@@ -1,74 +1,34 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2077.outbound.protection.outlook.com [40.107.223.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8E719307D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 15:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717600862; cv=fail; b=NUEgHtMgcWT6BOC8+L4lwjsB23b5gTd7wJwwW+DvA16ctPIAu47tIoAR2W3OVIztnj+kyZFKY9Wj9kcaXgAt2vhFbzVN8aiH7vA23nam+xpFLI7URr4oCd9XH57sUWG1T5o+TcNmEdu2ss61l7N8xorOYMZyRGg51tHr9QJYpCg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717600862; c=relaxed/simple;
-	bh=AircKrfsNlMSJI3s0adG5ofeDMaAt9OP1GjcUy38nEw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P/YPM30oOsaELgQmTGX1iIiziFmbLObJW1+0rrUxpETKRkFwTvOjZt6f4gUjwzYnmQmLzydi79ZQ9/7MxibmcBTV3gnDdolwMqA6PibILHfEJQCzVDsimvdwbjgP/WqFrR6I4O2EC3UK+CI5Wb/JO2jI0M2dRignOgiI5dohCMw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hpnW3bYB; arc=fail smtp.client-ip=40.107.223.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hpnW3bYB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PPvu9yB0V/s2E5yKp1ouE44KJ4FFJACsygWfK2fsnvX8QiH5lgsj9h1tQRlCsLToxjrdBg0O0Dd9vzs6bIj69pCmW2TyDjC1O8ebO9B8Qk3jhjvzD2CZu/gMz47DhtZ16JpTXHG6UuS821cYo9ynMO0Dsd1+42tKrINLyC3/gup8MEItny7DbGoOOdV7xLd2SHIxfQbpLvaTO01dJc2oKJ6YlnMrsty2nFNdjIcmomxJjwXh5Pb+t1QDmcFajK7iQxEhc/qq+2UfVuIDqxBweO4f8dHgkCoPmB5Nv8a1cwhjDXbFmzQZ3ZXpi6tR3M9VE14PjyWuDI4xcLQw/17oNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CSAQ121X98iwiEcitX8x/iHAY6E8i4awlh577kfvVy0=;
- b=AwQ5eKVJrKnb3V+n4zVCOxgPzwqfwmjl9BiTVFxQ7XhUiNhZOxw00fQsNIdx4PecdM65eeCSrcR4P263qDbycvkQYN5JyLQp2+UHu3A2WYjYwUpMmQRiUdXg27vvKvHLxY6r1DU3xLCtitUO+eF3pXPhvICk3Zj5IsCVGtVoxsLY7b00IS1kwu4Id/n36U628W1nqVq3J0PTmp/amsiT6HqmseMXYAEEnALhQqf3OUTVYfmqo3jk16ko9XdaDSqtFWQ6YGMVfuXcj2f8XbXrw2skHPskt5CYAAN+u9CC0J3fAbJ+dlS4lqPvxaQZ2G0dIMTv0HxL04L/qZym9VkN0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CSAQ121X98iwiEcitX8x/iHAY6E8i4awlh577kfvVy0=;
- b=hpnW3bYBpQAMlZH38TUvOw8QKeRQRZJj7aaG40hiCwQX8K38xlaT5C3FOA13c9UL7fhqyyo8bUHUVbEQiSyt311/bJvNJop/PEvfQ80ilS0brZnPPkzCAEWp41I2KuqxEHEpiXvvMOlC/O6RVlyBL0SGerN7ZJm2keUB2bmSZnQ=
-Received: from BN9PR03CA0709.namprd03.prod.outlook.com (2603:10b6:408:ef::24)
- by PH8PR12MB6962.namprd12.prod.outlook.com (2603:10b6:510:1bd::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.27; Wed, 5 Jun
- 2024 15:20:50 +0000
-Received: from BN3PEPF0000B374.namprd21.prod.outlook.com
- (2603:10b6:408:ef:cafe::ca) by BN9PR03CA0709.outlook.office365.com
- (2603:10b6:408:ef::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7656.18 via Frontend
- Transport; Wed, 5 Jun 2024 15:20:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B374.mail.protection.outlook.com (10.167.243.171) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.0 via Frontend Transport; Wed, 5 Jun 2024 15:20:50 +0000
-Received: from tlendack-t1.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 5 Jun
- 2024 10:20:49 -0500
-From: Tom Lendacky <thomas.lendacky@amd.com>
-To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-	<linux-coco@lists.linux.dev>, <svsm-devel@coconut-svsm.dev>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, "Peter
- Zijlstra" <peterz@infradead.org>, Dan Williams <dan.j.williams@intel.com>,
-	Michael Roth <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
-Subject: [PATCH v5 13/13] x86/sev: Allow non-VMPL0 execution when an SVSM is present
-Date: Wed, 5 Jun 2024 10:18:56 -0500
-Message-ID: <2ce7cf281cce1d0cba88f3f576687ef75dc3c953.1717600736.git.thomas.lendacky@amd.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <cover.1717600736.git.thomas.lendacky@amd.com>
-References: <cover.1717600736.git.thomas.lendacky@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A4F1863F;
+	Wed,  5 Jun 2024 15:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717600993; cv=none; b=YaKaPIbcHihlAUcVdmq3HpfTROo708LUd3lm5VZmLVhFkdlSjl9gMUhV9SKy7nUmK6nFp3f7gbNIttxHf044CtqhK5Pv75K+C5ZffCpLffzG4Q1wbgjJcFcowA05/8mXa16RUn88iH4Xm7crgNHTVZcgxTvNMjEViGwG93lv1pM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717600993; c=relaxed/simple;
+	bh=VPZkswdUi9IbeyGy87RvCLEp3+GYq472ghuyHCjHZVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q3QMEk0rHJgthnAhXDFEd9ByQtU0S9zgniUeQ5xCA4xGjdywaGYWOmKFYvpk9O5cCObEMU1rDgK8RLT8h9B7uZQaqeGK45ne3/IB2VWYj+I8Ah64eDNfvCC1yjG8TT8DBpkpCG+cQTHzL0Vd+5Qrff/zycnpuNhINz4T6FzpCJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+From: Kenton Groombridge <concord@gentoo.org>
+To: johannes@sipsolutions.net
+Cc: concord@gentoo.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: [PATCH v3] wifi: mac80211: Avoid address calculations via out of bounds array indexing
+Date: Wed,  5 Jun 2024 11:22:18 -0400
+Message-ID: <20240605152218.236061-1-concord@gentoo.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,158 +36,141 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B374:EE_|PH8PR12MB6962:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2bbd74a5-6994-4d7a-8809-08dc8573153d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|36860700004|7416005|376005|82310400017|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2UrSqoGFE9p8sO1/SMqMdyk/FhUedxNuA/a75xLKNUrdmQnrGxTapdnJrggw?=
- =?us-ascii?Q?AEISPXMWqmV4EeRwo3K1icpK9ORpxI579s5ANYPUSARx3CIbJE00ePmmLKi3?=
- =?us-ascii?Q?L45Y91XgeeR/NE1/Jmf1bntVTJAYeN9AwHaDJXgofb1vSxeXpq33pnzq3C3y?=
- =?us-ascii?Q?IDv19J5cGPfCko5xBh/ReAUbUk3QKFCAoZX4iHf4v4BLLDTgeLEO+ymMPc9t?=
- =?us-ascii?Q?gxrzrKTk2w1zZ0wS7tdM1cYvXZZnLhRLVshSAoaMnZFXigs7VO1ME1VtitOB?=
- =?us-ascii?Q?POYf4qxpyKcaEXjRHkjPDH4NwDIU9s0gZOdNONsPWJkePkCq9gPe9IXa3GI5?=
- =?us-ascii?Q?TMUoFoR1fvKlk5l1Vv3tL6Ek7mvhtCaFuhekP1J1d8IDbaLj7uB/v6F7jG/q?=
- =?us-ascii?Q?ezl8Gji6O9NqiRkvpVbB1ij2oTJ+3bA6b/FQNb/tzUimjQr8y9UawztYDKQe?=
- =?us-ascii?Q?2l6pFmhPqpTyn3W3k2h6VgfaZfAYy00yRhYDHa8frL+32gOzcEGCsO2BUP4b?=
- =?us-ascii?Q?utOh+v2depIU7SrDFNzw7Og7yvXfEDnzDPBZRH4Yu/xZ4nR+z6JPJ8HJBxqW?=
- =?us-ascii?Q?nij8Fes/E2pp9Mp+jg0mbpWFwP2hmnEPDJ5qWbZKzobvhht4WwTms6a6lsLE?=
- =?us-ascii?Q?8zPi5sKID7y7QXHhBkRkunJy0dWZcqFZ9BuJFGz30r5ZRHiPxjYxUtHzCuAT?=
- =?us-ascii?Q?xTOptiemSu7Ccgve9OzEduY8TZnwMmbGwTZ66RAQ2fZNNZ9jIpQMxYQmb9Eh?=
- =?us-ascii?Q?tNZxqE+mBcGarxhZTXNL3ap9vhBHXEewiQF5ycKYFfYtS928nnNprwsHpvyY?=
- =?us-ascii?Q?rUhhh19XSjFDANwUqNbR5K9ZNPZnQf1hHPqV5QdEcEVaJblbOIgpCSrjnpP3?=
- =?us-ascii?Q?fiJVM6s4eyWB18oBlMxxLsPOkd/nhS2A1Sv17RWkJmID2QQZqZuTWnQjE+fO?=
- =?us-ascii?Q?hJEG5ziHVjeV25AGNUZF5/uzfb9ALScDM+05Sq8qkdK/OTYd11LgyFMuIMkH?=
- =?us-ascii?Q?FBejaeT2am1ZSxQqGCR+V2WmjfxDoCNdk21OhtSpUOJolM+blKkzzDVqEA/U?=
- =?us-ascii?Q?srwJAhkwWECYMBfS5O2vIcM6aJN62i4e5wEr2amoym+gCScY6oSdMCsd7tZ4?=
- =?us-ascii?Q?DHIVV4X/1UP1I4z3V+9L1URBn9WZzcgBrOeMwqWvKOBP3sQtAJCh2GMTFa3p?=
- =?us-ascii?Q?JQjCMr42OhNZPH6RzbiByYAQ/+aqf9f51/qz/MP+fezQ4n9hbZ0jICfYPkSX?=
- =?us-ascii?Q?t9GW0FnY8VLZeV+kNFaxFP8rbaPapCBkB5RokNyy3IH3gBVWODriq8hhIhVb?=
- =?us-ascii?Q?UzPvfKabIql0CCYA6FMMONUe9CWAMXcXHAutNvs4aS1fVcpTsF9TAH+BUPBT?=
- =?us-ascii?Q?7RyG5kAE9iWAVTB5Daqi0DnXoxUYdWM2Tp8XAG19nbUV6FxODg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(7416005)(376005)(82310400017)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2024 15:20:50.3230
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bbd74a5-6994-4d7a-8809-08dc8573153d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B374.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6962
 
-To allow execution at a level other than VMPL0, an SVSM must be present.
-Allow the SEV-SNP guest to continue booting if an SVSM is detected and
-the hypervisor supports the SVSM feature as indicated in the GHCB
-hypervisor features bitmap.
+req->n_channels must be set before req->channels[] can be used.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+This patch fixes one of the issues encountered in [1].
+
+[   83.964252] ------------[ cut here ]------------
+[   83.964255] UBSAN: array-index-out-of-bounds in net/mac80211/scan.c:364:4
+[   83.964258] index 0 is out of range for type 'struct ieee80211_channel *[]'
+[   83.964260] CPU: 0 PID: 1695 Comm: iwd Tainted: G           O    T 6.8.9-gentoo-hardened1 #1
+[   83.964262] Hardware name: System76 Pangolin/Pangolin, BIOS ARB928_V00.01_T0025ASY1_ms 04/20/2023
+[   83.964264] Call Trace:
+[   83.964267]  <TASK>
+[   83.964269]  dump_stack_lvl+0x3f/0xc0
+[   83.964274]  __ubsan_handle_out_of_bounds+0xec/0x110
+[   83.964278]  ieee80211_prep_hw_scan+0x2db/0x4b0
+[   83.964281]  __ieee80211_start_scan+0x601/0x990
+[   83.964284]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964287]  ? cfg80211_scan+0x149/0x250
+[   83.964291]  nl80211_trigger_scan+0x874/0x980
+[   83.964295]  genl_family_rcv_msg_doit+0xe8/0x160
+[   83.964298]  genl_rcv_msg+0x240/0x270
+[   83.964301]  ? __cfi_nl80211_trigger_scan+0x10/0x10
+[   83.964302]  ? __cfi_nl80211_post_doit+0x10/0x10
+[   83.964304]  ? __cfi_nl80211_pre_doit+0x10/0x10
+[   83.964307]  ? __cfi_genl_rcv_msg+0x10/0x10
+[   83.964309]  netlink_rcv_skb+0x102/0x130
+[   83.964312]  genl_rcv+0x23/0x40
+[   83.964314]  netlink_unicast+0x23b/0x340
+[   83.964316]  netlink_sendmsg+0x3a9/0x450
+[   83.964319]  __sys_sendto+0x3ae/0x3c0
+[   83.964324]  __x64_sys_sendto+0x21/0x40
+[   83.964326]  do_syscall_64+0x90/0x150
+[   83.964329]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964331]  ? syscall_exit_work+0xc2/0xf0
+[   83.964333]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964335]  ? syscall_exit_to_user_mode+0x74/0xa0
+[   83.964337]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964339]  ? do_syscall_64+0x9c/0x150
+[   83.964340]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964342]  ? syscall_exit_to_user_mode+0x74/0xa0
+[   83.964344]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964346]  ? do_syscall_64+0x9c/0x150
+[   83.964347]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964349]  ? do_syscall_64+0x9c/0x150
+[   83.964351]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964353]  ? syscall_exit_work+0xc2/0xf0
+[   83.964354]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964356]  ? syscall_exit_to_user_mode+0x74/0xa0
+[   83.964358]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964359]  ? do_syscall_64+0x9c/0x150
+[   83.964361]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964362]  ? do_user_addr_fault+0x488/0x620
+[   83.964366]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964367]  ? srso_alias_return_thunk+0x5/0xfbef5
+[   83.964369]  entry_SYSCALL_64_after_hwframe+0x55/0x5d
+[   83.964372] RIP: 0033:0x6200808578d7
+[   83.964374] Code: 00 00 90 f3 0f 1e fa 41 56 55 41 89 ce 48 83 ec 28 80 3d 7b f7 0d 00 00 74 29 45 31 c9 45 31 c0 41 89 ca b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 71 48 83 c4 28 5d 41 5e c3 66 0f 1f 84 00 00
+[   83.964375] RSP: 002b:0000730c4e821530 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+[   83.964378] RAX: ffffffffffffffda RBX: 000006dbc456c570 RCX: 00006200808578d7
+[   83.964379] RDX: 000000000000005c RSI: 000006dbc45884f0 RDI: 0000000000000004
+[   83.964381] RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
+[   83.964382] R10: 0000000000000000 R11: 0000000000000246 R12: 000006dbc456c480
+[   83.964383] R13: 000006dbc456c450 R14: 0000000000000000 R15: 000006dbc456c610
+[   83.964386]  </TASK>
+[   83.964386] ---[ end trace ]---
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=218810
+
+v3:
+- Fix incorrect channel copying
+v2:
+- Drop changes in cfg80211 as requested by Johannes
+
+Co-authored-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kenton Groombridge <concord@gentoo.org>
 ---
- arch/x86/boot/compressed/sev.c    | 17 ++++++++++++++---
- arch/x86/include/asm/sev-common.h |  1 +
- arch/x86/kernel/sev.c             | 20 ++++++++++++--------
- 3 files changed, 27 insertions(+), 11 deletions(-)
+ net/mac80211/scan.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 1cc3106a3ba7..018c37ec1838 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -609,11 +609,15 @@ void sev_enable(struct boot_params *bp)
- 	 * features.
- 	 */
- 	if (sev_status & MSR_AMD64_SEV_SNP_ENABLED) {
--		if (!(get_hv_features() & GHCB_HV_FT_SNP))
-+		u64 hv_features;
-+		int ret;
-+
-+		hv_features = get_hv_features();
-+		if (!(hv_features & GHCB_HV_FT_SNP))
- 			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
+diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
+index 73850312580f..56beed61d2b7 100644
+--- a/net/mac80211/scan.c
++++ b/net/mac80211/scan.c
+@@ -358,7 +358,8 @@ static bool ieee80211_prep_hw_scan(struct ieee80211_sub_if_data *sdata)
+ 	struct cfg80211_scan_request *req;
+ 	struct cfg80211_chan_def chandef;
+ 	u8 bands_used = 0;
+-	int i, ielen, n_chans;
++	int i, ielen;
++	u32 *n_chans;
+ 	u32 flags = 0;
  
- 		/*
--		 * Enforce running at VMPL0.
-+		 * Enforce running at VMPL0 or with an SVSM.
- 		 *
- 		 * Use RMPADJUST (see the rmpadjust() function for a description of
- 		 * what the instruction does) to update the VMPL1 permissions of a
-@@ -622,7 +626,14 @@ void sev_enable(struct boot_params *bp)
- 		 * only ever run at a single VMPL level so permission mask changes of a
- 		 * lesser-privileged VMPL are a don't-care.
- 		 */
--		if (rmpadjust((unsigned long)&boot_ghcb_page, RMP_PG_SIZE_4K, 1))
+ 	req = rcu_dereference_protected(local->scan_req,
+@@ -368,34 +369,34 @@ static bool ieee80211_prep_hw_scan(struct ieee80211_sub_if_data *sdata)
+ 		return false;
+ 
+ 	if (ieee80211_hw_check(&local->hw, SINGLE_SCAN_ON_ALL_BANDS)) {
++		local->hw_scan_req->req.n_channels = req->n_channels;
 +
-+		ret = rmpadjust((unsigned long)&boot_ghcb_page, RMP_PG_SIZE_4K, 1);
+ 		for (i = 0; i < req->n_channels; i++) {
+ 			local->hw_scan_req->req.channels[i] = req->channels[i];
+ 			bands_used |= BIT(req->channels[i]->band);
+ 		}
+-
+-		n_chans = req->n_channels;
+ 	} else {
+ 		do {
+ 			if (local->hw_scan_band == NUM_NL80211_BANDS)
+ 				return false;
+ 
+-			n_chans = 0;
++			n_chans = &local->hw_scan_req->req.n_channels;
++			*n_chans = 0;
+ 
+ 			for (i = 0; i < req->n_channels; i++) {
+ 				if (req->channels[i]->band !=
+ 				    local->hw_scan_band)
+ 					continue;
+-				local->hw_scan_req->req.channels[n_chans] =
++				local->hw_scan_req->req.channels[(*n_chans)++] =
+ 							req->channels[i];
+-				n_chans++;
 +
-+		/*
-+		 * Running at VMPL0 is not required if an SVSM is present and the hypervisor
-+		 * supports the required SVSM GHCB events.
-+		 */
-+		if (ret && !(snp_vmpl && (hv_features & GHCB_HV_FT_SNP_MULTI_VMPL)))
- 			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
+ 				bands_used |= BIT(req->channels[i]->band);
+ 			}
+ 
+ 			local->hw_scan_band++;
+-		} while (!n_chans);
++		} while (!*n_chans);
  	}
  
-diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
-index 78a4c25119da..e90d403f2068 100644
---- a/arch/x86/include/asm/sev-common.h
-+++ b/arch/x86/include/asm/sev-common.h
-@@ -122,6 +122,7 @@ enum psc_op {
+-	local->hw_scan_req->req.n_channels = n_chans;
+ 	ieee80211_prepare_scan_chandef(&chandef);
  
- #define GHCB_HV_FT_SNP			BIT_ULL(0)
- #define GHCB_HV_FT_SNP_AP_CREATION	BIT_ULL(1)
-+#define GHCB_HV_FT_SNP_MULTI_VMPL	BIT_ULL(5)
- 
- /*
-  * SNP Page State Change NAE event
-diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index f4ae1d037b04..b7f3c767ef00 100644
---- a/arch/x86/kernel/sev.c
-+++ b/arch/x86/kernel/sev.c
-@@ -2349,23 +2349,27 @@ static void dump_cpuid_table(void)
-  * expected, but that initialization happens too early in boot to print any
-  * sort of indicator, and there's not really any other good place to do it,
-  * so do it here.
-+ *
-+ * If running as an SNP guest, report the current VM privilege level (VMPL).
-  */
--static int __init report_cpuid_table(void)
-+static int __init report_snp_info(void)
- {
- 	const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
- 
--	if (!cpuid_table->count)
--		return 0;
-+	if (cpuid_table->count) {
-+		pr_info("Using SNP CPUID table, %d entries present.\n",
-+			cpuid_table->count);
- 
--	pr_info("Using SNP CPUID table, %d entries present.\n",
--		cpuid_table->count);
-+		if (sev_cfg.debug)
-+			dump_cpuid_table();
-+	}
- 
--	if (sev_cfg.debug)
--		dump_cpuid_table();
-+	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-+		pr_info("SNP running at VMPL%u.\n", snp_vmpl);
- 
- 	return 0;
- }
--arch_initcall(report_cpuid_table);
-+arch_initcall(report_snp_info);
- 
- static int __init init_sev_config(char *str)
- {
+ 	if (req->flags & NL80211_SCAN_FLAG_MIN_PREQ_CONTENT)
 -- 
-2.43.2
+2.45.2
 
