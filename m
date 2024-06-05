@@ -1,103 +1,209 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD840192B98;
-	Wed,  5 Jun 2024 12:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EF819938F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 12:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717591163; cv=none; b=FXXLmCQctBXIsgKfvy6MAaKCx7xXQ7zVpQtkveC5yQ+ODhZmlDzTw7+jzMW7eaIC81NNCx1kXVf1NY4lSBHJlOs9Uu/M5uid8ihYKDKOw8R3UYX4UULGM5PDhNZY/KsFFoq25IAKhU1hJ59wiUrAkLmbGDJ2/QtE6y2hVC86/hw=
+	t=1717591174; cv=none; b=dm6jDeKqu0E1tlREA6A1RxJcppTjwMdXW5kHUjfJiEAL78NHzXvjpIqRmJQBdLDoVP8XUQkr4bWierNPuEkzZfjtobao2yvVF029vqv0oh/TJ5roZiZC/jpK8cJfOtvnV9pTf5uWv+nGl4i2+cffrgPCqh05/do3H8UwEtM2zo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717591163; c=relaxed/simple;
-	bh=fECiDaMb4F1kMdlJ53fEzmA/KWwVjlDq+a1cu8tfqZc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fho8fxBzYk93/k1Jsj5n7tNgdDIS3ruZLt7I7zZ6Vfnj4siBIhLDWyOoTKa3zBrDuQo/SBENxjEkEwV50nLpy7GE0vGfy3Vgz2NPnybCkrdIcKd3Kt6qVzL0DUBSu0FUC74WmNptG9MX/MbuNuSU6tsyWvQhH4dwj6+0HntTEdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-62a145e0bb2so66578657b3.0;
-        Wed, 05 Jun 2024 05:39:21 -0700 (PDT)
+	s=arc-20240116; t=1717591174; c=relaxed/simple;
+	bh=PN3w34drIVFY3EPIMuK3d7MloOEqH6vrNoCXQcodqfw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fYtA3rpHIkatogAI09p6U45aU/zAMkJz/loKlwugeP6fb9rHz+E/rhbyx0XfvTPae3ttdFMZLxe2wTbBR3QATwlo1nHAEyHBrNYhWiBMHkYy4koF4+ksm9dQgQCbrUoK5fzuWeP2/APyIzpIfxZlh4ObtZkqOteHOP2Kr7TFKQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=APmbBRop; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="APmbBRop"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42153115c65so14952585e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 05:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717591170; x=1718195970; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AsYvB5nRpR6ZIwbX5ZKQq6PXeotZMnLfWgyw/MJXre0=;
+        b=APmbBRop3ZoA/xyNiNARNuvmlyDAKlSv17U3fbW5Iluy3U1DQVmAuKlnBustljvjsS
+         1JRbEa1eqVEW0zK6dvt01Vt17jKXiYZrMcsJvtOWFKRzOH20i7cHvJie/v2oiyrDEjRz
+         GTBNJ2gGiupuD0AGFOnuCYzK/q8kLKoEVTq6SgK5jQV4SgkhkAyXAQ2qfNh2WzdzGoP0
+         QzKmhti2hOwlGcVMbHtY00RtDuX+Bp9HDZtDPmtyCPHWar/Q1slMm8y7SwEPpjw+gPBg
+         xBpnCl0dwwlV3r8ihyI2PMWWVT9UfmaktiSCgCCRaXu/o4KIB67/t7hTmoo9HJcZ54f7
+         +XKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717591160; x=1718195960;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F4h29fdB+cnJRLBhs8OVkcXiYefk6YXDuyr3Sq5hSqc=;
-        b=iF27VcF7FTzWeB/RFf1MeiIP6PohIc8pWZ8M4zjvmH7s7CqrpjRTq3jpQekKa+8XWc
-         AHQ1+kxuuFE6KRRq3FA91xSPvSohkIQiY4uUG91Pql8iE+Pk3TodhN7+2vqYERGYoW4a
-         sSRlnnLiE+iCn0k7k52VuTITiS1XsnYYDzsbLqcKDAt/qhVVSAZZdXKExx74KrdimqFQ
-         k6MTzhZjnApzzkzSiQvBOYxyHEJq8lKvTQ6Q47UkQmTQrNTBAVXwNPNvcxd1SXnt8kA3
-         ci4xOsXYI/V6SezS19oJcURr1IlRYLVaCEsf0QcBao5c5NvcMR9zWhyNB5GTQSLrCJ/J
-         o4/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVPDcsLaRJnIw7WSqB9UyUrf/kqPu9GNsyR0S/qbbqx3YBLgCC2eO897Xea/lPIRqjvonM3Cz8uqFVuG1nB+dRepxQBFFQEP+S0L1FAcUgPS1Jff+PngGfoJwueBQeKhpe9InsZ0OwQOxEGfSjaxg6inY19qh1UPbVnDk/mrI8kXJfXydMTV7WbBiuC+LmCwGHI7ZI/wwIOIEAqiZJPJOfMD2EdiyIgaw==
-X-Gm-Message-State: AOJu0YyBcAC39fzkvhkoCH9M09uf19AxhScT2tMRoLMJRBXF8ktoicHK
-	wltqdFj5a8mRGmtJENhLD4+1jUub9rkOFHeq3Rq4zt1HdCdZfDpgLwAP9Z1m
-X-Google-Smtp-Source: AGHT+IGRGEmazPxZajP7SNGEMm4USOakuizHfYTBsD0XeiL8mFCI4UYH0L9bHZ67vQl1O/ISKYwzqg==
-X-Received: by 2002:a81:c604:0:b0:615:10f8:124a with SMTP id 00721157ae682-62cbb510b16mr21269527b3.29.1717591159670;
-        Wed, 05 Jun 2024 05:39:19 -0700 (PDT)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62c765b8c28sm22024947b3.28.2024.06.05.05.39.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 05:39:19 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dfa5b9274feso7351607276.2;
-        Wed, 05 Jun 2024 05:39:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVEIs2CIIMKPpKf2qhjYiURPDkPPtcyo7To1uEITvOETkuMcFdJmXW/JuDhIZ0f+3FRKJChTEjP3Aug0sP6jlZItPlx0wpibK1uCHdi9pA8jV3fQ86avo7h3vrv4k1uQnH7vuX/HBOvk/VFcSRK3AXqW/ICq/12zDPn/lS+1YmU+Hdab1Sf77TZtQi0zf7TpLPTQ5swa7DKd2ZLv+EQAUfRcgsVCPU8Xw==
-X-Received: by 2002:a25:d8c3:0:b0:dfa:5a2f:9e56 with SMTP id
- 3f1490d57ef6-dfacab2efefmr2435803276.6.1717591159339; Wed, 05 Jun 2024
- 05:39:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717591170; x=1718195970;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AsYvB5nRpR6ZIwbX5ZKQq6PXeotZMnLfWgyw/MJXre0=;
+        b=pupHAD/R4UGXWw+GNUQ3fp/S5BUkWJouifHynmLbZtrWgD4kB0/1V1bl8YgrU0YN6y
+         Lw/No/E5cMRguC3EoU933W8FlB/xY5Bo+MbINJyjYf/G0bbFQNT+tdeIUBrSJRzE5dC+
+         6t0MZawUO9SShxOQlrxMCxq9nHtDDk3SH3ujlKQn1ycO83FrpvmlXwoXGc0j24Gyh8Ms
+         BHhYh4QHvNsiOHLUDKOQE4x/7YyJQwG83oVrU239dVhtSLUy8orC14lA7ZtnHTdF0ALx
+         OV3sTXlR8LyXUU56go1FH2D09zjLJSM/VHdYkX9fSTasW+0dDhG0lrHRdmZulmCXF3QI
+         riTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWDTsL920CgLebOUGvvZ1gWatavpXvmduYFIgotTti5FovkveysQTY2iOFweg/Ceie0aWsvC3TzW4N44TyQcSBDHDbOzfipTdxvYYTY
+X-Gm-Message-State: AOJu0Yyroh09DdLg29MQhhUl2QpMsKFB+BLtpgR2NzljKFilXQTNcmGU
+	81yNO/d2H+CikeY0JNZim+pT7oj8z1yt8aQMHKBKmH3AHx8u9zKtnCdwdPkZ38o=
+X-Google-Smtp-Source: AGHT+IGD/jtVA3Rdnq+bTWW2i+WoMmfuwV5XxVW4+NDqwpMdifM8PtmushixxRUAGEgebmaoZjpfYw==
+X-Received: by 2002:a05:600c:44d4:b0:41f:ed4b:93f9 with SMTP id 5b1f17b1804b1-421562dc3abmr17532165e9.19.1717591170461;
+        Wed, 05 Jun 2024 05:39:30 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:d3dd:423:e1eb:d88b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42158148f66sm21992535e9.32.2024.06.05.05.39.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 05:39:30 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Saravana Kannan <saravanak@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Alex Elder <elder@linaro.org>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Abel Vesa <abel.vesa@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Amit Pundir <amit.pundir@linaro.org>,
+	Xilin Wu <wuxilin123@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v9 0/2] pwrseq: introduce the subsystem and first driver
+Date: Wed,  5 Jun 2024 14:38:48 +0200
+Message-ID: <20240605123850.24857-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240530173857.164073-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240530173857.164073-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 5 Jun 2024 14:39:07 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXbDiP6g5CvHj+LJqcP+1yMzWADz0eZ50-jZbNqogiXxw@mail.gmail.com>
-Message-ID: <CAMuHMdXbDiP6g5CvHj+LJqcP+1yMzWADz0eZ50-jZbNqogiXxw@mail.gmail.com>
-Subject: Re: [PATCH v3 15/15] pinctrl: renesas: pinctrl-rzg2l: Add support for
- RZ/V2H SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Paul Barker <paul.barker.ct@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 30, 2024 at 7:42=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add pinctrl driver support for RZ/V2H(P) SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v2->v3
-> - Renamed PIN_CFG_OPEN_DRAIN->PIN_CFG_NOD
-> - Renamed PIN_CFG_SCHMIT_CTRL->PIN_CFG_SMT
-> - Introduced PWPR_REGWE_A instead of using PWPR_PFCWE
-> - Dropped using pwpr_lock
-> - Optimized rzv2h_pin_to_oen_bit()
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi!
 
-Gr{oetje,eeting}s,
+These are the power sequencing patches sent separately after some
+improvements suggested by Bjorn Helgaas. I intend to pick them up into a
+new branch and maintain the subsystem from now on. I then plan to
+provide an immutable tag to the Bluetooth and PCI subsystems so that the
+rest of the C changes can be applied. This new branch will then be
+directly sent to Linus Torvalds for the next merge window.
 
-                        Geert
+Changelog:
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Since v8:
+- split the pwrseq patches out into their own series
+- rename incref/decref functions to get/put for consistency
+- fix typos
+- make it very explicit in docs that arrays of targets and units must be
+  NULL-terminated
+- Link to v8: https://lore.kernel.org/r/20240528-pwrseq-v8-0-d354d52b763c@linaro.org
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Since v7:
+- added DTS changes for sm8650-hdk
+- added circular dependency detection for pwrseq units
+- fixed a KASAN reported use-after-free error in remove path
+- improve Kconfig descriptions
+- fix typos in bindings and Kconfig
+- fixed issues reported by smatch
+- fix the unbind path in PCI pwrctl
+- lots of minor improvements to the pwrseq core
+
+Since v6:
+- kernel doc fixes
+- drop myself from the DT bindings maintainers list for ath12k
+- wait until the PCI bridge device is fully added before creating the
+  PCI pwrctl platform devices for its sub-nodes, otherwise we may see
+  sysfs and procfs attribute failures (due to duplication, we're
+  basically trying to probe the same device twice at the same time)
+- I kept the regulators for QCA6390's ath11k as required as they only
+  apply to this specific Qualcomm package
+
+Since v5:
+- unify the approach to modelling the WCN WLAN/BT chips by always exposing
+  the PMU node on the device tree and making the WLAN and BT nodes become
+  consumers of its power outputs; this includes a major rework of the DT
+  sources, bindings and driver code; there's no more a separate PCI
+  pwrctl driver for WCN7850, instead its power-up sequence was moved
+  into the pwrseq driver common for all WCN chips
+- don't set load_uA from new regulator consumers
+- fix reported kerneldoc issues
+- drop voltage ranges for PMU outputs from DT
+- many minor tweaks and reworks
+
+v1: Original RFC:
+
+https://lore.kernel.org/lkml/20240104130123.37115-1-brgl@bgdev.pl/T/
+
+v2: First real patch series (should have been PATCH v2) adding what I
+    referred to back then as PCI power sequencing:
+
+https://lore.kernel.org/linux-arm-kernel/2024021413-grumbling-unlivable-c145@gregkh/T/
+
+v3: RFC for the DT representation of the PMU supplying the WLAN and BT
+    modules inside the QCA6391 package (was largely separate from the
+    series but probably should have been called PATCH or RFC v3):
+
+https://lore.kernel.org/all/CAMRc=Mc+GNoi57eTQg71DXkQKjdaoAmCpB=h2ndEpGnmdhVV-Q@mail.gmail.com/T/
+
+v4: Second attempt at the full series with changed scope (introduction of
+    the pwrseq subsystem, should have been RFC v4)
+
+https://lore.kernel.org/lkml/20240201155532.49707-1-brgl@bgdev.pl/T/
+
+v5: Two different ways of handling QCA6390 and WCN7850:
+
+https://lore.kernel.org/lkml/20240216203215.40870-1-brgl@bgdev.pl/
+
+Bartosz Golaszewski (2):
+  power: sequencing: implement the pwrseq core
+  power: pwrseq: add a driver for the PMU module on the QCom WCN
+    chipsets
+
+ MAINTAINERS                                |    8 +
+ drivers/power/Kconfig                      |    1 +
+ drivers/power/Makefile                     |    1 +
+ drivers/power/sequencing/Kconfig           |   29 +
+ drivers/power/sequencing/Makefile          |    6 +
+ drivers/power/sequencing/core.c            | 1105 ++++++++++++++++++++
+ drivers/power/sequencing/pwrseq-qcom-wcn.c |  336 ++++++
+ include/linux/pwrseq/consumer.h            |   56 +
+ include/linux/pwrseq/provider.h            |   75 ++
+ 9 files changed, 1617 insertions(+)
+ create mode 100644 drivers/power/sequencing/Kconfig
+ create mode 100644 drivers/power/sequencing/Makefile
+ create mode 100644 drivers/power/sequencing/core.c
+ create mode 100644 drivers/power/sequencing/pwrseq-qcom-wcn.c
+ create mode 100644 include/linux/pwrseq/consumer.h
+ create mode 100644 include/linux/pwrseq/provider.h
+
+-- 
+2.40.1
+
