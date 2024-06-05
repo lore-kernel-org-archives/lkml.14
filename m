@@ -1,371 +1,392 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2106.outbound.protection.outlook.com [40.107.223.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E9816D9A3;
-	Wed,  5 Jun 2024 21:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717623204; cv=none; b=FrR9CPxbIJtmMmGCObCcSs0e83zSqwEZYKH/LPQU7wTTO3u9aHKP04lHVKfeAQ9e4GqDtq+9ffVCCw/8KMLh2U325VyEsn0ZcRCNAE+pQq6mkm7CbClv66dQ6Ok93nTiockKwQoUSh+LJFzDXi+J23pN3YPujgwPstWe9Ohya1I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717623204; c=relaxed/simple;
-	bh=GFWdiBrrALapFfZ9mZyw4LqzPHc2E/G8ZMpfRlbTgeI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=msB5GAfy7HJrDo7W9y69JFwwslekkzt64k20yGHgGGC/eeYrlOn39F+/VGdrdivrAVFrQle5IA702+E8JICmtQ2BWlyOOY7LY0lEd5DoeYjMUumT+DTKAP+tnUYEzPVIpkh6mUYKD5swFSZb9kiYfpaetwCXl8qBgO7EJWzVpeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hKUlfAAA; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02BA16E864;
+	Wed,  5 Jun 2024 21:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.106
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717623209; cv=fail; b=CSJcT7qz0VXp+meoC8jnTX8GnP7fQjvs39jGgR8oAHMkwohDGHGWyR07vx5ZEFQSnYLT6WNpDqZX/oiJ3fBZb/o/JeCbaT7J89euhxs8TaPJwl/skw9fi4DPxrIhdv+sZi//bdGOSGSPJL5WMjazhFoL99Gbhwftjye+kYA/asQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717623209; c=relaxed/simple;
+	bh=V3pYop5ocUZ+zKcpfYHejI6L2xxqghuLK9tnZ+b4QY4=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KVDQ2eI+ACNWp8PcMVdQp4sZqGx8xWi6ds2A5Zm3nluqcvS/6o0w+yMBHzdH1u36OWm15cxltH/+GVcqLIl7itfw2M/EHwElFI4DmcJcJyinQFL8tzpSqb+DV3yDP5tmiCPuHTEHhZeIf8I98MvPJofzoaednK8+4mnjjUaST3Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=oiMVDZgn; arc=fail smtp.client-ip=40.107.223.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hKUlfAAA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717623203; x=1749159203;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GFWdiBrrALapFfZ9mZyw4LqzPHc2E/G8ZMpfRlbTgeI=;
-  b=hKUlfAAAYs131IqoLjHakOXK3Trww3H5KvoIVCv1GfbLBYHN0pGTQ42z
-   fo3x4YRjxHUzZ5cI91wP84r+dUl3xCjEyLyfdewe4gf4oIFDQHfQc7Jb4
-   OAUAyZN7cZqWOtm2d3SK7tEbttGaL0UlU6XWv4pR1l+DzAKfqQA+J5Mqp
-   Ft2+IoHkUJsWCWda1f5j9RqxixE3ngEgdx1HBjpY3tKglshrkv8jfntpa
-   UZcAQ3dS91Q8d3VeNyZ488q/vcN+/4SXktk682yCLwZ6DHnFf+hdmKWs7
-   qR5QtJFbQDeKQPy2LwF2LdTFg2olEa9ETdGxRlPfrL1Z2aOkVsuh24NUU
-   Q==;
-X-CSE-ConnectionGUID: a70VrjqbS7q980f7F0NeVg==
-X-CSE-MsgGUID: /iLCsArbRPqROD31EVtsFw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="18082602"
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="18082602"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 14:33:22 -0700
-X-CSE-ConnectionGUID: hSukBW8YS7Cmbn8i22c/LA==
-X-CSE-MsgGUID: BQua7tGaQOWACxECq10aZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="75204966"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 05 Jun 2024 14:33:18 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sEyFv-0002HK-2q;
-	Wed, 05 Jun 2024 21:33:15 +0000
-Date: Thu, 6 Jun 2024 05:32:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, nuno.sa@analog.com, dlechner@baylibre.com,
-	marcelo.schmitt1@gmail.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] iio: adc: Add support for AD4000
-Message-ID: <202406060558.kJtbRid3-lkp@intel.com>
-References: <e340f48324b0ea3afb1c715cb2fba184c27112a1.1717539384.git.marcelo.schmitt@analog.com>
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="oiMVDZgn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ijl2CDJYhyL7cllGN9W8w4Cp78fzZUHsQ+TMUTVGP+1ixL8h4B/h3zO3IAxtBJzw7P22Ucle1hsD0Rh0y51916huhmEPHwEY56EBmKpjbVSa0d0c0V1BN+sIbzYo8M/NkToW4j6jyvdBYtPsoWVtixP/aQMJYsM1FEvLEKRMiOfBniWBQ/5Vr2scsUlwmZHOWmOU9xI1ZkU+wEdTmC5Z9hA+hcXlj78HC0rd5aexPZ0nQN+Ofw9Ok2ER/YbeU9unLOD/03iDjIYPTArEfjoCtdvy0XRfYo6rzaBIxNBr3VMbDwq6n91w2a8tVLorFThH/2RGoBG3qD4Boz+iq270bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qPakuIFUQFQa4L3tBLRFi5uJaB/sqYalIbCcZrt7VZU=;
+ b=I2s5R0NB3s3WLaVuBnfDfA7gCEi7DoN+SzHvoo+xTOV/76sHOKztl6qPB5R6a48peLRwdfrjBBzj+NpNscmOvw0qKH4U53nAQE6R7ZO4CwnyS+i3Zp+fad1czAbDfyQJqFjnVa5pubvmo+2H4fnlHMbl+GhbSBTZb178Jguc2fReI1x5KYi+LOh91zp5B9uOKCjBmWOHjsliI+9Nzj9YQPCuEevDgDn8HOGYFasLWGuU0HuUrIopO3sqZe+m/i4dLrdaedwJN7ZnexWhMQw2QBFIZmI4ohhytla0oveS/1wMU3yqhaTzyy1BSQxWxSpj3x6wvfazZfNkYgtluB8+hA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qPakuIFUQFQa4L3tBLRFi5uJaB/sqYalIbCcZrt7VZU=;
+ b=oiMVDZgnXBmkoGKikqMCCyub75qeYJi+lnM1DTuzz7AcPOWGoQWehIVNRDLARNA5oxu9hgCwFEfXM9TZ1dj3xrM8db7pkiGFmeSY+sXgwsuD4tid7i11MbsHUqgSYLDEHiWbC4CVEe00MN87G3D6Rs+y412RUrc0noapPDObdWM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from CO1PR01MB7370.prod.exchangelabs.com (2603:10b6:303:159::16) by
+ LV3PR01MB8462.prod.exchangelabs.com (2603:10b6:408:1a7::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7633.27; Wed, 5 Jun 2024 21:33:25 +0000
+Received: from CO1PR01MB7370.prod.exchangelabs.com
+ ([fe80::6e98:87d1:5562:ad73]) by CO1PR01MB7370.prod.exchangelabs.com
+ ([fe80::6e98:87d1:5562:ad73%4]) with mapi id 15.20.7633.021; Wed, 5 Jun 2024
+ 21:33:25 +0000
+Message-ID: <fcd0621b-dd68-4e0d-96e1-15c16a3278d0@os.amperecomputing.com>
+Date: Wed, 5 Jun 2024 14:33:22 -0700
+User-Agent: Mozilla Thunderbird
+From: Daniel Ferguson <danielf@os.amperecomputing.com>
+Subject: Re: [RFC PATCH v8 10/10] ras: scrub: ACPI RAS2: Add memory ACPI RAS2
+ driver
+To: shiju.jose@huawei.com
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+ david@redhat.com, Vilas.Sridharan@amd.com, leo.duran@amd.com,
+ Yazen.Ghannam@amd.com, rientjes@google.com, jiaqiyan@google.com,
+ tony.luck@intel.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
+ rafael@kernel.org, lenb@kernel.org, naoya.horiguchi@nec.com,
+ james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+ erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+ mike.malvestuto@intel.com, gthelen@google.com,
+ wschwartz@amperecomputing.com, dferguson@amperecomputing.com,
+ wbs@os.amperecomputing.com, nifan.cxl@gmail.com, tanxiaofei@huawei.com,
+ prime.zeng@hisilicon.com, kangkang.shen@futurewei.com,
+ wanghuiqiang@huawei.com, linuxarm@huawei.com, ira.weiny@intel.com,
+ vishal.l.verma@intel.com, alison.schofield@intel.com, dave.jiang@intel.com,
+ jonathan.cameron@huawei.com, dave@stgolabs.net, dan.j.williams@intel.com,
+ linux-mm@kvack.org, linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
+References: <20240419164720.1765-1-shiju.jose@huawei.com>
+ <20240419164720.1765-11-shiju.jose@huawei.com>
+Content-Language: en-US
+In-Reply-To: <20240419164720.1765-11-shiju.jose@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR03CA0021.namprd03.prod.outlook.com
+ (2603:10b6:303:8f::26) To CO1PR01MB7370.prod.exchangelabs.com
+ (2603:10b6:303:159::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e340f48324b0ea3afb1c715cb2fba184c27112a1.1717539384.git.marcelo.schmitt@analog.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR01MB7370:EE_|LV3PR01MB8462:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5d775375-8cb4-4fc9-def5-08dc85a721ad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|52116005|1800799015|7416005|366007|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bXQ0MnRqb0d6SEw3YUo4anU2K2t4Zm93Tno1VFM2R3NkL0ZHNTNVU3VvbVFS?=
+ =?utf-8?B?R01jUjZlbTQ2ZEloMDl6WVF0Z1JkWCtBY2xCL2Myd3VZOHhuSjVsb1RxZHha?=
+ =?utf-8?B?RlBtWkorNVdOa3k1dWZRMzd2WVgyTkV0dytrRW02OFBNdm10eHUzUVRxR2pP?=
+ =?utf-8?B?eTNnZTdQVGI5ejV2SGdZNHZSRjFVeE9UTlZNR1ArRit2Q21URXVndXVqSUth?=
+ =?utf-8?B?emtuZG5EbEZwSEJUSG5sNVJiajFZNmM2czIreFNmalN5c2hneU5VY0k4em5P?=
+ =?utf-8?B?azN1Z2pIUy9vdHNsNW15VWZ3dGxEd1hXdzJJais0VUEwTFp3eEFUQ1MvaEU0?=
+ =?utf-8?B?MUh1cExnYVhaZmRVWFRKR1pjeHFOYURnR2IzdHhsR0Z2WVA5V2JEWTlrbnJY?=
+ =?utf-8?B?WGpsdFRaS2VsQTQwV0ZyZThFNlNXWnp3ZXVBR2Nma3V1bnIySzJrZDF3Y2Fs?=
+ =?utf-8?B?OWZVNTdXampLVGlCVTdWa0Z1QzJtTVg0aWZBSkVWNkxlc3Y2UmtMODlYWVBT?=
+ =?utf-8?B?MlJ4ZlExTkVwNHRySXRiNXU1TllVL2RmZTlnanQxSlcwdU9sMU5lQkVUQ2tz?=
+ =?utf-8?B?OTRMLzMxN1UvNThLVEJkOThzMXhmWmhKSzJnY1ZDb2dKNjNsV0ZmZlBoaDdu?=
+ =?utf-8?B?VHZiRHJ6R2pPc0ZWSXc1dWFMbFgyYXNLTVFIVW9LMWc3d3V0ZHo2T0hNaWdT?=
+ =?utf-8?B?R3F2MUFRcUpFbmVHUTluN1FySVpmR1Arb1RiaysxdDBCTU8xSjBuam0rVncy?=
+ =?utf-8?B?QW5sZGQ4MGZ4MTFiVENLcXA0TUZJZEFQTE5sSml5Nmc0TVh5M1Zrd3pRdWxL?=
+ =?utf-8?B?c0cwQk1MYnErOHJXTlZncXNqS2lLbmh0NU5IcXZmWjZtVHJLMEVUMUt5TUhV?=
+ =?utf-8?B?bnNuZmU4NS9ORzFMcG5OWE1pSjBybXloQlV4eTY2MDVzSlgzczFHTFJOaC9i?=
+ =?utf-8?B?WnVXdDBOK0YxVDI1dFZVOG9lYVAwdXRkd0VXMXhYQm5SeXROamxpRnhldm1X?=
+ =?utf-8?B?d0tOdWN4eEZqdUdxcVFHREE5aklCSlNuaHFtbG1OQ1h0RWkweDlFVFQ0UWN1?=
+ =?utf-8?B?REZ4U1g4Q2RPTHdwTXhkL2ltVEJSU3BPWWFJVC9jUFJCNHp2clBHMFZQeGlI?=
+ =?utf-8?B?YXdFZnljRmRJNUVqZHg1VzNDaGttK0VUbWdFL1pRNHl6T2dyRzlkbFh2Y3hL?=
+ =?utf-8?B?blkrSS9GQkJ6UzVya2dLbHdmazZPR3ZKV0NXREhLTlc3VEg3dWtIcTNOOEpY?=
+ =?utf-8?B?NWRUU09JYzRQcmtPcmZ1Q1A5aXlSQWRWdWI5ZlBJdVZhMGNlclN0a3J6cXI0?=
+ =?utf-8?B?aXA2MGxBQ3BOUjk4ZXNINFB5NDVBUzJnZ2tOTEZkMmRHMFZDc09ZdGViVzJw?=
+ =?utf-8?B?WjdoNllyOWEwaVlhbEU2amoxVVVuSUFuUWZneXhsdjhmMWNYM2JaNFFvZXFV?=
+ =?utf-8?B?VTBxdFZDdmJYb21CRWp3WjNpNFd0QmhrVGRtY1VhQWdIYlQrZzR1cHltU0pE?=
+ =?utf-8?B?WGFNTFN1TW5pQ3d3eXQxOCtVaVYxQXdEdUFROHdCR0V1aWF2dGtNU1dSelBz?=
+ =?utf-8?B?ZmlGd1lPc1R5ckNQUFdoZit2WlJ3TktTd1NYZ0RicnF0ZXN1WTJ0L245NFJI?=
+ =?utf-8?B?SklwT1paNzVodCs4amNQeUpvT3ZjcXRwaGFMT2VHd2lSa05vbytwcVhLdkZS?=
+ =?utf-8?B?KzNQdHlzaXdkaGtVVlVHRktLbzhCOENtTVdGbGxORGYxZ2IyOU1aekx6bllr?=
+ =?utf-8?B?cFR3Qm5hRUY5bUE1Y1ZWdjlUdzU4YnQ2MTdYRUpHU2d2U0d1TUppUlVuNDRl?=
+ =?utf-8?B?ZGlQUUVBWGhSQkR6VHRmQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR01MB7370.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(7416005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cGlRb25rRDJuK3lRbWNDSE5GTktMMXhtdmRzVkU1U2MwT2cwc1hXckdTTk83?=
+ =?utf-8?B?U05Bd056Ylk4QW5HZkVnMStJQWRnU29MdkNhb3lGdWRWckZZOUR4OUNLNWtC?=
+ =?utf-8?B?aUJ4RDNtdlNSSUVVWTc1MzZtakVHcW00QTBOeHVRamtuUStHalovR2YweVdB?=
+ =?utf-8?B?R25NcVcvVktxMStNeTh0NE9Kd0I1VUlNSDN0bnhTWklpT3lSbXRZTW4rMEhz?=
+ =?utf-8?B?cElDa1RDZC9XUGxqc1hURnhEY0ZkVnpObzVTSlRKSEhHTGY3V1BHOE82eEs4?=
+ =?utf-8?B?b2RGbHR6SExrNVZVbzhsRC9zTW9KQmkrb3dPSU9vRGtRTmhZTEwyclB1UkpS?=
+ =?utf-8?B?cVQwdWlHTTd1NkI2SWZyM25ZNStZYXRYYnY5VzFwSXFYZ2sweHVGSG9LK25n?=
+ =?utf-8?B?WjFxbExvN3hqOUwrUmR5NXRjZzNMTHBiWWlFdWptWm1PY3lCNm8wYVRkclJy?=
+ =?utf-8?B?ejlVUkJnT2txaDdBM1Zua0RsNmVlb0xKaFR4ck0ydVpJODZnM09uZm9GMUIz?=
+ =?utf-8?B?Z010QTdhVHdVQ2NzMUtEcTQ2clNpQTFDSWNSd0s5YTh3TFdaN085c040QUtD?=
+ =?utf-8?B?VGZKckZHN3pJN3p6c01OeTk3ZlBTcFM2ajJNZDZ5eVdkQmx3dmdOclg5S05i?=
+ =?utf-8?B?K1o5K2VTUURFWjdWYjJ5eGUzeGFrQW9XN1RnOXpUY0N3L1Q1SXFtbmJ0UzJr?=
+ =?utf-8?B?T1ZRUUhvbGh1dUVraVlhYllIY2JvK3JZUnEvdDZkS21jWVBYeXcvWWlteUZq?=
+ =?utf-8?B?anJoRmdkOEE3S3grdyt1bHlvRFM3V1NtN2VjNjFYSHRiZnhNNWtPSmV6T1g0?=
+ =?utf-8?B?U0ppcnJFendaY3NrQTNvU3lQRXJVb3RCWEUyZmhLQWxQczdlNVlDWDlkSDlT?=
+ =?utf-8?B?WkNKWXdyV2VlQ3ZMMDVSR1hrRjBIQU9hSys4S2c1M09OMVNDRDRsa3JWL2V6?=
+ =?utf-8?B?ZktmcTh6UzlkSGQ5aG91K3VMNTlDSTQxbU1TZ0RmdWdYckZlMTU1SHBKSU1j?=
+ =?utf-8?B?QWRsOUxJZFFBU3pkOEQ5anM5a2wzMEFsaHlnUTkyL1dRUDdPWC90R3dta1pP?=
+ =?utf-8?B?Q1grc3VrNTJiaFRZdFhJU21seE9LM0c5QmlzVkxRVjJXa0dNUWE2TnZKZDFt?=
+ =?utf-8?B?dzA3Um5kWHZ5UFh0SFJGNWl6MndEZkFaVWY5ZjcwYThQVk9SakN5ZGthMGdp?=
+ =?utf-8?B?K0JQclBNR1lWam5NZzk3bC9kbU92TVdtRzVZczlnUStORXVVWE1hZGdXR2Vm?=
+ =?utf-8?B?amZWOTU5d3lISkowNUdQdkJoSXJEZThhWUJldDlRdWI1NFNsWXhvcGordU5R?=
+ =?utf-8?B?aEEzUGpEUFA5b0o0a1orMVdqYk1aWG83ZjE5TDJqd3hRcE5vN2NhSFNic0Qv?=
+ =?utf-8?B?M0FDcEpSUFVJN2x2cDM1WnpGZW5jbEhvY1llYWNPdW9Ca1NEaGR2VGFyMmJn?=
+ =?utf-8?B?TXNYcFVwWWlUVUU1Q3QwOU9OMkE0MDFwVk1ZS2xWWmNUTndYL3A4NW1WZnFt?=
+ =?utf-8?B?NCt5czU2YmRwamc3Vjc3ZW0vZlZ4R09kVnVlSkFlbEYxbmJNL3NqQlFUbWp1?=
+ =?utf-8?B?RFNLZkgwRGxTUjFadTk5ZFlHb0dFdXNQcW1CTitmRktrM00xcThwRlVNTlBa?=
+ =?utf-8?B?MUR6TU1qRUk5VE5NK0JxWUpNY1RKekMxbisxamZHMDhzR1libHZ5aUQ3Qlha?=
+ =?utf-8?B?ZHZHWnlJMXphNUJnWm1RTVMzc2ZKR3FPbng3TzROR0NydHZBOGZIV1ZuNlNN?=
+ =?utf-8?B?YndVUVRBZ2oweU9JTkVYbGZhd05CKzBxLy91WkV5ZmZ1QmMrNTdScElxVnBY?=
+ =?utf-8?B?ZUpvc2l4YXphcGx3UXpaNEhRdk83a2FyR0FRbUJnTWlvTVJpV1dKc3ZQNi9t?=
+ =?utf-8?B?TmJmUDRXdE4yOEMzSTVSYjd0VngyVmFLcDBiOHNId2VHME9OamUxcGNoZjIx?=
+ =?utf-8?B?MU1KNWcyQzRlZ1hvbERJeURlanpVb3ZMam5jRDM5cjJ1KzNJb25BY0FDbWxU?=
+ =?utf-8?B?c2hNbE0rSlU5b25keTVReWU2Z0xyNENGaU1rTVh0aitWcTl2anZJWG81QmxW?=
+ =?utf-8?B?ZkF6cXJ3cmtIdjJQaXhYMzF3TzUxQ1MrSm1OYjl0NWJlaFM5YlArbHlpR0NM?=
+ =?utf-8?B?VmFYSzE0cDlDN05sNHZPY25Vb1gvNGFLWFJtQW95VUd0aXFORmVvdVRwdkht?=
+ =?utf-8?Q?CYnz6wMPYc8KFkrHAkhCAIo=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d775375-8cb4-4fc9-def5-08dc85a721ad
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR01MB7370.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2024 21:33:25.1594
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: frie/ux3zzyMi1FMXLo2vFQeTygs9mH5WsFgI0QkQsjeMdqiF0I33B+fpdb3505h5Q8zhdYFKAqtqc3ZPoBuBH1DkEvSymAdVpU8dwfGjKnZgjUrMbP16PKxwNUyrdsc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR01MB8462
 
-Hi Marcelo,
+> +/* Context - lock must be held */
+> +static int ras2_get_patrol_scrub_running(struct ras2_scrub_ctx *ras2_ctx,
+> +					 bool *running)
+> +{
+> +	struct acpi_ras2_ps_shared_mem __iomem *ps_sm = (void *)
+> +					ras2_ctx->pcc_subspace->pcc_comm_addr;
+> +	int ret;
+> +
+> +	if (ras2_ctx->bg)
+> +		*running = true;
+> +
+> +	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
+> +	ps_sm->params.patrol_scrub_command = RAS2_GET_PATROL_PARAMETERS;
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on broonie-spi/for-next]
-[also build test WARNING on jic23-iio/togreg linus/master v6.10-rc2 next-20240605]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Marcelo-Schmitt/spi-Add-SPI-mode-bit-for-MOSI-idle-state-configuration/20240605-231912
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-patch link:    https://lore.kernel.org/r/e340f48324b0ea3afb1c715cb2fba184c27112a1.1717539384.git.marcelo.schmitt%40analog.com
-patch subject: [PATCH v3 6/6] iio: adc: Add support for AD4000
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20240606/202406060558.kJtbRid3-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d7d2d4f53fc79b4b58e8d8d08151b577c3699d4a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240606/202406060558.kJtbRid3-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406060558.kJtbRid3-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/iio/adc/ad4000.c:17:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/iio/adc/ad4000.c:17:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/iio/adc/ad4000.c:17:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:26:
-   In file included from include/linux/kernel_stat.h:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   In file included from drivers/iio/adc/ad4000.c:17:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:21:
-   In file included from include/linux/mm.h:2253:
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   drivers/iio/adc/ad4000.c:375:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-     375 |         int ret;
-         |             ^
->> drivers/iio/adc/ad4000.c:538:3: warning: variable 'reg_val' is uninitialized when used here [-Wuninitialized]
-     538 |                 reg_val |= FIELD_PREP(AD4000_CFG_HIGHZ, 1);
-         |                 ^~~~~~~
-   drivers/iio/adc/ad4000.c:535:22: note: initialize the variable 'reg_val' to silence this warning
-     535 |         unsigned int reg_val;
-         |                             ^
-         |                              = 0
-   9 warnings generated.
+Need to reset the address range (base and size). A user may have previously
+called "Enable Background" where the code zeros out these parameters.
+	ps_sm->params.requested_address_range[0] = ras2_ctx->base;
+	ps_sm->params.requested_address_range[1] = ras2_ctx->size;
 
 
-vim +/reg_val +538 drivers/iio/adc/ad4000.c
+> +
+> +	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
+> +	if (ret) {
+> +		dev_err(ras2_ctx->dev, "failed to read parameters\n");
+> +		return ret;
+> +	}
+> +
+> +	*running = ps_sm->params.flags & RAS2_PATROL_SCRUB_FLAG_SCRUBBER_RUNNING;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ras2_hw_scrub_write_rate(struct device *dev, u64 rate)
+> +{
+> +	struct ras2_scrub_ctx *ras2_ctx = dev_get_drvdata(dev);
+> +	bool running;
+> +	int ret;
+> +
+> +	guard(mutex)(&ras2_ctx->lock);
+> +	ret = ras2_get_patrol_scrub_running(ras2_ctx, &running);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (running)
+> +		return -EBUSY;
 
-   369	
-   370	static int ad4000_single_conversion(struct iio_dev *indio_dev,
-   371					    const struct iio_chan_spec *chan, int *val)
-   372	{
-   373		struct ad4000_state *st = iio_priv(indio_dev);
-   374		u32 sample;
- > 375		int ret;
-   376	
-   377		ret = ad4000_convert_and_acquire(st);
-   378	
-   379		if (chan->scan_type.storagebits > 16)
-   380			sample = be32_to_cpu(st->scan.data.sample_buf32);
-   381		else
-   382			sample = be16_to_cpu(st->scan.data.sample_buf16);
-   383	
-   384		switch (chan->scan_type.realbits) {
-   385		case 16:
-   386			break;
-   387		case 18:
-   388			sample = FIELD_GET(AD4000_18BIT_MSK, sample);
-   389			break;
-   390		case 20:
-   391			sample = FIELD_GET(AD4000_20BIT_MSK, sample);
-   392			break;
-   393		default:
-   394			return -EINVAL;
-   395		}
-   396	
-   397		if (chan->scan_type.sign == 's')
-   398			*val = sign_extend32(sample, chan->scan_type.realbits - 1);
-   399	
-   400		return IIO_VAL_INT;
-   401	}
-   402	
-   403	static int ad4000_read_raw(struct iio_dev *indio_dev,
-   404				   struct iio_chan_spec const *chan, int *val,
-   405				   int *val2, long info)
-   406	{
-   407		struct ad4000_state *st = iio_priv(indio_dev);
-   408	
-   409		switch (info) {
-   410		case IIO_CHAN_INFO_RAW:
-   411			iio_device_claim_direct_scoped(return -EBUSY, indio_dev)
-   412				return ad4000_single_conversion(indio_dev, chan, val);
-   413			unreachable();
-   414		case IIO_CHAN_INFO_SCALE:
-   415			*val = st->scale_tbl[st->span_comp][0];
-   416			*val2 = st->scale_tbl[st->span_comp][1];
-   417			return IIO_VAL_INT_PLUS_NANO;
-   418		case IIO_CHAN_INFO_OFFSET:
-   419			*val = 0;
-   420			if (st->span_comp)
-   421				*val = mult_frac(st->vref / 1000, 1, 10);
-   422	
-   423			return IIO_VAL_INT;
-   424		default:
-   425			return -EINVAL;
-   426		}
-   427	}
-   428	
-   429	static int ad4000_read_avail(struct iio_dev *indio_dev,
-   430				     struct iio_chan_spec const *chan,
-   431				     const int **vals, int *type, int *length,
-   432				     long info)
-   433	{
-   434		struct ad4000_state *st = iio_priv(indio_dev);
-   435	
-   436		switch (info) {
-   437		case IIO_CHAN_INFO_SCALE:
-   438			*vals = (int *)st->scale_tbl;
-   439			*length = 2 * 2;
-   440			*type = IIO_VAL_INT_PLUS_NANO;
-   441			return IIO_AVAIL_LIST;
-   442		default:
-   443			return -EINVAL;
-   444		}
-   445	}
-   446	
-   447	static int ad4000_write_raw_get_fmt(struct iio_dev *indio_dev,
-   448					    struct iio_chan_spec const *chan, long mask)
-   449	{
-   450		switch (mask) {
-   451		case IIO_CHAN_INFO_SCALE:
-   452			return IIO_VAL_INT_PLUS_NANO;
-   453		default:
-   454			return IIO_VAL_INT_PLUS_MICRO;
-   455		}
-   456	}
-   457	
-   458	static int ad4000_write_raw(struct iio_dev *indio_dev,
-   459				    struct iio_chan_spec const *chan, int val, int val2,
-   460				    long mask)
-   461	{
-   462		struct ad4000_state *st = iio_priv(indio_dev);
-   463		unsigned int reg_val;
-   464		bool span_comp_en;
-   465		int ret;
-   466	
-   467		switch (mask) {
-   468		case IIO_CHAN_INFO_SCALE:
-   469			iio_device_claim_direct_scoped(return -EBUSY, indio_dev) {
-   470				ret = ad4000_read_reg(st, &reg_val);
-   471				if (ret < 0)
-   472					return ret;
-   473	
-   474				span_comp_en = (val2 == st->scale_tbl[1][1]);
-   475				reg_val &= ~AD4000_CFG_SPAN_COMP;
-   476				reg_val |= FIELD_PREP(AD4000_CFG_SPAN_COMP, span_comp_en);
-   477	
-   478				ret = ad4000_write_reg(st, reg_val);
-   479				if (ret < 0)
-   480					return ret;
-   481	
-   482				st->span_comp = span_comp_en;
-   483				return 0;
-   484			}
-   485			unreachable();
-   486		default:
-   487			return -EINVAL;
-   488		}
-   489	}
-   490	
-   491	static irqreturn_t ad4000_trigger_handler(int irq, void *p)
-   492	{
-   493		struct iio_poll_func *pf = p;
-   494		struct iio_dev *indio_dev = pf->indio_dev;
-   495		struct ad4000_state *st = iio_priv(indio_dev);
-   496		int ret;
-   497	
-   498		ret = ad4000_convert_and_acquire(st);
-   499		if (ret < 0)
-   500			goto err_out;
-   501	
-   502		iio_push_to_buffers_with_timestamp(indio_dev, &st->scan,
-   503						   iio_get_time_ns(indio_dev));
-   504	
-   505	err_out:
-   506		iio_trigger_notify_done(indio_dev->trig);
-   507		return IRQ_HANDLED;
-   508	}
-   509	
-   510	static int ad4000_reg_access(struct iio_dev *indio_dev, unsigned int reg,
-   511				     unsigned int writeval, unsigned int *readval)
-   512	{
-   513		struct ad4000_state *st = iio_priv(indio_dev);
-   514		int ret;
-   515	
-   516		if (readval)
-   517			ret = ad4000_read_reg(st, readval);
-   518		else
-   519			ret = ad4000_write_reg(st, writeval);
-   520	
-   521		return ret;
-   522	}
-   523	
-   524	static const struct iio_info ad4000_info = {
-   525		.read_raw = &ad4000_read_raw,
-   526		.read_avail = &ad4000_read_avail,
-   527		.write_raw = &ad4000_write_raw,
-   528		.write_raw_get_fmt = &ad4000_write_raw_get_fmt,
-   529		.debugfs_reg_access = &ad4000_reg_access,
-   530	
-   531	};
-   532	
-   533	static int ad4000_config(struct ad4000_state *st)
-   534	{
-   535		unsigned int reg_val;
-   536	
-   537		if (device_property_present(&st->spi->dev, "adi,high-z-input"))
- > 538			reg_val |= FIELD_PREP(AD4000_CFG_HIGHZ, 1);
-   539	
-   540		/*
-   541		 * The ADC SDI pin might be connected to controller CS line in which
-   542		 * case the write might fail. This, however, does not prevent the device
-   543		 * from functioning even though in a configuration other than the
-   544		 * requested one.
-   545		 */
-   546		return ad4000_write_reg(st, reg_val);
-   547	}
-   548	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I suggest we do not check if the patrol scrub is running when we are merely
+updating cached values. More importantly, if we had
+previously wrote an invalid value (that is only invalidated by firmware
+after
+executing a command), then when we try to write a correct value,
+this "ras2_get_patrol_scrub_running" check will always fail, therefore
+preventing us from correcting our error.
+
+> +
+> +	if (rate < ras2_ctx->rate_min || rate > ras2_ctx->rate_max)
+> +		return -EINVAL;
+> +
+> +	ras2_ctx->rate = rate;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ras2_hw_scrub_read_rate(struct device *dev, u64 *rate)
+> +{
+> +	struct ras2_scrub_ctx *ras2_ctx = dev_get_drvdata(dev);
+> +
+> +	*rate = ras2_ctx->rate;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ras2_hw_scrub_read_rate_avail(struct device *dev, u64 *min, u64 *max)
+> +{
+> +	struct ras2_scrub_ctx *ras2_ctx = dev_get_drvdata(dev);
+> +
+> +	*min = ras2_ctx->rate_min;
+> +	*max = ras2_ctx->rate_max;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ras2_hw_scrub_read_range(struct device *dev, u64 *base, u64 *size)
+> +{
+> +	struct ras2_scrub_ctx *ras2_ctx = dev_get_drvdata(dev);
+> +
+> +	*base = ras2_ctx->base;
+> +	*size = ras2_ctx->size;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ras2_hw_scrub_write_range(struct device *dev, u64 base, u64 size)
+> +{
+> +	struct ras2_scrub_ctx *ras2_ctx = dev_get_drvdata(dev);
+> +	bool running;
+> +	int ret;
+> +
+> +	guard(mutex)(&ras2_ctx->lock);
+> +	ret = ras2_get_patrol_scrub_running(ras2_ctx, &running);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (running)
+> +		return -EBUSY;
+
+I suggest we do not check if the patrol scrub is running. See previous
+comment above.
+
+> +
+> +	ras2_ctx->base = base;
+> +	ras2_ctx->size = size;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ras2_hw_scrub_set_enabled_bg(struct device *dev, bool enable)
+> +{
+> +	struct ras2_scrub_ctx *ras2_ctx = dev_get_drvdata(dev);
+> +	struct acpi_ras2_ps_shared_mem __iomem *ps_sm = (void *)
+> +					ras2_ctx->pcc_subspace->pcc_comm_addr;
+> +	int ret;
+> +
+> +	guard(mutex)(&ras2_ctx->lock);
+> +	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
+> +	if (enable) {
+> +		ps_sm->params.requested_address_range[0] = 0;
+> +		ps_sm->params.requested_address_range[1] = 0;
+> +		ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_RATE_IN_MASK;
+> +		ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_RATE_IN_MASK,
+> +							    ras2_ctx->rate);
+> +		ps_sm->params.patrol_scrub_command = RAS2_START_PATROL_SCRUBBER;
+> +	} else {
+> +		ps_sm->params.patrol_scrub_command = RAS2_STOP_PATROL_SCRUBBER;
+> +	}
+> +	ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_EN_BACKGROUND;
+> +	ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_EN_BACKGROUND,
+> +						    enable);
+> +
+> +	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
+> +	if (ret) {
+> +		dev_err(ras2_ctx->dev, "%s: failed to enable(%d) background scrubbing\n",
+> +			__func__, enable);
+> +		return ret;
+> +	}
+> +	ras2_ctx->bg = true;
+> +
+> +	/* Update the cache to account for rounding of supplied parameters and similar */
+> +	return ras2_update_patrol_scrub_params_cache(ras2_ctx);
+> +}
+> +
+> +static int ras2_hw_scrub_get_enabled_bg(struct device *dev, bool *enabled)
+> +{
+> +	struct ras2_scrub_ctx *ras2_ctx = dev_get_drvdata(dev);
+> +
+> +	*enabled = ras2_ctx->bg;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ras2_hw_scrub_set_enabled_od(struct device *dev, bool enable)
+> +{
+> +	struct ras2_scrub_ctx *ras2_ctx = dev_get_drvdata(dev);
+> +	struct acpi_ras2_ps_shared_mem __iomem *ps_sm = (void *)
+> +					ras2_ctx->pcc_subspace->pcc_comm_addr;
+> +	bool enabled;
+> +	int ret;
+> +
+> +	guard(mutex)(&ras2_ctx->lock);
+> +	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
+> +	if (enable) {
+> +		if (!ras2_ctx->size) {
+> +			dev_warn(ras2_ctx->dev,
+> +				 "%s: Invalid requested address range, requested_address_range[0]=0x%llx "
+> +				 "requested_address_range[1]=0x%llx\n", __func__,
+> +				 ps_sm->params.requested_address_range[0],
+> +				 ps_sm->params.requested_address_range[1]);
+> +			return -ERANGE;
+> +		}
+> +		ret = ras2_get_patrol_scrub_running(ras2_ctx, &enabled);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (enabled)
+> +			return 0;
+> +
+> +		ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_RATE_IN_MASK;
+> +		ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_RATE_IN_MASK,
+> +							    ras2_ctx->rate);
+> +		ps_sm->params.requested_address_range[0] = ras2_ctx->base;
+> +		ps_sm->params.requested_address_range[1] = ras2_ctx->size;
+
+
+We need to clear the RAS2_PATROL_SCRUB_EN_BACKGROUND bit in the input
+parameters.
+This is in case "Enable Background" was previously called, and this bit
+was set.
+
+		ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_EN_BACKGROUND;
+
+
+> +		ps_sm->params.patrol_scrub_command = RAS2_START_PATROL_SCRUBBER;
+> +	} else {
+> +		ps_sm->params.patrol_scrub_command = RAS2_STOP_PATROL_SCRUBBER;
+> +	}
+> +
+> +	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
+> +	if (ret) {
+> +		dev_err(ras2_ctx->dev, "failed to enable(%d) the demand scrubbing\n", enable);
+> +		return ret;
+> +	}
+> +	ras2_ctx->bg = false;
+> +
+> +	return ras2_update_patrol_scrub_params_cache(ras2_ctx);
+> +}
+
+
+
