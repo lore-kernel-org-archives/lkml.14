@@ -1,87 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FE619D8A2;
-	Wed,  5 Jun 2024 15:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520F119D8A2;
+	Wed,  5 Jun 2024 15:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717601169; cv=none; b=jIbL/8eEphguyO0orUznfK/1fk+1/0PRDFfKsnx9CV1pk1Mc/QR8zaQ1nF21eAOKi7FHyDZvh6FhAw8DhqrUBtHiRLUedUzgc2aVweJvaAW4EfVpILcFfkDdjDPgl9sRGr2l7SIWPq8g39RP3ZP6IjJr2Q0EnGrPNwpobfuL/B0=
+	t=1717601185; cv=none; b=eEAYKC79ONWyz6M5jIHl4jEBBiuxHhrgyOy903Th6+gdT2acEHYQhBOAGGAFhCxZXUxzR07qzYBCv4F0O8R/caPwApAmj5jjZLux1HsuFytIVT8S3bF8qwmdlndGrx13E74ffeRounMKBfmvNOsav7HPNwWWjXy6Ps5VODeRl3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717601169; c=relaxed/simple;
-	bh=jZnPdnaeLmJO5kHuCGrxoXWrDPQ+XKI6fsrjEvqiiVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=envxarqUcZfqVGrB9+dGgaMABhWCNCwDfbv+5D0T3vCYTnIBjTUtBLLtgK1uMTWvEZioRgbW3Uc9jqY/YFYzcx6oeRn99TdvhYLTdVc1jO8p5tqGD9s3I4t/zX9529UZjgJmQZ7pwBQ0IdeQvuQ+ZXzyaG/4vgzsQQ1zhEa0XcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XxSIBGH6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717601185; c=relaxed/simple;
+	bh=8XpyhZKSrc4bE8+XvtvAfYDllM78fVvoQxc/aBYNcsk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fAiLCuSvhhIc1n2qVRr/kCJDRcEZe0R/+NkjHaVFHhQKxmuusoufRcws7KmESbNi0nmwLIu+E36z2TKvxdkBfNlcUuLhvQXCybxgOa4yhkNjNdugJbNK5RZEVweVkbyV+wKxc9QU4PVk4ov8sfsio8Qvwxd5ORFrpJYJ0Q9rkTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=BJJAfbu2; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=BJJAfbu2; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XxSIBGH6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ADEEC2BD11;
-	Wed,  5 Jun 2024 15:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717601169;
-	bh=jZnPdnaeLmJO5kHuCGrxoXWrDPQ+XKI6fsrjEvqiiVA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XxSIBGH6rRgGrOvWHVda0jAQp3yhRM782xGt9XMZcSl7d0ZA1lIizB1m02OTh41lU
-	 OrgAkmc26Q+hlkecOcTIdgf4h0DD7g3Qf8a9CiHFwye67f6dMi24jzxoSljrTYTDqg
-	 FF3vy/uyk7Hbv2d1UWIxVQyN/cSjKma5vY9TasiN9eLBbGHOdp3g0+C17YonBncNeQ
-	 4z5CdS2uEe3o+SrmoXZ1adaCx8EVoK7FzIYJiEcRFdT6IupN2Lyutk+jkCaTew7aMI
-	 6G0NQWBVJzAuF/rcttJUUz1NJttM7PHuB332ybK/OXHgqyc27x208p9iQL2n8igUVL
-	 rGoril+oaHeIA==
-From: Christian Brauner <brauner@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 0/3] whack user_path_at_empty, cleanup getname_flags
-Date: Wed,  5 Jun 2024 17:10:03 +0200
-Message-ID: <20240605-notation-rausnehmen-c4bd0c38f994@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240604155257.109500-1-mjguzik@gmail.com>
-References: <20240604155257.109500-1-mjguzik@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="BJJAfbu2";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="BJJAfbu2"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7787B1F821;
+	Wed,  5 Jun 2024 15:26:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1717601180; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=d8GuYH83WUVlQTRs9HSo1c88X0WQdTG14bgqNF4Wo5Q=;
+	b=BJJAfbu2JD5bXRvgUHmTEDwD1sK2qedlKOYewz0oDcZ8oEffNBEE5IjLWSd5S+Ljh6Ds3B
+	0UkWXCJdkW61og0hBjR6bJeS3bMhITc/SOdM82o5oTTI9g5AwBzvdygCaUvRN5Xhe+UKG4
+	4aZlr/8+hUZoKG/93qn5PUu40yUUZv8=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1717601180; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=d8GuYH83WUVlQTRs9HSo1c88X0WQdTG14bgqNF4Wo5Q=;
+	b=BJJAfbu2JD5bXRvgUHmTEDwD1sK2qedlKOYewz0oDcZ8oEffNBEE5IjLWSd5S+Ljh6Ds3B
+	0UkWXCJdkW61og0hBjR6bJeS3bMhITc/SOdM82o5oTTI9g5AwBzvdygCaUvRN5Xhe+UKG4
+	4aZlr/8+hUZoKG/93qn5PUu40yUUZv8=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7048E13A42;
+	Wed,  5 Jun 2024 15:26:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 8+5iG5yDYGaiRgAAD6G6ig
+	(envelope-from <dsterba@suse.com>); Wed, 05 Jun 2024 15:26:20 +0000
+From: David Sterba <dsterba@suse.com>
+To: torvalds@linux-foundation.org
+Cc: David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fix for 6.10-rc3
+Date: Wed,  5 Jun 2024 17:26:14 +0200
+Message-ID: <cover.1717600881.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1442; i=brauner@kernel.org; h=from:subject:message-id; bh=jZnPdnaeLmJO5kHuCGrxoXWrDPQ+XKI6fsrjEvqiiVA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQlNLf5fI6WunTQXPrVzJ7D7z+qPG30nKiW3nC/y2zSA qMP50JedJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzkfiEjw0OHuokvp7l8dRCw /t3r4uaVlpa6+IR8EpdDzkcBoZIlqxgZru84+TJkoc6z+dZ1jSvlHk1ew6h89t321bVpQuqptql bGQE=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-On Tue, 04 Jun 2024 17:52:54 +0200, Mateusz Guzik wrote:
-> I tried to take a stab at the atomic filename refcount thing [1], found
-> some easy cleanup to do as a soft prerequisite.
-> 
-> user_path_at_empty saddles getname_flags with an int * argument nobody
-> else uses, so it only results in everyone else having to pass NULL
-> there. This is trivially avoidable.
-> 
-> [...]
+Hi,
 
-Snatched with some minor changes unless I hear complaints.
+please pull the following fix for fast fsync that needs to handle errors
+during writes after some COW failure so it does not lead to an
+inconsistent state. Thanks.
 
----
+----------------------------------------------------------------
+The following changes since commit 440861b1a03c72cc7be4a307e178dcaa6894479b:
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+  btrfs: re-introduce 'norecovery' mount option (2024-05-21 15:27:17 +0200)
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+are available in the Git repository at:
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.10-rc2-tag
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+for you to fetch changes up to f13e01b89daf42330a4a722f451e48c3e2edfc8d:
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
+  btrfs: ensure fast fsync waits for ordered extents after a write failure (2024-05-28 16:35:12 +0200)
 
-[1/3] vfs: stop using user_path_at_empty in do_readlinkat
-      https://git.kernel.org/vfs/vfs/c/d63b3a67520b
-[2/3] vfs: retire user_path_at_empty and drop empty arg from getname_flags
-      https://git.kernel.org/vfs/vfs/c/a01c264715dc
-[3/3] vfs: shave a branch in getname_flags
-      https://git.kernel.org/vfs/vfs/c/12a8c8f491b4
+----------------------------------------------------------------
+Filipe Manana (1):
+      btrfs: ensure fast fsync waits for ordered extents after a write failure
+
+ fs/btrfs/btrfs_inode.h  | 10 ++++++++++
+ fs/btrfs/file.c         | 16 ++++++++++++++++
+ fs/btrfs/ordered-data.c | 31 +++++++++++++++++++++++++++++++
+ 3 files changed, 57 insertions(+)
