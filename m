@@ -1,59 +1,50 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529CD194C99
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE88E153821
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679251; cv=none; b=ne9BS796UirFjIW1t2iMXF8r//clHjGE9hwm4OBBBaPDa3AYjU0mfSZ1nmc4pkP7WvUWtMyfNG1AOD2ksWHk0pHJc5JgRkR6V7B4DIyyzI39OmxQxl/FBJCx0nSDYNAQ1qAr8fBCMrA+xZ+B0+VSSHVbF65q6edfHc3t4AlXw+Y=
+	t=1717679374; cv=none; b=iOjYraRhGO1N6l7qJPG2NoycWRhmjK55AAw/EGq60DT8O1hEzDB6tSV3QIk9Kjd2giak8p7a18mO5xB8p5cBfI72n1e9Ne1NeaDUv63jKtRZZcywRBFk7UHrbBQ6V1Qi3LhMdPAAcTi1AfEJERSmkKcPjrck/EkacaVmMxoXbFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679251; c=relaxed/simple;
-	bh=BdMDCKYOciFtZo4PTTUMFab4UVUl6ecIp67QhNGiFxE=;
+	s=arc-20240116; t=1717679374; c=relaxed/simple;
+	bh=UdIASnxSyzifbmV5AhtmKjM701NiVtnzUbuXyj3DwEg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P/SfzIGzU4pK7o0m9fVCMAsoXxkpWBobWxnOvWqqRE+VJixlG4CG+3xyorz9CYMFgMrFYKBpnuy6IRe1D3GRDyij75ynEypik8s08dP7UiMB69oXRMiyjZl8XA8APYWnmXHk7X3bp8Ws5nEJTlcPwlIxhvLvDJ1vyByTcujT9Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pxwKEkMC; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=bpgGigtG6xPVXSkimdeyZSlUJqAY2ICD/Ij0JTWHuILrOYKJainIEuTYAX+FliqQHctWwffrwtinR7mN3xTq4W3vDuGkod4cmic7oZAOK7W+IsGRji7a+vHzFke8EY/e8NLCAx0my9SJnIGv0J0UDAmVhUXK4rwW8o0kjC4B8M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IID7dAix; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pxwKEkMC"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2e96f29884dso10099531fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717679247; x=1718284047; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9xqbTDU5EddtC0TrVAfeU+ERNe8gfqyFv4sZpg6VCoU=;
-        b=pxwKEkMCAXQ3w1PmZGCLFJPg73nrIiAPKJ09kyo49i0sr85KLCvLJ1iGVUpouQPxRK
-         VtoYUCN/QXLqsdurv1iapN+4l6ku+A7trXHNZCu3LMfJhXstzUuj+pEbAA3gqaTnQ2L3
-         yAVINfg0dsSQzCuA+ep21dnQAjJmLgzdVd1f3W/LWMzCXplErGog/26QuCbai80e5mku
-         kC7R7eJQNfDF5/w74oTXWwI9C9kE37U3apw+oFiG2ewAbScm2OVbzX5YuIsxFfxAZi/G
-         Y4L5YASTKUKdITRxEc2NoBHqk87NfI4sa5b0OL68oA6J9wKMpJ7cA7yaZKPa5+eqeZSB
-         CdVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717679247; x=1718284047;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9xqbTDU5EddtC0TrVAfeU+ERNe8gfqyFv4sZpg6VCoU=;
-        b=sF2Sn5JNPbq6up31vZcvF26CJkIfqPp6/TnTqmBkKnrylkI9enaCm462NucW3Z8dFg
-         FHfgTn10N95cF+WQcUC3zAc3q7amyab7ebjCi4B8iSGg5kkcX6K+d1ICTXqzENx9O1LE
-         cS7TT9kRZaIW+cNDoPk5++Cf60UjB/Dt9pSuoeSzJyyFkjHRj23VYoTkOR+DGiG7exuX
-         Olm4gQJSxS8j+yuiM7t4cwGh9JlE1wI/LxEXsn+XBzHeg+K4hIBmhrpCmnKmov9IFl0a
-         jAEqnNSLrGedeMKXAJ55C5X1WSC5ep8tOe8OlCnUwNbPu0/uaALMhlg+/k1VqpZ4sabA
-         wo1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWZRoKctSBqXY1gD57YQuwOqcaPs78n4Gb6lJx7KY+IujDBmEkLz5tPphr2xRzN3ROoAapKiWwfQGMJlHJPzKOZv2p6hVd/uIipSefH
-X-Gm-Message-State: AOJu0Ywf1zTkgGVgq/aEFCVMUxYhiKanf61LSgJvd+xSUdfrTf0Tr2iF
-	fu05TAQqs+B+Ss9N0pXKSMIir2VKge9W1ulfvJujxLzyFls9I2VM6PpBCK9NHtk=
-X-Google-Smtp-Source: AGHT+IGlDZLXub3zByy5p0lR4DbNs9Rf06mpjjFumk2zfzKdHZ7Rvj7G7Qjl3dOWAdV+S5AdUp9Xhg==
-X-Received: by 2002:a2e:9c07:0:b0:2e9:8ac8:b0c4 with SMTP id 38308e7fff4ca-2eac7a6ed32mr28518321fa.49.1717679247427;
-        Thu, 06 Jun 2024 06:07:27 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:f9a9:3740:b905:9995? ([2a05:6e02:1041:c10:f9a9:3740:b905:9995])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4215c19e67fsm21943435e9.2.2024.06.06.06.07.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 06:07:26 -0700 (PDT)
-Message-ID: <5f93f034-f781-47e0-b8ce-3c8407a709f7@linaro.org>
-Date: Thu, 6 Jun 2024 15:07:26 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IID7dAix"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717679373; x=1749215373;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UdIASnxSyzifbmV5AhtmKjM701NiVtnzUbuXyj3DwEg=;
+  b=IID7dAix/J4ipfPwU/tJfpIGQ40FHZy9yVH/F5VJ+m2efpA9M9KsMX+p
+   sUBfIayinjaY8X1hgYB+boxTH1jC8ouaLKpPIx5s6PMRvR7/TxYIKAFg5
+   G9ORfFl6kCHgQao7s8tVYa2aXzl5V4nNyTaSRR6YU4p1qamXxFb/D6hxF
+   KpC5MBJX3RknDt6nTiIpD9nhYzTZiWGga9WtMGNvTCBE0uwU1mO2Qnrva
+   OIk4oakxL0fUndpC3+cqjw0vBwIsZ0vRSh+bCN0L/gsodeH/cPcVD/W3C
+   yUMOqQ4u03wu4hB84pn2iQZwci1+gIB/KxFgH4rMDA7UZfxu7s0+Uu6rv
+   Q==;
+X-CSE-ConnectionGUID: wEy9yr7nQsePVUQBwLbm3g==
+X-CSE-MsgGUID: oprS+4r/TCWL3bR4EUyJVA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14497857"
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="14497857"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 06:09:33 -0700
+X-CSE-ConnectionGUID: z21AS0lJQDCamOm6pqPLcA==
+X-CSE-MsgGUID: sPiIrrc4TLyOrDwQx04CvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="42890050"
+Received: from ettammin-desk.ger.corp.intel.com (HELO [10.245.246.20]) ([10.245.246.20])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 06:09:24 -0700
+Message-ID: <146da765-c53f-4eb4-874e-53625daeb03e@linux.intel.com>
+Date: Thu, 6 Jun 2024 15:09:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,62 +52,195 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] thermal: core: Do not fail cdev registration because
- of invalid initial state
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>, Laura Nao <laura.nao@collabora.com>
-References: <4569763.LvFx2qVVIh@kreacher>
+Subject: Re: [RESEND PATCH v4] ASoc: tas2781: Enable RCA-based playback
+ without DSP firmware download
+To: Shenghao Ding <shenghao-ding@ti.com>, broonie@kernel.org
+Cc: andriy.shevchenko@linux.intel.com, lgirdwood@gmail.com, perex@perex.cz,
+ 13916275206@139.com, zhourui@huaqin.com, alsa-devel@alsa-project.org,
+ i-salazar@ti.com, linux-kernel@vger.kernel.org, j-chadha@ti.com,
+ liam.r.girdwood@intel.com, jaden-yue@ti.com,
+ yung-chuan.liao@linux.intel.com, dipa@ti.com, yuhsuan@google.com,
+ henry.lo@ti.com, tiwai@suse.de, baojun.xu@ti.com, soyer@irl.hu,
+ Baojun.Xu@fpt.com, judyhsiao@google.com, navada@ti.com,
+ cujomalainey@google.com, aanya@ti.com, nayeem.mahmud@ti.com,
+ savyasanchi.shukla@netradyne.com, flaviopr@microsoft.com, jesse-ji@ti.com,
+ darren.ye@mediatek.com
+References: <20240606124105.1492-1-shenghao-ding@ti.com>
 Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <4569763.LvFx2qVVIh@kreacher>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <20240606124105.1492-1-shenghao-ding@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 05/06/2024 21:17, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> It is reported that commit 31a0fa0019b0 ("thermal/debugfs: Pass cooling
-> device state to thermal_debug_cdev_add()") causes the ACPI fan driver
-> to fail probing on some systems which turns out to be due to the _FST
-> control method returning an invalid value until _FSL is first evaluated
-> for the given fan.  If this happens, the .get_cur_state() cooling device
-> callback returns an error and __thermal_cooling_device_register() fails
-> as uses that callback after commit 31a0fa0019b0.
-> 
-> Arguably, _FST should not return an inavlid value even if it is
-> evaluated before _FSL, so this may be regarded as a platform firmware
-> issue, but at the same time it is not a good enough reason for failing
-> the cooling device registration where the initial cooling device state
-> is only needed to initialize a thermal debug facility.
-> 
-> Accordingly, modify __thermal_cooling_device_register() to pass a
-> negative state value to thermal_debug_cdev_add() instead of failing
-> if the initial .get_cur_state() callback invocation fails and adjust
-> the thermal debug code to ignore negative cooling device state values.
-> 
-> Fixes: 31a0fa0019b0 ("thermal/debugfs: Pass cooling device state to thermal_debug_cdev_add()")
-> Closes: https://lore.kernel.org/linux-acpi/20240530153727.843378-1-laura.nao@collabora.com
-> Reported-by: Laura Nao <laura.nao@collabora.com>
-> Tested-by: Laura Nao <laura.nao@collabora.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-As it is a driver issue, it should be fixed in the driver, not in the 
-core code. The resulting code logic in the core is trying to deal with 
-bad driver behavior, it does not really seem appropriate.
-
-The core code has been clean up from the high friction it had with the 
-legacy ACPI code. It would be nice to continue it this direction.
+I am afraid there are still circular logic issues, or the code/comments
+don't capture what you are trying to do....
 
 
+> diff --git a/include/sound/tas2781-dsp.h b/include/sound/tas2781-dsp.h
+> index 7fba7ea26a4b..3cda9da14f6d 100644
+> --- a/include/sound/tas2781-dsp.h
+> +++ b/include/sound/tas2781-dsp.h
+> @@ -117,10 +117,17 @@ struct tasdevice_fw {
+>  	struct device *dev;
+>  };
+>  
+> -enum tasdevice_dsp_fw_state {
+> -	TASDEVICE_DSP_FW_NONE = 0,
+> +enum tasdevice_fw_state {
+> +	/* Driver in startup mode, not load any firmware. */
+>  	TASDEVICE_DSP_FW_PENDING,
+> +	/* DSP firmware in the system, but parsing error. */
+>  	TASDEVICE_DSP_FW_FAIL,
+> +	/*
+> +	 * Only RCA (Reconfigurable Architecture) firmware load
+> +	 * successfully.
+> +	 */
+> +	TASDEVICE_RCA_FW_OK,
+> +	/* Both RCA and DSP firmware load successfully. */
+>  	TASDEVICE_DSP_FW_ALL_OK,
+>  };
+>  
+> diff --git a/sound/soc/codecs/tas2781-fmwlib.c b/sound/soc/codecs/tas2781-fmwlib.c
+> index 265a8ca25cbb..838d29fead96 100644
+> --- a/sound/soc/codecs/tas2781-fmwlib.c
+> +++ b/sound/soc/codecs/tas2781-fmwlib.c
+> @@ -2324,14 +2324,21 @@ void tasdevice_tuning_switch(void *context, int state)
+>  	struct tasdevice_fw *tas_fmw = tas_priv->fmw;
+>  	int profile_cfg_id = tas_priv->rcabin.profile_cfg_id;
+>  
+> -	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
+> -		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
+> +	/*
+> +	 * Only RCA-based Playback can still work with no dsp program running
+> +	 * inside the chip.
+> +	 */
+> +	switch (tas_priv->fw_state) {
+> +	case TASDEVICE_RCA_FW_OK:
+> +	case TASDEVICE_DSP_FW_ALL_OK:
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+[1] so according to both the comment and code the RCA_FW_OK is fine and
+the device 'works', but ...
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> +		break;
+> +	default:
+>  		return;
+>  	}
+>  
+>  	if (state == 0) {
+> -		if (tas_priv->cur_prog < tas_fmw->nr_programs) {
+> -			/*dsp mode or tuning mode*/
+> +		if (tas_fmw && tas_priv->cur_prog < tas_fmw->nr_programs) {
+> +			/* dsp mode or tuning mode */
+>  			profile_cfg_id = tas_priv->rcabin.profile_cfg_id;
+>  			tasdevice_select_tuningprm_cfg(tas_priv,
+>  				tas_priv->cur_prog, tas_priv->cur_conf,
+> @@ -2340,9 +2347,10 @@ void tasdevice_tuning_switch(void *context, int state)
+>  
+>  		tasdevice_select_cfg_blk(tas_priv, profile_cfg_id,
+>  			TASDEVICE_BIN_BLK_PRE_POWER_UP);
+> -	} else
+> +	} else {
+>  		tasdevice_select_cfg_blk(tas_priv, profile_cfg_id,
+>  			TASDEVICE_BIN_BLK_PRE_SHUTDOWN);
+> +	}
+>  }
+>  EXPORT_SYMBOL_NS_GPL(tasdevice_tuning_switch,
+>  	SND_SOC_TAS2781_FMWLIB);
+> diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
+> index 9350972dfefe..9c3c89cb36de 100644
+> --- a/sound/soc/codecs/tas2781-i2c.c
+> +++ b/sound/soc/codecs/tas2781-i2c.c
+> @@ -380,23 +380,32 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
+>  	mutex_lock(&tas_priv->codec_lock);
+>  
+>  	ret = tasdevice_rca_parser(tas_priv, fmw);
+> -	if (ret)
+> +	if (ret) {
+> +		tasdevice_config_info_remove(tas_priv);
+>  		goto out;
+> +	}
+>  	tasdevice_create_control(tas_priv);
+>  
+>  	tasdevice_dsp_remove(tas_priv);
+>  	tasdevice_calbin_remove(tas_priv);
+> -	tas_priv->fw_state = TASDEVICE_DSP_FW_PENDING;
+> +	tas_priv->fw_state = TASDEVICE_RCA_FW_OK;
+>  	scnprintf(tas_priv->coef_binaryname, 64, "%s_coef.bin",
+>  		tas_priv->dev_name);
+>  	ret = tasdevice_dsp_parser(tas_priv);
+>  	if (ret) {
+>  		dev_err(tas_priv->dev, "dspfw load %s error\n",
+>  			tas_priv->coef_binaryname);
+> -		tas_priv->fw_state = TASDEVICE_DSP_FW_FAIL;
 
+... in this branch the fw_state remains TASDEVICE_RCA_FW_OK,
+so
+
+
+
+>  		goto out;
+>  	}
+> -	tasdevice_dsp_create_ctrls(tas_priv);
+> +
+> +	/*
+> +	 * If no dsp-related kcontrol created, the dsp resource will be freed.
+> +	 */
+> +	ret = tasdevice_dsp_create_ctrls(tas_priv);
+> +	if (ret) {
+> +		dev_err(tas_priv->dev, "dsp controls error\n");
+> +		goto out;
+> +	}
+
+... we never reach this line ...
+
+>  
+>  	tas_priv->fw_state = TASDEVICE_DSP_FW_ALL_OK;
+>  
+> @@ -417,9 +426,8 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
+>  	tasdevice_prmg_load(tas_priv, 0);
+>  	tas_priv->cur_prog = 0;
+>  out:
+> -	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
+> -		/*If DSP FW fail, kcontrol won't be created */
+> -		tasdevice_config_info_remove(tas_priv);
+> +	if (tas_priv->fw_state == TASDEVICE_RCA_FW_OK) {
+> +		/* If DSP FW fail, DSP kcontrol won't be created. */
+
+... and here this TASDEVICE_RCA_FW_OK really means a fail.
+
+so how can [1] consider TASDEVICE_RCA_FW_OK as a success case?
+
+Or this this saying that the baseline is the RCA case, and then the code
+attempts to load firmware but in case of failures just keep going, i.e.
+failing to load firmware is NOT an error?
+
+That would be somewhat different to the commit title that says 'without
+DSP firmware download'.
+
+Would you mind clarifying the steps please?
+
+
+>  		tasdevice_dsp_remove(tas_priv);
+>  	}
+>  	mutex_unlock(&tas_priv->codec_lock);
+> @@ -466,14 +474,14 @@ static int tasdevice_startup(struct snd_pcm_substream *substream,
+>  {
+>  	struct snd_soc_component *codec = dai->component;
+>  	struct tasdevice_priv TASDEVICE_RCA_FW_OK*tas_priv = snd_soc_component_get_drvdata(codec);
+> -	int ret = 0;
+>  
+> -	if (tas_priv->fw_state != TASDEVICE_DSP_FW_ALL_OK) {
+> -		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
+> -		ret = -EINVAL;
+> +	switch (tas_priv->fw_state) {
+> +	case TASDEVICE_RCA_FW_OK:
+> +	case TASDEVICE_DSP_FW_ALL_OK:
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+>  	}
+> -
+> -	return ret;
+>  }
+>  
+>  static int tasdevice_hw_params(struct snd_pcm_substream *substream,
