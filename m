@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9583198E8B;
-	Thu,  6 Jun 2024 15:56:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4A11990B7;
+	Thu,  6 Jun 2024 15:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717689377; cv=none; b=CtGVAq3RASYo1EqYF7nDeWFRttbMnD9BRN3+abbBaY4bTCeOLobi7VKEqyw/yrRijIxVsrL+e3nU/rOUXUAjj1n8MvV89zWa8oesr9U0ijFOnG8XyAkRFcTYvGP7srOVQi5fRqD9+ULauvjHZ1uAckIGa2NFg3Ba6DsCiTWKvbc=
+	t=1717689379; cv=none; b=Hmwqqc9ouy18lRycd0YmsvW+YNCAbXP5I33h+86ATpU2R9kTNgxMJWjwcQDLfTXASEX/NgpfAt+jmmABbgY/RvvnK9bjI8IcWALfYTNUrwmd7aG0Gk6CZBvn7H2XUQ3490RY5gd/oMhw9jyfRsbOLaK/0MXKFWDgBNTNgp0Gqxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717689377; c=relaxed/simple;
-	bh=z28G5odfgTFCbiNzNSbtdWGfyipoDdUN9lcFVyAkJ3U=;
+	s=arc-20240116; t=1717689379; c=relaxed/simple;
+	bh=tgSaH7pDA3q488BIGAg9INFjOhEWBEU92Cre1GIHnnA=;
 	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=Eh+CRpp7XubNL+XFFLKq6+VLhL9YVvu07fv+7N2YKYJfL6zgOh+PG58Mi/1zIELL9j6CMC4YUoYlM1/MsdmM2VkXCKVPyBONQekTEX7EhT7a7DqJffX0590rOoRb8HwFGMhZzoracWybT5S+Gtu0vTHCclQN5p7zDF6Bi8WRTbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9f4QCXu; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=Y68nrvd21DMLC/FDdqdli3V4k4NxnbXLql+k/ssGaLv3Vswv24Uyjij3QrcciNRihAsLGLJoutFIOud4fEfxF/UowjVF+pCOkJAcoDfIgMRAdaBOVwtgvvGWWGZxZGbFcrc6dLz8OsACXPGzWWQ7Cuneh7jyEwXDPuD6wlWiox4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nxHxUkDy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9f4QCXu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13D9AC2BD10;
-	Thu,  6 Jun 2024 15:56:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nxHxUkDy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CA4EC32781;
+	Thu,  6 Jun 2024 15:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717689377;
-	bh=z28G5odfgTFCbiNzNSbtdWGfyipoDdUN9lcFVyAkJ3U=;
+	s=k20201202; t=1717689378;
+	bh=tgSaH7pDA3q488BIGAg9INFjOhEWBEU92Cre1GIHnnA=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=A9f4QCXuv8GmmpBGCUv8i8euLSi3b/XIpvIH33y1Ytn9Ks2R8rE8Gb5xlCl5cMnt4
-	 nxf4pjmhpZN4MzriIbvX9C5CJgN+SF0d4o6/9Dg19wgtkbRcqiCu6whsZDskwJnvrB
-	 1KJ6hMooNtuik3DfvRg3D9AEiPgbE0TU5Vy8GCNFQl7W6P+t17KsQOKnwa8FbUQ9tr
-	 i2bTp08HdmOzMdm2PQXT1T6X+t/3vkmPu9ztVAKdk2S582zbenKC0CpkRStKF1XUAX
-	 aImgEwdL0AjPYy2SAvLxBzOMPRwDsN3QU0HpX+lZmlTpDhSje63wXsfjNmZrgPaQDC
-	 KN1gvvWueJlPw==
-Date: Thu, 06 Jun 2024 09:56:16 -0600
+	b=nxHxUkDy5SRXgOUC05eRFC9BM0omMZ1mJdaJJ5BTQ8mSdDDepnOjlXjqS/4JUjWoq
+	 7EuUUBdiYF7wGJH3Wimq2/EgzENSUqdtPWE/6bSrBUmttExLsHFlxngfNObfFtdEkS
+	 BUl1QNfQH5rbO9257a0+EHiJO2aT2Hz88curu3ZWONVInuRcoQSfomCBEbB3UuLIqg
+	 rmfR9u6F7TRzdbpoGCkIYv09MJa9fbXWuvBa3DYlw/MvhBBbefYGiO7kE5pBWY3Sfi
+	 7OJRysDSPVMqJyolD54U0YUjea88gIXWW/+tboACn8KlCd5VHuxb9yMof763cUZnGz
+	 t+FJ+DMqmnP+Q==
+Date: Thu, 06 Jun 2024 09:56:17 -0600
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,65 +36,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Michael Walle <mwalle@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, 
- Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, 
- linux-arm-kernel@lists.infradead.org, Li Yang <leoyang.li@nxp.com>, 
- Shawn Guo <shawnguo@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Priit Laes <plaes@plaes.org>, 
- Michael Grzeschik <m.grzeschik@pengutronix.de>, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, Marco Felsch <m.felsch@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>
-In-Reply-To: <20240606090206.2021237-1-mwalle@kernel.org>
-References: <20240606090206.2021237-1-mwalle@kernel.org>
-Message-Id: <171768925669.3793237.5164635523857392329.robh@kernel.org>
-Subject: Re: [PATCH v2 00/13] ARM: dts: kontron-samx6i: various fixes
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>
+In-Reply-To: <20240606094513.3949323-1-christianshewitt@gmail.com>
+References: <20240606094513.3949323-1-christianshewitt@gmail.com>
+Message-Id: <171768925717.3793270.14812356444317886177.robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: add dream vendor prefix
 
 
-On Thu, 06 Jun 2024 11:01:53 +0200, Michael Walle wrote:
-> While working on a new PHY support for this board I've noticed quite
-> a few errors. Fix these and introduce an actual board for the
-> module. For now, there was just a dtsi and no actual user of it.
+On Thu, 06 Jun 2024 09:45:11 +0000, Christian Hewitt wrote:
+> Add a vendor prefix for Dream Property GmbH
 > 
-> v2:
->  - new patch to fix the node names to make the schema happy
->  - new patch to fix the PCIe reset line polarity
->  - new patch to remove the unused and invalid wake-up-gpio property
->  - add required poperties for the supply voltages to the wm8904 node
->  - enable PCIe in the ADS2 device tree include
-> 
-> Michael Walle (13):
->   ARM: dts: imx6qdl-kontron-samx6i: fix phy-mode
->   ARM: dts: imx6qdl-kontron-samx6i: fix PHY reset
->   ARM: dts: imx6qdl-kontron-samx6i: fix board reset
->   ARM: dts: imx6qdl-kontron-samx6i: cleanup the PMIC node
->   ARM: dts: imx6qdl-kontron-samx6i: fix SPI0 chip selects
->   ARM: dts: imx6qdl-kontron-samx6i: fix product name
->   ARM: dts: imx6qdl-kontron-samx6i: always enable eMMC
->   ARM: dts: imx6qdl-kontron-samx6i: add SDIO_PWR_EN support
->   ARM: dts: imx6qdl-kontron-samx6i: fix node names
->   ARM: dts: imx6qdl-kontron-samx6i: fix PCIe reset polarity
->   ARM: dts: imx6qdl-kontron-samx6i: remove wake-up-gpio property
->   dt-bindings: arm: fsl: document Kontron SMARC-sAMX6i boards
->   ARM: dts: imx6qdl-kontron-samx6i: add actual device trees
-> 
->  .../devicetree/bindings/arm/fsl.yaml          |  12 ++
->  arch/arm/boot/dts/nxp/imx/Makefile            |   2 +
->  .../nxp/imx/imx6dl-kontron-samx6i-ads2.dts    |  12 ++
->  .../dts/nxp/imx/imx6dl-kontron-samx6i.dtsi    |   2 +-
->  .../dts/nxp/imx/imx6q-kontron-samx6i-ads2.dts |  12 ++
->  .../dts/nxp/imx/imx6q-kontron-samx6i.dtsi     |  25 +--
->  .../nxp/imx/imx6qdl-kontron-samx6i-ads2.dtsi  | 148 ++++++++++++++++++
->  .../dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi   |  58 ++++---
->  8 files changed, 225 insertions(+), 46 deletions(-)
->  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dts
->  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dts
->  create mode 100644 arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i-ads2.dtsi
-> 
-> --
-> 2.39.2
-> 
-> 
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 
@@ -112,31 +75,16 @@ make sure dt-schema is up to date:
   pip3 install dtschema --upgrade
 
 
-New warnings running 'make CHECK_DTBS=y nxp/imx/imx6dl-kontron-samx6i-ads2.dtb nxp/imx/imx6q-kontron-samx6i-ads2.dtb' for 20240606090206.2021237-1-mwalle@kernel.org:
+New warnings running 'make CHECK_DTBS=y amlogic/meson-g12b-dreambox-one.dtb amlogic/meson-g12b-dreambox-two.dtb' for 20240606094513.3949323-1-christianshewitt@gmail.com:
 
-arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dtb: /ldb: failed to match any schema with compatible: ['fsl,imx6q-ldb', 'fsl,imx53-ldb']
-arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dtb: /ldb: failed to match any schema with compatible: ['fsl,imx6q-ldb', 'fsl,imx53-ldb']
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: /ldb: failed to match any schema with compatible: ['fsl,imx6q-ldb', 'fsl,imx53-ldb']
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: /ldb: failed to match any schema with compatible: ['fsl,imx6q-ldb', 'fsl,imx53-ldb']
-arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dtb: iomuxc-gpr@20e0000: 'ipu1_csi0_mux', 'ipu1_csi1_mux' do not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/soc/imx/fsl,imx-iomuxc-gpr.yaml#
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: iomuxc-gpr@20e0000: 'ipu1_csi0_mux', 'ipu2_csi1_mux' do not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/soc/imx/fsl,imx-iomuxc-gpr.yaml#
-arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dtb: /soc/bus@2000000/pinctrl@20e0000: failed to match any schema with compatible: ['fsl,imx6dl-iomuxc']
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: /soc/bus@2000000/pinctrl@20e0000: failed to match any schema with compatible: ['fsl,imx6q-iomuxc']
-arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dtb: /soc/bus@2100000/mipi@21dc000: failed to match any schema with compatible: ['fsl,imx6-mipi-csi2']
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: /soc/bus@2100000/mipi@21dc000: failed to match any schema with compatible: ['fsl,imx6-mipi-csi2']
-arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dtb: /soc/bus@2100000/vdoa@21e4000: failed to match any schema with compatible: ['fsl,imx6q-vdoa']
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: /soc/bus@2100000/vdoa@21e4000: failed to match any schema with compatible: ['fsl,imx6q-vdoa']
-arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dtb: /soc/ipu@2400000: failed to match any schema with compatible: ['fsl,imx6q-ipu']
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: /soc/ipu@2400000: failed to match any schema with compatible: ['fsl,imx6q-ipu']
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: /soc/ipu@2800000: failed to match any schema with compatible: ['fsl,imx6q-ipu']
-arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dtb: /capture-subsystem: failed to match any schema with compatible: ['fsl,imx-capture-subsystem']
-arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dtb: /display-subsystem: failed to match any schema with compatible: ['fsl,imx-display-subsystem']
-arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i-ads2.dtb: /lcd: failed to match any schema with compatible: ['fsl,imx-parallel-display']
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: /capture-subsystem: failed to match any schema with compatible: ['fsl,imx-capture-subsystem']
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: /display-subsystem: failed to match any schema with compatible: ['fsl,imx-display-subsystem']
-arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i-ads2.dtb: /lcd: failed to match any schema with compatible: ['fsl,imx-parallel-display']
+arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-two.dtb: /soc/bus@ff600000/bus@42000/clock-controller@0: failed to match any schema with compatible: ['amlogic,g12a-audio-clkc']
+arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-one.dtb: /soc/bus@ff600000/bus@42000/clock-controller@0: failed to match any schema with compatible: ['amlogic,g12a-audio-clkc']
+arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-two.dtb: /soc/bus@ff600000/bus@42000/audio-controller@744: failed to match any schema with compatible: ['amlogic,g12a-tohdmitx']
+arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-two.dtb: sys-ctrl@0: '#address-cells', '#size-cells', 'ranges' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/soc/amlogic/amlogic,meson-gx-hhi-sysctrl.yaml#
+arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-one.dtb: /soc/bus@ff600000/bus@42000/audio-controller@744: failed to match any schema with compatible: ['amlogic,g12a-tohdmitx']
+arch/arm64/boot/dts/amlogic/meson-g12b-dreambox-one.dtb: sys-ctrl@0: '#address-cells', '#size-cells', 'ranges' do not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/soc/amlogic/amlogic,meson-gx-hhi-sysctrl.yaml#
 
 
 
