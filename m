@@ -1,103 +1,181 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C7A1953B5
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE67EC153
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717675339; cv=none; b=l8V34g75fY6e7vBkz3uWgDly0xwsbQQJi9svhc5IAMNQ7zOWCeq1K2hFwWAnqjauQCAE0xvWHY8H3xl7w9XIOAKfzsAgizRmdMpzWAavzy+A4X+UuHgMgFslYpuVobNMkGb0NNw0+q5QaYxxHmxQzJX6+iAmMZdhLKtOZWAsdmY=
+	t=1717675410; cv=none; b=FxYHmxJrKgDPCBpQ+sT7vTa47LCh73RDsU4YjtUAxuFTKMBCZKt+zQB27zEWg5ipKBJifrHnz+/eVJFBFRFcKzTbJgA7o12Ub6RZt5g4Y7rdd1L9TjFgCqWaGHJtBjUksBfjUbSRqr5/7DJCAQMH5vArnbHt+Ijb0M/fB5x3txs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717675339; c=relaxed/simple;
-	bh=4bUJYb2nU/Uqt7KYEGDi/qFb4SSmyf/7m+E23emU67Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gbe7v0pKVHLMcHZEXAV/93GxPdIqAbUfz+c5galIa9o2VQJ+MgfhyDiR+djCTQXH526VZI0XpPufXv8/BJoCMC+4iMIpeLcgwQVGW8l4B4zKMEX+Rq0MXc+J5xOc0LbC8XPnp+29aEMtnETl7gZ5Az0t1uTdEYb7+XYVHxlxns8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=djxxwVVI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717675410; c=relaxed/simple;
+	bh=ZC64W4+d+w1mCtWVvbgfFjvEH56VmkQcN4glvoyhyJc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QFeipT+YM9ZGAfLn2qL85bOn7nH6q/F0oqLYEp9YRvPOuNyhamJpZbU00dRLzrsGKZx2C+emvuT5rjchpkIff8xRXIWLhl1s8YCO8j/6CBTyUoPzYkPjiPsNISlfLMSBLotUjR553KuOALEecYNN6IzZRulsLHEzHbigmhQo0HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i3xxWfNA; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="djxxwVVI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717675336;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XWWTK5qhVcanDQ3qGq7g2oah+h7PvOaUzbsjJCySE6U=;
-	b=djxxwVVIa78SaPeREWZMX4uCQq4nnr7NuXCVmPDsjI0GIVvl+BpLH70fYrQoiTKoOZPgKW
-	5Py2Oqt1/YtUBkQzbJN9XA8hgVyhN1nuMdPbrVcAUouYTPRmMIeKs3xdDocnKffwm+Aiyy
-	MTD0S2Th+5hZBn+xGZHtsBjiqZEwFLI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-452-0yHxYiYcN1akpk4CRgImlw-1; Thu, 06 Jun 2024 08:02:11 -0400
-X-MC-Unique: 0yHxYiYcN1akpk4CRgImlw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7F13F811E8E;
-	Thu,  6 Jun 2024 12:02:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.3])
-	by smtp.corp.redhat.com (Postfix) with SMTP id B61B91C0005E;
-	Thu,  6 Jun 2024 12:02:07 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  6 Jun 2024 14:00:41 +0200 (CEST)
-Date: Thu, 6 Jun 2024 14:00:38 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave@sr71.net>, Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>
-Subject: Re: [PATCH 3/3, v4] x86/fpu: Remove init_task FPU state
- dependencies, add debugging warning for PF_KTHREAD tasks
-Message-ID: <20240606120038.GB22450@redhat.com>
-References: <20240605083557.2051480-1-mingo@kernel.org>
- <20240605083557.2051480-4-mingo@kernel.org>
- <20240605141733.GC25006@redhat.com>
- <CAHk-=wi4773Ls82kqVbPmM1deghS2NXkHNCCzWPc270kcByXPA@mail.gmail.com>
- <20240605162610.GF25006@redhat.com>
- <CAHk-=wg2zJgy69j8n6C9T4YARkxcJ09SFkpMiqrCqhChf0s3NQ@mail.gmail.com>
- <ZmFziN0i10sILaIo@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i3xxWfNA"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a68ee841138so104212466b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 05:03:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717675407; x=1718280207; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=EhzgN21teDTF/ZW3qgf+NvcxVJfop3KgFTk3I1MLoU0=;
+        b=i3xxWfNAx7aUVvtHaboUeK7VrdjgDsVq2xCS1IM8l78h/wwDe75WFzV8tpQ/V6h072
+         G6iBP0ngjE9HmJSRtuMVsUp3Jg9YRGmeC+pdfaSLwSsZxSmUDIe9EKs0KEFIS5iPtvw6
+         0Eqp45QGbMqdOObg/WnWdwhoDha2OSYGdHTM+X8M+r1KfI1DAW8NZP2hCABGu9Uw1Vk5
+         Tm7dPwG7OVFVsAJowi38/m9kiY0wlQzCmFZiOVWtMWSYpVX5uaOectfb1fiJtp5nTnGg
+         eMOamuoi0y0bdWYEGTvl3++l1DROKvo3MBpwKMXoF/TzeQmAMY+Q2D+ha5qNxKnCpOk8
+         QKTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717675407; x=1718280207;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EhzgN21teDTF/ZW3qgf+NvcxVJfop3KgFTk3I1MLoU0=;
+        b=DRJt/gQLJGFaXYuHVvTkn09NqCIQ4cKrkq3CIY0gAMPqL7qx8uIK3d/3HLvGdJyxKM
+         o7t6CqmNo+Tvmm/VgZ2supH+70KvYKWGAQ8WlMdYLMnW/ZYfG5giBY4dZSJBGR/CvdGu
+         dx34vP9PxyT41V58z5bBBsLdD0rQ9z9CYPKroA3N0gd8HL73epkv/MKQ+ZGBmOb2HCrx
+         gYEN/pkqCXrII3mvj+Vqa9/ZM7/ufPXpWQoTC0Dm66HbJVp9TahtQMQA61MvbW5KZNTj
+         MPIhlJxpy+OMW0nj7zCB1N8v/baTG0neI8aDIVsny9WRF0NElGUeOZH6RY9plAPsB7Df
+         /qtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXX0wHXPAr6shF3IJQw5IHzaMjSJr037xn84bIQ0KhoH1M+h4rAobTJn0kPBWnHeLm+bX/vyXKzikv4RQW7SSS2QJ/fu3WdHlq5Fure
+X-Gm-Message-State: AOJu0YzBH2wWjaESUzTUBb9lPzHUpAqPGh0nDd8bXIkPSNNa8SxnAclU
+	qmRJqn4NXUt+933USl+s6dBO6Ow3dX2NwRO3Spc71LSpHcvYoAqlCgYuFCYvljA=
+X-Google-Smtp-Source: AGHT+IFxfjWGrWlEFaeC88RJhH+tXUQS7F8xlGUVGHn8bDw/cok9mz5kkvNfMjnQ9TIj9poiaHp4OA==
+X-Received: by 2002:a17:906:c44d:b0:a6b:c993:7ede with SMTP id a640c23a62f3a-a6bc9938015mr258898966b.11.1717675407204;
+        Thu, 06 Jun 2024 05:03:27 -0700 (PDT)
+Received: from [192.168.128.139] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c806ebd48sm88558666b.108.2024.06.06.05.03.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 05:03:26 -0700 (PDT)
+Message-ID: <444f6a34-6636-44b0-850b-777c44fd62dd@linaro.org>
+Date: Thu, 6 Jun 2024 14:03:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmFziN0i10sILaIo@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/msm/adreno: De-spaghettify the use of memory barriers
+To: Will Deacon <will@kernel.org>, Andrew Halaney <ahalaney@redhat.com>
+Cc: Akhil P Oommen <quic_akhilpo@quicinc.com>, Rob Clark
+ <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Clark <robdclark@chromium.org>, linux-arm-msm@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20240508-topic-adreno-v1-1-1babd05c119d@linaro.org>
+ <20240514183849.6lpyplifero5u35r@hu-akhilpo-hyd.qualcomm.com>
+ <ae4a77wt3kc73ejshptldqx6ugzrqguyq7etbbu54y4avhbdlt@qyt4r6gma7ev>
+ <20240516145005.gdksmvxp35m45ifh@hu-akhilpo-hyd.qualcomm.com>
+ <5vyrmxvkurdstqfiatxfqcqljwyiswda2vpkea27ighb2eqbav@n24yzdykbc23>
+ <20240604144055.GE20384@willie-the-truck>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240604144055.GE20384@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 06/06, Ingo Molnar wrote:
->
-> I changed the debug check to test for PF_KTHREAD, and to return NULL:
->
-> +#ifdef CONFIG_X86_DEBUG_FPU
-> +struct fpu *x86_task_fpu(struct task_struct *task)
-> +{
-> +	if (WARN_ON_ONCE(task->flags & PF_KTHREAD))
-> +		return NULL;
-> +
-> +	return (void *)task + sizeof(*task);
-> +}
-> +#endif
+On 4.06.2024 4:40 PM, Will Deacon wrote:
+> On Thu, May 16, 2024 at 01:55:26PM -0500, Andrew Halaney wrote:
+>> On Thu, May 16, 2024 at 08:20:05PM GMT, Akhil P Oommen wrote:
+>>> On Thu, May 16, 2024 at 08:15:34AM -0500, Andrew Halaney wrote:
+>>>> If I understand correctly, you don't need any memory barrier.
+>>>> writel()/readl()'s are ordered to the same endpoint. That goes for all
+>>>> the reordering/barrier comments mentioned below too.
+>>>>
+>>>> device-io.rst:
+>>>>
+>>>>     The read and write functions are defined to be ordered. That is the
+>>>>     compiler is not permitted to reorder the I/O sequence. When the ordering
+>>>>     can be compiler optimised, you can use __readb() and friends to
+>>>>     indicate the relaxed ordering. Use this with care.
+>>>>
+>>>> memory-barriers.txt:
+>>>>
+>>>>      (*) readX(), writeX():
+>>>>
+>>>> 	    The readX() and writeX() MMIO accessors take a pointer to the
+>>>> 	    peripheral being accessed as an __iomem * parameter. For pointers
+>>>> 	    mapped with the default I/O attributes (e.g. those returned by
+>>>> 	    ioremap()), the ordering guarantees are as follows:
+>>>>
+>>>> 	    1. All readX() and writeX() accesses to the same peripheral are ordered
+>>>> 	       with respect to each other. This ensures that MMIO register accesses
+>>>> 	       by the same CPU thread to a particular device will arrive in program
+>>>> 	       order.
+>>>>
+>>>
+>>> In arm64, a writel followed by readl translates to roughly the following
+>>> sequence: dmb_wmb(), __raw_writel(), __raw_readl(), dmb_rmb(). I am not
+>>> sure what is stopping compiler from reordering  __raw_writel() and __raw_readl()
+>>> above? I am assuming iomem cookie is ignored during compilation.
+>>
+>> It seems to me that is due to some usage of volatile there in
+>> __raw_writel() etc, but to be honest after reading about volatile and
+>> some threads from gcc mailing lists, I don't have a confident answer :)
+>>
+>>>
+>>> Added Will to this thread if he can throw some light on this.
+>>
+>> Hopefully Will can school us.
+> 
+> The ordering in this case is ensured by the memory attributes used for
+> ioremap(). When an MMIO region is mapped using Device-nGnRE attributes
+> (as it the case for ioremap()), the "nR" part means "no reordering", so
+> readX() and writeX() to that region are ordered wrt each other.
+> 
+> Note that guarantee _doesn't_ apply to other flavours of ioremap(), so
+> e.g. ioremap_wc() won't give you the ordering.
+> 
+> Hope that helps,
 
-How many users enable CONFIG_X86_DEBUG_FPU? Perhaps it makes sense
-to check PF_KTHREAD unconditionally for the start, them add
-if (IS_ENABLED(X86_DEBUG_FPU)). But I won't insist.
+Just to make sure I'm following, would mapping things as nGnRnE effectively
+get rid of write buffering, perhaps being a way of debugging whether that
+in particular is causing issues (at the cost of speed)?
 
-
-For the record, I think we can later change this code to check
-
-	task->flags & (PF_KTHREAD | PF_USER_WORKER)
-
-but I guess this needs some (simple) changes in the ptrace/coredump
-paths.
-
-Oleg.
-
+Konrad
