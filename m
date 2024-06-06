@@ -1,1053 +1,359 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BCC190697;
-	Thu,  6 Jun 2024 12:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC67195B0E
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717678160; cv=none; b=bkji9Yo8qJr+jKAsNHELyiy6ZSsLbvz5eZovyWzwCKp5+0KDjYxJqjQq1E4u1qFGqzsTtMcMfqwcMwYJcsyLRZiiX6KjzYN3aC9BTbUaEl2BpFeaFtY4CcV0JuGiOWO5BUVcpc0sUwXOsiZJwpFl/ulYrDVmWUzqYg/KrTV3Rms=
+	t=1717678229; cv=none; b=iFMMWU+MWXYftnYovAfNjYFJS8uyGJBGcTOzerkvmRCgAYlYAFToGOVh4j4UEKBEVQy4ARf9X7VAKT/WHbYKitK7bWLNYpgFfHZ9J/+w0EKmdMP1X7VsdPq2hJJ+lUGs/mddei4neptLmIalyPBzo5SUAfy0MkSGRlEca27c99M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717678160; c=relaxed/simple;
-	bh=uKBB9O4azqXHijy9sqytye/+5PkNXFJ+zN7tzRd7pV0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Iul5zOnxVlKSaAlrgBspu2kkiqtUBAAIdzGr7PScTpzZ+2KVFBkk1kuWUB0F11m+4+JHHEupvawCuntx8VWInWMO5xI8guux/MDTbvDc9W2M4y8fcJXNxK+UO4xd14B+HZKNDK4c2RVoDrsM8Kp8Nth9rBvHBtexz0b2fWwJeds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MGqbjRF8; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717678229; c=relaxed/simple;
+	bh=G9/EX3+57FfdUlOscWXeQJd+tO85l3+9+DymQuRBI/M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cwlQVUi3zudbzTKajbffMR04Bud65vcxL4xaRpQmN9dOMYITRBX0LGMonMVdy5crqhFy74aJreKRU3iIfDokqz1XM3cgmw6VHm0D7ZH2y/K/vKYm6IDSf+RgTTK8hDHTyYCDynECataQcj6PJVbmRcHfZPOmHUrOTef3rPES6+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eTmc4ljl; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MGqbjRF8"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-35dbfe31905so877586f8f.2;
-        Thu, 06 Jun 2024 05:49:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eTmc4ljl"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-421396e3918so12477325e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 05:50:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717678156; x=1718282956; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NZAK+iDvm4gPLydt6fB+0xAaFXVjRHksEdKgG+bazWA=;
-        b=MGqbjRF8R7ulkSM8zQyLh6oXRRE9YZzATPB0+w+ZPg6tXfUbANcM7wpUZb53NVe2Ku
-         zd/N1zJ3Rt+oW7YA+6mqWiP3BN6lRmrdIhvQOyJFjn4CBBZEH/50Lr8M3cJGw86o9E/o
-         DtiAEQxgn/5gPz7SU1JzTUOD574MnADD1qO5ZNz4tw7IRmpLRJEwzOrnhC73JATLLhxD
-         NFL4awXcZZRHg/H9ftZv5hXXJiOPG5Z+fhgLb9lbhxj3CT8niajRzrjdttBds4Sp1Evf
-         Twpgb0LkzHUL2Kad8NtbJ8iU0uMuzjJA1niXFkNIE6szSxy1JPcsTyaKlFwhfC0QU/8O
-         RkRg==
+        d=linaro.org; s=google; t=1717678225; x=1718283025; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NYihygzERCiTGhiu5LEngitXdw6rx60D9mH07NjCb/4=;
+        b=eTmc4ljlmAYQfxXF9QWjCOnHlI4r14010v/iv65/UqSzXM09aIk7SYVwQuEN0z585X
+         zZMH+G2Ptfq6UvZKwNLGHX7UNP7s1cMoQwm6fJ726S+Ta/4Rh84+vnjs6z26HxzEij8P
+         6147HuKbBR8k6Pm1P6sAz3pqd3yA/5eef2F+KFkvWdYweIzcggHmNqnVy5tlOyZUpwRZ
+         RSPAvh9cnuGzjc/FTdWsGBAQ3vtymXipFFhnT2XYc9hblt/oS2+egBWN0/ip3832qQsX
+         miMLMzyvh0+9jSDiBmmCEmJOZBY8IndNE5aC25zz4lBuA6jIOrsZybWUAYmWPH8WjAnl
+         SFSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717678156; x=1718282956;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NZAK+iDvm4gPLydt6fB+0xAaFXVjRHksEdKgG+bazWA=;
-        b=wCB5YN/UFIF0d+r6L1OIABaKBYcvC0OPlE6OI/tJzsdXQ9gszktqdNsQ1vDwtiM9gS
-         Haad+Euq8MNYlyzIB8d6Cp1EYqIKt/xE0NFNpDuX6I9cxn7i3PapvjahNHMf+OpjTFWQ
-         n2OXxmley4cwr/66jqkoD7e/gdRa6TB8bCKWoy88dC1wxQChSFlgOxMbG0H1ONdw0NT0
-         4as4HvFtowLptirQIB+HrQNROEtpi7prSzoZapSSO6G+v1Yt0xbPTUBNgoqgp/AEOx7Z
-         SI7OdJVTIci+qlAWlheokxzBAVwnJ0vmCjVxwdrfL9gx+qaizF2wZvk5USZQqBX7zzbg
-         OEWA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9A5ellARUeStagz9abvksMSwnGRlQWgla5Fl28Tt16JnSG1jA8ZDuv+ytagzrCKldFAkF+LVITs+mxXU+WqgTFiH/IPr6Jo3AGaqhKXf/8ZKq+/TK5UroCIZVYfoFAvKEbM75evQtDwlalwRW5YvZna+iAxsCQv6xZskYh4jGZwjcqg==
-X-Gm-Message-State: AOJu0Yxmp5BUeP+xxTlMmr+2j/WS6KT2+7Ed2EjwCgSAnpqV2R1YWUlf
-	DatWZhTAHrKZ9Rka24iowaWZiCesJGUV1EkOQGuEcsLU4z7gHv8r
-X-Google-Smtp-Source: AGHT+IGkVj4XhKVFnqt1zLTMxZhOcZZZZseXZsz0rFNEg6j/TAOGwTyj/rVZOOOihvZWlHIfQP1LTg==
-X-Received: by 2002:a5d:4b86:0:b0:35e:83f4:3e83 with SMTP id ffacd0b85a97d-35e84062ca7mr3733149f8f.11.1717678156382;
-        Thu, 06 Jun 2024 05:49:16 -0700 (PDT)
-Received: from localhost.localdomain ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d4cbb4sm1480316f8f.44.2024.06.06.05.49.15
+        d=1e100.net; s=20230601; t=1717678225; x=1718283025;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NYihygzERCiTGhiu5LEngitXdw6rx60D9mH07NjCb/4=;
+        b=OK5959ZtkZst9fNGYTg5TbUzTAzA1DDNXBjsv8kvkwg5jyKaviqOfhwSWp33CjpQiy
+         14/xyrJ9fPHFL4QGRzEA841bh4fyC/IJssiCKrAHCT7W1iXhnvd6GLWrJjcrUeDG/Vft
+         TgW3nkalIpl7KWGYlgxcE3vUZlsF/CJIiCQXlP3T7LSCZEODxu4+6UqnLXeJTa820szU
+         YXIa4OOCfTvxOQhFN2oFfvTiQFzIFpOMjr5BjWCP1KqhUZVfBZNsIDQMG3/4+N3f0eTm
+         vg3mfOZ7BahmQBIM5pPaafStGD3tfAOLPbKGmu6TN0fgEMdM63TwNpobg3uphzX7JOpy
+         hnFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUM4hlt/yrgEinNp1WaQaNMTETtlZHeflTTRU/QQ7ik2o413BKk1H1fORT5tWXuGd59sS/WKyR33uEDv+p6NE9YgcxqWp0z5UXQI2R3
+X-Gm-Message-State: AOJu0Yy5g30mJTmY2JzTvOme6k9cTclavxjB/pK1JTnuutXQbHpk/6iL
+	Mz/w4tttUPLY85j/ttwTajvnL5HlLEkMQ3e9fXsoWWFcCzrHNA06TvgfhVihD14=
+X-Google-Smtp-Source: AGHT+IFXEIsQlTSTK2pgg7w6uh+Q3FgfbiLCFNldnGDduvCpt+AJyudr1dMYOx4fUbZIuBstOhA1Lw==
+X-Received: by 2002:a05:600c:4692:b0:421:3901:196 with SMTP id 5b1f17b1804b1-4215633a32cmr47772525e9.27.1717678224769;
+        Thu, 06 Jun 2024 05:50:24 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215814f141sm54588255e9.42.2024.06.06.05.50.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 05:49:15 -0700 (PDT)
-From: Mudit Sharma <muditsharma.info@gmail.com>
-To: jic23@kernel.org,
-	lars@metafoo.de,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	robh@kernel.org
-Cc: ivan.orlov0322@gmail.com,
-	javier.carrasco.cruz@gmail.com,
-	Mudit Sharma <muditsharma.info@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v3 2/2] iio: light: ROHM BH1745 colour sensor
-Date: Thu,  6 Jun 2024 13:45:32 +0100
-Message-ID: <20240606124539.60757-4-muditsharma.info@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240606124539.60757-1-muditsharma.info@gmail.com>
-References: <20240606124539.60757-1-muditsharma.info@gmail.com>
+        Thu, 06 Jun 2024 05:50:24 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Thu, 06 Jun 2024 14:50:22 +0200
+Subject: [PATCH v6] arch: arm64: dts: sm8650-hdk: add support for the
+ Display Card overlay
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240606-topic-sm8650-upstream-hdk-v6-1-fb034fe864cc@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAI2wYWYC/43OwW7DIAyA4VepOI8JbCBkp73H1AMD06CtSQRZ1
+ KnKu4/0kk2Roh1/S/7sOyuUExX2crqzTHMqaehrmKcT853rL8RTqM1AgBIAyKdhTJ6XqzVa8K+
+ xTJnclXfhgxNIH4OJMpBldX/MFNPtYb+da3epTEP+fpya5Tr9jzpLLrj33hmlfWiFfP1MvcvD8
+ 5AvbGVn2CiU9oiCSr0bdDoo7RqrdhT+okAfUVgpFdHo0LQILu4otVEK4IhS61eIbYvkHJDdUXq
+ jjDBHlOaS62AbG1GohvAPtSzLDwW9stfvAQAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7380;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=G9/EX3+57FfdUlOscWXeQJd+tO85l3+9+DymQuRBI/M=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmYbCPIkApLPdMmjAT+VZidsoFpVoa3+1OPJz0Awf7
+ tV2qvaOJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZmGwjwAKCRB33NvayMhJ0ZTGD/
+ 4vEDc+iHjoMry3socH7kycn40I+gvtVkDdokgOK/biJXF1gy7Z7NRdxd8KRFykMOxfaucqYZBJSXFI
+ crTLUHR/s0E/BzYY/Uby/joCsR4vMDCDIFfxNKLAXF5ZQUnGlUmNGN+vRNeSMrPid0qZ9itR+WXz37
+ ZdnZv/jRRs7uHM0Lcmo4oaInCdRCK734gvDAWCI/n8k5lUYjYDRQCIuN3kdkUIj//2KAcVKk/h0p2I
+ JQ/TY/wx4My6bLKLKSD1Hn4R2K2a61t/+69qgf6AKG9rzd0jddWltESL9b38V2xeqmUC6wZv5IOZt8
+ xRNVgV1GFJYeIV1k6+1Gz6ACkA6cqhadJuIcAML9WcgmE0hNeXQA1fBqPZQZrYPKIqaoRyVaRZUxwR
+ eGYQK0WGkjs6RCtDIel5k6v0zwiy4tgHP5shv/Z/ZuDnawxyJhwyhipnQ647u46CyFtRBsobEroViM
+ qw65acX+YNwROtcCyoEbES/c10UGi7AS2JgjVaBuQ3MKHW4Mx6CCJWlkeUuPAi1KxS6kSolAitMV5w
+ dtYm56k/H6YuV6/PEZhACnQob4vqvofdCHPkWLWzYGcTxs7ik0lXZChoBOY2mog8zTPp3BnhMEXA8/
+ v68l5+GL0Cc1nxpBfIlCJWQGyNRTWGcpehoTXQ35F990iij+imjGj+/Fz8ew==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Add support for BH1745, which is an I2C colour sensor with red, green,
-blue and clear channels. It has a programmable active low interrupt
-pin. Interrupt occurs when the signal from the selected interrupt
-source channel crosses set interrupt threshold high or low level.
+With the SM8650-HDK, a Display Card kit can be connected to provide
+a VTDR6130 display with Goodix Berlin Touch controller.
 
-This driver includes device attributes to configure the following:
-- Interrupt pin latch: The interrupt pin can be configured to
-  be latched (until interrupt register (0x60) is read or initialized)
-  or update after each measurement.
-- Interrupt source: The colour channel that will cause the interrupt
-  when channel will cross the set threshold high or low level.
+In order to route the DSI lanes to the connector for the Display
+Card kit, a switch must be changed on the board.
 
-This driver also includes device attributes to present valid
-configuration options/values for:
-- Integration time
-- Interrupt colour source
-- Hardware gain
+The HDMI nodes are disabled since the DSI lanes are shared with
+the DSI to HDMI transceiver.
 
-Add myself as the maintainer for this driver in MAINTAINERS.
+Add support for this card as an overlay and apply it it at
+build-time to the sm8650-hdk dtb.
 
-Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
-Reviewed-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+Tested-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
-v2->v3:
-- Squash commit for addition to MAINTAINERS
-- Fix code style for consistency:
-  - New line before last 'return'
-  - Use variable name 'value' instead of 'val' in
-    'bh1745_set_trigger_state()'
-  - Align function parameters to match parenthesis
-  - Avoid use of magic number
-- Use named enum instead of anonymous enum
-- Use 'guard(mutex)(&data->lock)' instead of 'mutex_lock()'
-  'mutex_unlock()'
-- Only initialize 'ret' and 'value' when necessary
-- Fix and optimize logic for `in_interrupt_latch_store()` 
-- Fix error handling in irq , trigger handlers and dev attribute for
-  latch
+The SM8650-HDK is an embedded development platforms for the
+Snapdragon 8 Gen 3 SoC aka SM8650, with the following features:
+- Qualcomm SM8650 SoC
+- 16GiB On-board LPDDR5
+- On-board WiFi 7 + Bluetooth 5.3/BLE
+- On-board UFS4.0
+- M.2 Key B+M Gen3x2 PCIe Slot
+- HDMI Output
+- USB-C Connector with DP Almode & Audio Accessory mode
+- Micro-SDCard Slot
+- Audio Jack with Playback and Microphone
+- 2 On-board Analog microphones
+- 2 On-board Speakers
+- 96Boards Compatible Low-Speed and High-Speed connectors [1]
+- For Camera, Sensors and external Display cards
+- Compatible with the Linaro Debug board [2]
+- SIM Slot for Modem
+- Debug connectors
+- 6x On-Board LEDs
 
- MAINTAINERS                |   6 +
- drivers/iio/light/Kconfig  |  12 +
- drivers/iio/light/Makefile |   1 +
- drivers/iio/light/bh1745.c | 866 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 885 insertions(+)
- create mode 100644 drivers/iio/light/bh1745.c
+An optional Display Card kit can be connected on top,
+an overlay is handled to add support for the DSI Display
+and Touch Controller.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d6c90161c7bf..024c14738dc7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19407,6 +19407,12 @@ S:	Supported
- F:	drivers/power/supply/bd99954-charger.c
- F:	drivers/power/supply/bd99954-charger.h
- 
-+ROHM BH1745 COLOUR SENSOR
-+M:	Mudit Sharma <muditsharma.info@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/iio/light/bh1745.c
+Product Page: [3]
+
+Dependencies: None
+
+[1] https://www.96boards.org/specifications/
+[2] https://git.codelinaro.org/linaro/qcomlt/debugboard
+[3] https://www.lantronix.com/products/snapdragon-8-gen-3-mobile-hardware-development-kit/
+
+To: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+
+Changes in v6:
+- added comment explaining why we disable nodes
+- removed useles comment on why we add the port/endpoint/address/size-cells
+- added Konrad's review
+- Link to v5: https://lore.kernel.org/r/20240606-topic-sm8650-upstream-hdk-v5-1-5d878f3047e3@linaro.org
+
+Changes in v5:
+- Resend the display card overlay now the I2C crash is fixed
+- Link to v4: https://lore.kernel.org/r/20240422-topic-sm8650-upstream-hdk-v4-0-b33993eaa2e8@linaro.org
+
+Changes in v4:
+- Rebased on next and fixed the apply failures
+- Link to v3: https://lore.kernel.org/r/20240325-topic-sm8650-upstream-hdk-v3-0-4f365d7932af@linaro.org
+
+Changes in v3:
+- fixed regulator node name to fix ordering
+- deleted pcie_1_phy_aux clock
+- removed undeeded mdss_mdp status okay
+- collected revied & tested tags
+- Link to v2: https://lore.kernel.org/r/20240318-topic-sm8650-upstream-hdk-v2-0-b63a5d45a784@linaro.org
+
+Changes in v2:
+- Fixed commit messages with links, and recently added product page URL
+- Swapped i2c3/i2c6 nodes
+- Moved pcie_1_phy_aux_clk under pcie1_phy
+- Removed duplicate mdp_vsync pinctrl state
+- Collected review & tested tags
+- Link to v1: https://lore.kernel.org/r/20240223-topic-sm8650-upstream-hdk-v1-0-ccca645cd901@linaro.org
+---
+ arch/arm64/boot/dts/qcom/Makefile                  |   4 +
+ .../boot/dts/qcom/sm8650-hdk-display-card.dtso     | 141 +++++++++++++++++++++
+ 2 files changed, 145 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 56992fc3fc59..0c1cebd16649 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -250,6 +250,10 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-qrd.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-samsung-q5q.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8550-sony-xperia-yodo-pdx234.dtb
 +
- ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
- M:	Tomasz Duszynski <tduszyns@gmail.com>
- S:	Maintained
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index 9a587d403118..6e0bd2addf9e 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -114,6 +114,18 @@ config AS73211
- 	 This driver can also be built as a module.  If so, the module
- 	 will be called as73211.
- 
-+config BH1745
-+	tristate "ROHM BH1745 colour sensor"
-+	depends on I2C
-+	select REGMAP_I2C
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	help
-+	  Say Y here to build support for the ROHM bh1745 colour sensor.
++sm8650-hdk-display-card-dtbs	:= sm8650-hdk.dtb sm8650-hdk-display-card.dtbo
 +
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called bh1745.
-+
- config BH1750
- 	tristate "ROHM BH1750 ambient light sensor"
- 	depends on I2C
-diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-index a30f906e91ba..939a701a06ac 100644
---- a/drivers/iio/light/Makefile
-+++ b/drivers/iio/light/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_APDS9300)		+= apds9300.o
- obj-$(CONFIG_APDS9306)		+= apds9306.o
- obj-$(CONFIG_APDS9960)		+= apds9960.o
- obj-$(CONFIG_AS73211)		+= as73211.o
-+obj-$(CONFIG_BH1745)		+= bh1745.o
- obj-$(CONFIG_BH1750)		+= bh1750.o
- obj-$(CONFIG_BH1780)		+= bh1780.o
- obj-$(CONFIG_CM32181)		+= cm32181.o
-diff --git a/drivers/iio/light/bh1745.c b/drivers/iio/light/bh1745.c
++dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-hdk-display-card.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-hdk.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-qrd.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sm8650-hdk-display-card.dtso b/arch/arm64/boot/dts/qcom/sm8650-hdk-display-card.dtso
 new file mode 100644
-index 000000000000..d0b14460e7c4
+index 000000000000..cb102535838d
 --- /dev/null
-+++ b/drivers/iio/light/bh1745.c
-@@ -0,0 +1,866 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/arch/arm64/boot/dts/qcom/sm8650-hdk-display-card.dtso
+@@ -0,0 +1,141 @@
++// SPDX-License-Identifier: BSD-3-Clause
 +/*
-+ * ROHM BH1745 digital colour sensor driver
-+ *
-+ * Copyright (C) Mudit Sharma <muditsharma.info@gmail.com>
-+ *
-+ * 7-bit I2C slave addresses:
-+ *  0x38 (ADDR pin low)
-+ *  0x39 (ADDR pin high)
-+ *
++ * Copyright (c) 2024, Linaro Limited
 + */
 +
-+#include <linux/i2c.h>
-+#include <linux/mutex.h>
-+#include <linux/util_macros.h>
-+#include <linux/iio/events.h>
-+#include <linux/regmap.h>
++/*
++ * Display Card kit overlay
++ * This requires S5702 Switch 7 to be turned to OFF to route DSI0 to the display panel
++ */
 +
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
 +
-+#define BH1745_MOD_NAME "bh1745"
++/dts-v1/;
++/plugin/;
 +
-+/* BH1745 config regs */
-+#define BH1745_SYS_CTRL 0x40
++/* Disable HDMI bridge related nodes (mutually exclusive with the display card) */
 +
-+#define BH1745_MODE_CTRL_1 0x41
-+#define BH1745_MODE_CTRL_2 0x42
-+#define BH1745_MODE_CTRL_3 0x44
-+
-+#define BH1745_INTR 0x60
-+#define BH1745_INTR_STATUS BIT(7)
-+
-+#define BH1745_PERSISTENCE 0x61
-+
-+#define BH1745_TH_LSB 0X62
-+#define BH1745_TH_MSB 0X63
-+
-+#define BH1745_TL_LSB 0X64
-+#define BH1745_TL_MSB 0X65
-+
-+#define BH1745_THRESHOLD_MAX 0xFFFF
-+#define BH1745_THRESHOLD_MIN 0x0
-+
-+#define BH1745_MANU_ID 0X92
-+
-+/* BH1745 output regs */
-+#define BH1745_R_LSB 0x50
-+#define BH1745_R_MSB 0x51
-+#define BH1745_G_LSB 0x52
-+#define BH1745_G_MSB 0x53
-+#define BH1745_B_LSB 0x54
-+#define BH1745_B_MSB 0x55
-+#define BH1745_CLR_LSB 0x56
-+#define BH1745_CLR_MSB 0x57
-+
-+#define BH1745_SW_RESET BIT(7)
-+#define BH1745_INT_RESET BIT(6)
-+
-+#define BH1745_MEASUREMENT_TIME_MASK GENMASK(2, 0)
-+
-+#define BH1745_RGBC_EN BIT(4)
-+
-+#define BH1745_ADC_GAIN_MASK GENMASK(1, 0)
-+
-+#define BH1745_INT_ENABLE BIT(0)
-+#define BH1745_INT_SIGNAL_ACTIVE BIT(7)
-+
-+#define BH1745_INT_SIGNAL_LATCHED BIT(4)
-+#define BH1745_INT_SIGNAL_LATCH_OFFSET 4
-+
-+#define BH1745_INT_SOURCE_MASK GENMASK(3, 2)
-+#define BH1745_INT_SOURCE_OFFSET 2
-+
-+#define BH1745_INT_TIME_AVAILABLE "0.16 0.32 0.64 1.28 2.56 5.12"
-+#define BH1745_HARDWAREGAIN_AVAILABLE "1 2 16"
-+#define BH1745_INT_COLOUR_CHANNEL_AVAILABLE \
-+	"0 (Red Channel) 1 (Green Channel) 2 (Blue channel) 3 (Clear channel)"
-+
-+static const int bh1745_int_time[][2] = {
-+	{ 0, 160000 }, /* 160 ms */
-+	{ 0, 320000 }, /* 320 ms */
-+	{ 0, 640000 }, /* 640 ms */
-+	{ 1, 280000 }, /* 1280 ms */
-+	{ 2, 560000 }, /* 2560 ms */
-+	{ 5, 120000 }, /* 5120 ms */
++&i2c6 {
++	status = "disabled";
 +};
 +
-+static const u8 bh1745_gain_factor[] = { 1, 2, 16 };
-+
-+enum bh1745_int_source {
-+	BH1745_INT_SOURCE_RED,
-+	BH1745_INT_SOURCE_GREEN,
-+	BH1745_INT_SOURCE_BLUE,
-+	BH1745_INT_SOURCE_CLEAR,
++&lt9611_1v2 {
++	status = "disabled";
 +};
 +
-+enum bh1745_gain {
-+	BH1745_ADC_GAIN_1X,
-+	BH1745_ADC_GAIN_2X,
-+	BH1745_ADC_GAIN_16X,
++&lt9611_3v3 {
++	status = "disabled";
 +};
 +
-+enum bh1745_measurement_time {
-+	BH1745_MEASUREMENT_TIME_160MS,
-+	BH1745_MEASUREMENT_TIME_320MS,
-+	BH1745_MEASUREMENT_TIME_640MS,
-+	BH1745_MEASUREMENT_TIME_1280MS,
-+	BH1745_MEASUREMENT_TIME_2560MS,
-+	BH1745_MEASUREMENT_TIME_5120MS,
++&vreg_bob_3v3 {
++	status = "disabled";
 +};
 +
-+enum bh1745_presistence_value {
-+	BH1745_PRESISTENCE_UPDATE_TOGGLE,
-+	BH1745_PRESISTENCE_UPDATE_EACH_MEASUREMENT,
-+	BH1745_PRESISTENCE_UPDATE_FOUR_MEASUREMENT,
-+	BH1745_PRESISTENCE_UPDATE_EIGHT_MEASUREMENT,
++&lt9611_codec {
++	status = "disabled";
 +};
 +
-+struct bh1745_data {
-+	struct mutex lock;
-+	struct regmap *regmap;
-+	struct i2c_client *client;
-+	struct iio_trigger *trig;
-+	u8 mode_ctrl1;
-+	u8 mode_ctrl2;
-+	u8 int_src;
-+	u8 int_latch;
-+	u8 interrupt;
++&mdss_dsi0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	panel@0 {
++		compatible = "visionox,vtdr6130";
++		reg = <0>;
++
++		reset-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
++
++		vddio-supply = <&vreg_l12b_1p8>;
++		vci-supply = <&vreg_l13b_3p0>;
++		vdd-supply = <&vreg_l11b_1p2>;
++
++		pinctrl-0 = <&disp0_reset_n_active>, <&mdp_vsync>;
++		pinctrl-1 = <&disp0_reset_n_suspend>, <&mdp_vsync>;
++		pinctrl-names = "default", "sleep";
++
++		port {
++			panel0_in: endpoint {
++				remote-endpoint = <&mdss_dsi0_out>;
++			};
++		};
++	};
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@1 {
++			reg = <1>;
++
++			mdss_dsi0_out: endpoint {
++				remote-endpoint = <&panel0_in>;
++			};
++		};
++	};
 +};
 +
-+static const struct regmap_range bh1745_volatile_ranges[] = {
-+	regmap_reg_range(BH1745_MODE_CTRL_2, BH1745_MODE_CTRL_2), /* VALID */
-+	regmap_reg_range(BH1745_R_LSB, BH1745_CLR_MSB), /* Data */
-+	regmap_reg_range(BH1745_INTR, BH1745_INTR), /* Interrupt */
++&spi4 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	status = "okay";
++
++	touchscreen@0 {
++		compatible = "goodix,gt9916";
++		reg = <0>;
++
++		interrupt-parent = <&tlmm>;
++		interrupts = <162 IRQ_TYPE_LEVEL_LOW>;
++
++		reset-gpios = <&tlmm 161 GPIO_ACTIVE_LOW>;
++
++		avdd-supply = <&vreg_l14b_3p2>;
++
++		spi-max-frequency = <1000000>;
++
++		touchscreen-size-x = <1080>;
++		touchscreen-size-y = <2400>;
++
++		pinctrl-0 = <&ts_irq>, <&ts_reset>;
++		pinctrl-names = "default";
++	};
 +};
 +
-+static const struct regmap_access_table bh1745_volatile_regs = {
-+	.yes_ranges = bh1745_volatile_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(bh1745_volatile_ranges),
++&tlmm {
++	disp0_reset_n_active: disp0-reset-n-active-state {
++		pins = "gpio133";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-disable;
++	};
++
++	disp0_reset_n_suspend: disp0-reset-n-suspend-state {
++		pins = "gpio133";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++
++	mdp_vsync: mdp-vsync-state {
++		pins = "gpio86";
++		function = "mdp_vsync";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++
++	ts_irq: ts-irq-state {
++		pins = "gpio161";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-pull-up;
++		output-disable;
++	};
++
++	ts_reset: ts-reset-state {
++		pins = "gpio162";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-pull-up;
++	};
 +};
-+
-+static const struct regmap_range bh1745_read_ranges[] = {
-+	regmap_reg_range(BH1745_SYS_CTRL, BH1745_MODE_CTRL_2),
-+	regmap_reg_range(BH1745_R_LSB, BH1745_CLR_MSB),
-+	regmap_reg_range(BH1745_INTR, BH1745_INTR),
-+	regmap_reg_range(BH1745_PERSISTENCE, BH1745_TL_MSB),
-+	regmap_reg_range(BH1745_MANU_ID, BH1745_MANU_ID),
-+};
-+
-+static const struct regmap_access_table bh1745_ro_regs = {
-+	.yes_ranges = bh1745_read_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(bh1745_read_ranges),
-+};
-+
-+static const struct regmap_range bh1745_writable_ranges[] = {
-+	regmap_reg_range(BH1745_SYS_CTRL, BH1745_MODE_CTRL_2),
-+	regmap_reg_range(BH1745_PERSISTENCE, BH1745_TL_MSB),
-+};
-+
-+static const struct regmap_access_table bh1745_wr_regs = {
-+	.yes_ranges = bh1745_writable_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(bh1745_writable_ranges),
-+};
-+
-+static const struct regmap_config bh1745_regmap = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = BH1745_MANU_ID,
-+	.cache_type = REGCACHE_RBTREE,
-+	.volatile_table = &bh1745_volatile_regs,
-+	.wr_table = &bh1745_wr_regs,
-+	.rd_table = &bh1745_ro_regs,
-+};
-+
-+static const struct iio_event_spec bh1745_event_spec[] = {
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_RISING,
-+		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
-+	},
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_FALLING,
-+		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
-+	},
-+	{
-+		.type = IIO_EV_TYPE_THRESH,
-+		.dir = IIO_EV_DIR_EITHER,
-+		.mask_shared_by_type = BIT(IIO_EV_INFO_PERIOD),
-+	},
-+};
-+
-+#define BH1745_CHANNEL(_colour, _si, _addr)                                   \
-+	{                                                                     \
-+		.type = IIO_INTENSITY, .modified = 1,                         \
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),                 \
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_HARDWAREGAIN) | \
-+					    BIT(IIO_CHAN_INFO_INT_TIME),      \
-+		.event_spec = bh1745_event_spec,                              \
-+		.num_event_specs = ARRAY_SIZE(bh1745_event_spec),             \
-+		.channel2 = IIO_MOD_LIGHT_##_colour, .address = _addr,        \
-+		.scan_index = _si,                                            \
-+		.scan_type = {                                                \
-+			.sign = 'u',                                          \
-+			.realbits = 16,                                       \
-+			.storagebits = 16,                                    \
-+			.endianness = IIO_CPU,                                \
-+		},                                                            \
-+	}
-+
-+static const struct iio_chan_spec bh1745_channels[] = {
-+	BH1745_CHANNEL(RED, 0, BH1745_R_LSB),
-+	BH1745_CHANNEL(GREEN, 1, BH1745_G_LSB),
-+	BH1745_CHANNEL(BLUE, 2, BH1745_B_LSB),
-+	BH1745_CHANNEL(CLEAR, 3, BH1745_CLR_LSB),
-+	IIO_CHAN_SOFT_TIMESTAMP(4),
-+};
-+
-+static int bh1745_write_value(struct bh1745_data *data, u8 reg, void *value,
-+			      size_t len)
-+{
-+	int ret;
-+
-+	ret = regmap_bulk_write(data->regmap, reg, value, len);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev,
-+			"Failed to write to sensor. Reg: 0x%x\n", reg);
-+	}
-+
-+	return ret;
-+}
-+
-+static int bh1745_read_value(struct bh1745_data *data, u8 reg, void *value,
-+			     size_t len)
-+{
-+	int ret;
-+
-+	ret = regmap_bulk_read(data->regmap, reg, value, len);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev,
-+			"Failed to read from sensor. Reg: 0x%x\n", reg);
-+	}
-+
-+	return ret;
-+}
-+
-+static ssize_t in_interrupt_source_show(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	int ret;
-+	int value;
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+
-+	ret = bh1745_read_value(data, BH1745_INTR, &value, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	value &= BH1745_INT_SOURCE_MASK;
-+
-+	return sprintf(buf, "%d\n", value >> 2);
-+}
-+
-+static ssize_t in_interrupt_source_store(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t len)
-+{
-+	int ret;
-+	u16 value;
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+
-+	ret = kstrtou16(buf, 10, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (value > BH1745_INT_SOURCE_CLEAR) {
-+		dev_err(dev,
-+			"Supplied value: '%d' for interrupt source is invalid\n",
-+			value);
-+		return -EINVAL;
-+	}
-+	guard(mutex)(&data->lock);
-+	data->int_src = value;
-+	value = value << BH1745_INT_SOURCE_OFFSET;
-+	ret = bh1745_read_value(data, BH1745_INTR, &data->interrupt, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	data->interrupt &= ~BH1745_INT_SOURCE_MASK;
-+	data->interrupt |= value;
-+	ret = bh1745_write_value(data, BH1745_INTR, &data->interrupt, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static ssize_t in_interrupt_latch_show(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	int ret;
-+	int value;
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+
-+	ret = bh1745_read_value(data, BH1745_INTR, &value, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	value &= BH1745_INT_SIGNAL_LATCHED;
-+	if (value)
-+		return sprintf(buf, "1\n");
-+
-+	return sprintf(buf, "0\n");
-+}
-+
-+static ssize_t in_interrupt_latch_store(struct device *dev,
-+					struct device_attribute *attr,
-+					const char *buf, size_t len)
-+{
-+	int ret;
-+	u16 value;
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+
-+	ret = kstrtou16(buf, 10, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (value > 1) {
-+		dev_err(dev, "Value out of range for latch setup. Supported values '0' or '1'\n");
-+		return -EINVAL;
-+	}
-+
-+	guard(mutex)(&data->lock);
-+	data->int_latch = value;
-+	ret = bh1745_read_value(data, BH1745_INTR, &data->interrupt, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (value == 0)
-+		data->interrupt &= ~BH1745_INT_SIGNAL_LATCHED;
-+	else
-+		data->interrupt |= BH1745_INT_SIGNAL_LATCHED;
-+
-+	ret = bh1745_write_value(data, BH1745_INTR, &data->interrupt, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	return len;
-+}
-+
-+static ssize_t hardwaregain_available_show(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	return sprintf(buf, "%s\n", BH1745_HARDWAREGAIN_AVAILABLE);
-+}
-+
-+static ssize_t interrupt_source_available_show(struct device *dev,
-+					       struct device_attribute *attr,
-+					       char *buf)
-+{
-+	return sprintf(buf, "%s\n", BH1745_INT_COLOUR_CHANNEL_AVAILABLE);
-+}
-+
-+static IIO_DEVICE_ATTR_RW(in_interrupt_source, 0);
-+static IIO_DEVICE_ATTR_RW(in_interrupt_latch, 0);
-+static IIO_DEVICE_ATTR_RO(hardwaregain_available, 0);
-+static IIO_DEVICE_ATTR_RO(interrupt_source_available, 0);
-+static IIO_CONST_ATTR_INT_TIME_AVAIL(BH1745_INT_TIME_AVAILABLE);
-+
-+static struct attribute *bh1745_attrs[] = {
-+	&iio_dev_attr_in_interrupt_source.dev_attr.attr,
-+	&iio_dev_attr_in_interrupt_latch.dev_attr.attr,
-+	&iio_dev_attr_hardwaregain_available.dev_attr.attr,
-+	&iio_dev_attr_interrupt_source_available.dev_attr.attr,
-+	&iio_const_attr_integration_time_available.dev_attr.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group bh1745_attr_group = {
-+	.attrs = bh1745_attrs,
-+};
-+
-+static int bh1745_reset(struct bh1745_data *data)
-+{
-+	int ret;
-+	u8 value;
-+
-+	ret = bh1745_read_value(data, BH1745_SYS_CTRL, &value, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	value |= (BH1745_SW_RESET | BH1745_INT_RESET);
-+
-+	return bh1745_write_value(data, BH1745_SYS_CTRL, &value, 1);
-+}
-+
-+static int bh1745_power_on(struct bh1745_data *data)
-+{
-+	int ret;
-+	u8 value;
-+
-+	ret = bh1745_read_value(data, BH1745_MODE_CTRL_2, &value, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	guard(mutex)(&data->lock);
-+	value |= BH1745_RGBC_EN;
-+	data->mode_ctrl2 = value;
-+	ret = bh1745_write_value(data, BH1745_MODE_CTRL_2, &data->mode_ctrl2, 1);
-+
-+	return ret;
-+}
-+
-+static int bh1745_power_off(struct bh1745_data *data)
-+{
-+	int ret;
-+	int value;
-+
-+	ret = bh1745_read_value(data, BH1745_MODE_CTRL_2, &value, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	guard(mutex)(&data->lock);
-+	value &= ~BH1745_RGBC_EN;
-+	data->mode_ctrl2 = value;
-+	ret = bh1745_write_value(data, BH1745_MODE_CTRL_2, &data->mode_ctrl2, 1);
-+
-+	return ret;
-+}
-+
-+static int bh1745_set_int_time(struct bh1745_data *data, int val, int val2)
-+{
-+	int ret;
-+
-+	for (u8 i = 0; i < ARRAY_SIZE(bh1745_int_time); i++) {
-+		if (val == bh1745_int_time[i][0] &&
-+		    val2 == bh1745_int_time[i][1]) {
-+			guard(mutex)(&data->lock);
-+			data->mode_ctrl1 &= ~BH1745_MEASUREMENT_TIME_MASK;
-+			data->mode_ctrl1 |= i;
-+			ret = bh1745_write_value(data, BH1745_MODE_CTRL_1,
-+						 &data->mode_ctrl1, 1);
-+			return ret;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int bh1745_read_raw(struct iio_dev *indio_dev,
-+			   struct iio_chan_spec const *chan, int *val,
-+			   int *val2, long mask)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+	u16 value;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW: {
-+		ret = iio_device_claim_direct_mode(indio_dev);
-+		if (ret)
-+			return ret;
-+		ret = bh1745_read_value(data, chan->address, &value, 2);
-+		if (ret < 0)
-+			return ret;
-+		iio_device_release_direct_mode(indio_dev);
-+		*val = value;
-+		return IIO_VAL_INT;
-+	}
-+
-+	case IIO_CHAN_INFO_HARDWAREGAIN: {
-+		guard(mutex)(&data->lock);
-+		ret = bh1745_read_value(data, BH1745_MODE_CTRL_2,
-+					&data->mode_ctrl2, 1);
-+		if (ret < 0)
-+			return ret;
-+
-+		value = data->mode_ctrl2 & BH1745_ADC_GAIN_MASK;
-+		*val = bh1745_gain_factor[value];
-+		return IIO_VAL_INT;
-+	}
-+
-+	case IIO_CHAN_INFO_INT_TIME: {
-+		guard(mutex)(&data->lock);
-+		ret = bh1745_read_value(data, BH1745_MODE_CTRL_1,
-+					&data->mode_ctrl1, 1);
-+		if (ret < 0)
-+			return ret;
-+
-+		value = data->mode_ctrl1 & BH1745_MEASUREMENT_TIME_MASK;
-+
-+		*val = bh1745_int_time[value][0];
-+		*val2 = bh1745_int_time[value][1];
-+
-+		return IIO_VAL_INT_PLUS_MICRO;
-+	}
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int bh1745_write_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan, int val, int val2,
-+			    long mask)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_HARDWAREGAIN: {
-+		for (u8 i = 0; i < ARRAY_SIZE(bh1745_gain_factor); i++) {
-+			if (bh1745_gain_factor[i] == val) {
-+				guard(mutex)(&data->lock);
-+				data->mode_ctrl2 &= ~BH1745_ADC_GAIN_MASK;
-+				data->mode_ctrl2 |= i;
-+				ret = bh1745_write_value(data,
-+							 BH1745_MODE_CTRL_2,
-+							 &data->mode_ctrl2, 1);
-+				return ret;
-+			}
-+		}
-+		return -EINVAL;
-+	}
-+
-+	case IIO_CHAN_INFO_INT_TIME: {
-+		return bh1745_set_int_time(data, val, val2);
-+	}
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int bh1745_read_thresh(struct iio_dev *indio_dev,
-+			      const struct iio_chan_spec *chan,
-+			      enum iio_event_type type,
-+			      enum iio_event_direction dir,
-+			      enum iio_event_info info, int *val, int *val2)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (info) {
-+	case IIO_EV_INFO_VALUE:
-+		switch (dir) {
-+		case IIO_EV_DIR_RISING:
-+			ret = bh1745_read_value(data, BH1745_TH_LSB, val, 2);
-+			if (ret < 0)
-+				return ret;
-+			return IIO_VAL_INT;
-+		case IIO_EV_DIR_FALLING:
-+			ret = bh1745_read_value(data, BH1745_TL_LSB, val, 2);
-+			if (ret < 0)
-+				return ret;
-+			return IIO_VAL_INT;
-+		default:
-+			return -EINVAL;
-+		}
-+		break;
-+	case IIO_EV_INFO_PERIOD:
-+		ret = bh1745_read_value(data, BH1745_PERSISTENCE, val, 1);
-+		if (ret < 0)
-+			return ret;
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int bh1745_write_thresh(struct iio_dev *indio_dev,
-+			       const struct iio_chan_spec *chan,
-+			       enum iio_event_type type,
-+			       enum iio_event_direction dir,
-+			       enum iio_event_info info, int val, int val2)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (info) {
-+	case IIO_EV_INFO_VALUE:
-+		if (val < BH1745_THRESHOLD_MIN || val > BH1745_THRESHOLD_MAX)
-+			return -EINVAL;
-+		switch (dir) {
-+		case IIO_EV_DIR_RISING:
-+			ret = bh1745_write_value(data, BH1745_TH_LSB, &val, 2);
-+			if (ret < 0)
-+				return ret;
-+			return IIO_VAL_INT;
-+		case IIO_EV_DIR_FALLING:
-+			ret = bh1745_write_value(data, BH1745_TL_LSB, &val, 2);
-+			if (ret < 0)
-+				return ret;
-+			return IIO_VAL_INT;
-+		default:
-+			return -EINVAL;
-+		}
-+		break;
-+	case IIO_EV_INFO_PERIOD:
-+		if (val < BH1745_PRESISTENCE_UPDATE_TOGGLE ||
-+		    val > BH1745_PRESISTENCE_UPDATE_EIGHT_MEASUREMENT)
-+			return -EINVAL;
-+		ret = bh1745_write_value(data, BH1745_PERSISTENCE, &val, 1);
-+		if (ret < 0)
-+			return ret;
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info bh1745_info = {
-+	.attrs = &bh1745_attr_group,
-+	.read_raw = bh1745_read_raw,
-+	.write_raw = bh1745_write_raw,
-+	.read_event_value = bh1745_read_thresh,
-+	.write_event_value = bh1745_write_thresh,
-+
-+};
-+
-+static void bh1745_remove(struct i2c_client *client)
-+{
-+	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+
-+	if (bh1745_power_off(data) < 0)
-+		dev_err(&data->client->dev, "Failed to turn off device");
-+
-+	dev_info(&data->client->dev, "BH1745 driver removed\n");
-+}
-+
-+static int bh1745_set_trigger_state(struct iio_trigger *trig, bool state)
-+{
-+	int ret;
-+	u8 value = 0;
-+	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+
-+	guard(mutex)(&data->lock);
-+	if (state) {
-+		ret = bh1745_read_value(data, BH1745_INTR, &value, 1);
-+		if (ret < 0)
-+			return ret;
-+		value |= (BH1745_INT_ENABLE |
-+			(data->int_latch << BH1745_INT_SIGNAL_LATCH_OFFSET) |
-+			(data->int_src << BH1745_INT_SOURCE_OFFSET));
-+		data->interrupt = value;
-+		ret = bh1745_write_value(data, BH1745_INTR, &data->interrupt,
-+					 1);
-+	} else {
-+		data->interrupt = value;
-+		ret = bh1745_write_value(data, BH1745_INTR, &data->interrupt,
-+					 1);
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct iio_trigger_ops bh1745_trigger_ops = {
-+	.set_trigger_state = bh1745_set_trigger_state,
-+};
-+
-+static irqreturn_t bh1745_interrupt_handler(int interrupt, void *p)
-+{
-+	struct iio_dev *indio_dev = p;
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+	int value;
-+
-+	ret = bh1745_read_value(data, BH1745_INTR, &value, 1);
-+	if (ret < 0)
-+		return IRQ_NONE;
-+
-+	if (value & BH1745_INTR_STATUS) {
-+		guard(mutex)(&data->lock);
-+		iio_push_event(indio_dev,
-+			       IIO_UNMOD_EVENT_CODE(IIO_INTENSITY,
-+						    data->int_src,
-+						    IIO_EV_TYPE_THRESH,
-+						    IIO_EV_DIR_EITHER),
-+			       iio_get_time_ns(indio_dev));
-+
-+		iio_trigger_poll_nested(data->trig);
-+		return IRQ_HANDLED;
-+	}
-+
-+	return IRQ_NONE;
-+}
-+
-+static irqreturn_t bh1745_trigger_handler(int interrupt, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	struct {
-+		u16 chans[4];
-+		s64 timestamp __aligned(8);
-+	} scan;
-+	u16 value;
-+	int ret;
-+
-+	int i, j = 0;
-+
-+	for_each_set_bit(i, indio_dev->active_scan_mask, indio_dev->masklength) {
-+		ret = bh1745_read_value(data, BH1745_R_LSB + 2 * i, &value, 2);
-+		if (ret < 0)
-+			goto err;
-+		scan.chans[j++] = value;
-+	}
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, &scan,
-+					   iio_get_time_ns(indio_dev));
-+
-+err:
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int bh1745_setup_trigger(struct iio_dev *indio_dev)
-+{
-+	struct bh1745_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	data->trig = devm_iio_trigger_alloc(indio_dev->dev.parent,
-+					    "%sdata-rdy-dev%d", indio_dev->name,
-+					    iio_device_id(indio_dev));
-+	if (!data->trig)
-+		return -ENOMEM;
-+
-+	data->trig->ops = &bh1745_trigger_ops;
-+	iio_trigger_set_drvdata(data->trig, indio_dev);
-+
-+	ret = devm_iio_trigger_register(&data->client->dev, data->trig);
-+	if (ret)
-+		return dev_err_probe(&data->client->dev, ret,
-+				     "Trigger registration failed\n");
-+
-+	ret = devm_iio_triggered_buffer_setup(indio_dev->dev.parent, indio_dev,
-+					      NULL, bh1745_trigger_handler,
-+					      NULL);
-+	if (ret)
-+		return dev_err_probe(&data->client->dev, ret,
-+				     "Triggered buffer setup failed\n");
-+
-+	ret = devm_request_threaded_irq(&data->client->dev, data->client->irq,
-+					NULL, bh1745_interrupt_handler,
-+					IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					"bh1745_interrupt", indio_dev);
-+	if (ret)
-+		return dev_err_probe(&data->client->dev, ret,
-+				     "Request for IRQ failed\n");
-+
-+	dev_info(&data->client->dev,
-+		 "Triggered buffer and IRQ setup successfully");
-+
-+	return ret;
-+}
-+
-+static int bh1745_init(struct bh1745_data *data)
-+{
-+	int ret;
-+
-+	mutex_init(&data->lock);
-+	data->mode_ctrl1 = 0;
-+	data->mode_ctrl2 = 0;
-+	data->interrupt = 0;
-+	data->int_src = BH1745_INT_SOURCE_RED;
-+
-+	ret = bh1745_reset(data);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Failed to reset sensor\n");
-+		return ret;
-+	}
-+
-+	ret = bh1745_power_on(data);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Failed to turn on sensor\n");
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static int bh1745_probe(struct i2c_client *client)
-+{
-+	int ret;
-+	struct bh1745_data *data;
-+	struct iio_dev *indio_dev;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	data->client = client;
-+	indio_dev->info = &bh1745_info;
-+	indio_dev->name = "bh1745";
-+	indio_dev->channels = bh1745_channels;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->num_channels = ARRAY_SIZE(bh1745_channels);
-+
-+	data->regmap = devm_regmap_init_i2c(client, &bh1745_regmap);
-+	if (IS_ERR(data->regmap))
-+		return dev_err_probe(&client->dev, PTR_ERR(data->regmap),
-+				     "Failed to initialize Regmap\n");
-+
-+	ret = bh1745_init(data);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (client->irq) {
-+		ret = bh1745_setup_trigger(indio_dev);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	ret = devm_iio_device_register(&client->dev, indio_dev);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Failed to register device\n");
-+		return ret;
-+	}
-+
-+	dev_info(&data->client->dev, "BH1745 driver loaded\n");
-+
-+	return ret;
-+}
-+
-+static const struct i2c_device_id bh1745_idtable[] = {
-+	{ "bh1745" },
-+	{},
-+};
-+
-+static const struct of_device_id bh1745_of_match[] = {
-+	{
-+		.compatible = "rohm,bh1745",
-+	},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, bh1745_idtable);
-+
-+static struct i2c_driver bh1745_driver = {
-+	.driver = {
-+		.name = "bh1745",
-+		.of_match_table = bh1745_of_match,
-+	},
-+	.probe = bh1745_probe,
-+	.remove = bh1745_remove,
-+	.id_table = bh1745_idtable,
-+};
-+
-+module_i2c_driver(bh1745_driver);
-+MODULE_AUTHOR("Mudit Sharma <muditsharma.info@gmail.com>");
-+MODULE_DESCRIPTION("BH1745 colour sensor driver");
-+MODULE_LICENSE("GPL");
+
+---
+base-commit: 234cb065ad82915ff8d06ce01e01c3e640b674d2
+change-id: 20240223-topic-sm8650-upstream-hdk-e21cfd6f1de8
+
+Best regards,
 -- 
-2.43.0
+Neil Armstrong <neil.armstrong@linaro.org>
 
