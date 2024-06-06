@@ -1,131 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D678197A8E;
-	Thu,  6 Jun 2024 16:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9C3196D8C;
+	Thu,  6 Jun 2024 16:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717690441; cv=none; b=q/0BrzVrlsPIsRSeU4rHdT4FdLDs+/yJyHi+qcxKLk+LSGRjH4o8cnBAmU6c5vExJYiZf4exI9gyz96jIeBVr+rQxpPkYYbyoCVEBhdmG02btUultiHa4+YNORv367t8vE7WiaOloszL7EF+kMPDP/4w6IQ6MRDWHHmNUyns11s=
+	t=1717690508; cv=none; b=DoDsC2yAscX+TI0KkKzcgkP6ETo0tBcIdBEyzadeHC/4xr0lbjkOX+pqFJ7JL2la7+/6YRrCa8CULG+Q1Johv1qMJymcsoyRMztf7ILy1uZbCQeYrAnZ6TB3vxTcuN7lSize+ZC6I8RE6PUBBd7ZIqaQ3Nq/5Vc7lsZhgSp3kks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717690441; c=relaxed/simple;
-	bh=mepfrNbOi1hjCED03erLNzGsbXFr7ZtXsrXGV+VfSkE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u/uD0Nw+TG899MRlkY2WeZKBFbZ2yqRBGMjGPtPI0JepJ9FSxGOZG0iDdCl4IBeiupnqM+ZucUGAWJsxaF3tvRhM5H2VMYyHSu1amMW9hrgaHj1fieWKwE18Vc5C/jWkjfNdCPrUDlfSvqbHA7YZ2VKvl+p1lNPQLL0j+RUBGL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=allw4ZzG; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717690508; c=relaxed/simple;
+	bh=6v0CUPRfaXGAoLPrPrKauXw7CPWZ+MBBWv69fm/Az0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MdPMwL+DJtIpl3MY+znVQGmnxa3Rhzeo8zxkzt/nGeiIJJ4GU/+eRMHjB04YiDciHQ427QIpy6g2+iZt4gTjIvG2lx5XA2hq1aakgDgjTXkkESFulzxJGzQr7wUyI2Am0upTQlo5zYXtDLIp5QEDFVmynb1DVpSuKI+A4KjYQJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=jJC88ykM; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="allw4ZzG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717690441; x=1749226441;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mepfrNbOi1hjCED03erLNzGsbXFr7ZtXsrXGV+VfSkE=;
-  b=allw4ZzG9dCLruX3QSeJ27GPXXNPocZl33OHtv1DSw4Yqbn8G1v6HrhJ
-   4XME/z57B7nrDZnj6FdjRycdIH1fXUnVYUyragm3396vcYjYRHm1KknLU
-   gLvigysdXUw8B6yobO3Hf3+7YUWgAjBCvrukRajE6GRAie7SRxeitY4wj
-   Yf5Psn7XLO3PodG7pzl7cTMr9cgS7mM3xqAclh5Jb7jbS63ZcyFMQKbcg
-   Yspg3glCAgTF1rNS6ypteaRSX0eNk0x/CkU8QpyGWaUmXmVVLJH41LZJH
-   1Te0zF/37Y9FJj7g0C3eZUejpA7b348FFNw5InR+L0t/pbKTJ/TiZ4Qba
-   g==;
-X-CSE-ConnectionGUID: LJc+yDRKQkCJsNNI0odPQg==
-X-CSE-MsgGUID: kjjpNWCbTv6KAtOoEAtS/A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14209121"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="14209121"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:14:00 -0700
-X-CSE-ConnectionGUID: /1J96yc2SHy24HaVEMjz5A==
-X-CSE-MsgGUID: zr937IJ1Stuu9jUW7IS4QA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="68810250"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 06 Jun 2024 09:13:57 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 0FFE62A4; Thu, 06 Jun 2024 19:13:56 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jJC88ykM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=mDaT/6dqllCZHo2gumWmEXOi5NqdI3/lfYccvH9BDkE=; b=jJC88ykMQtPQhL2WJaUqKKQ3OQ
+	2vavJMlgub9cow1wxW4ZK6+JCMiX5cuj0eWf1lP+mKMb4XCYxC1XGS9ujavcTrrmiWL9bKbQaIRqc
+	sX2pmN3KA2ak5W4iMcgMRzmkpK1KmVtcZHPFoG2UDpU6a1batT48h6/3nYURzwWrcNSs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sFFlX-00H2Fg-5T; Thu, 06 Jun 2024 18:15:03 +0200
+Date: Thu, 6 Jun 2024 18:15:03 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: =?iso-8859-1?B?Q3Pza+FzLFw=?= Bence <csokas.bence@prolan.hu>,
+	Russell King <rmk+kernel@armlinux.org.uk>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
 	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH net v2 1/1] net dsa: qca8k: fix usages of device_get_named_child_node()
-Date: Thu,  6 Jun 2024 19:13:03 +0300
-Message-ID: <20240606161354.2987218-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH] net: sfp: Always call `sfp_sm_mod_remove()` on remove
+Message-ID: <7768e181-19a5-4579-9113-c6d70479c452@lunn.ch>
+References: <20240605084251.63502-1-csokas.bence@prolan.hu>
+ <24a48e5a-efb3-4066-af6f-69f4a254b9c3@lunn.ch>
+ <20240606082830.30e3a294@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240606082830.30e3a294@kernel.org>
 
-The documentation for device_get_named_child_node() mentions this
-important point:
+On Thu, Jun 06, 2024 at 08:28:30AM -0700, Jakub Kicinski wrote:
+> On Thu, 6 Jun 2024 17:21:45 +0200 Andrew Lunn wrote:
+> > I was expecting Russell to review this. Maybe he missed it.
+> 
+> While it's fresh in your mind - does it look like a fix to you?
+> From a quick look - we're failing to unregister a device?
 
-"
-The caller is responsible for calling fwnode_handle_put() on the
-returned fwnode pointer.
-"
+Yes. A Fixes of:
 
-Add fwnode_handle_put() to avoid leaked references.
+commit d2e816c0293fc263b3f168c14992a5f1a50d7593
+Author: Russell King <rmk+kernel@armlinux.org.uk>
+Date:   Sun Nov 10 14:06:28 2019 +0000
 
-Fixes: 1e264f9d2918 ("net: dsa: qca8k: add LEDs basic support")
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: added one missed call (Jacub), added tag (Simon)
- drivers/net/dsa/qca/qca8k-leds.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+    net: sfp: handle module remove outside state machine
+    
+    Removing a module resets the module state machine back to its initial
+    state.  Rather than explicitly handling this in every state, handle it
+    early on outside of the state machine.
 
-diff --git a/drivers/net/dsa/qca/qca8k-leds.c b/drivers/net/dsa/qca/qca8k-leds.c
-index 811ebeeff4ed..43ac68052baf 100644
---- a/drivers/net/dsa/qca/qca8k-leds.c
-+++ b/drivers/net/dsa/qca/qca8k-leds.c
-@@ -431,8 +431,11 @@ qca8k_parse_port_leds(struct qca8k_priv *priv, struct fwnode_handle *port, int p
- 		init_data.devicename = kasprintf(GFP_KERNEL, "%s:0%d",
- 						 priv->internal_mdio_bus->id,
- 						 port_num);
--		if (!init_data.devicename)
-+		if (!init_data.devicename) {
-+			fwnode_handle_put(led);
-+			fwnode_handle_put(leds);
- 			return -ENOMEM;
-+		}
- 
- 		ret = devm_led_classdev_register_ext(priv->dev, &port_led->cdev, &init_data);
- 		if (ret)
-@@ -441,6 +444,7 @@ qca8k_parse_port_leds(struct qca8k_priv *priv, struct fwnode_handle *port, int p
- 		kfree(init_data.devicename);
- 	}
- 
-+	fwnode_handle_put(leds);
- 	return 0;
- }
- 
-@@ -471,9 +475,13 @@ qca8k_setup_led_ctrl(struct qca8k_priv *priv)
- 		 * the correct port for LED setup.
- 		 */
- 		ret = qca8k_parse_port_leds(priv, port, qca8k_port_to_phy(port_num));
--		if (ret)
-+		if (ret) {
-+			fwnode_handle_put(port);
-+			fwnode_handle_put(ports);
- 			return ret;
-+		}
- 	}
- 
-+	fwnode_handle_put(ports);
- 	return 0;
- }
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+is probably best, since that refactored to code.
 
+	Andrew
