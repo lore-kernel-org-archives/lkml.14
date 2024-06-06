@@ -1,258 +1,216 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229B713D8A0
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 21:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87754C622
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 21:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717709635; cv=none; b=g1Wj/5W6Vsh+88gz14abWgqCGlpxB6rwCaqbxzvpuVpdZH0qM/EpMgTg6WlH8R0qt6EIg9ZqMKhus33oUJ/IZZuaf7vvjroWiI6pIrno8Ff62SWA/OUl2nDadEVagrKSoKnGdQZWv/ZUNfuKXG9eE+4UCof64GawrTMo74hmEEM=
+	t=1717709813; cv=none; b=bzroq6D/tXUOAyMc/AKNa2PjNLipaNZSDkOXJAhQxeBRFnZkujDCPxWiJEAl1D0630JlIWZ2Iu0hmFXtxbpj04q/FCxPa73HDLgLbGuH09L7muGe7Deym7powup6iynkZ1fN3XRJ3Gb62BV2yqs2C6ZkJ8twj7JrpyQKBhC+oFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717709635; c=relaxed/simple;
-	bh=bl6Q8nkiPHSSkriXbTCVWxpXKhPBGBfSU3OcD0PgMsY=;
+	s=arc-20240116; t=1717709813; c=relaxed/simple;
+	bh=aelL7xI6/IzEA66yF0Joah/XxduN3Naqi1e1omjigpc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BuDNPZIE6oSwXMEApv3JddRxhQQtTrnhtBjMTXUCpdm9i9ZgBtH1yIW7N78RZNPtkTwe2uY8tfUtmDH8B26okla8yxW9YPQ9zSmSCIL0ydm78cSiGw1dRiC45172LhFbLsx8xZDQtaRgFlJ9uNfAvzrKvM01UnnLMZCMdGHqcfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HHR3smTd; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Y8nKGTR0p5ZTwu8/dQarPD2QtzJhLvBhyPHe8Wucg9/UybxqK4G1hTEOhC+zUjAh1jJxLiYNoaE+8lfcswalmzjGP1QmRepI9Ld9OAFSCDCMsgjXZ4jBU2+e0+jBFmhDj3P5They0hHEIECR1gBAcRJpZY60Y91DLIg/UJ+yUwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IPnfxV3F; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHR3smTd"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4eb0c729c2eso404054e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 14:33:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IPnfxV3F"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57a1fe63a96so1833843a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 14:36:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717709633; x=1718314433; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1717709810; x=1718314610; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ENh6EmpxBzWS1RyJnWCwXYBRXkzIo8pjpUNY60CBW0M=;
-        b=HHR3smTdV7aNLwhcL3K/4Y1o2NiUlo+SPShdLrshhFdBl7mhXdpb+ygBaf1xT/TP7m
-         FYwTYMCJPZhWNWLNX4Txb4ySYhuAKtQ8C67ipLJLdxi9uoDg+yvApUr61Lp3xoJkL4ip
-         1Cd2QnWhTCPX/AWh1Hpp+LM/5YumQgJe9lcMbYaf8unxytXkrm4BDBHTMciKWzcUt5V4
-         tlYVkwXZP0QRss5zdsgkpbaIXaavFEOkDMxLMJqU3IrTUedxogUPH38LB/9rSAxzphw5
-         VZJ7Xe9VkjCCQqLBPSYNCcEORXQusYSKEAeZXScd/6LzBOKanrM4wxLIv7hVDes+MqGs
-         +dKg==
+        bh=t7okuVesSYZb7WHBSF+efeY8peMB/zeL/21SpdnOh+c=;
+        b=IPnfxV3FzvLeFAax+WIyDqR4Xx+PczWNQheaOWgSEkmFutvugfMAKuokYMpzgURs6L
+         oESXgv662iam787873kjaWVKdmQiqlRe+iSQCFSMANeJx6io+5Iehm6QsM5QHgJAGY/D
+         O4tiLbYU8jluUPBZe4cQJgQDOYchP4Dep+qpcsafCt29xit7+U4llk7A0NKfwy/Ga13D
+         aHV+8SUtsLqjyWFzTFoga7YUzmsSomgLPBdB/0OwgGZhRxMEz3G5RtNo7mTUTJGdcYuK
+         eb1b4CreHl1TCBIvvy6CSWJf+urfI6etcdgQRHweqYYv8ljdbvFJzzN0tm3EDQOujI4o
+         0hdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717709633; x=1718314433;
+        d=1e100.net; s=20230601; t=1717709810; x=1718314610;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ENh6EmpxBzWS1RyJnWCwXYBRXkzIo8pjpUNY60CBW0M=;
-        b=MjykUuXnXQYVLTtHBQvGjzATPUvy7BQAPKxZvJ/TS9L3z+C4SgrwN0BTPF8qyMiQOf
-         Rvh9NXIkMSNam35SMm0OQs/cu8n1MxueM89mkTvDW9Q87RTQG/pKa0j/vlBlZgY471uI
-         hxbvHyJREfzEyAsL2RjvKvUBmrhoGLjXP1tQSknDzKSxXAM5/VZFW+kqpDglj+rvRrct
-         PTgPP111LKO+2DoLxGWmT+pIJ4FRsduN08xXaVA5cTprQ2CBdsYCcMwU4ikPPxPo0qC+
-         9+iBZUB+4eDaLSIKY+I/iaDJGHtf8OhK5fQs1jIgHfD1oiF3CuI86FdV9aN/a/fONpIR
-         Thxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVew2EPlF3axNAWjxglv9SpI/8T0FHIvXQBaPmqV8pvl+Nd5Jlr3u2nqYYWR8RNbcRnFCfZewldSEy7sZkw7dgw/wEe/vyeEKR/+3Z
-X-Gm-Message-State: AOJu0YwKz5qWNWF7gDhI0WWyhLNWzUtfMKRxiyVYOnT7yPVME0GgBfM5
-	69me8DnyCC71I2oAMz1vPQf5WSBF8HUakXVbtwibqbq+PACdxOqeqG+i32fbBIbR3Axg7LgUpEK
-	+WEQ7+TKpOqpmNaJry7KyNvZtFa0=
-X-Google-Smtp-Source: AGHT+IE0+uM7qXu/RA+jEbZdc4cfBIOn2I55lHxR2NcB5mpJEcF1RcWblNNTj663LVKwR67OPlnWqxSyRWzSNbVzWrI=
-X-Received: by 2002:a1f:cd87:0:b0:4e9:7f87:4c2b with SMTP id
- 71dfb90a1353d-4eb5621cd6cmr876541e0c.3.1717709632786; Thu, 06 Jun 2024
- 14:33:52 -0700 (PDT)
+        bh=t7okuVesSYZb7WHBSF+efeY8peMB/zeL/21SpdnOh+c=;
+        b=Ugbxp4qQM3TnQYVqEgTeD2XoZDzdDp3tS7l02z32GSw3qXYN4HBoD6c03yB1YucVe2
+         c/aoDwSiiH5uO+uZV3/ABwz8wmJhofXTCOsb4VWzPm2Tgomr81qaPYo1G/1foaMPo0av
+         oxELuM0umTkPlQ61DbyjU6lZ5aGBFosqnbD0gsRRXv/4R4njmcmijwYOIGokH6eB7gwo
+         lBkRR0q8aTbVp7MV1QbRG81cMRUyD4Na0kgi5Ybi8EI8CDLoTIbEZq8Ndx/JfZMEGl1A
+         HqElv4gpPdlEP8uPOUhwgZ4et3FyNAXqopAgWEwfQGc8wZYgKS2usQra863Y9oWGbcrV
+         9Ocg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+fvoduJkyVgoZJLq2v1qKnE5ryWRlermi+6Log0qEtZQPol8XjSpoqtxLyKDvE6fZYKSqb6PM+RhoMiFg3jf7VcpNPijJ0rq1NyJI
+X-Gm-Message-State: AOJu0YxhOhtp5OdIV1NGJwfDHx8/J4Yc9MYnHLXuunD/6x8kchz3Rw4D
+	0i0OABbgg9oSAKos6aHb+PwqgdQ+oCo0ZhdpTFuv0TeywaNYf9qeBIpoNtr7ThmtrnBMGdCl0VV
+	CMnoUwCX+L166u/Ii+lL8Efl2teFfrf31G/Tc
+X-Google-Smtp-Source: AGHT+IGZj/4GXD7GiIJana92FHJ0J/tDsdOuEKhEec46bZrlEctZgIPf7ftpUYb9TGioUvxkmYESJvqCoHpFT2mhiy8=
+X-Received: by 2002:a17:906:56ca:b0:a59:9b75:b90 with SMTP id
+ a640c23a62f3a-a6cd561214emr59619266b.2.1717709809697; Thu, 06 Jun 2024
+ 14:36:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606174203124_OW-VQZ_ZLm4lGEimA-K9@zte.com.cn>
- <51DED95F-832A-4836-AA81-556968F6B645@nvidia.com> <CAGsJ_4w9cRZUEF7PaVjz1HQoUr1pxHEO15gpbsnAoJHMZG0djQ@mail.gmail.com>
- <B7796F09-BAA6-4555-A9FE-F44DF1CBFA6F@nvidia.com>
-In-Reply-To: <B7796F09-BAA6-4555-A9FE-F44DF1CBFA6F@nvidia.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 7 Jun 2024 09:33:41 +1200
-Message-ID: <CAGsJ_4xu9jfC7UWdOqP5_saEXRE26mo6Msx_=JGCKaWac57=BQ@mail.gmail.com>
-Subject: Re: [PATCH linux-next v2] mm: huge_memory: fix misused
- mapping_large_folio_support() for anon folios
-To: Zi Yan <ziy@nvidia.com>
-Cc: xu.xin16@zte.com.cn, david@redhat.com, v-songbaohua@oppo.com, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	mhocko@kernel.org, yang.yang29@zte.com.cn, ran.xiaokai@zte.com.cn, 
-	Matthew Wilcox <willy@infradead.org>
+References: <20240606184818.1566920-1-yosryahmed@google.com>
+ <84d78362-e75c-40c8-b6c2-56d5d5292aa7@redhat.com> <CAJD7tkZH9C21nx75W9Erun=oUvmad5ujmDyGYWRRHEwPCCizUw@mail.gmail.com>
+ <7507d075-9f4d-4a9b-836c-1fbb2fbd2257@redhat.com>
+In-Reply-To: <7507d075-9f4d-4a9b-836c-1fbb2fbd2257@redhat.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 6 Jun 2024 14:36:13 -0700
+Message-ID: <CAJD7tkbBRchzHmyVTHVrXb15gmHvi-sjNViSNNhEKvkeG9JiZw@mail.gmail.com>
+Subject: Re: [PATCH] mm: zswap: add VM_BUG_ON() if large folio swapin is attempted
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Barry Song <21cnbao@gmail.com>, 
+	Chris Li <chrisl@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 7, 2024 at 9:24=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
+On Thu, Jun 6, 2024 at 2:17=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
 >
-> On 6 Jun 2024, at 14:00, Barry Song wrote:
->
-> > On Fri, Jun 7, 2024 at 2:35=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
+> On 06.06.24 22:31, Yosry Ahmed wrote:
+> > On Thu, Jun 6, 2024 at 1:22=E2=80=AFPM David Hildenbrand <david@redhat.=
+com> wrote:
 > >>
-> >> +Matthew
-> >>
-> >> For mapping_large_folio_support() changes.
-> >>
-> >> On 6 Jun 2024, at 2:42, xu.xin16@zte.com.cn wrote:
-> >>
-> >>> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+> >> On 06.06.24 20:48, Yosry Ahmed wrote:
+> >>> With ongoing work to support large folio swapin, it is important to m=
+ake
+> >>> sure we do not pass large folios to zswap_load() without implementing
+> >>> proper support.
 > >>>
-> >>> When I did a large folios split test, a WARNING
-> >>> "[ 5059.122759][  T166] Cannot split file folio to non-0 order"
-> >>> was triggered. But the test cases are only for anonmous folios.
-> >>> while mapping_large_folio_support() is only reasonable for page
-> >>> cache folios.
+> >>> For example, if a swapin fault observes that contiguous PTEs are
+> >>> pointing to contiguous swap entries and tries to swap them in as a la=
+rge
+> >>> folio, swap_read_folio() will pass in a large folio to zswap_load(), =
+but
+> >>> zswap_load() will only effectively load the first page in the folio. =
+If
+> >>> the first page is not in zswap, the folio will be read from disk, eve=
+n
+> >>> though other pages may be in zswap.
 > >>>
-> >>> In split_huge_page_to_list_to_order(), the folio passed to
-> >>> mapping_large_folio_support() maybe anonmous folio. The
-> >>> folio_test_anon() check is missing. So the split of the anonmous THP
-> >>> is failed. This is also the same for shmem_mapping(). We'd better add
-> >>> a check for both. But the shmem_mapping() in __split_huge_page() is
-> >>> not involved, as for anonmous folios, the end parameter is set to -1,=
- so
-> >>> (head[i].index >=3D end) is always false. shmem_mapping() is not call=
-ed.
+> >>> In both cases, this will lead to silent data corruption.
 > >>>
-> >>> Also add a VM_WARN_ON_ONCE() in mapping_large_folio_support()
-> >>> for anon mapping, So we can detect the wrong use more easily.
+> >>> Proper large folio swapin support needs to go into zswap before zswap
+> >>> can be enabled in a system that supports large folio swapin.
 > >>>
-> >>> THP folios maybe exist in the pagecache even the file system doesn't
-> >>> support large folio, it is because when CONFIG_TRANSPARENT_HUGEPAGE
-> >>> is enabled, khugepaged will try to collapse read-only file-backed pag=
-es
-> >>> to THP. But the mapping does not actually support multi order
-> >>> large folios properly.
+> >>> Looking at callers of swap_read_folio(), it seems like they are eithe=
+r
+> >>> allocated from __read_swap_cache_async() or do_swap_page() in the
+> >>> SWP_SYNCHRONOUS_IO path. Both of which allocate order-0 folios, so we
+> >>> are fine for now.
 > >>>
-> >>> Using /sys/kernel/debug/split_huge_pages to verify this, with this
-> >>> patch, large anon THP is successfully split and the warning is ceased=
-.
+> >>> Add a VM_BUG_ON() in zswap_load() to make sure that we detect changes=
+ in
+> >>> the order of those allocations without proper handling of zswap.
 > >>>
-> >>> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+> >>> Alternatively, swap_read_folio() (or its callers) can be updated to h=
+ave
+> >>> a fallback mechanism that splits large folios or reads subpages
+> >>> separately. Similar logic may be needed anyway in case part of a larg=
+e
+> >>> folio is already in the swapcache and the rest of it is swapped out.
+> >>>
+> >>> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
 > >>> ---
-> >>>  include/linux/pagemap.h |  4 ++++
-> >>>  mm/huge_memory.c        | 27 ++++++++++++++++-----------
-> >>>  2 files changed, 20 insertions(+), 11 deletions(-)
 > >>>
-> >>> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> >>> index ee633712bba0..59f1df0cde5a 100644
-> >>> --- a/include/linux/pagemap.h
-> >>> +++ b/include/linux/pagemap.h
-> >>> @@ -381,6 +381,10 @@ static inline void mapping_set_large_folios(stru=
-ct address_space *mapping)
-> >>>   */
-> >>>  static inline bool mapping_large_folio_support(struct address_space =
-*mapping)
-> >>>  {
-> >>> +     /* AS_LARGE_FOLIO_SUPPORT is only reasonable for pagecache foli=
-os */
-> >>> +     VM_WARN_ONCE((unsigned long)mapping & PAGE_MAPPING_ANON,
-> >>> +                     "Anonymous mapping always supports large folio"=
-);
-> >>> +
-> >>>       return IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
-> >>>               test_bit(AS_LARGE_FOLIO_SUPPORT, &mapping->flags);
-> >>>  }
-> >>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> >>> index 317de2afd371..62d57270b08e 100644
-> >>> --- a/mm/huge_memory.c
-> >>> +++ b/mm/huge_memory.c
-> >>> @@ -3009,30 +3009,35 @@ int split_huge_page_to_list_to_order(struct p=
-age *page, struct list_head *list,
-> >>>       if (new_order >=3D folio_order(folio))
-> >>>               return -EINVAL;
+> >>> Sorry for the long CC list, I just found myself repeatedly looking at
+> >>> new series that add swap support for mTHPs / large folios, making sur=
+e
+> >>> they do not break with zswap or make incorrect assumptions. This debu=
+g
+> >>> check should give us some peace of mind. Hopefully this patch will al=
+so
+> >>> raise awareness among people who are working on this.
 > >>>
-> >>> -     /* Cannot split anonymous THP to order-1 */
-> >>> -     if (new_order =3D=3D 1 && folio_test_anon(folio)) {
-> >>> -             VM_WARN_ONCE(1, "Cannot split to order-1 folio");
-> >>> -             return -EINVAL;
-> >>> -     }
-> >>> -
-> >>> -     if (new_order) {
-> >>> -             /* Only swapping a whole PMD-mapped folio is supported =
+> >>> ---
+> >>>    mm/zswap.c | 3 +++
+> >>>    1 file changed, 3 insertions(+)
+> >>>
+> >>> diff --git a/mm/zswap.c b/mm/zswap.c
+> >>> index b9b35ef86d9be..6007252429bb2 100644
+> >>> --- a/mm/zswap.c
+> >>> +++ b/mm/zswap.c
+> >>> @@ -1577,6 +1577,9 @@ bool zswap_load(struct folio *folio)
+> >>>        if (!entry)
+> >>>                return false;
+> >>>
+> >>> +     /* Zswap loads do not handle large folio swapins correctly yet =
 */
-> >>> -             if (folio_test_swapcache(folio))
-> >>> +     if (folio_test_anon(folio)) {
-> >>> +             /* Cannot split anonymous THP to order-1 */
-> >>> +             if (new_order =3D=3D 1) {
-> >>> +                     VM_WARN_ONCE(1, "Cannot split to order-1 folio"=
-);
-> >>>                       return -EINVAL;
-> >>> +             }
-> >>> +     } else if (new_order) {
-> >>>               /* Split shmem folio to non-zero order not supported */
-> >>>               if (shmem_mapping(folio->mapping)) {
-> >>>                       VM_WARN_ONCE(1,
-> >>>                               "Cannot split shmem folio to non-0 orde=
-r");
-> >>>                       return -EINVAL;
-> >>>               }
-> >>> -             /* No split if the file system does not support large f=
-olio */
-> >>> -             if (!mapping_large_folio_support(folio->mapping)) {
-> >>> +             /* No split if the file system does not support large f=
-olio.
-> >>> +              * Note that we might still have THPs in such mappings =
-due to
-> >>> +              * CONFIG_READ_ONLY_THP_FOR_FS. But in that case, the m=
-apping
-> >>> +              * does not actually support large folios properly.
-> >>> +              */
-> >>> +             if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) &&
-> >>> +                     !mapping_large_folio_support(folio->mapping)) {
+> >>> +     VM_BUG_ON(folio_test_large(folio));
+> >>> +
 > >>
-> >> Shouldn=E2=80=99t this be
-> >>
-> >> if (!IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) &&
-> >>         !mapping_large_folio_support(folio->mapping)) {
-> >>
-> >> ?
-> >>
-> >> When CONFIG_READ_ONLY_THP_FOR_FS is not set, we need to check
-> >> mapping_large_folio_support(), otherwise we do not.
+> >> There is no way we could have a WARN_ON_ONCE() and recover, right?
 > >
-> > while CONFIG_READ_ONLY_THP_FOR_FS is not set, that is no way
-> > a large folio can be mapped to a filesystem which doesn't support
-> > large folio mapping. i think
+> > Not without making more fundamental changes to the surrounding swap
+> > code. Currently zswap_load() returns either true (folio was loaded
+> > from zswap) or false (folio is not in zswap).
+> >
+> > To handle this correctly zswap_load() would need to tell
+> > swap_read_folio() which subpages are in zswap and have been loaded,
+> > and then swap_read_folio() would need to read the remaining subpages
+> > from disk. This of course assumes that the caller of swap_read_folio()
+> > made sure that the entire folio is swapped out and protected against
+> > races with other swapins.
+> >
+> > Also, because swap_read_folio() cannot split the folio itself, other
+> > swap_read_folio_*() functions that are called from it should be
+> > updated to handle swapping in tail subpages, which may be questionable
+> > in its own right.
+> >
+> > An alternative would be that zswap_load() (or a separate interface)
+> > could tell swap_read_folio() that the folio is partially in zswap,
+> > then we can just bail and tell the caller that it cannot read the
+> > large folio and that it should be split.
+> >
+> > There may be other options as well, but the bottom line is that it is
+> > possible, but probably not something that we want to do right now.
+> >
+> > A stronger protection method would be to introduce a config option or
+> > boot parameter for large folio swapin, and then make CONFIG_ZSWAP
+> > depend on it being disabled, or have zswap check it at boot and refuse
+> > to be enabled if it is on.
 >
-> That is why we have the warning below to catch this undesired
-> case.
+> Right, sounds like the VM_BUG_ON() really is not that easily avoidable.
 >
-> > if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS)) is correct.
+> I was wondering, if we could WARN_ON_ONCE and make the swap code detect
+> this like a read-error from disk.
 >
-> When it is set, khugepaged can create a large pagecache folio
-> on a filesystem without large folio support and the warning
-> will be triggered once the created large pagecache folio
-> is split. That is not what we want.
+> I think do_swap_page() detects that by checking if the folio is not
+> uptodate:
+>
+> if (unlikely(!folio_test_uptodate(folio))) {
+>         ret =3D VM_FAULT_SIGBUS;
+>         goto out_nomap;
+> }
+>
+> So maybe WARN_ON_ONCE() + triggering that might be a bit nicer to the
+> system (but the app would crash either way, there is no way around it).
 
-yes. This is exactly why we need if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS=
-))
-but not if (!IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS)) .
+It seems like most paths will handle this correctly just if the folio
+is not uptodate. do_swap_page() seems like it will work correctly
+whether
 
-because if (!IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS)), folio is definitely
-pointing to a file system supporting large folio. otherwise, it is a bug.
+swapin_readahead() and the direct call to swap_read_folio() in
+do_swap_page() should work correctly in this case. The shmem swapin
+path seems like it will return -EIO, which in the fault path will also
+sigbus, and in the file read/write path I assume will be handled
+correctly.
 
->
-> >
-> > The below means a BUG which has never a chance to happen if it
-> > is true.
-> >
-> > !IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) &&
-> >         !mapping_large_folio_support(folio->mapping));
-> >
-> >>
-> >>>                       VM_WARN_ONCE(1,
-> >>>                               "Cannot split file folio to non-0 order=
-");
-> >>>                       return -EINVAL;
-> >>>               }
-> >>>       }
-> >>>
-> >>> +     /* Only swapping a whole PMD-mapped folio is supported */
-> >>> +     if (folio_test_swapcache(folio) && new_order)
-> >>> +             return -EINVAL;
-> >>>
-> >>>       is_hzp =3D is_huge_zero_folio(folio);
-> >>>       if (is_hzp) {
-> >>> --
-> >>> 2.15.2
-> >>
-> >>
-> >> Best Regards,
-> >> Yan, Zi
-> >
-> > Thanks
-> > Barry
->
->
-> Best Regards,
-> Yan, Zi
+However, looking at the swapoff paths, it seems like we don't really
+check uptodate. For example, shmem_unuse_swap_entries() will just
+throw -EIO away. Maybe it is handled on a higher level by the fact
+that the number of swap entries will not drop to zero so swapoff will
+not complete? :)
+
+Anyway, I believe it may be possible to just not set uptodate, but I
+am not very sure how reliable it will be. It may be better than
+nothing anyway, I guess?
