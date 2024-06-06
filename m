@@ -1,120 +1,128 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100BB160865;
-	Thu,  6 Jun 2024 11:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6827160865
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 11:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717673318; cv=none; b=TORUG4qoNz+DpCq3ekr6I4lVri41QPyvoMa6Dl6pbhJUZLLYUN3CbJ/S6KI4ryHda1t2WnQ3h7k4CNWaTISGpKDiYGYA0qsKvjw+6TDUx26iE4Cs83FaEWfXAFsQG/JCfV6vBzG9JC+pJ0+aScNHGoISIXdOGGl8QkcXZ8ZBoxc=
+	t=1717673342; cv=none; b=tGjoAcFfC3PGea05L99ZH7svE4WQbQVPV7mdHse36jrPLNzOZlWc7bRn8UK4QpoW0K30mdD6JE2gIibZ15FL65up9c8z27WrK+buzArZ7UKDVVAfkznhbHTpiyXlBn9hr4tDIPT91LGmvUnRbV/i1WV9r0FEc3gk8bIDaFjXVGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717673318; c=relaxed/simple;
-	bh=gIl6IhooRxWV/OGWzJJqPd4ige0klHOlGYjha2TB8Xw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fJeaRkMDjcP3EhA5mNe82SMkVJv052iphQ+4GID7zoKdY7DCegTFg7536IQCHArCt6kA7fKtopviH6G6G0NtCHroeC4i6Kz0V3A8npqCu/qYmJa3ntBm1ormX7BcdlhVfCBDlpbsOErhdQoGagRUNrfyE34qMt1H7WCXw3M38jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=RvioBviE; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="RvioBviE"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 0068E100006;
-	Thu,  6 Jun 2024 14:28:17 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1717673297; bh=Y62XYCO9ZGwrKOdoymHIyR+uuZurw3es96f2p0GzfTU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=RvioBviEr2YiQMxGSertLCwx7lkbgeocMcF9gg+ah3oOiKCrLBwgeAx4r96WK8r1R
-	 xXxvEqjbA8SHm1l2P0BTzopyh5rTtLkrutsGhNc+uRPTwIzgELJ/qWurL4PdJb5xhQ
-	 6f+VduTzpFPL03pjGBKtPnK/ONPugkqQk0fjxaDTpNDP2XHX6UXYFV1DXQ5xUi5hG3
-	 LnOvdfTVX35k3ZzKmiqtF7kYzY/CfYJGJljc139GBbyiq/EzIKXf1L2b2ldDcsP2Uu
-	 W85DkeevmzxZQ2OJBg783pyh8ddo4y6hxkn5nYFeU/CvSduT3ZvF4IvSWHLgGHmj8Q
-	 8AhA/oTyw5yDw==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Thu,  6 Jun 2024 14:26:57 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Jun 2024
- 14:26:37 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Weiyi Lu <weiyi.lu@mediatek.com>, <stable@vger.kernel.org>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Michael Turquette
-	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, Sasha Levin <sashal@kernel.org>, AngeloGioacchino
- Del Regno <angelogioacchino.delregno@collabora.com>, Markus
- Schneider-Pargmann <msp@baylibre.com>, <linux-clk@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH 5.10/5.15/6.1 v2] clk: mediatek: Add memory allocation fail handling in clk_mt2712_top_init_early()
-Date: Thu, 6 Jun 2024 14:26:30 +0300
-Message-ID: <20240606112630.35682-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240606110955.35313-1-amishin@t-argos.ru>
-References: 
+	s=arc-20240116; t=1717673342; c=relaxed/simple;
+	bh=WH2ROnLCR40grHlWCcojPTgFMSnZb1kSwzJOI8moWwQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ZEKuM9EXj88Wnc4y3g4cWCGWFlAKoVM4sCq20vCOB+x+aZ2Y1Z+dIGxcEgFAK9eCvqxOPQaIDkgeaZUZ4a+2qfNyuWwzfIuqJks4GmxnQ2wlo2i2jMpPrpNM0xeFt7slCozJjNDmwxepwPMTTSvTiT2SWRLCZlxUPCok0OSA7nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3746147204eso7477675ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 04:29:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717673340; x=1718278140;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WH2ROnLCR40grHlWCcojPTgFMSnZb1kSwzJOI8moWwQ=;
+        b=cG3xERfPjteuDfMza+CKhMIIM60ZyAZVN+DqFsquutacyu6lGCT+3Yo3WL3VU0khy2
+         IlnoRotc1MsmXLCcrRCV+FMqundct54mJzjOJEpL+LEY8TGjx9AJd5MGIo6xF2tlrjWf
+         sReINeOt7w78uYnE6RM0Z/BBGuT/8Z0+wKlfbczQ3+dN85cgjDym5nqs7AmavQTaF/Wz
+         uzDxJzgh1JDnoCEfQZAFsKHSxwj7V+mMmG++Zf6wV4jS5oFkSzhodSquFNtRDHnNUGo0
+         oeeU7DjVmBxuh2uXp2W6LhYYZpKhpu0l5tWFLIlY84c3S5tumaS0CWbqH8Kd9GSDR6FL
+         U2+g==
+X-Gm-Message-State: AOJu0YwHPJnr/Y/AA5OOfr/G53+AcZH6rK+X0R3Idbm3MqFRByage/+o
+	vpDM32x4X7nr0wrVWnsfSiiw3R5A5cFJDwXPwDJkvKl7FyPCu7Y2c/9S2DPG2KSOUfCY46s5fUq
+	XNkOIewx4SjnQsqG8YT9U6MoTYW1m+uMzZuELG4c29GOe0UeCBzd/nJ8=
+X-Google-Smtp-Source: AGHT+IFP/lo2zqIF6X0L23XTOM6wLpD5TUqaLpYEn5Y9zzZiARQrJ8c2D3zTVMVQO/74JRwq8MHwuzAs5kfXL6l5m+ieVpz9KRtI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185766 [Jun 06 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/06/06 10:23:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/06 10:36:00 #25485870
-X-KSMG-AntiVirus-Status: Clean, skipped
+X-Received: by 2002:a05:6e02:b27:b0:374:491c:654a with SMTP id
+ e9e14a558f8ab-374b1edc6c9mr3403695ab.1.1717673340109; Thu, 06 Jun 2024
+ 04:29:00 -0700 (PDT)
+Date: Thu, 06 Jun 2024 04:29:00 -0700
+In-Reply-To: <000000000000adb08b061413919e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004720d2061a36fd41@google.com>
+Subject: Re: [syzbot] Re: 000000000000fcfa6406141cc8ac@google.com
+From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-No upstream commit exists for this commit.
-
-The issue was introduced with commit e2f744a82d72 ("clk: mediatek:
-Add MT2712 clock support")
-
-In case of memory allocation fail in clk_mt2712_top_init_early()
-'top_clk_data' will be set to NULL and later dereferenced without check.
-Fix this bug by adding NULL-return check.
-
-Upstream branch code has been significantly refactored and can't be
-backported directly.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: e2f744a82d72 ("clk: mediatek: Add MT2712 clock support")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
-v1->v2: Add "Fixes:" tag
-
- drivers/clk/mediatek/clk-mt2712.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/clk/mediatek/clk-mt2712.c b/drivers/clk/mediatek/clk-mt2712.c
-index a0f0c9ed48d1..1830bae661dc 100644
---- a/drivers/clk/mediatek/clk-mt2712.c
-+++ b/drivers/clk/mediatek/clk-mt2712.c
-@@ -1277,6 +1277,11 @@ static void clk_mt2712_top_init_early(struct device_node *node)
- 
- 	if (!top_clk_data) {
- 		top_clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
-+		if (!top_clk_data) {
-+			pr_err("%s(): could not register clock provider: %d\n",
-+				__func__, -ENOMEM);
-+			return;
-+		}
- 
- 		for (i = 0; i < CLK_TOP_NR_CLK; i++)
- 			top_clk_data->hws[i] = ERR_PTR(-EPROBE_DEFER);
--- 
-2.30.2
-
+Rm9yIGFyY2hpdmFsIHB1cnBvc2VzLCBmb3J3YXJkaW5nIGFuIGluY29taW5nIGNvbW1hbmQgZW1h
+aWwgdG8KbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZywgc3l6a2FsbGVyLWJ1Z3NAZ29vZ2xl
+Z3JvdXBzLmNvbS4KCioqKgoKU3ViamVjdDogUmU6IDAwMDAwMDAwMDAwMGZjZmE2NDA2MTQxY2M4
+YWNAZ29vZ2xlLmNvbQpBdXRob3I6IHdvamNpZWNoLmdsYWR5c3pAaW5mb2dhaW4uY29tCgojc3l6
+IHRlc3QgaHR0cHM6Ly9saW51eC5nb29nbGVzb3VyY2UuY29tL2xpbnV4L2tlcm5lbC9naXQvdG9y
+dmFsZHMvbGludXggZTM3N2Q4MDNiNjVlZTQxMzAyMTNiM2MwNDFmYzI1ZmRmZWMxYmQ5MA0KDQpk
+aWZmIC0tZ2l0IGEva2VybmVsL3RyYWNlL2JwZl90cmFjZS5jIGIva2VybmVsL3RyYWNlL2JwZl90
+cmFjZS5jDQppbmRleCAyZDI5YmMwZjIxY2MuLjc1ZmRiOGUzYWJhYSAxMDA2NDQNCi0tLSBhL2tl
+cm5lbC90cmFjZS9icGZfdHJhY2UuYw0KKysrIGIva2VybmVsL3RyYWNlL2JwZl90cmFjZS5jDQpA
+QCAtMjM5MywxMiArMjM5MywyMSBAQCB2b2lkIF9fYnBmX3RyYWNlX3J1bihzdHJ1Y3QgYnBmX3Jh
+d190cF9saW5rICpsaW5rLCB1NjQgKmFyZ3MpDQog4oCC4oCC4oCC4oCC4oCCY2FudF9zbGVlcCgp
+Ow0KDQog4oCC4oCC4oCC4oCC4oCCLy8gcmV0dXJuIGlmIGluc3RydW1lbnRhdGlvbiBkaXNhYmxl
+ZCwgc2VlOiBicGZfZGlzYWJsZV9pbnN0cnVtZW50YXRpb24NCi3igILigILigILigILigIJpZiAo
+dW5saWtlbHkoX190aGlzX2NwdV9yZWFkKGJwZl9wcm9nX2FjdGl2ZSkpKSB7DQor4oCC4oCC4oCC
+4oCC4oCCaW50IGluc3RydW1lbnRhdGlvbiA9IHVubGlrZWx5KF9fdGhpc19jcHVfcmVhZChicGZf
+cHJvZ19hY3RpdmUpKTsNCivigILigILigILigILigIJpZiAoaW5zdHJ1bWVudGF0aW9uKSB7DQor
+4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCCcHJpbnRrKCJTS0lQIEZPUiBJTlNUUlVN
+RU5UQVRJT046ICVzID4gJXMgPiAlcCAvJWkgPT09PT09PT09PT09PT1cbiIsDQor4oCC4oCC4oCC
+4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC
+4oCCcHJvZy0+YXV4LT5uYW1lLA0KK+KAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKA
+guKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAgmxpbmstPmJ0cC0+dHAtPm5hbWUsIHBy
+b2csIGluc3RydW1lbnRhdGlvbik7DQog4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC
+YnBmX3Byb2dfaW5jX21pc3Nlc19jb3VudGVyKHByb2cpOw0KIOKAguKAguKAguKAguKAguKAguKA
+guKAguKAguKAguKAgnJldHVybjsNCiDigILigILigILigILigIJ9DQoNCi3igILigILigILigILi
+gIJpZiAodW5saWtlbHkodGhpc19jcHVfaW5jX3JldHVybigqKHByb2ctPmFjdGl2ZSkpICE9IDEp
+KSB7DQor4oCC4oCC4oCC4oCC4oCCaW50IGFjdGl2ZSA9IHRoaXNfY3B1X2luY19yZXR1cm4oKihw
+cm9nLT5hY3RpdmUpKTsNCivigILigILigILigILigIIvLyBwcmludGsoIiVzID4gJXMgPiAlcCAv
+JWlcbiIsIHByb2ctPmF1eC0+bmFtZSwgbGluay0+YnRwLT50cC0+bmFtZSwgcHJvZywgYWN0aXZl
+KTsNCivigILigILigILigILigIJpZiAoYWN0aXZlICE9IDEpIHsNCivigILigILigILigILigILi
+gILigILigILigILigILigIJwcmludGsoIlNLSVAgRk9SIEFDVElWRTogJXMgPiAlcyA+ICVwIC8l
+aSA9PT09PT09PT09PT09PT09PT09PT09PVxuIiwNCivigILigILigILigILigILigILigILigILi
+gILigILigILigILigILigILigILigILigILigILigILigILigILigILigIJwcm9nLT5hdXgtPm5h
+bWUsDQor4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC
+4oCC4oCC4oCC4oCC4oCC4oCCbGluay0+YnRwLT50cC0+bmFtZSwgcHJvZywgYWN0aXZlKTsNCiDi
+gILigILigILigILigILigILigILigILigILigILigIJicGZfcHJvZ19pbmNfbWlzc2VzX2NvdW50
+ZXIocHJvZyk7DQog4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCCZ290byBvdXQ7DQog
+4oCC4oCC4oCC4oCC4oCCfQ0KZGlmZiAtLWdpdCBhL2tlcm5lbC90cmFjZXBvaW50LmMgYi9rZXJu
+ZWwvdHJhY2Vwb2ludC5jDQppbmRleCA4ZDE1MDdkZDA3MjQuLmU3NTYyNjJkOGRmNyAxMDA2NDQN
+Ci0tLSBhL2tlcm5lbC90cmFjZXBvaW50LmMNCisrKyBiL2tlcm5lbC90cmFjZXBvaW50LmMNCkBA
+IC0xNjgsMTIgKzE2OSwyMSBAQCBzdGF0aWMgaW5saW5lIHZvaWQgcmVsZWFzZV9wcm9iZXMoc3Ry
+dWN0IHRyYWNlcG9pbnRfZnVuYyAqb2xkKQ0KIHN0YXRpYyB2b2lkIGRlYnVnX3ByaW50X3Byb2Jl
+cyhzdHJ1Y3QgdHJhY2Vwb2ludF9mdW5jICpmdW5jcykNCiB7DQog4oCC4oCC4oCC4oCC4oCCaW50
+IGk7DQor4oCC4oCC4oCC4oCC4oCCc3RydWN0IGJwZl9yYXdfdHBfbGluayAqbGluazsNCg0KIOKA
+guKAguKAguKAguKAgmlmICghdHJhY2Vwb2ludF9kZWJ1ZyB8fCAhZnVuY3MpDQog4oCC4oCC4oCC
+4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCCcmV0dXJuOw0KDQot4oCC4oCC4oCC4oCC4oCCZm9yIChp
+ID0gMDsgZnVuY3NbaV0uZnVuYzsgaSsrKQ0KLeKAguKAguKAguKAguKAguKAguKAguKAguKAguKA
+guKAgnByaW50ayhLRVJOX0RFQlVHICJQcm9iZSAlZCA6ICVwXG4iLCBpLCBmdW5jc1tpXS5mdW5j
+KTsNCivigILigILigILigILigIJmb3IgKGkgPSAwOyBmdW5jc1tpXS5mdW5jOyBpKyspIHsNCivi
+gILigILigILigILigILigILigILigILigILigILigIJsaW5rID0gZnVuY3NbaV0uZGF0YTsNCivi
+gILigILigILigILigILigILigILigILigILigILigIJpbnQgYWN0aXZlID0gdGhpc19jcHVfcmVh
+ZCgqKGxpbmstPmxpbmsucHJvZy0+YWN0aXZlKSk7DQor4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC
+4oCC4oCC4oCCcHJpbnRrKCJQcm9iZSAlZCA6ICVwIC8gJXA6ICVzLyVkIC8gJWlcbiIsIGksDQor
+4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC
+4oCC4oCC4oCC4oCCZnVuY3NbaV0uZnVuYywNCivigILigILigILigILigILigILigILigILigILi
+gILigILigILigILigILigILigILigILigILigILigILigILigILigIJsaW5rLA0KK+KAguKAguKA
+guKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKA
+guKAgmxpbmstPmxpbmsucHJvZy0+YXV4LT5uYW1lLA0KK+KAguKAguKAguKAguKAguKAguKAguKA
+guKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAguKAgmFjdGl2ZSwNCivi
+gILigILigILigILigILigILigILigILigILigILigILigILigILigILigILigILigILigILigILi
+gILigILigILigIJmdW5jc1tpXS5wcmlvKTsNCivigILigILigILigILigIJ9DQogfQ0KDQogc3Rh
+dGljIHN0cnVjdCB0cmFjZXBvaW50X2Z1bmMgKg0KQEAgLTI5OCw2ICszMDgsOCBAQCBzdGF0aWMg
+ZW51bSB0cF9mdW5jX3N0YXRlIG5yX2Z1bmNfc3RhdGUoY29uc3Qgc3RydWN0IHRyYWNlcG9pbnRf
+ZnVuYyAqdHBfZnVuY3MpDQogew0KIOKAguKAguKAguKAguKAgmlmICghdHBfZnVuY3MpDQog4oCC
+4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCCcmV0dXJuIFRQX0ZVTkNfMDsNCivigILigILi
+gILigILigIJpZiAoIXRwX2Z1bmNzWzBdLmZ1bmMpDQor4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC
+4oCC4oCC4oCCcmV0dXJuIFRQX0ZVTkNfMDsNCiDigILigILigILigILigIJpZiAoIXRwX2Z1bmNz
+WzFdLmZ1bmMpDQog4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCC4oCCcmV0dXJuIFRQX0ZV
+TkNfMTsNCiDigILigILigILigILigIJpZiAoIXRwX2Z1bmNzWzJdLmZ1bmMpDQoNClRoZSBpbmZv
+cm1hdGlvbiBpbiB0aGlzIGVtYWlsIGlzIGNvbmZpZGVudGlhbCBhbmQgbWF5IGJlIGxlZ2FsbHkg
+cHJpdmlsZWdlZC4gSXQgaXMgaW50ZW5kZWQgc29sZWx5IGZvciB0aGUgYWRkcmVzc2VlIGFuZCBh
+Y2Nlc3MgdG8gaXQgYnkgYW55b25lIGVsc2UgaXMgdW5hdXRob3JpemVkLiBJZiB5b3UgYXJlIG5v
+dCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBhbnkgZGlzY2xvc3VyZSwgY29weWluZywgZGlzdHJp
+YnV0aW9uIG9yIGFueSBhY3Rpb24gdGFrZW4gb3Igb21pdHRlZCB0byBiZSB0YWtlbiBiYXNlZCBv
+biBpdCwgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IGJlIHVubGF3ZnVsLg0K
