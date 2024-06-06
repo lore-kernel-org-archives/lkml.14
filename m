@@ -1,240 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D548C4D13F;
-	Thu,  6 Jun 2024 19:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67678821;
+	Thu,  6 Jun 2024 19:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717702858; cv=none; b=Jb0A+ypKSBU0YIYR1A3Q/c9dhuC38I5j8sxFdf4WbvXOTcxUHP9NTUkHTI8p4TX7iMyZeI1V7CD5/xcaOQYC6pZYhNFWRR4vcA1B0QAERQ57Ce54zAKDKfr9Kr/Aq2pUy9i2MWQR/KMHUOWMKJhYlB23vDZ0WWxCu9T31JumCwQ=
+	t=1717702994; cv=none; b=egX6VQg+vYo/z/ShjaR74rV/d+uo51JkypPTL4gjJMZ0c3J6Q1AvOt3a4QZ56d6aKyabqzUJ3xjI3jFmp0e5n6i7CbC4ecA30rhi4vqVyrjHQbxCDZ41zsFUTUi0W4KQqCVx7KETReH4FkkruwC3MxfUSTUHQPYvUdkIcifyVLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717702858; c=relaxed/simple;
-	bh=P0QkZtgUQjhtRPh66yB0oPQQs0jzQOCepM5SRTacekk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZytuL5QruzpVCnc2kH8FXUvZN+7SVtq8mthZq2A6kghc1ouHcXTssQ2F1W6qAb34TRxQz9K4601uoFxIlESs088I9Uzrtes8/0ks/K3/toopBZY211KQYvVxcC3yOIlLJvrF3iiwHW/a4GCGOHqWDQWo6tOLDyLHVLH5ycNBNTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CspXD7QM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717702994; c=relaxed/simple;
+	bh=iJ3PfJIIVmISWOs3yDhd5uulGCXgxOcN7cbPaPCX9fg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B18rynBsyqYyjZ4JIb9T68X7UspsTSWGP3ReV7tA/e78Xpwd1OzKV1n45qbFnlBruG8H3P7w2BKBmjLmYuT1T6S7+LPWci3pfyLVTUdBQiGQ7z5KpKgc096I5aDdXWOF/XYfqMopNOihvRCJt+17W0PHJFKVEL+hvkkVqCORHFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lLlq5pID; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CspXD7QM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA373C2BD10;
-	Thu,  6 Jun 2024 19:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717702858;
-	bh=P0QkZtgUQjhtRPh66yB0oPQQs0jzQOCepM5SRTacekk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CspXD7QM7muSZaL7Q8b+IpA1ZXtUVeIhByTgUYvrCEis25tcxWvcSiWabz/0zmdKL
-	 tz40yXgBvVzRt0/bLIb0ia6Pv3BBRBh5LvFbKEwKhsm9eAa1IQ00KHLgkSfPZE4lx0
-	 +T1aDHd4bJUl7v5kS0kVd/XxvY7gRNZuNBkOtrvgdl1LI8mrZVICCi6S4fu2qiJ00d
-	 a68/P204rh8+MAoTzDFFs/CEmqBQ6gBbfI51xGD3yia8i75FbFi/9FUvRKgiK79tKW
-	 OAJwroFeDZtdH4XeccSqXxXUpxvAxr0fQ4xq+U+UfP3f+7+XvN9T4LYxZHDkPCYfN7
-	 XO+Gwo5BmBYzQ==
-Date: Thu, 6 Jun 2024 20:40:48 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, matthias.bgg@gmail.com, lee@kernel.org,
- andy@kernel.org, nuno.sa@analog.com, bigunclemax@gmail.com,
- dlechner@baylibre.com, marius.cristea@microchip.com,
- marcelo.schmitt@analog.com, fr0st61te@gmail.com, mitrutzceclan@gmail.com,
- mike.looijmans@topic.nl, marcus.folkesson@gmail.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v1 1/4] dt-bindings: iio: adc: Add MediaTek MT6359 PMIC
- AUXADC
-Message-ID: <20240606204048.2e06d995@jic23-huawei>
-In-Reply-To: <3d364430-96c7-4f9f-98e7-e68b1e57f69e@collabora.com>
-References: <20240530093410.112716-1-angelogioacchino.delregno@collabora.com>
-	<20240530093410.112716-2-angelogioacchino.delregno@collabora.com>
-	<20240602104048.14c75d7b@jic23-huawei>
-	<3d364430-96c7-4f9f-98e7-e68b1e57f69e@collabora.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lLlq5pID"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717702993; x=1749238993;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iJ3PfJIIVmISWOs3yDhd5uulGCXgxOcN7cbPaPCX9fg=;
+  b=lLlq5pIDLjuc++Mxa+wn/aLjn4eEFuUb79LiGpPEG0QpSQrKF2EeSGSL
+   xTp/EkASxpGtTe148fXVEAeS+fSvDUGQiSbohWGGc2Y/slUXLG6XefJQR
+   kSI9TUVVJ0YLj3phbj/s8bG94qBDVenjpIcCHXVKWezylseq+4vOqA9fc
+   wMFa1zCgCS9fdaAv926RsaC0ilfXMMCIWq+L4QIxmAuI7clUccBSHMZMw
+   q31171+35C9mG77VG0PVedseL85RxZWgUfjzTJZe5KpZMq9AlBNdGB1JN
+   iuuOU86xpextcEtDyX+nyJZegWvFKQBSdfBWIu39qUJz6fbi1XnmqNpLl
+   w==;
+X-CSE-ConnectionGUID: LNxkU18MRqGbYT+KC5NP6w==
+X-CSE-MsgGUID: 9vaT3FQDQvaLST+GxubIng==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="18190218"
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="18190218"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 12:43:13 -0700
+X-CSE-ConnectionGUID: UCStVhN/SO2DSJLGK0L4cA==
+X-CSE-MsgGUID: KIifYad2QW+Pi4FxVy2Pyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="68868902"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 12:43:11 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1sFJ0u-0000000EIca-0z55;
+	Thu, 06 Jun 2024 22:43:08 +0300
+Date: Thu, 6 Jun 2024 22:43:07 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+	Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v1 1/1] ARM: omap2: Switch to use kmemdup_array()
+Message-ID: <ZmIRS8HTar7iKQo7@smile.fi.intel.com>
+References: <20240606165104.3031737-1-andriy.shevchenko@linux.intel.com>
+ <20240606193202.GD9487@darkstar.musicnaut.iki.fi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240606193202.GD9487@darkstar.musicnaut.iki.fi>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, 4 Jun 2024 11:04:25 +0200
-AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> wrote:
+On Thu, Jun 06, 2024 at 10:32:02PM +0300, Aaro Koskinen wrote:
+> On Thu, Jun 06, 2024 at 07:51:04PM +0300, Andy Shevchenko wrote:
+> > Let the kememdup_array() take care about multiplication and possible
+> 
+>           ^^^^^
+>           Typo.
 
-> Il 02/06/24 11:40, Jonathan Cameron ha scritto:
-> > On Thu, 30 May 2024 11:34:07 +0200
-> > AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> wrote:
-> >   
-> >> Add a new binding for the MT6350 Series (MT6357/8/9) PMIC AUXADC,
-> >> providing various ADC channels for both internal temperatures and
-> >> voltages, audio accessory detection (hp/mic/hp+mic and buttons,
-> >> usually on a 3.5mm jack) other than some basic battery statistics
-> >> on boards where the battery is managed by this PMIC.
-> >>
-> >> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>  
-> > Hi,
-> > 
-> > What are all the headers for given the binding doc doesn't use anything from
-> > them?
-> >   
-> 
-> The binding document doesn't use them, yes, but those are part of the devicetree
-> binding itself, as those can be used by devicetrees to reference an ADC channel
-> like <&pmic_adc MT6359_AUXADC_ACCDET>.
-> 
-> I think growing the binding example to add an "external" node using one of those
-> channels is irrelevant, as that is "outside" of the description of the AUXADC HW.
+Aha, thanks!
 
-Add a note on that to the patch description and that is fine.
+> > overflows.
 
-J
+...
+
+> > -	hwmods = kmemdup(ohs, sizeof(struct omap_hwmod *) * oh_cnt, GFP_KERNEL);
+> > +	hwmods = kmemdup_array(ohs, oh_cnt, sizeof(*hwmods), GFP_KERNEL);
 > 
-> Cheers,
-> Angelo
-> 
-> > Jonathan
-> >   
-> >> ---
-> >>   .../iio/adc/mediatek,mt6359-auxadc.yaml       | 43 +++++++++++++++++++
-> >>   .../iio/adc/mediatek,mt6357-auxadc.h          | 21 +++++++++
-> >>   .../iio/adc/mediatek,mt6358-auxadc.h          | 22 ++++++++++
-> >>   .../iio/adc/mediatek,mt6359-auxadc.h          | 22 ++++++++++
-> >>   4 files changed, 108 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
-> >>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6357-auxadc.h
-> >>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6358-auxadc.h
-> >>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6359-auxadc.h
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml b/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
-> >> new file mode 100644
-> >> index 000000000000..dd6c331905cf
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
-> >> @@ -0,0 +1,43 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/iio/adc/mediatek,mt6359-auxadc.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: MediaTek MT6350 series PMIC AUXADC
-> >> +
-> >> +maintainers:
-> >> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> >> +
-> >> +description:
-> >> +  The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
-> >> +  in some MediaTek PMICs, performing various PMIC related measurements
-> >> +  such as battery and PMIC internal voltage regulators temperatures,
-> >> +  accessory detection resistance (usually, for a 3.5mm audio jack)
-> >> +  other than voltages for various PMIC internal components.
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - mediatek,mt6357-auxadc
-> >> +      - mediatek,mt6358-auxadc
-> >> +      - mediatek,mt6359-auxadc
-> >> +
-> >> +  "#io-channel-cells":
-> >> +    const: 1
-> >> +
-> >> +additionalProperties: false
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - "#io-channel-cells"
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    pmic {
-> >> +        pmic_adc: adc {
-> >> +            compatible = "mediatek,mt6359-auxadc";
-> >> +            #io-channel-cells = <1>;
-> >> +        };
-> >> +    };
-> >> +...
-> >> diff --git a/include/dt-bindings/iio/adc/mediatek,mt6357-auxadc.h b/include/dt-bindings/iio/adc/mediatek,mt6357-auxadc.h
-> >> new file mode 100644
-> >> index 000000000000..03ebb1d23953
-> >> --- /dev/null
-> >> +++ b/include/dt-bindings/iio/adc/mediatek,mt6357-auxadc.h
-> >> @@ -0,0 +1,21 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> >> +
-> >> +#ifndef _DT_BINDINGS_MEDIATEK_MT6357_AUXADC_H
-> >> +#define _DT_BINDINGS_MEDIATEK_MT6357_AUXADC_H
-> >> +
-> >> +/* ADC Channel Index */
-> >> +#define MT6357_AUXADC_BATADC		0
-> >> +#define MT6357_AUXADC_ISENSE		1
-> >> +#define MT6357_AUXADC_VCDT		2
-> >> +#define MT6357_AUXADC_BAT_TEMP		3
-> >> +#define MT6357_AUXADC_CHIP_TEMP		4
-> >> +#define MT6357_AUXADC_ACCDET		5
-> >> +#define MT6357_AUXADC_VDCXO		6
-> >> +#define MT6357_AUXADC_TSX_TEMP		7
-> >> +#define MT6357_AUXADC_HPOFS_CAL		8
-> >> +#define MT6357_AUXADC_DCXO_TEMP		9
-> >> +#define MT6357_AUXADC_VCORE_TEMP	10
-> >> +#define MT6357_AUXADC_VPROC_TEMP	11
-> >> +#define MT6357_AUXADC_VBAT		12
-> >> +
-> >> +#endif
-> >> diff --git a/include/dt-bindings/iio/adc/mediatek,mt6358-auxadc.h b/include/dt-bindings/iio/adc/mediatek,mt6358-auxadc.h
-> >> new file mode 100644
-> >> index 000000000000..efa08398fafd
-> >> --- /dev/null
-> >> +++ b/include/dt-bindings/iio/adc/mediatek,mt6358-auxadc.h
-> >> @@ -0,0 +1,22 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> >> +
-> >> +#ifndef _DT_BINDINGS_MEDIATEK_MT6358_AUXADC_H
-> >> +#define _DT_BINDINGS_MEDIATEK_MT6358_AUXADC_H
-> >> +
-> >> +/* ADC Channel Index */
-> >> +#define MT6358_AUXADC_BATADC		0
-> >> +#define MT6358_AUXADC_VCDT		1
-> >> +#define MT6358_AUXADC_BAT_TEMP		2
-> >> +#define MT6358_AUXADC_CHIP_TEMP		3
-> >> +#define MT6358_AUXADC_ACCDET		4
-> >> +#define MT6358_AUXADC_VDCXO		5
-> >> +#define MT6358_AUXADC_TSX_TEMP		6
-> >> +#define MT6358_AUXADC_HPOFS_CAL		7
-> >> +#define MT6358_AUXADC_DCXO_TEMP		8
-> >> +#define MT6358_AUXADC_VBIF		9
-> >> +#define MT6358_AUXADC_VCORE_TEMP	10
-> >> +#define MT6358_AUXADC_VPROC_TEMP	11
-> >> +#define MT6358_AUXADC_VGPU_TEMP		12
-> >> +#define MT6358_AUXADC_VBAT		13
-> >> +
-> >> +#endif
-> >> diff --git a/include/dt-bindings/iio/adc/mediatek,mt6359-auxadc.h b/include/dt-bindings/iio/adc/mediatek,mt6359-auxadc.h
-> >> new file mode 100644
-> >> index 000000000000..59826393ee7e
-> >> --- /dev/null
-> >> +++ b/include/dt-bindings/iio/adc/mediatek,mt6359-auxadc.h
-> >> @@ -0,0 +1,22 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> >> +
-> >> +#ifndef _DT_BINDINGS_MEDIATEK_MT6359_AUXADC_H
-> >> +#define _DT_BINDINGS_MEDIATEK_MT6359_AUXADC_H
-> >> +
-> >> +/* ADC Channel Index */
-> >> +#define MT6359_AUXADC_BATADC		0
-> >> +#define MT6359_AUXADC_BAT_TEMP		1
-> >> +#define MT6359_AUXADC_CHIP_TEMP		2
-> >> +#define MT6359_AUXADC_ACCDET		3
-> >> +#define MT6359_AUXADC_VDCXO		4
-> >> +#define MT6359_AUXADC_TSX_TEMP		5
-> >> +#define MT6359_AUXADC_HPOFS_CAL		6
-> >> +#define MT6359_AUXADC_DCXO_TEMP		7
-> >> +#define MT6359_AUXADC_VBIF		8
-> >> +#define MT6359_AUXADC_VCORE_TEMP	9
-> >> +#define MT6359_AUXADC_VPROC_TEMP	10
-> >> +#define MT6359_AUXADC_VGPU_TEMP		11
-> >> +#define MT6359_AUXADC_VBAT		12
-> >> +#define MT6359_AUXADC_IBAT		13
-> >> +
-> >> +#endif  
-> >   
-> 
+> Maybe same result, but I guess the 3rd parameter should be count?
+
+Actually it is going to be changed to follow kcalloc().
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?id=0ee14725471c
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
