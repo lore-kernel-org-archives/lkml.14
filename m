@@ -1,131 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83CD44361;
-	Thu,  6 Jun 2024 19:58:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE74171743;
+	Thu,  6 Jun 2024 19:58:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717703904; cv=none; b=CruEIK6MtrbLnZHUoV0YwlXhZFUf3EQxmFwzA80qSHu0/1InyC0GaZIBQpa0cA2tnenUwPS1qEyVGcubC66PMv/fHwyENwvCsZ2GBsv3nz5o8DIgR27DrpmpixiW10Mg3Rgt9w3dsuEYkxYZkJjMCsfq3ZF+k5HdldU4jhaDwsE=
+	t=1717703918; cv=none; b=nsGlSI55AkWjLlzmH5eBCtsywMidkQmSzx1yJMYGIl0pA2at7w/QtgMewYkBWUjEa7QMLHw/oo4KNhTIcWxM03epAZt71r3N8XUL8PoLDfTcgu7dY3E9OVuuXO9+g2S6vXJpQa1jo98jYmjwTtJBhyXxLvGKaOTVS0ZVXitb23o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717703904; c=relaxed/simple;
-	bh=Ew+uJIHo1tIv3V3cIwq+PSc8g98kQVzDQiK0ACMNhjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=epQGY8xmgH0SrCHbt39puAh7E+0feOkLwhwUygreDAREHFy2ij2h6kUzZwGgk/is7UaVKn49zqCOB7vJ5jmlevpWe5Ac2eJPmOM8GTevnjYI7yqDJhgSPauyQEzx7HRlpVBIjhx9rjuAseDz+B3W3e2mhXmn6JHFysrfjFmzQ/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kxw0PvxZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717703918; c=relaxed/simple;
+	bh=a41q0bUhTB2TfeDoXkXNBNdH5lct9YkYIl4SZkTdPoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=PO7PBSEdd3PJSbgxQEA9afvtJG52CpQlbyYg7u5f7tnYDCnhz8cgg/We1nsUhsYMvM9d8fh9NUxJIjoR8wAh5UbrPuXraoCTLPlA5DpKxLwWlY31cM1rR0+bm/mWERHKZSYsJnGk1YAxPaXTaQ6jpOCnvSNj4YRX1db0jyNWMlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOES39us; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kxw0PvxZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B09AC2BD10;
-	Thu,  6 Jun 2024 19:58:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOES39us"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58BD3C2BD10;
+	Thu,  6 Jun 2024 19:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717703903;
-	bh=Ew+uJIHo1tIv3V3cIwq+PSc8g98kQVzDQiK0ACMNhjc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Kxw0PvxZlvq15FdUzivZMcou6nAZV13taDbuK/NcPoGENpZmvccKY9eOC1Trn7u+d
-	 8KmYAxQ/4bKhzl/LMlp+kPI6D3uOAu1jMM99XckQ6/hp7r/qPIwNKTpoCyD6cdQXKj
-	 5p94n0MwBhXTpu7HX0kRqMOWqx3SE98CfaonMv3PEFbtqHwAhwFM67WH8hsZ7mZGdw
-	 li2/G/wYPqzoZEppGcvUCH2hwJ/MvYjC9iCUq3PnDZYTDOMw22KF8QNpNQF9ujOf+Y
-	 UFVhgxDIqQtqv7I8mpJrBLFli0ULUwsm0K6NmiodGfbPWOb1PqPB+DRyL7G3U09xuB
-	 R8Rg64G1sreSw==
-Date: Thu, 6 Jun 2024 20:58:13 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
-Cc: Dumitru Ceclan via B4 Relay
- <devnull+dumitru.ceclan.analog.com@kernel.org>, dumitru.ceclan@analog.com,
- Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/6] dt-bindings: adc: ad7173: add support for ad411x
-Message-ID: <20240606205813.65b342c4@jic23-huawei>
-In-Reply-To: <0f0c0b92-af0d-4e68-9880-bacfd53d726f@gmail.com>
-References: <20240531-ad4111-v4-0-64607301c057@analog.com>
-	<20240531-ad4111-v4-1-64607301c057@analog.com>
-	<20240601193512.0e17992b@jic23-huawei>
-	<efa10caa-5e78-4f3f-8cca-c61d7a01e6fd@gmail.com>
-	<20240603210014.6258134d@jic23-huawei>
-	<0f0c0b92-af0d-4e68-9880-bacfd53d726f@gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	s=k20201202; t=1717703917;
+	bh=a41q0bUhTB2TfeDoXkXNBNdH5lct9YkYIl4SZkTdPoQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=VOES39usLWYAA0XVRisqwwUHveB0zQXiDWdslluC3Ua17YfZxwEsZI0iqFKIoD/wI
+	 +dEEasTL8Xo5iE+LNlbnS7LXaYZ5I3ZeQ5vcNCvpjQcg69EfUEeNBY+7Cwgf1zoFHZ
+	 VUbjKYcJ3gKgjqhKU/y3vdQ3ihHj8JLnYVhHvCWuI3rxzi9PsvFrc23r3l8onexnii
+	 VvKYSecAoN6Yh3R3Inzdg+J8ehA8XVCMa5ZMEEKTMZjbZYh4CxZOCeZ9pJii4yFte8
+	 2JY+HcFumaK8Da2Pllay2FzvBJjsuvgvsvI9nUNfTt56PjfJqmfJfKF+Qls9Nqse5u
+	 zpj4AFW2rFDUg==
+Date: Thu, 6 Jun 2024 14:58:35 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux@treblig.org
+Cc: lpieralisi@kernel.org, robh@kernel.org, thierry.reding@gmail.com,
+	linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: remove unused struct 'tegra_pcie_soc'
+Message-ID: <20240606195835.GA816675@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240527160118.37069-1-linux@treblig.org>
 
-On Wed, 5 Jun 2024 09:54:31 +0300
-"Ceclan, Dumitru" <mitrutzceclan@gmail.com> wrote:
+On Mon, May 27, 2024 at 05:01:18PM +0100, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> 'tegra_pcie_soc' has been unused since the initial
+> commit 56e15a238d92 ("PCI: tegra: Add Tegra194 PCIe support").
+> 
+> Remove it.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-> On 03/06/2024 23:00, Jonathan Cameron wrote:
-> > On Mon, 3 Jun 2024 12:46:10 +0300
-> > "Ceclan, Dumitru" <mitrutzceclan@gmail.com> wrote:
-> >  =20
-> >> On 01/06/2024 21:35, Jonathan Cameron wrote: =20
-> >>> On Fri, 31 May 2024 22:42:27 +0300
-> >>> Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel=
-.org> wrote:
-> >>>    =20
-> >>>> From: Dumitru Ceclan <dumitru.ceclan@analog.com> =20
->=20
-> ...
->=20
-> >>>> +          Supported only by AD7172-2, AD7172-4, AD7175-2, AD7175-8,=
- AD7177-2:
-> >>>> +            19: ((AVDD1 =E2=88=92 AVSS)/5)+
-> >>>> +            20: ((AVDD1 =E2=88=92 AVSS)/5)=E2=88=92   =20
-> >>>
-> >>> That's what it says on the datasheet (so fine to copy that here) but =
-I'm curious, what does
-> >>> that mean in practice?  How can we have negative and postive signals =
-of the difference
-> >>> between two power supply voltages where I'm fairly sure AVDD1 always =
-greater than AVSS.
-> >>>   =20
-> >>
-> >> I have not tested that as I do not have a model that supports this wir=
-ed up.
-> >> If I had to guess they are the same signal but one should be connected=
- to the
-> >> positive input, one to the negative input...but I could be wrong. =20
-> >=20
-> > If they are, then as far as I we are concerned is this one channel with=
- two
-> > representations depending on whether it is 1st or 2nd in the list?
-> > Can we use one number and hide that detail in the driver?
-> >=20
-> > Seems odd though if that is the case.
-> >=20
-> > I guess if we find out later this is the case we can tighten the bindin=
-g to
-> > enforce the right one instead of squashing them to one value, but that
-> > is a bit ugly.  Any chance of digging out the info?  If not we can go a=
-head
-> > but ideally answering things like this make a our life easier in the lo=
-ng run.
-> >=20
-> > Jonathan
-> >  =20
->=20
-> "(Avdd1/Avss)/5+ as positive input and (Avdd/Avss)/5- as negative
->   this is used for monitoring power supplies, the inputs must be selected=
- in pair"
-> Perhaps it's an internal voltage divider...? I dunno
->=20
-> So it seems like this cannot be used as a common mode voltage input.
-> I'll restrict the driver to only allow these inputs paired together
-> and rename the define for these selections.
-Most mysterious :)  I'd be interested to know what value it reads
-back if you ever get the part.
+Applied with Niklas' reviewed-by to pci/controller/tegra194 for v6.11,
+thanks!
 
-Ah well, great to have gotten that extra detail even if it leaves
-more questions!
-
-Jonathan
-
->=20
->=20
->=20
-
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 93f5433c5c55..076f040ccc34 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -308,10 +308,6 @@ static inline u32 appl_readl(struct tegra_pcie_dw *pcie, const u32 reg)
+>  	return readl_relaxed(pcie->appl_base + reg);
+>  }
+>  
+> -struct tegra_pcie_soc {
+> -	enum dw_pcie_device_mode mode;
+> -};
+> -
+>  static void tegra_pcie_icc_set(struct tegra_pcie_dw *pcie)
+>  {
+>  	struct dw_pcie *pci = &pcie->pci;
+> -- 
+> 2.45.1
+> 
