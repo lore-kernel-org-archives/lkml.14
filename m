@@ -1,116 +1,79 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8756845BE3
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 18:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF2E1BC3C;
+	Thu,  6 Jun 2024 18:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717700010; cv=none; b=TF8nq/5dfTBsIJcZCIMmcU6o4rldn42N6HMI3Vp6Umzoh+cbaD+AMCK2IDBdVTmst+JVFu89K21wyXOA6ay5duQq62lxOGbIcfShCcZj+7OyuStgu4OA9njPZ7Iy69b9Z20iE/cdJa2cLsZA3TWDez7zmSfN36S9TvdWFSIEkAY=
+	t=1717700367; cv=none; b=r47kWwZu+ElrUblnK1ZGL23Ty2PobgY0/n373V+XNPY0UDBY0iDxAUvWU5kAaC6dlC22N9gEdCogqszq13rl1obh0xRZys69Ze6sD/LiGOKgemy8ZC0wqSeRMn8yvrDjAa0nkuOOuJxQLHaRWjWulrfDxDOOzsqMViwDILg/w8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717700010; c=relaxed/simple;
-	bh=om1n47XePQtjI/lLgidIuMniQGl6BwDPK4rXrD+4YZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sFHlq5BEGqD32vp36B2bSgfHuRDGrqel4NNgau6yUnkEXqf3FIJMqwO0w5RTeQ3YRM0zAHXab4AW0D6/cUO0FAQO7wwtjrhC130ngTKCzA4gxe2j6N8ENyDvhkTr8v1RcUM1OST379Ktjrwdu74DoP0MKNIA4CNvRbq9di13a+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=W3+7CrDF; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1717700367; c=relaxed/simple;
+	bh=FmIcLEU78RYqLgP+RXvK8d/zWUTgBjyUQnlYUUF65ns=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=s5jNcxOpkhF9yNQKO7Wy3C41R2/FnqnMe39erWXxJNILVngfSWVDK0KhhWwgYz39jQZmoLzMG5fLcfSkb1gumeZUeu5hdJqVYviari/ky2rhFOXLB8rHcnMuQ1SLJ3ELLHlSpgCYDJwZOh0XCx6ykiRlQmglAUoPLyWz+XfaQmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4Nu8RMt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="W3+7CrDF"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a690161d3ccso138155066b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 11:53:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1717700007; x=1718304807; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zeGjTLLISyTtH1AgP/c8JS96JX38uoEOXIRqVTS6/9M=;
-        b=W3+7CrDFBe+WIVTUDyjqaVB2cREbIijKrf1Kd5fReNBbsvxx0cW3FU6Fiv9HJv3PRW
-         2E7ZTFBdt/LXGWc23rUhnvCXDUVRKIHUeK3xmJnQiVAx0OnaKAP6XY7179k9RvXSLGjS
-         ToY+xGgMlF4BgNoTXf82jitUAjzIQAggp+bFD8L5drqExRN5ajuM0cDJSAIZ7UHBmN96
-         uNcGjI2Fi9NVjoJ+zpmzfd7ikq+0alik9RMyQ5Z4vU910pUHjOgXP8wI7lS1Si4Wecqz
-         AAr3tsO7U02ALhzmOrp3C9nSWA+8nF6ggrJ162GamfcnowyBy9a+IWK5cdnDHlHgFMN7
-         lJxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717700007; x=1718304807;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zeGjTLLISyTtH1AgP/c8JS96JX38uoEOXIRqVTS6/9M=;
-        b=F+9YzJir56tmwRq2vGMIJg9liGKUNKjhrARbHFm7ixtvA6f0co8tXSKgeEjsmvcEi/
-         h8HEYnris2yDsB2mQK6vVpRrtk9IgPm4s7egBRunwiFZRCV3/tR4d11J7lPFYg9LCba4
-         c/4O3kgSacOnX/NcJYIoyhjfOxjjvpb8K1h4HZSveHD811ilgSFDw46c8dx1Xb/nhl8m
-         /LwmJ3615jTogn7dVMLyu8pbHrLgBahJKxblp9WyN4Bh/w9aqo//fnsfQi4jpdcKdfbN
-         zNRI8mgHJalWtluhD/Na06t+YAObLjnmUw/XCe6Som06DtJ8pQr6s5yfM75EiVrRqwAX
-         AEbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVLdsoY0x+jN/xyfPlaH0ZCXG6W5rAhy417q+xvUdEeywhs4Vl/JGSSIeoP7WRIcGef6ZI02UnGbEgrqKmRRyJF+OIWqMhTY10ls+74
-X-Gm-Message-State: AOJu0YzcSNJH4OxUO+KvRLnOmHY3QmvZmkRHt5L44a+1706ktP1IevIh
-	wqBsVEdh/vxz13ochWTYd/XR2vJ509jUNfp2CkSF4HflB5QTf1vJ0vSiu44uqzldwI1sS27EiGy
-	JIUQ=
-X-Google-Smtp-Source: AGHT+IEx6zqhhAPgHVJ3Am/Pmt3iRNX4TeauA1h0PfHvUlHWCZBgHIV+NRaAEiIgeUrw/R2X5rdpRA==
-X-Received: by 2002:a17:906:4816:b0:a59:bdb7:73e8 with SMTP id a640c23a62f3a-a6cdad238d1mr28297666b.53.1717700006767;
-        Thu, 06 Jun 2024 11:53:26 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-164.dynamic.mnet-online.de. [82.135.80.164])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c806ea19esm130890066b.128.2024.06.06.11.53.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 11:53:25 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: rafael@kernel.org,
-	lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] ACPI/NUMA: Consolidate header includes
-Date: Thu,  6 Jun 2024 20:52:02 +0200
-Message-ID: <20240606185200.1596-3-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4Nu8RMt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C792CC2BD10;
+	Thu,  6 Jun 2024 18:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717700367;
+	bh=FmIcLEU78RYqLgP+RXvK8d/zWUTgBjyUQnlYUUF65ns=;
+	h=Date:From:To:Cc:Subject:From;
+	b=R4Nu8RMti0VThshaG+Ipzw7+E2qzgvmApl5iIwyNCSd9uekOQgF4f+sIjbm4SScE0
+	 S1hNxxvHh7LYHGdlXotwqZqNCGEjn9Nw07cD77amXwMWElp/5S/AnZzF4UEtf3Mc5Z
+	 eOnCtQR8mmfHc2G29WBZrXYQPmrrAbIm4mY0f7vpdDfS3FxK/bN+yn/h/XNsl0JyLS
+	 8vNsuIFi/MsV9J8+qZTcC2w11Rt/HCSqABOryC285bag9L2u9vjF8d2c7fCLk03ATc
+	 kfmq0xuvH63M5e7HWmSfKH8MhfSPF3dwmFs2SyaxsGjLOtJrY7zWGCyEpLHtIivUXU
+	 KB6m+XcrCteIQ==
+Date: Thu, 6 Jun 2024 13:59:25 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Imre Deak <imre.deak@intel.com>,
+	Hans de Goede <hdegoede@redhat.com>, Kalle Valo <kvalo@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jani Saarinen <jani.saarinen@intel.com>,
+	Leon Romanovsky <leonro@nvidia.com>
+Subject: [GIT PULL] PCI fixes for v6.10
+Message-ID: <20240606185925.GA810710@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The header file acpi/acpi_numa.h is included whether CONFIG_ACPI is
-defined or not.
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
 
-Include it only once before the #ifdef/#else/#endif preprocessor
-directives and fix the following make includecheck warning:
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
 
-	acpi/acpi_numa.h is included more than once
+are available in the Git repository at:
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- include/linux/acpi.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.10-fixes-1
 
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 28c3fb2bef0d..bb18e7bf8826 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -24,6 +24,7 @@ struct irq_domain_ops;
- #define _LINUX
- #endif
- #include <acpi/acpi.h>
-+#include <acpi/acpi_numa.h>
- 
- #ifdef	CONFIG_ACPI
- 
-@@ -35,7 +36,6 @@ struct irq_domain_ops;
- 
- #include <acpi/acpi_bus.h>
- #include <acpi/acpi_drivers.h>
--#include <acpi/acpi_numa.h>
- #include <acpi/acpi_io.h>
- #include <asm/acpi.h>
- 
-@@ -777,8 +777,6 @@ const char *acpi_get_subsystem_id(acpi_handle handle);
- #define acpi_dev_uid_match(adev, uid2)			(adev && false)
- #define acpi_dev_hid_uid_match(adev, hid2, uid2)	(adev && false)
- 
--#include <acpi/acpi_numa.h>
--
- struct fwnode_handle;
- 
- static inline bool acpi_dev_found(const char *hid)
--- 
-2.45.2
+for you to fetch changes up to c9d52fb313d3719d69a040f4ca78a3e2e95fba21:
 
+  PCI: Revert the cfg_access_lock lockdep mechanism (2024-06-04 12:10:05 -0500)
+
+----------------------------------------------------------------
+- Revert lockdep checking on locking that protects device resets from
+  user-space config accesses; it exposed issues for which fixes are in the
+  works but are too risky for this cycle (Dan Williams)
+
+----------------------------------------------------------------
+Dan Williams (1):
+      PCI: Revert the cfg_access_lock lockdep mechanism
+
+ drivers/pci/access.c    | 4 ----
+ drivers/pci/pci.c       | 1 -
+ drivers/pci/probe.c     | 3 ---
+ include/linux/lockdep.h | 5 -----
+ include/linux/pci.h     | 2 --
+ 5 files changed, 15 deletions(-)
