@@ -1,221 +1,238 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3819F145B13;
-	Thu,  6 Jun 2024 08:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.7])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E7201474BD
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 08:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717663900; cv=none; b=uIJofzXkK4Q22cdqGM+4ujUFXjB0oMKceG9PTlObik6KDQCxwWY5ketKGIutv68lWpIYl20/KNHOyzK/Eo63wS5ckzdRHvNyFdj7txlEh7oOE5W0kciHe8RB29cR2C9A7W4v2ezPPcl8GNUMdfYjE1XNaTpEQzZLXQDGelNNz4U=
+	t=1717663906; cv=none; b=DTZXTHR+OxAAqNCDkV5m9a6SuSEVVoR4WzQFuXsk+N6Jdjiy5w6QcvDBlIEMGQtw9x2Sm3yo4NdD9OPUG5BPeh+KIQ4K+zjbRY4Fo2R3Cpc3JLXZQety7Q2TxA2ofybWtNA7txkYX73vT+LeehC8FyGPFJLofVal5xDYhgI4v2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717663900; c=relaxed/simple;
-	bh=olMsTt0E07IExOiEWWxYo5VlwenVYpNVSmvwdO7uYe8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LPDKuFK6CnRggRWSeiIXAVvTyOE05a7u3fPhP6KnTWHWWM+bQy+CPmO8pMul0sSMcK8temLFifBJbWNi6/z/PuiQJGQmPlPztEe8Wdw/9gQr0NJmLh+D+5DgxQouN6UUBuAZ7tT8HwsVyo+hnVDlHn2aQsrm/ZP6inedmGvrp9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iHH342ED; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717663906; c=relaxed/simple;
+	bh=zYHPUSlxpklsO0n6/0IhIw1302QdrsKhm/V7cSysJk8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=DKr4Y5qFS6FP4TkVEvcREtSfKZy1HNaWMOo9JSmcdqS1kiMDTuug8YBLbIbDBRQNxguo/nROCevZh4ofHVZnBtB7rOtwPAR89d4BFyE24cwsIE6xaWmUNAyzBbBKu6WRaL/oppJ68G+5IJSNFRIGquw0V3VHrNx2DTsNe+NHvAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=JG0a6zGJ; arc=none smtp.client-ip=117.135.210.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHH342ED"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-35b6467754cso483549f8f.3;
-        Thu, 06 Jun 2024 01:51:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717663898; x=1718268698; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1mllGj07TyExdbGEWAEU/QQgVzOqr2piCK4whCFAxbs=;
-        b=iHH342ED33f1VOrWDeEwrO7VSl+c6V2qq5y7LRIA0SRnuuMPH6R+19E++QcvfgHtQf
-         N4qga3KklXymk7RFGMEBzIs53/iF7bxNMglyEhnMFculywKQgvWUykS4djQSzzrnE/bL
-         r8guSGZhg1QJdZwqL4zqnZ+FOeQWmF1YxgntySyxD4hW6e2DP4EN8dTFSBxVzfSnHh7E
-         xl1ScBlXXCm1CmoFxgn0Zd7q/RLAdDtQZznO87EqsKMEgz6b3CVTbnI6Xa1i582UEscV
-         4SrU24JkUUs9VDiDetIhfyASIvScnSXhctoLNS5g8Q+z3dKNzxNYgpedwtoLsJj8PNiU
-         Tdig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717663898; x=1718268698;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1mllGj07TyExdbGEWAEU/QQgVzOqr2piCK4whCFAxbs=;
-        b=HIazSisR91MAGKA2riVxcvMvDlKq8YyQ6fZU7b9kibY/vpWUeMQhpHaACwDHh1dmPY
-         Go/hWo8hoWcuyEZl3A3TDxCvXIn+jdj3IAWQb5jWT/XylhQTQJGshdmqcu5stRHz2Mrx
-         frv7MUc0YQbBXG1VykMJgE/sV3VPBqUNe7SPvMsVgVcS3Bdlf7gk7/E91GPp/iDZQAvH
-         tPTI+w1lvy2APlNglla2EH00z/ANX+DWFXgrD0Y4AgE/U1Dkxwaq3EcoetChNSM6xEX2
-         vRbRXbq4+eNfvko2wItozY/3dKi3bdzgkl/huhSjj9N92R2kuCBY0/skUIp09mtX7Q8I
-         c6Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxyToCaoyNZ/a6sjNzQVGfXn6xw+HtX7dh3aRMO4E/A1NtL6hXTcRZuW+oo27iY/6pcpX5rFx+2Z9Pexreys9susXFUEUqp20UKhF4LUjM+fycS+3fgnr+sM0mjy9vu29Z8TXGjD3Ljai++91eUIXuxZd+UeQiC9KMO6PYss3nBFmkT8o=
-X-Gm-Message-State: AOJu0Yx52ejlXtWlveVMtbOT60FkT+8JshNRH1iFeIeUFaRc7IbGhDMv
-	YuDXak6eQv03L1pSSZgacff2dMVhsUBL6iG5KRRTr7IwebXRk5K8
-X-Google-Smtp-Source: AGHT+IGtbmw8e09ZrB/ElqmFff5B2nsA8J/S0oplHnyKX/IDSc903euWdyLnHYpsrkdkNdDc6PzMMQ==
-X-Received: by 2002:a5d:49c5:0:b0:354:c934:efa1 with SMTP id ffacd0b85a97d-35e8ef888camr3319737f8f.56.1717663897283;
-        Thu, 06 Jun 2024 01:51:37 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d69c68sm986772f8f.61.2024.06.06.01.51.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 01:51:36 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4] dt-bindings: pinctrl: renesas: Document RZ/V2H(P) SoC
-Date: Thu,  6 Jun 2024 09:51:33 +0100
-Message-Id: <20240606085133.632307-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="JG0a6zGJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version:
+	Content-Type; bh=l9dgqjvvyjtqb4tZl+GZ+hz5ridGS7XuFizCC/+kJg8=;
+	b=JG0a6zGJdsac0KUjHwfMDue2zbAzSpXiprd2iMLcDRUPd/40d9dDpKY0FhULg9
+	c0kitkA9W23noUTOO8WTryEWXdbKkW3XsdLJCE/+7YDT4MuNHTh8aVnx2q2JW72c
+	hE+LEJyTXMeJHHRFKbRAKkoJm39xdLS2QusGXZHPY5Y8A=
+Received: from [172.21.21.216] (unknown [118.242.3.34])
+	by gzga-smtp-mta-g0-0 (Coremail) with SMTP id _____wD3v81LeGFmGm5wBA--.59082S2;
+	Thu, 06 Jun 2024 16:50:21 +0800 (CST)
+Subject: Re: [PATCH] mm/gup: don't check page lru flag before draining it
+To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+ Matthew Wilcox <willy@infradead.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ baolin.wang@linux.alibaba.com, liuzixing@hygon.cn
+References: <1717498121-20926-1-git-send-email-yangge1116@126.com>
+ <0d7a4405-9a2e-4bd1-ba89-a31486155233@redhat.com>
+ <dc7a0b61-8d3f-7205-2f6d-c2b12500947a@126.com>
+ <776de760-e817-43b2-bd00-8ce96f4e37a8@redhat.com>
+ <7063920f-963a-4b3e-a3f3-c5cc227bc877@redhat.com>
+ <a30ee643-8690-16f1-c315-c252d2c16e4a@126.com>
+ <19590664-5190-4d30-ba0d-ec9d0ea373d3@redhat.com>
+From: yangge1116 <yangge1116@126.com>
+Message-ID: <08a54ebe-bf4d-0560-aaa8-a196c6c88276@126.com>
+Date: Thu, 6 Jun 2024 16:50:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <19590664-5190-4d30-ba0d-ec9d0ea373d3@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3v81LeGFmGm5wBA--.59082S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Aw15ZF1ruFW7Ar4rtr4Dtwb_yoWxXrWrpF
+	W8GF1qgFWDJF1UCr42qF1Fyr10kr90qr4UXF47Gry2yFn8tr1DKF47tw15CFsxJr18uF1I
+	va4jqFn3WF1YqFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bwoGLUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiWQ71G2VLalhxNQABsg
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Add documentation for the pin controller found on the Renesas RZ/V2H(P)
-(R9A09G057) SoC. The RZ/V2H PFC varies slightly compared to the RZ/G2L
-family:
-- Additional bits need to be set during pinmuxing.
-- The GPIO pin count is different.
 
-Hence, a SoC-specific compatible string, 'renesas,r9a09g057-pinctrl', is
-added for the RZ/V2H(P) SoC.
+在 2024/6/6 下午3:39, David Hildenbrand 写道:
+> On 06.06.24 03:35, yangge1116 wrote:
+>>
+>>
+>> 在 2024/6/5 下午5:53, David Hildenbrand 写道:
+>>> On 05.06.24 11:41, David Hildenbrand wrote:
+>>>> On 05.06.24 03:18, yangge1116 wrote:
+>>>>>
+>>>>>
+>>>>> 在 2024/6/4 下午9:47, David Hildenbrand 写道:
+>>>>>> On 04.06.24 12:48, yangge1116@126.com wrote:
+>>>>>>> From: yangge <yangge1116@126.com>
+>>>>>>>
+>>>>>>> If a page is added in pagevec, its ref count increases one, remove
+>>>>>>> the page from pagevec decreases one. Page migration requires the
+>>>>>>> page is not referenced by others except page mapping. Before
+>>>>>>> migrating a page, we should try to drain the page from pagevec in
+>>>>>>> case the page is in it, however, folio_test_lru() is not sufficient
+>>>>>>> to tell whether the page is in pagevec or not, if the page is in
+>>>>>>> pagevec, the migration will fail.
+>>>>>>>
+>>>>>>> Remove the condition and drain lru once to ensure the page is not
+>>>>>>> referenced by pagevec.
+>>>>>>
+>>>>>> What you are saying is that we might have a page on which
+>>>>>> folio_test_lru() succeeds, that was added to one of the cpu_fbatches,
+>>>>>> correct?
+>>>>>
+>>>>> Yes
+>>>>>
+>>>>>>
+>>>>>> Can you describe under which circumstances that happens?
+>>>>>>
+>>>>>
+>>>>> If we call folio_activate() to move a page from inactive LRU list to
+>>>>> active LRU list, the page is not only in LRU list, but also in one of
+>>>>> the cpu_fbatches.
+>>>>>
+>>>>> void folio_activate(struct folio *folio)
+>>>>> {
+>>>>>         if (folio_test_lru(folio) && !folio_test_active(folio) &&
+>>>>>             !folio_test_unevictable(folio)) {
+>>>>>             struct folio_batch *fbatch;
+>>>>>
+>>>>>             folio_get(folio);
+>>>>>             //After this, folio is in LRU list, and its ref count have
+>>>>> increased one.
+>>>>>
+>>>>>             local_lock(&cpu_fbatches.lock);
+>>>>>             fbatch = this_cpu_ptr(&cpu_fbatches.activate);
+>>>>>             folio_batch_add_and_move(fbatch, folio, 
+>>>>> folio_activate_fn);
+>>>>>             local_unlock(&cpu_fbatches.lock);
+>>>>>         }
+>>>>> }
+>>>>
+>>>> Interesting, the !SMP variant does the folio_test_clear_lru().
+>>>>
+>>>> It would be really helpful if we could reliably identify whether LRU
+>>>> batching code has a raised reference on a folio.
+>>>>
+>>>> We have the same scenario in
+>>>> * folio_deactivate()
+>>>> * folio_mark_lazyfree()
+>>>>
+>>>> In folio_batch_move_lru() we do the folio_test_clear_lru(folio).
+>>>>
+>>>> No expert on that code, I'm wondering if we could move the
+>>>> folio_test_clear_lru() out, such that we can more reliably identify
+>>>> whether a folio is on the LRU batch or not.
+>>>
+>>> I'm sure there would be something extremely broken with the following
+>>> (I don't know what I'm doing ;) ), but I wonder if there would be a way
+>>> to make something like that work (and perform well enough?).
+>>>
+>>> diff --git a/mm/swap.c b/mm/swap.c
+>>> index 67786cb771305..642e471c3ec5a 100644
+>>> --- a/mm/swap.c
+>>> +++ b/mm/swap.c
+>>> @@ -212,10 +212,6 @@ static void folio_batch_move_lru(struct folio_batch
+>>> *fbatch, move_fn_t move_fn)
+>>>           for (i = 0; i < folio_batch_count(fbatch); i++) {
+>>>                   struct folio *folio = fbatch->folios[i];
+>>>
+>>> -               /* block memcg migration while the folio moves between
+>>> lru */
+>>> -               if (move_fn != lru_add_fn && 
+>>> !folio_test_clear_lru(folio))
+>>> -                       continue;
+>>> -
+>>>                   folio_lruvec_relock_irqsave(folio, &lruvec, &flags);
+>>>                   move_fn(lruvec, folio);
+>>>
+>>> @@ -255,8 +251,9 @@ static void lru_move_tail_fn(struct lruvec *lruvec,
+>>> struct folio *folio)
+>>>     */
+>>>    void folio_rotate_reclaimable(struct folio *folio)
+>>>    {
+>>> -       if (!folio_test_locked(folio) && !folio_test_dirty(folio) &&
+>>> -           !folio_test_unevictable(folio) && folio_test_lru(folio)) {
+>>> +       if (folio_test_lru(folio) && !folio_test_locked(folio) &&
+>>> +           !folio_test_dirty(folio) && 
+>>> !folio_test_unevictable(folio) &&
+>>> +           folio_test_clear_lru(folio)) {
+>>>                   struct folio_batch *fbatch;
+>>>                   unsigned long flags;
+>>>
+>>> @@ -354,7 +351,7 @@ static void folio_activate_drain(int cpu)
+>>>    void folio_activate(struct folio *folio)
+>>>    {
+>>>           if (folio_test_lru(folio) && !folio_test_active(folio) &&
+>>> -           !folio_test_unevictable(folio)) {
+>>> +           !folio_test_unevictable(folio) &&
+>>> folio_test_clear_lru(folio)) {
+>>>                   struct folio_batch *fbatch;
+>>>
+>>>                   folio_get(folio);
+>>> @@ -699,6 +696,8 @@ void deactivate_file_folio(struct folio *folio)
+>>>           /* Deactivating an unevictable folio will not accelerate
+>>> reclaim */
+>>>           if (folio_test_unevictable(folio))
+>>>                   return;
+>>> +       if (!folio_test_clear_lru(folio))
+>>> +               return;
+>>>
+>>>           folio_get(folio);
+>>>           local_lock(&cpu_fbatches.lock);
+>>> @@ -718,7 +717,8 @@ void deactivate_file_folio(struct folio *folio)
+>>>    void folio_deactivate(struct folio *folio)
+>>>    {
+>>>           if (folio_test_lru(folio) && !folio_test_unevictable(folio) &&
+>>> -           (folio_test_active(folio) || lru_gen_enabled())) {
+>>> +           (folio_test_active(folio) || lru_gen_enabled()) &&
+>>> +           folio_test_clear_lru(folio)) {
+>>>                   struct folio_batch *fbatch;
+>>>
+>>>                   folio_get(folio);
+>>> @@ -740,7 +740,8 @@ void folio_mark_lazyfree(struct folio *folio)
+>>>    {
+>>>           if (folio_test_lru(folio) && folio_test_anon(folio) &&
+>>>               folio_test_swapbacked(folio) &&
+>>> !folio_test_swapcache(folio) &&
+>>> -           !folio_test_unevictable(folio)) {
+>>> +           !folio_test_unevictable(folio) &&
+>>> +           folio_test_clear_lru(folio)) {
+>>>                   struct folio_batch *fbatch;
+>>>
+>>>                   folio_get(folio);
+>>
+>> With your changes, we will call folio_test_clear_lru(folio) firstly to
+>> clear the LRU flag, and then call folio_get(folio) to pin the folio,
+>> seems a little unreasonable. Normally, folio_get(folio) is called
+>> firstly to pin the page, and then some other functions is called to
+>> handle the folio.
+> 
+> Right, if that really matters (not sure if it does) we could do
+> 
+> if (folio_test_lru(folio) && ...
+>      folio_get(folio);
+>      if (!folio_test_clear_lru(folio)) {
+>          folio_put(folio)
+>      } else {
+>          struct folio_batch *fbatch;
+>      }
+> }
+> 
 
-Also, add the 'renesas,output-impedance' property. The drive strength
-setting on RZ/V2H(P) depends on the different power rails coming out from
-the PMIC (connected via I2C). These power rails (required for drive
-strength) can be 1.2V, 1.8V, or 3.3V.
+Right, it seems can work.
+As discussed above, it will make the visible time where it is cleared
+"longer". Other users of lru_add_drain_all() don't check whether folio 
+is in lru, seems there's no need to check here.
 
-Pins are grouped into 4 groups:
 
-Group 1: Impedance
-- 150/75/38/25 ohms (at 3.3V)
-- 130/65/33/22 ohms (at 1.8V)
 
-Group 2: Impedance
-- 50/40/33/25 ohms (at 1.8V)
 
-Group 3: Impedance
-- 150/75/37.5/25 ohms (at 3.3V)
-- 130/65/33/22 ohms (at 1.8V)
 
-Group 4: Impedance
-- 110/55/30/20 ohms (at 1.8V)
-- 150/75/38/25 ohms (at 1.2V)
-
-The 'renesas,output-impedance' property, as documented, can be
-[0, 1, 2, 3], these correspond to register bit values that can
-be set in the PFC_IOLH_mn register, which adjusts the drive
-strength value and is pin-dependent.
-
-As power rail information may not be available very early in the boot
-process, the 'renesas,output-impedance' property is added instead of
-reusing the 'output-impedance-ohms' property.
-
-Also, allow bias-disable, bias-pull-down and bias-pull-up properties
-as these can be used to configure the pins.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-Sending just the binding patch of series [0] as reset of the patches have
-been Reviewed.
-
-[0] https://patchwork.kernel.org/project/linux-renesas-soc/cover/20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
-
-v3->v4
-- Added a conditional schema for ensuring the reset length
-  is 2 for RZ/V2H and 3 otherwise
-- Updated description for renesas,output-impedance property
-- Dropped '|'
-
-v2->v3
-- Updated description for renesas,output-impedance property
-- Updated commit description
-
-RFC->v2
-- Renamed renesas-rzv2h,output-impedance -> renesas,output-impedance
-- Updated values for renesas,output-impedance
-- Added bias properties
----
- .../pinctrl/renesas,rzg2l-pinctrl.yaml        | 37 +++++++++++++++++--
- 1 file changed, 33 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-index 881e992adca3..56d90c8e1fa3 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-@@ -26,6 +26,7 @@ properties:
-               - renesas,r9a07g043-pinctrl # RZ/G2UL{Type-1,Type-2} and RZ/Five
-               - renesas,r9a07g044-pinctrl # RZ/G2{L,LC}
-               - renesas,r9a08g045-pinctrl # RZ/G3S
-+              - renesas,r9a09g057-pinctrl # RZ/V2H(P)
- 
-       - items:
-           - enum:
-@@ -66,10 +67,14 @@ properties:
-     maxItems: 1
- 
-   resets:
--    items:
--      - description: GPIO_RSTN signal
--      - description: GPIO_PORT_RESETN signal
--      - description: GPIO_SPARE_RESETN signal
-+    oneOf:
-+      - items:
-+          - description: GPIO_RSTN signal
-+          - description: GPIO_PORT_RESETN signal
-+          - description: GPIO_SPARE_RESETN signal
-+      - items:
-+          - description: PFC main reset
-+          - description: Reset for the control register related to WDTUDFCA and WDTUDFFCM pins
- 
- additionalProperties:
-   anyOf:
-@@ -111,6 +116,16 @@ additionalProperties:
-         output-high: true
-         output-low: true
-         line-name: true
-+        bias-disable: true
-+        bias-pull-down: true
-+        bias-pull-up: true
-+        renesas,output-impedance:
-+          description:
-+            Output impedance for pins on the RZ/V2H(P) SoC. The value provided by this
-+            property corresponds to register bit values that can be set in the PFC_IOLH_mn
-+            register, which adjusts the drive strength value and is pin-dependent.
-+          $ref: /schemas/types.yaml#/definitions/uint32
-+          enum: [0, 1, 2, 3]
- 
-     - type: object
-       additionalProperties:
-@@ -119,6 +134,20 @@ additionalProperties:
- allOf:
-   - $ref: pinctrl.yaml#
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,r9a09g057-pinctrl
-+    then:
-+      properties:
-+        resets:
-+          maxItems: 2
-+    else:
-+      properties:
-+        resets:
-+          minItems: 3
-+
- required:
-   - compatible
-   - reg
--- 
-2.34.1
 
