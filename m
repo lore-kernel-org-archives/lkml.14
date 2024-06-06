@@ -1,250 +1,197 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DC41B011E
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8581119E7DC
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684756; cv=none; b=jD9ESKTtEXDllnoJdP0UZL3g/tnVA5zkxwgtX5doWxneu4Zv+6iIIsMBtsxSjLX4T0WjfQYk8Eq7LkTd/NkGSGWq04A4yFljcNROwuCTdjb9Uv8s/4yKgJpv+KbopNX/7MprCbEYIZ4W8QOGuCHR1rnYYqSLLTGyFX2QAGEzqdc=
+	t=1717684773; cv=none; b=kPMtUC2lhXT6C2JeRSKNJpCaWaIIeBo7QxBVUT1uZHtl4C2S4jaxLayhdWKyN4MZNgEgrAycL6Jp9cYHtFRAmAHCW4m1e9FHIcEenvNjvr3zNXqGZ0TOhDZ0Q9gIOd/u/9Liic86PXLKIpIuvm1claZJVhhh9WUL2B8jd4a75DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684756; c=relaxed/simple;
-	bh=PW0mB/Ap+iosdJhw53tmQWtAwnayyP9uDzO9zkRDuNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xvgf7Uk28etwnBoe2e8FUCqIxlwPDs2I62SEpyho/iz8lH3wJYMGyUIT4Qno63OFtSUOybOiWjBkILIasT+bjpYL+kRTEEMg0Ldly9OIMDCG2i3vlbLm6bxUfDYgd58lVccod+/WTi7gYtK1DA9OZ1oKzZnDCzCYZwIIt0JTNRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iUn8bC65; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iUn8bC65"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2E69240E016C;
-	Thu,  6 Jun 2024 14:39:10 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id bk0JMOZU0YBh; Thu,  6 Jun 2024 14:39:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717684745; bh=+LG5ed49RtXEviXf/9mwTYPthSUWIdmD9Du5/B+SoL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iUn8bC65hH12zSAv5Z1ZPeFgEfXppDTQC0RTZhU6a3Dtv3eN0gQ5TIRkgZ6yB7yxF
-	 qIXe0XtDmefjN7K5zKn5wi1Zo4AbaqUtTG6MqDXGK/JCAVcUi4b3E18reLYRcIyOPY
-	 5iQZTkFB3c2oD/yVnYH119lPuEhIrrN10IE3F0WRqqep8H2fBfRYE2n3DNJz6yZepe
-	 tADOSVaT7CcjfNj2xse2+VcVZF/VGrH3xDej3Bp//tnvSVSOHoMrr/jCV45PTOkmNV
-	 n3fUUljocQFNWPbus1Y562aurZ5AjEXdP/lj/8DKL6089kgfMzFyYyBWkCSTXjotxZ
-	 q51dFgeG1iS8F/kiug6ASDvef9qhgyCqGbGqYkGFE7fZNzQvAmjO1/FNEBkNZOOCzl
-	 MLXlyS1a4sT4Z3mIjBBlOW6LsBehDch9/i/aCZvZ5ULDSyhKscjP54Dq5+JzAoa3t6
-	 zvYDtkitTE6dhossGMsmKqkG5kFFzbO7uEKpR/UZ6GNnlgBTJtdfNvyDyHdWy/B5VB
-	 AmOxlIXx0QT6bodV5xRYz8ZUDvrOnn0v6JvRf8agMtJurDqpo6499tT7lsRUNK9U7f
-	 nGVOgO2rc1FdSyaWBvLDbprfpxGOf3DnzpsJvqdAEqrqYVs3w5YR8Vk45RXznDlDE4
-	 7dgC1VghNqaVjDTso2OqoxgQ=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A0A8A40E0027;
-	Thu,  6 Jun 2024 14:38:51 +0000 (UTC)
-Date: Thu, 6 Jun 2024 16:38:44 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>
-Subject: Re: [PATCH v5 04/13] x86/sev: Perform PVALIDATE using the SVSM when
- not at VMPL0
-Message-ID: <20240606143844.GDZmHJ9CK_aNoD3TSe@fat_crate.local>
-References: <cover.1717600736.git.thomas.lendacky@amd.com>
- <4c4017d8b94512d565de9ccb555b1a9f8983c69c.1717600736.git.thomas.lendacky@amd.com>
+	s=arc-20240116; t=1717684773; c=relaxed/simple;
+	bh=P4YiNVb3I4wjSghmt9SxnupyyU9a+FcsHOsRzA0+z/w=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=n0GL6Vm0RzdPCwGujKGwvlUjDyXhrejvA1whOn7n/aYQYupsG0N94UNKvDO138u5Jz5nYA/zdcijNlVV39mHb5Vf6xyB28sPHcez96Ck1QHN+aoholtqDHIoZxpUYXMp8CzzqH7Mro78TS8Db7LXPzpOMWOqT9WNk1tCdvnfyFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7e261e3e1beso113088339f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 07:39:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717684770; x=1718289570;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zNjFQrtwTKaWBte4tJrnqffbmDU+f1M7PL3F7OYz3Hg=;
+        b=YX0ex5a2zNy08IuKe+dmg82L9xY22hZZbcxxUg+YbpD5qmoF8LVIRiqjyKO1XZF7De
+         ztGSDgjWjSV6KQHsFV7rn8sI+wll6Qk5bH7UUCiS6lCrueHSm+4Kv6flVtiXLJ10mMI5
+         d+/VlyZvK4vZ7qy4EY9mRtmQFWBq376OKIE99fQYT1iBVbv4NimVGSht5/xwxRfqSNxl
+         i/0SvVhBtRnKvTtC1QTVEal45npGkU8S06//CDSqKwCviNMTxuJq2eUFX3ZPcuIl+bqC
+         gr1wM8Uh+VXw4ZvHgMjx2a2L7fjceoFBsCflJ2+MN5Cj4ar6zogzegNl5qddFIQPEUPU
+         gCww==
+X-Forwarded-Encrypted: i=1; AJvYcCXxwDAt5YjZKGz7xZ5XvM4hT7j310OJ/GWV7ZuuOo7a00QiT7WRxAdl+evLqzc8aDUF+wIn0FeT0rb7nfD7N/PzvVIwSc7O9bYZfVhp
+X-Gm-Message-State: AOJu0YxcRl8oMhq8dYTYEz8K9TosKSLibwubwaicZmLt2VhCMvrspEwN
+	4kLA6AH3K2kmxbg+aPT6UA3106XnUrlZfpU0HMSFWvJdWXSwWTGtda/5OHz7aBYaGWuO/KyfqIH
+	9wUJHSwr3kpitiXQYkAdi7VonimmmnrmjwBAzx5EtQF9jP19vnHzH1t8=
+X-Google-Smtp-Source: AGHT+IFIPjUi6WEYAJixMlNNBzpSNLHiIstWGXkkrLSgheRHg7OUK5Sf5r0nZt1aVPWD8p7VlDX4yyWaVmpw6Y6EPCRNmi0SKY5c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4c4017d8b94512d565de9ccb555b1a9f8983c69c.1717600736.git.thomas.lendacky@amd.com>
+X-Received: by 2002:a05:6e02:156d:b0:36c:5c1b:2051 with SMTP id
+ e9e14a558f8ab-374b1f84326mr3805595ab.6.1717684770736; Thu, 06 Jun 2024
+ 07:39:30 -0700 (PDT)
+Date: Thu, 06 Jun 2024 07:39:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000989d2a061a39a667@google.com>
+Subject: [syzbot] [mm?] general protection fault in dequeue_hugetlb_folio_nodemask
+From: syzbot <syzbot+c019f68a83ef9b456444@syzkaller.appspotmail.com>
+To: Tim.Huang@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com, 
+	akpm@linux-foundation.org, alexander.deucher@amd.com, 
+	amd-gfx@lists.freedesktop.org, christian.koenig@amd.com, daniel@ffwll.ch, 
+	dri-devel@lists.freedesktop.org, evan.quan@amd.com, lijo.lazar@amd.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mario.limonciello@amd.com, 
+	muchun.song@linux.dev, syzkaller-bugs@googlegroups.com, yifan1.zhang@amd.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 05, 2024 at 10:18:47AM -0500, Tom Lendacky wrote:
-> The PVALIDATE instruction can only be performed at VMPL0. An SVSM will
-> be present when running at VMPL1 or a lower privilege level.
-> 
-> When an SVSM is present, use the SVSM_CORE_PVALIDATE call to perform
-> memory validation instead of issuing the PVALIDATE instruction directly.
-> 
-> The validation of a single 4K page is now explicitly identified as such
-> in the function name, pvalidate_4k_page(). The pvalidate_pages() function
-> is used for validating 1 or more pages at either 4K or 2M in size. Each
-> function, however, determines whether it can issue the PVALIDATE directly
-> or whether the SVSM needs to be invoked.
-> 
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> ---
->  arch/x86/boot/compressed/sev.c |  45 +++++-
->  arch/x86/include/asm/sev.h     |  26 ++++
->  arch/x86/kernel/sev-shared.c   | 250 +++++++++++++++++++++++++++++++--
->  arch/x86/kernel/sev.c          |  30 ++--
->  4 files changed, 325 insertions(+), 26 deletions(-)
+Hello,
 
-Some touchups ontop like slimming down indentation levels, etc.
+syzbot found the following issue on:
 
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 226b68b4a29f..ce941a9890f8 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -284,11 +284,12 @@ void sev_es_shutdown_ghcb(void)
- 		error("SEV-ES CPU Features missing.");
- 
- 	/*
--	 * This is used to determine whether to use the GHCB MSR protocol or
--	 * the GHCB shared page to perform a GHCB request. Since the GHCB page
--	 * is being changed to encrypted, it can't be used to perform GHCB
--	 * requests. Clear the boot_ghcb variable so that the GHCB MSR protocol
--	 * is used to change the GHCB page over to an encrypted page.
-+	 * This denotes whether to use the GHCB MSR protocol or the GHCB
-+	 * shared page to perform a GHCB request. Since the GHCB page is
-+	 * being changed to encrypted, it can't be used to perform GHCB
-+	 * requests. Clear the boot_ghcb variable so that the GHCB MSR
-+	 * protocol is used to change the GHCB page over to an encrypted
-+	 * page.
- 	 */
- 	boot_ghcb = NULL;
- 
-diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
-index 8b191e313c0a..b889be32ef9c 100644
---- a/arch/x86/kernel/sev-shared.c
-+++ b/arch/x86/kernel/sev-shared.c
-@@ -1220,6 +1220,15 @@ static void __head setup_cpuid_table(const struct cc_blob_sev_info *cc_info)
- 	}
- }
- 
-+static inline void __pval_terminate(u64 pfn, bool action, unsigned int page_size,
-+				    int ret, u64 svsm_ret)
-+{
-+	WARN(1, "PVALIDATE failure: pfn: 0x%llx, action: %u, size: %u, ret: %d, svsm_ret: 0x%llx\n",
-+	     pfn, action, page_size, ret, svsm_ret);
-+
-+	sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PVALIDATE);
-+}
-+
- static void svsm_pval_terminate(struct svsm_pvalidate_call *pc, int ret, u64 svsm_ret)
- {
- 	unsigned int page_size;
-@@ -1230,16 +1239,7 @@ static void svsm_pval_terminate(struct svsm_pvalidate_call *pc, int ret, u64 svs
- 	action = pc->entry[pc->cur_index].action;
- 	page_size = pc->entry[pc->cur_index].page_size;
- 
--	WARN(1, "PVALIDATE failure: pfn 0x%llx, action=%u, size=%u - ret=%d, svsm_ret=0x%llx\n",
--	     pfn, action, page_size, ret, svsm_ret);
--	sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PVALIDATE);
--}
--
--static void pval_terminate(u64 pfn, bool action, unsigned int page_size, int ret)
--{
--	WARN(1, "PVALIDATE failure: pfn 0x%llx, action=%u, size=%u - ret=%d\n",
--	     pfn, action, page_size, ret);
--	sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PVALIDATE);
-+	__pval_terminate(pfn, action, page_size, ret, svsm_ret);
- }
- 
- static void svsm_pval_4k_page(unsigned long paddr, bool validate)
-@@ -1284,7 +1284,7 @@ static void pvalidate_4k_page(unsigned long vaddr, unsigned long paddr, bool val
- 	int ret;
- 
- 	/*
--	 * This can be called very early in the boot, so use rip-relative
-+	 * This can be called very early during boot, so use rIP-relative
- 	 * references as needed.
- 	 */
- 	if (RIP_REL_REF(snp_vmpl)) {
-@@ -1292,7 +1292,7 @@ static void pvalidate_4k_page(unsigned long vaddr, unsigned long paddr, bool val
- 	} else {
- 		ret = pvalidate(vaddr, RMP_PG_SIZE_4K, validate);
- 		if (ret)
--			pval_terminate(PHYS_PFN(paddr), validate, RMP_PG_SIZE_4K, ret);
-+			__pval_terminate(PHYS_PFN(paddr), validate, RMP_PG_SIZE_4K, ret, 0);
- 	}
- }
- 
-@@ -1315,16 +1315,19 @@ static void pval_pages(struct snp_psc_desc *desc)
- 		validate = e->operation == SNP_PAGE_STATE_PRIVATE;
- 
- 		rc = pvalidate(vaddr, size, validate);
-+		if (!rc)
-+			continue;
-+
- 		if (rc == PVALIDATE_FAIL_SIZEMISMATCH && size == RMP_PG_SIZE_2M) {
- 			unsigned long vaddr_end = vaddr + PMD_SIZE;
- 
- 			for (; vaddr < vaddr_end; vaddr += PAGE_SIZE, pfn++) {
- 				rc = pvalidate(vaddr, RMP_PG_SIZE_4K, validate);
- 				if (rc)
--					pval_terminate(pfn, validate, RMP_PG_SIZE_4K, rc);
-+					__pval_terminate(pfn, validate, RMP_PG_SIZE_4K, rc, 0);
- 			}
--		} else if (rc) {
--			pval_terminate(pfn, validate, size, rc);
-+		} else {
-+			__pval_terminate(pfn, validate, size, rc, 0);
- 		}
- 	}
- }
-@@ -1429,24 +1432,26 @@ static void svsm_pval_pages(struct snp_psc_desc *desc)
- 
- 		do {
- 			ret = svsm_perform_call_protocol(&call);
--			if (ret) {
--				/*
--				 * Check if the entry failed because of an RMP mismatch (a
--				 * PVALIDATE at 2M was requested, but the page is mapped in
--				 * the RMP as 4K).
--				 */
--				if (call.rax_out == SVSM_PVALIDATE_FAIL_SIZEMISMATCH &&
--				    pc->entry[pc->cur_index].page_size == RMP_PG_SIZE_2M) {
--					/* Save this entry for post-processing at 4K */
--					pv_4k[pv_4k_count++] = pc->entry[pc->cur_index];
--
--					/* Skip to the next one unless at the end of the list */
--					pc->cur_index++;
--					if (pc->cur_index < pc->num_entries)
--						ret = -EAGAIN;
--					else
--						ret = 0;
--				}
-+			if (!ret)
-+				continue;
-+
-+			/*
-+			 * Check if the entry failed because of an RMP mismatch (a
-+			 * PVALIDATE at 2M was requested, but the page is mapped in
-+			 * the RMP as 4K).
-+			 */
-+
-+			if (call.rax_out == SVSM_PVALIDATE_FAIL_SIZEMISMATCH &&
-+			    pc->entry[pc->cur_index].page_size == RMP_PG_SIZE_2M) {
-+				/* Save this entry for post-processing at 4K */
-+				pv_4k[pv_4k_count++] = pc->entry[pc->cur_index];
-+
-+				/* Skip to the next one unless at the end of the list */
-+				pc->cur_index++;
-+				if (pc->cur_index < pc->num_entries)
-+					ret = -EAGAIN;
-+				else
-+					ret = 0;
- 			}
- 		} while (ret == -EAGAIN);
- 
+HEAD commit:    0e1980c40b6e Add linux-next specific files for 20240531
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=166086f2980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d9c3ca4e54577b88
+dashboard link: https://syzkaller.appspot.com/bug?extid=c019f68a83ef9b456444
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12f4094a980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e1e432980000
 
--- 
-Regards/Gruss,
-    Boris.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/44fb1d8b5978/disk-0e1980c4.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/a66ce5caf0b2/vmlinux-0e1980c4.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8992fc8fe046/bzImage-0e1980c4.xz
 
-https://people.kernel.org/tglx/notes-about-netiquette
+The issue was bisected to:
+
+commit cd94d1b182d2986378550c9087571991bfee01d4
+Author: Mario Limonciello <mario.limonciello@amd.com>
+Date:   Thu May 2 18:32:17 2024 +0000
+
+    dm/amd/pm: Fix problems with reboot/shutdown for some SMU 13.0.4/13.0.11 users
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=176121c2980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e121c2980000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c019f68a83ef9b456444@syzkaller.appspotmail.com
+Fixes: cd94d1b182d2 ("dm/amd/pm: Fix problems with reboot/shutdown for some SMU 13.0.4/13.0.11 users")
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000489: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: probably user-memory-access in range [0x0000000000002448-0x000000000000244f]
+CPU: 1 PID: 5089 Comm: syz-executor257 Not tainted 6.10.0-rc1-next-20240531-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+RIP: 0010:zonelist_zone_idx include/linux/mmzone.h:1613 [inline]
+RIP: 0010:next_zones_zonelist include/linux/mmzone.h:1644 [inline]
+RIP: 0010:first_zones_zonelist include/linux/mmzone.h:1670 [inline]
+RIP: 0010:dequeue_hugetlb_folio_nodemask+0x193/0xe40 mm/hugetlb.c:1362
+Code: 13 9b a0 ff c7 44 24 14 00 00 00 00 83 7c 24 40 00 0f 85 97 0c 00 00 48 83 7c 24 20 00 0f 85 45 09 00 00 48 89 d8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 58 09 00 00 44 8b 33 44 89 f7 8b 5c 24
+RSP: 0018:ffffc900035ef720 EFLAGS: 00010002
+RAX: 0000000000000489 RBX: 0000000000002448 RCX: ffff888026ef0000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc900035ef858 R08: ffffffff81f5e070 R09: fffff520006bdee8
+R10: dffffc0000000000 R11: fffff520006bdee8 R12: 00000000ffffffff
+R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000555564010380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000005fdeb8 CR3: 000000007bd96000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ alloc_hugetlb_folio_nodemask+0xae/0x3f0 mm/hugetlb.c:2603
+ memfd_alloc_folio+0x15e/0x390 mm/memfd.c:75
+ memfd_pin_folios+0x1066/0x1720 mm/gup.c:3864
+ udmabuf_create+0x658/0x11c0 drivers/dma-buf/udmabuf.c:353
+ udmabuf_ioctl_create drivers/dma-buf/udmabuf.c:420 [inline]
+ udmabuf_ioctl+0x304/0x4f0 drivers/dma-buf/udmabuf.c:451
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5151a7a369
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd962ee9e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007ffd962eebb8 RCX: 00007f5151a7a369
+RDX: 00000000200002c0 RSI: 0000000040187542 RDI: 0000000000000003
+RBP: 00007f5151aed610 R08: 00007ffd962eebb8 R09: 00007ffd962eebb8
+R10: 00007ffd962eebb8 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffd962eeba8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:zonelist_zone_idx include/linux/mmzone.h:1613 [inline]
+RIP: 0010:next_zones_zonelist include/linux/mmzone.h:1644 [inline]
+RIP: 0010:first_zones_zonelist include/linux/mmzone.h:1670 [inline]
+RIP: 0010:dequeue_hugetlb_folio_nodemask+0x193/0xe40 mm/hugetlb.c:1362
+Code: 13 9b a0 ff c7 44 24 14 00 00 00 00 83 7c 24 40 00 0f 85 97 0c 00 00 48 83 7c 24 20 00 0f 85 45 09 00 00 48 89 d8 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 58 09 00 00 44 8b 33 44 89 f7 8b 5c 24
+RSP: 0018:ffffc900035ef720 EFLAGS: 00010002
+RAX: 0000000000000489 RBX: 0000000000002448 RCX: ffff888026ef0000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc900035ef858 R08: ffffffff81f5e070 R09: fffff520006bdee8
+R10: dffffc0000000000 R11: fffff520006bdee8 R12: 00000000ffffffff
+R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000555564010380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000005fdeb8 CR3: 000000007bd96000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	13 9b a0 ff c7 44    	adc    0x44c7ffa0(%rbx),%ebx
+   6:	24 14                	and    $0x14,%al
+   8:	00 00                	add    %al,(%rax)
+   a:	00 00                	add    %al,(%rax)
+   c:	83 7c 24 40 00       	cmpl   $0x0,0x40(%rsp)
+  11:	0f 85 97 0c 00 00    	jne    0xcae
+  17:	48 83 7c 24 20 00    	cmpq   $0x0,0x20(%rsp)
+  1d:	0f 85 45 09 00 00    	jne    0x968
+  23:	48 89 d8             	mov    %rbx,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
+  2f:	84 c0                	test   %al,%al
+  31:	0f 85 58 09 00 00    	jne    0x98f
+  37:	44 8b 33             	mov    (%rbx),%r14d
+  3a:	44 89 f7             	mov    %r14d,%edi
+  3d:	8b                   	.byte 0x8b
+  3e:	5c                   	pop    %rsp
+  3f:	24                   	.byte 0x24
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
