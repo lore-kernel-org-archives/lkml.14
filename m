@@ -1,153 +1,135 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799F61990C8;
-	Thu,  6 Jun 2024 17:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0CB1990DA
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717694835; cv=none; b=UDxVBQbfT2sujRcKeU3tMZ0DdrIUvrJgl62pa+xQh6/PE1wJ7qVsVcgxFr2DopEz5KKBt83g4HFc8EIbFfTyxV+pNsg/W9wDqKIT6+meeZso227t7k4Khfu1AV+A+Zvs2m5gq8+GR0mi00CMaSRpTYowQeWpEZDQt38naZsPyA4=
+	t=1717694845; cv=none; b=ZC/DXtguNVYDGbS4JSjUjKxytYGYfBEnSOwlaVFOYI0v5P395kEsf6KHirja/zbHdc3hdgMRwFElrSNAPLkZGTYItQO5P0TlvdJGO6H3sAzu/kfqyhuHmaLdelqfAF87hidKj7fw29L40MRHKPgPridAcmKONgojnCtdGgLHkPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717694835; c=relaxed/simple;
-	bh=00CNnKfYf4m94sDjDxhhBBDOl45dZ+7MLCQdgobspB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pp2T3yzgaEQC3PumC9XSd+CxQnJCVBte6z7YGyOYrgvi8VySzcR8GkG+7bRQFRKj9Wql29bP5tFXoKuyqpTeP8z6Scauax0bVzYbmde9HhQ/NqDgeaD9n+UT3tb2xFH7qF/xuKEdXhL0hFG+f2Iw3fkveWtO+tmiWhk6CpronNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iHRnrKN9; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717694845; c=relaxed/simple;
+	bh=Vrj6by7HZ5znl+cZYgtRvTbs4mioHISFswzBIkufzzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q6oMePMtijSg2x1hf+CXqeqesbV2JDd7pU3G7dw2nSq7YRgLvn4L3//k8+tJZVm3lpwEV4fOChD+CRSLE/yvBcQ5gVoKHZdnZlQa/fGxdziW+7VZfkZ86dCyJrZwM3cwCr3FB/98aWpGpK2nHlDdmudwy/B0DbOHSUOvqBQwnJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OldNq88M; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHRnrKN9"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52b919d214cso1239245e87.2;
-        Thu, 06 Jun 2024 10:27:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717694831; x=1718299631; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ma8i9n0Ul2xhEENoFuQX+QsntPlbItenEYXbdtOE3xI=;
-        b=iHRnrKN9IegKtTFMMs670+xcdcbx/IT7ak2Wax5SAmL7vvWTwBR+clQms4fOjXDE73
-         faXzvTq0svubA0pn05aoE0pr61G8ihfs3E1kblcdwD7vREaIO3sf4kzvJg2nGclU8WXk
-         I8AOsE2cw3tUuvStxFD1beTH9TIPpHWAFCknUsxgF+pgi5CRNkyGiHdqVwYtVzMFNWLN
-         tg5P+YtaBpQHP/wPHyIxi8HeCCuSwSQg78JCpIGo79DCAZwWyMslCswU4pgm/lHjea4I
-         W/+Z27a7wpIW9/qlKfDomOhGtCTCy3nxMRGs2BbXvHKO8bH5kBZnTYPFhCIIG/lMSFu5
-         hQPQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OldNq88M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717694842;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sz0RERWk5Ecm+O3n3osXuRqBMwh86v1zD3ET+YEnd50=;
+	b=OldNq88MjcP6wkIoMum+VFpMKTeJGxuqrBgpa39Alj6NM31UkWAdc7JsNXadqVwv61F0cj
+	Z6RVNI16ionKyZrR5t91Nhwj1ka1xB6jkWsmFH3xg6j/bJVpFyiGUqgPjmH5CGB2D3Kgre
+	sr1klHOGtAHmfYJ/ABTBvTopjeifY1Y=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-491-xw4ZDV4gOgqDvDE55Aotcg-1; Thu, 06 Jun 2024 13:27:21 -0400
+X-MC-Unique: xw4ZDV4gOgqDvDE55Aotcg-1
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3746147204eso11282215ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 10:27:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717694831; x=1718299631;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ma8i9n0Ul2xhEENoFuQX+QsntPlbItenEYXbdtOE3xI=;
-        b=dbw3mf5DOFMYBFpmIURnTqebNH/5Lm3Qr1IUqwxUDVhNPs/BEfMxplCLG2Q6fCLfHg
-         Oyi9fRT/8dsGZzd2ZUOfvgn2dFC7GU7BMQ3+cY5DvuCl9HSw3RvPiOAxGhuCFaDeTG8m
-         3CeUWpGvdYExSCXo1JZ3TZbRwUUBKgO2Cv2zspSMGOlV5cAFrgyWEsa76AUwd7HkPH7a
-         hb2t5u1xXw83cpUDw32Ca4S3dZNlnk/tHp8AwFSWoffZSH4VT2sHJ1/7Sp0UHAhsXjPX
-         oRvMqUBSQtvXI1ikuwVm5lF7sPE/iIkPMwVGu83d7XPOBCwXR7iCxt8CSzqUSL1aEnTg
-         HzOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfq8c8FUmp0T4r+aI8C8Sfbz+R2JE6CttGOmNXjpPeK4n8LWWcyXSxj1nJ6ts3ICFSWjoavPfHF+b8Oa7LJAZxlqNxSWXMgrkSz+GXedHOOS9OeltKA2eb43Q490RzZwjbXp13JhW7w0TTC/464vmq6ikLmgHBn9mMe6WHSqbzOqJhwgV6LeYzLUTafSupMQtliHAAGUCqWwzusDSDWKB4
-X-Gm-Message-State: AOJu0YxgRNfokfHx/8Rf3mlpevCeIcayQCWQFfCJLtb+5yw0uSMPE35X
-	ccW4ZKTldXQM8sFsx2zfogolGpS+UP836CzBUtxhKYEoa8c6fALy
-X-Google-Smtp-Source: AGHT+IEbM6f+wbNlbLV6qSOqxDLFngYi99yMRrr1PnbH4p95Hn9PHtQN5YFpne5N83Yh7dK9IqDr3w==
-X-Received: by 2002:a05:6512:2812:b0:529:b6e9:7978 with SMTP id 2adb3069b0e04-52bb9f8ef6fmr224153e87.37.1717694831074;
-        Thu, 06 Jun 2024 10:27:11 -0700 (PDT)
-Received: from [10.0.0.42] (host-85-29-124-88.kaisa-laajakaista.fi. [85.29.124.88])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb433c894sm251499e87.256.2024.06.06.10.27.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 10:27:10 -0700 (PDT)
-Message-ID: <0a77e955-e5a6-4a0e-8c1d-8b2ebd0d1eec@gmail.com>
-Date: Thu, 6 Jun 2024 20:30:43 +0300
+        d=1e100.net; s=20230601; t=1717694840; x=1718299640;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Sz0RERWk5Ecm+O3n3osXuRqBMwh86v1zD3ET+YEnd50=;
+        b=mtQsObHNZa1LYc2HEKZ3Y704bHB5EPhRtVm7AzwTJ3twrJAYvnv+mFb5YaLrdkHhGf
+         V0E7odmWBuxUd8OfH92vWOUO4yg6BEMvq9k/5ZYxDVVTGgM0i0W/+PC9QGqeIg8SwcwH
+         kJu3ps80mNcUMj8KcF1/sfuA+JmiHJ1WGN+KM9/U/v0z5P3Av+KdjUXtaby7R+1nKb3I
+         PtbeSgxeXzFuFogskXxkxxFSNCOtqZRXRw8TC5W8WqdM1oTMGKZ2HPPUBGKYNaKbFnGu
+         0m6nO2JD/DvbwMyMyCIGx1djoQ4iY0AgNfkZfnDHa74GT6b6VVbfO24FuHPz9PRbxe9I
+         extQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEittrWSJC3XpaXJ60d9s7jMrHogjXZHKZPFWwfY5Agn/Z8zwhYI1Nc6ZqRUzlTZkEepCwDyMAng0kxMys3kcakrGdnjb4ocTV+hi4
+X-Gm-Message-State: AOJu0Yy9j7KF9xURtPmkgPuv+FvLbUE55e0q7xYsVwuAXTg6G6649R3r
+	8D/CKcLok7wdrtDdreUqUxmOsbfYuZLF9BJDeo+BEBXTKw6FsInvYJAMImk99ALVo8Xf+UGu2Kf
+	BH7qi83EbXpold96cBHEKP4SJsW5C+L+TYH2+5qD2qANGPacMcB15zWy0ky2LMZMB72ov9A==
+X-Received: by 2002:a05:6e02:218b:b0:374:a667:fc06 with SMTP id e9e14a558f8ab-37580309f62mr4417515ab.8.1717694840571;
+        Thu, 06 Jun 2024 10:27:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFckJLvv9jZB8litqQUIqmCS99LH6RC9Z9rWoLoaNkdTMJWgv2uggN2xOA/AH43OBZbA27vbg==
+X-Received: by 2002:a05:6e02:218b:b0:374:a667:fc06 with SMTP id e9e14a558f8ab-37580309f62mr4417285ab.8.1717694840192;
+        Thu, 06 Jun 2024 10:27:20 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-374bc15dca5sm3869215ab.49.2024.06.06.10.27.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 10:27:19 -0700 (PDT)
+Date: Thu, 6 Jun 2024 11:27:18 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Niklas Schnelle <schnelle@linux.ibm.com>, Gerald Schaefer
+ <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Gerd Bayer <gbayer@linux.ibm.com>,
+ Matthew Rosato <mjrosato@linux.ibm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] vfio/pci: s390: Fix issues preventing
+ VFIO_PCI_MMAP=y for s390 and enable it
+Message-ID: <20240606112718.0171f5b3.alex.williamson@redhat.com>
+In-Reply-To: <0a4622ce-3826-4b08-ab81-375887ab6a46@linux.ibm.com>
+References: <20240529-vfio_pci_mmap-v3-0-cd217d019218@linux.ibm.com>
+	<0a4622ce-3826-4b08-ab81-375887ab6a46@linux.ibm.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] dmaengine: ti: k3-udma-glue: clean up return in
- k3_udma_glue_rx_get_irq()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, MD Danish Anwar <danishanwar@ti.com>,
- Roger Quadros <rogerq@kernel.org>,
- Grygorii Strashko <grygorii.strashko@ti.com>,
- Julien Panis <jpanis@baylibre.com>, Chintan Vankar <c-vankar@ti.com>,
- Diogo Ivo <diogo.ivo@siemens.com>, Simon Horman <horms@kernel.org>,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kernel-janitors@vger.kernel.org
-References: <2f28f769-6929-4fc2-b875-00bf1d8bf3c4@kili.mountain>
-Content-Language: en-US
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <2f28f769-6929-4fc2-b875-00bf1d8bf3c4@kili.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 3 Jun 2024 17:50:13 +0200
+Christian Borntraeger <borntraeger@linux.ibm.com> wrote:
 
-
-On 6/6/24 5:23 PM, Dan Carpenter wrote:
-> Currently the k3_udma_glue_rx_get_irq() function returns either negative
-> error codes or zero on error.  Generally, in the kernel, zero means
-> success so this be confusing and has caused bugs in the past.  Also the
-> "tx" version of this function only returns negative error codes.  Let's
-> clean this "rx" function so both functions match.
+> Am 29.05.24 um 13:36 schrieb Niklas Schnelle:
+> > With the introduction of memory I/O (MIO) instructions enbaled in commit
+> > 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions") s390
+> > gained support for direct user-space access to mapped PCI resources.
+> > Even without those however user-space can access mapped PCI resources
+> > via the s390 specific MMIO syscalls. There is thus nothing fundamentally
+> > preventing s390 from supporting VFIO_PCI_MMAP allowing user-space drivers
+> > to access PCI resources without going through the pread() interface.
+> > To actually enable VFIO_PCI_MMAP a few issues need fixing however.
+> > 
+> > Firstly the s390 MMIO syscalls do not cause a page fault when
+> > follow_pte() fails due to the page not being present. This breaks
+> > vfio-pci's mmap() handling which lazily maps on first access.
+> > 
+> > Secondly on s390 there is a virtual PCI device called ISM which has
+> > a few oddities. For one it claims to have a 256 TiB PCI BAR (not a typo)
+> > which leads to any attempt to mmap() it fail with the following message:
+> > 
+> >      vmap allocation for size 281474976714752 failed: use vmalloc=<size> to increase size
+> > 
+> > Even if one tried to map this BAR only partially the mapping would not
+> > be usable on systems with MIO support enabled. So just block mapping
+> > BARs which don't fit between IOREMAP_START and IOREMAP_END.
+> > 
+> > Note:
+> > For your convenience the code is also available in the tagged
+> > b4/vfio_pci_mmap branch on my git.kernel.org site below:
+> > https: //git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/  
 > 
-> This patch has no effect on runtime.
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-
 > 
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  drivers/dma/ti/k3-udma-glue.c                | 3 +++
->  drivers/net/ethernet/ti/am65-cpsw-nuss.c     | 4 ++--
->  drivers/net/ethernet/ti/icssg/icssg_common.c | 4 +---
->  3 files changed, 6 insertions(+), 5 deletions(-)
+> I guess its now mostly a question of who picks those patches? Alex?
 > 
-> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-> index c9b93055dc9d..b96b448a0e69 100644
-> --- a/drivers/dma/ti/k3-udma-glue.c
-> +++ b/drivers/dma/ti/k3-udma-glue.c
-> @@ -1531,6 +1531,9 @@ int k3_udma_glue_rx_get_irq(struct k3_udma_glue_rx_channel *rx_chn,
->  		flow->virq = k3_ringacc_get_ring_irq_num(flow->ringrx);
->  	}
->  
-> +	if (!flow->virq)
-> +		return -ENXIO;
-> +
->  	return flow->virq;
->  }
->  EXPORT_SYMBOL_GPL(k3_udma_glue_rx_get_irq);
-> diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> index 4e50b3792888..8c26acc9cde1 100644
-> --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> @@ -2424,10 +2424,10 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
->  
->  		rx_chn->irq = k3_udma_glue_rx_get_irq(rx_chn->rx_chn, i);
->  
-> -		if (rx_chn->irq <= 0) {
-> +		if (rx_chn->irq < 0) {
->  			dev_err(dev, "Failed to get rx dma irq %d\n",
->  				rx_chn->irq);
-> -			ret = -ENXIO;
-> +			ret = rx_chn->irq;
->  			goto err;
->  		}
->  	}
-> diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-> index 088ab8076db4..cac7863c5cb2 100644
-> --- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-> +++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-> @@ -440,9 +440,7 @@ int prueth_init_rx_chns(struct prueth_emac *emac,
->  			fdqring_id = k3_udma_glue_rx_flow_get_fdq_id(rx_chn->rx_chn,
->  								     i);
->  		ret = k3_udma_glue_rx_get_irq(rx_chn->rx_chn, i);
-> -		if (ret <= 0) {
-> -			if (!ret)
-> -				ret = -ENXIO;
-> +		if (ret < 0) {
->  			netdev_err(ndev, "Failed to get rx dma irq");
->  			goto fail;
->  		}
+> Any patch suitable for stable?
 
--- 
-Péter
+Nothing here looks like stable material to me.  1/ only becomes an
+issue when mmap of MMIO is allowed on s390 (ie. 3/), 2/ is generic, but
+only really targets a device found on s390, and finally 3/ is
+essentially enabling a new feature.
+
+If we expect any conflicts with 1/ in the next merge window I can take
+a branch for it and apply 2/ and 3/ through the vfio tree, otherwise I
+can bring them all through the vfio tree if the s390 folks agree.
+Thanks,
+
+Alex
+
