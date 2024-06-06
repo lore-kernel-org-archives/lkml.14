@@ -1,131 +1,87 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669F5197A88
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 16:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472DD1E87F
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 16:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717692555; cv=none; b=hi9iTgz/mLNZ6tx5UePG+n9KkpKHxdVtXvAWteWyp+SyR07zSaoRuN1OSBCUlxvth+yay664qZKsozWOztG84yUldOa1mw1YMu2sAam2Ej9mtpTrfwvSSwcMqSS76P+q9WORHtTtd8WefFpocYp1FZQqas1oPA0qNf+iSJ1SOuU=
+	t=1717692573; cv=none; b=D759rvuBbw0HEJhr5MswFZsOFLpUvWmXyKjB4mpZ7Hl7MKbVBPk/tFx/cz+yWMVvhDPHE9CwjYKW58S69RdYr5UZ0eO06ABJSJHY6hxyETW9OtIcQjFyfd/YN/GcxeHvAbFDZ8DGJsgZIGKlflTAU8hWnWwp48vZbIk1hvfsYys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717692555; c=relaxed/simple;
-	bh=tiCDm7bQeazIveQ+TqmO+DoHjVeAxore34wgY+AIKtA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YavJzI7uLCeuEg3nUREcoFA6+aCHwhzSWEBiEhFIKTkwtXxMZhD2nxSwMNcFtnJkySfX448lInLJrLQKy9iFAZb2PIlfBaPmojv54qI7wGLkPTMLw86tMpIgAcCPfNwm/Q4CN1ka+Xzh9Nhft33Y0un2wdYhalfwJBpDU8KtLU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0H4g1rCz; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1717692573; c=relaxed/simple;
+	bh=XrBEvZfrYy08JDfr/OU9rx9z8n2umQxHa8nO92Cbhdk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GvtkI4y2SyqRXqqvwusThHeXhOgTh6WgM2+cNbNtZcOsz2XZ3JHEvYCanCBw/avhLrhLUSYbMvZrdD8XExMlVSyjVEY2vC411JGCBfMiDjo6KH218hTwzblvicote4TbCj/k6P9AX8P38aU+fCaJfKZgc1Dz488iJKpP05kwW3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VoAEr9kp; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0H4g1rCz"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4210aa00c94so12175015e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 09:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717692552; x=1718297352; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oSUOm+s6w//51hXzTTT6KSVkXugh1Bfh/htdRvH7neQ=;
-        b=0H4g1rCzcv8h6rM2GF8mN95vHh2SrC4PSELJgLqRtj4vvVwBX0jH6LrLlOw/Xv7iID
-         vyQc01cckNJ53zsK5lDkLoxD3Zk7nPIbcHhPMeTxPf9g9CJZMIrzkR8a0Gfh/6R6QMo6
-         h7/T3dLf7HM8mUvpOC5xdaFGL2glbX88SBwBYgFstAYpurfskGcVxmv1bNkTTqZQ4Sui
-         DP8Qi53QsKDAwwLkoxstaqNVBKeTEqQRzr8XC2Be6QGewdSXP/osXq8XodLxka2j49yP
-         v3mQmsXT1z6wbU6htgNo6pwtcZ7532vdGH1y6twH9vNw/IqvGYZpsLlNkeYxBlUdGUmf
-         nNDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717692552; x=1718297352;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oSUOm+s6w//51hXzTTT6KSVkXugh1Bfh/htdRvH7neQ=;
-        b=DLZ4qiEGFDDKuY1A1JiRXG1LXLUIkJDeFcxmSmuHmIZoZwAQYXunNstRU07OYX2VSK
-         lWaTaUkIbZxG7QwGPFxY6UHJ7hAjRVsm6qhqN+UicK22j2AxQkYZ165NFo+QIms5XXSe
-         yxrN5RQAXrJErquJBgMI0TgDjJe1uDUuW1xuM8DsZvBx2FJI79ACZzDSrssgx8GVY3pl
-         16GYNqVvFP60CLk+Dpx3g7F8MzsIb2hvcBWQghRIyB1jpYPG55NyhlnuddqhPh+GtxA+
-         pPj4XPooXi6vD2TybEJ1pvlzU/qy7wmCB1lTUK5gGgkMYlD+MlIKM/9eeSrjmgck4cos
-         8sQg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFnG/0+RsZ+pjm4HprsGvz+pvU0oG5aah3Vd89dFdvzrhL/JzMQ32k0oX9OZkIqGCH4w/gLa/cB/Kzdf/C6PfW76eYM6vHRm451Vco
-X-Gm-Message-State: AOJu0Yy8hpDEL8KRZY5L3q5kpOBNinGXaEpf5EEPsCJ4hux8L7mEJptz
-	lkaVSZ5bYmsS4ErNX4HZKpx3eICrAaO3UbC4iSCZLh5A65sPQMOTFKenYAOAqqY=
-X-Google-Smtp-Source: AGHT+IETeVy2S0X0ToniwMemG9HWaKxUfz7+suNaSmJu6XYzskDMOIIBIvpEEBYVVz2aX5u3vA6tIw==
-X-Received: by 2002:a05:600c:3503:b0:41a:ff7d:2473 with SMTP id 5b1f17b1804b1-421649e9f54mr2318905e9.4.1717692551704;
-        Thu, 06 Jun 2024 09:49:11 -0700 (PDT)
-Received: from localhost (p509153eb.dip0.t-ipconnect.de. [80.145.83.235])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42158102af1sm61361915e9.16.2024.06.06.09.49.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 09:49:11 -0700 (PDT)
-From: "Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=" <ukleinek@baylibre.com>
-X-Google-Original-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Date: Thu, 6 Jun 2024 18:49:10 +0200
-To: Trevor Gamblin <tgamblin@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	michael.hennerich@analog.com, nuno.sa@analog.com, dlechner@baylibre.com, 
-	devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Subject: Re: [RESEND][PATCH 0/2 v6] pwm: add axi-pwm-gen driver
-Message-ID: <wrniwk6ywjinuejn63fx7fmbck26arqtbsihz4ctqatd6coi3s@rwugd6dxsku5>
-References: <20240605203507.1934434-1-tgamblin@baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VoAEr9kp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717692572; x=1749228572;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XrBEvZfrYy08JDfr/OU9rx9z8n2umQxHa8nO92Cbhdk=;
+  b=VoAEr9kpApU1q582laZbu4lq7zqFn5Mvd+0+aJMK2mIe9Svlaku4qM0z
+   gPkmrjkfeG7pyxRrUs1SEP/Vzk7GjfQ3B4BfVJJTl4DH3o6iBtMvBMPJu
+   w0pk0YPIC7xsy7ogDl17anKr/vZQOW8TMRYJAz4ZAg+hpbfq92HJsjFy7
+   gMd+hTsHSlr8bDGdEs5b2xKSaiIa7cr4b3kHHTrpmA6LfRfxOgYgVwTpA
+   Wj/yfSXdEBswJs2KRbN4ZHtftCLHtqDj2V4w1mI2t8i9qnHaMHkGMJiFv
+   MIPJ8NFTt5HufObeBXvMbS60iLD1VKG4FGuZa9ClFqg/svxMquWJw38CA
+   Q==;
+X-CSE-ConnectionGUID: WLrFTqa4TlKRB5OWg6M8kQ==
+X-CSE-MsgGUID: Wr9pzzZvSkmE0UO4ALRgIg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="25009124"
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="25009124"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:49:31 -0700
+X-CSE-ConnectionGUID: JtxuEEPEQ3GcFCd72RNG1Q==
+X-CSE-MsgGUID: 1zXWF+XFQfyLsRDolKvR1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="38591513"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 06 Jun 2024 09:49:30 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 8A7C92A4; Thu, 06 Jun 2024 19:49:28 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH v1 1/1] driver core: platform: Switch to use kmemdup_array()
+Date: Thu,  6 Jun 2024 19:49:26 +0300
+Message-ID: <20240606164926.3031358-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="reyzrg4yf7eenh64"
-Content-Disposition: inline
-In-Reply-To: <20240605203507.1934434-1-tgamblin@baylibre.com>
+Content-Transfer-Encoding: 8bit
 
+Let the kememdup_array() take care about multiplication and possible
+overflows.
 
---reyzrg4yf7eenh64
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/base/platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hello Trevor,
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index de89d8ca7cec..0ac3c7fa7f94 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -643,7 +643,7 @@ int platform_device_add_resources(struct platform_device *pdev,
+ 	struct resource *r = NULL;
+ 
+ 	if (res) {
+-		r = kmemdup(res, sizeof(struct resource) * num, GFP_KERNEL);
++		r = kmemdup_array(res, num, sizeof(*r), GFP_KERNEL);
+ 		if (!r)
+ 			return -ENOMEM;
+ 	}
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-On Wed, Jun 05, 2024 at 04:35:04PM -0400, Trevor Gamblin wrote:
-> Resending due to missing real name in "From:" line.
->=20
-> This series adds support for the AXI PWM GEN subsystem found on FPGA IP
-> cores. It can be used to generate configurable PWM outputs, and includes
-> options for external synchronization and clock signals.  The work is
-> being done on behalf of, and therefore lists maintainers from Analog
-> Devices, Inc.
->=20
-> The series has been tested on actual hardware using an EVAL-AD7985FMCZ
-> evaluation board. An oscilloscope was used to validate that the
-> generated PWM signal matched the requested one.
->=20
-> There was previously a follow-up series
-> (https://lore.kernel.org/linux-pwm/20240314204722.1291993-1-tgamblin@bayl=
-ibre.com/)
-> that enabled support for two different versions of the AXI PWM GEN IP.
-> Since issues were identified with the v1 IP functionality and v2's
-> regmap is the one listed on the device wiki
-> (https://analogdevicesinc.github.io/hdl/library/axi_pwm_gen/index.html),
-> the driver was changed to support only the v2 IP after squashing those
-> additions. As a result, the overall driver is simpler as it no longer
-> uses an axi_pwm_variant struct. Support for v1 IP can be added back
-> later in the event that it is required.
-
-I found a minor nitpick in your patch. I applied it anyhow and jumped at
-the patch opportunity myself. Patch in your inbox (or at
-https://lore.kernel.org/linux-pwm/20240606164047.534741-6-u.kleine-koenig@b=
-aylibre.com)
-
-Best regards and thanks for your contribution!
-Uwe
-
---reyzrg4yf7eenh64
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZh6IIACgkQj4D7WH0S
-/k5jMgf/QgQYjCo0fHzsyrRbeEkabbKST7oz2dDGTe+6SpEgxK+krU45hdMQI7hX
-y5kpSC7CZO1u50/LUIwjXX6wrLeipcVHWhLqc2PCdQxMExWJwf/kClGEcE4lEZpm
-Kb/kJYjoz0GDmBPF8EoFnacvJSbTddC5SSGEh4+mELSSLctgp0g08/5+2NlbkX57
-rz0lh3+QTI79KQ6+AS/5RYXK/y6CHNDFv9e8k/VkexVmKuwMX9SEKPRqu07wnh+4
-y/wcwRwpvtPyR9zgAOsaui0V69Mghy6HExyhpJkcWVD5+wOK34gbq10GMvk1Cpy3
-2O4NY7enbdjhFbL3cbxKDG4aWVy5fQ==
-=5lHp
------END PGP SIGNATURE-----
-
---reyzrg4yf7eenh64--
