@@ -1,184 +1,87 @@
-Received: from smtp134-24.sina.com.cn (smtp134-24.sina.com.cn [180.149.134.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB591D696
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.149.134.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E861D696;
+	Thu,  6 Jun 2024 13:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717678926; cv=none; b=jxlFreWD81vvnRvR/H2cf5oBmajlwCDwVIwHLmIwauE6fu22V2FKR/pGyjdnNwKhN4lIEa4x1UcOc74QNCQ9YcrkBw+scs07gklBmcmFiOtRbibyR15xkxfekKUD37ktLnNE5iWWFeVZtJtfyXdgXQJAtAGOnAJh6m9+/0kEgIY=
+	t=1717679033; cv=none; b=O9VyWYKApEBqM/pzOTPxwIibuN+cRSq33f8/p+bOSgfCS+PU5ylRmdMkPyle2Jd/AsSpYshqL2DleTk4aHaf1dfXECcOcm4Pr1C4V5/rqyE4BhpMEVhE+rmfHK4mxTcLGxint/WyPJ6oJcaBhiRAEZPsvEnPrDzFRm46SRP/0pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717678926; c=relaxed/simple;
-	bh=9G+hDe0Y4HCk9gqOw5r8impQjZrix9+GnvOv3xH6UPs=;
-	h=Date:From:To:Cc:Subject:Mime-Version:Message-ID:Content-Type:
-	 Content-Disposition; b=R64de8V3SvzMgNmLFTXxPK5bjX7gqiRnxXO8TDttTD6Sxnr/pYs6V4j2tdPeU4esYK/mcT+mSkG8plWsnrNkznHy2gx++PdXQYULAG/68b+qympMRwbDoGKbs1Z0Kmbl53Pm0NHCaX3QvHx0wqFmyxjSTH4uKdnyLEgXKtxZYl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=180.149.134.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: webmail.sinamail.sina.com.cn
-Received: from webmail-23-147.pop3.fmail.yf.sinanode.com (HELO webmail.sinamail.sina.com.cn)([10.2.23.147])
-	by sina.com (10.185.250.21) with SMTP
-	id 6661B33C00004050; Thu, 6 Jun 2024 21:01:48 +0800 (CST)
-X-Sender: ghostxavier@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=ghostxavier@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=ghostxavier@sina.com
-X-SMAIL-MID: 5907333408643
-Received: by webmail.sinamail.sina.com.cn (Postfix, from userid 993)
-	id 83AC72B3E; Thu,  6 Jun 2024 21:01:48 +0800 (CST)
-Date: Thu, 06 Jun 2024 21:01:48 +0800
-Received: from ghostxavier@sina.com ([59.82.45.118]) by m1.mail.sina.com.cn via HTTP;
- Thu, 06 Jun 2024 21:01:48 +0800
-From: "Xavier" <ghostxavier@sina.com>
-Reply-To: ghostxavier@sina.com
-To: "Waiman Long" <longman@redhat.com>
-Cc: "cgroups" <cgroups@vger.kernel.org>,
- "linux-kernel" <linux-kernel@vger.kernel.org>, "tj" <tj@kernel.org>,
- "lizefan.x" <lizefan.x@bytedance.com>, "hannes" <hannes@cmpxchg.org>
-Subject: Re: [PATCH-cgroup 1/2] cgroup/cpuset: Fix remote root partition
- creation problem
-X-Priority: 3
+	s=arc-20240116; t=1717679033; c=relaxed/simple;
+	bh=7j2qQVuSNB+C9zogsWp3FupLtbD+FHkF7koYC+sia4E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pUauQQ8Os+IiGKR3aCLrR0FugLHmoQlUyxdjqSrMR9PeqBWD+AKlgpHYyHsjb4USDH7gjM26qAytRE79eCdFZyZSgORNcDrb2JMdmAQag57FbHzHFwj9Q8yAblXqm7T1rVnGWtaNPpFoG5i/h89LYtHzjrj7xBiRfqViDfwSOnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmBjBFWJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmBjBFWJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9C1EC2BD10;
+	Thu,  6 Jun 2024 13:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717679032;
+	bh=7j2qQVuSNB+C9zogsWp3FupLtbD+FHkF7koYC+sia4E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=dmBjBFWJ/xv8UjRs7CxI6Gw+fljoJfgF29Lj/OiHSK1rq6Vp98Zvg9rMzM97iFv9e
+	 ko3XSsOC2PQCJyq1L05+RoVwvZvlYO3Ud1WPqiUjFEd4Ew3wymKPmdptI0yFGMB2Gw
+	 hRppoj2oROTTSN60Sije1INt2BXxYeXdgObrvBigABam8xkOYEv61iIU98PNrdOOzs
+	 16u7U3mingg89AfCuFu9goSwGoiFVVUfsrzUhrUz9w2eGpCGhLrK86Jct5ffgxE8VG
+	 Ns6SU8IHdn65sIBerEl4q7JIvgYHoSvqVdJbHIOubT4n3e7Ogy6mlTFjNvj+5oq6na
+	 jNZZEvOHVpYIQ==
+From: Mark Brown <broonie@kernel.org>
+To: Jerome Brunet <jbrunet@baylibre.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240606-topic-amlogic-upstream-bindings-convert-g12a-tohdmitx-v2-1-70d44fa30790@linaro.org>
+References: <20240606-topic-amlogic-upstream-bindings-convert-g12a-tohdmitx-v2-1-70d44fa30790@linaro.org>
+Subject: Re: [PATCH v2] ASoC: dt-bindings: convert amlogic,g12a-tohdmitx to
+ dt-schema
+Message-Id: <171767903036.1300004.2234947523747840276.b4-ty@kernel.org>
+Date: Thu, 06 Jun 2024 14:03:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <6661b33c7f1670.55086514.d793e57a@m1.mail.sina.com.cn>
-X-MessageID: 760e2f921f99d0dbcce4f70c5d48172f_202406
-X-SMAIL-UIID: 204ABDE21985004C70E66AE2A1146B46-20240606-210148-2
-X-Mailer: Sina WebMail 4.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev-d4707
 
-SGkgTG9uZ21hbiwNCg0KSSBoYXZlIGEgc21hbGwgcXVlc3Rpb24gYWJvdXQgeW91ciBuZXcgcGF0
-Y2guIA0KSSB3b25kZXIgdGhhdCBpbiBjZ3JvdXAgdjIsICB3aWxsIHRoZXJlIGJlIGFueSBvdmVy
-bGFwIGJldHdlZW4gdmFsaWQgcGFydGl0aW9uIHJvb3RzIGFuZCB0b3BfY3B1c2V0PyBJZiBpdCBp
-cyBub3QsIHRoZSBzZWN0aW9uIHN0YXJ0aW5nIHdpdGggJ3Jlc3RhcnQ6JyB0aGF0IHNlYXJjaGVz
-IGZvciBvdmVybGFwcGluZyBjcHVzZXRzIGNhbiBiZSBza2lwcGVkIGZvciBjZ3JvdXAgdjIuIE90
-aGVyd2lzZSwgaWYgdGhlcmUgYXJlIGFueSBvdmVybGFwLCB0aGVuIHRoZSBhc3NpZ25tZW50IHRv
-ICdkb20nIG1heSBuZWVkIHBlcmZvcm0gYW4gY3B1bWFza19vciBvcGVyYXRpb24/DQoNCkJlc3Qg
-cmVnYXJkcywNClhhdmllcg0KDQo+LS0tLS0gT3JpZ2luYWwgTWVzc2FnZSAtLS0tLQ0KPkZyb206
-IFdhaW1hbiBMb25nIDxsb25nbWFuQHJlZGhhdC5jb20+DQo+VG86IFRlanVuIEhlbyA8dGpAa2Vy
-bmVsLm9yZz4sIFplZmFuIExpIDxsaXplZmFuLnhAYnl0ZWRhbmNlLmNvbT4sIEpvaGFubmVzIFdl
-aW5lciA8aGFubmVzQGNtcHhjaGcub3JnPg0KPkNjOiBjZ3JvdXBzQHZnZXIua2VybmVsLm9yZywg
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZywgWGF2aWVyIDxnaG9zdHhhdmllckBzaW5hLmNv
-bT4sIFdhaW1hbiBMb25nIDxsb25nbWFuQHJlZGhhdC5jb20+DQo+U3ViamVjdDogW1BBVENILWNn
-cm91cCAxLzJdIGNncm91cC9jcHVzZXQ6IEZpeCByZW1vdGUgcm9vdCBwYXJ0aXRpb24gY3JlYXRp
-b24gcHJvYmxlbQ0KPkRhdGU6IDIwMjQtMDYtMDYgMDE6MTkNCj4NCj5TaW5jZSBjb21taXQgMTgx
-YzhlMDkxYWFlICgiY2dyb3VwL2NwdXNldDogSW50cm9kdWNlIHJlbW90ZSBwYXJ0aXRpb24iKSwN
-Cj5hIHJlbW90ZSBwYXJ0aXRpb24gY2FuIGJlIGNyZWF0ZWQgdW5kZXJuZWF0aCBhIG5vbi1wYXJ0
-aXRpb24gcm9vdCBjcHVzZXQNCj5hcyBsb25nIGFzIGl0cyBleGNsdXNpdmVfY3B1cyBhcmUgc2V0
-IHRvIGRpc3RyaWJ1dGUgZXhjbHVzaXZlIENQVXMgZG93bg0KPnRvIGl0cyBjaGlsZHJlbi4gVGhl
-IGdlbmVyYXRlX3NjaGVkX2RvbWFpbnMoKSBmdW5jdGlvbiwgaG93ZXZlciwgZG9lc24ndA0KPnRh
-a2UgaW50byBhY2NvdW50IHRoaXMgbmV3IGJlaGF2aW9yIGFuZCBoZW5jZSB3aWxsIGZhaWwgdG8g
-Y3JlYXRlIHRoZQ0KPnNjaGVkIGRvbWFpbiBuZWVkZWQgZm9yIGEgcmVtb3RlIHJvb3QgKG5vbi1p
-c29sYXRlZCkgcGFydGl0aW9uLg0KPlRoZXJlIGFyZSB0d28gaXNzdWVzIHJlbGF0ZWQgdG8gcmVt
-b3RlIHBhcnRpdGlvbiBzdXBwb3J0LiBGaXJzdCBvZg0KPmFsbCwgZ2VuZXJhdGVfc2NoZWRfZG9t
-YWlucygpIGhhcyBhIGZhc3QgcGF0aCB0aGF0IGlzIGFjdGl2YXRlZCBpZg0KPnJvb3RfbG9hZF9i
-YWxhbmNlIGlzIHRydWUgYW5kIHRvcF9jcHVzZXQubnJfc3VicGFydHMgaXMgbm9uLXplcm8uIFRo
-ZQ0KPmxhdGVyIGNvbmRpdGlvbiBpc24ndCBxdWl0ZSBjb3JyZWN0IGZvciByZW1vdGUgcGFydGl0
-aW9ucyBhcyBucl9zdWJwYXJ0cw0KPmp1c3Qgc2hvd3MgdGhlIG51bWJlciBvZiBsb2NhbCBjaGls
-ZCBwYXJ0aXRpb25zIHVuZGVybmVhdGggaXQuIFRoZXJlDQo+Y2FuIGJlIG5vIGxvY2FsIGNoaWxk
-IHBhcnRpdGlvbiB1bmRlciB0b3BfY3B1c2V0IGV2ZW4gaWYgdGhlcmUgYXJlDQo+cmVtb3RlIHBh
-cnRpdGlvbnMgZnVydGhlciBkb3duIHRoZSBoaWVyYXJjaHkuIEZpeCB0aGF0IGJ5IGNoZWNraW5n
-DQo+Zm9yIHN1YnBhcnRpdGlvbnNfY3B1cyB3aGljaCBjb250YWlucyBleGNsdXNpdmUgQ1BVcyBh
-bGxvY2F0ZWQgdG8gYm90aA0KPmxvY2FsIGFuZCByZW1vdGUgcGFydGl0aW9ucy4NCj5TZWNvbmRs
-eSwgdGhlIHZhbGlkIHBhcnRpdGlvbiBjaGVjayBmb3Igc3VidHJlZSBza2lwcGluZyBpbiB0aGUg
-Y3NhW10NCj5nZW5lcmF0aW9uIGxvb3AgaXNuJ3QgZW5vdWdoIGFzIHJlbW90ZSBwYXJ0aXRpb24g
-ZG9lcyBub3QgbmVlZCB0bw0KPmhhdmUgYSBwYXJ0aXRpb24gcm9vdCBwYXJlbnQuIEZpeCB0aGlz
-IHByb2JsZW0gYnkgYnJlYWtpbmcgY3NhW10gYXJyYXkNCj5nZW5lcmF0aW9uIGxvb3Agb2YgZ2Vu
-ZXJhdGVfc2NoZWRfZG9tYWlucygpIGludG8gdjEgYW5kIHYyIHNwZWNpZmljIHBhcnRzDQo+YW5k
-IGNoZWNraW5nIGEgY3B1c2V0J3MgZXhjbHVzaXZlX2NwdXMgYmVmb3JlIHNraXBwaW5nIGl0cyBz
-dWJ0cmVlIGluDQo+dGhlIHYyIGNhc2UuDQo+QWxzbyBzaW1wbGlmeSBnZW5lcmF0ZV9zY2hlZF9k
-b21haW5zKCkgZm9yIGNncm91cCB2MiBhcyBvbmx5DQo+bm9uLWlzb2xhdGluZyBwYXJ0aXRpb24g
-cm9vdHMgc2hvdWxkIGJlIGluY2x1ZGVkIGluIGJ1aWxkaW5nIHRoZSBjcHVzZXQNCj5hcnJheSBh
-bmQgbm9uZSBvZiB0aGUgdjEgc2NoZWR1bGluZyBhdHRyaWJ1dGVzIG90aGVyIHRoYW4gYSBkaWZm
-ZXJlbnQNCj53YXkgdG8gY3JlYXRlIGFuIGlzb2xhdGVkIHBhcnRpdGlvbiBhcmUgc3VwcG9ydGVk
-Lg0KPkZpeGVzOiAxODFjOGUwOTFhYWUgKCJjZ3JvdXAvY3B1c2V0OiBJbnRyb2R1Y2UgcmVtb3Rl
-IHBhcnRpdGlvbiIpDQo+U2lnbmVkLW9mZi1ieTogV2FpbWFuIExvbmcgPGxvbmdtYW5AcmVkaGF0
-LmNvbT4NCj4tLS0NCj4ga2VybmVsL2Nncm91cC9jcHVzZXQuYyB8IDU1ICsrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLQ0KPiAxIGZpbGUgY2hhbmdlZCwgNDIgaW5zZXJ0
-aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pDQo+ZGlmZiAtLWdpdCBhL2tlcm5lbC9jZ3JvdXAvY3B1
-c2V0LmMgYi9rZXJuZWwvY2dyb3VwL2NwdXNldC5jDQo+aW5kZXggZjliOTdmNjVlMjA0Li5mYjcx
-ZDcxMGE2MDMgMTAwNjQ0DQo+LS0tIGEva2VybmVsL2Nncm91cC9jcHVzZXQuYw0KPisrKyBiL2tl
-cm5lbC9jZ3JvdXAvY3B1c2V0LmMNCj5AQCAtMTY5LDcgKzE2OSw3IEBAIHN0cnVjdCBjcHVzZXQg
-ew0KPiAJLyogZm9yIGN1c3RvbSBzY2hlZCBkb21haW4gKi8NCj4gCWludCByZWxheF9kb21haW5f
-bGV2ZWw7DQo+IA0KPi0JLyogbnVtYmVyIG9mIHZhbGlkIHN1Yi1wYXJ0aXRpb25zICovDQo+Kwkv
-KiBudW1iZXIgb2YgdmFsaWQgbG9jYWwgY2hpbGQgcGFydGl0aW9ucyAqLw0KPiAJaW50IG5yX3N1
-YnBhcnRzOw0KPiANCj4gCS8qIHBhcnRpdGlvbiByb290IHN0YXRlICovDQo+QEAgLTk1NywxMyAr
-OTU3LDE0IEBAIHN0YXRpYyBpbnQgZ2VuZXJhdGVfc2NoZWRfZG9tYWlucyhjcHVtYXNrX3Zhcl90
-ICoqZG9tYWlucywNCj4gCWludCBuc2xvdDsJCS8qIG5leHQgZW1wdHkgZG9tc1tdIHN0cnVjdCBj
-cHVtYXNrIHNsb3QgKi8NCj4gCXN0cnVjdCBjZ3JvdXBfc3Vic3lzX3N0YXRlICpwb3NfY3NzOw0K
-PiAJYm9vbCByb290X2xvYWRfYmFsYW5jZSA9IGlzX3NjaGVkX2xvYWRfYmFsYW5jZSgmdG9wX2Nw
-dXNldCk7DQo+Kwlib29sIGNncnB2MiA9IGNncm91cF9zdWJzeXNfb25fZGZsKGNwdXNldF9jZ3Jw
-X3N1YnN5cyk7DQo+IA0KPiAJZG9tcyA9IE5VTEw7DQo+IAlkYXR0ciA9IE5VTEw7DQo+IAljc2Eg
-PSBOVUxMOw0KPiANCj4gCS8qIFNwZWNpYWwgY2FzZSBmb3IgdGhlIDk5JSBvZiBzeXN0ZW1zIHdp
-dGggb25lLCBmdWxsLCBzY2hlZCBkb21haW4gKi8NCj4tCWlmIChyb290X2xvYWRfYmFsYW5jZSAm
-JiAhdG9wX2NwdXNldC5ucl9zdWJwYXJ0cykgew0KPisJaWYgKHJvb3RfbG9hZF9iYWxhbmNlICYm
-IGNwdW1hc2tfZW1wdHkoc3VicGFydGl0aW9uc19jcHVzKSkgew0KPiBzaW5nbGVfcm9vdF9kb21h
-aW46DQo+IAkJbmRvbXMgPSAxOw0KPiAJCWRvbXMgPSBhbGxvY19zY2hlZF9kb21haW5zKG5kb21z
-KTsNCj5AQCAtOTkyLDE2ICs5OTMsMTggQEAgc3RhdGljIGludCBnZW5lcmF0ZV9zY2hlZF9kb21h
-aW5zKGNwdW1hc2tfdmFyX3QgKipkb21haW5zLA0KPiAJY3B1c2V0X2Zvcl9lYWNoX2Rlc2NlbmRh
-bnRfcHJlKGNwLCBwb3NfY3NzLCAmdG9wX2NwdXNldCkgew0KPiAJCWlmIChjcCA9PSAmdG9wX2Nw
-dXNldCkNCj4gCQkJY29udGludWU7DQo+Kw0KPisJCWlmIChjZ3JwdjIpDQo+KwkJCWdvdG8gdjI7
-DQo+Kw0KPiAJCS8qDQo+KwkJICogdjE6DQo+IAkJICogQ29udGludWUgdHJhdmVyc2luZyBiZXlv
-bmQgQGNwIGlmZiBAY3AgaGFzIHNvbWUgQ1BVcyBhbmQNCj4gCQkgKiBpc24ndCBsb2FkIGJhbGFu
-Y2luZy4gIFRoZSBmb3JtZXIgaXMgb2J2aW91cy4gIFRoZQ0KPiAJCSAqIGxhdHRlcjogQWxsIGNo
-aWxkIGNwdXNldHMgY29udGFpbiBhIHN1YnNldCBvZiB0aGUNCj4gCQkgKiBwYXJlbnQncyBjcHVz
-LCBzbyBqdXN0IHNraXAgdGhlbSwgYW5kIHRoZW4gd2UgY2FsbA0KPiAJCSAqIHVwZGF0ZV9kb21h
-aW5fYXR0cl90cmVlKCkgdG8gY2FsYyByZWxheF9kb21haW5fbGV2ZWwgb2YNCj4gCQkgKiB0aGUg
-Y29ycmVzcG9uZGluZyBzY2hlZCBkb21haW4uDQo+LQkJICoNCj4tCQkgKiBJZiByb290IGlzIGxv
-YWQtYmFsYW5jaW5nLCB3ZSBjYW4gc2tpcCBAY3AgaWYgaXQNCj4tCQkgKiBpcyBhIHN1YnNldCBv
-ZiB0aGUgcm9vdCdzIGVmZmVjdGl2ZV9jcHVzLg0KPiAJCSAqLw0KPiAJCWlmICghY3B1bWFza19l
-bXB0eShjcC0+Y3B1c19hbGxvd2VkKSAmJg0KPiAJCSAgICAhKGlzX3NjaGVkX2xvYWRfYmFsYW5j
-ZShjcCkgJiYNCj5AQCAtMTAwOSwxNiArMTAxMiwyOCBAQCBzdGF0aWMgaW50IGdlbmVyYXRlX3Nj
-aGVkX2RvbWFpbnMoY3B1bWFza192YXJfdCAqKmRvbWFpbnMsDQo+IAkJCQkJIGhvdXNla2VlcGlu
-Z19jcHVtYXNrKEhLX1RZUEVfRE9NQUlOKSkpKQ0KPiAJCQljb250aW51ZTsNCj4gDQo+LQkJaWYg
-KHJvb3RfbG9hZF9iYWxhbmNlICYmDQo+LQkJICAgIGNwdW1hc2tfc3Vic2V0KGNwLT5jcHVzX2Fs
-bG93ZWQsIHRvcF9jcHVzZXQuZWZmZWN0aXZlX2NwdXMpKQ0KPi0JCQljb250aW51ZTsNCj4tDQo+
-IAkJaWYgKGlzX3NjaGVkX2xvYWRfYmFsYW5jZShjcCkgJiYNCj4gCQkgICAgIWNwdW1hc2tfZW1w
-dHkoY3AtPmVmZmVjdGl2ZV9jcHVzKSkNCj4gCQkJY3NhW2NzbisrXSA9IGNwOw0KPiANCj4tCQkv
-KiBza2lwIEBjcCdzIHN1YnRyZWUgaWYgbm90IGEgcGFydGl0aW9uIHJvb3QgKi8NCj4tCQlpZiAo
-IWlzX3BhcnRpdGlvbl92YWxpZChjcCkpDQo+KwkJLyogc2tpcCBAY3AncyBzdWJ0cmVlICovDQo+
-KwkJcG9zX2NzcyA9IGNzc19yaWdodG1vc3RfZGVzY2VuZGFudChwb3NfY3NzKTsNCj4rCQljb250
-aW51ZTsNCj4rDQo+K3YyOg0KPisJCS8qDQo+KwkJICogT25seSB2YWxpZCBwYXJ0aXRpb24gcm9v
-dHMgdGhhdCBhcmUgbm90IGlzb2xhdGVkIGFuZCB3aXRoDQo+KwkJICogbm9uLWVtcHR5IGVmZmVj
-dGl2ZV9jcHVzIHdpbGwgYmUgc2F2ZWQgaW50byBjc25bXS4NCj4rCQkgKi8NCj4rCQlpZiAoKGNw
-LT5wYXJ0aXRpb25fcm9vdF9zdGF0ZSA9PSBQUlNfUk9PVCkgJiYNCj4rCQkgICAgIWNwdW1hc2tf
-ZW1wdHkoY3AtPmVmZmVjdGl2ZV9jcHVzKSkNCj4rCQkJY3NhW2NzbisrXSA9IGNwOw0KPisNCj4r
-CQkvKg0KPisJCSAqIFNraXAgQGNwJ3Mgc3VidHJlZSBpZiBub3QgYSBwYXJ0aXRpb24gcm9vdCBh
-bmQgaGFzIG5vDQo+KwkJICogZXhjbHVzaXZlIENQVXMgdG8gYmUgZ3JhbnRlZCB0byBjaGlsZCBj
-cHVzZXRzLg0KPisJCSAqLw0KPisJCWlmICghaXNfcGFydGl0aW9uX3ZhbGlkKGNwKSAmJiBjcHVt
-YXNrX2VtcHR5KGNwLT5leGNsdXNpdmVfY3B1cykpDQo+IAkJCXBvc19jc3MgPSBjc3NfcmlnaHRt
-b3N0X2Rlc2NlbmRhbnQocG9zX2Nzcyk7DQo+IAl9DQo+IAlyY3VfcmVhZF91bmxvY2soKTsNCj5A
-QCAtMTA3Miw2ICsxMDg3LDIwIEBAIHN0YXRpYyBpbnQgZ2VuZXJhdGVfc2NoZWRfZG9tYWlucyhj
-cHVtYXNrX3Zhcl90ICoqZG9tYWlucywNCj4gCWRhdHRyID0ga21hbGxvY19hcnJheShuZG9tcywg
-c2l6ZW9mKHN0cnVjdCBzY2hlZF9kb21haW5fYXR0ciksDQo+IAkJCSAgICAgIEdGUF9LRVJORUwp
-Ow0KPiANCj4rCS8qDQo+KwkgKiBDZ3JvdXAgdjIgZG9lc24ndCBzdXBwb3J0IGRvbWFpbiBhdHRy
-aWJ1dGVzLCBqdXN0IHNldCBhbGwgb2YgdGhlbQ0KPisJICogdG8gU0RfQVRUUl9JTklULiBBbHNv
-IG5vbi1pc29sYXRpbmcgcGFydGl0aW9uIHJvb3QgQ1BVcyBhcmUgYQ0KPisJICogc3Vic2V0IG9m
-IEhLX1RZUEVfRE9NQUlOIGhvdXNla2VlcGluZyBDUFVzLg0KPisJICovDQo+KwlpZiAoY2dycHYy
-KSB7DQo+KwkJZm9yIChpID0gMDsgaSA8IG5kb21zOyBpKyspIHsNCj4rCQkJY3B1bWFza19jb3B5
-KGRvbXNbaV0sIGNzYVtpXS0+ZWZmZWN0aXZlX2NwdXMpOyAgICAgICAgIC8qKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKi8NCj4rCQkJaWYgKGRhdHRyKQ0KPisJCQkJZGF0
-dHJbaV0gPSBTRF9BVFRSX0lOSVQ7DQo+KwkJfQ0KPisJCWdvdG8gZG9uZTsNCj4rCX0NCj4rDQo+
-IAlmb3IgKG5zbG90ID0gMCwgaSA9IDA7IGkgPCBjc247IGkrKykgew0KPiAJCXN0cnVjdCBjcHVz
-ZXQgKmEgPSBjc2FbaV07DQo+IAkJc3RydWN0IGNwdW1hc2sgKmRwOw0KPkBAIC0xMjMxLDcgKzEy
-NjAsNyBAQCBzdGF0aWMgdm9pZCByZWJ1aWxkX3NjaGVkX2RvbWFpbnNfbG9ja2VkKHZvaWQpDQo+
-IAkgKiByb290IHNob3VsZCBiZSBvbmx5IGEgc3Vic2V0IG9mIHRoZSBhY3RpdmUgQ1BVcy4gIFNp
-bmNlIGEgQ1BVIGluIGFueQ0KPiAJICogcGFydGl0aW9uIHJvb3QgY291bGQgYmUgb2ZmbGluZWQs
-IGFsbCBtdXN0IGJlIGNoZWNrZWQuDQo+IAkgKi8NCj4tCWlmICh0b3BfY3B1c2V0Lm5yX3N1YnBh
-cnRzKSB7DQo+KwlpZiAoIWNwdW1hc2tfZW1wdHkoc3VicGFydGl0aW9uc19jcHVzKSkgew0KPiAJ
-CXJjdV9yZWFkX2xvY2soKTsNCj4gCQljcHVzZXRfZm9yX2VhY2hfZGVzY2VuZGFudF9wcmUoY3Ms
-IHBvc19jc3MsICZ0b3BfY3B1c2V0KSB7DQo+IAkJCWlmICghaXNfcGFydGl0aW9uX3ZhbGlkKGNz
-KSkgew0KPkBAIC00NTc1LDcgKzQ2MDQsNyBAQCBzdGF0aWMgdm9pZCBjcHVzZXRfaGFuZGxlX2hv
-dHBsdWcodm9pZCkNCj4gCSAqIEluIHRoZSByYXJlIGNhc2UgdGhhdCBob3RwbHVnIHJlbW92ZXMg
-YWxsIHRoZSBjcHVzIGluDQo+IAkgKiBzdWJwYXJ0aXRpb25zX2NwdXMsIHdlIGFzc3VtZWQgdGhh
-dCBjcHVzIGFyZSB1cGRhdGVkLg0KPiAJICovDQo+LQlpZiAoIWNwdXNfdXBkYXRlZCAmJiB0b3Bf
-Y3B1c2V0Lm5yX3N1YnBhcnRzKQ0KPisJaWYgKCFjcHVzX3VwZGF0ZWQgJiYgIWNwdW1hc2tfZW1w
-dHkoc3VicGFydGl0aW9uc19jcHVzKSkNCj4gCQljcHVzX3VwZGF0ZWQgPSB0cnVlOw0KPiANCj4g
-CS8qIEZvciB2MSwgc3luY2hyb25pemUgY3B1c19hbGxvd2VkIHRvIGNwdV9hY3RpdmVfbWFzayAq
-Lw0KPi0tIA0KPjIuMzkuMw==
+On Thu, 06 Jun 2024 10:06:58 +0200, Neil Armstrong wrote:
+> Convert text bindings to dt-schema format for the Amlogic TX HDMI
+> control glue.
+> 
+> 
+
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: dt-bindings: convert amlogic,g12a-tohdmitx to dt-schema
+      commit: a1708fda9388c83215f0be82ad47df10be6e1975
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
