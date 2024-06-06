@@ -1,300 +1,260 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A9C13F014
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92444195981
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717677608; cv=none; b=UcVMd6Weg1mCTEe/Yj+RUE+FRL/OTEddm1M5DPC1bzsozHuhp5etdNc0zS/kgXIQxvYYzVNIXL6mKE2CvjXUkKkciEN+XKCRxKyVNDNxhmFViI52AEohzDPwPeIi0u5aBgwHNO7BNbAxKRGn9nVHEbhyp25lj+TO+EvOTcagdm0=
+	t=1717677797; cv=none; b=QxTpL/Jdz04Qcw+hvXqamTr/ZYHqb0mSMlkSqT5BfdqF9f/0AMQ/1RvNUVs5b72SG34miBI8+GAcB2s1GNdbZAdSwjizqaaCSRRpPv3J6eu73j2T70KZuwZq70k9yQr6YTuc+hLMhR60yzIM63Wsfl7bpObcLJbsidk8vBNjscE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717677608; c=relaxed/simple;
-	bh=2hmuyNqQTvaA5z2wwn4yQo3Vjk9z0/qD/1y7aL3KO4k=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Hb6qn0KMpAyDOdP78Zh7bkAHT4YbrKMXKZEEKmcZ3KaQtKk5u5ySGGcJwWdQQvCbMOG2jnuA1tTKfXa69ae0ilxysuI61oPfVsiI/ekMSrk6vdRADCovZG/JaC8OPvdJBpHsUpBLQ0vTIty0+kjNTqX2Ktbg1aWlAlUPw9ACXG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WJYMlWJ0; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717677797; c=relaxed/simple;
+	bh=PzL3Agibp2BwAUGKAq4VnWqww86W93usoupJOjzqlQk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CtKu0DPAZoflCJBOE/dRWpfV9MUbL+1qQqdcVN9QjBKVVs8Ozy0epPTo31++nnuO04mNczIgyC8qy37hrtmILzEJ+cFTF1z0McHRxoKC9Y4qbu8LO9sVEBvPyNR9IHydy3R1uiU4o+HSXCjtBqnLHOz2wiof99tI+nHIr3WJjjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KrPhtBIC; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJYMlWJ0"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6afc61f9a2eso7022726d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 05:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717677606; x=1718282406; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SuUr0xdmiuXB9sYL3V50E0XBlpUTxzxBdUup1Y2+RDI=;
-        b=WJYMlWJ0a4Hr5tSHe5UrScT/j3PwIKn/4x4+zw9VGSUBITUzVLPuont45kPA5ctJQz
-         qHg6pASeJMDLiVftxdlb1RCBWTPWylv/FVROiHf9H/W6EWXAZbwiUzIn4mpSpDIJAiMw
-         HBZiMHWJTOINQv1It4CAg1WS/NPCs0syo03kz32UydFJqM/T9iPqyf0My/xLp6ygebf1
-         dlDcvk6GGSlGFpT7E45ZmPLvDyDOy6/sDld8RaKJeFm/NwA8C6PMJPbjMwgkUdqwlKb+
-         ykv4kzKHOXBihDksJiBeWif95hmhfvoXNVyD608G/VL/CYyLj3xqwly2Gw4mavI0I6h9
-         u3gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717677606; x=1718282406;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SuUr0xdmiuXB9sYL3V50E0XBlpUTxzxBdUup1Y2+RDI=;
-        b=Svn3GcooWvcKFGGWTmEySW3YgslHpIC5wN40adL+y3xFCS78UrP0MtCVKtM/cfqF4H
-         n9CX1jxZVFsQTaNugq1h2DpKwWkNNkgi7NofzlAMfCrxZcIJDN5rSFzje4y7d60xomoK
-         /g8Ziq2JJTHefBU97yObeWZYbLP4MK47uwmJfmNLOQ1lGWrMdB75F7j+xYjAKu9bGqfn
-         WjxFCuEzogaCyePQmTaqdAKtNxDqIMLI+UyXYFtR2h4dweGsYtSMb52b7/fRYx+2WMCO
-         tAqSqPQFyBnLMRqcit+aLZMaDG1OuXYmrM2hI18nclx3ZWoiUbEjcnUxZD4J18aw2UA2
-         SliA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9zyFJcEfGEbjvYdX71ZnlZIWTdYqEN4SpSUro31aHpYdpXUThRg4jAK0yEboWkpkTgYgHeQfC2034BYYZtYb+HOtd2teIlRTcwWU5
-X-Gm-Message-State: AOJu0YyeTNgYgjWf+pBMgjKx5N6Jrp3ovKRpFcKUOUQ+VnyLb2ON31Pk
-	Qiniovoq7gCCA+iNfOx3dtFWspQm2p0+dLb8XLb1n0fN9utDozXq
-X-Google-Smtp-Source: AGHT+IES+FMJjr9muBMUefRvn7PGclBxSG1bMxV60L4GSkvNKmMX4kS3eOt112c/VzYFf2D7NP3Kjw==
-X-Received: by 2002:a05:6214:598b:b0:6b0:5755:7dcf with SMTP id 6a1803df08f44-6b057557eaamr1976836d6.10.1717677605695;
-        Thu, 06 Jun 2024 05:40:05 -0700 (PDT)
-Received: from smtpclient.apple (174.137.59.200.16clouds.com. [174.137.59.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b04f9fb10csm5743626d6.120.2024.06.06.05.39.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2024 05:40:05 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KrPhtBIC"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 456CfLTs113415;
+	Thu, 6 Jun 2024 07:41:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717677681;
+	bh=swyYL/UTh/fJIrJdY36x8AgMYNmXTYRmwCF34ITHoj4=;
+	h=From:To:CC:Subject:Date;
+	b=KrPhtBICtQCzyNuZnJ8b7wwxW8OP4WMYICJHklMQAM5zM2+q57syNvTz0Ik8OByNF
+	 aWfa5DCMffEKHwbNJkN/Tx3gwI0fP3GHfG3sm4TAr/XE6+Geh0mIJFXTo7YQzXeIE1
+	 BD7gIoLzPImGPpY7mGVazwQ8ijGj5nBFV2Hc8t4I=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 456CfLbq006673
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 6 Jun 2024 07:41:21 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
+ Jun 2024 07:41:20 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 6 Jun 2024 07:41:20 -0500
+Received: from LT5CG31242FY.dhcp.ti.com ([10.250.160.158])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 456CfAJt103595;
+	Thu, 6 Jun 2024 07:41:11 -0500
+From: Shenghao Ding <shenghao-ding@ti.com>
+To: <broonie@kernel.org>
+CC: <andriy.shevchenko@linux.intel.com>, <lgirdwood@gmail.com>,
+        <perex@perex.cz>, <pierre-louis.bossart@linux.intel.com>,
+        <13916275206@139.com>, <zhourui@huaqin.com>,
+        <alsa-devel@alsa-project.org>, <i-salazar@ti.com>,
+        <linux-kernel@vger.kernel.org>, <j-chadha@ti.com>,
+        <liam.r.girdwood@intel.com>, <jaden-yue@ti.com>,
+        <yung-chuan.liao@linux.intel.com>, <dipa@ti.com>, <yuhsuan@google.com>,
+        <henry.lo@ti.com>, <tiwai@suse.de>, <baojun.xu@ti.com>, <soyer@irl.hu>,
+        <Baojun.Xu@fpt.com>, <judyhsiao@google.com>, <navada@ti.com>,
+        <cujomalainey@google.com>, <aanya@ti.com>, <nayeem.mahmud@ti.com>,
+        <savyasanchi.shukla@netradyne.com>, <flaviopr@microsoft.com>,
+        <jesse-ji@ti.com>, <darren.ye@mediatek.com>,
+        Shenghao Ding
+	<shenghao-ding@ti.com>
+Subject: [RESEND PATCH v4] ASoc: tas2781: Enable RCA-based playback without DSP firmware download
+Date: Thu, 6 Jun 2024 20:41:03 +0800
+Message-ID: <20240606124105.1492-1-shenghao-ding@ti.com>
+X-Mailer: git-send-email 2.33.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH] sched/fair: Reschedule the cfs_rq when current is
- ineligible
-From: Chunxin Zang <spring.cxz@gmail.com>
-In-Reply-To: <bb43844e-0ef2-44d6-9d98-496865d942b9@126.com>
-Date: Thu, 6 Jun 2024 20:39:44 +0800
-Cc: dietmar.eggemann@arm.com,
- rostedt@goodmis.org,
- bsegall@google.com,
- mgorman@suse.de,
- bristot@redhat.com,
- vschneid@redhat.com,
- linux-kernel@vger.kernel.org,
- Chen Yu <yu.c.chen@intel.com>,
- yangchen11@lixiang.com,
- Jerry Zhou <zhouchunhua@lixiang.com>,
- Chunxin Zang <zangchunxin@lixiang.com>,
- mingo@redhat.com,
- Peter Zijlstra <peterz@infradead.org>,
- juri.lelli@redhat.com,
- vincent.guittot@linaro.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DD2A2CD1-E7F9-4519-82F5-22E769364C55@gmail.com>
-References: <20240524134011.270861-1-spring.cxz@gmail.com>
- <572bef0a-727c-4922-93e9-ad29c385120e@126.com>
- <6AF97701-B8F4-46C6-851E-A8BACE97E8C0@gmail.com>
- <bb43844e-0ef2-44d6-9d98-496865d942b9@126.com>
-To: Honglei Wang <jameshongleiwang@126.com>
-X-Mailer: Apple Mail (2.3731.700.6)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+In only RCA (Reconfigurable Architecture) binary case, no DSP program will
+be working inside tas2563/tas2781, that is dsp-bypass mode, do not support
+speaker protection, and audio acoustic algorithms in this mode.
 
+Fixes: ef3bcde75d06 ("ASoC: tas2781: Add tas2781 driver")
+Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-> On Jun 3, 2024, at 10:55, Honglei Wang <jameshongleiwang@126.com> =
-wrote:
->=20
->=20
->=20
-> On 2024/5/29 22:31, Chunxin Zang wrote:
->>> On May 25, 2024, at 19:48, Honglei Wang <jameshongleiwang@126.com> =
-wrote:
->>>=20
->>>=20
->>>=20
->>> On 2024/5/24 21:40, Chunxin Zang wrote:
->>>> I found that some tasks have been running for a long enough time =
-and
->>>> have become illegal, but they are still not releasing the CPU. This
->>>> will increase the scheduling delay of other processes. Therefore, I
->>>> tried checking the current process in wakeup_preempt and =
-entity_tick,
->>>> and if it is illegal, reschedule that cfs queue.
->>>> The modification can reduce the scheduling delay by about 30% when
->>>> RUN_TO_PARITY is enabled.
->>>> So far, it has been running well in my test environment, and I have
->>>> pasted some test results below.
->>>> I isolated four cores for testing. I ran Hackbench in the =
-background
->>>> and observed the test results of cyclictest.
->>>> hackbench -g 4 -l 100000000 &
->>>> cyclictest --mlockall -D 5m -q
->>>>                                  EEVDF      PATCH  EEVDF-NO_PARITY  =
-PATCH-NO_PARITY
->>>>                 # Min Latencies: 00006      00006      00006      =
-00006
->>>>   LNICE(-19)    # Avg Latencies: 00191      00122      00089      =
-00066
->>>>                 # Max Latencies: 15442      07648      14133      =
-07713
->>>>                 # Min Latencies: 00006      00010      00006      =
-00006
->>>>   LNICE(0)      # Avg Latencies: 00466      00277      00289      =
-00257
->>>>                 # Max Latencies: 38917      32391      32665      =
-17710
->>>>                 # Min Latencies: 00019      00053      00010      =
-00013
->>>>   LNICE(19)     # Avg Latencies: 37151      31045      18293      =
-23035
->>>>                 # Max Latencies: 2688299    7031295    426196     =
-425708
->>>> I'm actually a bit hesitant about placing this modification under =
-the
->>>> NO_PARITY feature. This is because the modification conflicts with =
-the
->>>> semantics of RUN_TO_PARITY. So, I captured and compared the number =
-of
->>>> resched occurrences in wakeup_preempt to see if it introduced any
->>>> additional overhead.
->>>> Similarly, hackbench is used to stress the utilization of four =
-cores to
->>>> 100%, and the method for capturing the number of PREEMPT =
-occurrences is
->>>> referenced from [1].
->>>> schedstats                          EEVDF       PATCH   =
-EEVDF-NO_PARITY  PATCH-NO_PARITY  CFS(6.5)
->>>> stats.check_preempt_count          5053054     5057286    5003806   =
- 5018589    5031908
->>>> stats.patch_cause_preempt_count    -------     858044     -------   =
- 765726     -------
->>>> stats.need_preempt_count           570520      858684     3380513   =
- 3426977    1140821
->>>> =46rom the above test results, there is a slight increase in the =
-number of
->>>> resched occurrences in wakeup_preempt. However, the results vary =
-with each
->>>> test, and sometimes the difference is not that significant. But =
-overall,
->>>> the count of reschedules remains lower than that of CFS and is much =
-less
->>>> than that of NO_PARITY.
->>>> [1]: =
-https://lore.kernel.org/all/20230816134059.GC982867@hirez.programming.kick=
-s-ass.net/T/#m52057282ceb6203318be1ce9f835363de3bef5cb
->>>> Signed-off-by: Chunxin Zang <zangchunxin@lixiang.com>
->>>> Reviewed-by: Chen Yang <yangchen11@lixiang.com>
->>>> ---
->>>>  kernel/sched/fair.c | 6 ++++++
->>>>  1 file changed, 6 insertions(+)
->>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>> index 03be0d1330a6..a0005d240db5 100644
->>>> --- a/kernel/sched/fair.c
->>>> +++ b/kernel/sched/fair.c
->>>> @@ -5523,6 +5523,9 @@ entity_tick(struct cfs_rq *cfs_rq, struct =
-sched_entity *curr, int queued)
->>>>   hrtimer_active(&rq_of(cfs_rq)->hrtick_timer))
->>>>   return;
->>>>  #endif
->>>> +
->>>> + if (!entity_eligible(cfs_rq, curr))
->>>> + resched_curr(rq_of(cfs_rq));
->>>>  }
->>>>    @@ -8325,6 +8328,9 @@ static void =
-check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
->>>>   if (unlikely(p->policy !=3D SCHED_NORMAL) || =
-!sched_feat(WAKEUP_PREEMPTION))
->>>>   return;
->>>>  + if (!entity_eligible(cfs_rq, se))
->>>> + goto preempt;
->>>> +
->>>>   find_matching_se(&se, &pse);
->>>>   WARN_ON_ONCE(!pse);
->>>> =20
->>> Hi Chunxin,
->>>=20
->>> Did you run a comparative test to see which modification is more =
-helpful on improve the latency? Modification at tick point makes more =
-sense to me. But, seems just resched arbitrarily in wakeup might =
-introduce too much preemption (and maybe more context switch?) in =
-complex environment such as cgroup hierarchy.
->>>=20
->>> Thanks,
->>> Honglei
->> Hi Honglei
->> I attempted to build a slightly more complex scenario. It consists of =
-4 isolated cores,
->> 4 groups of hackbench (160 processes in total) to stress the CPU, and =
-1 cyclictest
->> process to test scheduling latency. Using cgroup v2, to created 64 =
-cgroup leaf nodes
->> in a binary tree structure (with a depth of 7). I then evenly =
-distributed the aforementioned
->> 161 processes across the 64 cgroups respectively, and observed the =
-scheduling delay
->> performance of cyclictest.
->> Unfortunately, the test results were very fluctuating, and the two =
-sets of data were very
->> close to each other. I suspect that it might be due to too few =
-processes being distributed
->> in each cgroup, which led to the logic for determining ineligible =
-always succeeding and
->> following the original logic. Later, I will attempt more tests to =
-verify the impact of these
->> modifications in scenarios involving multiple cgroups.
->=20
-> Sorry to lately replay, I was a bit busy last week. How's the test =
-going on? What about run some workload processes who spend more time in =
-kernel? Maybe it's worth do give a try, but it depends on your test =
-plan.
->=20
+---
+v4:
+ - add a description of what the state machine looks like, and why
+   FW_PENDING/FAIL remain but are not used.
+ - Remove TASDEVICE_DSP_FW_NONE because of unused.
+ - Remove stray change.
+ - Fix broken indentation.
+v3:
+ - Add description on RCA is Reconfigurable Architecture.
+ - Add the description on enabling
+ - Reword the commit
+ - Remove question mark in the comments.
+ - Add spaces in comments.
+v2:
+ - Correct comment.
+ - Add Fixes.
+ - Move header file to the first.
+v1:
+ - Split out the different logical changes into different patches.
+ - rename tasdevice_dsp_fw_state -> tasdevice_fw_state, the fw are not
+   only DSP fw, but also RCA(Reconfigurable data, such as acoustic data
+   and register setting, etc).
+ - Add TASDEVICE_RCA_FW_OK in tasdevice_fw_state to identify the state
+   that only RCA binary file has been download successfully, but DSP fw
+   is not loaded or loading failure.
+ - Add the this strategy into tasdevice_tuning_switch.
+ - If one side of the if/else has a braces both should in
+   tasdevice_tuning_switch.
+ - Identify whehter both RCA and DSP have been loaded or only RCA has
+   been loaded in tasdevice_fw_ready.
+ - Add check fw load status in tasdevice_startup.
+ - remove ret in tasdevice_startup to make the code neater.
+---
+ include/sound/tas2781-dsp.h       | 11 ++++++++--
+ sound/soc/codecs/tas2781-fmwlib.c | 18 +++++++++++-----
+ sound/soc/codecs/tas2781-i2c.c    | 34 +++++++++++++++++++------------
+ 3 files changed, 43 insertions(+), 20 deletions(-)
 
-Hi honglei
-
-Recently, I conducted testing of multiple cgroups using version 2. =
-Version 2 ensures the
-RUN_TO_PARITY feature, so the test results are somewhat better under the
-NO_RUN_TO_PARITY feature.
-=
-https://lore.kernel.org/lkml/20240529141806.16029-1-spring.cxz@gmail.com/T=
-/
-
-The testing environment I used still employed 4 cores,  4 groups of =
-hackbench (160 processes)
-and 1 cyclictest. If too many cgroups or processes are created on the 4 =
-cores, the test
-results will fluctuate severely, making it difficult to discern any =
-differences.
-
-The organization of cgroups was in two forms:=20
-1. Within the same level cgroup, 10 sub-cgroups were created, with each =
-cgroup having
-  an average of 16 processes.=20
-
-                                  EEVDF      PATCH  EEVDF-NO_PARITY  =
-PATCH-NO_PARITY
-
-   LNICE(-19)    # Avg Latencies: 00572      00347      00502      00218
-
-   LNICE(0)      # Avg Latencies: 02262      02225      02442      02321
-
-   LNICE(19)     # Avg Latencies: 03132      03422      03333      03489
-
-2. In the form of a binary tree, 8 leaf cgroups were established, with a =
-depth of 4.=20
-  On average, each cgroup had 20 processes
-
-                                  EEVDF      PATCH  EEVDF-NO_PARITY  =
-PATCH-NO_PARITY
-
-   LNICE(-19)    # Avg Latencies: 00601      00592      00510      00400
-
-   LNICE(0)      # Avg Latencies: 02703      02170      02381      02126
-
-   LNICE(19)     # Avg Latencies: 04773      03387      04478      03611
-
-Based on the test results, there is a noticeable improvement in =
-scheduling latency after
-applying the patch in scenarios involving multiple cgroups.
-
-
-thanks=20
-Chunxin
-
-> Thanks,
-> Honglei
->=20
->> thanks
->> Chunxin
-
+diff --git a/include/sound/tas2781-dsp.h b/include/sound/tas2781-dsp.h
+index 7fba7ea26a4b..3cda9da14f6d 100644
+--- a/include/sound/tas2781-dsp.h
++++ b/include/sound/tas2781-dsp.h
+@@ -117,10 +117,17 @@ struct tasdevice_fw {
+ 	struct device *dev;
+ };
+ 
+-enum tasdevice_dsp_fw_state {
+-	TASDEVICE_DSP_FW_NONE = 0,
++enum tasdevice_fw_state {
++	/* Driver in startup mode, not load any firmware. */
+ 	TASDEVICE_DSP_FW_PENDING,
++	/* DSP firmware in the system, but parsing error. */
+ 	TASDEVICE_DSP_FW_FAIL,
++	/*
++	 * Only RCA (Reconfigurable Architecture) firmware load
++	 * successfully.
++	 */
++	TASDEVICE_RCA_FW_OK,
++	/* Both RCA and DSP firmware load successfully. */
+ 	TASDEVICE_DSP_FW_ALL_OK,
+ };
+ 
+diff --git a/sound/soc/codecs/tas2781-fmwlib.c b/sound/soc/codecs/tas2781-fmwlib.c
+index 265a8ca25cbb..838d29fead96 100644
+--- a/sound/soc/codecs/tas2781-fmwlib.c
++++ b/sound/soc/codecs/tas2781-fmwlib.c
+@@ -2324,14 +2324,21 @@ void tasdevice_tuning_switch(void *context, int state)
+ 	struct tasdevice_fw *tas_fmw = tas_priv->fmw;
+ 	int profile_cfg_id = tas_priv->rcabin.profile_cfg_id;
+ 
+-	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
+-		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
++	/*
++	 * Only RCA-based Playback can still work with no dsp program running
++	 * inside the chip.
++	 */
++	switch (tas_priv->fw_state) {
++	case TASDEVICE_RCA_FW_OK:
++	case TASDEVICE_DSP_FW_ALL_OK:
++		break;
++	default:
+ 		return;
+ 	}
+ 
+ 	if (state == 0) {
+-		if (tas_priv->cur_prog < tas_fmw->nr_programs) {
+-			/*dsp mode or tuning mode*/
++		if (tas_fmw && tas_priv->cur_prog < tas_fmw->nr_programs) {
++			/* dsp mode or tuning mode */
+ 			profile_cfg_id = tas_priv->rcabin.profile_cfg_id;
+ 			tasdevice_select_tuningprm_cfg(tas_priv,
+ 				tas_priv->cur_prog, tas_priv->cur_conf,
+@@ -2340,9 +2347,10 @@ void tasdevice_tuning_switch(void *context, int state)
+ 
+ 		tasdevice_select_cfg_blk(tas_priv, profile_cfg_id,
+ 			TASDEVICE_BIN_BLK_PRE_POWER_UP);
+-	} else
++	} else {
+ 		tasdevice_select_cfg_blk(tas_priv, profile_cfg_id,
+ 			TASDEVICE_BIN_BLK_PRE_SHUTDOWN);
++	}
+ }
+ EXPORT_SYMBOL_NS_GPL(tasdevice_tuning_switch,
+ 	SND_SOC_TAS2781_FMWLIB);
+diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
+index 9350972dfefe..9c3c89cb36de 100644
+--- a/sound/soc/codecs/tas2781-i2c.c
++++ b/sound/soc/codecs/tas2781-i2c.c
+@@ -380,23 +380,32 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
+ 	mutex_lock(&tas_priv->codec_lock);
+ 
+ 	ret = tasdevice_rca_parser(tas_priv, fmw);
+-	if (ret)
++	if (ret) {
++		tasdevice_config_info_remove(tas_priv);
+ 		goto out;
++	}
+ 	tasdevice_create_control(tas_priv);
+ 
+ 	tasdevice_dsp_remove(tas_priv);
+ 	tasdevice_calbin_remove(tas_priv);
+-	tas_priv->fw_state = TASDEVICE_DSP_FW_PENDING;
++	tas_priv->fw_state = TASDEVICE_RCA_FW_OK;
+ 	scnprintf(tas_priv->coef_binaryname, 64, "%s_coef.bin",
+ 		tas_priv->dev_name);
+ 	ret = tasdevice_dsp_parser(tas_priv);
+ 	if (ret) {
+ 		dev_err(tas_priv->dev, "dspfw load %s error\n",
+ 			tas_priv->coef_binaryname);
+-		tas_priv->fw_state = TASDEVICE_DSP_FW_FAIL;
+ 		goto out;
+ 	}
+-	tasdevice_dsp_create_ctrls(tas_priv);
++
++	/*
++	 * If no dsp-related kcontrol created, the dsp resource will be freed.
++	 */
++	ret = tasdevice_dsp_create_ctrls(tas_priv);
++	if (ret) {
++		dev_err(tas_priv->dev, "dsp controls error\n");
++		goto out;
++	}
+ 
+ 	tas_priv->fw_state = TASDEVICE_DSP_FW_ALL_OK;
+ 
+@@ -417,9 +426,8 @@ static void tasdevice_fw_ready(const struct firmware *fmw,
+ 	tasdevice_prmg_load(tas_priv, 0);
+ 	tas_priv->cur_prog = 0;
+ out:
+-	if (tas_priv->fw_state == TASDEVICE_DSP_FW_FAIL) {
+-		/*If DSP FW fail, kcontrol won't be created */
+-		tasdevice_config_info_remove(tas_priv);
++	if (tas_priv->fw_state == TASDEVICE_RCA_FW_OK) {
++		/* If DSP FW fail, DSP kcontrol won't be created. */
+ 		tasdevice_dsp_remove(tas_priv);
+ 	}
+ 	mutex_unlock(&tas_priv->codec_lock);
+@@ -466,14 +474,14 @@ static int tasdevice_startup(struct snd_pcm_substream *substream,
+ {
+ 	struct snd_soc_component *codec = dai->component;
+ 	struct tasdevice_priv *tas_priv = snd_soc_component_get_drvdata(codec);
+-	int ret = 0;
+ 
+-	if (tas_priv->fw_state != TASDEVICE_DSP_FW_ALL_OK) {
+-		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
+-		ret = -EINVAL;
++	switch (tas_priv->fw_state) {
++	case TASDEVICE_RCA_FW_OK:
++	case TASDEVICE_DSP_FW_ALL_OK:
++		return 0;
++	default:
++		return -EINVAL;
+ 	}
+-
+-	return ret;
+ }
+ 
+ static int tasdevice_hw_params(struct snd_pcm_substream *substream,
+-- 
+2.34.1
 
