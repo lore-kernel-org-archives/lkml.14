@@ -1,57 +1,57 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D44197511;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CFD197510;
 	Thu,  6 Jun 2024 15:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717687371; cv=none; b=P0u9VgeEKKfynFKwl8kbnPHO0hLYCFThoyRBGlJzYTsaCGLXvK2p77w0SLjV8esUZ+8mQ1WpAfu04VwAOw2pHMBbzatKoYaL1R1lLGrzw+ubigbpJrC2HjKWpOMsABK3s0wzvCS0NLzXJ1QkrQPamxl8BusY2RSePSnvPKDP/lU=
+	t=1717687373; cv=none; b=lu2VNYx2Ft78UwPFJ26dd308hvxGTDartkUCW8HnAaMjrM2IXnnsKfiyeBzWHfz/5BkHYtHUvmQglNoD4grQf/yOoDndOH+FAf2aOpmSMhxkzYWCGjdL+DI0f8emKRHnwiVp1D1msRzJMe4NuOjGAUTjb6GPly5iVXgbBt2F0L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717687371; c=relaxed/simple;
-	bh=5X6i5YJwK+jQB7PuduPkzuTtnC15SQWqQq4DC5e8bnA=;
+	s=arc-20240116; t=1717687373; c=relaxed/simple;
+	bh=CQ5kV5X5nrlQfyWCXXdBvRSRxELqnYqw18SORIHe3UI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BpI/hT6Yx5Db7o6Zlc2f42Q//xq0O2AuifaF4fW/jm3UsXzchYp6IPRyAdIWQkl/ucLJLZJMuNPPXhsTvRPIsHeSxgSVAZwvUCRy1ItFR0wKeO0fjFuV6ZQf+JbIFqu+5npDa7WJvRAujrp4kpatS45xNlZ5zOagtNGzMgOsqiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=HEBOZkbD; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=HEBOZkbD; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version:Content-Type; b=Je4GOqD57+PIsNEA6IUR81SnPCNzSktE6T4PlbkoxbjUQml1owBxDTOJDZQHej/0fmM1XUypL+Eq0or0xHnrbYbEiBv9bQXVcivvXNJMypEUyCXWUahJiMms2BvCE40XWVzkoMdL+gfSuCPv8nktna0AKDcF3QsJ4YJ8v/HtvUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=BQxB4xYn; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=aVlpbnyK; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="HEBOZkbD";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="HEBOZkbD"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="BQxB4xYn";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="aVlpbnyK"
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id F2EBA1FB3A;
+	by smtp-out2.suse.de (Postfix) with ESMTPS id DA8721F8D7;
 	Thu,  6 Jun 2024 15:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
 	t=1717687362; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ETytyPpyO/ne7SCX3Wq9PF58dUOe/pCqU+w54NHSJZY=;
-	b=HEBOZkbDPKcmXI4zASPz2S6DI/nP7AL3FnDRJbLlPWsYAT1l+8WVlXcFRqoCM2DMBtHA0t
-	Sp99OGabVzlFxnuI7rqsGABXYYKdja4X+tmblQnS5s4pVn/QkXrgi3C6Ojr/08g83xt2yX
-	T8eJREiDDsTpL6uYmDn2b3a1Qg5TKNo=
+	bh=j5CJatTeD21yKGIUJTDlFh+ocnDWoH1DBubszi9zcsQ=;
+	b=BQxB4xYncgHBg7CFyGBNxGNf3U0Nzbm4D1ja0Yd4OeyVvGC1XxjEkjIXrlxwOmCv7vrLmd
+	te4p0pHWGsX5ginj03huzP7ibP2aBsFSjSqlrt/yQ2kvvseuvBxUHKvCB/R16LUrRaiL7/
+	VdjYdKiiEkcZWUID1GbtY4N5+QWtvS8=
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=HEBOZkbD
+	dkim=pass header.d=suse.com header.s=susede1 header.b=aVlpbnyK
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1717687362; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1717687361; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ETytyPpyO/ne7SCX3Wq9PF58dUOe/pCqU+w54NHSJZY=;
-	b=HEBOZkbDPKcmXI4zASPz2S6DI/nP7AL3FnDRJbLlPWsYAT1l+8WVlXcFRqoCM2DMBtHA0t
-	Sp99OGabVzlFxnuI7rqsGABXYYKdja4X+tmblQnS5s4pVn/QkXrgi3C6Ojr/08g83xt2yX
-	T8eJREiDDsTpL6uYmDn2b3a1Qg5TKNo=
+	bh=j5CJatTeD21yKGIUJTDlFh+ocnDWoH1DBubszi9zcsQ=;
+	b=aVlpbnyKESZ9aMiNPzz0Sit5DrguUMJbMFg7aNVKokIlBxORZABlAGMMMA4RB35v3aKsJY
+	hTBDUBw0TPK4ZU0qWIyrXw5mSyJ3I+PX4c8+oTXyuXG/6kLzU4bp64Bkrhk5tsooahiEF5
+	hBeMO7elzrTLaX//Rh5CPWTEeCec934=
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E01E313A9E;
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C4FD513A96;
 	Thu,  6 Jun 2024 15:22:41 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IGGYNkHUYWbGbwAAD6G6ig
+	id uM74L0HUYWbGbwAAD6G6ig
 	(envelope-from <mkoutny@suse.com>); Thu, 06 Jun 2024 15:22:41 +0000
 From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
 To: cgroups@vger.kernel.org,
@@ -68,9 +68,9 @@ Cc: Tejun Heo <tj@kernel.org>,
 	Muchun Song <muchun.song@linux.dev>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	"Jan Kratochvil (Azul)" <jkratochvil@azul.com>
-Subject: [RFC PATCH v5 3/3] memcg: Notify on memory.max.effective changes
-Date: Thu,  6 Jun 2024 17:22:32 +0200
-Message-ID: <20240606152232.20253-4-mkoutny@suse.com>
+Subject: [RFC PATCH v5 1/3] memcg: Add memory.max.effective attribute
+Date: Thu,  6 Jun 2024 17:22:30 +0200
+Message-ID: <20240606152232.20253-2-mkoutny@suse.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240606152232.20253-1-mkoutny@suse.com>
 References: <20240606152232.20253-1-mkoutny@suse.com>
@@ -82,12 +82,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -5.51
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: DA8721F8D7
 X-Spam-Level: 
-X-Spamd-Result: default: False [-3.21 / 50.00];
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-5.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
 	DWL_DNSWL_MED(-2.00)[suse.com:dkim];
-	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	BAYES_HAM(-0.70)[83.30%];
+	MID_CONTAINS_FROM(1.00)[];
 	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
@@ -109,72 +114,83 @@ X-Spamd-Result: default: False [-3.21 / 50.00];
 	DKIM_TRACE(0.00)[suse.com:+];
 	R_RATELIMIT(0.00)[to_ip_from(RL5prnn869rbm1x4t47t486h7c)];
 	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: F2EBA1FB3A
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -3.21
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:dkim,suse.com:email]
 
-When users are interested in cgroup's effective limit, they typically
-respond to the value somehow and therefore they should be notified when
-the value changes. Use the standard menchanism of triggering a
-modification of respective cgroup file.
+Some applications use memory cgroup limits to scale their own memory
+needs. Reading of the immediate membership cgroup's memory.max is not
+sufficient because of possible ancestral limits. The application could
+traverse upwards to figure out the tightest limit but this would not
+work in cgroup namespace where the view of cgroup hierarchy is
+incomplete and the limit may apply from outer world.
 
+(cgroup v1 used memory.stat:hierarchical_memory_limit to report the
+value but there's no such counterpart in cgroup v2 memory.stat.)
+
+Introduce a new memcg attribute file that contains the effective value
+of memory limit for given cgroup (following cpuset.cpus.effective
+pattern).
+
+Signed-off-by: Jan Kratochvil (Azul) <jkratochvil@azul.com>
+[ mkoutny: rewrite commit message, split out memory.swap.max]
 Signed-off-by: Michal Koutný <mkoutny@suse.com>
 ---
- include/linux/memcontrol.h |  2 ++
- mm/memcontrol.c            | 10 ++++++++++
- 2 files changed, 12 insertions(+)
+ Documentation/admin-guide/cgroup-v2.rst |  6 ++++++
+ mm/memcontrol.c                         | 18 ++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 030d34e9d117..79ecbbd87c4c 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -232,6 +232,8 @@ struct mem_cgroup {
- 	/* memory.events and memory.events.local */
- 	struct cgroup_file events_file;
- 	struct cgroup_file events_local_file;
-+	/* memory.max.effective */
-+	struct cgroup_file mem_max_file;
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 8fbb0519d556..988f26264054 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -1293,6 +1293,12 @@ PAGE_SIZE multiple when read back.
+ 	Caller could retry them differently, return into userspace
+ 	as -ENOMEM or silently ignore in cases like disk readahead.
  
- 	/* handle for "memory.swap.events" */
- 	struct cgroup_file swap_events_file;
++  memory.max.effective
++	A read-only file that provides effective value of cgroup's hard usage
++	limit.  It incorporates limits of all ancestors, even those not visible
++	in cgroupns. The value change in this file generates a file modified
++	event.
++
+   memory.reclaim
+ 	A write-only nested-keyed file which exists for all cgroups.
+ 
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index a889385f6033..72c8e4693506 100644
+index 7fad15b2290c..86bcec84fe7b 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -7022,6 +7022,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
- 				char *buf, size_t nbytes, loff_t off)
- {
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(of_css(of));
-+	struct mem_cgroup *iter;
- 	unsigned int nr_reclaims = MAX_RECLAIM_RETRIES;
- 	bool drained = false;
- 	unsigned long max;
-@@ -7061,6 +7062,14 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
- 			break;
- 	}
- 
-+	/*
-+	 * Notification about limit tightening, not about coming OOMs, so it
-+	 * can be after reclaim.
-+	 */
-+	for_each_mem_cgroup_tree(iter, memcg) {
-+		cgroup_file_notify(&iter->mem_max_file);
-+	}
-+
- 	memcg_wb_domain_size_changed(memcg);
+@@ -7065,6 +7065,19 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
  	return nbytes;
  }
-@@ -7275,6 +7284,7 @@ static struct cftype memory_files[] = {
- 	{
- 		.name = "max.effective",
- 		.flags = CFTYPE_NOT_ON_ROOT,
-+		.file_offset = offsetof(struct mem_cgroup, mem_max_file),
- 		.seq_show = memory_max_effective_show,
+ 
++static int memory_max_effective_show(struct seq_file *m, void *v)
++{
++	unsigned long memory;
++	struct mem_cgroup *mi;
++
++	/* Hierarchical information */
++	memory = PAGE_COUNTER_MAX;
++	for (mi = mem_cgroup_from_seq(m); mi; mi = parent_mem_cgroup(mi))
++		memory = min(memory, READ_ONCE(mi->memory.max));
++
++	return seq_puts_memcg_tunable(m, memory);
++}
++
+ /*
+  * Note: don't forget to update the 'samples/cgroup/memcg_event_listener'
+  * if any new events become available.
+@@ -7259,6 +7272,11 @@ static struct cftype memory_files[] = {
+ 		.seq_show = memory_max_show,
+ 		.write = memory_max_write,
  	},
++	{
++		.name = "max.effective",
++		.flags = CFTYPE_NOT_ON_ROOT,
++		.seq_show = memory_max_effective_show,
++	},
  	{
+ 		.name = "events",
+ 		.flags = CFTYPE_NOT_ON_ROOT,
 -- 
 2.45.1
 
