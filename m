@@ -1,122 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0027196442
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97541196456;
+	Thu,  6 Jun 2024 13:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717682346; cv=none; b=SMCDDMGX6v3Zsl7SLj3U0KAPanmarB9+FgkNVsZ0EQ8RnMeAln3RHMR3g8XY3RZ3nPBqWlDLntXzBJZ1QZPuq24sNEyqdOKWxtKqf3gOiG69L3L8AIc9uKUJ6vyzhbdxBVRNWtfrWktUer5mK5/iPdnoQ7G+3Cymg4miu+S6kqI=
+	t=1717682357; cv=none; b=U7ND0sXSczdGmDEpbYqeUzMog4mp5u/ZawUPuGfzAX2QuHYEhUAfrZi6395wyRm51tGb25cr6SLr74U0aGC/xH79drrdi4CF4v7lc9QRgpH4ACIhJ9V6zJRbE1dAatkjlpzeJ858xaGk5bs9+JuJ7mKMA/xPT1AJCBkPhVbDD4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717682346; c=relaxed/simple;
-	bh=2Ve9ZFIgEEJtTpjQsDrIZbNhAjC7L4m5KDK2f+Vh7Yg=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
-	 In-Reply-To; b=IGmbdN7FrQ1aJflBRAttua6WmPWDZsVL+MxQqBaWy1CYzKTafrT09r4ChqlUfHX1EBAVFFrh2Vw27D3a9S6crdHzVOEPh4wT7MtuBmr+MyOyQzTA7Z9vi6gFQDUWTIr6xFTg7NCZSxtFlvYmc8P3Bi8wi4O4bUcF4sZ7hOFtH6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wn8hi4P9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717682357; c=relaxed/simple;
+	bh=DmOMiIjbrQUbLc+fS9w2SijXg8UZYWX9YmlObtBW1Bs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PgAB08Oc8Qh49FH4+3PlQ+4bn84IjKsGJzPHsHOlKNAWilx9oke7QRDwHG2aKC5cm9oKVPDNTs4m+xSRG4Y/O6sLY9NrZjI7flXOmKJ2pKdM60tiWdm//6kIkKYSZhGBGYfxDGNUgd2HQMjz0A9lLkCkfqMr+iXs8bkhgoowtjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=roeL9wHu; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wn8hi4P9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5B1C4AF09;
-	Thu,  6 Jun 2024 13:59:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717682346;
-	bh=2Ve9ZFIgEEJtTpjQsDrIZbNhAjC7L4m5KDK2f+Vh7Yg=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=Wn8hi4P9U2qBFgDuVgEjHlWAwhuILkAUGFbm97IYCmfvDAAorXQ78B9Qqq6+X6k42
-	 sKArPhW7tfZQHG/hdqdd8x2sBDkPtzj25rFf4VwhPTSk73sYzbLeJ/N2ejhtOHU0fR
-	 kzVR14F3lQWcz2lRrfgQKvYbvwUNN58GAuhu/bthqHFFWoNcSraff8IbhVT4R8TRF1
-	 kY8MXOTZZ395Bzigl28E4T6HvlGjdRfacF0VuESvNkWT1pwJaH6Pw2s9a+jCplAzda
-	 MvoBF7vcbFlsSTU35w+yysetz2HihXS7olV2kye1vaoXEYGHDPq3cChIMwHESbkC38
-	 jZBZpWPGrHnlw==
-Content-Type: multipart/signed;
- boundary=40d3332916f6cfb5de41c586af81bc2c52a481e977090dafbcaf8e3348e3;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Thu, 06 Jun 2024 15:59:01 +0200
-Message-Id: <D1SZKLZBDDBA.1Z7ZD4UEOX05F@kernel.org>
-Subject: Re: [PATCH v2 1/2] mtd: spi-nor: core: add flag for doing optional
- SFDP
-Cc: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Rasmus
- Villemoes" <rasmus.villemoes@prevas.dk>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Tudor Ambarus" <tudor.ambarus@linaro.org>, "Esben Haabendal"
- <esben@geanix.com>, "Pratyush Yadav" <pratyush@kernel.org>, "Miquel Raynal"
- <miquel.raynal@bootlin.com>, "Richard Weinberger" <richard@nod.at>,
- "Vignesh Raghavendra" <vigneshr@ti.com>
-X-Mailer: aerc 0.16.0
-References: <20240603-macronix-mx25l3205d-fixups-v2-0-ff98da26835c@geanix.com> <20240603-macronix-mx25l3205d-fixups-v2-1-ff98da26835c@geanix.com> <a379a411-2c9e-4d9d-aa8f-4c4f3463cc27@linaro.org>
-In-Reply-To: <a379a411-2c9e-4d9d-aa8f-4c4f3463cc27@linaro.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="roeL9wHu"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 456DjchQ004065;
+	Thu, 6 Jun 2024 13:58:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pp1;
+ bh=0XrutT6mLZuu53qQauJy0ICKhvEuE23LhIYHOVtselU=;
+ b=roeL9wHuNHOVifN0/IKBQ6ANvmeqlnIgzqy82t7knSTk19pyE1YzRigmohXNMPRgriKS
+ FUS5FyVKkaVRwY6AKhzBGr5guyvp9QSYHuIcESTmVqKbUz/qny6dvHntFSvhycbgsmee
+ 1YUCwHcuFnYk7J2uW16gOL9eQdhz2Y9YuhEgQoVqZC807kW6KuAOrKIiS2FDYQFotAYx
+ 6XP9nBFrBY5r+o8rULvyA+sUKmIip0Xy2Cknm8uPtu/HLQ9sUm7CaP6sn+2337OknopA
+ ZGOg76HsEQYP3CHaOBVv4wevAOUfSH53XdnI3qYZZUg8+b2WTMFfrHvCbE5FPuGT4vWs Lw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yke5xr22r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Jun 2024 13:58:41 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 456DwfPg026289;
+	Thu, 6 Jun 2024 13:58:41 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yke5xr22m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Jun 2024 13:58:41 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 456Ae5Oe026509;
+	Thu, 6 Jun 2024 13:58:40 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yggp3acqy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Jun 2024 13:58:40 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 456Dwcpt9044526
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 6 Jun 2024 13:58:40 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 92CB758058;
+	Thu,  6 Jun 2024 13:58:36 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 79A6558076;
+	Thu,  6 Jun 2024 13:58:32 +0000 (GMT)
+Received: from [9.109.245.191] (unknown [9.109.245.191])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  6 Jun 2024 13:58:32 +0000 (GMT)
+Message-ID: <d0938d2d-dcb9-43c4-b5a3-2fad9de161b8@linux.ibm.com>
+Date: Thu, 6 Jun 2024 19:28:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftest: mm: Test if hugepage does not get leaked during
+ __bio_release_pages()
+To: Pankaj Raghav <p.raghav@samsung.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        ritesh.list@gmail.com, rppt@kernel.org, shuah@kernel.org,
+        songmuchun@bytedance.com, tonyb@cybernetics.com, willy@infradead.org
+References: <20240604132801.23377-1-donettom@linux.ibm.com>
+ <20240606131436.592793-1-p.raghav@samsung.com>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <20240606131436.592793-1-p.raghav@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Yb7zQ8oy9ZSTaBxNQ3IIcYO3I3G1AC5K
+X-Proofpoint-ORIG-GUID: Jt3fCppTgPHM1ILa5KzCxDNzf_Wwh0MN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-06_01,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=799
+ impostorscore=0 phishscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1011 bulkscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406060101
 
---40d3332916f6cfb5de41c586af81bc2c52a481e977090dafbcaf8e3348e3
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-On Thu Jun 6, 2024 at 3:31 PM CEST, Tudor Ambarus wrote:
-> On 6/3/24 14:09, Esben Haabendal wrote:
-> > A dedicated flag for triggering call to
-> > spi_nor_sfdp_init_params_deprecated() allows enabling optional SFDP rea=
-d
-> > and parse, with fallback to legacy flash parameters, without having dua=
-l,
-> > quad or octal parameters set in the legacy flash parameters.
-> >=20
-> > With this, spi-nor flash parts without SFDP that is replaced with a
-> > different flash NOR flash part that does have SFDP, but shares the same
-> > manufacturer and device ID is easily handled.
-> >=20
-> > Signed-off-by: Esben Haabendal <esben@geanix.com>
-> > ---
-> >  drivers/mtd/spi-nor/core.c | 3 ++-
-> >  drivers/mtd/spi-nor/core.h | 1 +
-> >  2 files changed, 3 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-> > index 3e1f1913536b..1c4d66fc993b 100644
-> > --- a/drivers/mtd/spi-nor/core.c
-> > +++ b/drivers/mtd/spi-nor/core.c
-> > @@ -2933,7 +2933,8 @@ static void spi_nor_init_params_deprecated(struct=
- spi_nor *nor)
-> > =20
-> >  	spi_nor_manufacturer_init_params(nor);
-> > =20
-> > -	if (nor->info->no_sfdp_flags & (SPI_NOR_DUAL_READ |
-> > +	if (nor->info->no_sfdp_flags & (SPI_NOR_TRY_SFDP |
+On 6/6/24 18:44, Pankaj Raghav wrote:
+>> +void run_dio_using_hugetlb(unsigned int start_off, unsigned int end_off)
+>> +{
+>> +	int fd;
+>> +	char *buffer =  NULL;
+>> +	char *orig_buffer = NULL;
+>> +	size_t h_pagesize = 0;
+>> +	size_t writesize;
+>> +	int free_hpage_b = 0;
+>> +	int free_hpage_a = 0;
+>> +
+>> +	writesize = end_off - start_off;
+>> +
+>> +	/* Get the default huge page size */
+>> +	h_pagesize = default_huge_page_size();
+>> +	if (!h_pagesize)
+>> +		ksft_exit_fail_msg("Unable to determine huge page size\n");
+>> +
+>> +	/* Open the file to DIO */
+>> +	fd = open("/tmp", O_TMPFILE | O_RDWR | O_DIRECT);
+> I encountered a build error as follows in NixOS:
 >
-> I don't like that we update deprecated methods. The solution though is
-> elegant.
+> In file included from /nix/store/fwh4fxd747m0py3ib3s5abamia9nrf90-glibc-2.39-52-dev/include/fcntl.h:342,
+>                   from hugetlb_dio.c:15:
+> In function ‘open’,
+>      inlined from ‘run_dio_using_hugetlb’ at hugetlb_dio.c:41:7:
+> /nix/store/fwh4fxd747m0py3ib3s5abamia9nrf90-glibc-2.39-52-dev/include/bits/fcntl2.h:50:11: error: call to ‘__open_missing_mode’ declared with attribute error: open with O_CREAT or O_TMPFILE in second argument needs 3 arguments
+>     50 |           __open_missing_mode ();
+>
+>
+> I saw a commit that fixed similar issues with open syscall before:
+> 8b65ef5ad486 ("selftests/mm: Fix build with _FORTIFY_SOURCE")
+>
+> So something like this should fix the issue?
+>
+> -       fd = open("/tmp", O_TMPFILE | O_RDWR | O_DIRECT);
+> +       fd = open("/tmp", O_TMPFILE | O_RDWR | O_DIRECT, 0664);
 
-I actually had the same concern. But currently there is no
-non-deprecated way to handle this case, right?
+Thank you Pankaj.
 
-Right now we have the following cases:
- (1) pure SFDP parsing
- (2) non-SFDP flashes with static configuration only
- (3) legacy implementation, where the magic flags decide whether we
-     use SFDP
+I am able to reproduce this error with "-D_FORTIFY_SOURCE=2 -O2".  I will post v3 with this fix.
 
-Which case is eventually used depends on the ID of the flash -
-assuming there will only be IDs which either fall into (1) *or* (2).
-That assumption is clearly wrong :)
+-donet
 
-I'd propose a new case in spi_nor_init_params()
- (4) try SFDP with a fallback to the static flags from the
-     flash_info db.
 
--michael
-
---40d3332916f6cfb5de41c586af81bc2c52a481e977090dafbcaf8e3348e3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZmHApRIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/jQQgGAsuqjHK9tnVfMizoJMfOwKCWc/YHYfi9P
-/XFj/2o3leAtvFU9UaG6P7wRv4SZ8q6EAX4kTKZ6JJn6zIr/yKseuvNNTtENChOi
-6ljlYeYbdzELIbsX3+YzBARrFtx/x51cgzQ=
-=rQmu
------END PGP SIGNATURE-----
-
---40d3332916f6cfb5de41c586af81bc2c52a481e977090dafbcaf8e3348e3--
+>
+>> +	if (fd < 0)
+>> +		ksft_exit_fail_msg("Error opening file");
+>> +
