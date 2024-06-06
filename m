@@ -1,119 +1,102 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3A5196C72;
-	Thu,  6 Jun 2024 15:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C25168C10;
+	Thu,  6 Jun 2024 15:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717687757; cv=none; b=bSlZ+QtORlqDGeXap+J31IKFPPdiXFnwIaIf2BGX8PPUBhinS9SyZUzGKzJpo+kBdoIG1dK6EzjFcrEHzGA1YaegOh5vUC5PuWe9ppugC5dK5vQKPDk/1+Jt6YaFPtIoLv37YYTXFuH5zWGlgMWSF7d9y0OLyDfIhhj1exsuXj0=
+	t=1717687921; cv=none; b=isJV2TXs4pTaUF7N9Zt1dJbPo2lFyrc6aVJwWYIxvmPcMEXeW7EgG1XT96vWjij2Po2Uq3/5p6xVufbbyvjaeB86m5O4nmU/EwYpqbWMNQEcAyWmqccBpB8juG7pJDwDdejAGcciuJQc20QPAuobqDMROGGaNK1j6SS4ehjV5gQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717687757; c=relaxed/simple;
-	bh=eBB9aBsiHmO7WU3mW/9YuXTak8tCclcTkOS/Rq6E7qk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FgJhwY6lGBl9FQJU/UcnvMuKru/SMuGTSPV+919KhWFwYVnNRcwb4Q6hHqL0Z+UWSb8JBYYrKSLLid7NUA37wzrErGoMbnj4fZBWKItb5H2JtQ2TZzUQzUo8kHE05kQO1sMQGwyYHZuUjsbPXthK7xHi4YHWLXr8qMaGrKPdBKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=A3LjRNJB; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1717687921; c=relaxed/simple;
+	bh=MBj93tShhJEdKEFfTZPRFKbwlvTXnMNXIe0ENrGbOUA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SQramMJ8GX4yIM0RwreVgU5gj3nC9ZeDZhbhvidWlOgGHX7xSgK8E0mSbZnJnmRqEJm/uvlYbmQrrKrO3CQiQLCLBmRUuR/cjkicTlt6v/DbubyAo2miYYnJJpr8sWWftdOPt1I6tGzYXP4ZG3BHFKASVt479aFf7qdzwfzBaHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4KYvT4s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="A3LjRNJB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1717687754;
-	bh=eBB9aBsiHmO7WU3mW/9YuXTak8tCclcTkOS/Rq6E7qk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=A3LjRNJBEERCPjwPScg2ylCa5gji25832C322+S371TeZM/YKkxh0OPo7S/9Fc9jY
-	 QKmCofOGy8HweZsq1Mze1B/jrfqevddKdNyyVOXfYlIO/b9QDfVlD+2mJ6mUtF4+Ik
-	 pvjWsScyQtxDbtHGtimWQph+F70cAVEac222LcrSnRebRmWIysrodQR6BFhFwWZiHX
-	 h9cPNQ4pFk91vERkOaia81xFrhCpNZspEJR0sPuPvPJguln0WjehwQQrjJ7+9aI0Kj
-	 2jLxTO9kmp+3igDS52Jn1sFxayMBry45PyVJ9W+gczgCQ6alF8fY5mC1cAhD7jycLL
-	 4AUaPKpc6L9GQ==
-Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Vw7Xp3yhGz13B5;
-	Thu,  6 Jun 2024 11:29:14 -0400 (EDT)
-Message-ID: <389a8c55-a169-47ef-99c0-48f58003b40c@efficios.com>
-Date: Thu, 6 Jun 2024 11:30:03 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4KYvT4s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27476C2BD10;
+	Thu,  6 Jun 2024 15:31:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717687920;
+	bh=MBj93tShhJEdKEFfTZPRFKbwlvTXnMNXIe0ENrGbOUA=;
+	h=From:Subject:Date:To:Cc:From;
+	b=f4KYvT4sbACZrFzq6EkD59u/+4A+yjivijeFwqRALKTqlAxK/P/9GRJXj2FFaRtzk
+	 a/+p0un4DD+KWmqhUDVAWutOG5kizjh0ZX/Xhujm1kKDUeKXikxbgFn7nWbkNvnZDg
+	 pGea7YFscmUiKvnwVnC6EYJ2x5Q7tPvanWItiyeSR5E/rYbd4RpsynLmqJXr8DpT+Y
+	 ayGzeuk5gEonbdez0HPGCAJ5sfZVuG6WcX15jHobQPEInCFVlwyp78PAPiAQ36AGwb
+	 YET+OsfOwAE4JSCSZvK61EtCTsZgzLy+/4cxiOeNF1PgoJprRZrdvpuzh5lBhSdkOm
+	 USyUKZYVDR+Dg==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH v2 0/4] KVM: arm64: Fix underallocation of storage for SVE
+ state
+Date: Thu, 06 Jun 2024 16:21:42 +0100
+Message-Id: <20240606-kvm-arm64-fix-pkvm-sve-vl-v2-0-c88f4eb4b14b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] rust: add tracepoint support
-To: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng
- <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@samsung.com>
-Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240606-tracepoint-v1-0-6551627bf51b@google.com>
- <20240606-tracepoint-v1-3-6551627bf51b@google.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20240606-tracepoint-v1-3-6551627bf51b@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAbUYWYC/32NzQqDMBCEX0X23C2JprH05HsUD5qsGvxlU0KL5
+ N0bhV57/IaZb3bwxI48PLIdmILzbl0S5JcMzNAsPaGziSEXuRJaKBzDjA3PWmHn3rgd6ANhmFA
+ Wxpays6VtBaT9xpQqp/tZJx6cf638Oa+CPNKf9fbHGiQK1HdhdauKVhlZjcQLTdeVe6hjjF9U3
+ cBPwwAAAA==
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Fuad Tabba <tabba@google.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev-d4707
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1692; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=MBj93tShhJEdKEFfTZPRFKbwlvTXnMNXIe0ENrGbOUA=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmYdZpmhq7uXSep2fj5uyu/TYvCSCdCgV45er4yujH
+ sT+KG+CJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZmHWaQAKCRAk1otyXVSH0EvKB/
+ 4u50d8HLRj/agRdCJ9VydUH2z+VnaQl1ygnW09kAoaZgsV67HJbRswoDMWd88AnnP7PfPuAu08YVQS
+ UBAFQZ3hc8wYw7te0x8UlrdyFG/FTLnAgMCBxULb6Y4kwA6c0suwU+LkNdUIrCv1tNDBathBWohnM+
+ oypYSPIDhf6s9kMLeeCbTt5uBTBDXomcvFtH6qgwYMnHwLVrMhXkGBDahYxxTMBu8pu1jcwFfjette
+ w2h9JTE/UJ/9VlTlncqZyYv8uZM2mqV/0CAlJxUCyAKsTkASgH/haYTHi+4yyu4c3zQYfGhADQgA3j
+ 6kPnUc6LVIpf9vhXS5Pdfq61Dk8bWT
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On 2024-06-06 11:05, Alice Ryhl wrote:
-> Make it possible to have Rust code call into tracepoints defined by C
-> code. It is still required that the tracepoint is declared in a C
-> header, and that this header is included in the input to bindgen.
-> 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+As observed during review the pKVM support for saving host SVE state is
+broken if an asymmetric system has VLs larger than the maximum shared
+VL, fix this by discovering then using the maximum VL for allocations
+and using RDVL during the save/restore process.
 
-[...]
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v2:
+- Downgrade check for a late CPU increasing maximum VL to a warning only
+  but do it unconditionally since pKVM prevents late CPUs anyway.
+- Commit log tweaks.
+- Link to v1: https://lore.kernel.org/r/20240605-kvm-arm64-fix-pkvm-sve-vl-v1-0-680d6b43b4c1@kernel.org
 
-> diff --git a/rust/helpers.c b/rust/helpers.c
-> index 2c37a0f5d7a8..0560cc2a512a 100644
-> --- a/rust/helpers.c
-> +++ b/rust/helpers.c
-> @@ -165,6 +165,30 @@ rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
->   }
->   EXPORT_SYMBOL_GPL(rust_helper_krealloc);
->   
-> +void rust_helper_preempt_enable_notrace(void)
-> +{
-> +	preempt_enable_notrace();
-> +}
-> +EXPORT_SYMBOL_GPL(rust_helper_preempt_enable_notrace);
-> +
-> +void rust_helper_preempt_disable_notrace(void)
-> +{
-> +	preempt_disable_notrace();
-> +}
-> +EXPORT_SYMBOL_GPL(rust_helper_preempt_disable_notrace);
-> +
-> +bool rust_helper_current_cpu_online(void)
-> +{
-> +	return cpu_online(raw_smp_processor_id());
-> +}
-> +EXPORT_SYMBOL_GPL(rust_helper_current_cpu_online);
-> +
-> +void *rust_helper___rcu_dereference_raw(void **p)
-> +{
-> +	return rcu_dereference_raw(p);
-> +}
-> +EXPORT_SYMBOL_GPL(rust_helper___rcu_dereference_raw);
+---
+Mark Brown (4):
+      arm64/fpsimd: Introduce __bit_to_vl() helper
+      arm64/fpsimd: Discover maximum vector length implemented by any CPU
+      KVM: arm64: Fix FFR offset calculation for pKVM host state save and restore
+      KVM: arm64: Avoid underallocating storage for host SVE state
 
-Ouch. Doing a function call for each of those small operations will
-have a rather large performance impact when tracing is active. If it is
-not possible to inline those in Rust, then implementing __DO_TRACE in
-a C function would at least allow Rust to only do a single call to C
-rather than go back and forth between Rust and C.
+ arch/arm64/include/asm/fpsimd.h         | 17 +++++++++++++++
+ arch/arm64/include/asm/kvm_host.h       |  2 +-
+ arch/arm64/include/asm/kvm_hyp.h        |  3 ++-
+ arch/arm64/include/asm/kvm_pkvm.h       |  2 +-
+ arch/arm64/kernel/fpsimd.c              | 38 +++++++++++++++++++++++++++------
+ arch/arm64/kvm/hyp/fpsimd.S             |  5 +++++
+ arch/arm64/kvm/hyp/include/hyp/switch.h |  2 +-
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c      |  6 +++---
+ arch/arm64/kvm/hyp/nvhe/pkvm.c          |  2 +-
+ arch/arm64/kvm/reset.c                  |  6 +++---
+ 10 files changed, 65 insertions(+), 18 deletions(-)
+---
+base-commit: afb91f5f8ad7af172d993a34fde1947892408f53
+change-id: 20240604-kvm-arm64-fix-pkvm-sve-vl-13cd71fd7db0
 
-What prevents inlining those helpers in Rust ?
-
-Thanks,
-
-Mathieu
-
+Best regards,
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+Mark Brown <broonie@kernel.org>
 
