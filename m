@@ -1,183 +1,232 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410B41514DB
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3264E13D2A4;
+	Thu,  6 Jun 2024 09:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717666639; cv=none; b=vEHEa54m9YojQ3O1eTHiu7rhxcUgGvYagRAIHTb8dj4HNLl1ygP2e4tsP4sc/wybyFRrjuC0CBKz37CJbLuWZgPlmoHMihboIkJNAVoLF2weMNfpfM6v9vc2ZB1yStZs+CqYwVdnZ/st2nwXjhS+4n5ytEjXs+cbZJG7pJR8u0M=
+	t=1717666722; cv=none; b=mWpDAp04xYWlo4HOyhs2doWHA3qpJ8D5IEWRq4UN6Mq7NirQC8yljaRr/RWr5/6xzb/67SDe/XoiPwwvnncGN05+oQPP0OpPng5WG2zZj2RKECsCeZbLypb+yTMk5BhBEAvkeSyFLdlcMQdac+g50NLTc/kinXnRYPZFs4xAn8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717666639; c=relaxed/simple;
-	bh=kVV5LyIkN1HBUvZJtL2AaAsVy962XcPeFU3Hzwm0aUs=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=UU2nOgvYqJe+23J2yGLMcl6dAH4geZqf/KW9jMXLyRrgtjiCvfSuNM0GEy6MRGZhGHcuc0eafwbtA1yH24RUB8KIQflZDVDblHinifIShh2C+XNr9hRDmYFRcDMGW7O1nyNtq7GHxRw+sYl4VR65TE3Wc9bZU1yGRjuh2cJPzdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lDe9iSjY; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1717666722; c=relaxed/simple;
+	bh=vqU/LAIuLv3MxglpSiLAs1b6iyW6OFeCtRLiL2wpHbE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CWHhQqSjSfqJfxUxUqaLNBzPK4F+gSr3Sv2Zo3XfrFqB3WFtaZJcaTCPE3/LsGBUAgDscwNLFUHtFdSxsPsjlNr3lQ1UEo87iYJgIRva7PK8qT7m+ZEqZNYZH3Aecg32sS6JaKRvZq6TFTi7GnTT6mH1qka+5p7g3MB4wo45M70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RPewTq3A; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lDe9iSjY"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240606093715epoutp036c1d15e4bc84da6e75ed8f120b397921~WYLRK7f-Z2339223392epoutp03X
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:37:15 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240606093715epoutp036c1d15e4bc84da6e75ed8f120b397921~WYLRK7f-Z2339223392epoutp03X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717666635;
-	bh=k//rUFK6ioPKyiPWu8vrK3hMgJf+tmmntQhomCJq75E=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=lDe9iSjYRDM4/ZJ4Dkn/zMFq6FdlSG5FzIwzzHsHkq2O7+zzJAEM18jSss2rixQfI
-	 04JQuL6GoqxuNtu3o4jC8o6v0XJg2/SJ12f6+Ub0E++RIjNcwmq7G3pBkzpbM7IGb+
-	 N2D7PO5aRlgByAZhk9ZGNIDxC+LpF2+Vc67afEFM=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240606093714epcas5p38a560e8ab7770c88bb1b5c1543b6f240~WYLQeb1uh0034700347epcas5p3b;
-	Thu,  6 Jun 2024 09:37:14 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4Vvzkc63K7z4x9Pt; Thu,  6 Jun
-	2024 09:37:12 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	3A.9F.10035.84381666; Thu,  6 Jun 2024 18:37:12 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240606091616epcas5p4806885e4893357ddf8d231ae045a5efc~WX48mSDif1383013830epcas5p40;
-	Thu,  6 Jun 2024 09:16:16 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240606091616epsmtrp1cf324bd16ddeb63e9659d90ec2a81c32~WX48lLBh52458024580epsmtrp1w;
-	Thu,  6 Jun 2024 09:16:16 +0000 (GMT)
-X-AuditID: b6c32a4b-8afff70000002733-19-666183481fa8
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	9E.89.08336.06E71666; Thu,  6 Jun 2024 18:16:16 +0900 (KST)
-Received: from FDSFTE596 (unknown [107.122.82.131]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240606091612epsmtip17f4f85cdc23f67a787eeaf619af8fe2d~WX45BtATA0216002160epsmtip1U;
-	Thu,  6 Jun 2024 09:16:12 +0000 (GMT)
-From: "Swathi K S" <swathi.ks@samsung.com>
-To: "'Andrew Lunn'" <andrew@lunn.ch>, "'Sriranjani P'"
-	<sriranjani.p@samsung.com>
-Cc: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<richardcochran@gmail.com>, <alexandre.torgue@foss.st.com>,
-	<joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>,
-	<alim.akhtar@samsung.com>, <linux-fsd@tesla.com>,
-	<pankaj.dubey@samsung.com>, <ravi.patel@samsung.com>,
-	<netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, "'Chandrasekar R'"
-	<rcsekar@samsung.com>, "'Suresh Siddha'" <ssiddha@tesla.com>
-In-Reply-To: <c17ce6db-4823-44cb-8fda-6ef62f4768fd@lunn.ch>
-Subject: RE: [PATCH v3 2/4] net: stmmac: dwc-qos: Add FSD EQoS support
-Date: Thu, 6 Jun 2024 14:46:11 +0530
-Message-ID: <000401dab7f2$2ee2b8f0$8ca82ad0$@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPewTq3A"
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4eb3e4bdbb9so242931e0c.0;
+        Thu, 06 Jun 2024 02:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717666720; x=1718271520; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/uzRoQkjhLlH3aMQ2w1B8Mep7CWm5DreMQa4sEdwu3E=;
+        b=RPewTq3AnvSfVvVYa13qzMDl2TzPffBzXZ5vgptf7qMVlFbxsimUN9dJMELFp2LUjE
+         Sl1qTZSfWv5O0j1a568Trf4v0PEOGmQe3Dhyxgjf4Now0ao7xeJAMPZznM+XRcmut+QE
+         NSoT/KchvA+5A0DNDMYxc5mE5uGtTsrMoneIRo6wLoYmFeG05AEOE7dIZEGfkIB0aE+S
+         yocAtnGyjcdm+YIaaGJJStWXyg6bFY1c0CVteMt3EIBFJtcujSaXs2VDRbsegk4K/INe
+         oxNnt6UIIY94r/hPzzzBZs8eYNBaNaxdBn/GUUqm657iXRrKBEWGVAGDZP972UvmZ08k
+         BquQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717666720; x=1718271520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/uzRoQkjhLlH3aMQ2w1B8Mep7CWm5DreMQa4sEdwu3E=;
+        b=fsfwTIZCxHXqmgFospEllnOdsFtOIqg3n+k+lROl8SNeAJEnYtV7AOv/yaa9tfS3ob
+         ZZGBnE7Fy4HqmS7Y6SKuylSPiwx8Wu9JkAuQMze/GXHb0bUHX/k2NsvvoTgAplzVxIhl
+         SD0/5sxvPLdICrJXlXiQLWo5v9K8N8Pc8bsN2w+RZhLjx/KHMWlY+B6Ci95xE3CbVS1P
+         zdC/EFk3JytNNDgbaozVNA3bGTZdge3gsDBIsQW2+g/FbW4KrCXwNi4X+DbqwzSyHNZp
+         ezk9DRJU0CZeEvubAU3Jv7kmn9hunglzznHPBYTWVpWoLEStOoht9QSMPZbkquu1HCoo
+         1wwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDjomeSCV/X6q9JpNEb106hZvWRn/NuMCdEuIpsxuq/XrGpvWxBgHmYybtPCot9Bja2V4eE/QurhwdYIqxTv4OdIIpU9VLTsY3h0j75HqM5u0uWgtx7aodw7nSw1dJghnT1NGRkTtl7KXEuXJXd9dFk1zCprpHt5gQhodJSXf5ajZHc9GaQbDvyd6Q3TzwzXdm9NBJJEB/4XEnc4EhFNTwTs+Kpdul
+X-Gm-Message-State: AOJu0YyRHh2x6cN/5D+yvxLTHDDW39BcobOevSRdXGDqoJyYk8uW8hUT
+	71BQDWPwcG6ghz49kCmBQvxqQDnIXOkjrcC9+EU562gOcMulUg356nNu//i+sxZJDHRasmEmx+G
+	+C6cWX0emuG1fo840P5mamIOt6QM=
+X-Google-Smtp-Source: AGHT+IHAC481NqArocQeFW+Qj/4Ff7uVhQb47OdnDRkX5aVif4JsrBIBTupUWE+GRC5pxgihrQhNxLyPDog9pldz2AE=
+X-Received: by 2002:a05:6122:489b:b0:4c9:a9c9:4b3b with SMTP id
+ 71dfb90a1353d-4eb3a4145acmr6751705e0c.9.1717666719889; Thu, 06 Jun 2024
+ 02:38:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQG0kE2cByMDcfrFjxkR49X5VWx9JAI1Xm+tAnXeS/UB6i7tpbHG4X3w
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTVxzHd2/bewvS5Y6HHEgY7O4lJECrtJ6q6IwEL4MQEsPYxKw29FIY
-	faW3bMNlmXODBMLTRMaaCqRRllVwWsqrPESeQxC6KShOTAGZoIJMkQwcutILG/99zvf8ft/f
-	+Z6Tw+d4F+GB/EyNgdZr5CoS8+Q2dofuCKe+k6cLjbci4MpcOQKdlY0YHJno4sDa9mEUmka+
-	58KqnmEenOmbwuE98wIPFs9OcqCjsZgHrdNjPDj5MAXesJswWDHSgcLKtToe7KveDpcHHyPQ
-	3LCEw8nFNhwaHc082DM0y4G57T04NDureR/4U7afx1FqpqQBp1qMEzhVbc2mrJZ8jLo71oZR
-	9ee+oVqan6HUk45RjCq2WRDKduUZQr08dRannlnfTBIczdqXQcsVtD6E1qRpFZkaZTQZf0R2
-	SCaWCEXhIincTYZo5Go6moxJSAqPzVS5opMhn8tV2S4pSc4wZOT+fXpttoEOydAyhmiS1ilU
-	uihdBCNXM9kaZYSGNuwRCYU7xa7C41kZg+OXUd2q4Mu6vKvck4h9WwHiwQdEFCgcuY2uszfR
-	ioCGV0dZfoqAwZnkAsTTxcsIqHT8xt1scNxs47Eb7QgYGprnsotZBLy69NJthRFhwFzcga+z
-	L3EE3BlscDOHKOKB2+fdNR7EXlD11x9uVx8iFlQ7yt3MJd4B9Z2jnHUWEFJw92Itl+U3wMCP
-	97msTzBomjdx2BOFgJWZGh47KxbccvyAsDX+oHelcKOm2wP0WiDLMWB44J8N3Qc87LfhLAeC
-	uZK8DZaBC8WjG4kzwMRqGcbyAdB50+TS+S7/UPCLPZKVg8CZaxdRduzroOjFfZTVBaC5cpPf
-	BmuPxjYsA0Dj+Sd4KUIatyQzbklm3JLA+P+0aoRrQQJoHaNW0oxYt0tDf/Hfc6dp1VbE/S/C
-	4puRKediRBeC8pEuBPA5pK8gkZGlewsU8pwTtF4r02eraKYLEbuuu4wT6JemdX0sjUEmipIK
-	oyQSSZR0l0RE+gse5Z5VeBNKuYHOomkdrd/sQ/kegSdRy8HXarxeXPhq6c7ARHyPj2a7b0UL
-	/33l9Ss3PrYzz9M7eO1Pdd+GXQXS0vH+ORvVveCll/10oCG6ZVw9mth67TRWN9+P5C7ZyTzO
-	cor/sQJl6vF3T1umxF6Pp/NVFYFFObr4Q3H3nvdNw9TUhTjPD7ETD/KvG3bv8Wl7L21I2xZe
-	e05cvwNKzQ9qnK3KkuC1sl8TCoV9CV9fUjWFp2FNfMXeT0/5fLJ4uPXYZ+ntJsFHTvRwR/Cq
-	bSy/s2pRkJxD+jntQSvbhvz4WGhccHlkb2KAOsf5Z4yXnpCgb0nrpkyO4GQcLbWO/X1w59rv
-	l4P8PSan+/abcwjcNDmeEqAiuUyGXBTG0TPyfwF9OF4PoAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUzMcRzHfX/PnR0/d9S3EDvPmass822smWG/mWdLnvObfkUP1+1OyEMq
-	NA85eUwnOaHUla3rOleS5ESx7jZ1tB5IIhSRspBxHdN/r+39+rz3/uPD4JKfhAezXbFDUCn4
-	SBklIkz3ZZ4ztsTxoT5ZehHqe3ceoJcZJgpZmypwlHenBkPp1kMEumypIVFb5SsaNWd+JJGm
-	vQVHNpOGRIZWO4la3gehpyXpFLpgLcNQRn8+iSp1rqj3cQdAmUVfadTSVUojrc1MIsuTdhwd
-	vmOhUUPHTRJlvtSR8yBnzKnHuLaTRTRXrG2iOZ0hhjPkHqW4RnspxRVeO8AVm7sx7lNZHcVp
-	jLmAM97tBtyvxEs0123wXCFeL5obIkRu3ymovAO2iLY9ri/AlN/Fu/OT7hHxoGToMeDCQNYP
-	2mpLyWNAxEjY2wDWv7ABZ+AOvxw8RzpZCnN+vaWd0hsAm+09AwHFesFMTRnt4JHsaphouEI4
-	JJy9SsI6nZlyXnQBWF56gXJYLuwcePlzA+FgKbsI6mznB5hgJ8LC8jrcwWLWHzbezCOcPAJW
-	pb3+w8yfVjlMKhhYh7Pj4K3OdNy5bjzsa8sinSMWwWe21L+OG3zQl4ynAKl2UJP2f5N2UJN2
-	0IUOELnAXVCqo8Ki1L5KX4WwS67mo9QxijD51ugoAxh4EK9pZnArt0teATAGVADI4LKR4mXq
-	4FCJOISP3SOoooNVMZGCugKMZgiZm9it/USIhA3jdwgRgqAUVP9SjHHxiMeWvzXVJ/w4w9Q9
-	bF42qqC28rQ0sfBRtVThF06Ke4/6lHjOsm8cuuLSlOEH0qbPT5EvNutXtk0oqh7i2iqfPJtp
-	PvwA740r9ru49Ij1XcNUhHln+0TkGze+yFs640nWs+mB0UGVTTO1J5pWPk/NSthnXtIYpF/r
-	rmfYNf6NF0f0J3vz8fOTe7Dbxjio3EN/2+D7nR+TXN3vYSxcHmjZfP96ultsQY59Q/fYpFTr
-	mFp/Q/Y1SZwmP0XqOnb/8fLZ2OpT4QEdhjzJwoxNAQnrNi88q/g898biNH1Q9iRb0t7ED4qd
-	4yyzTD9Qq6TnOv1qWGdV6IKI8HudgasU5XRVyKdHwTWxMkK9jff1wlVq/jd7aMISjwMAAA==
-X-CMS-MailID: 20240606091616epcas5p4806885e4893357ddf8d231ae045a5efc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230814112612epcas5p275cffb4d3dae86c6090ca246083631c4
-References: <20230814112539.70453-1-sriranjani.p@samsung.com>
-	<CGME20230814112612epcas5p275cffb4d3dae86c6090ca246083631c4@epcas5p2.samsung.com>
-	<20230814112539.70453-3-sriranjani.p@samsung.com>
-	<c17ce6db-4823-44cb-8fda-6ef62f4768fd@lunn.ch>
+References: <20240605074936.578687-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240605074936.578687-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <TY3PR01MB113464449FACE8364BF667CBB86FA2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY3PR01MB113464449FACE8364BF667CBB86FA2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 6 Jun 2024 10:38:12 +0100
+Message-ID: <CA+V-a8tXLsfTvuCWDqiFkWbe=C2Coo8KF4GchbHPzOG+RTiChw@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/4] mmc: renesas_sdhi: Add support for RZ/V2H(P) SoC
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Biju,
 
+Thank you for the review.
 
-> -----Original Message-----
-> From: Andrew Lunn [mailto:andrew@lunn.ch]
-> Sent: 15 August 2023 02:17
-> To: Sriranjani P <sriranjani.p@samsung.com>
-> Cc: davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
-> pabeni@redhat.com; robh+dt@kernel.org;
-> krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org;
-> richardcochran@gmail.com; alexandre.torgue@foss.st.com;
-> joabreu@synopsys.com; mcoquelin.stm32@gmail.com;
-> alim.akhtar@samsung.com; linux-fsd@tesla.com;
-> pankaj.dubey@samsung.com; swathi.ks@samsung.com;
-> ravi.patel@samsung.com; netdev@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-samsung-
-> soc@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Chandrasekar R
-> <rcsekar@samsung.com>; Suresh Siddha <ssiddha@tesla.com>
-> Subject: Re: [PATCH v3 2/4] net: stmmac: dwc-qos: Add FSD EQoS support
-> 
-> > +static const int rx_clock_skew_val[] = {0x2, 0x0};
-> 
-> > +static int dwc_eqos_setup_rxclock(struct platform_device *pdev, int
-> > +ins_num) {
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +	struct regmap *syscon;
-> > +	unsigned int reg;
+On Thu, Jun 6, 2024 at 10:32=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.co=
+m> wrote:
+>
+> Hi Prabhakar,
+>
+> Thanks for the feedback.
+>
+> > -----Original Message-----
+> > From: Prabhakar <prabhakar.csengg@gmail.com>
+> > Sent: Wednesday, June 5, 2024 8:50 AM
+> > Subject: [RFC PATCH 4/4] mmc: renesas_sdhi: Add support for RZ/V2H(P) S=
+oC
+> >
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > The SDHI/eMMC IPs found in the RZ/V2H(P) (a.k.a. r9a09g057) are very si=
+milar to those found in R-
+> > Car Gen3. However, they are not identical, necessitating an SoC-specifi=
+c compatible string for
+> > fine-tuning driver support.
+> >
+> > Key features of the RZ/V2H(P) SDHI/eMMC IPs include:
+> > - Voltage level control via the IOVS bit.
+> > - PWEN pin support via SD_STATUS register.
+> > - Lack of HS400 support.
+> > - Fixed address mode operation.
+> >
+> > sd_iovs and sd_pwen quirks are introduced for SoCs supporting this bit =
+to handle voltage level
+> > control and power enable via SD_STATUS register.
+> >
+> > regulator support is added to control the volatage levels of SD pins vi=
+a sd_iovs bit in SD_STATUS
+> > register.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  drivers/mmc/host/renesas_sdhi.h               |  7 ++
+> >  drivers/mmc/host/renesas_sdhi_core.c          | 67 +++++++++++++++++--
+> >  drivers/mmc/host/renesas_sdhi_internal_dmac.c | 45 +++++++++++++
+> >  drivers/mmc/host/tmio_mmc.h                   |  4 ++
+> >  4 files changed, 118 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/renesas_sdhi.h b/drivers/mmc/host/renesas=
+_sdhi.h index
+> > 586f94d4dbfd..9ef4fdf44280 100644
+> > --- a/drivers/mmc/host/renesas_sdhi.h
+> > +++ b/drivers/mmc/host/renesas_sdhi.h
+> > @@ -11,6 +11,8 @@
+> >
+> >  #include <linux/dmaengine.h>
+> >  #include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/regulator/driver.h>
+> >  #include "tmio_mmc.h"
+> >
+> >  struct renesas_sdhi_scc {
+> > @@ -49,6 +51,11 @@ struct renesas_sdhi_quirks {
+> >       bool manual_tap_correction;
+> >       bool old_info1_layout;
+> >       u32 hs400_bad_taps;
+> > +     bool sd_iovs;
+> > +     bool sd_pwen;
+> > +     struct regulator_desc *rdesc;
+> > +     const struct regmap_config *rdesc_regmap_config;
+> > +     unsigned int rdesc_offset;
+> >       const u8 (*hs400_calib_table)[SDHI_CALIB_TABLE_MAX];
+> >  };
+> >
+> > diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/re=
+nesas_sdhi_core.c
+> > index 12f4faaaf4ee..2eeea9513a23 100644
+> > --- a/drivers/mmc/host/renesas_sdhi_core.c
+> > +++ b/drivers/mmc/host/renesas_sdhi_core.c
+> > @@ -248,6 +248,19 @@ static int renesas_sdhi_card_busy(struct mmc_host =
+*mmc)
+> >                TMIO_STAT_DAT0);
+> >  }
+> >
+> > +static void renesas_sdhi_sd_status_pwen(struct tmio_mmc_host *host,
+> > +bool on) {
+> > +     u32 sd_status;
 > > +
-> > +	if (np && of_property_read_bool(np, "fsd-rx-clock-skew")) {
-> > +		syscon = syscon_regmap_lookup_by_phandle_args(np,
-> > +							      "fsd-rx-clock-
-> skew",
-> > +							      1, &reg);
-> > +		if (IS_ERR(syscon)) {
-> > +			dev_err(&pdev->dev,
-> > +				"couldn't get the rx-clock-skew syscon!\n");
-> > +			return PTR_ERR(syscon);
-> > +		}
+> > +     sd_ctrl_read32_rep(host, CTL_SD_STATUS, &sd_status, 1);
+> > +     if (on)
+> > +             sd_status |=3D  SD_STATUS_PWEN;
+> > +     else
+> > +             sd_status &=3D  ~SD_STATUS_PWEN;
 > > +
-> > +		regmap_write(syscon, reg, rx_clock_skew_val[ins_num]);
-> 
-> Please could you explain what this is doing.
+> > +     sd_ctrl_write32(host, CTL_SD_STATUS, sd_status); }
+> > +
+>
+> May be use regulator_set_voltage() to set this??
+>
+This is the PWEN bit which is not modelled as a regulator, we cannot
+use regulator_set_voltage() to set this bit.
 
-As per customer requirement, we need to provide a delay of 2ns in FSYS in
-both TX and RX path and no delay in peric block
+> >  static int renesas_sdhi_start_signal_voltage_switch(struct mmc_host *m=
+mc,
+> >                                                   struct mmc_ios *ios)
+> >  {
+> > @@ -587,6 +600,9 @@ static void renesas_sdhi_reset(struct tmio_mmc_host=
+ *host, bool preserve)
+> >                                         false, priv->rstc);
+> >                       /* At least SDHI_VER_GEN2_SDR50 needs manual rele=
+ase of reset */
+> >                       sd_ctrl_write16(host, CTL_RESET_SD, 0x0001);
+> > +                     if (sdhi_has_quirk(priv, sd_pwen))
+> > +                             renesas_sdhi_sd_status_pwen(host, true);
+> > +
+> >                       priv->needs_adjust_hs400 =3D false;
+> >                       renesas_sdhi_set_clock(host, host->clk_cache);
+> >
+> > @@ -904,6 +920,34 @@ static void renesas_sdhi_enable_dma(struct tmio_mm=
+c_host *host, bool enable)
+> >       renesas_sdhi_sdbuf_width(host, enable ? width : 16);  }
+> >
+> > +static int renesas_sdhi_internal_dmac_register_regulator(struct platfo=
+rm_device *pdev,
+> > +                                                      const struct ren=
+esas_sdhi_quirks *quirks) {
+> > +     struct tmio_mmc_host *host =3D platform_get_drvdata(pdev);
+> > +     struct renesas_sdhi *priv =3D host_to_priv(host);
+> > +     struct regulator_config rcfg =3D {
+> > +             .dev =3D &pdev->dev,
+> > +             .driver_data =3D priv,
+> > +     };
+> > +     struct regulator_dev *rdev;
+> > +     const char *devname;
+> > +
+> > +     devname =3D devm_kasprintf(&pdev->dev, GFP_KERNEL, "%s-vqmmc-regu=
+lator",
+> > +                              dev_name(&pdev->dev));
+> > +     if (!devname)
+> > +             return -ENOMEM;
+> > +
+> > +     quirks->rdesc->name =3D devname;
+> > +     rcfg.regmap =3D devm_regmap_init_mmio(&pdev->dev, host->ctl + qui=
+rks->rdesc_offset,
+>
+> This is (CTL_SD_STATUS << 2) , so the variable can be dropped from quirks=
+.
+>
+rdesc_offset is added to make code generic, that is in future if there
+is a new chip with a different offset which supports IOVS we can just
+pass the offset for it.
 
-> 
->        Andrew
-
-Regards,
-Swathi
-
+Cheers,
+Prabhakar
