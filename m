@@ -1,121 +1,94 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256AC194C99
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADBE195B31;
+	Thu,  6 Jun 2024 13:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679157; cv=none; b=gqJyVqXhuXg4IqsHQ3UPFbgP8WiAOAx2zl46DSs8ej9L33TW6F7tOnVqQg74muBbpabs8jzacDZJKILSMlQxt6dS23yVgqX/Tbv7+2keF0mTluP1auk54h3fmguwBYxKp1tOz4ZAQFKWuiDSRzc/RuVXi9HNBncAFs74iWZ7GLM=
+	t=1717679174; cv=none; b=RWGy5mxoS5QlaDiMZme//Tt0Ev+tjIkWKav5HVtDYNIXF2Cvok6VQ0lY/aboaDri67cszx1WLFiUbQfoGYuLx3Uz2ghf6Mp0NM7bxNTRBsE4e5SkANcgd1+wck+f44KgTQCHJpEYxth1rnoSZ8qWMx14+eoETnWM9RVn3NmlB1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679157; c=relaxed/simple;
-	bh=u8L6dUucWZRm9VtkOK5vym0gJ+Ywx2a9eggu8RhlaOk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=QmDu0Kdoh7mbIrwGBqTrIEFc7DnAWzPwSvBlmV1IVWzejupKEWCzqiqA2ofgN1Ny+IpMzqEt8QfVdCTxggrSZG1vpp+sqBEkrvMjyq5clR2rsrXLICg2TiKcbytw9BQOP/dXnyq4XHi0ovgWju1k+c5lOUx1xVjBQYN1Cjjh6Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7e8e5d55441so91872439f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:05:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717679155; x=1718283955;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mds6YO+HTZDWBYnzuTDKxSNA9F8P/HeS82JmjodgFU8=;
-        b=tbYB811AxXhY34ssucIasEySdsJCwebzPG4Xvh3ZFQ94JyWGrrH6h/ot5IZFHa3a62
-         n6VkUFR5VYuOa498lKvDaR3QlYYH0FoyYRbKwfj2ze6dCp+rgUMUs8GBkLFOhW0Jpx0N
-         VZ6GWdIRKIkEzfR6/P2LdQOCV1zO4SQs6l4ucx39eLnpHxDjKX36El4G9JvNouDRXLUA
-         MGEaLgfI2rDKaa9L2ad/CL/h1GBJWnP0TQJ9MuW62IBnFEVWOxmveDWn2z4+xt4CPdoK
-         1QCAZnQibdu5yTMOFoXFoDKvZyIRnE7PDftV/U/P2jc8eVvw3eqNVKjoFxCROaV0ytzg
-         bTbA==
-X-Gm-Message-State: AOJu0Yz4V0QKaaGZoYGJ4CV6vrLd6jyg8va4/w1rVR9YPLGufb52VTQ6
-	Lv0a2OTCW7k5mzUKyMy/ufsbMZEIcAIGjqwpgrA0ZzrWI2irpBIwIHN44Swg0lNGEDMOa2uoNBN
-	ZA9L2aPVb+2+98FyfFLWIGmy1fvb2tm11a5G7xq07uLZIsp7h2nmEBvc=
-X-Google-Smtp-Source: AGHT+IHJNQqRrETHsbsE4xCLExeB+43y2rsxwo47WOoeITfOMRHErt0OhoiLQtMxbTfEWW887yiDNMPTDf2A7Wsq0gYIHnkJ7XWx
+	s=arc-20240116; t=1717679174; c=relaxed/simple;
+	bh=Tp6wP+IiUzNwJhS8uTGND8lmdrlCNCVC1Ss82iqyxQ4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KIVvyx+/A8PD9P8Rl4R75a4bgSigojxg2mBEcTsmMZpM12LTn/sWOZ4Zn/kgt2Ty9eRWsTFXwHM/38XZsDTqit8PlzU/HMqAOUUi+cYXsDE3mglwY7oYOezmB0zu6T1yMdMy1zZA0OEDblxGjo3TTW4rgXzVJVDCbQGOgLanhYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Ku281UW2; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Ku281UW2"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4564ueAa021615;
+	Thu, 6 Jun 2024 08:03:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=GUbMaD2PpQP+ANm8Yi6q+kmBfu7Q89wlNpJCsxvENus=; b=
+	Ku281UW2JZgc+74MvOBpt1kzoc4KBoj2KMzcu7EyZSAlRXZtJwM15L/14uCWF1TT
+	pNasOfmTWE0cc4ktgwO95hy31jKlnW4E0f+q5trfshKQDNT6CU0JxcL4g95/wPfJ
+	tBA4YFcsv7ee9AcilUfShSH0F/Ngh7jul3bOO0Yy7T07pYaQl/Bz1vXQl++CqPlQ
+	iNDKMFgj3ycTMnEuwHMVHlGGmCj8MG6mhtYSoTAt0JDM5lB/Prf/LKKR6NR2sBED
+	XFP/YTPSjDWnpBPaSPxJdEOpB3R0XZEQsOJGgg/v/PWngsn3e+hHhA9gCPYetTdY
+	UqB9sbfy2Li2Z44DKbfCLQ==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3yg02hn5xp-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Jun 2024 08:03:59 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Jun 2024
+ 14:03:57 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Thu, 6 Jun 2024 14:03:57 +0100
+Received: from sbinding-cirrus-dsktp2.ad.cirrus.com (unknown [198.61.65.44])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 5EDD4820259;
+	Thu,  6 Jun 2024 13:03:57 +0000 (UTC)
+From: Stefan Binding <sbinding@opensource.cirrus.com>
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        "Stefan
+ Binding" <sbinding@opensource.cirrus.com>
+Subject: [PATCH v1 3/4] ALSA: hda/realtek: Support Lenovo Thinkbook 16P Gen 5
+Date: Thu, 6 Jun 2024 14:03:50 +0100
+Message-ID: <20240606130351.333495-4-sbinding@opensource.cirrus.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240606130351.333495-1-sbinding@opensource.cirrus.com>
+References: <20240606130351.333495-1-sbinding@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3787:b0:488:9fae:e95c with SMTP id
- 8926c6da1cb9f-4b63a8f6dbfmr158845173.4.1717679155102; Thu, 06 Jun 2024
- 06:05:55 -0700 (PDT)
-Date: Thu, 06 Jun 2024 06:05:55 -0700
-In-Reply-To: <000000000000adb08b061413919e@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e0e0e8061a385789@google.com>
-Subject: Re: [syzbot] Re: 000000000000fcfa6406141cc8ac@google.com
-From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: 583GiSrnpYDsCigqm-WQwWhFCSyubJ1c
+X-Proofpoint-ORIG-GUID: 583GiSrnpYDsCigqm-WQwWhFCSyubJ1c
+X-Proofpoint-Spam-Reason: safe
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+Add support for this laptop, which uses CS35L41 HDA amps.
+The laptop does not contain valid _DSD for these amps, so requires
+entries into the CS35L41 configuration table to function correctly.
 
-***
+Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+---
+ sound/pci/hda/patch_realtek.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Subject: Re: 000000000000fcfa6406141cc8ac@google.com
-Author: wojciech.gladysz@infogain.com
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index aa76d1c88589..6cb258978666 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -10544,6 +10544,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x38cd, "Y790 VECO DUAL", ALC287_FIXUP_TAS2781_I2C),
+ 	SND_PCI_QUIRK(0x17aa, 0x38d2, "Lenovo Yoga 9 14IMH9", ALC287_FIXUP_YOGA9_14IMH9_BASS_SPK_PIN),
+ 	SND_PCI_QUIRK(0x17aa, 0x38d7, "Lenovo Yoga 9 14IMH9", ALC287_FIXUP_YOGA9_14IMH9_BASS_SPK_PIN),
++	SND_PCI_QUIRK(0x17aa, 0x38F9, "Thinkbook 16P Gen5", ALC287_FIXUP_CS35L41_I2C_2),
++	SND_PCI_QUIRK(0x17aa, 0x38FA, "Thinkbook 16P Gen5", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x17aa, 0x3902, "Lenovo E50-80", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+ 	SND_PCI_QUIRK(0x17aa, 0x3977, "IdeaPad S210", ALC283_FIXUP_INT_MIC),
+ 	SND_PCI_QUIRK(0x17aa, 0x3978, "Lenovo B50-70", ALC269_FIXUP_DMIC_THINKPAD_ACPI),
+-- 
+2.34.1
 
-#syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux e=
-377d803b65ee4130213b3c041fc25fdfec1bd90
-
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 2d29bc0f21cc..75fdb8e3abaa 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2393,12 +2393,21 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, =
-u64 *args)
-       cant_sleep();
-
-       // return if instrumentation disabled, see: bpf_disable_instrumentat=
-ion
--       if (unlikely(__this_cpu_read(bpf_prog_active))) {
-+       int instrumentation =3D unlikely(__this_cpu_read(bpf_prog_active));
-+       if (instrumentation) {
-+               printk("SKIP FOR INSTRUMENTATION: %s > %s > %p /%i =3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D\n",
-+                               prog->aux->name,
-+                               link->btp->tp->name, prog, instrumentation)=
-;
-               bpf_prog_inc_misses_counter(prog);
-               return;
-       }
-
--       if (unlikely(this_cpu_inc_return(*(prog->active)) !=3D 1)) {
-+       int active =3D this_cpu_inc_return(*(prog->active));
-+       // printk("%s > %s > %p /%i\n", prog->aux->name, link->btp->tp->nam=
-e, prog, active);
-+       if (active !=3D 1) {
-+               printk("SKIP FOR ACTIVE: %s > %s > %p /%i =3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D\n",
-+                               prog->aux->name,
-+                               link->btp->tp->name, prog, active);
-               bpf_prog_inc_misses_counter(prog);
-               goto out;
-       }
-diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-index 8d1507dd0724..e756262d8df7 100644
---- a/kernel/tracepoint.c
-+++ b/kernel/tracepoint.c
-@@ -298,6 +308,8 @@ static enum tp_func_state nr_func_state(const struct tr=
-acepoint_func *tp_funcs)
-{
-       if (!tp_funcs)
-               return TP_FUNC_0;
-+       if (!tp_funcs[0].func)
-+               return TP_FUNC_0;
-       if (!tp_funcs[1].func)
-               return TP_FUNC_1;
-       if (!tp_funcs[2].func)
-
---
-
-The information in this email is confidential and may be legally privileged=
-. It is intended solely for the addressee and access to it by anyone else i=
-s unauthorized. If you are not the intended recipient, any disclosure, copy=
-ing, distribution or any action taken or omitted to be taken based on it, i=
-s strictly prohibited and may be unlawful.
