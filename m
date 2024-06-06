@@ -1,95 +1,134 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049322BAF1;
-	Thu,  6 Jun 2024 14:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1038D2BAF1
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717682635; cv=none; b=SbhL3xbCjSYHraUYCWnPQpYxG6Wj5qDNsaAfNFv3S8M6dRUqcKMW46kRMRYgk/Oq1tVRLroVqOcYE3c6fAWjr0f2tazllIxC+omDBjR3MsVNe76+Wbpjv6PGPh47GPN5fWsKKEzmOGElpSU62J9FExKFkBHMst7YcR+SZWiwPGg=
+	t=1717682647; cv=none; b=S/hUhpa29y5zdivsXwngdEcae1VqEig/b6/H/PQ++3XgqXQsKGCy1DKtQg1/YdWusaTLm/BYvkI79i7TRw67TlKO9+sEx//5xai8meEBLgqG2Kt4ng2aT7SFfj1x6GQ/7LjYd3wOGFfZaJzQT6JDCdmCrA2EkRSAUFZqxNh42NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717682635; c=relaxed/simple;
-	bh=eDx4LH2JaI56Oq69k1D2PUzOsVKOAQd9jJf6JpRrviw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z5+/jRLrfVWeYMwERAuwGsX2qnyfGkoymdnl626aXEiSKq4YvMH0ZyaCNWkb/x7czaoIPPYSxQG+Ee9aEEYpa45kiibKgwoMsfO4n1WGfmBkSeV7TOm5RJ8Scsa4lgHYEzj35DYhwO0+nxDVhQ2LJfY0tn4Y5dpcu1A1XnrLyfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Z+AFN3KH; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Z+AFN3KH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=ZiaiXQCWQ0/RfkMmzlIJgP09K1a+3++7CIazeg7YTlw=;
-	t=1717682634; x=1718114634; b=Z+AFN3KH0WaOVCED8ZZ8LkBz5baNqc08PICa6uwjrdefX81
-	ZR4TXHKn8l0Y6iMz9McfPrJvTW1UJGFLHDSiYf4j7iequFIjVio3bFkiSoTaXY0jApxX738q1YRe0
-	PjmcHbGcFcE1zjEUStC7k7PzCsJ7NwOZq92O9Hl1mReNkv2fA79XgdppBDdRkPTmNA8UUQpYs/pz0
-	/yiuOfJqdlMKS9wI6tEyke6VY7enNMlaYqaafEjo6BZaW04kUrIvLKjyWZjfssj/D4h2WZs1Q2goB
-	BKpbRr+Q7T2nhpQKcF8kj+OH+fofRH6dN5dNOqBvV19qtaaq1i7Aa2sF9akF/ZmQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sFDiY-0006Jk-3i; Thu, 06 Jun 2024 16:03:50 +0200
-Message-ID: <b0dceea1-3cf1-433d-954b-879f6390c5a4@leemhuis.info>
-Date: Thu, 6 Jun 2024 16:03:49 +0200
+	s=arc-20240116; t=1717682647; c=relaxed/simple;
+	bh=Aa+yNawb/6vYuwyonTK2efnNyGoMyOrjMBz0/aNhX4E=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=cOTD0oBgYwfJvLDagSa0UBkHMyoiySifPGZHE/+GS1MVBL9NeIdoPCKjG7/IDp8K3ruHBgKWjdl1BK1w2mF41VfN/2M3BToNz2r5WvAxWPyKOilXZ/CbzAw96yH2Vlrw5jEuU4+3XjNafL2Q0k8dYpF7GuUyLIyRaDu6XLPqTGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7e8e7707356so113059139f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 07:04:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717682645; x=1718287445;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1fTb+s859GtkLCRE6EYmEpE5ayYfzHKL23weMhhSCJw=;
+        b=oFuxWhe9beOK5il5+OkJhj4cTDEed1li6USoN/Vd+UiSOEfbH2LOp3QpGg7aa6fmUd
+         RQzT3qa/NxC+Ic9A1f+1nTHvFji/vv91DWwljnc4zVeR5MgTv5YBJLxD0wHD6SQ4Hmh/
+         qrcGatk5IMLZJ3WqkuuHYbtDa7Jc/BQ3JdB/NBgGlGVpqCnbdOKYqteg9qjiGTfFR5uW
+         n9aymN9eCj837xuZGFySFdWg829d/QEUyCGugsnDuuX6jdwmJgKpkK4QmDP4JydCo6te
+         6TjLT5XfG44lHNcbAMrarLFfC5IJKVuhcCCKoFfp+ZwdKgmIps4AMsqP59yioXlpmTc9
+         G1SQ==
+X-Gm-Message-State: AOJu0YxFH4ghD2nHeUi31zEgz5iK0EWStp0QPZjal2NQXg77O1yKbjjB
+	XMnoPL8yNijDqz942YnW9kT1uZPSSfTmMy2/5x2DQy9jTbUmFzKa/a0TVns/viQB/JMZPjsWlBg
+	x+U6ikCTKovJ2k9pmmuTzEkS2pBqNSVWJ7nCaIux62WnuDT5gQLyB78o=
+X-Google-Smtp-Source: AGHT+IGzdZgbkAjYV3xxcl7t4lOKILpj7Pjw+fbBoWdyx2dZil9BeMCC3g/yVgVkbWk7KhDj5eStbUF7nKktbyWfmFuBNv70O0vR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: chipidea: move ci_ulpi_init after the phy
- initialization
-To: Alexandre Messier <alex@me.ssier.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Michael Grzeschik <m.grzeschik@pengutronix.de>,
- Peter Chen <peter.chen@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, wouter@franken-peeters.be
-References: <20240328-chipidea-phy-misc-v1-1-907d9de5d4df@pengutronix.de>
- <CGME20240425194033eucas1p2c1e98d1c55c970e246087e2dab180e84@eucas1p2.samsung.com>
- <21ea292a-b1d1-43e2-92ab-9f1f63aaf729@samsung.com>
- <87546d93-3fe7-4459-b44a-47cbcab9da74@me.ssier.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Language: en-US, de-DE
-In-Reply-To: <87546d93-3fe7-4459-b44a-47cbcab9da74@me.ssier.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717682634;3c2d6c6c;
-X-HE-SMSGID: 1sFDiY-0006Jk-3i
+X-Received: by 2002:a05:6638:841c:b0:4b3:292b:278e with SMTP id
+ 8926c6da1cb9f-4b63a76852emr338252173.1.1717682644967; Thu, 06 Jun 2024
+ 07:04:04 -0700 (PDT)
+Date: Thu, 06 Jun 2024 07:04:04 -0700
+In-Reply-To: <000000000000adb08b061413919e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e3f688061a392771@google.com>
+Subject: Re: [syzbot] possible deadlock in trie_delete_elem
+From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 30.05.24 08:38, Alexandre Messier wrote:
-> On 2024-04-25 15:40, Marek Szyprowski wrote:
->> On 02.04.2024 08:23, Michael Grzeschik wrote:
->>> The function ci_usb_phy_init is already handling the
->>> hw_phymode_configure path which is also only possible after we have
->>> a valid phy. So we move the ci_ulpi_init after the phy initialization
->>> to be really sure to be able to communicate with the ulpi phy.
->>>
->>> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
->>
->> This patch landed in linux-next some time ago as commit 22ffd399e6e7 
->> ("usb: chipidea: move ci_ulpi_init after the phy initialization"). 
->> Unfortunately it breaks host USB operation on DragonBoard410c 
->> (arch/arm64/boot/dts/qcom/apq8016-sbc.dts). There is no error nor 
->> warning in the kernel log besides the information about deferred probe 
->> on the chipidea controller:
-> 
-> I am also seeing this issue on a msm8974-based device.
-> 
-> There is also a report and analysis by Wouter Franken here:
-> https://lore.kernel.org/all/ecb8d3e8-d525-4a2d-a868-803202c16296@franken-peeters.be/
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-TWIMC, as this is easy to miss (I was extremely close to writing a
-status inquiry instead of writing what I'm typing now): Greg applied
-that revert two days ago and I assume he'll soon send it to Linus.
+***
 
-Ciao, Thorsten
+Subject: possible deadlock in trie_delete_elem
+Author: norkam41@gmail.com
 
-#regzbot fix: 718d4a63c0a62d16af1d0425d515d7e76f35681e
-#regzbot ignore-activity
+#syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux e377d803b65ee4130213b3c041fc25fdfec1bd90
 
+---
+ kernel/trace/bpf_trace.c | 13 +++++++++++--
+ kernel/tracepoint.c      | 15 +++++++++++++--
+ 2 files changed, 24 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 2d29bc0f21cc..75fdb8e3abaa 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2393,12 +2393,21 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, u64 *args)
+ 	cant_sleep();
+
+ 	// return if instrumentation disabled, see: bpf_disable_instrumentation
+-	if (unlikely(__this_cpu_read(bpf_prog_active))) {
++	int instrumentation = unlikely(__this_cpu_read(bpf_prog_active));
++	if (instrumentation) {
++		printk("SKIP FOR INSTRUMENTATION: %s > %s > %p /%i ==============\n",
++				prog->aux->name,
++				link->btp->tp->name, prog, instrumentation);
+ 		bpf_prog_inc_misses_counter(prog);
+ 		return;
+ 	}
+
+-	if (unlikely(this_cpu_inc_return(*(prog->active)) != 1)) {
++	int active = this_cpu_inc_return(*(prog->active));
++	// printk("%s > %s > %p /%i\n", prog->aux->name, link->btp->tp->name, prog, active);
++	if (active != 1) {
++		printk("SKIP FOR ACTIVE: %s > %s > %p /%i =======================\n",
++				prog->aux->name,
++				link->btp->tp->name, prog, active);
+ 		bpf_prog_inc_misses_counter(prog);
+ 		goto out;
+ 	}
+diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+index 8d1507dd0724..a0a0d8b16b41 100644
+--- a/kernel/tracepoint.c
++++ b/kernel/tracepoint.c
+@@ -168,12 +168,21 @@ static inline void release_probes(struct tracepoint_func *old)
+ static void debug_print_probes(struct tracepoint_func *funcs)
+ {
+ 	int i;
++	struct bpf_raw_tp_link *link;
+
+ 	if (!tracepoint_debug || !funcs)
+ 		return;
+
+-	for (i = 0; funcs[i].func; i++)
+-		printk(KERN_DEBUG "Probe %d : %p\n", i, funcs[i].func);
++	for (i = 0; funcs[i].func; i++) {
++		link = funcs[i].data;
++		int active = this_cpu_read(*(link->link.prog->active));
++		printk("Probe %d : %p / %p: %s/%d / %i\n", i,
++				funcs[i].func,
++				link,
++				link->link.prog->aux->name,
++				active,
++				funcs[i].prio);
++	}
+ }
+
+ static struct tracepoint_func *
+@@ -298,6 +307,8 @@ static enum tp_func_state nr_func_state(const struct tracepoint_func *tp_funcs)
+ {
+ 	if (!tp_funcs)
+ 		return TP_FUNC_0;
++	if (!tp_funcs[0].func)
++		return TP_FUNC_0;
+ 	if (!tp_funcs[1].func)
+ 		return TP_FUNC_1;
+ 	if (!tp_funcs[2].func)
+--
+2.34.1
