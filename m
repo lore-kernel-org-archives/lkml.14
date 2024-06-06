@@ -1,59 +1,58 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1B2195B34
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246DC195FD9
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679855; cv=none; b=F1XDn82Eoxx19xJNhHyxLFcvyJimwx/QcMwLa1ndcugvDH32lGHx951zk/k3IUdgdDx/uwiJ6yHJ4d8EfSSnM6wbWLHsa6fPG3CELpovd+IOWYsXMVCR5LLBVYOEAhrYfPQGloBcg77M/VRJ3uf5gtxKmjtsltIMUjaLv2zTYHE=
+	t=1717679855; cv=none; b=d9wIDCYlCgRtMbLbe/0Hf76C5cGmYG0CrCLEGoNIYhnfMgpwTkxcjqd4ilXBwTZ14FI3UDLZ8zlPmoIIrRqeWJbgElCPIOn48fjvdukfraXNWJk/rHaRqQwIa4BZd2+zefCHs3FlCCXQwYhpzIhqvI+pTN+0tB9K9BVwt/CFt6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717679855; c=relaxed/simple;
-	bh=9Ex/psXstRZqGMxxPJ0VpkCq64t7rGKg+zLLyU8qbQM=;
+	bh=LKep9+SsMgXIw7N/wwAo5L/YSHeXN3o1qd6elsENQvg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=d/ubcXedFIkXevZERYnMYA8q/zBEG7+vk7tmZnyvPFtOlxWdkN2k0CduYDKXY94WcnDQejRi7iua1/xG4uoe2RcpqhYHL3UmznBgWSmPj2/LU4lf26kByMPmAppR9hLtwi1jF6V6+8yKLoEZ3lzSJ+U6gRzZFcXPzT6uMfP0OUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NvYMBhPb; arc=none smtp.client-ip=209.85.161.42
+	 In-Reply-To:To:Cc; b=Cvsl39WeOc+YqQenszPPcLhEjLZPA8+Qb3RNKEw+XTvXUO2nk1/1CV1a9q9iKZs5EVm17EAHWC9nPJg/Dy3T7JNIinlNFdDfEC3u/7eBvZCKTOFUUg6kugb3fHR2YB6J9T7qsk9Jq60lNQTYsvCzcP7oJpLdq0Pthml0qnrcfJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Q8dS9Jfh; arc=none smtp.client-ip=209.85.161.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NvYMBhPb"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5ba6c41e1a7so524878eaf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:17:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q8dS9Jfh"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5b970e90ab8so506613eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:17:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1717679850; x=1718284650; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1717679852; x=1718284652; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AAL4006xAnRJyzvWwdXcDdqMP35ODneV2/4JxIJoTYE=;
-        b=NvYMBhPbL4ddCR1Xdo0TVjY2+0mkBDXcQoJmDaBfuAgBEBD5KBI+0Vy9Ew7LZ3U64g
-         gqGYDYnPcUh6vAl+FOBCQdz9IbPMcv32KFFTjVy5vxB7Y0wv7ovxcZgmcRTNmJFVjL00
-         7szNGD1s7aojdVbkjcCPwbxa2KzrH/8JTxr2I=
+        bh=bZZh27lvax1pQKtebKo1tSyfI2/RfGD2+tRBLkwHpFg=;
+        b=Q8dS9JfhUN0JBhPQ2Pc+v0JQqNI9KiQVlEXPQ4YhjjMFO4vefxSidC2dXIJ2fMT41b
+         6rUYMQCj/lQSwE5Tmx6gtNRVdD4pkx7Hg5Ex9J8uuMl76DnLrYLyKPulvDvDWrkcFSQ9
+         WxbuomJvMde3Xv92dEN+InNMT0gFjt8sqnSd0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717679850; x=1718284650;
+        d=1e100.net; s=20230601; t=1717679852; x=1718284652;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AAL4006xAnRJyzvWwdXcDdqMP35ODneV2/4JxIJoTYE=;
-        b=DOcevrhSEmXjDqbwi3jbOxskY+vMhjH0mHd5VU54muxy4s+OI5U8KRVtkWuVPCHvkZ
-         bduPv4X/adugHgwA/iFyq54qc8JhMCW1nr7JdE3ERtE5X3DlG0AQH057AljeXY9j1HtV
-         3vC20WsAmkkHxuxdrPvl6q2VzYPLf5HXlBAP+OHlIVgDHYR6u0lbgF+/rCDp6mHd3q2n
-         48ojAwSVgKvo7qGvKFMroWjNCh9vP64xUOdM0mPoTWxfGuucQYGE5QHdjrNu3y1yGaSQ
-         UjVfHYbUzNlPTdThSpst3uQ5bBE1daneJjQ+DSVItNFrNXlX3zN/4BPbQtcGoasyAxSK
-         hBKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUi9mCqxgDzkm9x8IMLjDM4DWhbBdy8U9Jt2FxAKpaYKT21K2kRGkv5DtfsJCxDV+kWIHLEmn0taxBlM32WnP1SoMuf5DKV0kRGCfLt
-X-Gm-Message-State: AOJu0YwQ6hnz1jaZ+F89CectVcaHihgdEkYJPu8llhmC3U9JJHG5Sw/o
-	DsQJi8xMGtDnQ5BmHiW6XSCsJpdIqi44qfeelZqJyPKO2tyuIB72oefLV9RfATrADiXD9bWNg+p
-	MOIsJ
-X-Google-Smtp-Source: AGHT+IFMfHqWudPNwZ7gEE3WDMg2/DCijf/SGmLWSwqmxlW9rIKDz6JeqdjExEkt/BTcjfNpWLogIg==
-X-Received: by 2002:a05:6358:2609:b0:199:2b63:9f42 with SMTP id e5c5f4694b2df-19c6c68a2femr652957255d.10.1717679850292;
-        Thu, 06 Jun 2024 06:17:30 -0700 (PDT)
+        bh=bZZh27lvax1pQKtebKo1tSyfI2/RfGD2+tRBLkwHpFg=;
+        b=UjAAdulxcqof575dxKpYhEeZz1lqh0eYI2iCBEZQEB8XWmBKyvpsjWJii7aAM6Hff9
+         nZp42R7VZbk6mBi35zD4wOuG21dAqkCsEuPAd1zPRoD2lyzvk0aVSff1AodBcOSorzkW
+         LGxaW+pjQ4h+Yk+wVnwT0mTDlzF1x+RloOZsiuKuhDvM6hal8M98yMO3u1fuPlxvqk6v
+         tY01Z1XLg9zuXLHW9VFN7wn/m8Q30xWkrXFYBknS3L8zwK7OBGKRKW9v8bWP0Ns/vJbC
+         ryGgShIVAFENNgntTqXTjT1iBX4exGGfNCFK36x1Eh/eLuuRGJkaOUKnvQ3IM72ZF/z6
+         U1aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXb4tiQNszIjaOVbzEf4FmrwEZFIbflVLN99xQonXiwPDZOGwIZTW6G0wAXSATA1Rb31MyLEbMYyn9JVrCVMoXDm74vKNiOT8S4I/r2
+X-Gm-Message-State: AOJu0Yw+pkn3JAh/i7flhh+hWqsQZkcTpMiGnAE6YxN/Ehcan38/ZiA6
+	hkDiOSbA1gvEiBQrE3LySSae6BlrStcJa60LUl0XXuyPzs7Ct9sM0x/SJMQ5mQ==
+X-Google-Smtp-Source: AGHT+IGNI9HGZGYM1bs7kXBQ+Gzd7oXjy4+AygNfoD1Lq7a40uZ9nWHXC95xkS7mtZToVDJBYIlggA==
+X-Received: by 2002:a05:6358:9985:b0:19e:e402:4d17 with SMTP id e5c5f4694b2df-19ee4025007mr233623255d.7.1717679852165;
+        Thu, 06 Jun 2024 06:17:32 -0700 (PDT)
 Received: from denia.c.googlers.com (123.178.145.34.bc.googleusercontent.com. [34.145.178.123])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b04f6607f5sm6118036d6.31.2024.06.06.06.17.29
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b04f6607f5sm6118036d6.31.2024.06.06.06.17.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 06:17:29 -0700 (PDT)
+        Thu, 06 Jun 2024 06:17:31 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 06 Jun 2024 13:16:35 +0000
-Subject: [PATCH v4 01/11] media: dvb-frontend/mxl5xx: Refactor struct
- MBIN_FILE_T and MBIN_SEGMENT_T
+Date: Thu, 06 Jun 2024 13:16:37 +0000
+Subject: [PATCH v4 03/11] media: venus: Use flex array for
+ hfi_session_release_buffer_pkt
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +61,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240606-cocci-flexarray-v4-1-3379ee5eed28@chromium.org>
+Message-Id: <20240606-cocci-flexarray-v4-3-3379ee5eed28@chromium.org>
 References: <20240606-cocci-flexarray-v4-0-3379ee5eed28@chromium.org>
 In-Reply-To: <20240606-cocci-flexarray-v4-0-3379ee5eed28@chromium.org>
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
@@ -74,41 +73,30 @@ Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, linux-media@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.4
 
-Replace the older style one-element array with a flexible array member.
-There does not seem to be any allocation for these structs in the code, so
-no more code changes are required.
+Replace the old style single element array with a flex array. We do not
+allocate this structure, so the size change should not be an issue.
 
-The following cocci warnings are fixed:
-drivers/media/dvb-frontends/mxl5xx_defs.h:182:4-8: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
-drivers/media/dvb-frontends/mxl5xx_defs.h:171:4-8: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
+This fixes the following cocci warning:
+drivers/media/platform/qcom/venus/hfi_cmds.h:204:5-16: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/dvb-frontends/mxl5xx_defs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/dvb-frontends/mxl5xx_defs.h b/drivers/media/dvb-frontends/mxl5xx_defs.h
-index 097271f73740..bf08d82ba2cc 100644
---- a/drivers/media/dvb-frontends/mxl5xx_defs.h
-+++ b/drivers/media/dvb-frontends/mxl5xx_defs.h
-@@ -168,7 +168,7 @@ struct MBIN_FILE_HEADER_T {
- 
- struct MBIN_FILE_T {
- 	struct MBIN_FILE_HEADER_T header;
--	u8 data[1];
-+	u8 data[];
+diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
+index 41f765eac4d9..6dff949c4402 100644
+--- a/drivers/media/platform/qcom/venus/hfi_cmds.h
++++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
+@@ -201,7 +201,7 @@ struct hfi_session_release_buffer_pkt {
+ 	u32 extradata_size;
+ 	u32 response_req;
+ 	u32 num_buffers;
+-	u32 buffer_info[1];
++	u32 buffer_info[];
  };
  
- struct MBIN_SEGMENT_HEADER_T {
-@@ -179,7 +179,7 @@ struct MBIN_SEGMENT_HEADER_T {
- 
- struct MBIN_SEGMENT_T {
- 	struct MBIN_SEGMENT_HEADER_T header;
--	u8 data[1];
-+	u8 data[];
- };
- 
- enum MXL_CMD_TYPE_E { MXL_CMD_WRITE = 0, MXL_CMD_READ };
+ struct hfi_session_release_resources_pkt {
 
 -- 
 2.45.2.505.gda0bf45e8d-goog
