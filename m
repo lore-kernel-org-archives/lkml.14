@@ -1,70 +1,120 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127F41974FA
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3E01EB3A;
+	Thu,  6 Jun 2024 14:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684687; cv=none; b=HOGNAVYJFvuH1IVyUDp6phRKji6tBePr4NcbN5NlM2DgC76XTPO/mpX7gSfz9GhE6H5zdGSwOhLPUrO+yKMUGPal/zmLcvgxQErRdDH4DSb3Y7cguINhgsXwyszUd2WuzqZw0WuSScCc+OTL+AHjvzYE/jYWHLIz+p5E8PWn/vM=
+	t=1717684724; cv=none; b=TMc95ghLtNK1qNUkfjY7wxG9oWweYVasOfVDuZ/g1PT8QntyxdfSiPNblIVNK48w//iV/4ZXahDwWKwoza0oOvkc0pVXjE0M7IGrPZwvx0uqGCLuGDG+TFOBKdWlf7Z6EoYP3LwRCl64R+atFUlnrfIGsNsCymY0HfMevhst0a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684687; c=relaxed/simple;
-	bh=GKSmEQQhWMULX/meKsTtsC0/Yt50KLAGPEr7AHZpt14=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=q3ATaEo8fjTM8zlb063EzZFpcczJBauxPtv8ofneqsO4MyuPkTzX0egRSOHma7tOql/RDEd1pYOvQiJW3L3aYGIwsJT3UPKHb9f2RJSmqqfGN1/Fqzsi14TLBBR9SOgNlJp9H+TCiiVhUDvP4wfDZ4bivGL4HUatyq6kiPhvuDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7ead7796052so111850639f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 07:38:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717684685; x=1718289485;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2fLoaeyGFI7/ZIxhQjo4nBcAkpSxHGUV3XRWCyjIOHE=;
-        b=lns0XgTFq/6lOyxuc34+imbWq2OFp5QEzesSOuAq+67TFkM20ZQY3IJh75btcg/2wG
-         AGoEjmmELkBElSrSBqUgeYY6MeU/ZDeleFujxOJKy1erG6WyfDi0Mi3iLmNw2LghiSSE
-         PNe6LioD9vmJgZ1Am9IOi592Z5Wq/Y8dIrRDFC35ZNmVMhpPj97UbhQLZEmcSytOJbMs
-         Z4MFYSfApvhPmfrwTIbeiq1sWIhi0yRWHsuWNigGwvsCK/oN9Q/DiYaF597OcuSGrZGx
-         wHebdBjOgNYTSyW0qcNImwzsrF2Q/NEtvMNqmJ+i4qKfkMM7XFrM1GNe3YYvo8T64GnR
-         0m9A==
-X-Gm-Message-State: AOJu0YwG+DNq1CSO1vLSY8hjY/9nlMCbme0jOy8Y7W4UzhdvAcoRuWcA
-	+W6gRc9/db9FU0YNFU/vmY/f021tSXf5abKMl9NfDV7uBuzJsmaO8gWBUBpBo1YvwfXw9mktE4r
-	QaFnYbDwRz3EOjYb8Q16REOKjqt6RPhW4HfxVgz/F1EHxh+rTgluON6U=
-X-Google-Smtp-Source: AGHT+IH/RWfhFIJZdUsXH00+g69ohwgqn28xDhnGb04AViS7nzRcIfyUvLo9DBWtpXi2mCfaXfG4DS8XA68IkZY4Ahp1JFg7PZqf
+	s=arc-20240116; t=1717684724; c=relaxed/simple;
+	bh=PRwLGYovMSOZLOdr9ird43QgRk/4eRVu/yuyjg0HH2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ipy8vNiqtNoq4uvzz5jTdlucAiUaNMTMdhmI9l6g1BHZvxqD2NfFxNEkRVs+BtqbFkJP4R8iyIavwA8pdW8rabnIxS8ri+zD1ImUeQj4/Pn2KqdCEGE1Fmgj/frfQrAHUVnzL0YEpoO6O8b07swLAeFJ3rny5IuLl+0UKpay6J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDPRnO+p; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDPRnO+p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E45ADC2BD10;
+	Thu,  6 Jun 2024 14:38:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717684724;
+	bh=PRwLGYovMSOZLOdr9ird43QgRk/4eRVu/yuyjg0HH2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WDPRnO+puB64OOwO9azNiTjt7xJDjsraLNB6eonI4q58Kxy+F39fyzG1QGlUKwlAL
+	 jhR0iweie4sNriDWV6e4VDvtPuMoR6o+AytaUqPlJd37IesoRKtGu8AjmnuiUSZchU
+	 t/Ph3tNieVMPPjw+Hr3Zytbz33npRrSUlNX4h8U8bOeZapr1hEf1UUujQSKg/mUsAj
+	 4INvJHigvrIJ+SY0oCBcZideXGVF+pd/z+O2gm+pz0aFdnKVP8bKS7rz+GmOUBCJr9
+	 WSz1f/GM3RNbEUQFJk7TXqhGdFwLOecChJyJNiolXxH6xo2lcQNJoTExs3vYV1lL7b
+	 4qY5Tz7NJOzYQ==
+Date: Thu, 6 Jun 2024 15:38:37 +0100
+From: Mark Brown <broonie@kernel.org>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Magnus Damm <magnus.damm@gmail.com>, linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [RFC PATCH 1/4] regulator: core: Ensure the cached state matches
+ the hardware state in regulator_set_voltage_unlocked()
+Message-ID: <c7f4dc07-5a78-4cd4-8f3e-063dec5d0bc4@sirena.org.uk>
+References: <20240605074936.578687-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240605074936.578687-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <22664e29-4c7a-4544-ad32-25c3d7e342e9@sirena.org.uk>
+ <CA+V-a8vStea7RZWNXjJLbuibz+-53KT9=5g-P9N4fUrbqjj91A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6c12:b0:7de:e175:fd2d with SMTP id
- ca18e2360f4ac-7eb3ca8dc06mr25678739f.3.1717684685333; Thu, 06 Jun 2024
- 07:38:05 -0700 (PDT)
-Date: Thu, 06 Jun 2024 07:38:05 -0700
-In-Reply-To: <20240606141413.137516-1-norkam41@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000081786e061a39a187@google.com>
-Subject: Re: [syzbot] [bpf?] possible deadlock in trie_delete_elem
-From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, norkam41@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot tried to test the proposed patch but the build/boot failed:
-
-kernel/tracepoint.c:178:36: error: incomplete definition of type 'struct bpf_raw_tp_link'
-kernel/tracepoint.c:182:9: error: incomplete definition of type 'struct bpf_raw_tp_link'
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="k+c8wgxJKe7M4G9M"
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8vStea7RZWNXjJLbuibz+-53KT9=5g-P9N4fUrbqjj91A@mail.gmail.com>
+X-Cookie: Simulated picture.
 
 
-Tested on:
+--k+c8wgxJKe7M4G9M
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-commit:         c3f38fa6 Linux 6.10-rc2
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9d7ea7de0cb32587
-dashboard link: https://syzkaller.appspot.com/bug?extid=9d95beb2a3c260622518
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15bfdbc2980000
+On Thu, Jun 06, 2024 at 03:12:42PM +0100, Lad, Prabhakar wrote:
+> On Thu, Jun 6, 2024 at 1:05=E2=80=AFPM Mark Brown <broonie@kernel.org> wr=
+ote:
+> > On Wed, Jun 05, 2024 at 08:49:33AM +0100, Prabhakar wrote:
 
+> > > Driver code flow:
+> > > 1> set regulator to 1.8V (BIT0 =3D 1)
+> > > 2> Regulator cached state now will be 1.8V
+> > > 3> Now for some reason driver issues a reset to the IP block
+> > >    which resets the registers to default value. In this process
+> > >    the regulator is set to 3.3V (BIT0 =3D 0)
+> > > 4> Now the driver requests the regulator core to set 1.8V
+
+> > If something is resetting the regulator like this that's a problem in
+> > general, we need to either have the driver notify the core when that
+> > happens so it can reconfigure the regulator or have it reapply
+> > configuration directly.  Obviously it's not great to have that happen at
+> > all...
+
+> Currently I am seeing this problem with SDHI driver. For the voltage
+> switch operation the MMC core requests the driver to do the change and
+> similarly the MMC core requests the reset operation.
+
+> > Having the core driver notify the core when that happens so it can reco=
+nfigure the regulator or have it reapply configuration directly.
+
+> Again doing this would be a problem as MMC core also maintains the IOS
+> states, reconfiguring the regulator would cause conflicts between the
+> states.
+
+If the device can't cope with the requested configuration being applied
+why is this going through the regulator API at all?  This just seems
+quite confused, putting a bodge in the core like this clearly isn't the
+right solution.
+
+--k+c8wgxJKe7M4G9M
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZhye0ACgkQJNaLcl1U
+h9BLqAf/UG65PeifE6tHyWrpslKd/R60qY5DdOnrVWie0kqlq5nDZHQH/T+YBOLN
+ZnHdOfBmTHARgPc08z9ronRWn0YzjG3TwzclbJE6q7/sW793wynrKhhbSZCQRemS
+aG1s81H6ARFCrIp1esBflxwaeVtsaYFYTKtLiF46dYQjRjiOgeFj5C9ECwe47Ndn
+3zbm7Fn9MMWfjqyK3kOKLrnNoNxLjjeKtCvNhYNKRNogVxPBcFlz8JhY0fP8qhsa
+aEftWbjuIUYATdQG6rvJqrvfYXdeZZN3SWm6UAuMLWwz2r0DnL9fw6RIfryfdhq1
+EXlOvf1ya0E3D7poZG/K//OMoerQbA==
+=AZYv
+-----END PGP SIGNATURE-----
+
+--k+c8wgxJKe7M4G9M--
