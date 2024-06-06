@@ -1,152 +1,206 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1E51514EE
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220301527AA
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717666936; cv=none; b=Hgtp959+KDa3BBRFp0bs5ckVh88ENI6iq1LBKWJdvX/yDBvAgIY+CYpb5rX5jJfdcRWOo7fkC0bRAVKlBr7Vnte53Rik9Anh10aHHwE9SAyQwcSgLwa3LBqif8qrQLWoh64W9Yv+8UCwGr8v6Tdta0NHLvfJ0OZ5PWUcw37ka2o=
+	t=1717666947; cv=none; b=F2zqXo3oo8RiUfLVXfUeFOt+YtMLjgtNF6GSgqhk2+iPNmifudNOfpx3jz0Da5gSD4ZzkH1BKz8n4TmQlrIStDHh9OAxdfEiGe4N/r/GUhvByk4LPOBcFrOxCZQvUovhliR69ptc7iRLboOoWXl4DFqQvh5uTiVY7KUyYjSuu9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717666936; c=relaxed/simple;
-	bh=rAgI9GGJJTeCZyVaG2TflywO4JVeIlVSaK6x8F0N7Wc=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=TK9tic4460eWYsakIOd9DjVJ2g1pSgPXMGYpBG9XAEe5apOZ6ACizEHtjmDvP4lBrLvzWpBkyNg2UfLU8B6Z6bTNekU6mRfZLaUO/5R1CoFcK1P7tSeLQK3gmfJ9fnM0Lvpw+NWOZzIkriLd94njB7A/tAJKBUtw3XIM5g6nf6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VvzrG4pqkz4xPBc;
-	Thu,  6 Jun 2024 17:42:06 +0800 (CST)
-Received: from xaxapp03.zte.com.cn ([10.88.97.17])
-	by mse-fl1.zte.com.cn with SMTP id 4569g0MO058198;
-	Thu, 6 Jun 2024 17:42:00 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Thu, 6 Jun 2024 17:42:03 +0800 (CST)
-Date: Thu, 6 Jun 2024 17:42:03 +0800 (CST)
-X-Zmail-TransId: 2afa6661846bffffffff819-af71f
-X-Mailer: Zmail v1.0
-Message-ID: <20240606174203124_OW-VQZ_ZLm4lGEimA-K9@zte.com.cn>
+	s=arc-20240116; t=1717666947; c=relaxed/simple;
+	bh=Z+b7d3fhc4m4+HH35+El67g/rcBghxOw/7N/brUEw2o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j7IWmwdrcTfeL9BFed2FHUYLZdPk/sBLcpLar5gxJL2lBOO7WIZ27R8DuUYXM5/hmeQztwT9qfl5nJ+XstyMa/FKi9wGcek/tAbfpdiEwsT8+G33sa/FKi4NCy1j7CMPLJF+QBNcUAU+zZCXwx4Rxh/IGvPHQ9mNWRUixll9fIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E5FN9IWj; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E5FN9IWj"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-6c9e8c0a15bso547542a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 02:42:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717666944; x=1718271744; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pZxkAQ+JG8hv+VfYtFPLswW4j/3rOvFhx5X0N2PU448=;
+        b=E5FN9IWjmGxVoUD+OWTZamrPnXDvPSavkFVxYovj1GvPqpojMxxGK7EXOEVwM89/sj
+         BA67SJlwRC+KnFKCrGDfFXM7jHjo195s9ppGv0U/UVHyDfTEkid9rldQDO70NAQhQ33B
+         TUKIkU1Oy4v16ytVgyRDllutuHAIkahfrmzcuFWvPWzrGUtjeD52YtvBdmG0usvAFtog
+         5agnUSEhElOqDGCmKSbzHOLAwBWkyI1OwIFrNiTvuqtw3aIfyaPhl3zvgyBN6e6H9cYv
+         g7uAXYDRDtM7vr0mO/rUBZET4HlpzVE5cDs+hU2LRGGDQN6uXa3F/Vpd31FOyyXgWYpP
+         E3mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717666944; x=1718271744;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pZxkAQ+JG8hv+VfYtFPLswW4j/3rOvFhx5X0N2PU448=;
+        b=ed/z87XHugRBL4lSqgJeNpaUNL+tBxUbQqQoWmVso/bRyjJTDwUB5e426fRFUXeyow
+         MF8kWrMKh2jJp+h+uGk9nBc47YvI8dvKltU0/lmCqTxd4FQjPwcoOydIJDcdS+VIe3Cp
+         3exBXqS5OKNDaDfp5lMen6yoV9PS09PoPjnM8VvmjOkIcVTJu61tKqEnM8kyfPkcGTuE
+         aGxzzVNK3z1+cKjgH1Tui/LadfF7sytpg/qNYbXYmQg3kenhfjn27bHxNXJYlcZDk7mI
+         5a2UyO08k9oCRuKv/632KiGhCl1nWyts+vgsCFOBjfUNGp/jhGdhgSAzkt/U8O1TYlxY
+         owaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSNxEheFh/Vt1qee18lGfDpg1xl0e/CXR4NKcizOiPxwkle3Cn2vFcw/+m41OcjizUeBmzd4zUrZ5Z7sBmFv+JQDrEX1bELguWtEwL
+X-Gm-Message-State: AOJu0YwmRqQX3OZkEEpHyQQw+307sEp8qfKB7Msoe0NRjq3J9k+CRvFU
+	EAWgsJd4MMDXG71L7SC/pBDAWR5ymZqdnhHy93vuxL+QFvsVgXJRurSZVdwVWoTR0Y6E/7WJnAp
+	OB3VL4p4iAbNfb/3dn7PSynSbUgnJ3vGvzxet
+X-Google-Smtp-Source: AGHT+IEWwVSwT6aqEkrDe0tLMBSTWElwotQtqstSRStzjfIU8jhDcLm33ZWeSi7tWYVCsMsV4ghgN5gJvMEjynSIzaM=
+X-Received: by 2002:a05:6a20:daa4:b0:1a7:aabc:24ae with SMTP id
+ adf61e73a8af0-1b2b6ed7966mr5928466637.18.1717666944034; Thu, 06 Jun 2024
+ 02:42:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <david@redhat.com>, <ziy@nvidia.com>, <v-songbaohua@oppo.com>,
-        <akpm@linux-foundation.org>
-Cc: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <mhocko@kernel.org>,
-        <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>,
-        <ran.xiaokai@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHQgdjJdIG1tOiBodWdlX21lbW9yeTogZml4IG1pc3VzZWQgbWFwcGluZ19sYXJnZV9mb2xpb19zdXBwb3J0KCnCoGZvciBhbm9uIGZvbGlvcw==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 4569g0MO058198
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6661846E.000/4VvzrG4pqkz4xPBc
+MIME-Version: 1.0
+References: <20240605175953.2613260-1-joychakr@google.com> <20240605175953.2613260-8-joychakr@google.com>
+ <f98a1d8f-e936-4798-8447-c642e8fe11d5@moroto.mountain>
+In-Reply-To: <f98a1d8f-e936-4798-8447-c642e8fe11d5@moroto.mountain>
+From: Joy Chakraborty <joychakr@google.com>
+Date: Thu, 6 Jun 2024 15:12:03 +0530
+Message-ID: <CAOSNQF0Qj2CnRDWAGM8Y1wyEdgWP04RDJx1TKO-Ge4nUH=qxoQ@mail.gmail.com>
+Subject: Re: [PATCH v1 07/17] misc: eeprom: at25: Change nvmem reg_read/write
+ return type
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Bingbu Cao <bingbu.cao@intel.com>, Zhihao Cheng <chengzhihao1@huawei.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-hwmon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, manugautam@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+On Thu, Jun 6, 2024 at 2:11=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro.=
+org> wrote:
+>
+> On Wed, Jun 05, 2024 at 05:59:51PM +0000, Joy Chakraborty wrote:
+> > @@ -195,10 +195,11 @@ static struct attribute *sernum_attrs[] =3D {
+> >  };
+> >  ATTRIBUTE_GROUPS(sernum);
+> >
+> > -static int at25_ee_write(void *priv, unsigned int off, void *val, size=
+_t count)
+> > +static ssize_t at25_ee_write(void *priv, unsigned int off, void *val, =
+size_t count)
+> >  {
+> >       struct at25_data *at25 =3D priv;
+> >       size_t maxsz =3D spi_max_transfer_size(at25->spi);
+> > +     size_t bytes_written =3D count;
+> >       const char *buf =3D val;
+> >       int                     status =3D 0;
+> >       unsigned                buf_size;
+> > @@ -313,7 +314,7 @@ static int at25_ee_write(void *priv, unsigned int o=
+ff, void *val, size_t count)
+> >       mutex_unlock(&at25->lock);
+> >
+> >       kfree(bounce);
+> > -     return status;
+> > +     return status < 0 ? status : bytes_written;
+> >  }
+>
+> So the original bug was that rmem_read() is returning positive values
+> on success instead of zero[1].  That started a discussion about partial
+> reads which resulted in changing the API to support partial reads[2].
+> That patchset broke the build.  This patchset is trying to fix the
+> build breakage.
+>
+> [1] https://lore.kernel.org/all/20240206042408.224138-1-joychakr@google.c=
+om/
+> [2] https://lore.kernel.org/all/20240510082929.3792559-2-joychakr@google.=
+com/
+>
+> The bug in rmem_read() is still not fixed.  That needs to be fixed as
+> a stand alone patch.  We can discuss re-writing the API separately.
+>
 
-When I did a large folios split test, a WARNING
-"[ 5059.122759][  T166] Cannot split file folio to non-0 order"
-was triggered. But the test cases are only for anonmous folios.
-while mapping_large_folio_support() is only reasonable for page
-cache folios.
+True, fixing the return type would fix that as well is what I thought
+but maybe yes we need to fix that separately as well.
 
-In split_huge_page_to_list_to_order(), the folio passed to
-mapping_large_folio_support() maybe anonmous folio. The
-folio_test_anon() check is missing. So the split of the anonmous THP
-is failed. This is also the same for shmem_mapping(). We'd better add
-a check for both. But the shmem_mapping() in __split_huge_page() is
-not involved, as for anonmous folios, the end parameter is set to -1, so
-(head[i].index >= end) is always false. shmem_mapping() is not called.
+> These functions are used internally and exported to the user through
+> sysfs via bin_attr_nvmem_read/write().  For internal users partial reads
+> should be treated as failure.  What are we supposed to do with a partial
+> read?  I don't think anyone has asked for partial reads to be supported
+> from sysfs either except Greg was wondering about it while reading the
+> code.
+>
+> Currently, a lot of drivers return -EINVAL for partial read/writes but
+> some return success.  It is a bit messy.  But this patchset doesn't
+> really improve anything.  In at24_read() we check if it's going to be a
+> partial read and return -EINVAL.  Below we report a partial read as a
+> full read.  It's just a more complicated way of doing exactly what we
+> were doing before.
 
-Also add a VM_WARN_ON_ONCE() in mapping_large_folio_support()
-for anon mapping, So we can detect the wrong use more easily.
+Currently what drivers return is up to their interpretation of int
+return type, there are a few drivers which also return the number of
+bytes written/read already like
+drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c .
+The objective of the patch was to handle partial reads and errors at
+the nvmem core and instead of leaving it up to each nvmem provider by
+providing a better return value to nvmem providers.
 
-THP folios maybe exist in the pagecache even the file system doesn't
-support large folio, it is because when CONFIG_TRANSPARENT_HUGEPAGE
-is enabled, khugepaged will try to collapse read-only file-backed pages
-to THP. But the mapping does not actually support multi order
-large folios properly.
+Regarding drivers/misc/eeprom/at25.c which you pointed below, that is
+a problem in my code change. I missed that count was modified later on
+and should initialize bytes_written to the new value of count, will
+fix that when I come up with the new patch.
 
-Using /sys/kernel/debug/split_huge_pages to verify this, with this
-patch, large anon THP is successfully split and the warning is ceased.
+I agree that it does not improve anything for a lot of nvmem providers
+for example the ones which call into other reg_map_read/write apis
+which do not return the number of bytes read/written but it does help
+us do better error handling at the nvmem core layer for nvmem
+providers who can return the valid number of bytes read/written.
 
-Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
----
- include/linux/pagemap.h |  4 ++++
- mm/huge_memory.c        | 27 ++++++++++++++++-----------
- 2 files changed, 20 insertions(+), 11 deletions(-)
+Please let me know if you have any other suggestions on how to handle
+this better.
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index ee633712bba0..59f1df0cde5a 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -381,6 +381,10 @@ static inline void mapping_set_large_folios(struct address_space *mapping)
-  */
- static inline bool mapping_large_folio_support(struct address_space *mapping)
- {
-+	/* AS_LARGE_FOLIO_SUPPORT is only reasonable for pagecache folios */
-+	VM_WARN_ONCE((unsigned long)mapping & PAGE_MAPPING_ANON,
-+			"Anonymous mapping always supports large folio");
-+
- 	return IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
- 		test_bit(AS_LARGE_FOLIO_SUPPORT, &mapping->flags);
- }
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 317de2afd371..62d57270b08e 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -3009,30 +3009,35 @@ int split_huge_page_to_list_to_order(struct page *page, struct list_head *list,
- 	if (new_order >= folio_order(folio))
- 		return -EINVAL;
+Thanks
+Joy
 
--	/* Cannot split anonymous THP to order-1 */
--	if (new_order == 1 && folio_test_anon(folio)) {
--		VM_WARN_ONCE(1, "Cannot split to order-1 folio");
--		return -EINVAL;
--	}
--
--	if (new_order) {
--		/* Only swapping a whole PMD-mapped folio is supported */
--		if (folio_test_swapcache(folio))
-+	if (folio_test_anon(folio)) {
-+		/* Cannot split anonymous THP to order-1 */
-+		if (new_order == 1) {
-+			VM_WARN_ONCE(1, "Cannot split to order-1 folio");
- 			return -EINVAL;
-+		}
-+	} else if (new_order) {
- 		/* Split shmem folio to non-zero order not supported */
- 		if (shmem_mapping(folio->mapping)) {
- 			VM_WARN_ONCE(1,
- 				"Cannot split shmem folio to non-0 order");
- 			return -EINVAL;
- 		}
--		/* No split if the file system does not support large folio */
--		if (!mapping_large_folio_support(folio->mapping)) {
-+		/* No split if the file system does not support large folio.
-+		 * Note that we might still have THPs in such mappings due to
-+		 * CONFIG_READ_ONLY_THP_FOR_FS. But in that case, the mapping
-+		 * does not actually support large folios properly.
-+		 */
-+		if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) &&
-+			!mapping_large_folio_support(folio->mapping)) {
- 			VM_WARN_ONCE(1,
- 				"Cannot split file folio to non-0 order");
- 			return -EINVAL;
- 		}
- 	}
-
-+	/* Only swapping a whole PMD-mapped folio is supported */
-+	if (folio_test_swapcache(folio) && new_order)
-+		return -EINVAL;
-
- 	is_hzp = is_huge_zero_folio(folio);
- 	if (is_hzp) {
--- 
-2.15.2
+>
+> drivers/misc/eeprom/at25.c
+>    198  static int at25_ee_write(void *priv, unsigned int off, void *val,=
+ size_t count)
+>    199  {
+>    200          struct at25_data *at25 =3D priv;
+>    201          size_t maxsz =3D spi_max_transfer_size(at25->spi);
+> New:            size_t bytes_written =3D count;
+>                        ^^^^^^^^^^^^^^^^^^^^^
+> This is not the number of bytes written.
+>
+>    202          const char *buf =3D val;
+>    203          int                     status =3D 0;
+>    204          unsigned                buf_size;
+>    205          u8                      *bounce;
+>    206
+>    207          if (unlikely(off >=3D at25->chip.byte_len))
+>    208                  return -EFBIG;
+>    209          if ((off + count) > at25->chip.byte_len)
+>    210                  count =3D at25->chip.byte_len - off;
+>                         ^^^^^
+> This is.
+>
+>    211          if (unlikely(!count))
+>    212                  return -EINVAL;
+>    213
+>    214          /* Temp buffer starts with command and address */
+>    215          buf_size =3D at25->chip.page_size;
+>    216          if (buf_size > io_limit)
+>    217                  buf_size =3D io_limit;
+>    218          bounce =3D kmalloc(buf_size + at25->addrlen + 1, GFP_KERN=
+EL);
+>    219          if (!bounce)
+>    220                  return -ENOMEM;
+>    221
+>
+> regards,
+> dan carpenter
