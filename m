@@ -1,155 +1,97 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BB6224D1;
-	Thu,  6 Jun 2024 17:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9C8198A31;
+	Thu,  6 Jun 2024 17:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717693826; cv=none; b=QzAFBabIdUnpMa9uBE0aaPxNwhnnBnIPSRqZ7x7mM7VLIvASBcI7EgbLzjmxqKeDelznWBJ76MqynSOEv9/BzeM9QA0gUfAG3z8DVQV7Dz55ynj1uubkghMSeBdr4GiySDsNDvLtBTPBE8moowdBkQFHQ8zyrkd8o5RvN0nk9RE=
+	t=1717693896; cv=none; b=kLb8X//pKmIstN1OdL891rnch7VNCuMlnb84Iaom3xOhO668EEuzZQA4vB1IwZcjhqrbR4pO2zjRozud58vd6oglGy5oaq35yrNWobUh2D2gP2RANouY1evnLMetYfcOtMwGxCaX3HbMI8RBm6ncT2lcZxNGx5UzSIbpXHREobY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717693826; c=relaxed/simple;
-	bh=M70tp6532oErosXvST9jh7Vo9666z4tcB3oOndDwuWo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aiDu3bUys2KrKvot9jGaqVjx5UY/uZ84oDjqYAT9z1x1xxB7aq7SD1z/yuSkr7lZmTXfesfk8XTbEWoCGw6x3+U7BO2m+A6v8CcnBT+TIzC1rjclIhdmcbihZnWNutKPsAkcUTgI1bH2xKdJ+10J4obYuH84LY9g4gqYAWEj9yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FwLPMfxO; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717693896; c=relaxed/simple;
+	bh=63wNISo13/97qVFbNwC/m0bF2xFFqGttpBT+0BwEnew=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WeM6ZvS+CqRyflNvBGbnLE4XuVDGJfmgLpXs5oO1dZ+WgiDPC3z80WbQxzMFRAOmJqtmwkuLbV4TWaWfqm4mB8Vr6qB0MFytzgKIB/lTIRPx94+8lFimqubGXhwy1mm0me4UmtUh6Yr55OFP3cgyB1uJqOyrhxQsJmhtUv93ZaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IxIY+/zM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nK5SsT/R; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwLPMfxO"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52b94ad88cbso1882106e87.0;
-        Thu, 06 Jun 2024 10:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717693823; x=1718298623; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vfcPheLV0NZCmf87grsxqRgL031WLMyzJrb0w/6enLU=;
-        b=FwLPMfxOY2UivHsEBqPZJSUYsTJ2gFu9CCyLYNTISJh9QqTx2uYLsxqsURO8Ffw0eK
-         VUC2vozC6NnqwZl4yn0V1yCajm/GzIIExF0KSafQEVYNmX4XAyj9+mE/4VXTj3vvvzmU
-         0oZPusyxzTLjBAEMteDVtHpq/5rqyLPVGJIEC+NXR/Kv4qCpphb2fy/BoiDBMcZ6gU9u
-         QQux5JzIW/Tpa8cLoWgt6K0afncWT7ozOhT9o3WzR+uEWVD8cHTy57YDH/ZPEv6PLWgI
-         59puwfdbabzuOcwairzvGVCXpgQ2ZRgTeTSEkZfVb0oz3EpzWGOPTUF4hFFZzS/zZ4HK
-         rd3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717693823; x=1718298623;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vfcPheLV0NZCmf87grsxqRgL031WLMyzJrb0w/6enLU=;
-        b=pEU2hzL6XX8s+P4ELdiqVNzK+YnZP0jRZwsI9hYa0dO8OKTOd9XyhZNDQbRlsJgr4O
-         T3YqIx44F+JjEOGon7akoyNQ+incqc3OfTC5aylSH6i0oX/yllQ1ovZ7uOy3jnI02D6U
-         X3LjT+G37vfgFGageMZo51zicXZ7sIMDUPSi34sUhg+/7XNzZWhFydKwxTUZrVLCz0ca
-         ovzNpy9aZAkBYjpdhKq/Y3j+2BF7xzkbp4oszFUrAjg5e7g8lffksQsHGHm4tv84l1Qq
-         wttaqD0iVXLtOURHWcpIvmWxyfkcpGqyCfQGyF7TG09sBgaFFKrNkd1LxcAnXrs69VhH
-         uk3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWy+GvOMYSJLZg03U9nkga4yhj8sbckBDMxAp57PYrUXrpHEHHTntqvcWamaFF8AH2DJa3bmEPmOmAxdqsD18kYm6G0tkaBkATLeWY+
-X-Gm-Message-State: AOJu0YyeGvYovP0QC86AT+6n1059wmksY8zn36AtQfTTq7mpVc/yqwab
-	5hWcJFGxf4nX1TrCyDC/6teO4sE49l9xUw1cXy1xUn8n468xTtw0
-X-Google-Smtp-Source: AGHT+IHjAV1sRFdp+OWciQrMCzE/Ou7KGCZoDPrUBVN8JEZkK68c3eqRAB4TI9M5ylBpowsDZcF8Qg==
-X-Received: by 2002:a05:6512:3f09:b0:51f:3e0c:ace3 with SMTP id 2adb3069b0e04-52bb9f785d9mr227002e87.16.1717693822817;
-        Thu, 06 Jun 2024 10:10:22 -0700 (PDT)
-Received: from [10.0.0.42] (host-85-29-124-88.kaisa-laajakaista.fi. [85.29.124.88])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb423cf28sm246062e87.194.2024.06.06.10.10.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 10:10:22 -0700 (PDT)
-Message-ID: <6a88c1b3-b3d0-48d0-a620-b17464cb559e@gmail.com>
-Date: Thu, 6 Jun 2024 20:13:55 +0300
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IxIY+/zM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nK5SsT/R"
+From: Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717693891;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=63wNISo13/97qVFbNwC/m0bF2xFFqGttpBT+0BwEnew=;
+	b=IxIY+/zMpLVNBKwD4IIN7f9oggeNH/7nzTmJzXTJ/UU41EtCzDmCSrVINaoPZP2N0R6dIB
+	lAszc6oH0T2ngObSapuyxXF5iL8sC1RQQNfuZmHKa/Z5PJJFyPcpA1WRkYlJruwpuiW5o/
+	HAnJNO4Nt3W4ariTgSQi6I8TmGKoQ+VGvWDqHM/AzXhOvD1qCSuUZfezH0fk1WX82uj7uh
+	GFtghOgPGZivz3pbSq6qx+Jj2ITbzEEcdf8dRC8Stpz7+ryajtGP+79BnLBrauMoUo9Q66
+	CPtet/fYTk87xqFIwOAmg3Hu9dAjngX0cZf45C8aFVtfVpH2jqZJyjiqwuRQjw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717693891;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=63wNISo13/97qVFbNwC/m0bF2xFFqGttpBT+0BwEnew=;
+	b=nK5SsT/RjHVycaC4bMAFKGA9vyxTnnZUtHCHBHYZh9ewna4xNtsu6rTVS47g2ci1iiWCEq
+	EG9YCNdvcMBq8yDw==
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH net-next v1 1/1] net: dsa: hellcreek: Replace kernel.h
+ with what is used
+In-Reply-To: <20240606161549.2987587-1-andriy.shevchenko@linux.intel.com>
+References: <20240606161549.2987587-1-andriy.shevchenko@linux.intel.com>
+Date: Thu, 06 Jun 2024 19:11:29 +0200
+Message-ID: <87frtq2dz2.fsf@kurt.kurt.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] ASoC: ti: davinci-mcasp: Set min period size using
- FIFO config
-To: Jai Luthra <j-luthra@ti.com>, Lars-Peter Clausen <lars@metafoo.de>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
- alsa-devel@alsa-project.org
-References: <20240604-asoc_next-v1-0-e895c88e744d@ti.com>
- <20240604-asoc_next-v1-2-e895c88e744d@ti.com>
-Content-Language: en-US
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20240604-asoc_next-v1-2-e895c88e744d@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Hi,
+--=-=-=
+Content-Type: text/plain
 
-On 6/4/24 1:01 PM, Jai Luthra wrote:
-> The minimum period size was enforced to 64 as older devices integrating
-> McASP with EDMA used an internal FIFO of 64 samples.
-> 
-> With UDMA based platforms this internal McASP FIFO is optional, as the
-> DMA engine internally does some buffering which is already accounted for
-> when registering the platform. So we should read the actual FIFO
-> configuration (txnumevt/rxnumevt) instead of hardcoding frames.min to
-> 64.
-> 
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-> ---
->  sound/soc/ti/davinci-mcasp.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-> index 1e760c315521..2a53fb7e72eb 100644
-> --- a/sound/soc/ti/davinci-mcasp.c
-> +++ b/sound/soc/ti/davinci-mcasp.c
-> @@ -70,6 +70,7 @@ struct davinci_mcasp_context {
->  struct davinci_mcasp_ruledata {
->  	struct davinci_mcasp *mcasp;
->  	int serializers;
-> +	u8 numevt;
->  };
->  
->  struct davinci_mcasp {
-> @@ -1470,12 +1471,13 @@ static int davinci_mcasp_hw_rule_format(struct snd_pcm_hw_params *params,
->  static int davinci_mcasp_hw_rule_min_periodsize(
->  		struct snd_pcm_hw_params *params, struct snd_pcm_hw_rule *rule)
->  {
-> +	struct davinci_mcasp_ruledata *rd = rule->private;
->  	struct snd_interval *period_size = hw_param_interval(params,
->  						SNDRV_PCM_HW_PARAM_PERIOD_SIZE);
->  	struct snd_interval frames;
->  
->  	snd_interval_any(&frames);
-> -	frames.min = 64;
-> +	frames.min = rd->numevt;
+On Thu Jun 06 2024, Andy Shevchenko wrote:
+> kernel.h is included solely for some other existing headers.
+> Include them directly and get rid of kernel.h.
+>
+> While at it, sort headers alphabetically for easier maintenance.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-64 was a nice number ;)
+Thanks!
 
->  	frames.integer = 1;
->  
->  	return snd_interval_refine(period_size, &frames);
-> @@ -1516,6 +1518,9 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
->  		if (mcasp->serial_dir[i] == dir)
->  			max_channels++;
->  	}
-> +	ruledata->numevt = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
-> +				   mcasp->txnumevt :
-> +				   mcasp->rxnumevt;
+Reviewed-by: Kurt Kanzenbach <kurt@linutronix.de>
 
-Do this at the same location where the rest of the ruledata members are
-initialized, or
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
->  	ruledata->serializers = max_channels;
->  	ruledata->mcasp = mcasp;
->  	max_channels *= tdm_slots;
-> @@ -1591,7 +1596,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
->  
->  	snd_pcm_hw_rule_add(substream->runtime, 0,
->  			    SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
-> -			    davinci_mcasp_hw_rule_min_periodsize, NULL,
-> +			    davinci_mcasp_hw_rule_min_periodsize, ruledata,
+-----BEGIN PGP SIGNATURE-----
 
-You could just pass a pointer to txnumevt/rxnumevt directly...
-
->  			    SNDRV_PCM_HW_PARAM_PERIOD_SIZE, -1);
->  
->  	return 0;
-> 
-
--- 
-Péter
+iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmZh7cETHGt1cnRAbGlu
+dXRyb25peC5kZQAKCRDBk9HyqkZzgjZVEACuxnRhqdhTumWAeUFO7CWUch7cSn8q
+tqSHUEJoPjv/m7pypn6xqYIk8pTr/5FdvWXeyMCPWFF1MHG8KVufgvZgPJx2cpu+
+4l0t3mBN2hQwx3KF37l/2Xt0ro6CA2HnguggBwfSwyg8OoA6v4HdD4R0iymjKPsh
+4mYupER4oxnfYucp6K3teTNc9SMIO+KeInCUKyQ8ipCeV4xwrMoxZigSeax/IAEV
+l8dNQtJKDakgEJ+/+8BsMoe1lTl1qWhwfA2DrERMv/X+OwRiGsMAdu1BetAmGyTe
+uNUgMNRhAlgVkfouGf1JzG4DwAy+/r5vQhfQqzDIVrBQR+uGrE/H6YpcW+N90BFo
+XR+4ycMY4T/obPSSRVp5EMMHAhLGTNmpJ238+jFsCqEh1vfSPKitcGoyjJJx+32I
+Ub42h8mAwOyMQpDEWL5iMGCY6MbtmSTlbxZT4zVqd7rEaxwR1ZVGmSG59X5nJClI
+kZKN8P9Njb/OMH5CKc4A/Lpfyx/i/WH1EXogEws3r08jz59i7yZ+L7DXW38y9EuQ
+nxC9gmhO4+2zLybC0PGt+XzEbxc+CPkf78Ev3gOzKXo8/KGczpooineI1ypTlOZw
+EIZUXpSoZrZd2J8KXJo4tlEPzWhVxF7YC6GWMI59E35VesyN2i2dR5FomRFSpiBj
+lA+rJ4fRv+E5QQ==
+=1rPQ
+-----END PGP SIGNATURE-----
+--=-=-=--
