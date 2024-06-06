@@ -1,45 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FF96F068;
-	Thu,  6 Jun 2024 06:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9D63AC16
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 06:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717656812; cv=none; b=fEJ6kuFKvjIXh70O6GmE/M8hJODpH9yJ4293+xVbbqdZE2mESQbpzwI1K073ZwOx9yaZoFDsxlWXafdFogPkdYIHXBLpsfzLzrK46mLbfe5olD6acawexSVyWSKxw47JHmtSQr6n6YpX+yv6EpKJwNKMCrajqjJUUKuNgvOr2o8=
+	t=1717656878; cv=none; b=H6wn0p/x6PYNdHbjq4RUwxEvJ3HwyezAkzg+z1rBeikNSY8BhTJpYA6bMs24btsKp2WuddUUZfxNtrXwh7pv1TFVTjETjP22Ilja+z1ILbAuneEGXw9uf9L3xLdHQbq4ZpUDVQxJy9yZkjUff81gCs+AJDjDploblAbGIIUKgEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717656812; c=relaxed/simple;
-	bh=YWrK4iYDDKbeb1azVQHle6znUk1b3N3hYO1w8gGk7I4=;
+	s=arc-20240116; t=1717656878; c=relaxed/simple;
+	bh=KSdDPxC5VUh1WnamIAbzz671Erp4LUNSssBAt5dfhn0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qQTERqg1wu4+fR1AxOiqywzc4vMnKKgt4duZE4Q7WO9zb5sMTkFS8XaBjpxTMYpqqKh7NA0cg7S/de0mAesbJAWqwa4XagFuWf3ZSsQaUOZlGo9nisEX/nQYAuycJE+eHvkqIuUIaj78u/1H0QPv40zFFBiB57d8rghLnoe3e6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilU3ez+S; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=txR7GNss6IS07bRlEqhyCWHmu76A4RdzSC1C6XGQ6i27IhqJ8XxOdENLdNkmTkUe/GgsFTpgglAI0Y4qrR30qU4j+GTGFlyFAVUelD0uisNxmqA6dDjhbS6BOKBh9cWQo/8QWPoDb0+2+uCHkSVD3DY3rgUYPrELXhf8elIGhjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Xd1GeeWG; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilU3ez+S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86633C4AF08;
-	Thu,  6 Jun 2024 06:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717656812;
-	bh=YWrK4iYDDKbeb1azVQHle6znUk1b3N3hYO1w8gGk7I4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ilU3ez+Sh2XfeQBILe8JRGQCLnC0ghKF6UuH7S5xS7LUc3l6SC5WHPqAFhVpuM48c
-	 UECg8zkcemdw1eBNAIjRZ/NZWujmFxOgSPn2UL9xZi5NQLBZQ/ef+8I39VSs7UN04U
-	 wkFp1ypqPfeFRFh1I5BlyWBysjO7DS9d2V4CePghEko5dFcaph6FPk4VLiMqkIzEM8
-	 76XRTmS6pzm8GnxikRS52HlQrOtfSg7hmx1gtGM+TwkIXaIImPaFkacPCT7T5uNSOQ
-	 Ngjr8RT737ynyCqqwVmGcV7Hptn6Oh7BKdWg3BvsMl3daitgXE+1H5Q0O75jivs6WI
-	 ETUIi3yq6f9ig==
-Date: Wed, 5 Jun 2024 23:53:30 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	irogers@google.com, segher@kernel.crashing.org,
-	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH V3 10/14] tools/perf: Update instruction tracking for
- powerpc
-Message-ID: <ZmFc6kPnh-zIrIG1@google.com>
-References: <20240601060941.13692-1-atrajeev@linux.vnet.ibm.com>
- <20240601060941.13692-11-atrajeev@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Xd1GeeWG"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-35e83828738so680787f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 23:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1717656875; x=1718261675; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=a7TCmXGWr94ZoD3g1UVXKN5ISjES07LkwWyEhWG4/I0=;
+        b=Xd1GeeWG9v03txlf+IeiUr4isYxVXO7sIlwVrFgtx1zja6n/fz2iQPtu9T/SkSo4K+
+         DpyV/FkNfNHxSIxjwzogopPQt73IMD3+32oj5r1+swWqeEdbBTODAoWErX6qJ5EhbA0R
+         HtTfy7QuwaPn4Xw2Vnc3ZKfxCc7TComljJDoArtRbb7vtxsbwXhv3+n3YSv7av+TlfXd
+         Cxw7LiDF6mp/sNv39elNFu06CElZEKRl1/b4t5s7zI5rVUcrjmcAe5u8tm1H9iTQCg4n
+         IWigq2oVWJBeoHB0JUs38ul+2sI5OrV4XqceY9663k5lfLm1aTv5aOw3k9g1eAia2hF4
+         S/Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717656875; x=1718261675;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a7TCmXGWr94ZoD3g1UVXKN5ISjES07LkwWyEhWG4/I0=;
+        b=MadEW5zNaSn7O0byd9dbWS3AThx+2nJqmDHW0m1uNf+/S6W6qPp1VhSgMJSxz+tcet
+         1eYuh/Y5PHAILIQnKVuBMrBmZGVVzBbfcvKTfuR0NUSfVTo69Hop3rdfRoNpHx8avWbt
+         EksRzr7fnAbYdM3zD3CbCHVh0Rz7JMpQow3ceVLy+f3tez0kTg8MrHNJcGEMeUvrzN/W
+         rZquj8pUU6FYDZqUqJ4cNzLq15ybPri4OXN+cP2eTm7vH9L1M5wUX+crv7e+80eLLVEP
+         SWuHLwi/MMrznWsR3DnQl5mtOliE18JtT20Ong56eFQAAri/UFj6huUJFNCX6DCixcRO
+         AUTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3+2v+al6c8agjiRSyd6t77VtatA3xIK6eEYPpaBLRXoAnRZ8VqiRNGB4gnyM5IuUGJz+BsMoAY3sLQCm99TC1vqcrdxeuyKsqh+nE
+X-Gm-Message-State: AOJu0YwJyWa6Z0Ne0WmBGIsptI3+MVSnzXDeF3CwasCo6/tOW76747ag
+	uTEeKyWGhme+b4qY2v5LIRu4kkPuNIY3U91SSSXpTekld8axsbzQhmC+DQztRvU=
+X-Google-Smtp-Source: AGHT+IHNKnXIBb3qZJygU2iYDImkZ9rzUJkNBWDBUa1dYfWFLGg6a9Ze5BMW5kuAh9PHrPhk9uqCHQ==
+X-Received: by 2002:a5d:4711:0:b0:35e:83f3:ea0a with SMTP id ffacd0b85a97d-35e8ef65b69mr3594626f8f.48.1717656874844;
+        Wed, 05 Jun 2024 23:54:34 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5fc1ca8sm714821f8f.97.2024.06.05.23.54.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 23:54:34 -0700 (PDT)
+Date: Thu, 6 Jun 2024 08:54:33 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Tomasz Jeznach <tjeznach@rivosinc.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Anup Patel <apatel@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Nick Kossifidis <mick@ics.forth.gr>, Sebastien Boeuf <seb@rivosinc.com>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux@rivosinc.com, 
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v6 2/7] iommu/riscv: Add RISC-V IOMMU platform device
+ driver
+Message-ID: <20240606-988b5519747e28c276f9a952@orel>
+References: <cover.1716578450.git.tjeznach@rivosinc.com>
+ <7dcd9a154625704cbf9adc4b4ac07ca0b9753b31.1716578450.git.tjeznach@rivosinc.com>
+ <20240529-08fd52a8e703418142bdfa84@orel>
+ <CAH2o1u7N03b3dzxxG8jp7qW2jmCDADwq_OL2Ayv1AL1XsA7s5w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,155 +79,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240601060941.13692-11-atrajeev@linux.vnet.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH2o1u7N03b3dzxxG8jp7qW2jmCDADwq_OL2Ayv1AL1XsA7s5w@mail.gmail.com>
 
-On Sat, Jun 01, 2024 at 11:39:37AM +0530, Athira Rajeev wrote:
-> Add instruction tracking function "update_insn_state_powerpc" for
-> powerpc. Example sequence in powerpc:
+On Wed, Jun 05, 2024 at 11:58:28AM GMT, Tomasz Jeznach wrote:
+> On Wed, May 29, 2024 at 8:15 AM Andrew Jones <ajones@ventanamicro.com> wrote:
+...
+> > > +/* 3.1.3 I/O MMU Directory cache invalidation */
+> > > +/* Fields on dword0 */
+> > > +#define RISCV_IOMMU_CMD_IODIR_OPCODE         3
+> > > +#define RISCV_IOMMU_CMD_IODIR_FUNC_INVAL_DDT 0
+> > > +#define RISCV_IOMMU_CMD_IODIR_FUNC_INVAL_PDT 1
+> > > +#define RISCV_IOMMU_CMD_IODIR_PID            GENMASK_ULL(31, 12)
+> > > +#define RISCV_IOMMU_CMD_IODIR_DV             BIT_ULL(33)
+> > > +#define RISCV_IOMMU_CMD_IODIR_DID            GENMASK_ULL(63, 40)
+> >
+> > RISCV_IOMMU_CMD_IOTDIR_* for all above
+> >
 > 
-> ld      r10,264(r3)
-> mr      r31,r3
-> <<after some sequence>
-> ld      r9,312(r31)
-> 
-> Consider ithe sample is pointing to: "ld r9,312(r31)".
-> Here the memory reference is hit at "312(r31)" where 312 is the offset
-> and r31 is the source register. Previous instruction sequence shows that
-> register state of r3 is moved to r31. So to identify the data type for r31
-> access, the previous instruction ("mr") needs to be tracked and the
-> state type entry has to be updated. Current instruction tracking support
-> in perf tools infrastructure is specific to x86. Patch adds this support
-> for powerpc as well.
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  .../perf/arch/powerpc/annotate/instructions.c | 65 +++++++++++++++++++
->  tools/perf/util/annotate-data.c               |  9 ++-
->  tools/perf/util/disasm.c                      |  1 +
->  3 files changed, 74 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-> index db72148eb857..3ecf5a986037 100644
-> --- a/tools/perf/arch/powerpc/annotate/instructions.c
-> +++ b/tools/perf/arch/powerpc/annotate/instructions.c
-> @@ -231,6 +231,71 @@ static struct ins_ops *check_ppc_insn(int raw_insn)
->  	return NULL;
->  }
->  
-> +/*
-> + * Instruction tracking function to track register state moves.
-> + * Example sequence:
-> + *    ld      r10,264(r3)
-> + *    mr      r31,r3
-> + *    <<after some sequence>
-> + *    ld      r9,312(r31)
-> + *
-> + * Previous instruction sequence shows that register state of r3
-> + * is moved to r31. update_insn_state_powerpc tracks these state
-> + * changes
-> + */
-> +#ifdef HAVE_DWARF_SUPPORT
-> +static void update_insn_state_powerpc(struct type_state *state,
-> +		struct data_loc_info *dloc, Dwarf_Die * cu_die __maybe_unused,
-> +		struct disasm_line *dl)
-> +{
-> +	struct annotated_insn_loc loc;
-> +	struct annotated_op_loc *src = &loc.ops[INSN_OP_SOURCE];
-> +	struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
-> +	struct type_state_reg *tsr;
-> +	u32 insn_offset = dl->al.offset;
-> +
-> +	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
-> +		return;
-> +
-> +	/*
-> +	 * Value 444 for bits 21:30 is for "mr"
-> +	 * instruction. "mr" is extended OR. So set the
-> +	 * source and destination reg correctly
-> +	 */
-> +	if (PPC_21_30(dl->ops.raw_insn) == 444) {
-> +		int src_reg = src->reg1;
-> +
-> +		src->reg1 = dst->reg1;
-> +		dst->reg1 = src_reg;
-> +	}
-> +
-> +	if (!has_reg_type(state, dst->reg1))
-> +		return;
-> +
-> +	tsr = &state->regs[dst->reg1];
-> +
-> +	if (!has_reg_type(state, src->reg1) ||
-> +			!state->regs[src->reg1].ok) {
-> +		tsr->ok = false;
-> +		return;
-> +	}
-> +
-> +	tsr->type = state->regs[src->reg1].type;
-> +	tsr->kind = state->regs[src->reg1].kind;
-> +	tsr->ok = true;
-> +
-> +	pr_debug("mov [%x] reg%d -> reg%d",
+> I've checked latest RISC-V IOMMU Arch Specification and it looks there
+> it is a bit inconsistent in IODIR naming.  The acronym IOTDIR is used
+> only once, while all other references to directory cache invalidation
+> command use IODIR.  I'll keep _CMD_IODIR_ here.
+>
 
-pr_debug_dtp() ?
+Indeed. I've made a comment on the spec clarifications PR to suggest the
+s/IOTDIR/IODIR/ change.
 
 Thanks,
-Namhyung
-
-
-> +			insn_offset, src->reg1, dst->reg1);
-> +	pr_debug_type_name(&tsr->type, tsr->kind);
-> +}
-> +#else /* HAVE_DWARF_SUPPORT */
-> +static void update_insn_state_powerpc(struct type_state *state __maybe_unused, struct data_loc_info *dloc __maybe_unused,
-> +		Dwarf_Die * cu_die __maybe_unused, struct disasm_line *dl __maybe_unused)
-> +{
-> +	return;
-> +}
-> +#endif /* HAVE_DWARF_SUPPORT */
-> +
->  static int powerpc__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
->  {
->  	if (!arch->initialized) {
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index 7a48c3d72b89..734acdd8c4b7 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -1080,6 +1080,13 @@ static int find_data_type_insn(struct data_loc_info *dloc,
->  	return ret;
->  }
->  
-> +static int arch_supports_insn_tracking(struct data_loc_info *dloc)
-> +{
-> +	if ((arch__is(dloc->arch, "x86")) || (arch__is(dloc->arch, "powerpc")))
-> +		return 1;
-> +	return 0;
-> +}
-> +
->  /*
->   * Construct a list of basic blocks for each scope with variables and try to find
->   * the data type by updating a type state table through instructions.
-> @@ -1094,7 +1101,7 @@ static int find_data_type_block(struct data_loc_info *dloc,
->  	int ret = -1;
->  
->  	/* TODO: other architecture support */
-> -	if (!arch__is(dloc->arch, "x86"))
-> +	if (!arch_supports_insn_tracking(dloc))
->  		return -1;
->  
->  	prev_dst_ip = dst_ip = dloc->ip;
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 57af4dc42a58..d8b357055302 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -155,6 +155,7 @@ static struct arch architectures[] = {
->  	{
->  		.name = "powerpc",
->  		.init = powerpc__annotate_init,
-> +		.update_insn_state = update_insn_state_powerpc,
->  	},
->  	{
->  		.name = "riscv64",
-> -- 
-> 2.43.0
-> 
+drew
