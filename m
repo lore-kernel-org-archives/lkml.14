@@ -1,173 +1,146 @@
-Received: from repost01.tmes.trendmicro.eu (repost01.tmes.trendmicro.eu [18.185.115.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BB9197A68
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=18.185.115.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717683221; cv=fail; b=Q6E4h1IxCMbzWv+ruOCji7KW8IqSrdRclxIKlmO6LLE7aN+krbqrHSytmnuup3f/osPKjnZp/EtgGvFNm0EEjdoa4wnjvwr6j2IO9A7KpAAQbLSrRwelqHjde/HkfheseN9j8w121r7t1Lj3ZnWNA4uKUmhzEk1T6Cw0G1qmKIY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717683221; c=relaxed/simple;
-	bh=ZXv35xifz+hJm716XeIMbGKw4efsIvlgMuhBrLoADbc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Jocdb5OBuFSo9C7T+ehYAZ7rkOMmS6XkYAAcelHUGqd2e4LZkZo7loU1CVLwhmhgLF/ZQlWG3FqzWX/tnsW3S/l7RPBqTm5hwuEKTPwTYGJT+UB22TrTSBaVTMBkzr8itGF52WKysVqVPsFzJAlODmlV3VMH/Kxb6U97c0tThDw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com; spf=pass smtp.mailfrom=opensynergy.com; dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b=P9MqYJmj; arc=fail smtp.client-ip=18.185.115.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensynergy.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b="P9MqYJmj"
-Received: from 104.47.11.168_.trendmicro.com (unknown [172.21.163.121])
-	by repost01.tmes.trendmicro.eu (Postfix) with SMTP id CBA8D10001FB2;
-	Thu,  6 Jun 2024 14:13:31 +0000 (UTC)
-X-TM-MAIL-RECEIVED-TIME: 1717683210.892000
-X-TM-MAIL-UUID: b2d114a7-56b0-42fe-9394-aebe964cfdac
-Received: from DEU01-FR2-obe.outbound.protection.outlook.com (unknown [104.47.11.168])
-	by repre01.tmes.trendmicro.eu (Trend Micro Email Security) with ESMTPS id D9E651000031A;
-	Thu,  6 Jun 2024 14:13:30 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f4x+IMA7qCFQ/3YMkVHJE+90gqwnxK1S8ZWj4v81Eq+fzLuE8hNDm4iM6ATTcNXmtXL92PMwBrWP8JorD35jEGg7xSvK7mtfKJX2BV5gLdGr4iDvR58+8yZLdXqtDbsKtQ4BH8iTCd3Ac3h/z6aCoB12Lz521JKVsWDih1VYz5fKF8bZVBlLPKWxwyneKCPkm0YBkolGfL6P/D9DE7rmo1l1rvh4ArVyLoyG22O8Kqpj60qpDRTHAZrfIL0qi5TYEpIXVeL1HiNn5QgDO3rCPJG9Im0vfpT4stLCeoo1LAEtxQT1F1VUynnqtkZ30pPeuSmR+X8eC1w3cpLeCB3DJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4nu7ix7PCGKEAqZGthDLNSCsfM/y6b3m/vUkfP75TGQ=;
- b=kw+anKL0k5jSiBtaPWFEVShcXapBM7TFP69+95Q+3Huri1Pi4xYPvb9vsBb5gpeLxvAjb8Iys+xiCRO/s5VUVRQwSpp8DzlvAcjv1qnl2lOWk8mvZnTUXvtbmnBXuk6u4FG5ggtkrJ4yWq33Ld3PJHdIk0ZAmjqsBahOrLmmHj4X9//s9py8+KUEGpS9mjvvvDjgS+ZZUhbY7rkGHgUV8dtgw8CrkiWN6+mQ+AWFjIEC0R/2Y8NTGIHFsrECDTsp2zqusGvn8FVPEVyadXSn0VfbLZ93Gp+A/V3/ra9xbkLw1Ma/++ENC//Kc2yU/GY8FzxC9v8Ab9rUi6WTTYdHig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 213.61.166.92) smtp.rcpttodomain=davemloft.net smtp.mailfrom=opensynergy.com;
- dmarc=fail (p=reject sp=reject pct=100) action=oreject
- header.from=opensynergy.com; dkim=none (message not signed); arc=none (0)
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 213.61.166.92)
- smtp.mailfrom=opensynergy.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensynergy.com;
-Received-SPF: Fail (protection.outlook.com: domain of opensynergy.com does not
- designate 213.61.166.92 as permitted sender) receiver=protection.outlook.com;
- client-ip=213.61.166.92; helo=SR-MAIL-03.open-synergy.com;
-From: Harald Mommer <Harald.Mommer@opensynergy.com>
-To: virtio-dev@lists.linux.dev,
-	linux-can@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Wolfgang Grandegger <wg@grandegger.com>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Dariusz Stojaczyk <Dariusz.Stojaczyk@opensynergy.com>,
-	Harald Mommer <Harald.Mommer@opensynergy.com>
-Subject: [PATCH 1/1] virtio-can: Add link to CAN specification from ISO.
-Date: Thu,  6 Jun 2024 16:12:22 +0200
-Message-Id: <20240606141222.11237-1-Harald.Mommer@opensynergy.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A6919A295
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717683273; cv=none; b=cpzskNLyL2LDPN8ioAaWKXq15+a3BIvNWWjZHwx0sb7AMW1lZMzpjJsDHBhXUdfasyLp3IsB3SnTCVhPxTzKHANECl3OKLlHcejk+dS8Z0FQvMkgXZ1Ny8T2YSqWtGwjEES2rOV8JANotVg+jypgT68Jo1kP5DqQ7cegUtnnQTs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717683273; c=relaxed/simple;
+	bh=Pwl+Ph8+3XYeth7wyt/AmydUz4nZL/6HcBeIPvZXsRE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=bmWcvG/0igTzOH8FDQispcjar/K4pCQmk1oZ+iLQZhvBEC68Z1Sgli7XQhrY/py5OQQHKAmlV8uIrLMhxaXU/NI4mQMPurk99GGYeELYKq4OsDYP49MoFkofIWsdPALpM6cB/X+4/zic0ctipCuejI+hGPUfOXnIJZfNYcFvE8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-374ad7fa4bbso10089955ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 07:14:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717683270; x=1718288070;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MpKPMPp72E39a98DYqNubx0t6d1WZdls3EbkjhEyXDg=;
+        b=P20bFn4dV4et3KuzugVNoh9lvCXfYemVxQe82FvNwxQrlBda2NBKNHZ+lE8ICVE0EO
+         7SK7F2cTyuiEsTXGwrOb+giXROnOR+2lPuNIbTJM8Q2GaTd1ZtX0PumuqAW4RtURKN8a
+         sRv9vol/2agXUS6vHyg4AnTsVLRwt4AiVZltjQxYdEGXPn0OojBRz4MDk91AcuTjq/Km
+         MkwnaYrZk8LhgZ+NGOU9uYk6/k/dsbbxftaNh+itBtlVEaFC+qBIaz/q7Ay39tZQIB4E
+         jTUpJ8ahg8MYmzEUoONyJcP875RKT6GCaxdxecPe1dQvi+YElQZzVU3JSZsKhckA81Ba
+         7F+w==
+X-Gm-Message-State: AOJu0YxMeI12qX4cpfUUDD+8z21jqBCI4nmTF9mNdl8Drsw1J4laVl77
+	Pj+ptgWFeDoMGX1qtFKBTWPTgGOX4XzN3JMDmOga5UkeYZgf8LbrVLLLA5He7jui+ID/mTPbYSr
+	Dny7kuMFubvwx3Vkrg0hnofoT0PHkMbUvUvT4YMbJofgvRAspwU9b1io=
+X-Google-Smtp-Source: AGHT+IHHmX5X1ULzOzng/upfRocUoEOv/1IM52Yfa9EKkY1SuGZ+colljbASDJtMnxfDAR5WIJvxl/ekp7Bzzfq2BJ7KNwUPT7IV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB1PEPF0003922E:EE_|BE1P281MB3013:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 482a6911-d7d7-40d0-b68d-08dc8632d56c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|7416005|36860700004|1800799015|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?S/USiP98O9D9oMvhHySeHzM5MJ9mhIrxjaHWBmKiWfCr9yaSk7D/mUrUhzFN?=
- =?us-ascii?Q?Y4ZstUoqFGohPNDkk5NDPEkq2f9/Fz1jzu3VitCeejFrKs9erWLSO9ZHt/T/?=
- =?us-ascii?Q?AZuR3azZszMyliutO7G6ILZSPIaVdelAU7/RJLkX+lR7lfDdx3hrLvubl03K?=
- =?us-ascii?Q?R2qI8Tje+OUsYOHnHF443Fr+QQirq6FOnb3SVS8gEerrz68vtcyxktHjNYOV?=
- =?us-ascii?Q?TDTCnwfG9ljD+LXiXM58mtKteTAAsd+anq5kK78Jd/nPFpsgZ7aQ1uqFihj+?=
- =?us-ascii?Q?eMtHr9Z+Evr0JXAHm3V6BavBzKAMtCZGyfDQEnVAuhtuIQGlNXermxQuy9Gx?=
- =?us-ascii?Q?BQbzwHuTG3l/NnOBjvDfmyJzILg6lG+fACGOsQYdWE+ivyfLHW+lSfxPj9Is?=
- =?us-ascii?Q?yhcPHRbPnldoQ4ZVw31N3yysFSOB3bVGG6ILETJyerDD9dygeMLHJBg9mwkk?=
- =?us-ascii?Q?TQEf6Y8/HXOo9Gj+ytxwGXlwRJIVRFR6VVpDesRJw2q7fJI+6jNnjiqLyDzK?=
- =?us-ascii?Q?j5ZSq8vhNeAhx5VB7OMwRzqJW+Y7Mr5nrOGR2BZOr1eDu80C0zyYa5q/jSBo?=
- =?us-ascii?Q?MBl4xS6HXDhoVp3Fgz5xXmMKrBD2v8UU5WvZBJ36Dr8t3/yaVpZxLsZtZFE4?=
- =?us-ascii?Q?gyUqvcELlJKMkEGVdLrgc5eXJ7QTnrjYbvQ2tKxkbuU9kU3Qlrx7nGTRQmlC?=
- =?us-ascii?Q?T+c2xMbEddsiPCXf7+WYk1+xcBUdgoibv+KujoejiktHwulXGApcq5unsMj5?=
- =?us-ascii?Q?Y3QXHBRhWNiavnVaH0mg/9m/rIyukU5m5DiYYfjCzexHTcjixj8wG1XyGdfA?=
- =?us-ascii?Q?4JUYcfShyYWVSpaoHdGKAav/QyGA2by+oXt/qPk/W8HSx3vJo+ij8aELYtkw?=
- =?us-ascii?Q?5nKTAwRGQ3uwq8+V4BMEY7S8iXDrdefSn+n0kd/Ma1kMCjnhyd2qlL7FZ/F+?=
- =?us-ascii?Q?Lt5Nr+P946JcfwnKR3dDyLVDVNrDthPjq+vFvS2MhoO1EWo8rjlaKslGpfTF?=
- =?us-ascii?Q?ilkrqlVZOMqI3dlnPxZ/BO52NCgpnDIAVRtHhfqE0SBbxTmjOXGl2scmcmeY?=
- =?us-ascii?Q?CHqocwX+Wzd7Ti3GfE8Hlf65uyUhJUYEW5C0Ne6v+zaWASJUWt1PyvURrUyY?=
- =?us-ascii?Q?+FYpwoTijWsDdMfaW7P4T1y60N9sqHecfPelE3mCVXlqnOsMLr5PpmELg2vZ?=
- =?us-ascii?Q?1zX8OW7SiT9xPajo5x+awbY8D/Y5SOkZJHnp0bZ9BXHtyscHKtHPZca60wpY?=
- =?us-ascii?Q?0pz4c2SrPNuOh3azFuauS/gdC6MuJSxkraLmLI/TGwBZqLRJ4QkaHSj6JYY7?=
- =?us-ascii?Q?XE+4ms/mZXY9QZPm2lk5O+hmhQWlw+zOWLK/QCHD02c8SmSA2XsPRpHuhu2S?=
- =?us-ascii?Q?eGDku0CMASwMwytmaFMjmDa41Xi7EGq1ePCj+M2SweLC0vg40Q=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:213.61.166.92;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SR-MAIL-03.open-synergy.com;PTR:exchangeconnector.opensynergy.com;CAT:NONE;SFS:(13230031)(82310400017)(7416005)(36860700004)(1800799015)(376005);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensynergy.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 14:13:26.5832
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 482a6911-d7d7-40d0-b68d-08dc8632d56c
-X-MS-Exchange-CrossTenant-Id: 800fae25-9b1b-4edc-993d-c939c4e84a64
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=800fae25-9b1b-4edc-993d-c939c4e84a64;Ip=[213.61.166.92];Helo=[SR-MAIL-03.open-synergy.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF0003922E.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BE1P281MB3013
-X-TM-AS-ERS: 104.47.11.168-0.0.0.0
-X-TMASE-Version: StarCloud-1.3-9.1.1023-28436.000
-X-TMASE-Result: 10-1.047800-4.000000
-X-TMASE-MatchedRID: NGDYxnKYxb3J+P2VFrJmrKdMZMc4JlQbCsYnJzXwRoqL12p7cZqBWIvP
-	iBq/iW91MpPx8OFzfY1Ta75sGuqeWKi8PTAxIaqS7yR/hLt1y2iFU/rz+g+hxFtpNa0o3mGFqXN
-	pl1fc2dczrT87MhOW5dAxdIKEp2hCA3ASNiUtxi2wL+/cgG+7zMn4xfDEuqcVQUZlCPgOIPyF6z
-	UvsSpW6rEDulXIfwn2ckkZYKzf3mGfQEixngIIE2B6KL0WmlgVYppqMItbEgOI/kD+1oWNGb/a0
-	nd+hIFCI/NGWt0UYPAv8kOye9F0ID8aOpcAGK1zWClmBfZH1l0adwCj1QH6tsX55enpC3hi
-X-TMASE-XGENCLOUD: 8fd3d490-e00a-41d7-aab8-a1c43a45ac15-0-0-200-0
-X-TM-Deliver-Signature: C7A16AA34FA8A78513F2FD2AEEEB9E32
-X-TM-Addin-Auth: 1aCZQe/g7OGbQb8gWYKBQTEfmpX+jfFYL+p7mJAt2dl+mksNfThWsLoJMwH
-	Y3cC6H5EdD3EOpURaj8x0aTgfdCbN4kxSaLSWYsv1JnKviCdk7y3uZetMwc4+X0ZrLW05cqJBP5
-	8kEM4zdO2K/sOySFw4BKC10s5Ne4DAydfQ7zdaHT/VNYyij4kbuCpJCMnYyYFWrmQl7IIwIA6rG
-	+gRwYuyPV/l5J1BXIjT1kW4uZinE7dS36U8M7HoH6CweYm5gUGoS50rCvXFGwXkfznrtnakQncD
-	ng/F62CWzbPxX9M=.RKfypBes0KPGz17ya+9pF2Ja1WdanpdhAfiEk9EDYrHcTShZ5KSRkCUf1G
-	FfRjM1+uwYkekMKZyKEUR8m0s02jbQSuGTiFFXuZ4tFBctT4oqsBSMz8TnhVrCHXc01RjWSmCzi
-	Pei4bVMQO9pMaEONDCcRFcQboGBuguh33PwjTxW8XF3iSa9fOGRORDssc3ndRb1/Hv2kXkCDFLs
-	h/pXTPWBnFcozd8bYdQH7scdaBbuKuHOpsvSzK4wOGHiUiGmycfDokZlBP+q5KUQvM33kWJVOls
-	Y5t3tTAA7ms0510rTB0xNc3GXnP4sjLaU+Q7RxTJpSZreURpOzibPitF+Ug==
-X-TM-Addin-ProductCode: EMS
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=opensynergy.com;
-	s=TM-DKIM-20210503141657; t=1717683211;
-	bh=ZXv35xifz+hJm716XeIMbGKw4efsIvlgMuhBrLoADbc=; l=1043;
-	h=From:To:Date;
-	b=P9MqYJmj61pCmqiu8SaWJGOl2I3Gkc8ROrZ4JQ+GeGCkGKx1wrDVmofaunwtE3DeP
-	 z8ubQlcENbwt8esAPbd2hvXgNv7mSplg/k8JEF4CH0YExuT1SdjLBdntj+VzqGdyWP
-	 dB3crvClowBovJBPq5gAN2JR4Q65hSXB2LQnaySFyuNdJDzd7Z0cKq/Q8EXGLH/W5N
-	 HdwHdmU82exyMsKQv5QoAKlmX2UWm/pmGNM0wjZ9ajKlTK/Md0iiOSI71fm5ozzTcR
-	 UYCmRX4h57j7EdS1vMoS6Wrzmvjd+pGyLJNC2vyJpzgVFdm4XS+1FUY6j+z2Bty0Uw
-	 rTJVnoB4qJ/7Q==
+X-Received: by 2002:a92:c26b:0:b0:36c:5228:462 with SMTP id
+ e9e14a558f8ab-374b1f56c81mr3614015ab.3.1717683270146; Thu, 06 Jun 2024
+ 07:14:30 -0700 (PDT)
+Date: Thu, 06 Jun 2024 07:14:30 -0700
+In-Reply-To: <000000000000adb08b061413919e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000277099061a394d13@google.com>
+Subject: Re: [syzbot] possible deadlock in trie_delete_elem
+From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add link to the CAN specification in the ISO shop.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-  ISO 11898-1:2015
-  Road vehicles
-  Controller area network (CAN)
-  Part 1: Data link layer and physical signalling
+***
 
-The specification is not freely obtainable there.
+Subject: possible deadlock in trie_delete_elem
+Author: norkam41@gmail.com
+
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.g=
+it c3f38fa61af77b49866b006939479069cd451173
+
+Signed-off-by: Norbert Kami=C5=84ski <norkam41@gmail.com>
 ---
- introduction.tex | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/bpf_trace.c | 18 +++++++++++++++++-
+ kernel/tracepoint.c      | 15 +++++++++++++--
+ 2 files changed, 30 insertions(+), 3 deletions(-)
 
-diff --git a/introduction.tex b/introduction.tex
-index 8bcef03..72573d6 100644
---- a/introduction.tex
-+++ b/introduction.tex
-@@ -142,7 +142,8 @@ \section{Normative References}\label{sec:Normative References}
-     TRANSMISSION CONTROL PROTOCOL
- 	\newline\url{https://www.rfc-editor.org/rfc/rfc793}\\
- 	\phantomsection\label{intro:CAN}\textbf{[CAN]} &
--    ISO 11898-1:2015 Road vehicles -- Controller area network (CAN) -- Part 1: Data link layer and physical signalling\\
-+    ISO 11898-1:2015 Road vehicles -- Controller area network (CAN) -- Part 1: Data link layer and physical signalling
-+	\newline\url{https://www.iso.org/standard/63648.html}\\
- \end{longtable}
- 
- \section{Non-Normative References}
--- 
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 6249dac61701..75fdb8e3abaa 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2391,7 +2391,23 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, u=
+64 *args)
+ 	struct bpf_trace_run_ctx run_ctx;
+=20
+ 	cant_sleep();
+-	if (unlikely(this_cpu_inc_return(*(prog->active)) !=3D 1)) {
++
++	// return if instrumentation disabled, see: bpf_disable_instrumentation
++	int instrumentation =3D unlikely(__this_cpu_read(bpf_prog_active));
++	if (instrumentation) {
++		printk("SKIP FOR INSTRUMENTATION: %s > %s > %p /%i =3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D\n",
++				prog->aux->name,
++				link->btp->tp->name, prog, instrumentation);
++		bpf_prog_inc_misses_counter(prog);
++		return;
++	}
++
++	int active =3D this_cpu_inc_return(*(prog->active));
++	// printk("%s > %s > %p /%i\n", prog->aux->name, link->btp->tp->name, pro=
+g, active);
++	if (active !=3D 1) {
++		printk("SKIP FOR ACTIVE: %s > %s > %p /%i =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D\n",
++				prog->aux->name,
++				link->btp->tp->name, prog, active);
+ 		bpf_prog_inc_misses_counter(prog);
+ 		goto out;
+ 	}
+diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+index 8d1507dd0724..a0a0d8b16b41 100644
+--- a/kernel/tracepoint.c
++++ b/kernel/tracepoint.c
+@@ -168,12 +168,21 @@ static inline void release_probes(struct tracepoint_f=
+unc *old)
+ static void debug_print_probes(struct tracepoint_func *funcs)
+ {
+ 	int i;
++	struct bpf_raw_tp_link *link;
+=20
+ 	if (!tracepoint_debug || !funcs)
+ 		return;
+=20
+-	for (i =3D 0; funcs[i].func; i++)
+-		printk(KERN_DEBUG "Probe %d : %p\n", i, funcs[i].func);
++	for (i =3D 0; funcs[i].func; i++) {
++		link =3D funcs[i].data;
++		int active =3D this_cpu_read(*(link->link.prog->active));
++		printk("Probe %d : %p / %p: %s/%d / %i\n", i,
++				funcs[i].func,
++				link,
++				link->link.prog->aux->name,
++				active,
++				funcs[i].prio);
++	}
+ }
+=20
+ static struct tracepoint_func *
+@@ -298,6 +307,8 @@ static enum tp_func_state nr_func_state(const struct tr=
+acepoint_func *tp_funcs)
+ {
+ 	if (!tp_funcs)
+ 		return TP_FUNC_0;
++	if (!tp_funcs[0].func)
++		return TP_FUNC_0;
+ 	if (!tp_funcs[1].func)
+ 		return TP_FUNC_1;
+ 	if (!tp_funcs[2].func)
+--=20
 2.34.1
 
