@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6562D198845;
-	Thu,  6 Jun 2024 16:07:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F141197A9D;
+	Thu,  6 Jun 2024 16:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717690062; cv=none; b=BlwM6aqS0qm0It4hS/3gfW5L6LmfUdbqHeYrGSN2npxef9RkiEVWf2/+J3jcZawrBMTjtR92ACyrdYTdyhkjQLm3nU3otuZvlIMopVvw91BfJ+1OYAfimhBZbAj4N1t9RsbudzRNgrUHwYPjGpd6hkH6ckbblB+ep2JiI5i9i1c=
+	t=1717690062; cv=none; b=XbUkZ2nYiMeLp4QEXhB2Vnv6O07sxCmtYSnix+YcIt/SrKCkfv28hGIfFdfcNoUivVj9VGezYxMCRcIKRamaT+0FNrKHBHlQfbzTwQjf/DI58JHTtn7ZYY04u8pZxUsq7V1kDm5TtQISPh0/7o0fA5DGV8j7m6Mz0HI+LOJqQWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717690062; c=relaxed/simple;
-	bh=dgy2A943dFVWcr4xyJIn5kno2jgISeZ5CYUeSn4jwbQ=;
+	bh=pFJlM8jdXj3UG/fWXquP6MM1LUsxSGUYa3PMePc46ZU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZAdrnGzks0b94XE3XIyd7SfyBICmoYujn9s16Y8BvhMxkIQs/9GCLgCY7g3dfSi39cnvcBcDkdCKxpaSjA90dn7+D5dyhe8vIICvViy2Q39FgpDK06yQiWpAHLOZehxejvCo8/5HS+B4RDl1rxUpgDRPUZofdL/n/YRgL6rqKcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smVFugak; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ipK6sCexx8+eX+z40BUuoTp3P07zOPjIDSVyMCaQZ8p+bPo3gtfMshT6BDFfp4j8Vv450zJ76/HQkz8vWj0Kr+ZT3MI/k4erUO3rcbwxXBYTnv+PAEFLeywemHRTOEyB7DoDr+8CqIQIOURVWd1JRO4rN5kBFHAOxp0Sn4lY1CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GL0MyYsb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smVFugak"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 07AAEC4AF19;
-	Thu,  6 Jun 2024 16:07:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GL0MyYsb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C9908C4AF0A;
+	Thu,  6 Jun 2024 16:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717690062;
-	bh=dgy2A943dFVWcr4xyJIn5kno2jgISeZ5CYUeSn4jwbQ=;
+	s=k20201202; t=1717690061;
+	bh=pFJlM8jdXj3UG/fWXquP6MM1LUsxSGUYa3PMePc46ZU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=smVFugakJZUO0nj/oidkIb42h9VcmHufBpHWN7b9grcgLCNkda2HrgvJ1rI77KI9G
-	 IrbmsVCY8Ia6nzpwnp7Ef548VSTil3uWx9Zs0SSr7puyXmd4uT2NuNgsdrPuQl9029
-	 ojAmB47vP4CRbgbxsZ5gHy8PDnun1E4GFdmJ9fqC2acFxBuVuQYDJEmYZQpUHtic88
-	 dTjk+LrcYMuCgg9VU83qDQNWnQpEfWa6MUY8pvJMKGFNZDOR5TeliwQ1D63jvQvifk
-	 ih2iZq+QU/uF2EoDl+OLRmYLq4xMR4ItAc9T2NEAOzGcMCi39Atc8gRwQW6/i1q+6S
-	 E5znDsLUhZe7w==
+	b=GL0MyYsbS5d5B8XsxTCJW7TsmzNBv8H8wpkc0G2ohybiu5gDj6pHrfCs5bK787h8s
+	 OEE8dqirKbzObpsDAzFWz0olS3E3AX5uKC42Sjqn1Qbnw5Ck4KPpUCftEg3otjXJ1R
+	 6ukwtmNKfgoH2wSQN4lq4WNYAYclCmJIs8sWhxOeXp3qE04wdDNd68cLaRKEWzUrQ7
+	 n7u8m1QhilQQ6qjQYH6p+tY4FLpTE3p7gEJskyXe1VQCgNQUQxzet2Moo9a3GccdVx
+	 Umpk4RxFeIippilDKgbvSczy5V+6FllNxFFjzF01z+Pcqb4RYRzcps+e66HAXSxJ90
+	 U8ydeRyt5A6GA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3DEC27C5F;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACA2C27C5F;
 	Thu,  6 Jun 2024 16:07:41 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Thu, 06 Jun 2024 19:07:45 +0300
-Subject: [PATCH v6 6/9] iio: adc: ad7173: add support for special inputs
+Date: Thu, 06 Jun 2024 19:07:42 +0300
+Subject: [PATCH v6 3/9] iio: adc: ad_sigma_delta: add disable_one callback
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,8 +39,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240606-ad4111-v6-6-573981fb3e2e@analog.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240606-ad4111-v6-3-573981fb3e2e@analog.com>
 References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
 In-Reply-To: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
 To: Ceclan Dumitru <dumitru.ceclan@analog.com>
@@ -52,11 +52,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717690059; l=4388;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717690059; l=5773;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=hVN7Wx0S4d3TmvMG178sCl53E62M7EsA/DtotGwBQqo=;
- b=LAua7k1WT20Gd1RAfZJ+1SPPfBdUeQz0SPDLW4Y3AuIZQUHMBnp98XiaQFNBeK/hXc/bHv1vN
- RLSSia25SARD6QPVBzlY0aehybhuFvkeKvW7AhpRKC8tSPOS+JXK0Dp
+ bh=PYIwAxdWS0Vaj+UTdGUxVn/BTztmg1jq4R4qJO6GvnQ=;
+ b=8E1ukGrs7w6i2cthyhlzwg5uoN4lHBTbfpuHIgAP55g59/h0buedXEPQaZXCIoKirxHSt1aIP
+ 1f6Dj/8TZmwAvQP4fnpzbYJwY9rWJgMcKrLbzKycMICitHwDwkg1gmP
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -66,119 +66,153 @@ Reply-To: dumitru.ceclan@analog.com
 
 From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
- Add support for selecting REF+ and REF- inputs on all models.
- Add support for selecting ((AVDD1 − AVSS)/5) inputs
-  on supported models.
+Sigma delta ADCs with a sequencer need to disable the previously enabled
+channel when reading using ad_sigma_delta_single_conversion(). This was
+done manually in drivers for devices with sequencers.
+
+This patch implements handling of single channel disabling after a
+single conversion.
 
 Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
 ---
- drivers/iio/adc/ad7173.c | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ drivers/iio/adc/ad7124.c               | 14 ++++++++------
+ drivers/iio/adc/ad7173.c               | 11 ++++++-----
+ drivers/iio/adc/ad_sigma_delta.c       |  6 ++++++
+ include/linux/iio/adc/ad_sigma_delta.h | 14 ++++++++++++++
+ 4 files changed, 34 insertions(+), 11 deletions(-)
 
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index e7b1d517d3de..3beed78496c5 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -555,10 +555,18 @@ static int ad7124_disable_all(struct ad_sigma_delta *sd)
+ 	return 0;
+ }
+ 
++static int ad7124_disable_one(struct ad_sigma_delta *sd, unsigned int chan)
++{
++	struct ad7124_state *st = container_of(sd, struct ad7124_state, sd);
++
++	return ad7124_spi_write_mask(st, AD7124_CHANNEL(chan), AD7124_CHANNEL_EN_MSK, 0, 2);
++}
++
+ static const struct ad_sigma_delta_info ad7124_sigma_delta_info = {
+ 	.set_channel = ad7124_set_channel,
+ 	.append_status = ad7124_append_status,
+ 	.disable_all = ad7124_disable_all,
++	.disable_one = ad7124_disable_one,
+ 	.set_mode = ad7124_set_mode,
+ 	.has_registers = true,
+ 	.addr_shift = 0,
+@@ -582,12 +590,6 @@ static int ad7124_read_raw(struct iio_dev *indio_dev,
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		/* After the conversion is performed, disable the channel */
+-		ret = ad_sd_write_reg(&st->sd, AD7124_CHANNEL(chan->address), 2,
+-				      st->channels[chan->address].ain | AD7124_CHANNEL_EN(0));
+-		if (ret < 0)
+-			return ret;
+-
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		mutex_lock(&st->cfgs_lock);
 diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-index 4040edbd1c32..d16fa081a285 100644
+index 638e2468efbf..f3088e8b4b8b 100644
 --- a/drivers/iio/adc/ad7173.c
 +++ b/drivers/iio/adc/ad7173.c
-@@ -66,6 +66,13 @@
- 	 FIELD_PREP(AD7173_CH_SETUP_AINNEG_MASK, neg))
- #define AD7173_AIN_TEMP_POS	17
- #define AD7173_AIN_TEMP_NEG	18
-+#define AD7173_AIN_POW_MON_POS	19
-+#define AD7173_AIN_POW_MON_NEG	20
-+#define AD7173_AIN_REF_POS	21
-+#define AD7173_AIN_REF_NEG	22
-+
-+#define AD7173_IS_REF_INPUT(x)		((x) == AD7173_AIN_REF_POS || \
-+					(x) == AD7173_AIN_REF_NEG)
+@@ -569,10 +569,16 @@ static int ad7173_disable_all(struct ad_sigma_delta *sd)
+ 	return 0;
+ }
  
- #define AD7172_2_ID			0x00d0
- #define AD7175_ID			0x0cd0
-@@ -146,6 +153,8 @@ struct ad7173_device_info {
- 	unsigned int id;
- 	char *name;
- 	bool has_temp;
-+	/* ((AVDD1 − AVSS)/5) */
-+	bool has_pow_supply_monitoring;
- 	bool has_input_buf;
- 	bool has_int_ref;
- 	bool has_ref2;
-@@ -216,6 +225,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
- 		.has_temp = true,
- 		.has_input_buf = true,
- 		.has_int_ref = true,
-+		.has_pow_supply_monitoring = true,
- 		.clock = 2 * HZ_PER_MHZ,
- 		.sinc5_data_rates = ad7173_sinc5_data_rates,
- 		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
-@@ -230,6 +240,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
- 		.has_temp = false,
- 		.has_input_buf = true,
- 		.has_ref2 = true,
-+		.has_pow_supply_monitoring = true,
- 		.clock = 2 * HZ_PER_MHZ,
- 		.sinc5_data_rates = ad7173_sinc5_data_rates,
- 		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
-@@ -245,6 +256,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
- 		.has_input_buf = true,
- 		.has_int_ref = true,
- 		.has_ref2 = true,
-+		.has_pow_supply_monitoring = false,
- 		.clock = 2 * HZ_PER_MHZ,
- 		.sinc5_data_rates = ad7173_sinc5_data_rates,
- 		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
-@@ -259,6 +271,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
- 		.has_temp = true,
- 		.has_input_buf = true,
- 		.has_int_ref = true,
-+		.has_pow_supply_monitoring = true,
- 		.clock = 16 * HZ_PER_MHZ,
- 		.sinc5_data_rates = ad7175_sinc5_data_rates,
- 		.num_sinc5_data_rates = ARRAY_SIZE(ad7175_sinc5_data_rates),
-@@ -274,6 +287,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
- 		.has_input_buf = true,
- 		.has_int_ref = true,
- 		.has_ref2 = true,
-+		.has_pow_supply_monitoring = true,
- 		.clock = 16 * HZ_PER_MHZ,
- 		.sinc5_data_rates = ad7175_sinc5_data_rates,
- 		.num_sinc5_data_rates = ARRAY_SIZE(ad7175_sinc5_data_rates),
-@@ -288,6 +302,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
- 		.has_temp = false,
- 		.has_input_buf = false,
- 		.has_int_ref = true,
-+		.has_pow_supply_monitoring = false,
- 		.clock = 16 * HZ_PER_MHZ,
- 		.sinc5_data_rates = ad7175_sinc5_data_rates,
- 		.num_sinc5_data_rates = ARRAY_SIZE(ad7175_sinc5_data_rates),
-@@ -302,6 +317,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
- 		.has_temp = true,
- 		.has_input_buf = true,
- 		.has_int_ref = true,
-+		.has_pow_supply_monitoring = true,
- 		.clock = 16 * HZ_PER_MHZ,
- 		.odr_start_value = AD7177_ODR_START_VALUE,
- 		.sinc5_data_rates = ad7175_sinc5_data_rates,
-@@ -914,9 +930,18 @@ static int ad7173_validate_voltage_ain_inputs(struct ad7173_state *st,
- 					      unsigned int ain0, unsigned int ain1)
++static int ad7173_disable_one(struct ad_sigma_delta *sd, unsigned int chan)
++{
++	return ad_sd_write_reg(sd, AD7173_REG_CH(chan), 2, 0);
++}
++
+ static struct ad_sigma_delta_info ad7173_sigma_delta_info = {
+ 	.set_channel = ad7173_set_channel,
+ 	.append_status = ad7173_append_status,
+ 	.disable_all = ad7173_disable_all,
++	.disable_one = ad7173_disable_one,
+ 	.set_mode = ad7173_set_mode,
+ 	.has_registers = true,
+ 	.addr_shift = 0,
+@@ -668,11 +674,6 @@ static int ad7173_read_raw(struct iio_dev *indio_dev,
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		/* disable channel after single conversion */
+-		ret = ad_sd_write_reg(&st->sd, AD7173_REG_CH(chan->address), 2, 0);
+-		if (ret < 0)
+-			return ret;
+-
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		if (chan->type == IIO_TEMP) {
+diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+index 97a05f325df7..ec34b3d1336f 100644
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -321,6 +321,7 @@ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 
+ 	sigma_delta->keep_cs_asserted = false;
+ 	ad_sigma_delta_set_mode(sigma_delta, AD_SD_MODE_IDLE);
++	ad_sigma_delta_disable_one(sigma_delta, chan->address);
+ 	sigma_delta->bus_locked = false;
+ 	spi_bus_unlock(sigma_delta->spi->controller);
+ 	iio_device_release_direct_mode(indio_dev);
+@@ -671,6 +672,11 @@ int ad_sd_init(struct ad_sigma_delta *sigma_delta, struct iio_dev *indio_dev,
+ 			dev_err(&spi->dev, "ad_sigma_delta_info lacks disable_all().\n");
+ 			return -EINVAL;
+ 		}
++
++		if (!info->disable_one) {
++			dev_err(&spi->dev, "ad_sigma_delta_info lacks disable_one().\n");
++			return -EINVAL;
++		}
+ 	}
+ 
+ 	if (info->irq_line)
+diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
+index 383614ebd760..f8c1d2505940 100644
+--- a/include/linux/iio/adc/ad_sigma_delta.h
++++ b/include/linux/iio/adc/ad_sigma_delta.h
+@@ -37,6 +37,10 @@ struct iio_dev;
+  * @append_status: Will be called to enable status append at the end of the sample, may be NULL.
+  * @set_mode: Will be called to select the current mode, may be NULL.
+  * @disable_all: Will be called to disable all channels, may be NULL.
++ * @disable_one: Will be called to disable a single channel after
++ *		ad_sigma_delta_single_conversion(), may be NULL.
++ *		Usage of this callback expects iio_chan_spec.address to contain
++ *		the value required for the driver to identify the channel.
+  * @postprocess_sample: Is called for each sampled data word, can be used to
+  *		modify or drop the sample data, it, may be NULL.
+  * @has_registers: true if the device has writable and readable registers, false
+@@ -55,6 +59,7 @@ struct ad_sigma_delta_info {
+ 	int (*append_status)(struct ad_sigma_delta *, bool append);
+ 	int (*set_mode)(struct ad_sigma_delta *, enum ad_sigma_delta_mode mode);
+ 	int (*disable_all)(struct ad_sigma_delta *);
++	int (*disable_one)(struct ad_sigma_delta *, unsigned int chan);
+ 	int (*postprocess_sample)(struct ad_sigma_delta *, unsigned int raw_sample);
+ 	bool has_registers;
+ 	unsigned int addr_shift;
+@@ -140,6 +145,15 @@ static inline int ad_sigma_delta_disable_all(struct ad_sigma_delta *sd)
+ 	return 0;
+ }
+ 
++static inline int ad_sigma_delta_disable_one(struct ad_sigma_delta *sd,
++					     unsigned int chan)
++{
++	if (sd->info->disable_one)
++		return sd->info->disable_one(sd, chan);
++
++	return 0;
++}
++
+ static inline int ad_sigma_delta_set_mode(struct ad_sigma_delta *sd,
+ 	unsigned int mode)
  {
- 	struct device *dev = &st->sd.spi->dev;
-+	bool special_input0, special_input1;
-+
-+	/* (AVDD1-AVSS)/5 power supply monitoring */
-+	if (ain0 == AD7173_AIN_POW_MON_POS && ain1 == AD7173_AIN_POW_MON_NEG &&
-+	    st->info->has_pow_supply_monitoring)
-+		return 0;
-+
-+	special_input0 = AD7173_IS_REF_INPUT(ain0);
-+	special_input1 = AD7173_IS_REF_INPUT(ain1);
- 
--	if (ain0 >= st->info->num_inputs ||
--	    ain1 >= st->info->num_inputs)
-+	if ((ain0 >= st->info->num_inputs && !special_input0) ||
-+	    (ain1 >= st->info->num_inputs && !special_input1))
- 		return dev_err_probe(dev, -EINVAL,
- 				     "Input pin number out of range for pair (%d %d).\n",
- 				     ain0, ain1);
 
 -- 
 2.43.0
