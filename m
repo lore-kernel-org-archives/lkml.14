@@ -1,114 +1,78 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta-65-228.siemens.flowmailer.net (mta-65-228.siemens.flowmailer.net [185.136.65.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735FF19750F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 15:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90ED4196C7B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 15:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717688790; cv=none; b=Zb8n3bfEwDfwT8FvJ2VMSlP51fIJgXCMwn0qeW/tPedh7kFRdchxUith444WaFApkY/We1Q3LeJJv6/5MKgrwDFdiPMZoAzij+c8zeCWdAhp1rJqXSk/fUWIb27P7mI+IpJpku4bGGYXlXSlOQrlvkBeZrU4lHBMpgbSPlSplQs=
+	t=1717688829; cv=none; b=jOWEBdyOPbMif7Cg3iSRhYFT/xvtbRiYWiltrMBfrH/ZBa+1GtI97b+6SUwv7nbLSkbvqyB7Uc3Q68SuAicyE8YtfnQcvhsk3mEh02Du7kNgRT2aTvDxcKGLYwRZfNSrBZjhzAnAsAoyWaALvjsUecvE/HvsA03mj9BlFjv6xyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717688790; c=relaxed/simple;
-	bh=1iRA7zO8aKW7XL2XJgg+W5/y8qAK8Pw9ucLgJU3LjAE=;
+	s=arc-20240116; t=1717688829; c=relaxed/simple;
+	bh=vrTXVPJSfCdHgRlQve8QZixtZSx5LZeM/+2U7ngm2Hk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZMh8dh/3vuGNjMDyACBryd/oNcIERC9xWIkkFVEE9hPwD6kDcNdt/HbagyLBrq128soqZwPZrkbNsQx5DrpOLtao9ayqhJzzx1eIkrjTyBFAFXZv4DSjSQET+Z4If5JYN+UutH4wV9tpOvUmL+VFbzwYm5Jmk2vhuZ4G4Jbtj08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v5Ct1XvM; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=Da3jB68appiieOv8y8qZhs1yzA0/nVgvAXeFuFRyBp3Lhcd2xSqEKX/QjMjk5rjBAcSJqXWB8YZ4lpr1FjYvYB3+HYxBGncoeoLHHqf1vwT6L+s4nFnmQHLjVg8fxz/PTXhf4EzbTVXekJjA08BeIW+OnnrfQe6OsQU0mRIVSlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=lsUYfAPW; arc=none smtp.client-ip=185.136.65.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v5Ct1XvM"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2eaae2a6dc1so22212981fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 08:46:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717688787; x=1718293587; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3jZaZJv5zlvCixCJOj9oO9rxv5ZgEpgWsT6U+ox/0gg=;
-        b=v5Ct1XvMTXDuhBMQGBK9XFcLDVgVQYjLNpXmYIzsamIWgIaAtaZ248t5ebZ009ho5i
-         5pbx/FuZprwH7mcIQt+4nAL+yq14aetBqkJng6h7bcSSGoq6kExVpyvoEVlxd3PtEArO
-         4L1BZRWUhZEA28On4SoQ4EV8BEVcpD4KBG4cHRQhLR0h8sCTZIkK8RYQ2QFpjASxaQwP
-         ccZ4jlCo8hnOaxO8ESTafczECW6qlanHHYrOSsZr9EYt6s3OeAf3YVve1fQbjLdzKYu7
-         qMHbQSyENBSc/yHyG+Ue0wIRjC0TSDQb7btOZc6qJTzCZhTuKhO/Di3hhhFXd1cFcFcZ
-         Yggw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717688787; x=1718293587;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3jZaZJv5zlvCixCJOj9oO9rxv5ZgEpgWsT6U+ox/0gg=;
-        b=WKI6IkPVyx05GYwVXlLcYFHbiH7x0JfQdoM7zMinEabawk4Qc5upkGDylX6+ptwY07
-         K6haEIJm0cmBHIUkS02mpElLsqo7iyzjMcDxoAsqszLuZKnra8MUeY+sycIFpdPsiNXM
-         MH+7qqrZYROSuyXG7cq1g5fH/Ukfr986p32ifP1sr8ozMxykTXok0uWlYq8j1mEAbsWC
-         SJyCzUrtr8MhmBIxtc8ccei7OdHII0P48C8hBXrWdYwECYNU6Y2kwQlR0pyuv4UXS1cw
-         KqLf4zsnZKNo9jjs/4tG4pDGfzYyLiqCzpAkLIBF9HdcUSaywnKtWdEjj3IcYpY4WwBn
-         P73Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUXywNkPLBMemmfJj9Be5TrrEmUt3QIxh/aWMAuc8ER5WdPcWMN+Qx5UWwfjlhuxqDsqFdRe9pNTJzzQGatoCeOvmYeTC+bg5kaKoug
-X-Gm-Message-State: AOJu0Yz0Df3SsCSCWuR6SnbFCXSHmWqgL+w17uTK2x+9uuMBU7YndSYK
-	74hTqlmQVuR8+yyLCPx6xqZWPA05KSoQdF0t+jxI2Y2ImVaKjFy+oEYmg/96AbE=
-X-Google-Smtp-Source: AGHT+IF3Olj2yADWsiyPudNQTNLEdRBwLQ++SjfMUpeeG8B4vbwLAJXJod0AwM3jfQjB1/evd0dAEA==
-X-Received: by 2002:a2e:bc1f:0:b0:2e0:5d7:a3a6 with SMTP id 38308e7fff4ca-2eadce281bbmr969981fa.9.1717688786585;
-        Thu, 06 Jun 2024 08:46:26 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:f9a9:3740:b905:9995? ([2a05:6e02:1041:c10:f9a9:3740:b905:9995])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-421581020d2sm59821695e9.11.2024.06.06.08.46.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 08:46:26 -0700 (PDT)
-Message-ID: <3ab5357f-9577-4985-b09e-b686e66b7b5e@linaro.org>
-Date: Thu, 6 Jun 2024 17:46:25 +0200
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="lsUYfAPW"
+Received: by mta-65-228.siemens.flowmailer.net with ESMTPSA id 2024060615470555a7770650496feadb
+        for <linux-kernel@vger.kernel.org>;
+        Thu, 06 Jun 2024 17:47:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=diogo.ivo@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=MttvI1OKyaN+SBY2+k/1ktddeHssJ6lmI4v9SdChLC0=;
+ b=lsUYfAPWDB4NfBDbUQHnP3B0Irm1FG2hJ4NkPfiW2356Kl+PKiLCgSo9Fmq/Zj0sSJgP7w
+ EbzAHYzKaXAWz2ScD6+3Uc+DyDDpRtMNVoj7O35SNaz5ehZMGvS364tB54gxJ2E+2A9yF1H4
+ 5Grt4xxHS7jhIS3VD9EJ/OVILg4Rs=;
+Message-ID: <a11a3cf2-5e25-471f-ad74-4834d3540e1d@siemens.com>
+Date: Thu, 6 Jun 2024 16:47:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] thermal: core: Do not fail cdev registration because
- of invalid initial state
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>, Linux ACPI
- <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Lukasz Luba <lukasz.luba@arm.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>, Laura Nao <laura.nao@collabora.com>
-References: <4569763.LvFx2qVVIh@kreacher>
- <5f93f034-f781-47e0-b8ce-3c8407a709f7@linaro.org>
- <CAJZ5v0hkOvYL66D+tCRJxbp=XqV59yeZ0dA1Kxoczkcpe5X9sA@mail.gmail.com>
- <CAJZ5v0joTyOcRU0FyaHEEYEbiPbbNSFzW3P7eJJ4MM5QdhQR2w@mail.gmail.com>
- <90a9df3e-153f-4972-8086-13c21a574763@linaro.org>
- <CAJZ5v0jurx=TfT2GHCeMt7xhTFRQwpS_H6-fDss=bt+HodvBoQ@mail.gmail.com>
+Subject: Re: [PATCH] usb: typec: ucsi: treat get_pdos not supported condition
+ as info instead of error
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <mpearson-lenovo@squebb.ca>
+ <20240604194056.16625-1-mpearson-lenovo@squebb.ca>
+ <2midmmssv2i3plvtc2hajar6alfvggpnbvgpmldspelxsnjvcl@qiblhwat6n3p>
+ <a517bb13-9772-49f9-b75c-8fa4d98b2ae9@app.fastmail.com>
 Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <CAJZ5v0jurx=TfT2GHCeMt7xhTFRQwpS_H6-fDss=bt+HodvBoQ@mail.gmail.com>
+From: Diogo Ivo <diogo.ivo@siemens.com>
+In-Reply-To: <a517bb13-9772-49f9-b75c-8fa4d98b2ae9@app.fastmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1320519:519-21489:flowmailer
 
-On 06/06/2024 17:15, Rafael J. Wysocki wrote:
+Hi Mark,
 
-[ ... ]
-
-> OK, so arguably the driver could set the initial state of the cooling
-> device to 0.  That may or may not be the right thing to do depending
-> on the thermal state of the system at the moment.  Then it would need
-> to wait for the governor to pick up a more suitable state for it or
-> leave it at 0.  This could address the particular case at hand.
+On 6/5/24 6:09 PM, Mark Pearson wrote:
 > 
-> However, should the core fail the cooling device registration if it
-> gets an error from .get_cur_state() to start with?  It didn't do that
-> before.  Indeed, it didn't even call .get_cur_state() then in the
-> first place.  Moreover, the current state of the cooling device is not
-> even needed to register it except for the initialization of the debug
-> code for that cooling device, so why fail the registration of it?
+> @@ -645,9 +645,13 @@ static int ucsi_read_pdos(struct ucsi_connector *con,
+>   static int ucsi_get_pdos(struct ucsi_connector *con, enum typec_role role,
+>                           int is_partner, u32 *pdos)
+>   {
+> +       struct ucsi *ucsi = con->ucsi;
+>          u8 num_pdos;
+>          int ret;
+>   
+> +       if (!(ucsi->cap.features & UCSI_CAP_PDO_DETAILS))
+> +               return 0;
+> +
+>          /* UCSI max payload means only getting at most 4 PDOs at a time */
+>          ret = ucsi_read_pdos(con, role, is_partner, pdos, 0, UCSI_MAX_PDOS);
+> 
 
-Indeed, the simpler way would be to not register the debugfs if we can't 
-get the initial cooling device state, with a message, so the driver 
-responsible of that will appear and hopefully encourage someone to fix it.
+Seems good to me too.
 
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Best regards,
+Diogo
