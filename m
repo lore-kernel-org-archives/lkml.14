@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AA3768E1;
-	Thu,  6 Jun 2024 06:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7AC19D8A1;
+	Thu,  6 Jun 2024 06:41:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717656026; cv=none; b=l8z5ccPvW83ZjP9MwEQUliJMOgWD99JYRiaODytlceZjBWQ/6O0/jaj68jAMN1yKB1OnjKSwLISxOtCpeLzEVKxn5F1QuK0wj0G5i/RkjC8uhNM9vO8Nse7WHjnWHsWd/rDPrZ5qeAxP/H9DVDO5m6y7I70vZJmdA6A/+MvWzas=
+	t=1717656085; cv=none; b=LaNZrmnKXkdKM7dbRtSSd4xlhMK4C54dQ6lRN9u90KeyCK1AJR9ctbIj5JYAXBwc1Kh2obaYW+JGZAPzvzDODKylKhVHKuVXuNbeevt1YN3wtjXurMwRRMHflzl8oGIoXohYOh1nb5cajAPbJYRRcxuQu/HvASUmfPcuIUg8nm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717656026; c=relaxed/simple;
-	bh=BQUTtUE0GlUdPhQO0ro2WyOZ35L4blkmwQj67XovYDs=;
+	s=arc-20240116; t=1717656085; c=relaxed/simple;
+	bh=u1Ua0OCeUX5MT5pyXeBzHix33dU1A3JIMQ8y9wVfqdU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u8ISGh1hTRXGQrwtagQyPfr1YnPPLDNYJ0xw7rZmymbHP4lyWVTNN9eBpm7aqAXlY4PMxmDOdYM2/swyhZcGi9PeKwwJiqvVTnm6HqIG+GR3K/ihb1o5XuyBeuVkRhGr6c8gImO7faskTc9fvOBMYzkRkLbomwplOtqe14eLPGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSCvo6kx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HDeEEd/xgXRtdcU+Mg748vcYSpzDGnbDWDsI1mjpKATDOygVNuxojYa+AzCYP0wJWcDRhUDWhzy4z64ihcaRNXmJTOvkX8Wwxzf1tPs5PniLbtlIRtnuKKGAMbDbhFjwqEaYY3tLJae9Xn6Um5D88M+yPK58FJUd+YSPuO3LnbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WUitNi1M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSCvo6kx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34A30C4AF08;
-	Thu,  6 Jun 2024 06:40:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WUitNi1M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17A1EC2BD10;
+	Thu,  6 Jun 2024 06:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717656025;
-	bh=BQUTtUE0GlUdPhQO0ro2WyOZ35L4blkmwQj67XovYDs=;
+	s=k20201202; t=1717656085;
+	bh=u1Ua0OCeUX5MT5pyXeBzHix33dU1A3JIMQ8y9wVfqdU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XSCvo6kxZ4Uw6qHkNNey13WUa48GM3oDWy56ZG4bv5Ki4uJHnAgZP3YfS/G6Am/8b
-	 8KEQU2dChJYd7QbryuXmzXtMSLSkw+92B/mbndiaGOR+a9filNCbguD5P57T9NhzCc
-	 9VHQBgeu4X+1F6nn8CrKHIJ9Omv4g4esHBdOsOLkxGn19G1upJ79oB+jPcvKbLuvL5
-	 ThshJM2BAVcKfd9Jm8TqncJfL6rNU1/D8x6awuGyjCrpDO429U0f728nPRbu2kfP7m
-	 SuMO/R/h+MyPVeyHSeJNT9sVxWLBKF+Hm+vkpw0H5vBSQeNysmgiht7DsEDHUhOMSN
-	 asG/UETxRUBlw==
-Message-ID: <745f15b4-279b-4a6a-a6cb-58ac726f68b9@kernel.org>
-Date: Thu, 6 Jun 2024 08:40:21 +0200
+	b=WUitNi1MxjVRHcBSCq7PFZcxaUgvlGQiCymu/UlrXWgQDQDYHfyvAIthSpG2x9TqG
+	 Sd2x1al+fpQOM5fpj+ciYtVDP7qbLeLWerRP0cFbTWSONeHZr5wLiYwuIXHumjwRjj
+	 KjDAhae0fIZQFgnMA9KjdsIODh1ILV3VA2LnKzKb81OzgqpSqas3tggHDyembJSx3C
+	 BuKvUpJk+vBHQ2icB/c5igJC4Um/WJqwmbmueszIyQ/IzBsBRLeqpToY6fCx3kHG4X
+	 fCwcii6ogJ6eN+/dXg76NYXKRgQhrJbPSjBqN+B//IG3qrkeHSOeV37oL4zcMHS6L8
+	 6luC0r/DvlELw==
+Message-ID: <fcff0181-b6de-4e47-b7ff-47baac061b3e@kernel.org>
+Date: Thu, 6 Jun 2024 08:41:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] dt-bindings: clock: rk3128: Add HCLK_SFC
+Subject: Re: [PATCH v2 0/5] Add SFC support for RK3128
 To: Alex Bee <knaerzche@gmail.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
@@ -44,9 +44,9 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
  linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 References: <20240605205209.232005-1-knaerzche@gmail.com>
- <20240605205209.232005-3-knaerzche@gmail.com>
-Content-Language: en-US
+ <20240605205209.232005-6-knaerzche@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -90,18 +90,28 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240605205209.232005-3-knaerzche@gmail.com>
+In-Reply-To: <20240605205209.232005-6-knaerzche@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 05/06/2024 22:52, Alex Bee wrote:
-> Add a clock id for SFC's AHB clock.
+> This series adds support for the Serial Flash Controller (SFC) found in
+> RK3128 SoCs.
 > 
-> Signed-off-by: Alex Bee <knaerzche@gmail.com>
-> ---
->  include/dt-bindings/clock/rk3128-cru.h | 1 +
+> As without using some "id holes" we would run out clock ids in the binding
+> and would have to touch the ABI, I added patches which removes the
+> CLK_NR_CLKS macro and uses the recently introduced
+> rockchip_clk_find_max_clk_id helper instead to find the highest clock id.
+> 
+> changes since v1:
+>  - added patches to remove CLK_NR_CLKS (Connor)
+> 
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Do not attach (thread) your patchsets to some other threads (unrelated
+or older versions). This buries them deep in the mailbox and might
+interfere with applying entire sets.
+
+You sent now v2 immediately after. Confused.
 
 Best regards,
 Krzysztof
