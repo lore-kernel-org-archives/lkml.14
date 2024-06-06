@@ -1,122 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EBA13AD06
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 08:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 178C513AA48
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 08:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717662068; cv=none; b=WwYK4uET23OCDeSuM5h/7B/smxAc4fgYpIukJ11pYSJ2Ui/dqaBIuCM03Mmn2ZmCMNnPior53nsRhEBp5+zM/E6hJ+s5Dqp/rJKvzH0cEoTDfD5kyChMEB7v98zk6uz2k3Rl9S4tvqaRyW01OHecPJYE32a6fHUqP/hJjaYZhWY=
+	t=1717662096; cv=none; b=u97FDimjhhw6T1Tw1az0JCzhSqRgkWlT0k4lKJJB2kvTHXolhRhTZM28O7gRhIf+FPdeJY6W+Bxj4HqbiEAj7YbnIZxUvP6Ku3rah3Sv2FXfX4RWAP/65yZxV2Fc51pNwij7JJv7aQmrnyyfKtTasP6vqmvwfhU7xqXtDm6QoAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717662068; c=relaxed/simple;
-	bh=OOkSy4F0JYT9inqys1CD0ozUVyy8lyS01yw14ls74nQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jLzusmcdME6oEPZFic2CwVGVw3lbrzyeXbLrke8Yvs9NkPKHlKwsKj3Qnqa7sHQXW/XGi0dC0E6kSf1pA38u74B1r3mO145AxC8+F80/XEeQTmMDvMbRduZ+J78xy1zdhe9OdXsljockI4cq3gFkLRJvcw/jofCwew+fQqtdXvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NA/LBhby; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717662096; c=relaxed/simple;
+	bh=sRR+OoNe+CJbOABxoZNaQT2CCvoMwl0YHxGhGd8xLdY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=oqtY6QIHP2SxEZC+MBF1bogM1z9jJleozArT/u1MtqOZZVloU23a24tFnPbplw8iU7nBVwHrIgmPlE44n7kKP8kblnivyo8E1jMxDGK5H5+bR6YNdcwH+9ghhfxRDn7DvrWZU9PLMDRUIOdo1quBhu74TvzIG/Kxd527uXEWHno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UeziEwaO; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NA/LBhby"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717662065; x=1749198065;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=OOkSy4F0JYT9inqys1CD0ozUVyy8lyS01yw14ls74nQ=;
-  b=NA/LBhbyRlq8zjZ+IVG/rguRm872p8bxgOShNWcNKYSxdHW0DcX3kg25
-   vBLzCEou0XNFChQcnggqP7RKFjRFGRsirsKnDvrB/zP6bZgUTnnz+Zzdg
-   4eX7xicAPmHkeXsL1XaJiTYXe/ApSCrlrDnpDUEcaOzmemrdW42cODxNN
-   uhMelHyWTGlHCufEYRr9KCuX5XFH0lLnQHTrR+dOXG8YXVHTdggGPcUch
-   aUcNCVsGxnctz9/xHuWKDaWL50zsPybQcdx6ckuhZonWGCKeNWW1ZuncZ
-   QTC1ljHPHYdpdf7Ay8uNiYJQyeSGCJSYMduhhNPVPlWl97AiGID2BRTEm
-   A==;
-X-CSE-ConnectionGUID: o4iYyuwWT/qM2OTgB3n+2g==
-X-CSE-MsgGUID: gfs+kcj2T3SLyPwiYBdkIA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="36842099"
-X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
-   d="scan'208";a="36842099"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 01:21:05 -0700
-X-CSE-ConnectionGUID: RBEN41ANSAuJlHmEns1ziA==
-X-CSE-MsgGUID: 70o4qeZYR4ChidCq5p+urQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
-   d="scan'208";a="42813100"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.246.9])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 01:21:01 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: pengfuyuan <pengfuyuan@kylinos.cn>, Liviu Dudau <liviu.dudau@arm.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, pengfuyuan
- <pengfuyuan@kylinos.cn>, k2ci <kernel-bot@kylinos.cn>
-Subject: Re: [PATCH] arm/komeda: Compile DEFINE_SHOW_ATTRIBUTE() only when
- CONFIG_DEBUG_FS is enabled
-In-Reply-To: <20240606075846.1307007-1-pengfuyuan@kylinos.cn>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240606075846.1307007-1-pengfuyuan@kylinos.cn>
-Date: Thu, 06 Jun 2024 11:20:58 +0300
-Message-ID: <87ed9abhxx.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UeziEwaO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+	Content-Type; bh=WY9vcFIYHyY28AUyfY/N7+e9B4gmGc0udXw0k/OYO9k=;
+	b=UeziEwaOwbjCFAPmXl0FPNjppRawF29CZT5fHWOO8vTwSAttCff212N6ttmEV3
+	8oguGxFuvghWAbyM44a4GkP29I2Ds0tUHxGL7g80Nr5ZS93MqXASBAWOtf75i6ml
+	9rt/3AhIAcePhaMkivMCfgE1jMEYqx8ohTZHEJWbGI//M=
+Received: from localhost.localdomain (unknown [111.48.58.10])
+	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wD3P6dUcWFm9NsACA--.11320S2;
+	Thu, 06 Jun 2024 16:20:37 +0800 (CST)
+From: huanglei814 <huanglei814@163.com>
+To: sudipm.mukherjee@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	huanglei <huanglei@kylinos.cn>
+Subject: [PATCH] parport: Increase buffer max length to avoid memory out of bounds overflow
+Date: Thu,  6 Jun 2024 16:20:28 +0800
+Message-Id: <20240606082028.15772-1-huanglei814@163.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3P6dUcWFm9NsACA--.11320S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ary7CFWfZw4kGr4UKr45Jrb_yoW8Gr4Upa
+	98Krs0krZ8t3yUGw4kZwsI93yrXa97X3W8WF17G34akr4jqFn7ZFn0kF9FkF9Ygrs7uaya
+	grs3Kr1UCr4jkF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UgYFZUUUUU=
+X-CM-SenderInfo: xkxd0wxohlmiqu6rljoofrz/1tbiLBn19mXAmVF0ywAAsk
 
-On Thu, 06 Jun 2024, pengfuyuan <pengfuyuan@kylinos.cn> wrote:
-> We do not call komeda_debugfs_init() and the debugfs core function
-> declaration if CONFIG_DEBUG_FS is not defined, but we should not
-> compile it either because the debugfs core function declaration is
-> not included.
->
-> Reported-by: k2ci <kernel-bot@kylinos.cn>
-> Signed-off-by: pengfuyuan <pengfuyuan@kylinos.cn>
+From: huanglei <huanglei@kylinos.cn>
 
-An interesting alternative might actually be to remove *all* the
-CONFIG_DEBUG_FS conditional compilation from the file. Since the debugfs
-functions have no-op stubs for CONFIG_DEBUG_FS=n, the compiler will
-optimize the rest away, because they're no longer referenced. (For the
-same reason, I don't think this patch has an impact for code size.)
+Most of the time，will use 64 bit address.
+such as port->base=0xffffffc010e21280 and then use
+len += sprintf (buffer, "%lu\t%lu\n", port->base, port->base_hi),
+port->base convert to string is "18446743799114896000" add
+port->base_hi is "0" and "\t" "\n" len will be 23.
+But buffer the original max length is 20, length 23 is out of buffer.
+So to make sure 64 bit address will not experience buffer overflow,
+need increase buffer size to 32.
 
-The upside for removing conditional compilation is that you'll actually
-do build testing for both CONFIG_DEBUG_FS config values. Assuming most
-developers have it enabled, there's not a lot of testing going on for
-CONFIG_DEBUG_FS=n, and you might introduce build failures with the
-conditional compilation.
+Signed-off-by: huanglei <huanglei@kylinos.cn>
+---
+ drivers/parport/procfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Of course, up to Liviu to decide.
-
-
-BR,
-Jani.
-
-
-> ---
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> index 14ee79becacb..7ada8e6f407c 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> @@ -21,6 +21,7 @@
->  
->  #include "komeda_dev.h"
->  
-> +#ifdef CONFIG_DEBUG_FS
->  static int komeda_register_show(struct seq_file *sf, void *x)
->  {
->  	struct komeda_dev *mdev = sf->private;
-> @@ -43,7 +44,6 @@ static int komeda_register_show(struct seq_file *sf, void *x)
->  
->  DEFINE_SHOW_ATTRIBUTE(komeda_register);
->  
-> -#ifdef CONFIG_DEBUG_FS
->  static void komeda_debugfs_init(struct komeda_dev *mdev)
->  {
->  	if (!debugfs_initialized())
-
+diff --git a/drivers/parport/procfs.c b/drivers/parport/procfs.c
+index bd388560ed59..6722ae620b68 100644
+--- a/drivers/parport/procfs.c
++++ b/drivers/parport/procfs.c
+@@ -117,7 +117,7 @@ static int do_hardware_base_addr(struct ctl_table *table, int write,
+ 				 void *result, size_t *lenp, loff_t *ppos)
+ {
+ 	struct parport *port = (struct parport *)table->extra1;
+-	char buffer[20];
++	char buffer[32];
+ 	int len = 0;
+ 
+ 	if (*ppos) {
+@@ -171,7 +171,7 @@ static int do_hardware_dma(struct ctl_table *table, int write,
+ 			   void *result, size_t *lenp, loff_t *ppos)
+ {
+ 	struct parport *port = (struct parport *)table->extra1;
+-	char buffer[20];
++	char buffer[32];
+ 	int len = 0;
+ 
+ 	if (*ppos) {
 -- 
-Jani Nikula, Intel
+2.17.1
+
