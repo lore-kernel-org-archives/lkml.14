@@ -1,109 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DF0195B07
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA107195B24
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679653; cv=none; b=WBeuJxeazTAHvm/6vwMszHvW1CF3Y2YDYX7jJsftSYDvoppQGgRmSDDtKGmiDkeuquS+OXWJvkepWSxk6j80bwHqbCoVyC0oN9wR2paXlCyxvC7QN1Szsaz/FixRk+awOqbDNHkN+4eeVNTeSelSWZ8V2uo7UhVaOgTOWbVVIvE=
+	t=1717679681; cv=none; b=JtbzKwbo/ifPb/SwCq0bslaIgFXPriRx4tQXiHl267UeNmbD1ks1tUA9ohz5tA1qAaTmA4bSyAMe0vUYXH0mNSmB/q4Rh+nCjHmLDZDJPowtt1v+V2khoHMvVqArUtKF5ojgQoBhr6opYspY0O7CbRjiFcDKQo+iWnD5Uz6kU6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679653; c=relaxed/simple;
-	bh=lfT8JPB4EPm7jxr8JpU0YG0ocWc9/9yGGGGFE8+4XY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M3iw7MMTfuHz5RSzborPrYD+/fgGC26y4FkFdTgx5jO+AKaRys1BgMZpWkVZnGiFrhBXBruxBUEElCmt9RuGvKEzplp3IIX3fhaRYZMWiksISuZYDePCjW7NUTkNmzY6Bhxv8ZHtWmdZsuF2qXIfcCrNXi+477EeRuXSQXmxcbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OUJRY/qS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717679681; c=relaxed/simple;
+	bh=DSAnsYiVzVWKlnHu2xNJGJ3BVbSsFa3BBE2oC217PiM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JY4vcHhxGyXg/MFas7ifqnagXxgVBJUkJ4VpqshbtH2G9b939jgkF0AEaGvGbnSr/2jjDjYC8BWwk/5AqXOo0I1YA9/rrG428JI/wt0+2zV3CqxCkDFijW6UVH1/OPrZXyInrOi4K6lhA2ju3ihB3RNV206axVkQXqkC98gPBWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F3hXU3vc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PCjwzUTv; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUJRY/qS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717679650;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F3hXU3vc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PCjwzUTv"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717679677;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3sv8BP20qLzYNDYwYiUPNVzPr3CjiidPi2llEU3NezI=;
-	b=OUJRY/qS7ZSjw0TzdB3omBtbT0eCpsbK/ZCIK2DmC5MOL9aUpyzdGcP3HRbgXt2Y1Wu1cl
-	R+9PYaQJfGLxtQJmWk8d84G1rpnaDqrMoJAL8roCCnM85qv9z+wIF5xFMVzMOAbrODPG+D
-	mNgETbImuV6IAjFXQb6ww5TyUWhIsig=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-624-1h53aZBQNXmSqM6C9Ryh9w-1; Thu, 06 Jun 2024 09:14:06 -0400
-X-MC-Unique: 1h53aZBQNXmSqM6C9Ryh9w-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6ad77c0aa3dso566226d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:14:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717679645; x=1718284445;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3sv8BP20qLzYNDYwYiUPNVzPr3CjiidPi2llEU3NezI=;
-        b=upK2uLGNm8vruWQnbW+FMJoJp0JhMAlBacE2xdxLI40lDTM4fm1aUcfYPocpPYa0wC
-         DFRANPktggcD3G1F1l0unRVg31bjYm3AD7KqwJ4eXwN2OmFzulXLzKut0WSaW1L75Law
-         brl1RW07M1GNPeQq4kaLJXv0SsabbiuOy2tl1N0+W7JP/FjqAE3ml8DI+XmwsSsJzzRs
-         ktCG3fLFYJj0cWJ/eHy21p9eUi3eHnfuLkkwQhJBXPCnDL+GqXFvELsg1EcQVocOfQNa
-         /fv3Io46pB2oFsC9xBDbeQWiqBM5TGUgVfy30p3PSyXINR+lnZsbADsOWnHcDE+wWknw
-         1+GQ==
-X-Gm-Message-State: AOJu0YzvUOVEUjDRgD/5+RzkZFmukp2PghaB8vvGkQy97xZrlrmacImG
-	ni3XgiCDeJAkxGTtz4VKdbNKm5e2l0pscXAPge+pvC7iLLHHmnb0ih7HlR6mot2xfvU1egTPtgl
-	HUeZ269vwpGma8Qlf2XM5GnvosdDb6Pa9IVoT24KntFC/cC3g+LLwlcU1/H1Q7w==
-X-Received: by 2002:ad4:5d6e:0:b0:6a0:a4eb:bcdc with SMTP id 6a1803df08f44-6b030a7e3e9mr57081076d6.3.1717679645349;
-        Thu, 06 Jun 2024 06:14:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF0c6hpgSWYYwXOOmcrAHLoDdT34ON7mNLV662Q3lKDSB8ab5uSZaStQg0NJ8IsQpIZHyk+AA==
-X-Received: by 2002:ad4:5d6e:0:b0:6a0:a4eb:bcdc with SMTP id 6a1803df08f44-6b030a7e3e9mr57080496d6.3.1717679644489;
-        Thu, 06 Jun 2024 06:14:04 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b04f9f8343sm5986836d6.126.2024.06.06.06.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 06:14:04 -0700 (PDT)
-Date: Thu, 6 Jun 2024 09:14:01 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Dan Williams <dan.j.williams@intel.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: Re: [PATCH] mm/page_table_check: Fix crash on ZONE_DEVICE
-Message-ID: <ZmG2GciaQRTk-Yam@x1n>
-References: <20240605212146.994486-1-peterx@redhat.com>
- <20240605150543.87c81189fa7cb562e73fa0b8@linux-foundation.org>
+	bh=yAsZ/41lOcaQ90q2I6nOsLXJ1jn8OTLuONqlVOl/Qwg=;
+	b=F3hXU3vclt3wgaEdMhe8f2JPD/jGLGgpsWebOgeBHHa+8kjuavv10RP98lWXdLB9khxweb
+	bx0iAHU9PkIMvFi5XyqKXa8cwEBFbvzPm+AMrc6hAP/5XGlvfaE8Pj6zulkl9mW6N1h9gj
+	4aQhu3iBzJjpDr7TUcAvfMzCwfDHej3zV2rBsKISWob/PgQL2BsMdL7vx4wCFeSkEa/r32
+	c2Z/ptEBHyb3oOafTpZhmW+wCKarLgVkYP9wLNM8QHSldv1iK0+xiVwmh//mM5IYJA15uw
+	RVe/NREYcdiCrtORtLX9OOfXbaCkiubx2lFztT5rBTJObbNd//3VHg4uX6lKqg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717679677;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yAsZ/41lOcaQ90q2I6nOsLXJ1jn8OTLuONqlVOl/Qwg=;
+	b=PCjwzUTvkzTIUnlN4ZroszFujEBS7bTxk+AsI0SO3II+nx1H9Iud162t4hji4zxpl2163r
+	/L2LAj8lnnwsHdAg==
+To: Phil Chang <phil.chang@mediatek.com>
+Cc: alix.wu@mediatek.com, angelogioacchino.delregno@collabora.com,
+ frederic@kernel.org, jy.ho@mediatek.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ matthias.bgg@gmail.com, phil.chang@mediatek.com, tglx@linutronix.de
+Subject: Re: [PATCH] hrtimer: check hrtimer with a NULL function
+In-Reply-To: <20240605135106.16065-1-phil.chang@mediatek.com>
+References: <87plsvvgpn.fsf@somnus>
+ <20240605135106.16065-1-phil.chang@mediatek.com>
+Date: Thu, 06 Jun 2024 15:14:37 +0200
+Message-ID: <877cf2i56q.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240605150543.87c81189fa7cb562e73fa0b8@linux-foundation.org>
+Content-Type: text/plain
 
-On Wed, Jun 05, 2024 at 03:05:43PM -0700, Andrew Morton wrote:
-> On Wed,  5 Jun 2024 17:21:46 -0400 Peter Xu <peterx@redhat.com> wrote:
-> 
-> > Not all pages may apply to pgtable check.  One example is ZONE_DEVICE
-> > pages: they map PFNs directly, and they don't allocate page_ext at all even
-> > if there's struct page around.  One may reference devm_memremap_pages().
-> > 
-> > When both ZONE_DEVICE and page-table-check enabled, then try to map some
-> > dax memories, one can trigger kernel bug constantly now when the kernel was
-> > trying to inject some pfn maps on the dax device:
-> > 
-> >  kernel BUG at mm/page_table_check.c:55!
-> > 
-> > While it's pretty legal to use set_pxx_at() for ZONE_DEVICE pages for page
-> > fault resolutions, skip all the checks if page_ext doesn't even exist in
-> > pgtable checker, which applies to ZONE_DEVICE but maybe more.
-> 
-> Do we have a Reported-by: for this one?
+Phil Chang <phil.chang@mediatek.com> writes:
 
-Nop, I just hit that when I started to look at the dax issues.
+>>> simillar with timers, check for timer->function == NULL.
+>>> If the pointer is NULL, discard the request silently.
+>
+>> Can you please explain, why this change is required?
+>
+>> The statement "similar to timers" is not a valid explaination as timer
+>> list timers and hrtimers are two different things. The function pointer
+>> for timer list timers is explicitly set to NULL in shutdown path to
+>> prevent unwanted rearming of the timer. For hrtimers there is no
+>> shutdown function implemented and function is never set to NULL by
+>> hrtimer code.
+>>
+> The timer->function is provided  by caller, which is invaild if fuction is NULL, 
+> and currently, the hrtime code does not perform any checks to validate this. 
+> Passing a NULL function can lead to a system panic, with a backtrace likes:
+> ```
+>    __hrtimer_run_queues+0x1d8/0x3b8
+>    hrtimer_interrupt+0xdc/0x3a0
+>    arch_timer_handler_phys+0x54/0x94
+>    handle_percpu_devid_irq+0xb8/0x308
+>    handle_domain_irq+0x78/0xec
+>    gic_handle_irq+0x50/0x10c
+>    call_on_irq_stack+0x38/0x54
+>    do_interrupt_handler+0x40/0x98
+> ```
+> This backtrace does not clearly indicate the source of the invalid usage of hrtimer.
 
-> 
-> And a Fixes?  It looks like df4e817b7108?
-
-Yes that commit should be proper.
+To make it more clear to the inexperienced hrtimer user that it is
+mandatory to initialize timer->function to be able to use hrtimers, but
+to prevent the kernel to crash, please add a warning in
+hrtimer_start_range_ns(). The check can be done without locking the
+hrtimer base. When the function pointer is not set, return directly
+without doing anything. So this above mentioned backtrace will no longer
+appear, as the timer is not added to a queue.
 
 Thanks,
 
--- 
-Peter Xu
-
+	Anna-Maria
