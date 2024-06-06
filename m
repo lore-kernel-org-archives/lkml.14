@@ -1,53 +1,55 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B1219596A;
-	Thu,  6 Jun 2024 17:00:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60A21991AB;
+	Thu,  6 Jun 2024 17:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717693231; cv=none; b=c6HK0hV+eEA+Fme+gk6TijyxxfiUtEHhyRjdFNpVnIMoeoVLYkhtBFYx+xFTMCmiYUxiy47c9V3wn16Ixypv6JO1BJpbGdfjPOUTKiJjyG8siruNPj4y0WImBbmt1/cFROTm1M482SfFjAX8XaLbepZa3puZrMHTqAToCktKnEU=
+	t=1717693235; cv=none; b=TzAgtqUaAU+b7y6CJRnlZtcLwaEtvjPvjg6ymnbEkifid/iJwJrj8PrGtum5IykMRNAEr7DDjxq/MTWFqPFSyVkGV8SC6xio+dwgJgKwI6ivdUcG+yk84dv4nZ41A4tgRERkTiMssW1RhOeCc8R10BDIpV2WYxyodICca7V7bAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717693231; c=relaxed/simple;
-	bh=61gY3hTQriREDzwpsfPz5vE82xlNQq0cH2aNCderw3g=;
+	s=arc-20240116; t=1717693235; c=relaxed/simple;
+	bh=m6r75pHrYZ+QlMMG17vHAwdWJbiWhlnYmf9K2PsWwnY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MWQh2mVhCuDcx3GWm2FPurFEltZzHqi39/ZI4iiCMrLYVPA2WHF/qeaF+F5EnJ3q23zL0sVbr6bEZOBaxl2sk08ODAaPQjfWNmg7y3bQjNTnEEq4a3bILTNKLIJACY61cfTZUuSQjW5KmoP2kWQVRz/kjb8MsVhxSl9ooNZxTCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hANdAVyw; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=DGIIYGGpjr1MUyTqhz0kDBM8wbWPhhhytfBIo0FFcV3rV3OX2gnsDk7CVRDOa+cTGKRw+BScQMfkGmkp14qLFhK5E9foJu77PP+BlV7CJCRJizbyZ33iZ4dhY5i27OqIDrRZw7sHzApcHQ9AjqAUYww7wHZueROhmIqWhCtMQzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cf+wVnAd; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hANdAVyw"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 456Fm0Q0028989;
-	Thu, 6 Jun 2024 17:00:27 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cf+wVnAd"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 456ALKGt027443;
+	Thu, 6 Jun 2024 17:00:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	72X1LtE0KF1BC5pgvv80neHbryarkq6FZsVg1ZmpLyc=; b=hANdAVywUDp21sFS
-	nIBzmyrNMPHTIN/FiG31Ab0RXKOv8oeqYn0F9blhbBvSEcPK0/dZFNkVXcWUq98x
-	JyrLqQyzibeA8/tdbhxnh/k668/Id4LOHyCmjMKgtubJ+hUviMzuGVAA0QAfrij/
-	w/UnAjW28yfAMWgj6FjvPV1NsZL2j87mSSU7hlbjR3TY08XnweflbJwVMxLIa0/C
-	nXxW6JJWUmiTYTOt2nVrx4QU3BT7Cew+Qr18BSJd4h6UTl9vSU9J+xQxtvUSfocH
-	7FHWvpZnHxGVuTqaHXfAWz/tM6FHPs/gnn7w7QmO+s+1+HbkEwpWa8Hp9G9CtWtj
-	vNO9PA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ykg2qg5t1-1
+	AFYgExhThgscEsHhsUWDLwWrHcVzWbJ2J5xZVh8xZAo=; b=cf+wVnAdk8mTFnd3
+	8CRKZZ517eKsT0IRJRcd7qgSObL+BQZr+ZLcFyrNWF2SW3wa9QTfz/V2LZQxTtBQ
+	yQU8NC91WRKQUaDMVWu/X6qg/QcY3DwxMlrtgeie8PNTGEN9WmwQGJY4VlKUMOP+
+	vBXI6U1jIiSwlP2+UCew//v8W0aY7ny940EbarsgSX1kmcXkmat0pk6xvtbRLhjx
+	FnVvyzINZsWt0Lxakuqd2RLalyAwHePAQixYLF/fS6iUcPLLc5a24kJ8i6eMrP8E
+	JQbVsWS+pFcUXU4q/ZKLicjKrA9madWhtkuXA5LEsKogmt7nqK+epvijwMM5mZ+2
+	w4Nniw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjq2tknqh-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 17:00:26 +0000 (GMT)
+	Thu, 06 Jun 2024 17:00:27 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 456H09VD006618
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 456H0Eas007021
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Jun 2024 17:00:09 GMT
+	Thu, 6 Jun 2024 17:00:14 GMT
 Received: from hu-ekangupt-hyd.qualcomm.com (10.80.80.8) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Jun 2024 10:00:06 -0700
+ 15.2.1544.9; Thu, 6 Jun 2024 10:00:12 -0700
 From: Ekansh Gupta <quic_ekangupt@quicinc.com>
 To: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>
 CC: <gregkh@linuxfoundation.org>, <quic_bkumar@quicinc.com>,
-        <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>
-Subject: [PATCH v4 07/11] misc: fastrpc: Redesign remote heap management
-Date: Thu, 6 Jun 2024 22:29:27 +0530
-Message-ID: <20240606165939.12950-8-quic_ekangupt@quicinc.com>
+        <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>,
+        stable
+	<stable@kernel.org>
+Subject: [PATCH v4 09/11] misc: fastrpc: Fix remote heap alloc and free user request
+Date: Thu, 6 Jun 2024 22:29:29 +0530
+Message-ID: <20240606165939.12950-10-quic_ekangupt@quicinc.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240606165939.12950-1-quic_ekangupt@quicinc.com>
 References: <20240606165939.12950-1-quic_ekangupt@quicinc.com>
@@ -63,233 +65,249 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: TuDeWkU4JUjoiytx2mCWKGgF1IgIGyyd
-X-Proofpoint-ORIG-GUID: TuDeWkU4JUjoiytx2mCWKGgF1IgIGyyd
+X-Proofpoint-GUID: TBNncCVpiLe43Z3AdoJbs4DAiZjUqYUK
+X-Proofpoint-ORIG-GUID: TBNncCVpiLe43Z3AdoJbs4DAiZjUqYUK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-06_13,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- spamscore=0 malwarescore=0 clxscore=1015 bulkscore=0 impostorscore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 impostorscore=0 clxscore=1015 spamscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2405170001 definitions=main-2406060121
 
-Current remote heap design is adding the memory to channel context
-but here is also a possibility of audio daemon requesting new remote
-heap memory using map ioctl. For this purpose, it's much easier to
-maintain these types of static PD specific remote heap allocations
-as a list. This remote heap memory is only getting freed during
-rpmsg remove but it is also needed to be freed when static PD is
-shutting down as this memory will no longed be used by static PDs.
-For daemon kill cases where audio PD is still alive, the init IOCTL
-will again take the same address and size to DSP which DSP would try
-to map again which would result in mapping failure the PD might
-already be using the memory. In Daemon kill cases, the address and
-size is needed to be sent as zero and DSP will skip mapping in this
-case. Add changes to manage remote heap in a way that it can be added
-and removed as per needed and the information is sent as zero in daemon
-kill cases.
+A static PD daemon process can request for remote heap allocation
+which will allocate memory and change the ownership if the VMID
+information were defined. This allocations are currently getting
+added to fl mmaps list which could get freed when there is any
+daemon kill. There is no way to request for freeing of this memory
+also. Add changes to maintain the remote heap allocation in the
+static PD specific structure and add method to free the memory
+on user request.
 
+Fixes: 532ad70c6d44 ("misc: fastrpc: Add mmap request assigning for static PD pool")
+Cc: stable <stable@kernel.org>
 Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
 ---
- drivers/misc/fastrpc.c | 94 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 75 insertions(+), 19 deletions(-)
+ drivers/misc/fastrpc.c | 129 +++++++++++++++++++++++++++++++----------
+ 1 file changed, 98 insertions(+), 31 deletions(-)
 
 diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 7ee8bb3a9a6f..3686b2d34741 100644
+index 68c1595446d5..32f2e6f625ed 100644
 --- a/drivers/misc/fastrpc.c
 +++ b/drivers/misc/fastrpc.c
-@@ -274,6 +274,7 @@ struct fastrpc_session_ctx {
- };
- 
- struct fastrpc_static_pd {
-+	struct list_head rmaps;
- 	char *servloc_name;
- 	char *spdname;
- 	void *pdrhandle;
-@@ -299,7 +300,6 @@ struct fastrpc_channel_ctx {
- 	u32 dsp_attributes[FASTRPC_MAX_DSP_ATTRIBUTES];
- 	struct fastrpc_device *secure_fdevice;
- 	struct fastrpc_device *fdevice;
--	struct fastrpc_buf *remote_heap;
- 	struct list_head invoke_interrupted_mmaps;
- 	bool secure;
- 	bool unsigned_support;
-@@ -1256,6 +1256,53 @@ static bool is_session_rejected(struct fastrpc_user *fl, bool unsigned_pd_reques
- 	return false;
+@@ -210,6 +210,7 @@ struct fastrpc_buf {
+ 	struct dma_buf *dmabuf;
+ 	struct device *dev;
+ 	void *virt;
++	u32 flag;
+ 	u64 phys;
+ 	u64 size;
+ 	/* Lock for dma buf attachments */
+@@ -1924,29 +1925,54 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
+ 	return 0;
  }
  
-+static void fastrpc_mmap_remove_pdr(struct fastrpc_static_pd *spd)
+-static int fastrpc_req_munmap_impl(struct fastrpc_user *fl, struct fastrpc_buf *buf)
++static int fastrpc_req_munmap_dsp(struct fastrpc_user *fl, uintptr_t raddr, u64 size)
+ {
+ 	struct fastrpc_invoke_args args[1] = { [0] = { 0 } };
+ 	struct fastrpc_munmap_req_msg req_msg;
+-	struct device *dev = fl->sctx->dev;
+ 	int err;
+ 	u32 sc;
+ 
+ 	req_msg.pgid = fl->tgid;
+-	req_msg.size = buf->size;
+-	req_msg.vaddr = buf->raddr;
++	req_msg.size = size;
++	req_msg.vaddr = raddr;
+ 
+ 	args[0].ptr = (u64) (uintptr_t) &req_msg;
+ 	args[0].length = sizeof(req_msg);
+-
+ 	sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_MUNMAP, 1, 0);
+ 	err = fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE, sc,
+ 				      &args[0]);
++
++	return err;
++}
++
++static int fastrpc_req_munmap_impl(struct fastrpc_user *fl, struct fastrpc_buf *buf)
 +{
-+	struct fastrpc_buf *buf, *b;
-+	struct fastrpc_channel_ctx *cctx;
++	struct device *dev = fl->sctx->dev;
 +	int err;
 +
-+	if (!spd || !spd->fl)
-+		return;
++	err = fastrpc_req_munmap_dsp(fl, buf->raddr, buf->size);
+ 	if (!err) {
++		if (buf->flag == ADSP_MMAP_REMOTE_HEAP_ADDR) {
++			if (fl->cctx->vmcount) {
++				u64 src_perms = 0;
++				struct qcom_scm_vmperm dst_perms;
++				u32 i;
 +
-+	cctx = spd->cctx;
++				for (i = 0; i < fl->cctx->vmcount; i++)
++					src_perms |= BIT(fl->cctx->vmperms[i].vmid);
 +
-+	spin_lock(&spd->fl->lock);
-+	list_for_each_entry_safe(buf, b, &spd->rmaps, node) {
-+		list_del(&buf->node);
-+		spin_unlock(&spd->fl->lock);
-+		if (cctx->vmcount) {
-+			u64 src_perms = 0;
-+			struct qcom_scm_vmperm dst_perms;
-+			u32 i;
-+
-+			for (i = 0; i < cctx->vmcount; i++)
-+				src_perms |= BIT(cctx->vmperms[i].vmid);
-+
-+			dst_perms.vmid = QCOM_SCM_VMID_HLOS;
-+			dst_perms.perm = QCOM_SCM_PERM_RWX;
-+			err = qcom_scm_assign_mem(buf->phys, (u64)buf->size,
-+				&src_perms, &dst_perms, 1);
-+			if (err) {
-+				pr_err("%s: Failed to assign memory phys 0x%llx size 0x%llx err %d\n",
-+					__func__, buf->phys, buf->size, err);
-+				return;
++				dst_perms.vmid = QCOM_SCM_VMID_HLOS;
++				dst_perms.perm = QCOM_SCM_PERM_RWX;
++				err = qcom_scm_assign_mem(buf->phys, (u64)buf->size,
++								&src_perms, &dst_perms, 1);
++				if (err) {
++					dev_err(dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d\n",
++						buf->phys, buf->size, err);
++					return err;
++				}
 +			}
 +		}
-+		fastrpc_buf_free(buf);
-+		spin_lock(&spd->fl->lock);
-+	}
-+	spin_unlock(&spd->fl->lock);
-+}
-+
-+static void fastrpc_mmap_remove_ssr(struct fastrpc_channel_ctx *cctx)
-+{
-+	int i;
-+
-+	for (i = 0; i < FASTRPC_MAX_SPD; i++)
-+		fastrpc_mmap_remove_pdr(&cctx->spd[i]);
-+}
-+
- static struct fastrpc_static_pd *fastrpc_get_spd_session(
- 				struct fastrpc_user *fl)
- {
-@@ -1282,7 +1329,9 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
- 	struct fastrpc_init_create_static init;
- 	struct fastrpc_invoke_args *args;
- 	struct fastrpc_phy_page pages[1];
-+	struct fastrpc_buf *buf = NULL;
- 	struct fastrpc_static_pd *spd = NULL;
-+	u64 phys = 0, size = 0;
- 	char *name;
- 	int err;
- 	struct {
-@@ -1330,23 +1379,23 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
- 		goto err_name;
- 	}
- 	fl->spd = spd;
--	if (!fl->cctx->remote_heap) {
--		err = fastrpc_remote_heap_alloc(fl, fl->sctx->dev, init.memlen,
--						&fl->cctx->remote_heap);
-+	if (list_empty(&spd->rmaps)) {
-+		err = fastrpc_remote_heap_alloc(fl, fl->sctx->dev, init.memlen, &buf);
- 		if (err)
- 			goto err_name;
+ 		dev_dbg(dev, "unmmap\tpt 0x%09lx OK\n", buf->raddr);
+-		spin_lock(&fl->lock);
+-		list_del(&buf->node);
+-		spin_unlock(&fl->lock);
+ 		fastrpc_buf_free(buf);
+ 	} else {
+ 		dev_err(dev, "unmmap\tpt 0x%09lx ERROR\n", buf->raddr);
+@@ -1960,6 +1986,7 @@ static int fastrpc_req_munmap(struct fastrpc_user *fl, char __user *argp)
+ 	struct fastrpc_buf *buf = NULL, *iter, *b;
+ 	struct fastrpc_req_munmap req;
+ 	struct device *dev = fl->sctx->dev;
++	int err = 0;
  
-+		phys = buf->phys;
-+		size = buf->size;
- 		/* Map if we have any heap VMIDs associated with this ADSP Static Process. */
- 		if (fl->cctx->vmcount) {
- 			u64 src_perms = BIT(QCOM_SCM_VMID_HLOS);
- 
--			err = qcom_scm_assign_mem(fl->cctx->remote_heap->phys,
--							(u64)fl->cctx->remote_heap->size,
--							&src_perms,
--							fl->cctx->vmperms, fl->cctx->vmcount);
-+			err = qcom_scm_assign_mem(phys, (u64)size,
-+						&src_perms,
-+						fl->cctx->vmperms, fl->cctx->vmcount);
- 			if (err) {
- 				dev_err(fl->sctx->dev, "Failed to assign memory with phys 0x%llx size 0x%llx err %d\n",
--					fl->cctx->remote_heap->phys, fl->cctx->remote_heap->size, err);
-+					phys, size, err);
- 				goto err_map;
- 			}
+ 	if (copy_from_user(&req, argp, sizeof(req)))
+ 		return -EFAULT;
+@@ -1968,18 +1995,45 @@ static int fastrpc_req_munmap(struct fastrpc_user *fl, char __user *argp)
+ 	list_for_each_entry_safe(iter, b, &fl->mmaps, node) {
+ 		if ((iter->raddr == req.vaddrout) && (iter->size == req.size)) {
+ 			buf = iter;
++			list_del(&buf->node);
+ 			break;
  		}
-@@ -1365,8 +1414,8 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
- 	args[1].length = inbuf.namelen;
- 	args[1].fd = -1;
- 
--	pages[0].addr = fl->cctx->remote_heap->phys;
--	pages[0].size = fl->cctx->remote_heap->size;
-+	pages[0].addr = phys;
-+	pages[0].size = size;
- 
- 	args[2].ptr = (u64)(uintptr_t) pages;
- 	args[2].length = sizeof(*pages);
-@@ -1382,6 +1431,12 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
- 	kfree(args);
- 	kfree(name);
- 
-+	if (buf) {
-+		spin_lock(&fl->lock);
-+		list_add_tail(&buf->node, &spd->rmaps);
-+		spin_unlock(&fl->lock);
-+	}
-+
- 	return 0;
- err_invoke:
- 	if (fl->cctx->vmcount) {
-@@ -1394,15 +1449,15 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
- 
- 		dst_perms.vmid = QCOM_SCM_VMID_HLOS;
- 		dst_perms.perm = QCOM_SCM_PERM_RWX;
--		err = qcom_scm_assign_mem(fl->cctx->remote_heap->phys,
--						(u64)fl->cctx->remote_heap->size,
--						&src_perms, &dst_perms, 1);
-+		err = qcom_scm_assign_mem(phys, (u64)size,
-+					&src_perms, &dst_perms, 1);
- 		if (err)
- 			dev_err(fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d\n",
--				fl->cctx->remote_heap->phys, fl->cctx->remote_heap->size, err);
-+				phys, size, err);
  	}
- err_map:
--	fastrpc_buf_free(fl->cctx->remote_heap);
-+	if (buf)
-+		fastrpc_buf_free(buf);
- err_name:
- 	kfree(name);
- err:
-@@ -2250,6 +2305,7 @@ static void fastrpc_pdr_cb(int state, char *service_path, void *priv)
- 			spd->servloc_name,
- 			domains[cctx->domain_id]);
- 		spd->ispdup = false;
-+		fastrpc_mmap_remove_pdr(spd);
- 		fastrpc_notify_pdr_drivers(cctx, spd->servloc_name);
- 		break;
- 	case SERVREG_SERVICE_STATE_UP:
-@@ -2401,6 +2457,7 @@ static int fastrpc_setup_service_locator(struct fastrpc_channel_ctx *cctx, char
- 	cctx->spd[spd_session].servloc_name = client_name;
- 	cctx->spd[spd_session].spdname = service_path;
- 	cctx->spd[spd_session].cctx = cctx;
-+	INIT_LIST_HEAD(&cctx->spd[spd_session].rmaps);
- 	service = pdr_add_lookup(handle, service_name, service_path);
- 	if (IS_ERR(service)) {
- 		err = PTR_ERR(service);
-@@ -2567,9 +2624,6 @@ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
- 	list_for_each_entry_safe(buf, b, &cctx->invoke_interrupted_mmaps, node)
- 		list_del(&buf->node);
+ 	spin_unlock(&fl->lock);
  
--	if (cctx->remote_heap)
--		fastrpc_buf_free(cctx->remote_heap);
--
- 	for (i = 0; i < FASTRPC_MAX_SPD; i++) {
- 		if (cctx->spd[i].pdrhandle)
- 			pdr_handle_release(cctx->spd[i].pdrhandle);
-@@ -2577,6 +2631,8 @@ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+-	if (!buf) {
+-		dev_err(dev, "mmap\t\tpt 0x%09llx [len 0x%08llx] not in list\n",
+-			req.vaddrout, req.size);
+-		return -EINVAL;
++	if (buf) {
++		err = fastrpc_req_munmap_impl(fl, buf);
++		if (err) {
++			spin_lock(&fl->lock);
++			list_add_tail(&buf->node, &fl->mmaps);
++			spin_unlock(&fl->lock);
++		}
++		return err;
+ 	}
  
- 	of_platform_depopulate(&rpdev->dev);
- 
-+	fastrpc_mmap_remove_ssr(cctx);
-+
- 	fastrpc_channel_ctx_put(cctx);
+-	return fastrpc_req_munmap_impl(fl, buf);
++	spin_lock(&fl->lock);
++	if (fl->spd) {
++		list_for_each_entry_safe(iter, b, &fl->spd->rmaps, node) {
++			if ((iter->raddr == req.vaddrout) && (iter->size == req.size)) {
++				buf = iter;
++				list_del(&buf->node);
++				break;
++			}
++		}
++	}
++	spin_unlock(&fl->lock);
++	if (buf) {
++		err = fastrpc_req_munmap_impl(fl, buf);
++		if (err) {
++			spin_lock(&fl->lock);
++			list_add_tail(&buf->node, &fl->spd->rmaps);
++			spin_unlock(&fl->lock);
++		}
++		return err;
++	}
++	dev_err(dev, "buffer not found addr 0x%09lx, len 0x%08llx\n",
++			req.vaddrout, req.size);
++	return -EINVAL;
  }
+ 
+ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
+@@ -2008,15 +2062,34 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (req.flags == ADSP_MMAP_REMOTE_HEAP_ADDR)
++	if (req.flags == ADSP_MMAP_REMOTE_HEAP_ADDR) {
++		if (!fl->spd || !fl->spd->ispdup) {
++			dev_err(dev, "remote heap request supported only for active static PD\n");
++			return -EINVAL;
++		}
+ 		err = fastrpc_remote_heap_alloc(fl, dev, req.size, &buf);
+-	else
++	} else {
+ 		err = fastrpc_buf_alloc(fl, dev, req.size, &buf);
++	}
+ 
+ 	if (err) {
+ 		dev_err(dev, "failed to allocate buffer\n");
+ 		return err;
+ 	}
++	buf->flag = req.flags;
++
++	/* Add memory to static PD pool, protection through hypervisor */
++	if ((req.flags == ADSP_MMAP_REMOTE_HEAP_ADDR) && fl->cctx->vmcount) {
++		u64 src_perms = BIT(QCOM_SCM_VMID_HLOS);
++
++		err = qcom_scm_assign_mem(buf->phys, (u64)buf->size,
++			&src_perms, fl->cctx->vmperms, fl->cctx->vmcount);
++		if (err) {
++			dev_err(fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d\n",
++					buf->phys, buf->size, err);
++			goto err_invoke;
++		}
++	}
+ 
+ 	req_msg.pgid = fl->tgid;
+ 	req_msg.flags = req.flags;
+@@ -2049,26 +2122,16 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
+ 	/* let the client know the address to use */
+ 	req.vaddrout = rsp_msg.vaddr;
+ 
+-	/* Add memory to static PD pool, protection thru hypervisor */
+-	if (req.flags == ADSP_MMAP_REMOTE_HEAP_ADDR && fl->cctx->vmcount) {
+-		u64 src_perms = BIT(QCOM_SCM_VMID_HLOS);
+-
+-		err = qcom_scm_assign_mem(buf->phys, (u64)buf->size,
+-			&src_perms, fl->cctx->vmperms, fl->cctx->vmcount);
+-		if (err) {
+-			dev_err(fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d",
+-					buf->phys, buf->size, err);
+-			goto err_assign;
+-		}
+-	}
+-
+ 	spin_lock(&fl->lock);
+-	list_add_tail(&buf->node, &fl->mmaps);
++	if (req.flags == ADSP_MMAP_REMOTE_HEAP_ADDR)
++		list_add_tail(&buf->node, &fl->spd->rmaps);
++	else
++		list_add_tail(&buf->node, &fl->mmaps);
+ 	spin_unlock(&fl->lock);
+ 
+ 	if (copy_to_user((void __user *)argp, &req, sizeof(req))) {
+ 		err = -EFAULT;
+-		goto err_assign;
++		goto err_copy;
+ 	}
+ 
+ 	dev_dbg(dev, "mmap\t\tpt 0x%09lx OK [len 0x%08llx]\n",
+@@ -2076,8 +2139,12 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
+ 
+ 	return 0;
+ 
+-err_assign:
++err_copy:
++	spin_lock(&fl->lock);
++	list_del(&buf->node);
++	spin_unlock(&fl->lock);
+ 	fastrpc_req_munmap_impl(fl, buf);
++	buf = NULL;
+ err_invoke:
+ 	fastrpc_buf_free(buf);
  
 -- 
 2.43.0
