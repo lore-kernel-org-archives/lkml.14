@@ -1,49 +1,49 @@
 Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408A513AA48;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6F413AD3A;
 	Thu,  6 Jun 2024 08:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717661365; cv=none; b=kPh1lEYhBAru4YbalpVjslahbpxig4tYhWOwm14gafWzADnmiXCaNkqzSRhKy/Hab5aLgZnnQraMSZc2cNKKEDpkcQ6Z1L6tnsfKJk6n/5t+RUl+/s6GlXOGrIRg4e03pYSDkmWCLVbazHBbWSmwOAFYj5jzilLUzHhjcnOpHWc=
+	t=1717661365; cv=none; b=ucB2oK+AyLxtW8rdW2PgkX22ujy4ooWl0eA66aFPxW4TnQhQfPmwz/3S4TMtgBqkSVxo+YgvGOL6FEChUl/9P8O9e+JrMtR4bV7h5//2sDPW8viiPovPPTKIrOw6WvkdE4163XJBZLeMTouxmeShc3XXM5X5PSRHKQUVJmrEHQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717661365; c=relaxed/simple;
-	bh=Z6ZtYF+tacCS3Y3EPDaR/YMRNAcpL5ZpT7z7LxkeYSo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=L657IEPryUZJY26hay41K7F1aJm0l78buT5Hx+SAqMk1Uic9+L0FWc9xNCl2HSeQLMaPGFz1KRicYxvTLLxqswoGCGxeAZ6oQsc5T2Q6GIegJ1s92BaPOO339SX7ZQOh0Vxz2q9AJs4hRqVjaNZb4Fsp45gMy3BgXmDlvlBqlBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Z0hmQjTb; arc=none smtp.client-ip=198.47.23.249
+	bh=JwRCxkjzBxoZ+RTPlY+R88A3hli0uy+86d7yQBlTUzg=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=u/npWJys/zATnVP8fCC+aD98B74N0dCwZ5BoS8f0ncJZQVnMmfxGGBGQ61rrAzxo/3CIBzC4svx8hCZWmQKNwoaqHrsJzYUDQXql2LcBKOihC/RenSwrnwRT3RmlahVvXw7n5PDhH4+qjcyyt086P/fpq7gxOz/ZFkzrOpQ+zSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sVreaeaK; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z0hmQjTb"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45689EhJ089374;
-	Thu, 6 Jun 2024 03:09:14 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sVreaeaK"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45689BwJ089368;
+	Thu, 6 Jun 2024 03:09:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717661354;
-	bh=JYEt+lP+P6A015ogkke7INZphgtN1Cox1YrIcjuzjPY=;
-	h=From:Date:Subject:References:In-Reply-To:To:CC;
-	b=Z0hmQjTbDlEeyVkNDq2FAdMxiMlkkGpVeKXXkvbK3IoY2J+ZA7dUFa1+D4FQ7m2Py
-	 IJ+1xwnKC6/7ETHClPrGBZM8sCryGNvNzS/Jtz/UAIT2ngFn8n8E67oHpIwHzvR7y1
-	 5J7fuPw42Vtuy1G33WTgDoFlQyX7PcLkjWq45qBw=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45689EHT033635
+	s=ti-com-17Q1; t=1717661351;
+	bh=pHoOXJrDm+n+sdwoGca+WOQtOOaj32WL9daPT0XNCF4=;
+	h=From:Subject:Date:To:CC;
+	b=sVreaeaKgkyA23Egj09+ZJi6LsOxmh0JJjX+0zAVaI+X8qvLHMAzeMleE60qZeVfP
+	 RI/fmIA8fZ9jaIihRW44ntL8sE3KQWTpKZAlj1RIsoHRbs0+H+zYpJ8aakxXloCVJj
+	 /bkRVhfDeSmnkYN6Ss1Lx+1mJQPM0qtxsq42m+Zg=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45689BcR016058
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 6 Jun 2024 03:09:14 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 6 Jun 2024 03:09:11 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
- Jun 2024 03:09:13 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 03:09:10 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 6 Jun 2024 03:09:13 -0500
+ Frontend Transport; Thu, 6 Jun 2024 03:09:10 -0500
 Received: from localhost (jluthra.dhcp.ti.com [172.24.227.116])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45689CiY072642;
-	Thu, 6 Jun 2024 03:09:13 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45689AZr017363;
+	Thu, 6 Jun 2024 03:09:10 -0500
 From: Jai Luthra <j-luthra@ti.com>
-Date: Thu, 6 Jun 2024 13:37:41 +0530
-Subject: [PATCH v2 2/7] arm64: dts: ti: k3-am62a7: Drop McASP AFIFOs
+Subject: [PATCH v2 0/7] arm64: dts: ti: McASP fixes
+Date: Thu, 6 Jun 2024 13:37:39 +0530
+Message-ID: <20240606-mcasp_fifo_drop-v2-0-8c317dabdd0a@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,9 +52,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240606-mcasp_fifo_drop-v2-2-8c317dabdd0a@ti.com>
-References: <20240606-mcasp_fifo_drop-v2-0-8c317dabdd0a@ti.com>
-In-Reply-To: <20240606-mcasp_fifo_drop-v2-0-8c317dabdd0a@ti.com>
+X-B4-Tracking: v=1; b=H4sIAEtuYWYC/3WNQQ7CIBBFr9LMWgwdEI0r72GapsBgZ9FCoGk0T
+ e8udu/yveS/v0GhzFTg3myQaeXCca6ApwbcOMwvEuwrA0rU0kgtJjeU1AcOsfc5JmFuyjqlW0S
+ DUFcpU+D3UXx2lUcuS8yf42Btf/Z/a22FFFKRJbwEffX2sfDZxQm6fd+/I3jRPKsAAAA=
 To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         Tero
  Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -75,29 +75,40 @@ CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
 X-Mailer: b4 0.12.4
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-McASP AFIFOs are not necessary with UDMA-P/BCDMA as there is buffering
-on the DMA IP. Drop these for better audio latency.
+Drop McASP AFIFOs for all AM62 based platforms, as the extra buffering
+is not needed with BCDMA already having internal buffering.
 
-Fixes: 4a2c5dddf9e9 ("arm64: dts: ti: k3-am62a7-sk: Enable audio on AM62A")
+Also fix the pinmux for McASP1 on AM62P.
+
 Signed-off-by: Jai Luthra <j-luthra@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 2 --
- 1 file changed, 2 deletions(-)
+Changes in v2:
+- Drop [tx|rx]-num-evt properties instead of setting to 0
+- Add Fixes tag for am625-phyboard-lyra-rdk
+- Link to v1: https://lore.kernel.org/r/20240604-mcasp_fifo_drop-v1-0-03ebe25f47db@ti.com
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-index fa43cd0b631e..e026f65738b3 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
-@@ -701,8 +701,6 @@ &mcasp1 {
- 	       0 0 0 0
- 	       0 0 0 0
- 	>;
--	tx-num-evt = <32>;
--	rx-num-evt = <32>;
- };
- 
- &dss {
+---
+Jai Luthra (7):
+      arm64: dts: ti: k3-am62x: Drop McASP AFIFOs
+      arm64: dts: ti: k3-am62a7: Drop McASP AFIFOs
+      arm64: dts: ti: k3-am62p5: Drop McASP AFIFOs
+      arm64: dts: ti: k3-am625-beagleplay: Drop McASP AFIFOs
+      arm64: dts: ti: k3-am62-verdin: Drop McASP AFIFOs
+      arm64: dts: ti: k3-am625-phyboard-lyra-rdk: Drop McASP AFIFOs
+      arm64: dts: ti: k3-am62p5-sk: Fix pinmux for McASP1 TX
 
+ arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi            | 4 ----
+ arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts        | 2 --
+ arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts | 2 --
+ arch/arm64/boot/dts/ti/k3-am62a7-sk.dts               | 2 --
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts               | 4 +---
+ arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi        | 2 --
+ 6 files changed, 1 insertion(+), 15 deletions(-)
+---
+base-commit: d97496ca23a2d4ee80b7302849404859d9058bcd
+change-id: 20240604-mcasp_fifo_drop-683bc3412262
+
+Best regards,
 -- 
-2.43.0
+Jai Luthra <j-luthra@ti.com>
 
