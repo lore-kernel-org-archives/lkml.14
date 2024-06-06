@@ -1,134 +1,99 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7778213A896
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 07:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2550D19D890;
+	Thu,  6 Jun 2024 07:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717657507; cv=none; b=asEijppGExFI4bcDJ5x7AglbaNaCYCUFSYsc6xbJPfpMiXXgFlD0KvkVR20+1AL1rhmGpd3jJMlKyo6ukPKYYNoNFY9k3ZEUhn2wilMh33i6zNEwJvKrM6owUWn0U4hChlrXfMmklP8o4TSdQP0DZpI7K/YdlhVj+OFowZY5IPE=
+	t=1717657609; cv=none; b=afFp8e6Bk3wUN1182xF+BCcgP8TKKe32E9MSiVFYKtKLCOg2gwJfWUJsyUyT3tp/ruZEGPnsSlx7L72LUq/4NafbVplLei2YmVy469pwC6gCp28Iw+mpvO+7nf4xiYOfDmYbOF8JTO3Y6X5N82pb+MP55ypM3WcCIznzQ25Juno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717657507; c=relaxed/simple;
-	bh=lLbPi6PEtx7mcrA74H59gkeJ2Vj+bCUKyXS/pK0obXY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=imsmFQy/FYTla8JwB0YlaMGP71K5ISb/YKD8X8gCFXd0YogCcZy4i/ZGs0zz+L0dBm5eDMKH4FynPHW+O8Y5keVKnJOPXDBN59u2Q+9RJAHhkcxKpmrVAH10+wgmkyk2XoKnC4u4/cb3ChcColIuAmSgPhM6JVNBKzUrgDT2bLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0SE8UQjt; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717657609; c=relaxed/simple;
+	bh=2OUU5c+0oHQOjiWiuROmSRGh8j3BqgUxQjKXgFVzcJo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=noDYsodMYw3JFeg2Bm4B8Q9bvhDn0jx7mkCO19cBITJ6kwSasxLKSom1+MmuUPdLZ9c8f3XByPWc+6bh++8oUSXmNpnifFbbvDhwtDEXl/PEcKrlSfIruLKV5ppDOHo/ijKyNc9ECVZdjC/2/ss0LSfdCY6cAbw1F1cJXa7wAso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=qYmUcVRW; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0SE8UQjt"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3748a185da1so74235ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 00:05:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717657504; x=1718262304; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FbGdl+80JsgZCzp3psor20iOdoziZwxzCaIswtJY5jk=;
-        b=0SE8UQjtcdLXSac2dOqqHjopUll3AWsouvM6ijlWsMd4HZ3w2D83gxwQx5afQX7+xp
-         8ON5PpNqLhxzPrI0zedeFsZSsQY79tJ3xdaqdo4LyK0HuhQrkfS45XgwgUGtAIHqEQUG
-         2wR3yKZnpOIUADP9ZZQ0TelqR11Eeg0Y5xhnsd7ICTZPimbzwJwZmZlBl/I6Q9AxCIdq
-         vOsMXgrttOXqHdDamnINgP/tWjLJ1fZx5ba6JFHs7wDePy3xQ21yus4BB14rXKTPVD8S
-         SMVFxcgkdYin1r+dAzSN+lduTgviUPhau2SYaFrIYQZ59AYQtnwH8DBXekLWgP6wlszg
-         hOaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717657504; x=1718262304;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FbGdl+80JsgZCzp3psor20iOdoziZwxzCaIswtJY5jk=;
-        b=pPKPVpu9E3I146mtp/aHoulPWRQDTLgbFBlwHQ7ZoIST9qOz5HDTwRbgTzav+GWzop
-         7TWhsNmKGMi5LNjzY2l+LCGqhoWzd2r/PBMDtMmAPZVOy00Y2cXceOVr7B7u7BRvJfYg
-         KpSK087e85j20pSNlZdL29oHqgXwMM61SyWfQUNTQMBmoNCPp9egqkTA1pS2EWRDXQ1+
-         m+S3dp8ayT00D6vbretFNkQfs0N2vS3d2IqLKRZIZtvB5Y4dDDRnFakimOVbFhpyfcCD
-         BMAykchV0VRHOttCqZTJcDbvenkkln8eB4ccZtfX7iLl8GUl3gO4f9boxTmcWV0ruBaM
-         R34A==
-X-Forwarded-Encrypted: i=1; AJvYcCVPoJBSR6ewYgM+lNRonp+irBii56cqIzLPcMfjYTuFhSUVgxVBFHOdAnSlY4OTtYPkuTcRAPZImwumTYacQA3pzcRyIs73EvRxw9J0
-X-Gm-Message-State: AOJu0Yx9Bggdk4vDjNTB7v7Cq5iaCXYpK32e/6bviTrEBUVw9K75sgA2
-	zaP8j/vpshhFpVeW7PB2tAuJruekWeMGxUTe+RBV2zFx3+eSYXj4757FK+GfzJ/gXgXuO5zCBvk
-	bcdcdOjLcM0u1qItHK0Ri3L1sr69CcmJdajdO
-X-Google-Smtp-Source: AGHT+IHq+uj/5GSwZtHD9DsLDpdeqv/Osc7fiQ3uXZR8SK9wgzoiJMMqTITEcXpxCbgTKoPzuvi+2CNpKDTqVM1bDDw=
-X-Received: by 2002:a92:50b:0:b0:374:930f:e49b with SMTP id
- e9e14a558f8ab-374ba8c21f1mr2074375ab.24.1717657504452; Thu, 06 Jun 2024
- 00:05:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="qYmUcVRW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
+	s=default; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=+eJtUnrby00UuoYKS4VrVufy1eG1BTDW7IZPCyp/z7Y=; b=qYmUcVRWvbjX5/xj0PoVu+tz2N
+	jF2ZU0UEQ8d2sOcVbXn6+BRC6fxCQ3uCDkQqloOgx/H//mS7FxUesSahfTYB77SffP0Y8q2Ui4PPQ
+	1+wzk/MuOoI7sh8+K62MAQwQIoD60b/KelCtq7E/H/l+5GCgsUeQEjiStKxJQYwdk2SgJc87C3j8k
+	drPOCeszU7JTRglLz6u5OJuhYqWui+ku6zqKHXE5HTkcwh/VpYQa+jmmvLLSmeUU87SdrIssT6F6n
+	J2c++EF+JabD5uKDDnyFRhQenPhaRww3+/TOEzbnZ0m/Yb04vYULkbub+23QD3TmSOgyxUiSGxR1v
+	ZIgunZlw==;
+Received: from [89.212.21.243] (port=46262 helo=localhost.localdomain)
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <primoz.fiser@norik.com>)
+	id 1sF7Cw-00BN3X-31;
+	Thu, 06 Jun 2024 09:06:46 +0200
+From: Primoz Fiser <primoz.fiser@norik.com>
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Jarkko Nikula <jarkko.nikula@bitmer.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	alsa-devel@alsa-project.org,
+	linux-omap@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: upstream@lists.phytec.de
+Subject: [PATCH] ASoC: ti: omap-hdmi: Fix too long driver name
+Date: Thu,  6 Jun 2024 09:06:45 +0200
+Message-Id: <20240606070645.3519459-1-primoz.fiser@norik.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240603092812.46616-1-yangyicong@huawei.com> <CAP-5=fXw0=dHORC-kObYFiAco64PGP4_uFr__f9YmVctWtGSfA@mail.gmail.com>
- <3f43ecf1-ae3c-3418-9798-9f1aa0dcc3d2@huawei.com>
-In-Reply-To: <3f43ecf1-ae3c-3418-9798-9f1aa0dcc3d2@huawei.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 6 Jun 2024 00:04:51 -0700
-Message-ID: <CAP-5=fXw60RL=FBP4znRCCwvjmajcf2QpY_70Uf1J-ozutWVng@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Perf avoid opening events on offline CPUs
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: yangyicong@hisilicon.com, will@kernel.org, mark.rutland@arm.com, 
-	acme@kernel.org, namhyung@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, james.clark@arm.com, dongli.zhang@oracle.com, 
-	jonathan.cameron@huawei.com, prime.zeng@hisilicon.com, linuxarm@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
+X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Tue, Jun 4, 2024 at 1:04=E2=80=AFAM Yicong Yang <yangyicong@huawei.com> =
-wrote:
->
-> On 2024/6/4 0:42, Ian Rogers wrote:
-> > On Mon, Jun 3, 2024 at 2:33=E2=80=AFAM Yicong Yang <yangyicong@huawei.c=
-om> wrote:
-> >>
-> >> From: Yicong Yang <yangyicong@hisilicon.com>
-> >>
-> >> If user doesn't specify the CPUs, perf will try to open events on CPUs
-> >> of the PMU which is initialized from the PMU's "cpumask" or "cpus" sys=
-fs
-> >> attributes if provided. But we doesn't check whether the CPUs provided
-> >> by the PMU are all online. So we may open events on offline CPUs if PM=
-U
-> >> driver provide offline CPUs and then we'll be rejected by the kernel:
-> >>
-> >> [root@localhost yang]# echo 0 > /sys/devices/system/cpu/cpu0/online
-> >
-> > Generally Linux won't let you take CPU0 off line, I'm not able to
-> > follow this step on x86 Linux. Fwiw, I routinely run perf with the
-> > core hyperthread siblings offline.
-> >
->
-> It doesn't matter if it's the CPU0 offline or other CPUs. There's no rest=
-riction
-> for CPU0 can go offline or not on arm64 and I just use this for example.
->
-> I cannot reproduce it on x86. I think it may because we're initializing t=
-he
-> pmu->cpus in different routines in pmu_cpumask(). There's no "cpus"
-> for x86's core pmu on my x86 machine:
-> root@ubuntu204:~# ls /sys/bus/event_source/devices/cpu/
-> allow_tsx_force_abort  caps  events  format  freeze_on_smi  perf_event_mu=
-x_interval_ms  power  rdpmc  subsystem  type  uevent
->
-> So pmu_cpumask() will infer it as an core pmu and initialize the cpus
-> with online CPUs [1]. For arm64 there lies a "cpus" sysfs attributes
-> so pmu->cpus are initialized from the "cpus" without checking each
-> CPUs is online or not. That's what proposed in Patch 1/3.
->
-> There's a "cpus" sysfs for x86's hybrid machine, reading from the code [2=
-].
-> And it seems always reflect the online CPUs supported by that PMU.
+Set driver name to DRV_NAME. This simplifies the code and gets rid of
+the following error messages:
 
-Thanks Yicong, looking on a hybrid machine and taking cpu1 offline I
-see the PMU's "cpus" not containing the offline CPU. I think this
-supports that the PMU driver should be fixed for ARM, but we'll also
-need a workaround in the perf tool for older kernels.
+  ASoC: driver name too long 'HDMI 58040000.encoder' -> 'HDMI_58040000_e'
 
-Thanks,
-Ian
+Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
+---
+ sound/soc/ti/omap-hdmi.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/util/pmu.c?h=3Dperf-tools-next#n779
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree//arch/x86/events/intel/core.c#n5736
->
-> Thanks.
+diff --git a/sound/soc/ti/omap-hdmi.c b/sound/soc/ti/omap-hdmi.c
+index 639bc83f4263..3f35eedeea41 100644
+--- a/sound/soc/ti/omap-hdmi.c
++++ b/sound/soc/ti/omap-hdmi.c
+@@ -354,11 +354,7 @@ static int omap_hdmi_audio_probe(struct platform_device *pdev)
+ 	if (!card)
+ 		return -ENOMEM;
+ 
+-	card->name = devm_kasprintf(dev, GFP_KERNEL,
+-				    "HDMI %s", dev_name(ad->dssdev));
+-	if (!card->name)
+-		return -ENOMEM;
+-
++	card->name = DRV_NAME;
+ 	card->owner = THIS_MODULE;
+ 	card->dai_link =
+ 		devm_kzalloc(dev, sizeof(*(card->dai_link)), GFP_KERNEL);
+-- 
+2.25.1
+
