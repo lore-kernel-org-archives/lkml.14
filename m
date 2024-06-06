@@ -1,299 +1,228 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04olkn2090.outbound.protection.outlook.com [40.92.45.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D59196C6F;
-	Thu,  6 Jun 2024 14:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BBE160883;
+	Thu,  6 Jun 2024 14:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.45.90
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684391; cv=fail; b=ANKgl+cSARtPbHDd802dUBYoXi2K9jcr2PTiHDiAW9QZMiWOSUqWUg8Yl+UQgNymrFZafD48L7/Ce4YeTw33iMAL9Ka0ArESSGOwVu9CHaZqo+nAmpt0BBKgyhwbXmc+HyKrwdFflwLvyZcn+5m26dN1a6sYyVpB0u7OPJk9J+Y=
+	t=1717684446; cv=fail; b=F71KJldz7ftRkgzO2PAN+sc1kedYOmikJx7Kn7dkN/JkyB1PHxj3WVdIuN/6mTw8U6/CZAuwxB+WL6kPmYSNrCTtfO06snEUUvWUp50dHPSsdOGuPbNp1qwCl9iAwl+UhyO4+mBXvHrPcDXXID0WEp1o9QlxMIV6y538IkRB4cM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684391; c=relaxed/simple;
-	bh=W5XR++Z4xX2okXuiG9jmRKjd4zphcalv8Q6CR0ZwWek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ks+bXLjfgnzhoswYV/O9COcW/xygPrhLJn92qETnYjgrW5jdhoCadiy0wanQfpcS2jYQZazIyQze0Wx/J3F/xRISfGQMYC4cw7crJNiXLCFsiVML9aCIGYedoQhYGXnjxzm+miDa0PpAp6qWbbBL5ShMuDm7douiFBILZYbQYK0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WMgrEAQG; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=oohx1JRG; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1717684446; c=relaxed/simple;
+	bh=gMVkn7exBguDrQzfrx8Lc3CjG0F47p/wCGAiveRK2wY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HFdQEyeU3EUhq1nwNq9Vvd061wDbATVzjaEZX64d0/9Tuxl/pJ7h7E5gBg4+JFAkh7RxjnZxJXmaWzR6/eLLlrwdmwUvCuLTZ8nPPPzD8e63PCHLTxdZdSocB6MLC8I859VYMUb58gfIOYl3lv2BSkLnkkqkqtwAY7atk+Gfpjo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=N/X3fMk7; arc=fail smtp.client-ip=40.92.45.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WMgrEAQG";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="oohx1JRG"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4568i1EO032513;
-	Thu, 6 Jun 2024 14:32:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc : content-type :
- date : from : in-reply-to : message-id : mime-version : references :
- subject : to; s=corp-2023-11-20;
- bh=94euvAIJ6bausA9qS9Yh2FYrYp5+kxsCvzhjv9wBYiM=;
- b=WMgrEAQGx2Tck8iQx0//9icPH/mTb3/y9zi/k8Hau2SYmCqmdadwq/bA37HDtHrWkL3w
- 6kxGyRmJ6dSkVjNxJupEqsulyu2bHsuwKKpm4ORSDz8ayop1Mz2dk4xGIQ1ZeydnKTZW
- FeVzW96Aqgq8fbVD8lz6/IIxLc8+E+URBST4fMrZFK9vkNJJKlm0kve4U8ql1mqUvITj
- b5QbDv3mAaw6cqImdHVMfLF3Y0KWc7BjHujIn3xpMs1+PtsX5UNitJTf9bVcNpCLRkLS
- 4hZdOv16aitpoYLrL4a/NHf57gsMCS6yj48q5fQbxVb5EZpCVcw3geXh6l6St7+69maA VA== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yjbusupta-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 06 Jun 2024 14:32:16 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 456DhHvY015579;
-	Thu, 6 Jun 2024 14:32:15 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ygrjfbpes-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 06 Jun 2024 14:32:15 +0000
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="N/X3fMk7"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P9wGveYcR9jLwihBjdA1aUdCt/dL0/GP2e8fvUUn8ZP1iu+X4PPKUYDpgzlQW3apHZm6YVliBPN1gP2T8HwmyMvTR7xd8GT2JzbUrC88myNQSbc7ZOlu1eAqP5HY2Q9xYTGmn0cUNoR3vovILSbVBrStD1zQ15BGpJCtOosrtXICcKRfSdO5IfBjXg6dZlqX4fpuehyFeZdBx67y6FfSfjKdrf3Ru988EQ8nzCHmGSGVYCLXL2PfDpSndxhmzM4YvsHjrNzqeulkYgfDX2IE8mYV9BJfc9O52pMiX4RSFOeLMmI68GAD//50S/js3szsLwhgOeJ4LdKNIc2/k0ptOw==
+ b=A5jLG2Mw1eoLgEtza3qU8rkmS3XbZ7/6CW78yi7t+CdLRWAcFmFZd2uFBKfCS7vtPq2lQJHV56UqXsFksg4m6Olw7SGk6CVAjkFZEjZe/LOKu9Al3o5oZ8GO7OcExehCDvfcFtyw7A1rJEjsa84o6ytYMRtFmqqYe0eo8CqnMpaLHqP15coCjDYSs1mGAU2CqXImtCcW/i316bCMiWoGM1i1u1Rk8tGynnB/5QU7qu8hW3tfwnHjkMKc7QE2DFOXfBnw46MEpbC1w9BsE06BebfHVU0Kp5x3NnXFCg9P17BlkTNy32oMUhionlPOmD8yeOcBm4ng2xcH8IS57IHnnw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=94euvAIJ6bausA9qS9Yh2FYrYp5+kxsCvzhjv9wBYiM=;
- b=h51jpobQJuecUD/ZLKIppI4AtKfkTrSoOzCpC/5cGeJdkd+G4ad814Qj3udImDt3H7Tk9LRPXwjDDglxfXWEq8gLD8tcMMT7BH3WgN9/twL9XWE8jD4A30vnxxxErfdKICwyYKrh051mGlJjqENDjxruvrTMoTPqTn4cmyUq3szCEOcvQWbE/qJzdbIFAhAMF4/TyKpf8w6PCpa9XLJkElHaqLVPEDt4mjINFLjSjCnDqpi8CUGDAP+XFV+X0aAxpQa2B3SCdpIUfxHYsrIeZ5rOSwGLTi2fw8S+grFGUPpgsoIvKjxpLJOScQyM2NGQfqTEDZbNYIL4qDh8WDLe2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ bh=MLgP7/3wPPZoTnj9QPcPjIsz3VoEMuCUQ72A1hyO4Ag=;
+ b=fHz1R/LsgHVyIJC+K/qks5D11l8bW0jVlB2sXG7hKX9qR5qwNLdtSRfJHySrHcqMmsW/9Bgsxt+DLFUtm/DWm4zRWfmXBTaq/KunMt2Xa7QPD4oL/gEncQvBjC2KeZ5CdYmwpFOXiZ4urYls14Vo9Ds5N7uamI/QlRopapJ+kzG9S5R0U5WAd8+nnv6er3WRMxq7pqAWIMwh4dWY3RBGeUuGfNe0hVXG/4Qx1I0+7eXsZA1KQZJqpHO+PZBMXmdF9/6AuuDPn4NRJIxiLwMpdA+JvdEUjUrHnoF8exaGqn6c4sOs2CXC8zjgtMDyWCUx4Uq7Gr2fLJxWN3TWeMEPZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=94euvAIJ6bausA9qS9Yh2FYrYp5+kxsCvzhjv9wBYiM=;
- b=oohx1JRGq+C2UQVHWeFLPwN21NwaElozumVX+eGbit+ggGac9hEdYy8FUwGCcxXoaVu+f0lAuNzugTlpJX8VAaEsAQM/E+MoTtG7iam46wXY7PksHWsYFkzenX2o9Ays1F4XFXhVgfP6nrlcjyM6EVX+ggGmSSP3soIDVSMhw7E=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by IA1PR10MB7360.namprd10.prod.outlook.com (2603:10b6:208:3d8::13) with
+ bh=MLgP7/3wPPZoTnj9QPcPjIsz3VoEMuCUQ72A1hyO4Ag=;
+ b=N/X3fMk7RIAVV2ODN4+2UMQHtMU/kibb3wBC1Ra/kAjFFLG81iF6I+L4coNaNl5gr0i+NnWV+sfm2OwPRwdduPlTKOl8H+etsjP+8oT5ukhLLeOl2L6V1ZtNjNNWS8kG/+StjA1EIAcYxKG2lC6+AZkZ8bWvDb9D5djLWG5jTmU0JioUnDRtRwn+Xc3t3ulBetGoJ9fa/CFq8Nqar1NaK7R84tprCo78e4pyF1sBFvD0OYihv+irnGDL+TD56SCpLVYGrX4/uniFQ6oIuU0b/dqM6ObzTvMQC333gDG7Gwe5gU1sTiK0bI0jsYl1UAJO6JsRgxRgy7YXvqB32q+Tww==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by MWHPR02MB10499.namprd02.prod.outlook.com (2603:10b6:303:281::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.34; Thu, 6 Jun
- 2024 14:32:07 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.7633.033; Thu, 6 Jun 2024
- 14:32:07 +0000
-Date: Thu, 6 Jun 2024 10:32:03 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Jon Hunter <jonathanh@nvidia.com>, Neil Brown <neilb@suse.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        linux-stable <stable@vger.kernel.org>,
-        "patches@lists.linux.dev" <patches@lists.linux.dev>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "pavel@denx.de" <pavel@denx.de>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sudipm.mukherjee@gmail.com" <sudipm.mukherjee@gmail.com>,
-        "srw@sladewatkins.net" <srw@sladewatkins.net>,
-        "rwarsow@gmx.de" <rwarsow@gmx.de>,
-        "conor@kernel.org" <conor@kernel.org>,
-        "allen.lkml@gmail.com" <allen.lkml@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.15 00/23] 5.15.160-rc1 review
-Message-ID: <ZmHIYz3Imd7HWYiO@tissot.1015granger.net>
-References: <>
- <58fa929b-1713-472e-953f-7944be428049@nvidia.com>
- <171701638769.14261.14189708664797323773@noble.neil.brown.name>
- <b2dc17ff-faa6-4ada-a807-ce2a64c9fa29@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b2dc17ff-faa6-4ada-a807-ce2a64c9fa29@nvidia.com>
-X-ClientProxiedBy: CH0PR03CA0290.namprd03.prod.outlook.com
- (2603:10b6:610:e6::25) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.33; Thu, 6 Jun
+ 2024 14:34:00 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7633.033; Thu, 6 Jun 2024
+ 14:34:00 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Thomas Gleixner <tglx@linutronix.de>, "kys@microsoft.com"
+	<kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+	<decui@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+	<kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "James.Bottomley@HansenPartnership.com"
+	<James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+CC: "maz@kernel.org" <maz@kernel.org>, "den@valinux.co.jp"
+	<den@valinux.co.jp>, "jgowans@amazon.com" <jgowans@amazon.com>,
+	"dawei.li@shingroup.cn" <dawei.li@shingroup.cn>
+Subject: RE: [RFC 06/12] genirq: Add per-cpu flow handler with conditional IRQ
+ stats
+Thread-Topic: [RFC 06/12] genirq: Add per-cpu flow handler with conditional
+ IRQ stats
+Thread-Index:
+ AQHatj3dxfDAEhKlmk6xJJhdAubqnrG36WaAgAAakqCAASXCgIAAA1YQgAANOoCAANYaUIAAbHaAgABQ9bA=
+Date: Thu, 6 Jun 2024 14:34:00 +0000
+Message-ID:
+ <SN6PR02MB4157A4B5C6726CDC369E0E39D4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240604050940.859909-1-mhklinux@outlook.com>
+ <20240604050940.859909-7-mhklinux@outlook.com> <87h6e860f8.ffs@tglx>
+ <SN6PR02MB415737FF6F7B40A1CD20C4A9D4F82@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87zfrz4jce.ffs@tglx>
+ <SN6PR02MB415706390CB0E8FD599B6494D4F92@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87cyov4glm.ffs@tglx>
+ <SN6PR02MB4157AD9DE6D3F45EC5F5595DD4FA2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87le3i2z5g.ffs@tglx>
+In-Reply-To: <87le3i2z5g.ffs@tglx>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [d+msmNnIa85of4nq8LDjE4iLpC7KwlZq]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|MWHPR02MB10499:EE_
+x-ms-office365-filtering-correlation-id: 097fac48-51c7-4bfe-0110-08dc8635b4a8
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199019|102099023|3412199016|440099019;
+x-microsoft-antispam-message-info:
+ XHhuoGoTDrBbJJ7mNJG3ijXmBsFWNaSqR3A9ad+liIHaJJthbRFjp0b7iNH/mGAAW3ipNB/f34zBwMfVknbzYMJf0h/E8Cl3Nd4a57x5UYHXIM74Xy9sh/uxr7ztTw+6/Ec4AWsxdaIh16gdRWt3iakyxoP5OBHjjVsz+D3B5GF4A8D6L3T3ZqwtwGOEpSwK4Awo1MM5kAaLPUakW/lur2Gw56esEKkjT3IM23Jqx0vP7VJJQ575p3waksxRhK9SmBzfi7qDG4VmEtOUlX4rC9XJykCNPVa72l8mSLUx/XEkXY6HySNtTT+hMnyhoctHpl9DI3qnNEXwgcS/yXAW9M7yZWHi7yzGOsmulUVRMqp0VsE0Wzpeexw4q+vlxMT82HLDVpc0Rk84Do91exblK8NGWP7zQHzci/SLNElNyROjhTUiRxtFwqw1zx06TV3vcPGYtJxq4xMsJ7jJNHbKWyOageJBuxpwo5MrfBIRilNWpByBxd7l7RmxGH8uK5lt96ulfXMxItqibQ5U0BFP0IHlbD/VxrqBjFua1SNqmK8MkmlbUuVBBuIZmtZUdvfY
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?xl3g7G3e/eiA2yR1BvRD7lD6AbvXDsmNoBPgGii+ushopAYvguaQSJk2GwAP?=
+ =?us-ascii?Q?rUDhdK8fWwDev96S6nvVHi8CZNEQYehihCbDjA6PsqMajZlmMD3TD65qUImd?=
+ =?us-ascii?Q?uM38HMhngVl0NNQTw660UsnkEDfNWfLGUdpB/W9g9HYRKD/VuVeiFHcGTAkD?=
+ =?us-ascii?Q?mVMxS1MC84gx7q/S5ecYlKJzp3zByCQpZYgrPf2ISodGLqlPsa/KHUl88SVF?=
+ =?us-ascii?Q?1ENgnRdIjyDiC9nlhT/RMIJtdcSVUz4fMTrMx0Fx03U4XlurbdlvqYxrY0Yo?=
+ =?us-ascii?Q?W8ZssUCeI4p+Iqohc0W6gZuf+7jE2SscgKtDf9mI0vcX8JRgLzrVQ6wzbl3d?=
+ =?us-ascii?Q?KezhSYyMRr31X7F9qtNJE0eXRShyNeDlEfY5AchGhqtJQRPIDfJu5TgjB1oE?=
+ =?us-ascii?Q?SQKSVvjNadoj/Hk5U3TCQDNaW6EtMnfOTH+OI+pOmN3GeWiLdXb3pxzPTEFA?=
+ =?us-ascii?Q?43ZsbylXxe9M0hDq4IQd/spkCsb1eo3nGvN2oSD5HctRLhn/DUQzJkswhlWG?=
+ =?us-ascii?Q?cyVXGWQ+Rqigk6u/PkEtNSkPg0ZdDRadg4lipqYG+J8QRWcp06ohq9MZhPok?=
+ =?us-ascii?Q?ezkRi4JRJbMktP9Mdhd/p3FP0Op1ua9eU3FfGu5MrvRsSQxyvAm7HcUeTIs6?=
+ =?us-ascii?Q?sF0UYjMZJbwio7wYjoW5I4ubOvAkf8tYLFDmSAE4iJPE8ztwDNAlXo5UhqCY?=
+ =?us-ascii?Q?TUElVVMN4fVPewJzgCaA9fyU+FsTXX71vOWAH8QzUdgU3IM5ukXGv6+54igW?=
+ =?us-ascii?Q?rQWy+2HeepftAcX2oyspw3XbYjGDVBeJe0m27FTrVTwCBu9zaVHE8b/cNVFm?=
+ =?us-ascii?Q?oKdY/urrwCIOkmL7vaIiyqwT+PojHubl8+1FDw1kCYhfO7RhwjLnQEMpugSy?=
+ =?us-ascii?Q?cJIEdlfJjQ8IHxTxYXcPOQPqkpILVeyvBaSBBsLDjBmgxpeTaj+cqd3TKSJZ?=
+ =?us-ascii?Q?RhdcsBTFuIz70Gzpj8jxrURpspI6DNRLNDWV6Jyv7aO+Zdn4oRmGyh+/U2g/?=
+ =?us-ascii?Q?KxUpLWbvt0kbnQI+l2o37WmWCUNVpqkMffXk3oamA6rsKgfTTVuEK4DyRdxk?=
+ =?us-ascii?Q?jtM4p+FnIa4jOg+OKbubJdnA0pQmbl2gFStgtJBT4Okb+aUiQo8f0dOAgjsw?=
+ =?us-ascii?Q?foWEfg84yBKxFVNA+U1ttcKHzgkSbpMcBbiVV2qZBKtJXlh1OBhAY7DaDfdh?=
+ =?us-ascii?Q?7lTIM74hreCo6SJ1qzkE7ahYa/JhCiq3KEfXHQvyp2ht9G8Q8dXnXT7SnZk?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|IA1PR10MB7360:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6809cb94-d139-49ce-cd5e-08dc86357111
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|7416005|1800799015|376005;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?qCfxBXDKBgReh/CJV2dWcm9yZACwhdld/knCiU05gYv286YMJUg6HaIBNJZr?=
- =?us-ascii?Q?Q1IlM7yUKuuWIk8LH6uIpnf/w/0hoGkUTQo0xWxSqGo79MkPU0Mp19IHWvqE?=
- =?us-ascii?Q?DWmwNkgF70ddjAZRh2pWbLV9HO33fB90XqLW11WPQT1NBCBgBBO7RxBJOk3/?=
- =?us-ascii?Q?T3Naclj6rWi9CafXlBXH0xqyu3dsKROWPK8BfppGVEOrACsK2vwB1mzSbRt9?=
- =?us-ascii?Q?xO5p1nmTeXr5DMDFBkw7Xm4idGqJz5qpkhj2vJGvaUvQu9xSw6uHAUYLqXGj?=
- =?us-ascii?Q?kTOOIP0r9svPqwRo8jEVxpOo2dQ/8eq4wI8QTVnfD2hmpZJ88OC6ob4oR2Pt?=
- =?us-ascii?Q?5EfHr5BJgAd5aY4aeoxm3utxq4n4YA5xPM7esvjRp83PdRdzH1YjKBqyWMID?=
- =?us-ascii?Q?9LDWesZ94dAc3Isy8qTktiqhxHuz6To1RMW2fHIhMuVLhmQTv6Fx4xBXnm2L?=
- =?us-ascii?Q?yAovdyd0BctcmqAbxcanEMqtIdsK4mTbzBFtefEN1CL7aB55OJHHGiEbyGSC?=
- =?us-ascii?Q?uxy5LNLbBq8pjblEK1Jxa8bBy6B3o+u/YqFAh88ZgROsDrYdlPbqAbJF/coR?=
- =?us-ascii?Q?RD8fY3+0wj1qhgicjhaT+kPEAMQfFzkBVodhYcrP96uXtltDW2LNPFCjMXAl?=
- =?us-ascii?Q?0ycuoQ4Dpz+VLqQrDPsDPzTj5k7a47M2OGlRa3JnnOxZhqhJvwYOgACpMF25?=
- =?us-ascii?Q?mEIeUZN+iNvRS9Oo3alvQCQIclfwsLEtgwdpKZV53vz9WgYmtRHF+a5BfTed?=
- =?us-ascii?Q?SC2GHcqEVraiYi5PTy88UkUVRL8LpQCj5rq0juFgVaVmpDT9JP+CoGx/38Wa?=
- =?us-ascii?Q?9HdjpTnCWVjH8zR8g5uzV2o9YcESb+vCVmTXTmDeVuOsQQ3tmLMZ63eIXw/8?=
- =?us-ascii?Q?e6ZKnJlNzufFLe4Wa9xFrjM/UUajQQb8jeMhqMxwe70PQ4xbsoo4kVv/wocC?=
- =?us-ascii?Q?stdBydDHNndIFl24PUtqBs5+xGr0cjoBGbGEMp9OOVcMts+4LNL/2AXgYCWg?=
- =?us-ascii?Q?Zve3VsPu8dogF3sdskURcuMpTBUiNBQQrcqmALabXUDTuAWCk7mO6YzU5FkA?=
- =?us-ascii?Q?NlOFtskEQb5xFlPPi1mTCLcfQoZOTD1jvTTbCTnyAsG1IBTZjvJ14cNZjj2n?=
- =?us-ascii?Q?7vcXji9tMeN5znehejaQ88Ups7d2Oc3XFUyeCnXUZF+YyselGIB7XlBSUH6e?=
- =?us-ascii?Q?rKcX7Ha3lKJ1cuxj6jCNSINJ245Nbyql5dPk5chyZsCYhTRpcH9ZkNzPvOIG?=
- =?us-ascii?Q?azjmfJgAaicw/7CI0Jh9zayfVdmUqrydN5rmydLxedQHz70karxv1r+xVwrz?=
- =?us-ascii?Q?5UM=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?XYdTVEmsgjJY8xvvQkXoqLq8l3A7XwS8juk+lHYD+Pzc/bLjV7XfPin07HLx?=
- =?us-ascii?Q?LhIz6qf5LPQIk5E99Dhk3WABPXRZE3BE8SkKoz8ae+IlQq2MlknWqLJaT/tg?=
- =?us-ascii?Q?1t7QNl+QNrVwYHdMTY2a4fYFRUwjUrDoAJ6oNHH/OwsBjaX9UFtH/NV7a0xQ?=
- =?us-ascii?Q?c+786Zf4TLOD29VZi/3rnHgnGJ3MZbUkd3VTnk5pMZZZ1vPe4OyS6Jgx9GqQ?=
- =?us-ascii?Q?y2ysbU/vgruG2z0sQ8W7aTp3PhUNHlepuJvgP7fcVrltrDRsHerbViGRvonm?=
- =?us-ascii?Q?ujUkavo27a27jC3+PHfTUTdsPyCh5BK2sLcOSJRmCQVduiMA+8WGrbb1prXn?=
- =?us-ascii?Q?wvcABt0dq1gC2EFgrMwJU+W8KV/ixPnS7MB+gyfA5OYZBDXRdb1WCPkeB2jQ?=
- =?us-ascii?Q?MrspDZOV1bgfA9Z3oiZPNEkiKyiDj3Y4tVlm32BOPUl8UFiVJP4PHPNsWvda?=
- =?us-ascii?Q?AWtrzZGO2t655KsA/XRu5CeLxb63P5jXWw+GvNP2/EUSoeXv5Z+vNy4Vxrpp?=
- =?us-ascii?Q?3o2LR8+NurFfM1+nxROq8BDzvLgSN2rlafLwju783rbPVfrYOAX2vYRHMT/X?=
- =?us-ascii?Q?09N3+Cip+oNMTXO8K44R21J8npVKTNK0/nR5LkwD7T36hL+sERXfACaKmW3z?=
- =?us-ascii?Q?M6WzP+Tu6X4KPE23u2A2PsFzd35OPP303ownsSXEyuaP510KI8AyV4t/Uy8v?=
- =?us-ascii?Q?x9DY4A72T/tJFWKfx44t9sBm+GDOsTDSp6Inp6NJpsXbpSMS0nm+Q8Hp9xOw?=
- =?us-ascii?Q?8J9kPmFpocIuU8CkTpEiYoFpNcNnEvNCtsrQv6rkKQlyRAM/paXvd9WkwQEm?=
- =?us-ascii?Q?0uZxvrX6hSwQb/+2v4EcQjhv8rV2jZ+n4aNHo/9GLAUne7zQmzZhASvS5Qqt?=
- =?us-ascii?Q?Zz3vkH5XY8mSE6Si/4SBg6E+l8OqjP1FU8jc5iPrZeei1zLFk9x8Bxf5ZD/X?=
- =?us-ascii?Q?CNfe7jkKfmoVuIl7vV9EuJU0z1pYK6r3sxqlUCS0ZxkbjebIeSGG2IbDs+dv?=
- =?us-ascii?Q?9fWoz+g6BLPUAxzADp1ZdIZoFbeWf4u4CgabPO3rUUE4UvCR3JRhy7YFsRJA?=
- =?us-ascii?Q?ksxrrSgTLyr/tdpxCyNE2mEDc5tsGzWuAqi0ZZPMBRUjI2iTq6T/AWd5K0t6?=
- =?us-ascii?Q?qYNLPjcJTqf04rn5rwaMCICDjlM46olXziyRFO8HEJTV0GEoLyzE/+TpEYpn?=
- =?us-ascii?Q?Z0n4f+KTMjdi/r7ztnGgNLqKIWD+H+xPZjzQFqDMcmCOWmFqMfYUNQBotAPo?=
- =?us-ascii?Q?rpvk/Yi6HGV2dfyv1yE2EnlncZXza8wJieX8JXYv+vW7KmlQ74XwZyNHd36U?=
- =?us-ascii?Q?7kRHG0MAHmoEAQelLGjan/JWTAo50JvAeooamNHUJgKu2tBgAZK+GKJzczVH?=
- =?us-ascii?Q?FQd92FghwgVzEpb78GrrZ+xxCMUvlxbEwOnVxJUe5x3ZznB2PWS02zB2JdUL?=
- =?us-ascii?Q?NO75N82mgJoOuUCbejWQ5BnPbBnUKxUzJqdopY+YYtAoJ2SxvWU6XckYVUVP?=
- =?us-ascii?Q?TfVLXC/w3vIuLfQf3034A/MQ2HgImIKK0IgHj//a1/NOZcq0fM2x8og8rLGl?=
- =?us-ascii?Q?TFVM8hQ+tBDWS/nFLt+21VlQ8GcjH/yQswuxiZK97Jbm5xz1SdCkjSiOjCYO?=
- =?us-ascii?Q?Iw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	ZYikt1jGWPHZM6MlrDsBdDpdrLujfeIyRPv643i/mxpmD1GP3ZXim51W1dC5sOqRdP0kwez+I5wwFeS3BpWyB4WJOKVzCm2NQo29AuY+5PNqEAfiJHpuU/XAaW7I1xYpI2d60yGvr7CcSB0yct395qWhfTrC8OQbJX1v3algvGjP9Jxb/d4WXRQguFtfZmdO+zDsCSx67WfKOQDTCslcnQSWg3iGH8qsJ4aFXHvCxnnmfOEmwIl5ypnWrH0Yt7FwJMw++Kgm6sCWEL3QHG+w73/DDtz8RAzHghRSxvbgkVXvYmUUlAJ2kcsmBGXr28gcpkblgaNck11bBtEqpiFBbQDyLRIpXlQH4rsHZMNk+u+olRdKWH+nyXBV+cUVqggAHDjxKCyZBx+2bDwk1e/tWT5hIa4IEistfQtWmFkFoE1UVsWZL698gglUw4Y9aV/79mUGUe2Pt21R2Eazhcs0gLoVPRct+QnSD06AdtFR9kPw1zp4d/cAWpq4DcMS/4nk3JRbFdSBep/tNOMYIewf9rYVOubLFzIXDayT7C33v1ioHz9l4euPLbE04v/ig5xeMwWmstjbseLRxargndXzDg73ykErmO3+LJUCPyMnH2g=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6809cb94-d139-49ce-cd5e-08dc86357111
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 14:32:06.9659
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 097fac48-51c7-4bfe-0110-08dc8635b4a8
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jun 2024 14:34:00.1699
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1YmKLGctz+F+51e3gSti4wmcPZA0hEjjyS8P6M1M9mLULGBGZwRh0NX1EAf57cI3NzzOyH977liKb1pxMB6lDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7360
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-06_01,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406060105
-X-Proofpoint-ORIG-GUID: 1gX_fMd_0YEdBs1kVkSHZzIegJNPx56M
-X-Proofpoint-GUID: 1gX_fMd_0YEdBs1kVkSHZzIegJNPx56M
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB10499
 
-On Thu, May 30, 2024 at 01:11:47PM +0100, Jon Hunter wrote:
-> 
-> On 29/05/2024 21:59, NeilBrown wrote:
-> 
-> ...
-> 
-> > Thanks for testing.
-> > I can only guess that you had an active NFSv4.1 mount and that the
-> > callback thread was causing problems.  Please try this.  I also changed
-> > to use freezable_schedule* which seems like a better interface to do the
-> > same thing.
-> > 
-> > If this doesn't fix it, we'll probably need to ask someone who remembers
-> > the old freezer code.
-> > 
-> > Thanks,
-> > NeilBrown
-> > 
-> >  From 518f0c1150f988b3fe8e5e0d053a25c3aa6c7d44 Mon Sep 17 00:00:00 2001
-> > From: NeilBrown <neilb@suse.de>
-> > Date: Wed, 29 May 2024 09:38:22 +1000
-> > Subject: [PATCH] sunrpc: exclude from freezer when waiting for requests:
-> > 
-> > Prior to v6.1, the freezer will only wake a kernel thread from an
-> > uninterruptible sleep.  Since we changed svc_get_next_xprt() to use and
-> > IDLE sleep the freezer cannot wake it.  we need to tell the freezer to
-> > ignore it instead.
-> > 
-> > To make this work with only upstream requests we would need
-> >    Commit f5d39b020809 ("freezer,sched: Rewrite core freezer logic")
-> > which allows non-interruptible sleeps to be woken by the freezer.
-> > 
-> > Fixes: 9b8a8e5e8129 ("nfsd: don't allow nfsd threads to be signalled.")
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >   fs/nfs/callback.c     | 2 +-
-> >   fs/nfsd/nfs4proc.c    | 3 ++-
-> >   net/sunrpc/svc_xprt.c | 4 ++--
-> >   3 files changed, 5 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-> > index 46a0a2d6962e..8fe143cad4a2 100644
-> > --- a/fs/nfs/callback.c
-> > +++ b/fs/nfs/callback.c
-> > @@ -124,7 +124,7 @@ nfs41_callback_svc(void *vrqstp)
-> >   		} else {
-> >   			spin_unlock_bh(&serv->sv_cb_lock);
-> >   			if (!kthread_should_stop())
-> > -				schedule();
-> > +				freezable_schedule();
-> >   			finish_wait(&serv->sv_cb_waitq, &wq);
-> >   		}
-> >   	}
-> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > index 6779291efca9..e0ff2212866a 100644
-> > --- a/fs/nfsd/nfs4proc.c
-> > +++ b/fs/nfsd/nfs4proc.c
-> > @@ -38,6 +38,7 @@
-> >   #include <linux/slab.h>
-> >   #include <linux/kthread.h>
-> >   #include <linux/namei.h>
-> > +#include <linux/freezer.h>
-> >   #include <linux/sunrpc/addr.h>
-> >   #include <linux/nfs_ssc.h>
-> > @@ -1322,7 +1323,7 @@ static __be32 nfsd4_ssc_setup_dul(struct nfsd_net *nn, char *ipaddr,
-> >   			/* allow 20secs for mount/unmount for now - revisit */
-> >   			if (kthread_should_stop() ||
-> > -					(schedule_timeout(20*HZ) == 0)) {
-> > +					(freezable_schedule_timeout(20*HZ) == 0)) {
-> >   				finish_wait(&nn->nfsd_ssc_waitq, &wait);
-> >   				kfree(work);
-> >   				return nfserr_eagain;
-> > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> > index b19592673eef..3cf53e3140a5 100644
-> > --- a/net/sunrpc/svc_xprt.c
-> > +++ b/net/sunrpc/svc_xprt.c
-> > @@ -705,7 +705,7 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
-> >   			set_current_state(TASK_RUNNING);
-> >   			return -EINTR;
-> >   		}
-> > -		schedule_timeout(msecs_to_jiffies(500));
-> > +		freezable_schedule_timeout(msecs_to_jiffies(500));
-> >   	}
-> >   	rqstp->rq_page_end = &rqstp->rq_pages[pages];
-> >   	rqstp->rq_pages[pages] = NULL; /* this might be seen in nfsd_splice_actor() */
-> > @@ -765,7 +765,7 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
-> >   	smp_mb__after_atomic();
-> >   	if (likely(rqst_should_sleep(rqstp)))
-> > -		time_left = schedule_timeout(timeout);
-> > +		time_left = freezable_schedule_timeout(timeout);
-> >   	else
-> >   		__set_current_state(TASK_RUNNING);
-> 
-> 
-> That did the trick! Suspend is now working again on top of v5.15.160-rc1
-> with this change.
-> 
-> Feel free to add my ...
-> 
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+From: Thomas Gleixner <tglx@linutronix.de> Sent: Thursday, June 6, 2024 2:3=
+4 AM
+>=20
+> On Thu, Jun 06 2024 at 03:14, Michael Kelley wrote:
+> > From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 202=
+4 7:20 AM
+> >>
+> >> On Wed, Jun 05 2024 at 13:45, Michael Kelley wrote:
+> >> > From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, =
+2024 6:20 AM
+> >> >
+> >> > In /proc/interrupts, the double-counting isn't a problem, and is
+> >> > potentially helpful as you say. But /proc/stat, for example, shows a=
+ total
+> >> > interrupt count, which will be roughly double what it was before. Th=
+at
+> >> > /proc/stat value then shows up in user space in vmstat, for example.
+> >> > That's what I was concerned about, though it's not a huge problem in
+> >> > the grand scheme of things.
+> >>
+> >> That's trivial to solve. We can mark interrupts to be excluded from
+> >> /proc/stat accounting.
+> >>
+> >
+> > OK.  On x86, some simple #ifdef'ery in arch_irq_stat_cpu() can filter
+> > out the HYP interrupts. But what do you envision on arm64, where
+> > there is no arch_irq_stat_cpu()?  On arm64, the top-level interrupt is =
+a
+> > normal Linux IRQ, and its count is included in the "kstat.irqs_sum" fie=
+ld
+> > with no breakout by IRQ. Identifying the right IRQ and subtracting it
+> > out later looks a lot uglier than the conditional stats accounting.
+>=20
+> Sure. There are two ways to solve that:
+>=20
+> 1) Introduce a IRQ_NO_PER_CPU_STATS flag, mark the interrupt
+>    accordingly and make the stats increment conditional on it.
+>    The downside is that the conditional affects every interrupt.
+>=20
+> 2) Do something like this:
+>=20
+> static inline
+> void __handle_percpu_irq(struct irq_desc *desc, irqreturn_t (*handle)(str=
+uct irq_desc
+> *))
+> {
+> 	struct irq_chip *chip =3D irq_desc_get_chip(desc);
+>=20
+> 	if (chip->irq_ack)
+> 		chip->irq_ack(&desc->irq_data);
+>=20
+> 	handle(desc);
+>=20
+> 	if (chip->irq_eoi)
+> 		chip->irq_eoi(&desc->irq_data);
+> }
+>=20
+> void handle_percpu_irq(struct irq_desc *desc)
+> {
+> 	/*
+> 	 * PER CPU interrupts are not serialized. Do not touch
+> 	 * desc->tot_count.
+> 	 */
+> 	__kstat_incr_irqs_this_cpu(desc);
+> 	__handle_percpu_irq(desc, handle_irq_event_percpu);
+> }
+>=20
+> void handle_percpu_irq_nostat(struct irq_desc *desc)
+> {
+> 	__this_cpu_inc(desc->kstat_irqs->cnt);
+> 	__handle_percpu_irq(desc, __handle_irq_event_percpu);
+> }
+>=20
+> So that keeps the interrupt accounted for in /proc/interrupts. If you
+> don't want that remove the __this_cpu_inc() and mark the interrupt with
+> irq_set_status_flags(irq, IRQ_HIDDEN). That will exclude it from
+> /proc/interrupts too.
+>=20
 
-Since I've heard no objections, I've added this to nfsd-5.15.y for
-testing. I plan to send it along to stable@ when testing completes.
+Yes, this works for not double-counting in the first place. Account for the
+control message interrupts in their own Linux IRQ. Then for the top-level
+interrupt, instead of adding a new handler with conditional accounting,
+add a new per-CPU handler that does no accounting. I had not noticed
+the IRQ_HIDDEN flag, and that solves my concern about having an
+entry in /proc/interrupts that always shows zero interrupts.  And with
+no double-counting, the interrupt counts in /proc/stat won't be bloated.
 
--- 
-Chuck Lever
+On x86, I'll have to separately make the "HYP" line in /proc/interrupts
+go away, but that's easy.
+
+Thanks,
+
+Michael
