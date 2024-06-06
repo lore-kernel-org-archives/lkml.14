@@ -1,324 +1,154 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BE119922B;
-	Thu,  6 Jun 2024 17:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EA43AC2E;
+	Thu,  6 Jun 2024 17:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717693381; cv=none; b=sgLHdZO9HX/JB1r5LCQxRY6xii2/O3PyrbwiajRqZWqYgjBDzs0eSn7Zgy3GV1fdS9hZSFz3ZargWG0c5K9LbinmJMdLSIIrxQkG2RcnQG88tF12LVZ04MufMC0OnWgkBayDdfKq/N5B1CMMaCpTV6EGL3A6xV0RU3X0qFSCq7g=
+	t=1717693537; cv=none; b=DDwviDSluJwGo/NJpjQNFAAvIm3rYMGBL8hGF319VfErBNGI/HtSTbTHgjPLUd+VNusnD1waku1FTaoxFmb7mgPn2c8SIm7C7PJVI0SMLAHi3j77wIgVUujWrjBz+X8ehPbw920YhWMqAaqzYztLGzyp2pHkSgmYEoI3D9+gRKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717693381; c=relaxed/simple;
-	bh=ggzn+VB4VUR6nQvAcJsdA05/JkXney5QTdx0Lok4+pI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ju+FKGQKJg+ecLOVvgh4vQORvQ4pq6RirSYnQZq4KZ+3G2sI4BweHLelhFqB1CxwCuaehHNcCqVq2sUmlm/6BKbILz0pkOR4+QFrVkFlllK3oIB+jIKM4GKqgpEFMmQyF3HCbhI+B3ogoAmmUVkpcGnJgf7bShIb3j0NiKbwLFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a68b5f18fc5so145804566b.1;
-        Thu, 06 Jun 2024 10:02:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717693377; x=1718298177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6E3JGAnNdlUSj+6x83Fb8gt3zLtuaMS1NY1zybVIG/Y=;
-        b=artOMAKemzhjRe3tr8fIhdaZyJvJp8W/Cjs0At0WNKazatrYSD0apw7PvG/iSU/2pN
-         vErbbBpbNg+N32XVHHuwKVReSBwlH78ClotUuQtEl9nR9uoQzYcdqDAvhj4lQjb22Ve7
-         KH2/zfiakMuqXspptlRBUU9m4h0D6Z6dZRnTyY5+duNAAJNM+AjhOpFot4lHqZPSPB3y
-         MaHeYNsNEfjTzDiVZoQxRtBH6YrT4AH/sDqszCXAixE5Xle+/U8wa9swxJOnjozl0uP/
-         b8qiTAR9oxoAq4Ye90NDz1CTtBsv3qJvpob9w27W1+IOWbRKbuMf/ZIKVDKTYUkXTzxr
-         Dytw==
-X-Forwarded-Encrypted: i=1; AJvYcCULKTvgpPGerygPl94fe9aM832dh3chzStn9avzybP1ktctycgMgPUK/H7DmEuDYp3Fqsf9HjJJgIhtjcjOPudlMaD6ixtPw/05TjSRzw0wGOrXoIdtR6tI2JalPUn9wJbgxskuJgLKqwXMRIPw
-X-Gm-Message-State: AOJu0YxR0aTtoeuma67N91ze1t+/LmvNieWjCcOx73bNHAi2B4ZyUBp+
-	YZYnZzwkdxaolI4Szfxr+NaQC9WcAumTsu5FiuNPzzRilrw/CxNle2MrvUn5
-X-Google-Smtp-Source: AGHT+IEyWLx+LEoW7opUkxXTkqD0HEURj0QaTB1w7nh0BMJ6gqhCTDMrQ2i40qODUcUVOJuuhLIQxA==
-X-Received: by 2002:a17:906:32c7:b0:a52:3583:b9d0 with SMTP id a640c23a62f3a-a6cd560fb20mr12921266b.3.1717693376891;
-        Thu, 06 Jun 2024 10:02:56 -0700 (PDT)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c805c96d9sm119676566b.52.2024.06.06.10.02.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 10:02:56 -0700 (PDT)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57a2f032007so1524483a12.0;
-        Thu, 06 Jun 2024 10:02:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXZArm5PWCSkPc4jQ950bUrhrUBwfJvThvHIp1O/DZVhKP2U9J+JAsSNENuLHUnzb4/GF4lPMqCXYB/AJUaqyT68CTreFtILwDj+K0aYV5hK7orbaFyV3+1vxSVVV8QlkbJz7jfsX4dNNvhd798
-X-Received: by 2002:a50:f69d:0:b0:57a:79c2:e9d7 with SMTP id
- 4fb4d7f45d1cf-57a8b7c6141mr4117440a12.27.1717693375858; Thu, 06 Jun 2024
- 10:02:55 -0700 (PDT)
+	s=arc-20240116; t=1717693537; c=relaxed/simple;
+	bh=12E14gZ2QAVnMNIwYrxVZwM9VywDI+b+6wOtVi7+4Qc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PACHe4Eiu2zBpHI086vYyhZVNvg++dvdCiMcD++kCXBFTKJ/5kBkzl1hzGd6b4LWXOmoc93Rl+oDCp5LcbxcBAl9ZaTIVbXrBBU4fgHR79UaIGHnz2a5anSzbBNzBbCwIlZZSECqDymFIRhpBcILGeW4p3fAlvbT8/L+qJ0sTyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=psnUEsSe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="psnUEsSe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0329C32782;
+	Thu,  6 Jun 2024 17:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717693536;
+	bh=12E14gZ2QAVnMNIwYrxVZwM9VywDI+b+6wOtVi7+4Qc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=psnUEsSea+eKkkjw5n7TpdK5/LBJ1+DobMAK6WYLPPxBBfQ+EBq0vBV2RZiU4D7I0
+	 fcoIzRVXWRhVpXPqbryYVLeyDUuVhgBNuKNLES386QFENIiVFrER26zRLtKVolmLuQ
+	 rw5B4f3jLDzwsQhNE570Q+IUuDKD1m61O3LRD0Q5TwQrqyPgxtY63n6FsQhCnmD2yS
+	 MwvQ5RxGe6jq5oEdp/RGBRodueLukB2iS2YIDY8XzkjlPOFzj1OJLETDI6g2ZTIeIY
+	 hAepgIuESGPbYrZOe7w4pI8H+InLbYomIEWsrIAYdLdxOKpVElqruG0/RY5P5iV9Yr
+	 3DXThSnx6yBMg==
+Date: Thu, 6 Jun 2024 18:05:30 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Haylen Chu <heylenay@outlook.com>
+Cc: Inochi Amaoto <inochiama@outlook.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: sophgo,cv180x-thermal: Add
+ Sophgo CV180x thermal
+Message-ID: <20240606-reaction-thirsting-8c22d1b5ab72@spud>
+References: <SG2PR01MB4218013241B3EED779D3BAE8D7F82@SG2PR01MB4218.apcprd01.prod.exchangelabs.com>
+ <SG2PR01MB42189977B4172405F5704CC4D7F82@SG2PR01MB4218.apcprd01.prod.exchangelabs.com>
+ <IA1PR20MB49531F55C8D7DC5D0050CAF9BBF92@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <20240605-tightwad-janitor-82cfceb1469d@spud>
+ <SEYPR01MB4221F0E46F600E013974F21BD7FA2@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240602-btbcm4388-v1-1-210e4b4eeb3b@svenpeter.dev>
-In-Reply-To: <20240602-btbcm4388-v1-1-210e4b4eeb3b@svenpeter.dev>
-From: Neal Gompa <neal@gompa.dev>
-Date: Thu, 6 Jun 2024 10:02:18 -0700
-X-Gmail-Original-Message-ID: <CAEg-Je9VKMN7HrXjrTvDYNQEcR0dq31kkNsV9_Jvthpd-X0UKg@mail.gmail.com>
-Message-ID: <CAEg-Je9VKMN7HrXjrTvDYNQEcR0dq31kkNsV9_Jvthpd-X0UKg@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: hci_bcm4377: Add BCM4388 support
-To: sven@svenpeter.dev
-Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Hector Martin <marcan@marcan.st>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xNgNBLWP/RMLxW5/"
+Content-Disposition: inline
+In-Reply-To: <SEYPR01MB4221F0E46F600E013974F21BD7FA2@SEYPR01MB4221.apcprd01.prod.exchangelabs.com>
+
+
+--xNgNBLWP/RMLxW5/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 2, 2024 at 2:57=E2=80=AFAM Sven Peter via B4 Relay
-<devnull+sven.svenpeter.dev@kernel.org> wrote:
->
-> From: Hector Martin <marcan@marcan.st>
->
-> This new variant needs a different core2_window1 and always uses
-> beamforming.
-> The BAR2 also has an offset (RAM start, presumably), so add that.
->
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Reviewed-by: Sven Peter <sven@svenpeter.dev>
-> [sven: rebased, updated some comments, mentioned 4388 in Kconfig]
-> Signed-off-by: Sven Peter <sven@svenpeter.dev>
-> ---
-> Hi,
->
-> This is just a single commit mostly written by Hector that adds support
-> for BCM4388 chips. I've just rebased this to the current bluetooth-next
-> since it also needs 9dc8ac15ca5 and adjusted some comments.
->
-> Best,
->
-> Sven
-> ---
->  drivers/bluetooth/Kconfig       |  6 ++--
->  drivers/bluetooth/hci_bcm4377.c | 61 +++++++++++++++++++++++++++++++----=
-------
->  2 files changed, 50 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kconfig
-> index 0b5f218ac505..87484f5de8e3 100644
-> --- a/drivers/bluetooth/Kconfig
-> +++ b/drivers/bluetooth/Kconfig
-> @@ -287,12 +287,12 @@ config BT_HCIBCM203X
->
->
->  config BT_HCIBCM4377
-> -       tristate "HCI BCM4377/4378/4387 PCIe driver"
-> +       tristate "HCI BCM4377/4378/4387/4388 PCIe driver"
->         depends on PCI
->         select FW_LOADER
->         help
-> -         Support for Broadcom BCM4377/4378/4387 Bluetooth chipsets attac=
-hed via
-> -         PCIe. These are usually found in Apple machines.
-> +         Support for Broadcom BCM4377/4378/4387/4388 Bluetooth chipsets
-> +         attached via PCIe. These are usually found in Apple machines.
->
->           Say Y here to compile support for HCI BCM4377 family devices in=
-to the
->           kernel or say M to compile it as module (hci_bcm4377).
-> diff --git a/drivers/bluetooth/hci_bcm4377.c b/drivers/bluetooth/hci_bcm4=
-377.c
-> index e6644cb0163c..77a5454a8721 100644
-> --- a/drivers/bluetooth/hci_bcm4377.c
-> +++ b/drivers/bluetooth/hci_bcm4377.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0-only OR MIT
->  /*
-> - * Bluetooth HCI driver for Broadcom 4377/4378/4387 devices attached via=
- PCIe
-> + * Bluetooth HCI driver for Broadcom 4377/4378/4387/4388 devices attache=
-d via PCIe
->   *
->   * Copyright (C) The Asahi Linux Contributors
->   */
-> @@ -26,11 +26,13 @@ enum bcm4377_chip {
->         BCM4377 =3D 0,
->         BCM4378,
->         BCM4387,
-> +       BCM4388,
->  };
->
->  #define BCM4377_DEVICE_ID 0x5fa0
->  #define BCM4378_DEVICE_ID 0x5f69
->  #define BCM4387_DEVICE_ID 0x5f71
-> +#define BCM4388_DEVICE_ID 0x5f72
->
->  #define BCM4377_TIMEOUT msecs_to_jiffies(1000)
->  #define BCM4377_BOOT_TIMEOUT msecs_to_jiffies(5000)
-> @@ -488,6 +490,7 @@ struct bcm4377_data;
->   *                     second window in BAR0
->   * has_bar0_core2_window2: Set to true if this chip requires the second =
-core's
->   *                         second window to be configured
-> + * bar2_offset: Offset to the start of the variables in BAR2
->   * clear_pciecfg_subsystem_ctrl_bit19: Set to true if bit 19 in the
->   *                                     vendor-specific subsystem control
->   *                                     register has to be cleared
-> @@ -511,6 +514,7 @@ struct bcm4377_hw {
->         u32 bar0_window1;
->         u32 bar0_window2;
->         u32 bar0_core2_window2;
-> +       u32 bar2_offset;
->
->         unsigned long has_bar0_core2_window2 : 1;
->         unsigned long clear_pciecfg_subsystem_ctrl_bit19 : 1;
-> @@ -836,8 +840,8 @@ static irqreturn_t bcm4377_irq(int irq, void *data)
->         struct bcm4377_data *bcm4377 =3D data;
->         u32 bootstage, rti_status;
->
-> -       bootstage =3D ioread32(bcm4377->bar2 + BCM4377_BAR2_BOOTSTAGE);
-> -       rti_status =3D ioread32(bcm4377->bar2 + BCM4377_BAR2_RTI_STATUS);
-> +       bootstage =3D ioread32(bcm4377->bar2 + bcm4377->hw->bar2_offset +=
- BCM4377_BAR2_BOOTSTAGE);
-> +       rti_status =3D ioread32(bcm4377->bar2 + bcm4377->hw->bar2_offset =
-+ BCM4377_BAR2_RTI_STATUS);
->
->         if (bootstage !=3D bcm4377->bootstage ||
->             rti_status !=3D bcm4377->rti_status) {
-> @@ -1197,6 +1201,14 @@ static int bcm4387_send_calibration(struct bcm4377=
-_data *bcm4377)
->                                                   bcm4377->taurus_cal_siz=
-e);
->  }
->
-> +static int bcm4388_send_calibration(struct bcm4377_data *bcm4377)
-> +{
-> +       /* BCM4388 always uses beamforming */
-> +       return __bcm4378_send_calibration(
-> +               bcm4377, bcm4377->taurus_beamforming_cal_blob,
-> +               bcm4377->taurus_beamforming_cal_size);
-> +}
-> +
->  static const struct firmware *bcm4377_request_blob(struct bcm4377_data *=
-bcm4377,
->                                                    const char *suffix)
->  {
-> @@ -1820,8 +1832,8 @@ static int bcm4377_boot(struct bcm4377_data *bcm437=
-7)
->         int ret =3D 0;
->         u32 bootstage, rti_status;
->
-> -       bootstage =3D ioread32(bcm4377->bar2 + BCM4377_BAR2_BOOTSTAGE);
-> -       rti_status =3D ioread32(bcm4377->bar2 + BCM4377_BAR2_RTI_STATUS);
-> +       bootstage =3D ioread32(bcm4377->bar2 + bcm4377->hw->bar2_offset +=
- BCM4377_BAR2_BOOTSTAGE);
-> +       rti_status =3D ioread32(bcm4377->bar2 + bcm4377->hw->bar2_offset =
-+ BCM4377_BAR2_RTI_STATUS);
->
->         if (bootstage !=3D 0) {
->                 dev_err(&bcm4377->pdev->dev, "bootstage is %d and not 0\n=
-",
-> @@ -1855,9 +1867,12 @@ static int bcm4377_boot(struct bcm4377_data *bcm43=
-77)
->         iowrite32(BCM4377_DMA_MASK,
->                   bcm4377->bar0 + BCM4377_BAR0_HOST_WINDOW_SIZE);
->
-> -       iowrite32(lower_32_bits(fw_dma), bcm4377->bar2 + BCM4377_BAR2_FW_=
-LO);
-> -       iowrite32(upper_32_bits(fw_dma), bcm4377->bar2 + BCM4377_BAR2_FW_=
-HI);
-> -       iowrite32(fw->size, bcm4377->bar2 + BCM4377_BAR2_FW_SIZE);
-> +       iowrite32(lower_32_bits(fw_dma),
-> +                 bcm4377->bar2 + bcm4377->hw->bar2_offset + BCM4377_BAR2=
-_FW_LO);
-> +       iowrite32(upper_32_bits(fw_dma),
-> +                 bcm4377->bar2 + bcm4377->hw->bar2_offset + BCM4377_BAR2=
-_FW_HI);
-> +       iowrite32(fw->size,
-> +                 bcm4377->bar2 + bcm4377->hw->bar2_offset + BCM4377_BAR2=
-_FW_SIZE);
->         iowrite32(0, bcm4377->bar0 + BCM4377_BAR0_FW_DOORBELL);
->
->         dev_dbg(&bcm4377->pdev->dev, "waiting for firmware to boot\n");
-> @@ -1914,16 +1929,16 @@ static int bcm4377_setup_rti(struct bcm4377_data =
-*bcm4377)
->         dev_dbg(&bcm4377->pdev->dev, "RTI is in state 1\n");
->
->         /* allow access to the entire IOVA space again */
-> -       iowrite32(0, bcm4377->bar2 + BCM4377_BAR2_RTI_WINDOW_LO);
-> -       iowrite32(0, bcm4377->bar2 + BCM4377_BAR2_RTI_WINDOW_HI);
-> +       iowrite32(0, bcm4377->bar2 + bcm4377->hw->bar2_offset + BCM4377_B=
-AR2_RTI_WINDOW_LO);
-> +       iowrite32(0, bcm4377->bar2 + bcm4377->hw->bar2_offset + BCM4377_B=
-AR2_RTI_WINDOW_HI);
->         iowrite32(BCM4377_DMA_MASK,
-> -                 bcm4377->bar2 + BCM4377_BAR2_RTI_WINDOW_SIZE);
-> +                 bcm4377->bar2 + bcm4377->hw->bar2_offset + BCM4377_BAR2=
-_RTI_WINDOW_SIZE);
->
->         /* setup "Converged IPC" context */
->         iowrite32(lower_32_bits(bcm4377->ctx_dma),
-> -                 bcm4377->bar2 + BCM4377_BAR2_CONTEXT_ADDR_LO);
-> +                 bcm4377->bar2 + bcm4377->hw->bar2_offset + BCM4377_BAR2=
-_CONTEXT_ADDR_LO);
->         iowrite32(upper_32_bits(bcm4377->ctx_dma),
-> -                 bcm4377->bar2 + BCM4377_BAR2_CONTEXT_ADDR_HI);
-> +                 bcm4377->bar2 + bcm4377->hw->bar2_offset + BCM4377_BAR2=
-_CONTEXT_ADDR_HI);
->         iowrite32(2, bcm4377->bar0 + BCM4377_BAR0_RTI_CONTROL);
->
->         ret =3D wait_for_completion_interruptible_timeout(&bcm4377->event=
-,
-> @@ -2489,6 +2504,21 @@ static const struct bcm4377_hw bcm4377_hw_variants=
-[] =3D {
->                 .send_calibration =3D bcm4387_send_calibration,
->                 .send_ptb =3D bcm4378_send_ptb,
->         },
-> +
-> +       [BCM4388] =3D {
-> +               .id =3D 0x4388,
-> +               .otp_offset =3D 0x415c,
-> +               .bar2_offset =3D 0x200000,
-> +               .bar0_window1 =3D 0x18002000,
-> +               .bar0_window2 =3D 0x18109000,
-> +               .bar0_core2_window2 =3D 0x18106000,
-> +               .has_bar0_core2_window2 =3D true,
-> +               .broken_mws_transport_config =3D true,
-> +               .broken_le_coded =3D true,
-> +               .broken_le_ext_adv_report_phy =3D true,
-> +               .send_calibration =3D bcm4388_send_calibration,
-> +               .send_ptb =3D bcm4378_send_ptb,
-> +       },
->  };
->
->  #define BCM4377_DEVID_ENTRY(id)                                         =
-    \
-> @@ -2502,6 +2532,7 @@ static const struct pci_device_id bcm4377_devid_tab=
-le[] =3D {
->         BCM4377_DEVID_ENTRY(4377),
->         BCM4377_DEVID_ENTRY(4378),
->         BCM4377_DEVID_ENTRY(4387),
-> +       BCM4377_DEVID_ENTRY(4388),
->         {},
->  };
->  MODULE_DEVICE_TABLE(pci, bcm4377_devid_table);
-> @@ -2516,7 +2547,7 @@ static struct pci_driver bcm4377_pci_driver =3D {
->  module_pci_driver(bcm4377_pci_driver);
->
->  MODULE_AUTHOR("Sven Peter <sven@svenpeter.dev>");
-> -MODULE_DESCRIPTION("Bluetooth support for Broadcom 4377/4378/4387 device=
-s");
-> +MODULE_DESCRIPTION("Bluetooth support for Broadcom 4377/4378/4387/4388 d=
-evices");
->  MODULE_LICENSE("Dual MIT/GPL");
->  MODULE_FIRMWARE("brcm/brcmbt4377*.bin");
->  MODULE_FIRMWARE("brcm/brcmbt4377*.ptb");
-> @@ -2524,3 +2555,5 @@ MODULE_FIRMWARE("brcm/brcmbt4378*.bin");
->  MODULE_FIRMWARE("brcm/brcmbt4378*.ptb");
->  MODULE_FIRMWARE("brcm/brcmbt4387*.bin");
->  MODULE_FIRMWARE("brcm/brcmbt4387*.ptb");
-> +MODULE_FIRMWARE("brcm/brcmbt4388*.bin");
-> +MODULE_FIRMWARE("brcm/brcmbt4388*.ptb");
->
-> ---
-> base-commit: 3c376f35eb13a144d5039d911b35110c2beef815
-> change-id: 20240602-btbcm4388-431aed90d763
->
+On Thu, Jun 06, 2024 at 01:32:46PM +0000, Haylen Chu wrote:
+> On Wed, Jun 05, 2024 at 06:54:17PM +0100, Conor Dooley wrote:
+> > > > +  accumulation-period:
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description: Accumulation period for a sample
+> > > > +    oneOf:
+> > > > +      - const: 0
+> > > > +        description: 512 ticks
+> > > > +      - const: 1
+> > > > +        description: 1024 ticks
+> > > > +      - const: 2
+> > > > +        description: 2048 ticks
+> > > > +      - const: 3
+> > > > +        description: 4096 ticks
+> > > > +    default: 2
+> > > > +
+> > > > +  chop-period:
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description: ADC chop period
+> >=20
+> > What's a "chop" and why is either this or the accumulation-period a
+> > fixed property of the hardware? Shouldn't this choice really be up to
+> > the user?
+>=20
+> The chop-period is an ADC parameter.
+>=20
+> Both accumulation-period and chop-period specify how the sensor
+> measures temperature. Making these parameters up to end users brings
+> extra unnecessary code complexity. Being configurable for each board
+> should be enough and other thermal drivers have been doing things in
+> this way.
 
-This looks good to me.
+Other systems may well have properties for this, but something being
+done in the past doesn't mean it might be the right thing to do now.
+I don't really buy that this is something you set to a fixed value per
+board, but rather the use case of a particular board would factor into
+whether or not you would want to use a shorter or longer accumulation
+period.
 
-Reviewed-by: Neal Gompa <neal@gompa.dev>
+> > > > +    oneOf:
+> > > > +      - const: 0
+> > > > +        description: 128 ticks
+> > > > +      - const: 1
+> > > > +        description: 256 ticks
+> > > > +      - const: 2
+> > > > +        description: 512 ticks
+> > > > +      - const: 3
+> > > > +        description: 1024 ticks
+> >=20
+> > Can we just make the number of ticks the unit here, and above?
+> > Also, a "oneOf: - const" structure is just an enum.
+>=20
+> I do not catch your idea. These values directly map to raw register
+> configuration, which simplify the implementation a lot.
 
---=20
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
+It should be trivial to convert them to register values in your driver.
+
+> > > > +    default: 3
+> > > > +
+> > > > +  sample-cycle-us:
+> > > > +    description: Period between samples
+> > > > +    default: 1000000
+> > No constraints?
+>=20
+> Sample cycle is more flexible because of hardware designing.
+
+It quite likely has constraints, flexible or not. Is the hardware
+capable of both 1 us and uint32_max us?
+
+Thanks,
+Conor.
+
+--xNgNBLWP/RMLxW5/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmHsWgAKCRB4tDGHoIJi
+0vG7AP48IalU1RGZ/KbtaGu/vPghK4eP4Nk9f7t4VJwKdTosBwD9F3Yrkl2G2Ylr
+82IeEwZmoQQrxmHthTZEV+dAIf6BJQk=
+=4835
+-----END PGP SIGNATURE-----
+
+--xNgNBLWP/RMLxW5/--
