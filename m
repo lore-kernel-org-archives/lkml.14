@@ -1,35 +1,42 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id B7C204DA0F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 18:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7BF61FCE
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 18:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717699925; cv=none; b=eTKY2gqFQJgWnqRotj2c7KOruQleaf8rQq+qX9Sxmf71ZErPBdg4JLgSIWc9X/4yvlornk/ehzDrDBLSh2/e1iusX91MkSTWcRvmYnHF7SOmEQrHXW+AP0s2+NII5oSPtJk4Leaj12W/bBkTxTo1YN060JuAkt8c3pGifsXvt/o=
+	t=1717699946; cv=none; b=PBdyfVe8EDJx4i8Qj65DOQQAjWq/ovfByq9g1DU4DXr9Pc7F0QrTJ0HXFtBv1dZp0MGoUCVExDlmpuYjVXPdDE5hG16eY0CFzTDVJBRYUjCYc9VfrHFZ7rUeQeRw26hVMAnOh3NDhG0lqfOkd7QptKbe29EO1c/5O7xm/J4yC4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717699925; c=relaxed/simple;
-	bh=tT1S45dFo3TnMqFOJNXtbpzOZ2RqSOmznvA+HJXmivk=;
+	s=arc-20240116; t=1717699946; c=relaxed/simple;
+	bh=cjxXDxzOXY9wo/DdhYXtPhf/ZYUdZrTm3zV+OIKl1o4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HPbmJTh+nUdRGU38uaBAI9Zsm0Uh/p5lvLq0Sn/QTq8+DAOilU9B8GhEsmaZsRYEQQdquT6R36FnVx4FgwAqMNdDTJia2Eu+TSqvAWaLjbug1cKh0c6IB1JhgltKxmvdL6wI7w5ey9N/D+2zL8UqBrXObR0/v4weDq91aqzH3fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 16315 invoked by uid 1000); 6 Jun 2024 14:52:02 -0400
-Date: Thu, 6 Jun 2024 14:52:02 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Andrea Parri <parri.andrea@gmail.com>, will@kernel.org,
-  peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-  dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-  akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
-  linux-kernel@vger.kernel.org, hernan.poncedeleon@huaweicloud.com,
-  jonas.oberhauser@huaweicloud.com
-Subject: Re: New locking test for the paulmckrcu/litmus github archive
-Message-ID: <51b94313-ed74-4507-a354-eb418389fdaf@rowland.harvard.edu>
-References: <a8c06694-098d-4b95-845c-96b40cd3ff2d@rowland.harvard.edu>
- <df851df5-0e3a-45b1-ae85-9625309766b0@paulmck-laptop>
- <1d175b42-84b4-4a48-b1fb-ab6fd3566f75@rowland.harvard.edu>
- <64d944ff-b609-4977-a491-91ffc199a4cd@paulmck-laptop>
- <26aa2333-5e54-4dcd-b6df-f8f8545b2672@rowland.harvard.edu>
- <47fe55b3-81af-4397-9769-bda25209e980@paulmck-laptop>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qvThVNZCDGFE4YRFWQzfGmcuvnn7j1GQpxewv/K+B2MzL0dHjgLRGqrTPtkijo2D8Gc3IlgXakp44iQV/JyAvSH74+x2yk1jS8lLYnpeGn2SQCI9SPKcpD0oo3iofBcnnBClffpTuhqLQSdv4JQsw6GLTezko4otYyY++9NzrbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcxDMi/m; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcxDMi/m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E573C2BD10;
+	Thu,  6 Jun 2024 18:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717699946;
+	bh=cjxXDxzOXY9wo/DdhYXtPhf/ZYUdZrTm3zV+OIKl1o4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rcxDMi/mm4rrxhsLm+uiiiyTw1Bdgo2qUMftXKNN+T4kMEkOa28Lf0c2WuEAAWjan
+	 alcsj5oKfniV2gfHekNWhq9lYL2tLaVNiK43VAW1uYHg9gbJ+ZUY9Tx3AYJeg3uM8b
+	 HoA/NKz9WbvZGi3PeopKO/vCh+JMk7FYJU/L3NVS8A9tRA/CXUJXTqRLuYD5WRqS/D
+	 AUAhDXtDEA0zHTVgCQtADQyMbFE/MuMJoKMgvJlo06fD0MQFNQgLKxY/FH2om83GHu
+	 yDBrC9YdNiQxH0MLUZvXIcrfGpWMrCqvB4JHvXCv4uOeYwR04qRg9bCzd2KtOCjgjt
+	 vSqNrIANfKfnw==
+Date: Thu, 6 Jun 2024 11:52:25 -0700
+From: Kees Cook <kees@kernel.org>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: Current state of the sysctl constification effort
+Message-ID: <202406061143.27C12F44A3@keescook>
+References: <7823ff95-1490-4c1b-b489-a9c05adad645@t-8ch.de>
+ <CGME20240531163128eucas1p20976d08e829373bfa8aa04fda1c7bec4@eucas1p2.samsung.com>
+ <202405310930.5E2728A@keescook>
+ <20240605082625.6hwdc3haim66rr7v@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,36 +45,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <47fe55b3-81af-4397-9769-bda25209e980@paulmck-laptop>
+In-Reply-To: <20240605082625.6hwdc3haim66rr7v@joelS2.panther.com>
 
-On Thu, Jun 06, 2024 at 10:57:42AM -0700, Paul E. McKenney wrote:
-> On Thu, Jun 06, 2024 at 01:21:28PM -0400, Alan Stern wrote:
-> > Okay.  Don't we already have a litmus test in the archive that really 
-> > does create a deadlock?  Something like: Lock Lock Unlock Unlock, all 
-> > using the same lock variable?
+On Wed, Jun 05, 2024 at 10:26:25AM +0200, Joel Granados wrote:
+> On Fri, May 31, 2024 at 09:31:24AM -0700, Kees Cook wrote:
+> > On Fri, May 31, 2024 at 12:50:32PM +0200, Thomas Wei?schuh wrote:
+> > > Hi Joel, Hi Luis,
+> > > 
+> > > most of the sysctl handler preparation patches have been picked up by
+> > > the subsystem maintainers and are available in -next.
+> > > 
+> > > Only two are missing:
+> > > 
+> > > * utsname: constify ctl_table arguments of utility function [0]
+> > > * sysctl: constify ctl_table arguments of utility function [1]
+> > > 
+> > > Both of them are going through the sysctl tree anyways.
+> > 
+> > This is great! Is the target v6.11 or v6.10 for these?
+> > 
+> > -Kees
+> > 
+> > > With this done it should be possible to also queue up 
+> > > sysctl: treewide: constify the ctl_table argument of handlers [2]
+> > > for the bots to chew on in -next.
+> @kees: Since you have probably done these before, I'll ask you the
+> questions:
 > 
-> We do have these guys:
-> 
-> auto/C-RR-GR+RR-R+RR-R.litmus
-> auto/C-RR-GR+RR-R.litmus
-> auto/C-RW-GR+RW-R+RW-R.litmus
-> auto/C-RW-GR+RW-R.litmus
-> auto/C-WR-GR+WR-R+WR-R.litmus
-> auto/C-WR-GR+WR-R.litmus
-> auto/C-WW-GR+WW-R+WW-R.litmus
-> auto/C-WW-GR+WW-R.litmus
-> 	A synchronize_rcu() in an RCU read-side critical section.
-> 
-> I added a manual/locked/self-deadlock.litmus, which is shown at the
-> end of this email.  Omitting the nested self-deadlocking acquisition
-> and release gives one state with blank line.  ;-)
+> 1. The idea is to send Linus the treewide-constify patch on its own at
+>    the end of the merge window for 6.11. Right?
 
-Hah, because there is no "exists" clause and no variables other than the 
-spinlock itself.
+Right. The best time is likely around Wed on the second week of the merge
+window, assuming all dependencies have landed. And it could be sent
+earlier if all the dependencies land sooner than that.
 
-> Or should I add a spin_is_locked() in order to get a non-empty
-> state line?
+> 2. Is there a special way to send these treewide patches? Or is it just
+>    a regular PR with an explanation on why it is being done?
 
-It's fine the way it is.
+I would do a regular PR with all the details for Linus to do the change
+himself, but many times people send these as an explicit patch. For
+example, include the full Coccinelle script, or the "sed" command
+line, etc, and then detail any "by hand" changes that were needed on
+top of that.
 
-Alan
+> 3. Can you please send (if there are any) me any examples where this has
+>    been done in the past. Maybe some lore.kernel.org links?
+
+I found this one that is a good example, though it's a PATCH not a GIT PULL:
+
+https://lore.kernel.org/lkml/20221220134519.3dd1318b@gandalf.local.home/
+became
+https://git.kernel.org/linus/292a089d78d3e2f7944e60bb897c977785a321e3
+
+-Kees
+
+-- 
+Kees Cook
