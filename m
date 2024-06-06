@@ -1,140 +1,79 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E1D194ADF
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 15:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AEA196435
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 15:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717688172; cv=none; b=huUC9AhrhitCjPZqhJ6oCfiMyQFDkCTH1IYG45hSmbkFkgfJ7jYYzWM8mkZQEZ/UdHzqgM4xldJYxMZSeGGzB0jZtg3bC48HJmCueL1BgM+TOG7Ihc9pnu9AbbK2pPcbIe++cEazzJCVHuKHGkpcb6tJO8sm3G1DthoqOV+PJs8=
+	t=1717688191; cv=none; b=IuYrR9sMZ+ObxYo2/yB/jQLncMlI7kbKcz95kvXC2yy977+1e96Q4j5rwT+OFPPYVXjR1SaBbpRSESWa+rj0D9Q43/QBGkHH74E+cDSluvC/m3jGJe3GUmadFnCHjGJ6n6bziawajp1qphsZicwkCzqOdJEw7ZZz4JJ3IuiDVCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717688172; c=relaxed/simple;
-	bh=PeDlhjT8ut6E9aKG5RIVbh/fG7BR4qLOOB65IxE1J9A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JZ5mFd4dG0s7vCG9SQtW1Pwp5F67H9IC32drU2qMMdBwGaA7gNaTqTlDXip99wJ1cH4cWeL2nI59usIbpwwuVh/Q2x6T4f128ArQLv2SqnGz7wJkxaq3f1I+crYTMYpFNl/ilFO+oEWOzt5Oaho1kiwFnt5COIPym0iZaWv0rIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DnKaB05e; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717688191; c=relaxed/simple;
+	bh=DMWAGyFqLiUWvbNs9QDYkBkhVwbCJWKpXAzb+JyJW6k=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Fk+QLM27yMwaCgiPww2XygspqNIvsJfAkavD0yJ23E+NiRQR/kOgtGmq5Q9+Nv9BfeKhyInMgMXLL5bxoSarKFG9tvCgJgLv4fcXZxpVK/Eqyq4e3TXr7X017EtyGk2hTeBUkb2K6PUOoCsXzc0YO2Im+EsIMlNYnvQk3592ofA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=HRSJNuX2; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnKaB05e"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52961b77655so1309292e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 08:36:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717688168; x=1718292968; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pyiq1sRZOIKUcWY3fSoYAYeVrpMvl8oHpujcmV9B7v4=;
-        b=DnKaB05eccfIAt/C4CYbAhTKKOwE/SMPwFgJpGjhS3woxmo2+CJypdIK6oaDN1YiW+
-         q73QrQ7YTour5BwWTqHVrERTBIChu2M9N+rZAd88Wk8OM7RkEzi8q2WzAxTtJapjoebU
-         jA8rEbqlfblph4HScoqXsu3ja58Mu2TvHAxvs5eoiVvW9s64hiCL+sYLmz89uGo9ZKxf
-         CTP4TR8R9YzHxI3H7K9HQnzjEmnj0Ib6R/YjRAZPUSjjx94T+YtfTkI1hRuXu1i1Es2f
-         zXkv0c7rFajw1OExJANAXHBBXKGMmB8wPhNrw59p8E1C929Zgd5ElTiJeBSai9+3lNSH
-         vaEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717688168; x=1718292968;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pyiq1sRZOIKUcWY3fSoYAYeVrpMvl8oHpujcmV9B7v4=;
-        b=Xqc80V6ogOlfBymzX/8CUrntPKfZOjMlLawDoQWa0XtnetTSRwnC65+ri8UsHpWlC3
-         cl7OQQzwAS65nzO8+rvqcU7pKAxxMZx6gG6xOrvuraqKEJ0f0Ny1KmsXa71AHlV5WVon
-         zt3IlLiiiyTynXVXR4kDvXJNrxufaM3Zp5nvsGhU/foCSTsaRa78F3zP481C9Pra2QO6
-         hCJhn93Z4JIxwRlc8hfFzGgkr8h6hp4nkM2OWNUreNa59KNzHP5hx1lSRtuFUbEAhtim
-         Ea76GYfmJMnyfEdnrGGp/j2f+obRWiYbIqAy357D1hJGHqB4ZmNsXYM+v+/BvAVS4Cnf
-         MpwQ==
-X-Gm-Message-State: AOJu0Yzppboq0Azp+TRk5efetBwjnsxvaHpzph0WaNGGSiUt+AhD6Xi0
-	2bA50ZcGsJxXqRXrf0Yr7V/uXw8YQYEzWbCAPLvBf60tq19gfB12gQwEKM01N/NsjfFcW3ZOI8n
-	YE21hh5FxMcajcBVXkdqKl6DbcA==
-X-Google-Smtp-Source: AGHT+IHQuNdr2OeAp/oAD/js4i9hW2f2j3tQeBgOjO+X2z42P30KkS8IeXfyT1aOsY/e6aSvoXJOhcS0RNQUMGCqCvc=
-X-Received: by 2002:ac2:5927:0:b0:520:36bb:a6e1 with SMTP id
- 2adb3069b0e04-52bab4e777fmr3309879e87.29.1717688167638; Thu, 06 Jun 2024
- 08:36:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="HRSJNuX2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1717688177; bh=++8ewb9EX0RP8F9ywU1zC5YXQy/naWwkIEvGHucm84U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=HRSJNuX27ze0gqAPIDTE5UUkbm+SFxA4/2WEzuLV3Rk9BQKeEQqwTkoKwUHR9BaeY
+	 pi+u6QKkg/BGMOm8g8sG/eHSwg3qSqdfWDYC/azSVvlLf7EVhn+0nM8yPrBGqvbMJQ
+	 YGdxWQKHQeUrIaHsn7BScUEo62J8tq7Xr9f5ioRM=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
+	id 58C258CB; Thu, 06 Jun 2024 21:22:12 +0800
+X-QQ-mid: xmsmtpt1717680132tcxy0shw6
+Message-ID: <tencent_92497A23B524569769377926D4536A636A05@qq.com>
+X-QQ-XMAILINFO: MesT5uKpDagVV8yG3LJVEpNsjnpzrQS9uLKt9eiJm3n5sjWvhLLJroV/j1Oa3J
+	 fRp3gFuPPOxohfAwT+ebtATtoCNyrBdUZ1VVYr6PH3aHpOuontwILuv/2hxEP/WcnxA8bzsawfbi
+	 jac9EGdCrd6nOZMsDXaoyfHjRwhiZB2MzzQax3MMLjrWx+18Y8j3CPrMylCi9NttqfeYAvyFEDF0
+	 kNoB7f7dyIPjfbHEi+cSu+W9dQ8/yRZalyiAqspBTEubW+dImFN0OPbfaoif69fl5PtPVutUxSSb
+	 tyCc3Ls54AQFp0KA6bEITTGBpJbjhLocw1Q/jZLdn/VBIPC6kGq5OjcW1h8Hp5GikjwY+vDc4ofy
+	 yTyJmQSgkC2hcTgKrEj7IkdRfZfGyLnKE13bl0R1MkMSdvBw+BWAMcS/Exe9lHYMF6kkT7jTkq74
+	 N60vl7vS+OflFQd6yn807EyUuR2YLxRwxhF52YVqVuifX6lM9FwlWylEwADFgxhM6IjcnWOzTpEC
+	 lhRE0+K4lzyCexRZNc4hLB2JAsZEU6dCxO4XhYc5fRxcpZnHR5rYnmnF/sW7OiEExl9o8rzDIm6s
+	 pChRcQnvTlzEh3K7+ON2U42ObgsibgN6Is0d4NLnIywKtKhJP3THkgIsEJdGHUedljafl0ECwgJv
+	 Lu/Fg8t0Idu/02X8VkzCgwlEpN8oCOUNG8mWGnxDyqUFO1oFpj3iDpVAKRNWZFThgld06lLGriXm
+	 ICjM/jUZoKKpjeLuomEL5jA4FCnit3g8er4/2IeCkbiXA10KgjtFLbizeh57Y4A0JjnOUOclyf/y
+	 66eE9aN/gkWUS9U7fU6fS2aHDg9fmIEpbgBZdm1bLls56kC7AlfTFlQlU9oM1en4ZUMeAMFrjwHo
+	 jhJE2xyV7id6BQ2YoICl8I7cngv8PjqR9DFCTSpQaVGF4F+Qj/5e5/ouPj8XyHY2MSjFJHSPzjuw
+	 ckc+EAAyM=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+ee157488ade46c021ef4@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [gfs2?] WARNING: locking bug in gfs2_fill_super
+Date: Thu,  6 Jun 2024 21:22:12 +0800
+X-OQ-MSGID: <20240606132211.778639-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000b241e40619e1c3bc@google.com>
+References: <000000000000b241e40619e1c3bc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605083557.2051480-1-mingo@kernel.org> <CAMzpN2hms-cpsaief4j_1LhXXznreE+it8nnsH2-8yoQ2Bn0Rw@mail.gmail.com>
- <ZmF8AH0TX_lgkxS5@gmail.com>
-In-Reply-To: <ZmF8AH0TX_lgkxS5@gmail.com>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Thu, 6 Jun 2024 11:35:56 -0400
-Message-ID: <CAMzpN2gL04UbRUP5HDkz9hxdyxXVkFcXBrDc+hGmvR0rxt2Onw@mail.gmail.com>
-Subject: Re: [PATCH] x86/fpu: Introduce the x86_task_fpu() helper method
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Dave Hansen <dave@sr71.net>, 
-	Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 6, 2024 at 5:06=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrote=
-:
->
->
-> * Brian Gerst <brgerst@gmail.com> wrote:
->
-> > >  17 files changed, 104 insertions(+), 107 deletions(-)
-> >
-> > This series would be better if you added the x86_task_fpu() helper in
-> > an initial patch without any other changes.  That would make the
-> > actual changes more visible with less code churn.
->
-> Makes sense - I've split out the patch below and adjusted the rest of the
-> series. Is this what you had in mind?
->
-> Note that I also robustified the macro a bit:
->
->  -# define x86_task_fpu(task) ((struct fpu *)((void *)task + sizeof(*task=
-)))
->  +# define x86_task_fpu(task) ((struct fpu *)((void *)(task) + sizeof(*(t=
-ask))))
->
-> Thanks,
->
->         Ingo
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D>
-> From: Ingo Molnar <mingo@kernel.org>
-> Date: Thu, 6 Jun 2024 11:01:14 +0200
-> Subject: [PATCH] x86/fpu: Introduce the x86_task_fpu() helper method
->
-> The per-task FPU context/save area is allocated right
-> next to task_struct() - introduce the x86_task_fpu()
-> helper that calculates this explicitly from the
-> task pointer.
->
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> ---
->  arch/x86/include/asm/processor.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/proc=
-essor.h
-> index 920b0beebd11..fb6f030f0692 100644
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -507,6 +507,8 @@ struct thread_struct {
->         struct fpu              *fpu;
->  };
->
-> +#define x86_task_fpu(task) ((struct fpu *)((void *)(task) + sizeof(*(tas=
-k))))
-> +
->  /*
->   * X86 doesn't need any embedded-FPU-struct quirks:
->   */
+please test wr in gfs2_fill_super
 
-Since this should be the first patch in the series, It would be:
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git 9d99040b1bc8
 
-#define #define x86_task_fpu(task) (&(task)->thread.fpu)
+diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
+index 0561edd6cc86..7288a6221fde 100644
+--- a/fs/gfs2/ops_fstype.c
++++ b/fs/gfs2/ops_fstype.c
+@@ -1308,6 +1308,7 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
+ fail_delete_wq:
+ 	destroy_workqueue(sdp->sd_delete_wq);
+ fail_glock_wq:
++	flush_workqueue(sdp->sd_glock_wq);
+ 	destroy_workqueue(sdp->sd_glock_wq);
+ fail_free:
+ 	free_sbd(sdp);
 
-along with converting the existing accesses to task->thread.fpu in one
-patch with no other functional changes. Then you could change how the
-fpu struct is allocated without touching every access site again.
-
-
-Brian Gerst
