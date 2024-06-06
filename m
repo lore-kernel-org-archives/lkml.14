@@ -1,106 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9E38821;
-	Thu,  6 Jun 2024 06:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D587F8821;
+	Thu,  6 Jun 2024 06:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717653768; cv=none; b=tp0dkdqCZqvm3hfJBBZw1GwZDbFLvxy5/8B+sZMLm7CQ5sA4e1QLdpIIrm1w5ob1ko6i/K/yH2SKO1dP4qohN3BwWps5D/8jHJSOZ0+hmy+dK3x+tOu6lE20gm24t2Wp5C1LvRM8uHrZGwIENd0Jl9moWMYTKCeyuKyKKf8pT9g=
+	t=1717653845; cv=none; b=gAQgTsFN0vPAnq2NL8Sg0rMbMDzuYbxhA7DZPH6WTn2yVK8UMAdYlrwolKVI8j2vieZymbxglAZBasfIskP23dkHeMi+n0FDrzlS36qbqwhDfvNBfmFnrmlJdVBPcGmKfrM2eOdHCk5cItnkd0geAJlxvWtzzKagERavNngrIKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717653768; c=relaxed/simple;
-	bh=+N73ZoMcTU2eT6S1zwH3KuWbb697R2JF/05UDlnStFg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=OMfZD5R4DfDjBhp1qXw7CkgBO1rS4HyVckVeX+3uou26oE6iLXHoBUIzG2hWabf8yIUyPN8LCuBy+yPgxj/CAtOVJH9LpuVoD5RScqNgrS7NOrkEVuBgKQxs8NEBdTIsh2dG7D5FjDI2lGhSrsBS76wq7baricMvEyNTXW/uoQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZmLynZHb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZmLynZHb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9185C2BD10;
-	Thu,  6 Jun 2024 06:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717653768;
-	bh=+N73ZoMcTU2eT6S1zwH3KuWbb697R2JF/05UDlnStFg=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ZmLynZHbI6+wxCoH1qsyPjAEaqVNs7ObvEwVHIw3vJZfJHIwRxJfcf9FU3FL6NEEi
-	 g9yD4HLhAw0LoywOGsYjq7bj/p6fVvb66y+JJBELnB9P9WEGYvqEaCXlDEachSbGHA
-	 FRaf5sPKiic7EiwGrHG5hgacpnqiYn4ByHic1mk3NhtPrm61IpuUiVVO4X4U7s04ud
-	 GWGcjFMk85/3uLd6E8wEDOs9t3QNJ7LCJGI6cZyTTZ7CLOmIbPrLmc0PYZ3FpQL6R4
-	 mmbSZBbf9uHeBP9BxtYYUfhCFOxhy9eo/RtlsfNXBCA7SAb0aoSLB7LZDYGzuDJ59Y
-	 n/Am9dYvkU9Kg==
+	s=arc-20240116; t=1717653845; c=relaxed/simple;
+	bh=q0RkIW1UuOcBaGnX7vu1FHUFaqjIonZ3nWXkvIDOjNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ui31+ChYELI/ESi+uaMPq7kL5zSmeGLwH1k4rhdjAn4hUI0w9mJ3Sxnb63g22buPHhc3EiN19GB/qc6bDZCBdYyRg7VFMHjPuUTu5jTEddFkEjQcDH554u1Vuyw8F2ZA7YD7ptKFcRUBSxmk1bUatT/AEpS8W3IwvwcuobAw1g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f480624d0dso5742985ad.1;
+        Wed, 05 Jun 2024 23:04:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717653843; x=1718258643;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vW+NUheV7568ouqMVknlYZR46EFHvU/7fsxRTr51dSA=;
+        b=jTi2AZpIgG3Mnlfq9+peXCZVu82N0zqbqU7TDUgj7EIhjbhovCfJcrLhZ9/eu6bzQd
+         fdfgntsRyxM99senHDY+aPxEVQArj0KUBt3F4043lY/6WNm4CQIAQl5TTv4jDOPGTBfA
+         mygpZUbEwduLKcxyN+K01YHRH7TIpuFZguLsGG36TUyGeYURagozqCyk6E4uRSNyYyM1
+         Hs8MB8ValxUF45ukqWZjqsk3PgbOOcIMduWrWpw8dUwEphK/nCKPSpPAKe8JwEfAWFos
+         Lb39t2GE99meAZlLjksB41ZgTSASabiVuQUgU47Ceq+u9uKUW0NgbA3KuFaMr5yVRm8a
+         fuQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWdIHCYR2QGyVc2ccrZ7tNgeF9lT2veWsI2EBLqCerJVP56K5b2cvGUrS9qAU9I29IKBOpum/3Vv/0Eca5tKOvIiskpZEeruVWuc8dv8vQrNBFWmB0iqEmKs8bFyUBc8kY7aIFqpb8RtEw8
+X-Gm-Message-State: AOJu0YxCkyE1uhcpH4K8Lk2XWIyVSvKPl7Xz5e0ZBxjf1O7VygJczKBr
+	mTjQEeNuTenvVJiSv88hW3YXJeNWSVGGpJQvzzi5wgykVHBApcx91Or0jg==
+X-Google-Smtp-Source: AGHT+IEedURaXgZKthRR+I14MZX7JgvaXsxKqCy9JKFRscKccmM0FEVjcN3PflLAjXihY0+B8ZLs+Q==
+X-Received: by 2002:a17:902:e80b:b0:1f4:8358:47d5 with SMTP id d9443c01a7336-1f6a590a9d9mr65401995ad.7.1717653843013;
+        Wed, 05 Jun 2024 23:04:03 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd7d898asm5809685ad.134.2024.06.05.23.04.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 23:04:02 -0700 (PDT)
+Date: Thu, 6 Jun 2024 06:03:56 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Aditya Nagesh <adityanagesh@linux.microsoft.com>,
+	"adityanagesh@microsoft.com" <adityanagesh@microsoft.com>,
+	"kys@microsoft.com" <kys@microsoft.com>,
+	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"decui@microsoft.com" <decui@microsoft.com>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6] Drivers: hv: Cosmetic changes for hv.c and balloon.c
+Message-ID: <ZmFRTC7mi-67GG_8@liuwe-devbox-debian-v2>
+References: <1717152521-6439-1-git-send-email-adityanagesh@linux.microsoft.com>
+ <SN6PR02MB4157D719EE0D5BAC19FFA449D4FD2@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 06 Jun 2024 09:02:39 +0300
-Message-Id: <D1SPFVXS6FOG.IQQB3INFYEF2@kernel.org>
-Cc: <dpsmith@apertussolutions.com>, <tglx@linutronix.de>,
- <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
- <dave.hansen@linux.intel.com>, <ardb@kernel.org>, <mjg59@srcf.ucam.org>,
- <James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>,
- <jgg@ziepe.ca>, <luto@amacapital.net>, <nivedita@alum.mit.edu>,
- <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <corbet@lwn.net>,
- <ebiederm@xmission.com>, <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
- <kanth.ghatraju@oracle.com>, <andrew.cooper3@citrix.com>,
- <trenchboot-devel@googlegroups.com>
-Subject: Re: [PATCH v9 04/19] x86: Secure Launch Resource Table header file
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: <ross.philipson@oracle.com>, <linux-kernel@vger.kernel.org>,
- <x86@kernel.org>, <linux-integrity@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
- <kexec@lists.infradead.org>, <linux-efi@vger.kernel.org>,
- <iommu@lists.linux-foundation.org>
-X-Mailer: aerc 0.17.0
-References: <20240531010331.134441-1-ross.philipson@oracle.com>
- <20240531010331.134441-5-ross.philipson@oracle.com>
- <D1RFWFIJEYWL.2FC7V79321264@kernel.org>
- <1eca8cb1-4b3b-402b-993b-53de7c810016@oracle.com>
- <D1RLBMTUKRFN.34KQXEFZTBA08@kernel.org>
- <249a9b27-c18d-4377-8b51-9bc610b53a8b@oracle.com>
- <D1RNKV4JIE5L.1LNG82UAC916M@kernel.org>
- <f66de08f-4905-48d6-8bcf-5b1ab847492f@oracle.com>
- <D1RSB1PB5XGS.2X032M0E1VMJW@kernel.org>
- <a865a25c-336e-47de-9718-de4cb957e6c2@oracle.com>
-In-Reply-To: <a865a25c-336e-47de-9718-de4cb957e6c2@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB4157D719EE0D5BAC19FFA449D4FD2@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Wed Jun 5, 2024 at 10:03 PM EEST,  wrote:
-> So I did not mean to imply that DRTM support on various=20
-> platforms/architectures has a short expiration date. In fact we are=20
-> actively working on DRTM support through the TrenchBoot project on=20
-> several platforms/architectures. Just a quick rundown here:
->
-> Intel: Plenty of Intel platforms are vPro with TXT. It is really just=20
-> the lower end systems that don't have it available (like Core i3). And=20
-> my guess was wrong about x86s. You can find the spec on the page in the=
-=20
-> following link. There is an entire subsection on SMX support on x86s and=
-=20
-> the changes to the various GETSEC instruction leaves that were made to=20
-> make it work there (see 3.15).
->
-> https://www.intel.com/content/www/us/en/developer/articles/technical/envi=
-sioning-future-simplified-architecture.html
+On Sat, Jun 01, 2024 at 04:11:32AM +0000, Michael Kelley wrote:
+> From: Aditya Nagesh <adityanagesh@linux.microsoft.com> Sent: Friday, May 31, 2024 3:49 AM
+> > 
+> > Fix issues reported by checkpatch.pl script in hv.c and
+> > balloon.c
+> >  - Remove unnecessary parentheses
+> >  - Remove extra newlines
+> >  - Remove extra spaces
+> >  - Add spaces between comparison operators
+> >  - Remove comparison with NULL in if statements
+> > 
+> > No functional changes intended
+> > 
+> > Signed-off-by: Aditya Nagesh <adityanagesh@linux.microsoft.com>
+> > Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> > ---
+> > [V6]
+> > Fix build failure and unintended change after rebase
+> > 
+> > [V5]
+> > Rebase to hyperv-fixes
+> > 
+> > [V4]
+> > Fix Alignment issue and revert a line since 100 characters are allowed in a line
+> > 
+> > [V3]
+> > Fix alignment issues in multiline function parameters.
+> > 
+> > [V2]
+> > Change Subject from "Drivers: hv: Fix Issues reported by checkpatch.pl script"
+> >  drivers/hv/hv.c         | 37 ++++++++--------
+> >  drivers/hv/hv_balloon.c | 98 +++++++++++++++--------------------------
+> >  2 files changed, 53 insertions(+), 82 deletions(-)
+> 
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> 
 
-Happend to bump into same PDF specification and exactly the seeked
-information is "3.15 SMX Changes". So just write this down to some
-patch that starts adding SMX things.
-
-Link: https://cdrdv2.intel.com/v1/dl/getContent/776648
-
-So link and document, and other stuff above is not relevant from
-upstream context, only potential maintenance burden :-)
-
-For any architectures dig a similar fact:
-
-1. Is not dead.
-2. Will be there also in future.
-
-Make any architecture existentially relevant for and not too much
-coloring in the text that is easy to check.
-
-It is nearing 5k lines so you should be really good with measured
-facts too (not just launch) :-)
-
-BR, Jarkko
+Applied to hyperv-fixes. Thanks.
