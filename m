@@ -1,162 +1,146 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1C513DBBE
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 23:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFA513D884
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 23:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717715498; cv=none; b=IXuYBADsimEnfIYRLo4ClCaRgix108FkIlDohnvSuQkghjo+4c2VMQfB0e1bjhKM4en9OiOZEzrJi5MkB031Cr8qBBmF3WArXl2HulB44XTaCjeTmt/1NWbwlf5kXAIUNPrTwVMKJZUEc/w0/0KGPi6HbIAZ63GoLXrzeLUZLO4=
+	t=1717715533; cv=none; b=uKk4yktUxrBJJYR9NgUosYt0Lc0VdrCCoW/0bFxA3slePHBFvXR4nIMNojZOtctql76GLChlgGwdc+XXssJEP337/9t7fC3sEBEVFpzNdyPfoOXx7bqgPmepSOTSdFujFEuxOp67dIC+/wKYMX/Gm+r91frFqErnr8GGv9o595o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717715498; c=relaxed/simple;
-	bh=q+3KPt2nJvf1TgYW57/HxN+zoujEHesZU8KKVd4ivnY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XmlUTIXhQDPr81Dts8zVrcrczCyYEEABDJGdxQ2W3vzAJ/NrqOXZ9W8pDfi7x9bADAuCzjBKRW+Jqlfug65rl4H+ArRwSQh1yjCjTX2MpNKpMXVl4+xoUsZWDNAeca4AF36LXmTOv7XGEhEj3x/R96Wj4AqBwhepRCLziJT13w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NTAVzUDP; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717715533; c=relaxed/simple;
+	bh=9RCInlrJLxjHHfqXM0YBqh+KyU635HQ7qyOQspDvHlE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qBCstlANmfKR2ztOTlj3iEATCg614iI23fh+S2PN4vzoupSQ3XbrMYdVKpNAh6bATP9KLPhRKrZlONK2pJmFCIXzTutiUxP79QAt4a8NfrX9MgVu/fbeitg5xeDHrey7MH1TEH8NdwuGwrL7nCg9YwmsXIU0j4GtfsUYr02Rwp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NOyzSHuX; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NTAVzUDP"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57a1fe63947so1896783a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 16:11:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NOyzSHuX"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2e72b8931caso15397201fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 16:12:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717715495; x=1718320295; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q+3KPt2nJvf1TgYW57/HxN+zoujEHesZU8KKVd4ivnY=;
-        b=NTAVzUDPYYfzE3FIDRBM/Cmodkl/f6IlxK+vhKlIz+GqfWncNAH4E6Vkf4MOi5ukjw
-         061SwqhqhT9Vr3HXO5NFcJU36UNnBDYKHs9nqI9HKYIMmmoZl90Qqta6A+U5mAFv9Lw2
-         9w8Nst8dvJahjlfj4L/4W3fCv7NMF8JU6neUV8InC4Z6euqjp2iSqu+N2CAI+ZYg2H3P
-         7xComUas08VJKd7r5u430EhSHh4O81I6pW18XxJoFJNfSDOT3TEwcl/DUWC6BRRYzxiZ
-         3bYNO/JMaYYUtVpzL58Q2Ni00UaGgCy1v2K6/iH2D4+ZTCOmcwdr6dChpMvh2UtRunSs
-         CltQ==
+        d=suse.com; s=google; t=1717715530; x=1718320330; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=gHxOmY66PMBikRA71tJKrKC9swHys5sCI0tLSM2/7xc=;
+        b=NOyzSHuXbQrmiAM7p6onal8wPENk+IcWWEPI/0Iz5zcutFD2xBcYcQqdJzmThf7DfN
+         XFjaUbNK6Pd0r4jr/qEvTdlNn4P99RUUSwrKHSIRmU7F5yYFylpyfEUgjG8u9mbeUyqc
+         PIsZZQwfOxbnRy6Q4C81hOct5zyD1cIv6Gjbx6aTIZ0slbWKh5Z+j3MUXsXuTBaYaUBe
+         todhu6C57T6Hdqqgj9wG/DaP6I/k5FdqJVeykpM8zHbdHKU95gbfCswa77wA8cIMvjfa
+         Ps+idPnDCNwYyazuqSYuGC1A4TLBc9W/LwVgcPcU0hL4AEZ6gjwNNaaVxVsP7WRZHTPq
+         LvCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717715495; x=1718320295;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q+3KPt2nJvf1TgYW57/HxN+zoujEHesZU8KKVd4ivnY=;
-        b=PlfPar29GvVYaGCM2eKabDPZJNw8Gto9tFo4ocw0GW+moVDqP/7jPYLxo/gW8KCSM2
-         c5Iafn7RgtzThI+DTMyg6FsvTe3rNIaAcq7SOd5zEsSHR8vPYylJby7Gl3wiTKZvo9ne
-         iJNXGJ+EwE+eAzQM67eLI9JekfSvRl+QZ7FkGnp/lmKuiM+CrN+xzuoGcKFMEja9aiMv
-         o1caIePANk87negu6eh33OUbXa4xwKCMq1u/YOZ77rLNnkE/1TqpOOM7962gC7ELbrB2
-         hLjNk6WI3aVi98ixbqs5Gs5eUnbRmxMZScGxqfxIVtZJo3pANFIOr1U4owo/WdbZlUcX
-         rXHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpN5RsTiuvUhZGuiecfyaSvix1PGYiClf6sMQCPNxnHRHOzSHM5U9HzuaP+DfA7uakz9Jc0jV/PXaw2P69fUVGOPDmpdk6Q4AyzVME
-X-Gm-Message-State: AOJu0YxGbuLy/h7Paprf25iVU4C4GdAZww0aCgkU4GLjkMQ9gomZhED3
-	ulk39LU9auYZ3vF3a67tRYDbL7GGmLFLtooiJHg44kSsY3XdTooyRDcNsamkcK+3Rt4Vsd44FmP
-	RyP5uIfhebieEhrtqZDyFR9xBN7wYL+/BGZJcSAyYYFv6djCp6YtK
-X-Google-Smtp-Source: AGHT+IFNiFFnhENwqOI+298n5J5418oaFJcQaIba1KTvkhnfSk8Pre1KoxQy4qsGY35MzxINLXH7AW0DYULAth/OFgc=
-X-Received: by 2002:a17:906:694e:b0:a68:d2c:2a23 with SMTP id
- a640c23a62f3a-a6cdc0e0f9dmr54481066b.76.1717715494736; Thu, 06 Jun 2024
- 16:11:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717715530; x=1718320330;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gHxOmY66PMBikRA71tJKrKC9swHys5sCI0tLSM2/7xc=;
+        b=Y7pJWRDyz3+C94TAMdaUDAvU6DdvZXpflw4xbsPijHLIB8L9zJcON0zkdsJoEhXte+
+         lHeICxveV8VOSU/DnG3jRo+MHcfS9sSmizmG1qJt4O5TbvyxoyXkUKVGuYFrTXQiEJ7i
+         Pj3YN+dlh+h/2BssifjBsQnFOmqEW08Z76+VXQdqj4P+pwhYezUJ+CH4mH8jotUx2oCb
+         PsT2swCo7N1bHHRf2DCExqfLrnuasQuinqKRn5og/S33F/aSk/SfLjuvjR03MV7BhMkU
+         VX8PSh7FYERJZ934bf/vkZvYXYMYADz+61UX1XzveaeAhfdYOtZd8/3UbJhol2trwAML
+         wxSw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9j7KUOgDAIypNWNVerkykfAz4vm1uc3pSyOhBESTiG2EneWI2oXIn4TXYfEwOXgtj7sQd0YdOrHJXaM720YAvBR9orMfI8niZjDP2
+X-Gm-Message-State: AOJu0Yy8k9O5OKN7knIhtpAgPH49urjRn68UCgzuefanhrbMfs+ZByw4
+	bPQLuyfsa/hwfxW82voHhRi+OIJA+xEEWMPlyhpcRgc/BNSDolcsPt7tq+HubFE=
+X-Google-Smtp-Source: AGHT+IFkwvyyGaIV8j/6Y+JqLICb1PTXzPQt4MCr/hgT0t7zIDfVr195pbzGR02j+I9X2fuSSPmY5w==
+X-Received: by 2002:a2e:2c19:0:b0:2e9:84f9:3e17 with SMTP id 38308e7fff4ca-2eadce9253dmr6129301fa.50.1717715529655;
+        Thu, 06 Jun 2024 16:12:09 -0700 (PDT)
+Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c28066d57esm4262228a91.19.2024.06.06.16.12.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 16:12:09 -0700 (PDT)
+Message-ID: <8697c785-8724-448d-8cba-65e81a9c4d6a@suse.com>
+Date: Fri, 7 Jun 2024 08:42:03 +0930
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240604175340.218175-1-yosryahmed@google.com>
- <ZmI573n9-SoK4dIg@google.com> <CAJD7tkbO+ZLdhs-9BpthztZX32i8C4=QEnoiXGS7bM399nqwzg@mail.gmail.com>
-In-Reply-To: <CAJD7tkbO+ZLdhs-9BpthztZX32i8C4=QEnoiXGS7bM399nqwzg@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 6 Jun 2024 16:10:58 -0700
-Message-ID: <CAJD7tkYtZPv26raSsXZrn=t_P8=6A0QCfgSjBjq_WRDu=BntLA@mail.gmail.com>
-Subject: Re: [PATCH] mm: zsmalloc: share slab caches for all zsmalloc zpools
-To: Minchan Kim <minchan@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>, 
-	Erhard Furtner <erhard_f@mailbox.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Yu Zhao <yuzhao@google.com>, Chengming Zhou <chengming.zhou@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: manual merge of the btrfs tree with the btrfs-fixes
+ tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>, David Sterba <dsterba@suse.cz>
+Cc: David Sterba <dsterba@suse.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20240607085525.30555161@canb.auug.org.au>
+Content-Language: en-US
+From: Qu Wenruo <wqu@suse.com>
+Autocrypt: addr=wqu@suse.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJjTSJVBQkNOgemAAoJEMI9kfOh
+ Jf6oapEH/3r/xcalNXMvyRODoprkDraOPbCnULLPNwwp4wLP0/nKXvAlhvRbDpyx1+Ht/3gW
+ p+Klw+S9zBQemxu+6v5nX8zny8l7Q6nAM5InkLaD7U5OLRgJ0O1MNr/UTODIEVx3uzD2X6MR
+ ECMigQxu9c3XKSELXVjTJYgRrEo8o2qb7xoInk4mlleji2rRrqBh1rS0pEexImWphJi+Xgp3
+ dxRGHsNGEbJ5+9yK9Nc5r67EYG4bwm+06yVT8aQS58ZI22C/UeJpPwcsYrdABcisd7dddj4Q
+ RhWiO4Iy5MTGUD7PdfIkQ40iRcQzVEL1BeidP8v8C4LVGmk4vD1wF6xTjQRKfXHOwE0EWdWB
+ rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
+ Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
+ E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
+ vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
+ g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
+ AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJjTSJuBQkNOge/AAoJEMI9kfOhJf6o
+ rq8H/3LJmWxL6KO2y/BgOMYDZaFWE3TtdrlIEG8YIDJzIYbNIyQ4lw61RR+0P4APKstsu5VJ
+ 9E3WR7vfxSiOmHCRIWPi32xwbkD5TwaA5m2uVg6xjb5wbdHm+OhdSBcw/fsg19aHQpsmh1/Q
+ bjzGi56yfTxxt9R2WmFIxe6MIDzLlNw3JG42/ark2LOXywqFRnOHgFqxygoMKEG7OcGy5wJM
+ AavA+Abj+6XoedYTwOKkwq+RX2hvXElLZbhYlE+npB1WsFYn1wJ22lHoZsuJCLba5lehI+//
+ ShSsZT5Tlfgi92e9P7y+I/OzMvnBezAll+p/Ly2YczznKM5tV0gboCWeusM=
+In-Reply-To: <20240607085525.30555161@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 6, 2024 at 4:03=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com> =
-wrote:
->
-> On Thu, Jun 6, 2024 at 3:36=E2=80=AFPM Minchan Kim <minchan@kernel.org> w=
-rote:
-> >
-> > On Tue, Jun 04, 2024 at 05:53:40PM +0000, Yosry Ahmed wrote:
-> > > Zswap creates multiple zpools to improve concurrency. Each zsmalloc
-> > > zpool creates its own 'zs_handle' and 'zspage' slab caches. Currently=
- we
-> > > end up with 32 slab caches of each type.
-> > >
-> > > Since each slab cache holds some free objects, we end up with a lot o=
-f
-> > > free objects distributed among the separate zpool caches. Slab caches
-> > > are designed to handle concurrent allocations by using percpu
-> > > structures, so having a single instance of each cache should be enoug=
-h,
-> > > and avoids wasting more memory than needed due to fragmentation.
-> > >
-> > > Additionally, having more slab caches than needed unnecessarily slows
-> > > down code paths that iterate slab_caches.
-> > >
-> > > In the results reported by Eric in [1], the amount of unused slab mem=
-ory
-> > > in these caches goes down from 242808 bytes to 29216 bytes (-88%). Th=
-is
-> > > is calculated by (num_objs - active_objs) * objsize for each 'zs_hand=
-le'
-> > > and 'zspage' cache. Although this patch did not help with the allocat=
-ion
-> > > failure reported by Eric with zswap + zsmalloc, I think it is still
-> > > worth merging on its own.
-> > >
-> > > [1]https://lore.kernel.org/lkml/20240604134458.3ae4396a@yea/
-> >
-> > I doubt this is the right direction.
-> >
-> > Zsmalloc is used for various purposes, each with different object
-> > lifecycles. For example, swap operations relatively involve short-lived
-> > objects, while filesystem use cases might have longer-lived objects.
-> > This mix of lifecycles could lead to fragmentation with this approach.
->
-> Even in a swapfile, some objects can be short-lived and some objects
-> can be long-lived, and the line between swap and file systems both
-> becomes blurry with shmem/tmpfs. I don't think having separate caches
-> here is vital, but I am not generally familiar with the file system
-> use cases and I don't have data to prove/disprove it.
->
-> >
-> > I believe the original problem arose when zsmalloc reduced its lock
-> > granularity from the class level to a global level. And then, Zswap wen=
-t
-> > to mitigate the issue with multiple zpools, but it's essentially anothe=
-r
-> > bandaid on top of the existing problem, IMO.
->
-> IIRC we reduced the granularity when we added writeback support to
-> zsmalloc, which was relatively recent. I think we have seen lock
-> contention with zsmalloc long before that. We have had a similar patch
-> internally to use multiple zpools in zswap for many years now.
->
-> +Yu Zhao
->
-> Yu has more historical context about this, I am hoping he will shed
-> more light about this.
->
-> >
-> > The correct approach would be to further reduce the zsmalloc lock
-> > granularity.
->
-> I definitely agree that the correct approach should be to fix the lock
-> contention at the source and drop zswap's usage of multiple zpools.
-> Nonetheless, I think this patch provides value in the meantime. The
-> fragmentation within the slab caches is real with zswap's use case.
-> OTOH, sharing a cache between swap and file system use cases leading
-> to fragmentation within the same slab cache is a less severe problem
-> in my opinion.
->
-> That being said, I don't feel strongly. If you really don't like this
-> patch I am fine with dropping it.
 
-Oh and I forgot to mention, Chengming said he is already working on
-restoring the per-class lock and collecting lock contention data, so
-maybe that will be enough after all. Ideally we want to compare:
-- single zpool with per-pool lock
-- multiple zpools with per-pool lock (current)
-- single zpool with per-class locks
+
+在 2024/6/7 08:25, Stephen Rothwell 写道:
+> Hi all,
+> 
+> Today's linux-next merge of the btrfs tree got a conflict in:
+> 
+>    fs/btrfs/extent_io.c
+> 
+> between commit:
+> 
+>    d202776a44d5 ("btrfs: protect folio::private when attaching extent buffer folios")
+> 
+> from the btrfs-fixes tree and commit:
+> 
+>    46cda5a0ef68 ("btrfs: fix a possible race window when allocating new extent buffers")
+> 
+> from the btrfs tree.
+> 
+> I fixed it up (I just used the latter) and can carry the fix as
+> necessary.
+
+Please use the one titled "btrfs: protect folio::private when attaching 
+extent buffer folios" instead.
+
+The one titled "btrfs: fix a possible race window when allocating new 
+extent buffers" has a bug that would lead to a crash when a race happens.
+
+> This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+> 
+
+The "fix a possible race" one is originally a RFC without proper root 
+cause pinned down, nor enough determining tests.
+Considering it's an urgent bug we're pushing that RFC fix for testing.
+
+But now we have pinned down the root cause and have done enough tests, 
+the older RFC one can be gone.
+Sorry for the inconvenience.
+
+Thanks,
+Qu
