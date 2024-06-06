@@ -1,119 +1,114 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212A21870
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 11:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D5D1870;
+	Thu,  6 Jun 2024 11:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717672285; cv=none; b=Yq3cffINPRYv6lsNbPMQ+jhDCBPECJF59TMJBjbpain32l0Lq0luTSohOzfxkKijd7KFdvzuuGEC8oQOQ3pFAUMs7FXoGIXuoBqSjQ7tza2trTnPZTh/sTYSJm4JhlhEqfL7YkHCNtYA9sUenASDO3JKV0XlJJfD43jVpqYvXhM=
+	t=1717672325; cv=none; b=bd+rtl8jvStjvW2MW4DlW3b/PsV3YHLLo4/8qJ2vE5sV7nuD7C1xkNdMOgwxEVBpOp6udNKIeWhRqaohF7bbNtBvCqE324OcDrgzR0Yle+GqGZdvj3p/4FhdbGXFdpVMhV+Qs1surCF93E+KLVaJ6jdEo4dC0rEf7lshrXzZ7N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717672285; c=relaxed/simple;
-	bh=Ldc+cMjnwRL8nNUZJjSiU8UmJQHSwKHt5iyZLBbi+zM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nMNmPbWRqPYvH8MyBTXBu93Y2DekSGmdUfL0wD3IaMH0b5WfVQ7/3nKS3ayA3FISJIjpPOK+axZCCMYpIHVQeja19moZVQ0eq2AzeP1SHk+c1D9ADn09DGuwXMOps9Y+rhWl+J+wDXjQxPGnGP6R0plWV+nKbKE9I9mY02z3mdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MP8erYPA; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717672325; c=relaxed/simple;
+	bh=xkdQLPprwdUTlYoPH0s01hFUilN1bSyGE+rTC2MwfuQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gbf4scbMZMNzxA+K6GggpKSyZj7Nmmtm5K1TsONenRA5KX5MSasw9WouEDtMndENafDx9Z/Y67ECQZl+Dc6aM5eFFO65HGbGDHPaZeUElKfcKhHv47K9tdkmY3t9hWAF7RtmsNtNOg+ZEgv+P1UBMa+bHtoDEU9JJL839aDSmRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=a74KY71h; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MP8erYPA"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a68a4a9946cso93025566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 04:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717672280; x=1718277080; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pswOTtwBv3zIZovO9Qr4d5tz863/qgk3gUc3EVk4oGo=;
-        b=MP8erYPAxZCYDrghlVdEcXdIJ64xeGaOBDcxngLv50zla+5Dof4tHRKN76UPrKbDlt
-         AQF48L8OakYzXe3RVCq8TEMBMGOUIYH49k6E8ojLNCEQ+r5ANAViZ9ibreZvsDoMWmvM
-         fFJdIqgvLeZ21cv6c2CDpMR0CvRDYsECbQ0j/fix15PSVhxYM751uZUnzc1BjNP+WxeD
-         nse4rIoLl1Q2/ru8A6MdneGLjgmj54BlxYnc0ZOL4nyfBvleT07DdZh6+tESkOWuDVGy
-         3ijPe4vdIAcA/ypdD0MA17LOflDQeYb4kLsufvr5Ze6HH0dYE9BXigaLpNFgomDRaDD3
-         CakA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717672280; x=1718277080;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pswOTtwBv3zIZovO9Qr4d5tz863/qgk3gUc3EVk4oGo=;
-        b=OeyEkVt2vkv3kvSI+pFi4k8kTqh9xtP4mikDgOcI/t1IIaQXailL3TR9qRCIEzmeS4
-         1nG3hhXghLAwfypnucIIuXFIEbxwTGWz7Rv1Do33Slcq0Jlh2f5iYW/XBgSHZMtgdwrM
-         yHKlZBdYqQaJm7rPdAHxpEE4XpH48moV6rNOJ+OIoQf/s7Ph7XzPd11U7uRN1qZOSYNc
-         hQzip+8jK1wZo5Yh0y7h+mC9oZWbbk7nL2eUXNurkO/ywX3fN5a1m6SY2UfaAfOXV3+V
-         2gEQrIrIGsJGN7k/W8kGflmaJqrJwbhXatjzlV8vcBr6Bw3T4KTjdatrFgAOAncHM8kI
-         Q7og==
-X-Forwarded-Encrypted: i=1; AJvYcCWr/w0Nb8RueXINw3kN5vgSNANT97ONhrHMDjvwS1NAXLUhFOBvYPogh1/V5gAzPA1U730w2vpBHZVPWV1/fU3/+VVSc+PXWyS2TAoI
-X-Gm-Message-State: AOJu0Ywl0YUkM1/wDbiHG7fCVFxA5KpcgJ8umXh1zvEK7d8S5vgV27Ts
-	81rafu1JBYjFKUhSdWcbZlsnlpz6XtYG/ZNGvXA3FdXh1/sPINvG/wqNoRpUUrw=
-X-Google-Smtp-Source: AGHT+IHmyWxJzfXZI/7TrL+CVbTgNs57aPkmFDQ9Y2zmJIYoz1GTSYJenkqQ4Qfqa4czEODu9Ho3+A==
-X-Received: by 2002:a17:906:d181:b0:a68:c2dd:8ce0 with SMTP id a640c23a62f3a-a699fab8b68mr332921166b.13.1717672280445;
-        Thu, 06 Jun 2024 04:11:20 -0700 (PDT)
-Received: from [192.168.128.139] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c80581b5esm82609166b.3.2024.06.06.04.11.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 04:11:19 -0700 (PDT)
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Thu, 06 Jun 2024 13:10:49 +0200
-Subject: [PATCH] drm/msm/a6xx: Fix A702 UBWC mode
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="a74KY71h"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 25990100003;
+	Thu,  6 Jun 2024 14:11:43 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1717672303; bh=vVnZyr+Byd5IfmgdNdhgTlifSMH3+cJybEmR3qMbFvM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=a74KY71hgI+3T00Tg8UGiiq6XsAW2C7aRMPQe/Jz2QqMquL8glRnElIe9XXpYu418
+	 hf6G3bFaNnv77YZxubbWhCcNbDE5E08Nvyha6yDPyasrBIW3nh3nMrc9z4m7G62E0n
+	 IOgCxnhTma+plhiq4Mw9+wfQvn2JbpEEnQDh6QDpKdQcpCz7ORfVKfBgl8mF6dyWbV
+	 wY4TYuTFQHVSaskRHKjVbygOWck7Fk3aYyTOS4ConnUgVlK4X2MaaogczHE/G6+s6H
+	 gK32mQrUDQhIWLX0Qf+Ct5XWN+98XIpkVryf4lFtAFUs1Wbk1H4kw4Vrcacnwfq3vk
+	 gTe9ST+JxB1fw==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Thu,  6 Jun 2024 14:10:23 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Jun 2024
+ 14:10:03 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Weiyi Lu <weiyi.lu@mediatek.com>, <stable@vger.kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Michael Turquette
+	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, Sasha Levin <sashal@kernel.org>, AngeloGioacchino
+ Del Regno <angelogioacchino.delregno@collabora.com>, Markus
+ Schneider-Pargmann <msp@baylibre.com>, <linux-clk@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH 5.10/5.15/6.1] clk: mediatek: Add memory allocation fail handling in clk_mt2712_top_init_early()
+Date: Thu, 6 Jun 2024 14:09:55 +0300
+Message-ID: <20240606110955.35313-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240606-topic-a702_ubwcmode-v1-1-283fa9588af8@linaro.org>
-X-B4-Tracking: v=1; b=H4sIADiZYWYC/x3MSQqAMAxA0atI1hZincCriIimqWahldYJxLtbX
- L7F/w8E9sIBmuQBz6cEcWtEliZA87BOrMREg0ZdYIWV2t0mpIYadX+MFy3OsDJEpTWMNs8RYrl
- 5tnL/17Z73w/J8xNPZQAAAA==
-To: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- Rob Clark <robdclark@chromium.org>, linux-arm-msm@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717672278; l=1178;
- i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=Ldc+cMjnwRL8nNUZJjSiU8UmJQHSwKHt5iyZLBbi+zM=;
- b=D3kFiXSEs1918VgiCdBOZ1/YGTXUMjoAlJK+iua109QgkNzopKU7GVJI8O2igJRd19wo1U7p/
- 7ywEF+9sq67AJ93AEDcLzm+Qa5Rj9iheryNjZC3qYqRiEwp8rV5bqSd
-X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 185766 [Jun 06 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/06/06 10:23:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/06 06:58:00 #25471362
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-UBWC_MODE is a one-bit-wide field, so a value of 2 is obviously bogus.
+No upstream commit exists for this commit.
 
-Replace it with the correct value (0).
+The issue was introduced with commit e2f744a82d72 ("clk: mediatek:
+Add MT2712 clock support")
 
-Fixes: 18397519cb62 ("drm/msm/adreno: Add A702 support")
-Reported-by: Connor Abbott <cwabbott0@gmail.com>
-Closes: https://lore.kernel.org/linux-arm-msm/CACu1E7FTN=kwaDJMNiTmFspALzj2+Q-nvsN5ugi=vz4RdUGvGw@mail.gmail.com/
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+In case of memory allocation fail in clk_mt2712_top_init_early()
+'top_clk_data' will be set to NULL and later dereferenced without check.
+Fix this bug by adding NULL-return check.
+
+Upstream branch code has been significantly refactored and can't be
+backported directly.
+
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/mediatek/clk-mt2712.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 973872ad0474..5383aff84830 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -1409,7 +1409,7 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
- 	if (adreno_is_a702(gpu)) {
- 		gpu->ubwc_config.highest_bank_bit = 14;
- 		gpu->ubwc_config.min_acc_len = 1;
--		gpu->ubwc_config.ubwc_mode = 2;
-+		gpu->ubwc_config.ubwc_mode = 0;
- 	}
- }
+diff --git a/drivers/clk/mediatek/clk-mt2712.c b/drivers/clk/mediatek/clk-mt2712.c
+index a0f0c9ed48d1..1830bae661dc 100644
+--- a/drivers/clk/mediatek/clk-mt2712.c
++++ b/drivers/clk/mediatek/clk-mt2712.c
+@@ -1277,6 +1277,11 @@ static void clk_mt2712_top_init_early(struct device_node *node)
  
-
----
-base-commit: ee78a17615ad0cfdbbc27182b1047cd36c9d4d5f
-change-id: 20240606-topic-a702_ubwcmode-dcc5fde0f330
-
-Best regards,
+ 	if (!top_clk_data) {
+ 		top_clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
++		if (!top_clk_data) {
++			pr_err("%s(): could not register clock provider: %d\n",
++				__func__, -ENOMEM);
++			return;
++		}
+ 
+ 		for (i = 0; i < CLK_TOP_NR_CLK; i++)
+ 			top_clk_data->hws[i] = ERR_PTR(-EPROBE_DEFER);
 -- 
-Konrad Dybcio <konrad.dybcio@linaro.org>
+2.30.2
 
