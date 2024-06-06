@@ -1,73 +1,119 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE30645
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD6D195979
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679824; cv=none; b=nbCp3een7RVm0E/sImRY+Xveh9WVLXBLAQ8vORKf5Y/Zs7dBW9CElVLypDjm/VfObR4XEZ8D172kJeSKDQEDwokxKVOF8HGgnFHnKUOXK14wpYbXLAj0DCcYh7yWogKdBmLQ8oQ35X48IK6bbVOnpRs8pSIYF4sZqrQdoH7PhRk=
+	t=1717679853; cv=none; b=lSqADsqdfXaB0FXRW4tjMBPNwtNzPgXDtmva71mmkvO39xm2oEl5niTzYCgrxhx5zknSmrbB2dPH/CCu4lpP+KntIEBWj1VDYE8po7veJug8Vk+Mj6tljBxqT1JHmbyILGukDlPUTrt/xpBC6GQbwwcXf1KiKRJ4T1mSZv4MoUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679824; c=relaxed/simple;
-	bh=NSR54bD7P5KNnPSlPs4dhmlt/V2i7pKFpYXVlC9JkWE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=eeSUxkLpctP0QCfpmAmv2c6itc357aGqLocAH0X3vjfHmP5t80VXAqWy21Tn9Mi8ZjlbpZCaAwLUk53HXD65bU2LeMgrXmRoZjVB66gubuAtBolsdSLV/r0aS3ZinWJsIDFeK24GRTArtDCdrlx743lBTomjX8uaWKROCzTe0Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3747f1b958bso9616375ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:17:02 -0700 (PDT)
+	s=arc-20240116; t=1717679853; c=relaxed/simple;
+	bh=SAejXvaGIkk/FmNtQiseSS7vb8NuZINDurAfuZH6sKc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ThMOkx1PyxGiSdqueOKK5ArgI9EGx93JqzTR66Zp8tL7Bdi+/Ajs8Q5pWHlHveCLLM+b08hDpDYNp2U01WRRbRJmJvbObJyfy5wxBVsXskRMhznpk5UOAE0Q0C3A2EEWdGlvVuFcJLfGebwGUchDDlFfUwhNRhsoVB6i1Ej/Km0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OWBinAfU; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OWBinAfU"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4402066471cso7710621cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1717679849; x=1718284649; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=O3rA2wtN8OcyqgNSHm5jFE8HCUqDzvFj4F+hpoah2wQ=;
+        b=OWBinAfUZnM3lGrnaQ4egD6DbUdqUhoeMMkcUHWA5efmjwrV1KgpWrA+qo7sRbXX5K
+         75VnAL/ZPTsHV02J8IUWuAnMMBYVm1ClpLkHcsvTflBis1gPcW9dKkE44tg2soDnKoJy
+         kSDMTFYvRYS4bV4+i3a+kLqD7TOZCzdCFiBaU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717679822; x=1718284622;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=beKx2y9tr4j0XFeY8QaqlP3ofACHCvbC4fKCms+Ea/w=;
-        b=Tgkt3EaFRBwf4Lc0bbCf8JrBgs69KeojN0J6pSePaav9Oahfn8X0As0BJUsNMEkZJk
-         ZaccOlkeUFrcSFTUgw7i1FREkceZEan0C4bNsdSV+NfnDLV2oX+e9n09jMDI7O4dPJHG
-         4ZI/VvSisuOs5If3YbmrXjaI/a4aV8TQXAYzMFfHnTalmQc8/Sc9Tbksus5hF/m9iVvr
-         ozPT8yWsPDqhVQ43HLsmNVDjYYpA+jl3dnE8OQSqRLvENK0hFpHLepDFHtYOUa97uCFS
-         yKODAgFbhY1uJ+d+aqCX76JkXp8dKloDM8s9ZIgOPiQXncqpuf5moyQgkYpdnSD19IOm
-         i/WA==
-X-Gm-Message-State: AOJu0YzYUVK1k5c+g/grd1uvKDuFUSPID3kgHTaBXo8tUduH605qVLCw
-	IDmwx1CUKZrkcTbo4qPQOPUX2t8z8ERh1O2gN1uEBLeAZ8iymU7vvlb8t+gbCc2uVGmk3Npo9D4
-	Q1bxSZtJYhyHrFd20apVxslXP1cI8N6wLGgqmEo0/3QfxMWiMp+cLm6A=
-X-Google-Smtp-Source: AGHT+IG8BjAG7qxkCE/A1O3XYjuFzwSAADE2SK4KNxSXhdnC7/mplwOvcBgCMR1G7QqbA/MYYc+cQxcNK/FilULG7Vo7IEzwJM2h
+        d=1e100.net; s=20230601; t=1717679849; x=1718284649;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O3rA2wtN8OcyqgNSHm5jFE8HCUqDzvFj4F+hpoah2wQ=;
+        b=gTvfalV1R+ZURWEVoP11YxiCxkaXlBxvxEP9aqg+h9GTrtNHRAI+MVeUudua/TPfUI
+         kVzV6aMvK6/Qfq5hnEK1/mMnIp8YAKntKMptmIxoVfNYr9l1+Wkv+FVAw4S41fXXBnBS
+         DBKrn0Emi7CL1gRPjFN7QgVQuuT9fGTbVbqYb3/nnVILZ6I5GuIlARM4HsGZ7hnZSpsp
+         cGaAGWdKby1WsmIqk4BP9PuV7yTZS1pxtx3Y6jSxMXgHa1YUnii03Nq/KCHBiR3q6fTj
+         x7MnDb3B0SgsjGUVmypp5HMxSbVq/86Fa30ZLrJPogqLDrfjebY+rvfnZtRtKy6QSlQS
+         Ps1w==
+X-Forwarded-Encrypted: i=1; AJvYcCV7brluZ2cdRMYAvDRc92AIh865IM1kVa4CLJXvXcNf7KIH9WEUX65IF1EDPgP3lAz4lbPHw6Rc7FHcGwbOipCvwJ+xLazLQqK/r2/D
+X-Gm-Message-State: AOJu0Yy73nLnweobmKfDvojvX37u+p7uaQcgSjMlVE4/RfcrIAi68aDR
+	bjoSAaXo7WdZCFVewyHpzBYEC/7FOg8vZsLKS5jUR12Ul4X8L/9LvcIbkbIaxw==
+X-Google-Smtp-Source: AGHT+IEQW5U6dbkoc06U16r3Rl91JLSt2iOy7tMg1PUb2EP+OFpp8lGChaJqjTKIQLv1wVZB5kLEXQ==
+X-Received: by 2002:a05:622a:1388:b0:440:2a5b:ed6 with SMTP id d75a77b69052e-440361fbc96mr45674931cf.5.1717679849384;
+        Thu, 06 Jun 2024 06:17:29 -0700 (PDT)
+Received: from denia.c.googlers.com (123.178.145.34.bc.googleusercontent.com. [34.145.178.123])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b04f6607f5sm6118036d6.31.2024.06.06.06.17.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 06:17:29 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Subject: [PATCH v4 00/11] media: Fix the last set of coccinelle warnings
+Date: Thu, 06 Jun 2024 13:16:34 +0000
+Message-Id: <20240606-cocci-flexarray-v4-0-3379ee5eed28@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b27:b0:374:968e:7ee3 with SMTP id
- e9e14a558f8ab-374b1f59084mr3446575ab.3.1717679822243; Thu, 06 Jun 2024
- 06:17:02 -0700 (PDT)
-Date: Thu, 06 Jun 2024 06:17:02 -0700
-In-Reply-To: <PN2PR01MB489146FC0041ED737236BE64FCFA2@PN2PR01MB4891.INDPRD01.PROD.OUTLOOK.COM>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a49ef5061a387fd3@google.com>
-Subject: Re: [syzbot] [bpf?] possible deadlock in trie_delete_elem
-From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	wojciech.gladysz@infogain.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALK2YWYC/4XOzQ6CMAzA8VcxOzvTlW9Pvofx0JQCS4SZoQRCe
+ HcHJ2MwHv9N+mtn1Yu30qvzYVZeBttb14WIjwfFDXW1aFuGVggYQwKZZsdsdXWXkbynSReUQ0a
+ 5GMhFha2Hl8qOm3i9hW5s/3R+2g4MZp3+tgajQccUo2E0VQnphRvvWvtqT87XauUG/ENgIDISw
+ hS5gjTZIaIPAneIKBBcEhScREluvr9YluUNm/I8ijcBAAA=
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
+ Vikash Garodia <quic_vgarodia@quicinc.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.12.4
 
-Hello,
+With this set we are done with all the cocci warning/errors.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+Changes in v4:
+- Remove patches already merged
+- Combine dvb-frontend/mxl5xx patches and use flex on both (Thanks Hans)
+- Link to v3: https://lore.kernel.org/r/20240527-cocci-flexarray-v3-0-cda09c535816@chromium.org
 
-failed to apply patch:
-checking file kernel/trace/bpf_trace.c
-patch: **** malformed patch at line 7: diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+Changes in v3:
+- Do not rename structure fields. (Thanks Bryan)
+- Link to v2: https://lore.kernel.org/r/20240507-cocci-flexarray-v2-0-7aea262cf065@chromium.org
 
+Changes in v2:
+- allegro: Replace hard coded 1 with a define. (Thanks Michael)
+- Link to v1: https://lore.kernel.org/r/20240507-cocci-flexarray-v1-0-4a421c21fd06@chromium.org
 
+---
+Ricardo Ribalda (11):
+      media: dvb-frontend/mxl5xx: Refactor struct MBIN_FILE_T and MBIN_SEGMENT_T
+      media: venus: Remove unused structs
+      media: venus: Use flex array for hfi_session_release_buffer_pkt
+      media: venus: Refactor struct hfi_uncompressed_plane_info
+      media: venus: Refactor struct hfi_session_get_property_pkt
+      media: venus: Refactor struct hfi_uncompressed_format_supported
+      media: venus: Refactor hfi_session_empty_buffer_uncompressed_plane0_pkt
+      media: venus: Refactor hfi_session_empty_buffer_compressed_pkt
+      media: venus: Refactor hfi_sys_get_property_pkt
+      media: venus: Refactor hfi_session_fill_buffer_pkt
+      media: venus: Refactor hfi_buffer_alloc_mode_supported
 
+ drivers/media/dvb-frontends/mxl5xx_defs.h      |  4 +--
+ drivers/media/platform/qcom/venus/hfi_cmds.c   |  8 ++---
+ drivers/media/platform/qcom/venus/hfi_cmds.h   | 38 ++++------------------
+ drivers/media/platform/qcom/venus/hfi_helper.h | 45 ++------------------------
+ drivers/media/platform/qcom/venus/hfi_parser.c |  2 +-
+ 5 files changed, 16 insertions(+), 81 deletions(-)
+---
+base-commit: 24147897507cd3a7d63745d1518a638bf4132238
+change-id: 20240507-cocci-flexarray-9a807a8e108e
 
-Tested on:
-
-commit:         e377d803 kernel/trace: fix possible deadlock in trie_d..
-git tree:       https://linux.googlesource.com/linux/kernel/git/torvalds/linux
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9d7ea7de0cb32587
-dashboard link: https://syzkaller.appspot.com/bug?extid=9d95beb2a3c260622518
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=14224362980000
+Best regards,
+-- 
+Ricardo Ribalda <ribalda@chromium.org>
 
