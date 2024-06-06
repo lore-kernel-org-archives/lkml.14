@@ -1,252 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEED1993A9;
-	Thu,  6 Jun 2024 21:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C678D1DFD1;
+	Thu,  6 Jun 2024 21:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717708892; cv=none; b=m4bhIINYLkDo/QnjOXIdJjCkWEJW9oKJkeOCetAkCobmC+NqWjJbpMacUKIwRQP/WwGNu87jB2fxCqw9TTvXo6g75mkbW6atpLiqUjBCRO4xIeiPlRo7wWU9+i9JBMPlSad1q+wQmBpDnP5HytwdE4SgL3ZHAPu0OUZApR+TLMw=
+	t=1717709010; cv=none; b=ZhEJj4/KKMO6NggiDJXDv5ZJQFxR6moCtWTThJg/sHBzjthJFR37u2riXUYIvDLATQLZrvjKFcvVeWPlv4QYYcd7m6+OrTHadQYp+JEkkPxbWxv9JKfKbepQPHnWqEbhF7nb7cRlecy5Ki6M4+/+HOn5jLDnVMkhxiiJLl4H/MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717708892; c=relaxed/simple;
-	bh=eFh1jWuPzk0Zv5ZcO0wfloUDADPApbvTFdy1St9Dl3M=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=MFyMN6ph31vhxs17SIOt5mbpcwNgZO0+emr9wICN3iyfsjjtWhBspuVyNd5xP/NEaqOKySGJ4Ia4CZpGrsDId2S1/c2U9pk+YcrzRm1PH1Cvvlcc9qaYLNU4niDP5hp5srbSXnNjuO73ZzKQsoJUexHv7eVRFNgwryPEPpUM7D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70CFCC4AF0E;
-	Thu,  6 Jun 2024 21:21:32 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sFKYD-00000000qMD-3Lo6;
-	Thu, 06 Jun 2024 17:21:37 -0400
-Message-ID: <20240606212137.655608293@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 06 Jun 2024 17:17:45 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>,
- Joel Fernandes <joel@joelfernandes.org>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- suleiman@google.com,
- Thomas Gleixner <tglx@linutronix.de>,
- Vineeth Pillai <vineeth@bitbyteword.org>,
- Youssef Esmat <youssefesmat@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Alexander Graf <graf@amazon.com>,
- Baoquan He <bhe@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- David Howells <dhowells@redhat.com>,
- Mike Rapoport <rppt@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Tony Luck <tony.luck@intel.com>,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- Kees Cook <keescook@chromium.org>
-Subject: [PATCH v3 10/13] tracing/ring-buffer: Add last_boot_info file to boot instance
-References: <20240606211735.684785459@goodmis.org>
+	s=arc-20240116; t=1717709010; c=relaxed/simple;
+	bh=MlWKKowoduf1coKOO9ueG5D4siN7Sr8huDBPbThrT3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I9jKt0rZ75i/0Aqe04CmT77sxLzS05r/v54I68e0zzfUQC6o7Sbf8jMJwO5poWuKNge33TtSFD0XXsm1OdrO+Pp1NeybyILn6NbBFZTO4nJIUxSqJcJmKNfDqAGPxJnqUQMB5UR+6HEaMCZQndi0vbOmA7Ma+ZOowSZBw1VCDUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DOHuZNiz; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOHuZNiz"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-6c4f3e0e3d2so1168988a12.1;
+        Thu, 06 Jun 2024 14:23:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717709008; x=1718313808; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6/wrurbfyUySx6z2OKVYQ/vZalRqibSuFmNRlySgbic=;
+        b=DOHuZNiz7dVt1++kmgUY16xXmdRy5JaN7a2s15Y1iGFoWuNCkaBh0pJAX/bm1JFiTh
+         x132kcMzme5saSAf/oLVoFgL9gPVVB6hDjnIjE56PiF5ciy3TXTgTTGbw2WiA6aKcF0L
+         MwmDsWYnfw2XFopGaSl5Qpai0HL2LpLErYtOaxSoUHRzbNHwmZMNG8DCTtxI2ezYy8DW
+         lZySUzQeUXKcBpfoFqJWBzbYpswqIVlmO36ljAbK1DQmkEEAG8mWSjS/c640ccPCiBuz
+         QuuPX1TGB87XIxrF66ggs9o/09rLrJBfy/owCewqRqLIe3lYeMffWt7nKhEa32GcsJsd
+         ZTpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717709008; x=1718313808;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6/wrurbfyUySx6z2OKVYQ/vZalRqibSuFmNRlySgbic=;
+        b=PTMo0ZhmzAGoNSTXtbu1ryjA/dFEC6BIdCwBrBne3tfJLAyR2BDM0BU7Eq+PFaqsqH
+         /h3f2l5DD8a8qfnMEoigjg7vFkgsX9fjUgQx2sAL6oWvVwnvEiSDEz+8mi81hJyK/BlF
+         bOt6AR94MfQzZF9HIep2EEVn02d+DAmnU+hJ7ZMkQTiey29UVlMWDZxubRM271tIbJyO
+         HTPFS1GiUBnKzwcSdQ/5J8q9h2CztVKRiwJfy0qagzpn+VKNyzVYGgJ2nWigAFGLsoMP
+         S/z2t5CHKgU2Mw61ZAHxBgFglKdXlYL8jubIT2Kw0GHdGoKzUbkKBkIQAFi2m4MxTMhX
+         Skdw==
+X-Forwarded-Encrypted: i=1; AJvYcCXkG9UjCwVp+ow2oRw0WKkHF7/fcLX/DEodUW7OofjSu1NCDo+5b4an+dbWV7tZBxpgG1b4uvbZibo2dK/LERf9RTc86TG08JghVszl
+X-Gm-Message-State: AOJu0Yys7osP3YA0aEK3FIgNbsneP8Ru4gdatpO3ZGb+8U/S4LY8AY7+
+	TtZNbJjl3uDwOC4rYGg9daPv1rf8cGg2jfcSbje9JltGe954pDrI
+X-Google-Smtp-Source: AGHT+IHspRto+3fOf16TYOm26vXHjGcU7EJXSft/rL9XCCrYRNyn5X9m5AsN+6mHPKnXL61lXSPpOg==
+X-Received: by 2002:a17:902:d508:b0:1f6:8489:d150 with SMTP id d9443c01a7336-1f6d02d2295mr9122195ad.13.1717709007959;
+        Thu, 06 Jun 2024 14:23:27 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:cdcb:6470:dec1:846c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd7d5edfsm20337705ad.162.2024.06.06.14.23.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 14:23:27 -0700 (PDT)
+Date: Thu, 6 Jun 2024 14:23:24 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Alistair Francis <alistair@alistair23.me>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	alistair23@gmail.com
+Subject: Re: [PATCH v2] Input: wacom_i2c - Clean up the query device fields
+Message-ID: <ZmIozAu-R1nbRYHF@google.com>
+References: <20211118123545.102872-1-alistair@alistair23.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211118123545.102872-1-alistair@alistair23.me>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hi Alistair,
 
-If an instance is mapped to memory on boot up, create a new file called
-"last_boot_info" that will hold information that can be used to properly
-parse the raw data in the ring buffer.
+On Thu, Nov 18, 2021 at 10:35:45PM +1000, Alistair Francis wrote:
+> Improve the query device fields to be more verbose.
+> 
+> Signed-off-by: Alistair Francis <alistair@alistair23.me>
 
-It will export the delta of the addresses for text and data from what it
-was from the last boot. It does not expose actually addresses (unless you
-knew what the actual address was from the last boot).
+Could you please list what has changed since v1?
 
-The output will look like:
+> ---
+>  drivers/input/touchscreen/wacom_i2c.c | 45 ++++++++++++++++-----------
+>  1 file changed, 27 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/wacom_i2c.c b/drivers/input/touchscreen/wacom_i2c.c
+> index fe4ea6204a4e..50d159919bd1 100644
+> --- a/drivers/input/touchscreen/wacom_i2c.c
+> +++ b/drivers/input/touchscreen/wacom_i2c.c
+> @@ -23,13 +23,20 @@
+>  #define WACOM_BARREL_SWITCH_2	BIT(4)
+>  #define WACOM_IN_PROXIMITY	BIT(5)
+>  
+> -/* Registers */
+> -#define WACOM_CMD_QUERY0	0x04
+> -#define WACOM_CMD_QUERY1	0x00
+> -#define WACOM_CMD_QUERY2	0x33
+> -#define WACOM_CMD_QUERY3	0x02
+> -#define WACOM_CMD_THROW0	0x05
+> -#define WACOM_CMD_THROW1	0x00
+> +// Registers
 
- # cat last_boot_info
- text delta:	-268435456
- data delta:	-268435456
+I am partial to C-style comments, let's keep them.
 
-The text and data are kept separate in case they are ever made different.
+> +#define WACOM_COMMAND_LSB	0x04
+> +#define WACOM_COMMAND_MSB	0x00
+> +
+> +#define WACOM_DATA_LSB		0x05
+> +#define WACOM_DATA_MSB		0x00
+> +
+> +// Report types
+> +#define REPORT_FEATURE		0x30
+> +
+> +// Requests / operations
+> +#define OPCODE_GET_REPORT	0x02
+> +
+> +#define WACOM_QUERY_REPORT	3
+>  #define WACOM_QUERY_SIZE	19
+>  
+>  struct wacom_features {
+> @@ -51,22 +58,24 @@ static int wacom_query_device(struct i2c_client *client,
+>  			      struct wacom_features *features)
+>  {
+>  	int ret;
+> -	u8 cmd1[] = { WACOM_CMD_QUERY0, WACOM_CMD_QUERY1,
+> -			WACOM_CMD_QUERY2, WACOM_CMD_QUERY3 };
+> -	u8 cmd2[] = { WACOM_CMD_THROW0, WACOM_CMD_THROW1 };
+>  	u8 data[WACOM_QUERY_SIZE];
+> +
+> +	u8 get_query_data_cmd[] = {
+> +		WACOM_COMMAND_LSB,
+> +		WACOM_COMMAND_MSB,
+> +		REPORT_FEATURE | WACOM_QUERY_REPORT,
+> +		OPCODE_GET_REPORT,
+> +		WACOM_DATA_LSB,
+> +		WACOM_DATA_MSB,
+> +	};
+> +
+>  	struct i2c_msg msgs[] = {
+> +		// Request reading of feature ReportID: 3 (Pen Query Data)
+>  		{
+>  			.addr = client->addr,
+>  			.flags = 0,
+> -			.len = sizeof(cmd1),
+> -			.buf = cmd1,
+> -		},
+> -		{
+> -			.addr = client->addr,
+> -			.flags = 0,
+> -			.len = sizeof(cmd2),
+> -			.buf = cmd2,
+> +			.len = sizeof(get_query_data_cmd),
+> +			.buf = get_query_data_cmd,
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/ring_buffer.h |  3 +++
- kernel/trace/ring_buffer.c  | 23 ++++++++++++++++++
- kernel/trace/trace.c        | 47 ++++++++++++++++++++++++++++++++++++-
- kernel/trace/trace.h        |  2 ++
- 4 files changed, 74 insertions(+), 1 deletion(-)
+This combines writes into one message. Is this safe and works for all
+devices? At the very least this needs to be mentioned in the patch
+description.
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index a50b0223b1d3..55de3798a9b9 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -94,6 +94,9 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 					       unsigned long range_size,
- 					       struct lock_class_key *key);
- 
-+bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
-+				 long *data);
-+
- /*
-  * Because the ring buffer is generic, if other users of the ring buffer get
-  * traced by ftrace, it can produce lockdep warnings. We need to keep each
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 755ef278276b..3a927c6ddd14 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2394,6 +2394,29 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 	return alloc_buffer(size, flags, order, start, start + range_size, key);
- }
- 
-+/**
-+ * ring_buffer_last_boot_delta - return the delta offset from last boot
-+ * @buffer: The buffer to return the delta from
-+ * @text: Return text delta
-+ * @data: Return data delta
-+ *
-+ * Returns: The true if the delta is non zero
-+ */
-+bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
-+				 long *data)
-+{
-+	if (!buffer)
-+		return false;
-+
-+	if (!buffer->last_text_delta)
-+		return false;
-+
-+	*text = buffer->last_text_delta;
-+	*data = buffer->last_data_delta;
-+
-+	return true;
-+}
-+
- /**
-  * ring_buffer_free - free a ring buffer.
-  * @buffer: the buffer to free.
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 13e89023f33b..7dbb20b31ae5 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6041,6 +6041,18 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 	return ret;
- }
- 
-+static void update_last_data(struct trace_array *tr)
-+{
-+	if (!tr->text_delta && !tr->data_delta)
-+		return;
-+
-+	/* Clear old data */
-+	tracing_reset_online_cpus(&tr->array_buffer);
-+
-+	/* Using current data now */
-+	tr->text_delta = 0;
-+	tr->data_delta = 0;
-+}
- 
- /**
-  * tracing_update_buffers - used by tracing facility to expand ring buffers
-@@ -6058,6 +6070,9 @@ int tracing_update_buffers(struct trace_array *tr)
- 	int ret = 0;
- 
- 	mutex_lock(&trace_types_lock);
-+
-+	update_last_data(tr);
-+
- 	if (!tr->ring_buffer_expanded)
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
-@@ -6113,6 +6128,8 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 
- 	mutex_lock(&trace_types_lock);
- 
-+	update_last_data(tr);
-+
- 	if (!tr->ring_buffer_expanded) {
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
-@@ -6860,6 +6877,21 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
- }
- 
-+static ssize_t
-+tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
-+{
-+	struct trace_array *tr = filp->private_data;
-+	struct seq_buf seq;
-+	char buf[64];
-+
-+	seq_buf_init(&seq, buf, 64);
-+
-+	seq_buf_printf(&seq, "text delta:\t%ld\n", tr->text_delta);
-+	seq_buf_printf(&seq, "data delta:\t%ld\n", tr->data_delta);
-+
-+	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
-+}
-+
- static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
- {
- 	struct trace_array *tr = inode->i_private;
-@@ -7499,6 +7531,13 @@ static const struct file_operations trace_time_stamp_mode_fops = {
- 	.release	= tracing_single_release_tr,
- };
- 
-+static const struct file_operations last_boot_fops = {
-+	.open		= tracing_open_generic_tr,
-+	.read		= tracing_last_boot_read,
-+	.llseek		= generic_file_llseek,
-+	.release	= tracing_release_generic_tr,
-+};
-+
- #ifdef CONFIG_TRACER_SNAPSHOT
- static const struct file_operations snapshot_fops = {
- 	.open		= tracing_snapshot_open,
-@@ -9242,6 +9281,9 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
- 		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
- 						      tr->range_addr_start,
- 						      tr->range_addr_size);
-+
-+		ring_buffer_last_boot_delta(buf->buffer,
-+					    &tr->text_delta, &tr->data_delta);
- 		/*
- 		 * This is basically the same as a mapped buffer,
- 		 * with the same restrictions.
-@@ -9751,7 +9793,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 		MEM_FAIL(1, "Could not allocate function filter files");
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
--	if (!tr->range_addr_start) {
-+	if (tr->range_addr_start) {
-+		trace_create_file("last_boot_info", TRACE_MODE_READ, d_tracer,
-+				  tr, &last_boot_fops);
-+	} else {
- 		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
- 				  tr, &snapshot_fops);
- 	}
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 2efa4cccdd3b..611be17fdc70 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -347,6 +347,8 @@ struct trace_array {
- 	/* The below is for memory mapped ring buffer */
- 	unsigned long		range_addr_start;
- 	unsigned long		range_addr_size;
-+	long			text_delta;
-+	long			data_delta;
- 
- 	struct trace_pid_list	__rcu *filtered_pids;
- 	struct trace_pid_list	__rcu *filtered_no_pids;
+
+>  		},
+>  		{
+>  			.addr = client->addr,
+> -- 
+> 2.31.1
+> 
+
+Thanks.
+
 -- 
-2.43.0
-
-
+Dmitry
