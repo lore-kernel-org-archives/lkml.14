@@ -1,108 +1,103 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337981327E5;
-	Thu,  6 Jun 2024 07:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9F013C83C
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 07:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717660756; cv=none; b=C/9PAeD6Bhl3whbLNdMogXfwXn4raHwe1Qernv0+XRdxPMqKfNxsgrY0Clj5cw4hxq9n8LL5CmfNnXAkWBZtIZ81sjnC6Xvg7wIxcS06g4Z8jcprbrGCRZCKrJAo0NK5ja6gmgnz+qVfra7Tf8d4YQhsxEnJ2Jwt4BJgQkvl59w=
+	t=1717660761; cv=none; b=AlWVVE/rDByBzxvSCrfaIxKhhRSdNav2uT8YYYad92mGkBNa4p2+J+hmfde/dY3/9fhgNSyXIHoyM6Hr0CtRwT843+WDYwH6gnj1ggBWfZgLPctoOqOCYeuPNNOzEZTivFwC81oghhOkEWfVUZ2r5+AEPCc8iJbpEh7zF/uy/cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717660756; c=relaxed/simple;
-	bh=ATccA5r9ES5LDi1RDOSSs0f1rgaAZyIufvadcuOLeFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nUusVI166KnElkTJOzF/Bg80ZWMDUP7O2UqmTmcK8w8Z3tAyHSD8v9zWWGIzxibPH+hxI8grOZZe6YZQJymhy5qs5DTMGYJYhezGvtwlIt6zw/DwWY7Y/Mr94M8aLbituSSo6h0qOXZ2HtqPRivUjxWm5hjzpF1crsGS5AsZB5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qG7OKZtk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/vlEsE7K; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qG7OKZtk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/vlEsE7K"
-Date: Thu, 6 Jun 2024 09:59:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717660753;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=30vocsfTuBFpsGaciPogg95G00+g0UfUEX+ZmA5rlwg=;
-	b=qG7OKZtkHJpbqIHTP6vxfQj8V7scoSssLhudVwaoRNmMxuNqyDVz0iYt59zlvq1xEQyViX
-	pAo0nsfe/fWaTjkiYBg09yUpxkocdAxbBNXvd4WZGqPxnYoJ9OrVoqt+io2e7GWHeZZiRo
-	nOuv538ixF+g7vr8BmdDzbx+xbldmjBq/7iq9AwHdPqvVGi/KCn/u10wSgcgLfUiTTgyRQ
-	Hd4TJseY++Ezq60frsHLNVxP8nR1hSmioXrsp53+nKKaQz0JnHZZ3lK8JYabVeZ4gOoKTj
-	K4PSPXcupatjR3JRZYyux/bM8JpPE1I7o8GZMex6tHDxLdbq9yk0RWdFgOdHiQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717660753;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=30vocsfTuBFpsGaciPogg95G00+g0UfUEX+ZmA5rlwg=;
-	b=/vlEsE7KNVIsQeYT9HKWZ40jdf2xffBPU3Ix94pTZGc2VwmA1ydkvnSgKFpmSc6namZ0nr
-	SXN0zwMGrKiR5uCA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 net-next 01/14] locking/local_lock: Add local nested
- BH locking infrastructure.
-Message-ID: <20240606075911.4eE4DdNS@linutronix.de>
-References: <20240604154425.878636-1-bigeasy@linutronix.de>
- <20240604154425.878636-2-bigeasy@linutronix.de>
- <20240606075244.GB8774@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1717660761; c=relaxed/simple;
+	bh=uooDHpHJFWI6jV3hynKp8KvY2m93hNxujsxOR1uVsBk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JlaWAfJ8k3AtXem0pXIQxAKqyMVUFclkJ3PTRNH9h6BeiuE7ppdSfQDP/qOZVLFfXlPhqGiCerCcdHgNtMimPxUyY6hDJKMnYFLfMwXjii/XdqxgOdaE6xlzEbSzm1Fz/r5IvRQcjX85tdzgwe2mBNVCkllZOTD54LjHhvInoBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: a79610b823da11ef9305a59a3cc225df-20240606
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:b18f9f8c-2039-4090-b582-3a6fc4c2f8a9,IP:25,
+	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-1,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:44
+X-CID-INFO: VERSION:1.1.38,REQID:b18f9f8c-2039-4090-b582-3a6fc4c2f8a9,IP:25,UR
+	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-1,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:44
+X-CID-META: VersionHash:82c5f88,CLOUDID:6242702a3fbea42b9ae4b3f3e5dc454a,BulkI
+	D:240606155911IJGA8PEG,BulkQuantity:0,Recheck:0,SF:25|72|19|44|66|102,TC:n
+	il,Content:0,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL
+	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_UNFAMILIAR
+	SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
+	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
+	ABX_MISS_RDNS
+X-UUID: a79610b823da11ef9305a59a3cc225df-20240606
+X-User: pengfuyuan@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <pengfuyuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 301779591; Thu, 06 Jun 2024 15:59:09 +0800
+From: pengfuyuan <pengfuyuan@kylinos.cn>
+To: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	pengfuyuan <pengfuyuan@kylinos.cn>,
+	k2ci <kernel-bot@kylinos.cn>
+Subject: [PATCH] arm/komeda: Compile DEFINE_SHOW_ATTRIBUTE() only when CONFIG_DEBUG_FS is enabled
+Date: Thu,  6 Jun 2024 15:58:46 +0800
+Message-Id: <20240606075846.1307007-1-pengfuyuan@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240606075244.GB8774@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On 2024-06-06 09:52:44 [+0200], Peter Zijlstra wrote:
-> On Tue, Jun 04, 2024 at 05:24:08PM +0200, Sebastian Andrzej Siewior wrote:
-> > Add local_lock_nested_bh() locking. It is based on local_lock_t and the
-> > naming follows the preempt_disable_nested() example.
-> > 
-> > For !PREEMPT_RT + !LOCKDEP it is a per-CPU annotation for locking
-> > assumptions based on local_bh_disable(). The macro is optimized away
-> > during compilation.
-> > For !PREEMPT_RT + LOCKDEP the local_lock_nested_bh() is reduced to
-> > the usual lock-acquire plus lockdep_assert_in_softirq() - ensuring that
-> > BH is disabled.
-> > 
-> > For PREEMPT_RT local_lock_nested_bh() acquires the specified per-CPU
-> > lock. It does not disable CPU migration because it relies on
-> > local_bh_disable() disabling CPU migration.
-> 
-> should we assert this? lockdep_assert(current->migration_disabled) or
-> somesuch should do, rite?
+We do not call komeda_debugfs_init() and the debugfs core function
+declaration if CONFIG_DEBUG_FS is not defined, but we should not
+compile it either because the debugfs core function declaration is
+not included.
 
-local_lock_nested_bh() has lockdep_assert_in_softirq(). You want the
-migration check additionally or should that softirq assert work?
+Reported-by: k2ci <kernel-bot@kylinos.cn>
+Signed-off-by: pengfuyuan <pengfuyuan@kylinos.cn>
+---
+ drivers/gpu/drm/arm/display/komeda/komeda_dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > With LOCKDEP it performans the usual lockdep checks as with !PREEMPT_RT.
-> > Due to include hell the softirq check has been moved spinlock.c.
-> > 
-> > The intention is to use this locking in places where locking of a per-CPU
-> > variable relies on BH being disabled. Instead of treating disabled
-> > bottom halves as a big per-CPU lock, PREEMPT_RT can use this to reduce
-> > the locking scope to what actually needs protecting.
-> > A side effect is that it also documents the protection scope of the
-> > per-CPU variables.
-> > 
-> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> 
-> Otherwise I suppose sp.. not a fan of the whole nested thing, but I
-> don't really have an alternative proposal so yeah, whatever :-)
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+index 14ee79becacb..7ada8e6f407c 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+@@ -21,6 +21,7 @@
+ 
+ #include "komeda_dev.h"
+ 
++#ifdef CONFIG_DEBUG_FS
+ static int komeda_register_show(struct seq_file *sf, void *x)
+ {
+ 	struct komeda_dev *mdev = sf->private;
+@@ -43,7 +44,6 @@ static int komeda_register_show(struct seq_file *sf, void *x)
+ 
+ DEFINE_SHOW_ATTRIBUTE(komeda_register);
+ 
+-#ifdef CONFIG_DEBUG_FS
+ static void komeda_debugfs_init(struct komeda_dev *mdev)
+ {
+ 	if (!debugfs_initialized())
+-- 
+2.25.1
 
-Cool.
-
-Sebastian
