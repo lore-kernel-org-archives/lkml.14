@@ -1,174 +1,128 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2042.outbound.protection.outlook.com [40.107.244.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1002219CCF4;
-	Thu,  6 Jun 2024 16:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717690415; cv=fail; b=KVMGbmBCkYQ81QfjA26sJbKhDu8o58AIdlotCfDEiH/gXx+/F/hRE4gX3vYUi0CjLU87REJ3pyLaRbYyoWfI2Pb58IdlKglJLoNWkH7WGFG8SS/x1wShWkhWAMkWK8AVVZqETetq0keq/kB6Hk0nW1mRPjrjGlhgRqGi7rdtIzs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717690415; c=relaxed/simple;
-	bh=1skJ/7VJ1g2JtxqhkVli2UyaJ7oCXqXoF/P+u1FuNqw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Q1jrs6XFn++T3GZ/POgWWo/Th4uDVJp0sO4XvKTzjzGt7Apz2B3YeRSo2fqt27O34AfLSB/AJSvY2Xdsre7+hqWua4CXhaLrdC6J87fZF/sR60wQZdjL3NVpXeVQ69d1NOyTMbd8S7pOJy6xI24i8pQMtiZavV3M8krdaxVlQYE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XhNjxgb5; arc=fail smtp.client-ip=40.107.244.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D1D19D080
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 16:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717690420; cv=none; b=RA4cGvFXbT9D6WRLVmC0JW6gHuCyQ8dxRHEGLI40Ed+ztdH0fuwS3XQL0KN7EDwojyvtHk7/HrPOee/V+ZvnfghQIC6cDjaXj7vFJXwGuNYlof62Qqf7PybmRen8oDfjDGIeSXH9d6yqHMxRWMFfZTWcxzS5WfEMsQqWvan4vNA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717690420; c=relaxed/simple;
+	bh=KG3hb5X8K20zAVLnBnAIIFcAA7+yWFbwp+HNoGxJH7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NIZCcrMpGjG3+32IeeHHLZbKmW1NZLEiQxupOEqe2oTbOTSnpEN9mGhbHdy7/h7Mp7CeS7XaldpiyBTyrF9wm1Eb5bVzQJOouo82e090N0y4CoJIFXm9rOShLaaMRgsmBKoM598tAYwz8ZOz/n7wLvh/JgHCW2zKYKdlH8YW8pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QiTR5taU; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XhNjxgb5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HgtVhK4IWNTFh7qnraElEebZSN3gUOCVTjELqF7TWqmvC9zHnSC8ogKcmsEdWgMj9ldduq8wH1xCpdy2EFBEsrFBcIJXXNd/pkesQTim8r1PWQGKfjEFvKFHT8CJY9fdi9oZy4MUnUa2mPCEXjiGjpUwvtgFrOfDVb8xncHRS8Ezy9sNgh7W5ft7HmpyXzXtOBWgRvEMaciFO+PUdO6MCKENZ1P0dSkYMcbB1za6rbi1lSE0xl3AnAQuv8XPKcTxrQKqQ2WbChOqeX0PQKELkcxjNz2YWhJgQeVH/aGB3VMV/L5QZUcnNsLWzjSkUXaxvRQrMDD3VHcEci+fiV+TAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UE47HnUxvTJjZSnzAEg9NHiMXdh7F1Vo3vF5L9ZH1NA=;
- b=Mh+yOSqj99Xws/jBf6Wzkht7ZTGACQ0GNlncMSXHH4UtTlQgSAPgCEDUjjEgjue8SsOQWaDq9u+W6ONGeKKg03YOSDqJulP3H2Iop91TaJ71MlS3ucc2swAmFGqRxYKZM5XWh4IlEVedbfA7S5rVuBWJE6aqAOMuPozfRrv4oNcZ2h54FXogKnxRf2G853pShkqNoXrVAEdhwOdH8OQjQUQDb9erJ92RGInOc8aOb7kawfqoY5iwtIBQ+NrWSh12s0fzRbnHmpaDBZtPtGpt/8sgEbKsqXLvB1Pb0auJksWsThEI2TyfFIwRQ9PzK8J4Dc8l7WaGGSf7EzE3IR0xgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UE47HnUxvTJjZSnzAEg9NHiMXdh7F1Vo3vF5L9ZH1NA=;
- b=XhNjxgb5YWQFYptXTbQUa6EIaA4W83ZI85e2Uy6NAa0SLJuc3m8haa24VQ07mLagZdvQ49O66RE8vyy8UGb1g3Ogp8LZjuJCbuRNCyNA1UvZzDRM8lEDJdzUr7t1SkppRuXh53/nFJrEcAlCod6fOCNPLbSefoZWN0dFTfLoEGE=
-Received: from CH0PR04CA0097.namprd04.prod.outlook.com (2603:10b6:610:75::12)
- by PH0PR12MB7813.namprd12.prod.outlook.com (2603:10b6:510:286::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Thu, 6 Jun
- 2024 16:13:29 +0000
-Received: from CH2PEPF00000146.namprd02.prod.outlook.com
- (2603:10b6:610:75:cafe::ec) by CH0PR04CA0097.outlook.office365.com
- (2603:10b6:610:75::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7656.20 via Frontend
- Transport; Thu, 6 Jun 2024 16:13:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF00000146.mail.protection.outlook.com (10.167.244.103) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7633.15 via Frontend Transport; Thu, 6 Jun 2024 16:13:28 +0000
-Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 6 Jun
- 2024 11:13:22 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-Date: Thu, 6 Jun 2024 11:13:01 -0500
-Subject: [PATCH v4 8/8] hwmon: (k10temp) Rename _data variable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QiTR5taU"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52b912198a6so1453943e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 09:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717690417; x=1718295217; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=n7bsWDf8kON0466WBez1F6joRJhVo6XD8WRuZ2wLnFs=;
+        b=QiTR5taUqUA/iw28iq2G28DpQPHmsQyTyUSJv5VexJ+6qg6pCObgkb9erOpgTyaQas
+         YylaoCyXD0bXb5dCDeQ8hlx2rBTLyjM4SBl2wOcBDY1F6WftTEnU8/l11/62yvUGB+Ly
+         2nOlSdeCp9piNNVQJ4lBsdgkTIJsTuUagPAB1EUKz0B05XrBVEWXmHRCxYRZhyDLFD7L
+         siy3CvRjRgS/3RmYf0eKGuNYVvg7CveDT4fGLIQKWYKHT8P9sEAfqwYnudZAyAqWCeev
+         sDw+oaP5Dvc0+Mw5Z98bEOLAKWZC2/4UESfLLaBf/pU6mGUZGOhW3z/gBerJRq0VaKPP
+         rhMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717690417; x=1718295217;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n7bsWDf8kON0466WBez1F6joRJhVo6XD8WRuZ2wLnFs=;
+        b=oDPm4lGXv32OwoH0g3j/PwcPr+yD971X3viKptl3BIl3lQx1fD/4u2xedWYo5R5C0Z
+         46PAx6XkYybm3UGzFNQVwl5S7sHW47YUcIt9xYo+jx1PXBdgS2c9JAD2rTY6OpahBWVU
+         vxy6bStmyp9s6LYG+KlSTsJMknj5RFcQLFHzX+GtSckb2g++R4aZbVq+RR5cu+cDgdFK
+         aDS2PVgM5w1aD6CxWWFXsgl0Liu9c38Zq6PCath/OyqHy1oh81JLqAc4auKqeWguxcNm
+         qyPX17H/gUy2A0/XNMBHJIG/gMk1femp7vugGLtSBZgMUeCL68pO40hzXeUvwDzk3Ncd
+         o4OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJzi9jEsnzlLxCY9lniVbxCFDd9dWp7yi+R7/Gr3rfGp6z29jO884v2+4OjRojKsyWYm4/y/k3OTr3grNiXiOorett3hECQFu/96Tu
+X-Gm-Message-State: AOJu0Ywtku2MvGipr2wprCyu7L/fDevWmhZNNOTHhmFf6B1wexKiPcDg
+	cdamItYRqRjJ9FNwyk0ulkT8mfVSfba8n3XVtTVpIFnrHxTNDGu+
+X-Google-Smtp-Source: AGHT+IH+i+DxBJox18C+7HwhFhJzwcv17ZDP9UUSj9sX3PfM1T/ntR1jP0iBsCJGdN+8VMRID8zB+w==
+X-Received: by 2002:a05:6512:3b88:b0:52b:82d5:b361 with SMTP id 2adb3069b0e04-52bb9f8e244mr86616e87.37.1717690416780;
+        Thu, 06 Jun 2024 09:13:36 -0700 (PDT)
+Received: from andrea ([151.76.32.59])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215814f141sm60191835e9.42.2024.06.06.09.13.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 09:13:36 -0700 (PDT)
+Date: Thu, 6 Jun 2024 18:13:32 +0200
+From: Andrea Parri <parri.andrea@gmail.com>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, will@kernel.org,
+	peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
+	dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+	akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
+	linux-kernel@vger.kernel.org, hernan.poncedeleon@huaweicloud.com,
+	jonas.oberhauser@huaweicloud.com
+Subject: Re: [PATCH 1/2] tools/memory-model: Fix bug in lock.cat
+Message-ID: <ZmHgLFJNRekyVAiH@andrea>
+References: <eb202b3b-7408-4ab9-be82-81ca554b7603@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240606-fix-smn-bad-read-v4-8-ffde21931c3f@amd.com>
-References: <20240606-fix-smn-bad-read-v4-0-ffde21931c3f@amd.com>
-In-Reply-To: <20240606-fix-smn-bad-read-v4-0-ffde21931c3f@amd.com>
-To: Guenter Roeck <linux@roeck-us.net>, <x86@kernel.org>, Yazen Ghannam
-	<yazen.ghannam@amd.com>
-CC: Mario Limonciello <mario.limonciello@amd.com>,
-	<linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-hwmon@vger.kernel.org>, <babu.moger@amd.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000146:EE_|PH0PR12MB7813:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c365862-689b-4bf6-a3a2-08dc86439a59
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|36860700004|376005|82310400017;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bGNaM21WM1hvc1ZrL2hnQ2syQ3FIMTJBdXV6UmVWWEJUN0lYalhLMDhaYnpk?=
- =?utf-8?B?ZEdzYkdOd2thaDJPamw3MkhoZjFYVlJza3RSc1F5TThZcWtjbyt4RCtHaThV?=
- =?utf-8?B?WTRVdHBGUXNlQzBQV3ZYanlSZytnNDZvY0J3U2pTMDZmSEpRV0hSRXhTekZz?=
- =?utf-8?B?WnE5NytRTEFmd3JaUm5zUEk4RnJVTjVQMlROTkZzVU9kYVZsUVRMTDdGUU1X?=
- =?utf-8?B?dnlicnU3Y2luMk55UGJTanZ5bVRRNURmWkdjdmFBRVR2VUliM3A5S2YzUDFO?=
- =?utf-8?B?UE9NUXdwZUErcjB0N3RFVTc5ZWV1R0pqNUdjSkJFa3JkcENVOVJUMjEvaVJz?=
- =?utf-8?B?bHZ0ejViSXhTL25YRmR1TGRPSldoNTZ5cFhZMklXREcxL3VRSkhGdm5kL3Br?=
- =?utf-8?B?ZnY0cXh5SFl6SWRoTlF1Tlo0NmxweFJEbGcyY0RERy9TMVZ4b2RnTHJrQ25Q?=
- =?utf-8?B?VnV3OW82blpPYVBiekxudStCNE5ML3kzQVV2Y1UrRGVEMjgxbmNjZGZZSTNt?=
- =?utf-8?B?NVhnSDFiQWU2Umduazd3NzFQYno1NjV0Q0VlRUhDcTVReXdmZlN1eXZCZWZi?=
- =?utf-8?B?TTZnbDIvNmRrZG5aTGxSRVpSNGErOGpRRTNneXE4enlqSjdDZEZVclBwS1pv?=
- =?utf-8?B?MkhmU3BFUjd5VW05d0tyVkJQNy9OZWF4VUVPWFA4dlE4VG9DK0tCSnRRbEZh?=
- =?utf-8?B?azA4Q1NIbDc2NnNTVUxKMitFZjY4aktzVXNuQVpWaTY2NUNoZURwWlVyVE9a?=
- =?utf-8?B?MmtKRXhnQUdUb3QxdkpHNm1IZGUzRWFDMGlTaU5VYkxjRUU0SE9vT2RCc3lH?=
- =?utf-8?B?b3ZEMTBuYW8xaUpTeTRPN05ZV1lFNENxQTdvS1JBTXlmblJMa0ZCanUvSkRi?=
- =?utf-8?B?Y2IvK3VreWJWekJtYVFhaG1PTEZma1VqdUZ4REI3REEvRUZtL3ltaXZzUzRl?=
- =?utf-8?B?WTFVQTA1eGVaRGJpUFU2R1NpNzN4WmFNZ25wbjJxejVPN3R2L29TMUp6ZUJO?=
- =?utf-8?B?ZzhCQ0lWa3hiVGN1OXZHOC9nOG9DREZackg1SmdXbmg5a25SbGdGcGc5OWRr?=
- =?utf-8?B?aU1MU05DbWY3Q0QrU24xUEhtbFJ2ZGRiOEFjdXo4WGh4TElna3phNktiSkgz?=
- =?utf-8?B?b1ZCejB4QytZalgxMXhPSHF6R2hUVCt4SXMrUm80Z0hzWi9pL2NVSk05cEs5?=
- =?utf-8?B?ejcySjFpTUtkem0vZUxtMG5xcEZ2R1JqUjdJbjFuWDZ4TXd1bTJjQ0ZIVnFl?=
- =?utf-8?B?aEtKa1lhbTU5QlJRc2EwUlI2bVZNU1VkNnlwVUkrWUFJdmJ3ckpmeDc5SjVw?=
- =?utf-8?B?WmxkemUzdmVHVzJHamQ2QjRZWGFPcFRzYkUzQk1qeWUxdVM3VDhtZ09McDJV?=
- =?utf-8?B?eFRhekxxWjhpUXJZRmp0UHRQdXgzcmhvem5aY2RYMDUrSlV2aGgyV3hkaTVo?=
- =?utf-8?B?ZElmM0RJWlM2Q09JcXQyemJ6aGJFYmIrMUNGSjFLY09pMVZjSHdJL0pwc3Z3?=
- =?utf-8?B?QjgzYXQzK3hjUVdjV2dRVmNYN3hUNEVIRU1oQUl1eE9NaFZHV2lIdEVnUXZa?=
- =?utf-8?B?RG53c0oxNlFyOFh6dWhKREFsVUZJT20xY0NVSjJQeFBGTWVkdFlBblNNMVhl?=
- =?utf-8?B?bS9KSExaS1pQcFNrYzdITzVWZ25EQzEzLzNGUnhqbnE5ZW9BQ3QvckpWRzRY?=
- =?utf-8?B?a0hISFFwQ0RHa3p4SU90SWZSajd3dkVMTGVIc2xSdUhYVTVzaVVJY0NSekJu?=
- =?utf-8?B?WmFzVTJPSVdnMFJuNmZKdnNyM3ZEeUNZZHNnS296ajdRN3gyckdrL3RmdEhD?=
- =?utf-8?B?a2xPcTl0V29zaCs3Uk9RYTFoN2xhazZVVUhMdDdkb3V5MklyRyttNDQwMXd5?=
- =?utf-8?B?ZmtUQ3hreG5OUnc1dVNZNFZDbFNYRlRaYzl4VzFRNzlScmc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(376005)(82310400017);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 16:13:28.9483
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c365862-689b-4bf6-a3a2-08dc86439a59
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000146.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7813
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb202b3b-7408-4ab9-be82-81ca554b7603@rowland.harvard.edu>
 
-...to address the following warning:
+On Thu, Jun 06, 2024 at 09:57:55AM -0400, Alan Stern wrote:
+> Andrea reported that the following innocuous litmus test:
+> 
+> C T
+> 
+> {}
+> 
+> P0(spinlock_t *x)
+> {
+> 	int r0;
+> 
+> 	spin_lock(x);
+> 	spin_unlock(x);
+> 	r0 = spin_is_locked(x);
+> }
+> 
+> gives rise to a nonsensical empty result with no executions:
+> 
+> $ herd7 -conf linux-kernel.cfg T.litmus
+> Test T Required
+> States 0
+> Ok
+> Witnesses
+> Positive: 0 Negative: 0
+> Condition forall (true)
+> Observation T Never 0 0
+> Time T 0.00
+> Hash=6fa204e139ddddf2cb6fa963bad117c0
+> 
+> The problem is caused by a bug in the lock.cat part of the LKMM.  Its
+> computation of the rf relation for RU (read-unlocked) events is
+> faulty; it implicitly assumes that every RU event must read from
+> either a UL (unlock) event in another thread or from the lock's
+> initial state.  Neither is true in the litmus test above, so the
+> computation yields no possible executions.
+> 
+> The lock.cat code tries to make up for this deficiency by allowing RU
+> events outside of critical sections to read from the last po-previous
+> UL event.  But it does this incorrectly, trying to keep these rfi links
+> separate from the rfe links that might also be needed, and passing only
+> the latter to herd7's cross() macro.
+> 
+> The problem is fixed by merging the two sets of possible rf links for
+> RU events and using them all in the call to cross().
+> 
+> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+> Reported-and-tested-by: Andrea Parri <parri.andrea@gmail.com>
+> Closes: https://lore.kernel.org/linux-arch/ZlC0IkzpQdeGj+a3@andrea/
+> Fixes: 15553dcbca06 ("tools/memory-model: Add model support for spin_is_locked()")
 
-drivers/hwmon/k10temp.c:273:47:
-warning: declaration shadows a variable in the global scope [-Wshadow]
-static umode_t k10temp_is_visible(const void *_data,
-                                              ^
-include/asm-generic/sections.h:36:13:
-note: previous declaration is here
-extern char _data[], _sdata[], _edata[];
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
 
-No functional change is intended.
-
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/hwmon/k10temp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-index a2d203304533..543526bac042 100644
---- a/drivers/hwmon/k10temp.c
-+++ b/drivers/hwmon/k10temp.c
-@@ -269,11 +269,11 @@ static int k10temp_read(struct device *dev, enum hwmon_sensor_types type,
- 	}
- }
- 
--static umode_t k10temp_is_visible(const void *_data,
-+static umode_t k10temp_is_visible(const void *drvdata,
- 				  enum hwmon_sensor_types type,
- 				  u32 attr, int channel)
- {
--	const struct k10temp_data *data = _data;
-+	const struct k10temp_data *data = drvdata;
- 	struct pci_dev *pdev = data->pdev;
- 	u32 reg;
- 
-
--- 
-2.34.1
-
+  Andrea
