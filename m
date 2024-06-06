@@ -1,135 +1,173 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56651AB8FB
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44523197A93
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684032; cv=none; b=IuH0IHvs91haWm2K7NGVDuG2jQKTeVLXjky8jhp5WDKxHo+lWzTKgaHYPMzNuzh1F4PDbTLqVxWUm4X39M2y2FI+EGYld27EopcN4MaVBO9ole5xBwZUINKT1rRZ1hCfRGnqaQ8JGCu7U4z88DwXBIdNnRHbCYMoc0Nyk8RF9bQ=
+	t=1717684060; cv=none; b=XR+ilXGHVXF92BK8NoT2twffJLHjaFH+pIZWR5T0BA8HjYCW7zAzLASYGnw8MvBrqwnxzSBkuF0UMvl1QUHNmOj77+EEcvu9aa1xVUJhyw+CSQuQuEBfSMRICoP8YXO28KPr+C82pL0800cevEFHR8JbW/32C8MQreUNxL4K9no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684032; c=relaxed/simple;
-	bh=/Drt9DvPT3iPacr8BHFd0FnwQyhtB9dBAHbphjiKxpg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bNRClPZ44R4NRBG2Nmvpolpg5lx5tv0W5iZinOse6hK7qUZCWn3z9lJPr0xD9bIixdyr5AWnzkLWIYSqAmJl/txFKQz2w8CWvGjjTLlHVavuL8vWNo0XddzKOcFYOfPJQRP9FLJYZxVgiJlzgJ3PKMFqsNC9cbLbT2HOpJAaRS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bVYzO7F1; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1717684060; c=relaxed/simple;
+	bh=kBCPNlDnaF5A/j93fXd8C0p9oaSwJeDVY9kAHOruRoo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uf0nzYMKm8VtxmxLYE705msWEJlYJBQcqW4rBw2EIrQHsRoPGYL3HHthS0+7EImeFhaAwFifSb5vSgbZqSnDHrCua4MX7O4+57fO0dPLuNZK0nNG4f1fjX+57JtLOiMkAaTm0jAm5J9oRfTZh3o+as0ekQ+mNthsX+K9kL+cbm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=caaUIcMX; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bVYzO7F1"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-421208c97a2so10450585e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 07:27:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="caaUIcMX"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57a677d3d79so4078438a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 07:27:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717684028; x=1718288828; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3+ON/wkAKBmuxABFUuc+U89h1GiBlQq9gib75ECTHco=;
-        b=bVYzO7F1Du7O1daD7RRXQ3THaYiLXy8YZEXQFEwJKBXJvG0A07An0FeUlIbBE0UVVX
-         PBJh8V8DF/yf9Jw9a9avTbyfJ2sodRNj0cwZXK5oIEGq0Xtom1T9mCEpGCbnBRTM3IF5
-         SLLU4fJuHDGMddR5wTUvwp5XTxn0s1q4XDmbp837ok9kqkNCdhqQLUyqNebzzVZZQLWW
-         xn4Tve2QojzRMxCc4hLP1cao7U153Nu+JWyoMAARlglfPfhMftQdVQ64JZyvN4h9TCxz
-         2ZdFDK1ASZEsJiPxB6D5XpGb6IA1FOc+9x96eMRhrbtL2sfa+kJIHxZz+sIaeyh2vVZM
-         kF2g==
+        d=linaro.org; s=google; t=1717684057; x=1718288857; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4hLEV7cEhYqs364TwznzdmQhJORPUoZ782mB7mIsyO8=;
+        b=caaUIcMXoZ9RcFH9Uzv8B4l7JixqMj57w71tCNMjNEDLqgzWrJ/cAiE+vmauPvp6ui
+         nDLa/y5Raue+ci9JBbpZNLyQLr1AlDrYn5osbB+5eLdwZR5z2fe3EFk7q2ROwtZ11TYg
+         XaqkeHq8AFl90OAwfxBXOfMaaWGkQwitmA5hCAqGi/kUtfW7mP53FnuqZJlFFLTIR6HE
+         GesSJp6VUqfi6ITL6Cp+2eZ8PdPrVAzoGOuwA5be9tN83MjaJoEo6kbIEpy96xBiIiXU
+         3cMk/hDSwK4TAp8qAxtAp2rwsjemtINBdE8BKECxQmGxUpJDvQeCUErW4Clsxdt2RMm4
+         n2KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717684028; x=1718288828;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3+ON/wkAKBmuxABFUuc+U89h1GiBlQq9gib75ECTHco=;
-        b=AuwgfzL+eC4gFBtT9XJsmyLVqQbUfQT5uR1Rw4ld9wkXXwFb0C068tspOEf8fN9fED
-         MXC+ZFcDNANci87+HDHKqLvtd1to3p/cIDhr1ibZn6VoSXT2vNfxP+YCdTxPROwxJLAJ
-         YK5sjMZmgFqJ1Bz6YwelPYuLuc2h5AdclEbTf3OTGcCKlvrgZBJG6QmLYzNld28xwEkm
-         YT8uOeRk1po0jqBicOpkYM57cXAyHcgp84BFij6BdtKo9M01MWTqvuc6lIruytzc/K4V
-         e5zTikrRPJo6N3EOUuRBIa8Kwl4hIiRsKljl6cyJDWlQe6/A5r7L8G0yV9MH6GTv35Ge
-         W24A==
-X-Forwarded-Encrypted: i=1; AJvYcCUGnJsRIUNwP5Girqsv3DBBHw8PyzmONzkfILxUoiIXsxn9OjFGr1Wktj6+bV+UA8WKCoQ+0vxzxklRAwWzJ/Us7lYiBGgFwQtw6XGE
-X-Gm-Message-State: AOJu0YwvblKQU8BiDZV4zO7vBUTPvUUpwT0gJ6BOsr6YT2OjWz8HICv4
-	TEZORNj14+qwHFMG1//8Hm5a52CQNQh3Ws+3gkvv52vaH/iJQUNOHIgcJqNLmy8=
-X-Google-Smtp-Source: AGHT+IHyBXsfWnnY+dpEOaBk06feEQHV0wQw4MfxmfB1QhpJtZsLeUZjAg5UoLph3AgS1uzeBqFuPA==
-X-Received: by 2002:a05:600c:3550:b0:421:5288:63df with SMTP id 5b1f17b1804b1-421562cf734mr52054265e9.11.1717684028385;
-        Thu, 06 Jun 2024 07:27:08 -0700 (PDT)
-Received: from [127.0.1.1] ([110.93.11.116])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42158110dfesm59158615e9.19.2024.06.06.07.27.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 07:27:07 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Thu, 06 Jun 2024 16:26:50 +0200
-Subject: [PATCH 8/8] iio: adc: mcp3564: drop redundant open-coded
- spi_get_device_match_data()
+        d=1e100.net; s=20230601; t=1717684057; x=1718288857;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4hLEV7cEhYqs364TwznzdmQhJORPUoZ782mB7mIsyO8=;
+        b=hqsILIXL2WzUTF9V+NnHaeFLbH26tE6Cupid3+u2tN7mBNCKtEtdqiDY47PUUBTQxN
+         vRgcMtk3HXDiPwwUjaYWrwtDSO2f7ZCKQabeslcUvETV+O/I84ZLZDT0hpXvee2S5TpH
+         EijKc6IfP/kyq2SWHzdOCB3/DhMuZvjWNZh6SHPPtEzYxA2A47Inm33DqfpEN7V1IAQr
+         nB6likStAPJzLeDAXj4gqxJhX3P8aSbnj4g0qqyNHxtfcYwDLLfQEm0rW727NtGhv8TK
+         aTqXP/Xr5cEQzr7DoXFTfO3v8+NaQyKubH1Vay4TklItjpFTsr5lNZ1qd9kj72zWnYDO
+         jEMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVieiTJzQzyqTzJLYuM30rrCe23OomlXcp6dCGkaP7UP1SiRCWwsC3jPjyrnpuf07C+laKAhdF/RFCpEKiXIXnMHu4db5rjKKynQ/2b
+X-Gm-Message-State: AOJu0YymwO+6p8WEXELrtoEKEyLYT/LJA/0aofLpAzTeln5aoxG20t3X
+	0kBuOQZmQ1j6EvJ91jHvyfPy/6LQs9V8uini+PGqSBRQqkI6u8ooFChgAA9Xo3s=
+X-Google-Smtp-Source: AGHT+IHsP59EudlMYpMNXIptWO+FeQmE0ifFlSNcVw/Ot9lSWaCM41xaUl8Qj6EICFDnAC/IPJ3ITg==
+X-Received: by 2002:a17:906:5ac8:b0:a68:88a3:3645 with SMTP id a640c23a62f3a-a6c7650ae43mr235613366b.27.1717684056579;
+        Thu, 06 Jun 2024 07:27:36 -0700 (PDT)
+Received: from [192.168.2.107] ([79.115.63.17])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c8070e1c1sm102862566b.168.2024.06.06.07.27.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 07:27:35 -0700 (PDT)
+Message-ID: <9e304860-b4e9-4193-9bb3-ebcc3611032f@linaro.org>
+Date: Thu, 6 Jun 2024 15:27:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mtd: spi-nor: macronix: workaround for device id re-use
+To: Michael Walle <mwalle@kernel.org>, Esben Haabendal <esben@geanix.com>,
+ Pratyush Yadav <pratyush@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+References: <20240524-macronix-mx25l3205d-fixups-v1-1-ee152e56afb3@geanix.com>
+ <D1Q7BU6PJ356.1CTXPUZE8U6XX@kernel.org>
+ <8513a828-6669-4bf3-91d3-799771866f32@linaro.org>
+ <D1SZA4ZDM06P.CJC0EQ9ULA04@kernel.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <D1SZA4ZDM06P.CJC0EQ9ULA04@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240606-spi-match-data-v1-8-320b291ee1fe@linaro.org>
-References: <20240606-spi-match-data-v1-0-320b291ee1fe@linaro.org>
-In-Reply-To: <20240606-spi-match-data-v1-0-320b291ee1fe@linaro.org>
-To: Lucas Stankus <lucas.p.stankus@gmail.com>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
- Ramona Bolboaca <ramona.bolboaca@analog.com>, 
- Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, 
- Cosmin Tanislav <cosmin.tanislav@analog.com>, 
- Marius Cristea <marius.cristea@microchip.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1323;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=/Drt9DvPT3iPacr8BHFd0FnwQyhtB9dBAHbphjiKxpg=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmYccvHAlB7a2d3uml14VcNQVQcno4MG62juiap
- AWDoGyQoZKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZmHHLwAKCRDBN2bmhouD
- 18N/D/4zmNIBRCfaS+X2Tbqwv0wbam22Rj0rrVINzmy+8LpDrghxyf08QLn/Y9TNBPqrBewXpZA
- 3b8NtJWnJT+9LWPcIijpn/z57vsqvUfsLOKG70OEjRPf2TUZoluuZCDmG8QYOJYoOe4TiknvtDi
- lpLbQBfz8g+wdBF8n0G5tVzpeJBA6ceAfVFjsDGCmfDDBP2otzWGeuaQJhz02T6UmRJC/6T3zzr
- suZiC1Qs/IwbkYq41nYtGwpuQQizBzphqP1iArF6Nj33n8uwFAdaSQCPc+y4y8H8DEj27KUu2gA
- r8MFvX2xp3lRAJQCG9P3hBPPA96q0I6MLH3SthtYQZdv05LiiS8dNQqPmHm3iZk342VbzgeaImC
- fhLryLpkM1zinqavJZK/A5P8xqD/0knwtT5G0jWxOUT+CTvNc/GwZlQtujMsR7CZm06IIt/MOx2
- aga7/XXj0w6bJpejyytriRYraKR8qApQZR2SrS50n1DgAa/Pbzp5DShbAZnvTQd4c4407gNLJhW
- 3BfUjs+6vjqq95rT+fooFe/y/3nWnYrOevIfnLKVm1sjhTTEFDoRTLUow1splnX+QjcTfOCRKdJ
- ExdKlOLy6yNsQ6063IN+yWp/3mgv24eFF+xXmVqRpQfDhtDz3ajSw6OhRWYoCS0omqA3FG+3xOc
- 1z6rbxXttNnF6iw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-The driver calls spi_get_device_match_data() and on its failure calls
-again parts of it: spi_get_device_id() and getting driver data.  This is
-entirely redundant, because it is part of spi_get_device_match_data().
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/iio/adc/mcp3564.c | 6 ------
- 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/iio/adc/mcp3564.c b/drivers/iio/adc/mcp3564.c
-index e2ae13f1e842..d83bed0e63d2 100644
---- a/drivers/iio/adc/mcp3564.c
-+++ b/drivers/iio/adc/mcp3564.c
-@@ -1114,7 +1114,6 @@ static int mcp3564_config(struct iio_dev *indio_dev)
- {
- 	struct mcp3564_state *adc = iio_priv(indio_dev);
- 	struct device *dev = &adc->spi->dev;
--	const struct spi_device_id *dev_id;
- 	u8 tmp_reg;
- 	u16 tmp_u16;
- 	enum mcp3564_ids ids;
-@@ -1212,11 +1211,6 @@ static int mcp3564_config(struct iio_dev *indio_dev)
- 		 * try using fallback compatible in device tree to deal with some newer part number.
- 		 */
- 		adc->chip_info = spi_get_device_match_data(adc->spi);
--		if (!adc->chip_info) {
--			dev_id = spi_get_device_id(adc->spi);
--			adc->chip_info = (const struct mcp3564_chip_info *)dev_id->driver_data;
--		}
--
- 		adc->have_vref = adc->chip_info->have_vref;
- 	} else {
- 		adc->chip_info = &mcp3564_chip_infos_tbl[ids];
+On 6/6/24 14:45, Michael Walle wrote:
+>>>> + */
+>>>> +static int
+>>>> +mx25l3205d_late_init(struct spi_nor *nor)
+>>>> +{
+>>>> +	struct spi_nor_flash_parameter *params = nor->params;
+>>>> +
+>>>> +	/*                          DREAD  2READ  QREAD  4READ
+>>>> +	 *                          1-1-2  1-2-2  1-1-4  1-4-4
+>>>> +	 * Before SFDP parse          1      0      1      0
+>>>> +	 * 3206e after SFDP parse     1      0      0      0
+>>>> +	 * 3233f after SFDP parse     1      1      1      1
+>>>> +	 * 3205d after this func      0      1      0      0
+>>>> +	 */
+>>>> +	if ((params->hwcaps.mask & SNOR_HWCAPS_READ_1_1_4) &&
+>>>> +	    !(params->hwcaps.mask & SNOR_HWCAPS_READ_1_4_4)) {
+>>>> +		/* Should be MX25L3205D */
+>>>> +		params->hwcaps.mask &= ~SNOR_HWCAPS_READ_1_1_2;
+>>>> +		spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_1_1_2],
+>>>> +					  0, 0, 0, 0);
+>>>> +		params->hwcaps.mask &= ~SNOR_HWCAPS_READ_1_1_4;
+>>>> +		spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_1_1_4],
+>>>> +					  0, 0, 0, 0);
+>>>> +		params->hwcaps.mask |= SNOR_HWCAPS_READ_1_2_2;
+>>>> +		spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_1_2_2],
+>>>> +					  0, 4, SPINOR_OP_READ_1_2_2,
+>>>> +					  SNOR_PROTO_1_2_2);
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static const struct spi_nor_fixups mx25l3205d_fixups = {
+>>>> +	.late_init = mx25l3205d_late_init,
+>>>> +};
+>>>> +
+>>>>  static int
+>>>>  mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
+>>>>  			    const struct sfdp_parameter_header *bfpt_header,
+>>>> @@ -61,7 +118,8 @@ static const struct flash_info macronix_nor_parts[] = {
+>>>>  		.id = SNOR_ID(0xc2, 0x20, 0x16),
+>>>>  		.name = "mx25l3205d",
+>>>>  		.size = SZ_4M,
+>>>> -		.no_sfdp_flags = SECT_4K,
+>>>> +		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+>>>> +		.fixups = &mx25l3205d_fixups
+>>>>  	}, {
+>>>>  		.id = SNOR_ID(0xc2, 0x20, 0x17),
+>>>>  		.name = "mx25l6405d",
+>>>>
+>>
+>> If all support 1-1-2, (seems MX25L3205D doesn't), then we may have a
+>> change to don't update the core.
+>>
+>> Frankly I don't care too much about what happens in the manufacturer
+>> drivers, but I do care about the core and to not extend it with . This
+>> patch is not too heavy to be unmaintainable and shows clear where the
+>> problem is, we can keep this as well.
+> 
+> It's a horrible hack. For example I'm working on a patch to clean up
+> the spi_nor_set_read_settings() handling. So just throwing any code
+> into vendor drivers doesn't make it any better in terms of
+> maintainability. I'd need to touch all the code anyway. In fact it
+> makes it even worse, because it looks like the manufacturer drivers
+> are just a dumping ground for bad things. Thus, I'd really have it
+> handled in a correct way inside the core.
+> 
+> Also, this is not device specific. Let there be two different
+> flashes with the same ID, but one support SFDP and one doesn't.
+> Right now, you have to have any of the magic flags (dual, quad,
+> etc) set to trigger an SFDP parsing. If the flash without SFDP
+> doesn't support any of these, like in this case, we are screwed.
+> Hence we might need such a flag also for other flashes.
 
--- 
-2.43.0
+maybe. How many such flashes have you seen in the last 3 years?
+> 
+>> Other option that I'd like you to consider is whether we just remove
+>> support for MX25L3205D, thus the entry altogether, and instead rely on
+>> SFDP to set everything.
+> 
+> Well, this will break boards with this flash :) And we don't know if
+> there are any.
 
+The flash (MX25L3205D) was already deprecated in two iterations by the
+manufacturer. First migration being done in 2011 [1]. Having to maintain
+all flavors is a pain, thus let's remove support for the old flash. If
+anyone complains we can bring it back to life, but let's not complicate
+our existence yet.
+
+[1]
+https://www.mxic.com.tw/Lists/ApplicationNote/Attachments/1858/AN058-Migrating%20from%20MX25L3205D%20to%20MX25L3206E-1.2.pdf
