@@ -1,153 +1,144 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3500E38DC7
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE8F19597A
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717695312; cv=none; b=RatDhdMbv8XdIeEt4s1xG9C6EV7BMPHsSMQmbFLTDf4DZLgXOrS7RGjYSLtxyb+pMNWpvfqBeisYAvlOqTFdcBfLi7Y5FqVmRoiuqndjumhf95EOynlspEMVUv6PqoRzqLP1I01blum1UhnLgjqs76rp3mV9tdR6V5hqpiN4fzY=
+	t=1717695344; cv=none; b=ZKZkmg93vQaTEGICeEy1ZBwxw4dy6ghGhQkL8UaM8DfF6krY++JyRhxngztJOqsvxfZ+C+v/lkdkk8zZkoH7qU+VixWMyb1WMQb4hjBG8dk2qSmr5r+OUVRlFo4YwnOARDikcy8uzvQBJrHAwMbnnlAv07iRKI1OgbilsWCIaWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717695312; c=relaxed/simple;
-	bh=uupDSeWXdAPWvc2kL9o+GSBoSZKN1q738oHE+tt4FRc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uJBnImsT+tCEvf/F63DWrMnui/oip6hPFxZJ/ciWHq88+ElAB4pcUH1YaGk6F9DUHME2nVJZvOpBlnpOESd/kMZsfh6oTmXT5HE81pi0ife3g1ed741L7TaJ5ruqFKIzfRbyGPO5KL0D8XV986ULYCwUyWl4hfPl/0CQJwAtS2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=YIMRUiFy; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1717695344; c=relaxed/simple;
+	bh=xABQwRoV/rPfzO361kpsP71OpAjQdGoHAsuSMSpEf8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O4GVV3Px/YcBu1Q71bJ+ZUtTp9vZsEbF0/HgA21zLeOwDbhPGrtELy77EU8tltTsOrtp6g+ZihRxeM+Sd0Nj8N91ptL/+641EeOwN7CG49u23BcLRlULq67EZlSR916lYpVUpZgBoHoA77M3t1IIF5mVjlFh4IFte972Kb8WwdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MgtF9tvj; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="YIMRUiFy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
-	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=CUuCxid6NILsuNvzm9Fa8Mpc8mnuooImrZQ0s/si8+0=; b=YIMRUiFyJNP4LtyC2Zz0njPusb
-	6MUnjSmeRNscKJwJrMmBrHRnpon1Cgz7Cn8KEwkebwcL1vh5gf2G3j9pMGGega55FToZdPeziCvCh
-	obDd33IkMMavputh8MWl4EMDapomp6o/mdoRY8migmuwuSuFi3TSLW+21zyK+/9JhynVgd7y2Mk8d
-	862AkSqVarEEmGYP3/pY0h4Nx3HCzk4vaX9NHTR5dafRvWav361qPlMPsGkVpfQbB0tPcITvYj20P
-	zD8pMoz4+L9YFsQ7KR4bofFRUMhHidUAoSlT5JRNg+g1cr9Au/ITNxNg437EZmxe0N8DttoDHPS+e
-	DhiVlRaA==;
-Received: from sslproxy07.your-server.de ([78.47.199.104])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1sFH15-0004DR-6T; Thu, 06 Jun 2024 19:35:07 +0200
-Received: from [80.62.117.184] (helo=localhost)
-	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <esben@geanix.com>)
-	id 1sFH11-00019h-1M;
-	Thu, 06 Jun 2024 19:35:07 +0200
-From: Esben Haabendal <esben@geanix.com>
-To: "Michael Walle" <mwalle@kernel.org>
-Cc: "Tudor Ambarus" <tudor.ambarus@linaro.org>,  "Pratyush Yadav"
- <pratyush@kernel.org>,  "Miquel Raynal" <miquel.raynal@bootlin.com>,
-  "Richard Weinberger" <richard@nod.at>,  "Vignesh Raghavendra"
- <vigneshr@ti.com>,  <linux-mtd@lists.infradead.org>,
-  <linux-kernel@vger.kernel.org>,  "Rasmus Villemoes"
- <rasmus.villemoes@prevas.dk>
-Subject: Re: [PATCH] mtd: spi-nor: macronix: workaround for device id re-use
-In-Reply-To: <D1SZA4ZDM06P.CJC0EQ9ULA04@kernel.org> (Michael Walle's message
-	of "Thu, 06 Jun 2024 15:45:20 +0200")
-References: <20240524-macronix-mx25l3205d-fixups-v1-1-ee152e56afb3@geanix.com>
-	<D1Q7BU6PJ356.1CTXPUZE8U6XX@kernel.org>
-	<8513a828-6669-4bf3-91d3-799771866f32@linaro.org>
-	<D1SZA4ZDM06P.CJC0EQ9ULA04@kernel.org>
-Date: Thu, 06 Jun 2024 19:35:06 +0200
-Message-ID: <87msny9dpx.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MgtF9tvj"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-702555eb23bso1038794b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 10:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1717695342; x=1718300142; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FhekWzHrW9NurW+RaIOThqGP3SBDgZ6s+7MlrIOk/wY=;
+        b=MgtF9tvjfVG8WgSxaKt8mO71/UMk+7A30hmM3C83g13Rs40RWKwUcZKMR8uCYmuLDX
+         3hYE+pmuwHTstiuKAiNisE1Fq8GWkyiDGUv2qKIDC5dkj+u6vhfADFcGMd4c1CmNRaTY
+         born717BynFipcQsyahuffnF3llwfl5e2k2uo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717695342; x=1718300142;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FhekWzHrW9NurW+RaIOThqGP3SBDgZ6s+7MlrIOk/wY=;
+        b=g4lo80CGIk/1pZeDw6OD4DxTXIuCBUCr37zPrfCpWpiiZGpYFH8rlrDnErx6k5jfDc
+         HAwebCNQWafwxBUBAlClYhAGECs03XEgYoeoz7Z9zBWH3ScXkKr9TLaFXdw42DLZzW8t
+         dTH+0QfQ0AyatFUtV4KQRat/7F52ipbF1qkhZWFoV337tCmRbIAxzzGDf5xau3Vfke2d
+         glAOnC0HjORE57A/BkLOdW0gPRbVPPkMxVcvHcWBm7rOngwNvzBX4P2x/vjZoua+IoKY
+         ZtZZIxQnAcNSe9uLM5yAjzRoqtTUgv0Orgvy0B70aA46Lw5enmglEHmJ7Tyaekpritjz
+         qTeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWONjuZQIua6iuC6uw720Dy/JZOISgcJiCAMIyFbip85811vv5BUjdmxpzwx81/oi8wDzoOKj5vTbFoAqVIsfuRtFI2cqhR2XOqliQW
+X-Gm-Message-State: AOJu0YzvNqakAEyjH594jEz2XO2mM0hsp+vnD4hnpoYRFoO35r0Eky/4
+	MUEtlgdWBYl6jlUcroPll8c9bWGleOzlpXJBeAxM2hoKQl+JMl7jnBP3ibkTAg==
+X-Google-Smtp-Source: AGHT+IGqky3MNy6C2rzmt/288+9Xbb/3YZaZphiKwa4B9QhEBIhCOCT7QnAC/sV7qoLsAhgL5gCPbA==
+X-Received: by 2002:a05:6a20:7f8c:b0:1af:fff9:30dd with SMTP id adf61e73a8af0-1b2f9bd93c6mr270327637.35.1717695342540;
+        Thu, 06 Jun 2024 10:35:42 -0700 (PDT)
+Received: from pc98uv11.mtv.corp.google.com ([2620:15c:9d:2:3fe9:f321:712c:442f])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703fd375503sm1334904b3a.42.2024.06.06.10.35.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 10:35:42 -0700 (PDT)
+From: Daisuke Nojiri <dnojiri@chromium.org>
+To: 
+Cc: Daisuke Nojiri <dnojiri@chromium.org>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Reka Norman <rekanorman@chromium.org>,
+	Tzung-Bi Shih <tzungbi@chromium.org>,
+	Gwendal Grignou <gwendal@chromium.org>,
+	Abhishek Pandit-Subedi <abhishekpandit@google.com>,
+	Pavan Holla <pholla@chromium.org>,
+	Ching-Kang Yen <chingkang@chromium.org>,
+	Lukasz Majczak <lma@chromium.org>,
+	chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3 v4] platform/chrome: Add struct ec_response_get_next_event_v3
+Date: Thu,  6 Jun 2024 10:34:28 -0700
+Message-ID: <20240606173509.243739-2-dnojiri@chromium.org>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+In-Reply-To: <20240606173509.243739-1-dnojiri@chromium.org>
+References: <20240604005354.2294468-1-dnojiri@chromium.org>
+ <20240606173509.243739-1-dnojiri@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27298/Thu Jun  6 10:30:08 2024)
+Content-Transfer-Encoding: 8bit
 
-"Michael Walle" <mwalle@kernel.org> writes:
+Add struct ec_response_get_next_event_v3 to upgrade
+EC_CMD_GET_NEXT_EVENT to version 3.
 
->> >> + */
->> >> +static int
->> >> +mx25l3205d_late_init(struct spi_nor *nor)
->> >> +{
->> >> +	struct spi_nor_flash_parameter *params = nor->params;
->> >> +
->> >> +	/*                          DREAD  2READ  QREAD  4READ
->> >> +	 *                          1-1-2  1-2-2  1-1-4  1-4-4
->> >> +	 * Before SFDP parse          1      0      1      0
->> >> +	 * 3206e after SFDP parse     1      0      0      0
->> >> +	 * 3233f after SFDP parse     1      1      1      1
->> >> +	 * 3205d after this func      0      1      0      0
->> >> +	 */
->> >> +	if ((params->hwcaps.mask & SNOR_HWCAPS_READ_1_1_4) &&
->> >> +	    !(params->hwcaps.mask & SNOR_HWCAPS_READ_1_4_4)) {
->> >> +		/* Should be MX25L3205D */
->> >> +		params->hwcaps.mask &= ~SNOR_HWCAPS_READ_1_1_2;
->> >> +		spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_1_1_2],
->> >> +					  0, 0, 0, 0);
->> >> +		params->hwcaps.mask &= ~SNOR_HWCAPS_READ_1_1_4;
->> >> +		spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_1_1_4],
->> >> +					  0, 0, 0, 0);
->> >> +		params->hwcaps.mask |= SNOR_HWCAPS_READ_1_2_2;
->> >> +		spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_1_2_2],
->> >> +					  0, 4, SPINOR_OP_READ_1_2_2,
->> >> +					  SNOR_PROTO_1_2_2);
->> >> +	}
->> >> +
->> >> +	return 0;
->> >> +}
->> >> +
->> >> +static const struct spi_nor_fixups mx25l3205d_fixups = {
->> >> +	.late_init = mx25l3205d_late_init,
->> >> +};
->> >> +
->> >>  static int
->> >>  mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
->> >>  			    const struct sfdp_parameter_header *bfpt_header,
->> >> @@ -61,7 +118,8 @@ static const struct flash_info macronix_nor_parts[] = {
->> >>  		.id = SNOR_ID(0xc2, 0x20, 0x16),
->> >>  		.name = "mx25l3205d",
->> >>  		.size = SZ_4M,
->> >> -		.no_sfdp_flags = SECT_4K,
->> >> +		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
->> >> +		.fixups = &mx25l3205d_fixups
->> >>  	}, {
->> >>  		.id = SNOR_ID(0xc2, 0x20, 0x17),
->> >>  		.name = "mx25l6405d",
->> >>
->>
->> If all support 1-1-2, (seems MX25L3205D doesn't), then we may have a
->> change to don't update the core.
->>
->> Frankly I don't care too much about what happens in the manufacturer
->> drivers, but I do care about the core and to not extend it with . This
->> patch is not too heavy to be unmaintainable and shows clear where the
->> problem is, we can keep this as well.
->
-> It's a horrible hack. For example I'm working on a patch to clean up
-> the spi_nor_set_read_settings() handling. So just throwing any code
-> into vendor drivers doesn't make it any better in terms of
-> maintainability. I'd need to touch all the code anyway. In fact it
-> makes it even worse, because it looks like the manufacturer drivers
-> are just a dumping ground for bad things. Thus, I'd really have it
-> handled in a correct way inside the core.
->
-> Also, this is not device specific. Let there be two different
-> flashes with the same ID, but one support SFDP and one doesn't.
-> Right now, you have to have any of the magic flags (dual, quad,
-> etc) set to trigger an SFDP parsing. If the flash without SFDP
-> doesn't support any of these, like in this case, we are screwed.
-> Hence we might need such a flag also for other flashes.
+Signed-off-by: Daisuke Nojiri <dnojiri@chromium.org>
+---
+ .../linux/platform_data/cros_ec_commands.h    | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-Also, it is not very obvious that you can trigger SFDP parsing by
-setting these dual/quad bits.  Having an explicit flag to cause this
-behvaiour would be much better IMHO.
+diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+index 070e49c5381e..fff191a8d413 100644
+--- a/include/linux/platform_data/cros_ec_commands.h
++++ b/include/linux/platform_data/cros_ec_commands.h
+@@ -3527,6 +3527,34 @@ union __ec_align_offset1 ec_response_get_next_data_v1 {
+ };
+ BUILD_ASSERT(sizeof(union ec_response_get_next_data_v1) == 16);
+ 
++union __ec_align_offset1 ec_response_get_next_data_v3 {
++	uint8_t key_matrix[18];
++
++	/* Unaligned */
++	uint32_t host_event;
++	uint64_t host_event64;
++
++	struct __ec_todo_unpacked {
++		/* For aligning the fifo_info */
++		uint8_t reserved[3];
++		struct ec_response_motion_sense_fifo_info info;
++	} sensor_fifo;
++
++	uint32_t buttons;
++
++	uint32_t switches;
++
++	uint32_t fp_events;
++
++	uint32_t sysrq;
++
++	/* CEC events from enum mkbp_cec_event */
++	uint32_t cec_events;
++
++	uint8_t cec_message[16];
++};
++BUILD_ASSERT(sizeof(union ec_response_get_next_data_v3) == 18);
++
+ struct ec_response_get_next_event {
+ 	uint8_t event_type;
+ 	/* Followed by event data if any */
+@@ -3539,6 +3567,12 @@ struct ec_response_get_next_event_v1 {
+ 	union ec_response_get_next_data_v1 data;
+ } __ec_align1;
+ 
++struct ec_response_get_next_event_v3 {
++	uint8_t event_type;
++	/* Followed by event data if any */
++	union ec_response_get_next_data_v3 data;
++} __ec_align1;
++
+ /* Bit indices for buttons and switches.*/
+ /* Buttons */
+ #define EC_MKBP_POWER_BUTTON	0
+-- 
+2.45.2.505.gda0bf45e8d-goog
 
->> Other option that I'd like you to consider is whether we just remove
->> support for MX25L3205D, thus the entry altogether, and instead rely on
->> SFDP to set everything.
->
-> Well, this will break boards with this flash :) And we don't know if
-> there are any.
