@@ -1,122 +1,118 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E661953A4;
-	Thu,  6 Jun 2024 12:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3032F1953A4;
+	Thu,  6 Jun 2024 12:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717675780; cv=none; b=u3pnJ0eLQemVKDOIfDygTW4nQmU3CQO4wE6L7NrNi7Mwqzn4sacLS4NmY0cZ/1joK+65CLg06N+7ub//oNwQXlqcqttE2DfsMCSnlHRvpoNMuHa8dyMGrcdgwgDPZy/q+0lG1mxMTDMnOFH/1tn/GJwGJeLqxHyhBjzyLJmJ598=
+	t=1717675789; cv=none; b=HX0wPKEzDbGUTX77QCkZmp6+gUiVcKER+GIBw1P9l+NpE+BIWVzxNbUh2vQFOHiFBTXPynrCC9rEMHesI1UI9wHDRcTXG1wCdG9nAQmBigUqWBrIy20FREYkoXOo2hltXG8HiHWJdxAPLobKXLi+V2OQiVQJ4QXchLqYMaY9Ko0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717675780; c=relaxed/simple;
-	bh=d/jCCF0NCqOhRllSWhbYbAQCzOnOV4aDMEeLQSfza+0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=O879sNiuzhRksO/ucuLH77jPytbgrBxcWWlobhxlKXOfp5Q45u7Z+GYc3IGp+en+3FiGn0Vl4y3wu+woPdyThVHs15sjz20Vi2ZeJr7P2kN/k6X/83W/nrQJH+GHN232o96GkBVJkVpl2texU47TqwR0mY1NWoow0JdbilVXtyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ex+NapCY; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1717675789; c=relaxed/simple;
+	bh=X1m6b6lelnlNBB+WcqOljMIeenc6jY9qHrvKkYzdDQI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tqKV1LmzTUCR77XPmizT/JkfnlwPsk7XHGFhFLgm2xE+ZpKT6m3uEOdFUAgaCgT4OqnXLA7kK6yKBHvAeDxWPeYsUzg9JY+OA949Kuk+Pnz4Z8DUYEx94eYywU28855pej9QHo+2s0pJqx7JxhULihvQr2IjOs81N9LQVjlJSmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpmuGGf2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ex+NapCY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717675777;
-	bh=d/jCCF0NCqOhRllSWhbYbAQCzOnOV4aDMEeLQSfza+0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=ex+NapCYaV6uQigRxoz9OgZuuxLinAt+ffhPwDJQBgGlx2SPufS1v3P+AztsrF40y
-	 dRz3GUhZMHA2YYKyeXhuBGMbG9HldE7vrKp5Z0aMkk7TJDryuZgGDfB6vIuUmaN5Jh
-	 ZtaoW+WFg76wAWKZsxuc9ptVjZ6wJAFaEFmmrrdiBvJ/OcdNeb1n1sjacYJ08NifXs
-	 gJXda7TmOb3v0I06XyPOME2H9GCfAv25M4/IRnJcZmn5FRz6dl9OI7Bt36nIC2i+vy
-	 6ozyecsSOFutlgR3Bx0/B/YDrWkIdTEhWye8VrqdgyMs7MzMaplLnHAA1p7tZ0ul1V
-	 Dy86HOeJ8iz6A==
-Received: from [100.93.89.217] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: benjamin.gaignard)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8ACD83781022;
-	Thu,  6 Jun 2024 12:09:36 +0000 (UTC)
-Message-ID: <657ef910-e6fd-4791-988e-4aba03104c20@collabora.com>
-Date: Thu, 6 Jun 2024 14:09:35 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpmuGGf2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF0B0C4AF1D;
+	Thu,  6 Jun 2024 12:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717675788;
+	bh=X1m6b6lelnlNBB+WcqOljMIeenc6jY9qHrvKkYzdDQI=;
+	h=From:Subject:Date:To:Cc:From;
+	b=KpmuGGf2c+L7sS4JA9DpFtcYrsjYU3zBxW95LKTUNxYECbADNSSRgWTU6o+zm8aZ1
+	 lc/5hxEUkbtcDjiJPKd6yIM0C4iFP0YrYr3bmD42J/ivTZ498oJrTQSxZ359dd4KI5
+	 4ESwDvFxb2DIL24FjzPkJvCVTQPvap9WZjwLd1jqWHh9zzv4pJsrkGuQr+KDvlhvY5
+	 CMRjUA/28YjCy9IJrHm9Ch8XZ74dQSRNxH7Rj7fIFo/r8i+PCLjGN91sP4aGHnqYDt
+	 VKtENtoSoRd/6Fg1B7B6eRfOncHuEP3A4WacW8/yMu58ZsZak3VDSjps7rP6PuIA+s
+	 TfUbJDkPyfjVw==
+From: Roger Quadros <rogerq@kernel.org>
+Subject: [PATCH RFC net-next 0/7] net: ethernet: ti: am65-cpsw: Add multi
+ queue RX support
+Date: Thu, 06 Jun 2024 15:09:16 +0300
+Message-Id: <20240606-am65-cpsw-multi-rx-v1-0-0704b0cb6fdc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/12] media: platform: mtk-mdp3: Get fine-grain
- control of cmdq_pkt_finalize()
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Moudy Ho
- <moudy.ho@mediatek.com>, "Jason-JH . Lin" <jason-jh.lin@mediatek.com>,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org
-References: <20240222154120.16959-1-chunkuang.hu@kernel.org>
- <20240222154120.16959-11-chunkuang.hu@kernel.org>
-Content-Language: en-US
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-In-Reply-To: <20240222154120.16959-11-chunkuang.hu@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO2mYWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDMwMz3cRcM1Pd5ILict3c0pySTN2iCt20JLPkNIuU1ETT1CQloMaCotS
+ 0zAqwodFKQW7OCnmpJbp5qRUlSrG1tQBhvBqscgAAAA==
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, srk@ti.com, vigneshr@ti.com, 
+ danishanwar@ti.com, pekka Varis <p-varis@ti.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
+ Roger Quadros <rogerq@kernel.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2148; i=rogerq@kernel.org;
+ h=from:subject:message-id; bh=X1m6b6lelnlNBB+WcqOljMIeenc6jY9qHrvKkYzdDQI=;
+ b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBmYacAETk11b9CoCcsF4T8hXWudESgQWgRlNsrs
+ ypx6I/ni0yJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZmGnAAAKCRDSWmvTvnYw
+ k/xtD/0Qg2wSJ84gHz13CawwmbxCntS8LAShukgHheXdAXEvM6620f95TSiBtpzCHjGrv9jgjoc
+ L1wEh972EsUde9YB99oiss24dqtJ2v4LLlW/gTFODCKr0V3SNmrF8Iue4nzTwYrLxVW2NQN9LC7
+ yOxl5fTkgICLfuFh1f7cv/oleMUeSKtUqpMRiWNVRhFH7Fb8F58mLvzU6ZSvKtbaWN4eDOdClRY
+ GJm9IGpC7JHgRYgkwtdEGzMGNZKu0Hs4wtt5ju75jYgrP8/6iFIUI6mqCuvdNMEezHeEpOJI8Xl
+ 9UQ/u8uaJFSncEdhxiT/tg3eg+ngaoGS7jZEmYOKQL0smqqdYyPmSgtsHZhWMhHGuJeckbG9Mn9
+ DuEzraB0aXjr7nTfJTYzYGVNS6iTouVz9/ZVH9KJmMTt5bqdvOo7av4RSZAm3PIfCZ6qtAYg/0I
+ 7+r7Mgz3qkCPJvzBZkVrMrSAQ/HmwSHtHyu3MhwZvFZlvG/4h6gYBPxnyQ7xXsNX73au737Tr7R
+ O3RbVliDR1BsCHqMrFDe3krxWxuezFwaB4+Nr9Q5OULkjs0B6Qp+utZvpMMSZ3rDF2/uL+meY8g
+ CVvGjYuO0DXurJjt6NfLU2WmIlddSWBsKTXAOD19XZYwWOfx5fWgYKZDrPHcBYJSzCTMWOj79Hv
+ kTNOdMzXeb3UwVw==
+X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
+ fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
 
+Hi,
 
-Le 22/02/2024 à 16:41, Chun-Kuang Hu a écrit :
-> In order to have fine-grained control, use cmdq_pkt_eoc() and
-> cmdq_pkt_jump_rel() to replace cmdq_pkt_finalize().
->
-> Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> ---
->   drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c | 3 ++-
->   drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c | 2 ++
->   drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h | 1 +
->   3 files changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c
-> index 6adac857a477..b720e69b341d 100644
-> --- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c
-> +++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c
-> @@ -471,7 +471,8 @@ int mdp_cmdq_send(struct mdp_dev *mdp, struct mdp_cmdq_param *param)
->   		dev_err(dev, "mdp_path_config error\n");
->   		goto err_free_path;
->   	}
-> -	cmdq_pkt_finalize(&cmd->pkt);
-> +	cmdq_pkt_eoc(&cmd->pkt);
-> +	cmdq_pkt_jump_rel(&cmd->pkt, CMDQ_INST_SIZE, mdp->cmdq_shift_pa);
->   
->   	for (i = 0; i < num_comp; i++)
->   		memcpy(&comps[i], path->comps[i].comp,
-> diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
-> index 94f4ed78523b..2214744c937c 100644
-> --- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
-> +++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
-> @@ -231,6 +231,8 @@ static int mdp_probe(struct platform_device *pdev)
->   		goto err_put_scp;
->   	}
->   
-> +	mdp->cmdq_shift_pa = cmdq_get_shift_pa(mdp->cmdq_clt->chan);
-> +
->   	init_waitqueue_head(&mdp->callback_wq);
->   	ida_init(&mdp->mdp_ida);
->   	platform_set_drvdata(pdev, mdp);
-> diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h
-> index 7e21d226ceb8..ed61e0bb69ee 100644
-> --- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h
-> +++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h
-> @@ -83,6 +83,7 @@ struct mdp_dev {
->   	u32					id_count;
->   	struct ida				mdp_ida;
->   	struct cmdq_client			*cmdq_clt;
-> +	u8					cmdq_shift_pa;
+am65-cpsw can support up to 8 queues at Rx. So far we have
+been using only one queue (i.e. default flow) for all RX traffic.
 
-Can send a new version of this series because this patch can't
-be applied on media_tree/master branch.
-The code look correct for me but we need to be able to applied it
-to perform more checks.
+This series adds multi-queue support. The driver starts with
+1 RX queue by default. User can increase the RX queues via ethtool,
+e.g. 'ethtool ethx -L rx <N>'
 
-Regards,
-Benjamin
+The series also adds regmap and regfield support to some of the
+ALE registers. It adds Policer/Classifier registers and fields.
 
->   	wait_queue_head_t			callback_wq;
->   
->   	struct v4l2_device			v4l2_dev;
+Converting the existing ALE control APIs to regfields can be a separate
+exercise.
+
+Some helper functions are added to read/write to the Policer/Classifier
+registers and a default Classifier setup function is added that
+routes packets based on their PCP/DSCP priority to different RX queues.
+
+'RFC' because I had to revert the RX coalesing patch [1] to
+apply this series. I still need to work out how this will work
+together with RX coalescing. Series is based on v6.9
+
+[1] e4918f9d4882 ("net: ethernet: ti: am65-cpsw: add sw tx/rx irq coalescing based on hrtimers")
+
+Signed-off-by: Roger Quadros <rogerq@kernel.org>
+---
+Roger Quadros (7):
+      net: ethernet: ti: am65-cpsw: Introduce multi queue Rx
+      net: ethernet: ti: cpsw_ale: use regfields for ALE registers
+      net: ethernet: ti: cpsw_ale: use regfields for number of Entries and Policers
+      net: ethernet: ti: cpsw_ale: add Policer and Thread control register fields
+      net: ethernet: ti: cpsw_ale: add policer/classifier helpers
+      net: ethernet: ti: cpsw_ale: add helper to setup classifier defaults
+      net: ethernet: ti: am65-cpsw: setup priority to flow mapping
+
+ drivers/net/ethernet/ti/am65-cpsw-ethtool.c |   5 +-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 197 +++++++++++---------
+ drivers/net/ethernet/ti/am65-cpsw-nuss.h    |  25 ++-
+ drivers/net/ethernet/ti/cpsw_ale.c          | 273 +++++++++++++++++++++++++---
+ drivers/net/ethernet/ti/cpsw_ale.h          |  62 ++++++-
+ 5 files changed, 437 insertions(+), 125 deletions(-)
+---
+base-commit: bc4f675ad79dd6f081e36ca45b27eac8ee60e29f
+change-id: 20240606-am65-cpsw-multi-rx-fb6cf8dea5eb
+
+Best regards,
+-- 
+Roger Quadros <rogerq@kernel.org>
+
