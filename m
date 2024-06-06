@@ -1,94 +1,122 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C03195B3F;
-	Thu,  6 Jun 2024 13:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529CD194C99
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679235; cv=none; b=DOBeWHqeWz3qTXU/o6qz7XqDUXGVXCnKmXNfwrc4T2y+4jbm4a3j7OZhpQjXtN8j16Oy6fDheQCJiWBfbZlilDDYGARXcpTbcDVB7icThuQgulcaEDntIPHe67E+oSOwXvTCRlW5VLu1jvB6CIpKJ+ebwU9NR98UY71GVM/rvBM=
+	t=1717679251; cv=none; b=ne9BS796UirFjIW1t2iMXF8r//clHjGE9hwm4OBBBaPDa3AYjU0mfSZ1nmc4pkP7WvUWtMyfNG1AOD2ksWHk0pHJc5JgRkR6V7B4DIyyzI39OmxQxl/FBJCx0nSDYNAQ1qAr8fBCMrA+xZ+B0+VSSHVbF65q6edfHc3t4AlXw+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679235; c=relaxed/simple;
-	bh=XgoPJUd+bBN04TXRU9XnDTVGOMcux7DlhJ1saFdp+Xc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bZQRo3AL5o9ran7EPnOtGM6bKJbgJScYtKlRGnfIv2CbsKt9kC5mNzc9vpq6rn+Z/YW7T3Zj5k9SeABTcFqZxxmhh69LWmuOq0pdch7pmrRCnTwjm6IRcoZiFqstsP/pI19RAP1hiuGvoIuI3Aq4aFaEIPMSuVqHTaKIp3qzduc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Ts9YF4+L; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1717679251; c=relaxed/simple;
+	bh=BdMDCKYOciFtZo4PTTUMFab4UVUl6ecIp67QhNGiFxE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P/SfzIGzU4pK7o0m9fVCMAsoXxkpWBobWxnOvWqqRE+VJixlG4CG+3xyorz9CYMFgMrFYKBpnuy6IRe1D3GRDyij75ynEypik8s08dP7UiMB69oXRMiyjZl8XA8APYWnmXHk7X3bp8Ws5nEJTlcPwlIxhvLvDJ1vyByTcujT9Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pxwKEkMC; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Ts9YF4+L"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4565uenB010646;
-	Thu, 6 Jun 2024 08:04:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=uzLIpnXo22STGFdd/jwh3NFmWPS7od+JawZ3ySQ0Msg=; b=
-	Ts9YF4+LBkz8e/3l8prlLZuOixZJXsxhCTXXJiLjAX8WlVVJLwZa2mGnwA+DFy+q
-	xVju6XDazTq28myFj4uZf8sdRlyoG+60h+/XAHwLbQ04WDaKen0FeAP+l4FXkIi4
-	9lJrgUbQpn8JgCuX8BsvqqTvmycdL3NUs9je5EAR3uiaQ8Uk9zG+WrHSm4uHfQxj
-	1u9K8+J6gM6uVucrMu9ee89N9xF0isxT9VGv7PMxw1az68Kq0pXSZ00YqcObwsNC
-	h4B+JhtB+53Iw8Id1Tq1T1PCUgbvhKPe8fTHH0SAbrTUh/dbb5vZjupovArJhKdK
-	Bpe1UVsZLYzO0RYme04wlg==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3yg11xw66m-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 08:04:07 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Jun 2024
- 14:03:57 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Thu, 6 Jun 2024 14:03:57 +0100
-Received: from sbinding-cirrus-dsktp2.ad.cirrus.com (unknown [198.61.65.44])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 987D1820249;
-	Thu,  6 Jun 2024 13:03:57 +0000 (UTC)
-From: Stefan Binding <sbinding@opensource.cirrus.com>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Stefan
- Binding" <sbinding@opensource.cirrus.com>
-Subject: [PATCH v1 4/4] ALSA: hda/realtek: Support Lenovo Thinkbook 13x Gen 4
-Date: Thu, 6 Jun 2024 14:03:51 +0100
-Message-ID: <20240606130351.333495-5-sbinding@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240606130351.333495-1-sbinding@opensource.cirrus.com>
-References: <20240606130351.333495-1-sbinding@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pxwKEkMC"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2e96f29884dso10099531fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:07:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717679247; x=1718284047; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9xqbTDU5EddtC0TrVAfeU+ERNe8gfqyFv4sZpg6VCoU=;
+        b=pxwKEkMCAXQ3w1PmZGCLFJPg73nrIiAPKJ09kyo49i0sr85KLCvLJ1iGVUpouQPxRK
+         VtoYUCN/QXLqsdurv1iapN+4l6ku+A7trXHNZCu3LMfJhXstzUuj+pEbAA3gqaTnQ2L3
+         yAVINfg0dsSQzCuA+ep21dnQAjJmLgzdVd1f3W/LWMzCXplErGog/26QuCbai80e5mku
+         kC7R7eJQNfDF5/w74oTXWwI9C9kE37U3apw+oFiG2ewAbScm2OVbzX5YuIsxFfxAZi/G
+         Y4L5YASTKUKdITRxEc2NoBHqk87NfI4sa5b0OL68oA6J9wKMpJ7cA7yaZKPa5+eqeZSB
+         CdVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717679247; x=1718284047;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9xqbTDU5EddtC0TrVAfeU+ERNe8gfqyFv4sZpg6VCoU=;
+        b=sF2Sn5JNPbq6up31vZcvF26CJkIfqPp6/TnTqmBkKnrylkI9enaCm462NucW3Z8dFg
+         FHfgTn10N95cF+WQcUC3zAc3q7amyab7ebjCi4B8iSGg5kkcX6K+d1ICTXqzENx9O1LE
+         cS7TT9kRZaIW+cNDoPk5++Cf60UjB/Dt9pSuoeSzJyyFkjHRj23VYoTkOR+DGiG7exuX
+         Olm4gQJSxS8j+yuiM7t4cwGh9JlE1wI/LxEXsn+XBzHeg+K4hIBmhrpCmnKmov9IFl0a
+         jAEqnNSLrGedeMKXAJ55C5X1WSC5ep8tOe8OlCnUwNbPu0/uaALMhlg+/k1VqpZ4sabA
+         wo1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWZRoKctSBqXY1gD57YQuwOqcaPs78n4Gb6lJx7KY+IujDBmEkLz5tPphr2xRzN3ROoAapKiWwfQGMJlHJPzKOZv2p6hVd/uIipSefH
+X-Gm-Message-State: AOJu0Ywf1zTkgGVgq/aEFCVMUxYhiKanf61LSgJvd+xSUdfrTf0Tr2iF
+	fu05TAQqs+B+Ss9N0pXKSMIir2VKge9W1ulfvJujxLzyFls9I2VM6PpBCK9NHtk=
+X-Google-Smtp-Source: AGHT+IGlDZLXub3zByy5p0lR4DbNs9Rf06mpjjFumk2zfzKdHZ7Rvj7G7Qjl3dOWAdV+S5AdUp9Xhg==
+X-Received: by 2002:a2e:9c07:0:b0:2e9:8ac8:b0c4 with SMTP id 38308e7fff4ca-2eac7a6ed32mr28518321fa.49.1717679247427;
+        Thu, 06 Jun 2024 06:07:27 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:f9a9:3740:b905:9995? ([2a05:6e02:1041:c10:f9a9:3740:b905:9995])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4215c19e67fsm21943435e9.2.2024.06.06.06.07.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 06:07:26 -0700 (PDT)
+Message-ID: <5f93f034-f781-47e0-b8ce-3c8407a709f7@linaro.org>
+Date: Thu, 6 Jun 2024 15:07:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] thermal: core: Do not fail cdev registration because
+ of invalid initial state
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>, Laura Nao <laura.nao@collabora.com>
+References: <4569763.LvFx2qVVIh@kreacher>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <4569763.LvFx2qVVIh@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: 6O4_7rtS4rEXPjVSboSkGsaHwvy_mlJD
-X-Proofpoint-ORIG-GUID: 6O4_7rtS4rEXPjVSboSkGsaHwvy_mlJD
-X-Proofpoint-Spam-Reason: safe
 
-Add support for this laptop, which uses CS35L41 HDA amps.
-The laptop does not contain valid _DSD for these amps, so requires
-entries into the CS35L41 configuration table to function correctly.
+On 05/06/2024 21:17, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> It is reported that commit 31a0fa0019b0 ("thermal/debugfs: Pass cooling
+> device state to thermal_debug_cdev_add()") causes the ACPI fan driver
+> to fail probing on some systems which turns out to be due to the _FST
+> control method returning an invalid value until _FSL is first evaluated
+> for the given fan.  If this happens, the .get_cur_state() cooling device
+> callback returns an error and __thermal_cooling_device_register() fails
+> as uses that callback after commit 31a0fa0019b0.
+> 
+> Arguably, _FST should not return an inavlid value even if it is
+> evaluated before _FSL, so this may be regarded as a platform firmware
+> issue, but at the same time it is not a good enough reason for failing
+> the cooling device registration where the initial cooling device state
+> is only needed to initialize a thermal debug facility.
+> 
+> Accordingly, modify __thermal_cooling_device_register() to pass a
+> negative state value to thermal_debug_cdev_add() instead of failing
+> if the initial .get_cur_state() callback invocation fails and adjust
+> the thermal debug code to ignore negative cooling device state values.
+> 
+> Fixes: 31a0fa0019b0 ("thermal/debugfs: Pass cooling device state to thermal_debug_cdev_add()")
+> Closes: https://lore.kernel.org/linux-acpi/20240530153727.843378-1-laura.nao@collabora.com
+> Reported-by: Laura Nao <laura.nao@collabora.com>
+> Tested-by: Laura Nao <laura.nao@collabora.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
----
- sound/pci/hda/patch_realtek.c | 2 ++
- 1 file changed, 2 insertions(+)
+As it is a driver issue, it should be fixed in the driver, not in the 
+core code. The resulting code logic in the core is trying to deal with 
+bad driver behavior, it does not really seem appropriate.
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 6cb258978666..621b525a3c14 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10540,6 +10540,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x38be, "Yoga S980-14.5 proX YC Dual", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x38bf, "Yoga S980-14.5 proX LX Dual", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x38c3, "Y980 DUAL", ALC287_FIXUP_TAS2781_I2C),
-+	SND_PCI_QUIRK(0x17aa, 0x38c7, "Thinkbook 13x Gen 4", ALC287_FIXUP_CS35L41_I2C_4),
-+	SND_PCI_QUIRK(0x17aa, 0x38c8, "Thinkbook 13x Gen 4", ALC287_FIXUP_CS35L41_I2C_4),
- 	SND_PCI_QUIRK(0x17aa, 0x38cb, "Y790 YG DUAL", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x38cd, "Y790 VECO DUAL", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x38d2, "Lenovo Yoga 9 14IMH9", ALC287_FIXUP_YOGA9_14IMH9_BASS_SPK_PIN),
+The core code has been clean up from the high friction it had with the 
+legacy ACPI code. It would be nice to continue it this direction.
+
+
+
 -- 
-2.34.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
