@@ -1,98 +1,133 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailfilter01-out30.webhostingserver.nl (mailfilter01-out30.webhostingserver.nl [195.211.72.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052471BDEF
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 21:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717707858; cv=none; b=L1cD+H2Lres4aHET4ci7bV1IO+HJqYjMQK/8fsmDNf9dE1DmaEyXHi0ZHwm3FMXk9ConVelAkXPkWTVYGTXnhj+n4ycgcqeUxft3VZ8Od8U8MyenCiW2e04jJPhlzBaeMEVSa/Hm1eJiGLmFPCnWZBwU/NCCTCj1VErw1kqrhHQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717707858; c=relaxed/simple;
-	bh=keqHyOdOZOwQlgrReYoPFxFzA/8w5CidNqJNBoo8zhU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NnJpNz/v8tX1R81i0rADi7p9B6S2DM/P7dY+IUM8Th3duUnBoazO0GmtV2/8BCR8f4N4joJEBh2SxegkIPXIuOZ57KjWY+L3w4A+nyWr39nxY9bgWb9AZy7H8cXRNhIqwHo0ifXtlbKZ0D0u6Q/KDB1fek09OifE84gYUhdyWj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F6bCpPYL; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47D81BDEF
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 21:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.211.72.101
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717707983; cv=pass; b=F2p++T/3Zz4Rhe05M2za1Yce9Bs+D+a1/o6e5dG5Kf3ZTPO4VNIRdjOG4YGiTmto9Ytb46YlYICYz5cN9FKejKvTcqHyvmNJRbVml7RsErq4jKOufPCuUN0EInUaNzbEn+JYGGc66ws2qnbZoz/7kjvFCaTH14PvfpkhIClx2N0=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717707983; c=relaxed/simple;
+	bh=FlPshzzsKq0FTOB4NsIwbIrKkaxyemDmfw3O1xsn+bs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F54+i9HzxJaeMLLcH84JuDYODv7swLYNPHQ7PiqO2qT+wkcJ7zkD5VV4EfshWJqKYdwXRH+3+kYr/C2IlYuONcxxNDGK6c9gQCZayVevgs2idFHSTf27mCVAXhtEO2UhASdR+Jp/p+ifjKNiLZu8sApV5o7nPXu018oXXF4ANSI=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=exalondelft.nl; spf=pass smtp.mailfrom=exalondelft.nl; dkim=pass (2048-bit key) header.d=exalondelft.nl header.i=@exalondelft.nl header.b=EcCdukBi; arc=pass smtp.client-ip=195.211.72.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=exalondelft.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exalondelft.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F6bCpPYL"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-578517c7ae9so1558580a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 14:04:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=exalondelft.nl header.i=@exalondelft.nl header.b="EcCdukBi"
+ARC-Seal: i=2; a=rsa-sha256; t=1717707909; cv=pass;
+	d=webhostingserver.nl; s=whs1;
+	b=gVSCgaaGLhp+BGaxPPySQqgBQnyvFZACt9ofhfHmJevSlxPqEqFIzLeWM/GAqjgYNkOfarPmLew03
+	 3EQtkcEjSYqDcUUG2mjzUs5+09g4pfAbFfjsSK2hsu5FTze41Kup+pL7s62H0xjXU099aTg8c5Tlc1
+	 O6mK13fIvWjmgE/5wVKfxN9XMtTTU48+loCEs7NopGwRXThzHBiV5F8nOIdhUaZhUiT0J6tOIYRm6w
+	 1bLCZlZzhRTdeGypT41KZxeGMDNSbF4KTytJrOVJ/LO2iVs4bopCb5NNAqHSVB8XC87fpXb9so+JVi
+	 RbFMwrPS8pNjc29QjW7rJ48H5uqNHwQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed;
+	d=webhostingserver.nl; s=whs1;
+	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
+	 dkim-signature:from;
+	bh=D7fNeAroC+9NlN3PRHXmGK1172PHj8eqUc0ato6uCEs=;
+	b=ihTXQ0J3/CwSF5y3LeYbfwPvSmzQhtfAa3pLCsKO+NkD8b0bdVhmzNOvovMq8IvxgPNkkAOdLG/4y
+	 h1czr2V+ifvbWjldAsMj9xC3uaarzZZVykIb6g65NdBnQSxDp3pLA5AbMXs8qoSuGE0rWUxBSCT2fI
+	 +q9isA8VyAgj6EYlXbVDwUMeM6vjGSnBtF8VU9SEZgmesmGigbeJfpRSpcQoNGPpFGx4Py/B6RnM11
+	 rqI56mmDvPYdMx7KkVdk9SlrkuheynFFsxk6m4uFoK6X4a5z/Yk8zoRkxamNKjn/6DUmz60s+JHur9
+	 hqqH9YVzz6FSz2B8kaEJm2aLF5wjP1A==
+ARC-Authentication-Results: i=2; mailfilter01.webhostingserver.nl;
+	spf=pass smtp.mailfrom=exalondelft.nl smtp.remote-ip=141.138.168.154;
+	dmarc=pass header.from=exalondelft.nl;
+	arc=pass header.oldest-pass=0;
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717707855; x=1718312655; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=keqHyOdOZOwQlgrReYoPFxFzA/8w5CidNqJNBoo8zhU=;
-        b=F6bCpPYLjeUYOrspMZF8Ed39T5S9tSM1X1FGz7lTm9YrcbfWnNw8k+oa9Fv7PTVHvv
-         jyMxu/+8QMkHsySIt+Mu0XX1Xn658E9cLATYXqsMPMuNf/KSdAJBq9W5MH5U8tuCs7qe
-         sByfEhqBwdmEDIymilLmhP3fyv4sB+HoHKxMQHUsWRUZtw3yn22MeH7YL+8rb37ypfq/
-         RMfwDMpbt8+QjGgIYgJBC78O7y9tI86TgmeYg+WQ0MPO6t3KCjMSZMkLJMIyvNc2Db4S
-         AIw3at95vRuksLaqJIXtNz8/xopWaVT9dulDPxZinAw0fFVhKyuQWn4yDWA0xWwSkMtE
-         5WYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717707855; x=1718312655;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=keqHyOdOZOwQlgrReYoPFxFzA/8w5CidNqJNBoo8zhU=;
-        b=imOdtmOyIqJ/v4FACoeLytnIbatsOi/IT39xzbESbSY4YoiPVuYWG9a8aIqC6heCix
-         RjUDkzFjlXvsN1i+jmzGQx3xBbilbn+4Lkn0uvwTbDK3IEizLPvEpfe7PfuwxC0xjfk+
-         Rt+iPKuPN2zG5i36FV2Hyruvonrq3JwDZVOWR+FL8z7bdoQbq42AFOfUQr3FTMC2q+tQ
-         0BFHQHzycMizpJyV2A4FYRa8EpHZrLwTCI0yGpeB0Cvl0Z4SsbZaONoPzXnpPX0boPew
-         8mMd6NHljisy3LV20Bvtzm3Dn6Fb1n02mFVIFZZq8vqrByMYDLaFTTh53SLd1dr/+M2b
-         sh8w==
-X-Forwarded-Encrypted: i=1; AJvYcCW1v1gKxqf7InSfMon0VXzQMfPBuiIzZVCFe4tfjzq1uQC9bp5TXRqhoXIkwQRj3NYnxCqVZOgVE+iYAru+9SVvnkYSy8bgmxsJHdR+
-X-Gm-Message-State: AOJu0YwLliHKMQF2oGI5KhGEBztGv8cI6tWZI337s4VPmSyKEOa2MG0D
-	AevhuLNrX4iNVH1Fdh2LJDg9hgu/6n7c3jDo7vr8PrB/PbK+dF3vdSODIN1IKfmx6iVZVxexYnZ
-	OosYFfNkJNZUId8UlNyjxKLJQCmX5C7zjpljDrBtW9aR2Adkp
-X-Google-Smtp-Source: AGHT+IG2Dcfh1F6YQ6OimrrH2CnVwHu7YNWHrj7TTURR7AB/btLmExEwVjIwWGrAUhwqk8yw9zkUfG5ST1NPvx1G1f0=
-X-Received: by 2002:a50:931e:0:b0:57a:4ee0:8144 with SMTP id
- 4fb4d7f45d1cf-57c50827346mr239799a12.4.1717707855180; Thu, 06 Jun 2024
- 14:04:15 -0700 (PDT)
+	d=exalondelft.nl; s=whs1;
+	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
+	 from;
+	bh=D7fNeAroC+9NlN3PRHXmGK1172PHj8eqUc0ato6uCEs=;
+	b=EcCdukBiFg5opAt+aurMW615i85lLpxdLM4cmlm56ygew2F3D1YYxIU3wH0nK4aGRIOrffcAYYOAp
+	 904vsOa0iTSJZ5gHZ6WmCu20bivVleKWBUxFem8NcUED92rfDpsqh1VIGk3iu6FOSr1y872JKRkyk3
+	 QaWzigYf2hzbsuHah68Dm32wqP9OlP7t3eVABav2kZcInorto/EH1ImkLTlyxCE3wW/sOZ9pahmfx/
+	 Trv/HUIPqpcYnnKxhD8t18YLRlI5HZBFxFle/8gblEXFmu5gOON+GR1tyg/HZ2j8w4zur/mCkFtrn3
+	 mulrXfbPwglpQxZK4ttazbsvxpSUpWw==
+X-Halon-ID: 73e69e04-2448-11ef-8d21-001a4a4cb906
+Received: from s198.webhostingserver.nl (s198.webhostingserver.nl [141.138.168.154])
+	by mailfilter01.webhostingserver.nl (Halon) with ESMTPSA
+	id 73e69e04-2448-11ef-8d21-001a4a4cb906;
+	Thu, 06 Jun 2024 23:05:07 +0200 (CEST)
+ARC-Seal: i=1; cv=none; a=rsa-sha256; d=webhostingserver.nl; s=whs1; t=1717707907;
+	 b=als09rKqlo1LoeIPZH5A2708QsWwJUxT1ysPfhf9SWnbFGLQGYemDDjqivkZFV8hr9k8g7pQRO
+	  FrrR2llScHhXf0y0bdbt0EpGadChLT1Y4DvHxtXmyK1TgUCWHMSpiJXUVGoiC7tbLtF36Ny+2b
+	  Jpvwi/bbzTpphNk9FfMVKEDI+/VbQabIhxR4iMN1pW/RIiBpPQf7akdDReF7kHBSZ0YsiUwH8I
+	  o7Sd4xzLK1JLKtTfYms+LKe+Ya4CLDg7mt4+9QUrLLqHiBXlWo7naEayKRXgudTKHcWtIaJwLs
+	  9AZ2EXPUa6aH1DScnRUR5MyACtdZr8f4FH+jvM4Smo2YYQ==;
+ARC-Authentication-Results: i=1; webhostingserver.nl; smtp.remote-ip=2a02:a466:68ed:1:d680:309e:9a32:ec62;
+	iprev=pass (2a02-a466-68ed-1-d680-309e-9a32-ec62.fixed6.kpn.net) smtp.remote-ip=2a02:a466:68ed:1:d680:309e:9a32:ec62;
+	auth=pass (PLAIN) smtp.auth=ferry.toth@elsinga.info;
+	spf=softfail smtp.mailfrom=exalondelft.nl;
+	dmarc=skipped header.from=exalondelft.nl;
+	arc=none
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed; d=webhostingserver.nl; s=whs1; t=1717707907;
+	bh=FlPshzzsKq0FTOB4NsIwbIrKkaxyemDmfw3O1xsn+bs=;
+	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From;
+	b=MVXY/U+S+te1Ej9jciCm9o/eUMoWmqcPIonDyv1tngT2H0McKI8jvol/a68234QwzV33G3YYdC
+	  xyDg+ZStTSNVkub3VIFlGtFSf9sXjHRrEI5y09og896u98THaFjyZothXriakSPK9Qv7hKppvB
+	  LCMTN2TkHxNsb6LxBiCvHAFzqXeMwhbI1QxQQ4mtMHHIRkljuLbSPkHJFQ19m0GUm1tcWxtG2d
+	  uSM87zQtBuE4RiwjrVPZuX4r9bcHYmRcgYC+WLzZ6TRheuSEvseVy+QpiHeqUeKTYYSE/HJGk/
+	  o571QpoMPqUl0BVKAhF+htwwcKejmFLHWPsvoQja1UD/Vw==;
+Authentication-Results: webhostingserver.nl;
+	iprev=pass (2a02-a466-68ed-1-d680-309e-9a32-ec62.fixed6.kpn.net) smtp.remote-ip=2a02:a466:68ed:1:d680:309e:9a32:ec62;
+	auth=pass (PLAIN) smtp.auth=ferry.toth@elsinga.info;
+	spf=softfail smtp.mailfrom=exalondelft.nl;
+	dmarc=skipped header.from=exalondelft.nl;
+	arc=none
+Received: from 2a02-a466-68ed-1-d680-309e-9a32-ec62.fixed6.kpn.net ([2a02:a466:68ed:1:d680:309e:9a32:ec62] helo=submission)
+	by s198.webhostingserver.nl with esmtpa (Exim 4.97.1)
+	(envelope-from <ftoth@exalondelft.nl>)
+	id 1sFKIE-0000000APHI-3z6Q;
+	Thu, 06 Jun 2024 23:05:07 +0200
+From: Ferry Toth <ftoth@exalondelft.nl>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Kees Cook <kees@kernel.org>,
+	Linyu Yuan <quic_linyyuan@quicinc.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Ferry Toth <ftoth@exalondelft.nl>,
+	Richard Acayan <mailingradian@gmail.com>,
+	Hardik Gajjar <hgajjar@de.adit-jv.com>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	s.hauer@pengutronix.de,
+	jonathanh@nvidia.com,
+	paul@crapouillou.net,
+	quic_eserrao@quicinc.com,
+	erosca@de.adit-jv.com,
+	regressions@leemhuis.info
+Subject: [PATCH v1 0/2] "usb: gadget: u_ether: revert netif_device_detach change
+Date: Thu,  6 Jun 2024 23:02:30 +0200
+Message-ID: <20240606210436.54100-1-ftoth@exalondelft.nl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240603203437.973009-1-tanmay.shah@amd.com> <chqsvuwi7gukbw3l2y6xoxmd3lh6vlqhs2wjd4lylbhsg5m2hc@vnmesij3xoiu>
- <4b401ee7-73b8-4974-848c-5a181c0bdb81@amd.com>
-In-Reply-To: <4b401ee7-73b8-4974-848c-5a181c0bdb81@amd.com>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Thu, 6 Jun 2024 15:04:03 -0600
-Message-ID: <CANLsYky3f9cw-nY2Q--uniB4k1QfHkCy8JLi+XcaxYZKHw8jnw@mail.gmail.com>
-Subject: Re: [PATCH v4] drivers: remoteproc: xlnx: add attach detach support
-To: Tanmay Shah <tanmay.shah@amd.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, linux-remoteproc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ACL-Warn: Sender domain ( exalondelft.nl ) must match your domain name used in authenticated email user ( ferry.toth@elsinga.info ).
+X-ACL-Warn: From-header domain ( exalondelft.nl} ) must match your domain name used in authenticated email user ( ferry.toth@elsinga.info )
+X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
 
-On Wed, 5 Jun 2024 at 11:47, Tanmay Shah <tanmay.shah@amd.com> wrote:
->
->
->
-> On 6/4/24 3:23 PM, Bjorn Andersson wrote:
-> > On Mon, Jun 03, 2024 at 01:34:38PM -0700, Tanmay Shah wrote:
-> >> It is possible that remote processor is already running before
-> >> linux boot or remoteproc platform driver probe. Implement required
-> >> remoteproc framework ops to provide resource table address and
-> >> connect or disconnect with remote processor in such case.
-> >>
-> >
-> > I know if changes the current style for this driver, but could we drop
-> > "drivers: " from the subject prefix, to align changes to this driver
-> > with others?
-> >
->
-> Ack. Will be fixed. Is it convention not to have "drivers" ?
+As agreed with the author, the netif_device_detach change is going to be reverted by
+this series, so we will collaborate on a new one in the future that
+brings no regressions.
 
-"drivers" is not needed.
+Ferry Toth (2):
+  Revert "usb: gadget: u_ether: Re-attach netif device to mirror
+    detachment"
+  Revert "usb: gadget: u_ether: Replace netif_stop_queue with
+    netif_device_detach"
 
-> If so, from now on, I will format subject prefix: <subsystem>/<platform>:
->
+ drivers/usb/gadget/function/u_ether.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-That will be just fine.
+-- 
+2.43.0
 
-> > Regards,
-> > Bjorn
->
