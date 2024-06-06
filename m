@@ -1,104 +1,73 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BE739FEF;
-	Thu,  6 Jun 2024 11:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBC139FEF
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 11:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717674383; cv=none; b=kc/O/FuXLfSegGgStnyVTwGbzm5IsdN4V7iUC9ijSTPT3ksWHlXjb3S4m5bcHvGqo77n0bxVtTREbr2KJhu2uuKG/OlogfHXcge0SLYCnPI/62s15NpAYht5CJXxkhlK7QdNCqxO2sOZmzF+SGpjZJg27E5q+gJ6mH2dhyXsG4Y=
+	t=1717674425; cv=none; b=pHcXcC5ojkOblJwjbh+mXytbVhKegbCeqZz0oNH6JJ+wcLiGa/TZi6nKpLVALVBhKbRKiR0XQ6yWC5kOoZbZF9jhnaT22GFSnhVZlj9Ap3f99OuBrruFRvMOzltF86YSjOCCf7yrykwInCc6T8AlL7LAC/vXCVMfE70WJMhuYiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717674383; c=relaxed/simple;
-	bh=bawd7RoudWzE2MLiDRDMbDUVmw5SvItRGm9RIcJfnSM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=an51hKZVdrOzWG4UCTM57Jp6zUI25vJwWvwNixN6V8JC9wCp8QwDmWCxD+u6R0D9oKFnT4A9W16PV8AGIHd8NTHGZqzBFZrk/7efuUj3K5opr3tyy3PETi11fX/1LcOOEZkQDY+LlPPX/6/gBXYOzd7qcKgmScDqQliUWvSG1ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=pYQz6zxc; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="pYQz6zxc"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 6DDC988395;
-	Thu,  6 Jun 2024 13:40:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1717674056;
-	bh=Nyy8WYwlJkr9UvhAPlerxpBTyEbPyphWULV8TmMUzaU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pYQz6zxcgac01LlqCNOMbPaufE8YwphfPIR5SkZzMpMmELev1dXCLCBoucvlsUSfF
-	 l/3YBGPPFvkadQEpBoVp3atPRsuLp1pzdgwEerFOH6ZvJwNBBUMpMkZy1IRrL97yfy
-	 mMIXt91y17oBYF/bpPOFwzNaVwYEe/hq4kNSidvDd/Oq96x0O5P6jbSxf0Sg4kIWqt
-	 kgS92C72WlfKuwjHeO54oguTFMkG+3NWwxpia00M0JWCnOGYbC7S+0nmHeV5qHuCDF
-	 zzFFARA3mnX1+oOwTXQ9d2cisWz8drewWujYIJb9Ah5EOQM9WWm7JbxYTQpvktbuDR
-	 Rh7DZDG57eoxg==
-Message-ID: <5770f01f-2341-4fed-81da-3803f3c54f03@denx.de>
-Date: Thu, 6 Jun 2024 13:14:37 +0200
+	s=arc-20240116; t=1717674425; c=relaxed/simple;
+	bh=cb87yepL3NLm7aE+xMtGHRSskVryxcWtSReO5YFMHTY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=YndGLj7T3E6HMQVfjnKIWMt8hHkvQs0+RoRAV9We3fTpIWxy/LrwKg4zujJD/Fe0uyLkt8LkgEaA4i7PhVe1Ee3UPEWf64hWQhXkdWxgTsgZkAaEZ/ZnQUWLofTiGKyxDVywQ9C7TcYx99RxUTaBkTOkgZvVmJtUI+3R0cmO7eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7eb5518702bso3857039f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 04:47:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717674423; x=1718279223;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IYshJJq9VYculDPy1bKsqpBojSxQszJDU8nyNlYmFVI=;
+        b=Hc2DEIPPvIl8upra1NYG+KPdTWPdak+u9XVWJKXO3bQL7HlKTmlgwpNU8RfuOwZZxw
+         W/p3ieo0QeL3Bk5KLvCzGht1wR4pg1pFrIuJ8eD1n3TAaRDiFdUW4J5E7nUH0A0m94/Y
+         vhhpvta3inDFMVAWVqwjvLOrUwQlpwDTxUlDmQIWvVio5sQbOa1ToW+chG+MOyaqGjs9
+         4PmQqDS2UaSCDyLqB9ilAgz3tDxHrZ9wJZqEowk8zkDjQMxt9bHNKkjnAEnKV/XliNxf
+         3Sf2au6FgpB9SjKEdA6+fVEkgqiEzYBdgX9fFm/gNvP4y3FfNBqeuTE3/0cgHmn8o/dm
+         q6KQ==
+X-Gm-Message-State: AOJu0YzWS7YSjPX+Wf4vBTiYMtmrXvjr60v8IJgu+WXjNMIEsULJmdeF
+	W40ii3uFpS4Oi/50DQh+rc5rcJ/cMt4+S2/tF2Pry+pnYgN7CeUBsc59VsQ+SI8EyED8ggl3MFH
+	i6XXlM+I20uDx4rWKWV8A0NXVeodTh/Op6vsotrXus0jnKe5KjmiWL2E=
+X-Google-Smtp-Source: AGHT+IETATgPmWsnB0sqEkIT6z0JgSr5O9cbQI9hN6EksOcPWBTF7EnLdgUvi8wjKsGe+h7nPuOpIYwIMTs8fZJHXxXkmlLOZahh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build failure after merge of the stm32 tree
-To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20240606091217.19a08b65@canb.auug.org.au>
- <a827536d-004f-4a5d-8995-321ba9926349@denx.de>
- <361a9191-c320-411e-a628-ff41298391a9@foss.st.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <361a9191-c320-411e-a628-ff41298391a9@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+X-Received: by 2002:a92:c54a:0:b0:374:4edd:1fd4 with SMTP id
+ e9e14a558f8ab-374b1e13425mr3227535ab.0.1717674423523; Thu, 06 Jun 2024
+ 04:47:03 -0700 (PDT)
+Date: Thu, 06 Jun 2024 04:47:03 -0700
+In-Reply-To: <PN2PR01MB48911035081582F4B9893F9FFCFA2@PN2PR01MB4891.INDPRD01.PROD.OUTLOOK.COM>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dab083061a373d97@google.com>
+Subject: Re: [syzbot] [bpf?] possible deadlock in trie_delete_elem
+From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	wojciech.gladysz@infogain.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/6/24 8:54 AM, Alexandre TORGUE wrote:
-> Hi
+Hello,
 
-Hello everyone,
+syzbot tried to test the proposed patch but the build/boot failed:
 
-> On 6/6/24 01:29, Marek Vasut wrote:
->> On 6/6/24 1:12 AM, Stephen Rothwell wrote:
->>> Hi all,
->>
->> Hello everyone,
->>
->>> After merging the stm32 tree, today's linux-next build (arm
->>> multi_v7_defconfig) failed like this:
->>>
->>> make[4]: *** No rule to make target 
->>> 'arch/arm/boot/dts/st/stm32mp135f-dhsom-dhsbc.dtb', needed by 
->>> 'arch/arm/boot/dts/st/dtbs-list'.  Stop.
->>>
->>> Caused by commit
->>>
->>>    12ff8e167641 ("ARM: dts: stm32: Add support for STM32MP13xx DHCOR 
->>> SoM and DHSBC board")
->>>
->>> I have used the stm32 tree from next-20240605 for today.
->>
->> Fixed in
->>
->> [PATCH] ARM: dts: stm32: Fix STM32MP13xx DHCOR DHSBC Makefile entry
->>
->> sent to linux-arm-kernel .
->>
->> Thanks for the report, sorry for the breakage.
-> 
-> 
-> My fault, I tested to build the board using
-> "make  st/stm32mp135f-dhcor-dhsbc.dtb"
+failed to apply patch:
+checking file kernel/trace/bpf_trace.c
+patch: **** malformed patch at line 7: diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
 
-That's what I also use most of the time, and OE does its own DT builds.
-The LKP bot did find it today.
 
-> Fixed in stm32-next by applying Marek patch. I'll maybe squash it with 
-> initial patch for my PR.
 
-Thanks !
+
+Tested on:
+
+commit:         e377d803 kernel/trace: fix possible deadlock in trie_d..
+git tree:       https://linux.googlesource.com/linux/kernel/git/torvalds/linux
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9d7ea7de0cb32587
+dashboard link: https://syzkaller.appspot.com/bug?extid=9d95beb2a3c260622518
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=119fb274980000
+
