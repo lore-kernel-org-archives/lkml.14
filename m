@@ -1,116 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BC018638;
-	Thu,  6 Jun 2024 02:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81B1179A7;
+	Thu,  6 Jun 2024 02:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717641200; cv=none; b=eky+eLyswsK5Kkp5MaXUfmiQrsX8nMqzorq1HvdjZf++zNflft8bVucvd3Sc9QZDruRfQbAtakC/W6oHkq5zVLndosTZt2nzf0CtknT+ku6zaaOnfAKTUkZtQ9+Ou9FfAsXY6+D1mN63/3IcmVv4P/zNOwE7CXjBr5cKdMrCgEc=
+	t=1717641304; cv=none; b=XqFHy1ZVFr/V70gv4cDpqbGrXqCE+fKPNLnn6jJAnGLrfEAXTtboDZWqXRMs8oAfE7+/KZbzN/vYFLB/2wPul3tQ6lZkePlQ4uRxgLhP345GOJCT14vwtlN1T3H7lD46VFjVx8EZMqv0Kvv2PzKQbhesEcy5bP4eqvwtQSYkPF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717641200; c=relaxed/simple;
-	bh=muKFlTEZQ/AQ40SVi7FdGPUE3Q7TaOqoPMNhx6FRIis=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pjx9NOEP/H78kAvAb6mGgjgClB9/P60kd/iysJ8nk3a8rCpBwAK6eJs7rDxRS3QIZMXNgLRhykERj/41lW3/yzey6kZD91Dff3AtNxacPGuhmyq3FCHCffIQh5Es1WR1FAQmya6lL9oqLTdkwHnNndYUK6bCiCba0spPrgooMMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IvamltEO; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717641304; c=relaxed/simple;
+	bh=y7WNMKH1TghW1c2cFiLkX9FG5HRdxMYw3D4JfUDZCVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=KYcW/FoSkwAUUyn5izLeD6VDMVuIamXDNXAhZ9Rxj22ZG2EYzRDveB/+w2AIDQ4pmEZzbl6PDk8VYnZFnNkdLQ1SbTYhaefG5bWYuIXVkN+6mTfAnArFinTmej6q8B1IQUluS+0NYKvXH+X/xwRs7VFmdsa80QoP3NUaqlmr6k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=URoURIvQ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IvamltEO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717641198; x=1749177198;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=muKFlTEZQ/AQ40SVi7FdGPUE3Q7TaOqoPMNhx6FRIis=;
-  b=IvamltEOgtXMtxdEw4ntO/A1LSgGO+X15yYXIAVjxFR7fX7Pg58M6mpb
-   rbqgrMPa8+sRo1yJ7B2eUx9YPd4mn+z4OU/bIoOce/ALLng7lJKJcXmXk
-   l8GIP/uVx9IKmCDsCf3lyi8sotouyRh7z3KY0D0mKTKqG8eNTlH+pWzbo
-   5BgnzmVvug/sW0EjZ4EjTTjeouS8kgUsuc1PLDTp9V/iiP5pTa4BukFkz
-   L8pgb+LgrKlwrha+YW7H/+epocu6VReyJHDXABVibgg9J2V52lgOmWNlO
-   wAnyc5CK5HBC6kPSn1kvjbuD9mWz9joQ6VpRHdEOJ0YPspgjWih6lLqpU
-   A==;
-X-CSE-ConnectionGUID: nhMFWSdRQx63ePPHmkAb2g==
-X-CSE-MsgGUID: xe+3TQPGQeSAfoQjFuntbw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="14126980"
-X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
-   d="scan'208";a="14126980"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 19:33:17 -0700
-X-CSE-ConnectionGUID: BrP0J7NBQcSH/Fh3z9CL0g==
-X-CSE-MsgGUID: z9U+ODy6T/WnF0YSM+WryQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
-   d="scan'208";a="68621101"
-Received: from unknown (HELO yhuang6-mobl2.sh.intel.com) ([10.238.6.133])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 19:33:14 -0700
-From: Huang Ying <ying.huang@intel.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Huang Ying <ying.huang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bharata B Rao <bharata@amd.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH] acpi,hmat: Use ACCESS_COORDINATE_CPU when appropriate
-Date: Thu,  6 Jun 2024 10:28:45 +0800
-Message-Id: <20240606022845.189710-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="URoURIvQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1717641300;
+	bh=zSIVS0IoWqE7ioFrDQxLmG5mx5liyW0YWn0XhaIWeog=;
+	h=Date:From:To:Cc:Subject:From;
+	b=URoURIvQVLT/Cmh7jJQIpqER2KK5MyFOye3ujgxiGUoLsGokh5bFNcjyMioZb0t42
+	 ereaT+2hHV0Qeslv+0ZCXFGHGuq3QcvM0L55PdmMCd5NsOLHv8Ny1cpgj75csU/uHy
+	 fWlEByC9+5MWaiz/inaFfRKfYDU80QKESN9T9oeIUK9dTUbDGBdjW8B5SLGuskgLBe
+	 l/F5jdQBX+m8OgTtYrZ5G1WQbPqJo6SJ5/EU1hMTlRTetRIsKNdtfMxhGhc5jiTQOy
+	 ykDj5e5hN+nRe5evs5y9TI4t1JKdNUJD9+2OhTv4q+0niCP7EjQPB7hh7a3c5hSGG3
+	 h7/dKnq3sI6kQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VvpMR5FYpz4wc4;
+	Thu,  6 Jun 2024 12:34:59 +1000 (AEST)
+Date: Thu, 6 Jun 2024 12:34:58 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton
+ <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the char-misc tree
+Message-ID: <20240606123458.3cf18e4b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/sgvLgFkW/vZ3+lIL95.uSwn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-To improve the readability of the code via replacing the magic number
-"1" with ACCESS_COORDINATE_CPU when appropriate.  No functionality
-change.
+--Sig_/sgvLgFkW/vZ3+lIL95.uSwn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Bharata B Rao <bharata@amd.com>
-Cc: Alistair Popple <apopple@nvidia.com>
-Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
----
- drivers/acpi/numa/hmat.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Hi all,
 
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 2c8ccc91ebe6..febd9e51350b 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -408,7 +408,7 @@ static __init void hmat_update_target(unsigned int tgt_pxm, unsigned int init_px
- 	if (target && target->processor_pxm == init_pxm) {
- 		hmat_update_target_access(target, type, value,
- 					  ACCESS_COORDINATE_LOCAL);
--		/* If the node has a CPU, update access 1 */
-+		/* If the node has a CPU, update access ACCESS_COORDINATE_CPU */
- 		if (node_state(pxm_to_node(init_pxm), N_CPU))
- 			hmat_update_target_access(target, type, value,
- 						  ACCESS_COORDINATE_CPU);
-@@ -948,7 +948,7 @@ static int hmat_set_default_dram_perf(void)
- 		target = find_mem_target(pxm);
- 		if (!target)
- 			continue;
--		attrs = &target->coord[1];
-+		attrs = &target->coord[ACCESS_COORDINATE_CPU];
- 		rc = mt_set_default_dram_perf(nid, attrs, "ACPI HMAT");
- 		if (rc)
- 			return rc;
-@@ -975,7 +975,7 @@ static int hmat_calculate_adistance(struct notifier_block *self,
- 	hmat_update_target_attrs(target, p_nodes, ACCESS_COORDINATE_CPU);
- 	mutex_unlock(&target_lock);
- 
--	perf = &target->coord[1];
-+	perf = &target->coord[ACCESS_COORDINATE_CPU];
- 
- 	if (mt_perf_to_adistance(perf, adist))
- 		return NOTIFY_OK;
--- 
-2.39.2
+The following commit is also in the mm tree as a different commit (but
+the same patch):
 
+  5a71c0d1180e ("dyndbg: add missing MODULE_DESCRIPTION() macro")
+
+This is commit
+
+  62112a466412 ("dyndbg: add missing MODULE_DESCRIPTION() macro")
+
+in the mm-nonmm-unstable branch of the mm tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/sgvLgFkW/vZ3+lIL95.uSwn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZhIFIACgkQAVBC80lX
+0Gxrdwf/eSvtDuo4S+MnNPecY0buhrQfFcIoA1oYQSigpMDGSJf/E2UyYcgphjq6
+NxXw/4o8nDDa6q8ONm/nopEJf1J/pGwttyfF9gz6ksGlBwu/dVcTJPsOGbr0OPWu
+NElT4TJsC90QVLU9wcr4iCojqo/YvysPstJ6ojkbkuw0qVrtw0CZyMIe7UQTGuBw
+/luVWHm81McMdXEYWz350IqJimk5+zjGl/wmNyz14oJAnqKC/TWCF7/CGz56hjnB
+xzOQWg0XL7FK07RY+WrwKEgy9ybAuwJgNXPy1KDnaB44uN8oUQctmWBEt/nuLmVX
+3V3Ywc/oNFz9/rataTcGIPgH7wuIFA==
+=L92u
+-----END PGP SIGNATURE-----
+
+--Sig_/sgvLgFkW/vZ3+lIL95.uSwn--
