@@ -1,124 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D68E199399;
-	Thu,  6 Jun 2024 16:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCF01993AB;
+	Thu,  6 Jun 2024 16:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717690244; cv=none; b=hrheJrH4tdbMN4/8aThOnwAimBTd9DuuZLYkOiaraSQpVadz3FQLWhChTDmafKhXcO3ZecLy8VX/raTQOnbsbnV1TgD+T98dTIq6lc5ZbGYVQZg5Z1QtGkumlYJOIbTPJPpKvNjaNhOVSqqhxA3o56R54fOP1p97eTeXj1S4oRY=
+	t=1717690245; cv=none; b=Vxx4ZJby7wx14DP1saG576cROlXJICbLliPIScAXfnoERf1UIrq7Uvebck+W6BHdzvaNlMuQ1OAYINftuPygGfizfGIkbnN/HK8qgu3lPW/RwMVqywXVELpBy2hFafJs+L8YEm8tEvwGYz6v4RvdIR3f9+1Q0Ppa6MTc9ACdZ/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717690244; c=relaxed/simple;
-	bh=3+qSRLVpcdMyUzcNy5jn6Wrz5bikHflvBafSsMgGFj4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bkein40dAFnzn3YJd2TGm2bX77kqSyTNQioPle0HzHQCmga+CfAREYg1pF5UKfyu0K4mVooSk/LlPEeg+0WojA1gW1XF1dncSSWGBa1113oRpF3SGrgHftz4DJOFf0Z5+JzkN+GqtoOFhfuKoSq/g3ZLZXMi6ZLzDzGov5rwGdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aIEJx+PB; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717690245; c=relaxed/simple;
+	bh=qv1pFXlcSgwYbKrQz9zbw//dFkZVqhId2iv4MglEBDU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QpRwaB2nG3Pqw9eC3ja8AcMd5CpayHDjTT7RleSFqkbhhYQRhQdE/zQ/Zhgnh+5Si8S9h4d90bpBIg38fI8lndnxRS+Xq4YbagwMdpFyOGN1NUgHtRT+pML+wbiB+OSaXKMpAVx9lCtRryPiT1P8lI4UUDp40xxKUc2qOHTXHIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ndSWqezx; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aIEJx+PB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ndSWqezx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717690242; x=1749226242;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3+qSRLVpcdMyUzcNy5jn6Wrz5bikHflvBafSsMgGFj4=;
-  b=aIEJx+PBIvh4wCbIWf+5RU/uxUGYoQxDHB8tN/Snu2P04uA9R+wifoEg
-   OKCNtP0OVvqV4a1PemcfHQwtR8ah+SL5KxmkkiZt4QzxtqwDLfTy8QBDk
-   80RUkwB0OpFmvD48TbLp0c0qSvz+7R4wftjClWStMoDf551saFz2aCaYc
-   qxFG5mXk1o8QKcAo4j3QKz4y4u620sa9ZVyglvgN1rydtBzYoQtVMxrVy
-   tlG3Y0VUmbjBi19nH7nx9LGsvvM0nkCoaGpo0myfvPhckMZDWvjCBfbIT
-   E+TPRP8HzfvqV6SgYE4JKXlBdfdRncnFykXBKEcmUe528+SG+CgNOYfSp
-   g==;
-X-CSE-ConnectionGUID: w/PmKJ2lRZKIWJDukrHV5Q==
-X-CSE-MsgGUID: fYD5Ur7ySleyJ2pBZ6tojQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="18164351"
+  t=1717690244; x=1749226244;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qv1pFXlcSgwYbKrQz9zbw//dFkZVqhId2iv4MglEBDU=;
+  b=ndSWqezxjb/BIV+jOmZLHU9R8TSYXdOqbNeA70s+BIKhxw/jKmfP78G4
+   UN7tqe6opWbX3Bmw5SS4kf5m1YTOXkP+16HU/29pWbItbQBCM1pkA6EuX
+   9jXWKmzRIs42aNmjX6MLHtyHKWsoItY88kjvExwqE2bb2bweqZBpQIkcG
+   qHjUgWvJMVNPASnwmsOMHHW9hTVMsUB8CtSFTVNycP1EeB1fkBPD3O2hi
+   mly0oqsv5Un2+JSma1Y7SzVIN/j5C3l8py4Fpl1qcX14oyIko8fClbReM
+   NnRMlqWvy2lq92D/XikxfpLX9+cw1lSCtjQAWa6v1I2TEZtV0TBg063c3
+   A==;
+X-CSE-ConnectionGUID: uMU940J6R02cRdieFPLBlw==
+X-CSE-MsgGUID: n28c+R0TTkKUxDwUNprqvw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14525107"
 X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="18164351"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:10:35 -0700
-X-CSE-ConnectionGUID: 6PYiMqvtSKGU11AqT+idoA==
-X-CSE-MsgGUID: nCNrCDJvSL+zXHFUY5b1DQ==
+   d="scan'208";a="14525107"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:10:44 -0700
+X-CSE-ConnectionGUID: bvhW7S7sQSWtax5dU45RBQ==
+X-CSE-MsgGUID: Tqx9REmTSsaOvs1iEkDMhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="37949163"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 06 Jun 2024 09:10:32 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 73307339; Thu, 06 Jun 2024 19:10:30 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sam Protsenko <semen.protsenko@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH v1 3/4] clk: samsung: Switch to use kmemdup_array()
-Date: Thu,  6 Jun 2024 19:09:33 +0300
-Message-ID: <20240606161028.2986587-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20240606161028.2986587-1-andriy.shevchenko@linux.intel.com>
-References: <20240606161028.2986587-1-andriy.shevchenko@linux.intel.com>
+   d="scan'208";a="38695769"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.168]) ([10.125.109.168])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:10:44 -0700
+Message-ID: <5224f029-c156-4477-9823-54efd434af98@intel.com>
+Date: Thu, 6 Jun 2024 09:10:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ACPI: NFIT: add missing MODULE_DESCRIPTION() macro
+To: Jeff Johnson <quic_jjohnson@quicinc.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
+Cc: nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20240603-md-drivers-acpi-nfit-v1-1-11a5614a8dbe@quicinc.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240603-md-drivers-acpi-nfit-v1-1-11a5614a8dbe@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Let the kememdup_array() take care about multiplication and possible
-overflows.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/clk/samsung/clk-cpu.c | 4 ++--
- drivers/clk/samsung/clk-pll.c | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-cpu.c b/drivers/clk/samsung/clk-cpu.c
-index fbf4c4208e06..dfa149e648aa 100644
---- a/drivers/clk/samsung/clk-cpu.c
-+++ b/drivers/clk/samsung/clk-cpu.c
-@@ -689,8 +689,8 @@ static int __init exynos_register_cpu_clock(struct samsung_clk_provider *ctx,
- 	for (num_cfgs = 0; clk_data->cfg[num_cfgs].prate != 0; )
- 		num_cfgs++;
- 
--	cpuclk->cfg = kmemdup(clk_data->cfg, sizeof(*clk_data->cfg) * num_cfgs,
--			      GFP_KERNEL);
-+	cpuclk->cfg = kmemdup_array(clk_data->cfg, num_cfgs, sizeof(*cpuclk->cfg),
-+				    GFP_KERNEL);
- 	if (!cpuclk->cfg) {
- 		ret = -ENOMEM;
- 		goto unregister_clk_nb;
-diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
-index 4bbdf5e91650..4be879ab917e 100644
---- a/drivers/clk/samsung/clk-pll.c
-+++ b/drivers/clk/samsung/clk-pll.c
-@@ -1286,10 +1286,10 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
- 			len++;
- 
- 		pll->rate_count = len;
--		pll->rate_table = kmemdup(pll_clk->rate_table,
--					pll->rate_count *
--					sizeof(struct samsung_pll_rate_table),
--					GFP_KERNEL);
-+		pll->rate_table = kmemdup_array(pll_clk->rate_table,
-+						pll->rate_count,
-+						sizeof(*pll->rate_table),
-+						GFP_KERNEL);
- 		WARN(!pll->rate_table,
- 			"%s: could not allocate rate table for %s\n",
- 			__func__, pll_clk->name);
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+On 6/3/24 6:30 AM, Jeff Johnson wrote:
+> make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/acpi/nfit/nfit.o
+> 
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/acpi/nfit/core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+> index d4595d1985b1..e8520fb8af4f 100644
+> --- a/drivers/acpi/nfit/core.c
+> +++ b/drivers/acpi/nfit/core.c
+> @@ -3531,5 +3531,6 @@ static __exit void nfit_exit(void)
+>  
+>  module_init(nfit_init);
+>  module_exit(nfit_exit);
+> +MODULE_DESCRIPTION("ACPI NVDIMM Firmware Interface Table (NFIT) module");
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_AUTHOR("Intel Corporation");
+> 
+> ---
+> base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
+> change-id: 20240603-md-drivers-acpi-nfit-e032bad0b189
+> 
