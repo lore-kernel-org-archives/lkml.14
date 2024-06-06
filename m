@@ -1,104 +1,574 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4402029CE7;
-	Thu,  6 Jun 2024 07:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2DC13A898
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 07:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717660446; cv=none; b=M7eIK3fedq6IVOkdFHF0gErz3hVDNAeGwkFiHLmOSiAA00J3KniipBwgp6m+Bb2zUwarN1RiMTlIfm9vT08nP2vhVpAlTTVfRjF6Y1SmT83Wyftz8XW2rzQWON4E5wVBIpxJwkSc7TEB5IxUSRTU5ogHqwT4LnfuZWYklEhhDFU=
+	t=1717660446; cv=none; b=J2os5Paw5Hxgre5YEw9DK7TAcNfNnd0NgCmp2PU9znRsIs0/RQSyIZ3KEAmtldUkvghEII1rqALsp+pVODey1e+Q0OHYcFwKaBl1GCFYe4hQuGP1UcOWS0kVzvOLxPytuwxucms0dxp5hqPMRdNLCun8VQ4Pxb+QjP5egxH9m4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717660446; c=relaxed/simple;
-	bh=0eHWKmq6DgAnQMopQxlhQQ+wYbXZJwu+2Rydq21zm1k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P5RfnKqGycJdbn0MBx4VdXGeX0T4ce9pbtNJVJsVDkt56qMB+80NrvqkC8jpF230hRvYnoodYZit20L4tVeCMNPl5RMMZ/xAUVhjLl1Mr5JdUXbpb/Di6ohhcYmsAE92M4vhtVyVkqV9PDd4Q5A/sVCYRwJ6Pe/w+J23IlkhwvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=m5PdVe20; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	bh=sHrlOe3NTCnAMCSmqGXcMGAKIgr/nza9djFfKUSo/+E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=N64PmFv1mjkogrsSnlAGrePLzu1BDMtsjUy1O4VhEOTMN47PX2fakWSGTvjbKVxN6kwTPilqYZv5aLO+XmlOMKXYRgUznT7hZGua52OQOzc1mspwZos7kOEGxbVjH1T4aOQzHEOt44S7FC2h9dMMWPVZdM2jd30PYFFMKJFB27M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jC2eCpOr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="m5PdVe20"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 33865100003;
-	Thu,  6 Jun 2024 10:53:44 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1717660424; bh=gW9ORV3gxogsqQE+vcvVzXZfgTh4/T9kCBioOXKDrlY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=m5PdVe20m4Zw/kujZC6//s+1uPdkKVN1h6go9RGX8BlU72Ai+5yFsiZYZyU9I8qrX
-	 TGta/kSpqk3ECZbwDjbvLALdWgVB8cxv47Ukjz7dyybNveuGtQKVR05etGEQ/bSDkM
-	 NPfHglajH96oyesvkoOmTkAmn6SjG9ydMuNy9LaYNmAQSrfq01ig6mWlFIKp+dbNw7
-	 mfcL3cRp/wA1U3m4i7p4R1vYfMzRsVjPHlOeJFDPrrdZJu2Dm6pyqDgSHPOqyyimpU
-	 SvrQfb2w94RZ8D2tx9Qs3Vv5um/RpyfPeFiYrr7uos/QoxXlpqu4mdiTn42/Q82DDM
-	 mu37CMDR03nfA==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Thu,  6 Jun 2024 10:52:32 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Jun 2024
- 10:52:11 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Bjorn Andersson
-	<andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Shawn
- Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
-	<linux-remoteproc@vger.kernel.org>, <imx@lists.linux.dev>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH] remoteproc: imx_rproc: Adjust phandle parsing issue while remapping optional addresses in imx_rproc_addr_init()
-Date: Thu, 6 Jun 2024 10:52:04 +0300
-Message-ID: <20240606075204.12354-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jC2eCpOr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1175BC3277B;
+	Thu,  6 Jun 2024 07:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717660446;
+	bh=sHrlOe3NTCnAMCSmqGXcMGAKIgr/nza9djFfKUSo/+E=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=jC2eCpOr+/56KRQAX5Ypg5IEhTBXiRuZj9ALVdo58obnYFJeymlsME7ybc+JJsmf2
+	 cpNh5mjmBqbweQEEuhRQQFAgWjZpgRTQ7w87nhp2dv8EuNv7D7INPPevOYcAEKpLKK
+	 8nEdSwfvaZsXcbKcZ2NGggz+RQvOsZfnWHK9xRCxtol0XnavM36aV32swG3kzCTGnc
+	 8Zgwe83nVYd+q6IWLF5HoTgW3C5fepyPFaD7zNSS5fgSUQ4NMInBGBJLIcqAaHoI2C
+	 QGMpo4hhek9cUnFRnk9rcXIOr1AdmtEL8LgrNuqmDuDykZMUs5uQ1Ubf4J8kkxNyvf
+	 fGjgonEWBhByA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED593C27C52;
+	Thu,  6 Jun 2024 07:54:05 +0000 (UTC)
+From: Tao Zeng via B4 Relay <devnull+tao.zeng.amlogic.com@kernel.org>
+Date: Thu, 06 Jun 2024 15:53:39 +0800
+Subject: [PATCH] erofs: support external crypto for decompression
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185754 [Jun 06 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/06/06 06:52:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/05 22:40:00 #25473187
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240606-erofs-decompression-v1-1-ec5f31396e04@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIAAJrYWYC/x2MywqAIBBFf0VmnaBS9viVaBE51izScCAC8d+zl
+ od77snAmAgZJpEh4U1MMVTQjYDtWMOOklxlMMq0yiorMUXP0uEWzyshf770rkPjTa/HQUF91sH
+ T81fnpZQXsGwrzmUAAAA=
+To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, 
+ Yue Hu <huyue2@coolpad.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
+ Sandeep Dhavale <dhavale@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
+ Tao Zeng <tao.zeng@amlogic.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717660444; l=14972;
+ i=tao.zeng@amlogic.com; s=20240606; h=from:subject:message-id;
+ bh=UChEykSJC9STUyymjVQj6jbfmREBt7vm8tfAZME1FKw=;
+ b=2gGclF2ugFsco0gYqxPr1SF0+TtG8Fkm2SwV9oxVem0hPIwRAaCmAFXxJ64MmvMVqgvLjHuGr
+ eSDxVnvaPOWAqMOpV1bcV4w+vaZHI2KiVeDL+WYGTYVO6o54A2/xCw5
+X-Developer-Key: i=tao.zeng@amlogic.com; a=ed25519;
+ pk=TOPTYm9PlbErXLz0fwlAaBhc4HVp49Ki7eldqh1al1o=
+X-Endpoint-Received: by B4 Relay for tao.zeng@amlogic.com/20240606 with
+ auth_id=169
+X-Original-From: Tao Zeng <tao.zeng@amlogic.com>
+Reply-To: tao.zeng@amlogic.com
 
-In imx_rproc_addr_init() "nph = of_count_phandle_with_args()" just counts
-number of phandles. But phandles may be empty. So of_parse_phandle() in
-the parsing loop (0 < a < nph) may return NULL which is later dereferenced.
-Adjust this issue by adding NULL-return check.
+From: Tao Zeng <tao.zeng@amlogic.com>
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Some SoCs have hardware decompressors which using private algorithms,
+which can be used for accelerating decompression for EROFS, but
+current EROFS decompressor architecture do not support external
+decompressors, this change adds a crypto layer interface for decompression
+and can be used to hook SoC vendor's decompressor by crypto name. Soc
+vendors can develop their own code which can be added to crypto layer.
 
-Fixes: a0ff4aa6f010 ("remoteproc: imx_rproc: add a NXP/Freescale imx_rproc driver")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+Signed-off-by: Tao Zeng <tao.zeng@amlogic.com>
 ---
- drivers/remoteproc/imx_rproc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/erofs/Kconfig                |  19 +++
+ fs/erofs/Makefile               |   1 +
+ fs/erofs/compress.h             |  28 ++++
+ fs/erofs/decompressor.c         |   7 +
+ fs/erofs/decompressor_cryptor.c | 306 ++++++++++++++++++++++++++++++++++++++++
+ fs/erofs/erofs_fs.h             |  14 ++
+ fs/erofs/internal.h             |   4 +
+ fs/erofs/super.c                |   8 +-
+ 8 files changed, 386 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-index 5a3fb902acc9..39eacd90af14 100644
---- a/drivers/remoteproc/imx_rproc.c
-+++ b/drivers/remoteproc/imx_rproc.c
-@@ -726,6 +726,8 @@ static int imx_rproc_addr_init(struct imx_rproc *priv,
- 		struct resource res;
+diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+index 7dcdce660cac..72e29041244b 100644
+--- a/fs/erofs/Kconfig
++++ b/fs/erofs/Kconfig
+@@ -127,6 +127,25 @@ config EROFS_FS_ZIP_ZSTD
  
- 		node = of_parse_phandle(np, "memory-region", a);
-+		if (!node)
+ 	  If unsure, say N.
+ 
++config EROFS_FS_ZIP_CRYPTO
++	bool "EROFS external crypto decompress support"
++	depends on EROFS_FS_ZIP
++	help
++	  Saying Y here to support external crypto for decompressing EROFS
++	  file systems. Some SoCs have hardware decompressor with private
++	  algorithm, which can be used for accelarating decompression of
++	  EROFS. This config enables external cryptos.
++
++	  If unsure, say N.
++
++config EROFS_CRYPTO_MAX_DISTANCE_PAGES
++	int "EROFS max distance pages for crypto usage"
++	default 32
++	help
++	  This config defines max distance pages for external crypto. Crypto
++	  layer will use this value to grow up PCP buffers.
++	  The default value is 128KB(32 pages).
++
+ config EROFS_FS_ONDEMAND
+ 	bool "EROFS fscache-based on-demand read support"
+ 	depends on EROFS_FS
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+index 097d672e6b14..d2dc5e2d20bd 100644
+--- a/fs/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -7,4 +7,5 @@ erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
++erofs-$(CONFIG_EROFS_FS_ZIP_CRYPTO) += decompressor_cryptor.o
+ erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
+diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
+index 19d53c30c8af..8236775563a5 100644
+--- a/fs/erofs/compress.h
++++ b/fs/erofs/compress.h
+@@ -98,4 +98,32 @@ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+ 			       struct page **pagepool);
+ int z_erofs_zstd_decompress(struct z_erofs_decompress_req *rq,
+ 			    struct page **pgpl);
++
++#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
++/* for external cryto decompress */
++int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++			      struct page **pagepool);
++int z_erofs_load_crypto_config(struct super_block *sb,
++			       struct erofs_super_block *dsb,
++			       void *data, int size);
++#else
++static inline int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++					    struct page **pagepool)
++{
++	return -EINVAL;
++}
++
++static inline int z_erofs_load_crypto_config(struct super_block *sb,
++					     struct erofs_super_block *dsb,
++					     void *data,
++					     int size);
++{
++	if (crypto) {
++		erofs_err(sb, "crypto algorithm isn't enabled");
++		return -EINVAL;
++	}
++	return 0;
++}
++#endif
++
+ #endif
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 9d85b6c11c6b..83fde9e974e3 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -406,6 +406,13 @@ const struct z_erofs_decompressor erofs_decompressors[] = {
+ 		.name = "zstd"
+ 	},
+ #endif
++#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
++	[Z_EROFS_COMPRESSION_CRYPTO] = {
++		.config = z_erofs_load_crypto_config,
++		.decompress = z_erofs_crypto_decompress,
++		.name = "crypto"
++	},
++#endif
+ };
+ 
+ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
+diff --git a/fs/erofs/decompressor_cryptor.c b/fs/erofs/decompressor_cryptor.c
+new file mode 100644
+index 000000000000..87df4d285ad1
+--- /dev/null
++++ b/fs/erofs/decompressor_cryptor.c
+@@ -0,0 +1,306 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
++ */
++#include <linux/types.h>
++#include <linux/vmalloc.h>
++#include <linux/mm.h>
++#include <linux/slab.h>
++#include <linux/highmem.h>
++#include <linux/xz.h>
++#include <linux/module.h>
++#include <linux/crypto.h>
++#include "compress.h"
++#include "internal.h"
++
++static int crypto_max_distance_pages;
++
++int z_erofs_load_crypto_config(struct super_block *sb,
++			       struct erofs_super_block *dsb,
++			       void *data, int size)
++{
++	struct erofs_sb_info *sbi;
++	struct z_erofs_crypto_cfgs *crypto = (struct z_erofs_crypto_cfgs *)data;
++	int max_pages;
++
++	sbi = EROFS_SB(sb);
++	if (!sbi)
++		return -EINVAL;
++
++	if (sbi->crypto) {
++		erofs_err(sb, "already have crypto\n");
++		return -EINVAL;
++	}
++	if (crypto) {
++		max_pages = BIT(crypto->max_distance) / PAGE_SIZE;
++		if (max_pages > CONFIG_EROFS_CRYPTO_MAX_DISTANCE_PAGES) {
++			erofs_err(sb, "bad max distance:%d\n", max_pages);
++			return -EINVAL;
++		}
++
++		if (max_pages > crypto_max_distance_pages)
++			crypto_max_distance_pages = max_pages;
++		sbi->crypto = crypto_alloc_comp(crypto->crypto_name, 0, 0);
++		if (IS_ERR(sbi->crypto)) {
++			erofs_err(sb, "failed to alloc cryto %s\n",
++				  crypto->crypto_name);
++			return PTR_ERR(sbi->crypto);
++		}
++		erofs_info(sb, "max pcluster:%d, distance:%d, %d, crypto:%s\n",
++			   crypto->max_pclusterblks,
++			   crypto->max_distance, crypto_max_distance_pages,
++			   crypto->crypto_name);
++		return z_erofs_gbuf_growsize(crypto_max_distance_pages);
++	} else {
++		return -EINVAL;
++	}
++}
++
++static void *z_erofs_crypto_handle_inplace_io(struct z_erofs_decompress_req *rq,
++					      void *inpage,
++					      unsigned int *inputmargin,
++					      int *maptype,
++					      bool support_0padding)
++{
++	unsigned int nrpages_in, nrpages_out;
++	unsigned int ofull, oend, inputsize, total, i, j;
++	struct page **in;
++	void *src, *tmp;
++
++	inputsize = rq->inputsize;
++	nrpages_in = PAGE_ALIGN(inputsize) >> PAGE_SHIFT;
++	oend = rq->pageofs_out + rq->outputsize;
++	ofull = PAGE_ALIGN(oend);
++	nrpages_out = ofull >> PAGE_SHIFT;
++
++	if (rq->inplace_io) {
++		if (rq->partial_decoding)
++			goto docopy;
++
++		for (i = 0; i < nrpages_in; ++i) {
++			WARN_ON(!rq->in[i]);
++			for (j = 0; j < nrpages_out; ++j) {
++				if (rq->out[j] == rq->in[i])
++					goto docopy;
++			}
++		}
++	}
++
++	if (nrpages_in <= 1) {
++		*maptype = 0;
++		return inpage;
++	}
++	kunmap_local(inpage);
++	might_sleep();
++	src = erofs_vm_map_ram(rq->in, nrpages_in);
++	if (!src)
++		return ERR_PTR(-ENOMEM);
++	*maptype = 1;
++	return src;
++
++docopy:
++	/* Or copy compressed data which can be overlapped to per-CPU buffer */
++	in = rq->in;
++	src = z_erofs_get_gbuf(nrpages_in);
++	if (!src) {
++		WARN_ON(1);
++		kunmap_local(inpage);
++		return ERR_PTR(-EFAULT);
++	}
++
++	tmp = src;
++	total = rq->inputsize;
++	while (total) {
++		unsigned int page_copycnt =
++			min_t(unsigned int, total, PAGE_SIZE - *inputmargin);
++
++		if (!inpage)
++			inpage = kmap_local_page(*in);
++		memcpy(tmp, inpage + *inputmargin, page_copycnt);
++		kunmap_local(inpage);
++		inpage = NULL;
++		tmp += page_copycnt;
++		total -= page_copycnt;
++		++in;
++		*inputmargin = 0;
++	}
++	*maptype = 2;
++	return src;
++}
++
++static int z_erofs_crypto_decompress_mem(struct z_erofs_decompress_req *rq, u8 *out)
++{
++	unsigned int inputmargin;
++	u8 *src, *headpage;
++	int ret;
++	int maptype;
++	bool support_0padding = true;
++	struct erofs_sb_info *sbi;
++	int outsize;
++
++	WARN_ON(!*rq->in);
++	inputmargin = 0;
++	headpage = kmap_local_page(*rq->in);
++
++	sbi = EROFS_SB(rq->sb);
++
++	/* decompression inplace is only safe when 0padding is enabled */
++	if (erofs_sb_has_zero_padding(EROFS_SB(rq->sb))) {
++		support_0padding = true;
++
++		/* skip zero padding at beginning of page */
++		while (!headpage[inputmargin & ~PAGE_MASK])
++			if (!(++inputmargin & ~PAGE_MASK))
++				break;
++
++		if (inputmargin >= rq->inputsize) {
++			kunmap_local(headpage);
++			return -EIO;
++		}
++	}
++
++	rq->inputsize -= inputmargin;
++	src = z_erofs_crypto_handle_inplace_io(rq, headpage, &inputmargin,
++					       &maptype, support_0padding);
++	if (IS_ERR(src))
++		return PTR_ERR(src);
++
++	pr_debug("%s, type:%d, in:%p, out:%p, in page:%lx, out_page:%lx\n",
++		 __func__, maptype, src, out,
++		 page_to_pfn(*rq->in), page_to_pfn(*rq->out));
++
++	outsize = rq->outputsize;
++	ret = crypto_comp_decompress(sbi->crypto, src + inputmargin,
++				     rq->inputsize, out, &rq->outputsize);
++	if (ret < 0 || outsize != rq->outputsize) {
++		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
++			  ret, rq->inputsize, inputmargin, rq->outputsize);
++
++		print_hex_dump_debug("[ in]: ", DUMP_PREFIX_OFFSET,
++				     16, 1, src + inputmargin,
++				     rq->inputsize, true);
++		print_hex_dump_debug("[out]: ", DUMP_PREFIX_OFFSET,
++				     16, 1, out, rq->outputsize, true);
++
++		if (ret >= 0)
++			memset(out + ret, 0, rq->outputsize - ret);
++		ret = -EIO;
++	} else {
++		ret = 0;
++	}
++
++	if (maptype == 0) {
++		kunmap_local(src);
++	} else if (maptype == 1) {
++		vm_unmap_ram(src, PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT);
++	} else if (maptype == 2) {
++		z_erofs_put_gbuf(src);
++	} else {
++		WARN_ON(1);
++		return -EFAULT;
++	}
++	return ret;
++}
++
++/*
++ * Fill all gaps with bounce pages if it's a sparse page list. Also check if
++ * all physical pages are consecutive, which can be seen for moderate CR.
++ */
++static int z_erofs_crypto_prepare_dstpages(struct z_erofs_decompress_req *rq,
++					   struct page **pagepool)
++{
++	const unsigned int nr = PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
++	struct page *available[CONFIG_EROFS_CRYPTO_MAX_DISTANCE_PAGES] = { NULL };
++	unsigned long bounced[DIV_ROUND_UP(CONFIG_EROFS_CRYPTO_MAX_DISTANCE_PAGES, BITS_PER_LONG)];
++	void *kaddr = NULL;
++	unsigned int i, j, top;
++
++	memset(bounced, 0, sizeof(bounced));
++	top = 0;
++	for (i = j = 0; i < nr; ++i, ++j) {
++		struct page *const page = rq->out[i];
++		struct page *victim;
++
++		if (j >= crypto_max_distance_pages)
++			j = 0;
++
++		/* 'valid' bounced can only be tested after a complete round */
++		if (test_bit(j, bounced)) {
++			WARN_ON(i < crypto_max_distance_pages);
++			WARN_ON(top >= crypto_max_distance_pages);
++			available[top++] = rq->out[i - crypto_max_distance_pages];
++		}
++
++		if (page) {
++			__clear_bit(j, bounced);
++			if (!PageHighMem(page)) {
++				if (!i) {
++					kaddr = page_address(page);
++					continue;
++				}
++				if (kaddr &&
++				    kaddr + PAGE_SIZE == page_address(page)) {
++					kaddr += PAGE_SIZE;
++					continue;
++				}
++			}
++			kaddr = NULL;
 +			continue;
- 		/* Not map vdevbuffer, vdevring region */
- 		if (!strncmp(node->name, "vdev", strlen("vdev"))) {
- 			of_node_put(node);
++		}
++		kaddr = NULL;
++		__set_bit(j, bounced);
++
++		if (top) {
++			victim = available[--top];
++			get_page(victim);
++		} else {
++			victim = erofs_allocpage(pagepool,
++						 GFP_KERNEL | __GFP_NOFAIL);
++			set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
++		}
++		rq->out[i] = victim;
++	}
++	return kaddr ? 1 : 0;
++}
++
++int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++			      struct page **pagepool)
++{
++	const unsigned int nrpages_out =
++		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
++	unsigned int dst_maptype;
++	void *dst;
++	int ret;
++
++	/* one optimized fast path only for non bigpcluster cases yet */
++	if (rq->inputsize <= PAGE_SIZE && nrpages_out == 1 && !rq->inplace_io) {
++		WARN_ON(!*rq->out);
++		dst = kmap_local_page(*rq->out);
++		dst_maptype = 0;
++		goto dstmap_out;
++	}
++
++	ret = z_erofs_crypto_prepare_dstpages(rq, pagepool);
++	if (ret < 0)
++		return ret;
++
++	dst = erofs_vm_map_ram(rq->out, nrpages_out);
++	if (!dst)
++		return -ENOMEM;
++	dst_maptype = 2;
++
++dstmap_out:
++	pr_debug("%s, dst:%p, map:%d, pageofs_out:%d, outputsize:%d, inputsize:%d, inplace_io:%d, partial:%d\n",
++		 __func__, dst, dst_maptype,
++		 rq->pageofs_out, rq->outputsize, rq->inputsize,
++		 rq->inplace_io, rq->partial_decoding);
++
++	ret = z_erofs_crypto_decompress_mem(rq, dst + rq->pageofs_out);
++
++	if (!dst_maptype)
++		kunmap_local(dst);
++	else if (dst_maptype == 2)
++		vm_unmap_ram(dst, nrpages_out);
++
++	return ret;
++}
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index 6c0c270c42e1..993b7a1b656f 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -297,6 +297,10 @@ enum {
+ 	Z_EROFS_COMPRESSION_LZMA	= 1,
+ 	Z_EROFS_COMPRESSION_DEFLATE	= 2,
+ 	Z_EROFS_COMPRESSION_ZSTD	= 3,
++#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
++	/* for generic crypto framework */
++	Z_EROFS_COMPRESSION_CRYPTO	= 4,
++#endif
+ 	Z_EROFS_COMPRESSION_MAX
+ };
+ #define Z_EROFS_ALL_COMPR_ALGS		((1 << Z_EROFS_COMPRESSION_MAX) - 1)
+@@ -330,6 +334,16 @@ struct z_erofs_zstd_cfgs {
+ 	u8 reserved[4];
+ } __packed;
+ 
++#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
++/* 16 bytes */
++struct z_erofs_crypto_cfgs {
++	char   crypto_name[8];
++	__le16 max_distance;
++	__le16 max_pclusterblks;
++	u8     reserved[4];
++} __packed;
++#endif
++
+ #define Z_EROFS_ZSTD_MAX_DICT_SIZE      Z_EROFS_PCLUSTER_MAX_SIZE
+ 
+ /*
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 0c1b44ac9524..ecf49c260ed4 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -129,6 +129,10 @@ struct erofs_sb_info {
+ 	struct inode *managed_cache;
+ 
+ 	struct erofs_sb_lz4_info lz4;
++#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
++	/* decompress crypto for other algorithms except lz4/lzma */
++	struct crypto_comp *crypto;
++#endif
+ #endif	/* CONFIG_EROFS_FS_ZIP */
+ 	struct inode *packed_inode;
+ 	struct erofs_dev_context *devs;
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index c93bd24d2771..c7bc852dbc96 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -10,6 +10,9 @@
+ #include <linux/fs_context.h>
+ #include <linux/fs_parser.h>
+ #include <linux/exportfs.h>
++#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
++#include <linux/crypto.h>
++#endif
+ #include "xattr.h"
+ 
+ #define CREATE_TRACE_POINTS
+@@ -793,7 +796,10 @@ static void erofs_kill_sb(struct super_block *sb)
+ 		kill_anon_super(sb);
+ 	else
+ 		kill_block_super(sb);
+-
++#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
++	if (sbi->crypto)
++		crypto_free_comp(sbi->crypto);
++#endif
+ 	erofs_free_dev_context(sbi->devs);
+ 	fs_put_dax(sbi->dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
+
+---
+base-commit: ee78a17615ad0cfdbbc27182b1047cd36c9d4d5f
+change-id: 20240606-erofs-decompression-fd5e2f271980
+
+Best regards,
 -- 
-2.30.2
+Tao Zeng <tao.zeng@amlogic.com>
+
 
