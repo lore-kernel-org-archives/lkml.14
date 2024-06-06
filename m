@@ -1,119 +1,235 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF18196DA2
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE9D198E86
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717694045; cv=none; b=insb8AYysl0ZpVqaEJRj0FneIIO6GqbRDvsSI8fAqtuMfbCLlGiecF+7o7J+J1ITqmVQlsvdMn6+tFKD4JmLEUwHZkNXeMyuCd9VeL+JRE67PM3Eo8SzX6BgsJC7rNxYUpmsZM88rk/fGuLdtlpu/tvmPmlXphHfprE8p5oAyyc=
+	t=1717694048; cv=none; b=FHyiAXuXzFVBrqIwYb7iAkncUwHFPE/byLQuV/oqOuVLtIJSoKcuhU+Xi6bMJKxZSzQel7ZbWfVFwXiZDvhFWTLkHmsebm9uiYa5DOtNgjrBMvwLzddsKahjvJMSERQ81Cqho5h9ifEERfI12/4sbT3o/7xSbNTKRw7xCfsWqps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717694045; c=relaxed/simple;
-	bh=2J55QsUu0z3E0qDgXwQdGuYSG3si4g5PUGdsDhCwlfw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Em0hCx9DYCKGa8x8gYT4F1r1yzv/0zZq7KZVOeWn22my4AuUbXLes6QyT40tDR7lsI64xFFkyBXcIw0nGGaBsfjuubMIQrDOui2vyw/t3t1Hbjpo1fVnrJwrIDykEewxDDUMfQtvHyGWrWTekfZcy7CNCOdA3UgJSv+8Sig5ats=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=kpWsQY2+; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1717694048; c=relaxed/simple;
+	bh=3PcZbTSvMIet1KvRH/3UIizXiqdHfZwbn62ekU7BeTk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MJ/6OdgOuLDl3lZgqfRIj8McYQXpGkT0SVJauOeTsbVLASQczru1yMeQeaz3DXoMztE2cpn7PMwRvR+fQhthrtqZyHS5O8Q1gIx+yvXk509O4zXAFLSqWlZqZuvalVAzwOL21gp/UVVbJ4+1DhV//+9yGXbwHHQi6Lxc3AOTFxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZfHKPHd8; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="kpWsQY2+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
-	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=1vBrOmztxvBw+j73gnLOXwBxCVfezAXKUqEGyYm7Fts=; b=kpWsQY2+cY0zYTy6UinHv5YmIN
-	7lP0AP1opPSmrj4ovt/CwCKTZohixjRO7oMjFCcjLYw8kr+4g3O5cdCWB4mGLZUKSqeN1pf6GiVvB
-	DjfOkZH3NmsY/wkBRwI/ZvJcXQu8s6WHDB2JSaOi+DDhmlxEqepkAT0BQUVOahnBi1psQdjSEGBzD
-	hc83WZfTHp/lJAFHkkLD8drOP+V/fEtkCOLDmqEtoItOXinUlU4VJO3JodLHl9kvUR3gaH+QSId3P
-	fO6mLgGyn4V3mdZTj60sC/ARwDW0j199MLwzWuyHuIXvwBPD9HYSEwO2js1iOGROEzJAGYVB9+gxc
-	b4goRBQg==;
-Received: from sslproxy07.your-server.de ([78.47.199.104])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1sFGgb-00012F-Sw; Thu, 06 Jun 2024 19:13:58 +0200
-Received: from [80.62.117.184] (helo=localhost)
-	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <esben@geanix.com>)
-	id 1sFGgY-0005oY-0K;
-	Thu, 06 Jun 2024 19:13:57 +0200
-From: Esben Haabendal <esben@geanix.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Michael Walle
- <mwalle@kernel.org>,  Miquel Raynal <miquel.raynal@bootlin.com>,  Richard
- Weinberger <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,
-  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org,  Rasmus
- Villemoes <rasmus.villemoes@prevas.dk>
-Subject: Re: [PATCH v2 1/2] mtd: spi-nor: core: add flag for doing optional
- SFDP
-In-Reply-To: <a379a411-2c9e-4d9d-aa8f-4c4f3463cc27@linaro.org> (Tudor
-	Ambarus's message of "Thu, 6 Jun 2024 14:31:22 +0100")
-References: <20240603-macronix-mx25l3205d-fixups-v2-0-ff98da26835c@geanix.com>
-	<20240603-macronix-mx25l3205d-fixups-v2-1-ff98da26835c@geanix.com>
-	<a379a411-2c9e-4d9d-aa8f-4c4f3463cc27@linaro.org>
-Date: Thu, 06 Jun 2024 19:13:57 +0200
-Message-ID: <878qziat9m.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZfHKPHd8"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-62a0809c805so12054077b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 10:14:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717694045; x=1718298845; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hRK/mnhg9puUTTzwI/wwQsIKXT3wkOFAvZtn/HKANeU=;
+        b=ZfHKPHd88/pQdXDhSx7rj+OQOYhlJT8Ziy+oVtQGDenFjzFnp1lY1uDONjpIbY6C6L
+         T0SbIYjboXx1e02tAi3c3ZD3Gq+G2goZHggWjMm33l5djEuEPgfApdzrTlQsVSUKx1NT
+         STiUjeurb7q9QslwoKoU9kU6oYDOqZkkXO+LgaFSf6sv3L/fTb5ekW0oqxuv34FoqNxA
+         T5PcV+YIq8Lh/fwjRYzWA/oIS3a3kfdo+pTp/iOWhEUJXrhxNxbjCaYVw3m+oPnMl0pm
+         qbpCxk7rC7UMkgI24mawWB4sAvdATgJ0ztfcCGzylZuwZLWS+CzpSmGIURkswJap463h
+         4b2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717694045; x=1718298845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hRK/mnhg9puUTTzwI/wwQsIKXT3wkOFAvZtn/HKANeU=;
+        b=cyvmyl2nu8BmZ3w9s7AlkcPaIG/SKJPVOQdG1FamIpVPL++u4Cu5iAUpFhjdlZC+qi
+         XbaC3R5KxFticGxXS7X1T/ORVrlGuz0hrMW3kGbTmA/cCNAoRUjQvxGlUu1Drn2BiwNf
+         S9nHLdRgi+jQLBrAgRPt24SPxLIkOF/GyrjHTbWe6TmnYuyvfGshpsNs2aWmB7prZQF5
+         7bQ0hhrZOIZrKh2iItOtK7SuE+QdctzYlPxy37xRRl06qh3dUrgJjmsUcrBOXkZR10Sm
+         DHoRt2+CWfzacUZ6CANDUXY9qXx1i0W4cgPxL2PuKnmhCg56zBSsLGycvlmq92Xewn89
+         Ozmw==
+X-Forwarded-Encrypted: i=1; AJvYcCW31x5uYZpSw/Fwz90XtXxjGKnZ2UdhlsrzS77UpIhuA0eQhcgYg6+ADp7jwSzwDnE5UKoQhLn58LtG6rIlgqsV21HMgsGCWoRbwnKJ
+X-Gm-Message-State: AOJu0YxkP2ZvALq0qI0/u/EdZRWz+g5Sk3sBd1zQonqXHlYTUEWo2Hgd
+	L44CSM0XKaqTPwLFDo63AgUS6fSKiKx3jEIu+D2vig+amjmigIB8PDGFAL0CipuNviAfqn5Gr23
+	OztCUmjh8oz2/AAU61YNEHk6jzHbPRFJgmUC2
+X-Google-Smtp-Source: AGHT+IE6g1Qt1a0uWEMeEkhuX3E8E0Aujra9U26A4am4FT81CMUGmJmJOs73aDziKCtCgxpH2azFXeJj7iJZZjlkoqQ=
+X-Received: by 2002:a0d:d709:0:b0:615:1a0:78ea with SMTP id
+ 00721157ae682-62cbff3b0eamr45661767b3.34.1717694044790; Thu, 06 Jun 2024
+ 10:14:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27298/Thu Jun  6 10:30:08 2024)
+References: <20240605002459.4091285-1-andrii@kernel.org> <20240605002459.4091285-2-andrii@kernel.org>
+ <Zl-38XrUw9entlFR@casper.infradead.org> <uevtozlryyqw5vj2duuzowupknfynmreruiw6m7bcxryjppqpm@7g766emooxfh>
+ <CAEf4BzZFpidjJzRMWboZYY03U8M22Yo1sqXconi36V11XA-ZfA@mail.gmail.com>
+ <CAEf4BzYDhtkYt=qn2YgrnRkZ0tpa3EPAiCUcBkdUa-9DKN22dQ@mail.gmail.com>
+ <CAEf4Bzbzj55LfgTom9KiM1Xe8pfXvpWBd6ETjXQCh7M===G5aw@mail.gmail.com>
+ <5fmylram4hhrrdl7vf6odyvuxcrvhipsx2ij5z4dsfciuzf4on@qwk7qzze6gbt>
+ <CAJuCfpER9qUSGbWBcHhT1=ssH41Xv8--XVA5BEPCM7uf=z_GLw@mail.gmail.com> <CAEf4Bzax2E1JS=MUm=sBJvcMb+CyWaPdxmr2mDuODs2cc3_mTg@mail.gmail.com>
+In-Reply-To: <CAEf4Bzax2E1JS=MUm=sBJvcMb+CyWaPdxmr2mDuODs2cc3_mTg@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 6 Jun 2024 10:13:52 -0700
+Message-ID: <CAJuCfpFKA9KChaunoYo-yH4GipvGjRpKqyneOhwi-E6n3Lfq3g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] mm: add find_vma()-like API but RCU protected and
+ taking VMA lock
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Matthew Wilcox <willy@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
+	viro@zeniv.linux.org.uk, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, gregkh@linuxfoundation.org, 
+	linux-mm@kvack.org, rppt@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Tudor Ambarus <tudor.ambarus@linaro.org> writes:
-
-> On 6/3/24 14:09, Esben Haabendal wrote:
->> A dedicated flag for triggering call to
->> spi_nor_sfdp_init_params_deprecated() allows enabling optional SFDP read
->> and parse, with fallback to legacy flash parameters, without having dual,
->> quad or octal parameters set in the legacy flash parameters.
->> 
->> With this, spi-nor flash parts without SFDP that is replaced with a
->> different flash NOR flash part that does have SFDP, but shares the same
->> manufacturer and device ID is easily handled.
->> 
->> Signed-off-by: Esben Haabendal <esben@geanix.com>
->> ---
->>  drivers/mtd/spi-nor/core.c | 3 ++-
->>  drivers/mtd/spi-nor/core.h | 1 +
->>  2 files changed, 3 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
->> index 3e1f1913536b..1c4d66fc993b 100644
->> --- a/drivers/mtd/spi-nor/core.c
->> +++ b/drivers/mtd/spi-nor/core.c
->> @@ -2933,7 +2933,8 @@ static void spi_nor_init_params_deprecated(struct spi_nor *nor)
->>  
->>  	spi_nor_manufacturer_init_params(nor);
->>  
->> -	if (nor->info->no_sfdp_flags & (SPI_NOR_DUAL_READ |
->> +	if (nor->info->no_sfdp_flags & (SPI_NOR_TRY_SFDP |
+On Thu, Jun 6, 2024 at 9:52=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> I don't like that we update deprecated methods. The solution though is
-> elegant.
+> On Wed, Jun 5, 2024 at 4:22=E2=80=AFPM Suren Baghdasaryan <surenb@google.=
+com> wrote:
+> >
+> > On Wed, Jun 5, 2024 at 10:03=E2=80=AFAM Liam R. Howlett <Liam.Howlett@o=
+racle.com> wrote:
+> > >
+> > > * Andrii Nakryiko <andrii.nakryiko@gmail.com> [240605 12:27]:
+> > > > On Wed, Jun 5, 2024 at 9:24=E2=80=AFAM Andrii Nakryiko
+> > > > <andrii.nakryiko@gmail.com> wrote:
+> > > > >
+> > > > > On Wed, Jun 5, 2024 at 9:13=E2=80=AFAM Andrii Nakryiko
+> > > > > <andrii.nakryiko@gmail.com> wrote:
+> > > > > >
+> > > > > > On Wed, Jun 5, 2024 at 6:33=E2=80=AFAM Liam R. Howlett <Liam.Ho=
+wlett@oracle.com> wrote:
+> > > > > > >
+> > > > > > > * Matthew Wilcox <willy@infradead.org> [240604 20:57]:
+> > > > > > > > On Tue, Jun 04, 2024 at 05:24:46PM -0700, Andrii Nakryiko w=
+rote:
+> > > > > > > > > +/*
+> > > > > > > > > + * find_and_lock_vma_rcu() - Find and lock the VMA for a=
+ given address, or the
+> > > > > > > > > + * next VMA. Search is done under RCU protection, withou=
+t taking or assuming
+> > > > > > > > > + * mmap_lock. Returned VMA is guaranteed to be stable an=
+d not isolated.
+> > > > > > > >
+> > > > > > > > You know this is supposed to be the _short_ description, ri=
+ght?
+> > > > > > > > Three lines is way too long.  The full description goes bet=
+ween the
+> > > > > > > > arguments and the Return: line.
+> > > > > >
+> > > > > > Sure, I'll adjust.
+> > > > > >
+> > > > > > > >
+> > > > > > > > > + * @mm: The mm_struct to check
+> > > > > > > > > + * @addr: The address
+> > > > > > > > > + *
+> > > > > > > > > + * Returns: The VMA associated with addr, or the next VM=
+A.
+> > > > > > > > > + * May return %NULL in the case of no VMA at addr or abo=
+ve.
+> > > > > > > > > + * If the VMA is being modified and can't be locked, -EB=
+USY is returned.
+> > > > > > > > > + */
+> > > > > > > > > +struct vm_area_struct *find_and_lock_vma_rcu(struct mm_s=
+truct *mm,
+> > > > > > > > > +                                        unsigned long ad=
+dress)
+> > > > > > > > > +{
+> > > > > > > > > +   MA_STATE(mas, &mm->mm_mt, address, address);
+> > > > > > > > > +   struct vm_area_struct *vma;
+> > > > > > > > > +   int err;
+> > > > > > > > > +
+> > > > > > > > > +   rcu_read_lock();
+> > > > > > > > > +retry:
+> > > > > > > > > +   vma =3D mas_find(&mas, ULONG_MAX);
+> > > > > > > > > +   if (!vma) {
+> > > > > > > > > +           err =3D 0; /* no VMA, return NULL */
+> > > > > > > > > +           goto inval;
+> > > > > > > > > +   }
+> > > > > > > > > +
+> > > > > > > > > +   if (!vma_start_read(vma)) {
+> > > > > > > > > +           err =3D -EBUSY;
+> > > > > > > > > +           goto inval;
+> > > > > > > > > +   }
+> > > > > > > > > +
+> > > > > > > > > +   /*
+> > > > > > > > > +    * Check since vm_start/vm_end might change before we=
+ lock the VMA.
+> > > > > > > > > +    * Note, unlike lock_vma_under_rcu() we are searching=
+ for VMA covering
+> > > > > > > > > +    * address or the next one, so we only make sure VMA =
+wasn't updated to
+> > > > > > > > > +    * end before the address.
+> > > > > > > > > +    */
+> > > > > > > > > +   if (unlikely(vma->vm_end <=3D address)) {
+> > > > > > > > > +           err =3D -EBUSY;
+> > > > > > > > > +           goto inval_end_read;
+> > > > > > > > > +   }
+> > > > > > > > > +
+> > > > > > > > > +   /* Check if the VMA got isolated after we found it */
+> > > > > > > > > +   if (vma->detached) {
+> > > > > > > > > +           vma_end_read(vma);
+> > > > > > > > > +           count_vm_vma_lock_event(VMA_LOCK_MISS);
+> > > > > > > > > +           /* The area was replaced with another one */
+> > > > > > > >
+> > > > > > > > Surely you need to mas_reset() before you goto retry?
+> > > > > > >
+> > > > > > > Probably more than that.  We've found and may have adjusted t=
+he
+> > > > > > > index/last; we should reconfigure the maple state.  You shoul=
+d probably
+> > > > > > > use mas_set(), which will reset the maple state and set the i=
+ndex and
+> > > > > > > long to address.
+> > > > > >
+> > > > > > Yep, makes sense, thanks. As for the `unlikely(vma->vm_end <=3D
+> > > > > > address)` case, I presume we want to do the same, right? Basica=
+lly, on
+> > > > > > each retry start from the `address` unconditionally, no matter =
+what's
+> > > > > > the reason for retry.
+> > > > >
+> > > > > ah, never mind, we don't retry in that situation, I'll just put
+> > > > > `mas_set(&mas, address);` right before `goto retry;`. Unless we s=
+hould
+> > > > > actually retry in the case when VMA got moved before the requeste=
+d
+> > > > > address, not sure, let me know what you think. Presumably retryin=
+g
+> > > > > will allow us to get the correct VMA without the need to fall bac=
+k to
+> > > > > mmap_lock?
+> > > >
+> > > > sorry, one more question as I look some more around this (unfamilia=
+r
+> > > > to me) piece of code. I see that lock_vma_under_rcu counts
+> > > > VMA_LOCK_MISS on retry, but I see that there is actually a
+> > > > VMA_LOCK_RETRY stat as well. Any reason it's a MISS instead of RETR=
+Y?
+> > > > Should I use MISS as well, or actually count a RETRY?
+> > > >
+> > >
+> > > VMA_LOCK_MISS is used here because we missed the VMA due to a write
+> > > happening to move the vma (rather rare).  The VMA_LOCK missed the vma=
+.
+> > >
+> > > VMA_LOCK_RETRY is used to indicate we need to retry under the mmap lo=
+ck.
+> > > A retry is needed after the VMA_LOCK did not work under rcu locking.
+> >
+> > Originally lock_vma_under_rcu() was used only inside page fault path,
+> > so these counters helped us quantify how effective VMA locking is when
+> > handling page faults. With more users of that function these counters
+> > will be affected by other paths as well. I'm not sure but I think it
+> > makes sense to use them only inside page fault path, IOW we should
+> > probably move count_vm_vma_lock_event() calls outside of
+> > lock_vma_under_rcu() and add them only when handling page faults.
+>
+> Alright, seems like I should then just drop count_vm_vma_lock_event()
+> from the API I'm adding.
 
-Maybe we should un-deprecate it? I don't understand why it should be
-deprecated. It obviously has a valid purpose.
+That would be my preference but as I said, I'm not 100% sure about
+this direction.
 
->> +					SPI_NOR_DUAL_READ |
->>  					SPI_NOR_QUAD_READ |
->>  					SPI_NOR_OCTAL_READ |
->>  					SPI_NOR_OCTAL_DTR_READ))
->> diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
->> index 442786685515..77f61a984cb3 100644
->> --- a/drivers/mtd/spi-nor/core.h
->> +++ b/drivers/mtd/spi-nor/core.h
->> @@ -535,6 +535,7 @@ struct flash_info {
->>  	u8 no_sfdp_flags;
->>  #define SPI_NOR_SKIP_SFDP		BIT(0)
->>  #define SECT_4K				BIT(1)
->> +#define SPI_NOR_TRY_SFDP		BIT(2)
->>  #define SPI_NOR_DUAL_READ		BIT(3)
->>  #define SPI_NOR_QUAD_READ		BIT(4)
->>  #define SPI_NOR_OCTAL_READ		BIT(5)
->> 
+>
+> >
+> > >
+> > > Thanks,
+> > > Liam
