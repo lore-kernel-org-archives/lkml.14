@@ -1,137 +1,122 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E5A1667E3
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E661953A4;
+	Thu,  6 Jun 2024 12:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717675758; cv=none; b=MuHDpxkUp8iLRHhQ9VTmmV/zhrF0qUN8GmH2ShBLsEVrNmLHGx4ormtDepUwxXXEoExk/k5q7cj3QeFTYF2AarLk1ocw39TxTjjq/K4p75B7TUoQ1BY72+RgIkAe2ohwoWwZyp/ZcZ1U1UJ0vMHqRGNCHrL/nE8sBH9QOs4ZoWk=
+	t=1717675780; cv=none; b=u3pnJ0eLQemVKDOIfDygTW4nQmU3CQO4wE6L7NrNi7Mwqzn4sacLS4NmY0cZ/1joK+65CLg06N+7ub//oNwQXlqcqttE2DfsMCSnlHRvpoNMuHa8dyMGrcdgwgDPZy/q+0lG1mxMTDMnOFH/1tn/GJwGJeLqxHyhBjzyLJmJ598=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717675758; c=relaxed/simple;
-	bh=dM3fg9UVmmAVw4KeOAZWi4d6ofeyiVFvAa39WV5HAiw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UANqwsKHtWu/GVUr+uW6TztvpfVLvpvM+xcBAWAoaa4j1WLGFVL1vuN9B8TuGlaGF6WqHdZ7exakq8uWoXTZcsY8f0K+JAc8n28aobXFVxJxCH/d9iQBqNSrLO1D6jZooAJ6l+8kmKo6q0SpuykSBX74as2EhYpgTlGuY2+vbFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 9215e79023fd11ef9305a59a3cc225df-20240606
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:fea27831-eeb0-439f-8a9c-de7b6491236c,IP:25,
-	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-1,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-1
-X-CID-INFO: VERSION:1.1.38,REQID:fea27831-eeb0-439f-8a9c-de7b6491236c,IP:25,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-1,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-1
-X-CID-META: VersionHash:82c5f88,CLOUDID:901b4fd3b59d44e3d60918a0391e12b0,BulkI
-	D:240606200906C0SIN0UP,BulkQuantity:0,Recheck:0,SF:66|25|72|19|44|102,TC:n
-	il,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_UNFAMILIAR
-	SN_UNTRUSTED, SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-	ABX_MISS_RDNS
-X-UUID: 9215e79023fd11ef9305a59a3cc225df-20240606
-X-User: pengfuyuan@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
-	(envelope-from <pengfuyuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1518246745; Thu, 06 Jun 2024 20:09:05 +0800
-From: pengfuyuan <pengfuyuan@kylinos.cn>
-To: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	pengfuyuan <pengfuyuan@kylinos.cn>,
-	k2ci <kernel-bot@kylinos.cn>
-Subject: [PATCH] arm/komeda: Remove all CONFIG_DEBUG_FS conditional compilations
-Date: Thu,  6 Jun 2024 20:08:42 +0800
-Message-Id: <20240606120842.1377267-1-pengfuyuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1717675780; c=relaxed/simple;
+	bh=d/jCCF0NCqOhRllSWhbYbAQCzOnOV4aDMEeLQSfza+0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=O879sNiuzhRksO/ucuLH77jPytbgrBxcWWlobhxlKXOfp5Q45u7Z+GYc3IGp+en+3FiGn0Vl4y3wu+woPdyThVHs15sjz20Vi2ZeJr7P2kN/k6X/83W/nrQJH+GHN232o96GkBVJkVpl2texU47TqwR0mY1NWoow0JdbilVXtyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ex+NapCY; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ex+NapCY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717675777;
+	bh=d/jCCF0NCqOhRllSWhbYbAQCzOnOV4aDMEeLQSfza+0=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=ex+NapCYaV6uQigRxoz9OgZuuxLinAt+ffhPwDJQBgGlx2SPufS1v3P+AztsrF40y
+	 dRz3GUhZMHA2YYKyeXhuBGMbG9HldE7vrKp5Z0aMkk7TJDryuZgGDfB6vIuUmaN5Jh
+	 ZtaoW+WFg76wAWKZsxuc9ptVjZ6wJAFaEFmmrrdiBvJ/OcdNeb1n1sjacYJ08NifXs
+	 gJXda7TmOb3v0I06XyPOME2H9GCfAv25M4/IRnJcZmn5FRz6dl9OI7Bt36nIC2i+vy
+	 6ozyecsSOFutlgR3Bx0/B/YDrWkIdTEhWye8VrqdgyMs7MzMaplLnHAA1p7tZ0ul1V
+	 Dy86HOeJ8iz6A==
+Received: from [100.93.89.217] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: benjamin.gaignard)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8ACD83781022;
+	Thu,  6 Jun 2024 12:09:36 +0000 (UTC)
+Message-ID: <657ef910-e6fd-4791-988e-4aba03104c20@collabora.com>
+Date: Thu, 6 Jun 2024 14:09:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 10/12] media: platform: mtk-mdp3: Get fine-grain
+ control of cmdq_pkt_finalize()
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Moudy Ho
+ <moudy.ho@mediatek.com>, "Jason-JH . Lin" <jason-jh.lin@mediatek.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org
+References: <20240222154120.16959-1-chunkuang.hu@kernel.org>
+ <20240222154120.16959-11-chunkuang.hu@kernel.org>
+Content-Language: en-US
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+In-Reply-To: <20240222154120.16959-11-chunkuang.hu@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Since the debugfs functions have no-op stubs for CONFIG_DEBUG_FS=n,
-the compiler will optimize the rest away since they are no longer referenced.
 
-The benefit of removing the conditional compilation is that the build
-is actually tested for both CONFIG_DEBUG_FS configuration values.
-Assuming most developers have it enabled, CONFIG_DEBUG_FS=n is not tested
-much and may fail the build due to the conditional compilation.
+Le 22/02/2024 à 16:41, Chun-Kuang Hu a écrit :
+> In order to have fine-grained control, use cmdq_pkt_eoc() and
+> cmdq_pkt_jump_rel() to replace cmdq_pkt_finalize().
+>
+> Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> ---
+>   drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c | 3 ++-
+>   drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c | 2 ++
+>   drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h | 1 +
+>   3 files changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c
+> index 6adac857a477..b720e69b341d 100644
+> --- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c
+> +++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-cmdq.c
+> @@ -471,7 +471,8 @@ int mdp_cmdq_send(struct mdp_dev *mdp, struct mdp_cmdq_param *param)
+>   		dev_err(dev, "mdp_path_config error\n");
+>   		goto err_free_path;
+>   	}
+> -	cmdq_pkt_finalize(&cmd->pkt);
+> +	cmdq_pkt_eoc(&cmd->pkt);
+> +	cmdq_pkt_jump_rel(&cmd->pkt, CMDQ_INST_SIZE, mdp->cmdq_shift_pa);
+>   
+>   	for (i = 0; i < num_comp; i++)
+>   		memcpy(&comps[i], path->comps[i].comp,
+> diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
+> index 94f4ed78523b..2214744c937c 100644
+> --- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
+> +++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.c
+> @@ -231,6 +231,8 @@ static int mdp_probe(struct platform_device *pdev)
+>   		goto err_put_scp;
+>   	}
+>   
+> +	mdp->cmdq_shift_pa = cmdq_get_shift_pa(mdp->cmdq_clt->chan);
+> +
+>   	init_waitqueue_head(&mdp->callback_wq);
+>   	ida_init(&mdp->mdp_ida);
+>   	platform_set_drvdata(pdev, mdp);
+> diff --git a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h
+> index 7e21d226ceb8..ed61e0bb69ee 100644
+> --- a/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h
+> +++ b/drivers/media/platform/mediatek/mdp3/mtk-mdp3-core.h
+> @@ -83,6 +83,7 @@ struct mdp_dev {
+>   	u32					id_count;
+>   	struct ida				mdp_ida;
+>   	struct cmdq_client			*cmdq_clt;
+> +	u8					cmdq_shift_pa;
 
-Reported-by: k2ci <kernel-bot@kylinos.cn>
-Signed-off-by: pengfuyuan <pengfuyuan@kylinos.cn>
----
- drivers/gpu/drm/arm/display/komeda/komeda_dev.c | 8 --------
- 1 file changed, 8 deletions(-)
+Can send a new version of this series because this patch can't
+be applied on media_tree/master branch.
+The code look correct for me but we need to be able to applied it
+to perform more checks.
 
-diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-index 14ee79becacb..5ba62e637a61 100644
---- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-+++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-@@ -12,10 +12,8 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/dma-mapping.h>
--#ifdef CONFIG_DEBUG_FS
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
--#endif
- 
- #include <drm/drm_print.h>
- 
-@@ -43,7 +41,6 @@ static int komeda_register_show(struct seq_file *sf, void *x)
- 
- DEFINE_SHOW_ATTRIBUTE(komeda_register);
- 
--#ifdef CONFIG_DEBUG_FS
- static void komeda_debugfs_init(struct komeda_dev *mdev)
- {
- 	if (!debugfs_initialized())
-@@ -55,7 +52,6 @@ static void komeda_debugfs_init(struct komeda_dev *mdev)
- 	debugfs_create_x16("err_verbosity", 0664, mdev->debugfs_root,
- 			   &mdev->err_verbosity);
- }
--#endif
- 
- static ssize_t
- core_id_show(struct device *dev, struct device_attribute *attr, char *buf)
-@@ -265,9 +261,7 @@ struct komeda_dev *komeda_dev_create(struct device *dev)
- 
- 	mdev->err_verbosity = KOMEDA_DEV_PRINT_ERR_EVENTS;
- 
--#ifdef CONFIG_DEBUG_FS
- 	komeda_debugfs_init(mdev);
--#endif
- 
- 	return mdev;
- 
-@@ -286,9 +280,7 @@ void komeda_dev_destroy(struct komeda_dev *mdev)
- 
- 	sysfs_remove_group(&dev->kobj, &komeda_sysfs_attr_group);
- 
--#ifdef CONFIG_DEBUG_FS
- 	debugfs_remove_recursive(mdev->debugfs_root);
--#endif
- 
- 	if (mdev->aclk)
- 		clk_prepare_enable(mdev->aclk);
--- 
-2.25.1
+Regards,
+Benjamin
 
+>   	wait_queue_head_t			callback_wq;
+>   
+>   	struct v4l2_device			v4l2_dev;
