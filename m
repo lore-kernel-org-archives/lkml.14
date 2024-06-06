@@ -1,78 +1,79 @@
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DFF195B0E
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201B4FC02;
+	Thu,  6 Jun 2024 13:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717680292; cv=none; b=sq7AtY1MDaWKj9MUtNmuvbYB6LFZVXyvSOHFSlS2m9zSgQ+djxnuLA68RYaQC4T4V8+5SvBDkPiEybnu1V/ktd7hhVvG2Z9vJSyPATJ03qGxP7uE/XbLPKcXpQWqQxjoNd9iMBGOsHJR+HNKMzzO+yFv9U2/r9WQ06yWbBrEkPU=
+	t=1717680368; cv=none; b=mo3pgwldfb5GXUUe0+B5lOTTp2Tc1HyAChKY+yUxg0hIqVLytqcJ+bMpKzNGQr8KXnDxfey60e2XKB0bS3NlJr0u4LaiEzUuMSFwXAJFq94Q+a0cUbKkXdcKVST90PLGYIINyirS6/edOVoaWTa//jQyqG4YzNEXBwn0gG7jrLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717680292; c=relaxed/simple;
-	bh=rNBwdzFBhysEd9wzyQXAbWC3pB6V0UCYgvGyEBhdwgM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SSO82QNa2pRmcklh1BdQMGjlpza+il+9xJHmHTLX5iPiZHzDlKQGA0mHrNLZWnrIi8pCoLbQXUY78B3DytTjODyrSOCk11+Sn82Q4kEH6khAMeppsM7LhexMMwNuXV6xy318tB3FSBHiqihK/Dct7+ldH9vA8EJke9s76wL+9QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=15.184.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz1t1717680152t9w1o59
-X-QQ-Originating-IP: AmpsQDgASEaAJP+E87sCAd76grdai6fjPk9qNQFKsTE=
-Received: from HX01040082.powercore.com.cn ( [14.19.67.247])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 06 Jun 2024 21:22:30 +0800 (CST)
-X-QQ-SSF: 01400000000000B0B000000A0000000
-X-QQ-FEAT: ZbT1X8e7m5Fo8AN97Qo/SfGebcJKiGCLiCQTkAdeNHxeen7puOp3rgyNhjIt5
-	7ivIxPLQoqj+KveACDdj1lmBLe2B8/h/Vu0gnl0TIdLE8IDLugpGSGFcirwJP07QLzJL70D
-	cgcDtrWYTwlJ9foJ0eDH0q5qY5aybrSj0hEeGnf9DDQB7Y7NJHxJ+1YAkXKnCuds3woC6tq
-	0GKmhV3D2upU42VhZB6cbfDqQuYa+lH4lTGgjJqB4gCsEQF8JaQo/9N4cI9EiKqyVtOSna/
-	0dXm1bKxjcSRrgLGUJoblqa04ndCqf35Ce51QfzRd3kAjBx+G93Vv1lUCMa5nHc9yq59avq
-	A5RJA9krwXJw+hZMRDcyO6SwkDveAgBf/RznDViJIF90orGxmoprHMOgw12ww==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 20561316882800220
-From: Jinglin Wen <jinglin.wen@shingroup.cn>
-To: npiggin@gmail.com
-Cc: mpe@ellerman.id.au,
-	christophe.leroy@csgroup.eu,
-	naveen.n.rao@linux.ibm.com,
-	jinglin.wen@shingroup.cn,
-	masahiroy@kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc: Fixed the bug of duplicate copying
-Date: Thu,  6 Jun 2024 21:21:32 +0800
-Message-Id: <20240606132132.13785-1-jinglin.wen@shingroup.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1717680368; c=relaxed/simple;
+	bh=Da94MbDvCzudQyDztnqyQOKY9skofvJFvAJNp1KTIcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gieaXsHP8HeHZ2Del1BwTAvXF15KAZ9DkHmDNOgwd3De+Yiig384+w/kuyPFDs5BE5xUSMOPyrW6WXJwdJegZDLMHAR8MEsJRANbWVaqzX/8qzoPv7NIEwZjHRGhrahVz9pSsAXBgOJ1j204dPpwHZrSAfELGYH4Kt+ths2OHcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BEQ2Sg2h; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BEQ2Sg2h"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=QehpudYNwQn/+EF5t8WXc8vQI3VYnM/EWDpwkUDEZHI=; b=BEQ2Sg2hRkMyI04nmbrlG0HbLo
+	QeO7iB/STgiK0VKfWXCGl2sd4tRbx5MAgMZ9LWf63lpyYEFkYk4g6YyOsCBRaL6wqcc/iMAGBoUZ0
+	+cN1km/L3X73Hqjk5o0FlagS1JwYR7HdhDrOZmTBtipc3cdJhEStoQJjYmllVZH48tYg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sFD7o-00H1FE-DV; Thu, 06 Jun 2024 15:25:52 +0200
+Date: Thu, 6 Jun 2024 15:25:52 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Swathi K S <swathi.ks@samsung.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	richardcochran@gmail.com, alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
+	alim.akhtar@samsung.com, linux-fsd@tesla.com,
+	pankaj.dubey@samsung.com, ravi.patel@samsung.com,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] dt-bindings: net: Add FSD EQoS device tree
+ bindings
+Message-ID: <22eae086-0f77-4df7-9d70-e7249d67b106@lunn.ch>
+References: <20230814112539.70453-1-sriranjani.p@samsung.com>
+ <CGME20230814112605epcas5p31aca7b23e70e8d93df11414291f7ce66@epcas5p3.samsung.com>
+ <20230814112539.70453-2-sriranjani.p@samsung.com>
+ <4e745c2a-57bd-45da-8bd2-ee1cb2bab84f@lunn.ch>
+ <000201dab7f2$1c8d4580$55a7d080$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000201dab7f2$1c8d4580$55a7d080$@samsung.com>
 
-Fixed the issue where the kernel, when booting from address 0, had
-code incorrectly duplicated to address 0.
+> > > +  fsd-rx-clock-skew:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > > +    items:
+> > > +      - items:
+> > > +          - description: phandle to the syscon node
+> > > +          - description: offset of the control register
+> > > +    description:
+> > > +      Should be phandle/offset pair. The phandle to the syscon node.
+> > 
+> > What clock are you skew-ing here? And why?
+> 
+> As per customer's requirement, we need 2ns delay in fsys block both in TX
+> and RX path.
 
-Signed-off-by: Jinglin Wen <jinglin.wen@shingroup.cn>
----
- arch/powerpc/kernel/head_64.S | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Lots of people get RGMII delays wrong. Please look back at the mailing
+list where there is plenty of discussion about this. I don't want to
+have to repeat myself yet again...
 
-diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
-index 4690c219bfa4..6c73551bdc50 100644
---- a/arch/powerpc/kernel/head_64.S
-+++ b/arch/powerpc/kernel/head_64.S
-@@ -647,7 +647,9 @@ __after_prom_start:
-  * Note: This process overwrites the OF exception vectors.
-  */
- 	LOAD_REG_IMMEDIATE(r3, PAGE_OFFSET)
--	mr.	r4,r26			/* In some cases the loader may  */
-+	tophys(r4,r26)
-+	cmplwi	cr0,r4,0	/* runtime base addr is zero */
-+	mr	r4,r26			/* In some cases the loader may */
- 	beq	9f			/* have already put us at zero */
- 	li	r6,0x100		/* Start offset, the first 0x100 */
- 					/* bytes were copied earlier.	 */
--- 
-2.25.1
-
+     Andrew
