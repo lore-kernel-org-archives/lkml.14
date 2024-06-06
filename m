@@ -1,155 +1,208 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9864F13E058;
-	Thu,  6 Jun 2024 07:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859AC132494;
+	Thu,  6 Jun 2024 07:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717659286; cv=none; b=TDVDmJlQ/TdsH8bjybj2G79AAMZoteGbKeLN7PQVwmlTIwGa4Ci0vkThkydkLLqzyOlsINnzsscSBV892JCR9F/SZ1Qwx5seg3inFXJnC/Uds32uMmPuUdOxxpoKWL6E/Dmmwzh5R85tYGiyOxlQJTstJl8nlZVDvfF2efbjfkE=
+	t=1717659300; cv=none; b=qzXobx5aD6z1sxIq3iPWJzGskV5R6qj4of17fc4vzU4PMdyAVEVqj71wLbqc8p+y1vLFj8z/ae2i7y+bCxR6O/E230fWIUfV5lcr3iq5dyi3ihZ8ZOzjxc7aKVOd07NcUNXOQfVmKjPz1l23YFIPNvM9xREON1y+cMFbeYzR4DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717659286; c=relaxed/simple;
-	bh=2QuIxtKrX4JQURCSM13krZkPpuVxMNuAzViQSE1zWAs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fpiUBIytMF1NR6uOFNG2b8FUWtmdnDkrwgUHCjoIlYdrDvpNc1wlZ3vL077QJxtl+DWTU8lxePJXswxcE5YJ1T3Fx7FOx9D+dbOlz4ratd6iDPZFGCoyKejBaJJWhhtCHIOGIFRjrTQcjNRUb0AP8a3oxctI2ixcSjGLFI4ggpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QDorgE9P; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1717659300; c=relaxed/simple;
+	bh=OkV6XVuG6ybB4NCEJoskZZ1td3YrA3Uf2zmqvwKypac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m+RVlY52+IqQXCMwc8MDzfXt4t8UfiNeKRZDH92a+ylVJhpUcZ2aZp4QMuyqQojk4EypbXh4gP7f1DY+XppbRmL9GpVjaj/ZgLT8aCGd9yPvystMMqYCgETjnL6Aio9Ltq7YpkZQOJrV/34O7GjojiB8brYYmThClyfbVp+9XYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qe2+BYMQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QDorgE9P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717659283;
-	bh=2QuIxtKrX4JQURCSM13krZkPpuVxMNuAzViQSE1zWAs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QDorgE9PL4QNpGF8WG36TqanKGvV4rHpz6ItFIrdm6K9swNLY7hwZUcc/TBDXKwXt
-	 O6RYvUUruh0+xYtof/3pm6ssXyXUiMxCnxCBXUC3lSnYj7FBKCK5AKdefLtjsGN1YO
-	 JRC7BgDya5bWPAshfITWulQsTtpcaunELwn298eTU3sXk1ob9Qt9ZmyV1k/LO0bdaR
-	 WcP2gSOkEd9niuiyizGwmQCLXwe8cTVxtUr6/nX+rEf4uFJJPQd6qCOnaoK+jQhb6I
-	 vWYllAHNWiYgRNCUKw7T/tEZtf3s66lkCccJ6/9GqaW8mOIUnkicjUsIhu0ZpJ0MNU
-	 o8bd21ZdLtfqQ==
-Received: from eugen-station.. (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: ehristev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3A4E637821D8;
-	Thu,  6 Jun 2024 07:34:42 +0000 (UTC)
-From: Eugen Hristev <eugen.hristev@collabora.com>
-To: linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org,
-	jaegeuk@kernel.org,
-	adilger.kernel@dilger.ca,
-	tytso@mit.edu
-Cc: chao@kernel.org,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	ebiggers@google.com,
-	krisman@suse.de,
-	kernel@collabora.com,
-	Gabriel Krisman Bertazi <krisman@collabora.com>,
-	Eugen Hristev <eugen.hristev@collabora.com>
-Subject: [PATCH v18 7/7] f2fs: Move CONFIG_UNICODE defguards into the code flow
-Date: Thu,  6 Jun 2024 10:33:53 +0300
-Message-Id: <20240606073353.47130-8-eugen.hristev@collabora.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240606073353.47130-1-eugen.hristev@collabora.com>
-References: <20240606073353.47130-1-eugen.hristev@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qe2+BYMQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FDE9C2BD10;
+	Thu,  6 Jun 2024 07:34:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717659300;
+	bh=OkV6XVuG6ybB4NCEJoskZZ1td3YrA3Uf2zmqvwKypac=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qe2+BYMQ3QbD0U5WfbBYjUQxXAtvh+vjt7Mt0F+9By9hKlCM4Pk8Vl/UcqorQ03V7
+	 pA6Y4hg0+vyur+eDqRFFe9XYqQHqHYMcSKiIe4/jFDcoxrMTJDue5CV/OSjG07nbiV
+	 sD4KDDuhGDyvgITugBQ0NHFUY/zlpF8vrjn8cJf6nps/QhcCIQCrHKxAU9W6CHO8tn
+	 0T29G18CSyLt8BqSZwUgWYEMRATMm5dSU5uTSBV7L/UMspr4XdBcnfIuVFDZ412ieM
+	 glQs6KNZLtb9QrOtisbKzVn7aTpWppUxajFC43raAp6DP9thGC2mZSXJJhlkAhOCRK
+	 Po05a2vI536Yw==
+Message-ID: <c6d1b64b-48bf-435f-823c-fb4c588819cc@kernel.org>
+Date: Thu, 6 Jun 2024 10:34:53 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/7] arm64: dts: ti: k3-j722s: Switch to
+ k3-am62p-j722s-common.dtsi
+To: Vignesh Raghavendra <vigneshr@ti.com>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>, nm@ti.com, afd@ti.com,
+ kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, u-kumar1@ti.com, danishanwar@ti.com,
+ srk@ti.com
+References: <20240604085252.3686037-1-s-vadapalli@ti.com>
+ <20240604085252.3686037-5-s-vadapalli@ti.com>
+ <79eedaea-bf4f-4a20-8a52-751ce7187523@ti.com>
+Content-Language: en-US
+From: Roger Quadros <rogerq@kernel.org>
+In-Reply-To: <79eedaea-bf4f-4a20-8a52-751ce7187523@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
 
-Instead of a bunch of ifdefs, make the unicode built checks part of the
-code flow where possible, as requested by Torvalds.
 
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-[eugen.hristev@collabora.com: port to 6.10-rc1]
-Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
----
- fs/f2fs/namei.c | 10 ++++------
- fs/f2fs/super.c |  8 ++++----
- 2 files changed, 8 insertions(+), 10 deletions(-)
+On 06/06/2024 07:05, Vignesh Raghavendra wrote:
+> 
+> 
+> On 04/06/24 14:22, Siddharth Vadapalli wrote:
+>> Update "k3-j722s.dtsi" to use "k3-am62p-j722s-common.dtsi" which
+>> contains the nodes shared with AM62P, followed by including the J722S
+>> specific main domain peripherals contained in "k3-j722s-main.dtsi".
+>>
+>> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+>> ---
+>> v4:
+>> https://lore.kernel.org/r/20240601121554.2860403-5-s-vadapalli@ti.com/
+>> No changes since v4.
+>>
+>>  arch/arm64/boot/dts/ti/k3-j722s.dtsi | 97 +++++++++++++++++++++++++++-
+>>  1 file changed, 96 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j722s.dtsi b/arch/arm64/boot/dts/ti/k3-j722s.dtsi
+>> index c75744edb143..9e04e6a5c0fd 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j722s.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-j722s.dtsi
+>> @@ -10,12 +10,107 @@
+>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>  #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>>  
+>> -#include "k3-am62p5.dtsi"
+>> +#include "k3-am62p-j722s-common.dtsi"
+>> +#include "k3-j722s-main.dtsi"
+>>  
+>>  / {
+>>  	model = "Texas Instruments K3 J722S SoC";
+>>  	compatible = "ti,j722s";
+>>  
+>> +	cpus {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		cpu-map {
+>> +			cluster0: cluster0 {
+>> +				core0 {
+>> +					cpu = <&cpu0>;
+>> +				};
+>> +
+>> +				core1 {
+>> +					cpu = <&cpu1>;
+>> +				};
+>> +
+>> +				core2 {
+>> +					cpu = <&cpu2>;
+>> +				};
+>> +
+>> +				core3 {
+>> +					cpu = <&cpu3>;
+>> +				};
+>> +			};
+>> +		};
+>> +
+>> +		cpu0: cpu@0 {
+>> +			compatible = "arm,cortex-a53";
+>> +			reg = <0x000>;
+>> +			device_type = "cpu";
+>> +			enable-method = "psci";
+>> +			i-cache-size = <0x8000>;
+>> +			i-cache-line-size = <64>;
+>> +			i-cache-sets = <256>;
+>> +			d-cache-size = <0x8000>;
+>> +			d-cache-line-size = <64>;
+>> +			d-cache-sets = <128>;
+>> +			next-level-cache = <&l2_0>;
+>> +			clocks = <&k3_clks 135 0>;
+>> +		};
+>> +
+>> +		cpu1: cpu@1 {
+>> +			compatible = "arm,cortex-a53";
+>> +			reg = <0x001>;
+>> +			device_type = "cpu";
+>> +			enable-method = "psci";
+>> +			i-cache-size = <0x8000>;
+>> +			i-cache-line-size = <64>;
+>> +			i-cache-sets = <256>;
+>> +			d-cache-size = <0x8000>;
+>> +			d-cache-line-size = <64>;
+>> +			d-cache-sets = <128>;
+>> +			next-level-cache = <&l2_0>;
+>> +			clocks = <&k3_clks 136 0>;
+>> +		};
+>> +
+>> +		cpu2: cpu@2 {
+>> +			compatible = "arm,cortex-a53";
+>> +			reg = <0x002>;
+>> +			device_type = "cpu";
+>> +			enable-method = "psci";
+>> +			i-cache-size = <0x8000>;
+>> +			i-cache-line-size = <64>;
+>> +			i-cache-sets = <256>;
+>> +			d-cache-size = <0x8000>;
+>> +			d-cache-line-size = <64>;
+>> +			d-cache-sets = <128>;
+>> +			next-level-cache = <&l2_0>;
+>> +			clocks = <&k3_clks 137 0>;
+>> +		};
+>> +
+>> +		cpu3: cpu@3 {
+>> +			compatible = "arm,cortex-a53";
+>> +			reg = <0x003>;
+>> +			device_type = "cpu";
+>> +			enable-method = "psci";
+>> +			i-cache-size = <0x8000>;
+>> +			i-cache-line-size = <64>;
+>> +			i-cache-sets = <256>;
+>> +			d-cache-size = <0x8000>;
+>> +			d-cache-line-size = <64>;
+>> +			d-cache-sets = <128>;
+>> +			next-level-cache = <&l2_0>;
+>> +			clocks = <&k3_clks 138 0>;
+>> +		};
+>> +	};
+>> +
+>> +	l2_0: l2-cache0 {
+>> +		compatible = "cache";
+>> +		cache-unified;
+>> +		cache-level = <2>;
+>> +		cache-size = <0x80000>;
+>> +		cache-line-size = <64>;
+>> +		cache-sets = <512>;
+>> +	};
+>> +
+>>  	cbass_main: bus@f0000 {
+>>  		compatible = "simple-bus";
+>>  		#address-cells = <2>;
+> 
+> 
+> You would need to move the rest of main domain overrides and cbass_main
+> definitions to k3-j722s-main.dtsi and limit this file to CPU definitions
+> similar to k3-am62p5.dtsi
 
-diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-index e54f8c08bda8..1ecde2b45e99 100644
---- a/fs/f2fs/namei.c
-+++ b/fs/f2fs/namei.c
-@@ -576,8 +576,7 @@ static struct dentry *f2fs_lookup(struct inode *dir, struct dentry *dentry,
- 		goto out_iput;
- 	}
- out_splice:
--#if IS_ENABLED(CONFIG_UNICODE)
--	if (!inode && IS_CASEFOLDED(dir)) {
-+	if (IS_ENABLED(CONFIG_UNICODE) && !inode && IS_CASEFOLDED(dir)) {
- 		/* Eventually we want to call d_add_ci(dentry, NULL)
- 		 * for negative dentries in the encoding case as
- 		 * well.  For now, prevent the negative dentry
-@@ -586,7 +585,7 @@ static struct dentry *f2fs_lookup(struct inode *dir, struct dentry *dentry,
- 		trace_f2fs_lookup_end(dir, dentry, ino, err);
- 		return NULL;
- 	}
--#endif
-+
- 	new = d_splice_alias(inode, dentry);
- 	trace_f2fs_lookup_end(dir, !IS_ERR_OR_NULL(new) ? new : dentry,
- 				ino, IS_ERR(new) ? PTR_ERR(new) : err);
-@@ -639,16 +638,15 @@ static int f2fs_unlink(struct inode *dir, struct dentry *dentry)
- 	f2fs_delete_entry(de, page, dir, inode);
- 	f2fs_unlock_op(sbi);
- 
--#if IS_ENABLED(CONFIG_UNICODE)
- 	/* VFS negative dentries are incompatible with Encoding and
- 	 * Case-insensitiveness. Eventually we'll want avoid
- 	 * invalidating the dentries here, alongside with returning the
- 	 * negative dentries at f2fs_lookup(), when it is better
- 	 * supported by the VFS for the CI case.
- 	 */
--	if (IS_CASEFOLDED(dir))
-+	if (IS_ENABLED(CONFIG_UNICODE) && IS_CASEFOLDED(dir))
- 		d_invalidate(dentry);
--#endif
-+
- 	if (IS_DIRSYNC(dir))
- 		f2fs_sync_fs(sbi->sb, 1);
- fail:
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 1f1b3647a998..df4cf31f93df 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -321,7 +321,7 @@ struct kmem_cache *f2fs_cf_name_slab;
- static int __init f2fs_create_casefold_cache(void)
- {
- 	f2fs_cf_name_slab = f2fs_kmem_cache_create("f2fs_casefolded_name",
--							F2FS_NAME_LEN);
-+						   F2FS_NAME_LEN);
- 	return f2fs_cf_name_slab ? 0 : -ENOMEM;
- }
- 
-@@ -1326,13 +1326,13 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
- 		return -EINVAL;
- 	}
- #endif
--#if !IS_ENABLED(CONFIG_UNICODE)
--	if (f2fs_sb_has_casefold(sbi)) {
-+
-+	if (!IS_ENABLED(CONFIG_UNICODE) && f2fs_sb_has_casefold(sbi)) {
- 		f2fs_err(sbi,
- 			"Filesystem with casefold feature cannot be mounted without CONFIG_UNICODE");
- 		return -EINVAL;
- 	}
--#endif
-+
- 	/*
- 	 * The BLKZONED feature indicates that the drive was formatted with
- 	 * zone alignment optimization. This is optional for host-aware
+Not exactly.
+In existing cases there are 2 soc.dtsi files. e.g. k3-am62p.dtsi and k3-am62p5.dtsi.
+or k3-am2.dtsi and k3-am625.dtsi.
+
+The former includes everything that is required for the SOC variant except the CPU, OPP and cache.
+The later includes just the CPU, OPP and cache.
+
+I suppose this only makes sense if there are multiple variants of the SoC where only
+the number of CPUs change. Would this be the case for J722S?
+
+If not then one soc.dtsi file should be sufficient. If yes then we need to have 2 soc.dtsi files
+for J722S like the rest.
+
 -- 
-2.34.1
-
+cheers,
+-roger
