@@ -1,89 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F271E495;
-	Thu,  6 Jun 2024 17:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF18196DA2
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717693976; cv=none; b=CSeGYZmn8zD7mS0vex3u7BTAgxZ6MqHVj9XE9zOa38QAFa0mg/Z0Py1uaAOSPclBRXwqRF2YVNwI7VWpHif60OdnxmL54g/Di7yzyj/glI6dSRiu4DZB6WaWNCAj0+0n6cnwUbO/mhss6rpKKrnz55bfxAmcXIY9n0DwKF8r0+U=
+	t=1717694045; cv=none; b=insb8AYysl0ZpVqaEJRj0FneIIO6GqbRDvsSI8fAqtuMfbCLlGiecF+7o7J+J1ITqmVQlsvdMn6+tFKD4JmLEUwHZkNXeMyuCd9VeL+JRE67PM3Eo8SzX6BgsJC7rNxYUpmsZM88rk/fGuLdtlpu/tvmPmlXphHfprE8p5oAyyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717693976; c=relaxed/simple;
-	bh=yNzSGMzBPpeJxQaqXhbDJgrlYAct+LNjRn53sZZoCBc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RJ3wdhj7wmUWOM3ur81hwhTF4qfF+qLuJirZ8DYxqaaIMwugmeYaG7/pRqWZ+b9DxklPhHJ7TO2YxPwTfQiKsICr6mKXHbe8gPmRam0bIV17d4/OTxXx7tuSrm7OGlUQwMh0Xw5zDxkS0P2A+X+V5cpp89Q2DcjHoBlKu/SvZXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NW99UE9o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717694045; c=relaxed/simple;
+	bh=2J55QsUu0z3E0qDgXwQdGuYSG3si4g5PUGdsDhCwlfw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Em0hCx9DYCKGa8x8gYT4F1r1yzv/0zZq7KZVOeWn22my4AuUbXLes6QyT40tDR7lsI64xFFkyBXcIw0nGGaBsfjuubMIQrDOui2vyw/t3t1Hbjpo1fVnrJwrIDykEewxDDUMfQtvHyGWrWTekfZcy7CNCOdA3UgJSv+8Sig5ats=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=kpWsQY2+; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NW99UE9o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CA3C2BD10;
-	Thu,  6 Jun 2024 17:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717693975;
-	bh=yNzSGMzBPpeJxQaqXhbDJgrlYAct+LNjRn53sZZoCBc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NW99UE9ol72yWu8MgmnC9Dt3kKTxzcj+FrIvKXR4YzpclPRCy/uHN2SVJXrIzkYev
-	 qBtSG4wO1IUhq/QkvjFSXanhWQ14Vm3kKDwubQxW1f3sWGmouPl/dasGn1k76DkgKR
-	 C5KN8DAfDX9aqEoy3eAtfDTN/SWewyp/fKJyl3fb6v3LwdKOerDrm5BWwnBbQewKlP
-	 Ye2BtsBrlShxUR7CpASU3eZMR3cjQZflGtPWXo6k4iHRlIjRHWgcigMVrFhRZlYi3v
-	 7/mEuH0ZCTamuIHNJgr7UD9qXWjqSJgPHQ3LN37+wmTMgADzBgJkrTEZG4oKcFPyfx
-	 HmOwQsry8p/ow==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	James Clark <james.clark@arm.com>,
-	=?UTF-8?q?Cl=C3=A9ment=20Le=20Goffic?= <clement.legoffic@foss.st.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] perf: parse-events: Fix compilation error while defining DEBUG_PARSER
-Date: Thu,  6 Jun 2024 10:12:52 -0700
-Message-ID: <171769393997.2340193.15187370089504659355.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-In-Reply-To: <20240605140453.614862-1-clement.legoffic@foss.st.com>
-References: <20240605140453.614862-1-clement.legoffic@foss.st.com>
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="kpWsQY2+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
+	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=1vBrOmztxvBw+j73gnLOXwBxCVfezAXKUqEGyYm7Fts=; b=kpWsQY2+cY0zYTy6UinHv5YmIN
+	7lP0AP1opPSmrj4ovt/CwCKTZohixjRO7oMjFCcjLYw8kr+4g3O5cdCWB4mGLZUKSqeN1pf6GiVvB
+	DjfOkZH3NmsY/wkBRwI/ZvJcXQu8s6WHDB2JSaOi+DDhmlxEqepkAT0BQUVOahnBi1psQdjSEGBzD
+	hc83WZfTHp/lJAFHkkLD8drOP+V/fEtkCOLDmqEtoItOXinUlU4VJO3JodLHl9kvUR3gaH+QSId3P
+	fO6mLgGyn4V3mdZTj60sC/ARwDW0j199MLwzWuyHuIXvwBPD9HYSEwO2js1iOGROEzJAGYVB9+gxc
+	b4goRBQg==;
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1sFGgb-00012F-Sw; Thu, 06 Jun 2024 19:13:58 +0200
+Received: from [80.62.117.184] (helo=localhost)
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <esben@geanix.com>)
+	id 1sFGgY-0005oY-0K;
+	Thu, 06 Jun 2024 19:13:57 +0200
+From: Esben Haabendal <esben@geanix.com>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Michael Walle
+ <mwalle@kernel.org>,  Miquel Raynal <miquel.raynal@bootlin.com>,  Richard
+ Weinberger <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,
+  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org,  Rasmus
+ Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH v2 1/2] mtd: spi-nor: core: add flag for doing optional
+ SFDP
+In-Reply-To: <a379a411-2c9e-4d9d-aa8f-4c4f3463cc27@linaro.org> (Tudor
+	Ambarus's message of "Thu, 6 Jun 2024 14:31:22 +0100")
+References: <20240603-macronix-mx25l3205d-fixups-v2-0-ff98da26835c@geanix.com>
+	<20240603-macronix-mx25l3205d-fixups-v2-1-ff98da26835c@geanix.com>
+	<a379a411-2c9e-4d9d-aa8f-4c4f3463cc27@linaro.org>
+Date: Thu, 06 Jun 2024 19:13:57 +0200
+Message-ID: <878qziat9m.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27298/Thu Jun  6 10:30:08 2024)
 
-On Wed, 05 Jun 2024 16:04:53 +0200, Clément Le Goffic wrote:
+Tudor Ambarus <tudor.ambarus@linaro.org> writes:
 
-> Compiling perf tool with 'DEBUG_PARSER=1' leads to errors:
-> 
-> $> make -C tools/perf PARSER_DEBUG=1 NO_LIBTRACEEVENT=1
-> ...
->   CC      util/expr-flex.o
->   CC      util/expr.o
-> util/parse-events.c:33:12: error: redundant redeclaration of ‘parse_events_debug’ [-Werror=redundant-decls]
->    33 | extern int parse_events_debug;
->       |            ^~~~~~~~~~~~~~~~~~
-> In file included from util/parse-events.c:18:
-> util/parse-events-bison.h:43:12: note: previous declaration of ‘parse_events_debug’ with type ‘int’
->    43 | extern int parse_events_debug;
->       |            ^~~~~~~~~~~~~~~~~~
-> util/expr.c:27:12: error: redundant redeclaration of ‘expr_debug’ [-Werror=redundant-decls]
->    27 | extern int expr_debug;
->       |            ^~~~~~~~~~
-> In file included from util/expr.c:11:
-> util/expr-bison.h:43:12: note: previous declaration of ‘expr_debug’ with type ‘int’
->    43 | extern int expr_debug;
->       |            ^~~~~~~~~~
-> cc-1: all warnings being treated as errors
-> 
-> [...]
+> On 6/3/24 14:09, Esben Haabendal wrote:
+>> A dedicated flag for triggering call to
+>> spi_nor_sfdp_init_params_deprecated() allows enabling optional SFDP read
+>> and parse, with fallback to legacy flash parameters, without having dual,
+>> quad or octal parameters set in the legacy flash parameters.
+>> 
+>> With this, spi-nor flash parts without SFDP that is replaced with a
+>> different flash NOR flash part that does have SFDP, but shares the same
+>> manufacturer and device ID is easily handled.
+>> 
+>> Signed-off-by: Esben Haabendal <esben@geanix.com>
+>> ---
+>>  drivers/mtd/spi-nor/core.c | 3 ++-
+>>  drivers/mtd/spi-nor/core.h | 1 +
+>>  2 files changed, 3 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+>> index 3e1f1913536b..1c4d66fc993b 100644
+>> --- a/drivers/mtd/spi-nor/core.c
+>> +++ b/drivers/mtd/spi-nor/core.c
+>> @@ -2933,7 +2933,8 @@ static void spi_nor_init_params_deprecated(struct spi_nor *nor)
+>>  
+>>  	spi_nor_manufacturer_init_params(nor);
+>>  
+>> -	if (nor->info->no_sfdp_flags & (SPI_NOR_DUAL_READ |
+>> +	if (nor->info->no_sfdp_flags & (SPI_NOR_TRY_SFDP |
+>
+> I don't like that we update deprecated methods. The solution though is
+> elegant.
 
-Applied to perf-tools-next, thanks!
+Maybe we should un-deprecate it? I don't understand why it should be
+deprecated. It obviously has a valid purpose.
 
-
-Best regards,
-Namhyung
+>> +					SPI_NOR_DUAL_READ |
+>>  					SPI_NOR_QUAD_READ |
+>>  					SPI_NOR_OCTAL_READ |
+>>  					SPI_NOR_OCTAL_DTR_READ))
+>> diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
+>> index 442786685515..77f61a984cb3 100644
+>> --- a/drivers/mtd/spi-nor/core.h
+>> +++ b/drivers/mtd/spi-nor/core.h
+>> @@ -535,6 +535,7 @@ struct flash_info {
+>>  	u8 no_sfdp_flags;
+>>  #define SPI_NOR_SKIP_SFDP		BIT(0)
+>>  #define SECT_4K				BIT(1)
+>> +#define SPI_NOR_TRY_SFDP		BIT(2)
+>>  #define SPI_NOR_DUAL_READ		BIT(3)
+>>  #define SPI_NOR_QUAD_READ		BIT(4)
+>>  #define SPI_NOR_OCTAL_READ		BIT(5)
+>> 
