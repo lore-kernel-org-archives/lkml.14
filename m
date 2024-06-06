@@ -1,77 +1,78 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7360101CE
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 06:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EE84A2D;
+	Thu,  6 Jun 2024 06:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717655704; cv=none; b=heCkX1abyrFMSJDmoEeZ8GOyYgQaEp6kanednIMbmMNCQ1/+knmYJfS7TCdzLI/8pt+Did6Ubi4RAGruKY9zFiGOJEdCVODtUUZvElcSNOEIjrpn8BtkfGylOURJuiL85fiwGRbFCutxk6egN8jP9iJGyYrsxfHseIgGXwbnchM=
+	t=1717655788; cv=none; b=teFj7cVcD60RZbaCblC//2U6OEfo99GBaE/tPiAScD8X6bb5ZP2KqyeGgVkqnXr3iJ8rCXrqGUTwDIbxj2HXQcHG1gAUAJy0MeuhU4N0YgDIM7/oGPne3YGFDoeIBeZdsXm2C6seu2/RLeK8aMBJ+kZR47PWFhpS/tWAv+Q2yAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717655704; c=relaxed/simple;
-	bh=ls6qIClvI8ASOR4gsM8jHGCMbviTBNUuDJYtMobTXCY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=vGc5J5kl9XaLm9S6EASAOR1TuBiqODoMGSeN0mNPlPuZFnQBYlGVmRyVnOOTJ4jayTK2wbcMpGMeBmYmuFvAiMVfnmiJc75oBKQs5Emxrqc9F7Uwo+WUKWnKwzAVzDQpRjsvz8+8CMm6UWqd1oG1cm9TgUYrwXDQTLWHzmgUMlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7e1fe2ba2e1so69515939f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 23:35:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717655702; x=1718260502;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xJj8SpHZ3AK26zye3PjAjsbyQ9sFn5edKca5Lm2sMk8=;
-        b=hJsWOkx+31KGTS3XA69KWYeiI4onx+1VMGnmlWtv1L6yp8v4EV9iVMaki93ATVdqsU
-         x19ANOOsXqtqxwo2YhkFT5a2QP+IhdECO/5/Pfwa64YwI/dbLWVXGmqrWY6FaOXbPwZE
-         Y9653fe27v8Qy4eFJf7tFKN46ulVQXgqbn4hZPAX9d9wLEV8LQoR6hh2RzSwTQtGoyKl
-         N5PjeZfpTy6SsfcIyZ8gqs5J9XLD8eCLYbFdphQUx4jczJKAhXfTWvorjlgxA+kNYluR
-         yh/IuAyy9nPSk5crsHZAcnTAeHVC05pykOSKbLughJvIEyCWZhWpuNs8bRKAt4nC9UOx
-         f44A==
-X-Gm-Message-State: AOJu0YwlH2CzdHljDWTdF03UC31gXgspzYE0x0KBAuLp5ZQ9owKBBkmF
-	NCnIJIVuSzsCnDin/PxxWvZnuiqA8iGmdug91pMfGgzSgOPaQcHr/wagkL5bXk+GeBt5iDv133/
-	LQdCk184P+o7l2rVFGtFYq7iAXYjHraPPgNYx2FO8TdB3ApYIOAp15X8=
-X-Google-Smtp-Source: AGHT+IHls/gGIuDXCbpD732nqhfvkoBJGonxdRC8XS8dI0J9VwiFFGs4JLFQQFQkzmYO3b9UhLfipKT424YijfOmWWOk3hDqY+W/
+	s=arc-20240116; t=1717655788; c=relaxed/simple;
+	bh=IzGMhXq7EqfxAeS3IOJb9arAgUoQiH99bBTiJqZPX0E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LPypPpK8JNlueLTT7xW0vPDXB9rp2pprwy1KncjKl3X9qvEmVwaiGeiVVrRiFPwQBbU8W9HQlSpIfJQK152gGv5+ZcIvq4M8+3m01IqM7Xz8Gim0vbcGwAT2TqeKr1I2RQHC4X8I1X7OOfqAPM8c6eY95bjhs9Yu5cRrLg9FPAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VvvdN6Xp3zwRV1;
+	Thu,  6 Jun 2024 14:32:24 +0800 (CST)
+Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9EECF180085;
+	Thu,  6 Jun 2024 14:36:22 +0800 (CST)
+Received: from huawei.com (10.173.135.154) by canpemm500002.china.huawei.com
+ (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Jun
+ 2024 14:36:22 +0800
+From: Miaohe Lin <linmiaohe@huawei.com>
+To: <akpm@linux-foundation.org>, <tony.luck@intel.com>, <bp@alien8.de>
+CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
+Subject: [PATCH v2 00/13] Some cleanups for memory-failure
+Date: Thu, 6 Jun 2024 14:32:34 +0800
+Message-ID: <20240606063247.712575-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:6283:b0:4b0:ae06:24c1 with SMTP id
- 8926c6da1cb9f-4b63c0194c0mr124892173.6.1717655702042; Wed, 05 Jun 2024
- 23:35:02 -0700 (PDT)
-Date: Wed, 05 Jun 2024 23:35:02 -0700
-In-Reply-To: <20240606061456.13663-1-norkam41@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f78eb8061a32e1a9@google.com>
-Subject: Re: [syzbot] [ext4] KMSAN: uninit-value in aes_encrypt (5)
-From: syzbot <syzbot+aeb14e2539ffb6d21130@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, norkam41@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 
-Hello,
+Hi everyone,
+This series contains a few cleanup patches to simplify unneeded function
+variant, add helper macro, fix some obsolete comments and so on. More
+details can be found in the respective changelogs.
+Thanks!
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-SYZFAIL: NL802154_CMD_SET_SHORT_ADDR failed
+Miaohe Lin (13):
+  mm/memory-failure: simplify put_ref_page()
+  mm/memory-failure: remove MF_MSG_SLAB
+  mm/memory-failure: add macro GET_PAGE_MAX_RETRY_NUM
+  mm/memory-failure: save some page_folio() calls
+  mm/memory-failure: remove unneeded empty string
+  mm/memory-failure: remove confusing initialization to count
+  mm/memory-failure: simplify unneeded hwpoison_filter() variant
+  mm/memory-failure: use helper macro task_pid_nr()
+  mm/memory-failure: remove obsolete comment in unpoison_memory()
+  mm/memory-failure: move some function declarations into internal.h
+  mm/memory-failure: fix comment of get_hwpoison_page()
+  mm/memory-failure: remove obsolete comment in kill_proc()
+  mm/memory-failure: correct comment in me_swapcache_dirty
 
-2024/06/06 06:33:50 ignoring optional flag "sandboxArg"="0"
-2024/06/06 06:33:51 parsed 1 programs
-2024/06/06 06:33:52 [FATAL] failed to run ["./syz-executor" "setup" "fault" "binfmt_misc" "usb" "802154" "swap"]: exit status 67
-mkdir(/syzcgroup) failed: 17
-mount(binfmt_misc) failed: 16
-SYZFAIL: NL802154_CMD_SET_SHORT_ADDR failed
- (errno 16: Device or resource busy)
+ include/linux/mm.h         |  8 -------
+ include/linux/page-flags.h |  5 ----
+ include/linux/rmap.h       |  2 --
+ include/ras/ras_event.h    |  1 -
+ mm/internal.h              | 10 ++++++++
+ mm/memory-failure.c        | 48 +++++++++++++++-----------------------
+ 6 files changed, 29 insertions(+), 45 deletions(-)
 
 
-Tested on:
-
-commit:         45db3ab7 Merge tag '6.9-rc7-ksmbd-fixes' of git://git...
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=1555cbaa980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=617171361dd3cd47
-dashboard link: https://syzkaller.appspot.com/bug?extid=aeb14e2539ffb6d21130
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12cf4aac980000
+base-commit: 19b8422c5bd56fb5e7085995801c6543a98bda1f
+-- 
+2.33.0
 
