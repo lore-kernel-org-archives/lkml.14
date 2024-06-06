@@ -1,100 +1,128 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4668145322;
-	Thu,  6 Jun 2024 09:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58EA13DBBE
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717664786; cv=none; b=fEGg7B6Z60g/XO1XuJUOGfu2V9oTQPxx0OWACMrkh3eWDPFBq+ehZGRbh67rTNXFauhaUFdwYsiyiJpGyvoDAvryCXrZiXyQGiIfRaW2217q/X1j5JFsVxkutK2iL4EWiAFtvxy1v2SWFD8HtgmIBcEvcWtzpdVw0ZSkKYxit+I=
+	t=1717664862; cv=none; b=jiAnCSo/Tvt3SGaXmwcigfiFDyUCIRAEKaxEpJtgqa3Q/vRghIJtKFK+H9h1Pfvjhrjsf7FJ6XH2xfuViW8z6Ol78pF/+F5G34YPT7EtIqqd/3ZUW3u2RDZKaJ+MxYXje9dGPEk+SZVSPr8urlOJV+hZe+Do78qkFe2CFcvVWcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717664786; c=relaxed/simple;
-	bh=j0KhmEiIBVO2I7pYxITi/gig0dN1DEwHjsDGFnXyrzk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g/+v1FMdxe/zjSD7mW1cfQaOH6sNacjeW+usJqUL4p3WYB6pZEjRspdyfRgSRgXPsDzZwpIxocr+1480Wd6YICIDbagn37xWCKwJtCAGO9X/jcvogl68CV2+3Yi22g0SZRA7Oy7DmttWRDxZ8PvJ2GvzngdPhEJ7c6NSvGtr6eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=mediatek.corp-partner.google.com; spf=fail smtp.mailfrom=mediatek.corp-partner.google.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=meRGJnk6; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=mediatek.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mediatek.corp-partner.google.com
+	s=arc-20240116; t=1717664862; c=relaxed/simple;
+	bh=12+HnR3XT9xPMHW0m3i24CxsqNm6L5UZ44D6+dANpSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pKne8G+N/v9XIfwgMIbqwH921nzdGNASpidYfonhuUjUc9E8aXZbmg8w1Sv9mgIGIm1fQPrnn8ZHDcXVchHhLeLO9LLa6pS4l7LNuGWVseUmuFMbqAWovun9Aiq7AeZ4XRBgJrUSvUNfg5AOH3LqROfGDhgvcMZg5DRLsMufjL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eOxDOP7u; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="meRGJnk6"
-X-UUID: 0635c1be23e411efa54bbfbb386b949c-20240606
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=TulsrRhbIDs8TKsNZRbXbYoBg2+wZ1zCZBN14dFoG5E=;
-	b=meRGJnk6ziUMw8bfG5YwdnTXZ8OftlmFv16yhdTHyNmchu5fd0JqfDbu98jsgYSDLlISiTU91vS0GZoI9UyrVnhGbQT9sNTPi+5Fg9gWw3pCpdUU8wo9L13137J8ucGYCwdR+YaThhS29S2ltUZ7vW8JurHZrMQ5EsZz/UBvwds=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:14891e03-ae90-45a9-8280-66784abd9ebb,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:393d96e,CLOUDID:8178b093-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 0635c1be23e411efa54bbfbb386b949c-20240606
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
-	(envelope-from <jason-ch.chen@mediatek.corp-partner.google.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 665328105; Thu, 06 Jun 2024 17:06:13 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 6 Jun 2024 17:06:11 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 6 Jun 2024 17:06:11 +0800
-From: jason-ch chen <jason-ch.chen@mediatek.corp-partner.google.com>
-To: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier
-	<mathieu.poirier@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	Jason Chen <Jason-ch.Chen@mediatek.com>
-Subject: [PATCH] remoteproc: mediatek: Increase MT8188 SCP core0 DRAM size
-Date: Thu, 6 Jun 2024 17:06:09 +0800
-Message-ID: <20240606090609.3199-1-jason-ch.chen@mediatek.corp-partner.google.com>
-X-Mailer: git-send-email 2.18.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eOxDOP7u"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-6c7bf648207so576610a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 02:07:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717664860; x=1718269660; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sL7Vp5jCLEFf3PtEQziMPHphd4q4fdHZEr25V+ICNoI=;
+        b=eOxDOP7uWPAWO9WcT9xHF5ZiS+tbER4PUAdpXO3y0gxkin6jwEDflZom4CziVVb43W
+         +tRBHWdgRNulqPHdnJC9W/o2oO1nNcqlJN3pvr1+eORiVpbhEjghp/ZJWhJuelLy8O0M
+         oNeCn4Xef1czkEdQqP5jqNuqX3ZZkCf0GDANCU5rzytVbjQ9hG7S3hh5Yn6y5oAhbx3P
+         7l9X+Mi/hABNDMUgU7euk6VNx+1aJfI2xaGuchLZD2mJ2FE4tUj+zJTp2nmguG3bhp8l
+         u2473hxf1cjlk6Q9HDJ5N+I83hE68g1N4W1fGxW9m8+LF4APBZVqJo20TXrcAsbSuutM
+         HZNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717664860; x=1718269660;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sL7Vp5jCLEFf3PtEQziMPHphd4q4fdHZEr25V+ICNoI=;
+        b=McoLFZlTrxq2KxbZwXjAZUu/M2w1U41LHFtxWPH/JfVEzEVT3Qjtld7Uv1+v0LTkJ+
+         hF1SKq5bvsQy8Zw30cPiL+YskhSltUbqJLtWnyaPIXtcEChIXITF+H3X51dzxud8QAyi
+         Pp7dd5lPV7UyRJKGbLcdudW+PDckjAf7EXgoNR37OtYKZRvkHnrmtEjcgXVxAXkRnkjN
+         HSQYkC8Xzt3Nh/HOT5QDj7xEo7xQBHLY5OgLZmbwziDeL+nT7bjeB2t+ayOSQAZorN75
+         4bJsiBXklTgwvEopvZ2XT1qwILoAO97/e2KSwVGB/n5Q9GWrqrGLJ5lgVnla4+WmISWJ
+         d2Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCXyby+AI9MOESTnqT4JXHimmhvws3lOS2Qi4yFysBQQUg82oz0s0OJJ8LuljFRZWHJaNdKDCHDTqidiRAXidPTjE4nxcMhPTHcqE2Tz
+X-Gm-Message-State: AOJu0Yz6wr0d0Ysain2/aoCFa/yNHOz/MCdU3D75WOlawdJRibBtY5q7
+	UoHpute3em7p63cLXGSlkahkINwsLwpX5+UL3i9aae5ukxTlA+46j4l6ROx3qbk=
+X-Google-Smtp-Source: AGHT+IE4OX1OfiMTpsm6X5p243uV3bc9VV2G5/w8KsBpYY6LPPvpNmK9P4pK/aBv6YBgzmn6wFpBZQ==
+X-Received: by 2002:a05:6a20:2d24:b0:1b2:c28b:57ac with SMTP id adf61e73a8af0-1b2c28b59dcmr3704103637.62.1717664859923;
+        Thu, 06 Jun 2024 02:07:39 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703fd372e6esm721988b3a.34.2024.06.06.02.07.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 02:07:39 -0700 (PDT)
+Date: Thu, 6 Jun 2024 14:37:37 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Riwen Lu <luriwen@hotmail.com>, beata.michalska@arm.com,
+	ionela.voinescu@arm.com
+Cc: rafael@kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, hotran@apm.com,
+	Riwen Lu <luriwen@kylinos.cn>
+Subject: Re: [PATCH v3] cpufreq/cppc: Remove the desired_perf compare when
+ set target
+Message-ID: <20240606090737.z3qenphikjs5ijj4@vireshk-i7>
+References: <20240530061621.36byo5a2iqc6o2az@vireshk-i7>
+ <OS3P286MB249076187B3497D1EDD70988B1F32@OS3P286MB2490.JPNP286.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--11.374200-8.000000
-X-TMASE-MatchedRID: Xmee87WA04ARm9WAyl7+Dna57ruHAnHxJDAZBInjo2YUtdRZTmEaIUUe
-	RhGY4VMdIV4u8YKdeKsBtjkcfRMmqUN64DZ+6OgVngIgpj8eDcBpkajQR5gb3savT21DsLD/UEh
-	Wy9W70AGsWV0bdkf4OZnI7w0MyspY5QW3P0Do1rUHGWE57KOVV6Bw96C56Hm+BeJ5GJM55Sw=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--11.374200-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	8F2C02F9BB7FE52F84685050D7437B8500119C0C2DF2251449391A35E88052222000:8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OS3P286MB249076187B3497D1EDD70988B1F32@OS3P286MB2490.JPNP286.PROD.OUTLOOK.COM>
 
-From: Jason Chen <Jason-ch.Chen@mediatek.com>
+Ionela, Beata,
 
-Increase MT8188 SCP core0 DRAM size for HEVC driver.
+On 30-05-24, 19:08, Riwen Lu wrote:
+> From: Riwen Lu <luriwen@kylinos.cn>
+> 
+> There is a case that desired_perf is exactly the same with the old perf,
+> but the actual current freq is not.
+> 
+> This happened in S3 while the cpufreq governor is set to powersave.
+> During cpufreq resume process, the booting CPU's new_freq obtained via
+> .get() is the highest frequency, while the policy->cur and
+> cpu->perf_ctrls.desired_perf are in the lowest level(powersave
+> governor). Causing the warning: "CPU frequency out of sync:", and set
+> policy->cur to new_freq. Then the governor->limits() calls
+> cppc_cpufreq_set_target() to configures the CPU frequency and returns
+> directly because the desired_perf converted from target_freq is the
+> same with cpu->perf_ctrls.desired_perf and both are the lowest_perf.
+> Since target_freq and policy->cur have been compared in
+> __cpufreq_driver_target(), there's no need to compare desired_perf
+> and cpu->perf_ctrls.desired_perf again in cppc_cpufreq_set_target()
+> to ensure that the CPU frequency is properly configured.
+> 
+> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
+> 
+> ---
+> v1 -> v2:
+>  - Update commit message and email.
+> v2 -> v3:
+>  - Update patch subject and commit message.
+>  - Remove the desired_perf compare logic.
+> ---
+>  drivers/cpufreq/cppc_cpufreq.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index 15f1d41920a3..337cece61ab5 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -295,9 +295,6 @@ static int cppc_cpufreq_set_target(struct cpufreq_policy *policy,
+>  	int ret = 0;
+>  
+>  	desired_perf = cppc_khz_to_perf(&cpu_data->perf_caps, target_freq);
+> -	/* Return if it is exactly the same perf */
+> -	if (desired_perf == cpu_data->perf_ctrls.desired_perf)
+> -		return ret;
+>  
+>  	cpu_data->perf_ctrls.desired_perf = desired_perf;
+>  	freqs.old = policy->cur;
 
-Signed-off-by: Jason Chen <Jason-ch.Chen@mediatek.com>
----
- drivers/remoteproc/mtk_scp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Any objections to this change ?
 
-diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
-index b885a9a041e4..2119fc62c3f2 100644
---- a/drivers/remoteproc/mtk_scp.c
-+++ b/drivers/remoteproc/mtk_scp.c
-@@ -1390,7 +1390,7 @@ static const struct mtk_scp_sizes_data default_scp_sizes = {
- };
- 
- static const struct mtk_scp_sizes_data mt8188_scp_sizes = {
--	.max_dram_size = 0x500000,
-+	.max_dram_size = 0x800000,
- 	.ipi_share_buffer_size = 600,
- };
- 
 -- 
-2.34.1
-
+viresh
