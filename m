@@ -1,323 +1,121 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60761195F0F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256AC194C99
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679055; cv=none; b=dv9No8yKilP/aQ4i6UWZyouAasg1ccR4P10wNxhXuVBNYP13YzEud3iVAmyQYNSncpZ06nU0M83SBHqzBRoBoxbHyLq8yeixanhgidPAVgl7Q4cC44QqbetS7JP/lr/KhjUuuv6/V113GbxBTyk+B4ek6UKwm2HrpSdEctcWf/0=
+	t=1717679157; cv=none; b=gqJyVqXhuXg4IqsHQ3UPFbgP8WiAOAx2zl46DSs8ej9L33TW6F7tOnVqQg74muBbpabs8jzacDZJKILSMlQxt6dS23yVgqX/Tbv7+2keF0mTluP1auk54h3fmguwBYxKp1tOz4ZAQFKWuiDSRzc/RuVXi9HNBncAFs74iWZ7GLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679055; c=relaxed/simple;
-	bh=0hX+eelbJL2rS21QMuUK5AzMK7hMNulFf6/ooqSZ44o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MiK17b9ALMyjOw4H+Y5c2h9JAGlQMypl8klMJhb5MKmSFtCHNBXaMYL4tm8ejvTk/7twKH0RGHzcq2s1j0dBGyV6KEVtcrMza4LRXesqLq7UiRrAfyn8UE6du2GWbosEWQxEExF24IsBYjvUB5+lfWiUbrrf90ZmYbkWipu0qzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s3wxxQZH; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s3wxxQZH"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4215fc19abfso3915095e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717679052; x=1718283852; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kKbo0qapZkPA4AV1rYsoIj+52jvCSNCX0ifOmEVubQM=;
-        b=s3wxxQZH41i9BQXNcnVXgh8KeFnz3ToT8LexFYP3hYeKOepapShIzeMhfVnbp4IC86
-         kl0xc8asoIqLGOpSA87ZbR01R/pmMv2tHW2a+aX++4DVchAwWV2BggmyM3yNW/IZk+5Z
-         jWM1cN+1K/Uiz3xe1nV9q83/KC6dSbQxpL1xgAL8z4IOMSHBKsdNXj+hQnhoksCf1U/d
-         OuyiZGfW9QretQjEuuHBnmazVvb7wPIUfH9mKVOpkRjrX6Qxh0U4fsCvRqzydlcIUtXo
-         DlbHOOge5Fj4qzIPW8ag7h6cUlo3kVn2RcIa6+Z29xQErUGgUVCdTAquRzGF40vrNFnW
-         yQCg==
+	s=arc-20240116; t=1717679157; c=relaxed/simple;
+	bh=u8L6dUucWZRm9VtkOK5vym0gJ+Ywx2a9eggu8RhlaOk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=QmDu0Kdoh7mbIrwGBqTrIEFc7DnAWzPwSvBlmV1IVWzejupKEWCzqiqA2ofgN1Ny+IpMzqEt8QfVdCTxggrSZG1vpp+sqBEkrvMjyq5clR2rsrXLICg2TiKcbytw9BQOP/dXnyq4XHi0ovgWju1k+c5lOUx1xVjBQYN1Cjjh6Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7e8e5d55441so91872439f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:05:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717679052; x=1718283852;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kKbo0qapZkPA4AV1rYsoIj+52jvCSNCX0ifOmEVubQM=;
-        b=C7NyXJ0MNe/TDeia6YkggOvXh1dxk704ipxV48v44fXHDudoCPAhjYvTS0Y3RwtbgJ
-         5bENLnMi2nnsNelyxzNDovYxoFRB9R4x+YZOkz35rPsTGAVHyIz/XoFOhK+UgvNnbpgK
-         WngPTC+MkHGuYzb6WR/CcaF3fqUm1vF6WCTrlxSwxPhvI5RF5FGwIKvWoAxTpeG/Y3gO
-         1XMKm/i6GD1XR391BG4lQbOMemn4wGqdAEqWEHWuyQGGgFyCKHN999dQ8iqcUG1MCkNM
-         /6E/AAUMQIV1Dq+HYXOGA5LjU0uLEquVjxjJ9hUd11Hcfj6RV3uhf8VitxVACsNK2D8B
-         U6lA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrartMBmIycWl+Fe2eMoZ5HVMQCEGSdmuAiOZ7/Ftc3Sn5SFGKNnG464pyp2TvxYzmugR8SxHGcc4HF036NAZVg/8Zou0TNYmtb+Js
-X-Gm-Message-State: AOJu0YxpTB5HkXoS0yYO/oxqoqXLxCaGK1Q+sNRj6TwppvA8hFmwfwCv
-	UKFHlHjUxGuYQbO3DPvpSO/bkM4LvmGNZEsGK8pS7MFNrU9bGq+1ikUVVCdI/oY=
-X-Google-Smtp-Source: AGHT+IFCAbhDT9yQ9JxvjQIR8T3OQAtPNi65En0Q3KbyYaYt3XxfwYlF7TlTTvkQ2irpJWBJWgOUgw==
-X-Received: by 2002:a05:6000:1f8c:b0:35e:ead4:3d10 with SMTP id ffacd0b85a97d-35eead43f01mr3839150f8f.36.1717679051855;
-        Thu, 06 Jun 2024 06:04:11 -0700 (PDT)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d49dfcsm1505286f8f.39.2024.06.06.06.04.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 06:04:10 -0700 (PDT)
-From: srinivas.kandagatla@linaro.org
-To: andersson@kernel.org,
-	linus.walleij@linaro.org
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	srinivas.kandagatla@linaro.org,
-	linux-arm-msm@vger.kernel.org,
-	inux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] pinctrl: qcom: Introduce SM4250 LPI pinctrl driver
-Date: Thu,  6 Jun 2024 14:03:23 +0100
-Message-Id: <20240606130323.138970-3-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240606130323.138970-1-srinivas.kandagatla@linaro.org>
-References: <20240606130323.138970-1-srinivas.kandagatla@linaro.org>
+        d=1e100.net; s=20230601; t=1717679155; x=1718283955;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mds6YO+HTZDWBYnzuTDKxSNA9F8P/HeS82JmjodgFU8=;
+        b=tbYB811AxXhY34ssucIasEySdsJCwebzPG4Xvh3ZFQ94JyWGrrH6h/ot5IZFHa3a62
+         n6VkUFR5VYuOa498lKvDaR3QlYYH0FoyYRbKwfj2ze6dCp+rgUMUs8GBkLFOhW0Jpx0N
+         VZ6GWdIRKIkEzfR6/P2LdQOCV1zO4SQs6l4ucx39eLnpHxDjKX36El4G9JvNouDRXLUA
+         MGEaLgfI2rDKaa9L2ad/CL/h1GBJWnP0TQJ9MuW62IBnFEVWOxmveDWn2z4+xt4CPdoK
+         1QCAZnQibdu5yTMOFoXFoDKvZyIRnE7PDftV/U/P2jc8eVvw3eqNVKjoFxCROaV0ytzg
+         bTbA==
+X-Gm-Message-State: AOJu0Yz4V0QKaaGZoYGJ4CV6vrLd6jyg8va4/w1rVR9YPLGufb52VTQ6
+	Lv0a2OTCW7k5mzUKyMy/ufsbMZEIcAIGjqwpgrA0ZzrWI2irpBIwIHN44Swg0lNGEDMOa2uoNBN
+	ZA9L2aPVb+2+98FyfFLWIGmy1fvb2tm11a5G7xq07uLZIsp7h2nmEBvc=
+X-Google-Smtp-Source: AGHT+IHJNQqRrETHsbsE4xCLExeB+43y2rsxwo47WOoeITfOMRHErt0OhoiLQtMxbTfEWW887yiDNMPTDf2A7Wsq0gYIHnkJ7XWx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:3787:b0:488:9fae:e95c with SMTP id
+ 8926c6da1cb9f-4b63a8f6dbfmr158845173.4.1717679155102; Thu, 06 Jun 2024
+ 06:05:55 -0700 (PDT)
+Date: Thu, 06 Jun 2024 06:05:55 -0700
+In-Reply-To: <000000000000adb08b061413919e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e0e0e8061a385789@google.com>
+Subject: Re: [syzbot] Re: 000000000000fcfa6406141cc8ac@google.com
+From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Add support for the pin controller block on SM4250 Low Power Island.
+***
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/pinctrl/qcom/Kconfig                  |   9 +
- drivers/pinctrl/qcom/Makefile                 |   1 +
- .../pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c   | 191 ++++++++++++++++++
- 3 files changed, 201 insertions(+)
- create mode 100644 drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
+Subject: Re: 000000000000fcfa6406141cc8ac@google.com
+Author: wojciech.gladysz@infogain.com
 
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index 24619e80b2cc..dd9bbe8f3e11 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -68,6 +68,15 @@ config PINCTRL_SC7280_LPASS_LPI
- 	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
- 	  (Low Power Island) found on the Qualcomm Technologies Inc SC7280 platform.
- 
-+config PINCTRL_SM4250_LPASS_LPI
-+	tristate "Qualcomm Technologies Inc SM4250 LPASS LPI pin controller driver"
-+	depends on ARM64 || COMPILE_TEST
-+	depends on PINCTRL_LPASS_LPI
-+	help
-+	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-+	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
-+	  (Low Power Island) found on the Qualcomm Technologies Inc SM4250 platform.
-+
- config PINCTRL_SM6115_LPASS_LPI
- 	tristate "Qualcomm Technologies Inc SM6115 LPASS LPI pin controller driver"
- 	depends on ARM64 || COMPILE_TEST
-diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
-index e2e76071d268..eb04297b6388 100644
---- a/drivers/pinctrl/qcom/Makefile
-+++ b/drivers/pinctrl/qcom/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_PINCTRL_SDM845) += pinctrl-sdm845.o
- obj-$(CONFIG_PINCTRL_SDX55) += pinctrl-sdx55.o
- obj-$(CONFIG_PINCTRL_SDX65) += pinctrl-sdx65.o
- obj-$(CONFIG_PINCTRL_SDX75) += pinctrl-sdx75.o
-+obj-$(CONFIG_PINCTRL_SM4250_LPASS_LPI) += pinctrl-sm4250-lpass-lpi.o
- obj-$(CONFIG_PINCTRL_SM4450) += pinctrl-sm4450.o
- obj-$(CONFIG_PINCTRL_SM6115) += pinctrl-sm6115.o
- obj-$(CONFIG_PINCTRL_SM6115_LPASS_LPI) += pinctrl-sm6115-lpass-lpi.o
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
-new file mode 100644
-index 000000000000..6c5d09241e82
---- /dev/null
-+++ b/drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
-@@ -0,0 +1,191 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2020, 2023 Linaro Ltd.
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#include "pinctrl-lpass-lpi.h"
-+
-+enum lpass_lpi_functions {
-+	LPI_MUX_dmic01_clk,
-+	LPI_MUX_dmic01_data,
-+	LPI_MUX_dmic23_clk,
-+	LPI_MUX_dmic23_data,
-+	LPI_MUX_dmic4_clk,
-+	LPI_MUX_dmic4_data,
-+	LPI_MUX_ext_mclk0_a,
-+	LPI_MUX_ext_mclk0_b,
-+	LPI_MUX_ext_mclk1_a,
-+	LPI_MUX_ext_mclk1_b,
-+	LPI_MUX_ext_mclk1_c,
-+	LPI_MUX_i2s1_clk,
-+	LPI_MUX_i2s1_data,
-+	LPI_MUX_i2s1_ws,
-+	LPI_MUX_i2s2_clk,
-+	LPI_MUX_i2s2_data,
-+	LPI_MUX_i2s2_ws,
-+	LPI_MUX_i2s3_clk,
-+	LPI_MUX_i2s3_data,
-+	LPI_MUX_i2s3_ws,
-+	LPI_MUX_qua_mi2s_data,
-+	LPI_MUX_qua_mi2s_sclk,
-+	LPI_MUX_qua_mi2s_ws,
-+	LPI_MUX_slim_clk,
-+	LPI_MUX_slim_data,
-+	LPI_MUX_swr_rx_clk,
-+	LPI_MUX_swr_rx_data,
-+	LPI_MUX_swr_tx_clk,
-+	LPI_MUX_swr_tx_data,
-+	LPI_MUX_swr_wsa_clk,
-+	LPI_MUX_swr_wsa_data,
-+	LPI_MUX_gpio,
-+	LPI_MUX__,
-+};
-+
-+static const struct pinctrl_pin_desc sm4250_lpi_pins[] = {
-+	PINCTRL_PIN(0, "gpio0"),
-+	PINCTRL_PIN(1, "gpio1"),
-+	PINCTRL_PIN(2, "gpio2"),
-+	PINCTRL_PIN(3, "gpio3"),
-+	PINCTRL_PIN(4, "gpio4"),
-+	PINCTRL_PIN(5, "gpio5"),
-+	PINCTRL_PIN(6, "gpio6"),
-+	PINCTRL_PIN(7, "gpio7"),
-+	PINCTRL_PIN(8, "gpio8"),
-+	PINCTRL_PIN(9, "gpio9"),
-+	PINCTRL_PIN(10, "gpio10"),
-+	PINCTRL_PIN(11, "gpio11"),
-+	PINCTRL_PIN(12, "gpio12"),
-+	PINCTRL_PIN(13, "gpio13"),
-+	PINCTRL_PIN(14, "gpio14"),
-+	PINCTRL_PIN(15, "gpio15"),
-+	PINCTRL_PIN(16, "gpio16"),
-+	PINCTRL_PIN(17, "gpio17"),
-+	PINCTRL_PIN(18, "gpio18"),
-+};
-+
-+static const char * const dmic01_clk_groups[] = { "gpio6" };
-+static const char * const dmic01_data_groups[] = { "gpio7" };
-+static const char * const dmic23_clk_groups[] = { "gpio8" };
-+static const char * const dmic23_data_groups[] = { "gpio9" };
-+static const char * const dmic4_clk_groups[] = { "gpio10" };
-+static const char * const dmic4_data_groups[] = { "gpio11" };
-+static const char * const ext_mclk0_a_groups[] = { "gpio13" };
-+static const char * const ext_mclk0_b_groups[] = { "gpio5" };
-+static const char * const ext_mclk1_a_groups[] = { "gpio18" };
-+static const char * const ext_mclk1_b_groups[] = { "gpio9" };
-+static const char * const ext_mclk1_c_groups[] = { "gpio17" };
-+static const char * const slim_clk_groups[] = { "gpio14" };
-+static const char * const slim_data_groups[] = { "gpio15" };
-+static const char * const i2s1_clk_groups[] = { "gpio6" };
-+static const char * const i2s1_data_groups[] = { "gpio8", "gpio9" };
-+static const char * const i2s1_ws_groups[] = { "gpio7" };
-+static const char * const i2s2_clk_groups[] = { "gpio10" };
-+static const char * const i2s2_data_groups[] = { "gpio12", "gpio13" };
-+static const char * const i2s2_ws_groups[] = { "gpio11" };
-+static const char * const i2s3_clk_groups[] = { "gpio14" };
-+static const char * const i2s3_data_groups[] = { "gpio16", "gpio17" };
-+static const char * const i2s3_ws_groups[] = { "gpio15" };
-+static const char * const qua_mi2s_data_groups[] = { "gpio2", "gpio3", "gpio4", "gpio5" };
-+static const char * const qua_mi2s_sclk_groups[] = { "gpio0" };
-+static const char * const qua_mi2s_ws_groups[] = { "gpio1" };
-+static const char * const swr_rx_clk_groups[] = { "gpio3" };
-+static const char * const swr_rx_data_groups[] = { "gpio4", "gpio5" };
-+static const char * const swr_tx_clk_groups[] = { "gpio0" };
-+static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2" };
-+static const char * const swr_wsa_clk_groups[] = { "gpio10" };
-+static const char * const swr_wsa_data_groups[] = { "gpio11" };
-+
-+
-+static const struct lpi_pingroup sm4250_groups[] = {
-+	LPI_PINGROUP(0, 0, swr_tx_clk, qua_mi2s_sclk, _, _),
-+	LPI_PINGROUP(1, 2, swr_tx_data, qua_mi2s_ws, _, _),
-+	LPI_PINGROUP(2, 4, swr_tx_data, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(3, 8, swr_rx_clk, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(4, 10, swr_rx_data, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(5, 12, swr_rx_data, ext_mclk0_b, qua_mi2s_data, _),
-+	LPI_PINGROUP(6, LPI_NO_SLEW, dmic01_clk, i2s1_clk, _, _),
-+	LPI_PINGROUP(7, LPI_NO_SLEW, dmic01_data, i2s1_ws, _, _),
-+	LPI_PINGROUP(8, LPI_NO_SLEW, dmic23_clk, i2s1_data, _, _),
-+	LPI_PINGROUP(9, LPI_NO_SLEW, dmic23_data, i2s1_data, ext_mclk1_b, _),
-+	LPI_PINGROUP(10, 16, i2s2_clk, swr_wsa_clk, dmic4_clk, _),
-+	LPI_PINGROUP(11, 18, i2s2_ws, swr_wsa_data, dmic4_data, _),
-+	LPI_PINGROUP(12, LPI_NO_SLEW, dmic23_clk, i2s2_data, _, _),
-+	LPI_PINGROUP(13, LPI_NO_SLEW, dmic23_data, i2s2_data, ext_mclk0_a, _),
-+	LPI_PINGROUP(14, LPI_NO_SLEW, i2s3_clk, slim_clk, _, _),
-+	LPI_PINGROUP(15, LPI_NO_SLEW, i2s3_ws, slim_data, _, _),
-+	LPI_PINGROUP(16, LPI_NO_SLEW, i2s3_data, _, _, _),
-+	LPI_PINGROUP(17, LPI_NO_SLEW, i2s3_data, ext_mclk1_c, _, _),
-+	LPI_PINGROUP(18, 20, ext_mclk1_a, swr_rx_data, _, _),
-+};
-+
-+static const struct lpi_function sm4250_functions[] = {
-+	LPI_FUNCTION(dmic01_clk),
-+	LPI_FUNCTION(dmic01_data),
-+	LPI_FUNCTION(dmic23_clk),
-+	LPI_FUNCTION(dmic23_data),
-+	LPI_FUNCTION(dmic4_clk),
-+	LPI_FUNCTION(dmic4_data),
-+	LPI_FUNCTION(ext_mclk0_a),
-+	LPI_FUNCTION(ext_mclk0_b),
-+	LPI_FUNCTION(ext_mclk1_a),
-+	LPI_FUNCTION(ext_mclk1_b),
-+	LPI_FUNCTION(ext_mclk1_c),
-+	LPI_FUNCTION(i2s1_clk),
-+	LPI_FUNCTION(i2s1_data),
-+	LPI_FUNCTION(i2s1_ws),
-+	LPI_FUNCTION(i2s2_clk),
-+	LPI_FUNCTION(i2s2_data),
-+	LPI_FUNCTION(i2s2_ws),
-+	LPI_FUNCTION(i2s3_clk),
-+	LPI_FUNCTION(i2s3_data),
-+	LPI_FUNCTION(i2s3_ws),
-+	LPI_FUNCTION(qua_mi2s_data),
-+	LPI_FUNCTION(qua_mi2s_sclk),
-+	LPI_FUNCTION(slim_clk),
-+	LPI_FUNCTION(slim_data),
-+	LPI_FUNCTION(qua_mi2s_ws),
-+	LPI_FUNCTION(swr_rx_clk),
-+	LPI_FUNCTION(swr_rx_data),
-+	LPI_FUNCTION(swr_tx_clk),
-+	LPI_FUNCTION(swr_tx_data),
-+	LPI_FUNCTION(swr_wsa_clk),
-+	LPI_FUNCTION(swr_wsa_data),
-+	LPI_FUNCTION(ext_mclk1_a),
-+	LPI_FUNCTION(ext_mclk1_a),
-+	LPI_FUNCTION(ext_mclk1_a),
-+	LPI_FUNCTION(ext_mclk1_a),
-+};
-+
-+static const struct lpi_pinctrl_variant_data sm4250_lpi_data = {
-+	.pins = sm4250_lpi_pins,
-+	.npins = ARRAY_SIZE(sm4250_lpi_pins),
-+	.groups = sm4250_groups,
-+	.ngroups = ARRAY_SIZE(sm4250_groups),
-+	.functions = sm4250_functions,
-+	.nfunctions = ARRAY_SIZE(sm4250_functions),
-+};
-+
-+static const struct of_device_id lpi_pinctrl_of_match[] = {
-+	{ .compatible = "qcom,sm4250-lpass-lpi-pinctrl", .data = &sm4250_lpi_data },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lpi_pinctrl_of_match);
-+
-+static struct platform_driver lpi_pinctrl_driver = {
-+	.driver = {
-+		.name = "qcom-sm4250-lpass-lpi-pinctrl",
-+		.of_match_table = lpi_pinctrl_of_match,
-+	},
-+	.probe = lpi_pinctrl_probe,
-+	.remove_new = lpi_pinctrl_remove,
-+};
-+
-+module_platform_driver(lpi_pinctrl_driver);
-+MODULE_DESCRIPTION("QTI SM4250 LPI GPIO pin control driver");
-+MODULE_AUTHOR("Srinivas Kandagatla <srinivas.kandagatla@linaro.org>");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+#syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux e=
+377d803b65ee4130213b3c041fc25fdfec1bd90
 
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 2d29bc0f21cc..75fdb8e3abaa 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2393,12 +2393,21 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, =
+u64 *args)
+       cant_sleep();
+
+       // return if instrumentation disabled, see: bpf_disable_instrumentat=
+ion
+-       if (unlikely(__this_cpu_read(bpf_prog_active))) {
++       int instrumentation =3D unlikely(__this_cpu_read(bpf_prog_active));
++       if (instrumentation) {
++               printk("SKIP FOR INSTRUMENTATION: %s > %s > %p /%i =3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D\n",
++                               prog->aux->name,
++                               link->btp->tp->name, prog, instrumentation)=
+;
+               bpf_prog_inc_misses_counter(prog);
+               return;
+       }
+
+-       if (unlikely(this_cpu_inc_return(*(prog->active)) !=3D 1)) {
++       int active =3D this_cpu_inc_return(*(prog->active));
++       // printk("%s > %s > %p /%i\n", prog->aux->name, link->btp->tp->nam=
+e, prog, active);
++       if (active !=3D 1) {
++               printk("SKIP FOR ACTIVE: %s > %s > %p /%i =3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D\n",
++                               prog->aux->name,
++                               link->btp->tp->name, prog, active);
+               bpf_prog_inc_misses_counter(prog);
+               goto out;
+       }
+diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+index 8d1507dd0724..e756262d8df7 100644
+--- a/kernel/tracepoint.c
++++ b/kernel/tracepoint.c
+@@ -298,6 +308,8 @@ static enum tp_func_state nr_func_state(const struct tr=
+acepoint_func *tp_funcs)
+{
+       if (!tp_funcs)
+               return TP_FUNC_0;
++       if (!tp_funcs[0].func)
++               return TP_FUNC_0;
+       if (!tp_funcs[1].func)
+               return TP_FUNC_1;
+       if (!tp_funcs[2].func)
+
+--
+
+The information in this email is confidential and may be legally privileged=
+. It is intended solely for the addressee and access to it by anyone else i=
+s unauthorized. If you are not the intended recipient, any disclosure, copy=
+ing, distribution or any action taken or omitted to be taken based on it, i=
+s strictly prohibited and may be unlawful.
