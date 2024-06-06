@@ -1,63 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E5113AA31;
-	Thu,  6 Jun 2024 21:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0256D53C;
+	Thu,  6 Jun 2024 21:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717710457; cv=none; b=LIdoTiwVlVoauNpDaUAcv0+rLYxJrhuKz2gy4FLCiPm5IHpJmrowbzRjDV5e7g701/3k91qCMl91vKV93+MOJwtJsu4s7uctLP+qPKhJAhTqqa3IKlNBtZsP9kKebIqfXfMLyxL86A2Nflx08verfTzsX/FOPqoCFcfRPpZRZGA=
+	t=1717710656; cv=none; b=Ml1k73Z9aN7+C3enFbGjV/Wj5lwCm2HhygnRTawAoKysXkaM3Jw0ITdvIpes27LE8VgR4VJwMDUQxiToQrrqPQ54Nl1+qITiJKvqlsU+y0VMbxVk9lxtOBUG0g+zRcSegWcUfZ6ZNZbHPzXQYe5Mq0T3OtuQ3OsL+JJ1cDu28DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717710457; c=relaxed/simple;
-	bh=4zIzx33sDkv7R/xxA8g1AIqLRslHINgKj7vaNorjoiI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ssl+DfRzOqUhmXyX3csyt6tgl0yI/ijd5qOhtQGdmWue6SGlkhIIxja0GCUV+HnmAyqrT7pJtw1WRFUMkkC56KLSMg8sMU6NF0d7muN8eKbm2z+UUPDWr4g0l9/MjLsM+AFYnMOvWeCSzoLi+pl04Hk/oYzrXsJhcbp4yGOia8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b9PPRtnf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717710656; c=relaxed/simple;
+	bh=yRlzVq1f85dbcOPA1niy6gpUdxU/LAv6b1KRhJ4sF1A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=e07X9yAMy5/IYq0fhi9E2Uh3TFib2MroUQf0tFbaTNW63u9+JRbiwgIYUAT0FqGokP8XcFCGHyttmneJQ3Fd1UdfoCb08MKUcqXYrctPr7kIIEUlcLDu6xaR21Q8K++75bxNHCSzdDTpHNhBIIj7e3TwtkNrYOrVPpYrBfs/4kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XF0+T9vu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HO9NPha7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XF0+T9vu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HO9NPha7; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b9PPRtnf"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D9E0EC32786;
-	Thu,  6 Jun 2024 21:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717710456;
-	bh=4zIzx33sDkv7R/xxA8g1AIqLRslHINgKj7vaNorjoiI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=b9PPRtnf8ECEr+x/ibCIBqd01CbBTu6QtMbXUhXoUpwniZ1eIWfzy2wQu8bpWd2Pt
-	 /WOvmCFcJNkYw4sUjTZ1zw2ZgiQiqb6JlfORG7CoE9aO3pPjM4Cz2DHwYohH3RokeG
-	 eyqKfYXfXkcJtF6J3GWLRogdfkJN7gVLQ4ZXdcN3ZRHDR56HyZjfI/0j/Rv/b1PrT7
-	 vBSDVFoqgHUMRMgCzfEvfuwF6YKGd2nUfh8jhFUtE3rcS1gq0w0zxmCEil7RAYdpoT
-	 B3L5ZfRRXmJJyzMhdbVo2ViWHSyvaKFSi78ZHLbUt7ZSchCHUQ2Ow2Nby5kcMu3XbY
-	 reex8DCxWV4kQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CA846D2039E;
-	Thu,  6 Jun 2024 21:47:36 +0000 (UTC)
-Subject: Re: [GIT PULL] SCSI fixes for 6.10-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <f91727d00e7d2c0084c71022bb0884442fd1e13e.camel@HansenPartnership.com>
-References: <f91727d00e7d2c0084c71022bb0884442fd1e13e.camel@HansenPartnership.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <f91727d00e7d2c0084c71022bb0884442fd1e13e.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-X-PR-Tracked-Commit-Id: d53b681ce9ca7db5ef4ecb8d2cf465ae4a031264
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8a92980606e3585d72d510a03b59906e96755b8a
-Message-Id: <171771045682.14151.12228229203179950219.pr-tracker-bot@kernel.org>
-Date: Thu, 06 Jun 2024 21:47:36 +0000
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XF0+T9vu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HO9NPha7";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XF0+T9vu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HO9NPha7"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5B7351FB5A;
+	Thu,  6 Jun 2024 21:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1717710650; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PQTf0zBkx+6dYehfEwHIIeqVqSDrnQHWK9tVjpEW7s4=;
+	b=XF0+T9vu3aR4QBcisT3dppVXlPEF6SyNqm6k9wGy24cFhwtxuQNSfqsQu4lliWc5St//hy
+	txATNenfL3qtEnEze4CdH4Whz1UU0uGdZC8JQEePOJUC3ZGiIF5ukiox5bmcCpggWtGCpu
+	RtxcJNOMth9Y2JGfkbufuqe49WVj7V8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1717710650;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PQTf0zBkx+6dYehfEwHIIeqVqSDrnQHWK9tVjpEW7s4=;
+	b=HO9NPha7lz19I5x9wkNaD7XGnXuuqb7e+TSrgf1sGir4rQMJ2RT+JrTf3Qiob7SGgJTY3R
+	QTLl5ogL0xScvUCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1717710650; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PQTf0zBkx+6dYehfEwHIIeqVqSDrnQHWK9tVjpEW7s4=;
+	b=XF0+T9vu3aR4QBcisT3dppVXlPEF6SyNqm6k9wGy24cFhwtxuQNSfqsQu4lliWc5St//hy
+	txATNenfL3qtEnEze4CdH4Whz1UU0uGdZC8JQEePOJUC3ZGiIF5ukiox5bmcCpggWtGCpu
+	RtxcJNOMth9Y2JGfkbufuqe49WVj7V8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1717710650;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PQTf0zBkx+6dYehfEwHIIeqVqSDrnQHWK9tVjpEW7s4=;
+	b=HO9NPha7lz19I5x9wkNaD7XGnXuuqb7e+TSrgf1sGir4rQMJ2RT+JrTf3Qiob7SGgJTY3R
+	QTLl5ogL0xScvUCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1394313A79;
+	Thu,  6 Jun 2024 21:50:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4jzcOTkvYmaTXAAAD6G6ig
+	(envelope-from <krisman@suse.de>); Thu, 06 Jun 2024 21:50:49 +0000
+From: Gabriel Krisman Bertazi <krisman@suse.de>
+To: "Eugen Hristev" <eugen.hristev@collabora.com>, "Christian Brauner"
+ <christian@brauner.io>
+Cc: linux-ext4@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-f2fs-devel@lists.sourceforge.net,  linux-fsdevel@vger.kernel.org,
+  jaegeuk@kernel.org,  adilger.kernel@dilger.ca,  tytso@mit.edu,
+  chao@kernel.org,  viro@zeniv.linux.org.uk,  brauner@kernel.org,
+  jack@suse.cz,  ebiggers@google.com,  kernel@collabora.com
+Subject: Re: [PATCH v18 0/7] Case insensitive cleanup for ext4/f2fs
+In-Reply-To: <20240606073353.47130-1-eugen.hristev@collabora.com> (Eugen
+	Hristev's message of "Thu, 6 Jun 2024 10:33:46 +0300")
+Organization: SUSE
+References: <20240606073353.47130-1-eugen.hristev@collabora.com>
+Date: Thu, 06 Jun 2024 17:50:38 -0400
+Message-ID: <87v82livv5.fsf@mailhost.krisman.be>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.981];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-The pull request you sent on Thu, 06 Jun 2024 15:03:50 -0400:
+Eugen Hristev <eugen.hristev@collabora.com> writes:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+> Hello,
+>
+> I am trying to respin the series here :
+> https://www.spinics.net/lists/linux-ext4/msg85081.html
+>
+> I resent some of the v9 patches and got some reviews from Gabriel,
+> I did changes as requested and here is v18.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8a92980606e3585d72d510a03b59906e96755b8a
+The patchset looks good to me.  Feel free to add:
 
-Thank you!
+Reviewed-by: Gabriel Krisman Bertazi <krisman@suse.de>
+
+Bringing Christian into the loop, since this is getting ready and it
+should go through the VFS tree, as it touches libfs and a couple
+filesystems.
+
+Christian, can you please take a look? Eric has also been involved in
+the review, so we should give him a few days to see if he has more
+comments.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Gabriel Krisman Bertazi
