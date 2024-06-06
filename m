@@ -1,178 +1,111 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94CAE13C695
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 07:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DDA13A3EF
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 07:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717660646; cv=none; b=G2G5Y/gaypQzjaCycO9rQ47j7aDzriVFdkbla/B5Bx6qE6SiJc310ChsaJhyvE+Kx2U8fK5vxNhYMe5k0gNFOCcuvlQAdeNss/Mhu6yFbqKzyklfR36NPkF+PGXi4VaicbTe0SCM92+4ZkWU7EeUWG2uHUkL6FWlIRiExCICvBg=
+	t=1717660659; cv=none; b=o6730OSn195rnrLI1U/FzLd0ru0pPE4He8FeNeBlkDdfeyCABCIrprGrF8J6BETB3sogFOX+wkYRBECV+Lr593TNDEpNGSEEqNXSzZdIDiZi4vdFAdrtx0j0QT6tBGRpIFb5JYXsnD/Dtb2GDQhK2dqJIOZYayfjsN1RSXFeUKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717660646; c=relaxed/simple;
-	bh=n0zFL/hKs4u8O5/+08+Z+hRtcKMUCKI8n1GYa4WzNIY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=nMqDE0rOdQqKh5/nhBCEyJf8hqAGVpHYYVJLuhJKOXAce1KeKBLsS9VQ+BObWmTuwjTVhjQKOr+KQoiO70CINDbBcJ6tYU5y3EWcBsMCtAg9528Knf9Q5Wegq/aPJNIPi7S+KnuHjgL5/wIFqkF3IbcMThyyOFOR+YJGlbeK+8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JTMZTjTG; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JTMZTjTG"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ea903cd11bso8558171fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 00:57:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717660643; x=1718265443; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=e+7voCuL0AH5jCZ1l630xQ06ZEcQjIwkbAF5IbOgHUE=;
-        b=JTMZTjTG+Ea+fkXuhP63ZfUke1weoYEHoBFDfOHW54xVuqHcYBdgiNRU01VBvpjLbB
-         GLCfgzeWwfyH2OFZ4RiyLdsroqS8OSgmy9uarYwpg5T/keul6PWW9XS0jPlEzOi1+mik
-         DBhAQvlK3OuD/uePWFipOjCUbgoD8bSMxsdPxpZ9d6r8iedMJVOGPGvRNtAizGIiQVKP
-         phHUtCWy60YyNp4PxxZfhV+SGeOrmk9z0dQlGZObUJWJTo6mIGaX54BYzo3hKiyfGeOS
-         p7o9F/lGP5uiXujJrJjJBdGeppY9KgqHDGCYTHA3dJ884OSZGXEv4kLS5Oa6KcMA3wBB
-         dD/w==
+	s=arc-20240116; t=1717660659; c=relaxed/simple;
+	bh=IlSYBAMTeY3PIZNBpX/Fq2Bg2SS2LnFd574tJz2rVR4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=rAyUwwb2uS1qnGiE/Go0ZaB1LcVrrtBoHhnXw4nTvok1n9uaIIf0cNWmUwJRNIVc5dEOKxlChqblftPYYUfd5T2obTjCNRGZYcrDNviZ6qd8jqd2Mxa/eMSUahk4WNPZ1rrEk4W1FXaHJwVPsOqysr3cULS6W4eN+wyO1CQbnmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7e8e7707356so78047639f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 00:57:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717660643; x=1718265443;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=e+7voCuL0AH5jCZ1l630xQ06ZEcQjIwkbAF5IbOgHUE=;
-        b=NKJ80G19lfPbjHdV8/6SEx72zGWUwF6FaqVDArHX1VvskePppVrcj+uLKIOSYRpdJ8
-         TWgvC0tMzCB+ejqaSZ2tkIs0VpqMjcC2uFNKu7SkhdBlFna6wRj3wNfgYv0Gx79wekB8
-         wI0WVDAniAAbXtyrzzuhfXmyr+b7qqh9h81kL7UoRYaW6wCjUcv2NH8FifeNa6o5BWPV
-         XsOCXUCrdExYlcjwvhuuoq9k2uijhVAA3Grh+hSOpHXu30fq91oZgtj2ZjxKz3Old29c
-         sBfrcqmVB1eWj/pTlONFLtVUMn67zN1KbjobeCkp72TA0uXtTvgoXnWyRTDMrKFnflYF
-         lLKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfpHhlGE0LwV3cRNeU/QEcET/blhwF16Ze1LSGZbEj0x5OrYbMRRFP8Zwy6W2uhj5JVpe9g2sF2Q3h2ZXA6ry5DtIsRd06HaYGLlRA
-X-Gm-Message-State: AOJu0Ywac4xE+42390MO/2n68kIa7QLFeD2W3e7dL9Dur7ZaZbiZFgvy
-	2daoE+31l12YZmKk9vdFx848o48knO73auN+4N+hZDkI45LGsw01D8pi0dDTKOo=
-X-Google-Smtp-Source: AGHT+IHQTlXCaes2WPs1tS4SO/ZeAXtqzWbLEzAFaTEeJVA/bQtoNUFUtqIAg2EYkzJMWCFSPexC9Q==
-X-Received: by 2002:a2e:a378:0:b0:2e9:845a:8f1c with SMTP id 38308e7fff4ca-2eac7a92009mr30708851fa.51.1717660642753;
-        Thu, 06 Jun 2024 00:57:22 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:22fd:4ae6:287f:17f2? ([2a01:e0a:982:cbb0:22fd:4ae6:287f:17f2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5fc6d75sm839939f8f.110.2024.06.06.00.57.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 00:57:22 -0700 (PDT)
-Message-ID: <b41a781f-33bb-434c-adcf-97f494c689e5@linaro.org>
-Date: Thu, 6 Jun 2024 09:57:20 +0200
+        d=1e100.net; s=20230601; t=1717660657; x=1718265457;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d4pcIAiWNjlXdi99BU7K5FJiXH4rBJFbHcL9/QfFe0w=;
+        b=r8LYVpU2Z1xeJrXLqtZDax8KE0AjptDBFGpobET3FcCQ1mUP7V3ttJHUaPE9LlBxwd
+         PM2T3xoxpvVqW5VYaj7yzkZf0mNMfW/bdUcG/j/cm995VMc9lIV4MJ+M9WJs7RQUSGob
+         UmX7aeaIrUJlMCfztAAOc3lWP/eUTSFxENWMBhOWoOwtwyD11GK/2LAez7KepBZH4KAl
+         NKr3v+AyoavwgYBtOJCqOaj+rl8Go+9xzb56/LzdSs1ThRIiItSDI+RZnV9ShYNJI5Qf
+         /C6WGHqMQwJxWTmrVIX9SDxtKrAIC5Sod4k6M7UeZd35SYxtDdqDX8EFjmk8DEeIiUBh
+         fWDw==
+X-Gm-Message-State: AOJu0Yy1XgM4G8PtqN7zbSojX8kuP4u76JRsNdjvG1pPj/hrudEhyy7m
+	NQ/xKeAdJxN/lakBWqGIZRrYOKg5xij4MmkG/UdNSB3U07+exd6jj09G2qk+qMSzIUXoeI4iFQQ
+	kwwonOrQKni+zkiCe1yzYVBYuu+98uShL883ZB7zgcLxSbBDftio7cGM=
+X-Google-Smtp-Source: AGHT+IEtTXFnz4DmNIOJLZXiRDGS9g9WOkIJx9oY/mTH6sH52SzYuFsJ8nDUQgKW3zSfnc0mrI0yZWJmaNzLAJF38gscmmeP+Rk+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] ASoC: dt-bindings: linux,spdif-dir: Convert to dtschema
-To: Animesh Agarwal <animeshagarwal28@gmail.com>,
- Rob Herring <robh@kernel.org>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240605112301.8171-1-animeshagarwal28@gmail.com>
- <20240606005332.GA3526959-robh@kernel.org>
- <CAE3Oz82TsuDq5wAW4TSNeUuR0DTixAQPtJnCc3-5J7MnBYtuRw@mail.gmail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <CAE3Oz82TsuDq5wAW4TSNeUuR0DTixAQPtJnCc3-5J7MnBYtuRw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:841c:b0:4b3:292b:278e with SMTP id
+ 8926c6da1cb9f-4b63a76852emr273197173.1.1717660656832; Thu, 06 Jun 2024
+ 00:57:36 -0700 (PDT)
+Date: Thu, 06 Jun 2024 00:57:36 -0700
+In-Reply-To: <0000000000000fe556061725a7be@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004ba5d5061a340971@google.com>
+Subject: Re: [syzbot] ff/ext4: Prevent crypto operation on unaligned blocks
+From: syzbot <syzbot+aeb14e2539ffb6d21130@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/06/2024 04:19, Animesh Agarwal wrote:
-> On Thu, Jun 6, 2024 at 6:23 AM Rob Herring <robh@kernel.org> wrote:
->>
->> On Wed, Jun 05, 2024 at 04:52:55PM +0530, Animesh Agarwal wrote:
->>> Convert the dummy SPDIF receiver bindings to DT schema. Make bindings
->>> complete by adding property "#sound-dai-cells"
->>
->> 2 conversions of the same thing in one day:
->>
->> https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-convert-spdif-receiver-v1-1-262465adbac2@linaro.org/
->>
->> As I said there, I would just add the compatible to
->> linux,spdif-dit.yaml. But this is fine too.
->>
->>>
->>> Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
->>> Cc: Daniel Baluta <daniel.baluta@nxp.com>
->>> ---
->>>   .../bindings/sound/linux,spdif-dir.yaml       | 34 +++++++++++++++++++
->>>   .../bindings/sound/spdif-receiver.txt         | 10 ------
->>>   2 files changed, 34 insertions(+), 10 deletions(-)
->>>   create mode 100644 Documentation/devicetree/bindings/sound/linux,spdif-dir.yaml
->>>   delete mode 100644 Documentation/devicetree/bindings/sound/spdif-receiver.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/sound/linux,spdif-dir.yaml b/Documentation/devicetree/bindings/sound/linux,spdif-dir.yaml
->>> new file mode 100644
->>> index 000000000000..61767873200f
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/sound/linux,spdif-dir.yaml
->>> @@ -0,0 +1,34 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/sound/linux,spdif-dir.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Dummy SPDIF receiver
->>> +
->>> +maintainers:
->>> +  - Liam Girdwood <lgirdwood@gmail.com>
->>> +  - Mark Brown <broonie@kernel.org>
->>> +
->>> +allOf:
->>> +  - $ref: dai-common.yaml#
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: linux,spdif-dir
->>> +
->>> +  "#sound-dai-cells":
->>> +    const: 0
->>
->> It wasn't in the txt binding, but users also use 'sound-name-prefix'
->> property, so that should be added here.
-> linux,spdif-dir.yaml
-> 
-> If this is the case, I'll add the linux,spdif-dir compatible in
-> linux,spdif-dit.yaml instead of creating a new file in v2 of this
-> patch.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-OK but perhaps rename into dummy-spdif.yaml, no ?
+***
 
+Subject: ff/ext4: Prevent crypto operation on unaligned blocks
+Author: norkam41@gmail.com
 
-Thanks,
-Neil
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.g=
+it 45db3ab70092637967967bfd8e6144017638563c
 
-> 
-> Regards,
-> Animesh Agarwal
+syzbot is reporting an uninitialized value in aes_encrypt(). The block
+cipher expects the bytes to encrypt or decrypt to be a multiple of the
+cipher's block size. However, when ext4_write_begin() is called and new
+folios are allocated and they might not be aligned to the required block
+size.
+
+To ensure that padding bytes are automatically initialized in
+the ext4_write_begin, this patch adds __GFP_ZERO to the existing GFP
+masks. This adjustment is applied only when the CONFIG_FS_ENCRYPTION
+is defined.
+
+Closes: https://syzkaller.appspot.com/bug?extid=3Daeb14e2539ffb6d21130
+Signed-off-by: Norbert Kami=C5=84ski <norkam41@gmail.com>
+---
+ fs/ext4/inode.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 4bae9ccf5fe0..1a8e47221e72 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -1156,6 +1156,9 @@ static int ext4_write_begin(struct file *file, struct=
+ address_space *mapping,
+ 	 * the folio (if needed) without using GFP_NOFS.
+ 	 */
+ retry_grab:
++#ifdef CONFIG_FS_ENCRYPTION
++	mapping_set_gfp_mask(mapping, mapping_gfp_mask(mapping) | __GFP_ZERO);
++#endif
+ 	folio =3D __filemap_get_folio(mapping, index, FGP_WRITEBEGIN,
+ 					mapping_gfp_mask(mapping));
+ 	if (IS_ERR(folio))
+@@ -2882,6 +2885,9 @@ static int ext4_da_write_begin(struct file *file, str=
+uct address_space *mapping,
+ 	}
+=20
+ retry:
++#ifdef CONFIG_FS_ENCRYPTION
++	mapping_set_gfp_mask(mapping, mapping_gfp_mask(mapping) | __GFP_ZERO);
++#endif
+ 	folio =3D __filemap_get_folio(mapping, index, FGP_WRITEBEGIN,
+ 			mapping_gfp_mask(mapping));
+ 	if (IS_ERR(folio))
+--=20
+2.34.1
 
