@@ -1,160 +1,133 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 6F204266AB
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D691F38FB9
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717694497; cv=none; b=eSLn5CTnCqTv9/k7+4fjXeI2TNrzgaYelx0FiqKDOiRPY7am9MOBJB/cOwqYM7W0LsZHfpEa2q0PMTQVGuzGOv6sFST5gUDB2uG+zaDMcg/DOikbgMYiR7qELWeTnZypiSl4MRWrPdBSaR97U1eZdKNSd2lj8Y3os/jWHiOi36c=
+	t=1717694610; cv=none; b=Sftk6JV8gisOEtwOcJZLxk7qebyUO5VJhzyI0otixV+YPU0cFexIrcTwusvOtpDBZP6e4OygXupdUH4YS/nybSs3SqiGmnEbitT7l45iNzWdBi83QNPqcjOhVHk+/NFDMhm8pYfcBBOqJEkGqRCSQv/kMpd/Jaz2kf2/Mwg+IL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717694497; c=relaxed/simple;
-	bh=frS/UngMOUTMkvobfMhI/dDnG5z34IDT7+8i/Wni88Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uxskTRQpfEJbl6HlHY+iQRqJgHOjlJC3t0a8UvHn1KGDz3eOKZRvTTVU2B59E5brDahjWCTv0ZNnoMXAZLobDon7Llnf4U2ZMbTIUUwFdI2uk0wRGlqRZShMwtNqlb7to/U15k+5o9lz+d2O4cLSKeQNuEWp/FJFWiN9itXbhGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 13406 invoked by uid 1000); 6 Jun 2024 13:21:28 -0400
-Date: Thu, 6 Jun 2024 13:21:28 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Andrea Parri <parri.andrea@gmail.com>, will@kernel.org,
-  peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-  dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-  akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
-  linux-kernel@vger.kernel.org, hernan.poncedeleon@huaweicloud.com,
-  jonas.oberhauser@huaweicloud.com
-Subject: Re: New locking test for the paulmckrcu/litmus github archive
-Message-ID: <26aa2333-5e54-4dcd-b6df-f8f8545b2672@rowland.harvard.edu>
-References: <a8c06694-098d-4b95-845c-96b40cd3ff2d@rowland.harvard.edu>
- <df851df5-0e3a-45b1-ae85-9625309766b0@paulmck-laptop>
- <1d175b42-84b4-4a48-b1fb-ab6fd3566f75@rowland.harvard.edu>
- <64d944ff-b609-4977-a491-91ffc199a4cd@paulmck-laptop>
+	s=arc-20240116; t=1717694610; c=relaxed/simple;
+	bh=9fdDi/VIvNMFcoSPb0vjtLDb1QNbD08nrQuXSB8HujQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MPTXnNcQ2Q2nIO/D6Kk0rZ7qlab8ip6ze80CEICh0A65a5YOhREKRB406k0Cwvr+16BMVy0Wq3J+lmL5/CcHgtnfa4djDqUbcUFH6G4/R65694aa7UBGsB5bFkzZuC72RDRasA4NPpCNWogE/00Csx1T1Qrz6DJ1Nkui+Yl6UNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=FPpehQCx; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="FPpehQCx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
+	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=FedF7oPNdqEHHuz3xwLH/2qCzL60HSgGzIWdOOictbg=; b=FPpehQCxUOysukHnwgSo9tnbW9
+	BCihYTPtfMSlFzboPjZijiIEGyz+GdYfLd/HrMnHchxFF/4hVPywBldgzxXt/ktfM1ZAoE3FI+Kzw
+	XmPkaIqI25ncKL6rVy2/wvF4f9W0XQqWOyu1bKY51xnVcFlEdS9cMP+lzaeS2cg3fV35y/LuWi1hu
+	9qPudxhAouqNt4/5qHMDrPWf9YHMrLIlU28EdRXbimH1Tbt2BinGwqO8ERIQCEuzKUqxrqgRZ2MVZ
+	PDyNHA7KJ0uKIZFKepEtLmYIJui+Z5sRhT0QSUaTcKAuzTzqW/gP80mHyPJfOKZ/EgOxzJASGIY/b
+	Sz+UKIwQ==;
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1sFGpl-0002rG-Mz; Thu, 06 Jun 2024 19:23:26 +0200
+Received: from [80.62.117.184] (helo=localhost)
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <esben@geanix.com>)
+	id 1sFGph-000MWE-31;
+	Thu, 06 Jun 2024 19:23:25 +0200
+From: Esben Haabendal <esben@geanix.com>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Michael Walle
+ <mwalle@kernel.org>,  Miquel Raynal <miquel.raynal@bootlin.com>,  Richard
+ Weinberger <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,
+  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org,  Rasmus
+ Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH v2 2/2] mtd: spi-nor: macronix: enable quad/dual speed
+ for mx25l3205d chips
+In-Reply-To: <cdd6bc25-6282-4e43-9909-16ab918ed983@linaro.org> (Tudor
+	Ambarus's message of "Thu, 6 Jun 2024 14:33:16 +0100")
+References: <20240603-macronix-mx25l3205d-fixups-v2-0-ff98da26835c@geanix.com>
+	<20240603-macronix-mx25l3205d-fixups-v2-2-ff98da26835c@geanix.com>
+	<cdd6bc25-6282-4e43-9909-16ab918ed983@linaro.org>
+Date: Thu, 06 Jun 2024 19:23:25 +0200
+Message-ID: <87v82m9e9e.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64d944ff-b609-4977-a491-91ffc199a4cd@paulmck-laptop>
+Content-Type: text/plain
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27298/Thu Jun  6 10:30:08 2024)
 
-On Thu, Jun 06, 2024 at 10:07:35AM -0700, Paul E. McKenney wrote:
-> On Wed, Jun 05, 2024 at 02:40:05PM -0400, Alan Stern wrote:
-> > On Wed, Jun 05, 2024 at 11:25:11AM -0700, Paul E. McKenney wrote:
-> > > Thank you both!
-> > > 
-> > > I queued and pushed the following commit, please let me know if it
-> > > needs adjustment.
-> > > 
-> > > 							Thanx, Paul
-> > > 
-> > > ------------------------------------------------------------------------
-> > > 
-> > > commit fb65813a7a181cd86c50bb03f9df1f6a398fa22b
-> > > Author: Alan Stern <stern@rowland.harvard.edu>
-> > > Date:   Wed Jun 5 11:20:47 2024 -0700
-> > > 
-> > >     manual/locked: Add single-threaded spin_is_locked() test
-> > >     
-> > >     This new litmus test demonstrates a bug in the current LKMM lock.cat file.
-> > >     This bug results in the following output:
-> > >     
-> > >             Test CoWWW+sil-lock-sil-unlock-sil Allowed
-> > >             States 0
-> > >             No
-> > >             Witnesses
-> > >             Positive: 0 Negative: 0
-> > >             Condition exists (0:r0=0 /\ 0:r1=1 /\ 0:r2=0)
-> > >             Observation CoWWW+sil-lock-sil-unlock-sil Never 0 0
-> > >             Time CoWWW+sil-lock-sil-unlock-sil 0.01
-> > >             Hash=cf12d53b4d1afec2e46bf9886af219c8
-> > >     
-> > >     This is consistent with a deadlock.  After the fix, there should be one
-> > >     execution that matches the "exists" clause, hence an "Always" result.
-> > 
-> > The part about being consistent with a deadlock is not very important; 
-> > I'd omit it.  Also, the second sentence is ambiguous; change it to:
-> 
-> Good point, the deadlock is irrelevant.  If I want to make that point,
-> I can add a test that really does deadlock.  ;-)
-> 
-> > 	After the fix, there should be one execution that matches the 
-> > 	"exists" clause and no executions that don't match, hence an 
-> > 	"Always" result.
-> 
-> I ended up with the following:
-> 
-> 	This has no executions.  After the fix, there is one execution
-> 	that matches the "exists" clause and no executions that do not
-> 	match, hence an "Always" result.
-> 
-> The reason for explicitly stating "This has no executions" is that a
-> lot of people never have seen such a thing.
+Tudor Ambarus <tudor.ambarus@linaro.org> writes:
 
-Okay.  Don't we already have a litmus test in the archive that really 
-does create a deadlock?  Something like: Lock Lock Unlock Unlock, all 
-using the same lock variable?
+> On 6/3/24 14:09, Esben Haabendal wrote:
+>> Macronix engineers apparantly do not understand the purpose of having
+>> an ID actually identify the chip and its capabilities. Sigh.
+>> 
+>> The original Macronix SPI NOR flash that identifies itself as 0xC22016
+>> with RDID was MX25L3205D. This chip does not support SFDP, but does
+>> support the 2READ command (1-2-2).
+>> 
+>> When Macronix announced EoL for MX25L3205D, the recommended
+>> replacement part was MX25L3206E, which conveniently also identifies
+>> itself as 0xC22016. It does not support 2READ, but supports DREAD
+>> (1-1-2) instead, and supports SFDP for discovering this.
+>> 
+>> When Macronix announced EoL for MX25L3206E, the recommended
+>> replacement part was MX25L3233F, which also identifies itself as
+>> 0xC22016. It supports DREAD, 2READ, and the quad modes QREAD (1-1-4)
+>> and 4READ (1-4-4). This also support SFDP.
+>> 
+>> So far, all of these chips have been handled the same way by the Linux
+>> driver. The SFDP information have not been read, and no dual and quad
+>> read modes have been enabled.
+>> 
+>> The trouble begins when we want to enable the faster read modes. The
+>> RDID command only return the same 3 bytes for all 3 chips, so that
+>> doesn't really help.
+>> 
+>> Instead, we can use the SPI_NOR_TRY_SFDP flag, which forces the spi-nor
+>> system to try using SFDP, but fallback to the parameters specified in
+>> struct flash_info.
+>> 
+>> This way, boards using MX25L3205D will continue as before this change.
+>> That is without taking advantage of the 1-2-2 that it supports.
+>> 
+>> For MX25L3206E and MX25L3233F, the SFDP parameters are used, and they will
+>> therefore be using the optimal dual or quad mode supported by the flash
+>> and the SPI controller it is attached to.
+>> 
+>> Signed-off-by: Esben Haabendal <esben@geanix.com>
+>> ---
+>>  drivers/mtd/spi-nor/macronix.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
+>> index ea6be95e75a5..090f28e05a5d 100644
+>> --- a/drivers/mtd/spi-nor/macronix.c
+>> +++ b/drivers/mtd/spi-nor/macronix.c
+>> @@ -61,7 +61,7 @@ static const struct flash_info macronix_nor_parts[] = {
+>>  		.id = SNOR_ID(0xc2, 0x20, 0x16),
+>>  		.name = "mx25l3205d",
+>>  		.size = SZ_4M,
+>> -		.no_sfdp_flags = SECT_4K,
+>> +		.no_sfdp_flags = SECT_4K | SPI_NOR_TRY_SFDP,
+>>  	}, {
+>
+> let's remove support for MX25L3205D. You'll then be able to drop the
+> flash entry altogether and instead rely on SFDP to discover the flash's
+> capabilities.
 
-> > > diff --git a/manual/locked/CoWWW+sil-lock-sil-unlock-sil.litmus b/manual/locked/CoWWW+sil-lock-sil-unlock-sil.litmus
-> > > new file mode 100644
-> > > index 00000000..cee5abf4
-> > > --- /dev/null
-> > > +++ b/manual/locked/CoWWW+sil-lock-sil-unlock-sil.litmus
-> > > @@ -0,0 +1,24 @@
-> > > +C CoWWW+sil-lock-sil-unlock-sil.litmus
-> > 
-> > Where does the "CoWWW" part of the name come from?  If it refers to 
-> > coherence order and three writes, I'll point out that the litmus test 
-> > contains only two writes -- which would better be described as a lock 
-> > and an unlock.  (Or are you counting the "write" that sets the lock's 
-> > initial value?)
-> 
-> The CoWWW comes from me having been confused.  The new filename is
-> CoWW+sil-lock-sil-unlock-sil.litmus.  Thank you for spotting this!
+So anybody updating their Linux kernel for boards using MX25L3205D will
+get a bad surprise? While in the embedded world, upgrading Linux kernel
+is not the common case, it doesn't seem right to knowingly make it
+difficult to those few who actually tries to do the right thing.
 
-All right, but what does the "CoWW" part stand for?
-
-> > > +
-> > > +(*
-> > > + * Result: Always
-> > > + *
-> > > + * This tests the memory model's implementation of spin_is_locked().
-> > > + *)
-> > > +
-> > > +{}
-> > > +
-> > > +P0(spinlock_t *x)
-> > > +{
-> > > +        int r0;
-> > 
-> > Oops!  Apparently I managed not to convert the spaces on that line to a 
-> > tab.  Can you take care of that?
-> 
-> Done!  Please see below for the updated commit.
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> commit d4d216a08b4bedb8cdb0f57a224a4e331b35b931
-> Author: Alan Stern <stern@rowland.harvard.edu>
-> Date:   Wed Jun 5 11:20:47 2024 -0700
-> 
->     manual/locked: Add single-threaded spin_is_locked() test
->     
->     This new litmus test demonstrates a bug in the current LKMM lock.cat file.
->     This bug results in the following output:
->     
->             Test CoWW+sil-lock-sil-unlock-sil Allowed
->             States 0
->             No
->             Witnesses
->             Positive: 0 Negative: 0
->             Condition exists (0:r0=0 /\ 0:r1=1 /\ 0:r2=0)
->             Observation CoWWW+sil-lock-sil-unlock-sil Never 0 0
->             Time CoWWW+sil-lock-sil-unlock-sil 0.01
-
-Maybe you better re-run this with the updated litmus test file.  Those 
-two lines aren't right.
-
-Alan
+/Esben
