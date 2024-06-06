@@ -1,81 +1,72 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FD3198E8D
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FD51974F3;
+	Thu,  6 Jun 2024 14:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684617; cv=none; b=hHmX7J2wR3iJxN1DjAKEv49Xo/S5OmzVGhvarHa/46/FGYwdlcFRGGr1aK9ROUcWrujXgOytGn6Xqyuh6jzyyDHyONti1A0rhxMr2RuXqmpy+rPm7GVKJjKlhIFQSF05RK36lborXy9qB/kb/S8EJL/OPX9t85ANfRn3sPQMib4=
+	t=1717684649; cv=none; b=oimHg8hAEU40JqtCfvyHgpHhNwwkmuGbc/DyRHgqzFTzLedahRVVosawHExLORkDbfqtVojLUHqOoVsHoAa2NPwSeeXb9+dSCsL6bwxxjueA67lN1iAe5cSau6SdAbuExbDBS9wHBHCm1QmXxsv9Uygpb2Rl4jJnvGl0WN1ki6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684617; c=relaxed/simple;
-	bh=HoQgcM1v61QTQaw7hxevdOwl+gFbD0LvX+R34v7HQUI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hVyAsbHTJguSF6vCjf23o9CuKEV57rVGYs9cdiu6B9y+UEUzVXppAvovmHwkbghW8wzt1t7lHaSj1rJ/nLjZ/xTKkoXTVxVK/arYjAgeiTc4PAqpLqof7UWMXUaF82PxByFB63AhFqJBFpk9SpUVwNk0RNHiqY4bTSYQCJiaIwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HVpOSaIb; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717684649; c=relaxed/simple;
+	bh=8mMm3AqayXzUESgTdJ1XdJ48K/H9kxzWYjTpfdB4MBA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GMQw4a0IjMOMRnsDt+e+JQ9tNA1WjvNAKd9OUUpQgMdqin2kvrMhZS1L7tnRRH2g7eBuF3E47onzqhXppKwcJWSlQdKwJ7zlnzfmB4on5ITy+sYZdcg2WRYCqEiDuXSIGMSkoqswVYI0Ynl0PX/fmcKZSLqZxzrBCu5BOvB8GHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=agJQkNzP; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HVpOSaIb"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42163fed884so1965625e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 07:36:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agJQkNzP"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a85cc2d96so1313636a12.2;
+        Thu, 06 Jun 2024 07:37:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717684614; x=1718289414; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VJGZ6Uu/K+CEvU7SenPD0ND/ZswoEpORmUYwGdFQeI8=;
-        b=HVpOSaIb3v7P6Hhh4zvOD/Le1vKG1oqQ+LzAMjIwxhsdDYwq0BcxMghMQcvszVK+9f
-         MF8abLOX/lyOhOoh36V7y7z7Ezr7nO42/DL148P33vF2UdGGNK95cLpo//dkeBytZHLd
-         jLGwmE7Ey2pGx130Rdx47kmpoXUvvJYX0Pa2GHg1r4vw/evIpynn/JKXqXm9/0wYMKDo
-         MO68G80wjHzic4tWZQ3KqWDSfy5byubVYUrCHr0nRKREU2x20glHNLoxfL7ikMxonRWy
-         Tc/WYG2qZUhyxnaEYISEHkNn4vuvuK0yePAW+lBm/WkwDHwfTboqpjURSZwmyaM2IT4P
-         Y0bw==
+        d=gmail.com; s=20230601; t=1717684646; x=1718289446; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IQPdfmgPChtjBlPSUXP3XdJ6QoXKWpgusRBHic1ZZbo=;
+        b=agJQkNzPtGjTTFW7rAc9NSfNJcOhWUntCJrNOYx0kHbqv9hE3vjFbKQvvRYIi5pHJf
+         6s4km+f0c/U6/SgopQiBfzgpZMNpNNjqQUGqyOf0TsmkMw8Pkhtd+JbgB5VPsBuO81n+
+         mS2rL0Z6gw/CPdixN5CYe73wX0dMAui6gB+//+2qfSvzTh5WKHWcZzbScdSVFZTw8KJY
+         bZGu/PDN9pMjYawaiTDqkv/U8unjRdui+DlHk3TEHu8+bKtOFRokPZgWIMjpi9yoPoKG
+         dxZD7NCRnJreyOhUID981Hs4GRUTpeI7ym3pnSUaxvUuRDA0l3Z+uDWgUaOUbelQyivv
+         uW0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717684615; x=1718289415;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VJGZ6Uu/K+CEvU7SenPD0ND/ZswoEpORmUYwGdFQeI8=;
-        b=hxAsthrE3QHMF7F3yj7DShZy06f9j6lQ/PvdlsDgR6/hXCj56+2rcCBO3NvhYcnjcx
-         2BsKgqlR9zX6effGi4KmGNXBUN8WFb9rhsgmE0+YnnlSm9N488BlzheWpS/RCVrhvkt+
-         jQhmbekvEnY7iYlN5jcbmENiQVQzo68gDqVo6zGYzR6pIFpqPaK1eIRnM/Kw8aS2U6Fg
-         y0H86Y/Jv4FMmBZ1IMHkbJmDEZuZvpKaQYN1ZTPC9gUzfSFExcuJM6G9hMTTNhQVz/jv
-         UkA20HeS0c/EIFigGGdRDydRNTPH52nea82gINH6OWZf+XU6GB2C7h6tIILrvCiXXxJL
-         lSRw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7P0N5w31IysQFK0nKh917SPIclBP3l6V1mLUz0oZa13C8uN3SyhlZRzioWiMETRBDnPeSBXqMDYS77X7geX3rGeAPVKgZ6r8w80uO
-X-Gm-Message-State: AOJu0YyRj5TGGT9VQERKRdyp9h2fm90HsAchwR8hrNRuipNxlZjHqpvG
-	EprbUcPZiWroXV9sj1LJ40ajc4KN+pZBhS5m1rtozIqwax1lx58KGA9aCuWg/78=
-X-Google-Smtp-Source: AGHT+IHZn6oC9SB1W5aaL9cA3jdYYQVK4SRCy28QGjtvWm+2YyXB7pITSCWXefonmyHypnDRsqTmMQ==
-X-Received: by 2002:a05:600c:3b9e:b0:420:2cbe:7f00 with SMTP id 5b1f17b1804b1-42156357f60mr46822585e9.39.1717684614611;
-        Thu, 06 Jun 2024 07:36:54 -0700 (PDT)
-Received: from krzk-bin.. ([110.93.11.116])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42158148ffasm59540865e9.38.2024.06.06.07.36.53
+        d=1e100.net; s=20230601; t=1717684646; x=1718289446;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IQPdfmgPChtjBlPSUXP3XdJ6QoXKWpgusRBHic1ZZbo=;
+        b=b6ESNdAZ5wme4XvSxUAq3LslDiJWOJXBZ1joEwbx9PZ9Tz2pbla4+W2MN4sRkwIhnZ
+         Q9A2plWaOtZlkHtVjXiQJxDnfHJIUqibbBu7Na/vx7EBnRGam5mwxx00u9IYuDvaiINk
+         Z6I9MhPxkpQsGYp8gKpPdKHH474wFuBWAgZW6xVnDhXlNPoVnpNGDOyf2P9acnWWX/TT
+         2xXZot9MwKKu178KA/NsXy+rn/VZZVfGso0wOQj3ZqzFEN1kyut1GS4Xy3hMRs/mD7ds
+         0nPlyYHSigWcaKKrDVYdYc/JNq5zfe1V7TraV1j4tP3yDsqyENc4dC8fTi00ZIKbwsF8
+         2faQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+Ch1qNy5AFFePSrIj6TIK2yg4b2lxZCNw0l7yhM5g7X3+Vm9wSfrRVeeIkzNDBxoMLXUeRcDSLSGeLMnl5DcAdti5DhFw6eTr23PI0cGjESFhGlsmCLShlplZhFLcukiZ1kEF2oPlql+U+of7Ry2IdGI9nJeI4v7p6rT+mGvBi4C7wg==
+X-Gm-Message-State: AOJu0Yzp580XNJkTkIufIVZmzGt4xvQAvOVAVnuBeQrTRk7/PX5nTmbn
+	Yala/uMpRNuXcbvpDr/lGx8ARmwj55le6LBcneSu+DkERoZfgOI=
+X-Google-Smtp-Source: AGHT+IHNL5yo/Bdpu8nBzCloyRZW3BrEOgVM80xio31mispBtwt0CtqJWneNcLyY0SGGgTvqC7aD1A==
+X-Received: by 2002:a50:f61d:0:b0:57a:2d01:13cc with SMTP id 4fb4d7f45d1cf-57a8bccb52fmr3586977a12.39.1717684646306;
+        Thu, 06 Jun 2024 07:37:26 -0700 (PDT)
+Received: from U4.lan ([2a02:810b:f40:4600:ed9f:91b7:21f2:3109])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae1008adsm1190925a12.38.2024.06.06.07.37.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 07:36:54 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Chanwoo Choi <cw00.choi@samsung.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
+        Thu, 06 Jun 2024 07:37:25 -0700 (PDT)
+From: Alex Bee <knaerzche@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	patches@opensource.cirrus.com,
-	llvm@lists.linux.dev
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 3/3] mfd: wm8994: Fix Wvoid-pointer-to-enum-cast warning (again)
-Date: Thu,  6 Jun 2024 16:36:48 +0200
-Message-ID: <20240606143648.152668-3-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240606143648.152668-1-krzysztof.kozlowski@linaro.org>
-References: <20240606143648.152668-1-krzysztof.kozlowski@linaro.org>
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	Alex Bee <knaerzche@gmail.com>
+Subject: [PATCH v3 0/5] Add SFC support for RK3128
+Date: Thu,  6 Jun 2024 16:33:57 +0200
+Message-ID: <20240606143401.32454-2-knaerzche@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,35 +75,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-'type' is an enum, thus cast of pointer on 64-bit compile test with
-clang and W=1 causes:
+This series adds support for the Serial Flash Controller (SFC) found in
+RK3128 SoCs. The existing driver can be used as-is.
 
-  wm8994-core.c:625:17: error: cast to smaller integer type 'enum wm8994_type' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+As without using some "id holes" we would run out clock ids when adding the
+additional SFC AHB clock in the binding and would have to touch the ABI, I
+added patches which remove the CLK_NR_CLKS macro and use the recently
+introduced rockchip_clk_find_max_clk_id helper instead to find the highest
+clock id.
 
-Year ago this was solved, although LKML discussion suggested warning is
-not suitable for kernel.  Nothing changed in this regard for a year, so
-assume the warning will stay and we want to have warnings-free builds.
+changes since v1:
+ - added patches to remove CLK_NR_CLKS (Conor)
 
-Link: https://lore.kernel.org/all/20230814160457.GA2836@dev-arch.thelio-3990X/
-Link: https://lore.kernel.org/all/20230810095849.123321-1-krzysztof.kozlowski@linaro.org/
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/mfd/wm8994-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Link to v1:
+https://lore.kernel.org/all/20240605172154.193047-1-knaerzche@gmail.com/
 
-diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
-index d5ac066f9db4..094c0b3dbd97 100644
---- a/drivers/mfd/wm8994-core.c
-+++ b/drivers/mfd/wm8994-core.c
-@@ -622,7 +622,7 @@ static int wm8994_i2c_probe(struct i2c_client *i2c)
- 	wm8994->dev = &i2c->dev;
- 	wm8994->irq = i2c->irq;
- 
--	wm8994->type = (enum wm8994_type)i2c_get_match_data(i2c);
-+	wm8994->type = (kernel_ulong_t)i2c_get_match_data(i2c);
- 
- 	wm8994->regmap = devm_regmap_init_i2c(i2c, &wm8994_base_regmap_config);
- 	if (IS_ERR(wm8994->regmap)) {
+changes since v2:
+ - collect acks for the dt-bindings patches
+ - fixed pinmux settings for chipselect pincontrols
+
+Link to (the messed version of) v2:
+https://lore.kernel.org/all/20240605205209.232005-1-knaerzche@gmail.com/
+
+Alex Bee (5):
+  clk: rockchip: rk3128: Drop CLK_NR_CLKS usage
+  dt-bindings: clock: rk3128: Drop CLK_NR_CLKS
+  dt-bindings: clock: rk3128: Add HCLK_SFC
+  clk: rockchip: Add HCLK_SFC for RK3128
+  ARM: dts: rockchip: Add SFC for RK3128
+
+ arch/arm/boot/dts/rockchip/rk3128.dtsi | 35 ++++++++++++++++++++++++++
+ drivers/clk/rockchip/clk-rk3128.c      | 21 +++++++++++++---
+ include/dt-bindings/clock/rk3128-cru.h |  3 +--
+ 3 files changed, 53 insertions(+), 6 deletions(-)
+
+
+base-commit: 234cb065ad82915ff8d06ce01e01c3e640b674d2
 -- 
-2.43.0
+2.45.2
 
