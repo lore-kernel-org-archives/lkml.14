@@ -1,199 +1,119 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2054.outbound.protection.outlook.com [40.107.237.54])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2BC19750F;
-	Thu,  6 Jun 2024 15:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717688839; cv=fail; b=eoqlTGTGeROzefyjrxcVuX4SocncWDUuyYpeGrUcn1WZAVEJjNSBmOrHL9GV7aAEgf8H3uy9QpiPEiicX44lWnr6m/UyAIDpkThEEHI8tgQAiaO+MqrPyHYWCaGoP8gwy2/wlvVKkqgHR55vdRZm1Mq5zBUQTXrRUz3T+Uw1siA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717688839; c=relaxed/simple;
-	bh=BWqbF8nTPOz+VN8Dh9mMUqIUVm3CFMTNzjbpjEJHCEU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fhhMey6bxWWlsFMGoiQeMgKIqhv9wU7wnry+zoUW+KQ213VcloJuo8JfcN7DtRGkG8qNfEUnwrLCBniLCgjXiYox2yccBTp74+PCB5upjzCHb2BVj73/vUlA6GiXDsZobNcyy0KksPGC7nVW6aRKIpyUViRFLJHbn9OyghBFnlY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=JqVMJ4Z5; arc=fail smtp.client-ip=40.107.237.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC10198A0A;
+	Thu,  6 Jun 2024 15:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717688847; cv=none; b=ZigOTfEJAllCQ5znOHKEZT/FOe0yegMoRHsF2eOqDUt3rrI+vC7Ok9UXHaXHNgbMNnskaAs9esII/RqsMN9DFCd4l3dr8yNJHRMo0LT6Y0DHmYAayR6Ah9e378O/8Jvd9wz/4z0XS2O71vtfT/mNXFoRNxEPAUn7K+xHV50pYB0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717688847; c=relaxed/simple;
+	bh=QcDw2jc2BfZ+k/TbM/vd1C8TAW70hXP/jfMovjQ+yG0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KXP6yaRB7zv2iyXT/WPhcdzRstvU10vKt7XHJgiUxm8lhNcJAQTFZ8txedTZ9rqo+Rp67ObkYhEYbDaAIFFzmv1352x3lTLc+XqVUOcy+sjbCkZLLjR0rEZ6IAxjD20Oz5vs9NFc71jQPcwiFNEppKDcF5t4iZRaw2iNaflDvt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=schaecsn@gmx.net header.b=U2T/S5JR; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="JqVMJ4Z5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JbvKE6M4q8+GHUVr83vMM2F5A/5zwVDP+gJFz6qIFn9LCJFj6OSW4FJWabUQq1WMsH6ARd1Xx0HE2nF1Ir4JwHGLoQQPikWND1+VT9sBIg4rrx7l1PpEHDbDf23na+Vm7+bitElhgfiebH/MUCkDDGb2K/b3F9ERKM6ufnUvRGxLSNzum4XP0P33Djwf2Y3UUVvo+7YvrBOhX4mpH3f6Qj+DBdr9UOZ7/iMctt0oyVgrSUgpDPdvfaexM/SvxgkU8dNAP3NCP+NeXhlmeCtx+y1IDVxD1LZwtUlj5W/E0V02HXTeqai8IeKa3No0HVuoguf/yBQLIWZSh+m7j5Vlkg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RewaFLtv4QdHev3PzSC77exHoPdolEOk8JTtyK9/Odc=;
- b=ML6PqKfzDS0/gBsZ+DJqmpFvegMmPA3Va9FWAVwuCeUgUjunus0puVy06EiP6Qd2l1GogD6+VAVjEzkBt+lFCdyv7mLOg2Marh7p34MMHV5dk4cwbrmyQgX0zFGEA7O1C4DsbhvSs9xvscdwOg7F+W+rDMBpsM/xN3Soi3tQr3rKkyUYdlDJO5GmVSLNtGesR/TtZGOpNqnCf90uMaTlzlsAuzfxb3xTB7c9tFlRBKMeyEyUiX2582f/axkp8TVJxejON2mMU5iecJjLgdqSMYhT+zL8aa7Ywx/sAwtf/khL2Ixk2+1q5/9bu+A/1cbGhSMhKWUHVSOhUDAqSviiZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RewaFLtv4QdHev3PzSC77exHoPdolEOk8JTtyK9/Odc=;
- b=JqVMJ4Z5GyVQ71XpQjp50p4tX//HjFdsvdSUoX8ZxrwTRdXna3BgfEt2/qEy8QfCXWN0KZD/KgPxGQdamQTwdNiFEckJOGxY0BTCO5UYQOAKTQAGLDLX/GUX598+e9CJR2gUSCyBDPHK22hhKcE8L2faJtkO0glXCxPhMajDavry/wFcEnDuxTHw/hpB6JZfO/xFTuZE8xuR2PenVEds3/vlsB5JrLzIjBbQVESJrXbjhHCTVuBrDTANx3C9Viiy/qARWOuUd4kpGr2qywEt6eo5/eIW+tnvx0VJKikaB45/kwzQmBrM7KiD38/joN2T/0co6C4nBYjj2pSe3uxryQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com (2603:10b6:8:73::18) by
- MW4PR12MB7261.namprd12.prod.outlook.com (2603:10b6:303:229::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.35; Thu, 6 Jun
- 2024 15:47:13 +0000
-Received: from DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::f018:13a9:e165:6b7e]) by DS7PR12MB5744.namprd12.prod.outlook.com
- ([fe80::f018:13a9:e165:6b7e%4]) with mapi id 15.20.7633.021; Thu, 6 Jun 2024
- 15:47:13 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: Shuah Khan <shuah@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- linux-mm@kvack.org, gost.dev@samsung.com, mcgrof@kernel.org,
- willy@infradead.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH v2] selftests/mm: use global variable to not optimize mmap
- read variable
-Date: Thu, 06 Jun 2024 08:47:08 -0700
-X-Mailer: MailMate (1.14r6030)
-Message-ID: <744C4689-62F4-4565-988D-010824F4AB86@nvidia.com>
-In-Reply-To: <20240606154428.672643-1-kernel@pankajraghav.com>
-References: <20240606154428.672643-1-kernel@pankajraghav.com>
-Content-Type: multipart/signed;
- boundary="=_MailMate_1A98BCE4-F926-4E16-97A0-2C5DFDD51BEB_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
-X-ClientProxiedBy: BYAPR21CA0004.namprd21.prod.outlook.com
- (2603:10b6:a03:114::14) To DS7PR12MB5744.namprd12.prod.outlook.com
- (2603:10b6:8:73::18)
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=schaecsn@gmx.net header.b="U2T/S5JR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1717688825; x=1718293625; i=schaecsn@gmx.net;
+	bh=QcDw2jc2BfZ+k/TbM/vd1C8TAW70hXP/jfMovjQ+yG0=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=U2T/S5JR+0SiGAsJWWnecKg7FYYQ8f+8yIcT03A/poLh9al5q7EpfB+4HR2K8i3S
+	 oZMNiiuDB6as1VrNnS+hIk3Qs1UViKD/S8mKt4z0eZluVeC9GdPtREV89IwCeiZbR
+	 AGiDr7D8Sl5/GKvfFi+at37HjxRt3EDU92O7nWU+N2BhRoNy4xaNn9J4+W8VBOVWy
+	 /8887KtAdsSgUJqAofYtfUJgdAfFlZNKrQOkFBVznw/YceAv32V2IX9uhywR3tMfL
+	 RjQV1QOQetaeI7EkPqOlDrONjMyv3h6AzrEkxsO5SfDUMHhFbbUlH5vF9gOpMA2Ls
+	 +Ya496qxHiHzFt3q6g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.209] ([173.228.106.93]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M5wLT-1sM60x1tYB-00AKLE; Thu, 06
+ Jun 2024 17:47:04 +0200
+Message-ID: <70d92f17-d9aa-48c0-a132-506faf6f94dd@gmx.net>
+Date: Thu, 6 Jun 2024 08:46:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB5744:EE_|MW4PR12MB7261:EE_
-X-MS-Office365-Filtering-Correlation-Id: 537fb452-baa4-473e-ef91-08dc863fef05
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|7416005|366007|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hNMIbkHv4LFySB5+dNWldDQW9+A/U4GzLPV/5uILd7cS7xtsQQfdNJcJoXqg?=
- =?us-ascii?Q?A/fZymP1yGktki4B1lH3G0zetC9V95s+NjiJPOg0jDvgvLnVEyjMWap0+fKu?=
- =?us-ascii?Q?Uua7kF2li5Wz9GpwOTkz/6PBh/6MufOBCMNgpHAgWA3oaZNysxjxS+a5uyr/?=
- =?us-ascii?Q?H1/+SaTFAC4Lq4K40o3YptfG9PtzheQNPg0ki0c+Brw9kMvab4VgrNlOB3O2?=
- =?us-ascii?Q?DnvSkMn6ry7skx9Ne4mA09XH1QVj6QLpG0HZ+n2OrDjfGKsDUZjDUf+N0JL2?=
- =?us-ascii?Q?Ojci6xVmAYLUC8BdT1X9woO0dYj6IYmCLCtrBq0g065/tZAqO0OYmM5DnYVC?=
- =?us-ascii?Q?XxSmgTf0k0OQp4sZXLU8p67mbSMEzNY96d6lhSgu4xr+cmvRmNjeg28xipeL?=
- =?us-ascii?Q?1n70DrK6zv6lZT6cO+q9zai2lFLICwveK5hksWTwq4Ot3Ek7HYXQquKUO0RX?=
- =?us-ascii?Q?I9B0dpNsffUMV/+dknBLmjaBbv3FO6Bddonotq3vmvmIScC1iOOgxqELSf07?=
- =?us-ascii?Q?LK1TBm9+4Iq7ZvZWwBU+K/QGvki+e1ntEhvZwKYoFAGVKrzk6FtDJ2kI6Cst?=
- =?us-ascii?Q?1uZCyOolQSED8KO0HjDItMEolgivF+GVtkZNWp/9S4B5YlCrmgwNt2NXKIcd?=
- =?us-ascii?Q?n5HvWh3GzzUlxzqYZdivTKmrvjqrX1HRKwVnNrIX6rvSFSEbOR2ajYix+Z4j?=
- =?us-ascii?Q?0cf5Znt6bWKrcfPa1cOM0M6U3MjKyiM1Dx86GqDvCwgmZg79EZHuXQEjsT3A?=
- =?us-ascii?Q?FFAH3lq0HUATwV8TvTmAQg2rzlPIlnq5S3/Zb/rnoVlLwBy2K7msCxAqbDox?=
- =?us-ascii?Q?RkmPMVqIBz9nZZKsY+LuwqEnaHbccp41Iohm2yvBGzF73EJpC7NqJLXqIi/6?=
- =?us-ascii?Q?j31RaW1iUTsulwVGVqVbHifMdpcXf2qmVL5YCrq961AIZrUIg2LCqkv3Kq4T?=
- =?us-ascii?Q?SIhn6MnXST0oW8S5DFwzY8k9MT8+DOZ/61MqdpUUmO675wl/NTRGv+08O1ZW?=
- =?us-ascii?Q?f+kH7hLu/QWnLQdTYf6IdsQO+YpmCycozTq0etN6Z2IeFR0ZGwu9ddiRLzl7?=
- =?us-ascii?Q?AAD3t7OYUIeGCnN9+Hjo6ifYKS/l29/481Z6VTjzcZN3n39z63fb4AVxqfxK?=
- =?us-ascii?Q?b0cjilFY6TFqhF6VRQeqc42swJBr8zJ1vjMlzLjBepggVcqZmmFmcBPL2Slu?=
- =?us-ascii?Q?OFWxAXikjdGo9H1XuQMx1DSHE5t/qFV2MwPnNJRfMjG40sy4DEUw8FtLG3AM?=
- =?us-ascii?Q?Cw+t/x77ZILvxDFlIByGCc+NgfIUUjQdVzsg48FNLnn71Q7KDm5wU0FkKwqr?=
- =?us-ascii?Q?uOhJ53A8e+nkVuD0sVE9W3Fr?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5744.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(366007)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Kx4Auz9Hr1D3n/aF5dfdaT2tHzyZ5CItqGPnR/24xvstCv+1D2ecT0CkMA/r?=
- =?us-ascii?Q?bXYXcV2TwvQJv64MAfe0wAvJe9g2NZ5a6eD3bI/3Rs4ZVjxq/3iKKsEcM3fT?=
- =?us-ascii?Q?Ogonq5EzNdDvhIv+mrBLVR415ioJYvYRR7yyXZZw32jNkqw2ffiGThimEtcQ?=
- =?us-ascii?Q?HH0/ft2C9sB+2sGTntjSi2yLrrJ21a3G0x8VO1qz8UYBdcHAX9mHNFtdv5a4?=
- =?us-ascii?Q?NGl+VHQnFdOtAT2l9VfW0OpVXvBRIT1N0dBkSYXfkPtsk5cDZj5dAs37Xofk?=
- =?us-ascii?Q?RC1ZZ831mhJJpYmhXx7wmGltVFceYvKUUAthFkq4wumk/DdW94cmjnthB7rh?=
- =?us-ascii?Q?RwPpcJdUIBC7yC7HaXQNjb3L31RC+3wlx7BXDC3KpSSC4SJMyRdK9QFDjyBE?=
- =?us-ascii?Q?IoyLjeKIrcci1idm5Nw79EGu60xH81jixhCs4bC59vt7ADbfpbn/WYcCQZmm?=
- =?us-ascii?Q?DzLvmi4Bb0YHbvsvaddWJqJMeS5/B2Poz9WrF6+eJgTB+Cv5DHjybzszmUXs?=
- =?us-ascii?Q?FWrR8iHmEXvYasbxsoGsrZVE9yccTWFI94eBC0PYOMjIxwaahGnLfPSZtwLy?=
- =?us-ascii?Q?h4Vn3VA87Ych6Kqu3rLqK+OvoQc3Yuyl2EvILB+kIlIs4hxTzfmmoNm9kvxB?=
- =?us-ascii?Q?8JG+w4St4H2EBVMP1Q4DkxlST3K3bcsIMTCMD1lUtnvNzliKwzhu+8M9rAZd?=
- =?us-ascii?Q?1F1IDvd1IRyT+VmSBJNyzKAcc97XcuFmgfkLkwZOXrPEC1Fd0EovqPASKKJT?=
- =?us-ascii?Q?2zTYJlQQzqRX42+u1JV4v0s8MQZyobX1aamSswmfuPnenp3ywW0LvPSzFgBV?=
- =?us-ascii?Q?yZyApWVXFie4nouTJfiT7bd8BN4hjD9//V5UaLDj/D04iaJUmEELb4yPoB6W?=
- =?us-ascii?Q?VbQMvNQ0lxUWXhhU56oDKW9rcyZMG9ggR/9rrI1LdKcDccSmiSMqzOBF0NZO?=
- =?us-ascii?Q?VychM1Xp/TZ/nRxz1C8d8DFbSeDeo83urTJWM+erbcxByj8F6WMc+LCIbHkp?=
- =?us-ascii?Q?LC+ktQE0QaeSot4sOL6cUYPIv1NGkxZignozPf4KLpC64VqY/qR0GaN+NbGV?=
- =?us-ascii?Q?UKgWij5tNbI1qKEbPKLjV8BTbCdEp3phD3lvuJbmVSkprUvWo6VBMzieWt03?=
- =?us-ascii?Q?f77DDlgz5ljaDk6r2hiQbAIU3h7LybUpuiFbBcMfH0KmI71MFCXC7NhmHBrB?=
- =?us-ascii?Q?qQk8DqmvIiS38FiHIY0/9OOotjsvC09MhFkvqwCI7RwtiLJ8iLDwRkp6oXp7?=
- =?us-ascii?Q?6P4ZB3IzI0hcZRdgtBPdmYnBr61PE67qYJVonpyyuzicmf3uwiyP4hHHguc9?=
- =?us-ascii?Q?psuspZFAPkpdy/MJZHF+oF7mMZjgccqA0Tuk83yOVCNiWGv8OP4VZqr7x7SG?=
- =?us-ascii?Q?xhv+/22uqYX1+NzTzvjbRfXjvcHMn+qdiKDsiruXBGajznKpO+eY9cwn0nZu?=
- =?us-ascii?Q?k+eP3/CpsXri60RaSCx5GX+1ZG/eTWplsrlBCaEvxE3h6hra0S8OHek7FTMM?=
- =?us-ascii?Q?OmJaDrL7qDKxruYSuhKolnhY2RBCXCxzTaT6gSAFfhnv73pm+n8aMh++adBa?=
- =?us-ascii?Q?rx2xxu+tluNKIwBTyu4=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 537fb452-baa4-473e-ef91-08dc863fef05
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5744.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 15:47:13.2097
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fDn0kDBfLEz1bAhLWjEvgk55gFdWG22w2WCILWDndq1JWtX7xvRWQ5do5IRkvRix
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7261
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] igb: Fix igb_down hung on surprise removal
+To: Ying Hsu <yinghsu@chromium.org>
+Cc: netdev@vger.kernel.org, grundler@chromium.org,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Paolo Abeni <pabeni@redhat.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
+ intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
+References: <20230518072657.1.If9539da710217ed92e764cc0ba0f3d2d246a1aee@changeid>
+ <5184214b-22ed-41cf-a1b0-6db2d4ff324c@gmx.net>
+ <CAAa9mD1HGJDKzoLoqZzyrR5wsk_6voWs+VmoZoo9ZontyvjUww@mail.gmail.com>
+Content-Language: en-US
+From: Stefan Schaeckeler <schaecsn@gmx.net>
+In-Reply-To: <CAAa9mD1HGJDKzoLoqZzyrR5wsk_6voWs+VmoZoo9ZontyvjUww@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:RmkEobG8qViO5ZiTlBvaeaBpYAXSsAocvTIYWQATG91O5FsnEPF
+ naNXMtLGd0+K0AIT0P4dEDFW1lysZS7X3IZ/cSfR24LbftzMuQlFsNIgy1Hety/+P2WyutL
+ o5o98aBKQ3lwBnyrFnDVDxVoLlT0QMr1qq7+wbY/C5ffqYlxOwQiBa+ptFFFDFG0vPPrqPW
+ XdgK+alTkrPl3ZKcwo3Mg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/+v8FRrhYKg=;AjlZ+spZRlHkTBGo1MORJrN9CJR
+ yR8tJV/Yv8WZRm1KTu82pixM/xa9d0iev8SB8fMGQSeQA3mxwd6mABcFO0MVTTCAsrOcQAA0T
+ h0aK9wT2Q/bAP6WPwW3Jcojsn5I0jM75tpwe8sBXWWt6IzE0FtX949Cru4B9ArgaHj1+klGBm
+ SiTzHqevrgu5QJal6B54+YAfORngMMy/Ql4aXazSQyWHW3ChHqbRD6QyQnO5rCUrLCpDFAzxr
+ rTg3i1+BAyLJ32o4CPqxJbs085GPHIn6RclmwjeZofCtuJlsuyAG6QBhfPfy0QH1QXC8eQjhQ
+ aj9+r9aZE2rYGrjNcu5S41vOK67o9VrHPe6A5EJFEIzyggCbHw0krcg/lCQ8x2MH2B0Na5kaA
+ o3tM/P21Qs3kMqQShg1zkeG9p86jeuVSsh9+kbzM4DPrrxnlS+XUIkeZ6Ys7QiQgQ9nH9Zjdm
+ SATQHcbZA5fMSMBo5CcmgW4hlmmQV6qTgk+JGcX+4+DQIHtK9iUtumi+IFeK2cDEpPjRg9a6U
+ ptSfd6gHc3hUmCUjsINeAC/iaQVf87h2HtUrPu0wt28JemX9rdeVuaLxAwXJqyZ2paLy2XlCO
+ zb6X/MaIPKz3b3rRAyNpo4GoYU3Fk94QbZDAMhRmAFNxQxX8QMQ2o+b/BBIMULr0UKSep3Jxw
+ v9kBD43HDsG8Q2Pk2J1KRLKceQfHsKn2JvLW3b5D7cg6tfRitrDzUMi8G/sUYqRUHfqFNHub9
+ z/8viftYEgcEwRCn/6rJvXcQRXI+AsoHWnxxADI/LHxz8gzBAgeRR1gId2+8zL+u0T3nO+iAC
+ 2+sjgUE3ePunsWCWDGJLAmrk/ySRcsRMdwOhR7OWJ0xtU=
 
---=_MailMate_1A98BCE4-F926-4E16-97A0-2C5DFDD51BEB_=
-Content-Type: text/plain
+Hello Ying,
 
-On 6 Jun 2024, at 8:44, Pankaj Raghav (Samsung) wrote:
-
-> From: Pankaj Raghav <p.raghav@samsung.com>
+On 6/6/24 01:03, Ying Hsu wrote:
+> On the CalDigit Thunderbolt Station 3 Plus, we've encountered an issue
+> when the USB downstream display connection state changes. The
+> problematic sequence observed is:
+> ```
+> igb_io_error_detected
+> igb_down
+> igb_io_error_detected
+> igb_down
+> ```
 >
-> create_pagecache_thp_and_fd() in split_huge_page_test.c used the
-> variable dummy to perform mmap read.
->
-> However, this test was skipped even on XFS which has large folio
-> support. The issue was compiler (gcc 13.2.0) was optimizing out the
-> dummy variable, therefore, not creating huge page in the page cache.
->
-> Make it as a global variable to force the compiler not to optimize out
-> the loop where we read from the mmaped addr.
->
-> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-> ---
-> Changes since v1:
-> - Make the dummy variable as a global variable(willy).
->
->  tools/testing/selftests/mm/split_huge_page_test.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
+> The second igb_down call blocks at napi_synchronize.
 
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+=46rom the backtrace in your commit message, I gain the impression you get=
+ a hotplug event for removing the ethernet device. From your commit messag=
+e I gain the impression you get an AER as well which is handled in igb_io_=
+error_detected()/igb_io_resume(). The problem lies IMHO in the interaction=
+ of both.
 
-Thanks.
 
-Best Regards,
-Yan, Zi
+> Simply avoiding redundant igb_down calls makes the Ethernet of the thund=
+erbolt dock unusable.
 
---=_MailMate_1A98BCE4-F926-4E16-97A0-2C5DFDD51BEB_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename=signature.asc
-Content-Type: application/pgp-signature; name=signature.asc
+I'm not too sure if the current code is even perfect in your use-case. Wha=
+t happens when you get an AER on the ethernet device (without plugging it =
+out at the same time)?
 
------BEGIN PGP SIGNATURE-----
+Can you try to AER inject a completion timeout into your ethernet device, =
+similar how I showed it in my previous message? Just replace the bdf 09:00=
+.0 with the bdf of your ethernet device. I expect a kernel crash like we s=
+ee that on our embedded system.
 
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAmZh2fwPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqK3X8P/0cVGw5ksplTjZLQc/UzsKIiGw8yRt0JVX7b
-svcjBVXi8Ws1zyshjnwsyK9roLaoPheR7BE5DRcm3yRbsZrhgSAb3JkBK4Bf03Nm
-cdUr7TkE/TRe4cLontpGhPS57eWpiwK3pFk3EAawa9AhVCSwO+DR0btauRtEeRcG
-rXcpvAfeUixedDyHB+wPATtWI+CvRiuE0HYY2hq7leiBmYiDCt/WmQs/Kh3Y2zqm
-X84rK5mouAkkHrcJN6SmP3a7fWfzDH30rdxWnJnUe4wAz24gP9q+MMMZstY9PS89
-cWoZx+E/HIQl4j/Mt/92Ww2ulf4pFQUALcQt1QiHvJGVP5xrgN4o3F1sYmu8N0AZ
-a+gusMlTa++1d8kmt/UgOcvbho+qluSS5LuC3ImHPmDFS8C0JAYD0aA+JEo3V7RK
-vOb5BT936jv3abTWdKv+CbNQqdGypzEBQL1eoly6XLA9J+zUPRhEmqqz6qXSTdVD
-zOFRaeiYqJt/1wEh65AIcntDdfLfHByTDxSPON0C5z2JdNuZxhOq6fhEhDOQEObO
-W8Gaksk5o/a8mXc7Phr/o3Wtsu0pRr+R0R9T6wG+nA3X5Ku3jKcUkbKF9mJG5bpg
-9GhQbD6Gnh0qJWKROCq6ViBXvdxMKVE2L55jzBaA8bcBhX/pAfQqUKfo6foDIRuO
-T/466k2D
-=+DVO
------END PGP SIGNATURE-----
 
---=_MailMate_1A98BCE4-F926-4E16-97A0-2C5DFDD51BEB_=--
+> If Intel can identify when an Ethernet device is within a Thunderbolt
+> tunnel, the patch can be more specific.
+
+ Stefan
