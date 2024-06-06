@@ -1,62 +1,62 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DDBC13DB8D
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 08:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AA613E04C
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 08:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717663705; cv=none; b=c//LD28bVVch1fbfJ96eI3RBioMW27fqT9XRVFyLwKP6u3R/nGoV3C94q9oqPfSTuJWb4Od2FpcWinnJqxL7vwvo9s8ln+63fY5+ELZT+oDwq5+KlgJcLLm5YsIvTSWO0c2OxFoJJC+6OeKlcBJM2o2D7BGPWlHPoOZeQD73YAo=
+	t=1717663706; cv=none; b=SYNaq9BMU2g0pGHFFqOIPxHr3ymvBOMf7xt9so5ont+ATvXFbSRjA4ZS1tGbT3pKdmMOzRb9jdGoF9PUheTp45bYwKbIXqbfQEvp8ISlYVyeFoK0ZwkGYWWU8T3bhnJj0xVFbpW80ip/eton+9gSDRadDyvqLN262S+A6neCT/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717663705; c=relaxed/simple;
-	bh=QM5KvwfkUBuCDEX5LFM5kIWXkN8IDPDmIiueKWnAI5s=;
+	s=arc-20240116; t=1717663706; c=relaxed/simple;
+	bh=JAb6Muut5KHcHBna9lqyRERkBmnN5hdIffo6dmjjMoM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AATLJ9oX0njLGjTlN3LZyJmgU8JgRSdS5kyvHdrQAvG+b0k/Mk53rFhiM4woT5qA+2lMokR04Z2ge6C+bv2vzspD7n2bBnSvG+ay6+pkNZp1lquhjUr32vBI+i4AIYcNWSrUS8JSEmjOK/qkKuKxA6fV7BvSOmOKULZJflLi96g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HMI+taXL; arc=none smtp.client-ip=209.85.128.45
+	 In-Reply-To:To:Cc; b=XwNGgD+WltDWEK9eUDNmCvSC4Bd9AQrVf7PhYjDMrLiyoUj9C8NLDHHej4KPjhKmmvPYh068n8CKTKCS2ysclGKBWraw+uEjaKTBZM2Q+luNVq8frY+/zMHmbnFaLUnEe+7eFgywkpA7QGH1DDt9IayEEq7Sb1QJsEM4kcg7FlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uGEgR/Ph; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HMI+taXL"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42160f2dc32so120445e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 01:48:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uGEgR/Ph"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4214fe0067fso8117825e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 01:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717663702; x=1718268502; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1717663703; x=1718268503; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uLN9fK/Q1IJ4qkUSkkhIFN2WinWIfdWij0oNshXV/Tg=;
-        b=HMI+taXLJ6EPgMrb47RTDf/u0moHsUrFZrVHYboKK8jq7zLEGdTB/UZhqpamsSq97d
-         RLH5/Z/Y3i6HTPtwturux1KrGXB/UySqktvVw09Xo1c+2HvGNOkNjM8xP3LypRfoZJdc
-         LccwI8GfB0nBsVzc3Ye+l0iy9dADTy11Jg54YOB+b2IA1QnNld2aNblZ6NrROmveZoJV
-         mPmQATF6CO8B3niaMKa45qcyefX6eHcwDpY9yQexK7PcobROJ11tlWTS7J5Ps/E6bIsf
-         x/DrGlAnVH0zMEI3EhLmJWyBRb8bcguN0AlSThHj0gKHiF4kWnQ+0/WDfJQ+/0UL0He9
-         Ua+Q==
+        bh=whthHnnAV0riUU9YI5GKHGEVmsmBElqPPF6sWdWzQJE=;
+        b=uGEgR/PhQn9z6cTE7bcqA3H2nZasZZUW00+Bx9FSdBnVfeLasIXziScDI2mgJSiZ6w
+         LMNJ/J7n3wBHDtxSibyU/H0PcxK8VNVQi8l++RqvlZHQLZ8fvuEgSW1nFBQ3+xhJ4KrE
+         U5vDOD8NdSr2QdAYcc9h97IIKG0dP47elQjVWgfDCBjWujzf7aMA1HpJvu8dvBa2YvIY
+         tx0nFn0QGXcwUjE0uPsDxwHnFRxKJEBjcUDd3saf9ra1aHWZomnQDltO+m3qfDzGTkkT
+         8VEQnoFYeYB2gY0PiYmzX93pPL82M/1sqHaTpg+Wiya1/3wdQPLoiDPm5MW7XvmhNcLr
+         6GFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717663702; x=1718268502;
+        d=1e100.net; s=20230601; t=1717663703; x=1718268503;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uLN9fK/Q1IJ4qkUSkkhIFN2WinWIfdWij0oNshXV/Tg=;
-        b=loDsBOlVR9VNx5J4evJxMtqzvBB/KC7WUeQiNE9DE4RVsAhdvI1XG4grqz+T2VZqEP
-         m4QFF6qKMhnkjsQGfXotgtDptoHOgO+9Q1XAhMsuGDfjbWQLq7rK0ourfQjXdIEhk2uZ
-         hfoueJu1zmDyRcyaLXtvqLYDBptAkWM2gsdnt7iCvsIZNQYuqnPIqPbG36zpwokupJjp
-         wgBDuVdmuVxR5gw6B7zOcmfIO8wJXBKJLeg8iAcV/UdN8fJXgBuB9sWTaYoakIaO4E+c
-         UzzuIUPX30+b2RuXwXcPB11P3QydIanoroNQkmBdq/6yzZ3zICTfLNcGqRfm4DSzy5yJ
-         6Ing==
-X-Forwarded-Encrypted: i=1; AJvYcCUrYhKPsHRlb7W3HSS31iUsvOnm2xbb2r8BLoBGwRWHzHkSCJnbD35zzNLmDiKRutmUcDbftb2oU67n8a/QHrkOeAiCl38aE03PiAqu
-X-Gm-Message-State: AOJu0YxD6TRS3Mz0PUIP7E8DLfd2zmatb8tkCubO1c5PcXsOjxm6ZHSV
-	NGdW6wdaN2+BVX0RpYSinmsmzy3W3YVHsnMh93VC7/UD7attg9MFGawOdADfVnGSbNU+e8/xSLX
-	Z
-X-Google-Smtp-Source: AGHT+IGSktBg3igi8GWb9dMcYgXr4zEw/a/r8SvoK8C+S3AVdKHbOjSJxzo4An/FUE+mEFAirB1IAw==
-X-Received: by 2002:a05:600c:1f93:b0:421:b79:93fd with SMTP id 5b1f17b1804b1-421562e7053mr41861205e9.21.1717663701851;
-        Thu, 06 Jun 2024 01:48:21 -0700 (PDT)
+        bh=whthHnnAV0riUU9YI5GKHGEVmsmBElqPPF6sWdWzQJE=;
+        b=b9XRh8ButkulgjUlWz0pzWIdcO3SdlnDdqKB2+f4g9YUnMSuxgYrhPA6I/NQHBMdRx
+         ZZwKuRF0Qcj3uBXS2YohOdZ3ZnJVlL7odzv2vHnU2x7vG9uOtxAHxLlWdfUaj/bDs/FO
+         tc2Ro80u3cadHmqBkqHWrQAhpQsDIwinsRBHClwvymGny9mee411LKsqOzfTyu/YLhQS
+         E9Rgbm2GDdod+ekySCeeni5WgBvweEXKJL8u9Gg277w99N5JfOziR5Z5pf8dAyAncNQk
+         CTZykaJ47yVUJNqwkSNv+AKzEfRS/hCxi/1V7y09d1ua044ONEJVYB8uy3L1oVRo68EX
+         LA+w==
+X-Forwarded-Encrypted: i=1; AJvYcCV+4BNlGhG0zN3cbljpN1HxmqARP6VKR/4YRxbHQP0c/va3Z6bwgolFHIqGc/NM7BRg2vbpOdthEKU1600jEzRU7frRdp2caqe3UQDU
+X-Gm-Message-State: AOJu0YwrTGBUxbFXRAHd4kihq/+7uXfjnnzyAi9FG1O5LhJD79uIWpD3
+	Is7QYuAVPoPBr8QNkN5jSo6BbF/YEY42r5oTKbYfIw1+cbL7YvwSaqbQwxBbVaxhJPHBJqA2pUG
+	o
+X-Google-Smtp-Source: AGHT+IHu9gterr3sxhxkdqJc5Qs+YCT5HRh4tbwy1mr9JObTnqFltnf5YOEZ1L7+4uLq7kG+fY0Zsw==
+X-Received: by 2002:a05:600c:3108:b0:419:d5cd:5ba with SMTP id 5b1f17b1804b1-421562c7de5mr43085835e9.7.1717663703498;
+        Thu, 06 Jun 2024 01:48:23 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c2c690dsm14227445e9.34.2024.06.06.01.48.21
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c2c690dsm14227445e9.34.2024.06.06.01.48.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 01:48:21 -0700 (PDT)
+        Thu, 06 Jun 2024 01:48:23 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Thu, 06 Jun 2024 10:48:14 +0200
-Subject: [PATCH 07/12] arm64: dts: amlogic: g12a-u200: add missing
- AVDD-supply to acodec
+Date: Thu, 06 Jun 2024 10:48:16 +0200
+Subject: [PATCH 09/12] arm64: dts: amlogic: c3: use correct compatible for
+ gpio_intc node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240606-topic-amlogic-upstream-bindings-fixes-dts-v1-7-62e812729541@linaro.org>
+Message-Id: <20240606-topic-amlogic-upstream-bindings-fixes-dts-v1-9-62e812729541@linaro.org>
 References: <20240606-topic-amlogic-upstream-bindings-fixes-dts-v1-0-62e812729541@linaro.org>
 In-Reply-To: <20240606-topic-amlogic-upstream-bindings-fixes-dts-v1-0-62e812729541@linaro.org>
 To: Kevin Hilman <khilman@baylibre.com>, 
@@ -75,43 +75,48 @@ Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
  Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=632;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1360;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=QM5KvwfkUBuCDEX5LFM5kIWXkN8IDPDmIiueKWnAI5s=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmYXfMvEjLwITtzgzOM1XlPBOixFpTSMM8sfqbyqdF
- jR8DHTSJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZmF3zAAKCRB33NvayMhJ0Z/0D/
- 0bRThBlCqq1W0Khr0Zfszttq737tMTpibC2xEl0q2XEFXFkrAaBCa8Zwl8TWdE0Xqb/xuP1IXUFs/3
- pXnRqbQU8sdjX2t/kSCFK+mTC8wh0hO0aeJS1ZICcTyJB84VFBN6Rr0rK3bfXHJEZ041r4m25gRmXn
- ZnYCO165uSStzXf2YCZr+aKjWI8M0nA03xQGKo+98t5IlK3+05GeTvWm0+2ec6eXWcNYEgUwmRsu44
- 1OawnEzUKdYmsuRqFVNDR6TMIH4NpGirQmXU2Tci8wUEB7062XLYEyz63r77f46ED6i5w94S90ef4d
- UhTpSZYQX0Py0VsMu8kg1h+uDI2+jLQz10L3a8C0NE+v11Wy0kq6lSOprWFZboK0g0FP0YffEW3IZ1
- ruDJQm6B0bjYwavT+yDWItMCLy61OJWbCTgS5lH/EESO1ZYWAJrPvmOO2onkNyHPmhuYa0p988Omi3
- bCJqx7hcNcVsvGaRbs2obDkfnHhN1Yodh3KnjcsrH1p3PEvMfcW/MUW9yThsoyxldfdfrk0RB9hUgB
- 6kTY4auJ4Wr9VC5S5rr1jj9u6glDRJ5tbv4I9jW/BbAQyGRr+i26KBYlo6zoVazkR7GBHWCfT9BoqP
- a6LLIe9yfEqabV1Mx/R+zMwKyP+LA8CBKXVfipCS9x8IjYhE23UKrKax6WWQ==
+ bh=JAb6Muut5KHcHBna9lqyRERkBmnN5hdIffo6dmjjMoM=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmYXfNVIBKe2IvSZ6gQuVXIN5vKTJ3pwx4qJvciHA0
+ 3AAwnYCJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZmF3zQAKCRB33NvayMhJ0QqjD/
+ 98Nzxe2ojQV6/tCKNgn41bVNKl6EeN2XuOF8cgyikF4ikKDLr3ZXy2up1mw7VOhMf01UbwSjgr1C4P
+ piW84JnlGWrLfXCpayYik2PNUIdiukP0GML4QSFI3ocSm4R3X8Ckym73SJ0OiPSmrZ+RLk1VjMle3Y
+ S1+Woo5F8rZyqTm7dsUU6zrc9QALRO+Kq8YxJGDsjtgtCvIg77bfVxeEc6NuIhPLJLM0aofdPX1xsL
+ rvnbM/3srKQJowTvAHnLJ/zwqH7bkjUWMQtBs4VeOW5RxRSZ26GATIOnFMzxWYCPgZflqGm4vYjQrG
+ 5b+FwpjdiLceVA9K3bOVzexw5ZQShZlq+CNkurR71kKkKtUHtqAui4ZhlhhJAFHLR6deX9pkEa6rgl
+ Pz9iQkbeEcFZVv8koL2ayhN4h8TNvZ3J9Ea5U7vE/nNHE/1QugpUhPg6uB8KMU6u4gP08ScHoWapCP
+ SFHCwJJ686Syjqs1v4teMvOlxosixnc3UKc5ehxN8kE7K15z/ulxkMkP6SoRaG2n4nc7WVOvBQDDZx
+ 5Dm32dCvBr4cyUu/4pUu+lyCOw/gyC5YYEwie3Dmzj3Aju7kmo0owozHrCJAYMwZIV8lOs5l8f9O76
+ hGj3E9qnpgegW8OFm+BBo5IjuxETEBf93ahUQVJT1DATJWw8kjiZyRnkkT7Q==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
 This fixes the following:
-audio-controller@32000: 'AVDD-supply' is a required property
+interrupt-controller@4080: compatible: 'oneOf' conditional failed, one must be fixed:
+	['amlogic,meson-gpio-intc', 'amlogic,c3-gpio-intc'] is too long
+	'amlogic,meson-gpio-intc' is not one of ['amlogic,meson8-gpio-intc', 'amlogic,meson8b-gpio-intc', 'amlogic,meson-gxbb-gpio-intc', 'amlogic,meson-gxl-gpio-intc', 'amlogic,meson-axg-gpio-intc', 'amlogic,meson-g12a-gpio-intc', 'amlogic,meson-sm1-gpio-intc', 'amlogic,meson-a1-gpio-intc', 'amlogic,meson-s4-gpio-intc', 'amlogic,c3-gpio-intc', 'amlogic,t7-gpio-intc']
+	'amlogic,meson-gpio-intc' was expected
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-index e0f15d824249..7560e471c56e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-@@ -365,6 +365,7 @@ codec {
- };
+diff --git a/arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi
+index 32a754fe7990..f8fb060c49ae 100644
+--- a/arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi
++++ b/arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi
+@@ -111,8 +111,7 @@ gpio: bank@4000 {
+ 			};
  
- &acodec {
-+	AVDD-supply = <&vddao_1v8>;
- 	status = "okay";
- };
- 
+ 			gpio_intc: interrupt-controller@4080 {
+-				compatible = "amlogic,meson-gpio-intc",
+-					     "amlogic,c3-gpio-intc";
++				compatible = "amlogic,c3-gpio-intc", "amlogic,meson-gpio-intc";
+ 				reg = <0x0 0x4080 0x0 0x0020>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
 
 -- 
 2.34.1
