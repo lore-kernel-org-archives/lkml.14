@@ -1,106 +1,82 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADA1198A02
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7FB1607B2;
+	Thu,  6 Jun 2024 13:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679866; cv=none; b=gcaNfhDNrMbQ7qOAkVsVqfQmoe2qkrX9kARmneYW16hcA1Azj4Kf39p/HhWNN28ftORFzcStVCBnVAH6T6lgxpf9+1YJs/PV51YwKy+Z9e0qxAazhmekuVz7XHLkVSSVuzV1dVEQjyH1YWyUpoI3anoUPEhfW1BLMNX0unmaM14=
+	t=1717680029; cv=none; b=EMcmSIPoFhHKp7NygC9axyP+kzW04RdNdAYkzU+dWxDUfM43BOCrh2xA2Q8Y7Kf/WW86SbmW/lSUrsyGQZcZPhf88YK/hI20Wn4TJRe4cCrGGjqrHYDN7QtHafblkdI1ZXQ64T19UeCwI25HiFp29JdxmmsHVxkGWpPJg+aCTMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679866; c=relaxed/simple;
-	bh=Avo2Fleh4ujjt70o15EeficxKnpelBo2TOFCLUdZKFI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=teSNtIYDdgTz1K8dGWOFKTRsTwdFdgYg9MNP3nKRV1Uy2vHX1fMImbsOhzD8GZqbSaZF+w+VPStXER8Ay8oZXRjAcGlYfGDneRMEqTz4agDWQx1bgFquhN2+TLz0PIMOa031OG/or5bKs1a0SpXQxINjSfhg+ctAiaAabEVjhc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dr0D+icq; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1717680029; c=relaxed/simple;
+	bh=5iz8CAc0Z176SxxNcjKNqcapz4skKcl/itNcGZhmJyw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=mK/5HI3uWoUI7gAJXaPAWsWNl7Oft3ZqWuperqYoY+sjVqTefRpF+S8SradXKYL5fkk2KwIn6pfCjE0N/JH+gbRtRXHK//M/0H1SsSqZd/WCdbq7NoiIuR6OgOFJL02KxOtODRMjda1zqE5zA4EG4qas9BKrE2+ewUW/j0GaLBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZTbQkU0J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dr0D+icq"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6ae60725ea1so5388936d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1717679863; x=1718284663; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2o9uFpZwETiKeZWYLVPp/h/C01HBTzSktsioUGg06Ew=;
-        b=dr0D+icqsuyL2nuQ7p7S3Vud/E3YjHXXW6VdaFnIvukhdpS6XoVSxygvcFuE3lurd4
-         ElRlCgM7ovhhl4r98jnxmqNfFGAemoaFK95QcAr78CbdyY7YSZRiDvoAgDLT1m3Hjd6n
-         yrt+P0n5v7LJW1e/NjwPDP670UOhdTjCZpvfM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717679863; x=1718284663;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2o9uFpZwETiKeZWYLVPp/h/C01HBTzSktsioUGg06Ew=;
-        b=Yk8Dag6ukm1yCvrzH7JGtiKpztKH8ZWT8ukQe3AmghbBa0C3y/A4SCFKVHbE87RhyC
-         u6oCSudrMBfjBeUek4eJ4or5SvS7dMC+rDX/Qb8lIYOqCSw28ps5lXoeXwWFrklQtDsN
-         A8ERNZALPQGWALQP2Or69TrIHjhufZJwHplAcfPaW05aU/KXVGhg4MbJwKwddE8QaxT3
-         Dc8UffR6bzX+km1srDcZZfIrO/9GF1J3jdSjjxoGjrCr2Z7eZFpym9EVfA+LSSdVeerC
-         el5rz0OE2K0ncxTtInREaOYdE5WilxsVqMyIxWR7T9ZzKAZwjfFD7tLNr/+kWbAbo4FO
-         1wtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmiAGI5aRoZJTVtTc2fIHj8nQqCwGQja3BsxweBpJPbNl2JfAR7zUz04f7GWEv5qEBxCPe5RbUwIVihS9JnFDXclylBpepBFP5k8mP
-X-Gm-Message-State: AOJu0YyJF5CvkyzklUmDJfztDxkLsdHeFlQQVD3buiSRaAqTS5Q3Wk6t
-	rce1BveykZbQp3GmQZ58YybJBhZg0Avb5Sbt5JKzLbCiVN0ezB/IAYtDAJbOrg==
-X-Google-Smtp-Source: AGHT+IE8jXrmgfRC91PfzOqBRQfeMgy1DzBFB7+DOjFIBnca6lzwJN2RUcERx9LU43E0vr3vRV6ErQ==
-X-Received: by 2002:a05:6214:3f91:b0:6af:cdb3:5db with SMTP id 6a1803df08f44-6b031cecca9mr63488376d6.63.1717679863024;
-        Thu, 06 Jun 2024 06:17:43 -0700 (PDT)
-Received: from denia.c.googlers.com (123.178.145.34.bc.googleusercontent.com. [34.145.178.123])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b04f6607f5sm6118036d6.31.2024.06.06.06.17.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 06:17:42 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 06 Jun 2024 13:16:45 +0000
-Subject: [PATCH v4 11/11] media: venus: Refactor
- hfi_buffer_alloc_mode_supported
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZTbQkU0J"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B163BC32786;
+	Thu,  6 Jun 2024 13:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717680028;
+	bh=5iz8CAc0Z176SxxNcjKNqcapz4skKcl/itNcGZhmJyw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=ZTbQkU0JLdPBo0etm50uh6QTFTugMAATXS4YtUgJotLrvfLRoGN0pkPqn0SQ3TTbg
+	 ye2vaHvHp/ZvAK6rjZ5olAK3z48prPoJr5GpcZquF5xec7JQJasmMK64GucQsv9+Kv
+	 GsNcmz6qdCu6BrK9Ym2ddXS2sRc8tVZh11pMocFaph2CDNjjMatckYGYs3xsJ22Xuk
+	 m5NApJ7zNHp+Uw34uShaDE/DwFiZ3znzy4BnNq1IdrDC1czKFGCx0rOobqMDV4NnpP
+	 3KmI0CA0JzvZXyFmoFwll6NQ2doYKhdKlBHxxGb6ER8doT3PGJ7yNsJMLMYHgzGl0g
+	 XfnpEjZ2JXy/Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 94650D20380;
+	Thu,  6 Jun 2024 13:20:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240606-cocci-flexarray-v4-11-3379ee5eed28@chromium.org>
-References: <20240606-cocci-flexarray-v4-0-3379ee5eed28@chromium.org>
-In-Reply-To: <20240606-cocci-flexarray-v4-0-3379ee5eed28@chromium.org>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
- Vikash Garodia <quic_vgarodia@quicinc.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, linux-media@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/3] mptcp: misc. cleanups
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171768002860.7454.11835229356797799300.git-patchwork-notify@kernel.org>
+Date: Thu, 06 Jun 2024 13:20:28 +0000
+References: <20240605-upstream-net-next-20240604-misc-cleanup-v1-0-ae2e35c3ecc5@kernel.org>
+In-Reply-To: <20240605-upstream-net-next-20240604-misc-cleanup-v1-0-ae2e35c3ecc5@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, tanggeliang@kylinos.cn,
+ dcaratti@redhat.com
 
-Replace the old style single element array at the end of the struct with
-a flex array.
+Hello:
 
-The code does not allocate this structure, so the size change should not
-be a problem.
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-This fixes the following cocci warning:
-drivers/media/platform/qcom/venus/hfi_helper.h:1233:5-9: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
+On Wed, 05 Jun 2024 09:15:39 +0200 you wrote:
+> Here is a small collection of miscellaneous cleanups:
+> 
+> - Patch 1 uses an MPTCP helper, instead of a TCP one, to do the same
+>   thing.
+> 
+> - Patch 2 adds a similar MPTCP helper, instead of using a TCP one
+>   directly.
+> 
+> [...]
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/platform/qcom/venus/hfi_helper.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Here is the summary with links:
+  - [net-next,1/3] mptcp: use mptcp_win_from_space helper
+    https://git.kernel.org/netdev/net-next/c/5f0d0649c83f
+  - [net-next,2/3] mptcp: add mptcp_space_from_win helper
+    https://git.kernel.org/netdev/net-next/c/5cdedad62eab
+  - [net-next,3/3] mptcp: refer to 'MPTCP' socket in comments
+    https://git.kernel.org/netdev/net-next/c/92f74c1e05b0
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index dee439ea4d2e..9545c964a428 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -1230,7 +1230,7 @@ struct hfi_interlace_format_supported {
- struct hfi_buffer_alloc_mode_supported {
- 	u32 buffer_type;
- 	u32 num_entries;
--	u32 data[1];
-+	u32 data[];
- };
- 
- struct hfi_metadata_pass_through {
-
+You are awesome, thank you!
 -- 
-2.45.2.505.gda0bf45e8d-goog
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
