@@ -1,103 +1,116 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EE310A11;
-	Thu,  6 Jun 2024 02:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BC018638;
+	Thu,  6 Jun 2024 02:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717641041; cv=none; b=ZCEkEXvcssSkg9GhvQvyitUdoaiGW1rszpAxorSq8FwzCRAi+sav8aajh4u4+HIhUfRe3uulEd5bBPaFFbJC1e7Vp4V5+J6B/QkzpGBw9kNRnDC8VsekbUg2jmfhv08/cXVQjFMejq/mImoJggYdleFwDT1UWP7sZoJ0KEbzK6M=
+	t=1717641200; cv=none; b=eky+eLyswsK5Kkp5MaXUfmiQrsX8nMqzorq1HvdjZf++zNflft8bVucvd3Sc9QZDruRfQbAtakC/W6oHkq5zVLndosTZt2nzf0CtknT+ku6zaaOnfAKTUkZtQ9+Ou9FfAsXY6+D1mN63/3IcmVv4P/zNOwE7CXjBr5cKdMrCgEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717641041; c=relaxed/simple;
-	bh=LxujDUCoAGn/HL0wc/hUDm7fFlS/MuAj1T0yM6SyW2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mlJ8cUp4kmGoqZE7FSv7KiRXidholaRBriNJRXOrhXAdm4Ov3mR6FtAlUPqXqrmDLsXCPCY+dE0sYhBhWs20jxMSX2lSkB0J0Bk2exiDQGrx6ULqHFBukMWVoYnkrw3qPQoTAaegWoILlf1GadBnuiXpFq3RA9g9qxIwaAH8ceo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=m9ckHSCv; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1717641200; c=relaxed/simple;
+	bh=muKFlTEZQ/AQ40SVi7FdGPUE3Q7TaOqoPMNhx6FRIis=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pjx9NOEP/H78kAvAb6mGgjgClB9/P60kd/iysJ8nk3a8rCpBwAK6eJs7rDxRS3QIZMXNgLRhykERj/41lW3/yzey6kZD91Dff3AtNxacPGuhmyq3FCHCffIQh5Es1WR1FAQmya6lL9oqLTdkwHnNndYUK6bCiCba0spPrgooMMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IvamltEO; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="m9ckHSCv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1717641035;
-	bh=uBzvogFrLUHIEOCidbSDNXXd9YZ5o0WVc5ZoHiJioMI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=m9ckHSCvgyaYM4qAhz45TPpo1WEKhsV8DylmSwFBK0Vt1b+1DS3aokoLfZVth9MRJ
-	 SymznbXV97ZmFvGjLuuxKWLA61A0Rb1UUhidjIXszi9bEzu2EtwWoX1xFhd56TE0a9
-	 ZCnB334P+KBEmSe0X371JpKjOQPvZSG8n093un6dAft4x6XuDA0oCqFI4LpZ8JQ6RG
-	 wHFpEFI0hBJgk/Stq+wHtuJkh3eeeKI6XPVoqD24Z/V0rFAu9XPRQU/h2Qbdh8+U44
-	 yElwBtsXmtR2c9pPioDs4q+ilH6RGIRdtlRhXhvDp676/9H0Y1RJBxGu5qBOjZppVP
-	 YqK/tFtjFsdGw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VvpGM2Y9Cz4wcl;
-	Thu,  6 Jun 2024 12:30:35 +1000 (AEST)
-Date: Thu, 6 Jun 2024 12:30:34 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Wei Yang
- <richard.weiyang@gmail.com>
-Subject: linux-next: manual merge of the memblock tree with the mm tree
-Message-ID: <20240606123034.052151bc@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IvamltEO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717641198; x=1749177198;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=muKFlTEZQ/AQ40SVi7FdGPUE3Q7TaOqoPMNhx6FRIis=;
+  b=IvamltEOgtXMtxdEw4ntO/A1LSgGO+X15yYXIAVjxFR7fX7Pg58M6mpb
+   rbqgrMPa8+sRo1yJ7B2eUx9YPd4mn+z4OU/bIoOce/ALLng7lJKJcXmXk
+   l8GIP/uVx9IKmCDsCf3lyi8sotouyRh7z3KY0D0mKTKqG8eNTlH+pWzbo
+   5BgnzmVvug/sW0EjZ4EjTTjeouS8kgUsuc1PLDTp9V/iiP5pTa4BukFkz
+   L8pgb+LgrKlwrha+YW7H/+epocu6VReyJHDXABVibgg9J2V52lgOmWNlO
+   wAnyc5CK5HBC6kPSn1kvjbuD9mWz9joQ6VpRHdEOJ0YPspgjWih6lLqpU
+   A==;
+X-CSE-ConnectionGUID: nhMFWSdRQx63ePPHmkAb2g==
+X-CSE-MsgGUID: xe+3TQPGQeSAfoQjFuntbw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="14126980"
+X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
+   d="scan'208";a="14126980"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 19:33:17 -0700
+X-CSE-ConnectionGUID: BrP0J7NBQcSH/Fh3z9CL0g==
+X-CSE-MsgGUID: z9U+ODy6T/WnF0YSM+WryQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
+   d="scan'208";a="68621101"
+Received: from unknown (HELO yhuang6-mobl2.sh.intel.com) ([10.238.6.133])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 19:33:14 -0700
+From: Huang Ying <ying.huang@intel.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huang Ying <ying.huang@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bharata B Rao <bharata@amd.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: [PATCH] acpi,hmat: Use ACCESS_COORDINATE_CPU when appropriate
+Date: Thu,  6 Jun 2024 10:28:45 +0800
+Message-Id: <20240606022845.189710-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/cY2i+t1tYMpeDTJzaft4Ge8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/cY2i+t1tYMpeDTJzaft4Ge8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+To improve the readability of the code via replacing the magic number
+"1" with ACCESS_COORDINATE_CPU when appropriate.  No functionality
+change.
 
-Hi all,
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Bharata B Rao <bharata@amd.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+---
+ drivers/acpi/numa/hmat.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Today's linux-next merge of the memblock tree got a conflict in:
+diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+index 2c8ccc91ebe6..febd9e51350b 100644
+--- a/drivers/acpi/numa/hmat.c
++++ b/drivers/acpi/numa/hmat.c
+@@ -408,7 +408,7 @@ static __init void hmat_update_target(unsigned int tgt_pxm, unsigned int init_px
+ 	if (target && target->processor_pxm == init_pxm) {
+ 		hmat_update_target_access(target, type, value,
+ 					  ACCESS_COORDINATE_LOCAL);
+-		/* If the node has a CPU, update access 1 */
++		/* If the node has a CPU, update access ACCESS_COORDINATE_CPU */
+ 		if (node_state(pxm_to_node(init_pxm), N_CPU))
+ 			hmat_update_target_access(target, type, value,
+ 						  ACCESS_COORDINATE_CPU);
+@@ -948,7 +948,7 @@ static int hmat_set_default_dram_perf(void)
+ 		target = find_mem_target(pxm);
+ 		if (!target)
+ 			continue;
+-		attrs = &target->coord[1];
++		attrs = &target->coord[ACCESS_COORDINATE_CPU];
+ 		rc = mt_set_default_dram_perf(nid, attrs, "ACPI HMAT");
+ 		if (rc)
+ 			return rc;
+@@ -975,7 +975,7 @@ static int hmat_calculate_adistance(struct notifier_block *self,
+ 	hmat_update_target_attrs(target, p_nodes, ACCESS_COORDINATE_CPU);
+ 	mutex_unlock(&target_lock);
+ 
+-	perf = &target->coord[1];
++	perf = &target->coord[ACCESS_COORDINATE_CPU];
+ 
+ 	if (mt_perf_to_adistance(perf, adist))
+ 		return NOTIFY_OK;
+-- 
+2.39.2
 
-  mm/mm_init.c
-
-between commits:
-
-  dcd8c5e5603d ("mm/mm_init.c: use deferred_init_mem_pfn_range_in_zone() to=
- decide loop condition")
-  c6586af1f388 ("mm/mm_init.c: not always search next deferred_init_pfn fro=
-m very beginning")
-
-from the mm-unstable branch of the mm tree and commit:
-
-  731b11684819 ("mm/mm_init.c: use deferred_init_mem_pfn_range_in_zone() to=
- decide loop condition")
-
-from the memblock tree.
-
-I fixed it up (I used the former version) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/cY2i+t1tYMpeDTJzaft4Ge8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZhH0oACgkQAVBC80lX
-0GzCYQf/Vz77QCdiaGyyZDdcQsYlPXYDa3E/+UrceRxhiuy6FT7Kq+xqXbd56OBx
-pWK0iqbqQi7S3n3Sigyt7Ok0eEqVwDncHVe70+qX65SNX6wqRD0WUHUnx5d5pwRu
-SQ+0WeuRAR16pBvlMZUHDl7C71riZwPNKCob3Fm/8GU52mR/m+VvMj9m1hgNtkKu
-4dyd4wSx4EPhcWiDz6tRi13Na+CH2tBQ+vWk5aTXjIfXJJkwcbLp7q7nDe8Wdg3P
-9xDijejlublDnPN0VeiaZn2fLcRvRm6zaDZMGstSmZw/TjOqP1ZBwlGyH2pCWkPd
-CZwA+P0byiF8lDdCK/kMqpBWklv1Vw==
-=XZKB
------END PGP SIGNATURE-----
-
---Sig_/cY2i+t1tYMpeDTJzaft4Ge8--
