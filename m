@@ -1,86 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01BBE13AA5E;
-	Thu,  6 Jun 2024 09:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419EE14EC71;
+	Thu,  6 Jun 2024 09:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717664482; cv=none; b=Qxo9GDjJZEpYlPfJ6m6QQNQkaZtllGpO4IASmOxoFrWpnCBeND7Mn7YRspBTirSFYsi6cS+ge2y0O4Kq21EQGf7WBozbPVaB/LrxmDOcAh3fUr//rRCmxxEX/kY6lHv863XI7b6Etdxovc+1La4d9kUsFm7W/e0YlmQgw83ZuNM=
+	t=1717664481; cv=none; b=F+U+aTWEtqB0p2Q8CmgzdGmO8oBP7ogFcjwKiWIaWFq+RJbaoWOZSPTmyTBG2JKiRBtY6q/LDeu4987lEEm6gocg8/kWRNblhIk29wiUiYCWyFXjmoNgY+BHHqdW500U7Le++ybLejp9k43fdg7wmOM60mm9qeEDyoPu1wNuX0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717664482; c=relaxed/simple;
-	bh=qML0uzCbmFJloLReDcFy0oJJlPIuvZmfqSV9p2czb8M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qJuRhzjFIRC7I4UuW0jsA9aYVPonoC42fU8BylagLFzl+NzBd5C5yGxm+ClZ+W0gtxItmSCtWbTBs3+cIxMRW55yCcuf1snQ/c8h61bAy3+Ci5gGoIjsCHrg5vm6j5LYZFBdfQPCXft68YN4WhIc67zGce2P/AOXNkmx4td0nY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBC38339;
-	Thu,  6 Jun 2024 02:01:44 -0700 (PDT)
-Received: from e127648.arm.com (unknown [10.57.71.137])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E9E093F762;
-	Thu,  6 Jun 2024 02:01:17 -0700 (PDT)
-From: Christian Loehle <christian.loehle@arm.com>
-To: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rafael@kernel.org
-Cc: vincent.guittot@linaro.org,
-	qyousef@layalina.io,
-	peterz@infradead.org,
-	daniel.lezcano@linaro.org,
-	anna-maria@linutronix.de,
-	kajetan.puchalski@arm.com,
-	lukasz.luba@arm.com,
-	dietmar.eggemann@arm.com,
-	Christian Loehle <christian.loehle@arm.com>
-Subject: [PATCH 2/6] cpuidle: teo: Don't stop tick on utilized
-Date: Thu,  6 Jun 2024 10:00:46 +0100
-Message-Id: <20240606090050.327614-3-christian.loehle@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240606090050.327614-1-christian.loehle@arm.com>
-References: <20240606090050.327614-1-christian.loehle@arm.com>
+	s=arc-20240116; t=1717664481; c=relaxed/simple;
+	bh=RGDQk9fEPK8TgeW16JgNCDUsvYQVkjgaqUjy4gYx4Tg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NNX64AvMxw2BcMSqCwusYUjpRAis4OzpIF9Lid49OqbHZRKQzOQl/igraZg/9Tm3XxL+OK2uPRTYNZh5T5cSHaGzkieO8/z8jDrMbGlxlyU8UJO7rtMD0htN8R2UicpYGsMeY2ZbxmB9SecA7zfsRPtX6zLeqB/UQLCkiv4UoCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=B+gYOMfo; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="B+gYOMfo"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B9AB01BF20E;
+	Thu,  6 Jun 2024 09:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1717664472;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=P6nHOSRQUTf8lskncbcfrnOE9UYbIGtkvvS9zsNteIA=;
+	b=B+gYOMfoQgw4FyCl7kj7mLnNlrqSsM7ytiJnzZz8Q+UEsu9yEbM0jF6r7MZ6XbJ5Rff/C/
+	vMWapylmnzqLdpbZXMWTMMoeG0wnWNOhd5q/G8AlcxneKdkkH08Z7wLDmDYk7aFLM6kwfZ
+	BTmZi3nz/kET4STOEYSgG/C52WmwE+TKOfkyl2u4CckHlIzim2M7XHnp8zHqcQJFBBbKFa
+	/PsVRVDQ5aWSS7uLf23fHfBKuNCXV2kDl5HhHWvapM6h7OwKDC1kWngXRQmaxQVGRruvbM
+	XDI6/HzXUaEvUdATk7M7pxvn62d9/uUbbm1Fg47T2P1Rks/5iAbhBcRA6b+RfA==
+Message-ID: <0ae387c1-31b2-4e87-aa7d-f98e3c90e985@arinc9.com>
+Date: Thu, 6 Jun 2024 12:01:03 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Frank Wunderlich <linux@fw-web.de>, Paolo Abeni <pabeni@redhat.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Daniel Golle <daniel@makrotopia.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ frank-w@public-files.de, Rob Herring <robh@kernel.org>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
+ <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+ <43aacd9d-b851-4100-8ccc-878ac6ae10f8@leemhuis.info>
+ <698cf562-1ca9-4aa3-be7e-a1474b612c5b@leemhuis.info>
+ <0cba095c-3d55-416a-a7ad-b359129731cf@arinc9.com>
+ <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
+Content-Language: en-US
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <714da201-654b-4183-8e5e-8ff0b64fe621@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-As we expect to be woken up early, stopping the tick is likely to be
-a waste.
+On 06/06/2024 11.26, Thorsten Leemhuis wrote:
+> On 31.05.24 08:10, Arınç ÜNAL wrote:
+>> I had already submitted a patch series that would've prevented this
+>> issue back in 14 March 2024 [1]. I've asked numerous times for the patch
+>> series to be applied [2][3][4][5].
+>>> Eventually Daniel asked for some changes [6]. But I won't have time to do
+>> that anytime soon and I think the patch series is good enough to be applied
+>> as is.
+> 
+> Then I guess we need some other way to resolve this in mainline to unfix
 
-Signed-off-by: Christian Loehle <christian.loehle@arm.com>
----
- drivers/cpuidle/governors/teo.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+I don't believe we need another way to resolve it. I've already told that
+the patch series is good enough to be applied as is and I don't see any
+responses with reasons against this here.
 
-diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
-index 45f43e2ee02d..2c427dd4cac0 100644
---- a/drivers/cpuidle/governors/teo.c
-+++ b/drivers/cpuidle/governors/teo.c
-@@ -429,10 +429,13 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 			idx = 0;
- 			goto out_tick;
- 		}
--		/* Assume that state 1 is not a polling one and use it. */
-+		/*
-+		 * Assume that state 1 is not a polling one and use it, but
-+		 * don't stop the tick as we expect to be woken up early.
-+		 */
- 		idx = 1;
- 		duration_ns = drv->states[1].target_residency_ns;
--		goto end;
-+		goto out_tick_state;
- 	}
- 
- 	/* Compute the sums of metrics for early wakeup pattern detection. */
-@@ -618,6 +621,7 @@ static int teo_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 	    duration_ns >= TICK_NSEC) || tick_nohz_tick_stopped())
- 		return idx;
- 
-+out_tick_state:
- 	/*
- 	 * The tick is not going to be stopped, so if the target residency of
- 	 * the state to be returned is not within the time till the closest
--- 
-2.34.1
+> Frank's device. The two obvious options are afaics:
+> 
+> * revert the culprit (868ff5f4944aa9 ("net: dsa: mt7530-mdio: read PHY
+> address of switch from device tree")) and reapply it in a later cycle
 
+Sorry, no. There's nothing wrong with that patch. The actual cause of this
+issue is the patch that introduced this device tree source file with the
+wrong PHY address.
+
+> * apply Frank's patch (or an improved one) in this thread (and if needed
+> revert it when some better changes emerge.
+> 
+> Arınç ÜNAL, could you please comment on that and ideally handle the
+> necessary tasks, as it's your patch that causes the regression.
+
+I don't see any necessary tasks for me to handle. AngeloGioacchino Del
+Regno whom is the only person I know that maintains these device tree
+source files can simply apply the patch series that I have already
+submitted and we can all move on. I haven't heard from them whilst the
+patch had been waiting since March. So I'm not sure who's going to apply
+this patch, and to which tree.
+
+Arınç
