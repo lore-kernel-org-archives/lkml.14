@@ -1,398 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA31199225;
-	Thu,  6 Jun 2024 17:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851A91991C7;
+	Thu,  6 Jun 2024 17:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717695757; cv=none; b=Pslr/xHOZ23JrESSDPYyUSW1wwr3U9/StKv5NgPruY+eobVK2VYkqmm2uBOFdIbxTWZpmXiYMUMg7CG+Z0sVdJH+RTm09kEzvTPYi8EQVGqLG5G7iQlOGCg4OympsMc3VprjvjBtiefeHp6q+bFbTkpkP+IhX+bTsnxQ6Rp9icU=
+	t=1717695913; cv=none; b=KjAv72YyKPUWGd1AaswAKcSrwCnx3ACw38RgCahegQc5/cqv36gtdHkDfyShSjmu+cWfh8+IvGAcvjSUjhAnSHKL54Mx84/6LVEk7D3JohAHL+A3KCqj/NILcEWKlP8lmdlfAXJXeEeCGUtA73zwbaLJX80FWUoywuK4Kv0xv1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717695757; c=relaxed/simple;
-	bh=/4Jv3hhvs8UVbSOcZbwfddeZvsZJMDoUqP6gWQb+QD4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DHsy7EptSPkGS4iCZq0z56L6d5wVg13yxdkc9eiPmFDVc+FaY7VLdJzlLfS5W+IjTzaF6ngFNlk3JS7rNIYP9xF5igSLMsT1TlRoY4a7oghnxEgMumCS18DPpHapnkLp2nCo7bj4L6nrdwXGk4iWn6kTZTXhFhy+D44/Oafs5/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O16a1+/X; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717695913; c=relaxed/simple;
+	bh=uyGm6ZUIbxbRbpt405smIVUtq5i5bFuz83fng0Jpp+w=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=DsDk97kMgABxc3Ksu3VIN+JTUUVXuFeWGMIn27Xez5P8ahEFfeBc6u1VtUOgdsBZwXJzaUl/HaUSrYog3rbXTVD+WKb+RZlafwbnSwjRnv+oLLpg5OFjFYyGiIioiiIJSogiJPx1DGiR4DrtnNbmWa8mA5qDBC+no9IlCvukROE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zQbuG2hR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WWbspxkS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O16a1+/X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717695756; x=1749231756;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/4Jv3hhvs8UVbSOcZbwfddeZvsZJMDoUqP6gWQb+QD4=;
-  b=O16a1+/X4slN9TQbLY478F9oV0nrMglbBmnsqC+3gI1qbuKABY9HYG6f
-   NeothPfTZdQTjUUYY3a/+sUWGE91mP5x6oIbV9uZS/kwqMEZ8EBvjwyCO
-   FLPF3Z5xINrve5CmHGxO/3ZUZizB6tN1LFz/Eic5qSEh9/ud0oC2E/Vhl
-   e99Pd6bcnaOkVL7EDOW0Q7OgdSWhkNO4kprf08+hUZ8mNRwwqUSamwFIH
-   F3dwnXnEsfP0oaOerz5iJwF5bhI4/5Ye+J3Zt6Cz/eZKfQlyIB6Pbv7fK
-   VJi03nUibqbUr5iP67DWFnLJGmW0GuVXFTRbTmf8PRB3xNOeFNkQMglCA
-   g==;
-X-CSE-ConnectionGUID: VRtCPFL+SYazhjh1hDt95w==
-X-CSE-MsgGUID: LdFpHqMJTQ2HRwOA26UR5w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="25792275"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="25792275"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 10:42:32 -0700
-X-CSE-ConnectionGUID: MRQNuHePQ1ea/s+CX6HZbA==
-X-CSE-MsgGUID: ukI1yuUdSIeuHnsCkDJKCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="61254868"
-Received: from rchatre-ws.ostc.intel.com ([10.54.69.144])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 10:42:32 -0700
-From: Reinette Chatre <reinette.chatre@intel.com>
-To: isaku.yamahata@intel.com,
-	pbonzini@redhat.com,
-	erdemaktas@google.com,
-	vkuznets@redhat.com,
-	seanjc@google.com,
-	vannapurve@google.com,
-	jmattson@google.com,
-	mlevitsk@redhat.com,
-	xiaoyao.li@intel.com,
-	chao.gao@intel.com,
-	rick.p.edgecombe@intel.com,
-	yuan.yao@intel.com
-Cc: reinette.chatre@intel.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V7 2/2] KVM: selftests: Add test for configure of x86 APIC bus frequency
-Date: Thu,  6 Jun 2024 10:42:01 -0700
-Message-Id: <0f39bef6968032723866e0f38d047806839eb065.1717695426.git.reinette.chatre@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1717695426.git.reinette.chatre@intel.com>
-References: <cover.1717695426.git.reinette.chatre@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zQbuG2hR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WWbspxkS"
+Date: Thu, 06 Jun 2024 17:45:08 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717695909;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/DRLsjhbepAMwN+9568MetcDQGBIgafcDOLWHnxhD78=;
+	b=zQbuG2hRd/kn6X7JoB8dNT52KQrGPGX7fipxdEbkFyOVDFNJSWxUGxsduqoaZUMrHyyQD9
+	dR8f6hm197ohdYkDUqZlBpGqwuRkqiy5zvtTPlyErTbGakQcsF+GBpDJUng57w0KD0yS9y
+	QbGV8vPiYAe6L4YwybKgc7yN86ZYt1B7b1BVJ03NaJsf4ExRdoBsoPHT3mtW0jHqI2kwvW
+	JsxDHZ6YhOuyx8KloDd6fUfLBPzL9R67qi/YrhwMQeMk8TyAc4K0jpBf4NkS80XcA+6yDk
+	UeerZZl6eof80KYOpj+vMu35YKgYOFQZzBP1M7VDqp4OIpOjm5JErxjyRGNp3w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717695909;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/DRLsjhbepAMwN+9568MetcDQGBIgafcDOLWHnxhD78=;
+	b=WWbspxkSoGyH5YQzw23KCyXQLtHY1RuMyGGyc6Ie9lcNL0ptPUF5UBUEOP+WXfhzt47EOu
+	AMI2CRdeWWu8q5CQ==
+From: "tip-bot2 for Sean Christopherson" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/core: Drop spinlocks on contention iff kernel
+ is preemptible
+Cc: Sean Christopherson <seanjc@google.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Ankur Arora <ankur.a.arora@oracle.com>, Chen Yu <yu.c.chen@intel.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <ef81ff36-64bb-4cfe-ae9b-e3acf47bff24@proxmox.com>
+References: <ef81ff36-64bb-4cfe-ae9b-e3acf47bff24@proxmox.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <171769590909.10875.6998954081392102122.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+The following commit has been merged into the sched/core branch of tip:
 
-Test if KVM emulates the APIC bus clock at the expected frequency when
-userspace configures the frequency via KVM_CAP_X86_APIC_BUS_CYCLES_NS.
+Commit-ID:     c793a62823d1ce8f70d9cfc7803e3ea436277cda
+Gitweb:        https://git.kernel.org/tip/c793a62823d1ce8f70d9cfc7803e3ea436277cda
+Author:        Sean Christopherson <seanjc@google.com>
+AuthorDate:    Mon, 27 May 2024 17:34:48 -07:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 05 Jun 2024 16:52:36 +02:00
 
-Set APIC timer's initial count to the maximum value and busy wait for 100
-msec (largely arbitrary) using the TSC. Read the APIC timer's "current
-count" to calculate the actual APIC bus clock frequency based on TSC
-frequency.
+sched/core: Drop spinlocks on contention iff kernel is preemptible
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Co-developed-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+Use preempt_model_preemptible() to detect a preemptible kernel when
+deciding whether or not to reschedule in order to drop a contended
+spinlock or rwlock.  Because PREEMPT_DYNAMIC selects PREEMPTION, kernels
+built with PREEMPT_DYNAMIC=y will yield contended locks even if the live
+preemption model is "none" or "voluntary".  In short, make kernels with
+dynamically selected models behave the same as kernels with statically
+selected models.
+
+Somewhat counter-intuitively, NOT yielding a lock can provide better
+latency for the relevant tasks/processes.  E.g. KVM x86's mmu_lock, a
+rwlock, is often contended between an invalidation event (takes mmu_lock
+for write) and a vCPU servicing a guest page fault (takes mmu_lock for
+read).  For _some_ setups, letting the invalidation task complete even
+if there is mmu_lock contention provides lower latency for *all* tasks,
+i.e. the invalidation completes sooner *and* the vCPU services the guest
+page fault sooner.
+
+But even KVM's mmu_lock behavior isn't uniform, e.g. the "best" behavior
+can vary depending on the host VMM, the guest workload, the number of
+vCPUs, the number of pCPUs in the host, why there is lock contention, etc.
+
+In other words, simply deleting the CONFIG_PREEMPTION guard (or doing the
+opposite and removing contention yielding entirely) needs to come with a
+big pile of data proving that changing the status quo is a net positive.
+
+Opportunistically document this side effect of preempt=full, as yielding
+contended spinlocks can have significant, user-visible impact.
+
+Fixes: c597bfddc9e9 ("sched: Provide Kconfig support for default dynamic preempt mode")
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Ankur Arora <ankur.a.arora@oracle.com>
+Reviewed-by: Chen Yu <yu.c.chen@intel.com>
+Link: https://lore.kernel.org/kvm/ef81ff36-64bb-4cfe-ae9b-e3acf47bff24@proxmox.com
 ---
-Changes v7:
-- Drop Maxim Levitsky's Reviewed-by because of significant changes.
-- Remove redefine of _GNU_SOURCE. (kernel test robot)
-- Rewrite changelog and test description. (Sean)
-- Enable user space to set APIC bus frequency. (Sean)
-- Use GUEST_ASSERT() from guest instead of TEST_ASSERT() from host. (Sean)
-- Test xAPIC as well as x2APIC. (Sean)
-- Add check that KVM_CAP_X86_APIC_BUS_CYCLES_NS cannot be set
-  after vCPU created. (Sean)
-- Use new udelay() utility. (Sean)
-- Drop CLI. Mask LVT timer independently. (Sean)
-- Use correct LVT timer entry (0x350 -> 0x320) to enable oneshot operation.
-- Remove unnecessary static functions from single file test.
-- Be consistent in types by using uint32_t/uint64_t instead of
-  u32/u64.
+ Documentation/admin-guide/kernel-parameters.txt |  4 +++-
+ include/linux/spinlock.h                        | 14 ++++++--------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-Changes v6:
-- Use vm_create() wrapper instead of open coding it. (Zide)
-- Improve grammar of test description. (Zide)
-
-Changes v5:
-- Update to new name of capability KVM_CAP_X86_APIC_BUS_FREQUENCY ->
-  KVM_CAP_X86_APIC_BUS_CYCLES_NS. (Xiaoyao Li)
-
-Changes v4:
-- Rework changelog.
-- Add Sean's "Suggested-by" to acknowledge guidance received in
-  https://lore.kernel.org/all/ZU0BASXWcck85r90@google.com/
-- Add copyright.
-- Add test description to file header.
-- Consistent capitalization for acronyms.
-- Rebase to kvm-x86/next.
-- Update to v4 change of providing bus clock rate in nanoseconds.
-- Add a "TEST_REQUIRE()" for the new capability so that the test can
-  work on kernels that do not support the new capability.
-- Address checkpatch warnings and use tabs instead of spaces in header
-  file to match existing code.
-
-Changes v3:
-- Use 1.5GHz instead of 1GHz as frequency.
-
-Changes v2:
-- Newly added.
----
- tools/testing/selftests/kvm/Makefile          |   1 +
- .../selftests/kvm/include/x86_64/apic.h       |   8 +
- .../kvm/x86_64/apic_bus_clock_test.c          | 218 ++++++++++++++++++
- 3 files changed, 227 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
-
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index ce8ff8e8ce3a..ad8b5d15f2bd 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -112,6 +112,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_invalid_nested_guest_state
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_nested_tsc_scaling_test
-+TEST_GEN_PROGS_x86_64 += x86_64/apic_bus_clock_test
- TEST_GEN_PROGS_x86_64 += x86_64/xapic_ipi_test
- TEST_GEN_PROGS_x86_64 += x86_64/xapic_state_test
- TEST_GEN_PROGS_x86_64 += x86_64/xcr0_cpuid_test
-diff --git a/tools/testing/selftests/kvm/include/x86_64/apic.h b/tools/testing/selftests/kvm/include/x86_64/apic.h
-index bed316fdecd5..0f268b55fa06 100644
---- a/tools/testing/selftests/kvm/include/x86_64/apic.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/apic.h
-@@ -60,6 +60,14 @@
- #define		APIC_VECTOR_MASK	0x000FF
- #define	APIC_ICR2	0x310
- #define		SET_APIC_DEST_FIELD(x)	((x) << 24)
-+#define APIC_LVTT	0x320
-+#define		APIC_LVT_TIMER_ONESHOT		(0 << 17)
-+#define		APIC_LVT_TIMER_PERIODIC		(1 << 17)
-+#define		APIC_LVT_TIMER_TSCDEADLINE	(2 << 17)
-+#define		APIC_LVT_MASKED			(1 << 16)
-+#define	APIC_TMICT	0x380
-+#define	APIC_TMCCT	0x390
-+#define	APIC_TDCR	0x3E0
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 500cfa7..555e6b5 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4752,7 +4752,9 @@
+ 			none - Limited to cond_resched() calls
+ 			voluntary - Limited to cond_resched() and might_sleep() calls
+ 			full - Any section that isn't explicitly preempt disabled
+-			       can be preempted anytime.
++			       can be preempted anytime.  Tasks will also yield
++			       contended spinlocks (if the critical section isn't
++			       explicitly preempt disabled beyond the lock itself).
  
- void apic_disable(void);
- void xapic_enable(void);
-diff --git a/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c b/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
-new file mode 100644
-index 000000000000..12845c5378d1
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
-@@ -0,0 +1,218 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2024 Intel Corporation
-+ *
-+ * Verify KVM correctly emulates the APIC bus frequency when the VMM configures
-+ * the frequency via KVM_CAP_X86_APIC_BUS_CYCLES_NS.  Start the APIC timer by
-+ * programming TMICT (timer initial count) to the largest value possible (so
-+ * that the timer will not expire during the test).  Then, after an arbitrary
-+ * amount of time has elapsed, verify TMCCT (timer current count) is within 1%
-+ * of the expected value based on the time elapsed, the APIC bus frequency, and
-+ * the programmed TDCR (timer divide configuration register).
-+ */
+ 	print-fatal-signals=
+ 			[KNL] debug: print fatal signals
+diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
+index 3fcd20d..63dd8cf 100644
+--- a/include/linux/spinlock.h
++++ b/include/linux/spinlock.h
+@@ -462,11 +462,10 @@ static __always_inline int spin_is_contended(spinlock_t *lock)
+  */
+ static inline int spin_needbreak(spinlock_t *lock)
+ {
+-#ifdef CONFIG_PREEMPTION
++	if (!preempt_model_preemptible())
++		return 0;
 +
-+#include "apic.h"
-+#include "test_util.h"
+ 	return spin_is_contended(lock);
+-#else
+-	return 0;
+-#endif
+ }
+ 
+ /*
+@@ -479,11 +478,10 @@ static inline int spin_needbreak(spinlock_t *lock)
+  */
+ static inline int rwlock_needbreak(rwlock_t *lock)
+ {
+-#ifdef CONFIG_PREEMPTION
++	if (!preempt_model_preemptible())
++		return 0;
 +
-+/*
-+ * Pick 25MHz for APIC bus frequency. Different enough from the default 1GHz.
-+ * User can override via command line.
-+ */
-+unsigned long apic_hz = 25 * 1000 * 1000;
-+
-+/*
-+ * Possible TDCR values with matching divide count. Used to modify APIC
-+ * timer frequency.
-+ */
-+struct {
-+	uint32_t tdcr;
-+	uint32_t divide_count;
-+} tdcrs[] = {
-+	{0x0, 2},
-+	{0x1, 4},
-+	{0x2, 8},
-+	{0x3, 16},
-+	{0x8, 32},
-+	{0x9, 64},
-+	{0xa, 128},
-+	{0xb, 1},
-+};
-+
-+void guest_verify(uint64_t tsc_cycles, uint32_t apic_cycles, uint32_t divide_count)
-+{
-+	uint64_t freq;
-+
-+	GUEST_ASSERT(tsc_cycles > 0);
-+	freq = apic_cycles * divide_count * (tsc_khz * 1000) / tsc_cycles;
-+	/* Check if measured frequency is within 1% of configured frequency. */
-+	GUEST_ASSERT(freq < apic_hz * 101 / 100);
-+	GUEST_ASSERT(freq > apic_hz * 99 / 100);
-+}
-+
-+void x2apic_guest_code(void)
-+{
-+	uint32_t tmict, tmcct;
-+	uint64_t tsc0, tsc1;
-+	int i;
-+
-+	x2apic_enable();
-+
-+	/*
-+	 * Setup one-shot timer.  The vector does not matter because the
-+	 * interrupt should not fire.
-+	 */
-+	x2apic_write_reg(APIC_LVTT, APIC_LVT_TIMER_ONESHOT | APIC_LVT_MASKED);
-+
-+	for (i = 0; i < ARRAY_SIZE(tdcrs); i++) {
-+		x2apic_write_reg(APIC_TDCR, tdcrs[i].tdcr);
-+
-+		/* Set the largest value to not trigger the interrupt. */
-+		tmict = ~0;
-+		x2apic_write_reg(APIC_TMICT, tmict);
-+
-+		/* Busy wait for 100 msec. */
-+		tsc0 = rdtsc();
-+		udelay(100000);
-+		/* Read APIC timer and TSC. */
-+		tmcct = x2apic_read_reg(APIC_TMCCT);
-+		tsc1 = rdtsc();
-+
-+		/* Stop timer. */
-+		x2apic_write_reg(APIC_TMICT, 0);
-+
-+		guest_verify(tsc1 - tsc0, tmict - tmcct, tdcrs[i].divide_count);
-+	}
-+
-+	GUEST_DONE();
-+}
-+
-+void xapic_guest_code(void)
-+{
-+	uint32_t tmict, tmcct;
-+	uint64_t tsc0, tsc1;
-+	int i;
-+
-+	xapic_enable();
-+
-+	/*
-+	 * Setup one-shot timer.  The vector does not matter because the
-+	 * interrupt should not fire.
-+	 */
-+	xapic_write_reg(APIC_LVTT, APIC_LVT_TIMER_ONESHOT | APIC_LVT_MASKED);
-+
-+	for (i = 0; i < ARRAY_SIZE(tdcrs); i++) {
-+		xapic_write_reg(APIC_TDCR, tdcrs[i].tdcr);
-+
-+		/* Set the largest value to not trigger the interrupt. */
-+		tmict = ~0;
-+		xapic_write_reg(APIC_TMICT, tmict);
-+
-+		/* Busy wait for 100 msec. */
-+		tsc0 = rdtsc();
-+		udelay(100000);
-+		/* Read APIC timer and TSC. */
-+		tmcct = xapic_read_reg(APIC_TMCCT);
-+		tsc1 = rdtsc();
-+
-+		/* Stop timer. */
-+		xapic_write_reg(APIC_TMICT, 0);
-+
-+		guest_verify(tsc1 - tsc0, tmict - tmcct, tdcrs[i].divide_count);
-+	}
-+
-+	GUEST_DONE();
-+}
-+
-+void test_apic_bus_clock(struct kvm_vcpu *vcpu)
-+{
-+	bool done = false;
-+	struct ucall uc;
-+
-+	while (!done) {
-+		vcpu_run(vcpu);
-+		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
-+
-+		switch (get_ucall(vcpu, &uc)) {
-+		case UCALL_DONE:
-+			done = true;
-+			break;
-+		case UCALL_ABORT:
-+			REPORT_GUEST_ASSERT(uc);
-+			break;
-+		default:
-+			TEST_FAIL("Unknown ucall %lu", uc.cmd);
-+			break;
-+		}
-+	}
-+}
-+
-+void run_apic_bus_clock_test(bool xapic)
-+{
-+	struct kvm_vcpu *vcpu;
-+	struct kvm_vm *vm;
-+	int ret;
-+
-+	vm = vm_create(1);
-+
-+	sync_global_to_guest(vm, apic_hz);
-+
-+	vm_enable_cap(vm, KVM_CAP_X86_APIC_BUS_CYCLES_NS,
-+		      NSEC_PER_SEC / apic_hz);
-+
-+	vcpu = vm_vcpu_add(vm, 0, xapic ? xapic_guest_code : x2apic_guest_code);
-+
-+	ret = __vm_enable_cap(vm, KVM_CAP_X86_APIC_BUS_CYCLES_NS,
-+			      NSEC_PER_SEC / apic_hz);
-+	TEST_ASSERT(ret < 0 && errno == EINVAL,
-+		    "Setting of APIC bus frequency after vCPU is created should fail.");
-+
-+	if (xapic)
-+		virt_pg_map(vm, APIC_DEFAULT_GPA, APIC_DEFAULT_GPA);
-+
-+	test_apic_bus_clock(vcpu);
-+	kvm_vm_free(vm);
-+}
-+
-+void run_xapic_bus_clock_test(void)
-+{
-+	run_apic_bus_clock_test(true);
-+}
-+
-+void run_x2apic_bus_clock_test(void)
-+{
-+	run_apic_bus_clock_test(false);
-+}
-+
-+void help(char *name)
-+{
-+	puts("");
-+	printf("usage: %s [-h] [-a APIC bus freq]\n", name);
-+	puts("");
-+	printf("-a: The APIC bus frequency (in Hz) to be configured for the guest.\n");
-+	puts("");
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int opt;
-+
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_X86_APIC_BUS_CYCLES_NS));
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_GET_TSC_KHZ));
-+
-+	while ((opt = getopt(argc, argv, "a:h")) != -1) {
-+		switch (opt) {
-+		case 'a':
-+			apic_hz = atol(optarg);
-+			break;
-+		case 'h':
-+			help(argv[0]);
-+			exit(0);
-+		default:
-+			help(argv[0]);
-+			exit(1);
-+		}
-+	}
-+
-+	run_xapic_bus_clock_test();
-+	run_x2apic_bus_clock_test();
-+}
--- 
-2.34.1
-
+ 	return rwlock_is_contended(lock);
+-#else
+-	return 0;
+-#endif
+ }
+ 
+ /*
