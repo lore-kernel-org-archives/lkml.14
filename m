@@ -1,69 +1,99 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8557C19E7F5
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231041ABE2A;
+	Thu,  6 Jun 2024 14:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684824; cv=none; b=ONOIDOn9FTj7CYS+AMAk8WYB0mMPlCgnLbH82PVpSdbbkD+nHh2ZXemZ/Db/U7AAufjHjf7TmW0pcon5C3r4qnxfAOgFaHrM3w0e0UTBatnbsorc/SKiSQJp8zFu2hjp9MuNBFnaoxA38y2uM+QyTS4ezFFgdHdtZUNH7KWG0Q0=
+	t=1717684823; cv=none; b=TpcwHvsVmQEpDjiZ2RLaJrNLzaXlx2OMpBoVJzn6zB/4/5OCEEPh7mcJuFOJ49+da34g8OurNk7jOeb9lyDIQB66B/0xaqr3RviY0EAb+g1RjXnzO/stpZfT0DJfNF2bXzzSUglD1MJ3oxc6N4dTHfDzXnafZZgTqhMi9ikglIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684824; c=relaxed/simple;
-	bh=tUMWsF78RNhMYX/UO7ZV4hcCMrXZN0eXQoDvU9LivP8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=rIenbfOTxOcyhmeQiL3S3Eugl66gGYtk4+Y7WXqWtSwbA+o+Y2qEiV0T9lYmc/RdjwtWAlK2QMjNroSH4q4AThl6fk0Jv1hTCaMW2/kj/LkojHh71iAmG5DH5KMNRM5lU9QpVhUFi4xXrwQIjX4okyHlYRr30KUovu2ZnBIPNKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav413.sakura.ne.jp (fsav413.sakura.ne.jp [133.242.250.112])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 456EeBNA011132;
-	Thu, 6 Jun 2024 23:40:11 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav413.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp);
- Thu, 06 Jun 2024 23:40:11 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 456EeBuq011129
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 6 Jun 2024 23:40:11 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <c86f0ed7-4336-4bc8-a27c-8d7ccaaec5d8@I-love.SAKURA.ne.jp>
-Date: Thu, 6 Jun 2024 23:40:08 +0900
+	s=arc-20240116; t=1717684823; c=relaxed/simple;
+	bh=Yi8e6C06Z2hIN8SK8YDlnVlidHkQccKdpZguIQqa/sc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Eg+IuRu1gLP3ZLoeqNeg1ulWFRcDx7uQ7j0ZyIqviSbkW26AljJN+iwArq6agvvq6f0UzCScuWahs+d3DT0mTgepmIMw/gjOjYgD8t0rkrL2I2AYl2zGYtTt1FmwU8lH6PXxueqmh24hw63OOhvxsuQ9H88rKUvQnoLsLldSFEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZAKGlrDZ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZAKGlrDZ"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 456AhSOW016673;
+	Thu, 6 Jun 2024 14:40:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Iqwn7RUBPS+VCI0b9QeDYJin
+	oYGMvMqAN5xjaAaEMDA=; b=ZAKGlrDZ8lpo+O9djBdEZD/Kx3H3FsHK4sIpIyJ4
+	qLakEvXAgKmw8hK8eIKY5tMaWSoRJBBYYLNZ94/pQf5d9W9eM40U0h+4b/Z5XxXn
+	rCyErBsQGQEuDZ/iO3WVXvNVoZjxSgSnWAsLqm/5kgTHF+gcO502vzY44esgo5oR
+	+JgF11tO9cS8MbhGHOP6gRj9OBA4OTJVbzuZzC5FAo3FYCcKDZ1HLQIfcqypmXdr
+	1n/pHqV38Xk8YsB5dpMR6lkz9ksizV82lKoUkLr3EbzpeT86d+ZHso32nmjOWQGW
+	lQyCZ1ztqH7nXsgBXw0csicWLWj+AW1gebDdc1kUvJY2/Q==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjan2mvdu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Jun 2024 14:40:18 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 456EeHM0003408
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Jun 2024 14:40:17 GMT
+Received: from hyd-e160-a01-3-01.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 6 Jun 2024 07:40:14 -0700
+From: Naina Mehta <quic_nainmeht@quicinc.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>, <manivannan.sadhasivam@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_nainmeht@quicinc.com>
+Subject: [PATCH 1/5] dt-bindings: remoteproc: qcom,sm8550-pas: document the SDX75 PAS
+Date: Thu, 6 Jun 2024 20:08:54 +0530
+Message-ID: <20240606143858.4026-2-quic_nainmeht@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240606143858.4026-1-quic_nainmeht@quicinc.com>
+References: <20240606143858.4026-1-quic_nainmeht@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [GIT PULL] tomoyo update for v6.10
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IdI-LMgTFPtvDTo7TIg5Ymd6yrG6aYDH
+X-Proofpoint-ORIG-GUID: IdI-LMgTFPtvDTo7TIg5Ymd6yrG6aYDH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-06_01,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 adultscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406060106
 
-The following changes since commit c6144a21169fe7d0d70f1a0dae6f6301e5918d30:
+Document the MPSS Peripheral Authentication Service on SDX75 platform.
 
-  tomoyo: update project links (2024-06-03 22:43:11 +0900)
+Signed-off-by: Naina Mehta <quic_nainmeht@quicinc.com>
+---
+ .../devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml          | 1 +
+ 1 file changed, 1 insertion(+)
 
-are available in the Git repository at:
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml
+index 73fda7565cd1..02e15b1f78ab 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,sm8550-pas.yaml
+@@ -16,6 +16,7 @@ description:
+ properties:
+   compatible:
+     enum:
++      - qcom,sdx75-mpss-pas
+       - qcom,sm8550-adsp-pas
+       - qcom,sm8550-cdsp-pas
+       - qcom,sm8550-mpss-pas
+-- 
+2.17.1
 
-  git://git.code.sf.net/p/tomoyo/tomoyo.git
-
-for you to fetch changes up to c6144a21169fe7d0d70f1a0dae6f6301e5918d30:
-
-  tomoyo: update project links (2024-06-03 22:43:11 +0900)
-
-----------------------------------------------------------------
-Single patch, no behavior changes.
-
-Tetsuo Handa (1):
-  tomoyo: update project links
-
- Documentation/admin-guide/LSM/tomoyo.rst |   35 +++++++++----------------------
- MAINTAINERS                              |    2 -
- security/tomoyo/Kconfig                  |    2 -
- security/tomoyo/common.c                 |    2 -
- 4 files changed, 14 insertions(+), 27 deletions(-)
