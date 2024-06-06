@@ -1,118 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0538D10E9
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 16:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F8917BC9;
+	Thu,  6 Jun 2024 16:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717691261; cv=none; b=kPvMjrSJmGciHMgBFOqXGxsgNcncoZ6JRApfqoUIS2+1HcERn2u+muCSNG9qYkS72Y/cCHwvd+nQOk+fMLbFiurYAVtVid7nldE1lpVEUlHhhLn0SRc1s5GtKmyIdLwlvePx2CGXa4gBgo/d9DZXQb5ShiaiH26tsf336Tw2buI=
+	t=1717691420; cv=none; b=eUvknEsESBzDthEUVvRsgUqj11PmfuZjBVezvTKNb7Pg9+gZ9yiXPRKAGON5jJSEjpiEVF3rWbnonqsI+3mAnGoa308nUsdijrKapZ1WgiaYNWJr2h1WExW8KT7KJBzcZ1G3EAOeLHO66bHl3Emla7EhN8wl8KhJ4Z1hfeThsPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717691261; c=relaxed/simple;
-	bh=awmDsh57h4AtP7unUblPN0J9qBOX9TMrTx1/JBxYOEg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xa2WW3RCS0Ra+knGsFZnp2340nPhC+G4kimwwBs7x8DpV4+E94l5lhXUm4BFfv6oPdl4IopsBdkOcfgvmLa9WMBqlv9zyZHjzbx5Eq6MPKPGsmqVFV+K1JzM4qVHTea96r14gQ36DkW/rn9YvK1B78Ii7bKhgkTikzcMO+V6jzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HjzAbEJR; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717691420; c=relaxed/simple;
+	bh=lPAkVjXgLxFt5LPmzKwEMlabNfBjX6NWCwqF+0qLZvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RlAaXnU7Q58VEbPO0iNwnCRnDEyVlWIPTHiTvwQSwRm098b6q+gUxbnjkehYSqjMVeiNbg45csBPYxjYmCThkl1OfbjURnG8/lR/m60FXi1gjZlN8dCQ0ZY39cIL/6hVQAk6QwIPSlNPddxfHPIAfsNpttUVSjDTKN16CCWHVPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TtGuUN19; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HjzAbEJR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717691259; x=1749227259;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=awmDsh57h4AtP7unUblPN0J9qBOX9TMrTx1/JBxYOEg=;
-  b=HjzAbEJR5/EAW38nM/tb9RoSDuv7GSxl0lKVyvBqzv3IYP+Nrp02NwNd
-   f9isvp/XrkHQcurPBF16/DJvpVZIhIQdRjYQHcxlBcDCuBqPmaQBUlX+Y
-   6yl7jmiq9TBfcpUuOY4Kv/62S7vZQmf/ZqfAwTB7MDMnOOiYUvoRok7cN
-   6fFH3u2G1yxv/4LtCAspXYNP2KWDxWZl+ZcogwYFjkk3J+LjlCN5KqehO
-   JsiapK9ECBTzSjSt62Nx+tbmnUoDQ2N1nIIezvYzh5qPc7XWHAoCoyknm
-   CVRN1NOVg4S80dLNwJQMQ4xwbEi3+UpQU4Der1WliXEa/VP93o4VblYU0
-   w==;
-X-CSE-ConnectionGUID: xdoWqFEGQpak/SCxEyS7uw==
-X-CSE-MsgGUID: Uqun5xQxRCSzf4aNvvWuFw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14212369"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="14212369"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:27:05 -0700
-X-CSE-ConnectionGUID: HOGixHSaQPSsx4896ZAKCQ==
-X-CSE-MsgGUID: D8rI8EucSEKotOCKzzmewQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="37886303"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.109.168]) ([10.125.109.168])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:27:04 -0700
-Message-ID: <116afccd-c817-4a45-ad77-ccc039339285@intel.com>
-Date: Thu, 6 Jun 2024 09:27:03 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TtGuUN19"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4210aa012e5so13241705e9.0;
+        Thu, 06 Jun 2024 09:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717691418; x=1718296218; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1dqZNbQSETUuCOGmVNmSSKbXWwcQfdigyBoaPoEicrs=;
+        b=TtGuUN19w8mMp1fGfSBkzor+sumOvnHAfSxVG640fj4/UO0uACD290KzI8XnQw+Bl8
+         7y/19qlKKOuY6Mr1F0Dc8G0usXcy4eE5hGFpHQthMN1cFp4fzqJWTUutkmOUzlalhBRy
+         oyMkEeIR3w+GUkRpPjvsVZ8M78ah8X8A0b7Xmo42YYojQFjDnRz86Qaa9DOTzpi+OhRv
+         r6gXT2apRh2CsqPdO55JCC53c9TASDHUBhaVAdTzOXNQbStEFjJSX3TPbMkpEBajqufU
+         TdRfJdoxHgG/Aw6TD9Mt5CfrkuLfzXdUeRynCkjbYzTBsJ449Ige8USDMd7FHhBLzis6
+         LDIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717691418; x=1718296218;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1dqZNbQSETUuCOGmVNmSSKbXWwcQfdigyBoaPoEicrs=;
+        b=ijH2xHbgYNG75VSZidTEaeMZ0VHOKJIfReb1cvab6Eb4iMlTUhAJO6IcgEsqTfijdM
+         z+mxzGxfNdbs9Yv0fAa+SiMYKCUgEjnLjLwpbDQVPKOgX9GrTgPAacbb3NzNPNIMTdmG
+         vSNgEK/iGDmO0xSBgSuUQOXgc/sIVzNM+I/LKJcO3fSnE7gRdV6kJGq1jqWnxCf83Mdg
+         IrOsxOE0c41BWG0/kH7FOQ/6WV5qv737jYwINGp301J3Zr8DPMA4Wspc0n96Ctb/OwJs
+         J8eC7kpP96LFfS8r7/i3DMHT5lKwkF94YxqQkmZTIkWr8ZYY/CYf/N0a/zvONHoiffJ2
+         /uNg==
+X-Forwarded-Encrypted: i=1; AJvYcCX5Z/alAbX5VqJRYxn/ZqYST/WTJpuEvvaRjLRjFQwCzHZIadacVWqRG7QjzqETSItiU2tGkzJYQl04u4XI3J6qVa1ocU1/1lFP2yNlr/ofR0WoRXhmgA/thuYlrDhVyxcde7a2CzzXggfj5HNrSPase6g3p8refnc/FlD9Sktf5wQzdw==
+X-Gm-Message-State: AOJu0YxhdUZVpnYUVVaFenZ7h5bK3C5JHBLakZM3pLS01TimjljcYGKh
+	WT7G/VGkCR8tFSmO4ovkgILF0eVgH6vECyo3FPxE36PpmIWbNBLu
+X-Google-Smtp-Source: AGHT+IF21gop+b6k0JGHvqQYWZPu6iKxpWuDjEOjifn3fDeBBgYpbJeMFUreivkoDhv2hYUwDRCxRw==
+X-Received: by 2002:a5d:65c6:0:b0:354:f622:fc5b with SMTP id ffacd0b85a97d-35efed2cb79mr99952f8f.23.1717691417331;
+        Thu, 06 Jun 2024 09:30:17 -0700 (PDT)
+Received: from localhost.localdomain ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d29a85sm1978307f8f.10.2024.06.06.09.30.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 09:30:16 -0700 (PDT)
+From: Mudit Sharma <muditsharma.info@gmail.com>
+To: jic23@kernel.org,
+	lars@metafoo.de,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	robh@kernel.org
+Cc: ivan.orlov0322@gmail.com,
+	javier.carrasco.cruz@gmail.com,
+	Mudit Sharma <muditsharma.info@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v4 1/2] dt-bindings: iio: light: ROHM BH1745
+Date: Thu,  6 Jun 2024 17:29:41 +0100
+Message-ID: <20240606162948.83903-1-muditsharma.info@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvdimm: Fix devs leaks in scan_labels()
-To: Li Zhijian <lizhijian@fujitsu.com>, nvdimm@lists.linux.dev
-Cc: dan.j.williams@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- linux-kernel@vger.kernel.org
-References: <20240604031658.951493-1-lizhijian@fujitsu.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240604031658.951493-1-lizhijian@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Add ROHM BH1745 - 4 channel I2C colour sensor's dt-bindings.
 
+Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+v3->v4:
+- No changes
+v2->v3:
+- Move 'additionalProperties' after 'required' block
+- Remove block style indicator '|' from description
+v1->v2:
+- Fix yaml issue: Make `maintainers` a list
 
-On 6/3/24 8:16 PM, Li Zhijian wrote:
-> Don't allocate devs again when it's valid pointer which has pionted to
-> the memory allocated above with size (count + 2 * sizeof(dev)).
-> 
-> A kmemleak reports:
-> unreferenced object 0xffff88800dda1980 (size 16):
->   comm "kworker/u10:5", pid 69, jiffies 4294671781
->   hex dump (first 16 bytes):
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace (crc 0):
->     [<00000000c5dea560>] __kmalloc+0x32c/0x470
->     [<000000009ed43c83>] nd_region_register_namespaces+0x6fb/0x1120 [libnvdimm]
->     [<000000000e07a65c>] nd_region_probe+0xfe/0x210 [libnvdimm]
->     [<000000007b79ce5f>] nvdimm_bus_probe+0x7a/0x1e0 [libnvdimm]
->     [<00000000a5f3da2e>] really_probe+0xc6/0x390
->     [<00000000129e2a69>] __driver_probe_device+0x78/0x150
->     [<000000002dfed28b>] driver_probe_device+0x1e/0x90
->     [<00000000e7048de2>] __device_attach_driver+0x85/0x110
->     [<0000000032dca295>] bus_for_each_drv+0x85/0xe0
->     [<00000000391c5a7d>] __device_attach+0xbe/0x1e0
->     [<0000000026dabec0>] bus_probe_device+0x94/0xb0
->     [<00000000c590d936>] device_add+0x656/0x870
->     [<000000003d69bfaa>] nd_async_device_register+0xe/0x50 [libnvdimm]
->     [<000000003f4c52a4>] async_run_entry_fn+0x2e/0x110
->     [<00000000e201f4b0>] process_one_work+0x1ee/0x600
->     [<000000006d90d5a9>] worker_thread+0x183/0x350
-> 
-> Fixes: 1b40e09a1232 ("libnvdimm: blk labels and namespace instantiation")
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
->  drivers/nvdimm/namespace_devs.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-> index d6d558f94d6b..56b016dbe307 100644
-> --- a/drivers/nvdimm/namespace_devs.c
-> +++ b/drivers/nvdimm/namespace_devs.c
-> @@ -1994,7 +1994,9 @@ static struct device **scan_labels(struct nd_region *nd_region)
->  		/* Publish a zero-sized namespace for userspace to configure. */
->  		nd_mapping_free_labels(nd_mapping);
->  
-> -		devs = kcalloc(2, sizeof(dev), GFP_KERNEL);
-> +		/* devs probably has been allocated */
-> +		if (!devs)
-> +			devs = kcalloc(2, sizeof(dev), GFP_KERNEL);
+ .../bindings/iio/light/rohm,bh1745.yaml       | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
 
-This changes the behavior of this code and possibly corrupting the previously allocated memory at times when 'devs' is valid. Was the 'devs' leaked out from the previous loop and should be freed instead?
+diff --git a/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml b/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
+new file mode 100644
+index 000000000000..d5338a0af6b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/rohm,bh1745.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BH1745 colour sensor
++
++maintainers:
++  - Mudit Sharma <muditsharma.info@gmail.com>
++
++description:
++  BH1745 is an I2C colour sensor with red, green, blue and clear
++  channels. It has a programmable active low interrupt pin.
++  Interrupt occurs when the signal from the selected interrupt
++  source channel crosses set interrupt threshold high/low level.
++
++properties:
++  compatible:
++    const: rohm,bh1745
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        colour-sensor@38 {
++            compatible = "rohm,bh1745";
++            reg = <0x38>;
++            interrupt-parent = <&gpio>;
++            interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
++        };
++    };
++
++...
+-- 
+2.43.0
 
->  		if (!devs)
->  			goto err;
->  
