@@ -1,129 +1,77 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A195938DC7
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C176938DC7
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717695278; cv=none; b=FYq9Vk/7o9yZWPPN2i8Aby4ByGP7gHPoGXb+1ss/OMEUvKJSs2bXMtIvHpEo4FkigI1lZ+n4GjbI+XMCiSNGUUVD3lx9EwOyqbCyaWeMraoamg89jTGGT2Ph9MxtwIm8TUWlh4b/obllDe+7OLEqM/73bP5ymKJYoqHx0qdIkhU=
+	t=1717695301; cv=none; b=t2GxN61D4CoyDJ6XiexGPDWBZ7lISd4a//g/3WbKJuglxDyO++kcujVF5/1xgX5MTq22QWm9PPj5aVSMIi1/fFanJ7NKkjWesgFPjkuwKAKLdXBbarNBFWlWoEr8kyakiQsYjR/wkyH/+Y1MCzrowrU6IfwBNYs0AJGwIfE4Ys0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717695278; c=relaxed/simple;
-	bh=Mwm44gSX2pJSO1DQZKq/bU47/WAyUUvkVlSXQ5KADlE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WSR5HRhkc6tRVgGrs9EMScMs3s6jYlyhBMmPdMwaq1SAryHCEw0XztjGPYCjGlXo3k+clFjV6wVH8LzhbGiWsBSM/KMaBQ7/ZdkScvlAv78bnIDdXcndFYlxhomJIPhyqISX/kG7oXgY07LOSEFXvRYxCFy7UJbOAcuNmDFImug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com; spf=none smtp.mailfrom=osandov.com; dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b=YJO1Diat; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=osandov.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b="YJO1Diat"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f692d6e990so12785915ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 10:34:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=osandov-com.20230601.gappssmtp.com; s=20230601; t=1717695276; x=1718300076; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AAulxVnYL/xyKaB3vnDRoKBoF0F084Ubuhab5n7H9jo=;
-        b=YJO1Diat12qRHgRFZWWqBb3KbE33vc5ktBSHZTqYRHvyq4z4Z+2fKwebosbdoHGZsq
-         fd04O80vSJ4FLQsa5wbXmUmbbS5Izkx0Bpaz17aO+Zqt/mSyAGq7iuBbABhW6CIsZszR
-         WJyq6aE02SrNBKBkwctYJLM9dqZV0zGIlBgN9bHVxyXtYcpACpUtSmABkPUv7n4U+nxd
-         hn8J7rcTf6Dy4YyqEX/c9OzGhgJtp+uVmuLNU/DOWCjNqmxIYPDKPoWRr9HmCXKcAXja
-         SebV03S5FUqTRloqn2Zl6tXQyeG9rUmBCHu/gL0VYBLR8ACtPAkazyB6mhvb8OiCREKF
-         0A7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717695276; x=1718300076;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AAulxVnYL/xyKaB3vnDRoKBoF0F084Ubuhab5n7H9jo=;
-        b=u0FU+ftgWYttmr3u0xcr76nGmzoaG3D83Ap/bVGakP1UlJkp8B/5WJk8LsP2HJhQai
-         NP7H9gmu0jHuky5p+3oLArnsq1Goviqm5DY8u+yBbGcbeMV0oYwpqbJzMWUxpqIShAiu
-         p2OcYDvFjrrgwV2Yd/lcoptdc5FXrQ312oYuS5M0gEG7leUTKjc7Mcvt1D0znAqLpYk8
-         lofZK2ekedfM4URZayn8ZzMoo+Emd3QY3IpDB8js1pnqfWep+kTaYBZf70W/VE2kA9I/
-         qJPFD2XimCAN4uERK1ewukH2PPq5AJDBlLPdAeVZjc6fe+ukJKfACxjemKqYIVNT4N37
-         ++5g==
-X-Forwarded-Encrypted: i=1; AJvYcCVUlBQC9oKO3ifQBWBHTImQRyMBBXf8YsoeHNw7NL+VLOzj/tHTRTK//gjHiyuGzS62NYObnkrMMBqpE5c48hpnsKqhnYIFKyKz+KQX
-X-Gm-Message-State: AOJu0Yx3rLVwhvJxw3EIcPXntIWSEQwY3MaRZyfGa8dG/XrfHcb/NzEF
-	SikHHQ8wcZd7ipokhy8ElGxuqTxqUAmAujuGR7jjlaZFKvIEiOMaMQHcJKNO40iauFQ7Mdrq0MR
-	gXeg=
-X-Google-Smtp-Source: AGHT+IFF5YghgVig/RYReBOoP5uz9DUPAWXJpwtPKtVnFV4hSzqDyvhiRUIt9MC0+IujJ6KGfql9Zw==
-X-Received: by 2002:a17:902:dac6:b0:1f6:678c:9e8c with SMTP id d9443c01a7336-1f6d03be125mr2564165ad.67.1717695275716;
-        Thu, 06 Jun 2024 10:34:35 -0700 (PDT)
-Received: from telecaster.dhcp.thefacebook.com ([2620:10d:c090:400::5:ae4b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd76aa80sm17769735ad.69.2024.06.06.10.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 10:34:35 -0700 (PDT)
-Date: Thu, 6 Jun 2024 10:34:33 -0700
-From: Omar Sandoval <osandov@osandov.com>
-To: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-	Hao Ge <gehao@kylinos.cn>, Vlastimil Babka <vbabka@suse.cz>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	linux-debuggers@vger.kernel.org
-Subject: Re: [PATCH] mm: convert page type macros to enum
-Message-ID: <ZmHzKRkgKOGW8Xmk@telecaster.dhcp.thefacebook.com>
-References: <20240606172530.829790-1-stephen.s.brennan@oracle.com>
+	s=arc-20240116; t=1717695301; c=relaxed/simple;
+	bh=KwoN4Fz5TcJmsOcKVhh2EwjGAOn5StLwFJTBkYl1G6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bYZvbZkN6iQxdiIap+7NAmoMaGyde6O+4ekIvzP7obbBFqYSl1BYVVN5Rd+0BCi4VJTF+L93/8xZd5eL44AOZ+X0zIGAfeMGFiLZiM9aIpdDH8fErhM+7N/3JRfLvM2j8/NGErkNczu87d5qNF2liWrYgYI/nsxQRgOTQtcmnzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BAC0C2BD10;
+	Thu,  6 Jun 2024 17:35:00 +0000 (UTC)
+Date: Thu, 6 Jun 2024 13:35:11 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>
+Subject: [for-next][PATCH] tracing: Fix trace_pid_list_free() kernel-doc
+Message-ID: <20240606133511.7160610b@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606172530.829790-1-stephen.s.brennan@oracle.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 06, 2024 at 10:25:29AM -0700, Stephen Brennan wrote:
-> Changing PG_slab from a page flag to a page type in commit 46df8e73a4a3
-> ("mm: free up PG_slab") in has the unintended consequence of removing
-> the PG_slab constant from kernel debuginfo. The commit does add the
-> value to the vmcoreinfo note, which allows debuggers to find the value
-> without hardcoding it. However it's most flexible to continue
-> representing the constant with an enum. To that end, convert the page
-> type fields into an enum. Debuggers will now be able to detect that
-> PG_slab's type has changed from enum pageflags to enum page_type.
-> 
-> Fixes: 46df8e73a4a3 ("mm: free up PG_slab")
-> 
-> Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
-> ---
->  include/linux/page-flags.h | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index 104078afe0b16..64fc191a75e8d 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -947,12 +947,15 @@ PAGEFLAG_FALSE(HasHWPoisoned, has_hwpoisoned)
->  #define PAGE_TYPE_BASE	0xf0000000
->  /* Reserve		0x0000007f to catch underflows of _mapcount */
->  #define PAGE_MAPCOUNT_RESERVE	-128
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace/for-next
 
-Adding linux-debuggers to Cc.
+Head SHA1: 22b639253ec046d66c69c54b9d28bb1bd30f3a7a
 
-Can we also get PAGE_TYPE_BASE and PAGE_MAPCOUNT_RESERVE as enums? That
-would make it possible for debuggers to implement PageType() and
-page_has_type().
 
-> -#define PG_buddy	0x00000080
-> -#define PG_offline	0x00000100
-> -#define PG_table	0x00000200
-> -#define PG_guard	0x00000400
-> -#define PG_hugetlb	0x00000800
-> -#define PG_slab		0x00001000
-> +
-> +enum page_type {
-> +	PG_buddy	= 0x00000080,
-> +	PG_offline	= 0x00000100,
-> +	PG_table	= 0x00000200,
-> +	PG_guard	= 0x00000400,
-> +	PG_hugetlb	= 0x00000800,
-> +	PG_slab		= 0x00001000,
-> +};
->  
->  #define PageType(page, flag)						\
->  	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
-> -- 
-> 2.43.0
-> 
+Jeff Johnson (1):
+      tracing: Fix trace_pid_list_free() kernel-doc
+
+----
+ kernel/trace/pid_list.c | 1 +
+ 1 file changed, 1 insertion(+)
+---------------------------
+commit 22b639253ec046d66c69c54b9d28bb1bd30f3a7a
+Author: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date:   Mon May 6 07:22:33 2024 -0700
+
+    tracing: Fix trace_pid_list_free() kernel-doc
+    
+    make C=1 reports:
+    
+    kernel/trace/pid_list.c:458: warning: Function parameter or struct member 'pid_list' not described in 'trace_pid_list_free'
+    
+    Add the missing parameter to the trace_pid_list_free() kernel-doc.
+    
+    Link: https://lore.kernel.org/linux-trace-kernel/20240506-trace_pid_list_free-kdoc-v1-1-c70f0ae29144@quicinc.com
+    
+    Cc: Masami Hiramatsu <mhiramat@kernel.org>
+    Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+    Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+    Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+diff --git a/kernel/trace/pid_list.c b/kernel/trace/pid_list.c
+index 95106d02b32d..19b271a12c99 100644
+--- a/kernel/trace/pid_list.c
++++ b/kernel/trace/pid_list.c
+@@ -451,6 +451,7 @@ struct trace_pid_list *trace_pid_list_alloc(void)
+ 
+ /**
+  * trace_pid_list_free - Frees an allocated pid_list.
++ * @pid_list: The pid list to free.
+  *
+  * Frees the memory for a pid_list that was allocated.
+  */
