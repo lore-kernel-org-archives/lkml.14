@@ -1,55 +1,57 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FD51974F3;
-	Thu,  6 Jun 2024 14:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691D3198E90;
+	Thu,  6 Jun 2024 14:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684649; cv=none; b=oimHg8hAEU40JqtCfvyHgpHhNwwkmuGbc/DyRHgqzFTzLedahRVVosawHExLORkDbfqtVojLUHqOoVsHoAa2NPwSeeXb9+dSCsL6bwxxjueA67lN1iAe5cSau6SdAbuExbDBS9wHBHCm1QmXxsv9Uygpb2Rl4jJnvGl0WN1ki6w=
+	t=1717684650; cv=none; b=a18Td5XGaSm/oVlTXdImEEo+12Voi9M3pxKAzCQls2asj27hBe0JvdfmdssspI61ghPFTtsFYI5SgA8VQdL7T40MU0b5IZj5dGL+kICuXeDr2AnGPnrbZjh1Mxk2iYD2win+fMoNnIwdLQcpeA8Tg1+tRJldlt6wN2T8wBN+/UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684649; c=relaxed/simple;
-	bh=8mMm3AqayXzUESgTdJ1XdJ48K/H9kxzWYjTpfdB4MBA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GMQw4a0IjMOMRnsDt+e+JQ9tNA1WjvNAKd9OUUpQgMdqin2kvrMhZS1L7tnRRH2g7eBuF3E47onzqhXppKwcJWSlQdKwJ7zlnzfmB4on5ITy+sYZdcg2WRYCqEiDuXSIGMSkoqswVYI0Ynl0PX/fmcKZSLqZxzrBCu5BOvB8GHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=agJQkNzP; arc=none smtp.client-ip=209.85.208.50
+	s=arc-20240116; t=1717684650; c=relaxed/simple;
+	bh=HU/XmPOYc3rLTxGSCPg7+DoNE91QKlWhJKUcEcpTqRc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dQi+HKQsdMuwV7n7ROmr9Vc6GGkzm3MvjRrPgsMJ5bxpv1FFXHUYJ9rdq6rtUuCqqbqpmm15WHkOrAbcmJK7XMB67L9gl6CyiGWgox2gx0nFLHMdTQeLrmfyH3pLD5aIT1SwD+00POsCKiCXi/yA2BwXXICR2d7aEl44CdaED/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vx/hBLnB; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="agJQkNzP"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a85cc2d96so1313636a12.2;
-        Thu, 06 Jun 2024 07:37:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vx/hBLnB"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57864327f6eso518119a12.1;
+        Thu, 06 Jun 2024 07:37:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717684646; x=1718289446; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IQPdfmgPChtjBlPSUXP3XdJ6QoXKWpgusRBHic1ZZbo=;
-        b=agJQkNzPtGjTTFW7rAc9NSfNJcOhWUntCJrNOYx0kHbqv9hE3vjFbKQvvRYIi5pHJf
-         6s4km+f0c/U6/SgopQiBfzgpZMNpNNjqQUGqyOf0TsmkMw8Pkhtd+JbgB5VPsBuO81n+
-         mS2rL0Z6gw/CPdixN5CYe73wX0dMAui6gB+//+2qfSvzTh5WKHWcZzbScdSVFZTw8KJY
-         bZGu/PDN9pMjYawaiTDqkv/U8unjRdui+DlHk3TEHu8+bKtOFRokPZgWIMjpi9yoPoKG
-         dxZD7NCRnJreyOhUID981Hs4GRUTpeI7ym3pnSUaxvUuRDA0l3Z+uDWgUaOUbelQyivv
-         uW0Q==
+        d=gmail.com; s=20230601; t=1717684648; x=1718289448; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i9rzNDKvRTHIQEHFX1fo6SI12nhA/uBVeoZf8XBGrf4=;
+        b=Vx/hBLnBvGycHu2vLip1HyXs4FMgFDelZR0x5VynnGjX5CXAxoIcl2XwKtLsuWib0/
+         pIfOL/YXkfnTxm9OrX/hQ3e7SwB9U9jDXoB7/sZeo5hqGp4EluN2pB+TT8socn8P5V80
+         iTBKna+RFTvm75cXKRmf9U+gd0CJwY2pjzu+iMlWeYA7kVtoCmXKlRAnEeDg/51D2Vby
+         tfZU5ZgWpEehb9iMZymsrIhjEkR14NgDAFjCjxoKvBN+eg/+8LR9IJV7atG3AezbXybF
+         UQLrcs23A7pEgp4zaiHqkjYB4uXk0Gp9h1jaHAoXawETYw/rMd0GXxLm6DQazGBVN122
+         5bQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717684646; x=1718289446;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IQPdfmgPChtjBlPSUXP3XdJ6QoXKWpgusRBHic1ZZbo=;
-        b=b6ESNdAZ5wme4XvSxUAq3LslDiJWOJXBZ1joEwbx9PZ9Tz2pbla4+W2MN4sRkwIhnZ
-         Q9A2plWaOtZlkHtVjXiQJxDnfHJIUqibbBu7Na/vx7EBnRGam5mwxx00u9IYuDvaiINk
-         Z6I9MhPxkpQsGYp8gKpPdKHH474wFuBWAgZW6xVnDhXlNPoVnpNGDOyf2P9acnWWX/TT
-         2xXZot9MwKKu178KA/NsXy+rn/VZZVfGso0wOQj3ZqzFEN1kyut1GS4Xy3hMRs/mD7ds
-         0nPlyYHSigWcaKKrDVYdYc/JNq5zfe1V7TraV1j4tP3yDsqyENc4dC8fTi00ZIKbwsF8
-         2faQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Ch1qNy5AFFePSrIj6TIK2yg4b2lxZCNw0l7yhM5g7X3+Vm9wSfrRVeeIkzNDBxoMLXUeRcDSLSGeLMnl5DcAdti5DhFw6eTr23PI0cGjESFhGlsmCLShlplZhFLcukiZ1kEF2oPlql+U+of7Ry2IdGI9nJeI4v7p6rT+mGvBi4C7wg==
-X-Gm-Message-State: AOJu0Yzp580XNJkTkIufIVZmzGt4xvQAvOVAVnuBeQrTRk7/PX5nTmbn
-	Yala/uMpRNuXcbvpDr/lGx8ARmwj55le6LBcneSu+DkERoZfgOI=
-X-Google-Smtp-Source: AGHT+IHNL5yo/Bdpu8nBzCloyRZW3BrEOgVM80xio31mispBtwt0CtqJWneNcLyY0SGGgTvqC7aD1A==
-X-Received: by 2002:a50:f61d:0:b0:57a:2d01:13cc with SMTP id 4fb4d7f45d1cf-57a8bccb52fmr3586977a12.39.1717684646306;
-        Thu, 06 Jun 2024 07:37:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717684648; x=1718289448;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i9rzNDKvRTHIQEHFX1fo6SI12nhA/uBVeoZf8XBGrf4=;
+        b=phlGC7HpdpaFO8rILICBsRiNXgp9m4MyMsxIu85SbcBsxLqltOBazQjfaIC5FnV7lp
+         2y9MrJyZwcl/6OEc51XWjzePB8RlIC1kgU12FOP2mTFtRHxyZY5ajSYDfQLf+A/hKWlX
+         NZk2ILXno2zFw/TV3uOmBVkhZIZWKiRel5QbMO46npWoRi6lf5JwuZfzOGIlCcr0GjgM
+         /HSLZNcRf4kdPUOX57WLDaWLmFZk4zjaw9TpQiEwnmA6MeDZE90H2KBD/viB4fBG8T4X
+         JqCfDP2rYV98MAO66qhEodl5HhiBbTzVELoFtZ/bCPLtLlkcI7o4lzjo4XnHMe4ULy8m
+         8sng==
+X-Forwarded-Encrypted: i=1; AJvYcCWF0ewD/0Vn9SyX0IE+DUZV3bvQzoFf5e+TwiAXAE7PRtRTJYNrDHgAiWtPNxIjfPtg88pJEuLiiSjtvgi8R8fPU0LtFBBdLMzMWsBKyc6bc/4dT5M5Zj7Qt18SRy+FhazD0nO4yNWNk1zcVJzujUifV+hJ9pPFiIkbtAdJ6BgxHY/oFg==
+X-Gm-Message-State: AOJu0YzPOZ1NOQMbDtY2TgX4UZ/Yef+AnqWsMgEaK37TdFJuoMAF6AkT
+	Cl2LEo4dShD/fLsBCRcBIByPtLqpVDQB6BBupPkRzjc7GpgjK4M=
+X-Google-Smtp-Source: AGHT+IEZD1zCh1WfCvxH/MGx6QPAzngQWbhVxcZUWrSClLiSnL+TIe5o63jAqNH0QIyeu9gKgFaxhw==
+X-Received: by 2002:a50:a6ca:0:b0:575:2a03:8ff6 with SMTP id 4fb4d7f45d1cf-57aa55ae244mr2678406a12.16.1717684647657;
+        Thu, 06 Jun 2024 07:37:27 -0700 (PDT)
 Received: from U4.lan ([2a02:810b:f40:4600:ed9f:91b7:21f2:3109])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae1008adsm1190925a12.38.2024.06.06.07.37.25
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae1008adsm1190925a12.38.2024.06.06.07.37.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 07:37:25 -0700 (PDT)
+        Thu, 06 Jun 2024 07:37:27 -0700 (PDT)
 From: Alex Bee <knaerzche@gmail.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -62,11 +64,14 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-clk@vger.kernel.org,
-	Alex Bee <knaerzche@gmail.com>
-Subject: [PATCH v3 0/5] Add SFC support for RK3128
-Date: Thu,  6 Jun 2024 16:33:57 +0200
-Message-ID: <20240606143401.32454-2-knaerzche@gmail.com>
+	Alex Bee <knaerzche@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 2/5] dt-bindings: clock: rk3128: Drop CLK_NR_CLKS
+Date: Thu,  6 Jun 2024 16:33:59 +0200
+Message-ID: <20240606143401.32454-4-knaerzche@gmail.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240606143401.32454-2-knaerzche@gmail.com>
+References: <20240606143401.32454-2-knaerzche@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,42 +80,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds support for the Serial Flash Controller (SFC) found in
-RK3128 SoCs. The existing driver can be used as-is.
+CLK_NR_CLKS should not be part of the binding. Let's drop it, since
+the kernel code no longer uses it either.
 
-As without using some "id holes" we would run out clock ids when adding the
-additional SFC AHB clock in the binding and would have to touch the ABI, I
-added patches which remove the CLK_NR_CLKS macro and use the recently
-introduced rockchip_clk_find_max_clk_id helper instead to find the highest
-clock id.
-
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
 changes since v1:
- - added patches to remove CLK_NR_CLKS (Conor)
+ - new patch
 
-Link to v1:
-https://lore.kernel.org/all/20240605172154.193047-1-knaerzche@gmail.com/
+ include/dt-bindings/clock/rk3128-cru.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-changes since v2:
- - collect acks for the dt-bindings patches
- - fixed pinmux settings for chipselect pincontrols
-
-Link to (the messed version of) v2:
-https://lore.kernel.org/all/20240605205209.232005-1-knaerzche@gmail.com/
-
-Alex Bee (5):
-  clk: rockchip: rk3128: Drop CLK_NR_CLKS usage
-  dt-bindings: clock: rk3128: Drop CLK_NR_CLKS
-  dt-bindings: clock: rk3128: Add HCLK_SFC
-  clk: rockchip: Add HCLK_SFC for RK3128
-  ARM: dts: rockchip: Add SFC for RK3128
-
- arch/arm/boot/dts/rockchip/rk3128.dtsi | 35 ++++++++++++++++++++++++++
- drivers/clk/rockchip/clk-rk3128.c      | 21 +++++++++++++---
- include/dt-bindings/clock/rk3128-cru.h |  3 +--
- 3 files changed, 53 insertions(+), 6 deletions(-)
-
-
-base-commit: 234cb065ad82915ff8d06ce01e01c3e640b674d2
+diff --git a/include/dt-bindings/clock/rk3128-cru.h b/include/dt-bindings/clock/rk3128-cru.h
+index 1be455ba4985..2616a8791c14 100644
+--- a/include/dt-bindings/clock/rk3128-cru.h
++++ b/include/dt-bindings/clock/rk3128-cru.h
+@@ -145,8 +145,6 @@
+ #define HCLK_CRYPTO		476
+ #define HCLK_PERI		478
+ 
+-#define CLK_NR_CLKS		(HCLK_PERI + 1)
+-
+ /* soft-reset indices */
+ #define SRST_CORE0_PO		0
+ #define SRST_CORE1_PO		1
 -- 
 2.45.2
 
