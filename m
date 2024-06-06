@@ -1,107 +1,97 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CD145BE3
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 05:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5C628376;
+	Thu,  6 Jun 2024 05:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717653383; cv=none; b=Wan04Nr2yXHMarp1yyScq/IjaVdD2NU5RRJk+DYArkatcvwmwnKU9uLnTL63TGhhlJe0Aqxijn5T2MSCMmDsEeVse/vd375p4Nn83DKU6HpU0m0nLtFhnkacMV63zc38dqraRB8NXSzKAtmRCAZopV1IBPNpJ73oyqXbk79BNSE=
+	t=1717653423; cv=none; b=nDotJJ6jDf7GNhMpfjM78aJbE22mJC5jYyggDs8mSWsr9FLcJjlg3RhMXHEJWUZZR50sGMwjnsi1StrrIVzNzAgW9e4dlIu+jytwKfVxoUplS5ba0xk5kpr2OqI8jkKBCYI8zGIoxL+UK+/w3BJDZRMo5WL9eLq1knLLYvJkizk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717653383; c=relaxed/simple;
-	bh=Rn6MIgAHXThpOou1fRNGm5w62PA8fwoF6VJ/NPzgQgI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BsvZjO6WPzVYUNu2f+JakQfTJttegN4AYTfXanvEBKrbq79Pqjmgu8I2QfPjalIy1Dg0IRKiiomvwK5zvan3EQBGt0CaJzCyzJYpeyQpk14qnAXwaAtUTCAUYOQNFc32kbX+nd7550zehbDcbtnFKyZimn8NUdt/p4l3GICAXQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iwKwqsfj; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1717653423; c=relaxed/simple;
+	bh=/t3HMt63rItxc4gjrIQ2pDjEkGz9nwhITQHO3zrMkGc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NGiBSfVI1V3FyldkGzOb83U0EEROhMyZQpEeZxWJX2h2fbHfu0yfgJdYdAIFe1FtSQ9NdI96sxVbmUdGkilsCzbnZfS7fFnyLmEsXxClzlnOyke7NUAPh3pJ71V79cOPVXo+ITh7qzhAzzaV+5y6aUVcIyFWYeJ5IoLBCpt+Ffo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lgC91G2C; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iwKwqsfj"
-X-Envelope-To: senozhatsky@chromium.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717653378;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+8Z5XmpUE3zx1Y8cy7cbU/CoYCfPRTM2B2i5o3MFz18=;
-	b=iwKwqsfjoGXVgQe/po1O8i4bOhN+NhoK5vwBxCPBRqhvuJO6LC62WtY9E5l6kKozckGXAN
-	ENQD0kw1r5cy9frpP4esDYHVVJkYEgPMeRbsQqoP8S+NpNI4S+mRQgCBad5qPF4uRF7Akg
-	A+vmKupx/CjWu2gH98ucZkabpnMTcQs=
-X-Envelope-To: yosryahmed@google.com
-X-Envelope-To: erhard_f@mailbox.org
-X-Envelope-To: yuzhao@google.com
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linuxppc-dev@lists.ozlabs.org
-X-Envelope-To: hannes@cmpxchg.org
-X-Envelope-To: nphamcs@gmail.com
-X-Envelope-To: minchan@kernel.org
-X-Envelope-To: vbabka@kernel.org
-Message-ID: <f92e6d70-32e3-4f45-8fe8-0b7af7a14bc6@linux.dev>
-Date: Thu, 6 Jun 2024 13:55:50 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgC91G2C"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-35e573c0334so951701f8f.1;
+        Wed, 05 Jun 2024 22:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717653420; x=1718258220; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=67dVbFD/2DQF9usMWt43fKDwppvEBt20ndKl7bU0GFw=;
+        b=lgC91G2Cg7YWV9X2MYIWinhCJPCYTebabnCpiFaWxkcGDO7midUsv2j/UO4AFzvUIq
+         5DuOVGGPxjwEtCSubpqbP4mr6naoCe8zspeVaaeL6Sqdk3J1n63ITapFKBQZ8V1RLHwZ
+         2sJuPmH95VcOHfNcCjDYKTOrG/H4XrXx9DIYqLQgB5lta9DSee5ijcf1aOIkbAAH7oVj
+         /CfZLD3gSRM7w8BH6gB9iSjrdZAfrlwESoP5KvJUvntmKA4gSJCFOKMPEOw+M5IOnwCT
+         GN4MGnw1wqa3S6jslYczIoD2BEb1zL7fkAzaRcJF62Dr0Md4gVvKMmmqmVSTfvPmtp25
+         8SrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717653420; x=1718258220;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=67dVbFD/2DQF9usMWt43fKDwppvEBt20ndKl7bU0GFw=;
+        b=DD0mGrYk722cDaSzOSAwO1n7+Ywhxolt+7uOHvRFWFHY2LYZmntLtmqNqrLoIIm+XS
+         zN9ggZ3/h/HzWVy+UXcHAvaFs7awPkXx/Efv+42t6CPyguIZWJCjdxE/fQ1b8cOj7uZb
+         ArOEe4tbQ7H6kx6HUkoKCpp7zRF3u7yq3EM/CximEKi7SN7pCn6+oSi6AaArIGSjgSo+
+         nY3+77vmYqDqeAbAJrfK9RLvpi+CfKMyPv6tPrSu1HhAmrypLYrPmlRnKBN0b9Nz2ffJ
+         I1hLvnPkEq2mlyvuSJr/XyvpaJPjxO4KQNSHpfyWJdSETJhF9j43fReFrR6UlnrIlIJk
+         mxmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqtZUqPkA0RhnbMAUI23CKXtwBAarqqIgIhAQq/sqhHDozxhjugVdSKvHjQxx0X4KvBpQD2NyIDypsHgaegkI9lYMzNFUw2Ig0ELKZxi/KI+EJT5V/jn3D42IFEW9lO+ckrO2o
+X-Gm-Message-State: AOJu0YzncbuPzLcE9zwiEewbY/cSrP3krrEXOY63aAqAIWK2bJVoT72+
+	Me7M7KKzBQ8l3KSLQj+vGeOodauLunUxgIHfvJjtcWn2O4uAwDzdhODWgpqkmx76eA52jJTqupD
+	k0lhRLbd/ZGSo3jY8JYtOdDDjbeU=
+X-Google-Smtp-Source: AGHT+IFZepq3sEeQBCy5kZ48sBUfqe66PfQjpcYWZc5zSawvex/dg7mlw4aaY3fS0I9FAoKhuEtTLa3Rp4N1ejUG898=
+X-Received: by 2002:a5d:58ce:0:b0:35e:61b9:3037 with SMTP id
+ ffacd0b85a97d-35ef0c7281amr1250796f8f.7.1717653420153; Wed, 05 Jun 2024
+ 22:57:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: kswapd0: page allocation failure: order:0,
- mode:0x820(GFP_ATOMIC), nodemask=(null),cpuset=/,mems_allowed=0 (Kernel
- v6.5.9, 32bit ppc)
-Content-Language: en-US
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Yosry Ahmed <yosryahmed@google.com>, Erhard Furtner
- <erhard_f@mailbox.org>, Yu Zhao <yuzhao@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
- Minchan Kim <minchan@kernel.org>, "Vlastimil Babka (SUSE)"
- <vbabka@kernel.org>
-References: <CAJD7tkb=5GJ9SNUwDsu1Zy3Tus4rjsNo60Hg9N7=gGth409Diw@mail.gmail.com>
- <CAOUHufb6zXr14Wm3T-4-OJh7iAq+vzDKwVYfHLhMMt96SpiZXg@mail.gmail.com>
- <CAJD7tkZ+QY55GTzW9A7ZCm=rxAEfrW76cWXf8o5nwiKSXp8z=w@mail.gmail.com>
- <20240604231019.18e2f373@yea>
- <CAJD7tkYq5u7B+0UH2XKpeWJnUxoO2kJ1_XZ2JOgYpyNEVR7u0g@mail.gmail.com>
- <20240606010431.2b33318c@yea>
- <CAJD7tkbhWYzx=6YmzAh0F+cK-_Bn8mPOH7gMbQS7YVXmaFSgFg@mail.gmail.com>
- <e68bcc6a-25b1-42aa-83b3-5d457b254cbe@linux.dev>
- <20240606043156.GC11718@google.com>
- <6335c05d-9493-4b03-85a7-f2dd91db9451@linux.dev>
- <20240606054334.GD11718@google.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240606054334.GD11718@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <20240602173247.12651-1-eladwf@gmail.com> <20240605194305.194286d8@kernel.org>
+In-Reply-To: <20240605194305.194286d8@kernel.org>
+From: Elad Yifee <eladwf@gmail.com>
+Date: Thu, 6 Jun 2024 08:56:49 +0300
+Message-ID: <CA+SN3soxVEUUWZHMFX7OeMj56wEw7p9Q=eXXNJwiYz6Bh=pb7Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v5] net: ethernet: mtk_eth_soc: ppe: add support
+ for multiple PPEs
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>, 
+	Mark Lee <Mark-MC.Lee@mediatek.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, Daniel Golle <daniel@makrotopia.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/6/6 13:43, Sergey Senozhatsky wrote:
-> On (24/06/06 12:46), Chengming Zhou wrote:
->>>> Agree, I think we should try to improve locking scalability of zsmalloc.
->>>> I have some thoughts to share, no code or test data yet:
->>>>
->>>> 1. First, we can change the pool global lock to per-class lock, which
->>>>    is more fine-grained.
->>>
->>> Commit c0547d0b6a4b6 "zsmalloc: consolidate zs_pool's migrate_lock
->>> and size_class's locks" [1] claimed no significant difference
->>> between class->lock and pool->lock.
->>
->> Ok, I haven't looked into the history much, that seems preparation of trying
->> to introduce reclaim in the zsmalloc? Not sure. But now with the reclaim code
->> in zsmalloc has gone, should we change back to the per-class lock? Which is
-> 
-> Well, the point that commit made was that Nhat (and Johannes?) were
-> unable to detect any impact of pool->lock on a variety of cases.  So
-> we went on with code simplification.
-
-Right, the code is simpler.
-
-> 
->> obviously more fine-grained than the pool lock. Actually, I have just done it,
->> will test to get some data later.
-> 
-> Thanks, we'll need data on this.  I'm happy to take the patch, but
-> jumping back and forth between class->lock and pool->lock merely
-> "for obvious reasons" is not what I'm extremely excited about.
-
-Yeah, agree, we need test data.
+On Thu, Jun 6, 2024 at 5:43=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wro=
+te:
+>
+> On Sun,  2 Jun 2024 20:32:40 +0300 Elad Yifee wrote:
+> >  struct mtk_mac {
+> >       int                             id;
+> > +     u8                              ppe_idx;
+>
+> I thought Daniel's suggestion was to remove this field.
+> I don't see your rebuke to that point or how it's addressed in the code.
+> Also it would be good if you CCed Daniel, always CC people who gave you
+> feedback.
+I talked to Daniel in private, I should have done that publicly.
+Relying solely on ifindex%ppe_num could potentially lead to more than
+one GMAC assigned to the same PPE.
+Since the ingress device could be a non mtk type, I added that sanity check=
+.
+I think the additional field is a small price to keep things clear and simp=
+le.
+(sorry for the previous HTML tags)
