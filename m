@@ -1,842 +1,223 @@
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2085.outbound.protection.outlook.com [40.107.14.85])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE511514FF;
-	Thu,  6 Jun 2024 09:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.14.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717666817; cv=fail; b=dYLQXds+JoSwsRnauEHqy//OLhDzrxVN+ML6TM9yXjHgW965+Rx6WGlht4meKgAcoqP/5bnTD/4V4RCppEAqy+unqCSf30LLHwC4m067yeYklkLeiZXohnim4g3zPbZe70W9lgcjEnDlCyFlxpwHaJcXzQU/+CW2et9BTrsn4iw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717666817; c=relaxed/simple;
-	bh=D+QWyGjkch2LtnwliHyM+TeFRHwq837snS8jZg8aLv0=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=MilaMlhPhcyNg/loSUhu2LHAOPv3hxhnU1SWSh/34h4Pc3MbOu1Dh3cvteRS3WiHRRzU/b8Tb6PvDHN/s/cn0/sGLaxc61Z9shqT59mJobGZRrSy1z+qPM+Ve/9AzrYgoKk14S8B+mfV6NUE7Q1dslJEZ0Nm+F85qwbwj9flWvU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=WDfWeC2u; arc=fail smtp.client-ip=40.107.14.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428F379F4
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717666878; cv=none; b=VptXd2+gglVKpmFnigTiSwWbsAwPztSAMqkhr7rZodPaASvtkhby0iHlfuGsc0AmTEror9IYh7dwVcvlN+NrQV9gki2/KEkmBj/fQD8JIWq3+kLJebvTQIgF2/+WGWWwQHLr8gPz2W65fm08Yd2FSlaUoHHxn52eKBZRb85CITo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717666878; c=relaxed/simple;
+	bh=xiQKMXhmswoJYfu87AO/u+Q3CPtVEqr0qVK9t8P54SY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ryvvy47MKiPl+hW2iOWkAc9lhqHcuNTSCMdh2d/Jh4nVRgNAmAsJET1NqOdHKoHMBPgfHR3iM/0WPl2QcOkFpqkz6hp3Hoqel53fozwS6JvWVRyz5v6qLS7VJb9MgPEyfKXFXy2TLhy617FuADJr3xx6nWbyxiViUsKxlSe8+u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dw3lUjKK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WDfWeC2u"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ay1P3rgtGtwjr7zA3S79Rw1nuOPD93tUa6RPmCHwKHwPeMNu2P/ZCu4m8ZnCT9u/M7AH2iVwvk/ns9F2RAhF/2sMQE8gEEHjkpOxfuC+Ae/G9su5wSXGazaTVPzxOouKS2hX/ybeq5zG0q73RYWUI8I0SdWoPiKSDO6i8YVknhflt0ul/A5Jh3nmF0MqjQBPyOoKlBLP+Wbsoq2DweA2ISOdsLtA67KlmClQoqHb3yJ5Q8hbQVWCyoUJfM1Ns8JfBry/x98Q3KRN/1RpkcewpF6XA5QvNdUzVlB+WAYV+hXrYawdcM/XInzKMdkqiQ3vZpRXU95Rsaw2donfREmXwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NL6Gb1MRxJHhKXkOIyhEHPTHZ9l4O84vX+NbtkEHpzE=;
- b=jLyQwTG3tBUcOJUiJloXqXVPTpiLQrCVfRsXrhfIhKgJvygKVRNwdmlyahBSCUCnRw5O5op+U9IrgICR6nXuzP9bRPRU5z3DWgwHdr6i7mSHdiN7xn69KAXtC7m8Zbvv+6xz/My5FW+DYXWCQ1fbdmb3Ftv8SfL7ATRzgx0yUkTDyPhRDh5nkA3gb8vvc7aUQppdwwMBliR0JdO9oF8cFIWwdRDUK+5kw2WA5No5PmKdLCnqw/Ba08R2j2R7uKiSce2VUIB6cmRh1Ghsfv5fyjoDn+LKEjHlvgDbh/3bsVmpNAJoW6y6/Rt1CoCGbCH+2JI+/EbVZFnvWNsnae8LNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NL6Gb1MRxJHhKXkOIyhEHPTHZ9l4O84vX+NbtkEHpzE=;
- b=WDfWeC2urUomGXAETpsrKyxEYDhtEh2oh2ujQTGjq6DFNVlVr2Q1xrFlt1/tlgXvg1qf/xRX2V4cPlXAgJK9+DdKW6vBHzMJvBvKq07RNIk6NF+TFvKSccuJvXlyS7gMIsip2f4zcRRWYRrNkKYPGqYCB0KOsIP/ftGtL2YAatQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB5005.eurprd04.prod.outlook.com (2603:10a6:803:57::30)
- by PA4PR04MB9294.eurprd04.prod.outlook.com (2603:10a6:102:2a5::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.33; Thu, 6 Jun
- 2024 09:40:11 +0000
-Received: from VI1PR04MB5005.eurprd04.prod.outlook.com
- ([fe80::3a57:67cf:6ee0:5ddb]) by VI1PR04MB5005.eurprd04.prod.outlook.com
- ([fe80::3a57:67cf:6ee0:5ddb%6]) with mapi id 15.20.7633.021; Thu, 6 Jun 2024
- 09:40:11 +0000
-From: carlos.song@nxp.com
-To: aisheng.dong@nxp.com,
-	andi.shyti@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	sumit.semwal@linaro.org,
-	christian.koenig@amd.com
-Cc: carlos.song@nxp.com,
-	frank.li@nxp.com,
-	linux-i2c@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org
-Subject: [PATCH] i2c: imx-lpi2c: add eDMA mode support for LPI2C
-Date: Thu,  6 Jun 2024 17:48:15 +0800
-Message-Id: <20240606094815.933755-1-carlos.song@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0008.apcprd02.prod.outlook.com
- (2603:1096:3:17::20) To VI1PR04MB5005.eurprd04.prod.outlook.com
- (2603:10a6:803:57::30)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dw3lUjKK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717666875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=sDuQFsGapZ5dAq2VQ6Agr+wNPKN/yhAr1BOmKnlpkcE=;
+	b=Dw3lUjKK2OSxvwQZhdkakYlwq2LFJ/5Lm5GCbkv3bpo60GsBc6u0Swurd3I7LeRkSkecgU
+	aobzQc+J3ZBEHyHMxv6+wSQrU6zf6HLe8pSd22HD7ZbknjTFRtVwOw+Sm+ESPMDHz1KjP9
+	NqSfJ8J7BH3PTR3E5ysL+6Nd8OYpQWU=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-107-aY5RZiHLPOuR_2W__7VXFQ-1; Thu, 06 Jun 2024 05:41:13 -0400
+X-MC-Unique: aY5RZiHLPOuR_2W__7VXFQ-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52bb096e9d8so513422e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 02:41:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717666872; x=1718271672;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sDuQFsGapZ5dAq2VQ6Agr+wNPKN/yhAr1BOmKnlpkcE=;
+        b=dvNzP3Bq96vw0HElc2H/W7C70sUUoVV3FOGqlXMA/5i0BlMIKMUf/wOaO/sKPhFLrV
+         DRGiXLVlgGa3n+ZIokmx2FwoRHuVIriqo5AAoaTUIADkvetiGLxhWw0ictJ0lDaaMaOu
+         ZCiGnxgQQgZKSlImu0mspfElQsJv5FcCMETanANGHsMfRnzA3SLZVBMqOPyZ6KSdxjN3
+         zHXQ23horiy5ENdyfpDFfhAUDHxo6Hl66Nz53rRiBZtglLiHpA2i1rgSK5KKAvchg4Y7
+         eB4Nbak+85I5sPLqDaYPe6Z/Q7NMau2B1JPNljwJWniWEZF+lRAZE5UX9bFMck0bQuvb
+         2Rjw==
+X-Forwarded-Encrypted: i=1; AJvYcCXskFaPLBHosIsNK+lwDzHq8hNpEnwfuFO9C1BWuD7oVDlXAWTZKHLmKNJFYm3dw/CXYOCOh23cNFO58Ic8g/dG1aL7GQm2dffQnb+Y
+X-Gm-Message-State: AOJu0YzoJZ13BZhtyvS8rA0aai7nblLioLVU3vBBG3eJP83+xWCqcys5
+	BZlRy/90X6aJf/y4IoeOF78omlFeG6JYAz1AWbIaPeWLT7TRyhLAeRTvjq5WKS77GWrByHQOgdZ
+	dqzuA5fjwudxhsXQgyyWE+8cVhFrLrTWj4EpDNbM6y+uJr1YnZWa3HrvEH4NQhw==
+X-Received: by 2002:a19:a40a:0:b0:52b:aa2f:d89b with SMTP id 2adb3069b0e04-52bab4fc5c9mr2758007e87.68.1717666872104;
+        Thu, 06 Jun 2024 02:41:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFhLqsJXiIpJ9ZW7HW04hpVTkrfSK7URSEN5bAqF0lpzCT8Uw/WRp+1uI1wUYbaEqt8GWmWAQ==
+X-Received: by 2002:a19:a40a:0:b0:52b:aa2f:d89b with SMTP id 2adb3069b0e04-52bab4fc5c9mr2757990e87.68.1717666871651;
+        Thu, 06 Jun 2024 02:41:11 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c710:8800:a73c:ec5b:c02c:5e0b? (p200300cbc7108800a73cec5bc02c5e0b.dip0.t-ipconnect.de. [2003:cb:c710:8800:a73c:ec5b:c02c:5e0b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c1aa2easm15655555e9.12.2024.06.06.02.41.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 02:41:11 -0700 (PDT)
+Message-ID: <2a6a1b50-e711-42c2-91f4-42881a6057e9@redhat.com>
+Date: Thu, 6 Jun 2024 11:41:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR04MB5005:EE_|PA4PR04MB9294:EE_
-X-MS-Office365-Filtering-Correlation-Id: 71a04eb9-e019-49af-8253-08dc860ca895
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|52116005|7416005|1800799015|376005|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?HTQmNEvo7n4FvVQUV7POG1tcMt5jeC9xKj3NR0HXaPbha1DI3NcF+BC5cGAT?=
- =?us-ascii?Q?FdEAJdt3j2xBVF3V3XiC+YsVTXZxohqZJYgOoOHYX7oBEbe9Hy0PcnV9y1bN?=
- =?us-ascii?Q?5HnQI+dqJJDOILLbrr9qypKroYTqzo1/0tyaF8QIXsqUlPDqTvUvhhK9lpMY?=
- =?us-ascii?Q?vR7V4v/iAkJ+B+zXlaWd/EgCZP4vonZBaZKejoASF8XzW+KdqjCZ8XLXUx/l?=
- =?us-ascii?Q?rddXZXp1H0bMcIc9BGb58E/NibIs5hMbP/IKgoI4pDFUVRelUwNaERd+RTku?=
- =?us-ascii?Q?d9JMjwcrGBB/ws1HQXeYEipoGZWfaHXV6sV+WkQU02dFqYrwckjNTipJAwNy?=
- =?us-ascii?Q?ot9v2Pqa4pvKkyt7KwPvQ1JeQy/Otkxc+BEkduNU9e0uZHWFwd6Lft562dVw?=
- =?us-ascii?Q?CitaTDcad87k9VV9xSLyY/ZHW8jU17PLZspB/LDyHnJXq2Ly4yE8MJo/LJZN?=
- =?us-ascii?Q?sXDHs8odDyx/auLcRcuF4h3kQba0faBqnS7k3a23HMfevhoM/eOBg79nHurU?=
- =?us-ascii?Q?tPkVVTOGIJUJhvlCDV++CaYdRw66tJQkwENTI9f/fOjPDnJQPk6pwKpMaEik?=
- =?us-ascii?Q?lHERlNtC/+/PQcmaciY4VECyKVoSjJbOwWjhv2Ab2YKplnPsHFGWNq9vDU5L?=
- =?us-ascii?Q?ROA3Fz3sfA1wgdTSXsNZePEv27KEhldEf/Ny3Ks/uHf93paOrRQbwc51IZMf?=
- =?us-ascii?Q?N1AqanY4bnPdH4DcDS5u2EOA3ezjUbDpjwaN15eq7z3CZuoh0Tl1caMbazYE?=
- =?us-ascii?Q?MxYIZ+kdl25QxJcby5Qan2jzE2XMbh/2VUuOIS7WFWrnWWQStXx4Ik7y5tEB?=
- =?us-ascii?Q?5Rib0yFSE46UZzhi+sVM5BZlt1mChDi/Ot4xCyCYSyawn8HnFTRPaw4VLH9H?=
- =?us-ascii?Q?OCg0Xvz6dldndU0Zcn6yW203i2TlncRLHsrZHDzHOyS5Ousli3Dt1V+x76F9?=
- =?us-ascii?Q?V31H6C4NCYRpkDTffs/0D+vC7ZvYF0Hh1HPVTgW+QxEFptLCuZ5o7XvKgAZ1?=
- =?us-ascii?Q?9fNWtwQeZvudslge5kAAyr0kaaZeN7IgkvY+tkehHzq+2F78QXzGvpaBBslW?=
- =?us-ascii?Q?YCqEwb/LBng6bgpUXaJ1EPDL3xk2+8uo/5nlKzoCx3WOWsXxMFyN/j5URDcW?=
- =?us-ascii?Q?T9g+niCL50B1s72vZ6jS0v/GQ4/YoYGZvccfXTAqSNleg4z/Iohjdno7wp5r?=
- =?us-ascii?Q?XJYmTF+BlXzwg+WxOvFdYYboGuSd99VF27rJS4IZTZr7+B3AIUozIxgIZXYr?=
- =?us-ascii?Q?M0tXqQeAig8ze5H3Bzo2OhE/tql8dbdB5pcHwiiCa2iMmYi/Vx6jTBPDYR6a?=
- =?us-ascii?Q?sA9PCm2VMCRtYrwdf8024+EbT0jCRCMxreagLFuyctfSGbhGFENnGyEoy9PA?=
- =?us-ascii?Q?loRSBeM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5005.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(52116005)(7416005)(1800799015)(376005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?W4CoObp9YDFz4CM8Qsh98+upzamL5UqLL7SXKlkGIu6zLjaU5kEaftIZOcXt?=
- =?us-ascii?Q?iPeS9Ko465sxDm4OzfyfKonXGw4ezjTUKEYK4V9fkJj125FWrfwiXNevkfUQ?=
- =?us-ascii?Q?69KGsDcdX+Dgt5HtxXonWGvuIK+Dzp9ojpeO6Dglr9OQ/dxOVWOaEyDucddX?=
- =?us-ascii?Q?LZypZxTKM0y2DrkC5TgcvFepeH/O6JGChaeq0rHh5CSnz11F5faP6SIp2ho+?=
- =?us-ascii?Q?o8lwCpNjMwxdnIYo1r7o44vBWSPYen7Fnh97DBsYMeVt3s+W1aOQL35A+gR4?=
- =?us-ascii?Q?KZjOwx6cEDz3JSEhvRhDnpjeMqISpQBjoMWR4ryZNP60gTPXfJocMJb+Yesb?=
- =?us-ascii?Q?i/YhG1Dt9d4BPlgVrrQbXl0LHiBSeGKu33gQaJTd9a1mdNKDYmkiA+Uk8TVF?=
- =?us-ascii?Q?CpYQPIbQO9t6sEJGlEleIlEGAjvEdlqitvsLWPQXPnKJCuyxdFBnwO72wV9Z?=
- =?us-ascii?Q?NBDA3n8cqHSesd9/B4PWYgdUwLCY4E9NXxYfo2p2ppM4kFQ6dzNmSq4Kkof4?=
- =?us-ascii?Q?kvLoX0Tk6Z3CRDO+WWrq4krJu4jA6EkZE1svvHVkXtnw/EziywgsgmGRtwrv?=
- =?us-ascii?Q?fCenecod86RDyB3fxKXDxpjBFKX4p0izAURXqnNq46t8iWAsOqvgBciGPcdX?=
- =?us-ascii?Q?/ysnEt7ZrOWiLm2OnpaC0YSSUdOpSgua1/7n3sRZecIUEqunNme08C3BbV+g?=
- =?us-ascii?Q?ROEzKfHAPzfWU/Rbmzd52XIoWGLNb57xE4gBQQxem/J0QHZxLBWdvJ1Qdz74?=
- =?us-ascii?Q?QxAI1xW/CHI9bIa0OSfZuRdiOSIs1RPpqI3adFnjJa2lS65p2AxQCgw/mYzo?=
- =?us-ascii?Q?Alchj2j/HWwoKSeONhKY6uAyTR7tNOI4kM8t94G9b1r9zu1cu68cHMkHH8Tw?=
- =?us-ascii?Q?sDHor5WQZdVydZL+6tLyONKjMm571YXVlIYFJhI8PxS0M1r2FP4dMKzyMnlI?=
- =?us-ascii?Q?+0Rxan4tKOTx8xJUVsfiNiSkhJM9HPnAVLLo84Ilf1lAPqsmeiIL68hfVwTs?=
- =?us-ascii?Q?IseG0FtFz2RTATNgKeyblaKrG1/vl8+klyC5sep2V04RPzBpe4Lu/0PD4C5p?=
- =?us-ascii?Q?vxD1dDah1qWWElBgapdZdnyIPPRZBcAzH+PJvG7zo7nQNVM5F8S8SLSKPMbC?=
- =?us-ascii?Q?65F4BngWzKvC0X6eRrccff+8A9WJqaVAH7uV1aPVN3fIqtXl2HCPAbrRxHpm?=
- =?us-ascii?Q?Op//S6/4DyO+j0G9M7icwiMhF5ykq2p+cqhX6Xu47LiHS6NPeqEOJGvyn6/+?=
- =?us-ascii?Q?JeXpsBwNRIMlg+NpP1weqmEMNnMf37MQ2X/F7y7a+Qncr0kP8qnOlF1PVrqD?=
- =?us-ascii?Q?KEkVTF94wL2D2iMc20igwiVrA5CCwzojLuqj5vIuljrSo3quc2BFjAD+iN2Z?=
- =?us-ascii?Q?U5z9Z9SrpGXVa7qxGs/YIQ8rwMUpqni5+Mj358ndXL2f0hPKwftJFGBBKou5?=
- =?us-ascii?Q?06/KzoUeYQM86rrm203bAEuRKxn4te8HtKcRAbAawLr/ttI381OVEiobxtU+?=
- =?us-ascii?Q?VzjWRS6Pi0ZUwyAXVzBnetBhh8rhHVTYRg+rM37rq7bATB+OEJpZxlHmsXwP?=
- =?us-ascii?Q?72BtiLviTm6YHKP0q+AeegMSVDzLDlwqxyVIjQ87?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71a04eb9-e019-49af-8253-08dc860ca895
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5005.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 09:40:11.1640
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A2lX/XCENvH4KzRk95Erfz007WOYUXo0JLRzYHIRTQQnxyOd8wIMzkKG1/9yyOYHt6fPKOr6GFFZUV6DBSpKng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9294
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/3] mm/rmap: integrate PMD-mapped folio splitting into
+ pagewalk loop
+To: Lance Yang <ioworker0@gmail.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, sj@kernel.org,
+ baolin.wang@linux.alibaba.com, maskray@google.com, ziy@nvidia.com,
+ ryan.roberts@arm.com, 21cnbao@gmail.com, mhocko@suse.com,
+ fengwei.yin@intel.com, zokeefe@google.com, shy828301@gmail.com,
+ xiehuan09@gmail.com, libang.li@antgroup.com, wangkefeng.wang@huawei.com,
+ songmuchun@bytedance.com, peterx@redhat.com, minchan@kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240521040244.48760-1-ioworker0@gmail.com>
+ <20240521040244.48760-3-ioworker0@gmail.com>
+ <fd16b219-bc46-484a-8581-a21240440fa6@redhat.com>
+ <CAK1f24kwf4gDwK=8X4z1bM9-H6_M9QKy6-ko9pTUZij-W=40wg@mail.gmail.com>
+ <d319f00e-9dfb-43b1-ae81-a2e2afdf36c4@redhat.com>
+ <CAK1f24kKra71RSQdFOpQecU6+yMELC748irKUt54Kg64-P=4-A@mail.gmail.com>
+ <758f7be7-c17e-46d1-879f-83340ec85749@redhat.com>
+ <5a728148-ed93-4d68-a86f-9be3612dedbb@redhat.com>
+ <CAK1f24nMbW_UvCTq=K0aFu9=7psYZ9wmHq47J=AK7VYmpCpC4Q@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAK1f24nMbW_UvCTq=K0aFu9=7psYZ9wmHq47J=AK7VYmpCpC4Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Carlos Song <carlos.song@nxp.com>
+On 06.06.24 11:38, Lance Yang wrote:
+> On Thu, Jun 6, 2024 at 4:06 PM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 06.06.24 10:01, David Hildenbrand wrote:
+>>> On 06.06.24 05:55, Lance Yang wrote:
+>>>> On Wed, Jun 5, 2024 at 10:28 PM David Hildenbrand <david@redhat.com> wrote:
+>>>>>
+>>>>> On 05.06.24 16:20, Lance Yang wrote:
+>>>>>> Hi David,
+>>>>>>
+>>>>>> On Wed, Jun 5, 2024 at 8:46 PM David Hildenbrand <david@redhat.com> wrote:
+>>>>>>>
+>>>>>>> On 21.05.24 06:02, Lance Yang wrote:
+>>>>>>>> In preparation for supporting try_to_unmap_one() to unmap PMD-mapped
+>>>>>>>> folios, start the pagewalk first, then call split_huge_pmd_address() to
+>>>>>>>> split the folio.
+>>>>>>>>
+>>>>>>>> Since TTU_SPLIT_HUGE_PMD will no longer perform immediately, we might
+>>>>>>>> encounter a PMD-mapped THP missing the mlock in the VM_LOCKED range during
+>>>>>>>> the page walk. It’s probably necessary to mlock this THP to prevent it from
+>>>>>>>> being picked up during page reclaim.
+>>>>>>>>
+>>>>>>>> Suggested-by: David Hildenbrand <david@redhat.com>
+>>>>>>>> Suggested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>>>>>> Signed-off-by: Lance Yang <ioworker0@gmail.com>
+>>>>>>>> ---
+>>>>>>>
+>>>>>>> [...] again, sorry for the late review.
+>>>>>>
+>>>>>> No worries at all, thanks for taking time to review!
+>>>>>>
+>>>>>>>
+>>>>>>>> diff --git a/mm/rmap.c b/mm/rmap.c
+>>>>>>>> index ddffa30c79fb..08a93347f283 100644
+>>>>>>>> --- a/mm/rmap.c
+>>>>>>>> +++ b/mm/rmap.c
+>>>>>>>> @@ -1640,9 +1640,6 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>>>>>>>>           if (flags & TTU_SYNC)
+>>>>>>>>                   pvmw.flags = PVMW_SYNC;
+>>>>>>>>
+>>>>>>>> -     if (flags & TTU_SPLIT_HUGE_PMD)
+>>>>>>>> -             split_huge_pmd_address(vma, address, false, folio);
+>>>>>>>> -
+>>>>>>>>           /*
+>>>>>>>>            * For THP, we have to assume the worse case ie pmd for invalidation.
+>>>>>>>>            * For hugetlb, it could be much worse if we need to do pud
+>>>>>>>> @@ -1668,20 +1665,35 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>>>>>>>>           mmu_notifier_invalidate_range_start(&range);
+>>>>>>>>
+>>>>>>>>           while (page_vma_mapped_walk(&pvmw)) {
+>>>>>>>> -             /* Unexpected PMD-mapped THP? */
+>>>>>>>> -             VM_BUG_ON_FOLIO(!pvmw.pte, folio);
+>>>>>>>> -
+>>>>>>>>                   /*
+>>>>>>>>                    * If the folio is in an mlock()d vma, we must not swap it out.
+>>>>>>>>                    */
+>>>>>>>>                   if (!(flags & TTU_IGNORE_MLOCK) &&
+>>>>>>>>                       (vma->vm_flags & VM_LOCKED)) {
+>>>>>>>>                           /* Restore the mlock which got missed */
+>>>>>>>> -                     if (!folio_test_large(folio))
+>>>>>>>> +                     if (!folio_test_large(folio) ||
+>>>>>>>> +                         (!pvmw.pte && (flags & TTU_SPLIT_HUGE_PMD)))
+>>>>>>>>                                   mlock_vma_folio(folio, vma);
+> 
+> Should we still keep the '!pvmw.pte' here? Something like:
+> 
+> if (!folio_test_large(folio) || !pvmw.pte)
+>      mlock_vma_folio(folio, vma);
 
-Add eDMA mode support for LPI2C.
+I was wondering the same the whole time ...
 
-There are some differences between TX DMA mode and RX DMA mode.
-LPI2C MTDR register is Controller Transmit Data Register.
-When LPI2C send data, it is tx cmd register and tx data fifo.
-When LPI2C receive data, it is just a rx cmd register. LPI2C MRDR
-register is Controller Receive Data Register, received data are
-stored in this.
+> 
+> We can mlock the THP to prevent it from being picked up during page reclaim.
+> 
+> David, I’d like to hear your thoughts on this ;)
 
-MTDR[8:10] is CMD field and MTDR[0:7] is DATA filed.
-+-----------+-------------------------------+
-|  C  M  D  |          D  A  T  A           |
-+---+---+---+---+---+---+---+---+---+---+---+
-| 10| 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
-+---+---+---+---+---+---+---+---+---+---+---+
+but I think there is no need to for now, in the context of your patchset. :)
 
-MRDR is Controller Receive Data Register.
-MRDR[0:7] is DATA filed.
-+-------------------------------+
-|          D  A  T  A           |
-+---+---+---+---+---+---+---+---+
-| 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
-+---+---+---+---+---+---+---+---+
-
-When the LPI2C controller needs to send data, tx cmd and 8-bit data
-should be written into MTDR:
-CMD: 000b: Transmit the value in DATA[7:0].
-DATA: 8-bit data.
-
-If LPI2C controller needs to send N 8-bit data, just write N times
-(CMD(W) + DATA(u8)) to MTDR.
-
-When the LPI2C controller needs to receive data, rx cmd should be
-written into MTDR, the received data will be stored in the MRDR.
-
-MTDR(CMD): 001b: Receive (DATA[7:0] + 1) 8-bit data.
-MTDR(DATA): byte counter.
-MRDR(DATA): 8-bit data.
-
-So when LPI2C controller needs to receive N 8-bit data,
-1. N <= 256:
-Write 1 time (CMD(R) + BYTE COUNT(N-1)) into MTDR and receive data from
-MRDR.
-2. N > 256:
-Write N/256 times (CMD(R) + BYTE COUNT(255)) + 1 time (CMD(R) + BYTE
-COUNT(N%256)) into MTDR and receive data from MRDR.
-
-Due to these differences, when LPI2C is in DMA TX mode, only enable TX
-channel to send data. But when LPI2C is in DMA RX mode, TX and RX channel
-are both enabled, TX channel is used to send RX cmd and RX channel is
-used to receive data.
-
-Signed-off-by: Carlos Song <carlos.song@nxp.com>
-Reviewed-by: Frank Li <frank.li@nxp.com>
----
- drivers/i2c/busses/i2c-imx-lpi2c.c | 536 ++++++++++++++++++++++++++++-
- 1 file changed, 528 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c b/drivers/i2c/busses/i2c-imx-lpi2c.c
-index 0197786892a2..26640c1dadc7 100644
---- a/drivers/i2c/busses/i2c-imx-lpi2c.c
-+++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
-@@ -8,6 +8,8 @@
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-mapping.h>
- #include <linux/err.h>
- #include <linux/errno.h>
- #include <linux/i2c.h>
-@@ -29,6 +31,7 @@
- #define LPI2C_MCR	0x10	/* i2c contrl register */
- #define LPI2C_MSR	0x14	/* i2c status register */
- #define LPI2C_MIER	0x18	/* i2c interrupt enable */
-+#define LPI2C_MDER	0x1C	/* i2c DMA enable */
- #define LPI2C_MCFGR0	0x20	/* i2c master configuration */
- #define LPI2C_MCFGR1	0x24	/* i2c master configuration */
- #define LPI2C_MCFGR2	0x28	/* i2c master configuration */
-@@ -70,11 +73,14 @@
- #define MCFGR1_AUTOSTOP	BIT(8)
- #define MCFGR1_IGNACK	BIT(9)
- #define MRDR_RXEMPTY	BIT(14)
-+#define MDER_TDDE	BIT(0)
-+#define MDER_RDDE	BIT(1)
- 
- #define I2C_CLK_RATIO	2
- #define CHUNK_DATA	256
- 
- #define I2C_PM_TIMEOUT		10 /* ms */
-+#define I2C_DMA_THRESHOLD	8 /* bytes */
- 
- enum lpi2c_imx_mode {
- 	STANDARD,	/* 100+Kbps */
-@@ -108,6 +114,22 @@ struct lpi2c_imx_struct {
- 	unsigned int		rxfifosize;
- 	enum lpi2c_imx_mode	mode;
- 	struct i2c_bus_recovery_info rinfo;
-+
-+	bool			can_use_dma;
-+	bool			using_pio_mode;
-+	u8			rx_cmd_buf_len;
-+	u16			*rx_cmd_buf;
-+	u8			*dma_buf;
-+	unsigned int	dma_len;
-+	unsigned int	tx_burst_num;
-+	unsigned int	rx_burst_num;
-+	resource_size_t		phy_addr;
-+	dma_addr_t		dma_tx_addr;
-+	dma_addr_t		dma_addr;
-+	enum dma_data_direction dma_direction;
-+	struct dma_chan		*chan_tx;
-+	struct dma_chan		*chan_rx;
-+	struct i2c_msg		*msg;
- };
- 
- static void lpi2c_imx_intctrl(struct lpi2c_imx_struct *lpi2c_imx,
-@@ -305,7 +327,7 @@ static int lpi2c_imx_master_disable(struct lpi2c_imx_struct *lpi2c_imx)
- 	return 0;
- }
- 
--static int lpi2c_imx_msg_complete(struct lpi2c_imx_struct *lpi2c_imx)
-+static int lpi2c_imx_pio_msg_complete(struct lpi2c_imx_struct *lpi2c_imx)
- {
- 	unsigned long time_left;
- 
-@@ -451,6 +473,444 @@ static void lpi2c_imx_read(struct lpi2c_imx_struct *lpi2c_imx,
- 	lpi2c_imx_intctrl(lpi2c_imx, MIER_RDIE | MIER_NDIE);
- }
- 
-+static bool is_use_dma(struct lpi2c_imx_struct *lpi2c_imx, struct i2c_msg *msg)
-+{
-+	if (!lpi2c_imx->can_use_dma)
-+		return false;
-+
-+	/*
-+	 * When the length of data is less than I2C_DMA_THRESHOLD,
-+	 * cpu mode is used directly to avoid low performance.
-+	 */
-+	if (msg->len < I2C_DMA_THRESHOLD)
-+		return false;
-+
-+	return true;
-+}
-+
-+static int lpi2c_imx_pio_xfer(struct lpi2c_imx_struct *lpi2c_imx,
-+			   struct i2c_msg *msg)
-+{
-+	int result;
-+
-+	reinit_completion(&lpi2c_imx->complete);
-+
-+	if (msg->flags & I2C_M_RD)
-+		lpi2c_imx_read(lpi2c_imx, msg);
-+	else
-+		lpi2c_imx_write(lpi2c_imx, msg);
-+
-+	result = lpi2c_imx_pio_msg_complete(lpi2c_imx);
-+	if (result)
-+		return result;
-+
-+	return 0;
-+}
-+
-+static int lpi2c_imx_dma_calculate_timeout(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	unsigned long timeout = 0;
-+
-+	timeout = 8 * lpi2c_imx->msglen * 1000 / lpi2c_imx->bitrate;
-+
-+	/* Add extra second for scheduler related activities */
-+	timeout += 1;
-+
-+	/* Double calculated timeout */
-+	return msecs_to_jiffies(timeout * MSEC_PER_SEC);
-+}
-+
-+static int lpi2c_imx_alloc_rx_cmd_buf(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	u16 rx_remain = lpi2c_imx->msg->len;
-+	u16 temp;
-+	int cmd_num;
-+
-+	/*
-+	 * Calculate the number of rx command words via the DMA TX channel
-+	 * writing into command register based on the i2c msg len, and build
-+	 * the rx command words buffer.
-+	 */
-+	cmd_num = DIV_ROUND_UP(rx_remain, CHUNK_DATA);
-+	lpi2c_imx->rx_cmd_buf = kcalloc(cmd_num, sizeof(u16), GFP_KERNEL);
-+	lpi2c_imx->rx_cmd_buf_len = cmd_num * sizeof(u16);
-+
-+	if (!lpi2c_imx->rx_cmd_buf) {
-+		dev_err(&lpi2c_imx->adapter.dev, "Alloc RX cmd buffer failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	for (int i = 0; i < cmd_num ; i++) {
-+		temp = rx_remain > CHUNK_DATA ? CHUNK_DATA - 1 : rx_remain - 1;
-+		temp |= (RECV_DATA << 8);
-+		rx_remain -= CHUNK_DATA;
-+		lpi2c_imx->rx_cmd_buf[i] = temp;
-+	}
-+
-+	return 0;
-+}
-+
-+static void lpi2c_imx_free_rx_cmd_buf(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	if (!lpi2c_imx->rx_cmd_buf)
-+		return;
-+
-+	kfree(lpi2c_imx->rx_cmd_buf);
-+}
-+
-+static int lpi2c_imx_dma_msg_complete(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	unsigned long time_left, timeout;
-+
-+	timeout = lpi2c_imx_dma_calculate_timeout(lpi2c_imx);
-+	time_left = wait_for_completion_timeout(&lpi2c_imx->complete, timeout);
-+	if (time_left == 0) {
-+		dev_err(&lpi2c_imx->adapter.dev, "I/O Error in DMA Data Transfer\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
-+static void lpi2c_dma_unmap(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	struct dma_chan *chan = lpi2c_imx->dma_direction == DMA_FROM_DEVICE
-+				? lpi2c_imx->chan_rx : lpi2c_imx->chan_tx;
-+
-+	dma_unmap_single(chan->device->dev, lpi2c_imx->dma_addr,
-+			 lpi2c_imx->dma_len, lpi2c_imx->dma_direction);
-+
-+	lpi2c_imx->dma_direction = DMA_NONE;
-+}
-+
-+static void lpi2c_cleanup_rx_cmd_dma(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	dmaengine_terminate_sync(lpi2c_imx->chan_tx);
-+	dma_unmap_single(lpi2c_imx->chan_tx->device->dev, lpi2c_imx->dma_tx_addr,
-+				lpi2c_imx->rx_cmd_buf_len, DMA_TO_DEVICE);
-+}
-+
-+static void lpi2c_cleanup_dma(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	if (lpi2c_imx->dma_direction == DMA_NONE)
-+		return;
-+	else if (lpi2c_imx->dma_direction == DMA_FROM_DEVICE)
-+		dmaengine_terminate_sync(lpi2c_imx->chan_rx);
-+	else if (lpi2c_imx->dma_direction == DMA_TO_DEVICE)
-+		dmaengine_terminate_sync(lpi2c_imx->chan_tx);
-+
-+	lpi2c_dma_unmap(lpi2c_imx);
-+}
-+
-+static void lpi2c_dma_callback(void *data)
-+{
-+	struct lpi2c_imx_struct *lpi2c_imx = (struct lpi2c_imx_struct *)data;
-+
-+	complete(&lpi2c_imx->complete);
-+}
-+
-+static int lpi2c_dma_rx_cmd_submit(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	struct dma_chan *txchan = lpi2c_imx->chan_tx;
-+	struct dma_async_tx_descriptor *rx_cmd_desc;
-+	dma_cookie_t cookie;
-+
-+	lpi2c_imx->dma_tx_addr = dma_map_single(txchan->device->dev,
-+						 lpi2c_imx->rx_cmd_buf,
-+						 lpi2c_imx->rx_cmd_buf_len, DMA_TO_DEVICE);
-+	if (dma_mapping_error(txchan->device->dev, lpi2c_imx->dma_tx_addr)) {
-+		dev_err(&lpi2c_imx->adapter.dev, "dma map failed, use pio\n");
-+		return -EINVAL;
-+	}
-+
-+	rx_cmd_desc = dmaengine_prep_slave_single(txchan, lpi2c_imx->dma_tx_addr,
-+				lpi2c_imx->rx_cmd_buf_len, DMA_MEM_TO_DEV,
-+				DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	if (!rx_cmd_desc) {
-+		dma_unmap_single(txchan->device->dev, lpi2c_imx->dma_tx_addr,
-+				lpi2c_imx->rx_cmd_buf_len, DMA_TO_DEVICE);
-+		dev_err(&lpi2c_imx->adapter.dev, "dma prep slave sg failed, use pio\n");
-+		return -EINVAL;
-+	}
-+
-+
-+	cookie = dmaengine_submit(rx_cmd_desc);
-+	if (dma_submit_error(cookie)) {
-+		dma_unmap_single(txchan->device->dev, lpi2c_imx->dma_tx_addr,
-+				lpi2c_imx->rx_cmd_buf_len, DMA_TO_DEVICE);
-+		dmaengine_desc_free(rx_cmd_desc);
-+		dev_err(&lpi2c_imx->adapter.dev, "submitting dma failed, use pio\n");
-+		return -EINVAL;
-+	}
-+
-+	dma_async_issue_pending(txchan);
-+
-+	return 0;
-+}
-+
-+static int lpi2c_dma_submit(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	bool read = lpi2c_imx->msg->flags & I2C_M_RD;
-+	enum dma_data_direction dir = read ? DMA_FROM_DEVICE : DMA_TO_DEVICE;
-+	struct dma_chan *chan = read ? lpi2c_imx->chan_rx : lpi2c_imx->chan_tx;
-+	struct dma_async_tx_descriptor *desc;
-+	dma_cookie_t cookie;
-+
-+	lpi2c_imx->dma_direction = dir;
-+
-+	lpi2c_imx->dma_addr = dma_map_single(chan->device->dev,
-+					     lpi2c_imx->dma_buf,
-+					     lpi2c_imx->dma_len, dir);
-+	if (dma_mapping_error(chan->device->dev, lpi2c_imx->dma_addr)) {
-+		dev_err(&lpi2c_imx->adapter.dev, "dma map failed, use pio\n");
-+		return -EINVAL;
-+	}
-+
-+	desc = dmaengine_prep_slave_single(chan, lpi2c_imx->dma_addr,
-+					lpi2c_imx->dma_len, read ?
-+					DMA_DEV_TO_MEM : DMA_MEM_TO_DEV,
-+					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	if (!desc) {
-+		dev_err(&lpi2c_imx->adapter.dev, "dma prep slave sg failed, use pio\n");
-+		lpi2c_dma_unmap(lpi2c_imx);
-+		return -EINVAL;
-+	}
-+
-+	reinit_completion(&lpi2c_imx->complete);
-+	desc->callback = lpi2c_dma_callback;
-+	desc->callback_param = (void *)lpi2c_imx;
-+
-+	cookie = dmaengine_submit(desc);
-+	if (dma_submit_error(cookie)) {
-+		dev_err(&lpi2c_imx->adapter.dev, "submitting dma failed, use pio\n");
-+		lpi2c_dma_unmap(lpi2c_imx);
-+		dmaengine_desc_free(desc);
-+		return -EINVAL;
-+	}
-+
-+	/* Can't switch to PIO mode when DMA have started transferred */
-+	lpi2c_imx->using_pio_mode = false;
-+
-+	dma_async_issue_pending(chan);
-+
-+	return 0;
-+}
-+
-+static int lpi2c_imx_find_max_burst_num(unsigned int fifosize, unsigned int len)
-+{
-+	unsigned int i;
-+
-+	for (i = fifosize / 2; i > 0; i--) {
-+		if (!(len % i))
-+			break;
-+	}
-+
-+	return i;
-+}
-+/*
-+ * For a highest DMA efficiency, tx/rx burst number should be calculated according to
-+ * the FIFO depth.
-+ */
-+static void lpi2c_imx_dma_burst_num_calculate(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	unsigned int cmd_num;
-+
-+	if (lpi2c_imx->msg->flags & I2C_M_RD) {
-+		/*
-+		 * One RX cmd word can trigger DMA receive no more than 256 bytes.
-+		 * The number of RX cmd words should be calculated based on the data
-+		 * length.
-+		 */
-+		cmd_num = DIV_ROUND_UP(lpi2c_imx->dma_len, CHUNK_DATA);
-+		lpi2c_imx->tx_burst_num = lpi2c_imx_find_max_burst_num(lpi2c_imx->txfifosize,
-+				   cmd_num);
-+		lpi2c_imx->rx_burst_num = lpi2c_imx_find_max_burst_num(lpi2c_imx->rxfifosize,
-+				   lpi2c_imx->dma_len);
-+	} else
-+		lpi2c_imx->tx_burst_num = lpi2c_imx_find_max_burst_num(lpi2c_imx->txfifosize,
-+				   lpi2c_imx->dma_len);
-+}
-+
-+static int lpi2c_dma_config(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	int ret;
-+	struct dma_slave_config rx = {}, tx = {};
-+
-+	lpi2c_imx_dma_burst_num_calculate(lpi2c_imx);
-+
-+	if (lpi2c_imx->msg->flags & I2C_M_RD) {
-+		if (IS_ERR(lpi2c_imx->chan_tx)) {
-+			ret =  PTR_ERR(lpi2c_imx->chan_tx);
-+			dev_err(&lpi2c_imx->adapter.dev, "can't get RX channel %d\n", ret);
-+			return ret;
-+		}
-+
-+		if (IS_ERR(lpi2c_imx->chan_rx)) {
-+			ret =  PTR_ERR(lpi2c_imx->chan_rx);
-+			dev_err(&lpi2c_imx->adapter.dev, "can't get TX channel %d\n", ret);
-+			return ret;
-+		}
-+
-+		tx.dst_addr = lpi2c_imx->phy_addr + LPI2C_MTDR;
-+		tx.dst_addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
-+		tx.dst_maxburst = lpi2c_imx->tx_burst_num;
-+		tx.direction = DMA_MEM_TO_DEV;
-+		ret = dmaengine_slave_config(lpi2c_imx->chan_tx, &tx);
-+		if (ret < 0) {
-+			dev_err(&lpi2c_imx->adapter.dev, "can't configure TX channel %d\n", ret);
-+			return ret;
-+		}
-+
-+		rx.src_addr = lpi2c_imx->phy_addr + LPI2C_MRDR;
-+		rx.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+		rx.src_maxburst = lpi2c_imx->rx_burst_num;
-+		rx.direction = DMA_DEV_TO_MEM;
-+		ret = dmaengine_slave_config(lpi2c_imx->chan_rx, &rx);
-+		if (ret < 0) {
-+			dev_err(&lpi2c_imx->adapter.dev, "can't configure RX channel %d\n", ret);
-+			return ret;
-+		}
-+	} else {
-+		if (IS_ERR(lpi2c_imx->chan_tx)) {
-+			ret =  PTR_ERR(lpi2c_imx->chan_tx);
-+			dev_err(&lpi2c_imx->adapter.dev, "can't get TX channel %d\n", ret);
-+			return ret;
-+		}
-+
-+		tx.dst_addr = lpi2c_imx->phy_addr + LPI2C_MTDR;
-+		tx.dst_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+		tx.dst_maxburst = lpi2c_imx->tx_burst_num;
-+		tx.direction = DMA_MEM_TO_DEV;
-+		ret = dmaengine_slave_config(lpi2c_imx->chan_tx, &tx);
-+		if (ret < 0) {
-+			dev_err(&lpi2c_imx->adapter.dev, "can't configure TX channel %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void lpi2c_dma_enable(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	/*
-+	 * TX interrupt will be triggerred when the number of words in the transmit FIFO is equal
-+	 * or less than TX watermark. RX interrupt will be triggerred when the number of words
-+	 * in the receive FIFO is greater than RX watermark. In order to trigger the DMA interrupt,
-+	 * TX watermark should be set equal to the DMA TX burst number but RX watermark should be
-+	 * set less than the DMA RX burst number.
-+	 */
-+	if (lpi2c_imx->msg->flags & I2C_M_RD) {
-+		/* Set I2C TX/RX watermark */
-+		writel(lpi2c_imx->tx_burst_num | (lpi2c_imx->rx_burst_num - 1) << 16,
-+				lpi2c_imx->base + LPI2C_MFCR);
-+		/* Enable I2C DMA TX/RX function */
-+		writel(MDER_TDDE | MDER_RDDE, lpi2c_imx->base + LPI2C_MDER);
-+	} else {
-+		/* Set I2C TX watermark */
-+		writel(lpi2c_imx->tx_burst_num, lpi2c_imx->base + LPI2C_MFCR);
-+		/* Enable I2C DMA TX function */
-+		writel(MDER_TDDE, lpi2c_imx->base + LPI2C_MDER);
-+	}
-+
-+	/* Enable NACK detected */
-+	lpi2c_imx_intctrl(lpi2c_imx, MIER_NDIE);
-+};
-+
-+/*
-+ * When lpi2c in TX DMA mode we can use one DMA TX channel to write data word
-+ * into TXFIFO, but in RX DMA mode it is different.
-+ *
-+ * LPI2C MTDR register is a command data and transmit data register.
-+ * Bit 8-10 is a command data field and Bit 0-7 is a transmit data
-+ * field. When the LPI2C master needs to read data, the data number
-+ * to read should be set in transmit data field and RECV_DATA should
-+ * be set into the command data field to receive (DATA[7:0] + 1) bytes.
-+ * The recv data command word is made by RECV_DATA in command data field
-+ * and the data number to read in transmit data field. when the length
-+ * of the data that needs to be read exceeds 256 bytes, recv data command
-+ * word needs to be written to TXFIFO multiple times.
-+ *
-+ * So when in RX DMA mode, the TX channel also needs to be configured additionally
-+ * to send RX command words and the RX command word need be set in advance before
-+ * transmitting.
-+ */
-+static int lpi2c_imx_dma_xfer(struct lpi2c_imx_struct *lpi2c_imx,
-+			   struct i2c_msg *msg)
-+{
-+	int result;
-+
-+	lpi2c_imx->msg = msg;
-+	lpi2c_imx->dma_len = msg->len;
-+	lpi2c_imx->dma_buf = i2c_get_dma_safe_msg_buf(msg,
-+						I2C_DMA_THRESHOLD);
-+
-+	if (!lpi2c_imx->dma_buf)
-+		return -ENOMEM;
-+
-+	result = lpi2c_dma_config(lpi2c_imx);
-+	if (result) {
-+		dev_err(&lpi2c_imx->adapter.dev, "DMA Config Fail, error %d\n", result);
-+		goto disable_dma;
-+	}
-+
-+	lpi2c_dma_enable(lpi2c_imx);
-+
-+	result = lpi2c_dma_submit(lpi2c_imx);
-+	if (result) {
-+		dev_err(&lpi2c_imx->adapter.dev, "DMA submit Fail, error %d\n", result);
-+		goto disable_dma;
-+	}
-+
-+	if (msg->flags & I2C_M_RD) {
-+		result = lpi2c_imx_alloc_rx_cmd_buf(lpi2c_imx);
-+		if (result) {
-+			lpi2c_cleanup_dma(lpi2c_imx);
-+			goto disable_dma;
-+		}
-+
-+		result = lpi2c_dma_rx_cmd_submit(lpi2c_imx);
-+		if (result) {
-+			lpi2c_cleanup_dma(lpi2c_imx);
-+			goto disable_dma;
-+		}
-+	}
-+
-+	result = lpi2c_imx_dma_msg_complete(lpi2c_imx);
-+	if (result) {
-+		if (msg->flags & I2C_M_RD)
-+			lpi2c_cleanup_rx_cmd_dma(lpi2c_imx);
-+		lpi2c_cleanup_dma(lpi2c_imx);
-+		goto disable_dma;
-+	}
-+
-+	/* When meet NACK in transfer, cleanup all DMA transfer */
-+	if ((readl(lpi2c_imx->base + LPI2C_MSR) & MSR_NDF) && !result) {
-+		if (msg->flags & I2C_M_RD)
-+			lpi2c_cleanup_rx_cmd_dma(lpi2c_imx);
-+		lpi2c_cleanup_dma(lpi2c_imx);
-+		result = -EIO;
-+		goto disable_dma;
-+	}
-+
-+	if (msg->flags & I2C_M_RD)
-+		dma_unmap_single(lpi2c_imx->chan_tx->device->dev, lpi2c_imx->dma_tx_addr,
-+					lpi2c_imx->rx_cmd_buf_len, DMA_TO_DEVICE);
-+	lpi2c_dma_unmap(lpi2c_imx);
-+
-+disable_dma:
-+	/* Disable I2C DMA function */
-+	writel(0, lpi2c_imx->base + LPI2C_MDER);
-+	lpi2c_imx_free_rx_cmd_buf(lpi2c_imx);
-+	if (result)
-+		i2c_put_dma_safe_msg_buf(lpi2c_imx->dma_buf,
-+					lpi2c_imx->msg, false);
-+	else
-+		i2c_put_dma_safe_msg_buf(lpi2c_imx->dma_buf,
-+					lpi2c_imx->msg, true);
-+	return result;
-+}
-+
- static int lpi2c_imx_xfer(struct i2c_adapter *adapter,
- 			  struct i2c_msg *msgs, int num)
- {
-@@ -475,14 +935,17 @@ static int lpi2c_imx_xfer(struct i2c_adapter *adapter,
- 		lpi2c_imx->tx_buf = NULL;
- 		lpi2c_imx->delivered = 0;
- 		lpi2c_imx->msglen = msgs[i].len;
--		init_completion(&lpi2c_imx->complete);
- 
--		if (msgs[i].flags & I2C_M_RD)
--			lpi2c_imx_read(lpi2c_imx, &msgs[i]);
--		else
--			lpi2c_imx_write(lpi2c_imx, &msgs[i]);
-+		/* When DMA mode failed before transferring, CPU mode can be used. */
-+		lpi2c_imx->using_pio_mode = true;
-+
-+		if (is_use_dma(lpi2c_imx, &msgs[i])) {
-+			result = lpi2c_imx_dma_xfer(lpi2c_imx, &msgs[i]);
-+			if (result && lpi2c_imx->using_pio_mode)
-+				result = lpi2c_imx_pio_xfer(lpi2c_imx, &msgs[i]);
-+		} else
-+			result = lpi2c_imx_pio_xfer(lpi2c_imx, &msgs[i]);
- 
--		result = lpi2c_imx_msg_complete(lpi2c_imx);
- 		if (result)
- 			goto stop;
- 
-@@ -546,6 +1009,49 @@ static int lpi2c_imx_init_recovery_info(struct lpi2c_imx_struct *lpi2c_imx,
- 	return 0;
- }
- 
-+static void lpi2c_dma_exit(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	if (lpi2c_imx->chan_rx) {
-+		dma_release_channel(lpi2c_imx->chan_rx);
-+		lpi2c_imx->chan_rx = NULL;
-+	}
-+
-+	if (lpi2c_imx->chan_tx) {
-+		dma_release_channel(lpi2c_imx->chan_tx);
-+		lpi2c_imx->chan_tx = NULL;
-+	}
-+}
-+
-+static int lpi2c_dma_init(struct device *dev,
-+			  struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	int ret;
-+
-+	lpi2c_imx->chan_rx = lpi2c_imx->chan_tx = NULL;
-+	lpi2c_imx->can_use_dma = false;
-+
-+	/* Prepare for TX DMA: */
-+	lpi2c_imx->chan_tx = dma_request_chan(dev, "tx");
-+	if (IS_ERR(lpi2c_imx->chan_tx)) {
-+		ret = PTR_ERR(lpi2c_imx->chan_tx);
-+		lpi2c_imx->chan_tx = NULL;
-+		dev_dbg(dev, "can't get TX channel %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Prepare for RX DMA: */
-+	lpi2c_imx->chan_rx = dma_request_chan(dev, "rx");
-+	if (IS_ERR(lpi2c_imx->chan_rx)) {
-+		ret = PTR_ERR(lpi2c_imx->chan_rx);
-+		lpi2c_imx->chan_rx = NULL;
-+		dev_dbg(dev, "can't get RX channel %d\n", ret);
-+		return ret;
-+	}
-+
-+	lpi2c_imx->can_use_dma = true;
-+	return 0;
-+}
-+
- static u32 lpi2c_imx_func(struct i2c_adapter *adapter)
- {
- 	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL |
-@@ -568,12 +1074,13 @@ static int lpi2c_imx_probe(struct platform_device *pdev)
- 	struct lpi2c_imx_struct *lpi2c_imx;
- 	unsigned int temp;
- 	int irq, ret;
-+	struct resource *res;
- 
- 	lpi2c_imx = devm_kzalloc(&pdev->dev, sizeof(*lpi2c_imx), GFP_KERNEL);
- 	if (!lpi2c_imx)
- 		return -ENOMEM;
- 
--	lpi2c_imx->base = devm_platform_ioremap_resource(pdev, 0);
-+	lpi2c_imx->base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(lpi2c_imx->base))
- 		return PTR_ERR(lpi2c_imx->base);
- 
-@@ -587,6 +1094,7 @@ static int lpi2c_imx_probe(struct platform_device *pdev)
- 	lpi2c_imx->adapter.dev.of_node	= pdev->dev.of_node;
- 	strscpy(lpi2c_imx->adapter.name, pdev->name,
- 		sizeof(lpi2c_imx->adapter.name));
-+	lpi2c_imx->phy_addr = (dma_addr_t)res->start;
- 
- 	ret = devm_clk_bulk_get_all(&pdev->dev, &lpi2c_imx->clks);
- 	if (ret < 0)
-@@ -640,6 +1148,18 @@ static int lpi2c_imx_probe(struct platform_device *pdev)
- 	if (ret == -EPROBE_DEFER)
- 		goto rpm_disable;
- 
-+	/* Init DMA */
-+	ret = lpi2c_dma_init(&pdev->dev, lpi2c_imx);
-+	if (ret) {
-+		lpi2c_dma_exit(lpi2c_imx);
-+		if (ret == -EPROBE_DEFER)
-+			goto rpm_disable;
-+		dev_info(&pdev->dev, "LPI2C use pio mode\n");
-+	} else
-+		dev_info(&pdev->dev, " LPI2C eDMA enabled\n");
-+
-+	init_completion(&lpi2c_imx->complete);
-+
- 	ret = i2c_add_adapter(&lpi2c_imx->adapter);
- 	if (ret)
- 		goto rpm_disable;
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
