@@ -1,117 +1,96 @@
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80162FC02;
-	Thu,  6 Jun 2024 21:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7458AFC02;
+	Thu,  6 Jun 2024 21:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717709591; cv=none; b=l4eAoZ9q/Ev7ME5Y35HXthve6rB4Q+fUsB9GfIuZt2sDplVKBbiRLzryW5II/rMh1u7TTF/vr/bDCbkjDbdF6CVOQQQN8URtsP3i8cU79KkaGFbrdsC4jFwUzgAO6/svdkecOR+Pwljj3TpJd+m5whPdVnopcvxVrmRts/+6thI=
+	t=1717709631; cv=none; b=PuFVLPpI17Spk5CWBfQLCwj/7YMcYrT4RvV1DkbJqhOYqCQttDPax5Xfx+hGi58xrY5Op7n66lxbmhkIKUjmpgX2/zEAWwugl7LUjMdqGRNBniSo7DCTBp+SXVbpQR0Mk/ZsNnM+reEDm5lsw2afCdgAJbLImvZo/ffSzhSThgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717709591; c=relaxed/simple;
-	bh=c4VPquM25/aAzWc+PWoefzik+kfteGxmC9v6FNbyTbM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Subject; b=IoYcP12aQBzVufc6VYmCaoFcYI95EAvBJY06TghI61u1pQFGX6VlPvcUbYvBqmdeu53cuqZvzXNR4vxI4Hnz7McDuWHuFy0qbAaOGw+lgW5yEIL9M/D4eUMsLxq36uBLgRhFNFZN6Uvao2qD79v1ZwFZblWoqzlFdBMChA7MqtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=VafrFhSD; arc=none smtp.client-ip=204.191.154.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+	s=arc-20240116; t=1717709631; c=relaxed/simple;
+	bh=BIPCNwr2iNo5s7oX2a4ALoQD1rqzDFRTnwAeLaO1RRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n0aYY9wPtPSnv+YqEVs/4E37nUubcBYNniD0uZE3OQ+UrvR25X4kpJmViuNb3w13KJmir6obh+AJlR2jDThLIpt+bmosvMAFBSxf6xxFdSfo5NfkpSrB8yXqQWBaVhJIVf99rEi7SY5xO/481cOzIdju1BsH1lOWbJnlXSLlrP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IxtQjifz; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="VafrFhSD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=GFEw8cAaOIMPPjcIH/t2swdVfYuU+9OBnbnvT/Z34FA=; b=VafrFhSDZTiuTQ8+eqghWgRF/6
-	LbImSkv5LzDfHOSEpw5N5S4ulsNiiv1TzeiftXjYmAxXH9xYRxXqV6ScNt6jpoZhUoMjpLgULTY4c
-	RxEqaFL5TsOFZvWBW6uee5L1CXJlmgb8ZmEQb3c/zrxeclsuynN+yXuixJpTovirhWS9QmVDgv2Ka
-	zCh7bRny2nQzn/GF+eMTU8MtnBT27kGc17jRdSPb5CgAukSJ+fhCiWh1HUL/v2CPuqd9Kw4wF00zx
-	rokY8xTE011F43W7U8oQ0olgR2h94vh+ngSqC+weHVt2qqA6FxLwSBLt7mMgxdELA9RdCtvo2WLM9
-	NfcCF6PQ==;
-Received: from d104-157-31-28.abhsia.telus.net ([104.157.31.28] helo=[192.168.1.250])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <logang@deltatee.com>)
-	id 1sFKj7-002BN1-1U;
-	Thu, 06 Jun 2024 15:33:00 -0600
-Message-ID: <bb2e5a8d-797d-406c-acc6-60e83b302ede@deltatee.com>
-Date: Thu, 6 Jun 2024 15:32:39 -0600
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IxtQjifz"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9151E240002;
+	Thu,  6 Jun 2024 21:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717709626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YEe67kVi/zYEwJ949gLFt+c1vqpmrvxAyYHa4a+7LAA=;
+	b=IxtQjifzTaaXunLyy6L7jVE8sN9djdHYHsjmEicWNx5Nq3dloei3ROWn9XPo63TO2/KR2U
+	g/IiGLEwqUfI6iuGrUnGfKkZ2YNO1xaqfuuvNVNPDOPKAOHasengOhflZ6c6JjKK3a7S+w
+	gUKd94vQMeWOWpBueVlyHHdyFzXhCoohX6vtRCT4/gSCy7a4DVY1zdl/tAuJOYGNzzJOiv
+	pwTEq725uYcoRSF5FxMQktJ5SELAELSaimUoHrDpwVUI45obcjHtSNGiH3bYFAqhno6k56
+	r1G6Y1QbivoqI/u6KfMbHgWSwoKvxoBXbBRKU/rqAKhVi01VXeN5rns8T6zxpg==
+Date: Thu, 6 Jun 2024 23:33:44 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Keguang Zhang <keguang.zhang@gmail.com>
+Cc: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] dt-bindings: mtd: Add Loongson-1 NAND Controller
+Message-ID: <20240606233344.4e268c04@xps-13>
+In-Reply-To: <CAJhJPsW9gVe2F1qvxvOkQUX_K1BsK5q_1XjT0u2+QH2gRMNqXA@mail.gmail.com>
+References: <20240430-loongson1-nand-v7-0-60787c314fa4@gmail.com>
+	<20240430-loongson1-nand-v7-1-60787c314fa4@gmail.com>
+	<20240506091444.59228fa9@xps-13>
+	<CAJhJPsV1aCvji1G2F94A=pJa8+x6Aw7ndkQUBPtFeeKSxJK9Nw@mail.gmail.com>
+	<20240518124732.584f441d@xps-13>
+	<CAJhJPsW9gVe2F1qvxvOkQUX_K1BsK5q_1XjT0u2+QH2gRMNqXA@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Martin Oliveira <martin.oliveira@eideticom.com>
-Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-mm@kvack.org, Jason Gunthorpe
- <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Tejun Heo <tj@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Mike Marciniszyn <mike.marciniszyn@intel.com>,
- Michael Guralnik <michaelgur@nvidia.com>,
- Dan Williams <dan.j.williams@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
- Valentine Sinitsyn <valesini@yandex-team.ru>, Lukas Wunner <lukas@wunner.de>
-References: <20240605192934.742369-1-martin.oliveira@eideticom.com>
- <20240605192934.742369-2-martin.oliveira@eideticom.com>
- <2024060658-ember-unblessed-4c74@gregkh>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <2024060658-ember-unblessed-4c74@gregkh>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 104.157.31.28
-X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, martin.oliveira@eideticom.com, linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org, jgg@ziepe.ca, leon@kernel.org, bhelgaas@google.com, tj@kernel.org, rafael@kernel.org, akpm@linux-foundation.org, mike.marciniszyn@intel.com, michaelgur@nvidia.com, dan.j.williams@intel.com, ardb@kernel.org, valesini@yandex-team.ru, lukas@wunner.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH 1/6] kernfs: create vm_operations_struct without
- page_mkwrite()
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi Greg,
+Hi,
 
-On 2024-06-06 14:54, Greg Kroah-Hartman wrote:
-> On Wed, Jun 05, 2024 at 01:29:29PM -0600, Martin Oliveira wrote:
->> The standard kernfs vm_ops installs a page_mkwrite() operator which
->> modifies the file update time on write.
->>
->> This not always required (or makes sense), such as in the P2PDMA, which
->> uses the sysfs file as an allocator from userspace.
-> 
-> That's not a good idea, please don't do that.  sysfs binary files are
-> "pass through", why would you want to use this as an allocator?
+> > > > > +properties:
+> > > > > +  compatible:
+> > > > > +    oneOf:
+> > > > > +      - const: loongson,ls1b-nfc =20
+> > > >
+> > > > What is the rationale behind this choice? Seems like the b variant =
+has
+> > > > two possible implementations and should always be preceded by a more
+> > > > specific compatible.
+> > > >
+> > > > As there is currently no description of this controller upstream, I
+> > > > would not care too much about any out-of-tree description and direc=
+tly
+> > > > go for a clean description.
+> > > > =20
+> > > Excuse me, should I add a description for this property? =20
+> >
+> > No, description is not needed. But you are allowing the
+> > "loongson,ls1b-nfc" compatible alone, which I think is not relevant,
+> > unless you convince me it is :-)
+> > =20
+> "loongson,ls1b-nfc" itself is a specific implementation.
+> I was suggested to set up a fallback before.
+> https://lore.kernel.org/all/20231007-untapped-masses-01f80b7c13c7@spud/
+> Then "loongson,ls1b-nfc" became the fallback.
 
-The P2PDMA code already creates a binary attribute which is used to
-allocate P2PDMA memory into userspace[1]. It was done this way a couple
-of years ago at the suggestion of Christoph[2]. Using a sysfs attribute
-made the code substantially simpler and got rid of a bunch of pseudofs
-mess that was required when mmaping a char device. The attribute already
-exists and is used by userspace so it's not something we can change at
-this point.
-
-The attribute has worked well for what was needed until we wanted to use
-P2PDMA memory with FOLL_LONGTERM and GUP. That path specifically denies
-FOLL_LONGTERM pins when the underlying VMA has a .page_mkwrite operator,
-which sysfs/kernfs forces on us. P2PDMA doesn't benefit from this
-operator in any way so the simplest thing is to remove it for this use case.
-
->> Furthermore, having the page_mkwrite() operator causes
->> writable_file_mapping_allowed() to fail due to
->> vma_needs_dirty_tracking() on the gup flow, which is a pre-requisite for
->> enabling P2PDMA over RDMA.
->>
->> Fix this by adding a new boolean on kernfs_ops to differentiate between
->> the different behaviours.
-> 
-> This isn't going to work well.
-
-What about it are you worried won't work well? We're open to other
-suggestions.
+You cannot allow 'the fallback', alone. But this is what you do above.
+Below description is fine. Just don't allow the ls1b-nfc compatible
+alone.
 
 Thanks,
-
-Logan
-
-[1] https://elixir.bootlin.com/linux/latest/source/drivers/pci/p2pdma.c#L164
-[2] https://lore.kernel.org/all/20220705075108.GB17451@lst.de/
+Miqu=C3=A8l
