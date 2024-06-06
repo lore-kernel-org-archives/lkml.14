@@ -1,119 +1,253 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13833BB59;
-	Thu,  6 Jun 2024 10:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45C513E048
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 10:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717669857; cv=none; b=X5ZkQXGSlBu8lUVm6jnEzi1AM//SWqSe3hTLbxoISqDYRojm5tmIVRvl4eE9xtmddGDHrM7Q3T5vZy+fgYQx+5fS7jAsvo6I7HPuvfDa6hIoHZe+T11Tcw2WdUWt3hW8ASoCbyOJTzyG6oqyAY+1VUGE6jIwNYB68BHWajJ41yU=
+	t=1717669885; cv=none; b=M9l2lzOlvofl3uYFJBD9WhXsEHQgkyeELrBdzE+Rm/vlVxrsaK/H6tGbLPyXq3fOIp9fynY/nbaKn7bWpAgr6vaDHhG8CA6sW/yHzeGS82raZO9yUcf+CPxmWsf6k+EA3sOJPiL4pBWcjbQRbxfCmkVY4gfpIXMwlnI+b8s5tIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717669857; c=relaxed/simple;
-	bh=n8NQZKeOwsHVqFfy3xQydSiac6ZEqPtQOJSNPM1mQvk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oa1ouL90xkoeCYsm9eQozyz7BxgKFifNnA9VbLfdQPm8emD2SpizWdmAZJDP18Iqf8gfWCpSCxvxWlRzPGVbPjCGJzY3lEPURXi3oL1Dz6KKVw0OubMIqYU6TfN8kcIp9WYhi9OWZDa4Mdv4bQO4NEBYlrE/qSQ0ZPY6fnkJzrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fJKOa/ws; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717669885; c=relaxed/simple;
+	bh=GYdrlfDE3VBqGRrQYoVOCv+j+7jIOcaApwD/kEhgQ8k=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=CG3el87qzgBRouKtUQ1uZek1GpKaEzgaIe04YB60HrrzcyVoWDu12E5lMfvsyTNulMDT3zN7yW7oJSdyc7wjFXaBlGduSo3VzEHfKkay1cbB961w7EOULNzyDVE+X2wWHJ59qMucTdD/1ZvxTLBO1kpEW8T8+Zl1GcpeTcSJdUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJaitnj1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fJKOa/ws"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 456ATv4r063258;
-	Thu, 6 Jun 2024 05:29:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717669797;
-	bh=9ZCEA6cP5eUu5u5Wy7c5Qa6XpiJ0SNZvrvxHy3jwf1w=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=fJKOa/wsX3EBlujkA6t8UrFIGrAbdCE7KR+XE/HH97gbjeGaHaXL8+1qU/H0jK2cx
-	 wC5KT1F0rQ2h8e/E6HwyoyY7Yb2Ndc6I6UApNJoGJiIawowiz3rWLsr43MMzL7YLve
-	 kn2shltk136jLtQaP9TWHjtZ3qM7fvv3uKDOccqs=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 456ATvxF027716
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 6 Jun 2024 05:29:57 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
- Jun 2024 05:29:57 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 6 Jun 2024 05:29:57 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 456ATu3Y111689;
-	Thu, 6 Jun 2024 05:29:57 -0500
-Date: Thu, 6 Jun 2024 15:59:55 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Vignesh Raghavendra <vigneshr@ti.com>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof
- =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha
- Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team
-	<kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Minghuan Lian
-	<minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang
-	<roy.zang@nxp.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Jingoo Han
-	<jingoohan1@gmail.com>,
-        Srikanth Thokala <srikanth.thokala@intel.com>,
-        Marek
- Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda
-	<yoshihiro.shimoda.uh@renesas.com>,
-        Thierry Reding
-	<thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kunihiko
- Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu
-	<mhiramat@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <imx@lists.linux.dev>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-arm-kernel@axis.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <mhi@lists.linux.dev>, Niklas Cassel <cassel@kernel.org>,
-        Bjorn Helgaas
-	<helgaas@kernel.org>
-Subject: Re: [PATCH 1/5] PCI: dwc: ep: Remove dw_pcie_ep_init_notify() wrapper
-Message-ID: <ef98f581-e2a3-419c-90a8-6cb64ca4e835@ti.com>
-References: <20240606-pci-deinit-v1-0-4395534520dc@linaro.org>
- <20240606-pci-deinit-v1-1-4395534520dc@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJaitnj1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEF89C4AF0D;
+	Thu,  6 Jun 2024 10:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717669885;
+	bh=GYdrlfDE3VBqGRrQYoVOCv+j+7jIOcaApwD/kEhgQ8k=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=mJaitnj1dJzmCbP8CRWNLe0a5BbDsL1yNy9y/B0XEpO00si0z5fpIs7E2PEuI2+nW
+	 azhjXmxl+pwfjhs3tsvHg4gAtjqIhz5RkaRhiUQLAuy6Dn23+Cm+3beHEB3B6qn/j5
+	 pb6QDwZpezaugwf5PMnDR7b+oIzKIn8bbwFWuhIhgHUvISHzweGzVp8JqItS6l4xYx
+	 F6U8Gu7jvj35MX2yy3Pwc3Dl6P89ueNK/pZayCBaLhjrlHb/56ZioqyfJXQLXuXS1Y
+	 2owRg4/+mMe6dQD1JzbDof+eMTtO72FiyhSZAE7KI561GO2fmNAzLOlSuBWVrEY8QB
+	 C0Ilnv+Cy2nJQ==
+Message-ID: <4ac4f5cf-7748-4ee4-8d68-8842d8bf1753@kernel.org>
+Date: Thu, 6 Jun 2024 18:31:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240606-pci-deinit-v1-1-4395534520dc@linaro.org>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix to avoid racing in between read
+ and OPU dio write
+From: Chao Yu <chao@kernel.org>
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+References: <20240510023906.281700-1-chao@kernel.org>
+ <ZkOMwKAcKmEPQ4Xz@google.com>
+ <fc0d8b1f-0c54-4447-8ceb-3722645f71c2@kernel.org>
+ <ZkQ9Uo5713Xpr2n7@google.com>
+ <efae597c-d334-498b-9050-1a21bf40e21d@kernel.org>
+Content-Language: en-US
+In-Reply-To: <efae597c-d334-498b-9050-1a21bf40e21d@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 06, 2024 at 12:56:34PM +0530, Manivannan Sadhasivam wrote:
-> Currently dw_pcie_ep_init_notify() wrapper just calls pci_epc_init_notify()
-> directly. So this wrapper provides no benefit to the glue drivers.
+On 2024/5/15 14:38, Chao Yu wrote:
+> On 2024/5/15 12:42, Jaegeuk Kim wrote:
+>> On 05/15, Chao Yu wrote:
+>>> On 2024/5/15 0:09, Jaegeuk Kim wrote:
+>>>> On 05/10, Chao Yu wrote:
+>>>>> If lfs mode is on, buffered read may race w/ OPU dio write as below,
+>>>>> it may cause buffered read hits unwritten data unexpectly, and for
+>>>>> dio read, the race condition exists as well.
+>>>>>
+>>>>> Thread A                      Thread B
+>>>>> - f2fs_file_write_iter
+>>>>>    - f2fs_dio_write_iter
+>>>>>     - __iomap_dio_rw
+>>>>>      - f2fs_iomap_begin
+>>>>>       - f2fs_map_blocks
+>>>>>        - __allocate_data_block
+>>>>>         - allocated blkaddr #x
+>>>>>          - iomap_dio_submit_bio
+>>>>>                                 - f2fs_file_read_iter
+>>>>>                                  - filemap_read
+>>>>>                                   - f2fs_read_data_folio
+>>>>>                                    - f2fs_mpage_readpages
+>>>>>                                     - f2fs_map_blocks
+>>>>>                                      : get blkaddr #x
+>>>>>                                     - f2fs_submit_read_bio
+>>>>>                                 IRQ
+>>>>>                                 - f2fs_read_end_io
+>>>>>                                  : read IO on blkaddr #x complete
+>>>>> IRQ
+>>>>> - iomap_dio_bio_end_io
+>>>>>    : direct write IO on blkaddr #x complete
+>>>>>
+>>>>> This patch introduces a new per-inode i_opu_rwsem lock to avoid
+>>>>> such race condition.
+>>>>
+>>>> Wasn't this supposed to be managed by user-land?
+>>>
+>>> Actually, the test case is:
+>>>
+>>> 1. mount w/ lfs mode
+>>> 2. touch file;
+>>> 3. initialize file w/ 4k zeroed data; fsync;
+>>> 4. continue triggering dio write 4k zeroed data to file;
+>>> 5. and meanwhile, continue triggering buf/dio 4k read in file,
+>>> use md5sum to verify the 4k data;
+>>>
+>>> It expects data is all zero, however it turned out it's not.
+>>
+>> Can we check outstanding write bios instead of abusing locks?
+
+Jaegeuk, seems it can solve partial race cases, not all of them.
+
+Do you suggest to use this compromised solution?
+
+Thanks,
+
 > 
-> So let's remove it and call pci_epc_init_notify() directly from glue
-> drivers.
+> I didn't figure out a way to solve this w/o lock, due to:
+> - write bios can be issued after outstanding write bios check condition,
+> result in the race.
+> - once read() detects that there are outstanding write bios, we need to
+> delay read flow rather than fail it, right? It looks using a lock is more
+> proper here?
 > 
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-
-[...]
-
-Regards,
-Siddharth.
+> Any suggestion?
+> 
+> Thanks,
+> 
+>>
+>>>
+>>> Thanks,
+>>>
+>>>>
+>>>>>
+>>>>> Fixes: f847c699cff3 ("f2fs: allow out-place-update for direct IO in LFS mode")
+>>>>> Signed-off-by: Chao Yu <chao@kernel.org>
+>>>>> ---
+>>>>> v2:
+>>>>> - fix to cover dio read path w/ i_opu_rwsem as well.
+>>>>>    fs/f2fs/f2fs.h  |  1 +
+>>>>>    fs/f2fs/file.c  | 28 ++++++++++++++++++++++++++--
+>>>>>    fs/f2fs/super.c |  1 +
+>>>>>    3 files changed, 28 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>>> index 30058e16a5d0..91cf4b3d6bc6 100644
+>>>>> --- a/fs/f2fs/f2fs.h
+>>>>> +++ b/fs/f2fs/f2fs.h
+>>>>> @@ -847,6 +847,7 @@ struct f2fs_inode_info {
+>>>>>         /* avoid racing between foreground op and gc */
+>>>>>         struct f2fs_rwsem i_gc_rwsem[2];
+>>>>>         struct f2fs_rwsem i_xattr_sem; /* avoid racing between reading and changing EAs */
+>>>>> +     struct f2fs_rwsem i_opu_rwsem;  /* avoid racing between buf read and opu dio write */
+>>>>>
+>>>>>         int i_extra_isize;              /* size of extra space located in i_addr */
+>>>>>         kprojid_t i_projid;             /* id for project quota */
+>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>>> index 72ce1a522fb2..4ec260af321f 100644
+>>>>> --- a/fs/f2fs/file.c
+>>>>> +++ b/fs/f2fs/file.c
+>>>>> @@ -4445,6 +4445,7 @@ static ssize_t f2fs_dio_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>>>>>         const loff_t pos = iocb->ki_pos;
+>>>>>         const size_t count = iov_iter_count(to);
+>>>>>         struct iomap_dio *dio;
+>>>>> +     bool do_opu = f2fs_lfs_mode(sbi);
+>>>>>         ssize_t ret;
+>>>>>
+>>>>>         if (count == 0)
+>>>>> @@ -4457,8 +4458,14 @@ static ssize_t f2fs_dio_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>>>>>                         ret = -EAGAIN;
+>>>>>                         goto out;
+>>>>>                 }
+>>>>> +             if (do_opu && !f2fs_down_read_trylock(&fi->i_opu_rwsem)) {
+>>>>> +                     f2fs_up_read(&fi->i_gc_rwsem[READ]);
+>>>>> +                     ret = -EAGAIN;
+>>>>> +                     goto out;
+>>>>> +             }
+>>>>>         } else {
+>>>>>                 f2fs_down_read(&fi->i_gc_rwsem[READ]);
+>>>>> +             f2fs_down_read(&fi->i_opu_rwsem);
+>>>>>         }
+>>>>>
+>>>>>         /*
+>>>>> @@ -4477,6 +4484,7 @@ static ssize_t f2fs_dio_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>>>>>                 ret = iomap_dio_complete(dio);
+>>>>>         }
+>>>>>
+>>>>> +     f2fs_up_read(&fi->i_opu_rwsem);
+>>>>>         f2fs_up_read(&fi->i_gc_rwsem[READ]);
+>>>>>
+>>>>>         file_accessed(file);
+>>>>> @@ -4523,7 +4531,13 @@ static ssize_t f2fs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>>>>>         if (f2fs_should_use_dio(inode, iocb, to)) {
+>>>>>                 ret = f2fs_dio_read_iter(iocb, to);
+>>>>>         } else {
+>>>>> +             bool do_opu = f2fs_lfs_mode(F2FS_I_SB(inode));
+>>>>> +
+>>>>> +             if (do_opu)
+>>>>> +                     f2fs_down_read(&F2FS_I(inode)->i_opu_rwsem);
+>>>>>                 ret = filemap_read(iocb, to, 0);
+>>>>> +             if (do_opu)
+>>>>> +                     f2fs_up_read(&F2FS_I(inode)->i_opu_rwsem);
+>>>>>                 if (ret > 0)
+>>>>>                         f2fs_update_iostat(F2FS_I_SB(inode), inode,
+>>>>>                                                 APP_BUFFERED_READ_IO, ret);
+>>>>> @@ -4748,14 +4762,22 @@ static ssize_t f2fs_dio_write_iter(struct kiocb *iocb, struct iov_iter *from,
+>>>>>                         ret = -EAGAIN;
+>>>>>                         goto out;
+>>>>>                 }
+>>>>> +             if (do_opu && !f2fs_down_write_trylock(&fi->i_opu_rwsem)) {
+>>>>> +                     f2fs_up_read(&fi->i_gc_rwsem[READ]);
+>>>>> +                     f2fs_up_read(&fi->i_gc_rwsem[WRITE]);
+>>>>> +                     ret = -EAGAIN;
+>>>>> +                     goto out;
+>>>>> +             }
+>>>>>         } else {
+>>>>>                 ret = f2fs_convert_inline_inode(inode);
+>>>>>                 if (ret)
+>>>>>                         goto out;
+>>>>>
+>>>>>                 f2fs_down_read(&fi->i_gc_rwsem[WRITE]);
+>>>>> -             if (do_opu)
+>>>>> +             if (do_opu) {
+>>>>>                         f2fs_down_read(&fi->i_gc_rwsem[READ]);
+>>>>> +                     f2fs_down_write(&fi->i_opu_rwsem);
+>>>>> +             }
+>>>>>         }
+>>>>>
+>>>>>         /*
+>>>>> @@ -4779,8 +4801,10 @@ static ssize_t f2fs_dio_write_iter(struct kiocb *iocb, struct iov_iter *from,
+>>>>>                 ret = iomap_dio_complete(dio);
+>>>>>         }
+>>>>>
+>>>>> -     if (do_opu)
+>>>>> +     if (do_opu) {
+>>>>> +             f2fs_up_write(&fi->i_opu_rwsem);
+>>>>>                 f2fs_up_read(&fi->i_gc_rwsem[READ]);
+>>>>> +     }
+>>>>>         f2fs_up_read(&fi->i_gc_rwsem[WRITE]);
+>>>>>
+>>>>>         if (ret < 0)
+>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>>>>> index daf2c4dbe150..b4ed3b094366 100644
+>>>>> --- a/fs/f2fs/super.c
+>>>>> +++ b/fs/f2fs/super.c
+>>>>> @@ -1428,6 +1428,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
+>>>>>         init_f2fs_rwsem(&fi->i_gc_rwsem[READ]);
+>>>>>         init_f2fs_rwsem(&fi->i_gc_rwsem[WRITE]);
+>>>>>         init_f2fs_rwsem(&fi->i_xattr_sem);
+>>>>> +     init_f2fs_rwsem(&fi->i_opu_rwsem);
+>>>>>
+>>>>>         /* Will be used by directory only */
+>>>>>         fi->i_dir_level = F2FS_SB(sb)->dir_level;
+>>>>> -- 
+>>>>> 2.40.1
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
