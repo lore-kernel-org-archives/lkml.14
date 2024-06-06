@@ -1,216 +1,94 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B57E1974F7
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 15:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8C91974FB;
+	Thu,  6 Jun 2024 15:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717688281; cv=none; b=JH3ch0Bmz3APXAScewelcIEn5VggJKp4ijlbF1AkomT7ZI/Zh0gjTydl5zzu2hrvTXIjDzAi9gcUdxrFh6BiWh79VzXANXZZUux7MJq7BxILddCn9vwFP8tBmfouGvmJ/upXvMiDFliMoqgqKp9cGqjLckdaSX7kLgR97YWD2mM=
+	t=1717688376; cv=none; b=SYF7sVvtweCNnefbDgNWWPVTxovTBaFYRcwmNocHYSCHKy1MyOcJbkpjSF5Zd26IW7EHjVW9gUuVxX3GgaQU+DJoPP0xDpzLFIAlzTIq3STEWWwXwh0mB65Mqvor5WnMlSh8GwXTfw313ipxvFdJg5Y6N4oG/IYK4rh7g7E+bIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717688281; c=relaxed/simple;
-	bh=IUkk5zhj1DcZWdKzXDJyYKMNokzbRhqdTi9DBTeq744=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VRrbF08NAE2BQRhxJwRdeBvnJyNM7Ndzu1oiZ72gMvSRHP6aLSb8oZZPd/7mMEL5O7n7s0tVMKRu8X4C21iM6fofdtC7aE4b4E35o+QQz1txvMWg66IUQ817+B4/cqf4AaNcnzZrL2eJypwlOLOyKKGkJAWCztEgBlYA9DRLP2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=QWA8iU7x; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1717688376; c=relaxed/simple;
+	bh=gE1Kj3xuMoCiY4bdyzCrXSApgzBD60tymyxKW4bbTTM=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=mWT6x9ZUYGLParqhoaRiWcNF/xt0mPWaCUnNFKtQHPt6ctkayM1pQynuLNnMb/r2M33SBNjFngPDTBXWEOZiLzIH+8SjAF0U45WlPZroilMy7RO/0DkiZWxQ4ML8I6k3YOMlpkiNVZbnaWlEsETGveA1a6KlLun0/Ja+r4WCHBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=MNHRvRGF; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="QWA8iU7x"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a20ccafc6so1270427a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 08:37:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="MNHRvRGF"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2698D9C2AA2;
+	Thu,  6 Jun 2024 11:39:25 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id HrID-BG8ze49; Thu,  6 Jun 2024 11:39:24 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 888079C5ABA;
+	Thu,  6 Jun 2024 11:39:24 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 888079C5ABA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1717688277; x=1718293077; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cjoaKFiRHLufhoyzTuU0DqLcR7JBMRRBL3wKbN+Uo8A=;
-        b=QWA8iU7xtyLQy3d9bnvBrXcikdquZqcsZ9M2/V2DcgXRKnjjR3MNC0u3JfeoD3xXVY
-         02uHaHAqsqWoXFotMgj5l1rtiN14Ksre73OanLTRfY1OV4AQf89z3c1FThv/tpudF305
-         XIgFw1rqW8l+KmJpADZxlqxef/E71IwP6pzstwZR3HzLqhYesf5YLHlEDGI1aDl3zUh3
-         Cnw2LT3aSX91YPQI8vIKT46gr3cXPFPqnV8QaeI1g3j5s6i6ByYxI2HQaNN0pOLhZ61g
-         9azPz3mu2oLuV2cIuim+U/VLQgw/Q8LWIWnLoT+Qmv/S5qm2N8nqAeci036USmKS9EAf
-         ltdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717688278; x=1718293078;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cjoaKFiRHLufhoyzTuU0DqLcR7JBMRRBL3wKbN+Uo8A=;
-        b=HPx7Y1nL6cg3ddLu2gIfdd7J3+S/JsQ9ZyoLqAOI22kDduyckGgCcyDLQvpgeT1iao
-         heK6vC1Lj5dRO0dw6wO+RKwKGI2bgQ5wsWZas/eeOOu1C+kArozVuQkHcNXuC/T1ZHw7
-         rmhUMefa2UwDhsu3ALDZwF8yLWtxblJ9/eqEaDVZxEjADbhPPpHlzyJsDSSh9NTWHeUy
-         eppeeYrz7jGR9BA18LKZb6vfqFjdpK2VxgXagysfKZN5i3cbV7PbChbiBxRwcsA35pCh
-         btH0t7ikfIl1xnJC+AFZGc+Ye77TSIgs2+lWyCr8pw3ZGk/6hO3HwSMGOo6YocbLkcap
-         /7rA==
-X-Forwarded-Encrypted: i=1; AJvYcCWTZYUapokA90/sMFqLv9+VhDa7msw6SY/DZnR4SknYKOm9lcQ883nroeSBEpxzSAMLR6p6lfjSa5QjlMLy7m1zKFCuL6B5Xfl8oAr+
-X-Gm-Message-State: AOJu0YwKnVKNxOsnhO7q0gHDa5KGpOq/a2GTmUPXd4gfODyFBUpGiU5n
-	xdNX9scI2tiaT1Ra17w2qpCEbAs0+dBHPyPK2hip4cpP9HVHExKsi5HZJkTCtubhfDuHisiK93/
-	xiKLnK23aJLkAejV4j7c6TOYl9XkcqajEJdMgpQ==
-X-Google-Smtp-Source: AGHT+IFyT9WsgPIRQEwtewW7+PsUVNq1ikXDbAY6s7szeZI0EmQvhrtFcHcCN0i82engvdvgRnpiJmodMWMxvl4wN3Q=
-X-Received: by 2002:a50:d7c2:0:b0:57a:231e:2cf5 with SMTP id
- 4fb4d7f45d1cf-57a8b7c6225mr4188691a12.32.1717688277507; Thu, 06 Jun 2024
- 08:37:57 -0700 (PDT)
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1717688364; bh=rYRVIIw22ZVkSQXnTBWHvN7qfAPVVfCh/LRBnQMA1mw=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=MNHRvRGFyj67QeHiozGPa24sXXRlCMyLfd7jNHNA5jveZIw1fEh2VzMUM8F1eT+rD
+	 lwk4iYhNLjA70F5wA6ZGWuYV1MwyONWNZ2Q1TL0NzdGiF/A9Coxc95tA+hAB7T/QgI
+	 kmBgd1NfRVqUpiQYsNGpvBhNTskeGmFZiWy5RGkC1qoLweYdojg5mUdmi+fAy0oLpN
+	 M0eDRwuz8BImBwfN/U453mrzZAC6ZxfpCbriv2KLdHhPn7ez/mfuhAFaKY/4oA/lBe
+	 s9Ra9Q6ckJDy1JDMXHijrmuj7Hm4RpGtGTPK5RfzonZdM6fnBRN9O9STLBPYkp7KoY
+	 gbNO0HthXgqYw==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id ijXDkcF8BT_c; Thu,  6 Jun 2024 11:39:24 -0400 (EDT)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 457D19C2AA2;
+	Thu,  6 Jun 2024 11:39:24 -0400 (EDT)
+Date: Thu, 6 Jun 2024 11:39:24 -0400 (EDT)
+From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	shengjiu wang <shengjiu.wang@gmail.com>, 
+	Xiubo Lee <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, 
+	Nicolin Chen <nicoleotsuka@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	linux-sound <linux-sound@vger.kernel.org>, 
+	devicetree <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	alsa-devel <alsa-devel@alsa-project.org>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Message-ID: <1976575756.1264121.1717688364234.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <47a7a618-31d5-4dfc-9b6b-9426c6409e80@sirena.org.uk>
+References: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com> <ce9a87c6-4a5c-4f0a-a8df-1fdce8c1f5df@sirena.org.uk> <599489232.349333.1715936741672.JavaMail.zimbra@savoirfairelinux.com> <500db9de-6113-4e73-ba92-6e52ea292b32@sirena.org.uk> <1598202415.701258.1717159684103.JavaMail.zimbra@savoirfairelinux.com> <291daed8-a2e1-44d4-9a71-5bca2c585720@sirena.org.uk> <1220272166.706254.1717166894551.JavaMail.zimbra@savoirfairelinux.com> <47a7a618-31d5-4dfc-9b6b-9426c6409e80@sirena.org.uk>
+Subject: Re: [PATCHv4 9/9] ASoC: dt-bindings: fsl-asoc-card: add compatible
+ for generic codec
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1717529533.git.yan@cloudflare.com> <983c54f98746bd42d778b99840435d0a93963cb3.1717529533.git.yan@cloudflare.com>
- <20240605195750.1a225963@gandalf.local.home>
-In-Reply-To: <20240605195750.1a225963@gandalf.local.home>
-From: Yan Zhai <yan@cloudflare.com>
-Date: Thu, 6 Jun 2024 10:37:46 -0500
-Message-ID: <CAO3-PbqRNRduSAyN9CtaxPFsOs9xtGHruu1ACfJ5e-mrvTo2Cw@mail.gmail.com>
-Subject: Re: [RFC v3 net-next 1/7] net: add rx_sk to trace_kfree_skb
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, 
-	Abhishek Chauhan <quic_abchauha@quicinc.com>, Mina Almasry <almasrymina@google.com>, 
-	Florian Westphal <fw@strlen.de>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	David Howells <dhowells@redhat.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Pavel Begunkov <asml.silence@gmail.com>, 
-	linux-kernel@vger.kernel.org, kernel-team@cloudflare.com, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Neil Horman <nhorman@tuxdriver.com>, 
-	linux-trace-kernel@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - GC112 (Linux)/8.8.15_GA_4581)
+Thread-Topic: ASoC: dt-bindings: fsl-asoc-card: add compatible for generic codec
+Thread-Index: M+CiOw9Z1pP82SMivcOcvVDKOApGiw==
 
-On Wed, Jun 5, 2024 at 6:57=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Tue, 4 Jun 2024 14:47:38 -0700
-> Yan Zhai <yan@cloudflare.com> wrote:
->
-> > skb does not include enough information to find out receiving
-> > sockets/services and netns/containers on packet drops. In theory
-> > skb->dev tells about netns, but it can get cleared/reused, e.g. by TCP
-> > stack for OOO packet lookup. Similarly, skb->sk often identifies a loca=
-l
-> > sender, and tells nothing about a receiver.
-> >
-> > Allow passing an extra receiving socket to the tracepoint to improve
-> > the visibility on receiving drops.
-> >
-> > Signed-off-by: Yan Zhai <yan@cloudflare.com>
-> > ---
-> > v2->v3: fixed drop_monitor function prototype
-> > ---
-> >  include/trace/events/skb.h | 11 +++++++----
-> >  net/core/dev.c             |  2 +-
-> >  net/core/drop_monitor.c    |  9 ++++++---
-> >  net/core/skbuff.c          |  2 +-
-> >  4 files changed, 15 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/include/trace/events/skb.h b/include/trace/events/skb.h
-> > index 07e0715628ec..aa6b46b6172c 100644
-> > --- a/include/trace/events/skb.h
-> > +++ b/include/trace/events/skb.h
-> > @@ -24,15 +24,16 @@ DEFINE_DROP_REASON(FN, FN)
-> >  TRACE_EVENT(kfree_skb,
-> >
-> >       TP_PROTO(struct sk_buff *skb, void *location,
-> > -              enum skb_drop_reason reason),
-> > +              enum skb_drop_reason reason, struct sock *rx_sk),
-> >
-> > -     TP_ARGS(skb, location, reason),
-> > +     TP_ARGS(skb, location, reason, rx_sk),
-> >
-> >       TP_STRUCT__entry(
-> >               __field(void *,         skbaddr)
-> >               __field(void *,         location)
-> >               __field(unsigned short, protocol)
-> >               __field(enum skb_drop_reason,   reason)
-> > +             __field(void *,         rx_skaddr)
->
-> Please add the pointer after the other pointers:
->
->                 __field(void *,         skbaddr)
->                 __field(void *,         location)
-> +               __field(void *,         rx_skaddr)
->                 __field(unsigned short, protocol)
->                 __field(enum skb_drop_reason,   reason)
->
-> otherwise you are adding holes in the ring buffer event.
->
-> The TP_STRUCT__entry() is a structure that is saved in the ring buffer. W=
-e
-> want to avoid alignment holes. I also question having a short before the
-> enum, if the emum is 4 bytes. The short should be at the end.
->
-> In fact, looking at the format file, there is a 2 byte hole:
->
->  # cat /sys/kernel/tracing/events/skb/kfree_skb/format
->
-> name: kfree_skb
-> ID: 1799
-> format:
->         field:unsigned short common_type;       offset:0;       size:2; s=
-igned:0;
->         field:unsigned char common_flags;       offset:2;       size:1; s=
-igned:0;
->         field:unsigned char common_preempt_count;       offset:3;       s=
-ize:1; signed:0;
->         field:int common_pid;   offset:4;       size:4; signed:1;
->
->         field:void * skbaddr;   offset:8;       size:8; signed:0;
->         field:void * location;  offset:16;      size:8; signed:0;
->         field:unsigned short protocol;  offset:24;      size:2; signed:0;
->         field:enum skb_drop_reason reason;      offset:28;      size:4; s=
-igned:0;
->
-> Notice that "protocol" is 2 bytes in size at offset 24, but "reason" star=
-ts
-> at offset 28. This means at offset 26, there's a 2 byte hole.
->
-The reason I added the pointer as the last argument is trying to
-minimize the surprise to existing TP users, because for common ABIs
-it's fine to omit later arguments when defining a function, but it
-needs change and recompilation if the order of arguments changed.
+> From: "Mark Brown" <broonie@kernel.org>
+> Sent: Friday, 31 May, 2024 18:06:30
 
-Looking at the actual format after the change, it does not add a new
-hole since protocol and reason are already packed into the same 8-byte
-block, so rx_skaddr starts at 8-byte aligned offset:
+> On Fri, May 31, 2024 at 10:48:14AM -0400, Elinor Montmasson wrote:
+>> From: "Mark Brown" <broonie@kernel.org>
+> 
+>> > Why not just use the existing compatible - why would someone not want to
+>> > be able to use the ASRC if it's available in their system?
+> 
+>> That's true but it will be a problem if both `fsl-asoc-card.c` and
+>> `imx-spdif.c` drivers have the same compatible, and they don't
+>> have the same DT properties.
+> 
+> So merge the two then?
 
-# cat /sys/kernel/debug/tracing/events/skb/kfree_skb/format
-name: kfree_skb
-ID: 2260
-format:
-        field:unsigned short common_type;       offset:0;
-size:2; signed:0;
-        field:unsigned char common_flags;       offset:2;
-size:1; signed:0;
-        field:unsigned char common_preempt_count;       offset:3;
- size:1; signed:0;
-        field:int common_pid;   offset:4;       size:4; signed:1;
-
-        field:void * skbaddr;   offset:8;       size:8; signed:0;
-        field:void * location;  offset:16;      size:8; signed:0;
-        field:unsigned short protocol;  offset:24;      size:2; signed:0;
-        field:enum skb_drop_reason reason;      offset:28;
-size:4; signed:0;
-        field:void * rx_skaddr; offset:32;      size:8; signed:0;
-
-Do you think we still need to change the order?
-
-Yan
-
-
-> -- Steve
->
->
->
-> >       ),
-> >
-> >       TP_fast_assign(
-> > @@ -40,12 +41,14 @@ TRACE_EVENT(kfree_skb,
-> >               __entry->location =3D location;
-> >               __entry->protocol =3D ntohs(skb->protocol);
-> >               __entry->reason =3D reason;
-> > +             __entry->rx_skaddr =3D rx_sk;
-> >       ),
-> >
->
+It would avoid having duplicate drivers yes, I will do this for the v5 of this contribution.
+Thank you for the review.
