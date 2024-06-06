@@ -1,36 +1,36 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B93373465;
-	Thu,  6 Jun 2024 06:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2D27A141;
+	Thu,  6 Jun 2024 06:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717655789; cv=none; b=p/uTnXHV3bZUprU+712vNCIsJppjmCKjvuOEcXEhETq8/tLt3zNGOUzdXmpBGG8+/CqldNdd8TwOec/IvAAs8culkCWHbwPJJ42z67kzzDjH/fH1SBLNvUok3UxXiqZttfFQBKwXHp4TX9SZIyKWiJiioM8Q4myMaNtLxTA6pEA=
+	t=1717655790; cv=none; b=VUIo08PVDiItkHU7x8+I7R6p1iMP0FcZLaN/t0IwmbIGYiKF9IGpwVGv4zK/3WqPgKxnwE7qFN+k4Y6+TyQjn3ZtUKwOh/dh7YnO8c4bv7BydvnwwRbyqI32m5qcHif9XNeEMvB2ce0DHYm+vJIUwI+W2W8rb8SM3gywTiMeVbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717655789; c=relaxed/simple;
-	bh=WHHs7idYRzoEGuXmcyZ8bcVwyBbgz6mH+0HZTrbe8Vs=;
+	s=arc-20240116; t=1717655790; c=relaxed/simple;
+	bh=vinIoh1mF0LVftrP2O7FIMlW//2qg1WiOhM2v+HwznY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hpy5TyiEJxhRWpdtI0i+p7OmMrNEznF3N+lZzYykTE7bizJtI57dD19OjEF6zlU57wLOuLSxO5ojjTON+NF7F7UkX0s0Xe05lsq0fHDwv5uHxDBJ4qLdPZW8UkoSMlCpWwtYIP6ryQ6Wkkl+KlKlZfb+FjeNCZWCT2XZgjbZGHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+	 MIME-Version:Content-Type; b=nLuc+aomnRiJCQMCUmsEGwsIBFR1B5xJVKBmC7Bn8SVSGdefbCOjzKrcgLSMZB776gfQBYzchxLjC2thRedd5z7Y6Q/4Z9oQo+FfULE2KlRmMXiM5a5/7Y2YuQ53EU4pr8n7HgnqDCH/+RlBT8jXuxIcRVLck6fEGxd/umxb/lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4VvvhT19Fgz1xsBF;
-	Thu,  6 Jun 2024 14:35:05 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VvvdS74xmzwRlg;
+	Thu,  6 Jun 2024 14:32:28 +0800 (CST)
 Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id AFA62140109;
-	Thu,  6 Jun 2024 14:36:25 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B4A05141177;
+	Thu,  6 Jun 2024 14:36:26 +0800 (CST)
 Received: from huawei.com (10.173.135.154) by canpemm500002.china.huawei.com
  (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 6 Jun
- 2024 14:36:25 +0800
+ 2024 14:36:26 +0800
 From: Miaohe Lin <linmiaohe@huawei.com>
 To: <akpm@linux-foundation.org>, <tony.luck@intel.com>, <bp@alien8.de>
 CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
 	<linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
-Subject: [PATCH v2 06/13] mm/memory-failure: remove confusing initialization to count
-Date: Thu, 6 Jun 2024 14:32:40 +0800
-Message-ID: <20240606063247.712575-7-linmiaohe@huawei.com>
+Subject: [PATCH v2 08/13] mm/memory-failure: use helper macro task_pid_nr()
+Date: Thu, 6 Jun 2024 14:32:42 +0800
+Message-ID: <20240606063247.712575-9-linmiaohe@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240606063247.712575-1-linmiaohe@huawei.com>
 References: <20240606063247.712575-1-linmiaohe@huawei.com>
@@ -45,27 +45,54 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  canpemm500002.china.huawei.com (7.192.104.244)
 
-It's meaningless and confusing to init local variable count to 1.
-Remove it. No functional change intended.
+Use helper macro task_pid_nr() to get the pid of a task. No functional
+change intended.
 
 Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- mm/memory-failure.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memory-failure.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index ec482524158e..339752d768d8 100644
+index 6e26b8b975e5..81a544df8381 100644
 --- a/mm/memory-failure.c
 +++ b/mm/memory-failure.c
-@@ -2542,7 +2542,7 @@ int unpoison_memory(unsigned long pfn)
- 	struct folio *folio;
- 	struct page *p;
- 	int ret = -EBUSY, ghp;
--	unsigned long count = 1;
-+	unsigned long count;
- 	bool huge = false;
- 	static DEFINE_RATELIMIT_STATE(unpoison_rs, DEFAULT_RATELIMIT_INTERVAL,
- 					DEFAULT_RATELIMIT_BURST);
+@@ -343,7 +343,7 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
+ 	int ret = 0;
+ 
+ 	pr_err("%#lx: Sending SIGBUS to %s:%d due to hardware memory corruption\n",
+-			pfn, t->comm, t->pid);
++			pfn, t->comm, task_pid_nr(t));
+ 
+ 	if ((flags & MF_ACTION_REQUIRED) && (t == current))
+ 		ret = force_sig_mceerr(BUS_MCEERR_AR,
+@@ -361,7 +361,7 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
+ 				      addr_lsb, t);
+ 	if (ret < 0)
+ 		pr_info("Error sending signal to %s:%d: %d\n",
+-			t->comm, t->pid, ret);
++			t->comm, task_pid_nr(t), ret);
+ 	return ret;
+ }
+ 
+@@ -523,7 +523,7 @@ static void kill_procs(struct list_head *to_kill, int forcekill,
+ 		if (forcekill) {
+ 			if (tk->addr == -EFAULT) {
+ 				pr_err("%#lx: forcibly killing %s:%d because of failure to unmap corrupted page\n",
+-				       pfn, tk->tsk->comm, tk->tsk->pid);
++				       pfn, tk->tsk->comm, task_pid_nr(tk->tsk));
+ 				do_send_sig_info(SIGKILL, SEND_SIG_PRIV,
+ 						 tk->tsk, PIDTYPE_PID);
+ 			}
+@@ -536,7 +536,7 @@ static void kill_procs(struct list_head *to_kill, int forcekill,
+ 			 */
+ 			else if (kill_proc(tk, pfn, flags) < 0)
+ 				pr_err("%#lx: Cannot send advisory machine check signal to %s:%d\n",
+-				       pfn, tk->tsk->comm, tk->tsk->pid);
++				       pfn, tk->tsk->comm, task_pid_nr(tk->tsk));
+ 		}
+ 		list_del(&tk->nd);
+ 		put_task_struct(tk->tsk);
 -- 
 2.33.0
 
