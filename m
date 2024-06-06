@@ -1,204 +1,99 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985FE1ABCC6;
-	Thu,  6 Jun 2024 14:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FE21B1516;
+	Thu,  6 Jun 2024 14:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684829; cv=none; b=W3GVs4b0b5bZdIbzkvsiPbMQ8oFVGeDVQ/fBR4lzsEOO9N05+rDDtGsm5QdPCmpTsw0hfXKRkzTT4BmX4mpAIp0+D7l51H/Uw6P8pt7IIaXyy/808ySxn2pQwAJkb0l5HeUPkeMsBjGmqR0xyudbbsM94I0wxi0AdAyRYeH25Dk=
+	t=1717684831; cv=none; b=mX0UJXUzjbeMofDTt4QgWaMIhDqwi5B7NYP3ms1qlEy3kLbfO7BaZcE0wPtehGn+v3e2Stfra9Mc63sUunwLIze8m+GgzVIykeqLL+O9gU/SaVmvpLyXT4aX/yfeZzaVcMB118ecqdJEyLLV1K4hYUb+j23gu84N4IBgSnQOGoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684829; c=relaxed/simple;
-	bh=r6ctxYlFhKPoW9QH9D/dZVqAI1dWiHmDq09+6Bvxatk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=j7OVN8tI+R46j399iyHMHWfhE6XFWk2Z7mVH7K1lNqSyMzKsEa2KaGWkFikF7w2sDJQhG0rDZUztvK8lov8RoHLnR5BneVfp2NMUpkeYU2kTOyLXdNpgObvr36UsPc3047i1cAkuEmixC+NguQc/h7JZNudEgxlcryUmpXnTEV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J5KIury0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9xhHkNLU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1717684831; c=relaxed/simple;
+	bh=LFwELV9w/G9otWfx2kAUAGIkPgyj0NhOm8Q1i86BiRs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rWGkvIxLyqNM0Vcx5CNMb3QkTvfVNETLBZAvNxt/mf5X+ga6wG582DBy0gtoC/IK9zjMtw8a0UM6VrfwL490z3Ce14tWiYwuegV7vLkq1XaSH+veJ/Gflsdx4+SPyABOiFo2sGyH72HVTaeVx02TVSBPfpaFjCvMQrDjclwyh1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZjI9zw8u; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J5KIury0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9xhHkNLU"
-Date: Thu, 06 Jun 2024 14:40:23 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717684826;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Om1VCSNqPpr0VK3hPFHIBndBdY4QYvPmRknCYRoy2k=;
-	b=J5KIury07aNQktjb4f7Yvop/k7/06Tsp/knuerZThA71DsJftZNi3tO+el2zdH4xbf2HHU
-	c2y2RRvcdcyz5CAbvftOmKgikYGBnr2Rcj/eWdvD3ORLU7afcuqzfTzIoEUpGLzUQYXGei
-	mz67HrW4E7z4qEwHKiG8/QM2FBFYV40FYLFnzm7Et/WzAc6wnnceslJkdEOpkMIlay8e3A
-	Va2RGj2kCrFNw4r3SNR+vwlM2iIx816M8uWK2BR5g4UxwWc6nF4YCTBsmzZzZifQ0ByQZ7
-	px/eacMUhk9PfyjojNp006mL2sOf6E3NuJ6xU7L+tAw5+k4Pb7HqZM9xnqIYpw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717684826;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Om1VCSNqPpr0VK3hPFHIBndBdY4QYvPmRknCYRoy2k=;
-	b=9xhHkNLU1nAmHB7O+e80QI9cBiKTtkliqqYd9SikO6NeO8IfSmFgiGgU/5iXzgIcBnBI/R
-	9Bp/Ae1vy64kKaDQ==
-From: "tip-bot2 for Lorenzo Pieralisi" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic-v3: Enable non-coherent
- redistributors/ITSes ACPI probing
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Robin Murphy <robin.murphy@arm.com>,
- Marc Zyngier <maz@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240606094238.757649-2-lpieralisi@kernel.org>
-References: <20240606094238.757649-2-lpieralisi@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZjI9zw8u"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 456ALK47027443;
+	Thu, 6 Jun 2024 14:40:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=OTqhxUCL08AAvmj3iIFWNIvG
+	85mB0ebTfjFbMLge7vg=; b=ZjI9zw8uVB6N/IzoVTCAc5ccjkTEYUYKtXo6sAjj
+	r1TZh+C9UWHSygIekLEKdb4C/OJ1ciS4sbhQ9ffvtPpGuLpA6bTgClnFNUi7ApHZ
+	XSct+nhD78AoLAranRQsgldu2knj2+NpvNMGAtwysC6waga8YbnZ0o6NvcQ1QhHj
+	zPMw/bSw2nuMW4Nsbdp850jau4PiQ1T9Ba+llMQNE/w+zgxOVvEP9ArJcKgCzxZu
+	4r+J484jtPRyw+ndkidO9Vvo4afy9goYQcx3DhqS63eh4sjhbFdRnfG5qgesSmi7
+	OYDOQ8S9YNJqlY+JCwxJMs7RjZ2hmA4RsCpTlScBWmSJHA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjq2tkanq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Jun 2024 14:40:26 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 456EePd9010032
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Jun 2024 14:40:25 GMT
+Received: from hyd-e160-a01-3-01.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 6 Jun 2024 07:40:21 -0700
+From: Naina Mehta <quic_nainmeht@quicinc.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>, <manivannan.sadhasivam@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_nainmeht@quicinc.com>
+Subject: [PATCH 2/5] remoteproc: qcom: pas: Add SDX75 remoteproc support
+Date: Thu, 6 Jun 2024 20:08:55 +0530
+Message-ID: <20240606143858.4026-3-quic_nainmeht@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240606143858.4026-1-quic_nainmeht@quicinc.com>
+References: <20240606143858.4026-1-quic_nainmeht@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171768482381.10875.281989797581205013.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: bTU3JuIDmXlhbFZ7Lkyqt7qcYUhuWqtb
+X-Proofpoint-ORIG-GUID: bTU3JuIDmXlhbFZ7Lkyqt7qcYUhuWqtb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-06_01,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 impostorscore=0 clxscore=1015 spamscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406060105
 
-The following commit has been merged into the irq/core branch of tip:
+Add MPSS Peripheral Authentication Service support for SDX75 platform.
 
-Commit-ID:     ababa16fd9bd0e2727a1c31c4fb68d6be053bddc
-Gitweb:        https://git.kernel.org/tip/ababa16fd9bd0e2727a1c31c4fb68d6be053bddc
-Author:        Lorenzo Pieralisi <lpieralisi@kernel.org>
-AuthorDate:    Thu, 06 Jun 2024 11:42:38 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 06 Jun 2024 16:30:15 +02:00
-
-irqchip/gic-v3: Enable non-coherent redistributors/ITSes ACPI probing
-
-The GIC architecture specification defines a set of registers for
-redistributors and ITSes that control the sharebility and cacheability
-attributes of redistributors/ITSes initiator ports on the interconnect
-(GICR_[V]PROPBASER, GICR_[V]PENDBASER, GITS_BASER<n>).
-
-Architecturally the GIC provides a means to drive shareability and
-cacheability attributes signals but it is not mandatory for designs to
-wire up the corresponding interconnect signals that control the
-cacheability/shareability of transactions.
-
-Redistributors and ITSes interconnect ports can be connected to
-non-coherent interconnects that are not able to manage the
-shareability/cacheability attributes; this implicitly makes the
-redistributors and ITSes non-coherent observers.
-
-To enable non-coherent GIC designs on ACPI based systems, parse the MADT
-GICC/GICR/ITS subtables non-coherent flags to determine whether the
-respective components are non-coherent observers and force the
-shareability attributes to be programmed into the redistributors and
-ITSes registers.
-
-An ACPI global function (acpi_get_madt_revision()) is added to retrieve
-the MADT revision, in that it is essential to check the MADT revision
-before checking for flags that were added with MADT revision 7 so that
-if the kernel is booted with an ACPI MADT table with revision < 7 it
-skips parsing the newly added flags (that should be zeroed reserved
-values for MADT versions < 7 but they could turn out to be buggy and
-should be ignored).
-
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Link: https://lore.kernel.org/r/20240606094238.757649-2-lpieralisi@kernel.org
+Signed-off-by: Naina Mehta <quic_nainmeht@quicinc.com>
 ---
- drivers/acpi/processor_core.c    | 15 +++++++++++++++
- drivers/irqchip/irq-gic-v3-its.c |  4 ++++
- drivers/irqchip/irq-gic-v3.c     |  9 +++++++++
- include/linux/acpi.h             |  3 +++
- 4 files changed, 31 insertions(+)
+ drivers/remoteproc/qcom_q6v5_pas.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/acpi/processor_core.c b/drivers/acpi/processor_core.c
-index b203cfe..915713c 100644
---- a/drivers/acpi/processor_core.c
-+++ b/drivers/acpi/processor_core.c
-@@ -215,6 +215,21 @@ phys_cpuid_t __init acpi_map_madt_entry(u32 acpi_id)
- 	return rv;
- }
- 
-+int __init acpi_get_madt_revision(void)
-+{
-+	struct acpi_table_header *madt = NULL;
-+	int revision;
-+
-+	if (ACPI_FAILURE(acpi_get_table(ACPI_SIG_MADT, 0, &madt)))
-+		return -EINVAL;
-+
-+	revision = madt->revision;
-+
-+	acpi_put_table(madt);
-+
-+	return revision;
-+}
-+
- static phys_cpuid_t map_mat_entry(acpi_handle handle, int type, u32 acpi_id)
- {
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 40ebf17..af5297e 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -5600,6 +5600,10 @@ static int __init gic_acpi_parse_madt_its(union acpi_subtable_headers *header,
- 		goto node_err;
- 	}
- 
-+	if (acpi_get_madt_revision() >= 7 &&
-+	    (its_entry->flags & ACPI_MADT_ITS_NON_COHERENT))
-+		its->flags |= ITS_FLAGS_FORCE_NON_SHAREABLE;
-+
- 	err = its_probe_one(its);
- 	if (!err)
- 		return 0;
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 6fb2765..e4bc5f0 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -2349,6 +2349,11 @@ gic_acpi_parse_madt_redist(union acpi_subtable_headers *header,
- 		pr_err("Couldn't map GICR region @%llx\n", redist->base_address);
- 		return -ENOMEM;
- 	}
-+
-+	if (acpi_get_madt_revision() >= 7 &&
-+	    (redist->flags & ACPI_MADT_GICR_NON_COHERENT))
-+		gic_data.rdists.flags |= RDIST_FLAGS_FORCE_NON_SHAREABLE;
-+
- 	gic_request_region(redist->base_address, redist->length, "GICR");
- 
- 	gic_acpi_register_redist(redist->base_address, redist_base);
-@@ -2373,6 +2378,10 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers *header,
- 		return -ENOMEM;
- 	gic_request_region(gicc->gicr_base_address, size, "GICR");
- 
-+	if (acpi_get_madt_revision() >= 7 &&
-+	    (gicc->flags & ACPI_MADT_GICC_NON_COHERENT))
-+		gic_data.rdists.flags |= RDIST_FLAGS_FORCE_NON_SHAREABLE;
-+
- 	gic_acpi_register_redist(gicc->gicr_base_address, redist_base);
- 	return 0;
- }
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 28c3fb2..000d339 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -279,6 +279,9 @@ static inline bool invalid_phys_cpuid(phys_cpuid_t phys_id)
- 	return phys_id == PHYS_CPUID_INVALID;
- }
- 
-+
-+int __init acpi_get_madt_revision(void);
-+
- /* Validate the processor object's proc_id */
- bool acpi_duplicate_processor_id(int proc_id);
- /* Processor _CTS control */
+diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+index 8458bcfe9e19..833e2f9c2c5e 100644
+--- a/drivers/remoteproc/qcom_q6v5_pas.c
++++ b/drivers/remoteproc/qcom_q6v5_pas.c
+@@ -1343,6 +1343,7 @@ static const struct of_device_id adsp_of_match[] = {
+ 	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &sdm845_cdsp_resource_init},
+ 	{ .compatible = "qcom,sdm845-slpi-pas", .data = &sdm845_slpi_resource_init},
+ 	{ .compatible = "qcom,sdx55-mpss-pas", .data = &sdx55_mpss_resource},
++	{ .compatible = "qcom,sdx75-mpss-pas", .data = &sm8650_mpss_resource},
+ 	{ .compatible = "qcom,sm6115-adsp-pas", .data = &adsp_resource_init},
+ 	{ .compatible = "qcom,sm6115-cdsp-pas", .data = &cdsp_resource_init},
+ 	{ .compatible = "qcom,sm6115-mpss-pas", .data = &sc8180x_mpss_resource},
+-- 
+2.17.1
+
