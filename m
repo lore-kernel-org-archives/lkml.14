@@ -1,98 +1,69 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5031974FE;
-	Thu,  6 Jun 2024 14:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8557C19E7F5
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684817; cv=none; b=U6IpN8PNJkb9/LxnzfwtU68ZXGCuYDzJd21g3N9wDwzq7sPEvEweJumY1fN6CZkNPH/iXqqqxzL73rc0SRlYvZ49VDnBjv8tw6J+PpGNCjv5NRUSnBXaVGt+163Qxcrmi1N5Fj678U0WwSzC8gVzDJ/nLVRHmQFuEl41eKiYWyA=
+	t=1717684824; cv=none; b=ONOIDOn9FTj7CYS+AMAk8WYB0mMPlCgnLbH82PVpSdbbkD+nHh2ZXemZ/Db/U7AAufjHjf7TmW0pcon5C3r4qnxfAOgFaHrM3w0e0UTBatnbsorc/SKiSQJp8zFu2hjp9MuNBFnaoxA38y2uM+QyTS4ezFFgdHdtZUNH7KWG0Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684817; c=relaxed/simple;
-	bh=ZGB3juOxwVTV9EOeSwh34a8EfYqp00QVXUiUxC+Ea5I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nuBVIeoNEDaTUA/chx4ECJs+Bk/x9BTK/S+X3KDDwpxJM1Lhx7mdvwJufsO0bfl2l3zqwEnZagIdq1dwoFbB2NXO+tlK+0PxxNLVCAI7pii80zxOTAWh/vcn9i9S7thjSTAKKDH7vOFcn9gKnHcN98z7s6ZsLZGfbQ5HR4dYowI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AG1g5oic; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AG1g5oic"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45699e8M016166;
-	Thu, 6 Jun 2024 14:40:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	qcppdkim1; bh=VCPJV/VzG/M+IhNnUHL+ziLX+EjaBPDAUVTfhaUS/lA=; b=AG
-	1g5oicFc4NZ6QEWNF6Xl2Nf0HGSU3em582cnahrOLMnHwu4LZqqVNcmx23UnngYX
-	KGi568hk/+HzkZ1CuqRFYOGKGGy3AbNeUJTgnc0GrJafVBUgOf64LOjTc1GCwSkd
-	5lvtnADKP10LgH3JXs4NRKUx1pgE1wBGbJEgpkyhXvAiItiP4keHQNP9gOFHvkuD
-	hQhsmMB3EsKG+2l3yqwy94BHT+J2oTuAKMcofBu6U7VWvEhHAaIAhQTnE3F0Y8rT
-	UAFh1FEPQ8retAnv8tZYjp1Nx0eByLlGneYw4k7TP6TqygHw3PZUY8oV7Ndmc8C6
-	PP5+whaamTQ1C+ko44cA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yka7p8rjv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 14:40:12 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 456EeACl009445
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Jun 2024 14:40:10 GMT
-Received: from hyd-e160-a01-3-01.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Jun 2024 07:40:06 -0700
-From: Naina Mehta <quic_nainmeht@quicinc.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <manivannan.sadhasivam@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_nainmeht@quicinc.com>
-Subject: [PATCH 0/5] Add MPSS remoteproc support for SDX75
-Date: Thu, 6 Jun 2024 20:08:53 +0530
-Message-ID: <20240606143858.4026-1-quic_nainmeht@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+	s=arc-20240116; t=1717684824; c=relaxed/simple;
+	bh=tUMWsF78RNhMYX/UO7ZV4hcCMrXZN0eXQoDvU9LivP8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=rIenbfOTxOcyhmeQiL3S3Eugl66gGYtk4+Y7WXqWtSwbA+o+Y2qEiV0T9lYmc/RdjwtWAlK2QMjNroSH4q4AThl6fk0Jv1hTCaMW2/kj/LkojHh71iAmG5DH5KMNRM5lU9QpVhUFi4xXrwQIjX4okyHlYRr30KUovu2ZnBIPNKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav413.sakura.ne.jp (fsav413.sakura.ne.jp [133.242.250.112])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 456EeBNA011132;
+	Thu, 6 Jun 2024 23:40:11 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav413.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp);
+ Thu, 06 Jun 2024 23:40:11 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav413.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 456EeBuq011129
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Thu, 6 Jun 2024 23:40:11 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <c86f0ed7-4336-4bc8-a27c-8d7ccaaec5d8@I-love.SAKURA.ne.jp>
+Date: Thu, 6 Jun 2024 23:40:08 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9PpGwCdiY-hS7m9_aHwm7xl7e4sVnC4q
-X-Proofpoint-ORIG-GUID: 9PpGwCdiY-hS7m9_aHwm7xl7e4sVnC4q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-06_01,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- malwarescore=0 adultscore=0 spamscore=0 bulkscore=0 clxscore=1011
- phishscore=0 mlxlogscore=766 lowpriorityscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406060106
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [GIT PULL] tomoyo update for v6.10
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add modem support to SDX75 using the PAS remoteproc driver.
-Also, add qlink_logging memory region and split MPSS DSM
-region into 2 separate regions.
+The following changes since commit c6144a21169fe7d0d70f1a0dae6f6301e5918d30:
 
-These patches were co-authored by Rohit Agarwal while at
-Qualcomm.
+  tomoyo: update project links (2024-06-03 22:43:11 +0900)
 
-Naina Mehta (5):
-  dt-bindings: remoteproc: qcom,sm8550-pas: document the SDX75 PAS
-  remoteproc: qcom: pas: Add SDX75 remoteproc support
-  arm64: dts: qcom: sdx75: add missing qlink_logging reserved memory for
-    mpss
-  arm64: dts: qcom: sdx75: Add remoteproc node
-  arm64: dts: qcom: sdx75-idp: enable MPSS remoteproc node
+are available in the Git repository at:
 
- .../bindings/remoteproc/qcom,sm8550-pas.yaml  |  1 +
- arch/arm64/boot/dts/qcom/sdx75-idp.dts        |  6 ++
- arch/arm64/boot/dts/qcom/sdx75.dtsi           | 64 +++++++++++++++++--
- drivers/remoteproc/qcom_q6v5_pas.c            |  1 +
- 4 files changed, 68 insertions(+), 4 deletions(-)
+  git://git.code.sf.net/p/tomoyo/tomoyo.git
 
--- 
-2.17.1
+for you to fetch changes up to c6144a21169fe7d0d70f1a0dae6f6301e5918d30:
 
+  tomoyo: update project links (2024-06-03 22:43:11 +0900)
+
+----------------------------------------------------------------
+Single patch, no behavior changes.
+
+Tetsuo Handa (1):
+  tomoyo: update project links
+
+ Documentation/admin-guide/LSM/tomoyo.rst |   35 +++++++++----------------------
+ MAINTAINERS                              |    2 -
+ security/tomoyo/Kconfig                  |    2 -
+ security/tomoyo/common.c                 |    2 -
+ 4 files changed, 14 insertions(+), 27 deletions(-)
