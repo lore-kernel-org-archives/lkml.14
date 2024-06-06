@@ -1,148 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7823F17F362
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFB317E8FB;
+	Thu,  6 Jun 2024 09:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717667549; cv=none; b=Xdcz5EYAYzUZqx2eanKydOCJkUy6NFe4R+BGsBWPW4gVnwesg43X+ROczxGFIEfeiYTYzVjMU7o0stFOP4fm0gwF6eH6Tx07MBu0XNMKImc7i6z33aX5qUwVkp+jZLCyGzUKLX4SLy+KedtzGZehMSeD3NZ/OWVH/w8CQq5fhrY=
+	t=1717667609; cv=none; b=cmn7EDvkNWYckkbNJIYh0Cig3jPgldw9BNnoCi95i7emEEF6hQhXht8WYL+CAiyP1qibfO6TJU3hhauhs8eo2offx16BW6QK57reGBIAEAJTWM4iQHBh52ZKVE/+jGp8DtYaLYaMmmO58uMrp6X+L+fAUcJyXtyIAQgWGbq9RyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717667549; c=relaxed/simple;
-	bh=X7cVxbBveQqrOZ2WwFezmFwF45VgSY2MzHX0JhuP+Uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gLc4Iml6j0RctGXwblQL/AIUE64MjzRAINddkY7ImqVcsdOw/vMdW1zGGH2yBuwEmF3OXBe+L0omFR06L6+BvSFu4ErXmO2I+tRu4OkrfcbC7fbRLaL+x2WKpn4uHAYnG98k4GuMjAL0685SXknpODfxmkaILsSJ1gRyzHrKYqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VOn+B8HT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717667609; c=relaxed/simple;
+	bh=CKTgow/rXEHMO5WjfhlWa4EqAX2k6le6hA30B/0Rkug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X4mQnLfHvdpfVt7z1PyugGFoOjBECEHhm9GLWKx6+/vCTdBXzGJFJAK1lQ/OHtio3rU4/LjTS6wE/UHOu4scPYA5ox95hz2kawo7AVl6tJZvc5YvBWiFSwVuetQvnMiZFqB2eXBrkJf2hfGNv0snuIMgDpSYNHp1GIc2MspMRDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Qncj7IYy; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VOn+B8HT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717667546;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8rpvCY5bzwtgFrw8HO1MFPpTrsqw6qdsV1vTK4nMLwI=;
-	b=VOn+B8HT4qYh8o0koqMmyCQnOWPO/59F8cL/9fSOFiCL6pXEtiZ5evV6/RcuiPxtx+Ho7C
-	6aJWGnpAtqdrCCV2fjtgZdIVz9NXUDL1UweAvuTtSgx3n+hd2auycW8NimEcGpzW31K8r9
-	h0oyf3E2hiS3KgY8lMo2551j/acouKM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-325-mIggGKAlO3S6ge_9wYrxmw-1; Thu, 06 Jun 2024 05:52:23 -0400
-X-MC-Unique: mIggGKAlO3S6ge_9wYrxmw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Qncj7IYy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717667605;
+	bh=CKTgow/rXEHMO5WjfhlWa4EqAX2k6le6hA30B/0Rkug=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Qncj7IYyv4cPm7O8mmmeYAsqXX2wIMRYjy47ZisSwnTzuBapQHru2SfHHT5snuLzU
+	 NyJ/WPRp/6MGqP+ZMMhBM4jFWOLG5/qddVlFH5dKcZP1qRN2m4xOQPv74qFQfH8/rp
+	 HRvkqkGUS91XBUdJFpJZXiT3vRq4FPOvfZVb8E1/oIsOHdhO7Z1761xudvFgPbsq0r
+	 l7XGNa3vch39wRWsYD7c/tVCqEAyk/84VVKlCpUI6/mlItPi497RrIQuHRENY/R79h
+	 8efYUvpHPwgqh8nQpKJOxnRvThALy2bP83BmgTfnm2bmRiHLGOhyWq7dtWHacQdkar
+	 HgukqBYuuih7w==
+Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7E97C185A78E;
-	Thu,  6 Jun 2024 09:52:22 +0000 (UTC)
-Received: from fedora (unknown [10.72.113.78])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7A116492BF1;
-	Thu,  6 Jun 2024 09:52:16 +0000 (UTC)
-Date: Thu, 6 Jun 2024 17:52:12 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Li Nan <linan666@huaweicloud.com>
-Cc: Changhui Zhong <czhong@redhat.com>, axboe@kernel.dk,
-	ZiyangZhang@linux.alibaba.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-	yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH] ublk_drv: fix NULL pointer dereference in
- ublk_ctrl_start_recovery()
-Message-ID: <ZmGGzNLLC6WpM9tb@fedora>
-References: <20240529095313.2568595-1-linan666@huaweicloud.com>
- <Zl0QpCbYVHIkKa/H@fedora>
- <225f4c8e-0e2c-8f4b-f87d-69f4677af572@huaweicloud.com>
- <CAGVVp+XD5MbYOWL4pbLMxXL0yNKO5NJ84--=KVnW6w5-GF7Drw@mail.gmail.com>
- <918f128b-f752-2d66-ca60-7d9c711ed928@huaweicloud.com>
- <CAGVVp+V6XGmE_LyOYM3z8cEOzkvQZy=2Fnr5V3G4+DchxAz3Qw@mail.gmail.com>
- <ZmA0Se+t/LZihBKp@fedora>
- <CAGVVp+WoBochfQvLgAVbpWFv6JVAfQVkPwWDG8mBxqgGK-NDbg@mail.gmail.com>
- <2c46587e-0621-b21e-fbc1-fd69e87def03@huaweicloud.com>
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id CC0683781182;
+	Thu,  6 Jun 2024 09:53:23 +0000 (UTC)
+Message-ID: <25ba8753-b7e9-4f6f-a9ad-c5266540939a@collabora.com>
+Date: Thu, 6 Jun 2024 12:53:23 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/14] drm/bridge: synopsys: Add DW HDMI QP TX controller
+ driver
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Mark Yao <markyao0591@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ devicetree@vger.kernel.org, kernel@collabora.com,
+ Alexandre ARNOUD <aarnoud@me.com>, Luis de Arquer <ldearquer@gmail.com>,
+ Algea Cao <algea.cao@rock-chips.com>
+References: <20240601-b4-rk3588-bridge-upstream-v1-0-f6203753232b@collabora.com>
+ <20240601-b4-rk3588-bridge-upstream-v1-13-f6203753232b@collabora.com>
+ <2554679.TLnPLrj5Ze@diego>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <2554679.TLnPLrj5Ze@diego>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2c46587e-0621-b21e-fbc1-fd69e87def03@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-On Thu, Jun 06, 2024 at 04:05:33PM +0800, Li Nan wrote:
+On 6/5/24 5:48 PM, Heiko Stübner wrote:
+> Am Samstag, 1. Juni 2024, 15:12:35 CEST schrieb Cristian Ciocaltea:
+>> The Synopsys DesignWare HDMI 2.1 Quad-Pixel (QP) TX controller supports
+>> the following features, among others:
+>>
+>> * Fixed Rate Link (FRL)
+>> * 4K@120Hz and 8K@60Hz video modes
+>> * Variable Refresh Rate (VRR) including Quick Media Switching (QMS), aka
+>>   Cinema VRR
+>> * Fast Vactive (FVA), aka Quick Frame Transport (QFT)
+>> * SCDC I2C DDC access
+>> * TMDS Scrambler enabling 2160p@60Hz with RGB/YCbCr4:4:4
+>> * YCbCr4:2:0 enabling 2160p@60Hz at lower HDMI link speeds
+>> * Multi-stream audio
+>> * Enhanced Audio Return Channel (EARC)
+>>
+>> Add driver to enable basic support, i.e. RGB output up to 4K@60Hz,
+>> without audio, CEC or any HDMI 2.1 specific features.
+>>
+>> Co-developed-by: Algea Cao <algea.cao@rock-chips.com>
+>> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>> ---
+>>  drivers/gpu/drm/bridge/synopsys/Makefile     |   2 +-
+>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c | 787 +++++++++++++++++++++++++
+>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.h | 831 +++++++++++++++++++++++++++
+>>  include/drm/bridge/dw_hdmi.h                 |   8 +
+>>  4 files changed, 1627 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/synopsys/Makefile b/drivers/gpu/drm/bridge/synopsys/Makefile
+>> index ce715562e9e5..8354e4879f70 100644
+>> --- a/drivers/gpu/drm/bridge/synopsys/Makefile
+>> +++ b/drivers/gpu/drm/bridge/synopsys/Makefile
 > 
+>> +static int dw_hdmi_qp_i2c_read(struct dw_hdmi *hdmi,
+>> +			       unsigned char *buf, unsigned int length)
+>> +{
+>> +	struct dw_hdmi_i2c *i2c = hdmi->i2c;
+>> +	int stat;
+>> +
+>> +	if (!i2c->is_regaddr) {
+>> +		dev_dbg(hdmi->dev, "set read register address to 0\n");
+>> +		i2c->slave_reg = 0x00;
+>> +		i2c->is_regaddr = true;
+>> +	}
+>> +
+>> +	while (length--) {
+>> +		reinit_completion(&i2c->cmp);
+>> +
+>> +		dw_hdmi_qp_mod(hdmi, i2c->slave_reg++ << 12, I2CM_ADDR,
+>> +			       I2CM_INTERFACE_CONTROL0);
+>> +
+>> +		dw_hdmi_qp_mod(hdmi, I2CM_FM_READ, I2CM_WR_MASK,
+>> +			       I2CM_INTERFACE_CONTROL0);
 > 
-> 在 2024/6/6 12:48, Changhui Zhong 写道:
+> Somehow the segment handling is present in the rest of the i2c code here, but
+> not the actual handling for reads.
 > 
-> [...]
+> The vendor-kernel does:
 > 
-> > > 
-> > > Hi Changhui,
-> > > 
-> > > The hang is actually expected because recovery fails.
-> > > 
-> > > Please pull the latest ublksrv and check if the issue can still be
-> > > reproduced:
-> > > 
-> > > https://github.com/ublk-org/ublksrv
-> > > 
-> > > BTW, one ublksrv segfault and two test cleanup issues are fixed.
-> > > 
-> > > Thanks,
-> > > Ming
-> > > 
-> > 
-> > Hi,Ming and Nan
-> > 
-> > after applying the new patch and pulling the latest ublksrv,
-> > I ran the test for 4 hours and did not observe any task hang.
-> > the test results looks good！
-> > 
-> > Thanks，
-> > Changhui
-> > 
-> > 
-> > .
+> -               dw_hdmi_qp_mod(hdmi, I2CM_FM_READ, I2CM_WR_MASK,
+> -                              I2CM_INTERFACE_CONTROL0);
+> +               if (i2c->is_segment)
+> +                       dw_hdmi_qp_mod(hdmi, I2CM_EXT_READ, I2CM_WR_MASK,
+> +                                      I2CM_INTERFACE_CONTROL0);
+> +               else
+> +                       dw_hdmi_qp_mod(hdmi, I2CM_FM_READ, I2CM_WR_MASK,
+> +                                      I2CM_INTERFACE_CONTROL0);
+
+Hmm, for some reason this is not present in the stable-5.10-rock5 branch 
+I've been using as an implementation reference:
+
+https://github.com/radxa/kernel/blob/stable-5.10-rock5/drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c#L760
+
+Is there an updated fork?
+
+> Without this change, connecting to a DVI display does not work, and
+> reading the EDID ends in the "i2c read error" below.
 > 
-> Thanks for you test!
+> Adding the segment handling as above makes the DVI connection
+> work (as it does in the vendor-kernel).
 > 
-> However, I got a NULL pointer dereference bug with ublksrv. It is not
+> So it would be nice if you could maybe incorporate this in the next version?
 
-BTW, your patch isn't related with generic/004 which won't touch
-recovery code path.
+Sure, thanks for pointing this out!
 
-> introduced by this patch. It seems io was issued after deleting disk. And
-> it can be reproduced by:
-> 
->   while true; do make test T=generic/004; done
-
-We didn't see that when running such test with linus tree, and usually
-Changhui run generic test for hours.
-
-> 
-> [ 1524.286485] running generic/004
-> [ 1529.110875] blk_print_req_error: 109 callbacks suppressed
-...
-> [ 1541.171010] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> [ 1541.171734] #PF: supervisor write access in kernel mode
-> [ 1541.172271] #PF: error_code(0x0002) - not-present page
-> [ 1541.172798] PGD 0 P4D 0
-> [ 1541.173065] Oops: Oops: 0002 [#1] PREEMPT SMP
-> [ 1541.173515] CPU: 0 PID: 43707 Comm: ublk Not tainted
-> 6.9.0-next-20240523-00004-g9bc7e95c7323 #454
-> [ 1541.174417] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> 1.16.1-2.fc37 04/01/2014
-> [ 1541.175311] RIP: 0010:io_fallback_tw+0x252/0x300
-
-This one looks one io_uring issue.
-
-Care to provide which line of source code points to by 'io_fallback_tw+0x252'?
-
-gdb> l *(io_fallback_tw+0x252)
-
-
-Thanks,
-Ming
-
+Cristian
