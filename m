@@ -1,123 +1,138 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723BA29415;
-	Thu,  6 Jun 2024 03:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AF219D89B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 03:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717645020; cv=none; b=oqYv+eJPKCjxzmVDNwC79CfuDmPs/WxN1QfFuBIGs3tENGuXniD3Kt+RAFJ3/3o7HIeoaouJ4YIk4wfaKjDXyLpr6D6UofD0gO+PcXFjHOcObn1updL8qJhrQJxX6BMXyYNcVca1a0X8d4RbJ8qpM2POyNM3Y3HKLMFfq6ULFUs=
+	t=1717645125; cv=none; b=eLWVHUh+yXpH4Yaf9yuJOhJ2KhUs6un2SxS72qFnlAkKLZFgNRuQ23B/hIZgNehA9AswWc9FNF2Q5AtvAxgVMmRwNZbr0vJXrS+ekjKR96YcC7PNK58kChMx6zqqX6HyGhHorAhRQ/TFBTfuNV+WGfmzqc89xhg5/FOWfKqJ2Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717645020; c=relaxed/simple;
-	bh=rqAjxpHR7KTlsvFbPc+x691e3zDeF99vZooQi2w0+Ss=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=VmOsd0B9E/x5AFQ2XfO31jqNAOlqTQ/oUUjG2Csd0SpEfdnqPKJygStUWScNYz5SjNN68HDRbIluKXv0Ph4iVHFD83RumUyNnA32rVl0REsktnoX4sLfJ/FkCbJ2sDwCsz3EVmCoi+N03mOtH10IbWd8MMBnUShiiWu/tOsgg7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vvqkf65WMz4f3lgN;
-	Thu,  6 Jun 2024 11:36:42 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 07B301A016E;
-	Thu,  6 Jun 2024 11:36:54 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP3 (Coremail) with SMTP id _Ch0CgAn6J_VLmFmIDPrOQ--.6770S2;
-	Thu, 06 Jun 2024 11:36:53 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: willy@infradead.org,
-	akpm@linux-foundation.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] writeback: factor out balance_wb_limits to remove repeated code
-Date: Thu,  6 Jun 2024 11:35:47 +0800
-Message-Id: <20240606033547.344376-1-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1717645125; c=relaxed/simple;
+	bh=viBMVzMVJzk4djRwu6o8wINRdpBLjvA+yfIALtdxOds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cMeSb7o36ZVuFuSBwRH5iyaFKAWVn0J4HESmFgWZKp3Tgt6zfSPXUlVHxp+h6u4TQEx//bLxGh5DkwMW3tzRgQRM58jTyYJsKkboEqip6shoH31ZzjcJnC2Tp6MRz2dPzDX78+aYYsYS3SIgqW+R7GLW8J2kjiM8+lY8/qntRlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IYiDmYng; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IYiDmYng"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42152bb7b81so41335e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 20:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717645122; x=1718249922; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n+sCN4gd5xRSv8MbZzfOM4BQL071QPAHGQYJsY8mOBI=;
+        b=IYiDmYngqI37l0frb5drurlkjU9+L83ne1UH7tuY/8M0kFQWp63q3E1ZN+aZ92hSG1
+         MQSGj0gN4r+Q9uoQfJcCyl0n37O5+jVUcqjpa8cSFSTno1nNfhfhBkxrrNVDM41xSEPD
+         fktBpapTey3LdX37MsH8Z+LvstFusNtjHI04crasiyM1uB7dbGrowMMurDOFVgoVP5lm
+         jYO2tNMDhkYX7ZkExyXlaT2kf5dX1acWvW6Qxbr7FouFT5S4c8TNlVprxJcLHtQq2MCE
+         LpJjCrkcFLlLM/iYLnyrbo+h+nyDg1guSkykw/ZqQpTLyNI+DqEh1+nf6ZsksVMoJOo5
+         OrRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717645122; x=1718249922;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n+sCN4gd5xRSv8MbZzfOM4BQL071QPAHGQYJsY8mOBI=;
+        b=xOhEZaVeUKnXZnXWbZcqCvvFvQzo1S712apsQ0X7UOouXug8KcpwlZMiqQEl3CQnfi
+         twCFtESiGQWwSnIT9QQqCcaxGXud8UUzEZtWuDYkKEcRr3jFb9m5dfAphUg/CqxVF8ZV
+         vMt25kFCKCCPY93CtzHReYHAP1jeuLb+aBEENDIWH4GLsosL46P2z9jqNAxBc7jLw6hC
+         HaDgOeecCzddDOacQ7ubpVReFRl5IPzSL/4jXpKs1Jmud6OA31n3uVyZemX3BjsPzx4p
+         9WemaMHmBLVdQ+3mMyS+TlPIm1vn8U/oEAP0dNj4KJ99aqVujcPiq859dANen9yXQxnU
+         N7uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpfAsTpuoCBxW6qWz2rx5eRkPkjqqZ5olhayjVGYjtTQM/iqoP7HiNSItCA8gloQlVw7S5MNk0Ndd4kHGm5QQTonEomkditCRHbuy2
+X-Gm-Message-State: AOJu0YyTkvLBevliztaIGnSRuFzn4JMglqVsgKpg0Q7mY08U0GF8Uz/R
+	TO1gS4P6+0+of/wK2myyvQlHXHVGkFgCIMsrpMUm3fo+WllNE/pkJMR7mZCPmQK/ACwZeax5GA9
+	PskOoBQMXn3lMUR/Eo9WMNaPrTo1RpOmt6Weh
+X-Google-Smtp-Source: AGHT+IED6sI5jxhMT1wmnXVkKvgDEwPtPXeaSABuPbsUuWB+6ngoSn1LlcVFANBPnv+O+WxbFbVMvWEPm1NPGNA5yhc=
+X-Received: by 2002:a05:600c:1c09:b0:41a:444b:e1d9 with SMTP id
+ 5b1f17b1804b1-4215b7a0ae5mr1228175e9.4.1717645121762; Wed, 05 Jun 2024
+ 20:38:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAn6J_VLmFmIDPrOQ--.6770S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WFyUKrW7Ww1ktrWxWFW3ZFb_yoW8Cw4kpF
-	Z2ya10yr4kJF1Sqa9IyFZrurWaqrsayFWfJ348Gw4ftF4fKr17KFyavry0vF17ArnrGrW5
-	Zr4DtF97Gw1rCFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-	c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
-	CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
-	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6r
-	W3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
-	cSsGvfC2KfnxnUUI43ZEXa7IU1wL05UUUUU==
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+References: <20240508202111.768b7a4d@yea> <20240515224524.1c8befbe@yea>
+ <CAOUHufZ-9NmzOKjLedvZFp0=N0LvRZn77qC6k1WXK+NHtKr=0w@mail.gmail.com>
+ <CAOUHufZ36rQc8AfLtRv2QrEareysdvbprAEO5XkcG-FeDOxFLA@mail.gmail.com>
+ <45fc081c-ee8d-4774-a597-708d2924f812@redhat.com> <87tti6pxxc.fsf@mail.lhotse>
+In-Reply-To: <87tti6pxxc.fsf@mail.lhotse>
+From: Yu Zhao <yuzhao@google.com>
+Date: Wed, 5 Jun 2024 21:38:04 -0600
+Message-ID: <CAOUHufacbbpS3ghEwsQ-pObttnQk__xo0vjpGWXNq1i-bsuiGw@mail.gmail.com>
+Subject: Re: kswapd0: page allocation failure: order:0, mode:0x820(GFP_ATOMIC),
+ nodemask=(null),cpuset=/,mems_allowed=0 (Kernel v6.5.9, 32bit ppc)
+To: Michael Ellerman <mpe@ellerman.id.au>, Erhard Furtner <erhard_f@mailbox.org>
+Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Factor out balance_wb_limits to remove repeated code
+On Wed, Jun 5, 2024 at 9:12=E2=80=AFPM Michael Ellerman <mpe@ellerman.id.au=
+> wrote:
+>
+> David Hildenbrand <david@redhat.com> writes:
+> > On 01.06.24 08:01, Yu Zhao wrote:
+> >> On Wed, May 15, 2024 at 4:06=E2=80=AFPM Yu Zhao <yuzhao@google.com> wr=
+ote:
+> ...
+> >>
+> >> Your system has 2GB memory and it uses zswap with zsmalloc (which is
+> >> good since it can allocate from the highmem zone) and zstd/lzo (which
+> >> doesn't matter much). Somehow -- I couldn't figure out why -- it
+> >> splits the 2GB into a 0.25GB DMA zone and a 1.75GB highmem zone:
+> >>
+> >> [    0.000000] Zone ranges:
+> >> [    0.000000]   DMA      [mem 0x0000000000000000-0x000000002fffffff]
+> >> [    0.000000]   Normal   empty
+> >> [    0.000000]   HighMem  [mem 0x0000000030000000-0x000000007fffffff]
+> >
+> > That's really odd. But we are messing with "PowerMac3,6", so I don't
+> > really know what's right or wrong ...
+>
+> The DMA zone exists because 9739ab7eda45 ("powerpc: enable a 30-bit
+> ZONE_DMA for 32-bit pmac") selects it.
+>
+> It's 768MB (not 0.25GB) because it's clamped at max_low_pfn:
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- mm/page-writeback.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+Right. (I meant 0.75GB.)
 
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index bf050abd9053..f611272d3c5b 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -1783,6 +1783,21 @@ static inline void wb_dirty_exceeded(struct dirty_throttle_control *dtc,
- 		((dtc->dirty > dtc->thresh) || strictlimit);
- }
- 
-+/*
-+ * The limits fileds dirty_exceeded and pos_ratio won't be updated if wb is
-+ * in freerun state. Please don't use these invalid fileds in freerun case.
-+ */
-+static void balance_wb_limits(struct dirty_throttle_control *dtc,
-+			      bool strictlimit)
-+{
-+	wb_dirty_freerun(dtc, strictlimit);
-+	if (dtc->freerun)
-+		return;
-+
-+	wb_dirty_exceeded(dtc, strictlimit);
-+	wb_position_ratio(dtc);
-+}
-+
- /*
-  * balance_dirty_pages() must be called by processes which are generating dirty
-  * data.  It looks at the number of dirty pages in the machine and will force
-@@ -1869,12 +1884,9 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
- 		 * Calculate global domain's pos_ratio and select the
- 		 * global dtc by default.
- 		 */
--		wb_dirty_freerun(gdtc, strictlimit);
-+		balance_wb_limits(gdtc, strictlimit);
- 		if (gdtc->freerun)
- 			goto free_running;
--
--		wb_dirty_exceeded(gdtc, strictlimit);
--		wb_position_ratio(gdtc);
- 		sdtc = gdtc;
- 
- 		if (mdtc) {
-@@ -1884,12 +1896,9 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
- 			 * both global and memcg domains.  Choose the one
- 			 * w/ lower pos_ratio.
- 			 */
--			wb_dirty_freerun(mdtc, strictlimit);
-+			balance_wb_limits(mdtc, strictlimit);
- 			if (mdtc->freerun)
- 				goto free_running;
--
--			wb_dirty_exceeded(mdtc, strictlimit);
--			wb_position_ratio(mdtc);
- 			if (mdtc->pos_ratio < gdtc->pos_ratio)
- 				sdtc = mdtc;
- 		}
--- 
-2.30.0
+> #ifdef CONFIG_ZONE_DMA
+>         max_zone_pfns[ZONE_DMA] =3D min(max_low_pfn,
+>                                       1UL << (zone_dma_bits - PAGE_SHIFT)=
+);
+> #endif
+>
+> Which comes eventually from CONFIG_LOWMEM_SIZE, which defaults to 768MB.
 
+I see. I grep'ed VMSPLIT which is used on x86 and arm but apparently
+not on powerpc.
+
+> I think it's 768MB because the user:kernel split is 3G:1G, and then the
+> kernel needs some of that 1G virtual space for vmalloc/ioremap/highmem,
+> so it splits it 768M:256M.
+>
+> Then ZONE_NORMAL is empty because it is also limited to max_low_pfn:
+>
+>         max_zone_pfns[ZONE_NORMAL] =3D max_low_pfn;
+>
+> The rest of RAM is highmem.
+>
+> So I think that's all behaving as expected, but I don't know 32-bit /
+> highmem stuff that well so I could be wrong.
+
+Yes, the three zones work as intended.
+
+Erhard,
+
+Since your system only has 2GB memory, I'd try the 2G:2G split, which
+would in theory allow both the kernel and userspace to all memory.
+
+CONFIG_LOWMEM_SIZE_BOOL=3Dy
+CONFIG_LOWMEM_SIZE=3D0x7000000
+
+(Michael, please correct me if the above wouldn't work.)
