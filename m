@@ -1,204 +1,202 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E8612B17C;
-	Thu,  6 Jun 2024 06:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FF96F068;
+	Thu,  6 Jun 2024 06:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717656759; cv=none; b=BWQVIfk+ZW6G7exR605Oq9vujNh/22EQLFhZBzAPkr0ju1Mrv1c6K+bVsiJizG1YJENQuORrjABw/AftWtEG9lRj801P77U+5EDMoKclmMFwiA4IRo0sMPfjiAqiV5Wk5ZIcdsiDn6VpyoUepgUFVHXV6hnm6RtIsMtWeQqFK+A=
+	t=1717656812; cv=none; b=fEJ6kuFKvjIXh70O6GmE/M8hJODpH9yJ4293+xVbbqdZE2mESQbpzwI1K073ZwOx9yaZoFDsxlWXafdFogPkdYIHXBLpsfzLzrK46mLbfe5olD6acawexSVyWSKxw47JHmtSQr6n6YpX+yv6EpKJwNKMCrajqjJUUKuNgvOr2o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717656759; c=relaxed/simple;
-	bh=0mjjMGe367OYg5qoD1T9yoMijPlKQtT0gPZ5+U4wZrI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ocWuKlU5temMq5IVv077EnYzPfOIi8xFdqHI6O/sM3RZ3lRPreR4Fj6XygQoiO45+JC6y9ItAZtIcFo52AppRQHgiIrxRxQFkTCTbXF9WM+ecFRBPceiMaStfZ1xTi89LdYSplSekuOfbXiDPesR4eMibhnWbSAmUCCnsYTHg1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tdUOIgq+; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717656812; c=relaxed/simple;
+	bh=YWrK4iYDDKbeb1azVQHle6znUk1b3N3hYO1w8gGk7I4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qQTERqg1wu4+fR1AxOiqywzc4vMnKKgt4duZE4Q7WO9zb5sMTkFS8XaBjpxTMYpqqKh7NA0cg7S/de0mAesbJAWqwa4XagFuWf3ZSsQaUOZlGo9nisEX/nQYAuycJE+eHvkqIuUIaj78u/1H0QPv40zFFBiB57d8rghLnoe3e6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilU3ez+S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tdUOIgq+"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4566q532069189;
-	Thu, 6 Jun 2024 01:52:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717656725;
-	bh=KbbDyP4RKxjaOkCv02Y6AO/CjOQIQ/JQJ8NahY4g11A=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=tdUOIgq+Wom6F7mkCWT/Xez1YG4kE4YrFlnCHd4PXNHfE08lsCV6PCYWVIW1Q48ge
-	 UDpnUy2SRLh1ll7GNhVHGAshsmZbZLyWzbqES1yFtl8lznIO3KGnke4i61ikwrAwlt
-	 czyV2OK0OiP86wzcrOsOw/6rx/qHMSTbcHT2fSiE=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4566q5Bv112149
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 6 Jun 2024 01:52:05 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
- Jun 2024 01:52:05 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 6 Jun 2024 01:52:05 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4566q43h080133;
-	Thu, 6 Jun 2024 01:52:05 -0500
-Date: Thu, 6 Jun 2024 12:22:04 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <davem@davemloft.net>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <corbet@lwn.net>, <rogerq@kernel.org>, <danishanwar@ti.com>,
-        <vladimir.oltean@nxp.com>, <netdev@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
-        <misael.lopez@ti.com>, <srk@ti.com>
-Subject: Re: [RFC PATCH net-next 01/28] docs: networking: ti: add driver doc
- for CPSW Proxy Client
-Message-ID: <3586d2d1-1f03-47b0-94c0-258e48525a9d@ti.com>
-References: <20240518124234.2671651-1-s-vadapalli@ti.com>
- <20240518124234.2671651-2-s-vadapalli@ti.com>
- <642c8217-49fe-4c54-8d62-9550202c02c9@lunn.ch>
- <6e520ad0-0f9b-4fee-87fe-44477b01912b@ti.com>
- <287322d3-d3ee-4de6-9189-97067bc4835c@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilU3ez+S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86633C4AF08;
+	Thu,  6 Jun 2024 06:53:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717656812;
+	bh=YWrK4iYDDKbeb1azVQHle6znUk1b3N3hYO1w8gGk7I4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ilU3ez+Sh2XfeQBILe8JRGQCLnC0ghKF6UuH7S5xS7LUc3l6SC5WHPqAFhVpuM48c
+	 UECg8zkcemdw1eBNAIjRZ/NZWujmFxOgSPn2UL9xZi5NQLBZQ/ef+8I39VSs7UN04U
+	 wkFp1ypqPfeFRFh1I5BlyWBysjO7DS9d2V4CePghEko5dFcaph6FPk4VLiMqkIzEM8
+	 76XRTmS6pzm8GnxikRS52HlQrOtfSg7hmx1gtGM+TwkIXaIImPaFkacPCT7T5uNSOQ
+	 Ngjr8RT737ynyCqqwVmGcV7Hptn6Oh7BKdWg3BvsMl3daitgXE+1H5Q0O75jivs6WI
+	 ETUIi3yq6f9ig==
+Date: Wed, 5 Jun 2024 23:53:30 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+	irogers@google.com, segher@kernel.crashing.org,
+	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH V3 10/14] tools/perf: Update instruction tracking for
+ powerpc
+Message-ID: <ZmFc6kPnh-zIrIG1@google.com>
+References: <20240601060941.13692-1-atrajeev@linux.vnet.ibm.com>
+ <20240601060941.13692-11-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <287322d3-d3ee-4de6-9189-97067bc4835c@lunn.ch>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20240601060941.13692-11-atrajeev@linux.vnet.ibm.com>
 
-On Tue, Jun 04, 2024 at 04:20:16PM +0200, Andrew Lunn wrote:
-> On Sun, Jun 02, 2024 at 09:36:05AM +0530, Siddharth Vadapalli wrote:
-
-[...]
+On Sat, Jun 01, 2024 at 11:39:37AM +0530, Athira Rajeev wrote:
+> Add instruction tracking function "update_insn_state_powerpc" for
+> powerpc. Example sequence in powerpc:
 > 
-> If you do want to add a third model, where Linux has some insight into
-> the switch, you need to coordinate with other vendors in the
-> automotive world, and come up with a model which everybody can
-> use. What i don't want is a TI model, followed by a Realtek model,
-> followed by a vendor XYZ model. So if you need more than what the
-> first model above provides, you will need to get a consortium of
-> vendors together to design a new model a few vendors agree on.
+> ld      r10,264(r3)
+> mr      r31,r3
+> <<after some sequence>
+> ld      r9,312(r31)
+> 
+> Consider ithe sample is pointing to: "ld r9,312(r31)".
+> Here the memory reference is hit at "312(r31)" where 312 is the offset
+> and r31 is the source register. Previous instruction sequence shows that
+> register state of r3 is moved to r31. So to identify the data type for r31
+> access, the previous instruction ("mr") needs to be tracked and the
+> state type entry has to be updated. Current instruction tracking support
+> in perf tools infrastructure is specific to x86. Patch adds this support
+> for powerpc as well.
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  .../perf/arch/powerpc/annotate/instructions.c | 65 +++++++++++++++++++
+>  tools/perf/util/annotate-data.c               |  9 ++-
+>  tools/perf/util/disasm.c                      |  1 +
+>  3 files changed, 74 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
+> index db72148eb857..3ecf5a986037 100644
+> --- a/tools/perf/arch/powerpc/annotate/instructions.c
+> +++ b/tools/perf/arch/powerpc/annotate/instructions.c
+> @@ -231,6 +231,71 @@ static struct ins_ops *check_ppc_insn(int raw_insn)
+>  	return NULL;
+>  }
+>  
+> +/*
+> + * Instruction tracking function to track register state moves.
+> + * Example sequence:
+> + *    ld      r10,264(r3)
+> + *    mr      r31,r3
+> + *    <<after some sequence>
+> + *    ld      r9,312(r31)
+> + *
+> + * Previous instruction sequence shows that register state of r3
+> + * is moved to r31. update_insn_state_powerpc tracks these state
+> + * changes
+> + */
+> +#ifdef HAVE_DWARF_SUPPORT
+> +static void update_insn_state_powerpc(struct type_state *state,
+> +		struct data_loc_info *dloc, Dwarf_Die * cu_die __maybe_unused,
+> +		struct disasm_line *dl)
+> +{
+> +	struct annotated_insn_loc loc;
+> +	struct annotated_op_loc *src = &loc.ops[INSN_OP_SOURCE];
+> +	struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
+> +	struct type_state_reg *tsr;
+> +	u32 insn_offset = dl->al.offset;
+> +
+> +	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
+> +		return;
+> +
+> +	/*
+> +	 * Value 444 for bits 21:30 is for "mr"
+> +	 * instruction. "mr" is extended OR. So set the
+> +	 * source and destination reg correctly
+> +	 */
+> +	if (PPC_21_30(dl->ops.raw_insn) == 444) {
+> +		int src_reg = src->reg1;
+> +
+> +		src->reg1 = dst->reg1;
+> +		dst->reg1 = src_reg;
+> +	}
+> +
+> +	if (!has_reg_type(state, dst->reg1))
+> +		return;
+> +
+> +	tsr = &state->regs[dst->reg1];
+> +
+> +	if (!has_reg_type(state, src->reg1) ||
+> +			!state->regs[src->reg1].ok) {
+> +		tsr->ok = false;
+> +		return;
+> +	}
+> +
+> +	tsr->type = state->regs[src->reg1].type;
+> +	tsr->kind = state->regs[src->reg1].kind;
+> +	tsr->ok = true;
+> +
+> +	pr_debug("mov [%x] reg%d -> reg%d",
 
-I believe that a third model is required given the System Architecture
-and the use-case that it must cater to. I agree completely that having a
-vendor specific implementation should always be the last step when it is
-just not possible to generalize any portion of the implementation. I will
-describe the existing Architecture on the TI SoC and will also attempt to
-generalize the implementation below. I hope that you could review it and
-guide me towards the generic, vendor-agnostic implementation which will
-also address the use-case that this series corresponds to. I am willing
-to work on the generic implementation since I assume that this series
-does keep it generic enough that it could be extended to be vendor
-independent. So there might be minor changes required when switching to
-the generic model. On the other hand, based on the description that I
-provide below, if you think that the existing models can also be slightly
-modified to accomodate the use-case, I will surely take that into
-consideration and work on the corresponding implementation.
+pr_debug_dtp() ?
 
-System Architecture and Implementation Details
-==============================================
+Thanks,
+Namhyung
 
-The CPSW Ethernet Switch has a single Host Port (CPU facing port) through
-which it can receive data from the Host(s) and transmit data to the
-Host(s). The exchange of data occurs via TX/RX DMA Channels (Hardware
-Queues). These Hardware Queues are a limited resource (8 TX Channels and
-up to 64 RX Flows). If the Operating System on any of the cores is the
-sole user of CPSW then all of these Hardware Queues can be claimed by that
-OS. However, when CPSW has to be shared across the Operating Systems on
-various cores with the aim of enabling Ethernet Functionality for the
-Applications running on different cores, it is necessary to share these
-Hardware Queues in a manner that prevents conflicts. On the control path
-which corresponds to the configuration of CPSW to get it up and running,
-since there is no Integrated Processor within CPSW that can be programmed
-with a startup configuration, either the Operating System or Firmware
-running on one of the cores has to take the responsibility of setting it.
-One option in this case happens to be the Ethernet Switch Firmware (EthFw)
-which is loaded by the Bootloader on a remote core at the same time that
-Linux and other Operating Systems begin booting. EthFw quickly powers on
-and configures CPSW getting the Forwarding Path functional. Once Linux and
-other Operating Systems on various cores are ready, they can communicate
-with EthFw to obtain details of the Hardware Queues allocated to them to
-exchange data with CPSW. With the knowledge of the Hardware Queues that
-have been allocated, Linux can use the DMA APIs to setup these queues
-to exchange data with CPSW.
 
-Setting up the Hardware Queues alone isn't sufficient to exchange data
-with the external network. Consider the following example:
-The ethX interface in userspace which has been created to transmit/receive
-data to/from CPSW has the user-assigned MAC Address of "M". The ping
-command is run with the destination IP of "D". This results in an ARP
-request sent from ethX which is transmitted out of all MAC Ports of CPSW
-since it is a Broadcast request. Assuming that "D" is a valid
-destination IP, the ARP reply is received on one of the MAC Ports which
-is now a Unicast reply with the destination MAC Address of "M". The ALE
-(Address Lookup Engine) in CPSW has learnt that the MAC Address "M"
-corresponds to the Host Port when the ARP request was sent out. So the
-Unicast reply isn't dropped. The challenge however is determining which
-RX DMA Channel (Flow) to send the Unicast reply on. In the case of a
-single Operating System owning all Hardware Queues, sending it on any of
-the RX DMA Channels would have worked. In the current case where the RX
-DMA Channels map to different Hosts (Operating Systems and Applications),
-the mapping between the MAC Address "M" and the RX DMA Channel has to be
-setup to ensure that the correct Host receives the ARP reply. This
-necessitates a method to inform the MAC Address "M" associated with the
-interface ethX to EthFw so that EthFw can setup the MAC Address "M" to
-RX DMA Channel map accordingly.
-
-At this point, Linux can exchange data with the external network via CPSW,
-but no device on the external network can initiate the communication by
-itself unless it already has the ARP entry for the IP Address of ethX.
-That's because CPSW doesn't support packet replication implying that any
-Broadcast/Multicast packets received on the MAC Ports can only be sent
-on one of the RX DMA Channels. So the Broadcast/Multicast packets can
-only be received by one Host. Consider the following example:
-A PC on the network tries to ping the IP Address of ethX. In both of the
-following cases:
-1. Linux hasn't yet exchanged data with the PC via ethX.
-2. The MAC Address of ethX has changed.
-the PC sends an ARP request to one of the MAC Ports on CPSW to figure
-out the MAC Address of ethX. Since the ARP request is a Broadcast
-request, it is not possible for CPSW to determine the correct Host,
-since the Broadcast MAC isn't unique to any Host. So CPSW is forced
-to send the Broadcast request to a preconfigured RX DMA Channel which
-in this case happens to be the one mapped to EthFw. Thus, if EthFw
-is aware of the IP Address of ethX, it can generate and send the ARP
-reply containing the MAC Address "M" of ethX that it was informed of.
-With this, the PC can initiate communication with Linux as well.
-
-Similarly, in the case of Multicast packets, if Linux wishes to receive
-certain Multicast packets, it needs to inform the same to EthFw which
-shall then replicate the Multicast packets it received from CPSW and
-transmit them via alternate means (Shared Memory for example) to Linux.
-
-The following is a summary of the steps so far required to enable
-Ethernet Functionality for applications running on Linux:
-1. Determine and setup the Hardware Queues allocated to Linux
-2. Inform the MAC Address of ethX to EthFw
-3. Inform the IP Address of ethX to EthFw
-4. Inform any of the Multicast Addresses associated with ethX to EthFw
-
-All data between Linux (Or any Operating System) and EthFw is exchanged
-via the Hardware Mailboxes with the help of the RPMsg framework. Since
-all the resource allocation information comes from EthFw, the
-vendor-specific implementation in the Linux Client is limited to the DMA
-APIs used to setup the Hardware Queues and to transmit/receive data with
-the Ethernet Switch. Therefore, it might be possible to move most of the
-vendor specific implementation to the Switch Configuration Firmware
-(similar to EthFw), to make the Linux Client implementation as generic
-and vendor agnostic as possible. I believe that this series more or less
-does the same, just using custom terminology which can be made generic.
-
-I can update this series to a generic implementation along with proper
-documentation and naming convention to enable any vendor to reuse the
-same without having to modify the implementation. The RPMsg ABIs can
-be given generic names with extensive documentation and also designed
-to be extensible enough to cater to functional enhancements over time.
-
-Kindly let me know your thoughts on this.
-
-Regards,
-Siddharth.
+> +			insn_offset, src->reg1, dst->reg1);
+> +	pr_debug_type_name(&tsr->type, tsr->kind);
+> +}
+> +#else /* HAVE_DWARF_SUPPORT */
+> +static void update_insn_state_powerpc(struct type_state *state __maybe_unused, struct data_loc_info *dloc __maybe_unused,
+> +		Dwarf_Die * cu_die __maybe_unused, struct disasm_line *dl __maybe_unused)
+> +{
+> +	return;
+> +}
+> +#endif /* HAVE_DWARF_SUPPORT */
+> +
+>  static int powerpc__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
+>  {
+>  	if (!arch->initialized) {
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index 7a48c3d72b89..734acdd8c4b7 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -1080,6 +1080,13 @@ static int find_data_type_insn(struct data_loc_info *dloc,
+>  	return ret;
+>  }
+>  
+> +static int arch_supports_insn_tracking(struct data_loc_info *dloc)
+> +{
+> +	if ((arch__is(dloc->arch, "x86")) || (arch__is(dloc->arch, "powerpc")))
+> +		return 1;
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Construct a list of basic blocks for each scope with variables and try to find
+>   * the data type by updating a type state table through instructions.
+> @@ -1094,7 +1101,7 @@ static int find_data_type_block(struct data_loc_info *dloc,
+>  	int ret = -1;
+>  
+>  	/* TODO: other architecture support */
+> -	if (!arch__is(dloc->arch, "x86"))
+> +	if (!arch_supports_insn_tracking(dloc))
+>  		return -1;
+>  
+>  	prev_dst_ip = dst_ip = dloc->ip;
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index 57af4dc42a58..d8b357055302 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -155,6 +155,7 @@ static struct arch architectures[] = {
+>  	{
+>  		.name = "powerpc",
+>  		.init = powerpc__annotate_init,
+> +		.update_insn_state = update_insn_state_powerpc,
+>  	},
+>  	{
+>  		.name = "riscv64",
+> -- 
+> 2.43.0
+> 
