@@ -1,122 +1,144 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED43B13AA46
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 06:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3ED7130482;
+	Thu,  6 Jun 2024 06:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717656210; cv=none; b=G/0QOGRgLGFOk0X2z/bVZ5b6qnUu7orxB+AVLK8rrY+rnYoSGUuWNSUSm6LCUw5hnwllUV4QgzsvM4MZsddBGXs7lv4FfOc0LqYC3YIiAShY2WJSMJiB0j6NrrjBp4NCSWH2zqlVFdn8zF/MdnfV1wo3sy2APiiagtTysqiB3jg=
+	t=1717656238; cv=none; b=dMzwFXuUFWhF213+8NqLl6CxesIdid/tW2fyJnwediThQodOKF2VgbSIzc+u6fxUTQMe+qu2KHI68g0YhF642ELKBWhAQriv5+VJPE7gkh7CmxwjtX14kto5mCIa0Hdz05NPkm7v+iYWNkrFPf+GXhAm6Xd4MJwr+FjFUIeZfy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717656210; c=relaxed/simple;
-	bh=lUTwQmTkXSAak3oROEANOq70038+HQrsZbNaSYQ2QYc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D4+gt9yhtlAOb1MJCW9u5RIKu4KbrIv2E/1lYK1s46P1Vo5NjoWVwnwAAvIKKCZ72Q2sxh6cc9eexRWs50etavpe/2FmwU63gMU/GD5KtC5Ph1b7X67GgZYoVpCBAScUkvVYHBOBzgzjiX5F1M+YhZde08XtMA8yEbyFnt9QKWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JbJg1HQC; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1717656238; c=relaxed/simple;
+	bh=32L8G+FZMjkCPqq/m+QVmmb5J2ZOiAF+Tzy4v6bCN5I=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IXJHoPKoTJ57o+weq/Aelndu5XUd07jsHQZ8kifukXycEQGM4oWKI+k00ttxLbZ8JuaOUZzocHCXWxM77IxwrcH0Scz8RNbeDbZy3h6LrwFKOKaP7EAjxm08Ut1NGw1AqCBk6LaQXwrYAooQCLZGtHgCWZWDanS/TSTkE2FG2mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=RBuQdhw8; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="JbJg1HQC"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2eaccc097e2so6054781fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 23:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1717656207; x=1718261007; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=omfvRqkaBys+keRVcCwWZsFLAUvdCTBnb4DeOzbHfX4=;
-        b=JbJg1HQCh2aIquqEsg6HggZcyaY22fGmRrHencI4b9o9Ft6B6I/LpPumOX7WJWaShV
-         90raB0HlZnb3aQIZWTtHLxrP16Yt3w4UgrHlEFdvvO4xbLRBI1q487B67h1xsnp0QeGX
-         WX6Pd8szP/g3kaUjl9PcxbTNkVEI3HaFz6u/hcUDJ099VLAD75aSuhaxIemkmYxN+FyS
-         PIiDKhjP6Mw0exWrhoBvOtv9bQWgONMJgqKxUnFEbDgh6uhAip4GqRmRB3nEG46JvfLM
-         9eyvOeC9d6lZCp381zSQquyUkgzKJ4tnaowfzf8euWMTCAW6OhTgCHkNuF4iCCt5XX5c
-         ZxAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717656207; x=1718261007;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=omfvRqkaBys+keRVcCwWZsFLAUvdCTBnb4DeOzbHfX4=;
-        b=mx/Z9jcNMzPuKd96eyzbJDFNbPMNZaBC9i6uzm5mv14FoiO2nWN4EDwWHGIjC3WtWX
-         970rDQr5+upao+kLJbGF+kD5BiirAMaXFA7us8Njo7BUwgF43vt3sDslqChRbSZfjd6j
-         ZtjzRMcTvd7lJabV73nPlxo8q7I70jLm8MGn6qeG9i65wIU5V5PjfxUdt5eQXYJrFy7l
-         ev3MZocL1tATE9udh3RX4tnN8/XwFmvXazzGmkG63pDWcAmKpqhjW/a0GSLNPchLon0K
-         g1bNLGfmCPvaQ0TwBOdSvG+LgRVEccerUwYQO92fToqK1dwPI5926W3nnswFAoYqUXOY
-         mugg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnuAW8DU/4a5cAPFx91cB9O6Xp1+FKuBEaj3CWtIDqsCcqcWkELYG19o7hUj1AoEw7lBTgCl42eTrw4xJ8l/HN0jDfa0+ZyAa6noB9
-X-Gm-Message-State: AOJu0YxdPglgx/j/xRct1xB+5XALHNmu6rAWdT3XDXLSWpFzi7Y64FhF
-	O0W8RVZYQNanLp6F/mVBR+E0FG58sQKfkwdqkyAdGFATlbVFQuXVu3v2GDfcL5A=
-X-Google-Smtp-Source: AGHT+IEGA59Ld7fxgXUJDzsTcNIscMWvDgsppmsiO4nhCip7lnZ+ctEKacwPIC1ddr/EL9VC/D6TNw==
-X-Received: by 2002:a2e:9888:0:b0:2ea:cd94:60f9 with SMTP id 38308e7fff4ca-2eacd9461edmr14568641fa.51.1717656207292;
-        Wed, 05 Jun 2024 23:43:27 -0700 (PDT)
-Received: from localhost ([2401:e180:8882:8af3:26fa:edbd:5679:640c])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6de28957153sm499471a12.91.2024.06.05.23.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 23:43:26 -0700 (PDT)
-From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
-To: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	stable@vger.kernel.org,
-	workflows@vger.kernel.org,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>
-Subject: [PATCH 2/2] docs: stable-kernel-rules: remind reader about DCO
-Date: Thu,  6 Jun 2024 14:43:09 +0800
-Message-ID: <20240606064311.18678-2-shung-hsi.yu@suse.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240606064311.18678-1-shung-hsi.yu@suse.com>
-References: <20240606064311.18678-1-shung-hsi.yu@suse.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="RBuQdhw8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1717656236; x=1749192236;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=32L8G+FZMjkCPqq/m+QVmmb5J2ZOiAF+Tzy4v6bCN5I=;
+  b=RBuQdhw89eFDO0nCpgYzVZ+1hAJfm/RLUfeqBdIBnKedkenbB5/3bY8U
+   ePjOz7SDsBfpsXdThq8XvzL+irW0dcdtRLw/3v6d+drFiXgXTANIYv5Hc
+   oN0RqqspqkMfpz36y41LIQLwFhqoaLt+lrJNLipWfJ08QS5/fk+yG6/pF
+   U7vcIoa05w2JXg0R6ly+9aW2vAFDAgK73zIE6dKbjnnGFcd3C9fIslS17
+   4wJD/9JBTKk3JFKlrp5mq0rcKIWnGc2vu6Uq4mf7+5/AwRo4pAz+65vJm
+   eHL8mlEr9stkEdGvia4dx3vJR/rbBht8M0od2StYmyVmncKH2/3pQcsl4
+   w==;
+X-CSE-ConnectionGUID: TJ+w9vbOSBmBbzdOv8xviA==
+X-CSE-MsgGUID: 5YT6fVzyRhOdZkjKzntlGw==
+X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
+   d="scan'208";a="257898861"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Jun 2024 23:43:49 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 5 Jun 2024 23:43:45 -0700
+Received: from localhost (10.10.85.11) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Wed, 5 Jun 2024 23:43:44 -0700
+Date: Thu, 6 Jun 2024 12:11:05 +0530
+From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+To: Wojciech Drewek <wojciech.drewek@intel.com>
+CC: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>, <netdev@vger.kernel.org>,
+	<davem@davemloft.net>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<bryan.whitehead@microchip.com>, <andrew@lunn.ch>, <linux@armlinux.org.uk>,
+	<sbauer@blackbox.su>, <hmehrtens@maxlinear.com>, <lxu@maxlinear.com>,
+	<hkallweit1@gmail.com>, <edumazet@google.com>, <pabeni@redhat.com>,
+	<UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH net V3 3/3] net: phy: mxl-gpy: Remove interrupt mask
+ clearing from config_init
+Message-ID: <ZmFaATrK6ORRzHv6@HYD-DK-UNGSW21.microchip.com>
+References: <20240605101611.18791-1-Raju.Lakkaraju@microchip.com>
+ <20240605101611.18791-4-Raju.Lakkaraju@microchip.com>
+ <05146417-c29b-41f4-89ac-bc9e1af2cee7@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <05146417-c29b-41f4-89ac-bc9e1af2cee7@intel.com>
 
-When sending patch authored by someone else to stable, it is quite easy for
-the sender to forget adding the Developer's Certification of Origin (DCO,
-i.e. Signed-off-by). Mention DCO explicilty so senders are less likely to
-forget to do so and cause another round-trip.
+Hi Wojciech,
 
-Add a label in submitting-patches.rst so we can directly link to the DCO
-section.
+The 06/05/2024 13:24, Wojciech Drewek wrote:
+> [Some people who received this message don't often get email from wojciech.drewek@intel.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On 05.06.2024 12:16, Raju Lakkaraju wrote:
+> > When the system resumes from sleep, the phy_init_hw() function invokes
+> > config_init(), which clears all interrupt masks and causes wake events to be
+> > lost in subsequent wake sequences. Remove interrupt mask clearing from
+> > config_init() and preserve relevant masks in config_intr()
+> >
+> > Fixes: 7d901a1e878a ("net: phy: add Maxlinear GPY115/21x/24x driver")
+> > Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+> > ---
+> 
+> One nit, other than that:
+> Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
+> 
+> > Change List:
+> > ------------
+> > V0 -> V3:
+> >   - Address the https://lore.kernel.org/lkml/4a565d54-f468-4e32-8a2c-102c1203f72c@lunn.ch/T/
+> >     review comments
+> >
+> >  drivers/net/phy/mxl-gpy.c | 58 +++++++++++++++++++++++++--------------
+> >  1 file changed, 38 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/net/phy/mxl-gpy.c b/drivers/net/phy/mxl-gpy.c
+> > index b2d36a3a96f1..e5f8ac4b4604 100644
+> > --- a/drivers/net/phy/mxl-gpy.c
+> > +++ b/drivers/net/phy/mxl-gpy.c
+> > @@ -107,6 +107,7 @@ struct gpy_priv {
+> >
+> >       u8 fw_major;
+> >       u8 fw_minor;
+> > +     u32 wolopts;
+> >
+> >       /* It takes 3 seconds to fully switch out of loopback mode before
+> >        * it can safely re-enter loopback mode. Record the time when
+> > @@ -221,6 +222,15 @@ static int gpy_hwmon_register(struct phy_device *phydev)
+> >  }
+> >  #endif
+> >
+> > +static int gpy_ack_interrupt(struct phy_device *phydev)
+> > +{
+> > +     int ret;
+> > +
+> > +     /* Clear all pending interrupts */
+> > +     ret = phy_read(phydev, PHY_ISTAT);
+> > +     return ret < 0 ? ret : 0;
+> 
+> Can we just return phy_read?
+> 
 
-Link: https://lore.kernel.org/stable/2024051500-underage-unfixed-5d28@gregkh/
-Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
----
- Documentation/process/stable-kernel-rules.rst | 4 ++++
- Documentation/process/submitting-patches.rst  | 1 +
- 2 files changed, 5 insertions(+)
+No.
+PHY_ISTAT (i.e.16 bit) is Max Linear's GPY211 PHY interrupt status register.
+These bits are ROSC (i.e. "Read Only, Self-Clearing) bits.
+Read Status gives us the interrupts details
+Any negative number is indicate the error in accessing PHY registgers. 
+Return either success (i.e. 0) or Error ( < 0)
 
-diff --git a/Documentation/process/stable-kernel-rules.rst b/Documentation/process/stable-kernel-rules.rst
-index daa542988095..a8fecc5f681c 100644
---- a/Documentation/process/stable-kernel-rules.rst
-+++ b/Documentation/process/stable-kernel-rules.rst
-@@ -168,6 +168,10 @@ If the submitted patch deviates from the original upstream patch (for example
- because it had to be adjusted for the older API), this must be very clearly
- documented and justified in the patch description.
- 
-+Be sure to also include a :ref:`Developer's Certificate of Origin
-+<sign_your_work>` (i.e. ``Signed-off-by``) when sending patches that you did
-+not author yourself.
-+
- 
- Following the submission
- ------------------------
-diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-index 66029999b587..98f1c8d8b429 100644
---- a/Documentation/process/submitting-patches.rst
-+++ b/Documentation/process/submitting-patches.rst
-@@ -394,6 +394,7 @@ e-mail discussions.
- 
- ``git send-email`` will do this for you automatically.
- 
-+.. _sign_your_work:
- 
- Sign your work - the Developer's Certificate of Origin
- ------------------------------------------------------
+> > +}
+> > +
+> >  static int gpy_mbox_read(struct phy_device *phydev, u32 addr)
+> >  {
+> >       struct gpy_priv *priv = phydev->priv;
+> > @@ -262,16 +272,8 @@ static int gpy_mbox_read(struct phy_device *phydev, u32 addr)
+> >
+
 -- 
-2.45.1
-
+Thanks,                                                                         
+Raju
