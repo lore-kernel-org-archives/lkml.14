@@ -1,151 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A20A282F4
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 05:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850D7CA6F;
+	Thu,  6 Jun 2024 05:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717652145; cv=none; b=TC1vUSX0vPWe3SBxhbf3a+gX/ZUjxN7LMVffdVHeP+lQJe3MPwIjENh7L4jyKSCrLYn4lLKHxnx9dMCPZsdUi/J1epnX+6CBuKzwevGebvJm9aQGBQ4OMSWd0BnufFHjA0B6xYBt20aP9sQY6UjYiTo8HfMBfzgVujC0GVj8QEk=
+	t=1717652511; cv=none; b=QqUhxkka2lVneQfL7I6lYSYCwAr36RbEhc5dMdeTR0fC+nycUdcKsd8XKTVv7Zy0AiFxPAukhj6bHEHK+R5ffDA+2ggR87oHHuqa6uNdfDjsXLjqMBl9nx8r9ZkagiM9CP7OWNe26zRSAMq38bgBRfBh84/JbFX0tQmYs+Uk0ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717652145; c=relaxed/simple;
-	bh=InCQzcleHQrhQdMJPefCKWuAUYL7XdU2W+O2UOMCf1o=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=r19IgQIcRs8vTCD3uq0IK3YqL6eC/KRkPYH/QiH/ZfvursAV8DvN1JUjOEoDuGoGZ+F+gNJxsBwWs5nmvoa6tuG7nV3C7rdHq8DTEiJZ3QWUx46EKlHtoxgtczE8YIaMVju5mgFtu7wA3LNwOg6R4KtfEOoNXPem4Wj7s6TMUmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OaVleXGk; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OaVleXGk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717652143; x=1749188143;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=InCQzcleHQrhQdMJPefCKWuAUYL7XdU2W+O2UOMCf1o=;
-  b=OaVleXGkuxKF2kIkS5Rj1iI9KYjFhIEj+Ba7GDJIvB2vl93yQBfG0J8y
-   FV2iyV3X6s8lbUgNZHzgTTxwE5gH3/2tCgdnpWZ1Q71Q9TGXcCD/0m9xQ
-   vCmPEssTlh1yjS6jDH0DhxIDldYExLQpUuxsYu/3aC8gTptJBpZ5HForv
-   lmDSCiQDVzTYpiygr5TjJcSOTDS/kh+eyEmqQZrjCpp2TEthEJ4sZhDGY
-   8O/S42gxjDwcC740Ce5Z12jzxjuRHiW+4t5eIBt8RtePCB4aGKewiYGKQ
-   fdB9Jm0MyIfwC/yMTask9WOKpGHY1dm6jp7yxlQECqVb5GMROBC3e7uU6
-   w==;
-X-CSE-ConnectionGUID: Lq/6amKhQ5+WGPTQjyZelA==
-X-CSE-MsgGUID: Us0toESWQJ2O8A5Sv3e4Lg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="14136528"
-X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
-   d="scan'208";a="14136528"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 22:35:42 -0700
-X-CSE-ConnectionGUID: 7WWfxiLaQamFNN8Wrip2bQ==
-X-CSE-MsgGUID: 32paJY4dQeO+RRptTXFT9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,218,1712646000"; 
-   d="scan'208";a="42940006"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by orviesa004.jf.intel.com with ESMTP; 05 Jun 2024 22:35:39 -0700
-Message-ID: <ae7c05b0-104e-4c71-99aa-fed2a4f209fb@linux.intel.com>
-Date: Thu, 6 Jun 2024 13:33:29 +0800
+	s=arc-20240116; t=1717652511; c=relaxed/simple;
+	bh=8HB3h2MFtgnlhVUGhlc62c46kh4NgGxbN7o6c6UXwRU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DFf4g+XdSFfHNxKRMVI5DVLF+CUzRHC48JDDwC/F8XBRVQe24TKnTBDJoFTbGVuyCE0bwC2gAFXn7J+WJROY4vYJTH22x6b/bpmCHaKTkYsavp0gDhZBzeR8LKo36IEH8dSnI/oXocKTA4cDh3N80mocOlsh/z2hNFOsGz4Pvro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 5391A68CFE; Thu,  6 Jun 2024 07:41:44 +0200 (CEST)
+Date: Thu, 6 Jun 2024 07:41:43 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, axboe@kernel.dk, kbusch@kernel.org,
+	sagi@grimberg.me, jejb@linux.ibm.com, martin.petersen@oracle.com,
+	djwong@kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
+	dchinner@redhat.com, jack@suse.cz, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
+	linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com,
+	linux-aio@kvack.org, linux-btrfs@vger.kernel.org,
+	io-uring@vger.kernel.org, nilay@linux.ibm.com,
+	ritesh.list@gmail.com, willy@infradead.org,
+	Prasad Singamsetty <prasad.singamsetty@oracle.com>
+Subject: Re: [PATCH v7 2/9] fs: Initial atomic write support
+Message-ID: <20240606054143.GB9123@lst.de>
+References: <20240602140912.970947-1-john.g.garry@oracle.com> <20240602140912.970947-3-john.g.garry@oracle.com> <20240605083015.GA20984@lst.de> <fbb835ff-f1ae-4b59-8cb3-22a11449d781@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>,
- "virtualization@lists.linux-foundation.org"
- <virtualization@lists.linux-foundation.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v6 01/10] iommu: Introduce domain attachment handle
-To: "Tian, Kevin" <kevin.tian@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Nicolin Chen <nicolinc@nvidia.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
- Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Joel Granados <j.granados@samsung.com>
-References: <20240527040517.38561-1-baolu.lu@linux.intel.com>
- <20240527040517.38561-2-baolu.lu@linux.intel.com>
- <BN9PR11MB52767B3B1F441D9AA656AC258CF92@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB52767B3B1F441D9AA656AC258CF92@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fbb835ff-f1ae-4b59-8cb3-22a11449d781@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On 6/5/24 4:02 PM, Tian, Kevin wrote:
->> From: Lu Baolu <baolu.lu@linux.intel.com>
->> Sent: Monday, May 27, 2024 12:05 PM
->>
->> @@ -99,7 +99,9 @@ struct iommu_sva *iommu_sva_bind_device(struct device
->> *dev, struct mm_struct *mm
->>
->>   	/* Search for an existing domain. */
->>   	list_for_each_entry(domain, &mm->iommu_mm->sva_domains, next) {
->> -		ret = iommu_attach_device_pasid(domain, dev, iommu_mm-
->>> pasid);
->> +		handle->handle.domain = domain;
->> +		ret = iommu_attach_device_pasid(domain, dev, iommu_mm-
->>> pasid,
->> +						&handle->handle);
-> 
-> move the setting of handle.domain into the helper?
+On Wed, Jun 05, 2024 at 11:48:12AM +0100, John Garry wrote:
+> I have no strong attachment to that name (atomic).
+>
+> For both SCSI and NVMe, it's an "atomic" feature and I was basing the 
+> naming on that.
+>
+> We could have RWF_NOTEARS or RWF_UNTEARABLE_WRITE or RWF_UNTEARABLE or 
+> RWF_UNTORN or similar. Any preference?
 
-Yes.
+No particular preference between any of the option including atomic.
+Just mumbling out aloud my thoughts :)
 
-> 
->> @@ -3382,11 +3383,9 @@ int iommu_attach_device_pasid(struct
->> iommu_domain *domain,
->>   		}
->>   	}
->>
->> -	curr = xa_cmpxchg(&group->pasid_array, pasid, NULL, domain,
->> GFP_KERNEL);
->> -	if (curr) {
->> -		ret = xa_err(curr) ? : -EBUSY;
->> +	ret = xa_insert(&group->pasid_array, pasid, handle, GFP_KERNEL);
->> +	if (ret)
->>   		goto out_unlock;
->> -	}
-> 
-> this leads to a slightly different implication comparing to the old code.
-> 
-> the domain pointer was always tracked in the old code but now the handle
-> is optional.
-> 
-> if iommu core only needs to know whether a pasid has been attached (as
-> in this helper), it still works as xa_insert() will mark the entry as reserved
-> if handle==NULL and next xa_insert() at the same index will fail due to
-> the entry being reserved.
-> 
-> But if certain path (other than iopf) in the iommu core needs to know
-> the exact domain pointer then this change breaks it.
+> For io_uring/rw.c, we have io_write() -> io_rw_init_file(..., WRITE), and 
+> then later we set IOCB_WRITE, so would be neat to use there. But then 
+> do_iter_readv_writev() does not set IOCB_WRITE - I can't imagine that 
+> setting IOCB_WRITE would do any harm there. I see a similar change in 
+> https://lore.kernel.org/linux-fsdevel/167391048988.2311931.1567396746365286847.stgit@warthog.procyon.org.uk/
+>
+> AFAICS, setting IOCB_WRITE is quite inconsistent. From browsing through 
+> fsdevel on lore, there was some history in trying to use IOCB_WRITE always 
+> instead of iov_iter direction. Any idea what happened to that?
+>
+> I'm just getting the feeling that setting IOCB_WRITE in 
+> kiocb_set_rw_flags() is a small part - and maybe counter productive - of a 
+> larger job of fixing IOCB_WRITE usage.
 
-The iommu core should not fetch the domain pointer in paths other than
-attach/detach/replace. There is currently no reference counter for an
-iommu domain, hence fetching the domain for other purposes will
-potentially lead to a use-after-free issue.
+Someone (IIRC Dave H.) want to move it into the iov_iter a while ago.
+I think that is a bad idea - the iov_iter is a data container except
+for the shoehorned in read/write information doesn't describe the
+operation at all.  So using the flag in the iocb seems like the better
+architecture.  But I can understand that you might want to stay out
+of all of this, so let's not touch IOCB_WRITE here.
 
-> 
-> Anyway some explanation is welcomed here for why this change is safe.
-> 
->> @@ -3414,7 +3413,7 @@ void iommu_detach_device_pasid(struct
->> iommu_domain *domain, struct device *dev,
->>
->>   	mutex_lock(&group->mutex);
->>   	__iommu_remove_group_pasid(group, pasid, domain);
->> -	WARN_ON(xa_erase(&group->pasid_array, pasid) != domain);
->> +	xa_erase(&group->pasid_array, pasid);
-> 
-> if the entry is valid do we want to keep the WARN_ON() upon handle->domain?
-
-The domain pointer has already been passed to the iommu driver in
-__iommu_remove_group_pasid(). Therefore, the check for the pointer's
-validity should be performed before calling
-__iommu_remove_group_pasid(). Hence, in my view, using WARN_ON() around
-xa_erase() is not very useful.
-
-Best regards,
-baolu
