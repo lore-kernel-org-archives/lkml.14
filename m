@@ -1,149 +1,133 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B707E199234;
-	Thu,  6 Jun 2024 17:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C00196446
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717695663; cv=none; b=ko2Vm5HiVFYnSlIWlf9xcPCM+u1FukOJFkRXGpf5Kg0SQYSpCq7LHfDWQlrrs+gAI9KHOT4vnqV9TJ8zOtx9Qijem53jSJVZ37vCVKUlZbJZhnh/VhF+Iq14WdA85oSnK6ABRtAx5IJCZkjzxv43+QANbLIKa7Lzk+D54BgQbvc=
+	t=1717695754; cv=none; b=mbgT9jcBotfzjlopNu8yXovjN45gZg5m7mt7OLsADxBkFx4Zdte0okIt3mBsfPxOCG0mFFzWWx37Nr0wrT5EqdAw39ffeq4Lw81OuGV9j6jOSXhEy0sK227pgEPZvr9WoihUgtakkI9qI7gp9o/5i2GaJFbWa3VWN2muxXsFI0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717695663; c=relaxed/simple;
-	bh=yDUl6DKSl9pKbiUv316LKJC/x2wJuLMw7ScYSeQPJzA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DcZp1RpFAMQ8cpPwG2c0Ud5YDwdng6XD+9u1QQvNtyBJ09MHlmWV3gFOOWPookWTG1SOVt5X5nHzgD+l15COOUgaxp2n7WnmpmODXaMxf4SQx+CGSJgh+9ktsq0Jgfxvm+pP+livn1ojQZliwy4r9/kpV9aTMf56LrKccUB/O20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PzkVz2Rp; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717695754; c=relaxed/simple;
+	bh=BpLUPhuD0Jaux9zNhc6cZoFq9PmN/G6ECDCzUrjjxS4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s/NOYZIScpEY7X+U9NicbGpwMiXG2xgLtQzfoZzGYL8wC+W72OBdn+Gt0iQHo1Jz3kGGf0vl1BYqKVz/7W1ZkyoZeJ1MJiUDQz2hBG3z994s3fPi+vx+EMx+K/xwP9PGseYsxc4w27qmL0ysYIayHQoRTscAvkPbF39wrbzMOcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fIfgnLn4; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PzkVz2Rp"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e73359b979so15196241fa.1;
-        Thu, 06 Jun 2024 10:41:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fIfgnLn4"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a62ef52e837so164521066b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 10:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717695659; x=1718300459; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xxRkvTIPkScGp1ZyUGP+q6S56T8mZvmbd28YjaNuyas=;
-        b=PzkVz2RpKtL0vVCcA3TTmLQ4LND23PakwSf5r9xRGCKUtHcjEocRo5pkNV85X5vsSy
-         CcD7ngypCNl/hVJBzIuUXKJbbVsxc/+VxLIeBYd6rWA34a1PDIS9n29ItoK2i/YDf5RN
-         Fhlu8KnMGrwk3JSwjj+jD48Z1XrBEDrGcNQG7MBQAT0gzmHcNZRUY4vrw3Mvl0ERHPNV
-         cM2fCxAJgi8/HeMtgWhS7G+oG4EzGz47YUrpscPSlHCxS/OIgvjb/9EZTqIA5sbccix0
-         Ukeun8ZJAY3aZOgKIJiG3d4Je43xX7cAZXGWJ74uVJ1lPljOG/Jto+JQ1TNwjKwhJ4z/
-         gq1g==
+        d=google.com; s=20230601; t=1717695751; x=1718300551; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v1Ut3Dkh+dW6ZjfW0SAbH75TKykJw59snMxcOhxXPyw=;
+        b=fIfgnLn43TLsPR67Nwd9jEMggcE7WTgraq9BFtMESX2rpqQ5pvzvJGIkjIY+QHVpnf
+         TMzy7aC4+/iJ+NrOlVJVIFLkNO/AHvTqFVF8PvpuHJ8eajmr6IfRgGwcNr5rg9Xp1rpO
+         va+xxLb+y4PPPegbq2Bppc9GuQHt2hjsqIMgUrmJ7IMwWDJ7/fPZKFHIn3OxAYTKPW/q
+         Xt6O5QSAMOizYVUAP/VGeEAJmfHpEi8nOZMdlf7NZ9jVLST7ahb7kiIKt6YKT2mBpQb6
+         j7gjBvL+FsZqnNUqKPcYqd4hEFeqxXZ0FYZWkAFiH5rHCLcbghSEiyoBqkHH1ZpMZbRQ
+         1y7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717695659; x=1718300459;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xxRkvTIPkScGp1ZyUGP+q6S56T8mZvmbd28YjaNuyas=;
-        b=rC3xTFRTJDehwbpNaRvhlTU7JcTVOkrqcprV56Hgo09dk0lHZTUG14dNLrHfowZ5PQ
-         TsQm4O6r5Jg3iwpVFcV1HBbC0h+6HE3WZXA00F7NJTFSpC3kfeTAyYblCyaJ/1VsvMk6
-         0DrGQQH8eGQYucNS2/b8FzYvSpH6ASSB2RPUzj+IdzIWtEKNbzMdI/erm9KkSvGTu0dd
-         nzneX6fn6Nw2eNQmvMHEcIsnPJB7bRQAXhEucHqni2y43RlP3tHlVj8yODWuc9N1Wl2F
-         hpvZoanyQAR8qZoCyNDXSu4/rkhLged0BJMvN+So6ZVCPE9qDm/I/YUJD+GSR8erKlAj
-         nPCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxk/ccU/JKZyVCa/PXJQp99uE+a96U/FOVnF5w6g0XVFEFNlspla2veq/3+YP75/O/0jIFVfw5Az/lidcKmWpXq5IcUi3qLBT3t5IB8sGCLhELfV99Dh1bWfF48CEbelw/jqEFVBiFqOvmGoDV
-X-Gm-Message-State: AOJu0YwjlSvJ1AaVPAP6pgZ2W8/2dRukJNNaM0jqtHQbBO+bUvBYUVn/
-	di+TjpKXyYKkOwzgyi5A02vDdwlLUw7plOGbpz7kQF/l66lvcxHU
-X-Google-Smtp-Source: AGHT+IEc4dm0uh5aarO64zIpyotGYs9UV+iunav+qqO0HqIqTJeg4E9+AGBRQzENYh6eqU5xAzwJCg==
-X-Received: by 2002:a2e:bc14:0:b0:2da:a3ff:524e with SMTP id 38308e7fff4ca-2eadce208c4mr2745941fa.9.1717695658663;
-        Thu, 06 Jun 2024 10:40:58 -0700 (PDT)
-Received: from [10.0.0.42] (host-85-29-124-88.kaisa-laajakaista.fi. [85.29.124.88])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ead41bef2dsm2583541fa.109.2024.06.06.10.40.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 10:40:58 -0700 (PDT)
-Message-ID: <b57827de-8e72-442d-99fa-307a719ea33b@gmail.com>
-Date: Thu, 6 Jun 2024 20:44:31 +0300
+        d=1e100.net; s=20230601; t=1717695751; x=1718300551;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v1Ut3Dkh+dW6ZjfW0SAbH75TKykJw59snMxcOhxXPyw=;
+        b=bu2f7RW2IxPB6C9BG5/1Djlg0D1sp/YNf+kNyO9Nxlp+WnfC10UfBMi/YW0pufr4ac
+         Chq30e/pkGQZgcx1QGICnzBiNHoOHSXyQPkQoyxzQeo1DoBOgH+q+pinpQI0O815vjR9
+         c5juqrGmFqNQb41WNzFbPfpX4qQTWinWKgHseMh7ur8fF9W7UcRdc6yk/RVYZbI2KjnV
+         mSjL/yekv/efATGNJvNiPB2QUO8Fa0kRFlP6qTzGsmrVzrvRhIBEqRo0/MQTPKl63l2D
+         14RdVkspL8IGMrIOJyR4eCexST+l58fHNDRoc7TJIElg7i0vS0GIJp3SUgh9zHT4tPmS
+         F4Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqEwalCcm2MH+n7Vg6pUOdtrzxNWZs5Dsfkc2C18QVZoMwRHvZg4RB2l6Hyc75K2Q9K8avNq1st1ogQIEpEhNOMxdDtZvA2pDYLq64
+X-Gm-Message-State: AOJu0YxV7xm9yY68LjeVpdJ6FZEkKfYeTj122sk79CAJR9SydCwu/nPA
+	voYghkf9267smwG6J9ORWhS3Dkn3W8K3Nnk9e9RjnCxgmLHGW8dsClJsTzh+WYF7WY/2VRA9ts6
+	LBuhHFDyeC1hLe++WAj+PHZrepCYi46IFP4Wu
+X-Google-Smtp-Source: AGHT+IEGBdWWUZC+WrQXxIBv4KOZPlFFbVSfkIEVyzAaxtZJ4s8YMZ9cpHiZkAazV4knO5rL7j2QTzt4B0g4tFKtZN8=
+X-Received: by 2002:a17:906:fb11:b0:a68:c5b0:9890 with SMTP id
+ a640c23a62f3a-a6cd7a80f9dmr20626266b.42.1717695751357; Thu, 06 Jun 2024
+ 10:42:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: add missing MODULE_DESCRIPTION() macros
-To: Jeff Johnson <quic_jjohnson@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
- Fenghua Yu <fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <20240605-md-drivers-dma-v1-1-bcbcfd9ce706@quicinc.com>
-Content-Language: en-US
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20240605-md-drivers-dma-v1-1-bcbcfd9ce706@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240508202111.768b7a4d@yea> <20240515224524.1c8befbe@yea>
+ <CAOUHufZ-9NmzOKjLedvZFp0=N0LvRZn77qC6k1WXK+NHtKr=0w@mail.gmail.com>
+ <CAOUHufZ36rQc8AfLtRv2QrEareysdvbprAEO5XkcG-FeDOxFLA@mail.gmail.com>
+ <20240602200332.3e531ff1@yea> <20240604001304.5420284f@yea>
+ <CAJD7tkbCRLdy0vD2Pd17fNrxHgkzW1VucN4qMkohLFLBLaaeCQ@mail.gmail.com>
+ <20240604134458.3ae4396a@yea> <CAJD7tkYjJJGthQ_8NukGw6Q9EYbLA=8sAH_7=B90KXEL6HWdSw@mail.gmail.com>
+ <CAOUHufa0Fpj6SjNgB-z0n5Jg63q1ewkbOAU65forpDwQVs45qg@mail.gmail.com>
+ <CAJD7tkb=5GJ9SNUwDsu1Zy3Tus4rjsNo60Hg9N7=gGth409Diw@mail.gmail.com>
+ <CAOUHufb6zXr14Wm3T-4-OJh7iAq+vzDKwVYfHLhMMt96SpiZXg@mail.gmail.com>
+ <CAJD7tkZ+QY55GTzW9A7ZCm=rxAEfrW76cWXf8o5nwiKSXp8z=w@mail.gmail.com>
+ <20240604231019.18e2f373@yea> <CAJD7tkYq5u7B+0UH2XKpeWJnUxoO2kJ1_XZ2JOgYpyNEVR7u0g@mail.gmail.com>
+ <20240606010431.2b33318c@yea> <CAJD7tkbhWYzx=6YmzAh0F+cK-_Bn8mPOH7gMbQS7YVXmaFSgFg@mail.gmail.com>
+ <CAPpoddc2vOLdQJ7HwG7x+=oZsTz221+YJcNbUtKvPjA9AyeY2w@mail.gmail.com>
+In-Reply-To: <CAPpoddc2vOLdQJ7HwG7x+=oZsTz221+YJcNbUtKvPjA9AyeY2w@mail.gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 6 Jun 2024 10:41:52 -0700
+Message-ID: <CAJD7tkb2b0+4_m0gb8DKSTtRwtC2GMa9NF5RuGKhXJARYHK0gw@mail.gmail.com>
+Subject: Re: kswapd0: page allocation failure: order:0, mode:0x820(GFP_ATOMIC),
+ nodemask=(null),cpuset=/,mems_allowed=0 (Kernel v6.5.9, 32bit ppc)
+To: Takero Funaki <flintglass@gmail.com>
+Cc: Erhard Furtner <erhard_f@mailbox.org>, Yu Zhao <yuzhao@google.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Minchan Kim <minchan@kernel.org>, "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, Jun 6, 2024 at 10:14=E2=80=AFAM Takero Funaki <flintglass@gmail.com=
+> wrote:
+>
+> 2024=E5=B9=B46=E6=9C=886=E6=97=A5(=E6=9C=A8) 8:42 Yosry Ahmed <yosryahmed=
+@google.com>:
+>
+> > I think there are multiple ways to go forward here:
+> > (a) Make the number of zpools a config option, leave the default as
+> > 32, but allow special use cases to set it to 1 or similar. This is
+> > probably not preferable because it is not clear to users how to set
+> > it, but the idea is that no one will have to set it except special use
+> > cases such as Erhard's (who will want to set it to 1 in this case).
+> >
+> > (b) Make the number of zpools scale linearly with the number of CPUs.
+> > Maybe something like nr_cpus/4 or nr_cpus/8. The problem with this
+> > approach is that with a large number of CPUs, too many zpools will
+> > start having diminishing returns. Fragmentation will keep increasing,
+> > while the scalability/concurrency gains will diminish.
+> >
+> > (c) Make the number of zpools scale logarithmically with the number of
+> > CPUs. Maybe something like 4log2(nr_cpus). This will keep the number
+> > of zpools from increasing too much and close to the status quo. The
+> > problem is that at a small number of CPUs (e.g. 2), 4log2(nr_cpus)
+> > will actually give a nr_zpools > nr_cpus. So we will need to come up
+> > with a more fancy magic equation (e.g. 4log2(nr_cpus/4)).
+> >
+>
+> I just posted a patch to limit the number of zpools, with some
+> theoretical background explained in the code comments. I believe that
+> 2 * CPU linearly is sufficient to reduce contention, but the scale can
+> be reduced further. All CPUs are trying to allocate/free zswap is
+> unlikely to happen.
+>  How many concurrent accesses were the original 32 zpools supposed to
+> handle? I think it was for 16 cpu or more. or nr_cpus/4 would be
+> enough?
 
-On 6/5/24 10:28 PM, Jeff Johnson wrote:
-> make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/idxd/idxd.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/ti/omap-dma.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/dmatest.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/ioat/ioatdma.o
-> 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
->  drivers/dma/dmatest.c     | 1 +
->  drivers/dma/idxd/init.c   | 1 +
->  drivers/dma/ioat/init.c   | 1 +
->  drivers/dma/ti/omap-dma.c | 1 +
->  4 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-> index a4f608837849..1f201a542b37 100644
-> --- a/drivers/dma/dmatest.c
-> +++ b/drivers/dma/dmatest.c
-> @@ -1372,4 +1372,5 @@ static void __exit dmatest_exit(void)
->  module_exit(dmatest_exit);
->  
->  MODULE_AUTHOR("Haavard Skinnemoen (Atmel)");
-> +MODULE_DESCRIPTION("DMA Engine test module");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index a7295943fa22..cb5f9748f54a 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -22,6 +22,7 @@
->  #include "perfmon.h"
->  
->  MODULE_VERSION(IDXD_DRIVER_VERSION);
-> +MODULE_DESCRIPTION("Intel Data Accelerators support");
->  MODULE_LICENSE("GPL v2");
->  MODULE_AUTHOR("Intel Corporation");
->  MODULE_IMPORT_NS(IDXD);
-> diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-> index 9c364e92cb82..d84d95321f43 100644
-> --- a/drivers/dma/ioat/init.c
-> +++ b/drivers/dma/ioat/init.c
-> @@ -23,6 +23,7 @@
->  #include "../dmaengine.h"
->  
->  MODULE_VERSION(IOAT_DMA_VERSION);
-> +MODULE_DESCRIPTION("Intel I/OAT DMA Linux driver");
->  MODULE_LICENSE("Dual BSD/GPL");
->  MODULE_AUTHOR("Intel Corporation");
->  
-> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-> index b9e0e22383b7..5b994c325b41 100644
-> --- a/drivers/dma/ti/omap-dma.c
-> +++ b/drivers/dma/ti/omap-dma.c
-> @@ -1950,4 +1950,5 @@ static void __exit omap_dma_exit(void)
->  module_exit(omap_dma_exit);
->  
->  MODULE_AUTHOR("Russell King");
-> +MODULE_DESCRIPTION("OMAP DMAengine support");
+We use 32 zpools on machines with 100s of CPUs. Two zpools per CPU is
+an overkill imo.
 
-It would be better to "Texas Instruments sDMA DMAengine support"
+I have further comments that I will leave on the patch, but I mainly
+think this should be driven by real data, not theoretical possibility
+of lock contention.
 
->  MODULE_LICENSE("GPL");
-> 
-> ---
-> base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-> change-id: 20240605-md-drivers-dma-2105b7b6f243
-> 
-
--- 
-Péter
+>
+> --
+>
+> <flintglass@gmail.com>
