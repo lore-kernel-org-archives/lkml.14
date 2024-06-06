@@ -1,30 +1,30 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23EAB40BF2;
-	Thu,  6 Jun 2024 19:18:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768A64D13F;
+	Thu,  6 Jun 2024 19:18:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717701529; cv=none; b=h/NGdAIPY9vKuX+jJqzUh8lbUwTFyXopTUyV7ZxPliOYAFryaExcAsObAXsB+3WdqlwWIFaHoxqk4nSNjKUA6H08rRv7uuCqIB/ac5NltGMTrfTBJzTeWwR/DcuzUorcdAkjyuREnKjsgV/uLjwrjJyIW6mMsdNQaaP7t/zcBPY=
+	t=1717701529; cv=none; b=np28o2hagZ3fIhL6AT3pewUUgAUNcYw10zVwRziV1Q+dibw1KS4T0O57M9KYAksaIuI2m0IR3fUUec4wrDGhklKAM4NEeHk/YgvfgBd5hQy0DsasWw5CpzBSqvY/1UL61dbjD7vfVNwTFKU8CYWKdASHvZ0hNdleRka1MOqVBfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717701529; c=relaxed/simple;
-	bh=O+D0KxN0SpsIA/FwwMt4L5jfsFG66EQIF8vEPodHPxI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=o1sk/7vv0h0Rbi17fxEDfOsYR5SNEdhGg7aEi9O1DamsXBwcM84ByHriLjjOXeDlFn6ICFmriNecPzWrYssGFT+WV+AJsLHf3ueEJAp6dwkYZbY14im9w2udwJAh2Ezlwps/5orjQs2efPl/mGZ0Rt7BuwuTZLvxxRfliP63jik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=fzdn151y; arc=none smtp.client-ip=128.199.32.197
+	bh=YIfSYI9EIXoslwT+D0IciwYGUf4uGYA5uUUy4+mGv2s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=H38LrXdTyftRopW9VctMlAW+wu0HNOMGGHao89Fil/EUOW27yrpaKZ1blfRyRIy+qlBA/ZkWEBFpna7AwBBMdUSSsLKRqUM6iqAetv/6EIKvZHSiYJJyFA0F6zt9oV1zTFdBfu28ITI8cg9bmOTg8AERANE9IbjjrAZ15yuntiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=ufcDgmKq; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="fzdn151y"
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="ufcDgmKq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1717701525; bh=O+D0KxN0SpsIA/FwwMt4L5jfsFG66EQIF8vEPodHPxI=;
-	h=From:Subject:Date:To:Cc;
-	b=fzdn151yJrqTYGQ8o/uOKFDqxVxys0z2O+vv3tNDXQD6HPsUxzEYEJjGw9ea6GrNN
-	 BTHHRsZSEBQzqgRMDLkarbvGVtBgMxfrlexEVk0M8bBcs8BNc+TcY6K348eK0cSyKc
-	 BAJgkfs926mnK7oYxYvMtuSirNVV1h1NBD3g+ebE=
+	t=1717701525; bh=YIfSYI9EIXoslwT+D0IciwYGUf4uGYA5uUUy4+mGv2s=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=ufcDgmKqxSMA4MJen+NboZ9xOFLtO2Ac5dpSg3rGNEzTxQqjgfyyMrT/c7MqOE7x1
+	 c9u8kRQDPFlS0ke50LwazvT0MxsoUC7bUHhjCIiyIyGGvXnt67CwbeucnYhaqrVWi1
+	 4MCFFp7a6WTstfXpDcHg8miMHALcTCnIv3TGhTBA=
 From: Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH v2 0/2] Support mailbox interface in qcom,smsm driver
-Date: Thu, 06 Jun 2024 21:18:31 +0200
-Message-Id: <20240606-smsm-mbox-v2-0-8abe6b5f01da@z3ntu.xyz>
+Date: Thu, 06 Jun 2024 21:18:33 +0200
+Subject: [PATCH v2 2/2] soc: qcom: smsm: Support using mailbox interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,9 +33,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIcLYmYC/23MQQ7CIBCF4as0sxZDYSDGlfdouqg6WBaAgUpoG
- +4udu3yf3n5dkgULSW4djtEyjbZ4FuIUwePefIvYvbZGgQXyFEgSy455u6hMK61NlLRRIjQ/u9
- IxpbDGsbWs01LiOtB5/63/lNyzzhTShlpEMUF+9sm/fI5l3WDsdb6BclDF2CiAAAA
+Message-Id: <20240606-smsm-mbox-v2-2-8abe6b5f01da@z3ntu.xyz>
+References: <20240606-smsm-mbox-v2-0-8abe6b5f01da@z3ntu.xyz>
+In-Reply-To: <20240606-smsm-mbox-v2-0-8abe6b5f01da@z3ntu.xyz>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
  Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
@@ -45,76 +45,160 @@ Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
  linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1852; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=O+D0KxN0SpsIA/FwwMt4L5jfsFG66EQIF8vEPodHPxI=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmYguQmVDERBuVLSHtgyVRREuVhSOo3ZYk3ngcc
- iMOJWTMTl+JAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZmILkAAKCRBy2EO4nU3X
- Vq3uEAC4rkB5qQR7WH0JZYKYwNZTCLKZKnP+iswpy9AusfUuIysVAAFjmlSW7RH3yILWrwZjoqm
- 9sRNUfJ49nar2A1jZMZ2dZPSaeVRpA5DT47tEaSxP3qohndlTlH3xlhbJSYzQ3/9fEKTy4zjc2p
- ppECI5Hh8ymwE5deUyOFs3XB+0UdoDCqzJyTDzBeq2i9YBWMZYpJXQYQVRiiRWDtINo2vsqkBw0
- zkcKfhf8lDELwTH2BJi5gd/Rqvs/TyLR2pjcqs2bmuCCiizMkMI1WnJByezyUs8JQwUz1m2rsz8
- RrbMitx2UWDED3+nfKzGpU4n0mu3XtF6cwpX6IkGFIL87mpHeIY3T8OLLCIrmFe554Plf7HqjbS
- apQAv7Zp1oiRxZxLRPZsT3kh4/9xtJkQi6evOLQGChri/DfgfebDp+oscmDFqYEIu2UVE0nQRZq
- U6sWxkdsUfuT15//z5Oef4TC9XpYUug7t/JM7HListXZp6JQTaLkpvmD2NyHp9ArFOq7JUYAZC3
- 2iW7YHK0nqOJ5TFSR/kRA/AZumuSja7WwNMjJMDhnzAE4UJBELj3sujq5TrxhGL36ZPOKRjwjQa
- QfuPF1lGhBm7qCwY9RZX3+xAJwX7sVuWgR90sD8PTMAw5S7QJNDVFnpG69mfsZDi0j8ItQWXCOD
- tWILtOWkeXackUA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4231; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=YIfSYI9EIXoslwT+D0IciwYGUf4uGYA5uUUy4+mGv2s=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmYguUfB3hqtyvpAqEV2xW7ahsFiuT8cPSvzInV
+ IhED0DP1RuJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZmILlAAKCRBy2EO4nU3X
+ VlUFEAC5t52j88cvSenHRfm9XfPfZE3xjUp2HMjOnbv3Odg2anEbAPuA2p2QrsGlM87h5r/Rm7G
+ 4AcuaJRMVyHpQP/l6DLC90gnEh4+GZcQw/M7/ubW+T6l6tFdCQa+T/bo15qJ56UgI+ZCHk1uXIp
+ nR8AQoe0kcG6iEiBCAwOgQmTaP4tIG8FTrfJrA3/PC8hgUEZRVEAMA4MmSqulRV6UIKxc6vw6H+
+ F27vG7cwRjCgFJilb2SjFj0oDSDcoHf+T5ynhDtjjbL8azakVp9GG5ANFHAjpYlHyI5LdP7GotB
+ CHtXPBcu2L11RX1xEk8TTE9awglMk+w/rON8kX6gJ9eRLY/bkzSiRusRayWWjkM5hjf2hqytJaI
+ gz5ZUAkV0d9QXnIuUZ597U9BHiNBPMEN03kxMfgW0Co8fnl/3G2gxOA5lkW0Xd+GRMSEh07Kt5W
+ DQwnhsUNtP3ZN/bf1x7RE3DV//09G9X1nY/Eh14uHv2gfSRyjIxo/KYLo2z3CsGzOU/PD9E64Pj
+ qf6PWXYwtVlAJDy6w6qke2RM0o0j/4W7dnKyccBKEvd4APxcUpOqxlkCGH1V/zKRPTK0HOt7ZGM
+ N4Y+Nimu3CWUqY5Vx+OIxueJXZztRFZ3dgEPhO/4ZtG/XC5qwN85n4ItyPKxjC75v/yk93B0gtt
+ 3G/FQ5JWI0Jao0A==
 X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Take a shot at converting the last driver that requires direct
-"qcom,ipc*" syscon references in devicetree by allowing the smsm driver
-to use the mailbox interface to achieve the same effect.
+Add support for using the mbox interface instead of manually writing to
+the syscon. With this change the driver will attempt to get the mailbox
+first, and if that fails it will fall back to the existing way of using
+qcom,ipc-* properties and converting to syscon.
 
-Still not sure if the devicetree bindings are the prettiest but they're
-functional.
-
-One alternative I'm thinking of is to use mbox-names to not have <0>
-elements in dt, and reference the items by name from the driver?
-
-e.g. this change for msm8226 could be represented differently.
-
--		qcom,ipc-1 = <&apcs 8 13>;
--		qcom,ipc-2 = <&apcs 8 9>;
--		qcom,ipc-3 = <&apcs 8 19>;
-+		mboxes = <0>, <&apcs 13>, <&apcs 9>, <&apcs 19>;
-
-vs. for example:
-
--		qcom,ipc-1 = <&apcs 8 13>;
--		qcom,ipc-2 = <&apcs 8 9>;
--		qcom,ipc-3 = <&apcs 8 19>;
-+		mboxes = <&apcs 13>, <&apcs 9>, <&apcs 19>;
-+		mbox-names = "ipc-1", "ipc-2", "ipc-3";
-
-But also here the name with 'ipc-N' is probably not particularly
-fitting?
-
-Please let me know your thoughts and any suggestions.
-
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 ---
-Changes in v2:
-- Mark qcom,ipc-N as deprecated
-- Update & expand description for mboxes property
-- Don't duplicate example, just update existing one since qcom,ipc-N is
-  deprecated now anyways
-- Pick up tags
-- Link to v1: https://lore.kernel.org/r/20240424-smsm-mbox-v1-0-555f3f442841@z3ntu.xyz
+ drivers/soc/qcom/smsm.c | 51 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 50 insertions(+), 1 deletion(-)
 
----
-Luca Weiss (2):
-      dt-bindings: soc: qcom,smsm: Allow specifying mboxes instead of qcom,ipc
-      soc: qcom: smsm: Support using mailbox interface
+diff --git a/drivers/soc/qcom/smsm.c b/drivers/soc/qcom/smsm.c
+index e7c7e9a640a6..ffe78ae34386 100644
+--- a/drivers/soc/qcom/smsm.c
++++ b/drivers/soc/qcom/smsm.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <linux/interrupt.h>
++#include <linux/mailbox_client.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of_irq.h>
+@@ -71,6 +72,7 @@ struct smsm_host;
+  * @lock:	spinlock for read-modify-write of the outgoing state
+  * @entries:	context for each of the entries
+  * @hosts:	context for each of the hosts
++ * @mbox_client: mailbox client handle
+  */
+ struct qcom_smsm {
+ 	struct device *dev;
+@@ -88,6 +90,8 @@ struct qcom_smsm {
+ 
+ 	struct smsm_entry *entries;
+ 	struct smsm_host *hosts;
++
++	struct mbox_client mbox_client;
+ };
+ 
+ /**
+@@ -120,11 +124,14 @@ struct smsm_entry {
+  * @ipc_regmap:	regmap for outgoing interrupt
+  * @ipc_offset:	offset in @ipc_regmap for outgoing interrupt
+  * @ipc_bit:	bit in @ipc_regmap + @ipc_offset for outgoing interrupt
++ * @mbox_chan:	apcs ipc mailbox channel handle
+  */
+ struct smsm_host {
+ 	struct regmap *ipc_regmap;
+ 	int ipc_offset;
+ 	int ipc_bit;
++
++	struct mbox_chan *mbox_chan;
+ };
+ 
+ /**
+@@ -172,7 +179,13 @@ static int smsm_update_bits(void *data, u32 mask, u32 value)
+ 		hostp = &smsm->hosts[host];
+ 
+ 		val = readl(smsm->subscription + host);
+-		if (val & changes && hostp->ipc_regmap) {
++		if (!(val & changes))
++			continue;
++
++		if (hostp->mbox_chan) {
++			mbox_send_message(hostp->mbox_chan, NULL);
++			mbox_client_txdone(hostp->mbox_chan, 0);
++		} else if (hostp->ipc_regmap) {
+ 			regmap_write(hostp->ipc_regmap,
+ 				     hostp->ipc_offset,
+ 				     BIT(hostp->ipc_bit));
+@@ -352,6 +365,28 @@ static const struct irq_domain_ops smsm_irq_ops = {
+ 	.xlate = irq_domain_xlate_twocell,
+ };
+ 
++/**
++ * smsm_parse_mbox() - requests an mbox channel
++ * @smsm:	smsm driver context
++ * @host_id:	index of the remote host to be resolved
++ *
++ * Requests the desired channel using the mbox interface which is needed for
++ * sending the outgoing interrupts to a remove hosts - identified by @host_id.
++ */
++static int smsm_parse_mbox(struct qcom_smsm *smsm, unsigned int host_id)
++{
++	struct smsm_host *host = &smsm->hosts[host_id];
++	int ret = 0;
++
++	host->mbox_chan = mbox_request_channel(&smsm->mbox_client, host_id);
++	if (IS_ERR(host->mbox_chan)) {
++		ret = PTR_ERR(host->mbox_chan);
++		host->mbox_chan = NULL;
++	}
++
++	return ret;
++}
++
+ /**
+  * smsm_parse_ipc() - parses a qcom,ipc-%d device tree property
+  * @smsm:	smsm driver context
+@@ -521,8 +556,16 @@ static int qcom_smsm_probe(struct platform_device *pdev)
+ 			     "qcom,local-host",
+ 			     &smsm->local_host);
+ 
++	smsm->mbox_client.dev = &pdev->dev;
++	smsm->mbox_client.knows_txdone = true;
++
+ 	/* Parse the host properties */
+ 	for (id = 0; id < smsm->num_hosts; id++) {
++		/* Try using mbox interface first, otherwise fall back to syscon */
++		ret = smsm_parse_mbox(smsm, id);
++		if (!ret)
++			continue;
++
+ 		ret = smsm_parse_ipc(smsm, id);
+ 		if (ret < 0)
+ 			goto out_put;
+@@ -609,6 +652,9 @@ static int qcom_smsm_probe(struct platform_device *pdev)
+ 
+ 	qcom_smem_state_unregister(smsm->state);
+ out_put:
++	for (id = 0; id < smsm->num_hosts; id++)
++		mbox_free_channel(smsm->hosts[id].mbox_chan);
++
+ 	of_node_put(local_node);
+ 	return ret;
+ }
+@@ -622,6 +668,9 @@ static void qcom_smsm_remove(struct platform_device *pdev)
+ 		if (smsm->entries[id].domain)
+ 			irq_domain_remove(smsm->entries[id].domain);
+ 
++	for (id = 0; id < smsm->num_hosts; id++)
++		mbox_free_channel(smsm->hosts[id].mbox_chan);
++
+ 	qcom_smem_state_unregister(smsm->state);
+ }
+ 
 
- .../devicetree/bindings/soc/qcom/qcom,smsm.yaml    | 30 +++++++++----
- drivers/soc/qcom/smsm.c                            | 51 +++++++++++++++++++++-
- 2 files changed, 71 insertions(+), 10 deletions(-)
----
-base-commit: ee78a17615ad0cfdbbc27182b1047cd36c9d4d5f
-change-id: 20240424-smsm-mbox-0666f35eae44
-
-Best regards,
 -- 
-Luca Weiss <luca@z3ntu.xyz>
+2.45.2
 
