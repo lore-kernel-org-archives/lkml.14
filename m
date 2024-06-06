@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A693197541;
-	Thu,  6 Jun 2024 21:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A051993A2;
+	Thu,  6 Jun 2024 21:21:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717708892; cv=none; b=DJyIwH+/48wcZWVrfWuYUieqEzAMjIGjccDHfPjHDXaP9ciwypIliJ/D3u2VovuQxc0Ei3cupJU2Yxzw7vg7beVjyFDE5ecA93PFvg10En+MORhPmldnb/pEXxZEYwdg7g6ule/AdQypF+GYTc2/h6XRpPlT0xEfQAroVy7jlXw=
+	t=1717708892; cv=none; b=aBcNK1MU5u0smiFbw2Ksg+ZOeIaDPpE48qegnArz/r7sQeoCo8eunZ39CFJj8l+ussslBaV8Cs1Q1WqI58P63q2oMPTL3z4Q7j3doNkS8mWGFAwMZD/DIXRaxjBw/Ylb8T5YE2z/yHmqmEQYi7RTbUGH0HkSmUV+ENcMfCmrHPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717708892; c=relaxed/simple;
-	bh=tN5S4Qm5DLCv1/zqqz9De1g0NGzaG+9hsIfW3dius/k=;
+	bh=IE1IK2OKn7/pafSQ0ncO+HLzuopsT1q+/33iYZS7wTg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ovA1orzVGoQ1DMiXJXwnbT39AAXThaLA116UK1Q57Db6kL+3LZqfwQiaF1JXTi2VhAakeZOm7JgPQj/ZZUiLE6G/FuynKuaEh4mKWdZDjCJ6uo5FSLWF36mouB2HF+z5i/LVxGAibj6FLVvMpD6qrlri16b6bkG+HyZ6jUh3Cho=
+	 Content-Type; b=pe200Fh2uCZQFjIMK7q735jwWxX5fqNF3eB8jveacBJC28ny3KfGghBCKZYXEls1e1j3hoWUWVBtONYTMZDh8RXcIbSukBxx8kCppZvj4uxfvyK72d3kEp31dl4vT/bQEQm78p8XSMTvu7UZ3u1bF4sO55SsslZasJqsRp73BWU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC9F8C4AF1B;
-	Thu,  6 Jun 2024 21:21:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1267C3277B;
+	Thu,  6 Jun 2024 21:21:32 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sFKYC-00000000qJj-48WI;
-	Thu, 06 Jun 2024 17:21:36 -0400
-Message-ID: <20240606212136.844105833@goodmis.org>
+	id 1sFKYE-00000000qNC-0Urt;
+	Thu, 06 Jun 2024 17:21:38 -0400
+Message-ID: <20240606212137.979724516@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 06 Jun 2024 17:17:40 -0400
+Date: Thu, 06 Jun 2024 17:17:47 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -49,7 +49,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [PATCH v3 05/13] ring-buffer: Add output of ring buffer meta page
+Subject: [PATCH v3 12/13] tracing: Update function tracing output for previous boot buffer
 References: <20240606211735.684785459@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,198 +61,53 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Add a buffer_meta per-cpu file for the trace instance that is mapped to
-boot memory. This shows the current meta-data and can be used by user
-space tools to record off the current mappings to help reconstruct the
-ring buffer after a reboot.
-
-It does not expose any virtual addresses, just indexes into the sub-buffer
-pages.
+For a persistent ring buffer that is saved across boots, if function
+tracing was performed in the previous boot, it only saves the address of
+the functions and uses "%pS" to print their names. But the current boot,
+those functions may be in different locations. The persistent meta-data
+saves the text delta between the two boots and can be used to find the
+address of the saved function of where it is located in the current boot.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 77 ++++++++++++++++++++++++++++++++++++++
- kernel/trace/trace.c       | 30 ++++++++++++++-
- kernel/trace/trace.h       |  2 +
- 3 files changed, 107 insertions(+), 2 deletions(-)
+ kernel/trace/trace_output.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 385dc1750fc7..093c73c617cc 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -32,6 +32,8 @@
- #include <asm/local64.h>
- #include <asm/local.h>
- 
-+#include "trace.h"
-+
- /*
-  * The "absolute" timestamp in the buffer is only 59 bits.
-  * If a clock has the 5 MSBs set, it needs to be saved and
-@@ -1646,6 +1648,81 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
- 	}
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index d8b302d01083..b9d2c64c0648 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -990,8 +990,11 @@ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
  }
  
-+static void *rbm_start(struct seq_file *m, loff_t *pos)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = m->private;
-+	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
-+	unsigned long val;
-+
-+	if (!meta)
-+		return NULL;
-+
-+	if (*pos > meta->nr_subbufs)
-+		return NULL;
-+
-+	val = *pos;
-+	val++;
-+
-+	return (void *)val;
-+}
-+
-+static void *rbm_next(struct seq_file *m, void *v, loff_t *pos)
-+{
-+	(*pos)++;
-+
-+	return rbm_start(m, pos);
-+}
-+
-+static int rb_meta_subbuf_idx(struct ring_buffer_meta *meta, void *subbuf);
-+
-+static int rbm_show(struct seq_file *m, void *v)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = m->private;
-+	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
-+	unsigned long val = (unsigned long)v;
-+
-+	if (val == 1) {
-+		seq_printf(m, "head_buffer:   %d\n",
-+			   rb_meta_subbuf_idx(meta, (void *)meta->head_buffer));
-+		seq_printf(m, "commit_buffer: %d\n",
-+			   rb_meta_subbuf_idx(meta, (void *)meta->commit_buffer));
-+		seq_printf(m, "subbuf_size:   %d\n", meta->subbuf_size);
-+		seq_printf(m, "nr_subbufs:    %d\n", meta->nr_subbufs);
-+		return 0;
-+	}
-+
-+	val -= 2;
-+	seq_printf(m, "buffer[%ld]:    %d\n", val, meta->buffers[val]);
-+
-+	return 0;
-+}
-+
-+static void rbm_stop(struct seq_file *m, void *p)
-+{
-+}
-+
-+static const struct seq_operations rb_meta_seq_ops = {
-+	.start		= rbm_start,
-+	.next		= rbm_next,
-+	.show		= rbm_show,
-+	.stop		= rbm_stop,
-+};
-+
-+int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, int cpu)
-+{
-+	struct seq_file *m;
-+	int ret;
-+
-+	ret = seq_open(file, &rb_meta_seq_ops);
-+	if (ret)
-+		return ret;
-+
-+	m = file->private_data;
-+	m->private = buffer->buffers[cpu];
-+
-+	return 0;
-+}
-+
- static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 		long nr_pages, struct list_head *pages)
+ static void print_fn_trace(struct trace_seq *s, unsigned long ip,
+-			   unsigned long parent_ip, int flags)
++			   unsigned long parent_ip, long delta, int flags)
  {
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ff2b504fbe00..622fe670949d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5018,7 +5018,7 @@ static int show_traces_open(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static int show_traces_release(struct inode *inode, struct file *file)
-+static int tracing_seq_release(struct inode *inode, struct file *file)
- {
- 	struct trace_array *tr = inode->i_private;
- 
-@@ -5059,7 +5059,7 @@ static const struct file_operations show_traces_fops = {
- 	.open		= show_traces_open,
- 	.read		= seq_read,
- 	.llseek		= seq_lseek,
--	.release	= show_traces_release,
-+	.release	= tracing_seq_release,
- };
- 
- static ssize_t
-@@ -6860,6 +6860,22 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
- }
- 
-+static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
-+{
-+	struct trace_array *tr = inode->i_private;
-+	int cpu = tracing_get_cpu(inode);
-+	int ret;
++	ip += delta;
++	parent_ip += delta;
 +
-+	ret = tracing_check_open_get_tr(tr);
-+	if (ret)
-+		return ret;
-+
-+	ret = ring_buffer_meta_seq_init(filp, tr->array_buffer.buffer, cpu);
-+	if (ret < 0)
-+		__trace_array_put(tr);
-+	return ret;
-+}
-+
- static ssize_t
- tracing_free_buffer_write(struct file *filp, const char __user *ubuf,
- 			  size_t cnt, loff_t *ppos)
-@@ -7436,6 +7452,13 @@ static const struct file_operations tracing_entries_fops = {
- 	.release	= tracing_release_generic_tr,
- };
+ 	seq_print_ip_sym(s, ip, flags);
  
-+static const struct file_operations tracing_buffer_meta_fops = {
-+	.open		= tracing_buffer_meta_open,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= tracing_seq_release,
-+};
-+
- static const struct file_operations tracing_total_entries_fops = {
- 	.open		= tracing_open_generic_tr,
- 	.read		= tracing_total_entries_read,
-@@ -8668,6 +8691,9 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
- 	trace_create_cpu_file("buffer_size_kb", TRACE_MODE_READ, d_cpu,
- 				tr, cpu, &tracing_entries_fops);
+ 	if ((flags & TRACE_ITER_PRINT_PARENT) && parent_ip) {
+@@ -1009,7 +1012,7 @@ static enum print_line_t trace_fn_trace(struct trace_iterator *iter, int flags,
  
-+	if (tr->range_addr_start)
-+		trace_create_cpu_file("buffer_meta", TRACE_MODE_READ, d_cpu,
-+				      tr, cpu, &tracing_buffer_meta_fops);
- #ifdef CONFIG_TRACER_SNAPSHOT
- 	if (!tr->range_addr_start) {
- 		trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 994b86b9bf73..2efa4cccdd3b 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -645,6 +645,8 @@ trace_buffer_lock_reserve(struct trace_buffer *buffer,
- 			  unsigned long len,
- 			  unsigned int trace_ctx);
+ 	trace_assign_type(field, iter->ent);
  
-+int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, int cpu);
-+
- struct trace_entry *tracing_get_trace_entry(struct trace_array *tr,
- 						struct trace_array_cpu *data);
+-	print_fn_trace(s, field->ip, field->parent_ip, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
+ 	trace_seq_putc(s, '\n');
  
+ 	return trace_handle_return(s);
+@@ -1674,7 +1677,7 @@ trace_func_repeats_print(struct trace_iterator *iter, int flags,
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	print_fn_trace(s, field->ip, field->parent_ip, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
+ 	trace_seq_printf(s, " (repeats: %u, last_ts:", field->count);
+ 	trace_print_time(s, iter,
+ 			 iter->ts - FUNC_REPEATS_GET_DELTA_TS(field));
 -- 
 2.43.0
 
