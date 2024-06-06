@@ -1,105 +1,106 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D305328A0;
-	Thu,  6 Jun 2024 08:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D7613DB8D;
+	Thu,  6 Jun 2024 08:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717663082; cv=none; b=HxUT1x2ls5YLbiHp4TE877wtOBucjIulGz6aQnDKg5edYnPOMb7kI12iJ/m2L4z8BCyq0+kBpYRiqcOsBj5N0nfR828TaEr7fOPzveRgAjkhv9MrhPMHLy5vEaWqzFCBYppergTvxzwIeF2PLIkzKlAI2/SLniElZyeVqNNx0Bk=
+	t=1717663088; cv=none; b=F6wS1meRTNzU6a38xI9K1hB0DRNgzAK20yGdIcIGW8876d3Nt6w0BcQ+WaH7yF1uT1gJKGXnWmAM37sfH/66SXhGPAEW/0fnkHnDCbrRwnQvDVrj3sFtU7xbwcEoRSRmPHfwIQaLm+N+1/n7PWKAwa0loVulSer50V6qdEwM85A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717663082; c=relaxed/simple;
-	bh=iXa75xesv8Th6dmsNR5Wmb3zCyYb+vzqBgePfuDZquU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r93RJR7sS//4v967CaQTHzC6D6nlV0mxEr/MRXIHZtJusoUvhHgAP6N62c6LE4FJ0Bwo/I9621CiX3FlJj2RspniGNBsZuRHzcXS5UUWAYaXRbMokbb9My2HphiMdh9KfLhSoyHUgR6h3AIvai9J/SNuRBm7RPnuEqm6lquWvoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VaA/Tuaf; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717663088; c=relaxed/simple;
+	bh=eZpkYN1My8L0alqfBripkdov+U6NwJDEvmRjW7H7TrM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hC+NsjHFEuH/wn9bEqply7gffMTOydT8RhN+PdIc1M4ZGhbV0wSBE+7Z55SLqnAt84VayEfhgpLf2QKcNbsvKboZSZiIhcHZcvYBrw2F5rHlMopRvR+sBpruCDaNBWNyebekCnw1H0BzTaXANmCjP3yO6hWrM9/OSXdlSVphHMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0ssImOx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VaA/Tuaf"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-804c45a47b6so249948241.2;
-        Thu, 06 Jun 2024 01:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717663080; x=1718267880; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iXa75xesv8Th6dmsNR5Wmb3zCyYb+vzqBgePfuDZquU=;
-        b=VaA/Tuafy3eAlU3KCFCGZ7AgXIEv7zmVRInrzSHOHyQkIolDVW0JstqqlHKN/HjzMr
-         Z0KpWY6KjFFAOPYYXicAeDO+8BoCJYIyHSYTTKeRLJl1PneMjott0U/JpNOq/KGRqhWN
-         jJvzL3l6h4GdrLnZDrR+q0xHviIeZ0U6YxfyEFmNgQwMpZjczeELuHNXo7ojG36jL3ew
-         wiMJF973+83BY8qwlhQwxKQflU4jYp7DzKMWzEWV0vjlYdwxhOvzp9lTeJB0MzYPXx8r
-         XPVs6gRAu0gdHmj4UBolaEyo6I7vbx4RLY5BIRqKaRIREuxwAnF0aq/t9Cfi6n0hHLys
-         B6Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717663080; x=1718267880;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iXa75xesv8Th6dmsNR5Wmb3zCyYb+vzqBgePfuDZquU=;
-        b=pb46uh6YlgEqr2WlJyBPgq/Ouej+jMaVM9sZQnfM7IaEXXAzGNaRkAFTQ4a0k+Tjr0
-         jqmS/xXLasEtwyJu8Ovyr4Ue6LDZAKvx4x932caFJsaVGxAJHvE3A8EWnntegVI/G8zq
-         3dpLp+qwShMzQpJ5iIynU6qTEQV99TBhvpEmmctxbl9khGtK8MPXFoTVEl16h1t/yW/e
-         hvLVNKi0zJGzt8tuaL7MlEph0B//oj5Fau0T0cycoZS6m8uHeXDd9J/EwZmP7tMyJk6e
-         l9HNw9TgCPPDWq/ykXX4zyRn1nUhy5K/FIo1VcP7Hfpw5MbaayLdBoPhpaa4q3ukVJwY
-         kKYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWs4vrBwcfHL50XX7SCsxeDuDxx1zEgAW8FQA5GSRUEWCi2arGsqwYNv0VKz154Z0gQ+tnTx700adQPegoOc5W3d9zRAxhI03uyA41BBKqwebdKiCzeliuvdDidyfZK3ZjpJqx++/QM/jnaD2EkR/DZ0u/rR8QOYWtCoF/Llj3hh08nPSsRWIbmDrR/ck11TkMPcB0eyer8Rl9au32uxRewqL6gNoVU1A==
-X-Gm-Message-State: AOJu0YwLvHa2h5ed7DTjfzfVF1E7/2KMhFKB5ETIjfuLZmQttlHXxLMP
-	YA4ju1wXz4IvjIj6c3eyu7WCn0o+iDPq7xsjAXG/fzcFnvo6gTTWIpfwF/jKeBZdjGmDwdXOsCT
-	JRNLBz4YIKBc1HL331tnaURDYccc=
-X-Google-Smtp-Source: AGHT+IEx3i+oV0HZfHXhaY9bOrHFh8+AFcQPC9XrF38X4JBXblt7qoF3QhQT+xgJ2GHqCqFeCKL8/NzNxS/al88GyUo=
-X-Received: by 2002:a05:6122:914:b0:4eb:22b:492f with SMTP id
- 71dfb90a1353d-4eb3a4e6768mr6279305e0c.16.1717663080137; Thu, 06 Jun 2024
- 01:38:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0ssImOx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43C2C4AF08;
+	Thu,  6 Jun 2024 08:38:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717663087;
+	bh=eZpkYN1My8L0alqfBripkdov+U6NwJDEvmRjW7H7TrM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Z0ssImOxCls3XktDCYRtinxWEpufX07d73sxQPBmsmiSTJdiqog1pXPRBfXvJAE1F
+	 /qV1iyYYBd1CY7imDXH3RWCvRWB/JfVVUlLVPh8oLYsH7gtq1HQ8WTAzFRINBL1WIG
+	 Lm+pluRreSS29ZCs4j0bc7d6RB0E2KUq1/eosEqEb2vOxTiRSDsEe0iJW4x9y94ieq
+	 nGhVzqP1kdEp/nrXw5g3dUWiLA0+v7mrcg1i0T8TokYrma3NLYGFKsDyKsT9qu1Bf9
+	 aARw43yl5+4xEQ+ZmQuK3nOMf9Jl3X6m/n1xX6j+FUyPg5e4xoaiZAN5t9VjX7NmyY
+	 1o02QNKsrzcmg==
+Message-ID: <610ee49c-e936-43d4-991e-c39dd0f439d3@kernel.org>
+Date: Thu, 6 Jun 2024 17:38:05 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240530173857.164073-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240604153612.GA839371-robh@kernel.org> <CA+V-a8tWxGBkuOY=G3RaB_0NXS3ShE-nL+5t49=_mJGvo6j6yQ@mail.gmail.com>
- <CAMuHMdWvdvmt42Wy=5Do2MeCRNbLOd2c8Nra2RFQtumnmZod_g@mail.gmail.com>
-In-Reply-To: <CAMuHMdWvdvmt42Wy=5Do2MeCRNbLOd2c8Nra2RFQtumnmZod_g@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 6 Jun 2024 09:37:33 +0100
-Message-ID: <CA+V-a8sbjD=KghOmw6OEWXxbbPkmW-ycwuxFxh43GL3nKhLWxQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/15] dt-bindings: pinctrl: renesas: Document
- RZ/V2H(P) SoC
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Paul Barker <paul.barker.ct@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5.10/5.15] ata: libata-scsi: check cdb length for
+ VARIABLE_LENGTH_CMD commands
+To: Mikhail Ukhin <mish.uxin2012@yandex.ru>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jens Axboe <axboe@kernel.dk>
+Cc: stable@vger.kernel.org, linux-ide@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Pavel Koshutin <koshutin.pavel@yandex.ru>,
+ lvc-project@linuxtesting.org, Artem Sadovnikov <ancowi69@gmail.com>,
+ Mikhail Ivanov <iwanov-23@bk.ru>
+References: <20240605213428.4040-1-mish.uxin2012@yandex.ru>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20240605213428.4040-1-mish.uxin2012@yandex.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Geert,
+On 6/6/24 6:34 AM, Mikhail Ukhin wrote:
+> No upstream commit exists for this patch.
+> 
+> Fuzzing of 5.10 stable branch reports a slab-out-of-bounds error in
+> ata_scsi_pass_thru.
+> 
+> The error is fixed in 5.18 by commit ce70fd9a551a ("scsi: core: Remove the
+> cmd field from struct scsi_request") upstream.
+> Backporting this commit would require significant changes to the code so
+> it is bettter to use a simple fix for that particular error.
+> 
+> The problem is that the length of the received SCSI command is not
+> validated if scsi_op == VARIABLE_LENGTH_CMD. It can lead to out-of-bounds
+> reading if the user sends a request with SCSI command of length less than
+> 32.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+> 
+> Signed-off-by: Artem Sadovnikov <ancowi69@gmail.com>
+> Signed-off-by: Mikhail Ivanov <iwanov-23@bk.ru>
+> Signed-off-by: Mikhail Ukhin <mish.uxin2012@yandex.ru>
+> ---
+>  v2: The new addresses were added and the text was updated.
+>  v3: Checking has been moved to the function ata_scsi_var_len_cdb_xlat at
+>  the request of Damien Le Moal
+>  drivers/ata/libata-scsi.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+> index dfa090ccd21c..38488bd813d1 100644
+> --- a/drivers/ata/libata-scsi.c
+> +++ b/drivers/ata/libata-scsi.c
+> @@ -3948,7 +3948,11 @@ static unsigned int ata_scsi_var_len_cdb_xlat(struct ata_queued_cmd *qc)
+>  	struct scsi_cmnd *scmd = qc->scsicmd;
+>  	const u8 *cdb = scmd->cmnd;
+>  	const u16 sa = get_unaligned_be16(&cdb[8]);
+> +	u8 scsi_op = scmd->cmnd[0];
+>  
+> +	if (scsi_op == VARIABLE_LENGTH_CMD && scmd->cmd_len < 32)
 
-On Thu, Jun 6, 2024 at 8:13=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, Jun 5, 2024 at 11:39=E2=80=AFAM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > OK, I will fix the above and send a v6 series.
->
-> Please don't drag it out that long ;-)
-Oops, that was a typo.
+This functions is called only when the opcode is VARIABLE_LENGTH_CMD. So there
+is no need to check that again.
 
-> As the rest of the series looks fine, a v4 should be sufficient.
-> Actually a v4 of just the first patch would be fine for me, too.
->
-As agreed patch 02/15 needs dropping, with that patch 07/14 ("pinctrl:
-renesas: pinctrl-rzg2l: Add function pointer for locking/unlocking the
-PFC register") does not apply cleanly anymore. Maybe I'll just send v4
-for the entire patches?
+> +        	return 1;
+> +	
+>  	/*
+>  	 * if service action represents a ata pass-thru(32) command,
+>  	 * then pass it to ata_scsi_pass_thru handler.
 
-Cheers,
-Prabhakar
+-- 
+Damien Le Moal
+Western Digital Research
+
