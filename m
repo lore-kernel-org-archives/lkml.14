@@ -1,128 +1,104 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739011957FC;
-	Thu,  6 Jun 2024 11:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BE739FEF;
+	Thu,  6 Jun 2024 11:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717674304; cv=none; b=ILuxVW5rGKF893Zf+l6mmZO92TuV46FGnFdopKCYw8KmtG3bkU6BiwhqxUCacaqA9dEHR280rxr2UYXaZ13tsR6EIyEIRH/XxEBpZHQy3FphHEMi5LJIDp+mAaJrxbxfmjP2RrgApQdJcMwZKgpE+98R4zQd2lBHnUPv/YAKbOw=
+	t=1717674383; cv=none; b=kc/O/FuXLfSegGgStnyVTwGbzm5IsdN4V7iUC9ijSTPT3ksWHlXjb3S4m5bcHvGqo77n0bxVtTREbr2KJhu2uuKG/OlogfHXcge0SLYCnPI/62s15NpAYht5CJXxkhlK7QdNCqxO2sOZmzF+SGpjZJg27E5q+gJ6mH2dhyXsG4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717674304; c=relaxed/simple;
-	bh=cD3Jsio92s31TDYJCHOEGyn5uxqsUCgDOpPoEWrtzSg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hntr/sUAsNLIb6bX042/+6vXdYF7XS8hmYYaOqRdCsMqv3rKNh4vWOUF9AZs1cHjdGE+PKN+WnXThgMX2AgVpyTn/SEC/DxPTzuBu6x/oGd91l6aPYOTNEJEmaUYP6IFOD9/2tosuHE/mOcheT7z8i6JXyOjWNlefR3fq5UA9Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=3sml7F9U; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1717674383; c=relaxed/simple;
+	bh=bawd7RoudWzE2MLiDRDMbDUVmw5SvItRGm9RIcJfnSM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=an51hKZVdrOzWG4UCTM57Jp6zUI25vJwWvwNixN6V8JC9wCp8QwDmWCxD+u6R0D9oKFnT4A9W16PV8AGIHd8NTHGZqzBFZrk/7efuUj3K5opr3tyy3PETi11fX/1LcOOEZkQDY+LlPPX/6/gBXYOzd7qcKgmScDqQliUWvSG1ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=pYQz6zxc; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="3sml7F9U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717674300;
-	bh=cD3Jsio92s31TDYJCHOEGyn5uxqsUCgDOpPoEWrtzSg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=3sml7F9UeZ6Pd1mHhkDdgob/2Ebsf9axWIcs5viD3rqI0ZrSfatluuz3WXQCDw556
-	 +fQ8DVou0JDE8t9ETvDXzM2hs4StwjhBQymIl7oo2ruXPJ9hDDng+k5X1kvFujKCpD
-	 PW//QTOwHWYsMj2DTDfF8GmRywiONkiOo7TF6RDwGG+iRqz+6Jcd1enjPZ+ziN0VkX
-	 XHwqwr/KKun+iL0SP7bEHCuZUdCGtcqVkC+qRwMiwZUvXQnlFqy7NfUW16bBcf4wTs
-	 woxrG/UfUC5ZTteeOBJQp3hMaFXk8CE/1RTOpIfuwTJKXXuTwKH0cRDlFFgehNxIr3
-	 trRzrQbe5B5Hw==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="pYQz6zxc"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
 	(No client certificate requested)
-	(Authenticated sender: sebastianfricke)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 47E7A378061A;
-	Thu,  6 Jun 2024 11:45:00 +0000 (UTC)
-Date: Thu, 6 Jun 2024 13:44:59 +0200
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.gaignard@collabora.com, dri-devel@lists.freedesktop.org,
-	laurent.pinchart@ideasonboard.com, praneeth@ti.com, nm@ti.com,
-	vigneshr@ti.com, a-bhatia1@ti.com, j-luthra@ti.com, b-brnich@ti.com,
-	detheridge@ti.com, p-mantena@ti.com, vijayp@ti.com,
-	andrzej.p@collabora.com, nicolas@ndufresne.ca,
-	p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
-	akpm@linux-foundation.org, gregkh@linuxfoundation.org,
-	andriy.shevchenko@linux.intel.com, adobriyan@gmail.com,
-	jani.nikula@intel.com
-Subject: Re: [PATCH v12 12/13] media: imagination: Round to closest multiple
- for cropping region
-Message-ID: <20240606114459.x73yebdu7kg7re52@basti-XPS-13-9310>
-References: <20240604104001.2235082-1-devarsht@ti.com>
- <20240604105335.2257629-1-devarsht@ti.com>
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 6DDC988395;
+	Thu,  6 Jun 2024 13:40:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1717674056;
+	bh=Nyy8WYwlJkr9UvhAPlerxpBTyEbPyphWULV8TmMUzaU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pYQz6zxcgac01LlqCNOMbPaufE8YwphfPIR5SkZzMpMmELev1dXCLCBoucvlsUSfF
+	 l/3YBGPPFvkadQEpBoVp3atPRsuLp1pzdgwEerFOH6ZvJwNBBUMpMkZy1IRrL97yfy
+	 mMIXt91y17oBYF/bpPOFwzNaVwYEe/hq4kNSidvDd/Oq96x0O5P6jbSxf0Sg4kIWqt
+	 kgS92C72WlfKuwjHeO54oguTFMkG+3NWwxpia00M0JWCnOGYbC7S+0nmHeV5qHuCDF
+	 zzFFARA3mnX1+oOwTXQ9d2cisWz8drewWujYIJb9Ah5EOQM9WWm7JbxYTQpvktbuDR
+	 Rh7DZDG57eoxg==
+Message-ID: <5770f01f-2341-4fed-81da-3803f3c54f03@denx.de>
+Date: Thu, 6 Jun 2024 13:14:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20240604105335.2257629-1-devarsht@ti.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build failure after merge of the stm32 tree
+To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20240606091217.19a08b65@canb.auug.org.au>
+ <a827536d-004f-4a5d-8995-321ba9926349@denx.de>
+ <361a9191-c320-411e-a628-ff41298391a9@foss.st.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <361a9191-c320-411e-a628-ff41298391a9@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-Hey,
+On 6/6/24 8:54 AM, Alexandre TORGUE wrote:
+> Hi
 
-On 04.06.2024 16:23, Devarsh Thakkar wrote:
->If neither of the flags to round down (V4L2_SEL_FLAG_LE) or round up
->(V4L2_SEL_FLAG_GE) are specified by the user, then round to nearest
->multiple of requested value while updating the crop rectangle coordinates.
->
->Use the rounding macro which gives preference to rounding down in case two
->nearest values (high and low) are possible to raise the probability of
->cropping rectangle falling inside the bound region.
->
->This complies with the VIDIOC_G_SELECTION, VIDIOC_S_SELECTION ioctl
->description as documented in v4l uapi [1] which specifies that driver
->should choose crop rectangle as close as possible if no flags are passed by
->user-space, as quoted below :
->
->"``0`` - The driver can adjust the rectangle size freely and shall choose a
->crop/compose rectangle as close as possible to the requested
-> one."
->
->Link: https://www.kernel.org/doc/Documentation/userspace-api/media/v4l/vidioc-g-selection.rst [1]
->Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Hello everyone,
 
-Acked-by: Sebastian Fricke <sebastian.fricke@collabora.com>
+> On 6/6/24 01:29, Marek Vasut wrote:
+>> On 6/6/24 1:12 AM, Stephen Rothwell wrote:
+>>> Hi all,
+>>
+>> Hello everyone,
+>>
+>>> After merging the stm32 tree, today's linux-next build (arm
+>>> multi_v7_defconfig) failed like this:
+>>>
+>>> make[4]: *** No rule to make target 
+>>> 'arch/arm/boot/dts/st/stm32mp135f-dhsom-dhsbc.dtb', needed by 
+>>> 'arch/arm/boot/dts/st/dtbs-list'.  Stop.
+>>>
+>>> Caused by commit
+>>>
+>>>    12ff8e167641 ("ARM: dts: stm32: Add support for STM32MP13xx DHCOR 
+>>> SoM and DHSBC board")
+>>>
+>>> I have used the stm32 tree from next-20240605 for today.
+>>
+>> Fixed in
+>>
+>> [PATCH] ARM: dts: stm32: Fix STM32MP13xx DHCOR DHSBC Makefile entry
+>>
+>> sent to linux-arm-kernel .
+>>
+>> Thanks for the report, sorry for the breakage.
+> 
+> 
+> My fault, I tested to build the board using
+> "make  st/stm32mp135f-dhcor-dhsbc.dtb"
 
-Can, whoever picks up the math changes, pick up this change as well?
-I will send 1-6 via the media subsystem.
+That's what I also use most of the time, and OE does its own DT builds.
+The LKP bot did find it today.
 
-Regards,
-Sebastian
+> Fixed in stm32-next by applying Marek patch. I'll maybe squash it with 
+> initial patch for my PR.
 
->---
->V12: No change
->V11: No change
->V10: No change
->V9:  No change
->V8:  Update commit message with specification reference
->V1->V7 (No change, patch introduced in V7)
->---
-> drivers/media/platform/imagination/e5010-jpeg-enc.c | 8 ++++----
-> 1 file changed, 4 insertions(+), 4 deletions(-)
->
->diff --git a/drivers/media/platform/imagination/e5010-jpeg-enc.c b/drivers/media/platform/imagination/e5010-jpeg-enc.c
->index e701d573a26a..d65646f0c38c 100644
->--- a/drivers/media/platform/imagination/e5010-jpeg-enc.c
->+++ b/drivers/media/platform/imagination/e5010-jpeg-enc.c
->@@ -517,10 +517,10 @@ static int e5010_s_selection(struct file *file, void *fh, struct v4l2_selection
->
-> 	switch (s->flags) {
-> 	case 0:
->-		s->r.width = round_down(s->r.width, queue->fmt->frmsize.step_width);
->-		s->r.height = round_down(s->r.height, queue->fmt->frmsize.step_height);
->-		s->r.left = round_down(s->r.left, queue->fmt->frmsize.step_width);
->-		s->r.top = round_down(s->r.top, 2);
->+		s->r.width = round_closest_down(s->r.width, queue->fmt->frmsize.step_width);
->+		s->r.height = round_closest_down(s->r.height, queue->fmt->frmsize.step_height);
->+		s->r.left = round_closest_down(s->r.left, queue->fmt->frmsize.step_width);
->+		s->r.top = round_closest_down(s->r.top, 2);
->
-> 		if (s->r.left + s->r.width > queue->width)
-> 			s->r.width = round_down(s->r.width + s->r.left - queue->width,
->-- 
->2.39.1
->
+Thanks !
