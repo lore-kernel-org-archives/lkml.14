@@ -1,140 +1,124 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA8319D898;
-	Thu,  6 Jun 2024 06:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D37273472
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 06:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717656466; cv=none; b=PXLbGHOS8NkScYe79zJdPVdY6HkMRX+8C6JSrdlghvNgTAHct9Sfat8kzcn+yL7K1YcA7OQQb1c8kJ+DYnqLltlS58it2TOH8jUQxePlCM3RWPcNQfrrLOb3FTybz+2d5pagEpbGlpehqzT1EsPO9i1NuJr2lwFXv+1TQ8CUPsI=
+	t=1717656503; cv=none; b=fi8e2A9J8qgPLcJQ2u9Or3tFn7sGK+Ovn/rA5bqn/2b9nm8pmeXu0g/KptIjpArWjnCeVSqWdcMwzAAfkGx4Ai/Iszn3g01/wWZ3voVZ62T058ei+bGTFy/saMGVws1JOYRDqL8G/ImQCIyeSRmOb1Fo0kGdEkMMeAhQEbeVYE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717656466; c=relaxed/simple;
-	bh=k5s7YOLQTUatjXw1nfSPcz2NVGXMNK1aE7DYjJ86gfw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uXjGvhoju6Mj0Q0+7w8uBd5dWI4lPoD+Gt5po9xiRb9Ghe1tax/Vu8Tq2bf4ptidz5PdjRLqoKRcOn4F0NMrfiyVyq1yFIcUpjR8b7JPIOA+ZzKIBfzjWbHLpYMdX1TGXn0PaS5ulnez00p85JIuRvirWgrv1PalPb0PMvGMnSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AR1HQFdc; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717656503; c=relaxed/simple;
+	bh=wqfPO29UB1/mjfccPPQT5JKS23yxeBTG0IwgeGdDHYU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bXRPcZO1GB0lLXIFKjjnCF9iPmMw2HLx4WIwqvDp7OqZ17eCvazQMFjFf5FqsW6XMKE08J+QOYF3LAl+RHrN7zINr8PqXiFOdjNnGpqVLn25Z/ZBADt+ty0Jvo4nJ3ixaKum9wxxXdX0ow0UaqO7rlRoviHGfvkOrBLOO9Ekux4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=CCAYwqwO; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AR1HQFdc"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42108856c33so9823295e9.1;
-        Wed, 05 Jun 2024 23:47:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="CCAYwqwO"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-25071c66178so311473fac.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 23:48:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717656463; x=1718261263; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Lb426LLnUih8K2YvE1gaXIGP1CqxxrBM8f63wiNLErg=;
-        b=AR1HQFdc4pNbEsyuZbviskoQAcI6alssR9O87H+rPm2rHF1D2rzGLBRa2Uw1tvzppM
-         sZmw5VkdVS+VSvNPH4DDIbihAXNkTbi/q+2KDZaC7f8Eg1j/hX/Roh3Pszbocleu4W34
-         KrHR9YOyQyH+ioKqvzp5LCPiX4Q4B1F2WX833psXhmsCl+MuEJa+XuK4bq1T91BfrODo
-         PH+OuwdLAItM04tcrPIedt1jbKYkNWrjWPRwB0fkOWHFSmajOvcxxgd7VEhBGj1rFxDg
-         hj8hN5mG4N/NpettbMZzgCgJTqgVES4TbkHalfrpnp99yU7rqHuFAHXL9iiO0jLHXGwP
-         cTIg==
+        d=bytedance.com; s=google; t=1717656500; x=1718261300; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vilLytCpZB8nt5wILPrH9W0JpiXVzx6FOQqaxS4d2XI=;
+        b=CCAYwqwOKEozqe9/+R/2kOhT40SXTE/4MG2P4EgcDH6DNTzCqYb/k36NwK7dCegURk
+         Jz89eWlaDAWSbb19AsKJiZs5CjguCKksv0bH1pIRlXTLYkTfShrORnpZWWcxUZDiY0/E
+         0KpTkCtsY0vq+Jyg423J9zfQx09pFNBoDmYqQjHQXnvGeKh/MZ/96sETak7Wfekcq/WJ
+         XSBWRgPLjrJsaU/JkiI/lq0l7lpF996rMSfbmMacVk0ICbbaTpxIGIBMago+z5NarYlA
+         MwRd/XeDjm3OQq3C6sxHh9BHJF3EA7djVgook7ZM/eiEt7hKPVxyHpn2U+Ht5sByTRgt
+         /LLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717656463; x=1718261263;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Lb426LLnUih8K2YvE1gaXIGP1CqxxrBM8f63wiNLErg=;
-        b=I2z+9cxmSo/+b6SjtCeRJGOm4ILT0btXvNk/nE6GgyqAZ8MsG8EWO4M8YpPwZluc9C
-         NlT/jqJILwnHkBczIolEn0cp0HjOHdT79dxoxPWFGrjGPgBjEIZgHQcWu9XTZe/3v2Ho
-         x5rPo7y4tOVvUKXe3zrdEW3hRmmfW1KbDqYqT0EJOvhm0YM9BG5zCeqThTxFu4c/1ZJ9
-         rYtt1ZWx3lp/0YWoj713yemD3dCNM+6nldLkH3BEnIP6D5FqzjfmUMI6Ff/8TKpAZGTA
-         dKdodSTlV6yhplGJRU4EfF6k8+eRKvGJHaJ+07em+/RJg6pPRrER+0ffp/7/jMXI0zPI
-         giMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXfyjafyD9ddjdNf5hl/omc8jCtJoNRTiYRSZkVZ78BsaRpkdGlmDXxjfRKsHCqt3j9EtQvbwdVVaf7t5XcQ1VWfL0Pw4kXgRs0ZBtfH2mni4p+hu3P6AoS+Anu796AlBLQtiuxwFx31cSYtuUc72EAxvkRQaExO7KMDk4qvS0Kke+qkg==
-X-Gm-Message-State: AOJu0YyYYFf98bgTYxzJy78FSZyIgrk9zHz924yROpsnRgmL1Bk+yXVf
-	7CF3UFtORZBIy/FCgy1PKiTNTQQIBYs4/jw1RlCroWAQrqgQlnpK
-X-Google-Smtp-Source: AGHT+IHgIM6GzVD3SkjPmL595htx1HpX163bpnbtHN6d9yNTYrl3KyPXaMvMUNTmUbrcl7cCljvHOA==
-X-Received: by 2002:a05:600c:46cf:b0:41b:f4e1:381b with SMTP id 5b1f17b1804b1-4215acbf8bdmr13792865e9.2.1717656463069;
-        Wed, 05 Jun 2024 23:47:43 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42158116e41sm43625595e9.21.2024.06.05.23.47.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 23:47:42 -0700 (PDT)
-Message-ID: <0e18b3aa83a62103b0f06ee516193c03f80abae9.camel@gmail.com>
-Subject: Re: [PATCH v3 4/6] spi: spi-axi-spi-engine: Add support for MOSI
- idle configuration
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, broonie@kernel.org, lars@metafoo.de, 
- Michael.Hennerich@analog.com, jic23@kernel.org, robh+dt@kernel.org, 
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, nuno.sa@analog.com,
-  marcelo.schmitt1@gmail.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 06 Jun 2024 08:51:29 +0200
-In-Reply-To: <ed4fe3de-726b-4eba-a12a-d2f7b1da26d1@baylibre.com>
-References: <cover.1717539384.git.marcelo.schmitt@analog.com>
-	 <a6b00e84325bbe44919cc49509e837f2555367d0.1717539384.git.marcelo.schmitt@analog.com>
-	 <ed4fe3de-726b-4eba-a12a-d2f7b1da26d1@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+        d=1e100.net; s=20230601; t=1717656500; x=1718261300;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vilLytCpZB8nt5wILPrH9W0JpiXVzx6FOQqaxS4d2XI=;
+        b=H5AAIqP0tXzWAvc6l/yX6TXI2UdfpEM3/eZ8hFCucquHR9gZN5D2Fu6NgFZlsvDxmP
+         RPQIiarykVh2fyAX2S89A8VXCH9rY5qfJTu4alcQ5HySQSa+ZaRsIEyoJTWV9lr7GpDZ
+         6+MYNQhFqxwsJIBNm0q/G0UOLYuLm5bRLyBZ5sui0Z0nTyNbA7ffnA5HCz2HCDU9WC/W
+         tdHsZ01+TgU/YXBYeyCCasVqzPuNqj/OGKBdKj0YOgdjNYwddAJ1xXgV2r4sk3GdvE+F
+         q4vQw7+gE+zxk2deLhhnCdNWcvEEhInGwvVMDp5/VzwK/GMxoeRsgMQ1f0I/63lWkdG0
+         8X5A==
+X-Forwarded-Encrypted: i=1; AJvYcCV8+L3y2QNr6tbI1k6QkLStd5Q4eXd8Pikwny+y7odSEX5hyO0qFKKly7otmVL+dpNtlDEofDG0jyZVRCIUv079vY2N41/fAS4nOZYk
+X-Gm-Message-State: AOJu0YwTjQey2Q/HToQ9layIWFGdA9mZMkXYLiRZx0h/wgQbX4hZYNIs
+	atA5GQKoEHJt1ExFGAeXD1fcj3E6Mq0ddZLOBEteLdkCvRYlt6ekSC9hZP8iB235mfes9zMvmPd
+	GicChj9NPfG4clPOzHUhDDE4jWdKjExgW6X03+w==
+X-Google-Smtp-Source: AGHT+IE9l1hb0fFNXM4TPj/1zk1+1sZkZrVriFNUDmWKzdih+CtOnkmEdNr0xFuAptlVFLMK5CzKhMf9J7ne5mRr3iw=
+X-Received: by 2002:a05:6871:e015:b0:24f:d159:ea2 with SMTP id
+ 586e51a60fabf-25121e60d1dmr5176728fac.28.1717656500045; Wed, 05 Jun 2024
+ 23:48:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240531100407.282-1-dqfext@gmail.com>
+In-Reply-To: <20240531100407.282-1-dqfext@gmail.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Thu, 6 Jun 2024 14:48:09 +0800
+Message-ID: <CAEEQ3wkKxt-p1339EbXt-1nF_GvMmgYMio3OBHZSNke1kJc5sQ@mail.gmail.com>
+Subject: Re: [External] [PATCH] RISC-V: Implement ioremap_wc/wt
+To: Qingfang Deng <dqfext@gmail.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Samuel Holland <samuel.holland@sifive.com>, 
+	Qingfang Deng <qingfang.deng@siflower.com.cn>, Eric Chan <ericchancf@google.com>, 
+	Andrea Parri <parri.andrea@gmail.com>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2024-06-05 at 12:03 -0500, David Lechner wrote:
-> On 6/4/24 5:43 PM, Marcelo Schmitt wrote:
-> > Implement MOSI idle low and MOSI idle high to better support peripheral=
-s
-> > that request specific MOSI behavior.
-> >=20
-> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> > ---
-> > =C2=A0drivers/spi/spi-axi-spi-engine.c | 8 +++++++-
-> > =C2=A01 file changed, 7 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi=
--
-> > engine.c
-> > index 0aa31d745734..549f03069d0e 100644
-> > --- a/drivers/spi/spi-axi-spi-engine.c
-> > +++ b/drivers/spi/spi-axi-spi-engine.c
-> > @@ -41,6 +41,7 @@
-> > =C2=A0#define SPI_ENGINE_CONFIG_CPHA			BIT(0)
-> > =C2=A0#define SPI_ENGINE_CONFIG_CPOL			BIT(1)
-> > =C2=A0#define SPI_ENGINE_CONFIG_3WIRE			BIT(2)
-> > +#define SPI_ENGINE_CONFIG_SDO_IDLE		BIT(3)
-> > =C2=A0
-> > =C2=A0#define SPI_ENGINE_INST_TRANSFER		0x0
-> > =C2=A0#define SPI_ENGINE_INST_ASSERT			0x1
-> > @@ -132,6 +133,10 @@ static unsigned int spi_engine_get_config(struct
-> > spi_device *spi)
-> > =C2=A0		config |=3D SPI_ENGINE_CONFIG_CPHA;
-> > =C2=A0	if (spi->mode & SPI_3WIRE)
-> > =C2=A0		config |=3D SPI_ENGINE_CONFIG_3WIRE;
-> > +	if (spi->mode & SPI_MOSI_IDLE_HIGH)
-> > +		config |=3D SPI_ENGINE_CONFIG_SDO_IDLE;
-> > +	if (spi->mode & SPI_MOSI_IDLE_LOW)
-> > +		config &=3D ~SPI_ENGINE_CONFIG_SDO_IDLE;
-> > =C2=A0
-> > =C2=A0	return config;
-> > =C2=A0}
-> > @@ -645,7 +650,8 @@ static int spi_engine_probe(struct platform_device
-> > *pdev)
-> > =C2=A0		return ret;
-> > =C2=A0
-> > =C2=A0	host->dev.of_node =3D pdev->dev.of_node;
-> > -	host->mode_bits =3D SPI_CPOL | SPI_CPHA | SPI_3WIRE;
-> > +	host->mode_bits =3D SPI_CPOL | SPI_CPHA | SPI_3WIRE |
-> > SPI_MOSI_IDLE_LOW
-> > +			=C2=A0 | SPI_MOSI_IDLE_HIGH;
-> > =C2=A0	host->bits_per_word_mask =3D SPI_BPW_RANGE_MASK(1, 32);
-> > =C2=A0	host->max_speed_hz =3D clk_get_rate(spi_engine->ref_clk) / 2;
-> > =C2=A0	host->transfer_one_message =3D spi_engine_transfer_one_message;
->=20
-> I think we need a version check instead of setting the flags unconditiona=
-lly
-> here since older versions of the AXI SPI Engine won't support this featur=
-e.
+ Hi Qingfang,
 
-Oh, was not aware of that... Then, we definitely need to do that. Marcelo, =
-only
-add my r-b tag with the version change in place.
 
-- Nuno S=C3=A1
+On Fri, May 31, 2024 at 6:04=E2=80=AFPM Qingfang Deng <dqfext@gmail.com> wr=
+ote:
+>
+> From: Qingfang Deng <qingfang.deng@siflower.com.cn>
+>
+> Currently on RISC-V, ioremap_wc/wt uses the default ioremap
+> implementation, which maps the memory as strongly-ordered non-cacheable
+> IO memory on systems with Svpbmt.
+>
+> To improve performance, map the memory as weakly-ordered non-cacheable
+> normal memory.
+>
+> Signed-off-by: Qingfang Deng <qingfang.deng@siflower.com.cn>
+> ---
+>  arch/riscv/include/asm/io.h | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
+> index 1c5c641075d2..582503e0f508 100644
+> --- a/arch/riscv/include/asm/io.h
+> +++ b/arch/riscv/include/asm/io.h
+> @@ -133,6 +133,14 @@ __io_writes_outs(outs, u64, q, __io_pbr(), __io_paw(=
+))
+>  #define outsq(addr, buffer, count) __outsq(PCI_IOBASE + (addr), buffer, =
+count)
+>  #endif
+>
+> +#ifdef CONFIG_MMU
+> +#define ioremap_wc(addr, size) \
+> +       ioremap_prot((addr), (size), \
+> +                    (_PAGE_KERNEL & ~_PAGE_MTMASK) | _PAGE_NOCACHE)
+
+> +
+> +#define ioremap_wt ioremap_wc
+> +#endif
+> +
+>  #include <asm-generic/io.h>
+>
+>  #ifdef CONFIG_MMU
+> --
+> 2.34.1
+>
+>
+
+Can you provide specific test data for performance improvement?
+
+Thanks,
+Yunhui
