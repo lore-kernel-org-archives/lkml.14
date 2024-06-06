@@ -1,43 +1,43 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4850113E05A
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320BD13EFF3
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717666006; cv=none; b=b+zWZnoocYuTE1EpP10/RhYDMZLTapcorpkVSIE7MC+LuayjJuWPrLhCAkQPiw508hdFDDFsqWO8lKna4qYmFEfZjYKdJU1hT1IuKhz87yI2si0zDK4pXbtZMbOTMwTz58cX9wiwr9b5ReO8U9YljSej15Q2RIwf6ZUlhajUyYs=
+	t=1717666007; cv=none; b=r5Fo1hFXI2fO/oU6ojLjO7eGHahQN8BHWaIelprghGi9HBd7pSWDa5buxuIWq6KCBGQz9bzW1Y4V4lcto/Ww0fOeV/VJEOIch/iPzJrFYwba5pi5NRXKg89wU7RD8rDB2BsdZl1sXXvHeBXlGbId4Z98PuvsBw32f9RxMcRyMS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717666006; c=relaxed/simple;
-	bh=ubJoFLOaudmDepAwCD6kheFg4erFXVqoWAyNnxjVTQ4=;
+	s=arc-20240116; t=1717666007; c=relaxed/simple;
+	bh=eKpWxfAxY/NqzBb/rOMFmezlP8QEKNmXCxQikdX5yxs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E5b9qst0XpMYTGwbGRty9EyEUKbEkkzdHDeVHPacQKt8rUAB/7eEqiGz+iyffOtac0jl181taAKjAg8ecpcjn3rLVPoLZLy9wFJMGB3EjdU+tPzf8ogeGVPDPbluJEAY6cqcHbID1x0ABE+FbctbDUzf9ZpVfB/BEYYvslctcis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=RaglGVt6; arc=none smtp.client-ip=60.244.123.138
+	 MIME-Version:Content-Type; b=fd7ta1WYnFyPVOIwXg9XMOTYYXlfr+zDHyxAC7Bu53M2RwHJ9LYYd/5FX83MXsVCfst9keisLY2HckDc3rxVzAks3OERLNs56+FsnStsJiv4t7Mqo6D9fHnSQj79aoddguiKqSP/BgCOse7j/H/FbebiylJkAK0DQUqPVlAbids=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=KAQdtsr7; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RaglGVt6"
-X-UUID: e0254cbc23e611efa54bbfbb386b949c-20240606
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KAQdtsr7"
+X-UUID: e0c956b823e611efa22eafcdcd04c131-20240606
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=tN2fthEvbDALIOfu9f+hoAOF8rB39TbT5fxu0nBzcF0=;
-	b=RaglGVt6YwvkqOwJMIvpN1FMlnJJRhLDVfPwMKRe6skv/soSzsUmj+gbE8WNxhcCDyZ1mywusrqEOedG2FQxvijvnN1+ihr2vwAjsvJqftvT+nC8vmEZ96DqvDLHw4BCnGEY6oFF5F9R4+3+twgQLuImboTnfk3+lq/vCTwCeWc=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=xoLRYaU7yoSuJFIB2Klrt50DpYA8HCIs8Oq+MvdPFfs=;
+	b=KAQdtsr7sNvZMWo1Pn64s1en3q1WTeuEKceRJHp+zUaRTtJPIaTLLW2QcElAJ0XYmy+XsuKF1lTsjRhlAOkWCYAUyhJ8ttnHgKWj4MaaiZywnO9Q41/wozlpRdZ/1yAQWPBKDRGNpdDgrAkZtlq6GRn8jI9cI6+iX3Xgl/b2IzQ=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:8be7cec4-ed09-4b60-98ac-a1696584c7d6,IP:0,U
+X-CID-O-INFO: VERSION:1.1.39,REQID:5523b91d-6580-44af-ad8d-bbf40de34466,IP:0,U
 	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:0
-X-CID-META: VersionHash:393d96e,CLOUDID:353b4744-4544-4d06-b2b2-d7e12813c598,B
+X-CID-META: VersionHash:393d96e,CLOUDID:613b4744-4544-4d06-b2b2-d7e12813c598,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: e0254cbc23e611efa54bbfbb386b949c-20240606
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: e0c956b823e611efa22eafcdcd04c131-20240606
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
 	(envelope-from <shawn.sung@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 164953707; Thu, 06 Jun 2024 17:26:38 +0800
+	with ESMTP id 1676228695; Thu, 06 Jun 2024 17:26:39 +0800
 Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ MTKMBS14N2.mediatek.inc (172.21.101.76) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.2.1118.26; Thu, 6 Jun 2024 17:26:36 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
@@ -47,17 +47,17 @@ From: Shawn Sung <shawn.sung@mediatek.com>
 To: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
 	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Bibby
- Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>, "Nancy . Lin"
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, "Bibby
+ Hsieh" <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>, "Nancy . Lin"
 	<nancy.lin@mediatek.com>, Sean Paul <sean@poorly.run>, Jason Chen
 	<jason-ch.chen@mediatek.corp-partner.google.com>, Fei Shao
 	<fshao@chromium.org>, <dri-devel@lists.freedesktop.org>,
 	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, Hsiao Chien Sung
 	<shawn.sung@mediatek.com>
-Subject: [PATCH v8 04/16] drm/mediatek: Add DRM_MODE_ROTATE_0 to rotation property
-Date: Thu, 6 Jun 2024 17:26:23 +0800
-Message-ID: <20240606092635.27981-5-shawn.sung@mediatek.com>
+Subject: [PATCH v8 01/16] soc: mediatek: Disable 9-bit alpha in ETHDR
+Date: Thu, 6 Jun 2024 17:26:20 +0800
+Message-ID: <20240606092635.27981-2-shawn.sung@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20240606092635.27981-1-shawn.sung@mediatek.com>
 References: <20240606092635.27981-1-shawn.sung@mediatek.com>
@@ -68,89 +68,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--4.682500-8.000000
+X-TMASE-MatchedRID: k8Xm6x9M5Ep8XbDftE7Is98tWTI1R8epwZLXS0hN8p1Zps+y1VXzqdnv
+	4KmarbUQ2tWL4y7HsTWfKyXIRVJFjAgpNt5EgFbMY1bQMCMvmn744jpewrcFYd9RlPzeVuQQHz5
+	ccRN5kLPRGkFt/fG/yCjzbr1UlDnYGAdnzrnkM48URSScn+QSXt0H8LFZNFG7doMssNsUwYXRsV
+	AudlazscZEM68jstKz/J0+Gslj0VzkMCYT2R0qXKIl8iTbYhMhktJrxuof2amhvEPQS1e2QJ9C7
+	4QyK/10JJlSv7hgV4qAhOcaQrQ0U1GyRcoeF18qmKP0zzpTAeGwod8xOMKmvA1Aka/KIp/p
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.682500-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP:
+	729B3508F30CB7C12E0921B6D46869951CC58D4DAEBC39425134DCD5BA83767E2000:8
 X-MTK: N
 
 From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-Always add DRM_MODE_ROTATE_0 to rotation property to meet
-IGT's (Intel GPU Tools) requirement.
+When 9-bit alpha is enabled, its value will be converted from 0-255 to
+0-256 (255 = not defined). This is designed for special HDR related
+calculation, which should be disabled by default, otherwise, alpha
+blending will not work correctly.
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_ddp_comp.h |  6 +++++-
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 17 +++++------------
- drivers/gpu/drm/mediatek/mtk_plane.c    |  2 +-
- 3 files changed, 11 insertions(+), 14 deletions(-)
+ drivers/soc/mediatek/mtk-mmsys.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
-index 26236691ce4c..f7fe2e08dc8e 100644
---- a/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
-+++ b/drivers/gpu/drm/mediatek/mtk_ddp_comp.h
-@@ -192,7 +192,11 @@ unsigned int mtk_ddp_comp_supported_rotations(struct mtk_ddp_comp *comp)
- 	if (comp->funcs && comp->funcs->supported_rotations)
- 		return comp->funcs->supported_rotations(comp->dev);
+diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
+index f370f4ec4b88..938240714e54 100644
+--- a/drivers/soc/mediatek/mtk-mmsys.c
++++ b/drivers/soc/mediatek/mtk-mmsys.c
+@@ -236,6 +236,7 @@ void mtk_mmsys_mixer_in_config(struct device *dev, int idx, bool alpha_sel, u16
  
--	return 0;
-+	/*
-+	 * In order to pass IGT tests, DRM_MODE_ROTATE_0 is required when
-+	 * rotation is not supported.
-+	 */
-+	return DRM_MODE_ROTATE_0;
- }
- 
- static inline unsigned int mtk_ddp_comp_layer_nr(struct mtk_ddp_comp *comp)
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index b552a02d7eae..862ab683ed1b 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -296,27 +296,20 @@ int mtk_ovl_layer_check(struct device *dev, unsigned int idx,
- 			struct mtk_plane_state *mtk_state)
- {
- 	struct drm_plane_state *state = &mtk_state->base;
--	unsigned int rotation = 0;
- 
--	rotation = drm_rotation_simplify(state->rotation,
--					 DRM_MODE_ROTATE_0 |
--					 DRM_MODE_REFLECT_X |
--					 DRM_MODE_REFLECT_Y);
--	rotation &= ~DRM_MODE_ROTATE_0;
--
--	/* We can only do reflection, not rotation */
--	if ((rotation & DRM_MODE_ROTATE_MASK) != 0)
-+	/* check if any unsupported rotation is set */
-+	if (state->rotation & ~mtk_ovl_supported_rotations(dev))
- 		return -EINVAL;
- 
- 	/*
- 	 * TODO: Rotating/reflecting YUV buffers is not supported at this time.
- 	 *	 Only RGB[AX] variants are supported.
-+	 *	 Since DRM_MODE_ROTATE_0 means "no rotation", we should not
-+	 *	 reject layers with this property.
- 	 */
--	if (state->fb->format->is_yuv && rotation != 0)
-+	if (state->fb->format->is_yuv && (state->rotation & ~DRM_MODE_ROTATE_0))
- 		return -EINVAL;
- 
--	state->rotation = rotation;
--
- 	return 0;
- }
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_plane.c b/drivers/gpu/drm/mediatek/mtk_plane.c
-index a74b26d35985..1723d4333f37 100644
---- a/drivers/gpu/drm/mediatek/mtk_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_plane.c
-@@ -338,7 +338,7 @@ int mtk_plane_init(struct drm_device *dev, struct drm_plane *plane,
- 		return err;
- 	}
- 
--	if (supported_rotations & ~DRM_MODE_ROTATE_0) {
-+	if (supported_rotations) {
- 		err = drm_plane_create_rotation_property(plane,
- 							 DRM_MODE_ROTATE_0,
- 							 supported_rotations);
+ 	mtk_mmsys_update_bits(mmsys, MT8195_VDO1_MIXER_IN1_ALPHA + (idx - 1) * 4, ~0,
+ 			      alpha << 16 | alpha, cmdq_pkt);
++	mtk_mmsys_update_bits(mmsys, MT8195_VDO1_HDR_TOP_CFG, BIT(15 + idx), 0, cmdq_pkt);
+ 	mtk_mmsys_update_bits(mmsys, MT8195_VDO1_HDR_TOP_CFG, BIT(19 + idx),
+ 			      alpha_sel << (19 + idx), cmdq_pkt);
+ 	mtk_mmsys_update_bits(mmsys, MT8195_VDO1_MIXER_IN1_PAD + (idx - 1) * 4,
 -- 
 2.18.0
 
