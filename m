@@ -1,112 +1,167 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6D9194C7F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 10:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1CB194C61
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 10:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717669895; cv=none; b=GeAnya3q/G7hCtqmFi7gDr9t5tSCzHKlvcPlqocwWV7IxTe7dWGw1ntGrFbTyvqBabmnynKo0tos9frQeH48hvE6CpbjAT6Ol20FqePuq+D7L88IujhhVYGO5tBKl1wWnRfNQmI4iQv+T+4ien8HPF+zZ4TQkT5e1pbYEUy3oWs=
+	t=1717669926; cv=none; b=ReZK6h41T+Zur31zFwjnFFYgo73mNJfBD7RA7GaLLvhV/HOYKAGyXJ8b14gDc5KSz4RBvg2HGt3iYbHf/AUa/q3ughZ5jMTXb3doAN83k+7ZNNcuI+8xq6RlkLVUSfniBHd7TldgRnKWYDO9PJWj3QsOWd9lOyTxT7FODZ+Dhrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717669895; c=relaxed/simple;
-	bh=QG+XegQ1/r/iVUT6bSZGmh9xwOPL3hEw8L1Gf5xCFcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lSLMweDk+78svzn/59J7d3haJBSERj18yI/KOLBgMBbAH4i61n1gQJE09oCQJTKNA/yXl+1EiB7PP324Ni+aC8EPUeC+J2g1Ls+AjQBZMkYslVX7BjeYVACRy/n8Y1Ne8He4lPXSuNGAn6GOFIqUXc/Fw4/kE0T2gmkZpezQeo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=S7nT68Vm; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717669926; c=relaxed/simple;
+	bh=n0hrzdYnBksW+DamHG6BupTO1J0YAJybs/VDL2sugrE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uov7lggP/0YGwIvBHiIfFjDEWi42ZJFL98ws2FeWrQZ3w3tfNv89+MeZOz3y9h2K5LMhzXe3UrgwGo9wiXVadHDl+1YmIbSMA8nRwc6R15o7kz8dzcLMPoMAPrsH1h/yDpT8p7tjgeou0RIeXelIBRWV/jnEf0iLIAfAbOSPVns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ij9/iU/U; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="S7nT68Vm"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DD16A40E016C;
-	Thu,  6 Jun 2024 10:31:23 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id cSr9dqY6uZdE; Thu,  6 Jun 2024 10:31:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717669880; bh=KSCrX9oB1sfb0YE4irfnaZKrDq58FuJQTvrmtflRjIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S7nT68Vm6PWiPQK/kUXGHOV1a00Ckv/4KaHfLScjWjmWMCC/ATZbacSh3u/jKJS58
-	 tNwSQI20buLwtv0EU0iKWJ/g0GB04GbFj/Wlf/tdT0IWsmPzRMXNr43ibDKEXicH8n
-	 Y9hJrhyPiEqOFNaBwbs82pk4GPUU6kf3LsvXN9IdZzzZi5PXKY03sJGa9uX3Wl0m/w
-	 eBHvTNTqfsPnInKov9xduRnVM3xCGgbU1pkJOm5or/DNPB8lG0dADT9zNsYgWW+a88
-	 ENwez2SRaerxhwQUzFSlQ1rtkzoV+zRCXaii1DEh3Je3B8RBTMmqIbKnu1CKP8svbJ
-	 bA59Z6ux9rVclmfriVWlSOjDDDS4HS4+18tSUkHQrpC/hMLaLDRIdxFsxZN4hfoozr
-	 BtQkmnfAfxlOvdwetpo9YYYd4MHD7lHh7vn1oTpw+Q0xYvcwo3xyYal2P6KOq1hb+V
-	 +lLin/DEkPntkH9buKfhP82rfHWjFobsn9bcVqPlGRaudFW4ioNfz2S5s9dPX4qszX
-	 VcGXAg4j0xYvJf5S8ny8f/lSGXjyt9Z6AECRUJ9fW4e4DEYpmGZXE+rV3zwnbP7MYF
-	 M6Iv8/lMyoM0T7VuHfqaj+WGsWhPSzoMnzfRlMYNmY4Jn7AafOuV8xDs0GbtlBHhfV
-	 GU9sv8Dzd2hF13dY32/upY/Q=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 14C7F40E0027;
-	Thu,  6 Jun 2024 10:31:08 +0000 (UTC)
-Date: Thu, 6 Jun 2024 12:31:01 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tony Luck <tony.luck@intel.com>
-Cc: x86@kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>, linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: Re: [PATCH v2 1/3] cacheinfo: Add function to get cacheinfo for a
- given (cpu, cachelevel)
-Message-ID: <20240606103101.GAZmGP5Y6389EvCb8S@fat_crate.local>
-References: <20240605161427.312994-1-tony.luck@intel.com>
- <20240605161427.312994-2-tony.luck@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ij9/iU/U"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eaad2c673fso10432281fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 03:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717669923; x=1718274723; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2yOK4FlQCW+JMOCwnWP72jJymCtr5dD6IgIpna60BCY=;
+        b=Ij9/iU/Uyo6fcf8LONJ7xC09lvYBG8qaaeEz4vBXq2BTPZbQ2/pF3yyQBM4fRbFGfh
+         G2YVI79pdecNzRewdbn8sACLDUSzd7rOjlh6zMMORYPcVD1QveoeZ2kHNSsE+9FRNNbv
+         STcLcfiwZHhGsSEvRFW5mX9h4B8YphLBoSkl78uJsHCRnl9eDwrE59GFqtGknBB9mMy1
+         OSPuYgWTVQS8j2w3KVuq+5S7UftcTUbs1qQVWVzbjEhqRqb3+fKICTURvn7oWD734yHM
+         ft1saZpU5WP1Di0/lkFYY358dTnV3FFIlPJYisX1EUMUoYuw+wFXKiytWhGLxoNHAlTO
+         IcBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717669923; x=1718274723;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2yOK4FlQCW+JMOCwnWP72jJymCtr5dD6IgIpna60BCY=;
+        b=NpWxCR4WmV3TpjTam7fdAjQNQtja5IwZsk+V95ia+klBGjUoh8ajK3LiIDl9sAEjfr
+         FpWyf3UJAQa02/Ia2aG/FNZnOcGTmzdAK1KBampW8ZesvngFped5YSp+YMsfPsBEbWOn
+         fyiKbP43wpCx+80VxyAxcbTYGJIBOzSrxIkikf5bWYyCEs/jNNlDXch4KlBTcMwuAeDk
+         ykWCe/p+gVgqwc6OPfY8kd5ifJh2epxKF1gaIwpTZuv4yYhGDD7w0b0blyYGBCdDagXZ
+         b7kboQxHAfgZR/RvtZ5AUZBI36fLw/gOBlsIwcAcsQevh/gx23z+F0KFiRXaIHAdN+Ub
+         c0Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAxkIxY6xmQLmZ065+lzjtVmRd4bWcppEHjYJi7j85uwi9nsn9ALnu4W1hs4JjbgXqghouEJBw/OCjND0L2+jv1E9GlU/wsAlvuoF4
+X-Gm-Message-State: AOJu0Yy3st/Xe9WvMg+QTE9m9ixie11JHOIBpcgezAvQ61VxwoXHpJ2i
+	4D1Y8gGHhwP7MXfs+YMaiAERRNR4lo2KnVi2qj5XwnekyzGM4H7ltvelHJvqFErkob1dcCRtjqv
+	/GKX7IPoD0zEaxu4l09e4bdkIvR+aPRBsCAHP
+X-Google-Smtp-Source: AGHT+IHb92CvWzY0UMLIO3bnYXJ9lrbqmbf5jFApgNniI36TJ0LubnwynaglXsT5ps/3HCuaPh8FvkYR0EYkfnbTRiI=
+X-Received: by 2002:a2e:9643:0:b0:2e1:9c57:195a with SMTP id
+ 38308e7fff4ca-2eac7a5fd4dmr33302121fa.32.1717669922881; Thu, 06 Jun 2024
+ 03:32:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240605161427.312994-2-tony.luck@intel.com>
+References: <20240605175953.2613260-1-joychakr@google.com> <20240605175953.2613260-8-joychakr@google.com>
+ <f98a1d8f-e936-4798-8447-c642e8fe11d5@moroto.mountain> <CAOSNQF0Qj2CnRDWAGM8Y1wyEdgWP04RDJx1TKO-Ge4nUH=qxoQ@mail.gmail.com>
+ <2b979aa4-3a63-4010-9670-294ce7624e18@moroto.mountain>
+In-Reply-To: <2b979aa4-3a63-4010-9670-294ce7624e18@moroto.mountain>
+From: Joy Chakraborty <joychakr@google.com>
+Date: Thu, 6 Jun 2024 16:01:42 +0530
+Message-ID: <CAOSNQF02nUPZ=8re=uyruhxReQSjPoc8L-9yTnWMe4EfJ0-huA@mail.gmail.com>
+Subject: Re: [PATCH v1 07/17] misc: eeprom: at25: Change nvmem reg_read/write
+ return type
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Bingbu Cao <bingbu.cao@intel.com>, Zhihao Cheng <chengzhihao1@huawei.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-hwmon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, manugautam@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 05, 2024 at 09:14:25AM -0700, Tony Luck wrote:
->  /*
-> - * Get the id of the cache associated with @cpu at level @level.
-> + * Get the cacheinfo structure for the cache associated with @cpu at
-> + * level @level.
->   * cpuhp lock must be held.
->   */
-> -static inline int get_cpu_cacheinfo_id(int cpu, int level)
-> +static inline struct cacheinfo *get_cpu_cacheinfo_level(int cpu, int level)
->  {
->  	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
->  	int i;
-> @@ -124,12 +125,23 @@ static inline int get_cpu_cacheinfo_id(int cpu, int level)
+On Thu, Jun 6, 2024 at 3:41=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro.=
+org> wrote:
+>
+> On Thu, Jun 06, 2024 at 03:12:03PM +0530, Joy Chakraborty wrote:
+> > > These functions are used internally and exported to the user through
+> > > sysfs via bin_attr_nvmem_read/write().  For internal users partial re=
+ads
+> > > should be treated as failure.  What are we supposed to do with a part=
+ial
+> > > read?  I don't think anyone has asked for partial reads to be support=
+ed
+> > > from sysfs either except Greg was wondering about it while reading th=
+e
+> > > code.
+> > >
+> > > Currently, a lot of drivers return -EINVAL for partial read/writes bu=
+t
+> > > some return success.  It is a bit messy.  But this patchset doesn't
+> > > really improve anything.  In at24_read() we check if it's going to be=
+ a
+> > > partial read and return -EINVAL.  Below we report a partial read as a
+> > > full read.  It's just a more complicated way of doing exactly what we
+> > > were doing before.
+> >
+> > Currently what drivers return is up to their interpretation of int
+> > return type, there are a few drivers which also return the number of
+> > bytes written/read already like
+> > drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c .
+>
+> Returning non-zero is a bug.  It won't break bin_attr_nvmem_read/write()
+> but it will break other places like nvmem_access_with_keepouts(),
+> __nvmem_cell_read() and nvmem_cell_prepare_write_buffer() where all
+> non-zero returns from nvmem_reg_read() are treated as an error.
+>
 
-So:
+Yes, I will resend the patch to fix that.
 
-	lockdep_assert_cpus_held()
+> > The objective of the patch was to handle partial reads and errors at
+> > the nvmem core and instead of leaving it up to each nvmem provider by
+> > providing a better return value to nvmem providers.
+> >
+> > Regarding drivers/misc/eeprom/at25.c which you pointed below, that is
+> > a problem in my code change. I missed that count was modified later on
+> > and should initialize bytes_written to the new value of count, will
+> > fix that when I come up with the new patch.
+> >
+> > I agree that it does not improve anything for a lot of nvmem providers
+> > for example the ones which call into other reg_map_read/write apis
+> > which do not return the number of bytes read/written but it does help
+> > us do better error handling at the nvmem core layer for nvmem
+> > providers who can return the valid number of bytes read/written.
+>
+> If we're going to support partial writes, then it needs to be done all
+> the way.  We need to audit functions like at24_read() and remove the
+> -EINVAL lines.
+>
+>    440          if (off + count > at24->byte_len)
+>    441                  return -EINVAL;
+>
+> It should be:
+>
+>         if (off + count > at24->byte_len)
+>                 count =3D at24->byte_len - off;
+>
+> Some drivers handle writing zero bytes as -EINVAL and some return 0.
+> Those changes could be done before we change the API.
+>
 
-?
+Sure, we can do it in a phased manner like you suggested in another
+reply by creating new pointers and slowly moving each driver to the
+new pointer and then deprecating the old one.
 
->  	for (i = 0; i < ci->num_leaves; i++) {
->  		if (ci->info_list[i].level == level) {
->  			if (ci->info_list[i].attributes & CACHE_ID)
-> -				return ci->info_list[i].id;
-> -			return -1;
-> +				return &ci->info_list[i];
-> +			return NULL;
->  		}
->  	}
->  
-> -	return -1;
-> +	return NULL;
-> +}
+> You updated nvmem_access_with_keepouts() to handle negative returns but
+> not zero returns so it could lead to a forever loop.
+>
 
--- 
-Regards/Gruss,
-    Boris.
+Yes, that is a possible case. Will rework it.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> regards,
+> dan carpenter
+>
+Thanks
+Joy
