@@ -1,286 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AEA45C06;
-	Thu,  6 Jun 2024 18:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E78ED515;
+	Thu,  6 Jun 2024 18:38:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717698857; cv=none; b=SjUlW5+yrh2jF1q8k6V2T6B9eTG17rypV2WFj+s9DhOGjgcLDpQiprD/zUKTv6F8sfX2SRA+iFKSosyOruqQroKHw0ImqwmXtR0NovYH1sumidBGp2xar8iZybJTzF0TlrARCcnjUNAAbU3QULYPh/gFiz+gEKGXdEhq8Vf1yfg=
+	t=1717699095; cv=none; b=f+ecUDygTGAlxer+gzNg3eM51yjJkjjKPxOJBirk5ov0E5LM6Voz8G5hFZCTnM7jd9Tpjlh56r+WdN2AaxmRvDMAy3ovP+s/wphbFjt0x36BUFNS8RmduIGQcEGiztQ46tJEmSWtdAuvIjopTCUPBG/YANBfWLtYMKDzMS38+ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717698857; c=relaxed/simple;
-	bh=eLA3hGrikxSjRA0dX5ZlSKkNK5iKwOp6dxliFmBtumA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bljIxg/Ddakrghg/MHoJELHWee9jY8Nmh2xYEC+Xu0pZ+9vx0sAyUhadPGH+Apzz9T0jfO/ThJ8GHUcOr/KVEnmrATWuEFvH9vVRGxiX2o1IhVhHmf0h/U4ro6x3SN/zrfqOrlr+mqT0AYtGFX0zm4fDhv5KI5TGQLix+ViiEuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULf0WGTz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULf0WGTz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF624C4AF08;
-	Thu,  6 Jun 2024 18:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717698856;
-	bh=eLA3hGrikxSjRA0dX5ZlSKkNK5iKwOp6dxliFmBtumA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ULf0WGTz0swzxQgOAhaYK+hyN5nKqiIblIJujeFu3gROjfwyUwBRyl0PITl1ZJz6B
-	 czxSEejDvqR2/gCq2KAEG4MjoRNiQlkrXXb8BL1CNeGnNQzjEI7jgfS2VNuVZa/kOE
-	 qmghczPgsyvRxmwLaOcMwK/zJQjnGdKQB53MfN3srzCZfHI6VW4JJiL0LbVrcAuAwW
-	 saIVECwUxHqPLLmkAlVSo13GeMRC3NitPhWL8oIVS5iHQd8UgYIeO3k6aFl/oqgdzu
-	 XLl90ErlfLehFqZxc6IHmwPRdtWJ80l2okiBtlJ5IDgvFLxmJnZEJPhmYl1XLs97K6
-	 rzhVdHKAa5VNw==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2e6f33150bcso13546981fa.2;
-        Thu, 06 Jun 2024 11:34:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVLyaFIGGvtg0oRBiHUIrRYQtfC+0HVmDqtzrb0JRdL77xqIJ5Sxe+7KHfywxLX9fvUB/kF8o6xAhKkRbZqDHMvnh+4SKXE8DMhxMqPmdtlbe0c+PmZvnWY6lka4bgK5mP0Mls6HeiIefOn
-X-Gm-Message-State: AOJu0YzKzyFGGqXmAh1GtDMaYbEWPl7dQqg+an9Cpbv3xXYHBWD7F5+6
-	xVz+Y5a9RgjNzh+AiGTvBP5V50KMzS5+PTGhDp5aHe3XigmrJbuJBvGHaiNKjKsTkEYGCEqM0Jy
-	WhSe/4ywGJUbM/47ALoq9mdKlCck=
-X-Google-Smtp-Source: AGHT+IGmR5hJAgJwzgLflbgZnFKyK2gSaisKSeqI/RO1KbxRjDAVMP2L6QGVJbgbifcrb9x1Q49GG4+1eM9c+JmRo30=
-X-Received: by 2002:a2e:b00d:0:b0:2ea:7d38:d4a9 with SMTP id
- 38308e7fff4ca-2eadce83856mr3349231fa.52.1717698855540; Thu, 06 Jun 2024
- 11:34:15 -0700 (PDT)
+	s=arc-20240116; t=1717699095; c=relaxed/simple;
+	bh=m4y07AqUVhllB8GdQjGhynxMK/W/hDUwql04aVzrTcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LNZ8LOZPPYiogAdFfff/+rt/wVdrNWO7Sceb2vkKVtgkUvDRlYn9HWd+IOQNWAaPt2b+dkWZgcgC2IklmwjBo7CnCIHWj//a+fjSwa0r14S8SQ6L8vYrW3E1yE/3udBbDLQtSC9dJZpQgDTRRdLC1H0C34F78X2XE3Cs7tOEiOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F4CBC2BD10;
+	Thu,  6 Jun 2024 18:38:11 +0000 (UTC)
+Date: Thu, 6 Jun 2024 19:38:08 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev, Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: Re: [PATCH v3 12/14] arm64: realm: Support nonsecure ITS emulation
+ shared
+Message-ID: <ZmICEN8JvWM7M9Ch@arm.com>
+References: <20240605093006.145492-1-steven.price@arm.com>
+ <20240605093006.145492-13-steven.price@arm.com>
+ <86a5jzld9g.wl-maz@kernel.org>
+ <4c363476-e5b5-42ff-9f30-a02a92b6751b@arm.com>
+ <867cf2l6in.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606124705.822451-1-illevi@habana.ai> <171767982099.22567.196132369501507254@a6498e030952>
- <efbt3hl22g73r3372agpzowfejrpxzvaiqu2ysscntwa6dtioe@2ao55jz262rs>
-In-Reply-To: <efbt3hl22g73r3372agpzowfejrpxzvaiqu2ysscntwa6dtioe@2ao55jz262rs>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 7 Jun 2024 03:33:38 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATYmmNj2bmQru22BiOFFbCmAaQ0ohmjyogOUsQmBc+4fw@mail.gmail.com>
-Message-ID: <CAK7LNATYmmNj2bmQru22BiOFFbCmAaQ0ohmjyogOUsQmBc+4fw@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=E2=9C=97_CI=2EHooks=3A_failure_for_drm=2Fxe=2Firq=3A_remove_xe=5F?=
-	=?UTF-8?Q?irq=5Fshutdown?=
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: intel-xe@lists.freedesktop.org, Ilia Levi <illevi@habana.ai>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <867cf2l6in.wl-maz@kernel.org>
 
-On Fri, Jun 7, 2024 at 2:02=E2=80=AFAM Lucas De Marchi <lucas.demarchi@inte=
-l.com> wrote:
->
-> Cc'ing kbuild + lkml and maintainers.
->
-> On Thu, Jun 06, 2024 at 01:17:00PM GMT, Patchwork wrote:
-> >=3D=3D Series Details =3D=3D
-> >
-> >Series: drm/xe/irq: remove xe_irq_shutdown
-> >URL   : https://patchwork.freedesktop.org/series/134565/
-> >State : failure
-> >
-> >=3D=3D Summary =3D=3D
-> >
-> >run-parts: executing /workspace/ci/hooks/00-showenv
-> >+ export
-> >+ grep -Ei '(^|\W)CI_'
-> >declare -x CI_KERNEL_BUILD_DIR=3D"/workspace/kernel/build64-default"
-> >declare -x CI_KERNEL_SRC_DIR=3D"/workspace/kernel"
-> >declare -x CI_TOOLS_SRC_DIR=3D"/workspace/ci"
-> >declare -x CI_WORKSPACE_DIR=3D"/workspace"
-> >run-parts: executing /workspace/ci/hooks/10-build-W1
-> >+ SRC_DIR=3D/workspace/kernel
-> >+ RESTORE_DISPLAY_CONFIG=3D0
-> >+ '[' -n /workspace/kernel/build64-default ']'
-> >+ BUILD_DIR=3D/workspace/kernel/build64-default
-> >+ cd /workspace/kernel
-> >++ nproc
-> >+ make -j48 O=3D/workspace/kernel/build64-default modules_prepare
-> >make[1]: Entering directory '/workspace/kernel/build64-default'
-> >  GEN     Makefile
-> >  UPD     include/generated/compile.h
-> >  UPD     include/config/kernel.release
-> >mkdir -p /workspace/kernel/build64-default/tools/objtool && make O=3D/wo=
-rkspace/kernel/build64-default subdir=3Dtools/objtool --no-print-directory =
--C objtool
-> >  UPD     include/generated/utsrelease.h
-> >  HOSTCC  /workspace/kernel/build64-default/tools/objtool/fixdep.o
-> >  CALL    ../scripts/checksyscalls.sh
-> >  HOSTLD  /workspace/kernel/build64-default/tools/objtool/fixdep-in.o
-> >  LINK    /workspace/kernel/build64-default/tools/objtool/fixdep
-> >  INSTALL libsubcmd_headers
-> >  CC      /workspace/kernel/build64-default/tools/objtool/libsubcmd/exec=
--cmd.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/libsubcmd/help=
-.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/libsubcmd/page=
-r.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/libsubcmd/pars=
-e-options.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/libsubcmd/run-=
-command.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/libsubcmd/sigc=
-hain.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/libsubcmd/subc=
-md-config.o
-> >  LD      /workspace/kernel/build64-default/tools/objtool/libsubcmd/libs=
-ubcmd-in.o
-> >  AR      /workspace/kernel/build64-default/tools/objtool/libsubcmd/libs=
-ubcmd.a
-> >  CC      /workspace/kernel/build64-default/tools/objtool/weak.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/check.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/special.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/builtin-check.=
-o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/elf.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/objtool.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/orc_gen.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/orc_dump.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/libstring.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/libctype.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/str_error_r.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/librbtree.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/arch/x86/speci=
-al.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/arch/x86/decod=
-e.o
-> >  CC      /workspace/kernel/build64-default/tools/objtool/arch/x86/orc.o
-> >  LD      /workspace/kernel/build64-default/tools/objtool/arch/x86/objto=
-ol-in.o
-> >  LD      /workspace/kernel/build64-default/tools/objtool/objtool-in.o
-> >  LINK    /workspace/kernel/build64-default/tools/objtool/objtool
-> >make[1]: Leaving directory '/workspace/kernel/build64-default'
-> >++ nproc
-> >+ make -j48 O=3D/workspace/kernel/build64-default M=3Ddrivers/gpu/drm/xe=
- W=3D1
-> >make[1]: Entering directory '/workspace/kernel/build64-default'
-> >../scripts/Makefile.build:41: drivers/gpu/drm/xe/Makefile: No such file =
-or directory
+On Thu, Jun 06, 2024 at 11:17:36AM +0100, Marc Zyngier wrote:
+> On Wed, 05 Jun 2024 16:08:49 +0100,
+> Steven Price <steven.price@arm.com> wrote:
+> > 2. Use a special (global) memory allocator that does the
+> > set_memory_decrypted() dance on the pages that it allocates but allows
+> > packing the allocations. I'm not aware of an existing kernel API for
+> > this, so it's potentially quite a bit of code. The benefit is that it
+> > reduces memory consumption in a realm guest, although fragmentation
+> > still means we're likely to see a (small) growth.
+> > 
+> > Any thoughts on what you think would be best?
+> 
+> I would expect that something similar to kmem_cache could be of help,
+> only with the ability to deal with variable object sizes (in this
+> case: minimum of 256 bytes, in increments defined by the
+> implementation, and with a 256 byte alignment).
 
+Hmm, that's doable but not that easy to make generic. We'd need a new
+class of kmalloc-* caches (e.g. kmalloc-decrypted-*) which use only
+decrypted pages together with a GFP_DECRYPTED flag or something to get
+the slab allocator to go for these pages and avoid merging with other
+caches. It would actually be the page allocator parsing this gfp flag,
+probably in post_alloc_hook() to set the page decrypted and re-encrypt
+it in free_pages_prepare(). A slight problem here is that free_pages()
+doesn't get the gfp flag, so we'd need to store some bit in the page
+flags. Maybe the flag is not that bad, do we have something like for
+page_to_phys() to give us the high IPA address for decrypted pages?
 
+Similarly if we go for a kmem_cache (or a few for multiple sizes). One
+can specify a constructor which could set the memory decrypted but
+there's no destructor (and also the constructor is per object, not per
+page, so we'd need some refcounting).
 
+Another approach contained within the driver is to use mempool_create()
+with our own _alloc_fn/_free_fn that sets the memory decrypted/encrypted
+accordingly, though sub-page allocations need additional tracking. Also
+that's fairly similar to kmem_cache, fixed size.
 
-This is because b1992c3772e6 stopped adding VPATH for external module build=
-s.
+Yet another option would be to wire it somehow in the DMA API but the
+minimum allocation is already a page size, so we don't gain anything.
 
-You can manually add it, though.
+What gets somewhat closer to what we need is gen_pool. It can track
+different sizes, we just need to populate the chunks as needed. I don't
+think this would work as a generic allocator but may be good enough
+within the ITS code.
 
+If there's a need for such generic allocations in other parts of the
+kernel, my preference would be something around kmalloc caches and a new
+GFP flag (first option; subject to the selling it to the mm folk). But
+that's more of a separate prototyping effort that may or may not
+succeed.
 
+Anyway, we could do some hacking around gen_pool as a temporary solution
+(maybe as a set of patches on top of this series to be easier to revert)
+and start investigating a proper decrypted page allocator in parallel.
+We just need to find a victim that has the page allocator fresh in mind
+(Ryan or Alexandru ;)).
 
-$ make -j48 O=3D/workspace/kernel/build64-default M=3Ddrivers/gpu/drm/xe
-W=3D1 VPATH=3D$(pwd)
-
-
-will work like before.
-
-
-
-
-
-
-
->
-> This started happening since commit b1992c3772e6 ("kbuild: use $(src)
-> instead of $(srctree)/$(src) for source directory"). For context: after
-> building the entire kernel our CI tries to build just the xe module with
-> additional CFLAGS... in this case by passing W=3D1.
->
-> Trying to build just xe.ko by path doesn't work:
->
->         make O=3Dbuild64 W=3D1 drivers/gpu/drm/xe/xe.ko
->
-> WARNING: modpost: missing MODULE_DESCRIPTION() in vmlinux.o
-> ERROR: modpost: "ttm_bo_vm_dummy_page" [drivers/gpu/drm/xe/xe.ko] undefin=
-ed!
-> ERROR: modpost: "drm_mode_is_420_also" [drivers/gpu/drm/xe/xe.ko] undefin=
-ed!
-> ERROR: modpost: "drm_dp_downstream_max_dotclock" [drivers/gpu/drm/xe/xe.k=
-o] undefined!
-> ERROR: modpost: "drm_dp_mst_topology_mgr_set_mst" [drivers/gpu/drm/xe/xe.=
-ko] undefined!
-> ERROR: modpost: "drm_atomic_state_init" [drivers/gpu/drm/xe/xe.ko] undefi=
-ned!
-> ERROR: modpost: "drm_atomic_set_fb_for_plane" [drivers/gpu/drm/xe/xe.ko] =
-undefined!
-> ERROR: modpost: "drm_dp_remove_payload_part2" [drivers/gpu/drm/xe/xe.ko] =
-undefined!
-> ERROR: modpost: "drm_dp_channel_eq_ok" [drivers/gpu/drm/xe/xe.ko] undefin=
-ed!
-> ERROR: modpost: "drm_dp_downstream_debug" [drivers/gpu/drm/xe/xe.ko] unde=
-fined!
-> ERROR: modpost: "drm_modeset_lock_all_ctx" [drivers/gpu/drm/xe/xe.ko] und=
-efined!
-> WARNING: modpost: suppressed 507 unresolved symbol warnings because there=
- were too many)
-> make[3]: *** [../scripts/Makefile.modpost:145: Module.symvers] Error 1
-> make[2]: *** [/home/lucas/p/linux-dim/src/Makefile:1916: single_modules] =
-Error 2
-> make[1]: *** [/home/lucas/p/linux-dim/src/Makefile:240: __sub-make] Error=
- 2
-> make[1]: Leaving directory '/home/lucas/p/linux-dim/src/build64'
-> make: *** [Makefile:240: __sub-make] Error 2
-
-
-
-If you build a single module, modpost cannot resolve references to
-other modules.
-
-KBUILD_MODPOST_WARN=3D1 turns the errors into warnings, though.
-
-
-$ make O=3D/tmp/abc  drivers/gpu/drm/xe/xe.ko KBUILD_MODPOST_WARN=3D1
-
-
-
-
-
-> Alternatives that seem to work:
->
-> 1) pass the absolute path to M=3D:
->
->         make O=3Dbuild64 W=3D1 M=3D$PWD/drivers/gpu/drm/xe/
-
-
-This is a simpler solution than VPATH=3D$(pwd)
-
-
-
->
-> 2) just pass the directory:
->
->         make O=3Dbuild64 W=3D1 drivers/gpu/drm/xe/
->
-> I think we avoided (2) due to it not working if we were building commit
-> by commit and something touched things outside xe. But for this current
-> use case it seems it's the more correct approach since Makefile says:
->
->         # Use make M=3Ddir or set the environment variable KBUILD_EXTMOD =
-to specify the
->         # directory of external module to build. Setting M=3D takes prece=
-dence.
-
-
-I agree.
-If you are only interested in extra compiler warnings,
-you do not need to link the final *.ko file.
-
-
-
-
-
-
-
-
-
-
-
->
-> Lucas De Marchi
->
-> >make[3]: *** No rule to make target 'drivers/gpu/drm/xe/Makefile'.  Stop=
-.
-> >make[2]: *** [/workspace/kernel/Makefile:1934: drivers/gpu/drm/xe] Error=
- 2
-> >make[1]: Leaving directory '/workspace/kernel/build64-default'
-> >make[1]: *** [/workspace/kernel/Makefile:240: __sub-make] Error 2
-> >make: *** [Makefile:240: __sub-make] Error 2
-> >run-parts: /workspace/ci/hooks/10-build-W1 exited with return code 2
-> >
-> >
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+-- 
+Catalin
