@@ -1,123 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB04213C690;
-	Thu,  6 Jun 2024 15:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C20153511
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 16:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717689559; cv=none; b=IoxMvn2+iNy5lRttPFAfM9opFpmzqCJKFo1QGQqCZQIywTnqBhUJ85rP2/w8doCtJ3GHOVLAKCxE0WuT6CceVw0LxadmU4tfHSYYKIsweE2cxRHGMSQ+M94iq+EQ2z7y9qZ7Pr6qIzpeoXvQIbL3aszBWwrI/00mvE6ayHKhbBM=
+	t=1717689668; cv=none; b=p2Ogcd4uiZKPqTycjpAS7+1DJfV2j/WAXeKTUsFsYWEwlKubB/nHeE1ZuIWWJ9+tsIvJqyGfiwEjwC86oKg7qrm+lbhidms1Hxvwu5lMVvPowFduiugkcHC9b3NuFETFsbDzPcKiL/OCeHvhLC0LMR3kJjvd4RIe7qKFl6YEhFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717689559; c=relaxed/simple;
-	bh=iqq/X15Hld5HWTihI8ZbQsjQV9XWsw2ETmVkWvF4SBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LK+gIE4s+he+j5hm7vpxTPez0bZh0Zi7Uhy3eMx6BVWE0nbV3wVp6+w2FtCPNAjqINIZ+tVPuTuuaJO769xTUfzs+2g0yL4PdzN+Mz0wejOZcgp60ULTgQcyG7Uo+fu9m6okXEA4gXOIfPt1z4LTA7WbZDri5bMRStzNIueeHzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A4yAHgot; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717689668; c=relaxed/simple;
+	bh=sqVHQEDwVAxjqpqFdMyKgszMsUmj5y9aSsv6Guy/rJ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K/tfYyu84PAnXUVCN/FBxl4ORHBavFnFLFrG5vp2T6V0OrdF2lnuepIyIHS2qbd6T80lyreJhUYMu9HLhYe66mpeGlAXZ+P/7iwQxk5sYYJ2R3N+dZJCrtS/frkDoRZzSBbj4xpGxWBB7zHDip9WxRAXwQRM1bA5enVCGUPTufQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JYuTk84F; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A4yAHgot"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717689558; x=1749225558;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iqq/X15Hld5HWTihI8ZbQsjQV9XWsw2ETmVkWvF4SBE=;
-  b=A4yAHgotXyBwEpNFeFVx0eR3GvBn1gNWcyLvh5uamepWgWyGWbxipxu9
-   b468H87Ji2IS7wexhZC5w6bF6dqEHTRzIf3I4c/PPNa+7PAH+kV30OI8h
-   Vgp0Z14OuHxchbSV53QlTRE+6Fi3ylddyyyNzptLZ54ldVXTlZ56dD1es
-   FxkDT/Mj0ZP1RhZlV5cbU8GviGi1nqa5q2QqwLcpx0iYCrrnutKHfLLbC
-   3pO7ajLGHLlmgZpci7HhAbPQ1HupoN1E4ozimZsIaXL1UVwGPlIJaz/Ma
-   IHwnOA70Ge3AwElAiFmfRSdz0E0aBYaAWqdX1vdOLHMw3ujhdAvQDHfZP
-   g==;
-X-CSE-ConnectionGUID: 44p6bXD1TTGqmbL2Mg9OcQ==
-X-CSE-MsgGUID: fZ2DJJzBRmqBg2VVfLANzg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="31866612"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="31866612"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 08:59:17 -0700
-X-CSE-ConnectionGUID: l3igcPGLRcOTpGBJDCR8HQ==
-X-CSE-MsgGUID: ilwo1/p1R5epsYFiM7/Mvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="42472612"
-Received: from mgoodin-mobl2.amr.corp.intel.com (HELO [10.125.109.168]) ([10.125.109.168])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 08:59:17 -0700
-Message-ID: <7ad9261c-115b-451d-9b93-832f98124116@intel.com>
-Date: Thu, 6 Jun 2024 08:59:15 -0700
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JYuTk84F"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6b041fa2a54so8614376d6.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 09:01:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1717689666; x=1718294466; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sqVHQEDwVAxjqpqFdMyKgszMsUmj5y9aSsv6Guy/rJ4=;
+        b=JYuTk84FY4wVZ61V1rkIolMSSdhpuqsB5A0wznMf/x8TOHU1E7z1NMzXQrDA24zmwJ
+         rJUfGF6zSNIPKRUUC/NqyvsZLE4eTlvv8CjeWW3I2JG0FpaoVtvWxh6UeAUGDXUK+B+U
+         jVTnXoy7A8Cyf/8dHQMRPrMBEEhIe9t5K0Ho4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717689666; x=1718294466;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sqVHQEDwVAxjqpqFdMyKgszMsUmj5y9aSsv6Guy/rJ4=;
+        b=XQhL4BERrVbPn5peaXDgzRCa14tyTZ8V3gLu2W+daRxXmz1n6QAlzq7g9FrLSl0S6Q
+         V2vGx/oFKesYymQPEOzIB+JiNJKki8lAAkZYolwBweh2LYBHIY0OraRWZ+iUjMhEld3y
+         TEYS5G/q2xnalHlgkpm46mTw02IUvQ/rervdgzv26+s1PFWFMYlt0cTnmtg0cOJ4tiAo
+         PeV6IBHk9KbvkDPiYV6ulSX699AWBzEvHxYpxrVNRoEpOL+4U4IsZ22MxGs40Uxg5Fqn
+         suzVSCVp2tFJFkoloW/DOMlWZTBSZ8C9XjA1gsENHFmsLZqihx46+cqKlxddUnlSgQBK
+         NyJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqI68fp8EEcFD6+/214dr270oWU7FsgeaQeuuN9AjkaCxsdNKRw9L2AD4PfuQA6sJtZ+jzEQWZD950bFpQgCpxgxKrk8znpJH71qYN
+X-Gm-Message-State: AOJu0Yw8bqFCVCvoXoqpVbAhxd1H7PnbM7w/DZmYUwH+1AAfHIi9kxW0
+	jLBgOcD1Ms3n07l/kprxgsNSdzSaPTFaJ5OZ0opwdo1OypX1dBehNHEW+KHRUZN+tXOPnT2PpNR
+	XkADcmemgDKidMPUsERQ/7A2yLmMIpLujC8nM
+X-Google-Smtp-Source: AGHT+IFzj8RlanPuIZnlqigaZ47DrvMcpPjFdw9hKo3mN//pDXqRuiPsikMN3AUdLkN/Awqlt/3fx9d96fwFEYXKBKs=
+X-Received: by 2002:a05:6214:2c0d:b0:6ad:63c3:12fe with SMTP id
+ 6a1803df08f44-6b02266d4cfmr71924706d6.3.1717689665559; Thu, 06 Jun 2024
+ 09:01:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] acpi,hmat: Use ACCESS_COORDINATE_CPU when appropriate
-To: Huang Ying <ying.huang@intel.com>, "Rafael J . Wysocki"
- <rafael@kernel.org>
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Dan Williams <dan.j.williams@intel.com>, Bharata B Rao <bharata@amd.com>,
- Alistair Popple <apopple@nvidia.com>,
- "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-References: <20240606022845.189710-1-ying.huang@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240606022845.189710-1-ying.huang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240521-board-ids-v3-0-e6c71d05f4d2@quicinc.com>
+ <CAFLszTjexpNEjo1sGVs67L0CAgGZLNkyn9RGfHRD7iHak_mtmg@mail.gmail.com> <20240605100246481-0700.eberman@hu-eberman-lv.qualcomm.com>
+In-Reply-To: <20240605100246481-0700.eberman@hu-eberman-lv.qualcomm.com>
+From: Simon Glass <sjg@chromium.org>
+Date: Thu, 6 Jun 2024 10:00:54 -0600
+Message-ID: <CAFLszThbe_aUAq_5rCCiPV-bj60oq9UCc=vdDHwM3i6t44ohLw@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 0/9] dt-bindings: hwinfo: Introduce board-id
+To: Elliot Berman <quic_eberman@quicinc.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Amrit Anand <quic_amrianan@quicinc.com>, Peter Griffin <peter.griffin@linaro.org>, 
+	Caleb Connolly <caleb.connolly@linaro.org>, Andy Gross <agross@kernel.org>, 
+	Doug Anderson <dianders@chromium.org>, Chen-Yu Tsai <wenst@chromium.org>, 
+	Julius Werner <jwerner@chromium.org>, "Humphreys, Jonathan" <j-humphreys@ti.com>, 
+	Sumit Garg <sumit.garg@linaro.org>, Jon Hunter <jonathanh@nvidia.org>, 
+	Michal Simek <michal.simek@amd.com>, boot-architecture@lists.linaro.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Elliot,
 
+On Wed, 5 Jun 2024 at 11:17, Elliot Berman <quic_eberman@quicinc.com> wrote:
+>
+> On Wed, Jun 05, 2024 at 07:17:35AM -0600, Simon Glass wrote:
+> > Hi Elliot,
+> >
+> > I am just picking up the discussion here, which was started on another thread.
+> >
+> > I can't see why this new feature is needed. We should be able to use
+> > compatible strings, as we do now. I added a 'usage' section to the FIT
+> > spec [1] which might help. I also incorporated the board revision and
+> > variant information and some notes on how to add to the available
+> > suffixes.
+> >
+> > Does that handle your use case?
+>
+> -rev and -sku don't fit the versioning scheme for QTI devices, so this
+> isn't a generic enough approach. Patch 5 in this series describes the
+> versioning scheme for us.
+>
+> In the other thread, we had talked about using some regex based approach
+> for matching the root node compatible. I haven't had chance to work on
+> that proposal and will try to get to it in the next couple weeks.
 
-On 6/5/24 7:28 PM, Huang Ying wrote:
-> To improve the readability of the code via replacing the magic number
-> "1" with ACCESS_COORDINATE_CPU when appropriate.  No functionality
-> change.
-> 
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Bharata B Rao <bharata@amd.com>
-> Cc: Alistair Popple <apopple@nvidia.com>
-> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+OK, I look forward to it. Please do check the FIT best match approach
+and see how it might be extended to handle your requirements. So far I
+have not seen a need for regexes, but it is certainly a possibility.
 
-Thanks for this. Looks like I missed a few.
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->  drivers/acpi/numa/hmat.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index 2c8ccc91ebe6..febd9e51350b 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -408,7 +408,7 @@ static __init void hmat_update_target(unsigned int tgt_pxm, unsigned int init_px
->  	if (target && target->processor_pxm == init_pxm) {
->  		hmat_update_target_access(target, type, value,
->  					  ACCESS_COORDINATE_LOCAL);
-> -		/* If the node has a CPU, update access 1 */
-> +		/* If the node has a CPU, update access ACCESS_COORDINATE_CPU */
->  		if (node_state(pxm_to_node(init_pxm), N_CPU))
->  			hmat_update_target_access(target, type, value,
->  						  ACCESS_COORDINATE_CPU);
-> @@ -948,7 +948,7 @@ static int hmat_set_default_dram_perf(void)
->  		target = find_mem_target(pxm);
->  		if (!target)
->  			continue;
-> -		attrs = &target->coord[1];
-> +		attrs = &target->coord[ACCESS_COORDINATE_CPU];
->  		rc = mt_set_default_dram_perf(nid, attrs, "ACPI HMAT");
->  		if (rc)
->  			return rc;
-> @@ -975,7 +975,7 @@ static int hmat_calculate_adistance(struct notifier_block *self,
->  	hmat_update_target_attrs(target, p_nodes, ACCESS_COORDINATE_CPU);
->  	mutex_unlock(&target_lock);
->  
-> -	perf = &target->coord[1];
-> +	perf = &target->coord[ACCESS_COORDINATE_CPU];
->  
->  	if (mt_perf_to_adistance(perf, adist))
->  		return NOTIFY_OK;
+Regards,
+Simon
