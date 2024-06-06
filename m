@@ -1,73 +1,72 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C97A13C833
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B2813F016
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717665205; cv=none; b=GpoUudeVoaas/gC4pKSJA5E3wEgQZ19cmwYN6ITi7DPzwKYvHsY0Ph0DgKGcGqcbZq9fR7ppRA5Rk4SVApzvneHckLIwJ68l2c0YUdjiccsP6XkTva/fFhmP97hHpQcDdBpdVBQW4Ezcvi/KUCQl5rRG1PrHWW/av04fCdAHLm0=
+	t=1717665206; cv=none; b=eSoEcMO2oEFwRXj4K3H09ssMfUo0ob+81sfGc6VTvwTkuKqYn5+z6bRCxQOhbwGMc0TAD702pBFThpnNr79GpshzfGeP2RaZpRjEqIJUeJf1Bg990rFiqh0RIeWrnn5AyONPbfbRIFvw6SOhOJ1WYnGvOzs/Yvic7TlTYSO8Hlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717665205; c=relaxed/simple;
-	bh=Iru8iRC2ikGxa+eWGhTT0jj3sQOG4ulhkmijbZolgls=;
+	s=arc-20240116; t=1717665206; c=relaxed/simple;
+	bh=dD7n6UNHt9TJjT9VcKfmZT3jI4APvC7V6fUeeAl+1Fc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=VV6kybWV1B7giI+KN/9+nabapJHaE6cRFl0yMg6HfvoG1kOudrcWUETYvXoEHHVUs76lKaEqMYGtkPi56wV+Fvt6CeyCdibERMVzv4VBpl9wtaRWRmuBukL+Hej7/kzdEI4nLsW2VzlMCwMS/6XOtl4yaM13JdsBjb+3Aw2wIvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T70rtnqK; arc=none smtp.client-ip=209.85.167.45
+	 MIME-Version:Content-Type; b=RH4MAb4wA7kK3EuuIayXPH4yuLJPjqttdphhoTcUn5zHgqIsmjrTf0oMzpdJTHLR19FySEEBU/WILoqAhoArDSJ/Ixbi/FKF0V3IHfnF03dy9+nKse0PJYTcoAiB/ydie4X6u53PavH3s3LB4xKGt3HDQfrnF1t40YXW/IIL93k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HzY/sz/8; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T70rtnqK"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52b9dda4906so1007429e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 02:13:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HzY/sz/8"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-35dcd34a69bso792153f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 02:13:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717665202; x=1718270002; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1717665203; x=1718270003; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l8XpB9v83VyPuuQdMulEgHFlBA3mzFMN9vIEdPPQdzQ=;
-        b=T70rtnqKWTkDoMjXVbKlCovBLYs1lWawQd7RGM2xxS5xrUQuV68peoNZU8rvQ6RFNm
-         MfQNBg0h8EgibISHVL7BjIxsFPAOp3eOfa8xNZ0nX/SUgTMlGcerQ4MqhJNz5nFX4Azr
-         vGJHRNRBrCLOb+zhKeFcHtrFcma88SclPev1sqJWogfykJkb8o+b7ufcFfsLW6Yl806+
-         /eg/CXO4jZlIH/kmefYOWCBo7evoopd727pQLbdi82dAGqsNz4PnV/GJ91j6sKksEF6/
-         +nsNaM36VMW2L3qAe13ZFdTZgzUCqQNIfT5fNfyy3pgl92hHppqnnT9HrvXDzvZwS76t
-         /IZQ==
+        bh=8rV+wPIak8jDJVIln2KU5nBsAQyEDveq8MoQL7f6Gpw=;
+        b=HzY/sz/8uhE4iWoloqNuhHh98Nwot6PU9Emay4FmM5u1J6Ii+uumqNi/cIbg3FykYk
+         vuvZ9rq4PrX6vZtxdHNHl4Y3e7XZk01oU7/mgCxBnZ8L9PaSLD5x+sZEwmQf/9mFSFQc
+         MvF9pOi0QeNh2gcixrdLbSBgUXSMSRePjme344wgvTLQ8ian9V55EJO4sKwO053oCotq
+         BAjL8+qV1IyZIeZOIXEwdhr4CsdgqIL7Ev06MDPcP/ih9VramLP6L3Rvvunh6X5WRoGj
+         MefzJwKxmUghITwb08SuhBeyIWatnqtAlh0dzn7wcBB2rHWIoQB8EUwp/zJjSITh1dQo
+         Ue3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717665202; x=1718270002;
+        d=1e100.net; s=20230601; t=1717665203; x=1718270003;
         h=content-transfer-encoding:mime-version:date:message-id:subject
          :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l8XpB9v83VyPuuQdMulEgHFlBA3mzFMN9vIEdPPQdzQ=;
-        b=NeaNkeeNgiM4DlC+IHTtni+iP2inamGMavbDnZXEupWYz0cfFRZhKuuvFXCHcrO1xa
-         PfSDjvDgDij14RXj8XYjXDcf0tTpTSh6wlFmwWcah9onhrjPYLIQpzSkBGHCZwnv/otz
-         m+ZmqY9MOwFCD9P+VcnTCqWc4tSCsao2Y2mlbQk3ILHHfH0qj3CyGxKvogT+9ePlEeiA
-         4nLWJd/bnosBlYChH0nI7gNcCZOE+c/p7dYQjr8wJKqM2vCoizYc1L6rC67sXiHloAnr
-         a2cErstWF5NeXpll5lp6t+aNVP52W2PzExPXHdxgkkURH08mNb9lKgWx2pYWPFZISG6g
-         tq+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXGiLvQrgCgE2CrpnqdVXhuecA3iwhH6rNJbwjbzE8ySNolMH1yxvILtcOPJ9yJE9iMQ4FWw3bRs7d8f9DnxIi+Jp7eX9uSPp6kAEQY
-X-Gm-Message-State: AOJu0Yy+mV+H8EBECq31Fwl+AjoVBCK87s2jq67/FOsesRMQt+12HbJq
-	x380oRio8A+eEXhyLtvUqlzlyiJALwE+5VOWseqDxZJHFasOnrJTQWAYHiZdA44=
-X-Google-Smtp-Source: AGHT+IFqolBgjPb1yWWf0ytpdS7ylHHarzNbdgoMc38k4aaIgXcMNql57H+efViwpESPzqw6RAKTdw==
-X-Received: by 2002:a05:6512:3f03:b0:523:8a79:21b with SMTP id 2adb3069b0e04-52bab4ce48cmr4559162e87.11.1717665201463;
-        Thu, 06 Jun 2024 02:13:21 -0700 (PDT)
+        bh=8rV+wPIak8jDJVIln2KU5nBsAQyEDveq8MoQL7f6Gpw=;
+        b=BKNRicMeXN6AciE8RbPxTUSChB7V7MIwTCbs51NwXqk+7Ctby0XZnMSmxoN0qgRm4F
+         iKNG73FBK0Ey7BDQeqz8GHaHYF49COH7dn1i5eQyOSUXFr2l/Xgj3fxMCd8eZXuOXcDe
+         ynDGWCfpy2UqHFIJrmHGy1F4qe6jr74pc1LMrYjejdaGLR7+TU7bx5HpI0uJA/qkDj47
+         RXOGtc5/HXO54nhR2C1RxZoUKdrSwLK7LnvNuPGP0ZGwn6qQUSw+ogzfDZ5DHdkLbETj
+         W6UizSDkftxdAUTYfQ4YfhBgIK7G/zd+85MIEXUvWUslaLuCySrlA69vEjm0Aa+XDod8
+         lw7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVVJwFlM+e3nZr84Txl3c6pGC5qfVuYhdgUm5HrKhGr8m02uK3ljTwAu3gRy8f6ioDhstEeNA2EK25iafaaCTjClrYVGQAF1F0Pe9uc
+X-Gm-Message-State: AOJu0YyMqHkWeMsSP0Ll+tHj0JjXlXWRzyopGgbSTwWnB0VlQzsZHFPN
+	3wlgOxAyj1NhWg4dgPqxqlg9HvXYqYGCs2db4gv8Wru5RAt0dIvl8FBkMwaHyMk=
+X-Google-Smtp-Source: AGHT+IENoBRX9GZB8aiNkmV7wcMdCnCEvVTAjFXuir5TAL6BESM6I1wWByFMmTrTiJi75bRLz3bAJg==
+X-Received: by 2002:a5d:5f8f:0:b0:355:2212:45fd with SMTP id ffacd0b85a97d-35e8ef7ea42mr4942853f8f.46.1717665203266;
+        Thu, 06 Jun 2024 02:13:23 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d66d01sm1027407f8f.50.2024.06.06.02.13.20
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d66d01sm1027407f8f.50.2024.06.06.02.13.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 02:13:20 -0700 (PDT)
+        Thu, 06 Jun 2024 02:13:22 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Kevin Hilman <khilman@baylibre.com>, Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, 
+To: Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
  Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Dmitry Rokosov <ddrokosov@salutedevices.com>, 
- Igor Prusov <ivprusov@salutedevices.com>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240528133215.2266419-1-arnd@kernel.org>
-References: <20240528133215.2266419-1-arnd@kernel.org>
-Subject: Re: [PATCH] arm64: dts: amlogic: ad402: move thermal-zones to top
- node
-Message-Id: <171766520046.3911343.14113541266786791367.b4-ty@linaro.org>
-Date: Thu, 06 Jun 2024 11:13:20 +0200
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Christian Hewitt <christianshewitt@gmail.com>
+Cc: Yuntian Zhang <yt@radxa.com>
+In-Reply-To: <20240606090615.3946433-1-christianshewitt@gmail.com>
+References: <20240606090615.3946433-1-christianshewitt@gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: meson: radxa-zero2: add pwm-fan support
+Message-Id: <171766520246.3911343.18150781840775151395.b4-ty@linaro.org>
+Date: Thu, 06 Jun 2024 11:13:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,18 +79,17 @@ X-Mailer: b4 0.13.0
 
 Hi,
 
-On Tue, 28 May 2024 15:31:59 +0200, Arnd Bergmann wrote:
-> It appears that this accidentally got added into the spi node, causing
-> a warning.
-> 
-> arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts:119.16-161.4: Warning (spi_bus_reg): /soc/spi@fd000400/thermal-zones: missing or empty reg property
+On Thu, 06 Jun 2024 09:06:15 +0000, Christian Hewitt wrote:
+> The A311D on Zero2 needs active cooling and the board includes a header to
+> connect a simple fan. Add pwm-fan support with basic thermal properties so
+> the fan runs when connected.
 > 
 > 
 
 Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/arm64-dt)
 
-[1/1] arm64: dts: amlogic: ad402: move thermal-zones to top node
-      https://git.kernel.org/amlogic/c/6c9b5ba73ca77ef3863cda6560856fdfe7dc237a
+[1/1] arm64: dts: meson: radxa-zero2: add pwm-fan support
+      https://git.kernel.org/amlogic/c/1d1239a1b0e502faffe43b97d530232285b9f061
 
 These changes has been applied on the intermediate git tree [1].
 
