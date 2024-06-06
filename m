@@ -1,129 +1,100 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73401C0DC2;
-	Thu,  6 Jun 2024 14:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4F2196C78
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717683560; cv=none; b=WqYZoaHGrhpuCq2yQ2Wqjpo6g9Qagb/ytAnBS1Zo9wCg1EoOq/8J2F5E6ma8MKOQs6FTqlVw56dyrRhFkapftIqEYtF086SrFEtQU0HqC5xJnArgQfdNj/8QlCW14VMKE9gvQa/T7xb54xMbeJsoCGVxfzo8f7gOzycaDB4byD4=
+	t=1717683581; cv=none; b=aWDOGIxVxE4j39l5oBQZjBoxOicKS1ZhWoEZ/idiiu8HTl9THg6miWdMk0G/umHpZCNZF6NMQ/kX6aKXseWEwxQRhZQJ/Oayu/lCxXMVR9tJcldpAuoFj/HwkFcYBVyeIWReAXx8u25O8ti6Cj8lCqvTVDQF1gjNP8z24IK2Bg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717683560; c=relaxed/simple;
-	bh=EIN+KuUQmKGM4LQhb84pnUKc3j3RvgGFbJhMtBtv63I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MfwrcOKQxX0TvmT2PtCFhPx8ZTHdhHm0iZ0fkldO3eyvcZ7YgAX+Jyg2tn6bin9Nzo7kqVhoIWoU9+AnFeBDpCkssKUvCl6zyjFfsW46EF5UrH84H1i/nc+UiVbZMgGIkxCfU9E3eS1ssssmejzl2TctqS8KcVIfj0RBL4+Z2zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OIhqFYC4; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717683581; c=relaxed/simple;
+	bh=xmEdPDXw1k/BWduDyUVJLV259V5w3Fa90zom/EWQBFk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bxhG44Lc46v+RG+87NwfUM4cki9O6rTITGVXzvLsrqRR0Xb1tWtxwaj4+yUjV9bhX4yKTu1mwSlhmYfDmEzjtxqApzT85edicFfgDl1SYCjJUaBwKD1tnQY+XKYxbbz2O1ZuQUgsfg3HOpylBSapZD1hEU6WCLJfpyOJr4hg2ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JEAj96XI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIhqFYC4"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-701b0b0be38so1006440b3a.0;
-        Thu, 06 Jun 2024 07:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717683558; x=1718288358; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dcbWossHxFAPWhaCt0jaKVByCwga+fTczv+uXxjTlu0=;
-        b=OIhqFYC4jGwWY+9iFJSrz/vhxDx8jIXoIT/qW/m1VY34nyuoL4hlkA1ZfnjTW1+fyN
-         v7urIQrG8yXSi7Ty3GNa8v7rlDNLf5bTzraPNvXq6uIYzKWwhxNuB5qSM7lTKx6y+ou1
-         324wCln80TlRfv+Hz5yaC5aKAsKBzkG17vdyp6nqb28VsKoeZNWtWgHT5zNFm03we9Jy
-         tkaYH3r1K+X0FFg95ksDFzvbuiazswobVFxHnJlKmPWBUYl3oVKCRQoUFdkqPrj0B/QO
-         lyX9DT7+pB+HZJ4hSTDulIxM+aHiLRM6srpXf8kZrSXMKw86sBMi6i6wT+9zUclPwm/c
-         /D6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717683558; x=1718288358;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dcbWossHxFAPWhaCt0jaKVByCwga+fTczv+uXxjTlu0=;
-        b=gvskTnY/cW+UZE4/MV3Ynj1hpzpNkUjSP/qPHJUiH3vai8PLsXZ8qHZ4TgCm/2GoP/
-         +6LpukE/N+IumBeLcfscCmNIW6b7vPntdxvSnuryy4NxfQth+WkkfcIbi4B70jouUMa+
-         DRgGPL8hfHlkG7cBXL83s4d5jGtqUuavsE3KwJM5APONYPL2NYyQwNj+Bn6UlHvWBasU
-         1ia+ExNeiFRqQZJVvqLGxJA64bctKh6D/vjdtjP1BwbpegY/W7q3Hlkc52SZ8yIMGPf2
-         u+8wT2aa9bAsBtD9JaYKYsmZv6CejBdnI85iHiTdHl3HWBNKaEDdh7ljU8bkJ8Rz7VHq
-         G8Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCW3cTgCH0NBpHhCAfTuoS474/hlK/b8Sh3fBYLO5eXxoyUUak+cLmBHvENQtd4ubjKHpNvYFo18AHYwREI7ewZ0f37DWpNQwqggKRQIWsbu5WGla2cAhf+fN2Txqi/UeyvBLh38ArozwA==
-X-Gm-Message-State: AOJu0YyXr37PVh1TLzHtIIyMihQrEHwbRbMys9YFc/Puql/8/jI6Oqg+
-	GawFAsHERzbxFr4sTFSfKDoFHtbPMJCHATKixJQHJ+9vCIqK2Lrc
-X-Google-Smtp-Source: AGHT+IGW51mR4NTliKKpbb6mL8Di0ngne/w1f8Ev53XXXVhQjFI9ZzWUelNFBR3sa/34xvYKydHeSA==
-X-Received: by 2002:a05:6a20:3c8d:b0:1af:9edd:9cb3 with SMTP id adf61e73a8af0-1b2b7414232mr7369811637.17.1717683557519;
-        Thu, 06 Jun 2024 07:19:17 -0700 (PDT)
-Received: from [10.7.27.90] ([103.170.1.54])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703fd495062sm1146384b3a.119.2024.06.06.07.19.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 07:19:17 -0700 (PDT)
-Message-ID: <c32b902e-0338-436b-85e1-827c48e0ee2b@gmail.com>
-Date: Thu, 6 Jun 2024 19:49:04 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JEAj96XI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0939EC2BD10;
+	Thu,  6 Jun 2024 14:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717683581;
+	bh=xmEdPDXw1k/BWduDyUVJLV259V5w3Fa90zom/EWQBFk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=JEAj96XIpIO8CBmuyI6nhs3Mj9yer+/ii3D4GgzK/9cOYp60HZaQxY3fZkRAXORVv
+	 2lfgYC70M+Db7+Ht/VjPrFhuErIvi8H5nR71Df8qsUoL5+JnMzdHW2NZ/gHpO5w1qA
+	 HV4O4GnnG0P6toiMR2QXOP2ISFR8VIW1DHYtOG9PIAt6LGmNUyCJJVl1wpIBmg+DbL
+	 eNkKk+5hGmT9dQfY4mS7C2MXukA0aAaNrCoNfr3/BMoX9B/0xxUzJGZNn2/dgdbpEQ
+	 8jpVdwmjGxN44DkJyZVrRuY0cIkVLMjYM5UYd5BCJjSxUDZjE1tHqTkwxuMgQT9Lyd
+	 j0Z4249u5aIpw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 9512FCE3F34; Thu,  6 Jun 2024 07:19:40 -0700 (PDT)
+Date: Thu, 6 Jun 2024 07:19:40 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jan Beulich <jbeulich@suse.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: x86: WARNING: at mm/memblock.c:1339 memblock_set_node - Usage of
+ MAX_NUMNODES is deprecated. Use NUMA_NO_NODE instead
+Message-ID: <20c484a5-d797-4782-b5b5-bea5fcae9284@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <CA+G9fYsGFerOtoxwpKLOYcRtyJkmgjdP=qg4Y5iP5q-4Lt17Lg@mail.gmail.com>
+ <315d6873-d618-4126-b67a-de62502d7ee2@paulmck-laptop>
+ <7d55b65e-331a-4ce2-8f72-d3c5c9e6eae0@suse.com>
+ <e220910c-da6e-40ab-895f-87fd43c1de3f@paulmck-laptop>
+ <eaa90c1a-ae96-4506-90dd-146ce85d311c@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: dt-bindings: mt6358: Convert to dtschema
-Content-Language: en-US, ar-LB
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-References: <20240518081621.63386-1-agarwala.kartik@gmail.com>
- <c05f91f5-a878-4f36-b325-0ac8e038a7e5@linaro.org>
-From: Kartik Agarwala <agarwala.kartik@gmail.com>
-In-Reply-To: <c05f91f5-a878-4f36-b325-0ac8e038a7e5@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eaa90c1a-ae96-4506-90dd-146ce85d311c@suse.com>
 
-On 5/20/24 12:39 PM, Krzysztof Kozlowski wrote:
-> On 18/05/2024 10:16, Kartik Agarwala wrote:
->> Convert Mediatek MT6358 Audio Codec bindings from text to dtschema.
->>
->> Signed-off-by: Kartik Agarwala <agarwala.kartik@gmail.com>
->> ---
->>  .../bindings/sound/mediatek,mt6358.yaml       | 47 +++++++++++++++++++
->>  .../devicetree/bindings/sound/mt6358.txt      | 26 ----------
->>  2 files changed, 47 insertions(+), 26 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/sound/mediatek,mt6358.yaml
->>  delete mode 100644 Documentation/devicetree/bindings/sound/mt6358.txt
->>
->> diff --git a/Documentation/devicetree/bindings/sound/mediatek,mt6358.yaml b/Documentation/devicetree/bindings/sound/mediatek,mt6358.yaml
->> new file mode 100644
->> index 000000000..f57ef2aa5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/mediatek,mt6358.yaml
->> @@ -0,0 +1,47 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/sound/mediatek,mt6358.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Mediatek MT6358 Audio Codec
->> +
->> +maintainers:
->> +  - Kartik Agarwala <agarwala.kartik@gmail.com>
->> +
->> +description: |
+On Thu, Jun 06, 2024 at 08:13:17AM +0200, Jan Beulich wrote:
+> On 05.06.2024 22:48, Paul E. McKenney wrote:
+> > On Wed, Jun 05, 2024 at 09:46:37PM +0200, Jan Beulich wrote:
+> >> On 05.06.2024 21:07, Paul E. McKenney wrote:
+> >>> On Mon, Jun 03, 2024 at 07:19:21PM +0530, Naresh Kamboju wrote:
+> >>>> The following kernel warnings are noticed on x86 devices while booting
+> >>>> the Linux next-20240603 tag and looks like it is expected to warn users to
+> >>>> use NUMA_NO_NODE instead.
+> >>>>
+> >>>> Usage of MAX_NUMNODES is deprecated. Use NUMA_NO_NODE instead
+> >>>>
+> >>>> The following config is enabled
+> >>>> CONFIG_NUMA=y
+> >>>
+> >>> I am seeing this as well.  Is the following commit premature?
+> >>>
+> >>> e0eec24e2e19 ("memblock: make memblock_set_node() also warn about use of MAX_NUMNODES")
+> >>>
+> >>> Maybe old ACPI tables and device trees need to catch up?
+> >>>
+> >>> Left to myself, I would simply remove the WARN_ON_ONCE() from the above
+> >>> commit, but I would guess that there is a better way.
+> >>
+> >> Well, the warning is issued precisely to make clear that call
+> >> sites need to change. A patch to do so for the two instances
+> >> on x86 that I'm aware of is already pending maintainer approval.
+> > 
+> > Could you please point me at that patch so that I can stop repeatedly
+> > reproducing those two particular issues?
 > 
-> Do not need '|' unless you need to preserve formatting.
-> 
->> +  The communication between MT6358 and SoC is through Mediatek PMIC wrapper.
->> +  For more detail, please visit Mediatek PMIC wrapper documentation.
->> +  Must be a child node of PMIC wrapper.
-> 
-> Did you update the PMIC wrapper binding with ref to this?
-> 
+> https://lore.kernel.org/lkml/abadb736-a239-49e4-ab42-ace7acdd4278@suse.com/
 
-Hi Krzysztof, 
+Thank you, Jan!
 
-I apologize incase this is something obvious but I am still not sure
-if I understand what you expect here. Could you please explain this
-a bit more? I thought that you wanted me to convert the Mediatek PMIC 
-wrapper but it already seems to be in DT-Schema format.[1]
+A quick initial test shows that this clears things up.  I have started
+a longer test to check for additional issues.  But in the meantime
+for the issues I was already seeing in the initial test:
 
-[1]: https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/soc/mediatek/mediatek%2Cpwrap.yaml
+Tested-by: Paul E. McKenney <paulmck@kernel.org>
 
-Thanks and Regards,
-Kartik Agarwala
+							Thanx, Paul
