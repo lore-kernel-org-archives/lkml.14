@@ -1,88 +1,90 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 178C513AA48
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 08:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6028913C819
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 08:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717662096; cv=none; b=u97FDimjhhw6T1Tw1az0JCzhSqRgkWlT0k4lKJJB2kvTHXolhRhTZM28O7gRhIf+FPdeJY6W+Bxj4HqbiEAj7YbnIZxUvP6Ku3rah3Sv2FXfX4RWAP/65yZxV2Fc51pNwij7JJv7aQmrnyyfKtTasP6vqmvwfhU7xqXtDm6QoAU=
+	t=1717662101; cv=none; b=H6x7Ui/BAURywaNaRrtf79uFBZSul9vmVWDlJuB2cMvnfgdQSuXA+I3dGBcl1gSG+6gBsU/caBbsAxTbI9Q72posHc8TrHtON4fznPdTlXNRfaVWGreHx8BUd7aqsyiNa07r/SrU2UPpfgttYApuUYlw64kOpca/iEZWjxI154c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717662096; c=relaxed/simple;
-	bh=sRR+OoNe+CJbOABxoZNaQT2CCvoMwl0YHxGhGd8xLdY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=oqtY6QIHP2SxEZC+MBF1bogM1z9jJleozArT/u1MtqOZZVloU23a24tFnPbplw8iU7nBVwHrIgmPlE44n7kKP8kblnivyo8E1jMxDGK5H5+bR6YNdcwH+9ghhfxRDn7DvrWZU9PLMDRUIOdo1quBhu74TvzIG/Kxd527uXEWHno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UeziEwaO; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1717662101; c=relaxed/simple;
+	bh=aeK3bnvjs8VEJFtu6HdqB8LOAkT/9yDIQ2qbTFkOBF8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GXFkPxb5X1ahBPAnnvtS7DJKphDKXP27L0IFhtzCQiCCRZVkCqKZssMOku0yIPsAvYxpVl7JtHqKQyW7YerDviT0DIckoH0Q7skPdIPJZR5vI43d5BSoJjrgaKbS8dO3YLdKJ+T0E/cDw0UoUcZLX33xwUEn+XFYDrCFufcA2QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HbeIZ23h; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UeziEwaO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
-	Content-Type; bh=WY9vcFIYHyY28AUyfY/N7+e9B4gmGc0udXw0k/OYO9k=;
-	b=UeziEwaOwbjCFAPmXl0FPNjppRawF29CZT5fHWOO8vTwSAttCff212N6ttmEV3
-	8oguGxFuvghWAbyM44a4GkP29I2Ds0tUHxGL7g80Nr5ZS93MqXASBAWOtf75i6ml
-	9rt/3AhIAcePhaMkivMCfgE1jMEYqx8ohTZHEJWbGI//M=
-Received: from localhost.localdomain (unknown [111.48.58.10])
-	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wD3P6dUcWFm9NsACA--.11320S2;
-	Thu, 06 Jun 2024 16:20:37 +0800 (CST)
-From: huanglei814 <huanglei814@163.com>
-To: sudipm.mukherjee@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	huanglei <huanglei@kylinos.cn>
-Subject: [PATCH] parport: Increase buffer max length to avoid memory out of bounds overflow
-Date: Thu,  6 Jun 2024 16:20:28 +0800
-Message-Id: <20240606082028.15772-1-huanglei814@163.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HbeIZ23h"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57a1b122718so5673a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 01:21:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717662099; x=1718266899; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NHvKEz5JKdCznxSqHezsMu71OI+px6uSS61YT0rHfuU=;
+        b=HbeIZ23hH4Ka6f0sKo4cmwfPcRDkIuYnzfJ4YYdcdFAdHOyVlJHRQ7Q4GwCIFGS9NI
+         0zKVt0qSorWejr5JOpr9BSHR7kBSLdfnqh/4T/C7zP13ReUl4P/GOyqWnW+qCo8iucL0
+         EGB6lh8oVGUTv/lIM6LlrGL4xBsQm3mwP4EcqgXURRUpbTsgyJGaVyxKzl2tnJBPKLsH
+         zllNASFbBpxhLY+MGdzZqfjiNeWps8qQHAWmWUmW0Sn5obRn1M4ji++dLAHPh96iTAGA
+         2kxdX0wwhJXQAIy130emN5Oom2w3OQ1VsAVVLW5MJGIw0wnQFAp7QZQZ1wALR3UdCA35
+         lQ3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717662099; x=1718266899;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NHvKEz5JKdCznxSqHezsMu71OI+px6uSS61YT0rHfuU=;
+        b=WhpOgHTmgq1FyfUsMD46xk4uQiTpZvhJjujLay25zzexoAu5aGVZYqY3XwBOt7duPA
+         XctKrvgVz1kfr0QqmgGcXboQvWuvwFNabgDDswP8MaPeBZkvwTJnQ0a2VfaNV1dfwaoH
+         6QWdyiO6/txWXpQmuBiyzVMwuhe147SfXkvCeWFEImNIUwQt6Kt/Gaszke1ogvzN+Mfv
+         MSWllfVkTdJpo5I4JyuzA9RWWEskgojV3cLXxzi02x+GyGqOoIH3W993aEtx7THbnKkM
+         wHbzdtlycJJ0VS6BBwdeGu6FxTEtbAVgvf+kkiBkAJx53egfCsP6gSOI/ppx1nZpuE+i
+         2gWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOFMbi1DTFEvd2v1yfNjiNHVHLxagCFwCHo2l/xMUAvzjDI8xFWpuxqO29HJ8CTp4d+4kyw7wt5g1J9wN8IlNTEYSQiQvw2lvi040s
+X-Gm-Message-State: AOJu0Yz/rTWkp6h5MtqYj0xX1SJJ+wkiK6f9oSWj0oVU2RzOVqcgTyWZ
+	gPwU149EH7nhEEoShWjow18Y+6oWS5DEIG+1mb1hc5D/NARizRY+e610RNqgLEm3+VVlP9iN4wz
+	jpCk3x3Qx/vPl1RAkN+BN9ZJB+YsgQM4Yv/Zi
+X-Google-Smtp-Source: AGHT+IHh2yQO2i7W4TVOkZXhb8V7bKamRBQUc7Lc+uRHNVgFKKNhugjLVTkGob22mKGuMH+YwFRJbIKAat4YiCfDe/0=
+X-Received: by 2002:a05:6402:180e:b0:57a:9ea1:f92a with SMTP id
+ 4fb4d7f45d1cf-57aad34e850mr99772a12.7.1717662098423; Thu, 06 Jun 2024
+ 01:21:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3P6dUcWFm9NsACA--.11320S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ary7CFWfZw4kGr4UKr45Jrb_yoW8Gr4Upa
-	98Krs0krZ8t3yUGw4kZwsI93yrXa97X3W8WF17G34akr4jqFn7ZFn0kF9FkF9Ygrs7uaya
-	grs3Kr1UCr4jkF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UgYFZUUUUU=
-X-CM-SenderInfo: xkxd0wxohlmiqu6rljoofrz/1tbiLBn19mXAmVF0ywAAsk
+References: <20240606-tcp_ao-tracepoints-v3-0-13621988c09f@gmail.com> <20240606-tcp_ao-tracepoints-v3-3-13621988c09f@gmail.com>
+In-Reply-To: <20240606-tcp_ao-tracepoints-v3-3-13621988c09f@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 6 Jun 2024 10:21:26 +0200
+Message-ID: <CANn89iJyKWuZ4DtegJR99jYaSf-kbhr0gSosw_XGxjiaGT=00Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 3/6] net/tcp: Move tcp_inbound_hash() from headers
+To: 0x7f454c46@gmail.com
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Mohammad Nassiri <mnassiri@ciena.com>, Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: huanglei <huanglei@kylinos.cn>
+On Thu, Jun 6, 2024 at 2:58=E2=80=AFAM Dmitry Safonov via B4 Relay
+<devnull+0x7f454c46.gmail.com@kernel.org> wrote:
+>
+> From: Dmitry Safonov <0x7f454c46@gmail.com>
+>
+> Two reasons:
+> 1. It's grown up enough
+> 2. In order to not do header spaghetti by including
+>    <trace/events/tcp.h>, which is necessary for TCP tracepoints.
+>
+> While at it, unexport and make static tcp_inbound_ao_hash().
+>
+> Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
 
-Most of the time，will use 64 bit address.
-such as port->base=0xffffffc010e21280 and then use
-len += sprintf (buffer, "%lu\t%lu\n", port->base, port->base_hi),
-port->base convert to string is "18446743799114896000" add
-port->base_hi is "0" and "\t" "\n" len will be 23.
-But buffer the original max length is 20, length 23 is out of buffer.
-So to make sure 64 bit address will not experience buffer overflow,
-need increase buffer size to 32.
-
-Signed-off-by: huanglei <huanglei@kylinos.cn>
----
- drivers/parport/procfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/parport/procfs.c b/drivers/parport/procfs.c
-index bd388560ed59..6722ae620b68 100644
---- a/drivers/parport/procfs.c
-+++ b/drivers/parport/procfs.c
-@@ -117,7 +117,7 @@ static int do_hardware_base_addr(struct ctl_table *table, int write,
- 				 void *result, size_t *lenp, loff_t *ppos)
- {
- 	struct parport *port = (struct parport *)table->extra1;
--	char buffer[20];
-+	char buffer[32];
- 	int len = 0;
- 
- 	if (*ppos) {
-@@ -171,7 +171,7 @@ static int do_hardware_dma(struct ctl_table *table, int write,
- 			   void *result, size_t *lenp, loff_t *ppos)
- {
- 	struct parport *port = (struct parport *)table->extra1;
--	char buffer[20];
-+	char buffer[32];
- 	int len = 0;
- 
- 	if (*ppos) {
--- 
-2.17.1
-
+Reviewed-by: Eric Dumazet <edumazet@google.com>
