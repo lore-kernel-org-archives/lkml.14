@@ -1,81 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FD513C83D
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 21:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACEA2F2B;
+	Thu,  6 Jun 2024 22:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717711180; cv=none; b=YddD0Fl503gXTOzbbm6fTc4a+NAoW+dbrewEcGsFGWp4pYn0/kvZnEqd8PATC0AUFnDt/tzwkMIEbZiSR/8a4FTbsQGOVsmkWKBW+zjHQzw4T8q9bKRgKqu11OdxYLLQD3r0ikNh46erijiURNyueWfqW9EfuituAHT892dwUt0=
+	t=1717711641; cv=none; b=PnJxnUuQ3mmzQNlVj52f5uHEpH4IgxUauFIad6MOMimu7sfko/luhlyqN6hf2WlS509LYJ4dr5E/79z0X4LbRtHnWvblIQSIRThDIVqYWR7vvlIsjyxVnw5eMMs36Va49JupTQRgSyfDnPjTsknUk5VpSb8cMRIDD04+rfc6TgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717711180; c=relaxed/simple;
-	bh=+Gwn0DCpWggIO+/CSb7e0Je5msLNmTRhJebT8XHU8NU=;
+	s=arc-20240116; t=1717711641; c=relaxed/simple;
+	bh=74HpMXe+CG43MLy3G4Vs67xOq8UiLT5VdUaTnoZeUwg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A4+6IDg9MoyrKEZ+QuH0YjXB8PlJvq7ifElshVcORJYpyVUYPnVo4hNO74BeUUBV3Wlj6h+nTLRe3XHhhjGNU1t69L1t8jUAUlJwG9OfIq9W57U8jV39RXb8qvkVrO6q2O10UMsrw8/x9LtLtLXKyOa0+RRhcX/n4B6D67KkLCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iNsKvQlX; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZzaafEuB8/46GVJ2POw4rySiNgda5Gt7vw3fKpdXS+dZWfLegLZqmVRJnLkxKkWIw/+Ntxm7+tNgZ+8qn0qc9z7Ia9ipb7TPM+40sb2EbmvPyznwd/PCz5DurgMv3YMOdWfQFd0LRUZMXzZmOKnYz5ZjRLajileGsksbZj0wCDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=na+KN3/T; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iNsKvQlX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717711179; x=1749247179;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+Gwn0DCpWggIO+/CSb7e0Je5msLNmTRhJebT8XHU8NU=;
-  b=iNsKvQlXd5p30NFPLFq+E9wY9qLwq0EI/fusr4Pqoc9rvgX+GOmgEct9
-   //8mYOhgqmIk779maWLMrADRvZvt8JpykgaIuQ3dpmFGHwvgE0AwRxvXt
-   92ND96XMDK0HAuGf9jlzKzH2tsClHOWA/01pNtRRNOxpp2f0vzKHE8fm4
-   3TASNY1ITELICeB18HRSTtRruoTR2pdSsemOmnZlYp1mSm5BFFxuuNyzw
-   AyNxOiAfH6dZPlSq/lN8Lg+2lrT4MAFxftXJGwTh6E6Ma2fI7QX9LD7eI
-   6vkVp8gSg7G0LImHO26WdJkfjMh5Lyx/wXFF040I94EPzO1YF+/zb+7La
-   A==;
-X-CSE-ConnectionGUID: LmgKGEimSUyHpbzW45djkA==
-X-CSE-MsgGUID: km7P2Kw/T2+v67jSLG95yQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14367729"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="14367729"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 14:59:38 -0700
-X-CSE-ConnectionGUID: xzoZxw0oQ8CbgKXPJQxYzw==
-X-CSE-MsgGUID: iGfO0fY6TamP4YqJsropYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="42545100"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 06 Jun 2024 14:59:32 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sFL8r-0003mC-2D;
-	Thu, 06 Jun 2024 21:59:29 +0000
-Date: Fri, 7 Jun 2024 05:58:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jesse Taube <jesse@rivosinc.com>, linux-riscv@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Evan Green <evan@rivosinc.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Jesse Taube <jesse@rivosinc.com>, Xiao Wang <xiao.w.wang@intel.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	Heiko Stuebner <heiko@sntech.de>, Guo Ren <guoren@kernel.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Baoquan He <bhe@redhat.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Zong Li <zong.li@sifive.com>, Ben Dooks <ben.dooks@codethink.co.uk>,
-	Erick Archer <erick.archer@gmx.com>,
-	Vincent Chen <vincent.chen@sifive.com>,
-	Joel Granados <j.granados@samsung.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="na+KN3/T"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-681bc7f50d0so1843399a12.0;
+        Thu, 06 Jun 2024 15:07:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717711639; x=1718316439; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uvkHEPEs0Z1iGFT7Wj+07l4Max2ilBTpn8C2Gm83KxA=;
+        b=na+KN3/TLQsH+xIpUXHM8wSP+60bd4DA6wJ3KTrF0rJ0TPllVgfxgT1JPq3G1jrCNn
+         5x6/2WtJ4WoUxESqGxHMgx0SrvN2KdpjGupK4H4xi0LtlE8ZZLuHxomsyBYkOFB/pdU7
+         K79H2lvpST0k0vWusDG74jV0w2IB0IbGamALIDR91G1ATcOIn3uNVAMBf3iuAmQqqD4m
+         8eEoTNTg18xyAJtPc7kxkYM1QVMuTWAI1RkWC6gokCRsF25xGZU0nF9rp0dQeo/xVXOt
+         Fss0X3ZGOHdxk7es6pz9vmhKz9lQioo7Rxww+hD0TS9aP6KvO0P7zs3AfZ3mx+hzAm4l
+         lihg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717711639; x=1718316439;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uvkHEPEs0Z1iGFT7Wj+07l4Max2ilBTpn8C2Gm83KxA=;
+        b=UROu1mxBkHg9Osixxb8Kau2+VzmZsxN/h5eIlOfHeQ/At2ON+egFsS7k9x+Lg9tkwT
+         b908Ug/A0+v7jI0bHKD70mxZ9Gc6FTnL4n5YSy/EnjKURPDjpmpcLwuPq07yK+2C4Bzk
+         9OnqtmKYTs7ZdOKICiIocEwDj8FVnmk1NPu02WfWkKM+hM/A/e8g8eVRnhNU2m2GygGn
+         SswPm25nRwrqMfd9HFWFe69CnsgvGNFHgB+/sf/oc2HYptIdzN1UCQrRfDM5LyvHgLQj
+         Uo+SEkhm7DN0UdqEYfOt0qi/cOLBWwfQgRBSx1n9X6fO9saa0Nvrl9+jN+BPTtbqFK1p
+         UBhw==
+X-Forwarded-Encrypted: i=1; AJvYcCViZvYc3sr20I8qTUFc3gA7GnMI/D+oYrEuU9fTctn8EGW2gd9ySaBKy8SJSeTxvohIUQ6Edi44pRKbs0xd7lqEBe/q48JkScXw1jIQ/Cn3VQqF6uqyvrAnPQCvx5qbneQimiVUCGDoEtHWAX5nUba9QwaEkkKwdp8pdrwhnrxyx7db13Nldp1IJUi5IhmzkUoCAKJn3rkt8EcDcO+uVg==
+X-Gm-Message-State: AOJu0Yww/Wq3axU7JlW2myztMO3LucTWciO6iKzp3Jw/DaeWlKQ86OoZ
+	7B9zMxiNzep4p7G4CesGFdqtyOapGm2z8TwpmsWHfUv3fXPgSUnvXxMz9bfn
+X-Google-Smtp-Source: AGHT+IEws3XLyWSIeIljFrAA9FQiJ0XSw9ngJH1KYHPJcEukh2jwKKfcNOAsYsVT8N2DvNkYIBUNUg==
+X-Received: by 2002:a17:902:e741:b0:1f6:8c90:3521 with SMTP id d9443c01a7336-1f6d013563cmr13693655ad.8.1717711639248;
+        Thu, 06 Jun 2024 15:07:19 -0700 (PDT)
+Received: from localhost ([2804:30c:167a:4100:8407:a7e5:9b87:8081])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd7ed6c8sm20369285ad.241.2024.06.06.15.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 15:07:18 -0700 (PDT)
+Date: Thu, 6 Jun 2024 19:08:30 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>, lars@metafoo.de,
+	Michael.Hennerich@analog.com, jic23@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	nuno.sa@analog.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] RISC-V: Detect unaligned vector accesses supported.
-Message-ID: <202406070508.6UJUx2rO-lkp@intel.com>
-References: <20240606183215.416829-2-jesse@rivosinc.com>
+Subject: Re: [PATCH v3 1/6] spi: Add SPI mode bit for MOSI idle state
+ configuration
+Message-ID: <ZmIzXun2-DWl7cT-@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1717539384.git.marcelo.schmitt@analog.com>
+ <e1d5d57f7a7481c84f64a764f9898122e278739b.1717539384.git.marcelo.schmitt@analog.com>
+ <0a716b10-0ae0-425f-919a-ea5d8b7975b6@sirena.org.uk>
+ <5dcd9701-2725-4aff-9e73-d8f2e038be75@baylibre.com>
+ <d09485bf-bbb5-4a3f-84b8-54478c6d78cf@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,157 +77,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240606183215.416829-2-jesse@rivosinc.com>
+In-Reply-To: <d09485bf-bbb5-4a3f-84b8-54478c6d78cf@sirena.org.uk>
 
-Hi Jesse,
+On 06/05, Mark Brown wrote:
+> On Wed, Jun 05, 2024 at 11:37:48AM -0500, David Lechner wrote:
+> > On 6/5/24 7:24 AM, Mark Brown wrote:
+> > > On Tue, Jun 04, 2024 at 07:41:47PM -0300, Marcelo Schmitt wrote:
+> 
+> > >> The behavior of an SPI controller data output line (SDO or MOSI or COPI
+> > >> (Controller Output Peripheral Input) for disambiguation) is not specified
+> > >> when the controller is not clocking out data on SCLK edges. However, there
+> > >> exist SPI peripherals that require specific COPI line state when data is
+> > >> not being clocked out of the controller.
+> 
+> > I think this description is missing a key detail that the tx data line
+> > needs to be high just before and also during the CS assertion at the start
+> > of each message.
+> 
+> > And it would be helpful to have this more detailed description in the
+> > source code somewhere and not just in the commit message.
+> 
+> Yes, there's no way anyone could infer this from any aspect of the
+> series.  I think the properties also need a clearer name since someone
+> might want the accelerator functionality at some point.
 
-kernel test robot noticed the following build errors:
+So, if I understand correctly, it would be desirable to also have flags and
+descriptions for the MOSI idle configuration capabilities in include/linux/spi/spi.h.
 
-[auto build test ERROR on v6.9]
-[cannot apply to akpm-mm/mm-everything linus/master v6.10-rc2 v6.10-rc1 next-20240606]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Does the following definitions look good?
+#define SPI_CONTROLLER_MOSI_IDLE_LOW		BIT(8)
+#define SPI_CONTROLLER_MOSI_IDLE_HIGH		BIT(9)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jesse-Taube/RISC-V-Detect-unaligned-vector-accesses-supported/20240607-023434
-base:   v6.9
-patch link:    https://lore.kernel.org/r/20240606183215.416829-2-jesse%40rivosinc.com
-patch subject: [PATCH 2/3] RISC-V: Detect unaligned vector accesses supported.
-config: riscv-allnoconfig (https://download.01.org/0day-ci/archive/20240607/202406070508.6UJUx2rO-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240607/202406070508.6UJUx2rO-lkp@intel.com/reproduce)
+Maybe also document the MOSI idle configuration feature in spi-summary.rst?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406070508.6UJUx2rO-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/riscv/kernel/traps_misaligned.c: In function 'handle_misaligned_load':
->> arch/riscv/kernel/traps_misaligned.c:427:13: error: implicit declaration of function 'insn_is_vector' [-Werror=implicit-function-declaration]
-     427 |         if (insn_is_vector(insn) &&
-         |             ^~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/insn_is_vector +427 arch/riscv/kernel/traps_misaligned.c
-
-   406	
-   407	int handle_misaligned_load(struct pt_regs *regs)
-   408	{
-   409		union reg_data val;
-   410		unsigned long epc = regs->epc;
-   411		unsigned long insn;
-   412		unsigned long addr = regs->badaddr;
-   413		int i, fp = 0, shift = 0, len = 0;
-   414	
-   415		perf_sw_event(PERF_COUNT_SW_ALIGNMENT_FAULTS, 1, regs, addr);
-   416	
-   417		if (!unaligned_enabled)
-   418			return -1;
-   419	
-   420		if (user_mode(regs) && (current->thread.align_ctl & PR_UNALIGN_SIGBUS))
-   421			return -1;
-   422	
-   423		if (get_insn(regs, epc, &insn))
-   424			return -1;
-   425	
-   426	#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
- > 427		if (insn_is_vector(insn) &&
-   428		    *this_cpu_ptr(&vector_misaligned_access) == RISCV_HWPROBE_VEC_MISALIGNED_SUPPORTED) {
-   429			*this_cpu_ptr(&vector_misaligned_access) = RISCV_HWPROBE_VEC_MISALIGNED_UNSUPPORTED;
-   430			regs->epc = epc + INSN_LEN(insn);
-   431			return 0;
-   432		}
-   433	
-   434		*this_cpu_ptr(&misaligned_access_speed) = RISCV_HWPROBE_MISALIGNED_EMULATED;
-   435	#endif
-   436	
-   437		regs->epc = 0;
-   438	
-   439		if ((insn & INSN_MASK_LW) == INSN_MATCH_LW) {
-   440			len = 4;
-   441			shift = 8 * (sizeof(unsigned long) - len);
-   442	#if defined(CONFIG_64BIT)
-   443		} else if ((insn & INSN_MASK_LD) == INSN_MATCH_LD) {
-   444			len = 8;
-   445			shift = 8 * (sizeof(unsigned long) - len);
-   446		} else if ((insn & INSN_MASK_LWU) == INSN_MATCH_LWU) {
-   447			len = 4;
-   448	#endif
-   449		} else if ((insn & INSN_MASK_FLD) == INSN_MATCH_FLD) {
-   450			fp = 1;
-   451			len = 8;
-   452		} else if ((insn & INSN_MASK_FLW) == INSN_MATCH_FLW) {
-   453			fp = 1;
-   454			len = 4;
-   455		} else if ((insn & INSN_MASK_LH) == INSN_MATCH_LH) {
-   456			len = 2;
-   457			shift = 8 * (sizeof(unsigned long) - len);
-   458		} else if ((insn & INSN_MASK_LHU) == INSN_MATCH_LHU) {
-   459			len = 2;
-   460	#if defined(CONFIG_64BIT)
-   461		} else if ((insn & INSN_MASK_C_LD) == INSN_MATCH_C_LD) {
-   462			len = 8;
-   463			shift = 8 * (sizeof(unsigned long) - len);
-   464			insn = RVC_RS2S(insn) << SH_RD;
-   465		} else if ((insn & INSN_MASK_C_LDSP) == INSN_MATCH_C_LDSP &&
-   466			   ((insn >> SH_RD) & 0x1f)) {
-   467			len = 8;
-   468			shift = 8 * (sizeof(unsigned long) - len);
-   469	#endif
-   470		} else if ((insn & INSN_MASK_C_LW) == INSN_MATCH_C_LW) {
-   471			len = 4;
-   472			shift = 8 * (sizeof(unsigned long) - len);
-   473			insn = RVC_RS2S(insn) << SH_RD;
-   474		} else if ((insn & INSN_MASK_C_LWSP) == INSN_MATCH_C_LWSP &&
-   475			   ((insn >> SH_RD) & 0x1f)) {
-   476			len = 4;
-   477			shift = 8 * (sizeof(unsigned long) - len);
-   478		} else if ((insn & INSN_MASK_C_FLD) == INSN_MATCH_C_FLD) {
-   479			fp = 1;
-   480			len = 8;
-   481			insn = RVC_RS2S(insn) << SH_RD;
-   482		} else if ((insn & INSN_MASK_C_FLDSP) == INSN_MATCH_C_FLDSP) {
-   483			fp = 1;
-   484			len = 8;
-   485	#if defined(CONFIG_32BIT)
-   486		} else if ((insn & INSN_MASK_C_FLW) == INSN_MATCH_C_FLW) {
-   487			fp = 1;
-   488			len = 4;
-   489			insn = RVC_RS2S(insn) << SH_RD;
-   490		} else if ((insn & INSN_MASK_C_FLWSP) == INSN_MATCH_C_FLWSP) {
-   491			fp = 1;
-   492			len = 4;
-   493	#endif
-   494		} else {
-   495			regs->epc = epc;
-   496			return -1;
-   497		}
-   498	
-   499		if (!IS_ENABLED(CONFIG_FPU) && fp)
-   500			return -EOPNOTSUPP;
-   501	
-   502		val.data_u64 = 0;
-   503		for (i = 0; i < len; i++) {
-   504			if (load_u8(regs, (void *)(addr + i), &val.data_bytes[i]))
-   505				return -1;
-   506		}
-   507	
-   508		if (!fp)
-   509			SET_RD(insn, regs, val.data_ulong << shift >> shift);
-   510		else if (len == 8)
-   511			set_f64_rd(insn, regs, val.data_u64);
-   512		else
-   513			set_f32_rd(insn, regs, val.data_ulong);
-   514	
-   515		regs->epc = epc + INSN_LEN(insn);
-   516	
-   517		return 0;
-   518	}
-   519	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> > > Even without that we'd need feature detection so that drivers that try
+> > > to use this aren't just buggy when used with a controller that doesn't
+> > > implement it, but once you're detecting you may as well just make things
+> > > work.
+> 
+> > I could see something like this working for controllers that leave the
+> > tx data line in the state of the last bit of a write transfer. I.e. do a
+> > write transfer of 0xff (using the smallest number of bits per word
+> > supported by the controller) with CS not asserted, then assert CS, then
+> > do the rest of actual the transfers requested by the peripheral.
+> 
+> > But it doesn't seem like it would work for controllers that always
+> > return the tx data line to a low state after a write since this would
+> > mean that the data line would still be low during the CS assertion
+> > which is what we need to prevent.
+> 
+> With the additional requirement it's not emulatable, but we'd still need
+> the checks in the core.
