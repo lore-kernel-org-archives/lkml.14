@@ -1,60 +1,25 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3E6195B2D
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28A6D13F014;
+	Thu,  6 Jun 2024 12:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717677375; cv=none; b=ejZx2HakbDS2Gi7tDdV3kBUKnC8Gn2mBJtIwE0yClL7jvbw6VqOIozihPufCHc+aJLlDVQzbl3zL0RLaLml1QrhBps+jBaR/utBPkxvcKwbd85LVDGjEbGLx39pduyt8woAn/PyZnivyeezx3PceQgwGulD3VObuJ9xrv4FtoxU=
+	t=1717677408; cv=none; b=s3/9TX3b9hs2jYBL99Iyqb8HCl54KQs211MteWqtJGis9TWglIGFa2Z34N/Frgxc+h24qvT0CIJ87UhoTzE9hKJ8gfG6tg6GgA2eAJN4kjzBJJzwU8q3D+xSFER8+iJRJ+hgGEyquEddW7mUbPhWvc+WFS+RK1raAwUW26Z+xjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717677375; c=relaxed/simple;
-	bh=GJs62SsgmLSxQvrSOVsJLWdRFgzQ41bXC4iAy+Q0DUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ThiKx8VnOyz3mOkyHeanfDp020eLikllfl1eQU6ztq2yG+JfdkA1le5417X9/cpL51AGtGtaMMprQt9FyovMvOHRzqM5muAt6rY2tgmC16olo+723DhaqHoczzsQEywf8rRGpXAoMUh3/Wgy+S+bN7WSogpGX5oCx4IQcmdq7fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pO4mNX5D; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pO4mNX5D"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52b8d483a08so1156795e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 05:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717677372; x=1718282172; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=CwfHtQYioR0Ch6IYzc3G8E96QHC5Vz0OXP+upCsTiZQ=;
-        b=pO4mNX5DtnQTFOFFFKoyoSOMUNd2pXspOhcR1x5sxM9CLw9HsvxhLUv2exqrgB/TX+
-         oOTUImBMzBZ+tTEIsgX4/yjuwshdWqrUG1XSJajwhEkx4TdIPKjr/0DtcHiHwuEmfRsH
-         Qicj+qoCBwlDDDmDciK8OcJ7Woht3bqhYivaF8XftivnbV+a158LffFpQVhmsursCr6e
-         b6wAfqwJgupCzhyztVByDFvKCMendD8xKoFs1S70o0aHH0Mr0Son7YC+mDzrPNeU3xz+
-         4d29iq6wL4GGAKsXClOCbppNZOrvuCRRwCJTqbRf8Q91tA95vwfVjL1HOmMsHcQkWdWl
-         Ws6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717677372; x=1718282172;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CwfHtQYioR0Ch6IYzc3G8E96QHC5Vz0OXP+upCsTiZQ=;
-        b=JS2xqmCgyHrBz7zogFAC/iYGvOAA1umfu6HncmuAfEdqHt0g/GEtukw4Gbsn2CAMHz
-         8hCyREc21vfioThZd5blxemiHG2a6v7r8ztP06nL7ot5NaZfKaHiUAij5fydgErLrI3N
-         tT7ZtJ5rEjn2tFb2e3TFPRoVEz8MST9L/DIhGmUVftgqSgzsA3ppPE9o00jNrdqSHG7t
-         s1xgYjuQkJd2pxPqCUlWBI88IS2DkMDK7Nef04SqgMCWRqgcZSTZry/l5lizsRTGoW8R
-         u+2J4YI6sYAIoFDmI4hFmZtFx5cfdNw5qKstUvznmZ6jZ8n/j79YsXCa5AY3F5tmuCpy
-         93Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCWqqazvIDhPiZacm97bM87eEba/ucdKwJJJevzh+seYfPpCc3RDdOQeeZj3dB1TA3mSlbUIwAljYtKL4HXvhivDXdH4odgiTVAJ9z5J
-X-Gm-Message-State: AOJu0YzGUMy6UIb1ychTGdvKxciY1w1znjRmQ/4AqzFuQ0ZQpYrNfSqY
-	nTVW0bgMIJO7Q6pTFuysIP918via293hi2VCWOJxEvo2Q1d646Y6R7EojpiaOOk=
-X-Google-Smtp-Source: AGHT+IFxf5AbZK0xfoIuzBycTPd0ERSVWXQofkSrXHJeZcE6CsZLV7QVG/4Dq36UAbGn4z0NplXrCg==
-X-Received: by 2002:a19:7006:0:b0:52b:98ab:6100 with SMTP id 2adb3069b0e04-52bab4c92d3mr3154822e87.15.1717677371942;
-        Thu, 06 Jun 2024 05:36:11 -0700 (PDT)
-Received: from [192.168.2.24] ([110.93.11.116])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421580fe366sm54771735e9.7.2024.06.06.05.36.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 05:36:11 -0700 (PDT)
-Message-ID: <db540adf-b03a-445c-b9a4-aa48b2a844b5@linaro.org>
-Date: Thu, 6 Jun 2024 14:36:10 +0200
+	s=arc-20240116; t=1717677408; c=relaxed/simple;
+	bh=l6l6PWRPX6gzWzEzbrByaLKIK1Qw30ViidRoyvSAnDc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d0ggQP17YsNj4uI3XS5sZSPzYw52hhEOnSLsJM1Uahtb+4j3uJV+HVMupEcA2Fiye5jILxeZkvabQeBeGUwNw7yuEW0N0teynBJxelLrZs/iRhjF2P7ZoPkMXmwup302g+uBJxZfHSfTLjllcXIOjsdBD8W0afbOfJpV7UC4dDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA94C2F4;
+	Thu,  6 Jun 2024 05:37:09 -0700 (PDT)
+Received: from [10.1.28.63] (e127648.arm.com [10.1.28.63])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF92B3F64C;
+	Thu,  6 Jun 2024 05:36:43 -0700 (PDT)
+Message-ID: <75fc12cc-b343-4dfd-a142-398a77042d98@arm.com>
+Date: Thu, 6 Jun 2024 13:36:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,78 +27,141 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: arm: amlogic: add support for Dreambox
- One/Two
-To: Christian Hewitt <christianshewitt@gmail.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240606094513.3949323-1-christianshewitt@gmail.com>
- <20240606094513.3949323-2-christianshewitt@gmail.com>
+Subject: Re: [PATCH 0/6] cpuidle: teo: fixes and improvements
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ vincent.guittot@linaro.org, qyousef@layalina.io, peterz@infradead.org,
+ daniel.lezcano@linaro.org, anna-maria@linutronix.de,
+ kajetan.puchalski@arm.com, lukasz.luba@arm.com, dietmar.eggemann@arm.com
+References: <20240606090050.327614-1-christian.loehle@arm.com>
+ <db984b92-549a-46e1-ae3a-0e1fb4f2e5b2@arm.com>
+ <CAJZ5v0jmg4Vz4=pDoaZmToBGMxMoVDt8qDm-+RMHCh46nPW31Q@mail.gmail.com>
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240606094513.3949323-2-christianshewitt@gmail.com>
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <CAJZ5v0jmg4Vz4=pDoaZmToBGMxMoVDt8qDm-+RMHCh46nPW31Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 06/06/2024 11:45, Christian Hewitt wrote:
-> Dreambox One and Dreambox Two are DVBS/T2 receiver boxes based
-> on the Amlogic W400 reference board with an S922X chip.
+On 6/6/24 13:29, Rafael J. Wysocki wrote:
+> On Thu, Jun 6, 2024 at 1:59 PM Christian Loehle
+> <christian.loehle@arm.com> wrote:
+>>
+>> On 6/6/24 10:00, Christian Loehle wrote:
+>>> Hi all,
+>>> so my investigation into teo lead to the following fixes and
+>>> improvements. Logically they are mostly independent, that's why this
+>>> cover letter is quite short, details are in the patches.
+>>>
+>>> 1/6:
+>>> As discussed, the utilization threshold is too high, while
+>>> there are benefits in certain workloads, there are quite a few
+>>> regressions, too.
+>>> 2/6:
+>>> Especially with the new util threshold, stopping tick makes little
+>>> sense when utilized is detected, so don't.
+>>> 3/6:
+>>> Particularly with WFI, even if it's the only state, stopping the tick
+>>> has benefits, so enable that in the early bail out.
+>>> 4/6:
+>>> Stopping the tick with 0 cost (if the idle state dictates it) is too
+>>> aggressive IMO, so add 1ms constant cost.
+>>> XXX: This has the issue of now being counted as idle_miss, so we could
+>>> consider adding this to the states, too, but the simple implementation
+>>> of this would have the downside that the cost is added to deeper states
+>>> even if the tick is already off.
+>>> 5/6:
+>>> Remove the 'recent' intercept logic, see my findings in:
+>>> https://lore.kernel.org/lkml/0ce2d536-1125-4df8-9a5b-0d5e389cd8af@arm.com/
+>>> I haven't found a way to salvage this properly, so I removed it.
+>>> The regular intercept seems to decay fast enough to not need this, but
+>>> we could change it if that turns out to be the case.
+>>> 6/6:
+>>> The rest of the intercept logic had issues, too.
+>>> See the commit.
+>>>
+>>> TODO: add some measurements of common workloads and some simple sanity
+>>> tests (like Vincent described in low utilization workloads if the
+>>> state selection looks reasonable).
+>>> I have some, but more (and more standardized) would be beneficial.
+>>>
+>>> Happy for anyone to take a look and test as well.
+>>>
+>>> Some numbers for context:
+>>> Maybe some numbers for context, I'll probably add them to the cover letter.
+>>>
+>>> Comparing:
+>>> - IO workload (intercept heavy).
+>>> - Timer workload very low utilization (check for deepest state)
+>>> - hackbench (high utilization)
+>>> all on RK3399 with CONFIG_HZ=100.
+>>> target_residencies: 1, 900, 2000
+>>>
+>>> 1. IO workload, 5 runs, results sorted, in read IOPS.
+>>> fio --minimal --time_based --name=fiotest --filename=/dev/nvme0n1 --runtime=30 --rw=randread --bs=4k --ioengine=psync --iodepth=1 --direct=1 | cut -d \; -f 8;
+>>>
+>>> teo fixed:
+>>> /dev/nvme0n1
+>>> [4597, 4673, 4727, 4741, 4756]
+>>> /dev/mmcblk2
+>>> [5753, 5832, 5837, 5911, 5949]
+>>> /dev/mmcblk1
+>>> [2059, 2062, 2070, 2071, 2080]
+>>>
+>>> teo mainline:
+>>> /dev/nvme0n1
+>>> [3793, 3825, 3846, 3865, 3964]
+>>> /dev/mmcblk2
+>>> [3831, 4110, 4154, 4203, 4228]
+>>> /dev/mmcblk1
+>>> [1559, 1564, 1596, 1611, 1618]
+>>>
+>>> menu:
+>>> /dev/nvme0n1
+>>> [2571, 2630, 2804, 2813, 2917]
+>>> /dev/mmcblk2
+>>> [4181, 4260, 5062, 5260, 5329]
+>>> /dev/mmcblk1
+>>> [1567, 1581, 1585, 1603, 1769]
+>>>
+>>> 2. Timer workload (through IO for my convenience ;) )
+>>> Results in read IOPS, fio same as above.
+>>> echo "0 2097152 zero" | dmsetup create dm-zeros
+>>> echo "0 2097152 delay /dev/mapper/dm-zeros 0 50" | dmsetup create dm-slow
+>>> (Each IO is delayed by timer of 50ms, should be mostly in state2)
+>>>
+>>> teo fixed:
+>>> 3269 cpu_idle total
+>>> 48 cpu_idle_miss
+>>> 30 cpu_idle_miss above
+>>> 18 cpu_idle_miss below
+>>>
+>>> teo mainline:
+>>> 3221 cpu_idle total
+>>> 1269 cpu_idle_miss
+>>> 22 cpu_idle_miss above
+>>> 1247 cpu_idle_miss below
+>>>
+>>> menu:
+>>> 3433 cpu_idle total
+>>> 114 cpu_idle_miss
+>>> 61 cpu_idle_miss above
+>>> 53 cpu_idle_miss below
+>>>
+>>> Residencies:
+>>
+>> Hmm, maybe actually including them would've been helpful too:
+>> (Over 5s workload, only showing LITTLE cluster)
+>> teo fixed:
+>> idle_state
+>> 2.0     4.813378
+>> -1.0    0.210820
 > 
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
+> Just to clarify, what does -1.0 mean here?
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Good point, I should've mentioned.
+This adds up the residencies just from the trace event cpu_idle.
+-1 stands for PWR_EVENT_EXIT i.e. non-idle, it's quite useful
+if we're talking absolute numbers but idle state ratios.
+tldr: the time the CPU isn't in any idle state.
 
-Best regards,
-Krzysztof
-
+> [snip]
