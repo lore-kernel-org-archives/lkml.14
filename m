@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5539F19883B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6562D198845;
 	Thu,  6 Jun 2024 16:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717690062; cv=none; b=gZubbcr7vaq6Z8lyvRr2LsQSPZer1U/OiRCdnzpmZSo1iHs8+8Qan8XLQQQEF/EdqjTaIHTBkNZ0R21hriJTZl+Wfb9PjMiUSG8suKzT7nCYxzBH31siEpEGskqSc4Sr/35zslMX0hH9Fx+0hfKCOV/FBqag45pfum5SKSxF/+E=
+	t=1717690062; cv=none; b=BlwM6aqS0qm0It4hS/3gfW5L6LmfUdbqHeYrGSN2npxef9RkiEVWf2/+J3jcZawrBMTjtR92ACyrdYTdyhkjQLm3nU3otuZvlIMopVvw91BfJ+1OYAfimhBZbAj4N1t9RsbudzRNgrUHwYPjGpd6hkH6ckbblB+ep2JiI5i9i1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717690062; c=relaxed/simple;
-	bh=afsv2fV0gtzsJaTkVEd62/Yxe4pe2uQVIKmzH2c38Kw=;
+	bh=dgy2A943dFVWcr4xyJIn5kno2jgISeZ5CYUeSn4jwbQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tEGwidWiHvSeNPJBOShyPc+n+DvqJ5xdK3yrQxN+sH85yVGfJ6lOfLnJP7hDnCJRscaY1yLf9YRgQt/Qvh7Rkww1ZOcvNx8SJlgr1BhBXKKyOxfV45CtrIba8u+UEa2/E/rjqx33XFkArru5htj/y+xlTrKYgJ5oDevppovu5nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gcmM51XP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ZAdrnGzks0b94XE3XIyd7SfyBICmoYujn9s16Y8BvhMxkIQs/9GCLgCY7g3dfSi39cnvcBcDkdCKxpaSjA90dn7+D5dyhe8vIICvViy2Q39FgpDK06yQiWpAHLOZehxejvCo8/5HS+B4RDl1rxUpgDRPUZofdL/n/YRgL6rqKcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smVFugak; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gcmM51XP"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2C386C4AF1D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smVFugak"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 07AAEC4AF19;
 	Thu,  6 Jun 2024 16:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717690062;
-	bh=afsv2fV0gtzsJaTkVEd62/Yxe4pe2uQVIKmzH2c38Kw=;
+	bh=dgy2A943dFVWcr4xyJIn5kno2jgISeZ5CYUeSn4jwbQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gcmM51XPsZSAc5SqZIU0hg23qK7Z6i/xP1iNFqM9NWNNkmP7R7z6vUVU3eaLobSvT
-	 sjnTFNDg95WAYld+m7/rEOSUYDIoiUF4Kcx/ElKrwN40Jhfphc/xVUUr99GgZXJmfM
-	 164qO+BsOBZ5q4rVsyEldc7vgrK8YIynlx2cHMwORgllgu4L9jFxNZHFopGseDUalz
-	 5vliQLpLF+5fXILS8Xmrh03DlPXItSk0SHHqCLlJA5+7X6KYNFDzv41uApy9hpJm59
-	 e1bxV88Ezi10OzxGSZa5PO6ga0CuP8+FYJW7mNoNzlDdx40md4s+mwlhxHz7Hq9WaF
-	 VSRdjwc16t+8w==
+	b=smVFugakJZUO0nj/oidkIb42h9VcmHufBpHWN7b9grcgLCNkda2HrgvJ1rI77KI9G
+	 IrbmsVCY8Ia6nzpwnp7Ef548VSTil3uWx9Zs0SSr7puyXmd4uT2NuNgsdrPuQl9029
+	 ojAmB47vP4CRbgbxsZ5gHy8PDnun1E4GFdmJ9fqC2acFxBuVuQYDJEmYZQpUHtic88
+	 dTjk+LrcYMuCgg9VU83qDQNWnQpEfWa6MUY8pvJMKGFNZDOR5TeliwQ1D63jvQvifk
+	 ih2iZq+QU/uF2EoDl+OLRmYLq4xMR4ItAc9T2NEAOzGcMCi39Atc8gRwQW6/i1q+6S
+	 E5znDsLUhZe7w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2286CC27C65;
-	Thu,  6 Jun 2024 16:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3DEC27C5F;
+	Thu,  6 Jun 2024 16:07:41 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Thu, 06 Jun 2024 19:07:47 +0300
-Subject: [PATCH v6 8/9] iio: adc: ad7173: document sampling frequency
- behaviour
+Date: Thu, 06 Jun 2024 19:07:45 +0300
+Subject: [PATCH v6 6/9] iio: adc: ad7173: add support for special inputs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,8 +39,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240606-ad4111-v6-8-573981fb3e2e@analog.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240606-ad4111-v6-6-573981fb3e2e@analog.com>
 References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
 In-Reply-To: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
 To: Ceclan Dumitru <dumitru.ceclan@analog.com>
@@ -53,11 +52,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717690059; l=1618;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717690059; l=4388;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=5A7meMN974lnd3IZ+v3+YKzX36bmXGBNKl55VG1TWLo=;
- b=vhbwHZSMdCRyNA8RxOKXUcNeTNqYZaTz02kVQ4ip3JBIQveKFzYY1sJ+/GiVnaj/IOe/cUelS
- CDjv3IwJYyVACNS8MObykH3YVHBttwhyEbIsblfE87VnjnWr4Q+Z8rJ
+ bh=hVN7Wx0S4d3TmvMG178sCl53E62M7EsA/DtotGwBQqo=;
+ b=LAua7k1WT20Gd1RAfZJ+1SPPfBdUeQz0SPDLW4Y3AuIZQUHMBnp98XiaQFNBeK/hXc/bHv1vN
+ RLSSia25SARD6QPVBzlY0aehybhuFvkeKvW7AhpRKC8tSPOS+JXK0Dp
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -67,43 +66,119 @@ Reply-To: dumitru.ceclan@analog.com
 
 From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-The ADCs supported by this driver feature a sequencer that read in a
-loop all the enabled chanels. When setting the individual sampling
-frequency for each channel and enabling multiple channels, the effective
-of each channel will be lower than the actual set value. Document this
-behaviour in a comment.
+ Add support for selecting REF+ and REF- inputs on all models.
+ Add support for selecting ((AVDD1 − AVSS)/5) inputs
+  on supported models.
 
 Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
 ---
- drivers/iio/adc/ad7173.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/iio/adc/ad7173.c | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-index 8d008186cd6e..58da5717fd36 100644
+index 4040edbd1c32..d16fa081a285 100644
 --- a/drivers/iio/adc/ad7173.c
 +++ b/drivers/iio/adc/ad7173.c
-@@ -740,6 +740,21 @@ static int ad7173_write_raw(struct iio_dev *indio_dev,
- 		return ret;
+@@ -66,6 +66,13 @@
+ 	 FIELD_PREP(AD7173_CH_SETUP_AINNEG_MASK, neg))
+ #define AD7173_AIN_TEMP_POS	17
+ #define AD7173_AIN_TEMP_NEG	18
++#define AD7173_AIN_POW_MON_POS	19
++#define AD7173_AIN_POW_MON_NEG	20
++#define AD7173_AIN_REF_POS	21
++#define AD7173_AIN_REF_NEG	22
++
++#define AD7173_IS_REF_INPUT(x)		((x) == AD7173_AIN_REF_POS || \
++					(x) == AD7173_AIN_REF_NEG)
  
- 	switch (info) {
-+	/*
-+	 * This attribute sets the sampling frequency for each channel individually.
-+	 * There are no issues for raw or buffered reads of an individual channel.
-+	 *
-+	 * When multiple channels are enabled in buffered mode, the effective
-+	 * sampling rate of a channel is lowered in correlation to the number
-+	 * of channels enabled and the sampling rate of the other channels.
-+	 *
-+	 * Example: 3 channels enabled with rates CH1:6211sps CH2,CH3:10sps
-+	 * While the reading of CH1 takes only 0.16ms, the reading of CH2 and CH3
-+	 * will take 100ms each.
-+	 *
-+	 * This will cause the reading of CH1 to be actually done once every
-+	 * 200.16ms, an effective rate of 4.99sps.
-+	 */
- 	case IIO_CHAN_INFO_SAMP_FREQ:
- 		freq = val * MILLI + val2 / MILLI;
- 		for (i = st->info->odr_start_value; i < st->info->num_sinc5_data_rates - 1; i++)
+ #define AD7172_2_ID			0x00d0
+ #define AD7175_ID			0x0cd0
+@@ -146,6 +153,8 @@ struct ad7173_device_info {
+ 	unsigned int id;
+ 	char *name;
+ 	bool has_temp;
++	/* ((AVDD1 − AVSS)/5) */
++	bool has_pow_supply_monitoring;
+ 	bool has_input_buf;
+ 	bool has_int_ref;
+ 	bool has_ref2;
+@@ -216,6 +225,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
+ 		.has_temp = true,
+ 		.has_input_buf = true,
+ 		.has_int_ref = true,
++		.has_pow_supply_monitoring = true,
+ 		.clock = 2 * HZ_PER_MHZ,
+ 		.sinc5_data_rates = ad7173_sinc5_data_rates,
+ 		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
+@@ -230,6 +240,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
+ 		.has_temp = false,
+ 		.has_input_buf = true,
+ 		.has_ref2 = true,
++		.has_pow_supply_monitoring = true,
+ 		.clock = 2 * HZ_PER_MHZ,
+ 		.sinc5_data_rates = ad7173_sinc5_data_rates,
+ 		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
+@@ -245,6 +256,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
+ 		.has_input_buf = true,
+ 		.has_int_ref = true,
+ 		.has_ref2 = true,
++		.has_pow_supply_monitoring = false,
+ 		.clock = 2 * HZ_PER_MHZ,
+ 		.sinc5_data_rates = ad7173_sinc5_data_rates,
+ 		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
+@@ -259,6 +271,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
+ 		.has_temp = true,
+ 		.has_input_buf = true,
+ 		.has_int_ref = true,
++		.has_pow_supply_monitoring = true,
+ 		.clock = 16 * HZ_PER_MHZ,
+ 		.sinc5_data_rates = ad7175_sinc5_data_rates,
+ 		.num_sinc5_data_rates = ARRAY_SIZE(ad7175_sinc5_data_rates),
+@@ -274,6 +287,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
+ 		.has_input_buf = true,
+ 		.has_int_ref = true,
+ 		.has_ref2 = true,
++		.has_pow_supply_monitoring = true,
+ 		.clock = 16 * HZ_PER_MHZ,
+ 		.sinc5_data_rates = ad7175_sinc5_data_rates,
+ 		.num_sinc5_data_rates = ARRAY_SIZE(ad7175_sinc5_data_rates),
+@@ -288,6 +302,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
+ 		.has_temp = false,
+ 		.has_input_buf = false,
+ 		.has_int_ref = true,
++		.has_pow_supply_monitoring = false,
+ 		.clock = 16 * HZ_PER_MHZ,
+ 		.sinc5_data_rates = ad7175_sinc5_data_rates,
+ 		.num_sinc5_data_rates = ARRAY_SIZE(ad7175_sinc5_data_rates),
+@@ -302,6 +317,7 @@ static const struct ad7173_device_info ad7173_device_info[] = {
+ 		.has_temp = true,
+ 		.has_input_buf = true,
+ 		.has_int_ref = true,
++		.has_pow_supply_monitoring = true,
+ 		.clock = 16 * HZ_PER_MHZ,
+ 		.odr_start_value = AD7177_ODR_START_VALUE,
+ 		.sinc5_data_rates = ad7175_sinc5_data_rates,
+@@ -914,9 +930,18 @@ static int ad7173_validate_voltage_ain_inputs(struct ad7173_state *st,
+ 					      unsigned int ain0, unsigned int ain1)
+ {
+ 	struct device *dev = &st->sd.spi->dev;
++	bool special_input0, special_input1;
++
++	/* (AVDD1-AVSS)/5 power supply monitoring */
++	if (ain0 == AD7173_AIN_POW_MON_POS && ain1 == AD7173_AIN_POW_MON_NEG &&
++	    st->info->has_pow_supply_monitoring)
++		return 0;
++
++	special_input0 = AD7173_IS_REF_INPUT(ain0);
++	special_input1 = AD7173_IS_REF_INPUT(ain1);
+ 
+-	if (ain0 >= st->info->num_inputs ||
+-	    ain1 >= st->info->num_inputs)
++	if ((ain0 >= st->info->num_inputs && !special_input0) ||
++	    (ain1 >= st->info->num_inputs && !special_input1))
+ 		return dev_err_probe(dev, -EINVAL,
+ 				     "Input pin number out of range for pair (%d %d).\n",
+ 				     ain0, ain1);
 
 -- 
 2.43.0
