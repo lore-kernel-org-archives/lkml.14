@@ -1,177 +1,152 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D072D1E51D;
-	Thu,  6 Jun 2024 07:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7AE1BDEF;
+	Thu,  6 Jun 2024 07:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717658549; cv=none; b=LiMq3ZG104J2c1wDN4ydhrm7BsLap0WSt8a1Xkqj7Bcpk9cGPz1U1jT9wMMqwoXxsxg+/vfKrWQ7RRvPZIyvmnQEPOOXg1fFxJqFMnPxFZFh1ZSNBgCjfBZj1pmMwvaKSUVIBwyhOWxolg4cmRfc3h171pFs65HFFlqrhjkhaTk=
+	t=1717658654; cv=none; b=Z5aBAz70GMVbC7xu1d8JCB3dyp8MNbkbvxBuhTBykHAC79F62pB+58RD6VraMAm3dVFi8xXN/20AKef8yVF4FIKF6cyGi9rmHYCpFovmy4oVe4DPptY+FenCcnJYm//SpHJayUU1uwIiwZeeyXJP9oiehMPwCJQPJqAuacQl9MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717658549; c=relaxed/simple;
-	bh=szT99mGZHql/9nIzB4JuC9TNyyUcXb4GeLPFPN+LAng=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DaDsUc9Mn++35q2Sw/RFJiUKdfMXZ9YyGxpuicm8etaYxKVlZ9Iz9vYDpZm22dwgSftkMr1g4XqJKMAJ8xoSGyNqr8HbXtB3+XjjkOF6hUMNIEGVUnhIJ2U37mh1Ry0cyv0TUV/pBEgUTfQatYvf95arupHlrRDcxjP9OfhniHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZhvpbASW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717658654; c=relaxed/simple;
+	bh=jXYEynwSQ/kS6Y2DZCqgLn0Xi95jhH4Mfjku3tq6uV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=InfsNNijnyvkqpVAZGRV7fFGQltTUP0xt7dyXqqf3Y9hJ7G38on3VPt+UN93wCW+nWoUE6jTBTdiRM70WNoT7+JyqBzdLBuuvbggLm6YG6xfu4epnichYT/PRUW9fhWBpKbevwoKFaaOq1ImRMq4pTzFNOzBfPFtM14Q3AX6hig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=I6RLl4RT; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YWBU5sB8; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZhvpbASW"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 455KICoa004174;
-	Thu, 6 Jun 2024 07:22:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9N7P+qpAqx1kFTEkel5RJU3y+gdL6UcRibDpmh659lw=; b=ZhvpbASWzo+wPdwZ
-	Qwl/RthFSC1QS1XjqoAU60DlO80J2iU20H+g4qShP8T6IMHiAeMAOPiHMTsqf683
-	XKK6rHuP9FidB8yJjFPr0Be0UDRbB8Zy9iwQU5slisu3Dxo/tiZMeD55dKf1vkyw
-	zezN8rkgfjAN3Wmpe4XuTgAMjzopQcQcdC3jy5PwgBHn2twFApBHghEG+o9CUOXN
-	Ylw0yyImxQx/XnnFIrCXUAoKhv12z5FSnPJYLGuOhnYQ7Vc91ZA3KtQIfKnCF1i7
-	wpSKsviU2JhGPYrITu+3sYPYuHjeb9PP43vw5W23o5WxDR15O+NLr+anAvL8Y4CT
-	fG+XQQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjxxas1v6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 07:22:23 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4567MLkv008618
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Jun 2024 07:22:21 GMT
-Received: from [10.204.67.150] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Jun 2024
- 00:22:18 -0700
-Message-ID: <becf237b-1f46-46cd-b196-fdfca35ef736@quicinc.com>
-Date: Thu, 6 Jun 2024 12:52:15 +0530
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="I6RLl4RT";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YWBU5sB8"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DEB0521A84;
+	Thu,  6 Jun 2024 07:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1717658650; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dV+8uG3NWP7Z2WVw8rJlpezXlpJJAU6quHjqjCAuUvg=;
+	b=I6RLl4RTFv4iNm7RZk3oBzz1X4U9wTNmf++6TiYnwSjlgBzTnp/ljntV/374TuQ6sb1U0P
+	w78+ysogjl1D35qof9jCd54F1SLwGyi604q2F0UQmdUrsbd0U7o2WKoK2kxnZPNOHtLndx
+	j+4gpxqNtyWYaqwMc+09upJmlQUC/K4=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=YWBU5sB8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1717658649; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dV+8uG3NWP7Z2WVw8rJlpezXlpJJAU6quHjqjCAuUvg=;
+	b=YWBU5sB8RlKNt2fwTCRD3FIIKW2t72h7Ml+CqY9t0gBQC3Kq+xjuwBIBk3ByKnMyzjFdfs
+	UBnR1OJ4dJET6uT5HsViBzkUz+tbSd6ScKOJrtNglepjY85ZlsO2l7lXptvRy5TPdg0SQe
+	tX1gGABBxJBt3T2PC3Cag5d/FWVjZvc=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C631513A79;
+	Thu,  6 Jun 2024 07:24:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /GBaLRlkYWbETgAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Thu, 06 Jun 2024 07:24:09 +0000
+Date: Thu, 6 Jun 2024 09:24:09 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: Re: CVE-2023-52734: net: sched: sch: Bounds check priority
+Message-ID: <ZmFkGWitjXvyOtbK@tiehlicka>
+References: <2024052100-CVE-2023-52734-c8c2@gregkh>
+ <ZlWNaIMC3NCkIFxv@tiehlicka>
+ <2024052824-justice-lair-14e6@gregkh>
+ <ZlbIZ8bdBK4tZcBa@tiehlicka>
+ <2024052930-dealt-class-f845@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 8/9] misc: fastrpc: Restrict untrusted app to spawn
- signed PD
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <quic_bkumar@quicinc.com>,
-        <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>,
-        stable
-	<stable@kernel.org>
-References: <20240530102032.27179-1-quic_ekangupt@quicinc.com>
- <20240530102032.27179-9-quic_ekangupt@quicinc.com>
- <q6vl2d7ekrjiwbr4h6cieh6q7vewhbiqay67wrglurphkigq4c@zoeyzywhypww>
- <6c026f78-d397-4375-a347-85f41bff1e99@quicinc.com>
- <7eygwrefc43aaqeihir3odjhdseeewweqvabvq6jg5bbmnhrkz@p33mhebq5v3w>
-From: Ekansh Gupta <quic_ekangupt@quicinc.com>
-In-Reply-To: <7eygwrefc43aaqeihir3odjhdseeewweqvabvq6jg5bbmnhrkz@p33mhebq5v3w>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: _ufIZBHHGWcd2BdGZqHXuGL4ZfSL7WGH
-X-Proofpoint-GUID: _ufIZBHHGWcd2BdGZqHXuGL4ZfSL7WGH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-06_01,2024-06-06_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=923 adultscore=0
- priorityscore=1501 spamscore=0 malwarescore=0 mlxscore=0 bulkscore=0
- phishscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406060053
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024052930-dealt-class-f845@gregkh>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: DEB0521A84
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
 
+On Wed 29-05-24 11:51:10, Greg KH wrote:
+> On Wed, May 29, 2024 at 09:30:08AM +0200, Michal Hocko wrote:
+[...]
+> > I am questioning the decision to make it a CVE. Because if that was a
+> > real deal then WARN_ON is something kernel CNA is considering a CVE worth
+> > problem! So a CVE has been filed with a fix that is CVE itself.
+> > Seriously how could this pass through the CVE review process?
+> 
+> "How" is "this was part of the entries in the GSD records that MITRE
+> asked us to back-fill as CVE entries".  Those entries already went
+> through two different rounds of review last year for the GSD record, and
+> I did another one as well now before the CVE creation happened.  
 
+I am sorry but I have no idea how that is supposed to justify assigning
+a CVE to a non-issue with a fix that is clearly considered a CVE on its
+own. An overlook, sure. That is understandable but the above doesn't
+make any sense to me.
 
-On 6/3/2024 3:32 PM, Dmitry Baryshkov wrote:
-> On Mon, Jun 03, 2024 at 11:57:52AM +0530, Ekansh Gupta wrote:
->> On 5/31/2024 5:19 AM, Dmitry Baryshkov wrote:
->>> On Thu, May 30, 2024 at 03:50:26PM +0530, Ekansh Gupta wrote:
->>>> Some untrusted applications will not have access to open fastrpc
->>>> device nodes and a privileged process can open the device node on
->>>> behalf of the application. Add a check to restrict such untrusted
->>>> applications from offloading to signed PD.
->>>>
->>>> Fixes: 7f1f481263c3 ("misc: fastrpc: check before loading process to the DSP")
->>>> Cc: stable <stable@kernel.org>
->>>> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
->>>> ---
->>>>   drivers/misc/fastrpc.c | 23 ++++++++++++++++++-----
->>>>   1 file changed, 18 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
->>>> index 73fa0e536cf9..32615ccde7ac 100644
->>>> --- a/drivers/misc/fastrpc.c
->>>> +++ b/drivers/misc/fastrpc.c
->>>> @@ -328,6 +328,7 @@ struct fastrpc_user {
->>>>   	int pd;
->>>>   	bool is_secure_dev;
->>>>   	bool is_unsigned_pd;
->>>> +	bool untrusted_process;
->>>>   	char *servloc_name;
->>>>   	/* Lock for lists */
->>>>   	spinlock_t lock;
->>>> @@ -1249,13 +1250,17 @@ static bool is_session_rejected(struct fastrpc_user *fl, bool unsigned_pd_reques
->>>>   		 * channel is configured as secure and block untrusted apps on channel
->>>>   		 * that does not support unsigned PD offload
->>>>   		 */
->>>> -		if (!fl->cctx->unsigned_support || !unsigned_pd_request) {
->>>> -			dev_err(&fl->cctx->rpdev->dev, "Error: Untrusted application trying to offload to signed PD\n");
->>>> -			return true;
->>>> -		}
->>>> +		if (!fl->cctx->unsigned_support || !unsigned_pd_request)
->>>> +			goto reject_session;
->>>>   	}
->>>> +	/* Check if untrusted process is trying to offload to signed PD */
->>>> +	if (fl->untrusted_process && !unsigned_pd_request)
->>>> +		goto reject_session;
->>>>   	return false;
->>>> +reject_session:
->>>> +	dev_dbg(&fl->cctx->rpdev->dev, "Error: Untrusted application trying to offload to signed PD\n");
->>>> +	return true;
->>>>   }
->>>>   static void fastrpc_mmap_remove_pdr(struct fastrpc_static_pd *spd)
->>>> @@ -1504,12 +1509,20 @@ static int fastrpc_init_create_process(struct fastrpc_user *fl,
->>>>   		goto err;
->>>>   	}
->>>> +	/*
->>>> +	 * Third-party apps don't have permission to open the fastrpc device, so
->>> Permissions depend on the end-user setup. Is it going to break if the
->>> user sets 0666 mode for fastrpc nodes?
->> If the root user sets 0666 for fastrpc nodes, it is expected that this check will get bypassed.
-> So, any process will be trusted? This looks so Android-centric. Please come
-> with a better way to define 'trusted'.
->
-> On a typical UNIX system a used has multiple supplementary GIDs (which
-> can be used to allow access to the devices) which have no relationship
-> to the process effective GID. On a multi-user machine it might be
-> logical that fastrpc nodes have separate group-id and group's read/write
-> permissions. But then each of the users has their own unique 'effective'
-> GID. Which of those should be using for computing the 'trusted' status?
-Thanks for your suggestions, Dmitry. I am considering dropping this patch and system unsignedPD patch
-from this series(due to the dependency). I'm redesigning the trusted-process term to make it more generic.
-Planning to make it depend on the group IDs and have a check with both primary and supplementary GIDs
-of the process. I'll share the design with you along with the changes once it's ready.
->
->>>> +	 * it is opened on their behalf by a priveleged process. This is detected
->>>> +	 * by comparing current PID with the one stored during device open.
->>>> +	 */
->>>> +	if (current->tgid != fl->tgid)
->>>> +		fl->untrusted_process = true;
->>> If the comment talks about PIDs, when why are you comparing GIDs here?
->> It should be GID, I'll update the comment in next spin.
->>
->>>> +
->>>>   	if (init.attrs & FASTRPC_MODE_UNSIGNED_MODULE)
->>>>   		fl->is_unsigned_pd = true;
->>>>   	if (is_session_rejected(fl, fl->is_unsigned_pd)) {
->>>> -		err = -ECONNREFUSED;
->>>> +		err = -EACCES;
->>>>   		goto err;
->>>>   	}
->>>> -- 
->>>> 2.43.0
->>>>
+> It was in a batch where I reviewed 124 entries at once,
 
+OK, this makes much more sense and I do not mean to blame you for
+overlooking a particular things. But ...
+
+> and if I only got one
+> wrong, hey, that's a very good % overall, don't you think?  Especially
+> as it has been a publicily listed "vulnerability fix" for well over a
+> year now in the GSD system, and no one objected to it there.
+
+... it is unavoidable to overlook completely bogus or even harmfull CVE
+fixes if they are generated in the current volumes. It is much worse
+that it is easier to overlook those which really are important.
+Especially during CVSS assessment. This simply cannot scale!
+
+[...]
+
+> I welcome others to help out with this work, including yourself, if you
+> so desire.  That would help out a lot.
+
+I am sorry but I fundamentally disagree with the way how CVEs are
+processed _now_ and therefore I will not put my name under that. I am
+still hopeful that this is just the new process finding its own way and
+it will settle on something much more reasonable and _useful_.
+
+-- 
+Michal Hocko
+SUSE Labs
