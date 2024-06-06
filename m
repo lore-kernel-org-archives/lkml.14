@@ -1,105 +1,102 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5563BBCC;
-	Thu,  6 Jun 2024 19:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717703233; cv=pass; b=heFxj0WHfXFpmRFYwugGU4r8l6I+QMDeiPV4twPwEYK+1FFpR41bG2IPC3ip5sKqwcVrZmFiDRk09kWnPzPGGPMC2ue4D/q7vjo7RozHtp+Slf6aMTAH3EZ0l652dgw++Q93qRGZFtT4xauNDbTeo8bnHEDKDQW70h4fg5QUDUc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717703233; c=relaxed/simple;
-	bh=95JBikPb0VU85plNVzpeTui8k5LLPaKq/tw9FQgiWEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gQyIDa5ikGiwyUdx6niQAvgkTv0XuycagP6zcoxD//UphQWmWt2MtghiagihqcIDNPskoRJzxaV40nxz5aMZRHC311zeF1brb2SfJSNKSF1rtqqmhEbr0PY/pbb9pjeBoqiOHbshWsAeGWB+3vfEo6baw2D6oVN98cNf0N3fPyE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=q8ONmmOY; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15344AEF6;
+	Thu,  6 Jun 2024 19:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717703301; cv=none; b=DgUPAC23GFGQpYGLrNfPbTiwOXnhlnNuFRyInP5e1DRV3I4M2hr/pEOUU/MAjySW6pMVmz7AtkWrZad5iTNS2exfUztbwB15Ee8E8Fot8XVIfRttMJ/TS1ut/0rRZn6MyEarxPO/WXCvW5Gscbnk9gKBAO1XXcRk8s6tHCGd2ss=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717703301; c=relaxed/simple;
+	bh=xPMHflPdbksHj5PGoMkKEru9ufl0KWX8adQp+i3GW0I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eR6R347kCTsT4K2q+4SIIpTQxjTFJOyCd8fNROz6FmqVC5ZFHRjY6tZDzdEuejyLSk3XVuuOFRD9zyzyfiNa8ULv4r6sIyk4VAyox7rvly8FT19pTkx/xXEZhbG4tYVNmGqvcoEJWW79aP677vSd8KKhWV0D9kVenHRfW5XzXT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aNuBtyDW; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="q8ONmmOY"
-Received: from darkstar.musicnaut.iki.fi (85-76-74-208-nat.elisa-mobile.fi [85.76.74.208])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: aaro.koskinen)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4VwFGN5c5Mz49Q3M;
-	Thu,  6 Jun 2024 22:47:08 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1717703229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UrClKJA9brL19M4WtLgma2oVHMAxwn+KD22tbsVdg88=;
-	b=q8ONmmOYIBVmAKqu/7z3JAZwLs8Inom5+FHT0lLXpcJHH8m0xNQ1Ap7BqdEidau+Ek5fJW
-	BD+nsD9U54bL8nK91DTmFsogCXGWR9FjzHUsR/JkQZBhgW4Sjg3/4WcfOgrI1txJeOqCtC
-	4tZh9sfV4Y+e2W82JAtjUimvn/3ZaZjOmnrLjrzH6tfU62Tv2nL/kZw1qv6cUBQj8N/DbE
-	sSlYyGDcNH/LQTFkUogxRIghCwmmvYmJSgBxxNwb5Yhb3Ke5HwI5dzVeOAfyOpkU7qHpxZ
-	F3nXVeSadgaIwvmc3sm+4yVooTw6NlythJuZVROYWmx0us+IideVRVof1zkXqg==
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1717703229; a=rsa-sha256;
-	cv=none;
-	b=F+VKMfVokwqydHJto6eK36ByJZYaGwuU+I1cS62avWh7lOjhR3F0XmU+wjFJW0qOic3rR7
-	pc3EJtN46x9xL9P5rXlqWC4MFwFMWGDzp1SMcLF+dJdsigd4xn31N6rSXaG4kPjyB4pATj
-	pLkzYE/BHaihgrPhICSVPNz6FiLmJTlzTMbHUkwVcyUR455TcNhF1ZCnUrJMN+cLkPPDcn
-	rGMe2p6eVqd2NdaOw7Fo3EQ6oF9j9GqchXxJg/DboxZL5UlRPjI7jvxfhVt9qTK/K9vfVH
-	lM/BvxzWa1KJ3j5+w4gA1vNccbnh4v1Ci6afPZz2R1/NKZkoWNiNi/fAcw7B+w==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=aaro.koskinen smtp.mailfrom=aaro.koskinen@iki.fi
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=lahtoruutu; t=1717703229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UrClKJA9brL19M4WtLgma2oVHMAxwn+KD22tbsVdg88=;
-	b=ZMKaHRbImTolUYoichVgjsIobmvUgMeIx4GAPk8gHzRfIJv0ktSjDgoficvnk2uwLomb1N
-	nz6Ctv/qIEsrMJA1bmtjWDFT7re8hC2FgFo6VjnVT5m57V+9ocZpJj5E/vko8T7fag2NFo
-	WyYtXz8+yxN/nZhU5vQTKRLX43pcf9s8hqtk0G6ag8Bm0bLVKlZkzSRSgg9aN+425hCOMk
-	L0l1YE9ytJ1F1ZtVlAf/3R3vH3E+l+2WnyziB2CjuQs80vtNKMP79Vl6B0fK4IyBOUxkmu
-	aDTgOg9zjs5dnV0PCR4P6ODR3Ca0cF7dBr5iHUwY+FvG6FCPdF+bRe4Pdg9/zQ==
-Date: Thu, 6 Jun 2024 22:47:07 +0300
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1 1/1] ARM: omap2: Switch to use kmemdup_array()
-Message-ID: <20240606194707.GE9487@darkstar.musicnaut.iki.fi>
-References: <20240606165104.3031737-1-andriy.shevchenko@linux.intel.com>
- <20240606193202.GD9487@darkstar.musicnaut.iki.fi>
- <ZmIRS8HTar7iKQo7@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNuBtyDW"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52b936c958dso1675078e87.0;
+        Thu, 06 Jun 2024 12:48:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717703298; x=1718308098; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mNodoFmAbhZZRCDW0JBnKHX4e0v+tvTBYJa+POEfh54=;
+        b=aNuBtyDWnckl8sa3ROneBhSEDPZfTfFoEhI9lqG+jzrpJtPwjyapFRKJhcWkurjWLv
+         BPdLB+fPPv/raE9ZDi5O3INKYj3onUqhH6uJKoP2IfmDDiqVEcEx1xVdI3lxssmoO19V
+         YqRpjWarG4W/jylNmoLABtsLaPbH5UvNnDS+9N4413kd0z9bVUBGy74F2kcJ0wvsvAPZ
+         jhBI6OaOxmk50WIuIFu0WRsn3D/JVtc4OJPGq+EFeDewDcZHiSTc4FfR7OiEesANh/74
+         GjvWGElxQ2AO6BvJz/2Xhb1MJx6ZQSaGLHGQatpnMhIbUiVeF/P5ldG+AI+M0fThARR0
+         DhWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717703298; x=1718308098;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mNodoFmAbhZZRCDW0JBnKHX4e0v+tvTBYJa+POEfh54=;
+        b=e7SqEENqAJfekg88mFKeSNhbVihd4pWKcoRy6T//VMOoPuDol1gZ+DbvfpEnMAxIsc
+         ubZdPeKS7H8B32UZE5clxnWOqNOEHNwXrsq7Iq0Es1OtTnBKhrfd5GIOGf93ys/O27Fc
+         uMrbgXdEswEnQ7NK2rIEj9mx8d/E9AEHIs/hqX8Mc8cfArZdijpAOC3wk+FbGB2DGm8Z
+         9nJzJvveiD9JVvWb5rowpeHBGcPf2Nf5ZJU55OfUs0NxEiO8ySELOTeaPEdrq5EPHj3o
+         sWpplvViABhLtI8BvqD/6jKJ6DLddPTzTlOUEIyUTqzxfqpZtk0HaxRvGr4AWil9rUPa
+         jb2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVpNWCuxISekQq8UpS2PZ8/4Tj/fcuNjmxJfx+T1oYJNnY14SRoGRp40W+v6Ddsg2QUgiySoDUWMu45QVFIZT8XLTimWS10aCirnue39hhyfCs=
+X-Gm-Message-State: AOJu0Yz9jsJm3Ge6PScxaoE7Yl0vmT9Y3bMbmZc6S0QjVYQJzEGlbGf0
+	kBNLPnpravcmdLz65viSGMkfvPg7lPsQUZABtOl1Tlvtpgmob1zB
+X-Google-Smtp-Source: AGHT+IHucfKP2uAyE3xKSwyzZCnbwLmqBsOht+E3ZPWPr1Ql2D6yHovj3IYG2MdH901lYz35BtTJJg==
+X-Received: by 2002:a05:6512:34d4:b0:52b:8843:b084 with SMTP id 2adb3069b0e04-52bb9fc95a6mr334590e87.47.1717703297800;
+        Thu, 06 Jun 2024 12:48:17 -0700 (PDT)
+Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42161147811sm17262735e9.18.2024.06.06.12.48.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 12:48:17 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] irqchip: renesas-rzg2l: Reorder function calls in rzg2l_irqc_irq_disable()
+Date: Thu,  6 Jun 2024 20:48:13 +0100
+Message-Id: <20240606194813.676823-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmIRS8HTar7iKQo7@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 06, 2024 at 10:43:07PM +0300, Andy Shevchenko wrote:
-> On Thu, Jun 06, 2024 at 10:32:02PM +0300, Aaro Koskinen wrote:
-> > On Thu, Jun 06, 2024 at 07:51:04PM +0300, Andy Shevchenko wrote:
-> > > Let the kememdup_array() take care about multiplication and possible
-> > 
-> >           ^^^^^
-> >           Typo.
-> 
-> Aha, thanks!
-> 
-> > > overflows.
-> 
-> ...
-> 
-> > > -	hwmods = kmemdup(ohs, sizeof(struct omap_hwmod *) * oh_cnt, GFP_KERNEL);
-> > > +	hwmods = kmemdup_array(ohs, oh_cnt, sizeof(*hwmods), GFP_KERNEL);
-> > 
-> > Maybe same result, but I guess the 3rd parameter should be count?
-> 
-> Actually it is going to be changed to follow kcalloc().
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?id=0ee14725471c
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-OK, good, you can add:
+The order of function calls in the disable operation should be the reverse
+of that in the enable operation. Thus, reorder the function calls to first
+disable the parent IRQ chip before disabling the TINT IRQ.
 
-Reviewed-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/irqchip/irq-renesas-rzg2l.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-A.
+diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
+index 861a0e5a3e97..693ff285ca2c 100644
+--- a/drivers/irqchip/irq-renesas-rzg2l.c
++++ b/drivers/irqchip/irq-renesas-rzg2l.c
+@@ -271,8 +271,8 @@ static void rzg2l_tint_irq_endisable(struct irq_data *d, bool enable)
+ 
+ static void rzg2l_irqc_irq_disable(struct irq_data *d)
+ {
+-	rzg2l_tint_irq_endisable(d, false);
+ 	irq_chip_disable_parent(d);
++	rzg2l_tint_irq_endisable(d, false);
+ }
+ 
+ static void rzg2l_irqc_irq_enable(struct irq_data *d)
+-- 
+2.34.1
+
