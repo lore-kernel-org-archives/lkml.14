@@ -1,263 +1,129 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF651991D5
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A195938DC7
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717695218; cv=none; b=U/Glv4ttZypGPfXIJFqsUg5cd3ksHBaslfk5hQoUpCzlnJWZwsH5zUEAKF4YrshhkmTwRBMMg181WKjmjhE2JWL2vh/futhPKqtpwKDDYe7Boe0NYreKo4QwoK9gyhiYw9INOwZ87pyJuJBTtK1QrHvKHchu6ngsZAynQFctyoc=
+	t=1717695278; cv=none; b=FYq9Vk/7o9yZWPPN2i8Aby4ByGP7gHPoGXb+1ss/OMEUvKJSs2bXMtIvHpEo4FkigI1lZ+n4GjbI+XMCiSNGUUVD3lx9EwOyqbCyaWeMraoamg89jTGGT2Ph9MxtwIm8TUWlh4b/obllDe+7OLEqM/73bP5ymKJYoqHx0qdIkhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717695218; c=relaxed/simple;
-	bh=rYVMkwI8qFoB/ptB7kU79gZFDx+FsNx/WF4p8yfanOI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=ON7ElGIfxm7Rc7eEztKTwrKqmj064VMjAfnVBPM0DtLKuFNz8v3sXZ8e90enJkZg/6916z5A2tZCqVDw9NWYx+Oo5xzOu/y6MGdmO4WZQAX4CKCK4A4aPK/I3+zDjmmGKm82dSgTqH62MRbZ4ZNWkt3h9/wscauRAam9DBXaot4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mDTXyTi0; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717695278; c=relaxed/simple;
+	bh=Mwm44gSX2pJSO1DQZKq/bU47/WAyUUvkVlSXQ5KADlE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WSR5HRhkc6tRVgGrs9EMScMs3s6jYlyhBMmPdMwaq1SAryHCEw0XztjGPYCjGlXo3k+clFjV6wVH8LzhbGiWsBSM/KMaBQ7/ZdkScvlAv78bnIDdXcndFYlxhomJIPhyqISX/kG7oXgY07LOSEFXvRYxCFy7UJbOAcuNmDFImug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com; spf=none smtp.mailfrom=osandov.com; dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b=YJO1Diat; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=osandov.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mDTXyTi0"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4210aa012e5so13741165e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 10:33:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b="YJO1Diat"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f692d6e990so12785915ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 10:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717695215; x=1718300015; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mPjsJlKDBXzcFKJiIo/4f6GGzkeINELRnLiFwHcGpOo=;
-        b=mDTXyTi0rNw369u0JcGh6PhF8bbU1DdWb+GmNbbS/K5/j1zjdJa6PDMz2m++vK1gwa
-         M0qxjq4TcBc8R8CeRthxIZQfF5Y/RuM6f/Sme+sY6OvrFkZyWMw5QZvRDZlL3PbgoFIK
-         vZT1mxIRTSQioeBa//dcS7595/B+C46yb79cZ5cCBKkyLcLWC7VaVQhzgc1s5wq52nGJ
-         AZu3JET/rp8SQwrPDW0qXqJ7NJKJHRSIF3PB9tfKwPIlB4ZBJ8hfjzRWMNCraIIJ+26G
-         Yg1jT2s3OZfaq9250Ovcm6F5rElsrxJ3yLWk5oMcwzGt0wBMZsJB0Y6Age3GbIzX5QOL
-         m8Fg==
+        d=osandov-com.20230601.gappssmtp.com; s=20230601; t=1717695276; x=1718300076; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AAulxVnYL/xyKaB3vnDRoKBoF0F084Ubuhab5n7H9jo=;
+        b=YJO1Diat12qRHgRFZWWqBb3KbE33vc5ktBSHZTqYRHvyq4z4Z+2fKwebosbdoHGZsq
+         fd04O80vSJ4FLQsa5wbXmUmbbS5Izkx0Bpaz17aO+Zqt/mSyAGq7iuBbABhW6CIsZszR
+         WJyq6aE02SrNBKBkwctYJLM9dqZV0zGIlBgN9bHVxyXtYcpACpUtSmABkPUv7n4U+nxd
+         hn8J7rcTf6Dy4YyqEX/c9OzGhgJtp+uVmuLNU/DOWCjNqmxIYPDKPoWRr9HmCXKcAXja
+         SebV03S5FUqTRloqn2Zl6tXQyeG9rUmBCHu/gL0VYBLR8ACtPAkazyB6mhvb8OiCREKF
+         0A7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717695215; x=1718300015;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mPjsJlKDBXzcFKJiIo/4f6GGzkeINELRnLiFwHcGpOo=;
-        b=EOrJC16dZYZ5dHirQrE8vzj1MRImB6CWsD3F59JDNP+44tnD0a/de+kZ+YMrh9ffG8
-         XCEEHmiV/QE+Afg+PL/UKmKth8Ey9TSWkDUtAW1oI4MNg1DYL+jS5NErE1TsFMWMDBB0
-         krz9yB22ui85hpX9BKAEnHOcx8JqAF2YpQKtW+qeZMtq3TrjtL9BZWu3ZSTiXlcw1vGj
-         t6oSjb5ri3Wr5OaxtVFGdAn2pTDr/0K7vi388mH1OmhlaOvYSByUsSSIgGLzqem3Q5BK
-         Ii8utOcs+AVI0tK8lr0IAg8gsbEh2KX+2caNVH1su83UqbqCXMXaJUaaODBVKHFr9pJG
-         sJ6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUch4PHAqj3uTsPbYTtTGGqxClLXuhHuFZIkts4NxyxkGerOVVrZO7mkhe0YKOpNR1HZzm5fpSTnMlcU9JH6EHO8pu/bX9jqHXC0lWp
-X-Gm-Message-State: AOJu0YwmkQEeH8hgs7dkpAwzK4BcesrkqDMvG5BCRcqqhQv7RkCaiXEp
-	R0rwgucaVV0Um5667G0JcP5l6ULyUvHV8B+cJZPN/Z0ocSN5Cl61fLsU2HNmDXJso6VHszP3WHg
-	MTbPeUofdI+cb8tBWZmJlfR2RIT//vRwEVN3k
-X-Google-Smtp-Source: AGHT+IE4QPvkBQBYH5qBQiqsMSACkO+0MruSkYzXUyRwuzkvF/JqqLhtKdRfSDNl8JmBwmG1H52WpeDjd6vt0pJCRZ4=
-X-Received: by 2002:a05:600c:54ca:b0:420:309a:fe63 with SMTP id
- 5b1f17b1804b1-42164a030a5mr3279955e9.22.1717695214069; Thu, 06 Jun 2024
- 10:33:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717695276; x=1718300076;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AAulxVnYL/xyKaB3vnDRoKBoF0F084Ubuhab5n7H9jo=;
+        b=u0FU+ftgWYttmr3u0xcr76nGmzoaG3D83Ap/bVGakP1UlJkp8B/5WJk8LsP2HJhQai
+         NP7H9gmu0jHuky5p+3oLArnsq1Goviqm5DY8u+yBbGcbeMV0oYwpqbJzMWUxpqIShAiu
+         p2OcYDvFjrrgwV2Yd/lcoptdc5FXrQ312oYuS5M0gEG7leUTKjc7Mcvt1D0znAqLpYk8
+         lofZK2ekedfM4URZayn8ZzMoo+Emd3QY3IpDB8js1pnqfWep+kTaYBZf70W/VE2kA9I/
+         qJPFD2XimCAN4uERK1ewukH2PPq5AJDBlLPdAeVZjc6fe+ukJKfACxjemKqYIVNT4N37
+         ++5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVUlBQC9oKO3ifQBWBHTImQRyMBBXf8YsoeHNw7NL+VLOzj/tHTRTK//gjHiyuGzS62NYObnkrMMBqpE5c48hpnsKqhnYIFKyKz+KQX
+X-Gm-Message-State: AOJu0Yx3rLVwhvJxw3EIcPXntIWSEQwY3MaRZyfGa8dG/XrfHcb/NzEF
+	SikHHQ8wcZd7ipokhy8ElGxuqTxqUAmAujuGR7jjlaZFKvIEiOMaMQHcJKNO40iauFQ7Mdrq0MR
+	gXeg=
+X-Google-Smtp-Source: AGHT+IFF5YghgVig/RYReBOoP5uz9DUPAWXJpwtPKtVnFV4hSzqDyvhiRUIt9MC0+IujJ6KGfql9Zw==
+X-Received: by 2002:a17:902:dac6:b0:1f6:678c:9e8c with SMTP id d9443c01a7336-1f6d03be125mr2564165ad.67.1717695275716;
+        Thu, 06 Jun 2024 10:34:35 -0700 (PDT)
+Received: from telecaster.dhcp.thefacebook.com ([2620:10d:c090:400::5:ae4b])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd76aa80sm17769735ad.69.2024.06.06.10.34.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 10:34:35 -0700 (PDT)
+Date: Thu, 6 Jun 2024 10:34:33 -0700
+From: Omar Sandoval <osandov@osandov.com>
+To: Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+	Hao Ge <gehao@kylinos.cn>, Vlastimil Babka <vbabka@suse.cz>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	linux-debuggers@vger.kernel.org
+Subject: Re: [PATCH] mm: convert page type macros to enum
+Message-ID: <ZmHzKRkgKOGW8Xmk@telecaster.dhcp.thefacebook.com>
+References: <20240606172530.829790-1-stephen.s.brennan@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605002459.4091285-1-andrii@kernel.org> <20240605002459.4091285-5-andrii@kernel.org>
- <CAJuCfpFp38X-tbiRAqS36zXG_ho2wyoRas0hCFLo07pN1noSmg@mail.gmail.com>
- <CAEf4BzYv0Ys+NpMMuXBYEVwAaOow=oBgUhBwen7g=68_5qKznQ@mail.gmail.com> <ue44yftirugr6u4ewl5cvgatpqnheuho7rgax3jyg6ox5vruyq@7k6harvobd2q>
-In-Reply-To: <ue44yftirugr6u4ewl5cvgatpqnheuho7rgax3jyg6ox5vruyq@7k6harvobd2q>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 6 Jun 2024 10:33:19 -0700
-Message-ID: <CAJuCfpEFpd-+DDr=EyA1gMKZcDZYpZN9pBuFczhVXrFSe11U_g@mail.gmail.com>
-Subject: Re: [PATCH v3 4/9] fs/procfs: use per-VMA RCU-protected locking in
- PROCMAP_QUERY API
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	brauner@kernel.org, viro@zeniv.linux.org.uk, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, gregkh@linuxfoundation.org, 
-	linux-mm@kvack.org, rppt@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240606172530.829790-1-stephen.s.brennan@oracle.com>
 
-On Thu, Jun 6, 2024 at 10:15=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> * Andrii Nakryiko <andrii.nakryiko@gmail.com> [240606 12:52]:
-> > On Wed, Jun 5, 2024 at 4:16=E2=80=AFPM Suren Baghdasaryan <surenb@googl=
-e.com> wrote:
-> > >
-> > > On Tue, Jun 4, 2024 at 5:25=E2=80=AFPM Andrii Nakryiko <andrii@kernel=
-.org> wrote:
-> > > >
-> > > > Attempt to use RCU-protected per-VMA lock when looking up requested=
- VMA
-> > > > as much as possible, only falling back to mmap_lock if per-VMA lock
-> > > > failed. This is done so that querying of VMAs doesn't interfere wit=
-h
-> > > > other critical tasks, like page fault handling.
-> > > >
-> > > > This has been suggested by mm folks, and we make use of a newly add=
-ed
-> > > > internal API that works like find_vma(), but tries to use per-VMA l=
-ock.
-> > > >
-> > > > We have two sets of setup/query/teardown helper functions with diff=
-erent
-> > > > implementations depending on availability of per-VMA lock (conditio=
-ned
-> > > > on CONFIG_PER_VMA_LOCK) to abstract per-VMA lock subtleties.
-> > > >
-> > > > When per-VMA lock is available, lookup is done under RCU, attemptin=
-g to
-> > > > take a per-VMA lock. If that fails, we fallback to mmap_lock, but t=
-hen
-> > > > proceed to unconditionally grab per-VMA lock again, dropping mmap_l=
-ock
-> > > > immediately. In this configuration mmap_lock is never helf for long=
-,
-> > > > minimizing disruptions while querying.
-> > > >
-> > > > When per-VMA lock is compiled out, we take mmap_lock once, query VM=
-As
-> > > > using find_vma() API, and then unlock mmap_lock at the very end onc=
-e as
-> > > > well. In this setup we avoid locking/unlocking mmap_lock on every l=
-ooked
-> > > > up VMA (depending on query parameters we might need to iterate a fe=
-w of
-> > > > them).
-> > > >
-> > > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > > > ---
-> > > >  fs/proc/task_mmu.c | 46 ++++++++++++++++++++++++++++++++++++++++++=
-++++
-> > > >  1 file changed, 46 insertions(+)
-> > > >
-> > > > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> > > > index 614fbe5d0667..140032ffc551 100644
-> > > > --- a/fs/proc/task_mmu.c
-> > > > +++ b/fs/proc/task_mmu.c
-> > > > @@ -388,6 +388,49 @@ static int pid_maps_open(struct inode *inode, =
-struct file *file)
-> > > >                 PROCMAP_QUERY_VMA_FLAGS                         \
-> > > >  )
-> > > >
-> > > > +#ifdef CONFIG_PER_VMA_LOCK
-> > > > +static int query_vma_setup(struct mm_struct *mm)
-> > > > +{
-> > > > +       /* in the presence of per-VMA lock we don't need any setup/=
-teardown */
-> > > > +       return 0;
-> > > > +}
-> > > > +
-> > > > +static void query_vma_teardown(struct mm_struct *mm, struct vm_are=
-a_struct *vma)
-> > > > +{
-> > > > +       /* in the presence of per-VMA lock we need to unlock vma, i=
-f present */
-> > > > +       if (vma)
-> > > > +               vma_end_read(vma);
-> > > > +}
-> > > > +
-> > > > +static struct vm_area_struct *query_vma_find_by_addr(struct mm_str=
-uct *mm, unsigned long addr)
-> > > > +{
-> > > > +       struct vm_area_struct *vma;
-> > > > +
-> > > > +       /* try to use less disruptive per-VMA lock */
-> > > > +       vma =3D find_and_lock_vma_rcu(mm, addr);
-> > > > +       if (IS_ERR(vma)) {
-> > > > +               /* failed to take per-VMA lock, fallback to mmap_lo=
-ck */
-> > > > +               if (mmap_read_lock_killable(mm))
-> > > > +                       return ERR_PTR(-EINTR);
-> > > > +
-> > > > +               vma =3D find_vma(mm, addr);
-> > > > +               if (vma) {
-> > > > +                       /*
-> > > > +                        * We cannot use vma_start_read() as it may=
- fail due to
-> > > > +                        * false locked (see comment in vma_start_r=
-ead()). We
-> > > > +                        * can avoid that by directly locking vm_lo=
-ck under
-> > > > +                        * mmap_lock, which guarantees that nobody =
-can lock the
-> > > > +                        * vma for write (vma_start_write()) under =
-us.
-> > > > +                        */
-> > > > +                       down_read(&vma->vm_lock->lock);
-> > >
-> > > Hi Andrii,
-> > > The above pattern of locking VMA under mmap_lock and then dropping
-> > > mmap_lock is becoming more common. Matthew had an RFC proposal for an
-> > > API to do this here:
-> > > https://lore.kernel.org/all/ZivhG0yrbpFqORDw@casper.infradead.org/. I=
-t
-> > > might be worth reviving that discussion.
-> >
-> > Sure, it would be nice to have generic and blessed primitives to use
-> > here. But the good news is that once this is all figured out by you mm
-> > folks, it should be easy to make use of those primitives here, right?
-> >
-> > >
-> > > > +               }
-> > > > +
-> > > > +               mmap_read_unlock(mm);
-> > >
-> > > Later on in your code you are calling get_vma_name() which might call
-> > > anon_vma_name() to retrieve user-defined VMA name. After this patch
-> > > this operation will be done without holding mmap_lock, however per
-> > > https://elixir.bootlin.com/linux/latest/source/include/linux/mm_types=
-.h#L582
-> > > this function has to be called with mmap_lock held for read. Indeed
-> > > with debug flags enabled you should hit this assertion:
-> > > https://elixir.bootlin.com/linux/latest/source/mm/madvise.c#L96.
->
-> The documentation on the first link says to hold the lock or take a
-> reference, but then we assert the lock.  If you take a reference to the
-> anon vma name, then we will trigger the assert.  Either the
-> documentation needs changing or the assert is incorrect - or I'm missing
-> something?
+On Thu, Jun 06, 2024 at 10:25:29AM -0700, Stephen Brennan wrote:
+> Changing PG_slab from a page flag to a page type in commit 46df8e73a4a3
+> ("mm: free up PG_slab") in has the unintended consequence of removing
+> the PG_slab constant from kernel debuginfo. The commit does add the
+> value to the vmcoreinfo note, which allows debuggers to find the value
+> without hardcoding it. However it's most flexible to continue
+> representing the constant with an enum. To that end, convert the page
+> type fields into an enum. Debuggers will now be able to detect that
+> PG_slab's type has changed from enum pageflags to enum page_type.
+> 
+> Fixes: 46df8e73a4a3 ("mm: free up PG_slab")
+> 
+> Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+> ---
+>  include/linux/page-flags.h | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 104078afe0b16..64fc191a75e8d 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -947,12 +947,15 @@ PAGEFLAG_FALSE(HasHWPoisoned, has_hwpoisoned)
+>  #define PAGE_TYPE_BASE	0xf0000000
+>  /* Reserve		0x0000007f to catch underflows of _mapcount */
+>  #define PAGE_MAPCOUNT_RESERVE	-128
 
-I think the documentation is correct. It says that at the time of
-calling anon_vma_name() the mmap_lock should be locked (hence the
-assertion). Then the user can raise anon_vma_name refcount, drop
-mmap_lock and safely continue using anon_vma_name object. IOW this is
-fine:
+Adding linux-debuggers to Cc.
 
-mmap_read_lock(vma->mm);
-anon_name =3D anon_vma_name(vma);
-anon_vma_name_get(anon_name);
-mmap_read_unlock(vma->mm);
-// keep using anon_name
-anon_vma_name_put(anon_name);
+Can we also get PAGE_TYPE_BASE and PAGE_MAPCOUNT_RESERVE as enums? That
+would make it possible for debuggers to implement PageType() and
+page_has_type().
 
-
->
-> >
-> > Sigh... Ok, what's the suggestion then? Should it be some variant of
-> > mmap_assert_locked() || vma_assert_locked() logic, or it's not so
-> > simple?
-> >
-> > Maybe I should just drop the CONFIG_PER_VMA_LOCK changes for now until
-> > all these gotchas are figured out for /proc/<pid>/maps anyway, and
-> > then we can adapt both text-based and ioctl-based /proc/<pid>/maps
-> > APIs on top of whatever the final approach will end up being the right
-> > one?
-> >
-> > Liam, any objections to this? The whole point of this patch set is to
-> > add a new API, not all the CONFIG_PER_VMA_LOCK gotchas. My
-> > implementation is structured in a way that should be easily amenable
-> > to CONFIG_PER_VMA_LOCK changes, but if there are a few more subtle
-> > things that need to be figured for existing text-based
-> > /proc/<pid>/maps anyways, I think it would be best to use mmap_lock
-> > for now for this new API, and then adopt the same final
-> > CONFIG_PER_VMA_LOCK-aware solution.
->
-> The reason I was hoping to have the new interface use the per-vma
-> locking from the start is to ensure the guarantees that we provide to
-> the users would not change.  We'd also avoid shifting to yet another
-> mmap_lock users.
->
-> I also didn't think it would complicate your series too much, so I
-> understand why you want to revert to the old locking semantics.  I'm
-> fine with you continuing with the series on the old lock.  Thanks for
-> trying to make this work.
->
-> Regards,
-> Liam
+> -#define PG_buddy	0x00000080
+> -#define PG_offline	0x00000100
+> -#define PG_table	0x00000200
+> -#define PG_guard	0x00000400
+> -#define PG_hugetlb	0x00000800
+> -#define PG_slab		0x00001000
+> +
+> +enum page_type {
+> +	PG_buddy	= 0x00000080,
+> +	PG_offline	= 0x00000100,
+> +	PG_table	= 0x00000200,
+> +	PG_guard	= 0x00000400,
+> +	PG_hugetlb	= 0x00000800,
+> +	PG_slab		= 0x00001000,
+> +};
+>  
+>  #define PageType(page, flag)						\
+>  	((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
+> -- 
+> 2.43.0
+> 
