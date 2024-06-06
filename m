@@ -1,107 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3DC519580C;
-	Thu,  6 Jun 2024 11:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E87313D28C;
+	Thu,  6 Jun 2024 11:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717674164; cv=none; b=oWOu8qzEJAHO1+ctXG6M8Y0cGTjCobcTdAyEMRS94lThLmiz02bi1eki8tDT95nBGs6EdWdgaJASPToxMhse6uSWAUS09VP63rdAoc/ej2KBY7kEMwa4jzqJl3U+gMhSTlyChz83pJ03o+N1YbhpQN31yUBFgADofr3XicWhuaY=
+	t=1717674215; cv=none; b=KcpKP/ZEkid6wc7AXQ7Dvvdb4cBHi2MiiXu80qHN/EsOyyeGAq2jPtgemHq5Pjr2HO+yj+7Th90eR6Fw00E6YAIXoTGTv6yOFIQstFfylT+T31PQxsJb8Tko7b1FcxZEw3Fsdey9UdYCTVYD6zJzD14NHdlUh8TxOTfW/kTU4PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717674164; c=relaxed/simple;
-	bh=ZmU91IMTzL3EbILWOMUaRcnOPrsPyfbS4xQgTphHPZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NkL/nyfAWnPdfuCF6nTv0P/iyrAwKcKEwBD7g2ihbBnsFAQTvpSWbPZL5l0Gj6XsM8oEoxqgAMoYlXPYQ9RWaysd55jYsuBQDye7eUuj163izKonauyLw1C/D9L5QsxAuwEcv9Y+D3FvzZwS/9zMPc0nMTb4u+aMaM9l4Exlhs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EJaPyw21; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717674215; c=relaxed/simple;
+	bh=Hd6WVWO+3k2N6W88Frd2llpJ37EzLkQNE+lWirexqIQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Kk96xCLn7080Qz8PSOpC107r7+g1YsYwZopNL2ZrrBu59JiD1QJ+aH52KIdhjSTyUFgi5QMm5H/s3+Sw/fBKcMNs1XtZgnUlrTaH4kIDyUzftKuSXFisQABm2Mn78MYJ2C8nvsAdeUZR1y/eosc2rEti2FmU5p81no+DQPCH2eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=oRY3G565; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EJaPyw21"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717674163; x=1749210163;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZmU91IMTzL3EbILWOMUaRcnOPrsPyfbS4xQgTphHPZQ=;
-  b=EJaPyw21C7aRe6Ug78tGr4RzOG6CgtZ/9s84Lo+vJ2GsNXVJRt7/Bx4C
-   Yqupz1pTDFzZMYPacXCX4PVVIhDtcF28vUK9rGHu5trDdsIan+WCXTaG+
-   xFU2mryVGt/5K6oWHnrxV3FZ6fq2fgJ9vvBr6fCIArHjbiIptJo/mW7bt
-   yWMtBREnX8RYfxg29JjiavcQB/Yaf3BRbEo3l6SKs30/Iyq86Gt38PsA0
-   8olo4P9meW47b0OaPHMBJLgu2GeRiVniZIQyuRUptlGfyP6FAibCVPMGd
-   HeEucTu0a4DrYAkw2Q3oN/9zOGLdAa5Oks4qZsiY1ciEQ2O5iUZKNlyUn
-   Q==;
-X-CSE-ConnectionGUID: ZDYwbEm6QOune/YGSsqiVg==
-X-CSE-MsgGUID: NhNNbIYGT3KTgMJm3YGB9w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="14517465"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="14517465"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 04:42:42 -0700
-X-CSE-ConnectionGUID: KIvjY8cFQsG2VkZvGz6RLg==
-X-CSE-MsgGUID: SbU9GlMET92bldHYUhbBZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="42514908"
-Received: from unknown (HELO tlindgre-MOBL1.intel.com) ([10.245.247.177])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 04:42:38 -0700
-From: Tony Lindgren <tony.lindgren@linux.intel.com>
-To: Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Tony Lindgren <tony@atomide.com>
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-serial@vger.kernel.org,
-	Tony Lindgren <tony.lindgren@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] Revert "printk: Flag register_console() if console is set on command line"
-Date: Thu,  6 Jun 2024 14:41:47 +0300
-Message-ID: <20240606114149.118633-2-tony.lindgren@linux.intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240606114149.118633-1-tony.lindgren@linux.intel.com>
-References: <20240606114149.118633-1-tony.lindgren@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oRY3G565"
+X-UUID: fdf5e29823f911efa54bbfbb386b949c-20240606
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=MRbM1go2u6MZUEVsoScl8wXxNgQ/01QqJmmjheGQRzE=;
+	b=oRY3G565LU0akhW6Exz5hqo5u/SzHj5k/w53OyvSN71fbiOBEbhlIlkUThMAaQ6jwASAywlMtEg3ZNnoyx0j4GQuZjgzFN4jrQnyPFGoJVX0rn0f1WvEwJ+mn8vgTBv28oCTXk/4uGd6n9CghsyO1x0wH7q9LIlZlPnmlN7tM0Y=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.39,REQID:9c6b5f93-a310-4444-b6dc-67eda4ce4a1f,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:393d96e,CLOUDID:0dfd4a88-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: fdf5e29823f911efa54bbfbb386b949c-20240606
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+	(envelope-from <chris.lu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1471530254; Thu, 06 Jun 2024 19:43:28 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Thu, 6 Jun 2024 19:43:25 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Thu, 6 Jun 2024 19:43:25 +0800
+From: Chris Lu <chris.lu@mediatek.com>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+	<johan.hedberg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>
+CC: Sean Wang <sean.wang@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>,
+	Aaron Hou <aaron.hou@mediatek.com>, Steve Lee <steve.lee@mediatek.com>,
+	linux-bluetooth <linux-bluetooth@vger.kernel.org>, linux-kernel
+	<linux-kernel@vger.kernel.org>, linux-mediatek
+	<linux-mediatek@lists.infradead.org>, Chris Lu <chris.lu@mediatek.com>
+Subject: [PATCH v4 1/4] Bluetooth: net: add hci_iso_hdr function for iso data
+Date: Thu, 6 Jun 2024 19:43:18 +0800
+Message-ID: <20240606114321.30515-2-chris.lu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240606114321.30515-1-chris.lu@mediatek.com>
+References: <20240606114321.30515-1-chris.lu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--4.944900-8.000000
+X-TMASE-MatchedRID: 6pbNFWS8cDs1vivz3L6ga7RtO1RC1Ep0Kx5ICGp/WtEXdhT0BAdFzpRr
+	ve7l/C2qxiqnR+5LS88BtjkcfRMmqUDn8NFEhJAcngIgpj8eDcBpkajQR5gb3savT21DsLD/UEh
+	Wy9W70AEnRE+fI6etkkroJNCGM2Se8Cz2wcr1lhTBwAKaEHfCaXzAGEEECqNaBIf9dSYxrVWS8m
+	ZD0ewtoOzz1wbZMiRv8xNn7O/cul3/t0rZPZuWgICE5xpCtDRTUbJFyh4XXyqYo/TPOlMB4bCh3
+	zE4wqa8DUCRr8oin+k=
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--4.944900-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP: 44C0343066305BB1E34FC06E99E17ABA3BDB8006A6C9FE3EA6DEEE506803DCF42000:8
 
-This reverts commit b73c9cbe4f1fc02645228aa575998dd54067f8ef.
+Add function hci_iso_hdr to get skb->data when packet type is ISO.
 
-There is no need for this change now that we are reserving console_cmdline
-slots for the DEVNAME:0.0 style consoles.
-
-Signed-off-by: Tony Lindgren <tony.lindgren@linux.intel.com>
+Signed-off-by: Chris Lu <chris.lu@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- kernel/printk/printk.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ include/net/bluetooth/hci.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 52bdd7dcdb6f..8b746eeb77fa 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2541,9 +2541,6 @@ static int __init console_setup(char *str)
- 	if (console_opt_save(str, brl_options))
- 		return 1;
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index e372a88e8c3f..b9f8f91f6c7f 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -2898,6 +2898,11 @@ static inline struct hci_sco_hdr *hci_sco_hdr(const struct sk_buff *skb)
+ 	return (struct hci_sco_hdr *) skb->data;
+ }
  
--	/* Flag register_console() to not call try_enable_default_console() */
--	console_set_on_cmdline = 1;
--
- 	/* Don't attempt to parse a DEVNAME:0.0 style console */
- 	if (strchr(str, ':')) {
- 		reserve_deferred_console(str);
-@@ -3578,7 +3575,7 @@ void register_console(struct console *newcon)
- 	 * Note that a console with tty binding will have CON_CONSDEV
- 	 * flag set and will be first in the list.
- 	 */
--	if (preferred_console < 0 && !console_set_on_cmdline) {
-+	if (preferred_console < 0) {
- 		if (hlist_empty(&console_list) || !console_first()->device ||
- 		    console_first()->flags & CON_BOOT) {
- 			try_enable_default_console(newcon);
++static inline struct hci_iso_hdr *hci_iso_hdr(const struct sk_buff *skb)
++{
++	return (struct hci_iso_hdr *) skb->data;
++}
++
+ /* Command opcode pack/unpack */
+ #define hci_opcode_pack(ogf, ocf)	((__u16) ((ocf & 0x03ff)|(ogf << 10)))
+ #define hci_opcode_ogf(op)		(op >> 10)
 -- 
-2.45.2
+2.18.0
 
