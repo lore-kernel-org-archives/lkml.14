@@ -1,117 +1,114 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3EE1953A4;
-	Thu,  6 Jun 2024 10:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028D713C673;
+	Thu,  6 Jun 2024 10:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717670080; cv=none; b=Cj/pSL0O0jMVF8I/DypPiWnDXv91epgyzKUSDL4bwgaN/xJiaxeSBN8BbemncA0g16ig5GUDoHhIMd21MMbLmA5uPuwcYcgLks8ldQwVMOoBjudBWWzS4ncpxWL8v/ENBPhABWvUKPI3IlP3Y6s1EJ9Rg9h98fPS2dbuX+AdJWI=
+	t=1717670181; cv=none; b=tvVZlZgAsw4xmkp4nvEzaX62M85fDdjjNKfckNP1gGL70Fd82i4ebXN+ZDiXAf0jVGAgnRsbzhzOpqmlZ50WuAP2IxS2l4w0LtpMqecOqXjFZXn9ApWBk99USDmYCAoiTbQTZU/oYYLJ2MRXS3+dlcVBC9Jd0mqwRAlWBsS7O/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717670080; c=relaxed/simple;
-	bh=w+Cp/U/HLDL+t89AzdC0HW8vLKiCbe4Wmt8j44QHOXc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=THycGvBHeRiWZAOFDZEpY57nNH/VCkHH2/vsDKjfSMNMRgkndFCKlkE3SXxsdhyHwPkPg+Xi+dwb9w1jvpxr3Hgiv5ZhICG73brqy6F6sFBHds3mAgZsFQQkrvMf+p7UszavW3YvRQtaBVfE/qASrhW6oPoM/bmlesGchtuIrYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ngYtts2P; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717670181; c=relaxed/simple;
+	bh=LbTHfTiaz8Wa3aiCs77X41Ckl0OGx2RPke2/xDmq5VU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VFh8lcPnIUjklMGvT6Bwqh/5qBw9NHIDWimgGeaXwOlvrS9PCw7/gQvoM7B/t73YccGr8wVl+53ENkdpMC4LnuDsRXjnQpYABwTlEQk3AYmcLSGpZ+43IvUrbQLlzP7n7b80jSqNJ8upS+IzHQv7eYvaKcb1zHTDbOtfrIwcvZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=bUi1VfSv; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ngYtts2P"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=w+Cp/U/HLDL+t89AzdC0HW8vLKiCbe4Wmt8j44QHOXc=; t=1717670079;
-	x=1718102079; b=ngYtts2PUCdo5pXR6KWImqh3GO5qaXjmUDfaUvOscBbjgOwMb9jZ26vBcyaT9
-	RHQ1MnDhOJufP7tmP5aY7UkW4TSpRxCSS2uTO9yguN5xlF0gGz5MGQpZm5cXLynvoYJXWrzXl0FJ+
-	3Ag1RDdn85jXJbtsWxLlDQpIOEIc3fZdfxwyeSuLQy3Tnj5uChCssFcwLZpv9ben+yNuDt6ggTo5E
-	hu6T5hoAqdVIAis7JY5mKTdb5zNzg9mpVm4Von9ixLdXirohCNCzcWvJPEVBTi9MHTkXwVMLipeT8
-	x5r+2GaXjQf1mfkw6bMn32wRw79CpqmosXG46kolv2Aiij5SAw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sFAS0-0007b3-Cf; Thu, 06 Jun 2024 12:34:32 +0200
-Message-ID: <8d1588d5-0884-469a-b1ed-322f91a4d290@leemhuis.info>
-Date: Thu, 6 Jun 2024 12:34:31 +0200
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="bUi1VfSv"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 09848100003;
+	Thu,  6 Jun 2024 13:35:52 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1717670152; bh=BRjCYvyyTZK9/lxCnrrQBIuLJua/61JU5n0x/gTg+ZA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=bUi1VfSvb8h6aEDsPxp5NofVUCoT154GJavGxcDqJypy9mIDBA/wfMmhltqXK4X7k
+	 fbrtHihqpi/djmHEPT+V1D8OuoNLDxFkw8MjmmP5m7anSr6j/ims71DHilB6DC5TgW
+	 BAFH4xROBL8UkI/5Gn6eHzV7LpyWf9BGTXlZnmDriUpkmIU0lUrzsmfmKyRv+Z4prk
+	 hNcbUP9Zld0lsK9ZLhj4uKtXbRvjvjWkqqI+gOCD55PcTXxuyZY518s1vQIRSc6Sdr
+	 RXmBmdNnq7ExiLqEnTpjZzHMbJTWB+tuekBOzw8NtjUnicTuIK7jjFrynT65naVVqs
+	 1tBiYLfJ5E3vA==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Thu,  6 Jun 2024 13:34:30 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Jun 2024
+ 13:34:09 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Weiyi Lu <weiyi.lu@mediatek.com>, <stable@vger.kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Michael Turquette
+	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, Sasha Levin <sashal@kernel.org>, AngeloGioacchino
+ Del Regno <angelogioacchino.delregno@collabora.com>, Markus
+ Schneider-Pargmann <msp@baylibre.com>, <linux-clk@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH 5.10/5.15/6.1] clk: mediatek: mt8183: Add memory
+Date: Thu, 6 Jun 2024 13:34:02 +0300
+Message-ID: <20240606103402.23912-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2] net: ti: icssg-prueth: Split out common
- object into module
-To: MD Danish Anwar <danishanwar@ti.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Diogo Ivo <diogo.ivo@siemens.com>, Andrew Lunn <andrew@lunn.ch>,
- Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- "David S. Miller" <davem@davemloft.net>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, srk@ti.com,
- Vignesh Raghavendra <vigneshr@ti.com>, kernel test robot <lkp@intel.com>
-References: <20240606073639.3299252-1-danishanwar@ti.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: en-US, de-DE
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <20240606073639.3299252-1-danishanwar@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1717670079;7eb2a595;
-X-HE-SMSGID: 1sFAS0-0007b3-Cf
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 185766 [Jun 06 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/06/06 10:23:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/06 06:58:00 #25471362
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On 06.06.24 09:36, MD Danish Anwar wrote:
-> icssg_prueth.c and icssg_prueth_sr1.c drivers use multiple common .c
-> files. These common objects are getting added to multiple modules. As a
-> result when both drivers are enabled in .config, below warning is seen.
-> [...]
+No upstream commit exists for this commit.
 
-Thx, seems that patch does the trick as well (tested it with today's
--next and assuming here that no change fixed it in between).
+The issue was introduced with commit c93d059a8045 ("clk: mediatek: mt8183:
+Register 13MHz clock earlier for clocksource")
 
-Reported-and-tested-by: Thorsten Leemhuis <linux@leemhuis.info>
-Closes:
-https://lore.kernel.org/all/de980a49-b802-417a-a57e-2c47f67b08e4@leemhuis.info/
+In case of memory allocation fail in clk_mt8183_top_init_early()
+'top_clk_data' will be set to NULL and later dereferenced without check.
+Fix this bug by adding NULL-return check.
 
-Ciao, Thorsten
+Upstream branch code has been significantly refactored and can't be
+backported directly.
+
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+ drivers/clk/mediatek/clk-mt8183.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/clk/mediatek/clk-mt8183.c b/drivers/clk/mediatek/clk-mt8183.c
+index 78620244144e..8377a877d9e3 100644
+--- a/drivers/clk/mediatek/clk-mt8183.c
++++ b/drivers/clk/mediatek/clk-mt8183.c
+@@ -1185,6 +1185,11 @@ static void clk_mt8183_top_init_early(struct device_node *node)
+ 	int i;
+ 
+ 	top_clk_data = mtk_alloc_clk_data(CLK_TOP_NR_CLK);
++	if (!top_clk_data) {
++		pr_err("%s(): could not register clock provider: %d\n",
++			__func__, -ENOMEM);
++		return;
++	}
+ 
+ 	for (i = 0; i < CLK_TOP_NR_CLK; i++)
+ 		top_clk_data->hws[i] = ERR_PTR(-EPROBE_DEFER);
+-- 
+2.30.2
+
