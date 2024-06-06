@@ -1,204 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E047B1DDC9
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 16:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18701197A90;
+	Thu,  6 Jun 2024 16:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717690010; cv=none; b=Gs/WDojJplhjAdmSvIoOql5P2u0sy557sUqtH27uAocaJZdGmn9oCjlSfREhyWawCQXGuiwaAZ85pIrTx62ZfYU2JFtP7v1zSwztIuhAfNCI7I3EKGDlKcUKnJBUT2gDJyLEdi75dOKemIdpxBD4Dq8DwKQxJM3Tjt8PLhqY7a4=
+	t=1717690062; cv=none; b=XAlWDNHyZCu9gB7MH6hqwTrNlG6jFnApi2++e2d27vg8QaHuXNmfICqqd2ziWAnAycffPTPPBabHG/LjGkFfg7M7deSopL+VoWxOCgM8iykoGhx8Bd1KWHIkStP+h1Y5vyHxIa5xuR+iogWr9X8KaEkSmTk8sqI3dzNv5UaC6/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717690010; c=relaxed/simple;
-	bh=xtP+8AIj85C1/WgIWPRNG4p8BLG3rnAPCNR1vfpZHEk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mHMUvr7KjThoob7EgK5vVqppVCQyk2F5Xh/1FuzQNLBEVlpxmkrkHQpUuAWto3y6/KPlL37/EIjSrJoi4VpOqBUk25BM5FMPH2I+xZbMLZ3aL19r2qrdXevHK/WBimikGPtLZGaYIaq1ArSGRTn4qFFNHqXubnoOSJVWyzpSD8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dqei6xmL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717690062; c=relaxed/simple;
+	bh=6kCCkX7oEiTVbrjZ0mC374x6Q9o8/coYWFgv4Qj3ums=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=R9fnkyaAVlJ9arU0RLrU5RYSQRpLjGpnBmZQXr/6M7zn2Vijd8BCc3WWjzD2oUdLrUlkzrrH6KafOuRgrmpklfmtfbMHRwxhslCB1GUY8EHlgKqrcSRiIFaKIAMtfzkZb9nSojDrbEYO4j+5z39kIq3DNj6P7VVqgxcaBieLeYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1KBwhLI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dqei6xmL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717690007;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AqdpCvnzMbEvDLDb+VyMlSvq06RVNzNNqxG9y9taPwg=;
-	b=dqei6xmLmKZN51YWgAxyhWNZ/Q6qVl8ZCQboPAa0Ks+WvLr0PWbNpWQ4a0ZpZne0kEi/Cm
-	TQKmUiDhCqvlqZnPONSOzKV3j+3XRSMiAN5/f3OZ2yzUOXswH2qhAZT5Pe+AlLCMk/D1DT
-	p4UZiv2kC/4Pw+Cs4wH8McLDyM8pI68=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-492-UlyuETeoNZiecGHH36orWg-1; Thu, 06 Jun 2024 12:06:46 -0400
-X-MC-Unique: UlyuETeoNZiecGHH36orWg-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-35dceae6283so1064159f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 09:06:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717690005; x=1718294805;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AqdpCvnzMbEvDLDb+VyMlSvq06RVNzNNqxG9y9taPwg=;
-        b=SDXY0xPeyDpRszdIqPpEZO+pR6+IjB+kE0zJ5Tho+9s2hi7AKwzlzU4PPVuD7op/dr
-         S0Wfj36endMK60qNeg2g2G6chGQxJ9IWSywHgKqb9z3OStkaQ1G8DuKvh51KB19KrF1o
-         0RZ2+yrynnfIFLL2V20IO9zchhMwr+tSmK/Gq3vfaAPeoxODyL7yYoiSbDyW5l4ZynN3
-         ssgeJVcMvOKMft1mxjd3j+wZpis0A+mCANuIiBK3zobFjmFgFm7uJ0ckosu54XZTjjJw
-         VkEH5eqVHC1b3w/6eiiQYCf9AeYqdwqrOnt1ddJRhgfxm0Af7mtEGGt70TLgeSUB9Jx3
-         kahQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlZ6Ijxw5kt+83XmDUM/RSe+KceY/ic4C2z4xpQei16CrSyCS8O4KVFEC1FD6SFH71opxPqxovkejwhuLedpy3bwp+7ANR6caWEOTa
-X-Gm-Message-State: AOJu0Yx1eip4ecRzED3mzKiLZGlyi0dFV1vW03J7LszbivN4QulFnSzV
-	/EYEqfbV3UcbQDkeGmzSMZl16TaJ3MX017bmtrZATKgIyd+YBKXebnZ8v1j8wYgnc6JAFTtLbCG
-	V7v0q6tbgyHkp6hiy90jOIKOfL4CZO9MdhswmhgY5yt4XzWfVN/Tbnh1lAzREwZvJgTN4hnclnh
-	lJvCjPWm9d82e7AVSUx4g1BP4UuTQ3SG2557DC
-X-Received: by 2002:a5d:5750:0:b0:356:49a8:7e0a with SMTP id ffacd0b85a97d-35efed1d686mr56105f8f.11.1717690005380;
-        Thu, 06 Jun 2024 09:06:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHtuK4uojIq+VZLW+UvPNBI/OVsp0turKI0UvFa+AeYkiz/Gn3dzwmCpJcFa5pu3JCGHmlZTb7NXLe0DqqOEt8=
-X-Received: by 2002:a5d:5750:0:b0:356:49a8:7e0a with SMTP id
- ffacd0b85a97d-35efed1d686mr56090f8f.11.1717690004987; Thu, 06 Jun 2024
- 09:06:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1KBwhLI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A3816C4AF08;
+	Thu,  6 Jun 2024 16:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717690061;
+	bh=6kCCkX7oEiTVbrjZ0mC374x6Q9o8/coYWFgv4Qj3ums=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=p1KBwhLIWHJbXHGifR5r6w7StwOOh2zXIXG32cqZJPBQ0f7oYj83x93R5Bt/pZaSB
+	 heCLMz4XE4wh9MR1os9Ccw91r1ihCPO2U1EqhEAQUQTFg6h2e/0ptc5NfdGwx4AMjm
+	 ukuwWdRpbRjtsKIPydgtRbv2DZKdsX+4sT/NuN2RRIOF3/PLI2z3raPLjP2O8T5MVW
+	 F6zOWBdmyX+xX0LwZmWWPI5B4wdfP7VIMYKJXfnlKy3gF4ITosLLR/L3kzkMieEc5o
+	 vRKyPghEkiz3gjVlUjZFRP/45ivVdiz5H01HDXR7NVlfeO58iR8iNNqrTbce908E3s
+	 ZBT0fA5TyULcA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE12C27C55;
+	Thu,  6 Jun 2024 16:07:41 +0000 (UTC)
+From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
+Date: Thu, 06 Jun 2024 19:07:40 +0300
+Subject: [PATCH v6 1/9] dt-bindings: iio: adc: Add common-mode-channel
+ property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530210714.364118-1-rick.p.edgecombe@intel.com> <20240530210714.364118-5-rick.p.edgecombe@intel.com>
-In-Reply-To: <20240530210714.364118-5-rick.p.edgecombe@intel.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Thu, 6 Jun 2024 18:06:33 +0200
-Message-ID: <CABgObfa1xtZkGizNf=YrMYSo29v==qijMQJ-mZvobniS6-7OLw@mail.gmail.com>
-Subject: Re: [PATCH v2 04/15] KVM: x86/mmu: Add a new mirror_pt member for
- union kvm_mmu_page_role
-To: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: seanjc@google.com, kvm@vger.kernel.org, kai.huang@intel.com, 
-	dmatlack@google.com, erdemaktas@google.com, isaku.yamahata@gmail.com, 
-	linux-kernel@vger.kernel.org, sagis@google.com, yan.y.zhao@intel.com, 
-	Isaku Yamahata <isaku.yamahata@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240606-ad4111-v6-1-573981fb3e2e@analog.com>
+References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
+In-Reply-To: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
+To: Ceclan Dumitru <dumitru.ceclan@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>, 
+ Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717690059; l=1665;
+ i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
+ bh=7+gdjeLzhs0nsD3z5zCT8lTNIXL7WwI7n9Ywy4A7eJY=;
+ b=oZyApd6X1HRxsMW2ljvKhFCgcD7m1xakV5QkuOdiYuZYfC09kzX47w5iLBItPUFBMYChHkRox
+ DbE8aTtYIuVAfAA+YtcLuQcJ0RTBZqyFpfdZESWZ1cyAHLTB26Ar9yK
+X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
+ pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
+X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
+ with auth_id=140
+X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+Reply-To: dumitru.ceclan@analog.com
 
-On Thu, May 30, 2024 at 11:07=E2=80=AFPM Rick Edgecombe
-<rick.p.edgecombe@intel.com> wrote:
->
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
->
-> Introduce a "mirror_pt" member to the kvm_mmu_page_role union to identify
-> SPTEs associated with the mirrored EPT.
->
-> The TDX module maintains the private half of the EPT mapped in the TD in
-> its protected memory. KVM keeps a copy of the private GPAs in a mirrored
-> EPT tree within host memory. This "mirror_pt" attribute enables vCPUs to
-> find and get the root page of mirrored EPT from the MMU root list for a
-> guest TD. This also allows KVM MMU code to detect changes in mirrored EPT
-> according to the "mirror_pt" mmu page role and propagate the changes to
-> the private EPT managed by TDX module.
->
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> ---
-> TDX MMU Prep v2:
->  - Rename private -> mirrored
->
-> TDX MMU Prep:
-> - Remove warning and NULL check in is_private_sptep() (Rick)
-> - Update commit log (Yan)
->
-> v19:
-> - Fix is_private_sptep() when NULL case.
-> - drop CONFIG_KVM_MMU_PRIVATE
-> ---
->  arch/x86/include/asm/kvm_host.h | 13 ++++++++++++-
->  arch/x86/kvm/mmu/mmu_internal.h |  5 +++++
->  arch/x86/kvm/mmu/spte.h         |  5 +++++
->  3 files changed, 22 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_h=
-ost.h
-> index 250899a0239b..084f4708aff1 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -351,7 +351,8 @@ union kvm_mmu_page_role {
->                 unsigned ad_disabled:1;
->                 unsigned guest_mode:1;
->                 unsigned passthrough:1;
-> -               unsigned :5;
-> +               unsigned mirror_pt:1;
+From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-"is_mirror".
+There are ADCs that are differential but support to measure single-ended
+signals on the same channels by connecting a constant voltage to the
+negative input pin.
 
-> +               unsigned :4;
->
->                 /*
->                  * This is left at the top of the word so that
-> @@ -363,6 +364,16 @@ union kvm_mmu_page_role {
->         };
->  };
->
-> +static inline bool kvm_mmu_page_role_is_mirror(union kvm_mmu_page_role r=
-ole)
-> +{
-> +       return !!role.mirror_pt;
-> +}
-> +
-> +static inline void kvm_mmu_page_role_set_mirrored(union kvm_mmu_page_rol=
-e *role)
-> +{
-> +       role->mirror_pt =3D 1;
-> +}
+This property allows to properly define a single-ended channel that
+requires two inputs to be specified. Software can use the presence of
+this property to mark the channel as not differential.
 
-Not needed, remove it.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+---
+ Documentation/devicetree/bindings/iio/adc/adc.yaml | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
->  /*
->   * kvm_mmu_extended_role complements kvm_mmu_page_role, tracking propert=
-ies
->   * relevant to the current MMU configuration.   When loading CR0, CR4, o=
-r EFER,
-> diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_inter=
-nal.h
-> index faef40a561f9..6d82e389cd65 100644
-> --- a/arch/x86/kvm/mmu/mmu_internal.h
-> +++ b/arch/x86/kvm/mmu/mmu_internal.h
-> @@ -157,6 +157,11 @@ static inline int kvm_mmu_page_as_id(struct kvm_mmu_=
-page *sp)
->         return kvm_mmu_role_as_id(sp->role);
->  }
->
-> +static inline bool is_mirror_sp(const struct kvm_mmu_page *sp)
-> +{
-> +       return kvm_mmu_page_role_is_mirror(sp->role);
-> +}
+diff --git a/Documentation/devicetree/bindings/iio/adc/adc.yaml b/Documentation/devicetree/bindings/iio/adc/adc.yaml
+index 0a77592f7388..8e7835cf36fd 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adc.yaml
+@@ -46,6 +46,17 @@ properties:
+       differential channels). If this and diff-channels are not present reg
+       shall be used instead.
+ 
++  common-mode-channel:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Some ADCs have differential input pins that can be used to measure
++      single-ended or pseudo-differential inputs. This property can be used
++      in addition to single-channel to signal software that this channel is
++      not differential but still specify two inputs.
++
++      The input pair is specified by setting single-channel to the positive
++      input pin and common-mode-channel to the negative pin.
++
+   settling-time-us:
+     description:
+       Time between enabling the channel and first stable readings.
 
-e.g. "return sp->role.is_mirror".
+-- 
+2.43.0
 
->  static inline void *kvm_mmu_mirrored_spt(struct kvm_mmu_page *sp)
->  {
->         return sp->mirrored_spt;
-
-This one is also unnecessary BTW.
-
-Otherwise looks good.
-
-Paolo
-
-> diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
-> index 5dd5405fa07a..b3c065280ba1 100644
-> --- a/arch/x86/kvm/mmu/spte.h
-> +++ b/arch/x86/kvm/mmu/spte.h
-> @@ -265,6 +265,11 @@ static inline struct kvm_mmu_page *root_to_sp(hpa_t =
-root)
->         return spte_to_child_sp(root);
->  }
->
-> +static inline bool is_mirror_sptep(u64 *sptep)
-> +{
-> +       return is_mirror_sp(sptep_to_sp(sptep));
-> +}
-> +
->  static inline bool is_mmio_spte(struct kvm *kvm, u64 spte)
->  {
->         return (spte & shadow_mmio_mask) =3D=3D kvm->arch.shadow_mmio_val=
-ue &&
-> --
-> 2.34.1
->
 
