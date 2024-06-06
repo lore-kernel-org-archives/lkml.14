@@ -1,125 +1,152 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7308917FAA1
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680DE17FAC5
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717667831; cv=none; b=aHlic+QMoNesZ+hl9y8aUnYywxPnYhNmbrqGZwlr2v2gF1JqNaph7qxafd00cY0yKXaQO/MgFjXUMZX7OQPLv2+1S7fsL3bB9HifjWKcLrckVngvI4NDvldDi8hZYWr3EmECJqL2e5vmqavlz6uKkAvfww+UFJsjFHIOw6d7Fdg=
+	t=1717667893; cv=none; b=YW1ux4eEzt7fVA1G9XB3tKLGz8Zvulv3yLoIIZzpta99wHiEhP1bMqzUVnQ9068DM4wc4klRjlFRRV/ibnVBlyGnF+0HGv7CQomZVshWb13oT1cvXsAqBLdZd/HX/xbsRLnv577B6vUtt8J4ZsCK5632rA98rGq3ZTYPf7WWNu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717667831; c=relaxed/simple;
-	bh=pZba+yKPKAIjlW59yMlzkexteKvLGEOvgVy2SEAGPV4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bBSeO0cyGVhlr3hejKiu0vxVFWdWLVfYPtaa3CxAYmrcGjAW7TvEqEtk+Sx9nkTLUm3haEpUeuLHQ3b8MzL4iNRJNVYtALCXyvSy/oPQMj+Z+yXkzmbyrxojdOverq1tB0b2klqjTFzyQZDuzcmsqUHRNtkLOjiPq4t3QC3ajGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hj7TExGz; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717667893; c=relaxed/simple;
+	bh=PK/Yr00ssDR4VQl+Nq6ESa54g10t7lTOOMbDa1l6uRE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m7OkryzlN70cFuhlVj0ntnLDp2Sui9qzU+wRqgiP1qVhub3t1gisjfdgi4WY1qDJQ2h5Se8BQFtLTWcwMsDng0CZguClz9Yhez0lcozWqAdP65KDQYHVNVNoWaG4MzULpWoh+1LGxh498UZBa5PmU34AODHDGlEG/l2J72V4Qfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ly7SLx6x; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hj7TExGz"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a626919d19dso346588366b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 02:57:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ly7SLx6x"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-62a08091c2bso7304287b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 02:58:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717667827; x=1718272627; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=E3f93tFB2rT6AGkBJjlcrliLx2/McmtIe80WPbfuLCA=;
-        b=hj7TExGzMyPHmQrCZTc8qMWfoDn0e0b/DFij//PEb+4tNXWb0Zrue+DHD3y2PuT3TC
-         hatT0qDrX9XdGMQcs3T5gjDvHLbekEmhHXVK4/cs4xq65m2g/KCCPYvNFmPrCGqnAAzD
-         UZOgwLRW+n/9mDIssHYiu2Zq/D5ezQkDLId7HZRVRFA7kJfuFBHnp4vzbEPaLKRBzYEI
-         u+vOfhWH6hUH9I3QtzGnNCud+pjb+SZjSc6dnnvTtJMDFCXRpT+1AEgOQKCu/iFtPeVF
-         2xm64Rl+QIjQ55Uo9uUQmPxq2QakzUp9ArNFPZu7lpeTxSa+eGUxpDL9k8buojXfKfEg
-         VPAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717667827; x=1718272627;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1717667890; x=1718272690; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E3f93tFB2rT6AGkBJjlcrliLx2/McmtIe80WPbfuLCA=;
-        b=f1gXYKwV4SLMOzm4NC6KvIE+HjOGvaC/H/vuhYPJos705DhTFy9ycEfAiRmO0lS/yy
-         mxJXoudp1E7B4NuSgg3txQ/ojU89nePhA1B2K/SaJHoKrMVW/wUqDr1uMQHYcepzkdeB
-         0ywZzrQ7HbVdJz1myonBHZf3V5Xi0qd5TYMb0cWkFjTi7gODdjJQTzfDQAMTkwWyMLhD
-         8PKO8/juiUFS3uaABA+bLAf1c2ls4WCFTZbT/TPAKNqyKQvbID2ekDiFwP3QdSL+wzt8
-         SQeL2aVcs8xJuEI+mYogR4HG9qBDuSMs34yL7ficpSJ7uJHi/zgzHHOUXd1gbAvxd07C
-         lQyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX6mZodEU5XDVqEw6zhIGwd40rDXW1gn5Dr0WuIv2EAuIESE82VEwiYlltlpvp3oLqRFEPHLlbBzkH5XJmS/AhN/wnf0rOgKnGfWg5a
-X-Gm-Message-State: AOJu0Yw2ndBtC18xS+4EKcOmTH1u6nGDNpEz5L8GiHxwljgQJOFPAmSG
-	LWJ5au/ap4cMYVEeW7VczUu9oiQSznrS/gd2FxtOl8mj+5JvI3DUnvbCSWaWprY=
-X-Google-Smtp-Source: AGHT+IEo0+Vr7PVFW2gZBx1g/PraiBGsC+gt0IJWns+YxpEU8kU7Lfu7cX7h5TitU7otGn9P0VMA/w==
-X-Received: by 2002:a17:906:228b:b0:a69:2554:9c6 with SMTP id a640c23a62f3a-a6c75f942b4mr188930866b.6.1717667826883;
-        Thu, 06 Jun 2024 02:57:06 -0700 (PDT)
-Received: from [192.168.128.139] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c8070e2d9sm73065366b.158.2024.06.06.02.57.05
+        bh=IWM8oINC8AeyIZo0cnk7DqiORcHA5KDENrV1ggbh44E=;
+        b=Ly7SLx6xheph+G4IchYnlt3iItKRc0AQGU493g1cMoSEymH9s9OLSP7PPaliJCzwDK
+         fYdXPHOfIjHk9x6j6mr3PrkayIh8d9cPVqGblsTC1+2UCGzJX5lqY79JHVbdWz8roiTo
+         lepRn6Ml5OA93I9ManH8Es5WImME3uV82RcnU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717667890; x=1718272690;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IWM8oINC8AeyIZo0cnk7DqiORcHA5KDENrV1ggbh44E=;
+        b=Fs2xnZ3ANukYiNcKH94e9y6hxx9OVswxHncar/x2IkBLHHpW9VY9CV9NzWiKI3cjkm
+         y++u1kSuFnJHvKIyuhYRypEFFaV57c5zQqxjdXEpPYgB3mJ7u54BuHK1OVAgNOIgAnVy
+         CJMt0v0zqw7cs0e93bj1p+BI3G3nfeJP0TRL1Xx58q38VaKCUNzP6qqfdIvQTwdkHSpG
+         qKnXVr/sH4UVfJrx54jymleU4TMhLMPM5tuMRQDIF4zilzQzzhZmV337TSRU1ze2AvS7
+         /cqAoAzbsZDSrQxLd5hi5vWP2TFkappvmj0PiP8FW0rXcISAOcIhoRqzmuOE1F5ynRIn
+         hPSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUyT8wr+VnzUqt4/0VRPXSyL85DtbkSE96gt0kgCnIFnLo3pe2bah7BdVgT2NViZ0Icbef9uhy3DeUhje07jcinkwC86S5u8W2BZ18G
+X-Gm-Message-State: AOJu0YyKuoCZP/Uune4XQPUzJpfJ5eVdOhALrg+j3tcaK4FyzCn0PcHA
+	UWWxg7mn1j8u/ctFcFFi8ZBsyCaqgY77LS/LqVZ6UEUmTo3lxbcUGXMt6qYqd5g8LRAuIAE8sk9
+	Slg==
+X-Google-Smtp-Source: AGHT+IFXBU+7Bc1YfaK+JGOSU4FTLmI1IXzSRVVsSvoQ+b/5JUE2qPKnS0vib9NOU+ZgILyt9j59qQ==
+X-Received: by 2002:a0d:c082:0:b0:615:1527:aa2 with SMTP id 00721157ae682-62cbb4aa81fmr47692307b3.10.1717667889800;
+        Thu, 06 Jun 2024 02:58:09 -0700 (PDT)
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62ccacadb63sm1897467b3.20.2024.06.06.02.58.08
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 02:57:06 -0700 (PDT)
-Message-ID: <db76dd17-905c-40a8-9319-94659c95a6c3@linaro.org>
-Date: Thu, 6 Jun 2024 11:57:03 +0200
+        Thu, 06 Jun 2024 02:58:09 -0700 (PDT)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-62a2424ecdaso7754757b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 02:58:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjXKiWXIAqRMDlESnXB9YGQfzCw372ggTiVSoH52S5jwty3Jt9KyJxtoT303r7MEm8G0u3BEPlJGEex2oizEiNTY1JpItBnaUjAjiW
+X-Received: by 2002:a81:f806:0:b0:61b:3484:316b with SMTP id
+ 00721157ae682-62cbb4d423dmr48382467b3.14.1717667887633; Thu, 06 Jun 2024
+ 02:58:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: qcm6490-fairphone-fp5: Use .mbn
- firmware for IPA
-To: Luca Weiss <luca.weiss@fairphone.com>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240606-fp5-ipa-mbn-v1-1-183668affe58@fairphone.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240606-fp5-ipa-mbn-v1-1-183668affe58@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240327-guenter-mini-v4-0-49955c198eae@chromium.org> <20240327-guenter-mini-v4-1-49955c198eae@chromium.org>
+In-Reply-To: <20240327-guenter-mini-v4-1-49955c198eae@chromium.org>
+From: Tomasz Figa <tfiga@chromium.org>
+Date: Thu, 6 Jun 2024 18:57:50 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5BhJExCEA7_Ck2skWR52baSDH63-+oEZnpo4UiMc0C7=A@mail.gmail.com>
+Message-ID: <CAAFQd5BhJExCEA7_Ck2skWR52baSDH63-+oEZnpo4UiMc0C7=A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] media: uvcvideo: stop stream during unregister
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Max Staudt <mstaudt@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Alan Stern <stern@rowland.harvard.edu>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sean Paul <seanpaul@chromium.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6.06.2024 11:09 AM, Luca Weiss wrote:
-> Specify the file name for the squashed/non-split firmware with the .mbn
-> extension instead of the split .mdt. The kernel can load both but the
-> squashed version is preferred in dts nowadays.
-> 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+Hi Ricardo,
+
+On Wed, Mar 27, 2024 at 5:24=E2=80=AFPM Ricardo Ribalda <ribalda@chromium.o=
+rg> wrote:
+>
+> uvc_unregister_video() can be called asynchronously from
+> uvc_disconnect(). If the device is still streaming when that happens, a
+> plethora of race conditions can happen.
+>
+> Make sure that the device has stopped streaming before exiting this
+> function.
+>
+> If the user still holds handles to the driver's file descriptors, any
+> ioctl will return -ENODEV from the v4l2 core.
+>
+> This change make uvc more consistent with the rest of the v4l2 drivers
+> using the vb2_fop_* and vb2_ioctl_* helpers.
+>
+> Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 > ---
+>  drivers/media/usb/uvc/uvc_driver.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+First of all, thanks for the patch. I have a question about the
+problem being fixed here.
 
-Konrad
+Could you point out a specific race condition example that could
+happen without this change?
+From what I see in __video_do_ioctl((), no ioctls would be executed
+anymore after the video node is unregistered.
+Since the device is not present either, what asynchronous code paths
+could be still triggered?
+
+[1] https://elixir.bootlin.com/linux/latest/source/drivers/media/v4l2-core/=
+v4l2-ioctl.c#L3023
+
+Best regards,
+Tomasz
+
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/u=
+vc_driver.c
+> index bbd90123a4e76..17fc945c8deb6 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -1911,8 +1911,19 @@ static void uvc_unregister_video(struct uvc_device=
+ *dev)
+>                 if (!video_is_registered(&stream->vdev))
+>                         continue;
+>
+> +               /*
+> +                * Serialize other access to the stream.
+> +                */
+> +               mutex_lock(&stream->mutex);
+> +               uvc_queue_streamoff(&stream->queue, stream->type);
+>                 video_unregister_device(&stream->vdev);
+>                 video_unregister_device(&stream->meta.vdev);
+> +               mutex_unlock(&stream->mutex);
+> +
+> +               /*
+> +                * Now the vdev is not streaming and all the ioctls will
+> +                * return -ENODEV
+> +                */
+>
+>                 uvc_debugfs_cleanup_stream(stream);
+>         }
+>
+> --
+> 2.44.0.396.g6e790dbe36-goog
+>
