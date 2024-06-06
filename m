@@ -1,170 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F69315574D
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D502215664D;
+	Thu,  6 Jun 2024 09:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717664565; cv=none; b=IQHM1GxZ02KQPw3TDVjEK+5P2HRDyssuMZgRYVjjUPSTM6RIVKAh8qnb9bybgik3JgeDHATr2npAbSlih6C+on9l1XcdQgCFNECqleKpNiMsWye0p6FmeHvEKcKYMQs3dDaVjKW9MYfFg7jEdEJVLcfBM2gtA54e0OBRQ7cpKCo=
+	t=1717664567; cv=none; b=ijqoeyKQ+s0/FubdS/5KZZgIOcyvjaEavEGwat2Cr3lWMq+ssLRkGQjTRar6h5ZKKmtXqvI9+6ZbO90d9PGhHfFCPn8MZLEvy9a5I2iUeUEQRp50xFHGfd4/0rLHo4vS3Dt43PRREacKxBJU4wz+qVVhI2NdsF2ZwdwAf5Ln0As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717664565; c=relaxed/simple;
-	bh=9icnmEfpu4qV4+inQ0UmDn7/E9tga/lNpi/8MPeEJbs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kT5q+qCoZc24Qn3fGm0ThS0hWJd3WS3wNL+JgrzkMzxlENAi9fWH42fqqBd6QwGm9hJ3TcWCQH+8Pef/UnSn3c/YGvnJeep34jKPm/pe/8YKBTUqA2CEBqt79zQi7CFSP5iYgUQOS0kT6T3+2RH5Xi+7NUq5Ij+6j7Zbt27JLQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ugkwibh9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717664567; c=relaxed/simple;
+	bh=rFDucDznyAp9KdW6DmpqQ16mThJdgkTuPLsOXBQR5oo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=m+sEg/t5EOEHRHtnXX5ZXv9Z5bWjjbtPSyBUMxZMpXD98Aon/WU+2DJCpRy2ZDp3aA/4DjJ7vsHU3jb6ii+ggOk9hUtwcYYV6cmTidU5tyG7ouzlDp5FjBDZifonC+IO/0Z968jXvL1ZvVSulhLd1clFTIiKY+KZTqjva90X+Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvxZVdrL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ugkwibh9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717664562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LeIpi3AlPo5Ron82kvJE1KgranvjfzkDt2CgEkhJ+AQ=;
-	b=Ugkwibh9ObNUwxUzUflWNFLSW+xxazEU2+5WitymlKdYfBz6kBH3fLJtO79X2UvnwHJmZe
-	T02SB+RPCFbbCgH3icvwhDnpu10sD9nFcEo6QDkiX8PjCV10owKEa4+xXemclB6RZsMr8P
-	Bn/Zm/uEFhocem/03vHR5lQovTg95uk=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-219-KtvURmmHOEOHZXqGUnOUMA-1; Thu,
- 06 Jun 2024 05:02:40 -0400
-X-MC-Unique: KtvURmmHOEOHZXqGUnOUMA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DB4F529AA387;
-	Thu,  6 Jun 2024 09:02:39 +0000 (UTC)
-Received: from fedora (unknown [10.72.113.78])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 16B6B20229B8;
-	Thu,  6 Jun 2024 09:02:34 +0000 (UTC)
-Date: Thu, 6 Jun 2024 17:02:30 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: YangYang <yang.yang@vivo.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Andrew Morton <akpm@linux-foundation.org>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	"yukuai (C)" <yukuai3@huawei.com>,
-	Yu Kuai <yukuai1@huaweicloud.com>
-Subject: Re: [PATCH v2] sbitmap: fix io hung due to race on
- sbitmap_word::cleared
-Message-ID: <ZmF7JsJYlUmp5xTj@fedora>
-References: <20240604031124.2261-1-yang.yang@vivo.com>
- <CAFj5m9KV7OJ4_KjbSkpdtfrKamoLzV6EH-mJP3=y+VvoYOzC3w@mail.gmail.com>
- <aa7246f9-f7df-3054-077e-eb21c7f423ac@huaweicloud.com>
- <ZmEpIBL2Ot5cwRyv@fedora>
- <bebf237c-1223-43e9-93f1-10a32c4923af@vivo.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvxZVdrL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB04C4DE02;
+	Thu,  6 Jun 2024 09:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717664567;
+	bh=rFDucDznyAp9KdW6DmpqQ16mThJdgkTuPLsOXBQR5oo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EvxZVdrLcPwc1YPGrc4gtpEO3pgWroda9mAdJrQEZZcKl7ApfOKJLanOAqi9UEeOl
+	 ZB3sY5DEY/ozQTqT7eD1L1IJzIv+XeI8r5fMTU5ayd5ELgpY0VItwUqiHVTYx+a3qL
+	 2YurrrzY1dDqwPoqa2soUCCfkuxTRxppGc5rHl0S176TnYDvluX0A6gev6LDvzyK2W
+	 YbL/0WZtON5zEQKvVeD2PBm2/IpQhGP7LKBgqasfGEedfcJhjUyD9ecDYHAO2srblP
+	 0vxGu1Bkjzg7H2sdf6tCMZHglirpOg2CfSJs8SLCGsrytlNLt3Du5ZNJLITFBbvi/G
+	 rqkT7B3Vw6eUA==
+From: Michael Walle <mwalle@kernel.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Li Yang <leoyang.li@nxp.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Priit Laes <plaes@plaes.org>,
+	Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	Michael Walle <mwalle@kernel.org>
+Subject: [PATCH v2 08/13] ARM: dts: imx6qdl-kontron-samx6i: add SDIO_PWR_EN support
+Date: Thu,  6 Jun 2024 11:02:01 +0200
+Message-Id: <20240606090206.2021237-9-mwalle@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240606090206.2021237-1-mwalle@kernel.org>
+References: <20240606090206.2021237-1-mwalle@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <bebf237c-1223-43e9-93f1-10a32c4923af@vivo.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On Thu, Jun 06, 2024 at 03:21:38PM +0800, YangYang wrote:
-> On 2024/6/6 11:12, Ming Lei wrote:
-> > On Tue, Jun 04, 2024 at 02:12:22PM +0800, Yu Kuai wrote:
-> > > Hi,
-> > > 
-> > > 在 2024/06/04 11:25, Ming Lei 写道:
-> > > > On Tue, Jun 4, 2024 at 11:12 AM Yang Yang <yang.yang@vivo.com> wrote:
-> > > > > 
-> > > > > Configuration for sbq:
-> > > > >     depth=64, wake_batch=6, shift=6, map_nr=1
-> > > > > 
-> > > > > 1. There are 64 requests in progress:
-> > > > >     map->word = 0xFFFFFFFFFFFFFFFF
-> > > > > 2. After all the 64 requests complete, and no more requests come:
-> > > > >     map->word = 0xFFFFFFFFFFFFFFFF, map->cleared = 0xFFFFFFFFFFFFFFFF
-> > > > > 3. Now two tasks try to allocate requests:
-> > > > >     T1:                                       T2:
-> > > > >     __blk_mq_get_tag                          .
-> > > > >     __sbitmap_queue_get                       .
-> > > > >     sbitmap_get                               .
-> > > > >     sbitmap_find_bit                          .
-> > > > >     sbitmap_find_bit_in_word                  .
-> > > > >     __sbitmap_get_word  -> nr=-1              __blk_mq_get_tag
-> > > > >     sbitmap_deferred_clear                    __sbitmap_queue_get
-> > > > >     /* map->cleared=0xFFFFFFFFFFFFFFFF */     sbitmap_find_bit
-> > > > >       if (!READ_ONCE(map->cleared))           sbitmap_find_bit_in_word
-> > > > >         return false;                         __sbitmap_get_word -> nr=-1
-> > > > >       mask = xchg(&map->cleared, 0)           sbitmap_deferred_clear
-> > > > >       atomic_long_andnot()                    /* map->cleared=0 */
-> > > > >                                                 if (!(map->cleared))
-> > > > >                                                   return false;
-> > > > >                                        /*
-> > > > >                                         * map->cleared is cleared by T1
-> > > > >                                         * T2 fail to acquire the tag
-> > > > >                                         */
-> > > > > 
-> > > > > 4. T2 is the sole tag waiter. When T1 puts the tag, T2 cannot be woken
-> > > > > up due to the wake_batch being set at 6. If no more requests come, T1
-> > > > > will wait here indefinitely.
-> > > > > 
-> > > > > To fix this issue, simply revert commit 661d4f55a794 ("sbitmap:
-> > > > > remove swap_lock"), which causes this issue.
-> > > > 
-> > > > I'd suggest to add the following words in commit log:
-> > > > 
-> > > > Check on ->cleared and update on both ->cleared and ->word need to be
-> > > > done atomically, and using spinlock could be the simplest solution.
-> > > > 
-> > > > Otherwise, the patch looks fine for me.
-> > > 
-> > > Maybe I'm noob, but I'm confused how can this fix the problem, looks
-> > > like the race condition doesn't change.
-> > > 
-> > > In sbitmap_find_bit_in_word:
-> > > 
-> > > 1) __sbitmap_get_word read word;
-> > > 2) sbitmap_deferred_clear clear cleared;
-> > > 3) sbitmap_deferred_clear update word;
-> > > 
-> > > 2) and 3) are done atomically while 1) can still concurrent with 3):
-> > 
-> > After 1) fails, sbitmap_deferred_clear() is called with spinlock,
-> > then it is pretty easy to solve the race, such as, the following patch
-> > against the revert patch.
-> > 
-> > 
-> > diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-> > index dee02a0266a6..c015ecd8e10e 100644
-> > --- a/lib/sbitmap.c
-> > +++ b/lib/sbitmap.c
-> > @@ -63,13 +63,15 @@ static inline void update_alloc_hint_after_get(struct sbitmap *sb,
-> >   static inline bool sbitmap_deferred_clear(struct sbitmap_word *map)
-> >   {
-> >   	unsigned long mask;
-> > -	bool ret = false;
-> >   	unsigned long flags;
-> > +	bool ret;
-> >   	spin_lock_irqsave(&map->swap_lock, flags);
-> > -	if (!map->cleared)
-> > +	if (!map->cleared) {
-> > +		ret = !!map->word;
-> 
-> After atomic_long_andnot(mask, (atomic_long_t *)&map->word), map->word
-> may be 0 if all requests have completed, or not 0 if some requests are
-> still in flight.
+The module can enable/disable the SD card power supply and has
+it's dedicated pin SDIO_PWR_EN for that reason. This is esp.
+useful to be able to reset the SD card if it was in an UHS mode.
 
-setting ->word is lockless, but zeroing ->word is serialized with ->swap_lock.
+Signed-off-by: Michael Walle <mwalle@kernel.org>
+---
+ .../dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi   | 20 ++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-> Therefore, using !!map->word to determine the
-> availability of free tags is inaccurate.
-
-The check should be changed to decide if any free bit is available in
-map->word instead of !!map->word, and 'shift' need to be passed in
-sbitmap_deferred_clear().
-
-Just be curious, do you have reproducer for this issue?
-
-Thanks,
-Ming
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi
+index 4d3cd338a707..d36743e47552 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi
+@@ -61,6 +61,18 @@ reg_3p3v_s5: regulator-3p3v-s5 {
+ 		vin-supply = <&reg_smarc_suppy>;
+ 	};
+ 
++	reg_sdio: regulator-sdio {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_reg_sdio>;
++		regulator-name = "V_3V3_SD";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio1 29 GPIO_ACTIVE_HIGH>;
++		off-on-delay-us = <20000>;
++		enable-active-high;
++	};
++
+ 	reg_smarc_lcdbklt: regulator-smarc-lcdbklt {
+ 		compatible = "regulator-fixed";
+ 		pinctrl-names = "default";
+@@ -640,6 +652,12 @@ MX6QDL_PAD_SD1_CMD__PWM4_OUT 0x1b0b1
+ 		>;
+ 	};
+ 
++	pinctrl_reg_sdio: reg-sdiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x1b0b0 /* SDIO_PWR_EN */
++		>;
++	};
++
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA 0x1b0b1
+@@ -692,7 +710,6 @@ MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17059
+ 
+ 			MX6QDL_PAD_NANDF_CS1__GPIO6_IO14 0x1b0b0 /* CD */
+ 			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26 0x1b0b0 /* WP */
+-			MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x1b0b0 /* PWR_EN */
+ 		>;
+ 	};
+ 
+@@ -795,6 +812,7 @@ &usdhc3 {
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+ 	cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
+ 	wp-gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
++	vmmc-supply = <&reg_sdio>;
+ 	no-1-8-v;
+ };
+ 
+-- 
+2.39.2
 
