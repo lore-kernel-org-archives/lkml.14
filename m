@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0AC195FD5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B7B195FCD
 	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:11:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717675861; cv=none; b=fBYuvHgOamWqPfQR6uGw395ItfnPeEvygfy0sL4oZkwxKmE5UQAR8ed2K5IfsB9AL09qMRMzSotSh7H1s2K2Ukc4790ye0fKqAKJZ8XBXesacM+jRmrDQvhkFTT9WtXtewjj3Wqsoef98HkvHH5CmwUz0zhgZCY3hURMFCFQvGg=
+	t=1717675861; cv=none; b=k3jIySiJ1H1JwbnL8yIsPfrw3kLoJ6Q1jbhp7qvBTfbTqyIrk620Qm3vKgoNwEq5vj2fqL/CC4BU7r/Gxg7TYeA4hJPE0V4T07Ij+1fRF86788sdtq2m7P8tMbyLEkF4PiWoBXQYrmp7pvx2OMWnxV2wXiIZ+FjZEAWFjkAPACs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717675861; c=relaxed/simple;
-	bh=1USSILCftAKY2knoh2V0QYMEyPvdlS6a70pxmpzW/yw=;
+	bh=iVZzamMFw4KSf7EJWCT9D8ewRTw/E7zgRCVheMa8EUU=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=EpuAarIEyb2svTlrS5OS+vXoBsc/X+318Les7ma7+fzu/Rn5+VlEosUiXOvWI1MbtnCG4ilngJRh1+NxPi+ye4colemJSaz+D6KEbozqvRyGarPxoAmB1T6ovvPk1QXcT+hYzpwPVEr+shpDCm4vOJweffow6F1gi24u9wfHLEM=
+	 Content-Type; b=NB7Jy5weE6FawZ/6GoOvIbvqfJlwV1QrEl/0g1aKxHJnE77qlpc8op+k6yKAA73oWkHLRkoKxO22pdt/UkvO+pjODF5uMM1bbRT2jX4bGrmW/6GqgGY96UQF4pNP4wu3roossrnTphmAJQmyeOdpVtu37rL1zAqp+YVTRTc6cuk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A59BC4DDE5;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48262C4DDE4;
 	Thu,  6 Jun 2024 12:11:01 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sFBxR-00000000nMp-440Z;
+	id 1sFBxR-00000000nMK-3Oit;
 	Thu, 06 Jun 2024 08:11:05 -0400
-Message-ID: <20240606121105.828859387@goodmis.org>
+Message-ID: <20240606121105.667743331@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 06 Jun 2024 08:10:13 -0400
+Date: Thu, 06 Jun 2024 08:10:12 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 09/15] ftrace: Assign ftrace_list_end to ftrace_ops_list type cast to RCU
+Subject: [for-next][PATCH 08/15] ftrace: Declare function_trace_op in header to quiet sparse warning
 References: <20240606121004.857581251@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -39,14 +39,13 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Use a type cast to convert ftrace_list_end to RCU when assigning
-ftrace_ops_list. This will quiet the sparse warning:
+Sparse complains that function_trace_op is not static but is not declared
+in a header file. It is used only in assembly code. But add it to a header
+so that sparse no longer complains:
 
- kernel/trace/ftrace.c:125:59: warning: incorrect type in initializer (different address spaces)
- kernel/trace/ftrace.c:125:59:    expected struct ftrace_ops [noderef] __rcu *[addressable] [toplevel] ftrace_ops_list
- kernel/trace/ftrace.c:125:59:    got struct ftrace_ops *
+ kernel/trace/ftrace.c:99:19: warning: symbol 'function_trace_op' was not declared. Should it be static?
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240605202708.450784356@goodmis.org
+Link: https://lore.kernel.org/linux-trace-kernel/20240605202708.289105647@goodmis.org
 
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -54,22 +53,23 @@ Cc: Andrew Morton <akpm@linux-foundation.org>
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/ftrace.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 9c4d01b1bb68..034242675e7b 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -122,7 +122,7 @@ static int ftrace_disabled __read_mostly;
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 9f61556a9491..4135dc171447 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -1131,6 +1131,9 @@ extern void ftrace_graph_init_task(struct task_struct *t);
+ extern void ftrace_graph_exit_task(struct task_struct *t);
+ extern void ftrace_graph_init_idle_task(struct task_struct *t, int cpu);
  
- DEFINE_MUTEX(ftrace_lock);
- 
--struct ftrace_ops __rcu *ftrace_ops_list __read_mostly = &ftrace_list_end;
-+struct ftrace_ops __rcu *ftrace_ops_list __read_mostly = (struct ftrace_ops __rcu *)&ftrace_list_end;
- ftrace_func_t ftrace_trace_function __read_mostly = ftrace_stub;
- struct ftrace_ops global_ops;
- 
++/* Used by assembly, but to quiet sparse warnings */
++extern struct ftrace_ops *function_trace_op;
++
+ static inline void pause_graph_tracing(void)
+ {
+ 	atomic_inc(&current->tracing_graph_pause);
 -- 
 2.43.0
 
