@@ -1,105 +1,160 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E62224D6
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 22:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027B113B5AB
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 22:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717712543; cv=none; b=OcLSsRG+wxzkydwLMZnWJuiUeKCzPBITgYI9+VKKpeEaAxUSuJ2V7ESZTQ3pyqM/m2n7vXZfcyMk8L8laAyutKv68125y3t+2VPwhaUT7qFeqeeOoqrnd0lBywolgX5SENXqMctmS3VyV7HjOqRVDgw/Z8WEsrA+BBPVe8vaYFo=
+	t=1717712551; cv=none; b=Y3+fLJACzaC/gBTA10noCBCUXxuAH2edbqVBzGnnAHL50A1lF4sbNqMyj8iCNfHLPJofl14ZdJD+adC35GMegDbej4huxWQs887/RACVv5+jlR3nxUPctSNrD7udmmFh0ubQZgIQ7E29lsdQ265kc0fsnhom623BXczM4paaJlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717712543; c=relaxed/simple;
-	bh=/42Lk3rNVRxuB4doXZKhDHXe/9xzm3ve3J2e3+7e8Ac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WocaXjMRHnPmkNVaTyFmnhmBvZfyYaO5VaDi76bAVQFU3QfOIQ5hIz40uhvJK+o/W8R7jbw9IZp2KW788bsgmdlru2b3+sqlmR0RXP+i596QKKDCX4pN/Nl6gL74s/ME+8rpNgdW6sBnkxKuEPbIlQRg+uaLMaHp3DhOnltVlxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MuHAu5Oq; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MuHAu5Oq"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57a2f27090aso4290152a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 15:22:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1717712540; x=1718317340; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ch35V7/zJQlvtjwyeXUgERfqnvOqF1FgOOA5wx1Q9Ak=;
-        b=MuHAu5OqXy63LtV9zZjOddn681OI1MM2o2GP9unXrR+IeIfvJebPaAZYCa99uB5nSE
-         vy9SIT+f4Kg8+g6Y4QFqoj+hp7dnawqrfmTgshelkkzMFKss+8u0tExOSWtJKz3k+pTv
-         Ibor1i+C2hxL0uhoL7q/aIDj6B6dbHEqrzwcg=
+	s=arc-20240116; t=1717712551; c=relaxed/simple;
+	bh=+YbgPN4sGECjpFbIwFXJq2izvaMeN6JfjGGslKInETw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=T6WEtJ85yG9IKTr7ZoEh4YKHFcqgwEI9DgNQsEEDgrQ8Z9jgpwxEJtkmhCtSvX4TLNcyJXLEZ4OvWk6kWWHhEFYKguxV+uowvvubPD/aeaQzMgbCFCjI3XYdad16jNqdHIySdLsNH1mdUW1+Ux9MowJ0DOy886f7Y1aTN+ITweo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7ea27057813so151399739f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 15:22:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717712540; x=1718317340;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ch35V7/zJQlvtjwyeXUgERfqnvOqF1FgOOA5wx1Q9Ak=;
-        b=jo6Ul5seHW1AtOgV1IhxJHCMqQGN5S+ct07O50us/h6Em3CQAdBJooErl5Eyf6Dt3e
-         m5r0bgREZ3YjASQA5OVnjpYi09tiXr7NbCs0Hmn20xFvSrmak5ThMZT5qwX2PK/UlbVh
-         p/BWW3mdH8HLe052GUmPckjTzr0pahFJ2fccglwCEBLX1JlCFBlu3Q65L0n1rd/4gz3b
-         MvUCLi/Kb0XKTmm+dbxdbFJuDcG0+x/k71Iqai9ReK5Wp2Z8xQMpvYevQ2dp33WFJeTs
-         +p2g91Ke9KiUehMeT06x7gwsCtUlI4HpXI1dNjTPGvfJKnSZXExxqWkp3WDTGLgRrE2v
-         N69A==
-X-Gm-Message-State: AOJu0Yw5Z15vCwz+wWjy/xMW1sLS2MrfMFP8raKvS35dKwHeu7gwOqbj
-	jLGvcjwZ2I5ULCvk5xm+qqEd6o/2QWq50jQOd7m6IhNsIhtuX9T8UqX3QZvHl6zhorzKk+6tGZc
-	i2BA=
-X-Google-Smtp-Source: AGHT+IFPRKs0Mb/t2R9g3uRMz8OICY3KcEKD3zwDRMBMS4adeJ3eZ6c1VU9JIjgKP0yrrlPM4Yj31w==
-X-Received: by 2002:a17:906:7749:b0:a61:7f85:e31c with SMTP id a640c23a62f3a-a6cba5962damr74985366b.12.1717712539828;
-        Thu, 06 Jun 2024 15:22:19 -0700 (PDT)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c80582030sm151051266b.33.2024.06.06.15.22.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Jun 2024 15:22:19 -0700 (PDT)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57864327f6eso1311426a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 15:22:19 -0700 (PDT)
-X-Received: by 2002:a50:9e69:0:b0:579:fb7e:2112 with SMTP id
- 4fb4d7f45d1cf-57c4dee1747mr773861a12.11.1717712538914; Thu, 06 Jun 2024
- 15:22:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717712549; x=1718317349;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A3SfVqWCeEvzx6qk1GQPFO5BgPtJCu/+FRWlEGWXISU=;
+        b=iWhc2ePKnjUlm+qYkBc5x/HEp2Rx/gO7501o0MAcLedxy1HH2XiugGCIpM91z7Fmp6
+         tvbqD6BCFrmf8Rnz3Lj+hTMjqvdmMv6jCi5y6KkjZgyYoB3pcPXnMhCQHXqrN3Q9XI40
+         hZ7gA7XjXR6G7UBTGv/+ru/f9QbI7ft08axWlAW/XVpz4aHX3BIWU/Yf1pTCNpXF21rM
+         dR7KvYh8qYTVEybt3v4ewhqkiwYiLSNvNgKqqCQNvDykdlyT6sYxDK0mNtKd/4ik5U+U
+         TTPzDWQ9xHFWhIYFxuaTXl1NAoUsA6cit+/SJwJhAwBU2/lIYdH7YEqBk1nLljZidorY
+         TJ7g==
+X-Forwarded-Encrypted: i=1; AJvYcCXMWWATPaO9obzknBAKRJUbtXqZKHHJj+DXM03/olUJlbKzEJVt/8pxa1HYcqg6qJMbhEQFwMy5DxVue2S3c1Zh3npW82ep+Nbml+Xw
+X-Gm-Message-State: AOJu0YxvV41gZQZh+w00Ufyx9gDeB0g+R5RAu0JnTwIyLZd6UkR+NKEV
+	PHbVcbNRTpVw0yXvNdWaDKG/O+cfGaNpNvwy8pQhn73vgX+dnLbIlmqnXRjIoAeIs4YD93++La3
+	D/JgGiQZSJZHBOQi4dDZfDNhcaK0G0zhKSY3AIINaV3SX9mIbw+AWryg=
+X-Google-Smtp-Source: AGHT+IENlrlGDBqpnFUoQSvNfGUN0bBTXotpHV/JkSAeVwV2thJtKXX2sd9MVxa9vdHECg8wd4n8HlJD0fvpxngL1Q3xTTGa2MKp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <c86f0ed7-4336-4bc8-a27c-8d7ccaaec5d8@I-love.SAKURA.ne.jp>
- <CAHk-=wh5Odts_1ZL3gLuxmQBveTWveeWn3equ2JcH2yA9cyjxQ@mail.gmail.com> <d17e8d0c-b292-4915-a61b-1a4c2c496bae@I-love.SAKURA.ne.jp>
-In-Reply-To: <d17e8d0c-b292-4915-a61b-1a4c2c496bae@I-love.SAKURA.ne.jp>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 6 Jun 2024 15:22:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgU-ybmkd7rA+GcN1fSE+w3Hbm1E_Q0YHO2q5Uoo69pUQ@mail.gmail.com>
-Message-ID: <CAHk-=wgU-ybmkd7rA+GcN1fSE+w3Hbm1E_Q0YHO2q5Uoo69pUQ@mail.gmail.com>
-Subject: Re: [GIT PULL] tomoyo update for v6.10
-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc: LKML <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a05:6602:3fd5:b0:7cc:2522:f5fd with SMTP id
+ ca18e2360f4ac-7eb571c83c6mr6854139f.1.1717712549134; Thu, 06 Jun 2024
+ 15:22:29 -0700 (PDT)
+Date: Thu, 06 Jun 2024 15:22:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000515313061a401ea1@google.com>
+Subject: [syzbot] [bcachefs?] kernel BUG in bch2_lru_change
+From: syzbot <syzbot+df3bf3f088dcaa728857@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 6 Jun 2024 at 15:13, Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> On 2024/06/07 1:50, Linus Torvalds wrote:
-> > On Thu, 6 Jun 2024 at 07:40, Tetsuo Handa
-> > <penguin-kernel@i-love.sakura.ne.jp> wrote:
-> >>
-> >>   git://git.code.sf.net/p/tomoyo/tomoyo.git
-> >
-> > Tssk, tssk. I want to see a proper pull request from a signed tag.
-> >
-> > I did find the tag in your repo, so I pulled it, but please don't make
-> > me have to go look for it.
->
-> Excuse me, but what did I miss?
+Hello,
 
-Note how it doesn't actually mention the tag-name anywhere.
+syzbot found the following issue on:
 
-> I think I made the tag using "git tag -s tomoyo-pr-20240606".
-> What is "a proper pull request from a signed tag"?
+HEAD commit:    83814698cf48 Merge tag 'powerpc-6.10-2' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15376aba980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=47d282ddffae809f
+dashboard link: https://syzkaller.appspot.com/bug?extid=df3bf3f088dcaa728857
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Oh, the signed tag _existed_. And it was in the public repository. But
-it wasn't actually ever mentioned in the pull-request itself, so I had
-to find it by doing
+Unfortunately, I don't have any reproducer for this issue yet.
 
-    git ls-remote git://git.code.sf.net/p/tomoyo/tomoyo | less
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/e7b928e00d7b/disk-83814698.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/318e218a0bda/vmlinux-83814698.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b5b5d49c35f6/bzImage-83814698.xz
 
-and then look for the tag that pointed to the commit ID that you mentioned.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+df3bf3f088dcaa728857@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+kernel BUG at fs/bcachefs/lru.h:22!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 PID: 7494 Comm: syz-executor.4 Not tainted 6.10.0-rc1-syzkaller-00304-g83814698cf48 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+RIP: 0010:lru_pos fs/bcachefs/lru.h:22 [inline]
+RIP: 0010:__bch2_lru_set fs/bcachefs/lru.c:48 [inline]
+RIP: 0010:bch2_lru_del fs/bcachefs/lru.c:54 [inline]
+RIP: 0010:bch2_lru_change+0x65c/0x680 fs/bcachefs/lru.c:69
+Code: 80 e1 07 38 c1 0f 8c 47 fd ff ff be 14 00 00 00 48 8b 7c 24 10 e8 74 f5 c4 fd e9 33 fd ff ff e8 9a ee 49 07 e8 85 7d 62 fd 90 <0f> 0b e8 7d 7d 62 fd 90 0f 0b e8 75 7d 62 fd 90 0f 0b e8 6d 7d 62
+RSP: 0018:ffffc90004c5ec20 EFLAGS: 00010293
+RAX: ffffffff8433980b RBX: 1ffff9200098bd9a RCX: ffff88801a7e1e00
+RDX: 0000000000000000 RSI: 6985a28b8c752100 RDI: 0000ffffffffffff
+RBP: ffffc90004c5ed50 R08: ffffffff84339353 R09: ffffffff84011614
+R10: 0000000000000003 R11: ffff88801a7e1e00 R12: 0000ffffffffffff
+R13: 1ffff9200098bd8c R14: 6985a28b8c752100 R15: ffffa28b8c752100
+FS:  0000555590ab6480(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555590acf9b8 CR3: 000000006a46c000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ bch2_trigger_alloc+0x2695/0x3b90 fs/bcachefs/alloc_background.c:797
+ bch2_key_trigger fs/bcachefs/bkey_methods.h:88 [inline]
+ run_one_trans_trigger fs/bcachefs/btree_trans_commit.c:509 [inline]
+ run_btree_triggers+0xbff/0x11d0 fs/bcachefs/btree_trans_commit.c:544
+ bch2_trans_commit_run_triggers fs/bcachefs/btree_trans_commit.c:587 [inline]
+ __bch2_trans_commit+0x574/0x88e0 fs/bcachefs/btree_trans_commit.c:1022
+ bch2_trans_commit fs/bcachefs/btree_update.h:170 [inline]
+ bch2_inode_delete_keys+0xae8/0x1440 fs/bcachefs/inode.c:845
+ bch2_inode_rm+0x165/0xd40 fs/bcachefs/inode.c:874
+ bch2_evict_inode+0x21c/0x3c0 fs/bcachefs/fs.c:1579
+ evict+0x2a8/0x630 fs/inode.c:667
+ do_unlinkat+0x512/0x830 fs/namei.c:4414
+ __do_sys_unlink fs/namei.c:4455 [inline]
+ __se_sys_unlink fs/namei.c:4453 [inline]
+ __x64_sys_unlink+0x49/0x60 fs/namei.c:4453
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f64ece7c697
+Code: 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 57 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe5f1d8f38 EFLAGS: 00000206 ORIG_RAX: 0000000000000057
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f64ece7c697
+RDX: 00007ffe5f1d8f60 RSI: 00007ffe5f1d8ff0 RDI: 00007ffe5f1d8ff0
+RBP: 00007ffe5f1d8ff0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000100 R11: 0000000000000206 R12: 00007ffe5f1da0e0
+R13: 00007f64ecec8336 R14: 000000000003e964 R15: 0000000000000018
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:lru_pos fs/bcachefs/lru.h:22 [inline]
+RIP: 0010:__bch2_lru_set fs/bcachefs/lru.c:48 [inline]
+RIP: 0010:bch2_lru_del fs/bcachefs/lru.c:54 [inline]
+RIP: 0010:bch2_lru_change+0x65c/0x680 fs/bcachefs/lru.c:69
+Code: 80 e1 07 38 c1 0f 8c 47 fd ff ff be 14 00 00 00 48 8b 7c 24 10 e8 74 f5 c4 fd e9 33 fd ff ff e8 9a ee 49 07 e8 85 7d 62 fd 90 <0f> 0b e8 7d 7d 62 fd 90 0f 0b e8 75 7d 62 fd 90 0f 0b e8 6d 7d 62
+RSP: 0018:ffffc90004c5ec20 EFLAGS: 00010293
+RAX: ffffffff8433980b RBX: 1ffff9200098bd9a RCX: ffff88801a7e1e00
+RDX: 0000000000000000 RSI: 6985a28b8c752100 RDI: 0000ffffffffffff
+RBP: ffffc90004c5ed50 R08: ffffffff84339353 R09: ffffffff84011614
+R10: 0000000000000003 R11: ffff88801a7e1e00 R12: 0000ffffffffffff
+R13: 1ffff9200098bd8c R14: 6985a28b8c752100 R15: ffffa28b8c752100
+FS:  0000555590ab6480(0000) GS:ffff8880b
 
 
-                Linus
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
