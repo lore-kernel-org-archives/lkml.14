@@ -1,105 +1,104 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12393196C75;
-	Thu,  6 Jun 2024 15:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0E719755F;
+	Thu,  6 Jun 2024 15:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717688987; cv=none; b=pSa/n9lss9DQ05o8hHZNHENvdbqpYUYNovrBsMqoWkbrQBQXuXLy4kcg3/6O7W8uy5ja61tKUzbSTqs4aFN1DKphoT+RnGKtKUd8eHtDZo8g8DpaCMt2ltw/DHy9/JTDtKteqb5jIhUSDZIjtq/+GHQmXpZlAuu7JIQp2ja5428=
+	t=1717689018; cv=none; b=VroEidi91cEw2uEap/6Bd5UunVvrBpuicGoPoDjqlGXpMku3z8t1bfhD0CjcsgOoRbzvcZti0V7yZ/6sE9NPgx8KLXUI2so3YzzHwJJkGpT+YEP5zHaekmGcrECOb0s18cByr9sSQ2/aArfPlOylLtn8/Bpk+MCERj1uqWainD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717688987; c=relaxed/simple;
-	bh=wAkkySakwtpXetpqy216hr8Mf/oM3hJIoPHEJd0ks+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gdc8an+Al82DrdN/WQMjKoHSO11Qr+oeX6eR96vd5Kaxu50X6opHPyKoD4O8OhFoj2RjJC6aLrhENppFbreFOGk03hB79gix6J7WRnMWLisakpuGaKjN2E0KblFiGUR97fNlbttvriYHyrmS391cXY5+hrCiTb4L2g8UBfPzk7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=OJWfsYXr; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1717689018; c=relaxed/simple;
+	bh=JTTEXFMZTvtlDTJVPLvUO0Z07UFn9t9ZnGn843M99EY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tdEHIgiG5c+93teQfiPC6StQA0079YctPC2FoOxTwtSeVvAGxfJkgPjt2xSSU83fxlFMyKXbppiDyrxFRFd25RsLakwSbiOyB2jnrwJjcxuCA1LVYVE9C/u7Ko83vi5K1BM7Q2akz5qfdeRbS9ZH1+WP8dv4Ij76uXPuU5RaIfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MU1rRy0j; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="OJWfsYXr"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 7DB4187F5C;
-	Thu,  6 Jun 2024 17:49:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1717688984;
-	bh=oZ6AjegqpphtNzQqTVjigVkYVuIdij5lsm+LsTd1UtQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OJWfsYXrkT/xrqKKC8f0G7vpTqRVoG/3UxJo5NH1cdn0JC9Yt9dabTFrY4oPXk+W9
-	 9WAFIGbDvbHPI6Ox8lgHVYwEnf1xv3jwzZYpXtslutOdUt7HNrKlXZWsCVuETRBJ/8
-	 OjZ7JHCqWqSLXK3cXJaUkg/H9I7ECaLbr0y8usap/gU2Yk8HWgCel7gD5UPQhy5Jq+
-	 aSRxUxkQgw4vP49wQ/ikXJJyrFeieaVg/yZ1NqhJwtcJ5e9PoHbXCtee6PPFiXhfr9
-	 DTLsqYlSqWXaCBYawwS7t8z7izIKQTHpyWvaN8lNmjzd67mWPu3r/69eUI65g1/OQP
-	 lvkC69ao7ueuQ==
-Message-ID: <ee9a4da7-8b7a-4bd5-8a34-19e0e7cb49ff@denx.de>
-Date: Thu, 6 Jun 2024 17:47:11 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MU1rRy0j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717689017; x=1749225017;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=JTTEXFMZTvtlDTJVPLvUO0Z07UFn9t9ZnGn843M99EY=;
+  b=MU1rRy0jF4zvtTWz2rps02zr2ox+DKoQKXOkOX7/iF8WPnsIZPtA9OfQ
+   TxcK4gzipz+NzBrHoPQUX677TV4VRZ+vMBfHFNcPU2T1QMz8tI1v8t80d
+   T4xTRUhyTghrKEUafYLD/eoVwLyA2ys2HPbJZw7bcyd2wTXrSmSggkMKF
+   YcTfvmdyyTdSq9vlusOiAmusML1HTDGtZqD01qRG5f3xxNG6cKNteYYMW
+   nUK8puznZ8CR3Z7qDpqmIY8BJFpnJQNSNXOnVBZdtJ3g37vOVAcfnQoUr
+   v8+b5TlWLs7OmdD1HKyFzShzSDyJFwg4vg/xfWAiV6e5l5BhXdRf1yrig
+   A==;
+X-CSE-ConnectionGUID: 7M1ekhCxT3eHnlhcORO9gw==
+X-CSE-MsgGUID: mYb8SDr7S1WLffMa9IpBUQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14175092"
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="14175092"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 08:50:15 -0700
+X-CSE-ConnectionGUID: B7a4quCYS0qh6HJmmURX4g==
+X-CSE-MsgGUID: 4rJxK05uTq6E0hrQPsLFpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
+   d="scan'208";a="68803958"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 08:50:13 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 900B011F99A;
+	Thu,  6 Jun 2024 18:50:10 +0300 (EEST)
+Date: Thu, 6 Jun 2024 15:50:10 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Genes Lists <lists@sapience.com>
+Cc: linux-kernel@vger.kernel.org, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+	wentong.wu@intel.com, linux-media@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: 6.10-rc1 : crash in mei_csi_probe
+Message-ID: <ZmHasj3hfwwKimZF@kekkonen.localdomain>
+References: <8afe9391b96ff3e1c60e624c1b8a3b2bd5039560.camel@sapience.com>
+ <ZlTllJeZBiGapHwZ@kekkonen.localdomain>
+ <988e48090982c89ce0c906954832fdfb09a1ce34.camel@sapience.com>
+ <eb10620deecc8feeae1e308c22de199be7c48ca6.camel@sapience.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/11] net: ethernet: stmmac: add management of
- stm32mp13 for stm32
-To: Christophe ROULLIER <christophe.roullier@foss.st.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Richard Cochran <richardcochran@gmail.com>, Jose Abreu
- <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240604143502.154463-1-christophe.roullier@foss.st.com>
- <20240604143502.154463-8-christophe.roullier@foss.st.com>
- <3c40352b-ad69-4847-b665-e7b2df86a684@denx.de>
- <73f7b4a4-31d1-4907-b83b-2ac7758edf0d@foss.st.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <73f7b4a4-31d1-4907-b83b-2ac7758edf0d@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
-
-On 6/6/24 4:19 PM, Christophe ROULLIER wrote:
+In-Reply-To: <eb10620deecc8feeae1e308c22de199be7c48ca6.camel@sapience.com>
 
 Hi,
 
->>> @@ -348,8 +360,15 @@ static int stm32_dwmac_parse_data(struct 
->>> stm32_dwmac *dwmac,
->>>           return PTR_ERR(dwmac->regmap);
->>>         err = of_property_read_u32_index(np, "st,syscon", 1, 
->>> &dwmac->mode_reg);
->>> -    if (err)
->>> +    if (err) {
->>>           dev_err(dev, "Can't get sysconfig mode offset (%d)\n", err);
->>> +        return err;
->>> +    }
->>> +
->>> +    dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
->>> +    err = of_property_read_u32_index(np, "st,syscon", 2, 
->>> &dwmac->mode_mask);
->>> +    if (err)
->>> +        pr_debug("Warning sysconfig register mask not set\n");
->>
->> I _think_ you need to left-shift the mode mask by 8 for STM32MP13xx 
->> second GMAC somewhere in here, right ?
->>
-> The shift is performed in function stm32mp1_configure_pmcr:
+On Thu, Jun 06, 2024 at 11:39:35AM -0400, Genes Lists wrote:
+> On Mon, 2024-05-27 at 16:58 -0400, Genes Lists wrote:
+> > On Mon, 2024-05-27 at 19:57 +0000, Sakari Ailus wrote:
+> > > Hi,
+> > > 
+> > > Thanks for reporting this.
+> > > 
+> > > On Mon, May 27, 2024 at 12:34:41PM -0400, Genes Lists wrote:
+> > > > 
+> > > > First happened in 6.10-rc1 (6.9.2 stable is fine) �
+> > > 
+> > > Do you happen to have .config available? A full dmesg would also be
+> > > helpful.
+> > > 
+> > > Does the system crash after the warning or not?
+> > > 
+> > 
+> > System stays up and remains quite usable.
+> > 
+> > config and dmesg attached.
+> > 
+> > 
 > 
->      /* Shift value at correct ethernet MAC offset in SYSCFG_PMCSETR */
->      val <<= ffs(dwmac->mode_mask) - ffs(SYSCFG_MP1_ETH_MASK);
-> 
-> In case of MP13 Ethernet1 or MP15, shift equal 0
-> 
-> In case of MP13 Ethernet2 , shift equal 8  ;-)
+> Hi Sakari - just to let you know this is still happening in 6.10-rc2.
 
-Oh, good, thanks !
+It'll disappear once this patch is in:
+<URL:https://lore.kernel.org/linux-acpi/MW5PR11MB5787C81ABF0C9FFF5A17E4888DF32@MW5PR11MB5787.namprd11.prod.outlook.com/T/#t>.
+
+-- 
+Sakari Ailus
