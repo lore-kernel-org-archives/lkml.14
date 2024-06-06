@@ -1,235 +1,121 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE9D198E86
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916D6198E86
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 17:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717694048; cv=none; b=FHyiAXuXzFVBrqIwYb7iAkncUwHFPE/byLQuV/oqOuVLtIJSoKcuhU+Xi6bMJKxZSzQel7ZbWfVFwXiZDvhFWTLkHmsebm9uiYa5DOtNgjrBMvwLzddsKahjvJMSERQ81Cqho5h9ifEERfI12/4sbT3o/7xSbNTKRw7xCfsWqps=
+	t=1717694062; cv=none; b=Y5a0RJkEHDijawD6oEfwMJL6Rhhaul1HznQQiCxHl9prKKj4T5zBy10OsAwL92i5OLR04eFHqmZ22l8kMGEsVcA8Xe2OZiT/k/TwqIWWcOrmBbxxmU8Z4GUq93Qw+QrIWy4VoaT8ctLQzNyLJGSuTMOJfrEFsDBjCdhmt/1C9c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717694048; c=relaxed/simple;
-	bh=3PcZbTSvMIet1KvRH/3UIizXiqdHfZwbn62ekU7BeTk=;
+	s=arc-20240116; t=1717694062; c=relaxed/simple;
+	bh=+/1l2hgdu4GOtQ+Ob2oTmSMpsc9q1e6vX4IAFQSksuY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MJ/6OdgOuLDl3lZgqfRIj8McYQXpGkT0SVJauOeTsbVLASQczru1yMeQeaz3DXoMztE2cpn7PMwRvR+fQhthrtqZyHS5O8Q1gIx+yvXk509O4zXAFLSqWlZqZuvalVAzwOL21gp/UVVbJ4+1DhV//+9yGXbwHHQi6Lxc3AOTFxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZfHKPHd8; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=OXG9dyCwmry3UXp0/yq3h68IV0n74CeQEtyrgMbGbXmogDVzUjPxB8KlXEnR4LtNRcBEb0qE4f/9e5CvGrEDicwCv9FqQXAdxSHFhjaOgn16R4XkDK2Ie0yUNTazQQ/LHDVO9YI35jZte87eRQpTwZJ5kRHNKteHMq+idwxXiGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E99QoOUo; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZfHKPHd8"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-62a0809c805so12054077b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 10:14:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E99QoOUo"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3d208a05f97so728094b6e.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 10:14:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717694045; x=1718298845; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717694059; x=1718298859; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hRK/mnhg9puUTTzwI/wwQsIKXT3wkOFAvZtn/HKANeU=;
-        b=ZfHKPHd88/pQdXDhSx7rj+OQOYhlJT8Ziy+oVtQGDenFjzFnp1lY1uDONjpIbY6C6L
-         T0SbIYjboXx1e02tAi3c3ZD3Gq+G2goZHggWjMm33l5djEuEPgfApdzrTlQsVSUKx1NT
-         STiUjeurb7q9QslwoKoU9kU6oYDOqZkkXO+LgaFSf6sv3L/fTb5ekW0oqxuv34FoqNxA
-         T5PcV+YIq8Lh/fwjRYzWA/oIS3a3kfdo+pTp/iOWhEUJXrhxNxbjCaYVw3m+oPnMl0pm
-         qbpCxk7rC7UMkgI24mawWB4sAvdATgJ0ztfcCGzylZuwZLWS+CzpSmGIURkswJap463h
-         4b2w==
+        bh=+/1l2hgdu4GOtQ+Ob2oTmSMpsc9q1e6vX4IAFQSksuY=;
+        b=E99QoOUofKUzp//EMJk4mjJew1LALIfQ4uPwYM+Z8yUmKdjR7Usp+fjIRtAohTOX2N
+         MvpkyDeBgfoTwcCt2y13Ct+RWoiLhwrjv/HsC1vx/SZbW7VP1dX5nwrFvD3vjgL2AQ8Z
+         7gUIJrztOU/fA15oVsHuezvxA/ePprT+8yOdCem338+LVV+ZX/H9ntrIio+x8FvBw9A1
+         9BFiNT8acXhFwaUr/pfLNWrOlsJpm5Ew7C3+fWHzJpoiXajaSltMn/z19O9IcIOuVgbd
+         +Vc7MkD+SOHaL6eCcWumfKcTV2mZaVlsbHFrrTvUVMh826YnYT/tQ47NLLpzY21gTplJ
+         nYZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717694045; x=1718298845;
+        d=1e100.net; s=20230601; t=1717694059; x=1718298859;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hRK/mnhg9puUTTzwI/wwQsIKXT3wkOFAvZtn/HKANeU=;
-        b=cyvmyl2nu8BmZ3w9s7AlkcPaIG/SKJPVOQdG1FamIpVPL++u4Cu5iAUpFhjdlZC+qi
-         XbaC3R5KxFticGxXS7X1T/ORVrlGuz0hrMW3kGbTmA/cCNAoRUjQvxGlUu1Drn2BiwNf
-         S9nHLdRgi+jQLBrAgRPt24SPxLIkOF/GyrjHTbWe6TmnYuyvfGshpsNs2aWmB7prZQF5
-         7bQ0hhrZOIZrKh2iItOtK7SuE+QdctzYlPxy37xRRl06qh3dUrgJjmsUcrBOXkZR10Sm
-         DHoRt2+CWfzacUZ6CANDUXY9qXx1i0W4cgPxL2PuKnmhCg56zBSsLGycvlmq92Xewn89
-         Ozmw==
-X-Forwarded-Encrypted: i=1; AJvYcCW31x5uYZpSw/Fwz90XtXxjGKnZ2UdhlsrzS77UpIhuA0eQhcgYg6+ADp7jwSzwDnE5UKoQhLn58LtG6rIlgqsV21HMgsGCWoRbwnKJ
-X-Gm-Message-State: AOJu0YxkP2ZvALq0qI0/u/EdZRWz+g5Sk3sBd1zQonqXHlYTUEWo2Hgd
-	L44CSM0XKaqTPwLFDo63AgUS6fSKiKx3jEIu+D2vig+amjmigIB8PDGFAL0CipuNviAfqn5Gr23
-	OztCUmjh8oz2/AAU61YNEHk6jzHbPRFJgmUC2
-X-Google-Smtp-Source: AGHT+IE6g1Qt1a0uWEMeEkhuX3E8E0Aujra9U26A4am4FT81CMUGmJmJOs73aDziKCtCgxpH2azFXeJj7iJZZjlkoqQ=
-X-Received: by 2002:a0d:d709:0:b0:615:1a0:78ea with SMTP id
- 00721157ae682-62cbff3b0eamr45661767b3.34.1717694044790; Thu, 06 Jun 2024
- 10:14:04 -0700 (PDT)
+        bh=+/1l2hgdu4GOtQ+Ob2oTmSMpsc9q1e6vX4IAFQSksuY=;
+        b=Hf7IHoWChZOSDb4dhcWhHltUxynJXNiek6Q0p2mbkkx6VBtl+vR6FBUeoJ2d5QXvc8
+         2XR9LkX/gUjHsWdDUbYmVPAZSBrI2abUeceOulwrLn1pYnDsVKVJL9V5swFwHYbrd3yK
+         ktigkmbUPjg+GPvo1LkEXIrpoJm1bVtTw950vJY3FkuQiR/8Ferer0tDAnkdjldoF0ks
+         316n8XK8TC1CHEaK3hfZnPRhQReCUjFmR/BG7AwZmmk65vnpVnpsUzz4dctBZA9jR0aj
+         gNqKPfL2AQ/tb+Y74aAMtIa0KitcnQ6FgQDR1K792KQwQaTlKTE4F2zGESRAy/oUyg8w
+         anTw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7jj4bbVnpdiqUV1Q7++9NmV91+ZRfaikqjSvzOglSCYBwqvKdhe+jdjQRIeAHLKq6q8rdd5CQT/YKGHHItJd+EJ6COryzcjA2fIbc
+X-Gm-Message-State: AOJu0Yy+Ku3+gymX7spi+ZQgXbJlZRSNi0eIKOvdFv+H7UHi5VEU6rRG
+	74OSgA7xMVJekeBllX49klaUMsS5zANXw0yrgtkND5t6cqaP7eERZ62Ffbo57hLw2/BbO1118S0
+	R14j5iP+ELe1M+pi6W+cMKXdYpJW3OLlpCifDMqQG
+X-Google-Smtp-Source: AGHT+IFWj6gKymPuX65qB3SLiTcr/L24kWgHP0A2qAXzrNU1UqM44JmLCxgMounxH46aeClTSRC9dMKKMGyWy81enQM=
+X-Received: by 2002:a05:6808:618:b0:3d1:e059:fec6 with SMTP id
+ 5614622812f47-3d210d2b29emr63262b6e.3.1717694059455; Thu, 06 Jun 2024
+ 10:14:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605002459.4091285-1-andrii@kernel.org> <20240605002459.4091285-2-andrii@kernel.org>
- <Zl-38XrUw9entlFR@casper.infradead.org> <uevtozlryyqw5vj2duuzowupknfynmreruiw6m7bcxryjppqpm@7g766emooxfh>
- <CAEf4BzZFpidjJzRMWboZYY03U8M22Yo1sqXconi36V11XA-ZfA@mail.gmail.com>
- <CAEf4BzYDhtkYt=qn2YgrnRkZ0tpa3EPAiCUcBkdUa-9DKN22dQ@mail.gmail.com>
- <CAEf4Bzbzj55LfgTom9KiM1Xe8pfXvpWBd6ETjXQCh7M===G5aw@mail.gmail.com>
- <5fmylram4hhrrdl7vf6odyvuxcrvhipsx2ij5z4dsfciuzf4on@qwk7qzze6gbt>
- <CAJuCfpER9qUSGbWBcHhT1=ssH41Xv8--XVA5BEPCM7uf=z_GLw@mail.gmail.com> <CAEf4Bzax2E1JS=MUm=sBJvcMb+CyWaPdxmr2mDuODs2cc3_mTg@mail.gmail.com>
-In-Reply-To: <CAEf4Bzax2E1JS=MUm=sBJvcMb+CyWaPdxmr2mDuODs2cc3_mTg@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 6 Jun 2024 10:13:52 -0700
-Message-ID: <CAJuCfpFKA9KChaunoYo-yH4GipvGjRpKqyneOhwi-E6n3Lfq3g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/9] mm: add find_vma()-like API but RCU protected and
- taking VMA lock
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Matthew Wilcox <willy@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
-	viro@zeniv.linux.org.uk, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, gregkh@linuxfoundation.org, 
-	linux-mm@kvack.org, rppt@kernel.org
+References: <20240508202111.768b7a4d@yea> <20240515224524.1c8befbe@yea>
+ <CAOUHufZ-9NmzOKjLedvZFp0=N0LvRZn77qC6k1WXK+NHtKr=0w@mail.gmail.com>
+ <CAOUHufZ36rQc8AfLtRv2QrEareysdvbprAEO5XkcG-FeDOxFLA@mail.gmail.com>
+ <20240602200332.3e531ff1@yea> <20240604001304.5420284f@yea>
+ <CAJD7tkbCRLdy0vD2Pd17fNrxHgkzW1VucN4qMkohLFLBLaaeCQ@mail.gmail.com>
+ <20240604134458.3ae4396a@yea> <CAJD7tkYjJJGthQ_8NukGw6Q9EYbLA=8sAH_7=B90KXEL6HWdSw@mail.gmail.com>
+ <CAOUHufa0Fpj6SjNgB-z0n5Jg63q1ewkbOAU65forpDwQVs45qg@mail.gmail.com>
+ <CAJD7tkb=5GJ9SNUwDsu1Zy3Tus4rjsNo60Hg9N7=gGth409Diw@mail.gmail.com>
+ <CAOUHufb6zXr14Wm3T-4-OJh7iAq+vzDKwVYfHLhMMt96SpiZXg@mail.gmail.com>
+ <CAJD7tkZ+QY55GTzW9A7ZCm=rxAEfrW76cWXf8o5nwiKSXp8z=w@mail.gmail.com>
+ <20240604231019.18e2f373@yea> <CAJD7tkYq5u7B+0UH2XKpeWJnUxoO2kJ1_XZ2JOgYpyNEVR7u0g@mail.gmail.com>
+ <20240606010431.2b33318c@yea> <CAJD7tkbhWYzx=6YmzAh0F+cK-_Bn8mPOH7gMbQS7YVXmaFSgFg@mail.gmail.com>
+In-Reply-To: <CAJD7tkbhWYzx=6YmzAh0F+cK-_Bn8mPOH7gMbQS7YVXmaFSgFg@mail.gmail.com>
+From: Takero Funaki <flintglass@gmail.com>
+Date: Fri, 7 Jun 2024 02:14:07 +0900
+Message-ID: <CAPpoddc2vOLdQJ7HwG7x+=oZsTz221+YJcNbUtKvPjA9AyeY2w@mail.gmail.com>
+Subject: Re: kswapd0: page allocation failure: order:0, mode:0x820(GFP_ATOMIC),
+ nodemask=(null),cpuset=/,mems_allowed=0 (Kernel v6.5.9, 32bit ppc)
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Erhard Furtner <erhard_f@mailbox.org>, Yu Zhao <yuzhao@google.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Minchan Kim <minchan@kernel.org>, "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 6, 2024 at 9:52=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Wed, Jun 5, 2024 at 4:22=E2=80=AFPM Suren Baghdasaryan <surenb@google.=
-com> wrote:
-> >
-> > On Wed, Jun 5, 2024 at 10:03=E2=80=AFAM Liam R. Howlett <Liam.Howlett@o=
-racle.com> wrote:
-> > >
-> > > * Andrii Nakryiko <andrii.nakryiko@gmail.com> [240605 12:27]:
-> > > > On Wed, Jun 5, 2024 at 9:24=E2=80=AFAM Andrii Nakryiko
-> > > > <andrii.nakryiko@gmail.com> wrote:
-> > > > >
-> > > > > On Wed, Jun 5, 2024 at 9:13=E2=80=AFAM Andrii Nakryiko
-> > > > > <andrii.nakryiko@gmail.com> wrote:
-> > > > > >
-> > > > > > On Wed, Jun 5, 2024 at 6:33=E2=80=AFAM Liam R. Howlett <Liam.Ho=
-wlett@oracle.com> wrote:
-> > > > > > >
-> > > > > > > * Matthew Wilcox <willy@infradead.org> [240604 20:57]:
-> > > > > > > > On Tue, Jun 04, 2024 at 05:24:46PM -0700, Andrii Nakryiko w=
-rote:
-> > > > > > > > > +/*
-> > > > > > > > > + * find_and_lock_vma_rcu() - Find and lock the VMA for a=
- given address, or the
-> > > > > > > > > + * next VMA. Search is done under RCU protection, withou=
-t taking or assuming
-> > > > > > > > > + * mmap_lock. Returned VMA is guaranteed to be stable an=
-d not isolated.
-> > > > > > > >
-> > > > > > > > You know this is supposed to be the _short_ description, ri=
-ght?
-> > > > > > > > Three lines is way too long.  The full description goes bet=
-ween the
-> > > > > > > > arguments and the Return: line.
-> > > > > >
-> > > > > > Sure, I'll adjust.
-> > > > > >
-> > > > > > > >
-> > > > > > > > > + * @mm: The mm_struct to check
-> > > > > > > > > + * @addr: The address
-> > > > > > > > > + *
-> > > > > > > > > + * Returns: The VMA associated with addr, or the next VM=
-A.
-> > > > > > > > > + * May return %NULL in the case of no VMA at addr or abo=
-ve.
-> > > > > > > > > + * If the VMA is being modified and can't be locked, -EB=
-USY is returned.
-> > > > > > > > > + */
-> > > > > > > > > +struct vm_area_struct *find_and_lock_vma_rcu(struct mm_s=
-truct *mm,
-> > > > > > > > > +                                        unsigned long ad=
-dress)
-> > > > > > > > > +{
-> > > > > > > > > +   MA_STATE(mas, &mm->mm_mt, address, address);
-> > > > > > > > > +   struct vm_area_struct *vma;
-> > > > > > > > > +   int err;
-> > > > > > > > > +
-> > > > > > > > > +   rcu_read_lock();
-> > > > > > > > > +retry:
-> > > > > > > > > +   vma =3D mas_find(&mas, ULONG_MAX);
-> > > > > > > > > +   if (!vma) {
-> > > > > > > > > +           err =3D 0; /* no VMA, return NULL */
-> > > > > > > > > +           goto inval;
-> > > > > > > > > +   }
-> > > > > > > > > +
-> > > > > > > > > +   if (!vma_start_read(vma)) {
-> > > > > > > > > +           err =3D -EBUSY;
-> > > > > > > > > +           goto inval;
-> > > > > > > > > +   }
-> > > > > > > > > +
-> > > > > > > > > +   /*
-> > > > > > > > > +    * Check since vm_start/vm_end might change before we=
- lock the VMA.
-> > > > > > > > > +    * Note, unlike lock_vma_under_rcu() we are searching=
- for VMA covering
-> > > > > > > > > +    * address or the next one, so we only make sure VMA =
-wasn't updated to
-> > > > > > > > > +    * end before the address.
-> > > > > > > > > +    */
-> > > > > > > > > +   if (unlikely(vma->vm_end <=3D address)) {
-> > > > > > > > > +           err =3D -EBUSY;
-> > > > > > > > > +           goto inval_end_read;
-> > > > > > > > > +   }
-> > > > > > > > > +
-> > > > > > > > > +   /* Check if the VMA got isolated after we found it */
-> > > > > > > > > +   if (vma->detached) {
-> > > > > > > > > +           vma_end_read(vma);
-> > > > > > > > > +           count_vm_vma_lock_event(VMA_LOCK_MISS);
-> > > > > > > > > +           /* The area was replaced with another one */
-> > > > > > > >
-> > > > > > > > Surely you need to mas_reset() before you goto retry?
-> > > > > > >
-> > > > > > > Probably more than that.  We've found and may have adjusted t=
-he
-> > > > > > > index/last; we should reconfigure the maple state.  You shoul=
-d probably
-> > > > > > > use mas_set(), which will reset the maple state and set the i=
-ndex and
-> > > > > > > long to address.
-> > > > > >
-> > > > > > Yep, makes sense, thanks. As for the `unlikely(vma->vm_end <=3D
-> > > > > > address)` case, I presume we want to do the same, right? Basica=
-lly, on
-> > > > > > each retry start from the `address` unconditionally, no matter =
-what's
-> > > > > > the reason for retry.
-> > > > >
-> > > > > ah, never mind, we don't retry in that situation, I'll just put
-> > > > > `mas_set(&mas, address);` right before `goto retry;`. Unless we s=
-hould
-> > > > > actually retry in the case when VMA got moved before the requeste=
-d
-> > > > > address, not sure, let me know what you think. Presumably retryin=
-g
-> > > > > will allow us to get the correct VMA without the need to fall bac=
-k to
-> > > > > mmap_lock?
-> > > >
-> > > > sorry, one more question as I look some more around this (unfamilia=
-r
-> > > > to me) piece of code. I see that lock_vma_under_rcu counts
-> > > > VMA_LOCK_MISS on retry, but I see that there is actually a
-> > > > VMA_LOCK_RETRY stat as well. Any reason it's a MISS instead of RETR=
-Y?
-> > > > Should I use MISS as well, or actually count a RETRY?
-> > > >
-> > >
-> > > VMA_LOCK_MISS is used here because we missed the VMA due to a write
-> > > happening to move the vma (rather rare).  The VMA_LOCK missed the vma=
-.
-> > >
-> > > VMA_LOCK_RETRY is used to indicate we need to retry under the mmap lo=
-ck.
-> > > A retry is needed after the VMA_LOCK did not work under rcu locking.
-> >
-> > Originally lock_vma_under_rcu() was used only inside page fault path,
-> > so these counters helped us quantify how effective VMA locking is when
-> > handling page faults. With more users of that function these counters
-> > will be affected by other paths as well. I'm not sure but I think it
-> > makes sense to use them only inside page fault path, IOW we should
-> > probably move count_vm_vma_lock_event() calls outside of
-> > lock_vma_under_rcu() and add them only when handling page faults.
->
-> Alright, seems like I should then just drop count_vm_vma_lock_event()
-> from the API I'm adding.
+2024=E5=B9=B46=E6=9C=886=E6=97=A5(=E6=9C=A8) 8:42 Yosry Ahmed <yosryahmed@g=
+oogle.com>:
 
-That would be my preference but as I said, I'm not 100% sure about
-this direction.
-
+> I think there are multiple ways to go forward here:
+> (a) Make the number of zpools a config option, leave the default as
+> 32, but allow special use cases to set it to 1 or similar. This is
+> probably not preferable because it is not clear to users how to set
+> it, but the idea is that no one will have to set it except special use
+> cases such as Erhard's (who will want to set it to 1 in this case).
 >
-> >
-> > >
-> > > Thanks,
-> > > Liam
+> (b) Make the number of zpools scale linearly with the number of CPUs.
+> Maybe something like nr_cpus/4 or nr_cpus/8. The problem with this
+> approach is that with a large number of CPUs, too many zpools will
+> start having diminishing returns. Fragmentation will keep increasing,
+> while the scalability/concurrency gains will diminish.
+>
+> (c) Make the number of zpools scale logarithmically with the number of
+> CPUs. Maybe something like 4log2(nr_cpus). This will keep the number
+> of zpools from increasing too much and close to the status quo. The
+> problem is that at a small number of CPUs (e.g. 2), 4log2(nr_cpus)
+> will actually give a nr_zpools > nr_cpus. So we will need to come up
+> with a more fancy magic equation (e.g. 4log2(nr_cpus/4)).
+>
+
+I just posted a patch to limit the number of zpools, with some
+theoretical background explained in the code comments. I believe that
+2 * CPU linearly is sufficient to reduce contention, but the scale can
+be reduced further. All CPUs are trying to allocate/free zswap is
+unlikely to happen.
+ How many concurrent accesses were the original 32 zpools supposed to
+handle? I think it was for 16 cpu or more. or nr_cpus/4 would be
+enough?
+
+--=20
+
+<flintglass@gmail.com>
