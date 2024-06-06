@@ -1,69 +1,58 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF4F195B3B;
-	Thu,  6 Jun 2024 13:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56DC193080;
+	Thu,  6 Jun 2024 13:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717680388; cv=none; b=KhXIaR7J08R7sy98y6w/gbRKaIu29LXfcg78nBUdluBkQcsGaZZuthPMTUOgznoxg3+fNgkFzNvBd9F2C9NjZndVaa/xF7soYCDg3NFyBwqWKtDvdPnLvP6CNhNUnXuPAp2AXHP06YNAjufZ4MmgY437bbiSQ4PAGOiltymvoS8=
+	t=1717680453; cv=none; b=mymNBhuHR8v7g19P537tIJVI+h+36S+ZHb37ITya7C0KsnVloNCIVJ8zUkj+YO/JY0i3koi/+s6pGcu2I8G5vG59hzD19LI3vhHZDyw1TMD4cgrvQnsTqM4Y49hzSS4uc1JXZBdUSpZcyZz7RQHffOBuWchUx7E7nERFm4s8UT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717680388; c=relaxed/simple;
-	bh=T4gVqNeiQwLc9IY+uR1Fx3P7ODXlaBcg5nHWL2xEQ5Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JBdpjzY1rkK2YOnD0kx4PSNvF4uqImSZ0NPlXBVO0kmh73tj35GgHGWQQ6jP4qEo3n6E4AmekdQvqyQOXnttfJLgIuYNN+elap0aSkulgK7sLwPneR7Hq/k5PxLeIF2pFejL0L0ydDzoq+jc+t6e7FxFLQosacZphCelTtl/dQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DwhgUyyc; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1717680453; c=relaxed/simple;
+	bh=l00UI0JD6AC6Q+cJo4FKqgL09aX1TgDCu9xOfXS9uoM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ouWzw/29qlqrNXIVI0izSUYT0ofkphUiBC7ANjZBWqBzddoSo7lfRAi/mW7I88NJgfn2leEQE5py8YYa4jgFfkbtdgKAcTuliSV5O39W6rpaWgkOXt6VVxEUWU2/2PjCmNkFoSXgbu3zllJIXO/zW0zEcyCqujZi/gbO7KPBbZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwhgUyyc"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-703fec25cc5so509632b3a.0;
-        Thu, 06 Jun 2024 06:26:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717680386; x=1718285186; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=x07L2+MySqjTT/zwv5/pvgKJjPAjMRPDflzahQe9bjk=;
-        b=DwhgUyyckbiZ06PZ1u/IessHOJn6q6Oql4bTghZAZiRHLCy+Q7k4rGm5WQcl4eJBug
-         XEJORrCTcwyhNzY+XxYn8Qkk30nuaQIZrqfnq3y8FCEBSYClFnQAApNX3F7kqQJ7r25S
-         /InbRY34XMH2hDlr79RQHeM01cAl3F3sQNOhHFaeyL4Zb+d8zf7na/G5dO/XeSDNL3Se
-         Z+j7bITVWCgIzElx+quJUUDaebeYzvgZ7sfsVmoDb71K3Rf+NuIxkeOwquSubkAjRqIG
-         3PrDeRXpKVvMPU2lAQHNkJuEYfksb+WwpgO/JD12ysmG9DPSoUjuqu59WnlH1PqwOVMc
-         FSEA==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57864327f6eso355401a12.1;
+        Thu, 06 Jun 2024 06:27:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717680386; x=1718285186;
+        d=1e100.net; s=20230601; t=1717680449; x=1718285249;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=x07L2+MySqjTT/zwv5/pvgKJjPAjMRPDflzahQe9bjk=;
-        b=lqWEDH93BL5ds/elcweN7rSfhoe6Fqs2pclpfeN5j2sBd470prkOj1QbrEeoHyZM7U
-         Vvl/0DPwn61ucIcY+MKxwFQ4SYvVhhLX6m4Oh1DU+NwH//3p97U/S4xqgfT7jG32vBDF
-         33dUmpJcowkmMkcRW8beIEzZ9KwVbKOchb3jFirT9BD/qgWtDRYyM9iJ6XJ/KXzD/Ol4
-         HuRhBIQgn7pAGR3pASTB8P2IK1PFangCY1nNLVp0GwFmMDPo5+4/RL6/tU3lOVdp5BDe
-         UHlxwmx+S/sm/kOIG0UPjwMl4qd+pgNNVV/vwH8oSBfaI/TymrU+ztLtsHNUi3xk9X8d
-         kOWA==
-X-Forwarded-Encrypted: i=1; AJvYcCVC7zHctvPFknp8/JuJHNh+BcpS+3Fm/Ew60gNSTV5FcDGFC6/8AKz2nsxLe/B1iBT3qyR4RCurokS+PEqI9nrnae71/dXA/OL/5q7P3/gLka/+3RT3XuFQiq+WZIDCK29LthWXFJIoFDq8HB48W2TM
-X-Gm-Message-State: AOJu0Yxx+UegJLhXlivkO5VgPoPooL3C2du1omRHc7NSmzJ9HqQ34jwH
-	esU9D0C9vL7nHN8xv+Qd8uvJ6/2FSf57S5s/G4O8W64rYV6FjGOrHYzC5Vf1
-X-Google-Smtp-Source: AGHT+IHqxlZxQe+HTbj7/MJEg8YdNiO0QXLtdoN1nyAkm21W4IxViTfvZtV64EInGb0ldJuqW/ib7A==
-X-Received: by 2002:a05:6a21:622:b0:1a7:11bf:7b74 with SMTP id adf61e73a8af0-1b2b71adac8mr4742743637.62.1717680385745;
-        Thu, 06 Jun 2024 06:26:25 -0700 (PDT)
-Received: from mari.. ([2804:431:cfd3:42f5:bf70:5697:bacd:e5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70408c58197sm65585b3a.129.2024.06.06.06.26.21
+        bh=iuF5KD5rCo57TyG5EigT3fDurZ74w1tefad8AjM+COM=;
+        b=j8ikiYHAggBd94p9/sl8QgN9K/8bcidP+7iCCwstYypOJv6K2V5LLu7R8cPCHmbrd6
+         cJ8y0fp/qaqTX9MmKaJEvPqddtF9Km9CqHht98TQYQZ4n9gN5N/619SNf5ScA2ssv1FV
+         +SkSQuZwbp1fYkv9JQi+ALfhD0fsfZ0g10aXrJk7ktgvS7cGXzvp0/2MufC5HBwhjz8l
+         nTTLtLJLWMmrgC3RT5Akjm+5D+jKXJZVOFf8ojuEJgaLvj8R6AG8a4Em0aNqLqjUXfRL
+         oi65iiSLaV6BYqCuxIH4iJWoEfFyZezM7Z/daWgDJvMYFWN39VqxiGIbpoj8wUBgn5te
+         hIcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3ws6I0ZEuxJKPUCUkt8NSTqxdLUcu+5Le4IR/z+3/dWjPfgmOQwUjtUqs5QKO85jNHIh8GSXV+VIlGnA2nQPfoSHw9M6+hUK+frCHMopbyDkXBZS98neqXAO35UvLU7ERR7ef3rRFzlnkqfw7VJYkt/4dfTTXpnUc2r0HZmJxZooNbGo=
+X-Gm-Message-State: AOJu0YxioFA+1P+SM47ZKabRc1EQ9XyRxmrPciTnv6JjDS/6suG5ZPn8
+	0ehsixZKixgAYsPCOU4gOHuA+FRYQRU4LmUFhEPR1DdZYhpHXm5s
+X-Google-Smtp-Source: AGHT+IGkCI92lpY9im28PFCaqOXR0tPwgGp8l0RK7fN48VWfjPlSf/gZ9WuRB7v6N3QBhFb+BZc/Fw==
+X-Received: by 2002:a50:ab02:0:b0:574:ebf4:f786 with SMTP id 4fb4d7f45d1cf-57aa558746amr2338378a12.16.1717680448842;
+        Thu, 06 Jun 2024 06:27:28 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-120.fbsv.net. [2a03:2880:30ff:78::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae0caa84sm1103288a12.29.2024.06.06.06.27.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 06:26:25 -0700 (PDT)
-From: Marilene A Garcia <marilene.agarcia@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Marilene A Garcia <marilene.agarcia@gmail.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] ftrace: Add missing kerneldoc parameters to unregister_ftrace_direct()
-Date: Thu,  6 Jun 2024 10:25:20 -0300
-Message-Id: <20240606132520.1397567-1-marilene.agarcia@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Thu, 06 Jun 2024 06:27:28 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Laxman Dewangan <ldewangan@nvidia.com>,
+	Dmitry Osipenko <digetx@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>
+Cc: paulmck@kernel.org,
+	apopple@nvidia.com,
+	Michael van der Westhuizen <rmikey@meta.com>,
+	linux-i2c@vger.kernel.org (open list:I2C SUBSYSTEM HOST DRIVERS),
+	linux-tegra@vger.kernel.org (open list:TEGRA ARCHITECTURE SUPPORT),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] [i2c-tegra] Do not mark ACPI devices as irq safe
+Date: Thu,  6 Jun 2024 06:27:07 -0700
+Message-ID: <20240606132708.1610308-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,31 +61,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the description to the parameters addr and free_filters
-of the function unregister_ftrace_direct().
+On ACPI machines, the tegra i2c module encounters an issue due to a
+mutex being called inside a spinlock. This leads to the following bug:
 
-Signed-off-by: Marilene A Garcia <marilene.agarcia@gmail.com>
+	BUG: sleeping function called from invalid context at kernel/locking/mutex.c:585
+	in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 1282, name: kssif0010
+	preempt_count: 0, expected: 0
+	RCU nest depth: 0, expected: 0
+	irq event stamp: 0
+
+	Call trace:
+	dump_backtrace+0xf0/0x140
+	show_stack (./arch/x86/include/asm/current.h:49
+		     arch/x86/kernel/dumpstack.c:312)
+	dump_stack_lvl (lib/dump_stack.c:89 lib/dump_stack.c:115)
+	dump_stack (lib/earlycpio.c:61)
+	__might_resched (./arch/x86/include/asm/current.h:49
+			 kernel/sched/core.c:10297)
+	__might_sleep (./include/linux/lockdep.h:231
+			 kernel/sched/core.c:10236)
+	__mutex_lock_common+0x5c/0x2190
+	mutex_lock_nested (kernel/locking/mutex.c:751)
+	acpi_subsys_runtime_resume+0xb8/0x160
+	__rpm_callback+0x1cc/0x4b0
+	rpm_resume+0xa60/0x1078
+	__pm_runtime_resume+0xbc/0x130
+	tegra_i2c_xfer+0x74/0x398
+	__i2c_transfer (./include/trace/events/i2c.h:122 drivers/i2c/i2c-core-base.c:2258)
+
+The problem arises because during __pm_runtime_resume(), the spinlock
+&dev->power.lock is acquired before rpm_resume() is called. Later,
+rpm_resume() invokes acpi_subsys_runtime_resume(), which relies on
+mutexes, triggering the error.
+
+To address this issue, devices on ACPI are now marked as not IRQ-safe,
+considering the dependency of acpi_subsys_runtime_resume() on mutexes.
+
+Co-developed-by: Michael van der Westhuizen <rmikey@meta.com>
+Signed-off-by: Michael van der Westhuizen <rmikey@meta.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
-Hello,
-Thank you for the feedback.
-The requested changes were applied in this new version.
+ drivers/i2c/busses/i2c-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- kernel/trace/ftrace.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index da7e6abf48b4..1f79cf3c598e 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5960,6 +5960,8 @@ EXPORT_SYMBOL_GPL(register_ftrace_direct);
-  * unregister_ftrace_direct - Remove calls to custom trampoline
-  * previously registered by register_ftrace_direct for @ops object.
-  * @ops: The address of the struct ftrace_ops object
-+ * @addr: The address of the direct function that is called by the @ops functions
-+ * @free_filters: Set to true to remove all filters for the ftrace_ops, false otherwise
-  *
-  * This is used to remove a direct calls to @addr from the nop locations
-  * of the functions registered in @ops (with by ftrace_set_filter_ip
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 85b31edc558d..6d783ecc3431 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1804,7 +1804,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	 * VI I2C device shouldn't be marked as IRQ-safe because VI I2C won't
+ 	 * be used for atomic transfers.
+ 	 */
+-	if (!IS_VI(i2c_dev))
++	if (!IS_VI(i2c_dev) && !ACPI_HANDLE(i2c_dev->dev))
+ 		pm_runtime_irq_safe(i2c_dev->dev);
+ 
+ 	pm_runtime_enable(i2c_dev->dev);
 -- 
-2.34.1
+2.43.0
 
