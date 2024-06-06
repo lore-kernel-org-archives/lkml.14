@@ -1,195 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71109198E6C
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 15:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4101974E7;
+	Thu,  6 Jun 2024 15:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717688919; cv=none; b=YuowYtGZ5onrW1wQVUnHYDhEN0e9rOQ4bviGWsg3FF+mnIFgrwLm4pJPfSdE6G139/QKFMPanFQIJjzHEq+K9SHdidxrjIy/ijKcukf4zRtqvbwvmtnj2V4YoU/HHzJcJb0NCML5JeIQtPceGXj+jxj8djxAoFzujYyv1MLyHhM=
+	t=1717688959; cv=none; b=dSCxlIkIuSD9j7JZFnc2e7hxbq/VOn+9XBou7QNFqQ8mHWHqe53WIWzx2XvcrXDt3NMCf04hSmAZbCN7lNkPWXaoxwc4hJgDEdGFVF9wvInR15BZKXkYWpYzD+cdx5K0WlKUKI0BU2eFcE5Ac5SQRqRtsfhFDkca64yRMFivPwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717688919; c=relaxed/simple;
-	bh=tVjh5ldKzE1KX+dKPWFFnscnyL9qo0R9eo6uonINpT0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V0RLQjGUTo+VoSiIdKyWRBQl3UWWml4JAeVXBBXXYdiDogJW0Fp1HsbFjtZ3amD1BNwtk9E+zNSa3bL40TerJsSLV+UveNoj0L2JZmFN07oN31K39Z+EpFJBp7kvr3Ih7Mme3Zm3XDPkGL1lFKcWGFCRgta95qXYddM49/39xJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=histN5GR; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717688959; c=relaxed/simple;
+	bh=qKBLsTXNP6vC+txyf96Pbii9gskyvekAxKhkwXaTg08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ILXUm2cIdAOApiI2vHKxQseyazoikhe51MkyGKa2ZwCLU8oQuFhGyc/3+HbbpRDm/QL9RIF6TY/1zelyj323Ph4rluAuQHBlXiwqVUNZDCiPgjxFe79w78ZbD7KRU8esvJbhE9W8QLA8+N4hCASYbNxMCxsBVjnBpAc43dsOELc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G9RA+PO1; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="histN5GR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717688917; x=1749224917;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tVjh5ldKzE1KX+dKPWFFnscnyL9qo0R9eo6uonINpT0=;
-  b=histN5GRWAp9pL9ru6Ew4XnritHayhWoeKl1X/o3w6nEnsewCoEXYauq
-   pfBmUhKIMqE3pU9/+aoLSixJNgvAzFnITlawfG0ZDLTkvs6MRu92tvXnZ
-   ildGlMz6/EPFVyWKwlNA4nMS/X0VoeuDTAIkCG9QFc/9tIxJOuwwRNjRj
-   twOyUpZ/MiW787cj8jaLjfMl126AzxTt5ZpKJF2GKqBE/T61n8O7dqsxU
-   499MRlTJJZb/H70DB8PE8wtF/eoHFQgMJEu3T+LXeW8Vj+A0uYkRmfG1Q
-   eu2tFEts5551XsQsFl1LwRfE2C3D/v+AdFpaZBCqnnKyBBHG9YodGjbzL
-   Q==;
-X-CSE-ConnectionGUID: QnWMGnvNS7uWFY2zBH/PCg==
-X-CSE-MsgGUID: t3Ysf2tiR6qBFqNVqL6L+A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="25774697"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="25774697"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 08:48:37 -0700
-X-CSE-ConnectionGUID: OyRaKrYGTpWiKXgN2mJMHQ==
-X-CSE-MsgGUID: bVNx+HugQk+vxeWpv7b0sA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="42443089"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 08:48:36 -0700
-Received: from [10.212.72.92] (kliang2-mobl1.ccr.corp.intel.com [10.212.72.92])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 7FAB720B5703;
-	Thu,  6 Jun 2024 08:48:34 -0700 (PDT)
-Message-ID: <4622060b-b758-4629-9aa4-cc8334111be0@linux.intel.com>
-Date: Thu, 6 Jun 2024 11:48:33 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9RA+PO1"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7952b60b4d7so68013785a.1;
+        Thu, 06 Jun 2024 08:49:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717688956; x=1718293756; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gzKkLAKlqoZUCODC8uK1zfRTl8mdtLcn1fcJfh9jcFU=;
+        b=G9RA+PO11hjIRwK1TfodEhGydCiuJZoi7FcqCN2WeN33nNa3twFUCP1zPAZaPsP73W
+         MxcGAqq0k8LCS2DwxX9OcJyT4MuPfjX9nPp7O2vNi2qiJfDjsJ3WA2DNhy424R7V3F6s
+         UFTyso0UEkckb3TEZAbFTJd1ZsWpsA4XdsbIgHmYqmR10wFjDNR5TscGD9tXB/eodZ20
+         fLCOIV5mrLi5JlR2MAcJokVesF4pQZynCcxicy29TRdy1Zo3n+JCn9zr6BKIDUFczJzL
+         q1pY4PK/AGuWeZg7VOtyS1vTULbOxC4VNVoSHr2OYLLsKTWHNwNXkOqZhabNPHKPVwd+
+         EsbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717688956; x=1718293756;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gzKkLAKlqoZUCODC8uK1zfRTl8mdtLcn1fcJfh9jcFU=;
+        b=CUmQcyGGyEss48yltgMNcUKjRGdCH9aez4lMV4qDSqt92+aWpUoPr8SC1oIq9ExYEC
+         mSms8E8P+ECFciLq2SRT6qti8xRWtsIwrVgZhOMUiZvn5qnnnrK5baFN7Twd2Nu9MNEv
+         0hwW8o2MzylpFlot+bcBk8PiEqNYk8Ix9x1pZCDK0o82csyuZmH1s6tfkOx422/4VPQi
+         QPWQgaC7L7JEezzuqVGlsfuP/fW2OfVuPMJv8S6av5XrokQAN22VNH46BhbaLPYe74oQ
+         eEoWy2oP+FY7GVa0MpRSVKMqeOzwUh85ECS7cj11RYddTUujYGU1UoTZmVOdM76bC8/z
+         I6uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUHEhEwV3uW1fL7mqTSDwR//XPVJI6XaFRAIpjNISpTBhgqA5CLTztP0BJUTbwOjTEht7uSa0qS6DXUjPBHYXgasRBRUF0uS8Ej9vtZWOlasbKAB3qtkQm+f4FZ+R1xU1GVL1ud53c0TqIQJ7EuxZZpclOjtJpQYnkSMSF7dNiPQRJD0y9UIOoixIuqvyZhR4=
+X-Gm-Message-State: AOJu0YyKjDcRfeMNkROtLiGjqdwpwt4ytE92M2+uYz+cD9StPlNHdAME
+	JSZzyFVWoSIYQagBzqegycLKT4ubIPe+/pz2+BFGCQWUUOBeUMUQrBTe6A==
+X-Google-Smtp-Source: AGHT+IEFetjUuprranDmw5ZJd0GeJKi72Itx5uTqS/pls2I9jPyyGvrMahCfHgf3e26E4HEjVZYsdw==
+X-Received: by 2002:a05:620a:2ea:b0:795:2891:12df with SMTP id af79cd13be357-79528911570mr468163285a.47.1717688956356;
+        Thu, 06 Jun 2024 08:49:16 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-795330b7198sm71192185a.90.2024.06.06.08.49.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 08:49:16 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 537D11200043;
+	Thu,  6 Jun 2024 11:49:15 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Thu, 06 Jun 2024 11:49:15 -0400
+X-ME-Sender: <xms:e9phZuktlMhXYjnSHguXm6OfJRRfYrfGA4UwMfqlJaBs0xwYBwyCEQ>
+    <xme:e9phZl3-GDFB2xgTpu3XI5Jbypqr6rrnDkWJuT3TkXujXXRZHOPrL5MSJj1XcaS_N
+    r63Kqt-dGZU6ppmqA>
+X-ME-Received: <xmr:e9phZsozSHfFYDA7ykoIoAqeRpAx7QTPohdQVzW4konswY18aZk82i6lyXE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelkedgleefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeetffehgffhieetuefgjeffveektdejgfetueekvdehhedvvdegveekiefh
+    heefudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhdpvg
+    hffhhitghiohhsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthi
+    dqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghi
+    lhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:e9phZin1YNe2_r_ALQcMD-NUy8M1xqu8jyo5GgIL1Wez4MXL8WFJuQ>
+    <xmx:e9phZs38mpx3G7AEbhJ0kFcr9otaZW1agHN78O64tz4e0byaS5LRbA>
+    <xmx:e9phZpttAEGG_fPgoEGwtNub35n1iU8gm2Kck_OAbP492io2GIJJfw>
+    <xmx:e9phZoV-KfexwDEIcrrNJoVWyzmKtRdk2EXpwsuFLNzF-XlSdkfz4g>
+    <xmx:e9phZn0po4UT8M4EZKy8Qzev0BJ-BcIh_Q-Nv46mbzFtM_QEOmWSajsM>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 6 Jun 2024 11:49:14 -0400 (EDT)
+Date: Thu, 6 Jun 2024 08:49:06 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] rust: add tracepoint support
+Message-ID: <ZmHacqvRwBj7OvWm@boqun-archlinux>
+References: <20240606-tracepoint-v1-0-6551627bf51b@google.com>
+ <20240606-tracepoint-v1-3-6551627bf51b@google.com>
+ <389a8c55-a169-47ef-99c0-48f58003b40c@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] perf_events: exclude_guest impact on
- time_enabled/time_running
-To: Stephane Eranian <eranian@google.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Ian Rogers <irogers@google.com>,
- "Liang, Kan" <kan.liang@intel.com>, Andi Kleen <ak@linux.intel.com>,
- Ingo Molnar <mingo@redhat.com>, "Narayan, Ananth" <ananth.narayan@amd.com>,
- "Bangoria, Ravikumar" <ravi.bangoria@amd.com>,
- Namhyung Kim <namhyung@google.com>, Mingwei Zhang <mizhang@google.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>
-References: <CABPqkBQ3LQ_dXQSQVSrriinvSSXm2fHx4yOms=jRsa2WaXSsog@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CABPqkBQ3LQ_dXQSQVSrriinvSSXm2fHx4yOms=jRsa2WaXSsog@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <389a8c55-a169-47ef-99c0-48f58003b40c@efficios.com>
 
-
-
-On 2024-06-06 3:57 a.m., Stephane Eranian wrote:
-> Hi Peter,
+On Thu, Jun 06, 2024 at 11:30:03AM -0400, Mathieu Desnoyers wrote:
+> On 2024-06-06 11:05, Alice Ryhl wrote:
+> > Make it possible to have Rust code call into tracepoints defined by C
+> > code. It is still required that the tracepoint is declared in a C
+> > header, and that this header is included in the input to bindgen.
+> > 
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 > 
-> In the context of the new vPMU passthru patch series, we have to look
-> closer at the definition and implementation of the exclude_guest
-> filter in the perf_event_attr structure. This filter has been in the
-> kernel for many years. See patch:
-> https://lore.kernel.org/all/20240506053020.3911940-8-mizhang@google.com/
+> [...]
 > 
-> The presumed  definition of the filter is that the user does not want
-> the event to count while the processor is running in guest mode (i.e.,
-> inside the virtual machine guest OS or guest user code).
+> > diff --git a/rust/helpers.c b/rust/helpers.c
+> > index 2c37a0f5d7a8..0560cc2a512a 100644
+> > --- a/rust/helpers.c
+> > +++ b/rust/helpers.c
+> > @@ -165,6 +165,30 @@ rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
+> >   }
+> >   EXPORT_SYMBOL_GPL(rust_helper_krealloc);
+> > +void rust_helper_preempt_enable_notrace(void)
+> > +{
+> > +	preempt_enable_notrace();
+> > +}
+> > +EXPORT_SYMBOL_GPL(rust_helper_preempt_enable_notrace);
+> > +
+> > +void rust_helper_preempt_disable_notrace(void)
+> > +{
+> > +	preempt_disable_notrace();
+> > +}
+> > +EXPORT_SYMBOL_GPL(rust_helper_preempt_disable_notrace);
+> > +
+> > +bool rust_helper_current_cpu_online(void)
+> > +{
+> > +	return cpu_online(raw_smp_processor_id());
+> > +}
+> > +EXPORT_SYMBOL_GPL(rust_helper_current_cpu_online);
+> > +
+> > +void *rust_helper___rcu_dereference_raw(void **p)
+> > +{
+> > +	return rcu_dereference_raw(p);
+> > +}
+> > +EXPORT_SYMBOL_GPL(rust_helper___rcu_dereference_raw);
 > 
-> The perf tool sets is by default on all core PMU events:
-> $ perf stat -vv -e cycles sleep 0
-> ------------------------------------------------------------
-> perf_event_attr:
->   size                             112
->   sample_type                      IDENTIFIER
->   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->   disabled                         1
->   inherit                          1
->   enable_on_exec                   1
->   exclude_guest                    1
-> ------------------------------------------------------------
+> Ouch. Doing a function call for each of those small operations will
+> have a rather large performance impact when tracing is active. If it is
+
+Long-term plan is to 1) compile the C helpers in some IR and 2) inline
+the helpers with Rust in IR-level, as what Gary has:
+
+	https://lore.kernel.org/rust-for-linux/20240529202817.3641974-1-gary@garyguo.net/
+
+and I use it for the upcoming atomic API support:
+
+	https://github.com/fbq/linux/tree/dev/rust/atomic-rfc
+
+and it works very well.
+	
+Regards,
+Boqun
+
+> not possible to inline those in Rust, then implementing __DO_TRACE in
+> a C function would at least allow Rust to only do a single call to C
+> rather than go back and forth between Rust and C.
 > 
-> In the kernel, the way this is treated differs between AMD and Intel because AMD
-> does provide a hardware filter for guest vs. host in the PMU counters
-> whereas Intel
-> does not. For the latter, the  kernel simply disables the event in the
-> hardware counters,
-> i.e., the event is not descheduled.  Both approaches produce pretty
-> much the same
-> desired effect, the event is not counted while in guest mode.
+> What prevents inlining those helpers in Rust ?
 > 
-> The issue I would like to raise has to do with the effects on
-> time_enabled and time_running
-> for exclude_guest=1 events.
+> Thanks,
 > 
-> Given the event is not scheduled out while in guest mode, even though
-> it is stopped, both time_enabled and time_running continue ticking
-> while in guest mode.  If a measurement is 10s
-> long but only 5s are in non-guest mode, then time_enabled=10s,
-> time_running=10s. The count
-> represents 10s worth of non guest mode, of which only 5s were really
-> actively monitoring, but
-> the user has no way of determining this.
-
-
-For the latest design/implementation, only the exclude_guest=1 host
-event can be successfully created for the case.
-The end user should not expect that anything is collected in the guest
-mode. So both the time_enabled and the time_running will be 5s.
-
+> Mathieu
 > 
-> If we look at vPMU passthru, the host event must have exclude_guest=1
-> to avoid going into
-> an error state on context switch to the vCPU thread (with vPMU
-> enabled). 
-
-That's the design in V1. There is no error state anymore in V2 and later
-as suggested by Sean.
-https://lore.kernel.org/all/ZhmIrQQVgblrhCZs@google.com/
-
-The VM cannot be created if there are host events with exclude_guest=0.
-If a VM has been created, user cannot create an event with
-exclude_guest=0. So nothing will be moved to an error state on context
-switch to the vCPU thread.
-
-> But this time,
-> the event is scheduled out, that means that time_enabled keeps
-> counting, but time_running
-> stops. On context switch back in, the host event is scheduled again
-> and time_running restarts
-> ticking. For a 10s measurement, where 5s here in the guest, the event
-> will come out with
-> time_enabled=10s, time_running=5s, and the tool will scale it up
-> because it thinks the event
-> was multiplexed, when in fact it was not. This is not the intended
-> outcome here. The tool should
-> not scale the count, it was not multiplexed, it was descheduled
-> because the filter forced it out.
-> Note that if the event had been multiplexed while running on the host,
-> then the scaling would be
-> appropriate.
-
-The scaling will not happen, since both time_enabled and time_running
-should be the same when there are enough counter resources.
-
+> -- 
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> https://www.efficios.com
 > 
-> In that case, I argue, time_running should be updated to cover the
-> time the event was not running. That would bring us back to the case I
-> was describing earlier.
-> 
-> It boils down to the exact definition of exclude_guest and expected
-> impact on time_enabled
-> and time_running. Then, with or without vPMU passthru, we can fix the
-> kernel to ensure a
-> uniform behavior.
-
-I think the time_enabled should be the one that has a controversial
-definition.
-Should the time in the guest mode count as the enabled time for an host
-event that explicitly sets the exclude_guest=1?
-
-I think the answer is NO. So I implemented it in the code.
-
-> 
-> What are your thoughts on this problem?
-> 
-
-Peter, please share your thoughts. We want to make sure the design is on
-the right track.
-
-Thanks,
-Kan
