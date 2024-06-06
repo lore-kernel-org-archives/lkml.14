@@ -1,144 +1,80 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924BF13A3EF
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 07:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BC513AA48;
+	Thu,  6 Jun 2024 07:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717660673; cv=none; b=McofNIXNEgfRXAy5wJiXcPj0QrKyaMYMwb3J5Ku+5AHRUcVcNW4EQR4wIireybLJAzQ6B9TvOeCsJ2dpGczK4kiEgpW+CT6MJkZy1tQazKDoBOyMy3N3+KQsqgLrdCOA6aZKhbHhmUW4jhIZ4Y2eZG5M1aqwtLjcEpdFoDjrDNA=
+	t=1717660714; cv=none; b=djNTp337hVVXNoFahzP0ZVmkA609JhQfBEWzlCmPdsegYU5Rg/7irNpoDi9i0xVfNZ8bqpuGsBFzqu+wLTcr1phsmdILvusEld/W/+tZ5npdBKf0pSOObP2hKT5WM8ibgjIPtMDqd/UaAVjExz7DLvvRnUVCIwecKN5gQxhE91E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717660673; c=relaxed/simple;
-	bh=8ftuWvN4f67ebYtsec+R7qcnXlTP1cIvGoDAWr1UXXY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=p6mqlnZnQZ6ScnkfnOsSjUdHhKjGduBpIC70GeMDLN0wjHrK3nvgE3hvF9Je4QFrzB8EPlytPFKYrbuIJ1/UQbL06+5+s89fHe+xaYHZdpEbCPv8BbfoAfHI0Vv+BvUr2dgGaX41DOU3zjEMV7Wn+6LFiPFyOh+gPDdYkzxRswU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gRzjJyW4; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717660714; c=relaxed/simple;
+	bh=Cpqwp2eQ3/jCDknmCan0MWQAb6sJzKViBaYFh+gWbLU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MCSV0NpGHWEnCS/2jtdRAPd/C7rEm8Xb7N/5cT1DWz8ocd33WjpNfRppqgdeyg/8/11oQY9iGNQNdg3JkkRwPZv4yUdn680AK+g+lmDXWBJSh4/t+U0Kk4NceGbDX1C9EHS1lyrHF9QckgNu14UJVfw4r/qX9yG6p4H2CHv0S5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=08oCavi+; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gRzjJyW4"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4215b888eabso49305e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 00:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717660670; x=1718265470; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lBpAv6C3O+U7a9knE0xgywFkw1MNsJlamzVihT52F+s=;
-        b=gRzjJyW4QENf2dHHyYfYXGgHGpxH8+zaqSsjAu6NQqRrL6hc8AE9zkEtPfrL8hUo/v
-         4s6giYE5HUq3jA2G1bWJfItc454JV/13zx66WxjB0IY7DYJQo9o4iBd8aRleWkcZcyFS
-         LXKS5KRp1eZ8ia+R1N1aSAsFjCUTrMNQiySCEtinzaPgjsu4wuR/znyIn8vMDhr+aNbO
-         +OEG5azLpcfXZi8iG7/5LduxRU5IWN+Vr0b9wKRIY/OQQ2OPjhDreFc360XKWSj3Twk6
-         AI2BEIlPc/lc3meU9v/K9y//7AjYLdtUG4aibnrDwWshjV+4vtW1h5T48pbRiN4P+cUo
-         PIew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717660670; x=1718265470;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lBpAv6C3O+U7a9knE0xgywFkw1MNsJlamzVihT52F+s=;
-        b=Br0vOjjysvm3D4SJQTd8an/5507sO4OYnVAuE04TMnHrW7qobf/ivhqHApc9iGh1et
-         uRHT9JKjzMmKH7AXJbWeyM3vTvHV7hs61f2PT16m63GWVgjr4BbcmNegwXYBU1ygOQjD
-         f11aCX2nze5kzM21OEJjqVPHyIfOkZOYb1OLHVv3iZmIYZwXUNehCxpnLHl5mIL3eUqG
-         wS1jeIlcnivfomeW72cD+DDvQHpN9KhCOHVsNSlm8pvd++yR8X/gtsVJic0AaacLLmKL
-         W55BX5IBzNW3MuBvvTKoCdHNL6UkaZOFeQRndEYaNGXqAjlrmpopKILSWl4TdE/+A5nF
-         Tj5Q==
-X-Gm-Message-State: AOJu0YyYfKT/UrqPRfqWgUoTs9yPLtJYD3qvZS+/FCmdcPsjhUWCfQeN
-	SutNYJLpUFT+W+mrgv1vXmHXvsPaIg+IdjW2KRPfY/uwecUibJ5CC1nQfvte1HbM5pg8YZmDqJu
-	OGG9Nfk3Nu1FuQyn+ELMqnNFgNPG9FoKTCN1A
-X-Google-Smtp-Source: AGHT+IGlHWNqaiN4UT7al7+ZwKkCEh6R+OFSo6HizzYhY/uoIbalEuVa9hspJ7ikccXu2exETlSk66FCP72M/i4d9kw=
-X-Received: by 2002:a7b:ca4e:0:b0:41b:4c6a:de7a with SMTP id
- 5b1f17b1804b1-4215c0da3c3mr1158105e9.3.1717660669562; Thu, 06 Jun 2024
- 00:57:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="08oCavi+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=Cpqwp2eQ3/jCDknmCan0MWQAb6sJzKViBaYFh+gWbLU=; t=1717660712;
+	x=1718092712; b=08oCavi+qQxzSDXVV9GBTGlN+ti9gMqCrK7IbCeUvtiWUqkE7i5/ghcWZOn39
+	+7EJbxN/uScM6U93g22mlkvSk+adUcKKlab2FbFW12xmCfsHG9WL6IRNisj5Mj6ftI/kSn0Y5LXF+
+	4xaWFWMgKt9W0crSmvf14nimolp7QO5jangt8JiCEIzwk0udUdpUaFOVljUtw5SgtH3nHPd808ESV
+	KZw+m9gtuVMgvtXcRBCWQ8hg3gcILNWY+kmhrqpOq+59bPlXz/FEdu3AJ4pzdZUB5jmsV4gBy6B1B
+	OXMb5yUaHUIqQPVPPE49PPIl35l6Q9/66GfcDmg1rI/fJINuWQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sF80w-0000E2-6n; Thu, 06 Jun 2024 09:58:26 +0200
+Message-ID: <8c0c615c-d27b-42c9-bd53-2199f0c81264@leemhuis.info>
+Date: Thu, 6 Jun 2024 09:58:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Stephane Eranian <eranian@google.com>
-Date: Thu, 6 Jun 2024 00:57:35 -0700
-Message-ID: <CABPqkBQ3LQ_dXQSQVSrriinvSSXm2fHx4yOms=jRsa2WaXSsog@mail.gmail.com>
-Subject: [RFC] perf_events: exclude_guest impact on time_enabled/time_running
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Ian Rogers <irogers@google.com>, 
-	"Liang, Kan" <kan.liang@intel.com>, Andi Kleen <ak@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	"Narayan, Ananth" <ananth.narayan@amd.com>, "Bangoria, Ravikumar" <ravi.bangoria@amd.com>, 
-	Namhyung Kim <namhyung@google.com>, Mingwei Zhang <mizhang@google.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Zhang Xiong <xiong.y.zhang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] usb: gadget: u_ether: Replace netif_stop_queue with
+ netif_device_detach
+To: Hardik Gajjar <hgajjar@de.adit-jv.com>, Ferry Toth <fntoth@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+ gregkh@linuxfoundation.org, s.hauer@pengutronix.de, jonathanh@nvidia.com,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_linyyuan@quicinc.com, paul@crapouillou.net, quic_eserrao@quicinc.com,
+ erosca@de.adit-jv.com
+References: <5dae4b62-24d4-4942-934a-38c548a2fdbc@gmail.com>
+ <20240430153243.GA129136@vmlxhi-118.adit-jv.com>
+ <8041106f-0be0-4ed9-990e-1f62902b30e9@gmail.com>
+ <9dab0c4f-cfae-4212-9a27-518454314eef@gmail.com>
+ <20240502152916.GA7995@vmlxhi-118.adit-jv.com>
+ <64ffb6e4-d0c9-4e53-a314-a174097516b1@gmail.com>
+ <7013cad9-7331-45be-b115-e9e1f253bcea@gmail.com>
+ <20240510094520.GA8362@vmlxhi-118.adit-jv.com>
+ <6f7b11ed-e387-4d51-b0f4-3af8d4e32a16@gmail.com>
+ <fbc1a8c4-a459-4892-af75-d4176e606bd5@gmail.com>
+ <20240528071851.GB188434@HI-C-003YD.hi.de.bosch.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <20240528071851.GB188434@HI-C-003YD.hi.de.bosch.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717660712;1a58b1d6;
+X-HE-SMSGID: 1sF80w-0000E2-6n
 
-Hi Peter,
+On 28.05.24 09:18, Hardik Gajjar wrote:
+>
+> Okay, lets revert the patch till we fix your problem. Would you be able to send the revert ? or shall I ?
 
-In the context of the new vPMU passthru patch series, we have to look
-closer at the definition and implementation of the exclude_guest
-filter in the perf_event_attr structure. This filter has been in the
-kernel for many years. See patch:
-https://lore.kernel.org/all/20240506053020.3911940-8-mizhang@google.com/
+From what I can see it seems nobody submitted the revert since then.
+Unless I'm mistaken could you thus please take care of that?
 
-The presumed  definition of the filter is that the user does not want
-the event to count while the processor is running in guest mode (i.e.,
-inside the virtual machine guest OS or guest user code).
-
-The perf tool sets is by default on all core PMU events:
-$ perf stat -vv -e cycles sleep 0
-------------------------------------------------------------
-perf_event_attr:
-  size                             112
-  sample_type                      IDENTIFIER
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-  disabled                         1
-  inherit                          1
-  enable_on_exec                   1
-  exclude_guest                    1
-------------------------------------------------------------
-
-In the kernel, the way this is treated differs between AMD and Intel because AMD
-does provide a hardware filter for guest vs. host in the PMU counters
-whereas Intel
-does not. For the latter, the  kernel simply disables the event in the
-hardware counters,
-i.e., the event is not descheduled.  Both approaches produce pretty
-much the same
-desired effect, the event is not counted while in guest mode.
-
-The issue I would like to raise has to do with the effects on
-time_enabled and time_running
-for exclude_guest=1 events.
-
-Given the event is not scheduled out while in guest mode, even though
-it is stopped, both time_enabled and time_running continue ticking
-while in guest mode.  If a measurement is 10s
-long but only 5s are in non-guest mode, then time_enabled=10s,
-time_running=10s. The count
-represents 10s worth of non guest mode, of which only 5s were really
-actively monitoring, but
-the user has no way of determining this.
-
-If we look at vPMU passthru, the host event must have exclude_guest=1
-to avoid going into
-an error state on context switch to the vCPU thread (with vPMU
-enabled). But this time,
-the event is scheduled out, that means that time_enabled keeps
-counting, but time_running
-stops. On context switch back in, the host event is scheduled again
-and time_running restarts
-ticking. For a 10s measurement, where 5s here in the guest, the event
-will come out with
-time_enabled=10s, time_running=5s, and the tool will scale it up
-because it thinks the event
-was multiplexed, when in fact it was not. This is not the intended
-outcome here. The tool should
-not scale the count, it was not multiplexed, it was descheduled
-because the filter forced it out.
-Note that if the event had been multiplexed while running on the host,
-then the scaling would be
-appropriate.
-
-In that case, I argue, time_running should be updated to cover the
-time the event was not running. That would bring us back to the case I
-was describing earlier.
-
-It boils down to the exact definition of exclude_guest and expected
-impact on time_enabled
-and time_running. Then, with or without vPMU passthru, we can fix the
-kernel to ensure a
-uniform behavior.
-
-What are your thoughts on this problem?
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
