@@ -1,154 +1,153 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BC41990D8;
-	Thu,  6 Jun 2024 17:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799F61990C8;
+	Thu,  6 Jun 2024 17:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717694781; cv=none; b=BtfcZs4lj1W4Ex8Qj5p/7g9Id7YqtKe4z8jITBHSqvVYQUe7Jcw2anXZVT2Wq7a6cD1GMXH93SEbhZFe1ZptUImlVW2UOr6vDbFMAEsm8FFtK+bt3Bn+a08/Eh9veRkGROTTn6bH/znoVksK5i2v1rhpNdZJpJJ3tRX0FOswU1s=
+	t=1717694835; cv=none; b=UDxVBQbfT2sujRcKeU3tMZ0DdrIUvrJgl62pa+xQh6/PE1wJ7qVsVcgxFr2DopEz5KKBt83g4HFc8EIbFfTyxV+pNsg/W9wDqKIT6+meeZso227t7k4Khfu1AV+A+Zvs2m5gq8+GR0mi00CMaSRpTYowQeWpEZDQt38naZsPyA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717694781; c=relaxed/simple;
-	bh=l8EdykTqJ3aoDDrALAsVEr30BhVYMuefAflhbdzU+3A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pwt7N64kzigV8RAQqIZcb/mJOJ82Tj0b2/E46fWY9QEcouUeD7FhRtZ1X/aRGHTTmS8I+Zg7g3oNUigggxGrAqlEb3fVHIwh7TsW5FdLSYL/ebFzNVrKV1peOQOOCBzSopf2f9q7mRYgv+mo7hbRQpPlp3WHzqAKYQBrPc0lXog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=U6cVw9w4; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1717694835; c=relaxed/simple;
+	bh=00CNnKfYf4m94sDjDxhhBBDOl45dZ+7MLCQdgobspB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pp2T3yzgaEQC3PumC9XSd+CxQnJCVBte6z7YGyOYrgvi8VySzcR8GkG+7bRQFRKj9Wql29bP5tFXoKuyqpTeP8z6Scauax0bVzYbmde9HhQ/NqDgeaD9n+UT3tb2xFH7qF/xuKEdXhL0hFG+f2Iw3fkveWtO+tmiWhk6CpronNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iHRnrKN9; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U6cVw9w4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Jniy+NLgVrBfK0p3PyzP0Z6EZrAShqg1T5f6U9wpTZM=; b=U6cVw9w4l6T0HIwuVstgOdFrTf
-	/eJRHcWb1hvtr8USQwnMbi9gwBnZoAmC5llmrCK8WoJavNxSZyU1vBRsTXpX1mIxRV2HbXbKvemvr
-	TcXvzrpg5zh8w7sQ/DUmTHhVSvF/gW4d7nzHmzLdSKn8+nXlNSLKkBVrg5ifTV1HQcWCAL4a1TzO7
-	qOWitxMaFgEvdbg1vnic8/zdxscPveTofIJJgbgTNMTGr1zZ0yrw7ce5WHIqVbg4oxX0vZIbXtgXw
-	aC3yBbxrIM1qZQ9dcKNVCUGJtqPoggVx2LR7agbJzNJM8kOrpNoU60HebjaE6iXoVS3ZhuNGq8+B4
-	tvA9fqYA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sFGsN-00000001fmR-14ZR;
-	Thu, 06 Jun 2024 17:26:11 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E941230047C; Thu,  6 Jun 2024 19:26:07 +0200 (CEST)
-Date: Thu, 6 Jun 2024 19:26:07 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] rust: add tracepoint support
-Message-ID: <20240606172607.GG8774@noisy.programming.kicks-ass.net>
-References: <20240606-tracepoint-v1-0-6551627bf51b@google.com>
- <20240606-tracepoint-v1-3-6551627bf51b@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHRnrKN9"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52b919d214cso1239245e87.2;
+        Thu, 06 Jun 2024 10:27:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717694831; x=1718299631; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ma8i9n0Ul2xhEENoFuQX+QsntPlbItenEYXbdtOE3xI=;
+        b=iHRnrKN9IegKtTFMMs670+xcdcbx/IT7ak2Wax5SAmL7vvWTwBR+clQms4fOjXDE73
+         faXzvTq0svubA0pn05aoE0pr61G8ihfs3E1kblcdwD7vREaIO3sf4kzvJg2nGclU8WXk
+         I8AOsE2cw3tUuvStxFD1beTH9TIPpHWAFCknUsxgF+pgi5CRNkyGiHdqVwYtVzMFNWLN
+         tg5P+YtaBpQHP/wPHyIxi8HeCCuSwSQg78JCpIGo79DCAZwWyMslCswU4pgm/lHjea4I
+         W/+Z27a7wpIW9/qlKfDomOhGtCTCy3nxMRGs2BbXvHKO8bH5kBZnTYPFhCIIG/lMSFu5
+         hQPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717694831; x=1718299631;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ma8i9n0Ul2xhEENoFuQX+QsntPlbItenEYXbdtOE3xI=;
+        b=dbw3mf5DOFMYBFpmIURnTqebNH/5Lm3Qr1IUqwxUDVhNPs/BEfMxplCLG2Q6fCLfHg
+         Oyi9fRT/8dsGZzd2ZUOfvgn2dFC7GU7BMQ3+cY5DvuCl9HSw3RvPiOAxGhuCFaDeTG8m
+         3CeUWpGvdYExSCXo1JZ3TZbRwUUBKgO2Cv2zspSMGOlV5cAFrgyWEsa76AUwd7HkPH7a
+         hb2t5u1xXw83cpUDw32Ca4S3dZNlnk/tHp8AwFSWoffZSH4VT2sHJ1/7Sp0UHAhsXjPX
+         oRvMqUBSQtvXI1ikuwVm5lF7sPE/iIkPMwVGu83d7XPOBCwXR7iCxt8CSzqUSL1aEnTg
+         HzOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfq8c8FUmp0T4r+aI8C8Sfbz+R2JE6CttGOmNXjpPeK4n8LWWcyXSxj1nJ6ts3ICFSWjoavPfHF+b8Oa7LJAZxlqNxSWXMgrkSz+GXedHOOS9OeltKA2eb43Q490RzZwjbXp13JhW7w0TTC/464vmq6ikLmgHBn9mMe6WHSqbzOqJhwgV6LeYzLUTafSupMQtliHAAGUCqWwzusDSDWKB4
+X-Gm-Message-State: AOJu0YxgRNfokfHx/8Rf3mlpevCeIcayQCWQFfCJLtb+5yw0uSMPE35X
+	ccW4ZKTldXQM8sFsx2zfogolGpS+UP836CzBUtxhKYEoa8c6fALy
+X-Google-Smtp-Source: AGHT+IEbM6f+wbNlbLV6qSOqxDLFngYi99yMRrr1PnbH4p95Hn9PHtQN5YFpne5N83Yh7dK9IqDr3w==
+X-Received: by 2002:a05:6512:2812:b0:529:b6e9:7978 with SMTP id 2adb3069b0e04-52bb9f8ef6fmr224153e87.37.1717694831074;
+        Thu, 06 Jun 2024 10:27:11 -0700 (PDT)
+Received: from [10.0.0.42] (host-85-29-124-88.kaisa-laajakaista.fi. [85.29.124.88])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb433c894sm251499e87.256.2024.06.06.10.27.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 10:27:10 -0700 (PDT)
+Message-ID: <0a77e955-e5a6-4a0e-8c1d-8b2ebd0d1eec@gmail.com>
+Date: Thu, 6 Jun 2024 20:30:43 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606-tracepoint-v1-3-6551627bf51b@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] dmaengine: ti: k3-udma-glue: clean up return in
+ k3_udma_glue_rx_get_irq()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, MD Danish Anwar <danishanwar@ti.com>,
+ Roger Quadros <rogerq@kernel.org>,
+ Grygorii Strashko <grygorii.strashko@ti.com>,
+ Julien Panis <jpanis@baylibre.com>, Chintan Vankar <c-vankar@ti.com>,
+ Diogo Ivo <diogo.ivo@siemens.com>, Simon Horman <horms@kernel.org>,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel-janitors@vger.kernel.org
+References: <2f28f769-6929-4fc2-b875-00bf1d8bf3c4@kili.mountain>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <2f28f769-6929-4fc2-b875-00bf1d8bf3c4@kili.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 06, 2024 at 03:05:26PM +0000, Alice Ryhl wrote:
-> Make it possible to have Rust code call into tracepoints defined by C
-> code. It is still required that the tracepoint is declared in a C
-> header, and that this header is included in the input to bindgen.
+
+
+On 6/6/24 5:23 PM, Dan Carpenter wrote:
+> Currently the k3_udma_glue_rx_get_irq() function returns either negative
+> error codes or zero on error.  Generally, in the kernel, zero means
+> success so this be confusing and has caused bugs in the past.  Also the
+> "tx" version of this function only returns negative error codes.  Let's
+> clean this "rx" function so both functions match.
 > 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> This patch has no effect on runtime.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  rust/bindings/bindings_helper.h |  1 +
->  rust/bindings/lib.rs            | 15 +++++++
->  rust/helpers.c                  | 24 +++++++++++
->  rust/kernel/lib.rs              |  1 +
->  rust/kernel/tracepoint.rs       | 92 +++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 133 insertions(+)
+>  drivers/dma/ti/k3-udma-glue.c                | 3 +++
+>  drivers/net/ethernet/ti/am65-cpsw-nuss.c     | 4 ++--
+>  drivers/net/ethernet/ti/icssg/icssg_common.c | 4 +---
+>  3 files changed, 6 insertions(+), 5 deletions(-)
 > 
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index ddb5644d4fd9..d442f9ccfc2c 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -15,6 +15,7 @@
->  #include <linux/refcount.h>
->  #include <linux/sched.h>
->  #include <linux/slab.h>
-> +#include <linux/tracepoint.h>
->  #include <linux/wait.h>
->  #include <linux/workqueue.h>
+> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+> index c9b93055dc9d..b96b448a0e69 100644
+> --- a/drivers/dma/ti/k3-udma-glue.c
+> +++ b/drivers/dma/ti/k3-udma-glue.c
+> @@ -1531,6 +1531,9 @@ int k3_udma_glue_rx_get_irq(struct k3_udma_glue_rx_channel *rx_chn,
+>  		flow->virq = k3_ringacc_get_ring_irq_num(flow->ringrx);
+>  	}
 >  
-> diff --git a/rust/bindings/lib.rs b/rust/bindings/lib.rs
-> index 40ddaee50d8b..48856761d682 100644
-> --- a/rust/bindings/lib.rs
-> +++ b/rust/bindings/lib.rs
-> @@ -48,3 +48,18 @@ mod bindings_helper {
+> +	if (!flow->virq)
+> +		return -ENXIO;
+> +
+>  	return flow->virq;
 >  }
+>  EXPORT_SYMBOL_GPL(k3_udma_glue_rx_get_irq);
+> diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+> index 4e50b3792888..8c26acc9cde1 100644
+> --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+> +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+> @@ -2424,10 +2424,10 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
 >  
->  pub use bindings_raw::*;
-> +
-> +/// Rust version of the C macro `rcu_dereference_raw`.
-> +///
-> +/// The rust helper only works with void pointers, but this wrapper method makes it work with any
-> +/// pointer type using pointer casts.
-> +///
-> +/// # Safety
-> +///
-> +/// This method has the same safety requirements as the C macro of the same name.
-> +#[inline(always)]
-> +pub unsafe fn rcu_dereference_raw<T>(p: *const *mut T) -> *mut T {
-> +    // SAFETY: This helper calls into the C macro, so the caller promises to uphold the safety
-> +    // requirements.
-> +    unsafe { __rcu_dereference_raw(p as *mut *mut _) as *mut T }
-> +}
-> diff --git a/rust/helpers.c b/rust/helpers.c
-> index 2c37a0f5d7a8..0560cc2a512a 100644
-> --- a/rust/helpers.c
-> +++ b/rust/helpers.c
-> @@ -165,6 +165,30 @@ rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
->  }
->  EXPORT_SYMBOL_GPL(rust_helper_krealloc);
+>  		rx_chn->irq = k3_udma_glue_rx_get_irq(rx_chn->rx_chn, i);
 >  
-> +void rust_helper_preempt_enable_notrace(void)
-> +{
-> +	preempt_enable_notrace();
-> +}
-> +EXPORT_SYMBOL_GPL(rust_helper_preempt_enable_notrace);
-> +
-> +void rust_helper_preempt_disable_notrace(void)
-> +{
-> +	preempt_disable_notrace();
-> +}
-> +EXPORT_SYMBOL_GPL(rust_helper_preempt_disable_notrace);
+> -		if (rx_chn->irq <= 0) {
+> +		if (rx_chn->irq < 0) {
+>  			dev_err(dev, "Failed to get rx dma irq %d\n",
+>  				rx_chn->irq);
+> -			ret = -ENXIO;
+> +			ret = rx_chn->irq;
+>  			goto err;
+>  		}
+>  	}
+> diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
+> index 088ab8076db4..cac7863c5cb2 100644
+> --- a/drivers/net/ethernet/ti/icssg/icssg_common.c
+> +++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
+> @@ -440,9 +440,7 @@ int prueth_init_rx_chns(struct prueth_emac *emac,
+>  			fdqring_id = k3_udma_glue_rx_flow_get_fdq_id(rx_chn->rx_chn,
+>  								     i);
+>  		ret = k3_udma_glue_rx_get_irq(rx_chn->rx_chn, i);
+> -		if (ret <= 0) {
+> -			if (!ret)
+> -				ret = -ENXIO;
+> +		if (ret < 0) {
+>  			netdev_err(ndev, "Failed to get rx dma irq");
+>  			goto fail;
+>  		}
 
-A notrace wrapper that is tracable, lol.
-
-> +bool rust_helper_current_cpu_online(void)
-> +{
-> +	return cpu_online(raw_smp_processor_id());
-> +}
-> +EXPORT_SYMBOL_GPL(rust_helper_current_cpu_online);
-> +
-> +void *rust_helper___rcu_dereference_raw(void **p)
-> +{
-> +	return rcu_dereference_raw(p);
-> +}
-> +EXPORT_SYMBOL_GPL(rust_helper___rcu_dereference_raw);
-
-I'm going to keep yelling and objecting to these wrappers.
-
-Fix bindgen already. Or whatever is needed to get it to interoperate
-with C inline / asm.
-
-NAK NAK NAK
+-- 
+Péter
