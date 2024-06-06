@@ -1,104 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3124683;
-	Thu,  6 Jun 2024 00:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2653B1373
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 00:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717635214; cv=none; b=M9n32LXnhhYFikr/X0bLKCbOEls/DjVnb2z3FopH0Y0oCvF0pj51QDwhQviKKJBfruUkMKedM8+EAP5yQL+y9zrE818SVP02QueH50O0larLxUhnBt9iSBvHqiRoDLotphVPwPR8irrhoLw4GWAso9lzfc05G1CGnVZOuiqZ39Q=
+	t=1717635277; cv=none; b=PkNpTzY514wgrTNL7RJq5QCdOEhZY5fMpYDPXFiCd7Aja159Gi36ZekARgAUoydesQ3cX5djqvbsFriX/zM0/obcaBpknvgn/oWCtv3sSE1MGRSejgmChLQhTAG7zemtTyvViaoHapBy8CG+F4WjyMbuGDa+BcV+V/4LqtBZIUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717635214; c=relaxed/simple;
-	bh=y3NLehE4z6xgfNaULf7oIlI/u+h4fC3sVYtsfAAbbT4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PphS0MFHsCVioPqCNn+LMrXcG2opz0sTI4XcO6/dLTnEsMIulF5McfynBAj/+pMbjFnmTBGRoo55oEw1TAwvYcjHgKCaWYFc3tvFa3/kTQrP/punfwi7hFRbBVtYgMKFWQAGSoaNldX4BMVu11fE5nMq1IWey2PIlSM4gjHNZAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cYI26IzM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717635277; c=relaxed/simple;
+	bh=lzJtHlgCun8Ywse+qQtajmZ7QYd4hIobqe/lcYmoP90=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ImCq3OjXRDhi6RphYgTelYpyWHTWYL66TCu4lS4sRQ1UsNjp71QQY1DYk2uvzwQWvYllL0OadX83VyKGyMkhSXFODJ4TQQbJA5j6k0TYyzPE/BPDBYgFzPA1ryul+MnxKQaxvS4MGP8uE/j3Hbwvgxfc5rm9EPyFNb0rxB2NKOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Q+QJYzRN; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYI26IzM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21764C2BD11;
-	Thu,  6 Jun 2024 00:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717635214;
-	bh=y3NLehE4z6xgfNaULf7oIlI/u+h4fC3sVYtsfAAbbT4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cYI26IzMt/8KkfHDg8gdx/oyJXPQYS9VldQ9gvsjayQb1+0iERrg8miy2PjUuWOqE
-	 PzUuiaAARz69Xol8Nn69nMUOez8uoOqPy0FOjZH89M5UYzSOvRfqRVEekqExYORjY8
-	 XtsbcRZVR5iT1IjMRR0lBrdne9myBjkXrOA8daUU3IxgejRCQc+lakybMyi12eKhtZ
-	 ZRrfyEORegzbDpRB2cwOJVxk1gP9VeXfhFMOQmdY9kYR0zzpziTqUwDj3Yexci6FLq
-	 9dsS2k6IGCmf/Xi/dYGBhkJtOL8xBXdX0S3VMwTUQv2TGAZRPS9XKOAes4KfBR16q1
-	 0NQ77odt9NyRQ==
-Date: Wed, 5 Jun 2024 18:53:32 -0600
-From: Rob Herring <robh@kernel.org>
-To: Animesh Agarwal <animeshagarwal28@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: dt-bindings: linux,spdif-dir: Convert to dtschema
-Message-ID: <20240606005332.GA3526959-robh@kernel.org>
-References: <20240605112301.8171-1-animeshagarwal28@gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Q+QJYzRN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717635274;
+	bh=lzJtHlgCun8Ywse+qQtajmZ7QYd4hIobqe/lcYmoP90=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Q+QJYzRNDdNIbSd2bjvzdE1wxoxmzu2NfmaEuMUR7YIrQpCoVRQsbCcScQfQ1g/Y+
+	 7qhPdZ9VQYPuj60zfPY+kiLAsqDJrUwqBgEejeVLj9ilC2gMH3kar4Uxq9pxHhS/gW
+	 5OVo9fJxTjXJsiLhN+Mbbk09E0SXFhvUWf95gk5f9h7fYCy9QC+tk+OGhRPavzKA5c
+	 BkRUJNgz3TZ8lGGqgjmtOW6kRN9tnwVnfnNKvYiylfdELKdIa+i10RXS/bZxISQjM0
+	 syvPwYUfB6QLDV1J2dmMjLgboADFpKUtU9tLt8lg1VhWr7Yc09aZy85QvnsJnX/TKs
+	 mVqccGx5/ceBQ==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: alarumbe)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id AC85D37821C1;
+	Thu,  6 Jun 2024 00:54:33 +0000 (UTC)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>
+Cc: kernel@collabora.com,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] Support fdinfo runtime and memory stats on Panthor
+Date: Thu,  6 Jun 2024 01:49:52 +0100
+Message-ID: <20240606005416.1172431-1-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605112301.8171-1-animeshagarwal28@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 05, 2024 at 04:52:55PM +0530, Animesh Agarwal wrote:
-> Convert the dummy SPDIF receiver bindings to DT schema. Make bindings
-> complete by adding property "#sound-dai-cells"
+This patch series enables userspace utilities like gputop and nvtop to
+query a render context's fdinfo file and figure out rates of engine
+and memory utilisation.
 
-2 conversions of the same thing in one day:
+Previous discussion can be found at
+https://lore.kernel.org/dri-devel/20240423213240.91412-1-adrian.larumbe@collabora.com/
 
-https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-convert-spdif-receiver-v1-1-262465adbac2@linaro.org/
+Changelog:
+v3:
+ - Fixed some nits and removed useless bounds check in panthor_sched.c
+ - Added support for sysfs profiling knob and optional job accounting
+ - Added new patches for calculating size of internal BO's
+v2:
+ - Split original first patch in two, one for FW CS cycle and timestamp
+ calculations and job accounting memory management, and a second one
+ that enables fdinfo.
+ - Moved NUM_INSTRS_PER_SLOT to the file prelude
+ - Removed nelem variable from the group's struct definition.
+ - Precompute size of group's syncobj BO to avoid code duplication.
+ - Some minor nits.
 
-As I said there, I would just add the compatible to 
-linux,spdif-dit.yaml. But this is fine too.
 
-> 
-> Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
-> Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> ---
->  .../bindings/sound/linux,spdif-dir.yaml       | 34 +++++++++++++++++++
->  .../bindings/sound/spdif-receiver.txt         | 10 ------
->  2 files changed, 34 insertions(+), 10 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/linux,spdif-dir.yaml
->  delete mode 100644 Documentation/devicetree/bindings/sound/spdif-receiver.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/linux,spdif-dir.yaml b/Documentation/devicetree/bindings/sound/linux,spdif-dir.yaml
-> new file mode 100644
-> index 000000000000..61767873200f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/linux,spdif-dir.yaml
-> @@ -0,0 +1,34 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/linux,spdif-dir.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Dummy SPDIF receiver
-> +
-> +maintainers:
-> +  - Liam Girdwood <lgirdwood@gmail.com>
-> +  - Mark Brown <broonie@kernel.org>
-> +
-> +allOf:
-> +  - $ref: dai-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: linux,spdif-dir
-> +
-> +  "#sound-dai-cells":
-> +    const: 0
+Adrián Larumbe (7):
+  drm/panthor: introduce job cycle and timestamp accounting
+  drm/panthor: add DRM fdinfo support
+  drm/panthor: enable fdinfo for memory stats
+  drm/panthor: add sysfs knob for enabling job profiling
+  drm/panthor: support job accounting
+  drm/drm_file: add display of driver's internal memory size
+  drm/panthor: register size of internal objects through fdinfo
 
-It wasn't in the txt binding, but users also use 'sound-name-prefix' 
-property, so that should be added here.
+ Documentation/gpu/drm-usage-stats.rst     |   4 +
+ drivers/gpu/drm/drm_file.c                |   9 +-
+ drivers/gpu/drm/msm/msm_drv.c             |   2 +-
+ drivers/gpu/drm/panfrost/panfrost_drv.c   |   2 +-
+ drivers/gpu/drm/panthor/panthor_devfreq.c |  10 +
+ drivers/gpu/drm/panthor/panthor_device.c  |   2 +
+ drivers/gpu/drm/panthor/panthor_device.h  |  21 ++
+ drivers/gpu/drm/panthor/panthor_drv.c     |  83 +++++-
+ drivers/gpu/drm/panthor/panthor_fw.c      |  16 +-
+ drivers/gpu/drm/panthor/panthor_fw.h      |   5 +-
+ drivers/gpu/drm/panthor/panthor_gem.c     |  67 ++++-
+ drivers/gpu/drm/panthor/panthor_gem.h     |  16 +-
+ drivers/gpu/drm/panthor/panthor_heap.c    |  23 +-
+ drivers/gpu/drm/panthor/panthor_heap.h    |   6 +-
+ drivers/gpu/drm/panthor/panthor_mmu.c     |   8 +-
+ drivers/gpu/drm/panthor/panthor_mmu.h     |   3 +-
+ drivers/gpu/drm/panthor/panthor_sched.c   | 304 +++++++++++++++++++---
+ include/drm/drm_file.h                    |   7 +-
+ 18 files changed, 522 insertions(+), 66 deletions(-)
 
-Rob
+
+base-commit: 310ec03841a36e3f45fb528f0dfdfe5b9e84b037
+-- 
+2.45.1
+
