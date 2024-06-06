@@ -1,55 +1,55 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA141991C8;
-	Thu,  6 Jun 2024 17:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A73F199242;
+	Thu,  6 Jun 2024 17:00:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717693207; cv=none; b=hFSj9CrENWxL01x1AkZCmrlspE0V528IUQLQ2lAOrY8NB0hFD2dRcqBSvclUfID0/uB/rhcy1ieKXDyVzQhaYFoXe/VNdQBUXEVG0nxIukuOPfdvLMpS9ySF87BHJV9PiXVF/0iQxOMnHfouwagVnl61OfXsyfvOUVbC8z5wYU0=
+	t=1717693213; cv=none; b=e7HWut8tvovQs/wmlxEdOB0NKpgSlF1stbngNjUsaVfAwZxGUNkLWxy4+MAzKTiIsNHNW3/Pzkyc8wFK1Q9lOvYGZXfNi9JKdRczqg1r7BYp1XoVQ+MgSlTJ96wMfW3gO9sgRuvjgykGdT/naPTsKQyREmRav9Csj3n3QmOj+hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717693207; c=relaxed/simple;
-	bh=9QTdEjLiw8c8qss/5BtW4vrkb7+nG9Cc14q2CfjXh78=;
+	s=arc-20240116; t=1717693213; c=relaxed/simple;
+	bh=+mjq54ZflPu+vAODsuWCCdROJg6xEokZZODQUD7KU28=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B3xKlRPZAU/73t52dslcbmo4zOOiDiUqpC9jZwAPbGV+hEUnWOeIfdNfhts7I2gi0rrGC4GpoFkteugG4Nn3K8lAPOl6AEomJf3uAmVUygHeTKZlrnHP35lZEYnyLBp9gsK7A70rp90jsiNaL9oi5oSBA6xKMoHrXAIzjbuUskU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=U6Othtmk; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=YE7PyOcGccqwmZDrBQqzKCHkkLpLL+mjNHwY/OmhRxTUdWmyPbOKDJc0mUJmzl60zTPC5BQC6D2Q6H4iRZQdSQmDTxBkbqHgAzRVdJO72Zviu/gj8gfsqmwxOstSWT6HSImMyBxN+bQitKZBWhI9XCvxbpgCm6if6hm+g7bxcj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZeL5egzj; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="U6Othtmk"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45698hbc015037;
-	Thu, 6 Jun 2024 17:00:02 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZeL5egzj"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45684oso014039;
+	Thu, 6 Jun 2024 17:00:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	uMZ6sZO7X/FVFigW42Ucgp5WFfqw0ZXCXlUVSefdVk4=; b=U6Othtmk4m2JuWYO
-	n+8EtJQg621upbD56JokD/aFApJ+KmREQ91o73QVHTxNxNHJUjFnde2j35xRw8Kt
-	X1vV8ngS+Whn8UB8+1wwJxL9DKhxCsWTjCTju0Ee3p4EQrZ2Tr6bBFyfxEM7px/0
-	UO50GJQtoAuE4uiN1BkjlKvLJtiRFe8q4ar4zVKAW8yXWGNchn2DLVnunRf52xIN
-	m2oxLpu5ZIYR/g2raxSvnjbNQkxf4HF+TDryHWYs6yDlk41IJUwaH8qSWgzI/Ce/
-	ONSMUBDYBVA+2rqCGX4d1pbD7XDEHh/lv4wjKnnDVqGlPYSIBzmjjeoNlRoa2bWn
-	2+8qMg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yka7p93am-1
+	n0iQnfdu3uPvN6Xawc6tflmJqK/PX2AqNwmDw9u4V/k=; b=ZeL5egzjMsiTrwBI
+	cZSgOdbyZTuMbk5VplF5tOV7AeTViRmrY6h2TZupLHgyGYREujspZ0wRMhouVB/8
+	jrX8lxqJyngkk7Zt5PT0fDCaq1yLPJKrt5NRdgGyw2byJYORaa3rrwTZSPEAw0+5
+	E/B/m5IL0QIYoQoZVtiApyI0HlizA0Fw1KVi4qr+50GIqnt4dECBaeUzg6P7GI1M
+	U97Fw5+BsPYxvivFDnWvnjIAT9ux9WbFl1TVLUrbKznzLzlsPsNZJ/iFOqsX14FV
+	bVx8ybnR+BZlBPbc/FD99sP2es3u1/rMWyEk/cFvKOBzWg/QC7FzOEJmghcZClVR
+	xgltNw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjvxyard9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 17:00:02 +0000 (GMT)
+	Thu, 06 Jun 2024 17:00:07 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 456H01G4025080
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 456H06RY006515
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Jun 2024 17:00:01 GMT
+	Thu, 6 Jun 2024 17:00:06 GMT
 Received: from hu-ekangupt-hyd.qualcomm.com (10.80.80.8) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Jun 2024 09:59:58 -0700
+ 15.2.1544.9; Thu, 6 Jun 2024 10:00:04 -0700
 From: Ekansh Gupta <quic_ekangupt@quicinc.com>
 To: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>
 CC: <gregkh@linuxfoundation.org>, <quic_bkumar@quicinc.com>,
         <linux-kernel@vger.kernel.org>, <quic_chennak@quicinc.com>,
         stable
 	<stable@kernel.org>
-Subject: [PATCH v4 04/11] misc: fastrpc: Avoid updating PD type for capability request
-Date: Thu, 6 Jun 2024 22:29:24 +0530
-Message-ID: <20240606165939.12950-5-quic_ekangupt@quicinc.com>
+Subject: [PATCH v4 06/11] misc: fastrpc: Fix memory leak in audio daemon attach operation
+Date: Thu, 6 Jun 2024 22:29:26 +0530
+Message-ID: <20240606165939.12950-7-quic_ekangupt@quicinc.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240606165939.12950-1-quic_ekangupt@quicinc.com>
 References: <20240606165939.12950-1-quic_ekangupt@quicinc.com>
@@ -65,44 +65,41 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 7ioqd74XDM6mhBEuz41XJZq7ay98pV-s
-X-Proofpoint-ORIG-GUID: 7ioqd74XDM6mhBEuz41XJZq7ay98pV-s
+X-Proofpoint-ORIG-GUID: viJK7Nd6ytriZcL7P9pt85awy9T6brZT
+X-Proofpoint-GUID: viJK7Nd6ytriZcL7P9pt85awy9T6brZT
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-06_13,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- malwarescore=0 adultscore=0 spamscore=0 bulkscore=0 clxscore=1015
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ mlxscore=0 adultscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 impostorscore=0 malwarescore=0
  suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2405170001 definitions=main-2406060120
 
-When user is requesting for DSP capability, the process pd type is
-getting updated to USER_PD which is incorrect as DSP will assume the
-process which is making the request is a user PD and this will never
-get updated back to the original value. The actual PD type should not
-be updated for capability request and it should be serviced by the
-respective PD on DSP side. Adding changes to avoid process PD type
-modification.
+Audio PD daemon send the name as part of the init IOCTL call. This
+mane needs to be copied to kernel for which memory is allocated.
+This memory is never freed which might result in memory leak. Add
+changes to free the memory when it is not needed.
 
-Fixes: 6c16fd8bdd40 ("misc: fastrpc: Add support to get DSP capabilities")
+Fixes: 0871561055e6 ("misc: fastrpc: Add support for audiopd")
 Cc: stable <stable@kernel.org>
 Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
 ---
- drivers/misc/fastrpc.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/misc/fastrpc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index f64781c3012f..abdd35b7c3ad 100644
+index 13e368279765..7ee8bb3a9a6f 100644
 --- a/drivers/misc/fastrpc.c
 +++ b/drivers/misc/fastrpc.c
-@@ -1703,7 +1703,6 @@ static int fastrpc_get_info_from_dsp(struct fastrpc_user *fl, uint32_t *dsp_attr
- 	args[1].ptr = (u64)(uintptr_t)&dsp_attr_buf[1];
- 	args[1].length = dsp_attr_buf_len * sizeof(u32);
- 	args[1].fd = -1;
--	fl->pd = USER_PD;
+@@ -1380,6 +1380,7 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
+ 		goto err_invoke;
  
- 	return fastrpc_internal_invoke(fl, true, FASTRPC_DSP_UTILITIES_HANDLE,
- 				       FASTRPC_SCALARS(0, 1, 1), args);
+ 	kfree(args);
++	kfree(name);
+ 
+ 	return 0;
+ err_invoke:
 -- 
 2.43.0
 
