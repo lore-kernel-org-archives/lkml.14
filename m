@@ -1,80 +1,123 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50861991BD;
-	Thu,  6 Jun 2024 17:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82811990C0;
+	Thu,  6 Jun 2024 17:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717695358; cv=none; b=jlwh9MiF5OJfPl1KR1Y6TvPTzOkkvwI7qUxgvMuaSx5pSsV4iE5l3f35WQJFij1st3AW9xOXqRd0V72xRmeSwjeE+iFZJ7X/PWLs9L7YN2yLnoUnw+IBvNwiISyCMCl7xr16VoW3p5NZT1h0OwQ+V4frl5/Z8NDTIGEL21EvEsU=
+	t=1717695396; cv=none; b=K/hmjgcQ0fQRRHvkVkJF1GM1953Lf55NRPp5UDC+mMQK1NfFaOJkDFPgGetkw5oCgRW7mmPdUcCJj6bvXTaZHzcDRi4MQXDhwevvrTKII+5j41HvKj17h02jCOtgscl66xvU6DM1fiEF+/pVsPrYkEwB/jfHfAcft2Yiakw8PHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717695358; c=relaxed/simple;
-	bh=K95UY5fmgibcQQ6sthv1S5/PdLYNFoyPKt9sEpSCbeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WwqQIxUWXBQ3eeitP4IqhMunjStPnSqSgZefic71HNvFxu+P1+P+Tl8ynbYa06b5CP3SkbnIqHNYWVHUqaaxXilw0+qfGy15ub4DHCoRukPExjGoLXuVKzVApxU25XUffNmq5Pcj8Ir+6Pa14ojrMcLXE0nRYUXHchBMdOtOMv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=l0DHKAp9; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1717695396; c=relaxed/simple;
+	bh=7DsFrLZ1A0aXabiplzYPnYE/moNjQGYz9wk06ZU1JVo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KiILqKCrKUKw+a30RVeH5VEhC+G3kZvzy3AJ0aAchLJX0iPkg37x8KTB9qZj9dVFPYPBuo9e5zgJk5ydI5GZCbEhuZm7gPbuddw4WQTHDiYShW7q3EMou6UifS+FIJMiTq08TDPWn9sSg/EtGn3THHsMyZ544Pxi8sFz4Mntntw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XAgW+57G; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l0DHKAp9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Rey5qJ7BY13ky3bigo4MWBL8ulxyTtDItl78FrbFPQE=; b=l0DHKAp9pgwOYJGy6q17IxAKYk
-	InZ8CQSKwrYAb46Fg4KCTzN0hqcA6Dse+Q+x9G57PSijSP0134gUjHRdPavJ79WSIX7dEMkbz93QU
-	Ak/4eVkq9cFudul86GtuBwn5f6BsMhNAi3HHmYdDU67cgiROZ0a3SOWbF8OmAPX7eBCh4sXDTBHeL
-	mm9e72L3F2C0zI7Kz+v54fJUrG//TSU1Oqpp7LPaZany+XqCeWqqoO0omgFXfKSZxVZXFVu+Qvk1b
-	OLlXB5X7JmZ4xv/eEK+EON/AXSs9gCkVe21PhVDJssmS+P9//zSPOLxhNuK798NJXn+tjo2u6HBEk
-	XR4zCXiQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sFH1g-00000001g1c-19xi;
-	Thu, 06 Jun 2024 17:35:48 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BBAD930047C; Thu,  6 Jun 2024 19:35:44 +0200 (CEST)
-Date: Thu, 6 Jun 2024 19:35:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] rust: add tracepoint support
-Message-ID: <20240606173544.GI8774@noisy.programming.kicks-ass.net>
-References: <20240606-tracepoint-v1-0-6551627bf51b@google.com>
- <20240606-tracepoint-v1-3-6551627bf51b@google.com>
- <389a8c55-a169-47ef-99c0-48f58003b40c@efficios.com>
- <ZmHacqvRwBj7OvWm@boqun-archlinux>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAgW+57G"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52b919d214cso1250587e87.2;
+        Thu, 06 Jun 2024 10:36:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717695393; x=1718300193; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+AhFjx7oZyl4h/X/TIV0j2lLchguX/BQrq+sZk9X17o=;
+        b=XAgW+57GH5Fvn1hr+8E7R6S0LjMKC3ynQSjnqWXcfk6bLKdXFUTJONZ5Q2pxZu0HuR
+         3NnlenVKN2Jxom+ce89fYeQp1Nk//lDzWpeDP43dfrw16btQMSklY4cDvj7afGXu/bMF
+         rNiEcuFVFKZ2qT5DbAY8le0tgPuU3s4SQfKh0/LtshWzyVm/3bHBor0+AAvPRsj0zh72
+         Nv4oJHp9fRCo1laZOc81MA+GM6AdMwhFgYIIh/B6an5YWfVCHsNaN3Qy8bj3th4hTJsm
+         MtWRfm8Mlcd/IRI+zE5GzsVQ2xtQGe/b/g2IiO6T3+zhXBdd8t30nOwYD1IhaYzUyCQs
+         CEqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717695393; x=1718300193;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+AhFjx7oZyl4h/X/TIV0j2lLchguX/BQrq+sZk9X17o=;
+        b=F+Xr2xQMwEh500nHKloTW1lvBPIicuHJrSTuBydWPokOqbcHfKwSTSacGExSD5/iRv
+         T4AbktdTJEpgXXl9ZsRog8Cxvr61bdqw5L2ph1RfBAWFUv4vNLKtQM9cHORBp7/je/xg
+         3v+fBTlnAmC7cJ5HaHBEui3ZgkBBzWhmBfPxlmELrAsHsNT1tJZ0WZOnLYx3xBjY+Vgs
+         JLy/bXstlbjqBg/pFAqD5Tneqiqm2mRM/EbTnBqrYJ6NLDkvy9O/XeJH4UzmQEqv6C2Z
+         nWZCgZSGxsrcJxNumvwOkSuQ1bMAI+sEY16zcnOkgiY9XOBrgIxD2INpXZLVfWZFIiAq
+         s94w==
+X-Forwarded-Encrypted: i=1; AJvYcCX+xHNelYBIKSwg5kOKrGitBHXLZhQjnrSYF4HlUWA0reXJWIt3y8UvALcL0mw/1E6yDMpBDl5sOPYD0J0t9tVrxQOKLAaWf1Dwvgfc
+X-Gm-Message-State: AOJu0YxdSggh/MyCDgFIYg0nI3W4hT+5ri4HXiUev43fWhy0U532IN0M
+	hYOKmH/wDAyg2XdxUyuusF4CrPbXw48id5HgfzgqNvyFryy/Xtexvf585rZC/z4QdQ==
+X-Google-Smtp-Source: AGHT+IF3pzbeHhYLAJrDKTLTpaFuP26mSfHAEVGD16RvvvIUapR1YxJAXb2kHOn3KBNWUOhXRX7Jdw==
+X-Received: by 2002:a05:6512:4024:b0:52b:ab25:a4d with SMTP id 2adb3069b0e04-52bb9fc9561mr210491e87.48.1717695392386;
+        Thu, 06 Jun 2024 10:36:32 -0700 (PDT)
+Received: from [10.0.0.42] (host-85-29-124-88.kaisa-laajakaista.fi. [85.29.124.88])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb421642bsm253702e87.136.2024.06.06.10.36.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 10:36:32 -0700 (PDT)
+Message-ID: <30b7e588-d20c-4906-a954-48be72ed5199@gmail.com>
+Date: Thu, 6 Jun 2024 20:40:05 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmHacqvRwBj7OvWm@boqun-archlinux>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix BCHAN count with UHC and HC
+ channels
+To: Jai Luthra <j-luthra@ti.com>, Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Devarsh Thakkar <devarsht@ti.com>,
+ Jayesh Choudhary <j-choudhary@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+References: <20240604-bcdma_chan_cnt-v1-1-1e8932f68dca@ti.com>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <20240604-bcdma_chan_cnt-v1-1-1e8932f68dca@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 06, 2024 at 08:49:06AM -0700, Boqun Feng wrote:
 
-> Long-term plan is to 1) compile the C helpers in some IR and 2) inline
-> the helpers with Rust in IR-level, as what Gary has:
+
+On 6/4/24 12:51 PM, Jai Luthra wrote:
+> From: Vignesh Raghavendra <vigneshr@ti.com>
 > 
-> 	https://lore.kernel.org/rust-for-linux/20240529202817.3641974-1-gary@garyguo.net/
+> Unlike other channel counts in CAPx registers, BCDMA BCHAN CNT doesn't
+> include UHC and HC BC channels.
 
-Urgh, that still needs us to maintain that silly list of helpers :-/
+Oh, it does not?
+Back at the time of 017794739702 there were no devices with H/U BCHAN...
 
-Can't we pretty please have clang parse the actual header files into IR
-and munge that into rust? So that we don't get to manually duplicate
-everything+dog.
+> So include them explicitly to arrive at
+> total BC channel in the instance.
+> 
+> Fixes: 017794739702 ("dmaengine: ti: k3-udma: Initial support for K3 BCDMA")
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> Signed-off-by: Jai Luthra <j-luthra@ti.com>
+> ---
+>  drivers/dma/ti/k3-udma.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> index 6400d06588a2..710296dfd0ae 100644
+> --- a/drivers/dma/ti/k3-udma.c
+> +++ b/drivers/dma/ti/k3-udma.c
+> @@ -4473,6 +4473,7 @@ static int udma_get_mmrs(struct platform_device *pdev, struct udma_dev *ud)
+>  		break;
+>  	case DMA_TYPE_BCDMA:
+>  		ud->bchan_cnt = BCDMA_CAP2_BCHAN_CNT(cap2);
+> +		ud->bchan_cnt += BCDMA_CAP3_HBCHAN_CNT(cap3) + BCDMA_CAP3_UBCHAN_CNT(cap3);
+
+I would add them in a single operation. Easier for the eye:
+ud->bchan_cnt = BCDMA_CAP2_BCHAN_CNT(cap2) + BCDMA_CAP3_HBCHAN_CNT(cap3) +
+		BCDMA_CAP3_UBCHAN_CNT(cap3);
+
+>  		ud->tchan_cnt = BCDMA_CAP2_TCHAN_CNT(cap2);
+>  		ud->rchan_cnt = BCDMA_CAP2_RCHAN_CNT(cap2);
+>  		ud->rflow_cnt = ud->rchan_cnt;
+> 
+> ---
+> base-commit: d97496ca23a2d4ee80b7302849404859d9058bcd
+> change-id: 20240604-bcdma_chan_cnt-bbc6c0c95259
+> 
+> Best regards,
+
+-- 
+Péter
