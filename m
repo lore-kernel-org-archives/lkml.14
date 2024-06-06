@@ -1,146 +1,137 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97541196456;
-	Thu,  6 Jun 2024 13:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E44195FC6;
+	Thu,  6 Jun 2024 14:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717682357; cv=none; b=U7ND0sXSczdGmDEpbYqeUzMog4mp5u/ZawUPuGfzAX2QuHYEhUAfrZi6395wyRm51tGb25cr6SLr74U0aGC/xH79drrdi4CF4v7lc9QRgpH4ACIhJ9V6zJRbE1dAatkjlpzeJ858xaGk5bs9+JuJ7mKMA/xPT1AJCBkPhVbDD4g=
+	t=1717682523; cv=none; b=pPhRGc3+eF02CE1hMBmAU0Izw00W2BddFeB3x6we6zmSJbTt5hF2ofO0GTAl4p9+7FE5wwKV9UUDLKM0AvEwesYEjWX+AWXurmBHrapTiKD3Fk4/G42MCXQBDdw3rMIYdK9yZ+mPrmgCls+m2lLE9RgiFfo16GFzT0fLsAQjjPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717682357; c=relaxed/simple;
-	bh=DmOMiIjbrQUbLc+fS9w2SijXg8UZYWX9YmlObtBW1Bs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PgAB08Oc8Qh49FH4+3PlQ+4bn84IjKsGJzPHsHOlKNAWilx9oke7QRDwHG2aKC5cm9oKVPDNTs4m+xSRG4Y/O6sLY9NrZjI7flXOmKJ2pKdM60tiWdm//6kIkKYSZhGBGYfxDGNUgd2HQMjz0A9lLkCkfqMr+iXs8bkhgoowtjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=roeL9wHu; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1717682523; c=relaxed/simple;
+	bh=ivsf4NbZZPAamDEi3OCHaSjrBCmG4UqHfSgu3HZ5PWY=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=uMgY8E7GdivOGj22MEvTL/nH38wYVkxLH1M+xh/FsAKW1V/jSq/f0XvfP230ZcoXNCmW+fsyIE23lA7VjvhC+CZLd90BgXe/ym0Vkf5OvCCMuowfkRC9A8D9Edd5TK6rwB6Wvhy7smsr39HPqOVXeG41O84BZ2+LSAaI2Kb9Bh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uGSpgk2S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="roeL9wHu"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 456DjchQ004065;
-	Thu, 6 Jun 2024 13:58:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=pp1;
- bh=0XrutT6mLZuu53qQauJy0ICKhvEuE23LhIYHOVtselU=;
- b=roeL9wHuNHOVifN0/IKBQ6ANvmeqlnIgzqy82t7knSTk19pyE1YzRigmohXNMPRgriKS
- FUS5FyVKkaVRwY6AKhzBGr5guyvp9QSYHuIcESTmVqKbUz/qny6dvHntFSvhycbgsmee
- 1YUCwHcuFnYk7J2uW16gOL9eQdhz2Y9YuhEgQoVqZC807kW6KuAOrKIiS2FDYQFotAYx
- 6XP9nBFrBY5r+o8rULvyA+sUKmIip0Xy2Cknm8uPtu/HLQ9sUm7CaP6sn+2337OknopA
- ZGOg76HsEQYP3CHaOBVv4wevAOUfSH53XdnI3qYZZUg8+b2WTMFfrHvCbE5FPuGT4vWs Lw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yke5xr22r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 13:58:41 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 456DwfPg026289;
-	Thu, 6 Jun 2024 13:58:41 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yke5xr22m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 13:58:41 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 456Ae5Oe026509;
-	Thu, 6 Jun 2024 13:58:40 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yggp3acqy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 13:58:40 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 456Dwcpt9044526
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Jun 2024 13:58:40 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 92CB758058;
-	Thu,  6 Jun 2024 13:58:36 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 79A6558076;
-	Thu,  6 Jun 2024 13:58:32 +0000 (GMT)
-Received: from [9.109.245.191] (unknown [9.109.245.191])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  6 Jun 2024 13:58:32 +0000 (GMT)
-Message-ID: <d0938d2d-dcb9-43c4-b5a3-2fad9de161b8@linux.ibm.com>
-Date: Thu, 6 Jun 2024 19:28:30 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uGSpgk2S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55343C2BD10;
+	Thu,  6 Jun 2024 14:01:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717682522;
+	bh=ivsf4NbZZPAamDEi3OCHaSjrBCmG4UqHfSgu3HZ5PWY=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=uGSpgk2S9Q99QsCDrnFKgKraNdbOOhYSONYIIH2BHVK2ycaCv0j+dmU4CbWH9oBsl
+	 /J8x10c81VUUGgH+F+o5iFK8iJ1N3/hdDgSJpOL1eMQ64ggEw7IYNBeyUIg1QS0kuY
+	 Lym15z8f+QhlPxGLzLuxIEHUmDvZAvWyIa8AQ9O+MCJ4+iA9TEZTreiq6kGUHPKhy2
+	 l5LxMFSLbsqNE1sagCmLT/7GMCy/HoZtA3CTZiOAwK5tf6EVyW4/g5jr+XaV5B9ReZ
+	 7Bsrq9LThBfrwDEkz9kIRyRY1w8DCgbIRo9Vfe2lwE9W2LSIGgnws/KaPOes7FDA1J
+	 YXpduBI7BQwFA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: "David S . Miller" <davem@davemloft.net>,  Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
+ <pabeni@redhat.com>,  Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
+ <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Jeff Johnson
+ <jjohnson@kernel.org>,  linux-wireless@vger.kernel.org,
+  netdev@vger.kernel.org,  devicetree@vger.kernel.org,
+  ath11k@lists.infradead.org,  linux-kernel@vger.kernel.org,
+  ath12k@lists.infradead.org,  Bartosz Golaszewski
+ <bartosz.golaszewski@linaro.org>,  Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v9 1/2] dt-bindings: net: wireless: qcom,ath11k:
+ describe the ath11k on QCA6390
+References: <20240605122106.23818-1-brgl@bgdev.pl>
+	<20240605122106.23818-2-brgl@bgdev.pl> <87h6e6qjuh.fsf@kernel.org>
+	<CAMRc=MdiKxtnN+g92RUTXdOydaPV5M2u5iUdKyE2SNvDkdXAjg@mail.gmail.com>
+Date: Thu, 06 Jun 2024 17:01:57 +0300
+In-Reply-To: <CAMRc=MdiKxtnN+g92RUTXdOydaPV5M2u5iUdKyE2SNvDkdXAjg@mail.gmail.com>
+	(Bartosz Golaszewski's message of "Thu, 6 Jun 2024 15:35:47 +0200")
+Message-ID: <871q5aqiei.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftest: mm: Test if hugepage does not get leaked during
- __bio_release_pages()
-To: Pankaj Raghav <p.raghav@samsung.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        ritesh.list@gmail.com, rppt@kernel.org, shuah@kernel.org,
-        songmuchun@bytedance.com, tonyb@cybernetics.com, willy@infradead.org
-References: <20240604132801.23377-1-donettom@linux.ibm.com>
- <20240606131436.592793-1-p.raghav@samsung.com>
-Content-Language: en-US
-From: Donet Tom <donettom@linux.ibm.com>
-In-Reply-To: <20240606131436.592793-1-p.raghav@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Yb7zQ8oy9ZSTaBxNQ3IIcYO3I3G1AC5K
-X-Proofpoint-ORIG-GUID: Jt3fCppTgPHM1ILa5KzCxDNzf_Wwh0MN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-06_01,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=799
- impostorscore=0 phishscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1011 bulkscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406060101
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Bartosz Golaszewski <brgl@bgdev.pl> writes:
 
-On 6/6/24 18:44, Pankaj Raghav wrote:
->> +void run_dio_using_hugetlb(unsigned int start_off, unsigned int end_off)
->> +{
->> +	int fd;
->> +	char *buffer =  NULL;
->> +	char *orig_buffer = NULL;
->> +	size_t h_pagesize = 0;
->> +	size_t writesize;
->> +	int free_hpage_b = 0;
->> +	int free_hpage_a = 0;
->> +
->> +	writesize = end_off - start_off;
->> +
->> +	/* Get the default huge page size */
->> +	h_pagesize = default_huge_page_size();
->> +	if (!h_pagesize)
->> +		ksft_exit_fail_msg("Unable to determine huge page size\n");
->> +
->> +	/* Open the file to DIO */
->> +	fd = open("/tmp", O_TMPFILE | O_RDWR | O_DIRECT);
-> I encountered a build error as follows in NixOS:
+> On Thu, Jun 6, 2024 at 3:30=E2=80=AFPM Kalle Valo <kvalo@kernel.org> wrot=
+e:
 >
-> In file included from /nix/store/fwh4fxd747m0py3ib3s5abamia9nrf90-glibc-2.39-52-dev/include/fcntl.h:342,
->                   from hugetlb_dio.c:15:
-> In function ‘open’,
->      inlined from ‘run_dio_using_hugetlb’ at hugetlb_dio.c:41:7:
-> /nix/store/fwh4fxd747m0py3ib3s5abamia9nrf90-glibc-2.39-52-dev/include/bits/fcntl2.h:50:11: error: call to ‘__open_missing_mode’ declared with attribute error: open with O_CREAT or O_TMPFILE in second argument needs 3 arguments
->     50 |           __open_missing_mode ();
+>>
+>> Bartosz Golaszewski <brgl@bgdev.pl> writes:
+>>
+>> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>> >
+>> > Add a PCI compatible for the ATH11K module on QCA6390 and describe the
+>> > power inputs from the PMU that it consumes.
+>> >
+>> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>
+>> [...]
+>>
+>> > +allOf:
+>> > +  - if:
+>> > +      properties:
+>> > +        compatible:
+>> > +          contains:
+>> > +            const: pci17cb,1101
+>> > +    then:
+>> > +      required:
+>> > +        - vddrfacmn-supply
+>> > +        - vddaon-supply
+>> > +        - vddwlcx-supply
+>> > +        - vddwlmx-supply
+>> > +        - vddrfa0p8-supply
+>> > +        - vddrfa1p2-supply
+>> > +        - vddrfa1p7-supply
+>> > +        - vddpcie0p9-supply
+>> > +        - vddpcie1p8-supply
+>>
+>> Not sure if we discussed this before, but based on this I understand
+>> that there can't be an DT entry for device pci17cb,1101 without all the
+>> supply properties? But there are QCA6390 devices with PCI id 17cb:1101
+>> which do not need these supplies and already work. For example, my Dell
+>> XPS 13 x86 laptop is one. Or anyone who manually installs QCA6390 board
+>> to their PCI slot and some of them might want to use DT, for example
+>> setting qcom,ath11k-calibration-variant.
+>>
+>> This is not a blocker for me, just making sure that we are not breaking
+>> any existing setups.
+>>
 >
+> If they are already powered up without the need for the PCI pwrctl
+> driver to do it, then they will work alright. Bindings don't affect
+> functionality.
+
+Sure, I'm not worried about functionality. I'm worried that if I
+there's, for example, an ARM based setup which uses DT and wants to use
+a similar QCA6390 board that I have, and set
+qcom,ath11k-calibration-variant in DT. In other words, I'm worried if
+you are looking at this only for Snapdragon family of boards?
+
+Again, I don't see this as a blocker. I just want to understand how this
+should work for all types of devices there are out there.
+
+> But if you have a QCA6390 then you have its PMU too and the bindings
+> model the real-world hardware.
 >
-> I saw a commit that fixed similar issues with open syscall before:
-> 8b65ef5ad486 ("selftests/mm: Fix build with _FORTIFY_SOURCE")
->
-> So something like this should fix the issue?
->
-> -       fd = open("/tmp", O_TMPFILE | O_RDWR | O_DIRECT);
-> +       fd = open("/tmp", O_TMPFILE | O_RDWR | O_DIRECT, 0664);
+> IOW: your laptop should be alright but the supplies are really there
+> which warrants adding them to the bindings.
 
-Thank you Pankaj.
+Sorry, not following here. Can you clarify your comment "the supplies
+are really there"? You mean inside the PCI board? But that's not visible
+to the kernel in anyway, the PCI board just works after I plug it in.
+It's like a regular PCI device. So I don't understand why that should be
+visible in DT, but I can very well be missing something.
 
-I am able to reproduce this error with "-D_FORTIFY_SOURCE=2 -O2".  I will post v3 with this fix.
+--=20
+https://patchwork.kernel.org/project/linux-wireless/list/
 
--donet
-
-
->
->> +	if (fd < 0)
->> +		ksft_exit_fail_msg("Error opening file");
->> +
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
