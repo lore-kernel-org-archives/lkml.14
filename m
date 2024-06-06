@@ -1,60 +1,56 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EDC195B33;
-	Thu,  6 Jun 2024 13:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00A5194C99;
+	Thu,  6 Jun 2024 13:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679186; cv=none; b=PQLOU1e0+vysJxvhNMi3M3WlTUT69BR178bvejihGToQZCkNH6jaK4PqDA9hbuV4Gj1mcvXOqDfeTWYd2mkndS07AImzP+7LZ9SoBBkvFOItRRtWMWIP+CySsUl71h/KrkOruGyFvwASNbWMLZd6A7yROns/nXwnMau4s1BqdUY=
+	t=1717679226; cv=none; b=tFBeOlk9aC72QqpfNU5waqU5keQnp5gNFTD+gyATHSAOxnB7YnVY6nvhy5was9tnW1Fa9JLVXq67E03vFYKoezNf51OCWUSX+hTfIHYdhs2TcsqSUXguLwd5v0paTICVUyEuBaZKVijSe1o2a+97Du2q4aD2bgvMg4RSxZP6/DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679186; c=relaxed/simple;
-	bh=0Kx8hqLQGitntoFzXerDXeNFIOulpKRW07HQjXgMiFk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uFTRTJSSg3hcSUn7KUH6k6kvueTjMxdZP5NkWt2WVQjRhpTYX/F9o/b2FyjBiVGFUbFZXLeehwxM/iYvgGnq/HibDLvz3m1IBvq3JhL+E5RZtdL+6VqOFEQ/q819jIz4swwnXuL+kWNTerYffrdjzfp9IfbwG46EGZrYZUCAaWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=FH0FLrN3; arc=none smtp.client-ip=67.231.149.25
+	s=arc-20240116; t=1717679226; c=relaxed/simple;
+	bh=ri0OOOZWNRWsh9jBgHeTZuU2Qt1Eq8KklkhcUpeO8/E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E2Z8GZUkx3VwqS8XEGFlISUGnVmbmhCoV5vEOV2cwnFj7RjSgmastBHFdfciyk95vtYoiM33MMK2h7OmVNDErU62q8rZFTe7Ppy5HgSPF71/SvOq5V/5N6/44DcFEvIVfQWIw2Oza6cXC+7lNZWARnOACI85sBE+HY5H74bNemk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=ni+GTbJJ; arc=none smtp.client-ip=67.231.152.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="FH0FLrN3"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4565uenA010646;
-	Thu, 6 Jun 2024 08:04:06 -0500
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ni+GTbJJ"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4564ueAZ021615;
+	Thu, 6 Jun 2024 08:03:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=PAh85hwQZsafzP/3SaO3leBJB50ZLINVkNpAHcoAWn0=; b=
-	FH0FLrN3m0ebJQajGy5R35N9fc0ADA4OorqFqdXsCWpWfOrqoI/XyUB4oObjvcTn
-	z1BZ1onkKznYp4zxkW1ArUBRLP4BU6UsLWiiBeWVBAw+8uNHEVEPD5zcOk33HzJY
-	FwPzHKT/kij1//NZ/FB36tb3QhE6Mu5eGMMkEnnzZDMEP0bicpXit+xdCcDUb1eH
-	jWLGG/WGTaVC/NUefJX2L4tRMuvwOBWWgKkZQKlQ774iWRVUF8hm8kPmdMYze4JX
-	GNc3ed2buvsmZyA3rsY2sfatiI67tk5CsRS3IKZqo8niwRHBH21rSCLE5r8gsSDJ
-	9ginf71nzCv+ex8JD9pQ/Q==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3yg11xw66m-2
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PODMain02222019; bh=ITJde61E7SQb6Vol
+	mPyc4UokVhSx5f60rcqehJhVu64=; b=ni+GTbJJ3hwFOk/GR43llLiiLeXLD0N9
+	66x3+YSV1ou4v+gAuO4i89htcg+Ja8tXLEm2l/8d1ytiNabnWLtZ7ti16PHShSs0
+	QJjUGZ3E3CTMtQ4abHvZfOAnfaHFZS2sZEf38dhZPcHiRF5pm3LUtDRT3qvVwz/b
+	z5DpeA85zxduJZkYXcoDdUuvdlajCLqc8W68W4TmOMpPY3uSaO3J9OMP3WYG1ady
+	MXaZHw5JkdNlEfgOESKQs2HVhHYS7VUg2057avmSiAD03EzOvGNOGS/vBrq6ccD+
+	szR4PXRWVXdO0kb5syPbltXfa+F3p2zDqwE1XtH1/UbXx9pblSnTMw==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3yg02hn5xp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 08:04:06 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 06 Jun 2024 08:03:58 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Jun 2024
  14:03:57 +0100
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
  15.2.1544.9 via Frontend Transport; Thu, 6 Jun 2024 14:03:57 +0100
 Received: from sbinding-cirrus-dsktp2.ad.cirrus.com (unknown [198.61.65.44])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 2F844820249;
-	Thu,  6 Jun 2024 13:03:57 +0000 (UTC)
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id B6ACF820249;
+	Thu,  6 Jun 2024 13:03:56 +0000 (UTC)
 From: Stefan Binding <sbinding@opensource.cirrus.com>
 To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
 CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
         "Stefan
  Binding" <sbinding@opensource.cirrus.com>
-Subject: [PATCH v1 2/4] ALSA: hda: cs35l41: Support Lenovo Thinkbook 13x Gen 4
-Date: Thu, 6 Jun 2024 14:03:49 +0100
-Message-ID: <20240606130351.333495-3-sbinding@opensource.cirrus.com>
+Subject: [PATCH v1 0/4] Add support for Lenovo Thinkbooks
+Date: Thu, 6 Jun 2024 14:03:47 +0100
+Message-ID: <20240606130351.333495-1-sbinding@opensource.cirrus.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240606130351.333495-1-sbinding@opensource.cirrus.com>
-References: <20240606130351.333495-1-sbinding@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,40 +59,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: qDjOc460vRMTcMGS1p0QVrb9FTBBXQgL
-X-Proofpoint-ORIG-GUID: qDjOc460vRMTcMGS1p0QVrb9FTBBXQgL
+X-Proofpoint-GUID: N30JcssQ8WSJj6oXqXQV0dPfca5Q4bqG
+X-Proofpoint-ORIG-GUID: N30JcssQ8WSJj6oXqXQV0dPfca5Q4bqG
 X-Proofpoint-Spam-Reason: safe
 
-This laptop does not contain _DSD so needs to be supported using the
-configuration table.
+These laptops do not contain _DSD required to support CS35L41 HDA.
+To workaround this, add support for these laptops into the configuration
+table in cs35l41_hda_property.c.
+Also add the required entries into patch_realtek for this SSID.
 
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
----
- sound/pci/hda/cs35l41_hda_property.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Stefan Binding (4):
+  ALSA: hda: cs35l41: Support Lenovo Thinkbook 16P Gen 5
+  ALSA: hda: cs35l41: Support Lenovo Thinkbook 13x Gen 4
+  ALSA: hda/realtek: Support Lenovo Thinkbook 16P Gen 5
+  ALSA: hda/realtek: Support Lenovo Thinkbook 13x Gen 4
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
-index 046a94250683..51998d1c72ff 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -128,6 +128,8 @@ static const struct cs35l41_config cs35l41_config_table[] = {
- 	{ "17AA38B5", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
- 	{ "17AA38B6", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
- 	{ "17AA38B7", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
-+	{ "17AA38C7", 4, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, CS35L41_LEFT, CS35L41_RIGHT }, 0, 2, -1, 1000, 4500, 24 },
-+	{ "17AA38C8", 4, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, CS35L41_LEFT, CS35L41_RIGHT }, 0, 2, -1, 1000, 4500, 24 },
- 	{ "17AA38F9", 2, EXTERNAL, { CS35L41_RIGHT, CS35L41_LEFT, 0, 0 }, 0, 2, -1, 0, 0, 0 },
- 	{ "17AA38FA", 2, EXTERNAL, { CS35L41_RIGHT, CS35L41_LEFT, 0, 0 }, 0, 2, -1, 0, 0, 0 },
- 	{}
-@@ -531,6 +533,8 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
- 	{ "CSC3551", "17AA38B5", generic_dsd_config },
- 	{ "CSC3551", "17AA38B6", generic_dsd_config },
- 	{ "CSC3551", "17AA38B7", generic_dsd_config },
-+	{ "CSC3551", "17AA38C7", generic_dsd_config },
-+	{ "CSC3551", "17AA38C8", generic_dsd_config },
- 	{ "CSC3551", "17AA38F9", generic_dsd_config },
- 	{ "CSC3551", "17AA38FA", generic_dsd_config },
- 	{}
+ sound/pci/hda/cs35l41_hda_property.c | 8 ++++++++
+ sound/pci/hda/patch_realtek.c        | 4 ++++
+ 2 files changed, 12 insertions(+)
+
 -- 
 2.34.1
 
