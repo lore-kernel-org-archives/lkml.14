@@ -1,85 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2F219E7DC
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5031974FE;
+	Thu,  6 Jun 2024 14:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684789; cv=none; b=QuL/fGdjyIEJded/EeDdek2L/dVCHGBdYKeqiIopMGvgX+cNmcl/ork9xeVAffXFECmO3Sqwmw3jt76+CSni7SWjNVPGHCjF0isqXZgGDcIy1PP4NKIX9CBxq3ROxPsCeYggMDTmnWKUXAFIfEL4bv51GKUgJwV4/NGSiHV54Qs=
+	t=1717684817; cv=none; b=U6IpN8PNJkb9/LxnzfwtU68ZXGCuYDzJd21g3N9wDwzq7sPEvEweJumY1fN6CZkNPH/iXqqqxzL73rc0SRlYvZ49VDnBjv8tw6J+PpGNCjv5NRUSnBXaVGt+163Qxcrmi1N5Fj678U0WwSzC8gVzDJ/nLVRHmQFuEl41eKiYWyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684789; c=relaxed/simple;
-	bh=h7zjIQkZZTzWaJBKoOJsIZ+rDuw+R7H+L3cDkG6DR2c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E/eWSHAPnlFND555+XBla6wA5890ejK0Q1ZaysgPMcUv+sgXq2uWMnGlmRtTO8KHTNC1GwSRgRWfrSZZgxB/i8fbNeX2YZXc/jPeKbxEregYmQ50Ah18OMDmHWY/K+s+/y33lt2dSNct8maO5KhphXoReqG2sEwl8Cpg/uH9Wf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGVaVkyf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717684817; c=relaxed/simple;
+	bh=ZGB3juOxwVTV9EOeSwh34a8EfYqp00QVXUiUxC+Ea5I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nuBVIeoNEDaTUA/chx4ECJs+Bk/x9BTK/S+X3KDDwpxJM1Lhx7mdvwJufsO0bfl2l3zqwEnZagIdq1dwoFbB2NXO+tlK+0PxxNLVCAI7pii80zxOTAWh/vcn9i9S7thjSTAKKDH7vOFcn9gKnHcN98z7s6ZsLZGfbQ5HR4dYowI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AG1g5oic; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGVaVkyf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79206C2BD10;
-	Thu,  6 Jun 2024 14:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717684789;
-	bh=h7zjIQkZZTzWaJBKoOJsIZ+rDuw+R7H+L3cDkG6DR2c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BGVaVkyf5/nh+sUMeJbg1le2pWIskJPBQor0Ur9hVRT7r7RNMYSoamsKBOUBt3edf
-	 XGhXpu0TVRBqZgw8Pf+DsB/szpaZoLRcjOPl1JyOApwkO7vp0lWcuvL+msNfYHEkBJ
-	 YsjTNhrSIMuhUYYiZctJT/oEKcxR1/KKblBZHMB2k3XFbXbKb+Cd7s/gMOFHQ/yACT
-	 +mfoU5nqBt1mom+0nDn27nOdEb53xdkvs8/+RR/kRq9o36GHORnQsVpYM1D9KMhBOs
-	 DVkIYuPlON5MNW5coXBxRpYs9c0NSgwDNZX/a6NLCpdR/QbY8EF/cTK1XQNJSjo3FP
-	 8LkDV2NrezsTQ==
-Date: Thu, 6 Jun 2024 17:37:49 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Borislav Petkov <bp@kernel.org>, Jan Beulich <jbeulich@suse.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Narasimhan V <Narasimhan.V@amd.com>
-Subject: Re: [PATCH] x86/mm/numa: Use NUMA_NO_NODE when calling
- memblock_set_node()
-Message-ID: <ZmHJvY5h887hDN87@kernel.org>
-References: <20240603141005.23261-1-bp@kernel.org>
- <171750701353.925406.16431237983148253122.b4-ty@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AG1g5oic"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45699e8M016166;
+	Thu, 6 Jun 2024 14:40:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	qcppdkim1; bh=VCPJV/VzG/M+IhNnUHL+ziLX+EjaBPDAUVTfhaUS/lA=; b=AG
+	1g5oicFc4NZ6QEWNF6Xl2Nf0HGSU3em582cnahrOLMnHwu4LZqqVNcmx23UnngYX
+	KGi568hk/+HzkZ1CuqRFYOGKGGy3AbNeUJTgnc0GrJafVBUgOf64LOjTc1GCwSkd
+	5lvtnADKP10LgH3JXs4NRKUx1pgE1wBGbJEgpkyhXvAiItiP4keHQNP9gOFHvkuD
+	hQhsmMB3EsKG+2l3yqwy94BHT+J2oTuAKMcofBu6U7VWvEhHAaIAhQTnE3F0Y8rT
+	UAFh1FEPQ8retAnv8tZYjp1Nx0eByLlGneYw4k7TP6TqygHw3PZUY8oV7Ndmc8C6
+	PP5+whaamTQ1C+ko44cA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yka7p8rjv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Jun 2024 14:40:12 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 456EeACl009445
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Jun 2024 14:40:10 GMT
+Received: from hyd-e160-a01-3-01.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 6 Jun 2024 07:40:06 -0700
+From: Naina Mehta <quic_nainmeht@quicinc.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <konrad.dybcio@linaro.org>, <manivannan.sadhasivam@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_nainmeht@quicinc.com>
+Subject: [PATCH 0/5] Add MPSS remoteproc support for SDX75
+Date: Thu, 6 Jun 2024 20:08:53 +0530
+Message-ID: <20240606143858.4026-1-quic_nainmeht@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171750701353.925406.16431237983148253122.b4-ty@kernel.org>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 9PpGwCdiY-hS7m9_aHwm7xl7e4sVnC4q
+X-Proofpoint-ORIG-GUID: 9PpGwCdiY-hS7m9_aHwm7xl7e4sVnC4q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-06_01,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ malwarescore=0 adultscore=0 spamscore=0 bulkscore=0 clxscore=1011
+ phishscore=0 mlxlogscore=766 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406060106
 
-On Tue, Jun 04, 2024 at 04:16:57PM +0300, Mike Rapoport wrote:
-> On Mon, 03 Jun 2024 16:10:05 +0200, Borislav Petkov wrote:
-> > memblock_set_node() warns about using MAX_NUMNODES, see
-> > 
-> >   e0eec24e2e19 ("memblock: make memblock_set_node() also warn about use of MAX_NUMNODES")
-> > 
-> > for details.
-> > 
-> > 
-> > [...]
-> 
-> Applied to fixes branch of memblock.git tree, thanks!
-> 
-> [1/1] x86/mm/numa: Use NUMA_NO_NODE when calling memblock_set_node()
->       commit: c55f3cc2d9f241d6e45336fd48dafa755c012297
-> 
-> tree: https://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock
-> branch: fixes
+Add modem support to SDX75 using the PAS remoteproc driver.
+Also, add qlink_logging memory region and split MPSS DSM
+region into 2 separate regions.
 
-There was a similar, but better fix from Jan Beulich:
+These patches were co-authored by Rohit Agarwal while at
+Qualcomm.
 
-https://lore.kernel.org/lkml/abadb736-a239-49e4-ab42-ace7acdd4278@suse.com/
+Naina Mehta (5):
+  dt-bindings: remoteproc: qcom,sm8550-pas: document the SDX75 PAS
+  remoteproc: qcom: pas: Add SDX75 remoteproc support
+  arm64: dts: qcom: sdx75: add missing qlink_logging reserved memory for
+    mpss
+  arm64: dts: qcom: sdx75: Add remoteproc node
+  arm64: dts: qcom: sdx75-idp: enable MPSS remoteproc node
 
-that also updated numa_clear_kernel_node_hotplug().
-
-I'm going to replace this patch with his and use Boris' changelog as more
-appropriate.
- 
-> --
-> Sincerely yours,
-> Mike.
-> 
+ .../bindings/remoteproc/qcom,sm8550-pas.yaml  |  1 +
+ arch/arm64/boot/dts/qcom/sdx75-idp.dts        |  6 ++
+ arch/arm64/boot/dts/qcom/sdx75.dtsi           | 64 +++++++++++++++++--
+ drivers/remoteproc/qcom_q6v5_pas.c            |  1 +
+ 4 files changed, 68 insertions(+), 4 deletions(-)
 
 -- 
-Sincerely yours,
-Mike.
+2.17.1
+
