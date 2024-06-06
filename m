@@ -1,145 +1,147 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C245C196C75;
-	Thu,  6 Jun 2024 14:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62E9A196C75;
+	Thu,  6 Jun 2024 14:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684856; cv=none; b=VQ0h17a/FIVs71vRTVDe0msPdRvIPJL3zrtjsmYqu2xDxLyCxm3++gWu8jfEVeFuhnTKkUjkRFvmGAERE+s5zC35XxddMTo6L5zcQaRYhyfsgpnFuHc0oZy0wd1bpUua3dK9Rtt59MQTjo9OUFJmE5gfJjoP86w8alhghCZhI9c=
+	t=1717684868; cv=none; b=HTCj/Y7oYrGSC3J9OWXzDmZcS60JCWpnVgZR3ir0y4Vr+XZYSlwEJzwMClyi6iLm50ydAeK3J4hRG4SVx9aZeWFOi3vn8DpmduN49ibkNKd5oYInIlloxJJ04CNq2XThpdR8J5fo5Vb4+Hbprjka7JdYN8lF+bKH9kDANlSnjMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684856; c=relaxed/simple;
-	bh=uc7VVWG9aVC2KKTrjHYKS8R9toqfqD1KtSeHw7AAq7E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DAqkDII58NIQv2udWrdacR4vTO+vs2SIcLFsqPgE+3y5ig1UoO2eeKti+W70tKQLGhkepZGbqR40jw44BWx/6thfmJWPqD6cKiJbP5sORSYPhNNF779Q0k3D0dwaNs7X0cD/WwErQUL4eo5jVQQN9HlaNNbvoOLzKJTB8GWplbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jwSBurQK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jwSBurQK"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 456Ae2rR031662;
-	Thu, 6 Jun 2024 14:40:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=2pAfR8ZGYLwY1Br/yLLG39A4
-	rMvj4vC+b+3cwrWKo4E=; b=jwSBurQK9bDHdIuitzZL311zBsXhd6Oy1Ch43g8H
-	4GQnQ1+9nrJpJ5EopiF6yJZ1kXFnD+kCai6CcNnFI37u8iqycXv8acRXLBmYy9cq
-	cbpQrzsUwT1mSwEZ9xIGm5VhjBhEYy6KUrK5N7beaCwVS42jU3KSKFhxc96wKB3+
-	c/+rea5PLzwf/yqV0dFpNk+WXdSpU2uWQj5PFkjP+Wayza4hZ+9VsCZomaP9yJA6
-	IN8MmZF7oT6hCPKmo0G8wRJM77tmzzH4HMejLR1SzZjkfMSfuBLebt6tf4cwogD6
-	jVftHhSXpEjPXKCrEODU3UeFba1eXAm2MO22KhW8loRhHQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjk89by5m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 14:40:39 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 456Eecjd010156
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Jun 2024 14:40:38 GMT
-Received: from hyd-e160-a01-3-01.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 6 Jun 2024 07:40:34 -0700
-From: Naina Mehta <quic_nainmeht@quicinc.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <manivannan.sadhasivam@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_nainmeht@quicinc.com>
-Subject: [PATCH 4/5] arm64: dts: qcom: sdx75: Add remoteproc node
-Date: Thu, 6 Jun 2024 20:08:57 +0530
-Message-ID: <20240606143858.4026-5-quic_nainmeht@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240606143858.4026-1-quic_nainmeht@quicinc.com>
-References: <20240606143858.4026-1-quic_nainmeht@quicinc.com>
+	s=arc-20240116; t=1717684868; c=relaxed/simple;
+	bh=1OJvjP8YOx9mxAfDPtvPajDgJK/hJVrtOV26+t42uT8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B1HNWG9upkiKoMVjhpHxxbafyWeOtceZpLNzCSWGfQdDEfijqmRNCYfQQ+MvHAgSPHCCnsr6VGGidRwF+amw76begHMB6QmMaTLUkESH6iQ3B06mRDgpn4h8D80qwIp/QDAUphfUZyXgcPauMDCjbvHBwESi5HhLodJzUWah2Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 261122F4;
+	Thu,  6 Jun 2024 07:41:30 -0700 (PDT)
+Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.5])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 11FB93F64C;
+	Thu,  6 Jun 2024 07:41:03 -0700 (PDT)
+From: Ben Gainey <ben.gainey@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: james.clark@arm.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ben Gainey <ben.gainey@arm.com>
+Subject: [PATCH v7 0/4] perf: Support PERF_SAMPLE_READ with inherit
+Date: Thu,  6 Jun 2024 15:40:55 +0100
+Message-ID: <20240606144059.365633-1-ben.gainey@arm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: T1fcBqAY2GU6zMIZJ8JSjYTDtlan2fWu
-X-Proofpoint-ORIG-GUID: T1fcBqAY2GU6zMIZJ8JSjYTDtlan2fWu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-06_01,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 impostorscore=0 phishscore=0 mlxscore=0 bulkscore=0
- adultscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
- suspectscore=0 mlxlogscore=776 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2406060106
+Content-Transfer-Encoding: 8bit
 
-Add MPSS remoteproc node for SDX75 SoC.
+This change allows events to use PERF_SAMPLE READ with inherit so long
+as PERF_SAMPLE_TID is also set.
 
-Signed-off-by: Naina Mehta <quic_nainmeht@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sdx75.dtsi | 47 +++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+Currently it is not possible to use PERF_SAMPLE_READ with inherit. This
+restriction assumes the user is interested in collecting aggregate
+statistics as per `perf stat`. It prevents a user from collecting
+per-thread samples using counter groups from a multi-threaded or
+multi-process application, as with `perf record -e '{....}:S'`. Instead
+users must use system-wide mode, or forgo the ability to sample counter
+groups. System-wide mode is often problematic as it requires specific
+permissions (no CAP_PERFMON / root access), or may lead to capture of
+significant amounts of extra data from other processes running on the
+system.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdx75.dtsi b/arch/arm64/boot/dts/qcom/sdx75.dtsi
-index 9349b1c4e196..25d3f110abe1 100644
---- a/arch/arm64/boot/dts/qcom/sdx75.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdx75.dtsi
-@@ -890,6 +890,53 @@
- 			reg = <0x0 0x01fc0000 0x0 0x30000>;
- 		};
- 
-+		remoteproc_mpss: remoteproc@4080000 {
-+			compatible = "qcom,sdx75-mpss-pas";
-+			reg = <0 0x04080000 0 0x4040>;
-+
-+			interrupts-extended = <&intc GIC_SPI 250 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_modem_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_modem_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_modem_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_modem_in 3 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_modem_in 7 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog",
-+					  "fatal",
-+					  "ready",
-+					  "handover",
-+					  "stop-ack",
-+					  "shutdown-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
-+
-+			power-domains = <&rpmhpd RPMHPD_CX>,
-+					<&rpmhpd RPMHPD_MSS>;
-+			power-domain-names = "cx",
-+					     "mss";
-+
-+			memory-region = <&mpssadsp_mem>, <&q6_mpss_dtb_mem>,
-+					<&mpss_dsm_mem>, <&mpss_dsm_mem_2>,
-+					<&qlink_logging_mem>;
-+
-+			qcom,qmp = <&aoss_qmp>;
-+
-+			qcom,smem-states = <&smp2p_modem_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+
-+			glink-edge {
-+				interrupts-extended = <&ipcc IPCC_CLIENT_MPSS
-+							     IPCC_MPROC_SIGNAL_PING
-+							     IRQ_TYPE_EDGE_RISING>;
-+				mboxes = <&ipcc IPCC_CLIENT_MPSS
-+						IPCC_MPROC_SIGNAL_PING>;
-+				label = "mpss";
-+				qcom,remote-pid = <1>;
-+			};
-+		};
-+
- 		sdhc: mmc@8804000 {
- 			compatible = "qcom,sdx75-sdhci", "qcom,sdhci-msm-v5";
- 			reg = <0x0 0x08804000 0x0 0x1000>;
+This patch changes `perf_event_alloc` relaxing the restriction against
+combining `inherit` with `PERF_SAMPLE_READ` so that the combination
+will be allowed so long as `PERF_SAMPLE_TID` is enabled. It modifies
+sampling so that only the count associated with the active thread is
+recorded into the buffer. It modifies the context switch handling so
+that perf contexts are always switched out if they have this kind of
+event so that the correct per-thread state is maintained. Finally, the
+tools are updated to allow perf record to specify this combination and
+to correctly decode the sample data.
+
+In this configuration stream ids (such as may appear in the read_format
+field of a PERF_RECORD_SAMPLE) are no longer globally unique, rather
+the pair of (stream id, tid) uniquely identify each event. Tools that
+rely on this, for example to calculate a delta between samples, would
+need updating to take this into account. Previously valid event
+configurations (system-wide, no-inherit and so on) where each stream id
+is the identifier are unaffected.
+
+
+
+Changes since v6:
+ - Rebase on v6.10-rc2
+ - Make additional "perf test" tests succeed / skip based on kernel
+   version as per feedback from Namhyung.
+
+Changes since v5:
+ - Rebase on v6.9
+ - Cleanup feedback from Namhyung Kim
+
+Changes since v4:
+ - Rebase on v6.9-rc1
+ - Removed the dependency on inherit_stat that was previously assumed
+   necessary as per feedback from Namhyung Kim.
+ - Fixed an incorrect use of zfree instead of free in the tools leading
+   to an abort on tool shutdown.
+ - Additional test coverage improvements added to perf test.
+ - Cleaned up the remaining bit of irrelevant change missed between v3
+   and v4.
+
+Changes since v3:
+ - Cleaned up perf test data changes incorrectly included into this
+   series from elsewhere.
+
+Changes since v2:
+ - Rebase on v6.8
+ - Respond to James Clarke's feedback; fixup some typos and move some
+   repeated checks into a helper macro.
+ - Cleaned up checkpatch lints.
+ - Updated perf test; fixed evsel handling so that existing tests pass
+   and added new tests to cover the new behaviour.
+
+Changes since v1:
+ - Rebase on v6.8-rc1
+ - Fixed value written into sample after child exists.
+ - Modified handling of switch-out so that context with these events
+   take the slow path, so that the per-event/per-thread PMU state is
+   correctly switched.
+ - Modified perf tools to support this mode of operation.
+
+Ben Gainey (4):
+  perf: Support PERF_SAMPLE_READ with inherit
+  tools/perf: Track where perf_sample_ids need per-thread periods
+  tools/perf: Correctly calculate sample period for inherited
+    SAMPLE_READ values
+  tools/perf: Allow inherit + PERF_SAMPLE_READ when opening events
+
+ include/linux/perf_event.h                    |  1 +
+ kernel/events/core.c                          | 78 ++++++++++++++-----
+ tools/lib/perf/evlist.c                       |  1 +
+ tools/lib/perf/evsel.c                        | 48 ++++++++++++
+ tools/lib/perf/include/internal/evsel.h       | 54 ++++++++++++-
+ tools/perf/tests/attr/README                  |  2 +
+ .../tests/attr/test-record-group-sampling     |  3 +-
+ .../tests/attr/test-record-group-sampling1    | 51 ++++++++++++
+ .../tests/attr/test-record-group-sampling2    | 61 +++++++++++++++
+ tools/perf/tests/attr/test-record-group2      |  1 +
+ ...{test-record-group2 => test-record-group3} | 10 ++-
+ tools/perf/util/evsel.c                       | 19 ++++-
+ tools/perf/util/evsel.h                       |  1 +
+ tools/perf/util/session.c                     | 11 ++-
+ 14 files changed, 308 insertions(+), 33 deletions(-)
+ create mode 100644 tools/perf/tests/attr/test-record-group-sampling1
+ create mode 100644 tools/perf/tests/attr/test-record-group-sampling2
+ copy tools/perf/tests/attr/{test-record-group2 => test-record-group3} (81%)
+
 -- 
-2.17.1
+2.45.2
 
