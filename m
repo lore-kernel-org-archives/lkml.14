@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18701197A90;
-	Thu,  6 Jun 2024 16:07:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0DC197A98;
+	Thu,  6 Jun 2024 16:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717690062; cv=none; b=XAlWDNHyZCu9gB7MH6hqwTrNlG6jFnApi2++e2d27vg8QaHuXNmfICqqd2ziWAnAycffPTPPBabHG/LjGkFfg7M7deSopL+VoWxOCgM8iykoGhx8Bd1KWHIkStP+h1Y5vyHxIa5xuR+iogWr9X8KaEkSmTk8sqI3dzNv5UaC6/4=
+	t=1717690062; cv=none; b=UQM1iPve54XuYS9BXu+G6bnBdxxVLvforzXWhqHLtiLsqq2O2Zn9GKZ7Fu3Z+Usr0FUu+NYjkfcXJqLvc+LqTf4SamxcpRsJPz2nzO+mTnbbvPgmHLyHPhqyLd8KS0rqb8l/TIpJPOoni8LbHLvkt5XiYyLRF+imLJywIcvNtoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717690062; c=relaxed/simple;
-	bh=6kCCkX7oEiTVbrjZ0mC374x6Q9o8/coYWFgv4Qj3ums=;
+	bh=I8QhRMMTY7Sn7kVFggQi6xZH1k/ZS+7ezVgehAwwnKs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R9fnkyaAVlJ9arU0RLrU5RYSQRpLjGpnBmZQXr/6M7zn2Vijd8BCc3WWjzD2oUdLrUlkzrrH6KafOuRgrmpklfmtfbMHRwxhslCB1GUY8EHlgKqrcSRiIFaKIAMtfzkZb9nSojDrbEYO4j+5z39kIq3DNj6P7VVqgxcaBieLeYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1KBwhLI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=i3TwdzvPdPA+gTEdy8qDsiFJhnxITOJpdLT0kKjK0iA6M6tz5PFs4nz4Ct4h51HJinlcFW/9XfBfU7OUb8ml3D6hOmjCxQyO+jahU7eCNInwRgl4WW/VRvX1IN1nZuZx6Mw8nNHO8GWSmAmEaDMDDciC0Vhy8+b995oMqXfgJ6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8qVtAqW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1KBwhLI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A3816C4AF08;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8qVtAqW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D6DACC4AF11;
 	Thu,  6 Jun 2024 16:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717690061;
-	bh=6kCCkX7oEiTVbrjZ0mC374x6Q9o8/coYWFgv4Qj3ums=;
+	bh=I8QhRMMTY7Sn7kVFggQi6xZH1k/ZS+7ezVgehAwwnKs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=p1KBwhLIWHJbXHGifR5r6w7StwOOh2zXIXG32cqZJPBQ0f7oYj83x93R5Bt/pZaSB
-	 heCLMz4XE4wh9MR1os9Ccw91r1ihCPO2U1EqhEAQUQTFg6h2e/0ptc5NfdGwx4AMjm
-	 ukuwWdRpbRjtsKIPydgtRbv2DZKdsX+4sT/NuN2RRIOF3/PLI2z3raPLjP2O8T5MVW
-	 F6zOWBdmyX+xX0LwZmWWPI5B4wdfP7VIMYKJXfnlKy3gF4ITosLLR/L3kzkMieEc5o
-	 vRKyPghEkiz3gjVlUjZFRP/45ivVdiz5H01HDXR7NVlfeO58iR8iNNqrTbce908E3s
-	 ZBT0fA5TyULcA==
+	b=q8qVtAqWT7ozq2vn1EDvu3ITuH1Pa9Eo9GKAw7AmZ/un3g74AIoNpm15ZFyicve4d
+	 yc5gSWvYrLzRnkev81G2JWhIaO6jelRNerKr8Pmjdsfn1VdudiKfIo2i7WojvoHPbO
+	 5QjdjDFG4StQn65glRVo/0kbuQi5SftTLSXB28uCco/Wt4E+CGZztz77HnxTk6cURC
+	 gNX4ICwEKLqQ0TS6oISsGue/FcuXpCCMUYdmzgJVs41u1dsfbyCFEBBjzaAx32lVw/
+	 dgXvgf9c85JbpQpHaFzeJBw/gpegbw2ogBT1z+EsnwGJYqwajIDJjBzLlwwN3qy/B+
+	 UNnqbFkxEx6Ew==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE12C27C55;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC1CCC27C55;
 	Thu,  6 Jun 2024 16:07:41 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Thu, 06 Jun 2024 19:07:40 +0300
-Subject: [PATCH v6 1/9] dt-bindings: iio: adc: Add common-mode-channel
- property
+Date: Thu, 06 Jun 2024 19:07:43 +0300
+Subject: [PATCH v6 4/9] iio: adc: ad7173: refactor channel configuration
+ parsing
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240606-ad4111-v6-1-573981fb3e2e@analog.com>
+Message-Id: <20240606-ad4111-v6-4-573981fb3e2e@analog.com>
 References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
 In-Reply-To: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
 To: Ceclan Dumitru <dumitru.ceclan@analog.com>
@@ -52,13 +52,14 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, 
  linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>, 
- Conor Dooley <conor.dooley@microchip.com>
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Nuno Sa <nuno.sa@analog.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717690059; l=1665;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717690059; l=2390;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=7+gdjeLzhs0nsD3z5zCT8lTNIXL7WwI7n9Ywy4A7eJY=;
- b=oZyApd6X1HRxsMW2ljvKhFCgcD7m1xakV5QkuOdiYuZYfC09kzX47w5iLBItPUFBMYChHkRox
- DbE8aTtYIuVAfAA+YtcLuQcJ0RTBZqyFpfdZESWZ1cyAHLTB26Ar9yK
+ bh=Rvmh4+bkvyAlbEsr4U+b9e6sWYI3MMB6i+yP4e+zyrY=;
+ b=UKqyO0zKDzJZPGBsf0zu4eR1hFGaUeXS4kJq9dqnsbUKaCUOzcNQIeAExhCBUri1ZdS5GXnmx
+ 6Hymx7QjILjAOUAdogTi0nzpZN0sboMB/YfnSj8Xn9j8mJr949LWw0I
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -68,42 +69,72 @@ Reply-To: dumitru.ceclan@analog.com
 
 From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-There are ADCs that are differential but support to measure single-ended
-signals on the same channels by connecting a constant voltage to the
-negative input pin.
+Move configurations regarding number of channels from
+*_fw_parse_device_config to *_fw_parse_channel_config.
 
-This property allows to properly define a single-ended channel that
-requires two inputs to be specified. Software can use the presence of
-this property to mark the channel as not differential.
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Link: https://lore.kernel.org/all/20240303162148.3ad91aa2@jic23-huawei/
+Reviewed-by: David Lechner <dlechner@baylibre.com>
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
 ---
- Documentation/devicetree/bindings/iio/adc/adc.yaml | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/iio/adc/ad7173.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adc.yaml b/Documentation/devicetree/bindings/iio/adc/adc.yaml
-index 0a77592f7388..8e7835cf36fd 100644
---- a/Documentation/devicetree/bindings/iio/adc/adc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adc.yaml
-@@ -46,6 +46,17 @@ properties:
-       differential channels). If this and diff-channels are not present reg
-       shall be used instead.
+diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+index f3088e8b4b8b..8631f218b69e 100644
+--- a/drivers/iio/adc/ad7173.c
++++ b/drivers/iio/adc/ad7173.c
+@@ -913,7 +913,23 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
+ 	struct device *dev = indio_dev->dev.parent;
+ 	struct iio_chan_spec *chan_arr, *chan;
+ 	unsigned int ain[2], chan_index = 0;
+-	int ref_sel, ret;
++	int ref_sel, ret, num_channels;
++
++	num_channels = device_get_child_node_count(dev);
++
++	if (st->info->has_temp)
++		num_channels++;
++
++	if (num_channels == 0)
++		return dev_err_probe(dev, -ENODATA, "No channels specified\n");
++
++	if (num_channels > st->info->num_channels)
++		return dev_err_probe(dev, -EINVAL,
++			"Too many channels specified. Maximum is %d, not including temperature channel if supported.\n",
++			st->info->num_channels);
++
++	indio_dev->num_channels = num_channels;
++	st->num_channels = num_channels;
  
-+  common-mode-channel:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Some ADCs have differential input pins that can be used to measure
-+      single-ended or pseudo-differential inputs. This property can be used
-+      in addition to single-channel to signal software that this channel is
-+      not differential but still specify two inputs.
-+
-+      The input pair is specified by setting single-channel to the positive
-+      input pin and common-mode-channel to the negative pin.
-+
-   settling-time-us:
-     description:
-       Time between enabling the channel and first stable readings.
+ 	chan_arr = devm_kcalloc(dev, sizeof(*indio_dev->channels),
+ 				st->num_channels, GFP_KERNEL);
+@@ -1008,7 +1024,6 @@ static int ad7173_fw_parse_device_config(struct iio_dev *indio_dev)
+ {
+ 	struct ad7173_state *st = iio_priv(indio_dev);
+ 	struct device *dev = indio_dev->dev.parent;
+-	unsigned int num_channels;
+ 	int ret;
+ 
+ 	st->regulators[0].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF];
+@@ -1067,16 +1082,6 @@ static int ad7173_fw_parse_device_config(struct iio_dev *indio_dev)
+ 
+ 	ad7173_sigma_delta_info.irq_line = ret;
+ 
+-	num_channels = device_get_child_node_count(dev);
+-
+-	if (st->info->has_temp)
+-		num_channels++;
+-
+-	if (num_channels == 0)
+-		return dev_err_probe(dev, -ENODATA, "No channels specified\n");
+-	indio_dev->num_channels = num_channels;
+-	st->num_channels = num_channels;
+-
+ 	return ad7173_fw_parse_channel_config(indio_dev);
+ }
+ 
 
 -- 
 2.43.0
