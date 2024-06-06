@@ -1,83 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0180199B8;
-	Thu,  6 Jun 2024 02:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EE310A11;
+	Thu,  6 Jun 2024 02:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717641032; cv=none; b=snlMka764TD4eM5K9AedHWTxEC9WebfvryKQbUW1qOnCFl6KilB5CBYmHUQxX/78dXATDu1oohDL7m9ZDbNdXuvom5iX55ATfXcbN1jUmp9+O0huCyQ6SDkRSDxJ2v3gCUW5VHiy3Qo4HRZjRIsZ6zC9cy0jDzY6xxKaPdyDalI=
+	t=1717641041; cv=none; b=ZCEkEXvcssSkg9GhvQvyitUdoaiGW1rszpAxorSq8FwzCRAi+sav8aajh4u4+HIhUfRe3uulEd5bBPaFFbJC1e7Vp4V5+J6B/QkzpGBw9kNRnDC8VsekbUg2jmfhv08/cXVQjFMejq/mImoJggYdleFwDT1UWP7sZoJ0KEbzK6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717641032; c=relaxed/simple;
-	bh=3U+iDnACpZRpRUjZPACLMO+CtjRyATslJry5JmeZRAY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=famBVOrNU/YeUz3Tt1mdSsYaq6ZzMKN04vHKf8LPkil7PNpBXvCQwIdEKZVaKQbj11amBC0fzdUtBn6xRJ1Igvi06w9KufdpM5gaeWQYYSO3OeeWUrPWBVd9x/PRxbecRdR/ng+6wbaR3CYMYp7+6WBUWwxb1IToR4P5gHvNrmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAdemrmi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717641041; c=relaxed/simple;
+	bh=LxujDUCoAGn/HL0wc/hUDm7fFlS/MuAj1T0yM6SyW2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mlJ8cUp4kmGoqZE7FSv7KiRXidholaRBriNJRXOrhXAdm4Ov3mR6FtAlUPqXqrmDLsXCPCY+dE0sYhBhWs20jxMSX2lSkB0J0Bk2exiDQGrx6ULqHFBukMWVoYnkrw3qPQoTAaegWoILlf1GadBnuiXpFq3RA9g9qxIwaAH8ceo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=m9ckHSCv; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAdemrmi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 27EA8C4AF0F;
-	Thu,  6 Jun 2024 02:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717641032;
-	bh=3U+iDnACpZRpRUjZPACLMO+CtjRyATslJry5JmeZRAY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=mAdemrmibkCws598NOoG+9P9gC/N3ztL0ccyPBi4TZeRjA/juzK1boFTkHMaZDWF7
-	 LJLPb+UPWm2iFbFx5nZWXbcGuJwaBmtwd50lDmoOWbRsptWqAKbt1e1bAZoFPjbRk8
-	 0wA52q0cKTUnHWtXUEYDEnN8eiff84axgK6wloABwpKYYD2IS5pn1cflvcd7rNxb7q
-	 6RYkXQ/Yp2cuYrm2WpHx1vQ7tGeOOLeGkUxQNBIN5SxyzWps4qb4XrsJjp7Y26Q1A1
-	 Jz4E7ZQiwpSYJ7cpO8+cLGa9rVUkIAn5RoCjmP7I1Fz0pA3GPl8fZyy5vNGnupdfdL
-	 1c+jQ8KeYDC5g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0CA35D3E997;
-	Thu,  6 Jun 2024 02:30:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="m9ckHSCv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1717641035;
+	bh=uBzvogFrLUHIEOCidbSDNXXd9YZ5o0WVc5ZoHiJioMI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=m9ckHSCvgyaYM4qAhz45TPpo1WEKhsV8DylmSwFBK0Vt1b+1DS3aokoLfZVth9MRJ
+	 SymznbXV97ZmFvGjLuuxKWLA61A0Rb1UUhidjIXszi9bEzu2EtwWoX1xFhd56TE0a9
+	 ZCnB334P+KBEmSe0X371JpKjOQPvZSG8n093un6dAft4x6XuDA0oCqFI4LpZ8JQ6RG
+	 wHFpEFI0hBJgk/Stq+wHtuJkh3eeeKI6XPVoqD24Z/V0rFAu9XPRQU/h2Qbdh8+U44
+	 yElwBtsXmtR2c9pPioDs4q+ilH6RGIRdtlRhXhvDp676/9H0Y1RJBxGu5qBOjZppVP
+	 YqK/tFtjFsdGw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VvpGM2Y9Cz4wcl;
+	Thu,  6 Jun 2024 12:30:35 +1000 (AEST)
+Date: Thu, 6 Jun 2024 12:30:34 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Wei Yang
+ <richard.weiyang@gmail.com>
+Subject: linux-next: manual merge of the memblock tree with the mm tree
+Message-ID: <20240606123034.052151bc@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] selftests: hsr: Extend the hsr_redbox.sh test to use
- fixed MAC addresses
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171764103204.23267.6023664663218256417.git-patchwork-notify@kernel.org>
-Date: Thu, 06 Jun 2024 02:30:32 +0000
-References: <20240603093322.3150030-2-lukma@denx.de>
-In-Reply-To: <20240603093322.3150030-2-lukma@denx.de>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: kuba@kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
- edumazet@google.com, olteanv@gmail.com, davem@davemloft.net,
- o.rempel@pengutronix.de, Tristram.Ha@microchip.com, bigeasy@linutronix.de,
- r-gunasekaran@ti.com, horms@kernel.org, n.zhandarovich@fintech.ru,
- m-karicheri2@ti.com, Arvid.Brodin@xdin.com, dan.carpenter@linaro.org,
- ricardo@marliere.net, casper.casan@gmail.com, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, liuhangbin@gmail.com,
- tanggeliang@kylinos.cn, shuah@kernel.org
+Content-Type: multipart/signed; boundary="Sig_/cY2i+t1tYMpeDTJzaft4Ge8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello:
+--Sig_/cY2i+t1tYMpeDTJzaft4Ge8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Hi all,
 
-On Mon,  3 Jun 2024 11:33:22 +0200 you wrote:
-> Fixed MAC addresses help with debugging as last four bytes identify the
-> network namespace.
-> 
-> Moreover, it allows to mimic the real life setup with for example bridge
-> having the same MAC address on each port.
-> 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> 
-> [...]
+Today's linux-next merge of the memblock tree got a conflict in:
 
-Here is the summary with links:
-  - [net-next] selftests: hsr: Extend the hsr_redbox.sh test to use fixed MAC addresses
-    https://git.kernel.org/netdev/net-next/c/955edd872baf
+  mm/mm_init.c
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+between commits:
 
+  dcd8c5e5603d ("mm/mm_init.c: use deferred_init_mem_pfn_range_in_zone() to=
+ decide loop condition")
+  c6586af1f388 ("mm/mm_init.c: not always search next deferred_init_pfn fro=
+m very beginning")
 
+from the mm-unstable branch of the mm tree and commit:
+
+  731b11684819 ("mm/mm_init.c: use deferred_init_mem_pfn_range_in_zone() to=
+ decide loop condition")
+
+from the memblock tree.
+
+I fixed it up (I used the former version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/cY2i+t1tYMpeDTJzaft4Ge8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZhH0oACgkQAVBC80lX
+0GzCYQf/Vz77QCdiaGyyZDdcQsYlPXYDa3E/+UrceRxhiuy6FT7Kq+xqXbd56OBx
+pWK0iqbqQi7S3n3Sigyt7Ok0eEqVwDncHVe70+qX65SNX6wqRD0WUHUnx5d5pwRu
+SQ+0WeuRAR16pBvlMZUHDl7C71riZwPNKCob3Fm/8GU52mR/m+VvMj9m1hgNtkKu
+4dyd4wSx4EPhcWiDz6tRi13Na+CH2tBQ+vWk5aTXjIfXJJkwcbLp7q7nDe8Wdg3P
+9xDijejlublDnPN0VeiaZn2fLcRvRm6zaDZMGstSmZw/TjOqP1ZBwlGyH2pCWkPd
+CZwA+P0byiF8lDdCK/kMqpBWklv1Vw==
+=XZKB
+-----END PGP SIGNATURE-----
+
+--Sig_/cY2i+t1tYMpeDTJzaft4Ge8--
