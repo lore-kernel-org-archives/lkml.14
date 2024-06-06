@@ -1,160 +1,154 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D020C26AE7;
-	Thu,  6 Jun 2024 16:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CC51E87F;
+	Thu,  6 Jun 2024 16:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717692314; cv=none; b=nhFggh9R68xTWBB0RZc/vmImZj2WrW4u0F8s3UK965bHXl7nPMmS9GxZzcu6AOyGfdHG9my8pR6+o+SmgZv4HNCcRyPL2dur6/7I5c+1dXrmcW0DA6fgHFQwnW0170TjTPFfIMQBJaLR7rs+JKOHe387LDSrwNTxrlUHFfQiW70=
+	t=1717692393; cv=none; b=epTzFHaEIDe2Sdd2VTHDJKpf5xXaQpZzzAUTbljlElVHNLDw6X87Evpx5ci2XfDL4lnVH1RktC45Y3BWo6Ng5KvjZPyqObBH1N09Y/RcMICfGxu6+CejwwIMeeIEyQCi81/udEFBaqEHaIqVTuXvg+khJ+lEcCWxlVzQ6w1saig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717692314; c=relaxed/simple;
-	bh=DVWoZ94Ms0F2PXMXl9M29RDWyH9n8ugMwEG4I+rMNwk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ddNdLqWTEqhulc7JylpDcS5yqA3XeOlPBpoQeCNcHpRUKZz9peOgruATBcqTKXhEoumnjgaPGfqdN1B1YmBJdf59FRsSIPAHtf3mlgO2EV2Z2LwxBqSHwnoX1+niSq09vXktk2BIPSQeLrDMy0YaJHvBZ/ka5KDvmSedD3awoD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=4mA5ZvVo; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1717692393; c=relaxed/simple;
+	bh=YbCpow6g62s4Y/IsFXF+iWJNO0YFFPiz7b2876a3LhA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mPqMRxC45nP3zvjetClq6VRwfdtbKrFt3DOYIgmOz5+XWzIpy7H6z9EEWpuXj0uamYsGgb8b1QyeGC88qzOFI7oSEXhb0lcycMRzqJx4QWnDQSQU1ZC5MmO6FlmJxeWfUDvfXwNovl4KPrl+Sv3Du4jRY305eCH4utEFMytDx18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l3gnpkh8; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="4mA5ZvVo"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Vw9DS0Qyfz6Cnk9Y;
-	Thu,  6 Jun 2024 16:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1717692294; x=1720284295; bh=DVWoZ94Ms0F2PXMXl9M29RDW
-	yH9n8ugMwEG4I+rMNwk=; b=4mA5ZvVohYkAsNlESeJ3jT48VdyeK8RVsj3ddKMP
-	SOZ3qL+U8x9NM1ZGSjH50C5K8oZL02MYFmrM4LLS7LcN6Tnu5zK6VqD49X8s+/Wl
-	Q2pqYqBgt3v5m6dNRXCT45LrvYm9WAfeX/gCjCm7WTRpeTMdmX5dtuAQmOOSWnbN
-	hg557ukShq3D5vTZUmN6TJw6dClp7RzjuendtlKDt7Nc9zcakDR8XvWcguj3R4PG
-	/Sit8qPBUqK5xyJbF0768vVr5bMJMJ09pr7q3k1PsWR5jsUvXJYgUG+4L0lkcnZJ
-	KJVBRTo/nHq8gBaiIFh6kHDmcLWyOmgEpPd01gxx+e/Khg==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id riXgj8xOY7Yj; Thu,  6 Jun 2024 16:44:54 +0000 (UTC)
-Received: from [172.20.24.239] (unknown [204.98.150.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Vw9D15Xxtz6Cnk9X;
-	Thu,  6 Jun 2024 16:44:49 +0000 (UTC)
-Message-ID: <d4946174-32e1-47f0-b448-38377dae0600@acm.org>
-Date: Thu, 6 Jun 2024 10:44:47 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3gnpkh8"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so7169515e9.1;
+        Thu, 06 Jun 2024 09:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717692390; x=1718297190; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2+sr+zYDiUtTeri95usC9+OHaSQ8DEfZldxCyLfldlE=;
+        b=l3gnpkh8pivsu9hxmWWMOQpcNfgvO/ojU6CgyVg+XTyUEqQWV5qxPtYps7ZPC84BAU
+         Z0SvImA/jJioIjjuPmSFTY40uy7RsvqRLambEGUdtwpHFg6/IY3T70CgXS032EeGrSgs
+         bxti6LDq2RWOcF0obFK9i/L1Qo/fycf41CNwjse86B4/giv7sJccCTTFLZjYKDdo5Lj7
+         Ic3+5mtOePqtamUuczFkFKHKKLPerQu6mpruX1yhYBI47vqU7YKzC+pW0+PlOJ1v1sPG
+         JVjcuYzrOUWCg9O1X5ZlNdZ/qfDlCVPpNn98rlsWWivCoWJZeKf+vJhigLKhFuykiNR+
+         Y2bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717692390; x=1718297190;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2+sr+zYDiUtTeri95usC9+OHaSQ8DEfZldxCyLfldlE=;
+        b=K6o/ClsOHWjV2smCaA8Mxc3yll5CJrkqOvyIEm+I3kbzOU3DV/6VKbCh4MXtshTjCN
+         b2SazABnf4XbMl8FZMZS3mxVpYrywRUSmipT/28m4p2vrhHH41cryjepvQHOafosKJcY
+         SwChUGQX2X+046ZoEH5UjKokr09oI7B5HtaZrIg1M91z2OLm7gK9qkpj4/cCbC2WLGlr
+         o6z9JA8XrknA6+VMjysukAOWigcWRRN6dNqLOaq9CfYGu2ECP68rHTdakVK5ET4WZZiq
+         y9zIxuNI2A7xnIQkuEBDMGkIyzNzt6hoYduNDrego8rBNofzws3xcDKaYZxk/Btdzecs
+         h01g==
+X-Forwarded-Encrypted: i=1; AJvYcCXDAkdSBAGimfP2oKL5DuLCyICrc7vLQW5KjIYvw8teW6aua2Q0uHM2GrTpfWrLbvMz+xFVCGU97xeJVJhOvX2RVbL6g1rJZLvi1PX2k9jVtcrKpxuoOEhEEAua5dAGWn0KU0OlX2P2hKvg1lG0PbdA1UtbTAld9D1s26AxGgQbjGO/NLoF
+X-Gm-Message-State: AOJu0Yw9ltCh65hT7HCruJpM9faw7UkKbv/IQ+7IXWB13/9qGO5QhD1R
+	TBeyp6LkwieAkUavNVWzQ8RDlEywpJz6qApQ/fYwZ0J0ROSTNJFw
+X-Google-Smtp-Source: AGHT+IH26w+K+rCueYkQ75KLKyYrpzWeYSPuvSZSCvTtwn2ih1yFE/aHnp8z6WQnOYEM6J5EWvVolg==
+X-Received: by 2002:a05:600c:3b84:b0:421:28e6:9934 with SMTP id 5b1f17b1804b1-4215ad1f8a4mr31762835e9.15.1717692390122;
+        Thu, 06 Jun 2024 09:46:30 -0700 (PDT)
+Received: from krava (ip4-95-82-160-96.cust.nbox.cz. [95.82.160.96])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215811d49esm59509825e9.27.2024.06.06.09.46.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 09:46:29 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 6 Jun 2024 18:46:27 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC bpf-next 01/10] uprobe: Add session callbacks to
+ uprobe_consumer
+Message-ID: <ZmHn43Af4Kwlxoyc@krava>
+References: <20240604200221.377848-1-jolsa@kernel.org>
+ <20240604200221.377848-2-jolsa@kernel.org>
+ <CAEf4BzbzgTzvnPRJ24gdhuxN02_w8iNNFn4URh0vEp-t69oPnA@mail.gmail.com>
+ <20240605175619.GH25006@redhat.com>
+ <ZmDPQH2uiPYTA_df@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
- and request layer.
-To: Nitesh Shetty <nj.shetty@samsung.com>
-Cc: Christoph Hellwig <hch@lst.de>, Damien Le Moal <dlemoal@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
- Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
- Mikulas Patocka <mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>,
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- martin.petersen@oracle.com, david@fromorbit.com, hare@suse.de,
- damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
- nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
- linux-fsdevel@vger.kernel.org
-References: <20240520102033.9361-3-nj.shetty@samsung.com>
- <eda6c198-3a29-4da4-94db-305cfe28d3d6@acm.org>
- <9f1ec1c1-e1b8-48ac-b7ff-8efb806a1bc8@kernel.org>
- <a866d5b5-5b01-44a2-9ccb-63bf30aa8a51@acm.org>
- <665850bd.050a0220.a5e6b.5b72SMTPIN_ADDED_BROKEN@mx.google.com>
- <abe8c209-d452-4fb5-90eb-f77b5ec1a2dc@acm.org> <20240601055931.GB5772@lst.de>
- <d7ae00c8-c038-4bed-937e-222251bc627a@acm.org>
- <20240604044042.GA29094@lst.de>
- <4ffad358-a3e6-4a88-9a40-b7e5d05aa53c@acm.org>
- <CGME20240606072827epcas5p285de8d4f3b0f6d3a87f8341414336b42@epcas5p2.samsung.com>
- <66618886.630a0220.4d4fc.1c9cSMTPIN_ADDED_BROKEN@mx.google.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <66618886.630a0220.4d4fc.1c9cSMTPIN_ADDED_BROKEN@mx.google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZmDPQH2uiPYTA_df@krava>
 
-On 6/6/24 01:28, Nitesh Shetty wrote:
-> On 04/06/24 04:44AM, Bart Van Assche wrote:
->> On 6/3/24 21:40, Christoph Hellwig wrote:
->>> There is no requirement to process them synchronously, there is just
->>> a requirement to preserve the order.=C2=A0 Note that my suggestion a =
-few
->>> arounds ago also included a copy id to match them up.=C2=A0 If we don=
-'t
->>> need that I'm happy to leave it away.=C2=A0 If need it it to make sta=
-cking
->>> drivers' lifes easier that suggestion still stands.
->>
->> Including an ID in REQ_OP_COPY_DST and REQ_OP_COPY_SRC operations soun=
-ds
->> much better to me than abusing the merge infrastructure for combining
->> these two operations into a single request. With the ID-based approach
->> stacking drivers are allowed to process copy bios asynchronously and i=
-t
->> is no longer necessary to activate merging for copy operations if
->> merging is disabled (QUEUE_FLAG_NOMERGES).
->>
-> Single request, with bio merging approach:
-> The current approach is to send a single request to driver,
-> which contains both destination and source information inside separate =
-bios.
-> Do you have any different approach in mind ?
+On Wed, Jun 05, 2024 at 10:50:11PM +0200, Jiri Olsa wrote:
+> On Wed, Jun 05, 2024 at 07:56:19PM +0200, Oleg Nesterov wrote:
+> > On 06/05, Andrii Nakryiko wrote:
+> > >
+> > > so any such
+> > > limitations will cause problems, issue reports, investigation, etc.
+> > 
+> > Agreed...
+> > 
+> > > As one possible solution, what if we do
+> > >
+> > > struct return_instance {
+> > >     ...
+> > >     u64 session_cookies[];
+> > > };
+> > >
+> > > and allocate sizeof(struct return_instance) + 8 *
+> > > <num-of-session-consumers> and then at runtime pass
+> > > &session_cookies[i] as data pointer to session-aware callbacks?
+> > 
+> > I too thought about this, but I guess it is not that simple.
+> > 
+> > Just for example. Suppose we have 2 session-consumers C1 and C2.
+> > What if uprobe_unregister(C1) comes before the probed function
+> > returns?
+> > 
+> > We need something like map_cookie_to_consumer().
+> 
+> I guess we could have hash table in return_instance that gets 'consumer -> cookie' ?
 
-No. I did not propose to change how copy offload requests are sent to blo=
-ck
-drivers (other than stacking drivers).
+ok, hash table is probably too big for this.. I guess some solution that
+would iterate consumers and cookies made sure it matches would be fine
 
-> If we want to proceed with this single request based approach,
-> we need to merge the destination request with source BIOs at some point=
-.
-> a. We chose to do it via plug approach.
-> b. Alternative I see is scheduler merging, but here we need some way to
-> hold the request which has destination info, until source bio is also
-> submitted.
-> c. Is there any other way, which I am missing here ?
+jirka
 
-There are already exceptions in blk_mq_submit_bio() for zoned writes and =
-for
-flush bios. Another exception could be added for REQ_OP_COPY_* bios. I'm =
-not
-claiming that this is the best possible alternative. I'm only mentioning =
-this
-to show that there are alternatives.
-
-> Copy ID approach:
-> We see 3 possibilities here:
-> 1. No merging: If we include copy-id in src and dst bio, the bio's will=
- get
-> submitted separately and reach to the driver as separate requests.
-> How do we plan to form a copy command in driver ?
-> 2. Merging BIOs:
-> At some point we need to match the src bio with the dst bio and send th=
-is
-> information together to the driver. The current implementation.
-> This still does not solve the asynchronous submission problem, mentione=
-d
-> above.
-> 3. Chaining BIOs:
-> This won't work with stacked devices as there will be cloning, and henc=
-e
-> chain won't be maintained.
-
-I prefer option (2). Option (1) could result in a deadlock because the so=
-urce
-and destination bio both would have to be converted into a request before
-these are sent to a request-based driver.
-
-Thanks,
-
-Bart.
-
+> 
+> return instance is freed after the consumers' return handlers are executed,
+> so there's no leak if some consumer gets unregistered before that
+> 
+> > 
+> > > > +       /* The handler_session callback return value controls execution of
+> > > > +        * the return uprobe and ret_handler_session callback.
+> > > > +        *  0 on success
+> > > > +        *  1 on failure, DO NOT install/execute the return uprobe
+> > > > +        *    console warning for anything else
+> > > > +        */
+> > > > +       int (*handler_session)(struct uprobe_consumer *self, struct pt_regs *regs,
+> > > > +                              unsigned long *data);
+> > > > +       int (*ret_handler_session)(struct uprobe_consumer *self, unsigned long func,
+> > > > +                                  struct pt_regs *regs, unsigned long *data);
+> > > > +
+> > >
+> > > We should try to avoid an alternative set of callbacks, IMO. Let's
+> > > extend existing ones with `unsigned long *data`,
+> > 
+> > Oh yes, agreed.
+> > 
+> > And the comment about the return value looks confusing too. I mean, the
+> > logic doesn't differ from the ret-code from ->handler().
+> > 
+> > "DO NOT install/execute the return uprobe" is not true if another
+> > non-session-consumer returns 0.
+> 
+> well they are meant to be exclusive, so there'd be no other non-session-consumer
+> 
+> jirka
