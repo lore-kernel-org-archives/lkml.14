@@ -1,87 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E861D696;
-	Thu,  6 Jun 2024 13:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEB019598A
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 13:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717679033; cv=none; b=O9VyWYKApEBqM/pzOTPxwIibuN+cRSq33f8/p+bOSgfCS+PU5ylRmdMkPyle2Jd/AsSpYshqL2DleTk4aHaf1dfXECcOcm4Pr1C4V5/rqyE4BhpMEVhE+rmfHK4mxTcLGxint/WyPJ6oJcaBhiRAEZPsvEnPrDzFRm46SRP/0pU=
+	t=1717679052; cv=none; b=cw4HyIe2zIMh9pdvQjF1wNyngArAO1I8rpu3FAAbKdOXK5X7muMLZXt6nibqU5jv5ah1Fkdyz+K6bcerqsVWEn6imkmLZZ7pSScufdgZ6AUaLVhLQiSkxF1c4nmBak/60m9UV+Ic1pl1l5W6YoaICzbIQSMuMZKQGcaKycWjvqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717679033; c=relaxed/simple;
-	bh=7j2qQVuSNB+C9zogsWp3FupLtbD+FHkF7koYC+sia4E=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pUauQQ8Os+IiGKR3aCLrR0FugLHmoQlUyxdjqSrMR9PeqBWD+AKlgpHYyHsjb4USDH7gjM26qAytRE79eCdFZyZSgORNcDrb2JMdmAQag57FbHzHFwj9Q8yAblXqm7T1rVnGWtaNPpFoG5i/h89LYtHzjrj7xBiRfqViDfwSOnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmBjBFWJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717679052; c=relaxed/simple;
+	bh=vzrrnrsPs++w+wuxgBiG4lQEuVgC7hadEd1CorTRM5g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cDJjeCGGojQC9MsNc6iISzZFzd8gJY7RK5l0NPtJMYMg6DPaIY12plmXlYym7d8T8UIhjEbn9U8iyfbg56pj/vYCio+dSNU4w4aRAQBk/hJnSmE7XoRrY12vudpf68zlEyEjyg1eAQJXTh049ukjhvCqriF96qLaMdqqD70mRPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mg3dRO4F; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmBjBFWJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9C1EC2BD10;
-	Thu,  6 Jun 2024 13:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717679032;
-	bh=7j2qQVuSNB+C9zogsWp3FupLtbD+FHkF7koYC+sia4E=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=dmBjBFWJ/xv8UjRs7CxI6Gw+fljoJfgF29Lj/OiHSK1rq6Vp98Zvg9rMzM97iFv9e
-	 ko3XSsOC2PQCJyq1L05+RoVwvZvlYO3Ud1WPqiUjFEd4Ew3wymKPmdptI0yFGMB2Gw
-	 hRppoj2oROTTSN60Sije1INt2BXxYeXdgObrvBigABam8xkOYEv61iIU98PNrdOOzs
-	 16u7U3mingg89AfCuFu9goSwGoiFVVUfsrzUhrUz9w2eGpCGhLrK86Jct5ffgxE8VG
-	 Ns6SU8IHdn65sIBerEl4q7JIvgYHoSvqVdJbHIOubT4n3e7Ogy6mlTFjNvj+5oq6na
-	 jNZZEvOHVpYIQ==
-From: Mark Brown <broonie@kernel.org>
-To: Jerome Brunet <jbrunet@baylibre.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240606-topic-amlogic-upstream-bindings-convert-g12a-tohdmitx-v2-1-70d44fa30790@linaro.org>
-References: <20240606-topic-amlogic-upstream-bindings-convert-g12a-tohdmitx-v2-1-70d44fa30790@linaro.org>
-Subject: Re: [PATCH v2] ASoC: dt-bindings: convert amlogic,g12a-tohdmitx to
- dt-schema
-Message-Id: <171767903036.1300004.2234947523747840276.b4-ty@kernel.org>
-Date: Thu, 06 Jun 2024 14:03:50 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mg3dRO4F"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52b7c82e39eso1029258e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 06:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717679049; x=1718283849; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AKOctS8wR+JRhxMzTY3nM1CjlScan5iuXQc5lzoQeM0=;
+        b=Mg3dRO4FPQluNULhn0l8oeSoEw5r2xCbD254BzRv5u4Zhym5HtUkYfT0pCEa/DyazP
+         enTpm1lMBUtKiOeQo40sb/+1eBwRl+JxrBjjdcJPznOwmce1tvTGtOUg74A+NTSdXSD7
+         r6ficCVtQZNaaXd9WWGHeOKVpi1BQ2igSerCaMYGZGfgKDKcyWpryXUNIl9TKC2dK0Mr
+         vr7FS6GkLfz3I/5qJclX4UouD3kP0LtEZa907lx7xe2gB3RCrtGWW03WjQFdHidRjlWz
+         MOkQJ17AgZfzeN8vqnWkaaL83mXQQ8jAG3mR+fnH1pweeTez30UKSROj+d5feHwmamcF
+         aPSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717679049; x=1718283849;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AKOctS8wR+JRhxMzTY3nM1CjlScan5iuXQc5lzoQeM0=;
+        b=jiDnuSkE5Nr0fnzYCyakCVD/sIGQQnrXXB/4SJz41FpPcw527zFiQYjwoSdaCGvZ1i
+         yZtqetBfBtoorvdCLEsb5BUDhD4W3ZiQwPltAsV+KmI5hqYX/p4l9GWwdFACuudEZ3rz
+         oRXoTTY2KqQkJY/6EkXs8I+qVJ46T2KR4hXubgoz6kq5+kKihxTKiCRnvQdGHYfrc2lQ
+         iTocM2CqSjrsWHoFld4PeyoyS90cd8MctPayFdz9NNlRUPiaxhel2dgo2zvChlMRkQBx
+         Rkyf5zPcHlZXFknlfmoDJBHO4nsHu05wqg+F9/p8wOTpNdvHILp+gpUdO0ABd6N669rg
+         9Iug==
+X-Forwarded-Encrypted: i=1; AJvYcCVDupvu6gm0iBqheG9nqRa/ZCtzzug+4NByJ0Zi9OlBMZHtjmUq3r4fAv4QCLtIblzX5NX2tLO5lbzFUmv6n3T0VCw402BSnxen0Us7
+X-Gm-Message-State: AOJu0YysxK5WS8/LwWCbQgwrn1OQjYnXJWENIz9aeSOWwQQDAeAKyPqe
+	d6/JD7xSBlTvvPFQK+AJBRowMtAtXTclrJ57pOeuTrcJ4M75njRBmZIkvHRH2w0=
+X-Google-Smtp-Source: AGHT+IHAkM82zSzTg7E23bIybOGdXK2SBfH/dbKc5oL32jns+PWFQHQwA/GQ3GcMHsqZEYS5Y1oAow==
+X-Received: by 2002:a05:6512:3b8b:b0:529:46e:b2a5 with SMTP id 2adb3069b0e04-52bab4ce9d6mr5269249e87.2.1717679049193;
+        Thu, 06 Jun 2024 06:04:09 -0700 (PDT)
+Received: from localhost.localdomain ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d49dfcsm1505286f8f.39.2024.06.06.06.04.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 06:04:08 -0700 (PDT)
+From: srinivas.kandagatla@linaro.org
+To: andersson@kernel.org,
+	linus.walleij@linaro.org
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	srinivas.kandagatla@linaro.org,
+	linux-arm-msm@vger.kernel.org,
+	inux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] pinctrl: qcom: add sm4250 lpi pinctrl
+Date: Thu,  6 Jun 2024 14:03:21 +0100
+Message-Id: <20240606130323.138970-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-d4707
+Content-Transfer-Encoding: 8bit
 
-On Thu, 06 Jun 2024 10:06:58 +0200, Neil Armstrong wrote:
-> Convert text bindings to dt-schema format for the Amlogic TX HDMI
-> control glue.
-> 
-> 
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Applied to
+Add support for sm4250 lpi pinctrl.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Alexey tested this on RB2 with HDMI Audio.
 
-Thanks!
+Srinivas Kandagatla (2):
+  dt-bindings: pinctrl: qcom: Add SM4250 pinctrl
+  pinctrl: qcom: Introduce SM4250 LPI pinctrl driver
 
-[1/1] ASoC: dt-bindings: convert amlogic,g12a-tohdmitx to dt-schema
-      commit: a1708fda9388c83215f0be82ad47df10be6e1975
+ .../qcom,sm4250-lpass-lpi-pinctrl.yaml        | 119 +++++++++++
+ drivers/pinctrl/qcom/Kconfig                  |   9 +
+ drivers/pinctrl/qcom/Makefile                 |   1 +
+ .../pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c   | 191 ++++++++++++++++++
+ 4 files changed, 320 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm4250-lpass-lpi-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm4250-lpass-lpi.c
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-- 
+2.25.1
 
