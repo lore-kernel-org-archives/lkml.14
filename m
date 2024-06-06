@@ -1,283 +1,140 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A5A195978
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 11:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2967194AE0
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717675167; cv=none; b=pM+TcSuZHutNSBYtUMa324L5uOVEjkle6hlzBK0NtEmCSGALjO6rofVsN64UY8h9mplV8BxKNgabVU59ttBeRd72P0w9W1z2GOpCBQYwkHGNtFJdq/yuSjmer5V9uKjRFjLzUtIWjRAQx/ORmVrNfM8FIQLFZ0ctAn39xlD57Rw=
+	t=1717675324; cv=none; b=QBNduZHJFn34Y+Hzw9eRe8XSiEgBgL/qkyft5lZVZWHrPKvY8tGbSv/fnDQEhoohIcRTgcLYAAThYj7ehUbxjl/tA8M4XRWHfo2RW09jO41ygUm2f9hM8bNmYxWvfhX0/59hOk8nu5qtaYeVS1JF6/SjRAouBtAOCzhJza3YfpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717675167; c=relaxed/simple;
-	bh=C47jcCKzOoryOFp8A3tdkgy4JTiX5Q1m2tAsWCp5yTg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Pme8WMGPohSAe82HvBRz3BxIsVGvrQD4B9cx0/PAuhWax1eYy6GcVPpeE0WKm6Hw1LTsczDLwbkR/scBDkllVfkJ1KVmSH4dTjBC/gZdOMGIpzAZeRLy5mdeBrbbeEHC1EneML58/4LAt7557NLQPCTF0uSL8N2G+P8QDa3X6nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=TffbrXVz; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1717675324; c=relaxed/simple;
+	bh=XzA9XcS9J8/JaJGhY85xTyvzVAiJwfKIIBi3J6rxAwM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=oSOX1XuGSIDs+z1jUIvzlXymCjxqMt1u9btTv8HR6s9v1nonMFhAEA/VYuBLA44miQAqQ+ey0BltIaECiRMLOJR5Dal/sAbtZIZyJ1lpYD4efeqjiYWAj5rHn0wvkKh8WggY/3c2Y747uKfaycfx4vCNIgv7KKjoZB6JqNahKhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NG8m01Ef; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="TffbrXVz"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1717675158; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=Qh0W+u+9QDljuV5HDKuRhphJVSSVQ9c48/ae0QqTnoM=;
-	b=TffbrXVza3Ugakwy1aanpDPlcmPBTmlXQoWFolgfP32pnhGjHHqaCIjf0ud5ybdXRqaOxEOU0OWG/xkj5xOfx5cFn63JcsdVZbmXSLz9vmnv4Ln1jvuF3gfE57v2lHcZqkX2keCVDIzhgmLMsS9qMTsrG3iiS1jCUyZJ826Kqic=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0W7y6tqN_1717675155;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W7y6tqN_1717675155)
-          by smtp.aliyun-inc.com;
-          Thu, 06 Jun 2024 19:59:16 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	hughd@google.com
-Cc: willy@infradead.org,
-	david@redhat.com,
-	wangkefeng.wang@huawei.com,
-	chrisl@kernel.org,
-	ying.huang@intel.com,
-	21cnbao@gmail.com,
-	ryan.roberts@arm.com,
-	shy828301@gmail.com,
-	ziy@nvidia.com,
-	ioworker0@gmail.com,
-	da.gomez@samsung.com,
-	p.raghav@samsung.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/7] mm: add new 'orders' parameter for find_get_entries() and find_lock_entries()
-Date: Thu,  6 Jun 2024 19:58:55 +0800
-Message-Id: <5304c4c54868336985b396d2c46132c2e0cdf803.1717673614.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1717673614.git.baolin.wang@linux.alibaba.com>
-References: <cover.1717673614.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NG8m01Ef"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717675321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o1PVj6wl0RhMQ9aVu/kpZquF9TBmMzt7pDp7sPNrIU4=;
+	b=NG8m01EfkrXJkJGwgDbOjTdlf4hxxSxa9y8ubtHu/+BShqnf0n4BsSXvfUNrkzGI1uC1kg
+	iKqVUe3AmZpbH3D0TdclIGcpE71t1GWWeswoNLw9GYUOG9oo4lzbTGtlw5wVKX+W+FqQml
+	jZ1tetsFdVDT4OjaKZLc9S3bskTfDpE=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-615-f3vg4GAvOyWFdGgouxqVIw-1; Thu, 06 Jun 2024 08:01:59 -0400
+X-MC-Unique: f3vg4GAvOyWFdGgouxqVIw-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2eaa74bfc18so6433831fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 05:01:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717675317; x=1718280117;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o1PVj6wl0RhMQ9aVu/kpZquF9TBmMzt7pDp7sPNrIU4=;
+        b=kE2dds+c5nwPiTNa7j6MAzm5mI/cq/UNcsICjkGvGojdCKjY3+5CB9k1n8nfV8jWgF
+         LNCT83lG8KFKiXOqxYMNTsMCSUMX/cWxt0aHEN/VTilga92rf1CpW5ocTw3sqUj18bkr
+         xc4/X3Fv6o6f7Qd4feUIstWOfDiEwN9hq3zlp8TAwZX1kI8K6X/QSBTDAw0DcEQIjgz0
+         L4jehk0sfHAjvTHEQRaZqzeqkJDE6ZrUboklcAE7BvS1yEh58P3+556uXwMDUqZe1tmI
+         HBXarwVlZQIOaYcYfgztrPCxzHS5SYNoiN6KAt1iZQa86PJ6JUaK0sgLn9Ru51JegQLc
+         m5CA==
+X-Forwarded-Encrypted: i=1; AJvYcCVphjjO0DsqzCRBV+M20UVEMas5q+WuTs9xhqJII6cE52NgRzU2QYDpXwPMSU9G9up7YmdXPz/6BSj+dG/uIPWxyaupcmCsM6UQL2bH
+X-Gm-Message-State: AOJu0YxBpf0cBr2FqiHJWrlES5BgOzAtgw1ri0dzzSgExgm22ESm9Hk7
+	07u/zVsXjwTc9Vb9aY51+Xo3wTXX5n7mzy9S1q0TDKJTTaKkcpktTi43zCm1JcQbcl8qjfQtfOv
+	tX7pXrhST2wXMZhuvrRK7MGlqKPGWd0iMY7eiE6TuJSRxkVVxkbmmdLgB+wswVyTu930TSw==
+X-Received: by 2002:a2e:6804:0:b0:2d6:dba1:6d37 with SMTP id 38308e7fff4ca-2eac79c3350mr33445091fa.11.1717675317621;
+        Thu, 06 Jun 2024 05:01:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH2WITeGFROobQCTrCntY3Omdm5T0qGOCAwnVA1tvshsd8kmSQuctYu9lHc2+ZfKmWSvWTupQ==
+X-Received: by 2002:a2e:6804:0:b0:2d6:dba1:6d37 with SMTP id 38308e7fff4ca-2eac79c3350mr33444781fa.11.1717675317163;
+        Thu, 06 Jun 2024 05:01:57 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aadf9d296sm980451a12.7.2024.06.06.05.01.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 05:01:56 -0700 (PDT)
+Message-ID: <9d821cea-507f-4674-809c-a4640119c435@redhat.com>
+Date: Thu, 6 Jun 2024 14:01:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
+ rwsem and the rtnl mutex
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Linux LEDs <linux-leds@vger.kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, johanneswueller@gmail.com,
+ "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Genes Lists <lists@sapience.com>
+References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
+ <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
+ <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
+ <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
+ <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
+ <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
+Content-Language: en-US, nl
+In-Reply-To: <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In the following patches, shmem will support the swap out of large folios,
-which means the shmem mappings may contain large order swap entries, so an
-'orders' array is added for find_get_entries() and find_lock_entries() to
-obtain the order size of shmem swap entries, which will help in the release
-of shmem large folio swap entries.
+Hi all,
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- mm/filemap.c  | 27 +++++++++++++++++++++++++--
- mm/internal.h |  4 ++--
- mm/shmem.c    | 17 +++++++++--------
- mm/truncate.c |  8 ++++----
- 4 files changed, 40 insertions(+), 16 deletions(-)
+On 5/31/24 2:54 PM, Andrew Lunn wrote:
+>> I actually have been looking at a ledtrig-netdev lockdep warning yesterday
+>> which I believe is the same thing. I'll include the lockdep trace below.
+>>
+>> According to lockdep there indeed is a ABBA (ish) cyclic deadlock with
+>> the rtnl mutex vs led-triggers related locks. I believe that this problem
+>> may be a pre-existing problem but this now actually gets hit in kernels >=
+>> 6.9 because of commit 66601a29bb23 ("leds: class: If no default trigger is
+>> given, make hw_control trigger the default trigger"). Before that commit
+>> the "netdev" trigger would not be bound / set as phy LEDs trigger by default.
+>>
+>> +Cc Heiner Kallweit who authored that commit.
+>>
+>> The netdev trigger typically is not needed because the PHY LEDs are typically
+>> under hw-control and the netdev trigger even tries to leave things that way
+>> so setting it as the active trigger for the LED class device is basically
+>> a no-op. I guess the goal of that commit is correctly have the triggers
+>> file content reflect that the LED is controlled by a netdev and to allow
+>> changing the hw-control mode without the user first needing to set netdev
+>> as trigger before being able to change the mode.
+> 
+> It was not the intention that this triggers is loaded for all
+> systems.
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 37061aafd191..47fcd9ee6012 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2036,14 +2036,24 @@ static inline struct folio *find_get_entry(struct xa_state *xas, pgoff_t max,
-  * Return: The number of entries which were found.
-  */
- unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
--		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices)
-+		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices,
-+		int *orders)
- {
- 	XA_STATE(xas, &mapping->i_pages, *start);
- 	struct folio *folio;
-+	int order;
- 
- 	rcu_read_lock();
- 	while ((folio = find_get_entry(&xas, end, XA_PRESENT)) != NULL) {
- 		indices[fbatch->nr] = xas.xa_index;
-+		if (orders) {
-+			if (!xa_is_value(folio))
-+				order = folio_order(folio);
-+			else
-+				order = xa_get_order(xas.xa, xas.xa_index);
-+
-+			orders[fbatch->nr] = order;
-+		}
- 		if (!folio_batch_add(fbatch, folio))
- 			break;
- 	}
-@@ -2056,6 +2066,8 @@ unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
- 		folio = fbatch->folios[idx];
- 		if (!xa_is_value(folio))
- 			nr = folio_nr_pages(folio);
-+		else if (orders)
-+			nr = 1 << orders[idx];
- 		*start = indices[idx] + nr;
- 	}
- 	return folio_batch_count(fbatch);
-@@ -2082,10 +2094,12 @@ unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
-  * Return: The number of entries which were found.
-  */
- unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
--		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices)
-+		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices,
-+		int *orders)
- {
- 	XA_STATE(xas, &mapping->i_pages, *start);
- 	struct folio *folio;
-+	int order;
- 
- 	rcu_read_lock();
- 	while ((folio = find_get_entry(&xas, end, XA_PRESENT))) {
-@@ -2099,9 +2113,16 @@ unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
- 			if (folio->mapping != mapping ||
- 			    folio_test_writeback(folio))
- 				goto unlock;
-+			if (orders)
-+				order = folio_order(folio);
- 			VM_BUG_ON_FOLIO(!folio_contains(folio, xas.xa_index),
- 					folio);
-+		} else if (orders) {
-+			order = xa_get_order(xas.xa, xas.xa_index);
- 		}
-+
-+		if (orders)
-+			orders[fbatch->nr] = order;
- 		indices[fbatch->nr] = xas.xa_index;
- 		if (!folio_batch_add(fbatch, folio))
- 			break;
-@@ -2120,6 +2141,8 @@ unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
- 		folio = fbatch->folios[idx];
- 		if (!xa_is_value(folio))
- 			nr = folio_nr_pages(folio);
-+		else if (orders)
-+			nr = 1 << orders[idx];
- 		*start = indices[idx] + nr;
- 	}
- 	return folio_batch_count(fbatch);
-diff --git a/mm/internal.h b/mm/internal.h
-index 3419c329b3bc..0b5adb6c33cc 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -339,9 +339,9 @@ static inline void force_page_cache_readahead(struct address_space *mapping,
- }
- 
- unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
--		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices);
-+		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices, int *orders);
- unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
--		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices);
-+		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices, int *orders);
- void filemap_free_folio(struct address_space *mapping, struct folio *folio);
- int truncate_inode_folio(struct address_space *mapping, struct folio *folio);
- bool truncate_inode_partial_folio(struct folio *folio, loff_t start,
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 0ac71580decb..28ba603d87b8 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -840,14 +840,14 @@ static void shmem_delete_from_page_cache(struct folio *folio, void *radswap)
-  * Remove swap entry from page cache, free the swap and its page cache.
-  */
- static int shmem_free_swap(struct address_space *mapping,
--			   pgoff_t index, void *radswap)
-+			   pgoff_t index, void *radswap, int order)
- {
- 	void *old;
- 
- 	old = xa_cmpxchg_irq(&mapping->i_pages, index, radswap, NULL, 0);
- 	if (old != radswap)
- 		return -ENOENT;
--	free_swap_and_cache(radix_to_swp_entry(radswap));
-+	free_swap_and_cache_nr(radix_to_swp_entry(radswap), 1 << order);
- 	return 0;
- }
- 
-@@ -981,6 +981,7 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
- 	pgoff_t end = (lend + 1) >> PAGE_SHIFT;
- 	struct folio_batch fbatch;
- 	pgoff_t indices[PAGEVEC_SIZE];
-+	int orders[PAGEVEC_SIZE];
- 	struct folio *folio;
- 	bool same_folio;
- 	long nr_swaps_freed = 0;
-@@ -996,15 +997,15 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
- 	folio_batch_init(&fbatch);
- 	index = start;
- 	while (index < end && find_lock_entries(mapping, &index, end - 1,
--			&fbatch, indices)) {
-+			&fbatch, indices, orders)) {
- 		for (i = 0; i < folio_batch_count(&fbatch); i++) {
- 			folio = fbatch.folios[i];
- 
- 			if (xa_is_value(folio)) {
- 				if (unfalloc)
- 					continue;
--				nr_swaps_freed += !shmem_free_swap(mapping,
--							indices[i], folio);
-+				if (!shmem_free_swap(mapping, indices[i], folio, orders[i]))
-+					nr_swaps_freed += 1 << orders[i];
- 				continue;
- 			}
- 
-@@ -1058,7 +1059,7 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
- 		cond_resched();
- 
- 		if (!find_get_entries(mapping, &index, end - 1, &fbatch,
--				indices)) {
-+				indices, orders)) {
- 			/* If all gone or hole-punch or unfalloc, we're done */
- 			if (index == start || end != -1)
- 				break;
-@@ -1072,12 +1073,12 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
- 			if (xa_is_value(folio)) {
- 				if (unfalloc)
- 					continue;
--				if (shmem_free_swap(mapping, indices[i], folio)) {
-+				if (shmem_free_swap(mapping, indices[i], folio, orders[i])) {
- 					/* Swap was replaced by page: retry */
- 					index = indices[i];
- 					break;
- 				}
--				nr_swaps_freed++;
-+				nr_swaps_freed += 1 << orders[i];
- 				continue;
- 			}
- 
-diff --git a/mm/truncate.c b/mm/truncate.c
-index 5ce62a939e55..3a4bc9dba451 100644
---- a/mm/truncate.c
-+++ b/mm/truncate.c
-@@ -352,7 +352,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
- 	folio_batch_init(&fbatch);
- 	index = start;
- 	while (index < end && find_lock_entries(mapping, &index, end - 1,
--			&fbatch, indices)) {
-+			&fbatch, indices, NULL)) {
- 		truncate_folio_batch_exceptionals(mapping, &fbatch, indices);
- 		for (i = 0; i < folio_batch_count(&fbatch); i++)
- 			truncate_cleanup_folio(fbatch.folios[i]);
-@@ -392,7 +392,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
- 	while (index < end) {
- 		cond_resched();
- 		if (!find_get_entries(mapping, &index, end - 1, &fbatch,
--				indices)) {
-+				indices, NULL)) {
- 			/* If all gone from start onwards, we're done */
- 			if (index == start)
- 				break;
-@@ -496,7 +496,7 @@ unsigned long mapping_try_invalidate(struct address_space *mapping,
- 	int i;
- 
- 	folio_batch_init(&fbatch);
--	while (find_lock_entries(mapping, &index, end, &fbatch, indices)) {
-+	while (find_lock_entries(mapping, &index, end, &fbatch, indices, NULL)) {
- 		for (i = 0; i < folio_batch_count(&fbatch); i++) {
- 			struct folio *folio = fbatch.folios[i];
- 
-@@ -622,7 +622,7 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
- 
- 	folio_batch_init(&fbatch);
- 	index = start;
--	while (find_get_entries(mapping, &index, end, &fbatch, indices)) {
-+	while (find_get_entries(mapping, &index, end, &fbatch, indices, NULL)) {
- 		for (i = 0; i < folio_batch_count(&fbatch); i++) {
- 			struct folio *folio = fbatch.folios[i];
- 
--- 
-2.39.3
+<snip>
+
+> Reverting this patch does seem like a good way forward, but i would
+> also like to give Heiner a little bit of time to see if he has a quick
+> real fix.
+
+So it has been almost a week and no reply from Heiner. Since this is
+causing real issues for users out there I think a revert of 66601a29bb23
+should be submitted to Linus and then backported to the stable kernels.
+to fix the immediate issue at hand.
+
+Once the underlying locking issue which is the real root cause here
+is fixed then we can reconsider re-applying 66601a29bb23.
+
+Regards,
+
+Hans
+
+
+
+
 
