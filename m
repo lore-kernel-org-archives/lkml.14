@@ -1,35 +1,60 @@
-Received: from mailbox.box.xen0n.name (mail.xen0n.name [115.28.160.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E66160865;
-	Thu,  6 Jun 2024 11:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.28.160.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784B91957EF
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 11:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717673185; cv=none; b=CKa7xefSiIUznTxKlAIPYtqIotpv1oNmDXFlRBjw1CfZmoHc6FqH0FWnvaj9W1HHa9xOO5VK/gNF5ccCMfsxRl++pd+85BvG42AA//XTnpIW114D6YWbQT/D8wBhqYQAsG59Ojf1i41f8ZtGXBCLJHTq3Mx8/R8SU1bVkhkcaUY=
+	t=1717673261; cv=none; b=ub+/FGg908cEtjTlcTK6wCdJyKLSl9tY/fQXtxqeFn5l7cenfivv754rCshwGvbW3ljz00T7ho/DtdkQhpejwFTG/EK+IcFukUay7dU2J60EXwI5UJuxQBoObaNkACw7DcqHTZz7ItxwuFAJ9Uz4BBVhdH3KTh4cTjMTuOnOUSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717673185; c=relaxed/simple;
-	bh=I8eXEpEHYSS55mlqLSfygn5zlOeg8Bj8Bwky7Y1Nbrw=;
+	s=arc-20240116; t=1717673261; c=relaxed/simple;
+	bh=IKJMKta3gKbm6WrlCyDsenNN9FGXLJuX8rzYumUp5gw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d0V5FvuOAmEKyR9Ium2l00YDd+j+3B48rmxJlnUtPvp8LlDBGHbtFPtUvWxcjFjtwBlhB3d6rI55T48/FMZ7UzyjuPbZDmp8MdFBd7Ivm4KYAIr7KeqNh40XUPSdoVTzek3ee+uNZPq40q5RvfchWCEZGpFrsUkE/P+/NrFR8Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name; spf=pass smtp.mailfrom=xen0n.name; dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b=XO4TPrtj; arc=none smtp.client-ip=115.28.160.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=xen0n.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xen0n.name
+	 In-Reply-To:Content-Type; b=DEj8ITUjJuHTTeKskCrmozg2j2W31cy9ki92Ad6cDEnyIeZUnsvH0LaB4pTL4irKA3OWNAfU8qpTBuzp1FR6zoc2OXfI/RwSi+okN9yExkDhIqv65fvk3Y+nRCJbIuvHVNF0dqTQaYMLVsCwCwustAVEzkh80W4/9ZU0XEipolE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ICalM9Yj; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="XO4TPrtj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xen0n.name; s=mail;
-	t=1717672811; bh=I8eXEpEHYSS55mlqLSfygn5zlOeg8Bj8Bwky7Y1Nbrw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XO4TPrtjuDeNDFtuGW0qyMyddDdy90rW98a4gM2MLl5ynzT8L3JcC/7jc8MSHN207
-	 Eh5ylgeMaWqmoFtrAkwvCQYZ9wMktoNGJlOP0VfdQnhpqnkil3Sxs2SEmIs25DjT8S
-	 Pzt6lsOi+C0S9CD9aj/joRq06QdadcJqsDlfTPlE=
-Received: from [IPV6:240e:46c:8500:3a6c:c01f:bf1e:942:ff23] (unknown [IPv6:240e:46c:8500:3a6c:c01f:bf1e:942:ff23])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mailbox.box.xen0n.name (Postfix) with ESMTPSA id A1ABF60096;
-	Thu,  6 Jun 2024 19:20:10 +0800 (CST)
-Message-ID: <9bb552c8-fe86-43dc-9c4e-0b95c99fb25c@xen0n.name>
-Date: Thu, 6 Jun 2024 19:20:10 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ICalM9Yj"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a68b41ef3f6so81440866b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 04:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717673258; x=1718278058; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=7H5RlqVYDUyhbQV2vrFzVsqeAI5zP+J54d70UEPgNX4=;
+        b=ICalM9YjyU3RlE2NJy1LnnesmUY+7WMTwG44CEQYDmqBmwQYW+l/CBkvcyw46CuXJm
+         75GSeCslSy0UxQFD8EFfwR6z6p4eFKIeq3zBuxhbkoWaVU+pMg6CZP+hQVco5dPh/Nic
+         Sguo3qu0wmJcRObJds9ovhOgCDgRprGVwOLDYSaX/B/0zF/fVG3UPlDPWeyCcjfSdz8d
+         hV0myeivfemDs9+Q9bDrcanhrqMKIy40hqA6fMyaSZ7Eme4thxecxNwC34ZUnJ/sdAX3
+         S9Z9UvF2AJiYSIDpIoB03mwtVD1pKNdlzGIw1pBDTmQM5YomKiKSNywHyTMBLh/sN+mW
+         47Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717673258; x=1718278058;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7H5RlqVYDUyhbQV2vrFzVsqeAI5zP+J54d70UEPgNX4=;
+        b=Jgb2hlZknYNT0sb3yj+hw5Op5aIJLd1Mc1DIpSO65RhFK6I37BiWQpR1416YZnXFA2
+         fDenfvbly+0K5vYU63VSdjZ1ki7Qj/f5d/ZELiTQA5HOZctDGCAVLx7u/1MVS8Fm6U6+
+         nLY1gs5CfLBcPqV2JyHT0VwaN2t+XyWzv9ZDD4q9JDInVIFwCp7Rcppx8WFfj1CIF2fY
+         1VjTjIFj88UbXYmmX4xBNhVnm5/o4mYy6dnfROYIOYqlx1PgB+H2c9i3Md09rcBfsMwP
+         3L6tBdfPYQRnZqooI8fNEs8aP9XQQsF3fRML/RwHkwV5KC1g9jL2f0n4IOfxJtBfASxQ
+         m4MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWytDyOZVilxrVhVtnyw2XRBRGIqIMKmmLXiwNGaleMKUIkjJ9uMoG+VDwjkmLPUWMPBa4TKFCpz0vZiqyxJstZIM7yQaqwOusl1QJY
+X-Gm-Message-State: AOJu0YwzXzHP1SeoRfHe3qPaWKsvxf7DCTyhM8jHh76IhhjNYRbqH/e1
+	ZZHBdFOrcyV8RDZRLqXH/CHol2R9UsYzN9/y9e7BVCMcEoxAg/n+YrzMGuXPLM4=
+X-Google-Smtp-Source: AGHT+IFx0wGfFwN0UT4FIGaqOzJR3ykbzHdhODFPCyYmywROOYmHADOhrvqheQZuoFV0OyCitGp6Vg==
+X-Received: by 2002:a17:906:3498:b0:a58:e8c7:c0b8 with SMTP id a640c23a62f3a-a699f361c21mr336766866b.7.1717673257748;
+        Thu, 06 Jun 2024 04:27:37 -0700 (PDT)
+Received: from [192.168.128.139] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c8070e2fcsm83411466b.154.2024.06.06.04.27.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 04:27:37 -0700 (PDT)
+Message-ID: <202852cb-d49e-4380-8073-8bb679fcf53e@linaro.org>
+Date: Thu, 6 Jun 2024 13:27:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,132 +62,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] LoongArch: KVM: Add feature passing from user space
-To: Bibo Mao <maobibo@loongson.cn>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: kvm@vger.kernel.org, loongarch@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240606074850.2651896-1-maobibo@loongson.cn>
+Subject: Re: [PATCH v3 2/5] clk: qcom: clk-alpha-pll: Add HUAYRA_2290 support
+To: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20240219-topic-rb1_gpu-v3-0-86f67786539a@linaro.org>
+ <20240219-topic-rb1_gpu-v3-2-86f67786539a@linaro.org>
+ <b39e9d5ecfddef7b0564c2224685d9d0.sboyd@kernel.org>
 Content-Language: en-US
-From: WANG Xuerui <kernel@xen0n.name>
-In-Reply-To: <20240606074850.2651896-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <b39e9d5ecfddef7b0564c2224685d9d0.sboyd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 6/6/24 15:48, Bibo Mao wrote:
-> Currently features defined in cpucfg CPUCFG_KVM_FEATURE comes from
-> kvm kernel mode only. Some features are defined in user space VMM,
-
-"come from kernel side only. But currently KVM is not aware of 
-user-space VMM features which makes it hard to employ optimizations that 
-are both (1) specific to the VM use case and (2) requiring cooperation 
-from user space."
-
-> however KVM module does not know. Here interface is added to update
-> register CPUCFG_KVM_FEATURE from user space, only bit 24 - 31 is valid.
+On 5.04.2024 11:37 PM, Stephen Boyd wrote:
+> Quoting Konrad Dybcio (2024-03-26 14:08:24)
+>> diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+>> index 8a412ef47e16..27ba8aa3e577 100644
+>> --- a/drivers/clk/qcom/clk-alpha-pll.c
+>> +++ b/drivers/clk/qcom/clk-alpha-pll.c
+>> @@ -779,6 +792,40 @@ static long clk_alpha_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+>>         return clamp(rate, min_freq, max_freq);
+>>  }
+>>  
+>> +void clk_huayra_2290_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
+>> +                                  const struct alpha_pll_config *config)
+>> +{
+>> +       u32 val;
+>> +
+>> +       clk_alpha_pll_write_config(regmap, PLL_CONFIG_CTL(pll), config->config_ctl_val);
+>> +       clk_alpha_pll_write_config(regmap, PLL_CONFIG_CTL_U(pll), config->config_ctl_hi_val);
+>> +       clk_alpha_pll_write_config(regmap, PLL_CONFIG_CTL_U1(pll), config->config_ctl_hi1_val);
+>> +       clk_alpha_pll_write_config(regmap, PLL_TEST_CTL(pll), config->test_ctl_val);
+>> +       clk_alpha_pll_write_config(regmap, PLL_TEST_CTL_U(pll), config->test_ctl_hi_val);
+>> +       clk_alpha_pll_write_config(regmap, PLL_TEST_CTL_U1(pll), config->test_ctl_hi1_val);
+>> +       clk_alpha_pll_write_config(regmap, PLL_L_VAL(pll), config->l);
+>> +       clk_alpha_pll_write_config(regmap, PLL_ALPHA_VAL(pll), config->alpha);
+>> +       clk_alpha_pll_write_config(regmap, PLL_USER_CTL(pll), config->user_ctl_val);
+>> +
+>> +       /* Set PLL_BYPASSNL */
+>> +       regmap_update_bits(regmap, PLL_MODE(pll), PLL_BYPASSNL, PLL_BYPASSNL);
+>> +       regmap_read(regmap, PLL_MODE(pll), &val);
+>> +
+>> +       /* Wait 5 us between setting BYPASS and deasserting reset */
+>> +       udelay(5);
+>> +
+>> +       /* Take PLL out from reset state */
+>> +       regmap_update_bits(regmap, PLL_MODE(pll), PLL_RESET_N, PLL_RESET_N);
+>> +       regmap_read(regmap, PLL_MODE(pll), &val);
+>> +
+>> +       /* Wait 50us for PLL_LOCK_DET bit to go high */
 > 
-> Feature KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI is added from user mdoe.
-> FEAT_VIRT_EXTIOI is virt EXTIOI extension which can route interrupt
-> to 256 VCPUs rather than 4 CPUs like real hw.
+> Is the bit not reliable or something? I'd expect to see a polling loop
+> here but it's a sleep.
 
-"A new feature bit ... is added which can be set from user space. 
-FEAT_... indicates that the VM EXTIOI can route interrupts to 256 vCPUs, 
-rather than 4 like with real HW."
+Unfortunately, it seems so.
 
-(Am I right in paraphrasing the "EXTIOI" part?)
-
-> 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->   arch/loongarch/include/asm/kvm_host.h  |  4 +++
->   arch/loongarch/include/asm/loongarch.h |  5 ++++
->   arch/loongarch/include/uapi/asm/kvm.h  |  2 ++
->   arch/loongarch/kvm/exit.c              |  1 +
->   arch/loongarch/kvm/vcpu.c              | 36 +++++++++++++++++++++++---
->   5 files changed, 44 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-> index 88023ab59486..8fa50d757247 100644
-> --- a/arch/loongarch/include/asm/kvm_host.h
-> +++ b/arch/loongarch/include/asm/kvm_host.h
-> @@ -135,6 +135,9 @@ enum emulation_result {
->   #define KVM_LARCH_HWCSR_USABLE	(0x1 << 4)
->   #define KVM_LARCH_LBT		(0x1 << 5)
->   
-> +#define KVM_LOONGARCH_USR_FEAT_MASK			\
-> +	BIT(KVM_LOONGARCH_VCPU_FEAT_VIRT_EXTIOI)
-> +
->   struct kvm_vcpu_arch {
->   	/*
->   	 * Switch pointer-to-function type to unsigned long
-> @@ -210,6 +213,7 @@ struct kvm_vcpu_arch {
->   		u64 last_steal;
->   		struct gfn_to_hva_cache cache;
->   	} st;
-> +	unsigned int usr_features;
->   };
->   
->   static inline unsigned long readl_sw_gcsr(struct loongarch_csrs *csr, int reg)
-> diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-> index 7a4633ef284b..4d9837512c19 100644
-> --- a/arch/loongarch/include/asm/loongarch.h
-> +++ b/arch/loongarch/include/asm/loongarch.h
-> @@ -167,9 +167,14 @@
->   
->   #define CPUCFG_KVM_SIG			(CPUCFG_KVM_BASE + 0)
->   #define  KVM_SIGNATURE			"KVM\0"
-> +/*
-> + * BIT 24 - 31 is features configurable by user space vmm
-> + */
->   #define CPUCFG_KVM_FEATURE		(CPUCFG_KVM_BASE + 4)
->   #define  KVM_FEATURE_IPI		BIT(1)
->   #define  KVM_FEATURE_STEAL_TIME		BIT(2)
-> +/* With VIRT_EXTIOI feature, interrupt can route to 256 VCPUs */
-> +#define  KVM_FEATURE_VIRT_EXTIOI	BIT(24)
->   
->   #ifndef __ASSEMBLY__
->   
-
-What about assigning a new CPUCFG leaf ID for separating the two kinds 
-of feature flags very cleanly?
-
-> @@ -896,7 +907,24 @@ static int kvm_loongarch_vcpu_get_attr(struct kvm_vcpu *vcpu,
->   static int kvm_loongarch_cpucfg_set_attr(struct kvm_vcpu *vcpu,
->   					 struct kvm_device_attr *attr)
->   {
-> -	return -ENXIO;
-> +	u64 __user *user = (u64 __user *)attr->addr;
-> +	u64 val, valid_flags;
-> +
-> +	switch (attr->attr) {
-> +	case CPUCFG_KVM_FEATURE:
-> +		if (get_user(val, user))
-> +			return -EFAULT;
-> +
-> +		valid_flags = KVM_LOONGARCH_USR_FEAT_MASK;
-> +		if (val & ~valid_flags)
-> +			return -EINVAL;
-> +
-> +		vcpu->arch.usr_features |= val;
-
-Isn't this usage of "|=" instead of "=" implying that the feature bits 
-could not get disabled after being enabled earlier, for whatever reason?
-
-> +		return 0;
-> +
-> +	default:
-> +		return -ENXIO;
-> +	}
->   }
->   
->   static int kvm_loongarch_vcpu_set_attr(struct kvm_vcpu *vcpu,
-> 
-> base-commit: 2df0193e62cf887f373995fb8a91068562784adc
-
--- 
-WANG "xen0n" Xuerui
-
-Linux/LoongArch mailing list: https://lore.kernel.org/loongarch/
-
+Konrad
