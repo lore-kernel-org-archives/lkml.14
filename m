@@ -1,109 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB00198E70
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 16:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B0A198A2C
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 16:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717692446; cv=none; b=PHYT/11A8cNp3IAQYToEbsG/V4xbziksf1z3ej1/UKWuy2Ka+ejhb3HxQ/yslweuusNo0QAgFC/RDACjdxHrcHW0E/oz4lX1mf+JS4/37KQZlJblxNbSXW69aUQ3Zee8EAqAiz1ze473v9s8fxZiD5yz2WnQAdo7I6CzGVWG3rU=
+	t=1717692537; cv=none; b=J9ieVUzLAydWz58F3oWuADN/Ernu1w2ARa1cqn3BW8YmknyK4agHN8DgFsHilMrov3NZCNMRBBwFc6qWdD/7XgbcRbUH+sWoD//9On09m7lxtShCZ4dZkvW5vVx5oZTsqcDG65G1oD3x+nSjtGzUEughO4BR08JrQl38L62k78k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717692446; c=relaxed/simple;
-	bh=T6gLK4Xhn6yVmKQMI4ularKMV+lLmcOSTs0tDmhhchQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V+YogUPlVPaiwVXGMW2J4hoGbgMmMusDXuTbr7gLkcAD1nP/3uMVvVlcyGMjxo8nzmTP8eTYP9YnmzZaWlp2buPkJRKxsH0NpiVT6psdv/1weFUYTvldBZ/CJdh7VEI8GZQEAi3Gv4RH1yaZUkJ4hc42KP+HPEkb5tWYHcVYWq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UNIkGz+4; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UNIkGz+4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717692445; x=1749228445;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=T6gLK4Xhn6yVmKQMI4ularKMV+lLmcOSTs0tDmhhchQ=;
-  b=UNIkGz+4gUcEfTLqMC70xLllwPhZewW/AWrDVfbhCeyVsGcVKllgs04T
-   ExFgptU3kmaec94EXELQl25cFko+jZjykINQBPIWyFtDa0KYEYeyCQWQL
-   5FInGefVr0U/InV9tdKLB2LQau16rf8+56W5zdqWhmvZAr/VK+wkrcQ+g
-   eHRqmeLR0GY+Q2g1O833hc/luIKvOpeAgZWQoXlYZXr3ijUCsLI6twB/U
-   NMRHxktcqQhe1Q+NvyFuEeNG74HE2CmhBQaGaQFiCTwYOFlxHQmsM/ckk
-   CiwP2U9b7ClJRngqvfM25hOko2wDVX2UUA6ZXGzGVUjNSPuPN8+hVKziQ
-   g==;
-X-CSE-ConnectionGUID: PEe7vukoSM6CSw0+R7CyCw==
-X-CSE-MsgGUID: xxJZHO0gQnKu6nCWuEbgpw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14531942"
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="14531942"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2024 09:47:21 -0700
-X-CSE-ConnectionGUID: kPBrPhZJQBq/JOJdCyogdA==
-X-CSE-MsgGUID: c1BP5ct6QlSic9YG4VK5/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,219,1712646000"; 
-   d="scan'208";a="38475879"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 06 Jun 2024 09:47:20 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id DBCC52CF; Thu, 06 Jun 2024 19:47:18 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH v1 4/4] regmap: maple: Switch to use kmemdup_array()
-Date: Thu,  6 Jun 2024 19:46:25 +0300
-Message-ID: <20240606164717.3031107-5-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20240606164717.3031107-1-andriy.shevchenko@linux.intel.com>
-References: <20240606164717.3031107-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1717692537; c=relaxed/simple;
+	bh=NA592QpdHNILyqQw+YPUbhUgEevZwCv+wztjQVrzJ/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gqog7N4UsHywNA+EmsZ94nFJX4EtQ9NScU+e14xvnS0/VpeGYYcpLxH7KN5s1sl6n8SA7YZkwv0P3b3W6AFq+zPLObohlsLjk8nDjKjCwkVzmE1NmAEnIo6VRPmFCQb4LzsxPc5+y40XFIKa2+RzRmPOH3NU03rYv7P7INXGpUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66206C2BD10;
+	Thu,  6 Jun 2024 16:48:56 +0000 (UTC)
+Date: Thu, 6 Jun 2024 12:49:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [for-next][PATCH] function_graph: Rename BYTE_NUMBER to CHAR_NUMBER
+ in selftests
+Message-ID: <20240606124908.0d7b31e2@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Let the kememdup_array() take care about multiplication and possible
-overflows.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/base/regmap/regcache-maple.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+ftrace/for-next
 
-diff --git a/drivers/base/regmap/regcache-maple.c b/drivers/base/regmap/regcache-maple.c
-index e42433404854..f0df2da6d522 100644
---- a/drivers/base/regmap/regcache-maple.c
-+++ b/drivers/base/regmap/regcache-maple.c
-@@ -132,9 +132,9 @@ static int regcache_maple_drop(struct regmap *map, unsigned int min,
- 			lower_index = mas.index;
- 			lower_last = min -1;
+Head SHA1: 1af19b7c01061172f943ac247409626af0ba0867
+
+
+Steven Rostedt (Google) (1):
+      function_graph: Rename BYTE_NUMBER to CHAR_NUMBER in selftests
+
+----
+ kernel/trace/trace_selftest.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+---------------------------
+commit 1af19b7c01061172f943ac247409626af0ba0867
+Author: Steven Rostedt (Google) <rostedt@goodmis.org>
+Date:   Thu Jun 6 08:18:46 2024 -0400
+
+    function_graph: Rename BYTE_NUMBER to CHAR_NUMBER in selftests
+    
+    The function_graph selftests checks various size variables to pass from
+    the entry of the function to the exit. It tests 1, 2, 4 and 8 byte words.
+    The 1 byte macro was called BYTE_NUMBER but that is used in the sh
+    architecture: arch/sh/include/asm/bitops-op32.h
+    
+    Just rename the macro to CHAR_NUMBER.
+    
+    Link: https://lore.kernel.org/linux-trace-kernel/20240606081846.4cb82dc4@gandalf.local.home
+    
+    Cc: Masami Hiramatsu <mhiramat@kernel.org>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+    Fixes: 47c3c70aa3697 ("function_graph: Add selftest for passing local variables")
+    Reported-by: kernel test robot <lkp@intel.com>
+    Closes: https://lore.kernel.org/oe-kbuild-all/202406061744.rZDXfRrG-lkp@intel.com/
+    Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+index 369efc569238..adf0f436d84b 100644
+--- a/kernel/trace/trace_selftest.c
++++ b/kernel/trace/trace_selftest.c
+@@ -758,7 +758,7 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
  
--			lower = kmemdup(entry, ((min - mas.index) *
--						sizeof(unsigned long)),
--					map->alloc_flags);
-+			lower = kmemdup_array(entry,
-+					      min - mas.index, sizeof(*lower),
-+					      map->alloc_flags);
- 			if (!lower) {
- 				ret = -ENOMEM;
- 				goto out_unlocked;
-@@ -145,10 +145,9 @@ static int regcache_maple_drop(struct regmap *map, unsigned int min,
- 			upper_index = max + 1;
- 			upper_last = mas.last;
+ #ifdef CONFIG_DYNAMIC_FTRACE
  
--			upper = kmemdup(&entry[max - mas.index + 1],
--					((mas.last - max) *
--					 sizeof(unsigned long)),
--					map->alloc_flags);
-+			upper = kmemdup_array(&entry[max - mas.index + 1],
-+					      mas.last - max, sizeof(*upper),
-+					      map->alloc_flags);
- 			if (!upper) {
- 				ret = -ENOMEM;
- 				goto out_unlocked;
--- 
-2.43.0.rc1.1336.g36b5255a03ac
-
+-#define BYTE_NUMBER 123
++#define CHAR_NUMBER 123
+ #define SHORT_NUMBER 12345
+ #define WORD_NUMBER 1234567890
+ #define LONG_NUMBER 1234567890123456789LL
+@@ -789,7 +789,7 @@ static __init int store_entry(struct ftrace_graph_ent *trace,
+ 
+ 	switch (size) {
+ 	case 1:
+-		*(char *)p = BYTE_NUMBER;
++		*(char *)p = CHAR_NUMBER;
+ 		break;
+ 	case 2:
+ 		*(short *)p = SHORT_NUMBER;
+@@ -830,7 +830,7 @@ static __init void store_return(struct ftrace_graph_ret *trace,
+ 
+ 	switch (fixture->store_size) {
+ 	case 1:
+-		expect = BYTE_NUMBER;
++		expect = CHAR_NUMBER;
+ 		found = *(char *)p;
+ 		break;
+ 	case 2:
