@@ -1,216 +1,191 @@
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2125.outbound.protection.outlook.com [40.107.237.125])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B725313D884
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 21:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717709446; cv=none; b=kA5DkDzRyN/xySjWU85ajPTiLFI+3ZFtA10n5V3oTQELVbyWoFxk5UzXDJenfX2MuligNld6WZERiCgdQNqZHX9mZlvLmSRF//LiEQbjeOvKo/9YkDBcg5t5c2JnAA1fsb7prWQ8OD3hh3XVj6mKKuHVM4/oB9mm5pqU6HPRiOI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717709446; c=relaxed/simple;
-	bh=6OX5jbLn5eWzJyYfgZq3Z11UzdVZrtsm1qMNkRxFuGs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CvAVesyRZ2Cye9CB7cn0dV0jxaGzyNpZ412iqQzriHlhZQcZVhW5srDw/YEklLxgdji1XOgZbNXyrNmupA6M/SvE+afbCIWathJRZzU1u9YDJrxWUOk5uq4iQRcN0CL1F5IcoD/pEOiZ9PKwrYMqkVHBFUOwrn91C24ritE72BI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kYMqDpkK; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DCBFC02;
+	Thu,  6 Jun 2024 21:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.125
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717709551; cv=fail; b=eirBuDnObqMZfb2af4J+YQ9zji+trA+HBGwP7Fx1FXk2w3qk6JyNACVBiFN+EMs59phDnSupU2phGD/gpaztdoQbdqnonSz+MaamauIEtHylWaAHlgqJXMOKwQBCLPjH9a4uLW9Q+b+Ssl5nMZpDxgUzUF6hGeWcSw7AVl0KgJ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717709551; c=relaxed/simple;
+	bh=WW+V09E3LEd/zPC1PdF8eSblD638noU0rSFm0LeaUZY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=oLwiiRVow9JMNfE1vkLYUn2+hD6s93bmW08/uWDMmZ5Lur70oPtJAtAzbe5StN0xa2jgTctggNaEQsDwjYUNtR0NqcOaGXhd9mC+Ix4wOC0tHiEevkuYIZ5POFNrvGFNpt5ZHDtYmClL8cmMzrCWfNM3i89LkpMsV13jwtFM/m8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eideticom.com; spf=pass smtp.mailfrom=eideticom.com; dkim=pass (1024-bit key) header.d=eideticcom.onmicrosoft.com header.i=@eideticcom.onmicrosoft.com header.b=Fub/MEZ/; arc=fail smtp.client-ip=40.107.237.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eideticom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eideticom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYMqDpkK"
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-80ad842d3a7so438966241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 14:30:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=eideticcom.onmicrosoft.com header.i=@eideticcom.onmicrosoft.com header.b="Fub/MEZ/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D0Gw0d474E6NPWyHR/4iJMwl0ZoY2e9UZFHpJGT7+JQocjTuUJgsX92hroy8veN0AQnDicvuwm+Imx1wQtgL6X/ygunU54AqrDe/bA1cBpYyizS4GBtvVHujPLL1Pbw26tzd8RRsJXTHhVQLLAXxEw320WMI6ZXGl9Jh/o//EZC+dxQUypCs/PVxjjWKe7qM41yEZg2qHr8xsUhLd46MdwQ8WaBo9wifjm39Bjv4st51SFgx48QTYSqjxqE6nVEZ1ghM5Wx6RZ76TdVQaokO2h81yo0rgY+8JS0sXIbZj0zA0RWoswGrZiYSH67vOi4dpsm9/9TJloZvkFuOJ/C1Zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ud0SQ5VnLGbuClqg4MfLJFhgyNDcECCb59euoOAV/Lc=;
+ b=CywDnKbEZP627z5dIV5saWUgWxi8bVob2TGC01p2P7rWUb7l5wXrw0RVROTlHHCwIIW5ZLKcpnVL7tDxJg6fVIO0vmEIwxrTFyqsx9yrzO/O3IWXy7gK46MuG7x03eUtddrchF58LHGaPf8vVKGeV6QHpDzCdp1GaWj+VmCIKY+ByKbnvX64YwkTZgIfPbgX3sAkY6DweLMVeJ7Nzt57RtG5HVkzAPn53EGg/KVVpWWF6Lz5XUe+EFOQ2D+x4hVu6Lv5HAlBm+gMkhfkqmfwsiKqBYoKh3W7UjT7w7diUjmlChLYsVEv9EZ+vDMAzMfUqCmTJxGgbHxZgnHcuqJi2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=eideticom.com; dmarc=pass action=none
+ header.from=eideticom.com; dkim=pass header.d=eideticom.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717709443; x=1718314243; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9dcy8tpFWcvRLoLZii3SRyMdBoRRi8/R0gDiOrgpUeI=;
-        b=kYMqDpkKM9KLRgAp9XNDMjvFV2H6DGW4CaAjl5IJ6kZyvBFMb7kol1+fuRyDK7lC10
-         BIU/HbxRJUMUGMk6qq1qFSZl7JUOh8Mj5u5l6Fqwce/MHzGmrVDgK2ExIfkVfJO7WftQ
-         f1kTsdFmGeMARI+Mmnm8MuksJJdEFvx1gJ8nAaQ7jvhUF1K9hPcw5t5iS3btrbO30rAi
-         GRheshR0uCLEA7u10uVOI9uV0cfH6F5v5Y13781XmCbqSXcXi7DC7bCxXUXaBsBZF/Ka
-         pk9mneS/NgYgx6W/ww7FbwXwyhY2pcW3RURc5gsg4inBp+yBJY9un8UCS6UxL3OFXTvE
-         B0OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717709443; x=1718314243;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9dcy8tpFWcvRLoLZii3SRyMdBoRRi8/R0gDiOrgpUeI=;
-        b=ow3v1Ah9colG70Xu7XWvEWPNlU6/zEnsTu1n0g36l3ky1O1j2sBPLjrHZa76eNk5UR
-         OD0p71PAvdZzYlKszYJ1vOGU4ZSw2bVI2+B9GTbtWr2h9KOXFohFTWc2nCO95KmXEQPK
-         3jEOyBdBOFe6u79gYBnAiBXYqGliE0r1cE2WlhvrJkTBMsYhxwp5I3wKK1/gkaDALA/N
-         SJpsIB/dWn6EOkKe5ssSc2ilSi900k6PISi8UJRCUi0CSzFhuu4x8t4jHRK3qnALcPeI
-         RVuviB2qeJeRX36JticnJ6q7oI8ovYfe08kVAK8JySj2/P31c6LJue18CpLU6mgW4nEv
-         6IQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWr4AVsuWtD2qOLc0/siovVAuNVhX52eB537S2D9TJfFvPj4arViNRNJJxxuwT+vQrHVTJAggiK2MXGA0gvCY38Q5FaDHwzvgSF9qNh
-X-Gm-Message-State: AOJu0Yz+OU8kPFYVRO6UaeMClxNQjugh4Rdk/K/+aq/X6y7mfYOUHppl
-	CjcJgujusBmlcg3T90pe5wQZ1AVDy+bpAJF1kSD086c1HPW+uPSa8LBWxpiPPjRCgchQqc8P/V1
-	9tfNiPwdF25Jta1BrbacR5iFHVCo=
-X-Google-Smtp-Source: AGHT+IG4PaBA65BT5QX3MFC0AYUK0+sOcbkTAIJSiPdPkj1KsbpbjbQrUFT6MGHg0PeF1/oTxw3FXsmSKQPOisZpvyQ=
-X-Received: by 2002:a67:f744:0:b0:47b:cd96:6d3d with SMTP id
- ada2fe7eead31-48c27568ae3mr589121137.3.1717709443083; Thu, 06 Jun 2024
- 14:30:43 -0700 (PDT)
+ d=eideticcom.onmicrosoft.com; s=selector2-eideticcom-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ud0SQ5VnLGbuClqg4MfLJFhgyNDcECCb59euoOAV/Lc=;
+ b=Fub/MEZ/kI5CCgmzVhNBsBNQdVVBUETaj9KUYdehL4s5GnEfXxnKkhOrS6Ix1HBbUNF3tEq77ht5Y1sNwZ+RJ5e2mYMCIdPXo3PbzRsHw1/8XkbEXALu80tfMJ5va4dZpD5hCZ/rs85IioQw0M5sz+NmJ1YrFpJ7puVoA+jG3cs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=eideticom.com;
+Received: from MW3PR19MB4250.namprd19.prod.outlook.com (2603:10b6:303:46::16)
+ by SJ0PR19MB4574.namprd19.prod.outlook.com (2603:10b6:a03:283::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.33; Thu, 6 Jun
+ 2024 21:32:24 +0000
+Received: from MW3PR19MB4250.namprd19.prod.outlook.com
+ ([fe80::3280:d8d:de43:6376]) by MW3PR19MB4250.namprd19.prod.outlook.com
+ ([fe80::3280:d8d:de43:6376%6]) with mapi id 15.20.7633.033; Thu, 6 Jun 2024
+ 21:32:24 +0000
+Message-ID: <0efcd0a4-569b-44d0-932f-5f81cf07b916@eideticom.com>
+Date: Thu, 6 Jun 2024 15:32:22 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] Enable P2PDMA in Userspace RDMA
+To: Zhu Yanjun <zyjzyj2000@gmail.com>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-mm@kvack.org
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Mike Marciniszyn <mike.marciniszyn@intel.com>,
+ Michael Guralnik <michaelgur@nvidia.com>,
+ Dan Williams <dan.j.williams@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Valentine Sinitsyn <valesini@yandex-team.ru>, Lukas Wunner <lukas@wunner.de>
+References: <20240605192934.742369-1-martin.oliveira@eideticom.com>
+ <285e6cdb-f765-4969-ab16-abc53ad66a95@linux.dev>
+Content-Language: en-US
+From: Martin Oliveira <martin.oliveira@eideticom.com>
+In-Reply-To: <285e6cdb-f765-4969-ab16-abc53ad66a95@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MWH0EPF00056D14.namprd21.prod.outlook.com
+ (2603:10b6:30f:fff2:0:1:0:1c) To MW3PR19MB4250.namprd19.prod.outlook.com
+ (2603:10b6:303:46::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606184818.1566920-1-yosryahmed@google.com>
- <84d78362-e75c-40c8-b6c2-56d5d5292aa7@redhat.com> <CAJD7tkZH9C21nx75W9Erun=oUvmad5ujmDyGYWRRHEwPCCizUw@mail.gmail.com>
- <7507d075-9f4d-4a9b-836c-1fbb2fbd2257@redhat.com>
-In-Reply-To: <7507d075-9f4d-4a9b-836c-1fbb2fbd2257@redhat.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 7 Jun 2024 09:30:31 +1200
-Message-ID: <CAGsJ_4w_dEyLsPhdJCtRMReXDD116p+U979Yk-8EBu=zx5FWgQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: zswap: add VM_BUG_ON() if large folio swapin is attempted
-To: David Hildenbrand <david@redhat.com>
-Cc: Yosry Ahmed <yosryahmed@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Chris Li <chrisl@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW3PR19MB4250:EE_|SJ0PR19MB4574:EE_
+X-MS-Office365-Filtering-Correlation-Id: 51be555c-1565-4ec7-8022-08dc8670280b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|376005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VHZCSGpWU1ZmQlNhdHI2QWpMekFUQ0o5ZTdVczk2VGxPVUdhMTNDSWQwQ1Zq?=
+ =?utf-8?B?clNBa1pyT1FXdnN6dzRPdFRJellTaitRaEs3cmVZczg2RkdwbUc0K1B5OFlU?=
+ =?utf-8?B?cFNkYzRGS2MxU1BaczJyQ1p6VTlza2dhNjNhbWVUbVZTZnNxeXNmSVhRNlY5?=
+ =?utf-8?B?TEw0eldCeHN4L3NHdERGMVBhTUVTUVRUZzZzMzBtSjZ0cnZIOGlYRWJ6MDFu?=
+ =?utf-8?B?NGVTcGlONmRlRWZwN2NnT1YyN0pPUUhLcUxhRHpDRUcwMUVsbkZkMGVqU0ZO?=
+ =?utf-8?B?Y2NKcFN4QkNHSUxJcis0RENpcTZFbi9OeTZNNUVmMWMzbW05VXAwOWJnOXRz?=
+ =?utf-8?B?cDN5eU9Zam5qcXRIM01Ya0g2UnRrUHVxSGlwTVgyNTVDd09WeUNhZDNBK0Fy?=
+ =?utf-8?B?blN2N1lqSTFONVl4OUxpVTRieWQrOVBaazVNaS9melhlb21oQjJ4K1B2U0x5?=
+ =?utf-8?B?VkpFMWdGSHgxRWJsVTJ6MDFNNVBxSURxWXBadWRuanZWVWdBR3VxWDZmYUZN?=
+ =?utf-8?B?UlpIL1REVDdmbTY0OFMxTkFSQ2FkLy9pK3ZWdm1JUzhTbW5FeHlNeGdRMWRl?=
+ =?utf-8?B?ZGhNUEFsdG14d2hBTnE2bGxna3N2aEhLdkFYT2x5bTdZTm5jaHJEZkRGbTc1?=
+ =?utf-8?B?MUs1Yk1kZlpPcm1RWUU2Ty91Vjd2cXhkSUFGN2ZVdFI1alFqcFF0SC9aNTFQ?=
+ =?utf-8?B?MHlwam5JQlJIMkoyMkRkdy9Fb0RhbUIvNHYwWGVlYVljWW9UZkh0aldvcURG?=
+ =?utf-8?B?TnNza2diRVRJaDIzTHlUU3liMUUwOFhpYmVaU2ovK3pCYmtXSVUyRm5Qcklz?=
+ =?utf-8?B?cXVqUlo5bDZWSGV3SGFLZzR5WjV3OVNzT1ZMU1B2TngzeDFnTHlMY1dKU0dh?=
+ =?utf-8?B?U2dhMnlnQW5nSkRKUTEydml0czJjSTFYMWhkUTNzbGNpcUlJblg3TDNtZjVx?=
+ =?utf-8?B?M054OEJZM05INGNNRkpkSGEwSm5IMTUxVVptUGhYVEE4b25lSnVJNTBKQ2ZV?=
+ =?utf-8?B?a3NOYytTK1IySHpqMnVjc2E3bzNrTTIxYi8xdXpYdHFaWjhoc0J0MjcwU1Zy?=
+ =?utf-8?B?RXIxMmc2Mm9CWWtrMUx0R2pWY0hYVVdXSHJDMnlIeVJ6Yk84aDNmNWp5anht?=
+ =?utf-8?B?MnE1ekVaNUJJOEJwN2NvcW1XM3Izd005bUpXdlVIRWN0TFZGZmtRMzF1UVp5?=
+ =?utf-8?B?TnJBQTZlNGJ4VWdMcHY1Wk5HbS92MmpaVjgzV3ErbnBmcUhYM295OFlwS0tk?=
+ =?utf-8?B?RWgwNUpZc1pyUExuSzBORnRoTjRJRFh0TGE0ZUJPWk40RUhnNXBjcDBmOVkv?=
+ =?utf-8?B?Sm5DODlaeTZyTGpZUEpUL2VpMGhoeXhkSmNRQ3AwK1YweUdLdVVBVW85RnQ4?=
+ =?utf-8?B?ektyVXBYaFl4V0tSdDRvUWwxcHJaTW1hQncvTEwvMWFWMEVpZmNsSTFob3FH?=
+ =?utf-8?B?UkNRNi9xNzl3WDdNTDkxYkQ0VWJLZ1VnbVMvVGt5SGRlbzhVSUhjaUw0MFlT?=
+ =?utf-8?B?OXlpeldJdXJTNGRlODZycXdxR0h5SUxsNkNRL2ErRXFvRERpWVhjZHNMbTIy?=
+ =?utf-8?B?Y1VsTDJ2c2VScTJPNGpPelc5VFRIcnlxdUpHYjNOb1NQejRFWURybjBOTmNN?=
+ =?utf-8?B?NDE3dlp0VzVmTE8yNXZsdFRoR1BGaUdscmtydlBRVlNKZ0graEFzMVo3YTlr?=
+ =?utf-8?B?Y3B0aDJZZ0k1VzRhYkNPZkFlTy9kQ1lUVk1OdDA5ZFpLZkxhUVhiOVVQaEI3?=
+ =?utf-8?Q?wnBU2s6J7zm23qxSgickv6IxBJyZCAqoOQwYD9C?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR19MB4250.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MVNmQklGdFA3Wm9tZnR2TkswS0xrTUtLa2FjTzV6emRvVjFHSzhNT2hxeGx0?=
+ =?utf-8?B?NVFCdGYyT2ZaQ3R0SUsvTyticHFCMWgvQlEzUjAzcm9lc2xORkFoZ3FVN0Nn?=
+ =?utf-8?B?Lzd1Q3BZdkNvbmVoZ05rRjhtQ1hmYlVYZ2pIV1UraW1jQy9HMkJCSEhVaVI5?=
+ =?utf-8?B?UmZYWmxpR1c2UXJBN2tEUnVnUG42S3BqTy9SQ1V1bC9ta1pMcloxZkpMY1h0?=
+ =?utf-8?B?VkZqSHRKUjlpb25nY0Z2aXJwNHJGTUVVajltZUdlMDVweFhIU01TTVNsb3Mv?=
+ =?utf-8?B?MHZFYklBcEgrbDhqajlUWElwdkNYYmhXM3FzVDFqRUJDd3F0WWlkV0pSMVRm?=
+ =?utf-8?B?emZEVlpHRWxrYWFtNzh2YThjT3FQUnk4VTJBNFpEcXBlbllUN1JqNklPWGtZ?=
+ =?utf-8?B?NW14YWYzdVowKzI3VjY2ZklhMnJaNElEa1VMT1FJbHFMQXhXbVJ3UjVMbFBD?=
+ =?utf-8?B?c09tZ09JTTRFNy9hUWNkT3RyQ1QxYUNEbnpsQUJlaG1DVlYvTXpVcjloRjZj?=
+ =?utf-8?B?cG5NcDhuVlJaRzRSZnNub3lEbVB2V0hlRHhUMUVQWVF0MkVYUmx6RFFucmo3?=
+ =?utf-8?B?NEg3ZUpaNDRqQTJXcWRLWS9QS0VKSXJhbGIxZGtwdnlXMHdsRlNLeDdwcDJl?=
+ =?utf-8?B?dlljYkFSbTA4ancwaDFQNVFKWHJBU1k5WGpLYVZsRkNkeEVuY2YzYlFLNEtK?=
+ =?utf-8?B?bkVjWDdLcXZJdEVLeHdjeDBGeXZSNjVRNlUrQ21QQzJ3VmdtTitabUIxazA5?=
+ =?utf-8?B?ZlVJd01XSkNXMHZtdmt6Q2ViOHVSVE9rbklQNmtuZGs3UWR2OWt2TUszS0xv?=
+ =?utf-8?B?L1pzVHN4d29MY2prdWVOTDFhVlA3Nmw1SUdTKzJNRUJyRlBUTGZIT2tUTjA2?=
+ =?utf-8?B?YWpBOTJkRGxIU0JyZXM4TU9maHVDZkVBanJkTkJ2bGViOGZwYVk2b0MwdGlC?=
+ =?utf-8?B?T0JqeWZGVmZBRUM0NU5PZkppRmUwZ0owSkM2SmxURW1CMmQ4MFk0ZjJrdlEr?=
+ =?utf-8?B?Vjh4bnROZDFMZjV5TkpuMnp5eXlUZ3FBT1NSaTkzTUh1NE1GSS9sMlVtS1NP?=
+ =?utf-8?B?NjlXTmlaSGFUMUs0ZWlwWkdJc01sOHIyMmpUOXF3RDVPMXdsMC9oUGVkM3U2?=
+ =?utf-8?B?SUVtKzJSaS90YVQvTS82a0ltUGN3ZWxteFZoWVUxTlJReEF3OFlQYlhiMy9u?=
+ =?utf-8?B?eXNQWUF6REtQY0dTL09pV0o1SThtdmp3K24yZFI0T3B1MXlvTlkyekp0ZmpT?=
+ =?utf-8?B?U2w1MDFlblp5amxDcCtwUWhuczM5NEJENWZLSmZWa2FVN01RMkY5UERmRVdF?=
+ =?utf-8?B?Qm95N2E1WmR1KzlpdzBVN29ETVpBaUNQQ3JKWTN4eVBuMGZuS2h4Rnd4MG5Y?=
+ =?utf-8?B?ZGk5MnhTWjBSZG84VjRheW1ZZnI3S1VyREZjRi8yenpwR3lGYVE5dFo1Rkts?=
+ =?utf-8?B?YVVQeGNQeHFOSDUwbVE1NWFDWWZnMjE1VjA2eWtBUE0vRStxNjdMZTJjcENB?=
+ =?utf-8?B?NkVHTUZQS0ZzN29oUUFLdDBvaXB5T3ZiczdldGFQRHpiNnpDMWF6TzNYMzli?=
+ =?utf-8?B?Y1llN2JKaUdCdkFBMFZ0d1RqaFlTMEdOdktvcG5SV0RNVERqdXhRakxnS3p5?=
+ =?utf-8?B?WTcvbUNIV3I2ZEh3K0pXMElJSjJma1FVZFcvK2hzMGp2TzJoMnNZU2s2VXNJ?=
+ =?utf-8?B?aUM3cXp3RS9LT2phNTNOc25uZzQ3cEJBazJ0NUxBbFA5TWVLM1h1clVKVHkv?=
+ =?utf-8?B?RlNqOStzRlFta1JJa2pEalNnVEwrYUYxUXpkM1lSRUY0THdJSE4wVlN5MURz?=
+ =?utf-8?B?WXpzb2lpMmlXTFZBMDlNQU1nOGt4ZTZqRTg0R3hnQlBoYXBKREtCa3A0b3R6?=
+ =?utf-8?B?S09Uck8rT2VWNHM4MVVxR3MxWHdzbHhrM2NTNVZqU014ODFHcDNtSHVPbjJJ?=
+ =?utf-8?B?VVVlNzRvYWwzbStodXNaR1p2bnoxYkVVTHBxcGwrd2RReDFPdGtxc09Jam5J?=
+ =?utf-8?B?QnRJdm96bDM2UXlDbW9BM2VXYnJvM3R3S1pJUFFSQlgrNU1wNVpZWXNSN2Z1?=
+ =?utf-8?B?T3AzYlZUOVg2c1RudmZWNjBldmEzdU1saVR3dGgyRFZJdWlPVDV6d25FU3Vn?=
+ =?utf-8?B?aHhwU2UvVkRWREZEQ0t5RjE2SUduYjJxWXhjelJHeS8zRXRKTzFQWndkb0s2?=
+ =?utf-8?B?NWc9PQ==?=
+X-OriginatorOrg: eideticom.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51be555c-1565-4ec7-8022-08dc8670280b
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR19MB4250.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 21:32:24.6665
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3490cd4b-0360-4377-abb1-15f8c5af8fc2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0FJXVO/aRG9m3anZcbY2dXfT20WZMvnzcKZaQSmSgt8PpY8KxWsde4osPC6Z7YLIKpihsvCCSf2WrfptX4V55oyaHJTGtE/g6uPcWUjNAg0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR19MB4574
 
-On Fri, Jun 7, 2024 at 9:17=E2=80=AFAM David Hildenbrand <david@redhat.com>=
- wrote:
->
-> On 06.06.24 22:31, Yosry Ahmed wrote:
-> > On Thu, Jun 6, 2024 at 1:22=E2=80=AFPM David Hildenbrand <david@redhat.=
-com> wrote:
-> >>
-> >> On 06.06.24 20:48, Yosry Ahmed wrote:
-> >>> With ongoing work to support large folio swapin, it is important to m=
-ake
-> >>> sure we do not pass large folios to zswap_load() without implementing
-> >>> proper support.
-> >>>
-> >>> For example, if a swapin fault observes that contiguous PTEs are
-> >>> pointing to contiguous swap entries and tries to swap them in as a la=
-rge
-> >>> folio, swap_read_folio() will pass in a large folio to zswap_load(), =
-but
-> >>> zswap_load() will only effectively load the first page in the folio. =
-If
-> >>> the first page is not in zswap, the folio will be read from disk, eve=
-n
-> >>> though other pages may be in zswap.
-> >>>
-> >>> In both cases, this will lead to silent data corruption.
-> >>>
-> >>> Proper large folio swapin support needs to go into zswap before zswap
-> >>> can be enabled in a system that supports large folio swapin.
-> >>>
-> >>> Looking at callers of swap_read_folio(), it seems like they are eithe=
-r
-> >>> allocated from __read_swap_cache_async() or do_swap_page() in the
-> >>> SWP_SYNCHRONOUS_IO path. Both of which allocate order-0 folios, so we
-> >>> are fine for now.
-> >>>
-> >>> Add a VM_BUG_ON() in zswap_load() to make sure that we detect changes=
- in
-> >>> the order of those allocations without proper handling of zswap.
-> >>>
-> >>> Alternatively, swap_read_folio() (or its callers) can be updated to h=
-ave
-> >>> a fallback mechanism that splits large folios or reads subpages
-> >>> separately. Similar logic may be needed anyway in case part of a larg=
-e
-> >>> folio is already in the swapcache and the rest of it is swapped out.
-> >>>
-> >>> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
-> >>> ---
-> >>>
-> >>> Sorry for the long CC list, I just found myself repeatedly looking at
-> >>> new series that add swap support for mTHPs / large folios, making sur=
-e
-> >>> they do not break with zswap or make incorrect assumptions. This debu=
-g
-> >>> check should give us some peace of mind. Hopefully this patch will al=
-so
-> >>> raise awareness among people who are working on this.
-> >>>
-> >>> ---
-> >>>    mm/zswap.c | 3 +++
-> >>>    1 file changed, 3 insertions(+)
-> >>>
-> >>> diff --git a/mm/zswap.c b/mm/zswap.c
-> >>> index b9b35ef86d9be..6007252429bb2 100644
-> >>> --- a/mm/zswap.c
-> >>> +++ b/mm/zswap.c
-> >>> @@ -1577,6 +1577,9 @@ bool zswap_load(struct folio *folio)
-> >>>        if (!entry)
-> >>>                return false;
-> >>>
-> >>> +     /* Zswap loads do not handle large folio swapins correctly yet =
-*/
-> >>> +     VM_BUG_ON(folio_test_large(folio));
-> >>> +
-> >>
-> >> There is no way we could have a WARN_ON_ONCE() and recover, right?
-> >
-> > Not without making more fundamental changes to the surrounding swap
-> > code. Currently zswap_load() returns either true (folio was loaded
-> > from zswap) or false (folio is not in zswap).
-> >
-> > To handle this correctly zswap_load() would need to tell
-> > swap_read_folio() which subpages are in zswap and have been loaded,
-> > and then swap_read_folio() would need to read the remaining subpages
-> > from disk. This of course assumes that the caller of swap_read_folio()
-> > made sure that the entire folio is swapped out and protected against
-> > races with other swapins.
-> >
-> > Also, because swap_read_folio() cannot split the folio itself, other
-> > swap_read_folio_*() functions that are called from it should be
-> > updated to handle swapping in tail subpages, which may be questionable
-> > in its own right.
-> >
-> > An alternative would be that zswap_load() (or a separate interface)
-> > could tell swap_read_folio() that the folio is partially in zswap,
-> > then we can just bail and tell the caller that it cannot read the
-> > large folio and that it should be split.
-> >
-> > There may be other options as well, but the bottom line is that it is
-> > possible, but probably not something that we want to do right now.
-> >
-> > A stronger protection method would be to introduce a config option or
-> > boot parameter for large folio swapin, and then make CONFIG_ZSWAP
-> > depend on it being disabled, or have zswap check it at boot and refuse
-> > to be enabled if it is on.
->
-> Right, sounds like the VM_BUG_ON() really is not that easily avoidable.
->
-> I was wondering, if we could WARN_ON_ONCE and make the swap code detect
-> this like a read-error from disk.
->
-> I think do_swap_page() detects that by checking if the folio is not
-> uptodate:
->
-> if (unlikely(!folio_test_uptodate(folio))) {
->         ret =3D VM_FAULT_SIGBUS;
->         goto out_nomap;
-> }
->
-> So maybe WARN_ON_ONCE() + triggering that might be a bit nicer to the
-> system (but the app would crash either way, there is no way around it).
->
+On 2024-06-06 02:53, Zhu Yanjun wrote:
+> On 05.06.24 21:29, Martin Oliveira wrote:
+>> This patch series enables P2PDMA memory to be used in userspace RDMA
+>> transfers. With this series, P2PDMA memory mmaped into userspace (ie.
+>> only NVMe CMBs, at the moment) can then be used with ibv_reg_mr() (or
+>> similar) interfaces. This can be tested by passing a sysfs p2pmem
+>> allocator to the --mmap flag of the perftest tools.
+> 
+> Do you mean the following --mmap flag?
+> "
+> --mmap=file  Use an mmap'd file as the buffer for testing P2P transfers.
+> "
 
-I'd rather fallback to small folios swapin instead crashing apps till we fi=
-x
-the large folio swapin in zswap :-)
+Yes
 
-+static struct folio *alloc_swap_folio(struct vm_fault *vmf)
-+{
-+      ...
-+
-+      if (is_zswap_enabled())
-+           goto fallback;
+> I am interested in this. Can you provide the full steps to make tests
+> with this patch series
+First start the server with:
 
-> --
-> Cheers,
->
-> David / dhildenb
+ib_read_bw
 
-Thanks
-Barry
+Then run a client with something like this:
+
+ib_read_bw --mmap /sys/bus/pci/devices/0000\:c5\:00.0/p2pmem/allocate <host>
+
+Martin
