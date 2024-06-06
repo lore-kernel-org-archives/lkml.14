@@ -1,115 +1,104 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [91.198.224.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6595913E8B6
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 08:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA07913F443;
+	Thu,  6 Jun 2024 08:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.224.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717664041; cv=none; b=MzQO/k18v6c8cpNk2xxqtvczSmc9AZobu80SMEgEyEPLjA14aQrspSnhtjxIv3P/oHHLZCDq1AFI2a7tNuBQdmLiMefs2cC9KPTiay4kaxLXUnLBY+O0F+6LiDH1oED9fK/gFIk9YJtrLB+/Btgjg3g0T0snEAnN3Z1EnRjwzro=
+	t=1717664060; cv=none; b=htZlcgUTwhpxW1XkBaBsFWf2jK5gs/yT7w1W0k6aGNS0pSMKuYQ7kxa9+f31C9rtOa+cjPtoZI7IZtK8c4/28NS0VLMaRhdMKFbI5DSF45DhkyxnTjWLeYc1R0MB3fPVGEAT97RQGzmYkxKPcwIINAcLR9tDLTUfkbgeVf0wo5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717664041; c=relaxed/simple;
-	bh=C+s8Cf+xn4NSLnGuVo6MezQKUoye6EY3hIobHSOxoyk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j6DkuuDTpsQL9SLPSIHoQ9K7RF13T+fkPKjR8lDhS5bHB/kdazU0es7nT4ui64O4V9eYEEEM0peexKq1TZMMCBn8JlJERMxfeZyDBLlS8NrlLAJbsVo+EXNJX0+IEPWlE5W0XVpxTkALgXGFdBCivQMW3/BrFPoIAXdgxT9z7Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zznoi+ZN; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zznoi+ZN"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42155143cb0so9935785e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 01:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717664038; x=1718268838; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LhG8EPeH9MSySabYFfPbTg9X9y+fL2rjWWg8DWpXBx4=;
-        b=Zznoi+ZNHsp4w8plkdmq8j5w/zCvfKWl98dtmFjbS209Y7WLXAWwnIv8rt2BQWJx4e
-         KzF+CsSULxM4pKPmmr031MLQpPonwCSkgnWYHfw49fmHhrV2Jy6/MlgFOnYlUhWFn709
-         qFm47LFwI1VBH448QQbl5CqxEysxsQCqvvFR5hR6m/lR4X6LmTPna4wbhVBZ6FP1Gsch
-         ceXdSyyh/4gqIDm4R9gHrEzEYWHs7Ci8+RvYAL13INYXxp898+UeIVAYBczegNLOqVQt
-         axod4IBmRA1A9tBIiLlXjJL0mvzeW+DNImKhOo/9buukLAcqfvCoPZBM9Laml1w/vr8w
-         cuyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717664038; x=1718268838;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LhG8EPeH9MSySabYFfPbTg9X9y+fL2rjWWg8DWpXBx4=;
-        b=t2L30HWOeftcQ0Hv1jiosG4wkdjRhFTmT/t62WQHg1xc0T/MfA3zb6lIOvEKHFsxqt
-         MW6kvlcW/7kj/Uu/R6bbOaB2Tp21yZIU/E1+zQx90rVBMQWQApQ2wvzLCsC2h2HGyakr
-         Xi6nOW77afoW84ytabmT2UwE0wCo1J4qJ5nDAdvt85XMDcT8NF6cdzKnqyHxCSn1mXtW
-         n2hwYaKsylpVfnozzsauiw9172/RAwcy1MwYJK6w8YJBZOnCfk32lJAb5MfKh0FbycRB
-         iMrcxJIUmZ7KSFpw9NFCZqffer+p7pfpc6jKYRuXPAin5XFrcZyuOigHCB+owvJerU7C
-         Wwlw==
-X-Gm-Message-State: AOJu0YxzZa6ZAthbj+ghbHlHcjYijIZOgXW0tn+E2e6pUvfCeX+j4yQ2
-	Uo39aISNHOST1SeMiVYvK1yZmbTZaKLG4nQgR/BswVAAfrs3DUL/
-X-Google-Smtp-Source: AGHT+IHLiHFnxNhYyRHS5x47Zv9iLorrjVjFlK9xjsUyywIatfwwURBJXom75ZjGj7hYYNZ+eBEvEw==
-X-Received: by 2002:a05:600c:3d95:b0:41b:f116:8868 with SMTP id 5b1f17b1804b1-421562cd313mr45737105e9.12.1717664037232;
-        Thu, 06 Jun 2024 01:53:57 -0700 (PDT)
-Received: from gmail.com (1F2EF20A.nat.pool.telekom.hu. [31.46.242.10])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5e96c34sm974746f8f.82.2024.06.06.01.53.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 01:53:56 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Thu, 6 Jun 2024 10:53:54 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave@sr71.net>, Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>
-Subject: Re: [PATCH 2/3] x86/fpu: Remove the thread::fpu pointer
-Message-ID: <ZmF5IhYp5JiiMHgv@gmail.com>
-References: <20240605083557.2051480-1-mingo@kernel.org>
- <20240605083557.2051480-3-mingo@kernel.org>
- <20240605133805.GB25006@redhat.com>
+	s=arc-20240116; t=1717664060; c=relaxed/simple;
+	bh=Dxzgu1E2bxWwq/MieO5oAXOSUD/JtmEc28wK0XbexZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bOq4VTxh/n+/He7upx/UgrKEJBvDxHZ75GfMSjOBB6szIp49MuH12KjfB8K0436SQ8vnXfix9rNBdjPBtWO1HsNCc8vlOom4ppftyZQkCGqH7/twbgerbcRoC3wEiq7ijuYzkYJYYa4FbghW4oytXvhDnyHz+rN4aT+4UruxxUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=91.198.224.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=9901b58ca3=ms@dev.tdt.de>)
+	id 1sF8sy-00EJuv-8f; Thu, 06 Jun 2024 10:54:16 +0200
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1sF8sx-00EJun-O2; Thu, 06 Jun 2024 10:54:15 +0200
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id 773EA240053;
+	Thu,  6 Jun 2024 10:54:15 +0200 (CEST)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id 0E9AA240050;
+	Thu,  6 Jun 2024 10:54:15 +0200 (CEST)
+Received: from mschiller1.dev.tdt.de (unknown [10.2.3.20])
+	by mail.dev.tdt.de (Postfix) with ESMTPSA id B9CD2379F6;
+	Thu,  6 Jun 2024 10:54:14 +0200 (CEST)
+From: Martin Schiller <ms@dev.tdt.de>
+To: martin.blumenstingl@googlemail.com,
+	hauke@hauke-m.de,
+	andrew@lunn.ch,
+	f.fainelli@gmail.com,
+	olteanv@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 02/13] net: dsa: lantiq_gswip: Only allow phy-mode = "internal" on the CPU port
+Date: Thu,  6 Jun 2024 10:52:23 +0200
+Message-ID: <20240606085234.565551-3-ms@dev.tdt.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240606085234.565551-1-ms@dev.tdt.de>
+References: <20240606085234.565551-1-ms@dev.tdt.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605133805.GB25006@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+X-purgate-ID: 151534::1717664056-FD9A0776-C50BB7C2/0/0
+X-purgate: clean
+X-purgate-type: clean
 
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-* Oleg Nesterov <oleg@redhat.com> wrote:
+Add the CPU port to gswip_xrx200_phylink_get_caps() and
+gswip_xrx300_phylink_get_caps(). It connects through a SoC-internal bus,
+so the only allowed phy-mode is PHY_INTERFACE_MODE_INTERNAL.
 
-> On 06/05, Ingo Molnar wrote:
-> >
-> > @@ -591,13 +591,11 @@ int fpu_clone(struct task_struct *dst, unsigned long clone_flags, bool minimal,
-> >  	 * This is safe because task_struct size is a multiple of cacheline size.
-> >  	 */
-> >  	struct fpu *dst_fpu = (void *)dst + sizeof(*dst);
-> > -	struct fpu *src_fpu = current->thread.fpu;
-> > +	struct fpu *src_fpu = x86_task_fpu(current);
-> 
-> I think this patch can also change
-> 
-> 	struct fpu *dst_fpu = (void *)dst + sizeof(*dst);
-> 
-> above to use x86_task_fpu(dst).
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/net/dsa/lantiq_gswip.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Yeah, so I'd prefer to keep it open coded, because of the comment and the 
-debug check makes a lot more sense if the pointer calculation is visible:
+diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswi=
+p.c
+index a557049e34f5..b9c7076ce32f 100644
+--- a/drivers/net/dsa/lantiq_gswip.c
++++ b/drivers/net/dsa/lantiq_gswip.c
+@@ -1516,6 +1516,7 @@ static void gswip_xrx200_phylink_get_caps(struct ds=
+a_switch *ds, int port,
+ 	case 2:
+ 	case 3:
+ 	case 4:
++	case 6:
+ 		__set_bit(PHY_INTERFACE_MODE_INTERNAL,
+ 			  config->supported_interfaces);
+ 		break;
+@@ -1547,6 +1548,7 @@ static void gswip_xrx300_phylink_get_caps(struct ds=
+a_switch *ds, int port,
+ 	case 2:
+ 	case 3:
+ 	case 4:
++	case 6:
+ 		__set_bit(PHY_INTERFACE_MODE_INTERNAL,
+ 			  config->supported_interfaces);
+ 		break;
+--=20
+2.39.2
 
-        /*
-         * We allocate the new FPU structure right after the end of the task struct.
-         * task allocation size already took this into account.
-         *
-         * This is safe because task_struct size is a multiple of cacheline size.
-         */
-        struct fpu *dst_fpu = (void *)dst + sizeof(*dst);
-
-        BUILD_BUG_ON(sizeof(*dst) % SMP_CACHE_BYTES != 0);
-
-But yes, you are right, this is technically an open-coded x86_task_fpu().
-
-Thanks,
-
-	Ingo
