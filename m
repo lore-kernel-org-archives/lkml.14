@@ -1,33 +1,32 @@
 Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFFE13B28A
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C2013B28A
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 12:39:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717677539; cv=fail; b=eBWQfeRZ8vykBpoMRMtkQix0jQgctwkjFAL9q+yKpDvm36sHJDNVratNqooqnUfI5Xo+oa7Z48Fsvwd49kDcS0lIqvieVtzSiTYubla/eQSUrLhaQw76zqBWOrWNd+k+U7C8KGh42pnJaEKlhUFWELMKmgCWhakSp4FcTY4cTqI=
+	t=1717677577; cv=fail; b=IjfSPMbU695xrtaMC3ScK00SQP4hWEa2tZoKFN/yoTTVzmOOskAfO98Pdxcn1QeYBl/CM9T41MMO7cKN6wYohn7G/1bIUWCPUS/G1xhq43mybSfk0n8MUcRtJx5q/pLTdeQoEWrpDgiMhHqUFx8hQQwVnR+XnT+fTKYXgwlY2js=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717677539; c=relaxed/simple;
-	bh=ew15OwVogXyekIsX0nGXTQgmyMlBxXlBSTsIFtULP0A=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Dbk/ag4ogKsyvfKjbzRrmGFKmXoefizoPZjyIYZ+UeRIOmYVGymUovOEhXLUHjG4s1Pl+Bohl4wDgXWZA9ViySnSzyaEJgJOmlc65Mx5y/F+Ji5FLEWB4b+PDiCPluIllFbZGqz72uEWLg24ig/CqGe/qnYjr/+klaGs/ltK1xM=
+	s=arc-20240116; t=1717677577; c=relaxed/simple;
+	bh=q/CYn8jtoTmT6OX0PJ/k0uZUn3d6l+RsnN3U16+pveo=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=C4u29R5Pbf7P1uxeDXiZAnBO0wKXG9+4EZAdMCLIVfm3TvM4sPJcxbm61Zm0ltTbme5k5EpILWlUpKS55llaHKa2HEVHbeUqo5Dp0ebe+tH1rBNjYL9uhkL88RSh3dtpSri+UJJR75tC+ljsCSgp15jtMmofBqvupA9ksah5dL8=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.178.238
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 456Ba3Q1029696;
-	Thu, 6 Jun 2024 12:38:42 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2048.outbound.protection.outlook.com [104.47.70.48])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3yftm7w78w-1
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4563mMka021165;
+	Thu, 6 Jun 2024 12:39:27 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2045.outbound.protection.outlook.com [104.47.70.45])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3yfruxd8ux-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Jun 2024 12:38:42 +0000 (GMT)
+	Thu, 06 Jun 2024 12:39:27 +0000 (GMT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M0SUWfpjyLMFsSZ8CMj9K3qgOv2hSSiW+eLmRdINt0wYXuHkpo0vGoi/FHY3578DLNyzBiD+CSLqO8JegArU2OUzj14C6H1fVh4Nqon7CmRJXah+xFTw0pALk+7GrX4i4MkjPzLlkOrZbMVYcT/xUUOiyZV43SDGH9XyXOQAArNwTmEt9YAtLsMCiQKE1AOCIG2Q+EOfUP+tt7fZDM9Oy+K2PmDclQgH+dZrm6dvT9k7zgOHN2LVuBzw8szuoU56MXg18uyIkdhpVARpv52qutC0YPSu/YAySm2dJD6uaQcupHPY2M+Q1wEE/swT2oiaaF4shWhnIAHy75WcPxqBzA==
+ b=XsfnGSHWdG9CUF9n8MPcizih7bYsr6KAMbXkdszHULH26w3hlrnNpDoSlqVst4gDBPZpkGLDSfWUf6Flgyy1+ZMWWINDOjB+OUSPyhpJxOPDcwIkgdRf/AWyGQ30LbH3XWBfgEpL/Me95NIx7D66rY/me7fCSeJztsp7XWo3JMY8Aw4UfC3jsKAD0wheKZkZsO7mpaaQ78KDgJh6QW1bbvtQ0bGXbUYbOJS9eQ4hjYlGP/IixUPjMFdkZ5/j90NWVWsmpaNKSrtH+iv4z4tWviIyHp1ACHJX6ZSAdLQPNK0vJHbOzlO5kqAwx7d4Ri3qH58M/IRKYFquINdWUrOTBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RUZaZDtZzrIfOAIrw/W/lPsTV6NnKa8GlkGnjDPmdJ0=;
- b=anj0aXQzO2h7Q/4KYg0VCQOSK2lqOszVzUNLr7hE0H3lsAOsFq7DWKsN0P9NN8yDkesC4vhaEIvT8ZKOS33T6LUAVvpS3CNPQRSZNybyT+kiPGYalsp04Fux4SvfocapcbC4n/qpM+HWoHUvq95kgdDYvWkAMp3xq4/QtvovQ+l1jp7BroB+gLoEwfXwnv/SfhfL45mku+1Mz7ntH25S3RZpKcVDwwQ3jBWeUsDA2ywiY7cbfyI39i1Ffo/BgncuhoqJdxzeZIpAVKBz0PcOfmpB4WXrBAUBCMa6KqI/F5PUqeI7AVkXyCfYl7zZ18Kr8HeGTJTcXJ/vOXIx9v71vQ==
+ bh=sCdeKmv1OqCIjbA3GqAcpgZ0v/n8j8GWEev3otKZd44=;
+ b=A5ys4CCOD1ErU0nubUuAR11egJjoUHZD6Gk/QpI+lE9ZAnVlgHb/sfeKBTGQcDxhQdADgXDFpZzDxXgCYzHjpkk9d+b8Wd1+ldVKysK0bmn+HfQhghZx20EcFrMPcQ1l3pHHwO+zsXsH7pwOVGcS4llclQDY0jF1v3pDFfgvgfl45Bf30njLtvdGStCiQB3atxPoRfXJxklTLAB8+QNMqq9P7ylaLnZapnQfo7kov348k39xWJbq5t1L/SdCMwtUvl0HtrtkQtdg7b4IRLTr9f6KW71N5gx+eakBA0fy6bLfSPdq0fk58GwJmT4rX2Cs9eMPhvtDlpr2GaaLlomV5w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=windriver.com; dmarc=pass action=none
  header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
@@ -35,27 +34,23 @@ Received: from SA3PR11MB7527.namprd11.prod.outlook.com (2603:10b6:806:314::20)
  by CY8PR11MB7393.namprd11.prod.outlook.com (2603:10b6:930:84::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.32; Thu, 6 Jun
- 2024 12:38:39 +0000
+ 2024 12:39:24 +0000
 Received: from SA3PR11MB7527.namprd11.prod.outlook.com
  ([fe80::3133:62e0:c57c:e538]) by SA3PR11MB7527.namprd11.prod.outlook.com
  ([fe80::3133:62e0:c57c:e538%7]) with mapi id 15.20.7633.021; Thu, 6 Jun 2024
- 12:38:39 +0000
-Message-ID: <ea5fcbf7-408a-4edb-aefa-15f17e712139@windriver.com>
-Date: Thu, 6 Jun 2024 20:37:39 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] hpet: Support 32-bit userspace
-To: Arnd Bergmann <arnd@arndb.de>, Clemens Ladisch <clemens@ladisch.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-References: <20240606094620.3946453-1-zhe.he@windriver.com>
- <5050968c-6807-4688-ad7c-24c19820f1e6@app.fastmail.com>
+ 12:39:24 +0000
 From: He Zhe <zhe.he@windriver.com>
-Content-Language: en-US
-In-Reply-To: <5050968c-6807-4688-ad7c-24c19820f1e6@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR04CA0020.namprd04.prod.outlook.com
- (2603:10b6:a03:40::33) To SA3PR11MB7527.namprd11.prod.outlook.com
+To: clemens@ladisch.de, arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Cc: zhe.he@windriver.com
+Subject: [PATCH v3] hpet: Support 32-bit userspace
+Date: Thu,  6 Jun 2024 20:39:08 +0800
+Message-Id: <20240606123908.738733-1-zhe.he@windriver.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0016.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::17) To SA3PR11MB7527.namprd11.prod.outlook.com
  (2603:10b6:806:314::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -65,138 +60,200 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SA3PR11MB7527:EE_|CY8PR11MB7393:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7361b091-83d1-488d-460d-08dc862597b2
+X-MS-Office365-Filtering-Correlation-Id: 7be2082f-9caa-4187-f6a8-08dc8625b266
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230031|366007|52116005|1800799015|376005|38350700005;
 X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?cUJtMS9JSEpWWld3WmMyUy8vM0RMbFd0YXRaZGJWUlJlci9uQk1qQWpPT3RI?=
- =?utf-8?B?WU1EcE1zbCtodzI4dUM3SFRXQXRjZjc1Ykx6K1AzczhrK1JYMWZHZklwNXpL?=
- =?utf-8?B?RDRMVXRVM05MMGhhcVYxWUhtUkhxN1BiNEcvT0NsemJsV1dVRE5sbTVYZEt6?=
- =?utf-8?B?dTFDYlR1TnJlQ1ZKY0h3Sy9QZGpzdWpTQjA0WXlybHg0a08zMUt0M2NjN3lR?=
- =?utf-8?B?MnVJUVJwY1BBdjNyNjU2RmcvbWc1bXdoS0Zpc1J4VE44aGwxN2FwcVk5MkpK?=
- =?utf-8?B?THNxTGVIdjV2MWpvVjkxenVrOEt3ZG5yckNPL0NFRjZIaFhRRDZkOHVTalow?=
- =?utf-8?B?TnRsQmNROTNJbVJaTmRKbkhZd1VJQldxQkw5TmtsNzNxeDBHNFpNZ3VpTy9h?=
- =?utf-8?B?ZDZ4aDBwMTRqL3pCZ3RZNUgxWnpVZndkTlJMNkZxbG9Sbll2RDdpZUVObit5?=
- =?utf-8?B?dHgxTm5TQ082d2VCVFhsZjZVWHY2MzJtT3lDUENZTHcrWEpXQVp4SVdNM2lJ?=
- =?utf-8?B?UkZxU2FLdlhuSTk5bUdRdnI3YktBbmVJaVFkMlFndHJvbEdLMFZQZDNmSUl2?=
- =?utf-8?B?ZEFQcjE4VVZkd2JRWktPcGRJLzVuSzZjRHEvLzVrb2J3a29ubE5aclU3Z3VQ?=
- =?utf-8?B?TE9LQlRVMjlEbGNSZHZqZVZsTFNQUklWOTVVdkl2dHB2VWhWQzdzUG02Q0hy?=
- =?utf-8?B?ZHVNdkNScHpnZ1JrUmpZdDVOVTB5SWNTYTNCdlhzVEZXZmJkS2R4RXd4TElu?=
- =?utf-8?B?QW9ydFVuTnZkajhPVmVKS2YzRlFCd1J0OFVmdHcvQjkvMmZ0N2FMcmtmODdK?=
- =?utf-8?B?Q0tyUVBiUHRwV2F6L3VLRnF0SVpGV256cldWeWtadldRSDZVRG5CT1BDSCtz?=
- =?utf-8?B?dXJPUmhPVG54ZGhpVFpvRWx4RHYrdUQxL3JrNnlaTFZpTHJLTWV1MllZWUJF?=
- =?utf-8?B?ajhQU1I2azA5UUFTVllsWWdqTkk2SG5qV2JWYUhIc2JxaEZFT1NNQ0xMblRG?=
- =?utf-8?B?UmM2NjZqUXR5bDVUUGU0c2FEajNBNit2allqZVpybU1iajNvbGRGU1B4RVlm?=
- =?utf-8?B?b01DbEFqcjFvRERqSkhlenYvUXJPZ1RjUlFsR25wMThKRnRCNktnOHl6OU4z?=
- =?utf-8?B?UXdyQWU0TDRKd1o5TzltaC9INXI0WUJTSzZFTlIyQVBQUmJHaDRsdSsrcTRO?=
- =?utf-8?B?YnNEYWFXUEVlNmN0RGNmRTZhVFNYenFiYVBTaHRDMFZtUmYrcEdERFpCYkl3?=
- =?utf-8?B?RlNwa3QrNFFaWUthNkFmbDVGR2JsUmllajM1Nmhkd1ppbnQ0NUx4SDlFQTAx?=
- =?utf-8?B?aFNTM3Zjd21scWloVXpadFdOZEpUYmxLZ0hhTXZWNUFoRmg4cUxTKzZPT3hW?=
- =?utf-8?B?ajBVL1NZNnhENmVmUW4xa0w4Ri9CQTczRnhpd210a0FCMUFuZE1pOWg0ZUNN?=
- =?utf-8?B?TmN2Ym1kZ3dnRUs4SmZtRjdTdk1ldkNubnFHREV5UlE0Kzd1TSt3WFJZcWQ1?=
- =?utf-8?B?VnozODloUnM3cUt0d2FwZVJvaEJUbTFBK01lYkxiRDdnblBpN1FXTnZvMHR3?=
- =?utf-8?B?RGMyOVhRY2ZRdTNPdlU4ajl3YXVoREc4ZitOaHp0M0VrZzFNbXRBTGhyclZR?=
- =?utf-8?B?aEgyUjYvdzlycnloMHBhMXg2clkvWXRtd3FWUUM5WTY5cktFWWRERlFOZ2Zr?=
- =?utf-8?B?U0RBU2RhbXNKYXNkMWZiSFdOZktXN2tRR1JTS1pwRWVBbTBsT0ttbi85eSsz?=
- =?utf-8?Q?MGTSdgJBCEb25bvmirAhGdHVp9sK2iv2qAwDnEM?=
+	=?us-ascii?Q?dP1uX0Jqi0xFR/J66hHyCyvdwePS/DaY0c+BIZLfzsTPaQXcLICBljP8LXUs?=
+ =?us-ascii?Q?oDM4LpCOAsYEwTp176//8RILt147v+HEG7GL17Lsz1SnlrDHz0Mfq4qJ8p3V?=
+ =?us-ascii?Q?Alol97QtD2asLc1F9ZFnPTnAzk24c0AiCUWFGhxlTPJnzvkX5/AoiiUE8RSJ?=
+ =?us-ascii?Q?GaIhTYPvdbGDJE+kkjbABS4Xw3p2nctvjGWQ/YKBC3w8rnLZQqWOSJa83/4Z?=
+ =?us-ascii?Q?A7MvXchi1ELYQJCop66Ke6AjZBXr1OUSXqMBh3QWdjUCgSVRg1LVVgbPHMji?=
+ =?us-ascii?Q?sgyhf1/rTEuOfqqBSjwP0eb7PSX4JOxuSGs/IVt4L2NNQUFMl5XeZOhCCkR1?=
+ =?us-ascii?Q?/DJbHwr4VCSp3h9ddiOV9Xi7fpPdlkMKHY8j6wcDIcuOVHZdSLCj4njVyc8u?=
+ =?us-ascii?Q?IPprsFkQCobu9LM3ZuopJmN16vakvGyNuM9Uddbm2OqTl4PFZrQ63XqqlsCj?=
+ =?us-ascii?Q?gAogoCDnQTL9AYDhG/PUVMKGOTb2031U4xtzUKsk3D1WjMROUkhfCnhUxSpd?=
+ =?us-ascii?Q?gw4SqTZJYXyDfTATMcYP5hr79cWbR2YdbO5POCeJOJjSgKOqoBGTi5m0v3XT?=
+ =?us-ascii?Q?vsU9uHDe643/P1A5sHsa8rlEPI6y4qpH/ZQlSSQ+hHAVG3fR4zHlEXYIidaR?=
+ =?us-ascii?Q?2DdnJCtqmbt66PD+21ox+6G/fhjn1zJ7aIF1h5ayU3B68HmHuTZThq6rlCnQ?=
+ =?us-ascii?Q?B6WFZEbqyRneC0Ljw/xJlvnosCFHM+ZG9cUAMqwW1vikESI8oVkz4eJG5xrl?=
+ =?us-ascii?Q?zpFJJFOy9iNgC2H1psxF4amh2osn307P3W2zUIAVbiGUxjuIxZGGbq3VraAd?=
+ =?us-ascii?Q?dXn6bVfHdOOtsVC7H9Qo+ZWqO5HYg0FPLJ2xNZw2Q3v4QZ+ac6IVytaXrRq5?=
+ =?us-ascii?Q?b6skEhzO5Y+oUkHPruDw6+m2Enp4p+5lOb27CPpI45S32Hr6NZRRa+Ac6kIc?=
+ =?us-ascii?Q?dNFNA421DOExzbg7rdVT+kjcUWxr7Tn68d0XvwdwgfXdwS8NqeVCy/vZ+RUd?=
+ =?us-ascii?Q?Q2TXfdPwkFux1k3s0dM8wfPlb9HMazxzZJS2cV+FdmF2irQGCL60jOYD+xlW?=
+ =?us-ascii?Q?GNjMT4pSAXM8aEqO18rqGVkPGioyQHoYdbWMXtj2sL60QEekp6PSOhS1TOLd?=
+ =?us-ascii?Q?1+3oZQhCtdvjQfHZdYHHUSkfRevU/JYLBXmlmERPiIMGrfLq4pKrICMp5F5D?=
+ =?us-ascii?Q?P2vbiPK8/5j9WN51Oj9pq4B3OPUP2oeGNt3PimLvVc9MnPLrVpSKn0JiDb24?=
+ =?us-ascii?Q?g6BIPY7YI9whYDDTxiokiGXfdz8zrMmfYTGtyFdx9WjcNOScVlD7WFqmIMXc?=
+ =?us-ascii?Q?30MNwNsa2+r6bPFDlNS//VINrkSnJjPcsOCfFjvIw+2Ovdr4s7KyLan+nab0?=
+ =?us-ascii?Q?PrvqE0M=3D?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB7527.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB7527.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(52116005)(1800799015)(376005)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?R28zMFJKQnExTEx4Z2hwc3Y4SnMrb1lHQXVDVSsxNGg0MU9ucHUxUThFMnlQ?=
- =?utf-8?B?WmtqVGVLVkJjc3o3R3lwTUoyblVzZW1EeG9QWm1IZWVKR2NwV3JMUXZNaU5i?=
- =?utf-8?B?MzZWcFVtRVprWTZKOXdBZWlIQllIUHYyT0t1OUtEZFNULzI3ZmI4YjVDT3NT?=
- =?utf-8?B?dzI4L2dESXNxWHFQODBPQ2RUN2hvN3J0cDl6MDEreXpNWFlJdXlNaUkzYWxJ?=
- =?utf-8?B?S0JyaHhTSlErMGpWSHU2am5iN1FhYXZPaUpuRG1rMUVhQUpmRXZkWUs0MjZ3?=
- =?utf-8?B?c1lsWG0rRHo5SEh1bHJhVzBhS1RwU2RCd1dVS1RWOXZJNmp2SUpZa3BscWNq?=
- =?utf-8?B?ajNSSXVERkFpTTZiakhkUUVUTWQydWYyY3BrS2hTUFA3bUdLOEQyeGVPZ2o1?=
- =?utf-8?B?SjZaV1lUaE5XSGpYZE1oY0FyVEpzcFRwalRYZmxyalR4ZkF3alJSOEJER0l2?=
- =?utf-8?B?aUV1VkcyMk5DcndaT2ZNcFVHVDRqa2hRNmtIQWZ3TldhUjY5Z1NjaUhXYWlh?=
- =?utf-8?B?SzRMQ3BDTS9CYjRGQlY5L2lWcGlYWk5KNFNkMXlUY2VRQWc4eGE4NjExVE8w?=
- =?utf-8?B?WVJ3QVAxd3hmYThDNmRFY01JMDU5d3pTSjZVWmxlOGRIVDIrTWIxWFYvTkQz?=
- =?utf-8?B?bWpQU3h6dElsTGdhQldQMFBsbjN6dytMV2syYTE4Z3BDbHZYWUg3eXJqbmxy?=
- =?utf-8?B?ZXNzV2p3OWxPZ2ZnM0RnbHFld2JrYVp3RWFta1FsZUhtRTJjQzRNdklLNDRB?=
- =?utf-8?B?TnIwTTZmK1lpdmVZdUN5b1BxNDVjSnRMYVZwRUtaTGtPcjcyNmwxNzVrcXJw?=
- =?utf-8?B?Q210bXJFZThxWmdEQTBzU2JsWXFRMmR0QStwYXpGOS9zUlNtZys2anBkTDA1?=
- =?utf-8?B?ZG95QkdVcE1kbTZsQ3NqQnZGczc0cVlFMXR5VFg2TWN5NytDYlp6TjlvOTJi?=
- =?utf-8?B?K0pqbm9Zd01zWTRMY3pQU3lUOUI1RjZYa1p5Y1NuNE5uS1ZYVUwyK3FwNzk2?=
- =?utf-8?B?YWVQQmpTaHhScHJKVk5vMEtvdzdhOGZmcllkQ3d4Vlk4R2gycmxXQnFsN254?=
- =?utf-8?B?am41MFVRZWQxQ2ZNK0FKQ2pBWXh3RFBqSTJWL05SOCsrL3ErSkNISlRLRG1H?=
- =?utf-8?B?OXVtZXV2cEhoMDVDSkJzMXl1MlpaamNndEI3b2tMSmhzdUZpaTd4RjhiZS8x?=
- =?utf-8?B?eHRVTzVETDdrdDUxcmh2dzA0UXE4LzRqVDJmc3Jwd0tlMjlwNnN4Sm03Tnli?=
- =?utf-8?B?aU9yZE1pdG9HaCthOFBIMWNkeGJhSzVOSjdSKzVyTG9mQXdFNzhLejNnelk2?=
- =?utf-8?B?TWJqM29ZR1hzQWtHRWl0UXpldWxRaTFEc0ozWkhDdFhaYkZlV3dKYUtLRWFY?=
- =?utf-8?B?b0E1SXpOOFZyeHYyeE5HbFBmTUd4cXhwcnJ3aE9ndUJjcDdsYlBXN1ZWOFQw?=
- =?utf-8?B?MUFqMnZPSHp4MGlMUFRuS1FXUG9KMnBiVXB6Mld4Ti9uaVM0bGNiU3FtRzVu?=
- =?utf-8?B?alVMZEFhbzUwbG9yTlAyNitxeDc2eGcrczlvYjEwajNZQ0pIV2JZRzRPM1Ns?=
- =?utf-8?B?VTU4QTN4Mkh6YkQyOXBjTU44NlFtUndTV2c4RFVaRktsOTV6RVgrekdoejk1?=
- =?utf-8?B?VmJHcWdUV1llTit6Rlg4Z29haVp5S09PSmtQbEZUeU5vbVBqaGFXaHlrU2k1?=
- =?utf-8?B?djYyVyt5ZGtzc2c5N0ovc01CTFpPREE0MDdiSDJwR1M1YXVuTTlwNXM2NFZP?=
- =?utf-8?B?RUtQN0dzeFExY2Y1VFNGQzhhK0Q3QTdCMjQwQzRJaG1oVkhnYklNOFRUOTVx?=
- =?utf-8?B?Q0pBTGxDRWJQL3Fwc1JCay9CdnFUUjQ4YUZlWU9zdy9RdzRPNFVMSWF5dG5o?=
- =?utf-8?B?WW9aQThBc1V1OTMvQkxjM0J4K3ZMTm1GZGg0WklMTW83NzJHa2ZxWkdjUlVz?=
- =?utf-8?B?ak9WVmd0aDFNSFF5bGtTcWE5RkM1TWdYZGZZSGNLNkV2Sk1UWkZFR3VTY0tC?=
- =?utf-8?B?WVlIeUhXZlJySE5Ud2lDZmVucjExckFsVE9qdjRZVWR1dXNaZWtnaEZWOUd0?=
- =?utf-8?B?UXNVWlh4N1ZmU0Z5U0M1Znl5RTdadkdOQXcrV1Q5RTFDMS9ZTG1kSlJyeXYx?=
- =?utf-8?Q?MqWc/n1ebQhNjRUcJleCjuryG?=
+	=?us-ascii?Q?ciZOmxRALYJUaYJfpiA4mBWtvZdbano4KrVLLIRQve+uQFPqkjFD3mm0JqrU?=
+ =?us-ascii?Q?Lqbi92HEDS8JT+UYi75pPzAzF2fxUJrymgofERZDhOTHwPXXpCfN0kuutChY?=
+ =?us-ascii?Q?ZVrNRmT1P5b2GkZWjL+2CEa13ZeaoB+ThRFTVkqTG5tvqex+Y7RmryNSBEEj?=
+ =?us-ascii?Q?/oh7iEQ1ecVEW2Yw+FIVFVqUbfKd233G30E3/NgF70I0WqPTC6GBDKnAqtdn?=
+ =?us-ascii?Q?VPrQ4FXsuUGn7h2nvrcCq5HnNv3hV6nVi5AXpA0Q+iTutOuhHrnkfznnMXq4?=
+ =?us-ascii?Q?ILiFxJfdTQItSUccw+5Sx3ebvlY/2J2/sds4qmzfEUVCBf+PaD0kkevu4+UF?=
+ =?us-ascii?Q?rM+pO3Z3U5lSuk5qbR0gTsROk9FOSZksJ6HR37/U4qL17c1R5DBWyw+tYXR+?=
+ =?us-ascii?Q?q8fDjbNx5f8cnn/AJEKbSVuPk5Mo7jvJ7m9E7zfN5IoGK/KMZDJ/ccpEMF3B?=
+ =?us-ascii?Q?SNp5ZrwSZ8/QIAxfbEnI5zdW1GMRTk+TPOjIC4pX1bgRQDxtKIiGbU2I/YDo?=
+ =?us-ascii?Q?kO2YO8gMJ4svCxdArC7tc5j9lmAIxqKj5FxkYhAWgDKv9dPctUy3V/LABlke?=
+ =?us-ascii?Q?ieEULsuUXZxuMLUA4grIPbEqEoU19xG/2z7UVG9TX4SNnQ3TzuihMl9jVwXL?=
+ =?us-ascii?Q?qi/8Wh/Wty2jFxiwi1TZABvTDoQ8+RdSqr7iYEgeNtIribe3l4NMdNoyr/Uz?=
+ =?us-ascii?Q?rVLs/bvHK9eefgglQnN54u/TvpaFjWWj4TpKd1lcLMIw4Kh8KGdhdi7xABYF?=
+ =?us-ascii?Q?j6fLiRlOA29XtiJlgJvXxqxqBTwZ5k5QadcuwSDZz3uDo6QQkJjd6lQpoCDq?=
+ =?us-ascii?Q?zsmDJAhaZo1Kp4f7Z+TTSTCoFL2OPglbTYOgXR+bThm2oZuSNuuhSWA2Uv6o?=
+ =?us-ascii?Q?g23AsHuWc98Hxndy2NxSMM6SWmpNIYwflJwtsvUEZW5WsMx6s7LAEBToqjg9?=
+ =?us-ascii?Q?xkxOmMrmeCisIpTkujEeqqKRw4zXvdIPritk/oAFoSqbqxprsoRnPFYU48/g?=
+ =?us-ascii?Q?XyqLrDZYpZDz6h9KaCtORYRsyvG5r9MVhqr2Y+MZJA9nAFrwsvTkrak+0tEo?=
+ =?us-ascii?Q?AJuOlTE6WEN1eqxiyJprKwcfn/FFbfsD0ISx/pguvmKY7be32A+m//jQCEei?=
+ =?us-ascii?Q?Y1Tw9dA5UOR5gHYKBbk+vbN84lP3PB8cBAzXzSnN1vXu8cDeaVdX5auZXGp/?=
+ =?us-ascii?Q?QbzOEe8KjqN5OZ/80vaJwJRNpclCXI1apnGIgBIPHIhheJDLNT2tqJVRj3jB?=
+ =?us-ascii?Q?A0N+qmRN8GwSe94GkDw4UaDO7t87yeGHkC/+KeJ1dX6AQBrcpkCsXTjd8X3C?=
+ =?us-ascii?Q?YdEXiOd7ViT/JdIa2MV+4lseXSZA8pUduKeYpN2jbvJfQ0fqZ7vmiTqIv5KO?=
+ =?us-ascii?Q?ZUyXpnfAnkmkW7fSCHkyaF/p0l/KAb0CU6mlAy1S3EMaLMU4WdkfGoLbel0h?=
+ =?us-ascii?Q?/miwZx06VlxE3N2LwIGpbNzlqnejZxCzhm9ZrQbfiVadm25GhxYBhpA998+Q?=
+ =?us-ascii?Q?A/s5N5T/98PXCZOi+PFfwBuNOxJVYANcU7JTv8HMJt6Od+HAxbIK4AMMRqvb?=
+ =?us-ascii?Q?AMVhFeYgIK+8YBOUpW+qsp036BWgkWlh/Xlz7U/a?=
 X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7361b091-83d1-488d-460d-08dc862597b2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7be2082f-9caa-4187-f6a8-08dc8625b266
 X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB7527.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 12:38:39.8135
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2024 12:39:24.6329
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1jrs2lqe3oa3oOJpWmaKAsMBTalX+iit+qczNhRx1gLD7ZkEaQluSvMwNGdVCDLKb8N0J5SGYEN6Y3UkY6gDHw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: g6VJ/IrV+dGcSWh3L9yF79HveaC4uCcRGBsfylquyHLXKBLpXky7Wqi8+J0L8TZamuhKEReVvXVPwx6pLHnqxw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7393
-X-Proofpoint-GUID: cwzbCcmNRQAfc6gEft5uE9QQx3_pKZgP
-X-Proofpoint-ORIG-GUID: cwzbCcmNRQAfc6gEft5uE9QQx3_pKZgP
+X-Proofpoint-ORIG-GUID: uiNV1t4ANwD2UOmPWStSZNIOC6_YZn5_
+X-Proofpoint-GUID: uiNV1t4ANwD2UOmPWStSZNIOC6_YZn5_
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-06_01,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- phishscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 impostorscore=0
- mlxlogscore=891 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 spamscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.21.0-2405170001 definitions=main-2406060092
 
+hpet_compat_ioctl and read file operations failed to handle parameters from
+32-bit userspace and thus samples/timers/hpet_example.c fails as below.
 
+root@intel-x86-64:~# ./hpet_example-32.out poll /dev/hpet 1 2
+-hpet: executing poll
+hpet_poll: HPET_IRQFREQ failed
 
-On 2024/6/6 18:34, Arnd Bergmann wrote:
-> On Thu, Jun 6, 2024, at 11:46, He Zhe wrote:
->> v2:
->> - Use in_compat_syscall to determine if we're handling 32-bit or 64-bit
->> - Drop unnecessary compat_ptr for hpet_ioctl_common
->> - Add comment for COMPAT_HPET_INFO and COMPAT_HPET_IRQFREQ
-> Thanks, this version looks correct to me,
->
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
->
-> I would suggest one simplification though:
+This patch fixes cmd and arg handling in hpet_compat_ioctl and adds compat
+handling for 32-bit userspace in hpet_read.
 
-Thanks. v3 is sent.
+hpet_example now shows that it works for both 64-bit and 32-bit.
 
-Zhe
+root@intel-x86-64:~# ./hpet_example-32.out poll /dev/hpet 1 2
+-hpet: executing poll
+hpet_poll: info.hi_flags 0x0
+hpet_poll: expired time = 0xf4298
+hpet_poll: revents = 0x1
+hpet_poll: data 0x1
+hpet_poll: expired time = 0xf4235
+hpet_poll: revents = 0x1
+hpet_poll: data 0x1
+root@intel-x86-64:~# ./hpet_example-64.out poll /dev/hpet 1 2
+-hpet: executing poll
+hpet_poll: info.hi_flags 0x0
+hpet_poll: expired time = 0xf42a1
+hpet_poll: revents = 0x1
+hpet_poll: data 0x1
+hpet_poll: expired time = 0xf4232
+hpet_poll: revents = 0x1
+hpet_poll: data 0x1
 
->
->> +#ifdef CONFIG_COMPAT
->> +	if (in_compat_syscall()) {
->> +		if (count < sizeof(compat_ulong_t))
->> +			return -EINVAL;
->> +	} else {
->> +		if (count < sizeof(unsigned long))
->> +			return -EINVAL;
->> +	}
->> +#else
->>  	if (count < sizeof(unsigned long))
->>  		return -EINVAL;
->> +#endif
-> The #ifdef/#else is not really required here, since
-> in_compat_syscall() is defined to return false when
-> this is unset. For both cases, it should be sufficient
-> to keep the part inside of the #ifdef block.
->
->      Arnd
+Cc: stable@vger.kernel.org
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+v3:
+- Remove unnecessary CONFIG_COMPATs
+v2:
+- Use in_compat_syscall to determine if we're handling 32-bit or 64-bit
+- Drop unnecessary compat_ptr for hpet_ioctl_common
+- Add comment for COMPAT_HPET_INFO and COMPAT_HPET_IRQFREQ
+
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+ drivers/char/hpet.c | 34 +++++++++++++++++++++++++++++-----
+ 1 file changed, 29 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index d51fc8321d41..da32e8ed0830 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -269,8 +269,13 @@ hpet_read(struct file *file, char __user *buf, size_t count, loff_t * ppos)
+ 	if (!devp->hd_ireqfreq)
+ 		return -EIO;
+ 
+-	if (count < sizeof(unsigned long))
+-		return -EINVAL;
++	if (in_compat_syscall()) {
++		if (count < sizeof(compat_ulong_t))
++			return -EINVAL;
++	} else {
++		if (count < sizeof(unsigned long))
++			return -EINVAL;
++	}
+ 
+ 	add_wait_queue(&devp->hd_waitqueue, &wait);
+ 
+@@ -294,9 +299,16 @@ hpet_read(struct file *file, char __user *buf, size_t count, loff_t * ppos)
+ 		schedule();
+ 	}
+ 
+-	retval = put_user(data, (unsigned long __user *)buf);
+-	if (!retval)
+-		retval = sizeof(unsigned long);
++	if (in_compat_syscall()) {
++		retval = put_user(data, (compat_ulong_t __user *)buf);
++		if (!retval)
++			retval = sizeof(compat_ulong_t);
++	} else {
++		retval = put_user(data, (unsigned long __user *)buf);
++		if (!retval)
++			retval = sizeof(unsigned long);
++	}
++
+ out:
+ 	__set_current_state(TASK_RUNNING);
+ 	remove_wait_queue(&devp->hd_waitqueue, &wait);
+@@ -651,12 +663,24 @@ struct compat_hpet_info {
+ 	unsigned short hi_timer;
+ };
+ 
++/* 32-bit types would lead to different command codes which should be
++ * translated into 64-bit ones before passed to hpet_ioctl_common
++ */
++#define COMPAT_HPET_INFO       _IOR('h', 0x03, struct compat_hpet_info)
++#define COMPAT_HPET_IRQFREQ    _IOW('h', 0x6, compat_ulong_t)
++
+ static long
+ hpet_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ {
+ 	struct hpet_info info;
+ 	int err;
+ 
++	if (cmd == COMPAT_HPET_INFO)
++		cmd = HPET_INFO;
++
++	if (cmd == COMPAT_HPET_IRQFREQ)
++		cmd = HPET_IRQFREQ;
++
+ 	mutex_lock(&hpet_mutex);
+ 	err = hpet_ioctl_common(file->private_data, cmd, arg, &info);
+ 	mutex_unlock(&hpet_mutex);
+-- 
+2.25.1
 
