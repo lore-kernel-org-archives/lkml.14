@@ -1,127 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017BE1553B0;
-	Thu,  6 Jun 2024 08:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA016155A46;
+	Thu,  6 Jun 2024 08:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717664107; cv=none; b=GNWTR30CjXEQObDn1XGNHAEmUoHrKloMaPcakuHhWReuOd6hWCrF/X98gi7bnCe9eypRPZrH23QnA5EL3Ihub4d0FaeALLQaP1qnIYKtglst1hUje0XocyalzFp3Ib+LaMKho3U6F0p7JjAJtGTUmORZIJo2Bqn3O3uNOVyLcnA=
+	t=1717664111; cv=none; b=rcIvhXjm4YmCSpeNpcIjJO1JaD+Utv6vaKRcjM5ayGtmXXZHh54UvVX56dqV9c1bkRVjxLcmfNBhnxYAByR9vxGfVDaUGNAsnwAWWCXtAOsoR53a4LbcWbCO+vHb/RJXuaoNshfcMApVxnoTlexTgINfwWWZ8MwSa06u2XdJTsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717664107; c=relaxed/simple;
-	bh=flaEAuZ9nHRH4sGgsWaxOEBEE7aoCbt3vVi5NHd6VSI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=m0iUWCuCGUHn05cz4v/d9s7bDSqTd2D/63HsZH46lqtuKqXdPpS34WCT1/7qxpzb3HPHtQnMQB8rrNccM6G8AeCAETVR+4+2zI1xmJA/wlgR/1nk746rncrSfizloT1bi8DCrEkYVmauVgtMmVERii1iO9trGlzg0acrg5rzsnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHk/h4bt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHk/h4bt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8434BC4AF19;
-	Thu,  6 Jun 2024 08:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717664106;
-	bh=flaEAuZ9nHRH4sGgsWaxOEBEE7aoCbt3vVi5NHd6VSI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=OHk/h4btc3AyFQjefSgrwCziLFaFsmsmFsnALA+Ey9GEA4q0xvKp3UuT3JdyIpnQJ
-	 Cbl20AHZ9EFG5yYlgy4kfg77yeqrQbjzrdCjZFkxGmpDVNSaqztEGja6IBXPzrdOW4
-	 m25SlDA6n8gECEZQYvYK1lmZmbGUpc4hJh5H96DYgcfoxpJik8v7c2KvWVbfv09eVF
-	 FzUV7jBIYMBSSWHNo3XdVPfnGTOiA964MSvzxCcGaWUxY+3jBfcMF6Jq7cTFJonEtp
-	 5PXkzG3fR/CkcuQjF1c6vJlpSozEqpZmSwNyuRKoyZ1JoExA/BSnrpTeCQMAInMc7Q
-	 dRe+ZwU0xcKgA==
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Jiri Kosina <jikos@kernel.org>, 
- Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-janitors@vger.kernel.org
-In-Reply-To: <20240604-md-hid-misc-v1-1-4f9560796f3c@quicinc.com>
-References: <20240604-md-hid-misc-v1-1-4f9560796f3c@quicinc.com>
-Subject: Re: [PATCH] HID: add missing MODULE_DESCRIPTION() macros
-Message-Id: <171766410527.2923458.12157886272125960133.b4-ty@kernel.org>
-Date: Thu, 06 Jun 2024 10:55:05 +0200
+	s=arc-20240116; t=1717664111; c=relaxed/simple;
+	bh=Bn8X3b011v9yLue7/qfY2gNcWkxvqcOkHg5uIA94qxA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GEZwRN/E0U74yySJX+8pOhY1gImNRmI5r65qsb/9L/KphWf2DM1tczuItJyqFhhS4ASC4O2UJMEB6D936i+pkbQ6RV1ahwuPztQJVD/uI8WVMaSr5LFQIDqlwZEtHG6HHdJU/hj8SKeZpzB1GE6ghdZiViJBL4DiemZz6oiHqbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=9901b58ca3=ms@dev.tdt.de>)
+	id 1sF8tn-003wJX-S1; Thu, 06 Jun 2024 10:55:07 +0200
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1sF8tn-008x2v-AZ; Thu, 06 Jun 2024 10:55:07 +0200
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id 0EF2A240053;
+	Thu,  6 Jun 2024 10:55:07 +0200 (CEST)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id 996C3240050;
+	Thu,  6 Jun 2024 10:55:06 +0200 (CEST)
+Received: from mschiller1.dev.tdt.de (unknown [10.2.3.20])
+	by mail.dev.tdt.de (Postfix) with ESMTPSA id 6D083379F6;
+	Thu,  6 Jun 2024 10:55:06 +0200 (CEST)
+From: Martin Schiller <ms@dev.tdt.de>
+To: martin.blumenstingl@googlemail.com,
+	hauke@hauke-m.de,
+	andrew@lunn.ch,
+	f.fainelli@gmail.com,
+	olteanv@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 13/13] net: dsa: lantiq_gswip: Improve error message in gswip_port_fdb()
+Date: Thu,  6 Jun 2024 10:52:34 +0200
+Message-ID: <20240606085234.565551-14-ms@dev.tdt.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240606085234.565551-1-ms@dev.tdt.de>
+References: <20240606085234.565551-1-ms@dev.tdt.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: quoted-printable
+X-purgate-type: clean
+X-purgate-ID: 151534::1717664107-834B4642-90B4C736/0/0
+X-purgate: clean
 
-On Tue, 04 Jun 2024 15:10:23 -0700, Jeff Johnson wrote:
-> make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-a4tech.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-apple.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-aureal.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-belkin.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-betopff.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-bigbenff.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-cherry.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-chicony.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-cypress.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-dr.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-emsff.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-elecom.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-elo.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-evision.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ezkey.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-vivaldi-common.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-google-hammer.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-google-stadiaff.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-gyration.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-holtek-kbd.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-holtek-mouse.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ite.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-kensington.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-keytouch.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-kye.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-lcpower.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-lenovo.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-logitech.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-magicmouse.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-maltron.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-mf.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-megaworld.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-microsoft.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-monterey.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ntrig.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-ortek.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-prodikeys.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-pl.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-petalynx.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-primax.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-razer.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-redragon.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-retrode.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-saitek.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-samsung.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-semitek.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-sjoy.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-sony.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-speedlink.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-steam.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-steelseries.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-sunplus.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-gaff.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-tmff.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-tivo.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-topseed.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-twinhan.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-uclogic.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-xinmo.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zpff.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zydacron.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-viewsonic.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-waltop.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-winwing.o
-> 
-> [...]
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Applied to hid/hid.git (for-6.11/module-description), thanks!
+Print the port which is not found to be part of a bridge so it's easier
+to investigate the underlying issue.
 
-[1/1] HID: add missing MODULE_DESCRIPTION() macros
-      https://git.kernel.org/hid/hid/c/9d262f35b115
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/net/dsa/lantiq_gswip.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Cheers,
--- 
-Benjamin Tissoires <bentiss@kernel.org>
+diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswi=
+p.c
+index 4bb894e75b81..69035598e8a4 100644
+--- a/drivers/net/dsa/lantiq_gswip.c
++++ b/drivers/net/dsa/lantiq_gswip.c
+@@ -1377,7 +1377,8 @@ static int gswip_port_fdb(struct dsa_switch *ds, in=
+t port,
+ 	}
+=20
+ 	if (fid =3D=3D -1) {
+-		dev_err(priv->dev, "Port not part of a bridge\n");
++		dev_err(priv->dev,
++			"Port %d is not known to be part of bridge\n", port);
+ 		return -EINVAL;
+ 	}
+=20
+--=20
+2.39.2
 
