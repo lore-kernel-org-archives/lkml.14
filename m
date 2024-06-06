@@ -1,155 +1,70 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B138619D09B;
-	Thu,  6 Jun 2024 14:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127F41974FA
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 14:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717684653; cv=none; b=rCnVNOSQvx3cH1WYiZrNPMzM2sR4vUHVmlSfaEhIAMAamB+9gBD0X5JINpn6grZ5hoiD5j+zloz/UkRoJcLVIjg+sGOGBkp3a2tEE1qTy9A0aTswiXLe1L/NDbyNCiQ8xvxAfWOL62xSTqhbIVTY/wQAWhusOrPoLS7oHHPlMTE=
+	t=1717684687; cv=none; b=HOGNAVYJFvuH1IVyUDp6phRKji6tBePr4NcbN5NlM2DgC76XTPO/mpX7gSfz9GhE6H5zdGSwOhLPUrO+yKMUGPal/zmLcvgxQErRdDH4DSb3Y7cguINhgsXwyszUd2WuzqZw0WuSScCc+OTL+AHjvzYE/jYWHLIz+p5E8PWn/vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717684653; c=relaxed/simple;
-	bh=ZdpFKueYPK+WEfUg3Gqz23LkOndZ3SLipHGnj6qgiUY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U2YGwYvjTm1yvuZMKQu4iXsjqbU4vIFyfwkeQBFDy1qO9DuxcsgatSRowG6EPlntVjH+11sYN/lxEQZRz18ja95BiGkG1RqMkLonlp345x+S33CBD8wF2MDDE2WtTg2snLty58r+uUFNM0p7ClKBNCpVl1+aYuE5hjs8X/dpSeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AYz97BZB; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYz97BZB"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57864327f6eso518173a12.1;
-        Thu, 06 Jun 2024 07:37:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717684650; x=1718289450; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6e1IO8wa8L/zyDqKfvDJQSO9H57/3PySfWDoeUhjP78=;
-        b=AYz97BZBtunnETP89dklvH84DrWxZv/l4ix7tc1JetY+jYa2L+6PaiwpjSvKapyL/2
-         87wl33TWlNL7tEbDtnLPg2GT8Gkw1XdlJCzrBSB8ys63tNUYuSyR9B5IiDBLCKj5Huy5
-         jMS5/Us5rWYPQFfyCBSJpXWaU2EUGC82EF2f5WnKdmFjeazmdQuM5rD6TPTLXS1Ui4iO
-         juBe+i9dd+UfRZLPR3i2ZRfAZcQpJLuNR4wK/I9oWU93w+z0N5iGYcfoGIGxazzJbwWs
-         5E8tHz/kfx3UkRU1FsRNB/IeCKlTWyEJD+AiKSzl6pQfq6UkK6fo+WLqTKAfqcRZPkC4
-         tzcg==
+	s=arc-20240116; t=1717684687; c=relaxed/simple;
+	bh=GKSmEQQhWMULX/meKsTtsC0/Yt50KLAGPEr7AHZpt14=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=q3ATaEo8fjTM8zlb063EzZFpcczJBauxPtv8ofneqsO4MyuPkTzX0egRSOHma7tOql/RDEd1pYOvQiJW3L3aYGIwsJT3UPKHb9f2RJSmqqfGN1/Fqzsi14TLBBR9SOgNlJp9H+TCiiVhUDvP4wfDZ4bivGL4HUatyq6kiPhvuDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7ead7796052so111850639f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 07:38:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717684650; x=1718289450;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6e1IO8wa8L/zyDqKfvDJQSO9H57/3PySfWDoeUhjP78=;
-        b=R5uWMHy4xZgtg8k0zwbRIpmu+xF1ng9bgK/uFyjw7ErrinVRw3n7z1JgCal41SpU6K
-         v7UlQn95bPMhqj1/CfZwV7xXlIKnTvK7bEzuOudyL2mm/IB4JiEZJ0BD7m8+5CDbfEiB
-         3dShg//TJvhumvtx+ZqFvtPGNv29x3IMS/sUDoNzOt+Iwy4kS4u/lpXOm7F3N4sJKHE6
-         1k4IcEmD0hmT4du1S9JTLfzK0NVk4xNaaKTKtNBVK4cMgWPRjcxrDLUs62sCw6TpkqqI
-         WHBomYdOL470kD63GE9l950I5d7QONX4xeNgri1l7HEbUdX4r0VR0J7Kc6Q5tAq2L1bE
-         s9+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVzCpSr0U5jCrn0SqlBLNCL4/KtpJQTv7KGstG9vp8dqpgSNoVoFLUwkAAOI78IZT2xBg9az7cic5UfXrTCcLmD+TiE17jXv01gq+MZLc/2zzJTwbS0ITp6ybu48h8uGESdvdnGOnQAP8XH2oCNOKUUvnDjsYLK2EpKz3wL3hZD0dhLwg==
-X-Gm-Message-State: AOJu0Yx1ODWutmx/TQ4BcVyw3/ASmwU9H/FAq/s4pUfY4AUIieF5Mz7m
-	RoU2TBolsTQxEul+PzJzHiyREDIrc1xpdbEemAHMiwBdtKu+JDU=
-X-Google-Smtp-Source: AGHT+IGTguIsiQuctF52YO2KaIAv/wxplXc7Xf93KtnhaWBBwggvhPDzJlNlzZ3hmNeOjD5ieyF3QQ==
-X-Received: by 2002:a50:d7db:0:b0:578:69be:6e7a with SMTP id 4fb4d7f45d1cf-57aa53e0569mr2595265a12.1.1717684649733;
-        Thu, 06 Jun 2024 07:37:29 -0700 (PDT)
-Received: from U4.lan ([2a02:810b:f40:4600:ed9f:91b7:21f2:3109])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae1008adsm1190925a12.38.2024.06.06.07.37.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 07:37:29 -0700 (PDT)
-From: Alex Bee <knaerzche@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	Alex Bee <knaerzche@gmail.com>
-Subject: [PATCH v3 5/5] ARM: dts: rockchip: Add SFC for RK3128
-Date: Thu,  6 Jun 2024 16:34:02 +0200
-Message-ID: <20240606143401.32454-7-knaerzche@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240606143401.32454-2-knaerzche@gmail.com>
-References: <20240606143401.32454-2-knaerzche@gmail.com>
+        d=1e100.net; s=20230601; t=1717684685; x=1718289485;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2fLoaeyGFI7/ZIxhQjo4nBcAkpSxHGUV3XRWCyjIOHE=;
+        b=lns0XgTFq/6lOyxuc34+imbWq2OFp5QEzesSOuAq+67TFkM20ZQY3IJh75btcg/2wG
+         AGoEjmmELkBElSrSBqUgeYY6MeU/ZDeleFujxOJKy1erG6WyfDi0Mi3iLmNw2LghiSSE
+         PNe6LioD9vmJgZ1Am9IOi592Z5Wq/Y8dIrRDFC35ZNmVMhpPj97UbhQLZEmcSytOJbMs
+         Z4MFYSfApvhPmfrwTIbeiq1sWIhi0yRWHsuWNigGwvsCK/oN9Q/DiYaF597OcuSGrZGx
+         wHebdBjOgNYTSyW0qcNImwzsrF2Q/NEtvMNqmJ+i4qKfkMM7XFrM1GNe3YYvo8T64GnR
+         0m9A==
+X-Gm-Message-State: AOJu0YwG+DNq1CSO1vLSY8hjY/9nlMCbme0jOy8Y7W4UzhdvAcoRuWcA
+	+W6gRc9/db9FU0YNFU/vmY/f021tSXf5abKMl9NfDV7uBuzJsmaO8gWBUBpBo1YvwfXw9mktE4r
+	QaFnYbDwRz3EOjYb8Q16REOKjqt6RPhW4HfxVgz/F1EHxh+rTgluON6U=
+X-Google-Smtp-Source: AGHT+IH/RWfhFIJZdUsXH00+g69ohwgqn28xDhnGb04AViS7nzRcIfyUvLo9DBWtpXi2mCfaXfG4DS8XA68IkZY4Ahp1JFg7PZqf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:6c12:b0:7de:e175:fd2d with SMTP id
+ ca18e2360f4ac-7eb3ca8dc06mr25678739f.3.1717684685333; Thu, 06 Jun 2024
+ 07:38:05 -0700 (PDT)
+Date: Thu, 06 Jun 2024 07:38:05 -0700
+In-Reply-To: <20240606141413.137516-1-norkam41@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000081786e061a39a187@google.com>
+Subject: Re: [syzbot] [bpf?] possible deadlock in trie_delete_elem
+From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, norkam41@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add the Serial Flash Controller and it's pincontrols.
+Hello,
 
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
----
-changes since v2:
-Fixed pinux settings for the chipselect pincontrols which originated from
-contradictory documentation: Datasheet [0] (page 29/31) says it is func4
-(when start counting with func1), while TRM [1] (page 185) says func3
-(register value 0x2). It turned out TRM is correct as with setting cs
-pincontrols to func4 the spi chip is not detected, while func3 is fine.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-[0] https://www.armdesigner.com/download/Rockchip_RK3128_datasheet_V1.2.pdf, 
-[1] https://www.t-firefly.com/download/fireprime/docs/rk3128_trm/chapter-5-general-register-file(grf).pdf
+kernel/tracepoint.c:178:36: error: incomplete definition of type 'struct bpf_raw_tp_link'
+kernel/tracepoint.c:182:9: error: incomplete definition of type 'struct bpf_raw_tp_link'
 
 
- arch/arm/boot/dts/rockchip/rk3128.dtsi | 35 ++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Tested on:
 
-diff --git a/arch/arm/boot/dts/rockchip/rk3128.dtsi b/arch/arm/boot/dts/rockchip/rk3128.dtsi
-index a7ab0904564f..c37aed28bd10 100644
---- a/arch/arm/boot/dts/rockchip/rk3128.dtsi
-+++ b/arch/arm/boot/dts/rockchip/rk3128.dtsi
-@@ -399,6 +399,15 @@ usb_host_ohci: usb@101e0000 {
- 		status = "disabled";
- 	};
- 
-+	sfc: spi@1020c000 {
-+		compatible = "rockchip,sfc";
-+		reg = <0x1020c000 0x8000>;
-+		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_SFC>, <&cru HCLK_SFC>;
-+		clock-names = "clk_sfc", "hclk_sfc";
-+		status = "disabled";
-+	};
-+
- 	sdmmc: mmc@10214000 {
- 		compatible = "rockchip,rk3128-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x10214000 0x4000>;
-@@ -1155,6 +1164,32 @@ sdmmc_bus4: sdmmc-bus4 {
- 			};
- 		};
- 
-+		sfc {
-+			sfc_bus2: sfc-bus2 {
-+				rockchip,pins = <1 RK_PD0 3 &pcfg_pull_default>,
-+						<1 RK_PD1 3 &pcfg_pull_default>;
-+			};
-+
-+			sfc_bus4: sfc-bus4 {
-+				rockchip,pins = <1 RK_PD0 3 &pcfg_pull_default>,
-+						<1 RK_PD1 3 &pcfg_pull_default>,
-+						<1 RK_PD2 3 &pcfg_pull_default>,
-+						<1 RK_PD3 3 &pcfg_pull_default>;
-+			};
-+
-+			sfc_clk: sfc-clk {
-+				rockchip,pins = <2 RK_PA4 3 &pcfg_pull_none>;
-+			};
-+
-+			sfc_cs0: sfc-cs0 {
-+				rockchip,pins = <2 RK_PA2 2 &pcfg_pull_default>;
-+			};
-+
-+			sfc_cs1: sfc-cs1 {
-+				rockchip,pins = <2 RK_PA3 2 &pcfg_pull_default>;
-+			};
-+		};
-+
- 		spdif {
- 			spdif_tx: spdif-tx {
- 				rockchip,pins = <3 RK_PD3 1 &pcfg_pull_none>;
--- 
-2.45.2
+commit:         c3f38fa6 Linux 6.10-rc2
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9d7ea7de0cb32587
+dashboard link: https://syzkaller.appspot.com/bug?extid=9d95beb2a3c260622518
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15bfdbc2980000
 
