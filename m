@@ -1,95 +1,123 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4A013C80B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEFB13CF9C
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 09:26:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717665952; cv=none; b=hDqKntJaPBL7YznGVy/71F5kQuOb6YeuO9hiH/P+a58xX1gS9/cVM2cWpyHZtY4EXQPRXgatRTG334j+YenUrVnOvWCH//y9dFwcea+Fr1WM/WTbRbW/aqFA37dK+J5eR74BCiS8O51pVrEYdRRsjRvvZyWbLp5mKqiLIMRqa6I=
+	t=1717666004; cv=none; b=a3GTs48IeJT2JqEvmA0wDeDfNQpSvBnKlLnRief3ZNHcq0kMT11ByYXUVkPX87plKo24RW2Jju/T7etIt0nHQC4Iaryb2E96SbsyTNZqCX1WbWhew95SvhH0pP7HEH2U6xtBAj1/k128LTRZWWgIi8OrrGKkqvp/v5hfmvXxdMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717665952; c=relaxed/simple;
-	bh=uyl58san+NKMPwYZoSzT9Fy3BJH2QFV16QXFDLsu8+0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=VP8MM0HSvNvzPXZk+P2dA7lbEMW5JUTCh13L85WSSViCgzc7yMZmHr7ShXSQmQfOxmX4p+VDWM46vtf/Wf13+s+8gn6KLfiXw0lRabIFqgKsqKyKtm8Hf0EYAeu2FXMyco9sXQ8ND6o59gNPb256ce3DjVxonpL8ptI7cV/oPWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z4BeZsBb; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717666004; c=relaxed/simple;
+	bh=KmIpLkikeJV3qSL7m+5nQnVlC708ekVJJL/Hw310Xb8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=as2+/O8fcXaASfkaIZ8U9M7anv4S2CtfjNh61wXxmTF5zlVfaIVpGd+00EzUANj+lv+5vGkR1C/QYS7QPAw3a51rS4ioo1g3Y8d17lWgerr645bOg4xoU+HRir+ah9Ph9z5Y0mBMnyh3bm2M2Y/SbWzRDTDw55L3yxgypJ5GYBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=j1NbtShi; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z4BeZsBb"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4213485697fso8770535e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 02:25:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717665950; x=1718270750; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tcqdEefUwbLDF0Q15e/COsQkexWvEaGN2lXHG6coCLo=;
-        b=z4BeZsBbQhhdFueUVphBakeM0fCBulvI7SQz/WSfOJHwdjd2bTeO8GYy5+2+R0bIhD
-         OZaXJ3ywUko55x9BbfdvuNDAXFWztw/PoTp0f79UvMQNdxP55YJkZdQ5XGwUgcnoPcUV
-         1RLuTNOwd5X+FHEpQHKaZMalpz5unM0tKzveI5FUmAhmZ4BeueXGmFVWw4AZrpajbSiM
-         LIh1waUdv1K+dqq2MnsiKwMoehl7Oi2i67DBK3vNZqR6HQ21s3aP4GoMNe9FkRw0AZSK
-         AWq40scDPtK3wK/TZcH5nbsPbh3SYyHywj6W6s5RmTKXXEhMIiKuDEiWyK199XqBlvYO
-         mm7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717665950; x=1718270750;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tcqdEefUwbLDF0Q15e/COsQkexWvEaGN2lXHG6coCLo=;
-        b=oYpT2iKt4UdrzKlG88M/gxF64j/GHzm0h2tOkGW4/WExYpDqD3jKCcgNQIrMdKi2ok
-         Ltqlyb/kdxLpjSJVmjxfPh/T0nWTUNdJ7SfftlvGJwk29eL58Bqzo64glUQPvefvrjXP
-         gmsV3AsWFucYbXeI47fXctq5LcZfKofJ7QKDy47J0CdLZu9pOPgZFvToySvMuoYv8BLw
-         ZScnCNAjjqy4h+phr9ByYKgGhVu90VcSsLWlCZRVgoT9eoKCAqxPir2uA4qumGOG17bJ
-         GQlzpiS9h0rM5XmOeVS9lGOQOO5vuG5TRIVQt/57rx1VJK1TpzpdZSdP3QYubr0KqlWV
-         QK4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVq2NntRP/jnSVTLh133i9pcC6FMergxgzu+LXNDGkocdcmYsBKZVQWE4adp0GXP/3tVDkKA/vZBHFUKaEZl22crs46vQKwqtiHGTDs
-X-Gm-Message-State: AOJu0YyHDpzVrJPRlKJzo/L5ki29AZK67X9fI1vpAQ0LDnw/WQhS5iKk
-	Zp+Ehc0hi10q7b3ChF4P/RAsnh/3c876qYwDPaWoh7IzIyYnTj0HoKAS3be4ukE=
-X-Google-Smtp-Source: AGHT+IFbB8BHHN2WaElCWWkVsvsXwSQADBUM+mKiyFDG++QWWYRhOyBsyMb0orv0Unm9/QUc/7vtrQ==
-X-Received: by 2002:a05:600c:1c84:b0:41b:143b:5c2d with SMTP id 5b1f17b1804b1-4215633fce8mr44418375e9.28.1717665949760;
-        Thu, 06 Jun 2024 02:25:49 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c19e719sm15426995e9.3.2024.06.06.02.25.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jun 2024 02:25:49 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: maarten.lankhorst@linux.intel.com, Haoran Liu <liuhaoran14@163.com>
-Cc: mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
- daniel@ffwll.ch, khilman@baylibre.com, jbrunet@baylibre.com, 
- martin.blumenstingl@googlemail.com, dri-devel@lists.freedesktop.org, 
- linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20231129113405.33057-1-liuhaoran14@163.com>
-References: <20231129113405.33057-1-liuhaoran14@163.com>
-Subject: Re: [PATCH v2] [drm/meson] meson_plane: Add error handling
- v2(re-aligned)
-Message-Id: <171766594896.3953723.13432230473582313779.b4-ty@linaro.org>
-Date: Thu, 06 Jun 2024 11:25:48 +0200
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="j1NbtShi"
+X-UUID: e04d4d5223e611efa22eafcdcd04c131-20240606
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=6DRaQ6hX5EYZkmcbC5c2h2WINMETdG47VRNKyHtXygs=;
+	b=j1NbtShi2DkNEOlS0UvuFZxQA5UiUHCu8bWvRAm74hUqeTMBTWVIEkjLu6o04mi8LNAVBzQWAcp8ooDGM0yh8E1ncuCOCLRACVZf/rUMzzv2NeIG14dXlTjwCQ5TMPkFc4PlYUaa0ANWV3VJ0fyDvjwcA8NPINWQ1iBE1fNznRA=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.39,REQID:0877837b-de8d-4665-be17-ad09619e12f9,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:393d96e,CLOUDID:1bd24988-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR
+X-UUID: e04d4d5223e611efa22eafcdcd04c131-20240606
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
+	(envelope-from <shawn.sung@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1155626229; Thu, 06 Jun 2024 17:26:38 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Thu, 6 Jun 2024 17:26:37 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Thu, 6 Jun 2024 17:26:37 +0800
+From: Shawn Sung <shawn.sung@mediatek.com>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Bibby
+ Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>, "Nancy . Lin"
+	<nancy.lin@mediatek.com>, Sean Paul <sean@poorly.run>, Jason Chen
+	<jason-ch.chen@mediatek.corp-partner.google.com>, Fei Shao
+	<fshao@chromium.org>, <dri-devel@lists.freedesktop.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, Hsiao Chien Sung
+	<shawn.sung@mediatek.com>
+Subject: [PATCH v8 06/16] drm/mediatek: Turn off the layers with zero width or height
+Date: Thu, 6 Jun 2024 17:26:25 +0800
+Message-ID: <20240606092635.27981-7-shawn.sung@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20240606092635.27981-1-shawn.sung@mediatek.com>
+References: <20240606092635.27981-1-shawn.sung@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain
+X-MTK: N
 
-Hi,
+From: Hsiao Chien Sung <shawn.sung@mediatek.com>
 
-On Wed, 29 Nov 2023 03:34:05 -0800, Haoran Liu wrote:
-> This patch adds robust error handling to the meson_plane_create
-> function in drivers/gpu/drm/meson/meson_plane.c. The function
-> previously lacked proper handling for potential failure scenarios
-> of the drm_universal_plane_init call.
-> 
-> 
+We found that IGT (Intel GPU Tool) will try to commit layers with
+zero width or height and lead to undefined behaviors in hardware.
+Disable the layers in such a situation.
 
-Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
+Fixes: 777b7bc86a0a ("UPSTREAM: drm/mediatek: Add ovl_adaptor support for MT8195")
+Fixes: fa97fe71f6f9 ("UPSTREAM: drm/mediatek: Add ETHDR support for MT8195")
 
-[1/1] meson_plane: Add error handling v2(re-aligned)
-      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/3c28b239620e249b68beeca17f429e317fa6b8d4
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c | 2 +-
+ drivers/gpu/drm/mediatek/mtk_ethdr.c            | 7 ++++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
+index 02dd7dcdfedb..2b62d6475918 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
+@@ -158,7 +158,7 @@ void mtk_ovl_adaptor_layer_config(struct device *dev, unsigned int idx,
+ 	merge = ovl_adaptor->ovl_adaptor_comp[OVL_ADAPTOR_MERGE0 + idx];
+ 	ethdr = ovl_adaptor->ovl_adaptor_comp[OVL_ADAPTOR_ETHDR0];
+ 
+-	if (!pending->enable) {
++	if (!pending->enable || !pending->width || !pending->height) {
+ 		mtk_merge_stop_cmdq(merge, cmdq_pkt);
+ 		mtk_mdp_rdma_stop(rdma_l, cmdq_pkt);
+ 		mtk_mdp_rdma_stop(rdma_r, cmdq_pkt);
+diff --git a/drivers/gpu/drm/mediatek/mtk_ethdr.c b/drivers/gpu/drm/mediatek/mtk_ethdr.c
+index 156c6ff547e8..4ffd0a064861 100644
+--- a/drivers/gpu/drm/mediatek/mtk_ethdr.c
++++ b/drivers/gpu/drm/mediatek/mtk_ethdr.c
+@@ -160,7 +160,12 @@ void mtk_ethdr_layer_config(struct device *dev, unsigned int idx,
+ 	if (idx >= 4)
+ 		return;
+ 
+-	if (!pending->enable) {
++	if (!pending->enable || !pending->width || !pending->height) {
++		/*
++		 * instead of disabling layer with MIX_SRC_CON directly
++		 * set the size to 0 to avoid screen shift due to mixer
++		 * mode switch (hardware behavior)
++		 */
+ 		mtk_ddp_write(cmdq_pkt, 0, &mixer->cmdq_base, mixer->regs, MIX_L_SRC_SIZE(idx));
+ 		return;
+ 	}
 -- 
-Neil
+2.18.0
 
