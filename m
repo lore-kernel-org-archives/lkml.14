@@ -1,49 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E7B6F06E;
-	Thu,  6 Jun 2024 20:54:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F112A6F08E;
+	Thu,  6 Jun 2024 20:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717707249; cv=none; b=muizLf7rpNZoT3jwdVC0lzFlPt3LwwUVp2FTpfVP977F5SeXWFxaKACp1RKPZZtNIMX529oIdCLgiLcJBYnhuKGR86glxA3ERrhj93McoN9w7Il7aYuZNb8LjJRcXza/0A276kRMwqPFodLG1w2K3aDFznqs2s/6lCcABl/Fg2I=
+	t=1717707267; cv=none; b=svwK87q6AOICi1z7v5Grjx+XUKKr4dZw6WoqmmjdS0qzbGiKyv8wbbBIq+Ft0VRjG2jig0iR+KvV9op0i14WcaaJdIloy4MGX731H6qgs+fXE19QH3PUzZ2G/ERYvyiOprdjP1O9XKZRhONSGG19J6N2d008Yk3RKrV11PhYAew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717707249; c=relaxed/simple;
-	bh=UqeI96+MM5X3pqwCptXH2eQJ3yuc1OFxEnYiSX/y3zc=;
+	s=arc-20240116; t=1717707267; c=relaxed/simple;
+	bh=aeXGQdzPsVZ4cpuieF65ifFWcRnv+FQafZ2EDIxzKb0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OThTK7TeDfB4FDEef+Pq4zdCh0CoNe++cWG0bzYJFMCdbGf9WkY6LS3fljVegBAXcHL8Js1ICIr6HxFd+Mz1WfeqkGidY/73hTKHODIJcFD0A4B8/th/MpLyE8P43+RWSM36gRr/XI1cTzqL4ILyKwEP6GY1ad2SUtC3PsBY/mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=A6kyP1N4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ByOgyId/g1LOj0Np4IJ1IbWqLBXicXhlia8rQS1sEEzSRqO8gRMM4VDbGZn7Axd/iBkIuGdufkRKQDw8xOMG/Y3nAgtgejRpLGBtt0yOva3bpc92vu9e17PIcNrob2mu0+AaACC/6w/pZXvTT//k2pEPx+wAwgx4RzMgqE58q/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LoTyV14v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="A6kyP1N4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59061C2BD10;
-	Thu,  6 Jun 2024 20:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1717707248;
-	bh=UqeI96+MM5X3pqwCptXH2eQJ3yuc1OFxEnYiSX/y3zc=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LoTyV14v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D4EBC2BD10;
+	Thu,  6 Jun 2024 20:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717707266;
+	bh=aeXGQdzPsVZ4cpuieF65ifFWcRnv+FQafZ2EDIxzKb0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A6kyP1N4dXj3GzUHpLannf6y6D/DZdpilO3+TVH+Fi8roM8Aj39obTruHOHQheVuo
-	 UJwXzYsvbA9zFqU5zAV9iT651Za7HI5PQpS0joWloWlz6gfYZXd5/Xg1juzOG9Jn4T
-	 4c7WbLPv3KG8D/bcooMr+zVEgBpvvB94WvCxd0eE=
-Date: Thu, 6 Jun 2024 22:54:06 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Martin Oliveira <martin.oliveira@eideticom.com>
-Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-mm@kvack.org,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>, Tejun Heo <tj@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Marciniszyn <mike.marciniszyn@intel.com>,
-	Michael Guralnik <michaelgur@nvidia.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Valentine Sinitsyn <valesini@yandex-team.ru>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH 1/6] kernfs: create vm_operations_struct without
- page_mkwrite()
-Message-ID: <2024060658-ember-unblessed-4c74@gregkh>
-References: <20240605192934.742369-1-martin.oliveira@eideticom.com>
- <20240605192934.742369-2-martin.oliveira@eideticom.com>
+	b=LoTyV14v/jAiVGP0AATfPdsSbN8gtFnuY7baOKfWSmqxVwsrDKIj4HRRxuCGZma51
+	 550tMfBDqLisPoGIOjoMm1TmNWQgLk1ARDtUT+IpDmshoSp6wbqVH9G3Ky8sYlSdfS
+	 9EWrbUHKC+mueUd4/JAmfaaP0CFiBoUZiFmM5JehmrAR/wpuW9dibjzGT9+JjtcwYO
+	 tiSzaRx3ftMqPb93b4bx/F2ssP503CKzdnu7Ey5nPMJ+R+f5D5lnLS7xSDEryk37Uc
+	 38fOfjY9AQfguhiCpUIEL0ZMUcqix0vlYtOCPEuCb1ap34Lquz+jFofat0l3twBUrC
+	 C2M9rrysLxZvw==
+Date: Thu, 6 Jun 2024 14:54:24 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Avri Altman <avri.altman@wdc.com>,
+	Bjorn Andersson <andersson@kernel.org>, linux-scsi@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Bart Van Assche <bvanassche@acm.org>, linux-kernel@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5] dt-bindings: ufs: qcom,ufs: drop source clock entries
+Message-ID: <171770726231.3843186.17154781456146316329.robh@kernel.org>
+References: <20240528-msm8996-fix-ufs-v5-1-b475c341126e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,31 +50,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240605192934.742369-2-martin.oliveira@eideticom.com>
+In-Reply-To: <20240528-msm8996-fix-ufs-v5-1-b475c341126e@linaro.org>
 
-On Wed, Jun 05, 2024 at 01:29:29PM -0600, Martin Oliveira wrote:
-> The standard kernfs vm_ops installs a page_mkwrite() operator which
-> modifies the file update time on write.
+
+On Tue, 28 May 2024 16:36:48 +0300, Dmitry Baryshkov wrote:
+> There is no need to mention and/or to touch in any way the intermediate
+> (source) clocks. Drop them from MSM8996 UFSHCD schema, making it follow
+> the example lead by all other platforms.
 > 
-> This not always required (or makes sense), such as in the P2PDMA, which
-> uses the sysfs file as an allocator from userspace.
-
-That's not a good idea, please don't do that.  sysfs binary files are
-"pass through", why would you want to use this as an allocator?
-
-> Furthermore, having the page_mkwrite() operator causes
-> writable_file_mapping_allowed() to fail due to
-> vma_needs_dirty_tracking() on the gup flow, which is a pre-requisite for
-> enabling P2PDMA over RDMA.
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+> Changes in v5:
+> - Rebased on top of linux-next
+> - Dropped arm64 / DT patches applied by Bjorn
+> - Link to v4: https://lore.kernel.org/r/20240408-msm8996-fix-ufs-v4-0-ee1a28bf8579@linaro.org
 > 
-> Fix this by adding a new boolean on kernfs_ops to differentiate between
-> the different behaviours.
+> Changes in v4:
+> - Rebased on top of linux-next to resolve conflict with UFS schema
+>   changes
+> - Link to v3: https://lore.kernel.org/r/20240218-msm8996-fix-ufs-v3-0-40aab49899a3@linaro.org
+> 
+> Changes in v3:
+> - dropped the patch conflicting with Yassine's patch that got accepted
+> - Cc stable on the UFS change (Manivannan)
+> - Fixed typos in the commit message (Manivannan)
+> - Link to v2: https://lore.kernel.org/r/20240213-msm8996-fix-ufs-v2-0-650758c26458@linaro.org
+> 
+> Changes in v2:
+> - Dropped patches adding RX_SYMBOL_1_CLK, MSM8996 uses single lane
+>   (Krzysztof).
+> - Link to v1: https://lore.kernel.org/r/20240209-msm8996-fix-ufs-v1-0-107b52e57420@linaro.org
+> ---
+>  Documentation/devicetree/bindings/ufs/qcom,ufs.yaml | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+> 
 
-This isn't going to work well.
+Applied, thanks!
 
-What exactly are you wanting to do in sysfs that you feel this is
-required?
-
-thanks,
-
-greg k-h
