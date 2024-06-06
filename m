@@ -1,166 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DAA1953A6;
-	Thu,  6 Jun 2024 10:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1CA194C96;
+	Thu,  6 Jun 2024 10:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717671038; cv=none; b=NZhnhMOpdYY9+o11IXdPu0h8BWEXUf4KnpmUtzUwZkgvaVw9J/bQY9C4rZ36fcOmn2PE63ONb9JLo7A93RCpeoJ+f4SS4MbLIUEd8fUjy0/zYhC1Y5O9c6aClKfZIVoFNStbW0Jc4OBu+Dy7hTGCQSveIZk0bdkA9O1v93IELro=
+	t=1717671060; cv=none; b=Kt9keCPyoqPEQ/vgBxU7De2YZ/CDwzKW1Kj2A+STjRbgfCigqk9uZ3HNDHMnds3ZUZ3cG+hQ/h/NSXqlpjdY6aH9YjQHN/iuOTnTeFQcE8flq4ZyzXlOBWpCpC7jcF5BhT0JFqsR54E0V2mlFqdK3T5WGPIKFMW9NpwdkzP2vKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717671038; c=relaxed/simple;
-	bh=h6KYXJFHQc+mvtWcnYwa8pq9IgUKG9NU+TZNQUHrWBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UYPbg9aqq8xbhkdXU29P1OtZT2XRCgviQgOIKd/ZZ7erOfOlHmlNe6PE8xfdBL1gKvhXP8XGE0qsRrnXGmtOpAbe8IHI5VZV+8HhG0wyLbmHHMefLMg3y8Z4FJ3IeiFk9HL8Og6SF5BntL3V03ep4aqL1VH5Ex42GOyegKI06Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKkS4aDL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717671060; c=relaxed/simple;
+	bh=V5kYSuM39lIyPyl/wBUgkddb3iuaXISbMV793lW+VO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X0QxpH40QBlAwyz0IA6BuHvsuhqPwjDF8QQbW/V9rbuapiyp3okpUXMhQNuP02plMuJBM7IWBRRej4T69pc1dMns9JcV1oJDzpX7y3Z69QrGCG6s5hdZ1LDkHnTnOQCJrfA5wEa31nxiCJB0WcA17NChwY6M4EaQ47gHi2hr6lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XMmtKzPg; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKkS4aDL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CF8EC4AF07;
-	Thu,  6 Jun 2024 10:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717671038;
-	bh=h6KYXJFHQc+mvtWcnYwa8pq9IgUKG9NU+TZNQUHrWBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YKkS4aDLqIUaST3xTej8wzC1v80nowkkqWRUFrh+6i+PVWqkXenE1ZJIlaeWIiG+Y
-	 Goe6dKflV4loAbp/wforpzwYHCecs32J5pKicHr842xVZrk+Xf3PnfEDk6YNcSo/uU
-	 dmU0E8XnqQjl5kwkqdo++HefvFGygx6aLDXr5Xh2E7S4yjCpdrMGETCwk+nMLGgMg/
-	 61ibOaPg+oahTjf8vX5SJ1GkkHM9AWzDNKzwuVlX9ZhCr2maP8HL6fGM7q6vdm/c1C
-	 vjZuvIUFeemrX4RajzGa6sd5IUHKQKV6xubzwQx9iiI9q4kSaVml9SC7f79TMVHp2g
-	 xCiuBQfkrs0Eg==
-Date: Thu, 6 Jun 2024 13:50:33 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Konstantin Taranov <kotaranov@microsoft.com>
-Cc: Konstantin Taranov <kotaranov@linux.microsoft.com>,
-	Wei Hu <weh@microsoft.com>,
-	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>,
-	Long Li <longli@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH rdma-next 1/1] RDMA/mana_ib: process QP error events
-Message-ID: <20240606105033.GF13732@unreal>
-References: <1717500963-1108-1-git-send-email-kotaranov@linux.microsoft.com>
- <20240604120846.GQ3884@unreal>
- <PAXPR83MB0559D385C1AD343A506C45E3B4F82@PAXPR83MB0559.EURPRD83.prod.outlook.com>
- <20240606080136.GB13732@unreal>
- <PAXPR83MB0559D46DC010185AD7F7D531B4FA2@PAXPR83MB0559.EURPRD83.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XMmtKzPg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717671057;
+	bh=V5kYSuM39lIyPyl/wBUgkddb3iuaXISbMV793lW+VO8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XMmtKzPgFURGg6x7dDHARuSpRJmfp6YZhIZxS1Y+vK/tt8JbTXZ1/0oLVpARHtFXy
+	 lbNyoV1Y35lhQVP4Zorf2vsKM5S0LSMaE7A8uOwTIdzCZqV8ChpP9BnoQ/Ih1UBQhV
+	 Oj8P2sgE97ymMJ8sw70wj2Vc2Gsd1lFgnUJ//U9stRLIaAGlWQFRo6EKuRJeEh08fM
+	 FlzmvRPERk+/kkcsBNYOJ0Z6DBFyCquSC0coyahHsXfRtNyt1BqrqW2min272MnTZR
+	 5N22aB7Wx3kMoDf9J3645pyOHZaiMeocO0JRD1TNX6u0O4vqC78MM2oCcyqgA/0RWC
+	 XvXWCAAWsZOlA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C3FA63780627;
+	Thu,  6 Jun 2024 10:50:56 +0000 (UTC)
+Message-ID: <99d19104-875c-4214-b4a4-4c228cc08b66@collabora.com>
+Date: Thu, 6 Jun 2024 12:50:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PAXPR83MB0559D46DC010185AD7F7D531B4FA2@PAXPR83MB0559.EURPRD83.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] remoteproc: mediatek: Don't print error when optional scp
+ handle is missing
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: kernel@collabora.com, linux-remoteproc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20240605-mt8195-dma-scp-node-err-v1-1-f2cb42f24d6e@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240605-mt8195-dma-scp-node-err-v1-1-f2cb42f24d6e@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 06, 2024 at 09:30:51AM +0000, Konstantin Taranov wrote:
-> > > > > +static void
-> > > > > +mana_ib_event_handler(void *ctx, struct gdma_queue *q, struct
-> > > > > +gdma_event *event) {
-> > > > > +	struct mana_ib_dev *mdev = (struct mana_ib_dev *)ctx;
-> > > > > +	struct mana_ib_qp *qp;
-> > > > > +	struct ib_event ev;
-> > > > > +	unsigned long flag;
-> > > > > +	u32 qpn;
-> > > > > +
-> > > > > +	switch (event->type) {
-> > > > > +	case GDMA_EQE_RNIC_QP_FATAL:
-> > > > > +		qpn = event->details[0];
-> > > > > +		xa_lock_irqsave(&mdev->qp_table_rq, flag);
-> > > > > +		qp = xa_load(&mdev->qp_table_rq, qpn);
-> > > > > +		if (qp)
-> > > > > +			refcount_inc(&qp->refcount);
-> > > > > +		xa_unlock_irqrestore(&mdev->qp_table_rq, flag);
-> > > > > +		if (!qp)
-> > > > > +			break;
-> > > > > +		if (qp->ibqp.event_handler) {
-> > > > > +			ev.device = qp->ibqp.device;
-> > > > > +			ev.element.qp = &qp->ibqp;
-> > > > > +			ev.event = IB_EVENT_QP_FATAL;
-> > > > > +			qp->ibqp.event_handler(&ev, qp->ibqp.qp_context);
-> > > > > +		}
-> > > > > +		if (refcount_dec_and_test(&qp->refcount))
-> > > > > +			complete(&qp->free);
-> > > > > +		break;
-> > > > > +	default:
-> > > > > +		break;
-> > > > > +	}
-> > > > > +}
-> > > >
-> > > > <...>
-> > > >
-> > > > > @@ -620,6 +626,11 @@ static int mana_ib_destroy_rc_qp(struct
-> > > > mana_ib_qp *qp, struct ib_udata *udata)
-> > > > >  		container_of(qp->ibqp.device, struct mana_ib_dev, ib_dev);
-> > > > >  	int i;
-> > > > >
-> > > > > +	xa_erase_irq(&mdev->qp_table_rq, qp->ibqp.qp_num);
-> > > > > +	if (refcount_dec_and_test(&qp->refcount))
-> > > > > +		complete(&qp->free);
-> > > > > +	wait_for_completion(&qp->free);
-> > > >
-> > > > This flow is unclear to me. You are destroying the QP and need to
-> > > > make sure that mana_ib_event_handler is not running at that point
-> > > > and not mess with refcount and complete.
-> > >
-> > > Hi, Leon. Thanks for the concern. Here is the clarification:
-> > > The flow is similar to what mlx5 does with mlx5_get_rsc and
-> > mlx5_core_put_rsc.
-> > > When we get a QP resource, we increment the counter while holding the xa
-> > lock.
-> > > So, when we destroy a QP, the code first removes the QP from the xa to
-> > ensure that nobody can get it.
-> > > And then we check whether mana_ib_event_handler is holding it with
-> > refcount_dec_and_test.
-> > > If the QP is held, then we wait for the mana_ib_event_handler to call
-> > complete.
-> > > Once the wait returns, it is impossible to get the QP referenced, since it is
-> > not in the xa and all references have been removed.
-> > > So now we can release the QP in HW, so the QPN can be assigned to new
-> > QPs.
-> > >
-> > > Leon, have you spotted a bug? Or just wanted to understand the flow?
-> > 
-> > I understand the "general" flow, but think that implementation is very
-> > convoluted here. In addition, mlx5 and other drivers make sure sure that HW
-> > object is not free before they free it. They don't "mess" with ibqp, and
-> > probably you should do the same.
+Il 05/06/24 21:35, Nícolas F. R. A. Prado ha scritto:
+> The scp_get() helper has two users: the mtk-vcodec and the mtk-mdp3
+> drivers. mdp3 considers the mediatek,scp phandle optional, and when it's
+> missing mdp3 will directly look for the scp node based on compatible.
 > 
-> I can make the code more readable by introducing 4 helpers: add_qp_ref, get_qp_ref, put_qp_ref, destroy_qp_ref.
-> Would it make the code less convoluted for you?
+> For that reason printing an error in the helper when the handle is
+> missing is wrong, as it's not always an actual error. Besides, the other
+> user, vcodec, already prints an error message on its own when the helper
+> fails so this message doesn't add that much information.
+> 
+> Remove the error message from the helper. This gets rid of the deceptive
+> error on MT8195-Tomato:
+> 
+>    mtk-mdp3 14001000.dma-controller: can't get SCP node
 
-The thing is that you are trying to open-code part of restrack logic,
-which already has xarray DB per-QPN, maybe you should extend it to support
-your case, by adding some sort of barrier to prevent QP from being used.
+I'm way more for giving it a SCP handle instead of silencing this print... the
+SCP handle way *is* the correct one and I prefer it, as that'd also be the only
+way to support Dual-Core SCP in MDP3.
+
+I really want to see hardcoded stuff disappear and I really really *really* want
+to see more consistency across DT nodes in MediaTek platforms.
+
+So, still a one-line change, but do it on the devicetree instead of here please.
+
+Cheers,
+Angelo
 
 > 
-> The devices are different. Mana can do EQE with QPN, which can be destroyed by OS. With that reference counting I make sure
-> we do not destroy QP which is used in EQE processing. We still destroy the HW resource at same time as before the change.
-> The xa table is just a lookup table, which says whether object can be referenced or not. The change just dictates that we first
-> make a QP not referenceable.
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+>   drivers/remoteproc/mtk_scp.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> Note, that if we remove the QP from the table after we destroy it in HW, we can have a bug due to the collision in the xa table when
-> at the same time another entity creates a QP. Since the QPN is released in HW, it will most likely given to the next create_qp (so mana, unlike mlx,
-> does not assign QPNs with an increment and gives recently used QPN). So, the create_qp can fail as the QPN is still used in the xa.
+> diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
+> index b885a9a041e4..f813117b6312 100644
+> --- a/drivers/remoteproc/mtk_scp.c
+> +++ b/drivers/remoteproc/mtk_scp.c
+> @@ -37,10 +37,8 @@ struct mtk_scp *scp_get(struct platform_device *pdev)
+>   	struct platform_device *scp_pdev;
+>   
+>   	scp_node = of_parse_phandle(dev->of_node, "mediatek,scp", 0);
+> -	if (!scp_node) {
+> -		dev_err(dev, "can't get SCP node\n");
+> +	if (!scp_node)
+>   		return NULL;
+> -	}
+>   
+>   	scp_pdev = of_find_device_by_node(scp_node);
+>   	of_node_put(scp_node);
 > 
-> And what do you mean that "don't "mess" with ibqp"? Are you saying that we cannot process QP-related interrupts?
-> What do you propose to change? In any case it will be the same logic:
-> 1) remove from table
-> 2) make sure that current IRQ does not hold a reference
-> I use counters for that as most of other IB providers.
+> ---
+> base-commit: d97496ca23a2d4ee80b7302849404859d9058bcd
+> change-id: 20240605-mt8195-dma-scp-node-err-6a8dea26d4f5
 > 
-> I would also appreciate a list of changes to make this patch approved or confirmation that no changes are required.
+> Best regards,
 
-I'm not asking to change anything at this point, just trying to see if
-there is more general way to solve this problem, which exists in all
-drivers now and in the future.
-
-Thanks
-
-> Thanks
-> 
-> > Thanks
-> > 
-> > > Thanks
-> > >
-> > > >
-> > > > Thanks
