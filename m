@@ -1,96 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280793FB87;
-	Thu,  6 Jun 2024 20:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F192B139D1B;
+	Thu,  6 Jun 2024 20:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717705987; cv=none; b=gaZdDRCtKW4xroGdfuic5hIZVAPQA/ZstDcYJ0cbiTJufJZYXvCDm3d7tdLh2K7E00cg74b+HiwG+IJEV+8dHNJa9vOhtS7t7tdDP913xmoI1HHKQDENLaLHqQJ+ZJNIRDzWIhQSa0LW84Ilrrq3lHksVmWa9nVxv+v5uHaau+8=
+	t=1717705992; cv=none; b=ToKHnWpbKSvobeNV8OJnzSfdDSLbaBUFIhCSUsGYe+yLlyOONKt4hIT+k9ydlELqOROl4SQpbzy5C8ZccF7upAdykKIc17FMS62tr/vzHZWtd8OzDBBUjr5Jh1qBAoG1nqvu1XbnLMH4HOPjODkOdHDZjTh4wFrjYyW+5qr6hC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717705987; c=relaxed/simple;
-	bh=9oouy5x9Ue5GemoAYkfq4PmU8oIHLsNd4GhUYZOdKnk=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=p26gwAcYF67HnhTWpVLKEZDs5EgZuwPFBSAw3zIc50CRIxDwagAHEjrit7GPI0dzSp4yi4l3h+UQt5YHDfcXw80WdXTwvBKZAOvwnTHsB+fI8S4B2Bof7vYXIzgGQaSWoP93iufbpej2z0KM/xRS5PH4QfxlKbXz5OT58pQJYqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8mX8VVS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717705992; c=relaxed/simple;
+	bh=O/fIdSuE87jvT+rTXQIXkzqnruiLQx3ImxqfaRKWYqk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LmYzul+2zDAZXcAY9EnzhhmolRCPgIkBxFx/nXfXdRu06hwcS2+RxJGc39PAHExZ9/FgFvA54IkCu4S0Fm4Yei1sDQlDmVaewiscZrRyuzh78PzKoPm+KOylujqtTqSI4WOCQHqAZJqROQLKyWKOVVadZNf3hpj+yvs2pteIjMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=TlZaNFpR; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8mX8VVS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C9C8C2BD10;
-	Thu,  6 Jun 2024 20:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717705986;
-	bh=9oouy5x9Ue5GemoAYkfq4PmU8oIHLsNd4GhUYZOdKnk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=m8mX8VVS8F5m9+fNPFhT9U7Tp+cSZUAzQXRBB8WXkOY+YlfVD9QnoArFSKUpIXnc/
-	 oglUSqQp/CADGTIvBqtooUX4+18DnGe9iXVpURfW8eyb14FP2jtZKTv2XST7yWAn4q
-	 RNGJ/m3842XmtWmvJnQ2hTPDalPLSkrqu9MYUlFUy5z9dOJ1/3TIgxpKVd010jWJhH
-	 wnfNwvEyi4/UgD6nKSmix0nr+45jCZ3YPdGb8iGh8xcHcTRBhuoVuYaaSBf3WFlkrv
-	 qw1wY85gKgLh9bB+SzGpy2v7nIRyUy+oPzH57SpFwCas1t8Yl610Yv8MbzgCoDiQtP
-	 n05M4cvFHxi4w==
-Date: Thu, 06 Jun 2024 14:33:05 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="TlZaNFpR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
+	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
+	Resent-Message-ID:In-Reply-To:References;
+	bh=ncgrJTEhoRR3zBhbPk7eARi4Oy+hPL2CM+fE1z0zHPc=; t=1717705989; x=1718915589; 
+	b=TlZaNFpRMd/vNXG8faBshzjdXCDA/mHoycrg00Girak2kcS1P2t8SGUiNS2krxh7+FVjxyi9bvG
+	8r24vcYr8UfxaXcPfC7NSjBUHMy7W/yq3PrVoeujAo6JEZqx1cYNOjNZFadBYGKhe/Srr5wHPL+bs
+	77sputfYj7ZXks3PpTbF75JjwB50NzOXN/0S3kOjTAvefvbEplUMeyKMA8TrVijt1uSW1fWn4UGwH
+	e/tiRsP/poUpEHIg3s1Q6qA3rexHdLq3bJk5U77z4r08dWq1T6dIL0AiLEFLmlHhcD+u3DixaNfCr
+	lp49G3RbPO0QYmVAEidELqBRMAMlFQ/VRE6w==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1sFJn8-0000000HDhM-2x41;
+	Thu, 06 Jun 2024 22:32:59 +0200
+From: Johannes Berg <johannes@sipsolutions.net>
+To: linux-kernel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH v3 0/4] tracing: improve symbolic printing
+Date: Thu,  6 Jun 2024 22:32:00 +0200
+Message-ID: <20240606203255.49433-6-johannes@sipsolutions.net>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Shresth Prasad <shresthprasad7@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- heiko@sntech.de, skhan@linuxfoundation.org, krzk+dt@kernel.org, 
- linux-phy@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- conor+dt@kernel.org, javier.carrasco.cruz@gmail.com, 
- linux-kernel@vger.kernel.org, vkoul@kernel.org, kishon@kernel.org
-In-Reply-To: <20240606184135.11065-2-shresthprasad7@gmail.com>
-References: <20240606184135.11065-2-shresthprasad7@gmail.com>
-Message-Id: <171770598518.3813098.8400310988488073666.robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: phy: rockchip-emmc-phy: Convert to
- dtschema
+Content-Transfer-Encoding: 8bit
 
+Completely forgot about this again ... here's another respin.
 
-On Fri, 07 Jun 2024 00:11:36 +0530, Shresth Prasad wrote:
-> Convert txt bindings of Rockchip EMMC PHY to dtschema to allow
-> for validation.
-> 
-> Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
-> ---
-> Tested against `rockchip/rk3399-firefly.dtb`, `rockchip/rk3399-orangepi.dtb`
-> and `rockchip/rk3399-pinebook-pro.dtb`.
-> 
->  .../bindings/phy/rockchip,emmc-phy.yaml       | 78 +++++++++++++++++++
->  .../bindings/phy/rockchip-emmc-phy.txt        | 43 ----------
->  2 files changed, 78 insertions(+), 43 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> 
+v2 was:
+ - rebased on 6.9-rc1
+ - always search for __print_sym() and get rid of the DYNPRINT flag
+   and associated code; I think ideally we'll just remove the older
+   __print_symbolic() entirely
+ - use ':' as the separator instead of "//" since that makes searching
+   for it much easier and it's still not a valid char in an identifier
+ - fix RCU
 
-My bot found errors running 'make dt_binding_check' on your patch:
+v3:
+ - fix #undef issues
+ - fix drop_monitor default
+ - rebase on linux-trace/for-next (there were no conflicts)
+ - move net patches to 3/4
+ - clarify symbol name matching logic (and remove ")" from it)
 
-yamllint warnings/errors:
+To recap, it's annoying to have
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.example.dtb: grf: 'reg' is a required property
-	from schema $id: http://devicetree.org/schemas/soc/rockchip/grf.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.example.dtb: grf: 'reg' is a required property
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
+ irq/65-iwlwifi:-401   [000]    22.790000: kfree_skb:  ...  reason: 0x20000
 
-doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/soc/rockchip/grf.yaml references a file that doesn't exist: Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-Documentation/devicetree/bindings/soc/rockchip/grf.yaml: Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+and much nicer to see
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240606184135.11065-2-shresthprasad7@gmail.com
+ irq/65-iwlwifi:-401   [000]    22.790000: kfree_skb:  ...  reason: RX_DROP_MONITOR
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+but this doesn't work now because __print_symbolic() can only
+deal with a hard-coded list (which is actually really big.)
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+So here's __print_sym() which doesn't build the list into the
+kernel image, but creates it at runtime. For userspace, it
+will look the same as __print_symbolic() (it literally shows
+__print_symbolic() to userspace) so no changes are needed,
+but the actual list of values exposed to userspace in there
+is built dynamically. For SKB drop reasons, this then has all
+the reasons known when userspace queries the trace format.
 
-pip3 install dtschema --upgrade
+I guess patch 3/4 should go through net-next, so not sure
+how to handle this patch series. Or perhaps, as this will not
+cause conflicts, in fact I've been rebasing it for a long time,
+go through tracing anyway with an Ack from netdev? But I can
+also just wait for the trace patch(es) to land and resubmit the
+net patches after. Assuming this looks good at all :-)
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Thanks,
+johannes
 
+%
