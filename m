@@ -1,146 +1,166 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C244E15B134
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 15:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED8C194A5F;
+	Fri,  7 Jun 2024 15:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717773247; cv=none; b=PEGiNsenkckNZuWGo79tYrP3i8NpHsY+wXZJ1RqKZSHPbMokRnMkt1LfAt9SQw818vL337QeYFQkzouc/KEInOxX2JDYd8hcb7ODW9pSEefGgxgAbKhBZoRTZTFYSQlJ8X6qnuhJFjdv543yMh+2Ft6QkxXQnVUZmgkGZRLAXSA=
+	t=1717773248; cv=none; b=dNJLzH2/5BUtnsCTIuIWcS8DKqzW9K6exr0inWS9QCOrGkjAppd3KkzpzEU2fprMmWJDaH8jTgH2cHUSQHwTnr92K7wdq/qzWEAkJk3KsYuq2LmRkcuOp+TzdjmrG9sCOAskQ3wTwOYkHsCJi1F6XJ+h7OtVK5aBoOndOvYM/dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717773247; c=relaxed/simple;
-	bh=//LBZavakYY0qucFQkDYfrsRRLRkXvEtWcbRyxLWPN0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fFWEYXOfJypxZF5DXzX6hEt7eYMyLEswLhpzdDhsZCFG3+cyMFeJS3/3TTNbSuHEPB2RzfRpPFKXOxdILTveGknPLvmJCKXiiNeSoTrHUHk1IZ9HAS7My2pXmukv+WnbFCI7U7sH2tL3+6Uq8ggIAb7g3GVatuWD4T0zWcRbycQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=1aIPLqrK; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1717773248; c=relaxed/simple;
+	bh=bOlBKkHFjo5WOPdbthyGW/B7AwUCWnxawK0nxHrgEs8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fxze7mxRId3IEgxmMS0aK2qno5ZacEUk0Qps12+Cmo3tWVDKqBcQgkajEhWVIj4RTGLp7DJ+7XV+UEw5aGgdqLmWQns2efla2HBdMVioaF8tVWfZjaRJehZNlcuteILomRcHvRHAgP8eSQmPM7IQw+Q1Jx3LMCdN5fuQ9+mnNc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kBeaLN9N; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="1aIPLqrK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717773244;
-	bh=//LBZavakYY0qucFQkDYfrsRRLRkXvEtWcbRyxLWPN0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=1aIPLqrKOWTLTwWB6QD3Rcerx88XWgGwctZSWdS35fz8wTPq+KveNgBcWsBcOroBL
-	 VBup6pOOIqcI8Pa8IH0jfL5TGQ/5pV1IWUzppH0VtKU/y5xgFmqkYNFlxS9kL65ouB
-	 6D9dlz5giN6ZRg+y5hshrzZ5TqJF9LdlENicScZCV1wOLvsCTNhERORjUDkcKDMzIh
-	 kaoaYIHvAVR4BdQ4YrHkPFb2lJiv4ZP7S9kwv4b6sx606iWaLDQkzZlzIuMj1muJ6U
-	 ss0OBlGbt689ike9625EkUAwuPRqbMtezICd9+mYwI8D3BZR1qPj/unbk15lnio0rq
-	 TJEEUQH8f9quA==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laura.nao)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id EA02337821B0;
-	Fri,  7 Jun 2024 15:14:03 +0000 (UTC)
-From: Laura Nao <laura.nao@collabora.com>
-To: regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: [REGRESSION] next boot regression caused by RIP: 0010:usercopy_abort+0x74/0x76 kernel panic
-Date: Fri,  7 Jun 2024 17:14:39 +0200
-Message-Id: <20240607151439.175035-1-laura.nao@collabora.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kBeaLN9N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717773247; x=1749309247;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bOlBKkHFjo5WOPdbthyGW/B7AwUCWnxawK0nxHrgEs8=;
+  b=kBeaLN9Ni4PeDylNGA4MaNLPnw5piSdXOyGTaPp7og/JLrrEMxhc0lH5
+   7XZEQZxR+SIaB49ywUTcR3YwfnteivVNmRzeo/jUh2fuPymxk9tKe4mGt
+   q4gKoSK/FkWOLJ/zxbAs7vdldIZa0L1lpJfl3TeUi1mOxBhpj8RtdQAVt
+   WgzPnE14iUZP9nOJS8Qimy5xy07WM1xNyIMxlngAgq8GxcAfwMfiik0C4
+   YvA6qe8DpXPhrBSyz9fSi17AHurV0ZzdLuhqpiYeLieVW7BMwBzZNO78D
+   dP9K4cMoFQC/24Sb3bW+vb9p+OiOTrMUxypNAUwX/VPQNWMMsFUM1lkk3
+   w==;
+X-CSE-ConnectionGUID: jGhFwBmcSoqmprWDbeGL0Q==
+X-CSE-MsgGUID: 8e6gyLOWShK471NMDzajCA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="37027953"
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="37027953"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 08:14:06 -0700
+X-CSE-ConnectionGUID: pzyuSpVlRZGfY/++XMrl8w==
+X-CSE-MsgGUID: 6CmrAG3XR06+3ESGqCwpvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="43280270"
+Received: from lkp-server01.sh.intel.com (HELO b4d3d4be9bbf) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 07 Jun 2024 08:14:03 -0700
+Received: from kbuild by b4d3d4be9bbf with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sFbI0-00001O-1K;
+	Fri, 07 Jun 2024 15:14:00 +0000
+Date: Fri, 7 Jun 2024 23:13:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	Omar Sandoval <osandov@osandov.com>,
+	linux-debuggers@vger.kernel.org,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	Hao Ge <gehao@kylinos.cn>, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v3] mm: convert page type macros to enum
+Message-ID: <202406072244.8rZnMpsR-lkp@intel.com>
+References: <20240607001116.1061485-1-stephen.s.brennan@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240607001116.1061485-1-stephen.s.brennan@oracle.com>
 
-Hello,
+Hi Stephen,
 
-KernelCI has detected a boot regression affecting all AMD and Intel
-Chromebooks in the Collabora LAVA lab, occurring between next-20240605
-and next-20240606.
+kernel test robot noticed the following build errors:
 
-The following kernel panic has been reported in the logs. The trace
-provided below is from an Acer Chromebook 317, with similar traces
-observed on other devices:
+[auto build test ERROR on akpm-mm/mm-everything]
 
-[    5.944268] RIP: 0010:usercopy_abort+0x74/0x76
-[    5.944276] Code: 0f 89 9f 51 48 0f 45 d6 49 c7 c3 ac c1 7c 9f 4c 89 d1 57 48 c7 c6 38 54 7b 9f 48 c7 c7 b5 c1 7c 9f 49 0f 45 f3 e8 b9 8c e4 ff <0f> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00
-[    5.944278] RSP: 0000:ffffb01e8001fb90 EFLAGS: 00010246
-[    5.944280] RAX: 0000000000000068 RBX: 0000000000000d80 RCX: 0000000000000000
-[    5.944281] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-[    5.944282] RBP: 0000000000000000 R08: 0000000000000003 R09: 2079726f6d656d20
-[    5.944284] R10: 79706f6372657375 R11: 79706f6372657375 R12: ffff8e7b400a8800
-[    5.944285] R13: 0000000000000d80 R14: 0000000000000000 R15: 00000000ff879a40
-[    5.944286] FS:  0000000000000000(0003) GS:ffff8e7bc0100000(0063) knlGS:00000000eca4d440
-[    5.944288] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-[    5.944289] CR2: 00000000080e61d0 CR3: 0000000107002000 CR4: 0000000000350ef0
-[    5.944290] Call Trace:
-[    5.944293]  <TASK>
-[    5.944295]  ? __die_body+0x1b/0x5d
-[    5.944300]  ? die+0x31/0x4b
-[    5.944303]  ? do_trap+0x7c/0xfe
-[    5.944306]  ? usercopy_abort+0x74/0x76
-[    5.944309]  ? usercopy_abort+0x74/0x76
-[    5.944312]  ? do_error_trap+0x6f/0x99
-[    5.944315]  ? usercopy_abort+0x74/0x76
-[    5.944318]  ? exc_invalid_op+0x4e/0x65
-[    5.944321]  ? usercopy_abort+0x74/0x76
-[    5.944324]  ? asm_exc_invalid_op+0x16/0x20
-[    5.944327]  ? usercopy_abort+0x74/0x76
-[    5.944330]  __check_heap_object+0xcb/0x110
-[    5.944334]  __check_object_size+0x181/0x26d
-[    5.944336]  copy_from_buffer+0x43/0x66
-[    5.944340]  copy_uabi_to_xstate+0x113/0x194
-[    5.944343]  __fpu_restore_sig+0x3a3/0x4be
-[    5.944347]  fpu__restore_sig+0x6c/0x83
-[    5.944350]  ia32_restore_sigcontext+0x14e/0x16d
-[    5.944354]  __do_compat_sys_sigreturn+0x7b/0xbc
-[    5.944357]  do_int80_emulation+0xad/0xd3
-[    5.944360]  ? handle_mm_fault+0x10e/0x199
-[    5.944363]  ? exc_page_fault+0x27b/0x42f
-[    5.944365]  ? fpregs_assert_state_consistent+0x22/0x47
-[    5.944368]  ? clear_bhb_loop+0x45/0xa0
-[    5.944370]  ? clear_bhb_loop+0x45/0xa0
-[    5.944372]  ? clear_bhb_loop+0x45/0xa0
-[    5.944374]  ? clear_bhb_loop+0x45/0xa0
-[    5.944375]  ? clear_bhb_loop+0x45/0xa0
-[    5.944377]  ? clear_bhb_loop+0xe/0xa0
-[    5.944379]  asm_int80_emulation+0x16/0x20
-[    5.944382] RIP: 0023:0xeca52579
-[    5.944384] Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-[    5.944386] RSP: 002b:00000000ff879cbc EFLAGS: 00000246
-[    5.944387] RAX: 0000000000000060 RBX: 00000000ffffffff RCX: 00000000ff879d08
-[    5.944389] RDX: 0000000000000000 RSI: 0000000009b111a0 RDI: 00000000ff879d08
-[    5.944390] RBP: 00000000080d1801 R08: 0000000000000000 R09: 0000000000000000
-[    5.944391] R10: 0000000000000000 R11: 0000000000000282 R12: 0000000000000000
-[    5.944392] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    5.944393]  </TASK>
-[    5.944394] Modules linked in:
-[    5.944433] ---[ end trace 0000000000000000 ]---
-[    6.287986] RIP: 0010:usercopy_abort+0x74/0x76
-[    6.293033] Code: 0f 89 9f 51 48 0f 45 d6 49 c7 c3 ac c1 7c 9f 4c 89 d1 57 48 c7 c6 38 54 7b 9f 48 c7 c7 b5 c1 7c 9f 49 0f 45 f3 e8 b9 8c e4 ff <0f> 0b 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00
-[    6.313975] RSP: 0000:ffffb01e8001fb90 EFLAGS: 00010246
-[    6.319810] RAX: 0000000000000068 RBX: 0000000000000d80 RCX: 0000000000000000
-[    6.327780] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-[    6.335744] RBP: 0000000000000000 R08: 0000000000000003 R09: 2079726f6d656d20
-[    6.343710] R10: 79706f6372657375 R11: 79706f6372657375 R12: ffff8e7b400a8800
-[    6.351678] R13: 0000000000000d80 R14: 0000000000000000 R15: 00000000ff879a40
-[    6.359646] FS:  0000000000000000(0003) GS:ffff8e7bc0000000(0063) knlGS:00000000eca4d440
-[    6.368680] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-[    6.375098] CR2: 00000000f322e480 CR3: 0000000107002000 CR4: 0000000000350ef0
-[    6.383065] Kernel panic - not syncing: Fatal exception
-[    6.388907] Kernel Offset: 0x1ba00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+url:    https://github.com/intel-lab-lkp/linux/commits/Stephen-Brennan/mm-convert-page-type-macros-to-enum/20240607-081253
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240607001116.1061485-1-stephen.s.brennan%40oracle.com
+patch subject: [PATCH v3] mm: convert page type macros to enum
+config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20240607/202406072244.8rZnMpsR-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240607/202406072244.8rZnMpsR-lkp@intel.com/reproduce)
 
-The full kernel log is available on [1]. The config used was the
-upstream x86_64 defconfig with a fragment applied on top [2].
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406072244.8rZnMpsR-lkp@intel.com/
 
-The issue is still present on next-20240607.
+All error/warnings (new ones prefixed by >>):
 
-I'm sending this report to track the regression while a fix is 
-identified. I'll investigate the issue/run a bisection and report back 
-with the results.
+   In file included from fs/f2fs/dir.c:13:
+>> fs/f2fs/f2fs.h:1118:6: error: redefinition of 'page_type'
+    1118 | enum page_type {
+         |      ^
+   include/linux/page-flags.h:948:6: note: previous definition is here
+     948 | enum page_type {
+         |      ^
+   1 error generated.
+--
+   In file included from fs/f2fs/data.c:25:
+>> fs/f2fs/f2fs.h:1118:6: error: redefinition of 'page_type'
+    1118 | enum page_type {
+         |      ^
+   include/linux/page-flags.h:948:6: note: previous definition is here
+     948 | enum page_type {
+         |      ^
+   fs/f2fs/data.c:2373:10: warning: variable 'index' set but not used [-Wunused-but-set-variable]
+    2373 |         pgoff_t index;
+         |                 ^
+   1 warning and 1 error generated.
+--
+   In file included from fs/f2fs/segment.c:21:
+>> fs/f2fs/f2fs.h:1118:6: error: redefinition of 'page_type'
+    1118 | enum page_type {
+         |      ^
+   include/linux/page-flags.h:948:6: note: previous definition is here
+     948 | enum page_type {
+         |      ^
+>> fs/f2fs/segment.c:3403:7: warning: case value not in enumerated type 'enum page_type' [-Wswitch]
+    3403 |         case DATA:
+         |              ^
+   fs/f2fs/segment.c:3414:7: warning: case value not in enumerated type 'enum page_type' [-Wswitch]
+    3414 |         case NODE:
+         |              ^
+   fs/f2fs/segment.c:3425:7: warning: case value not in enumerated type 'enum page_type' [-Wswitch]
+    3425 |         case META:
+         |              ^
+   3 warnings and 1 error generated.
 
-Best,
 
-Laura
+vim +/page_type +1118 fs/f2fs/f2fs.h
 
-[1] https://pastebin.com/raw/1yDEDXSF
-[2] https://pastebin.com/raw/vPSw6cfB
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1104  
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1105  /*
+e1c42045203071 arter97     2014-08-06  1106   * The below are the page types of bios used in submit_bio().
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1107   * The available types are:
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1108   * DATA			User data pages. It operates as async mode.
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1109   * NODE			Node pages. It operates as async mode.
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1110   * META			FS metadata pages such as SIT, NAT, CP.
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1111   * NR_PAGE_TYPE		The number of page types.
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1112   * META_FLUSH		Make sure the previous pages are written
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1113   *			with waiting the bio's completion
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1114   * ...			Only can be used with META.
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1115   */
+7d5e510944ce60 Jaegeuk Kim 2013-11-18  1116  #define PAGE_TYPE_OF_BIO(type)	((type) > META ? META : (type))
+87161a2b0aed9e Jaegeuk Kim 2024-02-06  1117  #define PAGE_TYPE_ON_MAIN(type)	((type) == DATA || (type) == NODE)
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28 @1118  enum page_type {
+6b8beca0edd320 Chao Yu     2022-05-06  1119  	DATA = 0,
+6b8beca0edd320 Chao Yu     2022-05-06  1120  	NODE = 1,	/* should not change this */
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1121  	META,
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1122  	NR_PAGE_TYPE,
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1123  	META_FLUSH,
+3db1de0e582c35 Daeho Jeong 2022-04-28  1124  	IPU,		/* the below types are used by tracepoints only. */
+8ce67cb07dbf6b Jaegeuk Kim 2015-03-17  1125  	OPU,
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1126  };
+39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1127  
 
-#regzbot introduced: next-20240605..next-20240606
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
