@@ -1,113 +1,129 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D30814533D;
-	Fri,  7 Jun 2024 22:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CE5155724;
+	Fri,  7 Jun 2024 22:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717799298; cv=none; b=H6a/tAGMof1fr5sTifMbq8oicmqD3q4DciVvuOfNgwxNvbE9DZ+itqtyEO/v1C/9b6kVPzsyMnLuzFF4MmXgVLoz5owBOPZDbBG+tpCCKB3xa+6zgVk0pkZkiK/r6E+5kPqbd5mIeAAO55QAfHwivsCjyNPmIJfR43q7drp41uA=
+	t=1717799300; cv=none; b=OgTV+4SyLrIaW+dG1G44HW2VEGBvOvUkqEtzLDijJI7tWPTeoS2pdh6HhrahuJNDou6vO1eSqrx2s/wztl1GELZeGsC/NrmFDqZKewHwApF5rcbMfcK3uKxlo3TxRpEVtR9QTQ6/Fu08KdDXJFiS+IencEk5BY9BB8mbWsUseUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717799298; c=relaxed/simple;
-	bh=l/MrSi5lk5PVhPYbVtxedDFG6aG0Vvkjcl8AeXQ8zoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bwLxaLTCdFwpi6IeHGrH5z6K9Ls6t6QHeA4+EERZ5KseMpp6vpRUUB38z4BrtCIz6agcjyh9Jbw3CC+htoU5lKCLwXAyw3G67sO16kcTiPzW2q+DksYrYe0GrPytHeuiC+oZBy6gWE1cf9Vs3xu7SsW6PLJ5nez0xcICBXXo1Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N6PGMJVo; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717799300; c=relaxed/simple;
+	bh=sNjivo9Zvmbdpxv0rjCgyehgb1bPO24dBUGKz6U6QLI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=VRceocoiew0rASQsDuaXljJ4lsMNVC8uUfKyjnr7awnj5m8IGI6HvBekJW99pOF3R/HSSlUWpm204QMTzrPEiD2EBf+XZB+HH+N6uJPCjnbFJZ8SobztnvaaDsyFd94WhwKambX82Iijjw+tRksMUGg5G1JDTa5J2GQsLfAP+ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bvTbd5vw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6PGMJVo"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52bd48cf36bso878194e87.3;
-        Fri, 07 Jun 2024 15:28:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717799294; x=1718404094; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k4BkUg/TA3tRYPVfwl6zlyTMojUBhX6Gv43Vrpcb6ng=;
-        b=N6PGMJVoRUG/Z/4lhTKZv5P3bFloxFc0P1kBtYK9rK26wuWA1vTzWW+T4guDmW8zAs
-         uZkAw7S+vyDs1WS2YU3ugldvvxpRL2PpNImjTwH+qONltOXycMvpgksyeo/uxbrhckZg
-         0thbyWM8QDIJNGHKQPRy2WmzuC/KDMzoXiIE/ZgrqMk9ItrAhv/EjOUKAee4969f5K/6
-         7n1BMhyASS7zitBm3tge2PfC89hNhmHr2MdDod2lVKVNWzRh/6aZw0UfuZkrhgQlwuG/
-         TFZebLip7l+7M7Zc5CGkDCyatsuM6Wzb2OPP0wh0Xf/kacdXp3C3jNSyYZvnWbJCcmin
-         xlDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717799294; x=1718404094;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k4BkUg/TA3tRYPVfwl6zlyTMojUBhX6Gv43Vrpcb6ng=;
-        b=hwGh+boWsNdppcmm3WnBfcpWEEhMgq/lactYXCqXi9qVyV2vf6UvcyhVJYxAnE5gTI
-         AUzApsYLWazntfuWP1Flphd4WJB99v4R5KeZsFd9iTEvr1BtQbz1qQzv7RQLoLGkiWmD
-         QDxqkCHdS97uEHc/ddnlhf9o7+PGp3OzMcYB/OxnQPvPHgVk/9KDJtVVDX5nIYdDzsqM
-         YUegFyFgKiI/Ek416Et78yCyLsmBBAYAr0I3wJ/OkNimtqc+YQXFKwReP8ehfxbF0k5X
-         Mc4A/cg+eIMimF1wSsGjrZWKbXyMHIEfZxtOW0lr8LIkxIo3NIFiJWNYFequpy5UFm4c
-         j9rA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7uMDaxxj52Dq0z3QVyz0Z6kT6e+F7ODE0Md18W2cLUyYat+cA2FZT7Ny/S4ktZWy1HlmAjIwoVximjPB8NFLgMAxddWYzSV+hLQZT
-X-Gm-Message-State: AOJu0YyQNm3+7E7aGLrPkibr6/FLYXLXBkwrUHTw9QxSpcZ+HfA5SPY+
-	iDAd2Zz2v4GlLsocyzpq45ZjxQxREPtu1M5SNv7s6MeUonrsTnbW
-X-Google-Smtp-Source: AGHT+IFKhhMBptFKALqKje48pRi2hZGZ0cjPVsMJ6FqppKEsD8Zktc7poDtemXuD1UC1Dzh9PB46+w==
-X-Received: by 2002:ac2:4854:0:b0:522:2c9b:63b7 with SMTP id 2adb3069b0e04-52bb9f68965mr2292504e87.14.1717799294139;
-        Fri, 07 Jun 2024 15:28:14 -0700 (PDT)
-Received: from [192.168.0.5] ([69.6.8.124])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421580fe343sm99432215e9.6.2024.06.07.15.28.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Jun 2024 15:28:13 -0700 (PDT)
-Message-ID: <30d71968-d32d-4121-b221-d95a4cdfedb8@gmail.com>
-Date: Sat, 8 Jun 2024 01:28:48 +0300
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bvTbd5vw"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 457HZhIX028186;
+	Fri, 7 Jun 2024 22:28:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=p4puNrUTPUexUPQ4paUS/w
+	F6E13ce631RWT1AfUA6Yw=; b=bvTbd5vw7LwlAAEMcggwklCV9AOYdJKY2j8h/d
+	vJMaue6MC+8tsUUFZ/TpLtpHVGw5NMl+0C9qYyVvn8OAnZafDRTLxOYxB6AuUW7K
+	i23kUDr0p/KLwYX8UyZGeGXEJQHB+KyCnMVP663QGat20xN6SZeCh9nDyP4MuBwk
+	+oYyy+TP8QA9mhy8E2OA+2lmlSaEOQB6lQwUR5Z7JFKFULOCzleZQLWi+A3fFIJ/
+	AFWRCr9xYY44EkDhdkpJsG3JPY4SZwFkx6k0a6g8rMyRYCqikTYZJeh3gC1ybrir
+	Qb+UqOKWt354S4caCpmPLeVWc4YHTTAYPMCPz5jkr0INraGA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yk3h2wgmk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 22:28:02 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 457MS0dh026576
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 7 Jun 2024 22:28:00 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 7 Jun 2024
+ 15:27:59 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Fri, 7 Jun 2024 15:27:59 -0700
+Subject: [PATCH] hwmon: add missing MODULE_DESCRIPTION() macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] net: wwan: Fix SDX72 ping failure issue
-To: Slark Xiao <slark_xiao@163.com>, loic.poulain@linaro.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- manivannan.sadhasivam@linaro.org
-References: <20240607100309.453122-1-slark_xiao@163.com>
-Content-Language: en-US
-From: Sergey Ryazanov <ryazanov.s.a@gmail.com>
-In-Reply-To: <20240607100309.453122-1-slark_xiao@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20240607-md-drivers-hwmon-v1-1-1ea6d6fe61e3@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAG6JY2YC/x3MwQ6CMAyA4VchPdtkLIKZr2I8FFZcEzdMq0hCe
+ Hcnx+/w/xsYq7DBtdlAeRGTuVS0pwbGROXBKLEavPNn17sL5ohRZWE1TN88F+xiCM633UQuQM1
+ eypOsx/J2rx7IGAelMqb/6Cnls2Ime7PCvv8Au8bCnoEAAAA=
+To: Luca Tettamanti <kronos.it@gmail.com>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Marius Zachmann <mail@mariuszachmann.de>
+CC: <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: wO8xonhjJCmZE-pSvJKvgECHdB9nDrsX
+X-Proofpoint-ORIG-GUID: wO8xonhjJCmZE-pSvJKvgECHdB9nDrsX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-07_14,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 bulkscore=0 mlxscore=0 priorityscore=1501 clxscore=1011
+ suspectscore=0 spamscore=0 mlxlogscore=901 adultscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406070167
 
-Hello Slark,
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/asus_atk0110.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/corsair-cpro.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/mr75203.o
 
-without the first patch it is close to impossible to understand this 
-one. Next time please send such tightly connected patches to both 
-mailing lists.
+Add all missing invocations of the MODULE_DESCRIPTION() macro.
 
-On 07.06.2024 13:03, Slark Xiao wrote:
-> For SDX72 MBIM device, it starts data mux id from 112 instead of 0.
-> This would lead to device can't ping outside successfully.
-> Also MBIM side would report "bad packet session (112)".
-> So we add a link id default value for these SDX72 products which
-> works in MBIM mode.
-> 
-> Signed-off-by: Slark Xiao <slark_xiao@163.com>
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ drivers/hwmon/asus_atk0110.c | 1 +
+ drivers/hwmon/corsair-cpro.c | 1 +
+ drivers/hwmon/mr75203.c      | 1 +
+ 3 files changed, 3 insertions(+)
 
-Since it a but fix, it needs a 'Fixes:' tag.
+diff --git a/drivers/hwmon/asus_atk0110.c b/drivers/hwmon/asus_atk0110.c
+index d778a2aaefec..3751c1e3eddd 100644
+--- a/drivers/hwmon/asus_atk0110.c
++++ b/drivers/hwmon/asus_atk0110.c
+@@ -1389,4 +1389,5 @@ static void __exit atk0110_exit(void)
+ module_init(atk0110_init);
+ module_exit(atk0110_exit);
+ 
++MODULE_DESCRIPTION("ASUS ATK0110 driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
+index 3e63666a61bd..370c5a8a1486 100644
+--- a/drivers/hwmon/corsair-cpro.c
++++ b/drivers/hwmon/corsair-cpro.c
+@@ -582,6 +582,7 @@ static struct hid_driver ccp_driver = {
+ };
+ 
+ MODULE_DEVICE_TABLE(hid, ccp_devices);
++MODULE_DESCRIPTION("Corsair Commander Pro controller driver");
+ MODULE_LICENSE("GPL");
+ 
+ static int __init ccp_init(void)
+diff --git a/drivers/hwmon/mr75203.c b/drivers/hwmon/mr75203.c
+index 50a8b9c3f94d..7848198f8996 100644
+--- a/drivers/hwmon/mr75203.c
++++ b/drivers/hwmon/mr75203.c
+@@ -925,4 +925,5 @@ static struct platform_driver moortec_pvt_driver = {
+ };
+ module_platform_driver(moortec_pvt_driver);
+ 
++MODULE_DESCRIPTION("Moortec Semiconductor MR75203 PVT Controller driver");
+ MODULE_LICENSE("GPL v2");
 
-> ---
->   drivers/net/wwan/mhi_wwan_mbim.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wwan/mhi_wwan_mbim.c b/drivers/net/wwan/mhi_wwan_mbim.c
-> index 3f72ae943b29..4ca5c845394b 100644
-> --- a/drivers/net/wwan/mhi_wwan_mbim.c
-> +++ b/drivers/net/wwan/mhi_wwan_mbim.c
-> @@ -618,7 +618,8 @@ static int mhi_mbim_probe(struct mhi_device *mhi_dev, const struct mhi_device_id
->   	mbim->rx_queue_sz = mhi_get_free_desc_count(mhi_dev, DMA_FROM_DEVICE);
->   
->   	/* Register wwan link ops with MHI controller representing WWAN instance */
-> -	return wwan_register_ops(&cntrl->mhi_dev->dev, &mhi_mbim_wwan_ops, mbim, 0);
-> +	return wwan_register_ops(&cntrl->mhi_dev->dev, &mhi_mbim_wwan_ops, mbim,
-> +		mhi_dev->mhi_cntrl->link_id ? mhi_dev->mhi_cntrl->link_id : 0);
-
-Is it possible to drop the ternary operator and pass the link_id directly?
-
->   }
->   
->   static void mhi_mbim_remove(struct mhi_device *mhi_dev)
+---
+base-commit: 19ca0d8a433ff37018f9429f7e7739e9f3d3d2b4
+change-id: 20240607-md-drivers-hwmon-5d990215fa09
 
