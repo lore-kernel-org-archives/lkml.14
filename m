@@ -1,39 +1,39 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE8019D89B;
-	Fri,  7 Jun 2024 07:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B5515381B;
+	Fri,  7 Jun 2024 07:30:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717745442; cv=none; b=rlsDFpsl3UpcVNEtbpEQcnGSEFG0xHsKT2O74cLHvKc8KKCYL33x1hsd3pz2fPyQ9Z/b9Zvg7I1UpLn+l/83aMyg8q4DAjnH9hsJmezpd2S1Igi0UQhOU3mhLoBukSQBxxS1MOJz2vVfTIwLCJnFPCDH09CR+PA6Mne5FO+m1EI=
+	t=1717745443; cv=none; b=JOz06CzPWBf0YiI8cRi6tZyoAyhcSyiJN69t85v1tx/QiFnVPbFvy6x1XPOom3coSCi4NxryCT63uGCPoiowDXWFjIq755KfD11S23a0yY4RHba6eOgvSgOuXoDCweT6KZHV4a59k2rm9yBowuLWDgrLBXgaE/hu12widCryBvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717745442; c=relaxed/simple;
-	bh=XA7yXs98tBR+Y72hp0dM3tOORuRzx+vjQf+FlpZQy2g=;
+	s=arc-20240116; t=1717745443; c=relaxed/simple;
+	bh=wKMjgK3GIPQQd20gtCcFQwHg9O/bjN2nXRgotur12wc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=awxMWIT/xHGdlxlk9MCRdsv+hIyjNYfUHqc4yvrODFWqsocZjXHjzczpIgh5XtGUswkv4ngF+CglHzF672sRXUqj9Ihy2ZReiIhoCv9K4gO24J6CvXUcFS8fwiuBXLtxSrQceClG5Q4F8uypMqT7N6Hvsz9SNYvhGU7GJa9giuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=D47WZkx/; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=JQXJ7ITq77cC6jEfodVdt++0LGLEMamxNcQJ6FYzw/NR+DFGLigCABuieBKzjs/lWpNd1VT5NCk2VJ011YiWhi3g/+gYncV4FyICGRd1QhEoB190Od6DaBVcNXp1goontdYLvZJpT4DCENrYE598ALF9mHTCOud/SUcRQL+6mMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XunuChKw; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D47WZkx/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BC32640011;
-	Fri,  7 Jun 2024 07:30:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XunuChKw"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2E65E40010;
+	Fri,  7 Jun 2024 07:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1717745438;
+	t=1717745439;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2VeJW7JHQpWdY0KjL1cAtvzlXlZZ8Tp/iJj/ay+emhQ=;
-	b=D47WZkx/MwCxy0DNinourWkr4Nzke5EvAZ487X6zJtNuoHLvgKO+zbOywNzFwTc0bEgsII
-	K4fAdeB9Q+mIRIjr/gwTg5Np8MCnU44W4+7N9jFFXh28v4P/cIATg91Bo1VeTgh7OBEG4D
-	tQYfiaAVLyR/iZ5Co5vdw8qCy94UlURTfMwiH2z0a9QAYq1XKAeNTJLrXbVj4SpIePfUhB
-	Rtr2gIOQHEI/vA6AHPz9+CXa4NC+iuP9/igbSlJ5Y38yGHcLQBMMQqfGJG4SSS3/vsZ7Mr
-	9gQWHh1OomVJEIrmKSygIC0ouLSTcBgkINDBaY+97dvMugw+/eYbulYkzuCabw==
+	bh=PWgiv6Dw2J0CMsQahRN/WS1Vb3ESj1spouLrLT3OBb4=;
+	b=XunuChKwkT8m7BgVIpHDvis4uLT4GlwcWSfBCX1XlW0ZRUjiJyXNGstqZ2Wl8C+VTfBjbQ
+	jCTaz2xXOQx4ZH+Srq98s0t5xbeOw+sRzodKojMQQLlw98cy4ugrraWzrIC9yL1pDHxDqb
+	hYlPANtOOY6ez0LGKmBDwcceXsbje1U/miBpzJtrVPSRjZ1BQU6vz5lESKMnmBGEBsLSqn
+	hpZcZdayfMjW+26v0DxYHB4P+IpkOpf46iG7rpkvBYG7+/rz5Zwr2++/GZarqxeQ/Dbz39
+	nFbEz/SXexrkXR+N+Lq/t2C4Tq4FYeRgH73Svhi+RsvxQzkfhk5SHi+VSjeRyw==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Fri, 07 Jun 2024 09:30:19 +0200
-Subject: [PATCH net-next v2 2/8] net: ethtool: pse-pd: Expand C33 PSE
- status with class, power and extended state
+Date: Fri, 07 Jun 2024 09:30:21 +0200
+Subject: [PATCH net-next v2 4/8] net: pse-pd: pd692x0: Expand ethtool
+ status message
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240607-feature_poe_power_cap-v2-2-c03c2deb83ab@bootlin.com>
+Message-Id: <20240607-feature_poe_power_cap-v2-4-c03c2deb83ab@bootlin.com>
 References: <20240607-feature_poe_power_cap-v2-0-c03c2deb83ab@bootlin.com>
 In-Reply-To: <20240607-feature_poe_power_cap-v2-0-c03c2deb83ab@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -58,180 +58,146 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
 
-This update expands the status information provided by ethtool for PSE c33.
-It includes details such as the detected class, current power delivered,
+This update expands pd692x0_ethtool_get_status() callback with newly
+introduced details such as the detected class, current power delivered,
 and extended state information.
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
 
 Change in v2:
-- Move on PSE string error messages to ETHTOOL_LINK_EXT_STATE and
-  ETHTOOL_LINK_EXT_SUBSTATE with fixed enumeration in aim to unify
-  interface diagnostic.
+- Move in from string status message to c33_pse_ext_state_info.
 ---
- include/linux/ethtool.h              | 11 ++++++++++
- include/linux/pse-pd/pse.h           |  8 +++++++
- include/uapi/linux/ethtool.h         | 41 ++++++++++++++++++++++++++++++++++++
- include/uapi/linux/ethtool_netlink.h |  4 ++++
- net/ethtool/pse-pd.c                 | 29 ++++++++++++++++++++++++-
- 5 files changed, 92 insertions(+), 1 deletion(-)
+ drivers/net/pse-pd/pd692x0.c | 92 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
-diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
-index 6fd9107d3cc0..1a0c8d6a22a0 100644
---- a/include/linux/ethtool.h
-+++ b/include/linux/ethtool.h
-@@ -1155,4 +1155,15 @@ struct ethtool_forced_speed_map {
+diff --git a/drivers/net/pse-pd/pd692x0.c b/drivers/net/pse-pd/pd692x0.c
+index 6488b941703c..6b7367d009d6 100644
+--- a/drivers/net/pse-pd/pd692x0.c
++++ b/drivers/net/pse-pd/pd692x0.c
+@@ -73,6 +73,7 @@ enum {
+ 	PD692X0_MSG_SET_PORT_PARAM,
+ 	PD692X0_MSG_GET_PORT_STATUS,
+ 	PD692X0_MSG_DOWNLOAD_CMD,
++	PD692X0_MSG_GET_PORT_CLASS,
  
- void
- ethtool_forced_speed_maps_init(struct ethtool_forced_speed_map *maps, u32 size);
-+
-+/* C33 PSE extended state and substate. */
-+struct ethtool_c33_pse_ext_state_info {
-+	enum ethtool_c33_pse_ext_state c33_pse_ext_state;
-+	union {
-+		enum ethtool_c33_pse_ext_substate_voltage_issue voltage_issue;
-+		enum ethtool_c33_pse_ext_substate_current_issue current_issue;
-+		enum ethtool_c33_pse_ext_substate_config config;
-+		u32 __c33_pse_ext_substate;
-+	};
-+};
- #endif /* _LINUX_ETHTOOL_H */
-diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-index 6eec24ffa866..38b9308e5e7a 100644
---- a/include/linux/pse-pd/pse.h
-+++ b/include/linux/pse-pd/pse.h
-@@ -36,12 +36,20 @@ struct pse_control_config {
-  *	functions. IEEE 802.3-2022 30.9.1.1.2 aPSEAdminState
-  * @c33_pw_status: power detection status of the PSE.
-  *	IEEE 802.3-2022 30.9.1.1.5 aPSEPowerDetectionStatus:
-+ * @c33_pw_class: detected class of a powered PD
-+ *	IEEE 802.3-2022 30.9.1.1.8 aPSEPowerClassification
-+ * @c33_actual_pw: power currently delivered by the PSE in mW
-+ *	IEEE 802.3-2022 30.9.1.1.23 aPSEActualPower
-+ * @c33_ext_state_info: extended state information of the PSE
-  */
- struct pse_control_status {
- 	enum ethtool_podl_pse_admin_state podl_admin_state;
- 	enum ethtool_podl_pse_pw_d_status podl_pw_status;
- 	enum ethtool_c33_pse_admin_state c33_admin_state;
- 	enum ethtool_c33_pse_pw_d_status c33_pw_status;
-+	u32 c33_pw_class;
-+	u32 c33_actual_pw;
-+	struct ethtool_c33_pse_ext_state_info c33_ext_state_info;
+ 	/* add new message above here */
+ 	PD692X0_MSG_CNT
+@@ -149,6 +150,12 @@ static const struct pd692x0_msg pd692x0_msg_template_list[PD692X0_MSG_CNT] = {
+ 		.data = {0x16, 0x16, 0x99, 0x4e,
+ 			 0x4e, 0x4e, 0x4e, 0x4e},
+ 	},
++	[PD692X0_MSG_GET_PORT_CLASS] = {
++		.key = PD692X0_KEY_REQ,
++		.sub = {0x05, 0xc4},
++		.data = {0x4e, 0x4e, 0x4e, 0x4e,
++			 0x4e, 0x4e, 0x4e, 0x4e},
++	},
  };
  
- /**
-diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-index 8733a3117902..ef65ad4612d2 100644
---- a/include/uapi/linux/ethtool.h
-+++ b/include/uapi/linux/ethtool.h
-@@ -752,6 +752,47 @@ enum ethtool_module_power_mode {
- 	ETHTOOL_MODULE_POWER_MODE_HIGH,
- };
- 
-+/* C33 PSE extended state */
-+enum ethtool_c33_pse_ext_state {
-+	ETHTOOL_C33_PSE_EXT_STATE_UNKNOWN = 1,
-+	ETHTOOL_C33_PSE_EXT_STATE_DETECTION,
-+	ETHTOOL_C33_PSE_EXT_STATE_CLASSIFICATION_FAILURE,
-+	ETHTOOL_C33_PSE_EXT_STATE_HARDWARE_ISSUE,
-+	ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
-+	ETHTOOL_C33_PSE_EXT_STATE_CURRENT_ISSUE,
-+	ETHTOOL_C33_PSE_EXT_STATE_POWER_BUDGET_EXCEEDED,
-+	ETHTOOL_C33_PSE_EXT_STATE_CONFIG,
-+	ETHTOOL_C33_PSE_EXT_STATE_TEMP_ISSUE,
-+};
-+
-+/* More information in addition to ETHTOOL_C33_PSE_EXT_STATE_DETECTION. */
-+enum ethtool_c33_pse_ext_substate_detection {
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_DET_IN_PROGRESS = 1,
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_DET_FAILURE,
-+};
-+
-+/* More information in addition to ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE. */
-+enum ethtool_c33_pse_ext_substate_voltage_issue {
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_V_INJECTION = 1,
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_V_SHORT_DETECTED,
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_V_OVERVOLTAGE,
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_V_UNDERVOLTAGE,
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_V_OPEN,
-+};
-+
-+/* More information in addition to ETHTOOL_C33_PSE_EXT_STATE_CURRENT_ISSUE. */
-+enum ethtool_c33_pse_ext_substate_current_issue {
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_CRT_OVERLOAD = 1,
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_CRT_UNDERLOAD,
-+};
-+
-+/* More information in addition to ETHTOOL_C33_PSE_EXT_STATE_CONFIG.
-+ */
-+enum ethtool_c33_pse_ext_substate_config {
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_CFG_CHANGED = 1,
-+	ETHTOOL_C33_PSE_EXT_SUBSTATE_CFG_UNDEFINED,
-+};
-+
- /**
-  * enum ethtool_pse_types - Types of PSE controller.
-  * @ETHTOOL_PSE_UNKNOWN: Type of PSE controller is unknown
-diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-index b49b804b9495..ccbe8294dfd5 100644
---- a/include/uapi/linux/ethtool_netlink.h
-+++ b/include/uapi/linux/ethtool_netlink.h
-@@ -915,6 +915,10 @@ enum {
- 	ETHTOOL_A_C33_PSE_ADMIN_STATE,		/* u32 */
- 	ETHTOOL_A_C33_PSE_ADMIN_CONTROL,	/* u32 */
- 	ETHTOOL_A_C33_PSE_PW_D_STATUS,		/* u32 */
-+	ETHTOOL_A_C33_PSE_PW_CLASS,		/* u32 */
-+	ETHTOOL_A_C33_PSE_ACTUAL_PW,		/* u32 */
-+	ETHTOOL_A_C33_PSE_EXT_STATE,		/* u8 */
-+	ETHTOOL_A_C33_PSE_EXT_SUBSTATE,		/* u8 */
- 
- 	/* add new constants above here */
- 	__ETHTOOL_A_PSE_CNT,
-diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
-index 2c981d443f27..3d74cfe7765b 100644
---- a/net/ethtool/pse-pd.c
-+++ b/net/ethtool/pse-pd.c
-@@ -86,7 +86,14 @@ static int pse_reply_size(const struct ethnl_req_info *req_base,
- 		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ADMIN_STATE */
- 	if (st->c33_pw_status > 0)
- 		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_D_STATUS */
--
-+	if (st->c33_pw_class > 0)
-+		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_CLASS */
-+	if (st->c33_actual_pw > 0)
-+		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ACTUAL_PW */
-+	if (st->c33_ext_state_info.c33_pse_ext_state)
-+		len += nla_total_size(sizeof(u8)); /* _C33_PSE_EXT_STATE */
-+	if (st->c33_ext_state_info.__c33_pse_ext_substate)
-+		len += nla_total_size(sizeof(u8)); /* _C33_PSE_EXT_SUBSTATE */
- 	return len;
+ static u8 pd692x0_build_msg(struct pd692x0_msg *msg, u8 echo)
+@@ -435,6 +442,75 @@ static int pd692x0_pi_is_enabled(struct pse_controller_dev *pcdev, int id)
+ 	}
  }
  
-@@ -117,6 +124,26 @@ static int pse_fill_reply(struct sk_buff *skb,
- 			st->c33_pw_status))
- 		return -EMSGSIZE;
++struct pd692x0_pse_ext_state_mapping {
++	u32 status_code;
++	enum ethtool_c33_pse_ext_state pse_ext_state;
++	u8 pse_ext_substate;
++};
++
++static const struct pd692x0_pse_ext_state_mapping
++pd692x0_pse_ext_state_map[] = {
++	{0x06, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_V_OVERVOLTAGE},
++	{0x07, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_V_UNDERVOLTAGE},
++	{0x08, ETHTOOL_C33_PSE_EXT_STATE_HARDWARE_ISSUE, 0},
++	{0x0C, ETHTOOL_C33_PSE_EXT_STATE_CONFIG,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_CFG_UNDEFINED},
++	{0x11, ETHTOOL_C33_PSE_EXT_STATE_CONFIG,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_CFG_UNDEFINED},
++	{0x12, ETHTOOL_C33_PSE_EXT_STATE_HARDWARE_ISSUE, 0},
++	{0x1B, ETHTOOL_C33_PSE_EXT_STATE_DETECTION,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_DET_IN_PROGRESS},
++	{0x1C, ETHTOOL_C33_PSE_EXT_STATE_DETECTION,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_DET_FAILURE},
++	{0x1E, ETHTOOL_C33_PSE_EXT_STATE_CURRENT_ISSUE,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_CRT_UNDERLOAD},
++	{0x1F, ETHTOOL_C33_PSE_EXT_STATE_CURRENT_ISSUE,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_CRT_OVERLOAD},
++	{0x20, ETHTOOL_C33_PSE_EXT_STATE_POWER_BUDGET_EXCEEDED, 0},
++	{0x21, ETHTOOL_C33_PSE_EXT_STATE_HARDWARE_ISSUE, 0},
++	{0x22, ETHTOOL_C33_PSE_EXT_STATE_CONFIG,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_CFG_CHANGED},
++	{0x24, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_V_INJECTION},
++	{0x25, ETHTOOL_C33_PSE_EXT_STATE_DETECTION,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_DET_FAILURE},
++	{0x26, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE, 0},
++	{0x34, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_V_SHORT_DETECTED},
++	{0x35, ETHTOOL_C33_PSE_EXT_STATE_TEMP_ISSUE, 0},
++	{0x36, ETHTOOL_C33_PSE_EXT_STATE_TEMP_ISSUE, 0},
++	{0x37, ETHTOOL_C33_PSE_EXT_STATE_UNKNOWN, 0},
++	{0x3C, ETHTOOL_C33_PSE_EXT_STATE_POWER_BUDGET_EXCEEDED, 0},
++	{0x3D, ETHTOOL_C33_PSE_EXT_STATE_POWER_BUDGET_EXCEEDED, 0},
++	{0x41, ETHTOOL_C33_PSE_EXT_STATE_POWER_BUDGET_EXCEEDED, 0},
++	{0x43, ETHTOOL_C33_PSE_EXT_STATE_CLASSIFICATION_FAILURE, 0},
++	{0xA0, ETHTOOL_C33_PSE_EXT_STATE_HARDWARE_ISSUE, 0},
++	{0xA7, ETHTOOL_C33_PSE_EXT_STATE_DETECTION,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_DET_FAILURE},
++	{0xA8, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
++		ETHTOOL_C33_PSE_EXT_SUBSTATE_V_OPEN},
++	{ /* sentinel */ }
++};
++
++static void
++pd692x0_get_ext_state(struct ethtool_c33_pse_ext_state_info *c33_ext_state_info,
++		      u32 status_code)
++{
++	const struct pd692x0_pse_ext_state_mapping *ext_state_map;
++
++	ext_state_map = pd692x0_pse_ext_state_map;
++	while (ext_state_map->status_code) {
++		if (ext_state_map->status_code == status_code) {
++			c33_ext_state_info->c33_pse_ext_state = ext_state_map->pse_ext_state;
++			c33_ext_state_info->__c33_pse_ext_substate = ext_state_map->pse_ext_state;
++			return;
++		}
++		ext_state_map++;
++	}
++}
++
+ static int pd692x0_ethtool_get_status(struct pse_controller_dev *pcdev,
+ 				      unsigned long id,
+ 				      struct netlink_ext_ack *extack,
+@@ -442,6 +518,7 @@ static int pd692x0_ethtool_get_status(struct pse_controller_dev *pcdev,
+ {
+ 	struct pd692x0_priv *priv = to_pd692x0_priv(pcdev);
+ 	struct pd692x0_msg msg, buf = {0};
++	u32 class;
+ 	int ret;
  
-+	if (st->c33_pw_class > 0 &&
-+	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_PW_CLASS,
-+			st->c33_pw_class))
-+		return -EMSGSIZE;
+ 	ret = pd692x0_fw_unavailable(priv);
+@@ -471,6 +548,21 @@ static int pd692x0_ethtool_get_status(struct pse_controller_dev *pcdev,
+ 
+ 	priv->admin_state[id] = status->c33_admin_state;
+ 
++	pd692x0_get_ext_state(&status->c33_ext_state_info, buf.sub[0]);
 +
-+	if (st->c33_actual_pw > 0 &&
-+	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_ACTUAL_PW,
-+			st->c33_actual_pw))
-+		return -EMSGSIZE;
++	status->c33_actual_pw = (buf.data[0] << 4 | buf.data[1]) * 100;
 +
-+	if (st->c33_ext_state_info.c33_pse_ext_state > 0 &&
-+	    nla_put_u8(skb, ETHTOOL_A_C33_PSE_EXT_STATE,
-+		       st->c33_ext_state_info.c33_pse_ext_state))
-+		return -EMSGSIZE;
++	memset(&buf, 0, sizeof(buf));
++	msg = pd692x0_msg_template_list[PD692X0_MSG_GET_PORT_CLASS];
++	msg.sub[2] = id;
++	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
++	if (ret < 0)
++		return ret;
 +
-+	if (st->c33_ext_state_info.__c33_pse_ext_substate > 0 &&
-+	    nla_put_u8(skb, ETHTOOL_A_C33_PSE_EXT_SUBSTATE,
-+		       st->c33_ext_state_info.__c33_pse_ext_substate))
-+		return -EMSGSIZE;
++	class = buf.data[3] >> 4;
++	if (class <= 8)
++		status->c33_pw_class = class;
 +
  	return 0;
  }
