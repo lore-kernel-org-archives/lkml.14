@@ -1,336 +1,118 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B8315B131
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 08:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BDD18030;
+	Fri,  7 Jun 2024 08:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717750369; cv=none; b=gE9lrOICN0HC9CXVvp3zNdlkooU1QX3wDt5CnsqJ+npVAuxXGh2vaitJ4Mw2u2r2MTHJ8CBpqWt0tbmDvVrqp4ORFEy7pVDjEFSkpSFC1bsZLzsBZQwDZ6U9f3MVeiucW8z1eFyBoBl0OQ8M7rkQhf+4bgd/neh/GZXBy3tfqTQ=
+	t=1717750424; cv=none; b=RGd5o64APa3ANvrAoEjXRP3BXeBonW6u4OvW4kgSaS9xjLdTnUtWkQ1DYBRqk+7YCr+8nd9l2wStfLUKcxeq7yRlRQhF6sEI59JKcRNKM1eAnIb18s5puiucXqmn44wZuayr33E8xBtHVZflbJh75jkVrIvK7ATj8SZvYww9SPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717750369; c=relaxed/simple;
-	bh=66HBX4J19VbRekWum3euwSQ7xtqYmK2ftAnDc0LiNUI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hRK4zR917vpuX3x7MSo+IkGNljfEhXFZZkESkV0bkYN0cyxUr+54t7ocSssyR9C/pZs+D3pH1YLTEQU2ggZfOLS1UcGt20LPsw8gf4D7Yii902dYqB0ub7+CyVsByhS/qqM4522zfzjzt/aa9ix7LO3yvglxToFXdVn9SehHElw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cEYeB3FC; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1717750424; c=relaxed/simple;
+	bh=fTlaz4YzoIgFrsTHKkk4onrpRqCKI0V6DGDA8huFHEY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=seW1MoBkxo6xcA04Za4QC4ksHoA5fYFFApPwKH4a+woJ7JQn2/aQrMU8622ImoDryjW9KD0RvApvKeMeZmcNCOEY5q7jIDnWtpYwBDn9EkuYxgQ0t9U27U0JdwqoRgxocJCI7G4VHtckJRWBlNmVwfgkvLdb5SFejlyLUpcXSFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IIrYytqz; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cEYeB3FC"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57a677d3d79so5604468a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 01:52:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIrYytqz"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eaa80cb550so21400761fa.0;
+        Fri, 07 Jun 2024 01:53:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717750366; x=1718355166; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qjuZF9YFMCyt7vHEOY4hC4haJuA8BL1l+S1hJkJtq90=;
-        b=cEYeB3FCvUDvGJcO/VGB8nRYHeTaMlQ6phUOUPui2exsJRFxSsWpooLivxq02ru5Xu
-         SyRJUH0NV6mUMrfX/wGfWIkOtCtFYBKo+27ey26ico9tfLErzk7BiLdrIu5Gkj0u47Zw
-         of0MhcRxhG+kNMaSev07MaQWd2CGpmUc6gu0+0idtrRdwPI6vaBLKxZ+pVhGECJBMTde
-         2PlaiwK6MZLEkhrhQgIyqIw2RWFvmtUDL5Vnxjpid4bL7CUWb1UW2v/uUq58M4OoVMpR
-         LfWrqWOwc+qmn/SrN1AltGe4pOJ7xjrBBm5yCjTTsvaUc8CrOrMqNbam9EyptYaJdp+m
-         esRg==
+        d=gmail.com; s=20230601; t=1717750421; x=1718355221; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oJpntV1yf55hZRhCo04UHW16Iuj7l3TUdMsrXfsJkv0=;
+        b=IIrYytqzmChHx+jfuSoMWt1JArXH3DBj8fnkh5L0NNZHZJ7IsJMYARnNVnR88ZYB3n
+         s2hkM948wK0VkWMOxjoh12nR/2EIU40MXdVQ7+dIO41XQqhGkvnBmeYkGb95UMg5UR/v
+         dszVbrIVMDbUzGCpxOCfJd1x8myj9hUFiu5wO77hklF/1BqKvQs0K/vUc3Io7Mxa3CdE
+         EePV7o6bRt5Js1pewGB7N5TqiRhbB6irChKMaUEqQ2U7m6Au2AXlUZWfqhWJYWY5PL0v
+         uPC/p3LgNFOvf8icXHlC1KOMkf17Q9VlAhKC+DrmaH7u5+FpHN5mmHMbRRZ+2Cs1A96b
+         j9xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717750366; x=1718355166;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qjuZF9YFMCyt7vHEOY4hC4haJuA8BL1l+S1hJkJtq90=;
-        b=gB+MkZTQaxSFkKIcUUrBZtDrOsMwFOQQ+HewjnXa2Uugn1FlQt6bHqRw11Mcz4a+55
-         AERZ4r24Oens9D1OEG6bbgVV0tOT+gzpPphJ1T7F51gQsfTcapqGhy5oy52tosCuExhW
-         c1gIUCQNHb44oq7LTLMUtrrkm/k5tH5MQfLvZ1qbqXPawJESlm5RExz0OzfqNgesuU5Q
-         bwJ0iKbUl9OrhxTEEaGgnINA22ZbEWczaP5/aWTHGHd+QeY+QyGd32CUH7Kk00yvqNdm
-         3Y+G4yQj27ty6oe6iz5/emXHyqEfqkxlBeFffvBsqsVXdTKPlszJLLfkPA8vKPMmBu1z
-         R+Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2h7meWbkTbWNh5C5uOBz8FAD8Wff/H8XUBbn67QZoyO1U92pDLmL7BBzNZd7NWl+amT81TtWIHHYR24GrJkuYMzuiF2siFHB/YKqA
-X-Gm-Message-State: AOJu0Yw+wtquisqVn+35MbDUd930yC2gyaLZrr/9T8oCfR/sse9xFeA9
-	4dEbO+/8vERNyug1PM+NK7RaqaQEWFsyEzn6vXX7kk8WQuLTiTSKr32NjX/utzytB2eev2q+qUt
-	s56DlkJ4qo6t/OC0t5NFqd0vot16wEtjy1uzcSA==
-X-Google-Smtp-Source: AGHT+IHz0oblgfs6QK84jkLY1rRZ8G4iI07a+WGgFejWKVL3U8A1X2rtzxqVz9VMl0MyJrrPsb3bywI+y5oC/oU1aTg=
-X-Received: by 2002:a17:906:4090:b0:a6e:c5c0:ba42 with SMTP id
- a640c23a62f3a-a6ec5c0bb34mr26417566b.30.1717750365646; Fri, 07 Jun 2024
- 01:52:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717750421; x=1718355221;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oJpntV1yf55hZRhCo04UHW16Iuj7l3TUdMsrXfsJkv0=;
+        b=m6hADEtAz332elUTdUEE96pn5M3hY8LWDvp3/VlEmnLOpvR4WMJtvFe/ms80mA3Tfl
+         Ql2nATGc+XG0Y4hhmEDyw1M/ivOfYC+rOewqn0cpHRiRJKK49Wp3x5ff0Db8jG4bAQXv
+         ZtckEXetBAvWuarHStZuTozyEJ2Hp8sw8M4qr779mBnO4WsmDNGbJRrYSKMmG4tD3BIG
+         pgr5SCbG8zahjWlTkaqM+sn4EpZPlk7VlsAUmhmfjj5kRWDGHYs1LZbYN3IHALUhNBnA
+         SVFzri0Xm9ppbqoqgGXgFihpNwfKIfWjGLRUggZBhW7rMSWKeJesPUZ0gPHGuO95QFAU
+         63uA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdYaWgDnhI4tVa91cHM55/lBVG6J/fLjwKRywEAUvKtQFa/w79mvxwe1yZC4N2f01AP9OXpws1vHAkDG+gG2siARQfUFB7ywBi+lwL
+X-Gm-Message-State: AOJu0Yxgz1POKDILAtBF7npOasp3h+8uvZYvPEQhsmVphnvRkS8ZfZaF
+	IzwJrNxjHiKkzFMCPGsjTiA5gSYSOG3Bj3obFrRMcvtWVh0Woyfd
+X-Google-Smtp-Source: AGHT+IE2i5pJiSYLy45PDFEkAAGtOAVP+pyOPT0wzmAzfEWH5FKKs8VVfmrjkN057G89C0PXQt6Zqw==
+X-Received: by 2002:a05:651c:4d1:b0:2e0:752c:1f2e with SMTP id 38308e7fff4ca-2eadce1bd83mr15264851fa.1.1717750421112;
+        Fri, 07 Jun 2024 01:53:41 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aadf9ea35sm2393208a12.15.2024.06.07.01.53.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 01:53:40 -0700 (PDT)
+Message-ID: <7ecabb8e342b9bd4fc2552bce29dc8c7a98971ee.camel@gmail.com>
+Subject: Re: [PATCH 1/8] iio: accel: adxl313: simplify with
+ spi_get_device_match_data()
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Lucas Stankus
+ <lucas.p.stankus@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
+ <jic23@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, Ramona Bolboaca
+ <ramona.bolboaca@analog.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ kernel@pengutronix.de, Cosmin Tanislav <cosmin.tanislav@analog.com>, Marius
+ Cristea <marius.cristea@microchip.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 07 Jun 2024 10:57:28 +0200
+In-Reply-To: <20240606-spi-match-data-v1-1-320b291ee1fe@linaro.org>
+References: <20240606-spi-match-data-v1-0-320b291ee1fe@linaro.org>
+	 <20240606-spi-match-data-v1-1-320b291ee1fe@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110141443.364655-1-jstephan@baylibre.com>
- <20240110141443.364655-2-jstephan@baylibre.com> <e0bf8667-cbb8-49ba-bb44-3edf93b019b8@linaro.org>
-In-Reply-To: <e0bf8667-cbb8-49ba-bb44-3edf93b019b8@linaro.org>
-From: Julien Stephan <jstephan@baylibre.com>
-Date: Fri, 7 Jun 2024 10:52:33 +0200
-Message-ID: <CAEHHSvYt-aqFahi=B_si=duJH8xDgy_9nndgR-P0+U5THX69uw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] dt-bindings: media: add mediatek ISP3.0 sensor interface
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Louis Kuo <louis.kuo@mediatek.com>, Phi-Bang Nguyen <pnguyen@baylibre.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andy Hsieh <andy.hsieh@mediatek.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	Florian Sylvestre <fsylvestre@baylibre.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-media@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Paul Elder <paul.elder@ideasonboard.com>, 
-	Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Le ven. 12 janv. 2024 =C3=A0 08:32, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> a =C3=A9crit :
->
-> On 10/01/2024 15:14, Julien Stephan wrote:
-> > From: Louis Kuo <louis.kuo@mediatek.com>
-> >
-> > This adds the bindings, for the mediatek ISP3.0 SENINF module embedded =
-in
-> > some Mediatek SoC, such as the mt8365
-> >
->
-> ...
->
-> > +  clock-names:
-> > +    items:
-> > +      - const: camsys
-> > +      - const: top_mux
-> > +
-> > +  phys:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +    description:
-> > +      phandle to the PHYs connected to CSI0/A, CSI1, CSI2 and CSI0B
-> > +
-> > +  phy-names:
-> > +    minItems: 1
-> > +    items:
-> > +      - const: csi0
-> > +      - const: csi1
-> > +      - const: csi2
-> > +      - const: csi0b
->
-> Why one hardware has flexible number of phys?
+On Thu, 2024-06-06 at 16:26 +0200, Krzysztof Kozlowski wrote:
+> Use spi_get_device_match_data() helper to simplify a bit the driver.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+> =C2=A0drivers/iio/accel/adxl313_spi.c | 8 +-------
+> =C2=A01 file changed, 1 insertion(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/iio/accel/adxl313_spi.c b/drivers/iio/accel/adxl313_=
+spi.c
+> index b7cc15678a2b..6f8d73f6e5a9 100644
+> --- a/drivers/iio/accel/adxl313_spi.c
+> +++ b/drivers/iio/accel/adxl313_spi.c
+> @@ -72,13 +72,7 @@ static int adxl313_spi_probe(struct spi_device *spi)
+> =C2=A0	if (ret)
+> =C2=A0		return ret;
+> =C2=A0
+> -	/*
+> -	 * Retrieves device specific data as a pointer to a
+> -	 * adxl313_chip_info structure
+> -	 */
+> -	chip_data =3D device_get_match_data(&spi->dev);
+> -	if (!chip_data)
+> -		chip_data =3D (const struct adxl313_chip_info
+> *)spi_get_device_id(spi)->driver_data;
+> +	chip_data =3D spi_get_device_match_data(spi);
+> =C2=A0
 
-Hi Krzysztof,
+I understand you're sticking with the original code but since you're doing =
+this,
+could we maybe add proper error checking for the call? Maybe Jonathan can e=
+ven
+tweak that while applying...
 
-seninf can have multiple port depending on the soc, each requiring its own =
-phy
+(same comment for patch 3)
 
->
-> > +
-> > +  ports:
-> > +    $ref: /schemas/graph.yaml#/properties/ports
-> > +
-> > +    properties:
-> > +      port@0:
-> > +        $ref: /schemas/graph.yaml#/$defs/port-base
-> > +        unevaluatedProperties: false
-> > +        description: CSI0 or CSI0A port
-> > +
-> > +        properties:
-> > +          endpoint:
-> > +            $ref: video-interfaces.yaml#
-> > +            unevaluatedProperties: false
-> > +
-> > +            properties:
-> > +              clock-lanes:
-> > +                maxItems: 1
-> > +              data-lanes:
-> > +                minItems: 1
-> > +                maxItems: 4
-> > +
-> > +      port@1:
-> > +        $ref: /schemas/graph.yaml#/$defs/port-base
-> > +        unevaluatedProperties: false
-> > +        description: CSI1 port
-> > +
-> > +        properties:
-> > +          endpoint:
-> > +            $ref: video-interfaces.yaml#
-> > +            unevaluatedProperties: false
-> > +
-> > +            properties:
-> > +              clock-lanes:
-> > +                maxItems: 1
-> > +              data-lanes:
-> > +                minItems: 1
-> > +                maxItems: 4
-> > +
-> > +      port@2:
-> > +        $ref: /schemas/graph.yaml#/$defs/port-base
-> > +        unevaluatedProperties: false
-> > +        description: CSI2 port
-> > +
-> > +        properties:
-> > +          endpoint:
-> > +            $ref: video-interfaces.yaml#
-> > +            unevaluatedProperties: false
-> > +
-> > +            properties:
-> > +              clock-lanes:
-> > +                maxItems: 1
-> > +              data-lanes:
-> > +                minItems: 1
-> > +                maxItems: 4
-> > +
-> > +      port@3:
-> > +        $ref: /schemas/graph.yaml#/$defs/port-base
-> > +        unevaluatedProperties: false
-> > +        description: CSI0B port
-> > +
-> > +        properties:
-> > +          endpoint:
-> > +            $ref: video-interfaces.yaml#
-> > +            unevaluatedProperties: false
-> > +
-> > +            properties:
-> > +              clock-lanes:
-> > +                maxItems: 1
-> > +              data-lanes:
-> > +                minItems: 1
-> > +                maxItems: 2
-> > +
-> > +      port@4:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: connection point for cam0
-> > +
-> > +      port@5:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: connection point for cam1
-> > +
-> > +      port@6:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: connection point for camsv0
-> > +
-> > +      port@7:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: connection point for camsv1
-> > +
-> > +      port@8:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: connection point for camsv2
-> > +
-> > +      port@9:
-> > +        $ref: /schemas/graph.yaml#/properties/port
-> > +        description: connection point for camsv3
-> > +
-> > +    required:
-> > +      - port@0
-> > +      - port@1
-> > +      - port@2
-> > +      - port@3
-> > +      - port@4
-> > +      - port@5
-> > +      - port@6
-> > +      - port@7
-> > +      - port@8
-> > +      - port@9
-> > +
-> > +required:
-> > +  - compatible
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +  - power-domains
-> > +  - ports
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/mediatek,mt8365-clk.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/phy/phy.h>
-> > +    #include <dt-bindings/power/mediatek,mt8365-power.h>
-> > +
-> > +    soc {
-> > +          #address-cells =3D <2>;
-> > +          #size-cells =3D <2>;
->
-> Use 4 spaces for example indentation.
->
-> > +
-> > +          seninf: seninf@15040000 {
->
-> Node names should be generic. See also an explanation and list of
-> examples (not exhaustive) in DT specification:
-> https://devicetree-specification.readthedocs.io/en/latest/chapter2-device=
-tree-basics.html#generic-names-recommendation
->
->
-> > +                compatible =3D "mediatek,mt8365-seninf";
-> > +                reg =3D <0 0x15040000 0 0x6000>;
-> > +                interrupts =3D <GIC_SPI 210 IRQ_TYPE_LEVEL_LOW>;
-> > +                clocks =3D <&camsys CLK_CAM_SENIF>,
-> > +                         <&topckgen CLK_TOP_SENIF_SEL>;
-> > +                clock-names =3D "camsys", "top_mux";
-> > +
-> > +                power-domains =3D <&spm MT8365_POWER_DOMAIN_CAM>;
-> > +
-> > +                phys =3D <&mipi_csi0 PHY_TYPE_DPHY>;
-> > +                phy-names =3D "csi0";
-> > +
-> > +                ports {
-> > +                      #address-cells =3D <1>;
-> > +                      #size-cells =3D <0>;
-> > +
-> > +                      port@0 {
-> > +                            reg =3D <0>;
-> > +                            seninf_in1: endpoint {
-> > +                              clock-lanes =3D <2>;
-> > +                              data-lanes =3D <1 3 0 4>;
-> > +                              remote-endpoint =3D <&isp1_out>;
-> > +                            };
-> > +                      };
-> > +
-> > +                      port@1 {
-> > +                          reg =3D <1>;
-> > +                      };
-> > +
-> > +                      port@2 {
-> > +                            reg =3D <2>;
-> > +                      };
-> > +
-> > +                      port@3 {
-> > +                            reg =3D <3>;
-> > +                      };
-> > +
-> > +                      port@4 {
-> > +                            reg =3D <4>;
-> > +                            seninf_camsv1_endpoint: endpoint {
-> > +                                remote-endpoint =3D <&camsv1_endpoint>=
-;
-> > +                            };
-> > +                      };
-> > +
-> > +                      port@5 {
-> > +                            reg =3D <5>;
-> > +                      };
-> > +
-> > +                      port@6 {
-> > +                            reg =3D <6>;
-> > +                      };
-> > +
-> > +                      port@7 {
-> > +                            reg =3D <7>;
-> > +                      };
-> > +
-> > +                      port@8 {
-> > +                            reg =3D <8>;
-> > +                      };
-> > +
-> > +                      port@9 {
-> > +                            reg =3D <9>;
-> > +                      };
-> > +
->
-> Stray blank line
->
-> > +                };
->
->
->
-> Best regards,
-> Krzysztof
->
+- Nuno S=C3=A1
+
