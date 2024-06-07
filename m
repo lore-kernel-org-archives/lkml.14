@@ -1,126 +1,124 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [91.198.224.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B752415B98F;
-	Fri,  7 Jun 2024 09:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6217515B540;
+	Fri,  7 Jun 2024 09:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.224.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717751095; cv=none; b=KC3jap+oIhgtvk6xXqDUGdqcqR9FohMUUfIxocShc/ZY0GtT1sZT77Han4ZqtpsIYe+qvGqdQ/KCQ/vOF2kx89rw50vukmzYtIhngIWMG2NhIo2h0d7zVSVmZg4LRfz1X/kc4O7B04VcCFD7s+AjOoXsYs6n4Wwtun8NqPh4kKQ=
+	t=1717751104; cv=none; b=eXTwYpA9nuZVfqjQvJDCjMT1nRsp6vCOXWCzs4A7oJItRnBuGaQIpXr+PKjoamf5D/LsEm3vhrqihOkQIcs8VsxCLWBivdtU1z0YdyOrG9bKdtacRlN9Lq6Y63WS28VjenJrcVjTmXEcKmlvP/iJ3l2QK0YBMe0KgnbIQ3sfwfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717751095; c=relaxed/simple;
-	bh=QaWbGSoQuWyCIebMfdO7RQRkllZQk9raCfIUPfJtW+k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kvIPJPQwH5szaBrZKMKUV+dFrbnzyUe61tEi9czTKefUOkNOEg5dKEqM7no7jHUTUeJwaAM4BPduAblOAfRixD+WNjMa0UuV+lGcppM0LD1B4BMezT/FJ3xuvS65mSMdmxff1/ocejzdfU9bEKpK/UCkHKc6qRvD4CUvNCCcJKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=TB4yXsGo; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TB4yXsGo"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45794jbZ025810;
-	Fri, 7 Jun 2024 04:04:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717751085;
-	bh=5fWLliTADgayPCM4XSca9ixKaN0dPg24ZpXvFMY6hu8=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=TB4yXsGoj1StsOVKKAGSmvqYWd9vgGs3rQXg9zapRe7zz4CcW9hsEIEWJ0VUyeoc7
-	 4RVrkLVZ+MfpAAKmh8bFBtxeIfrE6/h9fo//iOeVYXlvErNGLKfY634hgsL+3PSID/
-	 K9ZKpzNGuBDPNmDoYFtIVjRHhkRdLNhP3+88N70g=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45794j4Z018340
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 7 Jun 2024 04:04:45 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
- Jun 2024 04:04:45 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 7 Jun 2024 04:04:45 -0500
-Received: from uda0510294.dhcp.ti.com (uda0510294.dhcp.ti.com [10.24.69.66])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45794Xgl020305;
-	Fri, 7 Jun 2024 04:04:42 -0500
-From: Beleswar Padhi <b-padhi@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vaishnav.a@ti.com>, <j-choudhary@ti.com>, <u-kumar1@ti.com>
-Subject: [PATCH 2/3] arm64: dts: ti: k3-j722s-evm: Enable Mailbox clusters
-Date: Fri, 7 Jun 2024 14:34:32 +0530
-Message-ID: <20240607090433.488454-3-b-padhi@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240607090433.488454-1-b-padhi@ti.com>
-References: <20240607090433.488454-1-b-padhi@ti.com>
+	s=arc-20240116; t=1717751104; c=relaxed/simple;
+	bh=yuFpd84XtrdmCusaDJjTM3sZmJosXeobQizTdbECW0o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JW8DpczgyJ1knDCEZi6AZbx63H0zJICaEfaBIXWwPce7YyR8ry6F+uA81Aop3U7YelXATR5u0qZ6X8/xCx0JJLHL17FbIThsvANCpMNZcXXj1s/03WFVwQ+c93fOH1IcbWIre7gpwUpCRi49CF0FEfYeaGDrt6vYTqxx/8IsRFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=91.198.224.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=990276a841=ms@dev.tdt.de>)
+	id 1sFVWX-006OZD-Le; Fri, 07 Jun 2024 11:04:37 +0200
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1sFVWW-00CQZP-Lf; Fri, 07 Jun 2024 11:04:36 +0200
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id 46AD5240053;
+	Fri,  7 Jun 2024 11:04:36 +0200 (CEST)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id 9DC06240050;
+	Fri,  7 Jun 2024 11:04:35 +0200 (CEST)
+Received: from mschiller1.dev.tdt.de (unknown [10.2.3.20])
+	by mail.dev.tdt.de (Postfix) with ESMTPSA id 25EAB37521;
+	Fri,  7 Jun 2024 11:04:35 +0200 (CEST)
+From: Martin Schiller <ms@dev.tdt.de>
+To: hauke@hauke-m.de,
+	dmitry.torokhov@gmail.com,
+	tsbogend@alpha.franken.de,
+	rdunlap@infradead.org,
+	robh@kernel.org,
+	bhelgaas@google.com
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Martin Schiller <ms@dev.tdt.de>,
+	stable@vger.kernel.org
+Subject: [PATCH] MIPS: pci: lantiq: restore reset gpio polarity
+Date: Fri,  7 Jun 2024 11:04:00 +0200
+Message-ID: <20240607090400.1816612-1-ms@dev.tdt.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+X-purgate-ID: 151534::1717751077-B9ADCD95-D17CD154/0/0
+X-purgate: clean
+X-purgate-type: clean
 
-The K3 J722S SoCs have one single-core Arm Cortex-R5F processor in each
-of the WAKEUP, MCU and MAIN voltage domain, and two C71x DSP subsystems
-in MAIN voltage domain.
+Commit 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using gpiod API") not
+only switched to the gpiod API, but also inverted / changed the polarity
+of the GPIO.
 
-The Inter-Processor communication between the main A72 cores and these
-R5F and DSP remote cores is achieved through shared memory and
-Mailboxes. Thus, enable the Mailbox clusters required for communication.
+According to the PCI specification, the RST# pin is an active-low
+signal. However, most of the device trees that have been widely used for
+a long time (mainly in the openWrt project) define this GPIO as
+active-high and the old driver code inverted the signal internally.
 
-Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+Apparently there are actually boards where the reset gpio must be
+operated inverted. For this reason, we cannot use the GPIOD_OUT_LOW/HIGH
+flag for initialization. Instead, we must explicitly set the gpio to
+value 1 in order to take into account any "GPIO_ACTIVE_LOW" flag that
+may have been set.
+
+In order to remain compatible with all these existing device trees, we
+should therefore keep the logic as it was before the commit.
+
+Fixes: 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using gpiod API")
+Cc: stable@vger.kernel.org
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
 ---
- arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 37 +++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ arch/mips/pci/pci-lantiq.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-index bf3c246d13d1f..a51925deb43b8 100644
---- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-@@ -384,3 +384,40 @@ &sdhci1 {
- 	status = "okay";
- 	bootph-all;
- };
-+
-+&mailbox0_cluster0 {
-+	status = "okay";
-+	mbox_r5_0: mbox-r5-0 {
-+		ti,mbox-rx = <0 0 0>;
-+		ti,mbox-tx = <1 0 0>;
-+	};
-+};
-+
-+&mailbox0_cluster1 {
-+	status = "okay";
-+	mbox_mcu_r5_0: mbox-mcu-r5-0 {
-+		ti,mbox-rx = <0 0 0>;
-+		ti,mbox-tx = <1 0 0>;
-+	};
-+};
-+
-+&mailbox0_cluster2 {
-+	status = "okay";
-+	mbox_c7x_0: mbox-c7x-0 {
-+		ti,mbox-rx = <0 0 0>;
-+		ti,mbox-tx = <1 0 0>;
-+	};
-+};
-+
-+&mailbox0_cluster3 {
-+	status = "okay";
-+	mbox_main_r5_0: mbox-main-r5-0 {
-+		ti,mbox-rx = <0 0 0>;
-+		ti,mbox-tx = <1 0 0>;
-+	};
-+
-+	mbox_c7x_1: mbox-c7x-1 {
-+		ti,mbox-rx = <2 0 0>;
-+		ti,mbox-tx = <3 0 0>;
-+	};
-+};
--- 
-2.34.1
+diff --git a/arch/mips/pci/pci-lantiq.c b/arch/mips/pci/pci-lantiq.c
+index 68a8cefed420..0844db34022e 100644
+--- a/arch/mips/pci/pci-lantiq.c
++++ b/arch/mips/pci/pci-lantiq.c
+@@ -124,14 +124,14 @@ static int ltq_pci_startup(struct platform_device *=
+pdev)
+ 		clk_disable(clk_external);
+=20
+ 	/* setup reset gpio used by pci */
+-	reset_gpio =3D devm_gpiod_get_optional(&pdev->dev, "reset",
+-					     GPIOD_OUT_LOW);
++	reset_gpio =3D devm_gpiod_get_optional(&pdev->dev, "reset", GPIOD_ASIS)=
+;
+ 	error =3D PTR_ERR_OR_ZERO(reset_gpio);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "failed to request gpio: %d\n", error);
+ 		return error;
+ 	}
+ 	gpiod_set_consumer_name(reset_gpio, "pci_reset");
++	gpiod_direction_output(reset_gpio, 1);
+=20
+ 	/* enable auto-switching between PCI and EBU */
+ 	ltq_pci_w32(0xa, PCI_CR_CLK_CTRL);
+@@ -194,10 +194,10 @@ static int ltq_pci_startup(struct platform_device *=
+pdev)
+=20
+ 	/* toggle reset pin */
+ 	if (reset_gpio) {
+-		gpiod_set_value_cansleep(reset_gpio, 1);
++		gpiod_set_value_cansleep(reset_gpio, 0);
+ 		wmb();
+ 		mdelay(1);
+-		gpiod_set_value_cansleep(reset_gpio, 0);
++		gpiod_set_value_cansleep(reset_gpio, 1);
+ 	}
+ 	return 0;
+ }
+--=20
+2.39.2
 
