@@ -1,115 +1,121 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809F017BB7
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 21:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B019A1E495;
+	Fri,  7 Jun 2024 21:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717796071; cv=none; b=mkJaXvcP50iQkCv+FgULMCK4LsZipOSWdcYl0XTK5FKAbtb1WyyYHvnjt4mRHBeugqgxwTr26cyIfM3h0uaPb2S0QuERmrL48jN7ijsQVg6ezOkiWdsTnORjMfAe4kcPcwibIuMtjZ9Fv3x7FhQDCPSSe5/HRDf3B9+8qvQCkV4=
+	t=1717796292; cv=none; b=uJAEoqOYw9OlqvlfC7OuxeH1Bc3d6kydcB8Av2y6Ey99vBOL/lp/fwZG9jdrOhQF2Z7lZtyGZHaFpGwDPjili0XuWhVFt+WENTbpdDAlMhHY5xKpYDyKbkqgl+hPJExwQOYc6Kpq1MoSIhndZTMx4xuQo2DyK0ilOCtmoZ+aEoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717796071; c=relaxed/simple;
-	bh=xfNSsQUzNewVN/mboc6Q0xEqgOp4BA88MYFHp0Rzyi8=;
-	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
-	 MIME-Version:Content-Type; b=txg2Bjz+1sOSA/wkveIoGNFyvxyBQrhd+bBLVolLG0EZFVAE6cVll7A+NCXkWCLEfP7bPES7ecOTQY1OZqoNgeASHS+sPOWggnSXhEf/W6S6Zwqp7BgohZ+H7f1ypQLKtJGGG22HoRanPcGg8TfmaTSi7iJv/nCF09ixXsgH1Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=0Cua+W7a; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1717796292; c=relaxed/simple;
+	bh=72gb8BM70mgsIZDMWOganiYr+lGSQ/4n7CT4a84+G8Y=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=mfS9bH9lwNDBzX2V2tMAgZF6TBHX270Eq7a9+/Cx18E+pO9WOxvmtKvmXqt+jfyabTPgmpdsk1i9m0/0TPt+Raok+EFpxRkFE9Ajva4RDDXzT65+42FGE/4ZY74UOH1rYLfZsXsgq52uHqCsU4xftlVaYhWLrpPGDJ0RuBItLtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gutMZWsm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZC9PkiTY; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="0Cua+W7a"
-Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
-	by cmsmtp with ESMTPS
-	id FfkrspNVgSqshFhECsJ2Q4; Fri, 07 Jun 2024 21:34:28 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id FhEBsx9eK0dJ4FhEBswvgE; Fri, 07 Jun 2024 21:34:28 +0000
-X-Authority-Analysis: v=2.4 cv=CsO5cG4D c=1 sm=1 tr=0 ts=66637ce4
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=T1WGqf2p2xoA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=3U1NTj930rUM-GEF0QgA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xS6YINBT7fbz6uzLiMSH6n3vsUox7c6GFJJbpYf/fSM=; b=0Cua+W7aRUDuBA939JItWF6TcY
-	xB7dxFdkugngH5ApnAKbRywy2WV9u2z7LvMdH1y7qDaup3TuOpLK632OE33baKIB2f+dyjSBcjVOX
-	pi1OVuI862KyU1QIog0UXe+ZCKO4PC0fmS2gAry8tL9ol93r7A2EBrStUCshOON6MaN6P6SLXT+28
-	TJPvOKVITYskO3rjZDno10ToPYbO4T7C5AxC4TeaA1dx89gqHZuXw0edn/Xg+RfVSrFXK0ivoKBIY
-	q77zoUFnyQYyEovzfzPjz3Hvv/6iFtaEjyiH2PvLjY549UBUjyDJO9G2Fv+fZZAi6P2xhe9K3YR0z
-	ExWCIMLg==;
-Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:42394 helo=[10.0.1.47])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1sFhE6-000sT9-2r;
-	Fri, 07 Jun 2024 15:34:22 -0600
-Subject: Re: [PATCH 6.1 000/473] 6.1.93-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240606131659.786180261@linuxfoundation.org>
-In-Reply-To: <20240606131659.786180261@linuxfoundation.org>
-From: Ron Economos <re@w6rz.net>
-Message-ID: <a5332a9b-092a-7aa5-dfc2-d28565167411@w6rz.net>
-Date: Fri, 7 Jun 2024 14:34:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gutMZWsm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZC9PkiTY"
+Date: Fri, 07 Jun 2024 21:38:07 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717796288;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lo6OeiHnixowsI/O8/Q1rbGOSTTLlz3S6ItfVtnVRgI=;
+	b=gutMZWsmM+f8yUvjo13SkQccaus4/nGCt3REe0fE2vdydJIa+jDR4SQHT2iwlLM4uRhGKV
+	9o17TTZFl2RK+saemwKCbVkYFfYdQS0kIHcukI7xSA9QCiOQVGWoyBSo4O55KpnaHRB36v
+	cWPsX+iaYeME2xGNt95bcbquH36QuUN6eJP5PNEf9lgTvAJQKQzWvvsXGyNyeO5Py71+Ma
+	utAgquunezQR9h0GETAQuLGFvfHyArt73zRrmLkHlgfr3cW1CE463nlPgPk9czAxgAJ5BR
+	XoTGk0B7uJkInxYFX4mFMtGCqeO9xQi5k8ACBzGsCJECvaOP0fNEYVRp/PLL3w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717796288;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lo6OeiHnixowsI/O8/Q1rbGOSTTLlz3S6ItfVtnVRgI=;
+	b=ZC9PkiTYOsDaUWQSr1BTD2ZPstDSXY4IJyZf0uQEDAu0rdmhbxem8RmmyzHCFQ6As9r8Ro
+	3uBNw/PlqDBIUlAQ==
+From: "tip-bot2 for Christian Heusel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/misc] tools/x86/kcpuid: Add missing dir via Makefile
+Cc: Christian Heusel <christian@heusel.eu>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240531111757.719528-2-christian@heusel.eu>
+References: <20240531111757.719528-2-christian@heusel.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Message-ID: <171779628813.10875.3798969892614697703.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 98.207.139.8
-X-Source-L: No
-X-Exim-ID: 1sFhE6-000sT9-2r
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:42394
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 42
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOFeGo2JfHyyVcX345gwZRVopylNw/cZwhJWzpckGPJvTCedhU9OBSo6RPAfY2q21PmJuW03pFm0pX6Sj5SRRzoeF4RVs70L+fx6eTuVcuOhIGBNfNk8
- qmtij67j0A4Ja1+dpZH4oVloJoEoEjAS9JSG3E5K3FTKmNW0KJzzSvnJ3ISBA3JHqk5EOsH/pDJaVSfvTT6PuSAZA1Gv9CuIJNE=
 
-On 6/6/24 6:58 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.93 release.
-> There are 473 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 08 Jun 2024 13:15:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.93-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+The following commit has been merged into the x86/misc branch of tip:
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Commit-ID:     f6d116e080604251880b4957843f9b1f6fdfa30f
+Gitweb:        https://git.kernel.org/tip/f6d116e080604251880b4957843f9b1f6fdfa30f
+Author:        Christian Heusel <christian@heusel.eu>
+AuthorDate:    Fri, 31 May 2024 13:17:58 +02:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Fri, 07 Jun 2024 23:30:52 +02:00
 
-Tested-by: Ron Economos <re@w6rz.net>
+tools/x86/kcpuid: Add missing dir via Makefile
 
+So far the Makefile just installed the csv into $(HWDATADIR)/cpuid.csv, which
+made it unaware about $DESTDIR. Add $DESTDIR to the install command and while
+at it also create the directory, should it not exist already. This eases the
+packaging of kcpuid and allows i.e. for the install on Arch to look like this:
+
+  $ make BINDIR=/usr/bin DESTDIR="$pkgdir" -C tools/arch/x86/kcpuid install
+
+Some background on DESTDIR:
+
+DESTDIR is commonly used in packaging for staged installs (regardless of the
+used package manager):
+
+  https://www.gnu.org/prep/standards/html_node/DESTDIR.html
+
+So the package is built and installed into a directory which the package
+manager later picks up and creates some archive from it.
+
+What is specific to Arch Linux here is only the usage of $pkgdir in the
+example, DESTDIR itself is widely used.
+
+  [ bp: Extend the commit message with Christian's info on DESTDIR as a GNU
+    coding standards thing. ]
+
+Signed-off-by: Christian Heusel <christian@heusel.eu>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20240531111757.719528-2-christian@heusel.eu
+---
+ tools/arch/x86/kcpuid/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/arch/x86/kcpuid/Makefile b/tools/arch/x86/kcpuid/Makefile
+index 87b554f..d0b4b0e 100644
+--- a/tools/arch/x86/kcpuid/Makefile
++++ b/tools/arch/x86/kcpuid/Makefile
+@@ -19,6 +19,6 @@ clean :
+ 	@rm -f kcpuid
+ 
+ install : kcpuid
+-	install -d  $(DESTDIR)$(BINDIR)
++	install -d  $(DESTDIR)$(BINDIR) $(DESTDIR)$(HWDATADIR)
+ 	install -m 755 -p kcpuid $(DESTDIR)$(BINDIR)/kcpuid
+-	install -m 444 -p cpuid.csv $(HWDATADIR)/cpuid.csv
++	install -m 444 -p cpuid.csv $(DESTDIR)$(HWDATADIR)/cpuid.csv
