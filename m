@@ -1,87 +1,80 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE2B15EFCB
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 09:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4571405F8;
+	Fri,  7 Jun 2024 09:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717751589; cv=none; b=PNJM2/Ta1t8/5LWFuc92Drfy2thHCQDPgPcKj9bvcSLRcSL3QYF4NcWQZN7vGaPaMelwbHaagskXAA49kiCiDHmlJTsF61BrNqCTaZq+ikWWMU+mGqRR4qFJrI5ZAxm9lW+Ej0/StqQBWyyPAQuvnbFJYcpLtmq38Ds1Tthy3Ig=
+	t=1717751789; cv=none; b=BQDEIf5g5IOgU/FGdnspmVw//OsxM7PRqwW53i5eX10OVhbg5cGy/HlN2NS9dUNDx6y5b9NTbU3wzUCtqNtAGFu2K3YB0HFipxv9LP6XgXEZVm/4KO0aInsMnfQMif364I/DRuhkycKYnvCX8Jgwurp1AfPFTiowPn+VwvzWl7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717751589; c=relaxed/simple;
-	bh=PlYAE9z0g5K3iAsbL9S0/w/lr81FU4c5zUhtR8b3HfE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eRY0Zy68w/z/HlojJE5PQi9GVZbEoxK1OZxpq1lk+o1FhhcM4afXlf8vdBxhqNrUlb+tEcfKR+bBceEluGKHyCZut442DGsTRQAEYMnlwEJ5XJjFpICHCiFZQVjS9ETiWKDGA8LgDO72GYR8iSo/JoDQoVcMMZLn0WGRHYhEjQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P3XiygEV; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717751789; c=relaxed/simple;
+	bh=J1iEPJ3kSS7y0Kh1gVO3QoyMg5RlWljzZPeVPqAGHWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qj4jXhN474zMK3WkbmUClM2bE5veuGzaHRW65Z1bCWvW+2W9by91U7SdOeUCMZqIpmO7lllFKStd35yXQWZkq4zPUof2ZLgajgk+KPWmpZo6TUHAw4CCg+k+EgOpgKlnZvqukefjAVPelMQ5DVSYdjhxk8eeblc4i3A0UWga5Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LNlg/biH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kK7KAn+b; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LNlg/biH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kK7KAn+b; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P3XiygEV"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c284095ea6so1634014a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 02:13:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717751587; x=1718356387; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gpdjfdsu7F7InZnhYGTwKFUVSu8T2YzyZYnj5q/OC3w=;
-        b=P3XiygEVSzpvjJFpzadjMKZWCn0y7tolzdnqeClHXN/tF7mOyozN4k2qT+psTZYBEA
-         y51bwWGhhejCinprctUg0MCiTumDoV6Yb632JPCNvfG1tF3mIptUQHn2NoFsJXET5RXD
-         a76kfzK7UU9Gdbn1HCfQq1xeqG2pjxhpEqWm8fRHEYZFKMACOzHKWPGLpc7Ka/Dg625Z
-         R4j8/wqwH2DYmxekCnaMAEr/vIw2shJAJhGb0kgcKDl7A2BLobIjxUqJz+dh6aXw+MCR
-         J5K+dTQbXInmzAXiXHb+7EGCLT7Tw3Nmbi/4KWjWr8G+enB1P6PdbYhXDpifTNjCGqLt
-         BfYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717751587; x=1718356387;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gpdjfdsu7F7InZnhYGTwKFUVSu8T2YzyZYnj5q/OC3w=;
-        b=wTOxZqQmaEBJuzow1AmGq/HYf3tQ+sz6Ug8c5IO7KyWy3uzMxlH+MUdrn/Gi7ORSlR
-         Uf27teunyES13vKz3fNzyXGkL07oNpgIfsvK9kzPynybQORgKnJxRdSca76lYsAjHwii
-         iNYy6ZwVvfFcfigRoApEs7FhbP+1LxLUdlXjRGqsM1n00xCbXF3ZHqSunXnQbyZhPGIq
-         dnmXbCRAEPCBxTxPrxWKDksp5TfHJKeq9QzqXKngTWTAqDUZ0fStp/Xn3sv0kbhOApJV
-         dULJUq2v3I/bIhTmfjjpDXv7jesojDbk7eL0j1Twu1qtb/ylgZ7eCjfVX/ONIJSb1BEM
-         7XUw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8J8crvCa2NTDnyZx8AqqBL8EK1aCRscB2DaPx4TTXiiei42FOI4r1S94/qH677vopL70DJcQlDxJydRzO9847YT8WuVGfXcOP+VFA
-X-Gm-Message-State: AOJu0YzynokkbHTy2EPWjFxmRyvCiLsKiYWtDavtov3iwLNXdry2qRc1
-	yPgZ/irPB8expmE8DrClLJOB6jTjBXR9uNvhPSF78yfeWV+Du45sQiBhHZPvaqU=
-X-Google-Smtp-Source: AGHT+IGTKWVmYcNoQJyhcj1P+6/81dmOtIBoL4JNvjOpvNWJY60yKyW7M76qmcyTJfvXfVUqVxTKmw==
-X-Received: by 2002:a17:90a:b008:b0:2bd:d2f9:e71a with SMTP id 98e67ed59e1d1-2c2bcc0bbe9mr1875468a91.29.1717751586630;
-        Fri, 07 Jun 2024 02:13:06 -0700 (PDT)
-Received: from localhost ([122.172.82.13])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c29c4a574bsm3069258a91.56.2024.06.07.02.13.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 02:13:06 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>
-Cc: linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>,
-	Rob Herring <robh@kernel.org>,
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LNlg/biH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kK7KAn+b";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LNlg/biH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kK7KAn+b"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A52CC21991;
+	Fri,  7 Jun 2024 09:16:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1717751785; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=yvfvtJ2vwLjq4w/MiB+bS7Kf8HpDDJ7m58lQDYUYOx0=;
+	b=LNlg/biHGPum4Bc4R1OrKDL9eSYMepFT1pXWpUzrN76bDqQzhgmGdvOlLJOfhgOXX2/27y
+	KBDW+uJ4pIq7ITXlS6f/cAWT3juzQjfWdE+ZQ/82pBhKrb3rV7juQBjzltJ5OcG+VPUL7L
+	iw7EyloetoN347RpdJ84PWDJtsl14rQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1717751785;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=yvfvtJ2vwLjq4w/MiB+bS7Kf8HpDDJ7m58lQDYUYOx0=;
+	b=kK7KAn+bBIHtsosPc98UNh1lRiQxt05qFsr2PkDnQgCOCxLMKJ7n6lbi+HP97WQYr6MryR
+	d0KwLRox+kHE0dBw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="LNlg/biH";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=kK7KAn+b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1717751785; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=yvfvtJ2vwLjq4w/MiB+bS7Kf8HpDDJ7m58lQDYUYOx0=;
+	b=LNlg/biHGPum4Bc4R1OrKDL9eSYMepFT1pXWpUzrN76bDqQzhgmGdvOlLJOfhgOXX2/27y
+	KBDW+uJ4pIq7ITXlS6f/cAWT3juzQjfWdE+ZQ/82pBhKrb3rV7juQBjzltJ5OcG+VPUL7L
+	iw7EyloetoN347RpdJ84PWDJtsl14rQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1717751785;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=yvfvtJ2vwLjq4w/MiB+bS7Kf8HpDDJ7m58lQDYUYOx0=;
+	b=kK7KAn+bBIHtsosPc98UNh1lRiQxt05qFsr2PkDnQgCOCxLMKJ7n6lbi+HP97WQYr6MryR
+	d0KwLRox+kHE0dBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 94AFB13A42;
+	Fri,  7 Jun 2024 09:16:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 6nsrI+nPYmZZHQAAD6G6ig
+	(envelope-from <chrubis@suse.cz>); Fri, 07 Jun 2024 09:16:25 +0000
+From: Cyril Hrubis <chrubis@suse.cz>
+To: Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH V2 8/8] cpufreq: Add Rust based cpufreq-dt driver
-Date: Fri,  7 Jun 2024 14:42:23 +0530
-Message-Id: <994d50cbf25a1301e4c0ffbc48eaabd8c90ab827.1717750631.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1717750631.git.viresh.kumar@linaro.org>
-References: <cover.1717750631.git.viresh.kumar@linaro.org>
+Cc: Cyril Hrubis <chrubis@suse.cz>,
+	Jan Kara <jack@suse.cz>
+Subject: [PATCH] loop: Disable fallocate() zero and discard if not supported
+Date: Fri,  7 Jun 2024 11:15:55 +0200
+Message-ID: <20240607091555.2504-1-chrubis@suse.cz>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,292 +82,104 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: A52CC21991
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email]
 
-This commit adds a Rust based cpufreq-dt driver, which covers most of
-the functionality of the existing C based driver. Only a handful of
-things are left, like fetching platform data from cpufreq-dt-platdev.c.
+If fallcate is implemented but zero and discard operations are not
+supported by the filesystem the backing file is on we continue to fill
+dmesg with errors from the blk_mq_end_request() since each time we call
+fallocate() on the loop device the EOPNOTSUPP error from lo_fallocate()
+ends up propagated into the block layer. In the end syscall succeeds
+since the blkdev_issue_zeroout() falls back to writing zeroes which
+makes the errors even more misleading and confusing.
 
-This is tested with the help of QEMU for now and switching of
-frequencies work as expected.
+How to reproduce:
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+1. make sure /tmp is mounted as tmpfs
+2. dd if=/dev/zero of=/tmp/disk.img bs=1M count=100
+3. losetup /dev/loop0 /tmp/disk.img
+4. mkfs.ext2 /dev/loop0
+5. dmesg |tail
+
+[710690.898214] operation not supported error, dev loop0, sector 204672 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.898279] operation not supported error, dev loop0, sector 522 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.898603] operation not supported error, dev loop0, sector 16906 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.898917] operation not supported error, dev loop0, sector 32774 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.899218] operation not supported error, dev loop0, sector 49674 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.899484] operation not supported error, dev loop0, sector 65542 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.899743] operation not supported error, dev loop0, sector 82442 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.900015] operation not supported error, dev loop0, sector 98310 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.900276] operation not supported error, dev loop0, sector 115210 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+[710690.900546] operation not supported error, dev loop0, sector 131078 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+
+This patch changes the lo_fallocate() to clear the flags for zero and
+discard operations if we get EOPNOTSUPP from the backing file fallocate
+callback, that way we at least stop spewing errors after the first
+unsuccessful try.
+
+CC: Jan Kara <jack@suse.cz>
+Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
 ---
- drivers/cpufreq/Kconfig        |  12 ++
- drivers/cpufreq/Makefile       |   1 +
- drivers/cpufreq/rcpufreq_dt.rs | 229 +++++++++++++++++++++++++++++++++
- 3 files changed, 242 insertions(+)
- create mode 100644 drivers/cpufreq/rcpufreq_dt.rs
+ drivers/block/loop.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-index 94e55c40970a..eb9359bd3c5c 100644
---- a/drivers/cpufreq/Kconfig
-+++ b/drivers/cpufreq/Kconfig
-@@ -217,6 +217,18 @@ config CPUFREQ_DT
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 93780f41646b..315c76e3ef4a 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -320,6 +320,21 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
+ 	ret = file->f_op->fallocate(file, mode, pos, blk_rq_bytes(rq));
+ 	if (unlikely(ret && ret != -EINVAL && ret != -EOPNOTSUPP))
+ 		return -EIO;
++
++	if (ret == -EOPNOTSUPP) {
++		struct queue_limits lim = queue_limits_start_update(lo->lo_queue);
++
++		if (mode & FALLOC_FL_ZERO_RANGE)
++			lim.max_write_zeroes_sectors = 0;
++
++		if (mode & FALLOC_FL_PUNCH_HOLE) {
++			lim.max_hw_discard_sectors = 0;
++			lim.discard_granularity = 0;
++		}
++
++		queue_limits_commit_update(lo->lo_queue, &lim);
++	}
++
+ 	return ret;
+ }
  
- 	  If in doubt, say N.
- 
-+config CPUFREQ_DT_RUST
-+	tristate "Rust based Generic DT based cpufreq driver"
-+	depends on HAVE_CLK && OF && RUST
-+	select CPUFREQ_DT_PLATDEV
-+	select PM_OPP
-+	help
-+	  This adds a Rust based generic DT based cpufreq driver for frequency
-+	  management.  It supports both uniprocessor (UP) and symmetric
-+	  multiprocessor (SMP) systems.
-+
-+	  If in doubt, say N.
-+
- config CPUFREQ_DT_PLATDEV
- 	tristate "Generic DT based cpufreq platdev driver"
- 	depends on OF
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index 8d141c71b016..4981d908b803 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_COMMON)		+= cpufreq_governor.o
- obj-$(CONFIG_CPU_FREQ_GOV_ATTR_SET)	+= cpufreq_governor_attr_set.o
- 
- obj-$(CONFIG_CPUFREQ_DT)		+= cpufreq-dt.o
-+obj-$(CONFIG_CPUFREQ_DT_RUST)		+= rcpufreq_dt.o
- obj-$(CONFIG_CPUFREQ_DT_PLATDEV)	+= cpufreq-dt-platdev.o
- 
- # Traces
-diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-new file mode 100644
-index 000000000000..b016771e6180
---- /dev/null
-+++ b/drivers/cpufreq/rcpufreq_dt.rs
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Rust based implementation of the cpufreq-dt driver.
-+
-+use core::format_args;
-+
-+use kernel::{
-+    b_str, c_str, clk, cpufreq, define_of_id_table,
-+    device::{self, Device},
-+    error::code::*,
-+    fmt,
-+    macros::vtable,
-+    module_platform_driver, of, opp, platform,
-+    prelude::*,
-+    str::CString,
-+    sync::Arc,
-+    types::ARef,
-+};
-+
-+// Finds exact supply name from the OF node.
-+fn find_supply_name_exact(np: &ARef<of::DeviceNode>, name: &str) -> Option<CString> {
-+    let name_cstr = CString::try_from_fmt(fmt!("{}-supply", name)).ok()?;
-+
-+    np.find_property(&name_cstr).ok()?;
-+    CString::try_from_fmt(fmt!("{}", name)).ok()
-+}
-+
-+// Finds supply name for the CPU from DT.
-+fn find_supply_names(dev: ARef<Device>, cpu: u32) -> Option<Vec<CString>> {
-+    let np = of::DeviceNode::from_dev(dev).ok()?;
-+
-+    // Try "cpu0" for older DTs.
-+    let name = match cpu {
-+        0 => find_supply_name_exact(&np, "cpu0"),
-+        _ => None,
-+    }
-+    .or(find_supply_name_exact(&np, "cpu"))?;
-+
-+    let mut list = Vec::with_capacity(1, GFP_KERNEL).ok()?;
-+    list.push(name, GFP_KERNEL).ok()?;
-+
-+    Some(list)
-+}
-+
-+// Represents the cpufreq dt device.
-+struct CPUFreqDTDevice {
-+    opp_table: opp::Table,
-+    freq_table: opp::FreqTable,
-+    #[allow(dead_code)]
-+    token: Option<opp::ConfigToken>,
-+    #[allow(dead_code)]
-+    clk: clk::Clk,
-+}
-+
-+#[vtable]
-+impl opp::ConfigOps for CPUFreqDTDevice {}
-+
-+#[vtable]
-+impl cpufreq::DriverOps for CPUFreqDTDevice {
-+    type Data = ();
-+    type PData = Arc<Self>;
-+
-+    fn init(policy: &mut cpufreq::Policy) -> Result<Self::PData> {
-+        let cpu = policy.cpu();
-+        let dev = Device::from_cpu(cpu)?;
-+
-+        policy.set_cpus(cpu);
-+
-+        let token = match find_supply_names(dev.clone(), cpu) {
-+            Some(names) => Some(
-+                opp::Config::<Self>::new()
-+                    .set_regulator_names(names)?
-+                    .set(dev.clone())?,
-+            ),
-+            _ => None,
-+        };
-+
-+        // Get OPP-sharing information from "operating-points-v2" bindings.
-+        let fallback = match opp::Table::of_sharing_cpus(dev.clone(), policy.cpus()) {
-+            Ok(_) => false,
-+            Err(e) => {
-+                if e != ENOENT {
-+                    return Err(e);
-+                }
-+
-+                // "operating-points-v2" not supported. If the platform hasn't
-+                // set sharing CPUs, fallback to all CPUs share the `Policy`
-+                // for backward compatibility.
-+                opp::Table::sharing_cpus(dev.clone(), policy.cpus()).is_err()
-+            }
-+        };
-+
-+        // Initialize OPP tables for all policy cpus.
-+        //
-+        // For platforms not using "operating-points-v2" bindings, we do this
-+        // before updating policy cpus. Otherwise, we will end up creating
-+        // duplicate OPPs for the CPUs.
-+        //
-+        // OPPs might be populated at runtime, don't fail for error here unless
-+        // it is -EPROBE_DEFER.
-+        let mut opp_table = match opp::Table::from_of_cpumask(dev.clone(), policy.cpus()) {
-+            Ok(table) => table,
-+            Err(e) => {
-+                if e == EPROBE_DEFER {
-+                    return Err(e);
-+                }
-+
-+                // The table is added dynamically ?
-+                opp::Table::from_dev(dev.clone())?
-+            }
-+        };
-+
-+        // The OPP table must be initialized, statically or dynamically, by this point.
-+        opp_table.opp_count()?;
-+
-+        // Set sharing cpus for fallback scenario.
-+        if fallback {
-+            policy.set_all_cpus();
-+            opp_table.set_sharing_cpus(policy.cpus())?;
-+        }
-+
-+        let mut transition_latency = opp_table.max_transition_latency() as u32;
-+        if transition_latency == 0 {
-+            transition_latency = cpufreq::ETERNAL_LATENCY;
-+        }
-+
-+        let freq_table = opp_table.to_cpufreq_table()?;
-+        let clk = policy
-+            .set_freq_table(freq_table.table())
-+            .set_dvfs_possible_from_any_cpu()
-+            .set_suspend_freq((opp_table.suspend_freq() / 1000) as u32)
-+            .set_transition_latency(transition_latency)
-+            .set_clk(dev, None)?;
-+
-+        Ok(Arc::new(
-+            CPUFreqDTDevice {
-+                opp_table,
-+                token,
-+                freq_table,
-+                clk,
-+            },
-+            GFP_KERNEL,
-+        )?)
-+    }
-+
-+    fn exit(_policy: &mut cpufreq::Policy, _data: Option<Self::PData>) -> Result<()> {
-+        Ok(())
-+    }
-+
-+    fn online(_policy: &mut cpufreq::Policy) -> Result<()> {
-+        // We did light-weight tear down earlier, nothing to do here.
-+        Ok(())
-+    }
-+
-+    fn offline(_policy: &mut cpufreq::Policy) -> Result<()> {
-+        // Preserve policy->data and don't free resources on light-weight
-+        // tear down.
-+        Ok(())
-+    }
-+
-+    fn suspend(policy: &mut cpufreq::Policy) -> Result<()> {
-+        policy.generic_suspend()
-+    }
-+
-+    fn verify(data: &mut cpufreq::PolicyData) -> Result<()> {
-+        data.generic_verify()
-+    }
-+
-+    fn target_index(policy: &mut cpufreq::Policy, index: u32) -> Result<()> {
-+        let data = match policy.data::<Self::PData>() {
-+            Some(data) => data,
-+            None => return Err(ENOENT),
-+        };
-+
-+        let freq = data.freq_table.freq(index.try_into().unwrap())? as u64;
-+        data.opp_table.set_rate(freq * 1000)
-+    }
-+
-+    fn get(policy: &mut cpufreq::Policy) -> Result<u32> {
-+        policy.generic_get()
-+    }
-+
-+    fn set_boost(_policy: &mut cpufreq::Policy, _state: i32) -> Result<()> {
-+        Ok(())
-+    }
-+
-+    fn register_em(policy: &mut cpufreq::Policy) {
-+        policy.register_em_opp()
-+    }
-+}
-+
-+type DeviceData = device::Data<cpufreq::Registration<CPUFreqDTDevice>, ()>;
-+
-+struct CPUFreqDTDriver;
-+
-+impl platform::Driver for CPUFreqDTDriver {
-+    type Data = Arc<DeviceData>;
-+
-+    define_of_id_table! {(), [
-+        (of::DeviceId(b_str!("operating-points-v2")), None),
-+    ]}
-+
-+    fn probe(_dev: &mut platform::Device, _id_info: Option<&Self::IdInfo>) -> Result<Self::Data> {
-+        let data = Arc::<DeviceData>::from(kernel::new_device_data!(
-+            cpufreq::Registration::new(),
-+            (),
-+            "CPUFreqDT::Registration"
-+        )?);
-+        let flags = cpufreq::flags::NEED_INITIAL_FREQ_CHECK | cpufreq::flags::IS_COOLING_DEV;
-+        let boost = true;
-+
-+        data.registrations()
-+            .ok_or(ENXIO)?
-+            .as_pinned_mut()
-+            .register(c_str!("cpufreq-dt"), (), flags, boost)?;
-+
-+        pr_info!("CPUFreq DT driver registered\n");
-+
-+        Ok(data)
-+    }
-+}
-+
-+module_platform_driver! {
-+    type: CPUFreqDTDriver,
-+    name: "cpufreq_dt",
-+    author: "Viresh Kumar <viresh.kumar@linaro.org>",
-+    description: "Generic CPUFreq DT driver",
-+    license: "GPL v2",
-+}
 -- 
-2.31.1.272.g89b43f80a514
+2.44.2
 
