@@ -1,35 +1,35 @@
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DDC1CA85;
-	Fri,  7 Jun 2024 07:18:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09031154C11;
+	Fri,  7 Jun 2024 07:18:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717744732; cv=none; b=DQMan+cIFeHIM8Fro4RQYUNxgqjNaaHh34EYbHMkJgY5V94yQB0mS7I2jrg7wDksr/2X+nGL/K+fKkUCFgheOzyR2mydDqzbkoH4KMeuSoEsN4NgkzRi4VRLqh9QcdPvFEjGQz4rjNPfp7kQblvuefHQhyBsr/wcsqd0z+wZiKw=
+	t=1717744735; cv=none; b=ph4Ydr4mRKGloujEpxeNbr06S0lIQrtJGbPpJFjQmiFhXMmt9D60mAK+H5CnMzhj2AObCP6LTZJ34Rdj5ooYuEfiTRh8QHJjDPYyYxvTQwGQ0vALWTflwINP+ZeOMF9LcgPftpXH8hmZdVt7OG2BiCfjS1y4u0R8oTADzTNzCdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717744732; c=relaxed/simple;
-	bh=x6g2mrUC9tUHfdpRqbgnEToJMEXi4fXzecxRgg516IE=;
+	s=arc-20240116; t=1717744735; c=relaxed/simple;
+	bh=T66fcYtzCtAtEweNYD/oA/QeJO8ERgYh0dPAiID+if8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nHq3fpd7lO7i4Qs0swqcqlHOU5O0VuCVKCjv6M+qdSlajH4/VqmUH2hgrpoRfbmWDAYBiaGVM1Jn7SjrYAYWhqqb9OnEreYXMxxT2/5UKvLFqR3TDl19L889iuIqz82XpRum4cR+mO90mh+Ox8kqJ33gHQ0g3TYjTReMc+dI2jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QCU57cYq; arc=none smtp.client-ip=217.70.183.201
+	 MIME-Version; b=ryb2Bw96H8w1iD9N3pD8ys/FR0HUYyD03DIeAENYGxX5wdfG2IeuV4HWroL5haxjCXbMh6iJh067IstKHBQ4pD2u7FqlY+R+gxkvGH/dTa0soJA7KEhaqQq86eFdeYQB9t2XlLGBk7gvQI+UWxb3KvtOSXCMFW38p5lxuc1GXAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UU+h6Oas; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QCU57cYq"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8D3601BF204;
-	Fri,  7 Jun 2024 07:18:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UU+h6Oas"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5D3F91BF206;
+	Fri,  7 Jun 2024 07:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1717744728;
+	t=1717744731;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=agpjVJeRse9CurHPbbSQ2ntEGc7DXA3d+/CblOCv/MA=;
-	b=QCU57cYqaTgq77rLLEw4KlcKRBagjzOYUqjcDgkt2lPsKGNIwVdEmt9hBAlpQFxmgsSRxp
-	n94BwR8J3xIED9bhBXZTuELIF5BGwHdlAL0DMsznhT5SQyb+U3PsMukpz39BSGFdB1H/PQ
-	09XHPTt3yYqi1FFFc43Ghaz5rcUlph6xqLHourWJx6fPNoeuhCNA8u2c78Hd8m4ZK254BX
-	3wsER8YTgT0u62b3hNoNqCVEQZy048EkraNrhA80fmLebwOotqyZICms9I1oUifkDHHq6E
-	uKly80eo+Ki4lZmydNTP4kmLe3OhN2nqdFqdoKGZIsZc6Gow+2s0kLBimPtK6Q==
+	bh=tpSJrMjUh9de5pwW08kqfCJLNjhMRh3Z5rUBLKmZw60=;
+	b=UU+h6Oasw090Udn/0AUSfBNHxPmh5y5qJMQ7TlFbUK2+XqZLTdTOzUyMrKWrfw7vryvhVr
+	vdWJTjEJ0/Yp8D+f6IGy87LfRXc+8+H5hH1UdSJaO8fawEDFyx9iMlm8+2dNgogNa9IEj6
+	rghBQGgCFYPW1cvhtgEv3B0MWix+AEYrfbLMvfJ5QGojSErAriHwRuEsJHxIZceaY9V3zO
+	/ux2W9sgD9fQKV7st1CCV6B5GH0BrOAChV5eeIhvgNifFZJu/aFOJjDwYs59YBFwPumfx3
+	hMyVIGcsW3JEj5gO5ujOPTTs3U1/wHX13eTOKUBJQ8weaSvM3EeUl4YZ0SEpLA==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -57,9 +57,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	mwojtas@chromium.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Antoine Tenart <atenart@kernel.org>
-Subject: [PATCH net-next v13 02/13] net: sfp: pass the phy_device when disconnecting an sfp module's PHY
-Date: Fri,  7 Jun 2024 09:18:15 +0200
-Message-ID: <20240607071836.911403-3-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v13 04/13] net: sfp: Add helper to return the SFP bus name
+Date: Fri,  7 Jun 2024 09:18:17 +0200
+Message-ID: <20240607071836.911403-5-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240607071836.911403-1-maxime.chevallier@bootlin.com>
 References: <20240607071836.911403-1-maxime.chevallier@bootlin.com>
@@ -72,67 +72,59 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Pass the phy_device as a parameter to the sfp upstream .disconnect_phy
-operation. This is preparatory work to help track phy devices across
-a net_device's link.
+Knowing the bus name is helpful when we want to expose the link topology
+to userspace, add a helper to return the SFP bus name.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/net/phy/phylink.c | 3 ++-
- drivers/net/phy/sfp-bus.c | 4 ++--
- include/linux/sfp.h       | 2 +-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/phy/sfp-bus.c | 11 +++++++++++
+ include/linux/sfp.h       |  6 ++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 02427378acfd..6468f2676a52 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -3416,7 +3416,8 @@ static int phylink_sfp_connect_phy(void *upstream, struct phy_device *phy)
- 	return ret;
- }
- 
--static void phylink_sfp_disconnect_phy(void *upstream)
-+static void phylink_sfp_disconnect_phy(void *upstream,
-+				       struct phy_device *phydev)
- {
- 	phylink_disconnect_phy(upstream);
- }
 diff --git a/drivers/net/phy/sfp-bus.c b/drivers/net/phy/sfp-bus.c
-index 2f44fc51848f..56953e66bb7b 100644
+index 56953e66bb7b..37c85f1e6534 100644
 --- a/drivers/net/phy/sfp-bus.c
 +++ b/drivers/net/phy/sfp-bus.c
-@@ -487,7 +487,7 @@ static void sfp_unregister_bus(struct sfp_bus *bus)
- 			bus->socket_ops->stop(bus->sfp);
- 		bus->socket_ops->detach(bus->sfp);
- 		if (bus->phydev && ops && ops->disconnect_phy)
--			ops->disconnect_phy(bus->upstream);
-+			ops->disconnect_phy(bus->upstream, bus->phydev);
- 	}
- 	bus->registered = false;
+@@ -860,3 +860,14 @@ void sfp_unregister_socket(struct sfp_bus *bus)
+ 	sfp_bus_put(bus);
  }
-@@ -743,7 +743,7 @@ void sfp_remove_phy(struct sfp_bus *bus)
- 	const struct sfp_upstream_ops *ops = sfp_get_upstream_ops(bus);
- 
- 	if (ops && ops->disconnect_phy)
--		ops->disconnect_phy(bus->upstream);
-+		ops->disconnect_phy(bus->upstream, bus->phydev);
- 	bus->phydev = NULL;
- }
- EXPORT_SYMBOL_GPL(sfp_remove_phy);
+ EXPORT_SYMBOL_GPL(sfp_unregister_socket);
++
++const char *sfp_get_name(struct sfp_bus *bus)
++{
++	ASSERT_RTNL();
++
++	if (bus->sfp_dev)
++		return dev_name(bus->sfp_dev);
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(sfp_get_name);
 diff --git a/include/linux/sfp.h b/include/linux/sfp.h
-index a45da7eef9a2..0de85cadfa7c 100644
+index 0de85cadfa7c..5ebc57f78c95 100644
 --- a/include/linux/sfp.h
 +++ b/include/linux/sfp.h
-@@ -544,7 +544,7 @@ struct sfp_upstream_ops {
- 	void (*link_down)(void *priv);
- 	void (*link_up)(void *priv);
- 	int (*connect_phy)(void *priv, struct phy_device *);
--	void (*disconnect_phy)(void *priv);
-+	void (*disconnect_phy)(void *priv, struct phy_device *);
- };
+@@ -570,6 +570,7 @@ struct sfp_bus *sfp_bus_find_fwnode(const struct fwnode_handle *fwnode);
+ int sfp_bus_add_upstream(struct sfp_bus *bus, void *upstream,
+ 			 const struct sfp_upstream_ops *ops);
+ void sfp_bus_del_upstream(struct sfp_bus *bus);
++const char *sfp_get_name(struct sfp_bus *bus);
+ #else
+ static inline int sfp_parse_port(struct sfp_bus *bus,
+ 				 const struct sfp_eeprom_id *id,
+@@ -648,6 +649,11 @@ static inline int sfp_bus_add_upstream(struct sfp_bus *bus, void *upstream,
+ static inline void sfp_bus_del_upstream(struct sfp_bus *bus)
+ {
+ }
++
++static inline const char *sfp_get_name(struct sfp_bus *bus)
++{
++	return NULL;
++}
+ #endif
  
- #if IS_ENABLED(CONFIG_SFP)
+ #endif
 -- 
 2.45.1
 
