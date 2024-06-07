@@ -1,90 +1,204 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2C179F4;
-	Fri,  7 Jun 2024 19:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1350C14E2DB;
+	Fri,  7 Jun 2024 19:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717789109; cv=none; b=RpRUjCmy0NFiOAYzjNEVcY4myEWtAdMSEbdbjpbhvA1upQ/78n3obZbbhTwvTL75+tq9/WuoMVUnZtUDIM0fNjhZyyCERVK2iojhR4MWc4aKWyXM8F8HRdooxAbNodvB+AHb1ZJ/ugfKIXQ/Iq7AyMSncQRbKVKfW1Fl6X5eSZ0=
+	t=1717789253; cv=none; b=mcau+XSFDseANNNPj7j15NztwQCL/CseEGe7+C5dlKnqlggqUfML+nf2eP0RLA33YcxntBcLEPf8BsfOejkGMZfrPlonHa0zxQi6dSsGEhJlUZ30HKVGEkgHwvhu/uFh/5Fjms4AEvpFoMLNi+xgpbqVoRsAgBeJLVA3ncTnzao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717789109; c=relaxed/simple;
-	bh=KoQW0PfrjsXYERprsNLLYE9VORE3VUwWvRgrI4DMz7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ks3VvaVzgrYZQ8VNXDmnvnH/NvsQVvDiGi9m6WXchhUVRL9mlvzyaDwTn/Eig3dzGXjcs5E8GS758bqKNcuNfIKltI9EQXYhKUHBooHvQFLVrZG26y/n3UVqyYwFPJ1PAXu7Q7yWTo6iR9D0gMx9HLyJylPYpmIGYHxihACtBhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Ix7UY4kd; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1717789253; c=relaxed/simple;
+	bh=F0KItqGXcVwfO0z1QHr5qTaW5Ud/D4JEVYpZ2Lqxfl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=nl3WERAGT5oYdzJyH+A74q0cZ5iaKvxUdDuBV3ldnipnJFy/UBNv4fxNXnNXOH/2nIoj6ftyT1rwrLQh6vbEWihXlj7xvd0QRcfn1L2n4vPjquPSL9XUE0qToNb7ebxtDOcPLzLToghWyZBFdGcK/VPkEiAMGDggf47udL4RnQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UH8xLEXV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Ix7UY4kd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MTEzRWAwJ8LSeiEucNCTCesadgMsTVrZqtI4H5H8Hj0=; b=Ix7UY4kdZPsy4Alki1oHK0Wmbg
-	zmyUnbpdgvF1WCQyOyB6+q/D8Zkr65aLzU97FOb7x+c2i7fxy7r5qKYlw0hG1QWk6fX82yx1uzj/2
-	0jWgn5GnwbY6LypKEs5c9g2/bx2htbFCY5xU4+niILa9jWdjXXOv/A3g3v3HWFRC8CW8CIVDDd8s5
-	VBG2odFDNPhLgeGHLoyxYQjwEVbBmvGEyVocDAAGLwEq0jiCDgfi8tj66tarvEI9D7JJUQSZ5y8no
-	VNsoXvgLLTeUwHIUw3OpLbzZcGOEmmFHbrEqKyqL3n+KUTfmo7r77YkNZs14f7A8zUiZNEC/panes
-	Vs3tz7dQ==;
-Received: from [191.205.188.103] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1sFfPk-000e9A-VB; Fri, 07 Jun 2024 21:38:17 +0200
-Message-ID: <cd1b2a9a-6f0d-65c0-4a0e-a525ed2487d9@igalia.com>
-Date: Fri, 7 Jun 2024 16:38:06 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UH8xLEXV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 084A0C4AF07;
+	Fri,  7 Jun 2024 19:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717789252;
+	bh=F0KItqGXcVwfO0z1QHr5qTaW5Ud/D4JEVYpZ2Lqxfl0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UH8xLEXVRzW8+12jdeSBfdtWZiqO6qS8a6ifk4z13FcdXJ1LkQrKPDxObnswKpsGZ
+	 ZlDrb2dF84B1UYD78OKpJ8Ss+lL8g7tZAlTPY6uxOLqtPHmlqbybcW+JSxsSa+S1km
+	 uVg+EhpfXLIpuftxRc/qwA4F3JIldk9yeiS8b3nbG4wW54IQoRnvnVY3oOCsX5hLUx
+	 oE0w6WhLBFp2g7Zy7OE7KE/22Yxxlf8Ev5ftg9cmZ0V8nOQHI3jtKoArenpBAMdlVF
+	 gA1S4ChgHCwBAMtusNe/ZQUrUcgkGHmbprMRYLWtGBOFmorUhr/MAoE6icp7qnd6IL
+	 2+ESRMzvTRgYQ==
+Date: Fri, 7 Jun 2024 14:40:50 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 00/13] Make PCI's devres API more consistent
+Message-ID: <20240607194050.GA857440@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 2/2] pstore/ramoops: Add ramoops.mem_name= command line
- option
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- linux-trace-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>, linux-hardening@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
- wklin@google.com, Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
-References: <20240606150143.876469296@goodmis.org>
- <20240606150316.916395285@goodmis.org>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20240606150316.916395285@goodmis.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240605081605.18769-2-pstanner@redhat.com>
 
-Hi Steve, thanks for the patch! A suggestion/fix below, inline.
+On Wed, Jun 05, 2024 at 10:15:52AM +0200, Philipp Stanner wrote:
+> Hello Bjorn,
+> 
+> I tried to meet your requests from the last feedback round as much as
+> possible. Especially, I removed a lot of code, made almost all
+> interfaces private and cut the series into smaller chunks where
+> possible.
+> 
+> Splitting it even smaller is unfortunately not possible because of the
+> Linux kernel build chain's rule on dead / unused code.
+> 
+> See also the changelog below.
+> 
+> Please tell me if that's enough to move forward here.
+> 
+> Regards,
+> P.
+> 
+> 
+> Changes in v7:
+>   - Split the entire series in smaller, more atomic chunks / patches
+>     (Bjorn)
+>   - Remove functions (such as pcim_iomap_region_range()) that do not yet
+>     have a user (Bjorn)
+>   - Don't export interfaces publicly anymore, except for
+>     pcim_iomap_range(), needed by vboxvideo (Bjorn)
+>   - Mention the actual (vboxvideo) bug in "PCI: Warn users..." commit
+>     (Bjorn)
+>   - Drop docstring warnings on PCI-internal functions (Bjorn)
+>   - Rework docstring warnings
+>   - Fix spelling in a few places. Rewrapp paragraphs (Bjorn)
+> 
+> Changes in v6:
+>   - Restructure the cleanup in pcim_iomap_regions_request_all() so that
+>     it doesn't trigger a (false positive) test robot warning. No
+>     behavior change intended. (Dan Carpenter)
+> 
+> Changes in v5:
+>   - Add Hans's Reviewed-by to vboxvideo patch (Hans de Goede)
+>   - Remove stable-kernel from CC in vboxvideo patch (Hans de Goede)
+> 
+> Changes in v4:
+>   - Rebase against linux-next
+> 
+> Changes in v3:
+>   - Use the term "PCI devres API" at some forgotten places.
+>   - Fix more grammar errors in patch #3.
+>   - Remove the comment advising to call (the outdated) pcim_intx() in pci.c
+>   - Rename __pcim_request_region_range() flags-field "exclusive" to
+>     "req_flags", since this is what the int actually represents.
+>   - Remove the call to pcim_region_request() from patch #10. (Hans)
+> 
+> Changes in v2:
+>   - Make commit head lines congruent with PCI's style (Bjorn)
+>   - Add missing error checks for devm_add_action(). (Andy)
+>   - Repair the "Returns: " marks for docu generation (Andy)
+>   - Initialize the addr_devres struct with memset(). (Andy)
+>   - Make pcim_intx() a PCI-internal function so that new drivers won't
+>     be encouraged to use the outdated pci_intx() mechanism.
+>     (Andy / Philipp)
+>   - Fix grammar and spelling (Bjorn)
+>   - Be more precise on why pcim_iomap_table() is problematic (Bjorn)
+>   - Provide the actual structs' and functions' names in the commit
+>     messages (Bjorn)
+>   - Remove redundant variable initializers (Andy)
+>   - Regroup PM bitfield members in struct pci_dev (Andy)
+>   - Make pcim_intx() visible only for the PCI subsystem so that new    
+>     drivers won't use this outdated API (Andy, Myself)
+>   - Add a NOTE to pcim_iomap() to warn about this function being the    onee
+>     xception that does just return NULL.
+>   - Consistently use the term "PCI devres API"; also in Patch #10 (Bjorn)
+> 
+> 
+> ¡Hola!
+> 
+> PCI's devres API suffers several weaknesses:
+> 
+> 1. There are functions prefixed with pcim_. Those are always managed
+>    counterparts to never-managed functions prefixed with pci_ – or so one
+>    would like to think. There are some apparently unmanaged functions
+>    (all region-request / release functions, and pci_intx()) which
+>    suddenly become managed once the user has initialized the device with
+>    pcim_enable_device() instead of pci_enable_device(). This "sometimes
+>    yes, sometimes no" nature of those functions is confusing and
+>    therefore bug-provoking. In fact, it has already caused a bug in DRM.
+>    The last patch in this series fixes that bug.
+> 2. iomappings: Instead of giving each mapping its own callback, the
+>    existing API uses a statically allocated struct tracking one mapping
+>    per bar. This is not extensible. Especially, you can't create
+>    _ranged_ managed mappings that way, which many drivers want.
+> 3. Managed request functions only exist as "plural versions" with a
+>    bit-mask as a parameter. That's quite over-engineered considering
+>    that each user only ever mapps one, maybe two bars.
+> 
+> This series:
+> - add a set of new "singular" devres functions that use devres the way
+>   its intended, with one callback per resource.
+> - deprecates the existing iomap-table mechanism.
+> - deprecates the hybrid nature of pci_ functions.
+> - preserves backwards compatibility so that drivers using the existing
+>   API won't notice any changes.
+> - adds documentation, especially some warning users about the
+>   complicated nature of PCI's devres.
+> 
+> 
+> Note that this series is based on my "unify pci_iounmap"-series from a
+> few weeks ago. [1]
+> 
+> I tested this on a x86 VM with a simple pci test-device with two
+> regions. Operates and reserves resources as intended on my system.
+> Kasan and kmemleak didn't find any problems.
+> 
+> I believe this series cleans the API up as much as possible without
+> having to port all existing drivers to the new API. Especially, I think
+> that this implementation is easy to extend if the need for new managed
+> functions arises :)
+> 
+> Greetings,
+> P.
+> 
+> Philipp Stanner (13):
+>   PCI: Add and use devres helper for bit masks
+>   PCI: Add devres helpers for iomap table
+>   PCI: Reimplement plural devres functions
+>   PCI: Deprecate two surplus devres functions
+>   PCI: Make devres region requests consistent
+>   PCI: Warn users about complicated devres nature
 
+Applied the above to pci/devres for v6.11 with minor comment and
+whitespace tweaks.  Will watch for updates for the ones below to 
+consolidate "enabled" and "enable_cnt".
 
-On 06/06/2024 12:01, Steven Rostedt wrote:
-> [...]
-> +static char *mem_name;
-> +module_param_named(mem_name, mem_name, charp, 0400);
-> +MODULE_PARM_DESC(mem_name,
-> +		"name of kernel param that holds addr (builtin only)");
-
-s/ (builtin only)//
-
-Likely a vestige of a previous version heh
-Cheers,
-
-Guilherme
+>   PCI: Move dev-enabled status bit to struct pci_dev
+>   PCI: Move pinned status bit to struct pci_dev
+>   PCI: Give pcim_set_mwi() its own devres callback
+>   PCI: Give pci(m)_intx its own devres callback
+>   PCI: Remove legacy pcim_release()
+>   PCI: Add pcim_iomap_range()
+>   drm/vboxvideo: fix mapping leaks
+> 
+>  drivers/gpu/drm/vboxvideo/vbox_main.c |  20 +-
+>  drivers/pci/devres.c                  | 897 +++++++++++++++++++++-----
+>  drivers/pci/iomap.c                   |  16 +
+>  drivers/pci/pci.c                     | 107 ++-
+>  drivers/pci/pci.h                     |  23 +-
+>  include/linux/pci.h                   |   6 +-
+>  6 files changed, 864 insertions(+), 205 deletions(-)
+> 
+> -- 
+> 2.45.0
+> 
