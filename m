@@ -1,105 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4FC19AD90;
-	Fri,  7 Jun 2024 17:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFFB4317B
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 17:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717782939; cv=none; b=k0Aed2Mo/67tuaBz9OUOEAEBXIGo5UJ74Oh9g9uYtt65oe7C+WadW7CnBElglxKK7vnzx5N/RTdKj9vZ/DNH5SiVGYTiMgt4Nq6EjkMeOkSJ76vYn7ShyLnGorYzZow47jOGrU+EqSw8z15CXlFdCRylgtj7R1Qojnp93uCxBlY=
+	t=1717782998; cv=none; b=IuP5RsPFmkl1At/cN2EILRx04qP+807PEScWShNZlsHVORw572zgoHn6jiJQqK3wIP9Lx2mAPMekCVcre/22F2HNS6dArD9daVf2gMU0A9EnGiXgVsXyJxSt0hb6H2E6lmw7JMbLbrOglqhh3ymg8USoTULkCz7gBc6WLjvJ6zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717782939; c=relaxed/simple;
-	bh=9pY0lakFOJQMli3EsSUnKuQMKYfcQqGOb4o+kPooLL8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E1xmIObCWe/sAYQ81oh5U0YcNSIvQerUC1mqus001TcOhc7T/zhwkkXvNWc6OFAvMaWssRNH+/B3J3z3rl4ggKIaxdNWHEdp3wa/UWWvmAn8ska0bsm/mxyfC9OcMtrzSZtT1dFpYSnxrV7Wh55GFjFKl2MRtHZdNLR9vrOnSJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OFzDW8cs; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717782998; c=relaxed/simple;
+	bh=de1isALUI6uoVRsEqbYmJH4cywJUZMBwIdGsDgR0zjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KeN9bCoTVpP8i6/upJvgAcrLjGUW8S9x5qGozCZzkv0cpT6/+/8TYcds0bgnFqt+pXcq5SB4gYza3Cc2JYkWpw+amAnOZciR60OEmhbDvcyf9lcoR0WrTcHMIhwSDrSUoX+yRJzazVgCfgTjwkwckgCzmjL5Xx1CfQqz2tLlxuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wz8OJoi3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OFzDW8cs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717782938; x=1749318938;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9pY0lakFOJQMli3EsSUnKuQMKYfcQqGOb4o+kPooLL8=;
-  b=OFzDW8csi+R2LLymnh+qi9vK6d/EdniXqoKNhY56yZavbqgVdPkOv18O
-   l88pqtFuC2iwV3Ko8J9Vvggx1DQMcUH8xBWdBXzMSRF298Mqw8ADpAOTr
-   xnBwZyipZOd531OoOCfOfdX13NdZbDS4ntp0KvRr+GMJGTt0Jec8qZ206
-   HbRRwrA9QeB8zwnNgRltBLCxtl71KvcpwphCiuBqFUA1eR3fMPblgS7IY
-   1Xb36o4ONVHvoQ9mkr/vyAqKT+F2Lp6CDFe5ZPN7WE+tF/NrBwt7n5o2z
-   dMykbEfbrjGzylRIHywyk7i2PeIcFNyM03ADdmKp2KH/ufXrhz9BhBKYX
-   g==;
-X-CSE-ConnectionGUID: quC/DEBaS6CxxzqdFYYxuA==
-X-CSE-MsgGUID: GoPI3i91R9SISJXLhK5BVg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="14357840"
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="14357840"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 10:55:38 -0700
-X-CSE-ConnectionGUID: yRJ/o2lLRbyqJ4NPFMy+6g==
-X-CSE-MsgGUID: 6fQUVGT8SzGNU2eGYa4iDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="38517697"
-Received: from mehlow-prequal01.jf.intel.com ([10.54.102.156])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 10:55:37 -0700
-From: Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>
-To: dave.hansen@intel.com
-Cc: dave.hansen@linux.intel.com,
-	dmitrii.kuvaiskii@intel.com,
-	haitao.huang@linux.intel.com,
-	jarkko@kernel.org,
-	kai.huang@intel.com,
-	kailun.qin@intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-sgx@vger.kernel.org,
-	mona.vij@intel.com,
-	reinette.chatre@intel.com
-Subject: Re: [PATCH v3 0/2] x86/sgx: Fix two data races in EAUG/EREMOVE flows
-Date: Fri,  7 Jun 2024 10:47:18 -0700
-Message-Id: <20240607174718.751068-1-dmitrii.kuvaiskii@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <2dd91299-650a-4e0e-97f4-0d4e472db9a0@intel.com>
-References: <2dd91299-650a-4e0e-97f4-0d4e472db9a0@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wz8OJoi3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717782995;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6Dq823qS5qbYnbhJH0kaG14MNgIq+VaZmSgwk/Jjr1s=;
+	b=Wz8OJoi3HsLRdFumF/2i4qeusGe8ERWnAnZ5H/T6SIUIALfLhCoMJQdUBsJaPA9XPq2uUC
+	QZutRHPnylAohD6cGcq2tT2zLIpFKkTZyW65YZhRI4jJFEb1mRk3MCynO1MEbs0E1jbVzu
+	5dJHY1cfLfcfOHY1AVNy5YhWQ4NEhWM=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-621-Th8csEVLMrGRXb2nHO29aw-1; Fri, 07 Jun 2024 13:56:34 -0400
+X-MC-Unique: Th8csEVLMrGRXb2nHO29aw-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7951dee4315so184172985a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 10:56:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717782994; x=1718387794;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Dq823qS5qbYnbhJH0kaG14MNgIq+VaZmSgwk/Jjr1s=;
+        b=Oht+CwZmwpCfiv8fNSMlBMLDO5IQlp4+UR0hdbEBVpyA9Hv+pEKnzOTKOY1TV72QUZ
+         507xPBBf4a3jZBli+BV1p8f7ipVmSsmE6l9WbMmCu3RCvvigcIQ0yDYK+iz4j7M/gH/g
+         n1BK2jdSr1txLYmLDPYD89qlKHCr+WR0jCJWp5SkQQgIc05Ds3ZqqZF8BqO0sQ3EPpjk
+         LhwDTpwVXvqaCvrGsnAD9HZc6r7+1dEi0RPVXr+bRDKGKcYPtOh25zruUfRElmpvLQYl
+         iQ3KmFsgayxTXia+Zf2iikCYDN1xUbOOOI/hjbUefwkI1XSFVzCR2dr88qNRHm5Vz7hK
+         AbJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVr7ee6iYwfOa2E/pgnJoIS+Zlhz+U5V7uTjbC4kxWRy/oCAMyqow9FGyTlMiLUrH81j1zDDv/vw+IfO2AnbC1SyMCh3JUeHDrxJhR8
+X-Gm-Message-State: AOJu0YwH7wl4fhGefj0pWZKWJyqDx0Yxd4tIZUXZdzI5BEAwQQh+/meA
+	zKsZkCnWUCLN6ILztVqJd4plObJcgXjpgLRUAJPHFuTOm8SUauNY9sQRxVYOGLNCuovID7nc5bm
+	UDDFINJ80u1umGI3BTuDuqjwmnOudpMjgOkOkhac5P1vk6wWWZ6diofRX0n4CjQ==
+X-Received: by 2002:a37:e103:0:b0:794:f1f1:804 with SMTP id af79cd13be357-7953c5dc121mr272158185a.52.1717782993946;
+        Fri, 07 Jun 2024 10:56:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG1jqy09tN4euwVTk1IC+LnZ5WNN+yf+ukRKckgihHaDLqr+dOdWB86hB+p4Vk6oqdI0p2AkQ==
+X-Received: by 2002:a37:e103:0:b0:794:f1f1:804 with SMTP id af79cd13be357-7953c5dc121mr272156285a.52.1717782993550;
+        Fri, 07 Jun 2024 10:56:33 -0700 (PDT)
+Received: from localhost (ip98-179-76-110.ph.ph.cox.net. [98.179.76.110])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-795330b1f12sm188416785a.95.2024.06.07.10.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 10:56:32 -0700 (PDT)
+Date: Fri, 7 Jun 2024 10:56:31 -0700
+From: Jerry Snitselaar <jsnitsel@redhat.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Yi Zhang <yi.zhang@redhat.com>, "Tian, Kevin" <kevin.tian@intel.com>, 
+	Vasant Hegde <vasant.hegde@amd.com>, Baolu Lu <baolu.lu@linux.intel.com>, 
+	Dimitri Sivanich <sivanich@hpe.com>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	David Wang <00107082@163.com>, Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>, 
+	Russ Anderson <russ.anderson@hpe.com>
+Subject: Re: [PATCH] iommu/amd: Fix panic accessing amd_iommu_enable_faulting
+Message-ID: <lsahbfrt26ysjzgg6p6ezcrf525b25d7nnuqxgis5k6g3zsnzt@qsmzecwdjnen>
+References: <ZljHE/R4KLzGU6vx@hpe.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Organization: Intel Deutschland GmbH - Registered Address: Am Campeon 10, 85579 Neubiberg, Germany
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZljHE/R4KLzGU6vx@hpe.com>
 
-On Tue, May 28, 2024 at 09:01:10AM -0700, Dave Hansen wrote:
-> On 5/17/24 04:06, Dmitrii Kuvaiskii wrote:
-> > We wrote a trivial stress test to reproduce the hangs observed in
-> > real-world applications. The test stresses #PF-based page allocation and
-> > SGX_IOC_ENCLAVE_REMOVE_PAGES flows in the SGX driver:
->
-> This seems like something we'd want in the kernel SGX selftests.
+On Thu, May 30, 2024 at 01:36:03PM GMT, Dimitri Sivanich wrote:
+> This fixes a bug introduced by commit d74169ceb0d2 ("iommu/vt-d: Allocate
+> DMAR fault interrupts locally").  The panic happens when
+> amd_iommu_enable_faulting is called from CPUHP_AP_ONLINE_DYN context.
+> 
+> Fixes: d74169ceb0d2 ("iommu/vt-d: Allocate DMAR fault interrupts locally")
+> Signed-off-by: Dimitri Sivanich <sivanich@hpe.com>
+> Tested-by: Yi Zhang <yi.zhang@redhat.com>
+> ---
+>  drivers/iommu/amd/init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+> index a18e74878f68..b02b959d12af 100644
+> --- a/drivers/iommu/amd/init.c
+> +++ b/drivers/iommu/amd/init.c
+> @@ -3353,7 +3353,7 @@ int amd_iommu_reenable(int mode)
+>  	return 0;
+>  }
+>  
+> -int __init amd_iommu_enable_faulting(unsigned int cpu)
+> +int amd_iommu_enable_faulting(unsigned int cpu)
+>  {
+>  	/* We enable MSI later when PCI is initialized */
+>  	return 0;
+> -- 
+> 2.35.3
 
-I looked at tools/testing/selftests/sgx/ and I observe several
-complications:
+Joerg,
 
-1. The stress test requires creation of several threads (at least two,
-   ideally more). However, current SGX selftests are single-threaded.
-   Adding the scaffolding to add multi-threading support to SGX selftests
-   seems like a non-trivial task.
+Can this get pulled in for the next batch of fixes?
 
-2. Catching the data race would require a for loop with some threshold.
-   - First, there are no such looping tests in current SGX selftests. Is
-     it normal to add such a test?
-   - Second, what would be the threshold to loop for? I.e., after how many
-     iterations should we consider the data race not manifesting, and
-     report success?
-   - Third, the data race may hang the test. Is this something that is
-     allowed in selftests? (I mean the test can have only two outcomes --
-     either it hangs, meaning the data race was not fixed, or it runs to
-     completion. There is no result that we could EXCEPT or ASSERT on.)
+Regards,
+Jerry
 
-Do we still want to add such a selftest? Or could we maybe piggy-back on
-Gramine CI (that will include the test I mentioned in the cover letter)?
-
---
-Dmitrii Kuvaiskii
