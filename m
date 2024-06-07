@@ -1,124 +1,110 @@
-Received: from ambassador.madduck.net (ambassador.madduck.net [188.174.253.166])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0002B2CF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 10:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.174.253.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B71115CD60;
+	Fri,  7 Jun 2024 10:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717754527; cv=none; b=gwVosw/taa8Rfe2PE5OfSo5uLHNhwqFA4CZQUe74sFPIR48IEqASiiBpOM9d5H1vh+lD08IcTA/7Mq72vcZMuM2jh8nnsEprwlns3IU4HwnwBGQx9DHWdQXxCweLVcLPNtcvZoGknnDcFTNjinTOk1+LQjJlgBkfjTL9nwjVEwc=
+	t=1717754530; cv=none; b=VWOazvK133xRJ6h6oY9GL1abKkvMybc6iQiCcvnJELcqxzTOYiEnc9xJ7sHs4OuE4KsNEBXvLbdIfLXL2knz8upfNdYmwnaATkCPDfJymR+tkM/0qLXUDX7DGPn3VBpi4AWBiCTrUDGIBTO8Krw51nfN3uZFU0t61FdQAGAmfNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717754527; c=relaxed/simple;
-	bh=dnKVMjd62RrJI2+D/Kg8MmoB1La/2JXsXyzEDF+J+QM=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=f2SRfU+fCIBzxX1p76m6ozT+3YUT1ITv6dKUKtS8EJGgavrE4q11uHjQrHdBAwkRL04HT0I7KfQ7UBSyRfPtvlAutUnRb/PL+OzxNENdPFbEL4N+bM4giOOQcSiASAuTTMw7mmXG5IEUZ4gKFkUhPFdZNsqxIy54Zb6PTA7cRv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=madduck.net; spf=pass smtp.mailfrom=madduck.net; dkim=pass (1024-bit key) header.d=madduck.net header.i=@madduck.net header.b=aZprkIRz; arc=none smtp.client-ip=188.174.253.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=madduck.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=madduck.net
+	s=arc-20240116; t=1717754530; c=relaxed/simple;
+	bh=PZjolXkinsbKkJg9D0xyN5Zm4GveXBTXlg8QiZ+N76E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EdsPLpXPoMvQmcijk/+KYJneUnPx9RDn4ONzF9wIwoH2FG+4qnQ+FmhmrxFsde2KHf6xh6emF2+JmcHEUg1zHJozv8SLZGl2xvqGrMjuNoTcKxx4rr9ETe1AN7CNLsA09N1nb+lnmIcQcgdLCHknGEhcJpKhOzbLYy76YpYAUKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=JRN9cvXF; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=madduck.net header.i=@madduck.net header.b="aZprkIRz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=madduck.net;
-	s=2015-11-14; t=1717754075;
-	bh=dnKVMjd62RrJI2+D/Kg8MmoB1La/2JXsXyzEDF+J+QM=;
-	h=Date:From:To:Subject:From;
-	b=aZprkIRzztGVM/lSUL5H5r4t+wQSPwNE92gVoKAR+Wwv4Ykv+NXWah+e/LcVRk6Eq
-	 iS/6xgZV16ZDsSC5W5KtTikNJR0tuGQBUlG4jD2rBMUar7bI0dudS6hpYA0DgvS1RU
-	 RjoGOHAlvvdgo4wRb+nRZNENUtVEduG6rmrQL+qA=
-X-MadduckNet-Submission: from albatross.fo.krafftwerk.de (host-80-81-19-185.customer.m-online.net [80.81.19.185]); Creds Client CN "albatross.fo.krafftwerk.de", Issuer "R3" (not verified)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 1.0.3 at ambassador.madduck.net
-Date: Fri, 7 Jun 2024 11:54:34 +0200
-From: martin f krafft <madduck@madduck.net>
-To: linux kernel mailing list <linux-kernel@vger.kernel.org>
-Subject: USB device causing reboot
-Message-ID: <rqlax4nkaff2vhzgtlvldh7wggtvlpc4n2ryx3m7hk3d6v3ssm@aknbt3urp44l>
-Organization: The Debian project
-X-OS: Debian GNU/Linux trixie/sid kernel 6.8.9-amd64 x86_64
-X-Motto: Keep the good times rollin'
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="JRN9cvXF"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45791KNp010973;
+	Fri, 7 Jun 2024 12:01:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	S/2VyWKkGuX5P0YCLDqxzItg9oxgZQDLFxM7j2pGY+s=; b=JRN9cvXFdKNaC884
+	F2zSuLB9I72sUNszwoJ1T9DZAhRv41y/wv/6nRYYaQXPGfilGqTBCjlGQwArcCsj
+	40rZzvUZJm6J5t4F28O1wmMIsHoA6bEOfD5nkob/Sww0b5bi5YSv01Nah/rjKfwy
+	GbALkEZhuQXdb0XKK7M9Qtd43pMMscshC0vQOgvaiSi6sAfM5Lw//IW8EG+TLpQi
+	+z986ArkPngK5Bj1d/AMFdkV2VoEVCm7IEeJNADYBX8SfR354l0MgbwJk0dWADyo
+	Um9z0g9qzXZK1bBcs5U/fIJMIsbtToabR+fqmNda/WBVpqEbWzo6RqFa5o4AHsD1
+	AhsCtg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yg7r0gxj2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 12:01:45 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C364F40044;
+	Fri,  7 Jun 2024 12:01:41 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E8F61214D16;
+	Fri,  7 Jun 2024 12:00:30 +0200 (CEST)
+Received: from localhost (10.252.19.205) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 7 Jun
+ 2024 12:00:30 +0200
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 12/12] ARM: multi_v7_defconfig: Add MCP23S08 pinctrl support
+Date: Fri, 7 Jun 2024 11:57:54 +0200
+Message-ID: <20240607095754.265105-13-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240607095754.265105-1-christophe.roullier@foss.st.com>
+References: <20240607095754.265105-1-christophe.roullier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="uwh2zcujbgjvtkj4"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-07_04,2024-06-06_02,2024-05-17_01
 
+Enable MCP23S08 I/O expanders to manage Ethernet phy
+reset in STM32MP135F-DK board.
 
---uwh2zcujbgjvtkj4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Dear list,
-
-I built myself a new computer with quality components, and was=20
-surprised to have kernel 6.8.9 randomly reboot (at least once per=20
-day). Thanks to netconsole, I was able to see one of the last=20
-messages prior to reboot:
-
-```
-[30315.872267] xhci_hcd 0000:0c:00.3: Controller not ready at resume -19
-[30315.872295] xhci_hcd 0000:0c:00.3: PCI post-resume error -19!
-[30315.872298] xhci_hcd 0000:0c:00.3: HC died; cleaning up
-[30315.872316] usb 3-1: USB disconnect, device number 2
-```
-
-So I removed `xhci_hcd` for a test, and the system didn't reboot=20
-anymore. So I removed all USB devices, loaded it again, and=20
-subsequently proceeded to add back the USB devices one by one.
-
-Turns out the bad boy is the combination of a [Genesys Logic=20
-Hub](https://linux-hardware.org/?id=3Dusb:05e3-0608), a [MosArt=20
-Wireless=20
-Mouse](https://linux-hardware.org/index.php?id=3Dusb:062a-4102)=20
-plugged into a USB2.0 port on the motherboard.
-
-After I moved the hub to a USB1.1 port, the problem didn't occur=20
-again.
-
-I am happy it works now, and not really keen on wanting to keep=20
-testing this (I am using the system, and reboots are painful), but I=20
-also think this is a bug, and wanted to ask what I could provide to=20
-help isolate the issue, and permit a fix being developed?
-
-Best,
-
---=20
- .''`.   martin f. krafft <madduck@d.o>
-: :'  :  proud Debian developer
-`. `'`   http://people.debian.org/~madduck
-  `-  Debian - when you have better things to do than fixing systems
-=20
-dies ist eine manuell generierte email. sie beinhaltet
-tippfehler und ist auch ohne gro=C3=9Fbuchstaben g=C3=BCltig.
-
---uwh2zcujbgjvtkj4
-Content-Type: application/pgp-signature; name="digital_signature_gpg.asc"
-Content-Description: Digital GPG signature (see http://martin-krafft.net/gpg/sig-policy/999bbcc4/current)
-
------BEGIN PGP SIGNATURE-----
-
-iQM4BAABCgEiFiEE49rR4ErfOnOmLTLCnJ1pea6UFjcFAmZi2NAxFIAAAAAAFQAT
-cGthLWFkZHJlc3NAZ251cGcub3JnbWFkZHVja0BtYWRkdWNrLm5ldMARGmh0dHA6
-Ly9tYXJ0aW4ta3JhZmZ0Lm5ldC9ncGcvc2lnLXBvbGljeS81NWM5ODgyZDk5OWJi
-Y2M0LzIwMTEwMTI0MTEyNT9zaGE1MTJzdW09MWNhZDk2ZmQyN2QzMjMzZjUzZTIy
-ODQ5NTMzNjQ4MTA3ZTVlZThkNWJlNjU1MjUxZDc0YzhmMWM1YzNiYzQyZjIzMDRm
-YTUxNTE1MGY3YmQ0ZGQwNWU5ODE5OTI0ZjA0OTUxM2VlOTk2MmNhNzE3MDlmODFk
-OTQ1MTU4NTJiZDgACgkQnJ1pea6UFjdnhBAAv1TCbAKJ9OaUwEqI94B11B6sTaWu
-eb5SEOZU/CfGyhu83IV3Hjd9ZtR5fOZ8pRI0ZZoKqReW6Ug4H4ZTi4ZRi+ppyHgP
-N35DH4Uq1LClk4/GxX2J6CTFUf57YCtsPFYx1xbzaHMMGmALpFMqTKCt0shjTmGd
-X02ODKmwOYjdD1Wp+Kn7WU/W1XaXic2rnOxxrxWidaF1eUnbcNwN1acZORFd1o8x
-At9DmE+fqraA3OHIeVy6gWFyD4wxITe8zGrm+/Gzr+ocZpiLJYPW3dKtxIOJ1U/r
-xt6Uup8VB3XzZ0R14ISd2InluK6xPL3mn8VdTsYZSxrCd52qelS4GvN3cJbz+iCM
-59skLK2deoHEvAg+e1rbZRyVYdOwMs33weE9FMmSBptJE24Ly4XmiTzUNuUMmC1B
-Ui6CERbwJroEy5Mv7ADyHl91+axuiZtycDcRjeoXTQF6QPBT/qomYWLC3Su6MPaI
-R+7oKlV6qAKrI1N/VhW55PBC6lhhJ/UTfDiGwflPP6N4VZynJiECmWEnkN8T37DH
-N9DUFMyiCUrIu0R9NKEoA0RmqLaoFq1Dho8kiKum9AHcRLXTwdr8EMj/ROdWhttL
-W4gDOMbijzpEZZ1c1X9gVUnvjAy9IDu24vV7RHiVtVhyDXM1xFl9CBCjX8EP2KUT
-AUfPWva03BKq+Ls=
-=yTLm
------END PGP SIGNATURE-----
-
---uwh2zcujbgjvtkj4--
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 86bf057ac3663..9758f3d41ad70 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -469,6 +469,7 @@ CONFIG_SPI_XILINX=y
+ CONFIG_SPI_SPIDEV=y
+ CONFIG_SPMI=y
+ CONFIG_PINCTRL_AS3722=y
++CONFIG_PINCTRL_MCP23S08=y
+ CONFIG_PINCTRL_MICROCHIP_SGPIO=y
+ CONFIG_PINCTRL_OCELOT=y
+ CONFIG_PINCTRL_PALMAS=y
+-- 
+2.25.1
 
