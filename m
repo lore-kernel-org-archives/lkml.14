@@ -1,37 +1,37 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCAD14EC7D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C7814F10A
 	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717734700; cv=none; b=BybtSQE5/IkShIb+uaz7RZu+flVcVySBeKCHAqGBjWpoEH1HwayMsmkdg6Y8ol204SknMMi2gIgzHjCfislwu0KznRkuXlbZqmoWJJY6tRP+OlqFwVqJ5XHyPPwGHXiyXuKiSHkIa60EtuprEr3/BusWSFASQkK42izQNOWRU2Q=
+	t=1717734700; cv=none; b=dPtmqNrYqinNhaOhsWcQ0jYx/ES6AKQfnAYcrMM4aLMPc+j+rzAupr3DfmqKsPa5NvH+q2ATHZcKNn7JDBNK7GiwnYUAj1fy9AQIUBsHkzHrgMOU3fXber8xhn9u2Yx/hDAe4LuSaMrzdocpZ4Q3ZCQwgzo2dIH7BtFp0WnAiUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717734700; c=relaxed/simple;
-	bh=Ig5aXA7tPttrb+8QeEwx/vuilocOCeIxIORAqUrzAgk=;
+	bh=4Fmbw3UkEm/9fLDakLmVOl+mCyb3Oh4enu6LnUe9QtA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M2aKN0VKjyvqopFWu1EMGzaYDIBlyUlfk5nE4rA7m1pIbp9RIf5wOk42d+GESuNAK1ao4ugqCv5a1bD9w1g455yqBLh9pn1duAuMJP4kg2l8dWCQiIo1jvyzsLHnDIWw/YmSqkvCOKKsnTKHgdv64HIpWC8tJgN0WRbhDiu+UMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 MIME-Version:Content-Type; b=RBksicCR4dtMtW+9983Tm/QDWVBwaRA9PPIZVwYIy0he3H/oZXuCbwZUb4Qe2HBVQ8PkyiLvGUrbphqUxdViNiE9tPBf7GdM/sqjfGDMuDLru29B6q0lgLxA/7QVNIKb4j48Je3qIomi4egl8f2HEnQK1adHJ2laQ0nINA6zOAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VwSss6wBJzdZfp;
-	Fri,  7 Jun 2024 12:30:09 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VwSqg6dLgzPpnC;
+	Fri,  7 Jun 2024 12:28:15 +0800 (CST)
 Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id DB7BD14040F;
-	Fri,  7 Jun 2024 12:31:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 38B6818007E;
+	Fri,  7 Jun 2024 12:31:35 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
  (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 12:27:45 +0800
+ 2024 12:27:48 +0800
 From: Zhihao Cheng <chengzhihao1@huawei.com>
 To: <richard@nod.at>, <david.oberhollenzer@sigma-star.at>,
 	<miquel.raynal@bootlin.com>, <yi.zhang@huawei.com>, <xiangyang3@huawei.com>,
 	<huangxiaojia2@huawei.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH mtd-utils 107/110] tests: ubifs_tools: fsck_tests: Add bad images fixing test
-Date: Fri, 7 Jun 2024 12:26:12 +0800
-Message-ID: <20240607042615.2069840-108-chengzhihao1@huawei.com>
+Subject: [RFC PATCH mtd-utils 110/110] tests: ubifs_tools: Add README
+Date: Fri, 7 Jun 2024 12:26:15 +0800
+Message-ID: <20240607042615.2069840-111-chengzhihao1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240607042615.2069840-1-chengzhihao1@huawei.com>
 References: <20240607042615.2069840-1-chengzhihao1@huawei.com>
@@ -46,421 +46,324 @@ Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600013.china.huawei.com (7.193.23.68)
 
-For kinds of inconsistent UBIFS images(which can simulate corruptions
-caused by some potentional UBIFS bug), check the result of fsck.
-This testcase mainly checks whether the behavior is in expected after
-repairing specific inconsistent UBIFS image.
+Add document for fsck.ubifs and mkfs.ubifs testcases, explain all
+testcases and how to run them.
 
 Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- .gitignore                                         |   1 +
- configure.ac                                       |   3 +-
- tests/ubifs_tools-tests/Makemodule.am              |   3 +-
- .../fsck_tests/fsck_bad_image.sh.in                | 355 +++++++++++++++++++++
- 4 files changed, 360 insertions(+), 2 deletions(-)
- create mode 100755 tests/ubifs_tools-tests/fsck_tests/fsck_bad_image.sh.in
+ tests/ubifs_tools-tests/README.txt | 303 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 303 insertions(+)
+ create mode 100644 tests/ubifs_tools-tests/README.txt
 
-diff --git a/.gitignore b/.gitignore
-index 203f01f0..68fff365 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -120,6 +120,7 @@ tests/ubifs_tools-tests/fsck_tests/powercut_fsck_mount.sh
- tests/ubifs_tools-tests/fsck_tests/cycle_corrupted_fsck_fault_inject.sh
- tests/ubifs_tools-tests/fsck_tests/cycle_powercut_mount_fsck.sh
- tests/ubifs_tools-tests/fsck_tests/random_corrupted_fsck.sh
-+tests/ubifs_tools-tests/fsck_tests/fsck_bad_image.sh
- 
- #
- # Files generated by autotools
-diff --git a/configure.ac b/configure.ac
-index 545fcc41..35c99bb6 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -296,7 +296,8 @@ AC_CONFIG_FILES([tests/fs-tests/fs_help_all.sh
- 	tests/ubifs_tools-tests/fsck_tests/powercut_fsck_mount.sh
- 	tests/ubifs_tools-tests/fsck_tests/cycle_corrupted_fsck_fault_inject.sh
- 	tests/ubifs_tools-tests/fsck_tests/cycle_powercut_mount_fsck.sh
--	tests/ubifs_tools-tests/fsck_tests/random_corrupted_fsck.sh])
-+	tests/ubifs_tools-tests/fsck_tests/random_corrupted_fsck.sh
-+	tests/ubifs_tools-tests/fsck_tests/fsck_bad_image.sh])
- 
- AC_OUTPUT([Makefile])
- 
-diff --git a/tests/ubifs_tools-tests/Makemodule.am b/tests/ubifs_tools-tests/Makemodule.am
-index 7ef873ce..1d3d0f29 100644
---- a/tests/ubifs_tools-tests/Makemodule.am
-+++ b/tests/ubifs_tools-tests/Makemodule.am
-@@ -5,7 +5,8 @@ test_SCRIPTS += \
- 	tests/ubifs_tools-tests/fsck_tests/powercut_fsck_mount.sh \
- 	tests/ubifs_tools-tests/fsck_tests/cycle_corrupted_fsck_fault_inject.sh \
- 	tests/ubifs_tools-tests/fsck_tests/cycle_powercut_mount_fsck.sh \
--	tests/ubifs_tools-tests/fsck_tests/random_corrupted_fsck.sh
-+	tests/ubifs_tools-tests/fsck_tests/random_corrupted_fsck.sh \
-+	tests/ubifs_tools-tests/fsck_tests/fsck_bad_image.sh
- 
- test_DATA += \
- 	tests/ubifs_tools-tests/images/good.gz \
-diff --git a/tests/ubifs_tools-tests/fsck_tests/fsck_bad_image.sh.in b/tests/ubifs_tools-tests/fsck_tests/fsck_bad_image.sh.in
-new file mode 100755
-index 00000000..2ba9f789
+diff --git a/tests/ubifs_tools-tests/README.txt b/tests/ubifs_tools-tests/README.txt
+new file mode 100644
+index 00000000..3848e23f
 --- /dev/null
-+++ b/tests/ubifs_tools-tests/fsck_tests/fsck_bad_image.sh.in
-@@ -0,0 +1,355 @@
-+#!/bin/sh
-+# Copyright (c), 2024, Huawei Technologies Co, Ltd.
-+# Author: Zhihao Cheng <chengzhihao1@huawei.com>
-+#
-+# Test Description: Tests whether all inconsistent UBIFS images can be fixed
-+# as expected.
-+# Origin UBIFS image content:
-+# /
-+# ├── corrupt_file (xattr - user.corrupt:123, 2K data)
-+# ├── dir
-+# │   ├── block_dev
-+# │   ├── char_dev
-+# │   ├── dir
-+# │   └── file (content: '123')
-+# ├── hardl_corrupt_file => corrupt_file
-+# └── softl_corrupt_file -> corrupt_file
-+#
-+# Running time: 2min
++++ b/tests/ubifs_tools-tests/README.txt
+@@ -0,0 +1,303 @@
 +
-+TESTBINDIR=@TESTBINDIR@
-+source $TESTBINDIR/common.sh
++ ubifs_tools tests
++ ==================
 +
-+CORRUPT_FILE=corrupt_file
-+CORRUPT_FILE_INUM=INO_65
-+XATTR_NAME="user.corrupt"
-+XATTR_VAL=123
-+CORRUPT_FILE_MD5=7d2f953e91033c743ab6a801d5ee6e15
-+SOFT_LINK_FILE=softl_corrupt_file
-+HARD_LINK_FILE=hardl_corrupt_file
-+DIR=dir
-+BLOCK_DEV=block_dev
-+CHAR_DEV=char_dev
-+FILE=file
-+FILE_INUM=INO_72
-+FILE_MD5=ba1f2511fc30423bdbb183fe33f3dd0f
-+LOST_FOUND="lost+found"
++ There are seven testcases for fsck.ubifs on encryption/non-encryption
++ situations:
++   1) authentication_refuse: Currently authenticated UBIFS image is not
++      supported for fsck.ubifs, check whether fsck.ubifs can refuse the
++      authenticated UBIFS image.
++   2) random_corrupted_fsck: Inject random corruption on UBIFS image
++      by writting random data on kinds of mtd devices (eg. nand, nor),
++      check the consistency of UBIFS after fsck.
++      This testcase simulate random bad UBIFS image caused by hardware
++      exceptions(eg. ecc uncorrectable, unwritten), and makes sure that
++      fsck.ubifs could make UBIFS be consistent after repairing UBIFS
++      image.
++   3) cycle_corrupted_fsck_fault_inject: Inject memory/io fault while
++      doing fsck for corrupted UBIFS images.
++      This testcase mainly checks whether fsck.ubifs has problems (eg.
++      UAF, null-ptr-def, etc.) in random error paths. Besides, it
++      provides a similar way to simulate powercut during fsck, and
++      checks whether the fsck.ubifs can fix an UBIFS image after many
++      rounds interrupted by kinds of errors.
++   4) cycle_powercut_mount_fsck: Inject powercut while doing fsstress
++      on mounted UBIFS, check the consistency of UBIFS after fsck.
++      This testscase mainly makes sure that fsck.ubifs can make UBIFS
++      image be consistent in common stress cases and powercut cases.
++   5) powercut_fsck_mount: Inject powercut while doing fsstress on
++      mounted UBIFS for kinds of flashes (eg. nand, nor).
++      This testcase mainly makes sure that fsck.ubifs can make UBIFS
++      image be consistent on different flashes (eg. nand, nor). Because
++      the min_io_size of nor flash is 1, the UBIFS image on nor flash
++      will be different from nand flash after doing powercut, so we need
++      make sure fsck.ubifs can handle these two types of flash.
++   6) cycle_mount_fsck_check: Do fsstress and fsck ubifs image, make
++      sure all files(and their data) are not lost after fsck.
++      This testcase mainly checks whether fsck.ubifs could corrupt the
++      filesystem content in common case.
++   7) fsck_bad_image: For kinds of inconsistent UBIFS images(which
++      can simulate corruptions caused by some potentional UBIFS bug), check
++      the result of fsck.
++      This testcase mainly checks whether the behavior is in expected after
++      repairing specific inconsistent UBIFS image. There is no debugfs tools
++      (for example: debugfs[ext4], xfs_db) for UBIFS, so no way to inject
++      precise corruption into UBIFS image, we have to prepare inconsistent
++      UBIFS images in advance like e2fsprogs[1] does. (Goto [2] to see how to
++      generate inconsistent UBIFS images).
++      Original UBIFS image content:
++      /
++      ├── corrupt_file (xattr - user.corrupt:123, 2K data)
++      ├── dir
++      │   ├── block_dev
++      │   ├── char_dev
++      │   ├── dir
++      │   └── file (content: '123')
++      ├── hardl_corrupt_file => corrupt_file
++      └── softl_corrupt_file -> corrupt_file
++      Here's a descriptons of the various test images:
++      =========================================================================
++            image         |     Description     |          expectancy
++      -------------------------------------------------------------------------
++      good                | good image contains | fsck success, fs content is
++                          | kinds of files.     | not changed.
++      -------------------------------------------------------------------------
++      sb_fanout           | invalid fanout in   | fsck failed.
++                          | superblock.         |
++      -------------------------------------------------------------------------
++      sb_fmt_version      | invalid fmt_version | fsck failed.
++                          | in superblock.      |
++      -------------------------------------------------------------------------
++      sb_leb_size         | invalid leb_size in | fsck failed.
++                          | superblock.         |
++      -------------------------------------------------------------------------
++      sb_log_lebs         | invalid log lebs in | fsck failed.
++                          | superblock.         |
++      -------------------------------------------------------------------------
++      sb_min_io_size      | invalid min_io_size | fsck failed.
++                          | in superblock.      |
++      -------------------------------------------------------------------------
++      master_highest_inum | invalid highest_inum| fsck success, fs content is
++                          | in master nodes.    | not changed.
++      -------------------------------------------------------------------------
++      master_lpt          | bad lpt pos in      | fsck success, fs content is
++                          | master nodes.       | not changed.
++      -------------------------------------------------------------------------
++      master_tnc          | bad tnc pos in      | fsck success, fs content is
++                          | master nodes.       | not changed.
++      -------------------------------------------------------------------------
++      master_total_dead   | bad total_dead in   | fsck success, fs content is
++                          | master nodes.       | not changed.
++      -------------------------------------------------------------------------
++      master_total_dirty  | bad total_dirty in  | fsck success, fs content is
++                          | master nodes.       | not changed.
++      -------------------------------------------------------------------------
++      master_total_free   | bad total_free in   | fsck success, fs content is
++                          | master nodes.       | not changed.
++      -------------------------------------------------------------------------
++      journal_log         | corrupted log area. | fsck success, fs content is
++                          |                     | not changed.
++      -------------------------------------------------------------------------
++      journal_bud         | corrupted bud area. | fsck success, file data is
++                          |                     | lost.
++      -------------------------------------------------------------------------
++      orphan_node         | bad orphan node.    | fsck success, file is
++                          |                     | deleted as expected.
++      -------------------------------------------------------------------------
++      lpt_dirty           | bad dirty in pnode. | fsck success, fs content is
++                          |                     | not changed.
++      -------------------------------------------------------------------------
++      lpt_flags           | bad flags in pnode  | fsck success, fs content is
++                          | (eg. index).        | not changed.
++      -------------------------------------------------------------------------
++      lpt_free            | bad free in pnode.  | fsck success, fs content is
++                          |                     | not changed.
++      -------------------------------------------------------------------------
++      lpt_pos             | bad pos in nnode.   | fsck success, fs content is
++                          |                     | not changed.
++      -------------------------------------------------------------------------
++      ltab_dirty          | bad dirty in lprops | fsck success, fs content is
++                          | table.              | not changed.
++      -------------------------------------------------------------------------
++      ltab_free           | bad free in lprops  | fsck success, fs content is
++                          | table.              | not changed.
++      -------------------------------------------------------------------------
++      index_size          | bad index size in   | fsck success, fs content is
++                          | master nodes.       | not changed.
++      -------------------------------------------------------------------------
++      tnc_lv0_key         | bad key in lv0      | fsck success, fs content is
++                          | znode.              | not changed.
++      -------------------------------------------------------------------------
++      tnc_lv0_len         | bad len in lv0      | fsck success, fs content is
++                          | znode.              | not changed.
++      -------------------------------------------------------------------------
++      tnc_lv0_pos         | bad pos in lv0      | fsck success, fs content is
++                          | znode.              | not changed.
++      -------------------------------------------------------------------------
++      tnc_noleaf_key      | bad key in non-leaf | fsck success, fs content is
++                          | znode.              | not changed.
++      -------------------------------------------------------------------------
++      tnc_noleaf_len      | bad len in non-leaf | fsck success, fs content is
++                          | znode.              | not changed.
++      -------------------------------------------------------------------------
++      tnc_noleaf_pos      | bad pos in non-leaf | fsck success, fs content is
++                          | znode.              | not changed.
++      -------------------------------------------------------------------------
++      corrupted_data_leb  | corrupted data leb. | fsck success, partial data of
++                          |                     | file is lost.
++      -------------------------------------------------------------------------
++      corrupted_idx_leb   | corrupted index leb.| fsck success, fs content is
++                          |                     | not changed.
++      -------------------------------------------------------------------------
++      inode_data          | bad data node.      | fsck success, file content
++                          |                     | is changed, other files are
++                          |                     | not changed.
++      -------------------------------------------------------------------------
++      inode_mode          | bad inode mode for  | fsck success, file is
++                          | file.               | dropped, other files are not
++                          |                     | changed.
++      -------------------------------------------------------------------------
++      inode_nlink         | wrong nlink for     | fsck success, nlink is
++                          | file.               | corrected, fs content is not
++                          |                     | changed.
++      -------------------------------------------------------------------------
++      inode_size          | wrong inode size    | fsck success, inode size is
++                          | for file.           | corrected, fs content is not
++                          |                     | changed.
++      -------------------------------------------------------------------------
++      inode_xcnt          | wrong inode         | fsck success, xattr_cnt is
++                          | xattr_cnt for file. | corrected, fs content is not
++                          |                     | changed.
++      -------------------------------------------------------------------------
++      soft_link_inode_mode| bad inode mode for  | fsck success, soft link
++                          | solf link file.     | file is dropped, other files
++                          |                     | are not changed.
++      -------------------------------------------------------------------------
++      soft_link_data_len  | bad inode data_len  | fsck success, soft link
++                          | for solt link file. | file is dropped, other files
++                          |                     | are not changed.
++      -------------------------------------------------------------------------
++      dentry_key          | bad dentry key for  | fsck success, dentry is
++                          | file.               | removed, other files are
++                          |                     | not changed.
++      -------------------------------------------------------------------------
++      dentry_nlen         | inconsistent nlen   | fsck success, dentry is
++                          | and name in dentry  | removed, other files are
++                          | for file.           | not changed.
++      -------------------------------------------------------------------------
++      dentry_type         | inconsistent type   | fsck success, dentry is
++                          | between dentry and  | removed, other files are
++                          | inode for file.     | not changed.
++      -------------------------------------------------------------------------
++      xinode_flags        | lost UBIFS_XATTR_FL | fsck success, xattr is
++                          | in xattr inode      | removed, other files are
++                          | flags for file.     | not changed.
++      -------------------------------------------------------------------------
++      xinode_key          | bad xattr inode key | fsck success, xattr is
++                          | for file.           | removed, other files are
++                          |                     | not changed.
++      -------------------------------------------------------------------------
++      xinode_mode         | bad xattr inode     | fsck success, xattr is
++                          | mode for file.      | removed, other files are
++                          |                     | not changed.
++      -------------------------------------------------------------------------
++      xentry_key          | bad xattr entry key | fsck success, xattr is
++                          | for file.           | removed, other files are
++                          |                     | not changed.
++      -------------------------------------------------------------------------
++      xentry_nlen         | inconsistent nlen   | fsck success, xattr is
++                          | and name in xattr   | removed, other files are
++                          | entry for file.     | not changed.
++      -------------------------------------------------------------------------
++      xentry_type         | inconsistent type   | fsck success, xattr is
++                          | between xattr entry | removed, other files are
++                          | and xattr inode for | not changed.
++                          | file.               |
++      -------------------------------------------------------------------------
++      xent_host           | the xattr's host    | fsck success, file, hard
++                          | is a xattr too, the | link and soft link are
++                          | flag of corrupt_file| dropped, other files are
++                          | inode is modified.  | not changed.
++      -------------------------------------------------------------------------
++      dir_many_dentry     | dir has too many    | fsck success, hard link is
++                          | dentries, the dentry| dropped, other files are not
++                          | of hard link is     | changed.
++                          | modified.           |
++      -------------------------------------------------------------------------
++      dir_lost            | bad dentry for dir. | fsck success, the 'file' is
++                          |                     | recovered under lost+found,
++                          |                     | left files under dir are
++                          |                     | removed, other files are not
++                          |                     | changed.
++      -------------------------------------------------------------------------
++      dir_lost_duplicated | bad inode for dir,  | fsck success, the 'file' is
++                          | there is a file     | recovered with INO_<inum>_1
++                          | under lost+found,   | under lost+found, left files
++                          | which named with the| under dir are removed, other
++                          | inum of the 'file'. | files are not changed.
++      -------------------------------------------------------------------------
++      dir_lost_not_recover| bad inode for dir,  | fsck success, all files
++                          | lost+found is a     | under dir are removed,
++                          | regular file and    | other files are not changed.
++                          | exists under root   |
++                          | dir.                |
++      -------------------------------------------------------------------------
++      root_dir            | bad '/'.            | fsck success, create new
++                          |                     | root dir('/'). All regular
++                          |                     | files are reocovered under
++                          |                     | lost+found, other files are
++                          |                     | removed.
++      -------------------------------------------------------------------------
++      empty_tnc           | all files have bad  | fsck success, fs content
++                          | inode.              | becomes empty.
++      =========================================================================
 +
-+function fsck_image()
-+{
-+	local img_type=$1;
-+	local img=$2;
-+	local fsck_mode=$3;
-+	local file_exist=$4;
-+	local file_nochange=$5
-+	local file_xattr_exist=$6;
-+	local hard_link_exist=$7;
-+	local hard_link_no_change=$8;
-+	local hard_link_xattr_exist=$9;
-+	local soft_link_exist=${10};
-+	local dir_exist=${11};
-+	local dir_file_no_change=${12};
-+	local lost_found=${13};
++ There is one testcase for mkfs.ubifs on encryption/non-encryption
++ situations:
++ 1) build_fs_from_dir: Initialize UBIFS image from a given directory, then
++    check whether the fs content in mounted UBIFS is consistent with the
++    original directory. Both UBI volume and file are chosen as storage
++    mediums to test. This testcase mainly ensures that mkfs.ubifs can
++    format an UBIFS image as user expected.
 +
-+	echo "======================================================================"
-+	echo "fsck $img_type, success_fsck_mode:$fsck_mode file_exist:$file_exist file_nochange:$file_nochange file_xattr_exist:$file_xattr_exist hard_link_exist:$hard_link_exist hard_link_no_change:$hard_link_no_change:hard_link_xattr_exist $hard_link_xattr_exist:soft_link_exist:$soft_link_exist dir_exist:$dir_exist $lost_found"
++ Dependence
++ ----------
++ kernel configs:
++   CONFIG_MTD_NAND_NANDSIM=m
++   CONFIG_MTD_MTDRAM=m
++   CONFIG_MTD_UBI=m
++   CONFIG_UBIFS_FS=m
++   CONFIG_UBIFS_FS_XATTR=y
++   CONFIG_UBIFS_FS_AUTHENTICATION=y
++   CONFIG_FS_ENCRYPTION=y
++   CONFIG_FAILSLAB=y
++   CONFIG_FAIL_PAGE_ALLOC=y
 +
-+	load_mtdram 1 16 || echo "cannot load mtdram"
-+	mtdnum="$(find_mtd_device "$mtdram_patt")"
++ tools:
++   fsstress		[3][4]
++   keyctl		[5]
++   fscryptctl		[6]
++   setfattr/getfattr	[7]
 +
-+	dmesg -c > /dev/null
-+	gzip -f -k -d $TESTBINDIR/${img}.gz || fatal "gzip failed"
-+	flash_eraseall /dev/mtd$mtdnum
-+	dd if=$TESTBINDIR/$img of=/dev/mtd$mtdnum bs=1M
-+	rm -f $TESTBINDIR/$img
-+	modprobe ubi mtd="$mtdnum,0" || fatal "modprobe ubi fail"
-+	modprobe ubifs || fatal "modprobe ubifs fail"
++ Running
++ -------
 +
-+	fsck.ubifs -a $DEV
-+	let "ret=$?&~$FSCK_NONDESTRUCT"
-+	if [[ $ret != $FSCK_OK ]]; then
-+		if [[ "$fsck_mode" == "safe" ]]; then
-+			fatal "The image should be fixed in $fsck_mode mode, but it fails"
-+		fi
++ Please build and install mtd-utils first.
++ Run single case:
++   cd $INSTALL_DIR/libexec/mtd-utils
++   ./powercut_fsck_mount.sh
++   ./random_corrupted_fsck.sh
++   ./cycle_mount_fsck_check.sh
++   ./build_fs_from_dir.sh
++ Run all cases: sh $INSTALL_DIR/libexec/mtd-utils/ubifs_tools_run_all.sh
 +
-+		fsck.ubifs -y $DEV
-+		let "ret=$?&~$FSCK_NONDESTRUCT"
-+		if [[ $ret != $FSCK_OK ]]; then
-+			if [[ "$fsck_mode" == "danger_default" ]]; then
-+				fatal "The image should be fixed in $fsck_mode mode, but it fails"
-+			fi
++ References
++ ----------
 +
-+			fsck.ubifs -yb $DEV
-+			let "ret=$?&~$FSCK_NONDESTRUCT"
-+			if [[ $ret != $FSCK_OK ]]; then
-+				if [[ "$fsck_mode" == "danger_rebuild" ]]; then
-+					fatal "The image should be fixed in $fsck_mode mode, but it fails"
-+				fi
-+
-+				echo "fsck failed is expected, skip"
-+
-+				modprobe -r ubifs
-+				modprobe -r ubi
-+				modprobe -r mtdram
-+				echo "----------------------------------------------------------------------"
-+
-+				return;
-+			elif [[ "$fsck_mode" != "danger_rebuild" ]]; then
-+				fatal "The image should not be fixed in $fsck_mode mode, but it succeeds"
-+			fi
-+		elif [[ "$fsck_mode" != "danger_default" ]]; then
-+			fatal "The image should not be fixed in $fsck_mode mode, but it succeeds"
-+		fi
-+	elif [[ "$fsck_mode" != "safe" ]]; then
-+		fatal "The image should not be fixed in $fsck_mode mode, but it succeeds"
-+	fi
-+
-+	enable_chkfs
-+
-+	mount_ubifs $DEV $MNT
-+	ret=$?
-+	if [[ $ret != 0 ]]; then
-+		fatal "mount failed $ret"
-+	fi
-+
-+	du -sh $MNT > /dev/null  # Make sure all files are accessible
-+	ret=$?
-+	if [[ $ret != 0 ]]; then
-+		fatal "cannot access all files $ret"
-+	fi
-+
-+	if [[ $file_exist == 1 ]]; then
-+		if ! [ -f $MNT/$CORRUPT_FILE ]; then
-+			fatal "$MNT/$CORRUPT_FILE is lost"
-+		fi
-+	else
-+		if [ -f $MNT/$CORRUPT_FILE ]; then
-+			fatal "$MNT/$CORRUPT_FILE should not exist"
-+		fi
-+	fi
-+
-+	md5_after=`md5sum $MNT/$CORRUPT_FILE 2>/dev/null | awk '{print $1}'`
-+	if [[ $file_nochange == 1 ]]; then
-+		if [[ $CORRUPT_FILE_MD5 != $md5_after ]]; then
-+			fatal "content changed for $MNT/$CORRUPT_FILE"
-+		fi
-+	else
-+		if [[ $CORRUPT_FILE_MD5 == $md5_after ]]; then
-+			fatal "content not changed for $MNT/$CORRUPT_FILE"
-+		fi
-+	fi
-+
-+	xattr=`getfattr -n $XATTR_NAME $MNT/$CORRUPT_FILE 2>/dev/null | grep $XATTR_NAME | awk -F '=' '{ print $2 }'`
-+	if [[ $file_xattr_exist == 1 ]]; then
-+		if ! [[ "$xattr" =~ "$XATTR_VAL" ]]; then
-+			fatal "wrong xattr $xattr for $MNT/$CORRUPT_DENT_NAME"
-+		fi
-+	else
-+		if [[ "$xattr" =~ "$XATTR_VAL" ]]; then
-+			fatal "xattr $xattr for $MNT/$CORRUPT_DENT_NAME should not exist"
-+		fi
-+	fi
-+
-+	if [[ $hard_link_exist == 1 ]]; then
-+		if ! [ -f $MNT/$HARD_LINK_FILE ]; then
-+			fatal "$MNT/$HARD_LINK_FILE should is lost"
-+		fi
-+	else
-+		if [ -f $MNT/$HARD_LINK_FILE ]; then
-+			fatal "$MNT/$HARD_LINK_FILE should not exist"
-+		fi
-+	fi
-+
-+	md5_after=`md5sum $MNT/$HARD_LINK_FILE 2>/dev/null | awk '{print $1}'`
-+	if [[ $hard_link_no_change == 1 ]]; then
-+		if [[ $CORRUPT_FILE_MD5 != $md5_after ]]; then
-+			fatal "content changed for $MNT/$HARD_LINK_FILE"
-+		fi
-+	else
-+		if [[ $CORRUPT_FILE_MD5 == $md5_after ]]; then
-+			fatal "content not changed for $MNT/$HARD_LINK_FILE"
-+		fi
-+	fi
-+
-+	xattr=`getfattr -n $XATTR_NAME $MNT/$HARD_LINK_FILE 2>/dev/null | grep $XATTR_NAME | awk -F '=' '{ print $2 }'`
-+	if [[ $hard_link_xattr_exist == 1 ]]; then
-+		if ! [[ "$xattr" =~ "$XATTR_VAL" ]]; then
-+			fatal "wrong xattr $xattr for $MNT/$HARD_LINK_FILE"
-+		fi
-+	else
-+		if [[ "$xattr" =~ "$XATTR_VAL" ]]; then
-+			fatal "xattr $xattr for $MNT/$HARD_LINK_FILE should not exist"
-+		fi
-+	fi
-+
-+	link=`stat -c %N $MNT/$SOFT_LINK_FILE 2>/dev/null | grep $SOFT_LINK_FILE | grep $CORRUPT_FILE`
-+	if [[ $soft_link_exist == 1 ]]; then
-+		if [[ "$link" == "" ]]; then
-+			fatal "$MNT/$SOFT_LINK_FILE is lost"
-+		fi
-+	else
-+		if [[ "$link" != "" ]]; then
-+			fatal "$MNT/$SOFT_LINK_FILE should not exist"
-+		fi
-+	fi
-+
-+	if [[ $dir_exist == 1 ]]; then
-+		if ! [ -d $MNT/$DIR ]; then
-+			fatal "$MNT/$DIR is lost"
-+		fi
-+		if ! [ -d $MNT/$DIR/$DIR ]; then
-+			fatal "$MNT/$DIR/$DIR is lost"
-+		fi
-+		if ! [ -f $MNT/$DIR/$FILE ]; then
-+			fatal "$MNT/$DIR/$FILE is lost"
-+		fi
-+		f_md5=`md5sum $MNT/$DIR/$FILE 2>/dev/null | awk '{print $1}'`
-+		if [[ $dir_file_no_change == 1 ]]; then
-+			if [[ $FILE_MD5 != $f_md5 ]]; then
-+				fatal "content changed for $MNT/$DIR/$FILE"
-+			fi
-+		else
-+			if [[ $FILE_MD5 == $f_md5 ]]; then
-+				fatal "content not changed for $MNT/$DIR/$FILE"
-+			fi
-+		fi
-+		if ! [ -b $MNT/$DIR/$BLOCK_DEV ]; then
-+			fatal "$MNT/$DIR/$BLOCK_DEV is lost"
-+		fi
-+		major=`stat -c %t $MNT/$DIR/$BLOCK_DEV`
-+		minor=`stat -c %T $MNT/$DIR/$BLOCK_DEV`
-+		if [[ $major != 1 ]] || [[ $minor != 2 ]]; then
-+			echo "major/minor changed for $MNT/$DIR/$BLOCK_DEV"
-+		fi
-+		if ! [ -c $MNT/$DIR/$CHAR_DEV ]; then
-+			fatal "$MNT/$DIR/$CHAR_DEV is lost"
-+		fi
-+		major=`stat -c %t $MNT/$DIR/$CHAR_DEV`
-+		minor=`stat -c %T $MNT/$DIR/$CHAR_DEV`
-+		if [[ $major != 0 ]] || [[ $minor != 1 ]]; then
-+			echo "major/minor changed for $MNT/$DIR/$CHAR_DEV"
-+		fi
-+	else
-+		if [ -d $MNT/$DIR ]; then
-+			fatal "$MNT/$DIR should not exist"
-+		fi
-+	fi
-+
-+	if [[ "$lost_found" == "no lost+found" ]]; then
-+		if [ -d $MNT/$LOST_FOUND ]; then
-+			fatal "$MNT/$LOST_FOUND should not exist"
-+		fi
-+	elif [[ "$lost_found" == "lost+found is regular" ]]; then
-+		if ! [ -f $MNT/$LOST_FOUND ]; then
-+			fatal "$MNT/$LOST_FOUND is not regular file"
-+		fi
-+	else
-+		if ! [ -d $MNT/$LOST_FOUND ]; then
-+			fatal "$MNT/$LOST_FOUND is lost"
-+		fi
-+
-+		if ! [ -f $MNT/$LOST_FOUND/${FILE_INUM}_0 ]; then
-+			fatal "$MNT/$LOST_FOUND/${FILE_INUM}_0 is lost"
-+		fi
-+		if [[ "$lost_found" == "lost+found has one" ]]; then
-+			f_md5=`md5sum $MNT/$LOST_FOUND/${FILE_INUM}_0 2>/dev/null | awk '{print $1}'`
-+			if [[ $FILE_MD5 != $f_md5 ]]; then
-+				fatal "content changed for $MNT/$LOST_FOUND/${FILE_INUM}_0"
-+			fi
-+		elif [[ "$lost_found" == "lost+found has two" ]]; then
-+			f_md5=`md5sum $MNT/$LOST_FOUND/${CORRUPT_FILE_INUM}_0 2>/dev/null | awk '{print $1}'`
-+			if [[ $CORRUPT_FILE_MD5 != $f_md5 ]]; then
-+				fatal "content changed for $MNT/$LOST_FOUND/${CORRUPT_FILE_INUM}_0"
-+			fi
-+			f_md5=`md5sum $MNT/$LOST_FOUND/${FILE_INUM}_0 2>/dev/null | awk '{print $1}'`
-+			if [[ $FILE_MD5 != $f_md5 ]]; then
-+				fatal "content changed for $MNT/$LOST_FOUND/${FILE_INUM}_0"
-+			fi
-+		else
-+			if ! [ -f $MNT/$LOST_FOUND/${FILE_INUM}_1 ]; then
-+				fatal "$MNT/$LOST_FOUND/${FILE_INUM}_1 is lost"
-+			fi
-+			f_md5=`md5sum $MNT/$LOST_FOUND/${FILE_INUM}_1 2>/dev/null | awk '{print $1}'`
-+			if [[ $FILE_MD5 != $f_md5 ]]; then
-+				fatal "content changed for $MNT/$LOST_FOUND/${FILE_INUM}_1"
-+			fi
-+		fi
-+	fi
-+
-+	umount $MNT
-+	res=$?
-+	if [[ $res != 0 ]]
-+	then
-+		fatal "unmount fail $res"
-+	fi
-+
-+	disable_chkfs
-+
-+	check_err_msg
-+
-+	modprobe -r ubifs
-+	modprobe -r ubi
-+	modprobe -r mtdram
-+
-+	echo "----------------------------------------------------------------------"
-+}
-+
-+start_t=$(date +%s)
-+echo "Do inconsistent UBIFS images fscking test"
-+fsck_image "good image" good "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad sb fanout image" sb_fanout "none" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad sb fmt_version image" sb_fmt_version "none" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad sb leb_size image" sb_leb_size "none" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad sb log_lebs image" sb_log_lebs "none" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad sb min_io_size image" sb_min_io_size "none" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad master highest_inum image" master_highest_inum "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad master lpt image" master_lpt "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad master tnc image" master_tnc "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad master total_dead image" master_total_dead "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad master total_dirty image" master_total_dirty "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad master total_free image" master_total_free "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "corrupted journal log area image" journal_log "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "corrupted journal bud area image" journal_bud "danger_default" 1 0 1 1 0 1 1 1 0 "no lost+found"
-+fsck_image "bad orphan node image" orphan_node "danger_default" 0 0 0 0 0 0 1 1 1 "no lost+found"
-+fsck_image "bad lpt dirty image" lpt_dirty "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad lpt lpt_flags image" lpt_flags "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad lpt free image" lpt_free "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad lpt pos image" lpt_pos "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad lprops table dirty image" ltab_dirty "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad lprops table free image" ltab_free "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad index size image" index_size "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad tnc lv0 key image" tnc_lv0_key "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad tnc lv0 len image" tnc_lv0_len "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad tnc lv0 pos image" tnc_lv0_pos "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad tnc non-leaf key image" tnc_noleaf_key "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad tnc non-leaf len image" tnc_noleaf_len "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad tnc non-leaf pos image" tnc_noleaf_pos "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "corrupted leb for file data image" corrupted_data_leb "danger_default" 1 0 1 1 0 1 1 1 1 "no lost+found"
-+fsck_image "corrupted leb for TNC image" corrupted_idx_leb "danger_rebuild" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad inode data image" inode_data "danger_default" 1 0 1 1 0 1 1 1 1 "no lost+found"
-+fsck_image "bad inode mode image" inode_mode "danger_default" 0 0 0 0 0 0 1 1 1 "no lost+found"
-+fsck_image "bad inode nlink image" inode_nlink "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad inode size image" inode_size "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad inode xattr_cnt image" inode_xcnt "safe" 1 1 1 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad softlink inode mode image" soft_link_inode_mode "danger_default" 1 1 1 1 1 1 0 1 1 "no lost+found"
-+fsck_image "bad softlink inode data_len image" soft_link_data_len "danger_default" 1 1 1 1 1 1 0 1 1 "no lost+found"
-+fsck_image "bad dentry key image" dentry_key "danger_default" 0 0 0 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad dentry nlen image" dentry_nlen "danger_default" 0 0 0 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad dentry type image" dentry_type "danger_default" 0 0 0 1 1 1 1 1 1 "no lost+found"
-+fsck_image "bad xattr inode flags image" xinode_flags "danger_default" 1 1 0 1 1 0 1 1 1 "no lost+found"
-+fsck_image "bad xattr inode key image" xinode_key "danger_default" 1 1 0 1 1 0 1 1 1 "no lost+found"
-+fsck_image "bad xattr inode mode image" xinode_mode "danger_default" 1 1 0 1 1 0 1 1 1 "no lost+found"
-+fsck_image "bad xattr dentry key image" xentry_key "danger_default" 1 1 0 1 1 0 1 1 1 "no lost+found"
-+fsck_image "bad xattr dentry nlen image" xentry_nlen "danger_default" 1 1 0 1 1 0 1 1 1 "no lost+found"
-+fsck_image "bad xattr dentry type image" xentry_type "danger_default" 1 1 0 1 1 0 1 1 1 "no lost+found"
-+fsck_image "bad xattr host image" xent_host "danger_default" 0 0 0 0 0 0 1 1 1 "no lost+found"
-+fsck_image "dir has too many dentry image" dir_many_dentry "danger_default" 1 1 1 0 0 0 1 1 1 "no lost+found"
-+fsck_image "bad dir image" dir_lost "danger_default" 1 1 1 1 1 1 1 0 1 "lost+found has one"
-+fsck_image "bad dir and duplicated file name in lost+found image" dir_lost_duplicated "danger_default" 1 1 1 1 1 1 1 0 1 "lost+found has duplicated files"
-+fsck_image "bad dir and lost+found image" dir_lost_not_recover "danger_default" 1 1 1 1 1 1 1 0 1 "lost+found is regular"
-+fsck_image "bad root dir image" root_dir "danger_default" 0 0 0 0 0 0 0 0 1 "lost+found has two"
-+fsck_image "empty TNC image" empty_tnc "danger_rebuild" 0 0 0 0 0 0 0 0 1 "no lost+found"
-+end_t=$(date +%s)
-+time_cost=$(( end_t - start_t ))
-+echo "Success, cost $time_cost seconds"
-+exit 0
++ [1] https://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git/tree/tests/README
++ [2] https://bugzilla.kernel.org/show_bug.cgi?id=218924
++ [3] https://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git/tree/ltp/fsstress.c
++ [4] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/fsstress/fsstress.c
++ [5] https://github.com/torvalds/linux/blob/master/security/keys/keyctl.c
++ [6] https://github.com/google/fscryptctl
++ [7] https://github.com/philips/attr/tree/master
 -- 
 2.13.6
 
