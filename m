@@ -1,147 +1,129 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A4315B553;
-	Fri,  7 Jun 2024 09:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002E517C6C
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 09:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717750970; cv=none; b=DWb7myDJtnbc94f7zihCTSxhYKOoGkb/osMtFykfbzh42QvE6TWmD/hsjIIhUTJH+ITfHbTCEUWhYYwPDRXY9S2VeZT8iM3IDKVklagkQ+4grU9h480c1yvf/zdDgW8hAmSBgqirKdcVlxJ7j6p71xxcUobUwX0hu1lfV46+q5Y=
+	t=1717751023; cv=none; b=nDgFg7tyI8GZQyQFdlvsd9JlZFBud624tElpQmn0OBxpYeNIjosCB7UnI9onOOQ5UNzLYQIVuBPKMJtYNweBFkiHwAte41WZ+az3gv/Z/o8zzwi8FPtl82OszFdnTaxHTOADEAbZxCMS1OPUYlcN9qyhvcM80ds4NMbbhBhMr78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717750970; c=relaxed/simple;
-	bh=gph2vTnyaKmegcHhIalKFsjOJL8aWTh9ZxQdX5E6tgY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Plt0qf1EoDIj+wvvf/y2a8VHiZaojVZzRYSTTb5OTccazx8GFWjEkGb3uW0Hylp/58Bc3xX+MlCvvZCsxTxS9kB60RAYwXVrSrTjh0K3ZpK2wUtf6LjAW7dC/zZtDfH/7ZPVAkHv5wMyGSMMBnh+WnYmFjeBrhBkf2CP3pDZ4Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g3dzJLte; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717751023; c=relaxed/simple;
+	bh=7X6zarJgJIAqkTEk8mUER5IEjtHSmRMyzVjoW1K8ZhY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Csz0ODHJ9xrW52wdMmJkz5g9XVg9A5Agk29k40rD72nXvUFwsp+oNhdDR+A3mPlEgYhqtP61ljeMuWystU/yH/Jq35afyPxHpK9+b6CtRaKVlRupiV7Eaeg2pc1T4VymmNWjM4JS54QprCziUwH7FMIWB2DptJlV8+dDlIxG77U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eUPUpaWR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g3dzJLte"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57aa64c6bbfso1931623a12.3;
-        Fri, 07 Jun 2024 02:02:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717750967; x=1718355767; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=B3OXk47KN1vRbsGCOqgQ0IPGonivWWX75uqXRl216dY=;
-        b=g3dzJLteszWWi4BGCeVGirG8NKtsZL5W7noINYv2M7kmYXoSueiqUM5S6jd6uwlLmi
-         5wCgm0qybEmksQXtXi7emzHk2NABnrJ0QS1ICR6AuvKBf3XJTT+B1MmEHsCRhyKBMZrk
-         Ejul6nkZo+xJu+Ehn18Wf2TwoyCxP0umt0R8GXOSA/pgicj6Y10sKSDc5T34rQ4G/mCW
-         KVJgmMJnlzm9H5zinVGhFi+JPVqK9zZPlUm3Dl2jQfht+QGZaDB5T9J50Pzt2i8yo8vq
-         YrFo56YFlbl1DL1xDY61l0C2yzAI/u2qtjMw/aZpt2ddcKZyPrTpMiYZ3662dBfIYuWj
-         ZZfw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eUPUpaWR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717751020;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xqE6hPCyqXNy3D1+Jzyj9gbitemqp2I97TKEU0JKvzE=;
+	b=eUPUpaWRb7bbisO702jI6rL/5pL3y8tlUQfce7zHvGv9HI70NqsrcaDnphjrpA4eN9fPp9
+	XmsgiFGcCmfCgHGvs0M9nBMHyOy0UWtTLjIyPkEQYjY2Y2H1yj2RuOnar4xHwnf20N71S5
+	6p/3JpuNBgY7kHjvLZg2mAhjOmFa/qk=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-368-E5xHp6M0OJ--Wwy-WjMRFw-1; Fri, 07 Jun 2024 05:03:39 -0400
+X-MC-Unique: E5xHp6M0OJ--Wwy-WjMRFw-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52b88765386so1774513e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 02:03:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717750967; x=1718355767;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B3OXk47KN1vRbsGCOqgQ0IPGonivWWX75uqXRl216dY=;
-        b=Z9IVrfBVUgXsMMf9LWq2UeJ91PbSbUbaZ9xzBWolkP5u0Me14rIusY7pXwdViLdvgr
-         9ovIWTaSIJo9Ir8dzs5fX97u4YTHJ1BBkqjSvJfyH7R56tQa+3q+1Vf00XIKc0eXVWsM
-         Jz++x+4erWSv4zwB3uCncg+SH3mhm9u/p9ub8qbeW1Sf1bAitFQteQunM2QOmj2mzLTt
-         bh2iS5OCFCRVqAT57E8b1zEjk1ABEEnGZhFGVk4EiMwBaVNaCxSuMrlbjyxDV6lMtAHD
-         yNKFnm2qKBDOrMwJK9cH1cE9/uPZVgz6KpO+Z95Dr8PsfhqPgTHXB9Dh1FlhOHQGB01Y
-         xi8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUzen7B+Ayi+enuZzj3l9uSWXtIJ6L6A0oFLwmYpDTAd73tPb+f3BHgSZH7cq8/z20L5TfCo5ytSyWFPHMsKxNGy50enAVU0fIL2UXH9cEfEjERGJCSthvC5Apx8MIGEXRqS2Iyfnwss7XtKnf+S5NWHIGjH3YZTSiYiugcBtj61l/Rww==
-X-Gm-Message-State: AOJu0YwBWW4qMfbFtEsTCo3K8ngvgrKXVdHQSRM9snCUFaGYYjYlJAKN
-	kD1A0zsEcnv9BEyLvdnVUZwp7fbYdJYzqqwmLxcB0eoXnYeRPJzd
-X-Google-Smtp-Source: AGHT+IGR1LaE6jacB8mFU7IYxmRZC0Sme4xtJm192W3JIo7nEukO7iZOkSUi/z11sXt7W3y77dOAKg==
-X-Received: by 2002:a17:906:2e82:b0:a68:379d:d623 with SMTP id a640c23a62f3a-a6cd7a84203mr124427866b.36.1717750967417;
-        Fri, 07 Jun 2024 02:02:47 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c8072a101sm214435266b.201.2024.06.07.02.02.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 02:02:47 -0700 (PDT)
-Message-ID: <822eec36a530f659e4924886ad8d2bf272accd59.camel@gmail.com>
-Subject: Re: [PATCH v6 6/9] iio: adc: ad7173: add support for special inputs
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: dumitru.ceclan@analog.com
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- David Lechner <dlechner@baylibre.com>,  linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org, Dumitru Ceclan
- <mitrutzceclan@gmail.com>
-Date: Fri, 07 Jun 2024 11:06:34 +0200
-In-Reply-To: <20240606-ad4111-v6-6-573981fb3e2e@analog.com>
-References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
-	 <20240606-ad4111-v6-6-573981fb3e2e@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+        d=1e100.net; s=20230601; t=1717751018; x=1718355818;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xqE6hPCyqXNy3D1+Jzyj9gbitemqp2I97TKEU0JKvzE=;
+        b=X4iZ+ENvt5AHYbXedCh1xr3candJ2+UKtQCzyn1qWiXiWxwE5wwhRgWW3kqUi3jDkI
+         qGCwzt/hRvSW2sBu3up0GHHL7CW02n/rdXktxYYG8bKpiV9wAJRVWRKKlaGkQlutHSXs
+         sqIq5Fmzg3VTVRklbWtLwRVDuZj2BrKU1Qemz++czGEKM04J9ti04zUf29Rws8oXR7zT
+         3EAEmT0rpD8n5A4AlRNSxSQTrFsC905jbgrP0CXL1FY17pm4CaWcp54SIWZiWcckPUZ7
+         T/jU9DAicRXOscRSv7IpEfepZmhISUXZRqcIjPuPXbB+6JNJEfGbYkF3mCu3QwLcsh6H
+         iGxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5PfNEc2K11YUX2LYJwu1jr4PREu90r3/bwj31t/gL43WWgICAf8lMFE5Kz8+z0OxdrXgvfyptiOs3ln9dxX6BFvWwv3/l7NdL2PNt
+X-Gm-Message-State: AOJu0Yy0BKw4JeP6FZQffpXNOcBneEo0FwFUv9266i0L7x24bSb3A1FH
+	D3i+ZPEBsJK0q3KWG/paAhxhCvO/CA7HFbB33K+Yix47GW0yqg9mvrL/QY5CT49USYbYEcKCU3Q
+	Nqanr/ax6Ly3oSQV1SRcQAyBoBnZ8dV3d5CspKoqXPnsfZ+tv0q9rg7qv0Xxi+3s2EXu/NctY2B
+	jI/EBCHeMv6EJZxK8QURKfpPZGxIEr0tlsIHif
+X-Received: by 2002:a19:f812:0:b0:529:9fe5:f54b with SMTP id 2adb3069b0e04-52bb9fcc495mr1260613e87.43.1717751018046;
+        Fri, 07 Jun 2024 02:03:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF3tfq7LInmTFS863fnDty0MeJZUA2Es5xSZAYprCk31HXCX5v9kTaO2IKs/xYldhZhlO5SsG8it4TA8W+b+H8=
+X-Received: by 2002:a19:f812:0:b0:529:9fe5:f54b with SMTP id
+ 2adb3069b0e04-52bb9fcc495mr1260596e87.43.1717751017623; Fri, 07 Jun 2024
+ 02:03:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240530210714.364118-1-rick.p.edgecombe@intel.com> <20240530210714.364118-15-rick.p.edgecombe@intel.com>
+In-Reply-To: <20240530210714.364118-15-rick.p.edgecombe@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Fri, 7 Jun 2024 11:03:25 +0200
+Message-ID: <CABgObfYL9uujoLTmSBW0LqoQbOGKpfZsB50BZqMo5_WOChrZ-A@mail.gmail.com>
+Subject: Re: [PATCH v2 14/15] KVM: x86/tdp_mmu: Invalidate correct roots
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: seanjc@google.com, kvm@vger.kernel.org, kai.huang@intel.com, 
+	dmatlack@google.com, erdemaktas@google.com, isaku.yamahata@gmail.com, 
+	linux-kernel@vger.kernel.org, sagis@google.com, yan.y.zhao@intel.com, 
+	Sean Christopherson <sean.j.christopherson@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-06-06 at 19:07 +0300, Dumitru Ceclan via B4 Relay wrote:
-> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
->=20
-> =C2=A0Add support for selecting REF+ and REF- inputs on all models.
-> =C2=A0Add support for selecting ((AVDD1 =E2=88=92 AVSS)/5) inputs
-> =C2=A0 on supported models.
->=20
-> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
-> ---
-> =C2=A0drivers/iio/adc/ad7173.c | 29 +++++++++++++++++++++++++++--
-> =C2=A01 file changed, 27 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-> index 4040edbd1c32..d16fa081a285 100644
-> --- a/drivers/iio/adc/ad7173.c
-> +++ b/drivers/iio/adc/ad7173.c
-> @@ -66,6 +66,13 @@
-> =C2=A0	 FIELD_PREP(AD7173_CH_SETUP_AINNEG_MASK, neg))
-> =C2=A0#define AD7173_AIN_TEMP_POS	17
-> =C2=A0#define AD7173_AIN_TEMP_NEG	18
-> +#define AD7173_AIN_POW_MON_POS	19
-> +#define AD7173_AIN_POW_MON_NEG	20
-> +#define AD7173_AIN_REF_POS	21
-> +#define AD7173_AIN_REF_NEG	22
-> +
-> +#define AD7173_IS_REF_INPUT(x)		((x) =3D=3D AD7173_AIN_REF_POS || \
-> +					(x) =3D=3D AD7173_AIN_REF_NEG)
-> =C2=A0
-> =C2=A0#define AD7172_2_ID			0x00d0
-> =C2=A0#define AD7175_ID			0x0cd0
-> @@ -146,6 +153,8 @@ struct ad7173_device_info {
-> =C2=A0	unsigned int id;
-> =C2=A0	char *name;
-> =C2=A0	bool has_temp;
-> +	/* ((AVDD1 =E2=88=92 AVSS)/5) */
-> +	bool has_pow_supply_monitoring;
-> =C2=A0	bool has_input_buf;
-> =C2=A0	bool has_int_ref;
-> =C2=A0	bool has_ref2;
-> @@ -216,6 +225,7 @@ static const struct ad7173_device_info
-> ad7173_device_info[] =3D {
-> =C2=A0		.has_temp =3D true,
-> =C2=A0		.has_input_buf =3D true,
-> =C2=A0		.has_int_ref =3D true,
-> +		.has_pow_supply_monitoring =3D true,
-> =C2=A0		.clock =3D 2 * HZ_PER_MHZ,
-> =C2=A0		.sinc5_data_rates =3D ad7173_sinc5_data_rates,
-> =C2=A0		.num_sinc5_data_rates =3D ARRAY_SIZE(ad7173_sinc5_data_rates),
-> @@ -230,6 +240,7 @@ static const struct ad7173_device_info
-> ad7173_device_info[] =3D {
-> =C2=A0		.has_temp =3D false,
-> =C2=A0		.has_input_buf =3D true,
-> =C2=A0		.has_ref2 =3D true,
-> +		.has_pow_supply_monitoring =3D true,
-> =C2=A0		.clock =3D 2 * HZ_PER_MHZ,
-> =C2=A0		.sinc5_data_rates =3D ad7173_sinc5_data_rates,
-> =C2=A0		.num_sinc5_data_rates =3D ARRAY_SIZE(ad7173_sinc5_data_rates),
-> @@ -245,6 +256,7 @@ static const struct ad7173_device_info
-> ad7173_device_info[] =3D {
-> =C2=A0		.has_input_buf =3D true,
-> =C2=A0		.has_int_ref =3D true,
-> =C2=A0		.has_ref2 =3D true,
-> +		.has_pow_supply_monitoring =3D false,
+On Thu, May 30, 2024 at 11:07=E2=80=AFPM Rick Edgecombe
+<rick.p.edgecombe@intel.com> wrote:
+>
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
+>
+> When invalidating roots, respect the root type passed.
+>
+> kvm_tdp_mmu_invalidate_roots() is called with different root types. For
+> kvm_mmu_zap_all_fast() it only operates on shared roots. But when tearing
+> down a VM it needs to invalidate all roots. Check the root type in root
+> iterator.
 
-No need to set the 'false' cases...
+This patch and patch 12 are small enough that they can be merged.
 
+> @@ -1135,6 +1135,7 @@ void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *=
+kvm)
+>  void kvm_tdp_mmu_invalidate_roots(struct kvm *kvm,
+>                                   enum kvm_process process_types)
+>  {
+> +       enum kvm_tdp_mmu_root_types root_types =3D kvm_process_to_root_ty=
+pes(kvm, process_types);
 
-- Nuno S=C3=A1
+Maybe pass directly enum kvm_tdp_mmu_root_types?
+
+Looking at patch 12:
+
++ /*
++ * The private page tables doesn't support fast zapping.  The
++ * caller should handle it by other way.
++ */
++ kvm_tdp_mmu_invalidate_roots(kvm, KVM_PROCESS_SHARED);
+
+now that we have separated private-ness and external-ness, it sounds
+much better to write:
+
+/*
+ * External page tables don't support fast zapping, therefore
+ * their mirrors must be invalidated separately by the caller.
+ */
+kvm_tdp_mmu_invalidate_roots(kvm, KVM_DIRECT_ROOTS);
+
+while kvm_mmu_uninit_tdp_mmu() can pass KVM_ANY_ROOTS. It may also be
+worth adding an
+
+if (WARN_ON_ONCE(root_types & KVM_INVALID_ROOTS))
+  root_types &=3D ~KVM_INVALID_ROOTS;
+
+to document the invariants.
+
+Paolo
+
