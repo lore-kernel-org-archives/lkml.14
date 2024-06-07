@@ -1,121 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8437196D99;
-	Fri,  7 Jun 2024 14:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A71B195B2E
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 14:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717771411; cv=none; b=vB9cucA9Op9Y8lY05RN2u76eZ8frkNuH+bDu86YbperwJDoVBvU7E76/u6QVKsF3re+FxBYZtd4/RkP00KrEx4U5jBF5L1mMtIGj5JiMg83Fu4uuKbOcQhkRq2nTbaE+L+9r8HKPyhE3iIvAfmPLqC8YrC8Hlb93ZOts2yDnazw=
+	t=1717771472; cv=none; b=UsNON2uP6zro3UMCq7BWU5k+l2YLVoL1jjDlw1HJ7slgfRXTTIwAtd7jL0C1iKjufUIyiuR0+n+qbyLOnGLK0vBt51JEEiak8ao3dx+bz8GVnoggLYMgliP5GCPfeMise4SFGtUkMPSbPmjaVjwrQWOkUr/DCuI2xqhAB8jhucU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717771411; c=relaxed/simple;
-	bh=Aghj0cHV7oDMUlR2GlJobLXB2IWw7s4ne4SMNdsCqFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sTc4YsMu4fP4KLf8bjxMaBixmvAZG0ESe6g265jygPSo5C1e5lE/9yTLCHYCXctnLclAwKfKJ1WzLK82g0EL+XYROrZbaHu9YsaKCO2BlTqZZof0rPbyi+iF9XIwei4581z28NBZL44wSvHuFtJ6A4Aayy5NZyXZe/q3Lfecg/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5MYrUXi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717771472; c=relaxed/simple;
+	bh=trC8zjKdFoxKnt0LPm3AF+tVZcf0sdu9cvB6t+sMDf0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gohc5qSaVBJjQ4qB/KWDgQySM+0oIZZAcl2bZ2nYL3CL+RaDbX6H7SRL8ia4bYoIJPSk5+zcugB2RkwD53VTlFe5e6DJgQvHnBbLbc+g502v7UKniZFTgMWUGKGnvraIUJkSxI/kwf8OfrJkEw4iKo7jCkPmrhj7pXBeStVTCxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LvHzy/nM; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5MYrUXi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FACAC2BBFC;
-	Fri,  7 Jun 2024 14:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717771411;
-	bh=Aghj0cHV7oDMUlR2GlJobLXB2IWw7s4ne4SMNdsCqFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c5MYrUXijLFyMMTns3Y1RmhtCMDTfGeUkaXeRVBhmPNyZIg2mApXb6ESEBshsy3Sd
-	 64pVbnn+U/RspCFpmpw/179i6UAbJ/W7L40/aKygtpmMWeNhyZJ8UCz2Kj7mAJIlGN
-	 9ul4dSj+UgSu4VFfox9z9wuN9kkN/MF3D+o96rWPTn1bSPTE28b5TcRJByejP20R5K
-	 fU3hMmdDy8c86v/V6FZ+jh3eZbuWRJ3Qty4qwQ8CR+w8TotpMLldTaThU1yrvx4CB+
-	 zLsbLYshtAo3I6Vl8VxFlL1gda/ALNpMTbBGgS2KGDQaKtiCaLrieqSUgef/ZGXsry
-	 9uq9G9UadYaiw==
-Date: Fri, 7 Jun 2024 07:43:29 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Arnd Bergmann <arnd@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc: vdso: fix building with wrong-endian toolchain
-Message-ID: <20240607144329.GB2483293@thelio-3990X>
-References: <20240607061629.530301-1-arnd@kernel.org>
- <87frtoq5yz.fsf@mail.lhotse>
- <23ddf649-f70b-47b0-90df-af572fd50504@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LvHzy/nM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717771472; x=1749307472;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=trC8zjKdFoxKnt0LPm3AF+tVZcf0sdu9cvB6t+sMDf0=;
+  b=LvHzy/nMwgZdYxKArfZkeh9cNebLMvegaKUTGvodKckb6S+lC6+LEanX
+   d94/7aF85POeqld1sqENZhDWANq/27TsA03VnXEuAzUvaJyHX5zqVm3Gx
+   0MTeviXz4gPgxooYGIa1cFlyLh0bDiH6LyByU808uswfQUN87ZEYkWrRa
+   wRDwBHs2BrR7PkrEO7gVpBLQyU5FNmk6pFo2vohV358jarUWNGurzQYOt
+   PbWlOzMINQud5IFtGvURfkxqMq0ePlfHEYureVm1D8fHmNKT69OlT1SQr
+   cRz63pJDMG87TkmnKKxPHKaK6QR9zYS1vGgd4Ije5rmvTxu1+GRE9Haov
+   A==;
+X-CSE-ConnectionGUID: w8cBAxwMRGm1CIkqpSTfOQ==
+X-CSE-MsgGUID: 5Fc+uSdvSbKnJqi8xO4XEA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="18285784"
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="18285784"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 07:44:31 -0700
+X-CSE-ConnectionGUID: McnHDPOqQXu8ZXa06yJZCA==
+X-CSE-MsgGUID: Xi0V/LR6S9y0ihvmx1VdTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="38277942"
+Received: from cpetruta-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.72])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 07:44:29 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Javier Martinez Canillas <javierm@redhat.com>,
+ dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org, airlied@gmail.com, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] drm: have config DRM_WERROR depend on !WERROR
+In-Reply-To: <87tti5j5d2.fsf@minerva.mail-host-address-is-not-set>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240516083343.1375687-1-jani.nikula@intel.com>
+ <87tti5j5d2.fsf@minerva.mail-host-address-is-not-set>
+Date: Fri, 07 Jun 2024 17:44:26 +0300
+Message-ID: <87le3glsmt.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23ddf649-f70b-47b0-90df-af572fd50504@app.fastmail.com>
+Content-Type: text/plain
 
-On Fri, Jun 07, 2024 at 04:11:25PM +0200, Arnd Bergmann wrote:
-> This patch seems to work as well for me, and is a little
-> more logical, but it's also more invasive and has a
-> higher regression risk:
+On Fri, 07 Jun 2024, Javier Martinez Canillas <javierm@redhat.com> wrote:
+> Jani Nikula <jani.nikula@intel.com> writes:
+>
+> Hello Jani,
+>
+>> If WERROR is already enabled, there's no point in enabling DRM_WERROR or
+>> asking users about it.
+>>
+>> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+>> Closes: https://lore.kernel.org/r/CAHk-=whxT8D_0j=bjtrvj-O=VEOjn6GW8GK4j2V+BiDUntZKAQ@mail.gmail.com
+>> Fixes: f89632a9e5fa ("drm: Add CONFIG_DRM_WERROR")
+>> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+>> ---
+>
+> The change makes sense to me.
+>
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 
-Commit feb843a469fb ("kbuild: add $(CLANG_FLAGS) to KBUILD_CPPFLAGS")
-did something similar for clang for the same reason, so I would say it
-is worth pursuing this direction. It also avoids including KBUILD_CFLAGS
-twice when generating .i files.
+Thanks, pushed to drm-misc-fixes.
 
-Cheers,
-Nathan
+BR,
+Jani.
 
-> 8<---------
-> diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-> index 65261cbe5bfd..9ad4ca318e34 100644
-> --- a/arch/powerpc/Makefile
-> +++ b/arch/powerpc/Makefile
-> @@ -62,14 +62,14 @@ KBUILD_LDFLAGS_MODULE += arch/powerpc/lib/crtsavres.o
->  endif
->  
->  ifdef CONFIG_CPU_LITTLE_ENDIAN
-> -KBUILD_CFLAGS  += -mlittle-endian
-> +KBUILD_CPPFLAGS        += -mlittle-endian
->  KBUILD_LDFLAGS += -EL
->  LDEMULATION    := lppc
->  GNUTARGET      := powerpcle
->  MULTIPLEWORD   := -mno-multiple
->  KBUILD_CFLAGS_MODULE += $(call cc-option,-mno-save-toc-indirect)
->  else
-> -KBUILD_CFLAGS += $(call cc-option,-mbig-endian)
-> +KBUILD_CPPFLAGS += $(call cc-option,-mbig-endian)
->  KBUILD_LDFLAGS += -EB
->  LDEMULATION    := ppc
->  GNUTARGET      := powerpc
-> @@ -95,7 +95,7 @@ aflags-$(CONFIG_CPU_BIG_ENDIAN)               += $(call cc-option,-mbig-endian)
->  aflags-$(CONFIG_CPU_LITTLE_ENDIAN)     += -mlittle-endian
->  
->  ifeq ($(HAS_BIARCH),y)
-> -KBUILD_CFLAGS  += -m$(BITS)
-> +KBUILD_CPPFLAGS        += -m$(BITS)
->  KBUILD_AFLAGS  += -m$(BITS)
->  KBUILD_LDFLAGS += -m elf$(BITS)$(LDEMULATION)
->  endif
-> @@ -176,7 +176,6 @@ KBUILD_CPPFLAGS     += -I $(srctree)/arch/powerpc $(asinstr)
->  KBUILD_AFLAGS  += $(AFLAGS-y)
->  KBUILD_CFLAGS  += $(call cc-option,-msoft-float)
->  KBUILD_CFLAGS  += $(CFLAGS-y)
-> -CPP            = $(CC) -E $(KBUILD_CFLAGS)
->  
->  CHECKFLAGS     += -m$(BITS) -D__powerpc__ -D__powerpc$(BITS)__
->  ifdef CONFIG_CPU_BIG_ENDIAN
-> diff --git a/arch/powerpc/kernel/vdso/Makefile b/arch/powerpc/kernel/vdso/Makefile
-> index 1b93655c2857..3516e71926e5 100644
-> --- a/arch/powerpc/kernel/vdso/Makefile
-> +++ b/arch/powerpc/kernel/vdso/Makefile
-> @@ -59,7 +59,7 @@ ldflags-$(CONFIG_LD_IS_LLD) += $(call cc-option,--ld-path=$(LD),-fuse-ld=lld)
->  ldflags-$(CONFIG_LD_ORPHAN_WARN) += -Wl,--orphan-handling=$(CONFIG_LD_ORPHAN_WARN_LEVEL)
->  
->  # Filter flags that clang will warn are unused for linking
-> -ldflags-y += $(filter-out $(CC_AUTO_VAR_INIT_ZERO_ENABLER) $(CC_FLAGS_FTRACE) -Wa$(comma)%, $(KBUILD_CFLAGS))
-> +ldflags-y += $(filter-out $(CC_AUTO_VAR_INIT_ZERO_ENABLER) $(CC_FLAGS_FTRACE) -Wa$(comma)%, $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
->  
->  CC32FLAGS := -m32
->  LD32FLAGS := -Wl,-soname=linux-vdso32.so.1
-> --------->8
-> 
->      Arnd
+-- 
+Jani Nikula, Intel
