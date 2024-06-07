@@ -1,142 +1,123 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8A91940B3;
-	Fri,  7 Jun 2024 16:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A0319AA43;
+	Fri,  7 Jun 2024 16:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717777735; cv=none; b=udCkT/Wi9PGY35atV/73k7NW9iIdNsKkGvof4g0VR5tvNLlV+rF5E4LG39Elo5C7KaApz11+3q+zWUH0xkBiE3KtbFwysxvVayBSK6EDfriNLufenXA7/PJqlKcqVmDFr0/zQJV1b5NXeKtQfuf2jH/qI1ujeUPpqNHFlmKo4O0=
+	t=1717777736; cv=none; b=VVUbpr95kCMTU+js6Ig4/HsNMo+TscWV1uAsmxWEII850ONWweB+GN46ANrnb0NNnEq2A+Jm4mFej11dUKOSqQ9N/wREscj69CdUGmEcFZkk4sBYTfU5/gVpUo6Hec0M5UGsfxVyMMDngs8WZFwtG34DS13wSj7Aa1JqlZSPp9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717777735; c=relaxed/simple;
-	bh=Gc4zNOk6+UfRPRlZrLAL0OpvwuPrtxfQIaAHFXJ/VWU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=MFOHkpdKUHxaH/pTcg5tR71aPntMhzNpiu3B4MSPod3WOnaLYQpYT6McGCI4ovpRn3Y23xd/ug271Off7n8IPwhDS9zLsmL++HckTId7ygGjR+qZQ1hngd0gz/6y8uoFQYMc9Nw84dmQwTZc0nm2lHUtN6ZUJ88OG0DRFfGrFMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TVnZWiaK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717777736; c=relaxed/simple;
+	bh=e4xsNXR4aHH3g6X+txeZJmzYbuKxtsIVX51XJHns80w=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eOJoW/3FRGgj4kTQO7w845rSc9XlXz0vZJaEV0mghWQqVvQ/MshbyFy7evkEsa+lvLXxKpzNgG4rOoS2RCTUkWXCDv+erAgMX7SPqdOSzzjsrkibYT5fR71y3NPrPYZo2UnM4zLp5jZrxundXs1OTFBgB5HSmiLtiCZtBFD8wrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wCji74A8; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TVnZWiaK"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 457EhKXr022870;
-	Fri, 7 Jun 2024 16:28:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=sF+XxA39YfAOxQ677VoFK+
-	BQ1AN34SAao5viH8UaNeA=; b=TVnZWiaKm4EP2VHaI969Ji006/BAjNDX+rCzo7
-	wlHf8LZDRnIvW3mbWH7xCBia8G75z5CyGAXIOARLTShLWUeg+fLxjX9Q5Os1JXxu
-	fEgGGUtN1B1G0/tkyngJggBiIoM1Q4PXurm4wZl4dLnBCYirzLlgzO/dCE3tsMFp
-	LMxRgizPunWoKXNc1PgSOMmbld2SEhM0kfLj5l7OnzWa3MUCCd0iT4q+f7XFEXDr
-	EFWpza0coFZKtR32Sc4MxsU+tiklr0F40BtB99Vr8pXcMcaxjJjhcpg7RxPcQ88G
-	gAWWKS1cYTXrpfaLn0qrBcQZqZ0kIp3PaiNJmgK1jvfwcVqg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ym0sf0ygd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Jun 2024 16:28:47 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 457GSjQr011825
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 7 Jun 2024 16:28:45 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 7 Jun 2024
- 09:28:44 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Fri, 7 Jun 2024 09:28:43 -0700
-Subject: [PATCH] i2c: add missing MODULE_DESCRIPTION() macros
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wCji74A8"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 457GRuGB076001;
+	Fri, 7 Jun 2024 11:27:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717777676;
+	bh=TQlEO9JyMzOGTNPEo9rGMr5dxmRC3ta0Lj34G6EI/Xo=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=wCji74A8GW1R1nRJF86gYl2IQVN6ttxh/5RC3WcbBJvB2G+C/YmkpNIk+oJByYghc
+	 d5nv2QXu++juG8dgR48Tn4cnh6/k/aFCE95gXrVkzsmujPP28/NRJ5pH7hOoMbsMD0
+	 OCFw0IGtGEnbDw+czLtUSQCaYMhb9WTsuMWXMAmg=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 457GRuD3096174
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 7 Jun 2024 11:27:56 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
+ Jun 2024 11:27:55 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 7 Jun 2024 11:27:56 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 457GRt1k068019;
+	Fri, 7 Jun 2024 11:27:56 -0500
+From: Judith Mendez <jm@ti.com>
+To: Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        William Breathitt Gray <william.gray@linaro.org>
+CC: David Lechner <david@lechnology.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Nishanth Menon
+	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH v3 4/8] arm64: dts: ti: k3-am62a-main: Add eQEP nodes
+Date: Fri, 7 Jun 2024 11:27:51 -0500
+Message-ID: <20240607162755.366144-5-jm@ti.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240607162755.366144-1-jm@ti.com>
+References: <20240607162755.366144-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240607-md-drivers-i2c-busses-v1-1-0340f4590199@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIADs1Y2YC/x3M0QrCMAyF4VcZuTZQy6jgq4gXbZq6gKuSuDEYe
- 3ejnKvv4vw7GKuwwXXYQXkVk1d3nE8D0JT7g1GqG2KIY0jhgnPFqrKyGkokLIsZG1JLvkaUUgP
- /vpWbbP/u7e4u2RiL5k7Tr/aUvmw4Z/uwwnF8ARs2y5GGAAAA
-To: Jean Delvare <jdelvare@suse.com>, Rudolf Marek <r.marek@assembler.cz>,
-        Andi Shyti <andi.shyti@kernel.org>
-CC: <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fLLpjQg9wI6ArHKbhWG0KCUkorCEaEQt
-X-Proofpoint-ORIG-GUID: fLLpjQg9wI6ArHKbhWG0KCUkorCEaEQt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-07_10,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 clxscore=1011 bulkscore=0 phishscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406070122
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ccgx-ucsi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ali1563.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-pxa.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-qup.o
+Add eQEP device tree nodes 0-2 for AM62A7 SoC.
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
-
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Judith Mendez <jm@ti.com>
 ---
- drivers/i2c/busses/i2c-ali1563.c   | 1 +
- drivers/i2c/busses/i2c-ccgx-ucsi.c | 1 +
- drivers/i2c/busses/i2c-pxa.c       | 1 +
- drivers/i2c/busses/i2c-qup.c       | 1 +
- 4 files changed, 4 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-ali1563.c b/drivers/i2c/busses/i2c-ali1563.c
-index 63897a89bb35..ee4fd66dedb0 100644
---- a/drivers/i2c/busses/i2c-ali1563.c
-+++ b/drivers/i2c/busses/i2c-ali1563.c
-@@ -438,4 +438,5 @@ static struct pci_driver ali1563_pci_driver = {
- 
- module_pci_driver(ali1563_pci_driver);
- 
-+MODULE_DESCRIPTION("i2c driver for the ALi 1563 Southbridge");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/i2c/busses/i2c-ccgx-ucsi.c b/drivers/i2c/busses/i2c-ccgx-ucsi.c
-index 092dc92dea9f..d97233862a6c 100644
---- a/drivers/i2c/busses/i2c-ccgx-ucsi.c
-+++ b/drivers/i2c/busses/i2c-ccgx-ucsi.c
-@@ -27,4 +27,5 @@ struct i2c_client *i2c_new_ccgx_ucsi(struct i2c_adapter *adapter, int irq,
- }
- EXPORT_SYMBOL_GPL(i2c_new_ccgx_ucsi);
- 
-+MODULE_DESCRIPTION("Instantiate UCSI device for Cypress CCGx Type-C controller");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index f495560bd99c..031175113dd4 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -1593,6 +1593,7 @@ static void __exit i2c_adap_pxa_exit(void)
- 	platform_driver_unregister(&i2c_pxa_driver);
- }
- 
-+MODULE_DESCRIPTION("Intel PXA2XX I2C adapter");
- MODULE_LICENSE("GPL");
- 
- subsys_initcall(i2c_adap_pxa_init);
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index c9b43a3c4bd3..4a2c745751a2 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -1985,5 +1985,6 @@ static struct platform_driver qup_i2c_driver = {
- 
- module_platform_driver(qup_i2c_driver);
- 
-+MODULE_DESCRIPTION("Qualcomm QUP based I2C controller");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:i2c_qup");
-
+Changes since v2:
+- No change
 ---
-base-commit: 19ca0d8a433ff37018f9429f7e7739e9f3d3d2b4
-change-id: 20240607-md-drivers-i2c-busses-cf6f6ffcc66f
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi | 27 +++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+index bf9c2d9c6439a..6c32c0c0d8dcc 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+@@ -909,6 +909,33 @@ ecap2: pwm@23120000 {
+ 		status = "disabled";
+ 	};
+ 
++	eqep0: counter@23200000 {
++		compatible = "ti,am62-eqep";
++		reg = <0x00 0x23200000 0x00 0x100>;
++		power-domains = <&k3_pds 59 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 59 0>;
++		interrupts = <GIC_SPI 116 IRQ_TYPE_EDGE_RISING>;
++		status = "disabled";
++	};
++
++	eqep1: counter@23210000 {
++		compatible = "ti,am62-eqep";
++		reg = <0x00 0x23210000 0x00 0x100>;
++		power-domains = <&k3_pds 60 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 60 0>;
++		interrupts = <GIC_SPI 117 IRQ_TYPE_EDGE_RISING>;
++		status = "disabled";
++	};
++
++	eqep2: counter@23220000 {
++		compatible = "ti,am62-eqep";
++		reg = <0x00 0x23220000 0x00 0x100>;
++		power-domains = <&k3_pds 62 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 62 0>;
++		interrupts = <GIC_SPI 118 IRQ_TYPE_EDGE_RISING>;
++		status = "disabled";
++	};
++
+ 	mcasp0: audio-controller@2b00000 {
+ 		compatible = "ti,am33xx-mcasp-audio";
+ 		reg = <0x00 0x02b00000 0x00 0x2000>,
+-- 
+2.45.1
 
