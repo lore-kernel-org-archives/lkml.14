@@ -1,86 +1,140 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CED413C67B;
-	Fri,  7 Jun 2024 12:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B5B187323;
+	Fri,  7 Jun 2024 12:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717762350; cv=none; b=DFsCCMxmkoIYRddY7pt/72VKZHsnZaGiUK5A/3G+SFlGOrtalgwC+deAcnuQemJzzlq5+JTJkzu2vcvoS8bUdUMnzSvFQTYuwdFzcYJ/x2/wYDPcURXdFDEtaUQSZpFHnn0haZe7seAOo4N7nrovbaz0dDbB4Lc4Qnohs+szZDw=
+	t=1717762388; cv=none; b=aJ+3EZpd2zJkC/Ct7oBHnozauqDn1/ZQsXb5WGc2IH/cMoUTAMpwOzcmJJdhmh4LlY6NUVB2bzAmvuATpkkDOxx+RilR2mHRxlvfqS+9XTX89Eaa5lYkTarNfZedtycKsELM1EVgq2+yW4cUY08C0dKGMdQRE9+pkXAyy2YoUN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717762350; c=relaxed/simple;
-	bh=EHxOxCSAM3lCsXcc/Z3JLZF5VT0uknERV+f3sR2kLK8=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=Ql8T31B5cS3CpENiuJpr64ngoXxEU3R3oFTONWL/H5sBfJ+wpu47pGxMi8n4ytQA/2+W5+heYRCiXNcfYnCh+IG6zHwY063J3cPc91O+Lwdj1Mg4GL5hO8BawG/LqkOv4lTfamSNWcWxRcPqwcOqN5jjlv6uugqY3xYDpeLYqLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=990276a841=ms@dev.tdt.de>)
-	id 1sFYSI-005Pn8-BI; Fri, 07 Jun 2024 14:12:26 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sFYSH-007ZNj-PA; Fri, 07 Jun 2024 14:12:25 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id 6FD0D240053;
-	Fri,  7 Jun 2024 14:12:25 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id 001BC240050;
-	Fri,  7 Jun 2024 14:12:24 +0200 (CEST)
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-	by mail.dev.tdt.de (Postfix) with ESMTP id B19EA3829D;
-	Fri,  7 Jun 2024 14:12:24 +0200 (CEST)
+	s=arc-20240116; t=1717762388; c=relaxed/simple;
+	bh=gF5n+zRaU3uzxOxtiMM2LdGmFoHvX4eM2/oevn8fkbA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JOtM1ay82FwtcASJ4nQQZciL5bacYED16mbGLnNElyO2A4VRMR80menS0VC3zssUKiOV7nLCPFMIUxDL0AgNT9hcKsI4BhGMxNijolH7SVIxsQztI3J4XnRakZtYIi9Pi2epc1DL9bMRancWMyYzlsonRm6cwCjrEBF+vRkiDfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AwrRI8y2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AwrRI8y2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3F4C5C2BBFC;
+	Fri,  7 Jun 2024 12:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717762388;
+	bh=gF5n+zRaU3uzxOxtiMM2LdGmFoHvX4eM2/oevn8fkbA=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=AwrRI8y2rLlk70qtMvL0YNffuEVQsM70xtvUu7fwILFhRUaEHT3kPyhRwLqGJWTQq
+	 DLc86kxEfQBaTwcc+s9rcshNa3OP3MawgKl1Wbjenh2zFrFqg5Acmyem89amPieSbK
+	 eCBlgIhbuDvyRx4PSLZ9Bj4ReavD/jua4urMRie+u2xx6CttVoOO1OLnwhBXGlE522
+	 riH2NwzxRJY9kaVXP2nUAEz6meIBw6XNqUfTY84DMZPHiSzgTcrasxsa7XR+LFu8nj
+	 KiBzvfKAUBVJ/q0tGmE6BbBiifehmgK5tiDBjJTQNJxMf3Mcz0M1DED/WBTg6ycDD9
+	 rqhkTw3rSitEw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28096C27C55;
+	Fri,  7 Jun 2024 12:13:08 +0000 (UTC)
+From: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>
+Subject: [PATCH v8 0/2] Add support for Loongson1 APB DMA
+Date: Fri, 07 Jun 2024 20:12:22 +0800
+Message-Id: <20240607-loongson1-dma-v8-0-f9992d257250@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Date: Fri, 07 Jun 2024 14:12:24 +0200
-From: Martin Schiller <ms@dev.tdt.de>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
- f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 04/13] net: dsa: lantiq_gswip: Don't manually
- call gswip_port_enable()
-Organization: TDT AG
-In-Reply-To: <20240607111112.tuilkvwektzohvrq@skbuf>
-References: <20240606085234.565551-1-ms@dev.tdt.de>
- <20240606085234.565551-5-ms@dev.tdt.de>
- <20240607111112.tuilkvwektzohvrq@skbuf>
-Message-ID: <7a05e5c0432f2822b4ef2756b23d3f76@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.3.17
-X-purgate-type: clean
-X-purgate-ID: 151534::1717762346-34DF7522-BF04625D/0/0
-X-purgate: clean
+X-B4-Tracking: v=1; b=H4sIACb5YmYC/12OzY7CIBRGX8WwntvwIxRczXsYFxRuWzK2TEAbt
+ em7D7iYNC6/xTnfWUnGFDCT02ElCZeQQ5zL0F8H4kY7DwjBl0045YIxTuEa4zzkODPwkwWmhO1
+ RtlR3hhTmN2EfHm/f+VJ2n+IEtzGh/bdQwzXjzEjRSH5UVAODHxzu5ax51cvvYbLh2rg4VeMY8
+ i2m5ztwUdVbLUcqmPpoWRRQMNQjd8K58rIT1Zal3dHcfNJtoUXrO6lLk0e5p7dt+wNv2zmPKgE
+ AAA==
+To: Keguang Zhang <keguang.zhang@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717762386; l=2538;
+ i=keguang.zhang@gmail.com; s=20231129; h=from:subject:message-id;
+ bh=gF5n+zRaU3uzxOxtiMM2LdGmFoHvX4eM2/oevn8fkbA=;
+ b=jhRwfB+vpFFBOmYUzSKsBu7OoBFlD0dWV9a6WDqY9cVvwsGut+NtK4HH/lnWannivrsr60YEF
+ EEilt2pYzBFBsDacigUIn5g+pbjy1zwbxhOtweHvvZLG6VWJcV4NRUu
+X-Developer-Key: i=keguang.zhang@gmail.com; a=ed25519;
+ pk=FMKGj/JgKll/MgClpNZ3frIIogsh5e5r8CeW2mr+WLs=
+X-Endpoint-Received: by B4 Relay for keguang.zhang@gmail.com/20231129 with
+ auth_id=102
+X-Original-From: Keguang Zhang <keguang.zhang@gmail.com>
+Reply-To: keguang.zhang@gmail.com
 
-On 2024-06-07 13:11, Vladimir Oltean wrote:
-> On Thu, Jun 06, 2024 at 10:52:25AM +0200, Martin Schiller wrote:
->> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> 
->> We don't need to manually call gswip_port_enable() from within
->> gswip_setup() for the CPU port. DSA does this automatically for us.
->> 
->> Signed-off-by: Martin Blumenstingl 
->> <martin.blumenstingl@googlemail.com>
->> ---
-> 
-> Not to mention the first thing in gswip_port_enable(), which is:
-> 
-> 	if (!dsa_is_user_port(ds, port))
-> 		return 0;
-> 
-> So the call is dead code anyway.
+Add the driver and dt-binding document for Loongson1 APB DMA.
 
-As you will have noticed, this code will be brought back to life in the 
-next
-patch.
+Changes in v8:
+- Change 'interrupts' property to an items list
+- Link to v7: https://lore.kernel.org/r/20240329-loongson1-dma-v7-0-37db58608de5@gmail.com
+
+Changes in v7:
+- Change the comptible to 'loongson,ls1*-apbdma' (suggested by Huacai Chen)
+- Update the title and description part accordingly
+- Rename the file to loongson,ls1b-apbdma.yaml
+- Add a compatible string for LS1A
+- Delete minItems of 'interrupts'
+- Change patterns of 'interrupt-names' to const
+- Rename the file to loongson1-apb-dma.c to keep the consistency
+- Update Kconfig and Makefile accordingly
+- Link to v6: https://lore.kernel.org/r/20240316-loongson1-dma-v6-0-90de2c3cc928@gmail.com
+
+Changes in v6:
+- Change the compatible to the fallback
+- Implement .device_prep_dma_cyclic for Loongson1 sound driver,
+- as well as .device_pause and .device_resume.
+- Set the limitation LS1X_DMA_MAX_DESC and put all descriptors
+- into one page to save memory
+- Move dma_pool_zalloc() into ls1x_dma_alloc_desc()
+- Drop dma_slave_config structure
+- Use .remove_new instead of .remove
+- Use KBUILD_MODNAME for the driver name
+- Improve the debug information
+- Some minor fixes
+
+Changes in v5:
+- Add the dt-binding document
+- Add DT support
+- Use DT information instead of platform data
+- Use chan_id of struct dma_chan instead of own id
+- Use of_dma_xlate_by_chan_id() instead of ls1x_dma_filter()
+- Update the author information to my official name
+
+Changes in v4:
+- Use dma_slave_map to find the proper channel.
+- Explicitly call devm_request_irq() and tasklet_kill().
+- Fix namespace issue.
+- Some minor fixes and cleanups.
+
+Changes in v3:
+- Rename ls1x_dma_filter_fn to ls1x_dma_filter.
+
+Changes in v2:
+- Change the config from 'DMA_LOONGSON1' to 'LOONGSON1_DMA',
+- and rearrange it in alphabetical order in Kconfig and Makefile.
+- Fix comment style.
+
+---
+Keguang Zhang (2):
+      dt-bindings: dma: Add Loongson-1 APB DMA
+      dmaengine: Loongson1: Add Loongson-1 APB DMA driver
+
+ .../bindings/dma/loongson,ls1b-apbdma.yaml         |  67 +++
+ drivers/dma/Kconfig                                |   9 +
+ drivers/dma/Makefile                               |   1 +
+ drivers/dma/loongson1-apb-dma.c                    | 665 +++++++++++++++++++++
+ 4 files changed, 742 insertions(+)
+---
+base-commit: d35b2284e966c0bef3e2182a5c5ea02177dd32e4
+change-id: 20231120-loongson1-dma-163afe5708b9
+
+Best regards,
+-- 
+Keguang Zhang <keguang.zhang@gmail.com>
+
+
