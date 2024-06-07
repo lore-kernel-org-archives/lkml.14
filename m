@@ -1,88 +1,120 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAE8186E26;
-	Fri,  7 Jun 2024 10:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5321E78C96
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 10:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717757928; cv=none; b=k5MFWZFiDgf51ezNUTPW5TwTUfCgjZL6w16YARQQGY16XUkfMwFOJIKuZWYojopxi+09q/hZ1x8jyKwLlN7C+Vq41CZx4tqF+Y72oVBABy3TO7dxBPBS9bCgwwFea9CHP057oj9QAooLWvF1HCRSqTZWBDxsHy+8ajvep0bjBcw=
+	t=1717757982; cv=none; b=ChJor2ZZ85sif5NxQF8iazYtvikWsLZNm1m/uStKolT3dUtDVLVizkIUdVeVXdTSa+xT0Q4LxiiQoN5N5m7VuOK068voUV78CD8FyDWNiimPvJ1heeC4h0fpAK/INHEj8B1Qyd/agHBkrmDL5U99FAnJESxCXj/W3EMCpMwHzoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717757928; c=relaxed/simple;
-	bh=gj9rHGiqEtVhgMyKf1T0aWkSra6juadP60PhESLNEog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Coovq8uTJOM+wj5yb3A8P1kfRzSEjOtt96yRcOYOqWnnVVQoDpN40w0WTwely4/x8w63epX9cUkcvuADOSU9dya656r/R94Irs0xN4SMDVHYDOv9kByfiGUGNeNxMK8gpdjaAjgq7m838VnOOdgU5/y/ShHb6lbJGGFf2IWEIzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1sFXIW-006npX-0e;
-	Fri, 07 Jun 2024 18:58:17 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 07 Jun 2024 18:58:18 +0800
-Date: Fri, 7 Jun 2024 18:58:18 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	Andreas.Fuchs@infineon.com, James Prestwood <prestwoj@gmail.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-crypto@vger.kernel.org, Stefan Berger <stefanb@linux.ibm.com>,
-	Lennart Poettering <lennart@poettering.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	open list <linux-kernel@vger.kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v7 4/5] keys: asymmetric: Add tpm2_key_rsa
-Message-ID: <ZmLnyp9j_QoPgj7W@gondor.apana.org.au>
-References: <20240528210823.28798-1-jarkko@kernel.org>
- <20240528210823.28798-5-jarkko@kernel.org>
+	s=arc-20240116; t=1717757982; c=relaxed/simple;
+	bh=13CC63O6WzMUiQHKNHxpWvs9vLgl5yeaMrCQ+TDxxWo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pVzEKLQTfkvDsS9k2qqyW3X2nmgxfbDKGPDvKojzu1xp9kBPPQpvcq8Wvv/pyRt/kLxoQOlkhoJTtq5CerS2uzhXTRBv/LGST51VbClbJ23pDkY+UBj5RkUL8poLtCRxjgv7vDBKw/+GZXeKYAHLhTgRutf5oQlvEFeFTWXm1zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FRhbUvIH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FRhbUvIH"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 457At7l7004248;
+	Fri, 7 Jun 2024 10:59:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=QB4oYmXLiJGYMvG/R01y9F
+	7Lq08+rcE5hcMOxo0hir8=; b=FRhbUvIH6XuIWd01jNBMjidb36dWJeha3P8znj
+	28FAf/r+LBOQCc8ZqFx+ymV79MS7SsA60X9h8YkAM/jlawMepqlRIPGz37rvthxU
+	hfS/cf7ZOP7fCG+qtXzrMVkno1PqRnA4nrnVHxCi/lsPysDjp2sOVA73Zvd3r7a2
+	pV9i41hA+QkbtfP5T8R2x5rtUB4LrAVyq+JVb+cgnNMC1zqzV/DBKw1Trdwnk9ba
+	iPz9zjdzxbBYd8bI7GPAbZFWPxkmLDV0gY7YNymTUqadXbukVmsf4DlU7ufJuffp
+	ZUNvt28xKv9Tf+HE2GPrsoNiNSmxVJZ5oa60OJftkW0TkS0Q==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjxxav7a8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 10:59:25 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 457AxOxj030932
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 7 Jun 2024 10:59:24 GMT
+Received: from hu-faiyazm-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 7 Jun 2024 03:59:21 -0700
+From: Faiyaz Mohammed <quic_faiyazm@quicinc.com>
+To: <benjamin.bara@skidata.com>, <dmitry.osipenko@collabora.com>,
+        <lee@kernel.org>, <daniel.lezcano@linaro.org>, <ldmldm05@gmail.com>,
+        <j.granados@samsung.com>, <quic_faiyazm@quicinc.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] kernel/reboot: enhance dmesg logging for system restart
+Date: Fri, 7 Jun 2024 16:29:06 +0530
+Message-ID: <20240607105906.4192924-1-quic_faiyazm@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528210823.28798-5-jarkko@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: QhTUjKT7tjTxqwjZZlo6vX-mwhMIPqVl
+X-Proofpoint-GUID: QhTUjKT7tjTxqwjZZlo6vX-mwhMIPqVl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-07_05,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=866 adultscore=0
+ priorityscore=1501 spamscore=0 malwarescore=0 mlxscore=0 bulkscore=0
+ phishscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1011
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406070079
 
-On Wed, May 29, 2024 at 12:08:09AM +0300, Jarkko Sakkinen wrote:
->
-> +/*
-> + * Sign operation is an encryption using the TPM's private key. With RSA the
-> + * only difference between encryption and decryption is where the padding goes.
-> + * Since own padding can be used, TPM2_RSA_Decrypt can be repurposed to do
-> + * encryption.
-> + */
-> +static int tpm2_key_rsa_sign(struct tpm_chip *chip, struct tpm2_key *key,
-> +			     struct kernel_pkey_params *params,
-> +			     const void *in, void *out)
-> +{
-> +	const off_t o = key->priv_len + 2 + sizeof(*key->desc);
-> +	const struct tpm2_rsa_parms *p =
-> +		(const struct tpm2_rsa_parms *)&key->data[o];
-> +	const u16 mod_size = be16_to_cpu(p->modulus_size);
-> +	const struct rsa_asn1_template *asn1;
-> +	u32 in_len = params->in_len;
-> +	void *asn1_wrapped = NULL;
-> +	u8 *padded;
-> +	int ret;
-> +
-> +	if (strcmp(params->encoding, "pkcs1") != 0) {
-> +		ret = -ENOPKG;
-> +		goto err;
-> +	}
-> +
-> +	if (params->hash_algo) {
-> +		asn1 = rsa_lookup_asn1(params->hash_algo);
+It is useful to add the PID and Comm information along with command info.
 
-Could you please explain why this can't be done through pkcs1pad
-instead of going to raw RSA?
+Currently, when system reboot kernel logs don not print PID and Comm:
 
-Thanks,
+reboot: Restarting system with command 'reboot,scheduled_reboot'
+reboot: Restarting system with command 'RescueParty'
+reboot: Restarting system with command 'bootloader'
+reboot: Restarting system with command 'recovery'
+reboot: Restarting system with command 'userrequested,recovery’
+
+For Example after adding PID and Comm:
+
+reboot: PID: 1 Comm: init Restarting system with command 'shell'
+reboot: PID: 1 Comm: init Restarting system with command 'bootloader'
+
+Signed-off-by: Faiyaz Mohammed <quic_faiyazm@quicinc.com>
+---
+ kernel/reboot.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index f05dbde2c93f..91a4a1428eb9 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -274,14 +274,17 @@ static void do_kernel_restart_prepare(void)
+  */
+ void kernel_restart(char *cmd)
+ {
++	char comm[sizeof(current->comm)];
++
++	get_task_comm(comm, current);
+ 	kernel_restart_prepare(cmd);
+ 	do_kernel_restart_prepare();
+ 	migrate_to_reboot_cpu();
+ 	syscore_shutdown();
+ 	if (!cmd)
+-		pr_emerg("Restarting system\n");
++		pr_emerg("PID: %d Comm: %s Restarting system\n", current->pid, comm);
+ 	else
+-		pr_emerg("Restarting system with command '%s'\n", cmd);
++		pr_emerg("PID: %d Comm: %s Restarting system with command '%s'\n", current->pid, comm, cmd);
+ 	kmsg_dump(KMSG_DUMP_SHUTDOWN);
+ 	machine_restart(cmd);
+ }
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.25.1
+
