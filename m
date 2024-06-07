@@ -1,37 +1,37 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C84E1C696
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C29613E3E3
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717734415; cv=none; b=IECFP95j0FTR0+B4UX6qRifTNna8V2kxWBcIUe3Z53TkHEn3Y+Ks1J5bv9PABv2Cd0Vj0qIKEG5jcoSOjR/xusVH/5Ak46FIZ+K6ToGn2fsD0sOYrKlH0W1hX0qTa7DsrBXh/+XoFC2dYXNqRdoOAdLRP7H1lUTXlUWhUMG5DBc=
+	t=1717734415; cv=none; b=R3XJ8WMHuKfFt0oXZdpuXWikni64XikccCA3ay+8C5RfoXH9chkWZEhgaCf4gJilKTYJeHatRiCtncqm9ujUVBxzHz65Wc8vHrB5nOokRCLhnlaj9x0fxDsBBYOYH6P7cGIGznHieEfz6UFMiPUxTLSAnp0hUfwmJMy1MG4fpNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717734415; c=relaxed/simple;
-	bh=iAEPiS3GJJvi1tloxr0JfZFhHNa6BbDrKk/62wDMx7g=;
+	bh=TqR0Drlt5bHLRRFJYfCIYnEYr7vATcOxetFpCZp2R/Q=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IftsEnHNnYr0YQSMozfuXifnoeZLNMVbVb8OdeY3EpLYFAeLX+oTu8yXDTSTxz0y49f5/aIcuuPBVneNN4QzSiTfR1EfjI+H0/myWY8G5uIInUqQRO1FYzSWr3Gd30YfpqYufirBCCcppHjOTax7h26og9djkYGXM7F34CvzdW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+	 MIME-Version:Content-Type; b=tUvE42e/Rl+LdDOk5eyw6xIlEJErpHrnNGg0+4xeN8CIl3PHozXSJk5/ukQIVdz7M9PWToqO+22cSEftRIWXESkVz4hrJOfI5WqzTQgXbvO24LHQ8VR8FKTl5XMQnBvU9cd0pgqwUkkDM7r176u3Oof0EvxgGmV1KhGJ/kMUVus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VwSkB6y2JzPpnS;
-	Fri,  7 Jun 2024 12:23:30 +0800 (CST)
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VwSjS5PxQz1SB5K;
+	Fri,  7 Jun 2024 12:22:52 +0800 (CST)
 Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4644C1400D5;
-	Fri,  7 Jun 2024 12:26:50 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6CDE714041A;
+	Fri,  7 Jun 2024 12:26:51 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
  (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 12:26:33 +0800
+ 2024 12:26:40 +0800
 From: Zhihao Cheng <chengzhihao1@huawei.com>
 To: <richard@nod.at>, <david.oberhollenzer@sigma-star.at>,
 	<miquel.raynal@bootlin.com>, <yi.zhang@huawei.com>, <xiangyang3@huawei.com>,
 	<huangxiaojia2@huawei.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH mtd-utils 010/110] mkfs.ubifs: Close libubi in error handling paths
-Date: Fri, 7 Jun 2024 12:24:35 +0800
-Message-ID: <20240607042615.2069840-11-chengzhihao1@huawei.com>
+Subject: [RFC PATCH mtd-utils 019/110] ubifs-utils: Add compiler attributes implementations
+Date: Fri, 7 Jun 2024 12:24:44 +0800
+Message-ID: <20240607042615.2069840-20-chengzhihao1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240607042615.2069840-1-chengzhihao1@huawei.com>
 References: <20240607042615.2069840-1-chengzhihao1@huawei.com>
@@ -46,105 +46,170 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600013.china.huawei.com (7.193.23.68)
 
-The libubi could be opened in get_options(), don't forget to close it
-in error handling paths in main(). Also close libubi in error handling
-paths in open_ubi(). To implement that, extract libubi_close() into a
-new helper function close_ubi().
-Besides, invoke crypto_cleanup() in error handling paths in main().
+Add compiler attributes implementations, such as __packed, __unused,
+__const, etc., which could be used in linux kernel libs. Besides, change
+some existing attributes into linux kernel style.
 
-Fixes: a48340c335dab ("mkfs.ubifs: use libubi to format UBI volume")
+This is a preparation for replacing implementation of UBIFS utils with
+linux kernel libs.
+
 Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- ubifs-utils/mkfs.ubifs/mkfs.ubifs.c | 38 ++++++++++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 13 deletions(-)
+ ubifs-utils/Makemodule.am                |  1 +
+ ubifs-utils/common/compiler_attributes.h | 79 ++++++++++++++++++++++++++++++++
+ ubifs-utils/common/fscrypt.h             |  6 ++-
+ ubifs-utils/common/sign.c                |  4 +-
+ 4 files changed, 86 insertions(+), 4 deletions(-)
+ create mode 100644 ubifs-utils/common/compiler_attributes.h
 
-diff --git a/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c b/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
-index 25c49967..6a4a4588 100644
---- a/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
-+++ b/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
-@@ -521,11 +521,21 @@ static long long get_bytes(const char *str)
+diff --git a/ubifs-utils/Makemodule.am b/ubifs-utils/Makemodule.am
+index 90cc7005..d58570fe 100644
+--- a/ubifs-utils/Makemodule.am
++++ b/ubifs-utils/Makemodule.am
+@@ -1,4 +1,5 @@
+ common_SOURCES = \
++	ubifs-utils/common/compiler_attributes.h \
+ 	ubifs-utils/common/defs.h \
+ 	ubifs-utils/common/crc16.h \
+ 	ubifs-utils/common/crc16.c \
+diff --git a/ubifs-utils/common/compiler_attributes.h b/ubifs-utils/common/compiler_attributes.h
+new file mode 100644
+index 00000000..bb65d3a9
+--- /dev/null
++++ b/ubifs-utils/common/compiler_attributes.h
+@@ -0,0 +1,79 @@
++#ifndef __COMPILER_ATTRIBUTES_H__
++#define __COMPILER_ATTRIBUTES_H__
++
++#if __has_attribute(__fallthrough__)
++#define fallthrough	__attribute__((__fallthrough__))
++#else
++#define fallthrough     do {} while (0)
++#endif
++
++#define __packed	__attribute__((__packed__))
++#define __unused	__attribute__((__unused__))
++#define __const		__attribute__((__const__))
++#define __must_check    __attribute__((__warn_unused_result__))
++#ifndef __force
++#define __force
++#endif
++
++/*
++ * Optional: only supported since clang >= 14.0
++ *
++ *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#index-error-function-attribute
++ */
++#if __has_attribute(__error__)
++# define __compiletime_error(msg)       __attribute__((__error__(msg)))
++#else
++# define __compiletime_error(msg)
++#endif
++
++#ifndef __compiletime_error
++# define __compiletime_error(message)
++#endif
++
++#ifdef __OPTIMIZE__
++# define __compiletime_assert(condition, msg, prefix, suffix)		\
++	do {								\
++		extern void prefix ## suffix(void) __compiletime_error(msg); \
++		if (!(condition))					\
++			prefix ## suffix();				\
++	} while (0)
++#else
++# define __compiletime_assert(condition, msg, prefix, suffix) do { } while (0)
++#endif
++
++#define _compiletime_assert(condition, msg, prefix, suffix) \
++	__compiletime_assert(condition, msg, prefix, suffix)
++
++/**
++ * compiletime_assert - break build and emit msg if condition is false
++ * @condition: a compile-time constant condition to check
++ * @msg:       a message to emit if condition is false
++ *
++ * In tradition of POSIX assert, this macro will break the build if the
++ * supplied condition is *false*, emitting the supplied error message if the
++ * compiler has support to do so.
++ */
++#define compiletime_assert(condition, msg) \
++	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
++
++/**
++ * BUILD_BUG_ON_MSG - break compile if a condition is true & emit supplied
++ *		      error message.
++ * @condition: the condition which the compiler should know is false.
++ *
++ * See BUILD_BUG_ON for description.
++ */
++#define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
++
++/**
++ * BUILD_BUG_ON - break compile if a condition is true.
++ * @condition: the condition which the compiler should know is false.
++ *
++ * If you have some code which relies on certain constants being equal, or
++ * some other compile-time-evaluated condition, you should use BUILD_BUG_ON to
++ * detect if someone changes it.
++ */
++#define BUILD_BUG_ON(condition) \
++	BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
++
++#endif
+diff --git a/ubifs-utils/common/fscrypt.h b/ubifs-utils/common/fscrypt.h
+index 908a5041..b8a599de 100644
+--- a/ubifs-utils/common/fscrypt.h
++++ b/ubifs-utils/common/fscrypt.h
+@@ -25,6 +25,8 @@
+ #include <openssl/rand.h>
+ #endif
+ #include <assert.h>
++
++#include "compiler_attributes.h"
+ #include "ubifs.h"
+ #include "crypto.h"
  
- 	return bytes;
- }
-+
-+static void close_ubi(void)
-+{
-+	if (ubi) {
-+		libubi_close(ubi);
-+		ubi = NULL;
-+	}
-+}
-+
+@@ -79,7 +81,7 @@ struct fscrypt_context {
+ 	__u8 flags;
+ 	__u8 master_key_descriptor[FS_KEY_DESCRIPTOR_SIZE];
+ 	__u8 nonce[FS_KEY_DERIVATION_NONCE_SIZE];
+-} __attribute__((packed));
++} __packed;
+ 
  /**
-- * open_ubi - open the UBI volume.
-+ * open_ubi - open the libubi.
-  * @node: name of the UBI volume character device to fetch information about
-  *
-- * Returns %0 in case of success and %-1 in case of failure
-+ * This function opens libubi, and initialize device & volume information
-+ * according to @node. Returns %0 in case of success and %-1 in case of failure.
-  */
- static int open_ubi(const char *node)
+  * For encrypted symlinks, the ciphertext length is stored at the beginning
+@@ -88,7 +90,7 @@ struct fscrypt_context {
+ struct fscrypt_symlink_data {
+ 	__le16 len;
+ 	char encrypted_path[1];
+-} __attribute__((packed));
++} __packed;
+ 
+ 
+ #ifndef FS_MAX_KEY_SIZE
+diff --git a/ubifs-utils/common/sign.c b/ubifs-utils/common/sign.c
+index 9c53e671..7530503a 100644
+--- a/ubifs-utils/common/sign.c
++++ b/ubifs-utils/common/sign.c
+@@ -28,6 +28,7 @@
+ #include <openssl/conf.h>
+ #include <err.h>
+ 
++#include "compiler_attributes.h"
+ #include "sign.h"
+ #include "defs.h"
+ #include "ubifs.h"
+@@ -116,8 +117,7 @@ static void drain_openssl_errors(void)
+ 
+ static const char *key_pass;
+ 
+-static int pem_pw_cb(char *buf, int len, __attribute__((unused)) int w,
+-		     __attribute__((unused)) void *v)
++static int pem_pw_cb(char *buf, int len, __unused int w, __unused void *v)
  {
-@@ -537,10 +547,14 @@ static int open_ubi(const char *node)
- 	ubi = libubi_open();
- 	if (!ubi)
- 		return -1;
--	if (ubi_get_vol_info(ubi, node, &c->vi))
-+	if (ubi_get_vol_info(ubi, node, &c->vi)) {
-+		close_ubi();
- 		return -1;
--	if (ubi_get_dev_info1(ubi, c->vi.dev_num, &c->di))
-+	}
-+	if (ubi_get_dev_info1(ubi, c->vi.dev_num, &c->di)) {
-+		close_ubi();
- 		return -1;
-+	}
- 	return 0;
- }
+ 	int pwlen;
  
-@@ -2880,8 +2894,6 @@ static int close_target(void)
- 		if (close(out_fd) == -1)
- 			return sys_errmsg("cannot close the target '%s'", output);
- 	}
--	if (ubi)
--		libubi_close(ubi);
- 	if (output)
- 		free(output);
- 	return 0;
-@@ -3062,25 +3074,25 @@ int main(int argc, char *argv[])
- 
- 	err = get_options(argc, argv);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	err = open_target();
- 	if (err)
--		return err;
-+		goto out;
- 
- 	err = mkfs();
- 	if (err) {
- 		close_target();
--		return err;
-+		goto out;
- 	}
- 
- 	err = close_target();
--	if (err)
--		return err;
- 
--	if (verbose)
-+	if (verbose && !err)
- 		printf("Success!\n");
- 
-+out:
-+	close_ubi();
- 	crypto_cleanup();
--	return 0;
-+	return err;
- }
 -- 
 2.13.6
 
