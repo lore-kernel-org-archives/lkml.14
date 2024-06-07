@@ -1,145 +1,336 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2E81940B5;
-	Fri,  7 Jun 2024 13:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED7D1946C6;
+	Fri,  7 Jun 2024 13:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717766881; cv=none; b=N/cjyc7SJ9CxIJd0UwFN7Wu9faRTBMMOlkcSQlU8K/+YXHvz2fz5QQ+ABC81KjMPkzXZgbrtYE1kTzhKNBk+7tyf++16g1JSGi+TA5HVxkgizPSWM5t4dweUw6MjvKpfBrpqFcrkecfFYzmquljhZaDvGqfVEc+jjyO9xoo00Fw=
+	t=1717766921; cv=none; b=aY40gOlvb1avqJZhT17eSdWS1bmxWmMC3wcH4LOzNxFexAfHgVJMMi/fTsA/Z8TdmTU2t1gAtAx1adMaJjIzZEOtaE99mixHgLR9Kjz9TWyrCxHCX8F818U+UG8flu/Rg8nsw6BDUKmeEvq1O/3AW8C1/iw0yeSOlRX0DXncBuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717766881; c=relaxed/simple;
-	bh=lLS9fQ8kfF3shs/Rg28crtMFJ5S+9vbd4oQ5jIQTZxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IyGlBakrmf+zNbsEz9MKZaZlmJFez2iSyQYxfN6v3IjuERZD8O9ZWO+dPJ8C3/7Tvv5FkeU26domxVOOFrSTMCwob2OuNp3Jv40/+hsu0azySth/9oCI50vRuxr8Fsc6rkhX0EEI5JVDu0cYha1Lt7iuHzqmiLkiE9d0Ek49A1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RPYHJWZB; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717766921; c=relaxed/simple;
+	bh=9YJDgD1sUF9wLiqDz96LWHNWgihyqNTKefm3EPo+PYg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ur8CeR6Qpi7OFhkGHjP0Axx20vqUApLjGRsyLqCk3jbqpAGEWvf8MPUMJOJtpDyIeDpgMZmNcgcUqjfyfH8T5Z6NcX4LJiqcnvortL8SCGCZL0LeApz3WK5Okzw2/LkdheUgTTKPB0n6sHarR1fyEa5wFy2mfLNL6gDHWNEGpHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GuIyLith; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RPYHJWZB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717766879; x=1749302879;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lLS9fQ8kfF3shs/Rg28crtMFJ5S+9vbd4oQ5jIQTZxg=;
-  b=RPYHJWZBV5RdiJENI/IPndy3ZTWOOYyM9cUZAAQv1hCNGjLNfeBJD+UL
-   YqBaXJjICuzaOcTiBEEymroblKYshu8+qFZaA3qRlIoFEk+q/v8bS4sVg
-   mz085mgre5jXmV0FdKcR0uvf4NVyjsL3evWFYoMKGph/AAnrguERNUd8L
-   AKi/PyHMyGqp+xTtGQgdfUh7sKHascDoBbdUbZSxEJe3aAGcY9mXmtuBP
-   FYoaTzJeP9N45X0zophadFfBMjNnqtPGHfXJ3C+UdvzZR7Qmx+ZLpFXRz
-   MCjBmOTZ7uqrGTSwja0f4PUphV7O4J3bVwMY65uQLLmuNud02yEbN8pWr
-   Q==;
-X-CSE-ConnectionGUID: /4Lj486YS7m9GsbMTC2OvA==
-X-CSE-MsgGUID: AubbwCOfTEq5ePjHlcgEWQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="14320996"
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="14320996"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 06:27:59 -0700
-X-CSE-ConnectionGUID: 3xJGotWVR1+A10Jmx2cynw==
-X-CSE-MsgGUID: FkvqHdazRBSdIH4lEToSQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="38901974"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 07 Jun 2024 06:27:57 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sFZdL-0004ps-0R;
-	Fri, 07 Jun 2024 13:27:55 +0000
-Date: Fri, 7 Jun 2024 21:27:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Johannes Berg <johannes@sipsolutions.net>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: Re: [PATCH v3 1/4] tracing: add __print_sym() to replace
- __print_symbolic()
-Message-ID: <202406072129.3ZzFDOlC-lkp@intel.com>
-References: <20240606203255.49433-7-johannes@sipsolutions.net>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GuIyLith"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 457DSXkT089042;
+	Fri, 7 Jun 2024 08:28:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717766913;
+	bh=a2o0W9ZTFF+lA1Bhtoj/rJ7TGEn+u+N/UnDDrxbd6ck=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=GuIyLithFAkqa9SUjr139gcXjCGvpm9z9DYpALlWRGFiCCpE6+komDIsOfqmVGQyk
+	 TtY+Rlmf5hQymogKzDDfaQ0odpCjtj/V2BGapqFvib6lmvA6h5qZ1zNRrgg6EaB3cj
+	 UvtWWjCUNsN7gm9/hI5GOMssSP72z/1Nrj5Vklnw=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 457DSX1S013748
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 7 Jun 2024 08:28:33 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
+ Jun 2024 08:28:33 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 7 Jun 2024 08:28:33 -0500
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 457DSWfN038953;
+	Fri, 7 Jun 2024 08:28:32 -0500
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>
+CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
+        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
+        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
+        <nicolas@ndufresne.ca>
+Subject: [PATCH v13 03/13] media: v4l2-jpeg: Export reference quantization and huffman tables
+Date: Fri, 7 Jun 2024 18:58:31 +0530
+Message-ID: <20240607132831.3551333-1-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20240607131900.3535250-1-devarsht@ti.com>
+References: <20240607131900.3535250-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606203255.49433-7-johannes@sipsolutions.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Johannes,
+Export reference quantization and huffman tables as provided in ITU-T.81 so
+that they can be re-used by other JPEG drivers.
 
-kernel test robot noticed the following build errors:
+These are example tables provided in ITU-T.81 as reference tables and the
+JPEG encoders are free to use either these or their own proprietary tables.
 
-[auto build test ERROR on mcgrof/modules-next]
-[also build test ERROR on arnd-asm-generic/master tip/timers/core net/main net-next/main linus/master horms-ipvs/master v6.10-rc2 next-20240607]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Also add necessary prefixes to be used for huffman tables in global header
+file.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Johannes-Berg/tracing-add-__print_sym-to-replace-__print_symbolic/20240607-043503
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git modules-next
-patch link:    https://lore.kernel.org/r/20240606203255.49433-7-johannes%40sipsolutions.net
-patch subject: [PATCH v3 1/4] tracing: add __print_sym() to replace __print_symbolic()
-config: arc-randconfig-002-20240607 (https://download.01.org/0day-ci/archive/20240607/202406072129.3ZzFDOlC-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240607/202406072129.3ZzFDOlC-lkp@intel.com/reproduce)
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+---
+V13: Fix smatch/sparse related below warning by using static global
+variable for arrays:
+Logs:
++drivers/media/v4l2-core/v4l2-jpeg.c: warning: symbol 'luma_qt' was not
+declared. Should it be static?
++drivers/media/v4l2-core/v4l2-jpeg.c: warning: symbol 'chroma_qt' was
+not declared. Should it be static?
++drivers/media/v4l2-core/v4l2-jpeg.c: warning: symbol 'zigzag' was not
+declared. Should it be static?
++drivers/media/v4l2-core/v4l2-jpeg.c: warning: symbol 'luma_dc_ht' was
+not declared. Should it be static?
++drivers/media/v4l2-core/v4l2-jpeg.c: warning: symbol 'luma_ac_ht' was
+not declared. Should it be static?
++drivers/media/v4l2-core/v4l2-jpeg.c: warning: symbol 'chroma_dc_ht' was
+not declared. Should it be static?
++drivers/media/v4l2-core/v4l2-jpeg.c: warning: symbol 'chroma_ac_ht' was
+not declared. Should it be static?"
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406072129.3ZzFDOlC-lkp@intel.com/
+V12: Fix html-doc warnings by removing * from args
+V11: No change
+V10: Add description for new macros introduced in this patchset
+V1->V9: No change (Patch introduced in V7)
+ drivers/media/v4l2-core/v4l2-jpeg.c | 162 +++++++++++++++++++++++++++-
+ include/media/v4l2-jpeg.h           |  28 +++++
+ 2 files changed, 189 insertions(+), 1 deletion(-)
 
-All errors (new ones prefixed by >>):
-
-   kernel/trace/trace_events.c: In function 'show_sym_list':
->> kernel/trace/trace_events.c:1586:31: error: invalid use of undefined type 'struct module'
-    1586 |                 sym_defs = mod->trace_sym_defs;
-         |                               ^~
-   kernel/trace/trace_events.c:1587:33: error: invalid use of undefined type 'struct module'
-    1587 |                 n_sym_defs = mod->num_trace_sym_defs;
-         |                                 ^~
-
-
-vim +1586 kernel/trace/trace_events.c
-
-  1575	
-  1576	/* note: @name is not NUL-terminated */
-  1577	static void show_sym_list(struct seq_file *m, struct trace_event_call *call,
-  1578				  const char *name, unsigned int name_len)
-  1579	{
-  1580		struct trace_sym_def **sym_defs;
-  1581		unsigned int n_sym_defs, i;
-  1582	
-  1583		if (call->module) {
-  1584			struct module *mod = call->module;
-  1585	
-> 1586			sym_defs = mod->trace_sym_defs;
-  1587			n_sym_defs = mod->num_trace_sym_defs;
-  1588		} else {
-  1589			sym_defs = __start_ftrace_sym_defs;
-  1590			n_sym_defs = __stop_ftrace_sym_defs - __start_ftrace_sym_defs;
-  1591		}
-  1592	
-  1593		for (i = 0; i < n_sym_defs; i++) {
-  1594			unsigned int sym_len;
-  1595	
-  1596			if (!sym_defs[i])
-  1597				continue;
-  1598			if (sym_defs[i]->system != call->class->system)
-  1599				continue;
-  1600			sym_len = strlen(sym_defs[i]->symbol_id);
-  1601			if (name_len != sym_len)
-  1602				continue;
-  1603			if (strncmp(sym_defs[i]->symbol_id, name, sym_len))
-  1604				continue;
-  1605			if (sym_defs[i]->show)
-  1606				sym_defs[i]->show(m);
-  1607			break;
-  1608		}
-  1609	}
-  1610	
-
+diff --git a/drivers/media/v4l2-core/v4l2-jpeg.c b/drivers/media/v4l2-core/v4l2-jpeg.c
+index 94435a7b6816..bd6305c92e0e 100644
+--- a/drivers/media/v4l2-core/v4l2-jpeg.c
++++ b/drivers/media/v4l2-core/v4l2-jpeg.c
+@@ -16,7 +16,7 @@
+ #include <linux/types.h>
+ #include <media/v4l2-jpeg.h>
+ 
+-MODULE_DESCRIPTION("V4L2 JPEG header parser helpers");
++MODULE_DESCRIPTION("V4L2 JPEG helpers");
+ MODULE_AUTHOR("Philipp Zabel <kernel@pengutronix.de>");
+ MODULE_LICENSE("GPL");
+ 
+@@ -52,6 +52,115 @@ MODULE_LICENSE("GPL");
+ #define COM	0xfffe	/* comment */
+ #define TEM	0xff01	/* temporary */
+ 
++/* Luma and chroma qp tables to achieve 50% compression quality
++ * This is as per example in Annex K.1 of ITU-T.81
++ */
++static const u8 luma_qt[] = {
++	16, 11, 10, 16, 24, 40, 51, 61,
++	12, 12, 14, 19, 26, 58, 60, 55,
++	14, 13, 16, 24, 40, 57, 69, 56,
++	14, 17, 22, 29, 51, 87, 80, 62,
++	18, 22, 37, 56, 68, 109, 103, 77,
++	24, 35, 55, 64, 81, 104, 113, 92,
++	49, 64, 78, 87, 103, 121, 120, 101,
++	72, 92, 95, 98, 112, 100, 103, 99
++};
++
++static const u8 chroma_qt[] = {
++	17, 18, 24, 47, 99, 99, 99, 99,
++	18, 21, 26, 66, 99, 99, 99, 99,
++	24, 26, 56, 99, 99, 99, 99, 99,
++	47, 66, 99, 99, 99, 99, 99, 99,
++	99, 99, 99, 99, 99, 99, 99, 99,
++	99, 99, 99, 99, 99, 99, 99, 99,
++	99, 99, 99, 99, 99, 99, 99, 99,
++	99, 99, 99, 99, 99, 99, 99, 99
++};
++
++/* Zigzag scan pattern */
++static const u8 zigzag[] = {
++	0,   1,  8, 16,  9,  2,  3, 10,
++	17, 24, 32, 25, 18, 11,  4,  5,
++	12, 19, 26, 33, 40, 48, 41, 34,
++	27, 20, 13,  6,  7, 14, 21, 28,
++	35, 42, 49, 56, 57, 50, 43, 36,
++	29, 22, 15, 23, 30, 37, 44, 51,
++	58, 59, 52, 45, 38, 31, 39, 46,
++	53, 60, 61, 54, 47, 55, 62, 63
++};
++
++/*
++ * Contains the data that needs to be sent in the marker segment of an
++ * interchange format JPEG stream or an abbreviated format table specification
++ * data stream. Specifies the huffman table used for encoding the luminance DC
++ * coefficient differences. The table represents Table K.3 of ITU-T.81
++ */
++static const u8 luma_dc_ht[] = {
++	0x00, 0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01,
++	0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B
++};
++
++/*
++ * Contains the data that needs to be sent in the marker segment of an
++ * interchange format JPEG stream or an abbreviated format table specification
++ * data stream. Specifies the huffman table used for encoding the luminance AC
++ * coefficients. The table represents Table K.5 of ITU-T.81
++ */
++static const u8 luma_ac_ht[] = {
++	0x00, 0x02, 0x01, 0x03, 0x03, 0x02, 0x04, 0x03, 0x05, 0x05, 0x04, 0x04,
++	0x00, 0x00, 0x01, 0x7D, 0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12,
++	0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07, 0x22, 0x71, 0x14, 0x32,
++	0x81, 0x91, 0xA1, 0x08, 0x23, 0x42, 0xB1, 0xC1, 0x15, 0x52, 0xD1, 0xF0,
++	0x24, 0x33, 0x62, 0x72, 0x82, 0x09, 0x0A, 0x16, 0x17, 0x18, 0x19, 0x1A,
++	0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39,
++	0x3A, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x53, 0x54, 0x55,
++	0x56, 0x57, 0x58, 0x59, 0x5A, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69,
++	0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x83, 0x84, 0x85,
++	0x86, 0x87, 0x88, 0x89, 0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98,
++	0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xB2,
++	0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 0xC5,
++	0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8,
++	0xD9, 0xDA, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA,
++	0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA
++};
++
++/*
++ * Contains the data that needs to be sent in the marker segment of an interchange format JPEG
++ * stream or an abbreviated format table specification data stream.
++ * Specifies the huffman table used for encoding the chrominance DC coefficient differences.
++ * The table represents Table K.4 of ITU-T.81
++ */
++static const u8 chroma_dc_ht[] = {
++	0x00, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
++	0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B
++};
++
++/*
++ * Contains the data that needs to be sent in the marker segment of an
++ * interchange format JPEG stream or an abbreviated format table specification
++ * data stream. Specifies the huffman table used for encoding the chrominance
++ * AC coefficients. The table represents Table K.6 of ITU-T.81
++ */
++static const u8 chroma_ac_ht[] = {
++	0x00, 0x02, 0x01, 0x02, 0x04, 0x04, 0x03, 0x04, 0x07, 0x05, 0x04, 0x04,
++	0x00, 0x01, 0x02, 0x77, 0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21,
++	0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61, 0x71, 0x13, 0x22, 0x32, 0x81,
++	0x08, 0x14, 0x42, 0x91, 0xA1, 0xB1, 0xC1, 0x09, 0x23, 0x33, 0x52, 0xF0,
++	0x15, 0x62, 0x72, 0xD1, 0x0A, 0x16, 0x24, 0x34, 0xE1, 0x25, 0xF1, 0x17,
++	0x18, 0x19, 0x1A, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x35, 0x36, 0x37, 0x38,
++	0x39, 0x3A, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x53, 0x54,
++	0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68,
++	0x69, 0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x82, 0x83,
++	0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x92, 0x93, 0x94, 0x95, 0x96,
++	0x97, 0x98, 0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9,
++	0xAA, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3,
++	0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6,
++	0xD7, 0xD8, 0xD9, 0xDA, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9,
++	0xEA, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA
++};
++
+ /**
+  * struct jpeg_stream - JPEG byte stream
+  * @curr: current position in stream
+@@ -675,3 +784,54 @@ int v4l2_jpeg_parse_huffman_tables(void *buf, size_t len,
+ 	return jpeg_parse_huffman_tables(&stream, huffman_tables);
+ }
+ EXPORT_SYMBOL_GPL(v4l2_jpeg_parse_huffman_tables);
++
++/**
++ * v4l2_jpeg_get_reference_quantization_tables - Get reference quantization
++ *						 tables as defined in ITU-T.81
++ * @ref_luma_qt: Output variable pointing to luma quantization table
++ * @ref_chroma_qt: Output variable pointing to chroma quantization table
++ */
++void v4l2_jpeg_get_reference_quantization_tables(const u8 **ref_luma_qt, const
++						 u8 **ref_chroma_qt)
++{
++	if (ref_luma_qt)
++		*ref_luma_qt = luma_qt;
++	if (ref_chroma_qt)
++		*ref_chroma_qt = chroma_qt;
++}
++EXPORT_SYMBOL_GPL(v4l2_jpeg_get_reference_quantization_tables);
++
++/**
++ * v4l2_jpeg_get_zig_zag_scan - Get zigzag scan table as defined in ITU-T.81
++ * @ref_zigzag: Output variable pointing to zigzag scan table
++ */
++void v4l2_jpeg_get_zig_zag_scan(const u8 **ref_zigzag)
++{
++	if (ref_zigzag)
++		*ref_zigzag = zigzag;
++}
++EXPORT_SYMBOL_GPL(v4l2_jpeg_get_zig_zag_scan);
++
++/**
++ * v4l2_jpeg_get_reference_huffman_tables - Get reference huffman tables as
++ *					    defined in ITU-T.81
++ * @ref_luma_dc_ht : Output variable pointing to huffman table for luma DC
++ * @ref_luma_ac_ht : Output variable pointing to huffman table for luma AC
++ * @ref_chroma_dc_ht : Output variable pointing to huffman table for chroma DC
++ * @ref_chroma_ac_ht : Output variable pointing to huffman table for chroma AC
++ */
++void v4l2_jpeg_get_reference_huffman_tables(const u8 **ref_luma_dc_ht,
++					    const u8 **ref_luma_ac_ht,
++					    const u8 **ref_chroma_dc_ht,
++					    const u8 **ref_chroma_ac_ht)
++{
++	if (ref_luma_dc_ht)
++		*ref_luma_dc_ht = luma_dc_ht;
++	if (ref_luma_ac_ht)
++		*ref_luma_ac_ht = luma_ac_ht;
++	if (ref_chroma_dc_ht)
++		*ref_chroma_dc_ht = chroma_dc_ht;
++	if (ref_chroma_ac_ht)
++		*ref_chroma_ac_ht = chroma_ac_ht;
++}
++EXPORT_SYMBOL_GPL(v4l2_jpeg_get_reference_huffman_tables);
+diff --git a/include/media/v4l2-jpeg.h b/include/media/v4l2-jpeg.h
+index 2dba843ce3bd..b470bbffb73f 100644
+--- a/include/media/v4l2-jpeg.h
++++ b/include/media/v4l2-jpeg.h
+@@ -14,6 +14,30 @@
+ 
+ #define V4L2_JPEG_MAX_COMPONENTS	4
+ #define V4L2_JPEG_MAX_TABLES		4
++/*
++ * Prefixes used to generate huffman table class and destination identifiers as
++ * described below:
++ *
++ * V4L2_JPEG_LUM_HT | V4L2_JPEG_DC_HT : Prefix for Luma DC coefficients
++ *					huffman table
++ * V4L2_JPEG_LUM_HT | V4L2_JPEG_AC_HT : Prefix for Luma AC coefficients
++ *					huffman table
++ * V4L2_JPEG_CHR_HT | V4L2_JPEG_DC_HT : Prefix for Chroma DC coefficients
++ *					huffman table
++ * V4L2_JPEG_CHR_HT | V4L2_JPEG_AC_HT : Prefix for Chroma AC coefficients
++ *					huffman table
++ */
++#define V4L2_JPEG_LUM_HT		0x00
++#define V4L2_JPEG_CHR_HT		0x01
++#define V4L2_JPEG_DC_HT			0x00
++#define V4L2_JPEG_AC_HT			0x10
++
++/* Length of reference huffman tables as provided in Table K.3 of ITU-T.81 */
++#define V4L2_JPEG_REF_HT_AC_LEN		178
++#define V4L2_JPEG_REF_HT_DC_LEN		28
++
++/* Array size for 8x8 block of samples or DCT coefficient */
++#define V4L2_JPEG_PIXELS_IN_BLOCK	64
+ 
+ /**
+  * struct v4l2_jpeg_reference - reference into the JPEG buffer
+@@ -154,4 +178,8 @@ int v4l2_jpeg_parse_quantization_tables(void *buf, size_t len, u8 precision,
+ int v4l2_jpeg_parse_huffman_tables(void *buf, size_t len,
+ 				   struct v4l2_jpeg_reference *huffman_tables);
+ 
++void v4l2_jpeg_get_reference_quantization_tables(const u8 **luma_qt, const u8 **chroma_qt);
++void v4l2_jpeg_get_zig_zag_scan(const u8 **zigzag);
++void v4l2_jpeg_get_reference_huffman_tables(const u8 **luma_dc_ht, const u8 **luma_ac_ht,
++					    const u8 **chroma_dc_ht, const u8 **chroma_ac_ht);
+ #endif
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.1
+
