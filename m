@@ -1,37 +1,37 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE50615AAD1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8777A15AABB
 	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717734452; cv=none; b=WNmancebpiGGXjgIPqGMJg+rbrEbsgmXXrEwa6cSUKH6rySbkNwPCUfqSKQCa4dKqC+d0bsQGGARPO0MWPVHKTrud1G3UoTxHc69mCOZNFkLGxV/QOTYer9NVMaTmLpt7t0eEK8rPyKTPkIIvaYb/iQWpXqvxx6bFNw0KFbmjxc=
+	t=1717734451; cv=none; b=anfONSljYYja7Np2PoRH6R+c6nB2/xuUkZWJPdN/WYCyFKa5ZVxVdNb92Cjg/ncPYma7rPic1FsVHIovj/L+JccpO+SYCZJYktqBamBBC7K6Vcpic/7S0FiKkAnQ41OWnnGWAhJQLblJY7QeTIq9pFqsyrtGeqauX3byx2tyf14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717734452; c=relaxed/simple;
-	bh=v3ETs9sJ1Z2KlftB6ZBvQyYnscciU+t3CjrgEmHW8Co=;
+	s=arc-20240116; t=1717734451; c=relaxed/simple;
+	bh=wsNY3Hv62vS170S6rgAswOaPj3HzzFhFu+dVaxHav8Q=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cilmtN2eD0gRIpeQ/pCizCdiE3ZeqT3WkjHWBJUrHVU27BiTU1byIf+bmIsmP7f/YuT0OX8B4SmwJ9TrQLycXHoL5fTyhAhspMdLkay8Y/KbER+ix8nABf4jnCibKJNUft22aiuUN+F9sK0eRWQofEdsk1vXHCu+m4KyLWZTU1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+	 MIME-Version:Content-Type; b=ENM2qlZhkcjGPUkipk2BcTi+9mtlGDVw/mRXaV2uMXlN/pqsvaBxf2gsqgOgiozUVWetzJ3oJz+Nh0Y1WBkzwz1+sPfQjHk5GKh0f6AuHpboa1EHlCn51RWYITcE0PIK4/mZ4F7hHdDFTPgxmQcROTdsdg/GM0yBxyzVUn3yWzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VwSk72qVCz1SB2c;
-	Fri,  7 Jun 2024 12:23:27 +0800 (CST)
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VwSn46w8QzdZdG;
+	Fri,  7 Jun 2024 12:26:00 +0800 (CST)
 Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2301B180085;
-	Fri,  7 Jun 2024 12:27:26 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D8923180085;
+	Fri,  7 Jun 2024 12:27:25 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
  (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 12:27:14 +0800
+ 2024 12:27:11 +0800
 From: Zhihao Cheng <chengzhihao1@huawei.com>
 To: <richard@nod.at>, <david.oberhollenzer@sigma-star.at>,
 	<miquel.raynal@bootlin.com>, <yi.zhang@huawei.com>, <xiangyang3@huawei.com>,
 	<huangxiaojia2@huawei.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH mtd-utils 064/110] fsck.ubifs: rebuild_fs: Remove deleted nodes from valid node tree
-Date: Fri, 7 Jun 2024 12:25:29 +0800
-Message-ID: <20240607042615.2069840-65-chengzhihao1@huawei.com>
+Subject: [RFC PATCH mtd-utils 060/110] fsck.ubifs: Load filesystem information from UBI volume
+Date: Fri, 7 Jun 2024 12:25:25 +0800
+Message-ID: <20240607042615.2069840-61-chengzhihao1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240607042615.2069840-1-chengzhihao1@huawei.com>
 References: <20240607042615.2069840-1-chengzhihao1@huawei.com>
@@ -46,164 +46,227 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600013.china.huawei.com (7.193.23.68)
 
-This is the 2/12 step of rebuilding. Traverse nodes from del_inos and
-del_dents trees, remove inode nodes and dentry nodes with smaller sqnum
-from valid trees.
-
-This step handles deleting case, for example, file A is deleted, deleted
-inode node and deleted dentry node are written, if we ignore the deleted
-nodes, file A can be recovered after rebuilding because undeleted inode
-node and undeleted dentry node can be scanned. There's an exception, if
-deleted inode node and deleted dentry node are reclaimed(by gc) after
-deletion, file A is recovered. UBIFS rebuild_fs cannot solve it, because
-the real existence information of nodes depends on TNC, but TNC should
-not be depended for UBIFS rebuild_fs.
+Load filesystem information from UBI volume (Similar to UBIFS mounting
+process), initialize kinds of buffers and read superblock. This is the
+base step for both fsck and rebuild_fs. Subsequent pacthes will complete
+this step by adding more steps(eg. read master, replay journal, etc.)
+which are only used in fsck.
 
 Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- ubifs-utils/fsck.ubifs/rebuild_fs.c | 120 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 119 insertions(+), 1 deletion(-)
+ ubifs-utils/Makemodule.am           |   3 +-
+ ubifs-utils/fsck.ubifs/fsck.ubifs.c |   7 ++
+ ubifs-utils/fsck.ubifs/fsck.ubifs.h |   7 ++
+ ubifs-utils/fsck.ubifs/load_fs.c    | 127 ++++++++++++++++++++++++++++++++++++
+ ubifs-utils/fsck.ubifs/problem.c    |   4 +-
+ 5 files changed, 146 insertions(+), 2 deletions(-)
+ create mode 100644 ubifs-utils/fsck.ubifs/load_fs.c
 
-diff --git a/ubifs-utils/fsck.ubifs/rebuild_fs.c b/ubifs-utils/fsck.ubifs/rebuild_fs.c
-index 3ca94869..dbb0f3bc 100644
---- a/ubifs-utils/fsck.ubifs/rebuild_fs.c
-+++ b/ubifs-utils/fsck.ubifs/rebuild_fs.c
-@@ -364,6 +364,117 @@ out:
- 	return err;
- }
+diff --git a/ubifs-utils/Makemodule.am b/ubifs-utils/Makemodule.am
+index faff911f..864271ab 100644
+--- a/ubifs-utils/Makemodule.am
++++ b/ubifs-utils/Makemodule.am
+@@ -80,7 +80,8 @@ fsck_ubifs_SOURCES = \
+ 	$(libubifs_SOURCES) \
+ 	ubifs-utils/fsck.ubifs/fsck.ubifs.h \
+ 	ubifs-utils/fsck.ubifs/fsck.ubifs.c \
+-	ubifs-utils/fsck.ubifs/problem.c
++	ubifs-utils/fsck.ubifs/problem.c \
++	ubifs-utils/fsck.ubifs/load_fs.c
  
-+static struct scanned_ino_node *
-+lookup_valid_ino_node(struct ubifs_info *c, struct scanned_info *si,
-+		      struct scanned_ino_node *target)
-+{
-+	int cmp;
-+	struct scanned_ino_node *ino_node;
-+	struct rb_node *p;
+ fsck_ubifs_LDADD = libmtd.a libubi.a $(ZLIB_LIBS) $(LZO_LIBS) $(ZSTD_LIBS) $(UUID_LIBS) $(LIBSELINUX_LIBS) $(OPENSSL_LIBS) -lm -lpthread
+ fsck_ubifs_CPPFLAGS = $(AM_CPPFLAGS) $(ZLIB_CFLAGS) $(LZO_CFLAGS) $(ZSTD_CFLAGS) $(UUID_CFLAGS) $(LIBSELINUX_CFLAGS) \
+diff --git a/ubifs-utils/fsck.ubifs/fsck.ubifs.c b/ubifs-utils/fsck.ubifs/fsck.ubifs.c
+index 36a8e061..9bc9c259 100644
+--- a/ubifs-utils/fsck.ubifs/fsck.ubifs.c
++++ b/ubifs-utils/fsck.ubifs/fsck.ubifs.c
+@@ -423,8 +423,15 @@ int main(int argc, char *argv[])
+ 		goto out_destroy_fsck;
+ 	}
+ 
++	/* Init: Read superblock */
++	err = ubifs_load_filesystem(c);
++	if (err)
++		goto out_close;
 +
-+	p = si->valid_inos.rb_node;
-+	while (p) {
-+		ino_node = rb_entry(p, struct scanned_ino_node, rb);
-+		cmp = keys_cmp(c, &target->key, &ino_node->key);
-+		if (cmp < 0) {
-+			p = p->rb_left;
-+		} else if (cmp > 0) {
-+			p = p->rb_right;
-+		} else {
-+			if (target->header.sqnum > ino_node->header.sqnum)
-+				return ino_node;
-+			else
-+				return NULL;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
-+static struct scanned_dent_node *
-+lookup_valid_dent_node(struct ubifs_info *c, struct scanned_info *si,
-+		       struct scanned_dent_node *target)
-+{
-+	int cmp, nlen;
-+	struct scanned_dent_node *dent_node;
-+	struct rb_node *p;
-+
-+	p = si->valid_dents.rb_node;
-+	while (p) {
-+		dent_node = rb_entry(p, struct scanned_dent_node, rb);
-+		cmp = keys_cmp(c, &target->key, &dent_node->key);
-+		if (cmp < 0) {
-+			p = p->rb_left;
-+		} else if (cmp > 0) {
-+			p = p->rb_right;
-+		} else {
-+			nlen = min(target->nlen, dent_node->nlen);
-+			cmp = strncmp(target->name, dent_node->name, nlen) ? :
-+				      target->nlen - dent_node->nlen;
-+			if (cmp < 0) {
-+				p = p->rb_left;
-+			} else if (cmp > 0) {
-+				p = p->rb_right;
-+			} else {
-+				if (target->header.sqnum >
-+				    dent_node->header.sqnum)
-+					return dent_node;
-+				else
-+					return NULL;
-+			}
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
-+/**
-+ * remove_del_nodes - remove deleted nodes from valid node tree.
-+ * @c: UBIFS file-system description object
-+ * @si: records nodes and files information during scanning
-+ *
-+ * This function compares sqnum between deleted node and corresponding valid
-+ * node, removes valid node from tree if the sqnum of deleted node is bigger.
-+ * Deleted ino/dent nodes will be removed from @si->del_inos/@si->del_dents
-+ * after this function finished.
-+ */
-+static void remove_del_nodes(struct ubifs_info *c, struct scanned_info *si)
-+{
-+	struct scanned_ino_node *del_ino_node, *valid_ino_node;
-+	struct scanned_dent_node *del_dent_node, *valid_dent_node;
-+	struct rb_node *this;
-+
-+	this = rb_first(&si->del_inos);
-+	while (this) {
-+		del_ino_node = rb_entry(this, struct scanned_ino_node, rb);
-+		this = rb_next(this);
-+
-+		valid_ino_node = lookup_valid_ino_node(c, si, del_ino_node);
-+		if (valid_ino_node) {
-+			rb_erase(&valid_ino_node->rb, &si->valid_inos);
-+			kfree(valid_ino_node);
-+		}
-+
-+		rb_erase(&del_ino_node->rb, &si->del_inos);
-+		kfree(del_ino_node);
-+	}
-+
-+	this = rb_first(&si->del_dents);
-+	while (this) {
-+		del_dent_node = rb_entry(this, struct scanned_dent_node, rb);
-+		this = rb_next(this);
-+
-+		valid_dent_node = lookup_valid_dent_node(c, si, del_dent_node);
-+		if (valid_dent_node) {
-+			rb_erase(&valid_dent_node->rb, &si->valid_dents);
-+			kfree(valid_dent_node);
-+		}
-+
-+		rb_erase(&del_dent_node->rb, &si->del_dents);
-+		kfree(del_dent_node);
-+	}
-+}
+ 	err = do_fsck();
+ 
++	ubifs_destroy_filesystem(c);
++out_close:
+ 	ubifs_close_volume(c);
+ out_destroy_fsck:
+ 	destroy_fsck_info(c);
+diff --git a/ubifs-utils/fsck.ubifs/fsck.ubifs.h b/ubifs-utils/fsck.ubifs/fsck.ubifs.h
+index 53dc5ff0..eb365b1a 100644
+--- a/ubifs-utils/fsck.ubifs/fsck.ubifs.h
++++ b/ubifs-utils/fsck.ubifs/fsck.ubifs.h
+@@ -36,6 +36,9 @@
+ enum { NORMAL_MODE = 0, SAFE_MODE, DANGER_MODE0,
+        DANGER_MODE1, REBUILD_MODE, CHECK_MODE };
+ 
++/* Types of inconsistent problems */
++enum { SB_CORRUPTED = 0 };
 +
  /**
-  * ubifs_rebuild_filesystem - Rebuild filesystem.
-  * @c: UBIFS file-system description object
-@@ -389,9 +500,16 @@ int ubifs_rebuild_filesystem(struct ubifs_info *c)
- 	/* Step 1: Scan valid/deleted nodes from volume. */
- 	log_out(c, "Scan nodes");
- 	err = scan_nodes(c, &si);
--	if (err)
+  * struct ubifs_fsck_info - UBIFS fsck information.
+  * @mode: working mode
+@@ -96,4 +99,8 @@ extern int exit_code;
+ /* problem.c */
+ bool fix_problem(const struct ubifs_info *c, int problem_type);
+ 
++/* load_fs.c */
++int ubifs_load_filesystem(struct ubifs_info *c);
++void ubifs_destroy_filesystem(struct ubifs_info *c);
++
+ #endif
+diff --git a/ubifs-utils/fsck.ubifs/load_fs.c b/ubifs-utils/fsck.ubifs/load_fs.c
+new file mode 100644
+index 00000000..4a06b4c2
+--- /dev/null
++++ b/ubifs-utils/fsck.ubifs/load_fs.c
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2024, Huawei Technologies Co, Ltd.
++ *
++ * Authors: Zhihao Cheng <chengzhihao1@huawei.com>
++ */
++
++#include <stdio.h>
++#include <stdlib.h>
++
++#include "bitops.h"
++#include "kmem.h"
++#include "ubifs.h"
++#include "defs.h"
++#include "debug.h"
++#include "key.h"
++#include "misc.h"
++#include "fsck.ubifs.h"
++
++int ubifs_load_filesystem(struct ubifs_info *c)
++{
++	int err;
++	size_t sz;
++
++	err = init_constants_early(c);
 +	if (err) {
- 		exit_code |= FSCK_ERROR;
-+		goto out;
++		exit_code |= FSCK_ERROR;
++		return err;
 +	}
 +
-+	/* Step 2: Remove deleted nodes from valid node tree. */
-+	log_out(c, "Remove deleted nodes");
-+	remove_del_nodes(c, &si);
++	err = check_volume_empty(c);
++	if (err <= 0) {
++		exit_code |= FSCK_ERROR;
++		log_err(c, 0, "%s UBI volume!", err < 0 ? "bad" : "empty");
++		return -EINVAL;
++	}
++
++	if (c->ro_media && !c->ro_mount) {
++		exit_code |= FSCK_ERROR;
++		log_err(c, 0, "cannot read-write on read-only media");
++		return -EROFS;
++	}
++
++	err = -ENOMEM;
++	c->bottom_up_buf = kmalloc_array(BOTTOM_UP_HEIGHT, sizeof(int),
++					 GFP_KERNEL);
++	if (!c->bottom_up_buf) {
++		exit_code |= FSCK_ERROR;
++		log_err(c, errno, "cannot allocate bottom_up_buf");
++		goto out_free;
++	}
++
++	c->sbuf = vmalloc(c->leb_size);
++	if (!c->sbuf) {
++		exit_code |= FSCK_ERROR;
++		log_err(c, errno, "cannot allocate sbuf");
++		goto out_free;
++	}
++
++	if (!c->ro_mount) {
++		c->ileb_buf = vmalloc(c->leb_size);
++		if (!c->ileb_buf) {
++			exit_code |= FSCK_ERROR;
++			log_err(c, errno, "cannot allocate ileb_buf");
++			goto out_free;
++		}
++	}
++
++	c->mounting = 1;
++
++	log_out(c, "Read superblock");
++	err = ubifs_read_superblock(c);
++	if (err) {
++		if (test_and_clear_failure_reason_callback(c, FR_DATA_CORRUPTED))
++			fix_problem(c, SB_CORRUPTED);
++		exit_code |= FSCK_ERROR;
++		goto out_mounting;
++	}
++
++	err = init_constants_sb(c);
++	if (err) {
++		exit_code |= FSCK_ERROR;
++		goto out_mounting;
++	}
++
++	sz = ALIGN(c->max_idx_node_sz, c->min_io_size) * 2;
++	c->cbuf = kmalloc(sz, GFP_NOFS);
++	if (!c->cbuf) {
++		err = -ENOMEM;
++		exit_code |= FSCK_ERROR;
++		log_err(c, errno, "cannot allocate cbuf");
++		goto out_mounting;
++	}
++
++	err = alloc_wbufs(c);
++	if (err) {
++		exit_code |= FSCK_ERROR;
++		log_err(c, 0, "cannot allocate wbuf");
++		goto out_mounting;
++	}
++
++	c->mounting = 0;
++
++	return 0;
++
++out_mounting:
++	c->mounting = 0;
++out_free:
++	kfree(c->cbuf);
++	kfree(c->ileb_buf);
++	kfree(c->sbuf);
++	kfree(c->bottom_up_buf);
++	kfree(c->sup_node);
++
++	return err;
++}
++
++void ubifs_destroy_filesystem(struct ubifs_info *c)
++{
++	free_wbufs(c);
++
++	kfree(c->cbuf);
++	kfree(c->ileb_buf);
++	kfree(c->sbuf);
++	kfree(c->bottom_up_buf);
++	kfree(c->sup_node);
++}
+diff --git a/ubifs-utils/fsck.ubifs/problem.c b/ubifs-utils/fsck.ubifs/problem.c
+index 9a8c2e06..acb9e45e 100644
+--- a/ubifs-utils/fsck.ubifs/problem.c
++++ b/ubifs-utils/fsck.ubifs/problem.c
+@@ -34,7 +34,9 @@ struct fsck_problem {
+ 	const char *desc;
+ };
  
-+out:
- 	destroy_scanned_info(c, &si);
- 	destroy_rebuild_info(c);
+-static const struct fsck_problem problem_table[] = {};
++static const struct fsck_problem problem_table[] = {
++	{0, "Corrupted superblock"},	// SB_CORRUPTED
++};
  
+ static void print_problem(const struct ubifs_info *c,
+ 			  const struct fsck_problem *problem)
 -- 
 2.13.6
 
