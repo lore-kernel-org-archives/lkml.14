@@ -1,65 +1,101 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5B2187347
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 11:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D6B1862AC
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 11:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717758478; cv=none; b=oZJmCjMy+wBqXFXBBbaanIpsbrkRo/cDCh874OIjtCegTfru3zgxITCCw5rUy9TrRwURcvnnpSDd5NzSzyueqs5SsVRhn8qiU1b3Gb8nKDeh82/3vcgtCF3WRd5BBfuu+lEDRSg0ADKode4SC8cc5n2/6Ut46g2ezNx+VgXO+e8=
+	t=1717758497; cv=none; b=aslprps4TttkID4I3TIMlykX6RRVX0ORx6C0mPg/1M+ovU4G6+xiQ9hoh6AASoDXEP1m2Lwi2MbrPbPhoZdIMPgv4eCopQtNJrsB+/m82yWj8bwHrRCJpv+xJ94liWZAKHvRCvYQBuKEthshNDv/WO5zl43TgDOtzea95KKAfRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717758478; c=relaxed/simple;
-	bh=2YY9nJ9us6W8sg8R/K99i1gxDwm586BvWRkpL2Ei9Cc=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=bB0WDeXkTwPn6cvhuQzfMpXlsCTdhgxI4+e3x4vjt+GXYfT23+RzDpBL7FyuS3TzITKX6Wp1cZtk5D/48CpHcqWcETVNx4GCNhWYcEGIokluliqbvdI0loSXKWSSJ+Zt1QimJTLifs/t8W4bU0JPRQPoP0Lh1MCalniHsebQsNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=malaika-12.net; spf=pass smtp.mailfrom=malaika-12.net; dkim=pass (2048-bit key) header.d=malaika-12.net header.i=@malaika-12.net header.b=Gexfb3JH; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=malaika-12.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=malaika-12.net
+	s=arc-20240116; t=1717758497; c=relaxed/simple;
+	bh=grRwC724PvUmoNcGmdXgtk47euMXChWb+9LwIxsSnRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gmZPafHDN0tJmgnaI/aCrCcZuehBkiH1kQTJkYlvQUGIdZQZwGv9TsNil4AcikIGoFjttu1pnR87z+JYy90AhALBmzyNRWMOdI65+IFHNNqaigqLxcPOvF9m6VfyBFc3XW1cJxsVWfxSVrG+ryZIAiodOQEijOMekEraN6+jK9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kdRobhu9; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=malaika-12.net header.i=@malaika-12.net header.b="Gexfb3JH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=malaika-12.net; s=ds202404; h=Content-Transfer-Encoding:Content-Type:
-	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=4XVwT+1xZpy/lG8yfKHYuh7fLl01Y2uuzW0Fd0rqGks=; b=Gexfb3JHbr4rq9nfeqnRQXNVaR
-	S15amrB0CJg/G5eP+j3yNEMEGDP88sVz4c3OtlvAuiqJpE567QMoQ60GXqidS7ErSvHX84hGiAF+K
-	qEs3y190mveyYXJTcVS+TPwDl+YFMbkdBp2IacX17rLK+PNMBLJtkOF3k9mOHpL+sDS30tqkPKL2M
-	SwTIAclmQaxNfxVUprjtAMSZ150xe1YLbSTFTFPgaQZ6/JfxiOuClQNivj6HSysZXhb9mB7UA7L6J
-	f9o4of9wiDxvUrXFsTZy/SAIySVU9P474afuk+nwIWMqTf3y1v/PKF4Q+spNP045zgdBVXxVkccdx
-	uIicKWmg==;
-Received: from [2a02:fe1:716d:5f00:20ea:232d:8efa:3ff6] (port=63347)
-	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <BIT@malaika-12.net>)
-	id 1sFXRk-00831Q-Iq
-	for linux-kernel@vger.kernel.org;
-	Fri, 07 Jun 2024 13:07:48 +0200
-Message-ID: <a9f241ec-5885-456d-97cf-895c680abfce@malaika-12.net>
-Date: Fri, 7 Jun 2024 13:07:47 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kdRobhu9"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5295eb47b48so2515315e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 04:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717758494; x=1718363294; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QwvApUeqo/GeZM3yb0HNmlUq35XuhdMdPtdEy3Zogv4=;
+        b=kdRobhu9AGcaO1stgTyvif1eN+kQNrtnOkAgo1ucPz/tBGc/g6skg+0nwYCeE0UbLI
+         Fxv3kbz0VBrT7y3TyS16KO7lA7mnJdxP3r6XAhGcE61Mc9wgzl2m1/i95aVKgESVuS9y
+         cu+xv1ePWw7fB0hLY+bmsvb1qLv1upK5DQmkDd/IqfCwvsVNfZHixRZXrUymgmyE+C8p
+         vW/nfCeWpxlGD61jNPbvbwbunxAWYDLvtAVa3e55sliT5ls7MZG/Fl8n59PhDJxY5cZQ
+         cuU2tt7tQtCkBrk09ZpC1D2Ug6KfVbfO3UpSedDpZmPd/M8VwdjACMVUg7nZt5R8XMej
+         SHYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717758494; x=1718363294;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QwvApUeqo/GeZM3yb0HNmlUq35XuhdMdPtdEy3Zogv4=;
+        b=d7lR9CleCYWAKZbkhpMEXdA8ILkaq3Rq1ek4T5d1VCDSIpLT6h/IjzA4L6oZBWWWbk
+         J7k+u8PZJNib4MMXACJ9mbzQx6RHs0KPzqH//LLfHbYABDdiirxQTIA6QzwgQrhReRlw
+         cFa5rkGeDi45sAPY/fiH6hepeyufMxH6003LDq+Cn/tG22/F0Npg8si3Ed9yZJk0nYAB
+         oeq9IM09ZvRTMYR/xotGHNAVkIPmrsIlvwdIxi+92k3fZ1JEbb1c8PoOLEuwcRh3v7/f
+         E1O4QEE6rchTuFAb5nBZohfI/t81lDGOMiLyLzerHDzO30FPce5jmEIUdZB5Q1sG0yBG
+         NFNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZEyZHUHWJFznxdpSKDISq3GExOlLsbMcxg0pmo9Ir0QeAeoCPh+l7Zb10NGvbG+Llkgz/nRsX53B1xPu1KN7BX15gQ3ZejOmnezfY
+X-Gm-Message-State: AOJu0YzMTiCrqsfXMGG9P3qUOMYv6zNhs4zAnjw8ZcCvnocD934tSaK/
+	9omcM21TJEUMXuhIUQmcxsven0v1cgH6zAqq58HUsISjWYtwOdzRGrIc1dukacs=
+X-Google-Smtp-Source: AGHT+IHMqehAzz0w5PPYFquWBtdJd6J+PcTWUMrSDVqV2ejVV83fMkFQGsrAwfj1Oh2Peqi8rq2fUQ==
+X-Received: by 2002:a05:6512:b9f:b0:52b:82d5:b369 with SMTP id 2adb3069b0e04-52bb9f7e70fmr1530867e87.27.1717758494141;
+        Fri, 07 Jun 2024 04:08:14 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb42166c9sm498491e87.164.2024.06.07.04.08.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 04:08:13 -0700 (PDT)
+Date: Fri, 7 Jun 2024 14:08:12 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Ekansh Gupta <quic_ekangupt@quicinc.com>
+Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
+	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
+	quic_chennak@quicinc.com, stable <stable@kernel.org>
+Subject: Re: [PATCH v4 02/11] misc: fastrpc: Fix DSP capabilities request
+Message-ID: <ueglf7wcoi7prt7wrjp6nfjavzksk4wybepep3qa3xmpug4hkr@ha37oovjfbbf>
+References: <20240606165939.12950-1-quic_ekangupt@quicinc.com>
+ <20240606165939.12950-3-quic_ekangupt@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <BIT@malaika-12.net>
-Subject: "Gay" vs(!?) Islam (The Vast X, was Fair Pay Philosophy, Low Jitter)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240606165939.12950-3-quic_ekangupt@quicinc.com>
 
-The debate seems polarized on "Gay".
+On Thu, Jun 06, 2024 at 10:29:22PM +0530, Ekansh Gupta wrote:
+> The DSP capability request call expects 2 arguments. First is the
+> information about the total number of attributes to be copied from
+> DSP and second is the information about the buffer where the DSP
+> needs to copy the information. The current design is passing the
+> information about te size to be copied from DSP which would be
+> considered as a bad argument to the call by DSP causing a failure
+> suggesting the same. The second argument carries the information
+> about the buffer where the DSP needs to copy the capability
+> information and the size to be copied. As the first entry of
+> capability attribute is getting skipped, same should also be
+> considered while sending the information to DSP. Add changes to
+> pass proper arguments to DSP.
+> 
+> Fixes: 6c16fd8bdd40 ("misc: fastrpc: Add support to get DSP capabilities")
+> Cc: stable <stable@kernel.org>
+> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+> ---
+>  drivers/misc/fastrpc.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
 
-In Islam and The Quran, one may consider esoteric referances to Lut, a 
-prophet of Sodom/Gomorrah, in modern times, 2nd millennium, where many 
-people consider "gay" a normalicy.
-
-There is indeed no conflict here.
-
-More awareness to this please, on the topic.
-
-The Light Be With You.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 
+-- 
+With best wishes
+Dmitry
