@@ -1,199 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11518F6F;
-	Fri,  7 Jun 2024 00:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58FFC8CE
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 00:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717721426; cv=none; b=KPfv4G2kk/1HuJ92u2cEwh07nSXKQ0fhsixqsjL2CuW7K0BTYjAB5FIBLFMZTDdxe/n+cRnlmcF/OD6twrfJqrRjPX0TpjeGsnhzYWvcxwubVbr2+fSF9f0x+vHUnBdWw/TVrvC+nenaWTOY5OXxE6NlyY2a/0r1op8SWJu6qIc=
+	t=1717721499; cv=none; b=gSze7xt7U9AWw0Xx6x+BlP7oXro3h3qwG6ea+yr8n8g0N3Nf9+0i38VbBoG9Dfx9ohqB340c7NMKxvXaVFJmgGXXgU+0zGJguUE2QNl5YBy45rIzzkGXU5gpwGhP89WCtvMH9ncAosVrAjajnlVyNYPPojy+q2H6dGwk1gNSFvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717721426; c=relaxed/simple;
-	bh=9OKGY5q4vExwsfS8GMOedX/ElPhLjFkOClCt3m5gVZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qu9gsKg6YjurV8TAvXp501je9jj7NWMTVWExAuUMrbe/cnkipdnQLsubZzUcVcZ14qt35UDtnU3WHEJRV6qEuY4mrOdS8I3FuaP5r06tRixyKhlzoqaYJJySaAAiA8hOcEdz6x5VhrSFhl8zj7JJH3xWC2x1dMzx4V62+vddGYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KslxOWeb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717721499; c=relaxed/simple;
+	bh=uIb7wnZICX9UPx+noCmwg0Dz4YxJOsZCbS38HSFGt0A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=IGg2Zp4y3AGdiXJu5qA+rdRUwSc6CyDr8PUkj8BJfneYnfghN4Y9QGD1KlqiJ+h64lzGcsTe//MY354lT8g2v5TCg9u+nCTn15Bx0lX3Hctzvs1GupxdMKhJrBu+VRv6RLzrkmWHSYWFnOLfG6wNDeltYkXMijFebxRlVF7dUk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Caslv8JU; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KslxOWeb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4946C32781;
-	Fri,  7 Jun 2024 00:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717721426;
-	bh=9OKGY5q4vExwsfS8GMOedX/ElPhLjFkOClCt3m5gVZw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KslxOWebZJXc7JSabOa6yOC3jTVh8v8kZ6VwVrnM/wr0g5QpeZF60SGSxtuM4SW7m
-	 x/WzQZc+1RM55hzpES1AEYgyjapyeLrY73c7Tcqjg5f66fkh03b9KLKkurFGNfgM+C
-	 n3HtUZ/sfSv/UUWC1ia+bgCPZ3PuTI5WIX82TyTcpsxMX2j32PX8z33LDOH2bGbzgF
-	 I51lxOEVJk8h0/ReeK/KJB9TaETc1G6qz2A3upxWoSDhbraftIi4PkfvtX3SPmMv0g
-	 KSpBA8oloaIJlli6R7kss7YZsZROO4jzud1t05annAVpfhHGEe0DR9nXvjaeBB/r5Y
-	 /DcJGLk3UnRJQ==
-Date: Thu, 6 Jun 2024 17:50:24 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, acme@redhat.com,
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf sched map: Add command-name option to filter the
- output map
-Message-ID: <ZmJZULPzy0C4aPiO@google.com>
-References: <20240417152521.80340-1-vineethr@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Caslv8JU"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a2aec8521so24902257b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 17:51:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717721494; x=1718326294; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PukLxFDU0Ot3Jcb8XBqyyI+4uu9g3SHu9LygR/IsHug=;
+        b=Caslv8JUIGwtXlCbdudeQzfguSMkr/rbeT2uHHSqk5WivmqWHBcGhIQlbFXJB7yXcY
+         pUTpAHd+5YhshoKljnEriaMZD+pNp2mhEQphM8aGtzQ9JhwfEDCeQAJ49hhYG8Fz/MWh
+         A8StbBNy0PXDYJyG5DjIG4OUZZ/VUUsv7jYv+ruHdi3uL7yN9jmBnu5ncw2JMuQUhP/i
+         SZ7rJj2vcL5gwWOsDO17y6LBZ56n/ot3u583FKrR2OO/Km07kasG7nN0cttBAbkL8hUr
+         q1U8nWK8EvFvV2Zkx/r3S3dabI5CrJ6rhToRf4fUL9iw++UDCr69e0VuQXMFko4F2P7X
+         VHMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717721494; x=1718326294;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PukLxFDU0Ot3Jcb8XBqyyI+4uu9g3SHu9LygR/IsHug=;
+        b=qWGp/FkP9eR2k/qbybiEbAkAGC7jM7iAK/U0HjClyucxn8xncKaFYJMUfEgfARB6fJ
+         57dJhM5olAsLXPve9rdK1knCLFLTOWJZnxQ3Na1PjnL9eO+syE4X5gj7Rqf4vvIJ5DgM
+         EXfdwiFKHnuTY0664nnpnkXvYLiS4wzRr+iiEbFMbNRZz3HhFutFfGlQFSbV3scUlRSA
+         lAV7ObYtcX68aZc7zqbNc+z5kz14oLOHTr/es4aBOCYIEIr2M9kVZiRF8NjsYX6mnuwx
+         /9vFLthXjhPq+ZFi4/uHxbhcI68mJtNSQnfuxPQauarJ+KxY/g/pyntVIPInaEP1i/a9
+         U8fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPPFZbB8CT1yqu9hQBvc0hMs4z6GcqvYW++gDhk9CV0dpdpWXRlsUwx6w69HI86FwIuKpAt4i6OhKxkFwk/XAqXjXOMhMLlBggTPXF
+X-Gm-Message-State: AOJu0YzyNt/ZUV4Hdx2dh26Q/A/M3zyb4EQRqQtrgN1xIp4KDAz0yf9o
+	jkHv9vgNXJqbNC8AlANJVIMf8rTQ9QbT4PVl0ebo8VCDBTM4oTcMAcyxWm+FiOlXBgMaLoG2l0t
+	AZFjeqwuKbhAdNG4KbuM3Eg==
+X-Google-Smtp-Source: AGHT+IEZf66CQYP7XEHxcxBhj1Silky2S0IJTrjIsPyH+y5kGILp/fpMtLnssPSkYdRLWxrdYLn/tBn9GjBsa1qOzA==
+X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
+ (user=almasrymina job=sendgmr) by 2002:a05:690c:6482:b0:627:c0ac:63f5 with
+ SMTP id 00721157ae682-62cd557880bmr2528737b3.2.1717721493894; Thu, 06 Jun
+ 2024 17:51:33 -0700 (PDT)
+Date: Fri,  7 Jun 2024 00:51:11 +0000
+In-Reply-To: <20240607005127.3078656-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240417152521.80340-1-vineethr@linux.ibm.com>
+Mime-Version: 1.0
+References: <20240607005127.3078656-1-almasrymina@google.com>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Message-ID: <20240607005127.3078656-2-almasrymina@google.com>
+Subject: [PATCH net-next v11 01/13] netdev: add netdev_rx_queue_restart()
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Cc: Mina Almasry <almasrymina@google.com>, Donald Hunter <donald.hunter@gmail.com>, 
+	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Add netdev_rx_queue_restart() function to netdev_rx_queue.h
 
-Sorry for the late reply.
+Signed-off-by: David Wei <dw@davidwei.uk>
+Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-On Wed, Apr 17, 2024 at 08:55:21PM +0530, Madadi Vineeth Reddy wrote:
-> By default, perf sched map prints sched-in events for all the tasks
-> which may not be required all the time as it prints lot of symbols
-> and rows to the terminal.
-> 
-> With --command-name option, one could specify the specific command
-> for which the map has to be shown. This would help in analyzing the
-> CPU usage patterns easier for that specific command. Since multiple
-> PID's might have the same command name, using command-name filter
-> would be more useful for debugging.
-> 
-> For other tasks, instead of printing the symbol, ** is printed and
-> the same . is used to represent idle. ** is used instead of symbol
-> for other tasks because it helps in clear visualization of command
-> of interest and secondly the symbol itself doesn't mean anything
-> because the sched-in of that symbol will not be printed(first sched-in
-> contains pid and the corresponding symbol).
-> 
-> 6.8.0
-> ======
->   *A0                   213864.670142 secs A0 => migration/0:18
->   *.                    213864.670148 secs .  => swapper:0
->    .  *B0               213864.670217 secs B0 => migration/1:21
->    .  *.                213864.670223 secs
->    .   .  *C0           213864.670247 secs C0 => migration/2:26
->    .   .  *.            213864.670252 secs
-> 
-> 6.8.0 + patch (--command-name = schbench)
-> =============
->    **  .   ** *A0       213864.671055 secs A0 => schbench:104834
->   *B0  .   .   A0       213864.671156 secs B0 => schbench:104835
->   *C0  .   .   A0       213864.671187 secs C0 => schbench:104836
->   *D0  .   .   A0       213864.671219 secs D0 => schbench:104837
->   *E0  .   .   A0       213864.671250 secs E0 => schbench:104838
->    E0  .  *D0  A0
-> 
-> This helps in visualizing how a benchmark like schbench is spread over
-> the available cpus while also knowing which cpus are idle(.) and which
-> are not(**). This will be more useful as number of CPUs increase.
+---
 
-Yeah I think this is good!  Thanks for working on this.
+v11:
+- Fix not checking dev->queue_mgmt_ops (Pavel).
+- Fix ndo_queue_mem_free call that passed the wrong pointer (David).
 
-But I guess people want to see when the tasks were sched out as well.
-Can you please add that too?
+v9: https://lore.kernel.org/all/20240502045410.3524155-4-dw@davidwei.uk/
+(submitted by David).
+- fixed SPDX license identifier (Simon).
+- Rebased on top of merged queue API definition, and changed
+  implementation to match that.
+- Replace rtnl_lock() with rtnl_is_locked() to make it useable from my
+  netlink code where rtnl is already locked.
 
-> 
-> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-> ---
->  tools/perf/Documentation/perf-sched.txt |  4 ++++
->  tools/perf/builtin-sched.c              | 17 ++++++++++++++---
->  2 files changed, 18 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-> index 5fbe42bd599b..b04a37560935 100644
-> --- a/tools/perf/Documentation/perf-sched.txt
-> +++ b/tools/perf/Documentation/perf-sched.txt
-> @@ -94,6 +94,10 @@ OPTIONS for 'perf sched map'
->  --color-pids::
->  	Highlight the given pids.
->  
-> +--command-name::
-> +	Map output only for the given command name.
-> +	(** indicates other tasks while . is idle).
+---
+ include/net/netdev_rx_queue.h |  3 ++
+ net/core/Makefile             |  1 +
+ net/core/netdev_rx_queue.c    | 74 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 78 insertions(+)
+ create mode 100644 net/core/netdev_rx_queue.c
 
-Probably we can support multiple names in CSV.
+diff --git a/include/net/netdev_rx_queue.h b/include/net/netdev_rx_queue.h
+index aa1716fb0e53c..e78ca52d67fbf 100644
+--- a/include/net/netdev_rx_queue.h
++++ b/include/net/netdev_rx_queue.h
+@@ -54,4 +54,7 @@ get_netdev_rx_queue_index(struct netdev_rx_queue *queue)
+ 	return index;
+ }
+ #endif
++
++int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq);
++
+ #endif
+diff --git a/net/core/Makefile b/net/core/Makefile
+index 62be9aef25285..f82232b358a2c 100644
+--- a/net/core/Makefile
++++ b/net/core/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_NETDEV_ADDR_LIST_TEST) += dev_addr_lists_test.o
+ 
+ obj-y += net-sysfs.o
+ obj-y += hotdata.o
++obj-y += netdev_rx_queue.o
+ obj-$(CONFIG_PAGE_POOL) += page_pool.o page_pool_user.o
+ obj-$(CONFIG_PROC_FS) += net-procfs.o
+ obj-$(CONFIG_NET_PKTGEN) += pktgen.o
+diff --git a/net/core/netdev_rx_queue.c b/net/core/netdev_rx_queue.c
+new file mode 100644
+index 0000000000000..de0575cf6df5d
+--- /dev/null
++++ b/net/core/netdev_rx_queue.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/netdevice.h>
++#include <net/netdev_queues.h>
++#include <net/netdev_rx_queue.h>
++
++int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
++{
++	void *new_mem, *old_mem;
++	int err;
++
++	if (!dev->queue_mgmt_ops || !dev->queue_mgmt_ops->ndo_queue_stop ||
++	    !dev->queue_mgmt_ops->ndo_queue_mem_free ||
++	    !dev->queue_mgmt_ops->ndo_queue_mem_alloc ||
++	    !dev->queue_mgmt_ops->ndo_queue_start)
++		return -EOPNOTSUPP;
++
++	DEBUG_NET_WARN_ON_ONCE(!rtnl_is_locked());
++
++	new_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
++	if (!new_mem)
++		return -ENOMEM;
++
++	old_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
++	if (!old_mem) {
++		err = -ENOMEM;
++		goto err_free_new_mem;
++	}
++
++	err = dev->queue_mgmt_ops->ndo_queue_mem_alloc(dev, new_mem, rxq_idx);
++	if (err)
++		goto err_free_old_mem;
++
++	err = dev->queue_mgmt_ops->ndo_queue_stop(dev, old_mem, rxq_idx);
++	if (err)
++		goto err_free_new_queue_mem;
++
++	err = dev->queue_mgmt_ops->ndo_queue_start(dev, new_mem, rxq_idx);
++	if (err)
++		goto err_start_queue;
++
++	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, old_mem);
++
++	kvfree(old_mem);
++	kvfree(new_mem);
++
++	return 0;
++
++err_start_queue:
++	/* Restarting the queue with old_mem should be successful as we haven't
++	 * changed any of the queue configuration, and there is not much we can
++	 * do to recover from a failure here.
++	 *
++	 * WARN if the we fail to recover the old rx queue, and at least free
++	 * old_mem so we don't also leak that.
++	 */
++	if (dev->queue_mgmt_ops->ndo_queue_start(dev, old_mem, rxq_idx)) {
++		WARN(1,
++		     "Failed to restart old queue in error path. RX queue %d may be unhealthy.",
++		     rxq_idx);
++		dev->queue_mgmt_ops->ndo_queue_mem_free(dev, old_mem);
++	}
++
++err_free_new_queue_mem:
++	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, new_mem);
++
++err_free_old_mem:
++	kvfree(old_mem);
++
++err_free_new_mem:
++	kvfree(new_mem);
++
++	return err;
++}
+-- 
+2.45.2.505.gda0bf45e8d-goog
 
-Thanks,
-Namhyung
-
-
-> +
->  OPTIONS for 'perf sched timehist'
->  ---------------------------------
->  -k::
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 0fce7d8986c0..e60836da53e5 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -156,6 +156,7 @@ struct perf_sched_map {
->  	const char		*color_pids_str;
->  	struct perf_cpu_map	*color_cpus;
->  	const char		*color_cpus_str;
-> +	const char		*command;
->  	struct perf_cpu_map	*cpus;
->  	const char		*cpus_str;
->  };
-> @@ -1594,8 +1595,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  
->  	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
->  
-> -	printf("  ");
-> -
->  	new_shortname = 0;
->  	if (!tr->shortname[0]) {
->  		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
-> @@ -1605,7 +1604,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  			 */
->  			tr->shortname[0] = '.';
->  			tr->shortname[1] = ' ';
-> -		} else {
-> +		} else if (!sched->map.command || !strcmp(thread__comm_str(sched_in),
-> +								sched->map.command)) {
->  			tr->shortname[0] = sched->next_shortname1;
->  			tr->shortname[1] = sched->next_shortname2;
->  
-> @@ -1618,10 +1618,18 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  				else
->  					sched->next_shortname2 = '0';
->  			}
-> +		} else {
-> +			tr->shortname[0] = '*';
-> +			tr->shortname[1] = '*';
->  		}
->  		new_shortname = 1;
->  	}
->  
-> +	if (sched->map.command && strcmp(thread__comm_str(sched_in), sched->map.command))
-> +		goto skip;
-> +
-> +	printf("  ");
-> +
->  	for (i = 0; i < cpus_nr; i++) {
->  		struct perf_cpu cpu = {
->  			.cpu = sched->map.comp ? sched->map.comp_cpus[i].cpu : i,
-> @@ -1678,6 +1686,7 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  out:
->  	color_fprintf(stdout, color, "\n");
->  
-> +skip:
->  	thread__put(sched_in);
->  
->  	return 0;
-> @@ -3560,6 +3569,8 @@ int cmd_sched(int argc, const char **argv)
->                      "highlight given CPUs in map"),
->  	OPT_STRING(0, "cpus", &sched.map.cpus_str, "cpus",
->                      "display given CPUs in map"),
-> +	OPT_STRING(0, "command-name", &sched.map.command, "command",
-> +		"map output only for the given command name"),
->  	OPT_PARENT(sched_options)
->  	};
->  	const struct option timehist_options[] = {
-> -- 
-> 2.39.1
-> 
