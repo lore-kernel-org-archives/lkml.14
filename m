@@ -1,106 +1,77 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B116E15DBBA;
-	Fri,  7 Jun 2024 10:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37B7B15CD7D;
+	Fri,  7 Jun 2024 10:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717754615; cv=none; b=t50IItQcRC+4k6yffGGBQMZ+MCjJOLn0Hunk+uCdhSGPCKKWru7xubw8HQzUVEnZAMllaDvXQX8vDPoN9FxKBwHacdd8GAkBfXQTBjArmc/mlSwR2+63fsUldRbUXBWik1aSqfMlIILR62fCtxvfpP+Fse9vFqz8OXRTKEEvE+k=
+	t=1717754628; cv=none; b=GNcbysluJZ+HzYaj0g4Y8/ETOtE863Z+QEBHtBxb50yLZm5rw1VcUSq99kN/Mx69m0Zzc6+TXc8mxgYQDxkN0ofkGz+TmdzkzOk4eRy1Y4gw7GV+AJKYpWeMobmFWNWdDgsrh9Iv+GROBElUf9mPyaiWhOR4dUaXKbQuxVgMEr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717754615; c=relaxed/simple;
-	bh=amMZc6m1aRSEtTlrDesVe38Db++HH1vW/7Yeem0LOHc=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=q01kqFWv7iA2Col1oaBs8of71/o88YayZGHLGUIDRZplJ83jMzQvz+R8+1z8QeagtWK5gZrOSxjdnqU0nyTmpld50bHBAmIxxuVNtbGYqQsdXLGaVMZP99tKuGLWRWT39pYHfP2+uopkD6e05RzBLFPtKM77OK1RQ1wB9Xe8M9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WWS2h7mK; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1717754628; c=relaxed/simple;
+	bh=rLfqKnBrl/JeZDlnCLR6XMpnZNF7Dk5Orfjdv9CwB+I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=moJ28iIgjtfp2CBFNYaZJfjWWMzTWltmElrzAeXZ86VlbHyMNvhyLYL+eV/VyrlGuvMGAVkkTlNnvPBn8LbUKr6+dSAdsaIDN+kvk9XW1XeaB2N8a6x5WnSQPjE9DeW5wjBNDVtgB+5emq+v4O3ylOBHPThtr7t90Vol3r74EUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Lh0rEY/A; arc=none smtp.client-ip=45.254.50.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WWS2h7mK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717754612;
-	bh=amMZc6m1aRSEtTlrDesVe38Db++HH1vW/7Yeem0LOHc=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=WWS2h7mKUHQ/KjyyIMm4ZMV44uFbqpA23mdxJKsHdJ7buh3vkY7dDGJuTdJ+wHg+C
-	 hkyUxCvAUb8OpmSSwVqodtMbREdF2yIJh8oWpS3sgIfrWZGRnykvdYOjtiJvRM3WKD
-	 VrQ7ocvgE2iqIxy970gR/R/51ZwQeoGyQamDPfFUPXNtH8USjPcjkDv1Th+0X3AG0T
-	 5mmydkFWRKzfuWp9YyDh6FZFwm+vYJsiKAo+1cZtpbvJ/vc7PbuLoydZLQz4h0WgLe
-	 8t5c/hQ6z2cYB5cixQLjsDiHSIuzmGSjqAXgYLs8/A0H88hpnzVlHus8HU89ur6Rss
-	 BtW2xhMV7xurg==
-Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 517EA37811D1;
-	Fri,  7 Jun 2024 10:03:27 +0000 (UTC)
-Message-ID: <06c41273-47c3-421a-8fbe-dbcf8321de7e@collabora.com>
-Date: Fri, 7 Jun 2024 15:04:01 +0500
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Lh0rEY/A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ezWsI
+	hM4Hh8p+QSv6p+yh190SDsAVLFSlr3UVPG0n3g=; b=Lh0rEY/Avpk51PMZDnOiN
+	DP7nOigge3P2OsGu31V4U3KIVXPrE/mZOcH21tNQP4uCbu6js2/HLKq2bplKqFN/
+	7+ypgabAtjWanzK6XlGN8fAnk1SMAUQrmdkOeZRwmR6NFeJrz2gg3+wZzdvq9lSu
+	Gn4d2zV/JfGZqFhFbMDPRw=
+Received: from localhost.localdomain (unknown [112.97.63.251])
+	by gzga-smtp-mta-g0-3 (Coremail) with SMTP id _____wD3fxzf2mJm_EwiBw--.9011S2;
+	Fri, 07 Jun 2024 18:03:12 +0800 (CST)
+From: Slark Xiao <slark_xiao@163.com>
+To: loic.poulain@linaro.org,
+	ryazanov.s.a@gmail.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	Slark Xiao <slark_xiao@163.com>
+Subject: [PATCH v1 2/2] net: wwan: Fix SDX72 ping failure issue
+Date: Fri,  7 Jun 2024 18:03:09 +0800
+Message-Id: <20240607100309.453122-1-slark_xiao@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, cmllamas@google.com,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kernel-team@android.com, llvm@lists.linux.dev, linux-mm@kvack.org
-Subject: Re: [PATCH v1 1/2] selftests/mm: Include linux/mman.h
-To: Edward Liaw <edliaw@google.com>, shuah@kernel.org,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20240605223637.1374969-1-edliaw@google.com>
- <20240605223637.1374969-2-edliaw@google.com>
- <b5e4ca79-8be0-4085-adfa-e8ee1c855fdb@collabora.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <b5e4ca79-8be0-4085-adfa-e8ee1c855fdb@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3fxzf2mJm_EwiBw--.9011S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7JFWkWFy7JF4xXF1kZryUAwb_yoW8Jr4rpa
+	yUKFZIkrWxJ3yUWw4UJayaqFy5ua1qg34ak3yUuwnYqrn0vry3AFZ3XFyUJw1Yya4kAr4U
+	CFy8Ary3Xa1kCrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRLYFAUUUUU=
+X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiJRP2ZGVOBlO3YwABsP
 
-On 6/7/24 2:44 PM, Muhammad Usama Anjum wrote:
-> On 6/6/24 3:36 AM, Edward Liaw wrote:
->> thuge-gen defines MAP_HUGE_* macros that are provided by linux/mman.h
->> since 4.15. Removes the macros and includes linux/mman.h instead.
->>
->> Signed-off-by: Edward Liaw <edliaw@google.com>
->> ---
->>  tools/testing/selftests/mm/thuge-gen.c | 5 +----
->>  1 file changed, 1 insertion(+), 4 deletions(-)
->>
->> diff --git a/tools/testing/selftests/mm/thuge-gen.c b/tools/testing/selftests/mm/thuge-gen.c
->> index ea7fd8fe2876..034635317935 100644
->> --- a/tools/testing/selftests/mm/thuge-gen.c
->> +++ b/tools/testing/selftests/mm/thuge-gen.c
->> @@ -15,6 +15,7 @@
->>  
->>  #define _GNU_SOURCE 1
->>  #include <sys/mman.h>
->> +#include <linux/mman.h>
->>  #include <stdlib.h>
->>  #include <stdio.h>
->>  #include <sys/ipc.h>
->> @@ -28,10 +29,6 @@
->>  #include "vm_util.h"
->>  #include "../kselftest.h"
->>  
->> -#define MAP_HUGE_2MB    (21 << MAP_HUGE_SHIFT)
->> -#define MAP_HUGE_1GB    (30 << MAP_HUGE_SHIFT)
->> -#define MAP_HUGE_SHIFT  26
->> -#define MAP_HUGE_MASK   0x3f
-> Totally makes sense.
-> Reviewed-by: Muhammad Usama Anjum <usama.anju@collabora.com>
-Fixing typo:
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+For SDX72 MBIM device, it starts data mux id from 112 instead of 0.
+This would lead to device can't ping outside successfully.
+Also MBIM side would report "bad packet session (112)".
+So we add a link id default value for these SDX72 products which
+works in MBIM mode.
 
-> 
->>  #if !defined(MAP_HUGETLB)
->>  #define MAP_HUGETLB	0x40000
->>  #endif
-> 
+Signed-off-by: Slark Xiao <slark_xiao@163.com>
+---
+ drivers/net/wwan/mhi_wwan_mbim.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/wwan/mhi_wwan_mbim.c b/drivers/net/wwan/mhi_wwan_mbim.c
+index 3f72ae943b29..4ca5c845394b 100644
+--- a/drivers/net/wwan/mhi_wwan_mbim.c
++++ b/drivers/net/wwan/mhi_wwan_mbim.c
+@@ -618,7 +618,8 @@ static int mhi_mbim_probe(struct mhi_device *mhi_dev, const struct mhi_device_id
+ 	mbim->rx_queue_sz = mhi_get_free_desc_count(mhi_dev, DMA_FROM_DEVICE);
+ 
+ 	/* Register wwan link ops with MHI controller representing WWAN instance */
+-	return wwan_register_ops(&cntrl->mhi_dev->dev, &mhi_mbim_wwan_ops, mbim, 0);
++	return wwan_register_ops(&cntrl->mhi_dev->dev, &mhi_mbim_wwan_ops, mbim,
++		mhi_dev->mhi_cntrl->link_id ? mhi_dev->mhi_cntrl->link_id : 0);
+ }
+ 
+ static void mhi_mbim_remove(struct mhi_device *mhi_dev)
 -- 
-BR,
-Muhammad Usama Anjum
+2.25.1
+
