@@ -1,122 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117CA1CD02;
-	Fri,  7 Jun 2024 18:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19E51A270;
+	Fri,  7 Jun 2024 18:48:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717785804; cv=none; b=DmC4Zp0G5fs0h1wSHLM0fbObLtG6ztOS+69UzSORrP+QM4gXKZp5hW9o5oId7yyH4720ZqUDuriDZTjXFtd6hG3v9+MvUzJJJAssN8fqkhTbapVk52YjA+nIyOUoWe/ceSQpcrN0+ci2PwMOvK1HnADHTlqK3cOMtf7SwQUEUGY=
+	t=1717786095; cv=none; b=lhg6dbV3yzg0EtgXXJtCt5Lx7NPVDw5ZjBnbNvPpqR9uwyKF5sgVJY31Schu+NwMWemAcElpzvuIqout2mrC+7aGCraAWToIqwmEn7jlLT6LILryTLVX50lA0PJUyHV7W/XKPPttmcAN+k+9mVhegbFgpnX1NnbBFjFLX2N2+Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717785804; c=relaxed/simple;
-	bh=OCTLuk/DIpZjCuMdEwXD4ZYH2rU5XWljSDnPfquC+XQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=A3cODvTYj5se672LrLHBqRByxqbI9jDql5JxpDuZE55g97YucYTta71OIxGuuMZ6FhBUMezFy0QXvF+7leSailW+ZpICwsxomtm621MWTxRID0bb+cZhG+A3kw/TskSi++NIUxxvmiFuTT6SPfS49kBwQE9o5FhLi/EirwHMTQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvClyOjf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717786095; c=relaxed/simple;
+	bh=DtGgDy+D5KM3EF/EaCxohZ818IYKLcFGHBkvEIlLjoo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DJ6gNGDx4MuucxVCUnvC3LWaZoLThoj6luIoOsFlv2zjXgwsVrP9Y/FGnCjer/k4VhNMpQW8S/to8QJ0rjw0t2wiOxyIAEpJbelWFsk3hh07c8N5exXgQITKKng9gRA+AxegQGKr/BuX2YPQdW9uW2BLWp0C4cqaHqVaybDTna0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ee3lp7YW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvClyOjf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 482B5C2BBFC;
-	Fri,  7 Jun 2024 18:43:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ee3lp7YW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ED11C32781;
+	Fri,  7 Jun 2024 18:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717785803;
-	bh=OCTLuk/DIpZjCuMdEwXD4ZYH2rU5XWljSDnPfquC+XQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lvClyOjfiMvMLVUxa9M8Ra8v/0slconYbv+YKmVtK3DEaJ+0XlVZ1a5ZNQbMhHrV/
-	 zUkvlgZvjmAmvvNSKaLHuWsCmi+pIUZx/wj33h+5ulghxjxjhg2xwhgntLWGFRcQqs
-	 G0rqi3F5z8MCKS8h4laqhVbFRgZQaNHSGIMpUhZlmKUWXYTvFKtfzinZ/EuIHxMA/A
-	 fX4IwZmlBp1ZXPBM7HPFLb9MoOTUKH5zBcp9xH7ghMEiaqA1ejvioVeozxUZKIQKZb
-	 94pUicfCZMhWv8y/ln/FTP5v1WENEIgF9IP3kZ24kcj9yDWk30AKZOGH9DNs9R014x
-	 MWxhjTgsSMHCQ==
-Date: Fri, 7 Jun 2024 13:43:20 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Wei Huang <wei.huang2@amd.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-	bhelgaas@google.com, corbet@lwn.net, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	alex.williamson@redhat.com, gospo@broadcom.com,
-	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
-	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
-	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
-	vadim.fedorenko@linux.dev, horms@kernel.org, bagasdotme@gmail.com
-Subject: Re: [PATCH V2 6/9] PCI/TPH: Retrieve steering tag from ACPI _DSM
-Message-ID: <20240607184320.GA853474@bhelgaas>
+	s=k20201202; t=1717786094;
+	bh=DtGgDy+D5KM3EF/EaCxohZ818IYKLcFGHBkvEIlLjoo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ee3lp7YWd80nonZ8cGDbIUHpkB6GiiBD5a4S2yQPTQLz+ZiUJWM3Ffxm/kF6o2SbE
+	 ALLh9uNXxvhWYNZtieW5N9DCfp7oLxZep2VEITrQGbaNscLowYzU90Kf/9ouX1QsdM
+	 jN2NjKKBoOjmcKM3h27UCcdLoCK/dRSxQi8vo4H9NXNFwaMHmwFTZ90qLDgieciAh1
+	 RvtaTYwqxaxdoS92V9QMXT7UAuo1GBjYqePWJ4SAQ77pwUamZWBnBmGbHvYoQk6cdM
+	 y+efsj5fxjPib0H+Nr2wIyKGvfwmUR2eK7HA1jHKaefsLTGM3+YfA7y5kTs9j80swl
+	 1xRTlTqlOtuaQ==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v2 0/7] HID/arm64: dts: qcom: sc8280xp-x13s: fix touchscreen power on
+Date: Fri,  7 Jun 2024 13:48:11 -0500
+Message-ID: <171778608823.816738.7581855560296370875.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240507144821.12275-1-johan+linaro@kernel.org>
+References: <20240507144821.12275-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531213841.3246055-7-wei.huang2@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 31, 2024 at 04:38:38PM -0500, Wei Huang wrote:
-> According to PCI SIG ECN, calling the _DSM firmware method for a given
-> CPU_UID returns the steering tags for different types of memory
-> (volatile, non-volatile). These tags are supposed to be used in ST
-> table entry for optimal results.
 
-Cite PCI Firmware spec if possible.  If it hasn't been incorporated
-yet, at least include the exact name of the ECN and the date it was
-approved.
+On Tue, 07 May 2024 16:48:14 +0200, Johan Hovold wrote:
+> The Elan eKTH5015M touch controller on the X13s requires a 300 ms delay
+> before sending commands after having deasserted reset during power on.
+> 
+> This series switches the X13s devicetree to use the Elan specific
+> binding so that the OS can determine the required power-on sequence and
+> make sure that the controller is always detected during boot. [1]
+> 
+> [...]
 
-Say what the patch does in the commit log (in addition to the subject
-line).
+Applied, thanks!
 
-> +#define MIN_ST_DSM_REV		7
+[7/7] arm64: defconfig: enable Elan i2c-hid driver
+      commit: e706474d8428f420bba11f2c49c3083fd1b31d88
 
-No useful value in this #define.  If the value ever changes, code
-changes will be required too.
-
-> +#define ST_DSM_FUNC_INDEX	0xf
-
-Move to the list in pci-acpi.h with name similar to others.
-
-> +static bool invoke_dsm(acpi_handle handle, u32 cpu_uid, u8 ph,
-> +		       u8 target_type, bool cache_ref_valid,
-> +		       u64 cache_ref, union st_info *st_out)
-> +{
-
-Return 0 or -errno.  "invoke_dsm" is not a predicate with an obvious
-true/false meaning.
-
-> +	union acpi_object in_obj, in_buf[3], *out_obj;
-> +
-> +	in_buf[0].integer.type = ACPI_TYPE_INTEGER;
-> +	in_buf[0].integer.value = 0; /* 0 => processor cache steering tags */
-> +
-> +	in_buf[1].integer.type = ACPI_TYPE_INTEGER;
-> +	in_buf[1].integer.value = cpu_uid;
-> +
-> +	in_buf[2].integer.type = ACPI_TYPE_INTEGER;
-> +	in_buf[2].integer.value = ph & 3;
-> +	in_buf[2].integer.value |= (target_type & 1) << 2;
-> +	in_buf[2].integer.value |= (cache_ref_valid & 1) << 3;
-> +	in_buf[2].integer.value |= (cache_ref << 32);
-> +
-> +	in_obj.type = ACPI_TYPE_PACKAGE;
-> +	in_obj.package.count = ARRAY_SIZE(in_buf);
-> +	in_obj.package.elements = in_buf;
-
-Must check whether this _DSM function is implemented first, e.g., see
-acpi_enable_dpc().
-
-> +	out_obj = acpi_evaluate_dsm(handle, &pci_acpi_dsm_guid, MIN_ST_DSM_REV,
-> +				    ST_DSM_FUNC_INDEX, &in_obj);
-> +
-> +	if (!out_obj)
-> +		return false;
-> +
-> +	if (out_obj->type != ACPI_TYPE_BUFFER) {
-> +		pr_err("invalid return type %d from TPH _DSM\n",
-> +		       out_obj->type);
-> +		ACPI_FREE(out_obj);
-> +		return false;
-> +	}
-> +
-> +	st_out->value = *((u64 *)(out_obj->buffer.pointer));
-> +
-> +	ACPI_FREE(out_obj);
-> +
-> +	return true;
-> +}
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
