@@ -1,185 +1,189 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2071.outbound.protection.outlook.com [40.107.249.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF7915D5A5;
-	Fri,  7 Jun 2024 10:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717754460; cv=none; b=CdzwsVQMgIx9aJBRyLCAYVq1tumUn7NfVzhx/CD5jccFts6yO3AJxWqRn7W03rJuOmckRBLiuOvsgVplsYNz9B+ZktEwuMe+KOdImlWWuLltvbobijIzddCg2Zl63o7DMntH7va3usFK/bd3T4/pW+I5IrTZwZBoYXGltpBo6ss=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717754460; c=relaxed/simple;
-	bh=hvam9ZzZ3n8GYR2xcTM6bOCO+wsLEhhNJ5qt5VkFFao=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tA3iSP0PauAtOkKNWyCb3/9w/3LjrQKtWXtv/aeWc1FjGOnXzJZy0OoGaRnkDi31hduSU+qIqx/dbZuVT1WznlLiUvWQqRGzyZ19aAg+BCbQCGR/QZ5BGy6f2/vZ66EqXDN1MJ1Gr1AQc6yuAqVCKEHyg9HyTEDSRwgDXt/A9EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=WjlAm8IC; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385F915D5C5;
+	Fri,  7 Jun 2024 10:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717754464; cv=fail; b=LNdbgrx3qAKxvicnMLvALN5qaQ01PJMmwbrd3ZULl1E8o3ZkaSSVxr4rn/k3kpTxcFzzydTV7BN50J+YbQ/xPvDuTHTPYAPIVzOUcM69Nw+KLJPGEaw53zywbh0/cmJNmMoJzFlAKpr8HvOZgGVFymrwwhS73yomQMoDk/sVit4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717754464; c=relaxed/simple;
+	bh=EdTYqBxadtY2HYA1NzjCy24oXQlUT2Dqvdo85dtRYz8=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=Ri/QjyQMESj06lcTLHNLOHaQgVNSXlAQ+q4lYNEHPT359BD3CPu5Lv1bsnvyH0kbBbLNguUjspyNhZuleBQZy8Lm2SCMOvscwKOgA5DPl/g4DReXRTwRkoCaCnCdb6WzzbF8VrjkOmsBiOaTAAm02LGAawRAKlTdRAI7L2+XUS4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=it33gaka; arc=fail smtp.client-ip=40.107.249.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="WjlAm8IC"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45791lAA009506;
-	Fri, 7 Jun 2024 12:00:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	hBO/8sFCkcPpRtbOEbZweOTDMZQkjBRnKwGu29CWvBY=; b=WjlAm8ICSHmsk/8u
-	M229+clIT1cv26522ElaPt82nbcIybYt1YXZHroCZN3Y1bYqo6IkK5HAj+1UlhdL
-	CQb95kIKGf0yBRZR4SfM9+ZAe+d2iWlVrfnRZ6kdjkCwC4mPmSAkZ7eeXn4Mspmf
-	pVor7pCSss+IrdHGdTWhM9rqTNmEC5JxZhbX3T70T+ZAeD4hYMR2Z36+7mA/I0UZ
-	Ydh9I+vc8SV0zU9mVTamN2lzKHXJkXvqJco0HrVkzyV+bW6AwdLAanXLs44NbEN1
-	OZJaUhDrLBakN011RacvV2E8E8KAVwJV4QzhAceRbAs0x/GVfzOaezYC6+s/ijIx
-	bWdIiw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yfw91swjf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Jun 2024 12:00:31 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EDA7540049;
-	Fri,  7 Jun 2024 12:00:26 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 267D8214D11;
-	Fri,  7 Jun 2024 11:59:16 +0200 (CEST)
-Received: from localhost (10.252.19.205) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 7 Jun
- 2024 11:59:15 +0200
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 07/12] net: stmmac: dwmac-stm32: Mask support for PMCR configuration
-Date: Fri, 7 Jun 2024 11:57:49 +0200
-Message-ID: <20240607095754.265105-8-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240607095754.265105-1-christophe.roullier@foss.st.com>
-References: <20240607095754.265105-1-christophe.roullier@foss.st.com>
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="it33gaka"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cZyOsVOJONI1jk/22WUBJCutR/Je9+aV0yk6LdwXG9BjIrLe+wdYg5uLnS0C0LEh1OvST/CQBhwVE9UENfXBEWXeMB8JAcjbbDZVnaJYyo55kqxEI9/vjirMd/eiM52vAKCib2OQSLPj956yn1TybWcfa0l6UUVVNGfgzlGn7z2iWeik2qKGwhhPiiQpsC08lT5hTQ2thQNXaO4LIRXHLypZO3JG2y1NxFy0uP26b0XpPfZ7Y2zFpa/Ldl6yIh1N7PgWZgUZaUVs8oTmM7ggzORWyJPlBJYA1G8EOvWtGG2MZVgnD8y1pziFEyY4WlTc3HR9DpvOCGSk6qAFAZ8iCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YUREBq54H9jZE7Z7onfglTlP4FFzPb8AIpnJT0Otv+Q=;
+ b=lvZLdRu67NXlRzgKqULKjB7GQ28oufC35OdQdHjEKw9RZDaU5C+/4ZY7vU04z6sMIkldbyoSwTaFzEaQasIEZGzOXnS573Bq3jp95UUSWzpmhXTmRFxB3z77F0kR5eNrlcQ6EmWSpPUxHsjTv7my/we49lXVQi8F2tw0NRiVl2EqJgJ3gNOlESj6nMhvg27VArYsf0wH9+pcBcwsuyQwma7Edhx1u9Gh9ycYZ6zEm/Ul01JfztlVmiO9T6+5t6efpwuUAhMwjjgX2cMGHP8JIxG/3gd9c+KQuiIP/Yqg+1TBidMzGeUtDqsB4S+aGJXuKn+qkvU5JdqKp4Uw30MA7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=alsa-project.org smtp.mailfrom=axis.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YUREBq54H9jZE7Z7onfglTlP4FFzPb8AIpnJT0Otv+Q=;
+ b=it33gakapBhZqR0fy1oQKp2LGn+5hQgWAk5TdI3+wxlpps8zYJQBJ98yBM5+cDq6/H9agPRhUqIKUBkJX0NrdjMgUhTyDdzcVttjZ8/x1lu86sd16NSMSO8ld40IyyH/gzB7L6ULXE/hTxHHq3ExAD2naD9mpkWH6r4ekuCp9+U=
+Received: from AM6PR08CA0046.eurprd08.prod.outlook.com (2603:10a6:20b:c0::34)
+ by PRAPR02MB7833.eurprd02.prod.outlook.com (2603:10a6:102:29d::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Fri, 7 Jun
+ 2024 10:00:57 +0000
+Received: from AMS0EPF00000190.eurprd05.prod.outlook.com
+ (2603:10a6:20b:c0:cafe::ce) by AM6PR08CA0046.outlook.office365.com
+ (2603:10a6:20b:c0::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7656.21 via Frontend
+ Transport; Fri, 7 Jun 2024 10:00:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ AMS0EPF00000190.mail.protection.outlook.com (10.167.16.213) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7633.15 via Frontend Transport; Fri, 7 Jun 2024 10:00:56 +0000
+Received: from SE-MAILARCH01W.axis.com (10.20.40.15) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 7 Jun
+ 2024 12:00:56 +0200
+Received: from se-mail02w.axis.com (10.20.40.8) by SE-MAILARCH01W.axis.com
+ (10.20.40.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 7 Jun
+ 2024 12:00:55 +0200
+Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Fri, 7 Jun 2024 12:00:55 +0200
+Received: from pc49102-2217.se.axis.com (pc49102-2217.se.axis.com [10.88.7.5])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id D9CD332E4;
+	Fri,  7 Jun 2024 12:00:55 +0200 (CEST)
+Received: by pc49102-2217.se.axis.com (Postfix, from userid 9470)
+	id D2F356476FDC; Fri,  7 Jun 2024 12:00:55 +0200 (CEST)
+From: Ricard Wanderlof <ricard.wanderlof@axis.com>
+Subject: [PATCH v2 0/2] tlv320adc3xxx: Allow MICBIAS pins to be used as
+ GPOs
+Date: Fri, 7 Jun 2024 12:00:44 +0200
+Message-ID: <20240607-tlv320adc3xxx-micbias-gpo-v2-0-b140a45ffffe@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-07_04,2024-06-06_02,2024-05-17_01
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEzaYmYC/32NQQqDMBBFryKz7pSYaNGuvEdxESepDlQjiYQU8
+ e5NhW67fA/++zsE69kGuBc7eBs5sFsyyEsBNOlltMgmM0ghK1HLBrdXVFJoQyqlhDPTwDrguDo
+ cmqEyJTXVzSjI+9XbJ6ez/egzTxw259/nVSy/9ldt/1RjiQKVEEa1ZInqutOJw5XcDP1xHB/DI
+ +ymwQAAAA==
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, Baojun Xu
+	<baojun.xu@ti.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Ricard Wanderlof
+	<ricardw@axis.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+	<tiwai@suse.com>
+CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Ricard
+ Wanderlof" <ricard.wanderlof@axis.com>, <kernel@axis.com>
+X-Mailer: b4 0.13.0
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF00000190:EE_|PRAPR02MB7833:EE_
+X-MS-Office365-Filtering-Correlation-Id: 01bba9b4-2942-4c67-b82a-08dc86d8b99e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|82310400017|36860700004|7416005|1800799015|921011;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Yk45OStnSXFrWXlneFJTN0o5ZmpURUZEd0tUNDloV1Z1eGlNbE5wbHBGb2E3?=
+ =?utf-8?B?QzZoTXpGMmc4QXhwWmFhekRlQTRpM2FkWTR4ZUg0MTBLTnJSV2o2NmlIMGJk?=
+ =?utf-8?B?QW9JRElubmN6U1MzWFo3Z1Q0Wjh5cWJPTGsvcnRORU5jcUJGUzJrenlSdE4w?=
+ =?utf-8?B?YUlPZmZkZnRFOU85S3d4MUJUcWR1TWdmOGJtWGRrYm94Mk5VSG4zMW01RjF5?=
+ =?utf-8?B?Yi9HMHJJS0J0VkJZMmdsS0xmZUZxSnBOOVB5NHhpRWc1YzJGUlZsb3RGU2pU?=
+ =?utf-8?B?MWFyc2dJV0c1a2wrUXI5MGpsQllrZTZUcDFmdDBNWnBZUjVXeXFCWjVmeWw0?=
+ =?utf-8?B?QnNVYmxhVlFMaUVLTkpHWTRPWWFrY3M2QzlaQi9DYmJDeGhMKzF5cXExZEdj?=
+ =?utf-8?B?eWk1UGVSb2Y5Q3hWL0dKSmJGcTVzK0g3T05DT2dRRDludGlBN3ZsNUgwOEt6?=
+ =?utf-8?B?c1NOcXR2eGlwODhSMzh5dmx3TzNNZmhBV1BvRVNkQ2VlZFRSRFZXRGllODF2?=
+ =?utf-8?B?Z3c5YjZZcmxNZG0wcGZJMHdkZjFTbExoR0VHMy9pelpvd1FkaTBlN0ZnOERL?=
+ =?utf-8?B?OGd1akdJK2l3SEoybGdHM0FncG1kVWRaK3hzSEsyZjJDNkZoQS9vampqUjg2?=
+ =?utf-8?B?ZmsvcGFNZ0c3b0Q2c0JsMDNpSHhiQnR0OXR6ZVM1NlUyOHRVTWdPRXk1eHFM?=
+ =?utf-8?B?VDR6UFNYb1R1L1JNdlFwUE53c1NpYWFlcUFjbSs1R3luekxLc0tFRm55WHhy?=
+ =?utf-8?B?Z3B6R0xCVE5PcVc1eUhNYk5meGhzWnhkamxZTmtRMWdtSElueGMyMVZyVEk2?=
+ =?utf-8?B?T1NYay9XOFk4SlJQdlZyVWZLMDh5cVlEUUhrSFF2Z0Q1eXEwditzZjBJVkZN?=
+ =?utf-8?B?akE0THhxc3c4M212cXVpYUcydTBLZFdSSGNiZTVWWUdGWGQ2ak1TSm9vUEpW?=
+ =?utf-8?B?clUzU3VTSzJpQndqemM1dzRXTmpVZTUvbGlhL1p0T1docE9ZenB0ekNwMnY3?=
+ =?utf-8?B?elpzOU84WFFLYXEwOXF0bXlLZWJFVGR3bXpyRnY5ejEybVlnazJQdHVhd1ZY?=
+ =?utf-8?B?Mk4wRSt5Qlkzd3BoOVNNZlBuTnA4algrOW82MHQ3Zit6MjFYTmEyN3JnSmhH?=
+ =?utf-8?B?U254MU5XczJnZFRsc3RhZlRrNTlTRjhiUGxuZnZxeFA1SUxRMzFkdS94UGRF?=
+ =?utf-8?B?ZThkcWRSSld3RzlZdzJubVFZNnk5ZDI1TWdIcTRKc0FVMC8zc1lmMElsbUNE?=
+ =?utf-8?B?OEQvK28xeUlIU1dqMEJMb1NIV0tuLzBTRHpzZ0cxRkFGQmd4UWEreTF5bDh6?=
+ =?utf-8?B?OEorQUJmWityNW05V2dUR1d4MFdyQTZ0WTlVVWoxd1p1OUgvSGVSRUJ4blI2?=
+ =?utf-8?B?ZXZ3OWN1S1FSOWFjMUthbi9tRGpYdDFudDZhdTBiUXNXcVEzYVdLWG5aSjV6?=
+ =?utf-8?B?WWxOZFU5Ry9paGxmVVFLQnArclNKeG1QaEtBSk1zbktoWmJwMVhHQzg0dzd6?=
+ =?utf-8?B?M2ROMVRsanJkVUVJNmFYdXVyeWcvUlRDamhZTGFONDMrZXRNWmFtOWJtNlpQ?=
+ =?utf-8?B?VVB6WTEzdnVZUDdoTE5RaTYzK291N212ZlVwM01iUjlLc09IK1VsVVUxTkRC?=
+ =?utf-8?B?aHdKV2Z4T0xpblJFOStIcTR0VXRHVktHUTlISnFjbC93Yllxc0RCMjR4N0Vk?=
+ =?utf-8?B?T04zZ0JLZTd1am5RcE5rbm9NOHBnYitsTFNiNlF5VWlJMkd3cmpiMW9jYW9C?=
+ =?utf-8?B?WGsrdlZDTXAyQXJWdDZ6UEs4WFZnemZJcFhmeVZHUW93Mk5WbHNVTy9nbk05?=
+ =?utf-8?B?R1pRZjNhRytKQm1NY2FjWDN3dEY1NHNQV2tNL0JBZFRKTGlOcHVxTE9TajlM?=
+ =?utf-8?Q?k4szi4/xQYoqn?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(82310400017)(36860700004)(7416005)(1800799015)(921011);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 10:00:56.4543
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01bba9b4-2942-4c67-b82a-08dc86d8b99e
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF00000190.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PRAPR02MB7833
 
-Add possibility to have second argument in syscon property to manage
-mask. This mask will be used to address right BITFIELDS of PMCR register.
+In some cases, depending on system design, the MICBIAS pins on the
+chip are not needed as such, but a couple of extra GPIO pins would be
+useful. This patch allows the MICBIAS pins to be configured in the
+device tree as general purpose output pins, controlled via the GPIO
+framework.
 
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+Owing to their originally intended purpose there are some limitations:
+when the MICBIAS pins are deactivated, they will float, so will likely
+need a pulldown in many applications. When activated, they will
+assume the voltage specified by the micbias1-vg and micbias2-vg
+properties, respectively, meaning that the resulting output voltage
+will be 2.0 V, 2.5 V or AVDD .
+
+Signed-off-by: Ricard Wanderlof <ricard.wanderlof@axis.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 28 +++++++++++++------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+Changes in v2:
+- Corrected typo in yaml document for ti,micbias2-vg property reference
+- Added dependecies to yaml document for ti,micbias1-gio and ti,micbias2-gpo
+- Link to v1: https://lore.kernel.org/r/20240529-tlv320adc3xxx-micbias-gpo-v1-0-300d39cecc55@axis.com
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-index bed2be129b2d2..96ba7bc73e823 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-@@ -90,6 +90,7 @@ struct stm32_dwmac {
- 	int eth_ref_clk_sel_reg;
- 	int irq_pwr_wakeup;
- 	u32 mode_reg;		 /* MAC glue-logic mode register */
-+	u32 mode_mask;
- 	struct regmap *regmap;
- 	u32 speed;
- 	const struct stm32_ops *ops;
-@@ -102,8 +103,8 @@ struct stm32_ops {
- 	void (*resume)(struct stm32_dwmac *dwmac);
- 	int (*parse_data)(struct stm32_dwmac *dwmac,
- 			  struct device *dev);
--	u32 syscfg_eth_mask;
- 	bool clk_rx_enable_in_suspend;
-+	u32 syscfg_clr_off;
- };
- 
- static int stm32_dwmac_clk_enable(struct stm32_dwmac *dwmac, bool resume)
-@@ -256,13 +257,16 @@ static int stm32mp1_configure_pmcr(struct plat_stmmacenet_data *plat_dat)
- 
- 	dev_dbg(dwmac->dev, "Mode %s", phy_modes(plat_dat->mac_interface));
- 
-+	/* Shift value at correct ethernet MAC offset in SYSCFG_PMCSETR */
-+	val <<= ffs(dwmac->mode_mask) - ffs(SYSCFG_MP1_ETH_MASK);
-+
- 	/* Need to update PMCCLRR (clear register) */
--	regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
--		     dwmac->ops->syscfg_eth_mask);
-+	regmap_write(dwmac->regmap, dwmac->ops->syscfg_clr_off,
-+		     dwmac->mode_mask);
- 
- 	/* Update PMCSETR (set register) */
- 	return regmap_update_bits(dwmac->regmap, reg,
--				 dwmac->ops->syscfg_eth_mask, val);
-+				 dwmac->mode_mask, val);
- }
- 
- static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
-@@ -303,7 +307,7 @@ static int stm32mcu_set_mode(struct plat_stmmacenet_data *plat_dat)
- 	dev_dbg(dwmac->dev, "Mode %s", phy_modes(plat_dat->mac_interface));
- 
- 	return regmap_update_bits(dwmac->regmap, reg,
--				 dwmac->ops->syscfg_eth_mask, val << 23);
-+				 SYSCFG_MCU_ETH_MASK, val << 23);
- }
- 
- static void stm32_dwmac_clk_disable(struct stm32_dwmac *dwmac, bool suspend)
-@@ -348,8 +352,15 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
- 		return PTR_ERR(dwmac->regmap);
- 
- 	err = of_property_read_u32_index(np, "st,syscon", 1, &dwmac->mode_reg);
--	if (err)
-+	if (err) {
- 		dev_err(dev, "Can't get sysconfig mode offset (%d)\n", err);
-+		return err;
-+	}
-+
-+	dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
-+	err = of_property_read_u32_index(np, "st,syscon", 2, &dwmac->mode_mask);
-+	if (err)
-+		pr_debug("Warning sysconfig register mask not set\n");
- 
- 	return err;
- }
-@@ -540,8 +551,7 @@ static SIMPLE_DEV_PM_OPS(stm32_dwmac_pm_ops,
- 	stm32_dwmac_suspend, stm32_dwmac_resume);
- 
- static struct stm32_ops stm32mcu_dwmac_data = {
--	.set_mode = stm32mcu_set_mode,
--	.syscfg_eth_mask = SYSCFG_MCU_ETH_MASK
-+	.set_mode = stm32mcu_set_mode
- };
- 
- static struct stm32_ops stm32mp1_dwmac_data = {
-@@ -549,7 +559,7 @@ static struct stm32_ops stm32mp1_dwmac_data = {
- 	.suspend = stm32mp1_suspend,
- 	.resume = stm32mp1_resume,
- 	.parse_data = stm32mp1_parse_data,
--	.syscfg_eth_mask = SYSCFG_MP1_ETH_MASK,
-+	.syscfg_clr_off = 0x44,
- 	.clk_rx_enable_in_suspend = true
- };
- 
+---
+Ricard Wanderlof (2):
+      ASoC: dt-bindings: tlv320adc3xxx: Add MICBIAS-as-GPO properties
+      tlv320adc3xxx: Add support for using MICBIAS pins as GPO
+
+ .../bindings/sound/ti,tlv320adc3xxx.yaml           |  24 +++++
+ sound/soc/codecs/tlv320adc3xxx.c                   | 105 ++++++++++++++++-----
+ 2 files changed, 108 insertions(+), 21 deletions(-)
+---
+base-commit: 47d09270d7776e46858a161f94b735640b2fb056
+change-id: 20240528-tlv320adc3xxx-micbias-gpo-b8b4d1c846d3
+
+Best regards,
 -- 
-2.25.1
+-- 
+Ricard Wolf Wanderlof                           ricardw(at)axis.com
+Axis Communications AB, Lund, Sweden            www.axis.com
+Phone +46 46 272 2016                           Fax +46 46 13 61 30
 
