@@ -1,117 +1,97 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA4718AF4
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 06:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B06714F9CC
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 06:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717741524; cv=none; b=f1xRhMQipGUfUlcTcS+7j+nEMMWMCAkhwfaD5yyhUdgAHsDQ7PU6Xn6BCWskl+fXBCMh+Kz8SOsAdnGwRFP08oTbQMrJi6sU1zubMOo9JGs0PFLU1UxUVGXOpKmk+K8DOPVu+YocY70pJyn5c8lgrW+iop7V1vPAInd9i2Ppl0Y=
+	t=1717741596; cv=none; b=jdbgeOptoldWzt9v5aYwdLSGC5dSJtUh70FBHiwzR1M6Pz7nM4ayBEJ2XUGE5rohJ9Izn5H/FJT5ZILWHqZH/J8qZAR0sjjP7jbVQpkyKCkf2Ou5hqj0fgjedbv6FuzE3tvpuEQ1pXFSHnF31yd+UNAlR9TWcoLvjI/dM2dA0gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717741524; c=relaxed/simple;
-	bh=wE/R/t5j7RmtTx7ndh8HOfKlFGmFGqY1/Yk4tvIlyLQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ir12fAMCpk9x5GEGxfT3uJ54TK34pPsNKJAdoxxV2dD5dQnrrL5ngUMvlTRvoJDdxVxwxi+nLwDQD7IABQfs2xZF+Fo9G1RxKdaJGc8b/yRYBW1CokNev6FciXanLcbn+tjawzge3REmfkM06AWg9XM0auma1QiDJKx46H91tQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xdCcH+tI; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1717741596; c=relaxed/simple;
+	bh=3ZTsHxW/IbapW9/uqLmzADDO9OOBIGtvwKgmTaxJ004=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gDShoQycl4i+I+g7clhw04fc27f/pkLZ/zC9nap/SZPfP391MgdpoaGLZyTkP7LAL+5uv7twRcH9oO/ZTsL0fDCP3wt7QvQ7femkt3kg4jpHOEm+uCUkszLGSVd5dtr9SeUKDPMoiGDM+iwEpwVd2mqnXsy1xFB3SVn+Fs8z1Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LXlYbMGv; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xdCcH+tI"
-X-Envelope-To: hch@lst.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717741520;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LXlYbMGv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717741594;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+m/nTQGXSyjTen2jr8IGQUJ8mP1sxHUVx39nE+L9CKc=;
-	b=xdCcH+tI0aeYp6KqObrL8aemNZ6sQ9PgIZCLqCjfd4gECosqAMCxlgBTERDvCymS4uBYXa
-	kzDE2j2kHq7lhuFVD5SwrTXDIB6+Tz1jR2D8B4mXxki/u0sMWzjX0L48K2BOHc/lHO3FxC
-	jPW4eRbjl/qp2jJEwNwho+jh38G9AIY=
-X-Envelope-To: f.weber@proxmox.com
-X-Envelope-To: axboe@kernel.dk
-X-Envelope-To: ming.lei@redhat.com
-X-Envelope-To: bvanassche@acm.org
-X-Envelope-To: linux-block@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: zhouchengming@bytedance.com
-X-Envelope-To: t.lamprecht@proxmox.com
-Message-ID: <2223bbb9-8bc8-4566-9c3f-ef6103422068@linux.dev>
-Date: Fri, 7 Jun 2024 14:24:52 +0800
+	bh=vLp0abxWPWeq0NDH61AYo4VII9n5wY1ynbuZau1muFU=;
+	b=LXlYbMGvZW0l15JcvKkH+AppPozYsfEMCOISkEl4YLZu1cTrue7MwPRCo1uZoSZgCCEH4d
+	tLt/S37LZ7BHa6VcsVPkVoLnfLEJgabYelKMa6py/1ffSmjviyJgjstf+g4IwREA05Ch2K
+	ePuWdb/myOX//wqJuoW/N+lLqKFh64E=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-182-cLVMIi1uP1mjK4jHSN8bWQ-1; Fri,
+ 07 Jun 2024 02:26:27 -0400
+X-MC-Unique: cLVMIi1uP1mjK4jHSN8bWQ-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id ECE371953949;
+	Fri,  7 Jun 2024 06:26:25 +0000 (UTC)
+Received: from localhost (unknown [10.72.113.124])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B5F871955F4B;
+	Fri,  7 Jun 2024 06:26:23 +0000 (UTC)
+Date: Fri, 7 Jun 2024 14:26:18 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Wenchao Hao <haowenchao22@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crash: Remove header files which are included more than
+ once
+Message-ID: <ZmKoCreQLlXdKR7V@MiWiFi-R3L-srv>
+References: <20240606091427.3512314-1-haowenchao22@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] block: fix request.queuelist usage in flush
-Content-Language: en-US
-To: Christoph Hellwig <hch@lst.de>
-Cc: Friedrich Weber <f.weber@proxmox.com>, axboe@kernel.dk,
- ming.lei@redhat.com, bvanassche@acm.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhouchengming@bytedance.com,
- Thomas Lamprecht <t.lamprecht@proxmox.com>
-References: <20240604064745.808610-1-chengming.zhou@linux.dev>
- <c9d03ff7-27c5-4ebd-b3f6-5a90d96f35ba@proxmox.com>
- <1344640f-b22d-4791-aed4-68fc62fb6e36@linux.dev>
- <ec27da86-b84a-430b-98aa-9971f90c8c87@proxmox.com>
- <7193e02e-7347-48db-b1a0-67b44730480b@proxmox.com>
- <448721f2-8e0b-4c5a-9764-bde65a5ee981@linux.dev>
- <343166f4-ac11-4f0e-ad13-6dc14dbf573d@proxmox.com>
- <dea87c0a-1c36-4737-bea5-cb7fa273b724@linux.dev>
- <20240607045511.GB2857@lst.de>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240607045511.GB2857@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240606091427.3512314-1-haowenchao22@gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On 2024/6/7 12:55, Christoph Hellwig wrote:
-> On Fri, Jun 07, 2024 at 10:37:58AM +0800, Chengming Zhou wrote:
->> Yeah, right, it seems LVM may create this special request that only has
->> PREFLUSH | POSTFLUSH without any DATA, goes into the flush state machine.
->> Then, cause the request double list_add_tail() without list_del_init().
->> I don't know the reason behind it, but well, it's allowable in the current
->> flush code.
+On 06/06/24 at 05:14pm, Wenchao Hao wrote:
+> Following warning is reported, so remove these duplicated header
+> including:
 > 
-> PREFLUSH | POSTFLUSH is a weird invalid format.  We'll need to fix this
-> in dm, and probably also catch it in the block layer submission path.
+> ./kernel/crash_reserve.c: linux/kexec.h is included more than once.
 > 
+> This is just a clean code, no logic changed.
+> 
+> Signed-off-by: Wenchao Hao <haowenchao22@gmail.com>
+> ---
+>  kernel/crash_reserve.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-Right, how about add WARN here to catch it? Or just set it to PREFLUSH?
-Not familiar with dm code, need help if we need to fix it in dm. :)
+I remember someone posted patch to clean this up. Anyway,
 
-diff --git a/block/blk-flush.c b/block/blk-flush.c
-index c17cf8ed8113..3ce9ed78c375 100644
---- a/block/blk-flush.c
-+++ b/block/blk-flush.c
-@@ -185,7 +185,7 @@ static void blk_flush_complete_seq(struct request *rq,
-                /* queue for flush */
-                if (list_empty(pending))
-                        fq->flush_pending_since = jiffies;
--               list_move_tail(&rq->queuelist, pending);
-+               list_add_tail(&rq->queuelist, pending);
-                break;
+Acked-by: Baoquan He <bhe@redhat.com>
 
-        case REQ_FSEQ_DATA:
-@@ -263,6 +263,7 @@ static enum rq_end_io_ret flush_end_io(struct request *flush_rq,
-                unsigned int seq = blk_flush_cur_seq(rq);
-
-                BUG_ON(seq != REQ_FSEQ_PREFLUSH && seq != REQ_FSEQ_POSTFLUSH);
-+               list_del_init(&rq->queuelist);
-                blk_flush_complete_seq(rq, fq, seq, error);
-        }
-
-@@ -402,6 +403,12 @@ bool blk_insert_flush(struct request *rq)
-        unsigned int policy = blk_flush_policy(fflags, rq);
-        struct blk_flush_queue *fq = blk_get_flush_queue(q, rq->mq_ctx);
-
-+       /*
-+        * PREFLUSH | POSTFLUSH is a weird invalid format,
-+        * need to fix in the upper layer, catch it here.
-+        */
-+       WARN_ON_ONCE(policy == (REQ_FSEQ_PREFLUSH | REQ_FSEQ_POSTFLUSH));
-+
-        /* FLUSH/FUA request must never be merged */
-        WARN_ON_ONCE(rq->bio != rq->biotail);
+> 
+> diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
+> index 5b2722a93a48..d3b4cd12bdd1 100644
+> --- a/kernel/crash_reserve.c
+> +++ b/kernel/crash_reserve.c
+> @@ -13,7 +13,6 @@
+>  #include <linux/memory.h>
+>  #include <linux/cpuhotplug.h>
+>  #include <linux/memblock.h>
+> -#include <linux/kexec.h>
+>  #include <linux/kmemleak.h>
+>  
+>  #include <asm/page.h>
+> -- 
+> 2.38.1
+> 
 
