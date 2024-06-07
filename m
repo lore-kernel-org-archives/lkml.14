@@ -1,79 +1,76 @@
-Received: from a.peacevolution.org (a.peacevolution.org [206.189.193.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908491667DE;
-	Fri,  7 Jun 2024 14:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.193.133
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85C9719751A;
+	Fri,  7 Jun 2024 14:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717770396; cv=none; b=Ggnn6jFibAqLoPXPz8iMMCEYXvyNLzE9kHNN1uQ9yPu5FRlT0Xvrevzf68Uy3N/TiM5EphJJ/NQNnO63r/Tt+pGnPckZuNhkW1wHdSzY7zrH7aFPE/mj5TxiEKXOggmCi5jCDo9lOXBcSkm69lxQBvUpVgp477LJGoMKARKrkDQ=
+	t=1717770427; cv=none; b=uWbD02gDF2Gix9CfMd4mlqNappa3CezKW41zh0mHi860Sut+43sCZDwyt+Lf62aYVREuQfcj1QLYb319+EwW6WiCLv9OIwDMAh0x4ag2OWZK0sf56+BxVNTxzHGiukV0WkaM6XUN3rcr3pWj1GNOlDfKy6NL6A9+JyOoJpT8tAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717770396; c=relaxed/simple;
-	bh=HhNF4gEO9wpQcZi+i8Hge7O/z4YF0BVJjH5/9mep+YA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qXOYZu1rLO2o5yL509pCafY7RjJ5JC/P1hSd0gyRm4lxJdrKymE8H01XL1uL1e472uRENUrtLGoRfwZj7DC4bB0nnKVE4v084JiyWQFKGYyrgdd5P7e/mK2/+ZIcMkviPbVonfgy9HJ2oAfXEdf0XhkEHJeCZl1bYmtINSWl85I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org; spf=pass smtp.mailfrom=peacevolution.org; dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b=a/gaYwcM; arc=none smtp.client-ip=206.189.193.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=peacevolution.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=peacevolution.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=peacevolution.org header.i=@peacevolution.org header.b="a/gaYwcM"
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-	by a.peacevolution.org (Postfix) with ESMTPA id D016947E7E;
-	Fri,  7 Jun 2024 14:19:18 +0000 (UTC)
-Date: Fri, 7 Jun 2024 10:19:16 -0400
-From: Aren <aren@peacevolution.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, Ondrej Jirman <megi@xff.cz>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-iio@vger.kernel.org, phone-devel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
-	Willow Barraco <contact@willowbarraco.fr>
-Subject: Re: [PATCH v2 2/6] iio: light: stk3310: Implement vdd supply and
- power it off during suspend
-Message-ID: <nkn5emedlkowgjdlqsvssg5ci3lipasbc5aaxn2krd5a6z3af4@fvvp4ysu5rs2>
-References: <20240423223309.1468198-2-aren@peacevolution.org>
- <20240423223309.1468198-4-aren@peacevolution.org>
- <20240428175337.61850e2a@jic23-huawei>
+	s=arc-20240116; t=1717770427; c=relaxed/simple;
+	bh=nkg5aipuVLewQWXLC5+GDdVmYg8QV1wazg4SucZBGsE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SOhcDVQF1RLPCD8EGtU7K+7tNPt8ttivdWlFb0jU8dQFM/gsmPAy45wQNkYpOqgwPXNJusmRSBSuEhOty5pmL3SRh3TiQ42BodIeH7YaZdfiML841qD5+Fb/GblU3IlkRHCPuRC29Hrx8qdHankz5pzfhrICgGYOP6Dt+GNp3Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52256153B;
+	Fri,  7 Jun 2024 07:27:29 -0700 (PDT)
+Received: from [192.168.0.102] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 883C63F64C;
+	Fri,  7 Jun 2024 07:27:00 -0700 (PDT)
+Message-ID: <6c946ece-3663-4520-a90a-68be4d93c56d@arm.com>
+Date: Fri, 7 Jun 2024 19:56:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240428175337.61850e2a@jic23-huawei>
-X-Spamd-Bar: /
-Authentication-Results: auth=pass smtp.auth=aren@peacevolution.org smtp.mailfrom=aren@peacevolution.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=peacevolution.org;
-	s=dkim; t=1717769960;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:in-reply-to:references;
-	bh=XAEyN4AkCHtTFKYLX9Yy5JtVjbYzN1yPHYJt3534IMA=;
-	b=a/gaYwcMwCH5yEh0swQaVtYVZwoEyr5KOx8OT9hrOGq/WzYIGxag68OcknO+ioNpWPzqrp
-	+X0ZhZ+6Ayy4OAseVLcHTZAifciqwFAPQE/uGytxwiMUbCR9bxIRvauaNsb1jnaUQ987R0
-	LyF1ukyJzdq4QZ7RUzLNGqVnAlzBfPY=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] selftests: Add a test mangling with uc_sigmask
+To: Mark Brown <broonie@kernel.org>
+Cc: shuah@kernel.org, oleg@redhat.com, stsp2@yandex.ru, mingo@kernel.org,
+ tglx@linutronix.de, mark.rutland@arm.com, ryan.roberts@arm.com,
+ suzuki.poulose@arm.com, Anshuman.Khandual@arm.com,
+ DeepakKumar.Mishra@arm.com, AneeshKumar.KizhakeVeetil@arm.com,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240607122319.768640-1-dev.jain@arm.com>
+ <20240607122319.768640-3-dev.jain@arm.com>
+ <ZmMHNZcYfNMW1Ft7@finisterre.sirena.org.uk>
+ <5d26ac17-a50a-46c4-8fcb-68eaa6d0ce2a@arm.com>
+ <ZmMOOOEg06SWQ05m@finisterre.sirena.org.uk>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <ZmMOOOEg06SWQ05m@finisterre.sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Apr 28, 2024 at 05:53:37PM GMT, Jonathan Cameron wrote:
-> On Tue, 23 Apr 2024 18:33:05 -0400
-> Aren Moynihan <aren@peacevolution.org> wrote:
-> 
-> > From: Ondrej Jirman <megi@xff.cz>
-> > 
-> > VDD power input can be used to completely power off the chip during
-> > system suspend. Do so if available.
-> > 
-> > Signed-off-by: Ondrej Jirman <megi@xff.cz>
-> > Signed-off-by: Aren Moynihan <aren@peacevolution.org>
-> 
-> Suggestions inline.  Key thing is take the whole thing devm_ managed
-> and your life gets much easier.  It is mixing the two approaches that
-> causes problems and often the best plan is to do everything in probe/remove
-> with devm_ calls to do the cleanup for you.
 
-Thank you for writing this up. I've been a bit distracted lately, but
-I'm hoping to find some time to implement this in a new revision soon.
+On 6/7/24 19:12, Mark Brown wrote:
+> On Fri, Jun 07, 2024 at 06:53:27PM +0530, Dev Jain wrote:
+>> On 6/7/24 18:42, Mark Brown wrote:
+>>> On Fri, Jun 07, 2024 at 05:53:19PM +0530, Dev Jain wrote:
+>>>> + * Test describing a clear distinction between signal states - delivered and
+>>>> + * blocked, and their relation with ucontext.
+>>> This would be clearer if it said more positiviely what the relationship
+>>> between these things is actually expected to be and how they're tested.
+>>> Right now it's a bit hard to tell what the test is actually verifying.
+>> I thought I had described that quite well in the code comments.
+>> Anyways, I shall incorporate some detail into the initial test
+>> description too.
+> If the overview is confusing and people have to read the code to figure
+> out what it means then that's an issue...
 
- - Aren
+
+You are right.
+
+I shall post a v2 rather quickly, perhaps in 1-2 days;
+
+the SIGPIPE vs SIGSEGV mistake basically renders
+
+this patch useless (although the test would still
+
+pass), and makes the code unnecessarily hard
+
+to review.
+
