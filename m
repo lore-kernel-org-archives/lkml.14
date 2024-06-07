@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3121990CE;
-	Fri,  7 Jun 2024 15:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91CEA19D079;
+	Fri,  7 Jun 2024 15:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717774134; cv=none; b=Uo35OXDP/FSi2MkGn7fjvmcFvfVojg51BAmqveEjYzmIGylFOtpLm30zo71Gv4TjYCndWG10+2JIaVNFKKrz/jhqEkqtb+YRhNxDcPnal7etA6FmJwJY4YaaiGxVhh6aw2+kgSwPSHc4LGMUrcanZAGq5bVmfxw7pCrFj2IjS2I=
+	t=1717774138; cv=none; b=G4G+8gEUvkNsHiAvAp+ZSj+y+VAZVQXQSjIRGFSpJRSpBmzBX0LPx+60leAfxUcMEfxHylm+e1TOUSyU54xcesViKML3kugEDHhUJd7f1Di/X+0kDkqBkJWZaO3f4miDrt1mnn+zIyA6kx2CCQEw1IXFybXnav0ZpQCSVB45Kaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717774134; c=relaxed/simple;
-	bh=A/OgJAoyz1jfOP1ujKz9EudGw2c1CaLUc4HxTAiFUBw=;
+	s=arc-20240116; t=1717774138; c=relaxed/simple;
+	bh=Ub7Vy/8HNvQPS41Xo0JZpRJdUsumnTmCiiNeoQ5mm4w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CsMfJbxIvydrU5XdDBKzb8XQmBWmoJZ5m5tL0Wjf9QTjwX0mHNwSRmqYHKxR0TKcAIDjU5qkD3HTcjpjjmAfek65fvJbp7IsTZSYWhIEzJfVhCmupEIwM7zeSeoVT+drCRJqxPTCozFPCDh5gMaBhR3zmUedqC+0m9rePocWkZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KkPmT2Pq; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=HiIxAzufZNXD0MNyEDphxRVhv9ZlPM+p+HUoIY+SfavmTa7AdeNHdz9Wg5gU+s1aoL8gZqDfUku6y65fYqWKSHtb3Ah4fujE4q6uM5nwgwlxyOEvjjqUhlRHTs7vXGN28WKNsDo8U5ZJEuabQe48I+dEuU1Jzdp8WvgOlOQPpZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UAw7Y4Ck; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KkPmT2Pq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9752BC4AF07;
-	Fri,  7 Jun 2024 15:28:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UAw7Y4Ck"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43373C4AF08;
+	Fri,  7 Jun 2024 15:28:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717774133;
-	bh=A/OgJAoyz1jfOP1ujKz9EudGw2c1CaLUc4HxTAiFUBw=;
+	s=k20201202; t=1717774138;
+	bh=Ub7Vy/8HNvQPS41Xo0JZpRJdUsumnTmCiiNeoQ5mm4w=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KkPmT2Pq87JghkUNxCrqiCLkgwsimlIIj+YaVDk0G+ThK8FmOy1StGdnEaiGiCNIw
-	 Dgd+piOfgVToDVLdBcF89vSMIpZpN4EIgtFgTghgdaMuOL7I9+hv0VgOkdD67uS7C5
-	 w4buZHMo7JwRLW/Aa209eIu1LnlFzWH0RYI0YKged0aTWGaytGsV8lFUEvCcMZzBrr
-	 T6DrmIJaoW4BtydPEuYVMxMFlQMnAuYp7m2hbObm1oeGvoBJdQJl7Q68xZjXMbu7Y6
-	 3ucE687Ma0n4IlGf7H/bVoHj3coTfCUi/JDf+qI0TJ8fxOZTU95fJbIQocoLSDnjcz
-	 QAPffffkug5YQ==
+	b=UAw7Y4CkQzrR7JkwqjpIGuL2GLK33RFwaG6RmSWO1BVV2vlvFEXaqvpeNX66StPMi
+	 bBYq3Kv6GoByvDP38k9VhjSzuTBcaCqPLBJgtXKV+rzfI9Lb21yLuiYqfpBkftCyeu
+	 yWKYaDsAqXxXoNXVeG6jAoJQj1ZN1pVpQQ97fCJMwUccjrxALD2mQZZcOwIIufE/sj
+	 1TlnCirKYyQWvbMoLiNDG8qqh+C0hKlFUmQv2AVD706ip1wg9KRgviW4f67kj4pnJ8
+	 UcnQIlmXqdRBjEY3NoXA4fu/14TTVjY/GmwLz3imwlGGzTHjoCNIo9OnPKRTltlCpy
+	 K7NbN2HP98HCQ==
 From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Fri, 07 Jun 2024 17:28:29 +0200
-Subject: [PATCH HID v2 09/16] selftests/hid: add subprog call test
+Date: Fri, 07 Jun 2024 17:28:31 +0200
+Subject: [PATCH HID v2 11/16] Documentation: HID: add a small blurb on
+ udev-hid-bpf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240607-hid_bpf_struct_ops-v2-9-3f95f4d02292@kernel.org>
+Message-Id: <20240607-hid_bpf_struct_ops-v2-11-3f95f4d02292@kernel.org>
 References: <20240607-hid_bpf_struct_ops-v2-0-3f95f4d02292@kernel.org>
 In-Reply-To: <20240607-hid_bpf_struct_ops-v2-0-3f95f4d02292@kernel.org>
 To: Shuah Khan <shuah@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
@@ -46,16 +47,18 @@ Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
  bpf@vger.kernel.org, linux-input@vger.kernel.org, linux-doc@vger.kernel.org, 
  Benjamin Tissoires <bentiss@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717774109; l=2901;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717774109; l=1805;
  i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=A/OgJAoyz1jfOP1ujKz9EudGw2c1CaLUc4HxTAiFUBw=;
- b=WKHdgp6sz43nGVMHWLGQNJDDB4b1BpfKEc2/DH3NXYA79bUelM6WvtPrR743fW19VfA2TTW+8
- ErNo+3thuI4Ai7weQ7lu4CFzbohtb+vDXma/AFQ+6VFXt5UflzCYuDN
+ bh=Ub7Vy/8HNvQPS41Xo0JZpRJdUsumnTmCiiNeoQ5mm4w=;
+ b=tLjgFaE9QvQSzzvBBHEXCurid0JKHqKzRRDQuInJwpTJmhuRIPqoIR2ASYkWWJTyU/Nlz7Q0Z
+ ZtehkP30kYZDUMvIohxdZxhSQNFMFQju66E+elnLey/+UIhzaOFFb8R
 X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
  pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-I got a weird verifier error with a subprog once, so let's have a test
-for it.
+This is the current decision we took: we don't provide automatic loading
+of HID-BPF by the kernel directly, but rely on an external tool for it.
+
+This tool is currently udev-hid-bpf, so let's make people aware of it.
 
 Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
 
@@ -63,97 +66,37 @@ Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
 
 no changes in v2
 ---
- tools/testing/selftests/hid/hid_bpf.c   | 41 +++++++++++++++++++++++++++++++++
- tools/testing/selftests/hid/progs/hid.c | 24 +++++++++++++++++++
- 2 files changed, 65 insertions(+)
+ Documentation/hid/hid-bpf.rst | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/tools/testing/selftests/hid/hid_bpf.c b/tools/testing/selftests/hid/hid_bpf.c
-index 967dfe6b58cb..45e173db35bd 100644
---- a/tools/testing/selftests/hid/hid_bpf.c
-+++ b/tools/testing/selftests/hid/hid_bpf.c
-@@ -638,6 +638,47 @@ TEST_F(hid_bpf, raw_event)
- 	ASSERT_EQ(buf[2], 52);
- }
+diff --git a/Documentation/hid/hid-bpf.rst b/Documentation/hid/hid-bpf.rst
+index 456e15097d87..8ae8f49801cb 100644
+--- a/Documentation/hid/hid-bpf.rst
++++ b/Documentation/hid/hid-bpf.rst
+@@ -129,6 +129,23 @@ When a BPF program needs to emit input events, it needs to talk with the HID
+ protocol, and rely on the HID kernel processing to translate the HID data into
+ input events.
  
-+/*
-+ * Attach hid_first_event to the given uhid device,
-+ * retrieve and open the matching hidraw node,
-+ * inject one event in the uhid device,
-+ * check that the program sees it and can change the data
-+ */
-+TEST_F(hid_bpf, subprog_raw_event)
-+{
-+	const struct test_program progs[] = {
-+		{ .name = "hid_subprog_first_event" },
-+	};
-+	__u8 buf[10] = {0};
-+	int err;
++In-tree HID-BPF programs and ``udev-hid-bpf``
++=============================================
 +
-+	LOAD_PROGRAMS(progs);
++Official device fixes are shipped in the kernel tree as source in the
++``drivers/hid/bpf/progs`` directory. This allows to add selftests to them in
++``tools/testing/selftests/hid``.
 +
-+	/* inject one event */
-+	buf[0] = 1;
-+	buf[1] = 42;
-+	uhid_send_event(_metadata, self->uhid_fd, buf, 6);
++However, the compilation of these objects is not part of a regular kernel compilation
++given that they need an external tool to be loaded. This tool is currently
++`udev-hid-bpf <https://libevdev.pages.freedesktop.org/udev-hid-bpf/index.html>`_.
 +
-+	/* read the data from hidraw */
-+	memset(buf, 0, sizeof(buf));
-+	err = read(self->hidraw_fd, buf, sizeof(buf));
-+	ASSERT_EQ(err, 6) TH_LOG("read_hidraw");
-+	ASSERT_EQ(buf[0], 1);
-+	ASSERT_EQ(buf[2], 47);
++For convenience, that external repository duplicates the files from here in
++``drivers/hid/bpf/progs`` into its own ``src/bpf/stable`` directory. This allows
++distributions to not have to pull the entire kernel source tree to ship and package
++those HID-BPF fixes. ``udev-hid-bpf`` also has capabilities of handling multiple
++objects files depending on the kernel the user is running.
 +
-+	/* inject another event */
-+	memset(buf, 0, sizeof(buf));
-+	buf[0] = 1;
-+	buf[1] = 47;
-+	uhid_send_event(_metadata, self->uhid_fd, buf, 6);
-+
-+	/* read the data from hidraw */
-+	memset(buf, 0, sizeof(buf));
-+	err = read(self->hidraw_fd, buf, sizeof(buf));
-+	ASSERT_EQ(err, 6) TH_LOG("read_hidraw");
-+	ASSERT_EQ(buf[2], 52);
-+}
-+
- /*
-  * Ensures that we can attach/detach programs
-  */
-diff --git a/tools/testing/selftests/hid/progs/hid.c b/tools/testing/selftests/hid/progs/hid.c
-index 614f1aa32649..2e7e5a736dc6 100644
---- a/tools/testing/selftests/hid/progs/hid.c
-+++ b/tools/testing/selftests/hid/progs/hid.c
-@@ -35,6 +35,30 @@ struct hid_bpf_ops first_event = {
- 	.hid_id = 2,
- };
+ Available types of programs
+ ===========================
  
-+int __hid_subprog_first_event(struct hid_bpf_ctx *hid_ctx, enum hid_report_type type)
-+{
-+	__u8 *rw_data = hid_bpf_get_data(hid_ctx, 0 /* offset */, 3 /* size */);
-+
-+	if (!rw_data)
-+		return 0; /* EPERM check */
-+
-+	rw_data[2] = rw_data[1] + 5;
-+
-+	return hid_ctx->size;
-+}
-+
-+SEC("?struct_ops/hid_device_event")
-+int BPF_PROG(hid_subprog_first_event, struct hid_bpf_ctx *hid_ctx, enum hid_report_type type)
-+{
-+	return __hid_subprog_first_event(hid_ctx, type);
-+}
-+
-+SEC(".struct_ops.link")
-+struct hid_bpf_ops subprog_first_event = {
-+	.hid_device_event = (void *)hid_subprog_first_event,
-+	.hid_id = 2,
-+};
-+
- SEC("?struct_ops/hid_device_event")
- int BPF_PROG(hid_second_event, struct hid_bpf_ctx *hid_ctx, enum hid_report_type type)
- {
 
 -- 
 2.44.0
