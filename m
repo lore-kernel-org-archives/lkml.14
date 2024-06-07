@@ -1,273 +1,204 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97DED1CA85;
-	Fri,  7 Jun 2024 10:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29381CA85;
+	Fri,  7 Jun 2024 10:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717754913; cv=none; b=EH9vnRbwbRGUOqY17wL/OPC3SRcBWMq4Z3pPEMRDI8zfpgAo5zIctJrSu54URzw6xF4Cdkh1M2qgKdK/K3oYFlYjc7qa38k/QkKs0JWV9iamn7ZYN1o88mpX53OEfBMLEYhTFrrvMwQnLae7TA6IRWZ3WEZ0f8HETyFsq9xxBmo=
+	t=1717754966; cv=none; b=SrkPgKtfSgkQVnod/5iyPTWqZkE7E/k7xqZd232t1pCF36nVARMlfi6q/j2ceajOofhBPFceHGn1DBDX2r2DGLEtkpwccHtz/vCaKhJDkhkKQKpa39p8hD5rClb4I1xyDHwFcRBz9SrWWci2cqhy8tyhKLVzLmW7zvsyL1IfY+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717754913; c=relaxed/simple;
-	bh=qld2R9srsXV/Hg8uPR+5FlrI6C210MwPh5xClF7AnVE=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=QRv8I/pI0TPstVia0wb1EnXDRN6pA2Bxo2ziUheKXgKH9i5jjFh0VeGbaBHDALhM3F4wtWW52rqeMel8ojCfOcI7CtAmpNKVKdH7CZmVfAgKZgHRnU/Iw4QFsi1c11HX9Y6AQuc6v6REJrw/kCL9iyoxC4zmR3n0OiSzBwHdmEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dRIzQ2Kl; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1717754966; c=relaxed/simple;
+	bh=W9OC2fUk3FD1xhnbtvYwKD+7Xd1c9IdLOs7cBPZSL7o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kSXMobxpursZ4NftQUVWPKFTI6YZR+NvRYLCyAohhY8ar6uwjIpbLXrrCfIermo9z3WKwPephmxlfrFIEGH9Y8/kl1v7jK3HYrnKLYnQ3kDbJWaYcn2kQ65rAFlLBG1OiZmmlG6Kw/UknVPDrgv1j1CYjE2jwrldBT5im8vcPh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=AiExaUJU; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dRIzQ2Kl"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4982720B9260;
-	Fri,  7 Jun 2024 03:08:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4982720B9260
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1717754910;
-	bh=Kc8PvZsPZKdp9dT96TN8x5FjLAArIFyjP+l/uaalYdo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dRIzQ2KlmVvrdEMgU9De54nSncVDRV9/PaQ4GSVWm73t/3cNFVL4pZK+s9EeHlXwQ
-	 sYvv5N7m+WCW1+IEmnjpmF/v3oBXflM2DlZyr0/o7pR7uBxgoNta8oxDP8SPKAhyJj
-	 y30lEd+pgxNDsvYpvzWc5xSc8NZ2IGhj32HxRVY4=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	weh@microsoft.com,
-	sharmaajay@microsoft.com,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next v2 1/1] RDMA/mana_ib: process QP error events in mana_ib
-Date: Fri,  7 Jun 2024 03:08:17 -0700
-Message-Id: <1717754897-19858-1-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="AiExaUJU"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45792cwG011010;
+	Fri, 7 Jun 2024 11:35:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	luA+ZUFTcJknApwisPNPdZman1Wn25gDMX3CVQ3XRQs=; b=AiExaUJUZZq3X+55
+	5iCmIA+wl2nzg/8jUXBJPv055U+1D7XT2ieww+3axrr0shiNDeo0KGx2RCJUuimq
+	lDtViKJ8Vcp/nVQUEBkZhgDLCACZgGZlv1N5UhZriWmXMWAcyWAt9wb5UpRa6y5N
+	e5/ggHVerLoJ2FJaeqx9F7D3D00vbsKL9aLVltFd+0fOXKfPFSCxqql7MtBZO9Ul
+	cUCMshaMTgW1hrxR6TJj+A6dREx+YgjUr+vj7zulQsDiTgCqE6sDg4kPVv0N+JL1
+	Dl2ELIdWukGZFz2kJIx+Li05ry+2OEGcFqsUn1SdPWUCx8jbn3zKjaEEaVbypLGX
+	8yyTUw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ykbv549tw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 11:35:09 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5669D40053;
+	Fri,  7 Jun 2024 11:34:58 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E9442214532;
+	Fri,  7 Jun 2024 11:34:08 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 7 Jun
+ 2024 11:34:08 +0200
+Received: from localhost (10.252.5.235) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 7 Jun
+ 2024 11:34:08 +0200
+From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+Subject: [PATCH v6 4/5] remoteproc: stm32: Create sub-functions to request shutdown and release
+Date: Fri, 7 Jun 2024 11:33:25 +0200
+Message-ID: <20240607093326.369090-5-arnaud.pouliquen@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240607093326.369090-1-arnaud.pouliquen@foss.st.com>
+References: <20240607093326.369090-1-arnaud.pouliquen@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-07_04,2024-06-06_02,2024-05-17_01
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
+To prepare for the support of TEE remoteproc, create sub-functions
+that can be used in both cases, with and without remoteproc TEE support.
 
-Process QP fatal events from the error event queue.
-For that, find the QP, using QPN from the event, and then call its
-event_handler. To find the QPs, store created RC QPs in an xarray.
-
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
-Reviewed-by: Wei Hu <weh@microsoft.com>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
 ---
+ drivers/remoteproc/stm32_rproc.c | 84 +++++++++++++++++++-------------
+ 1 file changed, 51 insertions(+), 33 deletions(-)
 
-v2 is the same code, but some code is moved into helper functions
-
-v1->v2
-* Introduced helpers to add and remove QPs to/from the table
-* Introduced helpers to get and put QP references
-
- drivers/infiniband/hw/mana/device.c           |  3 ++
- drivers/infiniband/hw/mana/main.c             | 31 +++++++++++++++++--
- drivers/infiniband/hw/mana/mana_ib.h          | 23 ++++++++++++++
- drivers/infiniband/hw/mana/qp.c               | 20 ++++++++++++
- .../net/ethernet/microsoft/mana/gdma_main.c   |  1 +
- include/net/mana/gdma.h                       |  1 +
- 6 files changed, 77 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-index 9a7da2e..b07a8e2 100644
---- a/drivers/infiniband/hw/mana/device.c
-+++ b/drivers/infiniband/hw/mana/device.c
-@@ -126,6 +126,7 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 	if (ret)
- 		goto destroy_eqs;
- 
-+	xa_init_flags(&dev->qp_table_wq, XA_FLAGS_LOCK_IRQ);
- 	ret = mana_ib_gd_config_mac(dev, ADDR_OP_ADD, mac_addr);
- 	if (ret) {
- 		ibdev_err(&dev->ib_dev, "Failed to add Mac address, ret %d",
-@@ -143,6 +144,7 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 	return 0;
- 
- destroy_rnic:
-+	xa_destroy(&dev->qp_table_wq);
- 	mana_ib_gd_destroy_rnic_adapter(dev);
- destroy_eqs:
- 	mana_ib_destroy_eqs(dev);
-@@ -158,6 +160,7 @@ static void mana_ib_remove(struct auxiliary_device *adev)
- 	struct mana_ib_dev *dev = dev_get_drvdata(&adev->dev);
- 
- 	ib_unregister_device(&dev->ib_dev);
-+	xa_destroy(&dev->qp_table_wq);
- 	mana_ib_gd_destroy_rnic_adapter(dev);
- 	mana_ib_destroy_eqs(dev);
- 	mana_gd_deregister_device(dev->gdma_dev);
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index 365b4f1..d13abc9 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -667,6 +667,33 @@ int mana_ib_gd_query_adapter_caps(struct mana_ib_dev *dev)
- 	return 0;
+diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+index 88623df7d0c3..8cd838df4e92 100644
+--- a/drivers/remoteproc/stm32_rproc.c
++++ b/drivers/remoteproc/stm32_rproc.c
+@@ -209,6 +209,54 @@ static int stm32_rproc_mbox_idx(struct rproc *rproc, const unsigned char *name)
+ 	return -EINVAL;
  }
  
-+static void
-+mana_ib_event_handler(void *ctx, struct gdma_queue *q, struct gdma_event *event)
++static void stm32_rproc_request_shutdown(struct rproc *rproc)
 +{
-+	struct mana_ib_dev *mdev = (struct mana_ib_dev *)ctx;
-+	struct mana_ib_qp *qp;
-+	struct ib_event ev;
-+	u32 qpn;
++	struct stm32_rproc *ddata = rproc->priv;
++	int err, dummy_data, idx;
 +
-+	switch (event->type) {
-+	case GDMA_EQE_RNIC_QP_FATAL:
-+		qpn = event->details[0];
-+		qp = mana_get_qp_ref(mdev, qpn);
-+		if (!qp)
-+			break;
-+		if (qp->ibqp.event_handler) {
-+			ev.device = qp->ibqp.device;
-+			ev.element.qp = &qp->ibqp;
-+			ev.event = IB_EVENT_QP_FATAL;
-+			qp->ibqp.event_handler(&ev, qp->ibqp.qp_context);
++	/* Request shutdown of the remote processor */
++	if (rproc->state != RPROC_OFFLINE && rproc->state != RPROC_CRASHED) {
++		idx = stm32_rproc_mbox_idx(rproc, STM32_MBX_SHUTDOWN);
++		if (idx >= 0 && ddata->mb[idx].chan) {
++			/* A dummy data is sent to allow to block on transmit. */
++			err = mbox_send_message(ddata->mb[idx].chan,
++						&dummy_data);
++			if (err < 0)
++				dev_warn(&rproc->dev, "warning: remote FW shutdown without ack\n");
 +		}
-+		mana_put_qp_ref(qp);
-+		break;
-+	default:
-+		break;
 +	}
 +}
 +
- int mana_ib_create_eqs(struct mana_ib_dev *mdev)
++static int stm32_rproc_release(struct rproc *rproc)
++{
++	struct stm32_rproc *ddata = rproc->priv;
++	unsigned int err = 0;
++
++	/* To allow platform Standby power mode, set remote proc Deep Sleep. */
++	if (ddata->pdds.map) {
++		err = regmap_update_bits(ddata->pdds.map, ddata->pdds.reg,
++					 ddata->pdds.mask, 1);
++		if (err) {
++			dev_err(&rproc->dev, "failed to set pdds\n");
++			return err;
++		}
++	}
++
++	/* Update coprocessor state to OFF if available. */
++	if (ddata->m4_state.map) {
++		err = regmap_update_bits(ddata->m4_state.map,
++					 ddata->m4_state.reg,
++					 ddata->m4_state.mask,
++					 M4_STATE_OFF);
++		if (err) {
++			dev_err(&rproc->dev, "failed to set copro state\n");
++			return err;
++		}
++	}
++
++	return 0;
++}
++
+ static int stm32_rproc_prepare(struct rproc *rproc)
  {
- 	struct gdma_context *gc = mdev_to_gc(mdev);
-@@ -676,7 +703,7 @@ int mana_ib_create_eqs(struct mana_ib_dev *mdev)
- 	spec.type = GDMA_EQ;
- 	spec.monitor_avl_buf = false;
- 	spec.queue_size = EQ_SIZE;
--	spec.eq.callback = NULL;
-+	spec.eq.callback = mana_ib_event_handler;
- 	spec.eq.context = mdev;
- 	spec.eq.log2_throttle_limit = LOG2_EQ_THROTTLE;
- 	spec.eq.msix_index = 0;
-@@ -691,7 +718,7 @@ int mana_ib_create_eqs(struct mana_ib_dev *mdev)
- 		err = -ENOMEM;
- 		goto destroy_fatal_eq;
+ 	struct device *dev = rproc->dev.parent;
+@@ -519,17 +567,9 @@ static int stm32_rproc_detach(struct rproc *rproc)
+ static int stm32_rproc_stop(struct rproc *rproc)
+ {
+ 	struct stm32_rproc *ddata = rproc->priv;
+-	int err, idx;
++	int err;
+ 
+-	/* request shutdown of the remote processor */
+-	if (rproc->state != RPROC_OFFLINE && rproc->state != RPROC_CRASHED) {
+-		idx = stm32_rproc_mbox_idx(rproc, STM32_MBX_SHUTDOWN);
+-		if (idx >= 0 && ddata->mb[idx].chan) {
+-			err = mbox_send_message(ddata->mb[idx].chan, "detach");
+-			if (err < 0)
+-				dev_warn(&rproc->dev, "warning: remote FW shutdown without ack\n");
+-		}
+-	}
++	stm32_rproc_request_shutdown(rproc);
+ 
+ 	err = stm32_rproc_set_hold_boot(rproc, true);
+ 	if (err)
+@@ -541,29 +581,7 @@ static int stm32_rproc_stop(struct rproc *rproc)
+ 		return err;
  	}
+ 
+-	/* to allow platform Standby power mode, set remote proc Deep Sleep */
+-	if (ddata->pdds.map) {
+-		err = regmap_update_bits(ddata->pdds.map, ddata->pdds.reg,
+-					 ddata->pdds.mask, 1);
+-		if (err) {
+-			dev_err(&rproc->dev, "failed to set pdds\n");
+-			return err;
+-		}
+-	}
 -
-+	spec.eq.callback = NULL;
- 	for (i = 0; i < mdev->ib_dev.num_comp_vectors; i++) {
- 		spec.eq.msix_index = (i + 1) % gc->num_msix_usable;
- 		err = mana_gd_create_mana_eq(mdev->gdma_dev, &spec, &mdev->eqs[i]);
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index 60bc548..6bd2edf 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -62,6 +62,7 @@ struct mana_ib_dev {
- 	mana_handle_t adapter_handle;
- 	struct gdma_queue *fatal_err_eq;
- 	struct gdma_queue **eqs;
-+	struct xarray qp_table_wq;
- 	struct mana_ib_adapter_caps adapter_caps;
- };
- 
-@@ -124,6 +125,9 @@ struct mana_ib_qp {
- 
- 	/* The port on the IB device, starting with 1 */
- 	u32 port;
-+
-+	refcount_t		refcount;
-+	struct completion	free;
- };
- 
- struct mana_ib_ucontext {
-@@ -333,6 +337,25 @@ static inline struct gdma_context *mdev_to_gc(struct mana_ib_dev *mdev)
- 	return mdev->gdma_dev->gdma_context;
+-	/* update coprocessor state to OFF if available */
+-	if (ddata->m4_state.map) {
+-		err = regmap_update_bits(ddata->m4_state.map,
+-					 ddata->m4_state.reg,
+-					 ddata->m4_state.mask,
+-					 M4_STATE_OFF);
+-		if (err) {
+-			dev_err(&rproc->dev, "failed to set copro state\n");
+-			return err;
+-		}
+-	}
+-
+-	return 0;
++	return stm32_rproc_release(rproc);
  }
  
-+static inline struct mana_ib_qp *mana_get_qp_ref(struct mana_ib_dev *mdev, uint32_t qid)
-+{
-+	struct mana_ib_qp *qp;
-+	unsigned long flag;
-+
-+	xa_lock_irqsave(&mdev->qp_table_wq, flag);
-+	qp = xa_load(&mdev->qp_table_wq, qid);
-+	if (qp)
-+		refcount_inc(&qp->refcount);
-+	xa_unlock_irqrestore(&mdev->qp_table_wq, flag);
-+	return qp;
-+}
-+
-+static inline void mana_put_qp_ref(struct mana_ib_qp *qp)
-+{
-+	if (refcount_dec_and_test(&qp->refcount))
-+		complete(&qp->free);
-+}
-+
- static inline struct net_device *mana_ib_get_netdev(struct ib_device *ibdev, u32 port)
- {
- 	struct mana_ib_dev *mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index 34a9372..b1afc75 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -398,6 +398,20 @@ err_free_vport:
- 	return err;
- }
- 
-+static int mana_table_store_qp(struct mana_ib_dev *mdev, struct mana_ib_qp *qp)
-+{
-+	refcount_set(&qp->refcount, 1);
-+	init_completion(&qp->free);
-+	return xa_insert_irq(&mdev->qp_table_wq, qp->ibqp.qp_num, qp, GFP_KERNEL);
-+}
-+
-+static void mana_table_remove_qp(struct mana_ib_dev *mdev, struct mana_ib_qp *qp)
-+{
-+	xa_erase_irq(&mdev->qp_table_wq, qp->ibqp.qp_num);
-+	mana_put_qp_ref(qp);
-+	wait_for_completion(&qp->free);
-+}
-+
- static int mana_ib_create_rc_qp(struct ib_qp *ibqp, struct ib_pd *ibpd,
- 				struct ib_qp_init_attr *attr, struct ib_udata *udata)
- {
-@@ -460,6 +474,10 @@ static int mana_ib_create_rc_qp(struct ib_qp *ibqp, struct ib_pd *ibpd,
- 		}
- 	}
- 
-+	err = mana_table_store_qp(mdev, qp);
-+	if (err)
-+		goto destroy_qp;
-+
- 	return 0;
- 
- destroy_qp:
-@@ -620,6 +638,8 @@ static int mana_ib_destroy_rc_qp(struct mana_ib_qp *qp, struct ib_udata *udata)
- 		container_of(qp->ibqp.device, struct mana_ib_dev, ib_dev);
- 	int i;
- 
-+	mana_table_remove_qp(mdev, qp);
-+
- 	/* Ignore return code as there is not much we can do about it.
- 	 * The error message is printed inside.
- 	 */
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index d33b272..ab8adac 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -380,6 +380,7 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
- 	case GDMA_EQE_HWC_INIT_EQ_ID_DB:
- 	case GDMA_EQE_HWC_INIT_DATA:
- 	case GDMA_EQE_HWC_INIT_DONE:
-+	case GDMA_EQE_RNIC_QP_FATAL:
- 		if (!eq->eq.callback)
- 			break;
- 
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 2768413..44c797d 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -60,6 +60,7 @@ enum gdma_eqe_type {
- 	GDMA_EQE_HWC_INIT_DONE		= 131,
- 	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
- 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
-+	GDMA_EQE_RNIC_QP_FATAL		= 176,
- };
- 
- enum {
+ static void stm32_rproc_kick(struct rproc *rproc, int vqid)
 -- 
-2.43.0
+2.25.1
 
