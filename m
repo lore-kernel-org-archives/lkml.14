@@ -1,129 +1,74 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4355343ACC
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 16:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846A81974F7;
+	Fri,  7 Jun 2024 16:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717778784; cv=none; b=nCPXabhA83Sey8kU2NP9tIcD8Snr7g813AOMFBNtKkw9FoLh45o78akqoD4R9hMua52ZoGTxnoNt1Ij+leu7k1//oytWBb5d6LvgRpKDhdijhBezPX+LD61kRmyC52cTZtGJkB/jPuwiBXoL5OUlUC27WgRhqr+1ZDwfPOB+weo=
+	t=1717778808; cv=none; b=PqJVueYseoPOlrKLZ9C3DGOVXKSbk95nR8zm3aiP4FQSzffIAtRrrS8qbB53/Ukuuty54Rf5aDm38HmrNxU3k3iDZofP8ciWXWxsiEmk/laIultEm6aF+sASPkepWUwQBvWs4BD2c8N9WGUu8jvLWKu3UxZtAlsQlPGIWTUCSVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717778784; c=relaxed/simple;
-	bh=9MbnM3fVlAk+fcUA/Vtc84nNWKYk7sEobTPiOwK0F9I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CsT85ewPSud3t5oC2rU5ysYysch/CeOHZievQfAKw6KmJlEM6R/9MgGbrra2AWpUob4ek9IRZPq2dHSrFZjQC47wjFrailJumIOJV9OETH9tOOm45sXtiWbGDMwMOfgrn81K45DDiC8stHHbFeZzMR8BQAjCbJPFM8eK34EXx5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WYE1Y+a9; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WYE1Y+a9"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7eb12b2bf78so99876839f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 09:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1717778782; x=1718383582; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wNmY6jHBKJ7etyJaxizFh2YSvXl1eDIGgCUXVjnXwMc=;
-        b=WYE1Y+a9k1UBKIBb+EwtwHbxtn5sGTVF3jp/VGg9VOP/2g7BYMHptIgNSnrHD1rpM1
-         MH5O+4n94RApnVtVsjRKb1ArvtoCHTipt5tsdz6I9UEVq+oqCrS68/J7H2Qr5xZkCjgg
-         rsLLMXGiz2KQBdirqDoeGA7V4iUyaHRNKoeQI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717778782; x=1718383582;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wNmY6jHBKJ7etyJaxizFh2YSvXl1eDIGgCUXVjnXwMc=;
-        b=gb6FY4j5H/f3naPfqRrBSOBm3wpQsGDMKCNDoYLE4Td/SPdfrAtTNpaBZ8Cz6VrC1N
-         XgPrPxXMt4+IxtjGGziX/VRMmcZHXz3Sz4nExC/QYQfuXVWgc1IPbZ6IhuWmfGNogVo+
-         0fON1I6OG4BsSLvY6+ZZSq4eoek7/EZeWXsfu+2Qki9Fh8+5YsEB6MulDHkNkjmA/Ocs
-         WuVLJnJtCAuBFOGZUU8q+BEWs7I1s1l42Xgz7aUkjwTRutOtbMT6wzhuXTLl+fe1Zyhq
-         gpkLGJi2z1JpJwlKiQ3Et9z9B3i8MCFsqncHe47z3La3EZ3rmVZz8hTlCBVorcE+ablz
-         9M1A==
-X-Gm-Message-State: AOJu0YwG6JwdNvYXRD6qCkNfkyDE+h5r6stfFZndJEtCF7hR48jHu6tl
-	xfN9Iz7+yg6rUYg6EEGyM+SPYlBYmsyxbbBb45l3SBUUgmBVb9dl7xI30nVsHfYHEuBsWdvwOB4
-	=
-X-Google-Smtp-Source: AGHT+IH/SKi+9fM2Uf69Jf8q6FQ3GQtOXugENfNyRQ6rvdkte4TkP7CL7rkEvXS6Q7835WfoxMzWOA==
-X-Received: by 2002:a05:6602:14ca:b0:7ea:ff17:d3a5 with SMTP id ca18e2360f4ac-7eb572164a3mr418400139f.10.1717778782143;
-        Fri, 07 Jun 2024 09:46:22 -0700 (PDT)
-Received: from timvp-p620-9115096.bld.corp.google.com ([2620:15c:183:200:7804:4c5e:f046:e9ec])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b7a225cd0dsm903815173.58.2024.06.07.09.46.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 09:46:21 -0700 (PDT)
-From: Tim Van Patten <timvp@chromium.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: druth@chromium.org,
-	Tim Van Patten <timvp@google.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Tejun Heo <tj@kernel.org>
-Subject: [PATCH] workqueue: Prevent delayed work UAF kernel panic
-Date: Fri,  7 Jun 2024 10:46:11 -0600
-Message-ID: <20240607104610.1.I6c23f4fdb786f7200f6f1255af57b4e9621bcc66@changeid>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+	s=arc-20240116; t=1717778808; c=relaxed/simple;
+	bh=/dDdFNzBjblJbkHspj7AhEQS924zK1q7V7UuQ5JIdrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jUsqq0/MPcTputxMKaENcnnpHstUe9qfE7B1JTLTw1AtoKQ7aAVIEYeU8tuMfH+OP/AUXwMvbDv/UikYOFaoMVAlxNEVBvaU+yWBq+jUNz3kSVLyedQiecsqY1quTT0zefSrkvaw+sJvQL9MeVwPEukWXbgiNXcM99J+IbMh8Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 216AEC2BBFC;
+	Fri,  7 Jun 2024 16:46:44 +0000 (UTC)
+Date: Fri, 7 Jun 2024 17:46:42 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Steven Price <steven.price@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev, Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: Re: [PATCH v3 12/14] arm64: realm: Support nonsecure ITS emulation
+ shared
+Message-ID: <ZmM5cpLRbxhE_bBo@arm.com>
+References: <20240605093006.145492-1-steven.price@arm.com>
+ <20240605093006.145492-13-steven.price@arm.com>
+ <86a5jzld9g.wl-maz@kernel.org>
+ <4c363476-e5b5-42ff-9f30-a02a92b6751b@arm.com>
+ <867cf2l6in.wl-maz@kernel.org>
+ <ZmICEN8JvWM7M9Ch@arm.com>
+ <0ea597d3-6520-4ab3-8050-d967c173bc23@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0ea597d3-6520-4ab3-8050-d967c173bc23@arm.com>
 
-From: Tim Van Patten <timvp@google.com>
+On Fri, Jun 07, 2024 at 04:45:14PM +0100, Steven Price wrote:
+> On 06/06/2024 19:38, Catalin Marinas wrote:
+> > Anyway, we could do some hacking around gen_pool as a temporary solution
+> > (maybe as a set of patches on top of this series to be easier to revert)
+> > and start investigating a proper decrypted page allocator in parallel.
+> > We just need to find a victim that has the page allocator fresh in mind
+> > (Ryan or Alexandru ;)).
+> 
+> Thanks for the suggestions Catalin. I had a go at implementing something
+> with gen_pool - the below (very lightly tested) hack seems to work. This
+> is on top of the current series.
+> 
+> I *think* it should also be safe to drop the whole alignment part with
+> this custom allocator, which could actually save memory. But I haven't
+> quite got my head around that yet.
 
-A kernel panic can be triggered by delayed work being queued to a
-workqueue that has been destroyed (wq->cpu_pwq nullified).
+Thanks Steven. It doesn't look too complex and it solves the memory
+wasting. We don't actually free the pages from gen_pool but I don't
+think it matters much, the memory would get reused if devices are
+removed and re-added.
 
-Commit 33e3f0a3358b ("workqueue: Add a new flag to spot the potential
-UAF error")added the flag __WQ_DESTROYING to help avoid this. However,
-this solution still allows work to be queued if it's from the same
-workqueue, even if the workqueue has been fully destroyed, which is
-possible with queue_delayed_work().
-
-1. queue_delayed_work()
-2. destroy_workqueue()
-3. [delayed work timer expires]: delayed_work_timer_fn()
-
-To prevent kernel panics, check if the pwq and pwq->pool pointers are
-valid before derefencing them, and discard the work if they're not.
-
-Discarding all work once __WQ_DESTROYING has been set (including from
-the same workqueue) causes breakage, so we must check the pointers
-directly.
-
-Signed-off-by: Tim Van Patten <timvp@google.com>
----
-
- kernel/workqueue.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 003474c9a77d0..6bcd5605dbc8b 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -2291,6 +2291,18 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
- 	}
- 
- 	pwq = rcu_dereference(*per_cpu_ptr(wq->cpu_pwq, cpu));
-+
-+	/*
-+	 * Discard work queued to a destroyed wq.
-+	 * This must be checked while the rcu_read_lock() is
-+	 * held, so destroy_workqueue() cannot nullify wq->cpu_pwq while it's
-+	 * being accessed here.
-+	 */
-+	if (WARN_ON_ONCE(!pwq || !pwq->pool)) {
-+		pr_warn("workqueue %s: discarding work for destroyed wq\n", wq->name);
-+		goto out_rcu_read_unlock;
-+	}
-+
- 	pool = pwq->pool;
- 
- 	/*
-@@ -2365,6 +2377,7 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
- 
- out:
- 	raw_spin_unlock(&pool->lock);
-+out_rcu_read_unlock:
- 	rcu_read_unlock();
- }
- 
 -- 
-2.45.2.505.gda0bf45e8d-goog
-
+Catalin
