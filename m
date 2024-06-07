@@ -1,67 +1,67 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC990154429
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 20:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF3514E2FF
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 20:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717793593; cv=none; b=JDaFcaQTyWSUVuxecr6dZv6TmWNYj07yE+8rx+Ye9AZg7s6xZ7L7BRO4VMFCNcIUbFq4lTXx1/+iIoG4FvsBcHiyipBRqBLAoQpgWb2OPAAcDbdTagZUZo0SaQJQWgCFZ1D5kh+ZD1OTv/xo/Li/KXbHr4eMTorS8en/yEZ1uDg=
+	t=1717793636; cv=none; b=EShU5g/lCABcT8n8whWTdGqD7/Qzb+qy0RcelzbM82iAM6WDmdM+tfPzPYP4b0H3t5Ea3yMJ162am318cff3+dBTOQ4oOXTYGWHZ7ntyjBDmK/w2WO6nI7K63PoBJPW8JqAIZvpCNqRhN2KiauCT4R3z0aGXdpZKealCUiebAwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717793593; c=relaxed/simple;
-	bh=P4GqccFemYCv3Ph3Tj4HFzTepeQOmwXMVKjFNfsdrHo=;
+	s=arc-20240116; t=1717793636; c=relaxed/simple;
+	bh=p6tMfLMEfPy9ylv7zqzbxmkBmy9bIJ2z7b+jtJTZiz8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PQ0Q9gUCX2FlgBcqNPp05KfjubPlrSw8bTd1g1fMwOL+2C9H8YpPZgr/f7fOkzXc0gCitFrJkltDabU/Tbod76I2hr0gu+YHK1lT0gTPHBQ9B67Cz2OxwYvWoOzMSS87o0bgHhD94QkUVpujOHW2gOAA+I5z3cw2HRfzpr0Mn9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h/e4QyA+; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=ZhQ/04vEUHnSPqtspDBKQ3Vrcu1png+PGyQYGuIESg3iAtMFB/I5+cotxvG175f5Pqto4v7yKZlMT0282HLIAsQ8pE3mwbgkKFtcZfmzAphr/65E4IK8haRuH4SRE8jpCN6lv0YII8PWz0OVRUpOCL0o8VgFP3VvF6ow6XbP3oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gLhmRyXN; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h/e4QyA+"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52bc274f438so1114077e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 13:53:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gLhmRyXN"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52b8b7b8698so3186006e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 13:53:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717793590; x=1718398390; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1717793633; x=1718398433; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ALL6wLm/pEiklAzdrlD0fFMMB40OeFD3F6hHrSjlWrg=;
-        b=h/e4QyA+1ti/beho16Kp4vdAb0lDLmCZV4QKM3S0hk9uEttg2m+h5TFNkenQo0oPJD
-         V5XWLpcycgDrm+5UlxBQN4FU/VzBLWGk27Lzo+4r1OilY9k6fdtuHaf4/4R4wbzb6h4J
-         6MWtQZKGhpie5sPDVhLErJaRfErYl4R56FDZ2FbJUYmYqRT3JC9PDFA51kR1cpXOv56Q
-         i65WBgD7XumtJOlgrTaN/knWx/mFInRK8jCwGDFdRzZkflyQuFVJp1odCh5QBPAyTTzV
-         n3rK7foI+BzQVrzePFa29iIqFAlKgPck+oDfBxXhGuQIFeQlUlgjxsSQF0IC3XwXAxU2
-         jziw==
+        bh=p6tMfLMEfPy9ylv7zqzbxmkBmy9bIJ2z7b+jtJTZiz8=;
+        b=gLhmRyXNFICiRNwKRwlVTd3iWM7nI6D5b0XVxaN6gpaVl0nTk194vQY9+NTaXN+wOs
+         pmnyw9gtY+Glq6/sg/tCVdxPFZ6Ldh8kE3t73SzemLROC8HeKD7d8+bKSzLQJEFr0QVb
+         Vy5UTHpjNBzlC1A1GgZPwkRJsjllHN5FFs6cJF5T447c5y8cFRm8gQ71o+Y8+Sp6YCpI
+         6n6KA/yqF9KuPOwKSzvmpnHbeoP6WudxUPfLsV8qIhLoJd/v/glSmmusglV7SHRVS7Un
+         WttuuyAcrTfgvNi9qE7S8uYxutb2EYTzproqZ5vwG20szuhyJNAhOjhmmlrJneZgagWl
+         qr0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717793590; x=1718398390;
+        d=1e100.net; s=20230601; t=1717793633; x=1718398433;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ALL6wLm/pEiklAzdrlD0fFMMB40OeFD3F6hHrSjlWrg=;
-        b=Xdk7tS9baIny3LSTI4zCrWat2uT+/m6b+3YcyTQBb3hIbBSLaNhj/cukY5Mesr8Ug/
-         2fV+t3+MUbIKb8mH7MQRrVmKSgs3TjTHYH/l0uxf6ziuk6y6VUR7ytTyIhkYGsy+/RsP
-         ZxvqwXSE5yw37Nlz7jyrxjrcRR6vq4XNJFPBuKSs7Z0vaVTM40P2LflEknJPMZx90kKa
-         wP1PVYH83r3Ml/qSg6dFwXHEcmt3KLl75SP/yekFZuyjKi+aFKd7sL99/ngMQJoT7wx+
-         kAoU9UM19Vwnhmxu1G/kqunj2nQl4U5qdxUdB8qk1nTg5rt5fEJBbriHR3BpJrETRqNB
-         zSIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWP5YJn0MUcMItCb/GKXhzV+wystZDtc5eDWnHO2J5GKgVdAPuDB2nVhQEyVhB7kIHvAO2N1mnJHB6J42tPLtlalFBnWsTAfFoxUipc
-X-Gm-Message-State: AOJu0Yzd63rdR/glutKJkmsv3XATL6nRPy1X8rBOiozxAMHOxn9IKFsz
-	9jdOILbWPbtHLS68fgbgo+05l/bnjEAx9Ykt9jXbxr+km8OZfYgfjwy1GAWPfjsiEdfZ1Ia2Twa
-	QHRr/qJH7ou+d0b6s0OkWMDIB3NWgh9jnLxuNQw==
-X-Google-Smtp-Source: AGHT+IGhGBYgYkG9ZA8FAwO0qaapJnnGVds+RrxgL96B4r78rFR4O2xGdaFmnclK8Gfv5k8zd5MDW6bRfsiVqyeC1S0=
-X-Received: by 2002:a19:7502:0:b0:52c:50ff:6567 with SMTP id
- 2adb3069b0e04-52c50ff65b2mr228916e87.22.1717793589914; Fri, 07 Jun 2024
- 13:53:09 -0700 (PDT)
+        bh=p6tMfLMEfPy9ylv7zqzbxmkBmy9bIJ2z7b+jtJTZiz8=;
+        b=ggUKWLe87qNa7TaeoIEpRcJaqHEBKwEGWGnH8p9VXtf8lqU7+3FdFi1t5xpkUxo8Az
+         mkmDopbgbfgJqAQzXCfK17ghn3MTFRiqv84tDUx8TTIzLYz4gKBv/5h3ATGAPNHM8IGu
+         OuFDdXzKX2AeyzcuZmt0iXPXApxc1vyRrMJDkCjpFrQwevhUj8VbaFNwNsc+PHRzuWph
+         XwRl53VqH214fIIsbgqG67N1aiuKBV5vF0F1TISsPwEATEivPzhokFGV6mSnJX8lHrxU
+         nlxPEj1sLirGIdJo6nNMv5+PHvjX2SgNtX8Rjv+4GOYG2bR3ubstqaWj/DXjdkbL1ObX
+         nRCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtDzUovqPmzpfi9VDZHElY/53hmwJqRCViCsCZOLHMwCeRAwWS0qO8XQrh8xaKEzMMZINBipRbj/szUXVZTWZB2sDdwvykwVezlhb5
+X-Gm-Message-State: AOJu0YyUDFArP9tUOowyQpRNmPKS/DW/zPFwThxUrU3+/bWEN9zMed5Y
+	7rOkI18izsd7ViVsbaENB5OszMRSm9dI97mt5S8Q47b4t6dpbcE/NBFbsGwUUQCFJJjQJ3dOoS+
+	4rpKyAMU5i7oCIm+JhKpUMXoRqd1FyTi5L9tsJA==
+X-Google-Smtp-Source: AGHT+IEvks17nJR8asjH8PhomcF1cey1wjkOU+SX7E9Lzp4zBUKn/Z+T817IqPLPi5qKBO3N5uckPU9YtHMMXQXgWSI=
+X-Received: by 2002:ac2:5588:0:b0:523:a924:3268 with SMTP id
+ 2adb3069b0e04-52bb9f5d4afmr2200384e87.6.1717793633140; Fri, 07 Jun 2024
+ 13:53:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240529162958.18081-1-johan+linaro@kernel.org> <20240529162958.18081-9-johan+linaro@kernel.org>
-In-Reply-To: <20240529162958.18081-9-johan+linaro@kernel.org>
+References: <20240529162958.18081-1-johan+linaro@kernel.org> <20240529162958.18081-10-johan+linaro@kernel.org>
+In-Reply-To: <20240529162958.18081-10-johan+linaro@kernel.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 7 Jun 2024 22:52:59 +0200
-Message-ID: <CACRpkdavOBqVe2gON=5Zk6JVWJfjy3E80YFEsyo0-94d1bX8FQ@mail.gmail.com>
-Subject: Re: [PATCH v2 08/14] pinctrl: qcom: spmi-gpio: drop broken pm8008 support
+Date: Fri, 7 Jun 2024 22:53:42 +0200
+Message-ID: <CACRpkdasVHEgqDLs_CdAJ3YAQPA7k95TsT22ErcU7TwdaSTy6w@mail.gmail.com>
+Subject: Re: [PATCH v2 09/14] dt-bindings: pinctrl: qcom,pmic-gpio: drop pm8008
 To: Johan Hovold <johan+linaro@kernel.org>
 Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>, 
 	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
@@ -70,32 +70,21 @@ Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>,
 	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, Stephen Boyd <swboyd@chromium.org>, 
 	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
 	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	stable@vger.kernel.org
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Wed, May 29, 2024 at 6:30=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
 rg> wrote:
 
-> The SPMI GPIO driver assumes that the parent device is an SPMI device
-> and accesses random data when backcasting the parent struct device
-> pointer for non-SPMI devices.
+> The binding for PM8008 is being reworked so that internal details like
+> interrupts and register offsets are no longer described. This
+> specifically also involves dropping the gpio child node and its
+> compatible string which is no longer needed.
 >
-> Fortunately this does not seem to cause any issues currently when the
-> parent device is an I2C client like the PM8008, but this could change if
-> the structures are reorganised (e.g. using structure randomisation).
+> Note that there are currently no users of the upstream binding and
+> driver.
 >
-> Notably the interrupt implementation is also broken for non-SPMI devices.
->
-> Also note that the two GPIO pins on PM8008 are used for interrupts and
-> reset so their practical use should be limited.
->
-> Drop the broken GPIO support for PM8008 for now.
->
-> Fixes: ea119e5a482a ("pinctrl: qcom-pmic-gpio: Add support for pm8008")
-> Cc: stable@vger.kernel.org      # 5.13
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
