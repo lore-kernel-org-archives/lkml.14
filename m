@@ -1,105 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 0.smtp.remotehost.it (0.smtp.remotehost.it [213.190.28.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A66AD2E5;
-	Fri,  7 Jun 2024 19:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6281411E6;
+	Fri,  7 Jun 2024 19:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.190.28.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717788392; cv=none; b=Vs+w0tBGQteBLbsiYxfjK7BwoZ4HZtudQih5b9SP23r5LaSFsTi2BppOtQ2AMY7v5Ha60jV0UpnmiQnDUAVFCTWfYDF01JFH75FlDqnpT0sPsTz+7xn32ybaOlBwKH9VxfoRYbYKMIo4nsRXL7XsUooaUx6verJzlIP2o0tG2Sg=
+	t=1717788504; cv=none; b=YIDtCbin2PAfRoTuLKJ0DLS8EBiyx3k6ES7+arEQjlU3zjFEHgjc5HCpn/ydP3g2SU8bWvaicCUJFNxLzi+4iTDUSFzFAD2Gumi5ujgBTYpW1jv7QF4aE7V2aOVwECAs/JbhJ6ATypEUW6Fr72zFUTgFXD4CbuunY14IqGUHfHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717788392; c=relaxed/simple;
-	bh=G79+bqVInJHcymuYBymhLDPTm1SW8aHugZAKnQjXQoM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tA3idvXg74cPdlIG4EJNzcZFxwOEyEAZIPX09HJwu/I5RtMwIaVBEsx3awDlWIHo23eC0uqDDsFyLX+aQfnqYGS6ihM17XorZvKSX9GCEf/0p5yGj3AGhlPSDMTNZkpPB17BzyubCyCmheXIeHzqCqeDos0NkNFHcELUn1FJD+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+wUjyI3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717788504; c=relaxed/simple;
+	bh=8tFFewtxiNJl4QWYW9HaQx4nW9OdtE14CT7u3e+Uc7c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RtJloO2r/hwT/N9RG+eO2vccxZzRxywU89+bZ65D1CV0vNUXo1aeqE5IOcbqUZUqJOKSoKgszZzAL2GERXNcurv7wl7Q2kyEE/EQN+eroGoPpyC9RgXTXCJbFrQ0dT7aFGi/17cI9whlS8VSoXICQqBokmFi/H8ZsAliUO2w2ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net; spf=pass smtp.mailfrom=hardfalcon.net; dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b=+/VDFziM; arc=none smtp.client-ip=213.190.28.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hardfalcon.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+wUjyI3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1B8AC32786;
-	Fri,  7 Jun 2024 19:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717788391;
-	bh=G79+bqVInJHcymuYBymhLDPTm1SW8aHugZAKnQjXQoM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B+wUjyI3GdObFOF2X8xCI8HV4H3u+nkcrMGrDH2+DwfwB1e0Tb/5FJVtL6i/dpEH8
-	 AUXWisqNYutnJOF+iphclC3qHtL68TD1J7UvDTJyf0EccOyN/OSw2SoyNdJzy5vZRl
-	 Tv3rdS2AEO8fp8/Evh7Sq+zdHUCIUIoDss4CK3FFK98WwoApb0JCtWV9b0DWxb9eP6
-	 5cPA1n5BL28Zmavk8fKD20Bvolan4gQG00so1x7nuibFrE8pbWMqKovGcETbTQ1akZ
-	 lY7dqeLqfsZ/1ucCRgKPrT7q3qErDIt3d8Lu4Y39hOA2cszfevcN6hng1zS65q9C4i
-	 QT8B2NhNlEyAQ==
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3d21c5b48f5so14167b6e.0;
-        Fri, 07 Jun 2024 12:26:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV4NiPGHuHfQs8d/fjZPKbb5QpPsFej7pHcMRIYTrgkyKsqlg/+XS3aqU3c2Td1yiwXthsrxcAK0Ktq/D/VjmcLTpDb3yzPjDJiP6x/9pZzGv3wxJuumAsenOCu98yk/hCM5iMBZNI=
-X-Gm-Message-State: AOJu0YyZC+wlMfv74PQqq0S12+fym/rU0Czep1QJGUlMyosJm7UojVvm
-	6pE9RNvr8OpyPyZxBfxzg1NdbyJVdu1baD7LmPORA42k6XCNtJ0Fc0W/OR1L+8OsjO9IgBkYm6i
-	M10aeQLhcd1HLSFJ+eCeYhjMeNYA=
-X-Google-Smtp-Source: AGHT+IGe4YDLMC1VPuov6ECazHzXXBggKeKCmQyWizyYIsOCWRXbjCnXLn9qaBtY+SGk+U99r0LI7eIRNJn/lvgUIis=
-X-Received: by 2002:a4a:a7c9:0:b0:5ba:6959:edf8 with SMTP id
- 006d021491bc7-5baae6da3bfmr3588960eaf.1.1717788391242; Fri, 07 Jun 2024
- 12:26:31 -0700 (PDT)
+	dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b="+/VDFziM"
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=hardfalcon.net;
+	s=dkim_2024-02-03; t=1717787980;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dDMS8z/DLgBUGwZOqSNT0EYKzfW8+6Nh0L0qT3Gf348=;
+	b=+/VDFziMv/YtrNTbgDNNiPHpSwl38qJAiMyVHYfAvys1JzuDRgge0X67dluiiZ/zPvPx2I
+	DMQ3LkTFL5ijRKDQ==
+Message-ID: <a2e931e3-fe92-4419-bcaf-ec61d3a5a68d@hardfalcon.net>
+Date: Fri, 7 Jun 2024 21:19:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530151704.282453-1-rui.zhang@intel.com>
-In-Reply-To: <20240530151704.282453-1-rui.zhang@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 7 Jun 2024 21:26:19 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iVtb8K0ww8REum6T90bu321sWoKCVUN0t-8Wzv9ZvkYw@mail.gmail.com>
-Message-ID: <CAJZ5v0iVtb8K0ww8REum6T90bu321sWoKCVUN0t-8Wzv9ZvkYw@mail.gmail.com>
-Subject: Re: [PATCH] thermal: intel: intel_pch: Improve cooling log
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, pmenzel@molgen.mpg.de, len.brown@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 6.9 000/374] 6.9.4-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+References: <20240606131651.683718371@linuxfoundation.org>
+Content-Language: en-US
+From: Pascal Ernster <git@hardfalcon.net>
+In-Reply-To: <20240606131651.683718371@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 30, 2024 at 5:17=E2=80=AFPM Zhang Rui <rui.zhang@intel.com> wro=
-te:
->
-> The intel_pch_thermal cooling mechanism currently only provides one of
-> the following final conclusions:
-> 1. intel_pch_thermal 0000:00:12.0: CPU-PCH is cool [48C]
-> 2. intel_pch_thermal 0000:00:12.0: CPU-PCH is cool [49C] after 30700 ms d=
-elay
-> 3. intel_pch_thermal 0000:00:12.0: CPU-PCH is hot [60C] after 60000 ms de=
-lay. S0ix might fail
-> 4. intel_pch_thermal 0000:00:12.0: Wakeup event detected, abort cooling
->
-> This does not provide sufficient context about what is happening,
-> especially for case 4.
->
-> Add one line log to indicate when PCH overheats and the cooling delay
-> has started.
->
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-> ---
->  drivers/thermal/intel/intel_pch_thermal.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/thermal/intel/intel_pch_thermal.c b/drivers/thermal/=
-intel/intel_pch_thermal.c
-> index f5be2c389351..fc326985796c 100644
-> --- a/drivers/thermal/intel/intel_pch_thermal.c
-> +++ b/drivers/thermal/intel/intel_pch_thermal.c
-> @@ -298,6 +298,11 @@ static int intel_pch_thermal_suspend_noirq(struct de=
-vice *device)
->         /* Get the PCH current temperature value */
->         pch_cur_temp =3D GET_PCH_TEMP(WPT_TEMP_TSR & readw(ptd->hw_base +=
- WPT_TEMP));
->
-> +       if (pch_cur_temp >=3D pch_thr_temp)
-> +               dev_warn(&ptd->pdev->dev,
-> +                       "CPU-PCH current temp [%dC] higher than the thres=
-hold temp [%dC], S0ix might fail. Start cooling...\n",
-> +                       pch_cur_temp, pch_thr_temp);
-> +
->         /*
->          * If current PCH temperature is higher than configured PCH thres=
-hold
->          * value, run some delay loop with sleep to let the current tempe=
-rature
-> --
+[2024-06-06 15:59] Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.9.4 release.
+> There are 374 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 08 Jun 2024 13:15:55 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.9.4-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Applied as 6.11 material, thanks!
+Hi, 6.9.4-rc1 is running fine on various x86_64 bare metal and virtual 
+machines of mine (Haswell, Skylake, Kaby Lake, Coffee Lake).
+
+Tested-by: Pascal Ernster <git@hardfalcon.net>
+
+
+Regard
+Pascal
