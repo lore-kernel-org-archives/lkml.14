@@ -1,182 +1,116 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4180819AA5A;
-	Fri,  7 Jun 2024 16:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C371993B5;
+	Fri,  7 Jun 2024 16:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717776341; cv=none; b=T4ehdNmke335BNIq9L1d8/AGgcXDy6A64Ww6dI8Vo3iVnphTkUi33P4PoZdLt3fT/gmjYB0Bz+HC7Xsa+mUZ2O7V6mkUghipx4AM4eV/6IlVq0SCo4wIWWXnua+0VxVb/gLhzhITEv3lmySQk0bUEdlJDYst4Kq89XNrRy+ynz4=
+	t=1717776441; cv=none; b=i+UgyepDP8fFvftPvDHBO6TuF7lq2qy27HcDHIiyUu+VdLvXMbP3vLyBQTS8d8vIASlXqHMM9L8wpt+Hekuh2cMU1YSBEjaruOT4DgThsHfP/JpKl0R+8Dgzj47/XDIzfn89ng1MawukGvgqFBFmHfuvWq6jMNDUP0A6MJ109+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717776341; c=relaxed/simple;
-	bh=E4arFM9k6nDnCNLegQCocTifweIoWJFBm9lxLSUeLxg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g5cwhkwUuofJXBEvK/5UOugsLxh2AYVodhdhZ6/CSuGRqmPbIIaERJIk27FSxRaTYrY6VEikFduatet2CxGhL7J9dsV9/1UsCUe7tGuy9UmETT34xBEBnU3z0H6ts5koSlkwEmbFDGobmfq/hmNVJkbMG2xUPhmu/1zLlrlSODI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=igZr1jmw; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1717776441; c=relaxed/simple;
+	bh=e060FibAN6dn7MpQtsRShU2TwVWcf8cJXNm5kggqNEE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e9+lpDad3rJtgtJ1ifL65dHy6Y37CtL7MHvZxan+WUviFJb/ccknqN2cwLaAvJ0Sa+xeE4PjUrW75gZobFTWdSrdDHQQUbqPB/JkbhIC0augXvBIrKrg8jj6g5pKIcU8zlqca+TuiyMQUdI1NH6RVOWRE6oaOhlHmcocU13m3x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=qmH+qbV1; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="igZr1jmw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=tKr7lLN/VFwO5+6n6WfNe+lZgTMwnw4xRQwRBA9Nxfs=;
-	t=1717776335; x=1718985935; b=igZr1jmwsPqrez+HHw2xwvLz9nQOok87U1KKpPDF9dt2+cE
-	qszclyYBKq9OmGq7RwBGudeW84cpYzCPbYM6uZwG6UJwv3dJOv7eiZlpBkS3SNMZQMPLEG7+s8lny
-	NcCP8fgkmmuvX6jthPvPPR3QQfuqh9U7tUiVm25x1kS1yx99zlgQ3eD0jcd1Ayq7/ouKNQ0OHQp69
-	g8h4uibCbB1wbvusJx7Ee4qC4kiEM1pZkTdZ7pTcY/hemPz0xLR+GUf15L2vtDruwgZprICX6Qv0z
-	niJMvwNFI8s9TlJhRmgiKEy5l2jzXEZQr+2yh2GA6UKEb6DgiQJOTsUHC6DxSoeg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1sFc5s-00000001Iyu-2Bnz;
-	Fri, 07 Jun 2024 18:05:32 +0200
-From: Johannes Berg <johannes@sipsolutions.net>
-To: linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH v4 3/4] net: dropreason: use new __print_sym() in tracing
-Date: Fri,  7 Jun 2024 18:04:25 +0200
-Message-ID: <20240607160527.23624-9-johannes@sipsolutions.net>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240607160527.23624-6-johannes@sipsolutions.net>
-References: <20240607160527.23624-6-johannes@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="qmH+qbV1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1717776408; x=1718381208; i=w_armin@gmx.de;
+	bh=WpsPycSkNqefv/DFU2+Dhs9QAFbosKfQE+s+COBHjek=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=qmH+qbV1XlN4xPNaXJca+WdLHKdPj1Zn6fxtZKD/K3DAtdHYELtYdCbsRl+0MXof
+	 Alkg/uxTkONug79tNzrqqhzhq2AWMtls3nYsecfghkuJXxj+J4QIXdF6LIE/Mvvp8
+	 JaY+Mdcp0m8+pGS8KGk01MnVPzbDNZ3mAn4z+2mndHoNXZb9aA8SSP7sfRQvaAtqV
+	 StG+EhQOcBEhcnqE8P6690Cb+HBtQ+/UEjstaRKWskmPKVVto2aydGb6OJ8cHCbKE
+	 lA1TT7CM7RMM/AlqqoZcz42H47fNEldf5g9eR8cvfMTvFfT1gM+embdi13iTJMz4k
+	 hbH1hpQ6MBo1gzWoLQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MMobU-1rzBit3cW4-00LrTp; Fri, 07
+ Jun 2024 18:06:47 +0200
+Message-ID: <c939b0c7-2c8c-4cf1-8d5c-9309ce0b371a@gmx.de>
+Date: Fri, 7 Jun 2024 18:06:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/6] i2c: smbus: Support DDR5 SPD EEPROMs
+To: Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ =?UTF-8?Q?Ren=C3=A9_Rebe?= <rene@exactcode.de>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Stephen Horvath <s.horvath@outlook.com.au>
+References: <20240604040237.1064024-1-linux@roeck-us.net>
+ <20240604040237.1064024-6-linux@roeck-us.net>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20240604040237.1064024-6-linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:m9nlxK5q1W4gn1wQ+3dfPZz1bRtMa5DYDrz3gb+BT/rgBF6HfRy
+ h4XAlOCE7YNAs/Bmruwyjmk+EeZfKnhrfJMKoQrWSTqUamoqr0e5borArKVYLLOO7xmUp2W
+ UceDH7ayjPB2PK3N0YCgSshSZlSB9y30aV5ctvOjAfvcQztcJJ4171B9GeTIpR3jgfVLo5R
+ ta5Im3gtbwXpqRQT/o6ZA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:5FObOyZ0MWA=;g4SABbYYlkx5KCNJjhK+xGdWk7M
+ 5ftpeTThh7KQ3YRrcb+RwIYzlflxyH9cMYpQ3KaWB4plqiRq9JYd+dwVFh69fQdROQnVKyWTN
+ EbMSAZV2R7dFdf8fVRlpSezV+zJKC44SjTxcC3mPVXzx6oxP0esBOKtLPpazBtYkSU3UHnHSE
+ i6xsBeBfwt4uc7+FU/w0PjAcAAu6NkTStRebWIfmxT0aNupGrV47S4mOoF1SGiXoF83FhUN9s
+ uB27/gCSCpvkRVvG0SkZ0GDkHjTRJq27kXbeN1/EHoMZpXwctI3hBprhNMclEHDblUvETKict
+ X5fP7/6NRqfVdQS7DwM5pj2CcorfEg93XJObAxB48AC7MHKkbut92a8cuJESl7nuRiAjRPD8D
+ 0CdSEOAC/GYNN/5rvSc7zNq/dgrMbtRZ6e+rqZ+qs1x6OFatCcygsf5OWDbY5Uqa0kimlFThk
+ sWLjy+maf2ngG2ndCNvY7YTBDhhhVAt3JwH4BbcSSbnCS8i+dfuCpD0fgws2XOhx/YLuk999X
+ CrbXVqbIbx6fbyTdNTGTBuLKwXK7UShyiUd9u2nso26a3fpT1xpmkfjy1LKKpK6/OHgkavsV5
+ O2P1QU2RwCx4kqJZI/IHUGR2vJBB+0NY0SBRrkYTkpG2ixnYooaIG757CLkFN855FjgSxwg6S
+ AcrPXvj0NbQY3iCAzlV27GtH9QqZ7DUmySWe1SIZKDbJ+wsQPhvv+UimWjONGpghgE7xR5GtU
+ 4df46+9/I0y5s90IK7qODXCewsyQYQAnbmE/+yWm1ZuxpY51Zmn0AVFmO6ZOI1Zk3Hv5+0/yV
+ oYCM2rG+WHOhkg2XIvhLq02VoFNyLAQXuwJpBWiZL41Ow=
 
-From: Johannes Berg <johannes.berg@intel.com>
+Am 04.06.24 um 06:02 schrieb Guenter Roeck:
 
-The __print_symbolic() could only ever print the core
-drop reasons, since that's the way the infrastructure
-works. Now that we have __print_sym() with all the
-advantages mentioned in that commit, convert to that
-and get all the drop reasons from all subsystems. As
-we already have a list of them, that's really easy.
+> Detect DDR5 memory and instantiate the SPD5118 driver automatically.
 
-This is a little bit of .text (~100 bytes in my build)
-and saves a lot of .data (~17k).
+Hi,
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
----
- include/net/dropreason.h   |  5 +++++
- include/trace/events/skb.h | 16 +++-----------
- net/core/skbuff.c          | 43 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 51 insertions(+), 13 deletions(-)
+the text "Only works for DDR, DDR2, DDR3 and DDR4 for now" should be updat=
+ed too.
+With this fixed:
 
-diff --git a/include/net/dropreason.h b/include/net/dropreason.h
-index 56cb7be92244..c157070b5303 100644
---- a/include/net/dropreason.h
-+++ b/include/net/dropreason.h
-@@ -42,6 +42,11 @@ struct drop_reason_list {
- extern const struct drop_reason_list __rcu *
- drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM];
- 
-+#ifdef CONFIG_TRACEPOINTS
-+const char *drop_reason_lookup(unsigned long long value);
-+void drop_reason_show(struct seq_file *m);
-+#endif
-+
- void drop_reasons_register_subsys(enum skb_drop_reason_subsys subsys,
- 				  const struct drop_reason_list *list);
- void drop_reasons_unregister_subsys(enum skb_drop_reason_subsys subsys);
-diff --git a/include/trace/events/skb.h b/include/trace/events/skb.h
-index 07e0715628ec..8a1a63f9e796 100644
---- a/include/trace/events/skb.h
-+++ b/include/trace/events/skb.h
-@@ -8,15 +8,9 @@
- #include <linux/skbuff.h>
- #include <linux/netdevice.h>
- #include <linux/tracepoint.h>
-+#include <net/dropreason.h>
- 
--#undef FN
--#define FN(reason)	TRACE_DEFINE_ENUM(SKB_DROP_REASON_##reason);
--DEFINE_DROP_REASON(FN, FN)
--
--#undef FN
--#undef FNe
--#define FN(reason)	{ SKB_DROP_REASON_##reason, #reason },
--#define FNe(reason)	{ SKB_DROP_REASON_##reason, #reason }
-+TRACE_DEFINE_SYM_FNS(drop_reason, drop_reason_lookup, drop_reason_show);
- 
- /*
-  * Tracepoint for free an sk_buff:
-@@ -44,13 +38,9 @@ TRACE_EVENT(kfree_skb,
- 
- 	TP_printk("skbaddr=%p protocol=%u location=%pS reason: %s",
- 		  __entry->skbaddr, __entry->protocol, __entry->location,
--		  __print_symbolic(__entry->reason,
--				   DEFINE_DROP_REASON(FN, FNe)))
-+		  __print_sym(__entry->reason, drop_reason ))
- );
- 
--#undef FN
--#undef FNe
--
- TRACE_EVENT(consume_skb,
- 
- 	TP_PROTO(struct sk_buff *skb, void *location),
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 466999a7515e..cd1ea6c3e0f8 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -145,6 +145,49 @@ drop_reasons_by_subsys[SKB_DROP_REASON_SUBSYS_NUM] = {
- };
- EXPORT_SYMBOL(drop_reasons_by_subsys);
- 
-+#ifdef CONFIG_TRACEPOINTS
-+const char *drop_reason_lookup(unsigned long long value)
-+{
-+	unsigned long long subsys_id = value >> SKB_DROP_REASON_SUBSYS_SHIFT;
-+	u32 reason = value & ~SKB_DROP_REASON_SUBSYS_MASK;
-+	const struct drop_reason_list *subsys;
-+
-+	if (subsys_id >= SKB_DROP_REASON_SUBSYS_NUM)
-+		return NULL;
-+
-+	subsys = rcu_dereference(drop_reasons_by_subsys[subsys_id]);
-+	if (!subsys)
-+		return NULL;
-+	if (reason >= subsys->n_reasons)
-+		return NULL;
-+	return subsys->reasons[reason];
-+}
-+
-+void drop_reason_show(struct seq_file *m)
-+{
-+	u32 subsys_id;
-+
-+	rcu_read_lock();
-+	for (subsys_id = 0; subsys_id < SKB_DROP_REASON_SUBSYS_NUM; subsys_id++) {
-+		const struct drop_reason_list *subsys;
-+		u32 i;
-+
-+		subsys = rcu_dereference(drop_reasons_by_subsys[subsys_id]);
-+		if (!subsys)
-+			continue;
-+
-+		for (i = 0; i < subsys->n_reasons; i++) {
-+			if (!subsys->reasons[i])
-+				continue;
-+			seq_printf(m, ", { %u, \"%s\" }",
-+				   (subsys_id << SKB_DROP_REASON_SUBSYS_SHIFT) | i,
-+				   subsys->reasons[i]);
-+		}
-+	}
-+	rcu_read_unlock();
-+}
-+#endif
-+
- /**
-  * drop_reasons_register_subsys - register another drop reason subsystem
-  * @subsys: the subsystem to register, must not be the core
--- 
-2.45.2
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
+>
+> Suggested-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> v5: New patch
+>
+>   drivers/i2c/i2c-smbus.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/i2c/i2c-smbus.c b/drivers/i2c/i2c-smbus.c
+> index 97f338b123b1..8a0dab835761 100644
+> --- a/drivers/i2c/i2c-smbus.c
+> +++ b/drivers/i2c/i2c-smbus.c
+> @@ -382,6 +382,10 @@ void i2c_register_spd(struct i2c_adapter *adap)
+>   	case 0x1E:	/* LPDDR4 */
+>   		name =3D "ee1004";
+>   		break;
+> +	case 0x22:	/* DDR5 */
+> +	case 0x23:	/* LPDDR5 */
+> +		name =3D "spd5118";
+> +		break;
+>   	default:
+>   		dev_info(&adap->dev,
+>   			 "Memory type 0x%02x not supported yet, not instantiating SPD\n",
