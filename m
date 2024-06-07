@@ -1,149 +1,100 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B5D14F9C6
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 06:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDA31BC2F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 06:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717740619; cv=none; b=PqVMVTVrilwKI06aqGp6UKB5UKmjCzzl4f+9F02cQjLqpiCGYZKy9YlTvO8TkEX6HsDsEtXed6vRJD65w5gU825Zi/Z1vxRk9Qb64hGXilWhiUxbHbR1F4tJ3cWdEbs4NxLbTUYoIO/yIXe5KZgn0F/STBEJ0hYgG1ydlESEig8=
+	t=1717740692; cv=none; b=tAAp/i2Ln9glbUwk5Ua55rxRLDako4vAyOioqbyiMBEUsyHN76XW/xzVtpqJQZtmWkQGcb+iFbjIyxbFnizby9hKcBHKzAGFnrr+6hfQ2pVlNzoSbTgTMkcHx3YYaUkVFdhkhK7UOaKWvKKNWZIWOa0uMszuEirjUNjC7587RhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717740619; c=relaxed/simple;
-	bh=+yNnUVafWEFHM6Vfhx3c/ikYL4GjYaVR1FLvegx+GN4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iuXWj9fbnM0nlhk9Pw5BtbWs8C/JWRAgPA0AVHadckGUpHzdsZ0S5sOScTgL0i+ZbHz5J3S/8os7QYGnsQfarZJuEvL4CaPLUwUDTmuy4gX0DJqvq8y/F7c6lVZ+tD+50DRTWFbsZZ67cdYEfNBSN1KVQtsowbwflWI9fDfVPHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R9MzvXSY; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joshwash.bounces.google.com
+	s=arc-20240116; t=1717740692; c=relaxed/simple;
+	bh=1GET/gPqYBfB2KGkVJyl6Vq7slwREOU1B0dY2YzUfbI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FGaE3OqLdVPrJxfBXWFZ9j928BY7wF+YC18G7sidfV0SYcXXKXbd4UFNVTW5zDwrr/A45/rINbVsvDW3NVrJfEOIPWhi2yFH/YLp5+zBvScTN47KLfbjiOg1DVoM+wLCgfMpNKHsneKEGtWF1nufgJ4pc9Cucmd59AV/qJwtQ4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Rx79y2CB; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R9MzvXSY"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1f682e7079bso23275565ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 23:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717740617; x=1718345417; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3IaxqkxoUHKrRAhQLcm0mCsfS9ca+q5nOq+ZwxnZnJs=;
-        b=R9MzvXSYGb3XeaVN1xdzz+MCDkgUmbY4+HIIo/RQfvh7ymY3hI+0Z/HXAR/2BppW+U
-         5vI+yoeRoK8jDlaigB87oZHfX38N7xfAM3I94o9yymeRjXPWq+TVF+6q+JB7GRT/VdNw
-         3XXrAZj6aAAJ1KpI3mRgk6PWeNQpA5jw21l9xPXY9cFhhC+0fZvEJYH5K1UYiQfxP193
-         uZZYdQM86gCONXjwMBdSiDOm/HT8z8bcss86ECIulVjcTo40v5Y8ybZCYPc92hxtGZ1T
-         WLE7y4aNRcVi3wasyo9VcGrgIXEGTLWtvrA9mps+tOMSeWAMJeemcgu3UlbI/fkRn221
-         eJrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717740617; x=1718345417;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3IaxqkxoUHKrRAhQLcm0mCsfS9ca+q5nOq+ZwxnZnJs=;
-        b=ubm/G0JLcPbHryafs307BqUNaInK0p+vwODpWs0eY7U4DrRxKKO18RDaxNXOst7YmJ
-         CtJsVhLx8eZZrx1a5P9OIfImM5BtuuksFQoNp0uUrV9nHtxQZD7payNaW6AO5/gwBMV0
-         Zg2hrRvtl+7j/JHNo2+yiDXW5n5RwePRmc+X89iqLip9/39Vi9bXYFdk/ENmQmNhG7Fs
-         yqNzMofkp0gOMY9aT21y1Ftc1syqNxRUzZlBSmnBlhNht8tjIGluBCPo9HemkbTdEayu
-         tumtD1/X8Vln+JvOaxMfmStBeGv2NCj/VovbVVEepj/N5EhTq+3XK17+IEltNnFB06y2
-         fJdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2Iz+dM1hh86PRfD0KcyrzAK1v52qC2UF/YDndGABkfX4Sy+AxZXZPzfeaXVTlzZmLV8PzhX/F0Mpwb4f+ehDDeiFbIhJVHTGZKq7J
-X-Gm-Message-State: AOJu0YwP6/Yj++8+9kJDbII8TZr8nZmo13yxIazZGnVr8trhSQskwH+h
-	5Gt6bX7EkGqwKc0b1/5aqRn1tZWacPbac5EHhMdhCtqPKvCLerJrxMVeNwzft5Ql6/6lo7TvgKc
-	0hTvvUH/csw==
-X-Google-Smtp-Source: AGHT+IF0A60X0eGYChsWehMsLUt65JdkRv2Yk1dsUtkseIs2rFVb0B3papVQSfoUqB4VpiwZFIWs5WPQpoeOtg==
-X-Received: from joshwash.sea.corp.google.com ([2620:15c:11c:202:a3cf:7d53:6a60:be07])
- (user=joshwash job=sendgmr) by 2002:a17:902:d488:b0:1f6:13fd:2473 with SMTP
- id d9443c01a7336-1f6d02fc466mr1480655ad.10.1717740616671; Thu, 06 Jun 2024
- 23:10:16 -0700 (PDT)
-Date: Thu,  6 Jun 2024 23:09:47 -0700
-In-Reply-To: <20240606192139.1872461-1-joshwash@google.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rx79y2CB"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4576B2Mg072051;
+	Fri, 7 Jun 2024 01:11:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717740662;
+	bh=VMAL1sqTsUTjaa+9dpj5ylbrniRaOR8tVqnEOplb/3U=;
+	h=From:To:CC:Subject:Date;
+	b=Rx79y2CBGvKQVR22ea7TV6NMUfmTRSKlnr1NKO0lAmFD004LDiYnvoKnfzoP4Q7rl
+	 Edh2KTPmt4JcQPK4TXdaJnYCWNEVWBrYuywSdGmKyfteGjRP+ZmfkQN/Bs5G24o3AP
+	 BLwKmnK2esQXzrsVNBTXO22yQe7ReRW9csNZ3XOw=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4576B2jx074791
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 7 Jun 2024 01:11:02 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
+ Jun 2024 01:11:02 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 7 Jun 2024 01:11:02 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4576AuAq003568;
+	Fri, 7 Jun 2024 01:10:57 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <quic_bjorande@quicinc.com>,
+        <geert+renesas@glider.be>, <krzysztof.kozlowski@linaro.org>,
+        <konrad.dybcio@linaro.org>, <dmitry.baryshkov@linaro.org>,
+        <neil.armstrong@linaro.org>, <arnd@arndb.de>,
+        <m.szyprowski@samsung.com>, <nfraprado@collabora.com>,
+        <u-kumar1@ti.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <praneeth@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH] arm64: defconfig: Enable USB2 PHY Driver
+Date: Fri, 7 Jun 2024 11:40:56 +0530
+Message-ID: <20240607061056.708946-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240606192139.1872461-1-joshwash@google.com>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <20240607060958.2789886-1-joshwash@google.com>
-Subject: [PATCH net v2] gve: ignore nonrelevant GSO type bits when processing
- TSO headers
-From: joshwash@google.com
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, kuba@kernel.org, stable@kernel.org, 
-	Joshua Washington <joshwash@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Willem de Bruijn <willemb@google.com>, 
-	Eric Dumazet <edumazet@google.com>, Andrei Vagin <avagin@gmail.com>, 
-	Jeroen de Borst <jeroendb@google.com>, Shailend Chand <shailend@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Rushil Gupta <rushilg@google.com>, Bailey Forrest <bcf@google.com>, 
-	Catherine Sullivan <csully@google.com>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Joshua Washington <joshwash@google.com>
+From: Ravi Gunasekaran <r-gunasekaran@ti.com>
 
-TSO currently fails when the skb's gso_type field has more than one bit
-set.
+The USB controller on TI SoCs such as AM65x needs the
+USB2 PHY driver to communicate with VBUS/ID comparator.
+So enable the OMAP USB2 PHY driver.
 
-TSO packets can be passed from userspace using PF_PACKET, TUNTAP and a
-few others, using virtio_net_hdr (e.g., PACKET_VNET_HDR). This includes
-virtualization, such as QEMU, a real use-case.
-
-The gso_type and gso_size fields as passed from userspace in
-virtio_net_hdr are not trusted blindly by the kernel. It adds gso_type
-|= SKB_GSO_DODGY to force the packet to enter the software GSO stack
-for verification.
-
-This issue might similarly come up when the CWR bit is set in the TCP
-header for congestion control, causing the SKB_GSO_TCP_ECN gso_type bit
-to be set.
-
-Fixes: a57e5de476be ("gve: DQO: Add TX path")
-Signed-off-by: Joshua Washington <joshwash@google.com>
-Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
-Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Suggested-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
- drivers/net/ethernet/google/gve/gve_tx_dqo.c | 21 +++++---------------
- 1 file changed, 5 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/google/gve/gve_tx_dqo.c b/drivers/net/ethernet/google/gve/gve_tx_dqo.c
-index fe1b26a4d736..a76b407a981b 100644
---- a/drivers/net/ethernet/google/gve/gve_tx_dqo.c
-+++ b/drivers/net/ethernet/google/gve/gve_tx_dqo.c
-@@ -551,32 +551,21 @@ static int gve_prep_tso(struct sk_buff *skb)
- 	 * - Hypervisor enforces a limit of 9K MTU
- 	 * - Kernel will not produce a TSO larger than 64k
- 	 */
--
- 	if (unlikely(skb_shinfo(skb)->gso_size < GVE_TX_MIN_TSO_MSS_DQO))
- 		return -1;
- 
-+	if (!(skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)))
-+		return -EINVAL;
-+
- 	/* Needed because we will modify header. */
- 	err = skb_cow_head(skb, 0);
- 	if (err < 0)
- 		return err;
- 
- 	tcp = tcp_hdr(skb);
--
--	/* Remove payload length from checksum. */
- 	paylen = skb->len - skb_transport_offset(skb);
--
--	switch (skb_shinfo(skb)->gso_type) {
--	case SKB_GSO_TCPV4:
--	case SKB_GSO_TCPV6:
--		csum_replace_by_diff(&tcp->check,
--				     (__force __wsum)htonl(paylen));
--
--		/* Compute length of segmentation header. */
--		header_len = skb_tcp_all_headers(skb);
--		break;
--	default:
--		return -EINVAL;
--	}
-+	csum_replace_by_diff(&tcp->check, (__force __wsum)htonl(paylen));
-+	header_len = skb_tcp_all_headers(skb);
- 
- 	if (unlikely(header_len > GVE_TX_MAX_HDR_SIZE_DQO))
- 		return -EINVAL;
+Hello,
+
+This patch is based on linux-next tagged next-20240607.
+
+Regards,
+Siddharth.
+
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 6308e8818257..f92e35ea96c4 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1065,6 +1065,7 @@ CONFIG_USB_MTU3=y
+ CONFIG_USB_MUSB_HDRC=y
+ CONFIG_USB_MUSB_SUNXI=y
+ CONFIG_USB_DWC3=y
++CONFIG_OMAP_USB2=m
+ CONFIG_USB_DWC2=y
+ CONFIG_USB_CHIPIDEA=y
+ CONFIG_USB_CHIPIDEA_UDC=y
 -- 
-2.45.2.505.gda0bf45e8d-goog
+2.40.1
 
