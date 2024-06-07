@@ -1,37 +1,37 @@
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E52C13E3F2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F87913E40C
 	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:26:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717734415; cv=none; b=eNbo+Sg/TIwyt8dY+/YRoYuFPPJ9/iobD4gTaTgoTueja7JioRfxGpOVaCKsZDE5j5DTvH2vzPlO5TNZkNrFFAWIDQLeUgeyG3cxgkmMOJctKIqzgjIioP4fJ6AAzix9PZzFIJaoDIqp95CRKfaFvCK0Tfc5LkXzRoGnIzBRPX0=
+	t=1717734416; cv=none; b=f8NWtpaPgPVfGArfs+u582rCHSzPDYhKRuIlQG8W2EJY4jqvjqrvvAxrAe7o0Z4qKwH1o+bkyUYh9iK5rxLoYIQciunKcjfXJT95rmahR8LD9IQA3U0zBacc8PEbXKtS06WAGvRE4nITKnHv3fxMb18GVLKh7quST8B6kmHq9VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717734415; c=relaxed/simple;
-	bh=3aUqBoDI9TJI8uywQ+vjApH/7H+Tswt28IIEqBix3kQ=;
+	s=arc-20240116; t=1717734416; c=relaxed/simple;
+	bh=iLPdc6e3+GxI2wHjO3ieu8gaZnEFNqjX6eO5XMTguOs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ozAebvL4kPEACoIvTfjSeDeFhu5u+sBr1pYV5jvYnjGQEaq7e2S75NsArw94cRDXJ35UsKgdmvxsUBIEKQsOMxJd0T1ic3Y/+qZCLOs0NXEmxG5o1qHkoPQNz+j/7z/v7AEZ3sym+44OYxrYSYhItQJnIEBwgw+ieGterG4FiYs=
+	 MIME-Version:Content-Type; b=iA35Gmn0VptjW0SIpI/EmmJOSGEU+Jhi4Lm0OsqcEnReUfR+dr21wT3nBnnmHIbCCjNZb/XsO4iZBy8ngOZCl2hhjeK5R4mO+m2DmoMVPsUKmSlL99xIDU2IGCGlXfhM0nAvwh38854EUCgu4W9glkV7S4eF5zx2VwM8AG9itwU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VwShl4fRFzmYRQ;
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VwShl5WxzzmYRx;
 	Fri,  7 Jun 2024 12:22:15 +0800 (CST)
 Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7B15D14038F;
+	by mail.maildlp.com (Postfix) with ESMTPS id 978D51400D5;
 	Fri,  7 Jun 2024 12:26:51 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
  (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 12:26:41 +0800
+ 2024 12:26:42 +0800
 From: Zhihao Cheng <chengzhihao1@huawei.com>
 To: <richard@nod.at>, <david.oberhollenzer@sigma-star.at>,
 	<miquel.raynal@bootlin.com>, <yi.zhang@huawei.com>, <xiangyang3@huawei.com>,
 	<huangxiaojia2@huawei.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH mtd-utils 020/110] ubifs-utils: Add linux type definitions
-Date: Fri, 7 Jun 2024 12:24:45 +0800
-Message-ID: <20240607042615.2069840-21-chengzhihao1@huawei.com>
+Subject: [RFC PATCH mtd-utils 022/110] ubifs-utils: Add linux kernel memory allocation implementations
+Date: Fri, 7 Jun 2024 12:24:47 +0800
+Message-ID: <20240607042615.2069840-23-chengzhihao1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240607042615.2069840-1-chengzhihao1@huawei.com>
 References: <20240607042615.2069840-1-chengzhihao1@huawei.com>
@@ -46,292 +46,166 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600013.china.huawei.com (7.193.23.68)
 
-Add linux type definitions, because there are many types
-(eg. u8/u16/u64) used in UBIFS linux kernel libs. Besides
-move type conversions (eg. cpu_to_le16, cpu_to_le32, etc.)
-into type definitions header file.
+Add linux kernel memory allocation implementations, because there are many
+memory allocations(eg. kmalloc, kzalloc) used in UBIFS linux kernel libs.
 
 This is a preparation for replacing implementation of UBIFS utils with
 linux kernel libs.
 
 Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- ubifs-utils/Makemodule.am           |  1 +
- ubifs-utils/common/crypto.c         |  1 +
- ubifs-utils/common/defs.h           | 30 -------------
- ubifs-utils/common/fscrypt.c        |  3 +-
- ubifs-utils/common/fscrypt.h        |  7 +--
- ubifs-utils/common/linux_types.h    | 89 +++++++++++++++++++++++++++++++++++++
- ubifs-utils/common/sign.c           |  2 +-
- ubifs-utils/mkfs.ubifs/mkfs.ubifs.c |  9 ++--
- 8 files changed, 104 insertions(+), 38 deletions(-)
- create mode 100644 ubifs-utils/common/linux_types.h
+ ubifs-utils/Makemodule.am |  2 ++
+ ubifs-utils/common/kmem.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++
+ ubifs-utils/common/kmem.h | 56 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 122 insertions(+)
+ create mode 100644 ubifs-utils/common/kmem.c
+ create mode 100644 ubifs-utils/common/kmem.h
 
 diff --git a/ubifs-utils/Makemodule.am b/ubifs-utils/Makemodule.am
-index d58570fe..0f9c0fa6 100644
+index 69192ffd..13171b74 100644
 --- a/ubifs-utils/Makemodule.am
 +++ b/ubifs-utils/Makemodule.am
-@@ -1,5 +1,6 @@
- common_SOURCES = \
+@@ -2,6 +2,8 @@ common_SOURCES = \
  	ubifs-utils/common/compiler_attributes.h \
-+	ubifs-utils/common/linux_types.h \
+ 	ubifs-utils/common/linux_types.h \
+ 	ubifs-utils/common/linux_err.h \
++	ubifs-utils/common/kmem.h \
++	ubifs-utils/common/kmem.c \
  	ubifs-utils/common/defs.h \
  	ubifs-utils/common/crc16.h \
  	ubifs-utils/common/crc16.c \
-diff --git a/ubifs-utils/common/crypto.c b/ubifs-utils/common/crypto.c
-index 2ecd8da1..e4ef3491 100644
---- a/ubifs-utils/common/crypto.c
-+++ b/ubifs-utils/common/crypto.c
-@@ -23,6 +23,7 @@
- #include <string.h>
- #include <assert.h>
- 
-+#include "linux_types.h"
- #include "fscrypt.h"
- #include "defs.h"
- #include "ubifs.h"
-diff --git a/ubifs-utils/common/defs.h b/ubifs-utils/common/defs.h
-index cafc94af..dd3b806e 100644
---- a/ubifs-utils/common/defs.h
-+++ b/ubifs-utils/common/defs.h
-@@ -9,7 +9,6 @@
- #include <stdlib.h>
- #include <stdio.h>
- #include <limits.h>
--#include <byteswap.h>
- #include <errno.h>
- 
- #include "ubifs.h"
-@@ -27,37 +26,8 @@ enum { MKFS_PROGRAM_TYPE = 0 };
- 	printf("%s: %s: " fmt "\n", PROGRAM_NAME, __FUNCTION__, ##__VA_ARGS__); \
- } while(0)
- 
--#define t16(x) ({ \
--	uint16_t __b = (x); \
--	(__LITTLE_ENDIAN==__BYTE_ORDER) ? __b : bswap_16(__b); \
--})
--
--#define t32(x) ({ \
--	uint32_t __b = (x); \
--	(__LITTLE_ENDIAN==__BYTE_ORDER) ? __b : bswap_32(__b); \
--})
--
--#define t64(x) ({ \
--	uint64_t __b = (x); \
--	(__LITTLE_ENDIAN==__BYTE_ORDER) ? __b : bswap_64(__b); \
--})
--
--#define cpu_to_le16(x) ((__le16){t16(x)})
--#define cpu_to_le32(x) ((__le32){t32(x)})
--#define cpu_to_le64(x) ((__le64){t64(x)})
--
--#define le16_to_cpu(x) (t16((x)))
--#define le32_to_cpu(x) (t32((x)))
--#define le64_to_cpu(x) (t64((x)))
--
- #define unlikely(x) (x)
- 
--struct qstr
--{
--	char *name;
--	size_t len;
--};
--
- /**
-  * fls - find last (most-significant) bit set
-  * @x: the word to search
-diff --git a/ubifs-utils/common/fscrypt.c b/ubifs-utils/common/fscrypt.c
-index 895d5c72..f39faa76 100644
---- a/ubifs-utils/common/fscrypt.c
-+++ b/ubifs-utils/common/fscrypt.c
-@@ -20,6 +20,7 @@
- 
- #include <endian.h>
- 
-+#include "linux_types.h"
- #include "fscrypt.h"
- #include "defs.h"
- #include "ubifs.h"
-@@ -88,7 +89,7 @@ unsigned int fscrypt_fname_encrypted_size(struct fscrypt_context *fctx,
- 	return round_up(ilen, padding);
- }
- 
--int encrypt_path(void **outbuf, void *data, unsigned int data_len,
-+int encrypt_path(void **outbuf, const void *data, unsigned int data_len,
- 		unsigned int max_namelen, struct fscrypt_context *fctx)
- {
- 	void *inbuf, *crypt_key;
-diff --git a/ubifs-utils/common/fscrypt.h b/ubifs-utils/common/fscrypt.h
-index b8a599de..4a073e97 100644
---- a/ubifs-utils/common/fscrypt.h
-+++ b/ubifs-utils/common/fscrypt.h
-@@ -107,7 +107,7 @@ struct fscrypt_context *inherit_fscrypt_context(struct fscrypt_context *fctx);
- void free_fscrypt_context(struct fscrypt_context *fctx);
- unsigned int fscrypt_fname_encrypted_size(struct fscrypt_context *fctx,
- 					  unsigned int ilen);
--int encrypt_path(void **outbuf, void *data, unsigned int data_len,
-+int encrypt_path(void **outbuf, const void *data, unsigned int data_len,
- 		 unsigned int max_namelen, struct fscrypt_context *fctx);
- int encrypt_data_node(struct fscrypt_context *fctx, unsigned int block_no,
- 		      struct ubifs_data_node *dn, size_t length);
-@@ -138,8 +138,9 @@ static inline void free_fscrypt_context(struct fscrypt_context *fctx)
- 	assert(!fctx);
- }
- 
--static inline int encrypt_path(void **outbuf, void *data, unsigned int data_len,
--		 unsigned int max_namelen, struct fscrypt_context *fctx)
-+static inline int encrypt_path(void **outbuf, const void *data,
-+			unsigned int data_len, unsigned int max_namelen,
-+			struct fscrypt_context *fctx)
- {
- 	(void)outbuf;
- 	(void)data;
-diff --git a/ubifs-utils/common/linux_types.h b/ubifs-utils/common/linux_types.h
+diff --git a/ubifs-utils/common/kmem.c b/ubifs-utils/common/kmem.c
 new file mode 100644
-index 00000000..556b2e25
+index 00000000..e926a137
 --- /dev/null
-+++ b/ubifs-utils/common/linux_types.h
-@@ -0,0 +1,89 @@
-+#ifndef __LINUX_TYPES_H__
-+#define __LINUX_TYPES_H__
-+
-+#include <linux/types.h>
-+#include <sys/types.h>
-+#include <byteswap.h>
-+#include <stdint.h>
-+#include <unistd.h>
++++ b/ubifs-utils/common/kmem.c
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Simple memory interface
++ */
 +
 +#include "compiler_attributes.h"
++#include "linux_types.h"
++#include "kmem.h"
++#include "defs.h"
 +
-+typedef __u8		u8;
-+typedef __u16		u16;
-+typedef __u32		u32;
-+typedef __u64		u64;
++static void *kmem_alloc(size_t size)
++{
++	void *ptr = malloc(size);
 +
-+typedef __s64		time64_t;
++	if (ptr == NULL)
++		sys_errmsg("malloc failed (%d bytes)", (int)size);
++	return ptr;
++}
 +
-+struct qstr {
-+	const char *name;
-+	size_t len;
-+};
++static void *kmem_zalloc(size_t size)
++{
++	void *ptr = kmem_alloc(size);
 +
-+struct fscrypt_name {
-+	struct qstr disk_name;
-+};
++	if (!ptr)
++		return ptr;
 +
-+#define fname_name(p)	((p)->disk_name.name)
-+#define fname_len(p)	((p)->disk_name.len)
++	memset(ptr, 0, size);
++	return ptr;
++}
 +
-+#define t16(x) ({ \
-+	uint16_t __b = (x); \
-+	(__LITTLE_ENDIAN==__BYTE_ORDER) ? __b : bswap_16(__b); \
-+})
++void *kmalloc(size_t size, gfp_t flags)
++{
++	if (flags & __GFP_ZERO)
++		return kmem_zalloc(size);
++	return kmem_alloc(size);
++}
 +
-+#define t32(x) ({ \
-+	uint32_t __b = (x); \
-+	(__LITTLE_ENDIAN==__BYTE_ORDER) ? __b : bswap_32(__b); \
-+})
++void *krealloc(void *ptr, size_t new_size, __unused gfp_t flags)
++{
++	ptr = realloc(ptr, new_size);
++	if (ptr == NULL)
++		sys_errmsg("realloc failed (%d bytes)", (int)new_size);
++	return ptr;
++}
 +
-+#define t64(x) ({ \
-+	uint64_t __b = (x); \
-+	(__LITTLE_ENDIAN==__BYTE_ORDER) ? __b : bswap_64(__b); \
-+})
-+
-+#define cpu_to_le16(x) ((__le16){t16(x)})
-+#define cpu_to_le32(x) ((__le32){t32(x)})
-+#define cpu_to_le64(x) ((__le64){t64(x)})
-+
-+#define le16_to_cpu(x) (t16((x)))
-+#define le32_to_cpu(x) (t32((x)))
-+#define le64_to_cpu(x) (t64((x)))
-+
-+#define check_mul_overflow(a, b, d) ({		\
-+	typeof(a) __a = (a);			\
-+	typeof(b) __b = (b);			\
-+	typeof(d) __d = (d);			\
-+	(void) (&__a == &__b);			\
-+	(void) (&__a == __d);			\
-+	__builtin_mul_overflow(__a, __b, __d);	\
-+})
-+
-+static inline __must_check size_t array_size(size_t a, size_t b)
++void *kmalloc_array(size_t n, size_t size, gfp_t flags)
 +{
 +	size_t bytes;
-+	if (check_mul_overflow(a, b, &bytes))
-+		return SIZE_MAX;
 +
-+	return bytes;
++	if (unlikely(check_mul_overflow(n, size, &bytes)))
++		return NULL;
++	return kmalloc(bytes, flags);
 +}
 +
-+static inline int int_log2(unsigned int arg)
++void *kmemdup(const void *src, size_t len, gfp_t gfp)
 +{
-+	int  l = 0;
++	void *p;
 +
-+	arg >>= 1;
-+	while (arg) {
-+		l++;
-+		arg >>= 1;
-+	}
-+	return l;
++	p = kmalloc(len, gfp);
++	if (p)
++		memcpy(p, src, len);
++
++	return p;
++}
+diff --git a/ubifs-utils/common/kmem.h b/ubifs-utils/common/kmem.h
+new file mode 100644
+index 00000000..9fe2a364
+--- /dev/null
++++ b/ubifs-utils/common/kmem.h
+@@ -0,0 +1,56 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2008 Silicon Graphics, Inc.
++ * All Rights Reserved.
++ */
++#ifndef __KMEM_H__
++#define __KMEM_H__
++
++#include <stdlib.h>
++
++typedef unsigned int gfp_t;
++
++#define GFP_KERNEL	0
++#define GFP_NOFS	0
++#define __GFP_NOWARN	0
++#define __GFP_ZERO	1
++
++#define vmalloc(size)	malloc(size)
++#define vfree(ptr)	free(ptr)
++
++extern void	*kmalloc(size_t, gfp_t);
++extern void	*krealloc(void *, size_t, __attribute__((unused)) gfp_t);
++extern void	*kmalloc_array(size_t, size_t, gfp_t);
++extern void	*kmemdup(const void *src, size_t len, gfp_t gfp);
++
++static inline void kfree(const void *ptr)
++{
++	free((void *)ptr);
 +}
 +
-+#undef PAGE_SIZE
-+#define PAGE_SIZE (getpagesize())
-+#undef PAGE_SHIFT
-+#define PAGE_SHIFT (int_log2(PAGE_SIZE))
++static inline void kvfree(const void *ptr)
++{
++	kfree(ptr);
++}
++
++static inline void *kvmalloc(size_t size, gfp_t flags)
++{
++	return kmalloc(size, flags);
++}
++
++static inline void *kzalloc(size_t size, gfp_t flags)
++{
++	return kmalloc(size, flags | __GFP_ZERO);
++}
++
++static inline void *__vmalloc(unsigned long size, gfp_t gfp_mask)
++{
++	return kmalloc(size, gfp_mask);
++}
++
++static inline void *kcalloc(size_t n, size_t size, gfp_t flags)
++{
++	return kmalloc_array(n, size, flags | __GFP_ZERO);
++}
 +
 +#endif
-diff --git a/ubifs-utils/common/sign.c b/ubifs-utils/common/sign.c
-index 7530503a..dfbc96bf 100644
---- a/ubifs-utils/common/sign.c
-+++ b/ubifs-utils/common/sign.c
-@@ -28,7 +28,7 @@
- #include <openssl/conf.h>
- #include <err.h>
- 
--#include "compiler_attributes.h"
-+#include "linux_types.h"
- #include "sign.h"
- #include "defs.h"
- #include "ubifs.h"
-diff --git a/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c b/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
-index 2181595e..c2f5a29d 100644
---- a/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
-+++ b/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
-@@ -46,6 +46,7 @@
- #include <zstd.h>
- #endif
- 
-+#include "linux_types.h"
- #include "defs.h"
- #include "crypto.h"
- #include "fscrypt.h"
-@@ -1207,12 +1208,14 @@ static int add_xattr(struct ubifs_ino_node *host_ino, struct stat *st,
- 	struct ubifs_ino_node *ino;
- 	struct ubifs_dent_node *xent;
- 	struct qstr nm;
-+	char *tmp_name;
- 	union ubifs_key xkey, nkey;
- 	int len, ret;
- 
- 	nm.len = strlen(name);
--	nm.name = xmalloc(nm.len + 1);
--	memcpy(nm.name, name, nm.len + 1);
-+	tmp_name = xmalloc(nm.len + 1);
-+	memcpy(tmp_name, name, nm.len + 1);
-+	nm.name = tmp_name;
- 
- 	host_ino->xattr_cnt++;
- 	host_ino->xattr_size += CALC_DENT_SIZE(nm.len);
-@@ -1240,7 +1243,7 @@ static int add_xattr(struct ubifs_ino_node *host_ino, struct stat *st,
- 
- 	xent->inum = cpu_to_le64(inum);
- 
--	ret = add_node(&xkey, nm.name, nm.len, xent, len);
-+	ret = add_node(&xkey, tmp_name, nm.len, xent, len);
- 	if (ret)
- 		goto out;
- 
 -- 
 2.13.6
 
