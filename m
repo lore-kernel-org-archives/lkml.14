@@ -1,172 +1,160 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2076.outbound.protection.outlook.com [40.107.237.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F5B15B55F;
-	Fri,  7 Jun 2024 10:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717755675; cv=none; b=MqsbkD6UhWIqaHIHamO6A1J+ATOzqYf3FA0Cuud3UB5sDqfX6BtF7hZOl4hLb4Vuyx/yNiCQ5oIUMJB5UilSScW9D5916Lg5uoWFlyRMklN8sPaM8tb8Uwypdzmfg9pGhovdpBTKD/lUHv5SPm8z1+hh7hL0XXDtIQQAZRdhRzA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717755675; c=relaxed/simple;
-	bh=Dks7OxXyBlyHmAOgz5BZhV2eq197RmmI4/NeHgpMpQk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YtiCtShDE/7Mqb+IjSzPbKbPyuYEkYfU5flTGOUPUV8H9xIAeag6OihwX/Xg0p7r9nlNqPnYs1Wv9IZl3z+2TackTB2j1xZfNje1PaO40mp0QDEXsxYwwOlR8+szbNoOnHT5IYJUcw9MhPGx4PMSvh04U49RvSL80v1Lw3v4y+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vo0Ldluo; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE30746E;
+	Fri,  7 Jun 2024 10:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717755698; cv=fail; b=g8c0sB+/s/bti2UThdse6/4PCQin795K6Qrpph2lzOh1XP8vyHZJfvr49eqB81Qxz+SusZ7Dh9rRWfTxlJozNumtgqiOkwNefq21wvpM5EMWwy0F+i90Ur+QMMXzRp0Z+8lEsNjnmhkm20BTkLo8p5HfjNge0GMjuOF8iw+snc0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717755698; c=relaxed/simple;
+	bh=rlw+9EgeknZYOaROpyuAMXH0QZJpJRB6lite18Cio9w=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P/I0nu5SMdA1ZDMiy3ybY3SVbIol8MtlanK/HKFym/fKrOoHQDg3UdyukfFlJymq6EA8be8gJArCGPpT62OW8izZG1M4XLz7bjK+5JWIAzrI3CDJXnHlYZhTaQtr/LbmGjKnkFONqt6z311shaOZJELRSZgclU2rTg9iQDlyvD8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=E0dTlrkA; arc=fail smtp.client-ip=40.107.237.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vo0Ldluo"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a68b54577aaso250756666b.3;
-        Fri, 07 Jun 2024 03:21:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717755670; x=1718360470; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3QcBsgWbss1EmWhGcEgsrw0bt0a7lGJfPQQEMYFDspo=;
-        b=Vo0LdluoLqyALSxQHXZBs++Ah67q/gZPNkb2Gc6y4Ryy7N5mZbkGbaRUUB2BGK+vjJ
-         vLVEUT9VBJpdJJ99GGvHEHI6JgweDHGczTl4DSf6fQic+QD2kPyEKWIC+3dDeiEZnv40
-         GlJNFvYleaF3rQEkCLCdMxhLGfXcj6mrqv6Ln1SVqk2rh7J/ZgeBQ87muN5HGw94c5Wg
-         mcPrkFuDXMsCf7VOIWY83lW71ZhmepANyLlcB4+fM2YdcQUpKL+1ppBtMmJSyIAbOetb
-         b437Dh/h0LrvuVpE0GJSNnhUHFvQdZ/cejVYeI0RD30G71rMpfKlwJVrSQK8pRarBJjv
-         w4lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717755670; x=1718360470;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3QcBsgWbss1EmWhGcEgsrw0bt0a7lGJfPQQEMYFDspo=;
-        b=RIdW9D2bnR6ELZs7Xla+eJreUOvoWrub8IkDxnt9Lw/rPLNIa6u6uy0e/9ml6x1qGx
-         /uqJMOM5704KYb14AZ0603r9CnYWSB+v/HBCr4I3lIvzWi665MEpc+ezYzZdtA1gmwFj
-         ZSZS1AYivIq2HYSpYPbYXO0GH7py4TzVdIA880llobX99WY5kFf5EEoG8B00zogt8L1a
-         KPHXIkRuRQFDWX2veGjy3/VAYIa5KIBbbDZuMxOYaoeiY6IMj8DbokyZjzHQlCVxxCim
-         zUMVFbBcIrg5xaZaHynumN3wmpuOcbegNI6PE/0DI6x2RsC+J96q5qEJD5H4/bQJhb5v
-         /YkA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+xKkZi5YkLVjDLnLBE0BmSxXISpV/C3JWK0N5SHI6P2nPU6m9Eu+63CvCIILKMfseTDqDZ1OeC+ClRE/MFRcHQAmWcPug7k/USm9n4eqDsNQIJVR7M8xu+PAkyof/fuN02UbI0N8l3mozjrhEwE7VWHzjsqcQuqE2Vde9N7bT9ADrWQ==
-X-Gm-Message-State: AOJu0YwhvlH06MBZyuUiTH1kEDJ5J4w/87FcODkzq/hR0uLlftz6xdWb
-	GpDG55divBFzMLTWUpnbXMXj+mp73YHWqirz1pnqYbGA8tTRAHs2
-X-Google-Smtp-Source: AGHT+IHHu/XB4j36RfnBoCcgy8Of3JZV/a6yi0TUcpN0xv4exB18c3i0eNgoKfCDmUyRrJGfGg2+RQ==
-X-Received: by 2002:a17:906:81c3:b0:a68:baca:f120 with SMTP id a640c23a62f3a-a6cdc0e089fmr134924966b.73.1717755670428;
-        Fri, 07 Jun 2024 03:21:10 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c8070eaf7sm228367566b.172.2024.06.07.03.21.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 03:21:10 -0700 (PDT)
-Message-ID: <7c016774f3892e4fa34d4c3fb770d8581e4787d9.camel@gmail.com>
-Subject: Re: [PATCH v6 5/9] iio: adc: ad7173: refactor ain and vref selection
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>, dumitru.ceclan@analog.com
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- David Lechner <dlechner@baylibre.com>,  linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Fri, 07 Jun 2024 12:24:57 +0200
-In-Reply-To: <0f230e9a-31bb-45e1-ab86-b80b30ad8502@gmail.com>
-References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
-	 <20240606-ad4111-v6-5-573981fb3e2e@analog.com>
-	 <8f74bb906951f56c753081af1462560fe98bc822.camel@gmail.com>
-	 <0f230e9a-31bb-45e1-ab86-b80b30ad8502@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="E0dTlrkA"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gvHOiDc2tDt/1fwIm/3Zzx0iwIESTJUZ4vM33R+efEqzUdmyu28vFukprTrAgFXITGGkis1x418au/2ztbFTwCBbzulOOylPNX46jLjC/5ik9l2Xa7jr93k4d5caf2aTYZQt30SunCxAPdp7Rz1qSHQZbtV5yfC8gnkUDanifzXyQMZP1xRxDJijAqnb6Q7kyuKTco1qqBQAo0gjGW02UIpf6z1mOCMUQufZnA3eczYdTTP7rKScoiYRCt22lV1WBJOIvlgC1RYYoN+AZ7+icc3Ku/19DTOE+wfg+nNowhfTNwKu3qqQfdoFO1FPQP7lIVMtfXH+/rchwZ8eJuBOfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VxklPLFgILSCLVjkX2DAgAVcmOLgE4NZCuD9D6ONueY=;
+ b=eC1MwmOLhbYY/pHaSF7h0v4uUiJqHIttz96Chf9HiVfo2TepdJEKX1qHsu/Lq+qKdrnSQ4WQ4p74ECmR5G06KXW8biOWvspCkow2A6ou1DOuVnzOfGAuy1xCHpvs/cEGRdakeW+0ESLcJGiTBaSeX8F16NmVxt+TEf/6n21aN710sGpByG8F62Whai+fS+G/8HPJzzPv3cJQvQr/HpCKvls+Ol3Tc09P3g4eUZWAPtNELvqnJJ5c8ZPwBLnbyEO5vHNQJjc4qqpNcYPF98vQCOPN7MbytHX5r9c27nYTD+M7R0TwBLn3yDWT4F5mwIQ6FCqW6EoFO1yjYfiPDBEkrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VxklPLFgILSCLVjkX2DAgAVcmOLgE4NZCuD9D6ONueY=;
+ b=E0dTlrkAOU7edyKThCDtCG6qDjrlE07e3jXW7JVHdy1vqxNt0nkUa1eGKhXU3N8z9H+FRuRCqbs6D3ZQgu3+5MVN+0vNEnStYx8LWke/2PYsJzdSae5lbzWzzO6iLPn767EPcpWOgCOfsPyj1DzJj99z73RJW6KIDIqBrqXzuRYwRYRVY0N/FhxNYX54fwbFM5GKlCtxv8bC9wzLg9MF9Bxly1XcymCJ3dY1qEIas7XngmSy1lfjp/QGaQ+xcbnGas9tw/V06BXUZWsUh7C4ce0irC6xj2pbv8nQ8dws9+NyIoXnqxLydeuAhpF8QwNo1tiyIDQy/p0Im2AokUNj2w==
+Received: from MW2PR2101CA0036.namprd21.prod.outlook.com (2603:10b6:302:1::49)
+ by DS0PR12MB8294.namprd12.prod.outlook.com (2603:10b6:8:f4::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.34; Fri, 7 Jun
+ 2024 10:21:32 +0000
+Received: from SJ1PEPF00002317.namprd03.prod.outlook.com
+ (2603:10b6:302:1:cafe::3d) by MW2PR2101CA0036.outlook.office365.com
+ (2603:10b6:302:1::49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.9 via Frontend
+ Transport; Fri, 7 Jun 2024 10:21:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ SJ1PEPF00002317.mail.protection.outlook.com (10.167.242.171) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7633.15 via Frontend Transport; Fri, 7 Jun 2024 10:21:31 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 7 Jun 2024
+ 03:21:18 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 7 Jun 2024
+ 03:21:17 -0700
+Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.6)
+ with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport; Fri, 7 Jun
+ 2024 03:21:16 -0700
+From: Shravan Kumar Ramani <shravankr@nvidia.com>
+To: Hans de Goede <hdegoede@redhat.com>, Ilpo Jarvinen
+	<ilpo.jarvinen@linux.intel.com>, Vadim Pasternak <vadimp@nvidia.com>, "David
+ Thompson" <davthompson@nvidia.com>
+CC: Shravan Kumar Ramani <shravankr@nvidia.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/4] Updates to mlxbf-pmc
+Date: Fri, 7 Jun 2024 06:21:10 -0400
+Message-ID: <cover.1717755404.git.shravankr@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002317:EE_|DS0PR12MB8294:EE_
+X-MS-Office365-Filtering-Correlation-Id: a649622e-ff5d-4c88-ea17-08dc86db99df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|36860700004|1800799015|82310400017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?K7PEaMzLvjoLf+fZwsTInRgUSo1GDFo58FzEnYqfeYjZuaxlZJSSlpPxgbAL?=
+ =?us-ascii?Q?cbZ8r9W3tqZ5TBwkAuXF1aVg2+0G6y8HhBkD3v95M/ylzPwtrzNBC30gMEzn?=
+ =?us-ascii?Q?eacS19RoPFbB6Es6zzdsIRNTqCWY61hfSsrIa1JcdQluOtFK9W1ECHAxAy80?=
+ =?us-ascii?Q?/xXLp8WC11ApnVryhL4VtRhGIV0VJejtHsLV0K/lDSuri2uvd31aSTjpb0Et?=
+ =?us-ascii?Q?wTpd/0T4Hmmgees6GFBIA6jePVmA/Gelp8mxNCwx63SpRDzQhFAD7/Ii6ceh?=
+ =?us-ascii?Q?NiJ1EvmnmELA7uD+wWejXbF4YTa+Jfe/BxBSrQCKRHf0OIt+1Sy4BwhmGxku?=
+ =?us-ascii?Q?yNg721AI8pFfQm1pz9lnSHzo/uU8/tXZu2D6UgXXeNki/bmdTA3L7fziJO1b?=
+ =?us-ascii?Q?P6oxJiRvnwVzRKGBLyJFVndkqfdrOADt4ZVffnD44ZVqwn6//t/Nr9SGUToN?=
+ =?us-ascii?Q?8DR55MJC0mTmE5U5qHShxL4G0Dhq0NM5RRsLZST7jDxl68RzoSCvdXIen3cU?=
+ =?us-ascii?Q?HEE81FtL834v+lxmTFPxQ4lVMLLA87enTQRkYDUvX10heht7WPQyY01Xy6+H?=
+ =?us-ascii?Q?rxMoPB8z5rf2wwBNQ5SXzjH6Uqfx5c6Nk2YIG3yWSJRLFPdjOS1W9o/kuwAm?=
+ =?us-ascii?Q?8McxGfPWKo9MMfOCMtxujyd++zcpi1O3TpufqLW8XHBdqNthwstVgeVhMX6t?=
+ =?us-ascii?Q?Yg3bhH1I8guh045W/zj4lxiYPX/V4PvD1B8pevdohxxcL/cZAMCTSQtQyCDb?=
+ =?us-ascii?Q?eDN2eQJq1nMa+NFbeNOVFbPrRQsK1i4gpje4o5x6wLJxSnDKsFXeduvGQomz?=
+ =?us-ascii?Q?DNK+Nv86+fg6wYTEw/cWNb2AAVHEbnZ981pyfzPXc8A1Tl4XqvDA2RdcQTmx?=
+ =?us-ascii?Q?vWksQkNA1iTq9vD8OI+xCKSITMFcAMGrxP3Dl+7AhDvZLgE1MIL1dftt8pmG?=
+ =?us-ascii?Q?yA3+L+HrtwUHVfKvAcz8c7JhBa+UbLoEzljoaJcKjZXFs2ySKGIHLTS9fboS?=
+ =?us-ascii?Q?aqYfmzfO1Cx5zduVWzPeg1Bn0mYLFMbc2K++N/WeF0t0cQtxMQjk35fmjhVb?=
+ =?us-ascii?Q?cRQhC91km7+Ye03tq4WjkPaNuOlUScNYvSF0UQv2LV3h0xqUySORFuKAkI35?=
+ =?us-ascii?Q?spEFFr2EAQK6h0DDbSFx5Sq/1ZXfw+o4CWjtlLzlUoSPbD0DCeMJgB8FHK3w?=
+ =?us-ascii?Q?TsEQPSTogP7rtRsVQWmpxmJOytjYf8zjC4CXzW2urXJ7ph7WZsGI0aJO2SSU?=
+ =?us-ascii?Q?669ZzbQLq5BJ8Qt+vX7g897RXKUFuxaVVKTEzjJHWkC5QMrUONSHv3paQn6f?=
+ =?us-ascii?Q?UK+Ok/VhsBw7QWxWJKKmdtukgs7bE/Fgqz6NjkRLp5okZ7vrJ6Kpt2YhT7oz?=
+ =?us-ascii?Q?6hZ3OxYEdi0dMJime2whS4GWCJlteIzt7tkw9kLVdVz5FSa0ow=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(376005)(36860700004)(1800799015)(82310400017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 10:21:31.6847
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a649622e-ff5d-4c88-ea17-08dc86db99df
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002317.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8294
 
-On Fri, 2024-06-07 at 12:37 +0300, Ceclan, Dumitru wrote:
-> On 07/06/2024 12:04, Nuno S=C3=A1 wrote:
-> > On Thu, 2024-06-06 at 19:07 +0300, Dumitru Ceclan via B4 Relay wrote:
-> > > From: Dumitru Ceclan <dumitru.ceclan@analog.com>
-> > >=20
-> > > Move validation of analog inputs and reference voltage selection to
-> > > separate functions to reduce the size of the channel config parsing
-> > > function and improve readability.
-> > > Add defines for the number of analog inputs in a channel.
-> > >=20
-> > > Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
-> > > ---
-> > > =C2=A0drivers/iio/adc/ad7173.c | 68 +++++++++++++++++++++++++++++++++=
-----------
-> > > ----
-> > > -
-> > > =C2=A01 file changed, 47 insertions(+), 21 deletions(-)
-> > >=20
-> > > diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-> > > index 8631f218b69e..4040edbd1c32 100644
-> > > --- a/drivers/iio/adc/ad7173.c
-> > > +++ b/drivers/iio/adc/ad7173.c
-> > > @@ -60,6 +60,7 @@
-> > > =C2=A0#define AD7173_CH_SETUP_AINPOS_MASK	GENMASK(9, 5)
-> > > =C2=A0#define AD7173_CH_SETUP_AINNEG_MASK	GENMASK(4, 0)
-> > > =C2=A0
-> > > +#define AD7173_NO_AINS_PER_CHANNEL	2
-> > > =C2=A0#define AD7173_CH_ADDRESS(pos, neg) \
-> > > =C2=A0	(FIELD_PREP(AD7173_CH_SETUP_AINPOS_MASK, pos) | \
-> > > =C2=A0	 FIELD_PREP(AD7173_CH_SETUP_AINNEG_MASK, neg))
-> > > @@ -629,6 +630,7 @@ static int ad7173_setup(struct iio_dev *indio_dev=
-)
-> > > =C2=A0static unsigned int ad7173_get_ref_voltage_milli(struct ad7173_=
-state *st,
-> > > =C2=A0						 u8 reference_select)
-> > > =C2=A0{
-> > > +	struct device *dev =3D &st->sd.spi->dev;
-> > > =C2=A0	int vref;
-> > > =C2=A0
-> > > =C2=A0	switch (reference_select) {
-> > > @@ -652,9 +654,11 @@ static unsigned int
-> > > ad7173_get_ref_voltage_milli(struct
-> > > ad7173_state *st,
-> > > =C2=A0		return -EINVAL;
-> > > =C2=A0	}
-> > > =C2=A0
-> > > -	if (vref < 0)
-> > > +	if (vref < 0) {
-> > > +		dev_err(dev, "Cannot use reference %u. Error:%d\n",
-> > > +			reference_select, vref);
-> > > =C2=A0		return vref;
-> > > -
-> > > +	}
-> > > =C2=A0	return vref / (MICRO / MILLI);
-> > > =C2=A0}
-> >=20
-> > unrelated?
-> >=20
-> > - Nuno S=C3=A1
-> >=20
->=20
-> Hmm, maybe I misunderstood "Any error log needed should be done inside
-> ad7173_get_ref_voltage_milli()"
-> https://lore.kernel.org/all/71452f6882efe6a181d477914488617d28a38e2f.came=
-l@gmail.com/
->=20
-> This change should be in a different patch or should it not've been done
-> this way?
+This submission contains 4 patches relating to mlxbf-pmc.
 
-Ohh right... Mentioning this particular log change in the commit message wo=
-uld
-avoid my question. Also, note that you're still doing:
+Patch 1 adds documentation for the sysfs files created by the driver.
+Patches 2 and 3 add specific functionality to the driver for supporting
+64-bit ocunters, cycle count and clock_measure performance block.
+Patch 4 adds documentation for the newly added sysfs entries.
 
-ret =3D ad7173_get_ref_voltage_milli(st, ref_sel);
-if (ret < 0)
-	return ret;
+v2 -> v3
+Updated documentation as suggested to provide more details on the
+sysfs and driver functionality.
 
-instead of:
+v1 -> v2
+Added patch 4 to document sysfs entries added in patches 2 and 3.
 
-return ad7173_get_ref_voltage_milli(...)
+Shravan Kumar Ramani (4):
+  Documentation/ABI: Add document for Mellanox PMC driver
+  platform/mellanox: mlxbf-pmc: Add support for 64-bit counters and
+    cycle count
+  platform/mellanox: mlxbf-pmc: Add support for clock_measure
+    performance block
+  Documentation/ABI: Add new sysfs fields to sysfs-platform-mellanox-pmc
 
-which defeats the purpose of having the log inside
-ad7173_get_ref_voltage_milli()=20
+ .../ABI/testing/sysfs-platform-mellanox-pmc   |  77 ++++++++
+ drivers/platform/mellanox/mlxbf-pmc.c         | 180 +++++++++++++++++-
+ 2 files changed, 253 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-mellanox-pmc
 
-But after stepping back I see ad7173_get_ref_voltage_milli() is also being =
-used
-in a non probe path. Hence, doing the log out of the function using
-dev_err_probe() may be reason enough to keep things as you had before my
-comments. Will leave that up to you (sorry for the noise).
+-- 
+2.30.1
 
-- Nuno S=C3=A1
-=20
