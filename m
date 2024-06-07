@@ -1,148 +1,101 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A061A198846
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 15:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A9A18732D;
+	Fri,  7 Jun 2024 15:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717773199; cv=none; b=CyQ41cH/J1KX7DHvobI60Huhjo4FlrZlsYdqydPNHjxOWY5Ja07rvIAcMtph3I8766+AqthCQsRFG1TEAxLQtx/cNXpuQmjXlSujEsERR/xqHIhnVmBRz0kN92ZFoo5l2DEKHmFXqnKMlbGKeAoBeosN6aFnuivVigT6I9ckvJ8=
+	t=1717773209; cv=none; b=Bixbs/h4iq+fkbPiD7Xmh1vOv19W+clbYRPHofMyT30nzP0C9wM/kH+yKDmrKhsN124mcEq2sXKTGaQppBxyt0qoCOQWDTi4eqnTR4qES6JmG+p4XI9ybsw1C61tVskgalIjUQRPV670yHKA5u8JtAt/KwgC67iWBfOYoq85+2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717773199; c=relaxed/simple;
-	bh=7n0apmTpqZ+tog798fnZb4ZTZm7Gl3vutnIWL1LYnuA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WsbeQo2aYtRn7+XZaGQjUkDfxG7RkQZXAJrPvX3Vk7OK3mG24GR8HZ9w8uLML179OpoETBt54w5+pUI6rCMYBai8Y+z6OZIhVIYlMka/dUFWOIbf2rma0xLFoczIwynqOXo0OFg+N2/fGBTRXledCcjBFwZTsHKfu72Po3EZ35o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oGF5ChVz; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oGF5ChVz"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57c5ec83886so9067a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 08:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717773195; x=1718377995; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F9DLoOIliT2vV+jCDlYYVBA1v56GjGd/sBFCy6REvhs=;
-        b=oGF5ChVzmkSrf4CDt2HjlSTVWxz0aYNl3lhxr2e67cX6NlsRsWve/wt9BUszmxwKV/
-         KOi8z8tpmG6DM9EVZZE6v7rpbNsSJaKmwxQav+hh8XcwWF0tMjgtsZ+YippmyST/Ccc1
-         HINUkWQYHln80yuBonj6B/0l4uXQ/xLdBD9n3xRqYJLSayvHUOiAJU+pK8LWVSZ2Jd2s
-         yWcydFqS/ro21AUCmgZdpHYS6Mli4NdHd+3oKYvPIWhY+HxAaXYTd63tAiU6b4LdYASf
-         ODfoYPGtmG202PkiEnCOF+xh+B9BE/4q8Lfh3z4hKQiEYW/OuUqqmhWzZQdFPy15YQ2J
-         QTSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717773195; x=1718377995;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F9DLoOIliT2vV+jCDlYYVBA1v56GjGd/sBFCy6REvhs=;
-        b=QiIFq+AFFvgbAu4ZqyvUYgsbD0GM6X7M0AqrD6IPJCVBw7SNd/EnNxM3/8OEJ/KJrO
-         ZseT56ndRbxBSC42aNJ/MMNZ7OXFsvZVBMoJRuN+rd7mK4LFG8aQ9hn/XgpNZVu3ur9S
-         VLn0BAjWG3QbcOJnAiibr0Ts2E9qmQs+XsJu6i4IVFZ0p9Ab7j+/+MPAJixeZWAMh05j
-         OchpwTonU8KX5ob0op6ruhAyFURx8JRwzHzvtI4jh6EEs0DB2yAV6iiL2sTsfJjHZJlc
-         gGvkptutK/j6M2YdzTk/b7NIzWrgDeNQdn+k7jAWnCN7N26XknnJEGxun+Iy3AqkMGgm
-         jsHg==
-X-Gm-Message-State: AOJu0Yw5ScDQVyFu6jTMilRJUMi3wDrR6ifkdMvMIKRKRvKyEavp4SW6
-	kOaaCcM7U2p046cDDW1J3eq2oZzwz11FMXCEfxYAICQBn2RKet9060BQaKUG6eeKKVVE1HdWByB
-	W8qOD1cYK/uc6JAMTtYVHIwqsOyGrOrq8wYXHfQ0HT9vZkd7pcjdc
-X-Google-Smtp-Source: AGHT+IGgwajHKpYdDWMQLIOmMJsfkmT9wQMD93gE5Vvy1QzU36KDO2gHuZ/Tqx8lOxhLvhtrGDMlAetFVDjv7C4htvM=
-X-Received: by 2002:a50:fb96:0:b0:572:988f:2f38 with SMTP id
- 4fb4d7f45d1cf-57aa6e8e2e9mr588051a12.6.1717773194672; Fri, 07 Jun 2024
- 08:13:14 -0700 (PDT)
+	s=arc-20240116; t=1717773209; c=relaxed/simple;
+	bh=Qz/aA87n1W3Jvbb2hp8KC483bwpvzJetmsqSha04DoE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hcxVzshJQAAEnN/dXszFg4msjCIVux3vy5lDvCxv++qIRVMP+VAD9yRHxbuLeBKSM4j5/yreAaqPgniLG9jAWKPcUvHPk9cu+oBt+PHaobOs4pJlVrucQKaffPUtL+w98ZEVzcwH/bqWABpyfb/h7bcm3tjXQhkT7tZjiMsBkfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vwl2c2yJLz6GBnb;
+	Fri,  7 Jun 2024 23:08:40 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 20137140C98;
+	Fri,  7 Jun 2024 23:13:23 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
+ 2024 16:13:22 +0100
+Date: Fri, 7 Jun 2024 16:13:21 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+CC: avidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7] cxl/events: Use a common struct for DRAM and General
+ Media events
+Message-ID: <20240607161321.0000420b@Huawei.com>
+In-Reply-To: <20240607144423.48681-1-fabio.m.de.francesco@linux.intel.com>
+References: <20240607144423.48681-1-fabio.m.de.francesco@linux.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528122352.2485958-1-Jason@zx2c4.com> <20240528122352.2485958-2-Jason@zx2c4.com>
- <CAG48ez0P3EDXC0uLLPjSjx3i6qB3fcdZbL2kYyuK6fZ_nJeN5w@mail.gmail.com>
- <Zlm-26QuqOSpXQg7@zx2c4.com> <CAG48ez3VhWpJnzHHn4NAJdrsd1Ts9hs0zvHa6Pqwatu4wV63Kw@mail.gmail.com>
- <ZmMamtll1Yq1yfxc@zx2c4.com>
-In-Reply-To: <ZmMamtll1Yq1yfxc@zx2c4.com>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 7 Jun 2024 17:12:38 +0200
-Message-ID: <CAG48ez0pan8aLGjHtoDdrpiP+e5YrGeuD_RzDXgzUwkUvWYLjA@mail.gmail.com>
-Subject: Re: [PATCH v16 1/5] mm: add VM_DROPPABLE for designating always
- lazily freeable mappings
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev, tglx@linutronix.de, 
-	linux-crypto@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>, "Carlos O'Donell" <carlos@redhat.com>, 
-	Florian Weimer <fweimer@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Christian Brauner <brauner@kernel.org>, David Hildenbrand <dhildenb@redhat.com>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, Jun 7, 2024 at 4:35=E2=80=AFPM Jason A. Donenfeld <Jason@zx2c4.com>=
- wrote:
-> On Fri, May 31, 2024 at 03:00:26PM +0200, Jann Horn wrote:
-> > On Fri, May 31, 2024 at 2:13=E2=80=AFPM Jason A. Donenfeld <Jason@zx2c4=
-.com> wrote:
-> > > On Fri, May 31, 2024 at 12:48:58PM +0200, Jann Horn wrote:
-> > > > On Tue, May 28, 2024 at 2:24=E2=80=AFPM Jason A. Donenfeld <Jason@z=
-x2c4.com> wrote:
-> > > > > c) If there's not enough memory to service a page fault, it's not=
- fatal.
-> > > > [...]
-> > > > > @@ -5689,6 +5689,10 @@ vm_fault_t handle_mm_fault(struct vm_area_=
-struct *vma, unsigned long address,
-> > > > >
-> > > > >         lru_gen_exit_fault();
-> > > > >
-> > > > > +       /* If the mapping is droppable, then errors due to OOM ar=
-en't fatal. */
-> > > > > +       if (vma->vm_flags & VM_DROPPABLE)
-> > > > > +               ret &=3D ~VM_FAULT_OOM;
-> > > >
-> > > > Can you remind me how this is supposed to work? If we get an OOM
-> > > > error, and the error is not fatal, does that mean we'll just keep
-> > > > hitting the same fault handler over and over again (until we happen=
- to
-> > > > have memory available again I guess)?
-> > >
-> > > Right, it'll just keep retrying. I agree this isn't great, which is w=
-hy
-> > > in the 2023 patchset, I had additional code to simply skip the faulti=
-ng
-> > > instruction, and then the userspace code would notice the inconsisten=
-cy
-> > > and fallback to the syscall. This worked pretty well. But it meant
-> > > decoding the instruction and in general skipping instructions is weir=
-d,
-> > > and that made this patchset very very contentious. Since the skipping
-> > > behavior isn't actually required by the /security goals/ of this, I
-> > > figured I'd just drop that. And maybe we can all revisit it together
-> > > sometime down the line. But for now I'm hoping for something a little
-> > > easier to swallow.
-> >
-> > In that case, since we need to be able to populate this memory to make
-> > forward progress, would it make sense to remove the parts of the patch
-> > that treat the allocation as if it was allowed to silently fail (the
-> > "__GFP_NOWARN | __GFP_NORETRY" and the "ret &=3D ~VM_FAULT_OOM")? I
-> > think that would also simplify this a bit by making this type of
-> > memory a little less special.
->
-> The whole point, though, is that it needs to not fail or warn. It's
-> memory that can be dropped/zeroed at any moment, and the code is
-> deliberately robust to that.
+On Fri,  7 Jun 2024 16:43:58 +0200
+"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com> wrote:
 
-Sure - but does it have to be more robust than accessing a newly
-allocated piece of memory [which hasn't been populated with anonymous
-pages yet] or bringing a swapped-out page back from swap?
+> cxl_event_common was an unfortunate naming choice and caused confusion with
+> the existing Common Event Record. Furthermore, its fields didn't map all
+> the common information between DRAM and General Media Events.
+> 
+> Remove cxl_event_common and introduce cxl_event_media_hdr to record common
+> information between DRAM and General Media events.
+> 
+> cxl_event_media_hdr, which is embedded in both cxl_event_gen_media and
+> cxl_event_dram, leverages the commonalities between the two events to
+> simplify their respective handling.
+> 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
+With the fix for my mistake in v6 review.
 
-I'm not an expert on OOM handling, but my understanding is that the
-kernel tries _really_ hard to avoid failing low-order GFP_KERNEL
-allocations, with the help of the OOM killer. My understanding is that
-those allocations basically can't fail with a NULL return unless the
-process has already been killed or it is in a memcg_kmem cgroup that
-contains only processes that have been marked as exempt from OOM
-killing. (Or if you're using error injection to explicitly tell the
-kernel to fail the allocation.)
-My understanding is that normal outcomes of an out-of-memory situation
-are things like the OOM killer killing processes (including
-potentially the calling one) to free up memory, or the OOM killer
-panic()ing the whole system as a last resort; but getting a NULL
-return from page_alloc(GFP_KERNEL) without getting killed is not one
-of those outcomes.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+>  
+> +struct cxl_event_media_hdr {
+> +	struct cxl_event_record_hdr hdr;
+> +	__le64 phys_addr;
+> +	u8 descriptor;
+> +	u8 type;
+> +	u8 transaction_type;
+> +	/*
+> +	 * The meaning of Validity Flags after bit 2 is
+oops. I got this wrong. Sorry!
+
+"from bit 2" 
+after would not include bit 2 which is "nibble" for dram and 
+"device" for media.
+
+Maybe if Dave is happy with this one otherwise he can tidy that
+up whilst applying?
+ 
+
+> +	 * different across DRAM and General Media records
+> +	 */
+> +	u8 validity_flags[2];
+> +	u8 channel;
+> +	u8 rank;
+> +} __packed;
+> +
