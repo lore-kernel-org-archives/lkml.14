@@ -1,103 +1,123 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C581747A6B;
-	Fri,  7 Jun 2024 08:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE7647A6B;
+	Fri,  7 Jun 2024 08:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717750301; cv=none; b=B00aijXjjzNWz+HzQxB27Fayf4rPwpmHwFpumluINkR+17hDQjxdKhfSs4HYqW4If0Tw+az03/JQZnKIAWEuo2LcOva9yjAL0ohaWXGF+EVHQnd4vRodsZClWrf72XUTsAOFcInvxSKYZWrszeF+m+bEeFKkqakc/9LCUjdZ0Po=
+	t=1717750320; cv=none; b=OLvHCzevI+nfQfrDlsxtYmtjrlKfRk6qCyTAxdghvHvj6g4snYdpKkCLgzUzl5fxjJNYmUCdl0zPMqW3tRF4eTevO3Qj2PIj/3Y5rteiRxA0Ld5OVN1yke647iEGlabBA9Z0YF7oZ/Ko70M/BdatcgMSaCuY9hLrQg5IfzTdqUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717750301; c=relaxed/simple;
-	bh=lL6XwdZJ4/NSnyTZr5wjeCiLPkV47JPaGNNKpbRUVio=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ScMDR/QCPhoxT8zEScA+4vfrwkFGJOlg//aUdXde9krGyc5ZDX1cowULjkm6pwY4ObuIx8vFipLPLznKm95VmjsGm1l13HqXky9zUgDL0FwyOwyba56n32eKgCWbvO/bQFVtwoyabVt4doZoBAXrQ3xY014yCoZ+Q2qjg9hheYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4578pInyD3819922, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4578pInyD3819922
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Jun 2024 16:51:18 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 7 Jun 2024 16:51:18 +0800
-Received: from RTDOMAIN (172.21.210.98) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 7 Jun
- 2024 16:51:18 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai
-	<justinlai0215@realtek.com>
-Subject: [PATCH net-next v20 12/13] realtek: Update the Makefile and Kconfig in the realtek folder
-Date: Fri, 7 Jun 2024 16:43:20 +0800
-Message-ID: <20240607084321.7254-13-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240607084321.7254-1-justinlai0215@realtek.com>
-References: <20240607084321.7254-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1717750320; c=relaxed/simple;
+	bh=g2XJhYP/BhrqpNm1t9IQIHdIlQAxxcALbbw+tPunz/c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ojwCgD2/6AWsOqRsKTX+bPtzrT0fD4+QmYzHCJkojPG4lsBjwVRsKynYlprT2eckeRWT8DKuO3/m3Z5N9or49MSiiPNDQMbcCDXbqKEz3vW16VYtS284WCsWioQlstca9Tv3LMm2xINNciy87KDGdE6mRp8HaRdly8CrbShaicU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D774fQyl; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D774fQyl"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a68bf84d747so174622466b.3;
+        Fri, 07 Jun 2024 01:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717750317; x=1718355117; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=g2XJhYP/BhrqpNm1t9IQIHdIlQAxxcALbbw+tPunz/c=;
+        b=D774fQylL+W8IppUEowKWNKwE7I7dKJC2uZ9vWnmUDytS6VeAwq6qtonSDwi/ooKgS
+         GNzG1zBl7CXS+sZEl6ff1pgXd0RJO88s2UDRusSUnYxAd4v/26bFMbWt0iwDw3k9Rcbx
+         Tb4hvqbC270PqKRaemniRISKPae1ebo1UWFtnDbcvuyxqeunhEflXvHLcA441+nMWTMq
+         DTRAPJG9NOKjmr5ivMdlB8mxYtmdBXrPxX54FhakXZR3JxKkHbHXHQBLDvhvym8Yk/Kw
+         mGthm0TkCyH/cka7wABpw4BonHoDklDwdeuPlkDY+FjQoMyo1ISUYpFk62AzjEYyp8gf
+         J33g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717750317; x=1718355117;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g2XJhYP/BhrqpNm1t9IQIHdIlQAxxcALbbw+tPunz/c=;
+        b=CpYzqZokDwXZZxbaT8uB/2T3ICB0TmOtt49Kc4uZXvo2rkbJxdkymEna6JIpFnrUr0
+         nKAXZbzZqIfwT7IWukcPxHZq1RDewl6INJO1jcxCoXFPGPG1WY4SPwEpVA6qrN8/WpST
+         LnmioWV+jZDQgtODz+v7AoOWgerzVBFXktMtisxkKI1nMvQekw3D8RJ67zcFwuF18O2t
+         kwi6TVwrfhML3h+mxUrTIesHPf0N3nat3/3fR4u20Ni1G1tNHPRftkK9Cb0fK4Ei2R4W
+         US4bfaonQZ4KScqvEewBeofFpKazrDXTSeCLNoACnNc4tI3e+jMySYg3N6IFzvKiZNum
+         0M+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWWPTMhJeCToZ/qTbYOhLtOFczqe+T5W8tsu8WH4WXDKVAeHArWTpBy8UIAvD2UeDlzV3eogz/PWX3JcK9Ju31XOMNKPrXhwQgIAOmB
+X-Gm-Message-State: AOJu0Yw4KaulsgAHT5THo3P8DBuzK0trl7BZG/ALqBeWrlGHnphXhdln
+	RBJrsYCtYYftr7pgGc/5DwWGsbhe+DdEgk6fvKz8zoFhrlpT83Nb0J4FWuniqr+pyw==
+X-Google-Smtp-Source: AGHT+IGIbTyaGYUok3BdXJZPibjwU4JWMyIf7Na75CKDwsGx7YyKC32/n8C5cTIow4xgBFjiivbNLA==
+X-Received: by 2002:a17:906:2c16:b0:a68:a800:5f7e with SMTP id a640c23a62f3a-a6cd561f12cmr129787266b.10.1717750316932;
+        Fri, 07 Jun 2024 01:51:56 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c8072ad35sm213377666b.213.2024.06.07.01.51.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 01:51:56 -0700 (PDT)
+Message-ID: <f7196ddf96551114204f7e8ba17b409fd3493202.camel@gmail.com>
+Subject: Re: [PATCH 0/8] iio: simplify with spi_get_device_match_data()
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Lucas Stankus
+ <lucas.p.stankus@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
+ <jic23@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, Ramona Bolboaca
+ <ramona.bolboaca@analog.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ kernel@pengutronix.de, Cosmin Tanislav <cosmin.tanislav@analog.com>, Marius
+ Cristea <marius.cristea@microchip.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 07 Jun 2024 10:55:44 +0200
+In-Reply-To: <20240606-spi-match-data-v1-0-320b291ee1fe@linaro.org>
+References: <20240606-spi-match-data-v1-0-320b291ee1fe@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-1. Add the RTASE entry in the Kconfig.
-2. Add the CONFIG_RTASE entry in the Makefile.
+On Thu, 2024-06-06 at 16:26 +0200, Krzysztof Kozlowski wrote:
+> Not tested on hardware, but code looks equivalent and should not have
+> functional effect.
+>=20
+> Best regards,
+> Krzysztof
+>=20
+> ---
+> Krzysztof Kozlowski (8):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: accel: adxl313: simplify with spi_get=
+_device_match_data()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: accel: adxl355: simplify with spi_get=
+_device_match_data()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: max11205: simplify with spi_get_=
+device_match_data()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ti-ads131e08: simplify with spi_=
+get_device_match_data()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: ti-tsc2046: simplify with spi_ge=
+t_device_match_data()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: addac: ad74413r: simplify with spi_ge=
+t_device_match_data()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: dac: max5522: simplify with spi_get_d=
+evice_match_data()
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iio: adc: mcp3564: drop redundant open-cod=
+ed spi_get_device_match_data()
+>=20
+> =C2=A0drivers/iio/accel/adxl313_spi.c |=C2=A0 8 +-------
+> =C2=A0drivers/iio/accel/adxl355_spi.c | 10 +++-------
+> =C2=A0drivers/iio/adc/max11205.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 =
++----
+> =C2=A0drivers/iio/adc/mcp3564.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 6 ------
+> =C2=A0drivers/iio/adc/ti-ads131e08.c=C2=A0 |=C2=A0 4 +---
+> =C2=A0drivers/iio/adc/ti-tsc2046.c=C2=A0=C2=A0=C2=A0 |=C2=A0 7 +------
+> =C2=A0drivers/iio/addac/ad74413r.c=C2=A0=C2=A0=C2=A0 | 13 +++----------
+> =C2=A0drivers/iio/dac/max5522.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 11 =
++++--------
+> =C2=A08 files changed, 13 insertions(+), 51 deletions(-)
+> ---
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- drivers/net/ethernet/realtek/Kconfig  | 19 +++++++++++++++++++
- drivers/net/ethernet/realtek/Makefile |  1 +
- 2 files changed, 20 insertions(+)
+LGTM, just some minor comments/asks that don't really stop me from:
 
-diff --git a/drivers/net/ethernet/realtek/Kconfig b/drivers/net/ethernet/realtek/Kconfig
-index 03015b665f4e..8a8ea51c639e 100644
---- a/drivers/net/ethernet/realtek/Kconfig
-+++ b/drivers/net/ethernet/realtek/Kconfig
-@@ -120,4 +120,23 @@ config R8169_LEDS
- 	  Optional support for controlling the NIC LED's with the netdev
- 	  LED trigger.
- 
-+config RTASE
-+	tristate "Realtek Automotive Switch 9054/9068/9072/9075/9068/9071 PCIe Interface support"
-+	depends on PCI
-+	select CRC32
-+	select PAGE_POOL
-+	help
-+	  Say Y here and it will be compiled and linked with the kernel
-+	  if you have a Realtek Ethernet adapter belonging to the
-+	  following families:
-+	  RTL9054 5GBit Ethernet
-+	  RTL9068 5GBit Ethernet
-+	  RTL9072 5GBit Ethernet
-+	  RTL9075 5GBit Ethernet
-+	  RTL9068 5GBit Ethernet
-+	  RTL9071 5GBit Ethernet
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called rtase. This is recommended.
-+
- endif # NET_VENDOR_REALTEK
-diff --git a/drivers/net/ethernet/realtek/Makefile b/drivers/net/ethernet/realtek/Makefile
-index 635491d8826e..046adf503ff4 100644
---- a/drivers/net/ethernet/realtek/Makefile
-+++ b/drivers/net/ethernet/realtek/Makefile
-@@ -9,3 +9,4 @@ obj-$(CONFIG_ATP) += atp.o
- r8169-y += r8169_main.o r8169_firmware.o r8169_phy_config.o
- r8169-$(CONFIG_R8169_LEDS) += r8169_leds.o
- obj-$(CONFIG_R8169) += r8169.o
-+obj-$(CONFIG_RTASE) += rtase/
--- 
-2.34.1
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+
 
