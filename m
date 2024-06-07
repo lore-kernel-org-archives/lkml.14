@@ -1,109 +1,230 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AB217C73;
-	Fri,  7 Jun 2024 16:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D95190060;
+	Fri,  7 Jun 2024 16:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717777976; cv=none; b=nISM3ZAvWDGklnanBEu1shIeOYcdHyOKRRXuUBfq+rogT6fUKVJp1+yfNyL1XYcigKt1nBTDJyuceJYpF7Rg5DKkXqcQwlFYzG4HbgGSUIE9HTYW7pY0mnjUQB8QF7mtoG6lWPARDT1hepr8PyMalWxVUSr4ck/zLv/yWYOzyfc=
+	t=1717777985; cv=none; b=QH0ObAxCOnP+tORnMT95UWZdvmBWHdn3tXG3Q7E+QAJRkjO4xDQRoq3f4mWEM3AQA3VtShAMKw7X2zF1ocoKAvcdV5l+Qwg7OmZypqQT8BxoooC5kUBgVQ/pdoEWdTJ0a1VHzItwYctm8rOanNIe3z30sAKqq29c7zm2eVqEpxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717777976; c=relaxed/simple;
-	bh=xjv1zFkmCPNQYjWEzOpbV3VX1wRuOu9jH2q93dMSu1I=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RfF2AWoFwWrKfq5JfI7G4DKP8Y11AHWvBb3xmXtOJvYTHUfV/SelShLogeBXPr8hZwGmV8eM4sX0gWy/GftqatkMbWKnVRI0k5euE4VhSV3GEkmd0VjjE2DSRNTfXKqFjPFdgiGuWBIIZQ1cQsiy2/pFf0QIIFDWwbKxCsRZUsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VwmpJ5cDFz67RyC;
-	Sat,  8 Jun 2024 00:28:08 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id A9CAE140A70;
-	Sat,  8 Jun 2024 00:32:51 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 17:32:51 +0100
-Date: Fri, 7 Jun 2024 17:32:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Wei Huang <wei.huang2@amd.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>, <bhelgaas@google.com>,
-	<corbet@lwn.net>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <alex.williamson@redhat.com>,
-	<gospo@broadcom.com>, <michael.chan@broadcom.com>,
-	<ajit.khaparde@broadcom.com>, <somnath.kotur@broadcom.com>,
-	<andrew.gospodarek@broadcom.com>, <manoj.panicker2@amd.com>,
-	<Eric.VanTassell@amd.com>, <vadim.fedorenko@linux.dev>, <horms@kernel.org>,
-	<bagasdotme@gmail.com>
-Subject: Re: [PATCH V2 4/9] PCI/TPH: Implement a command line option to
- force No ST Mode
-Message-ID: <20240607173250.000065d7@Huawei.com>
-In-Reply-To: <20240531213841.3246055-5-wei.huang2@amd.com>
-References: <20240531213841.3246055-1-wei.huang2@amd.com>
-	<20240531213841.3246055-5-wei.huang2@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1717777985; c=relaxed/simple;
+	bh=W6g6i9oWpso+MN74XfYv84WGY25V0nmPdLTUYO4UEyo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SpCCt8l6/nag/grmG0sCsbAPjc4y93Qghnw5SPVkRJ79Zo5ES1vOQjzyR3CHff8BnfGFX8+N68uwtJFSXh1Cr84GlpzCv1gaOVXNKBPuR+7Do6bEpHji/gIYyZKu8D54vu5CuFntn4j5MLTOp3htewKLRFo0Pmoj+rEPxD7RNqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=bR2Zm0at; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="bR2Zm0at"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11EA1C2BBFC;
+	Fri,  7 Jun 2024 16:33:03 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="bR2Zm0at"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1717777982;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=398CSylYW3aU5yDlQqUS8n51ZHJoO1PuzaIOtonBJck=;
+	b=bR2Zm0atsEJbd8EqXZHzvOaQPsgB5pUD8YS4RetAtvh5ar0R54k21SUcwwNLK8HjkKdrvr
+	3TMwokYT16HaQGS13RXsJXIScLAx8q8RxqyNrtH4J2dCVgk8PT3XT7OqJkhugUMhPLnWT+
+	FuAf2u+rIyJSIy33nuqZMJUGcLr5TYg=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id cbbbdb82 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 7 Jun 2024 16:33:02 +0000 (UTC)
+Date: Fri, 7 Jun 2024 18:32:58 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	linux-crypto@vger.kernel.org, linux-api@vger.kernel.org,
+	x86@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
+	Carlos O'Donell <carlos@redhat.com>,
+	Florian Weimer <fweimer@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jann Horn <jannh@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	David Hildenbrand <dhildenb@redhat.com>
+Subject: Re: [PATCH v16 4/5] random: introduce generic vDSO getrandom()
+ implementation
+Message-ID: <ZmM2Olwd4hr0teMT@zx2c4.com>
+References: <20240528122352.2485958-5-Jason@zx2c4.com>
+ <874ja73xx7.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <874ja73xx7.ffs@tglx>
 
-On Fri, 31 May 2024 16:38:36 -0500
-Wei Huang <wei.huang2@amd.com> wrote:
+On Wed, Jun 05, 2024 at 11:03:00PM +0200, Thomas Gleixner wrote:
+> Jason!
+Thomas!
 
-> When "No ST mode" is enabled, end-point devices can generate TPH headers
-> but with all steering tags treated as zero. A steering tag of zero is
-> interpreted as "using the default policy" by the root complex. This is
-> essential to quantify the benefit of steering tags for some given
-> workloads.
+> Can you please split the required defines into a seperate header
+> preferrably in include/vdso/ and include that from crypto/chacha.h
 
-This is a good explanation. Need similar in the previous patch to
-justify the disable TPH entirely.
+Sure. It only actually uses two straight forward constants from there.
+> > +			u32	key[CHACHA_KEY_SIZE / sizeof(u32)];
+> 
+> CHACHA_STATE_WORDS ?
 
-> diff --git a/drivers/pci/pcie/tph.c b/drivers/pci/pcie/tph.c
-> index 5dc533b89a33..d5f7309fdf52 100644
-> --- a/drivers/pci/pcie/tph.c
-> +++ b/drivers/pci/pcie/tph.c
-> @@ -43,6 +43,27 @@ static int tph_set_reg_field_u32(struct pci_dev *dev, u8 offset, u32 mask,
->  	return ret;
->  }
->  
-> +int tph_set_dev_nostmode(struct pci_dev *dev)
-> +{
-> +	int ret;
-> +
-> +	/* set ST Mode Select to "No ST Mode" */
-> +	ret = tph_set_reg_field_u32(dev, PCI_TPH_CTRL,
-> +				    PCI_TPH_CTRL_MODE_SEL_MASK,
-> +				    PCI_TPH_CTRL_MODE_SEL_SHIFT,
-> +				    PCI_TPH_NO_ST_MODE);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* set "TPH Requester Enable" to "TPH only" */
-> +	ret = tph_set_reg_field_u32(dev, PCI_TPH_CTRL,
-> +				    PCI_TPH_CTRL_REQ_EN_MASK,
-> +				    PCI_TPH_CTRL_REQ_EN_SHIFT,
-> +				    PCI_TPH_REQ_TPH_ONLY);
+Nah, that's for CHACHA_BLOCK_SIZE / sizeof(u32), but here is
+CHACHA_KEY_SIZE.
 
-Unless these have to be two RMW operations. (if they do add a spec reference)
-then this is a good example of why a field update function may not be
-the right option.  We probably want to RMW once.
+> 
+> > +		};
+> > +		u8		batch_key[CHACHA_BLOCK_SIZE * 2];
+> 
+> What does the u8 buy here over a simple unsigned int?
+> 
+> > +	bool 			in_use;
 
-return tph_set_reg_field_u32()
+It means that the structure can be more compact, because `pos` and the
+`in_use` boolean will be closer together.
 
-> +
-> +	return ret;
-> +}
-> +
->  int pcie_tph_disable(struct pci_dev *dev)
->  {
->  	return  tph_set_reg_field_u32(dev, PCI_TPH_CTRL,
 
+> > diff --git a/include/vdso/types.h b/include/vdso/types.h
+> > new file mode 100644
+> > index 000000000000..ce131463aeff
+> > --- /dev/null
+> > +++ b/include/vdso/types.h
+> > @@ -0,0 +1,35 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> 
+> Why does this need an extra header when it's clearly getrandom specific?
+> Please put this into getrandom.h
+
+From your followup, I just killed the whole thing and now use u64.
+
+> > +/**
+> > + * __cvdso_getrandom_data - Generic vDSO implementation of getrandom() syscall.
+> > + * @rng_info:		Describes state of kernel RNG, memory shared with kernel.
+> > + * @buffer:		Destination buffer to fill with random bytes.
+> > + * @len:		Size of @buffer in bytes.
+> > + * @flags:		Zero or more GRND_* flags.
+> > + * @opaque_state:	Pointer to an opaque state area.
+> > + *
+> > + * This implements a "fast key erasure" RNG using ChaCha20, in the same way that the kernel's
+> > + * getrandom() syscall does. It periodically reseeds its key from the kernel's RNG, at the same
+> > + * schedule that the kernel's RNG is reseeded. If the kernel's RNG is not ready, then this always
+> > + * calls into the syscall.
+> > + *
+> > + * @opaque_state *must* be allocated using the vgetrandom_alloc() syscall.  Unless external locking
+> > + * is used, one state must be allocated per thread, as it is not safe to call this function
+> > + * concurrently with the same @opaque_state. However, it is safe to call this using the same
+> > + * @opaque_state that is shared between main code and signal handling code, within the same thread.
+> > + *
+> > + * Returns the number of random bytes written to @buffer, or a negative value indicating an error.
+> > + */
+> > +static __always_inline ssize_t
+> > +__cvdso_getrandom_data(const struct vdso_rng_data *rng_info, void *buffer, size_t len,
+> > +		       unsigned int flags, void *opaque_state)
+> > +{
+> > +	ssize_t ret = min_t(size_t, INT_MAX & PAGE_MASK /* = MAX_RW_COUNT */, len);
+> 
+> We really need to allow reading almost 2GB of random data in one go?
+
+It's just copying the precise semantics as the syscall by bounding the
+requested length. The idea is to make this have basically identical
+semantics as the syscall (while being way faster).
+
+> > +	/*
+> > +	 * @state->in_use is basic reentrancy protection against this running in a signal handler
+> > +	 * with the same @opaque_state, but obviously not atomic wrt multiple CPUs or more than one
+> > +	 * level of reentrancy. If a signal interrupts this after reading @state->in_use, but before
+> > +	 * writing @state->in_use, there is still no race, because the signal handler will run to
+> > +	 * its completion before returning execution.
+> 
+> Can you please add an explanation that the syscall does not touch the
+> state and just fills the buffer?
+
+Will do.
+
+> > +	 */
+> > +	in_use = READ_ONCE(state->in_use);
+> > +	if (unlikely(in_use))
+> > +		goto fallback_syscall;
+> > +	WRITE_ONCE(state->in_use, true);
+> > +
+> > +retry_generation:
+> > +	/*
+> > +	 * @rng_info->generation must always be read here, as it serializes @state->key with the
+> > +	 * kernel's RNG reseeding schedule.
+> > +	 */
+> > +	current_generation = READ_ONCE(rng_info->generation);
+> > +
+> > +	/*
+> > +	 * If @state->generation doesn't match the kernel RNG's generation, then it means the
+> > +	 * kernel's RNG has reseeded, and so @state->key is reseeded as well.
+> > +	 */
+> > +	if (unlikely(state->generation != current_generation)) {
+> > +		/*
+> > +		 * Write the generation before filling the key, in case of fork. If there is a fork
+> > +		 * just after this line, the two forks will get different random bytes from the
+> 
+> the two forks? You mean the parent and the child, no?
+
+Yes, nice catch, thanks.
+
+> > +		 * syscall, which is good. However, were this line to occur after the getrandom
+> > +		 * syscall, then both child and parent could have the same bytes and the same
+> > +		 * generation counter, so the fork would not be detected. Therefore, write
+> > +		 * @state->generation before the call to the getrandom syscall.
+> > +		 */
+> > +		WRITE_ONCE(state->generation, current_generation);
+> > +
+> > +		/* Prevent the syscall from being reordered wrt current_generation. */
+> > +		barrier();
+> > +
+> > +		/* Reseed @state->key using fresh bytes from the kernel. */
+> > +		if (getrandom_syscall(state->key, sizeof(state->key), 0) != sizeof(state->key)) {
+> > +			/*
+> > +			 * If the syscall failed to refresh the key, then @state->key is now
+> > +			 * invalid, so invalidate the generation so that it is not used again, and
+> > +			 * fallback to using the syscall entirely.
+> > +			 */
+> > +			WRITE_ONCE(state->generation, 0);
+> > +
+> > +			/*
+> > +			 * Set @state->in_use to false only after the last write to @state in the
+> > +			 * line above.
+> > +			 */
+> > +			WRITE_ONCE(state->in_use, false);
+> 
+> So here you rely on the compiler not reordering vs. WRITE_ONCE(),
+> i.e. volatile, but above you have a barrier() to prevent the write being
+> reordered vs. the syscall, confused.
+> 
+> But even when the compiler does not reorder, what prevents a weakly
+> ordered CPU from doing so?
+
+The issue isn't that this code will race between CPUs -- that's
+explicitly disallowed by the design. The issue is that this code is
+signal-reentrant. So it's mostly a matter of compiler ordering the
+instructions correctly. Then, in addition, the write of
+current_generation to state->generation must come before the syscall
+fires.
+
+> > +	if (!len) {
+> > +		/* Prevent the loop from being reordered wrt ->generation. */
+> > +		barrier();
+> 
+> Same question as above.
+
+This came out of discussions here:
+https://lore.kernel.org/all/878rjlr85s.fsf@oldenburg.str.redhat.com/
+And on IRC with Jann.
+
+> > +	/* Refill the batch and then overwrite the key, in order to preserve forward secrecy. */
+> 
+> 'and then overwrite'?
+> 
+> Isn't this overwriting it implicitely because batch_key and key are at
+> the same place in the union?
+
+Yes, I'll remove the `then`.
+
+Thanks for the review!
+
+Jason
