@@ -1,42 +1,46 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5866515B11E;
-	Fri,  7 Jun 2024 08:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCBE15B134;
+	Fri,  7 Jun 2024 08:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717750210; cv=none; b=iTvkfRcqDuFnvZC3KHVok9rxZeIhXUbsm7pcSBq/6YuzcgiaomuimjV/YdKkCWgWOPAL1SN/PHjEp4LIgDwmS/Hjubu8LhfTXvd1GirF78ac5YEQFWGu0Eu+OlcGbWEHdQakt8jfp7WI5LeXNXnTGP1gxZrof99OWIIcHNO5bWo=
+	t=1717750212; cv=none; b=K3xVPDLxB5d43/qNNzGoW9STEUACxyG91qbN9fwmu4ArmzoukhuWBk+NIJr4MQJFj1lV0oF+Vl0IqZ2/u2doZAVRWp00b7zhgxUpU7OP4skKbfP1LpSQsR92wgtQgAACeufL1Vh7hy6U8naH7tTB6S1aN+hfNHkCoYjRtJn21D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717750210; c=relaxed/simple;
-	bh=I+5QaYIykDUxkM+AktFs0YaLfJqsqXs4Jnxrc3yWOTg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PopiWwBMuRPzl4kVIao2ILRSVMykrtZtN71064WnM2DQWR6bKLq+ScPtkvPxbdQH53cP6zDmTF4W04rn0aszs38Epk7CZxjiE/8ZGFQjPYEBTaU3wDdZbCJJtB6l5LYSaj3QWaMN8aph0NKONqG/7AhHmw7Ga2cz2BTEWtCHk7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=rtNSPQ+l; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="rtNSPQ+l"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1717750199; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=03my5rSzWoozmJ4G5TZgDpCn57NCoB6M9R5muxRkurE=;
-	b=rtNSPQ+lt4Tx5wNlhs8y5TMJ5WhHkwiO1aM0HIV9JXUn5WubhSs1JD+yjGdWP5FfwwfP2eNdmFfelW3SiDilVU74hhW5TFsP9Ju/z7HaIWsru+OWVjUBOPPzqpdA8Hc2WMPsGhbt1NH5c3F10pPZtl/YQXS4i88xRmhY7F4TESA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W8-ctpw_1717750198;
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0W8-ctpw_1717750198)
-          by smtp.aliyun-inc.com;
-          Fri, 07 Jun 2024 16:49:58 +0800
-From: Yang Li <yang.lee@linux.alibaba.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next 1/2] function_graph: Add kernel-doc comments for ftrace_graph_ret_addr() function
-Date: Fri,  7 Jun 2024 16:49:56 +0800
-Message-Id: <20240607084957.64715-1-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	s=arc-20240116; t=1717750212; c=relaxed/simple;
+	bh=bhv9T7017HVwAhOtMD71Qok04WzxOMUK6L1+ok3bHoQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D2OQi/2ZK7IutUHZ6XdPtsrE4yvwjbkPlngbVVbIxntDI8zrT7JiafEVXT9MdHD6Ih1MXsXKrxUWr5l3ZntHdv0kpY8yslNiFA9UeSiR2Pqo1h07U8zgM7zn5zWySluvMFtaaqzBseO3LfHC+r94mtZG8Z7MDEzCKe056WmsnsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4578nnXW33819216, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4578nnXW33819216
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Jun 2024 16:49:49 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 7 Jun 2024 16:49:49 +0800
+Received: from RTDOMAIN (172.21.210.98) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 7 Jun
+ 2024 16:49:48 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
+        Justin Lai
+	<justinlai0215@realtek.com>
+Subject: [PATCH net-next v20 09/13] rtase: Implement pci_driver suspend and resume function
+Date: Fri, 7 Jun 2024 16:43:17 +0800
+Message-ID: <20240607084321.7254-10-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240607084321.7254-1-justinlai0215@realtek.com>
+References: <20240607084321.7254-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,34 +48,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-Added kernel-doc comments for the ftrace_graph_ret_addr() function to
-improve code documentation and readability.
+Implement the pci_driver suspend function to enable the device
+to sleep, and implement the resume function to enable the device
+to resume operation.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9299
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
 ---
- kernel/trace/fgraph.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index a13551a023aa..4ad33e4cb8da 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -872,6 +872,12 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
- /**
-  * ftrace_graph_ret_addr - convert a potentially modified stack return address
-  *			   to its original value
-+ * @task: pointer to the task_struct of the task being examined
-+ * @idx: pointer to a state variable, should be initialized to zero
-+ *	 before the first call
-+ * @ret: the current return address found on the stack
-+ * @retp: pointer to the return address on the stack, ignored if
-+ *	  HAVE_FUNCTION_GRAPH_RET_ADDR_PTR is not defined
-  *
-  * This function can be called by stack unwinding code to convert a found stack
-  * return address ('ret') to its original value, in case the function graph
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 38faff333a93..e9bbafc212c5 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -2201,12 +2201,63 @@ static void rtase_shutdown(struct pci_dev *pdev)
+ 	rtase_reset_interrupt(pdev, tp);
+ }
+ 
++static int rtase_suspend(struct device *device)
++{
++	struct net_device *dev = dev_get_drvdata(device);
++
++	if (netif_running(dev)) {
++		netif_device_detach(dev);
++		rtase_hw_reset(dev);
++	}
++
++	return 0;
++}
++
++static int rtase_resume(struct device *device)
++{
++	struct net_device *dev = dev_get_drvdata(device);
++	struct rtase_private *tp = netdev_priv(dev);
++	int ret;
++
++	/* restore last modified mac address */
++	rtase_rar_set(tp, dev->dev_addr);
++
++	if (!netif_running(dev))
++		goto out;
++
++	rtase_wait_for_quiescence(dev);
++
++	rtase_tx_clear(tp);
++	rtase_rx_clear(tp);
++
++	ret = rtase_init_ring(dev);
++	if (ret) {
++		netdev_err(dev, "unable to init ring\n");
++		rtase_free_desc(tp);
++		return -ENOMEM;
++	}
++
++	rtase_hw_config(dev);
++	/* always link, so start to transmit & receive */
++	rtase_hw_start(dev);
++
++	netif_device_attach(dev);
++out:
++
++	return 0;
++}
++
++static const struct dev_pm_ops rtase_pm_ops = {
++	SYSTEM_SLEEP_PM_OPS(rtase_suspend, rtase_resume)
++};
++
+ static struct pci_driver rtase_pci_driver = {
+ 	.name = KBUILD_MODNAME,
+ 	.id_table = rtase_pci_tbl,
+ 	.probe = rtase_init_one,
+ 	.remove = rtase_remove_one,
+ 	.shutdown = rtase_shutdown,
++	.driver.pm = pm_ptr(&rtase_pm_ops),
+ };
+ 
+ module_pci_driver(rtase_pci_driver);
 -- 
-2.20.1.7.g153144c
+2.34.1
 
