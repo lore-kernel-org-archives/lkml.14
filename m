@@ -1,132 +1,171 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F77415D5AD
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 10:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4611A15CD75;
+	Fri,  7 Jun 2024 10:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717754460; cv=none; b=BjmVwfXI1lFwcYu0lO3ogiPgJG4Tty8M4i4m50dX61DfxZuT9DT627yIbD+1mSIi1itAq5XE2fYqLYvhsnHBYD84sGdYpeCmA4cbaO337hLlYcmAIUfoMyKgQUsBk4Ly4wtTm4vsCOVcOMSuaosj9mSYziMiTumutPZUdrkk/I4=
+	t=1717754460; cv=none; b=XysMz2QwrCCpYTfbDZhCPmRlqE2NHVSBv3jUKNcpifrzUCHQZUGg4O9Jf4mJ8ArTyfolEDETdnO93DIa598RiF0HkFZZsrOb3SPE2v/ROcdelYUwTUc8x6Vgag1ZiYNuUdYSoPZRCA5b7tyDQMNMknqcE1GigtttH0BVDItStjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717754460; c=relaxed/simple;
-	bh=FmBJwoatTD3ubavkLq7yAGUCYfFAazwL4EVqq/cDjuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fvNpm5SunWWovVxp9BVD6kpLb6ZUh0hqMIYyWirDRHEYqgc6kXPU1cw5ccio7DapoIbaMnzBWGwm6EdS7sXDK+H2VDi6+a3dUsK6Q0JU+M2Bue7pnfOemy8es0zmPUhghKzgEg14vBcaEUssss5thbFOrYxAFuEhHvQesbWiFUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QR4j25i4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=Wz7+F3RX2ErVq2AoH1Oy/dBnTV8neAuhbUlnFn1Nr6k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fp1OZI4TPGyJ9OkYLpqop53t2+09nGHmaho9ZawmG6S5H37cDeG9F/1FN06VmH9fKZqK/J/pxsgC5gnJ+G3gajTLFTWIvVoMkiv/b7nLmsAOzFJiT54IJ+6NGJoN17Ot2G1pi4teVUST0u+qzC4lBc6o3iVO7QH2pcl5kudckLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=5vAc/Tsr; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QR4j25i4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717754458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NH3oO20QFn673bgiV5dG3f+GU8g8vUS9TOFN0xj1Yvs=;
-	b=QR4j25i4CcYC8ij7Mi5+p5iJZIxBfUlE1hsJaOM/o3uOhlfYbxgUtyl8J0e8E9cvOAoi8g
-	WM71pNtnyzg8j5kfsh21KoxbHPePnuzdZ0ZYMSY+3fuP8qnxDtKcP2bWfpF0jVj1GARaLu
-	lrqCfcQ79zRtYSvn/fNrkATocftH3o0=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-247-xgL2DSfJMR-vi7a64Cs1NA-1; Fri,
- 07 Jun 2024 06:00:54 -0400
-X-MC-Unique: xgL2DSfJMR-vi7a64Cs1NA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C312F1955F34;
-	Fri,  7 Jun 2024 10:00:51 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.124])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B87A41956089;
-	Fri,  7 Jun 2024 10:00:49 +0000 (UTC)
-Date: Fri, 7 Jun 2024 18:00:44 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v4 7/7] x86/crash: make the page that stores the dm crypt
- keys inaccessible
-Message-ID: <ZmLaTJA6Vq1a9x5z@MiWiFi-R3L-srv>
-References: <20240523050451.788754-1-coxu@redhat.com>
- <20240523050451.788754-8-coxu@redhat.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="5vAc/Tsr"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45791LUr011040;
+	Fri, 7 Jun 2024 12:00:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	oZt3ANozAyCi4RMnooDgV1ukrsEF0MYMZVmMcPQZSJw=; b=5vAc/TsrFtf96Bjw
+	vF2qhf7Gwbx3kmjEm2g+Ud3NQILxtSFsn9cYEj/XAdVN7Bhx6Intxqn1ZgB7rGmJ
+	htBas0jC1pRSnOog2K3YTEjLtLAu6wMEDAnxUIltp7pIPx0MFUo/UAdqUVQk+bqi
+	QASjix4mRpAm3509bo4JMpU7exKca57zE9CtmYfH/LWmEVXhg23He7USNVOhy4y4
+	1XnWhgFfxMh1o/PVvBY3rqxeTqmzTuVkYQ29tWWGoOxn9/yNAv5t34XFsFhgx693
+	38jj2R7cNgz65DCdI2aqMbU/UoQNXAeIgeU+qd4Jy+8QK1x6O3OxLqDPA2bY84Xh
+	m5fvBg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yg7r0gx9q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jun 2024 12:00:31 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4C75840044;
+	Fri,  7 Jun 2024 12:00:26 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 64F63214D12;
+	Fri,  7 Jun 2024 11:59:16 +0200 (CEST)
+Received: from localhost (10.252.19.205) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 7 Jun
+ 2024 11:59:14 +0200
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 05/12] net: stmmac: dwmac-stm32: Clean up the debug prints
+Date: Fri, 7 Jun 2024 11:57:47 +0200
+Message-ID: <20240607095754.265105-6-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240607095754.265105-1-christophe.roullier@foss.st.com>
+References: <20240607095754.265105-1-christophe.roullier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240523050451.788754-8-coxu@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-07_04,2024-06-06_02,2024-05-17_01
 
-On 05/23/24 at 01:04pm, Coiby Xu wrote:
-> This adds an addition layer of protection for the saved copy of dm
-> crypt key. Trying to access the saved copy will cause page fault.
-> 
-> Suggested-by: Pingfan Liu <kernelfans@gmail.com>
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
->  arch/x86/kernel/machine_kexec_64.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index b180d8e497c3..fc0a80f4254e 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -545,13 +545,34 @@ static void kexec_mark_crashkres(bool protect)
->  	kexec_mark_range(control, crashk_res.end, protect);
->  }
->  
-> +static void kexec_mark_dm_crypt_keys(bool protect)
-> +{
-> +	unsigned long start_paddr, end_paddr;
-> +	unsigned int nr_pages;
-> +
-> +	if (kexec_crash_image->dm_crypt_keys_addr) {
-> +		start_paddr = kexec_crash_image->dm_crypt_keys_addr;
-> +		end_paddr = start_paddr + kexec_crash_image->dm_crypt_keys_sz - 1;
-> +		nr_pages = (PAGE_ALIGN(end_paddr) - PAGE_ALIGN_DOWN(start_paddr))/PAGE_SIZE;
-> +		if (protect)
-> +			set_memory_np((unsigned long)phys_to_virt(start_paddr), nr_pages);
-> +		else
-> +			__set_memory_prot(
-> +				(unsigned long)phys_to_virt(start_paddr),
-> +				nr_pages,
-> +				__pgprot(_PAGE_PRESENT | _PAGE_NX | _PAGE_RW));
-> +	}
-> +}
-> +
->  void arch_kexec_protect_crashkres(void)
->  {
->  	kexec_mark_crashkres(true);
-> +	kexec_mark_dm_crypt_keys(true);
+From: Marek Vasut <marex@denx.de>
 
-Isn't crashkernel region covering crypt keys' storing region? Do we need
-mark it again specifically? Not sure if I miss anything.
+Use dev_err()/dev_dbg() and phy_modes() to print PHY mode instead of
+pr_debug() and hand-written PHY mode decoding. This way, each debug
+print has associated device with it and duplicated mode decoding is
+removed.
 
->  }
->  
->  void arch_kexec_unprotect_crashkres(void)
->  {
-> +	kexec_mark_dm_crypt_keys(false);
->  	kexec_mark_crashkres(false);
->  }
->  #endif
-> -- 
-> 2.45.0
-> 
+Signed-off-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+---
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c  | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index aa413edd1ef71..75981ac2cbb56 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -228,19 +228,16 @@ static int stm32mp1_configure_pmcr(struct plat_stmmacenet_data *plat_dat)
+ 	switch (plat_dat->mac_interface) {
+ 	case PHY_INTERFACE_MODE_MII:
+ 		val = SYSCFG_PMCR_ETH_SEL_MII;
+-		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
+ 		break;
+ 	case PHY_INTERFACE_MODE_GMII:
+ 		val = SYSCFG_PMCR_ETH_SEL_GMII;
+ 		if (dwmac->enable_eth_ck)
+ 			val |= SYSCFG_PMCR_ETH_CLK_SEL;
+-		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
+ 		break;
+ 	case PHY_INTERFACE_MODE_RMII:
+ 		val = SYSCFG_PMCR_ETH_SEL_RMII;
+ 		if (dwmac->enable_eth_ck)
+ 			val |= SYSCFG_PMCR_ETH_REF_CLK_SEL;
+-		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RMII\n");
+ 		break;
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 	case PHY_INTERFACE_MODE_RGMII_ID:
+@@ -249,15 +246,16 @@ static int stm32mp1_configure_pmcr(struct plat_stmmacenet_data *plat_dat)
+ 		val = SYSCFG_PMCR_ETH_SEL_RGMII;
+ 		if (dwmac->enable_eth_ck)
+ 			val |= SYSCFG_PMCR_ETH_CLK_SEL;
+-		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RGMII\n");
+ 		break;
+ 	default:
+-		pr_debug("SYSCFG init :  Do not manage %d interface\n",
+-			 plat_dat->mac_interface);
++		dev_err(dwmac->dev, "Mode %s not supported",
++			phy_modes(plat_dat->mac_interface));
+ 		/* Do not manage others interfaces */
+ 		return -EINVAL;
+ 	}
+ 
++	dev_dbg(dwmac->dev, "Mode %s", phy_modes(plat_dat->mac_interface));
++
+ 	/* Need to update PMCCLRR (clear register) */
+ 	regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
+ 		     dwmac->ops->syscfg_eth_mask);
+@@ -291,19 +289,19 @@ static int stm32mcu_set_mode(struct plat_stmmacenet_data *plat_dat)
+ 	switch (plat_dat->mac_interface) {
+ 	case PHY_INTERFACE_MODE_MII:
+ 		val = SYSCFG_MCU_ETH_SEL_MII;
+-		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
+ 		break;
+ 	case PHY_INTERFACE_MODE_RMII:
+ 		val = SYSCFG_MCU_ETH_SEL_RMII;
+-		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RMII\n");
+ 		break;
+ 	default:
+-		pr_debug("SYSCFG init :  Do not manage %d interface\n",
+-			 plat_dat->mac_interface);
++		dev_err(dwmac->dev, "Mode %s not supported",
++			phy_modes(plat_dat->mac_interface));
+ 		/* Do not manage others interfaces */
+ 		return -EINVAL;
+ 	}
+ 
++	dev_dbg(dwmac->dev, "Mode %s", phy_modes(plat_dat->mac_interface));
++
+ 	return regmap_update_bits(dwmac->regmap, reg,
+ 				 dwmac->ops->syscfg_eth_mask, val << 23);
+ }
+-- 
+2.25.1
 
