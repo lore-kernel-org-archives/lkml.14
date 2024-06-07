@@ -1,91 +1,128 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [91.198.224.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCBD190682;
-	Fri,  7 Jun 2024 12:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.224.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7342F15A4A2
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 12:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717761724; cv=none; b=C8NGOJbkY7CXKS2bImhtOKTgX46ZSZxbW2ztHutrUZXH8MF6JJajKNQnI1r6iFiYoejiFXb39rhX5DkNDwOojy2PjkX5QJsxdEbROXxyq9x9egVPRLSHBecUQdmC2jd7WKUF2zo1pLk7Z8DHMCQL0IeLcE9qbPblHhFidKoQMEw=
+	t=1717761790; cv=none; b=gbDkFs8VEpE3obc5sI06+9UcU2lcqRuWZWt4RapXcqTCbFZvyBEK3dUhSAmGSGXCU7z7F8tSH9PEPR6MeF4zQOrGuvF9UEEAcsv/rsVa04mpNfSwi+7m7/C/LeTqLlyQYYJjoJHJM/ug8uyOV80jpMVaZspKdpaa6IvX/A4sFO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717761724; c=relaxed/simple;
-	bh=9ahM5q+SYr/ja3n2M2hkdMF+HWZWuvn6I+naWc5+fAQ=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=ISFXAz46oGR2GBRVGZNRPsS0c7NcqMc1WLyrWoCJ1jYkEfSQ/XLYPsB5AeGOb0dN7dXZqk0saIUhn6d7Q2+2epiEHJH7AUhv6qKZaxV6ffiVwUnGVoLwc/2KsAJoNEsFm7UDAF9zd/jyhf85a23/mrQVKkTVgEhFzjzYpuk/T2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=91.198.224.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=990276a841=ms@dev.tdt.de>)
-	id 1sFYIB-007m1k-PA; Fri, 07 Jun 2024 14:01:59 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sFYIB-0069Yi-4p; Fri, 07 Jun 2024 14:01:59 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id CC79E240053;
-	Fri,  7 Jun 2024 14:01:58 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id 57A48240050;
-	Fri,  7 Jun 2024 14:01:58 +0200 (CEST)
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-	by mail.dev.tdt.de (Postfix) with ESMTP id D7A483829D;
-	Fri,  7 Jun 2024 14:01:57 +0200 (CEST)
+	s=arc-20240116; t=1717761790; c=relaxed/simple;
+	bh=KmeA7Hp+ectQHT1nWYvVe5FCdGO/t++fiRlpFmSeqG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KttSvrQnAybbB7iVbSQEY0mQjptoFlGViXy0Dq91rfDpclTj1FNN4B7pLtRz+ob2mKlbOW3tak4w+IEqVA+zXf0gChNWB+U6RjYao0sDKF2jYwrVYQHrNMXedRaKik72CGxsddWThHnrbGDiV366nFwMbRr88ddyh8DpL3rbYto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=s/GLjwNj; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="s/GLjwNj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1717761248; bh=KmeA7Hp+ectQHT1nWYvVe5FCdGO/t++fiRlpFmSeqG4=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=s/GLjwNjTMvYUbTNV1Pq5ffs6tfHij1lsbCAVnymUN+S0JREZJT3PZjykzKAg4MDk
+	 9+JxVBOVTgofYptMakEJ3+Bq+yLU8RVxQpk5+P5gPUTiPVs4A2REIzPZjBeOZ800v3
+	 sZrYGgO4Jx3JADgNKZEd6wYnCQseima4IlfNj28c=
+Date: Fri, 7 Jun 2024 13:54:08 +0200
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Samuel Holland <samuel@sholland.org>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v2 0/3] Move blender setup from individual planes to crtc
+ commit in sun4i-drm
+Message-ID: <fpkbzbcuzwl5nqixhffzf3jjjungym3xba3xtpxqxnzza447dd@izuewtsaprsp>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>, linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Samuel Holland <samuel@sholland.org>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20240224150604.3855534-1-megi@xff.cz>
+ <wynuwtyn2skchb7gc5qixql2pxnb2nqvbmrda6s53u7nt5ki7n@hqb46kttkhee>
+ <2725781.mvXUDI8C0e@jernej-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Fri, 07 Jun 2024 14:01:57 +0200
-From: Martin Schiller <ms@dev.tdt.de>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
- f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 02/13] net: dsa: lantiq_gswip: Only allow
- phy-mode = "internal" on the CPU port
-Organization: TDT AG
-In-Reply-To: <20240607110318.jujco3liryl7om3v@skbuf>
-References: <20240606085234.565551-1-ms@dev.tdt.de>
- <20240606085234.565551-3-ms@dev.tdt.de>
- <20240607110318.jujco3liryl7om3v@skbuf>
-Message-ID: <bc660eb043143926ef267d1b96dee939@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.3.17
-X-purgate-ID: 151534::1717761719-B9ADCD95-00516752/0/0
-X-purgate-type: clean
-X-purgate: clean
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2725781.mvXUDI8C0e@jernej-laptop>
 
-On 2024-06-07 13:03, Vladimir Oltean wrote:
-> On Thu, Jun 06, 2024 at 10:52:23AM +0200, Martin Schiller wrote:
->> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> 
->> Add the CPU port to gswip_xrx200_phylink_get_caps() and
->> gswip_xrx300_phylink_get_caps(). It connects through a SoC-internal 
->> bus,
->> so the only allowed phy-mode is PHY_INTERFACE_MODE_INTERNAL.
->> 
->> Signed-off-by: Martin Blumenstingl 
->> <martin.blumenstingl@googlemail.com>
->> ---
+Hi Maxime,
+
+On Sun, Apr 21, 2024 at 09:52:58PM GMT, Jernej Škrabec wrote:
+> Dne petek, 19. april 2024 ob 15:36:17 GMT +2 je Ondřej Jirman napisal(a):
+> > Hi,
+> > 
+> > On Sat, Feb 24, 2024 at 04:05:57PM GMT, megi xff wrote:
+> > > From: Ondrej Jirman <megi@xff.cz>
+> > > 
+> > > This series refactors blender setup from individual planes to a common
+> > > place where it can be performed at once and is easier to reason about.
+> > > 
+> > > In the process this fixes a few bugs that allowed blender pipes to be
+> > > disabled while corresponding DRM planes were requested to be enabled.
+> > > 
+> > > Please take a look. :)
+> > > 
+> > > v2:
+> > > - use regmap_write where possible
+> > > - add review tags
+> > 
+> > It would be nice to have this applied.
 > 
-> This is for the case where those CPU port device tree properties are
-> present, right? In the device trees in current circulation they are 
-> not,
-> and DSA skips phylink registration.
+> Maxime,
+> 
+> do you mind applying?
 
-Yes, as far as I know, this driver is mainly, if not exclusively, used 
-in the
-openWrt environment. These functions were already added here in Oct. 
-2022 [1].
+Pretty please :) It would be nice if this did not miss another merge cycle.
 
-[1] 
-https://git.openwrt.org/?p=openwrt/openwrt.git;a=commitdiff;h=2683cca5927844594f7835aa983e2690d1e343c6
+Maxime, this is the solution you hinted at back in 2019:
 
+https://lore.kernel.org/all/20191003113802.tyecgkb6r3piin35@gilmour/
+
+Let's get this fixed. Or anyone else who can pull this to DRM tree.
+
+Thanks and kind regards,
+	o.
+
+> Best regards,
+> Jernej
+> 
+> > 
+> > Kind regards,
+> > 	o.
+> > 
+> > > Thank you very much,
+> > > 	Ondřej Jirman
+> > > 
+> > > Ondrej Jirman (3):
+> > >   drm/sun4i: Unify sun8i_*_layer structs
+> > >   drm/sun4i: Add more parameters to sunxi_engine commit callback
+> > >   drm/sun4i: Fix layer zpos change/atomic modesetting
+> > > 
+> > >  drivers/gpu/drm/sun4i/sun4i_backend.c  |  4 +-
+> > >  drivers/gpu/drm/sun4i/sun4i_crtc.c     |  2 +-
+> > >  drivers/gpu/drm/sun4i/sun8i_mixer.c    | 70 ++++++++++++++++++++-
+> > >  drivers/gpu/drm/sun4i/sun8i_mixer.h    | 20 ++++++
+> > >  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 85 +++----------------------
+> > >  drivers/gpu/drm/sun4i/sun8i_ui_layer.h | 20 ++----
+> > >  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 86 +++-----------------------
+> > >  drivers/gpu/drm/sun4i/sun8i_vi_layer.h | 20 ++----
+> > >  drivers/gpu/drm/sun4i/sunxi_engine.h   | 13 +++-
+> > >  9 files changed, 125 insertions(+), 195 deletions(-)
+> > > 
+> > 
+> 
+> 
+> 
+> 
