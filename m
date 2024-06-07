@@ -1,133 +1,199 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD04F1BC2F;
-	Fri,  7 Jun 2024 06:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4523F14EC78;
+	Fri,  7 Jun 2024 06:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717740398; cv=none; b=PTakbqCD8bdce/irKTHM+VI4enkxnO8jq/C0LnrrJDUUI25yt52qxql3r0kSYqzgyYe5AJGfOJk4i3RJLS2vj3Zx7SXlwgBFtHDrdpB1fGaQBDXlSke8LSBOyJP+HUxNinV3EgTUdsT8WgqjRVxjvD5clz5gZJEmFUuIV/gEa5g=
+	t=1717740611; cv=none; b=anAJVFcN1gpV/pOiE/BpBL5DDzXTKRVeVNZDAoQHIiUopQsN6bkSQm0ilV8+7RBaEPMMxC43NooYeGWCmD74VGCCmFOTbGBWe1Z7qjxUBy1thfnXmsTEW+pwrYd1zdVthTEMka+6tnlB0XKjjArHcEEXrSsFXU6uitDz21SHQ/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717740398; c=relaxed/simple;
-	bh=jNZkxBEs7U5TdwARCjZjVhwqyxR/ZXTvzrddGfOudKA=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=SU7O4GIn/WIuYula//qPWkGeSCXgR+0x9Fv6HwmeS2YxxZCZu35jsKcYxA2LZK9geiSmUGcMd3s0ylI87TE2yfgbv99yvxiRegTXUtF0PJv9NEJrlH525hm6xR4P2WcWbYyEPMPmge4Kh0yBHwN0eb+x/Wga5/KwwgGiqkD9bBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dAERxGI8; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717740611; c=relaxed/simple;
+	bh=MT9Gl/3nWYkiLESuDf2i06kzDPa0fika+gNfL63dSRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nc1CkH54WOolh5ky14DTY9rpBkyihaIF8KZ7PjhCdEkeJAY7CLcJQQ/jvc+8+2d4Y4eQlPFzJ8DRlyutQ4B5XtbgJGxVTZMflwfez+U61RKPzJSPQvM0IMK/ukksT2W+JWfSTilO0ql6SToVjMXVyEer+3wVoOrcsBIanKq6+2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQygzPtb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAERxGI8"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-35dd0c06577so1779188f8f.2;
-        Thu, 06 Jun 2024 23:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717740395; x=1718345195; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jNZkxBEs7U5TdwARCjZjVhwqyxR/ZXTvzrddGfOudKA=;
-        b=dAERxGI8++50YtItabwAiNuQR1Zp+tgjBNEQzMQorMHD7XbtGd53jp6qdHqzwxKxwT
-         j8SnSwJZB1EMdx4ipHxpRZm8L6CHGDlC7B8YL77evXL2OwMqk5obeMpjG3Qjf8OlPU0M
-         KQ8iTcwZYovbtpoyXfMzI9XPxFEnEeOSDMFRIUrPGj1z5tE9Ba8URgDOFMO9G3UD9o4r
-         aoJhp+mK0+vuylKY5fHPhy+MaznJqSyNjpIR8bo+lwEnQrpCG5ds0GEHqkz31Ll6IHmW
-         YXPXFr0oleBHNn18a46NHkHOl9lFjOBtd2yDteawikbiVS2XyXdHyEeR9YE2lV55fUtg
-         OTTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717740395; x=1718345195;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jNZkxBEs7U5TdwARCjZjVhwqyxR/ZXTvzrddGfOudKA=;
-        b=tq7OrEpoD2uHq3yaq7dUAC4oAaQe/po5kdgjlTtkKhAW7KpG8sWbmw8qNCLgCbi5Sd
-         yMAtJ1aUd2mAcV3sOORqQ6dfrD/VoldiIQvmJs/DKBhBzoUa0dd99uCjh3ERA3JIPVaO
-         YL6+epJYxToRtXv0586vczpxmXCfY3dani+6kXiu7EYBDoWTazclOV2aM1md6S7EQaaz
-         3in/0cCmnTM5wR+zX4325IqBCrf4d66qqC5vAhSOKxaVEQnXC8p573EHoiAResqTJ1FL
-         hhShTAy/89CLkIBNQMfuTswvwjwJc71sUD/Er47V4MSjPV9KY6tnkru47w1GLf8FC1KV
-         3F/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXqnbysRUbLypYMZow3+iLFgEc9kjCv3EHtzDw4Z0xiNdpHSWQOJoz/n5lQXisB4H0SGpac4/FV6vfbZ2yDwGOa4jR/tv+zj3gF+YtvP7+AK516ZyyNHYy88+2YZFMtMna73aSyzJ8Anw==
-X-Gm-Message-State: AOJu0YyPqQ4dpbwEoNgQswDDy4JLsV2eGg2/kWrBucNtSyUV+IktiJi2
-	p6s1Fe5Qszx32W2QZU9pgMAHGT7x8EOlj40EeFzE6LUEe/QLDEWl
-X-Google-Smtp-Source: AGHT+IEgwZKufWc5FwUuSbx7D4i1LN7jDSiJEogiwEw6n1p0cNIWxHRj+ziKiW0p1rfT+aXoS165cg==
-X-Received: by 2002:a5d:45c9:0:b0:34f:f540:bdbc with SMTP id ffacd0b85a97d-35efed64bdamr1061157f8f.38.1717740394602;
-        Thu, 06 Jun 2024 23:06:34 -0700 (PDT)
-Received: from smtpclient.apple ([167.99.200.149])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d69867sm3230511f8f.57.2024.06.06.23.06.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Jun 2024 23:06:34 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQygzPtb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E248C2BBFC;
+	Fri,  7 Jun 2024 06:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717740610;
+	bh=MT9Gl/3nWYkiLESuDf2i06kzDPa0fika+gNfL63dSRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oQygzPtbWxg8NHnX55eodLzOzgCvMC4qGMwckQc8HdzV21YZMrXCKKyB92dSSBMn6
+	 E+GPRHtj2uf1fRoy8PnqhTms6VV9coBEYeuAxvE/rgA2okMRmpT5ixNA8goFNluJOp
+	 bZ31CgHs8In4aytAC7QR24xIkZBltl3sNOViINTi27fxorOQJN+oximu//gK6Xhp+d
+	 uaxoGui8nnRVRG5MwMMpRlivOx/GBmn1pRsHDFx/wFXusHJNm8udVkRdXxdcDVxg9+
+	 c8mITOrUvC6ptFD5ZD0zbQI8AhnAAa4+Z+PHpV1jaLJiPym0V5jFGLy/Y53y+LDlnV
+	 ryhyg9EC0tHVw==
+Date: Thu, 6 Jun 2024 23:10:08 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: James Clark <james.clark@arm.com>
+Cc: Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core
+ PMUs
+Message-ID: <ZmKkQIUPqU8YTzbj@google.com>
+References: <Zld3dlJHjFMFG02v@x1>
+ <CAP-5=fXKnQzfwDSr3zVeo6ChJe3+xwpBfyAi0ExmPEdhcde4ww@mail.gmail.com>
+ <CAM9d7chV8YOCj8=SGs0f60UGtf+N2+X=U+Brg246bFoPXBXS+g@mail.gmail.com>
+ <aee9254e-81c1-464a-8a28-f971615baffc@arm.com>
+ <CAP-5=fVynt-8cH6Jc5VyfBLBOqkF+v_7kknHdUPZBM1r3WwhTQ@mail.gmail.com>
+ <ZlkC_Tm6kKIL3Phc@google.com>
+ <CAM9d7ciTbHngfimDNsXS_adR7xg4ZHvSHzVhAzuQ6o-nQ2nsMQ@mail.gmail.com>
+ <CAP-5=fUq6jLCtjPNb0gngtR0cXopG+-mJ-+CnEOAXeG7VShh8A@mail.gmail.com>
+ <CAM9d7cjPe68PMb1hnbypMOQUQOybpisdqH3eTH1B9G-KG5rKXw@mail.gmail.com>
+ <f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH 00/12] arm64: meson: bunch of DT fixes, take 4 (final one
- ??)
-From: Christian Hewitt <christianshewitt@gmail.com>
-In-Reply-To: <20240606-topic-amlogic-upstream-bindings-fixes-dts-v1-0-62e812729541@linaro.org>
-Date: Fri, 7 Jun 2024 10:06:20 +0400
-Cc: Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- devicetree <devicetree@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org,
- AML <linux-amlogic@lists.infradead.org>,
- LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <34243887-1D78-4D1E-BBB9-607297813CC7@gmail.com>
-References: <20240606-topic-amlogic-upstream-bindings-fixes-dts-v1-0-62e812729541@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: Apple Mail (2.3774.600.62)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com>
 
-> On 6 Jun 2024, at 12:48=E2=80=AFPM, Neil Armstrong =
-<neil.armstrong@linaro.org> wrote:
->=20
-> Along with the following:
-> - =
-https://lore.kernel.org/all/20240422-t7-reset-v2-1-cb82271d3296@amlogic.co=
-m/
-> - =
-https://lore.kernel.org/all/20240513224552.800153-1-jan.dakinevich@saluted=
-evices.com/
-> - =
-https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes=
--power-domains-spifc-v1-1-380f29ba4a16@linaro.org/
-> - =
-https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-conve=
-rt-spdif-receiver-v1-1-262465adbac2@linaro.org/
-> - =
-https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes=
--power-domains-mmc-v1-1-4acbb8cc2626@linaro.org/
-> - =
-https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes=
--power-domains-nvmem-v1-1-ef6f10c86a63@linaro.org/
-> - =
-https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes=
--power-domains-phy-v1-1-c819b0ecd8c8@linaro.org/
-> - =
-https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes=
--power-domains-rng-v1-1-0a55a7ba55e4@linaro.org/
-> - =
-https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes=
--audio-widgets-v1-1-65bd7cc2e09b@linaro.org/
-> - =
-https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes=
--power-domains-sardac-v1-1-40a8de6baa59@linaro.org/
-> - =
-https://lore.kernel.org/all/20240606-topic-amlogic-upstream-bindings-conve=
-rt-g12a-tohdmitx-v2-1-70d44fa30790@linaro.org/
->=20
-> this bunch of changes fixes 99% of the remaining dts check errors.
->=20
-> The two remaining bindings conversions for arm64/amlogic are:
-> - ti,tas5707
-> - everest,es7241
->=20
-> I'm too lazy to do them right now, so if someone is interested
-> in doing the conversion, please do it!
->=20
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+Hello,
 
-For the series, tested with multiple =E2=80=98meson=E2=80=99 boards =
-(GXBB/GXL/GXM/G12B):
+On Thu, Jun 06, 2024 at 10:42:33AM +0100, James Clark wrote:
+> 
+> 
+> On 06/06/2024 08:09, Namhyung Kim wrote:
+> > On Wed, Jun 5, 2024 at 4:02 PM Ian Rogers <irogers@google.com> wrote:
+> >>
+> >> On Wed, Jun 5, 2024 at 1:29 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >>>
+> >>> On Thu, May 30, 2024 at 3:52 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >>>>
+> >>>> On Thu, May 30, 2024 at 06:46:08AM -0700, Ian Rogers wrote:
+> >>>>> On Thu, May 30, 2024 at 5:48 AM James Clark <james.clark@arm.com> wrote:
+> >>>>>>
+> >>>>>> On 30/05/2024 06:35, Namhyung Kim wrote:
+> >>>>>>> It might not be a perfect solution but it could be a simple one.
+> >>>>>>> Ideally I think it'd be nice if the kernel exports more information
+> >>>>>>> about the PMUs like sampling and exclude capabilities.
+> >>>>>>>> Thanks,
+> >>>>>>> Namhyung
+> >>>>>>
+> >>>>>> That seems like a much better suggestion. Especially with the ever
+> >>>>>> expanding retry/fallback mechanism that can never really take into
+> >>>>>> account every combination of event attributes that can fail.
+> >>>>>
+> >>>>> I think this approach can work but we may break PMUs.
+> >>>>>
+> >>>>> Rather than use `is_core` on `struct pmu` we could have say a
+> >>>>> `supports_sampling` and we pass to parse_events an option to exclude
+> >>>>> any PMU that doesn't have that flag. Now obviously more than just core
+> >>>>> PMUs support sampling. All software PMUs, tracepoints, probes. We have
+> >>>>> an imprecise list of these in perf_pmu__is_software. So we can set
+> >>>>> supports_sampling for perf_pmu__is_software and is_core.
+> >>>>
+> >>>> Yep, we can do that if the kernel provides the info.  But before that
+> >>>> I think it's practical to skip uncore PMUs and hope other PMUs don't
+> >>>> have event aliases clashing with the legacy names. :)
+> >>>>
+> >>>>>
+> >>>>> I think the problem comes for things like the AMD IBS PMUs, intel_bts
+> >>>>> and intel_pt. Often these only support sampling but aren't core. There
+> >>>>> may be IBM S390 PMUs or other vendor PMUs that are similar. If we can
+> >>>>> make a list of all these PMU names then we can use that to set
+> >>>>> supports_sampling and not break event parsing for these PMUs.
+> >>>>>
+> >>>>> The name list sounds somewhat impractical, let's say we lazily compute
+> >>>>> the supports_sampling on a PMU. We need the sampling equivalent of
+> >>>>> is_event_supported:
+> >>>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/print-events.c?h=perf-tools-next#n242
+> >>>>> is_event_supported has had bugs, look at the exclude_guest workaround
+> >>>>> for Apple PMUs. It also isn't clear to me how we choose the event
+> >>>>> config that we're going to probe to determine whether sampling works.
+> >>>>> The perf_event_open may reject the test because of a bad config and
+> >>>>> not because sampling isn't supported.
+> >>>>>
+> >>>>> So I think we can make the approach work if we had either:
+> >>>>> 1) a list of PMUs that support sampling,
+> >>>>> 2) a reliable "is_sampling_supported" test.
+> >>>>>
+> >>>>> I'm not sure of the advantages of doing (2) rather than just creating
+> >>>>> the set of evsels and ignoring those that fail to open. Ignoring
+> >>>>> evsels that fail to open seems more unlikely to break anything as the
+> >>>>> user is giving the events/config values for the PMUs they care about.
+> >>>>
+> >>>> Yep, that's also possible.  I'm ok if you want to go that direction.
+> >>>
+> >>> Hmm.. I thought about this again.  But it can be a problem if we ignore
+> >>> any failures as it can be a real error due to other reason - e.g. not
+> >>> supported configuration or other user mistakes.
+> >>
+> >> Right, we have two not good choices:
+> >>
+> >> 1) Try to detect whether sampling is supported, but any test doing
+> >> this needs to guess at a configuration and we'll need to deflake this
+> >> on off platforms like those that don't allow things like exclude
+> >> guest.
+> > 
+> > I believe we don't need to try so hard to detect if sampling is
+> > supported or not.  I hope we will eventually add that to the
+> > kernel.  Also this is just an additional defense line, it should
+> > work without it in most cases.  It'll just protect from a few edge
+> > cases like uncore PMUs having events of legacy name.  For
+> > other events or PMUs, I think it's ok to fail.
+> > 
+> > 
+> >> 2) Ignore failures, possibly hiding user errors.
+> >>
+> >> I would prefer for (2) the errors were pr_err rather than pr_debug,
+> >> something the user can clean up by getting rid of warned about PMUs.
+> >> This will avoid hiding the error, but then on Neoverse cycles will
+> >> warn about the arm_dsu PMU's cycles event for exactly Linus' test
+> >> case. My understanding is that this is deemed a regression, hence
+> >> Arnaldo proposing pr_debug to hide it.
+> > 
+> > Right, if we use pr_err() then users will complain.  If we use
+> > pr_debug() then errors will be hidden silently.
+> > 
+> > Thanks,
+> > Namhyung
+> 
+> I'm not sure if anyone would really complain about warnings for
+> attempting to open but not succeeding, as long as the event that they
+> really wanted is there. I'm imagining output like this:
+> 
+>   $ perf record -e cycles -- ls
+> 
+>   Warning: skipped arm_dsu/cycles/ event(s), recording on
+>     armv8_pmuv3_0/cycles/, armv8_pmuv3_1/cycles/
 
-Tested-by: Christian Hewitt <christianshewitt@gmail.com>=
+This looks good, but I guess arm_dsu (or others maybe..) has multiple
+instances like arm_dsu_0, arm_dsu_1, and so on.  Then it should merge
+the similar PMUs and print once.  Same thing for armv8_pmuv3.
+
+But I think it's better to skip the events if we know the PMU doesn't
+support sampling for sure.
+
+> 
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.008 MB perf.data (30 samples) ]
+> 
+> You only really need to worry when no events can be opened, but
+> presumably that was a warning anyway.
+
+Right, this is a problem but I'm not sure it handles the case
+specifically as it just reported warning on any failures first.
+
+Thanks,
+Namhyung
+
+> 
+> And in stat mode I wouldn't expect any warnings.
