@@ -1,95 +1,148 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2063.outbound.protection.outlook.com [40.92.52.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3227115B15C;
-	Fri,  7 Jun 2024 09:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717751168; cv=none; b=Hsv9DYzNmdkQEQq2WEbBhMiP3/bS4vmf+PC6JCfxRV+Rn4mPwJs7AiC8PPB9joRV/vaeC+IkxCF/J7WQmsx9p+ZHJHhaBd2xVKsR9CvUypEvyEwK7tMQdTpd5RmYRSiwv6CuQe1MFaMEfr7fAOb6wa7qqGRp8lPjBm3Us04D8K4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717751168; c=relaxed/simple;
-	bh=02Ezor/EFk6mpRpX7GE8KDOgJoMksH7wmGt1Ymq2OUE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RdvP4REZrPXs+ZzN6c6tWwB8tMiRT6WWgkVKvqQ2J5n2B3L5RxAt+uICTOt7LDF8M0x1WJt3F/Z7KQAtyEbzKtmKnKAuFUCBwg5/qKCChwnXVvxt/aPrsbBTGRY4KymOUF7X8BCKpYgrWKsw6do0Sy5r2fb5dae2Rdj76I+sOm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ww4R4mEO; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0AA15B543;
+	Fri,  7 Jun 2024 09:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717751169; cv=fail; b=nVuOtuZHo91IA+eYBPZkuhoD3PHfaO6z9/CUSLEPFIxADU8XUa83bvd5nMKDAIiJr8KSf9t+PKelTeYgpXeuan0l8m/TLDbeCGIVq5k8YG89VtuOiVZvNZq4zi0WQCHPniT2Tq22gmOKoxr6+UxNH7/3rq2OIJsj+apcwd71G7U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717751169; c=relaxed/simple;
+	bh=VY7wv1HEqDfNdAKGYiSmQtDVzl25D4YxhdLUbr+38CE=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=JPEzto72EWdSZ9s/eMkGT83470oAAVWIWe7tWKk9QzKT9PQKl1snYOkU+sfnAGKtSqa4vxfbzmIsYhet71O9YxcBPbH13UAHDnz7yg/R860LWBVXdxufNLe+F4GkDsDIUypmVepDnbx8rlTMOTjw+Tocm5jMXTFKDawIAOwfPaU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=GH9/aq++; arc=fail smtp.client-ip=40.92.52.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ww4R4mEO"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57a526c6a2cso2118335a12.2;
-        Fri, 07 Jun 2024 02:06:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717751165; x=1718355965; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=02Ezor/EFk6mpRpX7GE8KDOgJoMksH7wmGt1Ymq2OUE=;
-        b=Ww4R4mEOkuQkZ4Vr/RZmCUJAdkKTnZxfHVoXFLBopRgli/Mf72AxRmWne7aes2wBlf
-         gl2Fnn2+EigEF8wKIBUwSOdi2+mGeQQHuEVtjD14XdtLP7zkcb71WMFZNPmr24ZwzeBf
-         JPvp6/IAvrJ2PBFjwWK/fTOfyDkL8a5kxJ9uzgjlFXBgAKMUZ3BbheTZoeyymlzGWABy
-         ap7K7czgGjV817TdPm5kjDMXUTe4Ij7BHtofKrwQOnhFMR7Wb879Qkv0YiZLI+U4O+zC
-         EPPRiOjvEM7HwgQhp5yMA3BPnI6ViQFeeQe75seQvkR2kuo6od7/cDEqEczBdxZhRxyx
-         3H9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717751165; x=1718355965;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=02Ezor/EFk6mpRpX7GE8KDOgJoMksH7wmGt1Ymq2OUE=;
-        b=H6n10+eZwlc3O4RfAUV1+SaKQhxHQRRDVYYrBv1DIlTdHoZD2kt6Uhf4UTNEWfIwYz
-         2B971Xl/8LnZ3xVmcg0pLqA2wp1vIEqyVY5nfzRiqgh3tzozQgnEoMhT6SJFBihgL9Qr
-         pYRlvQxswYwg4OFpjSzgjY6xo38gcrsCUO21kuhekf4Dc/bLobsvqcj/VrBot3Ykib5s
-         X5MU9n6cGM5sSpMJYKu9jImUQqYkJDcXiZLMKxMotC5a+PepfLlm1xwtfyAssrZ0x692
-         KsT+Br2zM5DDPQ8LXquF3GOo4fL2Rc2xBbDtit4CYWT/2VGRfX+NgUSMS89nYn87E9Et
-         EDYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDSqdJk78HkWXAl8vRADEsvLrqfrH7NRiFWrpNa50i8fIn3ihJ2cRBKI9rG5xkChpC5nqJxFsjixmlgSyMkyZFsbD+8KZBvaZkUxAgWZqlTSRfav8U2x1Jwavt3dnLFLhonfIDMy63EEih4LvokS/knesRXW8jAvaYLbOagiZCYALadQ==
-X-Gm-Message-State: AOJu0Ywsh9oVZm+wnfha9jnUEFSC/4+LAeLVSVTDRR6KPZxYlmcMN6Lx
-	7e1DrziXCC3j01KAathh0USD18TEbFVlMSRErLCQIymuyl1FxvvE
-X-Google-Smtp-Source: AGHT+IEN6md56MkALoiq/calcQIVIkG7jdXgQegNznInubYEMGzzFbk4uZozcFPSfxkdToBhRaUBeg==
-X-Received: by 2002:a50:8719:0:b0:57a:2546:2512 with SMTP id 4fb4d7f45d1cf-57c5099b8b0mr965262a12.34.1717751165181;
-        Fri, 07 Jun 2024 02:06:05 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae2023a1sm2399254a12.61.2024.06.07.02.06.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 02:06:04 -0700 (PDT)
-Message-ID: <fe4e553875d2d20b4c3994c24bde02184d160ff4.camel@gmail.com>
-Subject: Re: [PATCH v6 8/9] iio: adc: ad7173: document sampling frequency
- behaviour
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: dumitru.ceclan@analog.com
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- David Lechner <dlechner@baylibre.com>,  linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org, Dumitru Ceclan
- <mitrutzceclan@gmail.com>
-Date: Fri, 07 Jun 2024 11:09:51 +0200
-In-Reply-To: <20240606-ad4111-v6-8-573981fb3e2e@analog.com>
-References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
-	 <20240606-ad4111-v6-8-573981fb3e2e@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="GH9/aq++"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bbrgOUWqGbcliOHVv9qKSZJa46U7Eo8vtZ/t9Wl3Xr3gu7m11RA9MaFEApcQzCFTB2QF5JqKSRx0yMeukH56dxMwghd8ahRAXEoyo4l/COZ5tYE7lHDB1KKWB2hCtmlPfbJ7O7b2qeMjNjWlxIuwNP717KrBvoN0DHAwXJLM5HUABOu4pHIyztGkbtj2eYOs7P8dU/2cw19yvh9nTShM8vK223u6hXz1WVjMKNuEZZIagW6p9SfiFgczyeuXJ7ks5dkmipdNMb58tFlmdoZujxie061LICwob3abV5t5Kn/UR9Ym764BuJjkFxtPnyXOJgWK/gN1kOGXyFmLMLDKlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tV9HEmV0ibi36kbwXlPd9vt9ER8qleOcsKCWfJgCrng=;
+ b=aoZJd5rs0SKIJxcFRV79llF2deKbGtijHmRa/4EBBrEn1i1tyFf5U4y+bxl4dm62WUHMV4hfa/vngKUiUG1xs1XBhF/1IoF3WXek8FzPQVdNDC1gtUIDun4czxTeX3yJ6TEwWfDKj0vC83ynfsnKOhTAKnfcbcBa6txhqcqNoS9UrystEan06j79H8H59U27Yh/TPcHcUj/+K21ZKi6hd7J7jL+HwYOAN+mglUKB+lkpYOuxUmxCLuTt0943TjNQZY/kGznu33x/i39AUYeydT+JzKldBm3IiVsMtEH54zqg/SoTB2i0QePzTxNvyyZ+arWfMEC++rv+ZgEhvMBcyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tV9HEmV0ibi36kbwXlPd9vt9ER8qleOcsKCWfJgCrng=;
+ b=GH9/aq++8q/3CWBdLmKqmNgmWn1jzo6MeSmcjTFd7dTP5fktgv7SkReKS9jaftiOmlQKCYn4gvObk2lASc3d6m0qBcxHaVKgVxunRQcuNz34ChTEDyTuUnDHwc3OHowFfyiW4WSjuBIllllTQRjw7T8L3eSRPaI1wHehQTEu5k+bIVqWYC7rE9/luPwnBWTxrxABVPuk06emo9zWpjKuAzzQ78Wv+wn8LSgHJOTDjqNT0MryWbhtHrHd/NyZ32C5X+CaPEASjeoOM3boaA/jaRjFqZkbapouYb2oC3k80kt7WW/1FEiVOhrOU5yh6duyEluAmqmIfATJdXvMdIsEpA==
+Received: from SEYPR04MB6482.apcprd04.prod.outlook.com (2603:1096:101:be::7)
+ by SEZPR04MB8048.apcprd04.prod.outlook.com (2603:1096:101:238::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.33; Fri, 7 Jun
+ 2024 09:06:01 +0000
+Received: from SEYPR04MB6482.apcprd04.prod.outlook.com
+ ([fe80::ca2b:8a48:a7ab:60e5]) by SEYPR04MB6482.apcprd04.prod.outlook.com
+ ([fe80::ca2b:8a48:a7ab:60e5%5]) with mapi id 15.20.7633.033; Fri, 7 Jun 2024
+ 09:06:01 +0000
+From: Noah Wang <noahwang.wang@outlook.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	linux@roeck-us.net,
+	conor+dt@kernel.org,
+	jdelvare@suse.com
+Cc: corbet@lwn.net,
+	Delphine_CC_Chiu@Wiwynn.com,
+	peteryin.openbmc@gmail.com,
+	javier.carrasco.cruz@gmail.com,
+	patrick.rudolph@9elements.com,
+	bhelgaas@google.com,
+	lukas@wunner.de,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	Noah Wang <noahwang.wang@outlook.com>
+Subject: [PATCH 0/4] hwmon: Add support for MPS mp2993,mp9941 chip
+Date: Fri,  7 Jun 2024 17:05:40 +0800
+Message-ID:
+ <SEYPR04MB64822EE797B0CB024A913DFFFAFB2@SEYPR04MB6482.apcprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [cxJaOapP3Zqa7nBbvaUh4GdYPNO27yzx]
+X-ClientProxiedBy: TYWP286CA0001.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:178::12) To SEYPR04MB6482.apcprd04.prod.outlook.com
+ (2603:1096:101:be::7)
+X-Microsoft-Original-Message-ID:
+ <20240607090544.466833-1-noahwang.wang@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEYPR04MB6482:EE_|SEZPR04MB8048:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3ad826a6-14d4-4020-52bf-08dc86d10d45
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
+X-Microsoft-Antispam-Message-Info:
+	X4tTm+I2/fmQQLgo0MqtqTfZCHkJhynrOjXwVHmdbh6QNCwIvK8xFyJbdTzyM0V48RD8sFtdrAUVkL1ieLuqDQC3P7hNfay3VrbY7RtQwlvkxJa4uapU3H7oDygpPqdosAmZgZCqpX2xzC03FE2pxwgt6mgnVfb1lcH5BDX5l87WLU15hJepoQVBhpPY1a6xCSzGraGDiq8vKBMZAqu1/LfH1Zhtd68WOzd9iCppLeP/7DP5OgDy1sD8fCC8tMyrvWrHfROkaDShTRvkeXkNYzKl3ZB7SLsOVykFp8X6/PWsuo5E7lOfY2vH8rIyfSngIMzIaqaQEIaBbsG07OJeeA4v472UbNH9dTkkKy+fYeWGIpKom28XgM6wsImIx9FOhTRs2E1Qpwudvh9QN3dGn7ckpn0LPH9S/DyJ7IGdGAKa8stBqYAcMJ/VbzUBpc2UOIPGBcSPipG51TE5hq4I8ZgSNiaYZuziEmEVaXeJAzwQaW2zmWDve4ra99trSWxxekezO8ATPCnOpLrbGrcSakL02ZIpesGUUfdYj3gdCvPwT2mipyp+agALDh7iFHMtoCd1OvXtyLmNju/OAhTYlL/56C+2iUoV6xSS8IBJpqo7dh8dEPnSbdMH11vCxGbR
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?aeS9bxtl2CosS1xF8GOc3jgZ8PlxAYfj570Ts/bVOcy7LlUY0fV2HKz+Lxdj?=
+ =?us-ascii?Q?W4ymxZMHcMWgIQVHitY95TldUDD02YSlH+dlHCCUdfu3GccrAvtuZI57gbE1?=
+ =?us-ascii?Q?WCfxnt0aWoC5Xd8/GtfjswUGDJ6tziMEiPFLXM/Eci9KWU61yiS4K4H29Gnn?=
+ =?us-ascii?Q?vVHAw+mGMjz4ttlpfo+4BdCt4tmQ+9N5R2fm5uh5ROH2w0U3+QcdELzLI3SY?=
+ =?us-ascii?Q?tWQwvNxPdwszv2OCmneansEqlxdpCLC/n+/Sl1kdHD3VYJpwiVCNJgEGAmkW?=
+ =?us-ascii?Q?A9lHwglFOkxRTCeOvxeEDWTZd3V0hZ7xXhuZoYfXpJ+K6g4aMSdp+dQjrOU9?=
+ =?us-ascii?Q?/53HXnUOZGqQ4BI/nzQ4TCIsBfNIwAZI1n2EEFVERjKtMtuz5tqO3WSfnci8?=
+ =?us-ascii?Q?F2egSIsPWgH5jAuZyiCVqaYqJOhaso07DueHhYt4kB7NKRoEjgxbs2a8OSOG?=
+ =?us-ascii?Q?9K8O19smq2WOu+MubGceWebEhKkk0hilprVVk/LcK6tvBBc9ijmhk20jZdbi?=
+ =?us-ascii?Q?6JOXhx9SDrHfW0O/YTXg5/BTInOvcc3na5EqIrClopPzufSOoueQZ8qVtokT?=
+ =?us-ascii?Q?Zon3aW0M3CCs8wuwinZtIalaxaAPdqqQYC8qxg8bX71HS2R/SHvSMbXmidjM?=
+ =?us-ascii?Q?3c6QW8YXwx8G6ON6yLgUuyvd6Mdc8Y1qUYL75llWmZ44LaTAZiD78asoF1p+?=
+ =?us-ascii?Q?toBBTlVaPbfl14Z5zs5pWoZQ5C3bFM4vzfy2piAA2V4NDnbu6WEOraA7qK6J?=
+ =?us-ascii?Q?wwkL7D3yNKqtzbygJTNVcLcQbtJyTlhuzED45o/y9J/pb/S9wEDCz/Lb/kYq?=
+ =?us-ascii?Q?aGwyGhHwgE96IRGJ0M56q/pf48+RZ6xXtMocPYJZ3AUittwyS3c+EqsMKQnC?=
+ =?us-ascii?Q?zxb3fyiJRwthm6XyEsL0riZ9sCnX5OfxYtZAvIlTcBq5MTHRxh6kCADXPiku?=
+ =?us-ascii?Q?4vX0f38710EH9IPNfW4T4q7AJZC7C4ihv55XDflSF7S7a5Ek2faKqyyVGRKx?=
+ =?us-ascii?Q?DO/0Sp0hw/9Mu14mYN3hDqc8xiJyLCVwEkTRy4M+H4Yh+sgixsA3Ja+yDC+i?=
+ =?us-ascii?Q?rbJl/E66icrMjPvFOQXZ3fAAwMVcWAH/+nRbGjVNIGjO/zvxX22rqRGPYdgT?=
+ =?us-ascii?Q?OAKpcnIqwcFn1yZbHqq1+DDWTo3OVDr5UcnfVSIie2BVz0BLnaKt7iRzW13R?=
+ =?us-ascii?Q?4XoiWzNnpuMftN9r9v5C2nsdVo7T45y/mEFa2xuPRwYJMpQ6dCAExIhGqCba?=
+ =?us-ascii?Q?lSqWZjjQtvDGMtUqIBtV?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ad826a6-14d4-4020-52bf-08dc86d10d45
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR04MB6482.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 09:06:01.3051
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR04MB8048
 
-On Thu, 2024-06-06 at 19:07 +0300, Dumitru Ceclan via B4 Relay wrote:
-> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
->=20
-> The ADCs supported by this driver feature a sequencer that read in a
-> loop all the enabled chanels. When setting the individual sampling
-> frequency for each channel and enabling multiple channels, the effective
-> of each channel will be lower than the actual set value. Document this
-> behaviour in a comment.
->=20
-> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
-> ---
+Add mp2993,mp9941 driver in hwmon and add dt-bindings for them.
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+Noah Wang (4):
+  dt-bindings: hwmon: Add MPS mp2993
+  hwmon: add MP2993 driver
+  dt-bindings: hwmon: Add MPS mp9941
+  hwmon: add MP9941 driver
 
+ .../devicetree/bindings/trivial-devices.yaml  |   4 +
+ Documentation/hwmon/index.rst                 |   2 +
+ Documentation/hwmon/mp2993.rst                | 150 ++++++++
+ Documentation/hwmon/mp9941.rst                |  92 +++++
+ MAINTAINERS                                   |  14 +
+ drivers/hwmon/pmbus/Kconfig                   |  18 +
+ drivers/hwmon/pmbus/Makefile                  |   2 +
+ drivers/hwmon/pmbus/mp2993.c                  | 269 ++++++++++++++
+ drivers/hwmon/pmbus/mp9941.c                  | 328 ++++++++++++++++++
+ 9 files changed, 879 insertions(+)
+ create mode 100644 Documentation/hwmon/mp2993.rst
+ create mode 100644 Documentation/hwmon/mp9941.rst
+ create mode 100644 drivers/hwmon/pmbus/mp2993.c
+ create mode 100644 drivers/hwmon/pmbus/mp9941.c
+
+-- 
+2.25.1
 
