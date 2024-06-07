@@ -1,141 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta-64-226.siemens.flowmailer.net (mta-64-226.siemens.flowmailer.net [185.136.64.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9652513F42E;
-	Fri,  7 Jun 2024 13:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CC1193074
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 13:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717765945; cv=none; b=GG8YcddI8ptIAvZDUnel2pfMkfbST/WAMoI6+K+hn9eUWBrHoBEG4LXORpPEeFq0FEPpRUErR5rs8DWcQNjouzGQefxjYIG+MZYhPHfpyIbnwNxrL1030w+wmkiuvmndZkryyq+yT1pHd2o8ymPQdrCh4uM/mQGWu3mwawe0e5k=
+	t=1717766056; cv=none; b=hrKA1905dQseRqX0nVKCWIcEMIQVzc4+ND6DuY7mQNHqEpMF0j+OMWRru1fRjhqO2jXac47MHetUWenkXxOMmmcNllX7hZPLTAsxySsZ8lGQgS54Y0ONqdIQFipnqAdGODv+emPdblxYkhYq7TBy6bl11H6VTE0uEmDK0zi4ueU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717765945; c=relaxed/simple;
-	bh=NLJDJqeei4H3x1qQRMaUa1qgNu65ZOEg2TMUdlzO8+0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bF7ka6QVwY8JeesbAbNGuM2wXY2rkHGCMK/I8gn2KByRq38Nf80UdeBp14K8W3Ba9qqfprERjFLFM+2Y2F+xgVRQdh08hGOM+uPEUGjyJXHs5iX38wo1dJUnsg3Ng0KFC6g3dzoCuKWpIMDZBvBkCa8HKhUWm58R7b2AjSnTVjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQoZzbT0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717766056; c=relaxed/simple;
+	bh=Lubo51aFliEiy57U/CSrVnSv9x7BSB7UF3Ec1ulGl4U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OVpEQ35QEBqDkasaCYmYLXmRl1PoC+8XCjmdcPYayYeUpOLBY4RrBnKTdab1JeOGsj5L4/TQGawynlRuYaHTuroi0ZIIMGqcqLutg31VyRpxBBvHUL9dICrK9zjiXvOiF0BOa1JTeX7to7+X4DSGXwdqSbt+sXZm/KeDO30tp28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=D20CPWSO; arc=none smtp.client-ip=185.136.64.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQoZzbT0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A5F6C2BBFC;
-	Fri,  7 Jun 2024 13:12:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717765945;
-	bh=NLJDJqeei4H3x1qQRMaUa1qgNu65ZOEg2TMUdlzO8+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kQoZzbT0Pz9KM8oFv+st+iDpHTfHJPIfc7aOYOq0PlWV0opXrNlUv2gCkKq+Y3qrA
-	 O4+nMTkfFNea6bQRRKGlI9777nQdXUekBp7MNsR49XJ7RIkdPPUJXqrUygm7gMINMm
-	 0yEguDK6KdbiclzTeSszYqi4eVcyP7lFc6hNVPkbj+Ov9QrohabLlXA/z5lW2n7XGD
-	 zAbv205mlz03weHF4xODVvkbKjpqD0AJmaz82lPOQ/Vi3IxgpWKpuht/UWit2RFntJ
-	 IqNzZb/lh5qPb1o/BDt2TTIyhI+Lar2X7ILORXDbjo7eh1F1VISCOottLrSf6fT43N
-	 d6wQZUky5byPA==
-Date: Fri, 7 Jun 2024 14:12:21 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Dev Jain <dev.jain@arm.com>
-Cc: shuah@kernel.org, oleg@redhat.com, stsp2@yandex.ru, mingo@kernel.org,
-	tglx@linutronix.de, mark.rutland@arm.com, ryan.roberts@arm.com,
-	suzuki.poulose@arm.com, Anshuman.Khandual@arm.com,
-	DeepakKumar.Mishra@arm.com, AneeshKumar.KizhakeVeetil@arm.com,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] selftests: Add a test mangling with uc_sigmask
-Message-ID: <ZmMHNZcYfNMW1Ft7@finisterre.sirena.org.uk>
-References: <20240607122319.768640-1-dev.jain@arm.com>
- <20240607122319.768640-3-dev.jain@arm.com>
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="D20CPWSO"
+Received: by mta-64-226.siemens.flowmailer.net with ESMTPSA id 20240607131412d742d5fa78e77c91a2
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 07 Jun 2024 15:14:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=diogo.ivo@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=xLX7+CQO0TEbMXn1aOXc/7bQGueWhuMmOf9S1qPGGjk=;
+ b=D20CPWSO8w869qairY0Y5ea1kXH2yfbUrNqtsM/k5ZxVDQfe5j1K0aJwTnkJgqeIk/YYDi
+ XCJy1xFil/yCNVXRyOth/cYdzF+cFX4pQcKfAmRJleatBxmAlz9QBWfp0kqzeGf6rm2bdnsr
+ K92FaLURrh1NDc0FkYTGUNraDewMc=;
+From: Diogo Ivo <diogo.ivo@siemens.com>
+Date: Fri, 07 Jun 2024 14:02:43 +0100
+Subject: [PATCH net-next v3 2/4] net: ti: icss-iep: Remove spinlock-based
+ synchronization
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cF6vW8T0ysx4GnzU"
-Content-Disposition: inline
-In-Reply-To: <20240607122319.768640-3-dev.jain@arm.com>
-X-Cookie: Your love life will be... interesting.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240607-iep-v3-2-4824224105bc@siemens.com>
+References: <20240607-iep-v3-0-4824224105bc@siemens.com>
+In-Reply-To: <20240607-iep-v3-0-4824224105bc@siemens.com>
+To: MD Danish Anwar <danishanwar@ti.com>, Roger Quadros <rogerq@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, Nishanth Menon <nm@ti.com>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>, 
+ Jacob Keller <jacob.e.keller@intel.com>, Simon Horman <horms@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Diogo Ivo <diogo.ivo@siemens.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717766048; l=2559;
+ i=diogo.ivo@siemens.com; s=20240529; h=from:subject:message-id;
+ bh=Lubo51aFliEiy57U/CSrVnSv9x7BSB7UF3Ec1ulGl4U=;
+ b=Ilvq9R68ZKnCvFAGqplauA7xOO0uEcY3dD+RILon+Vwb7nES3d+1FW+V5FuKziyYgRngL4gjp
+ OsIH2tJxAYeD2jvHJ8+PI4+L/As4lC4Ol/AjL/iQKEJ34cUROXSmD1R
+X-Developer-Key: i=diogo.ivo@siemens.com; a=ed25519;
+ pk=BRGXhMh1q5KDlZ9y2B8SodFFY8FGupal+NMtJPwRpUQ=
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1320519:519-21489:flowmailer
 
+As all sources of concurrency in hardware register access occur in
+non-interrupt context eliminate spinlock-based synchronization and
+rely on the mutex-based synchronization that is already present.
 
---cF6vW8T0ysx4GnzU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
+---
+ drivers/net/ethernet/ti/icssg/icss_iep.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-On Fri, Jun 07, 2024 at 05:53:19PM +0530, Dev Jain wrote:
-> This test asserts the relation between blocked signal, delivered signal,
-> and ucontext. The ucontext is mangled with, by adding a signal mask to
-> it; on return from the handler, the thread must block the corresponding
-> signal.
+diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.c b/drivers/net/ethernet/ti/icssg/icss_iep.c
+index 3025e9c18970..1d6ccdf2583f 100644
+--- a/drivers/net/ethernet/ti/icssg/icss_iep.c
++++ b/drivers/net/ethernet/ti/icssg/icss_iep.c
+@@ -110,7 +110,6 @@ struct icss_iep {
+ 	struct ptp_clock_info ptp_info;
+ 	struct ptp_clock *ptp_clock;
+ 	struct mutex ptp_clk_mutex;	/* PHC access serializer */
+-	spinlock_t irq_lock; /* CMP IRQ vs icss_iep_ptp_enable access */
+ 	u32 def_inc;
+ 	s16 slow_cmp_inc;
+ 	u32 slow_cmp_count;
+@@ -199,7 +198,6 @@ static void icss_iep_settime(struct icss_iep *iep, u64 ns)
+ 		return;
+ 	}
+ 
+-	spin_lock_irqsave(&iep->irq_lock, flags);
+ 	if (iep->pps_enabled || iep->perout_enabled)
+ 		writel(0, iep->base + iep->plat_data->reg_offs[ICSS_IEP_SYNC_CTRL_REG]);
+ 
+@@ -210,7 +208,6 @@ static void icss_iep_settime(struct icss_iep *iep, u64 ns)
+ 		writel(IEP_SYNC_CTRL_SYNC_N_EN(0) | IEP_SYNC_CTRL_SYNC_EN,
+ 		       iep->base + iep->plat_data->reg_offs[ICSS_IEP_SYNC_CTRL_REG]);
+ 	}
+-	spin_unlock_irqrestore(&iep->irq_lock, flags);
+ }
+ 
+ /**
+@@ -559,11 +556,9 @@ static int icss_iep_perout_enable(struct icss_iep *iep,
+ 	if (iep->perout_enabled == !!on)
+ 		goto exit;
+ 
+-	spin_lock_irqsave(&iep->irq_lock, flags);
+ 	ret = icss_iep_perout_enable_hw(iep, req, on);
+ 	if (!ret)
+ 		iep->perout_enabled = !!on;
+-	spin_unlock_irqrestore(&iep->irq_lock, flags);
+ 
+ exit:
+ 	mutex_unlock(&iep->ptp_clk_mutex);
+@@ -589,8 +584,6 @@ static int icss_iep_pps_enable(struct icss_iep *iep, int on)
+ 	if (iep->pps_enabled == !!on)
+ 		goto exit;
+ 
+-	spin_lock_irqsave(&iep->irq_lock, flags);
+-
+ 	rq.perout.index = 0;
+ 	if (on) {
+ 		ns = icss_iep_gettime(iep, NULL);
+@@ -607,8 +600,6 @@ static int icss_iep_pps_enable(struct icss_iep *iep, int on)
+ 	if (!ret)
+ 		iep->pps_enabled = !!on;
+ 
+-	spin_unlock_irqrestore(&iep->irq_lock, flags);
+-
+ exit:
+ 	mutex_unlock(&iep->ptp_clk_mutex);
+ 
+@@ -853,7 +844,6 @@ static int icss_iep_probe(struct platform_device *pdev)
+ 
+ 	iep->ptp_info = icss_iep_ptp_info;
+ 	mutex_init(&iep->ptp_clk_mutex);
+-	spin_lock_init(&iep->irq_lock);
+ 	dev_set_drvdata(dev, iep);
+ 	icss_iep_disable(iep);
+ 
 
-> @@ -1,2 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  sigaltstack
-> +mangle_uc_sigmask
+-- 
+2.45.2
 
-Please keep these build files sorted alphabetically, this reduces
-spurioius conflicts between serieses.
-
-> + * Author: Dev Jain <dev.jain@arm.com>
-> + *
-> + * Test describing a clear distinction between signal states - delivered and
-> + * blocked, and their relation with ucontext.
-
-This would be clearer if it said more positiviely what the relationship
-between these things is actually expected to be and how they're tested.
-Right now it's a bit hard to tell what the test is actually verifying.
-
-> +void handler_verify_ucontext(int signo, siginfo_t *info, void *uc)
-> +{
-> +	int ret;
-> +
-> +	/* Kernel dumps ucontext with USR2 blocked */
-> +	ret = sigismember(&(((ucontext_t *)uc)->uc_sigmask), SIGUSR2);
-> +	ksft_test_result(ret == 1, "USR2 in ucontext\n");
-
-"USR2 blocked in ucontext".
-
-> +
-> +	raise(SIGUSR2);
-> +}
-
-A comment explaining that we're verifying that the signal is blocked
-might be good (I think that's what this is doing?).  We're also not
-checking the return value of raise() anywhere in the program, this would
-be a useful diagnostic.
-
-> +	/* SEGV blocked during handler execution, delivered on return */
-> +	raise(SIGPIPE);
-> +	ksft_print_msg("SEGV bypassed successfully\n");
-
-SIGPIPE or SIGEGV?
-
-> +	/* SIGPIPE has been blocked in sa_mask, but ucontext is invariant */
-> +	ret = sigismember(&(((ucontext_t *)uc)->uc_sigmask), SIGPIPE);
-> +	ksft_test_result(ret == 0, "USR1 not in ucontext\n");
-
-The relationship between the comment and test are not clear here, nor is
-that between the sigismembber() call and the test name we print?
-
-> +	/* SIGUSR1 has been blocked, but ucontext is invariant */
-> +	ret = sigismember(&(((ucontext_t *)uc)->uc_sigmask), SIGUSR1);
-> +	ksft_test_result(ret == 0, "SEGV not in ucontext\n");
-
-Similarly here.
-
-> +	/* add SEGV to blocked mask */
-> +	if (sigemptyset(&act.sa_mask) || sigaddset(&act.sa_mask, SIGPIPE)
-> +	    || (sigismember(&act.sa_mask, SIGPIPE) != 1))
-> +		ksft_exit_fail_msg("Cannot add SEGV to blocked mask\n");
-
-SIGPIPE vs SIGSEGV.
-
---cF6vW8T0ysx4GnzU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZjBzIACgkQJNaLcl1U
-h9BGwAf+NAq/bq240V4/kOR1sft3cqiATc7NHxEpjjk0MCkAsSzcxKDaMbPujgVx
-i8iNT1QYF43Rip16x/x0NKxttjm1X/EWoytGmOjXHSN8J4xl68LZX97wCfqwlTUB
-gW+L4K8T8i68m/bAnr31VkTAP/tBoX60r2KsuV8YgPA1+yHsUkA75KS9GmDfT5Bi
-R/Rwe7gVzCezAQF7A1pX5O3RoFq4dBpDxiAc/rSuTR9pqlWdn4VY1VCdWGRZse5B
-YAXYthSgs7DnYHHLT8uyLq/qtYLrsWZJlWWtvTGgegM3aQoGklL/0XmiX2OfVNJG
-DxntSU9FL/FD5tKdhHGqL13yXE3GCQ==
-=ZvFX
------END PGP SIGNATURE-----
-
---cF6vW8T0ysx4GnzU--
