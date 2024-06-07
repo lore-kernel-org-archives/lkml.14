@@ -1,121 +1,182 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B019A1E495;
-	Fri,  7 Jun 2024 21:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F20155341
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 21:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717796292; cv=none; b=uJAEoqOYw9OlqvlfC7OuxeH1Bc3d6kydcB8Av2y6Ey99vBOL/lp/fwZG9jdrOhQF2Z7lZtyGZHaFpGwDPjili0XuWhVFt+WENTbpdDAlMhHY5xKpYDyKbkqgl+hPJExwQOYc6Kpq1MoSIhndZTMx4xuQo2DyK0ilOCtmoZ+aEoE=
+	t=1717796474; cv=none; b=d6TmfeH+Yjw9cYliEMT+W5I6nnK9B2xJaS56Gdpg8TYDSYDPs9plJuYTb+80WfBJvRyOc0i8jX2mhrW/+NoILLApLmLuQnMPVtpsqt9qfIw3sfDO4hmk9R9p+6XwMMX8vpzr+y5hdAhYfdCTbJtBO0yG1CXxwHs4wyWHRbArCOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717796292; c=relaxed/simple;
-	bh=72gb8BM70mgsIZDMWOganiYr+lGSQ/4n7CT4a84+G8Y=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=mfS9bH9lwNDBzX2V2tMAgZF6TBHX270Eq7a9+/Cx18E+pO9WOxvmtKvmXqt+jfyabTPgmpdsk1i9m0/0TPt+Raok+EFpxRkFE9Ajva4RDDXzT65+42FGE/4ZY74UOH1rYLfZsXsgq52uHqCsU4xftlVaYhWLrpPGDJ0RuBItLtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gutMZWsm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZC9PkiTY; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1717796474; c=relaxed/simple;
+	bh=9ZiKY8Epob/6giwpHNtQhhAEigUlPvpphA0MlyV4bx4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QenVTXZcS3E4WCKu0CEhEqZHbNX16sHPYHNcwOO6e/2LcYu1RJqdE2C9xJ6ssYMLcG7Ri0xT/XhQJqy2tsABMD1zhdqojDkGx2mLeVJyxAPjtMTI7Op0Z1/Ie/QbvOJJ1GF3Len+C83z4PY6zNDwGuWxtD1bdoatk7udrLSVPwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=er0iEPlp; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gutMZWsm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZC9PkiTY"
-Date: Fri, 07 Jun 2024 21:38:07 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717796288;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lo6OeiHnixowsI/O8/Q1rbGOSTTLlz3S6ItfVtnVRgI=;
-	b=gutMZWsmM+f8yUvjo13SkQccaus4/nGCt3REe0fE2vdydJIa+jDR4SQHT2iwlLM4uRhGKV
-	9o17TTZFl2RK+saemwKCbVkYFfYdQS0kIHcukI7xSA9QCiOQVGWoyBSo4O55KpnaHRB36v
-	cWPsX+iaYeME2xGNt95bcbquH36QuUN6eJP5PNEf9lgTvAJQKQzWvvsXGyNyeO5Py71+Ma
-	utAgquunezQR9h0GETAQuLGFvfHyArt73zRrmLkHlgfr3cW1CE463nlPgPk9czAxgAJ5BR
-	XoTGk0B7uJkInxYFX4mFMtGCqeO9xQi5k8ACBzGsCJECvaOP0fNEYVRp/PLL3w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717796288;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lo6OeiHnixowsI/O8/Q1rbGOSTTLlz3S6ItfVtnVRgI=;
-	b=ZC9PkiTYOsDaUWQSr1BTD2ZPstDSXY4IJyZf0uQEDAu0rdmhbxem8RmmyzHCFQ6As9r8Ro
-	3uBNw/PlqDBIUlAQ==
-From: "tip-bot2 for Christian Heusel" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/misc] tools/x86/kcpuid: Add missing dir via Makefile
-Cc: Christian Heusel <christian@heusel.eu>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240531111757.719528-2-christian@heusel.eu>
-References: <20240531111757.719528-2-christian@heusel.eu>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="er0iEPlp"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f4c7b022f8so23956585ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 14:41:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1717796472; x=1718401272; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6rtEKQFLHrlHDJmkNDb3CDrkqX4wEACzExxiz6etLTM=;
+        b=er0iEPlpZMNIBW8yqVIQvtdvxVeH9Ipzh8fKrdBbx0kxHxED+GTqHjqOemrJVujUgw
+         3IH/mwSqQxblNbLPGqANcSo4UFCPV0Tr12JvIuWW6Vw1rC/0Lqi7XF8zwdQ5peKbY75u
+         XyQ9biIegTACFMKoheCF1DnTgIREyfallX2Fw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717796472; x=1718401272;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6rtEKQFLHrlHDJmkNDb3CDrkqX4wEACzExxiz6etLTM=;
+        b=bJ0cmNg5EAb/pQYjVYkrmPoceWYmnbnJ7nu/NrRCNbFEKPIehWbAibByl5TeHVDDwy
+         3jhSKm7A8Pw/q/5JMvjsZaOCwoCdfKqwOFwYRMEBI1YHHkLckkcFfcSd69c252IwKNa3
+         kdtMunhH8gusRl6HWZdQWFEPGKZ7uPXxaTBfy/d3woem42AhjcnuocBU3YH6Bw8pPKp1
+         K9NG0G75T1vNYM/e7kADVG8D+J7yXUIheP3TzoVZn4ULqPi6AlphxCkVVQrEwGVDKTP6
+         OSlZ+PIjs7UZKX2Y5SorJR7VWRwwqWl7CpiPWO4mp8b6DQH3ske/znLrx3+8o52Ed099
+         pJvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNGdhOCWssSPyz/BuH/HPIfV+jjoh4Lu6/D/MzXwoqm1Ap0zZXJoU7gw8nlCxFPoFY6NxEeIYTw3L3HG4rAzC5y8qBPr2x4FbbGBde
+X-Gm-Message-State: AOJu0YwCDcbfNGb68BhWrzOg64uGBwcDfkClGY574JR3pbefiwWx3SCE
+	K+ocqjui4bdfJif66hqOa+gsTs2KqiDWfjARqKXm0WF6ZM1+V0aJP9OvDTAe5Q==
+X-Google-Smtp-Source: AGHT+IEhB0e/xeVbB/SJ0/O4X/sDV0ptLoLnyUoA1V/jZ3LOegzIrzlkFMAUJeY8ot2co/j616uTcw==
+X-Received: by 2002:a17:902:ea12:b0:1f6:70d6:d49a with SMTP id d9443c01a7336-1f6d02c0563mr46888165ad.11.1717796471979;
+        Fri, 07 Jun 2024 14:41:11 -0700 (PDT)
+Received: from ubuntu-vm.dhcp.broadcom.net ([192.19.161.250])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd7e189fsm38946805ad.215.2024.06.07.14.41.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 14:41:11 -0700 (PDT)
+From: Kuntal Nayak <kuntal.nayak@broadcom.com>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: pablo@netfilter.org,
+	kadlec@netfilter.org,
+	fw@strlen.de,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ajay.kaher@broadcom.com,
+	alexey.makhalov@broadcom.com,
+	vasavi.sirnapalli@broadcom.com,
+	Kuntal Nayak <kuntal.nayak@broadcom.com>
+Subject: [PATCH 1/2 v5.10] netfilter: nf_tables: restrict tunnel object to NFPROTO_NETDEV
+Date: Fri,  7 Jun 2024 14:37:34 -0700
+Message-Id: <20240607213735.46127-1-kuntal.nayak@broadcom.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171779628813.10875.3798969892614697703.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/misc branch of tip:
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-Commit-ID:     f6d116e080604251880b4957843f9b1f6fdfa30f
-Gitweb:        https://git.kernel.org/tip/f6d116e080604251880b4957843f9b1f6fdfa30f
-Author:        Christian Heusel <christian@heusel.eu>
-AuthorDate:    Fri, 31 May 2024 13:17:58 +02:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Fri, 07 Jun 2024 23:30:52 +02:00
+[ upstream commit 776d451648443f9884be4a1b4e38e8faf1c621f9 ]
 
-tools/x86/kcpuid: Add missing dir via Makefile
+Bail out on using the tunnel dst template from other than netdev family.
+Add the infrastructure to check for the family in objects.
 
-So far the Makefile just installed the csv into $(HWDATADIR)/cpuid.csv, which
-made it unaware about $DESTDIR. Add $DESTDIR to the install command and while
-at it also create the directory, should it not exist already. This eases the
-packaging of kcpuid and allows i.e. for the install on Arch to look like this:
-
-  $ make BINDIR=/usr/bin DESTDIR="$pkgdir" -C tools/arch/x86/kcpuid install
-
-Some background on DESTDIR:
-
-DESTDIR is commonly used in packaging for staged installs (regardless of the
-used package manager):
-
-  https://www.gnu.org/prep/standards/html_node/DESTDIR.html
-
-So the package is built and installed into a directory which the package
-manager later picks up and creates some archive from it.
-
-What is specific to Arch Linux here is only the usage of $pkgdir in the
-example, DESTDIR itself is widely used.
-
-  [ bp: Extend the commit message with Christian's info on DESTDIR as a GNU
-    coding standards thing. ]
-
-Signed-off-by: Christian Heusel <christian@heusel.eu>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20240531111757.719528-2-christian@heusel.eu
+Fixes: af308b94a2a4 ("netfilter: nf_tables: add tunnel support")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+[KN: Backport patch according to v5.10.x source]
+Signed-off-by: Kuntal Nayak <kuntal.nayak@broadcom.com>
 ---
- tools/arch/x86/kcpuid/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/net/netfilter/nf_tables.h |  2 ++
+ net/netfilter/nf_tables_api.c     | 14 +++++++++-----
+ net/netfilter/nft_tunnel.c        |  1 +
+ 3 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/tools/arch/x86/kcpuid/Makefile b/tools/arch/x86/kcpuid/Makefile
-index 87b554f..d0b4b0e 100644
---- a/tools/arch/x86/kcpuid/Makefile
-+++ b/tools/arch/x86/kcpuid/Makefile
-@@ -19,6 +19,6 @@ clean :
- 	@rm -f kcpuid
+diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
+index 2da11d8c0..ab8d84775 100644
+--- a/include/net/netfilter/nf_tables.h
++++ b/include/net/netfilter/nf_tables.h
+@@ -1174,6 +1174,7 @@ void nft_obj_notify(struct net *net, const struct nft_table *table,
+  *	@type: stateful object numeric type
+  *	@owner: module owner
+  *	@maxattr: maximum netlink attribute
++ *	@family: address family for AF-specific object types
+  *	@policy: netlink attribute policy
+  */
+ struct nft_object_type {
+@@ -1183,6 +1184,7 @@ struct nft_object_type {
+ 	struct list_head		list;
+ 	u32				type;
+ 	unsigned int                    maxattr;
++	u8				family;
+ 	struct module			*owner;
+ 	const struct nla_policy		*policy;
+ };
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 858d09b54..de56f25dc 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -6234,11 +6234,15 @@ static int nft_object_dump(struct sk_buff *skb, unsigned int attr,
+ 	return -1;
+ }
  
- install : kcpuid
--	install -d  $(DESTDIR)$(BINDIR)
-+	install -d  $(DESTDIR)$(BINDIR) $(DESTDIR)$(HWDATADIR)
- 	install -m 755 -p kcpuid $(DESTDIR)$(BINDIR)/kcpuid
--	install -m 444 -p cpuid.csv $(HWDATADIR)/cpuid.csv
-+	install -m 444 -p cpuid.csv $(DESTDIR)$(HWDATADIR)/cpuid.csv
+-static const struct nft_object_type *__nft_obj_type_get(u32 objtype)
++static const struct nft_object_type *__nft_obj_type_get(u32 objtype, u8 family)
+ {
+ 	const struct nft_object_type *type;
+ 
+ 	list_for_each_entry(type, &nf_tables_objects, list) {
++		if (type->family != NFPROTO_UNSPEC &&
++		    type->family != family)
++			continue;
++
+ 		if (objtype == type->type)
+ 			return type;
+ 	}
+@@ -6246,11 +6250,11 @@ static const struct nft_object_type *__nft_obj_type_get(u32 objtype)
+ }
+ 
+ static const struct nft_object_type *
+-nft_obj_type_get(struct net *net, u32 objtype)
++nft_obj_type_get(struct net *net, u32 objtype, u8 family)
+ {
+ 	const struct nft_object_type *type;
+ 
+-	type = __nft_obj_type_get(objtype);
++	type = __nft_obj_type_get(objtype, family);
+ 	if (type != NULL && try_module_get(type->owner))
+ 		return type;
+ 
+@@ -6343,7 +6347,7 @@ static int nf_tables_newobj(struct net *net, struct sock *nlsk,
+ 		if (nlh->nlmsg_flags & NLM_F_REPLACE)
+ 			return -EOPNOTSUPP;
+ 
+-		type = __nft_obj_type_get(objtype);
++		type = __nft_obj_type_get(objtype, family);
+ 		nft_ctx_init(&ctx, net, skb, nlh, family, table, NULL, nla);
+ 
+ 		return nf_tables_updobj(&ctx, type, nla[NFTA_OBJ_DATA], obj);
+@@ -6354,7 +6358,7 @@ static int nf_tables_newobj(struct net *net, struct sock *nlsk,
+ 	if (!nft_use_inc(&table->use))
+ 		return -EMFILE;
+ 
+-	type = nft_obj_type_get(net, objtype);
++	type = nft_obj_type_get(net, objtype, family);
+ 	if (IS_ERR(type)) {
+ 		err = PTR_ERR(type);
+ 		goto err_type;
+diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
+index 2ee50996d..c8822fa81 100644
+--- a/net/netfilter/nft_tunnel.c
++++ b/net/netfilter/nft_tunnel.c
+@@ -684,6 +684,7 @@ static const struct nft_object_ops nft_tunnel_obj_ops = {
+ 
+ static struct nft_object_type nft_tunnel_obj_type __read_mostly = {
+ 	.type		= NFT_OBJECT_TUNNEL,
++	.family		= NFPROTO_NETDEV,
+ 	.ops		= &nft_tunnel_obj_ops,
+ 	.maxattr	= NFTA_TUNNEL_KEY_MAX,
+ 	.policy		= nft_tunnel_key_policy,
+-- 
+2.39.3
+
