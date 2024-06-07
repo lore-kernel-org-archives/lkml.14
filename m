@@ -1,162 +1,140 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED2E18059;
-	Fri,  7 Jun 2024 16:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF486195804
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 16:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717779109; cv=none; b=Jo4HEzeOKyz+BCuM32R2lljja8X6oEiD2wPqAfCYGFgMpr0iwA9tJEGAFi00kz7CCYs1KHCWSg+5uimeWwFH8uMyDjUVc6Y9kw19KO58BiLf++S4h/3RhfAgDrQ9taN2MLSgGtu/uiFMPyp+4F5QQeUjIR8Z4jDPLOQITA2/ahg=
+	t=1717779155; cv=none; b=EJpYjOEKHq7RVFizc2BXeb5KCGxQeeZ4lwof0zkyIENNelrq8n36wgGQXLX5FDsnOoDIo6/zXVJp2ktFYuHPOzi6IcxVsvNB+gP/sAO5F6WUARDiUNwaDkyWuwp/IG04LNBwF7vCzmos5+UAT3mzH0qi1TTWGz7gJb4sVc1CsgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717779109; c=relaxed/simple;
-	bh=1bJjhIo+skwf0sz4/9yRR4Oy///FQ4QnkOz9x3xs0W8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HDDH3Q9aznlwl8nvYoMfnM8rAqNchpv/6wGptXXlzWIuHpFEA+t0SHoom1784V70oxB0p6DXJ3oKagrOLJUb0UMu5butGyNvgHL1JwZ/wDjENkEZwYQkq6FsqGH24jFZrRpqks1t2ZkHNAboPjAIjbDjiJhQ3jh3xNQ7Ns6bUwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iYIY/KbL; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717779155; c=relaxed/simple;
+	bh=jzan/YNt+iph6kDhBYAQyNeRgRoEW/pl77UxjZOc1qU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K5Ex+Be5Iht9bW1q4FYHd9AwsG4x5gMZZytT9umHCo0oLNyosfK7lwdZQynVe+jnx+PWYubdAQa3XbtnambhNWEpZZIfpyO6TA9txpZEuqlf74d97aKhsRRPygs+mtGSv5cNf5qAl4+rZlUDDpv4ve2Fmx9Hp2Bfvc47mhs529Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=pOSNc8zL; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYIY/KbL"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4217926991fso2202045e9.3;
-        Fri, 07 Jun 2024 09:51:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="pOSNc8zL"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-35f090093d8so527062f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 09:52:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717779106; x=1718383906; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tMxkWvAB89M9V9iTWfyILXsU7ZFICeIaKzWoaQWGLXg=;
-        b=iYIY/KbLE0cGYut2x9p1MDydEElrra8mGEnNBLXQsOuCX4SscFrVTzAPLsxxwxBQw9
-         IMfDqVb9kXYaCn7CCMi/VNkaA4DJrCLetwCzugrNfudVolr/YQvY8gNWFieYb5YEBt4G
-         gINHGn2uCCK2idUr/m2Oj2Qt0BgsrvQxjeIAkSj2CX/gIMJ5geeXoQbut6R2FMC5XDtD
-         nCop0If3qMkpkDjyPi4tIVjqh6wPtwgCQvviQpZNgXKmt5EyIHNgAK1wHhywoLlH86l5
-         zl5L8yMj2HoIGQnkknhkuBLoe4QPNbotxMphC6nmx1z8gc7VIFxz7OGEQRT4maRJNFHa
-         Aoog==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717779150; x=1718383950; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bc5Fab9HJb5cr3eXsyaeU1ehshedHKC3eXMoebONp4U=;
+        b=pOSNc8zL4dULZI3NzlyxU8PHudgnLUEJsPhMq60YVn8ChCwap/t38pBJ4lWyNfx7ar
+         5roLH/4sYWDrJYbgMU/Ebu69wMlWcPkVw6Zn3oZQgj6MDVV3ByNMQm7GgWnHdl8/NkSI
+         yhXubzrABnSWmVlSR9ijdgkwElA2as+ObDQu2ivaPQXJtX4GzhLIhvuP/5cM6lyC0tbT
+         y5HGJKSQhQFC8/5X1rgAweISDM3UmD/dTUeJZckJLjm+7kqVDymwnw7OA+yFKdHAKgwS
+         /PjXtFy88ZtZnapVJbj+h9/whJpA7gokiSCuYM80372vqIZXPTB8OwP+ykXyxO9Tq5uP
+         18AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717779106; x=1718383906;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tMxkWvAB89M9V9iTWfyILXsU7ZFICeIaKzWoaQWGLXg=;
-        b=r+p8zjajLpjf02uD0IDS0IZp0halm/AjFZ3NnjKmLXnLeMOrqbY8Es0HEEOY7tfCVk
-         3Ff9GVfpbVQqrT5t36ydBtE1xWcXe5OQp95EkhTIv3B3lDnPWaZTqRk6smJTCJL/VvOI
-         I5PEfCwNmgO4L8j9VQVyXfJvEbMK4+h93yROdFFtdZbGKcQIABXlaSrZkxTK7185G1Ty
-         mjtADS2q8ZEMlAKiihGn6YGVGdxZSyyw88ngobh4x2pssdJn1zwf8Qh8x29DPAu6cl2Z
-         o6pvQljS4Ukku7YN5PUTQyIJAqrexbXYtDyls4QMr3DD6GOVsulAiwy5gGHIAJ6eLtA/
-         s8xA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPhk6/aK/wFPr/AXGQQkMLRVSma8he3pezNSf3SXdix8tLuHI6d4c+AEveVFg2PD9t5us0B6SZbqfTGpt8dgbsJUjXlwIbDEgxmZG5TyfvWwkvODvEBqH/lKznBQSWPUvuFRPXKrRNKTVY7Ftu3e6U0vr4dk1O3+CKHU1na5tU/wvgJgycoq4iMJzt9vmbmJhdfPyvHrufHEnbc1Zf4zxjs/9srtcY/EyrwY4XVMiySHP5DoSQHOprWC0=
-X-Gm-Message-State: AOJu0YwjsVBoDzyXGBERxwb/7oKsJ6ZsCpqBfJIWG0D82PNlJNNlPL6W
-	e/3d7hMEb7dOqJ1xG5qhb4L432DZJcVSlPUkqlP/7Q3mJWRyhDCMhs0qUydv3iVKhXVA2TMWKwj
-	MQ0znys8VqAXtoA+ks2QmG68RxG0=
-X-Google-Smtp-Source: AGHT+IHHae77jPsMRuAMp85p7UQJ8UtEsFv+8X6HMvb/PiDrhcFw4+Xw/LR9J2hf5nG4gO8ySMa1c1vDnWV9tCzVeHA=
-X-Received: by 2002:a5d:6483:0:b0:354:df59:c9a4 with SMTP id
- ffacd0b85a97d-35efed08bd4mr2933676f8f.9.1717779105887; Fri, 07 Jun 2024
- 09:51:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717779150; x=1718383950;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bc5Fab9HJb5cr3eXsyaeU1ehshedHKC3eXMoebONp4U=;
+        b=FgM91a5ka9SjuR2b9ybgU9EPYSredO9WxVtKO1VjdDlb0gmlGb/Ra4tgljsYMhD45/
+         4e1vBxVnsDORwinRFbqEqlb0iqbjp505GvXEZBmMEXt1w1xQfFUlwP2gHReyqaNkpzMj
+         2eum8hrrC5SEqu2Mm6Ku28/NMD1KlZdv34P7wO6ZJmfie6L6JjmgvJAfVI59WGdWjO6S
+         l+rZQjEmuLWOYXE8/w+VuE0J+zAlbPpCNEe+dcF1PE4OL+3LDtgNvYUrfLaYWr8TRrFe
+         154f4ynRzfATh/g1LUYYx3LQSV33svWtsfw9ttOrWN5tp3AXlfyEES/P4fASbbmX8jLV
+         zzkA==
+X-Forwarded-Encrypted: i=1; AJvYcCVW+yGbci0pnQZ1z0tLn8jiH8yZ4Evd56ZtMmrhrCXSIoIjvEHAxE7QPwq2bV9NqZjQMDHwr3m4k7ssZGJBJ3ImfgnCkjuwutLsF9vB
+X-Gm-Message-State: AOJu0Yy7IZwzY2CxLCdzoHRrE9YFEbAtX1F0oI2G6HmeFg3Ydt+Fn5kS
+	vKGliz8CGkUv2lEpiijC4x2CDVq3FKOLqSzgngqt3zUZoNYzge3y57uvoaFm3nk=
+X-Google-Smtp-Source: AGHT+IFx+YYu803ec7W+G74FTtSx4WrjApVrFi0xZp6/mRweE6i0Z2RLQm7zQoHi354T3EksuDSixg==
+X-Received: by 2002:a5d:6892:0:b0:35f:f1d:f4e9 with SMTP id ffacd0b85a97d-35f0f1df7famr378461f8f.28.1717779150418;
+        Fri, 07 Jun 2024 09:52:30 -0700 (PDT)
+Received: from localhost (p200300f65f283b0017c92b05fa289d44.dip0.t-ipconnect.de. [2003:f6:5f28:3b00:17c9:2b05:fa28:9d44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c364bcdsm57203535e9.19.2024.06.07.09.52.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 09:52:30 -0700 (PDT)
+From: "Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=" <ukleinek@baylibre.com>
+X-Google-Original-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Date: Fri, 7 Jun 2024 18:43:23 +0200
+To: Benson Leung <bleung@chromium.org>
+Cc: Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] pwm: cros-ec: Don't care about consumers in
+ .get_state()
+Message-ID: <loyvxce22gz6gwcp7vgjbttbtasmoyjwf6bdash4kqzhsf4na7@zf627ythm2ge>
+References: <20240607084416.897777-5-u.kleine-koenig@baylibre.com>
+ <20240607084416.897777-6-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240607-hid_bpf_struct_ops-v2-0-3f95f4d02292@kernel.org> <20240607-hid_bpf_struct_ops-v2-3-3f95f4d02292@kernel.org>
-In-Reply-To: <20240607-hid_bpf_struct_ops-v2-3-3f95f4d02292@kernel.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 7 Jun 2024 09:51:34 -0700
-Message-ID: <CAADnVQJo71xGQKLTW6Z1xsTLjtikN8bfemPUF4zj2c2Uvi5JMw@mail.gmail.com>
-Subject: Re: [PATCH HID v2 03/16] HID: bpf: implement HID-BPF through bpf_struct_ops
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>, Jiri Kosina <jikos@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Alexei Starovoitov <ast@kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	bpf <bpf@vger.kernel.org>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mhwn6reey4op4eyi"
+Content-Disposition: inline
+In-Reply-To: <20240607084416.897777-6-u.kleine-koenig@baylibre.com>
+
+
+--mhwn6reey4op4eyi
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 7, 2024 at 8:28=E2=80=AFAM Benjamin Tissoires <bentiss@kernel.o=
-rg> wrote:
-> +struct hid_bpf_ops {
-> +       /* hid_id needs to stay first so we can easily change it
-> +        * from userspace.
-> +        */
-> +       int                     hid_id;
-> +       u32                     flags;
-> +
-> +       /* private: internal use only */
-> +       struct list_head        list;
-> +
-> +       /* public: rest is public */
+On Fri, Jun 07, 2024 at 10:44:15AM +0200, Uwe Kleine-K=F6nig wrote:
+> The get_state() callback is never called (in a visible way) after there
+> is a consumer for a pwm device. The core handles loosing the information
+> about duty_cycle just fine.
+>=20
+> Simplify the driver accordingly.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+> ---
+>  drivers/pwm/pwm-cros-ec.c | 33 +--------------------------------
+>  1 file changed, 1 insertion(+), 32 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+> index 606ccfdaf4cc..ba4ee0b507b7 100644
+> --- a/drivers/pwm/pwm-cros-ec.c
+> +++ b/drivers/pwm/pwm-cros-ec.c
+> @@ -25,15 +25,6 @@
+>  struct cros_ec_pwm_device {
+>  	struct cros_ec_device *ec;
+>  	bool use_pwm_type;
+> -	struct cros_ec_pwm *channel;
+> -};
 
-Didn't notice it before, but the above comments are misleading.
-The whole struct is private to the kernel and bpf prog, while
-registering, can only touch a handful.
-I'd drop "internal use" and "is public". It's not an uapi.
+I forgot to drop the kernel doc comment. Unless I get some feedback that
+makes me send a v2, I'll squash the following into this patch when
+applying:
 
-> +
-> +/* fast path fields are put first to fill one cache line */
+diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+index fcc33a2cb878..189301dc395e 100644
+--- a/drivers/pwm/pwm-cros-ec.c
++++ b/drivers/pwm/pwm-cros-ec.c
+@@ -20,7 +20,6 @@
+  *
+  * @ec: Pointer to EC device
+  * @use_pwm_type: Use PWM types instead of generic channels
+- * @channel: array with per-channel data
+  */
+ struct cros_ec_pwm_device {
+ 	struct cros_ec_device *ec;
 
-Also misleading. The whole struct fits one cache line.
+Best regards
+Uwe
 
-> +
-> +       /**
-> +        * @hid_device_event: called whenever an event is coming in from =
-the device
-> +        *
-> +        * It has the following arguments:
-> +        *
-> +        * ``ctx``: The HID-BPF context as &struct hid_bpf_ctx
-> +        *
-> +        * Return: %0 on success and keep processing; a positive
-> +        * value to change the incoming size buffer; a negative
-> +        * error code to interrupt the processing of this event
-> +        *
-> +        * Context: Interrupt context.
-> +        */
-> +       int (*hid_device_event)(struct hid_bpf_ctx *ctx, enum hid_report_=
-type report_type);
-> +
-> +/* control/slow paths put last */
-> +
-> +       /**
-> +        * @hid_rdesc_fixup: called when the probe function parses the re=
-port descriptor
-> +        * of the HID device
-> +        *
-> +        * It has the following arguments:
-> +        *
-> +        * ``ctx``: The HID-BPF context as &struct hid_bpf_ctx
-> +        *
-> +        * Return: %0 on success and keep processing; a positive
-> +        * value to change the incoming size buffer; a negative
-> +        * error code to interrupt the processing of this device
-> +        */
-> +       int (*hid_rdesc_fixup)(struct hid_bpf_ctx *ctx);
-> +
-> +       /* private: internal use only */
-> +       struct hid_device *hdev;
-> +} ____cacheline_aligned_in_smp;
+--mhwn6reey4op4eyi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Such alignment is an overkill.
-I don't think you can measure the difference.
+-----BEGIN PGP SIGNATURE-----
 
-> +
->  struct hid_bpf_prog_list {
->         u16 prog_idx[HID_BPF_MAX_PROGS_PER_DEV];
->         u8 prog_cnt;
-> @@ -129,6 +188,10 @@ struct hid_bpf {
->         bool destroyed;                 /* prevents the assignment of any=
- progs */
->
->         spinlock_t progs_lock;          /* protects RCU update of progs *=
-/
-> +
-> +       struct hid_bpf_ops *rdesc_ops;
-> +       struct list_head prog_list;
-> +       struct mutex prog_list_lock;    /* protects RCU update of prog_li=
-st */
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmZjOKYACgkQj4D7WH0S
+/k4gHwf+IZdctA9vZgZrUZACvGGOpgs2zu3k4EIKxgfFK1nwlxmXo2yYY+JpGCP8
+UMzDV4Xen8UDwVhfjQtvMkZ0ZepmO60NNQqHSkbaws5CbtyeF6vvlktE0+w22Y+Y
+71+B8ShFk6pOS4YVEFNPh+kB+LjhRZ0MwdmxJUWBguxqHGIEruOrHVds0jiPlcnW
+2JSnIkNiQF5Tpt1lDtY634BVhb8Io/E6ZTYR7MPtD/BqAXwNg+jheyNGFSYUAeu/
+jsorkAXn+rwz03Fkrk5x05dNUXY3ikxUywJrZbTliqjKIP+BjQ4F2a623fygl0tt
+MzmI9xu7YcT3VDE3vitmLOR7c5c5Aw==
+=bXer
+-----END PGP SIGNATURE-----
 
-mutex protects rcu update... sounds very odd.
-Just say that mutex protects prog_list update, because "RCU update"
-has a different meaning. RCU logic itself is what protects Update part of r=
-cU.
-
-The rest looks good.
+--mhwn6reey4op4eyi--
