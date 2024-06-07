@@ -1,179 +1,103 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3141CA85;
-	Fri,  7 Jun 2024 13:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46FC192B89;
+	Fri,  7 Jun 2024 13:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717768049; cv=none; b=Lyyf2FrH5wYtll19EJvEdbw4J2JQKSdd/uWbRugYDOTg65vQi3VXQprwjd9/XJWjg6WehSjSqKHPHv0pdCT6V0xFh9C193pJOhq6ZR5rnuFehc7N17oUBydBscQYj4HE3H385UX1rqv/kjNjLu3ChyqmkRVCWEQ7kgiw9T7HvLE=
+	t=1717768101; cv=none; b=EMDAJyvsJ0YLAgITzwwvmuYXMTxHLaD9Uhx/8fUUyLXM9ILM57eHDBDE8113KmIbQXQEw+grePs+WFR2GbCZ6OInCEXmQ0Et44br20uuBl0U01fOUSqG2gvdVoTGSU/xiIEfvxV/UQg/1b9sdu66z7rCe7z92wAnbNFWM8gEWTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717768049; c=relaxed/simple;
-	bh=q8GCB4TXSIqeMhG+CRclgf0UKbJmwPTvZO4PRwJnmYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cJZjcaoWL/PPlshKkkGWZJUcrLNq7ssS5vmiSm9EV/fSre+UTQ9Pp4dcZmOufBaPcb+BPpklazFBuffZYl2/EAya4OlJ8+QQ7gbmxuCZbuj089UY3gMQ37+81BbnYK9P0cFC+kpz0BGUlwq07++6WcPFMQottOdl70Tsh+GL6UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EEkpLLv1; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEkpLLv1"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57a4ea8058bso2426690a12.1;
-        Fri, 07 Jun 2024 06:47:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717768046; x=1718372846; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KmgBm9ThJPNKXmPz1Y3oHMiCl5cXiVptHJkrXtuToGI=;
-        b=EEkpLLv1udx+zJ9bZza0CR0hnepGgAkIpF/XJIho6HDmdGpHLSkFi0BsZpEHktbTiQ
-         MMMoYXqQwbtlzC2skmo4mLZa9tjNjsd+3htWzPCwo3G1KzBGxfERcuFqMQNUIa5oDhnp
-         KoNCJwEua/uYJ1dRRaXHgYQ47eb61we9UkdNyartQ7aGmKwOvgNTje+7hY4KnrTSR+Bw
-         dlNh8n3W63TT9GM5IesjIFeT4ilcqUX694dY3aG4dr7y878+HUySBZSd75fEu0Sz3kCO
-         IOdn+/xZiOZypexu36dMA8RX8bNpNOOCq2zvq0+emG/trTERm6VN98XfBLCdanJdQECa
-         CIOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717768046; x=1718372846;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KmgBm9ThJPNKXmPz1Y3oHMiCl5cXiVptHJkrXtuToGI=;
-        b=OYfkom3AkqDGv51Stei3ikAEatID48RNuFbdqptJq4EJVWfoRod32XlvBTfJqnbbdZ
-         ioTBkrSuSjV2PLRotcu6pusXV7reno7bF/f7KSriGUntvYcvBPDJvtnjgwK3PPuNsKbK
-         Y8hq5QHkpjFxQgl6o/iKULJyOerJacOamHeagLLsqiqoEJV55cJiB5/OsNaQmixFpejX
-         zBlaRqOTZJD/3MGJ+wfFMugyVnYvZJIszTETC/I41dB23HZhdj8bHEbFllrTvJDMzZjG
-         o2OB2NbSJV9HpIrISP+GaFpTG+tAuGYRoJUuwGXs5Ozxfyga2ckEX1WCao9kONIlwjg4
-         Fkzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVn1vnLzmbYewbxqNIqKeKdZ7BUsm0lQPc34keJneM75JmKAYwGoAMx/qVoBAzGf/7UZo9I7Py+842Y5eb8Zl1FV9yujSAHPFn2VXVqrwmWI5Z5wJBMtVDmq0B1sflcwL5T7Bq5
-X-Gm-Message-State: AOJu0Yy0UFdftT2xq87jzc00yczZG4KxioNtIHY7gW+AStPwRXpoV7Y3
-	4szlFFxMX7zaIqRPQFQX4DMbLGCK91zxgeWeIf8Ad+aTV8lkBISq
-X-Google-Smtp-Source: AGHT+IGxJly2Ygnl7BBvSpHo2MzTbd4GTMItTxW3Hu6qDDGLINsRJ6cxScLTVygUaG+CuvUghmikPg==
-X-Received: by 2002:a50:d799:0:b0:57a:2fc1:e838 with SMTP id 4fb4d7f45d1cf-57c50928dd9mr1603090a12.22.1717768045293;
-        Fri, 07 Jun 2024 06:47:25 -0700 (PDT)
-Received: from skbuf ([188.25.55.166])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae1412a0sm2779581a12.56.2024.06.07.06.47.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 06:47:24 -0700 (PDT)
-Date: Fri, 7 Jun 2024 16:47:21 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Xiaolei Wang <xiaolei.wang@windriver.com>
-Cc: linux@armlinux.org.uk, andrew@lunn.ch, alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [net PATCH] net: stmmac: replace priv->speed with the
- portTransmitRate from the tc-cbs parameters
-Message-ID: <20240607134721.qxwyp63p5dlxw7ui@skbuf>
-References: <20240607103327.438455-1-xiaolei.wang@windriver.com>
+	s=arc-20240116; t=1717768101; c=relaxed/simple;
+	bh=JdONP7PI4z5eHlGJTSokvp6V8e5bDvrLIcTnte+cj2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rWcMhFqkAXnlM8qVP59CC/VpQvI7f68Rv1J9uZgY2DHQ9qhu9sAjqKx1Ep71yqbE/uyiXT1aaIEYg2NdHsFw+RC7a4FcI2r9EALBs6XZvHq+qg82pPL3m1IlHFjj5nAHIPu0bXT8iPvUo5GMGw2EKHEIg5gEi8lUOjP9BHbMn5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94387C2BBFC;
+	Fri,  7 Jun 2024 13:48:19 +0000 (UTC)
+Date: Fri, 7 Jun 2024 09:48:33 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] function_graph: Make fgraph_update_pid_func() a stub for
+ !DYNAMIC_FTRACE
+Message-ID: <20240607094833.6a787d73@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607103327.438455-1-xiaolei.wang@windriver.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 07, 2024 at 06:33:27PM +0800, Xiaolei Wang wrote:
-> Since the given offload->sendslope only applies to the
-> current link speed, and userspace may reprogram it when
-> the link speed changes, don't even bother tracking the
-> port's link speed, and deduce the port transmit rate
-> from idleslope - sentslope instead.
-> 
-> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Patches to the "net" tree usually need a Fixes: tag pointing to the
-first commit introducing an issue. They also need an explanation of the
-problem being addressed and how it can negatively affect an user.
+When CONFIG_DYNAMIC_FTRACE is not set, the function
+fgraph_update_pid_func() doesn't do anything. Currently, most of its logic
+is within a "#ifdef CONFIG_DYNAMIC_FTRACE" block, but its variables were
+declared outside that, and when DYNAMIC_FTRACE is not set, it produces
+unused variable warnings.
 
-Still on the process topic, please increment the patch version from the
-previous submissions, and post a change log under the "---" sign below,
-as well as links on patchwork or lore to previous versions.
+Instead, just place it (and the helper function fgraph_pid_func()) within
+the #ifdef block and have the header file use a empty stub function for
+when DYNAMIC_FTRACE is not defined.
 
-> ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-> index 222540b55480..48500864017b 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-> @@ -348,6 +348,7 @@ static int tc_setup_cbs(struct stmmac_priv *priv,
->  	u32 mode_to_use;
->  	u64 value;
->  	int ret;
-> +	s64 port_transmit_rate_kbps;
->  
->  	/* Queue 0 is not AVB capable */
->  	if (queue <= 0 || queue >= tx_queues_count)
-> @@ -355,27 +356,24 @@ static int tc_setup_cbs(struct stmmac_priv *priv,
->  	if (!priv->dma_cap.av)
->  		return -EOPNOTSUPP;
->  
-> +	port_transmit_rate_kbps = qopt->idleslope - qopt->sendslope;
-> +
->  	/* Port Transmit Rate and Speed Divider */
-> -	switch (priv->speed) {
-> +	switch (div_s64(port_transmit_rate_kbps, 1000)) {
->  	case SPEED_10000:
->  		ptr = 32;
-> -		speed_div = 10000000;
->  		break;
->  	case SPEED_5000:
->  		ptr = 32;
-> -		speed_div = 5000000;
->  		break;
->  	case SPEED_2500:
->  		ptr = 8;
-> -		speed_div = 2500000;
->  		break;
->  	case SPEED_1000:
->  		ptr = 8;
-> -		speed_div = 1000000;
->  		break;
->  	case SPEED_100:
->  		ptr = 4;
-> -		speed_div = 100000;
->  		break;
->  	default:
->  		return -EOPNOTSUPP;
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202406071806.BRjaC5FF-lkp@intel.com/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/fgraph.c          | 4 ++--
+ kernel/trace/ftrace_internal.h | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-This can be further compressed after the elimination of speed_div:
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index c0e428c87ea5..0859ab112db7 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -1151,6 +1151,7 @@ void ftrace_graph_exit_task(struct task_struct *t)
+ 	kfree(ret_stack);
+ }
+ 
++#ifdef CONFIG_DYNAMIC_FTRACE
+ static int fgraph_pid_func(struct ftrace_graph_ent *trace,
+ 			   struct fgraph_ops *gops)
+ {
+@@ -1177,7 +1178,6 @@ void fgraph_update_pid_func(void)
+ 	if (!(graph_ops.flags & FTRACE_OPS_FL_INITIALIZED))
+ 		return;
+ 
+-#ifdef CONFIG_DYNAMIC_FTRACE
+ 	list_for_each_entry(op, &graph_ops.subop_list, list) {
+ 		if (op->flags & FTRACE_OPS_FL_PID) {
+ 			gops = container_of(op, struct fgraph_ops, ops);
+@@ -1187,8 +1187,8 @@ void fgraph_update_pid_func(void)
+ 				static_call_update(fgraph_func, gops->entryfunc);
+ 		}
+ 	}
+-#endif
+ }
++#endif
+ 
+ /* Allocate a return stack for each task */
+ static int start_graph_tracing(void)
+diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
+index 4bb1e881154a..3235470e61b3 100644
+--- a/kernel/trace/ftrace_internal.h
++++ b/kernel/trace/ftrace_internal.h
+@@ -52,7 +52,11 @@ static inline int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_o
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ extern int ftrace_graph_active;
++# ifdef CONFIG_DYNAMIC_FTRACE
+ extern void fgraph_update_pid_func(void);
++# else
++static inline void fgraph_update_pid_func(void) {}
++# endif
+ #else /* !CONFIG_FUNCTION_GRAPH_TRACER */
+ # define ftrace_graph_active 0
+ static inline void fgraph_update_pid_func(void) {}
+-- 
+2.43.0
 
-	switch (div_s64(port_transmit_rate_kbps, 1000)) {
-	case SPEED_10000:
-	case SPEED_5000:
-		ptr = 32;
-	case SPEED_2500:
-	case SPEED_1000:
-		ptr = 8;
-		break;
-	case SPEED_100:
-		ptr = 4;
-		break;
-	default:
-		return -EOPNOTSUPP;
-	}
-
-> @@ -397,11 +395,13 @@ static int tc_setup_cbs(struct stmmac_priv *priv,
->  		priv->plat->tx_queues_cfg[queue].mode_to_use = MTL_QUEUE_DCB;
->  	}
->  
-> +	port_transmit_rate_kbps = qopt->idleslope - qopt->sendslope;
-> +
-
-You don't need to calculate it twice in the same function.
-
->  	/* Final adjustments for HW */
-> -	value = div_s64(qopt->idleslope * 1024ll * ptr, speed_div);
-> +	value = div_s64(qopt->idleslope * 1024ll * ptr, port_transmit_rate_kbps);
->  	priv->plat->tx_queues_cfg[queue].idle_slope = value & GENMASK(31, 0);
->  
-> -	value = div_s64(-qopt->sendslope * 1024ll * ptr, speed_div);
-> +	value = div_s64(-qopt->sendslope * 1024ll * ptr, port_transmit_rate_kbps);
->  	priv->plat->tx_queues_cfg[queue].send_slope = value & GENMASK(31, 0);
->  
->  	value = qopt->hicredit * 1024ll * 8;
-> -- 
-> 2.25.1
-> 
