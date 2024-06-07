@@ -1,208 +1,156 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A854415B576
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 09:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3055873468;
+	Fri,  7 Jun 2024 09:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717751793; cv=none; b=qhSwPcjII5SRtHjkZQ35QyJPW9fsJy7OV8/QPkw+TvY4zpq68ORd/77TimaBb2soaIb6VthpeoaHeJIo8CU9N2Np4gYWE6HRgucyfvRgdu5+cq7r/dc1+uxltRyacyVKxssLrpkNjkgjqWPYQCMWu6IrbBeqSF6XNuikT3uMc4U=
+	t=1717751828; cv=none; b=iqnn8HsdbMUDx+fFwpA5Fxb6s5/swyN1VIDdik2kW7UxWnrSp09127IeUaN7cdPmxOi47vQK5mpzKPrZHLE5enXg8QGGUDl9B/Fr6GOR5toYiKNmmP7U2B+jI0dtRlnvxMPBM8C5n/P0puhLZwK+YHICLcHfZ+bN/4XGU8yGVMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717751793; c=relaxed/simple;
-	bh=zIdt3Vb+Dr/QTS2l+2fvCqhwbM0oGZEPKaE2bmeBW9w=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rIOtzIOfr3paKQHkjm1A4ot3L7jQ0ALEx5iqMDomEIOWbec/uhXrJbZDKp3srKStaRGOlFSKoAP2GYPD3uQgQw+ivvFsgoO7PIORnA6N8g0Xsrwiy+x7DmKYIn6KPX/8A2R7qOwJwkeoLDPh+pTx7rl1ykhXNzAPnBtxLXCW1G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gheovIQd; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717751828; c=relaxed/simple;
+	bh=Qc5A8wW1S4AxpcaSX5CLxLhReIvvGxK0np1BQAuHJUs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MFOjNOT+PaCXfg36Jdgk/5l9iHC5n8DebZOS0IvV/vrxsqHScV3VvKE6sHiDpsvE4Q4EeTSCTOLzHKQI4637hgfmFj5xVNfEtq2/qqTJGxE+OFa086FdTO7my9Ymqm18z2arWSvgiL83fpV5txMG57AQzDwCMulvDnBEgitsi98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MxWS4c+L; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gheovIQd"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4215f694749so12533675e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 02:16:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxWS4c+L"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a63359aaacaso283214666b.1;
+        Fri, 07 Jun 2024 02:17:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717751790; x=1718356590; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RKhcW2Pv1TQb63OYj0Ad4PZwEbdEXdKfu9Ta+939bwE=;
-        b=gheovIQdX8MqCeEPYnxqkKy87TZqDaoReQVAHtPOSW8xk9EVop6rItgwqA1Z8q+qbc
-         GSWz4No0t/KYRKfiI64BK+uMGqYxjwjMaCeo1vEZginzaAr+MHdnhdHfSltMvx+FJHpw
-         m9pNJu4Wpj8XkOkxFIStpHhmGl8J8Hr+bpmYZO2X7IzFGG2wMKphHowfgYPQyqSTGhfH
-         6niqMTB+ULEQJ7pZ7tIRSQHPSa3WewijOeX6AOXqfMP5xQF12wY4tcfDOkLuiTiKfHOi
-         M/pRdqvUYAHeS616hutggdE3XCc1J8Qf/PXdRG6B3Hw+G1LkJ9CxyJcJmrMU77JlrhQy
-         nj6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717751790; x=1718356590;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+        d=gmail.com; s=20230601; t=1717751825; x=1718356625; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=RKhcW2Pv1TQb63OYj0Ad4PZwEbdEXdKfu9Ta+939bwE=;
-        b=Gbx04wvhRWhAE6zKGRkCkzhImX1rawc/LHWmAUoeHaNHXuxn5DmYhKQvX7aTnvmycg
-         xeyBdPtdn1AaH5CFZwOJRR1TcXX2YGJ714QwzsFmxIolQYXTeR4qMs7OWnEo1E2DbCxM
-         8JeHHsh1nlUMzVAbSspCJ3k+naIeMrj5zTpYv/MGrmZxBA8AY+3Ysj0bRGevF1ikEt0u
-         c4x7B465XvcegCH1CFrkYJEjMpjRF1IpptSGlxIJe96WmvRDvCoC0JZQhCYxTf86FhSv
-         KVSYmvm67sjwxiXxAgeU0LLC6m3FYe4XxVSxEdTEomUp8Lucr0iNuI13vdTLJwkOgzda
-         PJyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVf3opNI2lXBUxXpc4dm/hr531yb32wcnVDibf09BQpe+qbQZjsQiKWjiQvcOqZQibxWMA5w5A3innD70i/SV8fLLMyc131Wkz+0Q03
-X-Gm-Message-State: AOJu0YzTH+p0e7c/2N3TywLfF3xJVM8SO/HPPDcNuFg4M/gYmItF6JsV
-	6L8aSxlytKjPBKgY+MhVPZeYc7OBfRA44mhg+xDn58HhWPGco5o7OOTYfbo98fU=
-X-Google-Smtp-Source: AGHT+IH6lSQLjPhb+rH7MhIJCz8VcmYFFOPCXGM2LCapictgRME7AWqPy+I8YzSDVKMGrNP+Ca47Lg==
-X-Received: by 2002:a05:600c:4f4a:b0:421:20aa:6048 with SMTP id 5b1f17b1804b1-42164a20b24mr16134255e9.26.1717751789789;
-        Fri, 07 Jun 2024 02:16:29 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:7e4b:b0d3:6a34:6404? ([2a01:e0a:982:cbb0:7e4b:b0d3:6a34:6404])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421580fe37csm82143035e9.3.2024.06.07.02.16.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Jun 2024 02:16:29 -0700 (PDT)
-Message-ID: <88119323-bd54-4d2b-bb63-366c5fe77e39@linaro.org>
-Date: Fri, 7 Jun 2024 11:16:28 +0200
+        bh=pKVF5H7Af612iT5L8uzEkuJZLPXShQIxa9kUQtrflg8=;
+        b=MxWS4c+LFo4gs6XkijEcTGuEaSYgbfC9v1XFDGNG7re2nu4E0lx815WMGOY6e23mIH
+         Mbyl5wSEjeulI0QfkO9KDZP+HeaSM7ej0g/Xt7BaSzqq2X76iVBjCc0+vUSFhAIeM4gq
+         jUvuteWTtOfQLjvROODAhaWo50zOq0mytKcagCl73IaO40BpvbFskgCyQN3R31OoRe0n
+         SbrJK4DC6aUwgFLxE2Xjk4YfGZC2OT3KmlIQYHT9L0SQDCIS0XsFCCsKdQYGvoW9NbT/
+         glZ4SxLp+nZqx5ZK9yvKGDpHMuaMkNjPBGV3SUt0GaPDy5RDe5YGg0+TPtXtTNt6gnlf
+         zj+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717751825; x=1718356625;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pKVF5H7Af612iT5L8uzEkuJZLPXShQIxa9kUQtrflg8=;
+        b=sscvUXs+ulAch3NjuiWAjvkhzHrmNrcjlAnWgEb5oeKhAFKhSLnbzv5jmwytgqbkrt
+         VjXDj8WTzXae6ZiKeK9aD4Bx1issTmmSSIzePOYbfhgKsOCzRBlqgBxB9N3YlrseOIUi
+         a/XJHEo8UNyKn86t+eq3J/pbIqtAXu+UZtFwDTNusU5alBRwVUA4aa1XyUMjuCQfDLI1
+         +KnszmlOgsdgbeHxGSNiAmgOtd+XMyHnoFz24+YGEYNPDi68umx5YS+g3QCqHWRaSALE
+         rgyzYaDAyLyh93HZ1gYAqg0BQ8x3VflrYwzP5V5fCwutHVGpWjlo7u1u+ojaP/BlSqOO
+         v0TA==
+X-Forwarded-Encrypted: i=1; AJvYcCWGdixuXJKgTS4rDq6Z3k4A39/GABnc3fnsXLIPCHfRqgW80FzcI2ISvmbrcapLFvzjb5oKj5Biu05+6MowO1gjBpdQhNDzcqsf1H/33ROXFGaPuZLdjH3k9UOwM87Q6CJ10Vkd6/788Cz3Ltsk9BP9OZbTGkTXEZPLBILYE/QAxxhbuw==
+X-Gm-Message-State: AOJu0YyTsXVH6AES4n3ZMC4dvUPIK0cXuo01JJSac234zo+NtXK+AlyF
+	lF38yiiyLam5JBNJWS83aQ6+3bjhc1vFDqWGz3zIkp0AzumwYfyP
+X-Google-Smtp-Source: AGHT+IFZ9CrXNfTfZ9TvGHJ1UJDSFIxgqBj3iy3NGjFj3Kcu440uPOWocAks1Fs6i2sTyCvaHKCs/g==
+X-Received: by 2002:a17:906:3610:b0:a69:7d72:b0d6 with SMTP id a640c23a62f3a-a6cdbef7773mr119943166b.71.1717751825299;
+        Fri, 07 Jun 2024 02:17:05 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c8072ac5asm215679066b.219.2024.06.07.02.17.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 02:17:05 -0700 (PDT)
+Message-ID: <389546877ae11b18928b432e86710acf83974f67.camel@gmail.com>
+Subject: Re: [PATCH v6 9/9] iio: adc: ad7173: Add support for AD411x devices
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ David Lechner <dlechner@baylibre.com>,  linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org, Dumitru Ceclan
+ <mitrutzceclan@gmail.com>
+Date: Fri, 07 Jun 2024 11:20:52 +0200
+In-Reply-To: <20240606-ad4111-v6-9-573981fb3e2e@analog.com>
+References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
+	 <20240606-ad4111-v6-9-573981fb3e2e@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 00/12] arm64: meson: bunch of DT fixes, take 4 (final one
- ??)
-To: Kevin Hilman <khilman@baylibre.com>, Jerome Brunet
- <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240606-topic-amlogic-upstream-bindings-fixes-dts-v1-0-62e812729541@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20240606-topic-amlogic-upstream-bindings-fixes-dts-v1-0-62e812729541@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 06/06/2024 10:48, Neil Armstrong wrote:
-> Along with the following:
-> - https://lore.kernel.org/all/20240422-t7-reset-v2-1-cb82271d3296@amlogic.com/
-> - https://lore.kernel.org/all/20240513224552.800153-1-jan.dakinevich@salutedevices.com/
-> - https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes-power-domains-spifc-v1-1-380f29ba4a16@linaro.org/
-> - https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-convert-spdif-receiver-v1-1-262465adbac2@linaro.org/
-> - https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes-power-domains-mmc-v1-1-4acbb8cc2626@linaro.org/
-> - https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes-power-domains-nvmem-v1-1-ef6f10c86a63@linaro.org/
-> - https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes-power-domains-phy-v1-1-c819b0ecd8c8@linaro.org/
-> - https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes-power-domains-rng-v1-1-0a55a7ba55e4@linaro.org/
-> - https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes-audio-widgets-v1-1-65bd7cc2e09b@linaro.org/
-> - https://lore.kernel.org/all/20240605-topic-amlogic-upstream-bindings-fixes-power-domains-sardac-v1-1-40a8de6baa59@linaro.org/
-> - https://lore.kernel.org/all/20240606-topic-amlogic-upstream-bindings-convert-g12a-tohdmitx-v2-1-70d44fa30790@linaro.org/
-> 
-> this bunch of changes fixes 99% of the remaining dts check errors.
-> 
-> The two remaining bindings conversions for arm64/amlogic are:
-> - ti,tas5707
-> - everest,es7241
-> 
-> I'm too lazy to do them right now, so if someone is interested
-> in doing the conversion, please do it!
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+On Thu, 2024-06-06 at 19:07 +0300, Dumitru Ceclan via B4 Relay wrote:
+> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>=20
+> Add support for AD4111/AD4112/AD4114/AD4115/AD4116.
+>=20
+> The AD411X family encompasses a series of low power, low noise, 24-bit,
+> sigma-delta analog-to-digital converters that offer a versatile range of
+> specifications.
+>=20
+> This family of ADCs integrates an analog front end suitable for processin=
+g
+> both fully differential and single-ended, bipolar voltage inputs
+> addressing a wide array of industrial and instrumentation requirements.
+>=20
+> - All ADCs have inputs with a precision voltage divider with a division
+> =C2=A0 ratio of 10.
+> - AD4116 has 5 low level inputs without a voltage divider.
+> - AD4111 and AD4112 support current inputs (0 mA to 20 mA) using a 50ohm
+> =C2=A0 shunt resistor.
+>=20
+> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
 > ---
-> Neil Armstrong (12):
->        arm64: dts: amlogic: meson-g12b-bananapi: remove invalid fan on wrong pwm_cd controller
->        arm64: dts: amlogic: move ao_pinctrl into aobus
->        arm64: dts: amlogic: move assigned-clocks* from sound to clkc_audio node
->        arm64: dts: amlogic: sm1: fix tdm audio-controller clock order
->        arm64: dts: amlogic: sm1: fix tdm controllers compatible
->        arm64: dts: amlogic: g12a-u200: drop invalid sound-dai-cells
->        arm64: dts: amlogic: g12a-u200: add missing AVDD-supply to acodec
->        arm64: dts: amlogic: axg: fix tdm audio-controller clock order
->        arm64: dts: amlogic: c3: use correct compatible for gpio_intc node
->        arm64: dts: amlogic: a1: use correct node name for mmc controller
->        arm64: dts: amlogic: a1: drop the invalid reset-name for usb@fe004400
->        arm64: dts: amlogic: gxbb-odroidc2: fix invalid reset-gpio property
-> 
->   arch/arm64/boot/dts/amlogic/amlogic-c3.dtsi        |   3 +-
->   arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |   3 +-
->   arch/arm64/boot/dts/amlogic/meson-axg-s400.dts     |  17 +-
->   arch/arm64/boot/dts/amlogic/meson-axg.dtsi         |  24 +-
->   arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi  | 427 ++++++++++-----------
->   arch/arm64/boot/dts/amlogic/meson-g12a-fbx8am.dts  |  16 +-
->   .../boot/dts/amlogic/meson-g12a-radxa-zero.dts     |  16 +-
->   arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts  |  16 +-
->   arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts    |  18 +-
->   arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts |  16 +-
->   .../dts/amlogic/meson-g12b-bananapi-cm4-cm4io.dts  |  18 +-
->   .../meson-g12b-bananapi-cm4-mnt-reform2.dts        |  18 +-
->   .../boot/dts/amlogic/meson-g12b-bananapi.dtsi      |  30 +-
->   .../arm64/boot/dts/amlogic/meson-g12b-gsking-x.dts |  16 +-
->   .../boot/dts/amlogic/meson-g12b-gtking-pro.dts     |  16 +-
->   arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts  |  16 +-
->   .../dts/amlogic/meson-g12b-odroid-go-ultra.dts     |  16 +-
->   .../boot/dts/amlogic/meson-g12b-odroid-n2.dtsi     |  18 +-
->   .../boot/dts/amlogic/meson-g12b-odroid-n2l.dts     |  18 +-
->   .../boot/dts/amlogic/meson-g12b-radxa-zero2.dts    |  16 +-
->   .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts      |  16 +-
->   .../boot/dts/amlogic/meson-gx-libretech-pc.dtsi    |  17 +-
->   .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi |  18 +-
->   arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dts |  17 +-
->   .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts      |  17 +-
->   .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  17 +-
->   .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  19 +-
->   arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts    |  17 +-
->   arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts    |  17 +-
->   .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |  17 +-
->   .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      |  17 +-
->   .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    |  17 +-
->   .../dts/amlogic/meson-gxl-s805x-libretech-ac.dts   |  17 +-
->   .../boot/dts/amlogic/meson-gxl-s805x-p241.dts      |  17 +-
->   .../dts/amlogic/meson-gxl-s905x-khadas-vim.dts     |  17 +-
->   .../amlogic/meson-gxl-s905x-libretech-cc-v2.dts    |  17 +-
->   .../dts/amlogic/meson-gxl-s905x-libretech-cc.dts   |  17 +-
->   .../boot/dts/amlogic/meson-gxl-s905x-p212.dts      |  17 +-
->   .../boot/dts/amlogic/meson-gxm-khadas-vim2.dts     |  17 +-
->   .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  17 +-
->   arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts |  17 +-
->   arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi |  16 +-
->   .../dts/amlogic/meson-libretech-cottonwood.dtsi    |  16 +-
->   .../boot/dts/amlogic/meson-sm1-a95xf3-air-gbit.dts |  16 +-
->   .../boot/dts/amlogic/meson-sm1-a95xf3-air.dts      |  16 +-
->   .../boot/dts/amlogic/meson-sm1-bananapi-m2-pro.dts |  16 +-
->   .../boot/dts/amlogic/meson-sm1-bananapi-m5.dts     |  16 +-
->   arch/arm64/boot/dts/amlogic/meson-sm1-h96-max.dts  |  16 +-
->   arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi  |  16 +-
->   arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts   |  16 +-
->   .../boot/dts/amlogic/meson-sm1-x96-air-gbit.dts    |  16 +-
->   arch/arm64/boot/dts/amlogic/meson-sm1-x96-air.dts  |  16 +-
->   arch/arm64/boot/dts/amlogic/meson-sm1.dtsi         |  36 +-
->   53 files changed, 679 insertions(+), 630 deletions(-)
-> ---
-> base-commit: c3f38fa61af77b49866b006939479069cd451173
-> change-id: 20240606-topic-amlogic-upstream-bindings-fixes-dts-6a572ad54324
-> 
-> Best regards,
+> =C2=A0drivers/iio/adc/ad7173.c | 317 ++++++++++++++++++++++++++++++++++++=
+++++++----
+> -
+> =C2=A01 file changed, 285 insertions(+), 32 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+> index 58da5717fd36..cfcd12447e24 100644
+> --- a/drivers/iio/adc/ad7173.c
+> +++ b/drivers/iio/adc/ad7173.c
+>=20
+...
 
-I'll postpone applying patch 3 to be sure it's the right solution,
-but the other ones are trivial and I'll apply them now.
+> =C2=A0static const struct ad7173_device_info ad7172_2_device_info =3D {
+> =C2=A0	.name =3D "ad7172-2",
+> =C2=A0	.id =3D AD7172_2_ID,
+> -	.num_inputs =3D 5,
+> +	.num_voltage_in =3D 5,
+> =C2=A0	.num_channels =3D 4,
+> =C2=A0	.num_configs =3D 4,
+> =C2=A0	.num_gpios =3D 2,
+> +	.higher_gpio_bits =3D false,
 
-Neil
+No need to explicitly set to 'false'. Ditto for the other places...
+
+...
+
+>=20
+> =C2=A0static int ad7173_validate_voltage_ain_inputs(struct ad7173_state *=
+st,
+> =C2=A0					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int ain0, unsigned int
+> ain1)
+> =C2=A0{
+> @@ -946,15 +1145,30 @@ static int ad7173_validate_voltage_ain_inputs(stru=
+ct
+> ad7173_state *st,
+> =C2=A0	=C2=A0=C2=A0=C2=A0 st->info->has_pow_supply_monitoring)
+> =C2=A0		return 0;
+> =C2=A0
+> -	special_input0 =3D AD7173_IS_REF_INPUT(ain0);
+> -	special_input1 =3D AD7173_IS_REF_INPUT(ain1);
+> +	special_input0 =3D AD7173_IS_REF_INPUT(ain0) ||
+> +			 (ain0 =3D=3D AD4111_VINCOM_INPUT && st->info-
+> >has_vincom_input);
+> +	special_input1 =3D AD7173_IS_REF_INPUT(ain1) ||
+> +			 (ain1 =3D=3D AD4111_VINCOM_INPUT && st->info-
+> >has_vincom_input);
+> +
+
+Wondering... can ain1 (or ain0) be AD4111_VINCOM_INPUT and !st->info-
+>has_vincom_input? Would that actually be acceptable? It would assume it's =
+not
+so we should check that right? Or am I missing something?
+
+- Nuno S=C3=A1
+
