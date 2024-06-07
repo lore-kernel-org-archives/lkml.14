@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECDC19924F;
-	Fri,  7 Jun 2024 17:47:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19BB19B3D4;
+	Fri,  7 Jun 2024 17:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717782437; cv=none; b=FeJpdx6gFDgRF8xCbyqYRTeDpaRNNXjLerji/2RkAiQFppkuGrVH/5t2JPcb0JX8Dj4+OLT8I07XRA7j/F3qdX6pCxVAoqPNVbCEUGepHwXa+a+dWrBgY5/tab3c/Y4sApdAAddpLivSB+PAPpDDrM4mhFXnlxlgHg6ClUpaqIg=
+	t=1717782444; cv=none; b=G1aXa092SOzt5XtnwAzkAjISqsx9+nMwo5bPPilf+3GMwwUS2GNvJzNp+cLbpzpiLRG9GBZTPLqX1TktdiM7eXV6YnRPZkmTJwobANEJoZvVdhlPCPtteSJ5scNHw0hOh+3NMT4DAXm3qw2vsUWV+6bBGCYIibKU2uv9Z24rSb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717782437; c=relaxed/simple;
-	bh=Ah3xD2VYfWteOXiiI1LPCE0B+4+uVAXtyTUN+YThnGE=;
+	s=arc-20240116; t=1717782444; c=relaxed/simple;
+	bh=lgjefLL5Z3rP/rbNsFuurSusuD9paPVfZo+z2mjiAtg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=H2gjsS3YkH08iJYYeA+U+eK+JYVPFP0xWvIRA/d7OEES2X4i0XMApqBz7RTGbjdUsL52HuMB7wJ1YZNcxFk7CnmnKwoSO84nJmOAcT7p+7LZPLRhNoiPStpyw2iHR9w9j2m1S9Uxo9VFjqvkxFWRMx2wHzNfk8VrRepuT4ILggo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FC5dhQ8k; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ZpOb7Ma8BCU+HSVAwNHvWAqqUSurJ7PBfjgAC+vnZVAOUSaUndsNEAEeKFH42PPeCpUrLZpJQvhTWBX2MfvUjpuz3kqRaafPDWuX7k/HVr1gXAjTNRjs0v0jjsC/4TyRUxWeDWU/o3dnH8UQ4QLuSV64Rf5ZyRUA+Yi1jq5Dflo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h13+vsKP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FC5dhQ8k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078E4C32786;
-	Fri,  7 Jun 2024 17:47:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h13+vsKP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BAB2C2BBFC;
+	Fri,  7 Jun 2024 17:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717782437;
-	bh=Ah3xD2VYfWteOXiiI1LPCE0B+4+uVAXtyTUN+YThnGE=;
+	s=k20201202; t=1717782443;
+	bh=lgjefLL5Z3rP/rbNsFuurSusuD9paPVfZo+z2mjiAtg=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=FC5dhQ8k1oE23ig1HbTMiS4JdLzl6fnAdrdp4nKcndmm9XKwBaMkfQK8RiMPnwayd
-	 u4+X0+bwcvil/ueng01fss6gFXTkrGXKRgTR5MsRGSvSn+KA2uxGia8poZvGrzLhLy
-	 4cogYwIf2k8joqOd3OuZlzA4xjGAeIOHOyYeh3PV/qaNBrnijf0qX1Nc5V6hhzUz6A
-	 vtTi8DBWwNWseCP8uCYgnHWzZ1SesQeu9U0CIQkYsi6LO6d73o/MNYKpIcrODpT7wb
-	 KZxaZAL/+MNV+wpG/lprYffVAXLL7vVeNMcZ8ZFpmbXV9Gt0MVI3kl1dRoNxrMkTjy
-	 vnCLVcCwwHRsQ==
+	b=h13+vsKPhK6RHc3TEny30zmTeVjF/hJx9ANEnLNPfBEz59J4vtrpKob1RgFjInvjH
+	 fHJsb+quuBnBrKuhxr/3IWzyFMa1fte7OfOXIv1M56dDSQYGwhX3eQW0B0azrXBvYd
+	 yp7M9q/e/6v85mA5t3P82oIWQ4uu0Q21CgRPy7tPgx4xZeF/aLvRVNPQYgrzVWbKic
+	 34W/HKTGLdT3LuTxC4cZzALaLkJ9E/YRGBW2Sx/w20K24+IgQsUkJh/1RcI7fWc+yw
+	 7I/M8adDzFVowGzTPvVa161ao/KzFSm925Q1s/YnQUXTYa1UB+OobZDoFtQrrONhpW
+	 AHQBarZbYO/Ng==
 From: Vinod Koul <vkoul@kernel.org>
-To: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, dmaengine@vger.kernel.org, 
- devicetree@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240605003356.46458-1-animeshagarwal28@gmail.com>
-References: <20240605003356.46458-1-animeshagarwal28@gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: dma: fsl,imx-dma: Convert to dtschema
-Message-Id: <171778243367.276050.5441148149906303737.b4-ty@kernel.org>
-Date: Fri, 07 Jun 2024 23:17:13 +0530
+To: Sinan Kaya <okaya@kernel.org>, kernel@quicinc.com, 
+ Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <20240603-md-drivers-dma-qcom-v1-1-d1bd919352bf@quicinc.com>
+References: <20240603-md-drivers-dma-qcom-v1-1-d1bd919352bf@quicinc.com>
+Subject: Re: [PATCH] dmaengine: qcom: add missing MODULE_DESCRIPTION()
+ macros
+Message-Id: <171778244108.276050.8818140072679051239.b4-ty@kernel.org>
+Date: Fri, 07 Jun 2024 23:17:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,16 +49,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Wed, 05 Jun 2024 06:03:49 +0530, Animesh Agarwal wrote:
-> Convert the fsl i.MX DMA controller bindings to DT schema. Remove old
-> and deprecated properties #dma-channels and #dma-requests.
+On Mon, 03 Jun 2024 10:06:42 -0700, Jeff Johnson wrote:
+> make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/qcom/hdma_mgmt.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dma/qcom/hdma.o
 > 
+> Add the missing invocations of the MODULE_DESCRIPTION() macro, using
+> the descriptions from the associated Kconfig items.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: dma: fsl,imx-dma: Convert to dtschema
-      commit: 45a24e40581db95f9c7ee08e0f27874daf7d3e7b
+[1/1] dmaengine: qcom: add missing MODULE_DESCRIPTION() macros
+      commit: 8e9d83d7228f663ef340ebb339eaffc677277bd4
 
 Best regards,
 -- 
