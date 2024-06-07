@@ -1,492 +1,211 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682FA1A0AFF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 14:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717771263; cv=none; b=CUrmRYhK/tIQtJxysY7ji0E7miKY/IUmjfXrEQ3YlC8PtW9zJ4GLd729g2UPf57WGLqMcHz/zZgZWoL2cNMf4akRu5IdfXeh02hqU/s0qZ6IXz9+aU6XjU4Mbs5JPDakqOftSm8jkZCiR2beZcDsWOJTnuxDKY0aFzl7phiweGw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717771263; c=relaxed/simple;
-	bh=+8evMGg2n1u/8yOm9qRPDDeti+4TBuqjZRybbC+w58U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EEpc0BjS0YOfpVmnofUlBl5iJ2JkTUPaBa4+y9L+MLQLims5HexZ+l7OrJvCAq9BgIjTKMqMgxnq4nStm0kt22HmUslrm4VqB3naxWsJVZsetcm/OXStI7oeliQIERRqo8LTc8RM9BpzIrw1UnHdUBESKrgVjnF6qzLU9rhkMR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ylopEWRW; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4FA1A0B1C;
+	Fri,  7 Jun 2024 14:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717771265; cv=fail; b=j4a90KsDZEaPb5xO97SpuSI+JBUkuNIJ/2xLh+CBSLLMLgNdQSMdsIHfXYY8LlKIoMlzhnUkeQ3aLoKrA6kVj8NsnmThj7a0YnenoldG3T7lZTeWJDNpoED8oKpfNUlQ5E4H9nl0JfgXQugllTOnzUn7t7sbsi+7UtlCwLDR8uY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717771265; c=relaxed/simple;
+	bh=7A0UP1knvLD46RpasWbfGfM2XP1F/TaSAZuhe2gGZUc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sgQIxTlM7kgxtQcuSGKFpSt47yuVoXaQBz/bPE1c3y34CvguAU3zKV5Ic565AFui6nBPj0KMHAsPI2G0J00drjVPmsVe/QuNUOHvCo09uwf+yWtgPHI7myPCtzczkMfR/CcrjqWeklpNlzqfHW/GnvwsCkXeBYnV9CATEKUBvwM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=PWvSytpo; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=DsfqpoKk; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ylopEWRW"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57c5ec83886so8271a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 07:41:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PWvSytpo";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="DsfqpoKk"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 457CudrD029379;
+	Fri, 7 Jun 2024 14:40:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=corp-2023-11-20;
+ bh=HDhvO5bYGBhBuZX0wWVjWzM0MXq1wQKWMu6+eCFTp1U=;
+ b=PWvSytpoN7vQ9QtbCtexT8qe+fi1ZdH9WvmGnpeAKRBZLCGX1TjyThOfU4WfmvmvqyTv
+ OXYNTg4937Tv9SqvVWjpaXgdHs55CJ6hZxdngws4v2GzccZKDB+XNmINieDwTJQlCREH
+ kwWEFBL7EnIcQP5FAiM2bLaBLmaPrU1LugDxsHd9q+ADT4l90YVt6xexMrbfTuG3IN+a
+ Nw6/ErcG3Z920dE2vUMk6BlUjHqtpEmnZjd8EXFiSfymha/WRUlE/MlzOcnNc8pF8+04
+ Fcosz2hpFUqN+jNLl7OVV09c5E0/ytL9SqpWXPF9Ji4Ot3ZW++MSXqseLYGW63d2y1nu 9w== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yjbuswsjk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 07 Jun 2024 14:40:32 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 457DKjrI005462;
+	Fri, 7 Jun 2024 14:40:31 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ygrmhy918-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 07 Jun 2024 14:40:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fwUY9s9nLgE4XfWqBSDopfWOj842IdyO+Vc9fFfEQnNcN8IkQjzdQl0z3jokNOyPVbkTkvJQX22DtsO/SkLum59PojYkjkGYkkGv0I2H7KOzoxI6C5j4cJz3tU44KHFRRI0ezaukSCagluYVkv2gBSycWEx+/Iiyh+tauCbxELmkweqiMC/43iHn4F6tRTco1OPmYqm4qryddpPhyY10eGXS2z/wUQxuaRNqQSuNnq6tu4l+vgVniAyEKFYnViwjz39QwiQmKUty9rIuj3w0wFweer74gPem15TeQu5mPN0UMxUbNJIBpcSRKunt5yrWXe/b6Re6POuZfzoGAWZNlg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HDhvO5bYGBhBuZX0wWVjWzM0MXq1wQKWMu6+eCFTp1U=;
+ b=RO0WP64gruWtBo1tCezWSQE0G7bVWMSg812soc6lVm6c0n+FWsFJLXQuTwiHJRLpSuI8cfg9mhsLc5AwZjt1+0g5QzBIpPDD/l7LpqlJicpTzRrKUnnXdyfsRRYak2GSHHQ0Ydhan4qzxv5/dbU4bM5iB4wNyJck+GftVTe/SyWfdnsp5yt3fugmUaXcKLlGbuD68oe+HW12gjcwqhmvPXLqpzUt8A1CLksuotUlV6E4L6UrwRLQ8ewYMB4S3o/GmA/vCtf9BDwjhJu5PNJLas4Ps+OWa9AjMdbVbO1/XlK9uLiB8wyjKI5N7ymoxLAgdHOf/vq7a70UTOP3IEWJoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717771260; x=1718376060; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kt9qUYYFSO6k5VmbzbT82tlK3CSHJaSCL9vF7bZshII=;
-        b=ylopEWRWiYiIov7hPCSgQbzCFrqmJbVrFTgzRBQ2oRVhLGprUTYiLKKbIYu2LONx3p
-         dOgNZwLwVrCg6V24skMVWOJwTVJlyIHxfdsSs3z9eHawzM2QG5lGRBC6ttidNTuEAAb7
-         wLvyVl3+PqdXqM7h/RJEuB29mNZghNXjrDr97Q8sYfnETt31yiepPcsfJ3jpOeyQ1L7e
-         vlEXDb7/LMUalrF6LVQ13IB5xs+P+AD/WJfmPk6rYF1EKuKj18Blfg5TyItpG1tzBsyY
-         8QzcudJM6cQPk1jQZBR9DRsLl1/juAUf2abpCjattXfhJ+ziab0kR/ztYB+wBIzTQQ0K
-         rNzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717771260; x=1718376060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kt9qUYYFSO6k5VmbzbT82tlK3CSHJaSCL9vF7bZshII=;
-        b=Uk88/Kol9F5xprqqWdJ36pi/Ocl5pR6d3R/xFQ/9sY+GxvNxEFDugvxmMt33FH6il9
-         7RwlQPDVuP1q6uuthIMEv0atxty/tijFbtaBuC6O6ZDCuf0tjQqqDuIerBZSS83Nls6x
-         T0Vyzr+ZcjDNX78SLO+3KB1Hnjwi0Rpk6QtzlZwXnSdyv4LMWvUgPI7SNEsqe8p1RK5U
-         qONwK7ayFA2If4gF5sybewFgBz+caXaIrba19E2raHiGLZFkp+stdLmhyNTeGWNihNSO
-         pBtsg9Foq55PFS3ImLsAiGbPGHOKsxzOJlvxNTbW4s8xxUVo9rqj6iLr3OC2aEKv5So7
-         +ekQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPkw1CLxvAVn1o6UOA11K0KucaVMl0gs8kzQkEDaYXRAHihSPVb4W79dit/wWnoqu9TT0RS7ENL1tV6X9Ej7IEUXyA5ODPaOEHCyRm
-X-Gm-Message-State: AOJu0YyfqBGLWhtXKRN/90CAKUi3btjKG1F7hBC29SG9x4m3Kb4nLOFp
-	YeKTuk04uDgGTjJhrwiruyvsgHghqizi8I8S2w+Eh6etdmncb5hccRSpsqHKNeMjPRNYqnMPvTG
-	B0IjknvdH7dvkCm3Qvey0HUspgN1KOIGE+6hd
-X-Google-Smtp-Source: AGHT+IF+7OYsf/plphBn251y9C5NvZgYDGnF0KHYss+k6I+DerkG8/c8obCD4hxD/phsyZpCPyJATvuDvQDsX4YBKoA=
-X-Received: by 2002:aa7:c0c5:0:b0:57c:5ffb:9917 with SMTP id
- 4fb4d7f45d1cf-57c5ffb99b5mr114826a12.4.1717771257885; Fri, 07 Jun 2024
- 07:40:57 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HDhvO5bYGBhBuZX0wWVjWzM0MXq1wQKWMu6+eCFTp1U=;
+ b=DsfqpoKk0TCUX69h19aOvHA+P2QUm9gxDD1vKLCGiIddb2k6UfIfSk8OIGLxUnvtx1kwZ0Sceka36614uSNJ2bbgZrYWCFQt2oIiW0+6eY4fn1NiPFD54P9psd5Prl3oxWYpLDzmTgV9lfuTUsMMuCWmUXW8axrLrqW5ZrXj3Zc=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by DM6PR10MB4170.namprd10.prod.outlook.com (2603:10b6:5:213::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.35; Fri, 7 Jun
+ 2024 14:40:28 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%6]) with mapi id 15.20.7633.033; Fri, 7 Jun 2024
+ 14:40:28 +0000
+From: John Garry <john.g.garry@oracle.com>
+To: axboe@kernel.dk, tytso@mit.edu, dchinner@redhat.com,
+        viro@zeniv.linux.org.uk, brauner@kernel.org, djwong@kernel.org,
+        jack@suse.com, chandan.babu@oracle.com, hch@lst.de
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev,
+        linux-xfs@vger.kernel.org, catherine.hoang@oracle.com,
+        ritesh.list@gmail.com, mcgrof@kernel.org,
+        mikulas@artax.karlin.mff.cuni.cz, agruenba@redhat.com,
+        miklos@szeredi.hu, martin.petersen@oracle.com,
+        John Garry <john.g.garry@oracle.com>
+Subject: [PATCH v4 14/22] xfs: Only free full extents for forcealign
+Date: Fri,  7 Jun 2024 14:39:11 +0000
+Message-Id: <20240607143919.2622319-15-john.g.garry@oracle.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240607143919.2622319-1-john.g.garry@oracle.com>
+References: <20240607143919.2622319-1-john.g.garry@oracle.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR03CA0004.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::17) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240529202817.3641974-1-gary@garyguo.net> <20240529202817.3641974-3-gary@garyguo.net>
-In-Reply-To: <20240529202817.3641974-3-gary@garyguo.net>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Fri, 7 Jun 2024 07:40:45 -0700
-Message-ID: <CAGSQo02_siEiS07H+7MCi_T2REGoyF6FFuGHVmiUFi4EocLizQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] kbuild: rust: provide an option to inline C
- helpers into Rust
-To: Gary Guo <gary@garyguo.net>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Andrew Morton <akpm@linux-foundation.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|DM6PR10MB4170:EE_
+X-MS-Office365-Filtering-Correlation-Id: 975d064d-931b-485d-14d5-08dc86ffc675
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|7416005|1800799015;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?+h9v+R1PIPHfLy0O3kDO9J9Xma2pwrKnVTTms8mBdpV2tCntx7woXUQiecXp?=
+ =?us-ascii?Q?Mzq9wWPojMusc0k+r0xEnTeCoVtiQeFuArhAa1BTT67TiFB6zdrDvnjP8KqQ?=
+ =?us-ascii?Q?Xz0V/G5brEoH9PKxAjoVT2DGqlu2C7TE+HZ4VzuCNi6kZuvcKGTdD5G+Jd+B?=
+ =?us-ascii?Q?m4U4663YsGVHpPHnmxlYWK+SpVB2ZN1T//hNTC2QuQP6SIrgOtz7HjDIsoK4?=
+ =?us-ascii?Q?/cPVZimb3AeL1AjVT1ws/nxsZN0AX3Jz9uZaqTW42lADktsilqOQ8chxvsl2?=
+ =?us-ascii?Q?PcPjmvo+TFFvZELDBgTl2zKTpu8YGcFTO6cNlQuDPdg0cs8mja+Aa62M0pTw?=
+ =?us-ascii?Q?x0leYohQF4kprS9eEzH/i/Scoz43+p9ghE9/qu6uPru+GCrxKUBhxU1IPAH4?=
+ =?us-ascii?Q?6FioXWWa5iu02dwyyGDP7WMWE3y/BzK6zdClqvJNbmenpo6bdbvKCOXAcfJM?=
+ =?us-ascii?Q?Oo1PHq+laa4v3jLpadHVTHzDW9b5k4lYuLIlwKib+eq0ZSDFqlBS4HH0XQFG?=
+ =?us-ascii?Q?xqBPdgM6GOI0oH954BERuEZMFm0Z7c+of7v2L3cWPjqZu1W7WcKRNOSK8Uwj?=
+ =?us-ascii?Q?GfLqB1PPOBeSoCe7iv3mom/kItOTm+apfqVadYuaNhZNS+Biu51j17fdUxNQ?=
+ =?us-ascii?Q?5TlJ+O1m/2BKf04E72Bcg7BvRhg6+ehMYKtKkY72ltv9vFWWIId2+GL8G0bI?=
+ =?us-ascii?Q?QsaHj82vGRn2DCX0PfRZcVJQofQowy2s1d9z4/W6q9qi7pe7pPq8kiHpOsdJ?=
+ =?us-ascii?Q?Fam+DHQIW6l0eAPegj5oBifpmPLyW+pyAA4j2IFkEqSWJ2/Da0/4eJ71UrkH?=
+ =?us-ascii?Q?wHX48RSwlHR8zlP+Kpxxnn9UskERop2cUsgdMorNhcD23S2OgcekVBxeEj4x?=
+ =?us-ascii?Q?wyL357rPLqInWTwC83L/xQI9kNQ1isoTeH2gTrscxxxNikRD/wQ+08hIOYvo?=
+ =?us-ascii?Q?mvxwyHnAfgaU9jnEkg1jWKr62uoiR7+LPf0X1kGAkf8Razr1rOxg2LV1OmEW?=
+ =?us-ascii?Q?t9kKRU4xdk0uZxBVDAfoH5kMKGW5x0q0eul0RoFh8oQ6dR9GlPJXqTSViRcm?=
+ =?us-ascii?Q?Dc3Sh2EKmBa+D8vv505/88YdGGeNIOiMHTgwbQUsJJTje69g4boXxZ6/d6ld?=
+ =?us-ascii?Q?emNaVtytgpwaPe3UP2bvkFa2/gG7HV+hlGX1m5iVyncVBRAUqqeoT9vGVyhx?=
+ =?us-ascii?Q?Vdr6bw4XhNs3UWhSXE3B7IhBpdbqbPb45VugDQsulqJEQAkTagMblpsyTzK7?=
+ =?us-ascii?Q?OICEV0H5Kot4jAABHFKDWTx+Iv8po6TbRADlh+19IzqLt6KaJ+6raFXEzQAr?=
+ =?us-ascii?Q?TmQ=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?Opd0pN9Es/xqvE7lNAicoLprlQT1RjV7QOG2TF8AHt7tlToR8VEXE4f69Xhj?=
+ =?us-ascii?Q?qmIK/Zbn3QMFFT/Nd8gQthjLQgg8cf8sF9WbW7fow9E/+elup1Yv7XGq7Znr?=
+ =?us-ascii?Q?URJ2wSH7RsZYM6qqdQd8ZgF21Le1bCdWrOY+Q9Jv1IKTpjsvDSHTJZ9CVeqF?=
+ =?us-ascii?Q?tEJJpuswCx4ywffYXx7t5jAMQwRgVp17RSu0j5njV4p1cAncpYHZjnvBC6Pw?=
+ =?us-ascii?Q?DLEHHNAojoL4y3f6VG55L5Xff7zYxaIyrpIN5GrVYYk3AQBydPeJBHQuxufI?=
+ =?us-ascii?Q?n52GcBG4o28AyKUbwJ3LrdD3li5N50tiutrjw2VD3ZtxcRvJTOhNOlvSATl0?=
+ =?us-ascii?Q?0AVb+0Z2IfuAq5V1pRhz8TkSGD/PIr1s1q7CMWi3WDtqu1GEAmEVvT+8xKTF?=
+ =?us-ascii?Q?WUCssKsPU4EgM3lBrGFImx5I8PZ5bPfj/uHeTwwUAVhiL6aD0ES0BfidRdRW?=
+ =?us-ascii?Q?/0FqofwnTLB0EDYdZc4TJMPqSAjTXHocEdPkJTi3NHusGRZLRxGTFIGsrGG+?=
+ =?us-ascii?Q?fZj6yqFDAeD+XAjODtnh0Ayi4v0Me4H6zkyZT8vGUJlqog+v1O7qENPNKyFO?=
+ =?us-ascii?Q?OBEXpo/H9Xw1b/Bgyj5fZorgUneFw1ChY1Tq5n0qKtUPMWbUvhLOqT9xnjIY?=
+ =?us-ascii?Q?+0k4MrXhMveAlWooI1RHpQV4+eWPpwolDlOF2ht+ykxT/tJtaNBTr0bqnQ86?=
+ =?us-ascii?Q?DAcm9R4tnu7U0U2s40beKnJKU1Zd110xkiq6F74eQx1/15D7ZnY5pbkgK4Fs?=
+ =?us-ascii?Q?ndDxDWFNRD79Fg2mDZ+pIoIr4hAAzol4fHmQW7Y+7bVU7DESCtSVgRfpBuoz?=
+ =?us-ascii?Q?tqYhQV2egjJ6D0GNSodxnMVsXS9vSCTGZnykP6yOJ7uoKk9CTDz2o9vN/fQ9?=
+ =?us-ascii?Q?au0gJH7RbRA17n/9+imhEiHbEAbqiraGvHz1pUgK19DY2exEeuGLRINf1kgg?=
+ =?us-ascii?Q?GepWE7WI0Y4EM+s1ZMUuwpRxFR1JYIwDvJfVJl3nmE9fSKOEnxmFJrdgdsgp?=
+ =?us-ascii?Q?82YWqOhrcCd1dwTUnQPjgPzBbBxT+B9S30n0VXyiyb/5NN2Vg3PIXRiWvxtf?=
+ =?us-ascii?Q?d349sancn0E29YokH0a2gCgujpMPmpmSmaWjo4PqZk5vBr5KqTK3c18C8YLq?=
+ =?us-ascii?Q?e/BZzt9fJUhANnNIEuLMubU2zT1OCq3daYLeAkHDTcr+VFDPSKG7oW3xJnB1?=
+ =?us-ascii?Q?ezBHxbwysJQz9zYmCSjL89cf9HgSI6yGoUeuTsnqjZth4qX9pXZabqzqN+mb?=
+ =?us-ascii?Q?M1YD8rJdLDvo6TiQClUc1YevEXxD7e9dadMPoSgAfU7HkuQ/M1sLOP6Kbjv5?=
+ =?us-ascii?Q?b74Y2BNH6mJpsh4igAXs9BJo+ENNUxMqZTavDJuoEp6GIDFvJj4XO6NSjSP0?=
+ =?us-ascii?Q?FQcmgnWAiOJdS3MJqkm6Z4wscsiqlyV1tUyrcCkbnZMSHnFxOTwgADpa7ZLQ?=
+ =?us-ascii?Q?2eAt/BYD1QsgmWFsGRWJs741+wLfaPgeiHn2+GM66q889xrUjXhhE7xGF2Us?=
+ =?us-ascii?Q?j4U0KJtMFimf861XnqzbquGLJsjxw0Pj9vh1g4hFdfy/aQXEX0N3mUQ8n4JP?=
+ =?us-ascii?Q?L/CZKcPhqyeEljXrnn2en0+Mae3NTZcMz0hlKcn67lMzHGhoqdTSS83PQ7AI?=
+ =?us-ascii?Q?hg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	WdEfVrOsUT8em92Hj2MRnYlGiaiQlvjkrpUqp7k6tx7fTZbAdlG/z9e5yFB9GPYrn4mVi48pJ9mFzYFyZjhbLjkUZtlZ4tzmkcg/vAwwGuPzX1a/T6EJg08UVWbvyFmaoiZOPSj1wDdGzABF1IisdpyiZyedJJmF56MKq1qtRlmfvk5hni++Aq+TxlqKQgkMwR/4EjEoxOMLNPRnFPm0PBh0dhcDIwjv/IVylSYVASTANvD4MwVP/UM4qmlDHw/m5ZtBi+WF/ekgtueAPSi8DoylpdH9yzBEAvEvifq3yGn51DRSS4aOhGdQr3rtIUPugdD0ebDP3JXA6/WtsKwWpbmn+OxKEM1IcsKq/sHyGKtYewxbPXlrVfZ63+O6tag276CW24l+5cfjT/bCEIJgR9UyhQoaYn8sqVHpj9KzxduHaqUihIf5tYzZkUcOoIAjNYs1+brXxABaZMfI4Ojs0jqRioeSWa0/sP/uT3beHKqOiQ3AffINJO8/K5nNKjT9buIj2DeLHkb3jAe8jbRPd6tub4hZ4K01pJ2MjpM2sD19QvnJf6pqtjlpezHkqH6B2KExlSFWojkVFQ/3Nmo1mGyoNojjq+1ZQNmOn/2V2R8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 975d064d-931b-485d-14d5-08dc86ffc675
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 14:40:28.5605
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YdgeuDqKeP79TCfC1/kvQHsPWfggR1tHdx7xCTQnC+qFRV4uETTUqIGf15/eNSb+1eSKaOsNRm9jMQeLTF1adQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4170
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-07_08,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2406070108
+X-Proofpoint-ORIG-GUID: ALv6ujPmDKC6aG8PRq86AJAmZDae60tg
+X-Proofpoint-GUID: ALv6ujPmDKC6aG8PRq86AJAmZDae60tg
 
-The LLVM `.ll` textual bitcode representation may change from version
-to version, which makes using `sed` to edit it potentially fragile.
-Would it be possible to attach similar attributes without this? (Or
-other attributes that can accomplish something similar, see the second
-part.)
+Like we already do for rtvol, only free full extents for forcealign in
+xfs_free_file_space().
 
-Would it be possible to use a Rust-only-LTO (actual LTO) flag rather
-than a `llvm-link`? It seems likely that someone that wants to use a
-synced `clang` and `rustc` to allow helpers to be inlined would be
-unlikely to object to thin LTO of Rust. This would avoid introducing a
-new tool.
+Signed-off-by: John Garry <john.g.garry@oracle.com>
+---
+ fs/xfs/xfs_bmap_util.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-As one possible route around editing the `.ll` file, we could consider
-*not* hiding these symbols, just marking them as "good idea to inline
-if possible", and then masking any symbol that ends up in the final
-`.o` via `objcopy --localize-symbol=3Dblah`. If we're doing full-kernel
-LTO rather than rust-only LTO, we'd need to use `llvm-objcopy`
-instead, but the same process would follow - a postprocessing step on
-the final crate object that localizes the symbol, with LTO giving the
-compiler the option (but not requirement) to inline these functions if
-it seems like a good idea.
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 56b80a7c0992..ee767a4fd63a 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -842,8 +842,11 @@ xfs_free_file_space(
+ 	startoffset_fsb = XFS_B_TO_FSB(mp, offset);
+ 	endoffset_fsb = XFS_B_TO_FSBT(mp, offset + len);
+ 
+-	/* We can only free complete realtime extents. */
+-	if (xfs_inode_has_bigrtalloc(ip)) {
++	/* Free only complete extents. */
++	if (xfs_inode_has_forcealign(ip)) {
++		startoffset_fsb = roundup_64(startoffset_fsb, ip->i_extsize);
++		endoffset_fsb = rounddown_64(endoffset_fsb, ip->i_extsize);
++	} else if (xfs_inode_has_bigrtalloc(ip)) {
+ 		startoffset_fsb = xfs_rtb_roundup_rtx(mp, startoffset_fsb);
+ 		endoffset_fsb = xfs_rtb_rounddown_rtx(mp, endoffset_fsb);
+ 	}
+-- 
+2.31.1
 
-
-On Wed, May 29, 2024 at 1:30=E2=80=AFPM Gary Guo <gary@garyguo.net> wrote:
->
-> A new Kconfig option, `RUST_LTO_HELPERS` is added to allow C helpers
-> (which was created to allow Rust to call into inline/macro C functions
-> without having to re-implement the logic in Rust) to be inlined into
-> Rust crates without performing a global LTO.
->
-> If the option is enabled, the following is performed:
-> * For helpers, instead of compiling them to object file to be linked
->   into vmlinux, we compile them to LLVM IR.
-> * The LLVM IR is patched to add `linkonce_odr` linkage. This linkage
->   means that the function is inlineable (effect of `_odr`), and the
->   symbols generated will have weak linkage if emitted into object file
->   (important since as later described, we might have multiple copies of
->   the same symbol) and it will may be discarded if it is not invoked or
->   all invocations are inlined.
-> * The LLVM IR is compiled to bitcode (This is step is not necessary, but
->   is a performance optimisation to prevent LLVM from always have to
->   reparse the same IR).
-> * When a Rust crate is compiled, instead of generating object file, we
->   ask LLVM bitcode to be generated.
-> * llvm-link is invoked to combine the helper bitcode with the crate
->   bitcode. This step is similar to what's done in a full LTO, hence the
->   option name, but this is much faster since it only needs to inline the
->   helpers.
-> * clang is invoked to turn the combined bitcode into object file.
->
-> Some caveats with the option:
-> * clang and Rust doesn't have the exact target string. Manual inspection
->   shows that they should be compatible, but since they are not exactly
->   the same LLVM seems to prefer not inlining them. This is bypassed with
->   `--ignore-tti-inline-compatible`.
-> * LLVM doesn't want to inline functions combined with
->   `-fno-delete-null-pointer-checks` with code compiled without. So we
->   remove this command when compiling helpers. I think this should be
->   okay since this is one of the hardening features and we shouldn't have
->   null pointer dereferences in these helpers.
->
-> The checks can also be bypassed with force inlining (`__always_inline`)
-> but the behaviour is the same with extra options.
->
-> This option requires clang to be used for CC and the LLVM version of
-> clang and rustc to be matching (at least to the same major version), and
-> therefore is gated as EXPERT option.
->
-> Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Gary Guo <gary@garyguo.net>
-> ---
->  Makefile               |  4 +++-
->  lib/Kconfig.debug      | 10 ++++++++++
->  rust/Makefile          | 34 ++++++++++++++++++++++++++++++----
->  rust/exports.c         |  3 +++
->  rust/helpers.c         | 41 +++++++++++++++++++++--------------------
->  scripts/Makefile.build |  5 ++++-
->  6 files changed, 71 insertions(+), 26 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index f975b6396328..c6f12093fb1c 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -492,6 +492,8 @@ OBJCOPY             =3D $(LLVM_PREFIX)llvm-objcopy$(L=
-LVM_SUFFIX)
->  OBJDUMP                =3D $(LLVM_PREFIX)llvm-objdump$(LLVM_SUFFIX)
->  READELF                =3D $(LLVM_PREFIX)llvm-readelf$(LLVM_SUFFIX)
->  STRIP          =3D $(LLVM_PREFIX)llvm-strip$(LLVM_SUFFIX)
-> +LLVM_LINK      =3D $(LLVM_PREFIX)llvm-link$(LLVM_SUFFIX)
-> +LLVM_AS        =3D $(LLVM_PREFIX)llvm-as$(LLVM_SUFFIX)
->  else
->  CC             =3D $(CROSS_COMPILE)gcc
->  LD             =3D $(CROSS_COMPILE)ld
-> @@ -601,7 +603,7 @@ endif
->  export RUSTC_BOOTSTRAP :=3D 1
->
->  export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COM=
-PILE LD CC HOSTPKG_CONFIG
-> -export RUSTC RUSTDOC RUSTFMT RUSTC_OR_CLIPPY_QUIET RUSTC_OR_CLIPPY BINDG=
-EN CARGO
-> +export RUSTC RUSTDOC RUSTFMT RUSTC_OR_CLIPPY_QUIET RUSTC_OR_CLIPPY BINDG=
-EN CARGO LLVM_LINK LLVM_AS
->  export HOSTRUSTC KBUILD_HOSTRUSTFLAGS
->  export CPP AR NM STRIP OBJCOPY OBJDUMP READELF PAHOLE RESOLVE_BTFIDS LEX=
- YACC AWK INSTALLKERNEL
->  export PERL PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 59b6765d86b8..8b9a1bd8ce71 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -3049,6 +3049,16 @@ config RUST_KERNEL_DOCTESTS
->
->           If unsure, say N.
->
-> +config RUST_LTO_HELPERS
-> +    bool "LTO C helpers with Rust crates"
-> +    depends on RUST && CC_IS_CLANG && EXPERT
-> +    help
-> +      Links C helpers together with Rust crates using LTO.
-> +
-> +      This is achieved by compiling both helpers and Rust crates into
-> +      LLVM bitcode and use llvm-link to combine them.
-> +
-> +      This requires a matching LLVM version for Clang and rustc.
-> +
-> +      If unsure, say N.
-> +
->  endmenu # "Rust"
->
->  endmenu # Kernel hacking
-> diff --git a/rust/Makefile b/rust/Makefile
-> index b4d63ea9209f..ad0797467102 100644
-> --- a/rust/Makefile
-> +++ b/rust/Makefile
-> @@ -6,9 +6,14 @@ rustdoc_output :=3D $(objtree)/Documentation/output/rust=
-/rustdoc
->  obj-$(CONFIG_RUST) +=3D core.o compiler_builtins.o
->  always-$(CONFIG_RUST) +=3D exports_core_generated.h
->
-> +ifdef CONFIG_RUST_LTO_HELPERS
-> +always-$(CONFIG_RUST) +=3D helpers.bc
-> +else
-> +obj-$(CONFIG_RUST) +=3D helpers.o
-> +always-$(CONFIG_RUST) +=3D exports_helpers_generated.h
-> +endif
->  # Missing prototypes are expected in the helpers since these are exporte=
-d
->  # for Rust only, thus there is no header nor prototypes.
-> -obj-$(CONFIG_RUST) +=3D helpers.o
->  CFLAGS_REMOVE_helpers.o =3D -Wmissing-prototypes -Wmissing-declarations
->
->  always-$(CONFIG_RUST) +=3D libmacros.so
-> @@ -17,7 +22,7 @@ no-clean-files +=3D libmacros.so
->  always-$(CONFIG_RUST) +=3D bindings/bindings_generated.rs bindings/bindi=
-ngs_helpers_generated.rs
->  obj-$(CONFIG_RUST) +=3D alloc.o bindings.o kernel.o
->  always-$(CONFIG_RUST) +=3D exports_alloc_generated.h exports_bindings_ge=
-nerated.h \
-> -    exports_kernel_generated.h exports_helpers_generated.h
-> +    exports_kernel_generated.h
->
->  always-$(CONFIG_RUST) +=3D uapi/uapi_generated.rs
->  obj-$(CONFIG_RUST) +=3D uapi.o
-> @@ -350,12 +355,24 @@ $(obj)/bindings/bindings_helpers_generated.rs: priv=
-ate bindgen_target_flags =3D \
->      --blocklist-type '.*' --allowlist-var '' \
->      --allowlist-function 'rust_helper_.*'
->  $(obj)/bindings/bindings_helpers_generated.rs: private bindgen_target_cf=
-lags =3D \
-> -    -I$(objtree)/$(obj) -Wno-missing-prototypes -Wno-missing-declaration=
-s
-> +    -I$(objtree)/$(obj) $(CFLAGS_helpers.o) -Wno-missing-prototypes -Wno=
--missing-declarations
->  $(obj)/bindings/bindings_helpers_generated.rs: private bindgen_target_ex=
-tra =3D ; \
->      sed -Ei 's/pub fn rust_helper_([a-zA-Z0-9_]*)/#[link_name=3D"rust_he=
-lper_\1"]\n    pub fn \1/g' $@
->  $(obj)/bindings/bindings_helpers_generated.rs: $(src)/helpers.c FORCE
->         $(call if_changed_dep,bindgen)
->
-> +# When compiling helpers, filter `-fno-delete-null-pointer-checks` since=
- LLVM
-> +# prevents inlining such functions to be inlined into functions compiled
-> +# without the option (e.g. Rust functions).
-> +quiet_cmd_rust_helper =3D HELPER  $@
-> +      cmd_rust_helper =3D \
-> +       $(CC) $(filter-out -fno-delete-null-pointer-checks $(CFLAGS_REMOV=
-E_helpers.o), $(c_flags) $(CFLAGS_helpers.o)) -S $< -emit-llvm -o $(patsubs=
-t %.bc,%.ll,$@); \
-> +       sed -i 's/^define dso_local/define linkonce_odr dso_local/g' $(pa=
-tsubst %.bc,%.ll,$@); \
-> +       $(LLVM_AS) $(patsubst %.bc,%.ll,$@) -o $@
-> +
-> +$(obj)/helpers.bc: $(obj)/helpers.c FORCE
-> +       +$(call if_changed_dep,rust_helper)
-> +
->  quiet_cmd_exports =3D EXPORTS $@
->        cmd_exports =3D \
->         $(NM) -p --defined-only $< \
-> @@ -396,11 +413,13 @@ quiet_cmd_rustc_library =3D $(if $(skip_clippy),RUS=
-TC,$(RUSTC_OR_CLIPPY_QUIET)) L
->         OBJTREE=3D$(abspath $(objtree)) \
->         $(if $(skip_clippy),$(RUSTC),$(RUSTC_OR_CLIPPY)) \
->                 $(filter-out $(skip_flags),$(rust_flags) $(rustc_target_f=
-lags)) \
-> -               --emit=3Ddep-info=3D$(depfile) --emit=3Dobj=3D$@ \
-> +               --emit=3Ddep-info=3D$(depfile) --emit=3D$(if $(link_helpe=
-r),llvm-bc=3D$(patsubst %.o,%.bc,$@),obj=3D$@) \
->                 --emit=3Dmetadata=3D$(dir $@)$(patsubst %.o,lib%.rmeta,$(=
-notdir $@)) \
->                 --crate-type rlib -L$(objtree)/$(obj) \
->                 --crate-name $(patsubst %.o,%,$(notdir $@)) $< \
->                 --sysroot=3D/dev/null \
-> +       $(if $(link_helper),;$(LLVM_LINK) $(patsubst %.o,%.bc,$@) $(obj)/=
-helpers.bc -o $(patsubst %.o,%.m.bc,$@); \
-> +               $(CC) $(KBUILD_CFLAGS) -mllvm=3D--ignore-tti-inline-compa=
-tible -c $(patsubst %.o,%.m.bc,$@) -o $@) \
->         $(if $(rustc_objcopy),;$(OBJCOPY) $(rustc_objcopy) $@)
->
->  rust-analyzer:
-> @@ -463,4 +482,11 @@ $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/alloc.o=
- $(obj)/build_error.o \
->      $(obj)/libmacros.so $(obj)/bindings.o $(obj)/uapi.o FORCE
->         +$(call if_changed_dep,rustc_library)
->
-> +ifdef CONFIG_RUST_LTO_HELPERS
-> +
-> +$(obj)/kernel.o: private link_helper =3D 1
-> +$(obj)/kernel.o: $(obj)/helpers.bc
-> +
-> +endif
-> +
->  endif # CONFIG_RUST
-> diff --git a/rust/exports.c b/rust/exports.c
-> index aa1218b325e5..212c1ec1d38b 100644
-> --- a/rust/exports.c
-> +++ b/rust/exports.c
-> @@ -19,7 +19,10 @@
->  #include "exports_alloc_generated.h"
->  #include "exports_bindings_generated.h"
->  #include "exports_kernel_generated.h"
-> +
-> +#ifndef CONFIG_RUST_LTO_HELPERS
->  #include "exports_helpers_generated.h"
-> +#endif
->
->  // For modules using `rust/build_error.rs`.
->  #ifdef CONFIG_RUST_BUILD_ASSERT_ALLOW
-> diff --git a/rust/helpers.c b/rust/helpers.c
-> index 895f4b696962..3abf96f14148 100644
-> --- a/rust/helpers.c
-> +++ b/rust/helpers.c
-> @@ -32,18 +32,19 @@
->  #include <linux/spinlock.h>
->  #include <linux/wait.h>
->  #include <linux/workqueue.h>
-> +#include "helpers.h"
->
-> -__noreturn void rust_helper_BUG(void)
-> +__rust_helper __noreturn void rust_helper_BUG(void)
->  {
->         BUG();
->  }
->
-> -void rust_helper_mutex_lock(struct mutex *lock)
-> +__rust_helper void rust_helper_mutex_lock(struct mutex *lock)
->  {
->         mutex_lock(lock);
->  }
->
-> -void rust_helper___spin_lock_init(spinlock_t *lock, const char *name,
-> +__rust_helper void rust_helper___spin_lock_init(spinlock_t *lock, const =
-char *name,
->                                   struct lock_class_key *key)
->  {
->  #ifdef CONFIG_DEBUG_SPINLOCK
-> @@ -53,82 +54,82 @@ void rust_helper___spin_lock_init(spinlock_t *lock, c=
-onst char *name,
->  #endif
->  }
->
-> -void rust_helper_spin_lock(spinlock_t *lock)
-> +__rust_helper void rust_helper_spin_lock(spinlock_t *lock)
->  {
->         spin_lock(lock);
->  }
->
-> -void rust_helper_spin_unlock(spinlock_t *lock)
-> +__rust_helper void rust_helper_spin_unlock(spinlock_t *lock)
->  {
->         spin_unlock(lock);
->  }
->
-> -void rust_helper_init_wait(struct wait_queue_entry *wq_entry)
-> +__rust_helper void rust_helper_init_wait(struct wait_queue_entry *wq_ent=
-ry)
->  {
->         init_wait(wq_entry);
->  }
->
-> -int rust_helper_signal_pending(struct task_struct *t)
-> +__rust_helper int rust_helper_signal_pending(struct task_struct *t)
->  {
->         return signal_pending(t);
->  }
->
-> -refcount_t rust_helper_REFCOUNT_INIT(int n)
-> +__rust_helper refcount_t rust_helper_REFCOUNT_INIT(int n)
->  {
->         return (refcount_t)REFCOUNT_INIT(n);
->  }
->
-> -void rust_helper_refcount_inc(refcount_t *r)
-> +__rust_helper void rust_helper_refcount_inc(refcount_t *r)
->  {
->         refcount_inc(r);
->  }
->
-> -bool rust_helper_refcount_dec_and_test(refcount_t *r)
-> +__rust_helper bool rust_helper_refcount_dec_and_test(refcount_t *r)
->  {
->         return refcount_dec_and_test(r);
->  }
->
-> -__force void *rust_helper_ERR_PTR(long err)
-> +__rust_helper __force void *rust_helper_ERR_PTR(long err)
->  {
->         return ERR_PTR(err);
->  }
->
-> -bool rust_helper_IS_ERR(__force const void *ptr)
-> +__rust_helper bool rust_helper_IS_ERR(__force const void *ptr)
->  {
->         return IS_ERR(ptr);
->  }
->
-> -long rust_helper_PTR_ERR(__force const void *ptr)
-> +__rust_helper long rust_helper_PTR_ERR(__force const void *ptr)
->  {
->         return PTR_ERR(ptr);
->  }
->
-> -const char *rust_helper_errname(int err)
-> +__rust_helper const char *rust_helper_errname(int err)
->  {
->         return errname(err);
->  }
->
-> -struct task_struct *rust_helper_get_current(void)
-> +__rust_helper struct task_struct *rust_helper_get_current(void)
->  {
->         return current;
->  }
->
-> -void rust_helper_get_task_struct(struct task_struct *t)
-> +__rust_helper void rust_helper_get_task_struct(struct task_struct *t)
->  {
->         get_task_struct(t);
->  }
->
-> -void rust_helper_put_task_struct(struct task_struct *t)
-> +__rust_helper void rust_helper_put_task_struct(struct task_struct *t)
->  {
->         put_task_struct(t);
->  }
->
-> -struct kunit *rust_helper_kunit_get_current_test(void)
-> +__rust_helper struct kunit *rust_helper_kunit_get_current_test(void)
->  {
->         return kunit_get_current_test();
->  }
->
-> -void rust_helper_init_work_with_key(struct work_struct *work, work_func_=
-t func,
-> +__rust_helper void rust_helper_init_work_with_key(struct work_struct *wo=
-rk, work_func_t func,
->                                     bool onstack, const char *name,
->                                     struct lock_class_key *key)
->  {
-> @@ -139,7 +140,7 @@ void rust_helper_init_work_with_key(struct work_struc=
-t *work, work_func_t func,
->         work->func =3D func;
->  }
->
-> -void * __must_check __realloc_size(2)
-> +__rust_helper void * __must_check __realloc_size(2)
->  rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
->  {
->         return krealloc(objp, new_size, flags);
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index efacca63c897..201e7dc5ae5d 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -288,7 +288,10 @@ rust_common_cmd =3D \
->  # would not match each other.
->
->  quiet_cmd_rustc_o_rs =3D $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
-> -      cmd_rustc_o_rs =3D $(rust_common_cmd) --emit=3Dobj=3D$@ $<
-> +      cmd_rustc_o_rs =3D $(rust_common_cmd) --emit=3D$(if $(CONFIG_RUST_=
-LTO_HELPERS),llvm-bc=3D$(patsubst %.o,%.bc,$@),obj=3D$@) $< \
-> +       $(if $(CONFIG_RUST_LTO_HELPERS),;$(LLVM_LINK) $(patsubst %.o,%.bc=
-,$@) $(objtree)/rust/helpers.bc -o $(patsubst %.o,%.m.bc,$@); \
-> +               $(CC) $(KBUILD_CFLAGS) -mllvm=3D--ignore-tti-inline-compa=
-tible -c $(patsubst %.o,%.m.bc,$@) -o $@)
-> +
->
->  $(obj)/%.o: $(obj)/%.rs FORCE
->         +$(call if_changed_dep,rustc_o_rs)
-> --
-> 2.42.0
->
->
