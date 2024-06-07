@@ -1,235 +1,101 @@
-Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D29DF15B127;
-	Fri,  7 Jun 2024 12:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B45186E56;
+	Fri,  7 Jun 2024 12:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717762877; cv=none; b=m+JCEmZDKC0ETTMsKf2qjed6kSaxUKwN8zO4uOL8QveC6PV51EczXfk09seFEIRq/zQfau0a8kAppc/WsWpWqIDlcrZSQFVYPNkPFzKq7kyJ2jFq+PAJSzd5SnEyfduYCEKMZOmS8gSzoNy2seYyDiL10dOFIPwXnlZMzEjkLbw=
+	t=1717763025; cv=none; b=We/yBCmA758qJTJb86ZWX1+9dAaCvDFc7bQu4FnQ7q+GkoWROFlHvqT8zBfDGjj92ttonRMzZyggduAu6mRFKRShDkHxX+wwnrM/OR0B1RqyIrMlW6ggUkX5jp5dULAAC+cCimgJyPtYUKL9wPyy4peeAlbnv3AfkSwzKeAzsTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717762877; c=relaxed/simple;
-	bh=J6KPuZ2VxItqZmJdi4nQDQNER33qNxybVV6F+t0nrao=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jByU0HlrMs+cYnTd8a1wzKB/zdke7UNZPS03cyjv+XmqtybTDp/ftLT27buMzijAfiaw1nXJEMhrU3mVewEheTuIY3vZRnNnp3Em9ESfBxfZLvAl5krom2dUq4tUT/KEhuBfhM9sJ0pFCSkDp2oK/sdETOBvBDCPmbMAhxIjObk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=QrBgp6qI; arc=none smtp.client-ip=35.157.23.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
+	s=arc-20240116; t=1717763025; c=relaxed/simple;
+	bh=KXaT31eEGTd1QHcbggRukrvi8jLZCohTrUf9ufQF3Io=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tbwUFFEmeelO7CVoyIvbZwBZrsNnIdZJzbhPye5O8u2VA3CCZEgZTknXLqxF7wLMvwBPm8bVow9+htmkys/tvGGrzDqT7t0seDRgJf71oM6cZdMgrRXfk7g+85sZkdeWb0OPLBVel2RlS9BvjBSGfx89jdXtj4VHRsJL78VBOUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=ga6RQ8cN; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="QrBgp6qI"
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id ABBA720FF;
-	Fri,  7 Jun 2024 12:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=paragon-software.com; s=mail; t=1717762091;
-	bh=GaStLi+0wBM9tYp9G17MLO5l7cW1O7P/lNN8XAy/iCs=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=QrBgp6qIbln4ZrPCCqQEz4pKb2V85OCBgT80EIrWad4iz5GuhJzrQIKjpwanfzub/
-	 R86lsncvALbmlnjFnSt+uHqqHLLgZQF+yyzRiPnQYbM68vhNo/e73uHXxlUGRLsU76
-	 GX6ljmhAxqHUWXfVVpsJ71odO+F2CJqsYTuBK9Og=
-Received: from ntfs3vm.paragon-software.com (192.168.211.95) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Fri, 7 Jun 2024 15:16:05 +0300
-From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To: <ntfs3@lists.linux.dev>
-CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Subject: [PATCH 02/18] fs/ntfs3: Simplify initialization of $AttrDef and $UpCase
-Date: Fri, 7 Jun 2024 15:15:32 +0300
-Message-ID: <20240607121548.18818-3-almaz.alexandrovich@paragon-software.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240607121548.18818-1-almaz.alexandrovich@paragon-software.com>
-References: <20240607121548.18818-1-almaz.alexandrovich@paragon-software.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ga6RQ8cN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1717762993; x=1718367793; i=markus.elfring@web.de;
+	bh=xnbflH3Wg1z5GvtBOo9DAO3UHstyphUXTt3DOwd9w58=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ga6RQ8cNFDFq+7yR7zmw2wthREsvMJqzpr6gjIuF89FPKOhjFnFh7QcmoGqG3oOu
+	 DUgf5+V/BIppxa3tC82IY/bX4cOypmtzSuqlRFCI/T80NA2eQfzBgB+D04aqYOBnp
+	 WEsa1C02wS5Xk6I9YhxrP3euU2VJZriBlS0XktTuUMxl5T8gERXU0f4cSniVSFKmx
+	 sY5jFoCcC0FV0RoiLIR3ikXI/F7DQwG8HrvZzW/aeBQTo7hIW1st/HERWAtJbp7Gr
+	 czAfWj7K69QIKKCuMlx2rTONYLLZeJ7hwRfNakmeJEjwcKqkknXh6OXuIZqaoFmcI
+	 KKsxCUviv1cKxbocQQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MbTH3-1sr5AW1Zrl-00im4v; Fri, 07
+ Jun 2024 14:23:13 +0200
+Message-ID: <5bd85dce-13a8-4558-a574-726626ecbc5c@web.de>
+Date: Fri, 7 Jun 2024 14:23:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
- vdlg-exch-02.paragon-software.com (172.30.1.105)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dmaengine: xilinx: xdma: Fix data synchronisation in
+ xdma_channel_isr()
+To: Louis Chauvet <louis.chauvet@bootlin.com>, Lizhi Hou <lizhi.hou@amd.com>,
+ Brian Xu <brian.xu@amd.com>, Raj Kumar Rampelli
+ <raj.kumar.rampelli@amd.com>, Vinod Koul <vkoul@kernel.org>,
+ Michal Simek <michal.simek@amd.com>, dmaengine@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240607-xdma-fixes-v2-1-0282319ce345@bootlin.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240607-xdma-fixes-v2-1-0282319ce345@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Rq71xYcv7AE6RT6snxQ/7L88lxsSpvjLIAAaV4rGhD5tibDU584
+ 1LWrBOqL29y9nPpWAn/JgJSLhNtW4eDFr0O1eQj218dpPrjTDHu9zGDTR8fez75LcXyUq4S
+ u6fajeEzdtMNsaylUW4Jya1qLHXgNLoPOJpLUShnTucCcukiU7UIlkBhE1E1mK6yr3o1oBW
+ COJ5G9AUsu+8e2I5vVSjw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2ZuDCsg8jSw=;FL/XvPK9CgStER9vsTkVwtyJ/nA
+ sGzNB0h8wq0C3Z379vJ4IsFOQ6Z52BqnhKu/D8C4APJTwcW8jAIAr6DoCoBBu33yCDSm7jykm
+ tqQsbfJTHBiO5vHUnIM56Kq2ZJfx4lx//v4autdr9SBK4pCmNTEi02bzcgGnC6epqLFvJIovZ
+ rzx9k+PW1ZgMhpibsYmg7eU8j+QianriZu2Jcfz/T8TH+2VPQRCUnc5Uvv3LAB1H7j/27VGqM
+ uar1o8rNEfDk338wpx1eO/0FfZfZWGADkALr+gl2FXePQw4rRkrsmtTVHnAXMoNLRhc845MMe
+ maY9hLrkVUjsMfwU9ClsrSFjNo+ZV2703nyVp5tSWiqlmi0y34Bb1c/70D1oVm7W9JWWSCgD8
+ IZuYg51yJjb5OS+KUrx8BoV7+eTwW2Vfm3d89w84CcNOMkEWBQkWXGuUNDmrrQ/j/pBpe5W2j
+ zuTO3YL8T+LMV9TZwIFUve+TRcpgLIa4La+/jxYm0VgMBrKCuyOwuUU+gNwrW6/wt5N5W8TAH
+ elCNMyDMXio49MDI3rooDULUgiwkWPHuYKpKwmXiMRUYZ1U3wRmby0xLfxMdsnH5oniAlZ33o
+ HZuLxwh6jgNcjbuIiJRFvE1xO4SF0z1+3dvHquzwPt+sXpE5CSnOej3cIgZsOquNmxImYgFqT
+ 1cl08dS3M8VOmYzdIk6Mjwn7JQtWapFOFSrHu8oO3Ykhnc/dEaCsO6vlMYZtOj/EPy5mr8PqV
+ cX7FUCNBgVMpNzCHbFOiiR2mKpcSaFD+YqlB7OQEm+cb9B9X/NACa4mhIuqRFEPk81/1COZWg
+ FLmOoSJ0QXNA/wl/oMtosV82mSus3qSny6vQhA2HJ5AUA=
 
-Replaced the two loops reading $AttrDef and $UpCase with
-the inode_read_data() function.
+=E2=80=A6
+> +++ b/drivers/dma/xilinx/xdma.c
+> @@ -885,11 +885,11 @@ static irqreturn_t xdma_channel_isr(int irq, void =
+*dev_id)
+>  	u32 st;
+>  	bool repeat_tx;
+>
+> +	spin_lock(&xchan->vchan.lock);
+> +
+>  	if (xchan->stop_requested)
+>  		complete(&xchan->last_interrupt);
+=E2=80=A6
 
-Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
----
- fs/ntfs3/inode.c   | 28 ++++++++++++++++++++++
- fs/ntfs3/ntfs_fs.h | 17 +------------
- fs/ntfs3/super.c   | 60 ++++++++++++++++++----------------------------
- 3 files changed, 52 insertions(+), 53 deletions(-)
+Can any lock scope adjustments matter also for another variable definition=
+?
+https://elixir.bootlin.com/linux/v6.10-rc2/source/drivers/dma/xilinx/xdma.=
+c#L873
 
-diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-index 6dc51faeef8d..2a3522bbeeb4 100644
---- a/fs/ntfs3/inode.c
-+++ b/fs/ntfs3/inode.c
-@@ -1097,6 +1097,34 @@ int ntfs_flush_inodes(struct super_block *sb, struct inode *i1,
- 	return ret;
- }
- 
-+/*
-+ * Helper function to read file.
-+ */
-+int inode_read_data(struct inode *inode, void *data, size_t bytes)
-+{
-+	pgoff_t idx;
-+	struct address_space *mapping = inode->i_mapping;
-+
-+	for (idx = 0; bytes; idx++) {
-+		size_t op = bytes > PAGE_SIZE ? PAGE_SIZE : bytes;
-+		struct page *page = read_mapping_page(mapping, idx, NULL);
-+		void *kaddr;
-+
-+		if (IS_ERR(page))
-+			return PTR_ERR(page);
-+
-+		kaddr = kmap_atomic(page);
-+		memcpy(data, kaddr, op);
-+		kunmap_atomic(kaddr);
-+
-+		put_page(page);
-+
-+		bytes -= op;
-+		data = Add2Ptr(data, PAGE_SIZE);
-+	}
-+	return 0;
-+}
-+
- /*
-  * ntfs_reparse_bytes
-  *
-diff --git a/fs/ntfs3/ntfs_fs.h b/fs/ntfs3/ntfs_fs.h
-index ee0c1b76e812..3583d47b95da 100644
---- a/fs/ntfs3/ntfs_fs.h
-+++ b/fs/ntfs3/ntfs_fs.h
-@@ -716,6 +716,7 @@ int ntfs3_write_inode(struct inode *inode, struct writeback_control *wbc);
- int ntfs_sync_inode(struct inode *inode);
- int ntfs_flush_inodes(struct super_block *sb, struct inode *i1,
- 		      struct inode *i2);
-+int inode_read_data(struct inode *inode, void *data, size_t bytes);
- int ntfs_create_inode(struct mnt_idmap *idmap, struct inode *dir,
- 		      struct dentry *dentry, const struct cpu_str *uni,
- 		      umode_t mode, dev_t dev, const char *symname, u32 size,
-@@ -909,22 +910,6 @@ static inline bool ntfs_is_meta_file(struct ntfs_sb_info *sbi, CLST rno)
- 	       rno == sbi->usn_jrnl_no;
- }
- 
--static inline void ntfs_unmap_page(struct page *page)
--{
--	kunmap(page);
--	put_page(page);
--}
--
--static inline struct page *ntfs_map_page(struct address_space *mapping,
--					 unsigned long index)
--{
--	struct page *page = read_mapping_page(mapping, index, NULL);
--
--	if (!IS_ERR(page))
--		kmap(page);
--	return page;
--}
--
- static inline size_t wnd_zone_bit(const struct wnd_bitmap *wnd)
- {
- 	return wnd->zone_bit;
-diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
-index 27fbde2701b6..6c9e5fe8ce81 100644
---- a/fs/ntfs3/super.c
-+++ b/fs/ntfs3/super.c
-@@ -1163,7 +1163,7 @@ static int ntfs_fill_super(struct super_block *sb, struct fs_context *fc)
- 	CLST vcn, lcn, len;
- 	struct ATTRIB *attr;
- 	const struct VOLUME_INFO *info;
--	u32 idx, done, bytes;
-+	u32 done, bytes;
- 	struct ATTR_DEF_ENTRY *t;
- 	u16 *shared;
- 	struct MFT_REF ref;
-@@ -1435,31 +1435,22 @@ static int ntfs_fill_super(struct super_block *sb, struct fs_context *fc)
- 		goto put_inode_out;
- 	}
- 
--	for (done = idx = 0; done < bytes; done += PAGE_SIZE, idx++) {
--		unsigned long tail = bytes - done;
--		struct page *page = ntfs_map_page(inode->i_mapping, idx);
-+	/* Read the entire file. */
-+	err = inode_read_data(inode, sbi->def_table, bytes);
-+	if (err) {
-+		ntfs_err(sb, "Failed to read $AttrDef (%d).", err);
-+		goto put_inode_out;
-+	}
- 
--		if (IS_ERR(page)) {
--			err = PTR_ERR(page);
--			ntfs_err(sb, "Failed to read $AttrDef (%d).", err);
--			goto put_inode_out;
--		}
--		memcpy(Add2Ptr(t, done), page_address(page),
--		       min(PAGE_SIZE, tail));
--		ntfs_unmap_page(page);
--
--		if (!idx && ATTR_STD != t->type) {
--			ntfs_err(sb, "$AttrDef is corrupted.");
--			err = -EINVAL;
--			goto put_inode_out;
--		}
-+	if (ATTR_STD != t->type) {
-+		ntfs_err(sb, "$AttrDef is corrupted.");
-+		err = -EINVAL;
-+		goto put_inode_out;
- 	}
- 
- 	t += 1;
- 	sbi->def_entries = 1;
- 	done = sizeof(struct ATTR_DEF_ENTRY);
--	sbi->reparse.max_size = MAXIMUM_REPARSE_DATA_BUFFER_SIZE;
--	sbi->ea_max_size = 0x10000; /* default formatter value */
- 
- 	while (done + sizeof(struct ATTR_DEF_ENTRY) <= bytes) {
- 		u32 t32 = le32_to_cpu(t->type);
-@@ -1495,27 +1486,22 @@ static int ntfs_fill_super(struct super_block *sb, struct fs_context *fc)
- 		goto put_inode_out;
- 	}
- 
--	for (idx = 0; idx < (0x10000 * sizeof(short) >> PAGE_SHIFT); idx++) {
--		const __le16 *src;
--		u16 *dst = Add2Ptr(sbi->upcase, idx << PAGE_SHIFT);
--		struct page *page = ntfs_map_page(inode->i_mapping, idx);
--
--		if (IS_ERR(page)) {
--			err = PTR_ERR(page);
--			ntfs_err(sb, "Failed to read $UpCase (%d).", err);
--			goto put_inode_out;
--		}
--
--		src = page_address(page);
-+	/* Read the entire file. */
-+	err = inode_read_data(inode, sbi->upcase, 0x10000 * sizeof(short));
-+	if (err) {
-+		ntfs_err(sb, "Failed to read $UpCase (%d).", err);
-+		goto put_inode_out;
-+	}
- 
- #ifdef __BIG_ENDIAN
--		for (i = 0; i < PAGE_SIZE / sizeof(u16); i++)
-+	{
-+		const __le16 *src = sbi->upcase;
-+		u16 *dst = sbi->upcase;
-+
-+		for (i = 0; i < 0x10000; i++)
- 			*dst++ = le16_to_cpu(*src++);
--#else
--		memcpy(dst, src, PAGE_SIZE);
--#endif
--		ntfs_unmap_page(page);
- 	}
-+#endif
- 
- 	shared = ntfs_set_shared(sbi->upcase, 0x10000 * sizeof(short));
- 	if (shared && sbi->upcase != shared) {
--- 
-2.34.1
+	struct xdma_device *xdev =3D xchan->xdev_hdl;
 
+
+Regards,
+Markus
