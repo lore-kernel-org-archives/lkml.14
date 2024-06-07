@@ -1,129 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002E517C6C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 09:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61722156C5B;
+	Fri,  7 Jun 2024 09:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717751023; cv=none; b=nDgFg7tyI8GZQyQFdlvsd9JlZFBud624tElpQmn0OBxpYeNIjosCB7UnI9onOOQ5UNzLYQIVuBPKMJtYNweBFkiHwAte41WZ+az3gv/Z/o8zzwi8FPtl82OszFdnTaxHTOADEAbZxCMS1OPUYlcN9qyhvcM80ds4NMbbhBhMr78=
+	t=1717751062; cv=none; b=bNO3q3dnZ2nUDmjBYVHEx3NCOqEnXtwBqcoj5e+TNDk0lXAG71jTW7k7QTIw4Qy8NGTJWcoi90tK+v6/HaEbEG3K86yuTk0Dnro+cCl2xjTFbGhONNTHgYSSwLRKvQgSEqfYvSttwqPaE5Bmgzez5TcnsK3BlFgCuGXt0RpkrPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717751023; c=relaxed/simple;
-	bh=7X6zarJgJIAqkTEk8mUER5IEjtHSmRMyzVjoW1K8ZhY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Csz0ODHJ9xrW52wdMmJkz5g9XVg9A5Agk29k40rD72nXvUFwsp+oNhdDR+A3mPlEgYhqtP61ljeMuWystU/yH/Jq35afyPxHpK9+b6CtRaKVlRupiV7Eaeg2pc1T4VymmNWjM4JS54QprCziUwH7FMIWB2DptJlV8+dDlIxG77U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eUPUpaWR; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717751062; c=relaxed/simple;
+	bh=zY8w3RswIfZFX2pjGT2B4WWLkoE0CKtoyQZMU5wnpRc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fF75wjVsVOfwl2btW666HIyDaG+afk8RAw6XnRXWVVqmBVKVL1usS7VzwB+57OrsabA5Jn8UxPVlii/a7P9aSHzSjIDYjuQsPtM/bE8sMCj98GfMkk6eCzSlMoIF4I5/+np9VaeTUxHTeVCoAU/pDTPzz2kTAKdKxWoFCJDaKx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MFPdnf8d; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eUPUpaWR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717751020;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xqE6hPCyqXNy3D1+Jzyj9gbitemqp2I97TKEU0JKvzE=;
-	b=eUPUpaWRb7bbisO702jI6rL/5pL3y8tlUQfce7zHvGv9HI70NqsrcaDnphjrpA4eN9fPp9
-	XmsgiFGcCmfCgHGvs0M9nBMHyOy0UWtTLjIyPkEQYjY2Y2H1yj2RuOnar4xHwnf20N71S5
-	6p/3JpuNBgY7kHjvLZg2mAhjOmFa/qk=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-368-E5xHp6M0OJ--Wwy-WjMRFw-1; Fri, 07 Jun 2024 05:03:39 -0400
-X-MC-Unique: E5xHp6M0OJ--Wwy-WjMRFw-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-52b88765386so1774513e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 02:03:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFPdnf8d"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a6e0a499687so29485066b.2;
+        Fri, 07 Jun 2024 02:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717751060; x=1718355860; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zY8w3RswIfZFX2pjGT2B4WWLkoE0CKtoyQZMU5wnpRc=;
+        b=MFPdnf8dys0jBagmpNaZJAWpqSaN+xoaYdQeR44KCe5fsTfhAhYFjpzedageNnAa1S
+         jhTgWlqEf2PZFcbozTm7QVhdidVGUoTprsYK/MD7WCtIKHg/AOpYQXhZg/bqjDTkG2vz
+         ke2BW77ZUsWk6B6mhGv0mE3WojdlSBR1pPcI8mRUWKgrbFrQU0DC30m3SWPK2/fR6IJZ
+         zZwk2tqsPoeSLFuDcBFDad7H4QcPJmPrtTlR/WqCU2z4iGhlPAUHaPmfeeSPhgKTDn5C
+         lbay7jmzh4ilqIqJc8IMZqhiKkWnC0L7V5j4j6HWE+S0Gc/TSrIVtddhHNjbx9btHOt9
+         5ICw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717751018; x=1718355818;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xqE6hPCyqXNy3D1+Jzyj9gbitemqp2I97TKEU0JKvzE=;
-        b=X4iZ+ENvt5AHYbXedCh1xr3candJ2+UKtQCzyn1qWiXiWxwE5wwhRgWW3kqUi3jDkI
-         qGCwzt/hRvSW2sBu3up0GHHL7CW02n/rdXktxYYG8bKpiV9wAJRVWRKKlaGkQlutHSXs
-         sqIq5Fmzg3VTVRklbWtLwRVDuZj2BrKU1Qemz++czGEKM04J9ti04zUf29Rws8oXR7zT
-         3EAEmT0rpD8n5A4AlRNSxSQTrFsC905jbgrP0CXL1FY17pm4CaWcp54SIWZiWcckPUZ7
-         T/jU9DAicRXOscRSv7IpEfepZmhISUXZRqcIjPuPXbB+6JNJEfGbYkF3mCu3QwLcsh6H
-         iGxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5PfNEc2K11YUX2LYJwu1jr4PREu90r3/bwj31t/gL43WWgICAf8lMFE5Kz8+z0OxdrXgvfyptiOs3ln9dxX6BFvWwv3/l7NdL2PNt
-X-Gm-Message-State: AOJu0Yy0BKw4JeP6FZQffpXNOcBneEo0FwFUv9266i0L7x24bSb3A1FH
-	D3i+ZPEBsJK0q3KWG/paAhxhCvO/CA7HFbB33K+Yix47GW0yqg9mvrL/QY5CT49USYbYEcKCU3Q
-	Nqanr/ax6Ly3oSQV1SRcQAyBoBnZ8dV3d5CspKoqXPnsfZ+tv0q9rg7qv0Xxi+3s2EXu/NctY2B
-	jI/EBCHeMv6EJZxK8QURKfpPZGxIEr0tlsIHif
-X-Received: by 2002:a19:f812:0:b0:529:9fe5:f54b with SMTP id 2adb3069b0e04-52bb9fcc495mr1260613e87.43.1717751018046;
-        Fri, 07 Jun 2024 02:03:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3tfq7LInmTFS863fnDty0MeJZUA2Es5xSZAYprCk31HXCX5v9kTaO2IKs/xYldhZhlO5SsG8it4TA8W+b+H8=
-X-Received: by 2002:a19:f812:0:b0:529:9fe5:f54b with SMTP id
- 2adb3069b0e04-52bb9fcc495mr1260596e87.43.1717751017623; Fri, 07 Jun 2024
- 02:03:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717751060; x=1718355860;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zY8w3RswIfZFX2pjGT2B4WWLkoE0CKtoyQZMU5wnpRc=;
+        b=k3T6UEhqFvUCygY7t9KKDosOrFkQcgggs0FbZ59jXDolG+Ka4Y+Me7+NDSAWZAlLbw
+         aZL2DzAXI03eflKW3Dg2tJkIVB0XaEkiIIZFysHJEMqmx1w2HcEoIah4BaO9XOUfmInL
+         QSv2pZ+jk+G6nMuxSgx32QauaGIcsl/RBKfyZglzRREvzHY9ZM58NR5iauu/4hpp28/s
+         JefPNkcd5ZyaPhdumuwxb+O4EkrBE9b648pKVjwmWga59F/WULYEBQcnxkw8nT0POfPP
+         TSz0m6Z/TNq/JE2RRbavMKbyZ93vNFSxuUlAE3WlXkE038a5G3JOUOYho87OZu62JLGP
+         c0yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3yeLC7XnWshFV5uKiOZ4TPK2OI4evoRxaRWjcO4tcWO6E05q8eUn4WaaUmiRiCVWJ6aXJl+6W3QvkgjHlWbeN54mmfOPUWKYi1lk8Kl8JTrhH/c5vG/pzGbeVEU4QbGnOuTcVr4Mi6HSgidtXrTC67BmoLtlqbICSf8rUwCahF5oX/w==
+X-Gm-Message-State: AOJu0YwU6oHNGeW6v/PuqaqddH6ns556K8GtO3y+bcygIeDJ/DNegElp
+	+OxS5cnmK1dxmRRP2zvvX8N1vz8jkgeuX/eMOUoIil/CJ70DIERLxJ0fgw7i6Vfebw==
+X-Google-Smtp-Source: AGHT+IFO+WfF1ib+IKCLuKU+jB3CDvMMZYZptXoIzYymrazdnRRuoSOdKlRqzAMYKqHxQyxivMjSnw==
+X-Received: by 2002:a17:906:2687:b0:a63:582b:8ac1 with SMTP id a640c23a62f3a-a6cd6f00605mr113389266b.20.1717751059595;
+        Fri, 07 Jun 2024 02:04:19 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c80595e7bsm214853366b.23.2024.06.07.02.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 02:04:19 -0700 (PDT)
+Message-ID: <5905268db15644ece76b597b7bc8220f4f473204.camel@gmail.com>
+Subject: Re: [PATCH v6 7/9] iio: adc: ad7173: refactor device info structs
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ David Lechner <dlechner@baylibre.com>,  linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org, Dumitru Ceclan
+ <mitrutzceclan@gmail.com>
+Date: Fri, 07 Jun 2024 11:08:06 +0200
+In-Reply-To: <20240606-ad4111-v6-7-573981fb3e2e@analog.com>
+References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
+	 <20240606-ad4111-v6-7-573981fb3e2e@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530210714.364118-1-rick.p.edgecombe@intel.com> <20240530210714.364118-15-rick.p.edgecombe@intel.com>
-In-Reply-To: <20240530210714.364118-15-rick.p.edgecombe@intel.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 7 Jun 2024 11:03:25 +0200
-Message-ID: <CABgObfYL9uujoLTmSBW0LqoQbOGKpfZsB50BZqMo5_WOChrZ-A@mail.gmail.com>
-Subject: Re: [PATCH v2 14/15] KVM: x86/tdp_mmu: Invalidate correct roots
-To: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: seanjc@google.com, kvm@vger.kernel.org, kai.huang@intel.com, 
-	dmatlack@google.com, erdemaktas@google.com, isaku.yamahata@gmail.com, 
-	linux-kernel@vger.kernel.org, sagis@google.com, yan.y.zhao@intel.com, 
-	Sean Christopherson <sean.j.christopherson@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 30, 2024 at 11:07=E2=80=AFPM Rick Edgecombe
-<rick.p.edgecombe@intel.com> wrote:
->
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
->
-> When invalidating roots, respect the root type passed.
->
-> kvm_tdp_mmu_invalidate_roots() is called with different root types. For
-> kvm_mmu_zap_all_fast() it only operates on shared roots. But when tearing
-> down a VM it needs to invalidate all roots. Check the root type in root
-> iterator.
+On Thu, 2024-06-06 at 19:07 +0300, Dumitru Ceclan via B4 Relay wrote:
+> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>=20
+> Drop array of device info structs and use individual structs for all;
+> drop models enum as no longer needed. This improves readability as the
+> structs are pointed directly.
+>=20
+> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+> ---
 
-This patch and patch 12 are small enough that they can be merged.
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-> @@ -1135,6 +1135,7 @@ void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *=
-kvm)
->  void kvm_tdp_mmu_invalidate_roots(struct kvm *kvm,
->                                   enum kvm_process process_types)
->  {
-> +       enum kvm_tdp_mmu_root_types root_types =3D kvm_process_to_root_ty=
-pes(kvm, process_types);
-
-Maybe pass directly enum kvm_tdp_mmu_root_types?
-
-Looking at patch 12:
-
-+ /*
-+ * The private page tables doesn't support fast zapping.  The
-+ * caller should handle it by other way.
-+ */
-+ kvm_tdp_mmu_invalidate_roots(kvm, KVM_PROCESS_SHARED);
-
-now that we have separated private-ness and external-ness, it sounds
-much better to write:
-
-/*
- * External page tables don't support fast zapping, therefore
- * their mirrors must be invalidated separately by the caller.
- */
-kvm_tdp_mmu_invalidate_roots(kvm, KVM_DIRECT_ROOTS);
-
-while kvm_mmu_uninit_tdp_mmu() can pass KVM_ANY_ROOTS. It may also be
-worth adding an
-
-if (WARN_ON_ONCE(root_types & KVM_INVALID_ROOTS))
-  root_types &=3D ~KVM_INVALID_ROOTS;
-
-to document the invariants.
-
-Paolo
 
