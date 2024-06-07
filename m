@@ -1,72 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4AE187346
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 11:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717759028; cv=none; b=Jiy4QyIC6R7Ks5XX5fqw+9tT4FFtPY79dkQqU4XLWRjy/sFGlFq5x3JpssuFnhsORnON+MUIeuKMqjZfuYVAjyolQJQwE41t5L7Rtto1BvgyB9tOxtVu2L9j5TIWwwchG+C8L0Ak3ItBx7Xk0naGpPvQB3lwFqJlM1mxMzSrKIQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717759028; c=relaxed/simple;
-	bh=9t/V6lr+JXo0ko6oV1wFcYKchLmN9d+xrlxuBH0B4uw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YZlD+9ziNARmi5OmuQSZA6bfBjSl37ycfmPie0/yk25B04gT4l5i0gM/vWAYwtnSVmKpxGvBthxptj+feR1YJLiq8r7jCO1SQ+3DGvcEYtlUcNH3o6IfR3wGsjDzWJ/HRRyeR/gE/zj3EQlpRb0uZQBqk8YN7hM597sV+cmlSmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjC6ZkdH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjC6ZkdH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 760FEC32786;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DFA15CD41;
 	Fri,  7 Jun 2024 11:17:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717759028;
-	bh=9t/V6lr+JXo0ko6oV1wFcYKchLmN9d+xrlxuBH0B4uw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LjC6ZkdHpeOiJwD8KULbH05n5M/aDnRcFKFFGGnaWUSpRoS1uCeOolAzyzEv1hP+6
-	 mUYhWu44yslRj8norBzhDPTrCJr+CmzPPYHm/oc53KO0If2gbXF1L1SKDaZ9ItYJcQ
-	 vA9IJsyeVt6FBK/2knj2zfmULJeOO1QSy95+jHJ3VI0QYYWQXACDQLzoifobQTTlyt
-	 SkPDGB6mxZYCDvYgabn8jbw5y+jmkeywAyfWnRuw09rorSSRQ/+6jsl6H8Eh58lHp4
-	 P6C2i44xqMz+SyiUqgWkqpoPLHH9ASRxCSDy/Gi7lnINa/PW2b2jp3wh5vd6hRgRU1
-	 bCAjgZS+uyZuw==
-From: Borislav Petkov <bp@kernel.org>
-To: X86 ML <x86@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>
-Subject: [PATCH v1 01/14] x86/alternative: Zap alternative_ternary()
-Date: Fri,  7 Jun 2024 13:16:48 +0200
-Message-ID: <20240607111701.8366-2-bp@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240607111701.8366-1-bp@kernel.org>
-References: <20240607111701.8366-1-bp@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717759030; cv=none; b=KhpvKrNHajBJNAD95/i4NBrkPSQNhoC+hF27OIhNnrGboAPtNdMg4RlXYp5iZKAahZ3u1oDU03jsnvGD4HQ6CSIvlQ9O1ZG2c+RJ02owkkNWGxp6j40VtVzzohmCkoARLPBJDBxMMEVxwfhmftQ1RIALLGfvkNDLWKWDplGxdZE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717759030; c=relaxed/simple;
+	bh=/frmM6mD7/qvXSmcyd3JtyOkH85T/WmSsWCjL0CjS98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eLJjgnIobzbGs7MrgTAOwNtYt2yYVB7O5hAiLYy9f/1lW1RiI4j0Vj1TTIY2kGKSllb7DGxtMB6N8yfoenlTbUJe2cHf/VCIKss2K++qyJ6hEiBN1LoHirTTGt4Hdo9KishydPIRr0r6Eaq/Dyf16NfVhHAwXJM6OSp8e43fi+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1sFXab-006oBW-0W;
+	Fri, 07 Jun 2024 19:16:58 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 07 Jun 2024 19:16:59 +0800
+Date: Fri, 7 Jun 2024 19:16:59 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Jia Jie Ho <jiajie.ho@starfivetech.com>
+Cc: "David S . Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: starfive - Align rsa input data to 32-bit
+Message-ID: <ZmLsK9Apy9NwNEQi@gondor.apana.org.au>
+References: <20240529002553.1372257-1-jiajie.ho@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529002553.1372257-1-jiajie.ho@starfivetech.com>
 
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
+On Wed, May 29, 2024 at 08:25:53AM +0800, Jia Jie Ho wrote:
+> Hardware expects RSA input plain/ciphertext to be 32-bit aligned.
+> Allocate aligned buffer and shift data accordingly.
+> 
+> Signed-off-by: Jia Jie Ho <jiajie.ho@starfivetech.com>
+> ---
+>  drivers/crypto/starfive/jh7110-cryp.h |  3 +--
+>  drivers/crypto/starfive/jh7110-rsa.c  | 17 ++++++++++-------
+>  2 files changed, 11 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/crypto/starfive/jh7110-cryp.h b/drivers/crypto/starfive/jh7110-cryp.h
+> index 494a74f52706..eeb4e2b9655f 100644
+> --- a/drivers/crypto/starfive/jh7110-cryp.h
+> +++ b/drivers/crypto/starfive/jh7110-cryp.h
+> @@ -217,12 +217,11 @@ struct starfive_cryp_request_ctx {
+>  	struct scatterlist			*out_sg;
+>  	struct ahash_request			ahash_fbk_req;
+>  	size_t					total;
+> -	size_t					nents;
+>  	unsigned int				blksize;
+>  	unsigned int				digsize;
+>  	unsigned long				in_sg_len;
+>  	unsigned char				*adata;
+> -	u8 rsa_data[] __aligned(sizeof(u32));
+> +	u8					*rsa_data;
 
-Unused.
+You didn't explain why this is moving from a pre-allocated buffer
+to one that's allocated on the run.  It would appear that there is
+no reason why you can't build the extra space used for shifting
+into reqsize.
 
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
----
- arch/x86/include/asm/alternative.h | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index ba99ef75f56c..6db78909180a 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -271,9 +271,6 @@ static inline int alternatives_text_reserved(void *start, void *end)
- #define alternative_2(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2) \
- 	asm_inline volatile(ALTERNATIVE_2(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2) ::: "memory")
- 
--#define alternative_ternary(oldinstr, ft_flags, newinstr_yes, newinstr_no) \
--	asm_inline volatile(ALTERNATIVE_TERNARY(oldinstr, ft_flags, newinstr_yes, newinstr_no) ::: "memory")
--
- /*
-  * Alternative inline assembly with input.
-  *
+Cheers,
 -- 
-2.43.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
