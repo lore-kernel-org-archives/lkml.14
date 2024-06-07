@@ -1,478 +1,215 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2076.outbound.protection.outlook.com [40.107.6.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C47A18732F;
-	Fri,  7 Jun 2024 15:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717773524; cv=none; b=r1a/7fxZQn/bNnBUmO1FAcm6TygEa3JDNnpBCup0kM8ZYlvALwplFbiur82wK8XpOIywmw5r5UE4gihEOTH8tnr95Xfxa7HIarHtRUCiJ4TCdFTBBLPhNPF/kqWLN6rMREEs9bdbVp7wN7tm9RnzsGPf4cqjm7u8uz4NnxGMW48=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717773524; c=relaxed/simple;
-	bh=OtiYJoIbNhG6DLZNnzVwlO9J6ZhOu/MnQ1QRnnO/3Jk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X89ChkPTSDZFZCniUICURLrN+veHRb1N8mlJYpSsKYf4nkw8zwC1v2P7HaQXoP7axREozCOy40h4hynd9Xm4+zHUlwx/a/e9ZvLu+RTm+Y8tEGUACqSwblf2h2AG566aaXV4wJWWcEWFV63DwUoTWQdQZTs3C+VMVJ9r02JnLQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=lFlObGsq; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C44182D8;
+	Fri,  7 Jun 2024 15:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717773581; cv=fail; b=Sy1qcc7TNwHBIWf201k09vHL04/zNdelp6dq7ntSiK79XQ0btGbhWqEthb4986xhY4ck+JmWgHzg8/nHsuuNsWTIWLY9YPIkIAeNKRbZk0Uj3Y4Dtv9EMFFIpb/jSeBnBSmvK0wLXWNy7zK9tQ6I1XYtbcJVkNxIT+v+3VbGYgg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717773581; c=relaxed/simple;
+	bh=8IjLk4iQ/f8cfxRdRkb9TG8GJ287TFbuNMZisSpYmRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=c1/TWd/UzAAs/jp2o4942/1Gykl/tTEk3sjwwy3rKwavTYZoBxspaLKrSSoO0EBd9FG4s/ctozhE/O9/2DA3mgamzHB3Ki8KCeoCklIP/iw+3oin+QdGj3m6DidhG46X1EWzcaM1Gtbc/izelNpM4AYs/0FDkqydetBEoO+yMAQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=EYG4XRyJ; arc=fail smtp.client-ip=40.107.6.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="lFlObGsq"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 457AEqoN014883;
-	Fri, 7 Jun 2024 08:18:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=H
-	/uMmrJKiQqfVPPoejRCM8frNnghpGJmmTaZKg+Ovas=; b=lFlObGsq9tf+70HMy
-	FOP8q4vwjTq+Ql9PpBRjNBZRWaum9eGrEH55Aunu3HeOHRMeNWqYEf3CQ8U37RLW
-	vdb203C8ZdIfhZlJpvOzimQo8xvY8uHuDgC8hS12feBbRPY5HTV/7IVGCxOKVuci
-	7YKB00EGZ5jiCkrWzDfpEkc79FvpJZM1xZ/6iEGZmfakuYKbLImFTQkchHTx9eJP
-	lwxzr7J5DCW5CSVqcZdnCmkLJFWm46bKX1GbWNXTT/5sQnLVVq61s9YLoanYs69u
-	XvtLmh2tYNQIoiY98yYfrre1UQ+mva65kemRS+pBe6Gs9IuiLWUeaosnF2cnLS4r
-	h6Ieg==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3ym09ngx2u-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Jun 2024 08:18:37 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Fri, 7 Jun 2024 08:18:36 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 7 Jun 2024 08:18:36 -0700
-Received: from Dell2s-9.sclab.marvell.com (unknown [10.110.150.250])
-	by maili.marvell.com (Postfix) with ESMTP id A28F93F708F;
-	Fri,  7 Jun 2024 08:18:35 -0700 (PDT)
-From: Witold Sadowski <wsadowski@marvell.com>
-To: <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC: <broonie@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <pthombar@cadence.com>, Witold Sadowski <wsadowski@marvell.com>
-Subject: [PATCH v8 2/4] spi: cadence: Add Marvell xSPI IP overlay changes
-Date: Fri, 7 Jun 2024 08:18:29 -0700
-Message-ID: <20240607151831.3858304-3-wsadowski@marvell.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240607151831.3858304-1-wsadowski@marvell.com>
-References: <20240607151831.3858304-1-wsadowski@marvell.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EYG4XRyJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mkv0fvFAP0pB3uorqHELTf2HBXsn2Pm2fC19lFQHtvA1mfZcjtJ+1eLUgXQdyjo+c4UKpC3/3JSdu/ochxDHoMnE+D0Qs2XbN7ga5LH/qI8OqPdklh//ppPc5UDc4Nh01dI3XjlbfdxO89fwJfk6jg+pkI0V6BRNE64N8pCGu6Il/vEgRDmfD+E/KuegJ3i8GVved816ZXXwlhhWn9SrdMxHcs1TsDX6SRRcAEBCLmyXKjolwX7maYHPLEhXFAsAOiqolXUdndRT+B/h29EXLsB4Lqo2KnT2SoLZVTV+JGrWzthZAXJ2vsyIJaMZFa4B75T1L7wbheIpMMV4UUo9qA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lWnMCayxbbSHSlJko1DTLLifqQQGaM3dRMbGzB5udK4=;
+ b=Y7Rd5Fqr60hbQx6zXUlL/SHTR7d0THqFldO2kLniQXuOB5LSS1VYbnVOiSf0gY0JRG8obPw8OOCqcXcXfUuaPce3Q4iYtm+ed3O+zeodaLIz5OKTHfTF5cWGws48RCwpgvvShSaFKOq+MXHjPvYG+kyNpvJ/LOkzL9Vcely39uC3o0h6Cu6NgAl2X835IibU2cntrl3F7zTRUmLWzVlLqLpbtrxQ4oxXuKWNqpebGFLzV70ZyWSFAIT8YJWTALfpXSny5FbCZ8WXh4ODP5d/NfEsNUsQ6RoefZia0OrmoxnJoz3+VKhJ2vxnTjPgfFpniVsN+IwrqbFvPbrQuMmZXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lWnMCayxbbSHSlJko1DTLLifqQQGaM3dRMbGzB5udK4=;
+ b=EYG4XRyJcBhE1RszXkltm1mLeb3AGjKE63kIN4ZAY6OgduG9T4GfiXTJydLnEOCbQVF1qfbI0BNWVk+pBui4ZJZcACAedimomfD9UoHuDbOeQokxF0A/iwhscLLN0YdD8jJltNyk3pIOhcsM6EVZpwOCEGLBqGTzzFG5zg8pbps=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by VI2PR04MB10266.eurprd04.prod.outlook.com (2603:10a6:800:22b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.33; Fri, 7 Jun
+ 2024 15:19:36 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7633.033; Fri, 7 Jun 2024
+ 15:19:36 +0000
+Date: Fri, 7 Jun 2024 11:19:25 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+	festevam@gmail.com, imx@lists.linux.dev, kernel@pengutronix.de,
+	krzk+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	mathieu.poirier@linaro.org, peng.fan@nxp.com, robh@kernel.org,
+	s.hauer@pengutronix.de, shawnguo@kernel.org
+Subject: Re: [PATCH v2 1/1] dt-bindings: remoteproc: imx_rproc: add minItems
+ for power-domain
+Message-ID: <ZmMk/T3I1jNcxKOB@lizhi-Precision-Tower-5810>
+References: <20240606150030.3067015-1-Frank.Li@nxp.com>
+ <19058054-5138-4d37-860f-dd430abd3a0f@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19058054-5138-4d37-860f-dd430abd3a0f@kernel.org>
+X-ClientProxiedBy: BYAPR05CA0031.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::44) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: RM3c1ySUR0AMcvLFPWDjQVTQIAVMAHtC
-X-Proofpoint-ORIG-GUID: RM3c1ySUR0AMcvLFPWDjQVTQIAVMAHtC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-07_09,2024-06-06_02,2024-05-17_01
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI2PR04MB10266:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7aec2b50-3b71-4ffd-fb17-08dc87053dde
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|52116005|366007|7416005|1800799015|376005|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?UN/q+Ie1RqCQKGdcrHnRtuLpKmBq4DYUDfM/GNnsYdSF1FQ7WOrVz9v06je2?=
+ =?us-ascii?Q?UlyzYMEuTf+quYnggmRbzKscOw0aolzn3qQwipoGTi97JbFa8f7dZ/KdP7mt?=
+ =?us-ascii?Q?5wmAdi0rIQBGWxjtneVVa21yVezYNTLp6ko4xIOC8P+WTF0L5tVsItXmQbuV?=
+ =?us-ascii?Q?vGiAiS09B+B3lpG2NANOdSSRSAbMNN/ekXbEbf/gE+2ht71DZndBzckfKQK+?=
+ =?us-ascii?Q?3SU/ZNun5VIOi6ropgsSkODWESVi/gZ9T0uCnBKroJs9r+mGSnW2RXvqWxwB?=
+ =?us-ascii?Q?2ViY9+UfIuKdJmKK1PeiiOdVq3Np1zd/kGIoX7zcgs4GiEX+lL8l17eoK1Zk?=
+ =?us-ascii?Q?f27RRANb7IIikJZIE2OTq2n+NInQOEYflL+MWVsn3BxaX6HtnnB3tkgyuJLi?=
+ =?us-ascii?Q?RY6BU3mlChzrxGw+49xItrKonNoCe2Ai3u7mhakCxvXo4/axfT7SyXpZUNW1?=
+ =?us-ascii?Q?7bDmgO9naf6mVuIgKIB6MrqioZ9zoq5Qkoj0swdbjZLs2CQLYCIBRUnyQQOk?=
+ =?us-ascii?Q?SFDSJtRpk7N9etI2H6dNY9PWblPB4S0X5BLvohKVkg38nXNM/D7Pd9el6qUE?=
+ =?us-ascii?Q?YxF12h4SrqJsJsNdK4/MqAXxwH1DIaXufnGOeouCVMMD6PZL4+L1VL1WHdYU?=
+ =?us-ascii?Q?x7EusOrhBXnmGtyPfwggjV/N39BKVRCNy8MmFE6O35ST8ypFKwjRYEuYT6hF?=
+ =?us-ascii?Q?nnEJDhF65WqnS0UNK5ZqkuNKFNNcY1SOeHk3ImdbN+fgr5WmRIiLBrsGc2mV?=
+ =?us-ascii?Q?0vtGptC38Wn/KxqrDeQQEPxH2uEImn0a2bvoDi0Qn0EPnIdmpcpVezX6NK9Z?=
+ =?us-ascii?Q?o0zX+M1K1O/gxQkf7w7zgILGcE4Csn19WLSZdIrZsyyHE8BmC/Evip1CCdXM?=
+ =?us-ascii?Q?i0pr+5+HbXf5g72U8syZKbzDf7ygRv3xPlAiLi5SBHRkn3tVuQVHfrZeH8LP?=
+ =?us-ascii?Q?62SMhLl2quJ+70XNnDfpr6W2bu3fCaSGH/CCg2bEwg8d842X1fTfUrZ66DZZ?=
+ =?us-ascii?Q?bQ5g+VqQ+go5i/1z+wjGaIv0PbWgIyXXspiGL4dCzQtxg1vRv4jjPNKkMsKD?=
+ =?us-ascii?Q?p5SDv1HMD95pNUB/9cikVIlTorgv8Ss5LN618JCnibgeAWMQuCV+cukbCgKL?=
+ =?us-ascii?Q?Sm8r8KEPPeiKzs/XXOyc7IwpF+HlaBrcJx6ynRhueB6LIirCwE7TyU7XQRJC?=
+ =?us-ascii?Q?k4B2DfSgau2QF6kgqhDLFSPMLyb8e9MvvFlFIXNV6aciuFxjlW8hFwmJcrAP?=
+ =?us-ascii?Q?MG6cv6/4GN3OVOvk6KdENZB/Ne4XpsEUZRzIk7OEHKhu/q+ow+8oYcVK7AlB?=
+ =?us-ascii?Q?NmHd55aAyNJlzV95ohYKklm5T7svD2djbFNagqaDJDsJ2/BZ5tNDEhXe/iUT?=
+ =?us-ascii?Q?RAZY/jo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(366007)(7416005)(1800799015)(376005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ekJNv7Z9qFggu730EZRQ3QMJoTiaQRs1kSlYJ9wzviCzSdmOeK36tgdqTKRY?=
+ =?us-ascii?Q?Xw5JlTBf6lPdsDagPSKIJatvLWyo1f+5bGrAEjKSwDleNyQCezue9985qF9q?=
+ =?us-ascii?Q?uwpOJjce7tvPK54GsaOSiizD6PVyHcUMA0WZx5XCVmMAFLHfdDo2jIQyiZmW?=
+ =?us-ascii?Q?s0uAb4nz4aun5Kk0VoeKKIcakUOfW8DrJTSVNK68vCQz5qnc7btzLWm3e4N2?=
+ =?us-ascii?Q?yDJtJ8GEXgV50FKq9uirFu1vSYj3/z70Abb4WDQJTF7eZvfUXYI43x76uccD?=
+ =?us-ascii?Q?AYFWze2ve4DJgeqc1LIzohCwZ696Jt0UA7al+indQjR1zhhlMJxwrOLeZ5q1?=
+ =?us-ascii?Q?nUomrqXp0IAa+QWqSF8TBN4SB868YkET9S6VuE1sTw3uhsrWTF8W+Skyd+bJ?=
+ =?us-ascii?Q?eBp8cZiDLFfModJRfsk9qpmhOGms3PWd1KMC3W83u/NkZPNtfTJVVvjqcnm5?=
+ =?us-ascii?Q?VJJi8LMONPHzcBEEi94tJdQQifqbjArs2BikkMDZibZ+V0sxeSrwyZNSXP0q?=
+ =?us-ascii?Q?weKl74yM4uVZRMgBY4bfQS2dEJuD1q+CzpN9gOCpZ2XgDyy+irv5y0IR+vru?=
+ =?us-ascii?Q?kNQiy+8FjCVZQy7C/bEEMfsWngutadbrCPgeo5rbXZfLUQJMnvOCGTKbhWfv?=
+ =?us-ascii?Q?6Cug5J6CKzpbR4QoF2XevPu5SGjR0IXqEKJWfc6V/X12KASyQHjLG8GS0HeN?=
+ =?us-ascii?Q?tfpkv/6Qvi/wNcEd56KlJ1SHlmN8hgCRH0v+fEr0nVwmQTz9/2TJZ5Kq8LMT?=
+ =?us-ascii?Q?K02dBF5QGCqSW2WyoQ6Yg/kuBb3069k2tDlDGgQ41Mso431N+VlUJvCC2jjP?=
+ =?us-ascii?Q?cNziars/y7IRSQz9nMjt7yKUPTPUt7DhFlcquzKvj/WFU+CgHpViMM39BFO4?=
+ =?us-ascii?Q?7h5RTB5Ixzzy8zmDzPhh/+/UWRLJ0RBUVrQry4FGGBe6IoxFUghIrqZdMzTH?=
+ =?us-ascii?Q?G8wx02vKJyXdmBOSkNhvcm1ttR6n3+7+kBtup3gD3aeH9XxwIc7UCjzTQGHe?=
+ =?us-ascii?Q?iMBTb5vH5RkgBbdB7vVX93HW1XH+2siOg0xKCldRaHMjDwx4tdhTU7CmNr1V?=
+ =?us-ascii?Q?26Z21dEmnjHR1uzZxr/Ov0pucMiSbgMhXIINuuEY00Kt7eI/QJJIO4nfi11R?=
+ =?us-ascii?Q?rK3ZVv2Xyu40nUoWmIspQkuIaWeDf/OAPz24GG4afmwAydqj5kd6xyZbx82E?=
+ =?us-ascii?Q?CsbwjUlFEubfAn2p32QVFhWx8+RPilx8jql3TDoiaY0S3JfLVXVWRliGijc9?=
+ =?us-ascii?Q?oP417eeBb1sFydozVJqRzDGulnagpNkXAWJhdEzzF4X9peaA8iMktnSb3Wax?=
+ =?us-ascii?Q?vwp8z8IgOckWv8JAJSq++uXKmM2UDMUuH2/dhDLqHuAvWwWJ+vDDTLTXTQLt?=
+ =?us-ascii?Q?ij28TWW7IwXYrEZm1VqWsrBI3Pso2UkUCkpeIV+UG78gNo7bmZ4pE/M+47pl?=
+ =?us-ascii?Q?L0wYrBBs1rXndEqCPqc1EYs4L6lxR+Bui6m1na/zUv1s7ovqn6T+gMvUvgSF?=
+ =?us-ascii?Q?S1KpEsYA9hvvSDbunyUmE7j+YQV/xetfakg7Hx9H0lsbwlt8UPzUGu3phNAK?=
+ =?us-ascii?Q?OD0aRlCs9Oi9+pcRr/K4iBOF5XZ8r/AV9ZEPT2/v?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7aec2b50-3b71-4ffd-fb17-08dc87053dde
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 15:19:36.5173
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DhSoULCLd63KruNETzNTYlykYd+BHU2e7tARvOM792rtMCQmq/VM3LVlPooM3Eg5vwrRvPoYcmiLuFPXTTYwYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10266
 
-This commit adds support for the basic v2 Marvell overlay block. Key
-features included are:
-    - Clock configuration
-    - PHY configuration
-    - Interrupt configuration (enabling)
+On Fri, Jun 07, 2024 at 09:32:26AM +0200, Krzysztof Kozlowski wrote:
+> On 06/06/2024 17:00, Frank Li wrote:
+> > "fsl,imx8qxp-cm4" and "fsl,imx8qm-cm4" need minimum 2 power domains. Keep
+> > the same restriction for other compatible string.
+> > 
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> > 
+> > Notes:
+> >     Change from v1 to v2
+> >     - set minitem to 2 at top
+> >     - Add imx8qm compatible string also
+> >     - use not logic to handle difference compatible string restriction
+> >     - update commit message.
+> >     
+> >     pass dt_binding_check.
+> >     
+> >     make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,imx-rproc.yaml
+> >       SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+> >       CHKDT   Documentation/devicetree/bindings
+> >       LINT    Documentation/devicetree/bindings
+> >       DTEX    Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.example.dts
+> >       DTC_CHK Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.example.dtb
+> > 
+> >  .../bindings/remoteproc/fsl,imx-rproc.yaml         | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+> > index df36e29d974ca..da108a39df435 100644
+> > --- a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+> > +++ b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+> > @@ -59,6 +59,7 @@ properties:
+> >      maxItems: 32
+> >  
+> >    power-domains:
+> > +    minItems: 2
+> >      maxItems: 8
+> >  
+> >    fsl,auto-boot:
+> > @@ -99,6 +100,19 @@ allOf:
+> >        properties:
+> >          fsl,iomuxc-gpr: false
+> >  
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          not:
+> > +            contains:
+> > +              enum:
+> > +                - fsl,imx8qxp-cm4
+> > +                - fsl,imx8qm-cm4
+> > +    then:
+> > +      properties:
+> > +        power-domains:
+> > +          minItems: 8
+> 
+> What happened with the "else:"? How many power domains is needed for
+> other devices?
 
-The clock divider block, built on top of the Cadence xSPI IP,
-divides an external 800MHz clock. It supports a limited range of clock
-speeds from 6.25MHz to 200MHz.
+So far, only fsl,imx8qxp-cm4 ind fsl,imx8qm-cm4 need power domain (2-8). 
+Power-domains is option property. 
 
-To manage interrupts correctly, the driver needs to clear both the MSI-X
-interrupt bit and the xSPI interrupt bit. Additionally, interrupt
-masking must be disabled.
+Can I just remove whole "if"?
 
-Signed-off-by: Witold Sadowski <wsadowski@marvell.com>
----
- drivers/spi/spi-cadence-xspi.c | 270 ++++++++++++++++++++++++++++++++-
- 1 file changed, 265 insertions(+), 5 deletions(-)
+Frank 
 
-diff --git a/drivers/spi/spi-cadence-xspi.c b/drivers/spi/spi-cadence-xspi.c
-index 2e3eacd46b72..566db2591d34 100644
---- a/drivers/spi/spi-cadence-xspi.c
-+++ b/drivers/spi/spi-cadence-xspi.c
-@@ -193,6 +193,43 @@
- 		((op)->data.dir == SPI_MEM_DATA_IN) ? \
- 		CDNS_XSPI_STIG_CMD_DIR_READ : CDNS_XSPI_STIG_CMD_DIR_WRITE))
- 
-+/* PHY default values */
-+#define REGS_DLL_PHY_CTRL		0x00000707
-+#define CTB_RFILE_PHY_CTRL		0x00004000
-+#define RFILE_PHY_TSEL			0x00000000
-+#define RFILE_PHY_DQ_TIMING		0x00000101
-+#define RFILE_PHY_DQS_TIMING		0x00700404
-+#define RFILE_PHY_GATE_LPBK_CTRL	0x00200030
-+#define RFILE_PHY_DLL_MASTER_CTRL	0x00800000
-+#define RFILE_PHY_DLL_SLAVE_CTRL	0x0000ff01
-+
-+/* PHY config registers */
-+#define CDNS_XSPI_RF_MINICTRL_REGS_DLL_PHY_CTRL			0x1034
-+#define CDNS_XSPI_PHY_CTB_RFILE_PHY_CTRL			0x0080
-+#define CDNS_XSPI_PHY_CTB_RFILE_PHY_TSEL			0x0084
-+#define CDNS_XSPI_PHY_DATASLICE_RFILE_PHY_DQ_TIMING		0x0000
-+#define CDNS_XSPI_PHY_DATASLICE_RFILE_PHY_DQS_TIMING		0x0004
-+#define CDNS_XSPI_PHY_DATASLICE_RFILE_PHY_GATE_LPBK_CTRL	0x0008
-+#define CDNS_XSPI_PHY_DATASLICE_RFILE_PHY_DLL_MASTER_CTRL	0x000c
-+#define CDNS_XSPI_PHY_DATASLICE_RFILE_PHY_DLL_SLAVE_CTRL	0x0010
-+#define CDNS_XSPI_DATASLICE_RFILE_PHY_DLL_OBS_REG_0		0x001c
-+
-+#define CDNS_XSPI_DLL_RST_N BIT(24)
-+#define CDNS_XSPI_DLL_LOCK  BIT(0)
-+
-+/* Marvell overlay registers - clock */
-+#define MRVL_XSPI_CLK_CTRL_AUX_REG   0x2020
-+#define MRVL_XSPI_CLK_ENABLE	     BIT(0)
-+#define MRVL_XSPI_CLK_DIV	     GENMASK(4, 1)
-+#define MRVL_XSPI_IRQ_ENABLE	     BIT(6)
-+#define MRVL_XSPI_CLOCK_IO_HZ	     800000000
-+#define MRVL_XSPI_CLOCK_DIVIDED(div) ((MRVL_XSPI_CLOCK_IO_HZ) / (div))
-+#define MRVL_DEFAULT_CLK	     25000000
-+
-+/* Marvell overlay registers - MSI-X */
-+#define MRVL_XSPI_SPIX_INTR_AUX	0x2000
-+#define MRVL_MSIX_CLEAR_IRQ	0x01
-+
- enum cdns_xspi_stig_instr_type {
- 	CDNS_XSPI_STIG_INSTR_TYPE_0,
- 	CDNS_XSPI_STIG_INSTR_TYPE_1,
-@@ -212,6 +249,7 @@ enum cdns_xspi_stig_cmd_dir {
- struct cdns_xspi_dev {
- 	struct platform_device *pdev;
- 	struct device *dev;
-+	bool mrvl_hw_overlay;
- 
- 	void __iomem *iobase;
- 	void __iomem *auxbase;
-@@ -232,6 +270,123 @@ struct cdns_xspi_dev {
- 	u8 hw_num_banks;
- };
- 
-+struct cdns_xspi_driver_data {
-+	bool mrvl_hw_overlay;
-+};
-+
-+static struct cdns_xspi_driver_data mrvl_driver_data = {
-+	.mrvl_hw_overlay = true,
-+};
-+
-+static struct cdns_xspi_driver_data cdns_driver_data = {
-+	.mrvl_hw_overlay = false,
-+};
-+
-+const int cdns_mrvl_xspi_clk_div_list[] = {
-+	4,	//0x0 = Divide by 4.   SPI clock is 200 MHz.
-+	6,	//0x1 = Divide by 6.   SPI clock is 133.33 MHz.
-+	8,	//0x2 = Divide by 8.   SPI clock is 100 MHz.
-+	10,	//0x3 = Divide by 10.  SPI clock is 80 MHz.
-+	12,	//0x4 = Divide by 12.  SPI clock is 66.666 MHz.
-+	16,	//0x5 = Divide by 16.  SPI clock is 50 MHz.
-+	18,	//0x6 = Divide by 18.  SPI clock is 44.44 MHz.
-+	20,	//0x7 = Divide by 20.  SPI clock is 40 MHz.
-+	24,	//0x8 = Divide by 24.  SPI clock is 33.33 MHz.
-+	32,	//0x9 = Divide by 32.  SPI clock is 25 MHz.
-+	40,	//0xA = Divide by 40.  SPI clock is 20 MHz.
-+	50,	//0xB = Divide by 50.  SPI clock is 16 MHz.
-+	64,	//0xC = Divide by 64.  SPI clock is 12.5 MHz.
-+	128	//0xD = Divide by 128. SPI clock is 6.25 MHz.
-+};
-+
-+static void cdns_xspi_reset_dll(struct cdns_xspi_dev *cdns_xspi)
-+{
-+	u32 dll_cntrl = readl(cdns_xspi->iobase +
-+			      CDNS_XSPI_RF_MINICTRL_REGS_DLL_PHY_CTRL);
-+
-+	/* Reset DLL */
-+	dll_cntrl |= CDNS_XSPI_DLL_RST_N;
-+	writel(dll_cntrl, cdns_xspi->iobase +
-+			  CDNS_XSPI_RF_MINICTRL_REGS_DLL_PHY_CTRL);
-+}
-+
-+static bool cdns_xspi_is_dll_locked(struct cdns_xspi_dev *cdns_xspi)
-+{
-+	u32 dll_lock;
-+
-+	return !readl_relaxed_poll_timeout(cdns_xspi->iobase +
-+		CDNS_XSPI_INTR_STATUS_REG,
-+		dll_lock, ((dll_lock & CDNS_XSPI_DLL_LOCK) == 1), 10, 10000);
-+}
-+
-+/* Static configuration of PHY */
-+static bool cdns_xspi_configure_phy(struct cdns_xspi_dev *cdns_xspi)
-+{
-+	writel(REGS_DLL_PHY_CTRL,
-+	       cdns_xspi->iobase + CDNS_XSPI_RF_MINICTRL_REGS_DLL_PHY_CTRL);
-+	writel(CTB_RFILE_PHY_CTRL,
-+	       cdns_xspi->auxbase + CDNS_XSPI_PHY_CTB_RFILE_PHY_CTRL);
-+	writel(RFILE_PHY_TSEL,
-+	       cdns_xspi->auxbase + CDNS_XSPI_PHY_CTB_RFILE_PHY_TSEL);
-+	writel(RFILE_PHY_DQ_TIMING,
-+	       cdns_xspi->auxbase + CDNS_XSPI_PHY_DATASLICE_RFILE_PHY_DQ_TIMING);
-+	writel(RFILE_PHY_DQS_TIMING,
-+	       cdns_xspi->auxbase + CDNS_XSPI_PHY_DATASLICE_RFILE_PHY_DQS_TIMING);
-+	writel(RFILE_PHY_GATE_LPBK_CTRL,
-+	       cdns_xspi->auxbase + CDNS_XSPI_PHY_DATASLICE_RFILE_PHY_GATE_LPBK_CTRL);
-+	writel(RFILE_PHY_DLL_MASTER_CTRL,
-+	       cdns_xspi->auxbase + CDNS_XSPI_PHY_DATASLICE_RFILE_PHY_DLL_MASTER_CTRL);
-+	writel(RFILE_PHY_DLL_SLAVE_CTRL,
-+	       cdns_xspi->auxbase + CDNS_XSPI_PHY_DATASLICE_RFILE_PHY_DLL_SLAVE_CTRL);
-+
-+	cdns_xspi_reset_dll(cdns_xspi);
-+
-+	return cdns_xspi_is_dll_locked(cdns_xspi);
-+}
-+
-+/* Find max avalible clock */
-+static bool cdns_mrvl_xspi_setup_clock(struct cdns_xspi_dev *cdns_xspi,
-+				       int requested_clk)
-+{
-+	int i = 0;
-+	int clk_val;
-+	u32 clk_reg;
-+	bool update_clk = false;
-+
-+	while (i < ARRAY_SIZE(cdns_mrvl_xspi_clk_div_list)) {
-+		clk_val = MRVL_XSPI_CLOCK_DIVIDED(
-+				cdns_mrvl_xspi_clk_div_list[i]);
-+		if (clk_val <= requested_clk)
-+			break;
-+		i++;
-+	}
-+
-+	dev_dbg(cdns_xspi->dev, "Found clk div: %d, clk val: %d\n",
-+		cdns_mrvl_xspi_clk_div_list[i],
-+		MRVL_XSPI_CLOCK_DIVIDED(
-+		cdns_mrvl_xspi_clk_div_list[i]));
-+
-+	clk_reg = readl(cdns_xspi->auxbase + MRVL_XSPI_CLK_CTRL_AUX_REG);
-+
-+	if (FIELD_GET(MRVL_XSPI_CLK_DIV, clk_reg) != i) {
-+		clk_reg &= ~MRVL_XSPI_CLK_ENABLE;
-+		writel(clk_reg,
-+		       cdns_xspi->auxbase + MRVL_XSPI_CLK_CTRL_AUX_REG);
-+		clk_reg = FIELD_PREP(MRVL_XSPI_CLK_DIV, i);
-+		clk_reg &= ~MRVL_XSPI_CLK_DIV;
-+		clk_reg |= FIELD_PREP(MRVL_XSPI_CLK_DIV, i);
-+		clk_reg |= MRVL_XSPI_CLK_ENABLE;
-+		clk_reg |= MRVL_XSPI_IRQ_ENABLE;
-+		update_clk = true;
-+	}
-+
-+	if (update_clk)
-+		writel(clk_reg,
-+		       cdns_xspi->auxbase + MRVL_XSPI_CLK_CTRL_AUX_REG);
-+
-+	return update_clk;
-+}
-+
- static int cdns_xspi_wait_for_controller_idle(struct cdns_xspi_dev *cdns_xspi)
- {
- 	u32 ctrl_stat;
-@@ -295,6 +450,10 @@ static void cdns_xspi_set_interrupts(struct cdns_xspi_dev *cdns_xspi,
- 				     bool enabled)
- {
- 	u32 intr_enable;
-+	u32 irq_status;
-+
-+	irq_status = readl(cdns_xspi->iobase + CDNS_XSPI_INTR_STATUS_REG);
-+	writel(irq_status, cdns_xspi->iobase + CDNS_XSPI_INTR_STATUS_REG);
- 
- 	intr_enable = readl(cdns_xspi->iobase + CDNS_XSPI_INTR_ENABLE_REG);
- 	if (enabled)
-@@ -319,6 +478,9 @@ static int cdns_xspi_controller_init(struct cdns_xspi_dev *cdns_xspi)
- 		return -EIO;
- 	}
- 
-+	writel(FIELD_PREP(CDNS_XSPI_CTRL_WORK_MODE, CDNS_XSPI_WORK_MODE_STIG),
-+	       cdns_xspi->iobase + CDNS_XSPI_CTRL_CONFIG_REG);
-+
- 	ctrl_features = readl(cdns_xspi->iobase + CDNS_XSPI_CTRL_FEATURES_REG);
- 	cdns_xspi->hw_num_banks = FIELD_GET(CDNS_XSPI_NUM_BANKS, ctrl_features);
- 	cdns_xspi_set_interrupts(cdns_xspi, false);
-@@ -326,6 +488,70 @@ static int cdns_xspi_controller_init(struct cdns_xspi_dev *cdns_xspi)
- 	return 0;
- }
- 
-+static void mrvl_ioreadq(void __iomem  *addr, void *buf, int len)
-+{
-+	int i = 0;
-+	int rcount = len / 8;
-+	int rcount_nf = len % 8;
-+	uint64_t tmp;
-+	uint64_t *buf64 = (uint64_t *)buf;
-+
-+	if (((uint64_t)buf % 8) == 0) {
-+		for (i = 0; i < rcount; i++)
-+			*buf64++ = readq(addr);
-+	} else {
-+		for (i = 0; i < rcount; i++) {
-+			tmp = readq(addr);
-+			memcpy(buf+(i*8), &tmp, 8);
-+		}
-+	}
-+
-+	if (rcount_nf != 0) {
-+		tmp = readq(addr);
-+		memcpy(buf+(i*8), &tmp, rcount_nf);
-+	}
-+}
-+
-+static void mrvl_iowriteq(void __iomem *addr, const void *buf, int len)
-+{
-+	int i = 0;
-+	int rcount = len / 8;
-+	int rcount_nf = len % 8;
-+	uint64_t tmp;
-+	uint64_t *buf64 = (uint64_t *)buf;
-+
-+	if (((uint64_t)buf % 8) == 0) {
-+		for (i = 0; i < rcount; i++)
-+			writeq(*buf64++, addr);
-+	} else {
-+		for (i = 0; i < rcount; i++) {
-+			memcpy(&tmp, buf+(i*8), 8);
-+			writeq(tmp, addr);
-+		}
-+	}
-+
-+	if (rcount_nf != 0) {
-+		memcpy(&tmp, buf+(i*8), rcount_nf);
-+		writeq(tmp, addr);
-+	}
-+}
-+
-+static void cdns_xspi_sdma_memread(struct cdns_xspi_dev *cdns_xspi, int len)
-+{
-+	if (cdns_xspi->mrvl_hw_overlay)
-+		mrvl_ioreadq(cdns_xspi->sdmabase, cdns_xspi->in_buffer, len);
-+	else
-+		ioread8_rep(cdns_xspi->sdmabase, cdns_xspi->in_buffer, len);
-+}
-+
-+static void cdns_xspi_sdma_memwrite(struct cdns_xspi_dev *cdns_xspi, int len)
-+{
-+	if (cdns_xspi->mrvl_hw_overlay)
-+		mrvl_iowriteq(cdns_xspi->sdmabase, cdns_xspi->out_buffer, len);
-+	else
-+		iowrite8_rep(cdns_xspi->sdmabase, cdns_xspi->out_buffer, len);
-+}
-+
- static void cdns_xspi_sdma_handle(struct cdns_xspi_dev *cdns_xspi)
- {
- 	u32 sdma_size, sdma_trd_info;
-@@ -337,13 +563,11 @@ static void cdns_xspi_sdma_handle(struct cdns_xspi_dev *cdns_xspi)
- 
- 	switch (sdma_dir) {
- 	case CDNS_XSPI_SDMA_DIR_READ:
--		ioread8_rep(cdns_xspi->sdmabase,
--			    cdns_xspi->in_buffer, sdma_size);
-+		cdns_xspi_sdma_memread(cdns_xspi, sdma_size);
- 		break;
- 
- 	case CDNS_XSPI_SDMA_DIR_WRITE:
--		iowrite8_rep(cdns_xspi->sdmabase,
--			     cdns_xspi->out_buffer, sdma_size);
-+		cdns_xspi_sdma_memwrite(cdns_xspi, sdma_size);
- 		break;
- 	}
- }
-@@ -421,6 +645,9 @@ static int cdns_xspi_mem_op(struct cdns_xspi_dev *cdns_xspi,
- 	if (cdns_xspi->cur_cs != spi_get_chipselect(mem->spi, 0))
- 		cdns_xspi->cur_cs = spi_get_chipselect(mem->spi, 0);
- 
-+	if (cdns_xspi->mrvl_hw_overlay)
-+		cdns_mrvl_xspi_setup_clock(cdns_xspi, mem->spi->max_speed_hz);
-+
- 	return cdns_xspi_send_stig_command(cdns_xspi, op,
- 					   (dir != SPI_MEM_NO_DATA));
- }
-@@ -461,6 +688,10 @@ static irqreturn_t cdns_xspi_irq_handler(int this_irq, void *dev)
- 	irq_status = readl(cdns_xspi->iobase + CDNS_XSPI_INTR_STATUS_REG);
- 	writel(irq_status, cdns_xspi->iobase + CDNS_XSPI_INTR_STATUS_REG);
- 
-+	if (cdns_xspi->mrvl_hw_overlay)
-+		writel(MRVL_MSIX_CLEAR_IRQ,
-+		       cdns_xspi->auxbase + MRVL_XSPI_SPIX_INTR_AUX);
-+
- 	if (irq_status &
- 	    (CDNS_XSPI_SDMA_ERROR | CDNS_XSPI_SDMA_TRIGGER |
- 	     CDNS_XSPI_STIG_DONE)) {
-@@ -528,11 +759,23 @@ static void cdns_xspi_print_phy_config(struct cdns_xspi_dev *cdns_xspi)
- 		 readl(cdns_xspi->auxbase + CDNS_XSPI_CCP_PHY_DLL_SLAVE_CTRL));
- }
- 
-+static int cdns_xspi_setup(struct spi_device *spi_dev)
-+{
-+	struct cdns_xspi_dev *cdns_xspi = spi_controller_get_devdata(
-+						spi_dev->controller);
-+
-+	if (cdns_xspi->mrvl_hw_overlay)
-+		cdns_mrvl_xspi_setup_clock(cdns_xspi, spi_dev->max_speed_hz);
-+
-+	return 0;
-+}
-+
- static int cdns_xspi_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct spi_controller *host = NULL;
- 	struct cdns_xspi_dev *cdns_xspi = NULL;
-+	const struct cdns_xspi_driver_data *drv_data;
- 	struct resource *res;
- 	int ret;
- 
-@@ -544,10 +787,16 @@ static int cdns_xspi_probe(struct platform_device *pdev)
- 		SPI_RX_DUAL | SPI_RX_QUAD | SPI_TX_OCTAL | SPI_RX_OCTAL |
- 		SPI_MODE_0  | SPI_MODE_3;
- 
-+	drv_data = of_device_get_match_data(dev);
-+
- 	host->mem_ops = &cadence_xspi_mem_ops;
- 	host->dev.of_node = pdev->dev.of_node;
-+	host->dev.fwnode = pdev->dev.fwnode;
- 	host->bus_num = -1;
- 
-+	if (drv_data->mrvl_hw_overlay)
-+		host->setup = cdns_xspi_setup;
-+
- 	platform_set_drvdata(pdev, host);
- 
- 	cdns_xspi = spi_controller_get_devdata(host);
-@@ -559,6 +808,8 @@ static int cdns_xspi_probe(struct platform_device *pdev)
- 	init_completion(&cdns_xspi->auto_cmd_complete);
- 	init_completion(&cdns_xspi->sdma_complete);
- 
-+	cdns_xspi->mrvl_hw_overlay = drv_data->mrvl_hw_overlay;
-+
- 	ret = cdns_xspi_of_get_plat_data(pdev);
- 	if (ret)
- 		return -ENODEV;
-@@ -592,8 +843,12 @@ static int cdns_xspi_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	cdns_xspi_print_phy_config(cdns_xspi);
-+	if (drv_data->mrvl_hw_overlay) {
-+		cdns_mrvl_xspi_setup_clock(cdns_xspi, MRVL_DEFAULT_CLK);
-+		cdns_xspi_configure_phy(cdns_xspi);
-+	}
- 
-+	cdns_xspi_print_phy_config(cdns_xspi);
- 	ret = cdns_xspi_controller_init(cdns_xspi);
- 	if (ret) {
- 		dev_err(dev, "Failed to initialize controller\n");
-@@ -616,6 +871,11 @@ static int cdns_xspi_probe(struct platform_device *pdev)
- static const struct of_device_id cdns_xspi_of_match[] = {
- 	{
- 		.compatible = "cdns,xspi-nor",
-+		.data = &cdns_driver_data,
-+	},
-+	{
-+		.compatible = "marvell,cn10-xspi-nor",
-+		.data = &mrvl_driver_data,
- 	},
- 	{ /* end of table */}
- };
--- 
-2.43.0
 
+> 
+> Best regards,
+> Krzysztof
+> 
