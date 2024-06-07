@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBE414F127;
-	Fri,  7 Jun 2024 20:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CEB154429;
+	Fri,  7 Jun 2024 20:29:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717792160; cv=none; b=dPs3G6o9FF2LM5wi43ufbw623P3+iq90DYsBpMn8LkGQ3Jfz8lLypwvTuBTrQpKggq7K60sYZC254j3TpK5RlxUu1OY94e8QA2SVgXnrlUEBa8AtvleEEMQ/r4xmbJ7kSPijGFN32wjYeUFzGadhlah95loX1cP7yRFFwaZ2Bnc=
+	t=1717792161; cv=none; b=lVyuN7ycOEBGhoZ/2Qc/9pBIuC2w+EM8LIfWAXIUyFU7GM/6PJSOnXmnan4F9Daq3oMNQE/CgPNot8ZEsh4CvCUGAGpuGM+I2By+RLrFVcnTw5DiKsDKHGdtfrzAlkr9ECNWFZA79lk3b+ErC92bX16Q1FMOsW637DXJw37D2S4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717792160; c=relaxed/simple;
-	bh=VsiNqIhkLvF1K2yGWVtMozFdl46cM8yH7o/l5Y+/L6s=;
+	s=arc-20240116; t=1717792161; c=relaxed/simple;
+	bh=flcmlgF7FOvJbK8GX4v+2Pmn4oZIQjxIgvZ7GXLJMlQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XzuqjP1wK2HCCyX40RqPPkQRkkY0it75vLDeCOXJ09lmGmskf3C5Lpl103utcGc7oaN7nSk91AfKsLEfk0nJk7nhVOtTpybdJRvaY+NHlJFUCVPfwcjunX3Jz7/HM8UTBhidVMOzlgnEE26aSdcAEx2wufWzAFim4k9dAZG4pdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kXMobQdL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hfdghj0PSgU1kO3a5bWHjSsnuQzwQUVuAmjwmLi8zbW0ICkqpGc9YdspuujeWz06ACr9WtkVDpPx9WumZdu4eOlxO41WwH27N6rHgKwKrbij1O46MYLSLJpoyzgv+wbjuO5JULQ8updQf+B5YTFyxSlKuYurcIYk1YGgd5SldYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QLinowvC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXMobQdL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3CB7C4AF09;
-	Fri,  7 Jun 2024 20:29:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QLinowvC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A9BC32782;
+	Fri,  7 Jun 2024 20:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717792160;
-	bh=VsiNqIhkLvF1K2yGWVtMozFdl46cM8yH7o/l5Y+/L6s=;
+	s=k20201202; t=1717792161;
+	bh=flcmlgF7FOvJbK8GX4v+2Pmn4oZIQjxIgvZ7GXLJMlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kXMobQdLxCcLzMpRhuwUjLeLbIMbou46BAU63fVDtMQrnNupXjoVxJeZDkDy/7C/w
-	 Jo4qfix+25T+oYeiduJfFSrf9MoapFvMWWGEvUk0FDJVh+u875bxIe2AeodXDDx5ke
-	 aPQ1faosV6c79jie3TVRVhbpsB6Advdm2AspyyncVLW1HmJ3uohGJdNqp6HY0DlIRb
-	 Vek1Xz8/NsvpqH2SPfcupZzKU4Tija0Y4R/icrlJUaWa2t9L8pzVJhz/HQ7SM6j7H4
-	 ILc4jkzecTAs5pDNSAbLB11ZG1P2TbYxqCJau3ip3wDZDsJexh0r3sfxjOyD6JRbgu
-	 bJru86eQq5fRA==
+	b=QLinowvCaCCM9oPsHnspwGifQ7WLIYR+TwOrKGxOsnaZWYrsEb0yU7/xH0mJhoWNA
+	 5SB9lwlKfBPB6zjFBJC6RdIP14DPRi2lqxzvVeSkaOtzTKjhoMLO7ZRbxTrd5jxGdT
+	 65Ayz0U1M4iQ0vRJMk3nNXtrgQ4+be9ac4h+ruymlMCLimpG2bL0pQ7sr1PMgSKStw
+	 GUJ5/noapnpTHPhVVfo4WNMbT7nXz/obmoMp/kWerldma0YS8KlBdBaP95gDiDYy90
+	 huPxwPjRPEpUwycTSDIcBe9lAY6SHz/vxuKdYPr/45WCuYJCozKWyEig7uCzKu4j/n
+	 g3oRIzmcbfD1Q==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -37,9 +37,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 1/4] perf hist: Factor out __hpp__fmt_print()
-Date: Fri,  7 Jun 2024 13:29:15 -0700
-Message-ID: <20240607202918.2357459-2-namhyung@kernel.org>
+Subject: [PATCH 3/4] perf hist: Add symbol_conf.skip_empty
+Date: Fri,  7 Jun 2024 13:29:17 -0700
+Message-ID: <20240607202918.2357459-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
 In-Reply-To: <20240607202918.2357459-1-namhyung@kernel.org>
 References: <20240607202918.2357459-1-namhyung@kernel.org>
@@ -51,139 +51,201 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Split the logic to print the histogram values according to the format
-string.  This was used in 3 different places so it's better to move out
-the logic into a function.
+Add the skip_empty flag to symbol_conf and set the value from the report
+command to preserve the existing behavior.  This makes the code simpler
+and will be needed other code which is hard to add a new argument.
 
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/ui/hist.c | 83 +++++++++++++++++++-------------------------
- 1 file changed, 36 insertions(+), 47 deletions(-)
+ tools/perf/builtin-annotate.c  |  4 ++--
+ tools/perf/builtin-report.c    | 12 ++++++------
+ tools/perf/ui/stdio/hist.c     |  5 ++---
+ tools/perf/util/events_stats.h |  3 +--
+ tools/perf/util/hist.c         |  6 +++---
+ tools/perf/util/hist.h         |  3 +--
+ tools/perf/util/session.c      |  5 ++---
+ tools/perf/util/session.h      |  3 +--
+ tools/perf/util/symbol_conf.h  |  3 ++-
+ 9 files changed, 20 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index 685ba2a54fd8..e30fcb1e87e7 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -23,35 +23,42 @@
- 	__ret;							\
- })
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 50d2fb222d48..b10b7f005658 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -571,8 +571,8 @@ static int __cmd_annotate(struct perf_annotate *ann)
+ 		goto out;
  
--static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
--		      hpp_field_fn get_field, const char *fmt, int len,
--		      hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
-+static int __hpp__fmt_print(struct perf_hpp *hpp, struct hists *hists, u64 val,
-+			    int nr_samples, const char *fmt, int len,
-+			    hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
+ 	if (dump_trace) {
+-		perf_session__fprintf_nr_events(session, stdout, false);
+-		evlist__fprintf_nr_events(session->evlist, stdout, false);
++		perf_session__fprintf_nr_events(session, stdout);
++		evlist__fprintf_nr_events(session->evlist, stdout);
+ 		goto out;
+ 	}
+ 
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 69618fb0110b..9718770facb5 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -810,8 +810,8 @@ static int stats_print(struct report *rep)
  {
--	int ret;
--	struct hists *hists = he->hists;
--	struct evsel *evsel = hists_to_evsel(hists);
--	char *buf = hpp->buf;
--	size_t size = hpp->size;
--
- 	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
- 		double percent = 0.0;
- 		u64 total = hists__total_period(hists);
+ 	struct perf_session *session = rep->session;
  
- 		if (total)
--			percent = 100.0 * get_field(he) / total;
-+			percent = 100.0 * val / total;
+-	perf_session__fprintf_nr_events(session, stdout, rep->skip_empty);
+-	evlist__fprintf_nr_events(session->evlist, stdout, rep->skip_empty);
++	perf_session__fprintf_nr_events(session, stdout);
++	evlist__fprintf_nr_events(session->evlist, stdout);
+ 	return 0;
+ }
  
--		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, percent);
--	} else if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
--		double average = 0;
-+		return hpp__call_print_fn(hpp, print_fn, fmt, len, percent);
-+	}
+@@ -1089,10 +1089,8 @@ static int __cmd_report(struct report *rep)
+ 			perf_session__fprintf_dsos(session, stdout);
  
--		if (he->stat.nr_events)
--			average = 1.0 * get_field(he) / he->stat.nr_events;
-+	if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
-+		double avg = nr_samples ? (1.0 * val / nr_samples) : 0;
- 
--		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, average);
--	} else {
--		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, get_field(he));
-+		return hpp__call_print_fn(hpp, print_fn, fmt, len, avg);
- 	}
- 
-+	return hpp__call_print_fn(hpp, print_fn, fmt, len, val);
-+}
-+
-+static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
-+		      hpp_field_fn get_field, const char *fmt, int len,
-+		      hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
-+{
-+	int ret;
-+	struct hists *hists = he->hists;
-+	struct evsel *evsel = hists_to_evsel(hists);
-+	char *buf = hpp->buf;
-+	size_t size = hpp->size;
-+
-+	ret = __hpp__fmt_print(hpp, hists, get_field(he), he->stat.nr_events,
-+			       fmt, len, print_fn, fmtype);
-+
- 	if (evsel__is_group_event(evsel)) {
- 		int prev_idx, idx_delta;
- 		struct hist_entry *pair;
-@@ -72,30 +79,16 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
- 
- 			while (idx_delta--) {
- 				/*
--				 * zero-fill group members in the middle which
--				 * have no sample
-+				 * zero-fill group members in the middle which have
-+				 * no samples, pair->hists is not correct but it's
-+				 * fine since the value is 0.
- 				 */
--				if (fmtype != PERF_HPP_FMT_TYPE__RAW) {
--					ret += hpp__call_print_fn(hpp, print_fn,
--								  fmt, len, 0.0);
--				} else {
--					ret += hpp__call_print_fn(hpp, print_fn,
--								  fmt, len, 0ULL);
--				}
-+				ret += __hpp__fmt_print(hpp, pair->hists, 0, 0,
-+							fmt, len, print_fn, fmtype);
- 			}
- 
--			if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
--				ret += hpp__call_print_fn(hpp, print_fn, fmt, len,
--							  100.0 * period / total);
--			} else if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
--				double avg = nr_samples ? (period / nr_samples) : 0;
--
--				ret += hpp__call_print_fn(hpp, print_fn, fmt,
--							  len, avg);
--			} else {
--				ret += hpp__call_print_fn(hpp, print_fn, fmt,
--							  len, period);
--			}
-+			ret += __hpp__fmt_print(hpp, pair->hists, period, nr_samples,
-+						fmt, len, print_fn, fmtype);
- 
- 			prev_idx = evsel__group_idx(evsel);
- 		}
-@@ -104,15 +97,11 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
- 
- 		while (idx_delta--) {
- 			/*
--			 * zero-fill group members at last which have no sample
-+			 * zero-fill group members at last which have no sample.
-+			 * the hists is not correct but it's fine like above.
- 			 */
--			if (fmtype != PERF_HPP_FMT_TYPE__RAW) {
--				ret += hpp__call_print_fn(hpp, print_fn,
--							  fmt, len, 0.0);
--			} else {
--				ret += hpp__call_print_fn(hpp, print_fn,
--							  fmt, len, 0ULL);
--			}
-+			ret += __hpp__fmt_print(hpp, evsel__hists(evsel), 0, 0,
-+						fmt, len, print_fn, fmtype);
+ 		if (dump_trace) {
+-			perf_session__fprintf_nr_events(session, stdout,
+-							rep->skip_empty);
+-			evlist__fprintf_nr_events(session->evlist, stdout,
+-						  rep->skip_empty);
++			perf_session__fprintf_nr_events(session, stdout);
++			evlist__fprintf_nr_events(session->evlist, stdout);
+ 			return 0;
  		}
  	}
+@@ -1562,6 +1560,8 @@ int cmd_report(int argc, const char **argv)
+ 	data.path  = input_name;
+ 	data.force = symbol_conf.force;
  
++	symbol_conf.skip_empty = report.skip_empty;
++
+ repeat:
+ 	session = perf_session__new(&data, &report.tool);
+ 	if (IS_ERR(session)) {
+diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
+index b849caace398..9372e8904d22 100644
+--- a/tools/perf/ui/stdio/hist.c
++++ b/tools/perf/ui/stdio/hist.c
+@@ -897,8 +897,7 @@ size_t hists__fprintf(struct hists *hists, bool show_header, int max_rows,
+ 	return ret;
+ }
+ 
+-size_t events_stats__fprintf(struct events_stats *stats, FILE *fp,
+-			     bool skip_empty)
++size_t events_stats__fprintf(struct events_stats *stats, FILE *fp)
+ {
+ 	int i;
+ 	size_t ret = 0;
+@@ -910,7 +909,7 @@ size_t events_stats__fprintf(struct events_stats *stats, FILE *fp,
+ 		name = perf_event__name(i);
+ 		if (!strcmp(name, "UNKNOWN"))
+ 			continue;
+-		if (skip_empty && !stats->nr_events[i])
++		if (symbol_conf.skip_empty && !stats->nr_events[i])
+ 			continue;
+ 
+ 		if (i && total) {
+diff --git a/tools/perf/util/events_stats.h b/tools/perf/util/events_stats.h
+index 8fecc9fbaecc..f43e5b1a366a 100644
+--- a/tools/perf/util/events_stats.h
++++ b/tools/perf/util/events_stats.h
+@@ -52,7 +52,6 @@ struct hists_stats {
+ 
+ void events_stats__inc(struct events_stats *stats, u32 type);
+ 
+-size_t events_stats__fprintf(struct events_stats *stats, FILE *fp,
+-			     bool skip_empty);
++size_t events_stats__fprintf(struct events_stats *stats, FILE *fp);
+ 
+ #endif /* __PERF_EVENTS_STATS_ */
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 2e9e193179dd..f028f113c4fd 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -2706,8 +2706,7 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+ 	}
+ }
+ 
+-size_t evlist__fprintf_nr_events(struct evlist *evlist, FILE *fp,
+-				 bool skip_empty)
++size_t evlist__fprintf_nr_events(struct evlist *evlist, FILE *fp)
+ {
+ 	struct evsel *pos;
+ 	size_t ret = 0;
+@@ -2715,7 +2714,8 @@ size_t evlist__fprintf_nr_events(struct evlist *evlist, FILE *fp,
+ 	evlist__for_each_entry(evlist, pos) {
+ 		struct hists *hists = evsel__hists(pos);
+ 
+-		if (skip_empty && !hists->stats.nr_samples && !hists->stats.nr_lost_samples)
++		if (symbol_conf.skip_empty && !hists->stats.nr_samples &&
++		    !hists->stats.nr_lost_samples)
+ 			continue;
+ 
+ 		ret += fprintf(fp, "%s stats:\n", evsel__name(pos));
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 8fb3bdd29188..5273f5c37050 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -375,8 +375,7 @@ void hists__inc_nr_lost_samples(struct hists *hists, u32 lost);
+ size_t hists__fprintf(struct hists *hists, bool show_header, int max_rows,
+ 		      int max_cols, float min_pcnt, FILE *fp,
+ 		      bool ignore_callchains);
+-size_t evlist__fprintf_nr_events(struct evlist *evlist, FILE *fp,
+-				 bool skip_empty);
++size_t evlist__fprintf_nr_events(struct evlist *evlist, FILE *fp);
+ 
+ void hists__filter_by_dso(struct hists *hists);
+ void hists__filter_by_thread(struct hists *hists);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index a10343b9dcd4..0ec92d47373c 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -2696,8 +2696,7 @@ size_t perf_session__fprintf_dsos_buildid(struct perf_session *session, FILE *fp
+ 	return machines__fprintf_dsos_buildid(&session->machines, fp, skip, parm);
+ }
+ 
+-size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp,
+-				       bool skip_empty)
++size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp)
+ {
+ 	size_t ret;
+ 	const char *msg = "";
+@@ -2707,7 +2706,7 @@ size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp,
+ 
+ 	ret = fprintf(fp, "\nAggregated stats:%s\n", msg);
+ 
+-	ret += events_stats__fprintf(&session->evlist->stats, fp, skip_empty);
++	ret += events_stats__fprintf(&session->evlist->stats, fp);
+ 	return ret;
+ }
+ 
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 3b0256e977a6..4c29dc86956f 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -130,8 +130,7 @@ size_t perf_session__fprintf_dsos(struct perf_session *session, FILE *fp);
+ size_t perf_session__fprintf_dsos_buildid(struct perf_session *session, FILE *fp,
+ 					  bool (fn)(struct dso *dso, int parm), int parm);
+ 
+-size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp,
+-				       bool skip_empty);
++size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp);
+ 
+ void perf_session__dump_kmaps(struct perf_session *session);
+ 
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index c114bbceef40..657cfa5af43c 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -46,7 +46,8 @@ struct symbol_conf {
+ 			lazy_load_kernel_maps,
+ 			keep_exited_threads,
+ 			annotate_data_member,
+-			annotate_data_sample;
++			annotate_data_sample,
++			skip_empty;
+ 	const char	*vmlinux_name,
+ 			*kallsyms_name,
+ 			*source_prefix,
 -- 
 2.45.2.505.gda0bf45e8d-goog
 
