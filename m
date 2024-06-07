@@ -1,105 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEB219538C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 15:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF5D1990CE;
+	Fri,  7 Jun 2024 15:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717773897; cv=none; b=TA6QkBlPwn0lQHUPTC/BCBTc5ExRsI4dzzyuFkHeBS+g5ek2VpYRvQ2I+haScb2jakPUDeQ/JmB8duCdJN5rzq3MAS4ZbwcHn+zCTRPohVDULOaxAKBY87DQAcemlLJQ/yE3eRvnCrbJYsudLPKazyyYuBFthPl6rY+IJziiLzg=
+	t=1717773901; cv=none; b=URbu3FLjPCKRhpwVofbrhnLEAUnIpOTikpu5JRxH8norSDONQ5D1PgFzb6Fzzca8r0c6vQSRSe1Vi+rnwl1VyQCyFlWRgs5NHTZmxaQO4khXXqFKJjyobobHbXn7U8nC0+ffV4z5vHDqsiKSgYVhkqymy4wntpmbrfyV4Vw0CGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717773897; c=relaxed/simple;
-	bh=7u5Kq1brXSsHc7yb6Z2jTQVjPStfm1aWws6CwBvVo2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=k4NG9oudQLSMjcKRZdPFivCYnX7HBgBmv5QVXcOv2RZqu/kSVEJAZi5TqS9lVeGugp7lcniALCjb2kDtH/ymbLcfnlmjTkB6K8wd6PR4oT8g7YHkvYBJ2sSNOcNCsQG9ezE9tOWyC4EbQJQDPIZk6j7IrGbqalVxCHjaOhwRLUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TnK8HrNV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717773901; c=relaxed/simple;
+	bh=cDn0B8Cf4qrHCc8K+Bf4fdvPV0Lpo7tGIWXpE91On1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ubi3W2wNw23Ds6DDa12XuSRP0OopkKNteROcMkdee1gb73CPg7XD1+NUNF57xINyuk85Ni0qHuZmaky1fS//kuf82hcQTKyUNwcO4N5cFyNiLewPxuLku83YioDCkqm6rhLcswnw045fx7q1BKcLmeJeok2Kg5lkUvXpqgzbtJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZRJZFNzt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TnK8HrNV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717773894;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=LU5NzzP6V+9mwVMNTyXJ7sgLtfZ2ktDoJyAshRfGtNY=;
-	b=TnK8HrNVXOljfZ0OUNNMObWA6GLUdg195TlERYrDFo4ISgcvNruuyr9Te0mqUhqzU9L7WM
-	uUDLN7oF8xsv0gwbd6zi08u47VMBUSQzFypEcFc1NTD+veqTONDCIVC8Z2MVGPwJTtkTU5
-	atpPmmbRPXgDGJT3aRQmuJf2rFZhdY8=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-554-0Q_3i9AdPWqj_jtKifaLJA-1; Fri, 07 Jun 2024 11:24:52 -0400
-X-MC-Unique: 0Q_3i9AdPWqj_jtKifaLJA-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7953fc67fc8so120549685a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 08:24:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717773892; x=1718378692;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LU5NzzP6V+9mwVMNTyXJ7sgLtfZ2ktDoJyAshRfGtNY=;
-        b=e18eDvoU+GTJKcM8Q9YqS+LOMQSo4KdcOeSbLB7a9fR9L90Ew4ilVDRk2wHLcSehLh
-         XwR/H0X6CtMcZbd3qBzWdPfU/1xC84GfHDkUZ6RAxvN96By68FTMm4E8znulpTm6L1wU
-         NkXCEExIPakN7UW2wZe1zFhlktuSpZL3Rx4r9+/7mT73CLVevFYmiS/m0UP/COx2OmYm
-         iwOdSLFjRUgITXuBVw0maWUBkiXD/hRtpRxy5nKILlLU6R9cm9VMcgiquNU4SF0TPbs7
-         uD7MQqGQnL7A/xjlOjPAIXKkxrDEpaK4umOUs379CwrOGqXg2RqcxHPZ4sa9JlVxQer0
-         Osbg==
-X-Gm-Message-State: AOJu0Yyy8IkRFLApeOyif1pWyCwtphayIb1qOcHpbfR8LpSx854du7PK
-	TrLizVLILfjpcriXPJKbJ8u8iq8XjL1SWLzsDwFtjTCEZ6jZG8VJegH5u71+UjGYi+WjQzlhSJn
-	TqHlYjW/3tE2au70w6Hyzm+aRHgIKZyYUnqpDDn+3Cd2YsKqWLso/kEexLGWI4e9uRCusqQ==
-X-Received: by 2002:a05:620a:25d1:b0:794:f1d8:2798 with SMTP id af79cd13be357-7953c43c48amr298634685a.43.1717773891564;
-        Fri, 07 Jun 2024 08:24:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE/Ru4y6JR7LWzbICpWk3//XUDjpsGSRIRN2VBLwLDtDBo9OCUr1sBJ/ZO4cP3XEB8p+oUlww==
-X-Received: by 2002:a05:620a:25d1:b0:794:f1d8:2798 with SMTP id af79cd13be357-7953c43c48amr298632585a.43.1717773891180;
-        Fri, 07 Jun 2024 08:24:51 -0700 (PDT)
-Received: from x1.. (c-98-219-206-88.hsd1.pa.comcast.net. [98.219.206.88])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-795330b2426sm176765885a.73.2024.06.07.08.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 08:24:50 -0700 (PDT)
-From: Brian Masney <bmasney@redhat.com>
-To: akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	javierm@redhat.com
-Subject: [PATCH v2] lib/Kconfig.debug: document panic= command line option and procfs entry for PANIC_TIMEOUT
-Date: Fri,  7 Jun 2024 11:24:43 -0400
-Message-ID: <20240607152443.925168-1-bmasney@redhat.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZRJZFNzt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8203C4AF07;
+	Fri,  7 Jun 2024 15:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717773900;
+	bh=cDn0B8Cf4qrHCc8K+Bf4fdvPV0Lpo7tGIWXpE91On1Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZRJZFNztK842bugi+T8JjADH862nT+gmeHHlkohWrrKMH90W6kt7WPu8bOS2CoKgH
+	 J4Wqi+twOS1WjbjB32a7mBw1vc24/JajxqUJjABIZtyVGcE4lRvTiyIzHN6hT+t7DC
+	 3SgKF9MpVJw1kffKILjzH8ULeI6UmtVYwqkFQVF9Vj7pdK26q8/UoJO30m/dicJCr6
+	 mXq88gacGCDa3/YHiqq+1KbmEIP8Ubt5q7+GE0c/JUOBmAv9hwi3frtUCy/oZLj1h+
+	 ZPjbkAsg2119dgwnyI6+pYxY68SM4d/7dt1CXK2C6tKKuJyixpk4rRlqp3TG5u7E8k
+	 OtLffifjlq41g==
+Date: Fri, 7 Jun 2024 16:24:57 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com
+Subject: Re: [PATCH 6.1 000/473] 6.1.93-rc1 review
+Message-ID: <ZmMmSYqryQ2ufmL5@finisterre.sirena.org.uk>
+References: <20240606131659.786180261@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SVN2U3jxq2+OcCc9"
+Content-Disposition: inline
+In-Reply-To: <20240606131659.786180261@linuxfoundation.org>
+X-Cookie: Your love life will be... interesting.
 
-PANIC_TIMEOUT can also be controlled with the panic= kernel command line
-option and the file /proc/sys/kernel/panic. Let's document both of
-these in the Kconfig help text.
 
-Signed-off-by: Brian Masney <bmasney@redhat.com>
-Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
----
-Changes since v1:
-- Added /proc/sys/kernel/panic as suggested by Javier.
+--SVN2U3jxq2+OcCc9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- lib/Kconfig.debug | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On Thu, Jun 06, 2024 at 03:58:49PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.93 release.
+> There are 473 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 59b6765d86b8..2fc9f0ddde0b 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1043,7 +1043,9 @@ config PANIC_TIMEOUT
- 	  Set the timeout value (in seconds) until a reboot occurs when
- 	  the kernel panics. If n = 0, then we wait forever. A timeout
- 	  value n > 0 will wait n seconds before rebooting, while a timeout
--	  value n < 0 will reboot immediately.
-+	  value n < 0 will reboot immediately. This setting can be overridden
-+	  with the kernel command line option panic=, and from userspace via
-+	  /proc/sys/kernel/panic.
- 
- config LOCKUP_DETECTOR
- 	bool
--- 
-2.45.1
+Tested-by: Mark Brown <broonie@kernel.org>
 
+--SVN2U3jxq2+OcCc9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZjJkgACgkQJNaLcl1U
+h9CI1Qf+M2U369e8fh4c2+j8dLtSDa/MRhbvbimqFtc8apjuieun9ck/iGU4wL36
+M7FB/Sx5cOsl/ym+e96JEiTDmLXrogUuNzoYpRNvJXhpDjPp2t/ol8O1oneY5570
+O7bltmGbf/iSosg7i3RpBNRp6x7gyw94reua4zM/lCLrN5qi9oI/2VasPG0dEsSF
+VB9gIoc9mSymQdx5aYNP+rynx0csDbN8t4S7QHj4saMvoi1bHSgKNt9fyPWDXNxX
+7fjjzWgz5n5WcrilsYbrdVdIdI2ss4IHDTK4KnVT9XWeLFY4ToNaBvcaTmJEmrY9
+aWr7HUwFIYEKYUegQrtsaY2uDBFsOw==
+=DmHT
+-----END PGP SIGNATURE-----
+
+--SVN2U3jxq2+OcCc9--
