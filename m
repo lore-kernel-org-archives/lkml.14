@@ -1,50 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDF16D1AB
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 20:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22506153BC3
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 20:22:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717791738; cv=none; b=TeU4ZFpOExiVNVaQIVNE97kya/nkV7SHzM0xi2hZiqLxYn0F4wOD+ZpPTs4iN/yXdeHf4kQxTCT2vNKWObK0hT+c5+WK3jdsCikaoych0Q6M4SnLlHJN9IoFn5QjHr6lPQhKJN0I+u0W/hfQEKtFCuSFsIRnJ+dKcH9zq0wFK+U=
+	t=1717791740; cv=none; b=RRgA9GuU6Wv4bT3pPcDf4vl49djAO8ZfdmW4gKvlT+3I5tleRvcG7q92viLjKiY0uwCu+VMoBDd1dwTiamggvpljLx0IlLSht753+O1jrkeRwgGnpx+dLkOL6JKbdta3WXaLXeenPb50SjHMKnFppvGBhm7geCb0yOZjy4gs+J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717791738; c=relaxed/simple;
-	bh=GRVB1JZor8DNIf+EA76uz1CDrc9HGTu45kFvmt1Bnko=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=iWw51HnPYIuNTLXKUWG5flumNbPXxI7lN3dEpGk6Puu4GYer8nv2xpFu+XfhA6eweo9hJpFgf5zLXTgmKmyhvsAEMXaUWH15ARYo76C0QHoHIRhK3OyfiRUnnt5bI8J4ltNRKuqG79MGtEwMztcm4gf5f2AMHHU7IyLTae0hlHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KDmLcRrD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kkEBxDTw; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1717791740; c=relaxed/simple;
+	bh=CnPSiJoSkTaS4DgxuVepbWdO7rowLFCL7+5optFOhBE=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mEwJyXvKejkh+LbUip1cWXghIQX6ToZJTl2yyFKWAkgbE4N0ISkAg2nrNOQXVYAmeKU4MiSYX2aD79QO0VCF0eqlCc+KbY4TwJKR7/4woJ49dI35sVSS4GZkl+R80aB030579qhtENbKFOardCkjZjtAXCaNj9EWxnMghsWEzSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jV4r27iO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qenheITo; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KDmLcRrD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kkEBxDTw"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jV4r27iO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qenheITo"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1717791734;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=95PpUWaV62SsrnL0BPckok51h7bQ1MXWT68WtYsi6ZU=;
-	b=KDmLcRrDD/geGDzKxZ7XAY0NSrzjB5ssHpXsodTzg2B5lqPgH3Degn0hcmblSkD3yt9twq
-	Owlh9AEmDQexYrtRhMyfuhQW7gQ6is3I67r7OFRndJfA9vB18ko1kUdJxXS4n9dXJJ1pE3
-	S4SVaJtWc00v2nNxE2SIHnCD0roOtHB9vuEdRw0P7alD4srihU8ai6H2fimZzUgBkh9E/P
-	iP7sfYbk5xCORBxjGIXwTDHVBs6SYud0sp9cgaJ+4vGVQB/PhlsniDV6FfOWzUJeBmJrl5
-	u79H9dsry7buSvCifWTC3y38x7+Ix0vcy7XOAnCOAaOPjutzER9OBMNaEGWAyA==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y4FmsaK4U8owu4NlSDzmS6G8DVihDPJxkQgSL8xnqno=;
+	b=jV4r27iONhJVERHB641eznAaftrwZ3nE682uV9gC1aGX3evxbgEtI3+I/GGIFZOgjpwiHX
+	jrivhNjIULLbcTEF1ebUWj0KfocGBOpUnJ089SgjLwdKHrT3YqY/Eg0SXgoahKrD73OQPD
+	GIPo3UKx7rqQ8OQfdvFUdf7X8OHayoEhJvPcmX6BDOlSxCWNVz6CkE8p3Fk92DtWshTiPF
+	dt03h8kY0i0/VeSoJX638ThLxRh0Z3R5ck0NRVVs8N5T4i5pkp03gk2RhX4GYCP2ODf4pk
+	b/rBf/p5UzcV/U6PLxXYHL0ZFnOUVb7oknY6vFnqE2fmMzHNT9Mjn98ZwcXy8Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1717791734;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=95PpUWaV62SsrnL0BPckok51h7bQ1MXWT68WtYsi6ZU=;
-	b=kkEBxDTwLGDhUmHWmppMYOcw4k9zSfrUSiHwbrf3F4PLLWFPVNOD1g7RNXufuykyhtquEx
-	rCgxUBbJC/+m0pBw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y4FmsaK4U8owu4NlSDzmS6G8DVihDPJxkQgSL8xnqno=;
+	b=qenheITowqvS4kQkmh3FtMet7WUSPFv4Sdzt965PbpQbng2mrMAKUNPxeXEZyrFEa0dnT6
+	byAMvr7yCjRM4vBg==
 To: Alexandre Ghiti <alexghiti@rivosinc.com>,
 	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/8] remove size limit on XIP kernel
-Date: Fri,  7 Jun 2024 22:22:05 +0200
-Message-Id: <cover.1717789719.git.namcao@linutronix.de>
+Subject: [PATCH v2 7/8] riscv: drop the use of XIP_OFFSET in create_kernel_page_table()
+Date: Fri,  7 Jun 2024 22:22:12 +0200
+Message-Id: <4ea3f222a7eb9f91c04b155ff2e4d3ef19158acc.1717789719.git.namcao@linutronix.de>
+In-Reply-To: <cover.1717789719.git.namcao@linutronix.de>
+References: <cover.1717789719.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,49 +58,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+XIP_OFFSET is the hard-coded offset of writable data section within the
+kernel.
 
-For XIP kernel, the writable data section is always at offset specified in
-XIP_OFFSET, which is hard-coded to 32MB.
+By hard-coding this value, the read-only section of the kernel (which is
+placed before the writable data section) is restricted in size.
 
-Unfortunately, this means the read-only section (placed before the
-writable section) is restricted in size. This causes build failure if the
-kernel gets too large.
+As a preparation to remove this hard-coded value entirely, stop using
+XIP_OFFSET in create_kernel_page_table(). Instead use _sdata and _start to
+do the same thing.
 
-This series remove the use of XIP_OFFSET one by one, then remove this
-macro entirely at the end, with the goal of lifting this size restriction.
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/mm/init.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Also some cleanup and documentation along the way.
-
-This series depends on
-https://lore.kernel.org/linux-riscv/20240508191917.2892064-1-namcao@linutronix.de/
-
-v2: address all Alex's comments (thanks Alex!). This includes the addition of a
-new patch (riscv: don't export va_kernel_pa_offset in vmcoreinfo for XIP kernel),
-which fix a build failure if CONFIG_VMCORE_INFO=y
-
-Best regards,
-Nam
-
-Nam Cao (8):
-  riscv: cleanup XIP_FIXUP macro
-  riscv: don't export va_kernel_pa_offset in vmcoreinfo for XIP kernel
-  riscv: replace misleading va_kernel_pa_offset on XIP kernel
-  riscv: drop the use of XIP_OFFSET in XIP_FIXUP_OFFSET
-  riscv: drop the use of XIP_OFFSET in XIP_FIXUP_FLASH_OFFSET
-  riscv: drop the use of XIP_OFFSET in kernel_mapping_va_to_pa()
-  riscv: drop the use of XIP_OFFSET in create_kernel_page_table()
-  riscv: remove limit on the size of read-only section for XIP kernel
-
- arch/riscv/include/asm/page.h       | 29 ++++++++++++++++++++--------
- arch/riscv/include/asm/pgtable.h    | 18 +++++++----------
- arch/riscv/include/asm/set_memory.h |  2 +-
- arch/riscv/include/asm/xip_fixup.h  | 30 +++++++++++++++++++++++------
- arch/riscv/kernel/vmcore_info.c     |  7 +++++++
- arch/riscv/kernel/vmlinux-xip.lds.S |  5 +++--
- arch/riscv/mm/init.c                | 13 ++++++++-----
- 7 files changed, 71 insertions(+), 33 deletions(-)
-
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 313459329d16..b7b6affd4b79 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -911,7 +911,7 @@ static void __init relocate_kernel(void)
+ static void __init create_kernel_page_table(pgd_t *pgdir,
+ 					    __always_unused bool early)
+ {
+-	uintptr_t va, end_va;
++	uintptr_t va, start_va, end_va;
+ 
+ 	/* Map the flash resident part */
+ 	end_va = kernel_map.virt_addr + kernel_map.xiprom_sz;
+@@ -921,10 +921,11 @@ static void __init create_kernel_page_table(pgd_t *pgdir,
+ 				   PMD_SIZE, PAGE_KERNEL_EXEC);
+ 
+ 	/* Map the data in RAM */
++	start_va = kernel_map.virt_addr + (uintptr_t)&_sdata - (uintptr_t)&_start;
+ 	end_va = kernel_map.virt_addr + kernel_map.size;
+-	for (va = kernel_map.virt_addr + XIP_OFFSET; va < end_va; va += PMD_SIZE)
++	for (va = start_va; va < end_va; va += PMD_SIZE)
+ 		create_pgd_mapping(pgdir, va,
+-				   kernel_map.phys_addr + (va - (kernel_map.virt_addr + XIP_OFFSET)),
++				   kernel_map.phys_addr + (va - start_va),
+ 				   PMD_SIZE, PAGE_KERNEL);
+ }
+ #else
 -- 
 2.39.2
 
