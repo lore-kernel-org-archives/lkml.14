@@ -1,86 +1,116 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFB2194A44;
-	Fri,  7 Jun 2024 12:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AC5192B71
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 12:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717764128; cv=none; b=L7A+rBGEmKWVJDbYwa2J+4YOVkNpY7dgy9coW3RlCW+H45cYYQmF54wXrlA+VDzU4SC7Pn6voU3jvELMIL9tQN1BR8LYqrMnrwtb/BJsfaLFcKqsEpmfqajI4/ISgJ0DkQWb3UE+cxIKFcDf41NT0TlGcFngpsAhe0rsfM7bZR4=
+	t=1717764142; cv=none; b=E4mh/eEmyO+0LkFNyeXhoofTGCbv67XHLe6Sf34LfAYYBZ3dXulmhoNbyk8HwGLxYq8s/5eSysQkFWX0bgox6cWN0t4sv/W1rG//5HsJw5Ybl7/f6//2PgeEJC3vDT9Pv3LVqvtvJe4HG7yaGAq7pZdQcgP0Mc4Cc9ytNCB2GJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717764128; c=relaxed/simple;
-	bh=BO5EE4l/LhBZHQo+/JK7JyY63kHZRD4xKv9DBOWPlMY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g9wqpJV21FggLHKSwos0GImmPgLfDZwo35jlKoAoMN0SfTqUJ2+1H1CJGDsIZkBx+w8XYYm0R+/PaMORlsSKiA719BcyFSvX4q1SMAWCJjAgm02aWsuBpaEg8oH7JfZ2h4eO323xBj2ll50SybzCpiWZaW57EFFJxYyau3HuDEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Vwght062KzwSJl;
-	Fri,  7 Jun 2024 20:38:06 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 29076140336;
-	Fri,  7 Jun 2024 20:42:05 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 7 Jun 2024 20:42:04 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>
-Subject: [PATCH net-next v7 15/15] mm: page_frag: add a entry in MAINTAINERS for page_frag
-Date: Fri, 7 Jun 2024 20:38:18 +0800
-Message-ID: <20240607123819.40694-16-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240607123819.40694-1-linyunsheng@huawei.com>
-References: <20240607123819.40694-1-linyunsheng@huawei.com>
+	s=arc-20240116; t=1717764142; c=relaxed/simple;
+	bh=a5796ySW3YMSWtbXww5SPASPZ3Nh/h6vftisfvSJZQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NQv3WqsQEcDSC3We8YWmyLhtbySmwG8RQyhqtAKJlNPmG+0LNh1Co575CK82ijnPAtH6VpwqKsNSt6rG6fkOC8NsuD0hr66n1jAlWp4L1tlB1ap7X11xaLB6GU652KUQjVfiEF15mCBmBN6NPZgmQ9yxsJQ0VRrIWXT5aiXz3RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AGmTJiTS; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AGmTJiTS"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57c614c572aso265928a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 05:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717764139; x=1718368939; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=763OORXE2U3LdBi+kBiAJ1rdKK00vtJI0371975xlvU=;
+        b=AGmTJiTSrAOJe2jMpVDsTowCq0Ycp5iZCjYBntwS284jI2+LDeU3ikRo5wmWL8rgsg
+         zH+9qvqDY98u+qlPi/xSp3fMXv8KdOcwubNsw8d7ZWpSMqjhRBdmTSYcGfHjAsR65sFf
+         YtwTdNQISnNxIzYElJvu3PA3WCa6jCu7DRXeLh/BJDbmiKsUAUkq3gPXFOGFKnW6ol0f
+         ACYOA2hHDxEPckDjprEm4NJ+rMEH9+6bA+YmYEXRVfAHgBTDawkZCGV84N4nG8OfpzDl
+         Un5MII4zCpqg+5X57mMoBiS6dCL7RnPNenBZ2B2vU7OVH5YgKB/zbT1+gnskFA0rCiwa
+         3lGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717764139; x=1718368939;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=763OORXE2U3LdBi+kBiAJ1rdKK00vtJI0371975xlvU=;
+        b=IXJBeDp1Cc2QzUaV6sozerY0w8dpnXRTdJqAhz6NSmOT8slL+i6DCRStVG1YNPQ63n
+         30LTKQc8ZM6BMThemf8tVorX2ebPwPgHsV0eW0sChC0yia5A6bZ4KhRAkiratUJ1Pblq
+         RchoKrQgeMTtR2H7kINWrEV1aX1L+UQtFgQ1eCjo9rNCv+x3Aum/m8+EpcP64TPfiMXz
+         FDxIRnRgLbMYiyB+PioUaMAUFhqk5Vxr5855WabdbzIp6RCzRxHSdT9TYZsvNFKzdnh3
+         oxRCVjdBjmP82xkmoo3OpGhIl2zLmJsP4+fc72z7qbSEV9DKH7Emr9RFSEpNJR6JV8zD
+         +3Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCVBZ47bV1FpX6bnoXkFXlYJt1+cLigtMxw4rizlkBl2AgwP5twChMxsG7QnUcQTJq2OzG2gUirx9rzY6AtW8X6uEMvfX7DfAPUHY1iV
+X-Gm-Message-State: AOJu0YwNbb7AC2AHSmLsUF2hyTad/SOO6+A9lIKndabcw/aAzG0YLplP
+	wMSfPP+plWG3CxApkm52GBxqRXKeUzu2qPzXvti6IiZcb7lBhHfgeMRMrpvwQuFkZrOFPEwvyFP
+	/ldJWPM0C
+X-Google-Smtp-Source: AGHT+IHGCU7SOofUC5q+FlTfu45pN2L6JEbAlbXDLfaXmvVdmuyPmPykEYwb8QcVU5NVMF6CUNC2eg==
+X-Received: by 2002:a50:9509:0:b0:572:9962:7f0 with SMTP id 4fb4d7f45d1cf-57c509a841amr1347566a12.34.1717764138635;
+        Fri, 07 Jun 2024 05:42:18 -0700 (PDT)
+Received: from ?IPV6:2a02:8109:aa0d:be00::8090? ([2a02:8109:aa0d:be00::8090])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae234204sm2680408a12.87.2024.06.07.05.42.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Jun 2024 05:42:18 -0700 (PDT)
+Message-ID: <da6452eb-a419-4260-aeef-f092250430ba@linaro.org>
+Date: Fri, 7 Jun 2024 14:42:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/11] misc: fastrpc: Copy the complete capability
+ structure to user
+To: Ekansh Gupta <quic_ekangupt@quicinc.com>, srinivas.kandagatla@linaro.org,
+ linux-arm-msm@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, quic_bkumar@quicinc.com,
+ linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
+ stable <stable@kernel.org>
+References: <20240606165939.12950-1-quic_ekangupt@quicinc.com>
+ <20240606165939.12950-4-quic_ekangupt@quicinc.com>
+Content-Language: en-US
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <20240606165939.12950-4-quic_ekangupt@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-After this patchset, page_frag is a small subsystem/library
-on its own, so add a entry in MAINTAINERS for to indicate
-the new subsystem/library's maintainer, maillist, status and
-file lists of page_frag.
 
-Alexander is the orginal author of page_frag, add him in the
-MAINTAINERS too.
 
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On 06/06/2024 18:59, Ekansh Gupta wrote:
+> User is passing capability ioctl structure(argp) to get DSP
+> capabilities. This argp is copied to a local structure to get domain
+> and attribute_id information. After getting the capability, only
+> capability value is getting copied to user argp which will not be
+> useful if the use is trying to get the capability by checking the
+> capability member of fastrpc_ioctl_capability structure. Add changes
+> to copy the complete capability structure so that user can get the
+> capability value from the expected member of the structure.
+> 
+> Fixes: 6c16fd8bdd40 ("misc: fastrpc: Add support to get DSP capabilities")
+> Cc: stable <stable@kernel.org>
+> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7538152be2f1..51b20b1c7e38 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16953,6 +16953,17 @@ F:	mm/page-writeback.c
- F:	mm/readahead.c
- F:	mm/truncate.c
- 
-+PAGE FRAG
-+M:	Alexander Duyck <alexander.duyck@gmail.com>
-+M:	Yunsheng Lin <linyunsheng@huawei.com>
-+L:	linux-mm@kvack.org
-+L:	netdev@vger.kernel.org
-+S:	Supported
-+F:	Documentation/mm/page_frags.rst
-+F:	include/linux/page_frag_cache.h
-+F:	mm/page_frag_cache.c
-+F:	mm/page_frag_test.c
-+
- PAGE POOL
- M:	Jesper Dangaard Brouer <hawk@kernel.org>
- M:	Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Reviewed-by: Caleb Connolly <caleb.connolly@linaro.org>
+> ---
+>   drivers/misc/fastrpc.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+> index abf7df7c0c85..f64781c3012f 100644
+> --- a/drivers/misc/fastrpc.c
+> +++ b/drivers/misc/fastrpc.c
+> @@ -1784,7 +1784,7 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
+>   	if (err)
+>   		return err;
+>   
+> -	if (copy_to_user(argp, &cap.capability, sizeof(cap.capability)))
+> +	if (copy_to_user(argp, &cap, sizeof(cap)))
+>   		return -EFAULT;
+>   
+>   	return 0;
+
 -- 
-2.33.0
-
+// Caleb (they/them)
