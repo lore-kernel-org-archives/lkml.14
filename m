@@ -1,43 +1,56 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA5314EC7D;
-	Fri,  7 Jun 2024 08:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4052515B127;
+	Fri,  7 Jun 2024 08:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717749849; cv=none; b=tTqgcGGtY03luVXJyiBma4LAEp5O7LBdm98owDV0MkQTjtrioEEIfhIj0jsnhfCe8XNxx1V1FU2DSkSflE/413Pen7YxtEdubFDRiERI39xTSnq/aqtv1zYiA+wzr+Aq8Z10ttMRkbRF2q3XXUWCCN9BqDejdQyiN+C9RY6VyDc=
+	t=1717749868; cv=none; b=uvNt4b6PoeywYU1HDtKibya33NwbwWolAw0IC7+KRxqrEv2m7jxzr7yo9PZXJ+cxVUg6oxLEWzp2QctaAEU1Ue3n5joEcLAuwcB8asqofcojpXtWnZZKDjpDM5PYZT4Cz0gcGwFNJpdH0Fdgmykk8qQH5mudTqHEPt06GqOfQp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717749849; c=relaxed/simple;
-	bh=AaIXA8MjtT5hwDfIWAoPqUGP5jQYQJf9jiBjbQIYfjQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hVw5pIh6SWxrKemw2DkeG9ODX6wXnPqieC/5lYy5j7KE1WHHvYWCIJBBeZLFZ6/RFKZ5oZiF/CMYT8LKlpFscQe7kWOzPIz9JAgmDDfqx7nDxayJraiCPXFWvhcOeR2PSL/DUfGD1slCtuZakbVdATuMlb2R1ZzmS2BaXG/QJ20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4578hT6z93814699, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4578hT6z93814699
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Jun 2024 16:43:29 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 7 Jun 2024 16:43:29 +0800
-Received: from RTDOMAIN (172.21.210.98) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 7 Jun
- 2024 16:43:29 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai
-	<justinlai0215@realtek.com>
-Subject: [PATCH net-next v20 00/13] Add Realtek automotive PCIe driver
-Date: Fri, 7 Jun 2024 16:43:08 +0800
-Message-ID: <20240607084321.7254-1-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1717749868; c=relaxed/simple;
+	bh=ZGIN+3jBdsxYLWxmKjRImDnEocFLP4dx/WNFCIBynME=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sbL1zrRhU2q5fr6zpFRSGLf4RWl06EFlYc8sLl/HIEO+FvM+ojB0+Dshq3/0WpFVICc3o++ItFTXPK4yRJYfKeKHMrjIlWlioOmCqvc2VJo1dRVoWcMPIinEyncC5KWf3btHNW/gFASUfXMc9ujzy23ptgafG6jLEgc3WSyvO+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a6e349c0f2bso29854766b.2;
+        Fri, 07 Jun 2024 01:44:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717749865; x=1718354665;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o4K2z7NbHqX/9YFvaDXUZZSVRNBRpOe0GfnIPk5+1a8=;
+        b=GOwscALTrfBD5fV91VjII6Z0sNxJMliAzJnjq7L6BCeWWABbE7yTQ8H3GmRKGcP0cF
+         uTkj/BAab8VKSV8RCSDytHncGemkYjhv/uDZArK0Epm5N5LkPe/fmbHWykU6xo89O1t7
+         HHO5sOam2VUmRYKoJ1aCzTMtpDtLgZS+fO5c0dRSvwS1ix3veDz9NDeR+IiB/ntEo8Lw
+         U9slFy6F5RXb1frbfqxc4vZF4Rh+CyjbOArWQjCVcTufBnOkur5EQF2GnMquczhJrG0J
+         QEm5QDLqFHFNSnWy+Iq/M3QBwQNY9K1CO2gjhZw3PrSFFt+vfpCrzbLP9qppsmbVxkfF
+         kLcg==
+X-Forwarded-Encrypted: i=1; AJvYcCWSfQH1bj9QiJSeDuedOQxl+1HxV9LwMFVjoD1GzNK1+sLKqm71OsY0V+tEZAmL2OWhcwzYpZC7xhdSPOD0E2n127pRsXg7UC8Ck3g8
+X-Gm-Message-State: AOJu0YxXBj5/4QGduY+3+gZ9H9VXoEgIurN+nO+4w6BhmNVFBX8LUEMD
+	ytuQf7Hh9I0xgCwh3sQQBOYWIT/pgKYJ1DgWrciZUFTo8jA/9FDK
+X-Google-Smtp-Source: AGHT+IGOC8WKarSr1SDF9TztrVJzc005LX9HyTpLCm0LyrrM3frfZSG9Ck0GQ0GWIsIAS7ooPUM9IA==
+X-Received: by 2002:a17:906:2bdb:b0:a68:bcf6:5a57 with SMTP id a640c23a62f3a-a6cd7891d48mr130532966b.44.1717749865361;
+        Fri, 07 Jun 2024 01:44:25 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c805f6e3bsm214832466b.92.2024.06.07.01.44.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 01:44:24 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: "David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org,
+	horms@kernel.org,
+	sbhatta@marvell.com,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] ip_tunnel: Move stats allocation to core
+Date: Fri,  7 Jun 2024 01:44:19 -0700
+Message-ID: <20240607084420.3932875-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,163 +58,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-This series includes adding realtek automotive ethernet driver
-and adding rtase ethernet driver entry in MAINTAINERS file.
+With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
+convert veth & vrf"), stats allocation could be done on net core instead
+of this driver.
 
-This ethernet device driver for the PCIe interface of 
-Realtek Automotive Ethernet Switch,applicable to 
-RTL9054, RTL9068, RTL9072, RTL9075, RTL9068, RTL9071.
+With this new approach, the driver doesn't have to bother with error
+handling (allocation failure checking, making sure free happens in the
+right spot, etc). This is core responsibility now.
 
-v1 -> v2:
-- Remove redundent debug message.
-- Modify coding rule.
-- Remove other function codes not related to netdev.
+Move ip_tunnel driver to leverage the core allocation.
 
-v2 -> v3:
-- Remove SR-IOV function - We will add the SR-IOV function together when
-uploading the vf driver in the future.
-- Remove other unnecessary code and macro.
+All the ip_tunnel_init() users call ip_tunnel_init() as part of their
+.ndo_init callback. The .ndo_init callback is called before the stats
+allocation in netdev_register(), thus, the allocation will happen before
+the netdev is visible.
 
-v3 -> v4:
-- Remove function prototype - Our driver does not use recursion, so we
-have reordered the code and removed the function prototypes.
-- Define macro precisely - Improve macro code readability to make the
-source code cleaner.
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ net/ipv4/ip_tunnel.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-v4 -> v5:
-- Modify ethtool function - Remove some unnecessary code.
-- Don't use inline function - Let the compiler decide.
-
-v5 -> v6:
-- Some old macro definitions have been removed and replaced with the
-lastest usage.
-- Replace s32 with int to ensure consistency.
-- Clearly point out the objects of the service and remove unnecessary
-struct.
-
-v6 -> v7:
-- Split this driver into multiple patches.
-- Reorganize this driver code and remove redundant code to make this
-driver more concise.
-
-v7 -> v8:
-- Add the function to calculate time mitigation and the function to 
-calculate packet number mitigation. Users can use these two functions 
-to calculate the reg value that needs to be set for the mitigation value
-they want to set.
-- This device is usually used in automotive embedded systems. The page
-pool api will use more memory in receiving packets and requires more 
-verification, so we currently do not plan to use it in this patch.
-
-v8 -> v9:
-- Declare functions that are not extern as static functions and increase
-the size of the character array named name in the rtase_int_vector struct
-to correct the build warning noticed by the kernel test robot.
-
-v9 -> v10:
-- Currently we change to use the page pool api. However, when we allocate
-more than one page to an rx buffer, it will cause system errors
-in some cases. Therefore, we set the rx buffer to fixed size with 3776
-(PAGE_SIZE - SKB_DATA_ALIGN(sizeof(skb_shared_info) )), and the maximum 
-value of mtu is set to 3754(rx buffer size - VLAN_ETH_HLEN - ETH_FCS_LEN).
-- When ndo_tx_timeout is called, it will dump some device information,
-which can be used for debugging.
-- When the mtu is greater than 1500, the device supports checksums
-but not TSO.
-- Fix compiler warnning.
-
-v10 -> v11:
-- Added error handling of rtase_init_ring().
-- Modify the error related to asymmetric pause in rtase_get_settings.
-- Fix compiler error.
-
-v11 -> v12:
-- Use pm_sleep_ptr and related macros.
-- Remove multicast filter limit.
-- Remove VLAN support and CBS offload functions. 
-- Remove redundent code.
-- Fix compiler warnning.
-
-v12 -> v13:
-- Fixed the compiler warning of unuse rtase_suspend() and rtase_resume()
-when there is no define CONFIG_PM_SLEEP.
-
-v13 -> v14:
-- Remove unuse include.
-- call eth_hw_addr_random() to generate random MAC and set device flag 
-- use pci_enable_msix_exact() instead of pci_enable_msix_range() 
-- If dev->dma_mask is non-NULL, dma_set_mask_and_coherent with a 64-bit
-mask will never fail, so remove the part that determines the 32-bit mask.
-- set dev->pcpu_stat_type before register_netdev() and core will allocate
-stats 
-- call NAPI instance at the right location
-
-v14 -> v15:
-- In rtase_open, when the request interrupt fails, all request interrupts
-are freed.
-- When calling netif_device_detach, there is no need to call
-netif_stop_queue.
-- Call netif_tx_disable() instead of stop_queue(), it takes the tx lock so
-there is no need to worry about the packets being transmitted.
-- In rtase_tx_handler, napi budget is no longer used, but a customized
-tx budget is used.
-- Use the start / stop macros from include/net/netdev_queues.h. 
-- Remove redundent code.
-
-v15 -> v16:
-- Re-upload v15 patch set
-
-v16 -> v17:
-- Prefix the names of some rtase-specific macros, structs, and enums.
-- Fix the abnormal problem when returning page_pool resources.
-
-v17 -> v18:
-- Limit the width of each line to 80 colums.
-- Use reverse xmas tree order.
-- Modify the error handling of rtase_alloc_msix and rtase_alloc_interrupt.
-
-v18 -> v19:
-- Use dma_wmb() instead of wmb() to ensure the order of access
-instructions for a memory shared by DMA and CPU.
-- Add error message when allocate dma memory fails.
-- Add .get_eth_mac_stats function to report hardware information.
-- Remove .get_ethtool_stats function.
-- In rtase_tx_csum, when the packet is not ipv6 or ipv4, a warning will
-no longer be issued.
-
-v19 -> v20:    
-- Modify the description of switch architecture.
-
-Justin Lai (13):
-  rtase: Add pci table supported in this module
-  rtase: Implement the .ndo_open function
-  rtase: Implement the rtase_down function
-  rtase: Implement the interrupt routine and rtase_poll
-  rtase: Implement hardware configuration function
-  rtase: Implement .ndo_start_xmit function
-  rtase: Implement a function to receive packets
-  rtase: Implement net_device_ops
-  rtase: Implement pci_driver suspend and resume function
-  rtase: Implement ethtool function
-  rtase: Add a Makefile in the rtase folder
-  realtek: Update the Makefile and Kconfig in the realtek folder
-  MAINTAINERS: Add the rtase ethernet driver entry
-
- MAINTAINERS                                   |    7 +
- drivers/net/ethernet/realtek/Kconfig          |   19 +
- drivers/net/ethernet/realtek/Makefile         |    1 +
- drivers/net/ethernet/realtek/rtase/Makefile   |   10 +
- drivers/net/ethernet/realtek/rtase/rtase.h    |  327 +++
- .../net/ethernet/realtek/rtase/rtase_main.c   | 2366 +++++++++++++++++
- 6 files changed, 2730 insertions(+)
- create mode 100644 drivers/net/ethernet/realtek/rtase/Makefile
- create mode 100644 drivers/net/ethernet/realtek/rtase/rtase.h
- create mode 100644 drivers/net/ethernet/realtek/rtase/rtase_main.c
-
+diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
+index bccef2fcf620..5cffad42fe8c 100644
+--- a/net/ipv4/ip_tunnel.c
++++ b/net/ipv4/ip_tunnel.c
+@@ -1099,7 +1099,6 @@ static void ip_tunnel_dev_free(struct net_device *dev)
+ 
+ 	gro_cells_destroy(&tunnel->gro_cells);
+ 	dst_cache_destroy(&tunnel->dst_cache);
+-	free_percpu(dev->tstats);
+ }
+ 
+ void ip_tunnel_dellink(struct net_device *dev, struct list_head *head)
+@@ -1313,20 +1312,15 @@ int ip_tunnel_init(struct net_device *dev)
+ 
+ 	dev->needs_free_netdev = true;
+ 	dev->priv_destructor = ip_tunnel_dev_free;
+-	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
+-	if (!dev->tstats)
+-		return -ENOMEM;
++	dev->pcpu_stat_type = NETDEV_PCPU_STAT_TSTATS;
+ 
+ 	err = dst_cache_init(&tunnel->dst_cache, GFP_KERNEL);
+-	if (err) {
+-		free_percpu(dev->tstats);
++	if (err)
+ 		return err;
+-	}
+ 
+ 	err = gro_cells_init(&tunnel->gro_cells, dev);
+ 	if (err) {
+ 		dst_cache_destroy(&tunnel->dst_cache);
+-		free_percpu(dev->tstats);
+ 		return err;
+ 	}
+ 
 -- 
-2.34.1
+2.43.0
 
