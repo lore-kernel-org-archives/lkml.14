@@ -1,180 +1,253 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2B2186293
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 10:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CC71850BE
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 10:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717757509; cv=none; b=MCKSic7nrLcQBGLZZdzf3VoY+h/mpSLHbbj5zMLy3pPS6zV43YtPcd5zJAabFH8jTY3HJ7a7Yel7Hq2eHn38Em/uZKaqEw/ewqGzzE0FORtsNU4roulMy7mDyurcZFZezJRlTIb4tuee3ka9h2n77WTNLX5aSrwZejwQDNMDUeI=
+	t=1717757546; cv=none; b=HigtAh/mOlVyEKFHPWompRv+rVBaSpPFniXPN2+NZEsn63vL0HlMarqJngEXbMcieZBdyhCQsOvAKMb2SBLTazt7ywkvalUP3WcAkspIEBIgR4+tmjAMfatVQb3+edjUJh7qKe10TAHu1t/rgINJsom8fc11sNvjUpJRa+G0NJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717757509; c=relaxed/simple;
-	bh=FFbj21ozJQKf4i41vhO+He8GzAZG9POBGWSpHtgddTw=;
+	s=arc-20240116; t=1717757546; c=relaxed/simple;
+	bh=gSWSP+7C8UOKUu7+vq+El/x9kf+z97qTlQ+ZsMnmONo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ckEi7DXUIAP7uqMy8jXJk1SnrT37Q/ZhBOngGK9yt2QVuy7YaHD3JUXyA5MO5bC1teFwxHYst3C2csuJ8gWfkYVy0AUGlRJSkSxBspR8SGhVBt2XaxzzI5eaFQAmq+oXxoljklaq8alDDzF6Fmzi/H9U5xP4eufoue1/UCe9KXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ln5YiZc6; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=SIEAbSsEF6RWLnFO2vXgonnsCUzMSXzz063xuXYaVUhoIAF6wed9L51UMvj2aeMP8QKBVRiQCxeN3yOCgd/oCLzlc+SMpWz5YojrVcDFL4VgGXIrXeAR8DLREtVR3fJOqbTSA2Xf84zhvR2p3e+Ucevw4paJcme2i9DsNbxDJTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tIq8bJrR; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ln5YiZc6"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e73441edf7so21088961fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 03:51:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tIq8bJrR"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-4eb0089b4a2so684640e0c.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 03:52:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717757506; x=1718362306; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1717757543; x=1718362343; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LmeXUhFF655AvDeF8viECIcXvU5zP377LCGo+5Zcuww=;
-        b=Ln5YiZc6E7N94HOps5slmYwc9HJA7Ba9+LauR5+WSsJFdeB1/iRMZEPKoD7NO8ajvv
-         mGHMtcmji+J5fTo5hVYtcV6AzKYTJDluItgCGWyt7yGpxPrvmB/qX/uObZ4/AgRaf8fU
-         W6Kxh+S4AaXzcl41LmkI+uVRGOV3J34hidxM/S5ym2zsHs45iWNpBpSxoYaJmqFA3lWX
-         A6XGlNxINwrX5KBuKArVbh92vUuQVPMmesL+J/O7b7+cjlSYIF3p11dyV7l5jzE+w7Tw
-         3WQXijnJQbjl+X5hFbKzogmnfHPc4+wHjl5h1tBZsL9Boqu5t+oKqpm1iSRQ0vJ8iggM
-         +FrQ==
+        bh=mPbSPneHT7Jvjy5REyHR38Uuhd6bNow/3VWxu5TPx5Y=;
+        b=tIq8bJrRHvaLq2zc+PpaXwrjpXJ+G9pHfTizLsRXZroHEm4mxHNKhaN9Ioj/Hjeouu
+         ymGmlJpL6kxThdVxj0XWOOb0+OyIPOpg0q1NOR2uy2z6BMXzHz3pZi4IAYoZ3sBVeGz0
+         /x5I9lt8CxIPoLOxtEzFkXaxZT36dCUR1a1BCZgFvr3nOyBUdPCfRsmdQctPX5ypRW3B
+         xNDNOa4uCHbt/t7Q6KMVQ1R0AcL5u6g+zpOL9bN0gyN81tOGtwm+C1QsDdx8MKdN3DLh
+         IHqU6+1fDB0qOWTbSaZrhyzUYH/68r/0DHRm5rmD72ZVw1N+WeoNE5zqmCxiQGCOyxxE
+         LkYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717757506; x=1718362306;
+        d=1e100.net; s=20230601; t=1717757543; x=1718362343;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LmeXUhFF655AvDeF8viECIcXvU5zP377LCGo+5Zcuww=;
-        b=wQhX07xTfLH2TnjOcTqI7DAfKTHGHWUAWglHfbPr/vT75F1iP7dDF/eaOcmAONxzBJ
-         oWczWxTUPg2zktAuf8OWIT5/UhJLRdxM+0g8mi0JLtrbO6Oeha0exoIkSO9c2SIc5a96
-         hiebVQihwNcvLYixzojv30vpFpGOubN5/72+TR9EPdXbi+kZma0zDZpwrTSNKOQjKFoG
-         rJOXw/kCbkOvHc9V8N+wggvn6arW96e2493okqsfLYxG4KnoLCQp+w5jKNHwqaVFYjJt
-         d9cw9gbTaNOvEk5YQ+fidKK+TWgyTyC7AGO3GYJqGN5kTO02QxO9KaFNBeGkJkxwRZxY
-         1k6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWXnxCekiJs1zRPH3ZzHCnk8gw/77KXWo1nV7ONJiuT7KjCuXAue7D3Vbdz529Kxf1Y4HTLrmiSLyw7jlxsHYOl6c75H28/rhJMG/0W
-X-Gm-Message-State: AOJu0YwMpOBBlYT4fQPRq6wBBJAj4eptZrK/ef8X8CUCPCwY9qzSv/3J
-	LKSvvqY+P1b4Rij84FaTaDXFNB+OH4NqUp1qp1U64nYFm1T+sRm2zO+F/vW2bkbslygNITFy651
-	T1xvMVPR1iE+bfUW6ToLprzolZ/aJ5wUtMK3M
-X-Google-Smtp-Source: AGHT+IEFeA+ZKzhPTRkU9THjSAXPFZL65kZKzyqLrJjbcP6cigRGWjQ8n8Uxp6WFaK9P/DGcdNOxRalnf+pNS3YoNsA=
-X-Received: by 2002:a2e:88c6:0:b0:2ea:8291:c667 with SMTP id
- 38308e7fff4ca-2eadce24b75mr13406881fa.13.1717757505728; Fri, 07 Jun 2024
- 03:51:45 -0700 (PDT)
+        bh=mPbSPneHT7Jvjy5REyHR38Uuhd6bNow/3VWxu5TPx5Y=;
+        b=UoXQqifjNtQyo9Mq7dL1hIhBVGTZHyaQU4xBXnJ3bV6gORFIOx8CRtXsUsDblPYWzL
+         2Ol7ZXiG5LLPTYNZt1Rn9/YxuT8W5OeRTeTKDi6WKXItEmnXu2K8/vYTmGdDgM93xng0
+         8lmr7PWXN8MoHXqtZvooHoHuuv9wy1/jW8Wti9YE7yNRfKPWK/fEj2zLDH2c7u6FeGQ7
+         hAPE8aIg+p+TuG7Icbv+GOiZAzKEvdmPZeK5zTPtuU/2dGoI8IJByKBCaWYcweO9Ledd
+         F3aTRNP3wFKWUPQRFczZBCDIiFPw/a5fPcdSY/RATO5X1tYVf4yel88oY9G2YofkJXES
+         Wh4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXSKSu+foIsxOrRxV5OQJpAst6oNWOck0781v9SvaEN9oTMGhN83Uwb/f66Vv5xapy0mN+7SCchOf/cMs/sElh+dUTfrYM6dHf0h+aI
+X-Gm-Message-State: AOJu0YzFBUfq+Zvc9cCaaoDdtFXjjx8d+FfajAMC9KRHlWS25YCNP3rJ
+	H+XqF9Dk9Hmc6rmxjTdxcqlOb49w+oAawMOvCzzmQtnXxUw7lr5w6x4i2AbQMlcOm7CWSAKaJJg
+	vhoxDjq0Fbj7Ucrqu7rPRwEaFITfZvHjYNO+h1Q==
+X-Google-Smtp-Source: AGHT+IGZgoJBNxvF0IqzZ76RjN/3DL1M26P/4+jxT3RGwhtV8AOnkj8ddXuo2lmlwYIZDVnndDCRiLv2h7nduOcdfRM=
+X-Received: by 2002:a1f:7c05:0:b0:4e4:ec86:4240 with SMTP id
+ 71dfb90a1353d-4eb562a4b69mr2327968e0c.12.1717757542953; Fri, 07 Jun 2024
+ 03:52:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1717750631.git.viresh.kumar@linaro.org> <e74e3a14e6da3f920cee90d32a023ba4805328a0.1717750631.git.viresh.kumar@linaro.org>
-In-Reply-To: <e74e3a14e6da3f920cee90d32a023ba4805328a0.1717750631.git.viresh.kumar@linaro.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 7 Jun 2024 12:51:33 +0200
-Message-ID: <CAH5fLgjChZCtTUnHVHJat-sXFyLVE+MgDXrNDiUD0LNsUndpBQ@mail.gmail.com>
-Subject: Re: [RFC PATCH V2 1/8] rust: Add initial bindings for OPP framework
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, 
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, 
-	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
+References: <20240606131732.440653204@linuxfoundation.org>
+In-Reply-To: <20240606131732.440653204@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 7 Jun 2024 16:22:11 +0530
+Message-ID: <CA+G9fYsnQh6ydxf3asaEvoOE8a1oabcoUp91m3MJRyR6caKJ0A@mail.gmail.com>
+Subject: Re: [PATCH 6.6 000/744] 6.6.33-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
+	broonie@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 7, 2024 at 11:12=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
+On Thu, 6 Jun 2024 at 19:41, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> This commit adds initial Rust bindings for the Operating performance
-> points (OPP) core. This adds bindings for `struct dev_pm_opp` and
-> `struct dev_pm_opp_data` to begin with.
+> This is the start of the stable review cycle for the 6.6.33 release.
+> There are 744 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Responses should be made by Sat, 08 Jun 2024 13:15:55 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.6.33-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-> +//! Operating performance points.
-> +//!
-> +//! This module provides bindings for interacting with the OPP subsystem=
-.
-> +//!
-> +//! C header: [`include/linux/pm_opp.h`](../../../../../../include/linux=
-/pm_opp.h)
+Results from Linaro=E2=80=99s test farm.
+Build regressions on Powerpc.
 
-Please use srctree links instead.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-C header: [`include/linux/pm_opp.h`](srctree/include/linux/pm_opp.h)
+## Build
+* kernel: 6.6.33-rc1
+* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
+* git branch: linux-6.6.y
+* git commit: 39dd7d80cd65769389563028553e9ec89a8f88d1
+* git describe: v6.6.32-745-g39dd7d80cd65
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.3=
+2-745-g39dd7d80cd65
 
-> +impl OPP {
-> +    /// Creates a reference to a [`OPP`] from a valid pointer.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// The caller must ensure that `ptr` is valid and remains valid for=
- the lifetime of the
-> +    /// returned [`OPP`] reference.
-> +    pub unsafe fn from_ptr_owned(ptr: *mut bindings::dev_pm_opp) -> Resu=
-lt<ARef<Self>> {
-> +        let ptr =3D ptr::NonNull::new(ptr).ok_or(ENODEV)?;
-> +
-> +        // SAFETY: The safety requirements guarantee the validity of the=
- pointer.
-> +        //
-> +        // INVARIANT: The refcount is already incremented by the C API t=
-hat returned the pointer,
-> +        // and we pass ownership of the refcount to the new `ARef<OPP>`.
-> +        Ok(unsafe { ARef::from_raw(ptr.cast()) })
-> +    }
-> +
-> +    /// Creates a reference to a [`OPP`] from a valid pointer.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// The caller must ensure that `ptr` is valid and remains valid for=
- the lifetime of the
-> +    /// returned [`OPP`] reference.
-> +    pub unsafe fn from_ptr(ptr: *mut bindings::dev_pm_opp) -> Result<ARe=
-f<Self>> {
-> +        let opp =3D unsafe { Self::from_ptr_owned(ptr) }?;
-> +
-> +        // Take an extra reference to the OPP since the caller didn't ta=
-ke it.
-> +        opp.inc_ref();
-> +
-> +        Ok(opp)
-> +    }
+## Test Regressions (compared to v6.6.32)
 
-I would recommend a slightly different approach here. You can provide
-a method called `from_raw_opp` that takes a *mut bindings::dev_pm_opp
-and returns a &Self. The ARef type provides a method that converts
-&Self to ARef<Self> by taking a refcount. This way, users would also
-be able to call OPP methods without giving Rust any refcounts. You can
-compare to my file patchset, where I am going to rename the equivalent
-method to `from_raw_file` in the next version.
+* powerpc, build
+  - clang-18-cell_defconfig
+  - clang-18-defconfig
+  - clang-18-maple_defconfig
+  - clang-18-ppc64e_defconfig
+  - clang-nightly-cell_defconfig
+  - clang-nightly-defconfig
+  - clang-nightly-maple_defconfig
+  - gcc-13-cell_defconfig
+  - gcc-13-defconfig
+  - gcc-13-maple_defconfig
+  - gcc-13-ppc64e_defconfig
 
-As for `from_ptr_owned`, I would probably rename it to
-`from_raw_opp_owned` or similar. It's often nice to use a more
-descriptive name than just "ptr".
+## Metric Regressions (compared to v6.6.32)
 
-> +    fn as_mut_ptr(&self) -> *mut bindings::dev_pm_opp {
-> +        self.0.get()
-> +    }
+## Test Fixes (compared to v6.6.32)
 
-I think most existing examples call this `as_raw` and mark it `#[inline]`.
+## Metric Fixes (compared to v6.6.32)
 
-> +    /// Adds an OPP dynamically.
-> +    pub fn add(dev: ARef<Device>, mut data: Data) -> Result<()> {
-> +        // SAFETY: The requirements are satisfied by the existence of `D=
-evice` and its safety
-> +        // requirements.
-> +        to_result(unsafe { bindings::dev_pm_opp_add_dynamic(dev.as_raw()=
-, &mut data.0) })
-> +    }
-> +
-> +    /// Removes a dynamically added OPP.
-> +    pub fn remove(dev: ARef<Device>, freq: u64) {
-> +        // SAFETY: The requirements are satisfied by the existence of `D=
-evice` and its safety
-> +        // requirements.
-> +        unsafe { bindings::dev_pm_opp_remove(dev.as_raw(), freq) };
-> +    }
+## Test result summary
+total: 193993, pass: 148173, fail: 25962, skip: 18882, xfail: 976
 
-Is it intentional that these methods take ownership of a refcount to
-the device that it then drops after calling the C function?
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 129 total, 129 passed, 0 failed
+* arm64: 38 total, 38 passed, 0 failed
+* i386: 29 total, 29 passed, 0 failed
+* mips: 24 total, 24 passed, 0 failed
+* parisc: 3 total, 3 passed, 0 failed
+* powerpc: 33 total, 22 passed, 11 failed
+* riscv: 17 total, 17 passed, 0 failed
+* s390: 12 total, 12 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 6 total, 6 passed, 0 failed
+* x86_64: 33 total, 33 passed, 0 failed
 
-Also, why are these methods defined on OPP when they appear to be
-methods on Device and don't take any OPP argument?
+## Test suites summary
+* boot
+* kselftest-android
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-drivers-dma-buf
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-filesystems
+* kselftest-filesystems-binderfs
+* kselftest-filesystems-epoll
+* kselftest-firmware
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-ir
+* kselftest-kcmp
+* kselftest-kexec
+* kselftest-kvm
+* kselftest-lib
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-memory-hotplug
+* kselftest-mincore
+* kselftest-mm
+* kselftest-mount
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-forwarding
+* kselftest-net-mptcp
+* kselftest-netfilter
+* kselftest-nsfs
+* kselftest-openat2
+* kselftest-pid_namespace
+* kselftest-pidfd
+* kselftest-proc
+* kselftest-pstore
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-splice
+* kselftest-static_keys
+* kselftest-sync
+* kselftest-sysctl
+* kselftest-tc-testing
+* kselftest-timens
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-watchdog
+* kselftest-x86
+* kselftest-zram
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-test
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-smoketest
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
 
-Alice
+--
+Linaro LKFT
+https://lkft.linaro.org
