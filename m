@@ -1,37 +1,37 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A4915AAC6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE50615AAD1
 	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717734450; cv=none; b=V9z30Xh6R43fDBgjtvAv5kV2z6KmBRW6v1kz53DcdsUrmfRiRG41xFYLY1Ubm4fxyWAnenUS7r+vV7OvjxgnIYoyWoGDFhw/7wZaxsHuRkvGKAs3AOKrW6t7r52J2IQSkeuhjHIAtTPUgieBrpsSoBsgagBx4p42V7D0KoMCPLU=
+	t=1717734452; cv=none; b=WNmancebpiGGXjgIPqGMJg+rbrEbsgmXXrEwa6cSUKH6rySbkNwPCUfqSKQCa4dKqC+d0bsQGGARPO0MWPVHKTrud1G3UoTxHc69mCOZNFkLGxV/QOTYer9NVMaTmLpt7t0eEK8rPyKTPkIIvaYb/iQWpXqvxx6bFNw0KFbmjxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717734450; c=relaxed/simple;
-	bh=1E4SxR/zEJiSNt+fYgWJ0tixMquI1CWt99bw/e/XtyQ=;
+	s=arc-20240116; t=1717734452; c=relaxed/simple;
+	bh=v3ETs9sJ1Z2KlftB6ZBvQyYnscciU+t3CjrgEmHW8Co=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=te3pORpzvfm4h4XjFjkFpi7Q9M381EE+RAugMRWMI1qV579GjvtUhbd6t8znKY6HQQdeQQeH5Iqks+D3h0xH02Zmp61iNd3TJtZNGVTzoxCw/qNe3MjKSnj4RSEHoWxzSR05lQaAKaFJMzCTWFyOt8eU3eUVPF2xbo0A9lril9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	 MIME-Version:Content-Type; b=cilmtN2eD0gRIpeQ/pCizCdiE3ZeqT3WkjHWBJUrHVU27BiTU1byIf+bmIsmP7f/YuT0OX8B4SmwJ9TrQLycXHoL5fTyhAhspMdLkay8Y/KbER+ix8nABf4jnCibKJNUft22aiuUN+F9sK0eRWQofEdsk1vXHCu+m4KyLWZTU1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VwSk70d9BzsTSD;
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VwSk72qVCz1SB2c;
 	Fri,  7 Jun 2024 12:23:27 +0800 (CST)
 Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id B8A53180085;
-	Fri,  7 Jun 2024 12:27:25 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 2301B180085;
+	Fri,  7 Jun 2024 12:27:26 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
  (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 12:27:09 +0800
+ 2024 12:27:14 +0800
 From: Zhihao Cheng <chengzhihao1@huawei.com>
 To: <richard@nod.at>, <david.oberhollenzer@sigma-star.at>,
 	<miquel.raynal@bootlin.com>, <yi.zhang@huawei.com>, <xiangyang3@huawei.com>,
 	<huangxiaojia2@huawei.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH mtd-utils 058/110] fsck.ubifs: Add inconsistent problem handling asking function
-Date: Fri, 7 Jun 2024 12:25:23 +0800
-Message-ID: <20240607042615.2069840-59-chengzhihao1@huawei.com>
+Subject: [RFC PATCH mtd-utils 064/110] fsck.ubifs: rebuild_fs: Remove deleted nodes from valid node tree
+Date: Fri, 7 Jun 2024 12:25:29 +0800
+Message-ID: <20240607042615.2069840-65-chengzhihao1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240607042615.2069840-1-chengzhihao1@huawei.com>
 References: <20240607042615.2069840-1-chengzhihao1@huawei.com>
@@ -46,169 +46,164 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600013.china.huawei.com (7.193.23.68)
 
-There are four dimensions to define the type of inconsistent problems:
- 1. fixable: Some inconsistent problems can't be fixed, for example
-    corrupted superblock. Un-fixable problem will abort program.
- 2. must fix: Some inconsistent problems can be ignored(eg. incorrect
-    isize), but some are not(eg. corrupted TNC), which will affect the
-    subsequent fsck steps.
- 3. drop data: Some fixing methods will drop user data, which is
-    unacceptable for safe mode. If it happens, fsck will be aborted.
- 4. need rebuild: Some inconsistent problems depends on rebuilding
-    filesystem to be fixed(eg. corrupted master node, corrupted TNC).
-Define an asking function to handle above kinds of inconsistent problems.
+This is the 2/12 step of rebuilding. Traverse nodes from del_inos and
+del_dents trees, remove inode nodes and dentry nodes with smaller sqnum
+from valid trees.
+
+This step handles deleting case, for example, file A is deleted, deleted
+inode node and deleted dentry node are written, if we ignore the deleted
+nodes, file A can be recovered after rebuilding because undeleted inode
+node and undeleted dentry node can be scanned. There's an exception, if
+deleted inode node and deleted dentry node are reclaimed(by gc) after
+deletion, file A is recovered. UBIFS rebuild_fs cannot solve it, because
+the real existence information of nodes depends on TNC, but TNC should
+not be depended for UBIFS rebuild_fs.
 
 Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- ubifs-utils/Makemodule.am           |   3 +-
- ubifs-utils/fsck.ubifs/fsck.ubifs.h |   3 +
- ubifs-utils/fsck.ubifs/problem.c    | 111 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 116 insertions(+), 1 deletion(-)
- create mode 100644 ubifs-utils/fsck.ubifs/problem.c
+ ubifs-utils/fsck.ubifs/rebuild_fs.c | 120 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 119 insertions(+), 1 deletion(-)
 
-diff --git a/ubifs-utils/Makemodule.am b/ubifs-utils/Makemodule.am
-index 0ed91dff..faff911f 100644
---- a/ubifs-utils/Makemodule.am
-+++ b/ubifs-utils/Makemodule.am
-@@ -79,7 +79,8 @@ fsck_ubifs_SOURCES = \
- 	$(common_SOURCES) \
- 	$(libubifs_SOURCES) \
- 	ubifs-utils/fsck.ubifs/fsck.ubifs.h \
--	ubifs-utils/fsck.ubifs/fsck.ubifs.c
-+	ubifs-utils/fsck.ubifs/fsck.ubifs.c \
-+	ubifs-utils/fsck.ubifs/problem.c
+diff --git a/ubifs-utils/fsck.ubifs/rebuild_fs.c b/ubifs-utils/fsck.ubifs/rebuild_fs.c
+index 3ca94869..dbb0f3bc 100644
+--- a/ubifs-utils/fsck.ubifs/rebuild_fs.c
++++ b/ubifs-utils/fsck.ubifs/rebuild_fs.c
+@@ -364,6 +364,117 @@ out:
+ 	return err;
+ }
  
- fsck_ubifs_LDADD = libmtd.a libubi.a $(ZLIB_LIBS) $(LZO_LIBS) $(ZSTD_LIBS) $(UUID_LIBS) $(LIBSELINUX_LIBS) $(OPENSSL_LIBS) -lm -lpthread
- fsck_ubifs_CPPFLAGS = $(AM_CPPFLAGS) $(ZLIB_CFLAGS) $(LZO_CFLAGS) $(ZSTD_CFLAGS) $(UUID_CFLAGS) $(LIBSELINUX_CFLAGS) \
-diff --git a/ubifs-utils/fsck.ubifs/fsck.ubifs.h b/ubifs-utils/fsck.ubifs/fsck.ubifs.h
-index d267dd24..b9783c15 100644
---- a/ubifs-utils/fsck.ubifs/fsck.ubifs.h
-+++ b/ubifs-utils/fsck.ubifs/fsck.ubifs.h
-@@ -88,4 +88,7 @@ static inline const char *mode_name(const struct ubifs_info *c)
- /* Exit code for fsck program. */
- extern int exit_code;
- 
-+/* problem.c */
-+bool fix_problem(const struct ubifs_info *c, int problem_type);
-+
- #endif
-diff --git a/ubifs-utils/fsck.ubifs/problem.c b/ubifs-utils/fsck.ubifs/problem.c
-new file mode 100644
-index 00000000..9a8c2e06
---- /dev/null
-+++ b/ubifs-utils/fsck.ubifs/problem.c
-@@ -0,0 +1,111 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2024, Huawei Technologies Co, Ltd.
-+ *
-+ * Authors: Zhihao Cheng <chengzhihao1@huawei.com>
-+ */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <getopt.h>
-+
-+#include "ubifs.h"
-+#include "defs.h"
-+#include "debug.h"
-+#include "fsck.ubifs.h"
-+
-+/*
-+ * problem flags.
-+ *
-+ * PROBLEM_FIXABLE: problem is fixable, unsolvable problem such as corrupted
-+ *		    super block will abort the fsck program
-+ * PROBLEM_MUST_FIX: problem must be fixed because it will affect the subsequent
-+ *		     fsck process, otherwise aborting the fsck program
-+ * PROBLEM_DROP_DATA: user data could be dropped after fixing the problem
-+ * PROBLEM_NEED_REBUILD: rebuilding filesystem is needed to fix the problem
-+ */
-+#define PROBLEM_FIXABLE		(1<<0)
-+#define PROBLEM_MUST_FIX	(1<<1)
-+#define PROBLEM_DROP_DATA	(1<<2)
-+#define PROBLEM_NEED_REBUILD	(1<<3)
-+
-+struct fsck_problem {
-+	unsigned int flags;
-+	const char *desc;
-+};
-+
-+static const struct fsck_problem problem_table[] = {};
-+
-+static void print_problem(const struct ubifs_info *c,
-+			  const struct fsck_problem *problem)
++static struct scanned_ino_node *
++lookup_valid_ino_node(struct ubifs_info *c, struct scanned_info *si,
++		      struct scanned_ino_node *target)
 +{
-+	log_out(c, "problem: %s", problem->desc);
++	int cmp;
++	struct scanned_ino_node *ino_node;
++	struct rb_node *p;
++
++	p = si->valid_inos.rb_node;
++	while (p) {
++		ino_node = rb_entry(p, struct scanned_ino_node, rb);
++		cmp = keys_cmp(c, &target->key, &ino_node->key);
++		if (cmp < 0) {
++			p = p->rb_left;
++		} else if (cmp > 0) {
++			p = p->rb_right;
++		} else {
++			if (target->header.sqnum > ino_node->header.sqnum)
++				return ino_node;
++			else
++				return NULL;
++		}
++	}
++
++	return NULL;
 +}
 +
-+static void fatal_error(const struct ubifs_info *c,
-+			const struct fsck_problem *problem)
++static struct scanned_dent_node *
++lookup_valid_dent_node(struct ubifs_info *c, struct scanned_info *si,
++		       struct scanned_dent_node *target)
 +{
-+	if (!(problem->flags & PROBLEM_FIXABLE))
-+		log_out(c, "inconsistent problem cannot be fixed");
-+	else
-+		log_out(c, "inconsistent problem must be fixed");
-+	exit(exit_code);
++	int cmp, nlen;
++	struct scanned_dent_node *dent_node;
++	struct rb_node *p;
++
++	p = si->valid_dents.rb_node;
++	while (p) {
++		dent_node = rb_entry(p, struct scanned_dent_node, rb);
++		cmp = keys_cmp(c, &target->key, &dent_node->key);
++		if (cmp < 0) {
++			p = p->rb_left;
++		} else if (cmp > 0) {
++			p = p->rb_right;
++		} else {
++			nlen = min(target->nlen, dent_node->nlen);
++			cmp = strncmp(target->name, dent_node->name, nlen) ? :
++				      target->nlen - dent_node->nlen;
++			if (cmp < 0) {
++				p = p->rb_left;
++			} else if (cmp > 0) {
++				p = p->rb_right;
++			} else {
++				if (target->header.sqnum >
++				    dent_node->header.sqnum)
++					return dent_node;
++				else
++					return NULL;
++			}
++		}
++	}
++
++	return NULL;
 +}
 +
 +/**
-+ * fix_problem - whether fixing the inconsistent problem
++ * remove_del_nodes - remove deleted nodes from valid node tree.
 + * @c: UBIFS file-system description object
-+ * @problem_type: the type of inconsistent problem
++ * @si: records nodes and files information during scanning
 + *
-+ * This function decides to fix/skip the inconsistent problem or abort the
-+ * program according to @problem_type, returns %true if the problem should
-+ * be fixed, returns %false if the problem will be skipped.
++ * This function compares sqnum between deleted node and corresponding valid
++ * node, removes valid node from tree if the sqnum of deleted node is bigger.
++ * Deleted ino/dent nodes will be removed from @si->del_inos/@si->del_dents
++ * after this function finished.
 + */
-+bool fix_problem(const struct ubifs_info *c, int problem_type)
++static void remove_del_nodes(struct ubifs_info *c, struct scanned_info *si)
 +{
-+	bool ans, ask = true, def_y = true;
-+	const struct fsck_problem *problem = &problem_table[problem_type];
-+	const char *question = (problem->flags & PROBLEM_NEED_REBUILD) ?
-+				"Rebuild filesystem?" : "Fix it?";
++	struct scanned_ino_node *del_ino_node, *valid_ino_node;
++	struct scanned_dent_node *del_dent_node, *valid_dent_node;
++	struct rb_node *this;
 +
-+	ubifs_assert(c, FSCK(c)->mode != REBUILD_MODE);
++	this = rb_first(&si->del_inos);
++	while (this) {
++		del_ino_node = rb_entry(this, struct scanned_ino_node, rb);
++		this = rb_next(this);
 +
-+	if (!(problem->flags & PROBLEM_FIXABLE)) {
-+		exit_code |= FSCK_UNCORRECTED;
-+		fatal_error(c, problem);
++		valid_ino_node = lookup_valid_ino_node(c, si, del_ino_node);
++		if (valid_ino_node) {
++			rb_erase(&valid_ino_node->rb, &si->valid_inos);
++			kfree(valid_ino_node);
++		}
++
++		rb_erase(&del_ino_node->rb, &si->del_inos);
++		kfree(del_ino_node);
 +	}
 +
-+	if (FSCK(c)->mode == CHECK_MODE ||
-+	    ((problem->flags & PROBLEM_DROP_DATA) && FSCK(c)->mode == SAFE_MODE) ||
-+	    ((problem->flags & PROBLEM_NEED_REBUILD) &&
-+	     (FSCK(c)->mode == SAFE_MODE || FSCK(c)->mode == DANGER_MODE0)))
-+		def_y = false;
++	this = rb_first(&si->del_dents);
++	while (this) {
++		del_dent_node = rb_entry(this, struct scanned_dent_node, rb);
++		this = rb_next(this);
 +
-+	if ((problem->flags & PROBLEM_NEED_REBUILD) &&
-+	    (FSCK(c)->mode == DANGER_MODE0 || FSCK(c)->mode == DANGER_MODE1))
-+		ask = false;
++		valid_dent_node = lookup_valid_dent_node(c, si, del_dent_node);
++		if (valid_dent_node) {
++			rb_erase(&valid_dent_node->rb, &si->valid_dents);
++			kfree(valid_dent_node);
++		}
 +
-+	print_problem(c, problem);
-+	ans = def_y;
-+	if (FSCK(c)->mode == NORMAL_MODE) {
-+		printf("%s[%d] (%s%s)", c->program_name, getpid(),
-+		       c->dev_name ? : "-", mode_name(c));
-+		if (prompt(question, def_y))
-+			ans = true;
-+		else
-+			ans = false;
-+	} else {
-+		if (ask)
-+			log_out(c, "%s %c\n", question, def_y ? 'y' : 'n');
++		rb_erase(&del_dent_node->rb, &si->del_dents);
++		kfree(del_dent_node);
 +	}
-+
-+	if (!ans) {
-+		exit_code |= FSCK_UNCORRECTED;
-+		if (problem->flags & PROBLEM_MUST_FIX)
-+			fatal_error(c, problem);
-+	} else {
-+		exit_code |= FSCK_NONDESTRUCT;
-+	}
-+
-+	return ans;
 +}
++
+ /**
+  * ubifs_rebuild_filesystem - Rebuild filesystem.
+  * @c: UBIFS file-system description object
+@@ -389,9 +500,16 @@ int ubifs_rebuild_filesystem(struct ubifs_info *c)
+ 	/* Step 1: Scan valid/deleted nodes from volume. */
+ 	log_out(c, "Scan nodes");
+ 	err = scan_nodes(c, &si);
+-	if (err)
++	if (err) {
+ 		exit_code |= FSCK_ERROR;
++		goto out;
++	}
++
++	/* Step 2: Remove deleted nodes from valid node tree. */
++	log_out(c, "Remove deleted nodes");
++	remove_del_nodes(c, &si);
+ 
++out:
+ 	destroy_scanned_info(c, &si);
+ 	destroy_rebuild_info(c);
+ 
 -- 
 2.13.6
 
