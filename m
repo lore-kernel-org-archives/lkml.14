@@ -1,41 +1,63 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6CD192B89
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 13:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743A5194A5E;
+	Fri,  7 Jun 2024 13:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717768109; cv=none; b=Vc0Z3CAKkzHQ0HPM1WTHjXFKbxP2ZADPFAamYUPPPXAEfvdKLbF8Od0YUU6PQgXbGopDsUVCeCVm4Dz6PYbNQDD3AeEeMVMi1dFnbN3jCp5t/MoFlHnAJVmYcLOK5mBIY3NhVlB4aEIteKyEYlH5MZMCgGvv4DXUc90gBsE7WHs=
+	t=1717768153; cv=none; b=oBzO+YYkY0H5EqYB8CqzpNA6J7q1ke4zmolboTsLYyaQ/RIXor11u9KjKuYGK5TXq9G1Dy/zv9x48MgsqlBHBPKhWfW67W3CNL6IEAh0lLGMOCSBHsIvWyVc1iuNXo89At3sNfTKvyMEZLYv3zhjRZHGJ1SS4mfdvO22fJediHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717768109; c=relaxed/simple;
-	bh=flRN4f0GUMAs2oVcEL67vF6IZujwClDcBgizdMQWYyg=;
+	s=arc-20240116; t=1717768153; c=relaxed/simple;
+	bh=KPSZpnEK85cOffft4HH+s5Xl8C3xTVIGwUsb+Bh9liA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KtYHvsgCyIadX/MQyZhXeY80S0ZkWhCJvO3HCrpzGwBb8+siIfJ/eRGLLjBNM9CwiAukSN4elUj6UFn8HDiOAKPgoI2VVh4maO0Cf3VURoip/zjvEoAm3qDOtFiCu/m9GBZU9f5W2qd1v/uVKa2Losjqyr4jbTcHXUTDOcCRJKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=DFmbfU1i; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZbjVgWPebSQonqhZhvyqTr6bGcOUrGm7FUWUNVn+liQy+lyBNe/VpKUVrV0mcRdrP/LX4RELA5cSNoIbIN0PBCW230dm5Kaqu38UnTUiA1EudGGYq+H53nVz12EJ5++B+P/Yu8j3Upi09AMuHooav4s8jzjNYupr2YLjyfXu2Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FOCcQgRX; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="DFmbfU1i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1717768100;
-	bh=flRN4f0GUMAs2oVcEL67vF6IZujwClDcBgizdMQWYyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DFmbfU1iw3Zphmxi3+Lr+gl5uNpaCfP7J5ADHYUrx7yWq6CrnVCjGRPg2jjlVPKKZ
-	 se3REKn9ko7gyYaBrCete4eUy25cElcWnQc5V21yKnOVuy0ENZ/GvUKC7x8u3xtG9X
-	 jUJLY8qXHibmG4NvDMalFeDXFRyHhFgq4LxWAZlk=
-Date: Fri, 7 Jun 2024 15:48:20 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: Current state of the sysctl constification effort
-Message-ID: <a872f104-32ed-4479-9480-0cc01c31e998@t-8ch.de>
-References: <7823ff95-1490-4c1b-b489-a9c05adad645@t-8ch.de>
- <CGME20240531163128eucas1p20976d08e829373bfa8aa04fda1c7bec4@eucas1p2.samsung.com>
- <202405310930.5E2728A@keescook>
- <20240605082625.6hwdc3haim66rr7v@joelS2.panther.com>
- <202406061143.27C12F44A3@keescook>
- <20240607093053.ig6cqrr3xdxhbbt5@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FOCcQgRX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717768152; x=1749304152;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KPSZpnEK85cOffft4HH+s5Xl8C3xTVIGwUsb+Bh9liA=;
+  b=FOCcQgRXR6uKQV6je+sdjBcDA9B0FkyIHZauBaJlEVFgNqL2hSWP+Myd
+   pOrntlUg6LnfQoL3yzD4SAV1oKsYACy9IbQsVtS4F1I7n6ommaaAy3nNB
+   K4KWybY/Abi8plP9fdlrkBXg+bCuXZLqEO90PYAtWXDGEVsrb952WiJ/z
+   UbrkbmvR7fBo2ppJ+J2hcQV7vJoHKcTcSY6/ML0CSaWvkmOkTIkSVlYSI
+   D9oM+E5CVOhOv2MDZXr7oUfQfrHLC0l9i6UiKpF8sgm/YgI/i8Bu+LQQz
+   74LYiH6IzAH+x9DaOYBO7cLDBbVeaJfeXllScjnWDSJJGnDCL7xISfZ5W
+   Q==;
+X-CSE-ConnectionGUID: j23NaTtrSF+NeWwSePCcHg==
+X-CSE-MsgGUID: r/yZRwvET+uKj53n0svfOg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="31983856"
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="31983856"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 06:49:12 -0700
+X-CSE-ConnectionGUID: 6gXWBjRtRTCD2v+JIMzvEg==
+X-CSE-MsgGUID: D2JevSG2Sl6TgLqomuPF2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="75814895"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa001.jf.intel.com with ESMTP; 07 Jun 2024 06:49:11 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sFZxs-0004sY-0g;
+	Fri, 07 Jun 2024 13:49:08 +0000
+Date: Fri, 7 Jun 2024 21:48:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH v1 1/1] serial: 8250_platform: Explicitly show we
+ initialise ISA ports only once
+Message-ID: <202406072102.SGp8FYYi-lkp@intel.com>
+References: <20240606184841.3102545-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,50 +66,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240607093053.ig6cqrr3xdxhbbt5@joelS2.panther.com>
+In-Reply-To: <20240606184841.3102545-1-andriy.shevchenko@linux.intel.com>
 
-On 2024-06-07 11:30:53+0000, Joel Granados wrote:
-> On Thu, Jun 06, 2024 at 11:52:25AM -0700, Kees Cook wrote:
-> > On Wed, Jun 05, 2024 at 10:26:25AM +0200, Joel Granados wrote:
-> > > On Fri, May 31, 2024 at 09:31:24AM -0700, Kees Cook wrote:
-> ...
-> > > @kees: Since you have probably done these before, I'll ask you the
-> > > questions:
-> > > 
-> > > 1. The idea is to send Linus the treewide-constify patch on its own at
-> > >    the end of the merge window for 6.11. Right?
-> > 
-> > Right. The best time is likely around Wed on the second week of the merge
-> > window, assuming all dependencies have landed. And it could be sent
-> > earlier if all the dependencies land sooner than that.
-> That makes sense. I have added a reminder to myself to do this when the
-> time comes. Feel free (@kees and @thomas) to scream at me if you see
-> that I might be forgetting :)
-> 
-> > 
-> > > 2. Is there a special way to send these treewide patches? Or is it just
-> > >    a regular PR with an explanation on why it is being done?
-> > 
-> > I would do a regular PR with all the details for Linus to do the change
-> > himself, but many times people send these as an explicit patch. For
-> > example, include the full Coccinelle script, or the "sed" command
-> > line, etc, and then detail any "by hand" changes that were needed on
-> > top of that.
-> @Thomas: have you sent the 11/11 patch on its own to the lists? I cant
-> find it in my history. Please send it as a stand-alone patch, so It can
-> go into sysctl just like the others.
+Hi Andy,
 
-No, I didn't send it to the list on its own yet.
-Do you want some changes or can I send it as-is?
-(Plus the new motivational blurb)
+kernel test robot noticed the following build warnings:
 
-> 
-> > 
-> > > 3. Can you please send (if there are any) me any examples where this has
-> > >    been done in the past. Maybe some lore.kernel.org links?
-> > 
-> > I found this one that is a good example, though it's a PATCH not a GIT PULL:
-> > 
-> > https://lore.kernel.org/lkml/20221220134519.3dd1318b@gandalf.local.home/
-> > became
-> > https://git.kernel.org/linus/292a089d78d3e2f7944e60bb897c977785a321e3
+[auto build test WARNING on tty/tty-testing]
+[also build test WARNING on tty/tty-next next-20240607]
+[cannot apply to tty/tty-linus linus/master v6.10-rc2]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/serial-8250_platform-Explicitly-show-we-initialise-ISA-ports-only-once/20240607-025109
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
+patch link:    https://lore.kernel.org/r/20240606184841.3102545-1-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v1 1/1] serial: 8250_platform: Explicitly show we initialise ISA ports only once
+config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20240607/202406072102.SGp8FYYi-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240607/202406072102.SGp8FYYi-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406072102.SGp8FYYi-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/tty/serial/8250/8250_platform.o: warning: objtool: __jump_table+0x0: special: can't find orig instruction
+
+
+objdump-func vmlinux.o __jump_table:
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
