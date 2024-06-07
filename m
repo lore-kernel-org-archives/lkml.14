@@ -1,95 +1,129 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707A41974FD;
-	Fri,  7 Jun 2024 12:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FD3199236;
+	Fri,  7 Jun 2024 12:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717764911; cv=none; b=ugZPNc+GJ01w+t0pEM/U2GhEPQ8H0OtY5g1P2Dd3UYjT0zCCJDqRZFUb68u+NAYkEihYY3xWh2agrIt6ct8BPhtWitbZSndoR3UZri/eSvhbWtuidC63bP8hLlVidh9WWTFNDtiKh3s16m7qNNXra/rWe9dKiKnw/YMNVakit6g=
+	t=1717764915; cv=none; b=r25iTPgwD37845o2v8nnYSqAHTtPGDivaXKjAKVFL4ZkBrRahRPcCL2YIvhlP7jkzEZ7VeOtgm0BVhwGbt60riygvD9MQAwesLNqWzL5xr9LHiqjz1LNRwJnCtkh4XT2dHR4rb0bqyJ8K6rKJ/vE2Rn8m5poPVSDEfD9vLdrs54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717764911; c=relaxed/simple;
-	bh=5NWcVpNKympvjmY4ZAfbn8fpM87+EGDnRtTmadAXs2c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mGbDFS/Z4/XxIN8GY+jtuudPAfTozfrk1J+SPg/fOvKVIjaB9uVn8G+cUM16m+EKltlY+eVw1Dmdu1u8oWSbci6kTz+WCv+70+Yae7ZaPAEOci8tEJxFezjunusPwMBFOr+Z0orh3YiS/LvCQIOd6WFKdIKWM5x4hOGQx7UFlV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=qIudx6tl; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1717764915; c=relaxed/simple;
+	bh=4SCpVL/IeTKG53E42JHkzC4LYfnBdt41K4fBb9PzOZ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=V+iplYwN4ChGkz5SZjZ3WyHRvtM716LTGoFu/fan8d7ZfkJbf7SinhyB2ROql8UV47XaluQFBj9SlqULYgQNUlWWZWNPkdD4hdzDp5rAvE3EubNrTf1LXzuMJmxdTcXnfMiYrSvJvDV8G8onrJ4bqvpGq3sMCyOZIF6JsTrnTj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LjnW7Lfg; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="qIudx6tl"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 3FE458843A;
-	Fri,  7 Jun 2024 14:55:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1717764903;
-	bh=P0S/4deZxZJMtdvuT/iptKgogzJiQ+NI/Cuim8aAx14=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qIudx6tlhV1mJzqBeYZgsgKF0cBsiZfsJWaaZp1q+f1Ld9EPcv+p+INR1aeq1RBJa
-	 dplIhKaAlyfG0vCnCYsHWZnMnA5KfseZzghJa4vtxHY1axDZufbv61KbeB4fpfRpBR
-	 wVE0IyYu/RFuTAOmDi2xX7eg8A8E5p54aGJn0N83YIOT/Tj3xuuwgoHbQeDVHQtlzq
-	 yFrc+3GkcVUicRUNfK2AhYcCmgkizEvLaXLAr1syNvjXqLUSDqjjelG+OXZAP68cLF
-	 iYX23iJURj0ozm9EP/BczYi1QlQpbAawemXqPk4vOtDQScDSCofgfCiIGVgM0C4PaD
-	 2FK8zbhmrrqFg==
-Message-ID: <bcb7d95c-9ad3-4b10-b435-cec148aae061@denx.de>
-Date: Fri, 7 Jun 2024 14:50:03 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LjnW7Lfg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717764914; x=1749300914;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=4SCpVL/IeTKG53E42JHkzC4LYfnBdt41K4fBb9PzOZ0=;
+  b=LjnW7LfgVySWF8gDlwI3Ix50bwUwMHG5kumW8pE8lXyndXRwSbNW5P7X
+   BF41qnaw/f4xxuJYctN+fLtgN3InGHhHaerZDnHepR2X0bDh7785AAjVP
+   2Nz1Ve4J282XRp3vtjOSYhvU/nIcsNI4fqOBz3FMs26x9azd+cdmS0W4s
+   rZqm+uShZmZd40DHnvD17HIH47XYZB+w/t3pEMXzklIjt+uY+50RSDTte
+   6sX2N/34pampU7zaOHvsjOMjRThpqAMKh1JdkhvJoO2Adzs60WEr3a0NS
+   AdrRvBYKsGLoWHoZC4wLA7WhEavHdXWybl4tzN4wX8WpFkxCqlNO+ipXV
+   A==;
+X-CSE-ConnectionGUID: NV8nfm2rQF6xU8NyjbBhgA==
+X-CSE-MsgGUID: lRTcqGgnT8yaj2pAEjx7GQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="25055948"
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="25055948"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 05:55:14 -0700
+X-CSE-ConnectionGUID: bCMBMlU/S9alneuBSIFFuw==
+X-CSE-MsgGUID: 7c8plW4JSdWbvr0azYZ0VA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="69484057"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.184])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 05:55:10 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Shuah Khan <shuah@kernel.org>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>,
+	Babu Moger <babu.moger@amd.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	linux-kernel@vger.kernel.org,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v6 12/16] selftests/resctrl: Make some strings passed to resctrlfs functions const
+Date: Fri,  7 Jun 2024 15:53:12 +0300
+Message-Id: <20240607125316.7089-13-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240607125316.7089-1-ilpo.jarvinen@linux.intel.com>
+References: <20240607125316.7089-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 12/12] ARM: multi_v7_defconfig: Add MCP23S08 pinctrl
- support
-To: Christophe Roullier <christophe.roullier@foss.st.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Richard Cochran <richardcochran@gmail.com>, Jose Abreu
- <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240607095754.265105-1-christophe.roullier@foss.st.com>
- <20240607095754.265105-13-christophe.roullier@foss.st.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240607095754.265105-13-christophe.roullier@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/7/24 11:57 AM, Christophe Roullier wrote:
-> Enable MCP23S08 I/O expanders to manage Ethernet phy
+Control group, monitor group and resctrl_val are not mutated and
+should not be mutated within resctrlfs.c functions.
 
-PHY in capitals .
+Mark this by using const char * for the arguments.
 
-> reset in STM32MP135F-DK board.
-> 
-> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
-> ---
->   arch/arm/configs/multi_v7_defconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index 86bf057ac3663..9758f3d41ad70 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -469,6 +469,7 @@ CONFIG_SPI_XILINX=y
->   CONFIG_SPI_SPIDEV=y
->   CONFIG_SPMI=y
->   CONFIG_PINCTRL_AS3722=y
-> +CONFIG_PINCTRL_MCP23S08=y
->   CONFIG_PINCTRL_MICROCHIP_SGPIO=y
->   CONFIG_PINCTRL_OCELOT=y
->   CONFIG_PINCTRL_PALMAS=y
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Tested-by: Babu Moger <babu.moger@amd.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+ tools/testing/selftests/resctrl/resctrl.h   | 7 ++++---
+ tools/testing/selftests/resctrl/resctrlfs.c | 7 ++++---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-Send this as separate patch, this can go in right away.
+diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+index 4446a0e493ef..5967389038d4 100644
+--- a/tools/testing/selftests/resctrl/resctrl.h
++++ b/tools/testing/selftests/resctrl/resctrl.h
+@@ -141,9 +141,10 @@ bool test_resource_feature_check(const struct resctrl_test *test);
+ char *fgrep(FILE *inf, const char *str);
+ int taskset_benchmark(pid_t bm_pid, int cpu_no, cpu_set_t *old_affinity);
+ int taskset_restore(pid_t bm_pid, cpu_set_t *old_affinity);
+-int write_schemata(char *ctrlgrp, char *schemata, int cpu_no, const char *resource);
+-int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+-			    char *resctrl_val);
++int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
++		   const char *resource);
++int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
++			    const char *mongrp, const char *resctrl_val);
+ int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+ 		    int group_fd, unsigned long flags);
+ unsigned char *alloc_buffer(size_t buf_size, int memflush);
+diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
+index 9e4cda154d66..f4dc8ef23a8c 100644
+--- a/tools/testing/selftests/resctrl/resctrlfs.c
++++ b/tools/testing/selftests/resctrl/resctrlfs.c
+@@ -534,8 +534,8 @@ static int write_pid_to_tasks(char *tasks, pid_t pid)
+  *
+  * Return: 0 on success, < 0 on error.
+  */
+-int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+-			    char *resctrl_val)
++int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
++			    const char *mongrp, const char *resctrl_val)
+ {
+ 	char controlgroup[128], monitorgroup[512], monitorgroup_p[256];
+ 	char tasks[1024];
+@@ -593,7 +593,8 @@ int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+  *
+  * Return: 0 on success, < 0 on error.
+  */
+-int write_schemata(char *ctrlgrp, char *schemata, int cpu_no, const char *resource)
++int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
++		   const char *resource)
+ {
+ 	char controlgroup[1024], reason[128], schema[1024] = {};
+ 	int domain_id, fd, schema_len, ret = 0;
+-- 
+2.39.2
+
