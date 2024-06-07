@@ -1,202 +1,252 @@
-Received: from hust.edu.cn (mail.hust.edu.cn [202.114.0.240])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34144DDC9;
-	Fri,  7 Jun 2024 03:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.114.0.240
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717729581; cv=none; b=ZMZmKfqp6sIzoUBAICOWEF+aV/07dAhmdWBSgIQeCLgztFkvlOu8yYNqoB/6exhDzgVM2dcXoQWIaxFm0VWP2bz1uaWrrkkLOsSAwjxA3ZnwEmAyyn3PynMoGQu798uGxbmrqL+ULSLepf9z4AthQGFPM5IGO5m7B2KONPMIq94=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717729581; c=relaxed/simple;
-	bh=r/BCZHrbUXb73Owi/ShfMwGxZYo6J6aemMtwMA69ATQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=RS8fU6NYMk8yWJe3UCl8DtF/FRtIxHZRv5Lyfhn+xfLqDVKTIp2fLBF6qjFewgJaXlfqfOsDc3BFqsXD/RBWYZYqVawQmovUrsOc0MtnXR4P6vu8Rn6GfU6QrPNVuKOIvPm7/hF4g7Dqei67MBHz8KXRtbMiBmWCF8meRuL6GiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=202.114.0.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
-Received: from hust.edu.cn (unknown [172.16.0.50])
-	by app2 (Coremail) with SMTP id HwEQrAAHOMRvd2JmCPNjAQ--.45924S2;
-	Fri, 07 Jun 2024 10:58:55 +0800 (CST)
-Received: from pride-poweredge-r740.. (unknown [222.20.126.129])
-	by gateway (Coremail) with SMTP id _____wDXEFRjd2JmnmJAAA--.16835S2;
-	Fri, 07 Jun 2024 10:58:50 +0800 (CST)
-From: Dongliang Mu <dzm91@hust.edu.cn>
-To: Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Dongliang Mu <dzm91@hust.edu.cn>,
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs/zh_CN: update the translation of security-bugs
-Date: Fri,  7 Jun 2024 10:58:26 +0800
-Message-Id: <20240607025842.24321-1-dzm91@hust.edu.cn>
-X-Mailer: git-send-email 2.34.1
+Received: from esa4.fujitsucc.c3s2.iphmx.com (esa4.fujitsucc.c3s2.iphmx.com [68.232.151.214])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187BE14292
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 03:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.151.214
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717729979; cv=fail; b=StYwMaXMKIvCvPv14vkV2WjSd+6ZHNcJwFDdeDAr2/sBAxRCF3LSgGoaZKplxLISt6UNcUe3+lX9EBUiJLowRZs1oXnYJfnMqESKfyQg+UbHw4EgrYWwJanFUbQsltAJe1QIVJUK9ecInoJIwmgjVvkbm1h2poZc5tYVUqOe+IM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717729979; c=relaxed/simple;
+	bh=X4Cnm1ZAdLokQUbe1cLWR3QMoOzbVKiQyZzOOSmhhrQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UclSlkChrJC5GDzHzAYBTT2VipTzP39Egah+SHqNIhBMN9d5FsaaFVORVbi0gtSSlmAH05l9mPGQOF4dixMYHGkvIGkhUe3TFj8C/GK68fsBauhvpU5TectqTYAOBzgdY7qoaQWK5R10WphusaLWlMBDvmBhnUu3xvE3khCqrX4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=l9NmTJx1; arc=fail smtp.client-ip=68.232.151.214
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="l9NmTJx1"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1717729976; x=1749265976;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=X4Cnm1ZAdLokQUbe1cLWR3QMoOzbVKiQyZzOOSmhhrQ=;
+  b=l9NmTJx1511Ar5aqaa8kAzxU0LMqqYoGmE5zjy3yQ68cinZU14JpiB14
+   kYShGQQXGtan2ByFtoSMvfrsIvA1LX/Q1qE4kPUIjcEeVTK5fNiaRMXPH
+   na6l7YawPZnOt6iH7GAVpqeXTLcDyncDwhKgTkhf6WyC0tYUTaImJ1qdL
+   OJjaMr0OyIqq1Vr/zrvpMpOz+2pYcrbwa3SN8Sz1GQDeMhqwlvtlj50PY
+   1WhaitL4UBS9xQ5xlp6ZtX4FNIbDJhF6suovse3lxY0L/0/oO4K0WsV7V
+   Hzr7dM8N/9hcvOexwTPEVS79kqp6S4xz0fPnhYIrcbbZ5MT23hdZpnb0c
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="34655725"
+X-IronPort-AV: E=Sophos;i="6.08,219,1712588400"; 
+   d="scan'208";a="34655725"
+Received: from mail-os0jpn01lp2111.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.111])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 12:11:42 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=myOrMpQ3qmorrW9mhWdIwUZQJNbs/+4BbYP3H6jHkh4gBtHzd0AHfPr51pWviYMY+CfNhNPxJsdDu5bb8EeMlOBNsRmGArlbuMERObvGOYLHBZSTi3SOhbW/2M1k3HP3ravPfFRwgyv0XXdWyBcd6ne9xIr5rwkGc8649OS09IQ6MHlRUjPW+gn+1v9FR8qzu58XU3IogiAMHfsSrsE2msv5o8oo0TpkCSH44kyJfd7j93SOdBsWX2nY/tnn9oDbeNbj+5dtWlaLiXkuC4ItvZIyUx1fs4FrXXeNAaHbUE9v+hviKGGR8QNmH57akXfLH2sAymM8bUXdn+ipPhVWFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X4Cnm1ZAdLokQUbe1cLWR3QMoOzbVKiQyZzOOSmhhrQ=;
+ b=LJLREM7UeX6thX5NUMrR6BZNiBDMlCba4a4Kl/5wf6gIHBGSinwh8zwVutQFJJj1AU1E8+DXVT5RvmFxUounoX74tJ9ZMdVSxFxb9sIHxBahcoRLz6Vr2H0fgdAM0lM7QXb1M+3BRVCmzg5IspXirg1G4r6nht7eipm90nWI4qlIsCeinotquWoaP667KOVuJ99AjnaYy2H78W5DckLUVh9fjWmuiHt1s6gF+OjC3wH1FNAuCAYb20A/nMraR0SpIpymHfWRxwUaGB5UwDc16Vyaw8hNx+muH7VjQKyNfI6z+PSYE5wx4cYKcpyyab6iH1tVJgN42N1MRhbiTvAf5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (2603:1096:403:6::12)
+ by TYWPR01MB12103.jpnprd01.prod.outlook.com (2603:1096:400:446::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.34; Fri, 7 Jun
+ 2024 03:11:38 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::d9ba:425a:7044:6377]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::d9ba:425a:7044:6377%3]) with mapi id 15.20.7633.033; Fri, 7 Jun 2024
+ 03:11:38 +0000
+From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+To: Ira Weiny <ira.weiny@intel.com>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>
+CC: "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] nvdimm: Fix devs leaks in scan_labels()
+Thread-Topic: [PATCH] nvdimm: Fix devs leaks in scan_labels()
+Thread-Index: AQHati2t74u/nyp7wUqtJRv05QCX+LG69qCAgACt1YA=
+Date: Fri, 7 Jun 2024 03:11:38 +0000
+Message-ID: <5a5c91a4-9b0c-47d7-a9e9-43d15a28c0d4@fujitsu.com>
+References: <20240604031658.951493-1-lizhijian@fujitsu.com>
+ <6661e897cfd4c_16ff40294f@iweiny-mobl.notmuch>
+In-Reply-To: <6661e897cfd4c_16ff40294f@iweiny-mobl.notmuch>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY1PR01MB1562:EE_|TYWPR01MB12103:EE_
+x-ms-office365-filtering-correlation-id: 50214828-f70d-4e4e-b980-08dc869f8c02
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|1800799015|376005|366007|1580799018|38070700009;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?VDgxTzJNT2tma1dWbGdkVUJkc2liaVYxMWF4eEI1dTVZb0crQkY3NEZabG05?=
+ =?utf-8?B?OUY0T3pyeW80bkV6ZFBiWWc0Qmt6a3RuVVZMR2NUeURXYTZrQVlyaTdKclpn?=
+ =?utf-8?B?bUFoUUhwTHJWaUg3S3ZmY2xlUjBhOXE1dzEwNUswOERVSkxIRkdYSzlPSkgw?=
+ =?utf-8?B?K1ZoVW4raWlJZTBpOXp3OGUxT2JXdXlmR0p2b2t5QlRIcGp2cCt3cnpreGdn?=
+ =?utf-8?B?L0lwT3RoOThZTWlIbGg2VmNqbW9wZU83bzBaUWhIL0tZYnBGYno3V1J4aWFE?=
+ =?utf-8?B?bHRyYU54bWtpVlU4b2tINjJMOXdjdU5IQzRmbEd3L1plYVczeFBEaDBPczkr?=
+ =?utf-8?B?V2k3MytSZUJTekdVK0VZV3l4TkFyeHgzcUZiMllmS2lMMXZNM0xRcWRMVCtE?=
+ =?utf-8?B?UjB0VXdoREppMW5scmRlSnUrSmhnL0FPdlNXeXZVOER2UThBd3FJS29mRTU5?=
+ =?utf-8?B?aytockt5bzFuZis1cTRTZlFiRG9KMUU1dEFudjRiZU53ZUVzRE54ek5Bc2xS?=
+ =?utf-8?B?enFtblduMXhPTlVOMzFDS1Fzc2VtcXVKZEpKNnZndTdOMG9XS0hDa1lyQ254?=
+ =?utf-8?B?NXVoZG9RaG80VVpsZ2tNY21TaGlOL3c1bVJ4YjRyUFVtT1U0aDVyN3RGV3RS?=
+ =?utf-8?B?S1JSY0xLbjBDVFZpRTZEb0JPdmVBRklndjRNM0F0VU9kQnMrbUxKbGJ5ZnZJ?=
+ =?utf-8?B?blA4R1EyaEJTb1ZjOStRRkxteG1RV3ZwOVVldERPWWtDeUJKWE5MSkp6T3ZD?=
+ =?utf-8?B?MTNLLyttOVZqbEo2OEs4Q3BETHBaNUhzVFdnZmZLMUNNbjlnOWFnRTkrME1l?=
+ =?utf-8?B?NU85cDh3UURVdGFRTTJCS1YydnJHVmpwbUpVMlhkclZWNlByWEdYalB1TGI5?=
+ =?utf-8?B?NmFsNXJWWEttMktYV1ZTbFNYTkRzcjFNZWNYeS9kUUNEcEtOWlcwZzVCV0t4?=
+ =?utf-8?B?STNjUFllVzRpZCtQV2FQY0cxc2Fmb1R1UWUxRkJBQVhOMFBVOGtQMjhlZVh5?=
+ =?utf-8?B?Ym41dzhhSXJ0Szh1c2xleEM1bmZhd2ZseG9rTXFWeTRnUVg5My82M0dqS0pv?=
+ =?utf-8?B?VXlnZUl5cGdhT2VzM1hrTC9GRG5MdjRDYzRoUEx0QXFneDBtUTZqSjY0Slk5?=
+ =?utf-8?B?SmhqMHp0ZzdNS1ZzM3NKZnRtV2YvcGpXKzZ4V2ZhMWRtTVVLZjM3bWozMXM4?=
+ =?utf-8?B?TjNzY0R5Z0txN2MyWHBNcDVQOVorTW40SlV1YjlnaVN0c3puNEN2Sm5iS3lw?=
+ =?utf-8?B?bVUxSk5Ca3E5Vit6TGtkZytvUkVkcEhDdnc1VFpXTVUweTR2MUpEM2pjeHFT?=
+ =?utf-8?B?dEV4ZXozYmxhUmZpT3dRby9jelJ2VXhvT09KSDZBSU9WY0FVSDk0eFBydDRJ?=
+ =?utf-8?B?LzRISkp4THhuMTMrb0JGclcyZk1iaEtZemtmRnJYaFZiQmtnSWZJTnAvYUU4?=
+ =?utf-8?B?WHhUWkM4V2RFSjR4UnBKVGdtQ3lXaitPRDliZk1JT0o1WjRxOTdWb1dKL3kr?=
+ =?utf-8?B?b2lNNXpvN3ZQYVhBejJQNkFPcGR0clhMYXl3T2s3UXF1cERrZkpTTGdua1VL?=
+ =?utf-8?B?anRqYlc1ZzVPdmw1bUVBdy9ZVTRCNXpxMjdKdjFMemNocjdVZnUvRFBhMk9o?=
+ =?utf-8?B?ZHRVMnFxUXQ3bTV6Zi9WLzRwMjF3eUZySDZkZHVJN2pNQU5mTzJ4VE9RQlhL?=
+ =?utf-8?B?cVAyYlRXWUI5NXR3U3lnSDhKb1pMcDkxU0JpZXVFSHhUMkYrbjJmQ2RORXRk?=
+ =?utf-8?B?YmJFZTB2MHJlRmJzV0FZQWk2R3hxUnZFclFGYU1LNnpFcXNYNk5vbDZVMTE5?=
+ =?utf-8?B?LzZqM0hEOWpES1VqNkZta0FzTW9TMFNrOVB1TkdLc0RpL2dyRFNDbUFKR0oz?=
+ =?utf-8?B?cFZVSnJJQjZkRzhtVUlxME52c2Ryd3pKQnpESkxJMDdYZFE9PQ==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(1580799018)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?aEwxbmhiTmVQOStBbU9KdWQ2dXVuTXVMNDRWZDJFNWtDNTRUdUcwZHVHd0lu?=
+ =?utf-8?B?WE51TGRxRk1Lblc0Y2w0am0wd0VHT05sRWt5amFZci9jbWU2WDNiQW1nTS9i?=
+ =?utf-8?B?TGVYVVUreHg3MnhFaGJFcGtPcDVlZlkzVC9CeHpNOHN4ZUxlVWxVSUE1dGo0?=
+ =?utf-8?B?M0Z3L3hYbFNwSElkeEgrcWhqVDVZUWtsaHFUZmZBNTJmVDJVSi9nMHZpK21Q?=
+ =?utf-8?B?NW9KRkZ2MzQ1NTd0NTVjbUdkajloQjlBZ3BxNG5mQkJ2U00yZjBqSG1NeEMx?=
+ =?utf-8?B?UndmeHQrcWxacWxhVkF2eVVmUzM0RUhOTjhJb3R6Yy9uUUIvNU1ES3pKVTIr?=
+ =?utf-8?B?NVlxWGtLeXRJQ0hZU2lxM0U5ZU82S1ZaemJDZW9LODVySjJVSG1Xc0NkdmxV?=
+ =?utf-8?B?eGg4YWxaUWdnV1ZxMThNRzZmZVd6QVFJS1I3b29WT0JoT243TWFwN3ovOTZK?=
+ =?utf-8?B?NklwVVc0RmtraWdZbHpKdkJYMm1Ca3o4WkdzTzN0OVFreU5MYi9YYnFLcmI4?=
+ =?utf-8?B?QXJpUXUzOTNkQ0N0SHh0dk5wdUg3Q1l2OFI2RGg4M1NoRjUzU0NEYVpkdUNO?=
+ =?utf-8?B?dTFqNEpybGpFM0JoMVNKT0JTcGtVcUhFUU9RMkxiUThxMi8xVlAyZDFFQWkx?=
+ =?utf-8?B?WU1EY2tHZlhTWkhhUFl2am5Gc0g3UEo5QlJJOUN2eXBEbDQxVTRzcjVNOTRC?=
+ =?utf-8?B?OURZVG9TbnRGVUVUZTFrMVoxZ2p2Z3VEZ28yNktNU282Rll3R3JySEZ6NC85?=
+ =?utf-8?B?TGNYYWJVYTl6eUk1bWEwb2s5UFJ4blhnWkMzZDBaSkdzMVV0RFlTdVlEaFFM?=
+ =?utf-8?B?aUZBRzJaTEpieDE4dkVkMitodVlVYllYcHZLU2JBWHVjWS9nRXkrV1ZsbEtT?=
+ =?utf-8?B?bHJxcTBObTJtSnpjb3VQRWFjYmZDYjg2U3ArZjRsOW1HblhJUGZsZ084cXNz?=
+ =?utf-8?B?b0Q3cUV6L2VqYmdDd1BFaDRsMjllRVFSQm91S1g1ODd2TzdKRkdZNGs3c0N3?=
+ =?utf-8?B?Wk5ndWVvdG1oVXkycjZybEw4UTl6ams0VEZxYUU2WlFmODlKT081Y0lmSXBQ?=
+ =?utf-8?B?WW1VZnl3blhwUWJ0aTYyY0JmMUxnK0F1UXNMa3JaQUxwYXc4YzhjdzE3VkFa?=
+ =?utf-8?B?V1hVd1E5dmlCTFJwOGlGVyswZG5xVjc5QjAyTXI3UzVsdWJTaURYK1N4STc5?=
+ =?utf-8?B?OW5SSkVPOVhlNTd3K0JIS0t0YXZraU1EaFRRK3pKbE1LQzRwcHRHNm9zTWxq?=
+ =?utf-8?B?SkV0OGMzTkVDTHlxa1BXYWl5STY0WGthb1h0OXp4MTNFYnlWcGE5OXd1MDJS?=
+ =?utf-8?B?RVdVMlhMdHhhbCt1UW45OVcraEtSeWgrTGlxekkzSE5NNFRVR2U2VE94Unp2?=
+ =?utf-8?B?WTRnY2s0R2N6b1lPSWtadnZ1K0dhL09PUUdGakZZbHAveVNnbmlVTnRoUVhj?=
+ =?utf-8?B?a2RnN0ZGMmk0QmtUUFpRelF0TXM4UTR5cXBrMGMxWkUrQXlsbzVRWEpHSi9E?=
+ =?utf-8?B?d09ielByRm0zd292VDEvcDQ5Q3J1em5qeTBLQUNPZ2lkNzRBUFN4Qk13UDM1?=
+ =?utf-8?B?ZWhlQXNWczZ4c3ZqK0hjWCtBMEJFaDZYYm5EMjZjcW5sdlpZZGpEKzB2OEFK?=
+ =?utf-8?B?eXVYRGkwNUFBYkQ0bWdKQWJZRk4wTEhNNkFFQms5SjJaRi9qYjRyK250cDJs?=
+ =?utf-8?B?RHlURGpXVjRHNm9CT0EwM21FeW8zSlhTTmhzYlEwMnJZc1BKSEFldUV4ZEth?=
+ =?utf-8?B?VGNoU2ZiNmpnNER3NTRXMWVOVS9xZzYzdFNpdUFjR3I1aGhOZ3BJbnJCTU5y?=
+ =?utf-8?B?VWFjOExnZGF3YndYTWRUL3FhK1hsQkorVWwrRjRmMTI3OTU0bnFXYWZTNlV4?=
+ =?utf-8?B?ZmxkTXBLWGRPR3FzcDladzlvRU8xb2cxbm9tUTA2YXlHWW9Kd3gvSmhIMXBj?=
+ =?utf-8?B?YUVsV0krcUE3Uk9QTCtyMVBRc3YvaG1nZk1YbU1iS05XZFhqbGFqZXlScDYx?=
+ =?utf-8?B?V05Ba1V4YzFYY2hQSVh4T0xhQ2lvU1NteTEzMTBIRm54R1AwTUxzbFR5a2w3?=
+ =?utf-8?B?S2xxcmVoYWZTRFNPd3Nrcm9NTWF6cUR5Q01vTjcwUjJxNHVqR0U5R29CNlQv?=
+ =?utf-8?B?YW1wTnYzSXpOOWEyNlUvMm05SlFMc3lST0VIV3dZRGltYyttYVhSVTEwb1px?=
+ =?utf-8?B?Y1E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <95B38763DB244844AA2C04280D4F6821@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HwEQrAAHOMRvd2JmCPNjAQ--.45924S2
-Authentication-Results: app2; spf=neutral smtp.mail=dzm91@hust.edu.cn;
-X-Coremail-Antispam: 1UD129KBjvJXoWxKFyfCw45JF4UtFyxXryDtrb_yoW3Xw15p3
-	ZFgryxKanrJ3WYkFWfKr1UGF1xGFWfC3y3Krn8Ja4fJF1kAr4vqrn8tryvgayfXryrKayD
-	ZFWFkFW3Wry2yrUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQab7Iv0xC_Zr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK
-	6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r
-	126r1DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI
-	12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0Y40En7xvr7AKxV
-	W8Jr0_Cr1UMcIj6x8ErcxFaVAv8VW8uFyUJr1UMcIj6xkF7I0En7xvr7AKxVW8Jr0_Cr1U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtw
-	CF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fZr1UJr1l4I8I3I0E4IkC6x0Y
-	z7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-	7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jDkucUUUUU=
-X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	qYNOvA4xivnc71nU42tHLKRiPOUs95yv1U5PrCHXBPwnJ42kCBBUJfoNVUcmDr43V7CxHGtJjM9B9riLYvCt6OKmjH7fprbe6FPxeilSPJb/kM7hB1+0stOe9mtrtir2yxKE1nm76nr9WXagp66QsAtejM2+LIb4I3zoCkDSph9B1yEu+gSVDorsN4295hxn1fuEYJoxU1d1bckzdRo8SsxjR6yYP1Y0YBXZLr/A6IcUySv6+CpSBPevMiuMTDXdXLytKzbN6QtpUgKKax7XEGtU41TBXEv1+3STBzbAqJumHFYShmCOLWGm5c82QgphKGpnXYy5+O7xxGpiES3PGLEcPe3NFifLzSrilO5ptoLahzsYi9BCPwWdhLzzMJpTtQJ5HgLJU65Gh1rlik/1qAVd2cI8Iq0WLLunwFgT9/x5rdsOUHdqXBnWSdy6ZcCmIUXinIYus2sTPAovcp8NXv70K4DfSvau9TGyR3cxgM+Qd1DAHXk3sBupM0+3B74T7ihs3IBfJ9X8iroo9DpeAkCo1o7hpBtqARVlCjDZQlF910iz92FUkGlzlhn2uwz7rIBUv/G2wbEB7isSjkAhAc4RP7Dk5HKttLmsypKPJTBCNUZ/++joY10svYrtJGoD
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY1PR01MB1562.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50214828-f70d-4e4e-b980-08dc869f8c02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jun 2024 03:11:38.6413
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mxo5yHEGu+NGwglBM76wpxtSzN6hAeqyeh79eai6yuyFC+WMquMgbbL3b55Ytmk4/4yA8P0iY36ULu9mC694eQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB12103
 
-Update to commit 5928d411557e ("Documentation: Document the Linux Kernel
-CVE process")
-
-commit 0217f3944aeb ("Documentation: security-bugs.rst: linux-distros
-relaxed their rules")
-commit 3c1897ae4b6b ("Documentation: security-bugs.rst: clarify CVE
-handling")
-commit 4fee0915e649 ("Documentation: security-bugs.rst: update
-preferences when dealing with the linux-distros group")
-commit 44ac5abac86b ("Documentation/security-bugs: move from admin-guide/
-to process/")
-
-Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
----
- .../translations/zh_CN/admin-guide/index.rst  |  1 -
- .../translations/zh_CN/process/index.rst      |  3 +-
- .../zh_CN/process/security-bugs.rst           | 84 +++++++++++++++++++
- 3 files changed, 86 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/translations/zh_CN/process/security-bugs.rst
-
-diff --git a/Documentation/translations/zh_CN/admin-guide/index.rst b/Documentation/translations/zh_CN/admin-guide/index.rst
-index ac2960da33e6..773c53956000 100644
---- a/Documentation/translations/zh_CN/admin-guide/index.rst
-+++ b/Documentation/translations/zh_CN/admin-guide/index.rst
-@@ -37,7 +37,6 @@ Todolist:
- 
-    reporting-issues
-    reporting-regressions
--   security-bugs
-    bug-hunting
-    bug-bisect
-    tainted-kernels
-diff --git a/Documentation/translations/zh_CN/process/index.rst b/Documentation/translations/zh_CN/process/index.rst
-index 5c6c8ccdd50d..011dc2cf583a 100644
---- a/Documentation/translations/zh_CN/process/index.rst
-+++ b/Documentation/translations/zh_CN/process/index.rst
-@@ -49,10 +49,11 @@ TODOLIST:
- 
-    embargoed-hardware-issues
-    cve
-+   security-bugs
- 
- TODOLIST:
- 
--* security-bugs
-+* handling-regressions
- 
- 其它大多数开发人员感兴趣的社区指南：
- 
-diff --git a/Documentation/translations/zh_CN/process/security-bugs.rst b/Documentation/translations/zh_CN/process/security-bugs.rst
-new file mode 100644
-index 000000000000..a8f5fcbfadc9
---- /dev/null
-+++ b/Documentation/translations/zh_CN/process/security-bugs.rst
-@@ -0,0 +1,84 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: :doc:`../../../process/security-bugs`
-+
-+:译者:
-+
-+ 吴想成 Wu XiangCheng <bobwxc@email.cn>
-+ 慕冬亮 Dongliang Mu <dzm91@hust.edu.cn>
-+
-+安全缺陷
-+=========
-+
-+Linux内核开发人员非常重视安全性。因此我们想知道何时发现了安全漏洞，以便尽快
-+修复和披露。请向Linux内核安全团队报告安全漏洞。
-+
-+联络
-+-----
-+
-+可以通过电子邮件<security@kernel.org>联系Linux内核安全团队。这是一个安全人员
-+的私有列表，他们将帮助验证错误报告并开发和发布修复程序。如果您已经有了一个
-+修复，请将其包含在您的报告中，这样可以大大加快处理进程。安全团队可能会从区域维护
-+人员那里获得额外的帮助，以理解和修复安全漏洞。
-+
-+与任何缺陷一样，提供的信息越多，诊断和修复就越容易。如果您不清楚哪些信息有用，
-+请查看“Documentation/translations/zh_CN/admin-guide/reporting-issues.rst”中
-+概述的步骤。任何利用漏洞的攻击代码都非常有用，未经报告者同意不会对外发布，
-+除非已经公开。
-+
-+请尽可能发送无附件的纯文本电子邮件。如果所有的细节都藏在附件里，那么就很难对
-+一个复杂的问题进行上下文引用的讨论。把它想象成一个
-+:doc:`常规的补丁提交 <../process/submitting-patches>` （即使你还没有补丁）：
-+描述问题和影响，列出复现步骤，然后给出一个建议的解决方案，所有这些都是纯文本的。
-+
-+披露和限制信息
-+---------------
-+
-+安全列表不是公开渠道。为此，请参见下面的协作。
-+
-+一旦开发出了健壮的补丁，发布过程就开始了。对公开的缺陷的修复会立即发布。
-+
-+尽管我们倾向于在未公开缺陷的修复可用时即发布补丁，但应报告者或受影响方的请求，
-+这可能会被推迟到发布过程开始后的7日内，如果根据缺陷的严重性需要更多的时间，
-+则可额外延长到14天。推迟发布修复的唯一有效原因是为了适应QA的逻辑和需要发布
-+协调的大规模部署。
-+
-+虽然可能与受信任的个人共享受限信息以开发修复，但未经报告者许可，此类信息不会
-+与修复程序一起发布或发布在任何其他披露渠道上。这包括但不限于原始错误报告和
-+后续讨论（如有）、漏洞、CVE信息或报告者的身份。
-+
-+换句话说，我们唯一感兴趣的是修复缺陷。提交给安全列表的所有其他资料以及对报告
-+的任何后续讨论，即使在解除限制之后，也将永久保密。
-+
-+与其他团队协调
-+--------------
-+
-+虽然内核安全团队仅关注修复漏洞，但还有其他组织关注修复发行版上的安全问题以及协调
-+操作系统厂商的漏洞披露。协调通常由 "linux-distros" 邮件列表处理，而披露则由
-+公共 "oss-security" 邮件列表进行。两者紧密关联且被展示在 linux-distros 维基：
-+<https://oss-security.openwall.org/wiki/mailing-lists/distros>
-+
-+请注意，这三个列表的各自政策和规则是不同的，因为它们追求不同的目标。内核安全团队
-+与其他团队之间的协调很困难，因为对于内核安全团队，保密期（即最大允许天数）是从补丁
-+可用时开始，而 "linux-distros" 则从首次发布到列表时开始计算，无论是否存在补丁。
-+
-+因此，内核安全团队强烈建议，作为一位潜在安全问题的报告者，在受影响代码的维护者
-+接受补丁之前，且在您阅读上述发行版维基页面并完全理解联系 "linux-distros"
-+邮件列表会对您和内核社区施加的要求之前，不要联系 "linux-distros" 邮件列表。
-+这也意味着通常情况下不要同时抄送两个邮件列表，除非在协调时有已接受但尚未合并的补丁。
-+换句话说，在补丁被接受之前，不要抄送 "linux-distros"；在修复程序被合并之后，
-+不要抄送内核安全团队。
-+
-+CVE分配
-+--------
-+
-+安全团队不分配 CVE，同时我们也不需要 CVE 来报告或修复漏洞，因为这会使过程不必要
-+的复杂化，并可能延误漏洞处理。如果报告者希望为确认的问题分配一个 CVE 编号，
-+可以联系 :doc:`内核 CVE 分配团队 <../process/cve>` 获取。
-+
-+保密协议
-+---------
-+
-+Linux内核安全团队不是一个正式的机构实体，因此无法签订任何保密协议。
--- 
-2.34.1
-
+DQoNCk9uIDA3LzA2LzIwMjQgMDA6NDksIElyYSBXZWlueSB3cm90ZToNCj4gTGkgWmhpamlhbiB3
+cm90ZToNCj4+IERvbid0IGFsbG9jYXRlIGRldnMgYWdhaW4gd2hlbiBpdCdzIHZhbGlkIHBvaW50
+ZXIgd2hpY2ggaGFzIHBpb250ZWQgdG8NCj4+IHRoZSBtZW1vcnkgYWxsb2NhdGVkIGFib3ZlIHdp
+dGggc2l6ZSAoY291bnQgKyAyICogc2l6ZW9mKGRldikpLg0KPj4NCj4+IEEga21lbWxlYWsgcmVw
+b3J0czoNCj4+IHVucmVmZXJlbmNlZCBvYmplY3QgMHhmZmZmODg4MDBkZGExOTgwIChzaXplIDE2
+KToNCj4+ICAgIGNvbW0gImt3b3JrZXIvdTEwOjUiLCBwaWQgNjksIGppZmZpZXMgNDI5NDY3MTc4
+MQ0KPj4gICAgaGV4IGR1bXAgKGZpcnN0IDE2IGJ5dGVzKToNCj4+ICAgICAgMDAgMDAgMDAgMDAg
+MDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgIC4uLi4uLi4uLi4uLi4uLi4NCj4+
+ICAgIGJhY2t0cmFjZSAoY3JjIDApOg0KPj4gICAgICBbPDAwMDAwMDAwYzVkZWE1NjA+XSBfX2tt
+YWxsb2MrMHgzMmMvMHg0NzANCj4+ICAgICAgWzwwMDAwMDAwMDllZDQzYzgzPl0gbmRfcmVnaW9u
+X3JlZ2lzdGVyX25hbWVzcGFjZXMrMHg2ZmIvMHgxMTIwIFtsaWJudmRpbW1dDQo+PiAgICAgIFs8
+MDAwMDAwMDAwZTA3YTY1Yz5dIG5kX3JlZ2lvbl9wcm9iZSsweGZlLzB4MjEwIFtsaWJudmRpbW1d
+DQo+PiAgICAgIFs8MDAwMDAwMDA3Yjc5Y2U1Zj5dIG52ZGltbV9idXNfcHJvYmUrMHg3YS8weDFl
+MCBbbGlibnZkaW1tXQ0KPj4gICAgICBbPDAwMDAwMDAwYTVmM2RhMmU+XSByZWFsbHlfcHJvYmUr
+MHhjNi8weDM5MA0KPj4gICAgICBbPDAwMDAwMDAwMTI5ZTJhNjk+XSBfX2RyaXZlcl9wcm9iZV9k
+ZXZpY2UrMHg3OC8weDE1MA0KPj4gICAgICBbPDAwMDAwMDAwMmRmZWQyOGI+XSBkcml2ZXJfcHJv
+YmVfZGV2aWNlKzB4MWUvMHg5MA0KPj4gICAgICBbPDAwMDAwMDAwZTcwNDhkZTI+XSBfX2Rldmlj
+ZV9hdHRhY2hfZHJpdmVyKzB4ODUvMHgxMTANCj4+ICAgICAgWzwwMDAwMDAwMDMyZGNhMjk1Pl0g
+YnVzX2Zvcl9lYWNoX2RydisweDg1LzB4ZTANCj4+ICAgICAgWzwwMDAwMDAwMDM5MWM1YTdkPl0g
+X19kZXZpY2VfYXR0YWNoKzB4YmUvMHgxZTANCj4+ICAgICAgWzwwMDAwMDAwMDI2ZGFiZWMwPl0g
+YnVzX3Byb2JlX2RldmljZSsweDk0LzB4YjANCj4+ICAgICAgWzwwMDAwMDAwMGM1OTBkOTM2Pl0g
+ZGV2aWNlX2FkZCsweDY1Ni8weDg3MA0KPj4gICAgICBbPDAwMDAwMDAwM2Q2OWJmYWE+XSBuZF9h
+c3luY19kZXZpY2VfcmVnaXN0ZXIrMHhlLzB4NTAgW2xpYm52ZGltbV0NCj4+ICAgICAgWzwwMDAw
+MDAwMDNmNGM1MmE0Pl0gYXN5bmNfcnVuX2VudHJ5X2ZuKzB4MmUvMHgxMTANCj4+ICAgICAgWzww
+MDAwMDAwMGUyMDFmNGIwPl0gcHJvY2Vzc19vbmVfd29yaysweDFlZS8weDYwMA0KPj4gICAgICBb
+PDAwMDAwMDAwNmQ5MGQ1YTk+XSB3b3JrZXJfdGhyZWFkKzB4MTgzLzB4MzUwDQo+Pg0KPj4gRml4
+ZXM6IDFiNDBlMDlhMTIzMiAoImxpYm52ZGltbTogYmxrIGxhYmVscyBhbmQgbmFtZXNwYWNlIGlu
+c3RhbnRpYXRpb24iKQ0KPj4gU2lnbmVkLW9mZi1ieTogTGkgWmhpamlhbiA8bGl6aGlqaWFuQGZ1
+aml0c3UuY29tPg0KPj4gLS0tDQo+PiAgIGRyaXZlcnMvbnZkaW1tL25hbWVzcGFjZV9kZXZzLmMg
+fCA0ICsrKy0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlv
+bigtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL252ZGltbS9uYW1lc3BhY2VfZGV2cy5j
+IGIvZHJpdmVycy9udmRpbW0vbmFtZXNwYWNlX2RldnMuYw0KPj4gaW5kZXggZDZkNTU4Zjk0ZDZi
+Li41NmIwMTZkYmUzMDcgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL252ZGltbS9uYW1lc3BhY2Vf
+ZGV2cy5jDQo+PiArKysgYi9kcml2ZXJzL252ZGltbS9uYW1lc3BhY2VfZGV2cy5jDQo+PiBAQCAt
+MTk5NCw3ICsxOTk0LDkgQEAgc3RhdGljIHN0cnVjdCBkZXZpY2UgKipzY2FuX2xhYmVscyhzdHJ1
+Y3QgbmRfcmVnaW9uICpuZF9yZWdpb24pDQo+PiAgIAkJLyogUHVibGlzaCBhIHplcm8tc2l6ZWQg
+bmFtZXNwYWNlIGZvciB1c2Vyc3BhY2UgdG8gY29uZmlndXJlLiAqLw0KPj4gICAJCW5kX21hcHBp
+bmdfZnJlZV9sYWJlbHMobmRfbWFwcGluZyk7DQo+PiAgIA0KPj4gLQkJZGV2cyA9IGtjYWxsb2Mo
+Miwgc2l6ZW9mKGRldiksIEdGUF9LRVJORUwpOw0KPj4gKwkJLyogZGV2cyBwcm9iYWJseSBoYXMg
+YmVlbiBhbGxvY2F0ZWQgKi8NCj4gDQo+IEkgZG9uJ3QgdGhpbmsgdGhpcyBpcyB3aGVyZSB0aGUg
+YnVnIGlzLiAgVGhlIGxvb3AgYWJvdmUgaXMgcHJvY2Vzc2luZyB0aGUNCj4ga25vd24gbGFiZWxz
+IGFuZCBzaG91bGQgZXhpdCB3aXRoIGEgY291bnQgPiAwIGlmIGRldnMgaXMgbm90IE5VTEwuDQo+
+IA0KPiAgRnJvbSB3aGF0IEkgY2FuIHRlbGwgY3JlYXRlX25hbWVzcGFjZV9wbWVtKCkgbXVzdCBi
+ZSByZXR1cm5pbmcgRUFHQUlODQo+IHdoaWNoIGxlYXZlcyBkZXZzIGFsbG9jYXRlZCBidXQgZmFp
+bHMgdG8gaW5jcmVtZW50IGNvdW50LiAgVGh1cyB0aGVyZSBhcmUNCj4gbm8gdmFsaWQgbGFiZWxz
+IGJ1dCBkZXZzIHdhcyBub3QgZnJlZSdlZC4NCg0KUGVyIHRoZSBwaWVjZSBvZiB0aGUgY29kZSwg
+cmV0dXJuIEVBR0FJTiBhbmQgRU5PREVWIGNvdWxkIGNhdXNlIHRoaXMgaXNzdWUgaW4gdGhlb3J5
+Lg0KDQoxOTgwICAgICAgICAgICAgICAgICBkZXYgPSBjcmVhdGVfbmFtZXNwYWNlX3BtZW0obmRf
+cmVnaW9uLCBuZF9tYXBwaW5nLCBuZF9sYWJlbCk7DQoxOTgxICAgICAgICAgICAgICAgICBpZiAo
+SVNfRVJSKGRldikpIHsNCjE5ODIgICAgICAgICAgICAgICAgICAgICAgICAgc3dpdGNoIChQVFJf
+RVJSKGRldikpIHsNCjE5ODMgICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSAtRUFHQUlOOg0K
+MTk4NCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8qIHNraXAgaW52YWxpZCBsYWJl
+bHMgKi8NCjE5ODUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsNCjE5
+ODYgICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSAtRU5PREVWOg0KMTk4NyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIC8qIGZhbGx0aHJvdWdoIHRvIHNlZWQgY3JlYXRpb24gKi8N
+CjE5ODggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBicmVhazsNCjE5ODkgICAgICAg
+ICAgICAgICAgICAgICAgICAgZGVmYXVsdDoNCjE5OTAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBnb3RvIGVycjsNCjE5OTEgICAgICAgICAgICAgICAgICAgICAgICAgfQ0KMTk5MiAg
+ICAgICAgICAgICAgICAgfSBlbHNlDQoxOTkzICAgICAgICAgICAgICAgICAgICAgICAgIGRldnNb
+Y291bnQrK10gPSBkZXY7DQoNCg0KPiANCj4gQ2FuIHlvdSB0cmFjZSB0aGUgZXJyb3IgeW91IGFy
+ZSBzZWVpbmcgYSBiaXQgbW9yZSB0byBzZWUgaWYgdGhpcyBpcyB0aGUNCj4gY2FzZT8NCg0KDQpJ
+IGp1c3QgdHJpZWQsIGJ1dCBJIGNhbm5vdCByZXByb2R1Y2UgdGhpcyBsZWFraW5nIGFnYWluLg0K
+V2hlbiBpdCBoYXBwZW5lZCgxMDAlIHJlcHJvZHVjZSBhdCB0aGF0IHRpbWUpLCBJIHByb2JhYmx5
+IGhhZCBhIGNvcnJ1cHRlZCBMU0EoSSBzZWUgZW1wdHkNCm91dHB1dCB3aXRoIGNvbW1hbmQgJ25k
+Y3RsIGxpc3QnKS4gSXQgc2VlbWVkIHRoZSBRRU1VIGVtdWxhdGVkIE52ZGltbSBkZXZpY2Ugd2Fz
+IGJyb2tlbg0KZm9yIHNvbWUgcmVhc29ucy4NCg0KDQpUaGFua3MNClpoaWppYW4NCg0KDQo+IA0K
+PiBUaGFua3MsDQo+IElyYQ0KPiANCj4+ICsJCWlmICghZGV2cykNCj4+ICsJCQlkZXZzID0ga2Nh
+bGxvYygyLCBzaXplb2YoZGV2KSwgR0ZQX0tFUk5FTCk7DQo+PiAgIAkJaWYgKCFkZXZzKQ0KPj4g
+ICAJCQlnb3RvIGVycjsNCj4+ICAgDQo+PiAtLSANCj4+IDIuMjkuMg0KPj4NCj4gDQo+IA==
