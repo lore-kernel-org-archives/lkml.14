@@ -1,123 +1,83 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D432815D5A5;
-	Fri,  7 Jun 2024 10:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B9115D5D6
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 10:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717756673; cv=none; b=cof1jt5+W7UJRdEepWXWLCh31XEmiMGNRJ6suwZv/To/7Hl4w+bg7NTEVpY2J9eFrreobRoTA6KvArLqe5oln3Yo6fUhZtVFBDcyJS2g2vSm+t36NtSQ99Rn/q97epvu6XVMaA3we10Z2jeZWVej/k7/3c+3ga7xPWHAHlm4eRw=
+	t=1717756689; cv=none; b=muOKsRp38Kep/teieDppAYIz0Ffssbj7MPQ27alSeOT0qp1qZ1LbAStGEZdPkk3mumpoDUHCpDfk9Rgm8N1XnzolOCkSJPw6Z4RiXSwh3rYc1ikEbB1UpINAKHIRQSOoZ2RipnDlDLlH0MPD/r7ZVrxTJnLCTMSuYOVH8dgnOSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717756673; c=relaxed/simple;
-	bh=AI2ieUO/6av7s9ZXod25pYy+JFppaxhrF6e/NoXP2Ws=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dPmfCWV4xXh+19qE4JdY5R/byvRxWIu2FkJYBCtZHAKPpKofpYEu0WqAV/HKsoZriJOtFg3pdCtjYyRQCoOyIK7+K9IxupVzGNXpCyW3VcFLIEf53HzZ8Al5uenyXW5BCqf8j/nWv7A7njcxL+CD+fUF++yTabOAKBKaPLXXrAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a0CZUZWG; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717756689; c=relaxed/simple;
+	bh=Dfhm+Ao2OctkWzCPUlbZo2WPxOBCaMO/F20ozOPjqus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=RwB0JubgeDP2i9Z2uvLRk/3ji5MYoFJEA77bQa+Zz6yco+EzD298CPGLbbJUdFEDKyLcEtoNKXa18lIGnbUIsQGjy1U0shWHYKNGf1yHlvALzOfB+G3vaqRIyT+pGFqe2LR+Xqo8LSpwZhEP+nM3X3OVkzB9JGynGS6Gt16nFA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tnaCFC+S; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0CZUZWG"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a68ee841138so252765166b.1;
-        Fri, 07 Jun 2024 03:37:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tnaCFC+S"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-35dc0472b7eso1800538f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 03:38:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717756670; x=1718361470; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+        d=linaro.org; s=google; t=1717756686; x=1718361486; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to
+         :references:user-agent:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=cYd5bpwy4meymqvJV+NAOZHVbo2MmJICLvFAiNGTisQ=;
-        b=a0CZUZWGNsUHaTmqBd5ASKEct25BJ4H59gXABj3EK8s0gtBsbiNwKlRlKYyd+FrPTv
-         JtWrCSB3uGIW1lqnpsbr7ksX9WWqmYBRKaqDMHrBU+O4j4bekeU6x1cmaZ/hnOGM3pTE
-         jk8k7fHGswNI7/obxkriZbKpK2hr6NjrT5Vu60sMryXJt0Pc341G1GEl2/PE8EFHw4sX
-         kvGOJSFEcJLdGQaDo575QIQp0aYGyIQvaNrEtwub+0BVFPH0Fni0xWhG3htiCDwv0mma
-         kU1RkCSp8+IcICfk4Xo0+t9605UrnJAsOn3/UUrBvAo/i5qxQFJDk63j6EtrkRWf4hmi
-         yjcQ==
+        bh=Dfhm+Ao2OctkWzCPUlbZo2WPxOBCaMO/F20ozOPjqus=;
+        b=tnaCFC+SfWcqaMHB00quB4nInAKRiCZ3/LOVjc287R7qxnZjZpN5e3BPN+ZzlW3moj
+         ggk+LgOorn0Q5iL2g/rIOfCT1w16yAeXwxMkozo0R4e/n0J6mkoIanKKU8LSUONCzPdM
+         qQzreCyjRcpQhrPlIkhEPo0yzRe8WX2VF4QMHPVmTQa752KibDwCyHufFR8U0j7HDniI
+         HSqKGj4GZNiN4/K3d0BTnbzGsyxEZo0K/xEnIMd/gjtqK9Q+RJB3j/2GC+fTuKX5ltsR
+         xPytFClmybpR9z/J6wygzscxN6n8s5WuUuL0xUX22m+cfpfTnzwHIz6lesjdetA6VXKI
+         MIGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717756670; x=1718361470;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=1e100.net; s=20230601; t=1717756686; x=1718361486;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to
+         :references:user-agent:subject:cc:to:from:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=cYd5bpwy4meymqvJV+NAOZHVbo2MmJICLvFAiNGTisQ=;
-        b=BsZs00YfXRUwvr53JmSVIF7J/rX7n7mvVJVe8++4wrNdQpC0o+COrU6TPND+aP1oYX
-         xF6vdZm6S9dNdjn2dwac8L90Y/A4iesmNpWJClrIHlO0H8XP7AuzW4zZt9ZGHS3HoGsE
-         33W+9WMRP7SLw3JADv6MmOQufdb5GI8yvMI7i4EQORwCjvHIFoqPYW7pVSCsWTkQYb5t
-         zp8FSGYHeS9doX4UgDmwONW7RApJZ/Qn9+Dup4OvgbBH646TPHkIV0YlDg63Yfa3ytzN
-         Smk80BKejKFqwuHXYYXEQHjqAL8/zMMe9NgQDd6LQpAdVQKRw2s8T/MVM94uhK9RF+Y7
-         Y4EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+XZDstqwbB1umnhGhTAqwQ/SElrxNobpeX42PhsdWkRhalzqEDBN18FzWjmMJqPUb/FMmqx8meJ0iPbl/8clN7FYd+A0oOF4892ft+HakthMyLeBRhbI+x1mB2wBpu09Sud8uHClp
-X-Gm-Message-State: AOJu0YzYo56jVyTwizHe2Y919b/bEO5S37wWb3j9DYQyTArqiRuM7uFq
-	bPHYRJ4MlvljcAj61aNagCng1aXHEb73B8aKs9C4mJbv2sXgJ6Z+
-X-Google-Smtp-Source: AGHT+IEot8u6Kx2dBaaFTnk43HtFN61gLaNoiPmigTk6/4aDOSDBPYQkxaKir0bIj5Yf+9nCU8EZUQ==
-X-Received: by 2002:a17:906:e2c7:b0:a66:7666:fc62 with SMTP id a640c23a62f3a-a6cd6664187mr148202666b.22.1717756669944;
-        Fri, 07 Jun 2024 03:37:49 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c80728867sm226290366b.192.2024.06.07.03.37.49
+        bh=Dfhm+Ao2OctkWzCPUlbZo2WPxOBCaMO/F20ozOPjqus=;
+        b=F0/yvju41jg3Lsgrs5TAfkZu8ntUg0vvH6H8dJqVRMpCK1sliAwM/8TCX5dB2LAqel
+         b9So5bdbdnPO1nLlaRfQPe81leuM0xenAmZ9mFk3dd5RzeYegn3QT7m/g2MB0E8ORb5T
+         tjNzmDCUZpb/TBkt5uhoRJ79g8gSdHMUP9iw0AvdWJ1MwRIMTS/WDJ/jIO/UPVkOQHCL
+         nEftBM4RjGxumY44HhoF+9gtk0ZnM9UJ0APj7UXNwmkm9UUv0Y+UipveNW8R5bb7Jdwo
+         JYLN46WzTP8XEJacACr23+kZpZwy46JcytlwAiIH/GVH7ecFnr7S2n+FhUJ6uzYJWeKL
+         jgOg==
+X-Forwarded-Encrypted: i=1; AJvYcCW27vey5Rx118b7+rX1WGg/j/+xcBhXc9Ke+sVEijwNtA9o+PAP6LeNVhgKR6j9d82oAjnYeVOVi/PimnOkV7WlNhghftf4CdR19owp
+X-Gm-Message-State: AOJu0YytCLcPIU5H/0b29kmCSPMPqkDAO+Hz3b2l6ZBRPKezh0OAOPwh
+	uIRLSgrAYAFvkExS+SSwzUQUXs/aJqubdbmnTEKDQPMoyjGuZ/MNlg+McAuVdeY=
+X-Google-Smtp-Source: AGHT+IEalbWRcpQcRyHzFdufx8s7rTDBgqplrK6U7baTcerM2u8XIM+miaw2LC/2FNTBgh129sR4nQ==
+X-Received: by 2002:a05:6000:1755:b0:34b:1a4f:23fc with SMTP id ffacd0b85a97d-35efed1cfeemr1613166f8f.1.1717756686002;
+        Fri, 07 Jun 2024 03:38:06 -0700 (PDT)
+Received: from meli-email.org (adsl-105.37.6.1.tellas.gr. [37.6.1.105])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5e96d7dsm3675615f8f.67.2024.06.07.03.38.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 03:37:49 -0700 (PDT)
-Message-ID: <3f1a6ccf23cb901473bd490b1ca7330db51a1313.camel@gmail.com>
-Subject: Re: [PATCH v3 2/4] iio: temperature: ltc2983: convert to
- dev_err_probe()
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Nuno Sa <nuno.sa@analog.com>, Petr Mladek <pmladek@suse.com>, Jonathan
- Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Olivier
- Moysan <olivier.moysan@foss.st.com>, Jyoti Bhayana <jbhayana@google.com>,
- Chris Down <chris@chrisdown.name>, John Ogness <john.ogness@linutronix.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andi Shyti
- <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-iio@vger.kernel.org
-Date: Fri, 07 Jun 2024 12:41:37 +0200
-In-Reply-To: <ZmHD63_tvC75To8r@smile.fi.intel.com>
-References: <20240606-dev-add_dev_errp_probe-v3-0-51bb229edd79@analog.com>
-	 <20240606-dev-add_dev_errp_probe-v3-2-51bb229edd79@analog.com>
-	 <ZmGMwwglUlS6_NI_@smile.fi.intel.com>
-	 <da57a64e4f5cdda7ee6b794c448995eee648c436.camel@gmail.com>
-	 <ZmHD63_tvC75To8r@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+        Fri, 07 Jun 2024 03:38:05 -0700 (PDT)
+Date: Fri, 07 Jun 2024 13:32:22 +0300
+From: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, Bj=?UTF-8?B?w7Y=?= rn Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, Alex Benn=?UTF-8?B?w6k=?= e <alex.bennee@linaro.org>, Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 1/8] rust: Add initial bindings for OPP framework
+User-Agent: meli 0.8.5
+References: <cover.1717750631.git.viresh.kumar@linaro.org> <e74e3a14e6da3f920cee90d32a023ba4805328a0.1717750631.git.viresh.kumar@linaro.org>
+In-Reply-To: <e74e3a14e6da3f920cee90d32a023ba4805328a0.1717750631.git.viresh.kumar@linaro.org>
+Message-ID: <ephjf.9236xxczfzy@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
 
-On Thu, 2024-06-06 at 17:12 +0300, Andy Shevchenko wrote:
-> On Thu, Jun 06, 2024 at 02:27:03PM +0200, Nuno S=C3=A1 wrote:
-> > On Thu, 2024-06-06 at 13:17 +0300, Andy Shevchenko wrote:
-> > > On Thu, Jun 06, 2024 at 09:22:38AM +0200, Nuno Sa wrote:
->=20
-> ...
->=20
-> > > > +			return dev_err_ptr_probe(&st->spi->dev, -
-> > > > EINVAL,
-> > >=20
-> > > You can make all these lines shorter by using
-> > >=20
-> > > 	struct device *dev =3D &st->spi->dev; // or analogue
-> > >=20
-> > > at the top of the function.
-> > >=20
-> >=20
-> > Well, I had that in v2 (making the whole driver coherent with the local
-> > struct
-> > device helper but you kind of "complained" for a precursor patch (on a
-> > devm_kzalloc() call). So basically I deferred that change for a follow =
-up
-> > patch.
->=20
-> Hmm... I don't remember the story behind this, but probably it's good to =
-have
-> this done one (precursor) or the other way (follow up). Just check how ma=
-ny
-> changes will be done, whichever diff is shorter, choose that one.
->=20
+On Fri, 07 Jun 2024 12:12, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>This commit adds initial Rust bindings for the Operating performance
+>points (OPP) core. This adds bindings for `struct dev_pm_opp` and
+>`struct dev_pm_opp_data` to begin with.
+>
+>Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>---
 
-Well that has not much to do with the current series. I would prefer to hav=
-e a
-follow up when we're done with the current changes. Right now I would reall=
-y
-prefer to focus on the new dev_err_* APIs and see if anything else is neede=
-d for
-this to be acceptable.
+On the Rust side of things,
 
-- Nuno S=C3=A1
+Reviewed-by: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
