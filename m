@@ -1,119 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC3C14F10E;
-	Fri,  7 Jun 2024 07:24:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B72DDD9
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 07:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717745051; cv=none; b=BmSO9+ArrzS58KWIbT6w4kqMRG/H5PKI9FNt+lSBbYCyL+stNI17AktLjH3XTF/+m4KVGiu+HkQcVHBcoPkj8ug7A5gnh09OnD+Wv8BUX78Eur1/zfZqb2jwX3mK0bbOmEtcqk3ZNj7tzDaZonFW5VbBM2I+gmLBe3Gv7wDuTm0=
+	t=1717745264; cv=none; b=Jbxs5SpJUopotgB9n/AOFqrG1n80ogu1x0u7WAkEL04+CeA618dShTY8Qp9x8+dtIHKQ/kQBcPZk1FrHoaBVvL/TA/7ENxzf0ex1e/fNyTOvBzTh33tPOvt1GbnGZka6LiMIPXchE3hD1KtrmYSXCHeCIUbdYgh9SP+R6PA+9HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717745051; c=relaxed/simple;
-	bh=cg0sM5EZC/m878FCyRqOFVz/GtgaFzoKprs6r3BA7OQ=;
+	s=arc-20240116; t=1717745264; c=relaxed/simple;
+	bh=qzMe1iYAod/bcIq4XiyzKdjBhHpWZ1NslnzI6+M46Ss=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RETTfX0qrI/zW4f8Jaexct57WLxmvgvRFFWE9tavkZS17VDrH+oA6mN8lvOyyDigYBkrioYcHOu+RJo7qnE7Pme6ggT4FmRmUckO8ZawxLTjwHbxpkeRLHYqC+5qn0+mqHreQHTLuL8qO0wHsPpYjve9ON9PgzqCI5MJmu7dU2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hz6u8Af0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=n51drBWVPtAnAXTNYla7qzCq8Xxf43GY03VNH4v39ZxmUNbGtJOxfBfk/fFadv54kGbW9UwLrqdVoX99/UYY/25gqwxBO5AiQe7gbH1uDe/YlELdHvc+d+AR+GKea+7kfj+EGX0uJBJeOPRNUF0YJp7xjblux2dlA6Ilg04urrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UOM50Iwh; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hz6u8Af0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C75F4C2BBFC;
-	Fri,  7 Jun 2024 07:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717745051;
-	bh=cg0sM5EZC/m878FCyRqOFVz/GtgaFzoKprs6r3BA7OQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hz6u8Af06qm36k5d8dU/Q5jT2KjWf9wD/a4Q2Nvq9jjpy1hCQ/BSzal4uzLml+ruH
-	 xXaiNsXD6Tv3dh6qFgeSiFRU7aPP4jUEyqLmkqfBc5L5p9Nv4fmS325dBBa060/0H/
-	 oaZarKgi+u8AJMovv6FMEn8BQG1ozsMjmUztbv1nExdaC9dHWxpxKB61f/n07SKytA
-	 ny4VXKJj1vVhq58a7yCLdehGmrdklTYcE5jmscCTyLNX9rzdSNerzm6CZK18ZoHVYw
-	 dHue5PDrVTBooNvkzdxXjUZmBfCZcQxgQa6/10qcu5pCSFrMmUgrR+tzgbCfLv+xhw
-	 7ccr2YB59zd3A==
-Message-ID: <4b532e7f-5fba-440c-82ba-915309b6b502@kernel.org>
-Date: Fri, 7 Jun 2024 09:24:05 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UOM50Iwh"
+X-Envelope-To: vbabka@suse.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1717745259;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SmIHSLn/WvaJPUCX1Y8vqiV6qDdzhglScQrwFE+kVPs=;
+	b=UOM50Iwh2l1RuKUYUI3XZ8BTN4lzNFetHtCLig3C2tmvfdz/GJoBR+YE+bt1ThDI/irx2P
+	9sMcu9AaZA4y5SP7GoBS//xnF5LpiiESOog8FLdGWoa1RCqQ4BXI0gTdn21oxq4293Rel/
+	ty9UTtboEF7wLJDFHmzhMIei3FlPvmo=
+X-Envelope-To: cl@linux.com
+X-Envelope-To: penberg@kernel.org
+X-Envelope-To: rientjes@google.com
+X-Envelope-To: iamjoonsoo.kim@lge.com
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: roman.gushchin@linux.dev
+X-Envelope-To: 42.hyeyoo@gmail.com
+X-Envelope-To: feng.tang@intel.com
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: zhouchengming@bytedance.com
+Message-ID: <96f13b3c-ec74-4f87-be37-fbf796fe51eb@linux.dev>
+Date: Fri, 7 Jun 2024 15:26:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: soc: qcom,smsm: Allow specifying
- mboxes instead of qcom,ipc
-To: Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240606-smsm-mbox-v2-0-8abe6b5f01da@z3ntu.xyz>
- <20240606-smsm-mbox-v2-1-8abe6b5f01da@z3ntu.xyz>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/3] slab: make check_object() more consistent
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240606-smsm-mbox-v2-1-8abe6b5f01da@z3ntu.xyz>
+To: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+ Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ zhouchengming@bytedance.com
+References: <20240605-b4-slab-debug-v2-0-c535b9cd361c@linux.dev>
+ <20240605-b4-slab-debug-v2-1-c535b9cd361c@linux.dev>
+ <ef24c2be-d6bb-49ec-a72f-7228f284e524@suse.cz>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <ef24c2be-d6bb-49ec-a72f-7228f284e524@suse.cz>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 06/06/2024 21:18, Luca Weiss wrote:
-> The qcom,ipc-N properties are essentially providing a reference to a
-> mailbox, so allow using the mboxes property to do the same in a more
-> structured way.
+On 2024/6/6 16:28, Vlastimil Babka wrote:
+> On 6/5/24 9:13 AM, Chengming Zhou wrote:
+>> Now check_object() calls check_bytes_and_report() multiple times to
+>> check every section of the object it cares about, like left and right
+>> redzones, object poison, paddings poison and freepointer. It will
+>> abort the checking process and return 0 once it finds an error.
+>>
+[...]
+>> -	/* Check free pointer validity */
+>> -	if (!check_valid_pointer(s, slab, get_freepointer(s, p))) {
+>> +	/*
+>> +	 * Cannot check freepointer while object is allocated if
+>> +	 * object and freepointer overlap.
+>> +	 */
+>> +	if (!freeptr_outside_object(s) && val == SLUB_RED_ACTIVE &&
 > 
-> Since multiple SMSM hosts are supported, we need to be able to provide
-> the correct mailbox for each host. The old qcom,ipc-N properties map to
-> the mboxes property by index, starting at 0 since that's a valid SMSM
-> host also.
-> 
-> Mark the older qcom,ipc-N as deprecated and update the example with
-> mboxes.
-> 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
+> Seems this condition should have been logically flipped?
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Ah, right, will fix.
 
-Best regards,
-Krzysztof
+> 
+>> +	    !check_valid_pointer(s, slab, get_freepointer(s, p))) {
+>>  		object_err(s, slab, p, "Freepointer corrupt");
+>>  		/*
+>>  		 * No choice but to zap it and thus lose the remainder
+>> @@ -1370,9 +1368,14 @@ static int check_object(struct kmem_cache *s, struct slab *slab,
+>>  		 * another error because the object count is now wrong.
+>>  		 */
+>>  		set_freepointer(s, p, NULL);
+>> -		return 0;
+> 
+> Should set ret = 0 here?
+
+Yes.
+
+> 
+>>  	}
+>> -	return 1;
+>> +
+>> +	if (!ret && !slab_add_kunit_errors()) {
+> 
+> Also 5/6 of slub_kunit tests now fail as we increased the number of recorded
+
+My bad, I didn't test with slub_kunit, will test later.
+
+> errors vs expected. Either the slab_add_kunit_errors() test above should
+> have a variant (parameter?) so it will only detect we are in slab-kunit test
+> (to suppress the printing and taint) but doesn't increase slab_errors (we
+
+I think this way is simpler for me, only suppress the printing but doesn't
+increase slab_errors, will take this way and test again.
+
+Thanks!
+
+> increased them for the individual issues already), or simply raise the
+> expectations of the tests so it matches the new implementation.
+> 
 
