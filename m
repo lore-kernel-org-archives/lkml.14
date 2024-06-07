@@ -1,148 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AEC154436
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 07:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13901C2AF;
+	Fri,  7 Jun 2024 07:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717745383; cv=none; b=pZFC3EORRqlEWaCM+saawRe4kBA82yT+4U2Q+/Gm8Oy+Q8tksVJdox5a0Suu6oWUA2hvYUpa5J5qjJZQN0VcinL9XfgHzFavWEHQezTs7LulSrnrmcOfMJCAqazH5e1mDrHTKuClz23qkCtzETOFuG3PgDxgY+ffMWAl/2ognGM=
+	t=1717745441; cv=none; b=IQRov6c2oowe4LM5+QrgSW/yN0ZdMifDkd+D0ivmhXwdoxM59wy+7sDoGjbOTmWykLVumWKQ2oc09oXpVgV9D4FOwU0iTPPFdG2HsJFJLJ7DZguU4j5De4Iwdj8X1VIXclZyTrO6Bm1GoFf5xvJxxipC5snDqkY7tEHfRgzFMGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717745383; c=relaxed/simple;
-	bh=2zqhKlVxrz3mbaDx+3zFhoMg3wKeoW+Xa3Fjl4ex1ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bcPn7+W0E7FszlihnNnBlg7z0sG5c8OAfacpazT+vDzBxaxO3hI7oqiOsU8lKeGIApZNQwn0BFNCd4Q8PxfBF721ODiwHFwl/XRdemzOmtJ6zzDGHTDu86OMnreEsnrk4xFCP1FN3iJiRv4pJaJl0JNYYkfo1nyke6fBKLJ3Ik8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nfPp2I2u; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717745441; c=relaxed/simple;
+	bh=I7dGnuQJiK2CvEOG9kLQhbKFh6VzuIq7y1wWMbdusP0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oO0KOi48idVYiYN2kdM4QiB7QoYqabUfA54BqzAq755cUwfZp7vjeg/ZQTm2h2lvOBGAlUztcileBLD7NerOCMDI1kRvFAaXV08/1I2eW645Jaeu7s6EaymvYph5MXV9H+bpi5l5QR6xFF0Dmjg+jk96ywDTL5kVkwP1pu2McP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ow+EMRjp; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nfPp2I2u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717745382; x=1749281382;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2zqhKlVxrz3mbaDx+3zFhoMg3wKeoW+Xa3Fjl4ex1ps=;
-  b=nfPp2I2u6TUT7NSxDfHSOkiiaMgG+qyaypLBfKaOlzQeW8d03dI2m5Zc
-   vVmo9p9embdvHvpudaBQB9ou5O3yeTh30FcUCEDi/WWPOOkRpV9JtUkdt
-   A9w0KTKV4Zlx5WPmFEaanuuZLzYICqKR6W9sQ/mVHXe8Ya8Aj52S+uZXn
-   MZd2PtAbTNUHwdFkMEtVFWxTwUUgP+aYMu0wjQg7QSZCmCyuyElcG6pFJ
-   m2P0ZcHJgkQ8t8nLS13vXgiEHYsSvmmvk+exreNWmlMxGM1791VV6/C10
-   rUMrFeqjC24FDQG3O/3redtULvCEyMXGNedLq+9wbdfQOQrSj5z29tPaX
-   w==;
-X-CSE-ConnectionGUID: ULU+m2AdT4+E5Wz2a1qZaw==
-X-CSE-MsgGUID: 6dH3JEKpQE6WGNgSB2KgtQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="14634925"
-X-IronPort-AV: E=Sophos;i="6.08,220,1712646000"; 
-   d="scan'208";a="14634925"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 00:29:41 -0700
-X-CSE-ConnectionGUID: dhQ+h4aLSba7BzGhhFJOzQ==
-X-CSE-MsgGUID: LkN6+gQpQWOYS9MWDiSS/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,220,1712646000"; 
-   d="scan'208";a="75713087"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 07 Jun 2024 00:29:37 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sFU2X-0004D9-2b;
-	Fri, 07 Jun 2024 07:29:33 +0000
-Date: Fri, 7 Jun 2024 15:29:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tao Zeng via B4 Relay <devnull+tao.zeng.amlogic.com@kernel.org>,
-	Gao Xiang <xiang@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-	Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-	Tao Zeng <tao.zeng@amlogic.com>
-Subject: Re: [PATCH] erofs: support external crypto for decompression
-Message-ID: <202406071506.XHwo54ej-lkp@intel.com>
-References: <20240606-erofs-decompression-v1-1-ec5f31396e04@amlogic.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ow+EMRjp"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4ACAC4000A;
+	Fri,  7 Jun 2024 07:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717745436;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oVZaeJ7ov8Q4H8A8zYRzgBLW0YPPkgkDaWGaynlwq8M=;
+	b=ow+EMRjpjUDhhs/GUIK/l856KA5gAKofv0wXJHvGy1iGL1e249/c5ZPWHjm5xmyUqDakD9
+	l3iKwHCjnTzT0bVsCb6o266RzKIdGpcKheRttNhRixqaDblh4qVC4cCPAh6NMuKbqdEX8T
+	KSE1z7FEkbPLBsJwpZpN+0ZfZctdF7+nWjn4WiQ+S53ca/CqD7bTxg29UbF1P8xX+/QGlV
+	xKW3vUFbByumCDfn2RfD0D8sKV/q91dCYSOzBUXtVtJMyN+RMYFK58PaO7YTGqoiJaVtNG
+	S4tteuyYKF1nwRsGItLMKbfnFYnVB79c/wl/2e+kPHAc5PEBtbo5o8M90Z7+Eg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH net-next v2 0/8] net: pse-pd: Add new PSE c33 features
+Date: Fri, 07 Jun 2024 09:30:17 +0200
+Message-Id: <20240607-feature_poe_power_cap-v2-0-c03c2deb83ab@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606-erofs-decompression-v1-1-ec5f31396e04@amlogic.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAm3YmYC/3WNQQ7CIBREr9L8tRhAiMWV9zBNA/TXkig0gLWm6
+ d1F9i5m8TKZNxskjA4TXJoNIi4uueAL8EMDdtL+jsQNhYFTLqjgkoyo8ytiP4df3hh7q2fCWlT
+ U6DNXwkDZzhFHt1bvDTxm4nHN0JVmcimH+KmHC6t9dUuu/rgXRiihVhg2SCVPpr2aEPLD+aMNT
+ +j2ff8CNDKOVMYAAAA=
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
+ Kory Maincent <kory.maincent@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
+X-Mailer: b4 0.14-dev
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Hi Tao,
+From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
 
-kernel test robot noticed the following build errors:
+This patch series adds new c33 features to the PSE API.
+- Expand the PSE PI informations status with power, class and failure
+  reason
+- Add the possibility to get and set the PSE PIs power limit
 
-[auto build test ERROR on ee78a17615ad0cfdbbc27182b1047cd36c9d4d5f]
+Jakub could you check if patchwork works correctly with this patch series.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tao-Zeng-via-B4-Relay/erofs-support-external-crypto-for-decompression/20240606-155702
-base:   ee78a17615ad0cfdbbc27182b1047cd36c9d4d5f
-patch link:    https://lore.kernel.org/r/20240606-erofs-decompression-v1-1-ec5f31396e04%40amlogic.com
-patch subject: [PATCH] erofs: support external crypto for decompression
-config: arm64-randconfig-004-20240607 (https://download.01.org/0day-ci/archive/20240607/202406071506.XHwo54ej-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d7d2d4f53fc79b4b58e8d8d08151b577c3699d4a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240607/202406071506.XHwo54ej-lkp@intel.com/reproduce)
+Changes in v2:
+- Use uA and uV instead of mA and mV to have more precision in the power
+  calculation. Need to use 64bit variables for the calculation.
+- Modify the pd-92x0behavior in case of setting the current out of the
+  available ranges. Report an error now.
+- Link to v1: https://lore.kernel.org/r/20240529-feature_poe_power_cap-v1-0-0c4b1d5953b8@bootlin.com
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406071506.XHwo54ej-lkp@intel.com/
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Kory Maincent (8):
+      net: pse-pd: Use EOPNOTSUPP error code instead of ENOTSUPP
+      net: ethtool: pse-pd: Expand C33 PSE status with class, power and extended state
+      netlink: specs: Expand the PSE netlink command with C33 new features
+      net: pse-pd: pd692x0: Expand ethtool status message
+      net: pse-pd: Add new power limit get and set c33 features
+      net: ethtool: Add new power limit get and set features
+      netlink: specs: Expand the PSE netlink command with C33 pw-limit attributes
+      net: pse-pd: pd692x0: Enhance with new current limit and voltage read callbacks
 
-All errors (new ones prefixed by >>):
+ Documentation/netlink/specs/ethtool.yaml |  25 +++
+ drivers/net/pse-pd/pd692x0.c             | 283 ++++++++++++++++++++++++++++++-
+ drivers/net/pse-pd/pse_core.c            | 172 +++++++++++++++++--
+ include/linux/ethtool.h                  |  11 ++
+ include/linux/pse-pd/pse.h               |  46 ++++-
+ include/uapi/linux/ethtool.h             |  41 +++++
+ include/uapi/linux/ethtool_netlink.h     |   5 +
+ net/ethtool/pse-pd.c                     |  69 +++++++-
+ 8 files changed, 631 insertions(+), 21 deletions(-)
+---
+base-commit: c7309fc9b716c653dc37c8ebcdc6e9132c370076
+change-id: 20240425-feature_poe_power_cap-18e90ba7294b
 
-   In file included from fs/erofs/zdata.c:7:
-   In file included from fs/erofs/compress.h:9:
-   In file included from fs/erofs/internal.h:11:
-   In file included from include/linux/dax.h:6:
-   In file included from include/linux/mm.h:2241:
-   include/linux/vmstat.h:484:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     484 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     485 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:491:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     491 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     492 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:498:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     498 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:503:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     503 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     504 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:512:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     512 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     513 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   In file included from fs/erofs/zdata.c:7:
->> fs/erofs/compress.h:120:1: error: expected identifier or '('
-     120 | {
-         | ^
-   5 warnings and 1 error generated.
-
-
-vim +120 fs/erofs/compress.h
-
-   115	
-   116	static inline int z_erofs_load_crypto_config(struct super_block *sb,
-   117						     struct erofs_super_block *dsb,
-   118						     void *data,
-   119						     int size);
- > 120	{
-   121		if (crypto) {
-   122			erofs_err(sb, "crypto algorithm isn't enabled");
-   123			return -EINVAL;
-   124		}
-   125		return 0;
-   126	}
-   127	#endif
-   128	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
