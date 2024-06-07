@@ -1,156 +1,169 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2045.outbound.protection.outlook.com [40.107.236.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AD84E1DD
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 21:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717795974; cv=none; b=m6QSWvGD88TCFHMUJ+/sWIWgi6VXyno8oUkdwvDkHjEDz+UsZj3cL6tFYoelxwq4CP4QITxnTV5C2n1VnLbLmrtx4julqEMxIHPjMclX9807R9QZDWzFxWdZ37sKnZAtlxXqvwTtCV9r+0WQCwmRviKCUAqhFmCFG9yWpNfmDZ0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717795974; c=relaxed/simple;
-	bh=8qHPzm5a5JgFK8worTleaMJ20xoqkrEwmZZqgOn913I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MdAiCqE6mTNZQxJ9VzdNSVNFxT/fnSe06cUt4CmLB5DW5gADcPCWwDiakadt6FzntkCM027lcmxZ2+4qsq5NR0ZI56/D+XrLvGJyPjLdHfdLEWuXq1IctaVgjxNEsWEEL7sZJPIQAeNmQ/GbdlBRD5rXoQ+jl6OLMZNivEsjeg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=h+n7Bw2j; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6C517BB7;
+	Fri,  7 Jun 2024 21:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717796011; cv=fail; b=SAARsnDbwo5GhS8t93DflhS7cdaX7rhzN4asebNFd1mhyUIE45+QzjVUHnP62qPAVrgHbCa9qXedTv8dJVMjNwdvenFuWig30mJ2LjCeJ9PTFew4UzbLVx/BRuW5WS0nkTZ6Z57wZ3On58YHbP0rXUjfvcDzfEHYqprxfiWqRcY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717796011; c=relaxed/simple;
+	bh=rHjj1PVhZEqcOXDphIkhFX/joJ5uQvwvq84OD+kolLM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=EBbtty8v7v+4Y+LLgFtvjXbUTWeCukRRaCWCW7s5buCoya3uAPy64PsIvbDuFw2aAMAeOPphoXFFYe1jT8oC5Byx+zm6Hh6G1n4r2/nQ0VW4ZWZec0h1KOHTkzFiJvBMLZK/ORHkJK3DJS7ugZdJdtbfIc9hZgwam9BOJnKn13U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=s1lmgsdF; arc=fail smtp.client-ip=40.107.236.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="h+n7Bw2j"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f6559668e1so22765265ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 14:32:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717795972; x=1718400772; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=en5rhVQeS4jMQZ7MYT9HPVU5AsizJ4lSBaI/jISWz7g=;
-        b=h+n7Bw2jIFjjjb2AaQFDJKBQ6fnQgmYdj6kCxAXBUGkAImlg1AJCr1erzHbODVI1xC
-         6ctSS7OTfikXmwUvHPknG+LUT2wX8AoX107B1lgQ/YV3RuajHDLmq4XtiAYypMQi9byD
-         uAUO8qqTF+CP57fVF5jwbG/k9t6YktG3cdtKwWrJ7DKmuYekf1fJj0/iuWvC2GjXFEkR
-         IUVJG1cWKNk/HNpnGHUsKOwU8rbL1Bd9xpmsraXPJ2ZUyJjcMjXXQ3FKQNR4/UJyFA09
-         YMq9Ch75RWOnNZIordgppqV+YuOLeaT0QC6a4asfrSGKpzkW3sxaD7m3s1owgF703qBc
-         7mMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717795972; x=1718400772;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=en5rhVQeS4jMQZ7MYT9HPVU5AsizJ4lSBaI/jISWz7g=;
-        b=QoiqHOikqNEGfdpBToAOh1OKaiJk3VzDQnxeZevZmQoHSQKyJW7WQitfTKpuIbhvwd
-         +vEK08ZRzwt6JgOCV/wS2Rqjrh530j3YlPy84/jGPa1H600ss5lJDt4ouMO+FkZgt0Ws
-         h+v3NXitJOteEUPfGArwccd5ZJnjjYpMkxxlN228vNpZb4nA0Eua2TNODVJ3pffevWnB
-         mEU96ebNACk2nGGpZHw2rNpezw76EHB1p3xzZD4rRcMIPBLohnew525L6fecRn02nJa1
-         q0USbYRUnGENTMWqwMkC5cfbMy2gyJcCiPoYHmDc+nC43DsLLzqqPMxD5l4riG0DjBQe
-         Os0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXAdExlecHzMlrdrvOSIvIne5eU7ZYu+cpL1t0FgbhJGUrc3UwRIbtsXxvNYYsCIVfEchXqX/jK2vJRfx3w3cYED2mMWuuYrLF685Od
-X-Gm-Message-State: AOJu0Ywz28ibOadiD5mWUqJgVeywwe2+4RnsiqIXIFVHyDVze3Y2ovda
-	KXqQeRgBeAMdlPNVxeie5XQ6SaLLUn5qptDE6ahjSYZiWTYh7UWUioenNhHEok0=
-X-Google-Smtp-Source: AGHT+IEejcYKl9fBro2kSxxk5hY4d+88L6bC3+D1SvPJuq0Hk5YpcIl8tPK8uKbkJgY2r7rnpSoToA==
-X-Received: by 2002:a17:903:244b:b0:1f4:8d11:723 with SMTP id d9443c01a7336-1f6d039d26fmr43937765ad.51.1717795971902;
-        Fri, 07 Jun 2024 14:32:51 -0700 (PDT)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6e78585desm10762055ad.133.2024.06.07.14.32.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 14:32:51 -0700 (PDT)
-Date: Fri, 7 Jun 2024 14:32:48 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Jesse Taube <jesse@rivosinc.com>, linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Evan Green <evan@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Xiao Wang <xiao.w.wang@intel.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	Greentime Hu <greentime.hu@sifive.com>,
-	Heiko Stuebner <heiko@sntech.de>, Guo Ren <guoren@kernel.org>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Zong Li <zong.li@sifive.com>, Ben Dooks <ben.dooks@codethink.co.uk>,
-	Erick Archer <erick.archer@gmx.com>,
-	Vincent Chen <vincent.chen@sifive.com>,
-	Joel Granados <j.granados@samsung.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] RISC-V: Detect unaligned vector accesses supported.
-Message-ID: <ZmN8gER4RnyoyQT4@ghost>
-References: <20240606183215.416829-1-jesse@rivosinc.com>
- <20240606183215.416829-2-jesse@rivosinc.com>
- <ZmIqM3Cuui0HAwN1@ghost>
- <ZmJCq7bsglq7olSB@ghost>
- <a16ccf51-4b06-4c6d-94a1-cb43dc3f2945@rivosinc.com>
- <ZmN2U6BDAYRXxHEi@ghost>
- <20240607-wildfowl-baggage-54f622e18c4a@spud>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="s1lmgsdF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N0tQHsBw1TY2Jii8dzJhwt8HZqQtiVPFRLcRfzNmGT14J6g5Hxy0x3D0rIC7tIGzpxFfxO9aINLjVplvP9I7s1fJ0ntt/rfsFbPsN67y7b534/EJJV8slGMaAi9w9c/BtwDvGfb5BRNHoNTIVSPmN9UR5mAStAzMu/o1htaeml9p7Xp9G0uDZZ2c/d9bGgqFfDA180gdfoFzy+3xkZUlU3iqzfs5tPm1b+E4mmCj+hqNlfdUNdGjBJw2E5q0w17PaewtKxtGwY/2yOD3nmErEKBroq4ueBGAheESO3WPeXCftdYxhL94IzEkjdD3hZ+SLOd8JS4B19qWeOls2Sz8RA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KVEowPcblSSBfo7DGzDRNbVmmjU4jWlyAbZ9WXxflgI=;
+ b=Tj/Z9R0GgJ+eeY9G4sQc6gFpH7E+h020aa9o5W95wBMHyzEfwTWH7XUGy6OwuiGfpmcBTNHZ9fvJgg9xPtsMWMs7KYyIdeK4Mx2YQKk634qQ6XpFET9GVhTZkOcWofk3DCVk5nw+S+Ej6rI0wPky3QeSW2zI8HGyEeBQk44x7adx80upGq/V4WWRLIgFyRNbYZWzeym8BgsaQTJParHlmdFm0QkiZ82wvxKEGjaItvNEGWqAGj6+9Mf96ntLdkEG9o2JqMIRCndMSS06IZT2C6dK4zuF22RyFvPqb2r2v4aIFzzktA1l/GrgvsQ0geJ0bEbC4HWEfVicWdXH9YBtog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KVEowPcblSSBfo7DGzDRNbVmmjU4jWlyAbZ9WXxflgI=;
+ b=s1lmgsdFYIXPh75E5AmFQE/8FfEtK/xN3pQe/9p/nuRLBzqZsWZV6cOE/SvZOVe5PzPudd2J/YXGvYw5yWMUUBy7UMCfJv2mAr++LCPIdM6JF0zxRHRZE8NlvEobEVbBlktha22DVuPXKDsni5QK4/p7pnOUBsKuOYGWZ1PNdBw=
+Received: from PH0P220CA0028.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:d3::17)
+ by BL3PR12MB6452.namprd12.prod.outlook.com (2603:10b6:208:3bb::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Fri, 7 Jun
+ 2024 21:33:26 +0000
+Received: from CO1PEPF000042AA.namprd03.prod.outlook.com
+ (2603:10b6:510:d3:cafe::72) by PH0P220CA0028.outlook.office365.com
+ (2603:10b6:510:d3::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7656.21 via Frontend
+ Transport; Fri, 7 Jun 2024 21:33:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000042AA.mail.protection.outlook.com (10.167.243.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7633.15 via Frontend Transport; Fri, 7 Jun 2024 21:33:26 +0000
+Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 7 Jun
+ 2024 16:33:24 -0500
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+Date: Fri, 7 Jun 2024 16:32:59 -0500
+Subject: [PATCH 1/2] RAS/AMD/ATL: Fix MI300 bank hash
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607-wildfowl-baggage-54f622e18c4a@spud>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240607-mi300-dram-xl-fix-v1-1-2f11547a178c@amd.com>
+References: <20240607-mi300-dram-xl-fix-v1-0-2f11547a178c@amd.com>
+In-Reply-To: <20240607-mi300-dram-xl-fix-v1-0-2f11547a178c@amd.com>
+To: Yazen Ghannam <Yazen.Ghannam@amd.com>, Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>, Muralidhara M K <muralidhara.mk@amd.com>
+CC: <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Yazen
+ Ghannam" <yazen.ghannam@amd.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AA:EE_|BL3PR12MB6452:EE_
+X-MS-Office365-Filtering-Correlation-Id: c3d8bac9-ec9b-4cf1-f62c-08dc87397736
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|36860700004|82310400017|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S2RGVmpVTTlxN0MvRUFHWS9MMXZ2K3dOMkhDZUMxSlkxZjBUdjI4bkhjSW1G?=
+ =?utf-8?B?U2x4akFtWjk5cHd5aDZYY2NWMUxUeDI2SnBoaDVQR2JNZ0M5QlZKMTVreHFQ?=
+ =?utf-8?B?bHUxOGZUQVRVMmJjM20zbHZWOUZ6TE5MbGp3UU1EOWpkRUZyNTIvRktrd1M1?=
+ =?utf-8?B?ZitydnJSRjZTMjRXbFFjRDk1d2RIQVNMRzRjMmNCdVNrSUxCT2g4UEpWcHVM?=
+ =?utf-8?B?TDkyUUI4dGU1UUt3TEk1NXJJTzFrY2JPRVV2bXNzUG1Kd08wMHA2ckhvckt1?=
+ =?utf-8?B?akc5ajRxYWU5aGFJckM2ektEL09VN2tld1pLa1k1d25YcUYyZ3RNMGtrRExY?=
+ =?utf-8?B?MU1BMVVkK2RIM0V1TVZialVZZGVpeTRJbXV5cmtUbjkxanRnM2lRK2pPUWZD?=
+ =?utf-8?B?OERhVFVTbGQvVDZ4TXdqclZab3JPZU1sdjN2bU1RSEN0dkxEU0lTb1hwTUgz?=
+ =?utf-8?B?Yk15RWFZRjNWd2d6NXREc3lSS1FHS3pJU053Vk5xcGZGVzltOHFlWDdzQ29h?=
+ =?utf-8?B?cmpIYUFaMjRSdkUxem1FODBqWEdUVG5JRkNZSW9vRTFUc3hWSTNGS1dlNHV5?=
+ =?utf-8?B?eGxCVm5BRWlUcHdmVUtZMFN6TkR5akV3NnhwT3o4LzlSYU9EK25pYTBxeVVa?=
+ =?utf-8?B?UTZpSUxBcWVhbnNIRENMdnh2OFp6Q20rTENPU0l5dnVBMXZKdlhJOEk2c1Iw?=
+ =?utf-8?B?MlNjVTVWQ3BlSmVUam1hSDVOZzRrckhIVnc3WGxrc3ZWYzBkWnk1UXZPcTVo?=
+ =?utf-8?B?MUdVRlk2Qm91azQ2cmtKckZqK2NLWFR4T2FuSTdQQUlLeXM1RUxtMjF2ZWkz?=
+ =?utf-8?B?ditEY1QzSDdoNldzTlNvV2VoRmQ1OXU0VkRUQ05TN252eFovVHVGTXpUdURT?=
+ =?utf-8?B?b2I0TXJYbWRWUGczNjFVRm1aM1pnaGdsNzFpOXZNT2NRRVdvK2dmRkZUMVR6?=
+ =?utf-8?B?eG0vejVCYS9SVXhXdU5udDlXMkJZdEdRZmdSVHNucE9uaFArL29pUmRKU0p0?=
+ =?utf-8?B?dElnQmhZZldVUURxUFpVUEVaSVdXWFgvQnlabitrU0xiUG8wVnVlaFFmUlZG?=
+ =?utf-8?B?MGY2dEtHRlpSTkg0TkJSbGpXaW9wNFo5UGk2eFEzb0RKaSt5OVQ1NDVHSU5k?=
+ =?utf-8?B?WTlmYUNyRTZRallQeU9FSTh1aE5kNThpcTdvYjhwc2hGTVc4UTJjbWZjVG05?=
+ =?utf-8?B?SDRJZG45VERWSlpBYmZXL1lQWHVoMTRhaSswT3c2bGFhcUh0Vm83MExscnB2?=
+ =?utf-8?B?QmdEVmlkRXByaUFKU1Bzb0V6bXBmVXJkWGNHSTRtWlpIVkgrdlNPak5IaVNl?=
+ =?utf-8?B?MEFvTmIvd1BSaFZEZzd2TDJZOExBMXhxQ2JSamhXQmxlUTZheFJKazFTUFRP?=
+ =?utf-8?B?RXg4LzlHY2lxekhkbFhZUTdmem9xRjdlRWtVaWFUK0Q2ajlkcXJpRlZ3YlRp?=
+ =?utf-8?B?K09GZlVaQ2N6TUl6OEp5a0RrMGNyRkh3cnlIcytLSXlSY3Zoa0RxWThEVTNS?=
+ =?utf-8?B?MGtGV0FNYWtrdG1vcU94NElsWE1tWmFLNkR2eTgwOUsraVA2RTZnSS9CQ3VN?=
+ =?utf-8?B?S091dVJCTjkrMWxoVkRYdU1aYVNmK3g5OTRLSGNHa1oyYTU5VGV5ZG4zY0dY?=
+ =?utf-8?B?dDZaR2FUNU9qQVNLcnVRM21OWThDcTRPTndDbHJNU1JRRkdhbEJaRGJpNWQy?=
+ =?utf-8?B?enZyay9STWlvcmJYVkMrTnZMeFFZNEJEWlIxUnROS3hoUVUvUStXKzVhcmY2?=
+ =?utf-8?B?YmFSclhqRGd6K0Jycks2a1ZsYnFwZmpOeTIvdFAvZ0tUK0NrRzBGWldaMzlO?=
+ =?utf-8?B?b2krTHowV3MwRkxmZndTRlNmMkk4ODZJODdvNzlKMG4vdEU4OHdvdWhwaFRY?=
+ =?utf-8?B?MG1HOVpEQm12d0V4bUFYUnpSY3R1UTNXOENNUmFhaStqd0E9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400017)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 21:33:26.1025
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3d8bac9-ec9b-4cf1-f62c-08dc87397736
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000042AA.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6452
 
-On Fri, Jun 07, 2024 at 10:21:19PM +0100, Conor Dooley wrote:
-> On Fri, Jun 07, 2024 at 02:06:27PM -0700, Charlie Jenkins wrote:
-> > On Fri, Jun 07, 2024 at 03:53:23PM -0400, Jesse Taube wrote:
-> > > On 6/6/24 19:13, Charlie Jenkins wrote:
-> > > > On Thu, Jun 06, 2024 at 02:29:23PM -0700, Charlie Jenkins wrote:
-> > > > > On Thu, Jun 06, 2024 at 02:32:14PM -0400, Jesse Taube wrote:
-> 
-> > > > > Please use the exising UNKNOWN terminology instead of renaming to
-> > > > > SUPPORTED. Any option that is not UNSUPPORTED implies that unaligned
-> > > > > accesses are supported.
-> > > 
-> > > Conor didnt like using UNKNOWN a proxy for "SUPPORTED"
-> 
-> I did say this, but in the context of wanting you to actually add the
-> performance probing (and potentially the other infrastructure that
-> Charlie added for scalar).
-> 
-> > > Having SUPPORTED is better then assuing the speed to be slow.
-> > 
-> > The HWPROBE key is about misaligned access performance. UNKNOWN means
-> > that the performance is unknown.
-> 
-> Right. I also don't think that assuming "slow" is even problematic -
-> seemingly all extant hardware doesn't even support misaligned access.
-> But really, just whack in the probing, it shouldn't be too bad, right?
->
+Apply the SID bits to the correct offset in the Bank value. Do this in
+the temporary value so they don't need to be masked off later.
 
-Yeah that's a good point, slow is a reasonable default.
+Fixes: 87a612375307 ("RAS/AMD/ATL: Add MI300 DRAM to normalized address translation support")
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+---
+ drivers/ras/amd/atl/umc.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-> > The scalar and vector names need to
-> > match up.
-> 
-> That's definitely not the case. A different hwprobe key is allowed to
-> behave differently, but...
+diff --git a/drivers/ras/amd/atl/umc.c b/drivers/ras/amd/atl/umc.c
+index 59b6169093f7..5cb92330dc67 100644
+--- a/drivers/ras/amd/atl/umc.c
++++ b/drivers/ras/amd/atl/umc.c
+@@ -189,16 +189,11 @@ static unsigned long convert_dram_to_norm_addr_mi300(unsigned long addr)
+ 
+ 	/* Calculate hash for PC bit. */
+ 	if (addr_hash.pc.xor_enable) {
+-		/* Bits SID[1:0] act as Bank[6:5] for PC hash, so apply them here. */
+-		bank |= sid << 5;
+-
+ 		temp  = bitwise_xor_bits(col  & addr_hash.pc.col_xor);
+ 		temp ^= bitwise_xor_bits(row  & addr_hash.pc.row_xor);
+-		temp ^= bitwise_xor_bits(bank & addr_hash.bank_xor);
++		/* Bits SID[1:0] act as Bank[5:4] for PC hash, so apply them here. */
++		temp ^= bitwise_xor_bits((bank | sid << NUM_BANK_BITS) & addr_hash.bank_xor);
+ 		pc   ^= temp;
+-
+-		/* Drop SID bits for the sake of debug printing later. */
+-		bank &= 0x1F;
+ 	}
+ 
+ 	/* Reconstruct the normalized address starting with NA[4:0] = 0 */
 
-It of course can behave differently in purely technical sense, I said
-"need" because it would not be a very intuitive interface to have a
-different name for vector and scalar versions of the same thing.
-
-> 
-> > UNKNOWN was already merged and is supported by linux so if you
-> > want to use SUPPORTED here then you need to add a scalar SUPPORTED key
-> > that is an alias of the UNKNOWN key.
-> 
-> ...this suggestion of a scalar change I disagree with anyway, so it's
-> moot. Unknown should be a state that we only have internally when we
-> actually do not know, and not something that userspace should ever see,
-> unless there's a bug in the probing code IMO. Unknown gives userspace no
-> actionable information anyways.
-> 
-
-I agree, returning slow is probably always be more useful than unknown.
-
-- Charlie
-
-> > I would rather keep UNKNOWN as it
-> > is, but that's up to you.
-
+-- 
+2.34.1
 
