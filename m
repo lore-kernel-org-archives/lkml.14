@@ -1,158 +1,172 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B0C15A869;
-	Fri,  7 Jun 2024 07:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38331C2AF;
+	Fri,  7 Jun 2024 07:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717746725; cv=none; b=IL8uv2+iUq23eNlatHu7XdUd1/I26aWX7V7i1iQTqb+6wrzUL55uK0qqCFYIoNtnGQvSihMbt3ODdI8m4P3AxpOqZ7nhVdnXZh+dfFGC+fmwjoqsfpQ3BMmnj8c1mLBpQiDeJcv5Ta3BXPih+RmK0OHkUF6PlGyio7GXlVc64J0=
+	t=1717746842; cv=none; b=DsmDfEnlM/eOrzqje1Odmp0MMq+msMTR2TvH05oUmEsl9nFbpSM26vECs9xJzylEGNQjXI6IxfAhr1/PrkVVulOWyUD8rImtuGwZ3ayiBW8V+dp390fk30wx3km2pjnM25WO2SzfMLyxxBUrvkHt0/6olpZk7jWrjAx+NxxOnn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717746725; c=relaxed/simple;
-	bh=gn/fI6h9C1pAG5/3ooyTbLTKOd+/BUZX7VYHZhXdeNo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=spCS9AVxT5ip2Uxcu10CrJO/viGEdIAw+QTGgQbNNG7mOiFUTQLcp5eZyfJRaW7kc3TZDdwyO9fIUwLwxi84iOKgHH0DaA9asZ+fOcYW5DRHMu6eG2xpNVhRL/iYP/FZUY03X1EVUOMPxWqeZ3X3X4nU9wuf/An5Nf+7ej1fzMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BDF2+yqQ; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1717746842; c=relaxed/simple;
+	bh=RwvpPr3bZtIcVDK98m1UdTQjpXUECPEIZKoMiKr39p0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=mA9PXQj4dHX/eyT4vddBgC87gewK7LYcPwN3CCU+7NMcDbXOaN3hDHQCm1z9lmcLR+IKUCBDzxadCLRoldy/eEFIn+HqBjr1zXgsTCCY4tWQ9Ie81vanxVzxdqIswfFjj8R+a5sdOsfg3kYsjdjHYtesps9UnnpmMRKvU1+hPv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dJHjTh5G; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDF2+yqQ"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-35dca73095aso1604422f8f.0;
-        Fri, 07 Jun 2024 00:52:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJHjTh5G"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4210aa00c94so16996225e9.1;
+        Fri, 07 Jun 2024 00:54:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717746722; x=1718351522; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fhX0elXnOul8qpEh6FTKOxypSbbABlDAy/thil42Oyk=;
-        b=BDF2+yqQefzkk6kphjzXQDZe+qzK9k3JvU6y60F5UyYAJUpGYYuabm2X/H231a5xeS
-         7uvS+9yNbhpWOdYr65XR4v5eSdkkSFgct5Jc3Sqimv/b0EhbRiQXJytj58u3RUB99G1s
-         OJc/A51mwb/Ff4nYyc/fM6uDGXnKZrdSHf3FzF9TZRGS1U/P0rPyRrHM59sBeFOfgWsF
-         +N3pt4jlg8pseflT5WAdU2Kb5P50X2wBCINC12zVJVPEVVxs4wOCqaFGWPugUycXm251
-         byFBSJVwXGvL497tpez+wltFzdEQbRGWR+SQOUwPIFb9Sixh+vFYbNelmq3zjwJa9FKO
-         DXog==
+        d=gmail.com; s=20230601; t=1717746839; x=1718351639; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=fGtrfVkEldm/Tp2dI+OgyNdoMT3uZ1fT1eSIIAagWZs=;
+        b=dJHjTh5GTEP3lKzTgZ4TdN2SrNET8hy+3VkWY2ttFXBT1If0/vCCx3BMb82iV7YHtT
+         9rJh363kTKGElk8POTd52qwn9KEexHZF4WW1/P2snYuMP0EqFvRMX7NN1XOwky829D5S
+         5kRiNf0LORY5PnZZaQSwuudGafKYCSDLx76gSQ+hAxZB1oWHel+uSpkTF+xxjddLieK2
+         t/nJxQTWK4PjOmtLNYsO2KsH3rAlKtWIQ8zTZwKhOKPaPuHOFYkWk/Y9SGQMkcCDdAZ1
+         A+vCf3GCa+zWjyEAeNKKljC2bnLFBzm8mpWzJ5pGga1/Rc/2kn5oH8jVJhCgv06eQdtx
+         iOtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717746722; x=1718351522;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fhX0elXnOul8qpEh6FTKOxypSbbABlDAy/thil42Oyk=;
-        b=ZtlsMcUsVDYh0TNYvVG3hI37NKiEpVzkscojKwiJayOZ46zOg3lAe0odw99kaiAbXY
-         FOvjovvU/I4zqlFhuAuFeWqq8o33zHa8//IXqfQO8Z5Ajfino4peLLBUO9HGAfKdGBFF
-         KapkZbZgU9oNo07QxxZ3Ulm6ro4Ria4AvvDqCmebgLJemYHqCvxgrB5ocXKd0jWQjPzO
-         /lu+5WIVBNhqAJr9wydxFdyWUXMVHjauVirM0wrFu9sC4LHPgAWbTnafvRD76rquGKtU
-         x6mD3DhmDJZrRBXmIYAEaJfuUyjUXybHBS64FZE/Rc3CNL6yjQptwlJab8mZuAnoFJoz
-         hGfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSVzbs9lvXeYJmF70wO1UQXe/+xnGROpvBvdmumK/+QgGgSZeRUnwJzvpXwt1GqSDcdKpefbPI6r7W1WAwI+qOTRugkE8y3a6jx47ICdV8zT6ksxS2odm24gSCaopf7iLg8vGXGxUimovqmg==
-X-Gm-Message-State: AOJu0YwAgJZZ20c80539YxzArh1sfLZ4rR25gl4/vVHWB5/E1EF1oYfT
-	vdZ3qtU8ynWkxtoC7+U1pN7yTTp3x5CiJq0n88J9xXn2qyQaTIjurC3vpQ==
-X-Google-Smtp-Source: AGHT+IFg9iF/oTWeOXiIFEiNK+m4SDlsgwxzKh0cyRGOKLbgNfPK0aCpqzfgXTRg5OoGuvepK+081w==
-X-Received: by 2002:a05:6000:45:b0:34d:837a:9d08 with SMTP id ffacd0b85a97d-35efedfaf0dmr1296688f8f.61.1717746721955;
-        Fri, 07 Jun 2024 00:52:01 -0700 (PDT)
-Received: from f (cst-prg-5-143.cust.vodafone.cz. [46.135.5.143])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5fc169fsm3393990f8f.94.2024.06.07.00.51.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 00:52:01 -0700 (PDT)
-Date: Fri, 7 Jun 2024 09:51:51 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH] vfs: add rcu-based find_inode variants for iget ops
-Message-ID: <bujynmx7n32tzl2xro7vz6zddt5p7lf5ultnaljaz2p2ler64c@acr7jih3wad7>
-References: <20240606140515.216424-1-mjguzik@gmail.com>
- <ZmJqyrgPXXjY2Iem@dread.disaster.area>
+        d=1e100.net; s=20230601; t=1717746839; x=1718351639;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fGtrfVkEldm/Tp2dI+OgyNdoMT3uZ1fT1eSIIAagWZs=;
+        b=mYrZBA/h2/cgTGlKpAbbYnTXTDYwgQPvbuIq5lHp1IBQ8Mjy7ET2mL2Fls2uhF2nLE
+         Ihfe2mFCc7LA8Cee+feZmTtfHpMoN3Bu3mQpvj5d4Do1bHlh+fgvKceylt4ZXeCNYNvL
+         uKpXiUDQK/o0XHrwKktkLgFqXlhyUZxizcx1o0BK0BndQ4UyVniaCDyo5xQjWoFY5M5+
+         iDB162QmKK55EHIghL8acpoNheRBDPfB3v7ybxK/Y3d9JFLV0n3dHjvYigAjogjP2W+Q
+         MLFLGVMIpKttAnua7tCCitqYvqKOGvfrs49EWZHGKVLo3ZrETUEwZhtsNCNLpfBXg2op
+         Raqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXe6/e//5sLAjuOFFNEh+vy0WZTMXXlimg8gnNO3CJilTf77q4hbkj0h+g3AyXidIeDi94pfLd/vBgTH0IZvZtnBaml2PxMBHHrrykPIh0WBkAgtbwhbP5VnwMFm8xrki0deBlRolisuLi1p7u4rBm9JtOyyzRSB7yEe1yUfxuyrA==
+X-Gm-Message-State: AOJu0YwvefY7Y42+RsXsFXjE81X+Ej/fRpRh4OobtGPTp2BGKDqCadfg
+	9+74MDy+MxYXdiQfuyc04M7VQ5rfA+/Hb8reXNpFqeslCqkUbSH3
+X-Google-Smtp-Source: AGHT+IH9c8AhBKZVNPTxzNO5koOgJy0uwn1cRU8GIz8p1fKKNqcTqAlSgDII6tUtqjHRN/9kit8feQ==
+X-Received: by 2002:a5d:55c9:0:b0:355:1ae:cec3 with SMTP id ffacd0b85a97d-35efee32edcmr1187216f8f.60.1717746838697;
+        Fri, 07 Jun 2024 00:53:58 -0700 (PDT)
+Received: from [172.27.33.107] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d2f289sm3407491f8f.19.2024.06.07.00.53.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Jun 2024 00:53:58 -0700 (PDT)
+Message-ID: <fd788395-c936-49cf-a85d-d39d1d055131@gmail.com>
+Date: Fri, 7 Jun 2024 10:53:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZmJqyrgPXXjY2Iem@dread.disaster.area>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC net-next v4 2/2] net/mlx5e: Add per queue netdev-genl stats
+To: Joe Damato <jdamato@fastly.com>, Jakub Kicinski <kuba@kernel.org>,
+ Tariq Toukan <ttoukan.linux@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, nalramli@fastly.com,
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>,
+ "open list:MELLANOX MLX5 core VPI driver" <linux-rdma@vger.kernel.org>,
+ Tariq Toukan <tariqt@nvidia.com>
+References: <20240604004629.299699-1-jdamato@fastly.com>
+ <20240604004629.299699-3-jdamato@fastly.com>
+ <11b9c844-a56e-427f-aab3-3e223d41b165@gmail.com>
+ <ZmIwIJ9rxllqQT18@LQ3V64L9R2> <20240606171942.4226a854@kernel.org>
+ <ZmJcEM7brxivyDUV@LQ3V64L9R2>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <ZmJcEM7brxivyDUV@LQ3V64L9R2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 07, 2024 at 12:04:58PM +1000, Dave Chinner wrote:
-> On Thu, Jun 06, 2024 at 04:05:15PM +0200, Mateusz Guzik wrote:
-> > Instantiating a new inode normally takes the global inode hash lock
-> > twice:
-> > 1. once to check if it happens to already be present
-> > 2. once to add it to the hash
-> > 
-> > The back-to-back lock/unlock pattern is known to degrade performance
-> > significantly, which is further exacerbated if the hash is heavily
-> > populated (long chains to walk, extending hold time). Arguably hash
-> > sizing and hashing algo need to be revisited, but that's beyond the
-> > scope of this patch.
-> > 
-> > A long term fix would introduce fine-grained locking, this was attempted
-> > in [1], but that patchset was already posted several times and appears
-> > stalled.
+
+
+On 07/06/2024 4:02, Joe Damato wrote:
+> On Thu, Jun 06, 2024 at 05:19:42PM -0700, Jakub Kicinski wrote:
+>> On Thu, 6 Jun 2024 14:54:40 -0700 Joe Damato wrote:
+>>>>> Compare the values in /proc/net/dev match the output of cli for the same
+>>>>> device, even while the device is down.
+>>>>>
+>>>>> Note that while the device is down, per queue stats output nothing
+>>>>> (because the device is down there are no queues):
+>>>>
+>>>> This part is not true anymore.
+>>>
+>>> It is true with this patch applied and running the command below.
+>>> Maybe I should have been more explicit that using cli.py outputs []
+>>> when scope = queue, which could be an internal cli.py thing, but
+>>> this is definitely true with this patch.
+>>>
+>>> Did you test it and get different results?
+>>
+>> To avoid drivers having their own interpretations what "closed" means,
+>> core hides all queues in closed state:
+>>
+>> https://elixir.bootlin.com/linux/v6.10-rc1/source/net/core/netdev-genl.c#L582
+>>
+>>>> PTP RQ index is naively assigned to zero:
+>>>> rq->ix           = MLX5E_PTP_CHANNEL_IX;
+>>>>
+>>>> but this isn't to be used as the stats index.
+>>>> Today, the PTP-RQ has no matcing rxq in the kernel level.
+>>>> i.e. turning PTP-RQ on won't add a kernel-level RXQ to the
+>>>> real_num_rx_queues.
+>>>> Maybe we better do.
+>>>> If not, and the current state is kept, the best we can do is let the PTP-RQ
+>>>> naively contribute its queue-stat to channel 0.
+>>>
+>>> OK, it sounds like the easiest thing to do is just count PTP as
+>>> channel 0, so if i == 0, I'll in the PTP stats.
+>>>
+>>> But please see below regarding testing whether or not PTP is
+>>> actually enabled or not.
+>>
+>> If we can I think we should avoid making queue 0 too special.
+>> If someone configures steering and only expects certain packets on
+>> queue 0 - getting PTP counted there will be a surprise.
+>> I vote to always count it towards base.
 > 
-> Why not just pick up those patches and drive them to completion?
+> I'm OK with reporting PTP RX in base and only in base.
+> 
+> But, that would then leave PTP TX:
 > 
 
-Time constraints on my end aside.
+Right, currently there's no consistency between the PTP RX/TX 
+accountment in real_num_queues.
+I don't want to create more work for you, but IMO in the longterm I 
+should follow it up with a patch that adds PTP-RX to real_num_rx_queues.
 
-From your own e-mail [1] last year problems are:
+> PTP TX stats are reported in mlx5e_get_queue_stats_tx because
+> the user will pass in an 'i' which refers to the PTP txq. This works
+> fine with the mlx5e_get_queue_stats_tx code as-is because the PTP
+> txqs are mapped in the new priv->txq2sq_stats array.
+> 
+> However.... if PTP is enabled and then disabled by the user, that
+> leaves us in this state:
+> 
+>    priv->tx_ptp_opened && !test_bit(MLX5E_PTP_STATE_TX, channels.ptp->state)
+> 
+> e.g. PTP TX was opened at some point but is currently disabled as
+> the bit is unset.
+> 
+> In this case, when the txq2sq_stats map is built, it'll exclude PTP
+> stats struct from that mapping if MLX5E_PTP_STATE_TX is not set.
+> 
+> So, in this case, the stats have to be reported in base with
+> something like this (psuedo code):
+>   
+>    if (priv->tx_ptp_opened &&
+>       ! test_bit(MLX5E_PTP_STATE_TX, channels.ptp->state)) {
+>        for (tc = 0; tc < priv->channels.ptp->num_tc; tc++) {
 
-> - A lack of recent validation against ext4, btrfs and other
-> filesystems.
-> - the loss of lockdep coverage by moving to bit locks
-> - it breaks CONFIG_PREEMPT_RT=y because we nest other spinlocks
->   inside the inode_hash_lock and we can't do that if we convert the
->   inode hash to bit locks because RT makes spinlocks sleeping locks.
-> - There's been additions for lockless RCU inode hash lookups from
->   AFS and ext4 in weird, uncommon corner cases and I have no idea
->   how to validate they still work correctly with hash-bl. I suspect
->   they should just go away with hash-bl, but....
+Do not take num_tc from here, this ptp memory might not exist at this point.
+Calculate it the regular way with max_opened_tc.
 
-> There's more, but these are the big ones.
-
-I did see the lockdep and preempt_rt problem were patched up in a later
-iteration ([2]).
-
-What we both agree on is that the patchset adds enough complexity that
-it needs solid justification. I assumed one was there on your end when
-you posted it.
-
-For that entire patchset I don't have one. I can however justify the
-comparatively trivial thing I posted in this thread.
-
-That aside if I had to make the entire thing scale I would approach
-things differently, most notably in terms of locking granularity. Per
-your own statement things can be made to look great in microbenchmarks,
-but that does not necessarily mean they help. A lot of it is a tradeoff
-and making everything per-cpu for this particular problem may be taking
-it too far.
-
-For the inode hash it may be the old hack of having a lock array would
-do it more than well enough -- say 32 locks (or some other number
-dependent on hash size) each covering a dedicated subset. This very
-plausibly would scale well enough even in a microbenchmark with a high
-core count. Also note having regular spinlocks there would would retain
-all lockdep and whatnot coverage, while having smaller memory footprint
-than the variant coming in [2] which adds regular spinlocks for each
-bucket.
-
-In a similar spirit I'm not convinced per-cpu lists for super blocks are
-warranted either. Instead, some number per numa domain or core count,
-with backing area allocated from respective domain would probably do the
-trick well enough. Even if per-cpu granularity is needed, a mere array
-allocation as seen in the dlist patch warrants adjustment:
-+	dlist->heads = kcalloc(nr_cpu_ids, sizeof(struct dlock_list_head),
-+			       GFP_KERNEL);
-
-that is it should alloc separate arrays per domain, but then everything
-else has to be adjusted to also know which array to index into. Maybe it
-should use the alloc_percpu machinery.
-
-All that said, if someone(tm) wants to pick up your patchset and even
-commit it the way it is right now I'm not going to protest anything.
-
-I don't have time nor justification to do full work My Way(tm).
-
-I did have time to hack up the initial rcu lookup, which imo does not
-require much to justify inclusion and does help the case I'm interested
-in.
-
-[1] https://lore.kernel.org/linux-fsdevel/ZUautmLUcRyUqZZ+@dread.disaster.area/
-[2] https://lore.kernel.org/linux-fsdevel/20231206060629.2827226-11-david@fromorbit.com/
+>           tx->packets += ...ptp_stats.sq[tc].packets;
+>           tx->bytes += ...ptp_stats.sq[tc].bytes;
+>        }
+>    }
+> 
+> Right? Or am I just way off here?
