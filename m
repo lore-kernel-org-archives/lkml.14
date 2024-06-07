@@ -1,129 +1,92 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B433C15DBA3;
-	Fri,  7 Jun 2024 11:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4930B187350;
+	Fri,  7 Jun 2024 11:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717758474; cv=none; b=FRSylwzh8CJgL8EzYmFSCH8/eNfluOqj/nGRWvwDmzV7g3uT+Lvi7HGdy5X0v5mipgM8WKqAzRDDcNx7q3RTX+jQetbtIXWrF0ciE/kOjI3AqZN1/6SuJqm6dDw1ROJWaiU/CeuXaIcmgIIWm6BnydmGsxUTbsUH13thoNOd234=
+	t=1717758478; cv=none; b=sIyrFhsBLK3IgjWJZK2PmYW5Ppdty+ZmWJw965NfOVfWbesLyMlgWi43os6QiYZVYmGVP9RIBUYKElB/vkPX0t30I7EaAZi9BYPCrSOVTsDsgbJNW12ZZyTbWbOrJBKmviSzt0BoNq6uOtw9ixB3lcuU3mOnmrD6+zn4x8YEHM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717758474; c=relaxed/simple;
-	bh=yaJzSUIG1L7vHjglq5LBpdfym6nOV4qXdvbcEwWsOyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L2SgDZh/HD/BQWaoxssKMU4O2wRvrSDd8v01tyhIweabZ30oqHxeuyvocbrMcSCDOw/WaVkPnn+yWM8+88TAKiMc27fNDh8Wo7vtQwJwQu9LwtlT/4Vm9+9PDvrT8F8AqXwkPwXKXr6Jfhwb3WKlYo+OFtrxZ/ywiozhF11JwSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VDEkQSEF; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717758478; c=relaxed/simple;
+	bh=n0Kvyk+T+RtB/i+4T/qp6gEW7032T5bG4AfcmuA3ORA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=qhlNmmYrX/4o1wUfT3f+JlnLrPiMZiGtqdKIbeUNBKE3KBKVpnT8Ome0GrewcGjsTvyd7hNCsup/Fnu79JYYD+RZDV8e7xqio5jdUySCXooXAd1X3OuiHTgFmJjr5IyDY4SNTp7lzBRWBEaDeYJMCsGvZyGaWUNJ+4RbyzdTCh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gtucker.io; spf=pass smtp.mailfrom=gtucker.io; dkim=pass (2048-bit key) header.d=gtucker.io header.i=@gtucker.io header.b=XitJNlei; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gtucker.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gtucker.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDEkQSEF"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57a2ed9af7dso2853610a12.1;
-        Fri, 07 Jun 2024 04:07:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717758471; x=1718363271; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QwoB1I2CoqSrADBSqDpZDueAN3lp7krkHSyqi5h/Lrg=;
-        b=VDEkQSEF8hG4nOeTPlL3Wnv0iEU5qKWEjWMWYxUeu//cGmu5O9Iny68T0CSIMWVFRt
-         AngASh3m55t587XbMv9UKrJyMEPs6hO9e87IchI1gG5gKuT/lgyN5DwHiS1z2UhR0wtA
-         k3D9YDfMhShoJDUVoKd22zbdMbsvkCiaVzrEopajpui8V9URfWZpRzske1BF883g4IWu
-         Coh1sieAjhIKlbg+R6oA0JbZ3hyssCdhGrOrT2N1i9d2KRPZyPVnK5+aJnwN+GVrsK1J
-         PbgF7vZKYcw8OsFuBHjRKxOhpYSYeS2bRYxdgeIZ5KLtA0SohfygNYE+e6KF86NN1FfM
-         hAXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717758471; x=1718363271;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QwoB1I2CoqSrADBSqDpZDueAN3lp7krkHSyqi5h/Lrg=;
-        b=tuQeHeGPpjOAcHDaV9iYjZ5Uu0Ln8d5/pngmj54T0LqHfuP9fYWcObaFwJG416XgBv
-         uGi8I1jLdlJFHdFTU5qjHYTj21c+tx8dAI22Jj3I2/RJmgD5ayjLM7fPX92s20Ufs4GG
-         QRdLwDhiwkX3yRXry+bdDqAnD8xy+zjhjcB+35AOnyPt1OMDTqoo6s1YGPmH6BnK0MKO
-         wC3abFHfqK++BZKdr39YBKnThsInuAc0n7IaMCdD39G+g/REwSREvwYLvwDSdPQAc5Z6
-         AyFTTQEaNK8wZxdB54UP9Y3J2ugTF8yaXxDo7DOn2CBnOGtNgqfkvsEcXFgDRvTnaoeL
-         C5nw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjm+rgaKmKSKYaXYpxraYYjZO8b2AHBosQ7/A8r2LDNJyrBFIkmKxJUfBdV99ugSbSaavM86hOc/gEXBWdedW2A8gGJzBWfuYxhMociwo5+0Zvzq2UOHIfNBX/1TlRSEZkN4Z1KIRdag5tcU2dgkfRaLoPdrBxPbnmYPbZRyNL7g==
-X-Gm-Message-State: AOJu0YxQxPtkjKcr4+vxYvqQIu+SaWe2M6xw4MvhNtVaSALrUAbjKkMV
-	2rV4gvMX0z23lZts96rtX8R+Eot9wM0Ox+D321TBHVv3aq/mTtZ2
-X-Google-Smtp-Source: AGHT+IH6rZ9zLdc8fiE9PfrZZyWV332mnTZ/6+FIHUz//Qahy67ncSDhq+u1qaDIyiqhJKGU1Z/udw==
-X-Received: by 2002:a17:906:eece:b0:a68:ecd5:6083 with SMTP id a640c23a62f3a-a6cd637e1f0mr205666366b.27.1717758470759;
-        Fri, 07 Jun 2024 04:07:50 -0700 (PDT)
-Received: from skbuf ([188.25.55.166])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c8072a46asm230426466b.206.2024.06.07.04.07.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 04:07:50 -0700 (PDT)
-Date: Fri, 7 Jun 2024 14:07:47 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Martin Schiller <ms@dev.tdt.de>
-Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
-	f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 03/13] net: dsa: lantiq_gswip: Use dev_err_probe
- where appropriate
-Message-ID: <20240607110747.zsiahnzge2bvxd4l@skbuf>
-References: <20240606085234.565551-1-ms@dev.tdt.de>
- <20240606085234.565551-1-ms@dev.tdt.de>
- <20240606085234.565551-4-ms@dev.tdt.de>
- <20240606085234.565551-4-ms@dev.tdt.de>
+	dkim=pass (2048-bit key) header.d=gtucker.io header.i=@gtucker.io header.b="XitJNlei"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2C1BC1BF204;
+	Fri,  7 Jun 2024 11:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gtucker.io; s=gm1;
+	t=1717758468;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CJUCbM546q0LNVWlhbxcY9aawRMHmngLwnBnq4OdBYc=;
+	b=XitJNlei8F6drUPTvnCYDL/f93y60prNCd9OHDeWV92QxHGeTgQTsd6f9bCuk9DLPWMbSq
+	26ziB2MEtIT20BO8XyGai8wQ/nV67nEMAC8Uj+DHPO309VXac1msGXy7Dg/SXSvE7WFrXW
+	Aupejt5cq9TCsgf39zkzzzwfhYrpq7/Iove7FNg2sikueRw8aplSP0GRNYwdVNFHrmLAhF
+	+5KjvYE0TWkAcsOVmb8xfDfmLuRb5xg9d/9nFZrrNuT1eDz4Ky2iHY5JF0ga1mphGl66GQ
+	gz7iU9aDQg88jwBw2ngoXr1RwK/iD2FgPrg72sDPPiOBpJrk5b5y4Lwi6aPJSw==
+Message-ID: <e7ca4831-4e4a-4a7a-a310-459f102154e5@gtucker.io>
+Date: Fri, 7 Jun 2024 13:07:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606085234.565551-4-ms@dev.tdt.de>
- <20240606085234.565551-4-ms@dev.tdt.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Kernel Testing & Dependability Micro-Conference at LPC 2024
+From: Guillaume Tucker <gtucker@gtucker.io>
+To: automated-testing@lists.yoctoproject.org, kernelci@lists.linux.dev,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kunit-dev@googlegroups.com
+Cc: Shuah Khan <skhan@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+References: <aba2b2c0-ebb9-45e3-b14a-2321b7770e03@gtucker.io>
+Content-Language: en-GB
+Organization: gtucker.io
+In-Reply-To: <aba2b2c0-ebb9-45e3-b14a-2321b7770e03@gtucker.io>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: gtucker@gtucker.io
 
-On Thu, Jun 06, 2024 at 10:52:24AM +0200, Martin Schiller wrote:
-> @@ -2050,8 +2048,9 @@ static int gswip_gphy_fw_list(struct gswip_priv *priv,
->  			priv->gphy_fw_name_cfg = &xrx200a2x_gphy_data;
->  			break;
->  		default:
-> -			dev_err(dev, "unknown GSWIP version: 0x%x", version);
-> -			return -ENOENT;
-> +			return dev_err_probe(dev, -ENOENT,
-> +					     "unknown GSWIP version: 0x%x",
-> +					     version);
->  		}
->  	}
->  
-> @@ -2059,10 +2058,9 @@ static int gswip_gphy_fw_list(struct gswip_priv *priv,
->  	if (match && match->data)
->  		priv->gphy_fw_name_cfg = match->data;
->  
-> -	if (!priv->gphy_fw_name_cfg) {
-> -		dev_err(dev, "GPHY compatible type not supported");
-> -		return -ENOENT;
-> -	}
-> +	if (!priv->gphy_fw_name_cfg)
-> +		return dev_err_probe(dev, -ENOENT,
-> +				     "GPHY compatible type not supported");
->  
->  	priv->num_gphy_fw = of_get_available_child_count(gphy_fw_list_np);
->  	if (!priv->num_gphy_fw)
-> @@ -2163,8 +2161,8 @@ static int gswip_probe(struct platform_device *pdev)
->  			return -EINVAL;
->  		break;
->  	default:
-> -		dev_err(dev, "unknown GSWIP version: 0x%x", version);
-> -		return -ENOENT;
-> +		return dev_err_probe(dev, -ENOENT,
-> +				     "unknown GSWIP version: 0x%x", version);
->  	}
->  
->  	/* bring up the mdio bus */
-> @@ -2172,28 +2170,27 @@ static int gswip_probe(struct platform_device *pdev)
->  	if (!dsa_is_cpu_port(priv->ds, priv->hw_info->cpu_port)) {
-> -		dev_err(dev, "wrong CPU port defined, HW only supports port: %i",
-> -			priv->hw_info->cpu_port);
-> -		err = -EINVAL;
-> +		err = dev_err_probe(dev, -EINVAL,
-> +				    "wrong CPU port defined, HW only supports port: %i",
-> +				    priv->hw_info->cpu_port);
->  		goto disable_switch;
->  	}
+On 10/05/2024 20:43, Guillaume Tucker wrote:
+> Hello,
+> 
+> We're pleased to announce the return of the Kernel Testing &
+> Dependability Micro-Conference at Linux Plumbers 2024:
+> 
+>   https://lpc.events/event/18/contributions/1665/
+> 
+> You can already submit proposals by selecting the micro-conf in
+> the Track drop-down list:
+> 
+>   https://lpc.events/login/?next=/event/18/abstracts/%23submit-abstract
+> 
+> Please note that the deadline for submissions is *Sunday 16th June*
 
-Nitpick: there is no terminating \n here.
+The deadline has now been extended to *Sunday 14th July*
+
+This is to be better aligned with other MCs and to give more time
+to submit topics.  The reason for having a rather early deadline
+was based on the feedback that it helps to have a response early,
+especially for those who need approval to book their trip.
+
+So the new deadline is when we'll start finalising the schedule
+to submit to the LPC organisers (Steven).  If you do require any
+earlier feedback then please let us know when sending your
+proposal and we'll take a look on a case-by-case basis.
+
+> The event description contains a list of suggested topics
+> inherited from past editions.  Is there anything in particular
+> you would like to see discussed this year?
+> 
+> Knowing people's interests helps with triaging proposals and
+> making the micro-conf as relevant as possible.  See you there!
+
+Thanks,
+Guillaume
+
