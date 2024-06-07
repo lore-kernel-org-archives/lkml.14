@@ -1,106 +1,285 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E07193090;
-	Fri,  7 Jun 2024 12:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934DE192B71;
+	Fri,  7 Jun 2024 12:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717764907; cv=none; b=UPqnw0BQ/gyJavC6I5ECO2g9guJzbe3SPU4nUEq/4++xhF7cYfK3EuUgZ5iHJFvKRhmH1Yb+p0Q5ZD3fAJtUDbWn+ugv1W8DhIwC3ygsTOwIl2D3sK3rRBK3aO2Ik+XHUQ4B4dhzuc2nzAEg674gx6hCZ42jwSZatzeq7MxR4Do=
+	t=1717764907; cv=none; b=NOr5BhphgO7+eFz1CJlFc4XE2CKiMRLuIrw4kLxUSIfC4SrP4bMiY+CeN5Lt2UdxX8LYpUAbb6mhfv8iCr5XaZpMO8afD13X3UaG65Cc52mN7Y7ehlWyTOuylY33ACLtTeF/6bl6nHBBI//jG7ECirRaz7MwPeEj1fgEYVcW7Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717764907; c=relaxed/simple;
-	bh=ueQLqvfxS8iUthbLZJGnuX1gcFPmAKY0JNt/ouyFFsM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DnX8cHJJxq04v+iO1X27SHFWoQ+sLn5o/NROxyJc02Q737wkcPoadH3MXoBr+4bVpRAuHgQwZF7hYNRy+lH7CmZu74nU2iuyyfM1Fk9nz8yYHE033/5nCoZO2at6sz/WQeWL/3n8lZ2xlL1Sm17sx6FUk3Kv6u5vQWtZvzS5cqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=WPcE9Vzq; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	bh=WRe8NEY3kJuX6k0/E7Ze+UsA45owFsVDeVy2P1F3oFI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kEBBmZ2cpFMeOu/1zyjEf04bLn3igdB2ofmMgTYZHJ5sH8MVD0d2PLKPDREMJdk77S1p7hzBJ7p3FM5YxN/esIgg9L7fYZvUrWBcStn2SJnMLYRbQCRMrP4jD2yOd1vRcKVrLUxOdDL8BYGIygYUE2Z+3krt2IzYFjt2fExWGJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NdoEewTC; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="WPcE9Vzq"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 0BFDD87FFB;
-	Fri,  7 Jun 2024 14:54:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1717764899;
-	bh=dLyJBZqHf76+ChB4CcC6G4HDf+CMmtyIIIHG7RFXt4c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WPcE9VzqTN0zrI4noJOx9HQUp51f4aUcGe7g3aaP8cl9TMlMsIRkST9g5asihJjm3
-	 k22Xgt1EgJy9/K1EMt5BUiZZXODBq1WcQ3YOfntVVCyn02I/kqftREQV4m4myWjIm+
-	 iS69pw41jRRnt9Mw/PB9HQYCOYf+jLk+LUdjyDOZBt07pFWyUc5FqVNKgBPmoEAaIq
-	 M8+7dWf+kWA9lGOBZe7aebpdfB4aLb9ahFnISLOgGQDITXwZnCxA5VD/4mogNYVjsp
-	 xPypTq87yVAYo7xPfDBsGJ9iA4cF6NKz1DhtPd+ensSXMddFcNVbctBwC3lvQ51m7m
-	 jlYH805gKeAQw==
-Message-ID: <6f44537a-3d60-46f5-a159-919cc2a144ec@denx.de>
-Date: Fri, 7 Jun 2024 14:48:14 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NdoEewTC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717764906; x=1749300906;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=WRe8NEY3kJuX6k0/E7Ze+UsA45owFsVDeVy2P1F3oFI=;
+  b=NdoEewTCeQre/URQoIOamRPH3Rmi36UgpIKBLfBOS/Q6qdDa0rYDXqO4
+   fIzQVGsVVBoQURedPJcpsWLb4buxIHZtpdjyMIY8CZH8kfQ9zsDb8cKz5
+   A2YT3Q0oyua6qg2OorzerXuzO/2EMQ/YX5kyLKhaFIwrtH7aGuNoRDglR
+   Sqo8o9nWYURnB7WtztwkAsMntN9s4zuoeoOwfjilOqMldOhSws2pp1SbU
+   kw8mrzuO2uFUL0Y8Meuvm6fNP+3eH3QkACvK8D66A0Rfx3Vb/5h9mpZi0
+   mgWQ0sofsurZ20JytH+T+1TDg+mXOkw45wS8Lym9xRPreAhxmgyB15bw8
+   g==;
+X-CSE-ConnectionGUID: Y8GEQi7VRymUT869bjWi5w==
+X-CSE-MsgGUID: wkHtgK05QvGpLIP7/VkOgg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="14664858"
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="14664858"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 05:55:05 -0700
+X-CSE-ConnectionGUID: cOOrEMPTSpuhcaVHuKapzQ==
+X-CSE-MsgGUID: aOe5nbJGS3ixvWvkz2y33w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="75797383"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.184])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 05:55:02 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Shuah Khan <shuah@kernel.org>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>,
+	Babu Moger <babu.moger@amd.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	linux-kernel@vger.kernel.org,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v6 11/16] selftests/resctrl: Simplify bandwidth report type handling
+Date: Fri,  7 Jun 2024 15:53:11 +0300
+Message-Id: <20240607125316.7089-12-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240607125316.7089-1-ilpo.jarvinen@linux.intel.com>
+References: <20240607125316.7089-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] net: stmmac: dwmac-stm32: add management of
- stm32mp13 for stm32
-To: Christophe Roullier <christophe.roullier@foss.st.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Richard Cochran <richardcochran@gmail.com>, Jose Abreu
- <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240607095754.265105-1-christophe.roullier@foss.st.com>
- <20240607095754.265105-9-christophe.roullier@foss.st.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240607095754.265105-9-christophe.roullier@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/7/24 11:57 AM, Christophe Roullier wrote:
+bw_report is only needed for selecting the correct value from the
+values IMC measured. It is a member in the resctrl_val_param struct and
+is always set to "reads". The value is then checked in resctrl_val()
+using validate_bw_report_request() that besides validating the input,
+assumes it can mutate the string which is questionable programming
+practice.
 
-[...]
+Simplify handling bw_report:
 
-> @@ -224,11 +225,18 @@ static int stm32mp1_configure_pmcr(struct plat_stmmacenet_data *plat_dat)
->   {
->   	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
->   	u32 reg = dwmac->mode_reg;
-> -	int val;
-> +	int val = 0;
+- Convert validate_bw_report_request() into get_bw_report_type() that
+  inputs and returns const char *. Use NULL to indicate error.
 
-Is the initialization really needed ? It seems the switch-case below 
-does always initialize $val .
+- Validate the report types inside measure_mem_bw(), not in
+  resctrl_val().
 
->   	switch (plat_dat->mac_interface) {
->   	case PHY_INTERFACE_MODE_MII:
-> -		val = SYSCFG_PMCR_ETH_SEL_MII;
-> +		/*
-> +		 * STM32MP15xx supports both MII and GMII, STM32MP13xx MII only.
-> +		 * SYSCFG_PMCSETR ETH_SELMII is present only on STM32MP15xx and
-> +		 * acts as a selector between 0:GMII and 1:MII. As STM32MP13xx
-> +		 * supports only MII, ETH_SELMII is not present.
-> +		 */
-> +		if (!dwmac->ops->is_mp13)  /* Select MII mode on STM32MP15xx */
-> +			val |= SYSCFG_PMCR_ETH_SEL_MII;
->   		break;
->   	case PHY_INTERFACE_MODE_GMII:
->   		val = SYSCFG_PMCR_ETH_SEL_GMII;
+- Pass bw_report to measure_mem_bw() from ->measure() hook because
+  resctrl_val() no longer needs bw_report for anything.
 
-[...]
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Tested-by: Babu Moger <babu.moger@amd.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+v5:
+- Use imperative tone in commit message
+v2:
+- Rebased on top of next to resolve conflict in resctrl.h
+---
+ tools/testing/selftests/resctrl/mba_test.c    |  3 +--
+ tools/testing/selftests/resctrl/mbm_test.c    |  3 +--
+ tools/testing/selftests/resctrl/resctrl.h     |  7 +++----
+ tools/testing/selftests/resctrl/resctrl_val.c | 19 +++++++++----------
+ tools/testing/selftests/resctrl/resctrlfs.c   | 13 ++++++-------
+ 5 files changed, 20 insertions(+), 25 deletions(-)
 
-This way of adding MP13 support definitely looks much better.
+diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
+index 0a95c42f1616..9c9a4f22e529 100644
+--- a/tools/testing/selftests/resctrl/mba_test.c
++++ b/tools/testing/selftests/resctrl/mba_test.c
+@@ -67,7 +67,7 @@ static int mba_setup(const struct resctrl_test *test,
+ static int mba_measure(const struct user_params *uparams,
+ 		       struct resctrl_val_param *param, pid_t bm_pid)
+ {
+-	return measure_mem_bw(uparams, param, bm_pid);
++	return measure_mem_bw(uparams, param, bm_pid, "reads");
+ }
+ 
+ static bool show_mba_info(unsigned long *bw_imc, unsigned long *bw_resc)
+@@ -168,7 +168,6 @@ static int mba_run_test(const struct resctrl_test *test, const struct user_param
+ 		.ctrlgrp	= "c1",
+ 		.mongrp		= "m1",
+ 		.filename	= RESULT_FILE_NAME,
+-		.bw_report	= "reads",
+ 		.init		= mba_init,
+ 		.setup		= mba_setup,
+ 		.measure	= mba_measure,
+diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
+index 00e60b01188a..27b936fe60bc 100644
+--- a/tools/testing/selftests/resctrl/mbm_test.c
++++ b/tools/testing/selftests/resctrl/mbm_test.c
+@@ -121,7 +121,7 @@ static int mbm_setup(const struct resctrl_test *test,
+ static int mbm_measure(const struct user_params *uparams,
+ 		       struct resctrl_val_param *param, pid_t bm_pid)
+ {
+-	return measure_mem_bw(uparams, param, bm_pid);
++	return measure_mem_bw(uparams, param, bm_pid, "reads");
+ }
+ 
+ static void mbm_test_cleanup(void)
+@@ -135,7 +135,6 @@ static int mbm_run_test(const struct resctrl_test *test, const struct user_param
+ 		.resctrl_val	= MBM_STR,
+ 		.ctrlgrp	= "c1",
+ 		.filename	= RESULT_FILE_NAME,
+-		.bw_report	= "reads",
+ 		.init		= mbm_init,
+ 		.setup		= mbm_setup,
+ 		.measure	= mbm_measure,
+diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+index d3fbb957309d..4446a0e493ef 100644
+--- a/tools/testing/selftests/resctrl/resctrl.h
++++ b/tools/testing/selftests/resctrl/resctrl.h
+@@ -85,7 +85,6 @@ struct resctrl_test {
+  * @ctrlgrp:		Name of the control monitor group (con_mon grp)
+  * @mongrp:		Name of the monitor group (mon grp)
+  * @filename:		Name of file to which the o/p should be written
+- * @bw_report:		Bandwidth report type (reads vs writes)
+  * @init:		Callback function to initialize test environment
+  * @setup:		Callback function to setup per test run environment
+  * @measure:		Callback that performs the measurement (a single test)
+@@ -95,7 +94,6 @@ struct resctrl_val_param {
+ 	char		ctrlgrp[64];
+ 	char		mongrp[64];
+ 	char		filename[64];
+-	char		*bw_report;
+ 	unsigned long	mask;
+ 	int		num_of_runs;
+ 	int		(*init)(const struct resctrl_val_param *param,
+@@ -135,7 +133,7 @@ int filter_dmesg(void);
+ int get_domain_id(const char *resource, int cpu_no, int *domain_id);
+ int mount_resctrlfs(void);
+ int umount_resctrlfs(void);
+-int validate_bw_report_request(char *bw_report);
++const char *get_bw_report_type(const char *bw_report);
+ bool resctrl_resource_exists(const char *resource);
+ bool resctrl_mon_feature_exists(const char *resource, const char *feature);
+ bool resource_info_file_exists(const char *resource, const char *file);
+@@ -154,7 +152,8 @@ void fill_cache_read(unsigned char *buf, size_t buf_size, bool once);
+ int run_fill_buf(size_t buf_size, int memflush, int op, bool once);
+ int initialize_mem_bw_imc(void);
+ int measure_mem_bw(const struct user_params *uparams,
+-		   struct resctrl_val_param *param, pid_t bm_pid);
++		   struct resctrl_val_param *param, pid_t bm_pid,
++		   const char *bw_report);
+ void initialize_mem_bw_resctrl(const struct resctrl_val_param *param,
+ 			       int domain_id);
+ int resctrl_val(const struct resctrl_test *test,
+diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
+index e38bcdd8b46f..2e85badd6d6b 100644
+--- a/tools/testing/selftests/resctrl/resctrl_val.c
++++ b/tools/testing/selftests/resctrl/resctrl_val.c
+@@ -349,7 +349,7 @@ static void do_imc_mem_bw_test(void)
+  *
+  * Return: = 0 on success. < 0 on failure.
+  */
+-static int get_mem_bw_imc(char *bw_report, float *bw_imc)
++static int get_mem_bw_imc(const char *bw_report, float *bw_imc)
+ {
+ 	float reads, writes, of_mul_read, of_mul_write;
+ 	int imc;
+@@ -556,6 +556,7 @@ static int print_results_bw(char *filename, pid_t bm_pid, float bw_imc,
+  * @uparams:		User supplied parameters
+  * @param:		Parameters passed to resctrl_val()
+  * @bm_pid:		PID that runs the benchmark
++ * @bw_report:		Bandwidth report type (reads, writes)
+  *
+  * Measure memory bandwidth from resctrl and from another source which is
+  * perf imc value or could be something else if perf imc event is not
+@@ -563,13 +564,18 @@ static int print_results_bw(char *filename, pid_t bm_pid, float bw_imc,
+  * 1 sec to measure the data.
+  */
+ int measure_mem_bw(const struct user_params *uparams,
+-		   struct resctrl_val_param *param, pid_t bm_pid)
++		   struct resctrl_val_param *param, pid_t bm_pid,
++		   const char *bw_report)
+ {
+ 	unsigned long bw_resc, bw_resc_start, bw_resc_end;
+ 	FILE *mem_bw_fp;
+ 	float bw_imc;
+ 	int ret;
+ 
++	bw_report = get_bw_report_type(bw_report);
++	if (!bw_report)
++		return -1;
++
+ 	mem_bw_fp = open_mem_bw_resctrl(mbm_total_path);
+ 	if (!mem_bw_fp)
+ 		return -1;
+@@ -590,7 +596,7 @@ int measure_mem_bw(const struct user_params *uparams,
+ 	if (ret < 0)
+ 		goto close_imc;
+ 
+-	ret = get_mem_bw_imc(param->bw_report, &bw_imc);
++	ret = get_mem_bw_imc(bw_report, &bw_imc);
+ 	if (ret < 0)
+ 		goto close_imc;
+ 
+@@ -694,13 +700,6 @@ int resctrl_val(const struct resctrl_test *test,
+ 		return ret;
+ 	}
+ 
+-	if (!strncmp(resctrl_val, MBA_STR, sizeof(MBA_STR)) ||
+-	    !strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR))) {
+-		ret = validate_bw_report_request(param->bw_report);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	/*
+ 	 * If benchmark wasn't successfully started by child, then child should
+ 	 * kill parent, so save parent's pid
+diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
+index 917d677adbba..9e4cda154d66 100644
+--- a/tools/testing/selftests/resctrl/resctrlfs.c
++++ b/tools/testing/selftests/resctrl/resctrlfs.c
+@@ -837,22 +837,21 @@ int filter_dmesg(void)
+ 	return 0;
+ }
+ 
+-int validate_bw_report_request(char *bw_report)
++const char *get_bw_report_type(const char *bw_report)
+ {
+ 	if (strcmp(bw_report, "reads") == 0)
+-		return 0;
++		return bw_report;
+ 	if (strcmp(bw_report, "writes") == 0)
+-		return 0;
++		return bw_report;
+ 	if (strcmp(bw_report, "nt-writes") == 0) {
+-		strcpy(bw_report, "writes");
+-		return 0;
++		return "writes";
+ 	}
+ 	if (strcmp(bw_report, "total") == 0)
+-		return 0;
++		return bw_report;
+ 
+ 	fprintf(stderr, "Requested iMC bandwidth report type unavailable\n");
+ 
+-	return -1;
++	return NULL;
+ }
+ 
+ int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+-- 
+2.39.2
 
-Also, split the series, drivers/ stuff for netdev (and make sure to 
-include the net-next patch prefix , git send-email 
---subject-prefix="net-next,PATCH") , DTs for linux-arm-kernel , config 
-patch also for linux-arm-kernel .
