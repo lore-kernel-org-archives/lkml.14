@@ -1,138 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF28619066F;
-	Fri,  7 Jun 2024 17:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E71119AD56;
+	Fri,  7 Jun 2024 17:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717782200; cv=none; b=aTvKkSpQvWJejn6gepfwr3aKuW8aVQ72rMGqvTm1fUHFFxiYay6YgrT20CXTXDoofQbqK0BBwGN6l0tLALBF1BnsDfKXVonQe1ImeMCEdh2/c2WP/Nxt8fpP2sYCvsz/ZTEgsxTdk+bT5FCPjBe0LeGbdOimn4ddZwTh6l60QOY=
+	t=1717782217; cv=none; b=Tv1w921oDj6QZrnPMFN3++coHTiqPITjSNQ/oFLeHZwZWFHzDS0T/rOEHMRvyuWbOm/cldZnQheC3qkSo/0rKOsrsWL7NQ7eRYtZXRJvsBYB+E1r/6rxDZ7F7cauoAHhfsuzLSDNAmTyZh0umCWahuw2PNFkGHJ5cLgEbrjp10E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717782200; c=relaxed/simple;
-	bh=BljvyepxXT4x1++sRMx+Q1dhUFcguaAkYXBQIoz5Y4E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u2Ak+rd1HKBCnSlNEMoNBV27kN0L2rWFanD3as4vAI35tdnN60NM42Vn8pWVcC0QC3ZIqK0rdBzBDFoyfrvnF9EcLrdXfDsfl4Vg0yLV/7088RcorAgZHk/MmQEPE+Thbf+ffxUscoy0DMvKNTwCgTUem0VqD/tPerZdLiswsEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WJfaBeZj; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WJfaBeZj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717782199; x=1749318199;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BljvyepxXT4x1++sRMx+Q1dhUFcguaAkYXBQIoz5Y4E=;
-  b=WJfaBeZjgqqYqaxW+5mccoqY9f8ou+TZJRYEHQdcRfWT6Dj00J5uAMGl
-   Mzn4qX0Hwix/KcX7aupvnGeoMRVNj03dmE8k1uQBVJPNBtGdWUnm76OMR
-   +BIJ+M87tUwTGpE1vwuhGV7o2g0r+Kj5MK2m6lr6Q+COEBzkEYLe+Y+ut
-   gP4+q0T7GOlbXYHKZMWqmL/qlsUHd9ndV1+CNK+mudjcGPrsGHXZdAwmD
-   qcM3i+TkYUfqUNEvAFZBKs0KlUTWjlO55t8Kuc5V1U8ux7JqMnilrEkkC
-   ofTlBHpoHD/4+xQ167uIfiM4Vyq+x1wTwQTHzxjzaxBttTdZH67Zih9zz
-   w==;
-X-CSE-ConnectionGUID: ICIHYRfYTVaBL6QvHIMtFw==
-X-CSE-MsgGUID: Drkyf0ZWSaWDLEQ2VgSz/Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="25918177"
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="25918177"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 10:43:19 -0700
-X-CSE-ConnectionGUID: vbNlkgoBRPyz/3hCWYQDkA==
-X-CSE-MsgGUID: 1NbwmMqBRiuhN/hdh3cqJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="69560613"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.109.219]) ([10.125.109.219])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 10:43:16 -0700
-Message-ID: <1d405428-3847-4862-b146-dd57711c881e@intel.com>
-Date: Fri, 7 Jun 2024 10:43:15 -0700
+	s=arc-20240116; t=1717782217; c=relaxed/simple;
+	bh=fqvbyEdkiheu3Y3sbPvhK1sNPqECpIq6Z0OC2KEKcNA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TMG3H+V1/0ZMWs6yCJVy0PRkN+QRdS2vpIaAp0ZbmLLxC3FynOE6RcAfhNjjCmx9ca7R5ALTP9uxtqbhDUIayEMl/KZQpfO/yMr19bDEt+8wlvVfhzh4qXYb74KkZRHI+goHNKF8p83mW3g0mHociCxxwj6BpsQNYxSCvPMQGDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VwpND3DRkz6J9dh;
+	Sat,  8 Jun 2024 01:39:08 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1D2601402CB;
+	Sat,  8 Jun 2024 01:43:33 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
+ 2024 18:43:32 +0100
+Date: Fri, 7 Jun 2024 18:43:31 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Wei Huang <wei.huang2@amd.com>
+CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>, <bhelgaas@google.com>,
+	<corbet@lwn.net>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <alex.williamson@redhat.com>,
+	<gospo@broadcom.com>, <michael.chan@broadcom.com>,
+	<ajit.khaparde@broadcom.com>, <somnath.kotur@broadcom.com>,
+	<andrew.gospodarek@broadcom.com>, <manoj.panicker2@amd.com>,
+	<Eric.VanTassell@amd.com>, <vadim.fedorenko@linux.dev>, <horms@kernel.org>,
+	<bagasdotme@gmail.com>
+Subject: Re: [PATCH V2 7/9] PCI/TPH: Add TPH documentation
+Message-ID: <20240607184331.00000fa0@Huawei.com>
+In-Reply-To: <20240531213841.3246055-8-wei.huang2@amd.com>
+References: <20240531213841.3246055-1-wei.huang2@amd.com>
+	<20240531213841.3246055-8-wei.huang2@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] x86/sgx: Resolve EREMOVE page vs EAUG page data
- race
-To: Haitao Huang <haitao.huang@linux.intel.com>,
- Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>,
- dave.hansen@linux.intel.com, jarkko@kernel.org, kai.huang@intel.com,
- reinette.chatre@intel.com, linux-sgx@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: mona.vij@intel.com, kailun.qin@intel.com, stable@vger.kernel.org
-References: <20240517110631.3441817-1-dmitrii.kuvaiskii@intel.com>
- <20240517110631.3441817-3-dmitrii.kuvaiskii@intel.com>
- <01bb6519-680e-45bf-b8bd-34763658aa17@intel.com>
- <op.2oszlnlowjvjmi@hhuan26-mobl.amr.corp.intel.com>
-Content-Language: en-US
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <op.2oszlnlowjvjmi@hhuan26-mobl.amr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On 6/3/24 11:42, Haitao Huang wrote:
->> Second, convince me that this _needs_ a new bit.  Why can't we just have
->> a bit that effectively means "return EBUSY if you see this bit when
->> handling a fault".
+On Fri, 31 May 2024 16:38:39 -0500
+Wei Huang <wei.huang2@amd.com> wrote:
+
+> Provide a document for TPH feature, including the description of
+> kernel options and driver API interface.
 > 
-> IIUC, reclaimer_writing_to_pcmd() also uses
-> SGX_ENCL_PAGE_BEING_RECLAIMED to check if a page is about being
-> reclaimed in order to prevent its VA slot fro being freed. So I think we
-> do need separate bit for EREMOVE which does not write to VA slot?
+> Co-developed-by: Eric Van Tassell <Eric.VanTassell@amd.com>
+> Signed-off-by: Eric Van Tassell <Eric.VanTassell@amd.com>
+> Signed-off-by: Wei Huang <wei.huang2@amd.com>
+> Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
+> Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com> 
+> Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
+Sort and sweet.
 
-I think the bits should be centered around what action the code needs to
-take and not what is being done to the page.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Right now, SGX_ENCL_PAGE_BEING_RECLAIMED has two logical meanings:
+> ---
+>  Documentation/PCI/index.rst          |  1 +
+>  Documentation/PCI/tph.rst            | 57 ++++++++++++++++++++++++++++
+>  Documentation/driver-api/pci/pci.rst |  3 ++
+>  3 files changed, 61 insertions(+)
+>  create mode 100644 Documentation/PCI/tph.rst
+> 
+> diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+> index e73f84aebde3..5e7c4e6e726b 100644
+> --- a/Documentation/PCI/index.rst
+> +++ b/Documentation/PCI/index.rst
+> @@ -18,3 +18,4 @@ PCI Bus Subsystem
+>     pcieaer-howto
+>     endpoint/index
+>     boot-interrupts
+> +   tph
+> diff --git a/Documentation/PCI/tph.rst b/Documentation/PCI/tph.rst
+> new file mode 100644
+> index 000000000000..ea9c8313f3e4
+> --- /dev/null
+> +++ b/Documentation/PCI/tph.rst
+> @@ -0,0 +1,57 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +===========
+> +TPH Support
+> +===========
+> +
+> +
+> +:Copyright: 2024 Advanced Micro Devices, Inc.
+> +:Authors: - Eric van Tassell <eric.vantassell@amd.com>
+> +          - Wei Huang <wei.huang2@amd.com>
+> +
+> +Overview
+> +========
+> +TPH (TLP Processing Hints) is a PCIe feature that allows endpoint devices
+> +to provide optimization hints, such as desired caching behavior, for
+> +requests that target memory space. These hints, in a format called steering
+> +tags, are provided in the requester's TLP headers and can empower the system
+> +hardware, including the Root Complex, to optimize the utilization of platform
+> +resources for the requests.
+> +
+> +User Guide
+> +==========
+> +
+> +Kernel Options
+> +--------------
+> +There are two kernel command line options available to control TPH feature
+> +
+> +   * "notph": TPH will be disabled for all endpoint devices.
+> +   * "nostmode": TPH will be enabled but the ST Mode will be forced to "No ST Mode".
+> +
+> +Device Driver API
+> +-----------------
+> +In brief, an endpoint device driver using the TPH interface to configure
+> +Interrupt Vector Mode will call pcie_tph_set_st() when setting up MSI-X
+> +interrupts as shown below:
+> +
+> +.. code-block:: c
+> +
+> +    for (i = 0, j = 0; i < nr_rings; i++) {
+> +        ...
+> +        rc = request_irq(irq->vector, irq->handler, flags, irq->name, NULL);
+> +        ...
+> +        if (!pcie_tph_set_st(pdev, i, cpumask_first(irq->cpu_mask),
+> +                             TPH_MEM_TYPE_VM, PCI_TPH_REQ_TPH_ONLY))
+> +               pr_err("Error in configuring steering tag\n");
+> +        ...
+> +    }
+> +
+> +If a device only supports TPH vendor specific mode, its driver can call
+> +pcie_tph_get_st() to retrieve the steering tag for a specific CPU and uses
+> +the tag to control TPH behavior.
+> +
+> +.. kernel-doc:: drivers/pci/pcie/tph.c
+> +   :export:
+> +
+> +.. kernel-doc:: drivers/pci/pcie/tph.c
+> +   :identifiers: pcie_tph_set_st
+> diff --git a/Documentation/driver-api/pci/pci.rst b/Documentation/driver-api/pci/pci.rst
+> index aa40b1cc243b..3d896b2cf16e 100644
+> --- a/Documentation/driver-api/pci/pci.rst
+> +++ b/Documentation/driver-api/pci/pci.rst
+> @@ -46,6 +46,9 @@ PCI Support Library
+>  .. kernel-doc:: drivers/pci/pci-sysfs.c
+>     :internal:
+>  
+> +.. kernel-doc:: drivers/pci/pcie/tph.c
+> +   :export:
+> +
+>  PCI Hotplug Support Library
+>  ---------------------------
+>  
 
- 1. Don't load the page
- 2. The page is in the backing store
-
-But now folks are suggesting that a new bit is added which means "do #1,
-but not #2".
-
-Let's take a step back and look at what logical outcomes we want in the
-code and then create the bits based on _that_.
