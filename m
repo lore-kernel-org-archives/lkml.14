@@ -1,37 +1,37 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A4A1C2AF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA4613E05F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717734416; cv=none; b=AzR5XRDBQAJs0A0d5V5ABFycki1VxQBYufKHyTkU6kK/O4TsyYlsgcbJyzww5P2WhPOQL7Dn0PxpLuE7EYN1361t4EPOQwMJrJtEc0GEmTzIzETwS8BS2qavcFYtkDO5sF/I1ibM3fnjgjmUR0/Oy0ktoupbIZiQ4/P8PggmUXo=
+	t=1717734415; cv=none; b=lxNJ+iE3OfVSrApt83fw+PflUV9P+4qWZv5lh+COojVcmN0bdWZIZh8rQlpkeOQNpnqSCYv/sZQog6oLB/nrlwmOHdjHbetIcxZtGjxbOlpEo8OgWHq0KNfUEk7lKD90MHIzMolvWnkuAw/I7GL9UEWStGqvyx1eXTOwICo7vO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717734416; c=relaxed/simple;
-	bh=yRKUSeI/oGM9RyHCJz4KQ0eESRc5XMpsFjC/22BH/Jk=;
+	s=arc-20240116; t=1717734415; c=relaxed/simple;
+	bh=ObvfwTjhDbMioYXijcqbFWqaFGJW5k1txhkSnfrInQ0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RbTEQzSoDQhsJtLwMclYM2Ze+Kj3FzVi3tZ/EJ3eVBtkeQxw064R4NJXmB0rkZCFM6YJaOEuVKDnBPcxaQFYQ8Z9nJgwXXZAQIMoQPJzXmb8UIbTPUMNGdbQZiZuPbBdng4Yh+JXTZACnPpkOdLzz8gWiPIcFEu/DuERma8ouEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 MIME-Version:Content-Type; b=HPDTa003qprbFjs7gEANp4VFgAJ5SxfDbGXyKgDNO6jur7O6KMhyf94HX5EZXQiOMZY62iAmF25IPxlyWeesaX12Wl4on84T4P55ePbHkf7DrorZqvVbaKhBYQWx6iRhL05zctINf6eTPPFqjPvRTizd3clmCHJS66PR23Vk7pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VwSmR0KXjzdZdd;
-	Fri,  7 Jun 2024 12:25:27 +0800 (CST)
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VwSjR5PpSz1SB2c;
+	Fri,  7 Jun 2024 12:22:51 +0800 (CST)
 Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id EC8B21400D5;
-	Fri,  7 Jun 2024 12:26:51 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 7DBE01400D5;
+	Fri,  7 Jun 2024 12:26:50 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
  (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 12:26:47 +0800
+ 2024 12:26:36 +0800
 From: Zhihao Cheng <chengzhihao1@huawei.com>
 To: <richard@nod.at>, <david.oberhollenzer@sigma-star.at>,
 	<miquel.raynal@bootlin.com>, <yi.zhang@huawei.com>, <xiangyang3@huawei.com>,
 	<huangxiaojia2@huawei.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH mtd-utils 028/110] ubifs-utils: Add sorting implementations
-Date: Fri, 7 Jun 2024 12:24:53 +0800
-Message-ID: <20240607042615.2069840-29-chengzhihao1@huawei.com>
+Subject: [RFC PATCH mtd-utils 014/110] ubifs-utils: Add 'dev_fd' and 'libubi' into 'ubifs_info' structure
+Date: Fri, 7 Jun 2024 12:24:39 +0800
+Message-ID: <20240607042615.2069840-15-chengzhihao1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240607042615.2069840-1-chengzhihao1@huawei.com>
 References: <20240607042615.2069840-1-chengzhihao1@huawei.com>
@@ -46,340 +46,392 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600013.china.huawei.com (7.193.23.68)
 
-Add sorting implementations, because the sorting function
-is used in UBIFS linux kernel libs.
-
-This is a preparation for replacing implementation of UBIFS utils with
-linux kernel libs.
+Embed new members 'dev_fd' and 'libubi' into ubifs_info structure, so
+that global variable 'ubi', 'out_fd' and 'out_ubi' could be removed
+from mkfs.ubifs.c. Besides, add parameter in check_volume_empty().
+Next patch will extract UBI opening/closing/check_volume_empty functions
+into a new source file, these functions will be used in fsck.
 
 Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- ubifs-utils/Makemodule.am |   2 +
- ubifs-utils/common/sort.c | 274 ++++++++++++++++++++++++++++++++++++++++++++++
- ubifs-utils/common/sort.h |  20 ++++
- 3 files changed, 296 insertions(+)
- create mode 100644 ubifs-utils/common/sort.c
- create mode 100644 ubifs-utils/common/sort.h
+ ubifs-utils/common/lpt.c            |  10 ++--
+ ubifs-utils/common/ubifs.h          |  13 ++++-
+ ubifs-utils/mkfs.ubifs/mkfs.ubifs.c | 112 +++++++++++++++++++-----------------
+ 3 files changed, 75 insertions(+), 60 deletions(-)
 
-diff --git a/ubifs-utils/Makemodule.am b/ubifs-utils/Makemodule.am
-index ece8a6e9..3329b6f9 100644
---- a/ubifs-utils/Makemodule.am
-+++ b/ubifs-utils/Makemodule.am
-@@ -10,6 +10,8 @@ common_SOURCES = \
- 	ubifs-utils/common/rwsem.h \
- 	ubifs-utils/common/kmem.h \
- 	ubifs-utils/common/kmem.c \
-+	ubifs-utils/common/sort.h \
-+	ubifs-utils/common/sort.c \
- 	ubifs-utils/common/defs.h \
- 	ubifs-utils/common/crc16.h \
- 	ubifs-utils/common/crc16.c \
-diff --git a/ubifs-utils/common/sort.c b/ubifs-utils/common/sort.c
-new file mode 100644
-index 00000000..d585836d
---- /dev/null
-+++ b/ubifs-utils/common/sort.c
-@@ -0,0 +1,274 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * A fast, small, non-recursive O(n log n) sort for the Linux kernel
-+ *
-+ * This performs n*log2(n) + 0.37*n + o(n) comparisons on average,
-+ * and 1.5*n*log2(n) + O(n) in the (very contrived) worst case.
-+ *
-+ * Glibc qsort() manages n*log2(n) - 1.26*n for random inputs (1.63*n
-+ * better) at the expense of stack usage and much larger code to avoid
-+ * quicksort's O(n^2) worst case.
-+ */
+diff --git a/ubifs-utils/common/lpt.c b/ubifs-utils/common/lpt.c
+index 9c1143f6..d07f569f 100644
+--- a/ubifs-utils/common/lpt.c
++++ b/ubifs-utils/common/lpt.c
+@@ -421,7 +421,7 @@ int create_lpt(struct ubifs_info *c)
+ 			alen = ALIGN(len, c->min_io_size);
+ 			set_ltab(c, lnum, c->leb_size - alen, alen - len);
+ 			memset(p, 0xff, alen - len);
+-			err = write_leb(lnum++, alen, buf);
++			err = write_leb(c, lnum++, alen, buf);
+ 			if (err)
+ 				goto out;
+ 			p = buf;
+@@ -468,7 +468,7 @@ int create_lpt(struct ubifs_info *c)
+ 				set_ltab(c, lnum, c->leb_size - alen,
+ 					    alen - len);
+ 				memset(p, 0xff, alen - len);
+-				err = write_leb(lnum++, alen, buf);
++				err = write_leb(c, lnum++, alen, buf);
+ 				if (err)
+ 					goto out;
+ 				p = buf;
+@@ -515,7 +515,7 @@ int create_lpt(struct ubifs_info *c)
+ 			alen = ALIGN(len, c->min_io_size);
+ 			set_ltab(c, lnum, c->leb_size - alen, alen - len);
+ 			memset(p, 0xff, alen - len);
+-			err = write_leb(lnum++, alen, buf);
++			err = write_leb(c, lnum++, alen, buf);
+ 			if (err)
+ 				goto out;
+ 			p = buf;
+@@ -538,7 +538,7 @@ int create_lpt(struct ubifs_info *c)
+ 		alen = ALIGN(len, c->min_io_size);
+ 		set_ltab(c, lnum, c->leb_size - alen, alen - len);
+ 		memset(p, 0xff, alen - len);
+-		err = write_leb(lnum++, alen, buf);
++		err = write_leb(c, lnum++, alen, buf);
+ 		if (err)
+ 			goto out;
+ 		p = buf;
+@@ -558,7 +558,7 @@ int create_lpt(struct ubifs_info *c)
+ 
+ 	/* Write remaining buffer */
+ 	memset(p, 0xff, alen - len);
+-	err = write_leb(lnum, alen, buf);
++	err = write_leb(c, lnum, alen, buf);
+ 	if (err)
+ 		goto out;
+ 
+diff --git a/ubifs-utils/common/ubifs.h b/ubifs-utils/common/ubifs.h
+index 502a39ae..5a909f63 100644
+--- a/ubifs-utils/common/ubifs.h
++++ b/ubifs-utils/common/ubifs.h
+@@ -278,6 +278,8 @@ struct ubifs_znode
+  * @program_type: used to identify the type of current program
+  * @program_name: program name
+  * @dev_name: device name
++ * @dev_fd: opening handler for an UBI volume or an image file
++ * @libubi: opening handler for libubi
+  *
+  * @jhead_cnt: count of journal heads
+  * @max_bud_bytes: maximum number of bytes allowed in buds
+@@ -370,6 +372,8 @@ struct ubifs_info
+ 	int program_type;
+ 	const char *program_name;
+ 	char *dev_name;
++	int dev_fd;
++	libubi_t libubi;
+ 
+ 	int jhead_cnt;
+ 	long long max_bud_bytes;
+@@ -482,6 +486,13 @@ struct ubifs_branch *ubifs_idx_branch(const struct ubifs_info *c,
+ 				       (UBIFS_BRANCH_SZ + c->key_len + c->hash_len) * bnum);
+ }
+ 
+-int write_leb(int lnum, int len, void *buf);
++int write_leb(struct ubifs_info *c, int lnum, int len, void *buf);
 +
-+#include <stdio.h>
-+#include <stdbool.h>
-+#include <linux/types.h>
++/* super.c */
++int open_ubi(struct ubifs_info *c, const char *node);
++void close_ubi(struct ubifs_info *c);
++int open_target(struct ubifs_info *c);
++int close_target(struct ubifs_info *c);
++int check_volume_empty(struct ubifs_info *c);
+ 
+ #endif /* __UBIFS_H__ */
+diff --git a/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c b/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
+index 1cafbf3e..8bff44b2 100644
+--- a/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
++++ b/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
+@@ -136,7 +136,6 @@ struct inum_mapping {
+  */
+ struct ubifs_info info_;
+ static struct ubifs_info *c = &info_;
+-static libubi_t ubi;
+ 
+ int verbose;
+ int yes;
+@@ -145,8 +144,6 @@ static char *root;
+ static int root_len;
+ static struct fscrypt_context *root_fctx;
+ static struct stat root_st;
+-static int out_fd;
+-static int out_ubi;
+ static int squash_owner;
+ static int do_create_inum_attr;
+ static char *context;
+@@ -521,40 +518,42 @@ static long long get_bytes(const char *str)
+ 	return bytes;
+ }
+ 
+-static void close_ubi(void)
++void close_ubi(struct ubifs_info *c)
+ {
+-	if (ubi) {
+-		libubi_close(ubi);
+-		ubi = NULL;
++	if (c->libubi) {
++		libubi_close(c->libubi);
++		c->libubi = NULL;
+ 	}
+ }
+ 
+ /**
+  * open_ubi - open the libubi.
++ * @c: the UBIFS file-system description object
+  * @node: name of the UBI volume character device to fetch information about
+  *
+  * This function opens libubi, and initialize device & volume information
+  * according to @node. Returns %0 in case of success and %-1 in case of failure.
+  */
+-static int open_ubi(const char *node)
++int open_ubi(struct ubifs_info *c, const char *node)
+ {
+ 	struct stat st;
+ 
+ 	if (stat(node, &st) || !S_ISCHR(st.st_mode))
+ 		return -1;
+ 
+-	ubi = libubi_open();
+-	if (!ubi)
+-		return -1;
+-	if (ubi_get_vol_info(ubi, node, &c->vi)) {
+-		close_ubi();
++	c->libubi = libubi_open();
++	if (!c->libubi)
+ 		return -1;
+-	}
+-	if (ubi_get_dev_info1(ubi, c->vi.dev_num, &c->di)) {
+-		close_ubi();
+-		return -1;
+-	}
++	if (ubi_get_vol_info(c->libubi, node, &c->vi))
++		goto out_err;
++	if (ubi_get_dev_info1(c->libubi, c->vi.dev_num, &c->di))
++		goto out_err;
 +
-+#include "sort.h"
-+#include "linux_types.h"
+ 	return 0;
 +
-+/**
-+ * is_aligned - is this pointer & size okay for word-wide copying?
-+ * @base: pointer to data
-+ * @size: size of each element
-+ * @align: required alignment (typically 4 or 8)
-+ *
-+ * Returns true if elements can be copied using word loads and stores.
-+ * The size must be a multiple of the alignment.
-+ *
-+ * For some reason, gcc doesn't know to optimize "if (a & mask || b & mask)"
-+ * to "if ((a | b) & mask)", so we do that by hand.
-+ */
-+__const __always_inline
-+static bool is_aligned(const void *base, size_t size, unsigned char align)
-+{
-+	unsigned char lsbits = (unsigned char)size;
-+
-+	(void)base;
-+	return (lsbits & (align - 1)) == 0;
-+}
-+
-+/**
-+ * swap_words_32 - swap two elements in 32-bit chunks
-+ * @a: pointer to the first element to swap
-+ * @b: pointer to the second element to swap
-+ * @n: element size (must be a multiple of 4)
-+ *
-+ * Exchange the two objects in memory.  This exploits base+index addressing,
-+ * which basically all CPUs have, to minimize loop overhead computations.
-+ *
-+ * For some reason, on x86 gcc 7.3.0 adds a redundant test of n at the
-+ * bottom of the loop, even though the zero flag is still valid from the
-+ * subtract (since the intervening mov instructions don't alter the flags).
-+ * Gcc 8.1.0 doesn't have that problem.
-+ */
-+static void swap_words_32(void *a, void *b, size_t n)
-+{
-+	do {
-+		u32 t = *(u32 *)(a + (n -= 4));
-+		*(u32 *)(a + n) = *(u32 *)(b + n);
-+		*(u32 *)(b + n) = t;
-+	} while (n);
-+}
-+
-+/**
-+ * swap_words_64 - swap two elements in 64-bit chunks
-+ * @a: pointer to the first element to swap
-+ * @b: pointer to the second element to swap
-+ * @n: element size (must be a multiple of 8)
-+ *
-+ * Exchange the two objects in memory.  This exploits base+index
-+ * addressing, which basically all CPUs have, to minimize loop overhead
-+ * computations.
-+ *
-+ * We'd like to use 64-bit loads if possible.  If they're not, emulating
-+ * one requires base+index+4 addressing which x86 has but most other
-+ * processors do not.
-+ */
-+static void swap_words_64(void *a, void *b, size_t n)
-+{
-+	do {
-+		u64 t = *(u64 *)(a + (n -= 8));
-+		*(u64 *)(a + n) = *(u64 *)(b + n);
-+		*(u64 *)(b + n) = t;
-+	} while (n);
-+}
-+
-+/**
-+ * swap_bytes - swap two elements a byte at a time
-+ * @a: pointer to the first element to swap
-+ * @b: pointer to the second element to swap
-+ * @n: element size
-+ *
-+ * This is the fallback if alignment doesn't allow using larger chunks.
-+ */
-+static void swap_bytes(void *a, void *b, size_t n)
-+{
-+	do {
-+		char t = ((char *)a)[--n];
-+		((char *)a)[n] = ((char *)b)[n];
-+		((char *)b)[n] = t;
-+	} while (n);
-+}
-+
-+/*
-+ * The values are arbitrary as long as they can't be confused with
-+ * a pointer, but small integers make for the smallest compare
-+ * instructions.
-+ */
-+#define SWAP_WORDS_64 (swap_r_func_t)0
-+#define SWAP_WORDS_32 (swap_r_func_t)1
-+#define SWAP_BYTES    (swap_r_func_t)2
-+#define SWAP_WRAPPER  (swap_r_func_t)3
-+
-+struct wrapper {
-+	cmp_func_t cmp;
-+	swap_func_t swap;
-+};
-+
-+/*
-+ * The function pointer is last to make tail calls most efficient if the
-+ * compiler decides not to inline this function.
-+ */
-+static void do_swap(void *a, void *b, size_t size, swap_r_func_t swap_func, const void *priv)
-+{
-+	if (swap_func == SWAP_WRAPPER) {
-+		((const struct wrapper *)priv)->swap(a, b, (int)size);
-+		return;
-+	}
-+
-+	if (swap_func == SWAP_WORDS_64)
-+		swap_words_64(a, b, size);
-+	else if (swap_func == SWAP_WORDS_32)
-+		swap_words_32(a, b, size);
-+	else if (swap_func == SWAP_BYTES)
-+		swap_bytes(a, b, size);
-+	else
-+		swap_func(a, b, (int)size, priv);
-+}
-+
-+#define _CMP_WRAPPER ((cmp_r_func_t)0L)
-+
-+static int do_cmp(const void *a, const void *b, cmp_r_func_t cmp, const void *priv)
-+{
-+	if (cmp == _CMP_WRAPPER)
-+		return ((const struct wrapper *)priv)->cmp(a, b);
-+	return cmp(a, b, priv);
-+}
-+
-+/**
-+ * parent - given the offset of the child, find the offset of the parent.
-+ * @i: the offset of the heap element whose parent is sought.  Non-zero.
-+ * @lsbit: a precomputed 1-bit mask, equal to "size & -size"
-+ * @size: size of each element
-+ *
-+ * In terms of array indexes, the parent of element j = @i/@size is simply
-+ * (j-1)/2.  But when working in byte offsets, we can't use implicit
-+ * truncation of integer divides.
-+ *
-+ * Fortunately, we only need one bit of the quotient, not the full divide.
-+ * @size has a least significant bit.  That bit will be clear if @i is
-+ * an even multiple of @size, and set if it's an odd multiple.
-+ *
-+ * Logically, we're doing "if (i & lsbit) i -= size;", but since the
-+ * branch is unpredictable, it's done with a bit of clever branch-free
-+ * code instead.
-+ */
-+__const __always_inline
-+static size_t parent(size_t i, unsigned int lsbit, size_t size)
-+{
-+	i -= size;
-+	i -= size & -(i & lsbit);
-+	return i / 2;
-+}
-+
-+/**
-+ * sort_r - sort an array of elements
-+ * @base: pointer to data to sort
-+ * @num: number of elements
-+ * @size: size of each element
-+ * @cmp_func: pointer to comparison function
-+ * @swap_func: pointer to swap function or NULL
-+ * @priv: third argument passed to comparison function
-+ *
-+ * This function does a heapsort on the given array.  You may provide
-+ * a swap_func function if you need to do something more than a memory
-+ * copy (e.g. fix up pointers or auxiliary data), but the built-in swap
-+ * avoids a slow retpoline and so is significantly faster.
-+ *
-+ * Sorting time is O(n log n) both on average and worst-case. While
-+ * quicksort is slightly faster on average, it suffers from exploitable
-+ * O(n*n) worst-case behavior and extra memory requirements that make
-+ * it less suitable for kernel use.
-+ */
-+void sort_r(void *base, size_t num, size_t size,
-+	    cmp_r_func_t cmp_func,
-+	    swap_r_func_t swap_func,
-+	    const void *priv)
-+{
-+	/* pre-scale counters for performance */
-+	size_t n = num * size, a = (num/2) * size;
-+	const unsigned int lsbit = size & -size;  /* Used to find parent */
-+
-+	if (!a)		/* num < 2 || size == 0 */
-+		return;
-+
-+	/* called from 'sort' without swap function, let's pick the default */
-+	if (swap_func == SWAP_WRAPPER && !((struct wrapper *)priv)->swap)
-+		swap_func = NULL;
-+
-+	if (!swap_func) {
-+		if (is_aligned(base, size, 8))
-+			swap_func = SWAP_WORDS_64;
-+		else if (is_aligned(base, size, 4))
-+			swap_func = SWAP_WORDS_32;
-+		else
-+			swap_func = SWAP_BYTES;
-+	}
-+
-+	/*
-+	 * Loop invariants:
-+	 * 1. elements [a,n) satisfy the heap property (compare greater than
-+	 *    all of their children),
-+	 * 2. elements [n,num*size) are sorted, and
-+	 * 3. a <= b <= c <= d <= n (whenever they are valid).
-+	 */
-+	for (;;) {
-+		size_t b, c, d;
-+
-+		if (a)			/* Building heap: sift down --a */
-+			a -= size;
-+		else if (n -= size)	/* Sorting: Extract root to --n */
-+			do_swap(base, base + n, size, swap_func, priv);
-+		else			/* Sort complete */
-+			break;
-+
-+		/*
-+		 * Sift element at "a" down into heap.  This is the
-+		 * "bottom-up" variant, which significantly reduces
-+		 * calls to cmp_func(): we find the sift-down path all
-+		 * the way to the leaves (one compare per level), then
-+		 * backtrack to find where to insert the target element.
-+		 *
-+		 * Because elements tend to sift down close to the leaves,
-+		 * this uses fewer compares than doing two per level
-+		 * on the way down.  (A bit more than half as many on
-+		 * average, 3/4 worst-case.)
-+		 */
-+		for (b = a; c = 2*b + size, (d = c + size) < n;)
-+			b = do_cmp(base + c, base + d, cmp_func, priv) >= 0 ? c : d;
-+		if (d == n)	/* Special case last leaf with no sibling */
-+			b = c;
-+
-+		/* Now backtrack from "b" to the correct location for "a" */
-+		while (b != a && do_cmp(base + a, base + b, cmp_func, priv) >= 0)
-+			b = parent(b, lsbit, size);
-+		c = b;			/* Where "a" belongs */
-+		while (b != a) {	/* Shift it into place */
-+			b = parent(b, lsbit, size);
-+			do_swap(base + b, base + c, size, swap_func, priv);
++out_err:
++	close_ubi(c);
++	return -1;
+ }
+ 
+ static void select_default_compr(void)
+@@ -840,9 +839,9 @@ static int get_options(int argc, char**argv)
+ 	if (!c->dev_name)
+ 		return errmsg("not output device or file specified");
+ 
+-	out_ubi = !open_ubi(c->dev_name);
++	open_ubi(c, c->dev_name);
+ 
+-	if (out_ubi) {
++	if (c->libubi) {
+ 		c->min_io_size = c->di.min_io_size;
+ 		c->leb_size = c->vi.leb_size;
+ 		if (c->max_leb_cnt == -1)
+@@ -972,24 +971,25 @@ static void prepare_node(void *node, int len)
+ 
+ /**
+  * write_leb - copy the image of a LEB to the output target.
++ * @c: the UBIFS file-system description object
+  * @lnum: LEB number
+  * @len: length of data in the buffer
+  * @buf: buffer (must be at least c->leb_size bytes)
+  */
+-int write_leb(int lnum, int len, void *buf)
++int write_leb(struct ubifs_info *c, int lnum, int len, void *buf)
+ {
+ 	off_t pos = (off_t)lnum * c->leb_size;
+ 
+ 	dbg_msg(3, "LEB %d len %d", lnum, len);
+ 	memset(buf + len, 0xff, c->leb_size - len);
+-	if (out_ubi)
+-		if (ubi_leb_change_start(ubi, out_fd, lnum, c->leb_size))
++	if (c->libubi)
++		if (ubi_leb_change_start(c->libubi, c->dev_fd, lnum, c->leb_size))
+ 			return sys_errmsg("ubi_leb_change_start failed");
+ 
+-	if (lseek(out_fd, pos, SEEK_SET) != pos)
++	if (lseek(c->dev_fd, pos, SEEK_SET) != pos)
+ 		return sys_errmsg("lseek failed seeking %lld", (long long)pos);
+ 
+-	if (write(out_fd, buf, c->leb_size) != c->leb_size)
++	if (write(c->dev_fd, buf, c->leb_size) != c->leb_size)
+ 		return sys_errmsg("write failed writing %d bytes at pos %lld",
+ 				   c->leb_size, (long long)pos);
+ 
+@@ -1002,7 +1002,7 @@ int write_leb(int lnum, int len, void *buf)
+  */
+ static int write_empty_leb(int lnum)
+ {
+-	return write_leb(lnum, 0, leb_buf);
++	return write_leb(c, lnum, 0, leb_buf);
+ }
+ 
+ /**
+@@ -1058,7 +1058,7 @@ static int write_node(void *node, int len, int lnum)
+ 
+ 	len = do_pad(leb_buf, len);
+ 
+-	return write_leb(lnum, len, leb_buf);
++	return write_leb(c, lnum, len, leb_buf);
+ }
+ 
+ /**
+@@ -1172,7 +1172,7 @@ static int flush_nodes(void)
+ 	if (!head_offs)
+ 		return 0;
+ 	len = do_pad(leb_buf, head_offs);
+-	err = write_leb(head_lnum, len, leb_buf);
++	err = write_leb(c, head_lnum, len, leb_buf);
+ 	if (err)
+ 		return err;
+ 	set_lprops(head_lnum, head_offs, head_flags);
+@@ -2686,7 +2686,7 @@ static int write_super(void)
+ 
+ 	len = do_pad(sig, UBIFS_SIG_NODE_SZ + le32_to_cpu(sig->len));
+ 
+-	err = write_leb(UBIFS_SB_LNUM, UBIFS_SB_NODE_SZ + len, sup);
++	err = write_leb(c, UBIFS_SB_LNUM, UBIFS_SB_NODE_SZ + len, sup);
+ 	if (err)
+ 		goto out;
+ 
+@@ -2822,6 +2822,7 @@ static int write_orphan_area(void)
+ 
+ /**
+  * check_volume_empty - check if the UBI volume is empty.
++ * @c: the UBIFS file-system description object
+  *
+  * This function checks if the UBI volume is empty by looking if its LEBs are
+  * mapped or not.
+@@ -2829,12 +2830,12 @@ static int write_orphan_area(void)
+  * Returns %0 in case of success, %1 is the volume is not empty,
+  * and a negative error code in case of failure.
+  */
+-static int check_volume_empty(void)
++int check_volume_empty(struct ubifs_info *c)
+ {
+ 	int lnum, err;
+ 
+ 	for (lnum = 0; lnum < c->vi.rsvd_lebs; lnum++) {
+-		err = ubi_is_mapped(out_fd, lnum);
++		err = ubi_is_mapped(c->dev_fd, lnum);
+ 		if (err < 0)
+ 			return err;
+ 		if (err == 1)
+@@ -2845,35 +2846,29 @@ static int check_volume_empty(void)
+ 
+ /**
+  * open_target - open the output target.
++ * @c: the UBIFS file-system description object
+  *
+  * Open the output target. The target can be an UBI volume
+  * or a file.
+  *
+  * Returns %0 in case of success and %-1 in case of failure.
+  */
+-static int open_target(void)
++int open_target(struct ubifs_info *c)
+ {
+-	if (out_ubi) {
+-		out_fd = open(c->dev_name, O_RDWR | O_EXCL);
++	if (c->libubi) {
++		c->dev_fd = open(c->dev_name, O_RDWR | O_EXCL);
+ 
+-		if (out_fd == -1)
++		if (c->dev_fd == -1)
+ 			return sys_errmsg("cannot open the UBI volume '%s'",
+ 					   c->dev_name);
+-		if (ubi_set_property(out_fd, UBI_VOL_PROP_DIRECT_WRITE, 1)) {
+-			close(out_fd);
++		if (ubi_set_property(c->dev_fd, UBI_VOL_PROP_DIRECT_WRITE, 1)) {
++			close(c->dev_fd);
+ 			return sys_errmsg("ubi_set_property(set direct_write) failed");
+ 		}
+-
+-		if (!yes && check_volume_empty()) {
+-			if (!prompt("UBI volume is not empty.  Format anyways?", false)) {
+-				close(out_fd);
+-				return errmsg("UBI volume is not empty");
+-			}
+-		}
+ 	} else {
+-		out_fd = open(c->dev_name, O_CREAT | O_RDWR | O_TRUNC,
++		c->dev_fd = open(c->dev_name, O_CREAT | O_RDWR | O_TRUNC,
+ 			      S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
+-		if (out_fd == -1)
++		if (c->dev_fd == -1)
+ 			return sys_errmsg("cannot create output file '%s'",
+ 					   c->dev_name);
+ 	}
+@@ -2883,18 +2878,19 @@ static int open_target(void)
+ 
+ /**
+  * close_target - close the output target.
++ * @c: the UBIFS file-system description object
+  *
+  * Close the output target. If the target was an UBI
+  * volume, also close libubi.
+  *
+  * Returns %0 in case of success and %-1 in case of failure.
+  */
+-static int close_target(void)
++int close_target(struct ubifs_info *c)
+ {
+-	if (out_fd >= 0) {
+-		if (ubi && ubi_set_property(out_fd, UBI_VOL_PROP_DIRECT_WRITE, 0))
++	if (c->dev_fd >= 0) {
++		if (c->libubi && ubi_set_property(c->dev_fd, UBI_VOL_PROP_DIRECT_WRITE, 0))
+ 			return sys_errmsg("ubi_set_property(clear direct_write) failed");
+-		if (close(out_fd) == -1)
++		if (close(c->dev_fd) == -1)
+ 			return sys_errmsg("cannot close the target '%s'", c->dev_name);
+ 	}
+ 	return 0;
+@@ -3077,24 +3073,32 @@ int main(int argc, char *argv[])
+ 	if (err)
+ 		goto out;
+ 
+-	err = open_target();
++	err = open_target(c);
+ 	if (err)
+ 		goto out;
+ 
++	if (!yes && check_volume_empty(c)) {
++		if (!prompt("UBI volume is not empty.  Format anyways?", false)) {
++			close_target(c);
++			err = errmsg("UBI volume is not empty");
++			goto out;
 +		}
 +	}
-+}
 +
-+void sort(void *base, size_t num, size_t size,
-+	  cmp_func_t cmp_func,
-+	  swap_func_t swap_func)
-+{
-+	struct wrapper w = {
-+		.cmp  = cmp_func,
-+		.swap = swap_func,
-+	};
-+
-+	return sort_r(base, num, size, _CMP_WRAPPER, SWAP_WRAPPER, &w);
-+}
-diff --git a/ubifs-utils/common/sort.h b/ubifs-utils/common/sort.h
-new file mode 100644
-index 00000000..89829422
---- /dev/null
-+++ b/ubifs-utils/common/sort.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_SORT_H
-+#define _LINUX_SORT_H
-+
-+typedef void (*swap_r_func_t)(void *a, void *b, int size, const void *priv);
-+typedef void (*swap_func_t)(void *a, void *b, int size);
-+
-+typedef int (*cmp_r_func_t)(const void *a, const void *b, const void *priv);
-+typedef int (*cmp_func_t)(const void *a, const void *b);
-+
-+void sort_r(void *base, size_t num, size_t size,
-+	    cmp_r_func_t cmp_func,
-+	    swap_r_func_t swap_func,
-+	    const void *priv);
-+
-+void sort(void *base, size_t num, size_t size,
-+	  cmp_func_t cmp_func,
-+	  swap_func_t swap_func);
-+
-+#endif
+ 	err = mkfs();
+ 	if (err) {
+-		close_target();
++		close_target(c);
+ 		goto out;
+ 	}
+ 
+-	err = close_target();
++	err = close_target(c);
+ 
+ 	if (verbose && !err)
+ 		printf("Success!\n");
+ 
+ out:
+ 	free(c->dev_name);
+-	close_ubi();
++	close_ubi(c);
+ 	crypto_cleanup();
+ 	return err;
+ }
 -- 
 2.13.6
 
