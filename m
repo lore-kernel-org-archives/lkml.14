@@ -1,207 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAA21552EF;
-	Fri,  7 Jun 2024 20:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5312113F43A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 20:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717792162; cv=none; b=A3D7mIjjpzBX785rYPBZslvvtWSGdpZEwNkY4REZVmsoxDyQyFUZx51wYhJ+bwLPLMpUfSp7kfBQr5ylhxYdZyp2qYChAOoYCTvPJC+zLLtNuBMjJ9t8FI6kmgwhnWNhoCgWuVwNZSC++J20nHUwJFNEAJArPMBlxT0HEQLO1Wo=
+	t=1717792222; cv=none; b=IhIwQg8Jeo6z+IFkQ9EhhINOQWR0wcs8tJklbJ32XXyZjOOr2YxPD+2lPPhvR+KMCxN4FMcn2MxVbJIKlMej2IhJjO5mTs+yCWOVYhr/qHOmyzI6eJiXZd9FrEazQ3tZW3eUvR7hDyGh+X+A7Z9vwX/vjPC41u8O1SRYjxEET00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717792162; c=relaxed/simple;
-	bh=Bdv1T3V+QVoamQb/wjWYwDu3U6qdpHhyUU9S4KSBk3g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TDf61lMMVPsDBIHRuXBE+KC9g4uedh+76QV+2ndnJqzKdnG1Q458ooxMc7E07/nlRUtYbvlzLEU81HBYqfzFscEKA+m8K6Sg0HCx1KrZXqvHr82egLTlj0Qm8BrvX5hnoo3clXw0px1I30RpiSddtTQLOy9EfZQRHrcrPMbj3OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ky9ue0y+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717792222; c=relaxed/simple;
+	bh=ROYTdcM3h5PdNH7jMsNq6wgFbtlVF4K63MVqa1RfUTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bPQFY0eIHyIkBVMR7GxPDfa/y8VvQHm937UYlrai/ZG43ZoILNoUJF1g3CtOLdU1hi5AUcntJsjvmGB9Gc8k+vCOf41BqCWa8H2njEJFCwYoDnQ6PNX34ASYI09xCZpW666X9plCRgk7M0d1xLq1h0YVw2zaeEWJ97q2gER1PvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jPgcznK4; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ky9ue0y+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60982C4AF0F;
-	Fri,  7 Jun 2024 20:29:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717792161;
-	bh=Bdv1T3V+QVoamQb/wjWYwDu3U6qdpHhyUU9S4KSBk3g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ky9ue0y+/xNybgFOEj5pGu0kOmr7vYGQrZQBMDpDR5oWSotHdAojnDD9Nfu1TzIUa
-	 WLbq0nlyvnSpZY7NXuwXiMtNnAg926Dm7Ge3wgd1/cB/Ie8885mkgVPrhA3HmZrT6s
-	 4NS4tAIlzCepbJtzqLhpczQwr3kEreT8R6wM+/YsDQ5QF8gdMT+hMBx5/dYykDOErZ
-	 3MMpO7Vaw0uM3/g4n9egvEEHkf9JOj2ZLpU58uCp461qsvEx4kOeuHuNgzxy/7aIKp
-	 nK4yR5Nl+BXMJog7sY6NFEO3Qr3I6jyucwbNHFQfD3mPExW8ClVSlWmEM9HReuuZHP
-	 sbz9Hml6g18og==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4/4] perf hist: Honor symbol_conf.skip_empty
-Date: Fri,  7 Jun 2024 13:29:18 -0700
-Message-ID: <20240607202918.2357459-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-In-Reply-To: <20240607202918.2357459-1-namhyung@kernel.org>
-References: <20240607202918.2357459-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jPgcznK4"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52961b77655so2862922e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 13:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717792217; x=1718397017; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SJTzxe5ddw3ZN3ejg2VHMhuR5Wz3A7+WGmdxaZHLCtc=;
+        b=jPgcznK4RAkh5ubL6/776sukf9fOifb8Q3nuqaIvGnB8rXMWK2r0LVjzK1Ar73g+fu
+         k1ZO6/dZrJtO+9fuDmDRuaU9r3WfxCn83Fvpw8sEg2Mtfg9XlllH+km0bd37ogiZocEX
+         ZWOir99w1mUS9LnKGy54FmCzHE4WHF+iRhRDWGqXs4ARZt2dtjIcwbYmbnRDMuOnK03F
+         71tB172xx9hiZzvXTCsYh/bA++AN1kV2QhAkaZhI7LyIRZx5BJ1F1PDu334/sHvALEmA
+         Mq4OqkumimzGq/vxxqSqHudjZBWQwPU0VBd2EeYys7T9Um5oWN6FAJQQTvZIde62wt0N
+         F+7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717792217; x=1718397017;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SJTzxe5ddw3ZN3ejg2VHMhuR5Wz3A7+WGmdxaZHLCtc=;
+        b=J1mgCr24rZQ4jzKGGjSIssMZBv/lA2rv0bCGpf7BpmLk6pMfMRODgVTthSzb0RXo1/
+         yVM3KENCYHxm5TP0pvo0lUt2DWXk5n6yhppsHjL/GoIVKG6hR8VX0cNn7tQButYcOTW0
+         r1bX3IH2V9fvKWYRGcMmvX4UTOohOsTmKupcFKO23HKy813OHhXdZG0Cewho9Oo6krcN
+         S1SGGXSOS99gaiPlxzY6mCZsspox+3UeM3H9wg6qfS3nK8UeC7PV5RZcjvAfj3rQXFSY
+         kbNYVU7kKkq5EbwQfjgBH2Xumrfkkz38cxaYSnLjVrtUrmGf+z3hiUO+wEQTTSrxPAOW
+         do4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUeEZvcLLBL0YynYhcWioIua9YQvrGeLNUjZE5Q5L0DmfMqNCU4GYwkjR66vEpNa/b+tdLr+cfHTcyeQuf3JFcEszXRiydnfn6KkxrM
+X-Gm-Message-State: AOJu0YzRTYE0cS1gfoX7mdOa6DJU/m1hn1mZonrNJyjYtc9Tnui8u1a9
+	nL9T2UnUTj2bLZDC82EvWV9d6KvHAmWy/C9ReBPfSIKLxFQ+/1aGwGApo0bFyPA=
+X-Google-Smtp-Source: AGHT+IGXgq8j9ZQSdjhR2WRP238Fqx1W2VoFAvOkFfDn+JlkqIE2s+YVCpbU2MO5IYDF067L6l+FEQ==
+X-Received: by 2002:a19:ad45:0:b0:52b:f2ab:1303 with SMTP id 2adb3069b0e04-52bf2ab143dmr524832e87.28.1717792217335;
+        Fri, 07 Jun 2024 13:30:17 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb4347001sm646147e87.288.2024.06.07.13.30.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 13:30:16 -0700 (PDT)
+Date: Fri, 7 Jun 2024 23:30:15 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Kiarash Hajian <kiarash8112hajian@gmail.com>
+Cc: Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/msm/a6xx: request memory region
+Message-ID: <ugh3ohzktjxyus4t43jywmrwatz6t4zqz66nm2wdfjou7zu3yd@g64z7gp27wl2>
+References: <20240607-memory-v1-1-8664f52fc2a1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240607-memory-v1-1-8664f52fc2a1@gmail.com>
 
-So that it can skip events with no sample according to the config value.
-This can omit the dummy event in the output of perf report --group.
+On Fri, Jun 07, 2024 at 10:00:04AM -0400, Kiarash Hajian wrote:
+> The driver's memory regions are currently just ioremap()ed, but not
+> reserved through a request. That's not a bug, but having the request is
+> a little more robust.
+> 
+> Implement the region-request through the corresponding managed
+> devres-function.
 
-An example output:
+Please at least compile-test the patch before sending.
 
-  $ sudo perf mem record -a sleep 1
-  $ sudo perf report --group
+> 
+> Signed-off-by: Kiarash Hajian <kiarash8112hajian@gmail.com>
+> ---
+> To: Rob Clark <robdclark@gmail.com>
+> To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> To: Sean Paul <sean@poorly.run>
+> To: Marijn Suijten <marijn.suijten@somainline.org>
+> To: David Airlie <airlied@gmail.com>
+> To: Daniel Vetter <daniel@ffwll.ch>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: freedreno@lists.freedesktop.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Kiarash Hajian <kiarash8112hajian@gmail.com>
+> 
+> Changes in v5:
+>     - Fix errorhanlding problems.
+>     - Link to v4: https://lore.kernel.org/r/20240512-msm-adreno-memory-region-v4-1-3881a64088e6@gmail.com
+>     
+>     Changes in v4:
+>     - Combine v3 commits into a singel commit
+>     - Link to v3: https://lore.kernel.org/r/20240512-msm-adreno-memory-region-v3-0-0a728ad45010@gmail.com
+>     
+>     Changes in v3:
+>     - Remove redundant devm_iounmap calls, relying on devres for automatic resource cleanup.
+>     
+>     Changes in v2:
+>     - update the subject prefix to "drm/msm/a6xx:", to match the majority of other changes to this file.
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 33 +++++++++++++++------------------
+>  1 file changed, 15 insertions(+), 18 deletions(-)
+> 
 
-Before)
-  #
-  # Samples: 232  of events 'cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P, dummy:u'
-  # Event count (approx.): 3089861
-  #
-  #                 Overhead  Command      Shared Object      Symbol
-  # ........................  ...........  .................  .....................................
-  #
-       9.29%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] update_blocked_averages
-       5.26%   0.15%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_se
-       4.15%   0.00%   0.00%  perf-exec    [kernel.kallsyms]  [k] slab_update_freelist.isra.0
-       3.87%   0.00%   0.00%  perf-exec    [kernel.kallsyms]  [k] memcg_slab_post_alloc_hook
-       3.79%   0.17%   0.00%  swapper      [kernel.kallsyms]  [k] enqueue_task_fair
-       3.63%   0.00%   0.00%  sleep        [kernel.kallsyms]  [k] next_uptodate_page
-       2.86%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_cfs_rq
-       2.78%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] __schedule
-       2.34%   0.00%   0.00%  swapper      [kernel.kallsyms]  [k] intel_idle
-       2.32%   0.97%   0.00%  swapper      [kernel.kallsyms]  [k] psi_group_change
-
-After)
-  #
-  # Samples: 232  of events 'cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P'
-  # Event count (approx.): 3089861
-  #
-  #         Overhead  Command      Shared Object      Symbol
-  # ................  ...........  .................  .....................................
-  #
-       9.29%   0.00%  swapper      [kernel.kallsyms]  [k] update_blocked_averages
-       5.26%   0.15%  swapper      [kernel.kallsyms]  [k] __update_load_avg_se
-       4.15%   0.00%  perf-exec    [kernel.kallsyms]  [k] slab_update_freelist.isra.0
-       3.87%   0.00%  perf-exec    [kernel.kallsyms]  [k] memcg_slab_post_alloc_hook
-       3.79%   0.17%  swapper      [kernel.kallsyms]  [k] enqueue_task_fair
-       3.63%   0.00%  sleep        [kernel.kallsyms]  [k] next_uptodate_page
-       2.86%   0.00%  swapper      [kernel.kallsyms]  [k] __update_load_avg_cfs_rq
-       2.78%   0.00%  swapper      [kernel.kallsyms]  [k] __schedule
-       2.34%   0.00%  swapper      [kernel.kallsyms]  [k] intel_idle
-       2.32%   0.97%  swapper      [kernel.kallsyms]  [k] psi_group_change
-
-Now it doesn't have a column for the dummy event.
-
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/ui/hist.c     | 18 ++++++++++++++++--
- tools/perf/util/evsel.c  | 13 ++++++++++---
- tools/perf/util/python.c |  3 +++
- 3 files changed, 29 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index 7e863cd92781..5d1f04f66a5a 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -95,6 +95,10 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
- 	}
- 
- 	for (i = 0; i < nr_members; i++) {
-+		if (symbol_conf.skip_empty &&
-+		    values[i].hists->stats.nr_samples == 0)
-+			continue;
-+
- 		ret += __hpp__fmt_print(hpp, values[i].hists, values[i].val,
- 					values[i].samples, fmt, len,
- 					print_fn, fmtype);
-@@ -296,8 +300,18 @@ static int hpp__width_fn(struct perf_hpp_fmt *fmt,
- 	int len = fmt->user_len ?: fmt->len;
- 	struct evsel *evsel = hists_to_evsel(hists);
- 
--	if (symbol_conf.event_group)
--		len = max(len, evsel->core.nr_members * fmt->len);
-+	if (symbol_conf.event_group) {
-+		int nr = 0;
-+		struct evsel *pos;
-+
-+		for_each_group_evsel(pos, evsel) {
-+			if (!symbol_conf.skip_empty ||
-+			    evsel__hists(pos)->stats.nr_samples)
-+				nr++;
-+		}
-+
-+		len = max(len, nr * fmt->len);
-+	}
- 
- 	if (len < (int)strlen(fmt->name))
- 		len = strlen(fmt->name);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 4f818ab6b662..befb80c272d2 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -53,6 +53,7 @@
- #include "../perf-sys.h"
- #include "util/parse-branch-options.h"
- #include "util/bpf-filter.h"
-+#include "util/hist.h"
- #include <internal/xyarray.h>
- #include <internal/lib.h>
- #include <internal/threadmap.h>
-@@ -830,16 +831,22 @@ const char *evsel__group_name(struct evsel *evsel)
- int evsel__group_desc(struct evsel *evsel, char *buf, size_t size)
- {
- 	int ret = 0;
-+	bool first = true;
- 	struct evsel *pos;
- 	const char *group_name = evsel__group_name(evsel);
- 
- 	if (!evsel->forced_leader)
- 		ret = scnprintf(buf, size, "%s { ", group_name);
- 
--	ret += scnprintf(buf + ret, size - ret, "%s", evsel__name(evsel));
-+	for_each_group_evsel(pos, evsel) {
-+		if (symbol_conf.skip_empty &&
-+		    evsel__hists(pos)->stats.nr_samples == 0)
-+			continue;
- 
--	for_each_group_member(pos, evsel)
--		ret += scnprintf(buf + ret, size - ret, ", %s", evsel__name(pos));
-+		ret += scnprintf(buf + ret, size - ret, "%s%s",
-+				 first ? "" : ", ", evsel__name(pos));
-+		first = false;
-+	}
- 
- 	if (!evsel->forced_leader)
- 		ret += scnprintf(buf + ret, size - ret, " }");
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 0aeb97c11c03..88f98f2772fb 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -23,6 +23,7 @@
- #include "util/env.h"
- #include "util/pmu.h"
- #include "util/pmus.h"
-+#include "util/symbol_conf.h"
- #include <internal/lib.h>
- #include "util.h"
- 
-@@ -50,6 +51,8 @@
- #define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
- #endif
- 
-+struct symbol_conf symbol_conf;
-+
- /*
-  * Avoid bringing in event parsing.
-  */
 -- 
-2.45.2.505.gda0bf45e8d-goog
-
+With best wishes
+Dmitry
