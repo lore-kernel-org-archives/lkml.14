@@ -1,117 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96670190688;
-	Fri,  7 Jun 2024 15:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A1C1991D5;
+	Fri,  7 Jun 2024 15:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717775596; cv=none; b=eBLmSQBF9BgA3n8hNHFnnsYGE0ubV+GPy9Z3cuWKXuOnH9iZt+S8jvweRhChjgPRlaEcrxM5BUPYP7kGvxjt3iv1UvZrTOYA4OxrKNDJ9gzLMTP4tHSxxP+oK36ufxfaBJOjkwuynQI65DKjeHbxusM4uQgbZDXzheP3pNTBH3I=
+	t=1717775682; cv=none; b=OAdxn0aU6KsCOxJZNfc8yPEDhzsq3Lw8ckln8zW0Sq8V+S7oAmo1417e2oajdW97V/ovErkPQGxn5me7WaJOkes7AsrV1oEbdj1F5cGf5Iq9574KN9no13d6rSf49b12WcsKV/zd+dhdNZYHSytIDsaOeoP6gnJ5AFsYPaYKgU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717775596; c=relaxed/simple;
-	bh=oywe1mkIeynmHDRBwdvvmFRGJataxJ9ZGBEKiHkcpG4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VMiGEO+tSAX0fOVG+E8R/fKqW88Yd5nsP6QehaKw1TbNLQa0sbaAopUJZUnbAQQDQAeXlir6N+xd5r2kQjKAZqlwBf3oGhGJwHr+u796Pu4R7CiseAfBwNnldBqAnmPt4HgsIEuaSjdV4ctGE9KNa8W4+AlXNbPgjaZ4kIXVlgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IuvSUH0v; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717775682; c=relaxed/simple;
+	bh=MFaeXmhix5eaxxS4d1BjhVv8v5zdiL95TNv1+Je9cn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nYUYkqXu7rahYFj+MbERJ/FtWF11Lrkmskgo9o7GnVDcVWu1sSi6kQNpJjyqeAjPns02Q3Umb9ddNCBF434k3LN7oWMQpaBNbQwIxP07mhnGoHZH05CZq1LTeiCSwB/5jW/H1O5vaWCCxhraFFPggdHppS0fPiypLgpSwkjgMro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l54PWuxe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IuvSUH0v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717775595; x=1749311595;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=oywe1mkIeynmHDRBwdvvmFRGJataxJ9ZGBEKiHkcpG4=;
-  b=IuvSUH0vu3zDaoY1xRztBVJ23C3AVS6dnJlD3WfULbT8yvrLKpruM1s7
-   Ph6wDX1QVWBUloOq9CKga3k0flpElqVAvc1wc6vG0ZmTZdyYTJpTGM9An
-   jdHMAz57zXbnh4LJzEjGiktiZ4Ew7XaxzZ5ngPS4wTZu7reIlhO4qndxM
-   yrtOrzmzu+h+6cF5n1cQZy8MXgoFt+7CqOi4RYpas1Hy8O99L6LegdlC8
-   ygef/t3OJJSJslPQ9MvXQPSubBr7UfsdLyY0STpUEzGEf7AzrOZYJxMyq
-   GTNoibC02+xyh62YeMY67zm+LVwkgbZXG3oupTjrRj+OpzPUeFwy8mkDn
-   w==;
-X-CSE-ConnectionGUID: eOz7YVlLT/SkU+nZf9h5pg==
-X-CSE-MsgGUID: G312jb67TCuxjvlRViVEkg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="11966794"
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="11966794"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 08:53:14 -0700
-X-CSE-ConnectionGUID: 62bx5l5vTea9Pb1huVtfcw==
-X-CSE-MsgGUID: ZIpJdotQSJC+DmhhXjVFQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="43301572"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.184])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 08:53:11 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 7 Jun 2024 18:53:08 +0300 (EEST)
-To: Shravan Kumar Ramani <shravankr@nvidia.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Vadim Pasternak <vadimp@nvidia.com>, 
-    David Thompson <davthompson@nvidia.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] Documentation/ABI: Add new sysfs fields to
- sysfs-platform-mellanox-pmc
-In-Reply-To: <ef3f942c1d933ef757a0de84c2890d6779471239.1717755404.git.shravankr@nvidia.com>
-Message-ID: <c7464064-d08b-ecdc-8e07-b621a466d967@linux.intel.com>
-References: <cover.1717755404.git.shravankr@nvidia.com> <ef3f942c1d933ef757a0de84c2890d6779471239.1717755404.git.shravankr@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l54PWuxe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985CEC2BBFC;
+	Fri,  7 Jun 2024 15:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717775682;
+	bh=MFaeXmhix5eaxxS4d1BjhVv8v5zdiL95TNv1+Je9cn4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l54PWuxehpgFnT9UPaGHcmB0kb63C+AdVndkCbdEVJy3mLN9SZtc0OBWr/Jfpl0Q0
+	 xaejw/vJVkDcKbVyQ6SvomkpQa5FkMY0xyuTjN+rmuCtLWPkTibOusiFn2kZf7QVZE
+	 j4fiwbcSIPZwr/LsI5w2jzPuHJPJQw8P+7g8uDCAmqx0PATU1MX3aKPN2HCCUhzILg
+	 cMGtVHoIXFrKPVVq2s6k80JLOOj8FPsLp5BnSqsdjsQjOElWUVAEyKZ2QXeWoj9i57
+	 KdXHkVD+Hqaa9WrisppkN6YnBeD8hfeVAGjxFJx+GJRFtWi3U2plZNIca7RlEhhsFn
+	 itQB4hCdjk7ZA==
+Date: Fri, 7 Jun 2024 16:54:36 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	allen.lkml@gmail.com, broonie@kernel.org
+Subject: Re: [PATCH 6.6 000/744] 6.6.33-rc1 review
+Message-ID: <20240607-verdict-distract-2e220fbfe2a2@spud>
+References: <20240606131732.440653204@linuxfoundation.org>
+ <20240607-footnote-script-3a1537265b4a@spud>
+ <2024060756-graveyard-shifter-ba74@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Zyl/1zyiKCZKMLx+"
+Content-Disposition: inline
+In-Reply-To: <2024060756-graveyard-shifter-ba74@gregkh>
 
-On Fri, 7 Jun 2024, Shravan Kumar Ramani wrote:
 
-> Document newly added "count_clock" and "use_odd_counter" sysfs entries
-> for the Mellanox BlueField PMC driver.
-> 
-> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> Reviewed-by: David Thompson <davthompson@nvidia.com>
-> ---
->  .../ABI/testing/sysfs-platform-mellanox-pmc   | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-pmc b/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
-> index 9f987c6410da..ee03d066c0d9 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
-> +++ b/Documentation/ABI/testing/sysfs-platform-mellanox-pmc
-> @@ -52,3 +52,26 @@ Description:
->  		Writing 0 to the sysfs will clear the counter, writing any other
->  		value is not allowed.
->  
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/count_clock
-> +Date:		May 2024
-> +KernelVersion:	6.10
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Use a counter for counting cycles. This is used to repurpose/dedicate
-> +		any of the counters in the block to counting cycles. Each counter is
-> +		represented by a bit (bit 0 for counter0, bit1 for counter1 and so on)
-> +		and setting the corresponding bit will reserve that specific counter
-> +		for counting cycles and override the event<N> setting.
-> +
-> +What:		/sys/bus/platform/devices/<HID>/hwmon/hwmonX/<block>/use_odd_counter
-> +Date:		May 2024
-> +KernelVersion:	6.10
+--Zyl/1zyiKCZKMLx+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-6.10 ship has already sailed.
+On Fri, Jun 07, 2024 at 05:26:40PM +0200, Greg Kroah-Hartman wrote:
+> On Fri, Jun 07, 2024 at 04:23:47PM +0100, Conor Dooley wrote:
+> > On Thu, Jun 06, 2024 at 03:54:32PM +0200, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 6.6.33 release.
+> > > There are 744 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, plea=
+se
+> > > let me know.
+> >=20
+> > Tested-by: Conor Dooley <conor.dooley@microchip.com>
+> >=20
+> > btw, I requested a backport of a riscv patch to fix some userspace
+> > tools, but I didn't see it here.
+> > https://lore.kernel.org/stable/20240530-disparity-deafening-dcbb9e2f164=
+7@spud/
+> > Were you just too busy travelling etc?
+>=20
+> Yes, I have been on the road for the past 2 weeks in meetings and
+> training full-time with almost no time to catch up with requests like
+> this.  You aren't alone, my backlog is big :(
+>=20
+> I'll catch up on it next week as I will be home then.
 
-> +Contact:	"Shravan Kumar Ramani <shravankr@nvidia.com>"
-> +Description:
-> +		Form 64-bit counter using 2 32-bit counters. This is used to combine
-> +		2 adjacent counters to form a single 64-bit counter. Each even counter
-> +		is represented by a bit and setting the bit will join the corresponding
-> +		even counter with the next (odd) counter. The full 64-bit value can be
-> +		accessed using the same 2 counter<N> and counter<N+1> sysfs, with each
-> +		of them holding the lower and upper 32 bits respectively.
+That's fine, it's been broken for a long time, one release more release
+isn't gonna kill us :) Safe travels home.
 
-Okay, thanks for updating this, it's much clearer now what the intent of 
-each file is. One thing that is still unclear whether both bits are 
-expected to be set in count_clock when use_odd_counter is used to combine 
-two counters?
+--Zyl/1zyiKCZKMLx+
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
- i.
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmMtPAAKCRB4tDGHoIJi
+0njIAQDer0G3btmJzBsMGa42YqKNc+WHM783APSPwrq+flOhwAEAu6l3+gLlIquA
+ja2MoxBLFca/KeDvnHzIPBzWLCTM+gA=
+=LlYP
+-----END PGP SIGNATURE-----
+
+--Zyl/1zyiKCZKMLx+--
