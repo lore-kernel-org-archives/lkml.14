@@ -1,25 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9815C15AAC2;
-	Fri,  7 Jun 2024 08:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7424038D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 08:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717750636; cv=none; b=MGLYk4mfMkie+Nwb6gE3HVo8Hgtw1HyJoCcdEWhwHGMwGc2VwGCpNuv68pWgBLkEaMNK41rVSmUdJpSwkkMS4zuzud664nJuGO1DTafzae+yt+KvA8rU09FtXrlcz7p+81GwnU0yo6q6MxSVMGnYHBforFCdoHTGFTFoMqkehbs=
+	t=1717750699; cv=none; b=coNc9EURFpUmepddBGEwvX363pumKwhBvGbxSR7DEVzUOppp9TnwAPdsCuZNP1q1PsFyN9rgEITu6qhb1to4suWDeP2DVUrRokCstUOAd1tvtLkOgcrdvkqY02R+uAs3zPYr7cv467FcB8KRIttq3VeACljtoJpkWKrGUNFHbjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717750636; c=relaxed/simple;
-	bh=fWf8dL9zgX4/tY0MKEO40QNhd6iKATLd5H6NU7pTBcw=;
+	s=arc-20240116; t=1717750699; c=relaxed/simple;
+	bh=hmExR3uv2Ntk+jYSZJmh+BprqiDIdaybAdi91DukSWI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FzVLAHsLlpKeAjfTzmYVPxHlB3paZ6MSLvd1g605MarBdZ1i2vZ/r/GJSTNdFAeY5CvvTTd6EodOptv6EVULguH75tDUcrYp56Sl9YHZU7SQiMmyL22617+yTSYfYE0vcLrIv/vmFQU8TOWyS3FJyxJ5y1DgcjHEjnDfZO+3CvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08DC92F4;
-	Fri,  7 Jun 2024 01:57:38 -0700 (PDT)
-Received: from [192.168.2.88] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6F013F762;
-	Fri,  7 Jun 2024 01:57:11 -0700 (PDT)
-Message-ID: <96eb4e13-e1c7-4c64-a4bf-0d2b5610d390@arm.com>
-Date: Fri, 7 Jun 2024 10:57:10 +0200
+	 In-Reply-To:Content-Type; b=Q8h1rnHZIslsGBt7by66EPNtkK29I5rCx4TQEF7qBnb7Bhpw5pAS1H74Mf01j+xMXuidbeBRxM0QvGG4iBOlQo4glrhs34Uiru12T8VO9FQ0yOFuNe3WyhgXM76/jNyf9GrzWk6wIM2Bizqr/MP3rgHMCGSilSkaBYllm6POHc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mXMAKFXd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8zD9PuLK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mXMAKFXd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8zD9PuLK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mXMAKFXd";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8zD9PuLK";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mXMAKFXd";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8zD9PuLK"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 45C5D1FB8E;
+	Fri,  7 Jun 2024 08:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1717750695; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U2bfCmFU6J95yjEZ2GgDnCsnnuBBOizhhetPYhTJkZo=;
+	b=mXMAKFXdUl6MwWdW5OiO17ldWWreA5WF6XLw2Fk+86/CCk1ysogc9UM45V8f2BR5KxSVyo
+	HsvREcBGJTGuHk1CCIc+1oIzcO6nNNPtq1k4qf1PfJ2CdhPu2xOc95paDMZWe+Mqk3MiCh
+	GDIttzBWRzSu2vWX1rED3bsJIC0i5IQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1717750695;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U2bfCmFU6J95yjEZ2GgDnCsnnuBBOizhhetPYhTJkZo=;
+	b=8zD9PuLKUrQ8XAmWUh5KVdhcp8JIGFoJ39Eg/ZB3OMGhNX+Mmyn0WztY6hr9+FMebGflG9
+	QEh3Rg2ulv5z1YCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=mXMAKFXd;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=8zD9PuLK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1717750695; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U2bfCmFU6J95yjEZ2GgDnCsnnuBBOizhhetPYhTJkZo=;
+	b=mXMAKFXdUl6MwWdW5OiO17ldWWreA5WF6XLw2Fk+86/CCk1ysogc9UM45V8f2BR5KxSVyo
+	HsvREcBGJTGuHk1CCIc+1oIzcO6nNNPtq1k4qf1PfJ2CdhPu2xOc95paDMZWe+Mqk3MiCh
+	GDIttzBWRzSu2vWX1rED3bsJIC0i5IQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1717750695;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U2bfCmFU6J95yjEZ2GgDnCsnnuBBOizhhetPYhTJkZo=;
+	b=8zD9PuLKUrQ8XAmWUh5KVdhcp8JIGFoJ39Eg/ZB3OMGhNX+Mmyn0WztY6hr9+FMebGflG9
+	QEh3Rg2ulv5z1YCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 82AA313A42;
+	Fri,  7 Jun 2024 08:58:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0rpCH6bLYmYfFwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 07 Jun 2024 08:58:14 +0000
+Message-ID: <412071b4-19cf-4b6c-bc91-1560f1dfb609@suse.cz>
+Date: Fri, 7 Jun 2024 10:58:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,39 +83,117 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] cpuidle: teo: Remove recent intercepts metric
-To: Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, rafael@kernel.org
-Cc: vincent.guittot@linaro.org, qyousef@layalina.io, peterz@infradead.org,
- daniel.lezcano@linaro.org, anna-maria@linutronix.de,
- kajetan.puchalski@arm.com, lukasz.luba@arm.com
-References: <20240606090050.327614-1-christian.loehle@arm.com>
- <20240606090050.327614-6-christian.loehle@arm.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH v3 1/3] slab: make check_object() more consistent
 Content-Language: en-US
-In-Reply-To: <20240606090050.327614-6-christian.loehle@arm.com>
+To: Chengming Zhou <chengming.zhou@linux.dev>,
+ Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ zhouchengming@bytedance.com
+References: <20240607-b4-slab-debug-v3-0-bb2a326c4ceb@linux.dev>
+ <20240607-b4-slab-debug-v3-1-bb2a326c4ceb@linux.dev>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20240607-b4-slab-debug-v3-1-bb2a326c4ceb@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[linux.dev,linux.com,kernel.org,google.com,lge.com,linux-foundation.org,gmail.com,intel.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TAGGED_RCPT(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 45C5D1FB8E
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -3.00
 
-On 06/06/2024 11:00, Christian Loehle wrote:
-> The logic for recent intercepts didn't work, there is an underflow
-> that can be observed during boot already, which teo usually doesn't
-> recover from, making the entire logic pointless.
-
-Is this related to:
-
-https://lkml.kernel.org/r/0ce2d536-1125-4df8-9a5b-0d5e389cd8af@arm.com ?
-
-In this case, a link here would be helpful to get the story.
-
-> Furthermore the recent intercepts also were never reset, thus not
-> actually being very 'recent'.
+On 6/7/24 10:40 AM, Chengming Zhou wrote:
+> Now check_object() calls check_bytes_and_report() multiple times to
+> check every section of the object it cares about, like left and right
+> redzones, object poison, paddings poison and freepointer. It will
+> abort the checking process and return 0 once it finds an error.
 > 
-> If it turns out to be necessary to focus more heavily on resets, the
-> intercepts metric also could be adjusted to decay more quickly.
+> There are two inconsistencies in check_object(), which are alignment
+> padding checking and object padding checking. We only print the error
+> messages but don't return 0 to tell callers that something is wrong
+> and needs to be handled. Please see alloc_debug_processing() and
+> free_debug_processing() for details.
 > 
-> Fixes: 77577558f25d ("cpuidle: teo: Rework most recent idle duration values treatment")
-> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
+> We want to do all checks without skipping, so use a local variable
+> "ret" to save each check result and change check_bytes_and_report() to
+> only report specific error findings. Then at end of check_object(),
+> print the trailer once if any found an error.
+> 
+> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
 
-[...]
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+
+Thanks.
 
