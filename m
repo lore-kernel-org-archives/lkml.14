@@ -1,63 +1,63 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D605194A44
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 12:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEA4194C79
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 12:26:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717763216; cv=none; b=FXW7WdCcmL9XT2WToPovyQLxLGy48w+W4G72ry+u8DkOTSrxAedOfnKBf2l3Xz2yZfIaKdHGSB4+Oj7lsGj5Pk5DA4lMZC/fE0hnT2r9E8W10wkTEOnpxbPITWT7kn4jEK+twKCZWBbNMnol1WSSXQohYxfVQrUSEOjBnitVaCM=
+	t=1717763220; cv=none; b=Doch5x8oekm7mEpDqj0YWZvClAd55dLR9cDMxztea4O+GVl8F4tAdqF7Rwl6p2gUZfBPhGqP18r7AwbJx26hCcN02FzUs4GRrajn5ls2KO4JyQhn7pG2AvENT99U21YLU3wNUQAdq/1Ixo3EwaqR4zU4GHO+gtKzcrfgKVoMoz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717763216; c=relaxed/simple;
-	bh=SbX0OWmkyiQ25VmAS101r+rK0t4HDEEZ6y+7sHI5W3E=;
+	s=arc-20240116; t=1717763220; c=relaxed/simple;
+	bh=xldUFfQCLaHrWyRsZ3+WqfDxiKs8c6FyPyEYApGXNho=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D5LDKPMwksC1invN3nc1XpFLOBO6FrCvRX/erWH0XJ/FguoaAONUj3p6d8lzZ7xnJoZhUF9tHMa7G6rBrXrMqX8gQew90PH8qsBwdqzp8WAbCBzgol7GJkcWaBUc4OGURjJFaArJAngESM6qFiWSZMEJQ9bxLrxCTujQiCEstrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d/9WDXCT; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=YQv+Tyv7m2RW1l5qGalhkw9SVQtLy7QEfKk1CL2XlklZxeYapXbwTTKVxSr5AUhye7mxL2tb5c1axOWvEzLKYRu/D7XxvyKlpUy7JiXknsTkd2PvisJk8AeGjZkCQIaN3OUy4kuI/7bNBzZbK+uACwlupoC1nqBOjmxFwoZxfwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A7lTZuiJ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d/9WDXCT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A7lTZuiJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717763214;
+	s=mimecast20190719; t=1717763217;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NY6MlWJnYNHj2CGE0jYmgrV3LdjseoctScg0CAsxuF4=;
-	b=d/9WDXCTmzlz+pMy/n9CShk4AHQc8+254rgrSBmTVHWX5p11ic3SZWGYJvVNFzXwyA9OU4
-	XspscSdXZPxl2aIpsXkGbgQFePycAHY59UVs++DkdJtGQUQ/dEZYM/BKZuk2c7+82IOEp7
-	+vs3Cpv4cG/emxQ2pxe5M6FFwjNqkIw=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=PnrGjun192AtksvBWoEeo2xFayBkQDU9eM35Zfke7SA=;
+	b=A7lTZuiJMeJUmON1183D1aW+0UYNZxPtPUqv12nqxUKAbPYIWsdBX2+UiY9IbSAMEyizVL
+	/5l9RJ8qwvOVMyWSYK2vd6GtKrbUj2ILuw7BV0d7AEYfV0Df7C9ttt6M+NlTlbZtwMZLkt
+	X1aYqdLpYHO/Lev2m4umDN3SLGQSDWg=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-466-x4UoXJ6lOAuGsjj1Cvn1Xg-1; Fri, 07 Jun 2024 08:26:46 -0400
-X-MC-Unique: x4UoXJ6lOAuGsjj1Cvn1Xg-1
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-66348aafadcso1675069a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 05:26:45 -0700 (PDT)
+ us-mta-500-cHoI0TsNNKCrlYYabjyqMA-1; Fri, 07 Jun 2024 08:26:56 -0400
+X-MC-Unique: cHoI0TsNNKCrlYYabjyqMA-1
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2c1e9951604so1765215a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 05:26:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717763205; x=1718368005;
+        d=1e100.net; s=20230601; t=1717763215; x=1718368015;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NY6MlWJnYNHj2CGE0jYmgrV3LdjseoctScg0CAsxuF4=;
-        b=WXQ0NsBf/19hD1LuA4/ci61wrvFBuq9GWP8mo7ZEBZ4bc7F6YN3Nuksu/5hx+EaO2+
-         PoBMhEKo4h48nb2/iCk8Q7NjagyThTU8EMRJoLUWMhToOlHF72X5WsodY01sC/1idNSV
-         RTKWBeL01fSSY+5WCwsL3aMQfUcaWm/5GziF4P3yhR/r931GB9VtbYnb50Xao4Jo1JOD
-         ScRPloMNBnN87WAhLGGz0mPRsYNdnXoNOWIb/+q8IPgT2FYB0XIv5h5Vk6066mFc/D/S
-         Lx9antzG+Z70e8r7bAV29HbhFPOCBjWtfpwRZRn/MRKW8ZePmCmZ4IEaAEkF+zEiNlHY
-         4QIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvZr2gTm39jyVWv3VExx51IphE2xR5crRO0Nw+grys4Ypl8+0MohHHu0zC1y/maTg45qXg9erLYJuxqN6+W4x9LOvY4m6TwVPkCm7T
-X-Gm-Message-State: AOJu0Yzu7d/hVyrHNEC/kr/HYnZ5jqmO2c6IYC2T9elpqKuEN6Q4XjKP
-	XWQncHpuPHtjE0evaJfR1E6rzwLE6b/eTwILzEIWfaVFORK1aw/dTsFd/35o/5F71PtaC/95LOd
-	VagBg9fRZiT/LBmDBwb7GeFahnDmp8t+anQ2QjVnWbltZXQkYgzxIqYxqouG2sg==
-X-Received: by 2002:a17:903:32d2:b0:1f6:39d8:dc4f with SMTP id d9443c01a7336-1f6d02c0542mr26932975ad.10.1717763204577;
-        Fri, 07 Jun 2024 05:26:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHpdAyFSQcoxBOdQJBinBNNpDMf5FnhUP8x16FFmg6d0auNXsy7A03SjZ++vuIxTUa+Qb9LFA==
-X-Received: by 2002:a17:903:32d2:b0:1f6:39d8:dc4f with SMTP id d9443c01a7336-1f6d02c0542mr26932625ad.10.1717763203770;
-        Fri, 07 Jun 2024 05:26:43 -0700 (PDT)
+        bh=PnrGjun192AtksvBWoEeo2xFayBkQDU9eM35Zfke7SA=;
+        b=MJkO2Y0MujKpNfkeAprcX0OSBmXPaNxq8Zt3SMf5mVH7bCBooMXWZbM3OCZvjF1mfH
+         sM11tdVLd37Nk10MgLeSk9l3mx73Dqo7HyiyhTrJS9myVLJwij/xMRgvqjqF4GQ4wyR0
+         1T+95SOYMQSeo1Y7ZrRQ2E4gQDb5FtAq3NNpX29+bbNhB+YriCMwyHg2+33xVahVXc/b
+         9A1gExTSow8o9zVZ04WTa1msLvRa5BJQQ0maaaHc+QHWPHPAF5Sm3vJXwLnN3aqlI7Xw
+         AQoiJzcTztzZmEoW2aMjGAkTvawlgK2R+Adywhu6swgRAvtzD2j3CHVDWoBkKwI8FvIX
+         KxKA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7+nX7GqUAta7HrGwEWbGfi5z2ADlDzN1abuUUjP96pU7RYT9hrl4YS9xMmDv7iLJlcYtAtHNVQRWD2uzCnasglyW43drybyKsWSOo
+X-Gm-Message-State: AOJu0Yxq74kZawuMn7Bg7a3UbZl5Tj7A0+LHSJiqILIVtnqVdZWYTRcs
+	ShBxKp81SeJDlEY5ytA167QbTqKKNZO7xrG8j5ZLoIhxirlzQVdt68MwcF0ThejpqS3XAsHLet2
+	L7m11lYf/Ufotstyyz0aNcRBi9S1rHGqNmlLXHhOrPHoeLpd71z3AzvQeYQjILQ==
+X-Received: by 2002:a17:90a:ce8d:b0:2c2:d442:aa10 with SMTP id 98e67ed59e1d1-2c2d442ab77mr88245a91.45.1717763215025;
+        Fri, 07 Jun 2024 05:26:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGVjl4mp00EGKOz+YDE5MMuMdnmKS1XOHdz89KRwxto50YFnqTs7CRYSuimTnD6kBsJW/UMEA==
+X-Received: by 2002:a17:90a:ce8d:b0:2c2:d442:aa10 with SMTP id 98e67ed59e1d1-2c2d442ab77mr88213a91.45.1717763214227;
+        Fri, 07 Jun 2024 05:26:54 -0700 (PDT)
 Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd7eddf1sm33133565ad.249.2024.06.07.05.26.42
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c2c5c05208sm1129893a91.16.2024.06.07.05.26.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 05:26:43 -0700 (PDT)
+        Fri, 07 Jun 2024 05:26:53 -0700 (PDT)
 From: Coiby Xu <coxu@redhat.com>
 To: kexec@lists.infradead.org
 Cc: Ondrej Kozina <okozina@redhat.com>,
@@ -74,11 +74,10 @@ Cc: Ondrej Kozina <okozina@redhat.com>,
 	Dave Hansen <dave.hansen@intel.com>,
 	Vitaly Kuznetsov <vkuznets@redhat.com>,
 	Greg KH <gregkh@linuxfoundation.org>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: [PATCH v5 3/7] crash_dump: store dm crypt keys in kdump reserved memory
-Date: Fri,  7 Jun 2024 20:26:13 +0800
-Message-ID: <20240607122622.167228-4-coxu@redhat.com>
+	Vivek Goyal <vgoyal@redhat.com>
+Subject: [PATCH v5 5/7] crash_dump: retrieve dm crypt keys in kdump kernel
+Date: Fri,  7 Jun 2024 20:26:15 +0800
+Message-ID: <20240607122622.167228-6-coxu@redhat.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240607122622.167228-1-coxu@redhat.com>
 References: <20240607122622.167228-1-coxu@redhat.com>
@@ -90,159 +89,179 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the kdump kernel image and initrd are loaded, the dm crypts keys
-will be read from keyring and then stored in kdump reserved memory.
+Crash kernel will retrieve the dm crypt keys based on the dmcryptkeys
+command line parameter. When user space writes the key description to
+/sys/kernel/crash_dm_crypt_key, the crash kernel will save the
+encryption keys to the user keyring. Then user space e.g. cryptsetup's
+--volume-key-keyring API can use it to unlock the encrypted device.
 
 Signed-off-by: Coiby Xu <coxu@redhat.com>
 ---
- include/linux/crash_core.h   |  3 ++
- include/linux/crash_dump.h   |  2 +
- include/linux/kexec.h        |  4 ++
- kernel/crash_dump_dm_crypt.c | 87 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 96 insertions(+)
+ Documentation/ABI/testing/crash_dm_crypt_keys |   3 +
+ include/linux/crash_core.h                    |   1 +
+ kernel/crash_dump_dm_crypt.c                  | 101 +++++++++++++++++-
+ 3 files changed, 103 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/ABI/testing/crash_dm_crypt_keys b/Documentation/ABI/testing/crash_dm_crypt_keys
+index 7426c9d8de97..56a4b878a4dd 100644
+--- a/Documentation/ABI/testing/crash_dm_crypt_keys
++++ b/Documentation/ABI/testing/crash_dm_crypt_keys
+@@ -29,4 +29,7 @@ Description:	read/write
+         the kdump kernel has been loaded with the dm crypt keys stored to kdump
+         reserved memory
+ 
++    After the kdump kernel gets booted, user space can write anything to this API
++    so the dm crypt keys can be restored to the keyring.
++
+ User:		Kdump service
 diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 6bff1c24efa3..ab20829d0bc9 100644
+index ab20829d0bc9..d7308b6e83f4 100644
 --- a/include/linux/crash_core.h
 +++ b/include/linux/crash_core.h
-@@ -37,6 +37,9 @@ static inline void arch_kexec_unprotect_crashkres(void) { }
- #ifdef CONFIG_CRASH_DM_CRYPT
+@@ -38,6 +38,7 @@ static inline void arch_kexec_unprotect_crashkres(void) { }
  int crash_sysfs_dm_crypt_keys_read(char *buf);
  int crash_sysfs_dm_crypt_keys_write(const char *buf, size_t count);
-+int crash_load_dm_crypt_keys(struct kimage *image);
-+#else
-+static inline int crash_load_dm_crypt_keys(struct kimage *image) {return 0; }
+ int crash_load_dm_crypt_keys(struct kimage *image);
++ssize_t dm_crypt_keys_read(char *buf, size_t count, u64 *ppos);
+ #else
+ static inline int crash_load_dm_crypt_keys(struct kimage *image) {return 0; }
  #endif
- 
- #ifndef arch_crash_handle_hotplug_event
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index acc55626afdc..dfd8e4fe6129 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -15,6 +15,8 @@
- extern unsigned long long elfcorehdr_addr;
- extern unsigned long long elfcorehdr_size;
- 
-+extern unsigned long long dm_crypt_keys_addr;
-+
- #ifdef CONFIG_CRASH_DUMP
- extern int elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size);
- extern void elfcorehdr_free(unsigned long long addr);
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index c45bfc727737..cb6275928fbd 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -372,6 +372,10 @@ struct kimage {
- 	void *elf_headers;
- 	unsigned long elf_headers_sz;
- 	unsigned long elf_load_addr;
-+
-+	/* dm crypt keys buffer */
-+	unsigned long dm_crypt_keys_addr;
-+	unsigned long dm_crypt_keys_sz;
- };
- 
- /* kexec interface functions */
 diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-index 608bde3aaa8e..0033152668ae 100644
+index 9a6bd39adf76..00223343473b 100644
 --- a/kernel/crash_dump_dm_crypt.c
 +++ b/kernel/crash_dump_dm_crypt.c
-@@ -1,4 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/key.h>
-+#include <linux/keyctl.h>
- #include <keys/user-type.h>
- #include <linux/crash_dump.h>
+@@ -40,12 +40,67 @@ static struct keys_header {
+ 	struct dm_crypt_key keys[] __counted_by(total_keys);
+ } *keys_header;
  
-@@ -128,3 +130,88 @@ int crash_sysfs_dm_crypt_keys_read(char *buf)
- 	return sysfs_emit(buf, "%s\n", STATE_STR[state]);
- }
- EXPORT_SYMBOL_GPL(crash_sysfs_dm_crypt_keys_read);
++unsigned long long dm_crypt_keys_addr;
++EXPORT_SYMBOL_GPL(dm_crypt_keys_addr);
 +
-+static int read_key_from_user_keying(struct dm_crypt_key *dm_key)
++static int __init setup_dmcryptkeys(char *arg)
 +{
-+	const struct user_key_payload *ukp;
-+	struct key *key;
++	char *end;
 +
-+	kexec_dprintk("Requesting key %s", dm_key->key_desc);
-+	key = request_key(&key_type_logon, dm_key->key_desc, NULL);
-+
-+	if (IS_ERR(key)) {
-+		pr_warn("No such key %s\n", dm_key->key_desc);
-+		return PTR_ERR(key);
-+	}
-+
-+	ukp = user_key_payload_locked(key);
-+	if (!ukp)
-+		return -EKEYREVOKED;
-+
-+	memcpy(dm_key->data, ukp->data, ukp->datalen);
-+	dm_key->key_size = ukp->datalen;
-+	kexec_dprintk("Get dm crypt key (size=%u) %s: %8ph\n", dm_key->key_size,
-+		      dm_key->key_desc, dm_key->data);
-+	return 0;
-+}
-+
-+static int build_keys_header(void)
-+{
-+	int i, r;
-+
-+	for (i = 0; i < key_count; i++) {
-+		r = read_key_from_user_keying(&keys_header->keys[i]);
-+		if (r != 0) {
-+			pr_err("Failed to read key %s\n", keys_header->keys[i].key_desc);
-+			return r;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+int crash_load_dm_crypt_keys(struct kimage *image)
-+{
-+	struct kexec_buf kbuf = {
-+		.image = image,
-+		.buf_min = 0,
-+		.buf_max = ULONG_MAX,
-+		.top_down = false,
-+		.random = true,
-+	};
-+
-+	int r;
-+
-+	if (state == FRESH)
++	if (!arg)
++		return -EINVAL;
++	dm_crypt_keys_addr = memparse(arg, &end);
++	if (end > arg)
 +		return 0;
 +
-+	if (key_count != keys_header->total_keys) {
-+		kexec_dprintk("Only record %u keys (%u in total)\n", key_count,
-+			      keys_header->total_keys);
-+		return -EINVAL;
++	dm_crypt_keys_addr = 0;
++	return -EINVAL;
++}
++
++early_param("dmcryptkeys", setup_dmcryptkeys);
++
+ static size_t get_keys_header_size(struct keys_header *keys_header,
+ 				   size_t total_keys)
+ {
+ 	return struct_size(keys_header, keys, total_keys);
+ }
+ 
++/*
++ * Architectures may override this function to read dm crypt keys
++ */
++ssize_t __weak dm_crypt_keys_read(char *buf, size_t count, u64 *ppos)
++{
++	struct kvec kvec = { .iov_base = buf, .iov_len = count };
++	struct iov_iter iter;
++
++	iov_iter_kvec(&iter, READ, &kvec, 1, count);
++	return read_from_oldmem(&iter, count, ppos, false);
++}
++
++static int add_key_to_keyring(struct dm_crypt_key *dm_key,
++			      key_ref_t keyring_ref)
++{
++	key_ref_t key_ref;
++	int r;
++
++	/* create or update the requested key and add it to the target keyring */
++	key_ref = key_create_or_update(keyring_ref, "user", dm_key->key_desc,
++				       dm_key->data, dm_key->key_size,
++				       KEY_USR_ALL, KEY_ALLOC_IN_QUOTA);
++
++	if (!IS_ERR(key_ref)) {
++		r = key_ref_to_ptr(key_ref)->serial;
++		key_ref_put(key_ref);
++		kexec_dprintk("Success adding key %s", dm_key->key_desc);
++	} else {
++		r = PTR_ERR(key_ref);
++		kexec_dprintk("Error when adding key");
 +	}
 +
-+	image->dm_crypt_keys_addr = 0;
-+	r = build_keys_header();
-+	if (r)
-+		return r;
-+
-+	kbuf.buffer = keys_header;
-+	kbuf.bufsz = keys_header_size;
-+
-+	kbuf.memsz = kbuf.bufsz;
-+	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	r = kexec_add_buffer(&kbuf);
-+	if (r) {
-+		kvfree((void *)kbuf.buffer);
-+		return r;
-+	}
-+	state = LOADED;
-+	image->dm_crypt_keys_addr = kbuf.mem;
-+	image->dm_crypt_keys_sz = kbuf.bufsz;
-+	kexec_dprintk("Loaded dm crypt keys to kexec_buffer bufsz=0x%lx memsz=0x%lx\n",
-+		      kbuf.bufsz, kbuf.bufsz);
-+
++	key_ref_put(keyring_ref);
 +	return r;
 +}
++
+ /*
+  * Let the kernel know the number of dm crypt keys and allocate memory to
+  * initialize related structures.
+@@ -139,11 +194,53 @@ static int process_cmd(const char *buf, size_t count)
+ 	return -EINVAL;
+ }
+ 
++static int restore_dm_crypt_keys_to_thread_keyring(const char *key_desc)
++{
++	struct dm_crypt_key *key;
++	key_ref_t keyring_ref;
++	u64 addr;
++
++	/* find the target keyring (which must be writable) */
++	keyring_ref =
++		lookup_user_key(KEY_SPEC_USER_KEYRING, 0x01, KEY_NEED_WRITE);
++	if (IS_ERR(keyring_ref)) {
++		kexec_dprintk("Failed to get keyring %s\n", key_desc);
++		return PTR_ERR(keyring_ref);
++	}
++
++	addr = dm_crypt_keys_addr;
++	dm_crypt_keys_read((char *)&key_count, sizeof(key_count), &addr);
++	if (key_count < 0 || key_count > KEY_NUM_MAX) {
++		pr_info("Failed to read the number of dm_crypt keys\n");
++		return -1;
++	}
++
++	kexec_dprintk("There are %u keys\n", key_count);
++	addr = dm_crypt_keys_addr;
++
++	keys_header_size = get_keys_header_size(keys_header, key_count);
++
++	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
++	if (!keys_header)
++		return -ENOMEM;
++
++	dm_crypt_keys_read((char *)keys_header, keys_header_size, &addr);
++
++	for (int i = 0; i < keys_header->total_keys; i++) {
++		key = &keys_header->keys[i];
++		kexec_dprintk("Get key (size=%u)\n", key->key_size);
++		add_key_to_keyring(key, keyring_ref);
++	}
++
++	return 0;
++}
++
+ int crash_sysfs_dm_crypt_keys_write(const char *buf, size_t count)
+ {
+ 	if (!is_kdump_kernel())
+ 		return process_cmd(buf, count);
+-	return -EINVAL;
++	else
++		return restore_dm_crypt_keys_to_thread_keyring(buf);
+ }
+ EXPORT_SYMBOL_GPL(crash_sysfs_dm_crypt_keys_write);
+ 
+@@ -184,7 +281,7 @@ static int build_keys_header(void)
+ 	for (i = 0; i < key_count; i++) {
+ 		r = read_key_from_user_keying(&keys_header->keys[i]);
+ 		if (r != 0) {
+-			pr_err("Failed to read key %s\n", keys_header->keys[i].key_desc);
++			kexec_dprintk("Failed to read key %s\n", keys_header->keys[i].key_desc);
+ 			return r;
+ 		}
+ 	}
 -- 
 2.45.1
 
