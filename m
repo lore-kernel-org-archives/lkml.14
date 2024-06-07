@@ -1,397 +1,494 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B44A186E2E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 11:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E531862B8
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 11:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717758237; cv=none; b=A9QmzpFNv0tLW4OVUmdQsymEHv5q8cYUECzbKCb9X2/82wo7VxRwxUmc1K19ciFjt7LvCuI7Wsx0IkBUerlR3kYsWXlbfGheOW2wc/FzjahEpI2A1HoYttVVyKA8GggmGjQ8q8MVzD7pE4EU7rsbviUKbsSDcy7YhTWpevdLvqg=
+	t=1717758261; cv=none; b=S7870jDu5k9eurMQSbXdxLNher6QprO/2WCT6T1TzN7U9BLfM7YRrpzwUyu3Dgn6ylA8Nkr0g2GwbaqBNGos4zVWhtglZPQc7voaLwQ9NGRZlKpbQ3qck5PuWvaOf2i93BGZ+yr0Nv3q0RD0Smil5kWhWlQtkvspcCDKMFwcuUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717758237; c=relaxed/simple;
-	bh=iqK4sXvyXYzwRawxLH7Qmttv0TpUxcESQppaLdEEsnc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a+a0ZG5f8m3FjmkAKoaE829kd5tFRyTTNOp6b/uNAu8vSN18vwpGWwR/zyKxEszOKdqpUdXU8lrw3gMN9N1naGGL3uhCX2Woxjy3DL5uyNZZfvNvYjluDVjbgP+vWX3cb0sopiscjjp8BXZy0c4XRIVb8LMrUTiZh4OjWXKNFlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qRFcj5rr; arc=none smtp.client-ip=209.85.208.179
+	s=arc-20240116; t=1717758261; c=relaxed/simple;
+	bh=AN/mXFLmmOOxh4ohQqh0I5EZsgTEbPwsV7LU8Ha71SI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=s7IwsCJ2ddaZfB/06T6KiF7+a9PDf1i8JsDhwCMo/20+Z2U+94tonD2wmGSqbDQiVe2K8Yvl8x7OVVu73culdDwTTE5AR1w4tdveM3QkJ+M3a6QMkRgpN4PjCk3+M6O40tCHlNWOBDZ5kAp6/dYTazl34HOP3fZ8Bgj5Dawevf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sx8ROLsc; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qRFcj5rr"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2eaa80cb573so22384451fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 04:03:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sx8ROLsc"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4217136a74dso2771585e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 04:04:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717758232; x=1718363032; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ELTaPx5YTbXM+uNiIF/L+aaSl4VA6PsxXQKScV0FjyM=;
-        b=qRFcj5rrNpkwu8qTh0QvsfXZVkTMy4kDDQ3RkXJjmD1VO2xKhFQP7leyC85BrgWDS2
-         dXX0M96UEeisdO8au9tek2pdOhctbSZauyOx9WMDrvjw8DHmwYFGXIwizn+8IiGw2gcF
-         l8nk6LfmKu9ssJsFDKduG8RWFSnzOoj3LRVFd6r1ovM9v+EjveE+dYnhQ2Z60YhUHUrA
-         oyiZMqaTLxpObQZRLaXnSHdIi00biHJYgkfw9g5zP+QuQ+/oFnoyeZHj4P9k2i12faEz
-         3QAa0hGmjOeNMa5hdeUXhZTtFaWxSlNKH2/W/ofdSwb/526x2Vv78876S4kOdL4Vt39+
-         T2ew==
+        d=linaro.org; s=google; t=1717758258; x=1718363058; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to
+         :references:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dlz1M1Q96MoJTbBHiqN6xZFkx4A4jAugPwmqHEAfQlM=;
+        b=sx8ROLscim+16/5RnC+EJHtkqutKqN66BekfmIea1CLQhllcXogYZaoxQi8OF/AFFb
+         LdpWUCQFpqsnLrV5UlB2nE3NOkXOxvhgnlViZjHiyQxI6wEbEy/RZGJvt3Fc2JixA7gP
+         cIy67SSNzLIGMq8jmWLPb1uuYlgiDIOoIXuWzYBT0fVeHMrzeUVNzOS/57nTalCcXOxC
+         ti8HfZnqu7yar+kDZ154joNwXa8SWV9heVAVfXVM4rGrBdii1yK2E7+jzIMuDH/G8IeL
+         vcrqYUIcv8nrBx8cWUZRRcgVeT1zSM2opxHYaE2AdckFqqpzQe9JxLgYZ4GqD4/BOCXh
+         chKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717758232; x=1718363032;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ELTaPx5YTbXM+uNiIF/L+aaSl4VA6PsxXQKScV0FjyM=;
-        b=W9RiWqhbv5womgLRkjAVuLHDh/9kIrSTLZvEOdCDIcGDqUpXpV6HIB4kd+eUgV/CIO
-         TsXeAbm8rP8KP0WjRxscUeSM9b1bDsBQD5mlubzHC8woMgRxH0hCAoEa4SC8Na2oSbMU
-         A6/un8jNq2a2sEe8ct1JezJOLCPdjUPIE9jmLaRgmZCSNhrT1/tkEpGY6NyXBuOr4tS3
-         encJFLXhDMzaVkNkyZ1dYgjTaJgtst6ydY+naNi6nO6fv2qMzF+ouNGu0m9x2d5GIbR0
-         6qreS9jcc/8F+L6ZDAkH0H1tu+YOHJN1kpv5EhDYSl6zUSK86lu0uz7riAHD8S2eVdGe
-         60Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyF0fgskp1NY+AK1nKAZv+J3wftR1IGOTmd0o1b7oGVna/f25HzBA63wMeWb+t2N5dLUZTF5LoaKfFOe8PssxMaKg9OAdTXj3tOMfE
-X-Gm-Message-State: AOJu0YzE8FuXbMDt4hT4xEqBO4nZ4UqZBYZMbqrOf8R0ZF/MM7hLwTxq
-	O8zKWyrpx2KrVUrGJMbEoiwsmNwKW389EUrLZQ9SoZfePo4dOUdTWOwk6sNp3/c=
-X-Google-Smtp-Source: AGHT+IEhWGOMR5X97P8Fo2mgAd+J/etXVja+ifCzLsW/ZWUAvf+VNwo9A9i6JB4oljzk7wS6Jg1shA==
-X-Received: by 2002:a2e:2c19:0:b0:2e9:84f9:3e17 with SMTP id 38308e7fff4ca-2eadce9253dmr14699141fa.50.1717758232226;
-        Fri, 07 Jun 2024 04:03:52 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2eae2c7e33esm1351191fa.0.2024.06.07.04.03.51
+        d=1e100.net; s=20230601; t=1717758258; x=1718363058;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to
+         :references:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dlz1M1Q96MoJTbBHiqN6xZFkx4A4jAugPwmqHEAfQlM=;
+        b=nG/OIY+MrfIG/9y3dWA0B8Z8GbRIgfkkHDKxdc2DUv42g5LTaa6xVdQIJ+kNzZvcz9
+         DHgi8Zlgj6oC+f2aopSacIBQa0tsIxLMMZUIKIAvSaOT3VcW57D7dcv7UFGZr5XAZDDd
+         /AgryC8h5xhXO1MQBCnz57PbI1aeGcf5901Iwj1bdglUVrcllEHMUlE8f5UWtEDSbiGd
+         Nr9hWLQLb4PHaSW73uZEjvvvUsnx/JItaI4FmgnLOAShQrOgzaE4Uci3y8j4DFqwv8dq
+         FyV1BRBmOjayNBedoIGUt0ueAhBK3c5ASbjM0C/KSiQx7redQEqslayZnjLQY2NQRC8o
+         9Wzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmkR6ShsbtPm+C6Quoc7lvo5ooA6xg1VxIcs7FJvSd29JhKjvYnpJx00r2CpeMbZhSIP9hAQqdSEjGmsGPzbF/Jg7ltvcgax9WXVFK
+X-Gm-Message-State: AOJu0Yz4eoQERadHiPoxnH+5nE6XWusLdkLaD9W6A8fLVVwmbjCzug1V
+	5Lnip1V9VT3z30tYo2eT4rv965M8Z1aVq2w7z453unIzQ8jaihcioz0/p6mOJbA=
+X-Google-Smtp-Source: AGHT+IHod7WifBUl7WN31uqgwKkQIdjobL7dtcDM7zsUKlmpwG3Nkk+YAZ0yifsUngtlMlKS08HWgA==
+X-Received: by 2002:a05:600c:4f8e:b0:41b:f022:8e69 with SMTP id 5b1f17b1804b1-42164a03160mr19707055e9.19.1717758258064;
+        Fri, 07 Jun 2024 04:04:18 -0700 (PDT)
+Received: from meli-email.org (adsl-105.37.6.1.tellas.gr. [37.6.1.105])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215809fcbesm84707525e9.0.2024.06.07.04.04.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 04:03:51 -0700 (PDT)
-Date: Fri, 7 Jun 2024 14:03:50 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: srinivas.kandagatla@linaro.org
-Cc: broonie@kernel.org, perex@perex.cz, lgirdwood@gmail.com, 
-	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	krzk+dt@kernel.org, neil.armstrong@linaro.org, krzysztof.kozlowski@linaro.org
-Subject: Re: [PATCH v2 2/2] ASoC: codec: lpass-rx-macro: add suppor for 2.5
- codec version
-Message-ID: <qjyuvejxvjfanhqi3xpgobqjuugh52okxiutdprprx43emee7t@gzh7go6yc77z>
-References: <20240606122559.116698-1-srinivas.kandagatla@linaro.org>
- <20240606122559.116698-3-srinivas.kandagatla@linaro.org>
+        Fri, 07 Jun 2024 04:04:17 -0700 (PDT)
+Date: Fri, 07 Jun 2024 13:38:17 +0300
+From: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, Bj=?UTF-8?B?w7Y=?= rn Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, Alex Benn=?UTF-8?B?w6k=?= e <alex.bennee@linaro.org>, Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 2/8] rust: Extend OPP bindings for the OPP table
+User-Agent: meli 0.8.5
+References: <cover.1717750631.git.viresh.kumar@linaro.org> <dc156230814a899e5e3ffb6f3a0e5471d92506de.1717750631.git.viresh.kumar@linaro.org>
+In-Reply-To: <dc156230814a899e5e3ffb6f3a0e5471d92506de.1717750631.git.viresh.kumar@linaro.org>
+Message-ID: <epir3.2kxc5jzd28c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606122559.116698-3-srinivas.kandagatla@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
 
-On Thu, Jun 06, 2024 at 01:25:59PM +0100, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Fri, 07 Jun 2024 12:12, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>This extends OPP bindings with the bindings for the `struct opp_table`.
+>
+>Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>---
+> rust/kernel/opp.rs | 374 ++++++++++++++++++++++++++++++++++++++++++++-
+> 1 file changed, 372 insertions(+), 2 deletions(-)
+>
+>diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+>index 9e5cf0412ed5..06f36845047f 100644
+>--- a/rust/kernel/opp.rs
+>+++ b/rust/kernel/opp.rs
+>@@ -7,9 +7,9 @@
+> //! C header: [`include/linux/pm_opp.h`](../../../../../../include/linux/pm_opp.h)
 > 
-> LPASS Codec v2.5 has significant changes in the rx register offsets.
-> Due to this headset playback on SM8550, SM8650, x1e80100 and all SoCs
-> after SM8450 have only Left working.
+> use crate::{
+>-    bindings,
+>+    bindings, cpumask,
+>     device::Device,
+>-    error::{code::*, to_result, Result},
+>+    error::{code::*, from_err_ptr, to_result, Error, Result},
+>     types::{ARef, AlwaysRefCounted, Opaque},
+> };
 > 
-> This patch adjusts the registers to accomdate 2.5 changes. With this
-> fixed now L and R are functional on Headset playback.
+>@@ -31,6 +31,376 @@ pub fn new(freq: u64, u_volt: u64, level: u32, turbo: bool) -> Self {
+>     }
+> }
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  sound/soc/codecs/lpass-rx-macro.c | 565 ++++++++++++++++++++++--------
->  1 file changed, 410 insertions(+), 155 deletions(-)
-> 
-> diff --git a/sound/soc/codecs/lpass-rx-macro.c b/sound/soc/codecs/lpass-rx-macro.c
-> index f35187d69cac..bb8ede0e7076 100644
-> --- a/sound/soc/codecs/lpass-rx-macro.c
-> +++ b/sound/soc/codecs/lpass-rx-macro.c
-> @@ -158,7 +158,7 @@
->  #define CDC_RX_INTR_CTRL_LEVEL0		(0x03C0)
->  #define CDC_RX_INTR_CTRL_BYPASS0	(0x03C8)
->  #define CDC_RX_INTR_CTRL_SET0		(0x03D0)
-> -#define CDC_RX_RXn_RX_PATH_CTL(n)	(0x0400 + 0x80 * n)
-> +#define CDC_RX_RXn_RX_PATH_CTL(rx, n)	(0x0400  + rx->rxn_reg_offset * n)
+>+/// OPP search types.
+>+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+>+pub enum SearchType {
+>+    /// Search for exact value.
+>+    Exact,
+>+    /// Search for highest value less than equal to value.
+>+    Floor,
+>+    /// Search for lowest value greater than equal to value.
+>+    Ceil,
+>+}
 
-It's probably a stride or pitch, not an offset.
+Seeing this enum made me think about memory layouts which are not stable 
+in Rust and can change between compilations unless they have a specific 
+`repr`.
 
->  #define CDC_RX_RX0_RX_PATH_CTL		(0x0400)
->  #define CDC_RX_PATH_RESET_EN_MASK	BIT(6)
->  #define CDC_RX_PATH_CLK_EN_MASK		BIT(5)
-> @@ -166,45 +166,47 @@
->  #define CDC_RX_PATH_PGA_MUTE_MASK	BIT(4)
->  #define CDC_RX_PATH_PGA_MUTE_ENABLE	BIT(4)
->  #define CDC_RX_PATH_PCM_RATE_MASK	GENMASK(3, 0)
-> -#define CDC_RX_RXn_RX_PATH_CFG0(n)	(0x0404 + 0x80 * n)
-> +#define CDC_RX_RXn_RX_PATH_CFG0(rx, n)	(0x0404  + rx->rxn_reg_offset * n)
->  #define CDC_RX_RXn_COMP_EN_MASK		BIT(1)
->  #define CDC_RX_RX0_RX_PATH_CFG0		(0x0404)
->  #define CDC_RX_RXn_CLSH_EN_MASK		BIT(6)
->  #define CDC_RX_DLY_ZN_EN_MASK		BIT(3)
->  #define CDC_RX_DLY_ZN_ENABLE		BIT(3)
->  #define CDC_RX_RXn_HD2_EN_MASK		BIT(2)
-> -#define CDC_RX_RXn_RX_PATH_CFG1(n)	(0x0408 + 0x80 * n)
-> +#define CDC_RX_RXn_RX_PATH_CFG1(rx, n)	(0x0408  + rx->rxn_reg_offset * n)
->  #define CDC_RX_RXn_SIDETONE_EN_MASK	BIT(4)
->  #define CDC_RX_RX0_RX_PATH_CFG1		(0x0408)
->  #define CDC_RX_RX0_HPH_L_EAR_SEL_MASK	BIT(1)
-> -#define CDC_RX_RXn_RX_PATH_CFG2(n)	(0x040C + 0x80 * n)
-> +#define CDC_RX_RXn_RX_PATH_CFG2(rx, n)	(0x040C  + rx->rxn_reg_offset * n)
->  #define CDC_RX_RXn_HPF_CUT_FREQ_MASK	GENMASK(1, 0)
->  #define CDC_RX_RX0_RX_PATH_CFG2		(0x040C)
-> -#define CDC_RX_RXn_RX_PATH_CFG3(n)	(0x0410 + 0x80 * n)
-> +#define CDC_RX_RXn_RX_PATH_CFG3(rx, n)	(0x0410  + rx->rxn_reg_offset * n)
->  #define CDC_RX_RX0_RX_PATH_CFG3		(0x0410)
->  #define CDC_RX_DC_COEFF_SEL_MASK	GENMASK(1, 0)
->  #define CDC_RX_DC_COEFF_SEL_TWO		0x2
-> -#define CDC_RX_RXn_RX_VOL_CTL(n)	(0x0414 + 0x80 * n)
-> +#define CDC_RX_RXn_RX_VOL_CTL(rx, n)	(0x0414  + rx->rxn_reg_offset * n)
->  #define CDC_RX_RX0_RX_VOL_CTL		(0x0414)
-> -#define CDC_RX_RXn_RX_PATH_MIX_CTL(n)	(0x0418 + 0x80 * n)
-> +#define CDC_RX_RXn_RX_PATH_MIX_CTL(rx, n)	(0x0418  + rx->rxn_reg_offset * n)
->  #define CDC_RX_RXn_MIX_PCM_RATE_MASK	GENMASK(3, 0)
->  #define CDC_RX_RXn_MIX_RESET_MASK	BIT(6)
->  #define CDC_RX_RXn_MIX_RESET		BIT(6)
->  #define CDC_RX_RXn_MIX_CLK_EN_MASK	BIT(5)
->  #define CDC_RX_RX0_RX_PATH_MIX_CTL	(0x0418)
->  #define CDC_RX_RX0_RX_PATH_MIX_CFG	(0x041C)
-> -#define CDC_RX_RXn_RX_VOL_MIX_CTL(n)	(0x0420 + 0x80 * n)
-> +#define CDC_RX_RXn_RX_VOL_MIX_CTL(rx, n)	(0x0420  + rx->rxn_reg_offset * n)
->  #define CDC_RX_RX0_RX_VOL_MIX_CTL	(0x0420)
->  #define CDC_RX_RX0_RX_PATH_SEC1		(0x0424)
->  #define CDC_RX_RX0_RX_PATH_SEC2		(0x0428)
->  #define CDC_RX_RX0_RX_PATH_SEC3		(0x042C)
-> +#define CDC_RX_RXn_RX_PATH_SEC3(rx, n)	(0x042c  + rx->rxn_reg_offset * n)
->  #define CDC_RX_RX0_RX_PATH_SEC4		(0x0430)
->  #define CDC_RX_RX0_RX_PATH_SEC7		(0x0434)
-> +#define CDC_RX_RXn_RX_PATH_SEC7(rx, n)	(0x0434  + rx->rxn_reg_offset * n)
->  #define CDC_RX_DSM_OUT_DELAY_SEL_MASK	GENMASK(2, 0)
->  #define CDC_RX_DSM_OUT_DELAY_TWO_SAMPLE	0x2
->  #define CDC_RX_RX0_RX_PATH_MIX_SEC0	(0x0438)
->  #define CDC_RX_RX0_RX_PATH_MIX_SEC1	(0x043C)
-> -#define CDC_RX_RXn_RX_PATH_DSM_CTL(n)	(0x0440 + 0x80 * n)
-> +#define CDC_RX_RXn_RX_PATH_DSM_CTL(rx, n)	(0x0440  + rx->rxn_reg_offset * n)
->  #define CDC_RX_RXn_DSM_CLK_EN_MASK	BIT(0)
->  #define CDC_RX_RX0_RX_PATH_DSM_CTL	(0x0440)
->  #define CDC_RX_RX0_RX_PATH_DSM_DATA1	(0x0444)
-> @@ -213,6 +215,7 @@
->  #define CDC_RX_RX0_RX_PATH_DSM_DATA4	(0x0450)
->  #define CDC_RX_RX0_RX_PATH_DSM_DATA5	(0x0454)
->  #define CDC_RX_RX0_RX_PATH_DSM_DATA6	(0x0458)
-> +/* RX offsets prior to 2.5 codec version */
->  #define CDC_RX_RX1_RX_PATH_CTL		(0x0480)
->  #define CDC_RX_RX1_RX_PATH_CFG0		(0x0484)
->  #define CDC_RX_RX1_RX_PATH_CFG1		(0x0488)
-> @@ -259,10 +262,58 @@
->  #define CDC_RX_RX2_RX_PATH_MIX_SEC0	(0x0544)
->  #define CDC_RX_RX2_RX_PATH_MIX_SEC1	(0x0548)
->  #define CDC_RX_RX2_RX_PATH_DSM_CTL	(0x054C)
-> +
-> +/* LPASS CODEC version 2.5 rx reg offsets */
+Not related to this series directly, has there been discussion about 
+guaranteeing struct layouts in kernel APIs? It'd require a lot of things 
+to happen to cause a problem (multiple users of an API in the kernel in 
+separate compilation units maybe even compiled with different rustc 
+versions).
 
-Please separate 2.5 support into a separate patch.
+>+
+>+/// Operating performance point (OPP) table.
+>+///
+>+/// # Invariants
+>+///
+>+/// The pointer stored in `Self` is non-null and valid for the lifetime of the ARef instance. In
+>+/// particular, the ARef instance owns an increment on underlying object’s reference count.
+>+pub struct Table {
+>+    ptr: *mut bindings::opp_table,
+>+    dev: ARef<Device>,
+>+    em: bool,
+>+    of: bool,
+>+    cpumask: Option<cpumask::Cpumask>,
+>+}
+>+
+>+// SAFETY: The fields of `Table` are safe to be used from any thread.
+>+unsafe impl Send for Table {}
+>+
+>+// SAFETY: The fields of `Table` are safe to be referenced from any thread.
+>+unsafe impl Sync for Table {}
+>+
+>+impl Table {
+>+    /// Creates a new OPP table instance from raw pointer.
+>+    ///
+>+    /// # Safety
+>+    ///
+>+    /// Callers must ensure that `ptr` is valid and non-null.
+>+    unsafe fn from_ptr(ptr: *mut bindings::opp_table, dev: ARef<Device>) -> Self {
+>+        // SAFETY: By the safety requirements, ptr is valid and its refcount will be incremented.
+>+        unsafe { bindings::dev_pm_opp_get_opp_table_ref(ptr) };
+>+
+>+        Self {
+>+            ptr,
+>+            dev,
+>+            em: false,
+>+            of: false,
+>+            cpumask: None,
+>+        }
+>+    }
+>+
+>+    /// Find OPP table from device.
+>+    pub fn from_dev(dev: ARef<Device>) -> Result<Self> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements. Refcount of the OPP table is incremented as well.
+>+        let ptr = from_err_ptr(unsafe { bindings::dev_pm_opp_get_opp_table(dev.as_raw()) })?;
+>+
+>+        Ok(Self {
+>+            ptr,
+>+            dev: dev.clone(),
 
-> +#define CDC_2_5_RX_RX1_RX_PATH_CTL		(0x04c0)
-> +#define CDC_2_5_RX_RX1_RX_PATH_CFG0		(0x04c4)
-> +#define CDC_2_5_RX_RX1_RX_PATH_CFG1		(0x04c8)
-> +#define CDC_2_5_RX_RX1_RX_PATH_CFG2		(0x04cC)
-> +#define CDC_2_5_RX_RX1_RX_PATH_CFG3		(0x04d0)
-> +#define CDC_2_5_RX_RX1_RX_VOL_CTL		(0x04d4)
-> +#define CDC_2_5_RX_RX1_RX_PATH_MIX_CTL		(0x04d8)
-> +#define CDC_2_5_RX_RX1_RX_PATH_MIX_CFG		(0x04dC)
-> +#define CDC_2_5_RX_RX1_RX_VOL_MIX_CTL		(0x04e0)
-> +#define CDC_2_5_RX_RX1_RX_PATH_SEC1		(0x04e4)
-> +#define CDC_2_5_RX_RX1_RX_PATH_SEC2		(0x04e8)
-> +#define CDC_2_5_RX_RX1_RX_PATH_SEC3		(0x04eC)
-> +#define CDC_2_5_RX_RX1_RX_PATH_SEC4		(0x04f0)
-> +#define CDC_2_5_RX_RX1_RX_PATH_SEC7		(0x04f4)
-> +#define CDC_2_5_RX_RX1_RX_PATH_MIX_SEC0		(0x04f8)
-> +#define CDC_2_5_RX_RX1_RX_PATH_MIX_SEC1		(0x04fC)
-> +#define CDC_2_5_RX_RX1_RX_PATH_DSM_CTL		(0x0500)
-> +#define CDC_2_5_RX_RX1_RX_PATH_DSM_DATA1	(0x0504)
-> +#define CDC_2_5_RX_RX1_RX_PATH_DSM_DATA2	(0x0508)
-> +#define CDC_2_5_RX_RX1_RX_PATH_DSM_DATA3	(0x050C)
-> +#define CDC_2_5_RX_RX1_RX_PATH_DSM_DATA4	(0x0510)
-> +#define CDC_2_5_RX_RX1_RX_PATH_DSM_DATA5	(0x0514)
-> +#define CDC_2_5_RX_RX1_RX_PATH_DSM_DATA6	(0x0518)
-> +
-> +#define CDC_2_5_RX_RX2_RX_PATH_CTL		(0x0580)
-> +#define CDC_2_5_RX_RX2_RX_PATH_CFG0		(0x0584)
-> +#define CDC_2_5_RX_RX2_RX_PATH_CFG1		(0x0588)
-> +#define CDC_2_5_RX_RX2_RX_PATH_CFG2		(0x058C)
-> +#define CDC_2_5_RX_RX2_RX_PATH_CFG3		(0x0590)
-> +#define CDC_2_5_RX_RX2_RX_VOL_CTL		(0x0594)
-> +#define CDC_2_5_RX_RX2_RX_PATH_MIX_CTL		(0x0598)
-> +#define CDC_2_5_RX_RX2_RX_PATH_MIX_CFG		(0x059C)
-> +#define CDC_2_5_RX_RX2_RX_VOL_MIX_CTL		(0x05a0)
-> +#define CDC_2_5_RX_RX2_RX_PATH_SEC0		(0x05a4)
-> +#define CDC_2_5_RX_RX2_RX_PATH_SEC1		(0x05a8)
-> +#define CDC_2_5_RX_RX2_RX_PATH_SEC2		(0x05aC)
-> +#define CDC_2_5_RX_RX2_RX_PATH_SEC3		(0x05b0)
-> +#define CDC_2_5_RX_RX2_RX_PATH_SEC4		(0x05b4)
-> +#define CDC_2_5_RX_RX2_RX_PATH_SEC5		(0x05b8)
-> +#define CDC_2_5_RX_RX2_RX_PATH_SEC6		(0x05bC)
-> +#define CDC_2_5_RX_RX2_RX_PATH_SEC7		(0x05c0)
-> +#define CDC_2_5_RX_RX2_RX_PATH_MIX_SEC0		(0x05c4)
-> +#define CDC_2_5_RX_RX2_RX_PATH_MIX_SEC1		(0x05c8)
-> +#define CDC_2_5_RX_RX2_RX_PATH_DSM_CTL		(0x05cC)
-> +
->  #define CDC_RX_IDLE_DETECT_PATH_CTL	(0x0780)
->  #define CDC_RX_IDLE_DETECT_CFG0		(0x0784)
->  #define CDC_RX_IDLE_DETECT_CFG1		(0x0788)
->  #define CDC_RX_IDLE_DETECT_CFG2		(0x078C)
-> +
->  #define CDC_RX_IDLE_DETECT_CFG3		(0x0790)
->  #define CDC_RX_COMPANDERn_CTL0(n)	(0x0800 + 0x40 * n)
->  #define CDC_RX_COMPANDERn_CLK_EN_MASK	BIT(0)
-> @@ -598,6 +649,8 @@ struct rx_macro {
->  	int rx_mclk_users;
->  	int clsh_users;
->  	int rx_mclk_cnt;
-> +	int codec_version;
-> +	int rxn_reg_offset;
->  	bool is_ear_mode_on;
->  	bool hph_pwr_mode;
->  	bool hph_hd2_mode;
-> @@ -755,11 +808,15 @@ static SOC_ENUM_SINGLE_DECL(rx_int1_2_interp_enum, SND_SOC_NOPM, 0,
->  			    rx_int1_2_interp_mux_text);
->  static SOC_ENUM_SINGLE_DECL(rx_int2_2_interp_enum, SND_SOC_NOPM, 0,
->  			    rx_int2_2_interp_mux_text);
-> +
+Clone is not probably not needed here, right? the argument value will be 
+dropped after this.
 
-unrelated?
+>+            em: false,
+>+            of: false,
+>+            cpumask: None,
+>+        })
+>+    }
+>+
+>+    /// Add device tree based OPP table for the device.
+>+    #[cfg(CONFIG_OF)]
+>+    pub fn from_of(dev: ARef<Device>, index: i32) -> Result<Self> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements. Refcount of the OPP table is incremented as well.
+>+        to_result(unsafe { bindings::dev_pm_opp_of_add_table_indexed(dev.as_raw(), index) })?;
+>+
+>+        // Fetch the newly created table.
+>+        let mut table = Self::from_dev(dev)?;
+>+        table.of = true;
+>+
+>+        Ok(table)
+>+    }
+>+
+>+    // Remove device tree based OPP table for the device.
+>+    #[cfg(CONFIG_OF)]
+>+    fn remove_of(&self) {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements. We took the reference from `from_of` earlier, it is safe to drop the same
+>+        // now.
+>+        unsafe { bindings::dev_pm_opp_of_remove_table(self.dev.as_raw()) };
+>+    }
+>+
+>+    /// Add device tree based OPP table for CPU devices.
+>+    #[cfg(CONFIG_OF)]
+>+    pub fn from_of_cpumask(dev: ARef<Device>, cpumask: &mut cpumask::Cpumask) -> Result<Self> {
+>+        // SAFETY: The cpumask is valid and the returned ptr will be owned by the [`Table`] instance.
+>+        to_result(unsafe { bindings::dev_pm_opp_of_cpumask_add_table(cpumask.as_ptr()) })?;
+>+
+>+        // Fetch the newly created table.
+>+        let mut table = Self::from_dev(dev)?;
+>+        // SAFETY: The `cpumask` is guaranteed by the C code to be valid.
+>+        table.cpumask = Some(unsafe { cpumask::Cpumask::new(cpumask.as_mut_ptr()) });
+>+
+>+        Ok(table)
+>+    }
+>+
+>+    // Remove device tree based OPP table for CPU devices.
+>+    #[cfg(CONFIG_OF)]
+>+    fn remove_of_cpumask(&self, cpumask: &cpumask::Cpumask) {
+>+        // SAFETY: The cpumask is valid and we took the reference from `from_of_cpumask` earlier,
+>+        // it is safe to drop the same now.
+>+        unsafe { bindings::dev_pm_opp_of_cpumask_remove_table(cpumask.as_ptr()) };
+>+    }
+>+
+>+    /// Returns the number of OPPs in the table.
+>+    pub fn opp_count(&self) -> Result<u32> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        let ret = unsafe { bindings::dev_pm_opp_get_opp_count(self.dev.as_raw()) };
+>+        if ret < 0 {
+>+            Err(Error::from_errno(ret))
+>+        } else {
+>+            Ok(ret as u32)
+>+        }
+>+    }
+>+
+>+    /// Returns max clock latency of the OPPs in the table.
+>+    pub fn max_clock_latency(&self) -> u64 {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        unsafe { bindings::dev_pm_opp_get_max_clock_latency(self.dev.as_raw()) }
+>+    }
+>+
+>+    /// Returns max volt latency of the OPPs in the table.
+>+    pub fn max_volt_latency(&self) -> u64 {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        unsafe { bindings::dev_pm_opp_get_max_volt_latency(self.dev.as_raw()) }
+>+    }
+>+
+>+    /// Returns max transition latency of the OPPs in the table.
+>+    pub fn max_transition_latency(&self) -> u64 {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        unsafe { bindings::dev_pm_opp_get_max_transition_latency(self.dev.as_raw()) }
+>+    }
+>+
+>+    /// Returns the suspend OPP.
+>+    pub fn suspend_freq(&self) -> u64 {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        unsafe { bindings::dev_pm_opp_get_suspend_opp_freq(self.dev.as_raw()) }
+>+    }
+>+
+>+    /// Synchronizes regulators used by the OPP table.
+>+    pub fn sync_regulators(&self) -> Result<()> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        to_result(unsafe { bindings::dev_pm_opp_sync_regulators(self.dev.as_raw()) })
+>+    }
+>+
+>+    /// Gets sharing CPUs.
+>+    pub fn sharing_cpus(dev: ARef<Device>, cpumask: &mut cpumask::Cpumask) -> Result<()> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        to_result(unsafe {
+>+            bindings::dev_pm_opp_get_sharing_cpus(dev.as_raw(), cpumask.as_mut_ptr())
+>+        })
+>+    }
+>+
+>+    /// Sets sharing CPUs.
+>+    pub fn set_sharing_cpus(&self, cpumask: &cpumask::Cpumask) -> Result<()> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        to_result(unsafe {
+>+            bindings::dev_pm_opp_set_sharing_cpus(self.dev.as_raw(), cpumask.as_ptr())
+>+        })
+>+    }
+>+
+>+    /// Gets sharing CPUs from Device tree.
+>+    #[cfg(CONFIG_OF)]
+>+    pub fn of_sharing_cpus(dev: ARef<Device>, cpumask: &mut cpumask::Cpumask) -> Result<()> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        to_result(unsafe {
+>+            bindings::dev_pm_opp_of_get_sharing_cpus(dev.as_raw(), cpumask.as_mut_ptr())
+>+        })
+>+    }
+>+
+>+    /// Updates the voltage value for an OPP.
+>+    pub fn adjust_voltage(
+>+        &self,
+>+        freq: u64,
+>+        u_volt: u64,
+>+        u_volt_min: u64,
+>+        u_volt_max: u64,
+>+    ) -> Result<()> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        to_result(unsafe {
+>+            bindings::dev_pm_opp_adjust_voltage(
+>+                self.dev.as_raw(),
+>+                freq,
+>+                u_volt,
+>+                u_volt_min,
+>+                u_volt_max,
+>+            )
+>+        })
+>+    }
+>+
+>+    /// Sets a matching OPP based on frequency.
+>+    pub fn set_rate(&self, freq: u64) -> Result<()> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        to_result(unsafe { bindings::dev_pm_opp_set_rate(self.dev.as_raw(), freq) })
+>+    }
+>+
+>+    /// Sets exact OPP.
+>+    pub fn set_opp(&self, opp: ARef<OPP>) -> Result<()> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        to_result(unsafe { bindings::dev_pm_opp_set_opp(self.dev.as_raw(), opp.as_mut_ptr()) })
+>+    }
+>+
+>+    /// Finds OPP based on frequency.
+>+    pub fn opp_from_freq(
+>+        &self,
+>+        mut freq: u64,
+>+        available: Option<bool>,
+>+        index: Option<u32>,
+>+        stype: SearchType,
+>+    ) -> Result<ARef<OPP>> {
+>+        let rdev = self.dev.as_raw();
+>+        let index = index.unwrap_or(0);
+>+
+>+        let ptr = from_err_ptr(match stype {
+>+            SearchType::Exact => {
+>+                if let Some(available) = available {
+>+                    // SAFETY: The requirements are satisfied by the existence of `Device` and
+>+                    // its safety requirements. The returned ptr will be owned by the new [`OPP`]
+>+                    // instance.
+>+                    unsafe {
+>+                        bindings::dev_pm_opp_find_freq_exact_indexed(rdev, freq, index, available)
+>+                    }
+>+                } else {
+>+                    return Err(EINVAL);
+>+                }
+>+            }
+>+
+>+            // SAFETY: The requirements are satisfied by the existence of `Device` and its
+>+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
+>+            SearchType::Ceil => unsafe {
+>+                bindings::dev_pm_opp_find_freq_ceil_indexed(rdev, &mut freq as *mut u64, index)
+>+            },
+>+
+>+            // SAFETY: The requirements are satisfied by the existence of `Device` and its
+>+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
+>+            SearchType::Floor => unsafe {
+>+                bindings::dev_pm_opp_find_freq_floor_indexed(rdev, &mut freq as *mut u64, index)
+>+            },
+>+        })?;
+>+
+>+        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
+>+        unsafe { OPP::from_ptr_owned(ptr) }
+>+    }
+>+
+>+    /// Finds OPP based on level.
+>+    pub fn opp_from_level(&self, mut level: u32, stype: SearchType) -> Result<ARef<OPP>> {
+>+        let rdev = self.dev.as_raw();
+>+
+>+        let ptr = from_err_ptr(match stype {
+>+            // SAFETY: The requirements are satisfied by the existence of `Device` and its
+>+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
+>+            SearchType::Exact => unsafe { bindings::dev_pm_opp_find_level_exact(rdev, level) },
+>+
 
->  static SOC_ENUM_SINGLE_DECL(rx_int0_dem_inp_enum, CDC_RX_RX0_RX_PATH_CFG1, 0,
->  			    rx_int_dem_inp_mux_text);
->  static SOC_ENUM_SINGLE_DECL(rx_int1_dem_inp_enum, CDC_RX_RX1_RX_PATH_CFG1, 0,
->  			    rx_int_dem_inp_mux_text);
->  
-> +static SOC_ENUM_SINGLE_DECL(rx_2_5_int1_dem_inp_enum, CDC_2_5_RX_RX1_RX_PATH_CFG1, 0,
-> +			    rx_int_dem_inp_mux_text);
-> +
->  static SOC_ENUM_SINGLE_DECL(rx_macro_rx0_enum, SND_SOC_NOPM, 0, rx_macro_mux_text);
->  static SOC_ENUM_SINGLE_DECL(rx_macro_rx1_enum, SND_SOC_NOPM, 0, rx_macro_mux_text);
->  static SOC_ENUM_SINGLE_DECL(rx_macro_rx2_enum, SND_SOC_NOPM, 0, rx_macro_mux_text);
+Minor style comment, the empty lines between match patterns are unusual
 
-[skipped all split default + add 2.5] chunks
-
->  static int rx_macro_component_probe(struct snd_soc_component *component)
->  {
-> +	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
->  	struct rx_macro *rx = snd_soc_component_get_drvdata(component);
-> +	const struct snd_soc_dapm_widget *widgets;
-> +	const struct snd_kcontrol_new *controls;
-> +	unsigned int num_controls;
-> +	int ret, num_widgets;
->  
->  	snd_soc_component_init_regmap(component, rx->regmap);
->  
-> -	snd_soc_component_update_bits(component, CDC_RX_RX0_RX_PATH_SEC7,
-> +	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_SEC7(rx, 0),
->  				      CDC_RX_DSM_OUT_DELAY_SEL_MASK,
->  				      CDC_RX_DSM_OUT_DELAY_TWO_SAMPLE);
-> -	snd_soc_component_update_bits(component, CDC_RX_RX1_RX_PATH_SEC7,
-> +	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_SEC7(rx, 1),
->  				      CDC_RX_DSM_OUT_DELAY_SEL_MASK,
->  				      CDC_RX_DSM_OUT_DELAY_TWO_SAMPLE);
-> -	snd_soc_component_update_bits(component, CDC_RX_RX2_RX_PATH_SEC7,
-> +	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_SEC7(rx, 2),
->  				      CDC_RX_DSM_OUT_DELAY_SEL_MASK,
->  				      CDC_RX_DSM_OUT_DELAY_TWO_SAMPLE);
-> -	snd_soc_component_update_bits(component, CDC_RX_RX0_RX_PATH_CFG3,
-> +	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_CFG3(rx, 0),
->  				      CDC_RX_DC_COEFF_SEL_MASK,
->  				      CDC_RX_DC_COEFF_SEL_TWO);
-> -	snd_soc_component_update_bits(component, CDC_RX_RX1_RX_PATH_CFG3,
-> +	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_CFG3(rx, 1),
->  				      CDC_RX_DC_COEFF_SEL_MASK,
->  				      CDC_RX_DC_COEFF_SEL_TWO);
-> -	snd_soc_component_update_bits(component, CDC_RX_RX2_RX_PATH_CFG3,
-> +	snd_soc_component_update_bits(component, CDC_RX_RXn_RX_PATH_CFG3(rx, 2),
->  				      CDC_RX_DC_COEFF_SEL_MASK,
->  				      CDC_RX_DC_COEFF_SEL_TWO);
->  
-> +	if (rx->codec_version >= LPASS_CODEC_VERSION_2_5) {
-> +		controls = rx_macro_2_5_snd_controls;
-> +		num_controls = ARRAY_SIZE(rx_macro_2_5_snd_controls);
-> +		widgets = rx_macro_2_5_dapm_widgets;
-> +		num_widgets = ARRAY_SIZE(rx_macro_2_5_dapm_widgets);
-> +	} else {
-> +		controls = rx_macro_def_snd_controls;
-> +		num_controls = ARRAY_SIZE(rx_macro_def_snd_controls);
-> +		widgets = rx_macro_def_dapm_widgets;
-> +		num_widgets = ARRAY_SIZE(rx_macro_def_dapm_widgets);
-> +	}
-> +
->  	rx->component = component;
->  
-> -	return 0;
-> +	ret = snd_soc_add_component_controls(component, controls, num_controls);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return snd_soc_dapm_new_controls(dapm, widgets, num_widgets);
->  }
->  
->  static int swclk_gate_enable(struct clk_hw *hw)
-> @@ -3523,11 +3748,12 @@ static const struct snd_soc_component_driver rx_macro_component_drv = {
->  
->  static int rx_macro_probe(struct platform_device *pdev)
->  {
-> +	struct reg_default *reg_defaults;
->  	struct device *dev = &pdev->dev;
->  	kernel_ulong_t flags;
->  	struct rx_macro *rx;
->  	void __iomem *base;
-> -	int ret;
-> +	int ret, def_count;
->  
->  	flags = (kernel_ulong_t)device_get_match_data(dev);
->  
-> @@ -3567,6 +3793,33 @@ static int rx_macro_probe(struct platform_device *pdev)
->  		goto err;
->  	}
->  
-> +	rx->codec_version = lpass_macro_get_codec_version();
-
-What guarantees that VA macro has been probed already? If I'm not
-mistaken, we might easily get a default '0' here instead of a correct
-version.
-
-> +	switch (rx->codec_version) {
-> +	case LPASS_CODEC_VERSION_2_5 ... LPASS_CODEC_VERSION_2_8:
-> +		rx->rxn_reg_offset = 0xc0;
-> +		def_count = ARRAY_SIZE(rx_defaults) + ARRAY_SIZE(rx_2_5_defaults);
-> +		reg_defaults = kmalloc_array(def_count, sizeof(struct reg_default), GFP_KERNEL);
-> +		if (!reg_defaults)
-> +			return -ENOMEM;
-> +		memcpy(&reg_defaults[0], rx_defaults, sizeof(rx_defaults));
-> +		memcpy(&reg_defaults[ARRAY_SIZE(rx_defaults)],
-> +				rx_2_5_defaults, sizeof(rx_2_5_defaults));
-> +		break;
-> +	default:
-> +		rx->rxn_reg_offset = 0x80;
-> +		def_count = ARRAY_SIZE(rx_defaults) + ARRAY_SIZE(rx_pre_2_5_defaults);
-> +		reg_defaults = kmalloc_array(def_count, sizeof(struct reg_default), GFP_KERNEL);
-> +		if (!reg_defaults)
-> +			return -ENOMEM;
-> +		memcpy(&reg_defaults[0], rx_defaults, sizeof(rx_defaults));
-> +		memcpy(&reg_defaults[ARRAY_SIZE(rx_defaults)],
-> +				rx_pre_2_5_defaults, sizeof(rx_pre_2_5_defaults));
-> +		break;
-> +	}
-> +
-> +	rx_regmap_config.reg_defaults = reg_defaults,
-> +	rx_regmap_config.num_reg_defaults = def_count;
-> +
->  	rx->regmap = devm_regmap_init_mmio(dev, base, &rx_regmap_config);
->  	if (IS_ERR(rx->regmap)) {
->  		ret = PTR_ERR(rx->regmap);
-> @@ -3629,6 +3882,7 @@ static int rx_macro_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_clkout;
->  
-> +	kfree(reg_defaults);
->  	return 0;
->  
->  err_clkout:
-> @@ -3642,6 +3896,7 @@ static int rx_macro_probe(struct platform_device *pdev)
->  err_dcodec:
->  	clk_disable_unprepare(rx->macro);
->  err:
-> +	kfree(reg_defaults);
->  	lpass_macro_pds_exit(rx->pds);
->  
->  	return ret;
-> -- 
-> 2.21.0
-> 
-
--- 
-With best wishes
-Dmitry
+>+            // SAFETY: The requirements are satisfied by the existence of `Device` and its
+>+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
+>+            SearchType::Ceil => unsafe {
+>+                bindings::dev_pm_opp_find_level_ceil(rdev, &mut level as *mut u32)
+>+            },
+>+
+>+            // SAFETY: The requirements are satisfied by the existence of `Device` and its
+>+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
+>+            SearchType::Floor => unsafe {
+>+                bindings::dev_pm_opp_find_level_floor(rdev, &mut level as *mut u32)
+>+            },
+>+        })?;
+>+
+>+        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
+>+        unsafe { OPP::from_ptr_owned(ptr) }
+>+    }
+>+
+>+    /// Finds OPP based on bandwidth.
+>+    pub fn opp_from_bw(&self, mut bw: u32, index: i32, stype: SearchType) -> Result<ARef<OPP>> {
+>+        let rdev = self.dev.as_raw();
+>+
+>+        let ptr = from_err_ptr(match stype {
+>+            // The OPP core doesn't support this yet.
+>+            SearchType::Exact => return Err(EINVAL),
+>+
+>+            // SAFETY: The requirements are satisfied by the existence of `Device` and its
+>+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
+>+            SearchType::Ceil => unsafe {
+>+                bindings::dev_pm_opp_find_bw_ceil(rdev, &mut bw as *mut u32, index)
+>+            },
+>+
+>+            // SAFETY: The requirements are satisfied by the existence of `Device` and its
+>+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
+>+            SearchType::Floor => unsafe {
+>+                bindings::dev_pm_opp_find_bw_floor(rdev, &mut bw as *mut u32, index)
+>+            },
+>+        })?;
+>+
+>+        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
+>+        unsafe { OPP::from_ptr_owned(ptr) }
+>+    }
+>+
+>+    /// Enable the OPP.
+>+    pub fn enable_opp(&self, freq: u64) -> Result<()> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        to_result(unsafe { bindings::dev_pm_opp_enable(self.dev.as_raw(), freq) })
+>+    }
+>+
+>+    /// Disable the OPP.
+>+    pub fn disable_opp(&self, freq: u64) -> Result<()> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        to_result(unsafe { bindings::dev_pm_opp_disable(self.dev.as_raw(), freq) })
+>+    }
+>+
+>+    /// Registers with Energy model.
+>+    #[cfg(CONFIG_OF)]
+>+    pub fn of_register_em(&mut self, cpumask: &mut cpumask::Cpumask) -> Result<()> {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements.
+>+        to_result(unsafe {
+>+            bindings::dev_pm_opp_of_register_em(self.dev.as_raw(), cpumask.as_mut_ptr())
+>+        })?;
+>+
+>+        self.em = true;
+>+        Ok(())
+>+    }
+>+
+>+    // Unregisters with Energy model.
+>+    #[cfg(CONFIG_OF)]
+>+    fn of_unregister_em(&self) {
+>+        // SAFETY: The requirements are satisfied by the existence of `Device` and its safety
+>+        // requirements. We registered with the EM framework earlier, it is safe to unregister now.
+>+        unsafe { bindings::em_dev_unregister_perf_domain(self.dev.as_raw()) };
+>+    }
+>+}
+>+
+>+impl Drop for Table {
+>+    fn drop(&mut self) {
+>+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe
+>+        // to relinquish it now.
+>+        unsafe { bindings::dev_pm_opp_put_opp_table(self.ptr) };
+>+
+>+        #[cfg(CONFIG_OF)]
+>+        {
+>+            if self.em {
+>+                self.of_unregister_em();
+>+            }
+>+
+>+            if self.of {
+>+                self.remove_of();
+>+            } else if let Some(cpumask) = &self.cpumask {
+>+                self.remove_of_cpumask(cpumask);
+>+            }
+>+        }
+>+    }
+>+}
+>+
+> /// Operating performance point (OPP).
+> ///
+> /// # Invariants
+>-- 
+>2.31.1.272.g89b43f80a514
+>
