@@ -1,294 +1,190 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C5815D5C4;
-	Fri,  7 Jun 2024 10:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFFD15D5C4
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 10:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717756853; cv=none; b=P/BfR6xs7dqxXAj/RnGmlFbnLv9LcgEzvrNDg0rdusyWkVcgnSSvNYLbr3835jE6f3mOb8Z9tF6XrFsRtBNtpgQ4MjaRUC06hNilo2qDoiib3NkxR5pZvU9/kkI4cFjF8NztEUfWHRHZNTLAyWnvxqT7JbohHNreBJL1EZcAsvA=
+	t=1717757036; cv=none; b=XKPoRLY+npsdnogKOBWgg/LBIMCClCYRy5FsMrqynmnkF+P9HoOJ4HlyDHAsKpkidhqWJHhcswvOU9pNEXuBhibjsRbNerPW6tP5+aIV/KwA2QqpxBdr/6CsJqV9/lBu1Wsf1RMhhyTmANmCWRXuPJu5ygCyJBZ13aPFqpW1B58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717756853; c=relaxed/simple;
-	bh=UynYF8JW/N9DYyJC+f4j3JHrpHyBb40KUm2kws6VKh0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ddonD1kYKqRl5CjhNgcMRppIp3kW1MA4jVEkl0It9ZFpb2wX/kt5X4nTpjUGt41odnCGbObWi8/zij4Sc0oKaCIhVn3/DMCLZQH4LGFEi833Z+zzFeAAeMghKpbYUsF0Q9vdGsLOHlLv2fo15s790skwMIeUwfgpuK3TMGVBMdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YLsL13wL; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717757036; c=relaxed/simple;
+	bh=nftZrm39yKOwCjNTnJxdn3wtYwK7szKXFcVQzaV3Yw8=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=GQge0SNT2SBV6Fk+SNyCE5tRHgAhjg6rqowXw7oRTuhu14oRbHn3ATgZFE6fYke9Mbmlwow+9JvytJ527oG+DGA2X8U6gozWiTcyrYpHP31Lo4+J+Ru7gTxAxdw0ckbUh0zeUkFPbkE8RsfvBqSZGQK0dPNYaN+YnJSfUkecOH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WjIbObKR; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YLsL13wL"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-35e4aaa0f33so1986578f8f.0;
-        Fri, 07 Jun 2024 03:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717756850; x=1718361650; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kz+LCmEdD3MpY9rq5ZseyIHOMygig8X78a8YfUFrEaM=;
-        b=YLsL13wLv5d31hrh3JkWo2MEqXaoGr8v4Z/OzgRACeGqkZwxR9wlv+rCoroFFJqt/K
-         ipAR0zSm4K8BIe0ZsoCiydr+qn6wXqWXNiIbHhpLGfEPzx8EYKo57/2S/QkS8uJpZWza
-         M9SFqsKaqEB5N8SrieRfc+tLa6YLzrXcdQWgu2kY1fWok22Hk38xDenlko9GadUAAwGq
-         gHKmbzLDs+2rcAoqttTUyMzuBzxpaaxIc7bu9QHLOUZWdvLVXnjhCJQCGD8imogqozgD
-         bUQ5s5i9U4dc8tI4Rb/1SbSZku+pHlWAVurONRnNUxkUQfUZDOLQEvaW4x7+WKhajKhR
-         RyGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717756850; x=1718361650;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Kz+LCmEdD3MpY9rq5ZseyIHOMygig8X78a8YfUFrEaM=;
-        b=wq7FPbET/ImaidHclVbW9JIaJ308TbjZzPurmMv3z6RtlD2UKxtt05qgpKQHstThOw
-         hr6QFIeT7KjWFlsoeT2Z48smdawhcHdTOJFhfkQI2DlvSZog1LeYtRxiLkqWEbRx0TnC
-         wmavpb03BmDhlerbVHkh+VUES8WooU5uVcbrx8CJrG2wllT5X8WNuRy4QG+ENeLhemBn
-         i3AVImhEEEnmBT+BGVWf3x+SVAj2b73n4PUqfG8vslY9pqC0Adorrgex48+9OKHHhEUZ
-         aPGlzgYvFh7JyxdHlpGQYzwDznxTpVZF7+nUogSEToVOPQJp/V0LYuvI07Fd6y5r8+YT
-         S6JA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrmh/ZgSSG7fwVhw6rlNBTvrnyowYVvEwa8bAvkVKMjSU1rke+dr2ODhyqgrAP5lQc07422uRpeF70oTeOTWSs7dLt7s54ZoQz
-X-Gm-Message-State: AOJu0YzYrQbpeKceUf6Xiy827M+aJoQDtl22JxApusAIodsIVrIGdEG+
-	Pek1FfALaZw06/yfANP6kxFAgGgwhcMIqBFFWd7z65zXERZzLQ/p
-X-Google-Smtp-Source: AGHT+IFWrSsV98lABxtAWuYUuhaUhOEgnia9rghGWKGQ3beuppFQ0JQ+p1ULcJ5bOdLbp2II/lu7CQ==
-X-Received: by 2002:a05:6000:45:b0:35e:7d21:cad2 with SMTP id ffacd0b85a97d-35efed5a649mr1974916f8f.30.1717756849835;
-        Fri, 07 Jun 2024 03:40:49 -0700 (PDT)
-Received: from localhost.localdomain ([78.210.52.100])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d297a4sm3731717f8f.9.2024.06.07.03.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 03:40:49 -0700 (PDT)
-From: Antoni Pokusinski <apokusinski01@gmail.com>
-X-Google-Original-From: Antoni Pokusinski <apokusinski@o2.pl>
-To: jic23@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	apokusinski@o2.pl
-Subject: [PATCH v2] iio: humidity: si7020: add heater support
-Date: Fri,  7 Jun 2024 12:39:45 +0200
-Message-Id: <20240607103944.11730-1-apokusinski@o2.pl>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WjIbObKR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717757035; x=1749293035;
+  h=date:from:to:cc:subject:message-id;
+  bh=nftZrm39yKOwCjNTnJxdn3wtYwK7szKXFcVQzaV3Yw8=;
+  b=WjIbObKRPc1SIQoZnwe+njJaE/q3QGWnHYXQKQ5rqFFGlmVzByNklXA6
+   gQFxI0gqIPO8mcuRvskZp8Y9TUfXLWa+tsDIIJNt4Qm8MKoQ6teRa30Yw
+   Qb0nmD5656/tGPpJ7g9+bqdH76ad0VbzFHHHfzaSihNqeE/8PwfI7e8sV
+   e2OhfRB1o36axPIDq0LpRibViWDrd9jkl6qjfHLBHzSp2BHyNxP4mqW0Y
+   cgXpnStuAXrFSIxtD5fwnUdi32E56e+KOVhLcKkNqXkUlmqpi4TiBQJ+3
+   v6U3EUzbp3jpH1BVaI4OECtJnZ3P2tklEGFctuQku01whs3uhE3w7E3xr
+   Q==;
+X-CSE-ConnectionGUID: /VWIpF0WT/Ob5X1EYdhSyw==
+X-CSE-MsgGUID: dcOLvRBpThGfVqkegGrARA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11095"; a="11962272"
+X-IronPort-AV: E=Sophos;i="6.08,220,1712646000"; 
+   d="scan'208";a="11962272"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 03:43:54 -0700
+X-CSE-ConnectionGUID: fy31twCCS5ibxzGgyTIOKg==
+X-CSE-MsgGUID: REclHMxUQ+qnE2qyrHUHxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,220,1712646000"; 
+   d="scan'208";a="75767764"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa001.jf.intel.com with ESMTP; 07 Jun 2024 03:43:53 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sFX4Y-0004ek-32;
+	Fri, 07 Jun 2024 10:43:50 +0000
+Date: Fri, 07 Jun 2024 18:43:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ bf432610fb7b6870036f8f9ebbbef13cac638904
+Message-ID: <202406071825.f0lPYkAs-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This patch adds support for the integrated on-chip heater that is present
-on all the devices supported by this driver (si7020, si7021, si7013, th6).
-In order to configure the heater, the driver interacts with the following
-device registers:
-* User Register - the 2nd bit of this register is a "Heater Enable bit"
-  (0 means that the heater is off, 1 means that it's on).
-* Heater Register - this register is present only on the si70xx devices
-  and controls the current flowing through the heater. The 4 lower bits
-  of this register can be assigned values from 0x0 to 0xF.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: bf432610fb7b6870036f8f9ebbbef13cac638904  Merge branch into tip/master: 'x86/percpu'
 
-Signed-off-by: Antoni Pokusinski <apokusinski@o2.pl>
+elapsed time: 1475m
 
---
-Changes since v1:
-* macros: remove unnecessary comments
-* macros: add more meaningful names
-* `struct si7020_data`: add comment explaining the mutex
-* `si7020_update_reg()`: change the control flow to more standard
-* use `scoped_guard()` instead of `mutex_lock() <...> mutex_unlock()`
-* `si7020_probe()`: add comment for User Register default value
-* minor format fixes
+configs tested: 113
+configs skipped: 3
 
----
- drivers/iio/humidity/si7020.c | 137 +++++++++++++++++++++++++++++++++-
- 1 file changed, 133 insertions(+), 4 deletions(-)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/drivers/iio/humidity/si7020.c b/drivers/iio/humidity/si7020.c
-index fb1006649328..1215fab7b1a5 100644
---- a/drivers/iio/humidity/si7020.c
-+++ b/drivers/iio/humidity/si7020.c
-@@ -23,6 +23,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/slab.h>
- #include <linux/sysfs.h>
-+#include <linux/stat.h>
- 
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -33,17 +34,38 @@
- #define SI7020CMD_TEMP_HOLD	0xE3
- /* Software Reset */
- #define SI7020CMD_RESET		0xFE
-+#define SI7020CMD_USR_WRITE	0xE6
-+/* "Heater Enabled" bit in the User Register */
-+#define SI7020_USR_HEATER_EN	BIT(2)
-+#define SI7020CMD_HEATER_WRITE	0x51
-+/* Heater current configuration bits */
-+#define SI7020_HEATER_VAL	GENMASK(3, 0)
-+
-+struct si7020_data {
-+	struct i2c_client *client;
-+	/* Lock for cached register values */
-+	struct mutex lock;
-+	u8 user_reg;
-+	u8 heater_reg;
-+};
-+
-+static const int si7020_heater_vals[] = { 0, 1, 0xF };
- 
- static int si7020_read_raw(struct iio_dev *indio_dev,
- 			   struct iio_chan_spec const *chan, int *val,
- 			   int *val2, long mask)
- {
--	struct i2c_client **client = iio_priv(indio_dev);
-+	struct si7020_data *data = iio_priv(indio_dev);
- 	int ret;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
--		ret = i2c_smbus_read_word_swapped(*client,
-+		if (chan->type == IIO_CURRENT) {
-+			*val = data->heater_reg;
-+			return IIO_VAL_INT;
-+		}
-+
-+		ret = i2c_smbus_read_word_swapped(data->client,
- 						  chan->type == IIO_TEMP ?
- 						  SI7020CMD_TEMP_HOLD :
- 						  SI7020CMD_RH_HOLD);
-@@ -96,17 +118,118 @@ static const struct iio_chan_spec si7020_channels[] = {
- 		.type = IIO_TEMP,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
- 			BIT(IIO_CHAN_INFO_SCALE) | BIT(IIO_CHAN_INFO_OFFSET),
-+	},
-+	{
-+		.type = IIO_CURRENT,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.info_mask_separate_available = BIT(IIO_CHAN_INFO_RAW),
-+		.extend_name = "heater",
-+	}
-+};
-+
-+static int si7020_update_reg(struct si7020_data *data,
-+				u8 *reg, u8 cmd, u8 mask, u8 val)
-+{
-+	u8 new = (*reg & ~mask) | val;
-+	int ret;
-+
-+	ret = i2c_smbus_write_byte_data(data->client, cmd, new);
-+	if (ret)
-+		return ret;
-+
-+	*reg = new;
-+
-+	return 0;
-+}
-+
-+static int si7020_write_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     int val, int val2, long mask)
-+{
-+	struct si7020_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		if (chan->type != IIO_CURRENT || val2 != 0 ||
-+			val < si7020_heater_vals[0] || val > si7020_heater_vals[2])
-+			return -EINVAL;
-+
-+		scoped_guard(mutex, &data->lock)
-+			ret = si7020_update_reg(data, &data->heater_reg,
-+					SI7020CMD_HEATER_WRITE, SI7020_HEATER_VAL, val);
-+		return ret;
-+	default:
-+		return -EINVAL;
- 	}
-+}
-+
-+static int si7020_read_available(struct iio_dev *indio_dev,
-+				  struct iio_chan_spec const *chan,
-+				  const int **vals,
-+				  int *type, int *length, long mask)
-+{
-+	if (mask != IIO_CHAN_INFO_RAW || chan->type != IIO_CURRENT)
-+		return -EINVAL;
-+
-+	*vals = si7020_heater_vals;
-+	*type = IIO_VAL_INT;
-+
-+	return IIO_AVAIL_RANGE;
-+}
-+
-+static ssize_t si7020_show_heater_en(struct device *dev,
-+				 struct device_attribute *attr, char *buf)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct si7020_data *data = iio_priv(indio_dev);
-+
-+	return sysfs_emit(buf, "%d\n", !!(data->user_reg & SI7020_USR_HEATER_EN));
-+}
-+
-+static ssize_t si7020_store_heater_en(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t len)
-+{
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-+	struct si7020_data *data = iio_priv(indio_dev);
-+	int ret;
-+	bool val;
-+
-+	ret = kstrtobool(buf, &val);
-+	if (ret)
-+		return ret;
-+
-+	scoped_guard(mutex, &data->lock)
-+		ret = si7020_update_reg(data, &data->user_reg, SI7020CMD_USR_WRITE,
-+				SI7020_USR_HEATER_EN, val ? SI7020_USR_HEATER_EN : 0);
-+
-+	return ret < 0 ? ret : len;
-+}
-+
-+static IIO_DEVICE_ATTR(heater_enable, 0644,
-+		       si7020_show_heater_en, si7020_store_heater_en, 0);
-+
-+static struct attribute *si7020_attributes[] = {
-+	&iio_dev_attr_heater_enable.dev_attr.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group si7020_attribute_group = {
-+	.attrs = si7020_attributes,
- };
- 
- static const struct iio_info si7020_info = {
- 	.read_raw = si7020_read_raw,
-+	.write_raw = si7020_write_raw,
-+	.read_avail = si7020_read_available,
-+	.attrs = &si7020_attribute_group,
- };
- 
- static int si7020_probe(struct i2c_client *client)
- {
- 	struct iio_dev *indio_dev;
--	struct i2c_client **data;
-+	struct si7020_data *data;
- 	int ret;
- 
- 	if (!i2c_check_functionality(client->adapter,
-@@ -126,7 +249,9 @@ static int si7020_probe(struct i2c_client *client)
- 		return -ENOMEM;
- 
- 	data = iio_priv(indio_dev);
--	*data = client;
-+	i2c_set_clientdata(client, indio_dev);
-+	data->client = client;
-+	mutex_init(&data->lock);
- 
- 	indio_dev->name = dev_name(&client->dev);
- 	indio_dev->modes = INDIO_DIRECT_MODE;
-@@ -134,6 +259,10 @@ static int si7020_probe(struct i2c_client *client)
- 	indio_dev->channels = si7020_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(si7020_channels);
- 
-+	/* All the "reserved" bits in the User Register are 1s by default */
-+	data->user_reg = 0x3A;
-+	data->heater_reg = 0x0;
-+
- 	return devm_iio_device_register(&client->dev, indio_dev);
- }
- 
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240607   gcc  
+arc                   randconfig-002-20240607   gcc  
+arm                               allnoconfig   clang
+arm                                 defconfig   clang
+arm                   randconfig-002-20240607   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386         buildonly-randconfig-001-20240607   clang
+i386         buildonly-randconfig-002-20240607   clang
+i386         buildonly-randconfig-003-20240607   clang
+i386         buildonly-randconfig-004-20240607   clang
+i386         buildonly-randconfig-005-20240607   clang
+i386         buildonly-randconfig-006-20240607   clang
+i386                  randconfig-001-20240607   gcc  
+i386                  randconfig-002-20240607   gcc  
+i386                  randconfig-003-20240607   gcc  
+i386                  randconfig-004-20240607   gcc  
+i386                  randconfig-005-20240607   gcc  
+i386                  randconfig-006-20240607   gcc  
+i386                  randconfig-011-20240607   clang
+i386                  randconfig-012-20240607   gcc  
+i386                  randconfig-013-20240607   clang
+i386                  randconfig-014-20240607   clang
+i386                  randconfig-015-20240607   clang
+i386                  randconfig-016-20240607   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64       buildonly-randconfig-001-20240606   gcc  
+x86_64       buildonly-randconfig-002-20240606   clang
+x86_64       buildonly-randconfig-003-20240606   gcc  
+x86_64       buildonly-randconfig-004-20240606   gcc  
+x86_64       buildonly-randconfig-005-20240606   gcc  
+x86_64       buildonly-randconfig-006-20240606   clang
+x86_64                randconfig-001-20240606   gcc  
+x86_64                randconfig-002-20240606   gcc  
+x86_64                randconfig-003-20240606   gcc  
+x86_64                randconfig-004-20240606   clang
+x86_64                randconfig-005-20240606   gcc  
+x86_64                randconfig-006-20240606   gcc  
+x86_64                randconfig-011-20240606   clang
+x86_64                randconfig-012-20240606   gcc  
+x86_64                randconfig-013-20240606   clang
+x86_64                randconfig-014-20240606   clang
+x86_64                randconfig-015-20240606   clang
+x86_64                randconfig-016-20240606   clang
+x86_64                randconfig-071-20240606   clang
+x86_64                randconfig-072-20240606   gcc  
+x86_64                randconfig-073-20240606   clang
+x86_64                randconfig-074-20240606   clang
+x86_64                randconfig-075-20240606   gcc  
+x86_64                randconfig-076-20240606   clang
+xtensa                            allnoconfig   gcc  
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
