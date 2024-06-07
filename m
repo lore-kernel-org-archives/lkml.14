@@ -1,179 +1,167 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F03F1C33
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 17:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEC6196C68;
+	Fri,  7 Jun 2024 17:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717781407; cv=none; b=RGk/R4yNQT53mPsbc+q21veBb1lQgnPdPkbGxVuUNzepnwiswtURdRMgpn9Ic2Y+gewRmcMgBnqhxzxlbfzMq+LsNH04QBgxYKc8umrYRBZpJK9/TAbBN3EFlih+WM0JhGqa61olWPZB3QOXdklAyKzb9Dvce+eKed4C74P09QE=
+	t=1717781410; cv=none; b=Qmy8uVc+XL52EXqqBE96RlLNHTHSMSKU5W92nPhdcppdiZ/BdeJXqDW9HaDbmqsLtK+yr99hLvbpHoag6HdRfihlsKJpwaiC+NVZowcDocuXqeWGElMvr7fP4mMPOyGsf1MFOdyAyp2DFfd2dmuAVEktZRgfhl2+lc3vfJAqLow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717781407; c=relaxed/simple;
-	bh=e0AY1UZVACJQd1xtViB6DdfImOxuE/XRpLuic76lORg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B5l3G6CH3LT9R44TyqJ13WVhmkDf8PmjWKh+oriz9DwwxbTZIVdXWWtEpmQ3PSzAEFHf+lNPbaGcxWMAOFlD++B0qIX12i5kd40O6QxVckhNnBMILEjxgnU0ip1Rit9QcxCQsLt6oZuw17/dndyq3dblUqXDLLz85lM3n21z3t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=IEhWmlGB; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1717781410; c=relaxed/simple;
+	bh=B9tO+B2hT8Xk/eYrXZW//gyZWpphBGJke5m1suqOmjk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dkrIbpe1NxUaN6LNBkYDj+yUGMDZn8ijsbt+7dY/CnJJW52MNc2t/KhS2REo7lxaKeA3hpHzVHyz5x+lpIBY8d9/BTkpKcejwqh+/0nBqHmcUTWoJyiTqitnsifffBMWcAQhewdZDLn4mHSgwY6zUnunq4HNlBhmisZI2zdq/28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LcL0g5Lo; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="IEhWmlGB"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dfaff6bee06so732435276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 10:30:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1717781405; x=1718386205; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nfgbbC++t7lQwnyAlEgbOEhZ3OHimWGA3FY8Pt1QloU=;
-        b=IEhWmlGBeHl1TIJrNTfFfoy5Bb+iflHJf9jEhuYg5J4ChbMU99fETVxjUO3SEJGeYI
-         DHApk1oCdMH3xlDSrjyzFii7tkCxZxjsTpRkcR/PbClR2g7/8dQ0kTfCPJCw0h8BdC9G
-         9LAzaEnkkgRj7a0JLoSk3Y7XFRupUYMeim4Z7ZevnO/WDR1ygy/N908lf8NfKho9I0xp
-         zBvFvxLkQIWs1xXoQ8eeLyChdJeFJvBSa8ttbuT2qrGBss1puA5YFYfJegrfPZVeyNHW
-         ao0ALa8mj1J2bgc9AsVqvgwLN4Ye8vN1xjempHEdSPRrpYE31Aouj4TpHpYd8zSEVOH9
-         lVcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717781405; x=1718386205;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nfgbbC++t7lQwnyAlEgbOEhZ3OHimWGA3FY8Pt1QloU=;
-        b=gmLiUcKqleboY1/xYYlaV3LsoBmb2cJvHXfwFR+dpsuILHPKO0++np2OgwyNz+juok
-         alGlS02WbgSpWBVyi/ysydpQdSmnQhDz5pYpmWXJF0tCUAFw7MLuSLKWxDVUuecnfLjY
-         Juty8pbKKn8LC9KZuRS1yQ2+MwkHBJn2lycTdCXm453u8gQuB8jpy5sigIYELftWacSw
-         1tFDLaF3lLY6tSrMSQnKRBxY/M/yqHBWw0kYFTJ5c688IZdnENHPsVjgqANV+mIqaUc/
-         PYAOMsNY5pz9BigBYKqICO1ovNYv6ztsnXK19v7XNvtGqXHHF0k6AeWWd2PfWCw0xcqK
-         PFGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUbnCKFPKriTSrHI+B7a8eySIyVnaPrnsZt90Gfh4Ge1S5qOFEYy/FTeTEdulxcaHTLnYQ/ysR18x61aTSNqmuylAaGkSle3QrhNd6A
-X-Gm-Message-State: AOJu0YzIrZiuPu6PZs0nIau/qawNHq5hLQ7RAnTUGQG6UIVpM2dphlbo
-	zoNiz4tFc3Jd6j4MiSI5uE9JAwfVGkCXaVDWztCESOYiktM9811w/DgwaCO1DOi/eFO0RtIC1kb
-	UI8QeR/3SM+aDD3x6dA3bgliHf5vjBaYyOua81Q==
-X-Google-Smtp-Source: AGHT+IFROFUKI0sxohaL1XWzrCoSNjL5yAeFP8N4BKV2FeWOpDa9kAY7vqeiyaLF0Gf0qs98IHaiGlLSKSLX4TB58WE=
-X-Received: by 2002:a25:848d:0:b0:deb:a5bd:b5e9 with SMTP id
- 3f1490d57ef6-dfaf65c62aemr2844352276.64.1717781405009; Fri, 07 Jun 2024
- 10:30:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LcL0g5Lo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717781409; x=1749317409;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=B9tO+B2hT8Xk/eYrXZW//gyZWpphBGJke5m1suqOmjk=;
+  b=LcL0g5LoEeTTY7tXfPBb0kyWkeLx+oI2xDNZ2uvA4Fcrvc3nmoQWyQ1A
+   r/p7CYEnX2TfZ8nPmTweGBfQGldkaSAZpT90UmRdadouffc+bBy06SnNN
+   tMUQUSEvMoOXHicuP5AEaOa2S3qiY502myam72gmE+f/NYP0G9zfRuZAj
+   yFztSpLNkDu+1fTA8PInOGuiiTuLZ8AicCrLO616B8gwTiXwjOGAoDZ/S
+   RT/cOKD39Fqj1WSiP914SdbrGye28VFH1uGT+qbuIgcQQQex8lB/VMcZ5
+   TlCoQEG3itoDIANnUhDSIJeJAu1bvY538WhZXDVEL+8RgZOMCPp6Jbnm7
+   A==;
+X-CSE-ConnectionGUID: SyC4y/+MTW+/WX5lxrTsLQ==
+X-CSE-MsgGUID: SupNgW+NTPS6hREdBuN+bw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="18368118"
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="18368118"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 10:30:08 -0700
+X-CSE-ConnectionGUID: SpdaPTKvQbmoP0C/7JLRpw==
+X-CSE-MsgGUID: h0v3KNYvSseJzFH9vNCMuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="38472457"
+Received: from mehlow-prequal01.jf.intel.com ([10.54.102.156])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 10:30:07 -0700
+From: Dmitrii Kuvaiskii <dmitrii.kuvaiskii@intel.com>
+To: dave.hansen@intel.com
+Cc: dave.hansen@linux.intel.com,
+	dmitrii.kuvaiskii@intel.com,
+	haitao.huang@linux.intel.com,
+	jarkko@kernel.org,
+	kai.huang@intel.com,
+	kailun.qin@intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-sgx@vger.kernel.org,
+	mona.vij@intel.com,
+	reinette.chatre@intel.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] x86/sgx: Resolve EREMOVE page vs EAUG page data race
+Date: Fri,  7 Jun 2024 10:21:46 -0700
+Message-Id: <20240607172146.536993-1-dmitrii.kuvaiskii@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <01bb6519-680e-45bf-b8bd-34763658aa17@intel.com>
+References: <01bb6519-680e-45bf-b8bd-34763658aa17@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240607-trimmer-pummel-b452ed15e103@spud> <20240607155704.GB1242@pendragon.ideasonboard.com>
-In-Reply-To: <20240607155704.GB1242@pendragon.ideasonboard.com>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Fri, 7 Jun 2024 18:29:49 +0100
-Message-ID: <CAPY8ntBNNOFR1nn05g4Y-SOv_tN0YJv9wygO=+S80-zA1oq7mg@mail.gmail.com>
-Subject: Re: [PATCH v1] media: i2c: imx219: fix msr access command sequence
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Conor Dooley <conor@kernel.org>, linux-media@vger.kernel.org, 
-	Conor Dooley <conor.dooley@microchip.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Adam Ford <aford173@gmail.com>, 
-	Andrey Konovalov <andrey.konovalov@linaro.org>, linux-kernel@vger.kernel.org, 
-	Naushir Patuck <naush@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Organization: Intel Deutschland GmbH - Registered Address: Am Campeon 10, 85579 Neubiberg, Germany
+Content-Transfer-Encoding: 8bit
 
-Hi Conor and Laurent
+On Tue, May 28, 2024 at 09:23:13AM -0700, Dave Hansen wrote:
+> On 5/17/24 04:06, Dmitrii Kuvaiskii wrote:
+> ...
+>
+> First, why is SGX so special here?  How is the SGX problem different
+> than what the core mm code does?
 
-On Fri, 7 Jun 2024 at 16:57, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Conor,
->
-> Thank you for the patch.
->
-> On Fri, Jun 07, 2024 at 04:50:23PM +0100, Conor Dooley wrote:
-> > From: Conor Dooley <conor.dooley@microchip.com>
+Here is my understanding why SGX is so special and why I have to introduce
+a new bit SGX_ENCL_PAGE_BEING_REMOVED.
+
+In SGX's removal of the enclave page, two operations must happen
+atomically: the PTE entry must be removed and the page must be EREMOVE'd.
+
+Generally, to guarantee atomicity, encl->lock is acquired. Ideally, if
+this encl->lock could be acquired at the beginning of
+sgx_encl_remove_pages() and be released at the very end of this function,
+there would be no EREMOVE page vs EAUG page data race, and my bug fix
+(with SGX_ENCL_PAGE_BEING_REMOVED bit) wouldn't be needed.
+
+However, the current implementation of sgx_encl_remove_pages() has to
+release encl->lock before removing the PTE entry. Releasing the lock is
+required because the function that removes the PTE entry --
+sgx_zap_enclave_ptes() -- acquires another, enclave-MM lock:
+mmap_read_lock(encl_mm->mm).
+
+The two locks must be taken in this order:
+1. mmap_read_lock(encl_mm->mm)
+2. mutex_lock(&encl->lock)
+
+This lock order is apparent from e.g. sgx_encl_add_page(). This order also
+seems to make intuitive sense: VMA callbacks are called with the MM lock
+being held, so the MM lock should be the first in lock order.
+
+So, if sgx_encl_remove_pages() would _not_ release encl->lock before
+calling sgx_zap_enclave_ptes(), this would violate the lock order and
+might lead to deadlocks. At the same time, releasing encl->lock in the
+middle of the two-operations flow leads to a data race that I found in
+this patch series.
+
+Quick summary:
+- Removing the enclave page requires two operations: removing the PTE and
+  performing EREMOVE.
+- The complete flow of removing the enclave page cannot be protected by a
+  single encl->lock, because it would violate the lock order and would
+  lead to deadlocks.
+- The current upstream implementation thus breaks the flow into two
+  critical sections, releasing encl->lock before sgx_zap_enclave_ptes()
+  and re-acquiring this lock afterwards. This leads to a data race.
+- My patch restores "atomicity" of the flow by introducing a new flag
+  SGX_ENCL_PAGE_BEING_REMOVED.
+
+> > --- a/arch/x86/kernel/cpu/sgx/encl.h
+> > +++ b/arch/x86/kernel/cpu/sgx/encl.h
+> > @@ -25,6 +25,9 @@
+> >  /* 'desc' bit marking that the page is being reclaimed. */
+> >  #define SGX_ENCL_PAGE_BEING_RECLAIMED  BIT(3)
 > >
-> > It was reported to me that the imx219 didn't work on one of our
-> > development kits partly because the access sequence is incorrect.
-> > The datasheet I could find [1] for this camera has the access sequence:
-> > Seq. No. Address (Hex) data
-> > 1        30EB          05
-> > 2        30EB          0C
-> > 3        300A          FF
-> > 4        300B          FF
-> > 5        30EB          05
-> > 6        30EB          09
-> >
-> > but the driver swaps the first two elements. Laurent pointed out on IRC
-> > that the original code used the correct sequence for 1920x1080 but the
-> > current sequence for 3280x2464 and 1640x1232. During refactoring of the
-> > init sequence the current order was used for all formats.
-> >
-> > Switch to using the documented sequence.
-> >
-> > Link: https://www.opensourceinstruments.com/Electronics/Data/IMX219PQ.pdf [1]
-> > Fixes: 8508455961d5 ("media: i2c: imx219: Split common registers from mode tables")
-> > Fixes: 1283b3b8f82b ("media: i2c: Add driver for Sony IMX219 sensor")
-> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> > +/* 'desc' bit marking that the page is being removed. */
+> > +#define SGX_ENCL_PAGE_BEING_REMOVED    BIT(2)
 >
-> This looks reasonable, based on the above link.
+> Second, convince me that this _needs_ a new bit.  Why can't we just have
+> a bit that effectively means "return EBUSY if you see this bit when
+> handling a fault".
+
+As Haitao mentioned in his reply, the bit SGX_ENCL_PAGE_BEING_RECLAIMED is
+also used in reclaimer_writing_to_pcmd(). If we would re-use this bit to
+mark a page being removed, reclaimer_writing_to_pcmd() would incorrectly
+return 1, meaning that the reclaimer is about to write to the PCMD page,
+which is not true.
+
+> >  struct sgx_encl_page {
+> >     unsigned long desc;
+> >     unsigned long vm_max_prot_bits:8;
+> > diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
+> > index 5d390df21440..de59219ae794 100644
+> > --- a/arch/x86/kernel/cpu/sgx/ioctl.c
+> > +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
+> > @@ -1142,6 +1142,7 @@ static long sgx_encl_remove_pages(struct sgx_encl *encl,
+> >          * Do not keep encl->lock because of dependency on
+> >          * mmap_lock acquired in sgx_zap_enclave_ptes().
+> >          */
+> > +       entry->desc |= SGX_ENCL_PAGE_BEING_REMOVED;
 >
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
-> Dave, could you check the impact on the Raspberry Pi kernel ? It seems
-> to be shipping the incorrect sequence unconditionally.
+> This also needs a comment, no matter what.
 
-I've compared the values against the old firmware driver. There we
-have the cropped 1080p and VGA high framerate modes had 0x05 0x0c, and
-the full res 3280x2464 and 2x2 binned 1640x1232 modes had 0x0c 0x05,
-so the same as the original kernel driver. Not totally unsurprising as
-the kernel driver register sets were copied from the firmware.
-So the Pi has used imx219 in this manner since launch of the sensor in
-2014! Whether that was a transcription typo or an error in the
-register sets from Sony I couldn't say (Naush may still have the
-original register set information).
+Ok, I will write something along the lines that we want to prevent a data
+race with an EAUG flow, and since we have to release encl->lock (which
+would otherwise prevent the data race) we instead set a bit to mark this
+enclave page as being in the process of removal, so that the EAUG flow
+backs off and retries later.
 
-I don't have an imx219 to hand right now to test with, but will check
-it out on Monday. I'll agree that the patch looks valid based on the
-datasheet.
-
-> Any information about what the 12 undocumented MSRs that are programmed
-> by the driver do would be appreciated too ;-)
-
-Sadly I have no extra information on those.
-
-> > ---
-> > I got the report of this third hand, I don't have a device and can't
-> > test this. I do wonder why the RPis get away with the sequence that
-> > seemingly doesn't work for the guy that reported this to me. My theory
-> > is either that they noticed the sequence was wrong while adding some
-> > other MSR access that is needed on this board while either cross
-> > checking the values written or because the other MSR accesses didn't
-> > take effect.
-
-Did the change fix it for the reporter? We're using the driver with no
-changes to the register settings cf mainline.
-Why it works on the Pi but not on a Microchip board is likely to be
-something quite subtle.
-
-  Dave
-
-> > CC: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> > CC: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > CC: Mauro Carvalho Chehab <mchehab@kernel.org>
-> > CC: Adam Ford <aford173@gmail.com>
-> > CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > CC: Andrey Konovalov <andrey.konovalov@linaro.org>
-> > CC: linux-media@vger.kernel.org
-> > CC: linux-kernel@vger.kernel.org
-> > ---
-> >  drivers/media/i2c/imx219.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> > index 51ebf5453fce..e78a80b2bb2e 100644
-> > --- a/drivers/media/i2c/imx219.c
-> > +++ b/drivers/media/i2c/imx219.c
-> > @@ -162,8 +162,8 @@ static const struct cci_reg_sequence imx219_common_regs[] = {
-> >       { IMX219_REG_MODE_SELECT, 0x00 },       /* Mode Select */
-> >
-> >       /* To Access Addresses 3000-5fff, send the following commands */
-> > -     { CCI_REG8(0x30eb), 0x0c },
-> >       { CCI_REG8(0x30eb), 0x05 },
-> > +     { CCI_REG8(0x30eb), 0x0c },
-> >       { CCI_REG8(0x300a), 0xff },
-> >       { CCI_REG8(0x300b), 0xff },
-> >       { CCI_REG8(0x30eb), 0x05 },
->
-> --
-> Regards,
->
-> Laurent Pinchart
+--
+Dmitrii Kuvaiskii
