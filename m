@@ -1,334 +1,146 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2059.outbound.protection.outlook.com [40.92.20.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EDD18F2C6
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 11:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717760512; cv=none; b=uIZ6MgufhfCl3FT+yo2LpJUiNXU8krE7HenzxoZMad/YddAYbA9YAULTe+jtVEYjCpN3RJhtvOifMUFqSZISu2b+q5x/oSRkhdVngV1EuVwilDJlUmNp7OZcKE+adpgx2SajjN7AGZkTHI7h6EdK70jPR1ZgYRd9l4b7azoTgGQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717760512; c=relaxed/simple;
-	bh=zZfi4B/3xlwRwJ5Ae5BptjUYE+Mbt9SK7pYyryo1ftI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s/47zJ/RwS2+PErKOEdeh/scKzwuxIyvSJmA+5YLOfCFMG+e1Hb6kKyvG6cJTx4vGHzrRo6dREZovkxlyDZGwK6dMn7kzwxpop7ftF9Nu9aYBegY90KQjDmb1VjDpo+rKpcH1sipTFzWpYQHpKsA8U/C/k3RYIlmZ0hC7fPyqcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cup/PNym; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A811F170830;
+	Fri,  7 Jun 2024 11:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717760523; cv=fail; b=T1F6lbeKeZKoZhfv6mQCrd29Al/MWP02bHP5K/Z9zTW6zuLNtU6qnI+OeQIeKRmoS3bYLzuaq2uii5cANJpDbSQsWYxOwfz1xmYzy6r40D0qT7q/GmvkiIjdF3BhexFMNjar+tqMIJNAhU2DhGknbzpvKxqGq2SbQ1ygZTpptn8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717760523; c=relaxed/simple;
+	bh=PdC3D22jORJ3L5xWH2J3IfuUrt69cgf+Hb7ihp0xs5U=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=j9cqqiJTfIHBybCln67DdchlLTnHtq32/3V9xfm4VkhWLXfkDJ1el0UANcuhoARokh9heugXr3ZqJfSrGCrJqL7gafRK8erqR3zfy5XfFeAsJh0qwNsCxzjBqvhioYy1ZDXfZCD5JNcOnrcnHiqZqfw83B8gJ2kRW/JmtFKRbSk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=XQQSrQpr; arc=fail smtp.client-ip=40.92.20.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cup/PNym"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52962423ed8so2388063e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 04:41:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717760509; x=1718365309; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d3TWoGizEobT5QO5GTHAzDYLdCFbSYQPW14yvUV/BPk=;
-        b=cup/PNymZPx1a8lQeeaRArbVxz3I2sKIURDu60GGqGYAa3ALWeSycmJH8WxwhQPWVi
-         3mR/dptXlehpB9kmPteYPdsvvgqnhN5hUwjnfjpfWEVDyfjHsh2zKsQlfpsYU6r3xj9x
-         t/7k68wMKbR+c9hWFAlh9cqF0AhNjiTN+1HiDXUkbmzFv8PYJGRjFUG+pLaZ7O4aDXk4
-         4kXBUvNumzGdm4c5/yhE40n5mmkNT19UWp/U2p2AmBZsZgoJEf0c6UdgrNfKhpMsK8E2
-         TxPyye3yiLn/x6JIpzTdGBaCCBTMslzSEHOv5+9PyMvyXtaA75y7B7nkwRITMARNatu6
-         R3MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717760509; x=1718365309;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d3TWoGizEobT5QO5GTHAzDYLdCFbSYQPW14yvUV/BPk=;
-        b=neIgvl9irDVL0Z43P4ZtnryzmW2vzE5oSOxKidJaxnRGHwLJoPzC26kIigQ3Q1EPYo
-         92WslDAPGRn1TRx5M6GNomFPkl3qtDzQhe8PDcm4NyJTH0s1YFeqgfcfnHAAYLRcs1Gf
-         C2gTxWD0uBXSEeZkH81E0Uexp4WdMmEyh8n4dEH+zw3OWRLcArCk21O/ocZpXb5BXYff
-         CUecb4LMZVEoc+Zfpq4z5SfRN1zRuDfk4wlhPUpz7wsd3i0EgfVMSMBr2FNfryHRAyXR
-         iwX803LdL36DEkyxmYEKTA5CIcznztfKEi+5DtStqESDSuEwq8I2j3HHlDPQlfyqxKxt
-         sauw==
-X-Forwarded-Encrypted: i=1; AJvYcCWezD4X+BMCqh3P7+bI7L+qRUlMLU4GwEl7p3Q/RFqlLZQakAAVZU64qyw0MkfZTdqIA70OKS78Vl8xnPXiOsJXKNMsv12+0UINdnPm
-X-Gm-Message-State: AOJu0YxFtYBEJYcJrmkIWLQK7LodbWL5KNRoTpR+yOWNGrWArimxj2wi
-	NSSKT5wC4sWK/lXk85j7XtLyEqgV2S0yV8msizqt2IMviQzOCGNElRQfpceuymg=
-X-Google-Smtp-Source: AGHT+IELWjx7Y8HIxG6WyFhnBSr1BKM5sU+vXt+klI+TtVjCaf6vuxsuQwKEGym2wy6qsQGEN59ayw==
-X-Received: by 2002:a05:6512:1391:b0:51d:68fb:5d73 with SMTP id 2adb3069b0e04-52bb9f6897cmr1958075e87.8.1717760508853;
-        Fri, 07 Jun 2024 04:41:48 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb41e20f7sm502386e87.41.2024.06.07.04.41.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 04:41:47 -0700 (PDT)
-Date: Fri, 7 Jun 2024 14:41:46 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Ekansh Gupta <quic_ekangupt@quicinc.com>
-Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
-	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
-	quic_chennak@quicinc.com, stable <stable@kernel.org>
-Subject: Re: [PATCH v4 09/11] misc: fastrpc: Fix remote heap alloc and free
- user request
-Message-ID: <4vwahy5pb74an2nebp643s2doacbrslrsitolzksmmjnv4lxxu@vub4gpex5fcs>
-References: <20240606165939.12950-1-quic_ekangupt@quicinc.com>
- <20240606165939.12950-10-quic_ekangupt@quicinc.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="XQQSrQpr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZD9lr4mLmFwulBLMsmv+ZGFyiznqgnb5zsdz8QZkpwmpodDWb59KHYe6KlHxJX2m8A5qsmkYhzllJR3e2tt1nKRdz9BqyzI6BWS1HXmcCjpo7W0NjkSeDq15ZP2mX9FbUCkQSMMgqTWw2epmpRg9z4fE7j9QNtsIrW0YR3YDpj/JCxa7E8A9NI+CzDS6JADS9c3CsjlELBEWlVOtGP3SvpqcZJyOREPujlenvRvc3Z0JFa7hVDtWzoU2KmMYtHoLjnBeGP98gNU6JAHXbn7ElPkNLTy8AK6jkWA2mxsWEBCwx/hM4DQu4Tb1CuXBze9POmwjvyRaDczsCvkTlPuZgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=02xwAbFbaeb3QuFhxOIGvHTmvnhfH9bKR6Lhn0ulgRk=;
+ b=GJ/7jCrYDsN7fDLi09fhVOe08cSKyZpzj5rNsxh65HLngfnZ37Lp/93NaCXHnVpzUJ/w6jHniPo86090kId4yEV4/7C67fn2AdlfzvC7CFLaelxmyH48R8dPOAmVYSeN14HVN3bjl77KNs6ptV5R6jBqTlw2GmHxUR9eQUHzlVEZEyaG67MD3KArpyB0mjX4n3HEpoLyiIrC1ZjgLC1PosERyrE+aYx8WcdqdV951icoOHSXuuQz9paIN+PmITcpLAUMZz3V4hgqAnwLiPqBcgrIqgeIBJJ33ZZa09HfVSDMRwkwlXUTEASd86LfgD/qHouR6yx/NYh4z83+DVeXLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=02xwAbFbaeb3QuFhxOIGvHTmvnhfH9bKR6Lhn0ulgRk=;
+ b=XQQSrQpruF8DwVobkWozn3GZdsf9oXVDbpmczBWSss83+u3gS3IGc7Se6QXOq6z7InCoJsD60q8pFqL0lNx/QLO47ACepi9hPYUQMnWuB7amgIen/++T5ZdLY1iBmCuHyt3Lc99fCenzkKJ9xLiWE86m5sB+q/viwrqR0+sW+RGKgVUDvKKXg/mt1uCCqhYWmHG3DkGTntRlp6fnWRLT6320agev+Dx0rLAdN12XCVJr6fTRihEHoGRiNiLcKKPTGyCQGnryY/Dsqk+JxNVhYSXl8aJX7R/RXySQBSdje13QArlLVGYvOGD2af80r3kPXTZ0hqB6duwpKfTf66L7RQ==
+Received: from SN7PR12MB8101.namprd12.prod.outlook.com (2603:10b6:806:321::7)
+ by CY5PR12MB6034.namprd12.prod.outlook.com (2603:10b6:930:2e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.27; Fri, 7 Jun
+ 2024 11:41:59 +0000
+Received: from SN7PR12MB8101.namprd12.prod.outlook.com
+ ([fe80::fdb:e120:f99c:c899]) by SN7PR12MB8101.namprd12.prod.outlook.com
+ ([fe80::fdb:e120:f99c:c899%5]) with mapi id 15.20.7611.016; Fri, 7 Jun 2024
+ 11:41:59 +0000
+From: Yasin Lee <yasin.lee.x@outlook.com>
+To: jic23@kernel.org
+Cc: andy.shevchenko@gmail.com,
+	lars@metafoo.de,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nuno.a@analog.com,
+	swboyd@chromium.org,
+	u.kleine-koenig@pengutronix.de,
+	yasin.lee.x@gmail.com,
+	yasin.lee.x@outlook.com
+Subject: [PATCH v4 0/2] iio:proximity:hx9023s: Add TYHX HX9023S sensor driver
+Date: Fri,  7 Jun 2024 19:41:36 +0800
+Message-ID:
+ <SN7PR12MB8101204CE811B8E88A2464CCA4FB2@SN7PR12MB8101.namprd12.prod.outlook.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [obcYyx83dirNGFa/FlDLZzdq5ssN8gQ6hWfbCd+xQRyq+NJ2L+8bEScUJ8QVNWe4]
+X-ClientProxiedBy: SG2PR01CA0144.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::24) To SN7PR12MB8101.namprd12.prod.outlook.com
+ (2603:10b6:806:321::7)
+X-Microsoft-Original-Message-ID:
+ <20240607114138.390272-1-yasin.lee.x@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606165939.12950-10-quic_ekangupt@quicinc.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8101:EE_|CY5PR12MB6034:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6b27c581-fdad-438e-8c1c-08dc86e6d71d
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199019|1602099003|440099019|3412199016|1710799017;
+X-Microsoft-Antispam-Message-Info:
+	cGUHdiQnTHuEdK5NphTuBS2FUJrgaiu4vUQBUzgou8Xw2VVSaor5rDLIh75KIfUek/FQKPiXe06OnL+6oZ5aVMjtohS4y8TfFfM5s6BCj6y1yrAk3da/3sRvgwk70kDgpjQV9DyfRh71hDTJZrqhP2cD4Epz8eu1HGjJMgBIMwRn9pZMHBVPVrtsJK/cAhGEjoAgxqHuhhBN7Q+Nl2XKsl/ZrRD7eOjNQAAfuVLioH2mCnC0ZAjJCClqlj3DXziC1Yn32eigl5mgLPX7VmLkhppHyfXYCyLEZRlB5E97KuIaFks+6sr3yeTl4XftIQ/ii00nzT8fbyUI9fUgjQA17ufYdxgNDRqgJB4fyz6OLFA+9kw5ZFUnUmgpXleXfkXghc0gItzLxt4w3bI3N5l8nJmWcufjKWzau+yYFI2UEOV/cN+nlrwMDeiNK1YOPe66OKlkAKaz3Em/+TWHoZEEBU8hMzqsMp+TsH8sOhpTpDySiqVhHCtndnZJCO/ml7Bq1xV23S1E7JPuFsLO8rF+mGjnnvDzw37gdn2oDmjD5R7y0R5hVFjTSQvOp4bfniq1nfefgMAIroiJH/j9nEuaGjQEDEeMarS/RC5duIe6Eqndkk+uhqFrfGSCbdAAczRW780YejF75i/bYZ+X4mowtqAO/kTzkOMjybePtSz8E3v1oZ2cMGJJunCN1tHCwiq5A/WfDAQz1J0cCymYQFCXtCyWu0XRtuhu7OSwIxHNIAp4B9udFrdDlQ1ytlTMGM/8
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?27CAP1DP7yEbjfpF7qniqrD4hyWuPArlqxwe4pOEePC+eURbBII/IPbDJxCt?=
+ =?us-ascii?Q?t1hgrHE+06of06O7/KRjYNRS+iGBAoFYxA1HbjBI56ky0CVG+hAINohXVAeL?=
+ =?us-ascii?Q?16fp2IGhWKGqUBDWCZDFoKdePlnjudCBH+55g2p3v0l67Y0FE7GDg/SItSmI?=
+ =?us-ascii?Q?hdh8PxS9MBWyyJj8VVmAQGA1eg7kY+SivxLzzjgLsIgGi3zxCGWIkfVCQg5p?=
+ =?us-ascii?Q?ydwX+cn0iNmeuL0MwbIVKV/VL2taLKH4yBvakgqPWqaPqElT1xZwBPY5C7qw?=
+ =?us-ascii?Q?kmdsM4Bd0bfMdBOj5pARCbTnNfblzybP2OytpHh3k8HeyWU2AOa56/maH+hB?=
+ =?us-ascii?Q?3dotgi2NbrfE4yo1BRPDX1EMguGNNlE/giXNClwcOWg7zlR4lm28EQOEdB7R?=
+ =?us-ascii?Q?N+JhdE/tOtKxNonTru37OzuuvUgn//2Hkgk+xR/znWJhyppGGYd5/Y4eslJL?=
+ =?us-ascii?Q?BGbV+dmBG5pol60JbKMyplU7PqJaIt4xlv5l2RZVKzpIZaUhKgpY8GiJWpRk?=
+ =?us-ascii?Q?2B5timS9qgj5TtePIXUFJqPzndz+iP3xDsZdYnVafbL6nNPacUBbvlzi+lrg?=
+ =?us-ascii?Q?6Xi9+wq0bVG3UiJ8nm/tPEMDw0F42dPYsVlHJ7rRcd3tCMvinx80EQESIPDi?=
+ =?us-ascii?Q?O01Q9NsucQjlmTwHYCNHV5DNibrVJk8H8nVnpJ1WWW3q57WUk6PFXUI2+63o?=
+ =?us-ascii?Q?KFb0zSRQR6NtoZEwpVp8j9uKCZkGwQKYY/Nq97VzIRf/KWK5rZU5CweQ7akJ?=
+ =?us-ascii?Q?HBifCH5lrqb3i0KGEcqP4t/bV6lk7H/dQ2cjYzlX5Ol3Vnxf4/wjwrT4Z5ZI?=
+ =?us-ascii?Q?ON1gDk9gf394f1kUqmKp4PbHpakA/tT+vHxDt5mZ6NpvkQqBA40iliiROPQ8?=
+ =?us-ascii?Q?sTXOYJPoymjPIE98mp3LaxHhgtycSsHaRyFDgQRBFxA4WRwAHWagC6DwKhN2?=
+ =?us-ascii?Q?7XA8+7Jh1I43Wh113z7J8fh6EpM/x7pOaG0RuGcerrfWA2GqMsOe/xYHdthD?=
+ =?us-ascii?Q?P02ggq9+qNr6fw9SwetfcEzUbuGqu6V6JyzgYzXKY+63rzB/yXLSYp1HOF/V?=
+ =?us-ascii?Q?Ryg29KzUbzrEpqN5GWgcHvdsaEgS9faKA7iOtZaOzUJL00LHH8GuoVLXWOjh?=
+ =?us-ascii?Q?tbfyW2RQ0QIe9bYe2IvtkhbWUH/vmIiVLNgJdw04MG5KvTZ3fM57VHOyeh67?=
+ =?us-ascii?Q?RWmXjqpty+viaAT8FfvJf28F1Tm/br+ZMajyNEWhwwHo6bsAwMnjf9dH31JD?=
+ =?us-ascii?Q?2czA2L0nsHLKVtGFG58SGMf03UoeIb3A8F3RDRvwMeJdOqQib0cFsFw6b4yC?=
+ =?us-ascii?Q?rkigC7OB0usmtPwE0SNXdz8k?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b27c581-fdad-438e-8c1c-08dc86e6d71d
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2024 11:41:59.4387
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6034
 
-On Thu, Jun 06, 2024 at 10:29:29PM +0530, Ekansh Gupta wrote:
-> A static PD daemon process can request for remote heap allocation
-> which will allocate memory and change the ownership if the VMID
-> information were defined. This allocations are currently getting
-> added to fl mmaps list which could get freed when there is any
-> daemon kill. There is no way to request for freeing of this memory
-> also. Add changes to maintain the remote heap allocation in the
+From: Yasin Lee <yasin.lee.x@gmail.com>
 
-Simpler. 'Maintain foo'
+v4:
+- Removed hardware-irrelevant properties from dt-bindings, retaining only channel configuration
+  related `channel-positive` and `channel-negative`. Grouped by channel. 
+  Retained `channel-in-use` as it is hardware-related.
+- Removed redundant register definitions.
+- Reorganized `struct hx9023s_data`, extracting channel-related attributes 
+  into a new `struct hx9023s_ch_data`.
+- Optimized bit operation related code.
+- Replaced `of_` versions with generic firmware parsing functions.
+- Fixed other issues mentioned in the email feedback.
 
-> static PD specific structure and add method to free the memory
-> on user request.
+Link: https://lore.kernel.org/linux-iio/20240602152638.2c674930@jic23-huawei/
 
-Should this be split into two patches? 'foo and bar' suggests that.
+Yasin Lee (2):
+  dt-bindings:iio:proximity: Add hx9023s binding
+  iio:proximity:hx9023s: Add TYHX HX9023S sensor driver
 
-> 
-> Fixes: 532ad70c6d44 ("misc: fastrpc: Add mmap request assigning for static PD pool")
-> Cc: stable <stable@kernel.org>
-> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
-> ---
->  drivers/misc/fastrpc.c | 129 +++++++++++++++++++++++++++++++----------
->  1 file changed, 98 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-> index 68c1595446d5..32f2e6f625ed 100644
-> --- a/drivers/misc/fastrpc.c
-> +++ b/drivers/misc/fastrpc.c
-> @@ -210,6 +210,7 @@ struct fastrpc_buf {
->  	struct dma_buf *dmabuf;
->  	struct device *dev;
->  	void *virt;
-> +	u32 flag;
->  	u64 phys;
->  	u64 size;
->  	/* Lock for dma buf attachments */
-> @@ -1924,29 +1925,54 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
->  	return 0;
->  }
->  
-> -static int fastrpc_req_munmap_impl(struct fastrpc_user *fl, struct fastrpc_buf *buf)
-> +static int fastrpc_req_munmap_dsp(struct fastrpc_user *fl, uintptr_t raddr, u64 size)
->  {
->  	struct fastrpc_invoke_args args[1] = { [0] = { 0 } };
->  	struct fastrpc_munmap_req_msg req_msg;
-> -	struct device *dev = fl->sctx->dev;
->  	int err;
->  	u32 sc;
->  
->  	req_msg.pgid = fl->tgid;
-> -	req_msg.size = buf->size;
-> -	req_msg.vaddr = buf->raddr;
-> +	req_msg.size = size;
-> +	req_msg.vaddr = raddr;
->  
->  	args[0].ptr = (u64) (uintptr_t) &req_msg;
->  	args[0].length = sizeof(req_msg);
-> -
->  	sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_MUNMAP, 1, 0);
->  	err = fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE, sc,
->  				      &args[0]);
-> +
-> +	return err;
-> +}
-> +
-> +static int fastrpc_req_munmap_impl(struct fastrpc_user *fl, struct fastrpc_buf *buf)
-> +{
-> +	struct device *dev = fl->sctx->dev;
-> +	int err;
-> +
-> +	err = fastrpc_req_munmap_dsp(fl, buf->raddr, buf->size);
->  	if (!err) {
-> +		if (buf->flag == ADSP_MMAP_REMOTE_HEAP_ADDR) {
-> +			if (fl->cctx->vmcount) {
-> +				u64 src_perms = 0;
-> +				struct qcom_scm_vmperm dst_perms;
-> +				u32 i;
-> +
-> +				for (i = 0; i < fl->cctx->vmcount; i++)
-> +					src_perms |= BIT(fl->cctx->vmperms[i].vmid);
-> +
-> +				dst_perms.vmid = QCOM_SCM_VMID_HLOS;
-> +				dst_perms.perm = QCOM_SCM_PERM_RWX;
-> +				err = qcom_scm_assign_mem(buf->phys, (u64)buf->size,
-> +								&src_perms, &dst_perms, 1);
-> +				if (err) {
-> +					dev_err(dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d\n",
-> +						buf->phys, buf->size, err);
-> +					return err;
-> +				}
-
-It looks like this is too nested. Consider refactoring this code. For
-example, extract the function that you have c&p'ed.
-
-> +			}
-> +		}
->  		dev_dbg(dev, "unmmap\tpt 0x%09lx OK\n", buf->raddr);
-> -		spin_lock(&fl->lock);
-> -		list_del(&buf->node);
-> -		spin_unlock(&fl->lock);
->  		fastrpc_buf_free(buf);
->  	} else {
->  		dev_err(dev, "unmmap\tpt 0x%09lx ERROR\n", buf->raddr);
-> @@ -1960,6 +1986,7 @@ static int fastrpc_req_munmap(struct fastrpc_user *fl, char __user *argp)
->  	struct fastrpc_buf *buf = NULL, *iter, *b;
->  	struct fastrpc_req_munmap req;
->  	struct device *dev = fl->sctx->dev;
-> +	int err = 0;
-
-Why =0 is necessary?
-
->  
->  	if (copy_from_user(&req, argp, sizeof(req)))
->  		return -EFAULT;
-> @@ -1968,18 +1995,45 @@ static int fastrpc_req_munmap(struct fastrpc_user *fl, char __user *argp)
->  	list_for_each_entry_safe(iter, b, &fl->mmaps, node) {
->  		if ((iter->raddr == req.vaddrout) && (iter->size == req.size)) {
->  			buf = iter;
-> +			list_del(&buf->node);
->  			break;
->  		}
->  	}
->  	spin_unlock(&fl->lock);
->  
-> -	if (!buf) {
-> -		dev_err(dev, "mmap\t\tpt 0x%09llx [len 0x%08llx] not in list\n",
-> -			req.vaddrout, req.size);
-> -		return -EINVAL;
-> +	if (buf) {
-> +		err = fastrpc_req_munmap_impl(fl, buf);
-> +		if (err) {
-> +			spin_lock(&fl->lock);
-> +			list_add_tail(&buf->node, &fl->mmaps);
-> +			spin_unlock(&fl->lock);
-> +		}
-> +		return err;
->  	}
->  
-> -	return fastrpc_req_munmap_impl(fl, buf);
-> +	spin_lock(&fl->lock);
-> +	if (fl->spd) {
-> +		list_for_each_entry_safe(iter, b, &fl->spd->rmaps, node) {
-> +			if ((iter->raddr == req.vaddrout) && (iter->size == req.size)) {
-> +				buf = iter;
-> +				list_del(&buf->node);
-> +				break;
-> +			}
-> +		}
-> +	}
-> +	spin_unlock(&fl->lock);
-> +	if (buf) {
-> +		err = fastrpc_req_munmap_impl(fl, buf);
-> +		if (err) {
-> +			spin_lock(&fl->lock);
-> +			list_add_tail(&buf->node, &fl->spd->rmaps);
-> +			spin_unlock(&fl->lock);
-> +		}
-> +		return err;
-> +	}
-> +	dev_err(dev, "buffer not found addr 0x%09lx, len 0x%08llx\n",
-> +			req.vaddrout, req.size);
-
-Can this be triggered by the user? If so, it's dev_dbg() at best.
-
-> +	return -EINVAL;
->  }
->  
->  static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
-> @@ -2008,15 +2062,34 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
->  		return -EINVAL;
->  	}
->  
-> -	if (req.flags == ADSP_MMAP_REMOTE_HEAP_ADDR)
-> +	if (req.flags == ADSP_MMAP_REMOTE_HEAP_ADDR) {
-> +		if (!fl->spd || !fl->spd->ispdup) {
-> +			dev_err(dev, "remote heap request supported only for active static PD\n");
-> +			return -EINVAL;
-> +		}
->  		err = fastrpc_remote_heap_alloc(fl, dev, req.size, &buf);
-> -	else
-> +	} else {
->  		err = fastrpc_buf_alloc(fl, dev, req.size, &buf);
-> +	}
->  
->  	if (err) {
->  		dev_err(dev, "failed to allocate buffer\n");
->  		return err;
->  	}
-> +	buf->flag = req.flags;
-> +
-> +	/* Add memory to static PD pool, protection through hypervisor */
-> +	if ((req.flags == ADSP_MMAP_REMOTE_HEAP_ADDR) && fl->cctx->vmcount) {
-> +		u64 src_perms = BIT(QCOM_SCM_VMID_HLOS);
-> +
-> +		err = qcom_scm_assign_mem(buf->phys, (u64)buf->size,
-> +			&src_perms, fl->cctx->vmperms, fl->cctx->vmcount);
-> +		if (err) {
-> +			dev_err(fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d\n",
-> +					buf->phys, buf->size, err);
-
-misaligned
-
-> +			goto err_invoke;
-> +		}
-> +	}
->  
->  	req_msg.pgid = fl->tgid;
->  	req_msg.flags = req.flags;
-> @@ -2049,26 +2122,16 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
->  	/* let the client know the address to use */
->  	req.vaddrout = rsp_msg.vaddr;
->  
-> -	/* Add memory to static PD pool, protection thru hypervisor */
-> -	if (req.flags == ADSP_MMAP_REMOTE_HEAP_ADDR && fl->cctx->vmcount) {
-> -		u64 src_perms = BIT(QCOM_SCM_VMID_HLOS);
-> -
-> -		err = qcom_scm_assign_mem(buf->phys, (u64)buf->size,
-> -			&src_perms, fl->cctx->vmperms, fl->cctx->vmcount);
-> -		if (err) {
-> -			dev_err(fl->sctx->dev, "Failed to assign memory phys 0x%llx size 0x%llx err %d",
-> -					buf->phys, buf->size, err);
-> -			goto err_assign;
-> -		}
-> -	}
-> -
->  	spin_lock(&fl->lock);
-> -	list_add_tail(&buf->node, &fl->mmaps);
-> +	if (req.flags == ADSP_MMAP_REMOTE_HEAP_ADDR)
-> +		list_add_tail(&buf->node, &fl->spd->rmaps);
-> +	else
-> +		list_add_tail(&buf->node, &fl->mmaps);
->  	spin_unlock(&fl->lock);
->  
->  	if (copy_to_user((void __user *)argp, &req, sizeof(req))) {
->  		err = -EFAULT;
-> -		goto err_assign;
-> +		goto err_copy;
->  	}
->  
->  	dev_dbg(dev, "mmap\t\tpt 0x%09lx OK [len 0x%08llx]\n",
-> @@ -2076,8 +2139,12 @@ static int fastrpc_req_mmap(struct fastrpc_user *fl, char __user *argp)
->  
->  	return 0;
->  
-> -err_assign:
-> +err_copy:
-> +	spin_lock(&fl->lock);
-> +	list_del(&buf->node);
-> +	spin_unlock(&fl->lock);
->  	fastrpc_req_munmap_impl(fl, buf);
-> +	buf = NULL;
->  err_invoke:
->  	fastrpc_buf_free(buf);
->  
-> -- 
-> 2.43.0
-> 
+ .../bindings/iio/proximity/tyhx,hx9023s.yaml  |  103 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ drivers/iio/proximity/Kconfig                 |   14 +
+ drivers/iio/proximity/Makefile                |    1 +
+ drivers/iio/proximity/hx9023s.c               | 1162 +++++++++++++++++
+ 5 files changed, 1282 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/tyhx,hx9023s.yaml
+ create mode 100644 drivers/iio/proximity/hx9023s.c
 
 -- 
-With best wishes
-Dmitry
+2.25.1
+
