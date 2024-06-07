@@ -1,111 +1,53 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D8F15381B
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 20:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3736E61B
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 20:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717791741; cv=none; b=MWVCZoH0bIqgc19MUeOvUClzyALNh4attIZIaQYG5leertZPrZ01jVq6sPdUlj6gKF0zUPJTVLYJ+yNftio7TG7wBnogEj8++kNGZyvl4qaXR/IrrgCodteMz3wde/w5Ku1oGXA2QXNkG175S1RU2X7fphSPOrFYDQUUFAg1Q/4=
+	t=1717792008; cv=none; b=tU3L/SFEEbeIEqn4EkkQYK17LByuNPtWJsE5AcIB6Awv4IIJ2KMu2GODj09DvqdFwjw7FeoaFTkLXr5OJQiFHpg5ekFiaNKpHH1TXFBb1sKUpGYbsKz785ZJZzeLwbBj77LpCfZpiiW4intCZRQOTo5GKiMpEErDBg2A59O7uyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717791741; c=relaxed/simple;
-	bh=S3LKBRdYZ76UR5mU6mhYfYh8IKB/KBkG8xCM3TgV+vY=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jDgG89/VOoQdsgfK4jwDrSg/0vuKprR6Oin+ZyYg1jk2XgqhdD42TQD2JS3o3FwvrPlwJCDQi4pBT65JRYBnfozbvPkvGSwLt+Nwv786j4alCsm0PBKyeJawrZiSK5QpxWnc7ZLVbFp721LQT5hfs9Q3O6VoovXGNTsBzh+1TAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mEqcFoqV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gDBFKNnG; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mEqcFoqV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gDBFKNnG"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717791734;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DbsnZTi3yzYGcTgPSKaSRSUxnZfcrNRyLlLmKPFRcq8=;
-	b=mEqcFoqVjpXHIvQJzHnpy33A6eYLASQS9rK4xkGen/LQ6fhZnv+Ap785wROp0YvwD8FHU7
-	niKGv8x9Tk6bjiBkbMqWHx7aTIejL0Q/v+67iX5EsW6Nr8SNLpiDRAKoDnsc823a6WxVYk
-	uxqWB1BI7+OZ9N2AJ+qdfCIgjWFsuZQya0s6/DqRY3F5sIGmwmBQytg9ToasdWeP33Cmt6
-	Td8LxG0z+CU/rjNEd7//nkHBh+g8CuYp9a5AAhRulQWmX32QDCA52nJsFgAtcluFleaDyn
-	cFBOfrJWPcssBbXUtmJgPwLAqiwyBUF+y452lk5Iz7hETS57gUaAITAPT8zB1w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717791734;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DbsnZTi3yzYGcTgPSKaSRSUxnZfcrNRyLlLmKPFRcq8=;
-	b=gDBFKNnGRevOYtiAVL7cWyH6dsm6ymR4UCm6nKm+VDXdqgBs8BzfgFefTbtv2zd6af76QU
-	n80+Z688v6fHDwAw==
-To: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/8] riscv: drop the use of XIP_OFFSET in XIP_FIXUP_FLASH_OFFSET
-Date: Fri,  7 Jun 2024 22:22:10 +0200
-Message-Id: <7b3319657edd1822f3457e7e7c07aaa326cc2f87.1717789719.git.namcao@linutronix.de>
-In-Reply-To: <cover.1717789719.git.namcao@linutronix.de>
-References: <cover.1717789719.git.namcao@linutronix.de>
+	s=arc-20240116; t=1717792008; c=relaxed/simple;
+	bh=9NBH7cVg/Lo+EKM4OkwGnXHDApulgI1fbqUG/pd2nP4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iiHqST/6c2pnnCs1whvC0tK+49s8yoqDToYPGZRSFCC3tLhV3jzkYEUODWlAO0sG70qnBkgmIc8te47noSA4SIzput3vdBGIoMoAOfiBPrXHCF+mnrBdEvMsmoox9M6N/xd2uBarxQTvd0OUlYjr2VjlTqTkMzFr6Odwq1OkHUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 3e4b01e6-250c-11ef-80e1-005056bdfda7;
+	Fri, 07 Jun 2024 23:26:39 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 7 Jun 2024 23:26:38 +0300
+To: Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, naresh.solanki@9elements.com,
+	andy.shevchenko@gmail.com, broonie@kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] pinctrl: cy8c95x0: Use single I2C lock
+Message-ID: <ZmNs_m5hnLqR6OtL@surfacebook.localdomain>
+References: <20240521152602.1097764-1-patrick.rudolph@9elements.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240521152602.1097764-1-patrick.rudolph@9elements.com>
 
-XIP_OFFSET is the hard-coded offset of writable data section within the
-kernel.
+Tue, May 21, 2024 at 05:25:57PM +0200, Patrick Rudolph kirjoitti:
+> Currently there are 3 locks being used when accessing the chip, one
+> in the driver and one in each regmap. Reduce that to one driver only
+> lock that protects all regmap and regcache accesses.
 
-By hard-coding this value, the read-only section of the kernel (which is
-placed before the writable data section) is restricted in size.
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-As a preparation to remove this hard-coded macro XIP_OFFSET entirely, stop
-using XIP_OFFSET in XIP_FIXUP_FLASH_OFFSET. Instead, use __data_loc and
-_sdata to do the same thing.
+(As discussed the conversion to cleanup.h may be done separately)
 
-While at it, also add a description for XIP_FIXUP_FLASH_OFFSET.
-
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/include/asm/xip_fixup.h | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/arch/riscv/include/asm/xip_fixup.h b/arch/riscv/include/asm/xip_fixup.h
-index 9ed2cfae09e0..f3d56299bc22 100644
---- a/arch/riscv/include/asm/xip_fixup.h
-+++ b/arch/riscv/include/asm/xip_fixup.h
-@@ -24,13 +24,21 @@
- 	sub \reg, \reg, t0
- .endm
- .macro XIP_FIXUP_FLASH_OFFSET reg
-+	/* In linker script, at the transition from read-only section to
-+	 * writable section, the VMA is increased while LMA remains the same.
-+	 * (See in linker script how _sdata, __data_loc and LOAD_OFFSET is
-+	 * changed)
-+	 *
-+	 * Consequently, early during boot before MMU is up, the generated code
-+	 * reads the "writable" section at wrong addresses, because VMA is used
-+	 * by compiler to generate code, but the data is located in Flash using
-+	 * LMA.
-+	 */
-+	la t0, _sdata
-+	sub \reg, \reg, t0
- 	la t0, __data_loc
--	REG_L t1, _xip_phys_offset
--	sub \reg, \reg, t1
- 	add \reg, \reg, t0
- .endm
--
--_xip_phys_offset: .dword CONFIG_XIP_PHYS_ADDR + XIP_OFFSET
- #else
- .macro XIP_FIXUP_OFFSET reg
- .endm
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
