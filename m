@@ -1,125 +1,350 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E207317C;
-	Fri,  7 Jun 2024 08:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2544B15B0FD;
+	Fri,  7 Jun 2024 08:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717750153; cv=none; b=MYnbB4HFVfVl5z/9iXLGXsgvJpgVPlmLm0xOCiKv08rqgtRAKB8hqn7sEsH4ivVAT9hwAHE4tdG0tRe2AIexTWO3Kc0TCPAW/JWIXsDAZ9uKhAobX8rH2qwVjojtBxDcjggyke35RUivDbn8cLzOUlaRJV0yP9Raa4yot7dwq6Q=
+	t=1717750179; cv=none; b=Do1o+Uax/ljbHGDHBw38NdgGSlJsMKxOURfyf2WPInzIHIHBskj06Zav3jaTHhSH2oUtyWs5J6F8EA3JCQs/wD8pYklz+dDr4VppitktQBu96K0fctcnmNpyt5MbRyDV8lcZRDi0bVm+5CU6i4AIOEkuji3x0ydbZmPlpMGMSrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717750153; c=relaxed/simple;
-	bh=hMoCi3CiZZrj2+Y22zfqnFud4swZKvdCbQXLn4suIv8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MDSmB2ZXnnddkdcUxVxVglZPlZbjaPWxRHjt9ahJY2tix3t3aaeCtVNO0tI3t4iEoLBkijPCRL39nexsh5UrGGR9OwZGdmKXjj52U2NayXRTyq4pH6mbxq+yZ+5nqeSqEiSOv6PI7EvjlWZ3ZH1q11CgGjoFXUDTjD5+OUS5jC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhwYgiFM; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhwYgiFM"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52bc121fb1eso207057e87.1;
-        Fri, 07 Jun 2024 01:49:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717750150; x=1718354950; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gOiWxwHu+OpD7Jbm2v+TszlDGCIU7+PiFMWDJObj5oI=;
-        b=ZhwYgiFMIgT6X8TKkcSb/W5Iw7VT4Hu6olzeKa6edNjLRRAw2feklC43h6Nm85IGd3
-         sKfDUtCx8rdiEK3pt6oxZZDSFjWW5yQNedDJEpewpXGoOrDUJKWvH5iB0T6kpN4pG7MI
-         CJHGewzTkVXlYWLVXzOxbkcgJRopE5wtIpsxXZSHQPBQ0bWcGNchNE79v7sUpRjm286f
-         pSKL6xCLGgLgW74yoKGOA7HdvrT8ajoLJTy0q5QVTLOReqBrqQPdL96CmF/YHHM33kaG
-         yJM9MUfmoo3vVjZApcfYxki9IDzjHYr4WGkKUTDp8b+RVNL8wRWpM0jZE2ad/Ju61FyM
-         gm/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717750150; x=1718354950;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gOiWxwHu+OpD7Jbm2v+TszlDGCIU7+PiFMWDJObj5oI=;
-        b=hFwnogc7wqWCZMGQTEYhugJgCG6wFcmjNt7pbF3RNkt3Jcz05voSXcPP8gskWlANSe
-         zRFosr1zoYb21MoA4ew3HUYS0w4/LQ9UWLFyeTe+HL8W9jDeIh62T1s6XiNFTLN3qrgM
-         PXQCX0HqoHmBf6zcEraktkurKv8ZQV4dowe8qlpqCv+/u8K7nFUKvzenIi6NZ5nYzUu/
-         G+kUeecPYnUJ6sTQcd3vzovYP5rBibx2HV536E2Y6AKP2UdS2zJiXZVUG7km16yNnJoV
-         u4DNJyBMHzqUutv8UB/JuEt1UwO/S3q8f2AAHAyHEvDO/lfmpUHiHLWsOiNqWhYae+Vz
-         6nuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ05yIwyT+FCWnPg1jQlZjU8DWVhi84ZBKNujsWxZnvsZckI5TFiu6DMKHz6GGvT+N+wvCjLvcODfSNkaZcjKw5OE807OJbJukeXrg0bngS0DLsG8Z+/tpQP3rm5dEXJZNbDTQ60D9oHcZNEwSfRMlHUSlHhsl6III1HPxr6nt7gpRU5JYtTLK
-X-Gm-Message-State: AOJu0YwhbmMrtitxDRLo/2/fw/5hVDoaBqkCHLtGMM8K4E5AAKU8atNe
-	+xge/VqN47xsfAwamB/dWxqr6bMbSUc8LgXOq4zBc1BkBBlUlXu3
-X-Google-Smtp-Source: AGHT+IH5NzryrJZakVKjwXwY9sWRTl1oxs9lBNSNMkbs9SI6Ib9HPZ7/ynCWYdwr+ryNzSIxPwSNvA==
-X-Received: by 2002:a05:6512:239a:b0:52b:ad6e:87ac with SMTP id 2adb3069b0e04-52bb9f8efd4mr1411884e87.41.1717750149409;
-        Fri, 07 Jun 2024 01:49:09 -0700 (PDT)
-Received: from [172.16.183.82] ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb4216514sm453470e87.163.2024.06.07.01.49.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Jun 2024 01:49:08 -0700 (PDT)
-Message-ID: <b2b31803-44ff-462b-bc1a-6b1ffa93bdf0@gmail.com>
-Date: Fri, 7 Jun 2024 11:49:07 +0300
+	s=arc-20240116; t=1717750179; c=relaxed/simple;
+	bh=cy0TH13pN88Ypdgl0Nm15pRXMXIEOwCPhGAQUxUQIb0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LswqGqVUdMmRQbDBwBfqbAgOK2G+DlR8WUJUJMT4F8ooWCLt5sTjBm8Qh5NI6rFrsMwirb+aBG+THszGFNXg0MjAIsxtmQs25ViDCQ16U7GtSsWXpk1xM0W6k6jm164a1lPok1wn/hXGzhwmc7Gjl7CI/2BL0DKt0ALtsk2nSh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4578nHsX53817983, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4578nHsX53817983
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Jun 2024 16:49:17 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 7 Jun 2024 16:49:17 +0800
+Received: from RTDOMAIN (172.21.210.98) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 7 Jun
+ 2024 16:49:16 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
+        Justin Lai
+	<justinlai0215@realtek.com>
+Subject: [PATCH net-next v20 08/13] rtase: Implement net_device_ops
+Date: Fri, 7 Jun 2024 16:43:16 +0800
+Message-ID: <20240607084321.7254-9-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240607084321.7254-1-justinlai0215@realtek.com>
+References: <20240607084321.7254-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/10] irqdomain: Allow giving name suffix for domain
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <cover.1717486682.git.mazziesaccount@gmail.com>
- <bbd219c95f4fe88752aee5f21232480fe9b949fb.1717486682.git.mazziesaccount@gmail.com>
- <87plst28yk.ffs@tglx> <045828bd-4aeb-4d8d-b152-44a816a07221@gmail.com>
- <20240607101356.3ede2a17@bootlin.com>
-Content-Language: en-US, en-GB
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20240607101356.3ede2a17@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-On 6/7/24 11:13, Herve Codina wrote:
-> Hi Matti,
-> 
-> On Fri, 7 Jun 2024 09:38:31 +0300
-> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> 
-> ...
-> 
->> Herve, do you have any idea when you plan to do further sketching on
->> this? Do you want me to try seeing if I can add the struct
->> irq_domain_info and maybe use that in the __irq_domain_add() to get the
->> name-suffix added? I might be able to send one version out during next
->> week - but then I plan to be offline for couple of weeks ... so it may
->> be I am not much of a help here.
->>
-> 
-> On my side, I plan to work on it next week too.
-> If you are off a couple of weeks after, I think I can start and move forward
-> on this topic.
+1. Implement .ndo_set_rx_mode so that the device can change address
+list filtering.
+2. Implement .ndo_set_mac_address so that mac address can be changed.
+3. Implement .ndo_change_mtu so that mtu can be changed.
+4. Implement .ndo_tx_timeout to perform related processing when the
+transmitter does not make any progress.
+5. Implement .ndo_get_stats64 to provide statistics that are called
+when the user wants to get network device usage.
+6. Implement .ndo_vlan_rx_add_vid to register VLAN ID when the device
+supports VLAN filtering.
+7. Implement .ndo_vlan_rx_kill_vid to unregister VLAN ID when the device
+supports VLAN filtering.
+8. Implement the .ndo_setup_tc to enable setting any "tc" scheduler,
+classifier or action on dev.
+9. Implement .ndo_fix_features enables adjusting requested feature flags
+based on device-specific constraints.
+10. Implement .ndo_set_features enables updating device configuration to
+new features.
 
-Thanks for the prompt reply and thanks for working with this :) I'll 
-leave it to you for now then, as I don't think it makes much sense to 
-intentionally do conflicting changes. I'll see what you've been up to 
-when I return to the keyboard :) I'd appreciated if you added me to CC 
-when sending the irqdomain refactoring patches (but I can dig them up if 
-you don't).
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 237 ++++++++++++++++++
+ 1 file changed, 237 insertions(+)
 
-Have fun!
-
-Yours,
-	-- Matti
-
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 9ee9f30444f3..38faff333a93 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -1444,6 +1444,11 @@ static netdev_tx_t rtase_start_xmit(struct sk_buff *skb,
+ 	return NETDEV_TX_BUSY;
+ }
+ 
++static void rtase_set_rx_mode(struct net_device *dev)
++{
++	rtase_hw_set_rx_packet_filter(dev);
++}
++
+ static void rtase_enable_eem_write(const struct rtase_private *tp)
+ {
+ 	u8 val;
+@@ -1476,6 +1481,205 @@ static void rtase_rar_set(const struct rtase_private *tp, const u8 *addr)
+ 	rtase_w16(tp, RTASE_LBK_CTRL, RTASE_LBK_ATLD | RTASE_LBK_CLR);
+ }
+ 
++static int rtase_set_mac_address(struct net_device *dev, void *p)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++	int ret;
++
++	ret = eth_mac_addr(dev, p);
++	if (ret)
++		return ret;
++
++	rtase_rar_set(tp, dev->dev_addr);
++
++	return 0;
++}
++
++static int rtase_change_mtu(struct net_device *dev, int new_mtu)
++{
++	dev->mtu = new_mtu;
++
++	netdev_update_features(dev);
++
++	return 0;
++}
++
++static void rtase_wait_for_quiescence(const struct net_device *dev)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++	struct rtase_int_vector *ivec;
++	u32 i;
++
++	for (i = 0; i < tp->int_nums; i++) {
++		ivec = &tp->int_vector[i];
++		synchronize_irq(ivec->irq);
++		/* wait for any pending NAPI task to complete */
++		napi_disable(&ivec->napi);
++	}
++
++	rtase_irq_dis_and_clear(tp);
++
++	for (i = 0; i < tp->int_nums; i++) {
++		ivec = &tp->int_vector[i];
++		napi_enable(&ivec->napi);
++	}
++}
++
++static void rtase_sw_reset(struct net_device *dev)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++	int ret;
++
++	netif_stop_queue(dev);
++	netif_carrier_off(dev);
++	rtase_hw_reset(dev);
++
++	/* let's wait a bit while any (async) irq lands on */
++	rtase_wait_for_quiescence(dev);
++	rtase_tx_clear(tp);
++	rtase_rx_clear(tp);
++
++	ret = rtase_init_ring(dev);
++	if (ret) {
++		netdev_err(dev, "unable to init ring\n");
++		rtase_free_desc(tp);
++		return;
++	}
++
++	rtase_hw_config(dev);
++	/* always link, so start to transmit & receive */
++	rtase_hw_start(dev);
++
++	netif_carrier_on(dev);
++	netif_wake_queue(dev);
++}
++
++static void rtase_dump_tally_counter(const struct rtase_private *tp)
++{
++	dma_addr_t paddr = tp->tally_paddr;
++	u32 cmd = lower_32_bits(paddr);
++	u32 val;
++	int err;
++
++	rtase_w32(tp, RTASE_DTCCR4, upper_32_bits(paddr));
++	rtase_w32(tp, RTASE_DTCCR0, cmd);
++	rtase_w32(tp, RTASE_DTCCR0, cmd | RTASE_COUNTER_DUMP);
++
++	err = read_poll_timeout(rtase_r32, val, !(val & RTASE_COUNTER_DUMP),
++				10, 250, false, tp, RTASE_DTCCR0);
++
++	if (err == -ETIMEDOUT)
++		netdev_err(tp->dev, "error occurred in dump tally counter\n");
++}
++
++static void rtase_dump_state(const struct net_device *dev)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++	int max_reg_size = RTASE_PCI_REGS_SIZE;
++	const struct rtase_counters *counters;
++	const struct rtase_ring *ring;
++	u32 dword_rd;
++	int n = 0;
++
++	ring = &tp->tx_ring[0];
++	netdev_err(dev, "Tx descriptor info:\n");
++	netdev_err(dev, "Tx curIdx = 0x%x\n", ring->cur_idx);
++	netdev_err(dev, "Tx dirtyIdx = 0x%x\n", ring->dirty_idx);
++	netdev_err(dev, "Tx phyAddr = %pad\n", &ring->phy_addr);
++
++	ring = &tp->rx_ring[0];
++	netdev_err(dev, "Rx descriptor info:\n");
++	netdev_err(dev, "Rx curIdx = 0x%x\n", ring->cur_idx);
++	netdev_err(dev, "Rx dirtyIdx = 0x%x\n", ring->dirty_idx);
++	netdev_err(dev, "Rx phyAddr = %pad\n", &ring->phy_addr);
++
++	netdev_err(dev, "Device Registers:\n");
++	netdev_err(dev, "Chip Command = 0x%02x\n",
++		   rtase_r8(tp, RTASE_CHIP_CMD));
++	netdev_err(dev, "IMR = %08x\n", rtase_r32(tp, RTASE_IMR0));
++	netdev_err(dev, "ISR = %08x\n", rtase_r32(tp, RTASE_ISR0));
++	netdev_err(dev, "Boot Ctrl Reg(0xE004) = %04x\n",
++		   rtase_r16(tp, RTASE_BOOT_CTL));
++	netdev_err(dev, "EPHY ISR(0xE014) = %04x\n",
++		   rtase_r16(tp, RTASE_EPHY_ISR));
++	netdev_err(dev, "EPHY IMR(0xE016) = %04x\n",
++		   rtase_r16(tp, RTASE_EPHY_IMR));
++	netdev_err(dev, "CLKSW SET REG(0xE018) = %04x\n",
++		   rtase_r16(tp, RTASE_CLKSW_SET));
++
++	netdev_err(dev, "Dump PCI Registers:\n");
++
++	while (n < max_reg_size) {
++		if ((n % RTASE_DWORD_MOD) == 0)
++			netdev_err(tp->dev, "0x%03x:\n", n);
++
++		pci_read_config_dword(tp->pdev, n, &dword_rd);
++		netdev_err(tp->dev, "%08x\n", dword_rd);
++		n += 4;
++	}
++
++	netdev_err(dev, "Dump tally counter:\n");
++	counters = tp->tally_vaddr;
++	rtase_dump_tally_counter(tp);
++
++	netdev_err(dev, "tx_packets %lld\n",
++		   le64_to_cpu(counters->tx_packets));
++	netdev_err(dev, "rx_packets %lld\n",
++		   le64_to_cpu(counters->rx_packets));
++	netdev_err(dev, "tx_errors %lld\n",
++		   le64_to_cpu(counters->tx_errors));
++	netdev_err(dev, "rx_errors %d\n",
++		   le32_to_cpu(counters->rx_errors));
++	netdev_err(dev, "rx_missed %d\n",
++		   le16_to_cpu(counters->rx_missed));
++	netdev_err(dev, "align_errors %d\n",
++		   le16_to_cpu(counters->align_errors));
++	netdev_err(dev, "tx_one_collision %d\n",
++		   le32_to_cpu(counters->tx_one_collision));
++	netdev_err(dev, "tx_multi_collision %d\n",
++		   le32_to_cpu(counters->tx_multi_collision));
++	netdev_err(dev, "rx_unicast %lld\n",
++		   le64_to_cpu(counters->rx_unicast));
++	netdev_err(dev, "rx_broadcast %lld\n",
++		   le64_to_cpu(counters->rx_broadcast));
++	netdev_err(dev, "rx_multicast %d\n",
++		   le32_to_cpu(counters->rx_multicast));
++	netdev_err(dev, "tx_aborted %d\n",
++		   le16_to_cpu(counters->tx_aborted));
++	netdev_err(dev, "tx_underun %d\n",
++		   le16_to_cpu(counters->tx_underun));
++}
++
++static void rtase_tx_timeout(struct net_device *dev, unsigned int txqueue)
++{
++	rtase_dump_state(dev);
++	rtase_sw_reset(dev);
++}
++
++static void rtase_get_stats64(struct net_device *dev,
++			      struct rtnl_link_stats64 *stats)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++	const struct rtase_counters *counters;
++
++	counters = tp->tally_vaddr;
++
++	if (!counters)
++		return;
++
++	netdev_stats_to_stats64(stats, &dev->stats);
++	dev_fetch_sw_netstats(stats, dev->tstats);
++
++	/* fetch additional counter values missing in stats collected by driver
++	 * from tally counter
++	 */
++	rtase_dump_tally_counter(tp);
++	stats->tx_errors = le64_to_cpu(counters->tx_errors);
++	stats->rx_missed_errors = le16_to_cpu(counters->rx_missed);
++	stats->collisions = le32_to_cpu(counters->tx_multi_collision);
++	stats->tx_aborted_errors = le16_to_cpu(counters->tx_aborted);
++}
++
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+ /* Polling 'interrupt' - used by things like netconsole to send skbs
+  * without having to re-enable interrupts. It's not called while
+@@ -1492,13 +1696,46 @@ static void rtase_netpoll(struct net_device *dev)
+ }
+ #endif
+ 
++static netdev_features_t rtase_fix_features(struct net_device *dev,
++					    netdev_features_t features)
++{
++	netdev_features_t features_fix = features;
++
++	/*  not support TSO for jumbo frames */
++	if (dev->mtu > ETH_DATA_LEN)
++		features_fix &= ~NETIF_F_ALL_TSO;
++
++	return features_fix;
++}
++
++static int rtase_set_features(struct net_device *dev,
++			      netdev_features_t features)
++{
++	netdev_features_t features_set = features;
++
++	features_set &= NETIF_F_RXALL | NETIF_F_RXCSUM |
++			NETIF_F_HW_VLAN_CTAG_RX;
++
++	if (features_set ^ dev->features)
++		rtase_hw_set_features(dev, features_set);
++
++	return 0;
++}
++
+ static const struct net_device_ops rtase_netdev_ops = {
+ 	.ndo_open = rtase_open,
+ 	.ndo_stop = rtase_close,
+ 	.ndo_start_xmit = rtase_start_xmit,
++	.ndo_set_rx_mode = rtase_set_rx_mode,
++	.ndo_set_mac_address = rtase_set_mac_address,
++	.ndo_change_mtu = rtase_change_mtu,
++	.ndo_tx_timeout = rtase_tx_timeout,
++	.ndo_get_stats64 = rtase_get_stats64,
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+ 	.ndo_poll_controller = rtase_netpoll,
+ #endif
++	.ndo_fix_features = rtase_fix_features,
++	.ndo_set_features = rtase_set_features,
+ };
+ 
+ static void rtase_get_mac_address(struct net_device *dev)
 -- 
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
-
-~~ When things go utterly wrong vim users can always type :help! ~~
+2.34.1
 
