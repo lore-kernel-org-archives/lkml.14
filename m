@@ -1,99 +1,94 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0847E1CABF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 20:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD7833EE
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 20:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717791398; cv=none; b=tGRX42iJByLxAyBkiFRKmcKQEUGhVDFZjayPulU3LpZ8VZMkUwB9N7JeRLV/0P7/jedRdtEswgPxfqvJ4CfFjonmbzREFf9jZ/8FY3IxCflGBJQEvuPDcVWYjv+1jNDW4Jz83/LEyNPvtgaJHCHFMrQ14IeoakAja4A2tX9pN8A=
+	t=1717791737; cv=none; b=lZcSV8dIgbpBgcZQhXKkkPR6YWkWWq7hLpQ2L0d2sE1bUQEKDDN/iW7W61B22NOgw/k5XJh+wsnSdPZuiR1S3wrKSCiS0lJhFry4H6aJiNUJOOg/qXFYFaNcjKbVFwTKPb2B1TZLW0V8EJfyeloF+1EQ33nYmhXODNY6fHgSnns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717791398; c=relaxed/simple;
-	bh=94dQIEaXbShYcCUD2VZwQZfWzDfpId6SaEJtAerUUDs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iqw4MpPLqzz13sMKArXiyYKp8n/hL406KTDIU1I+KBrHGaqK/KKLW4IoNzxfHm9xSOnn3vOv63FLs+aL3nM380tpnFOKTHBNFMrb6T0UksBnFUMzZjldtjwrSlatcmghfibqjtug/27rjNAoXVyIdFi+fEZ2V0SrzdXTWW1cuWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gLN5hlVU; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1717791737; c=relaxed/simple;
+	bh=YxUzYoHE+R+dtYjDWQYkl313ZUeVoqUy01UITCRL2ek=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=APn0MfR3ATJub/uXzdGHUk6QpBZqCsIVKMYhDEjmwgp9JFmpHCLeb8IRoJmEGgYJXGcRW389oCQLZz0mWK8YqGTWqQChVBv24ymRC8V/7djyWXJEfbKtzcomj5pRtqP/JQWLozU9DU5PWsyboT5Uu4aIDZ5I+5HFS2xz3wmyoIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sD84pO/Z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3ojEtW3h; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gLN5hlVU"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3737b3c6411so1575865ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 13:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1717791396; x=1718396196; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=96rEQbBFraOtroPGskwQv9wJ6BgYJkFe+xf7ykDOFvM=;
-        b=gLN5hlVUsLfYAhKpEQyKwtcsjfdR5CSgnOYfNG7hZ6HC1QEwJwcWQGlXI0fgPYaKSU
-         4g0RPRvkyFavddKUYdAYm/yp4FXfyj5Y0YoHWwvj7TRqA6xA9hPhnt1VKj2i0SphXvZi
-         3mRgcsTRo/wlIe5BlEdvxtRsXVXUMjXeI/wMU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717791396; x=1718396196;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=96rEQbBFraOtroPGskwQv9wJ6BgYJkFe+xf7ykDOFvM=;
-        b=MdukM5io5WlEE0+J7TW/XVHZD2yhSNVixKwa4Eo14y5j+IjVMUkibkU4tNgfvJDzjs
-         LNV2RWIAqILrW+8ZhkUPksWJcSqqoryEOz/z/W07ofmJYTNkwrMtYdMmLdklsB29NIav
-         PyZPnJiIMDzeB67Vtd3gbXj2JU/8T72ZzCEvwq3WwJ+49K2NCFkDJ367eaK9uYoBDVOU
-         wVYVvuwTA+4zr+ExIOBpeZXrp2jDTwjntCHVw0P+GWG9w9rv53j1jVvxqFwwzLDY0cCl
-         w+8/K8ov05hNuDxOmRbTqaOxheEOETBUtFu8yoeE9IWKd9PkBNesj3+I/xq+bfo3eNjK
-         yHnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0fUk7GtCrO2Hpd+99dYWdmRZAON2U/ikE+JGes5GZwwm2+ojcRyAe7drPXAkh3BFCSmookb+ijTxxUPx7XcHpKm16ahXVEukGBmTF
-X-Gm-Message-State: AOJu0YyLfdNG40UbNzRxT3D5YJ1USkDy0aY58nTxYV+Z564OZKJa/+gL
-	ZbJyg+4ocUprOLqjRpYRdy9zJPSWillb+r3eDLKM88EkTeJgvuxD0lfWEqCwwdY=
-X-Google-Smtp-Source: AGHT+IGWuRP8uOeTBdfHQ4EtimpCODHyKWkg57vDi+SJtc+P1tHb2l9ZmD9GDO5yRdRZlSt99OBjFQ==
-X-Received: by 2002:a05:6602:256c:b0:7eb:6a6e:c830 with SMTP id ca18e2360f4ac-7eb6a6ec94dmr106967639f.2.1717791396021;
-        Fri, 07 Jun 2024 13:16:36 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b7a224cdd2sm1001756173.57.2024.06.07.13.16.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Jun 2024 13:16:35 -0700 (PDT)
-Message-ID: <62de4c57-1296-4fd3-8072-ebbb939bee47@linuxfoundation.org>
-Date: Fri, 7 Jun 2024 14:16:34 -0600
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sD84pO/Z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3ojEtW3h"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717791734;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cn6XVXZM59Nth6p5tsQDc4XnTOplZUQTrnvegHUFwrU=;
+	b=sD84pO/ZxF8vHvHfZgaOrW5D7kvyq5EI0jJbj4W+SN6ILAClGy5VssRHErCgGiHyp/NwXO
+	OZnpD5JzqSFGWBiat2vuhQB4gv+G0m1PrtfMfafLZDdtPvMeYzJc5IflhGoLSWb8nS8wjt
+	kJxyansVjaEjcaPglhJjXow7vTGq2KNE3FUU8PwsPnJsEz+U+lmyOVSXoaiSAlMvvII/6m
+	k7kxbe5pAKDnVaG9qF4tpQIuGjB6S0rlGDKPQN7uGHI2vG7cMEc4iE3ClM+DExPnVhM7iC
+	25S7NRNQBIZ7/1eQ8rI9/dWg7InxsXNoQPcxiQvp7GVnNOD1/0d5iPkEUqdbBw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717791734;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cn6XVXZM59Nth6p5tsQDc4XnTOplZUQTrnvegHUFwrU=;
+	b=3ojEtW3hB0mfLXr+O+vmKQZ403TBBNLnM77VmV5V/6nREtIuy9sp4RkPWThWftXATWKLaI
+	RaWPtBh1X93IkXBQ==
+To: Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/8] riscv: don't export va_kernel_pa_offset in vmcoreinfo for XIP kernel
+Date: Fri,  7 Jun 2024 22:22:07 +0200
+Message-Id: <8f8760d3f9a11af4ea0acbc247e4f49ff5d317e9.1717789719.git.namcao@linutronix.de>
+In-Reply-To: <cover.1717789719.git.namcao@linutronix.de>
+References: <cover.1717789719.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] kselftests: vdso: conform tests to TAP output
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Shuah Khan <shuah@kernel.org>, Vincenzo Frascino
- <vincenzo.frascino@arm.com>, Colin Ian King <colin.i.king@gmail.com>,
- Tiezhu Yang <yangtiezhu@loongson.cn>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: kernel@collabora.com, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240529072454.2522495-1-usama.anjum@collabora.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240529072454.2522495-1-usama.anjum@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/29/24 01:24, Muhammad Usama Anjum wrote:
-> Conform individual tests to TAP output. One patch conform one test. With
-> this series, all vDSO tests become TAP conformant.
-> 
-> Muhammad Usama Anjum (4):
->    kselftests: vdso: vdso_test_clock_getres: conform test to TAP output
->    kselftests: vdso: vdso_test_correctness: conform test to TAP output
->    kselftests: vdso: vdso_test_getcpu: conform test to TAP output
->    kselftests: vdso: vdso_test_gettimeofday: conform test to TAP output
-> 
->   .../selftests/vDSO/vdso_test_clock_getres.c   |  68 ++++----
->   .../selftests/vDSO/vdso_test_correctness.c    | 146 +++++++++---------
->   .../testing/selftests/vDSO/vdso_test_getcpu.c |  16 +-
->   .../selftests/vDSO/vdso_test_gettimeofday.c   |  23 +--
->   4 files changed, 126 insertions(+), 127 deletions(-)
-> 
+The crash utility uses va_kernel_pa_offset to translate virtual addresses.
+This is incorrect in the case of XIP kernel, because va_kernel_pa_offset is
+not the virtual-physical address offset (yes, the name is misleading; this
+variable will be removed for XIP in a following commit).
 
-Sounds like this series is converting the test to kselftest_harness
-and the commit message doesn't mention that.
+Stop exporting this variable for XIP kernel. The replacement is to be
+determined, note it as a TODO for now.
 
-I like to see the commit message match the change being made.
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ arch/riscv/kernel/vmcore_info.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-thanks,
--- Shuah
+diff --git a/arch/riscv/kernel/vmcore_info.c b/arch/riscv/kernel/vmcore_info.c
+index 6d7a22522d63..d5e448aa90e7 100644
+--- a/arch/riscv/kernel/vmcore_info.c
++++ b/arch/riscv/kernel/vmcore_info.c
+@@ -19,6 +19,13 @@ void arch_crash_save_vmcoreinfo(void)
+ #endif
+ #endif
+ 	vmcoreinfo_append_str("NUMBER(KERNEL_LINK_ADDR)=0x%lx\n", KERNEL_LINK_ADDR);
++#ifdef CONFIG_XIP_KERNEL
++	/* TODO: Communicate with crash-utility developers on the information to
++	 * export. The XIP case is more complicated, because the virtual-physical
++	 * address offset depends on whether the address is in ROM or in RAM.
++	 */
++#else
+ 	vmcoreinfo_append_str("NUMBER(va_kernel_pa_offset)=0x%lx\n",
+ 						kernel_map.va_kernel_pa_offset);
++#endif
+ }
+-- 
+2.39.2
+
