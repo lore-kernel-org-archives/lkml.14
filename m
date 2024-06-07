@@ -1,149 +1,165 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03316146D4D;
-	Fri,  7 Jun 2024 14:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36191146D4D;
+	Fri,  7 Jun 2024 14:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717769949; cv=none; b=RIAYeLw9IGZgURkGTRM/GUnzXdp2KhsE+Z9w84DqczK6uavADa7AYUHu3p4V3dmTvkrJtNSBKQ/+8EzA07xjWrQEy4tcM3sNY+pubrNkruC6mGgYaA2wKi5HKpXXydsfKKYEDI4EyN/PeNOFkb4L9ZeJ0q/0UpIsGjCD0hR09tA=
+	t=1717769962; cv=none; b=FEmOUqdZ/lGQQInn5LRNckDpSh51sfEZNRWfD0qD2LiKMG4nW4T6ffstSZKge43HHKjyv3M7F93unBGWdMr1JRRLssSu+rqzZOC2YkzMFIAj3k7LcUIcuhEh2DOFsC6tL3Zns3BRVCabH/nqaiAU17wX9pUSV4rFE0R4FWRRmdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717769949; c=relaxed/simple;
-	bh=dmyKBIrGJx3WWoBggWmjF0Z4ppLW8i1IhHzfkec1a4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=DYz1Vi0AlFZRmdM3mNZhWTCvCRBd0YRgRQL2WzMVYmj+1qu63ubzudEEb92hfChlQAAqwR5aJrAg9DUE9VPNRBSN4Kq7UZSFzNGP509RP3u7dF7vr3P36RxA5mKB/SYYn/SezrqDLAH3GYWN/Jkgc9zVyFGESI3c4cQZYn2qTuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AgL38T/C; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1717769962; c=relaxed/simple;
+	bh=g7v5y5TqQIYlFtzFUceKyepZT8VSU3QRJHcH6erE3nk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gdyyz7yCLejopwQnfadP2NEBWsiLKiObBmFhX9ZpIFWMj4XTQhNf7k/78OTpOlQrT3+4jinmJchd/I5cQ6PdO7Pp3pRlUi+R8CIRvLZ6/UMX218ZuZSFM8qAJgF3nxrlWbYdFSNvE2qcerkFDSndmcGdDBLW0fu800wrBkvNIzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=RuDzD5bH; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AgL38T/C"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 457EGrjo031239;
-	Fri, 7 Jun 2024 14:19:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc : content-type : date
- : from : message-id : mime-version : subject : to; s=pp1;
- bh=o5Ux/KkLv8VlOD1jNtlwAc2IfvsNrLcW/YitJutC2aI=;
- b=AgL38T/Chy9BzuLowVftiAxDG787rGisBqWTSfwLXHrt9VmbXcicPyGt3H6qfoBN6cFg
- kmlos0cAWOmGSVJej2hfX7R/q0uCDNzYy5sAG2CUn9HIihwiDAy/OaemsfjZL8rMqWXo
- +hYYS7szvt7a0kLlMEK5TzBL/a7w6P0PNPDO/arRVnQrLf5GiLFnvE6t4vYWiobdLzKT
- MQW/z9Uyxei8VQjiyKQZLcGU9GACuqxikEnUqsl+wkvXnvwWqfzvVimnpcwyma2qEdQs
- 4Dk2Zyhh5L0c5ddYif+PJsMUSyk0h4L4CFiNSKGNACmm6Edr6CSwWET9E8gUXG1l6Swj 9w== 
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ym3u3r08e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Jun 2024 14:19:03 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 457C0haF008479;
-	Fri, 7 Jun 2024 14:19:02 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ygec199va-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Jun 2024 14:19:02 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 457EIudx38011136
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Jun 2024 14:18:58 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D237720049;
-	Fri,  7 Jun 2024 14:18:56 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B837920040;
-	Fri,  7 Jun 2024 14:18:56 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  7 Jun 2024 14:18:56 +0000 (GMT)
-Date: Fri, 7 Jun 2024 16:18:55 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] s390 fixes for 6.10-rc3
-Message-ID: <ZmMWz7/EN3YsRfOH@tuxmaker.boeblingen.de.ibm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dQg7J8vEZqVu4pJj3kXSblJF0kv0OtXt
-X-Proofpoint-GUID: dQg7J8vEZqVu4pJj3kXSblJF0kv0OtXt
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="RuDzD5bH"
+Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 3147910002D;
+	Fri,  7 Jun 2024 17:12:59 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 3147910002D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1717769579;
+	bh=NhKK43BFs9WSPEu12TubmDHMMoMRfMTyJ3HOlIxykU8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=RuDzD5bHwi+Iz8CPlTd01O97dqvCy1XUa3pYVjVhv7kKwUL1E89Rznxx0fFdsRIlz
+	 EW/+rY8BmVmZadMclSmfulf/PzMeOfHrwTdrYADdWll4wxIkVKVMoOiucRb27holBM
+	 NG4ya/0vyXEJo0LfTLCr7RBKaZ1+XR+mCiJ8BbJ5llK8acS/Fep+inUDXndgeDyPSP
+	 qkt+tI2LhaIdd79z/cH8YrGUpN93eQ7d0QEAvhcKjb9LOBJDJ2lQYFGZUOqx1ehrQw
+	 bxyAS/aF2KvSON3/arTLYQSzO9q9Fg8SWZK1ESzzEolOd4BjlYBh/V/BCGV9SThEhB
+	 JfJEBIjM/nTsA==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri,  7 Jun 2024 17:12:59 +0300 (MSK)
+Received: from user-A520M-DS3H.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 7 Jun 2024 17:12:58 +0300
+From: Alexey Romanov <avromanov@salutedevices.com>
+To: <neil.armstrong@linaro.org>, <clabbe@baylibre.com>,
+	<herbert@gondor.apana.org.au>, <davem@davemloft.net>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
+	<martin.blumenstingl@googlemail.com>, <vadim.fedorenko@linux.dev>
+CC: <linux-crypto@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kernel@salutedevices.com>, Alexey
+ Romanov <avromanov@salutedevices.com>
+Subject: [PATCH v8 04/23] drivers: crypto: meson: add MMIO helpers
+Date: Fri, 7 Jun 2024 17:12:23 +0300
+Message-ID: <20240607141242.2616580-5-avromanov@salutedevices.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240607141242.2616580-1-avromanov@salutedevices.com>
+References: <20240607141242.2616580-1-avromanov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-07_08,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 mlxlogscore=889 suspectscore=0 clxscore=1011 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406070105
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 185803 [Jun 07 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/06/07 12:12:00 #25491508
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Hi Linus,
+Add MMIO access helpers: meson_dma_start() and meson_dma_ready().
 
-please pull s390 fixes for 6.10-rc3.
+Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ drivers/crypto/amlogic/amlogic-gxl-cipher.c |  2 +-
+ drivers/crypto/amlogic/amlogic-gxl-core.c   | 24 ++++++++++++++++-----
+ drivers/crypto/amlogic/amlogic-gxl.h        |  2 ++
+ 3 files changed, 22 insertions(+), 6 deletions(-)
 
-Please note that "KVM: s390x: selftests: Add shared zeropage test" was
-supposed to go into 6.10-rc1, but was postponed due to a build error,
-which is fixed as:
-
-diff -u b/tools/testing/selftests/kvm/s390x/shared_zeropage_test.c b/tools/testing/selftests/kvm/s390x/shared_zeropage_test.c
---- b/tools/testing/selftests/kvm/s390x/shared_zeropage_test.c
-+++ b/tools/testing/selftests/kvm/s390x/shared_zeropage_test.c
-@@ -11,6 +11,7 @@
- #include "test_util.h"
- #include "kvm_util.h"
- #include "kselftest.h"
-+#include "ucall_common.h"
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+index 7eff3ae7356f..1fe916b0a138 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+@@ -225,7 +225,7 @@ static int meson_cipher(struct skcipher_request *areq)
  
- static void set_storage_key(void *addr, uint8_t skey)
+ 	reinit_completion(&mc->chanlist[flow].complete);
+ 	mc->chanlist[flow].status = 0;
+-	writel(mc->chanlist[flow].t_phy | 2, mc->base + ((mc->pdata->descs_reg + flow) << 2));
++	meson_dma_start(mc, flow);
+ 	wait_for_completion_interruptible_timeout(&mc->chanlist[flow].complete,
+ 						  msecs_to_jiffies(500));
+ 	if (mc->chanlist[flow].status == 0) {
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
+index 9d92115043c3..0698ac5e2a6a 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-core.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
+@@ -22,18 +22,32 @@
+ 
+ #include "amlogic-gxl.h"
+ 
++void meson_dma_start(struct meson_dev *mc, int flow)
++{
++	u32 offset = (mc->pdata->descs_reg + flow) << 2;
++
++	writel(mc->chanlist[flow].t_phy | 2, mc->base + offset);
++}
++
++static bool meson_dma_ready(struct meson_dev *mc, int flow)
++{
++	u32 offset = (mc->pdata->status_reg + flow) << 2;
++	u32 data = readl(mc->base + offset);
++
++	if (data)
++		writel_relaxed(0xF, mc->base + offset);
++
++	return data;
++}
++
+ static irqreturn_t meson_irq_handler(int irq, void *data)
  {
+ 	struct meson_dev *mc = (struct meson_dev *)data;
+ 	int flow;
+-	u32 p;
+ 
+ 	for (flow = 0; flow < mc->flow_cnt; flow++) {
+ 		if (mc->chanlist[flow].irq == irq) {
+-			p = readl(mc->base + ((mc->pdata->status_reg + flow) << 2));
+-			if (p) {
+-				writel_relaxed(0xF, mc->base +
+-					      ((mc->pdata->status_reg + flow) << 2));
++			if (meson_dma_ready(mc, flow)) {
+ 				mc->chanlist[flow].status = 1;
+ 				complete(&mc->chanlist[flow].complete);
+ 				return IRQ_HANDLED;
+diff --git a/drivers/crypto/amlogic/amlogic-gxl.h b/drivers/crypto/amlogic/amlogic-gxl.h
+index 9ad75da214ff..8670f7ebcdda 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl.h
++++ b/drivers/crypto/amlogic/amlogic-gxl.h
+@@ -161,6 +161,8 @@ struct meson_alg_template {
+ #endif
+ };
+ 
++void meson_dma_start(struct meson_dev *mc, int flow);
++
+ int meson_enqueue(struct crypto_async_request *areq, u32 type);
+ 
+ int meson_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+-- 
+2.34.1
 
-
-The original version bc54d7c6050e had soaked in linux-next for few builds:
-
-next-20240422
-next-20240424
-next-20240426
-next-20240429
-next-20240430
-next-20240501
-next-20240502
-
-Thanks,
-Alexander
-
-The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
-
-  Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.10-3
-
-for you to fetch changes up to 01c51a32dc18f128d2e55a7b2128b77fc01a2285:
-
-  KVM: s390x: selftests: Add shared zeropage test (2024-06-05 17:03:24 +0200)
-
-----------------------------------------------------------------
-s390 updates for 6.10-rc3
-
-- Do not create PT_LOAD program header for the kenel image when
-  the virtual memory informaton in OS_INFO data is not available.
-  That fixes stand-alone dump failures against kernels that do not
-  provide the virtual memory informaton
-
-- Add KVM s390 shared zeropage selftest
-
-----------------------------------------------------------------
-Alexander Gordeev (1):
-      s390/crash: Do not use VM info if os_info does not have it
-
-David Hildenbrand (1):
-      KVM: s390x: selftests: Add shared zeropage test
-
- arch/s390/kernel/crash_dump.c                      |  54 +++++-----
- tools/testing/selftests/kvm/Makefile               |   1 +
- .../selftests/kvm/s390x/shared_zeropage_test.c     | 111 +++++++++++++++++++++
- 3 files changed, 142 insertions(+), 24 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/s390x/shared_zeropage_test.c
