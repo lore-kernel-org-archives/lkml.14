@@ -1,106 +1,103 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9DA615B150
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 08:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717750284; cv=none; b=VhlXSB3UY+JfpP6IvvFprHX7m5MNW7Jae/bVPcP4tjeS4rRAMjAlP7TmTsu168+SCPBJ2WHkmFPEJ/j8Ex1rT8scghJDIN+SyTqrLKjnQpDNAOsFG5zB4RXt2G8Lrkkvw3FxXAvcf40xJ4vSe7YfulvdJ0J9Y93zI4JyXRlAdvo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717750284; c=relaxed/simple;
-	bh=20qPAHxgHw2m0YF3MooU4EHuwN7JhQ7wiuoPVIhylLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sBwt/d+SkSpPIJZNWf1cVNBI7gvY+QO9bcemcVr/meU+W6blIUXBBt6P1LJ7R52PmRXGK/qqOYlzP0RkdG2+RsQwTlHRirQtaZhL1y8F9xOdm2PnN6Ybtkumro+BuDn+UBj0IK7LA5O+TBe2ezgrMIrU5HLX1MpXUvMQmXN2NrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=F2pzSoWj; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="F2pzSoWj"
-Received: from 8bytes.org (pd9fe9dd8.dip0.t-ipconnect.de [217.254.157.216])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id 61B311C7D6A;
-	Fri,  7 Jun 2024 10:51:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1717750275;
-	bh=20qPAHxgHw2m0YF3MooU4EHuwN7JhQ7wiuoPVIhylLA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=F2pzSoWjkIcu6FUPws3u9UC95Z9Ei8YVejgkOXIXsW6LWoxrUCgur/HVGLyduwNvu
-	 CX53t/kYOoPHMKntfyPKA44ncpYdmXNFUQXoDgKiwAL+t4qHp3fbG8qP2PW/bDBaPz
-	 PaUIR6ug+QjbcXOmVS9LvqFX/iBe4XmgLZzfaov+RCEAFdPH8rHRqcw8TC4yuVS+Bc
-	 Ammy+F81XjFp4YkSL4OYNsZ0wyEklN9A/dJ+Zj6MpVPRLfEKrfDEeMaeAql11wW1Cb
-	 bBI0K0xmQskX5lAnoA86kLTU26/cmarU+fSF3uvNqyPA4Xj4/Vdx6NPLUxndi3MkcK
-	 NXOKYOIbKxUsg==
-Date: Fri, 7 Jun 2024 10:51:14 +0200
-From: Joerg Roedel <joro@8bytes.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev
-Subject: [git pull] IOMMU Fixes for Linux v6.10-rc2
-Message-ID: <ZmLKAr7RYbL_wP3F@8bytes.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C581747A6B;
+	Fri,  7 Jun 2024 08:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717750301; cv=none; b=B00aijXjjzNWz+HzQxB27Fayf4rPwpmHwFpumluINkR+17hDQjxdKhfSs4HYqW4If0Tw+az03/JQZnKIAWEuo2LcOva9yjAL0ohaWXGF+EVHQnd4vRodsZClWrf72XUTsAOFcInvxSKYZWrszeF+m+bEeFKkqakc/9LCUjdZ0Po=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717750301; c=relaxed/simple;
+	bh=lL6XwdZJ4/NSnyTZr5wjeCiLPkV47JPaGNNKpbRUVio=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ScMDR/QCPhoxT8zEScA+4vfrwkFGJOlg//aUdXde9krGyc5ZDX1cowULjkm6pwY4ObuIx8vFipLPLznKm95VmjsGm1l13HqXky9zUgDL0FwyOwyba56n32eKgCWbvO/bQFVtwoyabVt4doZoBAXrQ3xY014yCoZ+Q2qjg9hheYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4578pInyD3819922, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4578pInyD3819922
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Jun 2024 16:51:18 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 7 Jun 2024 16:51:18 +0800
+Received: from RTDOMAIN (172.21.210.98) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 7 Jun
+ 2024 16:51:18 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
+        Justin Lai
+	<justinlai0215@realtek.com>
+Subject: [PATCH net-next v20 12/13] realtek: Update the Makefile and Kconfig in the realtek folder
+Date: Fri, 7 Jun 2024 16:43:20 +0800
+Message-ID: <20240607084321.7254-13-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240607084321.7254-1-justinlai0215@realtek.com>
+References: <20240607084321.7254-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-Hi Linus,
+1. Add the RTASE entry in the Kconfig.
+2. Add the CONFIG_RTASE entry in the Makefile.
 
-The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ drivers/net/ethernet/realtek/Kconfig  | 19 +++++++++++++++++++
+ drivers/net/ethernet/realtek/Makefile |  1 +
+ 2 files changed, 20 insertions(+)
 
-  Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
+diff --git a/drivers/net/ethernet/realtek/Kconfig b/drivers/net/ethernet/realtek/Kconfig
+index 03015b665f4e..8a8ea51c639e 100644
+--- a/drivers/net/ethernet/realtek/Kconfig
++++ b/drivers/net/ethernet/realtek/Kconfig
+@@ -120,4 +120,23 @@ config R8169_LEDS
+ 	  Optional support for controlling the NIC LED's with the netdev
+ 	  LED trigger.
+ 
++config RTASE
++	tristate "Realtek Automotive Switch 9054/9068/9072/9075/9068/9071 PCIe Interface support"
++	depends on PCI
++	select CRC32
++	select PAGE_POOL
++	help
++	  Say Y here and it will be compiled and linked with the kernel
++	  if you have a Realtek Ethernet adapter belonging to the
++	  following families:
++	  RTL9054 5GBit Ethernet
++	  RTL9068 5GBit Ethernet
++	  RTL9072 5GBit Ethernet
++	  RTL9075 5GBit Ethernet
++	  RTL9068 5GBit Ethernet
++	  RTL9071 5GBit Ethernet
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called rtase. This is recommended.
++
+ endif # NET_VENDOR_REALTEK
+diff --git a/drivers/net/ethernet/realtek/Makefile b/drivers/net/ethernet/realtek/Makefile
+index 635491d8826e..046adf503ff4 100644
+--- a/drivers/net/ethernet/realtek/Makefile
++++ b/drivers/net/ethernet/realtek/Makefile
+@@ -9,3 +9,4 @@ obj-$(CONFIG_ATP) += atp.o
+ r8169-y += r8169_main.o r8169_firmware.o r8169_phy_config.o
+ r8169-$(CONFIG_R8169_LEDS) += r8169_leds.o
+ obj-$(CONFIG_R8169) += r8169.o
++obj-$(CONFIG_RTASE) += rtase/
+-- 
+2.34.1
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v6.10-rc2
-
-for you to fetch changes up to 526606b0a1998b0791b42c199d53550c3ba724b5:
-
-  iommu/amd: Fix Invalid wait context issue (2024-06-04 14:00:59 +0200)
-
-----------------------------------------------------------------
-IOMMU Fixes for Linux v6.10-rc2
-
-Including:
-
-	- Core:
-	  - Make iommu-dma code recognize 'force_aperture' again
-	  - Fix for potential NULL-ptr dereference from iommu_sva_bind_device()
-	    return value
-
-	- AMD IOMMU fixes:
-	  - Fix lockdep splat for invalid wait context
-	  - Add feature bit check before enabling PPR
-	  - Make workqueue name fit into buffer
-	  - Fix memory leak in sysfs code
-
-----------------------------------------------------------------
-Kun(llfl) (1):
-      iommu/amd: Fix sysfs leak in iommu init
-
-Lu Baolu (1):
-      iommu: Return right value in iommu_sva_bind_device()
-
-Robin Murphy (1):
-      iommu/dma: Fix domain init
-
-Vasant Hegde (3):
-      iommu/amd: Fix workqueue name
-      iommu/amd: Check EFR[EPHSup] bit before enabling PPR
-      iommu/amd: Fix Invalid wait context issue
-
- drivers/iommu/amd/amd_iommu.h |  3 ++-
- drivers/iommu/amd/init.c      |  9 ++++++++
- drivers/iommu/amd/iommu.c     | 48 +++++++++++++++++++++----------------------
- drivers/iommu/amd/ppr.c       | 25 +++++-----------------
- drivers/iommu/dma-iommu.c     |  8 ++++----
- include/linux/iommu.h         |  2 +-
- 6 files changed, 45 insertions(+), 50 deletions(-)
-
-Please pull.
-
-Thanks,
-
-	Joerg
