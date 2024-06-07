@@ -1,158 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA2F198E84;
-	Fri,  7 Jun 2024 15:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72FD19A284;
+	Fri,  7 Jun 2024 15:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717772709; cv=none; b=MI1zGRXifVaXlB3SCHCll6lzvA2ZQ0q4MN3/TEj2Q7elI3ldt5iGS4ujyhAFgCp0X3ZhJC3LHo627jt260BU9lUyVyHnFsyvzAXeumlJrngTfOzgKOAPy9e8ZUkRMV91yFK4cQmmkLSQ4O1uwqm2l7PEihwCsrNCgZoWlCtEsjk=
+	t=1717772719; cv=none; b=sZeyQ8+NXxRQ8kL1P7YVUqQyLCg2zyRK0De0kfSExxWmr1iRHcSFj8otnmzVv7PoDvvhIq/hph4Bl4W5DBqdufNvFUtRxoVnVeAsIOmvSSO0qFh0oSprXoo2ZTv+OLS/BKgbn9kCj69eTrfjPw6NQ2deH/DOBjCqfLl8iSJR8Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717772709; c=relaxed/simple;
-	bh=hxdOBIFpzvLuVlj0/tQBcXCexd1esA1lmDKCEQeF3os=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U8yfinLrEuk9cQAYDi04enupDMgWYefh/yv8fmhug8dCxJPYkxpHl0ICjrrQVvPgUElNiCGCfgjI+XWBu4HbWV5busInbJFM/w9E3T/8fdWppptPcjZ+VB6d2qNBrhi5+J/mopCTyj/LDApu1BLzSuqabLGYqepRL0Spl88/uec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JdOkLoTu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717772719; c=relaxed/simple;
+	bh=lzp9RrGLcphje9tKqdeEIB6pXODtDIlP/2mRhS5elTs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pK28MMx12XkhiPVV6VxlzBnFRMSlc8FlAXNB9O0TlIyai7f5wauPfSpQ4NCvNJV/G44UOJ5MCInUK+lCAi4NbWtk4yrX3pAuoq65lZueJKGtoG8y5lsusZubGji5q1YuY0fF4BGIuk91jNAoVeLP9W7W2tBIB72Eo/CRmbLEVO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXdNlQsO; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JdOkLoTu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98155C3277B;
-	Fri,  7 Jun 2024 15:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717772708;
-	bh=hxdOBIFpzvLuVlj0/tQBcXCexd1esA1lmDKCEQeF3os=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JdOkLoTuwU5TUS/3Jnkj8onU1nEE/NJd1hlbXzy4ym2o4U3wTEN7j0d2ioefsrqeC
-	 1HMy3F4DagBQrDgKMxVw3BRqaMVEpPMLL4l+RGFnT4d4305AzqxodiZjEyv6Gp7Ckx
-	 NRDZZLpc69z1WsOAFWoGdbvDpIsi2uPQ0BVNpwCHdRTzymUJKWtnbuWXFqW5fX0nmG
-	 bNucAus4qZMeheiMFGCXTt/mR1vJMveUCBfyDArgwAyZq6hImXuuA9RsnsjFIYlE2f
-	 KPSzGEueSqnUutxCVFled7fBvaknBYjO0awW3BOe5kCk2F0m+Zns8RycmEAsz2gry6
-	 rRoDKJ/O2czlw==
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3d218bbba30so46029b6e.3;
-        Fri, 07 Jun 2024 08:05:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUb1bWKE1H/tLnut/mdXSjFEgelKxnRRz5vmoo9R4ge4F9UM0RErSSdnELQjM5Wtzh0DcQJNlys/q+SWcCw/HpFRzuUrl4NyTKUjuVL0n3Zj9BPFIgyaz0o6LMshq4UIIUQRhVWgGw=
-X-Gm-Message-State: AOJu0Yx6Mlxi5TDDt6mjp6f/YP2GO/1Mf6binL19ciMLQNFN3vDS7hha
-	xl9/F6j5QIWM0Z2DdfVcEtV/+xSvNT1hbtyoTEmWsIcRt1HSRtScdtvd16KX6p7fGICSldPNCG9
-	lqM+OFRlVGgzPqqAWjNbgsXxEV2E=
-X-Google-Smtp-Source: AGHT+IHRrjLeNDoOnuN/4gDMAgpm5VMxw9tymilfNC3lKc+GBnDyxi6xNkOedNoYPNPhHySGqiQCjeDa5/7W/juq1ck=
-X-Received: by 2002:a4a:a788:0:b0:5ba:ca8a:6598 with SMTP id
- 006d021491bc7-5baca8a70b5mr898315eaf.0.1717772707773; Fri, 07 Jun 2024
- 08:05:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXdNlQsO"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-702555eb23bso1871533b3a.1;
+        Fri, 07 Jun 2024 08:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717772717; x=1718377517; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1IQBttmjUc5XpGJyxQWesF6PULR+7Sc5uHVZnjulosc=;
+        b=EXdNlQsOeVIf3miWl8MbhbMB8c1wf9BHQ1/a/eGQWzsVs7uSscQe1GluAEAaHkTvl4
+         1WuJWqZMK3/Jv8V/oXDsU9A3L4raPdA8fmT26Qzg7ATz6cWzJWtImHqAPBKuJGfvJcRH
+         PRZmOzZXgITRQ4F9JJou5RZV1vSZZM7Da2J9Bf23cxNneiV6oELwSCPZ4v3UKrzEW47K
+         zoW7lP8L3QCwZ7fVKwkj+1sx2thzBF3l8erALmqQWApEjYl3hVuPfxhnKgzqQIQq82W+
+         AxQwRXmGK3KLyOOIoBAz+vLi9EjK9oF7smMK57CQEKu1p+CGMSkeMR9q8Hl7rrC8YYtb
+         iQJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717772717; x=1718377517;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1IQBttmjUc5XpGJyxQWesF6PULR+7Sc5uHVZnjulosc=;
+        b=GF3SaNsOz0Jp7KQiaFf0VxSmoAk9lnDPXTrlW8KIqK1ETan1ApP1ZDDfvREFEV04Jq
+         YZWw4nbIKDkoWS/2cWsCRS4qlK/2M25EzJrazksDeTfkc05YJtTHXbiGuS51r32aqE6V
+         Xaa+ZSf8YhdXLSLjHzULel70FMMwlql/9kuNCl8d7f6NzZq3PrdVOm8GuWnTBNj9F3P5
+         JY9MS1bJ8BRbaVIw4to39zO0/0RvXOFixqR7eHYGQF8wG+1If50f0NIIBeOIXhpsUG4b
+         24yVrhsfifF9VpHJgILaYfGyd906qv5nNghZwbhoVpkjIyBjXSB2dkIk1nP9e8JoXKtv
+         YI/A==
+X-Forwarded-Encrypted: i=1; AJvYcCU8Xozl/9JH7+LZnYyb/6b9Evv3kYaXNU52fcAVupsGhDLmtL3bH/W/Gmfsnj2SIdRLl1pYMXH3KL0Ga0SoevfjYB3k7ye1e16M7LqqJeLGefD6csTev7cf3fphPH1vMa8W
+X-Gm-Message-State: AOJu0YxTVR7NVFcD3nQvVfVjuAPWBSO5I6dbg4N4cmgqiSxKt7aFs7mY
+	skCQrY451oWSpLpqXuX14bkdsegErq55ztQUAw3Onf94c/zGPfj+
+X-Google-Smtp-Source: AGHT+IESV2QNvPJQDvL0z19+1HqsJgpaaQr/81akm1nmlmUDp4l9ebDGhvMxbOHzb+WQNDMtMacaHg==
+X-Received: by 2002:a05:6a20:5606:b0:1af:ac6c:367f with SMTP id adf61e73a8af0-1b2f9dc2fa8mr2830655637.44.1717772716777;
+        Fri, 07 Jun 2024 08:05:16 -0700 (PDT)
+Received: from localhost.localdomain ([91.199.84.25])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6de265a2ce3sm2370500a12.61.2024.06.07.08.04.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 08:05:07 -0700 (PDT)
+From: Wei Fu <fuweid89@gmail.com>
+To: oleg@redhat.com
+Cc: Sudhanva.Huruli@microsoft.com,
+	akpm@linux-foundation.org,
+	apais@linux.microsoft.com,
+	axboe@kernel.dk,
+	boqun.feng@gmail.com,
+	brauner@kernel.org,
+	ebiederm@xmission.com,
+	frederic@kernel.org,
+	fuweid89@gmail.com,
+	j.granados@samsung.com,
+	jiangshanlai@gmail.com,
+	joel@joelfernandes.org,
+	josh@joshtriplett.org,
+	linux-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	michael.christie@oracle.com,
+	mjguzik@gmail.com,
+	neeraj.upadhyay@kernel.org,
+	paulmck@kernel.org,
+	qiang.zhang1211@gmail.com,
+	rachelmenge@linux.microsoft.com,
+	rcu@vger.kernel.org,
+	rostedt@goodmis.org,
+	weifu@microsoft.com
+Subject: Re: [RCU] zombie task hung in synchronize_rcu_expedited
+Date: Fri,  7 Jun 2024 23:04:42 +0800
+Message-ID: <20240607150443.2096063-1-fuweid89@gmail.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240607062531.GA30954@redhat.com>
+References: <20240607062531.GA30954@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <13494237.uLZWGnKmhe@kreacher> <8366982.T7Z3S40VBb@kreacher>
- <bf3ebf1571a4788e97daf861eb493c12d42639a3.camel@xry111.site>
- <6d5ee74605bd9574baa5ed111cb54e959414437a.camel@linux.intel.com>
- <6ebadacd8aaa307a5766cdb1b4d4a5c69acd87ac.camel@xry111.site>
- <30a30c5107a47a2cc3fd39306728f70dd649d7fe.camel@linux.intel.com>
- <f382e06635b3b52841d1e0c11dcf639d225edae0.camel@xry111.site>
- <29d69252dcdc398f147c9139a8666d09e7bd831d.camel@linux.intel.com>
- <0324bc3a88654855719cd48a5ed69a34eea31037.camel@xry111.site>
- <c3526e7a0e80ec1a3a011259c38ab4b772040ea4.camel@linux.intel.com>
- <48eba83030e155f703b4248e9c1ae65aa44b1a83.camel@xry111.site>
- <CAJZ5v0jjLgG3VY_kBYc4mTrL2ybD2LfBTk2_H7xY0+Aq5g827A@mail.gmail.com>
- <f34c20ae3feac0e3570125f124e440d51c5e4d9b.camel@linux.intel.com>
- <1da736da33a61de92314934ecf7fa0420d6d6b81.camel@linux.intel.com>
- <aa643910265b9d92a397d5148b31d37b2c421b8b.camel@xry111.site>
- <63e98f2151ef64de92cf7e3da796937755ea5552.camel@linux.intel.com>
- <258ce61c155c28937620f6abe57a39f2b4b0ff56.camel@xry111.site>
- <101b903e58f2ebae60934edc374c7cda09f83de1.camel@linux.intel.com>
- <CAJZ5v0jBBgjBny0Ps9bvHc7q1Un_6sdudpNL0==Z5HB+gHH0Hw@mail.gmail.com>
- <651d11578646200cdb0a91c46ed09a22f29e94a0.camel@linux.intel.com>
- <1031cc4e4b507628531d9115ce7e4bc588dbab1c.camel@xry111.site> <a2f992adc034063de7f63e9065976f39f9929503.camel@linux.intel.com>
-In-Reply-To: <a2f992adc034063de7f63e9065976f39f9929503.camel@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 7 Jun 2024 17:04:56 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gvY6FGwhzTKrmNnKc48ixWAgTeT3Sw2tOUfshDwq3NcA@mail.gmail.com>
-Message-ID: <CAJZ5v0gvY6FGwhzTKrmNnKc48ixWAgTeT3Sw2tOUfshDwq3NcA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] cpufreq: intel_pstate: Do not update
- global.turbo_disabled after initialization
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Xi Ruoyao <xry111@xry111.site>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000000d69a0061a4e20a2"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
---0000000000000d69a0061a4e20a2
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi!
 
-On Wed, Jun 5, 2024 at 2:05=E2=80=AFPM srinivas pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> On Wed, 2024-06-05 at 13:21 +0800, Xi Ruoyao wrote:
-> > On Tue, 2024-06-04 at 09:56 -0700, srinivas pandruvada wrote:
-> > > > > With such a delay, I am not sure how this even worked before.
+> 
+> On 06/07, Wei Fu wrote:
 > >
-> > It didn't work out of box but it worked after manually writing 0 to
-> > no_turbo after 20 seconds, see
-> > https://bugzilla.kernel.org/show_bug.cgi?id=3D218702.
->
-> That make sense. So it never worked out of box. The store_no_turbo()
-> has additional read for turbo flag before, which is removed now. I
-> think adding that back will will restore old behavior.
->
-> diff --git a/drivers/cpufreq/intel_pstate.c
-> b/drivers/cpufreq/intel_pstate.c
-> index 4b986c044741..0d5330e5b96b 100644
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -1301,6 +1301,8 @@ static ssize_t store_no_turbo(struct kobject *a,
-> struct kobj_attribute *b,
->
->         no_turbo =3D !!clamp_t(int, input, 0, 1);
->
-> +       global.turbo_disabled =3D turbo_is_disabled();
-> +
->         if (no_turbo =3D=3D global.no_turbo)
->                 goto unlock_driver;
->
->
-> Need to adjust the mutex around it also.
+> > All the kernels disable CONFIG_PREEMPT and PREEMPT_RCU.
+> 
+> Ah, this can explain both soft-lockup and synchronize_rcu() hang. If my theory
+> is correct.
+> 
+> Can you try the patch I sent?
+> 
+> Oleg.
+> 
 
-Anyhow, it can be made work.
+Yes. I applied your patch on v5.15.160 and run reproducer for 5 hours.
+I didn't see this issue. Currently, it looks good!. I will continue that test
+on this weekend.
 
-global.turbo_disabled can be updated right before it is checked in
-store_no_turbo(), so if 0 is written to no_turbo (and global.no_turbo
-is 1), it will succeed if global.turbo_disabled changes from 1 to 0.
+In last reply, you mentioned TIF_NOTIFY_SIGNAL related to busy-wait loop.
+Would you please explain why flag-clear works here?
 
-Something like the attached (untested) patch.
+Thanks,
+Wei
 
---0000000000000d69a0061a4e20a2
-Content-Type: text/x-patch; charset="US-ASCII"; name="intel_pstate-turbo_disabled.patch"
-Content-Disposition: attachment; 
-	filename="intel_pstate-turbo_disabled.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lx4tgzik0>
-X-Attachment-Id: f_lx4tgzik0
+```
+➜  linux git:(v5.15.160) ✗ git --no-pager show
+commit c61bd26ae81a896c8660150b4e356153da30880a (HEAD, tag: v5.15.160, origin/linux-5.15.y)
+Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Date:   Sat May 25 16:20:19 2024 +0200
 
-LS0tCiBkcml2ZXJzL2NwdWZyZXEvaW50ZWxfcHN0YXRlLmMgfCAgIDE5ICsrKysrKysrKysrKy0t
-LS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoK
-SW5kZXg6IGxpbnV4LXBtL2RyaXZlcnMvY3B1ZnJlcS9pbnRlbF9wc3RhdGUuYwo9PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-Ci0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvY3B1ZnJlcS9pbnRlbF9wc3RhdGUuYworKysgbGlu
-dXgtcG0vZHJpdmVycy9jcHVmcmVxL2ludGVsX3BzdGF0ZS5jCkBAIC0xMzAyLDEyICsxMzAyLDE3
-IEBAIHN0YXRpYyBzc2l6ZV90IHN0b3JlX25vX3R1cmJvKHN0cnVjdCBrb2IKIAogCW5vX3R1cmJv
-ID0gISFjbGFtcF90KGludCwgaW5wdXQsIDAsIDEpOwogCi0JaWYgKG5vX3R1cmJvID09IGdsb2Jh
-bC5ub190dXJibykKLQkJZ290byB1bmxvY2tfZHJpdmVyOwotCi0JaWYgKGdsb2JhbC50dXJib19k
-aXNhYmxlZCkgewotCQlwcl9ub3RpY2Vfb25jZSgiVHVyYm8gZGlzYWJsZWQgYnkgQklPUyBvciB1
-bmF2YWlsYWJsZSBvbiBwcm9jZXNzb3JcbiIpOworCVdSSVRFX09OQ0UoZ2xvYmFsLnR1cmJvX2Rp
-c2FibGVkLCB0dXJib19pc19kaXNhYmxlZCgpKTsKKwlpZiAoZ2xvYmFsLnR1cmJvX2Rpc2FibGVk
-ICYmICFub190dXJibykgeworCQlwcl9ub3RpY2UoIlR1cmJvIGRpc2FibGVkIGJ5IEJJT1Mgb3Ig
-dW5hdmFpbGFibGUgb24gcHJvY2Vzc29yXG4iKTsKIAkJY291bnQgPSAtRVBFUk07CisJCWlmIChn
-bG9iYWwubm9fdHVyYm8pCisJCQlnb3RvIHVubG9ja19kcml2ZXI7CisJCWVsc2UKKwkJCW5vX3R1
-cmJvID0gMTsKKwl9CisKKwlpZiAobm9fdHVyYm8gPT0gZ2xvYmFsLm5vX3R1cmJvKSB7CiAJCWdv
-dG8gdW5sb2NrX2RyaXZlcjsKIAl9CiAKQEAgLTE3NjIsNyArMTc2Nyw3IEBAIHN0YXRpYyB1NjQg
-YXRvbV9nZXRfdmFsKHN0cnVjdCBjcHVkYXRhICoKIAl1MzIgdmlkOwogCiAJdmFsID0gKHU2NClw
-c3RhdGUgPDwgODsKLQlpZiAoUkVBRF9PTkNFKGdsb2JhbC5ub190dXJibykgJiYgIWdsb2JhbC50
-dXJib19kaXNhYmxlZCkKKwlpZiAoUkVBRF9PTkNFKGdsb2JhbC5ub190dXJibykgJiYgIVJFQURf
-T05DRShnbG9iYWwudHVyYm9fZGlzYWJsZWQpKQogCQl2YWwgfD0gKHU2NCkxIDw8IDMyOwogCiAJ
-dmlkX2ZwID0gY3B1ZGF0YS0+dmlkLm1pbiArIG11bF9mcCgKQEAgLTE5MjcsNyArMTkzMiw3IEBA
-IHN0YXRpYyB1NjQgY29yZV9nZXRfdmFsKHN0cnVjdCBjcHVkYXRhICoKIAl1NjQgdmFsOwogCiAJ
-dmFsID0gKHU2NClwc3RhdGUgPDwgODsKLQlpZiAoUkVBRF9PTkNFKGdsb2JhbC5ub190dXJibykg
-JiYgIWdsb2JhbC50dXJib19kaXNhYmxlZCkKKwlpZiAoUkVBRF9PTkNFKGdsb2JhbC5ub190dXJi
-bykgJiYgIVJFQURfT05DRShnbG9iYWwudHVyYm9fZGlzYWJsZWQpKQogCQl2YWwgfD0gKHU2NCkx
-IDw8IDMyOwogCiAJcmV0dXJuIHZhbDsK
---0000000000000d69a0061a4e20a2--
+    Linux 5.15.160
+
+    Link: https://lore.kernel.org/r/20240523130327.956341021@linuxfoundation.org
+    Tested-by: SeongJae Park <sj@kernel.org>
+    Tested-by: Mark Brown <broonie@kernel.org>
+    Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+    Tested-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+    Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+    Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+    Tested-by: Ron Economos <re@w6rz.net>
+    Tested-by: Kelsey Steele <kelseysteele@linux.microsoft.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+diff --git a/Makefile b/Makefile
+index 5cbfe2be72dd..bfc863d71978 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 5
+ PATCHLEVEL = 15
+-SUBLEVEL = 159
++SUBLEVEL = 160
+ EXTRAVERSION =
+ NAME = Trick or Treat
+
+➜  linux git:(v5.15.160) ✗ git --no-pager diff .
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index 259fc4ca0d9c..40b011f88067 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -214,6 +214,7 @@ void zap_pid_ns_processes(struct pid_namespace *pid_ns)
+         */
+        do {
+                clear_thread_flag(TIF_SIGPENDING);
++               clear_thread_flag(TIF_NOTIFY_SIGNAL);
+                rc = kernel_wait4(-1, NULL, __WALL, NULL);
+        } while (rc != -ECHILD);
+
+```
