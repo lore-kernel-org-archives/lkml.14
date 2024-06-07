@@ -1,91 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.adeep.su (mx.adeep.su [185.250.0.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5023D199E89;
-	Fri,  7 Jun 2024 14:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CD118732F;
+	Fri,  7 Jun 2024 14:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.250.0.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717771829; cv=none; b=WDFKNpCQP41ZDWXnXcmxw+HFda2QvIlnVkDHq8KvadVV9X6+a7ArvXlP8mCjeVUozC0h9/fGIOnCJ49rxG2eW1+Fgf3ltPlMvR4BwJU6MN4/cAFTbmbn/3GnEcnsmNTDJ3Su+u2cX6ows/h234l2n1gjl3/54iPFr93JMEQJGyg=
+	t=1717771939; cv=none; b=c0eSprP8vZ1rmNMPw0D2g4wMqLH6bbz7CWSR5SK4TDSvWQGURTIsu9wug/TR/9G4M0tgdJUnMp09ZCVbLmx9tiMa1D9zLCGMiCeKZ4uj0pEeyY1IZtvUORA3T78pY8a8rTmbmqvx+z1qkstwxy2r9T8/WV11h9kja8c5wuBM2IY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717771829; c=relaxed/simple;
-	bh=Ri87GktoRdbIrRZ4CFHdq761BmHVMP0uI9BCFg8/uUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a+5nohpI1SFlUVgvK5QnC3NjvTBoRt77GqVzCr6Y61bRnoEIHXOGuv3iy07On2dvxO/DcZkuoygVI/msHveuNswlkWQMNx776h+GoPSgCRkFPtJa+HMsSbdNCRVwj2Vwi38k5GUwJiRt6smdm1L85fXWjP31Re6Qvba1iEY2Qjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ajpPnekz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717771939; c=relaxed/simple;
+	bh=j2UtZvnfethoTFHwn5s9iGaN6lSq9VkOWo0P2Bvb8Ho=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IWTtyN+Xvsie+J92xzuAcqf5UUivzbJupGRTL/5Hea5lbWa5ZEZN2VErS/hh4bA8Ovjo+1iGb6/8nvyDjlJcn+9Afv3kr+AMqC4poX4gYbSN/cMg/+6wL0hq5ceP00qig0XWad4RT7DPBL4nJ1m5iKi/wO7O2v3uKqgNzguTP84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=mALkROfw; arc=none smtp.client-ip=185.250.0.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ajpPnekz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 942B0C3277B;
-	Fri,  7 Jun 2024 14:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717771829;
-	bh=Ri87GktoRdbIrRZ4CFHdq761BmHVMP0uI9BCFg8/uUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ajpPnekzaeDsiKbcXi7JmQ1H14SkDq/KVtLrBwMpKKm3pPbbQC/XhwIsBiNjZYKyd
-	 n0syZ89wyadP9smzrCuCvUanaH8L+0udg6KLkyWVzRjCY4PyhV5UTq28Fjo/buxHqI
-	 XVVbtd7fR0cUP+3BRQJjrUNm2vTVzuxmaWCs0QsHTUbeDTLWg7OjNT3d0jj8VET0mW
-	 aNKXJijIhUBbrqPTpstowjiQS70DcZXvgXHaKUfcD00jha6DmLoJMyAMD0EGCU91xT
-	 /jo5frptrBtdIRWNEELO4cjyTcDX4yxhFOcP/tllDC5um8RBM2lX+vM9TbBmfKWLHm
-	 IhCVeuFvDgmLA==
-Date: Fri, 7 Jun 2024 15:50:24 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alex Bee <knaerzche@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="mALkROfw"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E6F8D105B34;
+	Fri,  7 Jun 2024 17:51:55 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
+	t=1717771923; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=geCYlXiO0IWtdW5F32VwIPOBGEnsd+xctEzn2zYkT+Q=;
+	b=mALkROfww//auwXsXckN7RnBgbpRARuAQO54gWBvcmpHminERhO/pKBKkhW/pNqaEJB6yZ
+	lBVDM28GVNkz/hPbPqWCNBVPARmoBbPBd2PuNnJkO5kCm7UY7GMnj4Ok9c++lhwer5Sc+A
+	vibn8v8eCzV65Xs6pKFWs4GHZ5zt2TpFB5LII9VHwwO0JjpioZQQJdBHO8ri8zaWIsbIhR
+	K8EQH+XVsmsA6IEJ285aKv0pSN5zSHjV9paZNVpIaDrQs7x06BXwnC3jzz6oFb7yMaC3Hv
+	2UtpdIB0OzsgYuX2mp5qEk+rb6/dOK2M+hzeE5lvDZ3lsSy1g5JIKb8OF78mrQ==
+From: Viacheslav Bocharov <adeep@lexina.in>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 2/5 RESEND] dt-bindings: clock: rk3128: Drop
- CLK_NR_CLKS
-Message-ID: <20240607-dealer-vertebrae-9b22db3dc43b@spud>
-References: <20240605210049.232284-1-knaerzche@gmail.com>
- <20240605210049.232284-3-knaerzche@gmail.com>
- <20240606-dispersal-buffed-27a6e7540d4c@spud>
- <1f549cba-a754-4256-aa4b-dbc630e5e451@gmail.com>
+	linux-amlogic@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Subject: [PATCH v1 0/2] arm64: meson: add support for JetHome JetHub D2
+Date: Fri,  7 Jun 2024 17:50:02 +0300
+Message-ID: <20240607145148.2246990-1-adeep@lexina.in>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pn98VwvBn/z4pnw6"
-Content-Disposition: inline
-In-Reply-To: <1f549cba-a754-4256-aa4b-dbc630e5e451@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
+
+Add support for new controller.
+JetHome Jethub D2 (j200) is a home automation controller with the following
+features:
+  - DIN Rail Mounting
+  - Amlogic S905X3 (ARM Cortex-A55) quad-core
+  - micro-HDMI video out
+  - 4GB LPDDR4
+  - 32GB eMMC flash
+  - 1 x USB 2.0
+  - 1 x 10/100/1000Mbps ethernet
+  - two module slots for radio/wire interface cards
+  - 2 x gpio LEDS
+  - 1 x 1-Wire
+  - 1 x RS-485
+  - 3 x dry contact digital GPIO inputs
+  - 2 x relay GPIO outputs
+  - DC 9-36V power source with battery UPS on board option
+
+Viacheslav Bocharov (2):
+  dt-bindings: arm: amlogic: add binding for JetHome JetHub D2
+  arm64: dts: meson-axg: add support for JetHome JetHub D2 (j200)
+
+ .../devicetree/bindings/arm/amlogic.yaml      |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile          |   1 +
+ .../amlogic/meson-sm1-jethome-jethub-j200.dts | 614 ++++++++++++++++++
+ 3 files changed, 616 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-sm1-jethome-jethub-j200.dts
 
 
---pn98VwvBn/z4pnw6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+base-commit: 32f88d65f01bf6f45476d7edbe675e44fb9e1d58
+-- 
+2.45.2
 
-On Thu, Jun 06, 2024 at 07:26:06PM +0200, Alex Bee wrote:
->=20
-> Am 06.06.24 um 18:09 schrieb Conor Dooley:
-> > On Wed, Jun 05, 2024 at 11:00:46PM +0200, Alex Bee wrote:
-> > > CLK_NR_CLKS should not be part of the binding. Let's drop it, since
-> > > the kernel code no longer uses it either.
-> > What about other operating systems etc, e.g. U-Boot or barebox?
-> For u-boot: RK3128 hasn't been switched to OF_UPSTREAM yet and it still
-> uses it's own (dated) copy of the dt-bindings headers [0] and besides this
-> macro isn't used there. Barebox doesn't support RK3128 at all and I'm
-> generally not aware of any other bootloader/OS does which does and
-> especially none which uses this macro.
-
-Okay, thanks for looking into it.
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
---pn98VwvBn/z4pnw6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmMeMAAKCRB4tDGHoIJi
-0gLAAP9Z9FIoMScpKcRZaz/8f9q0x1pPmmkVVR4gcGHKm4Jw+gD/UZS0U/GpLXTT
-qhR6kXOZM+E1lndKozOzLvUKmPweXws=
-=CcOd
------END PGP SIGNATURE-----
-
---pn98VwvBn/z4pnw6--
