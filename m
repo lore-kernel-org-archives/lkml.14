@@ -1,166 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED8C194A5F;
-	Fri,  7 Jun 2024 15:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CF215B133
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 15:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717773248; cv=none; b=dNJLzH2/5BUtnsCTIuIWcS8DKqzW9K6exr0inWS9QCOrGkjAppd3KkzpzEU2fprMmWJDaH8jTgH2cHUSQHwTnr92K7wdq/qzWEAkJk3KsYuq2LmRkcuOp+TzdjmrG9sCOAskQ3wTwOYkHsCJi1F6XJ+h7OtVK5aBoOndOvYM/dY=
+	t=1717773276; cv=none; b=MToVlUV4AUmhb6mi232J7IGLczz2bcKDrPnNVa1mDbt4U2l6j7vYPcc5hKa3Uvqjj55S8G7rfIw8FhYh2dVzP/VrXv7y8NHRQzhbZrCgVFY43X3ISJzywKg8bmT38UFORSsVwMPVQtYOHJ7z/y5Wuc7gO+6cBMM0fM5Zqhpx24c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717773248; c=relaxed/simple;
-	bh=bOlBKkHFjo5WOPdbthyGW/B7AwUCWnxawK0nxHrgEs8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fxze7mxRId3IEgxmMS0aK2qno5ZacEUk0Qps12+Cmo3tWVDKqBcQgkajEhWVIj4RTGLp7DJ+7XV+UEw5aGgdqLmWQns2efla2HBdMVioaF8tVWfZjaRJehZNlcuteILomRcHvRHAgP8eSQmPM7IQw+Q1Jx3LMCdN5fuQ9+mnNc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kBeaLN9N; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717773276; c=relaxed/simple;
+	bh=YNvEbYqDIOeQJ9EYeosxPjIWgCnYmm6K3MKS+7KrJ8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=BeSQTHpCzmhJrZRCGrqPGGr71hTT0bfQ9HdOrQcCAIDpZ4H/gN6+oV+XeR03tYNXmt/BkleyuCC0Cj3KHeD/7Fi7oJk7nEroJIGBWOTutLPDZuC851QFvaD+jqdcGGY12StmQaKVecR2ws2LwByukQc9JwgNQPSPUfVQuK7iWfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BdZFikWO; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kBeaLN9N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717773247; x=1749309247;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bOlBKkHFjo5WOPdbthyGW/B7AwUCWnxawK0nxHrgEs8=;
-  b=kBeaLN9Ni4PeDylNGA4MaNLPnw5piSdXOyGTaPp7og/JLrrEMxhc0lH5
-   7XZEQZxR+SIaB49ywUTcR3YwfnteivVNmRzeo/jUh2fuPymxk9tKe4mGt
-   q4gKoSK/FkWOLJ/zxbAs7vdldIZa0L1lpJfl3TeUi1mOxBhpj8RtdQAVt
-   WgzPnE14iUZP9nOJS8Qimy5xy07WM1xNyIMxlngAgq8GxcAfwMfiik0C4
-   YvA6qe8DpXPhrBSyz9fSi17AHurV0ZzdLuhqpiYeLieVW7BMwBzZNO78D
-   dP9K4cMoFQC/24Sb3bW+vb9p+OiOTrMUxypNAUwX/VPQNWMMsFUM1lkk3
-   w==;
-X-CSE-ConnectionGUID: jGhFwBmcSoqmprWDbeGL0Q==
-X-CSE-MsgGUID: 8e6gyLOWShK471NMDzajCA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="37027953"
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="37027953"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 08:14:06 -0700
-X-CSE-ConnectionGUID: pzyuSpVlRZGfY/++XMrl8w==
-X-CSE-MsgGUID: 6CmrAG3XR06+3ESGqCwpvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="43280270"
-Received: from lkp-server01.sh.intel.com (HELO b4d3d4be9bbf) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 07 Jun 2024 08:14:03 -0700
-Received: from kbuild by b4d3d4be9bbf with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sFbI0-00001O-1K;
-	Fri, 07 Jun 2024 15:14:00 +0000
-Date: Fri, 7 Jun 2024 23:13:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	Omar Sandoval <osandov@osandov.com>,
-	linux-debuggers@vger.kernel.org,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	Hao Ge <gehao@kylinos.cn>, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v3] mm: convert page type macros to enum
-Message-ID: <202406072244.8rZnMpsR-lkp@intel.com>
-References: <20240607001116.1061485-1-stephen.s.brennan@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdZFikWO"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42165f6645fso7376385e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 08:14:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717773272; x=1718378072; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JN0e5P7VFDOR5oAxAAgFP2WrNug79RTU2V3y/YlwPng=;
+        b=BdZFikWO7wrA5KVl/Q1rjWYA7hp55PSDuvNu5SQCqzq7jf6R0KmUSZybf6vuU3age9
+         glNOV7sJ8e/r+Y3ktaNvvSo/He3IrO0+ZFST4pypdJc0Ib1XF+Pn2I+JSQOXlbiF5ELn
+         Njaf4xtkuUU3FykZr9BhLy/PpbRARjaU0Kdk3LEyTbDSh2aawYCVdxz0oLCFu5HqLmpI
+         pYyavddHtdBcTGXUg6yPnzDbIKfU5SU471bPfZPqlJhGMwH32fyXkMpCqJXktyZxs7Rp
+         abIzJmqUIWPy6XhWU0foGPdYgQ73AAmkawyatlr8CO5UwTOjjKEwAf8EtnUQ5JuTQkIq
+         tOzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717773272; x=1718378072;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JN0e5P7VFDOR5oAxAAgFP2WrNug79RTU2V3y/YlwPng=;
+        b=eTRYq73No1Rc0ladAmz3DP+uBWMDwA06TUPkZu72KvbqGqS5K7wSOWgP8KPXv08M3f
+         Nc48NwjTCx6LawXIAxfrT6KL3G8zICy1Tndn7IowyrqYAxKHF9DVs1ke3Vbev6eAOvlA
+         CjbaJm5DV3EtD7H9a3wu+PjqCBzO0vCs7GS2gcDwAqAQbZXTAjwd57bUC56pyZYoXmqT
+         zwjtmTyfisEwJMGsY5egP397oYD8HG60MUHnjRJy/fuRl/te96djAVhyfvBT1kU7hOay
+         WF7HQxv8JTjj5s4IBKhtQd47bzvphe8HQhWhfv7JQbPSdZOM9uDJkl+7PyFVCXyOOxTc
+         Dz6w==
+X-Gm-Message-State: AOJu0YzMpaK15WC4Gc78Ga5gZgrrakxu+e+fSD9BPj9hwTmfnF+FUGzS
+	n/7LNO+UceVzD3RQVWy03wIa0iTu1w4+ZVUMv6557APj+kOT+JMczC+l
+X-Google-Smtp-Source: AGHT+IGl969oowyESJ6gy7Xl+3jZ5Ug8ZQffJojcyoV0efokZca38DbbT+mNsyWTlZCbiO3QsMs2oQ==
+X-Received: by 2002:a05:6000:ecf:b0:35f:f3e:e7a9 with SMTP id ffacd0b85a97d-35f0f3ee8ccmr98890f8f.6.1717773272107;
+        Fri, 07 Jun 2024 08:14:32 -0700 (PDT)
+Received: from p183 ([46.53.249.224])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d6990csm4187371f8f.58.2024.06.07.08.14.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 08:14:31 -0700 (PDT)
+Date: Fri, 7 Jun 2024 18:14:29 +0300
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH] proc: test "Kthread:" field
+Message-ID: <818c4c41-8668-4566-97a9-7254abf819ee@p183>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240607001116.1061485-1-stephen.s.brennan@oracle.com>
 
-Hi Stephen,
+/proc/${pid}/status got Kthread field recently.
 
-kernel test robot noticed the following build errors:
+Test that userspace program is not reported as kernel thread.
 
-[auto build test ERROR on akpm-mm/mm-everything]
+Test that kernel thread is reported as kernel thread.
+Use kthreadd with pid 2 for this.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Stephen-Brennan/mm-convert-page-type-macros-to-enum/20240607-081253
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20240607001116.1061485-1-stephen.s.brennan%40oracle.com
-patch subject: [PATCH v3] mm: convert page type macros to enum
-config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20240607/202406072244.8rZnMpsR-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240607/202406072244.8rZnMpsR-lkp@intel.com/reproduce)
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406072244.8rZnMpsR-lkp@intel.com/
+ tools/testing/selftests/proc/.gitignore               |    2 
+ tools/testing/selftests/proc/Makefile                 |    2 
+ tools/testing/selftests/proc/proc-2-is-kthread.c      |   53 ++++++++++++++++++
+ tools/testing/selftests/proc/proc-self-isnt-kthread.c |   37 ++++++++++++
+ 4 files changed, 94 insertions(+)
 
-All error/warnings (new ones prefixed by >>):
-
-   In file included from fs/f2fs/dir.c:13:
->> fs/f2fs/f2fs.h:1118:6: error: redefinition of 'page_type'
-    1118 | enum page_type {
-         |      ^
-   include/linux/page-flags.h:948:6: note: previous definition is here
-     948 | enum page_type {
-         |      ^
-   1 error generated.
---
-   In file included from fs/f2fs/data.c:25:
->> fs/f2fs/f2fs.h:1118:6: error: redefinition of 'page_type'
-    1118 | enum page_type {
-         |      ^
-   include/linux/page-flags.h:948:6: note: previous definition is here
-     948 | enum page_type {
-         |      ^
-   fs/f2fs/data.c:2373:10: warning: variable 'index' set but not used [-Wunused-but-set-variable]
-    2373 |         pgoff_t index;
-         |                 ^
-   1 warning and 1 error generated.
---
-   In file included from fs/f2fs/segment.c:21:
->> fs/f2fs/f2fs.h:1118:6: error: redefinition of 'page_type'
-    1118 | enum page_type {
-         |      ^
-   include/linux/page-flags.h:948:6: note: previous definition is here
-     948 | enum page_type {
-         |      ^
->> fs/f2fs/segment.c:3403:7: warning: case value not in enumerated type 'enum page_type' [-Wswitch]
-    3403 |         case DATA:
-         |              ^
-   fs/f2fs/segment.c:3414:7: warning: case value not in enumerated type 'enum page_type' [-Wswitch]
-    3414 |         case NODE:
-         |              ^
-   fs/f2fs/segment.c:3425:7: warning: case value not in enumerated type 'enum page_type' [-Wswitch]
-    3425 |         case META:
-         |              ^
-   3 warnings and 1 error generated.
-
-
-vim +/page_type +1118 fs/f2fs/f2fs.h
-
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1104  
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1105  /*
-e1c42045203071 arter97     2014-08-06  1106   * The below are the page types of bios used in submit_bio().
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1107   * The available types are:
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1108   * DATA			User data pages. It operates as async mode.
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1109   * NODE			Node pages. It operates as async mode.
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1110   * META			FS metadata pages such as SIT, NAT, CP.
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1111   * NR_PAGE_TYPE		The number of page types.
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1112   * META_FLUSH		Make sure the previous pages are written
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1113   *			with waiting the bio's completion
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1114   * ...			Only can be used with META.
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1115   */
-7d5e510944ce60 Jaegeuk Kim 2013-11-18  1116  #define PAGE_TYPE_OF_BIO(type)	((type) > META ? META : (type))
-87161a2b0aed9e Jaegeuk Kim 2024-02-06  1117  #define PAGE_TYPE_ON_MAIN(type)	((type) == DATA || (type) == NODE)
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28 @1118  enum page_type {
-6b8beca0edd320 Chao Yu     2022-05-06  1119  	DATA = 0,
-6b8beca0edd320 Chao Yu     2022-05-06  1120  	NODE = 1,	/* should not change this */
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1121  	META,
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1122  	NR_PAGE_TYPE,
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1123  	META_FLUSH,
-3db1de0e582c35 Daeho Jeong 2022-04-28  1124  	IPU,		/* the below types are used by tracepoints only. */
-8ce67cb07dbf6b Jaegeuk Kim 2015-03-17  1125  	OPU,
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1126  };
-39a53e0ce0df01 Jaegeuk Kim 2012-11-28  1127  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--- a/tools/testing/selftests/proc/.gitignore
++++ b/tools/testing/selftests/proc/.gitignore
+@@ -2,6 +2,7 @@
+ /fd-001-lookup
+ /fd-002-posix-eq
+ /fd-003-kthread
++/proc-2-is-kthread
+ /proc-fsconfig-hidepid
+ /proc-loadavg-001
+ /proc-multiple-procfs
+@@ -9,6 +10,7 @@
+ /proc-pid-vm
+ /proc-self-map-files-001
+ /proc-self-map-files-002
++/proc-self-isnt-kthread
+ /proc-self-syscall
+ /proc-self-wchan
+ /proc-subset-pid
+--- a/tools/testing/selftests/proc/Makefile
++++ b/tools/testing/selftests/proc/Makefile
+@@ -7,11 +7,13 @@ TEST_GEN_PROGS :=
+ TEST_GEN_PROGS += fd-001-lookup
+ TEST_GEN_PROGS += fd-002-posix-eq
+ TEST_GEN_PROGS += fd-003-kthread
++TEST_GEN_PROGS += proc-2-is-kthread
+ TEST_GEN_PROGS += proc-loadavg-001
+ TEST_GEN_PROGS += proc-empty-vm
+ TEST_GEN_PROGS += proc-pid-vm
+ TEST_GEN_PROGS += proc-self-map-files-001
+ TEST_GEN_PROGS += proc-self-map-files-002
++TEST_GEN_PROGS += proc-self-isnt-kthread
+ TEST_GEN_PROGS += proc-self-syscall
+ TEST_GEN_PROGS += proc-self-wchan
+ TEST_GEN_PROGS += proc-subset-pid
+new file mode 100644
+--- /dev/null
++++ b/tools/testing/selftests/proc/proc-2-is-kthread.c
+@@ -0,0 +1,53 @@
++/*
++ * Copyright (c) 2024 Alexey Dobriyan <adobriyan@gmail.com>
++ *
++ * Permission to use, copy, modify, and distribute this software for any
++ * purpose with or without fee is hereby granted, provided that the above
++ * copyright notice and this permission notice appear in all copies.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
++ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
++ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
++ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
++ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ */
++/* Test that kernel thread is reported as such. */
++#undef NDEBUG
++#include <assert.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <string.h>
++#include <unistd.h>
++
++int main(void)
++{
++	/*
++	 * The following solutions don't really work:
++	 *
++	 * 1) jit kernel module which creates kernel thread:
++	 * test becomes arch-specific,
++	 * problems with mandatory module signing,
++	 * problems with lockdown mode,
++	 * doesn't work with CONFIG_MODULES=n at all,
++	 * kthread creation API is formally unstable internal kernel API,
++	 * need a mechanism to report test kernel thread's PID back,
++	 *
++	 * 2) ksoftirqd/0 and kswapd0 look like stable enough kernel threads,
++	 * but their PIDs are unstable.
++	 *
++	 * Check against kthreadd which always seem to exist under pid 2.
++	 */
++	int fd = open("/proc/2/status", O_RDONLY);
++	assert(fd >= 0);
++
++	char buf[4096];
++	ssize_t rv = read(fd, buf, sizeof(buf));
++	assert(0 <= rv && rv < sizeof(buf));
++	buf[rv] = '\0';
++
++	assert(strstr(buf, "Kthread:\t1\n"));
++
++	return 0;
++}
+new file mode 100644
+--- /dev/null
++++ b/tools/testing/selftests/proc/proc-self-isnt-kthread.c
+@@ -0,0 +1,37 @@
++/*
++ * Copyright (c) 2024 Alexey Dobriyan <adobriyan@gmail.com>
++ *
++ * Permission to use, copy, modify, and distribute this software for any
++ * purpose with or without fee is hereby granted, provided that the above
++ * copyright notice and this permission notice appear in all copies.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
++ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
++ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
++ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
++ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ */
++/* Test that userspace program is not kernel thread. */
++#undef NDEBUG
++#include <assert.h>
++#include <fcntl.h>
++#include <string.h>
++#include <unistd.h>
++
++int main(void)
++{
++	int fd = open("/proc/self/status", O_RDONLY);
++	assert(fd >= 0);
++
++	char buf[4096];
++	ssize_t rv = read(fd, buf, sizeof(buf));
++	assert(0 <= rv && rv < sizeof(buf));
++	buf[rv] = '\0';
++
++	/* This test is very much not kernel thread. */
++	assert(strstr(buf, "Kthread:\t0\n"));
++
++	return 0;
++}
