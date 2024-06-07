@@ -1,166 +1,111 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72FD19A284;
-	Fri,  7 Jun 2024 15:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9C6198E86;
+	Fri,  7 Jun 2024 15:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717772719; cv=none; b=sZeyQ8+NXxRQ8kL1P7YVUqQyLCg2zyRK0De0kfSExxWmr1iRHcSFj8otnmzVv7PoDvvhIq/hph4Bl4W5DBqdufNvFUtRxoVnVeAsIOmvSSO0qFh0oSprXoo2ZTv+OLS/BKgbn9kCj69eTrfjPw6NQ2deH/DOBjCqfLl8iSJR8Z4=
+	t=1717772786; cv=none; b=Bk35oMO9Hg3zig2DJNq8ILaGRQn3ukv7EIFbEd7q9NhprIB7n5oSZV5MBTQpNs47CTOZhuUiKg5VOEgYBcH+FYyazKVJojiC9AdE0cZCU/HB0KgAhCQRnBl45rkBYvLhImANVSfV9XOj0akQtL8cAW7E5yZM3LepIjdcO6HTmrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717772719; c=relaxed/simple;
-	bh=lzp9RrGLcphje9tKqdeEIB6pXODtDIlP/2mRhS5elTs=;
+	s=arc-20240116; t=1717772786; c=relaxed/simple;
+	bh=+6r70PXGOoDrgZczKyCNEqRz+H9Krx2IBf5jtzdMkms=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pK28MMx12XkhiPVV6VxlzBnFRMSlc8FlAXNB9O0TlIyai7f5wauPfSpQ4NCvNJV/G44UOJ5MCInUK+lCAi4NbWtk4yrX3pAuoq65lZueJKGtoG8y5lsusZubGji5q1YuY0fF4BGIuk91jNAoVeLP9W7W2tBIB72Eo/CRmbLEVO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXdNlQsO; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=ZyBaINdgPiff2608z4qXZg82sgXlbnqWhFoLG390v63sGiQCk4l8mv28oWx4YLF8fBBMvYX1FbKWxea/Lj64zMkegsttTKoDwx2oYDN+sPVl++j+J+qo1ySNFPenqKNciA7MMqB9P1eaDY2NeC3vU22+TREE0rjrHxwSdVmzHXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=Cn0j/AWN; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXdNlQsO"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-702555eb23bso1871533b3a.1;
-        Fri, 07 Jun 2024 08:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717772717; x=1718377517; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1IQBttmjUc5XpGJyxQWesF6PULR+7Sc5uHVZnjulosc=;
-        b=EXdNlQsOeVIf3miWl8MbhbMB8c1wf9BHQ1/a/eGQWzsVs7uSscQe1GluAEAaHkTvl4
-         1WuJWqZMK3/Jv8V/oXDsU9A3L4raPdA8fmT26Qzg7ATz6cWzJWtImHqAPBKuJGfvJcRH
-         PRZmOzZXgITRQ4F9JJou5RZV1vSZZM7Da2J9Bf23cxNneiV6oELwSCPZ4v3UKrzEW47K
-         zoW7lP8L3QCwZ7fVKwkj+1sx2thzBF3l8erALmqQWApEjYl3hVuPfxhnKgzqQIQq82W+
-         AxQwRXmGK3KLyOOIoBAz+vLi9EjK9oF7smMK57CQEKu1p+CGMSkeMR9q8Hl7rrC8YYtb
-         iQJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717772717; x=1718377517;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1IQBttmjUc5XpGJyxQWesF6PULR+7Sc5uHVZnjulosc=;
-        b=GF3SaNsOz0Jp7KQiaFf0VxSmoAk9lnDPXTrlW8KIqK1ETan1ApP1ZDDfvREFEV04Jq
-         YZWw4nbIKDkoWS/2cWsCRS4qlK/2M25EzJrazksDeTfkc05YJtTHXbiGuS51r32aqE6V
-         Xaa+ZSf8YhdXLSLjHzULel70FMMwlql/9kuNCl8d7f6NzZq3PrdVOm8GuWnTBNj9F3P5
-         JY9MS1bJ8BRbaVIw4to39zO0/0RvXOFixqR7eHYGQF8wG+1If50f0NIIBeOIXhpsUG4b
-         24yVrhsfifF9VpHJgILaYfGyd906qv5nNghZwbhoVpkjIyBjXSB2dkIk1nP9e8JoXKtv
-         YI/A==
-X-Forwarded-Encrypted: i=1; AJvYcCU8Xozl/9JH7+LZnYyb/6b9Evv3kYaXNU52fcAVupsGhDLmtL3bH/W/Gmfsnj2SIdRLl1pYMXH3KL0Ga0SoevfjYB3k7ye1e16M7LqqJeLGefD6csTev7cf3fphPH1vMa8W
-X-Gm-Message-State: AOJu0YxTVR7NVFcD3nQvVfVjuAPWBSO5I6dbg4N4cmgqiSxKt7aFs7mY
-	skCQrY451oWSpLpqXuX14bkdsegErq55ztQUAw3Onf94c/zGPfj+
-X-Google-Smtp-Source: AGHT+IESV2QNvPJQDvL0z19+1HqsJgpaaQr/81akm1nmlmUDp4l9ebDGhvMxbOHzb+WQNDMtMacaHg==
-X-Received: by 2002:a05:6a20:5606:b0:1af:ac6c:367f with SMTP id adf61e73a8af0-1b2f9dc2fa8mr2830655637.44.1717772716777;
-        Fri, 07 Jun 2024 08:05:16 -0700 (PDT)
-Received: from localhost.localdomain ([91.199.84.25])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6de265a2ce3sm2370500a12.61.2024.06.07.08.04.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 08:05:07 -0700 (PDT)
-From: Wei Fu <fuweid89@gmail.com>
-To: oleg@redhat.com
-Cc: Sudhanva.Huruli@microsoft.com,
-	akpm@linux-foundation.org,
-	apais@linux.microsoft.com,
-	axboe@kernel.dk,
-	boqun.feng@gmail.com,
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="Cn0j/AWN"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4VwkrP1CCjz9snn;
+	Fri,  7 Jun 2024 16:59:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1717772389;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bne/CkGLFb5Q+0r/mTCjdzHVWDyDH0TqoTxmXgBXKCE=;
+	b=Cn0j/AWNicr8OHAovh1eFeMf2drV755n5F+zvZ1MdbQyUkqzCsMz2XxYhmPOC2AHubjaPN
+	By+3Lnr4JK0aS27yj94k9MEkCJckWgq9jK1c1j3LFluOxy7/JDiNmX3uKasP8JO2jy6GXs
+	qtnId+YktikV8HX2Fv9n7TpvJhdGTgqufWtf8fk40FJTjnJd+iomWBoBupp3MQc3ELjc3X
+	lWt6MxodQqcZvTxBpdTkn7wBci1296lYMYsDoQYaUOU31D2WNUvNG6Mk1PrmUiDTt3/QKy
+	Q7qtduMYWr9zGNNdSdW+wsgGejLyBrAGbz1EjEttBWc9C32hcnrBwyRzNil4Ng==
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: david@fromorbit.com,
+	djwong@kernel.org,
+	chandan.babu@oracle.com,
 	brauner@kernel.org,
-	ebiederm@xmission.com,
-	frederic@kernel.org,
-	fuweid89@gmail.com,
-	j.granados@samsung.com,
-	jiangshanlai@gmail.com,
-	joel@joelfernandes.org,
-	josh@joshtriplett.org,
+	akpm@linux-foundation.org,
+	willy@infradead.org
+Cc: mcgrof@kernel.org,
+	linux-mm@kvack.org,
+	hare@suse.de,
 	linux-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	michael.christie@oracle.com,
-	mjguzik@gmail.com,
-	neeraj.upadhyay@kernel.org,
-	paulmck@kernel.org,
-	qiang.zhang1211@gmail.com,
-	rachelmenge@linux.microsoft.com,
-	rcu@vger.kernel.org,
-	rostedt@goodmis.org,
-	weifu@microsoft.com
-Subject: Re: [RCU] zombie task hung in synchronize_rcu_expedited
-Date: Fri,  7 Jun 2024 23:04:42 +0800
-Message-ID: <20240607150443.2096063-1-fuweid89@gmail.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240607062531.GA30954@redhat.com>
-References: <20240607062531.GA30954@redhat.com>
+	yang@os.amperecomputing.com,
+	Zi Yan <zi.yan@sent.com>,
+	linux-xfs@vger.kernel.org,
+	p.raghav@samsung.com,
+	linux-fsdevel@vger.kernel.org,
+	kernel@pankajraghav.com,
+	hch@lst.de,
+	gost.dev@samsung.com,
+	cl@os.amperecomputing.com,
+	john.g.garry@oracle.com
+Subject: [PATCH v7 10/11] xfs: make the calculation generic in xfs_sb_validate_fsb_count()
+Date: Fri,  7 Jun 2024 14:59:01 +0000
+Message-ID: <20240607145902.1137853-11-kernel@pankajraghav.com>
+In-Reply-To: <20240607145902.1137853-1-kernel@pankajraghav.com>
+References: <20240607145902.1137853-1-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4VwkrP1CCjz9snn
 
-Hi!
+From: Pankaj Raghav <p.raghav@samsung.com>
 
-> 
-> On 06/07, Wei Fu wrote:
-> >
-> > All the kernels disable CONFIG_PREEMPT and PREEMPT_RCU.
-> 
-> Ah, this can explain both soft-lockup and synchronize_rcu() hang. If my theory
-> is correct.
-> 
-> Can you try the patch I sent?
-> 
-> Oleg.
-> 
+Instead of assuming that PAGE_SHIFT is always higher than the blocklog,
+make the calculation generic so that page cache count can be calculated
+correctly for LBS.
 
-Yes. I applied your patch on v5.15.160 and run reproducer for 5 hours.
-I didn't see this issue. Currently, it looks good!. I will continue that test
-on this weekend.
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+---
+ fs/xfs/xfs_mount.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-In last reply, you mentioned TIF_NOTIFY_SIGNAL related to busy-wait loop.
-Would you please explain why flag-clear works here?
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 09eef1721ef4..46cb0384143b 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -132,11 +132,19 @@ xfs_sb_validate_fsb_count(
+ 	xfs_sb_t	*sbp,
+ 	uint64_t	nblocks)
+ {
++	uint64_t		max_index;
++	uint64_t		max_bytes;
++
+ 	ASSERT(PAGE_SHIFT >= sbp->sb_blocklog);
+ 	ASSERT(sbp->sb_blocklog >= BBSHIFT);
+ 
++	if (check_shl_overflow(nblocks, sbp->sb_blocklog, &max_bytes))
++		return -EFBIG;
++
+ 	/* Limited by ULONG_MAX of page cache index */
+-	if (nblocks >> (PAGE_SHIFT - sbp->sb_blocklog) > ULONG_MAX)
++	max_index = max_bytes >> PAGE_SHIFT;
++
++	if (max_index > ULONG_MAX)
+ 		return -EFBIG;
+ 	return 0;
+ }
+-- 
+2.44.1
 
-Thanks,
-Wei
-
-```
-➜  linux git:(v5.15.160) ✗ git --no-pager show
-commit c61bd26ae81a896c8660150b4e356153da30880a (HEAD, tag: v5.15.160, origin/linux-5.15.y)
-Author: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Sat May 25 16:20:19 2024 +0200
-
-    Linux 5.15.160
-
-    Link: https://lore.kernel.org/r/20240523130327.956341021@linuxfoundation.org
-    Tested-by: SeongJae Park <sj@kernel.org>
-    Tested-by: Mark Brown <broonie@kernel.org>
-    Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
-    Tested-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-    Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-    Tested-by: Shuah Khan <skhan@linuxfoundation.org>
-    Tested-by: Ron Economos <re@w6rz.net>
-    Tested-by: Kelsey Steele <kelseysteele@linux.microsoft.com>
-    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-diff --git a/Makefile b/Makefile
-index 5cbfe2be72dd..bfc863d71978 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 5
- PATCHLEVEL = 15
--SUBLEVEL = 159
-+SUBLEVEL = 160
- EXTRAVERSION =
- NAME = Trick or Treat
-
-➜  linux git:(v5.15.160) ✗ git --no-pager diff .
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index 259fc4ca0d9c..40b011f88067 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -214,6 +214,7 @@ void zap_pid_ns_processes(struct pid_namespace *pid_ns)
-         */
-        do {
-                clear_thread_flag(TIF_SIGPENDING);
-+               clear_thread_flag(TIF_NOTIFY_SIGNAL);
-                rc = kernel_wait4(-1, NULL, __WALL, NULL);
-        } while (rc != -ECHILD);
-
-```
