@@ -1,37 +1,37 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD98613E3EA
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFB4140E47
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717734416; cv=none; b=UgoRzNggAl/S/4i65Ny7FNkOELxyv4awXlnCO+eoJicq3/94FjBII/atfucPNodkkHfFLImM7NlMx6W5d6XvLJem5UiXWoIxGQiCUQCOBaOnrpxWG1j4ebb5oBtQ7mMkaL5nAsBS3tVYN7jhW07G+X/WKPioQHymT+ZPzhmv39s=
+	t=1717734418; cv=none; b=grrzfa164zT1oOnKMqzSUqILC3qN51gANQR4o1mgIonQ9bX5PmxGTkrDmUCIMUxBx2f6B8KEufVAG7BrdMSr0q6ZFaZUx4kFtqP+JjqQgnT5ryd/7bYF7KJZsHLDztsj8LyuoWdyMJAAw9dBgDafdP2n4nQPEoxlF5EMNCoCFks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717734416; c=relaxed/simple;
-	bh=YTGMO7hKEKGmSQF+I1X80893/sf851XzDTv1VYTeIYw=;
+	s=arc-20240116; t=1717734418; c=relaxed/simple;
+	bh=dc/LrlHJAc2ddrxUkGdfuC2nEGaAS6RogYjoPARLD+w=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h0z4ZJkU7FFO7pGJKXdh6ASJEAnu99s5kA1tSX0YCQkdcZSSAuld5NclOOk4VZTmivQTJXrkgcr4gCBpKCGsiGkR2qIcO8PxobuEkG2PLqgHztMYhMRCDaQb+A1vkbo+zXKFLJy2B5Ai8MdEztCFsiR4lpbpOdO9oOGylO73Ei0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 MIME-Version:Content-Type; b=NvWQhNJMf+P7c2gwFvcRZ5iKNuvowU1GvEIKSiIcYPfJXXxWFa37WJHt4v8oVwDlh3szc4xPgwgnzv9IoJcwo+0RcVy3f7W6w9Ya5FIrv7tMqyXE3x3uWzenYDv78aZ2x4vjtagQyz49B6TkIMw1nctO2eg6D5K0Oy/7CHjyyuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VwShk5frwzmYDj;
-	Fri,  7 Jun 2024 12:22:14 +0800 (CST)
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VwSkD55lPzPpnM;
+	Fri,  7 Jun 2024 12:23:32 +0800 (CST)
 Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9A9F81400D5;
-	Fri,  7 Jun 2024 12:26:50 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 06BFD14038F;
+	Fri,  7 Jun 2024 12:26:52 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
  (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 12:26:39 +0800
+ 2024 12:26:48 +0800
 From: Zhihao Cheng <chengzhihao1@huawei.com>
 To: <richard@nod.at>, <david.oberhollenzer@sigma-star.at>,
 	<miquel.raynal@bootlin.com>, <yi.zhang@huawei.com>, <xiangyang3@huawei.com>,
 	<huangxiaojia2@huawei.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH mtd-utils 017/110] mtd-utils: Extract list implementation to common lib and add list_sort support
-Date: Fri, 7 Jun 2024 12:24:42 +0800
-Message-ID: <20240607042615.2069840-18-chengzhihao1@huawei.com>
+Subject: [RFC PATCH mtd-utils 029/110] ubifs-utils: Add implementations for linux kernel printing functions
+Date: Fri, 7 Jun 2024 12:24:54 +0800
+Message-ID: <20240607042615.2069840-30-chengzhihao1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240607042615.2069840-1-chengzhihao1@huawei.com>
 References: <20240607042615.2069840-1-chengzhihao1@huawei.com>
@@ -46,656 +46,449 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600013.china.huawei.com (7.193.23.68)
 
-Current list implementation code is put under jffs utils, extract it into
-common lib, and add more list operations(eg. list_move, list_splice, etc.).
-Besides, add list sorting support in new source file lib/list_sort.c.
+Add implementations for linux kernel printing functions, because these
+functions(eg. pr_debug, pr_err, etc.) are widely used in UBIFS linux
+kernel libs. No need to define multiple levels in dbg_msg for debuging,
+just replace dbg_msg with pr_debug. Now, there are five levels of
+printing messages:
+ 0 - none
+ 1 - error message
+ 2 - warning message [default]
+ 3 - notice message
+ 4 - debug message
 
 This is a preparation for replacing implementation of UBIFS utils with
 linux kernel libs.
 
 Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- include/list.h            | 263 ++++++++++++++++++++++++++++++++++++++++++++++
- jffsX-utils/Makemodule.am |   3 +-
- jffsX-utils/compr.c       |  49 ---------
- jffsX-utils/compr.h       |   5 +-
- lib/Makemodule.am         |   2 +
- lib/list_sort.c           | 246 +++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 514 insertions(+), 54 deletions(-)
- create mode 100644 include/list.h
- create mode 100644 lib/list_sort.c
+ ubifs-utils/Makemodule.am           |  2 +-
+ ubifs-utils/common/defs.h           | 48 ++++++++++++++++++++++++++--
+ ubifs-utils/common/devtable.c       | 26 +++++++--------
+ ubifs-utils/common/lpt.c            | 40 +++++++++++------------
+ ubifs-utils/mkfs.ubifs/mkfs.ubifs.c | 64 ++++++++++++++++++-------------------
+ 5 files changed, 112 insertions(+), 68 deletions(-)
 
-diff --git a/include/list.h b/include/list.h
-new file mode 100644
-index 00000000..d26c9d1c
---- /dev/null
-+++ b/include/list.h
-@@ -0,0 +1,263 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2006 Silicon Graphics, Inc.
-+ * All Rights Reserved.
-+ */
-+#ifndef __LIST_H__
-+#define __LIST_H__
-+
-+#include <stddef.h>
-+
-+/*
-+ * This undef is here because BSD 4.4 added some LIST_ macros into system
-+ * header file sys/queue.h. This header is included in many other system
-+ * headers and thus causes "macro redefined" warnings.
-+ *
-+ * As OS X is kind of a derivate of BSD, this affects OS X too.
-+ *
-+ * To use our own LIST_ macros (copied from kernel code), we have to
-+ * at first undefine the conflicting system macros.
-+ *
-+ */
-+#undef LIST_HEAD
-+#undef LIST_HEAD_INIT
-+
-+/*
-+ * Simple, generic doubly-linked list implementation.
-+ */
-+
-+struct list_head {
-+	struct list_head *next;
-+	struct list_head *prev;
-+};
-+
-+#define LIST_HEAD_INIT(name) { &(name), &(name) }
-+
-+#define LIST_HEAD(name) \
-+		struct list_head name = LIST_HEAD_INIT(name)
-+
-+#define INIT_LIST_HEAD(list) list_head_init(list)
-+static inline void list_head_init(struct list_head *list)
-+{
-+	list->next = list->prev = list;
-+}
-+
-+static inline void list_head_destroy(struct list_head *list)
-+{
-+	list->next = list->prev = NULL;
-+}
-+
-+static inline void __list_add(struct list_head *add,
-+			      struct list_head *prev, struct list_head *next)
-+{
-+	next->prev = add;
-+	add->next = next;
-+	add->prev = prev;
-+	prev->next = add;
-+}
-+
-+static inline void list_add(struct list_head *add, struct list_head *head)
-+{
-+	__list_add(add, head, head->next);
-+}
-+
-+static inline void list_add_tail(struct list_head *add, struct list_head *head)
-+{
-+	__list_add(add, head->prev, head);
-+}
-+
-+static inline void __list_del(struct list_head *prev, struct list_head *next)
-+{
-+	next->prev = prev;
-+	prev->next = next;
-+}
-+
-+static inline void list_del_init(struct list_head *entry)
-+{
-+	__list_del(entry->prev, entry->next);
-+	list_head_init(entry);
-+}
-+
-+static inline void list_del(struct list_head *entry)
-+{
-+	__list_del(entry->prev, entry->next);
-+}
-+
-+static inline void list_move(struct list_head *list, struct list_head *head)
-+{
-+	__list_del(list->prev, list->next);
-+	list_add(list, head);
-+}
-+
-+static inline void list_move_tail(struct list_head *list, struct list_head *head)
-+{
-+	__list_del(list->prev, list->next);
-+	list_add_tail(list, head);
-+}
-+
-+/**
-+ * list_is_last - tests whether @list is the last entry in list @head
-+ * @list: the entry to test
-+ * @head: the head of the list
-+ */
-+static inline int list_is_last(const struct list_head *list, const struct list_head *head)
-+{
-+	return list->next == head;
-+}
-+
-+static inline int list_empty(const struct list_head *head)
-+{
-+	return head->next == head;
-+}
-+
-+static inline void __list_splice(struct list_head *list,
-+				 struct list_head *prev,
-+				 struct list_head *next)
-+{
-+	struct list_head *first = list->next;
-+	struct list_head *last = list->prev;
-+
-+	first->prev = prev;
-+	prev->next = first;
-+
-+	last->next = next;
-+	next->prev = last;
-+}
-+
-+static inline void list_splice(struct list_head *list, struct list_head *head)
-+{
-+	if (!list_empty(list))
-+		__list_splice(list, head, head->next);
-+}
-+
-+static inline void list_splice_tail(struct list_head *list,
-+				    struct list_head *head)
-+{
-+	if (!list_empty(list))
-+		__list_splice(list, head->prev, head);
-+}
-+
-+static inline void list_splice_init(struct list_head *list,
-+				    struct list_head *head)
-+{
-+	if (!list_empty(list)) {
-+		__list_splice(list, head, head->next);
-+		list_head_init(list);
-+	}
-+}
-+
-+#define list_entry(ptr, type, member) ({			\
-+	const typeof( ((type *)0)->member ) *__mptr = (ptr);	\
-+	(type *)( (char *)__mptr - offsetof(type,member) );})
-+
-+#define list_for_each(pos, head) \
-+	for (pos = (head)->next; pos != (head); pos = pos->next)
-+
-+#define list_for_each_safe(pos, n, head) \
-+	for (pos = (head)->next, n = pos->next; pos != (head); \
-+		pos = n, n = pos->next)
-+
-+#define list_for_each_entry(pos, head, member)				\
-+	for (pos = list_entry((head)->next, typeof(*pos), member);	\
-+	     &pos->member != (head); 	\
-+	     pos = list_entry(pos->member.next, typeof(*pos), member))
-+
-+#define list_for_each_entry_safe(pos, n, head, member)			\
-+	for (pos = list_entry((head)->next, typeof(*pos), member),	\
-+		n = list_entry(pos->member.next, typeof(*pos), member);	\
-+	     &pos->member != (head); 					\
-+	     pos = n, n = list_entry(n->member.next, typeof(*n), member))
-+
-+#define list_first_entry(ptr, type, member) \
-+	list_entry((ptr)->next, type, member)
-+
-+#define container_of(ptr, type, member) ({			\
-+	const typeof( ((type *)0)->member ) *__mptr = (ptr);	\
-+	(type *)( (char *)__mptr - offsetof(type,member) );})
-+
-+/**
-+ * list_entry_is_head - test if the entry points to the head of the list
-+ * @pos:	the type * to cursor
-+ * @head:	the head for your list.
-+ * @member:	the name of the list_head within the struct.
-+ */
-+#define list_entry_is_head(pos, head, member)				\
-+	(&pos->member == (head))
-+
-+typedef int __attribute__((nonnull(2,3))) (*list_cmp_func_t)(void *,
-+			const struct list_head *, const struct list_head *);
-+__attribute__((nonnull(2,3)))
-+void list_sort(void *priv, struct list_head *head, list_cmp_func_t cmp);
-+
-+/**
-+ * list_splice_tail_init - join two lists and reinitialise the emptied list
-+ * @list: the new list to add.
-+ * @head: the place to add it in the first list.
-+ *
-+ * Each of the lists is a queue.
-+ * The list at @list is reinitialised
-+ */
-+static inline void list_splice_tail_init(struct list_head *list,
-+					 struct list_head *head)
-+{
-+	if (!list_empty(list)) {
-+		__list_splice(list, head->prev, head);
-+		INIT_LIST_HEAD(list);
-+	}
-+}
-+
-+/**
-+ * list_replace - replace old entry by new one
-+ * @old : the element to be replaced
-+ * @new : the new element to insert
-+ *
-+ * If @old was empty, it will be overwritten.
-+ */
-+static inline void list_replace(struct list_head *old,
-+				struct list_head *new)
-+{
-+	new->next = old->next;
-+	new->next->prev = new;
-+	new->prev = old->prev;
-+	new->prev->next = new;
-+}
-+
-+/**
-+ * list_last_entry - get the last element from a list
-+ * @ptr:	the list head to take the element from.
-+ * @type:	the type of the struct this is embedded in.
-+ * @member:	the name of the list_head within the struct.
-+ *
-+ * Note, that list is expected to be not empty.
-+ */
-+#define list_last_entry(ptr, type, member) \
-+	list_entry((ptr)->prev, type, member)
-+
-+/**
-+ * list_prev_entry - get the prev element in list
-+ * @pos:	the type * to cursor
-+ * @member:	the name of the list_head within the struct.
-+ */
-+#define list_prev_entry(pos, member) \
-+	list_entry((pos)->member.prev, typeof(*(pos)), member)
-+
-+/**
-+ * list_next_entry - get the next element in list
-+ * @pos:	the type * to cursor
-+ * @member:	the name of the list_head within the struct.
-+ */
-+#define list_next_entry(pos, member) \
-+	list_entry((pos)->member.next, typeof(*(pos)), member)
-+
-+/**
-+ * list_for_each_entry_reverse - iterate backwards over list of given type.
-+ * @pos:	the type * to use as a loop cursor.
-+ * @head:	the head for your list.
-+ * @member:	the name of the list_head within the struct.
-+ */
-+#define list_for_each_entry_reverse(pos, head, member)			\
-+	for (pos = list_last_entry(head, typeof(*pos), member);		\
-+	     &pos->member != (head); 					\
-+	     pos = list_prev_entry(pos, member))
-+
-+#endif	/* __LIST_H__ */
-diff --git a/jffsX-utils/Makemodule.am b/jffsX-utils/Makemodule.am
-index 266c12ef..2374b858 100644
---- a/jffsX-utils/Makemodule.am
-+++ b/jffsX-utils/Makemodule.am
-@@ -9,7 +9,8 @@ mkfs_jffs2_SOURCES = \
- 	jffsX-utils/rbtree.h \
- 	jffsX-utils/summary.h \
- 	include/linux/jffs2.h \
--	include/mtd/jffs2-user.h
-+	include/mtd/jffs2-user.h \
-+	include/list.h
- mkfs_jffs2_LDADD = libmtd.a $(ZLIB_LIBS) $(LZO_LIBS)
- mkfs_jffs2_CPPFLAGS = $(AM_CPPFLAGS) $(ZLIB_CFLAGS) $(LZO_CFLAGS)
+diff --git a/ubifs-utils/Makemodule.am b/ubifs-utils/Makemodule.am
+index 3329b6f9..c14ba028 100644
+--- a/ubifs-utils/Makemodule.am
++++ b/ubifs-utils/Makemodule.am
+@@ -46,7 +46,7 @@ mkfs_ubifs_SOURCES = \
  
-diff --git a/jffsX-utils/compr.c b/jffsX-utils/compr.c
-index 01176ebe..d408ef8a 100644
---- a/jffsX-utils/compr.c
-+++ b/jffsX-utils/compr.c
-@@ -17,55 +17,6 @@
+ mkfs_ubifs_LDADD = libmtd.a libubi.a $(ZLIB_LIBS) $(LZO_LIBS) $(ZSTD_LIBS) $(UUID_LIBS) $(LIBSELINUX_LIBS) $(OPENSSL_LIBS) -lm -lpthread
+ mkfs_ubifs_CPPFLAGS = $(AM_CPPFLAGS) $(ZLIB_CFLAGS) $(LZO_CFLAGS) $(ZSTD_CFLAGS) $(UUID_CFLAGS) $(LIBSELINUX_CFLAGS) \
+-	-I$(top_srcdir)/ubi-utils/include -I$(top_srcdir)/ubifs-utils/common
++	-I$(top_srcdir)/ubi-utils/include -I$(top_srcdir)/ubifs-utils/common -rdynamic
  
- extern int page_size;
+ EXTRA_DIST += ubifs-utils/common/README
  
--/* LIST IMPLEMENTATION (from linux/list.h) */
--
--#define LIST_HEAD_INIT(name) { &(name), &(name) }
--
--#define LIST_HEAD(name) \
--	struct list_head name = LIST_HEAD_INIT(name)
--
--static inline void __list_add(struct list_head *new,
--		struct list_head *prev,
--		struct list_head *next)
--{
--	next->prev = new;
--	new->next = next;
--	new->prev = prev;
--	prev->next = new;
--}
--
--static inline void list_add(struct list_head *new, struct list_head *head)
--{
--	__list_add(new, head, head->next);
--}
--
--static inline void list_add_tail(struct list_head *new, struct list_head *head)
--{
--	__list_add(new, head->prev, head);
--}
--
--static inline void __list_del(struct list_head *prev, struct list_head *next)
--{
--	next->prev = prev;
--	prev->next = next;
--}
--
--static inline void list_del(struct list_head *entry)
--{
--	__list_del(entry->prev, entry->next);
--	entry->next = (void *) 0;
--	entry->prev = (void *) 0;
--}
--
--#define list_entry(ptr, type, member) \
--	((type *)((char *)(ptr)-(unsigned long)(&((type *)0)->member)))
--
--#define list_for_each_entry(pos, head, member)                          \
--	for (pos = list_entry((head)->next, typeof(*pos), member);      \
--			&pos->member != (head);                                    \
--			pos = list_entry(pos->member.next, typeof(*pos), member))
--
--
- /* Available compressors are on this list */
- static LIST_HEAD(jffs2_compressor_list);
+diff --git a/ubifs-utils/common/defs.h b/ubifs-utils/common/defs.h
+index 485c50c0..6d99a2fd 100644
+--- a/ubifs-utils/common/defs.h
++++ b/ubifs-utils/common/defs.h
+@@ -8,8 +8,10 @@
  
-diff --git a/jffsX-utils/compr.h b/jffsX-utils/compr.h
-index f1f59758..69699523 100644
---- a/jffsX-utils/compr.h
-+++ b/jffsX-utils/compr.h
-@@ -15,6 +15,7 @@
  #include <stdlib.h>
- #include <stdint.h>
- #include "linux/jffs2.h"
-+#include "list.h"
+ #include <stdio.h>
++#include <unistd.h>
+ #include <limits.h>
+ #include <errno.h>
++#include <execinfo.h>
  
- #define CONFIG_JFFS2_RTIME
+ #include "ubifs.h"
  
-@@ -49,10 +50,6 @@
- #define KERN_INFO
- #define KERN_DEBUG
+@@ -22,10 +24,52 @@ extern struct ubifs_info info_;
  
--struct list_head {
--	struct list_head *next, *prev;
--};
--
- void jffs2_set_compression_mode(int mode);
- int jffs2_get_compression_mode(void);
- int jffs2_set_compression_mode_name(const char *mode_name);
-diff --git a/lib/Makemodule.am b/lib/Makemodule.am
-index 570896b4..7f890daa 100644
---- a/lib/Makemodule.am
-+++ b/lib/Makemodule.am
-@@ -5,6 +5,8 @@ libmtd_a_SOURCES = \
- 	include/libfec.h \
- 	lib/common.c \
- 	include/common.h \
-+	lib/list_sort.c \
-+	include/list.h \
- 	lib/libcrc32.c \
- 	include/crc32.h \
- 	lib/libmtd_legacy.c \
-diff --git a/lib/list_sort.c b/lib/list_sort.c
-new file mode 100644
-index 00000000..d8734389
---- /dev/null
-+++ b/lib/list_sort.c
-@@ -0,0 +1,246 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "list.h"
+ enum { MKFS_PROGRAM_TYPE = 0 };
+ 
+-#define dbg_msg(lvl, fmt, ...) do {if (info_.debug_level >= lvl)	\
+-	printf("%s: %s: " fmt "\n", PROGRAM_NAME, __FUNCTION__, ##__VA_ARGS__); \
++enum { ERR_LEVEL = 1, WARN_LEVEL, INFO_LEVEL, DEBUG_LEVEL };
 +
-+/*
-+ * Returns a list organized in an intermediate format suited
-+ * to chaining of merge() calls: null-terminated, no reserved or
-+ * sentinel head node, "prev" links not maintained.
-+ */
-+__attribute__((nonnull(2,3,4)))
-+static struct list_head *merge(void *priv, list_cmp_func_t cmp,
-+			       struct list_head *a, struct list_head *b)
++#define pr_debug(fmt, ...) do { if (info_.debug_level >= DEBUG_LEVEL)	\
++	printf("<DEBUG> %s[%d] (%s): %s: " fmt, PROGRAM_NAME, getpid(),	\
++	       info_.dev_name, __FUNCTION__, ##__VA_ARGS__);		\
++} while(0)
++
++#define pr_notice(fmt, ...) do { if (info_.debug_level >= INFO_LEVEL)	\
++	printf("<INFO> %s[%d] (%s): %s: " fmt, PROGRAM_NAME, getpid(),	\
++	       info_.dev_name, __FUNCTION__, ##__VA_ARGS__);		\
++} while(0)
++
++#define pr_warn(fmt, ...) do { if (info_.debug_level >= WARN_LEVEL)	\
++	printf("<WARN> %s[%d] (%s): %s: " fmt, PROGRAM_NAME, getpid(),	\
++	       info_.dev_name, __FUNCTION__, ##__VA_ARGS__);		\
++} while(0)
++
++#define pr_err(fmt, ...) do { if (info_.debug_level >= ERR_LEVEL)	\
++	printf("<ERROR> %s[%d] (%s): %s: " fmt, PROGRAM_NAME, getpid(),	\
++	       info_.dev_name, __FUNCTION__, ##__VA_ARGS__);		\
+ } while(0)
+ 
++#define pr_cont(fmt, ...) do { if (info_.debug_level >= ERR_LEVEL)	\
++	printf(fmt, ##__VA_ARGS__);					\
++} while(0)
++
++static inline void dump_stack(void)
 +{
-+	struct list_head *head, **tail = &head;
++#define STACK_SIZE 512
++	int j, nptrs;
++	void *buffer[STACK_SIZE];
++	char **strings;
 +
-+	for (;;) {
-+		/* if equal, take 'a' -- important for sort stability */
-+		if (cmp(priv, a, b) <= 0) {
-+			*tail = a;
-+			tail = &a->next;
-+			a = a->next;
-+			if (!a) {
-+				*tail = b;
-+				break;
-+			}
-+		} else {
-+			*tail = b;
-+			tail = &b->next;
-+			b = b->next;
-+			if (!b) {
-+				*tail = a;
-+				break;
-+			}
-+		}
-+	}
-+	return head;
-+}
-+
-+/*
-+ * Combine final list merge with restoration of standard doubly-linked
-+ * list structure.  This approach duplicates code from merge(), but
-+ * runs faster than the tidier alternatives of either a separate final
-+ * prev-link restoration pass, or maintaining the prev links
-+ * throughout.
-+ */
-+__attribute__((nonnull(2,3,4,5)))
-+static void merge_final(void *priv, list_cmp_func_t cmp, struct list_head *head,
-+			struct list_head *a, struct list_head *b)
-+{
-+	struct list_head *tail = head;
-+	unsigned int count = 0;
-+
-+	for (;;) {
-+		/* if equal, take 'a' -- important for sort stability */
-+		if (cmp(priv, a, b) <= 0) {
-+			tail->next = a;
-+			a->prev = tail;
-+			tail = a;
-+			a = a->next;
-+			if (!a)
-+				break;
-+		} else {
-+			tail->next = b;
-+			b->prev = tail;
-+			tail = b;
-+			b = b->next;
-+			if (!b) {
-+				b = a;
-+				break;
-+			}
-+		}
-+	}
-+
-+	/* Finish linking remainder of list b on to tail */
-+	tail->next = b;
-+	do {
-+		/*
-+		 * If the merge is highly unbalanced (e.g. the input is
-+		 * already sorted), this loop may run many iterations.
-+		 * Continue callbacks to the client even though no
-+		 * element comparison is needed, so the client's cmp()
-+		 * routine can invoke cond_resched() periodically.
-+		 */
-+		if (!++count)
-+			cmp(priv, b, b);
-+		b->prev = tail;
-+		tail = b;
-+		b = b->next;
-+	} while (b);
-+
-+	/* And the final links to make a circular doubly-linked list */
-+	tail->next = head;
-+	head->prev = tail;
-+}
-+
-+/**
-+ * list_sort - sort a list
-+ * @priv: private data, opaque to list_sort(), passed to @cmp
-+ * @head: the list to sort
-+ * @cmp: the elements comparison function
-+ *
-+ * The comparison function @cmp must return > 0 if @a should sort after
-+ * @b ("@a > @b" if you want an ascending sort), and <= 0 if @a should
-+ * sort before @b *or* their original order should be preserved.  It is
-+ * always called with the element that came first in the input in @a,
-+ * and list_sort is a stable sort, so it is not necessary to distinguish
-+ * the @a < @b and @a == @b cases.
-+ *
-+ * This is compatible with two styles of @cmp function:
-+ * - The traditional style which returns <0 / =0 / >0, or
-+ * - Returning a boolean 0/1.
-+ * The latter offers a chance to save a few cycles in the comparison
-+ * (which is used by e.g. plug_ctx_cmp() in block/blk-mq.c).
-+ *
-+ * A good way to write a multi-word comparison is::
-+ *
-+ *	if (a->high != b->high)
-+ *		return a->high > b->high;
-+ *	if (a->middle != b->middle)
-+ *		return a->middle > b->middle;
-+ *	return a->low > b->low;
-+ *
-+ *
-+ * This mergesort is as eager as possible while always performing at least
-+ * 2:1 balanced merges.  Given two pending sublists of size 2^k, they are
-+ * merged to a size-2^(k+1) list as soon as we have 2^k following elements.
-+ *
-+ * Thus, it will avoid cache thrashing as long as 3*2^k elements can
-+ * fit into the cache.  Not quite as good as a fully-eager bottom-up
-+ * mergesort, but it does use 0.2*n fewer comparisons, so is faster in
-+ * the common case that everything fits into L1.
-+ *
-+ *
-+ * The merging is controlled by "count", the number of elements in the
-+ * pending lists.  This is beautifully simple code, but rather subtle.
-+ *
-+ * Each time we increment "count", we set one bit (bit k) and clear
-+ * bits k-1 .. 0.  Each time this happens (except the very first time
-+ * for each bit, when count increments to 2^k), we merge two lists of
-+ * size 2^k into one list of size 2^(k+1).
-+ *
-+ * This merge happens exactly when the count reaches an odd multiple of
-+ * 2^k, which is when we have 2^k elements pending in smaller lists,
-+ * so it's safe to merge away two lists of size 2^k.
-+ *
-+ * After this happens twice, we have created two lists of size 2^(k+1),
-+ * which will be merged into a list of size 2^(k+2) before we create
-+ * a third list of size 2^(k+1), so there are never more than two pending.
-+ *
-+ * The number of pending lists of size 2^k is determined by the
-+ * state of bit k of "count" plus two extra pieces of information:
-+ *
-+ * - The state of bit k-1 (when k == 0, consider bit -1 always set), and
-+ * - Whether the higher-order bits are zero or non-zero (i.e.
-+ *   is count >= 2^(k+1)).
-+ *
-+ * There are six states we distinguish.  "x" represents some arbitrary
-+ * bits, and "y" represents some arbitrary non-zero bits:
-+ * 0:  00x: 0 pending of size 2^k;           x pending of sizes < 2^k
-+ * 1:  01x: 0 pending of size 2^k; 2^(k-1) + x pending of sizes < 2^k
-+ * 2: x10x: 0 pending of size 2^k; 2^k     + x pending of sizes < 2^k
-+ * 3: x11x: 1 pending of size 2^k; 2^(k-1) + x pending of sizes < 2^k
-+ * 4: y00x: 1 pending of size 2^k; 2^k     + x pending of sizes < 2^k
-+ * 5: y01x: 2 pending of size 2^k; 2^(k-1) + x pending of sizes < 2^k
-+ * (merge and loop back to state 2)
-+ *
-+ * We gain lists of size 2^k in the 2->3 and 4->5 transitions (because
-+ * bit k-1 is set while the more significant bits are non-zero) and
-+ * merge them away in the 5->2 transition.  Note in particular that just
-+ * before the 5->2 transition, all lower-order bits are 11 (state 3),
-+ * so there is one list of each smaller size.
-+ *
-+ * When we reach the end of the input, we merge all the pending
-+ * lists, from smallest to largest.  If you work through cases 2 to
-+ * 5 above, you can see that the number of elements we merge with a list
-+ * of size 2^k varies from 2^(k-1) (cases 3 and 5 when x == 0) to
-+ * 2^(k+1) - 1 (second merge of case 5 when x == 2^(k-1) - 1).
-+ */
-+__attribute__((nonnull(2,3)))
-+void list_sort(void *priv, struct list_head *head, list_cmp_func_t cmp)
-+{
-+	struct list_head *list = head->next, *pending = NULL;
-+	size_t count = 0;	/* Count of pending */
-+
-+	if (list == head->prev)	/* Zero or one elements */
++	if (info_.debug_level < ERR_LEVEL)
 +		return;
 +
-+	/* Convert to a null-terminated singly-linked list. */
-+	head->prev->next = NULL;
++	nptrs = backtrace(buffer, STACK_SIZE);
++	strings = backtrace_symbols(buffer, nptrs);
 +
-+	/*
-+	 * Data structure invariants:
-+	 * - All lists are singly linked and null-terminated; prev
-+	 *   pointers are not maintained.
-+	 * - pending is a prev-linked "list of lists" of sorted
-+	 *   sublists awaiting further merging.
-+	 * - Each of the sorted sublists is power-of-two in size.
-+	 * - Sublists are sorted by size and age, smallest & newest at front.
-+	 * - There are zero to two sublists of each size.
-+	 * - A pair of pending sublists are merged as soon as the number
-+	 *   of following pending elements equals their size (i.e.
-+	 *   each time count reaches an odd multiple of that size).
-+	 *   That ensures each later final merge will be at worst 2:1.
-+	 * - Each round consists of:
-+	 *   - Merging the two sublists selected by the highest bit
-+	 *     which flips when count is incremented, and
-+	 *   - Adding an element from the input as a size-1 sublist.
-+	 */
-+	do {
-+		size_t bits;
-+		struct list_head **tail = &pending;
++	printf("dump_stack:\n");
++	for (j = 0; j < nptrs; j++)
++		printf("%s\n", strings[j]);
 +
-+		/* Find the least-significant clear bit in count */
-+		for (bits = count; bits & 1; bits >>= 1)
-+			tail = &(*tail)->prev;
-+		/* Do the indicated merge */
-+		if (bits) {
-+			struct list_head *a = *tail, *b = a->prev;
-+
-+			a = merge(priv, cmp, b, a);
-+			/* Install the merged result in place of the inputs */
-+			a->prev = b->prev;
-+			*tail = a;
-+		}
-+
-+		/* Move one element from input list to pending */
-+		list->prev = pending;
-+		pending = list;
-+		list = list->next;
-+		pending->next = NULL;
-+		count++;
-+	} while (list);
-+
-+	/* End of input; merge together all the pending lists. */
-+	list = pending;
-+	pending = pending->prev;
-+	for (;;) {
-+		struct list_head *next = pending->prev;
-+
-+		if (!next)
-+			break;
-+		list = merge(priv, cmp, pending, list);
-+		pending = next;
-+	}
-+	/* The final merge, rebuilding prev links */
-+	merge_final(priv, cmp, head, pending, list);
++	free(strings);
 +}
++
+ #define unlikely(x) (x)
+ 
+ #define do_div(n,base) ({ \
+diff --git a/ubifs-utils/common/devtable.c b/ubifs-utils/common/devtable.c
+index 39032646..7347f092 100644
+--- a/ubifs-utils/common/devtable.c
++++ b/ubifs-utils/common/devtable.c
+@@ -148,10 +148,10 @@ static int interpret_table_entry(const char *line)
+ 		   &start, &increment, &count) < 0)
+ 		return sys_errmsg("sscanf failed");
+ 
+-	dbg_msg(3, "name %s, type %c, mode %o, uid %u, gid %u, major %u, "
+-		"minor %u, start %u, inc %u, cnt %u",
+-		buf, type, mode, uid, gid, major, minor, start,
+-		increment, count);
++	pr_debug("name %s, type %c, mode %o, uid %u, gid %u, major %u, "
++		 "minor %u, start %u, inc %u, cnt %u\n",
++		 buf, type, mode, uid, gid, major, minor, start,
++		 increment, count);
+ 
+ 	len = strnlen(buf, 1024);
+ 	if (len == 0)
+@@ -204,7 +204,7 @@ static int interpret_table_entry(const char *line)
+ 	 */
+ 	ph_elt = hashtable_search(path_htbl, path);
+ 	if (!ph_elt) {
+-		dbg_msg(3, "inserting '%s' into path hash table", path);
++		pr_debug("inserting '%s' into path hash table\n", path);
+ 		ph_elt = malloc(sizeof(struct path_htbl_element));
+ 		if (!ph_elt) {
+ 			errmsg("cannot allocate %zd bytes of memory",
+@@ -252,8 +252,8 @@ static int interpret_table_entry(const char *line)
+ 		nh_elt->gid = gid;
+ 		nh_elt->dev = makedev(major, minor);
+ 
+-		dbg_msg(3, "inserting '%s' into name hash table (major %d, minor %d)",
+-			name, major(nh_elt->dev), minor(nh_elt->dev));
++		pr_debug("inserting '%s' into name hash table (major %d, minor %d)\n",
++			 name, major(nh_elt->dev), minor(nh_elt->dev));
+ 
+ 		if (hashtable_search(ph_elt->name_htbl, name)) {
+ 			errmsg("'%s' is referred twice", buf);
+@@ -291,8 +291,8 @@ static int interpret_table_entry(const char *line)
+ 			sprintf(nm, "%s%d", name, i);
+ 			nh_elt->name = nm;
+ 
+-			dbg_msg(3, "inserting '%s' into name hash table (major %d, minor %d)",
+-			        nm, major(nh_elt->dev), minor(nh_elt->dev));
++			pr_debug("inserting '%s' into name hash table (major %d, minor %d)\n",
++				 nm, major(nh_elt->dev), minor(nh_elt->dev));
+ 
+ 			if (hashtable_search(ph_elt->name_htbl, nm)) {
+ 				errmsg("'%s' is referred twice", buf);
+@@ -336,7 +336,7 @@ int parse_devtable(const char *tbl_file)
+ 	struct stat st;
+ 	size_t len;
+ 
+-	dbg_msg(1, "parsing device table file '%s'", tbl_file);
++	pr_debug("parsing device table file '%s'\n", tbl_file);
+ 
+ 	path_htbl = create_hashtable(128, &r5_hash, &is_equivalent);
+ 	if (!path_htbl)
+@@ -386,7 +386,7 @@ int parse_devtable(const char *tbl_file)
+ 		line = NULL;
+ 	}
+ 
+-	dbg_msg(1, "finished parsing");
++	pr_debug("finished parsing\n");
+ 	fclose(f);
+ 	return 0;
+ 
+@@ -460,8 +460,8 @@ int override_attributes(struct stat *st, struct path_htbl_element *ph_elt,
+ 			       "different", strcmp(ph_elt->path, "/") ? ph_elt->path : "",
+ 			       nh_elt->name);
+ 
+-	dbg_msg(3, "set UID %d, GID %d, mode %o for %s/%s as device table says",
+-		nh_elt->uid, nh_elt->gid, nh_elt->mode, ph_elt->path, nh_elt->name);
++	pr_debug("set UID %d, GID %d, mode %o for %s/%s as device table says\n",
++		 nh_elt->uid, nh_elt->gid, nh_elt->mode, ph_elt->path, nh_elt->name);
+ 
+ 	st->st_uid = nh_elt->uid;
+ 	st->st_gid = nh_elt->gid;
+diff --git a/ubifs-utils/common/lpt.c b/ubifs-utils/common/lpt.c
+index 3c55f91b..0723698d 100644
+--- a/ubifs-utils/common/lpt.c
++++ b/ubifs-utils/common/lpt.c
+@@ -337,7 +337,7 @@ static void pack_lsave(struct ubifs_info *c, void *buf, int *lsave)
+  */
+ static void set_ltab(struct ubifs_info *c, int lnum, int free, int dirty)
+ {
+-	dbg_msg(3, "LEB %d free %d dirty %d to %d %d",
++	pr_debug("LEB %d free %d dirty %d to %d %d\n",
+ 		lnum, c->ltab[lnum - c->lpt_first].free,
+ 		c->ltab[lnum - c->lpt_first].dirty, free, dirty);
+ 	c->ltab[lnum - c->lpt_first].free = free;
+@@ -566,26 +566,26 @@ int create_lpt(struct ubifs_info *c)
+ 	c->nhead_lnum = lnum;
+ 	c->nhead_offs = ALIGN(len, c->min_io_size);
+ 
+-	dbg_msg(1, "lpt_sz:         %lld", c->lpt_sz);
+-	dbg_msg(1, "space_bits:     %d", c->space_bits);
+-	dbg_msg(1, "lpt_lnum_bits:  %d", c->lpt_lnum_bits);
+-	dbg_msg(1, "lpt_offs_bits:  %d", c->lpt_offs_bits);
+-	dbg_msg(1, "lpt_spc_bits:   %d", c->lpt_spc_bits);
+-	dbg_msg(1, "pcnt_bits:      %d", c->pcnt_bits);
+-	dbg_msg(1, "lnum_bits:      %d", c->lnum_bits);
+-	dbg_msg(1, "pnode_sz:       %d", c->pnode_sz);
+-	dbg_msg(1, "nnode_sz:       %d", c->nnode_sz);
+-	dbg_msg(1, "ltab_sz:        %d", c->ltab_sz);
+-	dbg_msg(1, "lsave_sz:       %d", c->lsave_sz);
+-	dbg_msg(1, "lsave_cnt:      %d", c->lsave_cnt);
+-	dbg_msg(1, "lpt_hght:       %d", c->lpt_hght);
+-	dbg_msg(1, "big_lpt:        %d", c->big_lpt);
+-	dbg_msg(1, "LPT root is at  %d:%d", c->lpt_lnum, c->lpt_offs);
+-	dbg_msg(1, "LPT head is at  %d:%d", c->nhead_lnum, c->nhead_offs);
+-	dbg_msg(1, "LPT ltab is at  %d:%d", c->ltab_lnum, c->ltab_offs);
++	pr_debug("lpt_sz:         %lld\n", c->lpt_sz);
++	pr_debug("space_bits:     %d\n", c->space_bits);
++	pr_debug("lpt_lnum_bits:  %d\n", c->lpt_lnum_bits);
++	pr_debug("lpt_offs_bits:  %d\n", c->lpt_offs_bits);
++	pr_debug("lpt_spc_bits:   %d\n", c->lpt_spc_bits);
++	pr_debug("pcnt_bits:      %d\n", c->pcnt_bits);
++	pr_debug("lnum_bits:      %d\n", c->lnum_bits);
++	pr_debug("pnode_sz:       %d\n", c->pnode_sz);
++	pr_debug("nnode_sz:       %d\n", c->nnode_sz);
++	pr_debug("ltab_sz:        %d\n", c->ltab_sz);
++	pr_debug("lsave_sz:       %d\n", c->lsave_sz);
++	pr_debug("lsave_cnt:      %d\n", c->lsave_cnt);
++	pr_debug("lpt_hght:       %d\n", c->lpt_hght);
++	pr_debug("big_lpt:        %d\n", c->big_lpt);
++	pr_debug("LPT root is at  %d:%d\n", c->lpt_lnum, c->lpt_offs);
++	pr_debug("LPT head is at  %d:%d\n", c->nhead_lnum, c->nhead_offs);
++	pr_debug("LPT ltab is at  %d:%d\n", c->ltab_lnum, c->ltab_offs);
+ 	if (c->big_lpt)
+-		dbg_msg(1, "LPT lsave is at %d:%d",
+-		        c->lsave_lnum, c->lsave_offs);
++		pr_debug("LPT lsave is at %d:%d\n",
++			 c->lsave_lnum, c->lsave_offs);
+ out:
+ 	free(lsave);
+ 	free(buf);
+diff --git a/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c b/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
+index c2f5a29d..fb99222a 100644
+--- a/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
++++ b/ubifs-utils/mkfs.ubifs/mkfs.ubifs.c
+@@ -249,8 +249,8 @@ static const char *helptext =
+ "-y, --yes                assume the answer is \"yes\" for all questions\n"
+ "-v, --verbose            verbose operation\n"
+ "-V, --version            display version information\n"
+-"-g, --debug=LEVEL        display debug information (0 - none, 1 - statistics,\n"
+-"                         2 - files, 3 - more details)\n"
++"-g, --debug=LEVEL        display printing information (0 - none, 1 - error message, \n"
++"                         2 - warning message[default], 3 - notice message, 4 - debug message)\n"
+ "-a, --set-inum-attr      create user.image-inode-number extended attribute on files\n"
+ "                         added to the image. The attribute will contain the inode\n"
+ "                         number the file has in the generated image.\n"
+@@ -632,7 +632,7 @@ static int get_options(int argc, char**argv)
+ 		case 'g':
+ 			c->debug_level = strtol(optarg, &endp, 0);
+ 			if (*endp != '\0' || endp == optarg ||
+-			    c->debug_level < 0 || c->debug_level > 3)
++			    c->debug_level < 0 || c->debug_level > DEBUG_LEVEL)
+ 				return errmsg("bad debugging level '%s'",
+ 					       optarg);
+ 			break;
+@@ -943,7 +943,7 @@ int write_leb(struct ubifs_info *c, int lnum, int len, void *buf)
+ {
+ 	off_t pos = (off_t)lnum * c->leb_size;
+ 
+-	dbg_msg(3, "LEB %d len %d", lnum, len);
++	pr_debug("LEB %d len %d\n", lnum, len);
+ 	memset(buf + len, 0xff, c->leb_size - len);
+ 	if (c->libubi)
+ 		if (ubi_leb_change_start(c->libubi, c->dev_fd, lnum, c->leb_size))
+@@ -980,7 +980,7 @@ static int do_pad(void *buf, int len)
+ 
+ 	memset(buf + len, 0xff, alen - len);
+ 	pad_len = wlen - alen;
+-	dbg_msg(3, "len %d pad_len %d", len, pad_len);
++	pr_debug("len %d pad_len %d\n", len, pad_len);
+ 	buf += alen;
+ 	if (pad_len >= (int)UBIFS_PAD_NODE_SZ) {
+ 		struct ubifs_ch *ch = buf;
+@@ -1068,8 +1068,7 @@ static void set_lprops(int lnum, int offs, int flags)
+ 
+ 	free = c->leb_size - ALIGN(offs, a);
+ 	dirty = c->leb_size - free - ALIGN(offs, 8);
+-	dbg_msg(3, "LEB %d free %d dirty %d flags %d", lnum, free, dirty,
+-		flags);
++	pr_debug("LEB %d free %d dirty %d flags %d\n", lnum, free, dirty, flags);
+ 	if (i < c->main_lebs) {
+ 		c->lpt[i].free = free;
+ 		c->lpt[i].dirty = dirty;
+@@ -1104,7 +1103,7 @@ static int add_to_index(union ubifs_key *key, char *name, int name_len,
+ {
+ 	struct idx_entry *e;
+ 
+-	dbg_msg(3, "LEB %d offs %d len %d", lnum, offs, len);
++	pr_debug("LEB %d offs %d len %d\n", lnum, offs, len);
+ 	e = xmalloc(sizeof(struct idx_entry));
+ 	e->next = NULL;
+ 	e->prev = idx_list_last;
+@@ -1434,19 +1433,19 @@ static int inode_add_selinux_xattr(struct ubifs_ino_node *host_ino,
+ 	if (selabel_lookup(sehnd, &secontext, sepath, st->st_mode) < 0) {
+ 		/* Failed to lookup context, assume unlabeled */
+ 		secontext = strdup("system_u:object_r:unlabeled_t:s0");
+-		dbg_msg(2, "missing context: %s\t%s\t%d\n", secontext, sepath,
+-				st->st_mode);
++		pr_debug("missing context: %s\t%s\t%d\n", secontext, sepath,
++			 st->st_mode);
+ 	}
+ 
+-	dbg_msg(2, "appling selinux context on sepath=%s, secontext=%s\n",
+-			sepath, secontext);
++	pr_debug("appling selinux context on sepath=%s, secontext=%s\n",
++		 sepath, secontext);
+ 	free(sepath);
+ 	con_size = strlen(secontext) + 1;
+ 	name = strdup(XATTR_NAME_SELINUX);
+ 
+ 	ret = add_xattr(host_ino, st, inum, name, secontext, con_size);
+ 	if (ret < 0)
+-		dbg_msg(2, "add_xattr failed %d\n", ret);
++		pr_debug("add_xattr failed %d\n", ret);
+ 	return ret;
+ }
+ 
+@@ -1714,8 +1713,8 @@ static int add_dent_node(ino_t dir_inum, const char *name, ino_t inum,
+ 	char *kname;
+ 	int len;
+ 
+-	dbg_msg(3, "%s ino %lu type %u dir ino %lu", name, (unsigned long)inum,
+-		(unsigned int)type, (unsigned long)dir_inum);
++	pr_debug("%s ino %lu type %u dir ino %lu\n", name, (unsigned long)inum,
++		 (unsigned int)type, (unsigned long)dir_inum);
+ 	memset(dent, 0, UBIFS_DENT_NODE_SZ);
+ 
+ 	dname.name = (void *)name;
+@@ -1916,7 +1915,7 @@ static int add_non_dir(const char *path_name, ino_t *inum, unsigned int nlink,
+ {
+ 	int fd, flags = 0;
+ 
+-	dbg_msg(2, "%s", path_name);
++	pr_debug("%s\n", path_name);
+ 
+ 	if (S_ISREG(st->st_mode)) {
+ 		fd = open(path_name, O_RDONLY);
+@@ -2017,7 +2016,7 @@ static int add_directory(const char *dir_name, ino_t dir_inum, struct stat *st,
+ 	unsigned char type;
+ 	unsigned long long dir_creat_sqnum = ++c->max_sqnum;
+ 
+-	dbg_msg(2, "%s", dir_name);
++	pr_debug("%s\n", dir_name);
+ 	if (existing) {
+ 		dir = opendir(dir_name);
+ 		if (dir == NULL)
+@@ -2237,7 +2236,7 @@ static int add_multi_linked_files(void)
+ 		unsigned char type = 0;
+ 
+ 		for (im = hash_table[i]; im; im = im->next) {
+-			dbg_msg(2, "%s", im->path_name);
++			pr_debug("%s\n", im->path_name);
+ 			err = add_non_dir(im->path_name, &im->use_inum,
+ 					  im->use_nlink, &type, &im->st, NULL);
+ 			if (err)
+@@ -2342,8 +2341,8 @@ static int add_idx_node(void *node, int child_cnt)
+ 
+ 	c->old_idx_sz += ALIGN(len, 8);
+ 
+-	dbg_msg(3, "at %d:%d len %d index size %llu", lnum, offs, len,
+-		c->old_idx_sz);
++	pr_debug("at %d:%d len %d index size %llu\n", lnum, offs, len,
++		 c->old_idx_sz);
+ 
+ 	/* The last index node written will be the root */
+ 	c->zroot.lnum = lnum;
+@@ -2365,7 +2364,7 @@ static int write_index(void)
+ 	int child_cnt = 0, j, level, blnum, boffs, blen, blast_len, err;
+ 	uint8_t *hashes;
+ 
+-	dbg_msg(1, "leaf node count: %zd", idx_cnt);
++	pr_debug("leaf node count: %zd\n", idx_cnt);
+ 
+ 	/* Reset the head for the index */
+ 	head_flags = LPROPS_INDEX;
+@@ -2515,13 +2514,13 @@ static int write_index(void)
+ 	free(idx_ptr);
+ 	free(idx);
+ 
+-	dbg_msg(1, "zroot is at %d:%d len %d", c->zroot.lnum, c->zroot.offs,
+-		c->zroot.len);
++	pr_debug("zroot is at %d:%d len %d\n", c->zroot.lnum, c->zroot.offs,
++		 c->zroot.len);
+ 
+ 	/* Set the index head */
+ 	c->ihead_lnum = head_lnum;
+ 	c->ihead_offs = ALIGN(head_offs, c->min_io_size);
+-	dbg_msg(1, "ihead is at %d:%d", c->ihead_lnum, c->ihead_offs);
++	pr_debug("ihead is at %d:%d\n", c->ihead_lnum, c->ihead_offs);
+ 
+ 	/* Flush the last index LEB */
+ 	err = flush_nodes();
+@@ -2567,13 +2566,13 @@ static int finalize_leb_cnt(void)
+ 		printf("\tindex lebs:   %d\n", c->lst.idx_lebs);
+ 		printf("\tleb_cnt:      %d\n", c->leb_cnt);
+ 	}
+-	dbg_msg(1, "total_free:  %llu", c->lst.total_free);
+-	dbg_msg(1, "total_dirty: %llu", c->lst.total_dirty);
+-	dbg_msg(1, "total_used:  %llu", c->lst.total_used);
+-	dbg_msg(1, "total_dead:  %llu", c->lst.total_dead);
+-	dbg_msg(1, "total_dark:  %llu", c->lst.total_dark);
+-	dbg_msg(1, "index size:  %llu", c->old_idx_sz);
+-	dbg_msg(1, "empty_lebs:  %d", c->lst.empty_lebs);
++	pr_debug("total_free:  %llu\n", c->lst.total_free);
++	pr_debug("total_dirty: %llu\n", c->lst.total_dirty);
++	pr_debug("total_used:  %llu\n", c->lst.total_used);
++	pr_debug("total_dead:  %llu\n", c->lst.total_dead);
++	pr_debug("total_dark:  %llu\n", c->lst.total_dark);
++	pr_debug("index size:  %llu\n", c->old_idx_sz);
++	pr_debug("empty_lebs:  %d\n", c->lst.empty_lebs);
+ 	return 0;
+ }
+ 
+@@ -2822,7 +2821,7 @@ static int init(void)
+ 
+ 	c->dead_wm = ALIGN(MIN_WRITE_SZ, c->min_io_size);
+ 	c->dark_wm = ALIGN(UBIFS_MAX_NODE_SZ, c->min_io_size);
+-	dbg_msg(1, "dead_wm %d  dark_wm %d", c->dead_wm, c->dark_wm);
++	pr_debug("dead_wm %d  dark_wm %d\n", c->dead_wm, c->dark_wm);
+ 
+ 	leb_buf = xmalloc(c->leb_size);
+ 	node_buf = xmalloc(NODE_BUFFER_SIZE);
+@@ -2954,6 +2953,7 @@ int main(int argc, char *argv[])
+ 
+ 	info_.program_name = MKFS_PROGRAM_NAME;
+ 	info_.program_type = MKFS_PROGRAM_TYPE;
++	info_.debug_level = WARN_LEVEL;
+ 
+ 	if (crypto_init())
+ 		return -1;
 -- 
 2.13.6
 
