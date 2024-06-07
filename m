@@ -1,157 +1,275 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FC719752F;
-	Fri,  7 Jun 2024 14:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F9513F436;
+	Fri,  7 Jun 2024 14:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717769963; cv=none; b=YJYon3pLM50ss/8ZJKS1FY6Ez8sodcK4t+FDtr93SLJiq+WLGyn7Om2Hv/Gnewta679s0YmyHWn+4d3yFUmmLkNR4PuTXBRpQdWjK5+oAGTktpbkHwsCnLIIdaFD5T0VByzDgeptNSFhRJ39y8oWYWjD4CPaTbICKsg9BnbK18s=
+	t=1717770124; cv=none; b=uVtKH91qxEerQU+q4WIGFK/LOQiPwjDmgbzA9SyyjK8s6SJX1IJXWKbonFX+3arDt42eCy5nyPCxIEPgIbqZppyUCfhFaVfBntwGK45ot5ZgX9ZS+gp9Has+gUqvFura9qHx6clCbjRToUJn1o1nvavc/94d4tOtPyIl/bM/OSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717769963; c=relaxed/simple;
-	bh=QOYczxIU6FV0cOJGzOIxWZJrUesyGdwkLjpDpR1WMiY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MKCVEVlXcBvbbKTvM1ZodHC0C6cuacm9fFq8GWFUY8S+XjXm6+ek1KLKIv5foNUz7ALM3IYlCFaFH1jWXVaeW7L2Htb5PmOc7tL0On57LTXjNYLshHabN4wLZ6GvNQYO0fiRTJLz16hzRRF/RGxjRSVaml70YoeMOB1wKNC8uuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=HJr2xUlI; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1717770124; c=relaxed/simple;
+	bh=lN9LGnrgukjSjfQdaXfz6zoh1opVnc8Kbq0knfFwjw4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uSql0RloPVEb5SDM2v0Y1yCynVh+pZYidHkKAPcLGZJexgIegCJ9eR7prRvJauVMgtWUIf5K2ecdUZ+Bv2dn147r7+Z3ydds5F6d9DV/AshsOcPRSrQnvE9AbGozhUN+hnKZdsYVuDlcVHDax66hxeFkbe+ViwgxpFcSaFjxFMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ni87Lu/1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="HJr2xUlI"
-Received: from p-infra-ksmg-sc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id B270410002E;
-	Fri,  7 Jun 2024 17:13:00 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru B270410002E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1717769580;
-	bh=6wrU1/sGluytgSBoZtiBi/2AtIb9XSpi3qvvAJFAO6Q=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=HJr2xUlINgA4t1h3bIzYClpQn4aGnSORBWoaKTCt5sPsftUlVkdt4LDHJWHtjwzQ0
-	 44rZx7qpmn42523geGwoKIe8BveI0y/7KUxRDI3HMq4GZY/Md4+X8caTy8fKQGSsfU
-	 tW6RrKEvRabn5ezocFQTOKFmlZ1lz0tWsmhwtE55kbcn2yebPbqXEDGyt7lDdVi+4t
-	 YM7NHSVY5InbB6rctF9qaaRizHvNsRaGHxjW4tJ6ywPOeJULb/rpAh9B9k/odAXm/o
-	 DSXbWBwJsf8OWRmv4YjMyJ+QJWL3q2HZgkXAvgM32qmxlTy1G3vvi/8Wd1txoVmzE5
-	 05gTQdzROY8hA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri,  7 Jun 2024 17:13:00 +0300 (MSK)
-Received: from user-A520M-DS3H.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 7 Jun 2024 17:13:00 +0300
-From: Alexey Romanov <avromanov@salutedevices.com>
-To: <neil.armstrong@linaro.org>, <clabbe@baylibre.com>,
-	<herbert@gondor.apana.org.au>, <davem@davemloft.net>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <vadim.fedorenko@linux.dev>
-CC: <linux-crypto@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kernel@salutedevices.com>, Alexey
- Romanov <avromanov@salutedevices.com>
-Subject: [PATCH v8 06/23] drivers: crypto: meson: drop status field from meson_flow
-Date: Fri, 7 Jun 2024 17:12:25 +0300
-Message-ID: <20240607141242.2616580-7-avromanov@salutedevices.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240607141242.2616580-1-avromanov@salutedevices.com>
-References: <20240607141242.2616580-1-avromanov@salutedevices.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ni87Lu/1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94912C4AF09;
+	Fri,  7 Jun 2024 14:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717770123;
+	bh=lN9LGnrgukjSjfQdaXfz6zoh1opVnc8Kbq0knfFwjw4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ni87Lu/1s8fiBFXiewQHZBjZuWU0h4ZRzUgqvYVPBs74xJk03T4u3R51nIN7hsPU5
+	 11Ac35LQK5xSx9u4GKn33t2vYRArPw0xPDRKzk7jUm27VjFMzteZwmC2Aj4nodnVV1
+	 RsJ+B9GOESPVazKgDToSOJsCAdoFf88EkzKyUfn9oLC+2ZWIq01KjtyBQte4diylQz
+	 vTbzr+AHY6+FFMTgW8cj73aCAzw4+V3rmAa7HB4B1sSbHn5byldjGSPscp22hM9O+R
+	 rlLI+sP+TFOim3uEjIh02jvuUhArBO32G0ZVhqHBCxiwlrTNKDB19UfepT9F8qf4B6
+	 kYvAFZloGMwzg==
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5ba77a212adso107594eaf.3;
+        Fri, 07 Jun 2024 07:22:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXzpgVZmu6flofI75ma5PMqJHQS5nbYdkiUsjxpxCVGzaLrU0tXroesLFoK5eK60o6VwLOKgpSxzu8PU+h51cyNzeNP1q9fvUzWOq475VQtNyTgkRiHR+5wIXCywgfnbC78RsFJ784=
+X-Gm-Message-State: AOJu0YwO4rPDJHxZ8WXI4D7olHiLJpM3uwPTCm7axp49K42nqipJEAk3
+	QDxY2WIkBxccCf3FrHUQB4ybinppvQ4bhwIM20hBdRaAdfAV6YkpCs+j9EAG/7GbiEK1ag3Iwy3
+	Mq2EFnAW2LPy4W8c+jHzb0OrFaxg=
+X-Google-Smtp-Source: AGHT+IHrM4ProVsLq7TgVqRCERzD299+z5L7cTWF4rF+2zQvdtv5DTX/4oA2KtO7uwrtYe1Vz2O5sTGbf/mom2XM5ac=
+X-Received: by 2002:a05:6820:708:b0:5ba:6669:ba6e with SMTP id
+ 006d021491bc7-5baaed4f14dmr2423032eaf.1.1717770122391; Fri, 07 Jun 2024
+ 07:22:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185803 [Jun 07 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/06/07 12:12:00 #25491508
-X-KSMG-AntiVirus-Status: Clean, skipped
+References: <20240603081331.3829278-1-beata.michalska@arm.com>
+ <20240603081331.3829278-2-beata.michalska@arm.com> <20240603114811.oio3uemniib5uaa2@vireshk-i7>
+ <CAJZ5v0j1bqhmKrJirw+WgEVDdszZ9xQSgmfazVKMVa8H6_5TSw@mail.gmail.com> <20240606085513.pptx5dtjcvvg3zo4@vireshk-i7>
+In-Reply-To: <20240606085513.pptx5dtjcvvg3zo4@vireshk-i7>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 7 Jun 2024 16:21:51 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0it5vZvzkbErkGOVruPbkxgr8VMTgQzsncpdQmvCOfBng@mail.gmail.com>
+Message-ID: <CAJZ5v0it5vZvzkbErkGOVruPbkxgr8VMTgQzsncpdQmvCOfBng@mail.gmail.com>
+Subject: Re: [PATCH 1/1] cpufreq: Rewire arch specific feedback for cpuinfo/scaling_cur_freq
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Beata Michalska <beata.michalska@arm.com>, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, len.brown@intel.com, 
+	ionela.voinescu@arm.com, vanshikonda@os.amperecomputing.com, 
+	sumitg@nvidia.com, vincent.guittot@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This field is used only to check for timeout. But there is more
-convenient way to achive the same goal.
+On Thu, Jun 6, 2024 at 10:55=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
+>
+> On 03-06-24, 15:43, Rafael J. Wysocki wrote:
+> > On Mon, Jun 3, 2024 at 1:48=E2=80=AFPM Viresh Kumar <viresh.kumar@linar=
+o.org> wrote:
+> > > Rafael,
+> > >
+> > > We probably need to decide on a policy for these two files, it is
+> > > getting a bit confusing.
+> > >
+> > > cpuinfo_cur_freq:
+> > >
+> > > The purpose of this file is abundantly clear. This returns the best
+> > > possible guess of the current hardware frequency. It should rely on
+> > > arch_freq_get_on_cpu() or ->get() to get the value.
+> >
+> > Let me quote the documentation:
+> >
+> > "This is expected to be the frequency the hardware actually runs at.
+> > If that frequency cannot be determined, this attribute should not be
+> > present."
+> >
+> > In my reading, this has nothing to do with arch_freq_get_on_cpu(), at
+> > least on x86.
+> >
+> > > Perhaps we can
+> > > make this available all the time, instead of conditionally on ->get()
+> > > callback (which isn't present for intel-pstate for example).
+> >
+> > We could, but then on x86 there is no expectation that this file will
+> > be present and changing this may introduce significant confusion
+> > because of the way it is documented (which would need to be changed,
+> > but people might be forgiven for failing to notice the change of
+> > interpretation of this file).
+>
+> > > scaling_cur_freq:
+> > >
+> > > This should better reflect the last requested frequency, but since a
+> > > significant time now it is trying to show what cpuinfo_cur_freq shows=
+.
+> >
+> > Well, not really.
+> >
+> > > commit c034b02e213d ("cpufreq: expose scaling_cur_freq sysfs file for=
+ set_policy() drivers")
+> > > commit f8475cef9008 ("x86: use common aperfmperf_khz_on_cpu() to calc=
+ulate KHz using APERF/MPERF")
+> >
+> > "In the majority of cases, this is the frequency of the last P-state
+> > requested by the scaling driver from the hardware using the scaling
+> > interface provided by it, which may or may not reflect the frequency
+> > the CPU is actually running at (due to hardware design and other
+> > limitations).
+> >
+> > Some architectures (e.g. x86) may attempt to provide information more
+> > precisely reflecting the current CPU frequency through this attribute,
+> > but that still may not be the exact current CPU frequency as seen by
+> > the hardware at the moment."
+>
+> Right, with time the documentation is updated and now it has mixed
+> the purpose of both these files IMO.
+>
+> > So the problem is that on Intel x86 with HWP and intel_pstate in the
+> > active mode, say, "the frequency of the last P-state requested by the
+> > scaling driver from the hardware" is actually never known, so exposing
+> > it via scaling_cur_freq is not possible.
+> >
+> > Moreover, because cpuinfo_cur_freq is not present at all in that case,
+> > scaling_cur_freq is the only way to allow user space to get an idea
+> > about the CPU current frequency.  I don't think it can be changed now
+> > without confusing users.
+>
+> Yes, this is a valid concern. The changes in documentation have been
+> there for many years and changing the behavior now is not going to be
+> an easy / right thing to do.
+>
+> > > What should we do ? I wonder if we will break some userspace tools
+> > > (which may have started relying on these changes).
+> >
+> > We will.
+> >
+> > IIUC, it is desirable to expose "the frequency of the last P-state
+> > requested by the scaling driver from the hardware" via
+> > scaling_cur_freq on ARM, but it is also desirable to expose an
+> > approximation of the actual current CPU frequency, so the only way to
+> > do that without confusing the heck out of everybody downstream would
+> > be to introduce a new attribute for this purpose and document it
+> > precisely.
+>
+> Hmm, having 3 files would confuse people even more I guess. I wanted
+> to get this sorted to have the same behavior for all platforms, but it
+> seems somewhat difficult to achieve now.
+>
+> What about this, hopefully this doesn't break any existing platforms
+> and fix the problems for ARM (and others):
+>
+> - scaling_cur_freq:
+>
+>   Returns the frequency of the last P-state requested by the scaling
+>   driver from the hardware.
 
-Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- drivers/crypto/amlogic/amlogic-gxl-cipher.c | 13 +++++++++----
- drivers/crypto/amlogic/amlogic-gxl-core.c   |  1 -
- drivers/crypto/amlogic/amlogic-gxl.h        |  2 --
- 3 files changed, 9 insertions(+), 7 deletions(-)
+This would change the behavior for intel_pstate in the passive mode AFAICS.
 
-diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-index 18e9e2d39b1f..dc0b100c5de2 100644
---- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-+++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-@@ -219,13 +219,18 @@ static int meson_cipher(struct skcipher_request *areq)
- 	}
- 
- 	reinit_completion(&mc->chanlist[flow].complete);
--	mc->chanlist[flow].status = 0;
- 	meson_dma_start(mc, flow);
--	wait_for_completion_interruptible_timeout(&mc->chanlist[flow].complete,
--						  msecs_to_jiffies(500));
--	if (mc->chanlist[flow].status == 0) {
-+
-+	err = wait_for_completion_interruptible_timeout(&mc->chanlist[flow].complete,
-+							msecs_to_jiffies(500));
-+	if (err == 0) {
- 		dev_err(mc->dev, "DMA timeout for flow %d\n", flow);
- 		err = -EINVAL;
-+	} else if (err < 0) {
-+		dev_err(mc->dev, "Waiting for DMA completion is failed (%d)\n", err);
-+	} else {
-+		/* No error */
-+		err = 0;
- 	}
- 
- 	dma_unmap_single(mc->dev, phykeyiv, keyivlen, DMA_TO_DEVICE);
-diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
-index 52317f111c6c..4d04bb0ddc4e 100644
---- a/drivers/crypto/amlogic/amlogic-gxl-core.c
-+++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
-@@ -53,7 +53,6 @@ static irqreturn_t meson_irq_handler(int irq, void *data)
- 	for (flow = 0; flow < mc->flow_cnt; flow++) {
- 		if (mc->chanlist[flow].irq == irq) {
- 			if (meson_dma_ready(mc, flow)) {
--				mc->chanlist[flow].status = 1;
- 				complete(&mc->chanlist[flow].complete);
- 				return IRQ_HANDLED;
- 			}
-diff --git a/drivers/crypto/amlogic/amlogic-gxl.h b/drivers/crypto/amlogic/amlogic-gxl.h
-index dc54bd533a2d..4d60a0cc2dca 100644
---- a/drivers/crypto/amlogic/amlogic-gxl.h
-+++ b/drivers/crypto/amlogic/amlogic-gxl.h
-@@ -59,7 +59,6 @@ struct meson_desc {
-  * @engine:	ptr to the crypto_engine for this flow
-  * @keylen:	keylen for this flow operation
-  * @complete:	completion for the current task on this flow
-- * @status:	set to 1 by interrupt if task is done
-  * @irq:	IRQ number for amlogic-crypto
-  * @t_phy:	Physical address of task
-  * @tl:		pointer to the current ce_task for this flow
-@@ -68,7 +67,6 @@ struct meson_desc {
- struct meson_flow {
- 	struct crypto_engine *engine;
- 	struct completion complete;
--	int status;
- 	int irq;
- 	unsigned int keylen;
- 	dma_addr_t t_phy;
--- 
-2.34.1
+ATM it calls arch_freq_get_on_cpu(), after the change it would return
+policy->cur which would not be the same value most of the time.  And
+in the ->adjust_perf() case policy->cur is not updated by it even.
 
+>  For set_policy() drivers, use the ->get()
+>   callback to get a value that can provide the best estimate to user.
+>
+>   To make this work, we can add get() callback to intel and amd pstate
+>   drivers, and use arch_freq_get_on_cpu().
+>
+>   This will keep the current behavior intact for such drivers.
+
+Well, the passive mode thing would need to be addressed then.
+
+> - cpuinfo_cur_freq:
+>
+>   Currently this file is available only if the get() callback is
+>   available. Maybe we can keep this behavior as is, and expose this
+>   now for both the pstate drivers (once above change is added). We
+>   will be left with only one driver that doesn't provide the get()
+>   callback: pasemi-cpufreq.c
+
+I would rather get rid of it completely.
+
+>   Coming back to the implementation of the file read operation, I
+>   think the whole purpose of arch_freq_get_on_cpu() was to get a
+>   better estimate (which may not be perfect) of the frequency the
+>   hardware is really running at (in the last window) and if a platform
+>   provides this, then it can be given priority over the ->get()
+>   callback in order to show the value to userspace.
+
+There was a reason to add it and it was related to policy->cur being
+meaningless on x86 in general (even in the acpi-cpufreq case), but
+let's not go there.
+
+Hooking this up to cpuinfo_cur_freq on x86 wouldn't make much sense
+IMV because at times it is not even close to the frequency the
+hardware is running at.  It comes from the previous tick period,
+basically, and the hardware can adjust the frequency with a resolution
+that is orders of magnitude higher than the tick rate.
+
+>   And so, if the platform provides, we can use arch_freq_get_on_cpu()
+>   first and then the get() callback.
+>
+> That would leave us to this change for the core, and yes a get()
+> callback for intel-pstate and amd-pstate:
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 7c6879efe9ef..e265f8450160 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -756,12 +756,8 @@ __weak unsigned int arch_freq_get_on_cpu(int cpu)
+>  static ssize_t show_scaling_cur_freq(struct cpufreq_policy *policy, char=
+ *buf)
+>  {
+>         ssize_t ret;
+> -       unsigned int freq;
+>
+> -       freq =3D arch_freq_get_on_cpu(policy->cpu);
+> -       if (freq)
+> -               ret =3D sprintf(buf, "%u\n", freq);
+> -       else if (cpufreq_driver->setpolicy && cpufreq_driver->get)
+> +       if (cpufreq_driver->setpolicy && cpufreq_driver->get)
+>                 ret =3D sprintf(buf, "%u\n", cpufreq_driver->get(policy->=
+cpu));
+>         else
+>                 ret =3D sprintf(buf, "%u\n", policy->cur);
+> @@ -795,7 +791,10 @@ store_one(scaling_max_freq, max);
+>  static ssize_t show_cpuinfo_cur_freq(struct cpufreq_policy *policy,
+>                                         char *buf)
+>  {
+> -       unsigned int cur_freq =3D __cpufreq_get(policy);
+> +       unsigned int cur_freq =3D arch_freq_get_on_cpu(policy->cpu);
+> +
+> +       if (!cur_freq)
+> +               cur_freq =3D __cpufreq_get(policy);
+>
+>         if (cur_freq)
+>                 return sprintf(buf, "%u\n", cur_freq);
+>
+>
+> I think this will also make more sense from documentation's
+> perspective, which says that:
+>
+> "In the majority of cases, this is the frequency of the last P-state
+> requested by the scaling driver from the hardware using the scaling
+> interface provided by it, which may or may not reflect the frequency
+> the CPU is actually running at (due to hardware design and other
+> limitations)."
+>
+> -- we do this at the core level.
+>
+> "Some architectures (e.g. x86) may attempt to provide information more
+> precisely reflecting the current CPU frequency through this attribute,
+> but that still may not be the exact current CPU frequency as seen by
+> the hardware at the moment."
+>
+> -- and this at driver level, as a special case.
+
+Well, this sounds nice, but the changes are a bit problematic.
+
+If you don't want 3 files, I'd drop cpuinfo_cur_freq and introduce
+something else to replace it which will expose the
+arch_freq_get_on_cpu() return value and will be documented
+accordingly.
+
+Then scaling_cur_freq can be (over time) switched over to returning
+policy->cur in the cases when it is meaningful and -ENODATA otherwise.
+
+This would at least allow us to stop making up stuff.
