@@ -1,91 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D866D1B9;
-	Fri,  7 Jun 2024 16:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B333A19AA40;
+	Fri,  7 Jun 2024 16:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717777655; cv=none; b=b5H+8S6M97063M2L7eqqd6He6557R4MI5QUqSr8p4goAHCxgViqP2xTsdRJWnye1ic7ZGgrchlMPfCNZdLRv+PEl+Q2g78CoqM7FiF78SW0QX+jBdOZY44a6LnMkCD2K0Yu502vTRl1WIiXjh4syuQcwsZ6KtwzEgAp3TRQGY9s=
+	t=1717777735; cv=none; b=ub5LVt/YsanNqlkNwTrXMobRso2Ul+iJwhFcd7d4kc3SGE0JrXcij2SY76EuXVE9qkafY4Lv6FynJpYHxmXfIHzEo4HmrdN2VqQRtYK6SlLOHKeZ8++7UycZD1ainxEzBrXwJC/mNHqtnrz2l8I5CuN+gdU3y/0XcW2IlQvPeJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717777655; c=relaxed/simple;
-	bh=70WFcr3YZHLwEEqWuEFYuf3IHamdP8ojcxlq9+pNkuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=f1u9EiKijiv2nKpNWnZfvKM07Of/TW9CY6XTTeR3CEfLS5qHQNIdQiTB1A17OJnmxD8M4LIZQhRCZm2ZWTM+/RlWLWqtBnD/lrvssFernnM9bIaZj5O259e0F+s3NgZKiwO79mxFVv6Nj7OYuVs2Y3XVFk7+DvPOYUnPj7euzmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2ifAwwQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717777735; c=relaxed/simple;
+	bh=v5vfruB7l2v9qAe9ilwgL7QaEEjs5wPBoQ/14S5UB2g=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lPcFL1L2G0Io34sG3xdvFoyVRRj8fJG5zMzcRCoULFUgfdDQ90x6Oupq1WV8Oo4NPidJwqMskKfqE19Xk2ViesC99HMaEokPhWLZcz4SpoIz9tKFSXo0nOhhSeGQj/7yBud7nNljVax84QH+wPpeU98zlERcjBcJpNPv7eQ3yNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nPvAcsM1; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2ifAwwQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40999C2BBFC;
-	Fri,  7 Jun 2024 16:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717777654;
-	bh=70WFcr3YZHLwEEqWuEFYuf3IHamdP8ojcxlq9+pNkuI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=A2ifAwwQNjMrd1AqtONpXCSyvOdknl6boYk4Pw9p4ikc4NKZ8YGKRR1L0md2nPcPi
-	 m6kH8y2itDxknAKp65Y98T2MRAIXGe2/34JEAEdL5sFSTBzUPtiYUr7tSmPtR5JXNN
-	 9sKDMK7noCTja6zKbf+bDCHf8vENZsjUP9oSyMC3W99xGCTaHJpqsa4ds/kpaHe/8L
-	 euw+xkGrdiSo7cnFx5Dub7MvAlK9gSW4Q+dIrr0kHiKBAOO8TDZn3XnKebWatyMqg3
-	 D0fzdIn8t5StVG25HjdlKm5sgKYCK3KGAAKbDeuskRm3D1EL2GoXXnT0Wn5zhlsLSX
-	 VgvM7A9ZGM8Lw==
-Date: Fri, 7 Jun 2024 11:27:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Wei Huang <wei.huang2@amd.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-	bhelgaas@google.com, corbet@lwn.net, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	alex.williamson@redhat.com, gospo@broadcom.com,
-	michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
-	somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
-	manoj.panicker2@amd.com, Eric.VanTassell@amd.com,
-	vadim.fedorenko@linux.dev, horms@kernel.org, bagasdotme@gmail.com
-Subject: Re: [PATCH V2 1/9] PCI: Introduce PCIe TPH support framework
-Message-ID: <20240607162732.GA848790@bhelgaas>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nPvAcsM1"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 457GRvan025670;
+	Fri, 7 Jun 2024 11:27:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717777677;
+	bh=YFHPQL/G/uN01yS9rCCVaqefgaP5S3kCIPvNr4BAafA=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=nPvAcsM1TDHINr9dQGeBJV+5uvitTio0lQAnknK6xkjujpY+XQK5KBu1FX49uycNR
+	 pZNSM06NTm7HUGgegj0vjb4zIrNjCTVspJdoFgvLvBzmSIqDQLLSnz1103hqWU6p4u
+	 a7MfnIbKwQOdQ12PxJRQKPf3gH1Olkolbx8AK0Co=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 457GRvDq096187
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 7 Jun 2024 11:27:57 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
+ Jun 2024 11:27:56 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 7 Jun 2024 11:27:56 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 457GRt1m068019;
+	Fri, 7 Jun 2024 11:27:56 -0500
+From: Judith Mendez <jm@ti.com>
+To: Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        William Breathitt Gray <william.gray@linaro.org>
+CC: David Lechner <david@lechnology.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Nishanth Menon
+	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH v3 6/8] arm64: dts: ti: k3-am64-main: Add eQEP nodes
+Date: Fri, 7 Jun 2024 11:27:53 -0500
+Message-ID: <20240607162755.366144-7-jm@ti.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240607162755.366144-1-jm@ti.com>
+References: <20240607162755.366144-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531213841.3246055-2-wei.huang2@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, May 31, 2024 at 04:38:33PM -0500, Wei Huang wrote:
-> This patch implements the framework for PCIe TPH support. It introduces
-> tph.c source file, along with CONFIG_PCIE_TPH, to Linux PCIe subsystem.
-> A new member, named tph_cap, is also introduced in pci_dev to cache TPH
-> capability offset.
+Add eQEP device tree nodes 0-2 for AM642 SoC.
 
-s/This patch implements/Implement/
-s/It introduces/Introduce/
-s/is also introduced/Add tph_cap .../
+Signed-off-by: Judith Mendez <jm@ti.com>
+---
+Changes since v2:
+- No change
+---
+ arch/arm64/boot/dts/ti/k3-am64-main.dtsi | 27 ++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-https://chris.beams.io/posts/git-commit/
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.9#n94
+diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+index 6f9aa5e02138f..6be710138dded 100644
+--- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
+@@ -1171,6 +1171,33 @@ ecap2: pwm@23120000 {
+ 		status = "disabled";
+ 	};
+ 
++	eqep0: counter@23200000 {
++		compatible = "ti,am62-eqep";
++		reg = <0x00 0x23200000 0x00 0x100>;
++		power-domains = <&k3_pds 59 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 59 0>;
++		interrupts = <GIC_SPI 116 IRQ_TYPE_EDGE_RISING>;
++		status = "disabled";
++	};
++
++	eqep1: counter@23210000 {
++		compatible = "ti,am62-eqep";
++		reg = <0x00 0x23210000 0x00 0x100>;
++		power-domains = <&k3_pds 60 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 60 0>;
++		interrupts = <GIC_SPI 117 IRQ_TYPE_EDGE_RISING>;
++		status = "disabled";
++	};
++
++	eqep2: counter@23220000 {
++		compatible = "ti,am62-eqep";
++		reg = <0x00 0x23220000 0x00 0x100>;
++		power-domains = <&k3_pds 62 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 62 0>;
++		interrupts = <GIC_SPI 118 IRQ_TYPE_EDGE_RISING>;
++		status = "disabled";
++	};
++
+ 	main_rti0: watchdog@e000000 {
+ 		compatible = "ti,j7-rti-wdt";
+ 		reg = <0x00 0xe000000 0x00 0x100>;
+-- 
+2.45.1
 
-> +	  This option adds support for PCIE TLP Processing Hints (TPH).
-> +	  TPH allows endpoint devices to provide optimization hints, such as
-> +	  desired caching behavior, for requests that target memory space.
-> +	  These hints, called steering tags, can empower the system hardware
-> +	  to optimize the utilization of platform resources.
-
-s/PCIE TLP/PCIe TLP/ to match context.
-
-> +++ b/drivers/pci/pcie/tph.c
-
-> +#define pr_fmt(fmt) "TPH: " fmt
-> +#define dev_fmt pr_fmt
-
-Add when used.
-
-> +void pcie_tph_init(struct pci_dev *dev)
-> +{
-> +	dev->tph_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_TPH);
-> +}
-> +
-
-  $ git am m/v2_20240531_wei_huang2_pcie_tph_and_cache_direct_injection_support.mbx
-  Applying: PCI: Introduce PCIe TPH support framework
-  .git/rebase-apply/patch:88: new blank line at EOF.
-  +
-  warning: 1 line adds whitespace errors.
