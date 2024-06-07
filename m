@@ -1,361 +1,136 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2001C2AF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 08:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929AA1C2AF
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 08:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717747664; cv=none; b=HxYEKTaqrkxAnTn9zijvjEnVi2ZLowJEPPabE1liJ29i5Fvq1IHw4Lni1Nn2pHiXKXi/Lh4kH41soxPPiCaZEtJHtUznET0juCdbLqylN1fgVd9Dl+lZr2HnhIoyLb4zm1737if2k2qmsDp+m8FT1rs+3Sf83NvsNDkAz90qsHU=
+	t=1717747846; cv=none; b=X6ghRabEUjvuGlXDbKZIPlypWbaXaHx8dJw1v/mi/f4pVn9zKjsNU33qKcFkmvTSN1vGCzl0b/sNG40mJ0DDv/I5j5Toei6gj6OsMTkKNzhTAsEzoEpeVtkDr7CLKH0mBwUkhJZn58XW4iM0pdIRsgSeV68Yjt7/THwXIRDpmnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717747664; c=relaxed/simple;
-	bh=LMQ7fv6urpsT3xy9HS+IKJC5KLVk8cZam5BdjG0e64k=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=cFWTNrELhe+vBO0Yz+u6PbIspTmhkH9iEaexpAsFso7tvBx4fFpswBwxj0tlQOhEiDXlhlfB05SW71lZWEmufqWPV//oNt34kfHNOzSnbrSGQtuI0WcqwLN7FZt/iLMlS1WEvnSLERUncXR5CZsgvHmlh4n+adPQ+aBaBsO1Ho4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JAntBXKK; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717747846; c=relaxed/simple;
+	bh=xan89PWRu7zP6FjR4igFX3BzW5xabnOUhXxUie21/G8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dR91VtuKIeYDXeP/6Rw4kg6WzrXXUgueplzkVO2V1CJ4EFD08rSOuEKJkEZsHHe6wlC4qS9EBKmf5UhzPnpAXQJ4aX4pOJaM/4WwiChFSHDdLLl0EK4meFLLA1YP7IpT9xla+RH6fhl9jwF/NCN39H60iXPlqG27AXREnVHZIuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dgfEXFYY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JAntBXKK"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-35dbfe31905so1731571f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 01:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717747661; x=1718352461; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zm7TFPva0bErQOP/68vGfRmjP0R/5JymFuac9fbRPVw=;
-        b=JAntBXKKs/CBvI8SmaoqTO1COL9sQYlEJfUGgNGAJp0CYeYIiO5s3uQittPoeYxpy0
-         7dN4/yrV+/SWikAE46/5TVFup7XGxO754NNUBEdi08O2RDlxS/edMNyEUU9n/NlkILR3
-         dnqyPjVoBAWK6brqVf0tn97iIEyECLBb1dqXdB6LSuqT/KYs9kGzoDrssatAOT3sJJqt
-         9ERgDsl6B5DkbGCuFHVN80XOtMvg77zmMtsHF+8sVzRUqbtypCzLc2zwqKt2Rl/g5+u2
-         XE2BQcKN3X4zoJhWkNVuHysf30yZHoBRhZ4j7ZTKlQ3fee3y9fsTxoGkNGEMS0C+soPw
-         h3WQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dgfEXFYY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717747843;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IpzQWE3Fx+gen53+97uqx2lsnAb/FfxkaVcs1hIq2p0=;
+	b=dgfEXFYYHTz5bUTOIPSvE8OCEc44NwjFXo4LEcxFSenfMSMx4jaD7hSRWon5PFjdSaBjhl
+	D8kHam+mcE5j3GQ080VkIwm/fbd8NReWM9qxV22zLBhmG3uCWdojzvcQbekzyknaHXAmLh
+	iNVMXA2bjzlYwyf2AM9thZfmbhGNxwk=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-424-zpq3coNXOVSfH-73SqPnGA-1; Fri, 07 Jun 2024 04:10:41 -0400
+X-MC-Unique: zpq3coNXOVSfH-73SqPnGA-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52bc1e919deso55686e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 01:10:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717747661; x=1718352461;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zm7TFPva0bErQOP/68vGfRmjP0R/5JymFuac9fbRPVw=;
-        b=YmbaGeCByjLJu8aFChozbwLoS9tc7Cne/PHR5pNFPAweDNa7R/JQg/fDataEez7ayF
-         qMWPHEysCWoRPJ5/9od9uQyzQTEzlr9/gLsqSY+DCLiXJiYxlUHyuGGqdAta8fppSOtJ
-         prEjdqEOTCkEsoGeR/dCk+eTCiYLKGz0hUkicu5TWpTgSpW1Q8wbTolKcMYwvE7BHL+c
-         lcoNLAFcuPx7lDya5AYUcZKzlVaLsb7AHDNKTMBFK2gM5R8Qyqa7cQULxFg2wTqWPImb
-         UHXPvH3n8gPDZrXzWyYjfTzXn5ttG7ysVbdxxePncM58sVefupx31mEDLDMmPAhD0aW8
-         nSMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXimAW9wwratvx+4ICgUUys17uFwyWnSvazZyz7n3cA2NP5oknSxR2khIFMscUzIMLyKuSsK1O6L5rhkvapwBRewNLa3Z0wmBinIboK
-X-Gm-Message-State: AOJu0YxZAMny/g5jQMKTG2KzEFvgGOZw3Yw2g3bgGrgSo3iPTThqse2D
-	DKOEd9/GavSks6lla0E3ATm6+skisThhd0o3UCgPBZABBDAzyV4p5kCrPqYVvh4=
-X-Google-Smtp-Source: AGHT+IHqhz5k04ZzyFG1CkhZU4vWzmotulML28MoByYGhj8GH+MxqZaO0+We9+uAJfWY61IYXCGEKQ==
-X-Received: by 2002:a5d:6483:0:b0:354:df59:c9a4 with SMTP id ffacd0b85a97d-35efed08bd4mr1647456f8f.9.1717747660655;
-        Fri, 07 Jun 2024 01:07:40 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:7e4b:b0d3:6a34:6404? ([2a01:e0a:982:cbb0:7e4b:b0d3:6a34:6404])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d297b3sm3443187f8f.11.2024.06.07.01.07.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Jun 2024 01:07:40 -0700 (PDT)
-Message-ID: <7b877bc6-9e26-4bae-934a-ceb9663d751d@linaro.org>
-Date: Fri, 7 Jun 2024 10:07:38 +0200
+        d=1e100.net; s=20230601; t=1717747840; x=1718352640;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IpzQWE3Fx+gen53+97uqx2lsnAb/FfxkaVcs1hIq2p0=;
+        b=mc7tTGEoL92vNNMicrXxsBmGaufMhAib+H3upbgsUbDDnb4dp4ckMo8L+H4r8ZQzHI
+         r6Tp0p2usG+79dcCVHqIU8Owv4DdO/Q0uomUEIos9puwjrjGbgeMoHdQCZYBO5z7AeSx
+         Hrdrnk1ZLhMFVRR6Ev1siUlWxIv1yt8zRK6h8JiR86p3Jy5OUkQ4K0ABSinKR6b32vGR
+         CbQhxtBBhjrawFtC2J8/BS3LDY5OaS7MQTzhKs11rFCbV2M4sUKljIbhh3bsXLTmB6lS
+         REfk887Hk0umfKdDxOlQn125VHIWXVFUy2/ZgWVUA2xWKWHev1WVKkVHvON4nFdZdBJI
+         GSlA==
+X-Forwarded-Encrypted: i=1; AJvYcCWML2+evgElF3Oul3LKcwu2rXdLq9sX7cI6czeeCt+ALwfE924KzNv9PhFNExj0e2sFrH4jwvwSKwPdX4EwXCqumF0KJN0VhemK7CRr
+X-Gm-Message-State: AOJu0YxLOL0IHtVTCzLb3cKb2ouU31ujyPpUs1dXZxh48UG6P2l6VqHK
+	zpRCpKXLS/CP4+ZOeSFX/YQkIdcIrVvJA9Ag7F5udLyX9Q94dniIuEteYIv6fcY/NF+UJYe2aDw
+	XjruwlwpTRlaaiDrHe6q/xccvoPQ7fCrNOzdh0mvYmP9uVsEoSHQ+ouYTYJQHOsWo9GKaExDXls
+	PBNfgYB6HKTCezksNGiCIivY0n8yc9ZPZtUYPh
+X-Received: by 2002:a19:ac47:0:b0:51f:3fea:cbcf with SMTP id 2adb3069b0e04-52bb9fc458fmr1131226e87.52.1717747840496;
+        Fri, 07 Jun 2024 01:10:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHE22lzSu2t1eaY4ixWZwC3DnY7OJWdzQaXo6iDo3zOQV+ZZthH0LMFdtFi7RdQRJiObbC2NGO5n46x4ubLPcE=
+X-Received: by 2002:a19:ac47:0:b0:51f:3fea:cbcf with SMTP id
+ 2adb3069b0e04-52bb9fc458fmr1131216e87.52.1717747840096; Fri, 07 Jun 2024
+ 01:10:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 2/2] arm64: dts: meson: add support for OSMC Vero 4K
-To: Christian Hewitt <christianshewitt@gmail.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240606095419.3950015-1-christianshewitt@gmail.com>
- <20240606095419.3950015-2-christianshewitt@gmail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20240606095419.3950015-2-christianshewitt@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240530210714.364118-1-rick.p.edgecombe@intel.com> <20240530210714.364118-9-rick.p.edgecombe@intel.com>
+In-Reply-To: <20240530210714.364118-9-rick.p.edgecombe@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Fri, 7 Jun 2024 10:10:28 +0200
+Message-ID: <CABgObfZr_YNcymua7ejapiL0+M=0CQhroheerj-1_YYxisp=Ug@mail.gmail.com>
+Subject: Re: [PATCH v2 08/15] KVM: x86/tdp_mmu: Introduce KVM MMU root types
+ to specify page table type
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: seanjc@google.com, kvm@vger.kernel.org, kai.huang@intel.com, 
+	dmatlack@google.com, erdemaktas@google.com, isaku.yamahata@gmail.com, 
+	linux-kernel@vger.kernel.org, sagis@google.com, yan.y.zhao@intel.com, 
+	Isaku Yamahata <isaku.yamahata@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/06/2024 11:54, Christian Hewitt wrote:
-> The OSMC Vero 4K device is based on the Amlogic S905X (P212)
-> reference design with the following specifications:
-> 
-> - 2GB DDR4 RAM
-> - 16GB eMMC
-> - HDMI 2.1 video
-> - S/PDIF optical output
-> - AV output
-> - 10/100 Ethernet
-> - AP6255 Wireless (802.11 a/b/g/n/ac, BT 4.2)
-> - 2x USB 2.0 ports (1x OTG)
-> - IR receiver (internal)
-> - IR extender port (external)
-> - 1x micro SD card slot
-> - 1x Power LED (red)
-> - 1x Reset button (in AV jack)
-> 
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->   arch/arm64/boot/dts/amlogic/Makefile          |   7 +
->   .../dts/amlogic/meson-gxl-s905x-vero4k.dts    | 202 ++++++++++++++++++
->   2 files changed, 209 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905x-vero4k.dts
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 4addcae2c54e..78941ddd3136 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -55,6 +55,13 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
->   dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-phicomm-n1.dtb
->   dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-sml5442tw.dtb
->   dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-vero4k-plus.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-hwacom-amazetv.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-khadas-vim.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-libretech-cc.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-libretech-cc-v2.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-vero4k.dtb
->   dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-jethome-jethub-j80.dtb
->   dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
->   dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-tx3-mini.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-vero4k.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-vero4k.dts
-> new file mode 100644
-> index 000000000000..b325cd75a792
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-vero4k.dts
-> @@ -0,0 +1,202 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2024 Christian Hewitt <christianshewitt@gmail.com>
-> + */
+On Thu, May 30, 2024 at 11:07=E2=80=AFPM Rick Edgecombe
+<rick.p.edgecombe@intel.com> wrote:
+> +enum kvm_tdp_mmu_root_types {
+> +       KVM_VALID_ROOTS =3D BIT(0),
 > +
-> +/dts-v1/;
-> +
-> +#include "meson-gxl-s905x-p212.dtsi"
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/leds/common.h>
-> +#include <dt-bindings/sound/meson-aiu.h>
-> +
-> +/ {
-> +	compatible = "osmc,vero4k", "amlogic,s905x", "amlogic,meson-gxl";
-> +	model = "OSMC Vero 4K";
-> +
-> +	reserved-memory {
-> +		/* 32 MiB reserved for ARM Trusted Firmware (BL32) */
-> +		secmon_reserved_bl32: secmon@5300000 {
-> +			reg = <0x0 0x05300000 0x0 0x2000000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	gpio-keys-polled {
-> +		compatible = "gpio-keys-polled";
-> +		poll-interval = <20>;
-> +
-> +		button {
-> +			label = "power";
-> +			linux,code = <KEY_POWER>;
-> +			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		led-standby {
-> +			color = <LED_COLOR_ID_RED>;
-> +			function = LED_FUNCTION_POWER;
-> +			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_LOW>;
-> +			default-state = "off";
-> +			panic-indicator;
-> +		};
-> +	};
-> +
-> +	dio2133: analog-amplifier {
-> +		compatible = "simple-audio-amplifier";
-> +		sound-name-prefix = "AU2";
-> +		VCC-supply = <&hdmi_5v>;
-> +		enable-gpios = <&gpio GPIOH_5 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	spdif_dit: audio-codec-0 {
-> +		#sound-dai-cells = <0>;
-> +		compatible = "linux,spdif-dit";
-> +		sound-name-prefix = "DIT";
-> +	};
-> +
-> +	cvbs-connector {
-> +		compatible = "composite-video-connector";
-> +
-> +		port {
-> +			cvbs_connector_in: endpoint {
-> +				remote-endpoint = <&cvbs_vdac_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	hdmi-connector {
-> +		compatible = "hdmi-connector";
-> +		type = "a";
-> +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&hdmi_tx_tmds_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	sound {
-> +		compatible = "amlogic,gx-sound-card";
-> +		model = "VERO4K";
-> +		audio-aux-devs = <&dio2133>;
-> +		audio-widgets = "Line", "Lineout";
-> +		audio-routing = "AU2 INL", "ACODEC LOLP",
-> +				"AU2 INR", "ACODEC LORP",
-> +				"AU2 INL", "ACODEC LOLN",
-> +				"AU2 INR", "ACODEC LORN",
-> +				"Lineout", "AU2 OUTL",
-> +				"Lineout", "AU2 OUTR";
-> +
-> +		dai-link-0 {
-> +			sound-dai = <&aiu AIU_CPU CPU_I2S_FIFO>;
-> +		};
-> +
-> +		dai-link-1 {
-> +			sound-dai = <&aiu AIU_CPU CPU_SPDIF_FIFO>;
-> +		};
-> +
-> +		dai-link-2 {
-> +			sound-dai = <&aiu AIU_CPU CPU_I2S_ENCODER>;
-> +			dai-format = "i2s";
-> +			mclk-fs = <256>;
-> +
-> +			codec-0 {
-> +				sound-dai = <&aiu AIU_HDMI CTRL_I2S>;
-> +			};
-> +
-> +			codec-1 {
-> +				sound-dai = <&aiu AIU_ACODEC CTRL_I2S>;
-> +			};
-> +		};
-> +
-> +		dai-link-3 {
-> +			sound-dai = <&aiu AIU_CPU CPU_SPDIF_ENCODER>;
-> +
-> +			codec-0 {
-> +				sound-dai = <&spdif_dit>;
-> +			};
-> +		};
-> +
-> +		dai-link-4 {
-> +			sound-dai = <&aiu AIU_HDMI CTRL_OUT>;
-> +
-> +			codec-0 {
-> +				sound-dai = <&hdmi_tx>;
-> +			};
-> +		};
-> +
-> +		dai-link-5 {
-> +			sound-dai = <&aiu AIU_ACODEC CTRL_OUT>;
-> +
-> +			codec-0 {
-> +				sound-dai = <&acodec>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&acodec {
-> +	AVDD-supply = <&vddio_ao18>;
-> +	status = "okay";
-> +};
-> +
-> +&aiu {
-> +	status = "okay";
-> +	pinctrl-0 = <&spdif_out_h_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&cec_AO {
-> +	status = "okay";
-> +	pinctrl-0 = <&ao_cec_pins>;
-> +	pinctrl-names = "default";
-> +	hdmi-phandle = <&hdmi_tx>;
-> +};
-> +
-> +&clkc {
-> +	assigned-clocks = <&clkc CLKID_MPLL0>,
-> +			  <&clkc CLKID_MPLL1>,
-> +			  <&clkc CLKID_MPLL2>;
-> +	assigned-clock-parents = <0>, <0>, <0>;
-> +	assigned-clock-rates = <294912000>,
-> +			       <270950400>,
-> +			       <393216000>;
-> +};
-> +
-> +&cvbs_vdac_port {
-> +	cvbs_vdac_out: endpoint {
-> +		remote-endpoint = <&cvbs_connector_in>;
-> +	};
-> +};
-> +
-> +&ethmac {
-> +	phy-mode = "rmii";
-> +	phy-handle = <&internal_phy>;
-> +};
-> +
-> +&hdmi_tx {
-> +	status = "okay";
-> +	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-> +	pinctrl-names = "default";
-> +	hdmi-supply = <&hdmi_5v>;
-> +};
-> +
-> +&hdmi_tx_tmds_port {
-> +	hdmi_tx_tmds_out: endpoint {
-> +		remote-endpoint = <&hdmi_connector_in>;
-> +	};
-> +};
-> +
-> +&internal_phy {
-> +	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +/* This UART is brought out to the DB9 connector */
-> +&uart_AO {
-> +	status = "okay";
-> +};
+> +       KVM_ANY_ROOTS =3D 0,
+> +       KVM_ANY_VALID_ROOTS =3D KVM_VALID_ROOTS,
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+I would instead define it as
+
+    KVM_INVALID_ROOTS =3D BIT(0),
+    KVM_VALID_ROOTS =3D BIT(1),
+    KVM_ALL_ROOTS =3D KVM_VALID_ROOTS | KVM_INVALID_ROOTS,
+
+and then
+
+  if (root->role.invalid)
+    return types & KVM_INVALID_ROOTS;
+  else
+    return types & KVM_VALID_ROOTS;
+
+Then in the next patch you can do
+
+     KVM_INVALID_ROOTS =3D BIT(0),
+-    KVM_VALID_ROOTS =3D BIT(1),
++   KVM_DIRECT_ROOTS =3D BIT(1),
++   KVM_MIRROR_ROOTS =3D BIT(2),
++   KVM_VALID_ROOTS =3D KVM_DIRECT_ROOTS | KVM_MIRROR_ROOTS,
+     KVM_ALL_ROOTS =3D KVM_VALID_ROOTS | KVM_INVALID_ROOTS,
+
+and likewise
+
+  if (root->role.invalid)
+    return types & KVM_INVALID_ROOTS;
+  else if (likely(!is_mirror_sp(root)))
+    return types & KVM_DIRECT_ROOTS;
+  else
+    return types & KVM_MIRROR_ROOTS;
+
+This removes the need for KVM_ANY_VALID_ROOTS (btw I don't know if
+it's me, but ALL sounds more grammatical than ANY in this context). So
+the resulting code should be a bit clearer.
+
+Apart from this small tweak, the overall idea is really good.
+
+Paolo
+
+> +};
+> +
+>  bool kvm_tdp_mmu_zap_leafs(struct kvm *kvm, gfn_t start, gfn_t end, bool=
+ flush);
+>  bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp);
+>  void kvm_tdp_mmu_zap_all(struct kvm *kvm);
+> --
+> 2.34.1
+>
+
