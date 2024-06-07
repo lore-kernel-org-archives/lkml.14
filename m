@@ -1,37 +1,37 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBFA15AD9D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BD715AD83
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717734453; cv=none; b=G5dyPD1WVcso0CPx2V3ue21XKhZv/5uIqC3SSqpLoGLAKFJ+nRkOiJMxlTcznAJdZI6QjO8NbdEiNVkJF1i2ugb8zvoI5HcPNkj9cFJP9CWqO8ey9WHbcgU8GHihyrEyl+r5jo/O//edVu6kLmqvgE2pq9kp17oAuLm265vHo70=
+	t=1717734453; cv=none; b=lRZ5uw9gmp0jDlhJKpX93d6FkL/qSxIDaQYSJS3c+N885sN5z1SLbe4eALSjMGQrng1mV7IsibkOYTlWPquFXMg2d9Ug2BVx114jGkdAMmThTcL9JCi45QJrWlfxtH58M7S3n/TyKE5LUEos/uUolGYnRfrWxOXe5/fGgq6P/J8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717734453; c=relaxed/simple;
-	bh=JjJcN9iWyNonrHwgWIIfqfaiLq6dkNPRPMNX5nCV5bE=;
+	bh=S2S5g5OZb9+C3rfD4VFpTAAEqY1+QRFmAQ/CCydTFo8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZSU2U4NDoTkTiPK29qwwvIYkALj5QSS5DFeyZdz7fKtXNSHEckwrJA3TJ/dNamTfMBUi6/0QmRP/fIjFufFHkp+XdXSDuMgmUaYKMmenv3SW/Z6xvn85C1ysliobr0uVs/3VH37QoHx1tS+Sv5Nh4S/EJe17PJnrnbutRnqGHTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 MIME-Version:Content-Type; b=loMiVS5PeKNGdYyTRU9Kx32t4DhKF7QvoYVUGqnbnhy8eAUr2T9SleYpYEmToxco9ETE5vMYOZxGLtgTvFVbGp9ORffzGBrFLz3gzIHIaFXN6qu2pj9PimAwcy+LpiHMCewgXDHo6DADAw6lacCbQ90YrzozVUGdlB+dsInm1gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VwSjQ45gTzmYTL;
-	Fri,  7 Jun 2024 12:22:50 +0800 (CST)
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VwSkt5X8hzPpnM;
+	Fri,  7 Jun 2024 12:24:06 +0800 (CST)
 Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6378E180085;
+	by mail.maildlp.com (Postfix) with ESMTPS id 13412180AA6;
 	Fri,  7 Jun 2024 12:27:26 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
  (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 12:27:17 +0800
+ 2024 12:27:13 +0800
 From: Zhihao Cheng <chengzhihao1@huawei.com>
 To: <richard@nod.at>, <david.oberhollenzer@sigma-star.at>,
 	<miquel.raynal@bootlin.com>, <yi.zhang@huawei.com>, <xiangyang3@huawei.com>,
 	<huangxiaojia2@huawei.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH mtd-utils 068/110] fsck.ubifs: rebuild_fs: Check and correct files' information
-Date: Fri, 7 Jun 2024 12:25:33 +0800
-Message-ID: <20240607042615.2069840-69-chengzhihao1@huawei.com>
+Subject: [RFC PATCH mtd-utils 063/110] fsck.ubifs: Add rebuilding filesystem support
+Date: Fri, 7 Jun 2024 12:25:28 +0800
+Message-ID: <20240607042615.2069840-64-chengzhihao1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240607042615.2069840-1-chengzhihao1@huawei.com>
 References: <20240607042615.2069840-1-chengzhihao1@huawei.com>
@@ -46,360 +46,513 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600013.china.huawei.com (7.193.23.68)
 
-This is the 6/12 step of rebuilding. Correct the file information.
-Traverse all files and calculate information (nlink, size, xattr_cnt,
-etc.) for each file just like check_leaf() does, correct inode node
-based on the calculated information.
-Now, all files are consistent, and UBIFS will pass chk_fs after mounting.
+Add rebuilding filesystem support. This is the 1/12 step of rebuilding.
+Collect files, valid inode nodes, deleted inode nodes, valid dentry
+nodes and deleted dentry nodes in kinds of trees by scanning nodes from
+flash. Corrupted nodes(eg. incorrect crc, bad inode size, bad dentry
+name length, etc.) are dropped during scanning. Larger sqnum node is
+picked when more than 1 nodes with same index.
+In this step, trun node and data nodes are put into corresponding file,
+inode/dentry nodes are put into four trees: valid_inos(nlink != 0),
+del_inos(nlink is 0), valid_dents(inum != 0), del_dents(inum is 0).
+Next step will process above four trees to deal deletion situations.
 
 Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- ubifs-utils/fsck.ubifs/extract_files.c | 270 +++++++++++++++++++++++++++++++++
- ubifs-utils/fsck.ubifs/fsck.ubifs.h    |   1 +
- ubifs-utils/fsck.ubifs/rebuild_fs.c    |   6 +
- ubifs-utils/libubifs/debug.c           |   2 +-
- ubifs-utils/libubifs/debug.h           |   1 +
- 5 files changed, 279 insertions(+), 1 deletion(-)
+ ubifs-utils/Makemodule.am           |   3 +-
+ ubifs-utils/fsck.ubifs/fsck.ubifs.c |  12 +-
+ ubifs-utils/fsck.ubifs/fsck.ubifs.h |  15 ++
+ ubifs-utils/fsck.ubifs/rebuild_fs.c | 399 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 426 insertions(+), 3 deletions(-)
+ create mode 100644 ubifs-utils/fsck.ubifs/rebuild_fs.c
 
-diff --git a/ubifs-utils/fsck.ubifs/extract_files.c b/ubifs-utils/fsck.ubifs/extract_files.c
-index dd5cb310..b8777f6c 100644
---- a/ubifs-utils/fsck.ubifs/extract_files.c
-+++ b/ubifs-utils/fsck.ubifs/extract_files.c
-@@ -13,6 +13,7 @@
- #include "linux_err.h"
- #include "bitops.h"
- #include "kmem.h"
-+#include "crc32.h"
- #include "ubifs.h"
- #include "defs.h"
- #include "debug.h"
-@@ -982,3 +983,272 @@ reachable:
- 	dbg_fsck("file %lu is reachable, in %s", file->inum, c->dev_name);
- 	return true;
- }
+diff --git a/ubifs-utils/Makemodule.am b/ubifs-utils/Makemodule.am
+index a0676a70..b7ee3de4 100644
+--- a/ubifs-utils/Makemodule.am
++++ b/ubifs-utils/Makemodule.am
+@@ -82,7 +82,8 @@ fsck_ubifs_SOURCES = \
+ 	ubifs-utils/fsck.ubifs/fsck.ubifs.c \
+ 	ubifs-utils/fsck.ubifs/problem.c \
+ 	ubifs-utils/fsck.ubifs/load_fs.c \
+-	ubifs-utils/fsck.ubifs/extract_files.c
++	ubifs-utils/fsck.ubifs/extract_files.c \
++	ubifs-utils/fsck.ubifs/rebuild_fs.c
+ 
+ fsck_ubifs_LDADD = libmtd.a libubi.a $(ZLIB_LIBS) $(LZO_LIBS) $(ZSTD_LIBS) $(UUID_LIBS) $(LIBSELINUX_LIBS) $(OPENSSL_LIBS) -lm -lpthread
+ fsck_ubifs_CPPFLAGS = $(AM_CPPFLAGS) $(ZLIB_CFLAGS) $(LZO_CFLAGS) $(ZSTD_CFLAGS) $(UUID_CFLAGS) $(LIBSELINUX_CFLAGS) \
+diff --git a/ubifs-utils/fsck.ubifs/fsck.ubifs.c b/ubifs-utils/fsck.ubifs/fsck.ubifs.c
+index 9bc9c259..683d7c27 100644
+--- a/ubifs-utils/fsck.ubifs/fsck.ubifs.c
++++ b/ubifs-utils/fsck.ubifs/fsck.ubifs.c
+@@ -425,12 +425,20 @@ int main(int argc, char *argv[])
+ 
+ 	/* Init: Read superblock */
+ 	err = ubifs_load_filesystem(c);
+-	if (err)
++	if (err) {
++		if (FSCK(c)->try_rebuild)
++			ubifs_rebuild_filesystem(c);
+ 		goto out_close;
++	}
+ 
+ 	err = do_fsck();
++	if (err && FSCK(c)->try_rebuild) {
++		ubifs_destroy_filesystem(c);
++		ubifs_rebuild_filesystem(c);
++	} else {
++		ubifs_destroy_filesystem(c);
++	}
+ 
+-	ubifs_destroy_filesystem(c);
+ out_close:
+ 	ubifs_close_volume(c);
+ out_destroy_fsck:
+diff --git a/ubifs-utils/fsck.ubifs/fsck.ubifs.h b/ubifs-utils/fsck.ubifs/fsck.ubifs.h
+index 80d3af84..c6c21e99 100644
+--- a/ubifs-utils/fsck.ubifs/fsck.ubifs.h
++++ b/ubifs-utils/fsck.ubifs/fsck.ubifs.h
+@@ -175,16 +175,28 @@ struct scanned_file {
+ };
+ 
+ /**
++ * ubifs_rebuild_info - UBIFS rebuilding information.
++ * @scanned_files: tree of all scanned files
++ */
++struct ubifs_rebuild_info {
++	struct rb_root scanned_files;
++};
 +
 +/**
-+ * calculate_file_info - calculate the information of file
-+ * @c: UBIFS file-system description object
-+ * @file: file object
-+ * @file_tree: tree of all scanned files
+  * struct ubifs_fsck_info - UBIFS fsck information.
+  * @mode: working mode
+  * @failure_reason: reasons for failed operations
+  * @lpt_status: the status of lpt, could be: %0(OK), %FR_LPT_CORRUPTED or
+  *		%FR_LPT_INCORRECT
++ * @try_rebuild: %true means that try to rebuild fs when fsck failed
++ * @rebuild: rebuilding-related information
+  */
+ struct ubifs_fsck_info {
+ 	int mode;
+ 	unsigned int failure_reason;
+ 	unsigned int lpt_status;
++	bool try_rebuild;
++	struct ubifs_rebuild_info *rebuild;
+ };
+ 
+ #define FSCK(c) ((struct ubifs_fsck_info*)c->private)
+@@ -252,4 +264,7 @@ int insert_or_update_file(struct ubifs_info *c, struct rb_root *file_tree,
+ void destroy_file_content(struct ubifs_info *c, struct scanned_file *file);
+ void destroy_file_tree(struct ubifs_info *c, struct rb_root *file_tree);
+ 
++/* rebuild_fs.c */
++int ubifs_rebuild_filesystem(struct ubifs_info *c);
++
+ #endif
+diff --git a/ubifs-utils/fsck.ubifs/rebuild_fs.c b/ubifs-utils/fsck.ubifs/rebuild_fs.c
+new file mode 100644
+index 00000000..3ca94869
+--- /dev/null
++++ b/ubifs-utils/fsck.ubifs/rebuild_fs.c
+@@ -0,0 +1,399 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2024, Huawei Technologies Co, Ltd.
 + *
-+ * This function calculates file information according to dentry nodes,
-+ * data nodes and truncation node. The calculated informaion will be used
-+ * to correct inode node.
++ * Authors: Zhihao Cheng <chengzhihao1@huawei.com>
 + */
-+static void calculate_file_info(struct ubifs_info *c, struct scanned_file *file,
-+				struct rb_root *file_tree)
-+{
-+	int nlink = 0;
-+	bool corrupted_truncation = false;
-+	unsigned long long ino_sqnum, trun_size = 0, new_size = 0, trun_sqnum = 0;
-+	struct rb_node *node;
-+	struct scanned_file *parent_file, *xattr_file;
-+	struct scanned_dent_node *dent_node;
-+	struct scanned_data_node *data_node;
-+	LIST_HEAD(drop_list);
 +
-+	for (node = rb_first(&file->xattr_files); node; node = rb_next(node)) {
-+		xattr_file = rb_entry(node, struct scanned_file, rb);
++#include <stdio.h>
++#include <stdlib.h>
++#include <getopt.h>
++#include <sys/stat.h>
 +
-+		ubifs_assert(c, !rb_first(&xattr_file->xattr_files));
-+		calculate_file_info(c, xattr_file, file_tree);
-+	}
-+
-+	if (file->inum == UBIFS_ROOT_INO) {
-+		file->calc_nlink += 2;
-+		file->calc_size += UBIFS_INO_NODE_SZ;
-+		return;
-+	}
-+
-+	if (S_ISDIR(file->ino.mode)) {
-+		file->calc_nlink += 2;
-+		file->calc_size += UBIFS_INO_NODE_SZ;
-+
-+		dent_node = rb_entry(rb_first(&file->dent_nodes),
-+				     struct scanned_dent_node, rb);
-+		parent_file = lookup_file(file_tree, key_inum(c, &dent_node->key));
-+		if (!parent_file) {
-+			ubifs_assert(c, 0);
-+			return;
-+		}
-+		parent_file->calc_nlink += 1;
-+		parent_file->calc_size += CALC_DENT_SIZE(dent_node->nlen);
-+		return;
-+	}
-+
-+	if (file->ino.is_xattr) {
-+		file->calc_nlink = 1;
-+		file->calc_size = file->ino.size;
-+
-+		dent_node = rb_entry(rb_first(&file->dent_nodes),
-+				     struct scanned_dent_node, rb);
-+		parent_file = lookup_file(file_tree, key_inum(c, &dent_node->key));
-+		if (!parent_file) {
-+			ubifs_assert(c, 0);
-+			return;
-+		}
-+		parent_file->calc_xcnt += 1;
-+		parent_file->calc_xsz += CALC_DENT_SIZE(dent_node->nlen);
-+		parent_file->calc_xsz += CALC_XATTR_BYTES(file->ino.size);
-+		parent_file->calc_xnms += dent_node->nlen;
-+		return;
-+	}
-+
-+	for (node = rb_first(&file->dent_nodes); node; node = rb_next(node)) {
-+		nlink++;
-+
-+		dent_node = rb_entry(node, struct scanned_dent_node, rb);
-+
-+		parent_file = lookup_file(file_tree, key_inum(c, &dent_node->key));
-+		if (!parent_file) {
-+			ubifs_assert(c, 0);
-+			return;
-+		}
-+		parent_file->calc_size += CALC_DENT_SIZE(dent_node->nlen);
-+	}
-+	file->calc_nlink = nlink;
-+
-+	if (!S_ISREG(file->ino.mode)) {
-+		/* No need to verify i_size for symlink/sock/block/char/fifo. */
-+		file->calc_size = file->ino.size;
-+		return;
-+	}
-+
-+	/*
-+	 * Process i_size and data content, following situations should
-+	 * be considered:
-+	 * 1. Sequential writing or overwriting, i_size should be
-+	 *    max(i_size, data node size), pick larger sqnum one from
-+	 *    data nodes with same block index.
-+	 * 2. Mixed truncation and writing, i_size depends on the latest
-+	 *    truncation node or inode node or last data node, pick data
-+	 *    nodes which are not truncated.
-+	 * 3. Setting bigger i_size attr, pick inode size or biggest
-+	 *    i_size calculated by data nodes.
-+	 */
-+	if (file->trun.header.exist) {
-+		trun_size = file->trun.new_size;
-+		trun_sqnum = file->trun.header.sqnum;
-+	}
-+	ino_sqnum = file->ino.header.sqnum;
-+	for (node = rb_first(&file->data_nodes); node; node = rb_next(node)) {
-+		unsigned long long d_sz, d_sqnum;
-+		unsigned int block_no;
-+
-+		data_node = rb_entry(node, struct scanned_data_node, rb);
-+
-+		d_sqnum = data_node->header.sqnum;
-+		block_no = key_block(c, &data_node->key);
-+		d_sz = data_node->size + block_no * UBIFS_BLOCK_SIZE;
-+		if ((trun_sqnum > d_sqnum && trun_size < d_sz) ||
-+		    (ino_sqnum > d_sqnum && file->ino.size < d_sz)) {
-+			/*
-+			 * The truncated data nodes are not gced after
-+			 * truncating, just remove them.
-+			 */
-+			list_add(&data_node->list, &drop_list);
-+		} else {
-+			new_size = max_t(unsigned long long, new_size, d_sz);
-+		}
-+	}
-+	/*
-+	 * Truncation node is written successful, but inode node is not. It
-+	 * won't happen because inode node is written before truncation node
-+	 * according to ubifs_jnl_truncate(), unless only inode is corrupted.
-+	 * In this case, data nodes could have been removed in history mounting
-+	 * recovery, so i_size needs to be updated.
-+	 */
-+	if (trun_sqnum > ino_sqnum && trun_size < file->ino.size) {
-+		if (trun_size < new_size) {
-+			corrupted_truncation = true;
-+			/*
-+			 * Appendant writing after truncation and newest inode
-+			 * is not fell on disk.
-+			 */
-+			goto update_isize;
-+		}
-+
-+		/*
-+		 * Overwriting happens after truncation and newest inode is
-+		 * not fell on disk.
-+		 */
-+		file->calc_size = trun_size;
-+		goto drop_data;
-+	}
-+update_isize:
-+	/*
-+	 * The file cannot use 'new_size' directly when the file may have ever
-+	 * been set i_size. For example:
-+	 *  1. echo 123 > file		# i_size = 4
-+	 *  2. truncate -s 100 file	# i_size = 100
-+	 * After scanning, new_size is 4. Apperantly the size of 'file' should
-+	 * be 100. So, the calculated new_size according to data nodes should
-+	 * only be used for extending i_size, like ubifs_recover_size() does.
-+	 */
-+	if (new_size > file->ino.size || corrupted_truncation)
-+		file->calc_size = new_size;
-+	else
-+		file->calc_size = file->ino.size;
-+
-+drop_data:
-+	while (!list_empty(&drop_list)) {
-+		data_node = list_entry(drop_list.next, struct scanned_data_node,
-+				       list);
-+
-+		list_del(&data_node->list);
-+		rb_erase(&data_node->rb, &file->data_nodes);
-+		kfree(data_node);
-+	}
-+}
++#include "linux_err.h"
++#include "bitops.h"
++#include "kmem.h"
++#include "ubifs.h"
++#include "defs.h"
++#include "debug.h"
++#include "key.h"
++#include "misc.h"
++#include "fsck.ubifs.h"
 +
 +/**
-+ * correct_file_info - correct the information of file
-+ * @c: UBIFS file-system description object
-+ * @file: file object
-+ *
-+ * This function corrects file information according to calculated fields,
-+ * eg. 'calc_nlink', 'calc_xcnt', 'calc_xsz', 'calc_xnms' and 'calc_size'.
-+ * Corrected inode node will be re-written.
++ * scanned_info - nodes and files information from scanning.
++ * @valid_inos: the tree of scanned inode nodes with 'nlink > 0'
++ * @del_inos: the tree of scanned inode nodes with 'nlink = 0'
++ * @valid_dents: the tree of scanned dentry nodes with 'inum > 0'
++ * @del_dents: the tree of scanned dentry nodes with 'inum = 0'
 + */
-+static int correct_file_info(struct ubifs_info *c, struct scanned_file *file)
-+{
-+	uint32_t crc;
-+	int err, lnum, len;
-+	struct rb_node *node;
-+	struct ubifs_ino_node *ino;
-+	struct scanned_file *xattr_file;
++struct scanned_info {
++	struct rb_root valid_inos;
++	struct rb_root del_inos;
++	struct rb_root valid_dents;
++	struct rb_root del_dents;
++};
 +
-+	for (node = rb_first(&file->xattr_files); node; node = rb_next(node)) {
-+		xattr_file = rb_entry(node, struct scanned_file, rb);
-+
-+		err = correct_file_info(c, xattr_file);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (file->calc_nlink == file->ino.nlink &&
-+	    file->calc_xcnt == file->ino.xcnt &&
-+	    file->calc_xsz == file->ino.xsz &&
-+	    file->calc_xnms == file->ino.xnms &&
-+	    file->calc_size == file->ino.size)
-+		return 0;
-+
-+	lnum = file->ino.header.lnum;
-+	dbg_fsck("correct file(inum:%lu type:%s), nlink %u->%u, xattr cnt %u->%u, xattr size %u->%u, xattr names %u->%u, size %llu->%llu, at %d:%d, in %s",
-+		 file->inum, file->ino.is_xattr ? "xattr" :
-+		 ubifs_get_type_name(ubifs_get_dent_type(file->ino.mode)),
-+		 file->ino.nlink, file->calc_nlink,
-+		 file->ino.xcnt, file->calc_xcnt,
-+		 file->ino.xsz, file->calc_xsz,
-+		 file->ino.xnms, file->calc_xnms,
-+		 file->ino.size, file->calc_size,
-+		 lnum, file->ino.header.offs, c->dev_name);
-+
-+	err = ubifs_leb_read(c, lnum, c->sbuf, 0, c->leb_size, 0);
-+	if (err && err != -EBADMSG)
-+		return err;
-+
-+	ino = c->sbuf + file->ino.header.offs;
-+	ino->nlink = cpu_to_le32(file->calc_nlink);
-+	ino->xattr_cnt = cpu_to_le32(file->calc_xcnt);
-+	ino->xattr_size = cpu_to_le32(file->calc_xsz);
-+	ino->xattr_names = cpu_to_le32(file->calc_xnms);
-+	ino->size = cpu_to_le64(file->calc_size);
-+	len = le32_to_cpu(ino->ch.len);
-+	crc = crc32(UBIFS_CRC32_INIT, (void *)ino + 8, len - 8);
-+	ino->ch.crc = cpu_to_le32(crc);
-+
-+	/* Atomically write the fixed LEB back again */
-+	return ubifs_leb_change(c, lnum, c->sbuf, c->leb_size);
-+}
-+
-+/**
-+ * check_and_correct_files - check and correct information of files.
-+ * @c: UBIFS file-system description object
-+ *
-+ * This function does similar things with dbg_check_filesystem(), besides,
-+ * it also corrects file information if the calculated information is not
-+ * consistent with information from flash.
-+ */
-+int check_and_correct_files(struct ubifs_info *c)
++static int init_rebuild_info(struct ubifs_info *c)
 +{
 +	int err;
-+	struct rb_node *node;
-+	struct scanned_file *file;
-+	struct rb_root *tree = &FSCK(c)->rebuild->scanned_files;
 +
-+	for (node = rb_first(tree); node; node = rb_next(node)) {
-+		file = rb_entry(node, struct scanned_file, rb);
++	c->sbuf = vmalloc(c->leb_size);
++	if (!c->sbuf) {
++		log_err(c, errno, "can not allocate sbuf");
++		return -ENOMEM;
++	}
++	FSCK(c)->rebuild = kzalloc(sizeof(struct ubifs_rebuild_info),
++				   GFP_KERNEL);
++	if (!FSCK(c)->rebuild) {
++		err = -ENOMEM;
++		log_err(c, errno, "can not allocate rebuild info");
++		goto out;
++	}
++	FSCK(c)->rebuild->scanned_files = RB_ROOT;
 +
-+		calculate_file_info(c, file, tree);
++	return 0;
++
++out:
++	vfree(c->sbuf);
++	return err;
++}
++
++static void destroy_rebuild_info(struct ubifs_info *c)
++{
++	kfree(FSCK(c)->rebuild);
++	vfree(c->sbuf);
++}
++
++/**
++ * insert_or_update_ino_node - insert or update inode node.
++ * @c: UBIFS file-system description object
++ * @new_ino: new inode node
++ * @tree: a tree to record valid/deleted inode node info
++ *
++ * This function inserts @new_ino into the @tree, or updates inode node
++ * if it already exists in the tree. Returns zero in case of success, a
++ * negative error code in case of failure.
++ */
++static int insert_or_update_ino_node(struct ubifs_info *c,
++				     struct scanned_ino_node *new_ino,
++				     struct rb_root *tree)
++{
++	int cmp;
++	struct scanned_ino_node *ino_node, *old_ino_node = NULL;
++	struct rb_node **p, *parent = NULL;
++
++	p = &tree->rb_node;
++	while (*p) {
++		parent = *p;
++		ino_node = rb_entry(parent, struct scanned_ino_node, rb);
++		cmp = keys_cmp(c, &new_ino->key, &ino_node->key);
++		if (cmp < 0) {
++			p = &(*p)->rb_left;
++		} else if (cmp > 0) {
++			p = &(*p)->rb_right;
++		} else {
++			old_ino_node = ino_node;
++			break;
++		}
++	}
++	if (old_ino_node) {
++		if (old_ino_node->header.sqnum < new_ino->header.sqnum) {
++			size_t len = offsetof(struct scanned_ino_node, rb);
++
++			memcpy(old_ino_node, new_ino, len);
++		}
++		return 0;
 +	}
 +
-+	for (node = rb_first(tree); node; node = rb_next(node)) {
-+		file = rb_entry(node, struct scanned_file, rb);
++	ino_node = kmalloc(sizeof(struct scanned_ino_node), GFP_KERNEL);
++	if (!ino_node)
++		return -ENOMEM;
 +
-+		err = correct_file_info(c, file);
-+		if (err)
-+			return err;
-+	}
++	*ino_node = *new_ino;
++	rb_link_node(&ino_node->rb, parent, p);
++	rb_insert_color(&ino_node->rb, tree);
 +
 +	return 0;
 +}
-diff --git a/ubifs-utils/fsck.ubifs/fsck.ubifs.h b/ubifs-utils/fsck.ubifs/fsck.ubifs.h
-index d378a06c..124c8f12 100644
---- a/ubifs-utils/fsck.ubifs/fsck.ubifs.h
-+++ b/ubifs-utils/fsck.ubifs/fsck.ubifs.h
-@@ -272,6 +272,7 @@ bool file_is_valid(struct ubifs_info *c, struct scanned_file *file,
- 		   struct rb_root *file_tree);
- bool file_is_reachable(struct ubifs_info *c, struct scanned_file *file,
- 		       struct rb_root *file_tree);
-+int check_and_correct_files(struct ubifs_info *c);
- 
- /* rebuild_fs.c */
- int ubifs_rebuild_filesystem(struct ubifs_info *c);
-diff --git a/ubifs-utils/fsck.ubifs/rebuild_fs.c b/ubifs-utils/fsck.ubifs/rebuild_fs.c
-index 669b61d1..ecf6b0c6 100644
---- a/ubifs-utils/fsck.ubifs/rebuild_fs.c
-+++ b/ubifs-utils/fsck.ubifs/rebuild_fs.c
-@@ -677,6 +677,12 @@ int ubifs_rebuild_filesystem(struct ubifs_info *c)
- 	log_out(c, "Extract reachable files");
- 	extract_dentry_tree(c);
- 
-+	/* Step 6: Check & correct files' information. */
-+	log_out(c, "Check & correct file information");
-+	err = check_and_correct_files(c);
++
++/**
++ * insert_or_update_dent_node - insert or update dentry node.
++ * @c: UBIFS file-system description object
++ * @new_dent: new dentry node
++ * @tree: a tree to record valid/deleted dentry node info
++ *
++ * This function inserts @new_dent into the @tree, or updates dent node
++ * if it already exists in the tree. Returns zero in case of success, a
++ * negative error code in case of failure.
++ */
++static int insert_or_update_dent_node(struct ubifs_info *c,
++				      struct scanned_dent_node *new_dent,
++				      struct rb_root *tree)
++{
++	int cmp, nlen;
++	struct scanned_dent_node *dent_node, *old_dent_node = NULL;
++	struct rb_node **p, *parent = NULL;
++
++	p = &tree->rb_node;
++	while (*p) {
++		parent = *p;
++		dent_node = rb_entry(parent, struct scanned_dent_node, rb);
++		cmp = keys_cmp(c, &new_dent->key, &dent_node->key);
++		if (cmp < 0) {
++			p = &(*p)->rb_left;
++		} else if (cmp > 0) {
++			p = &(*p)->rb_right;
++		} else {
++			nlen = min(new_dent->nlen, dent_node->nlen);
++			cmp = strncmp(new_dent->name, dent_node->name, nlen) ? :
++				      new_dent->nlen - dent_node->nlen;
++			if (cmp < 0) {
++				p = &(*p)->rb_left;
++			} else if (cmp > 0) {
++				p = &(*p)->rb_right;
++			} else {
++				old_dent_node = dent_node;
++				break;
++			}
++		}
++	}
++	if (old_dent_node) {
++		if (old_dent_node->header.sqnum < new_dent->header.sqnum) {
++			size_t len = offsetof(struct scanned_dent_node, rb);
++
++			memcpy(old_dent_node, new_dent, len);
++		}
++		return 0;
++	}
++
++	dent_node = kmalloc(sizeof(struct scanned_dent_node), GFP_KERNEL);
++	if (!dent_node)
++		return -ENOMEM;
++
++	*dent_node = *new_dent;
++	rb_link_node(&dent_node->rb, parent, p);
++	rb_insert_color(&dent_node->rb, tree);
++
++	return 0;
++}
++
++/**
++ * process_scanned_node - process scanned node.
++ * @c: UBIFS file-system description object
++ * @lnum: logical eraseblock number
++ * @snod: scanned node
++ * @si: records nodes and files information during scanning
++ *
++ * This function parses, checks and records scanned node information.
++ * Returns zero in case of success, 1% if the scanned LEB doesn't hold file
++ * data and should be ignored(eg. index LEB), a negative error code in case
++ * of failure.
++ */
++static int process_scanned_node(struct ubifs_info *c, int lnum,
++				struct ubifs_scan_node *snod,
++				struct scanned_info *si)
++{
++	ino_t inum;
++	int offs = snod->offs;
++	void *node = snod->node;
++	union ubifs_key *key = &snod->key;
++	struct rb_root *tree;
++	struct scanned_node *sn;
++	struct scanned_ino_node ino_node;
++	struct scanned_dent_node dent_node;
++	struct scanned_data_node data_node;
++	struct scanned_trun_node trun_node;
++
++	switch (snod->type) {
++	case UBIFS_INO_NODE:
++	{
++		if (!parse_ino_node(c, lnum, offs, node, key, &ino_node))
++			return 0;
++
++		tree = &si->del_inos;
++		if (ino_node.nlink)
++			tree = &si->valid_inos;
++		return insert_or_update_ino_node(c, &ino_node, tree);
++	}
++	case UBIFS_DENT_NODE:
++	case UBIFS_XENT_NODE:
++	{
++		if (!parse_dent_node(c, lnum, offs, node, key, &dent_node))
++			return 0;
++
++		tree = &si->del_dents;
++		if (dent_node.inum)
++			tree = &si->valid_dents;
++		return insert_or_update_dent_node(c, &dent_node, tree);
++	}
++	case UBIFS_DATA_NODE:
++	{
++		if (!parse_data_node(c, lnum, offs, node, key, &data_node))
++			return 0;
++
++		inum = key_inum(c, key);
++		sn = (struct scanned_node *)&data_node;
++		break;
++	}
++	case UBIFS_TRUN_NODE:
++	{
++		if (!parse_trun_node(c, lnum, offs, node, key, &trun_node))
++			return 0;
++
++		inum = le32_to_cpu(((struct ubifs_trun_node *)node)->inum);
++		sn = (struct scanned_node *)&trun_node;
++		break;
++	}
++	default:
++		dbg_fsck("skip node type %d, at %d:%d, in %s",
++			 snod->type, lnum, offs, c->dev_name);
++		return 1;
++	}
++
++	tree = &FSCK(c)->rebuild->scanned_files;
++	return insert_or_update_file(c, tree, sn, key_type(c, key), inum);
++}
++
++/**
++ * destroy_scanned_info - destroy scanned nodes.
++ * @c: UBIFS file-system description object
++ * @si: records nodes and files information during scanning
++ *
++ * Destroy scanned files and all data/dentry nodes attached to file, destroy
++ * valid/deleted inode/dentry info.
++ */
++static void destroy_scanned_info(struct ubifs_info *c, struct scanned_info *si)
++{
++	struct scanned_ino_node *ino_node;
++	struct scanned_dent_node *dent_node;
++	struct rb_node *this;
++
++	destroy_file_tree(c, &FSCK(c)->rebuild->scanned_files);
++
++	this = rb_first(&si->valid_inos);
++	while (this) {
++		ino_node = rb_entry(this, struct scanned_ino_node, rb);
++		this = rb_next(this);
++
++		rb_erase(&ino_node->rb, &si->valid_inos);
++		kfree(ino_node);
++	}
++
++	this = rb_first(&si->del_inos);
++	while (this) {
++		ino_node = rb_entry(this, struct scanned_ino_node, rb);
++		this = rb_next(this);
++
++		rb_erase(&ino_node->rb, &si->del_inos);
++		kfree(ino_node);
++	}
++
++	this = rb_first(&si->valid_dents);
++	while (this) {
++		dent_node = rb_entry(this, struct scanned_dent_node, rb);
++		this = rb_next(this);
++
++		rb_erase(&dent_node->rb, &si->valid_dents);
++		kfree(dent_node);
++	}
++
++	this = rb_first(&si->del_dents);
++	while (this) {
++		dent_node = rb_entry(this, struct scanned_dent_node, rb);
++		this = rb_next(this);
++
++		rb_erase(&dent_node->rb, &si->del_dents);
++		kfree(dent_node);
++	}
++}
++
++/**
++ * scan_nodes - scan node information from flash.
++ * @c: UBIFS file-system description object
++ * @si: records nodes and files information during scanning
++ *
++ * This function scans nodes from flash, all ino/dent nodes are split
++ * into valid tree and deleted tree, all trun/data nodes are collected
++ * into file, the file is inserted into @FSCK(c)->rebuild->scanned_files.
++ */
++static int scan_nodes(struct ubifs_info *c, struct scanned_info *si)
++{
++	int lnum, err = 0;
++	struct ubifs_scan_leb *sleb;
++	struct ubifs_scan_node *snod;
++
++	for (lnum = c->main_first; lnum < c->leb_cnt; ++lnum) {
++		dbg_fsck("scan nodes at LEB %d, in %s", lnum, c->dev_name);
++
++		sleb = ubifs_scan(c, lnum, 0, c->sbuf, 1);
++		if (IS_ERR(sleb)) {
++			if (PTR_ERR(sleb) != -EUCLEAN)
++				return PTR_ERR(sleb);
++
++			sleb = ubifs_recover_leb(c, lnum, 0, c->sbuf, -1);
++			if (IS_ERR(sleb)) {
++				if (PTR_ERR(sleb) != -EUCLEAN)
++					return PTR_ERR(sleb);
++
++				/* This LEB holds corrupted data, abandon it. */
++				continue;
++			}
++		}
++
++		list_for_each_entry(snod, &sleb->nodes, list) {
++			if (snod->sqnum > c->max_sqnum)
++				c->max_sqnum = snod->sqnum;
++
++			err = process_scanned_node(c, lnum, snod, si);
++			if (err < 0) {
++				log_err(c, 0, "process node failed at LEB %d, err %d",
++					lnum, err);
++				ubifs_scan_destroy(sleb);
++				goto out;
++			} else if (err == 1) {
++				err = 0;
++				break;
++			}
++		}
++
++		ubifs_scan_destroy(sleb);
++	}
++
++out:
++	return err;
++}
++
++/**
++ * ubifs_rebuild_filesystem - Rebuild filesystem.
++ * @c: UBIFS file-system description object
++ *
++ * Scanning nodes from UBI volume and rebuild filesystem. Any inconsistent
++ * problems or corrupted data will be fixed.
++ */
++int ubifs_rebuild_filesystem(struct ubifs_info *c)
++{
++	int err = 0;
++	struct scanned_info si;
++
++	si.valid_inos = si.del_inos = si.valid_dents = si.del_dents = RB_ROOT;
++	log_out(c, "Start rebuilding filesystem (Notice: dropping data/recovering deleted data can't be awared)");
++	FSCK(c)->mode = REBUILD_MODE;
++
++	err = init_rebuild_info(c);
++	if (err) {
++		exit_code |= FSCK_ERROR;
++		return err;
++	}
++
++	/* Step 1: Scan valid/deleted nodes from volume. */
++	log_out(c, "Scan nodes");
++	err = scan_nodes(c, &si);
 +	if (err)
 +		exit_code |= FSCK_ERROR;
 +
- out:
- 	destroy_scanned_info(c, &si);
- 	destroy_rebuild_info(c);
-diff --git a/ubifs-utils/libubifs/debug.c b/ubifs-utils/libubifs/debug.c
-index 94928da3..eaf403f9 100644
---- a/ubifs-utils/libubifs/debug.c
-+++ b/ubifs-utils/libubifs/debug.c
-@@ -69,7 +69,7 @@ static const char *get_key_type(int type)
- 	}
- }
- 
--static const char *get_dent_type(int type)
-+const char *ubifs_get_type_name(int type)
- {
- 	switch (type) {
- 	case UBIFS_ITYPE_REG:
-diff --git a/ubifs-utils/libubifs/debug.h b/ubifs-utils/libubifs/debug.h
-index 8da79f80..400b4759 100644
---- a/ubifs-utils/libubifs/debug.h
-+++ b/ubifs-utils/libubifs/debug.h
-@@ -85,6 +85,7 @@ static inline int dbg_is_chk_index(__unused const struct ubifs_info *c)
- { return 0; }
- 
- /* Dump functions */
-+const char *ubifs_get_type_name(int type);
- const char *dbg_ntype(int type);
- const char *dbg_cstate(int cmt_state);
- const char *dbg_jhead(int jhead);
++	destroy_scanned_info(c, &si);
++	destroy_rebuild_info(c);
++
++	return err;
++}
 -- 
 2.13.6
 
