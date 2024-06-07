@@ -1,131 +1,414 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C031198E86;
-	Fri,  7 Jun 2024 15:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 205E419414D;
+	Fri,  7 Jun 2024 15:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717775848; cv=none; b=oWsOMCfGJ1a7Imx9kXMpaPHy8BmWWABG1VqB7Yp9NFnqxfvumRlWus5/GdRYA4BgZoVduqABGC7TCWb+LEAl4mrBm2xRpo4RUOeFmct/GxLj9eVJvmadk23NvVgA9tVk7JPrSTgP7tsDfVW3M8lCsOQEHRRKwCnze9fl6BQuKSM=
+	t=1717775897; cv=none; b=DVQRBI9jc9ZTl3gziuTzhVdgMTfgMb1lyETUvYPs6L5yPfsJ0e9dySDt0f95uu6P/Dcr2a/e31QOqXkpRn2A4t/FOnr5zMf4WwUjf/aO6FYsN9KDVGtuozhrwW8S5YT0A1on6aUjnlfmXEHXEcQgZBue/lVcEyG3Jfhls9ehLxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717775848; c=relaxed/simple;
-	bh=XB/qC7jM5fZOLA6Lr3Z/5B9poMffcOVNytBHe974sqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UmOqDV5P0FLJXs8wXim5OMKYIRhrgocVpPAUnu03aNEKDj56uUsfytfaPgx8TDHDfNjKx6y0n+fqbfu/p3yimX8tynYW3PvWT6Mt4c2JkURP0gjAbax8p68dO3zIDsoOP8sCsSbTQ1FCs4BVM313dh83+rxFuYzuRstlQetdNfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=DkptC5or; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DkptC5or"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 12D56BD1;
-	Fri,  7 Jun 2024 17:57:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1717775834;
-	bh=XB/qC7jM5fZOLA6Lr3Z/5B9poMffcOVNytBHe974sqc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DkptC5orh+htsaE+i5VvzbUkQR3RobnM/ZqqstB90vwAwJchFFUtAaeI27Zq0F+/1
-	 9TDn52yumhZl0GJcSzegtL0kYsD/wOFpOClj+Nyhw/r+5a046RVf/JmYC07AsI39AQ
-	 tq+++MqY6vh6Oe7seifFsiC6JxL7ylXrXYxVeBis=
-Date: Fri, 7 Jun 2024 18:57:04 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-media@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Adam Ford <aford173@gmail.com>,
-	Andrey Konovalov <andrey.konovalov@linaro.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] media: i2c: imx219: fix msr access command sequence
-Message-ID: <20240607155704.GB1242@pendragon.ideasonboard.com>
-References: <20240607-trimmer-pummel-b452ed15e103@spud>
+	s=arc-20240116; t=1717775897; c=relaxed/simple;
+	bh=wLmEPnGiH2sWjtpPH5jP3Z6lrRzcGqIBWkF60wZBWhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fy5V0rnDwxqhtKTT+zxLCJVkVtvjTvIAkdq0Gk3CE7wxwJXaZxuazDBZi3wg5vs/kfCroPQll6Vz3hUshUBq+gUPTmNrLf4kSZAJx6JgdR1bz67VZ/7gcLsNX/OiDFdMVFVxSo8qXuUW+SbWzuzOrfgvdD5k4EpiaMz6ZQdWfRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01F4315A1;
+	Fri,  7 Jun 2024 08:58:39 -0700 (PDT)
+Received: from [10.57.70.171] (unknown [10.57.70.171])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB6B43F64C;
+	Fri,  7 Jun 2024 08:58:12 -0700 (PDT)
+Message-ID: <c803199b-7e0a-4086-96de-00cf95bae2fd@arm.com>
+Date: Fri, 7 Jun 2024 16:58:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240607-trimmer-pummel-b452ed15e103@spud>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 2/7] coresight: tmc-etr: Add support to use reserved
+ trace memory
+Content-Language: en-GB
+To: Linu Cherian <lcherian@marvell.com>, mike.leach@linaro.org,
+ james.clark@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+ linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, sgoutham@marvell.com, gcherian@marvell.com,
+ Anil Kumar Reddy <areddy3@marvell.com>
+References: <20240605081725.622953-1-lcherian@marvell.com>
+ <20240605081725.622953-3-lcherian@marvell.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20240605081725.622953-3-lcherian@marvell.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Conor,
+Hi Linu
 
-Thank you for the patch.
-
-On Fri, Jun 07, 2024 at 04:50:23PM +0100, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+On 05/06/2024 09:17, Linu Cherian wrote:
+> Add support to use reserved memory for coresight ETR trace buffer.
 > 
-> It was reported to me that the imx219 didn't work on one of our
-> development kits partly because the access sequence is incorrect.
-> The datasheet I could find [1] for this camera has the access sequence:
-> Seq. No. Address (Hex) data
-> 1        30EB          05
-> 2        30EB          0C
-> 3        300A          FF
-> 4        300B          FF
-> 5        30EB          05
-> 6        30EB          09
+> Introduce a new ETR buffer mode called ETR_MODE_RESRV, which
+> becomes available when ETR device tree node is supplied with a valid
+> reserved memory region.
 > 
-> but the driver swaps the first two elements. Laurent pointed out on IRC
-> that the original code used the correct sequence for 1920x1080 but the
-> current sequence for 3280x2464 and 1640x1232. During refactoring of the
-> init sequence the current order was used for all formats.
+> ETR_MODE_RESRV can be selected only by explicit user request.
 > 
-> Switch to using the documented sequence.
+> $ echo resrv >/sys/bus/coresight/devices/tmc_etr<N>/buf_mode_preferred
 > 
-> Link: https://www.opensourceinstruments.com/Electronics/Data/IMX219PQ.pdf [1]
-> Fixes: 8508455961d5 ("media: i2c: imx219: Split common registers from mode tables")
-> Fixes: 1283b3b8f82b ("media: i2c: Add driver for Sony IMX219 sensor")
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Anil Kumar Reddy <areddy3@marvell.com>
+> Signed-off-by: Linu Cherian <lcherian@marvell.com>
+> Reviewed-by: James Clark <james.clark@arm.com>
 
-This looks reasonable, based on the above link.
+Some minor comments below.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-Dave, could you check the impact on the Raspberry Pi kernel ? It seems
-to be shipping the incorrect sequence unconditionally.
-
-Any information about what the 12 undocumented MSRs that are programmed
-by the driver do would be appreciated too ;-)
 
 > ---
-> I got the report of this third hand, I don't have a device and can't
-> test this. I do wonder why the RPis get away with the sequence that
-> seemingly doesn't work for the guy that reported this to me. My theory
-> is either that they noticed the sequence was wrong while adding some
-> other MSR access that is needed on this board while either cross
-> checking the values written or because the other MSR accesses didn't
-> take effect.
+> Changelog from v8:
+> Added Reviewed-by tag.
 > 
-> CC: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> CC: Sakari Ailus <sakari.ailus@linux.intel.com>
-> CC: Mauro Carvalho Chehab <mchehab@kernel.org>
-> CC: Adam Ford <aford173@gmail.com>
-> CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> CC: Andrey Konovalov <andrey.konovalov@linaro.org>
-> CC: linux-media@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> ---
->  drivers/media/i2c/imx219.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   .../hwtracing/coresight/coresight-tmc-core.c  | 47 +++++++++++
+>   .../hwtracing/coresight/coresight-tmc-etr.c   | 79 +++++++++++++++++++
+>   drivers/hwtracing/coresight/coresight-tmc.h   | 27 +++++++
+>   3 files changed, 153 insertions(+)
 > 
-> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> index 51ebf5453fce..e78a80b2bb2e 100644
-> --- a/drivers/media/i2c/imx219.c
-> +++ b/drivers/media/i2c/imx219.c
-> @@ -162,8 +162,8 @@ static const struct cci_reg_sequence imx219_common_regs[] = {
->  	{ IMX219_REG_MODE_SELECT, 0x00 },	/* Mode Select */
->  
->  	/* To Access Addresses 3000-5fff, send the following commands */
-> -	{ CCI_REG8(0x30eb), 0x0c },
->  	{ CCI_REG8(0x30eb), 0x05 },
-> +	{ CCI_REG8(0x30eb), 0x0c },
->  	{ CCI_REG8(0x300a), 0xff },
->  	{ CCI_REG8(0x300b), 0xff },
->  	{ CCI_REG8(0x30eb), 0x05 },
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> index 741ce1748e75..6beb69d74d0a 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+> @@ -23,6 +23,7 @@
+>   #include <linux/spinlock.h>
+>   #include <linux/pm_runtime.h>
+>   #include <linux/of.h>
+> +#include <linux/of_address.h>
+>   #include <linux/coresight.h>
+>   #include <linux/amba/bus.h>
+>   #include <linux/platform_device.h>
+> @@ -400,6 +401,50 @@ static inline bool tmc_etr_has_non_secure_access(struct tmc_drvdata *drvdata)
+>   
+>   static const struct amba_id tmc_ids[];
+>   
+> +static struct device_node *tmc_get_region_byname(struct device_node *node,
+> +						 char *name)
+> +{
+> +	int index;
+> +
+> +	index = of_property_match_string(node, "memory-region-names", name);
+> +	if (index < 0)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return of_parse_phandle(node, "memory-region", index);
+> +}
+> +
+> +static void tmc_get_reserved_region(struct device *parent)
+> +{
+> +	struct tmc_drvdata *drvdata = dev_get_drvdata(parent);
+> +	struct device_node *node;
+> +	struct resource res;
+> +	int rc;
+> +
+> +	node = tmc_get_region_byname(parent->of_node, "tracedata");
+> +	if (IS_ERR_OR_NULL(node)) {
+> +		dev_dbg(parent, "No reserved trace buffer specified\n");
+> +		return;
+> +	}
+> +
+> +	rc = of_address_to_resource(node, 0, &res);
 
--- 
-Regards,
+This sequence is repeated again in the metadat area, where :
 
-Laurent Pinchart
+1. We get region by name.
+2. Read the resource details.
+
+Could we not make "the helper" do both and move the "of_node_put()" 
+inside the helper ?
+
+static int of_tmc_get_reserved_resource_by_name(struct device *dev,
+					        const char *name,
+					        struct resource *res)
+{
+
+ > +	int index, rc = -ENODEV;
+ > +	struct device_node *node;
+
+	if (!is_of_node(dev_fwnode(dev->fwnode)))
+		return -ENODEV;
+ > +
+ > +	index = of_property_match_string(dev->of_node, 
+"memory-region-names", name);
+ > +	if (index < 0)
+ > +		return rc;
+ > +
+ > +	node = of_parse_phandle(node, "memory-region", index);
+	if (!node)
+		return rc;
+
+	if (!of_address_to_resource(node, 0, res) &&
+	    res->start != 0 && resource_size(res) != 0)
+		rc = 0;
+	of_node_put(node);
+	
+	return rc;
+}
+
+
+> +	of_node_put(node);
+> +	if (rc || res.start == 0 || resource_size(&res) == 0) {
+> +		dev_err(parent, "Reserved trace buffer memory is invalid\n");
+> +		return;
+> +	}
+
+and the caller does :
+
+	if (of_tmc_get_reserved_area_by_name(parent, "tracedata", &res))
+		return;
+
+> +
+> +	drvdata->crash_tbuf.vaddr = memremap(res.start,
+> +						resource_size(&res),
+> +						MEMREMAP_WC);
+> +	if (IS_ERR_OR_NULL(drvdata->crash_tbuf.vaddr)) {
+> +		dev_err(parent, "Reserved trace buffer mapping failed\n");
+> +		return;
+> +	}
+> +
+> +	drvdata->crash_tbuf.paddr = res.start;
+> +	drvdata->crash_tbuf.size  = resource_size(&res);
+> +}
+> +
+>   /* Detect and initialise the capabilities of a TMC ETR */
+>   static int tmc_etr_setup_caps(struct device *parent, u32 devid,
+>   			      struct csdev_access *access)
+> @@ -510,6 +555,8 @@ static int __tmc_probe(struct device *dev, struct resource *res)
+>   		drvdata->size = readl_relaxed(drvdata->base + TMC_RSZ) * 4;
+>   	}
+>   
+> +	tmc_get_reserved_region(dev);
+> +
+>   	desc.dev = dev;
+>   
+>   	switch (drvdata->config_type) {
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index e75428fa1592..041c428dd7cd 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -30,6 +30,7 @@ struct etr_buf_hw {
+>   	bool	has_iommu;
+>   	bool	has_etr_sg;
+>   	bool	has_catu;
+> +	bool	has_resrv;
+>   };
+>   
+>   /*
+> @@ -694,6 +695,75 @@ static const struct etr_buf_operations etr_flat_buf_ops = {
+>   	.get_data = tmc_etr_get_data_flat_buf,
+>   };
+>   
+> +/*
+> + * tmc_etr_alloc_resrv_buf: Allocate a contiguous DMA buffer from reserved region.
+> + */
+> +static int tmc_etr_alloc_resrv_buf(struct tmc_drvdata *drvdata,
+> +				  struct etr_buf *etr_buf, int node,
+> +				  void **pages)
+> +{
+> +	struct etr_flat_buf *resrv_buf;
+> +	struct device *real_dev = drvdata->csdev->dev.parent;
+> +
+> +	/* We cannot reuse existing pages for resrv buf */
+> +	if (pages)
+> +		return -EINVAL;
+> +
+> +	resrv_buf = kzalloc(sizeof(*resrv_buf), GFP_KERNEL);
+> +	if (!resrv_buf)
+> +		return -ENOMEM;
+> +
+> +	resrv_buf->daddr = dma_map_resource(real_dev, drvdata->crash_tbuf.paddr,
+> +					   drvdata->crash_tbuf.size,
+> +					   DMA_FROM_DEVICE, 0);
+> +	if (dma_mapping_error(real_dev, resrv_buf->daddr)) {
+> +		dev_err(real_dev, "failed to map source buffer address\n");
+> +		kfree(resrv_buf);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	resrv_buf->vaddr = drvdata->crash_tbuf.vaddr;
+> +	resrv_buf->size = etr_buf->size = drvdata->crash_tbuf.size;
+> +	resrv_buf->dev = &drvdata->csdev->dev;
+> +	etr_buf->hwaddr = resrv_buf->daddr;
+> +	etr_buf->mode = ETR_MODE_RESRV;
+> +	etr_buf->private = resrv_buf;
+> +	return 0;
+> +}
+> +
+> +static void tmc_etr_free_resrv_buf(struct etr_buf *etr_buf)
+> +{
+> +	struct etr_flat_buf *resrv_buf = etr_buf->private;
+> +
+> +	if (resrv_buf && resrv_buf->daddr) {
+
+
+> +		struct device *real_dev = resrv_buf->dev->parent;
+> +
+> +		dma_unmap_resource(real_dev, resrv_buf->daddr,
+> +				resrv_buf->size, DMA_FROM_DEVICE, 0);
+> +	}
+> +	kfree(resrv_buf);
+> +}
+> +
+> +static void tmc_etr_sync_resrv_buf(struct etr_buf *etr_buf, u64 rrp, u64 rwp)
+> +{
+> +	/*
+> +	 * Adjust the buffer to point to the beginning of the trace data
+> +	 * and update the available trace data.
+> +	 */
+> +	etr_buf->offset = rrp - etr_buf->hwaddr;
+> +	if (etr_buf->full)
+> +		etr_buf->len = etr_buf->size;
+> +	else
+> +		etr_buf->len = rwp - rrp;
+> +}
+> +
+> +static const struct etr_buf_operations etr_resrv_buf_ops = {
+> +	.alloc = tmc_etr_alloc_resrv_buf,
+> +	.free = tmc_etr_free_resrv_buf,
+> +	.sync = tmc_etr_sync_resrv_buf,
+> +	.get_data = tmc_etr_get_data_flat_buf,
+> +};
+> +
+>   /*
+>    * tmc_etr_alloc_sg_buf: Allocate an SG buf @etr_buf. Setup the parameters
+>    * appropriately.
+> @@ -800,6 +870,7 @@ static const struct etr_buf_operations *etr_buf_ops[] = {
+>   	[ETR_MODE_FLAT] = &etr_flat_buf_ops,
+>   	[ETR_MODE_ETR_SG] = &etr_sg_buf_ops,
+>   	[ETR_MODE_CATU] = NULL,
+> +	[ETR_MODE_RESRV] = &etr_resrv_buf_ops
+>   };
+>   
+>   void tmc_etr_set_catu_ops(const struct etr_buf_operations *catu)
+> @@ -825,6 +896,7 @@ static inline int tmc_etr_mode_alloc_buf(int mode,
+>   	case ETR_MODE_FLAT:
+>   	case ETR_MODE_ETR_SG:
+>   	case ETR_MODE_CATU:
+> +	case ETR_MODE_RESRV:
+>   		if (etr_buf_ops[mode] && etr_buf_ops[mode]->alloc)
+>   			rc = etr_buf_ops[mode]->alloc(drvdata, etr_buf,
+>   						      node, pages);
+> @@ -843,6 +915,7 @@ static void get_etr_buf_hw(struct device *dev, struct etr_buf_hw *buf_hw)
+>   	buf_hw->has_iommu = iommu_get_domain_for_dev(dev->parent);
+>   	buf_hw->has_etr_sg = tmc_etr_has_cap(drvdata, TMC_ETR_SG);
+>   	buf_hw->has_catu = !!tmc_etr_get_catu_device(drvdata);
+> +	buf_hw->has_resrv = is_tmc_reserved_region_valid(dev->parent);
+
+Minor nit: In line with the other helpers, please could we rename this to :
+
+tmc_has_reserved_buffer(drvdata) ?
+
+We already have access to drvdata and we can pass that directly instead 
+of passing the dev->parent and then fetch drvdata again.
+
+>   }
+>   
+>   static bool etr_can_use_flat_mode(struct etr_buf_hw *buf_hw, ssize_t etr_buf_size)
+> @@ -1830,6 +1903,7 @@ static const char *const buf_modes_str[] = {
+>   	[ETR_MODE_FLAT]		= "flat",
+>   	[ETR_MODE_ETR_SG]	= "tmc-sg",
+>   	[ETR_MODE_CATU]		= "catu",
+> +	[ETR_MODE_RESRV]	= "resrv",
+>   	[ETR_MODE_AUTO]		= "auto",
+>   };
+>   
+> @@ -1848,6 +1922,9 @@ static ssize_t buf_modes_available_show(struct device *dev,
+>   	if (buf_hw.has_catu)
+>   		size += sysfs_emit_at(buf, size, "%s ", buf_modes_str[ETR_MODE_CATU]);
+>   
+> +	if (buf_hw.has_resrv)
+> +		size += sysfs_emit_at(buf, size, "%s ", buf_modes_str[ETR_MODE_RESRV]);
+> +
+>   	size += sysfs_emit_at(buf, size, "\n");
+>   	return size;
+>   }
+> @@ -1875,6 +1952,8 @@ static ssize_t buf_mode_preferred_store(struct device *dev,
+>   		drvdata->etr_mode = ETR_MODE_ETR_SG;
+>   	else if (sysfs_streq(buf, buf_modes_str[ETR_MODE_CATU]) && buf_hw.has_catu)
+>   		drvdata->etr_mode = ETR_MODE_CATU;
+> +	else if (sysfs_streq(buf, buf_modes_str[ETR_MODE_RESRV]) && buf_hw.has_resrv)
+> +		drvdata->etr_mode = ETR_MODE_RESRV;
+>   	else if (sysfs_streq(buf, buf_modes_str[ETR_MODE_AUTO]))
+>   		drvdata->etr_mode = ETR_MODE_AUTO;
+>   	else
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+> index c77763b49de0..c23dc9917ab9 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc.h
+> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
+> @@ -135,6 +135,7 @@ enum etr_mode {
+>   	ETR_MODE_FLAT,		/* Uses contiguous flat buffer */
+>   	ETR_MODE_ETR_SG,	/* Uses in-built TMC ETR SG mechanism */
+>   	ETR_MODE_CATU,		/* Use SG mechanism in CATU */
+> +	ETR_MODE_RESRV,		/* Use reserved region contiguous buffer */
+>   	ETR_MODE_AUTO,		/* Use the default mechanism */
+>   };
+>   
+> @@ -164,6 +165,17 @@ struct etr_buf {
+>   	void				*private;
+>   };
+>   
+> +/**
+> + * @paddr	: Start address of reserved memory region.
+> + * @vaddr	: Corresponding CPU virtual address.
+> + * @size	: Size of reserved memory region.
+> + */
+> +struct tmc_resrv_buf {
+> +	phys_addr_t     paddr;
+> +	void		*vaddr;
+> +	size_t		size;
+> +};
+> +
+>   /**
+>    * struct tmc_drvdata - specifics associated to an TMC component
+>    * @pclk:	APB clock if present, otherwise NULL
+> @@ -188,6 +200,10 @@ struct etr_buf {
+>    * @idr_mutex:	Access serialisation for idr.
+>    * @sysfs_buf:	SYSFS buffer for ETR.
+>    * @perf_buf:	PERF buffer for ETR.
+> + * @crash_tbuf:	Used by ETR as hardware trace buffer and for trace data
+> + *		retention (after crash) only when ETR_MODE_RESRV buffer
+> + *		mode is enabled. Used by ETF for trace data retention
+> + *		(after crash) by default.
+
+Minor nit: This need not be called crash_tbuf, could instead be
+resrv_buf as we use it everywhere.
+
+Suzuki
+
+
+>    */
+>   struct tmc_drvdata {
+>   	struct clk		*pclk;
+> @@ -213,6 +229,7 @@ struct tmc_drvdata {
+>   	struct mutex		idr_mutex;
+>   	struct etr_buf		*sysfs_buf;
+>   	struct etr_buf		*perf_buf;
+> +	struct tmc_resrv_buf	crash_tbuf;
+>   };
+>   
+>   struct etr_buf_operations {
+> @@ -330,6 +347,16 @@ tmc_sg_table_buf_size(struct tmc_sg_table *sg_table)
+>   	return (unsigned long)sg_table->data_pages.nr_pages << PAGE_SHIFT;
+>   }
+>   
+> +static inline bool is_tmc_reserved_region_valid(struct device *dev)
+> +{
+> +	struct tmc_drvdata *drvdata = dev_get_drvdata(dev);
+> +
+> +	if (drvdata->crash_tbuf.paddr &&
+> +		drvdata->crash_tbuf.size)
+> +		return true;
+> +	return false;
+> +}
+> +
+>   struct coresight_device *tmc_etr_get_catu_device(struct tmc_drvdata *drvdata);
+>   
+>   void tmc_etr_set_catu_ops(const struct etr_buf_operations *catu);
+
