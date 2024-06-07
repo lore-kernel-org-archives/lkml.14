@@ -1,152 +1,85 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
+Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90913C67B;
-	Fri,  7 Jun 2024 12:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DD0186E46;
+	Fri,  7 Jun 2024 12:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717762488; cv=none; b=tukFX/WzSK27oB8kGrjTc9x5hBXoPXf64d7uX54bwUZTFe4C6mb9e5JgeaZKoY1xm4x3evcvyMcxZCBio9OU0Jg4tOj/vTHp+Y9Ctpuj3w25srXqPbO+hJsN0crwtGdvkdFCpexsbhjc718mUwhIwOWO3nL5YJ81ahKb0zMMA+s=
+	t=1717762573; cv=none; b=BCmQmfYLBGHMpoygOfNOh+h8my1MtzKhmagwj5hMdLzH+fEFjCHzoLCuPbQdCecNALtWUYcQ++HQhlVWX4oGyLO3GSQWyIn+xIPaA2NHUx1Flu1HIcP7g9T6YL4ySvIEsFIX2Kq5CrIOrAJHBL0VPbhw4ZyQ0A4sMFjMBW7ZkDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717762488; c=relaxed/simple;
-	bh=rBD/3nCmF1QYjRKRLiSkFwgr2koq+gPST/UnCrH/FVA=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=f+0/XcLF668vfr73Ei/DxIIIB/1XjJROmBu1albUQ5y5TpRJ8//0YaJMpwco8mBruEE5xgmeDtrnbxgyu8jr3noFklv+tAkGCXoGNFlXAE09G1ic64GsVBZOp1Aw9q43/ZtQbb06Wu3dFd9N1zKXpTkOwVkAUCNJX4ZjfJtUYN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=990276a841=ms@dev.tdt.de>)
-	id 1sFYUW-007Ysq-Mf; Fri, 07 Jun 2024 14:14:44 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sFYUW-00DoVi-5M; Fri, 07 Jun 2024 14:14:44 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id D4981240053;
-	Fri,  7 Jun 2024 14:14:43 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id 6088F240050;
-	Fri,  7 Jun 2024 14:14:43 +0200 (CEST)
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-	by mail.dev.tdt.de (Postfix) with ESMTP id E9DDF3829D;
-	Fri,  7 Jun 2024 14:14:42 +0200 (CEST)
+	s=arc-20240116; t=1717762573; c=relaxed/simple;
+	bh=YBMNvGaHXBY1iE8bR/ub81+vXUT/4Gibt/hvIi+Vp1M=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MGEGuJGtpwC8PBtsSpiIeOEso2homK8FR3jSezWKWjk6zQNVqGopUgGfHACI8puk2aoj5X+MdcqfyBMVk/shreClflA/laVthrvo6YxwO5mJ18o1E/P/gr9p+n7AUpPHlz4jw7BWk+hY3mdu/rbc6FuTqAXVnpcG/JWE6ZFGnKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=fp0aJiW/; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=The1bojn; arc=none smtp.client-ip=35.157.23.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="fp0aJiW/";
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="The1bojn"
+Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
+	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id 4089C2111;
+	Fri,  7 Jun 2024 12:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1717762096;
+	bh=6p1zGEnOfUC6mKbV+PZ9lD9z8S0agv4/5/6Rd6f5BCc=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=fp0aJiW/xHJJxTjaEmgIfFd9RpnfHUGE6eGCNRqIRjdVy572F1x3mqoPHmInh/pFR
+	 k55F3tbaJDnzmUCxNQr81KpAjFdYPNtkCBN+GfDB5jiGV3klZqFGRiRg1N0xGbdj0w
+	 CuxsJ+j377cD8y2QtCJvNthCJu8JbpUlQ8PyTA2E=
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 25341195;
+	Fri,  7 Jun 2024 12:16:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1717762570;
+	bh=6p1zGEnOfUC6mKbV+PZ9lD9z8S0agv4/5/6Rd6f5BCc=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=The1bojn4lSM6xboNjP3TuFw29hQYrvbGbE8M+fvlvP2JS6Q3EJcwzlmrgKooApzd
+	 HJVhKvysJiMncfCeHA7sYVFQgXe+T7oNd0BDrzVshP+bpobBql2hrm+0QgZYTfnaUO
+	 As1YVQXz6lKyBsVBhigiakGK0kH5J8uGYaix7pqg=
+Received: from ntfs3vm.paragon-software.com (192.168.211.95) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Fri, 7 Jun 2024 15:16:09 +0300
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To: <ntfs3@lists.linux.dev>
+CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Subject: [PATCH 05/18] fs/ntfs3: Missed NI_FLAG_UPDATE_PARENT setting
+Date: Fri, 7 Jun 2024 15:15:35 +0300
+Message-ID: <20240607121548.18818-6-almaz.alexandrovich@paragon-software.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240607121548.18818-1-almaz.alexandrovich@paragon-software.com>
+References: <20240607121548.18818-1-almaz.alexandrovich@paragon-software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Fri, 07 Jun 2024 14:14:42 +0200
-From: Martin Schiller <ms@dev.tdt.de>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
- f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 05/13] net: dsa: lantiq_gswip: do also enable or
- disable cpu port
-Organization: TDT AG
-In-Reply-To: <20240607111830.jfi3roiry27bmwih@skbuf>
-References: <20240606085234.565551-1-ms@dev.tdt.de>
- <20240606085234.565551-6-ms@dev.tdt.de>
- <20240607111830.jfi3roiry27bmwih@skbuf>
-Message-ID: <449164b18beb18c1dfe2c356ba6af583@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.3.17
-X-purgate-ID: 151534::1717762484-AA85434D-581F8BBD/0/0
-X-purgate-type: clean
-X-purgate: clean
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
+ vdlg-exch-02.paragon-software.com (172.30.1.105)
 
-On 2024-06-07 13:18, Vladimir Oltean wrote:
-> On Thu, Jun 06, 2024 at 10:52:26AM +0200, Martin Schiller wrote:
->> Before commit 74be4babe72f ("net: dsa: do not enable or disable non 
->> user
->> ports"), gswip_port_enable/disable() were also executed for the cpu 
->> port
->> in gswip_setup() which disabled the cpu port during initialization.
-> 
-> Ah, you also noticed this.
-> 
->> 
->> Let's restore this by removing the dsa_is_user_port checks. Also, 
->> let's
->> clean up the gswip_port_enable() function so that we only have to 
->> check
->> for the cpu port once.
->> 
->> Fixes: 74be4babe72f ("net: dsa: do not enable or disable non user 
->> ports")
-> 
-> Fixes tags shouldn't be taken lightly. If you think there's a 
-> functional
-> user-visible problem caused by that change, you need to explain what
-> that problem is and what it affects. Additionally, bug fix patches are
-> sent out to the 'net' tree, not bundled up with 'net-next' material
-> (unless they fix a change that's also exclusive to net-next).
-> Otherwise, just drop the 'Fixes' tag.
+Fixes: be71b5cba2e64 ("fs/ntfs3: Add attrib operations")
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+---
+ fs/ntfs3/attrib.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-OK, I will drop the 'Fixes' tag.
+diff --git a/fs/ntfs3/attrib.c b/fs/ntfs3/attrib.c
+index 7918ab1a3f35..0d13da5523b1 100644
+--- a/fs/ntfs3/attrib.c
++++ b/fs/ntfs3/attrib.c
+@@ -1738,6 +1738,7 @@ int attr_allocate_frame(struct ntfs_inode *ni, CLST frame, size_t compr_size,
+ 
+ 	attr_b->nres.total_size = cpu_to_le64(total_size);
+ 	inode_set_bytes(&ni->vfs_inode, total_size);
++	ni->ni_flags |= NI_FLAG_UPDATE_PARENT;
+ 
+ 	mi_b->dirty = true;
+ 	mark_inode_dirty(&ni->vfs_inode);
+-- 
+2.34.1
 
-> 
->> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
->> ---
->>  drivers/net/dsa/lantiq_gswip.c | 24 ++++++++----------------
->>  1 file changed, 8 insertions(+), 16 deletions(-)
->> 
->> diff --git a/drivers/net/dsa/lantiq_gswip.c 
->> b/drivers/net/dsa/lantiq_gswip.c
->> index 3fd5599fca52..38b5f743e5ee 100644
->> --- a/drivers/net/dsa/lantiq_gswip.c
->> +++ b/drivers/net/dsa/lantiq_gswip.c
->> @@ -695,13 +695,18 @@ static int gswip_port_enable(struct dsa_switch 
->> *ds, int port,
->>  	struct gswip_priv *priv = ds->priv;
->>  	int err;
->> 
->> -	if (!dsa_is_user_port(ds, port))
->> -		return 0;
->> -
->>  	if (!dsa_is_cpu_port(ds, port)) {
->> +		u32 mdio_phy = 0;
->> +
->>  		err = gswip_add_single_port_br(priv, port, true);
->>  		if (err)
->>  			return err;
->> +
->> +		if (phydev)
->> +			mdio_phy = phydev->mdio.addr & GSWIP_MDIO_PHY_ADDR_MASK;
->> +
->> +		gswip_mdio_mask(priv, GSWIP_MDIO_PHY_ADDR_MASK, mdio_phy,
->> +				GSWIP_MDIO_PHYp(port));
->>  	}
->> 
->>  	/* RMON Counter Enable for port */
->> @@ -714,16 +719,6 @@ static int gswip_port_enable(struct dsa_switch 
->> *ds, int port,
->>  	gswip_switch_mask(priv, 0, GSWIP_SDMA_PCTRL_EN,
->>  			  GSWIP_SDMA_PCTRLp(port));
->> 
->> -	if (!dsa_is_cpu_port(ds, port)) {
->> -		u32 mdio_phy = 0;
->> -
->> -		if (phydev)
->> -			mdio_phy = phydev->mdio.addr & GSWIP_MDIO_PHY_ADDR_MASK;
->> -
->> -		gswip_mdio_mask(priv, GSWIP_MDIO_PHY_ADDR_MASK, mdio_phy,
->> -				GSWIP_MDIO_PHYp(port));
->> -	}
->> -
->>  	return 0;
->>  }
-> 
-> It would be good to state in the commit message that the operation
-> reordering is safe. The commit seems to be concerned mainly with code
-> cleanliness, which does not always take side effects into account.
-
-Thanks for the hint. I will take it into account in the commit message.
