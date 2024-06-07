@@ -1,183 +1,112 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C09AB64E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 02:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8DAFC1D;
+	Fri,  7 Jun 2024 02:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717725964; cv=none; b=htAUlIcjMgDkz0PRpLDMSkPSwvxyxLIqK7Vl551rgn4GyVTAdQbWSxDo5BU2LpLwh26RXwCEzFIDLNgyac3MjOZqzaLEM/VTEoq1a4HTo5UZ3Fo9OcDlBLtqdKwfARbjOYy/kmseeOoeqCKFFlm91vNDfAHGRTMDw9dyT1tvgp8=
+	t=1717726137; cv=none; b=ZaAk+V6kKIyoTHhuHqn7UbMdI3JAnziLx0EQ4IbXNRqy9cd8pkapJTONIN8IZUrrfX6YCPQpX2y+hewCwBeZdOI53Gm238EtXFZQ+NJA80SK3wNU7zJ3smHk0oDkb2H+O0CAAm+U1bDku2j+ugOn6so2KkocdgHzbVoK628SDAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717725964; c=relaxed/simple;
-	bh=xMeczsdAlv4UoRd1dy3o2EX9IC+SZrtDX6ksBtcaQK8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=coYOY2m+MnO9lU16FpWgNtg13aTuuyhHEmX1ZRXlyQlbuzBvVdxJDbTyL5h+12ee6KvehFkPSwaqXJD8z2GmMt+jY/xR19eUpXu8Blx8sFGAqUZFY/eGiVN+rDpK1yQJNNssItxso8GIUvaBzY/s+NhhUfCWdps795o12NrMFh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cpEoAvwV; arc=none smtp.client-ip=209.85.167.41
+	s=arc-20240116; t=1717726137; c=relaxed/simple;
+	bh=Zgs6EUaw+fgETHFqLyu+EyBx0t4ITnZTlUfvdp01WrQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LjLlUnq4cJn1Bnh0K4AvVM+8e6zNvRqRHAkM5IhnTh6Uqr2/JWLLOI/DWj2GM1DiMbAfbUP0ihm5PaGU6Xp8q9xIZlTyZEfY7BDurBg01BkwKSE/EbtDTwOOG08QkQcRJuBvWgGalZSRN7x9dLsXke3LFBzhI5ptSgp4HumNYos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q38czejR; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpEoAvwV"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52b992fd796so1672134e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 19:06:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q38czejR"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7024cd9dd3dso1324804b3a.3;
+        Thu, 06 Jun 2024 19:08:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717725961; x=1718330761; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QmdigPbiZh7u73WyQrLPcTJkkfoD9rCWbKcRqUVrOeI=;
-        b=cpEoAvwVwCA/Nb7rybs4U+fb5vcW/IqcQVrB9ksi9rpuH4bFefH91GRvZ1lP+qu95V
-         +/YojcWmSd1kAL2hB4V2oGXbrGt6fDhs255GzQmannjagBql96jH+k2rHzg7jeCl8iy7
-         CPDn/V0QO+MhLX+BP9c/lJuxn39As0EkuH2EU7pzmJxBn1dMfB28WfqYQA3FEH//+YeX
-         swex8ee7xh8zteOkcEdep63RG6kcUROjkMvSRjVy3N4EiOXsqmQqaDgLo2Pa7jV5hfmP
-         YnVRH496//ULEspBxHdc4rkYIoMC20a09Vo9/m4NOB+MgVSKZSo7M9p3ACAE3rQ4NMXQ
-         oPvQ==
+        d=gmail.com; s=20230601; t=1717726136; x=1718330936; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2YbNkfBTg7QNL7W0fk9O5zt5ZxmyJT5/V6X8thSn3Xs=;
+        b=Q38czejR0p4uW0/oga7n1rL8vphLHa4xPOp70+uFl+VROqECzLTrMmtHtz2kwdZMDT
+         rc7nMSSx6VOeQLrFLN6TiO5pDOKGPar4QpshvpfsIBIxW9I3xITtaHN0mXqgTzIlUCSt
+         MucFMf4Jx9eOlE/PpC+eHqqRN+hV8v67S7AkMWVbA6vw3qCBP7hKd5K8NxtCa2ZhwiH6
+         ikbdVcVj9cNlzJxSP9mPBBHaQmFCk8Jdi17UISJCZAjFuvQPL4ECp/Es0vV473ju65bm
+         FPAVEitimy9yt39MlhLoWkhAUfoTpHFmw3xY2tDr1NpBiAcR16M18461P47OHSR0sJjo
+         wzXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717725961; x=1718330761;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QmdigPbiZh7u73WyQrLPcTJkkfoD9rCWbKcRqUVrOeI=;
-        b=JLrfX5c7cpGh7btELXzWu8D1+YpGui/SYqVTX846n/a68Wv/UhJdfkR+NrFwgj4n3L
-         znsrXtrAzYQLchQ3YCSq1vZUhJd0pVtNqbo1X+jFhkGqpBYkCWTxiojbKnlIJfZLBFQZ
-         dkHt8VNXqtR0YmcJOv8O1q7wMoiLImv2S56L8GTmutqX7nCvHq9j3/TgxXIj7ZFyXPze
-         wknTdboTI7WkMMVBylWOb223/bkTHgI+KM7W+OmHpByrNrWsTOstR1kkfAvb6qRheAWg
-         g5f8NCpqo5NM9SRB4sxU/40dRlYybdqt5aDbjTLpux3JfudSjzMM1V3XF9odI/EUJovK
-         vsxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWoCmDQZqNIqu4HbA82p7N/7GqxVFAseiDYmR7lQQgb9fPsLHCdb6puNO4JEbVEVLdFuGBDzz9jKF0EoTssb1GrMcuDKASRvGWekCt7
-X-Gm-Message-State: AOJu0Ywyhcw95BlXvTSJrB85rPQsad9b0RMK+4ZuN/3FQDEijcr/g11h
-	TFfsz3BUJkjvw3X2gIeAkxaIgTanhmcUXQf29slHvVfH545BmrQknmEYIhmixBAnmoR/+leay3r
-	7YIlZ6sP67J1N7sYffeGELEdTBbU=
-X-Google-Smtp-Source: AGHT+IFQlGkIbJhF9IM0XawMYHjSy8OtNnb4ijLh5dvdjX1Odn7hgcWDHLCBTdhu8/9XzpTX36XSKzRXzES+6SGR3qY=
-X-Received: by 2002:a05:6512:3e14:b0:52b:bb10:6c19 with SMTP id
- 2adb3069b0e04-52bbb106d7cmr554972e87.23.1717725960650; Thu, 06 Jun 2024
- 19:06:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717726136; x=1718330936;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2YbNkfBTg7QNL7W0fk9O5zt5ZxmyJT5/V6X8thSn3Xs=;
+        b=umLcQ26FBz/qUhGl/CkKH5BSnKLKP2Ly3CrgFjxjaDIRnrP2ECrDJ210dQx5AHUZqf
+         tpcXx/7KckGTYQH4baP9M5iLBYoAdn5BZbjKeZSoropScHsfWFO6zbsZ8L+21Sj05CGR
+         NUjWdtNQaS2aH6qLKY/a0adzAXKkPs7yjqfX5vkP6qHw5nLR0Ye9Ig/yHydbwFxWAFNk
+         HW8ZHhQ3EY0EQ7uhyaPAy6TwkNIphefa2+6TYau0v4Cj/O7mOJ7DjQE7ve8yIoXiXGBy
+         BTY1cUvUTukX4GEog3fqNmCi6YvG0SJZ5+YBhQf7mu8hPrJp+RqCkKuGnxJhlgvozPn0
+         YHnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDBgrfLoBt8xyl6ZdVKKVyVxQCfRswPBIsRibpivooPscIO+OOpkH5ES7jrz0PGu2dRkb2LgeGI58ZffKw+0SVNT1Cv7R2wGdJN2q+PU3rj+udB0+G8bBwPb98IOWn/KiCIIj7
+X-Gm-Message-State: AOJu0Yy7Hm/2sP37Tu2nbZic8Q+VUPd8dkCNHtUWKJHwVxEqMcKy6YtS
+	DClRjquNhzq7si25lBW1+M+w7kMNT5jRRk9aoAItQ2x5XlX3Jf6O
+X-Google-Smtp-Source: AGHT+IGMw2tKALOAt5+mXjWbsar+Mn1+2+TehGkELpiwdXYkZoU9WWSW+/rp2sKMuUd8tEkbZiJgug==
+X-Received: by 2002:a05:6a00:2387:b0:6ec:db05:36c3 with SMTP id d2e1a72fcca58-7040c615964mr1144379b3a.4.1717726135546;
+        Thu, 06 Jun 2024 19:08:55 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703fd498a8fsm1687742b3a.109.2024.06.06.19.08.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jun 2024 19:08:54 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id F110618463038; Fri, 07 Jun 2024 09:08:51 +0700 (WIB)
+Date: Fri, 7 Jun 2024 09:08:51 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	allen.lkml@gmail.com, broonie@kernel.org
+Subject: Re: [PATCH 6.9 000/374] 6.9.4-rc1 review
+Message-ID: <ZmJrs2ntqb77ebCn@archie.me>
+References: <20240606131651.683718371@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Airlie <airlied@gmail.com>
-Date: Fri, 7 Jun 2024 12:05:49 +1000
-Message-ID: <CAPM=9tyvjs75_Op_yXD=vD_ZLQwZRzio0=_oM=vGkeOkaGW=TA@mail.gmail.com>
-Subject: [git pull] drm fixes for 6.10-rc3
-To: Linus Torvalds <torvalds@linux-foundation.org>, Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3AxIghRg5g1ofXuB"
+Content-Disposition: inline
+In-Reply-To: <20240606131651.683718371@linuxfoundation.org>
 
-Hi Linus,
 
-Weekly fixes, vmwgfx leads the way this week, with minor changes in xe
-and amdgpu and a couple of other small fixes.
+--3AxIghRg5g1ofXuB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Seems quiet enough.
+On Thu, Jun 06, 2024 at 03:59:39PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.9.4 release.
+> There are 374 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
 
-Dave.
+Successfully compiled and installed the kernel on my computer (Acer
+Aspire E15, Intel Core i3 Haswell). No noticeable regressions.
 
-drm-fixes-2024-06-07:
-drm fixes for 6.10-rc3
+Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-xe:
-- Update the LMTT when freeing VF GT config
+--=20
+An old man doll... just what I always wanted! - Clara
 
-amdgpu:
-- Fix shutdown issues on some SMU 13.x platforms
-- Silence some UBSAN flexible array warnings
+--3AxIghRg5g1ofXuB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-panel:
-- sitronix-st7789v: handle of_drm_get_panel_orientation
-  failing error.
+-----BEGIN PGP SIGNATURE-----
 
-vmwgfx:
-- filter modes greater than available graphics memory
-- fix 3D vs STDU enable
-- remove STDU logic from mode valid
-- logging fix
-- memcmp pointers fix
-- remove unused struct
-- screen target lifetime fix
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZmJrrgAKCRD2uYlJVVFO
+o00uAQCB/IULpEyo/wECqAHRYZiQNScetvGwBHIp1X3fIjCUrwEAwRAk2sft3lXh
+QNyLORJJ7s94M/OI8Gn+/TuL2Ahv1wQ=
+=POE3
+-----END PGP SIGNATURE-----
 
-komeda:
-- unused struct removal
-The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
-
-  Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
-
-are available in the Git repository at:
-
-  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2024-06-07
-
-for you to fetch changes up to eb55943aab89be99a26e34fc2175ebb3583a2778:
-
-  Merge tag 'drm-misc-next-fixes-2024-06-07' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
-(2024-06-07 08:40:58 +1000)
-
-----------------------------------------------------------------
-drm fixes for 6.10-rc3
-
-xe:
-- Update the LMTT when freeing VF GT config
-
-amdgpu:
-- Fix shutdown issues on some SMU 13.x platforms
-- Silence some UBSAN flexible array warnings
-
-panel:
-- sitronix-st7789v: handle of_drm_get_panel_orientation
-  failing error.
-
-vmwgfx:
-- filter modes greater than available graphics memory
-- fix 3D vs STDU enable
-- remove STDU logic from mode valid
-- logging fix
-- memcmp pointers fix
-- remove unused struct
-- screen target lifetime fix
-
-komeda:
-- unused struct removal
-
-----------------------------------------------------------------
-Chen Ni (1):
-      drm/panel: sitronix-st7789v: Add check for of_drm_get_panel_orientation
-
-Dave Airlie (4):
-      Merge tag 'drm-xe-fixes-2024-06-04' of
-https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
-      Merge tag 'amd-drm-fixes-6.10-2024-06-06' of
-https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
-      Merge tag 'drm-misc-fixes-2024-06-07' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
-      Merge tag 'drm-misc-next-fixes-2024-06-07' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
-
-Dr. David Alan Gilbert (2):
-      drm/komeda: remove unused struct 'gamma_curve_segment'
-      drm/vmwgfx: remove unused struct 'vmw_stdu_dma'
-
-Ian Forbes (6):
-      drm/vmwgfx: Filter modes which exceed graphics memory
-      drm/vmwgfx: 3D disabled should not effect STDU memory limits
-      drm/vmwgfx: Remove STDU logic from generic mode_valid function
-      drm/vmwgfx: Standardize use of kibibytes when logging
-      drm/vmwgfx: Don't destroy Screen Target when CRTC is enabled but inactive
-      drm/vmwgfx: Don't memcmp equivalent pointers
-
-Mario Limonciello (1):
-      drm/amd: Fix shutdown (again) on some SMU v13.0.4/11 platforms
-
-Michal Wajdeczko (1):
-      drm/xe/pf: Update the LMTT when freeing VF GT config
-
-Tasos Sahanidis (1):
-      drm/amdgpu/pptable: Fix UBSAN array-index-out-of-bounds
-
- drivers/gpu/drm/amd/include/pptable.h              | 91 ++++++++++++----------
- .../gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_4_ppt.c   | 20 ++---
- .../gpu/drm/arm/display/komeda/komeda_color_mgmt.c |  5 --
- drivers/gpu/drm/panel/panel-sitronix-st7789v.c     |  4 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c                | 19 ++---
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.h                |  3 -
- drivers/gpu/drm/vmwgfx/vmwgfx_gmrid_manager.c      |  4 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_kms.c                | 28 +++----
- drivers/gpu/drm/vmwgfx/vmwgfx_stdu.c               | 60 ++++++++++++--
- drivers/gpu/drm/xe/xe_gt_sriov_pf_config.c         |  1 +
- 10 files changed, 135 insertions(+), 100 deletions(-)
+--3AxIghRg5g1ofXuB--
