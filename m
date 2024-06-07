@@ -1,36 +1,34 @@
 Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449E51847;
-	Fri,  7 Jun 2024 11:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A098415A4A2;
+	Fri,  7 Jun 2024 11:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717761435; cv=none; b=nVs7mD964CvqCfRNDmEGCOFuKzu5lxODDF5tgW0/A991GdxRmgjSKC3qDfn4gOnI3MJSUl4TJr3KmEHaZqkUM3/ny/l8EDjC+4vA4Aw7VpHBNYyBWkjGqxoxZs+usyrggp5Hi5CI6NZQNhlnI1GFE0OmbWRPGL3pMAyFGV3j/3k=
+	t=1717761484; cv=none; b=j3qXgmxzHy4A06zSiSJxx4+nNgFEQ9g0F7sb90NG9BXGJZ6iO7VWNBPqAru1Eagxd/BlwOkxTa46Cg8UQX34czVeBb2jhdUoLPa0CPFqEhuuwpF/JBl2Y7GcscfPwL4q5HFfTKZGiGY2R9DXvCtLWjr9MUvyQow2Otr9eLczi08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717761435; c=relaxed/simple;
-	bh=adjTYryesZPpS5hAWfrCjwqqYGcWxRjoYGnUfbQ27wI=;
+	s=arc-20240116; t=1717761484; c=relaxed/simple;
+	bh=BJgA5mjSOdgFasg9fVU69D0IkoNIEebkOV1Dysjw+vw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wk2prfNv9pBhtlXl5uHsCpMrvd4umE/o9SQOWjP3RSnXPYYTbqiLJ7ICL8Z4pJyZyR32ztiu6/3V1HMIu4Tr5sTZybGo+E2gpFmk7MWdmY9iS84p+0ZPPgUBncx64qnD0IGaN0LPNQgw5mnC5BweudJcnCvQwY9GfXx1iGpbcGA=
+	 Content-Type:Content-Disposition:In-Reply-To; b=UAGkmDgl9pMyLmjP/AyKkX3UK73gYXiXHWB/vGA2H/sKa/W+Ef7neFxqW8liFa71n8RyW5VLMj8ZRa0I8aIvIiYA1T/V3Yfs+5kLbPrjzfKNEAk8X6PEwicxZh6A/b+sQWiiiLfaTYASGw28cOg7LhA87zTXkHywIyT688lTr4M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
 	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1sFYCw-006pHZ-21;
-	Fri, 07 Jun 2024 19:56:35 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 07 Jun 2024 19:56:37 +0800
-Date: Fri, 7 Jun 2024 19:56:37 +0800
+	id 1sFYEH-006pKV-20;
+	Fri, 07 Jun 2024 19:57:58 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 07 Jun 2024 19:58:00 +0800
+Date: Fri, 7 Jun 2024 19:58:00 +0800
 From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] crypto: x86 - add missing MODULE_DESCRIPTION() macros
-Message-ID: <ZmL1deAM0RrEDHJ4@gondor.apana.org.au>
-References: <20240530-md-x86-crypto-v1-1-b480cbcc6bdf@quicinc.com>
+To: Chenghai Huang <huangchenghai2@huawei.com>
+Cc: davem@davemloft.net, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, shenyang39@huawei.com,
+	liulongfang@huawei.com, qianweili@huawei.com
+Subject: Re: [PATCH V3 0/2] crypto: hisilicon - adjust vf configuration
+ sequence and optimize zip reg offset
+Message-ID: <ZmL1yH-6e6VE4Dtd@gondor.apana.org.au>
+References: <20240601025150.1660826-1-huangchenghai2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,23 +37,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240530-md-x86-crypto-v1-1-b480cbcc6bdf@quicinc.com>
+In-Reply-To: <20240601025150.1660826-1-huangchenghai2@huawei.com>
 
-On Thu, May 30, 2024 at 05:53:17PM -0700, Jeff Johnson wrote:
-> On x86, make allmodconfig && make W=1 C=1 warns:
+On Sat, Jun 01, 2024 at 10:51:48AM +0800, Chenghai Huang wrote:
+> The VF enabling and disabling issues are fixed, and the ZIP address
+> offset calculation is optimized.
 > 
-> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/crypto/crc32-pclmul.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in arch/x86/crypto/curve25519-x86_64.o
+> Chenghai Huang (2):
+>   crypto: hisilicon/qm - adjust the internal processing sequence of the
+>     vf enable and disable
+>   crypto: hisilicon/zip - optimize the address offset of the reg query
+>     function
 > 
-> Add the missing MODULE_DESCRIPTION() macro invocations.
+>  drivers/crypto/hisilicon/qm.c           | 11 ++----
+>  drivers/crypto/hisilicon/zip/zip_main.c | 48 +++++++++++--------------
+>  2 files changed, 23 insertions(+), 36 deletions(-)
 > 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
->  arch/x86/crypto/crc32-pclmul_glue.c | 1 +
->  arch/x86/crypto/curve25519-x86_64.c | 1 +
->  2 files changed, 2 insertions(+)
+> -- 
+> 2.33.0
 
-Patch applied.  Thanks.
+All applied.  Thanks.
 -- 
 Email: Herbert Xu <herbert@gondor.apana.org.au>
 Home Page: http://gondor.apana.org.au/~herbert/
