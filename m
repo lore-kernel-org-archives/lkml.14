@@ -1,40 +1,35 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95ECD15A4A2;
-	Fri,  7 Jun 2024 11:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654D4D53C;
+	Fri,  7 Jun 2024 12:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717761490; cv=none; b=FR9Bmc/7C+pqcJgQf9eOAUiJ4HsycoiVc8ZH2Kt3rgPHk6z4PLcgd9e5iSomcJzwO4qmcOaTtra7IRWo2DgDQyH/6oZG+miyXtBu1qIKMqxgUNgsnVwB5kREyXUmcwDvcvug42/5n+BOvBDlX5SrONAgUvG+VhUFF3hLla5IhTk=
+	t=1717761669; cv=none; b=rYMlMuMmnXTGLeDrYX0gaahETQqNHkqsyg/nu7vd/2na3ux5jN/UxrvBPm9uf/1Xn0hylH19CfFUve5QZODxsqqj6lPikie7ho6xmeG87x5d2zBRJeG/GJfqx54o4Hu25utQ65bfejHVWjKtxECrujH52BWHYSy16lz1D8Gy4Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717761490; c=relaxed/simple;
-	bh=4b2ugFfalk4/kWMxtoFcpD43wGccOMs6ThCReo3lAvA=;
+	s=arc-20240116; t=1717761669; c=relaxed/simple;
+	bh=8bM4TXmZF6Q3bEWKpxwk+dcuEiChrvC6AykME8hxFxU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BqvObxa1a54Rbs7qYcc0Cn0pIJoyInWj6u+gSYeMj5vUOeqzOzInR1vR6LVeGK2rYrD77AWAxShSG/c4lmHnw68kzVozSkqV4F7s4e7Ie2w/0AF9nfsLgX/GGW6KcazUb4HfnUBFbY2f0IFyVG9VXVihLPeEXKIoernLIJ+fdT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=apR+ZE8Y; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="apR+ZE8Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=TR/Oh9dwCvTN/XzGdtqdy+Cjahkykd+vTLsu3IoL/UA=; b=apR+ZE8YqRaZUM+25wDrxTl6Fk
-	xwylTeSR/y2FC+tp4CNZ3H8aGA4yE+kBgp64GqbxO76fK2iyntb/R7geULxJ3wwMK2gr+RpVhLhVy
-	hS7luvwm7sJ3YX2d1/NljC9tIt+zKaNwDgAGIyV+J6Wn8/4NxWekch/SFWFJBmwsnmnM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sFYEJ-00H7Lt-7V; Fri, 07 Jun 2024 13:57:59 +0200
-Date: Fri, 7 Jun 2024 13:57:59 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: f.fainelli@gmail.com, olteanv@gmail.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: Fix typo in NET_DSA_TAG_RTL4_A Kconfig
-Message-ID: <a0630e6e-d979-4856-98c7-93721006da66@lunn.ch>
-References: <20240607020843.1380735-1-chris.packham@alliedtelesis.co.nz>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IzNFsbDdTWooe8d0oUsmZmtITttOKp7XJM26f7gFyXoMfcaKxmsL8DzI3ehaEUGA/5pGfQVyJqQmbSLpvZQwZHYOTsDUZEQSihY8Uv1151XqvI9Zvf5dNzKoeS0/UQ4Jq3Rct/eXdkLkGVc8TWBp+YthKyHtoyicAyVUoBxrbTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1sFYHA-006pMU-3C;
+	Fri, 07 Jun 2024 20:00:58 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 07 Jun 2024 20:00:59 +0800
+Date: Fri, 7 Jun 2024 20:00:59 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+	Declan Murphy <declan.murphy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] crypto: keembay - add missing MODULE_DESCRIPTION() macro
+Message-ID: <ZmL2e00gtB9K88iv@gondor.apana.org.au>
+References: <20240602-md-keembay-ocs-hcu-v1-1-22741e1c3d13@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,14 +38,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240607020843.1380735-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20240602-md-keembay-ocs-hcu-v1-1-22741e1c3d13@quicinc.com>
 
-On Fri, Jun 07, 2024 at 02:08:43PM +1200, Chris Packham wrote:
-61;7592;1c> Fix a minor typo in the help text for the NET_DSA_TAG_RTL4_A config
-> option.
+On Sun, Jun 02, 2024 at 04:03:54PM -0700, Jeff Johnson wrote:
+> make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/crypto/intel/keembay/keembay-ocs-hcu.o
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> ---
+>  drivers/crypto/intel/keembay/ocs-hcu.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
