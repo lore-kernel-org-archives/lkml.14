@@ -1,233 +1,107 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8E5F19308B;
-	Fri,  7 Jun 2024 12:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relayaws-01.paragon-software.com (relayaws-01.paragon-software.com [35.157.23.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB5E1922F2;
+	Fri,  7 Jun 2024 12:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.157.23.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717763066; cv=none; b=p/NHRX1hDGdAbC9EI/nVFji2k9ttEFywtHHHr4XWLtlc0R0WBrYViWzD1rFxWlohY4ei8egxKJG34qDMwJoao0YMYUzQnSFnSrdWl6OqYrtNlYjdyRh8/rmTJE6gPtNG8TTCb49r2dfo2a1pcJeXltLwhgKN3/WnbsC/3a/GvYY=
+	t=1717763177; cv=none; b=RqIFPx6LS2+s99y1g6ccHfcsKvBM3U1fvv9DToKeIT6soUbgfddG//S178gc80aKkTTmyRINPxxkt3l0SzqcthWhdKMFgsDPlNSv2iICKhBKXhwf9MxLssHIw9pQ23sSRAMCdi920jaLj4WXL3N7WTcLS9yyJ0HJa4PuV/HUHXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717763066; c=relaxed/simple;
-	bh=8mATx8ljEnNckwsyZDussvV/iVh+BnTFcanWppCv5+U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ddvNy43m4Z9sFu6LCSm8GOzOk5Ma0OQpe56FSQ41Z7+FsPGy47X33G0sXDFwCXEy5xqdW+KXiXP5Kdt+sXGqW3ErVzjGdAu/yLi9C/XxZDeLs31umc8RdUB21c8DKAcMcwLNzCc3IQxhk3G9BiPZtpjWiX9nlC1cFjCVTxmiKqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C4877DA7;
-	Fri,  7 Jun 2024 05:24:47 -0700 (PDT)
-Received: from e116581.blr.arm.com (e116581.arm.com [10.162.42.8])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8BC473F64C;
-	Fri,  7 Jun 2024 05:24:18 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: shuah@kernel.org,
-	oleg@redhat.com,
-	stsp2@yandex.ru
-Cc: mingo@kernel.org,
-	tglx@linutronix.de,
-	mark.rutland@arm.com,
-	ryan.roberts@arm.com,
-	broonie@kernel.org,
-	suzuki.poulose@arm.com,
-	Anshuman.Khandual@arm.com,
-	DeepakKumar.Mishra@arm.com,
-	AneeshKumar.KizhakeVeetil@arm.com,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH 2/2] selftests: Add a test mangling with uc_sigmask
-Date: Fri,  7 Jun 2024 17:53:19 +0530
-Message-Id: <20240607122319.768640-3-dev.jain@arm.com>
+	s=arc-20240116; t=1717763177; c=relaxed/simple;
+	bh=Qftod05FG8cvV0DSzaUmUcM0W3C99UwJOo6+6K5E5Q0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OT1qXnBSi0xSSGz/RhI6yFgOrmiSd1+FnfxsgeWF8Ym+I1kL4IiTSV8ZZtCGArNhIIweWsbETqWzY0J+IjTOKRyYgnPYRY+u8K6K0qEe3iQTwkCf8THAjEu86XHhsY6NlVE11B0w6xfEAT29L6S3Be2CN1dOBN/LXihgMQxkpmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com; spf=pass smtp.mailfrom=paragon-software.com; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=pciVf6Lh; dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b=Rtx/WFi/; arc=none smtp.client-ip=35.157.23.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=paragon-software.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paragon-software.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="pciVf6Lh";
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="Rtx/WFi/"
+Received: from relayfre-01.paragon-software.com (unknown [172.30.72.12])
+	by relayaws-01.paragon-software.com (Postfix) with ESMTPS id A986C210F;
+	Fri,  7 Jun 2024 12:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1717762093;
+	bh=C0FGKScgnT35/rhseY+g8+MwboIiYrT4rJr94CiH6dY=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=pciVf6LhJPjNSSemFdaR0dyVndK7+XIl3Ol5Urwi736uGXEw+YMn1LLC29agSpdgQ
+	 HiW2zgOEyemCnAwE2iT3bXnnhUS8Cc4gGkMIVWcUv3pcZRLrGzusnOwnNya84ZwvKN
+	 QmnJYKv+QmHVLNthp3kd83AOvQhY2D/nKDCZfKQQ=
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+	by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 8D3D7195;
+	Fri,  7 Jun 2024 12:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=paragon-software.com; s=mail; t=1717762567;
+	bh=C0FGKScgnT35/rhseY+g8+MwboIiYrT4rJr94CiH6dY=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=Rtx/WFi/ykZJaXFGm3HBVjNjkCEEWUQyaucxmFbLNNcTSc+eptRAUchT1VcRMLI4e
+	 49jCBSnBbKXDXQEl/0LoSgDEFTbsYyM+dYNeyMbmwoJavnF82PLaVj9JcZa3hmX5pz
+	 Ss2o6UJfeOQllTIonhl3DU54Tu0ZRN/yrKtY/NWc=
+Received: from ntfs3vm.paragon-software.com (192.168.211.95) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Fri, 7 Jun 2024 15:16:07 +0300
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To: <ntfs3@lists.linux.dev>
+CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Subject: [PATCH 03/18] fs/ntfs3: Fix transform resident to nonresident for compressed files
+Date: Fri, 7 Jun 2024 15:15:33 +0300
+Message-ID: <20240607121548.18818-4-almaz.alexandrovich@paragon-software.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240607122319.768640-1-dev.jain@arm.com>
-References: <20240607122319.768640-1-dev.jain@arm.com>
+In-Reply-To: <20240607121548.18818-1-almaz.alexandrovich@paragon-software.com>
+References: <20240607121548.18818-1-almaz.alexandrovich@paragon-software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
+ vdlg-exch-02.paragon-software.com (172.30.1.105)
 
-This test asserts the relation between blocked signal, delivered signal,
-and ucontext. The ucontext is mangled with, by adding a signal mask to
-it; on return from the handler, the thread must block the corresponding
-signal.
+Сorrected calculation of required space len (in clusters)
+for attribute data storage in case of compression.
 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
+Fixes: be71b5cba2e64 ("fs/ntfs3: Add attrib operations")
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 ---
- tools/testing/selftests/signal/.gitignore     |   1 +
- tools/testing/selftests/signal/Makefile       |   1 +
- .../selftests/signal/mangle_uc_sigmask.c      | 141 ++++++++++++++++++
- 3 files changed, 143 insertions(+)
- create mode 100644 tools/testing/selftests/signal/mangle_uc_sigmask.c
+ fs/ntfs3/attrib.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/signal/.gitignore b/tools/testing/selftests/signal/.gitignore
-index 98a7bbc4f325..ccba56247942 100644
---- a/tools/testing/selftests/signal/.gitignore
-+++ b/tools/testing/selftests/signal/.gitignore
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
- sigaltstack
-+mangle_uc_sigmask
-diff --git a/tools/testing/selftests/signal/Makefile b/tools/testing/selftests/signal/Makefile
-index dd6be992fd81..4ebf6ac2e303 100644
---- a/tools/testing/selftests/signal/Makefile
-+++ b/tools/testing/selftests/signal/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- CFLAGS = -Wall
- TEST_GEN_PROGS = sigaltstack
-+TEST_GEN_PROGS += mangle_uc_sigmask
+diff --git a/fs/ntfs3/attrib.c b/fs/ntfs3/attrib.c
+index 8e6bcdf99770..8638248d80d9 100644
+--- a/fs/ntfs3/attrib.c
++++ b/fs/ntfs3/attrib.c
+@@ -231,7 +231,7 @@ int attr_make_nonresident(struct ntfs_inode *ni, struct ATTRIB *attr,
+ 	struct ntfs_sb_info *sbi;
+ 	struct ATTRIB *attr_s;
+ 	struct MFT_REC *rec;
+-	u32 used, asize, rsize, aoff, align;
++	u32 used, asize, rsize, aoff;
+ 	bool is_data;
+ 	CLST len, alen;
+ 	char *next;
+@@ -252,10 +252,13 @@ int attr_make_nonresident(struct ntfs_inode *ni, struct ATTRIB *attr,
+ 	rsize = le32_to_cpu(attr->res.data_size);
+ 	is_data = attr->type == ATTR_DATA && !attr->name_len;
  
- include ../lib.mk
+-	align = sbi->cluster_size;
+-	if (is_attr_compressed(attr))
+-		align <<= COMPRESSION_UNIT;
+-	len = (rsize + align - 1) >> sbi->cluster_bits;
++	/* len - how many clusters required to store 'rsize' bytes */
++	if (is_attr_compressed(attr)) {
++		u8 shift = sbi->cluster_bits + NTFS_LZNT_CUNIT;
++		len = ((rsize + (1u << shift) - 1) >> shift) << NTFS_LZNT_CUNIT;
++	} else {
++		len = bytes_to_cluster(sbi, rsize);
++	}
  
-diff --git a/tools/testing/selftests/signal/mangle_uc_sigmask.c b/tools/testing/selftests/signal/mangle_uc_sigmask.c
-new file mode 100644
-index 000000000000..0803aeb248a0
---- /dev/null
-+++ b/tools/testing/selftests/signal/mangle_uc_sigmask.c
-@@ -0,0 +1,141 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 ARM Ltd.
-+ *
-+ * Author: Dev Jain <dev.jain@arm.com>
-+ *
-+ * Test describing a clear distinction between signal states - delivered and
-+ * blocked, and their relation with ucontext.
-+ */
-+
-+#include <signal.h>
-+#include <unistd.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <ucontext.h>
-+#include <assert.h>
-+
-+#include "../kselftest.h"
-+
-+void handler_verify_ucontext(int signo, siginfo_t *info, void *uc)
-+{
-+	int ret;
-+
-+	/* Kernel dumps ucontext with USR2 blocked */
-+	ret = sigismember(&(((ucontext_t *)uc)->uc_sigmask), SIGUSR2);
-+	ksft_test_result(ret == 1, "USR2 in ucontext\n");
-+
-+	raise(SIGUSR2);
-+}
-+
-+void handler_segv(int signo, siginfo_t *info, void *uc)
-+{
-+	/*
-+	 * Three cases possible:
-+	 * 1. Program already terminated due to segmentation fault.
-+	 * 2. SEGV was blocked even after returning from handler_usr.
-+	 * 3. SEGV was delivered on returning from handler_usr.
-+	 * The last option must happen.
-+	 */
-+	ksft_test_result_pass("SEGV delivered\n");
-+}
-+
-+static int cnt;
-+
-+void handler_usr(int signo, siginfo_t *info, void *uc)
-+{
-+	int ret;
-+
-+	/*
-+	 * Break out of infinite recursion caused by raise(SIGUSR1) invoked
-+	 * from inside the handler
-+	 */
-+	++cnt;
-+	if (cnt > 1)
-+		return;
-+
-+	ksft_print_msg("In handler_usr\n");
-+
-+	/* SEGV blocked during handler execution, delivered on return */
-+	raise(SIGPIPE);
-+	ksft_print_msg("SEGV bypassed successfully\n");
-+
-+	/*
-+	 * Signal responsible for handler invocation is blocked by default;
-+	 * delivered on return, leading to an infinite recursion
-+	 */
-+	raise(SIGUSR1);
-+	ksft_test_result(cnt == 1,
-+			 "USR1 is blocked, cannot invoke handler again\n");
-+
-+	/* SIGPIPE has been blocked in sa_mask, but ucontext is invariant */
-+	ret = sigismember(&(((ucontext_t *)uc)->uc_sigmask), SIGPIPE);
-+	ksft_test_result(ret == 0, "USR1 not in ucontext\n");
-+
-+	/* SIGUSR1 has been blocked, but ucontext is invariant */
-+	ret = sigismember(&(((ucontext_t *)uc)->uc_sigmask), SIGUSR1);
-+	ksft_test_result(ret == 0, "SEGV not in ucontext\n");
-+
-+	/*
-+	 * Mangle ucontext; this will be copied back into &current->blocked
-+	 * on return from the handler.
-+	 */
-+	if (sigaddset(&((ucontext_t *)uc)->uc_sigmask, SIGUSR2))
-+		ksft_exit_fail_perror("Cannot add into uc_sigmask");
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct sigaction act, act2;
-+	sigset_t *set, *oldset;
-+
-+	ksft_print_header();
-+	ksft_set_plan(6);
-+
-+	act.sa_flags = SA_SIGINFO;
-+	act.sa_sigaction = &handler_usr;
-+
-+	/* add SEGV to blocked mask */
-+	if (sigemptyset(&act.sa_mask) || sigaddset(&act.sa_mask, SIGPIPE)
-+	    || (sigismember(&act.sa_mask, SIGPIPE) != 1))
-+		ksft_exit_fail_msg("Cannot add SEGV to blocked mask\n");
-+
-+	if (sigaction(SIGUSR1, &act, NULL))
-+		ksft_exit_fail_perror("Cannot install handler");
-+
-+	act2.sa_flags = SA_SIGINFO;
-+	act2.sa_sigaction = &handler_segv;
-+
-+	if (sigaction(SIGPIPE, &act2, NULL))
-+		ksft_exit_fail_perror("Cannot install handler");
-+
-+	/* invoke handler */
-+	raise(SIGUSR1);
-+
-+	/* Mangled ucontext implies USR2 is blocked for current thread */
-+	raise(SIGUSR2);
-+	ksft_print_msg("USR2 bypassed successfully\n");
-+
-+	act.sa_sigaction = &handler_verify_ucontext;
-+	if (sigaction(SIGUSR1, &act, NULL))
-+		ksft_exit_fail_perror("Cannot install handler");
-+
-+	raise(SIGUSR1);
-+
-+	ksft_print_msg("USR2 still blocked on return from handler\n");
-+
-+	/* Confirm USR2 blockage by sigprocmask() too */
-+	set = malloc(sizeof(sigset_t *));
-+	oldset = malloc(sizeof(sigset_t *));
-+
-+	if (sigemptyset(set))
-+		ksft_exit_fail_perror("Cannot empty set");
-+
-+	if (sigprocmask(SIG_BLOCK, set, oldset))
-+		ksft_exit_fail_perror("sigprocmask()");
-+
-+	ksft_test_result(sigismember(oldset, SIGUSR2) == 1,
-+			 "USR2 present in &current->blocked\n");
-+
-+	ksft_finished();
-+}
+ 	run_init(run);
+ 
 -- 
 2.34.1
 
