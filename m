@@ -1,143 +1,175 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E976D19413B;
-	Fri,  7 Jun 2024 14:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FE7192B89
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 14:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717769279; cv=none; b=SA/CRH2eDnNDgHcDT9BVTFfLCUlAWXS8LYNH3h1qQy6yN5hEE3zaeCPWu7WcUvj8MF6gzBeTbV244Bjcs4vIc6ReVdf7ojzMdHsX4XAGNzPsCve3hwG4C2DyynUGc45dBhv3rXrbVKJcZ+Uz98xxFD11wUj2qgb4Vbhjg48IAqw=
+	t=1717769455; cv=none; b=MnipIiBNDsnngQtIKv32OgtKCROYzxxNopXZXjP9DiofGY1q3QvTfFVhdBGAqmGUyMnjne6MT4RbNAhMSS+mP1h8D+dsV1vVnT02x5tqgjcz74DsYOf4ZbhCyS6YkS5fCQHsQvdFHOEdIbC3r/okKHM3RGrUf6jpnhR0akZANhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717769279; c=relaxed/simple;
-	bh=Q0qVcx6Lh/xX9m1Yek3cdXKhexjuZvDuIwtmNW3N5x0=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=A6u9ohqKxF1J5iWlwC+c4dRG2uJshdXcKPXGA4UT4OGDjGUhCVBvKeBD0unJ3AzKhdSychb3uHn94hiEYg0GJOZ24pw704M/R4UFustgAP5c4vxWoJKihKjy+iD+81nV7pq2UsOorEipl4R1rJfU1+Vyi7+CQPGrLXNpEahEjH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SNsp2S+e; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717769455; c=relaxed/simple;
+	bh=sciOujBFI9gvywDifAfAlIe7Qf9PZPeyUwNpz1jEwuY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gsfi5cOI+8267uexweup6oMvvtA+lQQbrDWZhufNpTu2arrm8DTaTa4I15b6KCRJWTYc9zUdLGn0rwd8kjiezhVeMLf+g07HYb+TLy+KPuwRvL8NkM7qAj/UP5/YOvO1YpQuyMM7Px6Adox966k0J+5YUBNyHOYL/VNEH8e0WwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pvY2CVq8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNsp2S+e"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-79524f6693dso155515185a.0;
-        Fri, 07 Jun 2024 07:07:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717769277; x=1718374077; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=76G98oggkba1Pa7jOw98g00tlzrNcJsAPnhQ44HuPIY=;
-        b=SNsp2S+erFabSAzT+GGWiMueNXYfLFxCTHtn8U8mSf7xkbQXGzJqfTEX+9/E6ho95u
-         AXKJN9Bc6HjvtbkMdLC/E/2HtKAirh0UrgcNq4tdsiNxiHW5WjvsWAd96uvlsvMVd3jj
-         RDuvdSlLt+jmOsHFaxduPAWP4J8KslHxab17s58rm9d4CHwvup+DTNcKLuYC4aNaNT9J
-         JC9/5qPKFvSEuoMG8wmRqWzb3fzFqxM5xCBhdfrcjXeTdhZOYh83aobBZ8wZbn8YJ5FG
-         r/91CSCdHFgncXIWVmE96fSumLlCWlVkfe5B8bZ8Ik4bH0xho0WgCHS6kdQyobQNnrAn
-         QnCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717769277; x=1718374077;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=76G98oggkba1Pa7jOw98g00tlzrNcJsAPnhQ44HuPIY=;
-        b=uT/ALK57+V88fg/8KBb4bdiCsoDYAB7iNHHFz/JIs4f1dYYTjdUvMrxsd16alWgm9g
-         fytePJsJ8vw538Z1RsH5i9NI4ehTUrLUKviHg9T9cD4PS7jRITvF/aloyicH/bIPFAGy
-         mwt1mvqCuR8ESf+uXs/hoexoK7wCDKgB2ToPyCPMUAnvwe9nKWLujED5wBTIhjUGpcmM
-         zwUQjKxxSM9dSl5MwOsn9kemNJMBRLBg8vug9jXiQ1bPYy+xd1zaQGjPiWsC2JWjEfpl
-         MfZr0+H2XdyaY3pHSRB1zogMDC18Jhu2+IY3vizc66b/HFUpJ8pP7jlvQ6hCNgJfCHzP
-         rTrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWsxnK6YLlVbUzv82ACZzm1chNM+/watTntkRKnWten+qM1qZ2uqiiGokpJN7eiHDGTWbgwyavx3mATHQKuTAmRUzAEmTKWlCh3Xx0oSskmsJ8ckSsnsXE7cOsft/GVPUI8+Kmp
-X-Gm-Message-State: AOJu0Yw9ZzsexVXxjhRAg3bT3JPZr366q232bWdp6Kljlb6LmjMkmZHj
-	zLsBfbx4DnY8D5FAEcmvRjWU2U6pOeVhupgOpS2mdCT9yyyQypZc
-X-Google-Smtp-Source: AGHT+IEx6jdJ6+Tq5s1qSCTBn11J1LjVDiMbsh0HZyTk5UwkDByBNXCQgJJ/nUreX4OfIFYG+w3vaQ==
-X-Received: by 2002:a05:620a:21dd:b0:794:eb25:708b with SMTP id af79cd13be357-7953c4d1ac8mr211497585a.75.1717769276592;
-        Fri, 07 Jun 2024 07:07:56 -0700 (PDT)
-Received: from localhost (56.148.86.34.bc.googleusercontent.com. [34.86.148.56])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-79543f02d1bsm61637785a.34.2024.06.07.07.07.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 07:07:55 -0700 (PDT)
-Date: Fri, 07 Jun 2024 10:07:55 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: joshwash@google.com, 
- netdev@vger.kernel.org
-Cc: davem@davemloft.net, 
- kuba@kernel.org, 
- stable@kernel.org, 
- Joshua Washington <joshwash@google.com>, 
- Praveen Kaligineedi <pkaligineedi@google.com>, 
- Harshitha Ramamurthy <hramamurthy@google.com>, 
- Willem de Bruijn <willemb@google.com>, 
- Eric Dumazet <edumazet@google.com>, 
- Andrei Vagin <avagin@gmail.com>, 
- Jeroen de Borst <jeroendb@google.com>, 
- Shailend Chand <shailend@google.com>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Rushil Gupta <rushilg@google.com>, 
- Bailey Forrest <bcf@google.com>, 
- Catherine Sullivan <csully@google.com>, 
- open list <linux-kernel@vger.kernel.org>
-Message-ID: <6663143b90996_2f27b2949@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20240607060958.2789886-1-joshwash@google.com>
-References: <20240606192139.1872461-1-joshwash@google.com>
- <20240607060958.2789886-1-joshwash@google.com>
-Subject: Re: [PATCH net v2] gve: ignore nonrelevant GSO type bits when
- processing TSO headers
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pvY2CVq8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0159C32782;
+	Fri,  7 Jun 2024 14:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717769455;
+	bh=sciOujBFI9gvywDifAfAlIe7Qf9PZPeyUwNpz1jEwuY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pvY2CVq82lHS2IuDhm/tTt7LaBqa4lOD0C8bwAzVku489mHX+y2OC85cRr3L2Pph7
+	 4mb+lgTl65sM9E++pv74B969fSm0Pt2Czp1IqR9G5PcNNHJdJBK5KIdsw8rnws+rJC
+	 Uo6v5NlFYxNpulwetYMqEb637dfuqyrbjIOvi82SA9g9OKn7+5IkSagf28rruqrGAL
+	 iq57r5eY66ppTyjE4SUObD83ZOZ1C2p+CZUsYUOU8tHR7pA+HizK00eg/ilRvR06D4
+	 xxHCD+S8EjNKPa5vdR9sFQaewZdWWcTr9XXmfVvcHsxtOaCjCyonNZkXT4Eoy7b9/a
+	 i65rb4AsfWNvw==
+Message-ID: <e56b6166-1bb4-411a-a701-51bf452d2369@kernel.org>
+Date: Fri, 7 Jun 2024 22:10:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] f2fs: get rid of buffer_head use
+To: Matthew Wilcox <willy@infradead.org>
+Cc: jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+References: <20240607101829.389015-1-chao@kernel.org>
+ <ZmMMDy9eeCU2igqj@casper.infradead.org>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+Autocrypt: addr=chao@kernel.org; keydata=
+ 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
+In-Reply-To: <ZmMMDy9eeCU2igqj@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-joshwash@ wrote:
-> From: Joshua Washington <joshwash@google.com>
+On 2024/6/7 21:33, Matthew Wilcox wrote:
+> On Fri, Jun 07, 2024 at 06:18:29PM +0800, Chao Yu wrote:
+>> @@ -1990,6 +1989,12 @@ static inline struct f2fs_super_block *F2FS_RAW_SUPER(struct f2fs_sb_info *sbi)
+>>   	return (struct f2fs_super_block *)(sbi->raw_super);
+>>   }
+>>   
+>> +static inline struct f2fs_super_block *F2FS_SUPER_BLOCK(struct folio *folio)
+>> +{
+>> +	return (struct f2fs_super_block *)(page_address(folio_page(folio, 0)) +
+>> +							F2FS_SUPER_OFFSET);
+>> +}
 > 
-> TSO currently fails when the skb's gso_type field has more than one bit
-> set.
-> 
-> TSO packets can be passed from userspace using PF_PACKET, TUNTAP and a
-> few others, using virtio_net_hdr (e.g., PACKET_VNET_HDR). This includes
-> virtualization, such as QEMU, a real use-case.
-> 
-> The gso_type and gso_size fields as passed from userspace in
-> virtio_net_hdr are not trusted blindly by the kernel. It adds gso_type
-> |= SKB_GSO_DODGY to force the packet to enter the software GSO stack
-> for verification.
-> 
-> This issue might similarly come up when the CWR bit is set in the TCP
-> header for congestion control, causing the SKB_GSO_TCP_ECN gso_type bit
-> to be set.
-> 
-> Fixes: a57e5de476be ("gve: DQO: Add TX path")
-> Signed-off-by: Joshua Washington <joshwash@google.com>
-> Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
-> Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
-> Reviewed-by: Willem de Bruijn <willemb@google.com>
-> Suggested-by: Eric Dumazet <edumazet@google.com>
-> Acked-by: Andrei Vagin <avagin@gmail.com>
+> This assumes that the superblock is in the first page of the folio.
+> That's not necessarily guaranteed; let's say you have a 64KiB folio
+> that covers the start of the bdev.
 
-I did not mean to ask for a revision. When you send a v2, please do include
-a changelog
+Oh, I missed to add large folio support in this version.
 
-> ---
->  drivers/net/ethernet/google/gve/gve_tx_dqo.c | 21 +++++---------------
->  1 file changed, 5 insertions(+), 16 deletions(-)
+For the case: page size is 4KiB, and folio size is 64KiB,
+read_mapping_folio(mapping, 0, NULL) and read_mapping_folio(mapping,
+1, NULL) will return the same #0 folio, right?
+
 > 
-> diff --git a/drivers/net/ethernet/google/gve/gve_tx_dqo.c b/drivers/net/ethernet/google/gve/gve_tx_dqo.c
-> index fe1b26a4d736..a76b407a981b 100644
-> --- a/drivers/net/ethernet/google/gve/gve_tx_dqo.c
-> +++ b/drivers/net/ethernet/google/gve/gve_tx_dqo.c
-> @@ -551,32 +551,21 @@ static int gve_prep_tso(struct sk_buff *skb)
->  	 * - Hypervisor enforces a limit of 9K MTU
->  	 * - Kernel will not produce a TSO larger than 64k
->  	 */
-> -
+> I don't quite know how to write this because f2fs defines its block size
+> in terms of PAGE_SIZE, which just seems like nonsense to me.  If you
+> format a filesystem on a 16KiB PAGE_SIZE machine and then try to mount
+> it on a machine with a 4KiB PAGE_SIZE, it's going to go horribly wrong.
 
-Accidental removal?
+f2fs will check on-disk block size w/ PAGE_SIZE in sanity_check_raw_super()
+as below:
 
->  	if (unlikely(skb_shinfo(skb)->gso_size < GVE_TX_MIN_TSO_MSS_DQO))
->  		return -1;
->  
-> +	if (!(skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)))
-> +		return -EINVAL;
-> +
+	/* only support block_size equals to PAGE_SIZE */
+	if (le32_to_cpu(raw_super->log_blocksize) != F2FS_BLKSIZE_BITS) {
+		f2fs_info(sbi, "Invalid log_blocksize (%u), supports only %u",
+			  le32_to_cpu(raw_super->log_blocksize),
+			  F2FS_BLKSIZE_BITS);
+		return -EFSCORRUPTED;
+	}
 
+> 
+> You'd need to pass in something that indicates whether you're trying to
+> access the first or second superblock; there's no way to tell from the
+> folio which one it is.
+> 
+>> +static int __f2fs_commit_super(struct f2fs_sb_info *sbi, struct folio *folio,
+>> +								bool update)
+>>   {
+>> -	lock_buffer(bh);
+>> -	if (super)
+>> -		memcpy(bh->b_data + F2FS_SUPER_OFFSET, super, sizeof(*super));
+>> -	set_buffer_dirty(bh);
+>> -	unlock_buffer(bh);
+>> -
+>> +	struct bio *bio;
+>>   	/* it's rare case, we can do fua all the time */
+>> -	return __sync_dirty_buffer(bh, REQ_SYNC | REQ_PREFLUSH | REQ_FUA);
+>> +	blk_opf_t opf = REQ_OP_WRITE | REQ_SYNC | REQ_PREFLUSH | REQ_FUA;
+>> +	int ret;
+>> +
+>> +	folio_lock(folio);
+>> +	folio_wait_writeback(folio);
+>> +	if (update)
+>> +		memcpy(F2FS_SUPER_BLOCK(folio), F2FS_RAW_SUPER(sbi),
+>> +					sizeof(struct f2fs_super_block));
+>> +	folio_mark_dirty(folio);
+>> +	folio_clear_dirty_for_io(folio);
+>> +	folio_start_writeback(folio);
+>> +	folio_unlock(folio);
+>> +
+>> +	bio = bio_alloc(sbi->sb->s_bdev, 1, opf, GFP_NOFS);
+>> +
+>> +	/* it doesn't need to set crypto context for superblock update */
+>> +	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(folio_index(folio));
+>> +
+>> +	if (!bio_add_folio(bio, folio, PAGE_SIZE, 0))
+>> +		f2fs_bug_on(sbi, 1);
+> 
+> Better make that folio_size(folio) to support bs>PS.
+
+Looks better, will update.
+
+Thanks,
+
+> 
