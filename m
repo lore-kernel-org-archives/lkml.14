@@ -1,327 +1,346 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D4515B967
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 10:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF3115DBC8
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 10:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717756364; cv=none; b=m8HOzZauil8o1YglxRp1lZHssAUipvutsgBUuoME4Wjph7JAVyf/QPfdO1Oa/0tGT5VcNm/V/Q7wjsqYUylgntTFYffXhYt3YFlozp0QngQK28QrhKqABHl3GCqC2Fyv6jQnJ6x2Rr6kYN7cTDl9WRkHU6tkI2ymGOWgbyx2uQY=
+	t=1717756367; cv=none; b=eyixoJLRvvOElYST37eqObF7MdICRa3bhaDiHPq/+arEjGLmHeyH5+0FwOxxcIAFSr1UYs45YjmYuXmczuOtHunLzl2MUjFBOccL4mBD1cTh7zQcgwSQ9pFIxfYJ0c4dCQJeLYAnGkW/RA3Cp0gz4UEpMhT5OKDQRQk8cshgR1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717756364; c=relaxed/simple;
-	bh=os0cVuPzw+jWCbn9VAhGFBwppdv0iftcBV0RHdJQu8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I50MJ72uHBOMRryUO0G12Vw98U4MsS7CRbN46cL/+jzB/hW6bKYGpClfrypVuB9bkHlb3a7/IB+BGH6eHch41p0Dzr3Gyzgejq9waRCIgdHTZf0FdsjW2FznqkTQWoZKV3UuoryisKTx6014zDhCkT+Zdp14us7duQTFFE8bHdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lOpIc55N; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717756367; c=relaxed/simple;
+	bh=bDPI93m5Tt38Imf2xDmlzCR3mDjGDdiW6tBNCWrxUL8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QmwDhSZ1LdQsKG99F2fIa4yCJZUIBndG2f8c+hqbR1Pa6NfqUJqBbbOWFuoEJ6SERmOrhU3KPU/gZN03dtde+gODyOLdFc6LO6bZF48Ut5UxHjptUPLTI2/DrDNg9GyQwd2B8aUcGjwcKe1iq/DYiQrWvOd16m/IBIMfL4P96p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PK645yfm; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lOpIc55N"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2547e1c7bbeso75899fac.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 03:32:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PK645yfm"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5295eb47b48so2476349e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 03:32:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717756361; x=1718361161; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CNWU6NevmfP/UVY2xrrnkXoHv1zTsYjWHUFESWwCj/8=;
-        b=lOpIc55N8Y9hKOX+QQK0VogJcX1sBx4gMqlfnuR6egxHndcMsPSsAqiTQaTFSCngxb
-         ZY4+VfGO12xonkUftx11B5/D5UiOH2zkooJUrYsZGqkwKE0nFt0OSdg2LgvIeSQKKE7V
-         e8hrp7dqFDWGXIurWckKW8RVYnUgpcW+yfZ6nidwsSwloNdFvTSZ90Pgp5m8U0ikTIbs
-         NH5rGt986F9PH36hxINXX35SVsWjbIBLMjHRLphDdRbQqdToPp7Hq7dCGM8umBmliOJR
-         +/JEyaABNHneJxaS6uYewh22PYKE4nQ0gill0LOves+OZI2Z93m3ydVEvvICHm6Z37uX
-         tU8Q==
+        d=linaro.org; s=google; t=1717756363; x=1718361163; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vC9YfLlk7LlLp3bVQxQQxqnW9tFEmO8Ok5Bjp89caCY=;
+        b=PK645yfmfP6AyVZtVVGWQBRvyr3DUjK8Qt+ySmOzcbuUPQvZou2nW9Nh5aqVT1lvak
+         tZEP4mI6Y3c0R4CQi4oyFyvrpupsWjhYw7hWtKXC+7O2wcMEEwqHARF5j9V4Ra/9FQ5u
+         qmWfQkKHYfzsnw3HS8Q71/WrH6dbGq48mflDtpwcqUY+sFnr2jkxt+ikC6Nqxxlq0EYH
+         psUs/eYsM6hrQsTJwJ7PqnmOgy8V507XcXJIHO8cg7HHkp6xjkkmMyTHGXrQJ9VyKzt3
+         N+Rsidis0CS+KEZ8UDou2/Qw4Au66k4qY2x95Ocu2QDrZQZ4qqDDxs+2HkGOM5woinvG
+         x5zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717756361; x=1718361161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1717756363; x=1718361163;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CNWU6NevmfP/UVY2xrrnkXoHv1zTsYjWHUFESWwCj/8=;
-        b=CbfvqER8fLdVfAi5wBCjDLNu75lL/DJbjVK2sY713zTFGkjX8mNa4aQhNVd7P/SM03
-         yIwoodhNSkazz2g0ELFPmBqLbzKhr6toJgw5lPNCqDC5jbdVmOS/ltQWPY+coe41FbrE
-         kuDuOeIY2FHvYhn2zOPOQeDf7XpR+Zoyq9TKrEIwDo7HAZSeRbTr5BOvY2p9OazHT8ZF
-         YaDt/dhHEKuMZ+VS381/FHk4mtN8zhYi/A0YToH2OuRAem/pc7ZucEUWJR7y6wklJRlF
-         rfXwwHBBRNNstD7H/WP685VVOICTsm6lFLMuORVD1Mu+XJ17dB9aSs7OJv1x+7MzMQny
-         hC5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVRZTpvox2nzGleVhKm2A42/W93u7Y0SdfjVdTd8ukRM08d4sDMnf2DyU6wmmQNH12xcouJEjnfORhM811wdheGz9DYGpQWylNNtPrd
-X-Gm-Message-State: AOJu0YzyTluFLJQNSCQ8l3jfTjGyGhVuWzJhVMM759cCE0LIKQJKri46
-	gDFqXXFTNK/0BAs9NUO4S+mWbCZlIKEzXmtV8/GcIhX+yf1CETAAziWHtQANJ1lILWlPp8ajO7c
-	/1Qp1kVFKb7QcbHX00eiEbpf+IqM=
-X-Google-Smtp-Source: AGHT+IFihNgTHkTKtEHFmdxD5PcHYYJNrfIij0oP9vRuroIVk4WKeGn8wwbTlwgWwdeXzuj9/dJJxtR2CNBOz/zQ2mY=
-X-Received: by 2002:a05:6870:c1d4:b0:250:129a:d0ef with SMTP id
- 586e51a60fabf-25464e9e9a6mr2164048fac.36.1717756361069; Fri, 07 Jun 2024
- 03:32:41 -0700 (PDT)
+        bh=vC9YfLlk7LlLp3bVQxQQxqnW9tFEmO8Ok5Bjp89caCY=;
+        b=OjdeDK38n+z82jZSUfbhpUZ4v5+5l44r1pDDbI3HPaa5SIjg64YyNdKfJVopCDI1D4
+         K+vZAAdmaUUp4Epw8hjVZVj3CvFthAZm67ibnQexoeQKhUzeheSWvmAH2+FB2EFM3/+o
+         1Poi6b/oGIqYtE+G7aZqDO4HNZnpIAG4taHGiyyFoqk3dsYRVFeXyan846HetOx8ymEG
+         rQ7rely59jzuWqlpLmPuIcpizwFbGHqBYqu6ENQyhbqCs291FWbYGrZfswAt1OtSUzhT
+         WCnQRLNMrWT18mW6VVGlNCxZObSbvYbI6OEZDshazCVjiNxXwz+wO0G9UotI/M6OiUgw
+         AmNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeviSsJqGbkjwTjX4rZpoaf2hcNXv/d2laVd+OhLL3GPSBaP+pQUC0pXLEh9l5xCPbZYw3TwiLV8LC9aDebKlCbcEUhiB/hoxL9I5P
+X-Gm-Message-State: AOJu0YzIug/64XOkLo9LJBnWgLqdKmQdYnRYf8G5nhsDyE+BzKddxTQu
+	dMlAmBK6KchDdB6sMjqempzYGjqpO6hSLhVTw1vBmlsoHTpXmFLwJqQyNoDxuD8=
+X-Google-Smtp-Source: AGHT+IEqzSqcM07LAv8WDH78ddBMVsEhSfPkve7P0y2iC0HgwAQOjidNGOgp3dL9Xz9Zr8mR0U0HWA==
+X-Received: by 2002:a05:6512:130b:b0:52b:bf8f:5690 with SMTP id 2adb3069b0e04-52bbf8f5813mr884860e87.52.1717756362506;
+        Fri, 07 Jun 2024 03:32:42 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb433ccdbsm483448e87.283.2024.06.07.03.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 03:32:41 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Fri, 07 Jun 2024 13:32:38 +0300
+Subject: [PATCH v5 3/6] usb: typec: ucsi: add Lenovo Yoga C630 glue driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507072242.585-1-xuewen.yan@unisoc.com> <ZmLavE/tO66VUP3D@linux.ibm.com>
-In-Reply-To: <ZmLavE/tO66VUP3D@linux.ibm.com>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Fri, 7 Jun 2024 18:32:30 +0800
-Message-ID: <CAB8ipk8N5MjmPDJzBdc-FZdtVAG7-Wa1YNjq2U05sDPCxE3tgQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] sched: Clear user_cpus_ptr only when no intersection
- with the new mask
-To: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, mingo@redhat.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, vincent.guittot@linaro.org, longman@redhat.com, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, ke.wang@unisoc.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240607-yoga-ec-driver-v5-3-1ac91a0b4326@linaro.org>
+References: <20240607-yoga-ec-driver-v5-0-1ac91a0b4326@linaro.org>
+In-Reply-To: <20240607-yoga-ec-driver-v5-0-1ac91a0b4326@linaro.org>
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Nikita Travkin <nikita@trvn.ru>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7205;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=bDPI93m5Tt38Imf2xDmlzCR3mDjGDdiW6tBNCWrxUL8=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmYuHG7DWpupvE88U4ZwcS5LPGbYU7zV0OPK+Wp
+ 7Qv0GqVzmKJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZmLhxgAKCRCLPIo+Aiko
+ 1aNVB/4+2d1quCNlRlcxfMm3FCbRrZuLFpgn55P6PJRDQvT/npZH7xhRRTXH3Gqhbo2soyJwJgd
+ zMvPQolFlbBYPhQUHqv0nUJ/yfTS13k6G67SXaKY7RoIXgXkcT5NVB6YNpgXFKYkgj6xwstLp21
+ P7OnEQOtaqNxY/oGb6cw5yINqbH2Jp8nDMkhog5qE2s9UfRUKTleSsAEkeyrnyppXYYT8t3DI2+
+ mbwtA6ZrvDuk8TzYP7wGUu0yF90bJsbLEn4XhSn6Le89xnYzpHYj8sj/dwlI5cxm9tF9ZZw+mkv
+ /rynKsbVkgza4AA3RELw0/NSG6SOu9zKEZQdyc0vcy8X6ta4
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Hi Saket
+The Lenovo Yoga C630 WOS laptop provides implements UCSI interface in
+the onboard EC. Add glue driver to interface the platform's UCSI
+implementation.
 
-On Fri, Jun 7, 2024 at 6:02=E2=80=AFPM Saket Kumar Bhaskar <skb99@linux.ibm=
-.com> wrote:
->
-> On Tue, May 07, 2024 at 03:22:42PM +0800, Xuewen Yan wrote:
-> > The commit 851a723e45d1c("sched: Always clear user_cpus_ptr in do_set_c=
-pus_allowed()")
-> > would cause that online/offline cpu will produce different results
-> > for the !top-cpuset task.
-> > For example:
-> >
-> > If the task was running, then offline task's cpus, would lead to clear
-> > its user-mask.
-> >
-> > unisoc:/ # while true; do sleep 600; done&
-> > [1] 6786
-> > unisoc:/ # echo 6786 > /dev/cpuset/top-app/tasks
-> > unisoc:/ # cat /dev/cpuset/top-app/cpus
-> > 0-7
-> > unisoc:/ # cat /proc/6786/status | grep Cpus
-> > Cpus_allowed:   ff
-> > Cpus_allowed_list:      0-7
-> >
-> > unisoc:/ # taskset -p c0 6786
-> > pid 6786's current affinity mask: ff
-> > pid 6786's new affinity mask: c0
-> > unisoc:/ # cat /proc/6786/status | grep Cpus
-> > Cpus_allowed:   c0
-> > Cpus_allowed_list:      6-7
-> >
-> > After offline the cpu6 and cpu7, the user-mask would be cleared:
-> >
-> > unisoc:/ # echo 0 > /sys/devices/system/cpu/cpu7/online
-> > unisoc:/ # cat /proc/6786/status | grep Cpus
-> > Cpus_allowed:   40
-> > Cpus_allowed_list:      6
-> > ums9621_1h10:/ # echo 0 > /sys/devices/system/cpu/cpu6/online
-> > ums9621_1h10:/ # cat /proc/6786/status | grep Cpus
-> > Cpus_allowed:   3f
-> > Cpus_allowed_list:      0-5
-> >
-> > When online the cpu6/7, the user-mask can not bring back:
-> >
-> > unisoc:/ # echo 1 > /sys/devices/system/cpu/cpu6/online
-> > unisoc:/ # echo 1 > /sys/devices/system/cpu/cpu7/online
-> > unisoc:/ # cat /proc/6786/status | grep Cpus
-> > Cpus_allowed:   ff
-> > Cpus_allowed_list:      0-6
-> >
-> > However, if we offline the cpu when the task is sleeping, at this
-> > time, because would not call the fallback_cpu(), its user-mask will
-> > not be cleared.
-> >
-> > unisoc:/ # while true; do sleep 600; done&
-> > [1] 5990
-> > unisoc:/ # echo 5990 > /dev/cpuset/top-app/tasks
-> > unisoc:/ # cat /proc/5990/status | grep Cpus
-> > Cpus_allowed:   ff
-> > Cpus_allowed_list:      0-7
-> >
-> > unisoc:/ # taskset -p c0 5990
-> > pid 5990's current affinity mask: ff
-> > pid 5990's new affinity mask: c0
-> > unisoc:/ # cat /proc/5990/status | grep Cpus
-> > Cpus_allowed:   c0
-> > Cpus_allowed_list:      6-7
-> >
-> > unisoc:/ # echo 0 > /sys/devices/system/cpu/cpu6/online
-> > unisoc:/ # cat /proc/5990/status | grep Cpus
-> > Cpus_allowed:   80
-> > Cpus_allowed_list:      7
-> > unisoc:/ # echo 0 > /sys/devices/system/cpu/cpu7/online
-> > unisoc:/ # cat /proc/5990/status | grep Cpus
-> > Cpus_allowed:   3f
-> > Cpus_allowed_list:      0-5
-> >
-> > After 10 minutes, it was waked up, it can also keep its user-mask:
-> > ums9621_1h10:/ # cat /proc/5990/status | grep Cpus
-> > Cpus_allowed:   3f
-> > Cpus_allowed_list:      0-5
-> >
-> > And when online the cpu6/7,the user-mask could bring back.
-> > unisoc:/ # echo 1 > /sys/devices/system/cpu/cpu6/online
-> > unisoc:/ # echo 1 > /sys/devices/system/cpu/cpu7/online
-> > unisoc:/ # cat /proc/6786/status | grep Cpus
-> > Cpus_allowed:   c0
-> > Cpus_allowed_list:      6-7
-> >
-> > Indeed, there is no need to clear the user_cpus_ptr if there is an
-> > intersection between user_cpus_ptr and new_mask.
-> > So add the judgement of whether there is an intersection between them.
-> > Clear user_cpus_ptr only when no intersection with the new mask.
-> > In this way, the above problems can also be solved.
-> >
-> > Suggested-by: Waiman Long <longman@redhat.com>
-> > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> > ---
-> > previous discussion:
-> >  https://lore.kernel.org/all/e402d623-1875-47a2-9db3-8299a54502ef@redha=
-t.com/
-> > ---
-> >  kernel/sched/core.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 7019a40457a6..bbb8e88949f4 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -2796,21 +2796,24 @@ __do_set_cpus_allowed(struct task_struct *p, st=
-ruct affinity_context *ctx)
-> >  }
-> >
-> >  /*
-> > - * Used for kthread_bind() and select_fallback_rq(), in both cases the=
- user
-> > - * affinity (if any) should be destroyed too.
-> > + * Used for kthread_bind() and select_fallback_rq().
-> > + * Destroy user affinity if no intersection with the new_mask.
-> >   */
-> >  void do_set_cpus_allowed(struct task_struct *p, const struct cpumask *=
-new_mask)
-> >  {
-> >       struct affinity_context ac =3D {
-> >               .new_mask  =3D new_mask,
-> >               .user_mask =3D NULL,
-> > -             .flags     =3D SCA_USER,  /* clear the user requested mas=
-k */
-> > +             .flags     =3D 0,
-> >       };
-> >       union cpumask_rcuhead {
-> >               cpumask_t cpumask;
-> >               struct rcu_head rcu;
-> >       };
-> >
-> > +     if (p->user_cpus_ptr && !cpumask_intersects(p->user_cpus_ptr, new=
-_mask))
-> > +             ac.flags =3D SCA_USER;    /* clear the user requested mas=
-k */
-> > +
-> >       __do_set_cpus_allowed(p, &ac);
-> >
-> >       /*
-> > --
-> > 2.25.1
-> >
->
-> Hi Xuewen,
->
-> I have a query here:
->
-> 1. From the example where task is running, " while true; do sleep 600; do=
-ne& "
->    is being used, which is a sleeping task. How running task is emulated =
-here?
->
-> 2. Tried without patch (6.9.0-rc4) on a 64 CPUs system. Results are:
->
->    For a task that is running:
->
->    # stress-ng -l 100 --cpu 1
->    stress-ng: info:  [2307] defaulting to a 86400 second (1 day, 0.00 sec=
-s) run per stressor
->    stress-ng: info:  [2307] dispatching hogs: 1 cpu
->
->    #taskset -p c0 2308
->    pid 2308's current affinity mask: ffffffffffffffff
->    pid 2308's new affinity mask: c0
->
->    # cat /proc/2308/status |grep Cpus
->    Cpus_allowed:        00000000,000000c0
->    Cpus_allowed_list:   6-7
->
->    #chcpu -d 6,7
->    CPU 6 disabled
->    CPU 7 disabled
->
->    After disabling CPUs 6 and 7:
->
->    # cat /proc/2308/status |grep Cpus
->    Cpus_allowed:        ffffffff,ffffffff
->    Cpus_allowed_list:   0-63
->
->    After enabling CPUs 6 and 7:
->
->    ## chcpu -e 6,7
->    CPU 6 enabled
->    CPU 7 enabled
->
->    # cat /proc/2308/status |grep Cpus
->    Cpus_allowed:        ffffffff,ffffffff
->    Cpus_allowed_list:   0-63
->
->    From the above output, after disabling CPUs 6 and 7, all the CPUs in t=
-he
->    system are displayed rather than showing only remaining online CPUs(as
->    shown in above example).
->
->    For a task that is sleeping:
->
->    # while true; do sleep 60; done&
->    [1] 2541
->
->    # taskset -p c0 2541
->    pid 2541's current affinity mask: ffffffffffffffff
->    pid 2541's new affinity mask: c0
->
->    # cat /proc/2541/status |grep Cpus
->    Cpus_allowed:        00000000,000000c0
->    Cpus_allowed_list:   6-7
->
->    After disabling CPUs 6 and 7:
->
->    # chcpu -d 6,7
->    CPU 6 disabled
->    CPU 7 disabled
->
->    # cat /proc/2541/status |grep Cpus
->    Cpus_allowed:        00000000,000000c0
->    Cpus_allowed_list:   6-7
->
->    After 1 minute:
->
->    # cat /proc/2541/status |grep Cpus
->    Cpus_allowed:        ffffffff,ffffffff
->    Cpus_allowed_list:   0-63
->
->    # chcpu -e 6,7
->    CPU 6 enabled
->    CPU 7 enabled
->
->    # cat /proc/2541/status |grep Cpus
->    Cpus_allowed:        ffffffff,ffffffff
->    Cpus_allowed_list:   0-63
->
->    From the above output, after disabling CPUs 6 and 7, it waked up after
->    1 minute and Cpus_allowed_list got changed to 0-63 (which is contrary
->    to the above example).
->
->    So, there is some deviation in behaviour seen without the patch,
->    than reported or am I missing something?
-
-Whether the thread you are testing belongs to top-cpuset? If so, I
-think is normal.
-And you can see the patch: 3fb906e7fabbb (group/cpuset: Don't filter
-offline CPUs in cpuset_cpus_allowed() for top cpuset tasks).
-
-BR
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-xuewen
->
-> Thanks and regards,
-> Saket Kumar Bhaskar
+ drivers/usb/typec/ucsi/Kconfig          |   9 ++
+ drivers/usb/typec/ucsi/Makefile         |   1 +
+ drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 202 ++++++++++++++++++++++++++++++++
+ 3 files changed, 212 insertions(+)
+
+diff --git a/drivers/usb/typec/ucsi/Kconfig b/drivers/usb/typec/ucsi/Kconfig
+index bdcb1764cfae..680e1b87b152 100644
+--- a/drivers/usb/typec/ucsi/Kconfig
++++ b/drivers/usb/typec/ucsi/Kconfig
+@@ -69,4 +69,13 @@ config UCSI_PMIC_GLINK
+ 	  To compile the driver as a module, choose M here: the module will be
+ 	  called ucsi_glink.
+ 
++config UCSI_LENOVO_YOGA_C630
++	tristate "UCSI Interface Driver for Lenovo Yoga C630"
++	depends on EC_LENOVO_YOGA_C630
++	help
++	  This driver enables UCSI support on the Lenovo Yoga C630 laptop.
++
++	  To compile the driver as a module, choose M here: the module will be
++	  called ucsi_yoga_c630.
++
+ endif
+diff --git a/drivers/usb/typec/ucsi/Makefile b/drivers/usb/typec/ucsi/Makefile
+index b4679f94696b..aed41d23887b 100644
+--- a/drivers/usb/typec/ucsi/Makefile
++++ b/drivers/usb/typec/ucsi/Makefile
+@@ -21,3 +21,4 @@ obj-$(CONFIG_UCSI_ACPI)			+= ucsi_acpi.o
+ obj-$(CONFIG_UCSI_CCG)			+= ucsi_ccg.o
+ obj-$(CONFIG_UCSI_STM32G0)		+= ucsi_stm32g0.o
+ obj-$(CONFIG_UCSI_PMIC_GLINK)		+= ucsi_glink.o
++obj-$(CONFIG_UCSI_LENOVO_YOGA_C630)	+= ucsi_yoga_c630.o
+diff --git a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+new file mode 100644
+index 000000000000..194b49291f28
+--- /dev/null
++++ b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+@@ -0,0 +1,202 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2022-2024, Linaro Ltd
++ * Authors:
++ *  Bjorn Andersson
++ *  Dmitry Baryshkov
++ */
++#include <linux/auxiliary_bus.h>
++#include <linux/bitops.h>
++#include <linux/completion.h>
++#include <linux/container_of.h>
++#include <linux/module.h>
++#include <linux/notifier.h>
++#include <linux/string.h>
++#include <linux/platform_data/lenovo-yoga-c630.h>
++
++#include "ucsi.h"
++
++struct yoga_c630_ucsi {
++	struct yoga_c630_ec *ec;
++	struct ucsi *ucsi;
++	struct notifier_block nb;
++	struct completion complete;
++	unsigned long flags;
++#define UCSI_C630_COMMAND_PENDING	0
++#define UCSI_C630_ACK_PENDING		1
++	u16 version;
++};
++
++static int yoga_c630_ucsi_read(struct ucsi *ucsi, unsigned int offset,
++			       void *val, size_t val_len)
++{
++	struct yoga_c630_ucsi *uec = ucsi_get_drvdata(ucsi);
++	u8 buf[YOGA_C630_UCSI_READ_SIZE];
++	int ret;
++
++	ret = yoga_c630_ec_ucsi_read(uec->ec, buf);
++	if (ret)
++		return ret;
++
++	if (offset == UCSI_VERSION) {
++		memcpy(val, &uec->version, min(val_len, sizeof(uec->version)));
++		return 0;
++	}
++
++	if (offset == UCSI_CCI)
++		memcpy(val, buf, min(val_len, YOGA_C630_UCSI_CCI_SIZE));
++	else if (offset == UCSI_MESSAGE_IN)
++		memcpy(val, buf + YOGA_C630_UCSI_CCI_SIZE,
++		       min(val_len, YOGA_C630_UCSI_DATA_SIZE));
++	else
++		return -EINVAL;
++
++	return 0;
++}
++
++static int yoga_c630_ucsi_async_write(struct ucsi *ucsi, unsigned int offset,
++				      const void *val, size_t val_len)
++{
++	struct yoga_c630_ucsi *uec = ucsi_get_drvdata(ucsi);
++
++	if (offset != UCSI_CONTROL ||
++	    val_len != YOGA_C630_UCSI_WRITE_SIZE)
++		return -EINVAL;
++
++	return yoga_c630_ec_ucsi_write(uec->ec, val);
++}
++
++static int yoga_c630_ucsi_sync_write(struct ucsi *ucsi, unsigned int offset,
++				     const void *val, size_t val_len)
++{
++	struct yoga_c630_ucsi *uec = ucsi_get_drvdata(ucsi);
++	bool ack = UCSI_COMMAND(*(u64 *)val) == UCSI_ACK_CC_CI;
++	int ret;
++
++	if (ack)
++		set_bit(UCSI_C630_ACK_PENDING, &uec->flags);
++	else
++		set_bit(UCSI_C630_COMMAND_PENDING, &uec->flags);
++
++	reinit_completion(&uec->complete);
++
++	ret = yoga_c630_ucsi_async_write(ucsi, offset, val, val_len);
++	if (ret)
++		goto out_clear_bit;
++
++	if (!wait_for_completion_timeout(&uec->complete, 5 * HZ))
++		ret = -ETIMEDOUT;
++
++out_clear_bit:
++	if (ack)
++		clear_bit(UCSI_C630_ACK_PENDING, &uec->flags);
++	else
++		clear_bit(UCSI_C630_COMMAND_PENDING, &uec->flags);
++
++	return ret;
++}
++
++const struct ucsi_operations yoga_c630_ucsi_ops = {
++	.read = yoga_c630_ucsi_read,
++	.sync_write = yoga_c630_ucsi_sync_write,
++	.async_write = yoga_c630_ucsi_async_write,
++};
++
++static void yoga_c630_ucsi_notify_ucsi(struct yoga_c630_ucsi *uec, u32 cci)
++{
++	if (UCSI_CCI_CONNECTOR(cci))
++		ucsi_connector_change(uec->ucsi, UCSI_CCI_CONNECTOR(cci));
++
++	if (cci & UCSI_CCI_ACK_COMPLETE &&
++	    test_bit(UCSI_C630_ACK_PENDING, &uec->flags))
++		complete(&uec->complete);
++
++	if (cci & UCSI_CCI_COMMAND_COMPLETE &&
++	    test_bit(UCSI_C630_COMMAND_PENDING, &uec->flags))
++		complete(&uec->complete);
++}
++
++static int yoga_c630_ucsi_notify(struct notifier_block *nb,
++				 unsigned long action, void *data)
++{
++	struct yoga_c630_ucsi *uec = container_of(nb, struct yoga_c630_ucsi, nb);
++	u32 cci;
++	int ret;
++
++	switch (action) {
++	case LENOVO_EC_EVENT_USB:
++	case LENOVO_EC_EVENT_HPD:
++		ucsi_connector_change(uec->ucsi, 1);
++		return NOTIFY_OK;
++
++	case LENOVO_EC_EVENT_UCSI:
++		ret = uec->ucsi->ops->read(uec->ucsi, UCSI_CCI, &cci, sizeof(cci));
++		if (ret)
++			return NOTIFY_DONE;
++
++		yoga_c630_ucsi_notify_ucsi(uec, cci);
++
++		return NOTIFY_OK;
++
++	default:
++		return NOTIFY_DONE;
++	}
++}
++
++static int yoga_c630_ucsi_probe(struct auxiliary_device *adev,
++				const struct auxiliary_device_id *id)
++{
++	struct yoga_c630_ec *ec = adev->dev.platform_data;
++	struct yoga_c630_ucsi *uec;
++	int ret;
++
++	uec = devm_kzalloc(&adev->dev, sizeof(*uec), GFP_KERNEL);
++	if (!uec)
++		return -ENOMEM;
++
++	uec->ec = ec;
++	init_completion(&uec->complete);
++	uec->nb.notifier_call = yoga_c630_ucsi_notify;
++
++	uec->ucsi = ucsi_create(&adev->dev, &yoga_c630_ucsi_ops);
++	if (IS_ERR(uec->ucsi))
++		return PTR_ERR(uec->ucsi);
++
++	ucsi_set_drvdata(uec->ucsi, uec);
++
++	uec->version = yoga_c630_ec_ucsi_get_version(uec->ec);
++
++	auxiliary_set_drvdata(adev, uec);
++
++	ret = yoga_c630_ec_register_notify(ec, &uec->nb);
++	if (ret)
++		return ret;
++
++	return ucsi_register(uec->ucsi);
++}
++
++static void yoga_c630_ucsi_remove(struct auxiliary_device *adev)
++{
++	struct yoga_c630_ucsi *uec = auxiliary_get_drvdata(adev);
++
++	yoga_c630_ec_unregister_notify(uec->ec, &uec->nb);
++	ucsi_unregister(uec->ucsi);
++}
++
++static const struct auxiliary_device_id yoga_c630_ucsi_id_table[] = {
++	{ .name = YOGA_C630_MOD_NAME "." YOGA_C630_DEV_UCSI, },
++	{}
++};
++MODULE_DEVICE_TABLE(auxiliary, yoga_c630_ucsi_id_table);
++
++static struct auxiliary_driver yoga_c630_ucsi_driver = {
++	.name = YOGA_C630_DEV_UCSI,
++	.id_table = yoga_c630_ucsi_id_table,
++	.probe = yoga_c630_ucsi_probe,
++	.remove = yoga_c630_ucsi_remove,
++};
++
++module_auxiliary_driver(yoga_c630_ucsi_driver);
++
++MODULE_DESCRIPTION("Lenovo Yoga C630 UCSI");
++MODULE_LICENSE("GPL");
+
+-- 
+2.39.2
+
