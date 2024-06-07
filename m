@@ -1,423 +1,118 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061B419309E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 14:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846D9194AC9;
+	Fri,  7 Jun 2024 14:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717771139; cv=none; b=u+tOob8SkjqiTbZ4OfBDVHKQdSYDYbbt3zqU9flraIpSVavbOT3IX+cYY3XUV2XeXGW3vb5hpLhJHwdPJjv5sPyONnOcLay3cBLvfKV7XcpZ20EgHLQCrtt6Bgg14Grotwi3VbTq4g9QWmpuBmTglporNkOi1ZpzbP7mtPg1+bs=
+	t=1717771151; cv=none; b=oXBA7DMvTO7LsEcbmbo7qlmW926i+yl/VKBDAwmmpgobtwCvqxkTbWnAHntdwZxBOQ5u7DRKiMj5q4yW7fXU+5uQoWqOAkuyiXol1zZzBHSnXPLEuHzCbIeaUaZToC2yAaaX3I/bX65QlqkFWt1NQrUbg4pypBNykSQna65xOTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717771139; c=relaxed/simple;
-	bh=5uMP2yOX8Hn91NChX5+SWL/0/u80xBnr2yDTHvhvw3w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b+Rd+hHVTnvDyQJLI1x6m10QkgO+A8X4DTUx6TwuFsV3c7Y83Nrvto32IkrR+y97XoVzO9kJlJKKTLq1RVa0qAWmv4bsxjkJOFgzcIuGTuC7V5wl+lpWmHdmTqS9SeQjcoYZRtpyHF9KNf6dfXrx0EX8oeVvBllQGZSM0cEi5iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=psKzANeL; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717771151; c=relaxed/simple;
+	bh=W3wrYHtqo+bJ8K0enZqOAavHpM96oX/oFjtjuQWi+g4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rdCOUwXWlFyLoxh1EsZu52/A0c2yDVGtpaXuslZv7kvy3DfGbfvqj9Dplbx4L4O84RF6GjyPvqeOvI4XSkVg1pcIbOGlPXN67pVMHg7HTUyr2VPJIl9bdOaYo1rfwP7Dsj17j1wxoRpiP5kLdX2a9TmBpNkM2sUBTgVbepmNTBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKV1tgZ3; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="psKzANeL"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-62a2424ecb8so23389727b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 07:38:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKV1tgZ3"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-6e5fd488d9fso92463a12.3;
+        Fri, 07 Jun 2024 07:39:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717771137; x=1718375937; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VPY3kEn9dtxckyYDxTCJfVvE65ZOGNBoardFeiSOUO4=;
-        b=psKzANeLDOyD5rU34LNNu5jhCJ5T3El1GmG6elV0ba1MhXBGHZPsnDS/t3wHK/HI0B
-         /lzKOWjZ4LuzgA1QIJ7Ot8KB9LvRWhTYZim2IC3rNg3/NkqE3Nge/2VWP2MCQjMaaXYg
-         BW1NPBu8OMQXPDv9y3lzbhg/oHbKUUJRDxhUB6JgWGBmxWtXbmb526X7LXd04rZjwuQn
-         JZDCxVwL2mfP6sUf+quSp/Xjj/Kq06HhXCyR/YnOdrpmRulmSYnHyl1P2RPAtVz9tiBa
-         jz+EG4ZOKTjVfn5MbopWSzIM1ffIbeF5dEkiuDYejdBpsJ/pCVowgZSfj4lD/s2ynuvJ
-         52qg==
+        d=gmail.com; s=20230601; t=1717771150; x=1718375950; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=a/f/Oi5XluXEWQ1D4hzwtOzeMatJYwD5RcCHoIy1Hvk=;
+        b=NKV1tgZ3kwwkKcbhEhgGSLxQUb7TfmoZTdyeE5sog3zktIBnOw4Dj0ifjuglRRneFs
+         BFb/e/fNlm50JsnkZWMpEsLMs6490PoQ33YyVR61QAPRhsWfI9SjUbiXnlLUGNyg2k1J
+         IpXUYhoqRDi5/lf7tN3KDwiy6szxsb5RdZ3CNLMYu6qHBjB/CEq+aUQ0sXGANhxgtwic
+         mfkDk3FkjkhpsEBSCZg1D2f4Hq2pwNwSjkGosmmxL4nPauac+cpaWEuzFKuu8YaeKygM
+         2UIDLnShTb4i5rFbFRpp5cf5+HUXjc3PZvWBv/hK9O0vQJc0BliMTQYXJPJJSzEm3nz6
+         uPrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717771137; x=1718375937;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VPY3kEn9dtxckyYDxTCJfVvE65ZOGNBoardFeiSOUO4=;
-        b=FqlenBd2VZtyhceA+bVIPa2uN5+39ILn1kp+ZYTuGJ/zpwyq+peBk5i3rTZVH7a78T
-         u//thXuDIaf5OjypaewBedNN6WktHabgMFrVQjEAUfHMj68zezWZ1w71hOIvkibApA83
-         ze/6dM+9oBcFTlCk/0Tv+CM1H1utRn+Bh1B+GCm083DH9fPvPOgNqwN7RKFmUo/5LLXi
-         TO2XnacaLWrFEUzJKiX4kJBFTRyNcAPnh4b4zsNAV/aIaqjhl6FB2MIzK85n0NSuX6Pk
-         ifE54PmuYlmlksTkCZu5TN3Am4GDz6scneD2+uymkIPPtJ4NxDW6sGY7sP3Vhv0RzbFl
-         43uw==
-X-Forwarded-Encrypted: i=1; AJvYcCUynLmnDM4i6lDKmhXuoQnqImiMuiHn7cd4eAzI+A9eHLwd/yhUucTmkZX72WRs6y/7EfFD8fo+b/q1hT3ObdPq2obPwwSFKaSYwYzG
-X-Gm-Message-State: AOJu0YzGotiWUytBGsjLkep41tY/3F708Xco5WXX2kDcVfelUhIsUqVf
-	cqxRseuK4prVeLL6xiwGf1OuoB8/C/nCgcMWaH+wBNgfidGqmAUKoC0R2TsNqJVlUUqr/aN8hnu
-	f7Hhby38ALCDkhBBdrPuTohkE6xbtWDsOCk75
-X-Google-Smtp-Source: AGHT+IF9IGu66PpUZhf3pesqD1C7cZCpvg6vwgT7dOW1Z95P6GM8MHILMIrHEn4UXDxfXFqf7IuVk6prvEibZoqUPs8=
-X-Received: by 2002:a25:84c7:0:b0:dfa:b64b:48a5 with SMTP id
- 3f1490d57ef6-dfaf663bf34mr2482386276.19.1717771136602; Fri, 07 Jun 2024
- 07:38:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717771150; x=1718375950;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a/f/Oi5XluXEWQ1D4hzwtOzeMatJYwD5RcCHoIy1Hvk=;
+        b=N3wwe4U4Y5FSSCAS6E5imP3JYqYRc/WiLg/QwHZxboGkmEF4humt+C0xcLWUJOUcXg
+         /xA8+SK0nPu7q49thClWUbxOk7kFdVPVG4xtWCxDk7Cr80KHLsoeL/W6ig+yZbpaP5at
+         gj5FQKjwMBSBbfqL6tZfnlAW6lFCJ8uB2GPZbQ5Y2+OsO6XGoPs04P984/VH/05sMNVN
+         toG8jqu3WgIiZRm9np9VA45N5RkL91Lir23CK9manzHTYsxUYeiVNuxhxvABwFtUsevW
+         eYcCtMqGOhdm9qTocbuPr1syXrH2seldWe2G+sVFKWKSOaB0O5AU18ApJDMsVeVe60Tv
+         jUMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXg3cU2DIe2MTXj+cvnipbIy7TqaXp4WHQHR/AnsH+pfTRSrH6zmFZ77p5VZUSQnPWO40ufc7XueY3NVePhEC12W/btTL4f6oLIx9eyCnKHCDyUPwLfpFDMHYzRFF2VtR14mBuY+mQKJTPxD+cdAsX7gJpJ0XOmHjzGuW4bHcZX/KBsl7H/VQtXUenpcq3lNXkhZzP64w7TqwINfu/5zw==
+X-Gm-Message-State: AOJu0YxLXi91CfNBU94Pbm93X2TfrdVzyPxLvJWlkj4XIC6wCf4/0Ss3
+	4alh41g3o2EjYOgFA/9geBHj8lOtZ+lwyRd4BfKqO+4ZgHH7pFmL
+X-Google-Smtp-Source: AGHT+IG0opAjrQ5yl44/E2vjkow+VRkTP/Cu+hf29SVzv/sfXcq1o8LP+aBY8D5Ig61A82XXqIWqRA==
+X-Received: by 2002:a17:90a:5b14:b0:2bd:744a:1131 with SMTP id 98e67ed59e1d1-2c2bcc65362mr2705930a91.30.1717771149616;
+        Fri, 07 Jun 2024 07:39:09 -0700 (PDT)
+Received: from localhost ([2804:30c:167a:4100:8407:a7e5:9b87:8081])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c2806399c5sm5682717a91.9.2024.06.07.07.39.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 07:39:08 -0700 (PDT)
+Date: Fri, 7 Jun 2024 11:40:23 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, nuno.sa@analog.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/6] spi: spi-axi-spi-engine: Add support for MOSI
+ idle configuration
+Message-ID: <ZmMb10S0ewIwouXJ@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1717539384.git.marcelo.schmitt@analog.com>
+ <a6b00e84325bbe44919cc49509e837f2555367d0.1717539384.git.marcelo.schmitt@analog.com>
+ <ed4fe3de-726b-4eba-a12a-d2f7b1da26d1@baylibre.com>
+ <0e18b3aa83a62103b0f06ee516193c03f80abae9.camel@gmail.com>
+ <f8ce5dc8-ed68-4f04-af3a-187bf0e4a3b3@baylibre.com>
+ <ZmIqxS-xUVMNH_lJ@debian-BULLSEYE-live-builder-AMD64>
+ <04b1296ff98a0accbf962a4a4bafc2e85a9869ae.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531163217.1584450-1-Liam.Howlett@oracle.com> <20240531163217.1584450-4-Liam.Howlett@oracle.com>
-In-Reply-To: <20240531163217.1584450-4-Liam.Howlett@oracle.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 7 Jun 2024 07:38:45 -0700
-Message-ID: <CAJuCfpGxN6Py8zi9CveO+1xRaXd9+=sBFBjNPCjq=0wEmiHZ7A@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/5] mm/mmap: Introduce vma_munmap_struct for use in
- munmap operations
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	sidhartha.kumar@oracle.com, Matthew Wilcox <willy@infradead.org>, 
-	Lorenzo Stoakes <lstoakes@gmail.com>, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <04b1296ff98a0accbf962a4a4bafc2e85a9869ae.camel@gmail.com>
 
-On Fri, May 31, 2024 at 9:33=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> Use a structure to pass along all the necessary information and counters
-> involved in removing vmas from the mm_struct.
->
-> Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+On 06/07, Nuno Sá wrote:
+> On Thu, 2024-06-06 at 18:31 -0300, Marcelo Schmitt wrote:
+> 
+> ...
+> 
+> > 
+> > 
+> > 
+> > When is a driver version check needed?
+> > Yes, older versions of SPI-Engine won't support this, but the patch set should
+> > cause no regression. Even if loading the current ad4000 driver with
+> > older SPI-Engine HDL and driver, the ADC driver would get a warn (or error?)
+> > and do what's possible without MOSI idle feature (probably only be able to do
+> > reg access) or fail probing.
+> > 
+> 
+> Maybe I'm missing something but with the patchset we unconditionally set
+> SPI_MOSI_IDLE_HIGH. So if we load an hdl which does not support it things will
+> apparently be ok but it won't actually work, right? If I'm right we should have
+Yes, that's correct.
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> a bit in a RO config_register telling us that the feature is being supported or
+> not. That way we only set the mode bit if we do support it...
 
-> ---
->  mm/internal.h |  16 ++++++
->  mm/mmap.c     | 133 +++++++++++++++++++++++++++++---------------------
->  2 files changed, 94 insertions(+), 55 deletions(-)
->
-> diff --git a/mm/internal.h b/mm/internal.h
-> index b2c75b12014e..6ebf77853d68 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -1428,6 +1428,22 @@ struct vma_prepare {
->         struct vm_area_struct *remove2;
->  };
->
-> +/*
-> + * vma munmap operation
-> + */
-> +struct vma_munmap_struct {
-> +       struct vma_iterator *vmi;
-> +       struct mm_struct *mm;
-> +       struct vm_area_struct *vma;     /* The first vma to munmap */
-> +       struct list_head *uf;           /* Userfaultfd list_head */
-> +       unsigned long start;            /* Aligned start addr */
-> +       unsigned long end;              /* Aligned end addr */
-> +       int vma_count;                  /* Number of vmas that will be re=
-moved */
-> +       unsigned long nr_pages;         /* Number of pages being removed =
-*/
-> +       unsigned long locked_vm;        /* Number of locked pages */
-> +       bool unlock;                    /* Unlock after the munmap */
-> +};
-> +
->  void __meminit __init_single_page(struct page *page, unsigned long pfn,
->                                 unsigned long zone, int nid);
->
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index fad40d604c64..57f2383245ea 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -459,6 +459,31 @@ static inline void init_vma_prep(struct vma_prepare =
-*vp,
->         init_multi_vma_prep(vp, vma, NULL, NULL, NULL);
->  }
->
-> +/*
-> + * init_vma_munmap() - Initializer wrapper for vma_munmap_struct
-> + * @vms: The vma munmap struct
-> + * @vmi: The vma iterator
-> + * @vma: The first vm_area_struct to munmap
-> + * @start: The aligned start address to munmap
-> + * @end: The aligned end address to munmap
-> + * @uf: The userfaultfd list_head
-> + * @unlock: Unlock after the operation.  Only unlocked on success
-> + */
-> +static inline void init_vma_munmap(struct vma_munmap_struct *vms,
-> +               struct vma_iterator *vmi, struct vm_area_struct *vma,
-> +               unsigned long start, unsigned long end, struct list_head =
-*uf,
-> +               bool unlock)
-> +{
-> +       vms->vmi =3D vmi;
-> +       vms->vma =3D vma;
-> +       vms->mm =3D vma->vm_mm;
-> +       vms->start =3D start;
-> +       vms->end =3D end;
-> +       vms->unlock =3D unlock;
-> +       vms->uf =3D uf;
-> +       vms->vma_count =3D 0;
-> +       vms->nr_pages =3D vms->locked_vm =3D 0;
-> +}
->
->  /*
->   * vma_prepare() - Helper function for handling locking VMAs prior to al=
-tering
-> @@ -2340,7 +2365,6 @@ static inline void remove_mt(struct mm_struct *mm, =
-struct ma_state *mas)
->
->                 if (vma->vm_flags & VM_ACCOUNT)
->                         nr_accounted +=3D nrpages;
-> -
->                 vm_stat_account(mm, vma->vm_flags, -nrpages);
->                 remove_vma(vma, false);
->         }
-> @@ -2562,29 +2586,20 @@ static inline void abort_munmap_vmas(struct ma_st=
-ate *mas_detach)
->  }
->
->  /*
-> - * vmi_gather_munmap_vmas() - Put all VMAs within a range into a maple t=
-ree
-> + * vms_gather_munmap_vmas() - Put all VMAs within a range into a maple t=
-ree
->   * for removal at a later date.  Handles splitting first and last if nec=
-essary
->   * and marking the vmas as isolated.
->   *
-> - * @vmi: The vma iterator
-> - * @vma: The starting vm_area_struct
-> - * @mm: The mm_struct
-> - * @start: The aligned start address to munmap.
-> - * @end: The aligned end address to munmap.
-> - * @uf: The userfaultfd list_head
-> + * @vms: The vma munmap struct
->   * @mas_detach: The maple state tracking the detached tree
->   *
->   * Return: 0 on success
->   */
-> -static int
-> -vmi_gather_munmap_vmas(struct vma_iterator *vmi, struct vm_area_struct *=
-vma,
-> -                   struct mm_struct *mm, unsigned long start,
-> -                   unsigned long end, struct list_head *uf,
-> -                   struct ma_state *mas_detach, unsigned long *locked_vm=
-)
-> +static int vms_gather_munmap_vmas(struct vma_munmap_struct *vms,
-> +               struct ma_state *mas_detach)
->  {
->         struct vm_area_struct *next =3D NULL;
->         int error =3D -ENOMEM;
-> -       int count =3D 0;
->
->         /*
->          * If we need to split any vma, do it now to save pain later.
-> @@ -2595,17 +2610,18 @@ vmi_gather_munmap_vmas(struct vma_iterator *vmi, =
-struct vm_area_struct *vma,
->          */
->
->         /* Does it split the first one? */
-> -       if (start > vma->vm_start) {
-> +       if (vms->start > vms->vma->vm_start) {
->
->                 /*
->                  * Make sure that map_count on return from munmap() will
->                  * not exceed its limit; but let map_count go just above
->                  * its limit temporarily, to help free resources as expec=
-ted.
->                  */
-> -               if (end < vma->vm_end && mm->map_count >=3D sysctl_max_ma=
-p_count)
-> +               if (vms->end < vms->vma->vm_end &&
-> +                   vms->mm->map_count >=3D sysctl_max_map_count)
->                         goto map_count_exceeded;
->
-> -               error =3D __split_vma(vmi, vma, start, 1);
-> +               error =3D __split_vma(vms->vmi, vms->vma, vms->start, 1);
->                 if (error)
->                         goto start_split_failed;
->         }
-> @@ -2614,24 +2630,24 @@ vmi_gather_munmap_vmas(struct vma_iterator *vmi, =
-struct vm_area_struct *vma,
->          * Detach a range of VMAs from the mm. Using next as a temp varia=
-ble as
->          * it is always overwritten.
->          */
-> -       next =3D vma;
-> +       next =3D vms->vma;
->         do {
->                 /* Does it split the end? */
-> -               if (next->vm_end > end) {
-> -                       error =3D __split_vma(vmi, next, end, 0);
-> +               if (next->vm_end > vms->end) {
-> +                       error =3D __split_vma(vms->vmi, next, vms->end, 0=
-);
->                         if (error)
->                                 goto end_split_failed;
->                 }
->                 vma_start_write(next);
-> -               mas_set(mas_detach, count++);
-> +               mas_set(mas_detach, vms->vma_count++);
->                 if (next->vm_flags & VM_LOCKED)
-> -                       *locked_vm +=3D vma_pages(next);
-> +                       vms->locked_vm +=3D vma_pages(next);
->
->                 error =3D mas_store_gfp(mas_detach, next, GFP_KERNEL);
->                 if (error)
->                         goto munmap_gather_failed;
->                 vma_mark_detached(next, true);
-> -               if (unlikely(uf)) {
-> +               if (unlikely(vms->uf)) {
->                         /*
->                          * If userfaultfd_unmap_prep returns an error the=
- vmas
->                          * will remain split, but userland will get a
-> @@ -2641,16 +2657,17 @@ vmi_gather_munmap_vmas(struct vma_iterator *vmi, =
-struct vm_area_struct *vma,
->                          * split, despite we could. This is unlikely enou=
-gh
->                          * failure that it's not worth optimizing it for.
->                          */
-> -                       error =3D userfaultfd_unmap_prep(next, start, end=
-, uf);
-> +                       error =3D userfaultfd_unmap_prep(next, vms->start=
-,
-> +                                                      vms->end, vms->uf)=
-;
->
->                         if (error)
->                                 goto userfaultfd_error;
->                 }
->  #ifdef CONFIG_DEBUG_VM_MAPLE_TREE
-> -               BUG_ON(next->vm_start < start);
-> -               BUG_ON(next->vm_start > end);
-> +               BUG_ON(next->vm_start < vms->start);
-> +               BUG_ON(next->vm_start > vms->end);
->  #endif
-> -       } for_each_vma_range(*vmi, next, end);
-> +       } for_each_vma_range(*(vms->vmi), next, vms->end);
->
->  #if defined(CONFIG_DEBUG_VM_MAPLE_TREE)
->         /* Make sure no VMAs are about to be lost. */
-> @@ -2659,21 +2676,21 @@ vmi_gather_munmap_vmas(struct vma_iterator *vmi, =
-struct vm_area_struct *vma,
->                 struct vm_area_struct *vma_mas, *vma_test;
->                 int test_count =3D 0;
->
-> -               vma_iter_set(vmi, start);
-> +               vma_iter_set(vms->vmi, vms->start);
->                 rcu_read_lock();
-> -               vma_test =3D mas_find(&test, count - 1);
-> -               for_each_vma_range(*vmi, vma_mas, end) {
-> +               vma_test =3D mas_find(&test, vms->vma_count - 1);
-> +               for_each_vma_range(*(vms->vmi), vma_mas, vms->end) {
->                         BUG_ON(vma_mas !=3D vma_test);
->                         test_count++;
-> -                       vma_test =3D mas_next(&test, count - 1);
-> +                       vma_test =3D mas_next(&test, vms->vma_count - 1);
->                 }
->                 rcu_read_unlock();
-> -               BUG_ON(count !=3D test_count);
-> +               BUG_ON(vms->vma_count !=3D test_count);
->         }
->  #endif
->
-> -       while (vma_iter_addr(vmi) > start)
-> -               vma_iter_prev_range(vmi);
-> +       while (vma_iter_addr(vms->vmi) > vms->start)
-> +               vma_iter_prev_range(vms->vmi);
->
->         return 0;
->
-> @@ -2686,38 +2703,44 @@ vmi_gather_munmap_vmas(struct vma_iterator *vmi, =
-struct vm_area_struct *vma,
->         return error;
->  }
->
-> -static void
-> -vmi_complete_munmap_vmas(struct vma_iterator *vmi, struct vm_area_struct=
- *vma,
-> -               struct mm_struct *mm, unsigned long start,
-> -               unsigned long end, bool unlock, struct ma_state *mas_deta=
-ch,
-> -               unsigned long locked_vm)
-> +/*
-> + * vmi_complete_munmap_vmas() - Update mm counters, unlock if directed, =
-and free
-> + * all VMA resources.
-> + *
-> + * do_vmi_align_munmap() - munmap the aligned region from @start to @end=
-.
-> + * @vms: The vma munmap struct
-> + * @mas_detach: The maple state of the detached vmas
-> + *
-> + */
-> +static void vms_complete_munmap_vmas(struct vma_munmap_struct *vms,
-> +               struct ma_state *mas_detach)
->  {
->         struct vm_area_struct *prev, *next;
-> -       int count;
-> +       struct mm_struct *mm;
->
-> -       count =3D mas_detach->index + 1;
-> -       mm->map_count -=3D count;
-> -       mm->locked_vm -=3D locked_vm;
-> -       if (unlock)
-> +       mm =3D vms->mm;
-> +       mm->map_count -=3D vms->vma_count;
-> +       mm->locked_vm -=3D vms->locked_vm;
-> +       if (vms->unlock)
->                 mmap_write_downgrade(mm);
->
-> -       prev =3D vma_iter_prev_range(vmi);
-> -       next =3D vma_next(vmi);
-> +       prev =3D vma_iter_prev_range(vms->vmi);
-> +       next =3D vma_next(vms->vmi);
->         if (next)
-> -               vma_iter_prev_range(vmi);
-> +               vma_iter_prev_range(vms->vmi);
->
->         /*
->          * We can free page tables without write-locking mmap_lock becaus=
-e VMAs
->          * were isolated before we downgraded mmap_lock.
->          */
->         mas_set(mas_detach, 1);
-> -       unmap_region(mm, mas_detach, vma, prev, next, start, end, count,
-> -                    !unlock);
-> +       unmap_region(mm, mas_detach, vms->vma, prev, next, vms->start, vm=
-s->end,
-> +                    vms->vma_count, !vms->unlock);
->         /* Statistics and freeing VMAs */
->         mas_set(mas_detach, 0);
->         remove_mt(mm, mas_detach);
->         validate_mm(mm);
-> -       if (unlock)
-> +       if (vms->unlock)
->                 mmap_read_unlock(mm);
->
->         __mt_destroy(mas_detach->tree);
-> @@ -2746,11 +2769,12 @@ do_vmi_align_munmap(struct vma_iterator *vmi, str=
-uct vm_area_struct *vma,
->         MA_STATE(mas_detach, &mt_detach, 0, 0);
->         mt_init_flags(&mt_detach, vmi->mas.tree->ma_flags & MT_FLAGS_LOCK=
-_MASK);
->         mt_on_stack(mt_detach);
-> +       struct vma_munmap_struct vms;
->         int error;
-> -       unsigned long locked_vm =3D 0;
->
-> -       error =3D vmi_gather_munmap_vmas(vmi, vma, mm, start, end, uf,
-> -                                      &mas_detach, &locked_vm);
-> +       init_vma_munmap(&vms, vmi, vma, start, end, uf, unlock);
-> +
-> +       error =3D vms_gather_munmap_vmas(&vms, &mas_detach);
->         if (error)
->                 goto gather_failed;
->
-> @@ -2758,8 +2782,7 @@ do_vmi_align_munmap(struct vma_iterator *vmi, struc=
-t vm_area_struct *vma,
->         if (error)
->                 goto clear_area_failed;
->
-> -       vmi_complete_munmap_vmas(vmi, vma, mm, start, end, unlock, &mas_d=
-etach,
-> -                                locked_vm);
-> +       vms_complete_munmap_vmas(&vms, &mas_detach);
->         return 0;
->
->  clear_area_failed:
-> --
-> 2.43.0
->
+Ok, understood. Will do it for v4.
+
+Thanks,
+Marcelo
+
+> 
+> - Nuno Sá
+> 
+> 
