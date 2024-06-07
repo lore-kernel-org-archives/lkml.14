@@ -1,242 +1,173 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07719405F8;
-	Fri,  7 Jun 2024 08:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F3C405F8
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 08:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717749994; cv=none; b=PjWr4NROvW61KuL7FRoqBjlfjrW1Tq4sEVtN/PuJC0EP25xzjebLgWXyrzlwI+IlCgtsNc7HRULT/yOHj/jGHPzzGqIwowoyeVT5lRisiajbRzw1vIQVBoolcIIdrCyVO7Z1eRGkwlfB+1rqyaCxz7vMRvMK+ddZWo2uvfLAFxk=
+	t=1717749998; cv=none; b=CYyTUZek76h+oXFi8YZ+zhJIccpEbYb+uOYYxTz0mIqfwbGvjiyjU2rnKx17Np5rjswJQ1hscuBRTnHxwAOV++omHpJqgKbxFaEhoOxUY8LYuddUtpaqurhj09A9nbzzvOC3LQnRgpv3dGPHgalqJ08mztnAL3lWL6xxYI24Ewc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717749994; c=relaxed/simple;
-	bh=RkoxeDs0BfHXdYBL6o220lGNyfSDAdZpkZOtWdQb+QM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SHnSPnookXuAy2WSgv1C7cwiuOVPcobtyJhW+FGYeHLA11DZhg7g6naQeoJErejnuWjvh8Qff3XPKydexOe6eCCJCkLzTx1lNTqsRtzmleEXOKMors1ehA+il/Oo+dUtD3VSqlS/ER4EQonJCmSMuOSmwmhPZdVSDLGgWxQyscs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4578k9LL13816826, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4578k9LL13816826
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Jun 2024 16:46:09 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 7 Jun 2024 16:46:09 +0800
-Received: from RTDOMAIN (172.21.210.98) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 7 Jun
- 2024 16:46:08 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai
-	<justinlai0215@realtek.com>
-Subject: [PATCH net-next v20 03/13] rtase: Implement the rtase_down function
-Date: Fri, 7 Jun 2024 16:43:11 +0800
-Message-ID: <20240607084321.7254-4-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240607084321.7254-1-justinlai0215@realtek.com>
-References: <20240607084321.7254-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1717749998; c=relaxed/simple;
+	bh=2Wa8WJN+LkbpX5rIrmW7DojlEn69aWowv37cc5RuTJc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZTZlNBJeA6HHWdO+7m+n2EsIuEdzusUrGp5p+5GP5x0dmbwnav5sAQaDteqRPR48puWlAWjbFu2JpCy7LAnh1fislh5gcpGqHLPCSqjFMqTI+X4ujxZk4i1Fy147T4VI2LpXTcNiHbZLsqkeWiAGWpy3AGDV2CnBxzxtygoEtH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SU8dgZ01; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SU8dgZ01"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717749995;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pHc7ht3SZXEa6o5dCgAIwUAQvCXAypKl+sYnw9GSGFg=;
+	b=SU8dgZ01aGw2km91ot3aIqA8QeD+nZlsAl0xGU/PMJgJcY0b/n3t1jJnGuLDWuM0uqMqEZ
+	pdEHcoI6epWPmKxuRG4wvoSg3gtB7/qtX5fNpHLhCOSlqCBIdB0eL+mUYsfkjiV7V/xMuV
+	7Zi9ofTvVvx0z+vHAgCMwqp99sIQMbM=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-519--r8-GXrAO72qig3MfoYghg-1; Fri, 07 Jun 2024 04:46:29 -0400
+X-MC-Unique: -r8-GXrAO72qig3MfoYghg-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-52bbe6a1c80so295202e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 01:46:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717749988; x=1718354788;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pHc7ht3SZXEa6o5dCgAIwUAQvCXAypKl+sYnw9GSGFg=;
+        b=aw1zMe/kwqZqSAr6WeoT0auGyvPrALiscfJOAwBpCYRqpGJukU2c+7xTtcPIEz4O9K
+         4L9+5uIIZk2ra9oJs8ABkEakEZ7sHkqal6UPRuC02wb6jYwIPUTtW9iuLOngB0d0IIFN
+         dEkbf0Yj0ArpTSZjgRlSJCLX9UPT9uPgGnNBiman0iy0IOVBt7lUV04CbdKAUZJBBCOo
+         Ao+4KWBOmARCZfZsM2xx+KbZjAL+dcaXbUY6kccnKwD57S3EAhRIHQPIu+IlUbTx2S1g
+         1rg5z332Mxn/VbKB/w16aTPEzE4fFWXy2z4s2x4uMl3F/tW8iwk2FSO8oJahAPGZFOMI
+         ffOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVpcpR4Kn5+hTUuIg5Z48EBCmNlSroyaMrxxZrX8PN/JGEQsL9RUQ7l4oaCmz+hnKzhM6sZkaq8Zxryc6mooulobXdm14hsZMEGXsa3
+X-Gm-Message-State: AOJu0YzDPCRlqgEnX/7McSawy4eJyIfVpz6rSba2whI6umRJQ9PimxF+
+	lOStagMHf6M93y/gRZChn6suY6Vj0FSS+M3KDF4IPYlrHPAM/AlgJmZX1hAAQMuZAS7Z9n2b1Rf
+	4fzIGJyHXNe9zv46UErCwkE7BULBoYNieYrRjhGDwNQQNbcNK5uUgjkALC8BMKOzG9ClfUaGQAZ
+	8AdgVQ6y4gm/M3F8W61LRc9HZbSOLb2QkKfeSp
+X-Received: by 2002:a05:6512:484f:b0:518:c69b:3a04 with SMTP id 2adb3069b0e04-52bb9f17544mr1580693e87.0.1717749988141;
+        Fri, 07 Jun 2024 01:46:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG/RUpTs7PSC3j3HsAZ81KZAsJhPLtVSgMtkMt2HZENken/B/jFKI6iqgyxSHoSLGc1sRRr8s9LzxGLTffk/Ic=
+X-Received: by 2002:a05:6512:484f:b0:518:c69b:3a04 with SMTP id
+ 2adb3069b0e04-52bb9f17544mr1580678e87.0.1717749987705; Fri, 07 Jun 2024
+ 01:46:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+References: <20240530210714.364118-1-rick.p.edgecombe@intel.com> <20240530210714.364118-10-rick.p.edgecombe@intel.com>
+In-Reply-To: <20240530210714.364118-10-rick.p.edgecombe@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Fri, 7 Jun 2024 10:46:15 +0200
+Message-ID: <CABgObfbzjLtzFX9wC_FU2GKGF_Wq8og+O=pSnG_yD8j1Dn3jAg@mail.gmail.com>
+Subject: Re: [PATCH v2 09/15] KVM: x86/tdp_mmu: Support mirror root for TDP MMU
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: seanjc@google.com, kvm@vger.kernel.org, kai.huang@intel.com, 
+	dmatlack@google.com, erdemaktas@google.com, isaku.yamahata@gmail.com, 
+	linux-kernel@vger.kernel.org, sagis@google.com, yan.y.zhao@intel.com, 
+	Isaku Yamahata <isaku.yamahata@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Implement the rtase_down function to disable hardware setting
-and interrupt and clear descriptor ring.
+On Thu, May 30, 2024 at 11:07=E2=80=AFPM Rick Edgecombe
+<rick.p.edgecombe@intel.com> wrote:
+> +static inline bool kvm_on_mirror(const struct kvm *kvm, enum kvm_process=
+ process)
+> +{
+> +       if (!kvm_has_mirrored_tdp(kvm))
+> +               return false;
+> +
+> +       return process & KVM_PROCESS_PRIVATE;
+> +}
+> +
+> +static inline bool kvm_on_direct(const struct kvm *kvm, enum kvm_process=
+ process)
+> +{
+> +       if (!kvm_has_mirrored_tdp(kvm))
+> +               return true;
+> +
+> +       return process & KVM_PROCESS_SHARED;
+> +}
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 152 ++++++++++++++++++
- 1 file changed, 152 insertions(+)
+These helpers don't add much, it's easier to just write
+kvm_process_to_root_types() as
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 80ee963971c0..caff2cfe78c7 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -194,6 +194,57 @@ static void rtase_free_desc(struct rtase_private *tp)
- 	}
- }
- 
-+static void rtase_unmap_tx_skb(struct pci_dev *pdev, u32 len,
-+			       struct rtase_tx_desc *desc)
-+{
-+	dma_unmap_single(&pdev->dev, le64_to_cpu(desc->addr), len,
-+			 DMA_TO_DEVICE);
-+	desc->opts1 = cpu_to_le32(RTK_OPTS1_DEBUG_VALUE);
-+	desc->opts2 = 0x00;
-+	desc->addr = cpu_to_le64(RTK_MAGIC_NUMBER);
-+}
-+
-+static void rtase_tx_clear_range(struct rtase_ring *ring, u32 start, u32 n)
-+{
-+	const struct rtase_private *tp = ring->ivec->tp;
-+	struct rtase_tx_desc *desc_base = ring->desc;
-+	struct net_device *dev = tp->dev;
-+	u32 i;
-+
-+	for (i = 0; i < n; i++) {
-+		u32 entry = (start + i) % RTASE_NUM_DESC;
-+		struct rtase_tx_desc *desc = desc_base + entry;
-+		u32 len = ring->mis.len[entry];
-+		struct sk_buff *skb;
-+
-+		if (len == 0)
-+			continue;
-+
-+		rtase_unmap_tx_skb(tp->pdev, len, desc);
-+		ring->mis.len[entry] = 0;
-+		skb = ring->skbuff[entry];
-+		if (!skb)
-+			continue;
-+
-+		dev->stats.tx_dropped++;
-+		dev_kfree_skb_any(skb);
-+		ring->skbuff[entry] = NULL;
-+	}
-+}
-+
-+static void rtase_tx_clear(struct rtase_private *tp)
-+{
-+	struct rtase_ring *ring;
-+	u16 i;
-+
-+	for (i = 0; i < tp->func_tx_queue_num; i++) {
-+		ring = &tp->tx_ring[i];
-+		rtase_tx_clear_range(ring, ring->dirty_idx, RTASE_NUM_DESC);
-+		ring->cur_idx = 0;
-+		ring->dirty_idx = 0;
-+	}
-+}
-+
- static void rtase_mark_to_asic(union rtase_rx_desc *desc, u32 rx_buf_sz)
- {
- 	u32 eor = le32_to_cpu(desc->desc_cmd.opts1) & RTASE_RING_END;
-@@ -430,6 +481,80 @@ static void rtase_tally_counter_clear(const struct rtase_private *tp)
- 	rtase_w32(tp, RTASE_DTCCR0, cmd | RTASE_COUNTER_RESET);
- }
- 
-+static void rtase_irq_dis_and_clear(const struct rtase_private *tp)
-+{
-+	const struct rtase_int_vector *ivec = &tp->int_vector[0];
-+	u32 val1;
-+	u16 val2;
-+	u8 i;
-+
-+	rtase_w32(tp, ivec->imr_addr, 0);
-+	val1 = rtase_r32(tp, ivec->isr_addr);
-+	rtase_w32(tp, ivec->isr_addr, val1);
-+
-+	for (i = 1; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		rtase_w16(tp, ivec->imr_addr, 0);
-+		val2 = rtase_r16(tp, ivec->isr_addr);
-+		rtase_w16(tp, ivec->isr_addr, val2);
-+	}
-+}
-+
-+static void rtase_poll_timeout(const struct rtase_private *tp, u32 cond,
-+			       u32 sleep_us, u64 timeout_us, u16 reg)
-+{
-+	int err;
-+	u8 val;
-+
-+	err = read_poll_timeout(rtase_r8, val, val & cond, sleep_us,
-+				timeout_us, false, tp, reg);
-+
-+	if (err == -ETIMEDOUT)
-+		netdev_err(tp->dev, "poll reg 0x00%x timeout\n", reg);
-+}
-+
-+static void rtase_nic_reset(const struct net_device *dev)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	u16 rx_config;
-+	u8 val;
-+
-+	rx_config = rtase_r16(tp, RTASE_RX_CONFIG_0);
-+	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_config & ~RTASE_ACCEPT_MASK);
-+
-+	val = rtase_r8(tp, RTASE_MISC);
-+	rtase_w8(tp, RTASE_MISC, val | RTASE_RX_DV_GATE_EN);
-+
-+	val = rtase_r8(tp, RTASE_CHIP_CMD);
-+	rtase_w8(tp, RTASE_CHIP_CMD, val | RTASE_STOP_REQ);
-+	mdelay(2);
-+
-+	rtase_poll_timeout(tp, RTASE_STOP_REQ_DONE, 100, 150000,
-+			   RTASE_CHIP_CMD);
-+
-+	rtase_poll_timeout(tp, RTASE_TX_FIFO_EMPTY, 100, 100000,
-+			   RTASE_FIFOR);
-+
-+	rtase_poll_timeout(tp, RTASE_RX_FIFO_EMPTY, 100, 100000,
-+			   RTASE_FIFOR);
-+
-+	val = rtase_r8(tp, RTASE_CHIP_CMD);
-+	rtase_w8(tp, RTASE_CHIP_CMD, val & ~(RTASE_TE | RTASE_RE));
-+	val = rtase_r8(tp, RTASE_CHIP_CMD);
-+	rtase_w8(tp, RTASE_CHIP_CMD, val & ~RTASE_STOP_REQ);
-+
-+	rtase_w16(tp, RTASE_RX_CONFIG_0, rx_config);
-+}
-+
-+static void rtase_hw_reset(const struct net_device *dev)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+
-+	rtase_irq_dis_and_clear(tp);
-+
-+	rtase_nic_reset(dev);
-+}
-+
- static void rtase_nic_enable(const struct net_device *dev)
- {
- 	const struct rtase_private *tp = netdev_priv(dev);
-@@ -533,6 +658,33 @@ static int rtase_open(struct net_device *dev)
- 	return ret;
- }
- 
-+static void rtase_down(struct net_device *dev)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+	struct rtase_int_vector *ivec;
-+	struct rtase_ring *ring, *tmp;
-+	u32 i;
-+
-+	for (i = 0; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		napi_disable(&ivec->napi);
-+		list_for_each_entry_safe(ring, tmp, &ivec->ring_list,
-+					 ring_entry) {
-+			list_del(&ring->ring_entry);
-+		}
-+	}
-+
-+	netif_tx_disable(dev);
-+
-+	netif_carrier_off(dev);
-+
-+	rtase_hw_reset(dev);
-+
-+	rtase_tx_clear(tp);
-+
-+	rtase_rx_clear(tp);
-+}
-+
- static int rtase_close(struct net_device *dev)
- {
- 	struct rtase_private *tp = netdev_priv(dev);
--- 
-2.34.1
+if (process & KVM_PROCESS_SHARED)
+  ret |=3D KVM_DIRECT_ROOTS;
+if (process & KVM_PROCESS_PRIVATE)
+  ret |=3D kvm_has_mirror_tdp(kvm) ? KVM_MIRROR_ROOTS : KVM_DIRECT_ROOTS;
+
+WARN_ON_ONCE(!ret);
+return ret;
+
+(Here I chose to rename kvm_has_mirrored_tdp to kvm_has_mirror_tdp;
+but if you prefer to call it kvm_has_external_tdp, it's just as
+readable. Whatever floats your boat).
+
+>         struct kvm *kvm =3D vcpu->kvm;
+> -       struct kvm_mmu_page *root =3D root_to_sp(vcpu->arch.mmu->root.hpa=
+);
+> +       enum kvm_tdp_mmu_root_types root_type =3D tdp_mmu_get_fault_root_=
+type(kvm, fault);
+> +       struct kvm_mmu_page *root =3D tdp_mmu_get_root(vcpu, root_type);
+
+Please make this
+
+  struct kvm_mmu_page *root =3D tdp_mmu_get_root_for_fault(vcpu, fault);
+
+Most other uses of tdp_mmu_get_root() don't really need a root_type,
+I'll get to them in the reviews for the rest of the series.
+
+>  enum kvm_tdp_mmu_root_types {
+>         KVM_VALID_ROOTS =3D BIT(0),
+> +       KVM_DIRECT_ROOTS =3D BIT(1),
+> +       KVM_MIRROR_ROOTS =3D BIT(2),
+>
+> -       KVM_ANY_ROOTS =3D 0,
+> -       KVM_ANY_VALID_ROOTS =3D KVM_VALID_ROOTS,
+> +       KVM_ANY_ROOTS =3D KVM_DIRECT_ROOTS | KVM_MIRROR_ROOTS,
+> +       KVM_ANY_VALID_ROOTS =3D KVM_DIRECT_ROOTS | KVM_MIRROR_ROOTS | KVM=
+_VALID_ROOTS,
+
+See previous review.
+
+> +static inline enum kvm_tdp_mmu_root_types tdp_mmu_get_fault_root_type(st=
+ruct kvm *kvm,
+> +                                                                     str=
+uct kvm_page_fault *fault)
+> +{
+> +       if (fault->is_private)
+> +               return kvm_process_to_root_types(kvm, KVM_PROCESS_PRIVATE=
+);
+> +       return KVM_DIRECT_ROOTS;
+> +}
+> +
+> +static inline struct kvm_mmu_page *tdp_mmu_get_root(struct kvm_vcpu *vcp=
+u, enum kvm_tdp_mmu_root_types type)
+> +{
+> +       if (type =3D=3D KVM_MIRROR_ROOTS)
+> +               return root_to_sp(vcpu->arch.mmu->mirror_root_hpa);
+> +       return root_to_sp(vcpu->arch.mmu->root.hpa);
+> +}
+
+static inline struct kvm_mmu_page *
+tdp_mmu_get_root_for_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fa=
+ult)
+{
+  hpa_t root_hpa;
+  if (unlikely(fault->is_private && kvm_has_mirror_tdp(kvm)))
+    root_hpa =3D vcpu->arch.mmu->mirror_root_hpa;
+  else
+    root_hpa =3D vcpu->arch.mmu->root.hpa;
+  return root_to_sp(root_hpa);
+}
+
+Paolo
 
