@@ -1,92 +1,217 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BEB195B2E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 13:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9B319149E;
+	Fri,  7 Jun 2024 13:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717768446; cv=none; b=JzjJ11jOzHPiDKsMBNit3oWK6HYILGdsP7/QlI7pliGHbjIaUjcDSxMikeQ7KgHnVCID+GbSSwsg7JkVTy//T5Rl5NXSjtsjyWNaarp9hIekqnURP/vj3qvNwLeD8EfOdToFjaeQYVfPd2i/NuM/jskVJT6Yhypio335iDuHbjs=
+	t=1717768447; cv=none; b=Rw5EUvZeyJ3QA8UGehkY+bt/dfB+03wIfyr3omxv/DgLzmZ6gUM1HNzetu/6Cz1WWWZW89eeNvBU6/uGhvFOzHaIcm+9cIgjfhUao68B1/dyNnxOLQEjf+yGW/Z1UHKcBZw34huaH6GBLLrZ40A+6hMyniwx5/NWWXn6z23VH78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717768446; c=relaxed/simple;
-	bh=Mp5s+leBjzFi1kNNv9MmnZ647UlxmmCA12Jil7R3iA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLsr1GKCE51geMqZyPrAzJndxqmZEUBrCGSLEyKc9MSlZM/BAofqkpSss75kUKs8dqTN6OVt70IFzgsSUPJuB/Pta5WeXpWlD3HJhgTu0B528oNP2gvqjOn1lW7taCzj765lMx/GlEb2WrjQMT65lCJeMPc+czDQVaYlvYr6dck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=QFWwBGKb; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
+	s=arc-20240116; t=1717768447; c=relaxed/simple;
+	bh=JVyDe9RXOoTpH8UhUIf8WoCT32z5wEtggQ1u8PWzvEE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Dxu3Al9abYr5AVI9iaaCPbaTLLi/ochfaqNxqhEBdXSfmQmpR9WscsUcRxEy9jpx7gwMb8MUsk3M5vxdbiq/MBxWY4+Sf7qSFhzvmMaOr65O2pkq5aTyGtiudMN4/3ekrsYhcMoYPXPrK7cvwa5Cp4RQBxxZd+K1ak13A8lRFCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QjdSMNLT; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="QFWwBGKb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-	t=1717768441; bh=Mp5s+leBjzFi1kNNv9MmnZ647UlxmmCA12Jil7R3iA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QFWwBGKbihW15MB0Q7Ef6M23/p3loPUKAsnFnOyrG1oZ2XP7kYY3HiIIIjWiv+ZZv
-	 4G+j9AFEplaaua/bzDtYmWCLKX2PQ9LTLw89iHwOyV0lmuZVEAZmGomXMW4WJx7zIy
-	 d/oL6CQHk098jql2uAE/Mlws//xQeRSKFpd0becg=
-Date: Fri, 7 Jun 2024 15:54:01 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>
-Subject: Re: Current state of the sysctl constification effort
-Message-ID: <37d5fd30-9327-4b57-8e4d-22af929d3fc4@t-8ch.de>
-References: <CGME20240531105042eucas1p1bcf3ee22d224c8d88aca633e5f01e0d2@eucas1p1.samsung.com>
- <7823ff95-1490-4c1b-b489-a9c05adad645@t-8ch.de>
- <20240607094053.x3cmkhmrgaw6jqd3@joelS2.panther.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QjdSMNLT"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 457Drxun008437;
+	Fri, 7 Jun 2024 08:53:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717768439;
+	bh=iQI4I7tJW6P7UMx0wD5pKAZVtrPk222xYrbCwWOHk+c=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=QjdSMNLTI+pIF88P2kWcT9ZSZi20wqDp88oQDbv80GL3MZFszp4q08kxoytQ8SkeE
+	 aF1Dzww5wEUSDhKxJdBHHc1pH8WClRUvLu7Pfr/fRyO+spf4oX0nnNQPQ1VadIezmV
+	 u1dFj4wEQ9u6KWMKLw8DIUEkOlpqW15hsqZXX9Ao=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 457DrxhX030901
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 7 Jun 2024 08:53:59 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
+ Jun 2024 08:53:59 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 7 Jun 2024 08:53:59 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 457DrwHu018908;
+	Fri, 7 Jun 2024 08:53:59 -0500
+Message-ID: <5b18692c-c98f-4183-a9f1-5fc264983dfe@ti.com>
+Date: Fri, 7 Jun 2024 08:53:58 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240607094053.x3cmkhmrgaw6jqd3@joelS2.panther.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] arm64: dts: ti: k3-j722s-evm: Add memory carveouts
+ for R5F and C7x
+To: Beleswar Padhi <b-padhi@ti.com>, <nm@ti.com>, <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <vaishnav.a@ti.com>, <j-choudhary@ti.com>, <u-kumar1@ti.com>
+References: <20240607090433.488454-1-b-padhi@ti.com>
+ <20240607090433.488454-4-b-padhi@ti.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20240607090433.488454-4-b-padhi@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 2024-06-07 11:40:53+0000, Joel Granados wrote:
-> On Fri, May 31, 2024 at 12:50:32PM +0200, Thomas Weißschuh wrote:
-> > Hi Joel, Hi Luis,
-> > 
-> > most of the sysctl handler preparation patches have been picked up by
-> > the subsystem maintainers and are available in -next.
-> > 
-> > Only two are missing:
-> > 
-> > * utsname: constify ctl_table arguments of utility function [0]
-> > * sysctl: constify ctl_table arguments of utility function [1]
-> > 
-> > Both of them are going through the sysctl tree anyways.
-> > 
-> > With this done it should be possible to also queue up 
-> > sysctl: treewide: constify the ctl_table argument of handlers [2]
-> > for the bots to chew on in -next.
-> > 
-> > My local builds are still succeeding on the last submitted version of
-> > the patch.
-> > 
-> > 
-> > Thomas
-> > 
-> > [0] https://lore.kernel.org/lkml/20240518-sysctl-const-handler-utsname-v1-1-27a6c8813620@weissschuh.net/
-> > [1] https://lore.kernel.org/lkml/20240513-jag-constfy_sysctl_proc_args-v1-1-bba870a480d5@samsung.com/
-> > [2] https://lore.kernel.org/lkml/20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net/
+On 6/7/24 4:04 AM, Beleswar Padhi wrote:
+> From: Apurva Nandan <a-nandan@ti.com>
 > 
-> All this is coming together nicely.
+> The K3 J722S SoCs have one single-core Arm Cortex-R5F processor in each
+> of the WAKEUP, MCU and MAIN voltage domain, and two C71x DSP subsystems
+> in MAIN voltage domain.
+> 
+> The Inter-Processor communication between the main A72 cores and these
+> R5F and DSP remote cores is achieved through shared memory and
+> Mailboxes. Thus, add the memory carveouts required for communication.
+> 
+> Signed-off-by: Apurva Nandan <a-nandan@ti.com>
+> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 103 ++++++++++++++++++++++++
+>   1 file changed, 103 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> index a51925deb43b8..b0b5b6c97b92d 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+> @@ -49,12 +49,71 @@ secure_ddr: optee@9e800000 {
+>   			no-map;
+>   		};
+>   
+> +		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@a0000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0xa0000000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+>   		wkup_r5fss0_core0_memory_region: r5f-memory@a0100000 {
+>   			compatible = "shared-dma-pool";
+>   			reg = <0x00 0xa0100000 0x00 0xf00000>;
+>   			no-map;
+>   		};
+>   
+> +		mcu_r5fss0_core0_dma_memory_region: mcu-r5fss-dma-memory-region@a1000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0xa1000000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		mcu_r5fss0_core0_memory_region: mcu-r5fss-memory-region@a1100000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0xa1100000 0x00 0xf00000>;
+> +			no-map;
+> +		};
+> +
+> +		main_r5fss0_core0_dma_memory_region: main-r5fss-dma-memory-region@a2000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0xa2000000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		main_r5fss0_core0_memory_region: main-r5fss-memory-region@a2100000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0xa2100000 0x00 0xf00000>;
+> +			no-map;
+> +		};
+> +
+> +		c7x_0_dma_memory_region: c7x-dma-memory@a3000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0xa3000000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		c7x_0_memory_region: c7x-memory@a3100000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0xa3100000 0x00 0xf00000>;
+> +			no-map;
+> +		};
+> +
+> +		c7x_1_dma_memory_region: c7x-dma-memory@a4000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0xa4000000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		c7x_1_memory_region: c7x-memory@a4100000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0xa4100000 0x00 0xf00000>;
+> +			no-map;
+> +		};
+> +
+> +		rtos_ipc_memory_region: ipc-memories@a5000000 {
+> +			reg = <0x00 0xa5000000 0x00 0x1c00000>;
+> +			alignment = <0x1000>;
+> +			no-map;
+> +		};
+>   	};
+>   
+>   	vmain_pd: regulator-0 {
+> @@ -421,3 +480,47 @@ mbox_c7x_1: mbox-c7x-1 {
+>   		ti,mbox-tx = <3 0 0>;
+>   	};
+>   };
+> +
+> +&wkup_r5fss0 {
+> +	status = "okay";
+> +};
+> +
+> +&wkup_r5fss0_core0 {
+> +	mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
 
-Indeed.
+These mboxes where added in the previous patch, why not add these
+references in that patch? Or you could probably just merge the two
+patches together as they are doing the same logical thing: enabling
+remote cores for J722s-EVM.
 
-> Is there anything left to do besides
-> what is being discussed in this mail, to start changing the ctl_tables
-> to `static const`?
+Andrew
 
-The changes to the tables also need (as per [0] and [1]):
-
-* sysctl: move internal interfaces to const struct ctl_table
-* sysctl: allow registration of const struct ctl_table
-
-I think we do the handlers for v6.11, the rest of [0] and [1] for v6.12
-and then we can go through the rest of the trees ctl_tables.
-
-
-[0] https://lore.kernel.org/lkml/20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net/
-[1] https://git.sr.ht/~t-8ch/linux/log/sysctl-constfy
+> +	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
+> +			<&wkup_r5fss0_core0_memory_region>;
+> +};
+> +
+> +&mcu_r5fss0 {
+> +	status = "okay";
+> +};
+> +
+> +&mcu_r5fss0_core0 {
+> +	mboxes = <&mailbox0_cluster1 &mbox_mcu_r5_0>;
+> +	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+> +			<&mcu_r5fss0_core0_memory_region>;
+> +};
+> +
+> +&main_r5fss0 {
+> +	status = "okay";
+> +};
+> +
+> +&main_r5fss0_core0 {
+> +	mboxes = <&mailbox0_cluster3 &mbox_main_r5_0>;
+> +	memory-region = <&main_r5fss0_core0_dma_memory_region>,
+> +			<&main_r5fss0_core0_memory_region>;
+> +};
+> +
+> +&c7x_0 {
+> +	status = "okay";
+> +	mboxes = <&mailbox0_cluster2 &mbox_c7x_0>;
+> +	memory-region = <&c7x_0_dma_memory_region>,
+> +			<&c7x_0_memory_region>;
+> +};
+> +
+> +&c7x_1 {
+> +	status = "okay";
+> +	mboxes = <&mailbox0_cluster3 &mbox_c7x_1>;
+> +	memory-region = <&c7x_1_dma_memory_region>,
+> +			<&c7x_1_memory_region>;
+> +};
