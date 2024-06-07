@@ -1,39 +1,39 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B5515381B;
-	Fri,  7 Jun 2024 07:30:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04E115530F;
+	Fri,  7 Jun 2024 07:30:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717745443; cv=none; b=JOz06CzPWBf0YiI8cRi6tZyoAyhcSyiJN69t85v1tx/QiFnVPbFvy6x1XPOom3coSCi4NxryCT63uGCPoiowDXWFjIq755KfD11S23a0yY4RHba6eOgvSgOuXoDCweT6KZHV4a59k2rm9yBowuLWDgrLBXgaE/hu12widCryBvw=
+	t=1717745444; cv=none; b=FdQx/Wc4yIVL6wIV+ZSLrZL/igmNG9Vt9uHK40vjwukLiM6clBQe9hvn+7X4GGzBS+4ENFMb3ILFyQGrS9w2qR9UzhETqpDr/BSfj2Jkr9Sbf1ebZXWvJN+UYikIYt/n7pZJeL+YICAl7d5e3s5QMbQvoomUDDvloOlYc3CJAxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717745443; c=relaxed/simple;
-	bh=wKMjgK3GIPQQd20gtCcFQwHg9O/bjN2nXRgotur12wc=;
+	s=arc-20240116; t=1717745444; c=relaxed/simple;
+	bh=L+ZQS6w50mPzNNU09e8nv4NAoqXE9SdHMuKog4rNWW4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JQXJ7ITq77cC6jEfodVdt++0LGLEMamxNcQJ6FYzw/NR+DFGLigCABuieBKzjs/lWpNd1VT5NCk2VJ011YiWhi3g/+gYncV4FyICGRd1QhEoB190Od6DaBVcNXp1goontdYLvZJpT4DCENrYE598ALF9mHTCOud/SUcRQL+6mMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XunuChKw; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=P1nfUtiU5JS82p/mQ5R3yXHIEJkGTMPWCeQ/yWCBEHhGa2mnc6Qib/utQR8/P6jo7ORb+m1TPoNBmBUWuAZSmmfNkmtYdGUDlPSefZDP2OIneqmm1kZCsaUD+d25ShCx1LRsyFI80OQ02kB56wkTlPSpmH4Hao5nNNRNYwqzV5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=W1CJB+yM; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XunuChKw"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2E65E40010;
-	Fri,  7 Jun 2024 07:30:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="W1CJB+yM"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9FB5B4000F;
+	Fri,  7 Jun 2024 07:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1717745439;
+	t=1717745441;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PWgiv6Dw2J0CMsQahRN/WS1Vb3ESj1spouLrLT3OBb4=;
-	b=XunuChKwkT8m7BgVIpHDvis4uLT4GlwcWSfBCX1XlW0ZRUjiJyXNGstqZ2Wl8C+VTfBjbQ
-	jCTaz2xXOQx4ZH+Srq98s0t5xbeOw+sRzodKojMQQLlw98cy4ugrraWzrIC9yL1pDHxDqb
-	hYlPANtOOY6ez0LGKmBDwcceXsbje1U/miBpzJtrVPSRjZ1BQU6vz5lESKMnmBGEBsLSqn
-	hpZcZdayfMjW+26v0DxYHB4P+IpkOpf46iG7rpkvBYG7+/rz5Zwr2++/GZarqxeQ/Dbz39
-	nFbEz/SXexrkXR+N+Lq/t2C4Tq4FYeRgH73Svhi+RsvxQzkfhk5SHi+VSjeRyw==
+	bh=gkpOAyKbzUUqntYuBj/ZLM7EdvYb+d5LGE5Tip8ZYTU=;
+	b=W1CJB+yML0dK69BE5uUu0y98k2tcBGUVEhArQLMDYU1NiOIkzhHNZRT+Z1Gphh79IdpYJC
+	rE4/i7nN8qp9o3mWiTzTUclt8gnLV+W5y8bwfEtfr6RjW7PIkancQkdAmpj4AEeHaZym23
+	NuFDz+0sOxIXRG14ftZJFYX4gIc7iOolKeCPWIKHzT++/6E3Pj8IlXVuND2lNR8DjGcTOR
+	Jfinj+4d6ckoSjgYbIXnMR7zlzfk6j2je6BaAYohRYlNjG2PtLFb7zmJ4s682Ns3NhsDAT
+	ehTe5wJeyTSOhjURZ5EnGy+W+vy0Yfo7G4qhMCeTJW+LQxd3ya9DagNmFJZaWw==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Fri, 07 Jun 2024 09:30:21 +0200
-Subject: [PATCH net-next v2 4/8] net: pse-pd: pd692x0: Expand ethtool
- status message
+Date: Fri, 07 Jun 2024 09:30:23 +0200
+Subject: [PATCH net-next v2 6/8] net: ethtool: Add new power limit get and
+ set features
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240607-feature_poe_power_cap-v2-4-c03c2deb83ab@bootlin.com>
+Message-Id: <20240607-feature_poe_power_cap-v2-6-c03c2deb83ab@bootlin.com>
 References: <20240607-feature_poe_power_cap-v2-0-c03c2deb83ab@bootlin.com>
 In-Reply-To: <20240607-feature_poe_power_cap-v2-0-c03c2deb83ab@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -58,150 +58,108 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
 
-This update expands pd692x0_ethtool_get_status() callback with newly
-introduced details such as the detected class, current power delivered,
-and extended state information.
+This patch expands the status information provided by ethtool for PSE c33
+with power limit. It also adds a call to pse_ethtool_set_pw_limit() to
+configure the PSE control power limit.
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
+ include/uapi/linux/ethtool_netlink.h |  1 +
+ net/ethtool/pse-pd.c                 | 42 ++++++++++++++++++++++++++++++------
+ 2 files changed, 36 insertions(+), 7 deletions(-)
 
-Change in v2:
-- Move in from string status message to c33_pse_ext_state_info.
----
- drivers/net/pse-pd/pd692x0.c | 92 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
-
-diff --git a/drivers/net/pse-pd/pd692x0.c b/drivers/net/pse-pd/pd692x0.c
-index 6488b941703c..6b7367d009d6 100644
---- a/drivers/net/pse-pd/pd692x0.c
-+++ b/drivers/net/pse-pd/pd692x0.c
-@@ -73,6 +73,7 @@ enum {
- 	PD692X0_MSG_SET_PORT_PARAM,
- 	PD692X0_MSG_GET_PORT_STATUS,
- 	PD692X0_MSG_DOWNLOAD_CMD,
-+	PD692X0_MSG_GET_PORT_CLASS,
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+index ccbe8294dfd5..0a39aae8ccfd 100644
+--- a/include/uapi/linux/ethtool_netlink.h
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -919,6 +919,7 @@ enum {
+ 	ETHTOOL_A_C33_PSE_ACTUAL_PW,		/* u32 */
+ 	ETHTOOL_A_C33_PSE_EXT_STATE,		/* u8 */
+ 	ETHTOOL_A_C33_PSE_EXT_SUBSTATE,		/* u8 */
++	ETHTOOL_A_C33_PSE_PW_LIMIT,		/* u32 */
  
- 	/* add new message above here */
- 	PD692X0_MSG_CNT
-@@ -149,6 +150,12 @@ static const struct pd692x0_msg pd692x0_msg_template_list[PD692X0_MSG_CNT] = {
- 		.data = {0x16, 0x16, 0x99, 0x4e,
- 			 0x4e, 0x4e, 0x4e, 0x4e},
- 	},
-+	[PD692X0_MSG_GET_PORT_CLASS] = {
-+		.key = PD692X0_KEY_REQ,
-+		.sub = {0x05, 0xc4},
-+		.data = {0x4e, 0x4e, 0x4e, 0x4e,
-+			 0x4e, 0x4e, 0x4e, 0x4e},
-+	},
- };
- 
- static u8 pd692x0_build_msg(struct pd692x0_msg *msg, u8 echo)
-@@ -435,6 +442,75 @@ static int pd692x0_pi_is_enabled(struct pse_controller_dev *pcdev, int id)
- 	}
+ 	/* add new constants above here */
+ 	__ETHTOOL_A_PSE_CNT,
+diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
+index 3d74cfe7765b..b4462a51c006 100644
+--- a/net/ethtool/pse-pd.c
++++ b/net/ethtool/pse-pd.c
+@@ -94,6 +94,9 @@ static int pse_reply_size(const struct ethnl_req_info *req_base,
+ 		len += nla_total_size(sizeof(u8)); /* _C33_PSE_EXT_STATE */
+ 	if (st->c33_ext_state_info.__c33_pse_ext_substate)
+ 		len += nla_total_size(sizeof(u8)); /* _C33_PSE_EXT_SUBSTATE */
++	if (st->c33_pw_limit > 0)
++		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_LIMIT */
++
+ 	return len;
  }
  
-+struct pd692x0_pse_ext_state_mapping {
-+	u32 status_code;
-+	enum ethtool_c33_pse_ext_state pse_ext_state;
-+	u8 pse_ext_substate;
-+};
-+
-+static const struct pd692x0_pse_ext_state_mapping
-+pd692x0_pse_ext_state_map[] = {
-+	{0x06, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_V_OVERVOLTAGE},
-+	{0x07, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_V_UNDERVOLTAGE},
-+	{0x08, ETHTOOL_C33_PSE_EXT_STATE_HARDWARE_ISSUE, 0},
-+	{0x0C, ETHTOOL_C33_PSE_EXT_STATE_CONFIG,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_CFG_UNDEFINED},
-+	{0x11, ETHTOOL_C33_PSE_EXT_STATE_CONFIG,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_CFG_UNDEFINED},
-+	{0x12, ETHTOOL_C33_PSE_EXT_STATE_HARDWARE_ISSUE, 0},
-+	{0x1B, ETHTOOL_C33_PSE_EXT_STATE_DETECTION,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_DET_IN_PROGRESS},
-+	{0x1C, ETHTOOL_C33_PSE_EXT_STATE_DETECTION,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_DET_FAILURE},
-+	{0x1E, ETHTOOL_C33_PSE_EXT_STATE_CURRENT_ISSUE,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_CRT_UNDERLOAD},
-+	{0x1F, ETHTOOL_C33_PSE_EXT_STATE_CURRENT_ISSUE,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_CRT_OVERLOAD},
-+	{0x20, ETHTOOL_C33_PSE_EXT_STATE_POWER_BUDGET_EXCEEDED, 0},
-+	{0x21, ETHTOOL_C33_PSE_EXT_STATE_HARDWARE_ISSUE, 0},
-+	{0x22, ETHTOOL_C33_PSE_EXT_STATE_CONFIG,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_CFG_CHANGED},
-+	{0x24, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_V_INJECTION},
-+	{0x25, ETHTOOL_C33_PSE_EXT_STATE_DETECTION,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_DET_FAILURE},
-+	{0x26, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE, 0},
-+	{0x34, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_V_SHORT_DETECTED},
-+	{0x35, ETHTOOL_C33_PSE_EXT_STATE_TEMP_ISSUE, 0},
-+	{0x36, ETHTOOL_C33_PSE_EXT_STATE_TEMP_ISSUE, 0},
-+	{0x37, ETHTOOL_C33_PSE_EXT_STATE_UNKNOWN, 0},
-+	{0x3C, ETHTOOL_C33_PSE_EXT_STATE_POWER_BUDGET_EXCEEDED, 0},
-+	{0x3D, ETHTOOL_C33_PSE_EXT_STATE_POWER_BUDGET_EXCEEDED, 0},
-+	{0x41, ETHTOOL_C33_PSE_EXT_STATE_POWER_BUDGET_EXCEEDED, 0},
-+	{0x43, ETHTOOL_C33_PSE_EXT_STATE_CLASSIFICATION_FAILURE, 0},
-+	{0xA0, ETHTOOL_C33_PSE_EXT_STATE_HARDWARE_ISSUE, 0},
-+	{0xA7, ETHTOOL_C33_PSE_EXT_STATE_DETECTION,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_DET_FAILURE},
-+	{0xA8, ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
-+		ETHTOOL_C33_PSE_EXT_SUBSTATE_V_OPEN},
-+	{ /* sentinel */ }
-+};
-+
-+static void
-+pd692x0_get_ext_state(struct ethtool_c33_pse_ext_state_info *c33_ext_state_info,
-+		      u32 status_code)
-+{
-+	const struct pd692x0_pse_ext_state_mapping *ext_state_map;
-+
-+	ext_state_map = pd692x0_pse_ext_state_map;
-+	while (ext_state_map->status_code) {
-+		if (ext_state_map->status_code == status_code) {
-+			c33_ext_state_info->c33_pse_ext_state = ext_state_map->pse_ext_state;
-+			c33_ext_state_info->__c33_pse_ext_substate = ext_state_map->pse_ext_state;
-+			return;
-+		}
-+		ext_state_map++;
-+	}
-+}
-+
- static int pd692x0_ethtool_get_status(struct pse_controller_dev *pcdev,
- 				      unsigned long id,
- 				      struct netlink_ext_ack *extack,
-@@ -442,6 +518,7 @@ static int pd692x0_ethtool_get_status(struct pse_controller_dev *pcdev,
- {
- 	struct pd692x0_priv *priv = to_pd692x0_priv(pcdev);
- 	struct pd692x0_msg msg, buf = {0};
-+	u32 class;
- 	int ret;
+@@ -144,6 +147,11 @@ static int pse_fill_reply(struct sk_buff *skb,
+ 		       st->c33_ext_state_info.__c33_pse_ext_substate))
+ 		return -EMSGSIZE;
  
- 	ret = pd692x0_fw_unavailable(priv);
-@@ -471,6 +548,21 @@ static int pd692x0_ethtool_get_status(struct pse_controller_dev *pcdev,
- 
- 	priv->admin_state[id] = status->c33_admin_state;
- 
-+	pd692x0_get_ext_state(&status->c33_ext_state_info, buf.sub[0]);
-+
-+	status->c33_actual_pw = (buf.data[0] << 4 | buf.data[1]) * 100;
-+
-+	memset(&buf, 0, sizeof(buf));
-+	msg = pd692x0_msg_template_list[PD692X0_MSG_GET_PORT_CLASS];
-+	msg.sub[2] = id;
-+	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
-+	if (ret < 0)
-+		return ret;
-+
-+	class = buf.data[3] >> 4;
-+	if (class <= 8)
-+		status->c33_pw_class = class;
++	if (st->c33_pw_limit > 0 &&
++	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_PW_LIMIT,
++			st->c33_pw_limit))
++		return -EMSGSIZE;
 +
  	return 0;
  }
  
+@@ -157,6 +165,7 @@ const struct nla_policy ethnl_pse_set_policy[ETHTOOL_A_PSE_MAX + 1] = {
+ 	[ETHTOOL_A_C33_PSE_ADMIN_CONTROL] =
+ 		NLA_POLICY_RANGE(NLA_U32, ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED,
+ 				 ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED),
++	[ETHTOOL_A_C33_PSE_PW_LIMIT] = { .type = NLA_U32 },
+ };
+ 
+ static int
+@@ -199,19 +208,38 @@ static int
+ ethnl_set_pse(struct ethnl_req_info *req_info, struct genl_info *info)
+ {
+ 	struct net_device *dev = req_info->dev;
+-	struct pse_control_config config = {};
+ 	struct nlattr **tb = info->attrs;
+ 	struct phy_device *phydev;
++	int ret = 0;
+ 
+ 	phydev = dev->phydev;
++
++	if (tb[ETHTOOL_A_C33_PSE_PW_LIMIT]) {
++		unsigned int pw_limit = nla_get_u32(tb[ETHTOOL_A_C33_PSE_PW_LIMIT]);
++
++		ret = pse_ethtool_set_pw_limit(phydev->psec, info->extack,
++					       pw_limit);
++		if (ret)
++			return ret;
++	}
++
+ 	/* These values are already validated by the ethnl_pse_set_policy */
+-	if (pse_has_podl(phydev->psec))
+-		config.podl_admin_control = nla_get_u32(tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL]);
+-	if (pse_has_c33(phydev->psec))
+-		config.c33_admin_control = nla_get_u32(tb[ETHTOOL_A_C33_PSE_ADMIN_CONTROL]);
++	if (tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL] ||
++	    tb[ETHTOOL_A_C33_PSE_ADMIN_CONTROL]) {
++		struct pse_control_config config = {};
++
++		if (pse_has_podl(phydev->psec))
++			config.podl_admin_control = nla_get_u32(tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL]);
++		if (pse_has_c33(phydev->psec))
++			config.c33_admin_control = nla_get_u32(tb[ETHTOOL_A_C33_PSE_ADMIN_CONTROL]);
++
++		ret = pse_ethtool_set_config(phydev->psec, info->extack,
++					     &config);
++		if (ret)
++			return ret;
++	}
+ 
+-	/* Return errno directly - PSE has no notification */
+-	return pse_ethtool_set_config(phydev->psec, info->extack, &config);
++	return ret;
+ }
+ 
+ const struct ethnl_request_ops ethnl_pse_request_ops = {
 
 -- 
 2.34.1
