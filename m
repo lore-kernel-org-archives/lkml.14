@@ -1,116 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7E215B543
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 09:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3227115B15C;
+	Fri,  7 Jun 2024 09:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717751161; cv=none; b=qDbPtEStKppXyDvxXOwEYvZcjJTllzoC8/+zLR00PkYHRy868XjdYFSVP+zDZcvemM3raYDIfPOXPDgzSKle63tqxarhttwm39w6XnUzTClq1iIDom3i2CMjZgkgU7Ttwjk9c3htwzddPozI4sFThC+6dhsjurj69cN905CSrBE=
+	t=1717751168; cv=none; b=Hsv9DYzNmdkQEQq2WEbBhMiP3/bS4vmf+PC6JCfxRV+Rn4mPwJs7AiC8PPB9joRV/vaeC+IkxCF/J7WQmsx9p+ZHJHhaBd2xVKsR9CvUypEvyEwK7tMQdTpd5RmYRSiwv6CuQe1MFaMEfr7fAOb6wa7qqGRp8lPjBm3Us04D8K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717751161; c=relaxed/simple;
-	bh=TTK1GYtFtsVo48+qOHmmrbUdupYD8dUd916fpZW2CU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YyTuy7qRVLqnVqaXyoU5031/ME9JYnUSiw9U/qfqfzS+Naq8F75SoFQlMP9XsjcggU+FTEqp86sAzx5FxqhE5NJr4k+Br56veFnZcgELXyDKxVwhAwtiXxUG0dib5gL76OGGiOzEXnY3ZKUsIYESHTWOpAsL7WHi3IS4gv8gzao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Icz7oD97; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717751168; c=relaxed/simple;
+	bh=02Ezor/EFk6mpRpX7GE8KDOgJoMksH7wmGt1Ymq2OUE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RdvP4REZrPXs+ZzN6c6tWwB8tMiRT6WWgkVKvqQ2J5n2B3L5RxAt+uICTOt7LDF8M0x1WJt3F/Z7KQAtyEbzKtmKnKAuFUCBwg5/qKCChwnXVvxt/aPrsbBTGRY4KymOUF7X8BCKpYgrWKsw6do0Sy5r2fb5dae2Rdj76I+sOm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ww4R4mEO; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Icz7oD97"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717751158;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dGYDizRf/2C0sa0+xp/HL0cUgtFnHVaSqzQ3tVH7lxg=;
-	b=Icz7oD97R0bNENKMbn/YzpvNUeyn+0vuBmEoXZrJmRXRlw/MrTUh8xGblMcPQDvLKR/fUM
-	uv5F4zbq6122VYa/TCsGLFFHMK/vKsRjKnDhfa+QqrvyAquoMTwZOPzoF2Xl2BOp1KUdxU
-	6DnotyZCASqQslIbcJJJmlxglWBzU1c=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-150-nifmnnaxNcujG65iewTmMg-1; Fri, 07 Jun 2024 05:05:56 -0400
-X-MC-Unique: nifmnnaxNcujG65iewTmMg-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a6e37310ebaso11787466b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 02:05:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ww4R4mEO"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57a526c6a2cso2118335a12.2;
+        Fri, 07 Jun 2024 02:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717751165; x=1718355965; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=02Ezor/EFk6mpRpX7GE8KDOgJoMksH7wmGt1Ymq2OUE=;
+        b=Ww4R4mEOkuQkZ4Vr/RZmCUJAdkKTnZxfHVoXFLBopRgli/Mf72AxRmWne7aes2wBlf
+         gl2Fnn2+EigEF8wKIBUwSOdi2+mGeQQHuEVtjD14XdtLP7zkcb71WMFZNPmr24ZwzeBf
+         JPvp6/IAvrJ2PBFjwWK/fTOfyDkL8a5kxJ9uzgjlFXBgAKMUZ3BbheTZoeyymlzGWABy
+         ap7K7czgGjV817TdPm5kjDMXUTe4Ij7BHtofKrwQOnhFMR7Wb879Qkv0YiZLI+U4O+zC
+         EPPRiOjvEM7HwgQhp5yMA3BPnI6ViQFeeQe75seQvkR2kuo6od7/cDEqEczBdxZhRxyx
+         3H9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717751153; x=1718355953;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dGYDizRf/2C0sa0+xp/HL0cUgtFnHVaSqzQ3tVH7lxg=;
-        b=r9NuF9lmBMlQkQirAfyfJUydZuzLBF19HvOvTZZEDcdorMfjG+22nWu7dwZ3pWt0LO
-         VYsNlRIt58te3E/F0p/2bFFgnZ/GN3WTVYH4fOsB4XcjzAXAa+v5sIupLd814DtU6Oha
-         VXTWUzqcvHjjLargPooX5O4IXbezYxHWIOejNNitZefzkYB2NuBEXLu/L0kmHIUjKIao
-         Y+Z/QSLSHFnC/D6iXRqCJ21E6mt0gU+uddRvp1oHl41WF8tJT/TaPXUTPYkSRrMHW0AI
-         gSr85zzluKaMT/5i8EfEYJPcKMll+mFEvgfxBN+GOyt7f2tZAxodyo98f7uelwJH9+1q
-         /k6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVw1qKdK3/qJ+pGJWAFdAuU4IoIuurOEG1WdcAttwaGfvMRk8M/Qii6bh808zja8iQowKF55YsZy6N8LgWBXKt8yGblutkq+TCWA8tA
-X-Gm-Message-State: AOJu0YxgFZNKSAnttSih3qnGIecDFAz6u8yZn8moCYwt0z9WbJRdGYJw
-	4tweeKeuomKD07dOmQy9KX779kCjKNfkvTq2XL2UKH8wrBHjCgBEWymHZ84iRLT8JcXVyNC3qTB
-	RM4jBmFRWEUUo4LbVMC4v2HGzNlJjO0qerwnZ9uLF6Mfo6N86mXH2j1osjXybyIhHvCWQYA==
-X-Received: by 2002:a17:906:e1b:b0:a6d:e0dd:f7 with SMTP id a640c23a62f3a-a6de0dd0399mr70566866b.52.1717751153242;
-        Fri, 07 Jun 2024 02:05:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFDIn9rSgHARHfYV/cxRs9YgwJvZSg1qSEkxYVv4VWP1Sp5NzmUd4BO6G+TOihp5MZeIbXWww==
-X-Received: by 2002:a17:906:e1b:b0:a6d:e0dd:f7 with SMTP id a640c23a62f3a-a6de0dd0399mr70564966b.52.1717751152868;
-        Fri, 07 Jun 2024 02:05:52 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c80581746sm217030166b.21.2024.06.07.02.05.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Jun 2024 02:05:52 -0700 (PDT)
-Message-ID: <179d5111-5cc8-4a17-b735-84f02e0144f5@redhat.com>
-Date: Fri, 7 Jun 2024 11:05:51 +0200
+        d=1e100.net; s=20230601; t=1717751165; x=1718355965;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=02Ezor/EFk6mpRpX7GE8KDOgJoMksH7wmGt1Ymq2OUE=;
+        b=H6n10+eZwlc3O4RfAUV1+SaKQhxHQRRDVYYrBv1DIlTdHoZD2kt6Uhf4UTNEWfIwYz
+         2B971Xl/8LnZ3xVmcg0pLqA2wp1vIEqyVY5nfzRiqgh3tzozQgnEoMhT6SJFBihgL9Qr
+         pYRlvQxswYwg4OFpjSzgjY6xo38gcrsCUO21kuhekf4Dc/bLobsvqcj/VrBot3Ykib5s
+         X5MU9n6cGM5sSpMJYKu9jImUQqYkJDcXiZLMKxMotC5a+PepfLlm1xwtfyAssrZ0x692
+         KsT+Br2zM5DDPQ8LXquF3GOo4fL2Rc2xBbDtit4CYWT/2VGRfX+NgUSMS89nYn87E9Et
+         EDYA==
+X-Forwarded-Encrypted: i=1; AJvYcCWDSqdJk78HkWXAl8vRADEsvLrqfrH7NRiFWrpNa50i8fIn3ihJ2cRBKI9rG5xkChpC5nqJxFsjixmlgSyMkyZFsbD+8KZBvaZkUxAgWZqlTSRfav8U2x1Jwavt3dnLFLhonfIDMy63EEih4LvokS/knesRXW8jAvaYLbOagiZCYALadQ==
+X-Gm-Message-State: AOJu0Ywsh9oVZm+wnfha9jnUEFSC/4+LAeLVSVTDRR6KPZxYlmcMN6Lx
+	7e1DrziXCC3j01KAathh0USD18TEbFVlMSRErLCQIymuyl1FxvvE
+X-Google-Smtp-Source: AGHT+IEN6md56MkALoiq/calcQIVIkG7jdXgQegNznInubYEMGzzFbk4uZozcFPSfxkdToBhRaUBeg==
+X-Received: by 2002:a50:8719:0:b0:57a:2546:2512 with SMTP id 4fb4d7f45d1cf-57c5099b8b0mr965262a12.34.1717751165181;
+        Fri, 07 Jun 2024 02:06:05 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae2023a1sm2399254a12.61.2024.06.07.02.06.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 02:06:04 -0700 (PDT)
+Message-ID: <fe4e553875d2d20b4c3994c24bde02184d160ff4.camel@gmail.com>
+Subject: Re: [PATCH v6 8/9] iio: adc: ad7173: document sampling frequency
+ behaviour
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ David Lechner <dlechner@baylibre.com>,  linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org, Dumitru Ceclan
+ <mitrutzceclan@gmail.com>
+Date: Fri, 07 Jun 2024 11:09:51 +0200
+In-Reply-To: <20240606-ad4111-v6-8-573981fb3e2e@analog.com>
+References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
+	 <20240606-ad4111-v6-8-573981fb3e2e@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] ACPI: PMIC: a small refactoring
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Andy Shevchenko <andy@kernel.org>
-References: <20240606205712.3187675-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240606205712.3187675-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi,
+On Thu, 2024-06-06 at 19:07 +0300, Dumitru Ceclan via B4 Relay wrote:
+> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>=20
+> The ADCs supported by this driver feature a sequencer that read in a
+> loop all the enabled chanels. When setting the individual sampling
+> frequency for each channel and enabling multiple channels, the effective
+> of each channel will be lower than the actual set value. Document this
+> behaviour in a comment.
+>=20
+> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+> ---
 
-On 6/6/24 10:54 PM, Andy Shevchenko wrote:
-> Use sizeof(), dev_err()/dev_warn(), and regmap bulk read
-> where it makes sense.
-> 
-> In v4:
-> - dropped controversial changes (Hans)
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-Thanks, the whole series looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-for the series.
-
-Regards,
-
-Hans
-
-
-
-
-> 
-> Andy Shevchenko (3):
->   ACPI: PMIC: Use sizeof() instead of hard coded value
->   ACPI: PMIC: Convert pr_*() to dev_*() printing macros
->   ACPI: PMIC: Replace open coded be16_to_cpu()
-> 
->  drivers/acpi/pmic/intel_pmic_chtdc_ti.c | 13 ++++++++-----
->  drivers/acpi/pmic/intel_pmic_chtwc.c    |  5 +++--
->  drivers/acpi/pmic/intel_pmic_xpower.c   |  7 ++++---
->  3 files changed, 15 insertions(+), 10 deletions(-)
-> 
 
