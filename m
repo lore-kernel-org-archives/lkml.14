@@ -1,413 +1,156 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A074CB36;
-	Fri,  7 Jun 2024 06:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EB94204E
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 06:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717742515; cv=none; b=Nn38ACX6rGyG5MmgWYedDd8gW9IaXXAPuZcq3yQLFKwSnxU/G7Jy4o3mFc3H84MSISNqcK025UEC8z7IZwXTiaFTuvIL/PyOKUJOp6jXTeiXcKBS9u3BIknKQQiFojrjZfAtkVv/UV7gjlw1EMZr0XNSiRueemShGFhS4ELe9O0=
+	t=1717742776; cv=none; b=Z+2SDZeszMDLIKecrVMElY90selt8CW/2o8vK2qNDxTQXF8zGWzh62hkpWnKh4y43AhvAqck7u2i0ugU25MZRyCn1QpOnmJydSgaWT+tfG8JYSqL2NeYazbsG8RdzUw4lydVzltt0zhHSJXAi79nub1M3waV1eLw7qYe3+nb5GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717742515; c=relaxed/simple;
-	bh=LqwZ1bRhi1S9fntGwGFdpafnrTl4n75QKDz4c8K5wQY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nJ6pT/GeESWkEjzEKHfFUJqADbyivSFQ23UcvUSVrdkq2fT+RoBS0A5UEyuDhMDc7/Sfdf9AYkOLP6fu4ELzKVSzMnw+0ypZKhEzpJyH06qf/WGmhkpxZkcvxmMGd37lKsn6HSm/7lYJ3chMIfApGPsJ5d5NeSwAq5TMxCxSTTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=BDsWbsM4; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=RxZ88pIN reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1717742776; c=relaxed/simple;
+	bh=HNv9Qs6Djj31IvEPg/GplsTToM3nXwpGglo7o2V/O9k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p5ow/idC1sBTLv/s28T8afeSVf2KxNULuhdFAGj0HqBDg62GjvbFyVN/ytgU+j9iqDjBDeS2TA5nosF6KlD655tkz6mSwmdcwx3lCSF8i4xlSfiJwgqiL1DyJQLPlr1e0dXZhOr06stu+lKo6ZW47EN9keINAXbNfEor/LhxmrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UaKJInBY; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="BDsWbsM4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="RxZ88pIN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UaKJInBY"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-35dce610207so2038601f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 23:46:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1717742511; x=1749278511;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=oDWXk9Ip84mUFg4/ADwA1LpVB7/h3jEawVahgnt2/Uc=;
-  b=BDsWbsM4Vl+aoU3JjjVxxGFTA9Ck3IPcvXqHS6OhhgXlz1lXZbsTFU+T
-   ElhtUdsiZwXo9kYgXtYuGw9dkYh8+k3tt1lZdaBID8gnSNHTMOj6v7omj
-   yflWdg5bvZHHFV7Hv7lYJRC7vUUrbsMfcP+YoSnkGR7WFZSrdCqgAxK0J
-   5hoeweGkGyTjAUZNtM+S1wevLftPGrLaQ9z45IV362EwWl/GIyfyHq6sd
-   rIGqhDNECGGxet4w0MshSGkYNZeX2btktqLG5chNK3JJz6CPtj69J4Qn1
-   QOI98z1zor2uv6YLBac/naV65cdeb61/7hEn508EPWebVSHtOQbx41HBQ
-   A==;
-X-CSE-ConnectionGUID: 5Kjk5ea1S1+33Ri51/5AbQ==
-X-CSE-MsgGUID: aZeO6HILRgmYG2mb3kahhQ==
-X-IronPort-AV: E=Sophos;i="6.08,220,1712613600"; 
-   d="scan'208";a="37274501"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 07 Jun 2024 08:41:49 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4795E170735;
-	Fri,  7 Jun 2024 08:41:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1717742505;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=oDWXk9Ip84mUFg4/ADwA1LpVB7/h3jEawVahgnt2/Uc=;
-	b=RxZ88pIN1B/ayw7taFUeqJxc5cTZM3sOiQj3SMST85ctsblSS+DjPwe46dFLcbrKMLdVlb
-	HieWJHLTUu0M4ceY19Cmr+tFGXMObSWtDA7fBCS/trj5613nQbAffpVQqa50jLzn6IZC+8
-	DXAl4rcjnSe9+cxwEF8OWDCon8pxgQu6ugiN1S4qStOwgqxHoSnS9f/M1Y2uQBPlQdpUll
-	qQhuMVUMXOctQnlmiemriQ2VmA0L6ekvaHb3wOl1IDW29ialDhv0dWuKmGxsXJlsiFC0oB
-	WCT9QfsQKt+9uh9AXAc6rsqcOrhlTxH0zoZ6O0rInT7rnAVn6c8HrWxyYyeD7w==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, linux-arm-kernel@lists.infradead.org, Frank Li <Frank.Li@nxp.com>
-Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH 2/7] arm64: dts: imx8qm: add mipi subsystem
-Date: Fri, 07 Jun 2024 08:41:44 +0200
-Message-ID: <6638616.G0QQBjFxQf@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20240606-imx8qm-dts-usb-v1-2-565721b64f25@nxp.com>
-References: <20240606-imx8qm-dts-usb-v1-0-565721b64f25@nxp.com> <20240606-imx8qm-dts-usb-v1-2-565721b64f25@nxp.com>
+        d=linaro.org; s=google; t=1717742773; x=1718347573; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=TgM4htnI+X4TgZ0Tu9HzazlKE8pD1poXdLHXcMZJBPc=;
+        b=UaKJInBYYWxXHohcjMhISgk1f6KTYS7P4Xalxg2DtBadWjo71AQtojLL/RRAYfSDA2
+         lpE3uBTIwVFiAvi1bikYZ4iA11thjPcAZ+aDc70M+gkWLB4LZbXpEjoJtRf3NXY9zY+I
+         W3aQkhBlR1AiFnwhM85zLAkBlH3G73jDDm27HszcsxrXjEMDa/+Wcn9APiriYYercT2S
+         29F+IODozj/R3tBF6bN30YvtKxcEXcZMWL2v2ckrIWrIBYvjwdgHsPxSd/ewr5Fa33Pd
+         1ezL3+2cMXZrTdVN5/DmWvzpZSNZDYxADyrgK93LFc5uNNpyZSJ6w3FKxHvnS69KRhKk
+         lN4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717742773; x=1718347573;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TgM4htnI+X4TgZ0Tu9HzazlKE8pD1poXdLHXcMZJBPc=;
+        b=DzPkl0j4Uj32z+1FNEwX2sY4OWBkdp2NA7vNDZOlqcBLbhCk1uTrpv1f3ZTHV8uWUP
+         NtdAqyd5M8l3XUtiO2NlrJjMfUJOPXlAMb/J5uQLP85GK06Gm9P4ylIIrs4SA08jmbO6
+         jTqrC/JaGMJMoLAfnfEWmzQBKhiIeAnhAcM0/DGplaLv+5PCvrsTeVcE3sAKO6ATjspr
+         U7SDodDnGDsyuQjHv36vHn85qXJ9ADsTI/Onip66sQ6Dw1q8kDAi+Mz5xqNGUvV5hbrJ
+         SORLpkP/+w8ODXmgegZymq5KmJyclDlk/60x1Ur8yRW32Ez5Q7sReh6EN+W+yVrzyrOR
+         BWqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUo8xFDOmZDtaoEgUonOH2gbLCm7JA7oz9TC3g4JfUMtcU5pubqPvg0JpedDXcmXtrqDTP9BGTXO/s05xcrBwliNxp257xsOsqeb8Jv
+X-Gm-Message-State: AOJu0YzpmxCazbt8NMMHCuqXEYKyx25Xz0JFn9HhqqqsG9VC9fmVYAd5
+	YqJJfmYJnSXLEkNeflNs6LELmrOhBNNaAwdPyPfFI4SRKaQnOeZxNQh2Jn3lb4I=
+X-Google-Smtp-Source: AGHT+IH9OxWfO16xiy/w9qCKD6ug6UJ5lS56XXORWzx+b1YzITZIZNI7kcB6tLngBoMN30NxoBzegg==
+X-Received: by 2002:adf:fd08:0:b0:34e:93c1:7979 with SMTP id ffacd0b85a97d-35efed5d77dmr1461398f8f.38.1717742772977;
+        Thu, 06 Jun 2024 23:46:12 -0700 (PDT)
+Received: from [192.168.2.24] ([110.93.11.116])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42160a19ae5sm30662635e9.18.2024.06.06.23.46.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Jun 2024 23:46:12 -0700 (PDT)
+Message-ID: <31a9060a-aef3-4b1a-8db8-ada5e57833cc@linaro.org>
+Date: Fri, 7 Jun 2024 08:46:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] i2c: muxes: pca954x: Allow sharing reset GPIO
+To: Eddie James <eajames@linux.ibm.com>,
+ Chris Packham <chris.packham@alliedtelesis.co.nz>, peda@axentia.se,
+ p.zabel@pengutronix.de
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240311041412.3858710-1-chris.packham@alliedtelesis.co.nz>
+ <a8f8aefa-9013-4ede-adce-0f585d3e528f@linux.ibm.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <a8f8aefa-9013-4ede-adce-0f585d3e528f@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 06/06/2024 23:58, Eddie James wrote:
+> 
+> On 3/10/24 23:14, Chris Packham wrote:
+>> Some hardware designs with multiple PCA954x devices use a reset GPIO
+>> connected to all the muxes. Support this configuration by making use of
+>> the reset controller framework which can deal with the shared reset
+>> GPIOs. Fall back to the old GPIO descriptor method if the reset
+>> controller framework is not enabled.
+> 
+> 
+> Hello Chris, Krzysztof,
+> 
+> 
+> This change makes it so that the reset subsystem reset doesn't behave in 
+> the same way as the fallback gpio reset. The gpio, as part of acquiring 
+> it, gets set high, and then set low in the mux driver. So, the device 
+> reset is toggled. In the case of the reset subsystem option, the reset 
+> is only de-asserted (so the device is taken out of reset).
+> 
+> 
+> I'm interested in preserving the previous behavior but with the shared 
+> reset line. This can't be done just by doing "assert" first because the 
+> shared reset subsystem doesn't allow that. So the reset-gpio driver 
+> would have to implement the reset operation - no problem. However, how 
+> to specify the wait time for the reset-gpio driver here? Something like 
+> the simple reset driver maybe? Or a function call from the reset 
+> consumer driver to specify the wait time for that reset?
 
-thanks for the patch.
-What are your plans regarding imx8xqp? This memory region
-has dual use on imx8qxp mipi/lvds0. I would prefer
-imx8-ss-mipi.dtsi with common parts and a imx8qm-ss-mipi.dtsi
-adding/modifying imx8qm specific things. I'll send my current WIP
-as a response to this.
+You can check my slides from EOSS/OSSNA this year:
+https://ossna2024.sched.com/event/1aPvr?iframe=no
+maybe links to original work will help you.
 
 Best regards,
-Alexander
-
-Am Donnerstag, 6. Juni 2024, 20:46:56 CEST schrieb Frank Li:
-> Add irqstear, pwm and i2c in mipi subsystem.
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8qm-ss-mipi.dtsi | 286 ++++++++++++++++=
-++++++
->  arch/arm64/boot/dts/freescale/imx8qm.dtsi         |   1 +
->  2 files changed, 287 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qm-ss-mipi.dtsi b/arch/arm=
-64/boot/dts/freescale/imx8qm-ss-mipi.dtsi
-> new file mode 100644
-> index 0000000000000..bd18468923e52
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8qm-ss-mipi.dtsi
-> @@ -0,0 +1,286 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +/*
-> + * Copyright 2024 NXP
-> + */
-> +
-> +/ {
-> +	dsi_ipg_clk: clock-dsi-ipg {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-frequency =3D <120000000>;
-> +		clock-output-names =3D "dsi_ipg_clk";
-> +	};
-> +
-> +	mipi_pll_div2_clk: clock-mipi-div2-pll {
-> +		compatible =3D "fixed-clock";
-> +		#clock-cells =3D <0>;
-> +		clock-frequency =3D <432000000>;
-> +		clock-output-names =3D "mipi_pll_div2_clk";
-> +	};
-> +
-> +	mipi0_subsys: bus@56220000 {
-> +		compatible =3D "simple-bus";
-> +		interrupt-parent =3D <&irqsteer_mipi0>;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges =3D <0x56220000 0x0 0x56220000 0x10000>;
-> +
-> +		irqsteer_mipi0: interrupt-controller@56220000 {
-> +			compatible =3D "fsl,imx-irqsteer";
-
-compatible =3D "fsl,imx8qxp-irqsteer", "fsl,imx-irqsteer" or even
-compatible =3D "fsl,imx8qm-irqsteer", "fsl,imx-irqsteer". Please refer to [=
-1].
-
-[1] https://lore.kernel.org/all/20240528071141.92003-1-alexander.stein@ew.t=
-q-group.com/
-
-> +			reg =3D <0x56220000 0x1000>;
-> +			interrupts =3D <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-controller;
-> +			interrupt-parent =3D <&gic>;
-> +			#interrupt-cells =3D <1>;
-> +			clocks =3D <&mipi0_lis_lpcg IMX_LPCG_CLK_0>;
-> +			clock-names =3D "ipg";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0>;
-> +			fsl,channel =3D <0>;
-> +			fsl,num-irqs =3D <32>;
-> +		};
-> +
-> +		mipi0_lis_lpcg: clock-controller@56223000 {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x56223000 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&dsi_ipg_clk>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi0_lis_lpcg_ipg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0>;
-> +		};
-> +
-> +		mipi0_pwm_lpcg: clock-controller@5622300c {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x5622300c 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&clk IMX_SC_R_MIPI_0_PWM_0 IMX_SC_PM_CLK_PER>,
-> +				 <&dsi_ipg_clk>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-> +			clock-output-names =3D "mipi0_pwm_lpcg_clk",
-> +					     "mipi0_pwm_lpcg_ipg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0_PWM_0>;
-> +		};
-> +
-> +		mipi0_i2c0_lpcg_ipg_clk: clock-controller@56223014 {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x56223014 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&mipi0_i2c0_lpcg_ipg_s_clk IMX_LPCG_CLK_0>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi0_i2c0_lpcg_ipg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0_I2C_0>;
-> +		};
-> +
-> +		mipi0_i2c0_lpcg_ipg_s_clk: clock-controller@56223018 {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x56223018 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&dsi_ipg_clk>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi0_i2c0_lpcg_ipg_s_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0_I2C_0>;
-> +		};
-> +
-> +		mipi0_i2c0_lpcg_clk: clock-controller@5622301c {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x5622301c 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&clk IMX_SC_R_MIPI_0_I2C_0 IMX_SC_PM_CLK_MISC2>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi0_i2c0_lpcg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0_I2C_0>;
-> +		};
-> +
-> +		mipi0_i2c1_lpcg_ipg_clk: clock-controller@56223024 {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x56223024 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&mipi0_i2c1_lpcg_ipg_s_clk IMX_LPCG_CLK_0>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi0_i2c1_lpcg_ipg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0_I2C_1>;
-> +		};
-> +
-> +		mipi0_i2c1_lpcg_clk: clock-controller@5622302c {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x5622302c 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&clk IMX_SC_R_MIPI_0_I2C_1 IMX_SC_PM_CLK_MISC2>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi0_i2c1_lpcg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0_I2C_1>;
-> +		};
-> +
-> +		mipi0_i2c1_lpcg_ipg_s_clk: clock-controller@56223028 {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x56223028 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&dsi_ipg_clk>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi0_i2c1_lpcg_ipg_s_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0_I2C_1>;
-> +		};
-> +
-> +		pwm_mipi0: pwm@56224000 {
-> +			compatible =3D "fsl,imx8qxp-pwm", "fsl,imx27-pwm";
-> +			reg =3D <0x56224000 0x1000>;
-> +			clocks =3D <&mipi0_pwm_lpcg IMX_LPCG_CLK_4>,
-> +				 <&mipi0_pwm_lpcg IMX_LPCG_CLK_0>;
-> +			clock-names =3D "ipg", "per";
-> +			assigned-clocks =3D <&clk IMX_SC_R_MIPI_0_PWM_0 IMX_SC_PM_CLK_PER>;
-> +			assigned-clock-rates =3D <24000000>;
-> +			#pwm-cells =3D <3>;
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0_PWM_0>;
-> +			status =3D "disabled";
-> +		};
-> +
-> +		i2c0_mipi0: i2c@56226000 {
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +			compatible =3D "fsl,imx8qm-lpi2c", "fsl,imx7ulp-lpi2c";
-> +			reg =3D <0x56226000 0x1000>;
-> +			interrupts =3D <8>;
-> +			clocks =3D <&mipi0_i2c0_lpcg_clk IMX_LPCG_CLK_0>,
-> +				 <&mipi0_i2c0_lpcg_ipg_clk IMX_LPCG_CLK_0>;
-> +			clock-names =3D "per", "ipg";
-> +			assigned-clocks =3D <&mipi0_i2c0_lpcg_clk IMX_LPCG_CLK_0>;
-> +			assigned-clock-rates =3D <24000000>;
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_0_I2C_0>;
-> +			status =3D "disabled";
-> +		};
-> +	};
-> +
-> +	mipi1_subsys: bus@57220000 {
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges =3D <0x57220000 0x0 0x57220000 0x10000>;
-> +
-> +		irqsteer_mipi1: interrupt-controller@57220000 {
-> +			compatible =3D "fsl,imx-irqsteer";
-> +			reg =3D <0x57220000 0x1000>;
-> +			interrupts =3D <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-controller;
-> +			interrupt-parent =3D <&gic>;
-> +			#interrupt-cells =3D <1>;
-> +			clocks =3D <&mipi1_lis_lpcg IMX_LPCG_CLK_0>;
-> +			clock-names =3D "ipg";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1>;
-> +			fsl,channel =3D <0>;
-> +			fsl,num-irqs =3D <32>;
-> +		};
-> +
-> +		mipi1_lis_lpcg: clock-controller@57223000 {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x57223000 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&dsi_ipg_clk>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi1_lis_lpcg_ipg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1>;
-> +		};
-> +
-> +		mipi1_pwm_lpcg: clock-controller@5722300c {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x5722300c 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&clk IMX_SC_R_MIPI_1_PWM_0 IMX_SC_PM_CLK_PER>,
-> +				 <&dsi_ipg_clk>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-> +			clock-output-names =3D "mipi1_pwm_lpcg_clk",
-> +					     "mipi1_pwm_lpcg_ipg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1_PWM_0>;
-> +		};
-> +
-> +		mipi1_i2c0_lpcg_clk: clock-controller@5722301c {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x5722301c 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&clk IMX_SC_R_MIPI_1_I2C_0 IMX_SC_PM_CLK_MISC2>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi1_i2c0_lpcg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1_I2C_0>;
-> +		};
-> +
-> +		mipi1_i2c0_lpcg_ipg_clk: clock-controller@57223014 {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x57223014 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&mipi1_i2c0_lpcg_ipg_s_clk IMX_LPCG_CLK_0>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi1_i2c0_lpcg_ipg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1_I2C_0>;
-> +		};
-> +
-> +		mipi1_i2c0_lpcg_ipg_s_clk: clock-controller@57223018 {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x57223018 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&dsi_ipg_clk>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi1_i2c0_lpcg_ipg_s_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1_I2C_0>;
-> +		};
-> +
-> +		mipi1_i2c1_lpcg_ipg_clk: clock-controller@57223024 {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x57223024 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&mipi1_i2c1_lpcg_ipg_s_clk IMX_LPCG_CLK_0>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi1_i2c1_lpcg_ipg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1_I2C_1>;
-> +		};
-> +
-> +		mipi1_i2c1_lpcg_ipg_s_clk: clock-controller@57223028 {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x57223028 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&dsi_ipg_clk>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi1_i2c1_lpcg_ipg_s_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1_I2C_1>;
-> +		};
-> +
-> +		mipi1_i2c1_lpcg_clk: clock-controller@5722302c {
-> +			compatible =3D "fsl,imx8qxp-lpcg";
-> +			reg =3D <0x5722302c 0x4>;
-> +			#clock-cells =3D <1>;
-> +			clocks =3D <&clk IMX_SC_R_MIPI_1_I2C_1 IMX_SC_PM_CLK_MISC2>;
-> +			clock-indices =3D <IMX_LPCG_CLK_0>;
-> +			clock-output-names =3D "mipi1_i2c1_lpcg_clk";
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1_I2C_1>;
-> +		};
-> +
-> +		pwm_mipi1: pwm@57224000 {
-> +			compatible =3D "fsl,imx8qxp-pwm", "fsl,imx27-pwm";
-> +			reg =3D <0x57224000 0x1000>;
-> +			clocks =3D <&mipi1_pwm_lpcg IMX_LPCG_CLK_4>,
-> +				 <&mipi1_pwm_lpcg IMX_LPCG_CLK_0>;
-> +			clock-names =3D "ipg", "per";
-> +			assigned-clocks =3D <&clk IMX_SC_R_MIPI_1_PWM_0 IMX_SC_PM_CLK_PER>;
-> +			assigned-clock-rates =3D <24000000>;
-> +			#pwm-cells =3D <3>;
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1_PWM_0>;
-> +			status =3D "disabled";
-> +		};
-> +
-> +		i2c0_mipi1: i2c@57226000 {
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +			compatible =3D "fsl,imx8qm-lpi2c", "fsl,imx7ulp-lpi2c";
-> +			reg =3D <0x57226000 0x1000>;
-> +			interrupts =3D <8>;
-> +			interrupt-parent =3D <&irqsteer_mipi1>;
-> +			clocks =3D <&mipi1_i2c0_lpcg_clk IMX_LPCG_CLK_0>,
-> +				 <&mipi1_i2c0_lpcg_ipg_clk IMX_LPCG_CLK_0>;
-> +			clock-names =3D "per", "ipg";
-> +			assigned-clocks =3D <&mipi1_i2c0_lpcg_clk IMX_LPCG_CLK_0>;
-> +			assigned-clock-rates =3D <24000000>;
-> +			power-domains =3D <&pd IMX_SC_R_MIPI_1_I2C_0>;
-> +			status =3D "disabled";
-> +		};
-> +	};
-> +};
-> +
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qm.dtsi b/arch/arm64/boot/=
-dts/freescale/imx8qm.dtsi
-> index 9f29fe4589668..846b95be22bbe 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
-> @@ -577,3 +577,4 @@ clk_spdif1_rx: clock-spdif1-rx {
->  #include "imx8qm-ss-lsio.dtsi"
->  #include "imx8qm-ss-audio.dtsi"
->  #include "imx8qm-ss-lvds.dtsi"
-> +#include "imx8qm-ss-mipi.dtsi"
->=20
->=20
-
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
+Krzysztof
 
