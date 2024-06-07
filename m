@@ -1,37 +1,37 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F87913E40C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FDB13E3FD
 	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 04:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717734416; cv=none; b=f8NWtpaPgPVfGArfs+u582rCHSzPDYhKRuIlQG8W2EJY4jqvjqrvvAxrAe7o0Z4qKwH1o+bkyUYh9iK5rxLoYIQciunKcjfXJT95rmahR8LD9IQA3U0zBacc8PEbXKtS06WAGvRE4nITKnHv3fxMb18GVLKh7quST8B6kmHq9VQ=
+	t=1717734416; cv=none; b=et2TUJfSYvgvKa0QQj4zZ/q7+GReFX9oiuVvG1ze/bmZ00FiQ7nYGwDnMmikppYMMIGIO1a7cWAqT/rtzdGGHfC0WDUyjzsOseRR92YXP5Nmml5n13S0g6L3T5OHCbB0djpmo6lulIPumXj3gwIPsV0VoyuQTr5+PfMvkhY3w8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717734416; c=relaxed/simple;
-	bh=iLPdc6e3+GxI2wHjO3ieu8gaZnEFNqjX6eO5XMTguOs=;
+	bh=O20nN2xsA4izfO/nOZrGeXdSiMb1bFIg/yN9SNzd53k=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iA35Gmn0VptjW0SIpI/EmmJOSGEU+Jhi4Lm0OsqcEnReUfR+dr21wT3nBnnmHIbCCjNZb/XsO4iZBy8ngOZCl2hhjeK5R4mO+m2DmoMVPsUKmSlL99xIDU2IGCGlXfhM0nAvwh38854EUCgu4W9glkV7S4eF5zx2VwM8AG9itwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 MIME-Version:Content-Type; b=DMUyOfpOV2pXlALPrs9oeb/FYMx/W7U7ruocU3CJShcCKylHR3tUEX80q7vt7dLUFkyD99yGxCirCinY6cJMw3c/JVuQYwvwgnGTa2PwYgheG9X/cDytMh5akTpYLNhRyXYQ7IQdbcjyxHUpErxFZ2y6b/Irf9CuMcvqBbiWGCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VwShl5WxzzmYRx;
-	Fri,  7 Jun 2024 12:22:15 +0800 (CST)
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VwSjS4Tqfz1SB59;
+	Fri,  7 Jun 2024 12:22:52 +0800 (CST)
 Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 978D51400D5;
+	by mail.maildlp.com (Postfix) with ESMTPS id 5EC5B1400D5;
 	Fri,  7 Jun 2024 12:26:51 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
  (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Jun
- 2024 12:26:42 +0800
+ 2024 12:26:39 +0800
 From: Zhihao Cheng <chengzhihao1@huawei.com>
 To: <richard@nod.at>, <david.oberhollenzer@sigma-star.at>,
 	<miquel.raynal@bootlin.com>, <yi.zhang@huawei.com>, <xiangyang3@huawei.com>,
 	<huangxiaojia2@huawei.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH mtd-utils 022/110] ubifs-utils: Add linux kernel memory allocation implementations
-Date: Fri, 7 Jun 2024 12:24:47 +0800
-Message-ID: <20240607042615.2069840-23-chengzhihao1@huawei.com>
+Subject: [RFC PATCH mtd-utils 018/110] mtd-utils: Extract rbtree implementation to common lib
+Date: Fri, 7 Jun 2024 12:24:43 +0800
+Message-ID: <20240607042615.2069840-19-chengzhihao1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240607042615.2069840-1-chengzhihao1@huawei.com>
 References: <20240607042615.2069840-1-chengzhihao1@huawei.com>
@@ -46,166 +46,154 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600013.china.huawei.com (7.193.23.68)
 
-Add linux kernel memory allocation implementations, because there are many
-memory allocations(eg. kmalloc, kzalloc) used in UBIFS linux kernel libs.
+Current rbtree implementation code is put under jffs utils, extract it
+into common lib, and add more rbtree operations(eg. rb_first_postorder,
+rb_next_postorder, etc.).
 
 This is a preparation for replacing implementation of UBIFS utils with
 linux kernel libs.
 
 Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- ubifs-utils/Makemodule.am |  2 ++
- ubifs-utils/common/kmem.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++
- ubifs-utils/common/kmem.h | 56 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 122 insertions(+)
- create mode 100644 ubifs-utils/common/kmem.c
- create mode 100644 ubifs-utils/common/kmem.h
+ {jffsX-utils => include}/rbtree.h | 32 ++++++++++++++++++++++++++++++++
+ jffsX-utils/Makemodule.am         |  6 ++----
+ lib/Makemodule.am                 |  2 ++
+ {jffsX-utils => lib}/rbtree.c     | 38 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 74 insertions(+), 4 deletions(-)
+ rename {jffsX-utils => include}/rbtree.h (79%)
+ rename {jffsX-utils => lib}/rbtree.c (90%)
 
-diff --git a/ubifs-utils/Makemodule.am b/ubifs-utils/Makemodule.am
-index 69192ffd..13171b74 100644
---- a/ubifs-utils/Makemodule.am
-+++ b/ubifs-utils/Makemodule.am
-@@ -2,6 +2,8 @@ common_SOURCES = \
- 	ubifs-utils/common/compiler_attributes.h \
- 	ubifs-utils/common/linux_types.h \
- 	ubifs-utils/common/linux_err.h \
-+	ubifs-utils/common/kmem.h \
-+	ubifs-utils/common/kmem.c \
- 	ubifs-utils/common/defs.h \
- 	ubifs-utils/common/crc16.h \
- 	ubifs-utils/common/crc16.c \
-diff --git a/ubifs-utils/common/kmem.c b/ubifs-utils/common/kmem.c
-new file mode 100644
-index 00000000..e926a137
---- /dev/null
-+++ b/ubifs-utils/common/kmem.c
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Simple memory interface
+diff --git a/jffsX-utils/rbtree.h b/include/rbtree.h
+similarity index 79%
+rename from jffsX-utils/rbtree.h
+rename to include/rbtree.h
+index 0d77b65f..89926e74 100644
+--- a/jffsX-utils/rbtree.h
++++ b/include/rbtree.h
+@@ -155,6 +155,38 @@ extern struct rb_node *rb_prev(struct rb_node *);
+ extern struct rb_node *rb_first(struct rb_root *);
+ extern struct rb_node *rb_last(struct rb_root *);
+ 
++/* Postorder iteration - always visit the parent after its children */
++extern struct rb_node *rb_first_postorder(const struct rb_root *);
++extern struct rb_node *rb_next_postorder(const struct rb_node *);
++
++#define rb_entry_safe(ptr, type, member) \
++	({ typeof(ptr) ____ptr = (ptr); \
++	   ____ptr ? rb_entry(____ptr, type, member) : NULL; \
++	})
++
++/**
++ * rbtree_postorder_for_each_entry_safe - iterate in post-order over rb_root of
++ * given type allowing the backing memory of @pos to be invalidated
++ *
++ * @pos:	the 'type *' to use as a loop cursor.
++ * @n:		another 'type *' to use as temporary storage
++ * @root:	'rb_root *' of the rbtree.
++ * @field:	the name of the rb_node field within 'type'.
++ *
++ * rbtree_postorder_for_each_entry_safe() provides a similar guarantee as
++ * list_for_each_entry_safe() and allows the iteration to continue independent
++ * of changes to @pos by the body of the loop.
++ *
++ * Note, however, that it cannot handle other modifications that re-order the
++ * rbtree it is iterating over. This includes calling rb_erase() on @pos, as
++ * rb_erase() may rebalance the tree, causing us to miss some nodes.
 + */
++#define rbtree_postorder_for_each_entry_safe(pos, n, root, field) \
++	for (pos = rb_entry_safe(rb_first_postorder(root), typeof(*pos), field); \
++	     pos && ({ n = rb_entry_safe(rb_next_postorder(&pos->field), \
++			typeof(*pos), field); 1; }); \
++	     pos = n)
 +
-+#include "compiler_attributes.h"
-+#include "linux_types.h"
-+#include "kmem.h"
-+#include "defs.h"
+ /* Fast replacement of a single node without remove/rebalance/add/rebalance */
+ extern void rb_replace_node(struct rb_node *victim, struct rb_node *new,
+ 			    struct rb_root *root);
+diff --git a/jffsX-utils/Makemodule.am b/jffsX-utils/Makemodule.am
+index 2374b858..4ae4c57b 100644
+--- a/jffsX-utils/Makemodule.am
++++ b/jffsX-utils/Makemodule.am
+@@ -1,16 +1,14 @@
+ mkfs_jffs2_SOURCES = \
+ 	jffsX-utils/mkfs.jffs2.c \
+-	jffsX-utils/rbtree.h \
+ 	jffsX-utils/compr.h \
+-	jffsX-utils/rbtree.c \
+ 	jffsX-utils/compr.c \
+ 	jffsX-utils/compr_rtime.c \
+ 	jffsX-utils/compr.h \
+-	jffsX-utils/rbtree.h \
+ 	jffsX-utils/summary.h \
+ 	include/linux/jffs2.h \
+ 	include/mtd/jffs2-user.h \
+-	include/list.h
++	include/list.h \
++	include/rbtree.h
+ mkfs_jffs2_LDADD = libmtd.a $(ZLIB_LIBS) $(LZO_LIBS)
+ mkfs_jffs2_CPPFLAGS = $(AM_CPPFLAGS) $(ZLIB_CFLAGS) $(LZO_CFLAGS)
+ 
+diff --git a/lib/Makemodule.am b/lib/Makemodule.am
+index 7f890daa..441532de 100644
+--- a/lib/Makemodule.am
++++ b/lib/Makemodule.am
+@@ -7,6 +7,8 @@ libmtd_a_SOURCES = \
+ 	include/common.h \
+ 	lib/list_sort.c \
+ 	include/list.h \
++	lib/rbtree.c \
++	include/rbtree.h \
+ 	lib/libcrc32.c \
+ 	include/crc32.h \
+ 	lib/libmtd_legacy.c \
+diff --git a/jffsX-utils/rbtree.c b/lib/rbtree.c
+similarity index 90%
+rename from jffsX-utils/rbtree.c
+rename to lib/rbtree.c
+index 329e0986..32c87556 100644
+--- a/jffsX-utils/rbtree.c
++++ b/lib/rbtree.c
+@@ -388,3 +388,41 @@ void rb_replace_node(struct rb_node *victim, struct rb_node *new,
+ 	/* Copy the pointers/colour from the victim to the replacement */
+ 	*new = *victim;
+ }
 +
-+static void *kmem_alloc(size_t size)
++static struct rb_node *rb_left_deepest_node(const struct rb_node *node)
 +{
-+	void *ptr = malloc(size);
-+
-+	if (ptr == NULL)
-+		sys_errmsg("malloc failed (%d bytes)", (int)size);
-+	return ptr;
++	for (;;) {
++		if (node->rb_left)
++			node = node->rb_left;
++		else if (node->rb_right)
++			node = node->rb_right;
++		else
++			return (struct rb_node *)node;
++	}
 +}
 +
-+static void *kmem_zalloc(size_t size)
++struct rb_node *rb_next_postorder(const struct rb_node *node)
 +{
-+	void *ptr = kmem_alloc(size);
-+
-+	if (!ptr)
-+		return ptr;
-+
-+	memset(ptr, 0, size);
-+	return ptr;
-+}
-+
-+void *kmalloc(size_t size, gfp_t flags)
-+{
-+	if (flags & __GFP_ZERO)
-+		return kmem_zalloc(size);
-+	return kmem_alloc(size);
-+}
-+
-+void *krealloc(void *ptr, size_t new_size, __unused gfp_t flags)
-+{
-+	ptr = realloc(ptr, new_size);
-+	if (ptr == NULL)
-+		sys_errmsg("realloc failed (%d bytes)", (int)new_size);
-+	return ptr;
-+}
-+
-+void *kmalloc_array(size_t n, size_t size, gfp_t flags)
-+{
-+	size_t bytes;
-+
-+	if (unlikely(check_mul_overflow(n, size, &bytes)))
++	const struct rb_node *parent;
++	if (!node)
 +		return NULL;
-+	return kmalloc(bytes, flags);
++	parent = rb_parent(node);
++
++	/* If we're sitting on node, we've already seen our children */
++	if (parent && node == parent->rb_left && parent->rb_right) {
++		/* If we are the parent's left node, go to the parent's right
++		 * node then all the way down to the left */
++		return rb_left_deepest_node(parent->rb_right);
++	} else
++		/* Otherwise we are the parent's right node, and the parent
++		 * should be next */
++		return (struct rb_node *)parent;
 +}
 +
-+void *kmemdup(const void *src, size_t len, gfp_t gfp)
++struct rb_node *rb_first_postorder(const struct rb_root *root)
 +{
-+	void *p;
++	if (!root->rb_node)
++		return NULL;
 +
-+	p = kmalloc(len, gfp);
-+	if (p)
-+		memcpy(p, src, len);
-+
-+	return p;
++	return rb_left_deepest_node(root->rb_node);
 +}
-diff --git a/ubifs-utils/common/kmem.h b/ubifs-utils/common/kmem.h
-new file mode 100644
-index 00000000..9fe2a364
---- /dev/null
-+++ b/ubifs-utils/common/kmem.h
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2008 Silicon Graphics, Inc.
-+ * All Rights Reserved.
-+ */
-+#ifndef __KMEM_H__
-+#define __KMEM_H__
-+
-+#include <stdlib.h>
-+
-+typedef unsigned int gfp_t;
-+
-+#define GFP_KERNEL	0
-+#define GFP_NOFS	0
-+#define __GFP_NOWARN	0
-+#define __GFP_ZERO	1
-+
-+#define vmalloc(size)	malloc(size)
-+#define vfree(ptr)	free(ptr)
-+
-+extern void	*kmalloc(size_t, gfp_t);
-+extern void	*krealloc(void *, size_t, __attribute__((unused)) gfp_t);
-+extern void	*kmalloc_array(size_t, size_t, gfp_t);
-+extern void	*kmemdup(const void *src, size_t len, gfp_t gfp);
-+
-+static inline void kfree(const void *ptr)
-+{
-+	free((void *)ptr);
-+}
-+
-+static inline void kvfree(const void *ptr)
-+{
-+	kfree(ptr);
-+}
-+
-+static inline void *kvmalloc(size_t size, gfp_t flags)
-+{
-+	return kmalloc(size, flags);
-+}
-+
-+static inline void *kzalloc(size_t size, gfp_t flags)
-+{
-+	return kmalloc(size, flags | __GFP_ZERO);
-+}
-+
-+static inline void *__vmalloc(unsigned long size, gfp_t gfp_mask)
-+{
-+	return kmalloc(size, gfp_mask);
-+}
-+
-+static inline void *kcalloc(size_t n, size_t size, gfp_t flags)
-+{
-+	return kmalloc_array(n, size, flags | __GFP_ZERO);
-+}
-+
-+#endif
 -- 
 2.13.6
 
