@@ -1,174 +1,228 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA4719A284;
-	Fri,  7 Jun 2024 15:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490F919ADA8;
+	Fri,  7 Jun 2024 15:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717772786; cv=none; b=nQuJMY/5kqASHXXWRzd3cKl1hSnRDqV34jG4hSyR7+uNw9B1BX28o40oK4AliYjHtA0cT7wq/2jjhhCdgfV1eaptX2fUJm2SbsPCKGDVtAboSKHMvonXY8tzp9d6+9sVI0HH7YKiSIpsmXSVCT8Y9XipAWpGThkMH94x6aqXOMU=
+	t=1717772811; cv=none; b=J3kEZ1AtINtgQy1KaBdJO+xr+4l2XV2Dhx6+8G+V42vr2zR89NmvBGLvo4nazmEuY5G77q9q2I75HAlfgmEjO+hka6DkXsWl2t1f/lGswm83CHmA89bX6vHeUYhoG1i1/jVveWWzBSh3YAss8vNo5dDXQwt+VlS5E0h1jWTzm+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717772786; c=relaxed/simple;
-	bh=Sv9E3U1vrEuoSMMHMwfb5YdKHNu1CJKxciCkR7PpDe4=;
+	s=arc-20240116; t=1717772811; c=relaxed/simple;
+	bh=5q5KeN3nK8kY1P0pg+KQs5FbftLLFK48Ksbvdd3ZAT4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q2hthaJICfCorQikOUXnay7Vo3LzVLuLgEZZMChCTIWaWrIjjI5VlyDwMNTD/Yzdjt1uGkFoYttS3BqL4gp0UmNJWjs24fswt9fsWX6cjkagxxXDm5lODXrnuLi3P6IXJf2wqu+ZDvVwavy1Nvls0FkVAHCAk2iazNjDW0WGyiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=NolyD4e3; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	 MIME-Version; b=S47aYbaClNQeENYJAFaPHCTHhQAIszW83Or1VOeAfwfIciL9aFZFGd063kpUNZPg2FkvA1CEiZU9EIJK7sHOEBRbkT7fpqZWWokbQthx8QDRVMAmfT8KkOmf3KSsrUbzAZQYwtwa0JQrJkLaenKcQtKnCQS5nmdsohu7MxtxDUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uuzBmzq2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mRfVgsn0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uuzBmzq2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mRfVgsn0; dkim=neutral (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LNlg/biH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kK7KAn+b; dkim=neutral (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LNlg/biH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kK7KAn+b; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="NolyD4e3"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uuzBmzq2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mRfVgsn0";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uuzBmzq2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mRfVgsn0";
+	dkim=neutral (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LNlg/biH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kK7KAn+b";
+	dkim=neutral (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LNlg/biH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kK7KAn+b"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4VwkrF2Pd1z9sng;
-	Fri,  7 Jun 2024 16:59:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1717772381;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 126A12197B;
+	Fri,  7 Jun 2024 15:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1717772807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kZG/lL31K25//iaIAV7jBbt1MNjj987Sk8ll7Dxjdts=;
-	b=NolyD4e3omUCcx8jYDPY5ZsDQIHnS6RImuHNHeschPG7wr1uaeUR7qeU92o88kizWNRrAr
-	SPhn3Cqkx/nm6ynGmBxDMlx2bkrNAdRZYpqYRswXXrTZ4S9FOqoHy95aPpCwC7eWGKAhgV
-	UYRW6njfy8HdZueqtcGalhYbUfZUliyN9Dpi69gv2Rf3twKEUV51yeGEhqz47K6Gfi/vUp
-	WvGe3GyAxkVYhSTpOGarHrkIJRYmf6bgft57mVFmQofyk/wz89uXsAMB/OeiiET5V3FeLw
-	+IKc3x61zFHlTj9qpPNiPwyTtnKkR+k3siGQMDaR8gHW6pfH/5JO6whYg9+Jqg==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: david@fromorbit.com,
-	djwong@kernel.org,
-	chandan.babu@oracle.com,
-	brauner@kernel.org,
-	akpm@linux-foundation.org,
-	willy@infradead.org
-Cc: mcgrof@kernel.org,
-	linux-mm@kvack.org,
-	hare@suse.de,
-	linux-kernel@vger.kernel.org,
-	yang@os.amperecomputing.com,
-	Zi Yan <zi.yan@sent.com>,
-	linux-xfs@vger.kernel.org,
-	p.raghav@samsung.com,
-	linux-fsdevel@vger.kernel.org,
-	kernel@pankajraghav.com,
-	hch@lst.de,
-	gost.dev@samsung.com,
-	cl@os.amperecomputing.com,
-	john.g.garry@oracle.com,
-	Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH v7 08/11] xfs: use kvmalloc for xattr buffers
-Date: Fri,  7 Jun 2024 14:58:59 +0000
-Message-ID: <20240607145902.1137853-9-kernel@pankajraghav.com>
-In-Reply-To: <20240607145902.1137853-1-kernel@pankajraghav.com>
-References: <20240607145902.1137853-1-kernel@pankajraghav.com>
+	 in-reply-to:in-reply-to:references:references:list-id:
+	 list-unsubscribe:list-subscribe;
+	bh=ECn9IKY+8fmiPsaMpieYBYYu2CDiL7Pa8kNvznWWzJ8=;
+	b=uuzBmzq2JB3Nxay4Y6jCN/LYm+Cj/z9mgHJhhEJifQ/mYZ7oADGstUI7v/zz7OZayTIWua
+	jF2IFjTb8yldWH6GuaBP2aWsP7fpTVwiT1TOozevMgx1rts3Ji2CK2tXwxF0HLcRX+h8tf
+	2IeYXQfc7/m3lBHRefQTJOeHsUYBYY0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1717772807;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:
+	 list-unsubscribe:list-subscribe;
+	bh=ECn9IKY+8fmiPsaMpieYBYYu2CDiL7Pa8kNvznWWzJ8=;
+	b=mRfVgsn031h1LCcbdEc3JAOGw+3O6cJ9I44ExV1C7YrB+jYtqJCiHDoXIpHL5TQxT+y+Fl
+	wegLZQ35vcL+voAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1717772807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:
+	 list-unsubscribe:list-subscribe;
+	bh=ECn9IKY+8fmiPsaMpieYBYYu2CDiL7Pa8kNvznWWzJ8=;
+	b=uuzBmzq2JB3Nxay4Y6jCN/LYm+Cj/z9mgHJhhEJifQ/mYZ7oADGstUI7v/zz7OZayTIWua
+	jF2IFjTb8yldWH6GuaBP2aWsP7fpTVwiT1TOozevMgx1rts3Ji2CK2tXwxF0HLcRX+h8tf
+	2IeYXQfc7/m3lBHRefQTJOeHsUYBYY0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1717772807;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:list-id:
+	 list-unsubscribe:list-subscribe;
+	bh=ECn9IKY+8fmiPsaMpieYBYYu2CDiL7Pa8kNvznWWzJ8=;
+	b=mRfVgsn031h1LCcbdEc3JAOGw+3O6cJ9I44ExV1C7YrB+jYtqJCiHDoXIpHL5TQxT+y+Fl
+	wegLZQ35vcL+voAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D1A0D134C7;
+	Fri,  7 Jun 2024 15:06:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id u4VyMQYiY2YsFwAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Fri, 07 Jun 2024 15:06:46 +0000
+From: Petr Vorel <pvorel@suse.cz>
+To: chrubis@suse.cz,
+	Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: jack@suse.cz,
+	Dave Chinner <david@fromorbit.com>
+Subject: [PATCH] loop: Disable fallocate() zero and discard if not supported
+Date: Fri,  7 Jun 2024 17:06:44 +0200
+Message-ID: <20240607091555.2504-1-chrubis@suse.cz>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240607091555.2504-1-chrubis@suse.cz>
+References: <20240607091555.2504-1-chrubis@suse.cz>
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130]) (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4571405F8; Fri,  7 Jun 2024 09:16:27 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97]) (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256) (No client certificate requested) by smtp-out1.suse.de (Postfix) with ESMTPS id A52CC21991; Fri,  7 Jun 2024 09:16:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa; t=1717751785; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc: mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding; bh=yvfvtJ2vwLjq4w/MiB+bS7Kf8HpDDJ7m58lQDYUYOx0=; b=LNlg/biHGPum4Bc4R1OrKDL9eSYMepFT1pXWpUzrN76bDqQzhgmGdvOlLJOfhgOXX2/27y KBDW+uJ4pIq7ITXlS6f/cAWT3juzQjfWdE+ZQ/82pBhKrb3rV7juQBjzltJ5OcG+VPUL7L iw7EyloetoN347RpdJ84PWDJtsl14rQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_ed25519; t=1717751785; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc: mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding; bh=yvfvtJ2vwLjq4w/MiB+bS7Kf8HpDDJ7m58lQDYUYOx0=; b=kK7KAn+bBIHtsosPc98UNh1lRiQxt05qFsr2PkDnQgCOCxLMKJ7n6lbi+HP97WQYr6MryR d0KwLRox+kHE0dBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa; t=1717751785; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc: mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding; bh=yvfvtJ2vwLjq4w/MiB+bS7Kf8HpDDJ7m58lQDYUYOx0=; b=LNlg/biHGPum4Bc4R1OrKDL9eSYMepFT1pXWpUzrN76bDqQzhgmGdvOlLJOfhgOXX2/27y KBDW+uJ4pIq7ITXlS6f/cAWT3juzQjfWdE+ZQ/82pBhKrb3rV7juQBjzltJ5OcG+VPUL7L iw7EyloetoN347RpdJ84PWDJtsl14rQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_ed25519; t=1717751785; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc: mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding; bh=yvfvtJ2vwLjq4w/MiB+bS7Kf8HpDDJ7m58lQDYUYOx0=; b=kK7KAn+bBIHtsosPc98UNh1lRiQxt05qFsr2PkDnQgCOCxLMKJ7n6lbi+HP97WQYr6MryR d0KwLRox+kHE0dBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1]) (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits) key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256) (No client certificate requested) by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 94AFB13A42; Fri,  7 Jun 2024 09:16:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167]) by imap1.dmz-prg2.suse.org with ESMTPSA id 6nsrI+nPYmZZHQAAD6G6ig (envelope-from <chrubis@suse.cz>); Fri, 07 Jun 2024 09:16:25 +0000
+X-Mailer: git-send-email 2.44.2
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: A52CC21991
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.06 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MAILLIST(-0.15)[generic];
+	SUSE_ML_WHITELIST_VGER(-0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
+	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -4.06
+X-Spam-Flag: NO
+Message-ID: <20240607150644.urQJIloH7fATxuxPm0Cm8b8-YbTURCpoz6mvhtQFv70@z>
 
-From: Dave Chinner <dchinner@redhat.com>
+From: Cyril Hrubis <chrubis@suse.cz>
 
-Pankaj Raghav reported that when filesystem block size is larger
-than page size, the xattr code can use kmalloc() for high order
-allocations. This triggers a useless warning in the allocator as it
-is a __GFP_NOFAIL allocation here:
+Hi Cyril, all,
 
-static inline
-struct page *rmqueue(struct zone *preferred_zone,
-                        struct zone *zone, unsigned int order,
-                        gfp_t gfp_flags, unsigned int alloc_flags,
-                        int migratetype)
-{
-        struct page *page;
 
-        /*
-         * We most definitely don't want callers attempting to
-         * allocate greater than order-1 page units with __GFP_NOFAIL.
-         */
->>>>    WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
-...
+> If fallcate is implemented but zero and discard operations are not
+nit: s/fallocate/fallcate/
 
-Fix this by changing all these call sites to use kvmalloc(), which
-will strip the NOFAIL from the kmalloc attempt and if that fails
-will do a __GFP_NOFAIL vmalloc().
+> supported by the filesystem the backing file is on we continue to fill
+> dmesg with errors from the blk_mq_end_request() since each time we call
+> fallocate() on the loop device the EOPNOTSUPP error from lo_fallocate()
+> ends up propagated into the block layer. In the end syscall succeeds
+> since the blkdev_issue_zeroout() falls back to writing zeroes which
+> makes the errors even more misleading and confusing.
 
-This is not an issue that productions systems will see as
-filesystems with block size > page size cannot be mounted by the
-kernel; Pankaj is developing this functionality right now.
+Thanks for looking into this!
 
-Reported-by: Pankaj Raghav <kernel@pankajraghav.com>
-Fixes: f078d4ea8276 ("xfs: convert kmem_alloc() to kmalloc()")
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Pankaj Raghav <p.raghav@samsung.com>
----
- fs/xfs/libxfs/xfs_attr_leaf.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+FYI this has been in mainline for some time: mentioned for 4.16.0-rc7 [1], later
+in v5.19 [2]. Cc also Dave, who back then suggested to remove the warning as not
+being useful for users [3].
 
-diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index b9e98950eb3d..09f4cb061a6e 100644
---- a/fs/xfs/libxfs/xfs_attr_leaf.c
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -1138,10 +1138,7 @@ xfs_attr3_leaf_to_shortform(
- 
- 	trace_xfs_attr_leaf_to_sf(args);
- 
--	tmpbuffer = kmalloc(args->geo->blksize, GFP_KERNEL | __GFP_NOFAIL);
--	if (!tmpbuffer)
--		return -ENOMEM;
--
-+	tmpbuffer = kvmalloc(args->geo->blksize, GFP_KERNEL | __GFP_NOFAIL);
- 	memcpy(tmpbuffer, bp->b_addr, args->geo->blksize);
- 
- 	leaf = (xfs_attr_leafblock_t *)tmpbuffer;
-@@ -1205,7 +1202,7 @@ xfs_attr3_leaf_to_shortform(
- 	error = 0;
- 
- out:
--	kfree(tmpbuffer);
-+	kvfree(tmpbuffer);
- 	return error;
- }
- 
-@@ -1613,7 +1610,7 @@ xfs_attr3_leaf_compact(
- 
- 	trace_xfs_attr_leaf_compact(args);
- 
--	tmpbuffer = kmalloc(args->geo->blksize, GFP_KERNEL | __GFP_NOFAIL);
-+	tmpbuffer = kvmalloc(args->geo->blksize, GFP_KERNEL | __GFP_NOFAIL);
- 	memcpy(tmpbuffer, bp->b_addr, args->geo->blksize);
- 	memset(bp->b_addr, 0, args->geo->blksize);
- 	leaf_src = (xfs_attr_leafblock_t *)tmpbuffer;
-@@ -1651,7 +1648,7 @@ xfs_attr3_leaf_compact(
- 	 */
- 	xfs_trans_log_buf(trans, bp, 0, args->geo->blksize - 1);
- 
--	kfree(tmpbuffer);
-+	kvfree(tmpbuffer);
- }
- 
- /*
-@@ -2330,7 +2327,7 @@ xfs_attr3_leaf_unbalance(
- 		struct xfs_attr_leafblock *tmp_leaf;
- 		struct xfs_attr3_icleaf_hdr tmphdr;
- 
--		tmp_leaf = kzalloc(state->args->geo->blksize,
-+		tmp_leaf = kvzalloc(state->args->geo->blksize,
- 				GFP_KERNEL | __GFP_NOFAIL);
- 
- 		/*
-@@ -2371,7 +2368,7 @@ xfs_attr3_leaf_unbalance(
- 		}
- 		memcpy(save_leaf, tmp_leaf, state->args->geo->blksize);
- 		savehdr = tmphdr; /* struct copy */
--		kfree(tmp_leaf);
-+		kvfree(tmp_leaf);
- 	}
- 
- 	xfs_attr3_leaf_hdr_to_disk(state->args->geo, save_leaf, &savehdr);
--- 
-2.44.1
+> How to reproduce:
 
+> 1. make sure /tmp is mounted as tmpfs
+> 2. dd if=/dev/zero of=/tmp/disk.img bs=1M count=100
+> 3. losetup /dev/loop0 /tmp/disk.img
+> 4. mkfs.ext2 /dev/loop0
+> 5. dmesg |tail
+
+> [710690.898214] operation not supported error, dev loop0, sector 204672 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+> [710690.898279] operation not supported error, dev loop0, sector 522 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+> [710690.898603] operation not supported error, dev loop0, sector 16906 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+> [710690.898917] operation not supported error, dev loop0, sector 32774 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+> [710690.899218] operation not supported error, dev loop0, sector 49674 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+> [710690.899484] operation not supported error, dev loop0, sector 65542 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+> [710690.899743] operation not supported error, dev loop0, sector 82442 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+> [710690.900015] operation not supported error, dev loop0, sector 98310 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+> [710690.900276] operation not supported error, dev loop0, sector 115210 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+> [710690.900546] operation not supported error, dev loop0, sector 131078 op 0x9:(WRITE_ZEROES) flags 0x8000800 phys_seg 0 prio class 0
+
+Kind regards,
+Petr
+
+[1] https://lore.kernel.org/all/10632862.17524551.1522402353418.JavaMail.zimbra@redhat.com/
+[2] https://lore.kernel.org/all/YvZUfq+3HYwXEncw@pevik/
+[3] https://lore.kernel.org/all/20220814224440.GR3600936@dread.disaster.area/
+
+> This patch changes the lo_fallocate() to clear the flags for zero and
+> discard operations if we get EOPNOTSUPP from the backing file fallocate
+> callback, that way we at least stop spewing errors after the first
+> unsuccessful try.
+
+> CC: Jan Kara <jack@suse.cz>
+> Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
+> ---
+>  drivers/block/loop.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index 93780f41646b..315c76e3ef4a 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -320,6 +320,21 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
+>  	ret = file->f_op->fallocate(file, mode, pos, blk_rq_bytes(rq));
+>  	if (unlikely(ret && ret != -EINVAL && ret != -EOPNOTSUPP))
+>  		return -EIO;
+> +
+> +	if (ret == -EOPNOTSUPP) {
+> +		struct queue_limits lim = queue_limits_start_update(lo->lo_queue);
+> +
+> +		if (mode & FALLOC_FL_ZERO_RANGE)
+> +			lim.max_write_zeroes_sectors = 0;
+> +
+> +		if (mode & FALLOC_FL_PUNCH_HOLE) {
+> +			lim.max_hw_discard_sectors = 0;
+> +			lim.discard_granularity = 0;
+> +		}
+> +
+> +		queue_limits_commit_update(lo->lo_queue, &lim);
+> +	}
+> +
+>  	return ret;
+>  }
