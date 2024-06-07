@@ -1,135 +1,139 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBE61BC23;
-	Fri,  7 Jun 2024 09:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7C31BC23
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 09:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717750847; cv=none; b=C1RJbRWKSmAOJ5SPa3WJTjsZl4lfQ9qJXJhAmXgLc2kIAskKPPcVTLQ+i4VzRZZfM8IPJnAiFYz1vlp9B6F9CilRBYlv/tWr7hnBv6WhlbeUDCXcOt8Ir+SAsiAY41EfONFoJM/jmwGtp84HZVvsoD+cjd+I9ZIK9t3F7ZrPhgc=
+	t=1717750853; cv=none; b=J3V06grvIr/WSPF83klBXJaPjqzvzNiCEAjYUYcmsMzxEM1LIUDpyjtW+VQCM6UHYHqm0Jb3sQf9QC7QSc3JPKqiLkPdxeDa/oLSxg5uiqUro9jJSaU7Y+o/IAs4NI3IKx/x5wWwGT8VJsJ+W+1y20RoSK3hhUynM/0SrbWkAtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717750847; c=relaxed/simple;
-	bh=6d2oyaveoYD51b3+do73Byor0bMXDI/B0IVfCP0qQpk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Q4ZwkdVuI1wZXHmWcC7cUeQRPzj56m2hIUgecMUkYzxUgRPBc62CXMOgG4KiUBbY81tYP88bYV177Aurn4Hh6bUmvTnu2LYrJLeCNT/hMiw0SFC69lpwdWsQTLB9W1Dy9i6Gr6azTv69kxk6hjVg/X7A8GFcvIZaEI+1c/WtpNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CHxEbv4p; arc=none smtp.client-ip=209.85.218.50
+	s=arc-20240116; t=1717750853; c=relaxed/simple;
+	bh=hbH9FscCbenKyJOliecIL8HXiCKJO1fhxhChk9cPvPQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rAZ+JrSqn2cqBOFoQf7WEPMFpe59Q+PW5kDlx2V9iN0jdtolHJJgRYiWyGjirt5huG4M3Re/TnKbC+cjLpO8HRfvvkLb4Yu4FIATcEYDZtYR7iuQoFm6rlKiuAGGuT4ANwn0UrD7YQz5bwoH6rehUDi3vQoJwvUj9q2r9rt9r5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QdoCsf54; arc=none smtp.client-ip=209.85.221.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHxEbv4p"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a626919d19dso545368366b.0;
-        Fri, 07 Jun 2024 02:00:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdoCsf54"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4eb007a9f6fso585857e0c.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 02:00:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717750844; x=1718355644; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=njCJhsy2MgojMs7qfkzrTmxM/SuOjJ6hLPnSqBOXbMI=;
-        b=CHxEbv4p1k1FHzTi9/AIzCicyZql11dX2HvOnMAEUxG1s7ouaouCwQB7VfN3nRByBQ
-         UV76HqKAlE0sXIaMwxtdsV6tkmreumawWcZoZjj/og8D5VnNHiLU79IJ12sEiERfVQvm
-         +cihiP+WFTawSAbTdcscl5YiF+hlwClblVqdamfyLYemJYpum4/UQPaocIceNW2KyPxb
-         Elhol7kvDUISs2a2i/z8UFN3kEnvxHx4J4erTNkH1pSCfPDE8xleKJ028HyeVTOQ4VMI
-         IP0opcZg3UoURej+UC1PgtDAeomZ1FnHgEAflTaIGOGagSXihSZTyWk7GECFJxSVkcOl
-         bfkw==
+        d=gmail.com; s=20230601; t=1717750851; x=1718355651; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DBcoLUrX2L9eb2fV5NkylUMV+gvpxQM/JqT0hm0OtKQ=;
+        b=QdoCsf54zCcbgQ9pL2my7TNT0/jHAqdn6hkGE8x+yG3dzr6TngdKF8Go/1LIToUAzk
+         yz9rMHhkvwZm+7MH5cb7HZMavYqMpGfrR4ZkCHOwiL/Ya0/jECPFq0o3XhSgkrFir1hE
+         C2IEQO2m22GNGNMNB3q415OK6HfUQE7sahL4XIBi6Gq4g71fyRMP9TL1Io9vpHndZZz7
+         iE5LWaElmULQgOnGQ1+6/WmermRB6GdODZrZHKioU/N3t1n+NVSqq0urs/UyR5fV6Y6Q
+         WtvPkbUdKmi5Ck7L/SUlnD+zbWXRwUifEi2mRYg14ieY8RwuZYa5JvkpyrWnqrUuMtTK
+         QqAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717750844; x=1718355644;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=njCJhsy2MgojMs7qfkzrTmxM/SuOjJ6hLPnSqBOXbMI=;
-        b=DOyKzr1fBmIFlygdODy/RWdsdXbc22Xjp6nvKagonTMyojKKX8AXzR7SKKKwPzabJC
-         MPD1wGXkbZ1GI+8txYNoBbVC8f6UrqlzaSvQOTXs072XkbjdL5ZokJ5XXixKtuGxHbKM
-         CNek/uPbRUA/lx13VwwN/+ggWN453ILw1bNLyz7buMkWKD1du/+6RadWziRI75FMRiHL
-         clmxThaJ/y+PPSwjfloakqFjEc3yrAGBR6cvvzrMZjIEvP0avCIE2l7eU+MK9N/pdK+b
-         xN5WxRXPiWnQfyKkFMd+EqIMVg6T5cbAvXMlVVNuDHdz0dQY3g/bCBpXJwa1O1KqLH52
-         wXBw==
-X-Forwarded-Encrypted: i=1; AJvYcCWseqVRnDY65YPa5xfi7NEARvZgk74ogP+J2VCVuuxglJIZukc8fnanozZ8vQTLfAiZVG2SPqhPBPCyrxSm9nGNeXEG1RFYK2cNQqvsv+7Kn4kPUYN5mXKm47fA5nyDFIkqNWEGjgJJrtXjO+0/fpdXx4AIA1GAlPTDQ3rtwmeBbut2WQ==
-X-Gm-Message-State: AOJu0Yx8PJuwtBYnlbhH1k4Z4mLZhfj3Yeqn1da3qJmgjM1v8yLNOwKk
-	ifC78p5KR0Ouf7pgYRuT2sarCvWWE/GvLC478JsEto6EomD6tBGE
-X-Google-Smtp-Source: AGHT+IHLiLFheQj+yJQdq9hnRsDDDu9iBd3tmzAObK/st+kKWoHSHuDiy/xJciPfciWurAnMG9pnsA==
-X-Received: by 2002:a17:906:c254:b0:a6c:70f3:de0f with SMTP id a640c23a62f3a-a6cbc6ca035mr174610166b.28.1717750843414;
-        Fri, 07 Jun 2024 02:00:43 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c805ce1a4sm215208066b.75.2024.06.07.02.00.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 02:00:43 -0700 (PDT)
-Message-ID: <8f74bb906951f56c753081af1462560fe98bc822.camel@gmail.com>
-Subject: Re: [PATCH v6 5/9] iio: adc: ad7173: refactor ain and vref selection
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: dumitru.ceclan@analog.com
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- David Lechner <dlechner@baylibre.com>,  linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org, Dumitru Ceclan
- <mitrutzceclan@gmail.com>
-Date: Fri, 07 Jun 2024 11:04:30 +0200
-In-Reply-To: <20240606-ad4111-v6-5-573981fb3e2e@analog.com>
-References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
-	 <20240606-ad4111-v6-5-573981fb3e2e@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+        d=1e100.net; s=20230601; t=1717750851; x=1718355651;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DBcoLUrX2L9eb2fV5NkylUMV+gvpxQM/JqT0hm0OtKQ=;
+        b=AaXs38fEjf9TUvaDbqGLYwwnry8ePOQcCfcev+Vf+7W5d5lx1YMctH9HjA28W1bB4P
+         zbqRKN2MBJeZE3hV6oeVnWy/HYJ29OLd7RLhCNp/QWAw2aZW5Uf9OFVQXwXGtklqnA1t
+         ZlCWDIwATlzFabHWr73v6++EQvRq9k+kh18yYMY05Sot3nWjdGMd93tUhLbTUoabj0e0
+         8Wu8Y1K8K4G1FYOgLSpsXmUXoaOCBBuedl05GUDtPoPQM6z3sfuvpMvLPRAlLCokgMlH
+         zckjjhk1mw9wZmW4nsGQue3fav6tBOCq5P8MfHzRPZZ1Df/KiwnrODx/xnVVxydzeTia
+         ztqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVMc2xiZ9wMdRaudZi1GKn/ACnoUCXMopgzk+tAyhctwkkvajJ7eQfOvXyfippvp1b9f4JwEw3XFLQFsDQFzURM09cGpsJAVcsXGa9p
+X-Gm-Message-State: AOJu0YwMDYjH8nyld5k+UDR4D8wZNkyCmi36LLAk48FTOObcTL+mbeQp
+	irzs7LhMk/fDvMYCIW9QySkC2cNMpqCGyqcquD/eqsVEjX+ZahgBLVYUg4+3fj3kYiC9Xk9MWCp
+	WxuraFDrFfZEcCOyMOsxfBUteups=
+X-Google-Smtp-Source: AGHT+IGLUmk2eI7NKtebudys+AdNxQPrEw0y6t74Brmd9i82lSeOm4DST94C+ok3UcTEGRrcETFb4Cjpiqg67slKY/4=
+X-Received: by 2002:ac5:ccad:0:b0:4e4:eb50:fd57 with SMTP id
+ 71dfb90a1353d-4eb562543bdmr2166514e0c.9.1717750850115; Fri, 07 Jun 2024
+ 02:00:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240606034016.82559-1-21cnbao@gmail.com> <a04dd2d6-8526-488f-b46a-80c530891415@redhat.com>
+In-Reply-To: <a04dd2d6-8526-488f-b46a-80c530891415@redhat.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Fri, 7 Jun 2024 21:00:38 +1200
+Message-ID: <CAGsJ_4wSFWMpgd38XqZNNdfDT9PHp+xNjfFYY46yHvjqwJ5QkA@mail.gmail.com>
+Subject: Re: [PATCH] mm: introduce pmd|pte_need_soft_dirty_wp helpers for
+ softdirty write-protect
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, chrisl@kernel.org, 
+	kasong@tencent.com, linux-kernel@vger.kernel.org, minchan@kernel.org, 
+	ryan.roberts@arm.com, surenb@google.com, v-songbaohua@oppo.com, 
+	willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2024-06-06 at 19:07 +0300, Dumitru Ceclan via B4 Relay wrote:
-> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
->=20
-> Move validation of analog inputs and reference voltage selection to
-> separate functions to reduce the size of the channel config parsing
-> function and improve readability.
-> Add defines for the number of analog inputs in a channel.
->=20
-> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
-> ---
-> =C2=A0drivers/iio/adc/ad7173.c | 68 +++++++++++++++++++++++++++++++++----=
-----------
-> -
-> =C2=A01 file changed, 47 insertions(+), 21 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-> index 8631f218b69e..4040edbd1c32 100644
-> --- a/drivers/iio/adc/ad7173.c
-> +++ b/drivers/iio/adc/ad7173.c
-> @@ -60,6 +60,7 @@
-> =C2=A0#define AD7173_CH_SETUP_AINPOS_MASK	GENMASK(9, 5)
-> =C2=A0#define AD7173_CH_SETUP_AINNEG_MASK	GENMASK(4, 0)
-> =C2=A0
-> +#define AD7173_NO_AINS_PER_CHANNEL	2
-> =C2=A0#define AD7173_CH_ADDRESS(pos, neg) \
-> =C2=A0	(FIELD_PREP(AD7173_CH_SETUP_AINPOS_MASK, pos) | \
-> =C2=A0	 FIELD_PREP(AD7173_CH_SETUP_AINNEG_MASK, neg))
-> @@ -629,6 +630,7 @@ static int ad7173_setup(struct iio_dev *indio_dev)
-> =C2=A0static unsigned int ad7173_get_ref_voltage_milli(struct ad7173_stat=
-e *st,
-> =C2=A0						 u8 reference_select)
-> =C2=A0{
-> +	struct device *dev =3D &st->sd.spi->dev;
-> =C2=A0	int vref;
-> =C2=A0
-> =C2=A0	switch (reference_select) {
-> @@ -652,9 +654,11 @@ static unsigned int ad7173_get_ref_voltage_milli(str=
-uct
-> ad7173_state *st,
-> =C2=A0		return -EINVAL;
-> =C2=A0	}
-> =C2=A0
-> -	if (vref < 0)
-> +	if (vref < 0) {
-> +		dev_err(dev, "Cannot use reference %u. Error:%d\n",
-> +			reference_select, vref);
-> =C2=A0		return vref;
-> -
-> +	}
-> =C2=A0	return vref / (MICRO / MILLI);
-> =C2=A0}
+On Fri, Jun 7, 2024 at 8:46=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 06.06.24 05:40, Barry Song wrote:
+> > From: Barry Song <v-songbaohua@oppo.com>
+> >
+> > This patch introduces the pte_need_soft_dirty_wp and
+> > pmd_need_soft_dirty_wp helpers to determine if write protection is
+> > required for softdirty tracking. This can enhance code readability
+> > and improve its overall appearance.
+> >
+> > These new helpers are utilized in gup, huge_memory, and protect,
+> > and are particularly applied in do_swap_page() to optimize a
+> > softdirty scenario where mkwrite can still be performed.
+>
+> [...]
+>
+> > +static inline bool pmd_need_soft_dirty_wp(struct vm_area_struct *vma, =
+pmd_t pmd)
+> > +{
+> > +     return vma_soft_dirty_enabled(vma) && !pmd_soft_dirty(pmd);
+> > +}
+> > +
+> > +static inline bool pte_need_soft_dirty_wp(struct vm_area_struct *vma, =
+pte_t pte)
+> > +{
+> > +     return vma_soft_dirty_enabled(vma) && !pte_soft_dirty(pte);
+> > +}
+> > +
+>
+> Should these be "needs" ? I tend to like these names/semantics.
 
-unrelated?
+yes. "needs" is better. Glad to know you have the common liking
+for these names.
 
-- Nuno S=C3=A1
+>
+>
+> >   static inline void vma_iter_config(struct vma_iterator *vmi,
+> >               unsigned long index, unsigned long last)
+> >   {
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index db9130488231..6307c43796aa 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -4322,7 +4322,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >       if (!folio_test_ksm(folio) &&
+> >           (exclusive || folio_ref_count(folio) =3D=3D 1)) {
+> >               if ((vma->vm_flags & VM_WRITE) && !userfaultfd_pte_wp(vma=
+, pte) &&
+> > -                 !vma_soft_dirty_enabled(vma)) {
+> > +                 !pte_need_soft_dirty_wp(vma, pte)) {
+> >                       pte =3D pte_mkwrite(pte, vma);
+>
+> I would move that into a separate patch, as it's not a simple conversion.
+>
 
+cool. will separate it in v2.
+
+> --
+> Cheers,
+>
+> David / dhildenb
+>
+
+Thanks
+Barry
