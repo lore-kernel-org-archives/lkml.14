@@ -1,303 +1,129 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB95A78C96;
-	Fri,  7 Jun 2024 13:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110401940B2
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 13:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717766373; cv=none; b=RLf0Y5KJqBXZu1+P+lb+CVHzN9PP++EbTKmyTqBa/p1zvZyB2ruRUxcLcrFKRmaDpa8c81bQMQMDdFI26Fm8Lh2C3PoCMwmXdbWCpXhF52dyUPP+bj731s1ZfgvyxQmeRO2RLd8ZhvbCxLvRR2NxlYwRjaJjahOo/BVAUAHSsAo=
+	t=1717766380; cv=none; b=V0AkGj9p7Mss+43iY5QrRFWn+UDY8ogDigfqoYtf/hiwIFc3jc8rULY7x+m8Khn5/ppBILawBwHdrguvVM1dxdowQqY1KMNezvtfsyOf3jN+viHFowvYiPPREXVfu17hQNgPEvmoVQwdshtOVCeAOMgtNA5Bid52DZb0nn9/6ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717766373; c=relaxed/simple;
-	bh=5Xt6obCgPelAKtz+Zb43GC+lp2ON0FN4HGDQrtwemB4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lPN80LC/3tsD/COoKv4rL+ka+pqkRzfr6R7X2Q/fZaEVNjgojkH2p4ivm7KFdQNXqIdRcrG+hn9wNGs10G1c2eiHJNUM0KrjOkE20K8+O6i9UV1RHE+ZA50w5KRWIn0oX+v0MyEyG9v+VapKckwM/mwNv6uGYu2doHePqddXi8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kPT86xCD; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717766380; c=relaxed/simple;
+	bh=OSQEU8WQvHs9CqN7OWfxsw7wbc722N6psOtPDT3lTF8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=tN7TVYlCFBQPjWdH4c/dWK8kZuQ2Iy2y9sOTM4q/vrUvsmbPKA+HIl6A1nsYpvBuam6vyOFVdFJKNozJP3J0aOc4uOVBCBXkrfNxJVvsCe5hvJ4qezI7NPpOTHIfRBQukYCqWsSYDZhm4cLBQOfFcSkAXeY86OmDWRluAz7pybI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=infogain.com; spf=fail smtp.mailfrom=infogain.com; dkim=pass (2048-bit key) header.d=infogain-com.20230601.gappssmtp.com header.i=@infogain-com.20230601.gappssmtp.com header.b=eyOK//9/; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=infogain.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=infogain.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kPT86xCD"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 457DJ3Uq110775;
-	Fri, 7 Jun 2024 08:19:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717766343;
-	bh=TZKJcvnP97l2agNRo8jIlGe+t10ELgbL9S/DCOKGQ/Q=;
-	h=From:To:CC:Subject:Date;
-	b=kPT86xCDu6oqE4W8YVbTj9AiyMsViJVDCPSfAPDCgXF68J0LUKt6XHH5Losx8cXO7
-	 /kraR7eBnluHYMdyC9WnFrxqJWY3ojItN2FnwlpiLkfQDYIAdOWBTWdFXwlza0DiSS
-	 eU654dHsEUPaArpb4U/U3FGcg77NtQSq5v42cmt0=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 457DJ3Ui091235
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 7 Jun 2024 08:19:03 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
- Jun 2024 08:19:02 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 7 Jun 2024 08:19:02 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 457DJ1id097282;
-	Fri, 7 Jun 2024 08:19:02 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <mchehab@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <hverkuil-cisco@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
-        <p.zabel@pengutronix.de>
-CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
-        <nicolas@ndufresne.ca>, <akpm@linux-foundation.org>,
-        <gregkh@linuxfoundation.org>, <andriy.shevchenko@linux.intel.com>,
-        <adobriyan@gmail.com>, <andi.shyti@linux.intel.com>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>, <jani.nikula@intel.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-rockchip@lists.infradead.org>, <davidgow@google.com>,
-        <dlatypov@google.com>
-Subject: [PATCH v13 00/13] Add V4L2 M2M Driver for E5010 JPEG Encoder
-Date: Fri, 7 Jun 2024 18:49:00 +0530
-Message-ID: <20240607131900.3535250-1-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
+	dkim=pass (2048-bit key) header.d=infogain-com.20230601.gappssmtp.com header.i=@infogain-com.20230601.gappssmtp.com header.b="eyOK//9/"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52bc121fb1eso530109e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 06:19:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=infogain-com.20230601.gappssmtp.com; s=20230601; t=1717766376; x=1718371176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xf2Z7kV+qRW7ecMxgqkQxiQuL+vRhmaWLr9eKOKWDn4=;
+        b=eyOK//9/cHQ/JbHBaEpOB0WLqjZFGMmAD8aGjohIN35LRNp5Zh3WvRvBwWIZ7b7A8v
+         2RGeH6RTkbaM4OdPsB1Oj12fV2Oqko/wiX2+vXW2M+Gh3nffylwL/mbwPVuGTnVxAtsV
+         hVbNB3nBfoAp2lAAAZ7rW3P6qVccfxLxDI6yOeQcsJ4QMwBSC8b94ruo40yykfCw1z/q
+         57a2ISoWkyErTQEUvJFgSNtjVeGs/1ztf2D19G+eHDr7eGcyfZpr8u2HnZ+w4SwpDQOK
+         8LoG1BtQaEJqJBKOghzonvYJKykjWF3g92zU7dnHrih6IXq4hxXW/HddTbk1ToBElVYh
+         j7ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717766376; x=1718371176;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xf2Z7kV+qRW7ecMxgqkQxiQuL+vRhmaWLr9eKOKWDn4=;
+        b=N/Cm5RajeM8b6qaZ3dG1hPsN66ce0p4p3HVVUD2/qptouhHKM0S0jrmslL4guBq+Km
+         p/ZXJOEuC+L80e3xG8+f1OcoCCBriTA4ke63lKVXkS/PkShgzH7rAZUA/I2nc0vXF90Y
+         4s8DEeDXKAcqIpgJblr5ZjlOj19lI4G5I7Ia4t5SUKokG+clPLBbL9aL2P/9IxltF/Ha
+         bY+RPwGVUcesH5BAwFPg4Wf9usgh6nQCQI7JK/I22FUssttDLGAW13N5y029IB0YJF5l
+         G6saMMrXhybfMbLQg1ODQi5kzchHolzkq0uDixqsBzhmuq8lO6a02RWmW2PDoNSS+H/Q
+         yD7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWalapljgI7MHZ7jit6Yx4Tz/NXK5z12xGM3YBbPLCBEsDkEMHBj4MUbafozkTsXkyRfBGJEfOSvTKfJ28NzN7l2Iily4/52SXZwMJ8
+X-Gm-Message-State: AOJu0Yx8f4mmVsOH3PE+/eDZnlgkR2GDqPogSQ+0kFKVTbATF+dv1z15
+	BAChz5kZNAXIE8wtJCHO06KNAjfEXRdKzyDb2rAda00ccgNituKuwsRkooIFHGo=
+X-Google-Smtp-Source: AGHT+IET/hXJen46ojUBBSZb/7cDiS407ZVhwJK05+QzuBKflaYCF2qbs6nnMd5MnR1ezeKPhG7+jg==
+X-Received: by 2002:a19:9141:0:b0:52b:b19c:306b with SMTP id 2adb3069b0e04-52bb9fe0af6mr1587753e87.63.1717766376197;
+        Fri, 07 Jun 2024 06:19:36 -0700 (PDT)
+Received: from localhost.localdomain (apn-31-0-0-232.dynamic.gprs.plus.pl. [31.0.0.232])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb433d15fsm530443e87.285.2024.06.07.06.19.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 06:19:35 -0700 (PDT)
+From: =?UTF-8?q?Wojciech=20G=C5=82adysz?= <wojciech.gladysz@infogain.com>
+To: song@kernel.org,
+	jolsa@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@google.com,
+	haoluo@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Wojciech=20G=C5=82adysz?= <wojciech.gladysz@infogain.com>,
+	syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com
+Subject: [PATCH] kernel/trace: fix possible deadlock in trie_delete_elem
+Date: Fri,  7 Jun 2024 15:19:30 +0200
+Message-Id: <20240607131930.12002-1-wojciech.gladysz@infogain.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This adds support for V4L2 M2M based driver for E5010 JPEG Encoder
-which is a stateful JPEG encoder from Imagination technologies
-and is present in TI AM62A SoC.
+On bpf syscall map operations the bpf_disable_instrumentation function
+is called for the reason described in the comment to the function.
+The description matches the bug case. The function increments a per CPU
+integer variable bpf_prog_active. The variable is not processed in the
+bpf trace path. The fix implements a similar processing as for kprobe
+handling. The fix degrades the bpf tracing by skipping some eBPF trace
+sequences that otherwise might yield deadlock.
 
-While adding support for it, following additional framework changes were
-made:
- - Moved reference quantization and huffman tables provided in
-   ITU-T-REC-T.81 to v4l2-jpeg.c as suggested in mailing list [1].
- - Add macros to round to closest integer (either higher or lower) while
-   rounding in order of 2.
- - Add KUnit tests for math functions.
+Reported-by: syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=9d95beb2a3c260622518
+Link: https://lore.kernel.org/all/000000000000adb08b061413919e@google.com/T/
+Signed-off-by: Wojciech Gładysz <wojciech.gladysz@infogain.com>
+---
+ kernel/trace/bpf_trace.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-v4l2-compliance test :
-Link: https://gist.github.com/devarsht/1f039c631ca953a57f405cfce1b69e49
-
-E5010 JPEG Encoder Manual tests :
-
-Performance:
-Link: https://gist.github.com/devarsht/c40672944fd71c9a53ab55adbfd9e28b
-
-Functionality:
-Link: https://gist.github.com/devarsht/8e88fcaabff016bb2bac83d89c9d23ce
-
-Compression Quality:
-Link: https://gist.github.com/devarsht/cbcc7cd97e8c48ba1486caa2b7884655
-
-Multi Instance:
-Link: https://gist.github.com/devarsht/22c2fca08cd3441fb40f2c7a4cebc95a
-
-Crop support:
-Link: https://gist.github.com/devarsht/de6f5142f678bb1a5338abfd9f814abd
-
-Runtime PM:
-Link: https://gist.github.com/devarsht/70cd95d4440ddc678489d93885ddd4dd
-
-Math lib KUnit tests:
-Link: https://gist.github.com/devarsht/3f9042825be3da4e133b8f4eda067876
-
-[1]: 
-https://lore.kernel.org/all/de46aefe-36da-4e1a-b4fa-b375b2749181@xs4all.nl/
-
-Changelog:
-V13:
- - Fix smatch/sparse related warnings
-
-V12:
- - Fix documentation and enable kernel-doc rendering for math.h and jpeg helpers
- - Add Reviewed-by and Acked-by tags
-  
-V10->V11:
- - Fix commenting for math.h, include headers per IWYU principle in
-   math_kunit, update title for math.h kernel-doc
-
-V9->V10:
- - Update commenting style in math.h and add notes for new jpeg header
-   macros
- - Add KUnit dependency for math_kunit
-
-V8->V9:
- - Remove kernel.h header file
- - Remove stale filler data on jpeg header in E5010 jpeg driver
-
-V7->V8:
- - Add KUnit tests for math functions
- - Add roundclosest() for supporting rounding for non-multiple of 2
- - Update commit message as suggested
- - Add Reviewed-by and Acked-by tags to patches as received
-
-V6->V7:
- - Fix cropping support
- - Move reference huffman and quantization tables to v4l2-jpeg.c
- - Fix suspend/resume use-case
- - Add Reviewed-by
-
-V5->V6:
- - Fix sparse warnings
-
-V4->V5:
- - Sort the #includes in driver file alphabetically
- - Rename huffman and quantization tables to not use '_'
- - Add Reviewed-by tag
-
-V3->V4:
-- Use ti-specific compatible ti,am62a-jpeg-enc as secondary one in
-  dt-binding
-- Remove clock-names as only single clock in dt-binding
-- Fix issue with default params setting
-- Correct v4l2 error prints
-- Simplify register write functions with single statement return values
-- Remove unrequired error checks from get_queue()
-- Drop explicit device_caps setting as it is already taken care by v4l2
-  core
-- Remove unrequired multiplanar checks and memset from s_fmt, g_fmt
-  callback functions
-- Fix try_fmt callback to not update the queues
-- Remove unrequired contiguous format attribute from queue_init
-- Use dynamic allocation for video_device and remove unrequired
-  assignments in probe()
-- Remove unrequired checks from queue_setup function
-- Return queued buffers back if start_streaming fails
-- Use ARRAY_SIZE in place of hard-coding
-- Use huffman and quantization tables from reference header file
-
-V2->V3:
-- Add DONOTMERGE patches for dts and defconfig
-- Update driver with below changes :
-  - Correct license headers
-  - Use more generic name core instead of jasper for base registers
-  - Add Comment for forward declarations
-  - Simplify quantization table calculations
-  - Use v4l2_apply_frmsize_constraints for updating framesize and remove
-    unrequired functions
-  - Place TODO at top of file and in commit message too
-  - Use dev_err_probe helper in probe function
-  - Fix return value checking for failure scenarios in probe function
-  - Use v4l2_err/info/warn helpers instead of dev_err/info/warn helpers
-  - Fix unexpected indentation
-  - Correct commit message
-- Update dt-bindings with below changes :
-  - Add vendor specific compatible 
-  - Fix commit title and message
-  - Update reg names
-  - Update clocks to 1
-  - Fix dts example with proper naming
-
-V1->V2:
- - Send dt-bindings and driver together
-
-Patch-Diff between the series :
-V12->V13 Range diff :
-https://gist.github.com/devarsht/0bd2e90b7352ed4831252a7962fff65d
-
-V11->V12 Range diff :
-https://gist.github.com/devarsht/18455f1744b6b6b8f33dd505a4ca2651
-
-V10->V11 Range diff :
-https://gist.github.com/devarsht/cd76372bff7c125f75d06ba009264b75
-
-V9->V10 Range diff :
-https://gist.github.com/devarsht/b446acee460b8c65fb577d06b7bbc1da
-
-V8->V9 Range diff :
-https://gist.github.com/devarsht/3fd6c4e8031ab114248f93d01c8dfc74
-
-V6->V7 Range diff :
-https://gist.github.com/devarsht/1db185b1e187eaf397e9e4c37066777e
-
-V5->V6 Range diff :
-https://gist.github.com/devarsht/c89180ac2b0d2814614f2b59d0705c19
-
-V4->V5 Range diff :
-https://gist.github.com/devarsht/298790af819f299a0a05fec89371097b
-
-V3->V4 Range diff :
-https://gist.github.com/devarsht/22a744d999080de6e813bcfb5a596272
-
-Previous patch series:
-V12: https://lore.kernel.org/all/20240604104001.2235082-1-devarsht@ti.com/
-V11: https://lore.kernel.org/all/20240531170229.1270828-1-devarsht@ti.com/
-V10: https://lore.kernel.org/all/20240530165925.2715837-1-devarsht@ti.com/
-V9: https://lore.kernel.org/all/20240526175655.1093707-1-devarsht@ti.com/
-V8: https://lore.kernel.org/all/20240517171532.748684-1-devarsht@ti.com/
-V7: https://lore.kernel.org/all/20240510082603.1263256-1-devarsht@ti.com/
-V6: https://lore.kernel.org/all/20240228141140.3530612-1-devarsht@ti.com/
-V5: https://lore.kernel.org/all/20240215134641.3381478-1-devarsht@ti.com/
-V4: https://lore.kernel.org/all/20240205114239.924697-1-devarsht@ti.com/
-V3: https://lore.kernel.org/all/20230816152210.4080779-1-devarsht@ti.com/
-V2: https://lore.kernel.org/all/20230727112546.2201995-1-devarsht@ti.com/
-
-
-Daniel Latypov (1):
-  lib: add basic KUnit test for lib/math
-
-Devarsh Thakkar (12):
-  media: dt-bindings: Add Imagination E5010 JPEG Encoder
-  media: imagination: Add E5010 JPEG Encoder driver
-  media: v4l2-jpeg: Export reference quantization and huffman tables
-  media: Documentation: Document v4l2-jpeg helper functions
-  media: imagination: Use exported tables from v4l2-jpeg core
-  media: verisilicon : Use exported tables from v4l2-jpeg for hantro
-    codec
-  math.h: Add macros for rounding to closest value
-  math.h: Use kernel-doc syntax for divison macros
-  Documentation: core-api: Add math.h macros and functions
-  lib: math_kunit: Add tests for new macros related to rounding to
-    nearest value
-  media: imagination: Round to closest multiple for cropping region
-  gpu: ipu-v3: Use generic macro for rounding closest to specified value
-
- Documentation/core-api/kernel-api.rst         |    6 +
- .../bindings/media/img,e5010-jpeg-enc.yaml    |   75 +
- Documentation/driver-api/media/v4l2-core.rst  |    1 +
- Documentation/driver-api/media/v4l2-jpeg.rst  |   10 +
- MAINTAINERS                                   |    7 +
- drivers/gpu/ipu-v3/ipu-image-convert.c        |    4 +-
- drivers/media/platform/Kconfig                |    1 +
- drivers/media/platform/Makefile               |    1 +
- drivers/media/platform/imagination/Kconfig    |   13 +
- drivers/media/platform/imagination/Makefile   |    3 +
- .../platform/imagination/e5010-core-regs.h    |  585 ++++++
- .../platform/imagination/e5010-jpeg-enc-hw.c  |  267 +++
- .../platform/imagination/e5010-jpeg-enc-hw.h  |   42 +
- .../platform/imagination/e5010-jpeg-enc.c     | 1641 +++++++++++++++++
- .../platform/imagination/e5010-jpeg-enc.h     |  168 ++
- .../platform/imagination/e5010-mmu-regs.h     |  311 ++++
- drivers/media/platform/verisilicon/Kconfig    |    1 +
- .../media/platform/verisilicon/hantro_jpeg.c  |  128 +-
- drivers/media/v4l2-core/v4l2-jpeg.c           |  162 +-
- include/linux/math.h                          |   86 +-
- include/media/v4l2-jpeg.h                     |   28 +
- lib/math/Kconfig                              |   14 +
- lib/math/Makefile                             |    1 +
- lib/math/math_kunit.c                         |  329 ++++
- 24 files changed, 3760 insertions(+), 124 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
- create mode 100644 Documentation/driver-api/media/v4l2-jpeg.rst
- create mode 100644 drivers/media/platform/imagination/Kconfig
- create mode 100644 drivers/media/platform/imagination/Makefile
- create mode 100644 drivers/media/platform/imagination/e5010-core-regs.h
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc-hw.c
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc-hw.h
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc.c
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc.h
- create mode 100644 drivers/media/platform/imagination/e5010-mmu-regs.h
- create mode 100644 lib/math/math_kunit.c
-
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 6249dac61701..8de2e084b162 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2391,7 +2391,9 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, u64 *args)
+ 	struct bpf_trace_run_ctx run_ctx;
+ 
+ 	cant_sleep();
+-	if (unlikely(this_cpu_inc_return(*(prog->active)) != 1)) {
++
++	// if the instrumentation is not disabled disable recurrence and go
++	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
+ 		bpf_prog_inc_misses_counter(prog);
+ 		goto out;
+ 	}
+@@ -2405,7 +2407,7 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, u64 *args)
+ 
+ 	bpf_reset_run_ctx(old_run_ctx);
+ out:
+-	this_cpu_dec(*(prog->active));
++	__this_cpu_dec(bpf_prog_active);
+ }
+ 
+ #define UNPACK(...)			__VA_ARGS__
 -- 
-2.39.1
+2.35.3
 
