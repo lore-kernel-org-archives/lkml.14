@@ -1,223 +1,125 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B028447A6B;
-	Fri,  7 Jun 2024 08:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E207317C;
+	Fri,  7 Jun 2024 08:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717750133; cv=none; b=PTnraYeNRgO/kDc414d6SfskfK6I3CoDUJjlZdPSCjWIpdedxhn4DHFKy5BnC7DwE0t6xmQASxPbP6GjF0DnJx2wS9pQrX8IhL7Ep76vpK8nGSrtficfzWKOVWd6pMcht8NqUSklpzdsnlulHpT3nrT8QhPo928Iw9hN548fa0E=
+	t=1717750153; cv=none; b=MYnbB4HFVfVl5z/9iXLGXsgvJpgVPlmLm0xOCiKv08rqgtRAKB8hqn7sEsH4ivVAT9hwAHE4tdG0tRe2AIexTWO3Kc0TCPAW/JWIXsDAZ9uKhAobX8rH2qwVjojtBxDcjggyke35RUivDbn8cLzOUlaRJV0yP9Raa4yot7dwq6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717750133; c=relaxed/simple;
-	bh=Zmtu36yPX7kyY0bWaQJ4r2bDQd2aAvevMd9QiRHwjQI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tp1K/+LPmS49Ma0l85J9BZXkTmrDIwao9vQuAO9aALaPbn2XL+whFWya4sv6PrzEF8qp4XZzjsczd85xK+dvPhYRbvVF+B0PNAPy7rCS3Z31Cx/3hNFP0TVTX6IVYVnH1e0GIokoa0Yymq87uNitRWSuGolYaZb7Cd5mmL3JJKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4578mUviD3817535, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4578mUviD3817535
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Jun 2024 16:48:30 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 7 Jun 2024 16:48:30 +0800
-Received: from RTDOMAIN (172.21.210.98) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 7 Jun
- 2024 16:48:29 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai
-	<justinlai0215@realtek.com>
-Subject: [PATCH net-next v20 07/13] rtase: Implement a function to receive packets
-Date: Fri, 7 Jun 2024 16:43:15 +0800
-Message-ID: <20240607084321.7254-8-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240607084321.7254-1-justinlai0215@realtek.com>
-References: <20240607084321.7254-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1717750153; c=relaxed/simple;
+	bh=hMoCi3CiZZrj2+Y22zfqnFud4swZKvdCbQXLn4suIv8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MDSmB2ZXnnddkdcUxVxVglZPlZbjaPWxRHjt9ahJY2tix3t3aaeCtVNO0tI3t4iEoLBkijPCRL39nexsh5UrGGR9OwZGdmKXjj52U2NayXRTyq4pH6mbxq+yZ+5nqeSqEiSOv6PI7EvjlWZ3ZH1q11CgGjoFXUDTjD5+OUS5jC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhwYgiFM; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhwYgiFM"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52bc121fb1eso207057e87.1;
+        Fri, 07 Jun 2024 01:49:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717750150; x=1718354950; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gOiWxwHu+OpD7Jbm2v+TszlDGCIU7+PiFMWDJObj5oI=;
+        b=ZhwYgiFMIgT6X8TKkcSb/W5Iw7VT4Hu6olzeKa6edNjLRRAw2feklC43h6Nm85IGd3
+         sKfDUtCx8rdiEK3pt6oxZZDSFjWW5yQNedDJEpewpXGoOrDUJKWvH5iB0T6kpN4pG7MI
+         CJHGewzTkVXlYWLVXzOxbkcgJRopE5wtIpsxXZSHQPBQ0bWcGNchNE79v7sUpRjm286f
+         pSKL6xCLGgLgW74yoKGOA7HdvrT8ajoLJTy0q5QVTLOReqBrqQPdL96CmF/YHHM33kaG
+         yJM9MUfmoo3vVjZApcfYxki9IDzjHYr4WGkKUTDp8b+RVNL8wRWpM0jZE2ad/Ju61FyM
+         gm/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717750150; x=1718354950;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gOiWxwHu+OpD7Jbm2v+TszlDGCIU7+PiFMWDJObj5oI=;
+        b=hFwnogc7wqWCZMGQTEYhugJgCG6wFcmjNt7pbF3RNkt3Jcz05voSXcPP8gskWlANSe
+         zRFosr1zoYb21MoA4ew3HUYS0w4/LQ9UWLFyeTe+HL8W9jDeIh62T1s6XiNFTLN3qrgM
+         PXQCX0HqoHmBf6zcEraktkurKv8ZQV4dowe8qlpqCv+/u8K7nFUKvzenIi6NZ5nYzUu/
+         G+kUeecPYnUJ6sTQcd3vzovYP5rBibx2HV536E2Y6AKP2UdS2zJiXZVUG7km16yNnJoV
+         u4DNJyBMHzqUutv8UB/JuEt1UwO/S3q8f2AAHAyHEvDO/lfmpUHiHLWsOiNqWhYae+Vz
+         6nuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ05yIwyT+FCWnPg1jQlZjU8DWVhi84ZBKNujsWxZnvsZckI5TFiu6DMKHz6GGvT+N+wvCjLvcODfSNkaZcjKw5OE807OJbJukeXrg0bngS0DLsG8Z+/tpQP3rm5dEXJZNbDTQ60D9oHcZNEwSfRMlHUSlHhsl6III1HPxr6nt7gpRU5JYtTLK
+X-Gm-Message-State: AOJu0YwhbmMrtitxDRLo/2/fw/5hVDoaBqkCHLtGMM8K4E5AAKU8atNe
+	+xge/VqN47xsfAwamB/dWxqr6bMbSUc8LgXOq4zBc1BkBBlUlXu3
+X-Google-Smtp-Source: AGHT+IH5NzryrJZakVKjwXwY9sWRTl1oxs9lBNSNMkbs9SI6Ib9HPZ7/ynCWYdwr+ryNzSIxPwSNvA==
+X-Received: by 2002:a05:6512:239a:b0:52b:ad6e:87ac with SMTP id 2adb3069b0e04-52bb9f8efd4mr1411884e87.41.1717750149409;
+        Fri, 07 Jun 2024 01:49:09 -0700 (PDT)
+Received: from [172.16.183.82] ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb4216514sm453470e87.163.2024.06.07.01.49.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Jun 2024 01:49:08 -0700 (PDT)
+Message-ID: <b2b31803-44ff-462b-bc1a-6b1ffa93bdf0@gmail.com>
+Date: Fri, 7 Jun 2024 11:49:07 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/10] irqdomain: Allow giving name suffix for domain
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
+ <linux@roeck-us.net>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <cover.1717486682.git.mazziesaccount@gmail.com>
+ <bbd219c95f4fe88752aee5f21232480fe9b949fb.1717486682.git.mazziesaccount@gmail.com>
+ <87plst28yk.ffs@tglx> <045828bd-4aeb-4d8d-b152-44a816a07221@gmail.com>
+ <20240607101356.3ede2a17@bootlin.com>
+Content-Language: en-US, en-GB
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20240607101356.3ede2a17@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Implement rx_handler to read the information of the rx descriptor,
-thereby checking the packet accordingly and storing the packet
-in the socket buffer to complete the reception of the packet.
+On 6/7/24 11:13, Herve Codina wrote:
+> Hi Matti,
+> 
+> On Fri, 7 Jun 2024 09:38:31 +0300
+> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> 
+> ...
+> 
+>> Herve, do you have any idea when you plan to do further sketching on
+>> this? Do you want me to try seeing if I can add the struct
+>> irq_domain_info and maybe use that in the __irq_domain_add() to get the
+>> name-suffix added? I might be able to send one version out during next
+>> week - but then I plan to be offline for couple of weeks ... so it may
+>> be I am not much of a help here.
+>>
+> 
+> On my side, I plan to work on it next week too.
+> If you are off a couple of weeks after, I think I can start and move forward
+> on this topic.
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 146 ++++++++++++++++++
- 1 file changed, 146 insertions(+)
+Thanks for the prompt reply and thanks for working with this :) I'll 
+leave it to you for now then, as I don't think it makes much sense to 
+intentionally do conflicting changes. I'll see what you've been up to 
+when I return to the keyboard :) I'd appreciated if you added me to CC 
+when sending the irqdomain refactoring patches (but I can dig them up if 
+you don't).
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 6bdb4edbfbc1..9ee9f30444f3 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -458,6 +458,152 @@ static void rtase_rx_ring_clear(struct rtase_ring *ring)
- 	}
- }
- 
-+static int rtase_fragmented_frame(u32 status)
-+{
-+	return (status & (RTASE_RX_FIRST_FRAG | RTASE_RX_LAST_FRAG)) !=
-+		(RTASE_RX_FIRST_FRAG | RTASE_RX_LAST_FRAG);
-+}
-+
-+static void rtase_rx_csum(const struct rtase_private *tp, struct sk_buff *skb,
-+			  const union rtase_rx_desc *desc)
-+{
-+	u32 opts2 = le32_to_cpu(desc->desc_status.opts2);
-+
-+	/* rx csum offload */
-+	if (((opts2 & RTASE_RX_V4F) && !(opts2 & RTASE_RX_IPF)) ||
-+	    (opts2 & RTASE_RX_V6F)) {
-+		if (((opts2 & RTASE_RX_TCPT) && !(opts2 & RTASE_RX_TCPF)) ||
-+		    ((opts2 & RTASE_RX_UDPT) && !(opts2 & RTASE_RX_UDPF))) {
-+			skb->ip_summed = CHECKSUM_UNNECESSARY;
-+		} else {
-+			skb->ip_summed = CHECKSUM_NONE;
-+		}
-+	} else {
-+		skb->ip_summed = CHECKSUM_NONE;
-+	}
-+}
-+
-+static void rtase_rx_vlan_skb(union rtase_rx_desc *desc, struct sk_buff *skb)
-+{
-+	u32 opts2 = le32_to_cpu(desc->desc_status.opts2);
-+
-+	if (!(opts2 & RTASE_RX_VLAN_TAG))
-+		return;
-+
-+	__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q),
-+			       swab16(opts2 & RTASE_VLAN_TAG_MASK));
-+}
-+
-+static void rtase_rx_skb(const struct rtase_ring *ring, struct sk_buff *skb)
-+{
-+	struct rtase_int_vector *ivec = ring->ivec;
-+
-+	napi_gro_receive(&ivec->napi, skb);
-+}
-+
-+static int rx_handler(struct rtase_ring *ring, int budget)
-+{
-+	const struct rtase_private *tp = ring->ivec->tp;
-+	union rtase_rx_desc *desc_base = ring->desc;
-+	u32 pkt_size, cur_rx, delta, entry, status;
-+	struct net_device *dev = tp->dev;
-+	union rtase_rx_desc *desc;
-+	struct sk_buff *skb;
-+	int workdone = 0;
-+
-+	cur_rx = ring->cur_idx;
-+	entry = cur_rx % RTASE_NUM_DESC;
-+	desc = &desc_base[entry];
-+
-+	do {
-+		/* make sure discriptor has been updated */
-+		rmb();
-+		status = le32_to_cpu(desc->desc_status.opts1);
-+
-+		if (status & RTASE_DESC_OWN)
-+			break;
-+
-+		if (unlikely(status & RTASE_RX_RES)) {
-+			if (net_ratelimit())
-+				netdev_warn(dev, "Rx ERROR. status = %08x\n",
-+					    status);
-+
-+			dev->stats.rx_errors++;
-+
-+			if (status & (RTASE_RX_RWT | RTASE_RX_RUNT))
-+				dev->stats.rx_length_errors++;
-+
-+			if (status & RTASE_RX_CRC)
-+				dev->stats.rx_crc_errors++;
-+
-+			if (dev->features & NETIF_F_RXALL)
-+				goto process_pkt;
-+
-+			rtase_mark_to_asic(desc, tp->rx_buf_sz);
-+			goto skip_process_pkt;
-+		}
-+
-+process_pkt:
-+		pkt_size = status & RTASE_RX_PKT_SIZE_MASK;
-+		if (likely(!(dev->features & NETIF_F_RXFCS)))
-+			pkt_size -= ETH_FCS_LEN;
-+
-+		/* the driver does not support incoming fragmented
-+		 * frames. they are seen as a symptom of over-mtu
-+		 * sized frames
-+		 */
-+		if (unlikely(rtase_fragmented_frame(status))) {
-+			dev->stats.rx_dropped++;
-+			dev->stats.rx_length_errors++;
-+			rtase_mark_to_asic(desc, tp->rx_buf_sz);
-+			continue;
-+		}
-+
-+		skb = ring->skbuff[entry];
-+		dma_sync_single_for_cpu(&tp->pdev->dev,
-+					ring->mis.data_phy_addr[entry],
-+					tp->rx_buf_sz, DMA_FROM_DEVICE);
-+
-+		ring->skbuff[entry] = NULL;
-+
-+		if (dev->features & NETIF_F_RXCSUM)
-+			rtase_rx_csum(tp, skb, desc);
-+
-+		skb->dev = dev;
-+		skb_put(skb, pkt_size);
-+		skb_mark_for_recycle(skb);
-+		skb->protocol = eth_type_trans(skb, dev);
-+
-+		if (skb->pkt_type == PACKET_MULTICAST)
-+			dev->stats.multicast++;
-+
-+		rtase_rx_vlan_skb(desc, skb);
-+		rtase_rx_skb(ring, skb);
-+
-+		dev_sw_netstats_rx_add(dev, pkt_size);
-+
-+skip_process_pkt:
-+		workdone++;
-+		cur_rx++;
-+		entry = cur_rx % RTASE_NUM_DESC;
-+		desc = ring->desc + sizeof(union rtase_rx_desc) * entry;
-+		prefetch(desc);
-+	} while (workdone != budget);
-+
-+	ring->cur_idx = cur_rx;
-+	delta = rtase_rx_ring_fill(ring, ring->dirty_idx, ring->cur_idx, 1);
-+
-+	if (!delta && workdone)
-+		netdev_info(dev, "no Rx buffer allocated\n");
-+
-+	ring->dirty_idx += delta;
-+
-+	if ((ring->dirty_idx + RTASE_NUM_DESC) == ring->cur_idx)
-+		netdev_emerg(dev, "Rx buffers exhausted\n");
-+
-+	return workdone;
-+}
-+
- static void rtase_rx_desc_init(struct rtase_private *tp, u16 idx)
- {
- 	struct rtase_ring *ring = &tp->rx_ring[idx];
+Have fun!
+
+Yours,
+	-- Matti
+
 -- 
-2.34.1
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
 
