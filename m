@@ -1,207 +1,90 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720AC188CAD
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 11:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6ED18734E;
+	Fri,  7 Jun 2024 11:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717759850; cv=none; b=rvYax9VFM7DksrNaGldim3I7SwwXxIWLNaZU+P2/MLHJjZ7fp6RjwUkIzly2QTY6rTmYSzMolFBm2S3TA7HpmZdQkNAG0AwW89EWmNetwHU1Ug/F2ZUHsk8E9eT/YndQ0+7le2SCrvf9WPXfh1OK76cZQ/NKwh/6Zf0BxGNim+0=
+	t=1717759877; cv=none; b=Z2ke6BkriU3iNFzrdwFpU2W0e/Xhux2yoQbzJERb7npvCVypm1lqxcH22+XS2IlSGsCFvh7UrqPpK5NA2omE4xVPI92XS/OTcUOAFEp6fojML0WW28a3NhesjZwOhETjMtM29qbDbL6fxZaW5MG3oYJTfJLUSARBeOEavsyJ7qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717759850; c=relaxed/simple;
-	bh=syc8lfkdqAhYqqUgiwY19a01afo/wfTXbmwvaqeiYic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EcSIkJvXVEfYVUknVNwMKtRavtnkWlNxbJBAYhr5XlY0FIaTXC36mmR9IPO2hFLp7TgAeJkWVezgXh93JDfczxms9sE9FO+6mzoSym7iYNI0PThG/YSWH9rvW9hhkJ7a1oD91CL3fWpIaGng6T/zTBqeRwS7f0lvs2w70xJQa7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bn+P8KJD; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717759877; c=relaxed/simple;
+	bh=Nkzv4hcPPvps22qWpC47FSwYdykZx12iKlrS0Wd94wA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hdKQXFPeicDJB4d+/47WFVDTa9mCYsv6JXmuu7+kWHJeMy6wHtYEsPpHaeYpZeE3LhAJDwamU1Rq5UpJ0l5zk6NBPYvaEP8mkSZiGl8MJC+NG5UJ5eUCM5z8i4tGTpw7ZEq1Ee3mdXgjwhG60Hy8ukOKExEEYwVNyzEvQCpo5ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cQSQfIhV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bn+P8KJD"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4210aa00c94so18580635e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 04:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717759847; x=1718364647; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xEVTt2IK3Vh17CDV3iJIHzc4vLOeEHZQVEzUE5ODCe4=;
-        b=bn+P8KJD3Dmp0O1z0RbSRhAGSEFUF2CPJ+L+R9r9x3NWZTFQgZTmv+mU2JhxYoV/BU
-         IKPGw1CVAjJZecPeDPMbFUOlk2PJnUQFo3ei45EOoF84Obrk99EAm9TTHIkkNsM9IfiS
-         OaesgOcqoMPID8eDynN0Fvgq639IYR7sxEUBubKxGUghoHPyuFnWp1JFLAJP4XrXO13C
-         3Tr4piQwSszcD/Tdp/cYtxLhlEGbnrq/utVrr0gp5NDbAfLj5rjpv4sYbjxQ0ZQDDXCG
-         K1jmy2PLXVKVxAuhK41EIGq1PXBh8XWhvtaM2E5laNFKsHnWV3w5lJ9N9EcqvFWA3CVC
-         o9XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717759847; x=1718364647;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xEVTt2IK3Vh17CDV3iJIHzc4vLOeEHZQVEzUE5ODCe4=;
-        b=qqda4Y8IlLCOxUbxXqVvQDOcOLlAAY3zaxvUjmOfy4uzwfDXu/YdZMtrTy2+vXoDac
-         ZtKVyB4DYzw/G3QIiZTc6gQdrzY4Mz10ZznJYC7XfEab7LmjPFyO3EbJs6JxeGNT0h7w
-         pRmQXB/eVZqL/vk6iXfCC7RZpfFRM2I0pOcNJ4aDCOHvGFLrH4ucXupV8eNo2ttUhChc
-         68/cvRDrEYKzCo6zO1mAOAu+Nw6CtKFfTKnOhvq5hlReWbnBPO9HsDrJKn8ifSrrfIkc
-         aYpIUp26P8x3nuX1za1p7c0zBtsuMdkfvGUXOBu09Gg3rcCQ3UnWIHhgv6uxxIv32Aru
-         o6Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCVc1yMgWOOJjVO4COkjo5khARBO9eEBZvTfEMK64heOC4/zrPQqkUAmQKcKs2nY/PY9yOAEGR4I4Ptkcq6SCU9sfUJRLFKEXKsSGb
-X-Gm-Message-State: AOJu0YyM9z40QPGe7RIifBm/HlR5U1Xf9gvIFsy21+w4JpiXZyY8Y2QB
-	uskcEpHZexhXvqmma7pEwOWtju7hkb4KYCXMB/kqSsDtN9R3RIcz2oeCs9nHhp8KLcGVWwIVBq0
-	kxulWcjMMrIB2yD8lBg3p68U2IAatPMUEhe+t
-X-Google-Smtp-Source: AGHT+IFC4Hhzv/8OF1cQ+vRRaRNypcOJ9/rvpzK9bT/WNnoycgKnSO8e4XShXiTTlnm9DYCE8cpj99u/yWLDFpL6ubk=
-X-Received: by 2002:a05:600c:4449:b0:420:2a22:bd3e with SMTP id
- 5b1f17b1804b1-42164a02b6bmr17113535e9.18.1717759846480; Fri, 07 Jun 2024
- 04:30:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cQSQfIhV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DD8CC2BBFC;
+	Fri,  7 Jun 2024 11:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717759876;
+	bh=Nkzv4hcPPvps22qWpC47FSwYdykZx12iKlrS0Wd94wA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cQSQfIhVy92SkTaaGnvSgGOmaOrGPEO9ebOslY3tPDyGu2jF1GTJI9arb4XK29his
+	 0BLTfM2LZthM3JHTsdnQHQt0Z4GQiN7MUermB1jSdlNyTlO1ebFCHNF2nXBVU7sbDs
+	 N9dCpUgXtuB9ixdap7wO+KFbjkfX+Fe6eWjl+w1HdJ7rrbqG6mvqzpIHR+sxpLYEBy
+	 h7g2mVnP6NnWsT3CayAWQbJNEjj4VeA41bOhubBCrmLD+Op1b9G/fVnN4BqtzwWJmv
+	 zYcpo16xMyADhz6EMSN1zwreNy5aX1bROtpuyJXMk6eS6rivF7GgpBMYO/OFEV4fJP
+	 Bj9egWQZQQb8g==
+Date: Fri, 7 Jun 2024 12:31:11 +0100
+From: Simon Horman <horms@kernel.org>
+To: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Jochen Henneberg <jh@henneberg-systemdesign.com>,
+	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Andrew Lunn <andrew@lunn.ch>, Andrew Halaney <ahalaney@redhat.com>
+Subject: Re: [PATCH net v2] net: stmmac: dwmac-qcom-ethqos: Configure host
+ DMA width
+Message-ID: <20240607113111.GA27689@kernel.org>
+References: <20240605-configure_ethernet_host_dma_width-v2-1-4cc34edfa388@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1717750631.git.viresh.kumar@linaro.org> <e74e3a14e6da3f920cee90d32a023ba4805328a0.1717750631.git.viresh.kumar@linaro.org>
- <CAH5fLgjChZCtTUnHVHJat-sXFyLVE+MgDXrNDiUD0LNsUndpBQ@mail.gmail.com> <epjoz.s6l4l8qrt331@linaro.org>
-In-Reply-To: <epjoz.s6l4l8qrt331@linaro.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 7 Jun 2024 13:30:33 +0200
-Message-ID: <CAH5fLgiBtUkCfTt198mEkZD=-OqC7cdNY-hgBWPBE310ti0V+w@mail.gmail.com>
-Subject: Re: [RFC PATCH V2 1/8] rust: Add initial bindings for OPP framework
-To: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6_rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, 
-	Erik Schilling <erik.schilling@linaro.org>, =?UTF-8?Q?Alex_Benn=C3=A9_e?= <alex.bennee@linaro.org>, 
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240605-configure_ethernet_host_dma_width-v2-1-4cc34edfa388@quicinc.com>
 
-On Fri, Jun 7, 2024 at 1:24=E2=80=AFPM Manos Pitsidianakis
-<manos.pitsidianakis@linaro.org> wrote:
->
-> On Fri, 07 Jun 2024 13:51, Alice Ryhl <aliceryhl@google.com> wrote:
-> >On Fri, Jun 7, 2024 at 11:12=E2=80=AFAM Viresh Kumar <viresh.kumar@linar=
-o.org> wrote:
-> >>
-> >> This commit adds initial Rust bindings for the Operating performance
-> >> points (OPP) core. This adds bindings for `struct dev_pm_opp` and
-> >> `struct dev_pm_opp_data` to begin with.
-> >>
-> >> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> >
-> >> +//! Operating performance points.
-> >> +//!
-> >> +//! This module provides bindings for interacting with the OPP subsys=
-tem.
-> >> +//!
-> >> +//! C header: [`include/linux/pm_opp.h`](../../../../../../include/li=
-nux/pm_opp.h)
-> >
-> >Please use srctree links instead.
-> >
-> >C header: [`include/linux/pm_opp.h`](srctree/include/linux/pm_opp.h)
-> >
-> >> +impl OPP {
-> >> +    /// Creates a reference to a [`OPP`] from a valid pointer.
-> >> +    ///
-> >> +    /// # Safety
-> >> +    ///
-> >> +    /// The caller must ensure that `ptr` is valid and remains valid =
-for the lifetime of the
-> >> +    /// returned [`OPP`] reference.
-> >> +    pub unsafe fn from_ptr_owned(ptr: *mut bindings::dev_pm_opp) -> R=
-esult<ARef<Self>> {
-> >> +        let ptr =3D ptr::NonNull::new(ptr).ok_or(ENODEV)?;
-> >> +
-> >> +        // SAFETY: The safety requirements guarantee the validity of =
-the pointer.
-> >> +        //
-> >> +        // INVARIANT: The refcount is already incremented by the C AP=
-I that returned the pointer,
-> >> +        // and we pass ownership of the refcount to the new `ARef<OPP=
->`.
-> >> +        Ok(unsafe { ARef::from_raw(ptr.cast()) })
-> >> +    }
-> >> +
-> >> +    /// Creates a reference to a [`OPP`] from a valid pointer.
-> >> +    ///
-> >> +    /// # Safety
-> >> +    ///
-> >> +    /// The caller must ensure that `ptr` is valid and remains valid =
-for the lifetime of the
-> >> +    /// returned [`OPP`] reference.
-> >> +    pub unsafe fn from_ptr(ptr: *mut bindings::dev_pm_opp) -> Result<=
-ARef<Self>> {
-> >> +        let opp =3D unsafe { Self::from_ptr_owned(ptr) }?;
-> >> +
-> >> +        // Take an extra reference to the OPP since the caller didn't=
- take it.
-> >> +        opp.inc_ref();
-> >> +
-> >> +        Ok(opp)
-> >> +    }
-> >
-> >I would recommend a slightly different approach here. You can provide
-> >a method called `from_raw_opp` that takes a *mut bindings::dev_pm_opp
-> >and returns a &Self. The ARef type provides a method that converts
-> >&Self to ARef<Self> by taking a refcount. This way, users would also
-> >be able to call OPP methods without giving Rust any refcounts. You can
->
-> Wouldn't this allow for use-after-free? What if the refcount drops to 0
-> before the method is called?
+On Wed, Jun 05, 2024 at 11:57:18AM -0700, Sagar Cheluvegowda wrote:
+> Commit 070246e4674b ("net: stmmac: Fix for mismatched host/device DMA
+> address width") added support in the stmmac driver for platform drivers
+> to indicate the host DMA width, but left it up to authors of the
+> specific platforms to indicate if their width differed from the addr64
+> register read from the MAC itself.
+> 
+> Qualcomm's EMAC4 integration supports only up to 36 bit width (as
+> opposed to the addr64 register indicating 40 bit width). Let's indicate
+> that in the platform driver to avoid a scenario where the driver will
+> allocate descriptors of size that is supported by the CPU which in our
+> case is 36 bit, but as the addr64 register is still capable of 40 bits
+> the device will use two descriptors as one address.
+> 
+> Fixes: 8c4d92e82d50 ("net: stmmac: dwmac-qcom-ethqos: add support for emac4 on sa8775p platforms")
+> Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+> ---
+> Changes in v2:
+> Fix commit message to include a commit body
+> Replace the proper fixes tag
+> Remove the change-Id
+> - Link to v1: https://lore.kernel.org/r/20240529-configure_ethernet_host_dma_width-v1-1-3f2707851adf@quicinc.com
 
-The method would be unsafe and require the caller to avoid that.
+Thanks,
 
-/// Creates a reference to a [`File`] from a valid pointer.
-///
-/// # Safety
-///
-/// The caller must ensure that `ptr` points at a valid file and that
-/// the file's refcount is positive for the duration of 'a.
-pub unsafe fn from_raw_file<'a>(ptr: *const bindings::file) -> &'a File {
-    // SAFETY: The caller guarantees that the pointer is not dangling
-    // and stays valid for the duration of 'a. The cast is okay because
-    // `File` is `repr(transparent)`.
-    unsafe { &*ptr.cast() }
-}
+this change looks good to me - the usage of dma_addr_width is in line with
+my understanding of how it is intended to be used.
 
-> >As for `from_ptr_owned`, I would probably rename it to
-> >`from_raw_opp_owned` or similar. It's often nice to use a more
-> >descriptive name than just "ptr".
-> >I think most existing examples call this `as_raw` and mark it
-> >`#[inline]`.
->
-> I think `ptr` is more idiomatic to Rust users, not that your suggestion
-> is wrong. from_ptr_owned also implies the function signature.
->
->
-> >
-> >> +    /// Adds an OPP dynamically.
-> >> +    pub fn add(dev: ARef<Device>, mut data: Data) -> Result<()> {
-> >> +        // SAFETY: The requirements are satisfied by the existence of=
- `Device` and its safety
-> >> +        // requirements.
-> >> +        to_result(unsafe { bindings::dev_pm_opp_add_dynamic(dev.as_ra=
-w(), &mut data.0) })
-> >> +    }
-> >> +
-> >> +    /// Removes a dynamically added OPP.
-> >> +    pub fn remove(dev: ARef<Device>, freq: u64) {
-> >> +        // SAFETY: The requirements are satisfied by the existence of=
- `Device` and its safety
-> >> +        // requirements.
-> >> +        unsafe { bindings::dev_pm_opp_remove(dev.as_raw(), freq) };
-> >> +    }
-> >
-> >Is it intentional that these methods take ownership of a refcount to
-> >the device that it then drops after calling the C function?
->
-> use-after-free again? Though I'm suggesting this without actually
-> examining if it can happen.
+And, AFAICS, the changes in v2 address the review of v1.
 
-Rust references are required to not be dangling, so if you take a
-&Device, then the caller promises that they will keep the device alive
-for the duration of the call.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-Alice
+...
