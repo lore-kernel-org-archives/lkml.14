@@ -1,88 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C48187329
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 11:30:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3549B13FD7D;
+	Fri,  7 Jun 2024 11:30:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717759823; cv=none; b=i79IUOF1FqWOS+MCMZFl7c/CVzU4DBXH4p4GyU79hZ+nEr7M6PfKMJ/S7BRjojmbKcD28MqJPaqdZTRMN96KrJWnry+0wcF5EZrKgd9OHCo2nAcaDIN7M9+z0paHGYRM1eHF8Jd+43kz/zjNZ4ZWShzK/mCtE1h1nXdyb4Shpyc=
+	t=1717759834; cv=none; b=lbItVauEy3cSWS3pGf/Tm62SV/ZVKWsXcLQwoQiTGdk+ekCxkVbrK40y1BNvQoDokGbZvOgDhOkLfulNJQBdxi+uWwK7eUadrI30r0Wi63V1IeJjaggxIZ33xpHkLOjBa/wgo7c9E8F7Jx9muOEqpMMlsjUYmkhMrwUGJoyuRjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717759823; c=relaxed/simple;
-	bh=o9nHKyarRr6J/3ejRnvxUC2BzvWsttfSZ01al77jjjE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pOWtwKWCHYnJc8IbGScWm7DXu+29WTuVMcJFqjm4BrnjqdAmUVKo39MTBSQw0H9WZMx+HDQph/Zy1LyqMP5YwESqKysj3I+v2t6qJUUnpGtE3bD4Vldrotr7KptPELW/ooal3BZGLay2xqnx5NXRQcDEkYpnwG6qMzk/zfJOeWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LoP7mMCW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717759834; c=relaxed/simple;
+	bh=enrwhfG18wfm5gqaqtyOjWSrtHc3M17cSZkl014723U=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=VN+fRJC7++ANivlwXQuPqX35YSm0DVv7GU+c1sw7p+RVgUBYpygGjTUZKQQiy2M6ZZrbEqF0gCkKF1qbQQHmMafK5WAg5nrgWBYaNPWKtzYbJc3tKrzvtD6NP5LHfsS1ARG/5NzHJWR2koQZs6gBISda2dOcwTfSzXz3K0l5ZVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nd2x7JA5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LoP7mMCW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27678C2BBFC;
-	Fri,  7 Jun 2024 11:30:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nd2x7JA5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id ABEACC4AF08;
+	Fri,  7 Jun 2024 11:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717759823;
-	bh=o9nHKyarRr6J/3ejRnvxUC2BzvWsttfSZ01al77jjjE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=LoP7mMCWy4ZsyS3uaHCQKijiaQS7JfdLoLLXvC4IRye8BK+3F2WASzIBZSR8xzBhl
-	 GQSA9tOiTUbuzkRa7mXlNOq8LbffI2HSXSGtOSKmeoF/dHmRB3t1IuwMkrGe+3T0hE
-	 aiTbj1MoVokl7+2dgHLStmsX8+WgZ3g84ruiP7bBf+SeJ645j+nMJazFnBB9eVKynN
-	 xLlWXDmRX4BQ5mMtcb2TmOh6GhYOer5KoFnr3DLOPUfkizI9vj4N5MLq4TcpEPVAEC
-	 tI7Wyx5pZ/lKb1IngVIdn0ZibzozPpqMhePUTlu24CrrG6SpYs8S+t0D9gnNVdJn02
-	 O5YAS7lj7Wekg==
-Date: Fri, 7 Jun 2024 12:30:18 +0100
-From: Will Deacon <will@kernel.org>
-To: torvalds@linux-foundation.org
-Cc: catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: [GIT PULL] arm64 fixes for -rc3
-Message-ID: <20240607113018.GA24475@willie-the-truck>
+	s=k20201202; t=1717759833;
+	bh=enrwhfG18wfm5gqaqtyOjWSrtHc3M17cSZkl014723U=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=nd2x7JA5lOY//2wdXfGxstCw4W3sv1SkcQlZJ31ZeOh7+LPenN/EmWo1UDnP0hDau
+	 9TtFHET8KYdf3IDHaZpJU7pdTo85nVXnrRvJzFyNTLJ8Av4zpKQTknPzj8pFDYbbnJ
+	 mZA5Z2I3m5jD03Co9aE0qeMaRCp9o/3di0CaqH2vX/nDvWcEBfo3CrrPzVq/g6X6KO
+	 2u9Tfr3CTY40pM+m4mXglzX/tz9suNMj2cYQp1MbesvFtTckvqwTIEtd9hyA7jp1a/
+	 HGYTGVWcxII2P6RQMxYeYuTR7H0lw7MyI5cdtuz0uFZxc4yTYiv6aPTp640WYYnY6K
+	 vx27qCSqk2a6g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A100CC43168;
+	Fri,  7 Jun 2024 11:30:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/2] There are some bugfix for the HNS3 ethernet driver
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171775983365.24248.8058677044176070765.git-patchwork-notify@kernel.org>
+Date: Fri, 07 Jun 2024 11:30:33 +0000
+References: <20240605072058.2027992-1-shaojijie@huawei.com>
+In-Reply-To: <20240605072058.2027992-1-shaojijie@huawei.com>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: yisen.zhuang@huawei.com, salil.mehta@huawei.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ shenjian15@huawei.com, wangjie125@huawei.com, liuyonglong@huawei.com,
+ chenhao418@huawei.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hello:
 
-Please pull these couple of minor fixes for -rc3. The summary's in the
-tag, but neither are hugely interesting.
+This series was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-The main bug we have at the moment is an out-of-bounds access in the
-contiguous pte code; Andrew should send you the fix via -mm shortly.
+On Wed, 5 Jun 2024 15:20:56 +0800 you wrote:
+> There are some bugfix for the HNS3 ethernet driver
+> 
+> Jie Wang (1):
+>   net: hns3: add cond_resched() to hns3 ring buffer init process
+> 
+> Yonglong Liu (1):
+>   net: hns3: fix kernel crash problem in concurrent scenario
+> 
+> [...]
 
-Cheers,
+Here is the summary with links:
+  - [net,1/2] net: hns3: fix kernel crash problem in concurrent scenario
+    https://git.kernel.org/netdev/net/c/12cda920212a
+  - [net,2/2] net: hns3: add cond_resched() to hns3 ring buffer init process
+    https://git.kernel.org/netdev/net/c/968fde83841a
 
-Will
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
---->8
 
-The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
-
-  Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
-
-for you to fetch changes up to 5c40e428aea644c9d924e491b1bc22fa9f272bcc:
-
-  arm64/io: add constant-argument check (2024-06-05 13:30:58 +0100)
-
-----------------------------------------------------------------
-arm64 fix for -rc3
-
-- Fix spurious CPU hotplug warning message from SETEND emulation code
-
-- Fix the build when GCC wasn't inlining our I/O accessor internals
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      arm64/io: add constant-argument check
-
-Wei Li (1):
-      arm64: armv8_deprecated: Fix warning in isndep cpuhp starting process
-
- arch/arm64/include/asm/io.h          | 36 ++++++++++++++++--------------------
- arch/arm64/kernel/armv8_deprecated.c |  3 +++
- 2 files changed, 19 insertions(+), 20 deletions(-)
