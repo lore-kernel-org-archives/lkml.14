@@ -1,81 +1,98 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD6778C60;
-	Fri,  7 Jun 2024 08:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDD2525D;
+	Fri,  7 Jun 2024 08:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717750271; cv=none; b=KFDcLBSaL2Spt+x0NV9MtM4Gm2XX/H4fFN8XWdaZL16+hCcAm29wpMfPRbMphvIl24HObaUb0bhFtDI0zYO121AzuCh6AtHLq8vLOqr1YesicibRx9hd3Q5BbkdiaInjeYZCUStdX1UfyNl/DoE12LsB7ZixpVuVliCI72jcWIg=
+	t=1717750273; cv=none; b=G1h1Xla38vTLOE3Ju1pwfrNf4b4xBG8dtePeWdAuUeP1FIbwsrjVJILqnldPiDQteHto/5cMfP7L5v1ni11eeDL7GyiOq7QXcpTQCCARi5zefwmjoMSHxzhuHtfvr4TwCQPuuykDp4FLIB75sKzbhHmayLf/vtpSyg64/C+g1fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717750271; c=relaxed/simple;
-	bh=SlqGkIVRf6lyj7y8M/u+PC9E6k5Kr08HL6t3Mmf1fpQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XSTin9I3A2nniPD9fH+6+H6YNKfDrvYYfFFUHH6V0EnjzrKN5zg5rCFOXBhxKJ/S+r9sg2kaCQ293LM6TzJ3VQ4pJ9EWJ2rPPPlyzTElNlh5/uHULbOTyC0VRapciObLV7/J+Rw83X2JsUy/ogvY9+46pisxiteGWPG0scLrUTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4578omQY33819868, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4578omQY33819868
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Jun 2024 16:50:48 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 7 Jun 2024 16:50:48 +0800
-Received: from RTDOMAIN (172.21.210.98) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 7 Jun
- 2024 16:50:47 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <rkannoth@marvell.com>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai
-	<justinlai0215@realtek.com>
-Subject: [PATCH net-next v20 11/13] rtase: Add a Makefile in the rtase folder
-Date: Fri, 7 Jun 2024 16:43:19 +0800
-Message-ID: <20240607084321.7254-12-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240607084321.7254-1-justinlai0215@realtek.com>
-References: <20240607084321.7254-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1717750273; c=relaxed/simple;
+	bh=vpgHYf4KNjaS10gM3AzhCsI3g/sQUs9BDH6puuuj7JQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c7i4ji7/jUclxZ02MQ58F6ggt8AF7qR9LVKLcxvmIeUFGqu3S8oKTmxPDzsoJ0gnjZOQEEDiCMzbPN6MS3nZZV8TEu3mEqNLiIlGqCBzgnFkq3FANEEdApDoL826tbxYIGE2MIlKUv9yQsDvFlN2fB80ZkayJL/Ko3yJVzmCQLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JMZRRWwQ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JMZRRWwQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=N3eKsRnAYRK1h7qu28YJgeAnWFt3S0skQfE4J69qFxk=; b=JMZRRWwQsTsU7BtGunXVqRfkhz
+	g6GjdKkVdNPkfyyOgBHxQDvAbn53C5lPynN2rJmPjJxftVNVQK3fMNOTYToo6HvtaAcXLFY5RyK78
+	HzSoxn9hnUMO03n3P0C5cUCCaRu12lTzPglLuZvuMiW0kqtj/rBqxFOZrlM4+0pZHXdeyehFgarn9
+	eug3hruCLSbgbQVdGH39JQ5gpzqEt8hqFjrfvkpvKyM58VF/TuvWiMAPqjkip1b8WU5Nn7VF3/SQi
+	i+KEBDGLJwZRQWhIT7DHXJL8/uzObc/m5upJT9jgulskyH/IsPfXGUuS1Onpgfe5mmRud/234bjDz
+	Cg4OS8vQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sFVJP-00000004f73-0aAS;
+	Fri, 07 Jun 2024 08:51:03 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8EDDE30058E; Fri,  7 Jun 2024 10:50:55 +0200 (CEST)
+Date: Fri, 7 Jun 2024 10:50:55 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 net-next 01/15] locking/local_lock: Introduce guard
+ definition for local_lock.
+Message-ID: <20240607085055.GL8774@noisy.programming.kicks-ass.net>
+References: <20240607070427.1379327-1-bigeasy@linutronix.de>
+ <20240607070427.1379327-2-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240607070427.1379327-2-bigeasy@linutronix.de>
 
-Add a Makefile in the rtase folder to build rtase driver.
+On Fri, Jun 07, 2024 at 08:53:04AM +0200, Sebastian Andrzej Siewior wrote:
+> Introduce lock guard definition for local_lock_t. There are no users
+> yet.
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- drivers/net/ethernet/realtek/rtase/Makefile | 10 ++++++++++
- 1 file changed, 10 insertions(+)
- create mode 100644 drivers/net/ethernet/realtek/rtase/Makefile
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-diff --git a/drivers/net/ethernet/realtek/rtase/Makefile b/drivers/net/ethernet/realtek/rtase/Makefile
-new file mode 100644
-index 000000000000..ba3d8550f9e6
---- /dev/null
-+++ b/drivers/net/ethernet/realtek/rtase/Makefile
-@@ -0,0 +1,10 @@
-+# SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-+# Copyright(c) 2024 Realtek Semiconductor Corp. All rights reserved.
-+
-+#
-+# Makefile for the Realtek PCIe driver
-+#
-+
-+obj-$(CONFIG_RTASE) += rtase.o
-+
-+rtase-objs := rtase_main.o
--- 
-2.34.1
-
+> ---
+>  include/linux/local_lock.h | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
+> index e55010fa73296..82366a37f4474 100644
+> --- a/include/linux/local_lock.h
+> +++ b/include/linux/local_lock.h
+> @@ -51,4 +51,15 @@
+>  #define local_unlock_irqrestore(lock, flags)			\
+>  	__local_unlock_irqrestore(lock, flags)
+>  
+> +DEFINE_GUARD(local_lock, local_lock_t __percpu*,
+> +	     local_lock(_T),
+> +	     local_unlock(_T))
+> +DEFINE_GUARD(local_lock_irq, local_lock_t __percpu*,
+> +	     local_lock_irq(_T),
+> +	     local_unlock_irq(_T))
+> +DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t __percpu,
+> +		    local_lock_irqsave(_T->lock, _T->flags),
+> +		    local_unlock_irqrestore(_T->lock, _T->flags),
+> +		    unsigned long flags)
+> +
+>  #endif
+> -- 
+> 2.45.1
+> 
