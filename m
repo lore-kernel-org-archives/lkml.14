@@ -1,108 +1,121 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48F419415D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 13:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99415195978;
+	Fri,  7 Jun 2024 13:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717767187; cv=none; b=qZiJU9Sd0xqrErgV4uxHuFHKxHaIDHvmWhlIpMZDt72gzHcMosXA2hA8S5zOlvcMleuFRYRi8fqXdH5aSnMPAJIZoVdtB86QbjVIaPVfPeW2Vh3PQdjspkKEHnLgD9j8Qrrq0YLmBk0gQ6WeSNd6EomrZG1D33jEb7pOS71m994=
+	t=1717767200; cv=none; b=dUayqq+4ZJATYRdq/426uM7GBaZoV1f4sRhRqJuk1GH9Grnmr4xcZk7hOdL7qKF7wlXVSoPo1NHlnFgCoeBSh/7TGnEDc3EvOz6MGwvRqAuiX4aF5CLmePaXASy0T4Iu1fHcVqa+5VJPHen+G4aZOIwY81KRCii/aaOaLCbVXDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717767187; c=relaxed/simple;
-	bh=jRjpn/aCZiZBz0Aqn7IkINUMJj2UiFOycXcGc9CYR1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=atQ4lYr05ipRpcoNunNrRgMEWTSUu86fJHp/kch/2zCGVjvii8tx1U/aqhucfHRddRPHCCHZu6iGZ1Wp9GbZuAvtkr38x2KkTSHfiDrx51SDPz9VGBFEMRKZYPBXnWbCpYsar8W1Ie593F13AHnYXf+GvJHcH+jYjFFKU5KnBhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KJHFk5Yl; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1717767200; c=relaxed/simple;
+	bh=sTv+4L8NPPBBpg+i+qz9cePrzDf4eKNTqM5Xda6LRw0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O4KZQM1uqWYHSsgzYzsQJH8lNlqj7Gz0da5XV6VewDb0F0V08LEwz86FFZApmIn+RKgKIsLt7Il6WV4wAVwJiMmAXL2W8iFhlAy+WdvXJbnWaY8j+oeAE9XBH9K7n9y816B7GcxN64TGkuLOQsE+e8sm++Q6PfAGXIm3vZ/BhR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=L6NYNlPj; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KJHFk5Yl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=PcY+IMjQpk0PL4/bmmieIepic/SgBBF32UMJe2Qyub0=; b=KJHFk5Yl2xkpDxC6WonNt/UB7P
-	+qlM+bli9bb3xGiCC8qffan2T7bDtw9DgUbGWU5Hz84acTNc0GCBbmQSCmtjEVvWcNDSY24fzSOre
-	hgD/aFQJ6iAMGFT7JuGAXaS/zz3yiE4AsNdbtJ25bR9foaWNbeMlXtRTCXb/qfFwJIvdLP7gIFI+n
-	R2xAyncyOpK/515eFn97bWb+vYQGafbVNACL5Rvr+6NCV1hVuwIg/DqUGzWmLmFweaGm5XQx73rR0
-	u+rnLsty4M7KIsTs4TrdL/4kq6+3MSBS+JNEor2XuHS7BLFOTqthUJPowoVUBokchD6HlJu49musL
-	0Z76zymw==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sFZiJ-00000006HUe-3L41;
-	Fri, 07 Jun 2024 13:33:03 +0000
-Date: Fri, 7 Jun 2024 14:33:03 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] f2fs: get rid of buffer_head use
-Message-ID: <ZmMMDy9eeCU2igqj@casper.infradead.org>
-References: <20240607101829.389015-1-chao@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L6NYNlPj"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 457DWsoO118337;
+	Fri, 7 Jun 2024 08:32:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717767174;
+	bh=dnlV6EZfbKSSOB5yAkozQxyQBhab8cR780BU+/JTZrQ=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=L6NYNlPjRde1WkOLXLqkzPfOtF1fM01Iox5Db8LaU+PXPUP3EhmR0AJQgTT855PCg
+	 tTnKhY/zUIsqKBlWxrMXKA0TcDA8n1gwyMUoMGkd9zp2JBDjtBN/s3lVqfCEuBFLmg
+	 VlSqGMjGto1chRA//GNAmNzTk49pP8+u5raJiBZs=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 457DWsWD017223
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 7 Jun 2024 08:32:54 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
+ Jun 2024 08:32:54 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 7 Jun 2024 08:32:54 -0500
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 457DWrnp119514;
+	Fri, 7 Jun 2024 08:32:54 -0500
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
+        <dri-devel@lists.freedesktop.org>
+CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
+        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
+        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
+        <nicolas@ndufresne.ca>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
+        <daniel@ffwll.ch>, <akpm@linux-foundation.org>,
+        <gregkh@linuxfoundation.org>, <andriy.shevchenko@linux.intel.com>,
+        <adobriyan@gmail.com>, <jani.nikula@intel.com>
+Subject: [PATCH v13 12/13] media: imagination: Round to closest multiple for cropping region
+Date: Fri, 7 Jun 2024 19:02:53 +0530
+Message-ID: <20240607133253.3559339-1-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20240607131900.3535250-1-devarsht@ti.com>
+References: <20240607131900.3535250-1-devarsht@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607101829.389015-1-chao@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, Jun 07, 2024 at 06:18:29PM +0800, Chao Yu wrote:
-> @@ -1990,6 +1989,12 @@ static inline struct f2fs_super_block *F2FS_RAW_SUPER(struct f2fs_sb_info *sbi)
->  	return (struct f2fs_super_block *)(sbi->raw_super);
->  }
->  
-> +static inline struct f2fs_super_block *F2FS_SUPER_BLOCK(struct folio *folio)
-> +{
-> +	return (struct f2fs_super_block *)(page_address(folio_page(folio, 0)) +
-> +							F2FS_SUPER_OFFSET);
-> +}
+If neither of the flags to round down (V4L2_SEL_FLAG_LE) or round up
+(V4L2_SEL_FLAG_GE) are specified by the user, then round to nearest
+multiple of requested value while updating the crop rectangle coordinates.
 
-This assumes that the superblock is in the first page of the folio.
-That's not necessarily guaranteed; let's say you have a 64KiB folio
-that covers the start of the bdev.
+Use the rounding macro which gives preference to rounding down in case two
+nearest values (high and low) are possible to raise the probability of
+cropping rectangle falling inside the bound region.
 
-I don't quite know how to write this because f2fs defines its block size
-in terms of PAGE_SIZE, which just seems like nonsense to me.  If you
-format a filesystem on a 16KiB PAGE_SIZE machine and then try to mount
-it on a machine with a 4KiB PAGE_SIZE, it's going to go horribly wrong.
+This complies with the VIDIOC_G_SELECTION, VIDIOC_S_SELECTION ioctl
+description as documented in v4l uapi [1] which specifies that driver
+should choose crop rectangle as close as possible if no flags are passed by
+user-space, as quoted below :
 
-You'd need to pass in something that indicates whether you're trying to
-access the first or second superblock; there's no way to tell from the
-folio which one it is.
+"``0`` - The driver can adjust the rectangle size freely and shall choose a
+crop/compose rectangle as close as possible to the requested
+ one."
 
-> +static int __f2fs_commit_super(struct f2fs_sb_info *sbi, struct folio *folio,
-> +								bool update)
->  {
-> -	lock_buffer(bh);
-> -	if (super)
-> -		memcpy(bh->b_data + F2FS_SUPER_OFFSET, super, sizeof(*super));
-> -	set_buffer_dirty(bh);
-> -	unlock_buffer(bh);
-> -
-> +	struct bio *bio;
->  	/* it's rare case, we can do fua all the time */
-> -	return __sync_dirty_buffer(bh, REQ_SYNC | REQ_PREFLUSH | REQ_FUA);
-> +	blk_opf_t opf = REQ_OP_WRITE | REQ_SYNC | REQ_PREFLUSH | REQ_FUA;
-> +	int ret;
-> +
-> +	folio_lock(folio);
-> +	folio_wait_writeback(folio);
-> +	if (update)
-> +		memcpy(F2FS_SUPER_BLOCK(folio), F2FS_RAW_SUPER(sbi),
-> +					sizeof(struct f2fs_super_block));
-> +	folio_mark_dirty(folio);
-> +	folio_clear_dirty_for_io(folio);
-> +	folio_start_writeback(folio);
-> +	folio_unlock(folio);
-> +
-> +	bio = bio_alloc(sbi->sb->s_bdev, 1, opf, GFP_NOFS);
-> +
-> +	/* it doesn't need to set crypto context for superblock update */
-> +	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(folio_index(folio));
-> +
-> +	if (!bio_add_folio(bio, folio, PAGE_SIZE, 0))
-> +		f2fs_bug_on(sbi, 1);
+Link: https://www.kernel.org/doc/Documentation/userspace-api/media/v4l/vidioc-g-selection.rst [1]
+Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+---
+V9->V13: No change
+V8: Update commit message with specification reference
+V1->V7 (No change, patch introduced in V7)
+---
+ drivers/media/platform/imagination/e5010-jpeg-enc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Better make that folio_size(folio) to support bs>PS.
+diff --git a/drivers/media/platform/imagination/e5010-jpeg-enc.c b/drivers/media/platform/imagination/e5010-jpeg-enc.c
+index 4b6fbe99d5ff..ea96b1bc5315 100644
+--- a/drivers/media/platform/imagination/e5010-jpeg-enc.c
++++ b/drivers/media/platform/imagination/e5010-jpeg-enc.c
+@@ -517,10 +517,10 @@ static int e5010_s_selection(struct file *file, void *fh, struct v4l2_selection
+ 
+ 	switch (s->flags) {
+ 	case 0:
+-		s->r.width = round_down(s->r.width, queue->fmt->frmsize.step_width);
+-		s->r.height = round_down(s->r.height, queue->fmt->frmsize.step_height);
+-		s->r.left = round_down(s->r.left, queue->fmt->frmsize.step_width);
+-		s->r.top = round_down(s->r.top, 2);
++		s->r.width = round_closest_down(s->r.width, queue->fmt->frmsize.step_width);
++		s->r.height = round_closest_down(s->r.height, queue->fmt->frmsize.step_height);
++		s->r.left = round_closest_down(s->r.left, queue->fmt->frmsize.step_width);
++		s->r.top = round_closest_down(s->r.top, 2);
+ 
+ 		if (s->r.left + s->r.width > queue->width)
+ 			s->r.width = round_down(s->r.width + s->r.left - queue->width,
+-- 
+2.39.1
 
