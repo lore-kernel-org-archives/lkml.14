@@ -1,105 +1,112 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40601946AB;
-	Fri,  7 Jun 2024 13:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4C215B54A;
+	Fri,  7 Jun 2024 13:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717767259; cv=none; b=hgU7bWYCTYHbkrpsEjk+2CZvCrOwphemYV64UcpZ7wS8i85nFy0QBIPPXorLm/i1WXzmFHw0VxoPMZuRan5RNx2VDPqndymW7eJMM1ZoOBLZON/tQrfouFyT6ncv9GWnR0sqwUXS8QdTVVcgB9EnEfKqXXgLN/WQ5hXaijZLF2Q=
+	t=1717767416; cv=none; b=U1kDyAQsOuKe10tpq65odbEUwQ027sM5vQToY8oxB5WJEpAmJXPCjMVu/DowCb9XdG1C2vJQcYqpiLmSubOs6TfoNi7j8ndiidReIcfaz/Ej5bIXkaxsIAkIbrObxqzMJlzNOhwV4JOMKcVXZuDzPluwkCqdMf35Kerr/BuSyLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717767259; c=relaxed/simple;
-	bh=6p1R3jgBWGcBkfv4pBjSAmPrqdO5jpX7UsZJf+Dnvo8=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=KglRpPehAiKDWkXBOBupnF7eUPG4H/VFB/uS8tIYFsadPTGZpXcmtEoITSypwxkq86uafxg+Gc4Yhsi34IfUDmzRw9v2SlX3UGkPNozAfAfp1dHnCmt6E3t3hPH5X07OaAtNiozrHQBVHalrilrdBpT2EzbXhe77LxOFNruSgus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=990276a841=ms@dev.tdt.de>)
-	id 1sFZjT-005xhe-JY; Fri, 07 Jun 2024 15:34:15 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sFZjT-00ENF4-2Z; Fri, 07 Jun 2024 15:34:15 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id BE735240053;
-	Fri,  7 Jun 2024 15:34:14 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id 53F0F240050;
-	Fri,  7 Jun 2024 15:34:14 +0200 (CEST)
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-	by mail.dev.tdt.de (Postfix) with ESMTP id 09FE238490;
-	Fri,  7 Jun 2024 15:34:14 +0200 (CEST)
+	s=arc-20240116; t=1717767416; c=relaxed/simple;
+	bh=aTqDPs2BV1TkSSf7DvtFtL1V0gHpXhKpZ4wD3WJPDVw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bF0Wguu2ifoh8AsyI8HaAtGQyaE7ignVdj/rt+b8pa1MrhA3oikaKKbM/vLaZb2pi66VCNIwJt5OOBIKcDTgJ62aNLF+AUhrwKpZ+IkRj80xJqOMcM3YbnT42A+lZAirp2Dm0IelftEn3euY/U1X8Ufw+Hjv1m9N8MXC++lpBBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=af0/R9R3; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="af0/R9R3"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3d1ffa16080so317169b6e.2;
+        Fri, 07 Jun 2024 06:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717767414; x=1718372214; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OsnPTo/8GBKfAm5hQE1/ElT4VESU6abIi/S302Yoa/A=;
+        b=af0/R9R3mDpuB8ZFPLusmdPtNUss5tCutbO17vRKBa/l3Ci5m1NVBObLZt6gqlT5h/
+         g3JJh74JUvt6jvy1qBR1M4NG6NWlBs8wdkmLD77NmM63aslXAFGktpVsMFB8q1WKvjn4
+         PhkTV9jOyJIF/7n9fLXfgezzTnAiq0MFVb3JkO4lauJVhhHjZ5K+GhTx5gwSR6un/m8+
+         skJT/vNIjwxF0J+dr7cYMRXKHjutQ6K2UR8WakfE7JyhHi/sOZwxLZahQloAWroDF9NY
+         nBfaEvbjFFFL1KNiU5S3CQ3llGubgVjifUh60m2FeAYXSMn6NKawP3qBKe8Zh6oHDef5
+         ouRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717767414; x=1718372214;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OsnPTo/8GBKfAm5hQE1/ElT4VESU6abIi/S302Yoa/A=;
+        b=KDkhpr4HnspWu6Whpgxm6RZ9h8j3gT4nJfTWDmjnLYnfMh4bbWhFx5+LiLJs2JuEQ8
+         Fp9RcSeN4vpwAGAA0tzPD6rmQb48lpa1OKble4di079DX69muipdKXQzTT5TQfOwRHKM
+         HGuaYq/jzl4urebZwovL7Cr9TArXOnFSDXg+2WZ2l3/+dwo6eYh2/v11128Xyw0Ig5+e
+         urSlDUyfzrIrf6KXwUdga4vdd+VcCpWqZ1K0LM73R1pI22+aMPGImKKJfTXM2Ozfbhhi
+         4KmCkxCA9yvjHUrFcA74neAeVZjIYsEzDYuiib/NRVm2ZaXnCOwSoOIZBFLf0TpJFchs
+         NK8w==
+X-Forwarded-Encrypted: i=1; AJvYcCU8ja98orwGriMUWPd9puF1UDCkPbU1NeUnO59UbzF3AOrf3gE2i7isRKZsdCkvDvdqRvACNZDGSILDVhGRypA3XCTVHNVNiSIr0MPu1mkJfRpTtix45efoU3jJNiaIOOrOSW3lmwABTg==
+X-Gm-Message-State: AOJu0YxJTgpTTxap7NwYyi93LDur5X94px36I1WHND2b0foyAb5djc01
+	k00DMd+xyVY86jrcX/vq+B8iM77bIPGKZdwDsCDpuJafnecRUFI6M95hwm17aZZ2lxDkV9KeeO9
+	1SpXJu4hK2bAUq3AW3Cf4HSyKz7U=
+X-Google-Smtp-Source: AGHT+IEojVhe1VE2I9tkYeYFprnJEtgfGkdfoWwK5O0NK2oo8xUNetmXenf1UiYpFdw8PyEET/QaYELWmnmu1A9VAqA=
+X-Received: by 2002:a05:6808:21a0:b0:3c8:64b7:7814 with SMTP id
+ 5614622812f47-3d210f98377mr2592800b6e.5.1717767413813; Fri, 07 Jun 2024
+ 06:36:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Fri, 07 Jun 2024 15:34:13 +0200
-From: Martin Schiller <ms@dev.tdt.de>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
- f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 10/13] net: dsa: lantiq_gswip: Fix error message
- in gswip_add_single_port_br()
-Organization: TDT AG
-In-Reply-To: <20240607112710.gbqyhnwisnjfnxrl@skbuf>
-References: <20240606085234.565551-1-ms@dev.tdt.de>
- <20240606085234.565551-11-ms@dev.tdt.de>
- <20240607112710.gbqyhnwisnjfnxrl@skbuf>
-Message-ID: <07b91d4a519c698bb80c0f50a0d00067@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.3.17
-X-purgate: clean
-X-purgate-ID: 151534::1717767255-36936522-0A96A253/0/0
-X-purgate-type: clean
+References: <20240607122357.115423-1-david@redhat.com> <20240607122357.115423-2-david@redhat.com>
+In-Reply-To: <20240607122357.115423-2-david@redhat.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Fri, 7 Jun 2024 21:36:42 +0800
+Message-ID: <CABzRoyYer2Bb-yLXJAafqpxG5p+aZhnxoxq2v5KLY3JswpnX0A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/6] fs/proc/task_mmu: indicate PM_FILE for PMD-mapped
+ file THP
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-06-07 13:27, Vladimir Oltean wrote:
-> On Thu, Jun 06, 2024 at 10:52:31AM +0200, Martin Schiller wrote:
->> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> 
->> The error message is printed when the port cannot be used. Update the
->> error message to reflect that.
->> 
->> Signed-off-by: Martin Blumenstingl 
->> <martin.blumenstingl@googlemail.com>
->> ---
->>  drivers/net/dsa/lantiq_gswip.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/net/dsa/lantiq_gswip.c 
->> b/drivers/net/dsa/lantiq_gswip.c
->> index d2195271ffe9..3c96a62b8e0a 100644
->> --- a/drivers/net/dsa/lantiq_gswip.c
->> +++ b/drivers/net/dsa/lantiq_gswip.c
->> @@ -658,7 +658,8 @@ static int gswip_add_single_port_br(struct 
->> gswip_priv *priv, int port, bool add)
->>  	int err;
->> 
->>  	if (port >= max_ports || dsa_is_cpu_port(priv->ds, port)) {
->> -		dev_err(priv->dev, "single port for %i supported\n", port);
->> +		dev_err(priv->dev, "single port for %i is not supported\n",
->> +			port);
->>  		return -EIO;
->>  	}
->> 
->> --
->> 2.39.2
->> 
-> 
-> Isn't even the original condition (port >= max_ports) dead code? Why 
-> not
-> remove the condition altogether?
+On Fri, Jun 7, 2024 at 8:24=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> Looks like we never taught pagemap_pmd_range() about the existence of
+> PMD-mapped file THPs. Seems to date back to the times when we first added
+> support for non-anon THPs in the form of shmem THP.
+>
+> Fixes: 800d8c63b2e9 ("shmem: add huge pages support")
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-I also agree here if we can be sure, that .port_enable, 
-.port_bridge_join and
-.port_bridge_leave are only called for "valid" (<= max_ports) ports.
+LGTM. Feel free to add:
+Reviewed-by: Lance Yang <ioworker0@gmail.com>
+
+Thanks,
+Lance
+
+> ---
+>  fs/proc/task_mmu.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 5aceb3db7565e..08465b904ced5 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -1522,6 +1522,8 @@ static int pagemap_pmd_range(pmd_t *pmdp, unsigned =
+long addr, unsigned long end,
+>                 }
+>  #endif
+>
+> +               if (page && !PageAnon(page))
+> +                       flags |=3D PM_FILE;
+>                 if (page && !migration && page_mapcount(page) =3D=3D 1)
+>                         flags |=3D PM_MMAP_EXCLUSIVE;
+>
+> --
+> 2.45.2
+>
+>
