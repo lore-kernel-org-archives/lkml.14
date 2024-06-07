@@ -1,165 +1,162 @@
-Received: from mxde.zte.com.cn (mxde.zte.com.cn [209.9.37.143])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44FB15CD5C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 09:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.9.37.143
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF3F746E;
+	Fri,  7 Jun 2024 09:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717753269; cv=none; b=qIk7Wsa+JeduYPm6Fj8BuCbTJ1gByxAKTO/6/p3kLFBhAY+qhs4gSNVwtDyktfUpAX2UpDrjRDsr0NRh1WmihReT3aDWzsnm4144IIoJhAi2iCwngjGSqas3S8NXeOEEF0ZBgEA6/+F6EFLP9CzRtIZeh147I7OXkkQHXcw5ArM=
+	t=1717753308; cv=none; b=k51hDmGFng+6ZfklI4z/kKMfBqvhcsuDwZGya56G31PAbjbg9CYP66XdhE0SeTbwDB3HiK7kDGfbA9Ssn6fz6+lAFBZrRteOMgIbeMk5Fr72HhYE5FmIipMXKPr42S+ogpVcKjXqNJJUR7VHv4FFyNEGkxt/dGjuhRK6LBQdK5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717753269; c=relaxed/simple;
-	bh=x9fp+gWVJGtIzJ6GcT0SwqoJs5luw78VAYq6ovnD3x4=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=u8BMOiDrRaTZUMDYYCiYiffp2CCEkdppnq6iA7guQlu53ijTCwTpfFwsf7Y4n8Yf56W/pS03FSkkpuERy3dwRutbWXJ9ZHlrWA+l97m0gWOWl2o1wuYvXDyhrGlwzDwoj0RyqxuHcHpt6bCnklLpUg0zK7nwRur63RaeqYyCkng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=209.9.37.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4VwbmW6Wx7z5TCGC
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 17:40:59 +0800 (CST)
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VwbmJ0Sy0z8XrS1;
-	Fri,  7 Jun 2024 17:40:48 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl1.zte.com.cn with SMTP id 4579ejtn002111;
-	Fri, 7 Jun 2024 17:40:45 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Fri, 7 Jun 2024 17:40:48 +0800 (CST)
-Date: Fri, 7 Jun 2024 17:40:48 +0800 (CST)
-X-Zmail-TransId: 2afa6662d5a0ffffffffa1b-000d9
-X-Mailer: Zmail v1.0
-Message-ID: <202406071740485174hcFl7jRxncsHDtI-Pz-o@zte.com.cn>
+	s=arc-20240116; t=1717753308; c=relaxed/simple;
+	bh=ynvlvVbo/tWkOIken/yYFOvDfSVzxKWB8fQuH4Z+Q54=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OsC1OjDh4ZV2U6vHZS54FDamQGqljpIOeKlsSb7URrEVTPA7kGS7Z4fX58QKNzsyk943Ka4Ve08QHRYSiYfdeiO128BBbsyKPdwMxgSKXcNR7n+uG1BPDWb9r8llYZQajge0k6TEqNOKFqzMlYchMAM3PsEOWHXSjgNbDoHxYz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hDd3z6yk; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDd3z6yk"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a626919d19dso551960666b.0;
+        Fri, 07 Jun 2024 02:41:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717753305; x=1718358105; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iHthyJxfQWG9RW2oiS/t6zGoou7lw4UFn78RRn4Kbbo=;
+        b=hDd3z6ykQ7ewoMES4zYloy15EVnXfP3OsvSYJYESsk2cfn4u+TJBYVR0/FISWp77lA
+         +q6ouGRDEJCAe3xFjCGipilVMVPSPtTQO23++aNuNhOUh4qI10Roi7LqDcVjj9T3pfz9
+         sSgi0caqBxz+yeVCDoMXmAi1kHuR2jvR0JqeF4V3ovFokszJV2n1ZrsLqr9z+NwSgDES
+         bw0+ky6HaOMLgXZgyepArkZlyu4NxTH13WBH49gkeSeMXDq8d6iubEInaluKXwMPNbFe
+         k2GzkJe4LvTre0Pfg8V4dhtTLSl76//R/1Z+7yz07CVtZMxbLfDzIiPHwb/EVWbsVST1
+         3XuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717753305; x=1718358105;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iHthyJxfQWG9RW2oiS/t6zGoou7lw4UFn78RRn4Kbbo=;
+        b=oC2NbdUbIfvSohsqe+LRkyq/oMd0P2TLNnBUZ8fcikMetBGrX9Sd+Wl7j0uD3OozH0
+         6Mwnz39/szG+pvKeqeqe320cBUERWCp+OqIMZnxIrodMHeaB7zFCuUt0b2Pz5lCVBdLJ
+         2w9Zek5GtdHGE1prM3aosHYKgvgNYlSxspzahibdQz4zBQE8AKbffzdFSSxezi3XTGLS
+         tVSrwfJ5aMEm49lHwKpCM602/W7m4xC+eYR8PErmLVbCp+65yGrsQ5ZJSFBedZGXiYbE
+         vQCIkrOfMTgCqskMC15bmGJL6sOQ5zDiQbUFi6BDmNeudwqZSpZ8JoQg1zgq7a3SZQiK
+         Dl3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXbTs7zq+pr1w/V0DZC1scWxEhbo1R2+hjQVM+SH+QdAC6EYAWhvRNSGZzoZU/2j/8kcsbpUCTZEg9rlwTlQVmtDie8dCAvdMhlhjArXbEkkNgbdXC3WFD/Q8wY2ITUP77VwGxvduxGYz6Ti3iOtFZpjGKQeJvj4cjtabajaTC+ROPQXA==
+X-Gm-Message-State: AOJu0YyIo5sN2E6ULwx91REJo7BnVdyY2CNvpTUm8u9ES1+Facne262U
+	mbg8vMnszD1dkx6KwUrOTx2Ggu0q23tS8wKw2bHFPyJJDXPm/Ung
+X-Google-Smtp-Source: AGHT+IF3iq8j3f7Ft+xnRNqD2FMzh7+5wrp83qD5WemFIuZYfqTXJxrAZ5OB7zdPhvJmFFEuZnHiAQ==
+X-Received: by 2002:a17:906:e56:b0:a6e:372f:5783 with SMTP id a640c23a62f3a-a6e372f5b4dmr59107566b.4.1717753304658;
+        Fri, 07 Jun 2024 02:41:44 -0700 (PDT)
+Received: from [192.168.0.220] ([83.103.132.21])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c80727e1esm218698066b.190.2024.06.07.02.41.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Jun 2024 02:41:44 -0700 (PDT)
+Message-ID: <1c6d409b-ba9e-4a19-a6cb-e06209a24154@gmail.com>
+Date: Fri, 7 Jun 2024 12:41:42 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <david@redhat.com>, <ziy@nvidia.com>, <v-songbaohua@oppo.com>,
-        <akpm@linux-foundation.org>
-Cc: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <mhocko@kernel.org>,
-        <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>,
-        <ran.xiaokai@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHQgdjNdIG1tOiBodWdlX21lbW9yeTogZml4IG1pc3VzZWQgbWFwcGluZ19sYXJnZV9mb2xpb19zdXBwb3J0KCnCoCBmb3IgYW5vbiBmb2xpb3M=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 4579ejtn002111
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6662D5AA.000/4VwbmW6Wx7z5TCGC
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 9/9] iio: adc: ad7173: Add support for AD411x devices
+To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240606-ad4111-v6-0-573981fb3e2e@analog.com>
+ <20240606-ad4111-v6-9-573981fb3e2e@analog.com>
+ <389546877ae11b18928b432e86710acf83974f67.camel@gmail.com>
+Content-Language: en-US
+From: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
+In-Reply-To: <389546877ae11b18928b432e86710acf83974f67.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+On 07/06/2024 12:20, Nuno Sá wrote:
+> On Thu, 2024-06-06 at 19:07 +0300, Dumitru Ceclan via B4 Relay wrote:
+>> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>>
+>> Add support for AD4111/AD4112/AD4114/AD4115/AD4116.
+>>
+>> The AD411X family encompasses a series of low power, low noise, 24-bit,
+>> sigma-delta analog-to-digital converters that offer a versatile range of
+>> specifications.
+>>
+>> This family of ADCs integrates an analog front end suitable for processing
+>> both fully differential and single-ended, bipolar voltage inputs
+>> addressing a wide array of industrial and instrumentation requirements.
+>>
+>> - All ADCs have inputs with a precision voltage divider with a division
+>>   ratio of 10.
+>> - AD4116 has 5 low level inputs without a voltage divider.
+>> - AD4111 and AD4112 support current inputs (0 mA to 20 mA) using a 50ohm
+>>   shunt resistor.
+>>
+>> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>> ---
+>>  drivers/iio/adc/ad7173.c | 317 ++++++++++++++++++++++++++++++++++++++++++----
+>> -
+>>  1 file changed, 285 insertions(+), 32 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+>> index 58da5717fd36..cfcd12447e24 100644
+>> --- a/drivers/iio/adc/ad7173.c
+>> +++ b/drivers/iio/adc/ad7173.c
+>>
+> ...
+> 
+>>  static const struct ad7173_device_info ad7172_2_device_info = {
+>>  	.name = "ad7172-2",
+>>  	.id = AD7172_2_ID,
+>> -	.num_inputs = 5,
+>> +	.num_voltage_in = 5,
+>>  	.num_channels = 4,
+>>  	.num_configs = 4,
+>>  	.num_gpios = 2,
+>> +	.higher_gpio_bits = false,
+> 
+> No need to explicitly set to 'false'. Ditto for the other places...
+> 
+> ...
+> 
+>>
+>>  static int ad7173_validate_voltage_ain_inputs(struct ad7173_state *st,
+>>  					      unsigned int ain0, unsigned int
+>> ain1)
+>>  {
+>> @@ -946,15 +1145,30 @@ static int ad7173_validate_voltage_ain_inputs(struct
+>> ad7173_state *st,
+>>  	    st->info->has_pow_supply_monitoring)
+>>  		return 0;
+>>  
+>> -	special_input0 = AD7173_IS_REF_INPUT(ain0);
+>> -	special_input1 = AD7173_IS_REF_INPUT(ain1);
+>> +	special_input0 = AD7173_IS_REF_INPUT(ain0) ||
+>> +			 (ain0 == AD4111_VINCOM_INPUT && st->info-
+>>> has_vincom_input);
+>> +	special_input1 = AD7173_IS_REF_INPUT(ain1) ||
+>> +			 (ain1 == AD4111_VINCOM_INPUT && st->info-
+>>> has_vincom_input);
+>> +
+> 
+> Wondering... can ain1 (or ain0) be AD4111_VINCOM_INPUT and !st->info-
+>> has_vincom_input? Would that actually be acceptable? It would assume it's not
+> so we should check that right? Or am I missing something?
+> 
+> - Nuno Sá
+> 
 
-When I did a large folios split test, a WARNING
-"[ 5059.122759][  T166] Cannot split file folio to non-0 order"
-was triggered. But the test cases are only for anonmous folios.
-while mapping_large_folio_support() is only reasonable for page
-cache folios.
+It will fail when we check for the number of voltage inputs:
+(ain0 >= st->info->num_voltage_in && !special_input0) 
+as special_input will not be true if has_vincom_input is false
 
-In split_huge_page_to_list_to_order(), the folio passed to
-mapping_large_folio_support() maybe anonmous folio. The
-folio_test_anon() check is missing. So the split of the anonmous THP
-is failed. This is also the same for shmem_mapping(). We'd better add
-a check for both. But the shmem_mapping() in __split_huge_page() is
-not involved, as for anonmous folios, the end parameter is set to -1, so
-(head[i].index >= end) is always false. shmem_mapping() is not called.
+Indeed this check is a bit hidden, should it be more explicit?
 
-Also add a VM_WARN_ON_ONCE() in mapping_large_folio_support()
-for anon mapping, So we can detect the wrong use more easily.
-
-THP folios maybe exist in the pagecache even the file system doesn't
-support large folio, it is because when CONFIG_TRANSPARENT_HUGEPAGE
-is enabled, khugepaged will try to collapse read-only file-backed pages
-to THP. But the mapping does not actually support multi order
-large folios properly.
-
-Using /sys/kernel/debug/split_huge_pages to verify this, with this
-patch, large anon THP is successfully split and the warning is ceased.
-
-Changes since v2:
- - fix two coding style problems suggested by David
- - update the comments of the order-1 case suggested by Barry
-
-Reviewed-by: Barry Song <baohua@kernel.org>
-Reviewed-by: Zi Yan <ziy@nvidia.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
----
- include/linux/pagemap.h |  4 ++++
- mm/huge_memory.c        | 28 +++++++++++++++++-----------
- 2 files changed, 21 insertions(+), 11 deletions(-)
-
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index ee633712bba0..59f1df0cde5a 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -381,6 +381,10 @@ static inline void mapping_set_large_folios(struct address_space *mapping)
-  */
- static inline bool mapping_large_folio_support(struct address_space *mapping)
- {
-+	/* AS_LARGE_FOLIO_SUPPORT is only reasonable for pagecache folios */
-+	VM_WARN_ONCE((unsigned long)mapping & PAGE_MAPPING_ANON,
-+			"Anonymous mapping always supports large folio");
-+
- 	return IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
- 		test_bit(AS_LARGE_FOLIO_SUPPORT, &mapping->flags);
- }
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 317de2afd371..155d6a9f73be 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -3009,30 +3009,36 @@ int split_huge_page_to_list_to_order(struct page *page, struct list_head *list,
- 	if (new_order >= folio_order(folio))
- 		return -EINVAL;
-
--	/* Cannot split anonymous THP to order-1 */
--	if (new_order == 1 && folio_test_anon(folio)) {
--		VM_WARN_ONCE(1, "Cannot split to order-1 folio");
--		return -EINVAL;
--	}
--
--	if (new_order) {
--		/* Only swapping a whole PMD-mapped folio is supported */
--		if (folio_test_swapcache(folio))
-+	if (folio_test_anon(folio)) {
-+		/* order-1 is not supported for anonymous THP. */
-+		if (new_order == 1) {
-+			VM_WARN_ONCE(1, "Cannot split to order-1 folio");
- 			return -EINVAL;
-+		}
-+	} else if (new_order) {
- 		/* Split shmem folio to non-zero order not supported */
- 		if (shmem_mapping(folio->mapping)) {
- 			VM_WARN_ONCE(1,
- 				"Cannot split shmem folio to non-0 order");
- 			return -EINVAL;
- 		}
--		/* No split if the file system does not support large folio */
--		if (!mapping_large_folio_support(folio->mapping)) {
-+		/*
-+		 * No split if the file system does not support large folio.
-+		 * Note that we might still have THPs in such mappings due to
-+		 * CONFIG_READ_ONLY_THP_FOR_FS. But in that case, the mapping
-+		 * does not actually support large folios properly.
-+		 */
-+		if (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) &&
-+		    !mapping_large_folio_support(folio->mapping)) {
- 			VM_WARN_ONCE(1,
- 				"Cannot split file folio to non-0 order");
- 			return -EINVAL;
- 		}
- 	}
-
-+	/* Only swapping a whole PMD-mapped folio is supported */
-+	if (folio_test_swapcache(folio) && new_order)
-+		return -EINVAL;
-
- 	is_hzp = is_huge_zero_folio(folio);
- 	if (is_hzp) {
--- 
-2.15.2
