@@ -1,95 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0570A1946A9;
-	Fri,  7 Jun 2024 13:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFB919149E;
+	Fri,  7 Jun 2024 13:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717768373; cv=none; b=lrBmAC15Y2H3Vsk170PNn61xIuI4qwzZGYYWHYFkrQE3l7eMpW6lATGNjflTBrXPttHZj06nYc9hflJdc/7LkMHhnondfnzVgc0qEFEXFwDqFSvH2XNLR71sTwvFCYqFmurkAjqUld8Pe/IWPsfWMm+XQyBjlLVdWYNtFwBkGlE=
+	t=1717768443; cv=none; b=g/8KXIGOf1zD9Vz7P12raeCST7PS9VLJgYlid9bwxOJdpHUyduLgdBbI1SSQ0wgPTIB4cQA0x0eCWqa3Ze02FsI4HzzJu7UKep/HAfvZjrwNgdoZx9v8RNWUfmZJiKkmudg5h3/YNEhFhcvFXTrqPvPUlaBBfHUZIrQTZ34NI7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717768373; c=relaxed/simple;
-	bh=XGVX7AZuoXtC4aHwOBmnRoGcJiF2HZ1EWEecnKPuTHQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WFNQdQlMXQBqg5RQEySf9qeQvTxxkFuRyVNiwkJRNwaXjWiFNMZe29LDMh8wrdr8aXk9+w9gdPXzKc5C/ZU7AD7dGOZ7EzGpEhpBjZwF2nKqj4LCogHFsPSBAkKXgpXvSAyUHY4k829qI7h3XC9GhOLqTQDozUxq0oCUDZdx3IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L8ixaMzu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L8ixaMzu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BFB0C2BBFC;
-	Fri,  7 Jun 2024 13:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717768372;
-	bh=XGVX7AZuoXtC4aHwOBmnRoGcJiF2HZ1EWEecnKPuTHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L8ixaMzufss7LKTZZeC7c9zLvHE5YFqtgNWtJ/a3u2PmaUGqb8r9/jgCnVW7mNdT6
-	 8+3gyYTYGz3pIMkG2RN9IyDO4Q29wG4f2kys/jXSAJF6B3wRjimZCqSDA0ecCDudCe
-	 DI1GF+JzP+TrejWY+2iCuaHXyGiGdH7STvEzdKSo2bjj2e/IJBUe95Q/NXr3gm44y+
-	 P4EG1DQjqD+ZN4Td6NAkK4TwWXF3H1oZjERh3z0KOz1oYxgCKI8QNXW9XmSVE8IGKV
-	 8sxLryzrveWMoo6yAImOU7N3lKgwi8kKZmDHUuC+LHb3LD06C0NQ1znllOJZdCUkob
-	 XOksEcf1JuQ4Q==
-Date: Fri, 7 Jun 2024 14:52:49 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>, lars@metafoo.de,
-	Michael.Hennerich@analog.com, jic23@kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	nuno.sa@analog.com, dlechner@baylibre.com,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] spi: Add SPI mode bit for MOSI idle state
- configuration
-Message-ID: <ZmMQseQUm05ctRWM@finisterre.sirena.org.uk>
-References: <cover.1717539384.git.marcelo.schmitt@analog.com>
- <e1d5d57f7a7481c84f64a764f9898122e278739b.1717539384.git.marcelo.schmitt@analog.com>
- <21d3314355b43ecd6acc42f9dfedec501418332d.camel@gmail.com>
- <67f94cfb-6a33-4390-8032-a942f5f7b944@sirena.org.uk>
- <ZmIXnBSk7nlviIZ3@debian-BULLSEYE-live-builder-AMD64>
+	s=arc-20240116; t=1717768443; c=relaxed/simple;
+	bh=91otkUgIB0mhSgUT3Jf/hB6FYPgNDeYftqYvwzJmFRc=;
+	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
+	 References:Message-ID; b=X3EfSKlOWSdPZ7XG85NOMaGgLRcUSGkigfkdbl962OvUvYJdYY6+IYeTT5AO6vCHCa61tAH4qTQ02QMCVx0uwr1FMQi4sR8hQieDhmh+qQHLJrQ1hyRJk9iki1prM6UJ6F0AOumVaNM4K7RFEEfDM07SV0UdoB4JU9wtXj1keA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=990276a841=ms@dev.tdt.de>)
+	id 1sFa2Z-0065jU-HH; Fri, 07 Jun 2024 15:53:59 +0200
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1sFa2Z-008CvR-0N; Fri, 07 Jun 2024 15:53:59 +0200
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id B1C8C240053;
+	Fri,  7 Jun 2024 15:53:58 +0200 (CEST)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id 44326240050;
+	Fri,  7 Jun 2024 15:53:58 +0200 (CEST)
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+	by mail.dev.tdt.de (Postfix) with ESMTP id 0AA0C2092B;
+	Fri,  7 Jun 2024 15:53:58 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zsC/K195XhebRJpD"
-Content-Disposition: inline
-In-Reply-To: <ZmIXnBSk7nlviIZ3@debian-BULLSEYE-live-builder-AMD64>
-X-Cookie: Your love life will be... interesting.
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Fri, 07 Jun 2024 15:53:58 +0200
+From: Martin Schiller <ms@dev.tdt.de>
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
+ f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 10/13] net: dsa: lantiq_gswip: Fix error message
+ in gswip_add_single_port_br()
+Organization: TDT AG
+In-Reply-To: <20240607135041.4lo36yeybwa2tkue@skbuf>
+References: <20240606085234.565551-1-ms@dev.tdt.de>
+ <20240606085234.565551-11-ms@dev.tdt.de>
+ <20240607112710.gbqyhnwisnjfnxrl@skbuf>
+ <07b91d4a519c698bb80c0f50a0d00067@dev.tdt.de>
+ <20240607135041.4lo36yeybwa2tkue@skbuf>
+Message-ID: <cb945e096fe9a5d6c74057b20bb9c1c1@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.3.17
+X-purgate-ID: 151534::1717768439-1FCDB522-0293E6EC/0/0
+X-purgate-type: clean
+X-purgate: clean
 
+On 2024-06-07 15:50, Vladimir Oltean wrote:
+> On Fri, Jun 07, 2024 at 03:34:13PM +0200, Martin Schiller wrote:
+>> On 2024-06-07 13:27, Vladimir Oltean wrote:
+>> > Isn't even the original condition (port >= max_ports) dead code? Why not
+>> > remove the condition altogether?
+>> 
+>> I also agree here if we can be sure, that .port_enable, 
+>> .port_bridge_join and
+>> .port_bridge_leave are only called for "valid" (<= max_ports) ports.
+> 
+> dsa_switch_parse_ports_of() has:
+> 
+> 		if (reg >= ds->num_ports) {
+> 			dev_err(ds->dev, "port %pOF index %u exceeds num_ports (%u)\n",
+> 				port, reg, ds->num_ports);
+> 			of_node_put(port);
+> 			err = -EINVAL;
+> 			goto out_put_node;
+> 		}
 
---zsC/K195XhebRJpD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jun 06, 2024 at 05:10:04PM -0300, Marcelo Schmitt wrote:
-> On 06/05, Mark Brown wrote:
-
-> > > Should we assume such a thing? IOW, should this be treated as a warning or a
-> > > real error? I would assume this should be a configuration error and return -
-> > > EINVAL but...
-
-> > Right, and the error message isn't very clear.
-
-> Yeah, the message is not all that clear. I'll think of something better.
-> I'm biased towards having this as a warning because I don't see this as a
-> feature of usual SPI protocol but not really sure about either ...
-
-The less usual it is the more likely it is that it won't be supported
-and we should actually check that to try to avoid data corruption.
-
---zsC/K195XhebRJpD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZjELAACgkQJNaLcl1U
-h9BmlQf+JUslqI9U0mKHytkvvRL0JDpLxIk4U4QG9t0LRiQCyBhlDYh0HWJPuYpr
-ArpMHl9BEFliiK59gU9RiIQ+FOE4MrGBq/oRmYIYmRqFB/h0RseDcx6kr/2LB0CY
-jvWxpmAKSyLIR3+xJ6JAlZiL6TXxew2t/Orj3AR/RRkmkQ2ZqM8MckIirrCUZHng
-wq1NYg9EVNzn+9EuMwh4z+n7401QdpkvqUrsRcd6NLaMdvSruhxna2bLHwtnxdid
-++fT/i6NKtGGtq0mnGW6TAtBqua2Ao9armQrstBqrpYwPu1vCuFzlRDhSgvHIzKK
-FxMBVjRAWeecDUBC0+VITFnCoIPLpg==
-=TXlA
------END PGP SIGNATURE-----
-
---zsC/K195XhebRJpD--
+OK, so I will remove this check altogether.
