@@ -1,55 +1,55 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF889FC02
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 00:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C01D13E3EA
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 00:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717721514; cv=none; b=Q3MUB1rhA+WGyBxUtsW32WE4tVAtY6nTFKxI5YBrUkWWDDmAEvgWuTmQEDON0VKnCGY+OZoRN1+U5Oe0C2bFt9bynoKgZYLUH9bwdBxAPssdyy4Msyg7y0Zpkdfo6bEsA7JWTHaL/j4ONrkmF9AO2glRRMxEgYcHSz2nKfUcH3Q=
+	t=1717721524; cv=none; b=rIkprd1jDN1SWXMLoNsO4SqcK6nJqt5mumOTUGZG2NV8o+jLbjSJayzSmk1/4oxj2suDz1doLDZ7ZemqSbImMgq4VOcfh7H1Z7s6IJAoI0vxGT+tJPrbUTm4aPsyCHvDb4IWvAfhTtoxgyBGAJ+tPU0Gp4w65TSzNaXLC3/3z1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717721514; c=relaxed/simple;
-	bh=qXQG+NonAH1+PqrB3E+4t34SPZL0uZHfUL5dkTe2E7k=;
+	s=arc-20240116; t=1717721524; c=relaxed/simple;
+	bh=IpmsKdmAg2dkzE7gg4B1MRUlTQNolccrcZaFLDHfwBA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aPj/8UNRaBzz+YRgvYtZZ4xYAT4tXK9f4abCu1mksUMm8cuj/HjU6BtmIe4xA4FGFpWGyxfArcp8yWVdNh7ashZHg7rCxG1vkFx+riD95Y/8I+kaDbWHb2G7j83BbzvPPbX7WG6BhwLiNXPxiknTOHpGFmBvQl0hEEwEdRsuRzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gnp+qJto; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=qKQbY1zwEwFfelYdZguNZQCg4c1gErDXVS4adMauLpzmi3aJfltxmFbM+gZMjV1UgYTM5ew4V+v4SqviQk5oHoz95ksLsOEDPiiBWJt8XPKF7nMe75bbv0/v4fm1X+ebs3I49LGF7/ieBxXhr1NyJtVLwnwjcv6AHS6qaW7ZK9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gbtgdxJ4; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gnp+qJto"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a248f46aaso25182647b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 17:51:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gbtgdxJ4"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-df771b5e942so2463054276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Jun 2024 17:51:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717721507; x=1718326307; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1717721515; x=1718326315; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N6xCNwW+oHdK+191elSmFQXDV8eNU/icLSxb9izKGcU=;
-        b=Gnp+qJtoUH562hFy8/0X14KJKanhXsKB/50hajgCYoNP4ZnYo2q/DRSuLzTsLQz3CA
-         rYWkCAPUqCu5i9gwyckOcY7NF0gpdVTeJUpZeTUg14y0iWx3SD9ag8kbLQFidMnF7f+c
-         oSXm/H9DZZyL4nRcfqk7O5oIipMJihAg1LIKOlIA/pfO8PMl1t5ye2MZ+pxFjVZj6d6t
-         KhimZtNpLu1iUSl5Rrw7Jj+Htx1S5lP13JOniS3hVXza6QHi+wgBCEAAiceK+nE5qD6X
-         u55UCanD/7/Dh0VnwttfGIYGZAoUbbmOt/obTdoc4ACBgT5HVVnhhW7M4wxRb7dqfnbH
-         /9wA==
+        bh=DOmuvn8Oj/aVx2P9uVs7PicLin7S83XgYGg6MlGI1pQ=;
+        b=gbtgdxJ4DyD5ELWxQKb8wPTkd/N41Rbm6mM5j4pcsewvrgAK4kx1OofIgG3GLOEyHV
+         UrDYt6fJp/ruQnXVVpD03xQbE+r4rqnkWV73QUiYMtFdbmnfVmAMPXFgYXQ7ykw0aXiB
+         zLYCRA+c8/V0jQ4tFjzaDa956fYCNl8a5Ltnf8x4jIHJF4mITxldjn9ahT1Rc0d/Id/y
+         Xup+EpfrZ9ucK0I9ntKSvnzLfXe9CBKanzy78l2zlvKE0yJf5it2VgLwqerd1LfoOmlV
+         0cj6jgx8bSrCk+lbrhWFw93WAy9ISwF05CnIu1Y6gA4iH+HVSu6TuttSI6gGzS8lNNW/
+         /WvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717721507; x=1718326307;
+        d=1e100.net; s=20230601; t=1717721515; x=1718326315;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N6xCNwW+oHdK+191elSmFQXDV8eNU/icLSxb9izKGcU=;
-        b=NLR309QqvWfR8mxE2Umo2DVAfNJyiHx8OsavhnJY38CD/p19DK2uEwcwvJxkiat/ts
-         VHELsIaJttSJUydyF8GXXyxeY/rTob5D9PJlzEVfVM79/uwI/vQnkhQNNcCQps0YeWrt
-         0c5stFmSJbikK64it9LEU9hN8a4ysHxfG9LQG8uW5DCpHVoKxDsP/KMtqLYlucNUcpQ+
-         IYtnY4zqFqZ1Q7a4J8OunBypsJ70xeSb97YCPceAiskJaXwCffuKFR+NZh5ssdFKZpMR
-         tEX7H28AYbB4a2K98RkjEGgDcoqNzExHXmnUmqOteLjsP6O/vQr0PB9pq2rAMsCRpMqN
-         HCIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWCNLLxOyyOQYUOQ1SD73etn1fReSCFC1eAKJD7H56mSYVtKfBk6g1m9160b1gFKbdNMtVCGqEQCYvuFMNiaj7k9TEWoucKRikxN/+
-X-Gm-Message-State: AOJu0YwmFeJihAwFKQsYthbg5AMBr9s6J514JqmYj6p/zP73iHHP47Re
-	LEJ6ZT5VkmpN24ZfsdFWscPFe4rbugW54QYT3WWKaUxpMYI6irm/3ShJsuWXzSKV47W8X3BoSKT
-	o7pohnIzsZtlda8XovcD2SQ==
-X-Google-Smtp-Source: AGHT+IHwijPu96ImCWyuyOrl9Ej6DYNxocgBOQr9WhO5zOKYH2P9VV48yLuB+PNlI6rXLeu9SD2Lqaq1mSx6cncXtw==
+        bh=DOmuvn8Oj/aVx2P9uVs7PicLin7S83XgYGg6MlGI1pQ=;
+        b=IuHuczNYJBjQfSmJ5Io5ApUr7/IodBIhhSYlP3kOitP22cpC+dwTpWiS3LLANBnL1M
+         XWIlmYcDw34u8bpCbg1akUWQK0zrgG4aYINgb+iDbN4vtrYyEHD+seWkrqELRQguNXC9
+         uw7Rx77CGQsCxe6ZDoo9NM5keecaW1uOjmIxfmF5Kpo7YLHuktVF5jRn/kIEAGUPyGf2
+         pojNbZQbMBPRDQJ2P/bei0ABVdpl0XWiosp8Gk05hp/SEaWLUUdnNN6aQltMu+Ar2ewA
+         QqGvywwSc5CBrQVbvQgboNkMKEF1osr9NVP9P2heg6rPyisI328zeFMEmfbjyE471jOw
+         9x4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUxnK9iyd9aqg6qwlAUA3hLeWcfiyAjixA94TFnO7B/vvvkg/37ii6UvabHoNKHCaIqrG3nssJe2Eh4L8oibgcYQnXCIWXWNHm+Alk4
+X-Gm-Message-State: AOJu0YzOwN5D80k6WeNu4YyYw4MzcMG2pRb3T4OXQkvVBNpLbtIz1OVD
+	SWBK3ip8ql6e6PM+YUQKEfYA28Hmq7TXiFqlBWB045zj4gNVDlZCvbhr7ZaAcyHGAHrK6Eml3TP
+	8FTF0DvV+MtkOa3rM7xFn1g==
+X-Google-Smtp-Source: AGHT+IGB9uqbLMDr+q9R8HhoFDIbUDIDIvBbGO5v2bU1XGM3hMBBv6ZDhoqjoZuLO6RMGtT+CEzbt3fMZKOR+h/vzg==
 X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
- (user=almasrymina job=sendgmr) by 2002:a05:690c:ecc:b0:61a:dcd0:5a61 with
- SMTP id 00721157ae682-62cd5657808mr2127387b3.7.1717721506925; Thu, 06 Jun
- 2024 17:51:46 -0700 (PDT)
-Date: Fri,  7 Jun 2024 00:51:18 +0000
+ (user=almasrymina job=sendgmr) by 2002:a05:6902:708:b0:dd9:2a64:e98a with
+ SMTP id 3f1490d57ef6-dfaf663d3dbmr153427276.9.1717721514446; Thu, 06 Jun 2024
+ 17:51:54 -0700 (PDT)
+Date: Fri,  7 Jun 2024 00:51:22 +0000
 In-Reply-To: <20240607005127.3078656-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240607005127.3078656-1-almasrymina@google.com>
 X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <20240607005127.3078656-9-almasrymina@google.com>
-Subject: [PATCH net-next v11 08/13] net: support non paged skb frags
+Message-ID: <20240607005127.3078656-13-almasrymina@google.com>
+Subject: [PATCH net-next v11 12/13] net: add devmem TCP documentation
 From: Mina Almasry <almasrymina@google.com>
 To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
@@ -96,241 +96,309 @@ Cc: Mina Almasry <almasrymina@google.com>, Donald Hunter <donald.hunter@gmail.co
 	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Make skb_frag_page() fail in the case where the frag is not backed
-by a page, and fix its relevant callers to handle this case.
+Add documentation outlining the usage and details of devmem TCP.
 
 Signed-off-by: Mina Almasry <almasrymina@google.com>
-
-
----
-
-v10:
-- Fixed newly generated kdoc warnings found by patchwork. While we're
-  at it, fix the Return section of the functions I touched.
-
-v6:
-- Rebased on top of the merged netmem changes.
-
-Changes in v1:
-- Fix illegal_highdma() (Yunsheng).
-- Rework napi_pp_put_page() slightly to reduce code churn (Willem).
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
 ---
- include/linux/skbuff.h     | 42 +++++++++++++++++++++++++++++++++++++-
- include/linux/skbuff_ref.h |  9 ++++----
- net/core/dev.c             |  3 ++-
- net/core/gro.c             |  3 ++-
- net/core/skbuff.c          | 11 ++++++++++
- net/ipv4/esp4.c            |  3 ++-
- net/ipv4/tcp.c             |  3 +++
- net/ipv6/esp6.c            |  3 ++-
- 8 files changed, 67 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index fe7d8dbef77e1..0a4df0025e6dc 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -3492,21 +3492,58 @@ static inline void skb_frag_off_copy(skb_frag_t *fragto,
- 	fragto->offset = fragfrom->offset;
- }
- 
-+/* Return: true if the skb_frag contains a net_iov. */
-+static inline bool skb_frag_is_net_iov(const skb_frag_t *frag)
-+{
-+	return netmem_is_net_iov(frag->netmem);
-+}
+v9: https://lore.kernel.org/netdev/20240403002053.2376017-14-almasrymina@google.com/
+- Bagas doc suggestions.
+
+v8:
+- Applied docs suggestions (Randy). Thanks!
+
+v7:
+- Applied docs suggestions (Jakub).
+
+v2:
+
+- Missing spdx (simon)
+- add to index.rst (simon)
+
+---
+ Documentation/networking/devmem.rst | 258 ++++++++++++++++++++++++++++
+ Documentation/networking/index.rst  |   1 +
+ 2 files changed, 259 insertions(+)
+ create mode 100644 Documentation/networking/devmem.rst
+
+diff --git a/Documentation/networking/devmem.rst b/Documentation/networking/devmem.rst
+new file mode 100644
+index 0000000000000..f32acfd62075d
+--- /dev/null
++++ b/Documentation/networking/devmem.rst
+@@ -0,0 +1,258 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+/**
-+ * skb_frag_net_iov - retrieve the net_iov referred to by fragment
-+ * @frag: the fragment
-+ *
-+ * Return: the &struct net_iov associated with @frag. Returns NULL if this
-+ * frag has no associated net_iov.
-+ */
-+static inline struct net_iov *skb_frag_net_iov(const skb_frag_t *frag)
-+{
-+	if (!skb_frag_is_net_iov(frag))
-+		return NULL;
++=================
++Device Memory TCP
++=================
 +
-+	return netmem_to_net_iov(frag->netmem);
-+}
 +
- /**
-  * skb_frag_page - retrieve the page referred to by a paged fragment
-  * @frag: the paged fragment
-  *
-- * Returns the &struct page associated with @frag.
-+ * Return: the &struct page associated with @frag. Returns NULL if this frag
-+ * has no associated page.
-  */
- static inline struct page *skb_frag_page(const skb_frag_t *frag)
- {
-+	if (skb_frag_is_net_iov(frag))
-+		return NULL;
++Intro
++=====
 +
- 	return netmem_to_page(frag->netmem);
- }
- 
-+/**
-+ * skb_frag_netmem - retrieve the netmem referred to by a fragment
-+ * @frag: the fragment
-+ *
-+ * Return: the &netmem_ref associated with @frag.
-+ */
-+static inline netmem_ref skb_frag_netmem(const skb_frag_t *frag)
-+{
-+	return frag->netmem;
-+}
++Device memory TCP (devmem TCP) enables receiving data directly into device
++memory (dmabuf). The feature is currently implemented for TCP sockets.
 +
- int skb_pp_cow_data(struct page_pool *pool, struct sk_buff **pskb,
- 		    unsigned int headroom);
- int skb_cow_data_for_xdp(struct page_pool *pool, struct sk_buff **pskb,
- 			 struct bpf_prog *prog);
 +
- /**
-  * skb_frag_address - gets the address of the data contained in a paged fragment
-  * @frag: the paged fragment buffer
-@@ -3516,6 +3553,9 @@ int skb_cow_data_for_xdp(struct page_pool *pool, struct sk_buff **pskb,
-  */
- static inline void *skb_frag_address(const skb_frag_t *frag)
- {
-+	if (!skb_frag_page(frag))
-+		return NULL;
++Opportunity
++-----------
 +
- 	return page_address(skb_frag_page(frag)) + skb_frag_off(frag);
- }
- 
-diff --git a/include/linux/skbuff_ref.h b/include/linux/skbuff_ref.h
-index 16c241a234728..0f3c58007488a 100644
---- a/include/linux/skbuff_ref.h
-+++ b/include/linux/skbuff_ref.h
-@@ -34,14 +34,13 @@ static inline void skb_frag_ref(struct sk_buff *skb, int f)
- 
- bool napi_pp_put_page(netmem_ref netmem);
- 
--static inline void
--skb_page_unref(struct page *page, bool recycle)
-+static inline void skb_page_unref(netmem_ref netmem, bool recycle)
- {
- #ifdef CONFIG_PAGE_POOL
--	if (recycle && napi_pp_put_page(page_to_netmem(page)))
-+	if (recycle && napi_pp_put_page(netmem))
- 		return;
- #endif
--	put_page(page);
-+	put_page(netmem_to_page(netmem));
- }
- 
- /**
-@@ -54,7 +53,7 @@ skb_page_unref(struct page *page, bool recycle)
-  */
- static inline void __skb_frag_unref(skb_frag_t *frag, bool recycle)
- {
--	skb_page_unref(skb_frag_page(frag), recycle);
-+	skb_page_unref(skb_frag_netmem(frag), recycle);
- }
- 
- /**
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 25faa1fd64fc1..9fd81cf68350f 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3432,8 +3432,9 @@ static int illegal_highdma(struct net_device *dev, struct sk_buff *skb)
- 	if (!(dev->features & NETIF_F_HIGHDMA)) {
- 		for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
- 			skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
-+			struct page *page = skb_frag_page(frag);
- 
--			if (PageHighMem(skb_frag_page(frag)))
-+			if (page && PageHighMem(page))
- 				return 1;
- 		}
- 	}
-diff --git a/net/core/gro.c b/net/core/gro.c
-index b3b43de1a6502..26f09c3e830b7 100644
---- a/net/core/gro.c
-+++ b/net/core/gro.c
-@@ -408,7 +408,8 @@ static inline void skb_gro_reset_offset(struct sk_buff *skb, u32 nhoff)
- 	pinfo = skb_shinfo(skb);
- 	frag0 = &pinfo->frags[0];
- 
--	if (pinfo->nr_frags && !PageHighMem(skb_frag_page(frag0)) &&
-+	if (pinfo->nr_frags && skb_frag_page(frag0) &&
-+	    !PageHighMem(skb_frag_page(frag0)) &&
- 	    (!NET_IP_ALIGN || !((skb_frag_off(frag0) + nhoff) & 3))) {
- 		NAPI_GRO_CB(skb)->frag0 = skb_frag_address(frag0);
- 		NAPI_GRO_CB(skb)->frag0_len = min_t(unsigned int,
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 5aaaa796c5fb4..a0cd848a18dfa 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -1352,6 +1352,14 @@ void skb_dump(const char *level, const struct sk_buff *skb, bool full_pkt)
- 		struct page *p;
- 		u8 *vaddr;
- 
-+		if (skb_frag_is_net_iov(frag)) {
-+			printk("%sskb frag %d: not readable\n", level, i);
-+			len -= skb_frag_size(frag);
-+			if (!len)
-+				break;
-+			continue;
++A large number of data transfers have device memory as the source and/or
++destination. Accelerators drastically increased the prevalence of such
++transfers.  Some examples include:
++
++- Distributed training, where ML accelerators, such as GPUs on different hosts,
++  exchange data.
++
++- Distributed raw block storage applications transfer large amounts of data with
++  remote SSDs. Much of this data does not require host processing.
++
++Typically the Device-to-Device data transfers in the network are implemented as
++the following low-level operations: Device-to-Host copy, Host-to-Host network
++transfer, and Host-to-Device copy.
++
++The flow involving host copies is suboptimal, especially for bulk data transfers,
++and can put significant strains on system resources such as host memory
++bandwidth and PCIe bandwidth.
++
++Devmem TCP optimizes this use case by implementing socket APIs that enable
++the user to receive incoming network packets directly into device memory.
++
++Packet payloads go directly from the NIC to device memory.
++
++Packet headers go to host memory and are processed by the TCP/IP stack
++normally. The NIC must support header split to achieve this.
++
++Advantages:
++
++- Alleviate host memory bandwidth pressure, compared to existing
++  network-transfer + device-copy semantics.
++
++- Alleviate PCIe bandwidth pressure, by limiting data transfer to the lowest
++  level of the PCIe tree, compared to the traditional path which sends data
++  through the root complex.
++
++
++More Info
++---------
++
++  slides, video
++    https://netdevconf.org/0x17/sessions/talk/device-memory-tcp.html
++
++  patchset
++    [RFC PATCH v6 00/12] Device Memory TCP
++    https://lore.kernel.org/netdev/20240305020153.2787423-1-almasrymina@google.com/
++
++
++Interface
++=========
++
++Example
++-------
++
++tools/testing/selftests/net/ncdevmem.c:do_server shows an example of setting up
++the RX path of this API.
++
++NIC Setup
++---------
++
++Header split, flow steering, & RSS are required features for devmem TCP.
++
++Header split is used to split incoming packets into a header buffer in host
++memory, and a payload buffer in device memory.
++
++Flow steering & RSS are used to ensure that only flows targeting devmem land on
++an RX queue bound to devmem.
++
++Enable header split & flow steering::
++
++	# enable header split
++	ethtool -G eth1 tcp-data-split on
++
++
++	# enable flow steering
++	ethtool -K eth1 ntuple on
++
++Configure RSS to steer all traffic away from the target RX queue (queue 15 in
++this example)::
++
++	ethtool --set-rxfh-indir eth1 equal 15
++
++
++The user must bind a dmabuf to any number of RX queues on a given NIC using
++the netlink API::
++
++	/* Bind dmabuf to NIC RX queue 15 */
++	struct netdev_queue *queues;
++	queues = malloc(sizeof(*queues) * 1);
++
++	queues[0]._present.type = 1;
++	queues[0]._present.idx = 1;
++	queues[0].type = NETDEV_RX_QUEUE_TYPE_RX;
++	queues[0].idx = 15;
++
++	*ys = ynl_sock_create(&ynl_netdev_family, &yerr);
++
++	req = netdev_bind_rx_req_alloc();
++	netdev_bind_rx_req_set_ifindex(req, 1 /* ifindex */);
++	netdev_bind_rx_req_set_dmabuf_fd(req, dmabuf_fd);
++	__netdev_bind_rx_req_set_queues(req, queues, n_queue_index);
++
++	rsp = netdev_bind_rx(*ys, req);
++
++	dmabuf_id = rsp->dmabuf_id;
++
++
++The netlink API returns a dmabuf_id: a unique ID that refers to this dmabuf
++that has been bound.
++
++Socket Setup
++------------
++
++The socket must be flow steered to the dmabuf bound RX queue::
++
++	ethtool -N eth1 flow-type tcp4 ... queue 15,
++
++
++Receiving data
++--------------
++
++The user application must signal to the kernel that it is capable of receiving
++devmem data by passing the MSG_SOCK_DEVMEM flag to recvmsg::
++
++	ret = recvmsg(fd, &msg, MSG_SOCK_DEVMEM);
++
++Applications that do not specify the MSG_SOCK_DEVMEM flag will receive an EFAULT
++on devmem data.
++
++Devmem data is received directly into the dmabuf bound to the NIC in 'NIC
++Setup', and the kernel signals such to the user via the SCM_DEVMEM_* cmsgs::
++
++		for (cm = CMSG_FIRSTHDR(&msg); cm; cm = CMSG_NXTHDR(&msg, cm)) {
++			if (cm->cmsg_level != SOL_SOCKET ||
++				(cm->cmsg_type != SCM_DEVMEM_DMABUF &&
++				 cm->cmsg_type != SCM_DEVMEM_LINEAR))
++				continue;
++
++			dmabuf_cmsg = (struct dmabuf_cmsg *)CMSG_DATA(cm);
++
++			if (cm->cmsg_type == SCM_DEVMEM_DMABUF) {
++				/* Frag landed in dmabuf.
++				 *
++				 * dmabuf_cmsg->dmabuf_id is the dmabuf the
++				 * frag landed on.
++				 *
++				 * dmabuf_cmsg->frag_offset is the offset into
++				 * the dmabuf where the frag starts.
++				 *
++				 * dmabuf_cmsg->frag_size is the size of the
++				 * frag.
++				 *
++				 * dmabuf_cmsg->frag_token is a token used to
++				 * refer to this frag for later freeing.
++				 */
++
++				struct dmabuf_token token;
++				token.token_start = dmabuf_cmsg->frag_token;
++				token.token_count = 1;
++				continue;
++			}
++
++			if (cm->cmsg_type == SCM_DEVMEM_LINEAR)
++				/* Frag landed in linear buffer.
++				 *
++				 * dmabuf_cmsg->frag_size is the size of the
++				 * frag.
++				 */
++				continue;
++
 +		}
 +
- 		skb_frag_foreach_page(frag, skb_frag_off(frag),
- 				      skb_frag_size(frag), p, p_off, p_len,
- 				      copied) {
-@@ -3142,6 +3150,9 @@ static bool __skb_splice_bits(struct sk_buff *skb, struct pipe_inode_info *pipe,
- 	for (seg = 0; seg < skb_shinfo(skb)->nr_frags; seg++) {
- 		const skb_frag_t *f = &skb_shinfo(skb)->frags[seg];
- 
-+		if (WARN_ON_ONCE(!skb_frag_page(f)))
-+			return false;
++Applications may receive 2 cmsgs:
 +
- 		if (__splice_segment(skb_frag_page(f),
- 				     skb_frag_off(f), skb_frag_size(f),
- 				     offset, len, spd, false, sk, pipe))
-diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
-index 3968d3f98e083..4ce0bc41e7806 100644
---- a/net/ipv4/esp4.c
-+++ b/net/ipv4/esp4.c
-@@ -115,7 +115,8 @@ static void esp_ssg_unref(struct xfrm_state *x, void *tmp, struct sk_buff *skb)
- 	 */
- 	if (req->src != req->dst)
- 		for (sg = sg_next(req->src); sg; sg = sg_next(sg))
--			skb_page_unref(sg_page(sg), skb->pp_recycle);
-+			skb_page_unref(page_to_netmem(sg_page(sg)),
-+				       skb->pp_recycle);
- }
- 
- #ifdef CONFIG_INET_ESPINTCP
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 6553221694ec2..5395f0e22c65f 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2176,6 +2176,9 @@ static int tcp_zerocopy_receive(struct sock *sk,
- 			break;
- 		}
- 		page = skb_frag_page(frags);
-+		if (WARN_ON_ONCE(!page))
-+			break;
++- SCM_DEVMEM_DMABUF: this indicates the fragment landed in the dmabuf indicated
++  by dmabuf_id.
 +
- 		prefetchw(page);
- 		pages[pages_to_map++] = page;
- 		length += PAGE_SIZE;
-diff --git a/net/ipv6/esp6.c b/net/ipv6/esp6.c
-index 34a9a5b9ed00b..0318aea0d4ce6 100644
---- a/net/ipv6/esp6.c
-+++ b/net/ipv6/esp6.c
-@@ -132,7 +132,8 @@ static void esp_ssg_unref(struct xfrm_state *x, void *tmp, struct sk_buff *skb)
- 	 */
- 	if (req->src != req->dst)
- 		for (sg = sg_next(req->src); sg; sg = sg_next(sg))
--			skb_page_unref(sg_page(sg), skb->pp_recycle);
-+			skb_page_unref(page_to_netmem(sg_page(sg)),
-+				       skb->pp_recycle);
- }
- 
- #ifdef CONFIG_INET6_ESPINTCP
++- SCM_DEVMEM_LINEAR: this indicates the fragment landed in the linear buffer.
++  This typically happens when the NIC is unable to split the packet at the
++  header boundary, such that part (or all) of the payload landed in host
++  memory.
++
++Applications may receive no SO_DEVMEM_* cmsgs. That indicates non-devmem,
++regular TCP data that landed on an RX queue not bound to a dmabuf.
++
++
++Freeing frags
++-------------
++
++Frags received via SCM_DEVMEM_DMABUF are pinned by the kernel while the user
++processes the frag. The user must return the frag to the kernel via
++SO_DEVMEM_DONTNEED::
++
++	ret = setsockopt(client_fd, SOL_SOCKET, SO_DEVMEM_DONTNEED, &token,
++			 sizeof(token));
++
++The user must ensure the tokens are returned to the kernel in a timely manner.
++Failure to do so will exhaust the limited dmabuf that is bound to the RX queue
++and will lead to packet drops.
++
++
++Implementation & Caveats
++========================
++
++Unreadable skbs
++---------------
++
++Devmem payloads are inaccessible to the kernel processing the packets. This
++results in a few quirks for payloads of devmem skbs:
++
++- Loopback is not functional. Loopback relies on copying the payload, which is
++  not possible with devmem skbs.
++
++- Software checksum calculation fails.
++
++- TCP Dump and bpf can't access devmem packet payloads.
++
++
++Testing
++=======
++
++More realistic example code can be found in the kernel source under
++tools/testing/selftests/net/ncdevmem.c
++
++ncdevmem is a devmem TCP netcat. It works very similarly to netcat, but
++receives data directly into a udmabuf.
++
++To run ncdevmem, you need to run it on a server on the machine under test, and
++you need to run netcat on a peer to provide the TX data.
++
++ncdevmem has a validation mode as well that expects a repeating pattern of
++incoming data and validates it as such. For example, you can launch
++ncdevmem on the server by::
++
++	ncdevmem -s <server IP> -c <client IP> -f eth1 -d 3 -n 0000:06:00.0 -l \
++		 -p 5201 -v 7
++
++On client side, use regular netcat to send TX data to ncdevmem process
++on the server::
++
++	yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06) | \
++		tr \\n \\0 | head -c 5G | nc <server IP> 5201 -p 5201
+diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+index a6443851a1424..f93950a441573 100644
+--- a/Documentation/networking/index.rst
++++ b/Documentation/networking/index.rst
+@@ -48,6 +48,7 @@ Contents:
+    cdc_mbim
+    dccp
+    dctcp
++   devmem
+    dns_resolver
+    driver
+    eql
 -- 
 2.45.2.505.gda0bf45e8d-goog
 
