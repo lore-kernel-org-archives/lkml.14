@@ -1,165 +1,152 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24EC78C9A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 09:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9AD15A4B0;
+	Fri,  7 Jun 2024 09:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717752670; cv=none; b=PNDmHz3MjkMjWNDXW/M0JjrNRQLOj36dJUgu/Ojp4ZYKott2XEC00U23lbeevW0KnOkw26hRgT6qIDhgh3MUWo1ksFYdIyjAAprs8htqbRoG37S1HDmmK5blVZo5E+zluhqGw7YX8+c+fgAM4wx8l4gsUvWFhEIzmvpBhogqjUQ=
+	t=1717752700; cv=none; b=lLarsrHcOLWLmwWRq64AlF2TfTuqL/HCNeVw2UsunZvwq+JNP8NvME9y+RFrZ0rBvSWJoYXiL7LxrhHDLj+NgzrA5vt/2St343yNB33WaZoOKQE+GTN67foB1zgmCB35WiR+AZvIGRlq4jagIoFa733UBo/G3kjQj9uYclSPhzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717752670; c=relaxed/simple;
-	bh=gG+bUJnrPtgwLsrV97ksKD5NtK/Ty4/nFj2SETrG6Yw=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=KS1EZPcwE4iqSNQsOOSahD7qu9RPR3XSsLwn4H1izvdhTUidhsHClYT7rmxwQ8LddsQNwkSB/dYlILG+MPc/C8Jx5N6Jz/C9gnDkf5a+7ZtE1kPrTQ69ga8qDMbS+BhO2lJSQyGM6I9zI1ZmdHJjwJwqhMekeJo1x9wToCr9oGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kcvYmwh8; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1717752700; c=relaxed/simple;
+	bh=rhqvtgLdAjJDetwu1HLnQ9oLmOzc4vfXBUwHh6e/WhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qCkfezev8K4nGA56N6RvcrL9PaDLDYaXKcsRUB172F/rGQY/CeK4TQOu3JWuDPyjaW7K8ccUMxhFc1AKNtB3WGg58XUBpwbhBjigjsHc327PEwPVTLx43KPFZqHPpkU3VNO4UXKeTLBCqCrFBMBRegC1Z8xZG2WqdhAG/cuoEkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YvgS8d5/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kcvYmwh8"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240607093059euoutp0112646fa693cdb71c3101b9294d655503~WrvF3RAK23011330113euoutp01_
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Jun 2024 09:30:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240607093059euoutp0112646fa693cdb71c3101b9294d655503~WrvF3RAK23011330113euoutp01_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717752660;
-	bh=yw9YtbT2H6sEFUZcewAsaEnL0TT9wgQkl8MWZgYfP6c=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=kcvYmwh8YnhvgmnthNno42e+tSrmfD90wZc3OkTRz6ftumImo+f3Vs2cxDOMk3UGs
-	 FeOyRwCaXkdnxYNBo6v/QJNuTnHcC0PxpIwX2ZfWBXPbBwAP4JdiRgI7dJPY3i9M8D
-	 cpc1gHJXZYAiZGhe1NZXaZAF3F92+D0m0aWtofC8=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240607093059eucas1p1b2abe8e6ba8feee61fdc4c5c51cbc890~WrvFrEYCA2220722207eucas1p1U;
-	Fri,  7 Jun 2024 09:30:59 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id E8.D6.09624.353D2666; Fri,  7
-	Jun 2024 10:30:59 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240607093059eucas1p2825b2366c6f98880a48fb7933bbd56be~WrvFTdyCC3036530365eucas1p27;
-	Fri,  7 Jun 2024 09:30:59 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240607093059eusmtrp15939478975890a2e54d37b78db05ca02~WrvFS8eo72550625506eusmtrp1Q;
-	Fri,  7 Jun 2024 09:30:59 +0000 (GMT)
-X-AuditID: cbfec7f2-c11ff70000002598-e5-6662d353d0f4
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id CC.A3.09010.353D2666; Fri,  7
-	Jun 2024 10:30:59 +0100 (BST)
-Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240607093059eusmtip29803f72998c7624e4f0120292a5cf728~WrvFBdDei0560405604eusmtip26;
-	Fri,  7 Jun 2024 09:30:59 +0000 (GMT)
-Received: from localhost (106.210.248.166) by CAMSVWEXC01.scsc.local
-	(2002:6a01:e347::6a01:e347) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Fri, 7 Jun 2024 10:30:57 +0100
-Date: Fri, 7 Jun 2024 11:30:53 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Kees Cook <kees@kernel.org>,
-	=?utf-8?B?PT91dGYtOD9xP1Rob21hc19XZWk9QzM9OUZzY2h1aD89?=
-	<linux@weissschuh.net>
-CC: Luis Chamberlain <mcgrof@kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Current state of the sysctl constification effort
-Message-ID: <20240607093053.ig6cqrr3xdxhbbt5@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YvgS8d5/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D64AC2BBFC;
+	Fri,  7 Jun 2024 09:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717752699;
+	bh=rhqvtgLdAjJDetwu1HLnQ9oLmOzc4vfXBUwHh6e/WhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YvgS8d5/r8o92wmID2/l03gbU9QAWi7CUT0IEKy/7vK4blclQl++O0siD+W1pPIRG
+	 /s9Z0+oaUX8bOt6GmBL5GhYuGexbsFKFZsuXnRguzAumckCsBKgglkzab0VySUz0tP
+	 4/EqJQD5Z6OVOQeETexIJPP/WkAcfu8yg30yYDDU1xFm6BvPkQ4Oud+e5SIiJw4jTd
+	 0lD1ADHlCHs7c04IQZIMzrXLNniJTMxbSR4JO+3aL4oTsTCsP9fT1TOfYQrPANoAUL
+	 fPprirrsaqFRhHwkKVzNeVkm1xgc/DvgYPVHJ77wqpDhdnaLG0j0wSLMv3CnTJ7yfb
+	 ZRogfCZ0zHcWA==
+Date: Fri, 7 Jun 2024 11:31:28 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Minghuan Lian <minghuan.Lian@nxp.com>,
+	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+	Jesper Nilsson <jesper.nilsson@axis.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+	mhi@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 0/5] PCI: endpoint: Add EPC 'deinit' event and
+ dw_pcie_ep_linkdown() API
+Message-ID: <ZmLTcNz0FxAWRYcd@ryzen.lan>
+References: <20240606-pci-deinit-v1-0-4395534520dc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202406061143.27C12F44A3@keescook>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOIsWRmVeSWpSXmKPExsWy7djPc7rBl5PSDD781LRY9/Y8q8XlXXPY
-	LH7/eMZkcWPCU0YHFo9NqzrZPD5vkvPo7z7GHsAcxWWTkpqTWZZapG+XwJXx+ehkpoKnfBU7
-	/1g0MO7n7mLk5JAQMJE4sWMWaxcjF4eQwApGiVd32llBEkICXxglFp0QhEh8ZpR4cWAhC0zH
-	/E932CASyxklGi73MUJ0AFW9/qcHkdjCKNHatQ6sg0VAReLk1ftgNpuAjsT5N3eYQWwRgRKJ
-	4x9vAcU5OJgFPCT2TggFCQsL2Ens2bCcHcTmFXCQ2P5hIjOELShxcuYTsDHMQGMW7P7EBtEq
-	LbH8HwdImFNAX6L57QRmiDuVJU6tmsYGYddKrD12hh3kNAmBPRwSd1sWMUEkXCQaf/+HahCW
-	eHV8CzuELSNxenIPC0TDZEaJ/f8+QHWvZpRY1vgVqttaouXKE6gOR4kZK/exglwkIcAnceOt
-	IMShfBKTtk1nhgjzSnS0CUFUq0msvveGZQKj8iwkr81C8toshNcWMDKvYhRPLS3OTU8tNsxL
-	LdcrTswtLs1L10vOz93ECEwbp/8d/7SDce6rj3qHGJk4GA8xSnAwK4nw+hXHpwnxpiRWVqUW
-	5ccXleakFh9ilOZgURLnVU2RTxUSSE8sSc1OTS1ILYLJMnFwSjUwTXWaFBH0R3Z9tpJ+SfX6
-	aqP9q62dwja3/bJXqwjOMp6wbKv4tG1f7NftyJl3sZWleIF+l7zlRdPlAS9SM5c+1HslcZ6v
-	/YMoW7RKVPtlGwmhT7zHZ/zhW+5VZnzWw+LS9dNTdLKrW8qb7Cav/3bKwXKZUWstx3zLlSt/
-	aX08mfvpwczDh5Qt6pUvmb0oPtX+KDGWr/99mMamOZ2Fz+N8A/NdrD89TvZfEey5pPfQzaKX
-	+079TFp77qz4pJWR5+OfyUi827Lc12yHTXZ20zbBqLjPnS80mHasd9Ro/zbbLObd/pkpunL2
-	vWvbl+1r/jDloM+fy+Zzjgcfnrqd9+QN95MFvMHZtsFPfr6zfnmNXYmlOCPRUIu5qDgRAEkV
-	uMaKAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKIsWRmVeSWpSXmKPExsVy+t/xe7rBl5PSDH48FLRY9/Y8q8XlXXPY
-	LH7/eMZkcWPCU0YHFo9NqzrZPD5vkvPo7z7GHsAcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
-	ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfx+ehkpoKnfBU7/1g0MO7n7mLk5JAQMJGY/+kO
-	WxcjF4eQwFJGiR0Tv7BCJGQkNn65CmULS/y51gVV9JFRYuO5AywQzhZGidWzvrGAVLEIqEic
-	vHofzGYT0JE4/+YOM4gtIlAicfzjLaA4BwezgIfE3gmhIGFhATuJPRuWs4PYvAIOEts/TGSG
-	mNnLJLHw9xlGiISgxMmZT8BmMgPNXLD7ExvEHGmJ5f84QMKcAvoSzW8nMEMcqixxatU0Ngi7
-	VuLV/d2MExiFZyGZNAvJpFkIkxYwMq9iFEktLc5Nzy020itOzC0uzUvXS87P3cQIjJ9tx35u
-	2cG48tVHvUOMTByMhxglOJiVRHj9iuPThHhTEiurUovy44tKc1KLDzGaAkNiIrOUaHI+MILz
-	SuINzQxMDU3MLA1MLc2MlcR5PQs6EoUE0hNLUrNTUwtSi2D6mDg4pRqYzPf+mHxE1G/ZfGHP
-	en5nsfjD3luSt+y57LBLgOflRcuU9eXORw3dRfYySbRpPRFefGtLvN+5hd4HBc0W2D/xEMt4
-	WNT64L5kpsY6kcTarzXv+O6++58Z0JPGv5BL57fIz5ev6xavsEmSffqrqvHBcr28jNSpCTdT
-	Zm/w3Px74voq9iSlC1tWy6g9fXLHdjf/1oSQ0PK9xxjLG1fMy8yIr37+2erOwZPilrmPjsv8
-	vJH0dp3Ml9//ZzdHrq95ELrnbfnDex/XqkoyXN8zx/d61KsznXxFtpf0dR4c9ylbv/bmu2dt
-	UZ8iRGWOMq/ReCSry5Ilu0Kif11CztYD8zcUma8TVvKVWXarSDNU/8wUcyWW4oxEQy3mouJE
-	AJWn/fIoAwAA
-X-CMS-MailID: 20240607093059eucas1p2825b2366c6f98880a48fb7933bbd56be
-X-Msg-Generator: CA
-X-RootMTR: 20240531163128eucas1p20976d08e829373bfa8aa04fda1c7bec4
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240531163128eucas1p20976d08e829373bfa8aa04fda1c7bec4
-References: <7823ff95-1490-4c1b-b489-a9c05adad645@t-8ch.de>
-	<CGME20240531163128eucas1p20976d08e829373bfa8aa04fda1c7bec4@eucas1p2.samsung.com>
-	<202405310930.5E2728A@keescook>
-	<20240605082625.6hwdc3haim66rr7v@joelS2.panther.com>
-	<202406061143.27C12F44A3@keescook>
+In-Reply-To: <20240606-pci-deinit-v1-0-4395534520dc@linaro.org>
 
-On Thu, Jun 06, 2024 at 11:52:25AM -0700, Kees Cook wrote:
-> On Wed, Jun 05, 2024 at 10:26:25AM +0200, Joel Granados wrote:
-> > On Fri, May 31, 2024 at 09:31:24AM -0700, Kees Cook wrote:
-...
-> > @kees: Since you have probably done these before, I'll ask you the
-> > questions:
-> > 
-> > 1. The idea is to send Linus the treewide-constify patch on its own at
-> >    the end of the merge window for 6.11. Right?
+On Thu, Jun 06, 2024 at 12:56:33PM +0530, Manivannan Sadhasivam wrote:
+> Hi,
 > 
-> Right. The best time is likely around Wed on the second week of the merge
-> window, assuming all dependencies have landed. And it could be sent
-> earlier if all the dependencies land sooner than that.
-That makes sense. I have added a reminder to myself to do this when the
-time comes. Feel free (@kees and @thomas) to scream at me if you see
-that I might be forgetting :)
-
+> This series includes patches that were left over from previous series [1] for
+> making the host reboot handling robust in endpoint framework.
 > 
-> > 2. Is there a special way to send these treewide patches? Or is it just
-> >    a regular PR with an explanation on why it is being done?
+> When the above mentioned series got merged to pci/endpoint, we got a bug report
+> from LKP bot [2] and due to that the offending patches were dropped.
 > 
-> I would do a regular PR with all the details for Linus to do the change
-> himself, but many times people send these as an explicit patch. For
-> example, include the full Coccinelle script, or the "sed" command
-> line, etc, and then detail any "by hand" changes that were needed on
-> top of that.
-@Thomas: have you sent the 11/11 patch on its own to the lists? I cant
-find it in my history. Please send it as a stand-alone patch, so It can
-go into sysctl just like the others.
-
+> This series addressed the issue reported by the bot by adding the stub APIs in
+> include/pci/pci-epc.h and also removed the unused dwc wrapper as concluded in
+> [3].
 > 
-> > 3. Can you please send (if there are any) me any examples where this has
-> >    been done in the past. Maybe some lore.kernel.org links?
+> Testing
+> =======
 > 
-> I found this one that is a good example, though it's a PATCH not a GIT PULL:
+> This series is tested on Qcom SM8450 based development board with 2 SM8450 SoCs
+> connected over PCIe.
 > 
-> https://lore.kernel.org/lkml/20221220134519.3dd1318b@gandalf.local.home/
-> became
-> https://git.kernel.org/linus/292a089d78d3e2f7944e60bb897c977785a321e3
+> - Mani
+> 
+> [1] https://lore.kernel.org/linux-pci/20240430-pci-epf-rework-v4-0-22832d0d456f@linaro.org/
+> [2] https://lore.kernel.org/linux-pci/202405130815.BwBrIepL-lkp@intel.com/
+> [3] https://lore.kernel.org/linux-pci/20240529141614.GA3293@thinkpad/
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> Manivannan Sadhasivam (5):
+>       PCI: dwc: ep: Remove dw_pcie_ep_init_notify() wrapper
+>       PCI: endpoint: Introduce 'epc_deinit' event and notify the EPF drivers
+>       PCI: dwc: ep: Add a generic dw_pcie_ep_linkdown() API to handle Link Down event
+>       PCI: qcom-ep: Use the generic dw_pcie_ep_linkdown() API to handle Link Down event
+>       PCI: layerscape-ep: Use the generic dw_pcie_ep_linkdown() API to handle Link Down event
+> 
+>  drivers/pci/controller/dwc/pci-dra7xx.c           |   2 +-
+>  drivers/pci/controller/dwc/pci-imx6.c             |   2 +-
+>  drivers/pci/controller/dwc/pci-keystone.c         |   2 +-
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c    |   4 +-
+>  drivers/pci/controller/dwc/pcie-artpec6.c         |   2 +-
+>  drivers/pci/controller/dwc/pcie-designware-ep.c   | 116 +++++++++++++---------
+>  drivers/pci/controller/dwc/pcie-designware-plat.c |   2 +-
+>  drivers/pci/controller/dwc/pcie-designware.h      |  10 +-
+>  drivers/pci/controller/dwc/pcie-keembay.c         |   2 +-
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c         |   5 +-
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c       |   2 +-
+>  drivers/pci/controller/dwc/pcie-tegra194.c        |   3 +-
+>  drivers/pci/controller/dwc/pcie-uniphier-ep.c     |   2 +-
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c      |  19 ++++
+>  drivers/pci/endpoint/functions/pci-epf-test.c     |  17 +++-
+>  drivers/pci/endpoint/pci-epc-core.c               |  25 +++++
+>  include/linux/pci-epc.h                           |  13 +++
+>  include/linux/pci-epf.h                           |   2 +
+>  18 files changed, 162 insertions(+), 68 deletions(-)
+> ---
+> base-commit: 7d96527bc16e46545739c6fe0ab6e4c915e9910e
+> change-id: 20240606-pci-deinit-2e6cdf1bd69f
+> 
+> Best regards,
+> -- 
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
 
-Thx for the help
+Considering certain dependency patches have been merged to
+pci/endpoint and other dependency patches have been merged to
+pci/controller/dwc, perhaps it is best if you split this series:
 
-Best
+Series 1 based on pci/endpoint: with patch 1/5 and 2/5.
+Series 2 based on pci/controller/dwc: with patch 5/5.
 
--- 
+Just a friendly suggestion to make Bjorn's life easier
+(and grease the path of your patch) ;) [0]
 
-Joel Granados
+
+Kind regards,
+Niklas
+
+[0]: https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
+(I still have this in my bookmarks :P)
