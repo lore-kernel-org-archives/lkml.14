@@ -1,136 +1,144 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B958D54660;
-	Fri,  7 Jun 2024 15:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479411922FD;
+	Fri,  7 Jun 2024 15:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717773491; cv=none; b=aDxPHsI50nXz5ilenZ875D3ort2DIkwwCTTmE7YIOZ8UhA4X3KyMMy6u6wY+F6AOxSZOgLcAk0PQ5cxFAV/7bd6keZoG2remwrEZcbKUHUfCRsl5yOsZdIQ9RcjUCwuV3FvG/uOkCjqcYCePH73rL8W3d0oSfYbfPx5NRJWZTZE=
+	t=1717773511; cv=none; b=DyYAIRmcmTjoSI0v2iYX5yFpwHuqX3EiWhy4eCDvwt1WC/2vaxqpIEzkw5sua39YbQgKZiOTinTlvRxBxY+Etuj2p/Xtq5yzvYpLdeAdv1bi/tVpcT3y0h4vM2LGUf1zSZRM/7k0y29JoHitSbPJ01s801tkEXTiirTqfHJhsRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717773491; c=relaxed/simple;
-	bh=46eiL3n7740sy9h8YQoi5Nr9j6AlZg3ptAj7G+nRV4Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y7oRqfxOgpXsF2sKGoAmAJ6ny4VFNBnQfj2riP9I/vWysJtE7YZ+ylhe8BUXiH5PFtV9D5PL9eKJCBoKtG3H/TgNDUjFQUIgSaeP4GndkUdJSLFG0TEz5zBia5oRuCy3fGbQL12GafZnXnF7wbnad2tFzI6ZItWiWRDTdm3+IE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=F1MyOKgi; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=odq7ZnV7; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1717773511; c=relaxed/simple;
+	bh=mx+HUEjgAJNMiC9UnPN48IwI2aMt7Q4WkoEfs7332KA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ncqRUMeSYKRFqKBBXyVGAt9T/TNq/KWj09L8tfq3BQZbc+wKz/baxB8W3w+2geJnyKk48MulZFR9NavpWndCI3UxXysDHrhRz4lI2736h5ql1WjwrR6SwNzTQ22SG3evX2vUF6tqM0FYJvS/tgwinRSqWmmilI7yAw0GGwat5aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X7v4NTKD; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="F1MyOKgi";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="odq7ZnV7"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EFF1821B6B;
-	Fri,  7 Jun 2024 15:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1717773487; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=kwjqxJMZL83q8d52d/Qaewk3aeVcuPuXb72BXcqc4Ww=;
-	b=F1MyOKgiUYhsORqpvUkkI/L+oBHM4sMLqhMsjMB0OQr3Kl5bGqTXvPQTWG0IQxA8HHujzU
-	j53eZn361+BWmRzLtOFojXwYB68hZJr3Mws29pYpf+CnX59a3+DKA0KVLmaXkz6DJBu4Od
-	vUSkTtCAis8OQotOgrr1FGVgfsw10ZA=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1717773486; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=kwjqxJMZL83q8d52d/Qaewk3aeVcuPuXb72BXcqc4Ww=;
-	b=odq7ZnV7Cl/DOhQdNjPG3oZBNrns2QgLwgG6lyUSyfP72pXAifO+2gUb51eUCtFd2448QG
-	qAla5wm9vxbIiKTQShR0YWUCqUBU99sOahz3S/V91wnQqteRE3lc7J2qUaLimOGU6n9X5k
-	+nTguBTDRs9ymLQtqKcuya/OQ2eb5AA=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8D9F134C7;
-	Fri,  7 Jun 2024 15:18:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nFjXOK4kY2bsGgAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Fri, 07 Jun 2024 15:18:06 +0000
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 6.10-rc3, part 2
-Date: Fri,  7 Jun 2024 17:18:02 +0200
-Message-ID: <cover.1717771196.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X7v4NTKD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717773511; x=1749309511;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=mx+HUEjgAJNMiC9UnPN48IwI2aMt7Q4WkoEfs7332KA=;
+  b=X7v4NTKDS6+VW7mTYImdN7IaNVh/UeqRIWWU+z0Slg30p4i3tZUpY0lQ
+   Wi9T6blpyuzZ/PsR2CxJBrg4Rj1CDSInF7ZUKGSiqsV6GVLUY2zbQvX/C
+   xJMDTk+k5b0QF/9JZa/Y2xj4iq29E5vh0moVmVTjbmocwoATO3ZGVul2l
+   bwe/j9VuxIdrrCigP+g5WpsZI6yNRsZFxI2LMhs4ziE3MNKZZOkUm54mx
+   5SGXOMbgydWjMaV/GRBJMVz5UVWLwmrYgHp4OzRH3Hr5Mv2lcncQElRJR
+   z3YGhWZznyXGnF1H5SC0Uyz+hbbZYC1PihEUaBNU40oCtqGNRz93Ylb74
+   w==;
+X-CSE-ConnectionGUID: fet2cx53Q+K1irDaY+WkBA==
+X-CSE-MsgGUID: 0pKbWhI7S2KWhPuFq4p5Qg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="37028793"
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="37028793"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 08:18:30 -0700
+X-CSE-ConnectionGUID: sJPDrhkSQHC0MIwJ+Xr9Qw==
+X-CSE-MsgGUID: gozCqHLWQa6HT+JxZPxvww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
+   d="scan'208";a="43295641"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 08:18:30 -0700
+Message-ID: <4fe39e45c117a976b60dfb37234551391050b199.camel@linux.intel.com>
+Subject: Re: [PATCH v1 2/6] cpufreq: intel_pstate: Do not update
+ global.turbo_disabled after initialization
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Xi Ruoyao <xry111@xry111.site>, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+  Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Date: Fri, 07 Jun 2024 08:18:29 -0700
+In-Reply-To: <CAJZ5v0gvY6FGwhzTKrmNnKc48ixWAgTeT3Sw2tOUfshDwq3NcA@mail.gmail.com>
+References: <13494237.uLZWGnKmhe@kreacher> <8366982.T7Z3S40VBb@kreacher>
+	 <bf3ebf1571a4788e97daf861eb493c12d42639a3.camel@xry111.site>
+	 <6d5ee74605bd9574baa5ed111cb54e959414437a.camel@linux.intel.com>
+	 <6ebadacd8aaa307a5766cdb1b4d4a5c69acd87ac.camel@xry111.site>
+	 <30a30c5107a47a2cc3fd39306728f70dd649d7fe.camel@linux.intel.com>
+	 <f382e06635b3b52841d1e0c11dcf639d225edae0.camel@xry111.site>
+	 <29d69252dcdc398f147c9139a8666d09e7bd831d.camel@linux.intel.com>
+	 <0324bc3a88654855719cd48a5ed69a34eea31037.camel@xry111.site>
+	 <c3526e7a0e80ec1a3a011259c38ab4b772040ea4.camel@linux.intel.com>
+	 <48eba83030e155f703b4248e9c1ae65aa44b1a83.camel@xry111.site>
+	 <CAJZ5v0jjLgG3VY_kBYc4mTrL2ybD2LfBTk2_H7xY0+Aq5g827A@mail.gmail.com>
+	 <f34c20ae3feac0e3570125f124e440d51c5e4d9b.camel@linux.intel.com>
+	 <1da736da33a61de92314934ecf7fa0420d6d6b81.camel@linux.intel.com>
+	 <aa643910265b9d92a397d5148b31d37b2c421b8b.camel@xry111.site>
+	 <63e98f2151ef64de92cf7e3da796937755ea5552.camel@linux.intel.com>
+	 <258ce61c155c28937620f6abe57a39f2b4b0ff56.camel@xry111.site>
+	 <101b903e58f2ebae60934edc374c7cda09f83de1.camel@linux.intel.com>
+	 <CAJZ5v0jBBgjBny0Ps9bvHc7q1Un_6sdudpNL0==Z5HB+gHH0Hw@mail.gmail.com>
+	 <651d11578646200cdb0a91c46ed09a22f29e94a0.camel@linux.intel.com>
+	 <1031cc4e4b507628531d9115ce7e4bc588dbab1c.camel@xry111.site>
+	 <a2f992adc034063de7f63e9065976f39f9929503.camel@linux.intel.com>
+	 <CAJZ5v0gvY6FGwhzTKrmNnKc48ixWAgTeT3Sw2tOUfshDwq3NcA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-Hi,
+On Fri, 2024-06-07 at 17:04 +0200, Rafael J. Wysocki wrote:
+> On Wed, Jun 5, 2024 at 2:05=E2=80=AFPM srinivas pandruvada
+> <srinivas.pandruvada@linux.intel.com> wrote:
+> >=20
+> > On Wed, 2024-06-05 at 13:21 +0800, Xi Ruoyao wrote:
+> > > On Tue, 2024-06-04 at 09:56 -0700, srinivas pandruvada wrote:
+> > > > > > With such a delay, I am not sure how this even worked
+> > > > > > before.
+> > >=20
+> > > It didn't work out of box but it worked after manually writing 0
+> > > to
+> > > no_turbo after 20 seconds, see
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=3D218702.
+> >=20
+> > That make sense. So it never worked out of box. The
+> > store_no_turbo()
+> > has additional read for turbo flag before, which is removed now. I
+> > think adding that back will will restore old behavior.
+> >=20
+> > diff --git a/drivers/cpufreq/intel_pstate.c
+> > b/drivers/cpufreq/intel_pstate.c
+> > index 4b986c044741..0d5330e5b96b 100644
+> > --- a/drivers/cpufreq/intel_pstate.c
+> > +++ b/drivers/cpufreq/intel_pstate.c
+> > @@ -1301,6 +1301,8 @@ static ssize_t store_no_turbo(struct kobject
+> > *a,
+> > struct kobj_attribute *b,
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 no_turbo =3D !!clamp_t(int, =
+input, 0, 1);
+> >=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 global.turbo_disabled =3D turbo_i=
+s_disabled();
+> > +
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (no_turbo =3D=3D global.n=
+o_turbo)
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 goto unlock_driver;
+> >=20
+> >=20
+> > Need to adjust the mutex around it also.
+>=20
+> Anyhow, it can be made work.
+>=20
+> global.turbo_disabled can be updated right before it is checked in
+> store_no_turbo(), so if 0 is written to no_turbo (and global.no_turbo
+> is 1), it will succeed if global.turbo_disabled changes from 1 to 0.
+>=20
+> Something like the attached (untested) patch.
 
-a few more fixes, two are for serious problems which are hard to hit,
-details in the changelogs. Please pull, thanks.
+Should work.
 
-- fix handling of folio private changes, the private value holds pointer
-  to our extent buffer structure representing a metadata range, release
-  and create of the range was not properly synchronized when updating
-  the private bit which ended up in double folio_put, leading to all
-  sorts of breakage
+Xi,
+Please test so that we can close this issue.
 
-- fix a crash, reported as duplicate key in metadata, but caused by a
-  race of fsync and size extending write, requires prealloc target
-  range + fsync and other conditions (log tree state, timing)
+Thanks,
+Srinivas
 
-- fix leak of qgroup extent records after transaction abort
-
-----------------------------------------------------------------
-The following changes since commit f13e01b89daf42330a4a722f451e48c3e2edfc8d:
-
-  btrfs: ensure fast fsync waits for ordered extents after a write failure (2024-05-28 16:35:12 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.10-rc2-tag
-
-for you to fetch changes up to f3a5367c679d31473d3fbb391675055b4792c309:
-
-  btrfs: protect folio::private when attaching extent buffer folios (2024-06-06 21:42:22 +0200)
-
-----------------------------------------------------------------
-Filipe Manana (1):
-      btrfs: fix leak of qgroup extent records after transaction abort
-
-Omar Sandoval (1):
-      btrfs: fix crash on racing fsync and size-extending write into prealloc
-
-Qu Wenruo (1):
-      btrfs: protect folio::private when attaching extent buffer folios
-
- fs/btrfs/disk-io.c   | 10 +--------
- fs/btrfs/extent_io.c | 60 +++++++++++++++++++++++++++-------------------------
- fs/btrfs/tree-log.c  | 17 +++++++++------
- 3 files changed, 43 insertions(+), 44 deletions(-)
