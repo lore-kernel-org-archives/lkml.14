@@ -1,214 +1,214 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA53DDA0
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 04:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E148C1A
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 04:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717820026; cv=none; b=SaNPP8Q3wnbUiFBZSu1jVADpjt7r2pvsU1oxsZquY2zCzs5FbzRch41X+IEWnpEW4ogDZcjzbc3PoXcLofus5lCIy3toeHlSzm3Q4hSsNTOPZY5/MDcIaWlGaTzh5/TIIIgwVK0H8zryKxxjbaUfaSxMp/hTUmu/QY6cf/glJs0=
+	t=1717820371; cv=none; b=CV/IKkU6lT6tumw2ARo7A/yipVuj4llhX+aQNVCBe9+k5km5cLwmQGf+IxcRYAWms9TuEwHNSqPA76zc2J9IEUfILc6e58jz1pod+CZvKzfaOcqZjxlgHwS2yY7Q6rGfWFR3EtIOBPsvo3L3Fk6D2SKWTn+XhdH54ODGom7GyjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717820026; c=relaxed/simple;
-	bh=O400+9wVp3g3fp4A8Of/xElXZbCrroY8e0GKkhpzmwY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hXj61F+LgUH7wcO9UUcAcpBfPP8O3Sl3KsS3vH6gqxbTCN1fwU2dC8PYX5TzjtHT6qzivEaXNAnkDB8LXDmsyg2GSNuSqLg8UTiHlMpKJi9dsWodZ6c5t9W4zCjKDhtaYKcjJG0gzdsQFuRtPjKSA4KiMNbNgu6i+puYI8lCqTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BElwNTsw; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BElwNTsw"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-4e4f0020ca3so913834e0c.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 21:13:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717820023; x=1718424823; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XFzQjQZ4PGhanSjiQrmvBxDd4Mvj6fEelSJPr221TPE=;
-        b=BElwNTswZuhyh2iC0F8/URyNhDEoSSJevyUWpWb5Zt2MFtSROH/cFp7AY6B2HvKDpB
-         yAo/fVzCI7QFIEe3Nap+YQW0adYSRKkI+UGG20HhGgwa/pFsfJNJVG67RvZm1dC9DOl1
-         4xp9CXSt1E7Rj/nsDUvhxpFPudxnrBwN1vqY3zLqtHp1va4juCx0PLvwLJIo9xzVz+K/
-         XaDBVQcHbV4K1Gm5VusC6hBj5lbjfc2VfWV7NOuIDz0Wzd7io7PeazhbHNrGY3r3sXvU
-         Cziywtpfv94+QiM9mpRhgb9SqhpzF2mXUYjllDQDK1L4KmLxbj2ZotgfB3ZH2IQyL08c
-         ISLA==
+	s=arc-20240116; t=1717820371; c=relaxed/simple;
+	bh=X0teV559jlfZtNFTdn0vczKwkiEC69CYvIAxRsiPpCA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qUTYB+AXg5HsSJkhdDUAhWYYFRleqSHYEmsj4CS6RKM8YPv3Jgd4dYDdHBU2KaXHNShOTrlA2qRbimNZxznpONkXmkOhtxdXCVPsO0BLKmAu67mPogzv81act3N6TWjedRek4mK8PRPATAAfn2XfCd3YiLVK28ETxn5vNZF63AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3745fb76682so28282325ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 21:19:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717820023; x=1718424823;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XFzQjQZ4PGhanSjiQrmvBxDd4Mvj6fEelSJPr221TPE=;
-        b=Hl2TpiOlOBlcQW1THtHaYRkdG96wvgrVVMh4W5R7l1+yKpJGM/hiQiGZzXCYltsGrS
-         wDdOgtrqVfnaiVXWEDPLAGjHHBnd0Xcjg6xcQEtzmG59UVGmOXCNUcEGCUnRld15tQk2
-         /a5WkiMC8cxAI3lr/+NOgxG+JYQsFZsWMP/sIMir+fdNnf3UbgzMZta4nFCfqb6lcQ47
-         aXZb/rLEGfO4CLQqoK9MpiyuFn+NjNAw7fwqAC80yDQ/TWgDocKoCo1s3Wt4IVtVB781
-         vZUdIicBIhlyCV4jcusnJpNp4llkT3bV7g4VXQbH+P2qRnB8ks4nh+GHqyHhT32G03SJ
-         Xdlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPHFtPM0Ucr7x6O5rnJdmMoTFjy3yXF9z/z6kxPSM6rVvdOUQKeckxP6vQNOiklDy8KefURYRgXX1LKsZR97NP2pvvpHyW8BmUTG+U
-X-Gm-Message-State: AOJu0YyAJBq3BL69HwgncusoSUNWQO7G470kOUVzIii2OH111FAMdPEN
-	rNB8ozpYukwNYNiQCmHGLJslPt4PhYp4cGltINHZd8McnYqcg7t1RKUV6mvb5fzUkI1SVKiBGCE
-	UfxU4NOEi2LYnij+UPxBjtKcNHRA=
-X-Google-Smtp-Source: AGHT+IGB8gyEbx6UGGRkv/k8uHrQLYHd4Vp+ytT1kbDHAym/H76aBq32J8T6UxuIa9sjwIdW6m+nZoX1Z8m3CveKiHo=
-X-Received: by 2002:a05:6122:4124:b0:4d3:31fc:4839 with SMTP id
- 71dfb90a1353d-4eb5621b763mr4883410e0c.2.1717820023430; Fri, 07 Jun 2024
- 21:13:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717820369; x=1718425169;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aFuJHIowLvdv+S/MY3yW2L+R0NtntumzDdr8pfEPbnA=;
+        b=JkNzaDny4cVL9SI4gdZPjZHNujmC7yple6iO5E7SrqxrNocsFHoGg0npqRnMiBMxim
+         K904tyuuCoMXp2Kx987wUI5u42KH4+prKtzEXV27gGKi0cyRVnOZ3an7SdRkOlj1bLMI
+         3vqVypXi9RmgAlm9OQQ8L0B+tAjRhn2QkXr/bzOYpf5dmayidlgTfO5Py/o9WeTNMqxa
+         kO7KfguHeuNU5D5nveMGwBIldW/fLJr34w+CJ2+H4gvxsk8+Ie/30csZvV1G892UdNw0
+         5Em7EvYpUIVKJbPuiVVgJwJ6OOpet+rb0OoZIWfBsj5XVRvobGqDxOPoRTmk32kliETu
+         1TaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsyTjY8t6wpeDJAQ75wjjgv1GrNnqkFlazCkwQn7lPnlc2rbipoypJkhJ4BudDcdQ0kybTNty1xAtTIMEmldNBbBA6IDEyVnJQhw/G
+X-Gm-Message-State: AOJu0YwAba7DW7QILhXRUKgLuYiA3mh+cZCIu8RE8QkW5JaQu1pxPXB2
+	MSTTY8x4jjveLTHUfhnRyyeR63aO41hhSI8ZzinfOxi8Ho3rjN/6OHiiRlrxiXAxEhS8AMZBYzu
+	TYvrPCUR5E4FGVmZzPKSLu9HEjTMcTR9ioYlzTzjQiLRyS8dbnsL6vcU=
+X-Google-Smtp-Source: AGHT+IG+tBNAsB4soo5Wd1WTLfqHn2iEeP1fHWDV1vVAOHz8Q9oGKp+gOvSsE42TikUV3AwOJ+seTavtBssdIgKSiDfGZXBYwqMc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240608023654.3513385-1-yosryahmed@google.com>
-In-Reply-To: <20240608023654.3513385-1-yosryahmed@google.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Sat, 8 Jun 2024 11:13:24 +0800
-Message-ID: <CAGsJ_4yVmDKtcKKAdjPOkOMWB+=ZT5TrrWz188xJaTV4EpM1Bw@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: zswap: handle incorrect attempts to load of large folios
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chris Li <chrisl@kernel.org>, 
-	Ryan Roberts <ryan.roberts@arm.com>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+X-Received: by 2002:a05:6e02:1c4b:b0:369:f7ca:a361 with SMTP id
+ e9e14a558f8ab-37580303aebmr3387565ab.1.1717820368771; Fri, 07 Jun 2024
+ 21:19:28 -0700 (PDT)
+Date: Fri, 07 Jun 2024 21:19:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000de6b81061a5938d6@google.com>
+Subject: [syzbot] [btrfs?] INFO: trying to register non-static key in btrfs_stop_all_workers
+From: syzbot <syzbot+8e86db7d430e87415248@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 8, 2024 at 10:37=E2=80=AFAM Yosry Ahmed <yosryahmed@google.com>=
- wrote:
->
-> Zswap does not support storing or loading large folios. Until proper
-> support is added, attempts to load large folios from zswap are a bug.
->
-> For example, if a swapin fault observes that contiguous PTEs are
-> pointing to contiguous swap entries and tries to swap them in as a large
-> folio, swap_read_folio() will pass in a large folio to zswap_load(), but
-> zswap_load() will only effectively load the first page in the folio. If
-> the first page is not in zswap, the folio will be read from disk, even
-> though other pages may be in zswap.
->
-> In both cases, this will lead to silent data corruption. Proper support
-> needs to be added before large folio swapins and zswap can work
-> together.
->
-> Looking at callers of swap_read_folio(), it seems like they are either
-> allocated from __read_swap_cache_async() or do_swap_page() in the
-> SWP_SYNCHRONOUS_IO path. Both of which allocate order-0 folios, so
-> everything is fine for now.
->
-> However, there is ongoing work to add to support large folio swapins
-> [1]. To make sure new development does not break zswap (or get broken by
-> zswap), add minimal handling of incorrect loads of large folios to
-> zswap.
->
-> First, move the call folio_mark_uptodate() inside zswap_load().
->
-> If a large folio load is attempted, and any page in that folio is in
-> zswap, return 'true' without calling folio_mark_uptodate(). This will
-> prevent the folio from being read from disk, and will emit an IO error
-> because the folio is not uptodate (e.g. do_swap_fault() will return
-> VM_FAULT_SIGBUS). It may not be reliable recovery in all cases, but it
-> is better than nothing.
->
-> This was tested by hacking the allocation in __read_swap_cache_async()
-> to use order 2 and __GFP_COMP.
->
-> In the future, to handle this correctly, the swapin code should:
-> (a) Fallback to order-0 swapins if zswap was ever used on the machine,
-> because compressed pages remain in zswap after it is disabled.
-> (b) Add proper support to swapin large folios from zswap (fully or
-> partially).
->
-> Probably start with (a) then followup with (b).
->
-> [1]https://lore.kernel.org/linux-mm/20240304081348.197341-6-21cnbao@gmail=
-.com/
->
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
-> ---
->
-> v1: https://lore.kernel.org/lkml/20240606184818.1566920-1-yosryahmed@goog=
-le.com/
->
-> v1 -> v2:
-> - Instead of using VM_BUG_ON() use WARN_ON_ONCE() and add some recovery
->   handling (David Hildenbrand).
->
-> ---
->  mm/page_io.c |  1 -
->  mm/zswap.c   | 22 +++++++++++++++++++++-
->  2 files changed, 21 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/page_io.c b/mm/page_io.c
-> index f1a9cfab6e748..8f441dd8e109f 100644
-> --- a/mm/page_io.c
-> +++ b/mm/page_io.c
-> @@ -517,7 +517,6 @@ void swap_read_folio(struct folio *folio, struct swap=
-_iocb **plug)
->         delayacct_swapin_start();
->
->         if (zswap_load(folio)) {
-> -               folio_mark_uptodate(folio);
->                 folio_unlock(folio);
->         } else if (data_race(sis->flags & SWP_FS_OPS)) {
->                 swap_read_folio_fs(folio, plug);
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index b9b35ef86d9be..ebb878d3e7865 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -1557,6 +1557,26 @@ bool zswap_load(struct folio *folio)
->
->         VM_WARN_ON_ONCE(!folio_test_locked(folio));
->
-> +       /*
-> +        * Large folios should not be swapped in while zswap is being use=
-d, as
-> +        * they are not properly handled. Zswap does not properly load la=
-rge
-> +        * folios, and a large folio may only be partially in zswap.
-> +        *
-> +        * If any of the subpages are in zswap, reading from disk would r=
-esult
-> +        * in data corruption, so return true without marking the folio u=
-ptodate
-> +        * so that an IO error is emitted (e.g. do_swap_page() will sigfa=
-ult).
-> +        *
-> +        * Otherwise, return false and read the folio from disk.
-> +        */
-> +       if (folio_test_large(folio)) {
-> +               if (xa_find(tree, &offset,
-> +                           offset + folio_nr_pages(folio) - 1, XA_PRESEN=
-T)) {
-> +                       WARN_ON_ONCE(1);
-> +                       return true;
-> +               }
-> +               return false;
+Hello,
 
-IMHO, this appears to be over-designed. Personally, I would opt to
-use
+syzbot found the following issue on:
 
- if (folio_test_large(folio))
-               return true;
+HEAD commit:    f06ce441457d Merge tag 'loongarch-fixes-6.10-1' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=176b7026980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=998c63c06e77f5e7
+dashboard link: https://syzkaller.appspot.com/bug?extid=8e86db7d430e87415248
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: i386
 
-Before we address large folio support in zswap, it=E2=80=99s essential
-not to let them coexist. Expecting valid data by lunchtime is
-not advisable.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-> +       }
-> +
->         /*
->          * When reading into the swapcache, invalidate our entry. The
->          * swapcache can be the authoritative owner of the page and
-> @@ -1590,7 +1610,7 @@ bool zswap_load(struct folio *folio)
->                 zswap_entry_free(entry);
->                 folio_mark_dirty(folio);
->         }
-> -
-> +       folio_mark_uptodate(folio);
->         return true;
->  }
->
-> --
-> 2.45.2.505.gda0bf45e8d-goog
->
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-f06ce441.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/67a525046331/vmlinux-f06ce441.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/01865e308aa0/bzImage-f06ce441.xz
 
-Thanks
-Barry
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+8e86db7d430e87415248@syzkaller.appspotmail.com
+
+BTRFS info (device loop2): last unmount of filesystem 395ef67a-297e-477c-816d-cd80a5b93e5d
+INFO: trying to register non-static key.
+The code is fine but needs lockdep annotation, or maybe
+you didn't initialize this object before use?
+turning off the locking correctness validator.
+CPU: 0 PID: 9630 Comm: syz-executor.2 Not tainted 6.10.0-rc2-syzkaller-00007-gf06ce441457d #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ assign_lock_key kernel/locking/lockdep.c:976 [inline]
+ register_lock_class+0xc2a/0x1230 kernel/locking/lockdep.c:1289
+ __lock_acquire+0x111/0x3b30 kernel/locking/lockdep.c:5014
+ lock_acquire kernel/locking/lockdep.c:5754 [inline]
+ lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
+ __raw_spin_lock_irq include/linux/spinlock_api_smp.h:119 [inline]
+ _raw_spin_lock_irq+0x36/0x50 kernel/locking/spinlock.c:170
+ put_pwq_unlocked kernel/workqueue.c:1662 [inline]
+ put_pwq_unlocked kernel/workqueue.c:1655 [inline]
+ destroy_workqueue+0x5df/0xaa0 kernel/workqueue.c:5851
+ btrfs_stop_all_workers+0x29f/0x370 fs/btrfs/disk-io.c:1804
+ close_ctree+0x4e3/0xf90 fs/btrfs/disk-io.c:4365
+ generic_shutdown_super+0x159/0x3d0 fs/super.c:642
+ kill_anon_super+0x3a/0x60 fs/super.c:1226
+ btrfs_kill_super+0x3b/0x50 fs/btrfs/super.c:2096
+ deactivate_locked_super+0xbe/0x1a0 fs/super.c:473
+ deactivate_super+0xde/0x100 fs/super.c:506
+ cleanup_mnt+0x222/0x450 fs/namespace.c:1267
+ task_work_run+0x14e/0x250 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
+ __do_fast_syscall_32+0x80/0x120 arch/x86/entry/common.c:389
+ do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
+ entry_SYSENTER_compat_after_hwframe+0x84/0x8e
+RIP: 0023:0xf72e5579
+Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
+RSP: 002b:00000000ffbeced8 EFLAGS: 00000292 ORIG_RAX: 0000000000000034
+RAX: 0000000000000000 RBX: 00000000ffbecf80 RCX: 0000000000000009
+RDX: 00000000f743bff4 RSI: 00000000f738c361 RDI: 00000000ffbee024
+RBP: 00000000ffbecf80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000292 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
+------------[ cut here ]------------
+UBSAN: array-index-out-of-bounds in kernel/locking/qspinlock.c:131:9
+index 855 is out of range for type 'long unsigned int [8]'
+CPU: 0 PID: 9630 Comm: syz-executor.2 Not tainted 6.10.0-rc2-syzkaller-00007-gf06ce441457d #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_out_of_bounds+0x110/0x150 lib/ubsan.c:429
+ decode_tail kernel/locking/qspinlock.c:131 [inline]
+ __pv_queued_spin_lock_slowpath+0xcb2/0xcc0 kernel/locking/qspinlock.c:468
+ pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
+ queued_spin_lock_slowpath arch/x86/include/asm/qspinlock.h:51 [inline]
+ queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
+ do_raw_spin_lock+0x210/0x2c0 kernel/locking/spinlock_debug.c:116
+ put_pwq_unlocked kernel/workqueue.c:1662 [inline]
+ put_pwq_unlocked kernel/workqueue.c:1655 [inline]
+ destroy_workqueue+0x5df/0xaa0 kernel/workqueue.c:5851
+ btrfs_stop_all_workers+0x29f/0x370 fs/btrfs/disk-io.c:1804
+ close_ctree+0x4e3/0xf90 fs/btrfs/disk-io.c:4365
+ generic_shutdown_super+0x159/0x3d0 fs/super.c:642
+ kill_anon_super+0x3a/0x60 fs/super.c:1226
+ btrfs_kill_super+0x3b/0x50 fs/btrfs/super.c:2096
+ deactivate_locked_super+0xbe/0x1a0 fs/super.c:473
+ deactivate_super+0xde/0x100 fs/super.c:506
+ cleanup_mnt+0x222/0x450 fs/namespace.c:1267
+ task_work_run+0x14e/0x250 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
+ __do_fast_syscall_32+0x80/0x120 arch/x86/entry/common.c:389
+ do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
+ entry_SYSENTER_compat_after_hwframe+0x84/0x8e
+RIP: 0023:0xf72e5579
+Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
+RSP: 002b:00000000ffbeced8 EFLAGS: 00000292 ORIG_RAX: 0000000000000034
+RAX: 0000000000000000 RBX: 00000000ffbecf80 RCX: 0000000000000009
+RDX: 00000000f743bff4 RSI: 00000000f738c361 RDI: 00000000ffbee024
+RBP: 00000000ffbecf80 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000292 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
+---[ end trace ]---
+----------------
+Code disassembly (best guess), 2 bytes skipped:
+   0:	10 06                	adc    %al,(%rsi)
+   2:	03 74 b4 01          	add    0x1(%rsp,%rsi,4),%esi
+   6:	10 07                	adc    %al,(%rdi)
+   8:	03 74 b0 01          	add    0x1(%rax,%rsi,4),%esi
+   c:	10 08                	adc    %cl,(%rax)
+   e:	03 74 d8 01          	add    0x1(%rax,%rbx,8),%esi
+  1e:	00 51 52             	add    %dl,0x52(%rcx)
+  21:	55                   	push   %rbp
+  22:	89 e5                	mov    %esp,%ebp
+  24:	0f 34                	sysenter
+  26:	cd 80                	int    $0x80
+* 28:	5d                   	pop    %rbp <-- trapping instruction
+  29:	5a                   	pop    %rdx
+  2a:	59                   	pop    %rcx
+  2b:	c3                   	ret
+  2c:	90                   	nop
+  2d:	90                   	nop
+  2e:	90                   	nop
+  2f:	90                   	nop
+  30:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
+  37:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
