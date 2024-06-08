@@ -1,194 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755A827457
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 14:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8C7179652;
+	Sat,  8 Jun 2024 14:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717856188; cv=none; b=Jh0glPiydLoo9a/4DWIh6HGV2CR1yjpZBDb6NK8U0KWZFCvb9CtjOlPRXqvJK7ks64QYsc0OFK44Fr/BPU78FABWRYXiJU5B/2ZitLY8albpXVEFy1QmclMfQaO1WR+AhD4v4NWko82ebLpLRusyHU67o4X5VsucOajwgLRbdiU=
+	t=1717856212; cv=none; b=ifiZBL9ik3s2EW3TN5dmwcmpjCFbA3ef9NpgqQBhULe3HqE1S4urQFdI98102qWpkTJmW/HFoft0CYGZ5DLj7XW8faUhohh3cQsSXcwuQJZsEcFDEYyNh0HWdz1emX6OrRVUYt7eq8Jc1pAA8ADfjawLUKUATsPwWxgxdAG3eAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717856188; c=relaxed/simple;
-	bh=y1/pdGFNQ4bmBupNSPXczZk3gfpVzHE5/xtJhhxuZEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bwOivWlKuPbvVanKgjGRBvMLWXJFvoUqdioXEY/Kv3itCLeTvi6mUaBn/mNkK8Rruh8moEEe9WaIJD7I7JI5Jer3gyzyvLkvhjFD3Gy1MDa9m4SL3eFF8FEAiSjuPCB7kneaG0XQ8zdx5zYZ65lmH8FB/+n96t6MzsXX3cZg3mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bGMlaSGz; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717856212; c=relaxed/simple;
+	bh=Y0RqWg41gTp2+bnmNIZlUVnvMEc4erjUmvjDN4eKdCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X2oZ9Z03/ILCU3o3obIopnnmUpCDoegIYLYyuCVWldGMXRcwiXL5Fo1IydVe92FN5Ttmht7a4leRkW5yMoLzWGU+LBGkbf7HARY+LOAdDPK/05gT4FdQPChG04knDJRpVo8ZlyIWIcJhomFdLBxC4gG/siox/oouCiPCdzm6Qgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+CEJSDl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bGMlaSGz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717856185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e4i3eRJmBmN+iQA9CJ+0NHv/UewJVWHJgwRHQO6ZQpM=;
-	b=bGMlaSGz6APPr9zNP1Yot6WMUL439akzptfCVcUxIxPzZeBGOutPqcwcvWsPzlCVVZ5X0h
-	GBolX0+kV72R7SpjeqfE/7Yk+Y+whmZHF/4S+DvEbE9IjcJj0VoOM9g8Cn1rHQRTVrVh4H
-	zSxkvLGTfiQvFdC6Rc25y3P5/CoeVb8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-531-ESfm0zbmO4CqmPNoso-9zA-1; Sat, 08 Jun 2024 10:16:21 -0400
-X-MC-Unique: ESfm0zbmO4CqmPNoso-9zA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 41D21185A780;
-	Sat,  8 Jun 2024 14:16:21 +0000 (UTC)
-Received: from fedora (unknown [10.72.112.37])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 117253C23;
-	Sat,  8 Jun 2024 14:16:14 +0000 (UTC)
-Date: Sat, 8 Jun 2024 22:16:10 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Li Nan <linan666@huaweicloud.com>
-Cc: Changhui Zhong <czhong@redhat.com>, axboe@kernel.dk,
-	ZiyangZhang@linux.alibaba.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yukuai3@huawei.com,
-	yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com,
-	ming.lei@redhat.com
-Subject: Re: [PATCH] ublk_drv: fix NULL pointer dereference in
- ublk_ctrl_start_recovery()
-Message-ID: <ZmRnqmiNGW5Y+452@fedora>
-References: <Zl0QpCbYVHIkKa/H@fedora>
- <225f4c8e-0e2c-8f4b-f87d-69f4677af572@huaweicloud.com>
- <CAGVVp+XD5MbYOWL4pbLMxXL0yNKO5NJ84--=KVnW6w5-GF7Drw@mail.gmail.com>
- <918f128b-f752-2d66-ca60-7d9c711ed928@huaweicloud.com>
- <CAGVVp+V6XGmE_LyOYM3z8cEOzkvQZy=2Fnr5V3G4+DchxAz3Qw@mail.gmail.com>
- <ZmA0Se+t/LZihBKp@fedora>
- <CAGVVp+WoBochfQvLgAVbpWFv6JVAfQVkPwWDG8mBxqgGK-NDbg@mail.gmail.com>
- <2c46587e-0621-b21e-fbc1-fd69e87def03@huaweicloud.com>
- <ZmGGzNLLC6WpM9tb@fedora>
- <dd486a95-b7e8-5760-9ff1-7e9c1cfc9873@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+CEJSDl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD4D6C2BD11;
+	Sat,  8 Jun 2024 14:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717856212;
+	bh=Y0RqWg41gTp2+bnmNIZlUVnvMEc4erjUmvjDN4eKdCQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=R+CEJSDl6MsJ2ZOkktECryQlDO+kMpVVhp5WK9E0lLLMGwVP5ISrbF3BTecnM8s9u
+	 roa6bx7iTr3BjcPROVhdGvEsy+PnW6Tw9Gj1QLPxlxU6KS45Y5BYtHfwyLEJ69wKJ1
+	 wGAc2WADfNftSNQH3g8ZPkHq1fK78fkIsWu26q7Vx05iLcBjhbO7jYFeKfmNkenNJv
+	 CDpWV8HDmlGAySDgtC1QudXt2SkmeAnvs/KblwB1cgC1aEfAYue7wUSPhSbHUCiY6l
+	 jVf2K7Dz0f61NyOwNmeBC8vl3mMPEZyUpms7wd8UQLWnMLqgGKrtdtTdt2A7ZmbxuZ
+	 XnVuzUjpTJ53Q==
+Date: Sat, 8 Jun 2024 15:16:43 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Justin Stitt
+ <justinstitt@google.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] iio: event: use sizeof(*pointer) instead of
+ sizeof(type)
+Message-ID: <20240608151643.5f82e10d@jic23-huawei>
+In-Reply-To: <AS8PR02MB7237D024459C314CECE72EAF8BFE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+References: <AS8PR02MB7237D024459C314CECE72EAF8BFE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dd486a95-b7e8-5760-9ff1-7e9c1cfc9873@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 08, 2024 at 02:34:47PM +0800, Li Nan wrote:
+On Sun,  2 Jun 2024 19:23:54 +0200
+Erick Archer <erick.archer@outlook.com> wrote:
+
+> It is preferred to use sizeof(*pointer) instead of sizeof(type)
+> due to the type of the variable can change and one needs not
+> change the former (unlike the latter). At the same time refactor
+> the NULL comparison.
 > 
+> This patch has no effect on runtime behavior.
 > 
-> 在 2024/6/6 17:52, Ming Lei 写道:
-> > On Thu, Jun 06, 2024 at 04:05:33PM +0800, Li Nan wrote:
-> > > 
-> > > 
-> > > 在 2024/6/6 12:48, Changhui Zhong 写道:
-> > > 
-> > > [...]
-> > > 
-> > > > > 
-> > > > > Hi Changhui,
-> > > > > 
-> > > > > The hang is actually expected because recovery fails.
-> > > > > 
-> > > > > Please pull the latest ublksrv and check if the issue can still be
-> > > > > reproduced:
-> > > > > 
-> > > > > https://github.com/ublk-org/ublksrv
-> > > > > 
-> > > > > BTW, one ublksrv segfault and two test cleanup issues are fixed.
-> > > > > 
-> > > > > Thanks,
-> > > > > Ming
-> > > > > 
-> > > > 
-> > > > Hi,Ming and Nan
-> > > > 
-> > > > after applying the new patch and pulling the latest ublksrv,
-> > > > I ran the test for 4 hours and did not observe any task hang.
-> > > > the test results looks good！
-> > > > 
-> > > > Thanks，
-> > > > Changhui
-> > > > 
-> > > > 
-> > > > .
-> > > 
-> > > Thanks for you test!
-> > > 
-> > > However, I got a NULL pointer dereference bug with ublksrv. It is not
-> > 
-> > BTW, your patch isn't related with generic/004 which won't touch
-> > recovery code path.
-> > 
-> > > introduced by this patch. It seems io was issued after deleting disk. And
-> > > it can be reproduced by:
-> > > 
-> > >    while true; do make test T=generic/004; done
-> > 
-> > We didn't see that when running such test with linus tree, and usually
-> > Changhui run generic test for hours.
-> > 
-> > > 
-> > > [ 1524.286485] running generic/004
-> > > [ 1529.110875] blk_print_req_error: 109 callbacks suppressed
-> > ...
-> > > [ 1541.171010] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> > > [ 1541.171734] #PF: supervisor write access in kernel mode
-> > > [ 1541.172271] #PF: error_code(0x0002) - not-present page
-> > > [ 1541.172798] PGD 0 P4D 0
-> > > [ 1541.173065] Oops: Oops: 0002 [#1] PREEMPT SMP
-> > > [ 1541.173515] CPU: 0 PID: 43707 Comm: ublk Not tainted
-> > > 6.9.0-next-20240523-00004-g9bc7e95c7323 #454
-> > > [ 1541.174417] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> > > 1.16.1-2.fc37 04/01/2014
-> > > [ 1541.175311] RIP: 0010:io_fallback_tw+0x252/0x300
-> > 
-> > This one looks one io_uring issue.
-> > 
-> > Care to provide which line of source code points to by 'io_fallback_tw+0x252'?
-> > 
-> > gdb> l *(io_fallback_tw+0x252)
-> > 
-> (gdb) list * io_fallback_tw+0x252
-> 0xffffffff81d79dc2 is in io_fallback_tw
-> (./arch/x86/include/asm/atomic64_64.h:25).
-> 20              __WRITE_ONCE(v->counter, i);
-> 21      }
-> 22
-> 23      static __always_inline void arch_atomic64_add(s64 i, atomic64_t *v)
-> 24      {
-> 25              asm volatile(LOCK_PREFIX "addq %1,%0"
-> 26                           : "=m" (v->counter)
-> 27                           : "er" (i), "m" (v->counter) : "memory");
-> 28      }
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+
+Applied.
+> ---
+>  drivers/iio/industrialio-event.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> The corresponding code is:
-> io_fallback_tw
->   percpu_ref_get(&last_ctx->refs);
-
-[ 1541.171010] BUG: kernel NULL pointer dereference, address: 0000000000000000
-...
-[ 1541.175311] RIP: 0010:io_fallback_tw+0x252/0x300
-
-So looks the 'struct io_ring_ctx' instance is freed and ctx->refs.data
-becomes NULL when calling percpu_ref_get(&last_ctx->refs), not clear how
-it can happen since request grabs one ctx reference.
-
-Maybe you can try kasan and see if more useful info can be dumped.
-
-> 
-> I have the vmcore of this issue. If you have any other needs, please let me
-> know.
-
-Not try remote vmcore debug yet, will think further if any useful hint
-is needed.
-
-> The space of the root path has been filled up by
-> ublksrv(tests/tmpublk_loop_data_xxx), which may the issue be related to this?
-
-It isn't supposed to be related, since the backing loop image is created by dd
-and it isn't sparse image, and the test runs fio over ublk block
-device only.
-
-Thanks,
-Ming
+> diff --git a/drivers/iio/industrialio-event.c b/drivers/iio/industrialio-event.c
+> index 910c1f14abd5..b99bfeff7d37 100644
+> --- a/drivers/iio/industrialio-event.c
+> +++ b/drivers/iio/industrialio-event.c
+> @@ -572,8 +572,8 @@ int iio_device_register_eventset(struct iio_dev *indio_dev)
+>  	      iio_check_for_dynamic_events(indio_dev)))
+>  		return 0;
+>  
+> -	ev_int = kzalloc(sizeof(struct iio_event_interface), GFP_KERNEL);
+> -	if (ev_int == NULL)
+> +	ev_int = kzalloc(sizeof(*ev_int), GFP_KERNEL);
+> +	if (!ev_int)
+>  		return -ENOMEM;
+>  
+>  	iio_dev_opaque->event_interface = ev_int;
 
