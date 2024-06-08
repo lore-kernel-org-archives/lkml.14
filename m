@@ -1,146 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E263175AA
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 12:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8211755896;
+	Sat,  8 Jun 2024 12:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717850090; cv=none; b=lpxUN40J0rHVZgkDxKIWIY2Nsk1g3IKIWN2dHIkfiB9XucoC2U8C6ijzwBzsp4Ioz0rBT160pWmFzksdUnyPXn5WSeuUSC4E1Ly2xzGtiVGVIv6SxpsAt2Iep2yIVI3eu2bIZHtxiWSe7/juf/Fgsbop8Zrtp3Yx8TgjM0wxf+A=
+	t=1717850593; cv=none; b=OGJaOCk9tWrqmvXBV9cjxXq05wlAWy3MbKv1E7WFEqQgRSadJ2VayQlT8wOH1P2DfXroUvU8WmJt8W4IjQe3z2S4npdSgbY92q8PFOW0EOmXyafhwrOjvKd9ofcIicZZcKxDvoXZ9Qfq9fdlza6NhHzW+7y+qjgb2kX8E83IV/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717850090; c=relaxed/simple;
-	bh=vPnMjqtol+dnoSheDRAOwf/tp0qa9MOgByaRrsa0Kz4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t8KGd5HxU6qqzTtuu/4lx4EYWtyQeT9YE7R6QfoklUMasvXpATCcmfBvxohydUdt2DXbIsYsWPFaF/Wypl+Wfs//KKVDjlGAt+I/5YrATWFPfNRQPiifFoB+3fOjylkR32pZkTCLFTFM1ON57bu8tBEc3FNXcFk+0tSm7b8RT9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DwC4KbLO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717850593; c=relaxed/simple;
+	bh=8nyWEsXGX2UC3fntWUZe5tv9qmwbftOOI1ptiVpeTlE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hUphpSJS63ksvEoCm9K7jFBYvzKvIdYghrC6ootVBP4T4q+jQUqixpagiLaozlbeBgISc8yL0kVopFCH8z1H1vNrWfboH8hPNTkiMC99C0hcLQR6phfk6HHvR3qQUFZzEmIuS0N90mb/FfS0Q7lbi3LNYW4zajsInygYaa+2eAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WWqHL8Bh; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DwC4KbLO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E5BC2BD11;
-	Sat,  8 Jun 2024 12:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717850089;
-	bh=vPnMjqtol+dnoSheDRAOwf/tp0qa9MOgByaRrsa0Kz4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DwC4KbLO4rn2JODKiRd5J1mgfZh1CbPIIqTbOa8bxEKdpcHw442Do+yleTF/z2utD
-	 E9oK+JJ8lWeOQ6gkKwwg9SN8AyV9NaAg8cpSLQjwZzKKrYc0111e0676+xGgnP/Lft
-	 LOJc9oksAVQ89z3RZq+JMVFsJwnV3QesH3pi019rt/m8wMqlgQX2ZdbtTnPxRJpCM2
-	 wiWg+3jZ89nom0zb1QEyQBiE380RHyeYltxtXa0GAW60N3tIzORggmuqYH7u1la5wL
-	 CkuAf11ke5Z9YBE0j06noRMapgl9TcIgry362Y6qhk5LkYai1ZpcF9biHuIw/y46Kf
-	 5cpV66feT9wbw==
-Message-ID: <d38a2712-f7cc-4aea-a343-00335a5215a0@kernel.org>
-Date: Sat, 8 Jun 2024 20:34:47 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWqHL8Bh"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a63359aaacaso455803866b.1;
+        Sat, 08 Jun 2024 05:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717850590; x=1718455390; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u2jJpnazhyNnGAHA2J872EkU21KY+hirrOIRfP72bSc=;
+        b=WWqHL8Bhg8UlSSyGoa9DpFuLV47VbsmE+UIbPpvreWKExoeLgV+m8LSy9f+L/vniPN
+         KLm7op9lzFvUr74wDoon92sTKEfGQkrKknuI9cf6EBA/+jH83agVh/xp8i17e4oUWG6l
+         5/Tr86en0VaWdSD4T8KKITfwDXKzVX2ZPvAEbP5akE/7vkj/4Qyij1sYQXIiA/f/aDbQ
+         4zgE3ZCpSpRP/kmnZ6UWvc2Yt9+F5MMwA7+nmynAnexOinNsXOeu7NZXFNiLJpH0Jho4
+         BPlxv0YxoQ8f5UsHFCZsLtaHSTSixroOiNhlGBdbjdIK+l/+MqJ8OeEmxxk6GTN2rzmT
+         YslQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717850590; x=1718455390;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u2jJpnazhyNnGAHA2J872EkU21KY+hirrOIRfP72bSc=;
+        b=oGHvH03r+bRovhZF2eFOF70suUE416bA5Igploh/3beWifyjwdgvT7OB9roY8FnGrH
+         VbKHAPWeDl3p+XdV9/jCYgvCTeL32TmF9myEvOzbnUe35ZA/9WMZcnhJKdv7wVWIaOwS
+         qDmORotbLvDBIy6icv60h1AnKffS+oEhNDqCRPH75OW/Um4GdQ9+ut8p8SmHk/48DN5U
+         kEbv1N3pGNvyIeQKneZcbEgO0nsxgBmeU0rKfQQ+ErScsSfxzXtpMIBhDTDLz7AonE8w
+         egiemnrLR0mBpEqjuIWmJ7k8stFGhKIdEA9J86/kZXh2zknOqnPn328W6e9FFi3RSvOG
+         5HnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUF3EXA6a/hWT5Z0pZNDRm/8sT7BAwsWJUXVHcsyx63kyq/8hcUSWhiIUNqPY2XQkTjGLy/q7a7ykEpFjMNooEyskYeVk2xECtM9C+fJk0FV2tIb0hBXC5O5wxlWDWy1WP5d3q4
+X-Gm-Message-State: AOJu0Yzu+tSete/woYFUAo7X9t8Vy7qkh2c6AdOCIGKaxz+ImnNstFem
+	Cz/ZE2aO1ye7tK4TkL0UG4EZXr9+psyuckd4xA4S0SUjWtxMFair
+X-Google-Smtp-Source: AGHT+IGDEYouqAB0pPS44aRwekYh9i439dQuEXVnbRKmELsUCwf2icDlFZh9N5imcqNACwiXv9tutg==
+X-Received: by 2002:a17:906:25c5:b0:a6c:8bc3:aabd with SMTP id a640c23a62f3a-a6cd7d684e9mr310486466b.46.1717850589544;
+        Sat, 08 Jun 2024 05:43:09 -0700 (PDT)
+Received: from skbuf ([188.25.55.166])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f10d1c044sm10633466b.163.2024.06.08.05.43.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Jun 2024 05:43:09 -0700 (PDT)
+Date: Sat, 8 Jun 2024 15:43:06 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Xiaolei Wang <xiaolei.wang@windriver.com>
+Cc: linux@armlinux.org.uk, andrew@lunn.ch, alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
+	wojciech.drewek@intel.com, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [net v4 PATCH] net: stmmac: replace priv->speed with the
+ portTransmitRate from the tc-cbs parameters
+Message-ID: <20240608124306.nh2olzpybffitw6w@skbuf>
+References: <20240608044557.1380550-1-xiaolei.wang@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] f2fs: fix to add missing sb_{start,end}_intwrite()
- for ckpt thread
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
- Daeho Jeong <daehojeong@google.com>
-References: <20240606095213.4087668-1-chao@kernel.org>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-Autocrypt: addr=chao@kernel.org; keydata=
- xsFNBFYs6bUBEADJuxYGZRMvAEySns+DKVtVQRKDYcHlmj+s9is35mtlhrLyjm35FWJY099R
- 6DL9bp8tAzLJOMBn9RuTsu7hbRDErCCTiyXWAsFsPkpt5jgTOy90OQVyTon1i/fDz4sgGOrL
- 1tUfcx4m5i5EICpdSuXm0dLsC5lFB2KffLNw/ZfRuS+nNlzUm9lomLXxOgAsOpuEVps7RdYy
- UEC81IYCAnweojFbbK8U6u4Xuu5DNlFqRFe/MBkpOwz4Nb+caCx4GICBjybG1qLl2vcGFNkh
- eV2i8XEdUS8CJP2rnp0D8DM0+Js+QmAi/kNHP8jzr7CdG5tje1WIVGH6ec8g8oo7kIuFFadO
- kwy6FSG1kRzkt4Ui2d0z3MF5SYgA1EWQfSqhCPzrTl4rJuZ72ZVirVxQi49Ei2BI+PQhraJ+
- pVXd8SnIKpn8L2A/kFMCklYUaLT8kl6Bm+HhKP9xYMtDhgZatqOiyVV6HFewfb58HyUjxpza
- 1C35+tplQ9klsejuJA4Fw9y4lhdiFk8y2MppskaqKg950oHiqbJcDMEOfdo3NY6/tXHFaeN1
- etzLc1N3Y0pG8qS/mehcIXa3Qs2fcurIuLBa+mFiFWrdfgUkvicSYqOimsrE/Ezw9hYhAHq4
- KoW4LQoKyLbrdOBJFW0bn5FWBI4Jir1kIFHNgg3POH8EZZDWbQARAQABzRlDaGFvIFl1IDxj
- aGFvQGtlcm5lbC5vcmc+wsF3BBMBCgAhBQJWLOm1AhsDBQsJCAcDBRUKCQgLBRYCAwEAAh4B
- AheAAAoJEKTPgB1/p52Gm2MP/0zawCU6QN7TZuJ8R1yfdhYr0cholc8ZuPoGim69udQ3otet
- wkTNARnpuK5FG5la0BxFKPlazdgAU1pt+dTzCTS6a3/+0bXYQ5DwOeBPRWeFFklm5Frmk8sy
- wSTxxEty0UBMjzElczkJflmCiDfQunBpWGy9szn/LZ6jjIVK/BiR7CgwXTdlvKcCEkUlI7MD
- vTj/4tQ3y4Vdx+p7P53xlacTzZkP+b6D2VsjK+PsnsPpKwaiPzVFMUwjt1MYtOupK4bbDRB4
- NIFSNu2HSA0cjsu8zUiiAvhd/6gajlZmV/GLJKQZp0MjHOvFS5Eb1DaRvoCf27L+BXBMH4Jq
- 2XIyBMm+xqDJd7BRysnImal5NnQlKnDeO4PrpFq4JM0P33EgnSOrJuAb8vm5ORS9xgRlshXh
- 2C0MeyQFxL6l+zolEFe2Nt2vrTFgjYLsm2vPL+oIPlE3j7ToRlmm7DcAqsa9oYMlVTTnPRL9
- afNyrsocG0fvOYFCGvjfog/V56WFXvy9uH8mH5aNOg5xHB0//oG9vUyY0Rv/PrtW897ySEPh
- 3jFP/EDI0kKjFW3P6CfYG/X1eaw6NDfgpzjkCf2/bYm/SZLV8dL2vuLBVV+hrT1yM1FcZotP
- WwLEzdgdQffuQwJHovz72oH8HVHD2yvJf2hr6lH58VK4/zB/iVN4vzveOdzlzsFNBFYs6bUB
- EADZTCTgMHkb6bz4bt6kkvj7+LbftBt5boKACy2mdrFFMocT5zM6YuJ7Ntjazk5z3F3IzfYu
- 94a41kLY1H/G0Y112wggrxem6uAtUiekR9KnphsWI9lRI4a2VbbWUNRhCQA8ag7Xwe5cDIV5
- qb7r7M+TaKaESRx/Y91bm0pL/MKfs/BMkYsr3wA1OX0JuEpV2YHDW8m2nFEGP6CxNma7vzw+
- JRxNuyJcNi+VrLOXnLR6hZXjShrmU88XIU2yVXVbxtKWq8vlOSRuXkLh9NQOZn7mrR+Fb1EY
- DY1ydoR/7FKzRNt6ejI8opHN5KKFUD913kuT90wySWM7Qx9icc1rmjuUDz3VO+rl2sdd0/1h
- Q2VoXbPFxi6c9rLiDf8t7aHbYccst/7ouiHR/vXQty6vSUV9iEbzm+SDpHzdA8h3iPJs6rAb
- 0NpGhy3XKY7HOSNIeHvIbDHTUZrewD2A6ARw1VYg1vhJbqUE4qKoUL1wLmxHrk+zHUEyLHUq
- aDpDMZArdNKpT6Nh9ySUFzlWkHUsj7uUNxU3A6GTum2aU3Gh0CD1p8+FYlG1dGhO5boTIUsR
- 6ho73ZNk1bwUj/wOcqWu+ZdnQa3zbfvMI9o/kFlOu8iTGlD8sNjJK+Y/fPK3znFqoqqKmSFZ
- aiRALjAZH6ufspvYAJEJE9eZSX7Rtdyt30MMHQARAQABwsFfBBgBCgAJBQJWLOm1AhsMAAoJ
- EKTPgB1/p52GPpoP/2LOn/5KSkGHGmdjzRoQHBTdm2YV1YwgADg52/mU68Wo6viStZqcVEnX
- 3ALsWeETod3qeBCJ/TR2C6hnsqsALkXMFFJTX8aRi/E4WgBqNvNgAkWGsg5XKB3JUoJmQLqe
- CGVCT1OSQA/gTEfB8tTZAGFwlw1D3W988CiGnnRb2EEqU4pEuBoQir0sixJzFWybf0jjEi7P
- pODxw/NCyIf9GNRNYByUTVKnC7C51a3b1gNs10aTUmRfQuu+iM5yST5qMp4ls/yYl5ybr7N1
- zSq9iuL13I35csBOn13U5NE67zEb/pCFspZ6ByU4zxChSOTdIJSm4/DEKlqQZhh3FnVHh2Ld
- eG/Wbc1KVLZYX1NNbXTz7gBlVYe8aGpPNffsEsfNCGsFDGth0tC32zLT+5/r43awmxSJfx2P
- 5aGkpdszvvyZ4hvcDfZ7U5CBItP/tWXYV0DDl8rCFmhZZw570vlx8AnTiC1v1FzrNfvtuxm3
- 92Qh98hAj3cMFKtEVbLKJvrc2AO+mQlS7zl1qWblEhpZnXi05S1AoT0gDW2lwe54VfT3ySon
- 8Klpbp5W4eEoY21tLwuNzgUMxmycfM4GaJWNCncKuMT4qGVQO9SPFs0vgUrdBUC5Pn5ZJ46X
- mZA0DUz0S8BJtYGI0DUC/jAKhIgy1vAx39y7sAshwu2VILa71tXJ
-In-Reply-To: <20240606095213.4087668-1-chao@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240608044557.1380550-1-xiaolei.wang@windriver.com>
 
-On 2024/6/6 17:52, Chao Yu wrote:
-> After commit 261eeb9c1585 ("f2fs: introduce checkpoint_merge mount
-> option"), checkpoint can be triggered in background thread, it missed
-> to cover f2fs inner checkpoint operation w/ sb_{start,end}_intwrite(),
-> fix it.
-
-It needs to use sb_start_intwrite_trylock(), otherwise, it will cause
-deadlock as below:
-
-- freeze_super
-  - sb_wait_write(SB_FREEZE_WRITE)
-  - sb_wait_write(SB_FREEZE_PAGEFAULT)
-  - sb_wait_write(SB_FREEZE_FS)
-					- sync
-					 - iterate_supers
-					  - super_lock_shared
-					   - down_read(&sb->s_umount)
-					   - sync_fs_one_sb
-					    - f2fs_sync_fs
-					     - f2fs_issue_checkpoint
-					      - wait_for_completion
-									- issue_checkpoint_thread
-									 - sb_start_intwrite(sbi->sb);
-
-- thaw_super
-  - super_lock_excl
-   - down_write(&sb->s_umount)
-
-Thanks,
-
+On Sat, Jun 08, 2024 at 12:45:57PM +0800, Xiaolei Wang wrote:
+> The current cbs parameter depends on speed after uplinking,
+> which is not needed and will report a configuration error
+> if the port is not initially connected. The UAPI exposed by
+> tc-cbs requires userspace to recalculate the send slope anyway,
+> because the formula depends on port_transmit_rate (see man tc-cbs),
+> which is not an invariant from tc's perspective. Therefore, we
+> use offload->sendslope and offload->idleslope to derive the
+> original port_transmit_rate from the CBS formula.
 > 
-> Fixes: 261eeb9c1585 ("f2fs: introduce checkpoint_merge mount option")
-> Cc: Daeho Jeong <daehojeong@google.com>
-> Signed-off-by: Chao Yu <chao@kernel.org>
+> Fixes: 1f705bc61aee ("net: stmmac: Add support for CBS QDISC")
+> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+> Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
 > ---
->   fs/f2fs/checkpoint.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index 55d444bec5c0..66eaad591b60 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -1828,8 +1828,11 @@ static int issue_checkpoint_thread(void *data)
->   	if (kthread_should_stop())
->   		return 0;
->   
-> -	if (!llist_empty(&cprc->issue_list))
-> +	if (!llist_empty(&cprc->issue_list)) {
-> +		sb_start_intwrite(sbi->sb);
->   		__checkpoint_and_complete_reqs(sbi);
-> +		sb_end_intwrite(sbi->sb);
-> +	}
->   
->   	wait_event_interruptible(*q,
->   		kthread_should_stop() || !llist_empty(&cprc->issue_list));
+> Change log:
+> 
+> v1:
+>     https://patchwork.kernel.org/project/linux-arm-kernel/patch/20240528092010.439089-1-xiaolei.wang@windriver.com/
+> v2:
+>     Update CBS parameters when speed changes after linking up
+>     https://patchwork.kernel.org/project/linux-arm-kernel/patch/20240530061453.561708-1-xiaolei.wang@windriver.com/
+> v3:
+>     replace priv->speed with the  portTransmitRate from the tc-cbs parameters suggested by Vladimir Oltean
+>     link: https://patchwork.kernel.org/project/linux-arm-kernel/patch/20240607103327.438455-1-xiaolei.wang@windriver.com/
+> v4:
+>     Delete speed_div variable, delete redundant port_transmit_rate_kbps = qopt->idleslope - qopt->sendslope; and update commit log
+> 
+>  .../net/ethernet/stmicro/stmmac/stmmac_tc.c   | 20 +++++++------------
+>  1 file changed, 7 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+> index 222540b55480..87af129a6a1d 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+> @@ -344,10 +344,11 @@ static int tc_setup_cbs(struct stmmac_priv *priv,
+>  {
+>  	u32 tx_queues_count = priv->plat->tx_queues_to_use;
+>  	u32 queue = qopt->queue;
+> -	u32 ptr, speed_div;
+> +	u32 ptr;
+>  	u32 mode_to_use;
+>  	u64 value;
+>  	int ret;
+> +	s64 port_transmit_rate_kbps;
+>  
+>  	/* Queue 0 is not AVB capable */
+>  	if (queue <= 0 || queue >= tx_queues_count)
+> @@ -355,27 +356,20 @@ static int tc_setup_cbs(struct stmmac_priv *priv,
+>  	if (!priv->dma_cap.av)
+>  		return -EOPNOTSUPP;
+>  
+> +	port_transmit_rate_kbps = qopt->idleslope - qopt->sendslope;
+> +
+>  	/* Port Transmit Rate and Speed Divider */
+> -	switch (priv->speed) {
+> +	switch (div_s64(port_transmit_rate_kbps, 1000)) {
+>  	case SPEED_10000:
+> -		ptr = 32;
+> -		speed_div = 10000000;
+> -		break;
+>  	case SPEED_5000:
+>  		ptr = 32;
+> -		speed_div = 5000000;
+>  		break;
+>  	case SPEED_2500:
+> -		ptr = 8;
+> -		speed_div = 2500000;
+> -		break;
+>  	case SPEED_1000:
+>  		ptr = 8;
+> -		speed_div = 1000000;
+>  		break;
+>  	case SPEED_100:
+>  		ptr = 4;
+> -		speed_div = 100000;
+>  		break;
+>  	default:
+>  		return -EOPNOTSUPP;
+
+I have one more request.
+
+It is very discouraging for a user to give invalid parameters and
+receive -EOPNOTSUPP, because this is indicative of other "usual
+suspects": "did I enable CONFIG_NET_SCH_CBS?"
+
+It is unfortunate that struct tc_cbs_qopt_offload does not carry a
+netlink extack, but I'm also not requesting you to add one here.
+Instead, please at least change the return code to something like
+-EINVAL, and print something to the console along the lines of:
+"Invalid portTransmitRate %lld (idleSlope - sendSlope)\n".
