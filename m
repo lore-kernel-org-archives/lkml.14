@@ -1,106 +1,221 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374DF1E888;
-	Sat,  8 Jun 2024 16:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E66E17966C;
+	Sat,  8 Jun 2024 16:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717864309; cv=none; b=C8Q5U/te3fD77pq+UtVuoYJpEoOnp7wQBM8ApJRJmRQMTmqV3/fHg5zNJ95fZ6YZ/MwV79W72b0hUtJxRXxYHbzsH4EkRi4acFLUPgQss+fqQRDz/f/6wa0oPqCBNo0viy7c18cqpqbQKBnOLYaE+iEuvDX75VT/qRoqLlE/o4Q=
+	t=1717864328; cv=none; b=ak07OGLKKkcnGiCBvhwyX8hWIfs1uk011jDMgeJxaQcMLHtVCA1kbjobELdSncj7jRH46IXgg5AEv7Y/yBOxq7l3mEIh0zc277H4DByO8rpSg4Mzqy3QU7UNRhMAb/4VZPsl2hzUdwQXd+ybFUfhmjYuM5pWE/uVIaX41BZn8tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717864309; c=relaxed/simple;
-	bh=dzIhkuinC2M3kjTBzjU1/eeINliwXE3DjZLHluC8O58=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=RMSNRpBazs77QngiybsFNpHD5iYW8GNku1jN09jGczmOjXJJLjU1blGI8hapnaTuBGiFI8sV66+0AHdrqIgvhgJ5P62kTDxKUukpRg3XuCHUW440naWqaov6/vp/6Z1YZmTDB4wV34A3LOmBcdMzvarH+bKh6PZDZ6DP8d4jKz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HNaoG582; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717864328; c=relaxed/simple;
+	bh=o/u5WZeJigd1BA/22pBMeXDv1TvliwKZCiKlV3ON1+E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Cp01JPKcD1XUe+5/z+Gx7l28ItO9EfyE9QFb/WYXw/362rHh7PbsMWZTNx5xKlbA95WnCqDZhs9BLHmb5ETtISsp0nc/eHUUcfeSx2f8AoeFO35E9Wj24jHGB6bbWl5NVl4kTPD5Zy11qfwhvIMs8RrZ7rjbIq9x/eyvnoqLpac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GAjIsKDu; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HNaoG582"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 458FkEHQ020933;
-	Sat, 8 Jun 2024 16:31:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=536ZuBV5Xko30Q9QMlfsPn
-	5bbVS/iTQ4a8HbJhBdSFI=; b=HNaoG582wKFtHPPjR/c2amJbmbFW02g5F18ybt
-	4JZKO4mSYkPEXG0zX5U5NyCJF27w7dGkpZj5lcOqvXg6Ja+QRu3ZAen/+lkryHuZ
-	0t+2NURJx7LVWDwLJIy01mj1Lds+AzzJfjfvFlbNS3l6JYJ67DW9biFCeX1EeKZc
-	k4W+F+pw33pTfuOxuwyxg3R/aLNkjDUNkhGsJUQThxBO3JzJZVqMH9ctC8soMOP6
-	SdQ0g5oKO+okI/zT0RoxsCMtwbGloDBECxsIhu1OG2e2CNmd4mh9IU0wWPfeTzVA
-	hzxHBbPqg9FfOScyrbwCJc9jlOjU1FNqJKIY8yi05b/e23RA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymgk8rn07-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 08 Jun 2024 16:31:41 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 458GVeI8018130
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 8 Jun 2024 16:31:40 GMT
-Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 8 Jun 2024
- 09:31:40 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Sat, 8 Jun 2024 09:31:35 -0700
-Subject: [PATCH] mailbox: mtk-cmdq: add missing MODULE_DESCRIPTION() macro
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GAjIsKDu"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7041cda5dcfso835448b3a.2;
+        Sat, 08 Jun 2024 09:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717864326; x=1718469126; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SmEppoo7LJtI7/L6gS+2VAgxSOPXPX1I5fRFysD/WXU=;
+        b=GAjIsKDuoZidD3tPGrgcjntWDbbwbWK9XjuwwIJRa6MymafQcqwqVJDZsCo+XdxYlo
+         thOv2CgdbbU4S2qGv8PrYuBp6OkIJSxElKh40EWVYQR93empjBKj8C+lSX+iDijFww3o
+         kmLvnvMVgTGUn9eHMupJdoQfvIFUMtkhzloz7TBzjW+yeS4r9YrnoTfGupkVJaKJ1nqE
+         t/z7uG5T1VamfbBiwjnTyNjWKA89W6HuOSQg9ca5E8uc0VORnFOx1ZGakjFKzQfuVHJy
+         zwMENZz4DmCAo4zJtNvm3Z1JGUOgHxf5Db5Yj9tcm6ZhrrkQ4d1uX346JqyEdvtfCs2i
+         CQ/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717864326; x=1718469126;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=SmEppoo7LJtI7/L6gS+2VAgxSOPXPX1I5fRFysD/WXU=;
+        b=pRLhTxf1ggdNtRiO2/hL1hbVu3OVQfOur3oMesnQzudcrQfOQYQOtcf1WkRv6xkxC7
+         NeQwnJJUTxgGqjy6RWA+M2HaMV3WkyLkuOp99FcGQsQQPWmGDh6wUwMPnyYY30uS+oZ4
+         ZsDmOHsYQHAs2ancM+pI+/SKmvdKmw7fEIcEQrtqRHB/nI1JUQJTTQJIThoKcTDfQg9K
+         QqHapVZclq0+ywWvPt7bSSh+uFnp6kW1RQTB8TD29wMo1RkO67SilvwUrpcfG79hY4LC
+         Jnl+MnI4yct8cuxsyAO6xXl2bmW8r0mIBD0FUxN8l9jGVIm52ISGZR6+RHzr+2pmx91x
+         8CIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4MZPXPEXWswl7QqaFf99cZ9OaDbdYYdesz52ajfdgbesDqD7Tf9QI4rH33TcG94mHbhDo1pk+JxmEO/1BBneGaATbynlL7wSI98tgPtX2pj5IG9VkgE6PzZI6jaeuVBHZ/Kgp1aPIbtX91gRA7fGTei3l/Ssy4gy4NtMbKPjBKJCvcJgS
+X-Gm-Message-State: AOJu0YzHnuWr9ozLnVCyJymWpny4kVYKiz3pU0/BdIfwt+KtVqh4ElGr
+	z20B0CGdYy721JdcJfLS6MpDUwaskYj1iYbVGzoLcqEXxQmRkj0t
+X-Google-Smtp-Source: AGHT+IEORPWxgaU9VsAkekFiyGNzWmHyEcZ52yFJiGYOMyZlhMOslzX2Xu1u1mw/RWcqkaAqkvPlJg==
+X-Received: by 2002:a05:6a21:6d9a:b0:1a9:8836:ae37 with SMTP id adf61e73a8af0-1b2f969bf66mr6030396637.12.1717864325619;
+        Sat, 08 Jun 2024 09:32:05 -0700 (PDT)
+Received: from localhost.localdomain (124x33x176x97.ap124.ftth.ucom.ne.jp. [124.33.176.97])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7043180d0e5sm321460b3a.99.2024.06.08.09.32.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Jun 2024 09:32:04 -0700 (PDT)
+Sender: Vincent Mailhol <vincent.mailhol@gmail.com>
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+To: Kees Cook <keescook@chromium.org>
+Cc: Jakub Kicinski Rasmus Villemoes <kuba@kernel.orglinux@rasmusvillemoes.dk>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Keith Packard <keithp@keithp.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	kernel test robot <lkp@intel.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] stddef: Allow attributes to be used when creating flex arrays
+Date: Sun,  9 Jun 2024 01:26:49 +0900
+Message-ID: <20240608163148.2141262-1-mailhol.vincent@wanadoo.fr>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240213234212.3766256-1-keescook@chromium.org>
+References: <20240213234023.it.219-kees@kernel.org> <20240213234212.3766256-1-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240608-md-drivers-mailbox-v1-1-6ce5d6f924ad@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAGaHZGYC/x3MTQqDMBBA4avIrDsQf5DSq5QuksykDmgsM60Ex
- Ls3uvwW7+1grMIGj2YH5U1M1lzR3hqIk89vRqFq6Fw3uNHdcSEklY3VcPEyh7VgH6lvE6U4hBF
- q+FFOUq7p81UdvDEG9TlO52qW/Cs1ti8rHMcffDtjaYMAAAA=
-To: Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger
-	<matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <kernel-janitors@vger.kernel.org>,
-        "Jeff Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: sgnuojmQtyHcFGj8RcGnPU-sjzXGdcTN
-X-Proofpoint-ORIG-GUID: sgnuojmQtyHcFGj8RcGnPU-sjzXGdcTN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-08_10,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 clxscore=1011
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406080125
+Content-Transfer-Encoding: 8bit
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mailbox/mtk-cmdq-mailbox.o
+Hi, Kees
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+I was looking to apply the __counted_by to the drivers/net/can
+subtree, and a research on the DECLARE_FLEX_ARRAY brought me to this
+patch.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 1 +
- 1 file changed, 1 insertion(+)
+I could not find it in any tree (tried Linus's tree and linux-next),
+so I am not sure what is the status here (sorry if it was upstreamed
+and if I just missed it).
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 4aa394e91109..8247584bcbeb 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -790,4 +790,5 @@ static void __exit cmdq_drv_exit(void)
- subsys_initcall(cmdq_drv_init);
- module_exit(cmdq_drv_exit);
- 
-+MODULE_DESCRIPTION("Mediatek Command Queue(CMDQ) driver");
- MODULE_LICENSE("GPL v2");
+While at it, and with several months of delays, here is my feedback.
 
----
-base-commit: 19ca0d8a433ff37018f9429f7e7739e9f3d3d2b4
-change-id: 20240608-md-drivers-mailbox-3cd31fdfc4b6
+On Tue, 13 Feb 2024 at 15:42:10, Kees Cook <keescook@chromium.org> wrote:
+> With the coming support for the __counted_by struct member attribute,
+> we will need a way to add such annotations to the places where
+> DECLARE_FLEX_ARRAY() is used. Add an optional 3rd argument that can be
+> used for including attributes in the flexible array definition.
+> 
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Keith Packard <keithp@keithp.com>
+> Cc: Miguel Ojeda <ojeda@kernel.org>
+> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+> Cc: Dmitry Antipov <dmantipov@yandex.ru>
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/linux/stddef.h      |  6 +++---
+>  include/uapi/linux/stddef.h | 10 +++++-----
+>  2 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+> index 929d67710cc5..176bfe8c0bd7 100644
+> --- a/include/linux/stddef.h
+> +++ b/include/linux/stddef.h
+> @@ -82,15 +82,15 @@ enum {
+>  
+>  /**
+>   * DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
+> - *
 
+Nitpick: this line removal is not related to the patch and the other
+documentation blocks in include/linux/stddef.h also have this empty
+line. For consistency, better to keep.
+
+>   * @TYPE: The type of each flexible array element
+>   * @NAME: The name of the flexible array member
+> + * @...: The list of member attributes to apply (optional)
+>   *
+>   * In order to have a flexible array member in a union or alone in a
+>   * struct, it needs to be wrapped in an anonymous struct with at least 1
+>   * named member, but that member can be empty.
+>   */
+> -#define DECLARE_FLEX_ARRAY(TYPE, NAME) \
+> -	__DECLARE_FLEX_ARRAY(TYPE, NAME)
+> +#define DECLARE_FLEX_ARRAY(TYPE, NAME, ...) \
+> +	__DECLARE_FLEX_ARRAY(TYPE, NAME, __VA_ARGS__)
+>  
+>  #endif
+> diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
+> index 2ec6f35cda32..028aeec3d7f1 100644
+> --- a/include/uapi/linux/stddef.h
+> +++ b/include/uapi/linux/stddef.h
+> @@ -31,23 +31,23 @@
+>  
+>  #ifdef __cplusplus
+>  /* sizeof(struct{}) is 1 in C++, not 0, can't use C version of the macro. */
+> -#define __DECLARE_FLEX_ARRAY(T, member)	\
+> -	T member[0]
+> +#define __DECLARE_FLEX_ARRAY(TYPE, NAME, ...)	\
+> +	TYPE NAME[0] __VA_ARGS__
+>  #else
+>  /**
+>   * __DECLARE_FLEX_ARRAY() - Declare a flexible array usable in a union
+> - *
+
+Same as above: no need to remove.
+
+>   * @TYPE: The type of each flexible array element
+>   * @NAME: The name of the flexible array member
+> + * @...: The list of member attributes to apply (optional)
+>   *
+>   * In order to have a flexible array member in a union or alone in a
+>   * struct, it needs to be wrapped in an anonymous struct with at least 1
+>   * named member, but that member can be empty.
+>   */
+> -#define __DECLARE_FLEX_ARRAY(TYPE, NAME)	\
+> +#define __DECLARE_FLEX_ARRAY(TYPE, NAME, ...)	\
+>  	struct { \
+>  		struct { } __empty_ ## NAME; \
+> -		TYPE NAME[]; \
+> +		TYPE NAME[] __VA_ARGS__; \
+>  	}
+>  #endif
+
+How does this work?
+
+If I take this example:
+
+  struct foo {
+         size_t union_size;
+         union {
+  		struct bar;
+  		DECLARE_FLEX_ARRAY(u8, raw, __counted_by(union_size));
+  	};
+  };
+
+it will expand to:
+
+  struct foo {
+         size_t union_size;
+         union {
+  		struct bar;
+  		struct {
+			struct { } __empty_raw;
+			u8 raw[] __counted_by(union_size);
+		};
+  	};
+  };
+
+right?
+
+Looking at clang documentation:
+
+  The count field member must be within the same non-anonymous,
+  enclosing struct as the flexible array member.
+
+Ref: https://clang.llvm.org/docs/AttributeReference.html#counted-by
+
+Here, the union_size and the flexible array member are in different
+structures (struct foo and anonymous structure). It seems to me that
+the prerequisites are not met. Am I missing something?
+
+Yours sincerely,
+Vincent Mailhol
