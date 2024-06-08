@@ -1,83 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8C7179652;
-	Sat,  8 Jun 2024 14:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2187C17A93C;
+	Sat,  8 Jun 2024 14:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717856212; cv=none; b=ifiZBL9ik3s2EW3TN5dmwcmpjCFbA3ef9NpgqQBhULe3HqE1S4urQFdI98102qWpkTJmW/HFoft0CYGZ5DLj7XW8faUhohh3cQsSXcwuQJZsEcFDEYyNh0HWdz1emX6OrRVUYt7eq8Jc1pAA8ADfjawLUKUATsPwWxgxdAG3eAk=
+	t=1717856216; cv=none; b=ufuoxQLVDcqzrp7UrAOWwCIJqRAeA2fqht++beF55JX6s5Hpg7Qnm3xCkHAv1LBZ+pemHAU7xbM3F+AGMvV4qlY/IWnqCuISIwncHQvEIg6zGY4gUr/avO6Zhiyg0Dni4Zyu8y6KKUT8P0Ksqz4Nd/hiYn57BgDn5KbecguoCcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717856212; c=relaxed/simple;
-	bh=Y0RqWg41gTp2+bnmNIZlUVnvMEc4erjUmvjDN4eKdCQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X2oZ9Z03/ILCU3o3obIopnnmUpCDoegIYLYyuCVWldGMXRcwiXL5Fo1IydVe92FN5Ttmht7a4leRkW5yMoLzWGU+LBGkbf7HARY+LOAdDPK/05gT4FdQPChG04knDJRpVo8ZlyIWIcJhomFdLBxC4gG/siox/oouCiPCdzm6Qgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+CEJSDl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717856216; c=relaxed/simple;
+	bh=3ZQeW8xyCfO0mF0Lz2gwAXBPIFqpW8xq/6Un+XG7dl8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aOM4Xy6cn/KGSbjDtvF0lgGtDIJRlONVlljfpr24iRJ+Dr2cASniX0DYRxf7/dfoCD1BvwdAaPZSu73J0yuMi9W2XDS/EkAP6WVj1tU1fbEjdKQXpaoGOb7Elr5Qo8sy+A+gnMk0uYg13KG7zwtul9lW9XFj/jpXur6QganRRq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=FWeJ52Y6; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+CEJSDl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD4D6C2BD11;
-	Sat,  8 Jun 2024 14:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717856212;
-	bh=Y0RqWg41gTp2+bnmNIZlUVnvMEc4erjUmvjDN4eKdCQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=R+CEJSDl6MsJ2ZOkktECryQlDO+kMpVVhp5WK9E0lLLMGwVP5ISrbF3BTecnM8s9u
-	 roa6bx7iTr3BjcPROVhdGvEsy+PnW6Tw9Gj1QLPxlxU6KS45Y5BYtHfwyLEJ69wKJ1
-	 wGAc2WADfNftSNQH3g8ZPkHq1fK78fkIsWu26q7Vx05iLcBjhbO7jYFeKfmNkenNJv
-	 CDpWV8HDmlGAySDgtC1QudXt2SkmeAnvs/KblwB1cgC1aEfAYue7wUSPhSbHUCiY6l
-	 jVf2K7Dz0f61NyOwNmeBC8vl3mMPEZyUpms7wd8UQLWnMLqgGKrtdtTdt2A7ZmbxuZ
-	 XnVuzUjpTJ53Q==
-Date: Sat, 8 Jun 2024 15:16:43 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, Justin Stitt
- <justinstitt@google.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iio: event: use sizeof(*pointer) instead of
- sizeof(type)
-Message-ID: <20240608151643.5f82e10d@jic23-huawei>
-In-Reply-To: <AS8PR02MB7237D024459C314CECE72EAF8BFE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-References: <AS8PR02MB7237D024459C314CECE72EAF8BFE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FWeJ52Y6"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 74E1CC67;
+	Sat,  8 Jun 2024 16:16:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1717856201;
+	bh=3ZQeW8xyCfO0mF0Lz2gwAXBPIFqpW8xq/6Un+XG7dl8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FWeJ52Y6LvaMBC28vCdJ58rQuBqpU4C8SI6PL+y5U7gcVCPyg/xD9Wh+0/noL3RNZ
+	 F0zWQwqw6U5C/7jrvkGhZBwNGWrx5YLstlnRWCUchdrLw/hu1MXTlitnV3hDyaCnDt
+	 MlW03w20sCD+5MGzOGdiN9XkuXGxb/Ze1oo376ds=
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Subject: [PATCH v4 0/4] ADP5585 GPIO expander, PWM and keypad controller support
+Date: Sat,  8 Jun 2024 17:16:29 +0300
+Message-ID: <20240608141633.2562-1-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.44.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sun,  2 Jun 2024 19:23:54 +0200
-Erick Archer <erick.archer@outlook.com> wrote:
+Hello,
 
-> It is preferred to use sizeof(*pointer) instead of sizeof(type)
-> due to the type of the variable can change and one needs not
-> change the former (unlike the latter). At the same time refactor
-> the NULL comparison.
-> 
-> This patch has no effect on runtime behavior.
-> 
-> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+This patch series introduces support for the Analog Devices ADP5585, a
+GPIO expander, PWM and keyboard controller. It models the chip as an MFD
+device, and includes DT bindings (1/4), an MFD driver (2/4) and drivers
+for the GPIO (3/4) and PWM (4/4) functions.
 
-Applied.
-> ---
->  drivers/iio/industrialio-event.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/industrialio-event.c b/drivers/iio/industrialio-event.c
-> index 910c1f14abd5..b99bfeff7d37 100644
-> --- a/drivers/iio/industrialio-event.c
-> +++ b/drivers/iio/industrialio-event.c
-> @@ -572,8 +572,8 @@ int iio_device_register_eventset(struct iio_dev *indio_dev)
->  	      iio_check_for_dynamic_events(indio_dev)))
->  		return 0;
->  
-> -	ev_int = kzalloc(sizeof(struct iio_event_interface), GFP_KERNEL);
-> -	if (ev_int == NULL)
-> +	ev_int = kzalloc(sizeof(*ev_int), GFP_KERNEL);
-> +	if (!ev_int)
->  		return -ENOMEM;
->  
->  	iio_dev_opaque->event_interface = ev_int;
+Support for the keypad controller is left out, as I have no means to
+test it at the moment. The chip also includes a tiny reset controller,
+as well as a 3-bit input programmable logic block, which I haven't tried
+to support (and also have no means to test).
+
+The driver is based on an initial version from the NXP BSP kernel, then
+extensively and nearly completely rewritten, with added DT bindings. I
+have nonetheless retained original authorship. Clark, Haibo, if you
+would prefer not being credited and/or listed as authors, please let me
+know.
+
+Compared to v3, this version addresses small review comments. I believe
+it is ready to go, pending another review of the PWM side (Uwe reviewed
+a previous version, and to the best of my knowledge, I've addressed all
+his concerns) and the MFD driver. Once the PWM driver gets reviewed, I
+think the simplest course of action is to merge the whole series through
+the MFD tree.
+
+Clark Wang (1):
+  pwm: adp5585: Add Analog Devices ADP5585 support
+
+Haibo Chen (2):
+  mfd: adp5585: Add Analog Devices ADP5585 core support
+  gpio: adp5585: Add Analog Devices ADP5585 support
+
+Laurent Pinchart (1):
+  dt-bindings: mfd: Add Analog Devices ADP5585
+
+ .../devicetree/bindings/mfd/adi,adp5585.yaml  |  90 +++++++
+ .../devicetree/bindings/trivial-devices.yaml  |   4 -
+ MAINTAINERS                                   |  11 +
+ drivers/gpio/Kconfig                          |   7 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-adp5585.c                   | 231 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |  12 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/adp5585.c                         | 199 +++++++++++++++
+ drivers/pwm/Kconfig                           |   7 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-adp5585.c                     | 189 ++++++++++++++
+ include/linux/mfd/adp5585.h                   | 126 ++++++++++
+ 13 files changed, 875 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+ create mode 100644 drivers/gpio/gpio-adp5585.c
+ create mode 100644 drivers/mfd/adp5585.c
+ create mode 100644 drivers/pwm/pwm-adp5585.c
+ create mode 100644 include/linux/mfd/adp5585.h
+
+
+base-commit: c3f38fa61af77b49866b006939479069cd451173
+-- 
+Regards,
+
+Laurent Pinchart
 
