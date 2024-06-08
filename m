@@ -1,52 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2966B1E888;
-	Sat,  8 Jun 2024 15:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BFD179663
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 15:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717861727; cv=none; b=jBP8Q0kO7mHehfoiikzSdIdrFOFUExJeE9n71tA2Nqon2chawCfdChfVqi14bRC2ylvgz9O3nQTlgTDhZKFzWjjxxdJ/CrwnPdchc+qcrNEqO5sF40XkrQNZhiwu9tUxWglTkGk3/J3yfcM5A5JEyzmVgZzC3i3H7R7GRIkrANk=
+	t=1717861746; cv=none; b=h9odC6WChx13PIHTpO94M7uNUJs2fSAE6+Jz1kzpJqvsbOh5DCwnVRJQRjnF5MOlm/MNjPtpx3U7scuG3L3YtrpEObTVpUX0A7w2KX0+NKrlqo0KPvwQl7pBNE3aOq3ViK716CosyYvfSCOP29kBInNM5S6g01d8xl3afU8nznA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717861727; c=relaxed/simple;
-	bh=3p3kxCe/yhGV0q146IRm30LBrdx5GWV65OqRWxDa644=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BmC69hgRHqBOmrbA5+qsC6/CjjHJ3J4rsO0kEpnbDWP9rM6oMFKjQIvwgGdlarwWvLU8CrJ4a0HxjXxmeLa29eOVuAkmtu3YEsLgGk9Ov5TY3RYIEWlI6CxtvTI+bG/0altAH3L9ZDQxw18XCOQ4mSMTPrB17PsNdIaErx/57G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9iTnJW1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717861746; c=relaxed/simple;
+	bh=Vu3mBoCiq0N9b7QydQzPOnM6ZLugKz3OoDl2wdqCxNY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=iN/Z2Cp5hMMfM7xHLAvPNByllz9si1+QC1hCXXEx9zN9tkwB8GiEIQBEnR9BUXdXWozr1OEtuD0CdYpO43FWc8gaWe5+tX03yMW12LfBQno2+u18LlSSMMOz93T9kpsvohZ0eD2msmTM9Nm/P8FhFHG7gPU4rIiTC51KKdvDdik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gPFopaxC; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9iTnJW1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFEBCC32781;
-	Sat,  8 Jun 2024 15:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717861726;
-	bh=3p3kxCe/yhGV0q146IRm30LBrdx5GWV65OqRWxDa644=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=i9iTnJW1vgPwDQx57ApoXYc9y4CZkj12TYUblreb2RUJQjmkEK4ThrX2dfODGjUcK
-	 jZeTQo+ztRwSue2+nuMM/pul0jQRVLy8ryhfUPZmV924bHQOeayMw6Y/G6eLPPmlzP
-	 yE+u1liBfLzXRpOGD+eqMKRZoHJ/1iB4Y2r4QjZqhDfdpdcj1lSFjO3XDGWks5LiIa
-	 aH5BB7QloSrhf2Z4Thv7lxUg9o3hPuDEdYHQAE3xxW+bPTsiyXN+Sb5MK8dyllUPps
-	 0anRM9maFxEhmetGjQ4FEGaGh2VN/WP04ueKz4ajwZSWjOHLn5qSyZnxiZqbJU9JY+
-	 qcO94RFcuAxUQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 46920CE0C16; Sat,  8 Jun 2024 08:48:46 -0700 (PDT)
-Date: Sat, 8 Jun 2024 08:48:46 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	kernel-team@meta.com, mingo@kernel.org, stern@rowland.harvard.edu,
-	parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
-	boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-	j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-	Marco Elver <elver@google.com>, Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH memory-model 3/3] tools/memory-model: Add KCSAN LF
- mentorship session citation
-Message-ID: <6bb5f789-f143-493c-a804-62b7c81dabb0@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <b290acd5-074f-4e17-a8bf-b444e553d986@paulmck-laptop>
- <20240604221419.2370127-3-paulmck@kernel.org>
- <42fa4660-b3bf-4d09-bbad-064f9d4cc727@gmail.com>
- <f11f7230-7c16-45a3-83be-9aba32e10a3b@paulmck-laptop>
- <3c5a53e2-b5a9-4197-97a3-247abb7f3061@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gPFopaxC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717861745; x=1749397745;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Vu3mBoCiq0N9b7QydQzPOnM6ZLugKz3OoDl2wdqCxNY=;
+  b=gPFopaxCDo2u643vfZi92QK54UAG/DKBiy57eTdkDOgxI+IiXxUIecNQ
+   uyV3Ggc1tP57oG7xTklcDDUp5kuO3N7Ya6tmeJfBQeb8SWSz1VYWxslx8
+   M4ehThKNt87CYN/twLmQ9KxIs+JL2ksGvS9pf8kuDbf1I3+PP5mRgFGs5
+   YtAgKNfaUDJIgMbISLKd1CjV6YUbYvWs0I4BbTxCOnquOBCd5GwtwcSFz
+   u7W3xMxoF/5RS/PnnB+SFAzZj1oMgTGP48FebNM3sa7QEV9UjHurcd5tQ
+   aYS0KokcgbxshatR58647PIwsjOlCh8AMH23UOkHB1ODq/Pg49r3kZPol
+   Q==;
+X-CSE-ConnectionGUID: HyX1tQNVRJ+7aNNNd2kdQQ==
+X-CSE-MsgGUID: TayVRuMWSZq3Xxw8se7OZA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11097"; a="25681616"
+X-IronPort-AV: E=Sophos;i="6.08,223,1712646000"; 
+   d="scan'208";a="25681616"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2024 08:49:04 -0700
+X-CSE-ConnectionGUID: 1h+eeu0rQ7OP1d7Rztx+ag==
+X-CSE-MsgGUID: TrjGLIAcSieXP0Ml/ud06A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,223,1712646000"; 
+   d="scan'208";a="38552071"
+Received: from lkp-server01.sh.intel.com (HELO 8967fbab76b3) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 08 Jun 2024 08:49:02 -0700
+Received: from kbuild by 8967fbab76b3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sFyJP-00008Q-1y;
+	Sat, 08 Jun 2024 15:48:59 +0000
+Date: Sat, 8 Jun 2024 23:48:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Michal Simek <monstr@monstr.eu>
+Subject: arch/microblaze/kernel/entry.S:945: Error: unknown opcode "suspend"
+Message-ID: <202406082323.HAzjhTNu-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,110 +61,157 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3c5a53e2-b5a9-4197-97a3-247abb7f3061@gmail.com>
 
-On Sat, Jun 08, 2024 at 08:38:12AM +0900, Akira Yokosawa wrote:
-> On 2024/06/05 13:02, Paul E. McKenney wrote:
-> > On Wed, Jun 05, 2024 at 10:57:27AM +0900, Akira Yokosawa wrote:
-> >> On Tue,  4 Jun 2024 15:14:19 -0700, Paul E. McKenney wrote:
-> >>> Add a citation to Marco's LF mentorship session presentation entitled
-> >>> "The Kernel Concurrency Sanitizer"
-> >>>
-> >>> [ paulmck: Apply Marco Elver feedback. ]
-> >>>
-> >>> Reported-by: Marco Elver <elver@google.com>
-> >>> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> >>> Cc: Alan Stern <stern@rowland.harvard.edu>
-> >>> Cc: Andrea Parri <parri.andrea@gmail.com>
-> >>> Cc: Will Deacon <will@kernel.org>
-> >>> Cc: Peter Zijlstra <peterz@infradead.org>
-> >>> Cc: Boqun Feng <boqun.feng@gmail.com>
-> >>> Cc: Nicholas Piggin <npiggin@gmail.com>
-> >>> Cc: David Howells <dhowells@redhat.com>
-> >>> Cc: Jade Alglave <j.alglave@ucl.ac.uk>
-> >>> Cc: Luc Maranget <luc.maranget@inria.fr>
-> >>> Cc: Akira Yokosawa <akiyks@gmail.com>
-> >>
-> >> Paul,
-> >>
-> >> While reviewing this, I noticed that
-> >> tools/memory-model/Documentation/README has no mention of
-> >> access-marking.txt.
-> >>
-> >> It has no mention of glossary.txt or locking.txt, either.
-> >>
-> >> I'm not sure where are the right places in README for them.
-> >> Can you update it in a follow-up change?
-> >>
-> >> Anyway, for this change,
-> >>
-> >> Reviewed-by: Akira Yokosawa <akiyks@gmail.com>
-> > 
-> > Thank you, and good catch!  Does the patch below look appropriate?
-> 
-> Well, I must say this is not what I expected.
-> Please see below.
+Hi Appana,
 
-OK, I was clearly in way too much of a hurry when doing this, and please
-accept my apologies for my inattention.  I am therefore going to do
-what I should have done in the first place, which is to ask you if you
-would like to send a patch fixing this.  If so, I would be quite happy
-to replace mine with yours.
+FYI, the error/warning still remains.
 
-							Thanx, Paul
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   dc772f8237f9b0c9ea3f34d0dc4a57d1f6a5070d
+commit: 88707ebe77e23e856981e597f322cabbf6415662 microblaze: Add custom break vector handler for mb manager
+date:   1 year, 8 months ago
+config: microblaze-allmodconfig (https://download.01.org/0day-ci/archive/20240608/202406082323.HAzjhTNu-lkp@intel.com/config)
+compiler: microblaze-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240608/202406082323.HAzjhTNu-lkp@intel.com/reproduce)
 
-> > ------------------------------------------------------------------------
-> > 
-> > commit 834b22ba762fb59024843a64554d38409aaa82ec
-> > Author: Paul E. McKenney <paulmck@kernel.org>
-> > Date:   Tue Jun 4 20:59:35 2024 -0700
-> > 
-> >     tools/memory-model: Add access-marking.txt to README
-> >     
-> >     Given that access-marking.txt exists, this commit makes it easier to find.
-> >     
-> >     Reported-by: Akira Yokosawa <akiyks@gmail.com>
-> >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > 
-> > diff --git a/tools/memory-model/Documentation/README b/tools/memory-model/Documentation/README
-> > index db90a26dbdf40..304162743a5b8 100644
-> > --- a/tools/memory-model/Documentation/README
-> > +++ b/tools/memory-model/Documentation/README
-> > @@ -47,6 +47,10 @@ DESCRIPTION OF FILES
-> >  README
-> >  	This file.
-> >  
-> > +access-marking.txt
-> > +	Guidelines for marking intentionally concurrent accesses to
-> > +	shared memory.
-> > +
-> >  cheatsheet.txt
-> >  	Quick-reference guide to the Linux-kernel memory model.
-> >
-> 
-> What I expected was an entry in the bullet list in the upper half
-> of README which mentions access-marking.txt along with the update of
-> alphabetical list of files.
-> 
-> Updating the latter wouldn't worth bothering you.
-> 
-> And you are missing another comment WRT glossary.txt and locking.txt. ;-)
-> 
-> Let me suggest an idea of their positions in the bullet list where the
-> ordering is important.  Looks reasonable to you ?
-> 
->   o   simple.txt
->   o   ordering.txt
->   o   locking.txt               <--new
->   o   litmus-test.txt
->   o   recipes.txt
->   o   control-dependencies.txt
->   o   access-marking.txt        <--new
->   o   cheatsheet.txt
->   o   explanation.txt
->   o   references.txt
->   o   glossary.txt              <--new
-> 
-> Have I made my point clear enough?
-> 
->         Thanks, Akira
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406082323.HAzjhTNu-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   arch/microblaze/kernel/entry.S: Assembler messages:
+>> arch/microblaze/kernel/entry.S:945: Error: unknown opcode "suspend"
+
+
+vim +/suspend +945 arch/microblaze/kernel/entry.S
+
+   825	
+   826		/* restore all the tlb's */
+   827		addik	r3, r0, TOPHYS(tlb_skip)
+   828		addik	r6, r0, PT_TLBL0
+   829		addik	r7, r0, PT_TLBH0
+   830	restore_tlb:
+   831		add	r6, r6, r1
+   832		add	r7, r7, r1
+   833		lwi	r2, r6, 0
+   834		mts 	rtlblo, r2
+   835		lwi	r2, r7, 0
+   836		mts	rtlbhi, r2
+   837		addik	r6, r6, 4
+   838		addik	r7, r7, 4
+   839		bgtid	r3, restore_tlb
+   840		addik	r3, r3, -1
+   841	
+   842		lwi  	r5, r0, TOPHYS(xmb_manager_dev)
+   843		lwi	r8, r0, TOPHYS(xmb_manager_reset_callback)
+   844		set_vms
+   845		/* return from reset need -8 to adjust for rtsd r15, 8 */
+   846		addik   r15, r0, ret_from_reset - 8
+   847		rtbd	r8, 0
+   848		nop
+   849	
+   850	ret_from_reset:
+   851		set_bip /* Ints masked for state restore */
+   852		VM_OFF
+   853		/* MS: Restore all regs */
+   854		RESTORE_REGS
+   855		lwi	r14, r1, PT_R14
+   856		lwi	r16, r1, PT_PC
+   857		addik	r1, r1, PT_SIZE + 36
+   858		rtbd	r16, 0
+   859		nop
+   860	
+   861	/*
+   862	 * Break handler for MB Manager. Enter to _xmb_manager_break by
+   863	 * injecting fault in one of the TMR Microblaze core.
+   864	 * FIXME: This break handler supports getting
+   865	 * called from kernel space only.
+   866	 */
+   867	C_ENTRY(_xmb_manager_break):
+   868		/*
+   869		 * Reserve memory in the stack for context store/restore
+   870		 * (which includes memory for storing tlbs (max two tlbs))
+   871		 */
+   872		addik	r1, r1, -PT_SIZE - 36
+   873		swi	r1, r0, xmb_manager_stackpointer
+   874		SAVE_REGS
+   875		swi	r14, r1, PT_R14	/* rewrite saved R14 value */
+   876		swi	r16, r1, PT_PC; /* PC and r16 are the same */
+   877	
+   878		lwi	r6, r0, TOPHYS(xmb_manager_baseaddr)
+   879		lwi	r7, r0, TOPHYS(xmb_manager_crval)
+   880		/*
+   881		 * When the break vector gets asserted because of error injection,
+   882		 * the break signal must be blocked before exiting from the
+   883		 * break handler, below code configures the tmr manager
+   884		 * control register to block break signal.
+   885		 */
+   886		swi	r7, r6, 0
+   887	
+   888		/* Save the special purpose registers  */
+   889		mfs	r2, rpid
+   890		swi	r2, r1, PT_PID
+   891	
+   892		mfs	r2, rtlbx
+   893		swi	r2, r1, PT_TLBI
+   894	
+   895		mfs	r2, rzpr
+   896		swi	r2, r1, PT_ZPR
+   897	
+   898	#if CONFIG_XILINX_MICROBLAZE0_USE_FPU
+   899		mfs	r2, rfsr
+   900		swi	r2, r1, PT_FSR
+   901	#endif
+   902		mfs	r2, rmsr
+   903		swi	r2, r1, PT_MSR
+   904	
+   905		/* Save all the tlb's */
+   906		addik	r3, r0, TOPHYS(tlb_skip)
+   907		addik	r6, r0, PT_TLBL0
+   908		addik	r7, r0, PT_TLBH0
+   909	save_tlb:
+   910		add	r6, r6, r1
+   911		add	r7, r7, r1
+   912		mfs	r2, rtlblo
+   913		swi	r2, r6, 0
+   914		mfs	r2, rtlbhi
+   915		swi	r2, r7, 0
+   916		addik	r6, r6, 4
+   917		addik	r7, r7, 4
+   918		bgtid	r3, save_tlb
+   919		addik	r3, r3, -1
+   920	
+   921		lwi  	r5, r0, TOPHYS(xmb_manager_dev)
+   922		lwi	r8, r0, TOPHYS(xmb_manager_callback)
+   923		/* return from break need -8 to adjust for rtsd r15, 8 */
+   924		addik   r15, r0, ret_from_break - 8
+   925		rtbd	r8, 0
+   926		nop
+   927	
+   928	ret_from_break:
+   929		/* flush the d-cache */
+   930		bralid	r15, mb_flush_dcache
+   931		nop
+   932	
+   933		/*
+   934		 * To make sure microblaze i-cache is in a proper state
+   935		 * invalidate the i-cache.
+   936		 */
+   937		bralid	r15, mb_invalidate_icache
+   938		nop
+   939	
+   940		set_bip; /* Ints masked for state restore */
+   941		VM_OFF;
+   942		mbar	1
+   943		mbar	2
+   944		bri	4
+ > 945		suspend
+   946		nop
+   947	#endif
+   948	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
