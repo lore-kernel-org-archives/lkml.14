@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5169017B410;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A7A17B4E9;
 	Sat,  8 Jun 2024 15:57:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717862241; cv=none; b=s+CC1STbyAFLjoVKkLwdf7e4uGxLFWX8XNw1LVVgtJh3Zm71boc19u39p124/qA0CracUtmTi+e2KC4B+1oEIK2FtR9osQ3CdsJ16lDHcjCGPTQB3pBr24f4mwNfXFYXf5a6Nx7Ef6hYwpmWc8bgZ/yrmdgV0JjKbLdlZrZDPYc=
+	t=1717862241; cv=none; b=IZxQwa5iF5REz7CaD/r8dk7gLvlX2jagWo48onyzcb9uIibYflcsfbQOLOKCSlY6uFo6+UoOKJti1CMKLwc2OMkeYz8mZBn+R1UXkpq+vKbMGeHHemd86Lsxl/i5cslRKnp7/Tn43nnDu2rN/Evu17mpHGXhZnWPiwG+S/71q/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717862241; c=relaxed/simple;
-	bh=1PVqbSEdTjzNUNtNb5nVf+8za+2HVUfuQBw5ji4FkkQ=;
+	bh=xvGDdXmPugW8gDTyzx+vdea6PEvo7eNqJuG1wNKxm9w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oBVpjGGLbkX+InmZLyu9EOGjqHCQENTyE8VYigQOMId9cuXstCMogckvM3aPwrkvktxs5AvEtwc3AQZbdKV1lri8o1nSSV6O6c0his99kXfjRcqp4NSGLaaSLM4vOUGfoTs2j7hPLlliIdE67P1gWl7I3WFoO1cFhtH3iOoWI9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JkGEdCKK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=J8JomugPqJ3ldyXIFKVhbcdPhf00cs62BxwUH0RARJJd6qcAvOlX55+FM4jtLQIhQmKDAzkmP7zTFyxCg0J54jT/nYqYpVCLukRTATmTJCIY7cYmteKR8dbbZlJ0LN0/k+2VBU1r1VcCEQf4TkwDj7DUHF8tLMC/kzggpJocC9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RknpwIy9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JkGEdCKK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4801C4AF0E;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RknpwIy9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A875C4AF0B;
 	Sat,  8 Jun 2024 15:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717862240;
-	bh=1PVqbSEdTjzNUNtNb5nVf+8za+2HVUfuQBw5ji4FkkQ=;
+	bh=xvGDdXmPugW8gDTyzx+vdea6PEvo7eNqJuG1wNKxm9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JkGEdCKKaAxXwMSPoCmHPOgQWdxzjHOD/26D2+dOnwpJEjcR/xulIhLDzG/sbt3dC
-	 GVQYF35B7AVDJ4QwsnvdO/OoSO6B1AGD4rVbolR4XiIieJ1ib13eIiCuziGnW8In/m
-	 RYy/9r2POv1kNQDZBV8LXqO91Dh/QT5B6V0hNOr5zxEy1e/hjSieEhWPjTyqmGGTtS
-	 KvWBolM5e3XPoCDr47lLmk+BqRlce+XaUydHO8CFeIxJwRFTYARsEqm5jfegXl8JJV
-	 JWlWa/I+V/iGgUiNEQiwsab0M+nkcn4FAkaN4FCqpiRNrieLabSaVYN83llNL7Uwl7
-	 yzmU0X8QBf9aA==
+	b=RknpwIy9ywVh90i88yY6pRVCslHbAesaWxPMnrgDzPLtlgW0R1fn+mZemOpQeeQyY
+	 ZGJuMOlRpPjbI1SlH53KxEhjEPUtns8Ot2aWJ8A2JrPT8slHverQH9mmael1hP1YDQ
+	 xHsJpL6LPCsKBapD+6ZzIIcrCslWznX5XFgF2T65F45i/jWG1wTjDfzDeKF6s/YKmH
+	 LYXkqhjEznA7lYn/FTSrrp5kvHur62r7iTCEoL9qZeegR66OhCFmGfj+XaB6PYAT47
+	 UeV4amShsexMNg2h/Q+s6tr3+QhaF2XeM6wFPW2tdc78ncHUQi6uaSA36K3yw3lRGB
+	 0u5bRkq207aUQ==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1sFyRU-000000003Q8-0hto;
-	Sat, 08 Jun 2024 17:57:20 +0200
+	id 1sFyRT-000000003Pz-3Rt2;
+	Sat, 08 Jun 2024 17:57:19 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Lee Jones <lee@kernel.org>,
 	Mark Brown <broonie@kernel.org>,
@@ -49,9 +49,9 @@ Cc: Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 08/12] dt-bindings: mfd: pm8008: Drop redundant descriptions
-Date: Sat,  8 Jun 2024 17:55:22 +0200
-Message-ID: <20240608155526.12996-9-johan+linaro@kernel.org>
+Subject: [PATCH v3 04/12] mfd: pm8008: Mark regmap structures as const
+Date: Sat,  8 Jun 2024 17:55:18 +0200
+Message-ID: <20240608155526.12996-5-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.44.1
 In-Reply-To: <20240608155526.12996-1-johan+linaro@kernel.org>
 References: <20240608155526.12996-1-johan+linaro@kernel.org>
@@ -63,36 +63,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for reworking the binding, drop the redundant
-descriptions of the standard 'reg' and 'interrupts' properties.
+The regmap irq chip structures can be const so mark them as such.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml | 5 -----
- 1 file changed, 5 deletions(-)
+ drivers/mfd/qcom-pm8008.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml b/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
-index e1e05921afb4..d71657f488db 100644
---- a/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
-+++ b/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
-@@ -19,16 +19,11 @@ properties:
-     const: qcom,pm8008
+diff --git a/drivers/mfd/qcom-pm8008.c b/drivers/mfd/qcom-pm8008.c
+index 5a77155a63d7..ab55d524c27b 100644
+--- a/drivers/mfd/qcom-pm8008.c
++++ b/drivers/mfd/qcom-pm8008.c
+@@ -51,7 +51,7 @@ enum {
+ 	POLARITY_LO_INDEX,
+ };
  
-   reg:
--    description:
--      I2C slave address.
--
-     maxItems: 1
+-static unsigned int pm8008_config_regs[] = {
++static const unsigned int pm8008_config_regs[] = {
+ 	INT_SET_TYPE_OFFSET,
+ 	INT_POL_HIGH_OFFSET,
+ 	INT_POL_LOW_OFFSET,
+@@ -129,7 +129,7 @@ static int pm8008_set_type_config(unsigned int **buf, unsigned int type,
+ 	return 0;
+ }
  
-   interrupts:
-     maxItems: 1
- 
--    description: Parent interrupt.
--
-   reset-gpios:
-     maxItems: 1
- 
+-static struct regmap_irq_chip pm8008_irq_chip = {
++static const struct regmap_irq_chip pm8008_irq_chip = {
+ 	.name			= "pm8008_irq",
+ 	.main_status		= I2C_INTR_STATUS_BASE,
+ 	.num_main_regs		= 1,
 -- 
 2.44.1
 
