@@ -1,116 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (smtp-70.smtpout.orange.fr [80.12.242.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B54149DED;
-	Sat,  8 Jun 2024 14:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C67149DED;
+	Sat,  8 Jun 2024 14:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717857167; cv=none; b=rRdtPzzbvYY1xd03QIF9ySrhZIcyqtuE7ZYGKilJeccSAYHlLenbk0kjMUR23fEMuuCPmV7cB1vGiUsdhUWK3/gSZqk4kepL5pTiaQkv4bTTib6Ck+RJ/Fx7TtCLPPfletDdaTmXdTVKrWEfkmP7ORwfe51e12Qa1IdF9HoGq+I=
+	t=1717857305; cv=none; b=ZWZZBBDMYELYT1AKTCCwEirIz6bg8qTWxEqGuCX5vP1c+rXExc1Z9vt1n9VJkl3iN0WYIiQciqo/91YO11xCSduoLFT8bGUxRFvQrOU0xrGb8oyi9kXC4xbmQjDQhpjh4vq91+u6WH8AJiM6l4sLystY9cNbzeHLoASh2KP/tcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717857167; c=relaxed/simple;
-	bh=+mfH5kPRQKjFbiX+1m7cu4HLvr1f9QnlfzdttOt8hto=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=CD9D2pekS2cQChhbG+To+I+wvXD33MJmilXsc5zvZnYK7dZBWMIShPT2B4FeILKaQIdiCztgW9StWTb8qo8WAOtthKJAGX+58Slrkio2IMxjjJiLUNEnQq5iP0aS8yXEUWmVj9BNwE4jZkx904MaJCWLhC7cqNF0SGsmvf6O+Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6HGJuTs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717857305; c=relaxed/simple;
+	bh=Avzt8iuW+icupfQzd34mdUP1exisuMqsbmUkbTgWcBk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E3vK9IB1F6SoCECVWOhI/b43ZpfmVfB7Wiuv59qOECtcjrvC2iXuy4322cdUorN1bl5PxbF99Xi07T4V/AtFG0YyHlRWM34ZSj+1+EsYjDXlDabLroYRkSstobh2aQf9aOtpOMdGdEczsPg1fWDRIJ/EjhQJlqiF4W/pBZk6TVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=H/3bKZTJ; arc=none smtp.client-ip=80.12.242.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6HGJuTs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D342C2BD11;
-	Sat,  8 Jun 2024 14:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717857166;
-	bh=+mfH5kPRQKjFbiX+1m7cu4HLvr1f9QnlfzdttOt8hto=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=W6HGJuTsLphg3hJwaCcOqeBS/036cr1C35LPh+8S97Y+K7jUszwmKWkgwu5GjXPiK
-	 LoEX3fxAN2Q/2/ElZBXzpd4aO+B05yvV7V/0xf5CQJ0rW/ivN3zUAgcJ1xVbAjnQBD
-	 W6nvC+wkNMVOd/9fbnDQF5SgtqMI6dhEJb5HuzaXEQ7gGjGDqUP8n1QQQluMvNOWTN
-	 S5G3rueKMUiWI1aF74l9jSnB90djcoSqWvUGmZgwf4FDQTcPVokTMvAbBZPfsrKc7P
-	 Roief3NScRkY1DcjAIcx39RO0GwlU0EDKBV9J3kFkmgNIJ3Hp3ddxszlsLDVkf/RvU
-	 OV2DdZ/nqxo1A==
-Date: Sat, 8 Jun 2024 23:32:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] function_graph: Rename BYTE_NUMBER to CHAR_NUMBER in
- selftests
-Message-Id: <20240608233242.414564f51bcc5db9993eb682@kernel.org>
-In-Reply-To: <20240606081846.4cb82dc4@gandalf.local.home>
-References: <20240606081846.4cb82dc4@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="H/3bKZTJ"
+Received: from fedora.home ([86.243.222.230])
+	by smtp.orange.fr with ESMTPA
+	id Fx9Rs04TztVxQFx9gsAXpq; Sat, 08 Jun 2024 16:34:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1717857293;
+	bh=5Rt9DtR3wFrK6NMeCAc9r8PlkozK/OUjFMR/opTt2bA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=H/3bKZTJzfjZgxWQ8Rs0pWnmgAXTGeglbXFR4n4P469sILXGIkny3rjPA3/Bu8+Vv
+	 sGSH8L+E+1yaCyhC8y9hV76w0dguIvAtpgioV7E2/RfdU2ssj6/v63KNKTFpwBjoo8
+	 YJ5dbTWax5EV0LrH3UVGHaJhxcdYF8CAxS+wV0+e/yZPIzlQBXz+CWVexB/3q0xkZL
+	 Ic/cn4zhFBj8t6e/tFR9NdMDKD7enSUxCPAiUp/cyIJom+iUJ1RyqPqB9bab2RvcNB
+	 0Z9raMR654UkVwRhj+rrAEbIRsIwiiDCwy4sC47c6KP5z0ayRfyB9p0KjGjnjW7eOX
+	 jXQfBpKEtiMvA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 08 Jun 2024 16:34:53 +0200
+X-ME-IP: 86.243.222.230
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: jk@ozlabs.org,
+	joel@jms.id.au,
+	alistair@popple.id.au,
+	eajames@linux.ibm.com,
+	parthiban.veerasooran@microchip.com,
+	christian.gromm@microchip.com,
+	willy@infradead.org,
+	akpm@linux-foundation.org
+Cc: linux-fsi@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH RESEND 2/3] most: Remove usage of the deprecated ida_simple_xx() API
+Date: Sat,  8 Jun 2024 16:34:19 +0200
+Message-ID: <ddbb2e3f249ba90417dc7ab01713faa1091fb44c.1717855701.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1717855701.git.christophe.jaillet@wanadoo.fr>
+References: <cover.1717855701.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 6 Jun 2024 08:18:46 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+ida_alloc() and ida_free() should be preferred to the deprecated
+ida_simple_get() and ida_simple_remove().
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> The function_graph selftests checks various size variables to pass from
-> the entry of the function to the exit. It tests 1, 2, 4 and 8 byte words.
-> The 1 byte macro was called BYTE_NUMBER but that is used in the sh
-> architecture: arch/sh/include/asm/bitops-op32.h
-> 
-> Just rename the macro to CHAR_NUMBER.
-> 
+This is less verbose.
 
-Looks good to me.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>
+---
+This patch has been sent about 6 months ago [1].
+A gentle reminder has been sent 2 months later and an A-by has been given
+[2].
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Another gentle reminder has been sent another 2 months later [3].
 
-Thanks,
+However, it has still not reached -next since then in the last 2 months.
 
-> Fixes: 47c3c70aa3697 ("function_graph: Add selftest for passing local variables")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202406061744.rZDXfRrG-lkp@intel.com/
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_selftest.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
-> index 369efc569238..adf0f436d84b 100644
-> --- a/kernel/trace/trace_selftest.c
-> +++ b/kernel/trace/trace_selftest.c
-> @@ -758,7 +758,7 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
->  
->  #ifdef CONFIG_DYNAMIC_FTRACE
->  
-> -#define BYTE_NUMBER 123
-> +#define CHAR_NUMBER 123
->  #define SHORT_NUMBER 12345
->  #define WORD_NUMBER 1234567890
->  #define LONG_NUMBER 1234567890123456789LL
-> @@ -789,7 +789,7 @@ static __init int store_entry(struct ftrace_graph_ent *trace,
->  
->  	switch (size) {
->  	case 1:
-> -		*(char *)p = BYTE_NUMBER;
-> +		*(char *)p = CHAR_NUMBER;
->  		break;
->  	case 2:
->  		*(short *)p = SHORT_NUMBER;
-> @@ -830,7 +830,7 @@ static __init void store_return(struct ftrace_graph_ret *trace,
->  
->  	switch (fixture->store_size) {
->  	case 1:
-> -		expect = BYTE_NUMBER;
-> +		expect = CHAR_NUMBER;
->  		found = *(char *)p;
->  		break;
->  	case 2:
-> -- 
-> 2.43.0
-> 
-> 
+So, I've added the A-b tag and I'm adding Andrew Morton in To:, in order to
+help in the merge process.
 
+Thanks
+CJ
 
+[1]: https://lore.kernel.org/all/988c218ef3d91bffaf4c3db9b6fba0d369cbb2b2.1702326601.git.christophe.jaillet@wanadoo.fr/
+[2]: https://lore.kernel.org/all/cd56d073-04ad-40ad-968b-7e137d10f456@microchip.com/
+[3]: https://lore.kernel.org/all/c5e519ea-2602-417c-84e9-199b610d427e@wanadoo.fr/
+---
+ drivers/most/core.c      | 10 +++++-----
+ drivers/most/most_cdev.c |  6 +++---
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/most/core.c b/drivers/most/core.c
+index f13d0e14a48b..10342e8801bf 100644
+--- a/drivers/most/core.c
++++ b/drivers/most/core.c
+@@ -1286,7 +1286,7 @@ int most_register_interface(struct most_interface *iface)
+ 	    !iface->poison_channel || (iface->num_channels > MAX_CHANNELS))
+ 		return -EINVAL;
+ 
+-	id = ida_simple_get(&mdev_id, 0, 0, GFP_KERNEL);
++	id = ida_alloc(&mdev_id, GFP_KERNEL);
+ 	if (id < 0) {
+ 		dev_err(iface->dev, "Failed to allocate device ID\n");
+ 		return id;
+@@ -1294,7 +1294,7 @@ int most_register_interface(struct most_interface *iface)
+ 
+ 	iface->p = kzalloc(sizeof(*iface->p), GFP_KERNEL);
+ 	if (!iface->p) {
+-		ida_simple_remove(&mdev_id, id);
++		ida_free(&mdev_id, id);
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -1308,7 +1308,7 @@ int most_register_interface(struct most_interface *iface)
+ 		dev_err(iface->dev, "Failed to register interface device\n");
+ 		kfree(iface->p);
+ 		put_device(iface->dev);
+-		ida_simple_remove(&mdev_id, id);
++		ida_free(&mdev_id, id);
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -1366,7 +1366,7 @@ int most_register_interface(struct most_interface *iface)
+ 	}
+ 	kfree(iface->p);
+ 	device_unregister(iface->dev);
+-	ida_simple_remove(&mdev_id, id);
++	ida_free(&mdev_id, id);
+ 	return -ENOMEM;
+ }
+ EXPORT_SYMBOL_GPL(most_register_interface);
+@@ -1397,7 +1397,7 @@ void most_deregister_interface(struct most_interface *iface)
+ 		device_unregister(&c->dev);
+ 	}
+ 
+-	ida_simple_remove(&mdev_id, iface->p->dev_id);
++	ida_free(&mdev_id, iface->p->dev_id);
+ 	kfree(iface->p);
+ 	device_unregister(iface->dev);
+ }
+diff --git a/drivers/most/most_cdev.c b/drivers/most/most_cdev.c
+index 3ed8f461e01e..b9423f82373d 100644
+--- a/drivers/most/most_cdev.c
++++ b/drivers/most/most_cdev.c
+@@ -100,7 +100,7 @@ static void destroy_cdev(struct comp_channel *c)
+ 
+ static void destroy_channel(struct comp_channel *c)
+ {
+-	ida_simple_remove(&comp.minor_id, MINOR(c->devno));
++	ida_free(&comp.minor_id, MINOR(c->devno));
+ 	kfifo_free(&c->fifo);
+ 	kfree(c);
+ }
+@@ -425,7 +425,7 @@ static int comp_probe(struct most_interface *iface, int channel_id,
+ 	if (c)
+ 		return -EEXIST;
+ 
+-	current_minor = ida_simple_get(&comp.minor_id, 0, 0, GFP_KERNEL);
++	current_minor = ida_alloc(&comp.minor_id, GFP_KERNEL);
+ 	if (current_minor < 0)
+ 		return current_minor;
+ 
+@@ -472,7 +472,7 @@ static int comp_probe(struct most_interface *iface, int channel_id,
+ err_free_c:
+ 	kfree(c);
+ err_remove_ida:
+-	ida_simple_remove(&comp.minor_id, current_minor);
++	ida_free(&comp.minor_id, current_minor);
+ 	return retval;
+ }
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.45.2
+
