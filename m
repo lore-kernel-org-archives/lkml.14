@@ -1,261 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7DC3233
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 01:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CDF17C8;
+	Sat,  8 Jun 2024 01:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717810241; cv=none; b=KWXDqqlrsY87A4Ei7wXwyp6oDnDPhMgAAJtG1zdMQjZQ99joYJkXjjJVAwGZrEmC1grZDAFTvSv8q6fTaQsaOpNV8aNbmRd0EoYWCGs57Fq56R+At3x/DKZXUYwJllbrkrkfTUab3FgTEN933P4Ue6soehFdJOoApDis38eo4tw=
+	t=1717810843; cv=none; b=UEupebATEXMHs2AHcRLdbngUr/L/hQ6vs91vVRY0VSpQHSUK9JGpj7u5JUmu2wqHjpUVRs2Q24BHNUEK/vAXfxrdKoaPoAureg/MO2wY+tXTHSFVglO1s9vEu6+ZYdoV1QfE67n2mFQxCXcGH9htm8fHMbAElSyXNvkfDin33Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717810241; c=relaxed/simple;
-	bh=hjCP01qKnJF8j+l2wZ4Q6TKDW+o+AnIizpbon3uG6H0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uKSk/GN1ksWb9yWWCvM+SLTVrRBLU/Q1buyyMoXPzfDRKNcBsPE1UjO/D3VpAFcZvl5Yfjz42hj2lQb4+HnvE37vgEPzPoysX1pW1FMyNbMaTgF7z/skGrmQwRt0MkhGvdPohqbEuTgWpTtTYzEgqEQdGYSfhuzO97yA1TteptM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DH+gZ5jw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717810843; c=relaxed/simple;
+	bh=RbTPg4S/ysm54UTzBHh/+YK6rrBNdPkV6bmNQeYbX1c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=AMN6dq/nA+jIII7JU1ERf2KF7iKq2kUvl4NochLCMOVgwiwn/plapuyAoqlrn+EcvFxxKQad4qhyIlhM10Uww2en1yRVLH5ufbY5QEkuA+Yh+8IMVAbrsxHZVej20Z5wIdQjqilpWwOFuiqNyxc7uhsr6VHymN9YjlGUAzs/7ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FptiezBC; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DH+gZ5jw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717810238;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8Il+x7mPxkybxlGmp96omLuhvnPqHbzJs6J/7vrJ884=;
-	b=DH+gZ5jwGLwVk1tIhvwUu9K5w/gl8Z9AQuETd6t/0TltEgMoizB0E55+1XWiMllryk/IP5
-	woyBnmsNsbcvcxw+tsCAsEZC+T2oYDD4JsOY+JIB0OqbjpAUwfKtL8p83rVEPezhgypaKX
-	JivWapn7aueWIq+vVzkpQuLBhYiW+eY=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-621-gL236XnyNNGiPgJJhwYnXQ-1; Fri, 07 Jun 2024 21:30:37 -0400
-X-MC-Unique: gL236XnyNNGiPgJJhwYnXQ-1
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-704231a9953so358077b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Jun 2024 18:30:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FptiezBC"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f68834bfdfso20972715ad.3;
+        Fri, 07 Jun 2024 18:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717810841; x=1718415641; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TtWpCftc1i0dh9TufBQnUO/VJ3Tz4vjLVpf1e9btJYA=;
+        b=FptiezBCaSQ+1EZsJW1chL5xrlgZS9OxvlpaX89a/x1Wvpz0mkFHSfW+QGggF5chUK
+         Sjool+5rO1ZmXoQRKNcqXSqlHjPTqgyYIeonkYca7fzh8yzOGqG6lszsU3jlDLRr9scM
+         UqINHh9B3rUP+ShP86FtLOKNj1iRhJD5N5DEVbgvRZktQrJHj4TbVpLnB+RELty/avXM
+         RSXqxpJJqwHEON3fA8DJchcnGRldkZ8YiK7z4e4ECXp94gXdmC5iVbAUU4RmDqMCnDlJ
+         FIry79Xps2rtnzM4znWsdjuRXTzfM4IoWmg2e4YJ7hSPSjBDdgxfYBVpx1AL7efFfdTQ
+         NkhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717810237; x=1718415037;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8Il+x7mPxkybxlGmp96omLuhvnPqHbzJs6J/7vrJ884=;
-        b=V/rAZo2I3WvoNLcMCojYGvFGDreesuaqdZE3BtpA0WWy6hw4dhrpVcvBPINdiruXLD
-         +suS5KMyQo7MDGrvrAZBb0MFbc7/Ts6147mexOx3LDnE5d/nmRfjg6iEI1d/7HsZ5eKL
-         lB4cFUr4BoMtQGSXsGEap3qyVL1/adDr9fDxYUTrzvK5V6o81QhS+Lq5ajfGcDUEy1jB
-         AJFtgxzqNA5NaTEb5Qs2loMnOIR23k/3AfGFJ+ZDdagqnx3scnQZ9OAvwJGCBOzdCCJx
-         Iw/h/SS5dqXIhw4Om2T0GSga6hVBhOxpyqWA84Z1nHDPFFl+1idlQMFR0+XqKXZXqdk8
-         uekQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUG1uAO68qPz4lI04Y6BANbd3RtjUTPNn9ZD6NcPUaSC/owk7DCE9g7St1UbTs/OI28zstuhdmpRMQLpeBX4WxULF0nPgYli+AVysOj
-X-Gm-Message-State: AOJu0YzRHeqTsm/xpbIWewDaNjw45XGcbCf8O0qwI4UYCG15dHF/Ww5I
-	ckKqjM08idgeAAdsnlbe+5jC737W/odbLFjK4ExhcEEXZo1jFQTFUFGUoOQGPjV81QICbJEOUfj
-	Brf9b1NKaiHZ93qHLul0N/IM49Ud4LyTpjzF0wL+QVGGI389KzeylqHNWujmcNA==
-X-Received: by 2002:a05:6a00:2e9c:b0:6ea:bf1c:9dfd with SMTP id d2e1a72fcca58-7040c737a8bmr4548035b3a.27.1717810235835;
-        Fri, 07 Jun 2024 18:30:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHf18qDxBKvh63AOJgteBoZ+l1rs1vBq/RxFyokdqBxSXDxTeJ/VWO2OgmN/pBacP7VyFcMzA==
-X-Received: by 2002:a05:6a00:2e9c:b0:6ea:bf1c:9dfd with SMTP id d2e1a72fcca58-7040c737a8bmr4548005b3a.27.1717810235042;
-        Fri, 07 Jun 2024 18:30:35 -0700 (PDT)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70423a7f217sm251223b3a.206.2024.06.07.18.30.33
+        d=1e100.net; s=20230601; t=1717810841; x=1718415641;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TtWpCftc1i0dh9TufBQnUO/VJ3Tz4vjLVpf1e9btJYA=;
+        b=SGzNumIsfxuGX0loMBxaMrtNPiPuzP8lDJoze38Wgn22GKozEj04g7Tm3dFvgLE4CR
+         oWZW5WUrht+4wDyJeJw4K0qF6F0mR9WrLLPZ7nAaXTdDt0cTkyJnKETIS/g6UWu8WZtU
+         WGoZY4wdwVMyoi/jabP2uybb2aGoYQUzcddqDyeKwye18LrddzBfS6KeAl9MZNoSLXuN
+         22Ne4JEnxXCqIPs1RaRMmUIiSQYMUBKj/Gx7tbirurXfAp8KZxHS58R34dCtUZz586aG
+         XshJGbOs1HVeIkgbaWBbqIRZuABCxogDE84VJ7lfko3a+2kuRK8OcdDnFytzCojxkIbz
+         rT5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWsB1SVo/c6CsDpexrH+OT0QGf+oppzWlH2Eyli+CEu0oY0Sw3bbQcO+Zxlnv5ZLln9E0HsmgHkzZhvjl6AO0CDtfkATlzoVlO9NUOh4kpiQX6BtVrkLVi6R9V9WfHrTABv
+X-Gm-Message-State: AOJu0YzmJkmNMMwSJv0rHe53gifgYhHMNs/I/jG58D5HbkwOP8xaJWAp
+	N7IPn+9BrsjXQTR2qtejs25ZdBoLqNKWI7LWYhldoRt4jy4D3/8b
+X-Google-Smtp-Source: AGHT+IEb5JRSiY87d55ZsQCCHAOEce4xJO4WGdSBSAWZ4GEVElX1/RvtUBEND13XIf0x1UR/goYTdQ==
+X-Received: by 2002:a17:903:41cd:b0:1f4:5c4b:dc48 with SMTP id d9443c01a7336-1f6d02d1ff5mr48612475ad.11.1717810841204;
+        Fri, 07 Jun 2024 18:40:41 -0700 (PDT)
+Received: from localhost.localdomain (140-211-169-189-openstack.osuosl.org. [140.211.169.189])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd7ccf80sm41270955ad.160.2024.06.07.18.40.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 18:30:34 -0700 (PDT)
-Date: Sat, 8 Jun 2024 09:26:43 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Ondrej Kozina <okozina@redhat.com>, Milan Broz <gmazyland@gmail.com>, 
-	Thomas Staudt <tstaudt@de.ibm.com>, Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, 
-	Kairui Song <ryncsn@gmail.com>, Jan Pazdziora <jpazdziora@redhat.com>, 
-	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
-Message-ID: <26jkoqavu54xo4ctbpxfibhdlbc5kezu2kkyl5fbb7r6oizvo4@cmq5yaeszfqq>
-References: <20240607122622.167228-1-coxu@redhat.com>
+        Fri, 07 Jun 2024 18:40:40 -0700 (PDT)
+From: Zhouyi Zhou <zhouzhouyi@gmail.com>
+To: akpm@linux-foundation.org,
+	pmladek@suse.com,
+	masahiroy@kernel.org,
+	yoann.congal@smile.fr,
+	rdunlap@infradead.org,
+	gustavoars@kernel.org,
+	nphamcs@gmail.com,
+	vincent.guittot@linaro.org,
+	linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org
+Cc: Zhouyi Zhou <zhouzhouyi@gmail.com>
+Subject: [PATCH] init/Kconfig: lower to GCC version 9 check for -Warray-bounds
+Date: Sat,  8 Jun 2024 01:40:27 +0000
+Message-Id: <20240608014027.1118686-1-zhouzhouyi@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20240607122622.167228-1-coxu@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The subject prefix should be "[PATCH v5 0/7]". I'm sorry if it causes
-any confusion.
+commit 3e00f5802fab ("init/Kconfig: lower GCC version check for -Warray-bounds")
+lowers GCC version check for -Warray-bounds, but I continue to see false positives
+from -Warray-bounds in GCC 9.4.
 
-On Fri, Jun 07, 2024 at 08:26:10PM +0800, Coiby Xu wrote:
->LUKS is the standard for Linux disk encryption. Many users choose LUKS
->and in some use cases like Confidential VM it's mandated. With kdump
->enabled, when the 1st kernel crashes, the system could boot into the
->kdump/crash kernel and dump the memory image i.e. /proc/vmcore to a
->specified target. Currently, when dumping vmcore to a LUKS
->encrypted device, there are two problems,
->
-> - Kdump kernel may not be able to decrypt the LUKS partition. For some
->   machines, a system administrator may not have a chance to enter the
->   password to decrypt the device in kdump initramfs after the 1st kernel
->   crashes; For cloud confidential VMs, depending on the policy the
->   kdump kernel may not be able to unseal the keys with TPM and the
->   console virtual keyboard is untrusted.
->
-> - LUKS2 by default use the memory-hard Argon2 key derivation function
->   which is quite memory-consuming compared to the limited memory reserved
->   for kdump. Take Fedora example, by default, only 256M is reserved for
->   systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
->   to be reserved for kdump. Note if the memory reserved for kdump can't
->   be used by 1st kernel i.e. an user sees ~1300M memory missing in the
->   1st kernel.
->
->Besides users (at least for Fedora) usually expect kdump to work out of
->the box i.e. no manual password input is needed. And it doesn't make
->sense to derivate the keys again in kdump kernel which seems to be
->redundant work.
->
->This patch set addresses the above issues by make the LUKS volume keys
->persistent for kdump kernel with the help of cryptsetup's new APIs
->(--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
->this kdump copy of LUKS volume keys,
->
-> 1. After the 1st kernel loads the initramfs during boot, systemd
->    use an user-input passphrase or TPM-sealed key to de-crypt the LUKS
->    volume keys and then save the volume keys to specified keyring
->    (using the --link-vk-to-keyring API) and the key will expire within
->    specified time.
->
-> 2. A user space tool (kdump initramfs builder) writes a key description to
->    /sys/kernel/crash_dm_crypt_keys to inform the 1st kernel to record the
->    key while building the kdump initramfs
->
-> 3. The kexec_file_load syscall read the volume keys by recorded key
->    descriptions and then save them key to kdump reserved memory and wipe the
->    copy.
->
-> 4. When the 1st kernel crashes and the kdump initramfs is booted, the kdump
->    initramfs asks the kdump kernel to create a user key using the key stored in
->    kdump reserved memory by writing to to /sys/kernel/crash_dm_crypt_keys. Then
->    the LUKS encrypted devide is unlocked with libcryptsetup's
->    --volume-key-keyring API.
->
-> 5. The system gets rebooted to the 1st kernel after dumping vmcore to
->    the LUKS encrypted device is finished
->
->After libcryptsetup saving the LUKS volume keys to specified keyring,
->whoever takes this should be responsible for the safety of these copies
->of keys. The keys will be saved in the memory area exclusively reserved
->for kdump where even the 1st kernel has no direct access. And further
->more, two additional protections are added,
-> - save the copy randomly in kdump reserved memory as suggested by Jan
-> - clear the _PAGE_PRESENT flag of the page that stores the copy as
->   suggested by Pingfan
->
->This patch set only supports x86. There will be patches to support other
->architectures once this patch set gets merged.
->
->v5
-> - Baoquan
->   - limit the feature of placing kexec_buf randomly to kdump (CONFIG_CRASH_DUMP)
->   - add documentation for added sysfs API
->   - allow to re-send init command to support the case of user switching to
->     a different LUKS-encrypted target
->   - make CONFIG_CRASH_DM_CRYPT depends on CONFIG_DM_CRYPT
->   - check if the number of keys exceed KEY_NUM_MAX
->   - rename (struct keys_header).key_count as (struct
->     keys_header).total_keys to improve code readiblity
->   - improve commit message
->   - fix the failure of calling crash_exclude_mem_range (there is a split
->     of mem_range)
->   - use ret instead of r as return code
->
-> - Greg
->   - add documentation for added sysfs API
->   - avoid spamming kernel logs
->   - fix a buffer overflow issue
->   - keep the state enums synced up with the string values
->   - use sysfs_emit other than sprintf
->   - explain KEY_NUM_MAX and KEY_SIZE_MAX
->   - s/EXPORT_SYMBOL_GPL/EXPORT_SYMBOL/g
->   - improve code readability
->
-> - Rebase onto latest Linus tree
->
->
->v4
->- rebase onto latest Linus tree so Baoquan can apply the patches for
->  code review
->- fix kernel test robot warnings
->
->v3
-> - Support CPU/memory hot-plugging [Baoquan]
-> - Don't save the keys temporarily to simplify the implementation [Baoquan]
-> - Support multiple LUKS encrypted volumes
-> - Read logon key instead of user key to improve security [Ondrej]
-> - A kernel config option CRASH_DM_CRYPT for this feature (disabled by default)
-> - Fix warnings found by kernel test robot
-> - Rebase the code onto 6.9.0-rc5+
->
->v2
-> - work together with libscryptsetup's --link-vk-to-keyring/--volume-key-keyring APIs [Milan and Ondrej]
-> - add the case where console virtual keyboard is untrusted for confidential VM
-> - use dm_crypt_key instead of LUKS volume key [Milan and Eric]
-> - fix some code format issues
-> - don't move "struct kexec_segment" declaration
-> - Rebase the code onto latest Linus tree (6.7.0)
->
->v1
-> - "Put the luks key handling related to crash_dump out into a separate
->   file kernel/crash_dump_luks.c" [Baoquan]
-> - Put the generic luks handling code before the x86 specific code to
->   make it easier for other arches to follow suit [Baoquan]
-> - Use phys_to_virt instead of "pfn -> page -> vaddr" [Dave Hansen]
-> - Drop the RFC prefix [Dave Young]
-> - Rebase the code onto latest Linus tree (6.4.0-rc4)
->
->RFC v2
-> - libcryptsetup interacts with the kernel via sysfs instead of "hacking"
->   dm-crypt
->   - to save a kdump copy of the LUKS volume key in 1st kernel
->   - to add a logon key using the copy for libcryptsetup in kdump kernel [Milan]
->   - to avoid the incorrect usage of LUKS master key in dm-crypt [Milan]
-> - save the kdump copy of LUKS volume key randomly [Jan]
-> - mark the kdump copy inaccessible [Pingfan]
-> - Miscellaneous
->   - explain when operations related to the LUKS volume key happen [Jan]
->   - s/master key/volume key/g
->   - use crash_ instead of kexec_ as function prefix
->   - fix commit subject prefixes e.g. "x86, kdump" to x86/crash
->
->Coiby Xu (7):
->  kexec_file: allow to place kexec_buf randomly
->  crash_dump: make dm crypt keys persist for the kdump kernel
->  crash_dump: store dm crypt keys in kdump reserved memory
->  crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging
->  crash_dump: retrieve dm crypt keys in kdump kernel
->  x86/crash: pass dm crypt keys to kdump kernel
->  x86/crash: make the page that stores the dm crypt keys inaccessible
->
-> Documentation/ABI/testing/crash_dm_crypt_keys |  35 ++
-> arch/x86/kernel/crash.c                       |  20 +-
-> arch/x86/kernel/kexec-bzimage64.c             |   7 +
-> arch/x86/kernel/machine_kexec_64.c            |  22 ++
-> include/linux/crash_core.h                    |   9 +-
-> include/linux/crash_dump.h                    |   2 +
-> include/linux/kexec.h                         |   8 +
-> kernel/Kconfig.kexec                          |   9 +
-> kernel/Makefile                               |   1 +
-> kernel/crash_dump_dm_crypt.c                  | 338 ++++++++++++++++++
-> kernel/kexec_file.c                           |  21 ++
-> kernel/ksysfs.c                               |  24 ++
-> 12 files changed, 493 insertions(+), 3 deletions(-)
-> create mode 100644 Documentation/ABI/testing/crash_dm_crypt_keys
-> create mode 100644 kernel/crash_dump_dm_crypt.c
->
->
->base-commit: 8a92980606e3585d72d510a03b59906e96755b8a
->-- 
->2.45.1
->
+This happens after
+commit b44759705f7d ("bitmap: make bitmap_{get,set}_value8() use bitmap_{read,write}()")
 
+During the rcuturture test in Ubuntu 20.04 GCC 9.4.0 x86_64, the compiling of
+drivers/gpio/gpio-pca953x.c issues following warning:
+
+```
+  CC      drivers/gpio/gpio-pca953x.o
+In file included from drivers/gpio/gpio-pca953x.c:12:
+drivers/gpio/gpio-pca953x.c: In function ‘pca953x_probe’:
+./include/linux/bitmap.h:799:17: error: array subscript [1, 1024] is outside array bounds of ‘long unsigned int[1]’ [-Werror=array-bounds]
+  799 |  map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
+      |                 ^~
+In file included from ./include/linux/atomic.h:5,
+                 from drivers/gpio/gpio-pca953x.c:11:
+drivers/gpio/gpio-pca953x.c:1015:17: note: while referencing ‘val’
+ 1015 |  DECLARE_BITMAP(val, MAX_LINE);
+      |                 ^~~
+./include/linux/types.h:11:16: note: in definition of macro ‘DECLARE_BITMAP’
+   11 |  unsigned long name[BITS_TO_LONGS(bits)]
+      |                ^~~~
+In file included from drivers/gpio/gpio-pca953x.c:12:
+./include/linux/bitmap.h:800:17: error: array subscript [1, 1024] is outside array bounds of ‘long unsigned int[1]’ [-Werror=array-bounds]
+  800 |  map[index + 1] |= (value >> space);
+      |  ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+In file included from ./include/linux/atomic.h:5,
+                 from drivers/gpio/gpio-pca953x.c:11:
+drivers/gpio/gpio-pca953x.c:1015:17: note: while referencing ‘val’
+ 1015 |  DECLARE_BITMAP(val, MAX_LINE);
+      |                 ^~~
+./include/linux/types.h:11:16: note: in definition of macro ‘DECLARE_BITMAP’
+   11 |  unsigned long name[BITS_TO_LONGS(bits)]
+```   
+
+Disable gcc-9+ array-bounds avoid above warning.
+
+Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>
+---
+ init/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index 72404c1f2157..27ce2ded95b6 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -876,14 +876,14 @@ config CC_IMPLICIT_FALLTHROUGH
+ 	default "-Wimplicit-fallthrough=5" if CC_IS_GCC && $(cc-option,-Wimplicit-fallthrough=5)
+ 	default "-Wimplicit-fallthrough" if CC_IS_CLANG && $(cc-option,-Wunreachable-code-fallthrough)
+ 
+-# Currently, disable gcc-10+ array-bounds globally.
++# Currently, disable gcc-9+ array-bounds globally.
+ # It's still broken in gcc-13, so no upper bound yet.
+-config GCC10_NO_ARRAY_BOUNDS
++config GCC9_NO_ARRAY_BOUNDS
+ 	def_bool y
+ 
+ config CC_NO_ARRAY_BOUNDS
+ 	bool
+-	default y if CC_IS_GCC && GCC_VERSION >= 100000 && GCC10_NO_ARRAY_BOUNDS
++	default y if CC_IS_GCC && GCC_VERSION >= 90000 && GCC9_NO_ARRAY_BOUNDS
+ 
+ # Currently, disable -Wstringop-overflow for GCC globally.
+ config GCC_NO_STRINGOP_OVERFLOW
 -- 
-Best regards,
-Coiby
+2.25.1
 
