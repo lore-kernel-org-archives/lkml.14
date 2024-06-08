@@ -1,136 +1,120 @@
-Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C22A29CF7;
-	Sat,  8 Jun 2024 13:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2333D15A86A
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 13:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717853986; cv=none; b=d2t2XvOud9m/u6iTVRvRDumjbC0ifLFH0wp8VmfX/EMrFI5biEVvkHutk1/rZkDyZTuyQMG4KhokstugUHH4T6zkAGgTJWhA10xGUxFwD1pqwzLZ4ZSVek+oSvY6VSC4xgv6M07RR4D6Dcm7qYutxc4GdgPPtjzVSr6Ga9c3Ogg=
+	t=1717854047; cv=none; b=ZBMt8ebBkpgtwmtOlwvw1EfUoDi/VLV87dSpFAoc/Ey+KeuNKuWXSxnyZcOWjF8Xgvg8JYJShsHqoaiV4IfEqe8mrMKbBuQkuujZOG50o7Asq7/olRMJHQQ7uiCD7fsOyN+NC1ZN/MwRlEUwwwpx5ALOymA6rxd9ZeLQBE4WMZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717853986; c=relaxed/simple;
-	bh=9m3OIuae1zNFGFGVyrmmwy+m5wPvFLdoYkoGrWa//04=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QusVFBE088gwIF4RLeYFnlgCpT5tqMiLCY/yPnXeTg8jE5tcyaXokNOZjanECcVGAhuEoNdOXLHVlzHgl0qHTorFAg9rkZS16EJD7Ikmsf+pkF7FK2N3IpoOyTbLiwrRgebW68hMaIT+gAdalffiT1Prdha9yIys3QSN0OPkwzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=KcX7vAxP; arc=none smtp.client-ip=98.142.107.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
+	s=arc-20240116; t=1717854047; c=relaxed/simple;
+	bh=nxlyu8p0CmGPfAk0LMwhtYf3/QdjlSKkf/Ec2s2SFc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rlUqh8vyJ9DEZleQK7bYGmFYaCR1LcfwWgRVEwaAQ+9A1ArirME6tDsWHSpO18V54y4HpnX8GFhvhLVgnkEQOPjCq9C+s1opSG7YgeVfxGzgIdTWyiEgnjLn7x3mxNhawpxQPabOQOjS2qGo5bzJx0RI8cKSmyXgu5yEocPMep4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hQXRtI0F; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="KcX7vAxP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HVsdDOA0uLH9M41RhiGluNttUGtaeue6XWyJq6fM5h8=; b=KcX7vAxPJROq54xLcRQ/ZokzQp
-	/XwYk8dD7Ke8k7zR3+oI6o0b/GxNfdKLvqIvJY7m0GRVHWrR+IvSqc1K4YvuxprKgjJzCSL53W8SG
-	cndQCwj3Kk+oxa4FQEIOW6wl4EtjMDLZfCvvTpXito3kWDiMgiWjxloqhLkMyZcFFIJF11Gctbp07
-	ktImQ9OKg4MX264V2oPS/grrdIgMQ3EZFSj/C8dL3MqdMJXf04KOviSfB1WgIEQjelECjIw5rmc73
-	2905KQCzTH5tqg9UfzK8YoLfp+dffgyy4E8XbvNOP/LZ0zhKEULJ62KAQw4xLB8Q29qU0SEvNM9HJ
-	YN49GDdw==;
-Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:36466 helo=[192.168.0.142])
-	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <david@lechnology.com>)
-	id 1sFw57-0000iP-1J;
-	Sat, 08 Jun 2024 09:22:22 -0400
-Message-ID: <d7189834-0d82-4936-823d-cb14faa54990@lechnology.com>
-Date: Sat, 8 Jun 2024 08:22:16 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hQXRtI0F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717854043; x=1749390043;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=nxlyu8p0CmGPfAk0LMwhtYf3/QdjlSKkf/Ec2s2SFc0=;
+  b=hQXRtI0FljlcUakKkNAZwJBKl2QJ+yx0Ysq3yR+9nmtk6GgDEYqhrvLO
+   Q+fZVVq2si7JYwuTCBW8Yj8hcnCNkBEzAPAdRDGaFWEMc//HKlYRqP3GG
+   mnphjZGNSDOTpSm3GspStgf41GeywgpmO9lV5xNwIpZEtXwWmgAL+SWJr
+   kQdc9O+DykrAwls8y4W8VLtLh/YCeDJc1B3huah7bA5NSODT/3FUQn1vM
+   v6SwDhb+oi3bItimuwU4nUcFTPxaZIX7M6M1vcVVX0O/Jumae2wYTq7I0
+   hSnJjLrdcSl1esat2EftVngpDp+1v1G/8jlzG4KdDGu2RKLyTdS81E2Q8
+   Q==;
+X-CSE-ConnectionGUID: HLwrlq2+Rf6+HzQYGQIx2A==
+X-CSE-MsgGUID: g7h0e2hzQDeHsSLlxbb3Aw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11097"; a="37098413"
+X-IronPort-AV: E=Sophos;i="6.08,223,1712646000"; 
+   d="scan'208";a="37098413"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2024 06:40:42 -0700
+X-CSE-ConnectionGUID: Fd1YXlatTYidf8BU70XtuQ==
+X-CSE-MsgGUID: 66N6BsC7S9miif6MtHCQlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,223,1712646000"; 
+   d="scan'208";a="38690193"
+Received: from lkp-server01.sh.intel.com (HELO 472b94a103a1) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 08 Jun 2024 06:40:41 -0700
+Received: from kbuild by 472b94a103a1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sFwJD-0001e6-1C;
+	Sat, 08 Jun 2024 13:40:39 +0000
+Date: Sat, 8 Jun 2024 21:40:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Roger Quadros <rogerq@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Vignesh Raghavendra <vigneshr@ti.com>, Andrew Davis <afd@ti.com>
+Subject: arch/arm64/boot/dts/ti/k3-am62p5-sk.dts:367.10-376.6: Warning
+ (graph_child_address):
+ /bus@f0000/i2c@20000000/usb-power-controller@3f/connector/ports: graph node
+ has single child node 'port@0', #address-cells/#size-cells are not necessary
+Message-ID: <202406082152.SN1xuMYL-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/8] dt-bindings: counter: Add new ti,am62-eqep
- compatible
-To: Judith Mendez <jm@ti.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- William Breathitt Gray <william.gray@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-References: <20240607162755.366144-1-jm@ti.com>
- <20240607162755.366144-2-jm@ti.com>
-Content-Language: en-US
-From: David Lechner <david@lechnology.com>
-Autocrypt: addr=david@lechnology.com; keydata=
- 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
-In-Reply-To: <20240607162755.366144-2-jm@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 6/7/24 11:27 AM, Judith Mendez wrote:
-> Add new compatible ti,am62-eqep for TI K3 devices. If a device
-> uses this compatible, require power-domains property.
-> 
-> Since there is only one functional and interface clock for eqep,
-> clock-names is not really required, so removed from required
-> section, make it optional for ti,am3352-eqep compatible, and
-> update the example.
-> 
-> The clock-name also changed for TI K3 SoCs so do not allow
-> clock-names property for the new compatible.
-> 
-> While we are here, add an example using ti,am62-eqep compatible.
-> 
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   dc772f8237f9b0c9ea3f34d0dc4a57d1f6a5070d
+commit: c1453d3c3e9baf538b5f978c9e7cc24e47cc877e arm64: dts: ti: k3-am62p: add the USB sub-system
+date:   6 weeks ago
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240608/202406082152.SN1xuMYL-lkp@intel.com/reproduce)
 
-Reviewed-by: David Lechner <david@lechnology.com>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406082152.SN1xuMYL-lkp@intel.com/
 
+dtcheck warnings: (new ones prefixed by >>)
+>> arch/arm64/boot/dts/ti/k3-am62p5-sk.dts:367.10-376.6: Warning (graph_child_address): /bus@f0000/i2c@20000000/usb-power-controller@3f/connector/ports: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
+>> arch/arm64/boot/dts/ti/k3-am62p-main.dtsi:651.22-661.5: Warning (graph_child_address): /bus@f0000/usb@f900000/usb@31000000: graph node has single child node 'port@0', #address-cells/#size-cells are not necessary
 
+vim +367 arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+
+   350	
+   351	&main_i2c0 {
+   352		status = "okay";
+   353		pinctrl-names = "default";
+   354		pinctrl-0 = <&main_i2c0_pins_default>;
+   355		clock-frequency = <400000>;
+   356	
+   357		typec_pd0: usb-power-controller@3f {
+   358			compatible = "ti,tps6598x";
+   359			reg = <0x3f>;
+   360	
+   361			connector {
+   362				compatible = "usb-c-connector";
+   363				label = "USB-C";
+   364				self-powered;
+   365				data-role = "dual";
+   366				power-role = "sink";
+ > 367				ports {
+   368					#address-cells = <1>;
+   369					#size-cells = <0>;
+   370					port@0 {
+   371						reg = <0>;
+   372						usb_con_hs: endpoint {
+   373							remote-endpoint = <&usb0_hs_ep>;
+   374						};
+   375					};
+   376				};
+   377			};
+   378		};
+   379	};
+   380	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
