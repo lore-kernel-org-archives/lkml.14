@@ -1,103 +1,136 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3575415A86A
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 13:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C22A29CF7;
+	Sat,  8 Jun 2024 13:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717853964; cv=none; b=cAUfxWwg1NlDBffJ+Ttr7/W2zno0N5AAQHki2INvcaPipxE+WCyCMUIKxzFG4xmjDcg2chTOc+T0rhDKVO99rtophhNLBNzznlcAh4qp/RZqFgrmmQKNjYfLuPX63tyGCmZmXxEylkO0C1uAVJcS/bj3QFtYBKFxvG3da6PHkFM=
+	t=1717853986; cv=none; b=d2t2XvOud9m/u6iTVRvRDumjbC0ifLFH0wp8VmfX/EMrFI5biEVvkHutk1/rZkDyZTuyQMG4KhokstugUHH4T6zkAGgTJWhA10xGUxFwD1pqwzLZ4ZSVek+oSvY6VSC4xgv6M07RR4D6Dcm7qYutxc4GdgPPtjzVSr6Ga9c3Ogg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717853964; c=relaxed/simple;
-	bh=uaPK4xrTNaoaOY/sggbFJGDdFEFu0GvkAoaczriQjN8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bNkFn23IgyLEZWwAISge4SjdrhRuhyYcGIQo34Ne0PM+v3ZztVKC240oLatzSgVLW+XM5lkFrGLRTAotxctG+pD8HaMiqNNT27KkoXXzyvXAKPR/+r7wyg/wuvPGBbKDLIwVySYDBYkHMIVsnASCyBlzXXNu/yp9/bhizlf6PR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UcWsidjU; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717853986; c=relaxed/simple;
+	bh=9m3OIuae1zNFGFGVyrmmwy+m5wPvFLdoYkoGrWa//04=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QusVFBE088gwIF4RLeYFnlgCpT5tqMiLCY/yPnXeTg8jE5tcyaXokNOZjanECcVGAhuEoNdOXLHVlzHgl0qHTorFAg9rkZS16EJD7Ikmsf+pkF7FK2N3IpoOyTbLiwrRgebW68hMaIT+gAdalffiT1Prdha9yIys3QSN0OPkwzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=KcX7vAxP; arc=none smtp.client-ip=98.142.107.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UcWsidjU"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C845540E0176;
-	Sat,  8 Jun 2024 13:39:19 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id CWErTM9s9C7R; Sat,  8 Jun 2024 13:39:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717853955; bh=PQ29wWCcL69CHNpGbAphn9Hd4o/BHBI19wH67CwMGO0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UcWsidjUwXX4R0wVlaFb0Pe3OrC2PNgzvOqIN7tBpmMNM6NYU2wK38mihW/aiKNia
-	 l1YgOF0gXxbplYT3/EHdRhiHNoB4CsDC0svzHOsoGW+aKnr1GRpDLfYr1vRKALbsy2
-	 /cbkcVeWgNv0oJ2eukG8WIH+yBfv6ITR54eWsq4mdalK4PDagweK8e36eDiijWcexK
-	 Gxp4S3HplJQXIGUbLGxdfUttQFRiFmS9WS3yJm5y8ETX0LitF+5wG+TakZ0qp+hbuj
-	 UXZWjLalEWPm3GUAa8HT6rQVcmNMr1peTVoNkGpQheTOfgwKkHl/17MmrMVIvjkcgc
-	 cjFLNM1Q9ApD9RTQlTQxSh4rzWHf96Pc1MDVI3LM1UwOE2ETTwSOOBVcHRXEORybH2
-	 h4zpbJrZ2r6NSPpDsBxk4laAZHs2WcTStGXtHW/8qhXK30mjWDeCcP0Ym+7Rag49ml
-	 Pwu8KpswqJYXnI8ck5P74xfIFY/oFFyZ1+BytzgFOYk8T0eanKwqW7QchKdKya9AFP
-	 diD8PvPLbl9VLNUeE/0aXxhpQN4Ys7YLCkOa7KHDcHhb/U0t6TTEnKHG+mg7iOdQ4s
-	 zyFkuuilq3O4ym7JuSwZM9N2fI9CIhSFPzJHcOlN8DALOFF7NXKWXll/lizCbQzA+v
-	 W38QVOzU2xH0c6E3+8383Da4=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8A63840E016A;
-	Sat,  8 Jun 2024 13:39:03 +0000 (UTC)
-Date: Sat, 8 Jun 2024 15:38:53 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, "Yu, Fenghua" <fenghua.yu@intel.com>,
-	"Chatre, Reinette" <reinette.chatre@intel.com>,
-	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Drew Fustini <dfustini@baylibre.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>
-Subject: Re: [PATCH v3 1/2] cacheinfo: Add function to get cacheinfo for a
- given (cpu, cachelevel)
-Message-ID: <20240608133853.GAZmRe7d3Q3IpXhD-l@fat_crate.local>
-References: <20240606164047.318378-1-tony.luck@intel.com>
- <20240606164047.318378-2-tony.luck@intel.com>
- <SJ1PR11MB60830475F52F359E116B2274FCFA2@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <SJ1PR11MB608331168096BFEBBB311EDCFCFA2@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <20240608121207.GEZmRKl3uwP9Bfrx8D@fat_crate.local>
- <SJ1PR11MB6083ED84B69CABBBD3ED9605FCC42@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="KcX7vAxP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=HVsdDOA0uLH9M41RhiGluNttUGtaeue6XWyJq6fM5h8=; b=KcX7vAxPJROq54xLcRQ/ZokzQp
+	/XwYk8dD7Ke8k7zR3+oI6o0b/GxNfdKLvqIvJY7m0GRVHWrR+IvSqc1K4YvuxprKgjJzCSL53W8SG
+	cndQCwj3Kk+oxa4FQEIOW6wl4EtjMDLZfCvvTpXito3kWDiMgiWjxloqhLkMyZcFFIJF11Gctbp07
+	ktImQ9OKg4MX264V2oPS/grrdIgMQ3EZFSj/C8dL3MqdMJXf04KOviSfB1WgIEQjelECjIw5rmc73
+	2905KQCzTH5tqg9UfzK8YoLfp+dffgyy4E8XbvNOP/LZ0zhKEULJ62KAQw4xLB8Q29qU0SEvNM9HJ
+	YN49GDdw==;
+Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:36466 helo=[192.168.0.142])
+	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <david@lechnology.com>)
+	id 1sFw57-0000iP-1J;
+	Sat, 08 Jun 2024 09:22:22 -0400
+Message-ID: <d7189834-0d82-4936-823d-cb14faa54990@lechnology.com>
+Date: Sat, 8 Jun 2024 08:22:16 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB6083ED84B69CABBBD3ED9605FCC42@SJ1PR11MB6083.namprd11.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/8] dt-bindings: counter: Add new ti,am62-eqep
+ compatible
+To: Judith Mendez <jm@ti.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ William Breathitt Gray <william.gray@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
+References: <20240607162755.366144-1-jm@ti.com>
+ <20240607162755.366144-2-jm@ti.com>
+Content-Language: en-US
+From: David Lechner <david@lechnology.com>
+Autocrypt: addr=david@lechnology.com; keydata=
+ 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
+In-Reply-To: <20240607162755.366144-2-jm@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Sat, Jun 08, 2024 at 01:27:30PM +0000, Luck, Tony wrote:
-> Does this look like an OK direction?
+On 6/7/24 11:27 AM, Judith Mendez wrote:
+> Add new compatible ti,am62-eqep for TI K3 devices. If a device
+> uses this compatible, require power-domains property.
+> 
+> Since there is only one functional and interface clock for eqep,
+> clock-names is not really required, so removed from required
+> section, make it optional for ti,am3352-eqep compatible, and
+> update the example.
+> 
+> The clock-name also changed for TI K3 SoCs so do not allow
+> clock-names property for the new compatible.
+> 
+> While we are here, add an example using ti,am62-eqep compatible.
+> 
+> Signed-off-by: Judith Mendez <jm@ti.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
 
-Yap, actually pretty nice and straight-forward at a quick glance.
+Reviewed-by: David Lechner <david@lechnology.com>
 
-> Any better name for the new header?
 
-Considering how we call that machinery "cpuhp" everywhere, I think it
-actually fits perfectly.
-
-> While I'm moving those declarations, should I zap the "extern " from the
-> function ones to match current fashion for this (checkpatch barfs all over
-> them)?
-
-Yeah, you can ignore checkpatch or simply do another patch ontop which
-does just that. Code movement should be only mechanical movement, with
-no other changes for ease of review.
-
-In any case, thanks for doing that, that looks real good to me.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
