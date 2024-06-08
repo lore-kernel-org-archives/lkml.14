@@ -1,130 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B78A178379
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 15:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7651E888;
+	Sat,  8 Jun 2024 15:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717861833; cv=none; b=dUjPAPExJgy1IpGIHNyLw0NasxQZIly0pPmEuWRl2/WAlDmdkMGA4kDQTQVaRs6COrUakQMLqt8+MmlIjYk0IQS0iC/GqQzhjoC+ndf3LJhTk4jxx13C7HI0tPv/ovYFmrghI126A04LajO6bQW33HfoMF+RBq8a0m3u5MpsqDQ=
+	t=1717862008; cv=none; b=Qp+iSsGwxGLpU3o7UYrDESJSuOnTKoCgmJvIW6f3SRsE+QoWU58YKN6nWxtlaTKNDuC9dLnAGZ9toCyJBB8BqfC1KTBN0UJiidjvOAcPiJyyac2kAR6G74+hPK2Z1uAZY5AujD9QPfL556qpO8PSiutj4R2X5nzswM8o3UdzgBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717861833; c=relaxed/simple;
-	bh=8ancUU9hhNXbB4+x7qua8ta8rsrFFSFgVPiTAjOuNqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UyTSG0Jg0RbU8UDW4JXXbIceLol0EB8fgp4pdi79HUpmkhOD/EsgpfGe8UUbUNqEVcWM4pwAMQKhln32reo3UA/tMVsiUNFjCTz9LCcym2NdZlrZlZ1GkfSMvtL4EHEXfOyGHoiifRULtbBrGleyB9UhmmEpin/eGYeWCmupc0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QSzEa7kT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717862008; c=relaxed/simple;
+	bh=vOVkuXFeGSuE1OvKskDxmGpY989Qbt/a1vEPJq4FUYg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L2qV0WKUEXjM+HaJEfb/2AF3Sc6KBAQy8q5x+xUd15kIeE4PKqctKucM1cNzwuSURjcVqfe4idGM2jCCKrD8+zfk4p7L+ipPuhjvnbNlyfiObmn7vpoA8WdjZ8vyX9OuuYlaX5ooVfYBazIUQbfsShgobLMmevOi1dTbKiuAYU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eiz+M2NH; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QSzEa7kT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717861831;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pWtXInkYT7gp35kmZ/vplCyQ6OWaROzH79A+E+0FfKc=;
-	b=QSzEa7kTdF8QZFJsCAe+wCu7DaLFOzujJRPePs8cVgSWzTWekifYSFyL5DP3ANewqO/TPY
-	VOhGor6YR3FNrIcNzNsMZQH9RxPadd1TsmCX3d+qQL4LwiyrwRLn++FJ1QshtlA6aUX5R7
-	tuWFRr3JvnhsiuKtd7PFYCffmPLXank=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-528-P5c5lBWyPuqwSyGZYzhO9g-1; Sat,
- 08 Jun 2024 11:50:19 -0400
-X-MC-Unique: P5c5lBWyPuqwSyGZYzhO9g-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87BC41956083;
-	Sat,  8 Jun 2024 15:50:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.55])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C6C1A19560AA;
-	Sat,  8 Jun 2024 15:50:06 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat,  8 Jun 2024 17:48:44 +0200 (CEST)
-Date: Sat, 8 Jun 2024 17:48:35 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Rachel Menge <rachelmenge@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	Wei Fu <fuweid89@gmail.com>, apais@linux.microsoft.com,
-	Sudhanva Huruli <Sudhanva.Huruli@microsoft.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Christian Brauner <brauner@kernel.org>,
-	Mike Christie <michael.christie@oracle.com>,
-	Joel Granados <j.granados@samsung.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>
-Subject: [PATCH] zap_pid_ns_processes: don't send SIGKILL to sub-threads
-Message-ID: <20240608154835.GD7947@redhat.com>
-References: <1386cd49-36d0-4a5c-85e9-bc42056a5a38@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eiz+M2NH"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7024d571d8eso2607609b3a.0;
+        Sat, 08 Jun 2024 08:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717862006; x=1718466806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=b9VRrAeGIH91nbJ+l+6EogIiaTtVPhZdGtuhQM+K29k=;
+        b=eiz+M2NHo0WXCoMozSdHeENCa3O0hSXFqlK1bZv2vP683i1Ng1JRrj/mNMmYd7xxni
+         goF1n7Sf9YBN80rkzU3o/99giDHXT46818L0UTZC/l8sDCRPe/184iLJYah888IjtsLF
+         7gK7eS4XndZQ9Z7ukwcsSj6N+99QQ+mQ6jCl5qVMrVivaMgH1pxRsWQtoMB5vR9au2kN
+         fSnCRpP0GCRS50d/jKKnjsVxjZl2QNhimPqkIPwX54dXXxJcuM2PReBUL5DkibVlWmS2
+         B5xlIASYI3ZptatUdRB/xrLeYp2opAP2eV+xuCzHSGqb54zK9OYURkuLD3KnmkFOv94L
+         p8Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717862006; x=1718466806;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=b9VRrAeGIH91nbJ+l+6EogIiaTtVPhZdGtuhQM+K29k=;
+        b=mLxw+1RbNXWi45j2Nk1y+G9Xv8LfTZjCPC+PDSNBSyHknMcZwttPdWvXbdbaE7h2Jw
+         4iBdBaduC1YZti5OSQjqim3IH2LP6x93xwFtmGIcPkJWyswooVVnAt1MwsQp8rCIMxG1
+         NwM2USYffmxHpCHrP/0WXqL7KAChPr5d5uiIOwVDDFYMaxQC1TivHVfhr5JJa9gXbLeS
+         p9QEMu8MCAyCC5h6c9G2WeWPa1s69mPWYWbTnChhSURcMIaQGzHquNlIChrx0s1FzHsC
+         F7/Uc9206kC5lhZ/eudL25+sB1lR5rrzIQpo620GCblg0TJbDRjKz2RJ+GqxPp+SH7CB
+         05Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+nqQ/rrkL9cImhsmUVz2YZ1JbkPGNa4MaP7/pjCFLhhblctTjk9r1Mm0lrz0IW+vTfhjR5yAs2vDKewv9TMuxSGoyZ/jdgR6AHewk4DEc2K/vlYEmfVh+j7JSrlJGcd6xmFBSvqE1
+X-Gm-Message-State: AOJu0YwMtfSs+WVpxxGstMdEiDkVwAHDqUfdOAWau1O9BOHTmQKDfeuY
+	PY6fhhscBhM83TQsQJo9rcQ78vIeMl+m65R3ZpN4C0D47iXqiUvW
+X-Google-Smtp-Source: AGHT+IFpTRsmPHwSEMhSYb9qhAwknvo0q5iq6AgwuXLmiBVIA78tWwc33X4OMQqkuR/sfFDPXkrUAA==
+X-Received: by 2002:a05:6a00:1396:b0:6ed:de30:9e43 with SMTP id d2e1a72fcca58-7040c754e29mr7200418b3a.32.1717862005667;
+        Sat, 08 Jun 2024 08:53:25 -0700 (PDT)
+Received: from cbuild.srv.usb0.net (uw2.srv.usb0.net. [185.197.30.200])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703fd4d9d8fsm4335209b3a.149.2024.06.08.08.53.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Jun 2024 08:53:25 -0700 (PDT)
+From: Takero Funaki <flintglass@gmail.com>
+To: Johannes Weiner <hannes@cmpxchg.org>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Domenico Cerasuolo <cerasuolodomenico@gmail.com>
+Cc: Takero Funaki <flintglass@gmail.com>,
+	linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3]  mm: zswap: global shrinker fix and proactive shrink
+Date: Sat,  8 Jun 2024 15:53:07 +0000
+Message-ID: <20240608155316.451600-1-flintglass@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1386cd49-36d0-4a5c-85e9-bc42056a5a38@linux.microsoft.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Transfer-Encoding: 8bit
 
-The comment above the idr_for_each_entry_continue() loop tries to explain
-why we have to signal each thread in the namespace, but it is outdated.
-This code no longer uses kill_proc_info(), we have a target task so we can
-check thread_group_leader() and avoid the unnecessary group_send_sig_info.
-Better yet, we can change pid_task() to use PIDTYPE_TGID rather than _PID,
-this way it returns NULL if this pid is not a group-leader pid.
+This series addresses two issues and introduces a minor improvement in
+zswap global shrinker:
 
-Also, change this code to check SIGNAL_GROUP_EXIT, the exiting process /
-thread doesn't necessarily has a pending SIGKILL. Either way these checks
-are racy without siglock, so the patch uses data_race() to shut up KCSAN.
+1. Fix the memcg iteration logic that breaks iteration on offline memcgs.
+2. Fix the error path that aborts on expected error codes.
+3. Add proactive shrinking at 91% full, for 90% accept threshold.
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/pid_namespace.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+These patches need to be applied in this order to avoid potential loops
+caused by the first issue. Patch 3 can be applied independently, but the
+two issues must be resolved to ensure the shrinker can evict pages.
 
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index 25f3cf679b35..0f9bd67c9e75 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -191,21 +191,14 @@ void zap_pid_ns_processes(struct pid_namespace *pid_ns)
- 	 * The last thread in the cgroup-init thread group is terminating.
- 	 * Find remaining pid_ts in the namespace, signal and wait for them
- 	 * to exit.
--	 *
--	 * Note:  This signals each threads in the namespace - even those that
--	 * 	  belong to the same thread group, To avoid this, we would have
--	 * 	  to walk the entire tasklist looking a processes in this
--	 * 	  namespace, but that could be unnecessarily expensive if the
--	 * 	  pid namespace has just a few processes. Or we need to
--	 * 	  maintain a tasklist for each pid namespace.
--	 *
- 	 */
- 	rcu_read_lock();
- 	read_lock(&tasklist_lock);
- 	nr = 2;
- 	idr_for_each_entry_continue(&pid_ns->idr, pid, nr) {
--		task = pid_task(pid, PIDTYPE_PID);
--		if (task && !__fatal_signal_pending(task))
-+		task = pid_task(pid, PIDTYPE_TGID);
-+		/* reading signal->flags is racy without sighand->siglock */
-+		if (task && !(data_race(task->signal->flags) & SIGNAL_GROUP_EXIT))
- 			group_send_sig_info(SIGKILL, SEND_SIG_PRIV, task, PIDTYPE_MAX);
- 	}
- 	read_unlock(&tasklist_lock);
+Previously, the zswap pool could be filled with old pages that the
+shrinker failed to evict, leading to zswap rejecting new pages. With
+this series applied, the shrinker will continue to evict pages until the
+pool reaches the accept_thr_percent threshold proactively, as
+documented, and maintain the pool to keep recent pages.
+
+As a side effect of changes in the hysteresis logic, zswap will no
+longer reject pages under the max pool limit.
+
+With this series, reclaims smaller than the proative shrinking amount
+finish instantly and trigger background shrinking. Admins can check if
+new pages are buffered by zswap by monitoring the pool_limit_hit
+counter. 
+
+Changes since v0:
+mm: zswap: fix global shrinker memcg iteration
+- Drop and reacquire spinlock before skipping a memcg.
+- Add some comment to clarify the locking mechanism.
+mm: zswap: proactive shrinking before pool size limit is hit
+- Remove unneeded check before scheduling work.
+- Change shrink start threshold to accept_thr_percent + 1%.
+
+Now it starts shrinking at accept_thr_percent + 1%. Previously, the
+threshold was at the midpoint of 100% to accept_threshold.
+
+If a workload needs 10% space to buffer the average reclaim amount, with
+the previous patch, it required setting the accept_thr_percent to 80%.
+For 50%, it became 0%, which is not acceptable and unclear for admins.
+We can use the accept percent as the shrink threshold directly but that
+sounds shrinker is called too frequently around the accept threshold.  I
+added 1% as a minimum gap to the shrink threshold.
+
+----
+
+Takero Funaki (3):
+  mm: zswap: fix global shrinker memcg iteration
+  mm: zswap: fix global shrinker error handling logic
+  mm: zswap: proactive shrinking before pool size limit is hit
+
+ Documentation/admin-guide/mm/zswap.rst |  17 ++-
+ mm/zswap.c                             | 172 ++++++++++++++++++-------
+ 2 files changed, 136 insertions(+), 53 deletions(-)
+
 -- 
-2.25.1.362.g51ebf55
-
+2.43.0
 
