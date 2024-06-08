@@ -1,32 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBE5176AC7;
-	Sat,  8 Jun 2024 08:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF5E176AB7;
+	Sat,  8 Jun 2024 08:12:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717834372; cv=none; b=eyQTZ1aTRVKtrKRRvc/P/D5HPjKu1ES9KH7mernv0ZH9hYCkn6ZavXPegH8qlpDvE8OieKLaEJEKDv8eOjWWa1NZ7NxrmxAhVECfckxTuHPs7ERlApz7vR5TXA8dEHSVSeguHxZZ8Q67r321CLmGXKLGnifZReLsIoUBtYAtHB8=
+	t=1717834372; cv=none; b=YOOU3S27LS8HzplwRQQHVfm4wTpf5gd6i/DHsYiysK3kmNpJbQZSz1VORNJx6YM02l0ucUSH1oM8CG3c6y2YACpzhCfCRjNEiyu1VYnCkxeoVNrpLNLTbfNeX9IzRmYRwlLZDFsATU+ydTLi+RcnA9PJMVCNpQdu6xgmxn9qNao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717834372; c=relaxed/simple;
-	bh=c+uFpWCMZSQ7m/Mz5EU7dhzeC3k6SNmPxQRmuwxkvE4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jC0Z6yF5e8j7Fmnfwjp00QwHXLNyccNfJ1JN7YqIrimvXihnhkjiaF0MbmEV7W/ztqqB8OTsUtcaE9H1tYdG7AIyNNTSEiEy7J7vHRNA9oqfODAT8KSZXuOVfjtaR5soRp1XfsRjtT+0JvdBabbk1Hycsz7UFfJxlkRBcvI1/IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=fm50fgeh; arc=none smtp.client-ip=159.69.126.157
+	bh=cey65pHupnRn7AKD1BC6IG+jnHBcwTWEUtCKuXY67cE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ETFtg1/zczP203P6/Bg0UwChYDzJpaw8H3n2y7mC9ZQ/we7Vu2Ut7nIHa3WnJbjeordg+vJM7Jernf3PdhXAg8dRxokCCw4SfaqUYooNm6idQzu25rjsmDaXRXeSyPRkqGTmHUlLQASeacbiWNko80qeodNyMmqBcRzSB5KNEu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=qo9Wgxe6; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="fm50fgeh"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qo9Wgxe6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1717834365;
-	bh=c+uFpWCMZSQ7m/Mz5EU7dhzeC3k6SNmPxQRmuwxkvE4=;
-	h=From:Subject:Date:To:Cc:From;
-	b=fm50fgehiRH9BsrP5fW4J04QmVMefFB2retvoLCwfq2MkCj140cQuJ0CqSXpMqQ08
-	 kzkba2FtQYlB10N2JxJpeISl1voORZPN+UOeI0XFVnHeX5PfYuE9igMgOHnizbdTKi
-	 MCs0CneMRezwRaxyuMvqYAv2dFL4FiSwGDno2YGM=
+	bh=cey65pHupnRn7AKD1BC6IG+jnHBcwTWEUtCKuXY67cE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=qo9Wgxe6BLPHOFk2WVMOAOGhyjN2H81WFz6tp0LF5UPh6D3YItwR1x5WoDWb7gHtZ
+	 0q2PbEcbCYKEusDgQhfMshRbWfLzxKcYItq2X++iI+o3GeDreA+FN/Urq8Zw0E0JdH
+	 rxL+vkkhR6PTKtNlPI+u6rW6jxpXrdwyDbZsG4NU=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH 0/5] hwmon: (cros_ec): fan target, fan pwm control and
- temperature thresholds
-Date: Sat, 08 Jun 2024 10:12:42 +0200
-Message-Id: <20240608-cros_ec-hwmon-pwm-v1-0-d29dfc26fbc3@weissschuh.net>
+Date: Sat, 08 Jun 2024 10:12:45 +0200
+Subject: [PATCH 3/5] hwmon: (cros_ec) Add support for PWM fan control
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,9 +34,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAHoSZGYC/x2MQQqAMAzAviI9W6hDBf2KiMxatQc32cAJ4t8d3
- pJD8kCUoBKhLx4IcmlU77JUZQG8W7cJ6pIdDJmaGtMhBx8nYdzT4R2e6UBamNuKZpsBcncGWfX
- +n8P4vh/9Ya6gYwAAAA==
+Message-Id: <20240608-cros_ec-hwmon-pwm-v1-3-d29dfc26fbc3@weissschuh.net>
+References: <20240608-cros_ec-hwmon-pwm-v1-0-d29dfc26fbc3@weissschuh.net>
+In-Reply-To: <20240608-cros_ec-hwmon-pwm-v1-0-d29dfc26fbc3@weissschuh.net>
 To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
  Guenter Roeck <groeck@chromium.org>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>, 
@@ -48,59 +47,238 @@ Cc: Dustin Howett <dustin@howett.net>,
  linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717834364; l=1917;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717834365; l=7057;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=c+uFpWCMZSQ7m/Mz5EU7dhzeC3k6SNmPxQRmuwxkvE4=;
- b=4jzTKzT8wrfJoXc3/XsHoF+ibf+T1IlRLVbt8KY6ViDATww+JRaWiWiDD0SR2sFW6yLyQCBpy
- TLUja5j9ZpIBg/xxUIcAqrvfZqYyEAPlDQ0qwYtu2f0SE181uVI7oC1
+ bh=cey65pHupnRn7AKD1BC6IG+jnHBcwTWEUtCKuXY67cE=;
+ b=1VITW0coHrRX9kNamlVH5dgZxBlx1VogdDAvGzhI9dZbRPF2D6Wj3X89dDPDTUz4x7MxU1RAg
+ nPAkFVPSffcCOKVyXFm67ESIBZInt3AkC8ngZiqZAnbPHQKl5Kf1BGl
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Add support to cros_ec_hwmon for
-* fan target speed for fan 1
-* fan pwm control for all fans
-* fan temperature thresholds (RW) for all temp sensors
+Implement setting fan duty cycle and automatic management through
+EC_CMD_PWM_SET_FAN_DUTY and EC_CMD_THERMAL_AUTO_FAN_CTRL.
 
-The EC also supports tempY_auto_pointZ_{pwm,temp} but that does not yet
-seem to be usable from "struct hwmon_channel_info".
-Guenter, is this intentional, do you want me to add support for it?
-
-Patch 1 introduces a utility function cros_ec_cmd_versions() which wraps
-EC_CMD_GET_CMD_VERSIONS.
-That is used as it seems inadvisable to call EC_CMD_PWM_SET_FAN_DUTY
-during probing.
-I'm planning on also using this utility function in my CrOS EC charge
-control driver.
-Also  there are some other places throughout the tree that could use it.
-
-This series is meant to be merged through the chrome-platform tree,
-as cros_ec_hwmon itself is only available there and because of
-the new cros_ec_cmd_version().
-To test it you *also* need
-commit 27e669820c ("mfd: cros_ec: Register hardware monitoring subdevice")
-from the MFD tree (branch mfd-for-next).
-
-Tested on a Framework 13 AMD.
+The hardware does not support reading back the values again,
+so that is emulated in the driver.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
-Thomas Weißschuh (5):
-      platform/chrome: cros_ec_proto: Introduce cros_ec_cmd_versions()
-      hwmon: (cros_ec) Add support for fan target speed
-      hwmon: (cros_ec) Add support for PWM fan control
-      hwmon: (cros_ec) Split temperature channel params
-      hwmon: (cros_ec) Add support for temperature thresholds
+ Documentation/hwmon/cros_ec_hwmon.rst |   1 +
+ drivers/hwmon/cros_ec_hwmon.c         | 128 +++++++++++++++++++++++++++++++++-
+ 2 files changed, 127 insertions(+), 2 deletions(-)
 
- Documentation/hwmon/cros_ec_hwmon.rst       |   8 +-
- drivers/hwmon/cros_ec_hwmon.c               | 284 +++++++++++++++++++++++++---
- drivers/platform/chrome/cros_ec_proto.c     |  26 +++
- include/linux/platform_data/cros_ec_proto.h |   2 +
- 4 files changed, 290 insertions(+), 30 deletions(-)
----
-base-commit: c8a4bdca928debacf49524d1b09dbf27e88e1f18
-change-id: 20240529-cros_ec-hwmon-pwm-0dcc610ba0dc
+diff --git a/Documentation/hwmon/cros_ec_hwmon.rst b/Documentation/hwmon/cros_ec_hwmon.rst
+index 4aede331baeb..3cc345425aac 100644
+--- a/Documentation/hwmon/cros_ec_hwmon.rst
++++ b/Documentation/hwmon/cros_ec_hwmon.rst
+@@ -27,4 +27,5 @@ Supported features:
+ 
+   - Current fan speed
+   - Target fan speed (for fan 1 only)
++  - PWM-based fan control
+   - Current temperature
+diff --git a/drivers/hwmon/cros_ec_hwmon.c b/drivers/hwmon/cros_ec_hwmon.c
+index 09b8057e1223..48b7073a4991 100644
+--- a/drivers/hwmon/cros_ec_hwmon.c
++++ b/drivers/hwmon/cros_ec_hwmon.c
+@@ -7,6 +7,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/hwmon.h>
++#include <linux/math.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -17,10 +18,19 @@
+ 
+ #define DRV_NAME	"cros-ec-hwmon"
+ 
++enum cros_ec_hwmon_fan_mode {
++	cros_ec_hwmon_fan_mode_full = 0,
++	cros_ec_hwmon_fan_mode_manual = 1,
++	cros_ec_hwmon_fan_mode_auto = 2,
++};
++
+ struct cros_ec_hwmon_priv {
+ 	struct cros_ec_device *cros_ec;
+ 	const char *temp_sensor_names[EC_TEMP_SENSOR_ENTRIES + EC_TEMP_SENSOR_B_ENTRIES];
+ 	u8 usable_fans;
++	bool has_fan_pwm;
++	u8 fan_pwm[EC_FAN_SPEED_ENTRIES];
++	enum cros_ec_hwmon_fan_mode fan_mode[EC_FAN_SPEED_ENTRIES];
+ };
+ 
+ static int cros_ec_hwmon_read_fan_speed(struct cros_ec_device *cros_ec, u8 index, u16 *speed)
+@@ -50,6 +60,27 @@ static int cros_ec_hwmon_read_fan_target(struct cros_ec_device *cros_ec, u16 *sp
+ 	return 0;
+ }
+ 
++static int cros_ec_hwmon_set_fan_auto(struct cros_ec_device *cros_ec, u8 index)
++{
++	struct ec_params_auto_fan_ctrl_v1 req = {
++		.fan_idx = index,
++	};
++
++	return cros_ec_cmd(cros_ec, 1, EC_CMD_THERMAL_AUTO_FAN_CTRL,
++			   &req, sizeof(req), NULL, 0);
++}
++
++static int cros_ec_hwmon_set_fan_duty_cycle(struct cros_ec_device *cros_ec, u8 index, u8 percent)
++{
++	struct ec_params_pwm_set_fan_duty_v1 req = {
++		.fan_idx = index,
++		.percent = percent,
++	};
++
++	return cros_ec_cmd(cros_ec, 1, EC_CMD_PWM_SET_FAN_DUTY,
++			   &req, sizeof(req), NULL, 0);
++}
++
+ static int cros_ec_hwmon_read_temp(struct cros_ec_device *cros_ec, u8 index, u8 *temp)
+ {
+ 	unsigned int offset;
+@@ -111,6 +142,17 @@ static int cros_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 			if (ret == 0)
+ 				*val = speed;
+ 		}
++
++	} else if (type == hwmon_pwm) {
++		if (attr == hwmon_pwm_input) {
++			*val = priv->fan_pwm[channel];
++			ret = 0;
++
++		} else if (attr == hwmon_pwm_enable) {
++			*val = priv->fan_mode[channel];
++			ret = 0;
++		}
++
+ 	} else if (type == hwmon_temp) {
+ 		if (attr == hwmon_temp_input) {
+ 			ret = cros_ec_hwmon_read_temp(priv->cros_ec, channel, &temp);
+@@ -143,6 +185,61 @@ static int cros_ec_hwmon_read_string(struct device *dev, enum hwmon_sensor_types
+ 	return -EOPNOTSUPP;
+ }
+ 
++static int cros_ec_hwmon_write_pwm_input(struct cros_ec_hwmon_priv *priv, int channel, long val)
++{
++	u8 percent;
++	int ret;
++
++	if (val < 0 || val > 255)
++		return -EINVAL;
++
++	percent = DIV_ROUND_CLOSEST(val * 100, 255);
++
++	if (priv->fan_mode[channel] == cros_ec_hwmon_fan_mode_manual) {
++		ret = cros_ec_hwmon_set_fan_duty_cycle(priv->cros_ec, channel, percent);
++		if (ret < 0)
++			return ret;
++	}
++
++	priv->fan_pwm[channel] = percent;
++	return 0;
++}
++
++static int cros_ec_hwmon_write_pwm_enable(struct cros_ec_hwmon_priv *priv, int channel, long val)
++{
++	int ret;
++
++	if (val == cros_ec_hwmon_fan_mode_full)
++		ret = cros_ec_hwmon_set_fan_duty_cycle(priv->cros_ec, channel, 100);
++	else if (val == cros_ec_hwmon_fan_mode_manual)
++		ret = cros_ec_hwmon_set_fan_duty_cycle(priv->cros_ec, channel,
++						       priv->fan_pwm[channel]);
++	else if (val == cros_ec_hwmon_fan_mode_auto)
++		ret = cros_ec_hwmon_set_fan_auto(priv->cros_ec, channel);
++	else
++		return -EINVAL;
++
++	priv->fan_mode[channel] = val;
++	return ret;
++}
++
++static int cros_ec_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
++			       u32 attr, int channel, long val)
++{
++	struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
++	int ret = -EOPNOTSUPP;
++
++	if (type == hwmon_pwm) {
++		if (attr == hwmon_pwm_input)
++			ret = cros_ec_hwmon_write_pwm_input(priv, channel, val);
++
++		else if (attr == hwmon_pwm_enable)
++			ret = cros_ec_hwmon_write_pwm_enable(priv, channel, val);
++	}
++
++	return ret;
++}
++
+ static umode_t cros_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
+ 					u32 attr, int channel)
+ {
+@@ -156,6 +253,11 @@ static umode_t cros_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_type
+ 
+ 		if (priv->usable_fans & BIT(channel))
+ 			return 0444;
++
++	} else if (type == hwmon_pwm) {
++		if (priv->has_fan_pwm && priv->usable_fans & BIT(channel))
++			return 0644;
++
+ 	} else if (type == hwmon_temp) {
+ 		if (priv->temp_sensor_names[channel])
+ 			return 0444;
+@@ -170,6 +272,11 @@ static const struct hwmon_channel_info * const cros_ec_hwmon_info[] = {
+ 			   HWMON_F_INPUT | HWMON_F_FAULT,
+ 			   HWMON_F_INPUT | HWMON_F_FAULT,
+ 			   HWMON_F_INPUT | HWMON_F_FAULT),
++	HWMON_CHANNEL_INFO(pwm,
++			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
++			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
++			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE,
++			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
+ 	HWMON_CHANNEL_INFO(temp,
+ 			   HWMON_T_INPUT | HWMON_T_FAULT | HWMON_T_LABEL,
+ 			   HWMON_T_INPUT | HWMON_T_FAULT | HWMON_T_LABEL,
+@@ -201,6 +308,7 @@ static const struct hwmon_channel_info * const cros_ec_hwmon_info[] = {
+ static const struct hwmon_ops cros_ec_hwmon_ops = {
+ 	.read = cros_ec_hwmon_read,
+ 	.read_string = cros_ec_hwmon_read_string,
++	.write = cros_ec_hwmon_write,
+ 	.is_visible = cros_ec_hwmon_is_visible,
+ };
+ 
+@@ -249,10 +357,26 @@ static void cros_ec_hwmon_probe_fans(struct cros_ec_hwmon_priv *priv)
+ 	size_t i;
+ 	int ret;
+ 
++	ret = cros_ec_cmd_versions(priv->cros_ec, EC_CMD_PWM_SET_FAN_DUTY);
++	if (ret >= 0 && ret & EC_VER_MASK(1))
++		priv->has_fan_pwm = 1;
++
+ 	for (i = 0; i < EC_FAN_SPEED_ENTRIES; i++) {
+ 		ret = cros_ec_hwmon_read_fan_speed(priv->cros_ec, i, &speed);
+-		if (ret == 0 && speed != EC_FAN_SPEED_NOT_PRESENT)
+-			priv->usable_fans |= BIT(i);
++		if (ret < 0)
++			continue;
++		if (speed == EC_FAN_SPEED_NOT_PRESENT)
++			continue;
++
++		priv->usable_fans |= BIT(i);
++
++		if (priv->has_fan_pwm) {
++			priv->fan_mode[i] = cros_ec_hwmon_fan_mode_auto;
++			ret = cros_ec_hwmon_set_fan_auto(priv->cros_ec, i);
++			if (ret != 0)
++				priv->has_fan_pwm = 0;
++		}
++
+ 	}
+ }
+ 
 
-Best regards,
 -- 
-Thomas Weißschuh <linux@weissschuh.net>
+2.45.2
 
