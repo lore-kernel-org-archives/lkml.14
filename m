@@ -1,180 +1,115 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA931B813
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 09:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A262F12BE91
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 09:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717837926; cv=none; b=DMdJSwR7NuQG15cfP+iwhv273KN0t1/ojrCB1KVVMG/061gIwjKUSNpcFLl5sz59aauLP0Do4rvNLBnR6n2iKEzSFUv/BX02O6uAbdHD8rtjeF1PiHhlYc6frheGiyObb1pLHgWbR3rtTQVgWwUmW4NQ8tUIfxlqqKcHknNY8dE=
+	t=1717838058; cv=none; b=ZoxHPSaOZSjr6Bu4gs9lQCy95Lcvb0Qmrb1RngEnRNHj2gL1u/kUJHQNFq08f+svqg5dQcCjMLvDtND+xNdiVOQCUhLPeTfo5WLsMnsfzUouiIaDU71iU2R48Qq6KX0F9PgrtdJ6pKeJv/bPsD/Ly63wFIcRGsaAvDNefzMCbEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717837926; c=relaxed/simple;
-	bh=eVab9dY4pSAIshPG2LfxmqFFlszomKgU2u38kNf82Fc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bf5AasljKd2zOJZa27AEBpGVv6WlRGKboer1o5AY/fSNpAGZqeB91KOUhnrLH6rppIThIn1EWI/AVJijfc9sqFl169acYufz6FFjHevxzsgK5PwUFVSm8+a92amyaTct4o+2qVncEKHDECzb91huWGmsN0lAybWLk8kmgaNgK3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T7O3r78z; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717838058; c=relaxed/simple;
+	bh=Q/TGAr0CiNDoDYrcj03jYZOrzqb1pAXuFRC9IC55pSM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mg60f5nH/IvVcQnWFHS0DsfaG4Mqkm5NgGzcXKV7a8nfSabxcjSN+Pfppusf65oB/ShxtG7EltTQ5ibwTnCmLdE7LrVBqpYa3BdRlXehuqmzIq1MexaxtrMpjctB+J2Q5SWoCNDq27cdSBF8ksnXyjZ8rQsWPzZO4mmB96AQEm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wz719ZCj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T7O3r78z"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57a30dbdb7fso3870398a12.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2024 02:12:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717837923; x=1718442723; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B0UpUKnkWpc6C7/avXDFr5uyhktb5SegGLRIL+r2gqA=;
-        b=T7O3r78zAc8j9TgX6xtD1GOnGZwtCSnXibSVUXWkCsPKKq2o/0z5Yvm4UZf5jsysi8
-         vU0XKPhd8T7SK3MEUHrqlmrdE++ua1posch4Hnm/oTwavEXu+QCBd5z3kLl+Kn/dfpVx
-         Ok1byU0gT4Xw5nxMvEb7A5jE17+PLx2g+bGt8Xo/D4mqJWSUnuLPwHQ2Dqkk+qJmxSWy
-         ZhzXjuF2Ls8qYWRTG6aiwVuB9FcdbllilY96QClBOgcq4Z615Bd+jNEwYyP1fkHo+7ni
-         jE7MMdXTzKeM0anQ1Vup9ll9rQDYGoQnEXb3c8BnrLe3JNxV9gj0oRw6vPKfoJgLpJJO
-         X6qA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wz719ZCj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717838055;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ku7v+UVkWkWp0wqpNRlbUjz2nl0FWZCw5kgGu5XvDzY=;
+	b=Wz719ZCjafINrMFosjA5rr2WT+LFjf605rVVeXaKcI65T2kEoBmiEuwGlnn/jZyao0hNPx
+	dcmgl4oDdFwmcuE48FA0UQtzmZZxET9HrcieiOPTJvgZEB5jYtg61QfP8iLMjJkvdDQ138
+	mr2YlClEHWZaG2FyZsvhncBIpmCrvQs=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-76-jX3gwbMgNkqyyXWKnnICjg-1; Sat, 08 Jun 2024 05:14:10 -0400
+X-MC-Unique: jX3gwbMgNkqyyXWKnnICjg-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2c2dd7fb263so441043a91.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2024 02:14:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717837923; x=1718442723;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B0UpUKnkWpc6C7/avXDFr5uyhktb5SegGLRIL+r2gqA=;
-        b=edVqTRV5jqsF0lz1WjBpkgyZQ6AzYv4h5OdUmtz41MwDizE+ykoBtwXxDN60ONmLNq
-         3pTacWisluPrjTiYy2Of96AIItnMN9y1FmnPpHsWzLjT7Ho9KAlGSlE1mBl6usOnLFpV
-         xjVG4gXnvSW8dEVbBbF+yOWfZxJC3j869N1gcuSPKBUVE5+W1b/2QmA9JrpSwRl0nX+r
-         aV2QS55sLxISBujajrOHBz4MhhY5Ta1CPcF6DEO/DdidNv7dPtEKDYIJ1Zk/Ui2H5zBZ
-         xRz8DOGJYOHh57A4A16ehvHG0oorJaTd7P2fq6V8zaOdShy0ZAhW3ms3I0iSfUjGQAC9
-         vXwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhnkSg7O+PFproVnSFlI3lj/HpkCSOFf6m3MDNEKksyZaILHCEQOgBS3ZyTyb8UYzdwpryreXViDhSLPFneZqflQvZmBsrJLPVOG1K
-X-Gm-Message-State: AOJu0YwbqTZ3I6hjotie8OdbZ4quAtUEgEyf1lc1LsP9D94ZP2/EjoK2
-	8ZYSgvLVT3bUSUMfB8S1sPzgaXJ8eED/iqME5hFozaLliqR+ecAHXhS0d4CgRWM=
-X-Google-Smtp-Source: AGHT+IGgJ9P7gtdKHjyuziQT+ntOGPCdrCq5wKDE9BsBfE7IbIX651xKkM9jSh5hxO3HmLkhGM90xw==
-X-Received: by 2002:a50:8714:0:b0:57c:6c98:b622 with SMTP id 4fb4d7f45d1cf-57c6c98b85amr620690a12.38.1717837922899;
-        Sat, 08 Jun 2024 02:12:02 -0700 (PDT)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-57aae20238asm3998372a12.73.2024.06.08.02.12.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Jun 2024 02:12:02 -0700 (PDT)
-Message-ID: <3ea05a12-27a8-46df-9fb3-28501404a399@linaro.org>
-Date: Sat, 8 Jun 2024 10:12:01 +0100
+        d=1e100.net; s=20230601; t=1717838049; x=1718442849;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ku7v+UVkWkWp0wqpNRlbUjz2nl0FWZCw5kgGu5XvDzY=;
+        b=u3Gd4azhHTRTcMJSJDHXSIqau+VSlr2r3lS1GmDzkQuocjpvgPYRP7hVm4cGQypzmu
+         77r5YQve0Oeckpd2TjsX+gqYrCLh5DkAE+psIIX7kA2+ORvePNpFOcgJturC+oQQu2So
+         v4ZHn2m8tzQ5IFKlRro+GGTXoSFNdJzcIJGrPaH3g8s0aTXrvnFXzTCVnJFIM45UGcb7
+         cLsuWhbMw4SibJWXm8ufz/Fd/IzLCyZQquVlKfGd228O0T9t4hbG0s3nlSh7daO6C5CH
+         4ybV+eAQKLn7d8I2DYLtsCfbOh5jH7Njg/jXfBGcxMQR71QJOjMZU35/q0xdNytH9mNj
+         7Z/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVFVPRbRo6hPM+M3iKtV+g7j/CtYxFWvBYVbSiESdcoirM4BDDomPa54zOrtds8RHgUW9t62EP5Xj42Tg2GdmywU4PiKe9qYGrahaI/
+X-Gm-Message-State: AOJu0YyHIIjzWf9b416xWUj3Qazpc9lkLq/+cfUziz//87qJBM3Ha0sZ
+	nvLz+2RglV84IM8rauJm6RWmsxozK4MuoP36DNi/MifH+OkLqU6e21C4UbuF9Og3KTm+q0UeC2V
+	+Lw8CQEdBl+r97wmRocT/4l7TrTLyli9xRO3bTXP1SycCdeSzujYmpWVMN2YGmcbLZqwG/Z3XtT
+	P6is859COuUpNNP/y+OTNTExc7ggjH9NRoL2Vx
+X-Received: by 2002:a17:90b:2352:b0:2c2:cfca:6783 with SMTP id 98e67ed59e1d1-2c2cfca6890mr2473199a91.45.1717838049451;
+        Sat, 08 Jun 2024 02:14:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHBnTLiWOqQ8M39DA41jBBu3T4ZcnpjvGkKGIcmuIotBe6az6pnyy609CbOYHeRjWy3x6zvVVnDyy1QEi2ONuw=
+X-Received: by 2002:a17:90b:2352:b0:2c2:cfca:6783 with SMTP id
+ 98e67ed59e1d1-2c2cfca6890mr2473190a91.45.1717838049109; Sat, 08 Jun 2024
+ 02:14:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/4] ASoC: qcom: display port changes
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: broonie@kernel.org, perex@perex.cz, lgirdwood@gmail.com,
- alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, krzk+dt@kernel.org
-References: <20240606104922.114229-1-srinivas.kandagatla@linaro.org>
- <i6jwqycgywrq42u4km6pjppgvvhsbvuh7m6mzyqy2qcge32ihy@n3lrowkyouv2>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <i6jwqycgywrq42u4km6pjppgvvhsbvuh7m6mzyqy2qcge32ihy@n3lrowkyouv2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240530210714.364118-1-rick.p.edgecombe@intel.com>
+ <20240530210714.364118-10-rick.p.edgecombe@intel.com> <CABgObfbzjLtzFX9wC_FU2GKGF_Wq8og+O=pSnG_yD8j1Dn3jAg@mail.gmail.com>
+ <b1306914ee4ca844f9963fcd77b8bf9a30d05249.camel@intel.com>
+In-Reply-To: <b1306914ee4ca844f9963fcd77b8bf9a30d05249.camel@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Sat, 8 Jun 2024 11:13:53 +0200
+Message-ID: <CABgObfb1L4SLGLOPwUKTBusN9bVKACJp7cyvgL8LPhGz0QTNAA@mail.gmail.com>
+Subject: Re: [PATCH v2 09/15] KVM: x86/tdp_mmu: Support mirror root for TDP MMU
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "seanjc@google.com" <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
+	"sagis@google.com" <sagis@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Aktas, Erdem" <erdemaktas@google.com>, 
+	"Zhao, Yan Y" <yan.y.zhao@intel.com>, "dmatlack@google.com" <dmatlack@google.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Dmitry for testing this out.
+On Fri, Jun 7, 2024 at 10:27=E2=80=AFPM Edgecombe, Rick P
+<rick.p.edgecombe@intel.com> wrote:
+> > static inline struct kvm_mmu_page *
+> > tdp_mmu_get_root_for_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault
+> > *fault)
+> > {
+> >   hpa_t root_hpa;
+> >   if (unlikely(fault->is_private && kvm_has_mirror_tdp(kvm)))
+> >     root_hpa =3D vcpu->arch.mmu->mirror_root_hpa;
+> >   else
+> >     root_hpa =3D vcpu->arch.mmu->root.hpa;
+> >   return root_to_sp(root_hpa);
+> > }
+>
+> I was not loving the amount of indirection here in the patch, but thought=
+ it
+> centralized the logic a bit better. This way seems good, given that the a=
+ctual
+> logic is not that complex.
 
-On 08/06/2024 03:23, Dmitry Baryshkov wrote:
-> On Thu, Jun 06, 2024 at 11:49:18AM +0100, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> This patchset adds support for.
->> 	1. parse Display Port module tokens from ASoC topology
->> 	2. add support to DP/HDMI Jack events.
->> 	3. fixes a typo in function name in sm8250
->>
->> Verified these patches on X13s along with changes to tplg in
->> https://git.codelinaro.org/linaro/qcomlt/audioreach-topology/-/tree/topic/x13s-dp?ref_type=heads
->> and ucm changes from https://github.com/Srinivas-Kandagatla/alsa-ucm-conf/tree/topic/x13s-dp
->>
->> x1e80100 is verified by Krzysztof with his changes in tplg
->>
->> https://git.codelinaro.org/linaro/qcomlt/audioreach-topology/-/merge_requests/7/commits
->>
->> Thanks,
->> Srini
->>
-> 
-> I have been testing this patchset on X13s, switching between speakers,
-> connected and disconnected DP output.
-> 
+My proposed implementation is a bit TDX-specific though... Something
+like this is more agnostic, and it exploits nicely the difference
+between fault->addr and fault->gfn:
 
-This series changed the Jack event names by removing HDMI string from it 
-as suggested, did you update the UCM to reflect this?
-I have pushed changes required to 
-https://github.com/Srinivas-Kandagatla/alsa-ucm-conf/tree/topic/x13s-dp
+if (!kvm_gfn_direct_mask(kvm) ||
+    (gpa_to_gfn(fault->addr) & kvm_gfn_direct_mask(kvm))
+  root_hpa =3D vcpu->arch.mmu->root.hpa;
+else
+  root_hpa =3D vcpu->arch.mmu->mirror_root_hpa;
+return root_to_sp(root_hpa);
 
+Paolo
 
-Can you also try to  clean the asound.state restart the pipewire.
-
-> - Once the DSP got into the state, where I could not further get it to
->    work until the reboot:
-> 
-> rohan pipewire[1749]: spa.alsa: set_hw_params: Invalid argument
-> rohan pipewire[1749]: pw.node: (alsa_output.platform-sound.HiFi__hw_SC8280XPLENOVOX_1__sink-48) suspended -> error (Start error: Invalid argument)
-> rohan kernel: qcom-apm gprsvc:service:2:1: Error (1) Processing 0x01001006 cmd
-> rohan kernel: qcom-apm gprsvc:service:2:1: DSP returned error[1001006] 1
-> rohan kernel: qcom-apm gprsvc:service:2:1: Error (1) Processing 0x01001006 cmd
-> rohan kernel: qcom-apm gprsvc:service:2:1: DSP returned error[1001006] 1
-> rohan kernel: qcom-apm gprsvc:service:2:1: Error (1) Processing 0x01001001 cmd
-> rohan kernel: qcom-apm gprsvc:service:2:1: DSP returned error[1001001] 1
-> rohan kernel: q6apm-lpass-dais 3000000.remoteproc:glink-edge:gpr:service@1:bedais: Failed to prepare Graph -22
-> rohan kernel: q6apm-lpass-dais 3000000.remoteproc:glink-edge:gpr:service@1:bedais: ASoC: error at snd_soc_pcm_dai_prepare on WSA_CODEC_DMA_RX_0: -22
-> rohan pipewire[1749]: spa.alsa: set_hw_params: Invalid argument
-> rohan kernel: qcom-apm gprsvc:service:2:1: Error (1) Processing 0x01001006 cmd
-> rohan kernel: qcom-apm gprsvc:service:2:1: DSP returned error[1001006] 1
-> rohan kernel: qcom-apm gprsvc:service:2:1: Error (1) Processing 0x01001006 cmd
-> rohan kernel: qcom-apm gprsvc:service:2:1: DSP returned error[1001006] 1
-> rohan kernel: qcom-apm gprsvc:service:2:1: Error (1) Processing 0x01001001 cmd
-> rohan kernel: qcom-apm gprsvc:service:2:1: DSP returned error[1001001] 1
-> rohan kernel: q6apm-lpass-dais 3000000.remoteproc:glink-edge:gpr:service@1:bedais: Failed to prepare Graph -22
-> rohan kernel: q6apm-lpass-dais 3000000.remoteproc:glink-edge:gpr:service@1:bedais: ASoC: error at snd_soc_pcm_dai_prepare on WSA_CODEC_DMA_RX_0: -22
-> rohan kernel: qcom-apm gprsvc:service:2:1: Error (1) Processing 0x01001006 cmd
-> rohan kernel: qcom-apm gprsvc:service:2:1: DSP returned error[1001006] 1
-> rohan kernel: qcom-apm gprsvc:service:2:1: Error (1) Processing 0x01001006 cmd
-> rohan kernel: qcom-apm gprsvc:service:2:1: DSP returned error[1001006] 1
-> rohan kernel: qcom-apm gprsvc:service:2:1: Error (1) Processing 0x01001001 cmd
-> rohan kernel: qcom-apm gprsvc:service:2:1: DSP returned error[1001001] 1
-> 
-> 
-> - Once in a while during startup PipeWire will try opening the
->    incorrect DAI and then fail with:
-> 
-> rohan kernel: hdmi-audio-codec hdmi-audio-codec.8.auto: ASoC: error at snd_soc_dai_hw_params on i2s-hifi: -22
-> rohan kernel: hdmi-audio-codec hdmi-audio-codec.8.auto: ASoC: error at snd_soc_dai_hw_params on i2s-hifi: -22
-> 
->    I think this happens if previously I have selected DP as an output,
->    then closed gnome session, unplugged the cable and tried logging in
->    again.
-> 
-> Generally, it looks like even though the Jack is reporting
-> 'unplugged', sound daemon still can switch to to the disabled output
-I think this is to do with ucm changes requried for new jack name.
-
-> (or the audio card can be left in the stale state).  In case of DP
-> this frequently results in audio daemon or DSP failures.
-> 
-> So, the DP implementation needs to be made more robust, so that if
-> DP output gets selected when the cable is unplugged, the driver will not
-> attempt to configure the DSP.
-
-I have tested this with
-
-kernel: 
-https://git.codelinaro.org/srinivas.kandagatla/linux/-/tree/dp/sc8280xp-6.10-rc1?ref_type=heads
-ucm: https://github.com/Srinivas-Kandagatla/alsa-ucm-conf/tree/topic/x13s-dp
-tplg: 
-https://git.codelinaro.org/linaro/qcomlt/audioreach-topology/-/tree/topic/x13s-dp?ref_type=heads
-
-
-with the above on my x13s, I can properly do switching between dp0,dp1 
-and speakers with no issues.
-
-Can you try them?
-
-thanks,
-Srini
-
-> 
