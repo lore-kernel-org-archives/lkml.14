@@ -1,129 +1,110 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9B22BAE9;
-	Sat,  8 Jun 2024 08:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B41176FC0
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 08:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717836744; cv=none; b=DY3FOcUpM4AxtYMnxx9DhprzpMyUxFiA02pp2Yf1q5M6SIdWnrG1sqJ0TU8GLEqJ5te1Hac5IOd/dPZSQ9w10LolGBDnjBxQF5GTw52QAHSda71aO8xJJzlPmCQoJpW3Jg3boAbLiiboyZejwn5Iv4JlgIWNNCF7oxjegLUaOrw=
+	t=1717836766; cv=none; b=oPfqznKCjgSKhIh3vsDSYAQkcAizhd+hZnISUcxI9iXH8ipYtVVgn70THTy1CXfeYsIOOPnY/RTJc2GkEAVaB1DDru+LdJnsuGTWkjHHIIOOPeP9i/r933syICy/J/I1Vb2PQq8vgwinvhg5Ovnzk7xdNvGYp8Yfh2LMvkBwySc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717836744; c=relaxed/simple;
-	bh=ha7EzrpsruY6y9xDIkz/nhmxyf0XxlQ+52RUFa2ziNA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jEOSX+7az5YdCgg9bk5nMq5FDW2cGglEGtfw/AjpgX31CDFh721mDKiTiWlEkfOzy3w4ztWyz7N/pz2G1Ajn0dB+Nrdi0pRD5oHsDJqjgfJq5i4uB3qvSbnUJ/Sy3p7vw7rc1/YdBLYnJOdSMmBQhH758eEFI+gJ4evN5q16vIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HsiKKfaP; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717836766; c=relaxed/simple;
+	bh=j/pc0aDSaoMD5Z4FefrtiCAvHYjnJdayUYaFlXoI2g8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J7DWNJaDO2XcIUugRRwa6Z43vVaADYe+Fh/29tCLIWHoPMY09KJbao+biTiAS8Vm8WOYC4f0bQYNqnZHK3pcWmfoNJP2psUqHR5zvEKm0nOpupCoMJAF37IvmJQVBWdSDPhrpqNnTe2OKmV3SW7kkWVq4BaeXCkNLaC+sucqMwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q/CD+ZK/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsiKKfaP"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6e0a499687so135733066b.2;
-        Sat, 08 Jun 2024 01:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717836741; x=1718441541; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w1aXjWmtgZ3e8sv722YupJkGCAHwEEWx+AcscMfS3UI=;
-        b=HsiKKfaPTpqswHjqPBp9bR6b+9ihcnsARcehS6lv5XHD1Kw3MS78BODbDfWzAq0dZG
-         JHjubAKUuxL18aUpVRM5ioRTp2bg7eWVCMDMRbmIhFvKSQ2r0QbJGZT6OBnSnMcfL9tl
-         iX88nQYpwB1ikU5FGK+UwUNcCOFyFrph1dm5ubuk4GLlCC66bhhQGTZ5fqU9RAkl/jZm
-         HiLpIx37+IHndikXl8Jt3bXp2dP8orWUB1rJSq5yeAh+PMj10P/oi0AtJp6OL9d1eKFI
-         r49VYIJz6qQehiQ8WDEYkJTRNQthXAuAvizBZuxYWH0SdX3zPYnEHcC2WDNSjYj3ax5t
-         scjA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q/CD+ZK/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717836763;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JE0Afv2+MSIgjGY50KIS26TxZdTfOBnblGzJXPbJMP0=;
+	b=Q/CD+ZK/h4wRgq+cJFWnjjkbKd+E59YBkzXbj1OXGO9BDigD2XmKm5MBTcu7bP8zXb64Ll
+	GOEkF9p2wAbLogbAmHmAYMSuV/gxkAWST1GhwCl7HTOxsNStDbIjXkPFot6IJpOtewok+6
+	RRsqkg9gtVuE1BTNEDNehN+iow7OGOs=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-270-3KvID8H7Mx6mGYPfS0L-8g-1; Sat, 08 Jun 2024 04:52:39 -0400
+X-MC-Unique: 3KvID8H7Mx6mGYPfS0L-8g-1
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-5e4df21f22dso2277754a12.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Jun 2024 01:52:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717836741; x=1718441541;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1717836758; x=1718441558;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w1aXjWmtgZ3e8sv722YupJkGCAHwEEWx+AcscMfS3UI=;
-        b=wyn//DCgspDB411wQdKWSWjnRFMjiYFbT53EGP9nkCCBflTZnB56j33fpDmf4eD6yY
-         vwOYoqfH39aXrhMmqhbllyiRHjOC9Ou1DF00qM/7yn2wEhRrPp2/SjEzDt9uwlGhkCen
-         zlIio/1wBd4CASI+nSvvCLyvzAnIEJ5DgdS+X9R05v8CX9cQdUvdDQHaPYu64wtC68zw
-         Kk/WA5k9gwUrTX9ualndJ5IorUlZqJju78hR+8/HNahpbR+Nooz1dR620mSKZQUseW67
-         21dbFpTTQi/74c0yk0uvZAebd79nqwzdveZeCL4t6K/xuHZ+BuHtP2zzxFcEqY21+65a
-         UNgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKw67NnFraa/cI0NS4jRDOwqS9CNELrLwIXzSi4CZ03E8E9aM0gpOGcV7dpW+TdLJYMyzBK4C8uZmOSWZkruoRIHYoX2as0s+DaXqSxSzo4k4yJa9d8k3Kbnfx5hDRb4v5vSPGb0A8qOcGaZuORUDZPvzTIW8oPsZeQYOSbyvWTAqTDgM=
-X-Gm-Message-State: AOJu0YwWVE2mwYILNgUOSh+3AEuUyVIleBxPK9ZQkAWZXG8i1CBsMnPs
-	ZvG2BV1XRDOovEf+OoVDCN6XbyAHTOxrMoaWg59+6ooqmNZpWgRz
-X-Google-Smtp-Source: AGHT+IFbDZmJD7JT3b/jbSma58/rkMWsWZspI9oABhrJ/uKXNK/8TzbM8H3qFUVbwUIAU2urSQtEXw==
-X-Received: by 2002:a17:906:3882:b0:a69:2025:1535 with SMTP id a640c23a62f3a-a6cd7a8abdemr323683866b.33.1717836740945;
-        Sat, 08 Jun 2024 01:52:20 -0700 (PDT)
-Received: from caracal.museclub.art (p200300cf9f200400a86c445e36ca9cbe.dip0.t-ipconnect.de. [2003:cf:9f20:400:a86c:445e:36ca:9cbe])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a6c805fa410sm359066266b.94.2024.06.08.01.52.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Jun 2024 01:52:20 -0700 (PDT)
-From: Eugene Shalygin <eugene.shalygin@gmail.com>
-To: eugene.shalygin@gmail.com
-Cc: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] hwmon: (asus-ec-sensors) add ProArt X670E-CREATOR WIFI
-Date: Sat,  8 Jun 2024 10:50:05 +0200
-Message-ID: <20240608085146.572777-2-eugene.shalygin@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240608085146.572777-1-eugene.shalygin@gmail.com>
-References: <20240608085146.572777-1-eugene.shalygin@gmail.com>
+        bh=JE0Afv2+MSIgjGY50KIS26TxZdTfOBnblGzJXPbJMP0=;
+        b=u+TK2uxMy+1z5g9/RMTxNRIC6lVifEf9i03b9w2dEpNysjqGbxt1aBqaHghqRJdk8k
+         MUrtAIR3S7MoRFh5iLPMJUliTJw+I3769AysG1WOONWuMEdOmHaUlLdf8iyZmV0PKZ38
+         dP7FCKAV5jLfFYtIfddeWvmma6XyRJ4oTticd/dAyMGrLVkPaIFhofFldOxUvLz8KHWa
+         GPSFsnfZ+YEqU/pCoMiCgs0MpOXRxvnONY2CJuvIe9ZPi/gVq4WmNcRvwJ4kLnNPKZr6
+         EoliXClpuha9Wdg8PP9IrvPIn/bblcknTQz7awD0VuleL92G+DqzZ+ePBHamAXmYx0Qv
+         z2gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6i5Ptsvxhrc8+X4Iq33gezqHJN4Ibl6HpuNFewzAjktG/pO6iBACj4o4oeAsq5n0J3CfqaSeb2H/2Xpz66vPNKJZ6LPZZHgz/BJS3
+X-Gm-Message-State: AOJu0Yx5CLKo1yCj8oMn6N9bj/0UAtxQV4CmgEb2BDEFUyHduoEmU6qZ
+	XHGgkGvybfpbre2Zk+cLTKi8PlKgU4rR1prdhaGyT1hm/aaDqqx7nF7XZ1f/DDfqTwsjw9LicUI
+	ICDD1kxPpdf9If6Gs+VRg6QZVEE/G0RCQXwIBQ91TBZsFJXBtmApLmtnoTc/mKn6bP8vSXTWiL7
+	WGS9zD7qKtWPU7uJwhq9ZEgFdl5dbXfwFxZ/8W
+X-Received: by 2002:a17:90a:528e:b0:2c0:d4d:837 with SMTP id 98e67ed59e1d1-2c2b89aadbemr6759884a91.12.1717836758294;
+        Sat, 08 Jun 2024 01:52:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEvKkEGPHZgVnVRswnvyZIOkK63ksDBuLzbYBh/cydVgzI1vSizf/xTfkrdJb3on2BinrUqcswJtL+NkIA7mUs=
+X-Received: by 2002:a17:90a:528e:b0:2c0:d4d:837 with SMTP id
+ 98e67ed59e1d1-2c2b89aadbemr6759862a91.12.1717836757895; Sat, 08 Jun 2024
+ 01:52:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240530210714.364118-1-rick.p.edgecombe@intel.com>
+ <20240530210714.364118-7-rick.p.edgecombe@intel.com> <CABgObfZuv45Bphz=VLCO4AF=W+iQbmMbNVk4Q0CAsVd+sqfJLw@mail.gmail.com>
+ <9423e6b83523c0a3828a88f38ffc3275a08e11dd.camel@intel.com>
+In-Reply-To: <9423e6b83523c0a3828a88f38ffc3275a08e11dd.camel@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Sat, 8 Jun 2024 10:52:24 +0200
+Message-ID: <CABgObfYmt+U5O4eawBqFudSCz8PBZMYs4vv=qRQzOc7+Htnr7w@mail.gmail.com>
+Subject: Re: [PATCH v2 06/15] KVM: x86/mmu: Support GFN direct mask
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "seanjc@google.com" <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
+	"sagis@google.com" <sagis@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Aktas, Erdem" <erdemaktas@google.com>, 
+	"Zhao, Yan Y" <yan.y.zhao@intel.com>, "dmatlack@google.com" <dmatlack@google.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Provided and tested by a user in a GitHub PR [1].
+On Fri, Jun 7, 2024 at 8:39=E2=80=AFPM Edgecombe, Rick P
+<rick.p.edgecombe@intel.com> wrote:
+> > > +       return kvm_gfn_direct_mask(kvm);
+> >
+> > Ok, please excuse me again for being fussy on the naming. Typically I
+> > think of a "mask" as something that you check against, or something
+> > that you do x &~ mask, not as something that you add. Maybe
+> > kvm_gfn_root_offset and gfn_direct_offset?
+>
+> As for the name, I guess I'd be less keen on "offset" because it's not cl=
+ear
+> that it is a power-of-two value that can be used with bitwise operations.
+>
+> I'm not sure what the "fixed" adds and it makes it longer. Also, many PTE=
+ bits
+> cannot be moved and they are not referred to as fixed, where the shared b=
+it
+> actually *can* be moved via GPAW (not that the MMU code cares about that
+> though).
+>
+> Just "bits" sounds better to me, so maybe I'll try?
+> kvm_gfn_direct_bits()
+> kvm_gfn_root_bits()
 
-[1] https://github.com/zeule/asus-ec-sensors/pull/56
+Yep, kvm_gfn_direct_bits and kvm_gfn_root_bits are good.
 
-Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
----
- Documentation/hwmon/asus_ec_sensors.rst |  1 +
- drivers/hwmon/asus-ec-sensors.c         | 10 ++++++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/Documentation/hwmon/asus_ec_sensors.rst b/Documentation/hwmon/asus_ec_sensors.rst
-index 0bf99ba406dd..ca38922f4ec5 100644
---- a/Documentation/hwmon/asus_ec_sensors.rst
-+++ b/Documentation/hwmon/asus_ec_sensors.rst
-@@ -8,6 +8,7 @@ Supported boards:
-  * PRIME X570-PRO
-  * Pro WS X570-ACE
-  * ProArt X570-CREATOR WIFI
-+ * ProArt X670E-CREATOR WIFI
-  * ProArt B550-CREATOR
-  * ROG CROSSHAIR VIII DARK HERO
-  * ROG CROSSHAIR VIII HERO (WI-FI)
-diff --git a/drivers/hwmon/asus-ec-sensors.c b/drivers/hwmon/asus-ec-sensors.c
-index 36f9e38000d5..6bb8d7b1d219 100644
---- a/drivers/hwmon/asus-ec-sensors.c
-+++ b/drivers/hwmon/asus-ec-sensors.c
-@@ -322,6 +322,14 @@ static const struct ec_board_info board_info_pro_art_x570_creator_wifi = {
- 	.family = family_amd_500_series,
- };
- 
-+static const struct ec_board_info board_info_pro_art_x670E_creator_wifi = {
-+	.sensors = SENSOR_TEMP_CPU | SENSOR_TEMP_CPU_PACKAGE |
-+		SENSOR_TEMP_MB | SENSOR_TEMP_VRM |
-+		SENSOR_TEMP_T_SENSOR,
-+	.mutex_path = ACPI_GLOBAL_LOCK_PSEUDO_PATH,
-+	.family = family_amd_600_series,
-+};
-+
- static const struct ec_board_info board_info_pro_art_b550_creator = {
- 	.sensors = SENSOR_SET_TEMP_CHIPSET_CPU_MB |
- 		SENSOR_TEMP_T_SENSOR |
-@@ -486,6 +494,8 @@ static const struct dmi_system_id dmi_table[] = {
- 					&board_info_prime_x570_pro),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ProArt X570-CREATOR WIFI",
- 					&board_info_pro_art_x570_creator_wifi),
-+	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ProArt X670E-CREATOR WIFI",
-+					&board_info_pro_art_x670E_creator_wifi),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ProArt B550-CREATOR",
- 					&board_info_pro_art_b550_creator),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("Pro WS X570-ACE",
--- 
-2.45.2
+Paolo
 
