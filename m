@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C3617B508;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DA417B501;
 	Sat,  8 Jun 2024 15:57:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717862241; cv=none; b=ub/nxln4oXzocKLCm9NYgaFNtRte2hufr3rC8YSVRLKImFskN5RL0IvIjN1Bq5WYGQXDmAqi1K/Q7UWuI9QJ3hsp3XDGpl3TR9+lc0/zf4R4XLzR02OWgcalTw/mRotq1YWW+qCbTvq8u+XIZjD38srIAgeAIGtdDyd6K/jrAoU=
+	t=1717862241; cv=none; b=ZuC0OJgrEEGBUfCAX17+mlimpKPk9uGA2BhAWs9+5bzeNpL6Gzr/gH8+yiWTfbhj8LFGdo0L/Nq3C6CRGxDdMvMuijECCFX5sX33/Ysk2tPV4b2yK9HUV1sWeIMqXp31OVkheFTJhleauLw6B0K4/93pb8I1MVnXeMOy4AgtV98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717862241; c=relaxed/simple;
-	bh=mrE9CflCyD5JGJU45JpmcouGaGOztDkM/lJ4oalLK0c=;
+	bh=xuLW186fea6lJzbfge+RPFqnKTg2k2paCC0ZLWkIo8M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Frfs9URPqNh3cyDffZUYOaqJAoeBAMY9YjL/iKlQGnQhwtlchkNYiLoPXNQlCAX7QmZ3qf8T8u10BbMhCuaPoeaEGVTckJ80nEmmM2YHtcCx4TuymEGHdmlsmYhcvYnatOjQq3Z3E+u2pG01ppguYLxTJtReZBva4P4SZYqdkLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGxkhm4Y; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lp+P1Aa8whwpT/Gy0sUVgl5NHn7rFZ1PJTZOt0yLlTtRxeeZsyKDlXDZdqamVHYIBfuDhKY5ckY+IiU0CoAmzbwJSYres3AFfp+BzIgv6NDvFLdQl7v/S8xYBJPkT3N3RkWa+NBl04Dpw/GFquRPuh7dRQo/bmfBzhgS2TmGaQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MFNDOOfK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGxkhm4Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10A95C4DE00;
-	Sat,  8 Jun 2024 15:57:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MFNDOOfK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFDD6C4AF1D;
+	Sat,  8 Jun 2024 15:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717862241;
-	bh=mrE9CflCyD5JGJU45JpmcouGaGOztDkM/lJ4oalLK0c=;
+	bh=xuLW186fea6lJzbfge+RPFqnKTg2k2paCC0ZLWkIo8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oGxkhm4YIAttg9cFJNPyiFrl4ijOQsL6rfF0KwRw5jU1mDiWrWCwCzuCQrMoO5eaE
-	 KPr+719Jx14U6SK4/vpnlrNvSRKI0alg300+P0XM2WSWT9vqWub/6aylm0OC417psp
-	 e/ymxXVIA+KtjVcZJibDuxcoHWwS9Fw1IHS+ilwdYLA12NrytGF2P/dRN1UsUb8WAK
-	 vs8uKTH5q4fzREncAidWEFyuc+BnC5d/3xdzooIPSL8He+WJlqmMkzcoRyAxWKHUyO
-	 ZUXo1lItASsMG+zMOszCVF5WpzKnacEjd7AxbVAq968ue+LF6Lx7eqIO1fU4zC2yPW
-	 z3dfc2F9xjNkQ==
+	b=MFNDOOfKmyk7wBhW7lAU2yXcx+5TU/EnYCQSr9hCGygcERkvrnmTJ3hhIY9Io3/dq
+	 MpCcWT9gAuwR2HbMDkPMu6sy4V/+vVOfneCAjLosB66N+zMRS14PXFME4zlko+Zrtj
+	 sC7+mgyyAy3KDwQjIJLylDjGM17WcesG7fZx5YBExuIUvkbDgnyZLC+6L0SNXowQad
+	 /FLWNhfyOSah64zdaBKgoj++E5z6ahktS8HLti7zwxLownp+emefx37kSLuctj8oNJ
+	 mt+wPca/11oixsUJsC8kQTVJaPg3cnrw28At1YH4rltwRvoTs2ommJLb21LJw7GQbb
+	 tTJ41yvIhhfng==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1sFyRU-000000003QN-2Rhf;
+	id 1sFyRU-000000003QF-1Ytt;
 	Sat, 08 Jun 2024 17:57:20 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Lee Jones <lee@kernel.org>,
@@ -49,9 +49,9 @@ Cc: Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v3 12/12] arm64: dts: qcom: sc8280xp-x13s: enable pm8008 camera pmic
-Date: Sat,  8 Jun 2024 17:55:26 +0200
-Message-ID: <20240608155526.12996-13-johan+linaro@kernel.org>
+Subject: [PATCH v3 10/12] mfd: pm8008: Rework to match new DT binding
+Date: Sat,  8 Jun 2024 17:55:24 +0200
+Message-ID: <20240608155526.12996-11-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.44.1
 In-Reply-To: <20240608155526.12996-1-johan+linaro@kernel.org>
 References: <20240608155526.12996-1-johan+linaro@kernel.org>
@@ -63,170 +63,237 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enable the PM8008 PMIC which is used to power the camera sensors.
+Rework the pm8008 driver to match the new devicetree binding which no
+longer describes internal details like interrupts and register offsets
+(including which of the two consecutive I2C addresses the registers
+belong to).
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Instead make the interrupt controller implementation internal and pass
+interrupts to the subdrivers using MFD cell resources.
+
+Note that subdrivers may either get their resources, like register block
+offsets, from the parent MFD or this can be included in the subdrivers
+directly.
+
+In the current implementation, the temperature alarm driver is generic
+enough to just get its base address and alarm interrupt from the parent
+driver, which already uses this information to implement the interrupt
+controller.
+
+The regulator driver, however, needs additional information like parent
+supplies and regulator characteristics so in that case it is easier to
+just augment its table with the regulator register base addresses.
+
+Similarly, the current GPIO driver already holds the number of pins and
+that lookup table can therefore also be extended with register offsets.
+
+Note that subdrivers can now access the two regmaps by name, even if the
+primary regmap is registered last so that it is returned by default when
+no name is provided in lookups.
+
+Finally, note that the temperature alarm and GPIO subdrivers need some
+minor rework before they can be used with non-SPMI devices like the
+PM8008. The temperature alarm MFD cell name specifically uses a "qpnp"
+rather than "spmi" prefix to prevent binding until the driver has been
+updated.
+
 Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- .../qcom/sc8280xp-lenovo-thinkpad-x13s.dts    | 123 ++++++++++++++++++
- 1 file changed, 123 insertions(+)
+ drivers/mfd/Kconfig                   |  1 +
+ drivers/mfd/qcom-pm8008.c             | 97 +++++++++++++++++++++++----
+ include/dt-bindings/mfd/qcom-pm8008.h | 19 ------
+ 3 files changed, 86 insertions(+), 31 deletions(-)
+ delete mode 100644 include/dt-bindings/mfd/qcom-pm8008.h
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-index 642705b7d896..daca6bd2e34c 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-@@ -297,6 +297,27 @@ linux,cma {
- 	};
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 266b4f54af60..6b220dfea0a4 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -2208,6 +2208,7 @@ config MFD_ACER_A500_EC
+ config MFD_QCOM_PM8008
+ 	tristate "QCOM PM8008 Power Management IC"
+ 	depends on I2C && OF
++	select MFD_CORE
+ 	select REGMAP_I2C
+ 	select REGMAP_IRQ
+ 	help
+diff --git a/drivers/mfd/qcom-pm8008.c b/drivers/mfd/qcom-pm8008.c
+index 72199840231e..246b5fe9819d 100644
+--- a/drivers/mfd/qcom-pm8008.c
++++ b/drivers/mfd/qcom-pm8008.c
+@@ -7,8 +7,10 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
++#include <linux/ioport.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/mfd/core.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+@@ -16,8 +18,6 @@
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
  
- 	thermal-zones {
-+		pm8008-thermal {
-+			polling-delay-passive = <100>;
-+			polling-delay = <0>;
+-#include <dt-bindings/mfd/qcom-pm8008.h>
+-
+ #define I2C_INTR_STATUS_BASE		0x0550
+ #define INT_RT_STS_OFFSET		0x10
+ #define INT_SET_TYPE_OFFSET		0x11
+@@ -45,6 +45,16 @@ enum {
+ #define PM8008_GPIO1_ADDR	PM8008_PERIPH_2_BASE
+ #define PM8008_GPIO2_ADDR	PM8008_PERIPH_3_BASE
+ 
++/* PM8008 IRQ numbers */
++#define PM8008_IRQ_MISC_UVLO	0
++#define PM8008_IRQ_MISC_OVLO	1
++#define PM8008_IRQ_MISC_OTST2	2
++#define PM8008_IRQ_MISC_OTST3	3
++#define PM8008_IRQ_MISC_LDO_OCP	4
++#define PM8008_IRQ_TEMP_ALARM	5
++#define PM8008_IRQ_GPIO1	6
++#define PM8008_IRQ_GPIO2	7
 +
-+			thermal-sensors = <&pm8008>;
-+
-+			trips {
-+				trip0 {
-+					temperature = <95000>;
-+					hysteresis = <0>;
-+					type = "passive";
-+				};
-+
-+				trip1 {
-+					temperature = <115000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
- 		skin-temp-thermal {
- 			polling-delay-passive = <250>;
- 			polling-delay = <0>;
-@@ -671,6 +692,85 @@ touchscreen@10 {
- 	};
+ enum {
+ 	SET_TYPE_INDEX,
+ 	POLARITY_HI_INDEX,
+@@ -148,21 +158,65 @@ static const struct regmap_irq_chip pm8008_irq_chip = {
+ 	.get_irq_reg		= pm8008_get_irq_reg,
  };
  
-+&i2c11 {
-+	clock-frequency = <400000>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c11_default>;
-+
-+	status = "okay";
-+
-+	pm8008: pmic@c {
-+		compatible = "qcom,pm8008";
-+		reg = <0xc>;
-+
-+		interrupts-extended = <&tlmm 41 IRQ_TYPE_EDGE_RISING>;
-+		reset-gpios = <&tlmm 42 GPIO_ACTIVE_LOW>;
-+
-+		vdd-l1-l2-supply = <&vreg_s11b>;
-+		vdd-l3-l4-supply = <&vreg_bob>;
-+		vdd-l5-supply = <&vreg_bob>;
-+		vdd-l6-supply = <&vreg_bob>;
-+		vdd-l7-supply = <&vreg_bob>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pm8008_default>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-ranges = <&pm8008 0 0 2>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		#thermal-sensor-cells = <0>;
-+
-+		regulators {
-+			vreg_l1q: ldo1 {
-+				regulator-name = "vreg_l1q";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+			};
-+
-+			vreg_l2q: ldo2 {
-+				regulator-name = "vreg_l2q";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+			};
-+
-+			vreg_l3q: ldo3 {
-+				regulator-name = "vreg_l3q";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+			};
-+
-+			vreg_l4q: ldo4 {
-+				regulator-name = "vreg_l4q";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+			};
-+
-+			vreg_l5q: ldo5 {
-+				regulator-name = "vreg_l5q";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+
-+			vreg_l6q: ldo6 {
-+				regulator-name = "vreg_l6q";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+
-+			vreg_l7q: ldo7 {
-+				regulator-name = "vreg_l7q";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+			};
-+		};
-+	};
+-static struct regmap_config qcom_mfd_regmap_cfg = {
++static const struct regmap_config qcom_mfd_regmap_cfg = {
++	.name		= "primary",
++	.reg_bits	= 16,
++	.val_bits	= 8,
++	.max_register	= 0xffff,
 +};
 +
- &i2c21 {
- 	clock-frequency = <400000>;
++static const struct regmap_config pm8008_regmap_cfg_2 = {
++	.name		= "secondary",
+ 	.reg_bits	= 16,
+ 	.val_bits	= 8,
+ 	.max_register	= 0xffff,
+ };
  
-@@ -1361,6 +1461,13 @@ i2c4_default: i2c4-default-state {
- 		bias-disable;
- 	};
++static const struct resource pm8008_temp_res[] = {
++	DEFINE_RES_MEM(PM8008_TEMP_ALARM_ADDR, 0x100),
++	DEFINE_RES_IRQ(PM8008_IRQ_TEMP_ALARM),
++};
++
++static const struct mfd_cell pm8008_cells[] = {
++	MFD_CELL_NAME("pm8008-regulator"),
++	MFD_CELL_RES("qpnp-temp-alarm", pm8008_temp_res),
++	MFD_CELL_NAME("pm8008-gpio"),
++};
++
++static void devm_irq_domain_fwnode_release(void *data)
++{
++	struct fwnode_handle *fwnode = data;
++
++	irq_domain_free_fwnode(fwnode);
++}
++
+ static int pm8008_probe(struct i2c_client *client)
+ {
+ 	struct regmap_irq_chip_data *irq_data;
++	struct device *dev = &client->dev;
++	struct regmap *regmap, *regmap2;
++	struct fwnode_handle *fwnode;
++	struct i2c_client *dummy;
+ 	struct gpio_desc *reset;
+-	int rc;
+-	struct device *dev;
+-	struct regmap *regmap;
++	char *name;
++	int ret;
++
++	dummy = devm_i2c_new_dummy_device(dev, client->adapter, client->addr + 1);
++	if (IS_ERR(dummy)) {
++		ret = PTR_ERR(dummy);
++		dev_err(dev, "failed to claim second address: %d\n", ret);
++		return ret;
++	}
++
++	regmap2 = devm_regmap_init_i2c(dummy, &qcom_mfd_regmap_cfg);
++	if (IS_ERR(regmap2))
++		return PTR_ERR(regmap2);
  
-+	i2c11_default: i2c11-default-state {
-+		pins = "gpio18", "gpio19";
-+		function = "qup11";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
+-	dev = &client->dev;
++	ret = regmap_attach_dev(dev, regmap2, &pm8008_regmap_cfg_2);
++	if (ret)
++		return ret;
 +
- 	i2c21_default: i2c21-default-state {
- 		pins = "gpio81", "gpio82";
- 		function = "qup21";
-@@ -1464,6 +1571,22 @@ wake-n-pins {
- 		};
- 	};
++	/* Default regmap must be attached last. */
+ 	regmap = devm_regmap_init_i2c(client, &qcom_mfd_regmap_cfg);
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
+@@ -177,14 +231,33 @@ static int pm8008_probe(struct i2c_client *client)
+ 	 */
+ 	usleep_range(1000, 2000);
  
-+	pm8008_default: pm8008-default-state {
-+		int-pins {
-+			pins = "gpio41";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
+-	if (of_property_read_bool(dev->of_node, "interrupt-controller")) {
+-		rc = devm_regmap_add_irq_chip(dev, regmap, client->irq,
++	name = devm_kasprintf(dev, GFP_KERNEL, "%pOF-internal", dev->of_node);
++	if (!name)
++		return -ENOMEM;
 +
-+		reset-n-pins {
-+			pins = "gpio42";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
++	name = strreplace(name, '/', ':');
 +
- 	spkr_1_sd_n_default: spkr-1-sd-n-default-state {
- 		perst-n-pins {
- 			pins = "gpio178";
++	fwnode = irq_domain_alloc_named_fwnode(name);
++	if (!fwnode)
++		return -ENOMEM;
++
++	ret = devm_add_action_or_reset(dev, devm_irq_domain_fwnode_release, fwnode);
++	if (ret)
++		return ret;
++
++	ret = devm_regmap_add_irq_chip_fwnode(dev, fwnode, regmap, client->irq,
+ 				IRQF_SHARED, 0, &pm8008_irq_chip, &irq_data);
+-		if (rc)
+-			dev_err(dev, "failed to add IRQ chip: %d\n", rc);
++	if (ret) {
++		dev_err(dev, "failed to add IRQ chip: %d\n", ret);
++		return ret;
+ 	}
+ 
+-	return devm_of_platform_populate(dev);
++	/* Needed by GPIO driver. */
++	dev_set_drvdata(dev, regmap_irq_get_domain(irq_data));
++
++	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, pm8008_cells,
++				ARRAY_SIZE(pm8008_cells), NULL, 0,
++				regmap_irq_get_domain(irq_data));
+ }
+ 
+ static const struct of_device_id pm8008_match[] = {
+diff --git a/include/dt-bindings/mfd/qcom-pm8008.h b/include/dt-bindings/mfd/qcom-pm8008.h
+deleted file mode 100644
+index eca9448df228..000000000000
+--- a/include/dt-bindings/mfd/qcom-pm8008.h
++++ /dev/null
+@@ -1,19 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (c) 2021 The Linux Foundation. All rights reserved.
+- */
+-
+-#ifndef __DT_BINDINGS_MFD_QCOM_PM8008_H
+-#define __DT_BINDINGS_MFD_QCOM_PM8008_H
+-
+-/* PM8008 IRQ numbers */
+-#define PM8008_IRQ_MISC_UVLO	0
+-#define PM8008_IRQ_MISC_OVLO	1
+-#define PM8008_IRQ_MISC_OTST2	2
+-#define PM8008_IRQ_MISC_OTST3	3
+-#define PM8008_IRQ_MISC_LDO_OCP	4
+-#define PM8008_IRQ_TEMP_ALARM	5
+-#define PM8008_IRQ_GPIO1	6
+-#define PM8008_IRQ_GPIO2	7
+-
+-#endif
 -- 
 2.44.1
 
