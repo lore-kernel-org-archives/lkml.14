@@ -1,114 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993FF17A920;
-	Sat,  8 Jun 2024 14:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00071FBB
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Jun 2024 14:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717856701; cv=none; b=pbYQDFRu7jjZ7xKWX8e7IlQcEsGFiarl9tFr6HxVEE1bfqg/X+4OT9h7XFdsInV1ZxTMqer0TlDGAvnY9DVbq1TBzfNK5Nul1yMXeaQ3uleBmFJGUXcpXv5iKudBKOXLlBxq1p2L/SL9l3+b0XRX1At1y4Pbe/MF1lNbewqq2kg=
+	t=1717857111; cv=none; b=YcUEomIj7vgO4Ay8b7IZndV2GzsloHkMApRCK3lr3rIJ0ugHYoLErn/AT9a7ualkM79tipH3K5NErF6MFNKa82Ll74dO5aAGp6CY3l5jRes1F2N+zhahx4BH/pbzDzzw72CFmLxjAZMeIwflCFO+XvkIFuVqxOHZLx6c3P20bU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717856701; c=relaxed/simple;
-	bh=rlC8MSGnb6YA01DoUOnDbXDIu1BbNuO1qPii8soutYw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eyFxEhFjv+EP1ZTJOpJd85muY2qLJTdQ1GheM01SL8y0ba92hsUhZUxMpAglERo2M2F5f/SekaoHj7pEdcr9mRBtG+ZSW0Czju+Z9cTvM/ugkx63NxtItVrHOlvjFxf7HkJmiPIOyLRG+BiM2xUD9a45dhMfUv0/enHz9O2Uh6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RryReEsD; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717857111; c=relaxed/simple;
+	bh=5/9a85I5i8X0PqtfKhvRzdHzvpIcMGzFXPg+TzfeH/w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oR9rblLflZtkggaQf15he6Wjy0jRW2TQwOwVvGIokxfNV8yt9N3CxBPSPFr8J+1ADS5bf2OJePuoxq2+4B/71pbQLoXH/pICXVinyxs7+b1HqZX075rpnIOH/jNRKquwT4sHe0BCs+FpPzuEpu3uggwPzKBlEd/PITfqO0jCVhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AsoXqxX6; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RryReEsD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717856699; x=1749392699;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=rlC8MSGnb6YA01DoUOnDbXDIu1BbNuO1qPii8soutYw=;
-  b=RryReEsDvLT4lzCCkDlBOj1ew5Dm0l+HIgaKOaiJsxDmJcyv/W+nRkuE
-   nVQ446Nr74QU4ALeP2oeK/uoMyA6nwcSTiPo530exjcgv3sMSPSByAp+7
-   1UU4HtvJ00KJ56YKKH72Sh+sjgFcD0INbw5gRoo9+x8q4+4rS0BMhf+fU
-   EjqhPlfNsFAihqi6muzLYfno41wVYxtPqqm6BqJLGJnBSw6eVFXigcAw6
-   72smYIgdFOZnJ+ZR6mh+PRT6gy2q4Se1dKooAWu7SrB6OA1h1llZDRzdD
-   zzdd3h1VCWbHQ4JC1tpxcPf2ayoJDtkGBNfpl+ZFla/GCODAVg3zT7PIY
-   w==;
-X-CSE-ConnectionGUID: kB8I2w7MTLCbd67QT+sd2w==
-X-CSE-MsgGUID: XbEm6xjHSK2Pk5q7znAadQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11097"; a="14726828"
-X-IronPort-AV: E=Sophos;i="6.08,223,1712646000"; 
-   d="scan'208";a="14726828"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2024 07:24:59 -0700
-X-CSE-ConnectionGUID: 08A8MsLfQq2uUBz6UiXTFQ==
-X-CSE-MsgGUID: 8j2cGZ7nTMC2JfPsGBkgKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,223,1712646000"; 
-   d="scan'208";a="38547777"
-Received: from lkp-server01.sh.intel.com (HELO 8967fbab76b3) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 08 Jun 2024 07:24:57 -0700
-Received: from kbuild by 8967fbab76b3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sFx02-00001W-2M;
-	Sat, 08 Jun 2024 14:24:54 +0000
-Date: Sat, 8 Jun 2024 22:24:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@baylibre.com>,
-	Benson Leung <bleung@chromium.org>
-Cc: oe-kbuild-all@lists.linux.dev, Guenter Roeck <groeck@chromium.org>,
-	linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] pwm: cros-ec: Don't care about consumers in
- .get_state()
-Message-ID: <202406082139.KG4VcZiF-lkp@intel.com>
-References: <20240607084416.897777-6-u.kleine-koenig@baylibre.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AsoXqxX6"
+X-Envelope-To: axboe@kernel.dk
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1717857105;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=G6bSjM248xI7+oW0z8fYSMF0v53Z/T3KEz7PTnmiSTs=;
+	b=AsoXqxX6rKS4PFjzo7S/7byCyNK1WrASUTiymE2yz4/OU0T2jbH9pGcynIbgwtRMwGpU3T
+	sxk9EDOLJZOkCCg/KgwVcnUsIZ7uc1vGFUiwJeYNPXF3yiKM/bG3Ap4CRaXgZqOQc+05iG
+	O29nUpXOmtniyu3tswqQwbxPZqae5uU=
+X-Envelope-To: ming.lei@redhat.com
+X-Envelope-To: hch@lst.de
+X-Envelope-To: f.weber@proxmox.com
+X-Envelope-To: bvanassche@acm.org
+X-Envelope-To: linux-block@vger.kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: chengming.zhou@linux.dev
+X-Envelope-To: zhouchengming@bytedance.com
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+To: axboe@kernel.dk,
+	ming.lei@redhat.com,
+	hch@lst.de,
+	f.weber@proxmox.com,
+	bvanassche@acm.org
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chengming.zhou@linux.dev,
+	zhouchengming@bytedance.com
+Subject: [PATCH v2] block: fix request.queuelist usage in flush
+Date: Sat,  8 Jun 2024 22:31:15 +0800
+Message-Id: <20240608143115.972486-1-chengming.zhou@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240607084416.897777-6-u.kleine-koenig@baylibre.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Uwe,
+Friedrich Weber reported a kernel crash problem and bisected to commit
+81ada09cc25e ("blk-flush: reuse rq queuelist in flush state machine").
 
-kernel test robot noticed the following build warnings:
+The root cause is that we use "list_move_tail(&rq->queuelist, pending)"
+in the PREFLUSH/POSTFLUSH sequences. But rq->queuelist.next == xxx since
+it's popped out from plug->cached_rq in __blk_mq_alloc_requests_batch().
+We don't initialize its queuelist just for this first request, although
+the queuelist of all later popped requests will be initialized.
 
-[auto build test WARNING on 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0]
+Fix it by changing to use "list_add_tail(&rq->queuelist, pending)" so
+rq->queuelist doesn't need to be initialized. It should be ok since rq
+can't be on any list when PREFLUSH or POSTFLUSH, has no move actually.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Uwe-Kleine-K-nig/pwm-cros-ec-Don-t-care-about-consumers-in-get_state/20240607-164747
-base:   1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-patch link:    https://lore.kernel.org/r/20240607084416.897777-6-u.kleine-koenig%40baylibre.com
-patch subject: [PATCH 1/3] pwm: cros-ec: Don't care about consumers in .get_state()
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240608/202406082139.KG4VcZiF-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240608/202406082139.KG4VcZiF-lkp@intel.com/reproduce)
+Please note the commit 81ada09cc25e ("blk-flush: reuse rq queuelist in
+flush state machine") also has another requirement that no drivers would
+touch rq->queuelist after blk_mq_end_request() since we will reuse it to
+add rq to the post-flush pending list in POSTFLUSH. If this is not true,
+we will have to revert that commit IMHO.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406082139.KG4VcZiF-lkp@intel.com/
+This updated version adds "list_del_init(&rq->queuelist)" in flush rq
+callback since the dm layer may submit request of a weird invalid format
+(REQ_FSEQ_PREFLUSH | REQ_FSEQ_POSTFLUSH), which causes double list_add
+if without this "list_del_init(&rq->queuelist)". The weird invalid format
+problem should be fixed in dm layer.
 
-All warnings (new ones prefixed by >>):
+Reported-by: Friedrich Weber <f.weber@proxmox.com>
+Closes: https://lore.kernel.org/lkml/14b89dfb-505c-49f7-aebb-01c54451db40@proxmox.com/
+Closes: https://lore.kernel.org/lkml/c9d03ff7-27c5-4ebd-b3f6-5a90d96f35ba@proxmox.com/
+Fixes: 81ada09cc25e ("blk-flush: reuse rq queuelist in flush state machine")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: ming.lei@redhat.com
+Cc: bvanassche@acm.org
+Tested-by: Friedrich Weber <f.weber@proxmox.com>
+Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
+---
+ block/blk-flush.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->> drivers/pwm/pwm-cros-ec.c:28: warning: Excess struct member 'channel' description in 'cros_ec_pwm_device'
-
-
-vim +28 drivers/pwm/pwm-cros-ec.c
-
-3d593b6e80ad2c Fabio Baltieri   2022-04-28  17  
-1f0d3bb02785f6 Brian Norris     2016-07-15  18  /**
-1f0d3bb02785f6 Brian Norris     2016-07-15  19   * struct cros_ec_pwm_device - Driver data for EC PWM
-1f0d3bb02785f6 Brian Norris     2016-07-15  20   *
-1f0d3bb02785f6 Brian Norris     2016-07-15  21   * @ec: Pointer to EC device
-3d593b6e80ad2c Fabio Baltieri   2022-04-28  22   * @use_pwm_type: Use PWM types instead of generic channels
-82adc1b2688b02 Uwe Kleine-König 2023-07-05  23   * @channel: array with per-channel data
-1f0d3bb02785f6 Brian Norris     2016-07-15  24   */
-1f0d3bb02785f6 Brian Norris     2016-07-15  25  struct cros_ec_pwm_device {
-1f0d3bb02785f6 Brian Norris     2016-07-15  26  	struct cros_ec_device *ec;
-3d593b6e80ad2c Fabio Baltieri   2022-04-28  27  	bool use_pwm_type;
-1db37f9561b2b3 Thierry Reding   2019-10-17 @28  };
-1db37f9561b2b3 Thierry Reding   2019-10-17  29  
-
+diff --git a/block/blk-flush.c b/block/blk-flush.c
+index c17cf8ed8113..cca4f9131f79 100644
+--- a/block/blk-flush.c
++++ b/block/blk-flush.c
+@@ -185,7 +185,7 @@ static void blk_flush_complete_seq(struct request *rq,
+ 		/* queue for flush */
+ 		if (list_empty(pending))
+ 			fq->flush_pending_since = jiffies;
+-		list_move_tail(&rq->queuelist, pending);
++		list_add_tail(&rq->queuelist, pending);
+ 		break;
+ 
+ 	case REQ_FSEQ_DATA:
+@@ -263,6 +263,7 @@ static enum rq_end_io_ret flush_end_io(struct request *flush_rq,
+ 		unsigned int seq = blk_flush_cur_seq(rq);
+ 
+ 		BUG_ON(seq != REQ_FSEQ_PREFLUSH && seq != REQ_FSEQ_POSTFLUSH);
++		list_del_init(&rq->queuelist);
+ 		blk_flush_complete_seq(rq, fq, seq, error);
+ 	}
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.20.1
+
