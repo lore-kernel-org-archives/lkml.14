@@ -1,57 +1,57 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1566F304;
-	Sun,  9 Jun 2024 23:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4130673539;
+	Sun,  9 Jun 2024 23:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717976321; cv=none; b=YgYRXpwlCWaECCmW6IYnrhYEPS/s8E7CmUjeBrBtBQDH5q89amP8CQ6RcjFAVIdqm1sVfHQQKKxw4D7E5K4sbLqmYCQ6EmOeMW4WE53q+dddQYWkxLfyHTQKrDqax7DQqTQBsDVJrplHuXUVTo88qah8NvsSQUoLGuOnyhNQRU0=
+	t=1717976322; cv=none; b=RHFdF9ao1PD4MOv65Bw3wo/c/4RW3cFsFBelCribDIMBMgcHEuNwhGlhYGRz5DvBNjy/bZP9npMdXxDS0P/zYI2vb3efbWza/fPXJCaODgENAEkd4Ghfl5p/xEh0n5QERRfp2MnRrezdcVcx/V3IzGp33CfaJv9io7ar236mCAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717976321; c=relaxed/simple;
-	bh=kT+N+A6B1z60I6KgFrmJu/OyAxrx0C8tvVp8Z/JEa84=;
+	s=arc-20240116; t=1717976322; c=relaxed/simple;
+	bh=Hfb3FXLY0jr5pWcGc5sD5mDS5XumgG1uHHXw/e5JYu0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uw9HjnAgMKVzX05m7F24IJR5vQ3zwWs1mtRHSbio+wFx0ht5MFb5S/r0PAKa+kvZCB30dGrAJ7WrQ7Ez43s+e0stJIe9FmKodn/arhWB9uX6M5kTabqdYxHlvNdXv9Bq4x0IA8xJPLjSTrCNZ1PCwl94g45NAyw3/e5o+Ml9lSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f5WflYKU; arc=none smtp.client-ip=209.85.208.174
+	 MIME-Version; b=Jv3OdALG+h0bJJKhYQQMIkalMba+JUmtVAMYTaFYpsqZ5nbXY4yoCkXemm5ubSrFbkOtIw8r6ZyDlxw8Z9A4LRZwJV8j8g99bvHb/c5TVp1jWUq33aeRyGCXMSkE4fv5sMLTTs+WAotqHCoxYLOP3c1cccjYkRI/ZS5mXLDNBHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbkdsQ93; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5WflYKU"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eabd22d441so61733621fa.2;
-        Sun, 09 Jun 2024 16:38:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbkdsQ93"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6e43dad8ecso370786966b.1;
+        Sun, 09 Jun 2024 16:38:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717976317; x=1718581117; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717976320; x=1718581120; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0LfV168pmmLldnkKP0bzQoHl57vTq1AfdoTWFyVDYg4=;
-        b=f5WflYKUpgPFTiEorjnk3MwvxCwiU+GvdPgAo8iqAPZubVPpxskfYiCjfJQj+ACGY3
-         wZJWiLXh2zkcQ7sp6Tg7j+iCcFpsDtXZl6gYrehOX2TGAF2YTcJXHUUscYpv9baTAOO8
-         sPhXHUiDPoaMl/vd1l9w+zNczCLIUr2XyKGQv3lJdtSFTEXNC2uDJRZq/k+XOVmB/FwT
-         mRUfTtYPYbXYKKzRN0UTuOj+9HOCGB9NYaN+UjTuVY9fjtdQXhydeLg6PPP+I16tbzPq
-         XEAzhip8vl2ZGW+kJOBu7fEJPybCtzMgD4jEybGLoAxsn+65GBv7drx6Gjn9GTcPjNKN
-         AhBg==
+        bh=8DCTb+Pv7ST7rOA5pIjw+wTL/eb7fOtCFb+LXYKEqh8=;
+        b=lbkdsQ93C+nsUWE88O0qmiGMBKe8gF/j5p4MjeSDc+cPsTZpbzDvEJLjbf5nqcBLqa
+         gibv+zIfiKCUHgFcCPFEZoJktAAyXl72BcjzJRhUht5CgAkBWBtLlUrR/dK3fT5Ey7oT
+         oVT2gbVBTXlH86n2S5Omc0rtZ/ujuFxOSwWlilWNCfJBnOJ0LJCvypjLALkJ8GNz0Z7B
+         xGq5A5jGftgkcZM40VtuBauvD+TGmULG0v013mDEUkoaYlC4DzgLgNL7X0VYprLCs7rX
+         GzbkkPQXZqGYdLOWBYgzVesLQ6zRLL5AgQ1eBYGZclf7/8YlGUnmV2XZ7pD1+KEkPXBg
+         cR7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717976317; x=1718581117;
+        d=1e100.net; s=20230601; t=1717976320; x=1718581120;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0LfV168pmmLldnkKP0bzQoHl57vTq1AfdoTWFyVDYg4=;
-        b=Mh1nTgc4+4eB747sy7AhdC7cbpkQEuFqZnlTi9FpDUUJu74kuGHcEkw1VSp5LKhMJt
-         3H5Cg2lSHcpmGvsHQDxyhrpH4l+HoAc4Gc+xfUl7Vj8njXcd6+YmtX3ZMyQCcRyQvW5j
-         x3b9+3xiCkvdT6W8+9uGlZpwOjvl//G40/VxJHqJB8Ar+QzUdww/XMS6ih0/Z7AJSl4Q
-         VrxTOamq1PKEolLivU+RCqZvd7TSw8655YjXggR1ViGwwoK+eezBDkpPx038VY+X5zyh
-         tdG4qg1NCKxCAQFeXKEWB40fk57XhLZiKKYqmavhh7n+evCEkrBkEOvFtP18Cf6RgdMK
-         JsfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmpdMgNMR/lYQ4lldj92oaPBJIHZh1usCgv2cN1ofBtBP2T6GwOlv9QTQek24fsxeaLX1zJMOfN778iPt4AxiPcHVX/BlA+lcVFuzjneTprI+umH3Afc/WCQ+ZbXw41CiqtcgBOqAh
-X-Gm-Message-State: AOJu0YxJeZALHnt6tbokh5Hg6ooSa90dXgk4T9tQB10WG9OelThSOG0Q
-	E4jBELqZ2dgY40nh+NsPN1ZV/1h4YaNejPz8FHI/2zdfzYZNhruEYj9MGQ==
-X-Google-Smtp-Source: AGHT+IHN5IV6XhKrwE8W6PFjmTX8OUYpO3itZ9BaCpE60+X7cGuaA7G5fdWbmS+iYq0WjTw0OkMf5w==
-X-Received: by 2002:ac2:54a9:0:b0:52c:816c:28cd with SMTP id 2adb3069b0e04-52c816c2966mr2837351e87.37.1717976317239;
-        Sun, 09 Jun 2024 16:38:37 -0700 (PDT)
+        bh=8DCTb+Pv7ST7rOA5pIjw+wTL/eb7fOtCFb+LXYKEqh8=;
+        b=MilnMGSqGsKfhuiTgzwEG1o/2X/w0XzcZAtEwQ/PUznTe1Pa0t49tJOQVbblu0cNOY
+         fFX5HEXl5DEF+VpedLIswQJMD42inXEMRYnh/8YbscwCh3PeNr879P5o/0OpaosiPJYu
+         yWKwSqFE+5zhrpw4jXGx7/yiKxFuH2rww3l/7D1YGCIGeuSmJwSrAjHeygqRT2LJaQu4
+         vAtYXdUP5jDfGg80mHiAkW8zjujX8JsTIhBq+nQ8prAbCZYeYLpA43wp0yU3Cqxl8DDg
+         SuXJZJ1YCFXg4Qy6Ne3v3b8eTGp9O0mlha549VJmcJJLuQzEgumrGIQ+hd+EjDsw4fw8
+         qAMA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCHIJZIaNwC0u4Rm1432BWEOQ8ufaG7vhBvK79kp8piNFbZ+fufxHX5I63+Appv+DMg2Fw49SUUocjlkjS0Q6MAm+6tT7efxEV9tRO6yGz3tYIDqUHGGRVzk8BUZ15sZc/EwlN4reY
+X-Gm-Message-State: AOJu0YyP3cYuh6wsEWNzyAB2IMxUiJNDscV0J/fQSPsVdxZRibxcZiPM
+	qnXGD5kYL0YScnWxcjj8yJeGnEkGyUd+t8xYgqSAcuJ92DT2AFOYQCMsXQ==
+X-Google-Smtp-Source: AGHT+IFHLm7IU2p83vb2gx+K5EKm7HQ/WiO1JOj+Qus0le7+FIaREqjV4iFyWKLqCKC5C0wD9NhvUQ==
+X-Received: by 2002:a17:906:5589:b0:a6e:feb8:eb15 with SMTP id a640c23a62f3a-a6efeb8f4f8mr283786166b.38.1717976319585;
+        Sun, 09 Jun 2024 16:38:39 -0700 (PDT)
 Received: from localhost.localdomain ([2a04:ee41:82:7577:635a:738f:880f:9ea5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f20bb1abesm46063366b.172.2024.06.09.16.38.36
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f20bb1abesm46063366b.172.2024.06.09.16.38.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 16:38:36 -0700 (PDT)
+        Sun, 09 Jun 2024 16:38:39 -0700 (PDT)
 From: Vasileios Amoiridis <vassilisamir@gmail.com>
 To: jic23@kernel.org
 Cc: dpfrey@gmail.com,
@@ -61,9 +61,9 @@ Cc: dpfrey@gmail.com,
 	linux-kernel@vger.kernel.org,
 	mike.looijmans@topic.nl,
 	vassilisamir@gmail.com
-Subject: [PATCH v3 06/15] iio: chemical: bme680: Remove duplicate register read
-Date: Mon, 10 Jun 2024 01:38:17 +0200
-Message-Id: <20240609233826.330516-7-vassilisamir@gmail.com>
+Subject: [PATCH v3 08/15] iio: chemical: bme680: Allocate IIO device before chip initialization
+Date: Mon, 10 Jun 2024 01:38:19 +0200
+Message-Id: <20240609233826.330516-9-vassilisamir@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240609233826.330516-1-vassilisamir@gmail.com>
 References: <20240609233826.330516-1-vassilisamir@gmail.com>
@@ -75,82 +75,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The LSB of the gas register was read first to check if the following
-check was correct and then the MSB+LSB were read together. Simplify this
-by reading together the MSB+LSB immediately.
+Move the IIO device allocation before the actual initialization of the
+chip to be more consistent with most IIO drivers and also to have the
+ability to use any driver specific data for the chip initialization.
+
+While at it, fix also a misaligned line.
 
 Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
 ---
- drivers/iio/chemical/bme680.h      |  2 +-
- drivers/iio/chemical/bme680_core.c | 21 ++++++++-------------
- 2 files changed, 9 insertions(+), 14 deletions(-)
+ drivers/iio/chemical/bme680_core.c | 38 +++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/iio/chemical/bme680.h b/drivers/iio/chemical/bme680.h
-index c51bf2bdf504..b5f16ca81e70 100644
---- a/drivers/iio/chemical/bme680.h
-+++ b/drivers/iio/chemical/bme680.h
-@@ -46,7 +46,7 @@
- #define   BME680_RSERROR_MASK			GENMASK(7, 4)
- #define BME680_REG_RES_HEAT_0			0x5A
- #define BME680_REG_GAS_WAIT_0			0x64
--#define BME680_ADC_GAS_RES_SHIFT		6
-+#define BME680_ADC_GAS_RES			GENMASK(15, 6)
- #define BME680_AMB_TEMP				25
- 
- #define BME680_REG_CTRL_GAS_1			0x71
 diff --git a/drivers/iio/chemical/bme680_core.c b/drivers/iio/chemical/bme680_core.c
-index 72bd5445b6c0..9660ec3854a1 100644
+index 493d190f4461..7dfe4bf2f2ae 100644
 --- a/drivers/iio/chemical/bme680_core.c
 +++ b/drivers/iio/chemical/bme680_core.c
-@@ -767,7 +767,7 @@ static int bme680_read_gas(struct bme680_data *data,
+@@ -837,25 +837,6 @@ int bme680_core_probe(struct device *dev, struct regmap *regmap,
+ 	unsigned int val;
  	int ret;
- 	__be16 tmp = 0;
- 	unsigned int check;
--	u16 adc_gas_res;
-+	u16 adc_gas_res, gas_regs_val;
- 	u8 gas_range;
  
- 	/* Set heater settings */
-@@ -792,11 +792,14 @@ static int bme680_read_gas(struct bme680_data *data,
- 		return -EBUSY;
- 	}
- 
--	ret = regmap_read(data->regmap, BME680_REG_GAS_R_LSB, &check);
-+	ret = regmap_bulk_read(data->regmap, BME680_REG_GAS_MSB,
-+			       &tmp, sizeof(tmp));
- 	if (ret < 0) {
--		dev_err(dev, "failed to read gas_r_lsb register\n");
-+		dev_err(dev, "failed to read gas resistance\n");
- 		return ret;
- 	}
-+	gas_regs_val = be16_to_cpu(tmp);
-+	adc_gas_res = FIELD_GET(BME680_ADC_GAS_RES, gas_regs_val);
- 
- 	/*
- 	 * occurs if either the gas heating duration was insuffient
-@@ -804,20 +807,12 @@ static int bme680_read_gas(struct bme680_data *data,
- 	 * heater temperature was too high for the heater sink to
- 	 * reach.
- 	 */
--	if ((check & BME680_GAS_STAB_BIT) == 0) {
-+	if ((gas_regs_val & BME680_GAS_STAB_BIT) == 0) {
- 		dev_err(dev, "heater failed to reach the target temperature\n");
- 		return -EINVAL;
- 	}
- 
--	ret = regmap_bulk_read(data->regmap, BME680_REG_GAS_MSB,
--			       &tmp, sizeof(tmp));
+-	ret = regmap_write(regmap, BME680_REG_SOFT_RESET,
+-			   BME680_CMD_SOFTRESET);
 -	if (ret < 0) {
--		dev_err(dev, "failed to read gas resistance\n");
+-		dev_err(dev, "Failed to reset chip\n");
 -		return ret;
 -	}
 -
--	gas_range = check & BME680_GAS_RANGE_MASK;
--	adc_gas_res = be16_to_cpu(tmp) >> BME680_ADC_GAS_RES_SHIFT;
-+	gas_range = FIELD_GET(BME680_GAS_RANGE_MASK, gas_regs_val);
+-	ret = regmap_read(regmap, BME680_REG_CHIP_ID, &val);
+-	if (ret < 0) {
+-		dev_err(dev, "Error reading chip ID\n");
+-		return ret;
+-	}
+-
+-	if (val != BME680_CHIP_ID_VAL) {
+-		dev_err(dev, "Wrong chip ID, got %x expected %x\n",
+-				val, BME680_CHIP_ID_VAL);
+-		return -ENODEV;
+-	}
+-
+ 	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+ 	if (!indio_dev)
+ 		return -ENOMEM;
+@@ -877,6 +858,25 @@ int bme680_core_probe(struct device *dev, struct regmap *regmap,
+ 	data->heater_temp = 320; /* degree Celsius */
+ 	data->heater_dur = 150;  /* milliseconds */
  
- 	*val = bme680_compensate_gas(data, adc_gas_res, gas_range);
- 	return IIO_VAL_INT;
++	ret = regmap_write(regmap, BME680_REG_SOFT_RESET,
++			   BME680_CMD_SOFTRESET);
++	if (ret < 0) {
++		dev_err(dev, "Failed to reset chip\n");
++		return ret;
++	}
++
++	ret = regmap_read(regmap, BME680_REG_CHIP_ID, &val);
++	if (ret < 0) {
++		dev_err(dev, "Error reading chip ID\n");
++		return ret;
++	}
++
++	if (val != BME680_CHIP_ID_VAL) {
++		dev_err(dev, "Wrong chip ID, got %x expected %x\n",
++			val, BME680_CHIP_ID_VAL);
++		return -ENODEV;
++	}
++
+ 	ret = bme680_chip_config(data);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to set chip_config data\n");
 -- 
 2.25.1
 
