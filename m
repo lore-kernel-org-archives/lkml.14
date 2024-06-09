@@ -1,104 +1,152 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1DB63C7
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 16:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2DA42ABB;
+	Sun,  9 Jun 2024 17:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717952178; cv=none; b=XFgI0PtXkrHZrVsWWrFi93GvGj/J5hxHHJhQ0YmzhrrQmDtnl01VT1Z6aeY7ajtEXgkmy0Sdd0FpF2oWkY730DA2WKOe/xMstYu+Qz6uG6+fBJaIcGh/xfsDLisBjyfBAHB3O1mbyWgg+HcDup/oxFallWONgW3op+4hWF8WE0Q=
+	t=1717952801; cv=none; b=mzS/+2dZqxSo2K222TGXP8YusyB75g6mixKkLugGejy7S4c6Va0MHV3unqMl9WFdX42mKiL5vuEoh9JBpHssAQOnNzBLB0UH4ZXHK05Zu9fzfKohYztRB5XrFXiLJnPehgNGk2Eu7cgYUO5dqFwiqGc5+gRO5wxwpibciJeI9CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717952178; c=relaxed/simple;
-	bh=QVRDcudzq+SxuxGLiSNE6jrKkkJUQNIjX703RDFrUM0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YC88AJXXKvtG+H/lQ/woZioCh6i69nANTmmZr+MKVmJQf257gyo3YsolMYzOMpeUK8Zleoe2PT9PoBy239/F2HEbAsjSHUt6TK+13HuzCmro1gm/xcuzK0Ug9cHbdOPCeRF/dgiat9Vw+3jMH1hAdzW1wPe6ba1nvykFoxWyA2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PXHRcjgd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zCYX5cs1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1717952801; c=relaxed/simple;
+	bh=UONug+tHjGQtm0wMv5FIcjK3HlH0v7XTS+RD9si9Z9E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=bx2UvaZqzxh16YRhfcaE5kAX/O/2uHEr8rRulhPfob2iUQb9Tn6Nm1DetQJJoHB6KoZB9bfiqY9GuMHkbQIq/j/4KNCwgYJVfk7gQM9iIuYaM7jtRIP+ehH5droM/4Xu5FQOQ23VqrYpyZWNz64Xivj/uyghFMzMAXm6q0WF6HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PnIvlTqf; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PXHRcjgd";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zCYX5cs1"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717952175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2BfnhShkMx76spM67lpVd99C3roozhsXHPVJTgEobwM=;
-	b=PXHRcjgd4omUMqVA20w1Qyn/t4cjCl0oj5c8JdjBAA3qZF68g2wDcvab8V1P8neWFEcRtd
-	nEnRV7j+YjIGU2dkfkwK5HZ0xqydB0xNaIhKCeZQOTQMOXQAyfX/pIj/TenhkAzRo/tkV8
-	UwA97Y2K5+nXV+Kc2gnbU3wl+l9Ugxfi6Nsvioigr0V/IwBBSVps4nRdwhUPefD8gAs1jD
-	hcoLTPebNInOFfdHjObHl/uOV2lfznYPy5QVnmn86YDsI+L88Mfs+MlsIMqBSHZyNWLpkz
-	fBr/C5K/0C0lX0+7bvH9Fh4Ync/++VNf0YIlzvEqjCZUQcG7GURkYC8BZcCoaQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717952175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2BfnhShkMx76spM67lpVd99C3roozhsXHPVJTgEobwM=;
-	b=zCYX5cs1LwLmwMr0V6KwDwpuptYlwCTrCGyHfrX9h80Y0rvp8vz12MjJGaBgj69cHEVDzW
-	WObTgUpuulR8zxAg==
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sam Sun <samsun1006219@gmail.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, syzkaller-bugs@googlegroups.com, peterz@infradead.org,
- jpoimboe@kernel.org, jbaron@akamai.com, ardb@kernel.org, mingo@redhat.com,
- Borislav Petkov <bp@alien8.de>, dave.hansen@linux.intel.com,
- hpa@zytor.com, xrivendell7@gmail.com, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [Linux kernel bug] WARNING in static_key_slow_inc_cpuslocked
-In-Reply-To: <87le3exfx2.ffs@tglx>
-References: <20240609090431.3af238bc@gandalf.local.home>
- <87o78axlbm.ffs@tglx> <20240609102530.0a292b07@rorschach.local.home>
- <87le3exfx2.ffs@tglx>
-Date: Sun, 09 Jun 2024 18:56:14 +0200
-Message-ID: <87h6e2xdg1.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PnIvlTqf"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 459Dj28H004165;
+	Sun, 9 Jun 2024 17:06:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Nd4I7BwXo/JVhQ7ZFFgJ7D
+	z9h9yOs/Q0G21x7GFkf+8=; b=PnIvlTqf4iDBxpDUe5gTO7JnOZlnB6n3PLXfQv
+	8VBBm9aQmgIwqsmj4VGb2RlrVNtS8JVgODcDQHu/tZJJN+MbXPiWEAyvUeauI/Fl
+	coL/VzwDlqJ8YYx/4Mu+rkX+rZLkssV2KR7ePEx+Ycz6raHzt8mea7eEcFDnVjbW
+	bkjeLBuIQaM9T1otRbwFC4TDmpDEYKL06gYR7Iv4FHBRuKe8MbgqGzZRKZGeyU9d
+	GZXZ2KdloY96FTLCCVBsRHakfplSwB8V29fXekq1ms3Wkf8auuw9KU/xP1pZXh3B
+	GrYnVqOmiM4Jev4fDDqGbvMzrouPdHVttvKFRrcVamARsjig==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymfp79ty9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 09 Jun 2024 17:06:23 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 459H6KqP021937
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 9 Jun 2024 17:06:20 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 9 Jun 2024
+ 10:06:20 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Sun, 9 Jun 2024 10:06:17 -0700
+Subject: [PATCH] drm/bridge: add missing MODULE_DESCRIPTION() macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240609-md-drivers-gpu-drm-bridge-v1-1-b582c5c815d7@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAAjhZWYC/x2M0QrCMAxFf2Xk2UCts6i/Ij60a7YFbB2JG4Oxf
+ zfz7R4492ygJEwKj2YDoYWVP9XgfGqgG2MdCDkbg3e+dcHdsWTMwguJ4jDNtgsm4WxiiOniwzX
+ k/hbA/pNQz+u//XwZp6hkbqzdeBTfXOcVS9QvCez7D5sjl6uKAAAA
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        "Jernej
+ Skrabec" <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 94vtPuE6jhCkHW1cF7GiZaiXDf1Jvg51
+X-Proofpoint-ORIG-GUID: 94vtPuE6jhCkHW1cF7GiZaiXDf1Jvg51
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-09_12,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
+ priorityscore=1501 clxscore=1011 bulkscore=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406090134
 
-On Sun, Jun 09 2024 at 18:02, Thomas Gleixner wrote:
-> On Sun, Jun 09 2024 at 10:25, Steven Rostedt wrote:
-> Well the bug is there to detect inconsistency and that clearly works :)
->
-> But I clearly can't read, because the jump label operations are
-> serialized via jump_label_mutex. Hrm...
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611uxc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/sil-sii8620.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/sii9234.o
 
-Ok. Now I found if for real. It's in the jump label core:
+Add the missing invocations of the MODULE_DESCRIPTION() macro.
 
-CPU0                            CPU1
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ drivers/gpu/drm/bridge/lontium-lt9611.c    | 1 +
+ drivers/gpu/drm/bridge/lontium-lt9611uxc.c | 1 +
+ drivers/gpu/drm/bridge/sii9234.c           | 1 +
+ drivers/gpu/drm/bridge/sil-sii8620.c       | 1 +
+ 4 files changed, 4 insertions(+)
 
-static_key_slow_dec()
- static_key_slow_try_dec()
+diff --git a/drivers/gpu/drm/bridge/lontium-lt9611.c b/drivers/gpu/drm/bridge/lontium-lt9611.c
+index b99fe87ec738..73983f9b50cb 100644
+--- a/drivers/gpu/drm/bridge/lontium-lt9611.c
++++ b/drivers/gpu/drm/bridge/lontium-lt9611.c
+@@ -1195,4 +1195,5 @@ static struct i2c_driver lt9611_driver = {
+ };
+ module_i2c_driver(lt9611_driver);
+ 
++MODULE_DESCRIPTION("Lontium LT9611 DSI/HDMI bridge driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/gpu/drm/bridge/lontium-lt9611uxc.c b/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
+index ab702471f3ab..724a08f526db 100644
+--- a/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
++++ b/drivers/gpu/drm/bridge/lontium-lt9611uxc.c
+@@ -1021,6 +1021,7 @@ static struct i2c_driver lt9611uxc_driver = {
+ module_i2c_driver(lt9611uxc_driver);
+ 
+ MODULE_AUTHOR("Dmitry Baryshkov <dmitry.baryshkov@linaro.org>");
++MODULE_DESCRIPTION("Lontium LT9611UXC DSI/HDMI bridge driver");
+ MODULE_LICENSE("GPL v2");
+ 
+ MODULE_FIRMWARE(FW_FILE);
+diff --git a/drivers/gpu/drm/bridge/sii9234.c b/drivers/gpu/drm/bridge/sii9234.c
+index d8373d918324..0c74cdc07032 100644
+--- a/drivers/gpu/drm/bridge/sii9234.c
++++ b/drivers/gpu/drm/bridge/sii9234.c
+@@ -961,4 +961,5 @@ static struct i2c_driver sii9234_driver = {
+ };
+ 
+ module_i2c_driver(sii9234_driver);
++MODULE_DESCRIPTION("Silicon Image SII9234 HDMI/MHL bridge driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
+index 599164e3877d..6bb755e9f0a5 100644
+--- a/drivers/gpu/drm/bridge/sil-sii8620.c
++++ b/drivers/gpu/drm/bridge/sil-sii8620.c
+@@ -2384,4 +2384,5 @@ static struct i2c_driver sii8620_driver = {
+ };
+ 
+ module_i2c_driver(sii8620_driver);
++MODULE_DESCRIPTION("Silicon Image SiI8620 HDMI/MHL bridge driver");
+ MODULE_LICENSE("GPL v2");
 
-   key->enabled == 1
-   val = atomic_fetch_add_unless(&key->enabled, -1, 1);
-   if (val == 1)
-   	return false;
+---
+base-commit: 19ca0d8a433ff37018f9429f7e7739e9f3d3d2b4
+change-id: 20240609-md-drivers-gpu-drm-bridge-6ab32656df86
 
-   jump_label_lock();
-   if (atomic_dec_and_test(&key->enabled)) {
-      --> key->enabled == 0
-      __jump_label_update()
-
-                                static_key_slow_dec()
-                                 static_key_slow_try_dec()
-
-                                    key->enabled == 0
-                                    val = atomic_fetch_add_unless(&key->enabled, -1, 1);
-
-                                    --> key->enabled == -1 <- FAIL
-
-static_key_slow_try_dec() is buggy. It needs similar logic as
-static_key_slow_try_inc() to work correctly.
-
-It's not only the 0, key->enabled can be -1 when the other CPU is in the
-slow path of enabling it.
-
-I'll send a patch after testing it.
-
-Thanks,
-
-        tglx
