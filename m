@@ -1,46 +1,46 @@
 Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5071477106;
-	Sun,  9 Jun 2024 18:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC2F74064;
+	Sun,  9 Jun 2024 18:22:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717957384; cv=none; b=pyNmfrjM5J1wX5P8ysjUqUqEdtrv4JGsNR8zaSjbl92rtTZM7vDWIfvENboMcTyuSI/tuSXqYq0qWtGcF++I+K9N4CeyK0OgcboQ4wda+fllXdfKacyfB09bcFzW3Ugk5BSV+T2P1hfu5gjID2cn9LIEQfzAmWJ8Wn3jQ2E8MgA=
+	t=1717957380; cv=none; b=q0C0XjVOJNFJSkgoveEItWIAyHjJ8E96cX7ly6sI2JvbyNQFgaUnIum5Ti09cpLWHbKFTKKul6mOOiI+zPObTXS6NU1LZGvRGCH49F51T93T6aZbYMgHolAZMRtezTsVksTcFrGPDJghvi44ShrSCrSKxh1BAU82IxMUuadYIfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717957384; c=relaxed/simple;
-	bh=vqUq+Z5QBQgk7H3/tGLJZnSzwDdUh+0pPAtp5frvaGI=;
+	s=arc-20240116; t=1717957380; c=relaxed/simple;
+	bh=731YSLBlCm9vjVxcKAdJ7VlZ3d6SGb4FRcKjyeKMk9c=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YBKE3JyD7uLEa1I9G65yuVkA8fmWYkd8hTDK5OGx9pbi9ddgAgUzbvFetRW42BUkhHUMv2I6RqrJXW3X/SVU8+ruZoPnGN1YHC8xRUB5oGBvCSiYkdAckSnce9uou2Cdf6NRNjd9ApIJzCkzBj/GTJ6XqrRVHSou4chMhuWbPGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oAKsUFGw; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=m5mz9zaebs60k0p15MKDFUVk+uusMpW5LHiCFz5yruUazxC78lAYtIPhExfAcVWS7QCN2pR3HDkrtZBm2mvxre1gmPD9AY/NV9f+Uxvkt1u6uganL476ZUJKEDagGAftxY6hTcNxN5wYlhLxobBgQdOb4Bwc4RVXLes1Gvi8fFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=zVoZxD6j; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oAKsUFGw"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 459IMowA075149;
-	Sun, 9 Jun 2024 13:22:50 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zVoZxD6j"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 459IMkGM075138;
+	Sun, 9 Jun 2024 13:22:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717957370;
-	bh=x/38vh0TSaeL/hFvXKJSsgXnEeNrlRuDu10Br89vj9Y=;
+	s=ti-com-17Q1; t=1717957366;
+	bh=d39SgyocJ9NTEeqA/HCGbZ/f+M6mkTHVUklUlwSIK8E=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=oAKsUFGw8ASD6M2hCcEgk9WkseVb2inFkyUo6WxBManfPTQMYPuDAhNemJ5nX+j2t
-	 i5r7steIu1ZE63iwnmQXg83mNnb8cmUnUiY31y04khLYrJhbFUD6ZawXKc8a6n2BKE
-	 cI6YRCqhzxNttwnCNBu+YVL6P40yvDckRNU6xL5A=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 459IMoMo053577
+	b=zVoZxD6j4N2PDwlqbrq5vF2cf8x+wW+Z4f6MF5REN0HeHa5pNeSQNnWeXCTH94uUf
+	 z3UntQo6u3WBQt4pPWjdB+Mevnx6A7MKwVIwA0S7YQk8FogTdRMB/1WCbqGlyFW1XA
+	 j6TprTgO7muMEOrL/aW9t+tOfKBrcOkQ74X34rk0=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 459IMjjY035508
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 9 Jun 2024 13:22:50 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+	Sun, 9 Jun 2024 13:22:46 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 9
- Jun 2024 13:22:50 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 13:22:45 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sun, 9 Jun 2024 13:22:50 -0500
+ Frontend Transport; Sun, 9 Jun 2024 13:22:45 -0500
 Received: from localhost (uda0389739.dhcp.ti.com [137.167.1.114])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 459IMnbf067796;
-	Sun, 9 Jun 2024 13:22:49 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 459IMiaG034685;
+	Sun, 9 Jun 2024 13:22:45 -0500
 From: <michael.nemanov@ti.com>
 To: Sabeeh Khan <sabeeh-khan@ti.com>, Kalle Valo <kvalo@kernel.org>,
         Johannes
@@ -56,9 +56,9 @@ CC: <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Michael Nemanov
 	<Michael.Nemanov@ti.com>
-Subject: [PATCH v2 13/17] wifi: cc33xx: Add conf.h
-Date: Sun, 9 Jun 2024 21:20:58 +0300
-Message-ID: <20240609182102.2950457-14-michael.nemanov@ti.com>
+Subject: [PATCH v2 10/17] wifi: cc33xx: Add tx.c, tx.h
+Date: Sun, 9 Jun 2024 21:20:55 +0300
+Message-ID: <20240609182102.2950457-11-michael.nemanov@ti.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240609182102.2950457-1-michael.nemanov@ti.com>
 References: <20240609182102.2950457-1-michael.nemanov@ti.com>
@@ -74,1265 +74,1603 @@ X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 From: Michael Nemanov <Michael.Nemanov@ti.com>
 
-Various HW / FW / Driver controls unique for the CC33xx that
-can be set by OEMs.
+Tx of data frames starts either with MAC80211 tx op (cc33xx_op_tx)
+or from the deferred IRQ context (irq_deferred_work). Both trigger
+cc->tx_work (cc33xx_tx_work @ tx.c) which will call
+cc33xx_tx_work_locked where data from MAC80211 SKBs will be packed
+and transferred to HW. An interrupt will then be received from HW
+indicating that a given frame was transmitted or expired so that its
+SKB can be freed (cc33xx_tx_immediate_complete).
 ---
- drivers/net/wireless/ti/cc33xx/conf.h | 1246 +++++++++++++++++++++++++
- 1 file changed, 1246 insertions(+)
- create mode 100644 drivers/net/wireless/ti/cc33xx/conf.h
+ drivers/net/wireless/ti/cc33xx/tx.c | 1411 +++++++++++++++++++++++++++
+ drivers/net/wireless/ti/cc33xx/tx.h |  160 +++
+ 2 files changed, 1571 insertions(+)
+ create mode 100644 drivers/net/wireless/ti/cc33xx/tx.c
+ create mode 100644 drivers/net/wireless/ti/cc33xx/tx.h
 
-diff --git a/drivers/net/wireless/ti/cc33xx/conf.h b/drivers/net/wireless/ti/cc33xx/conf.h
+diff --git a/drivers/net/wireless/ti/cc33xx/tx.c b/drivers/net/wireless/ti/cc33xx/tx.c
 new file mode 100644
-index 000000000000..d3881aadeade
+index 000000000000..287220f4a3f4
 --- /dev/null
-+++ b/drivers/net/wireless/ti/cc33xx/conf.h
-@@ -0,0 +1,1246 @@
++++ b/drivers/net/wireless/ti/cc33xx/tx.c
+@@ -0,0 +1,1411 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (C) 2022-2024 Texas Instruments Incorporated - https://www.ti.com/
++ */
++
++#include "acx.h"
++#include "debug.h"
++#include "io.h"
++#include "ps.h"
++#include "tx.h"
++#include "cc33xx.h"
++
++static int cc33xx_set_default_wep_key(struct cc33xx *cc,
++				      struct cc33xx_vif *wlvif, u8 id)
++{
++	int ret;
++	bool is_ap = (wlvif->bss_type == BSS_TYPE_AP_BSS);
++
++	if (is_ap)
++		ret = cc33xx_cmd_set_default_wep_key(cc, id,
++						     wlvif->ap.bcast_hlid);
++	else
++		ret = cc33xx_cmd_set_default_wep_key(cc, id, wlvif->sta.hlid);
++
++	if (ret < 0)
++		return ret;
++
++	cc33xx_debug(DEBUG_CRYPT, "default wep key idx: %d", (int)id);
++	return 0;
++}
++
++static int cc33xx_alloc_tx_id(struct cc33xx *cc, struct sk_buff *skb)
++{
++	int id;
++
++	id = find_first_zero_bit(cc->tx_frames_map, CC33XX_NUM_TX_DESCRIPTORS);
++	if (id >= CC33XX_NUM_TX_DESCRIPTORS)
++		return -EBUSY;
++
++	__set_bit(id, cc->tx_frames_map);
++	cc->tx_frames[id] = skb;
++	cc->tx_frames_cnt++;
++	cc33xx_debug(DEBUG_TX, "alloc desc ID. id - %d, frames count %d",
++		     id, cc->tx_frames_cnt);
++	return id;
++}
++
++void cc33xx_free_tx_id(struct cc33xx *cc, int id)
++{
++	if (__test_and_clear_bit(id, cc->tx_frames_map)) {
++		if (unlikely(cc->tx_frames_cnt == CC33XX_NUM_TX_DESCRIPTORS))
++			clear_bit(CC33XX_FLAG_FW_TX_BUSY, &cc->flags);
++
++		cc->tx_frames[id] = NULL;
++		cc->tx_frames_cnt--;
++	}
++	cc33xx_debug(DEBUG_TX, "free desc ID. id - %d, frames count %d",
++		     id, cc->tx_frames_cnt);
++}
++EXPORT_SYMBOL(cc33xx_free_tx_id);
++
++static void cc33xx_tx_ap_update_inconnection_sta(struct cc33xx *cc,
++						 struct cc33xx_vif *wlvif,
++						 struct sk_buff *skb)
++{
++	struct ieee80211_hdr *hdr;
++
++	hdr = (struct ieee80211_hdr *)(skb->data +
++				       sizeof(struct cc33xx_tx_hw_descr));
++	if (!ieee80211_is_auth(hdr->frame_control))
++		return;
++
++	/* ROC for 1 second on the AP channel for completing the connection.
++	 * Note the ROC will be continued by the update_sta_state callbacks
++	 * once the station reaches the associated state.
++	 */
++	cc33xx_update_inconn_sta(cc, wlvif, NULL, true);
++	wlvif->pending_auth_reply_time = jiffies;
++	cancel_delayed_work(&wlvif->pending_auth_complete_work);
++	ieee80211_queue_delayed_work(cc->hw,
++				     &wlvif->pending_auth_complete_work,
++				msecs_to_jiffies(CC33XX_PEND_AUTH_ROC_TIMEOUT));
++}
++
++static void cc33xx_tx_regulate_link(struct cc33xx *cc,
++				    struct cc33xx_vif *wlvif,
++				    u8 hlid)
++{
++	bool fw_ps;
++	u8 tx_pkts;
++
++	if (WARN_ON(!test_bit(hlid, wlvif->links_map)))
++		return;
++
++	fw_ps = test_bit(hlid, &cc->ap_fw_ps_map);
++	tx_pkts = cc->links[hlid].allocated_pkts;
++
++	/* if in FW PS and there is enough data in FW we can put the link
++	 * into high-level PS and clean out its TX queues.
++	 * Make an exception if this is the only connected link. In this
++	 * case FW-memory congestion is less of a problem.
++	 * Note that a single connected STA means 2*ap_count + 1 active links,
++	 * since we must account for the global and broadcast AP links
++	 * for each AP. The "fw_ps" check assures us the other link is a STA
++	 * connected to the AP. Otherwise the FW would not set the PSM bit.
++	 */
++	if (cc->active_link_count > (cc->ap_count * 2 + 1) && fw_ps &&
++	    tx_pkts >= CC33XX_PS_STA_MAX_PACKETS)
++		cc33xx_ps_link_start(cc, wlvif, hlid, true);
++}
++
++inline bool cc33xx_is_dummy_packet(struct cc33xx *cc, struct sk_buff *skb)
++{
++	return cc->dummy_packet == skb;
++}
++EXPORT_SYMBOL(cc33xx_is_dummy_packet);
++
++static u8 cc33xx_tx_get_hlid_ap(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++				struct sk_buff *skb, struct ieee80211_sta *sta)
++{
++	struct ieee80211_hdr *hdr;
++
++	if (sta) {
++		struct cc33xx_station *wl_sta;
++
++		wl_sta = (struct cc33xx_station *)sta->drv_priv;
++		return wl_sta->hlid;
++	}
++
++	if (!test_bit(WLVIF_FLAG_AP_STARTED, &wlvif->flags))
++		return CC33XX_SYSTEM_HLID;
++
++	hdr = (struct ieee80211_hdr *)skb->data;
++	if (is_multicast_ether_addr(ieee80211_get_DA(hdr)))
++		return wlvif->ap.bcast_hlid;
++	else
++		return wlvif->ap.global_hlid;
++}
++
++u8 cc33xx_tx_get_hlid(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++		      struct sk_buff *skb, struct ieee80211_sta *sta)
++{
++	struct ieee80211_tx_info *control;
++
++	if (wlvif->bss_type == BSS_TYPE_AP_BSS)
++		return cc33xx_tx_get_hlid_ap(cc, wlvif, skb, sta);
++
++	control = IEEE80211_SKB_CB(skb);
++	if (control->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
++		cc33xx_debug(DEBUG_TX, "tx offchannel");
++		return wlvif->dev_hlid;
++	}
++
++	return wlvif->sta.hlid;
++}
++
++unsigned int cc33xx_calc_packet_alignment(struct cc33xx *cc,
++					  unsigned int packet_length)
++{
++	if ((cc->quirks & CC33XX_QUIRK_TX_PAD_LAST_FRAME) ||
++	    !(cc->quirks & CC33XX_QUIRK_TX_BLOCKSIZE_ALIGN))
++		return ALIGN(packet_length, CC33XX_TX_ALIGN_TO);
++	else
++		return ALIGN(packet_length, CC33XX_BUS_BLOCK_SIZE);
++}
++EXPORT_SYMBOL(cc33xx_calc_packet_alignment);
++
++static u32 cc33xx_calc_tx_blocks(struct cc33xx *cc, u32 len, u32 spare_blks)
++{
++	u32 blk_size = CC33XX_TX_HW_BLOCK_SIZE;
++	/* In CC33xx the packet will be stored along with its internal descriptor.
++	 * the descriptor is not part of the host transaction, but should be
++	 * considered as part of the allocate memory blocks in the device
++	 */
++	len = len + CC33xx_INTERNAL_DESC_SIZE;
++	return (len + blk_size - 1) / blk_size + spare_blks;
++}
++
++static inline void cc33xx_set_tx_desc_blocks(struct cc33xx *cc,
++					     struct cc33xx_tx_hw_descr *desc,
++					     u32 blks, u32 spare_blks)
++{
++	desc->cc33xx_mem.total_mem_blocks = blks;
++}
++
++static void cc33xx_set_tx_desc_data_len(struct cc33xx *cc,
++					struct cc33xx_tx_hw_descr *desc,
++					struct sk_buff *skb)
++{
++	desc->length = cpu_to_le16(skb->len);
++
++	/* if only the last frame is to be padded, we unset this bit on Tx */
++	if (cc->quirks & CC33XX_QUIRK_TX_PAD_LAST_FRAME)
++		desc->cc33xx_mem.ctrl = CC33XX_TX_CTRL_NOT_PADDED;
++	else
++		desc->cc33xx_mem.ctrl = 0;
++
++	cc33xx_debug(DEBUG_TX, "tx_fill_hdr: hlid: %d  len: %d life: %d mem: %d",
++		     desc->hlid, le16_to_cpu(desc->length),
++		     le16_to_cpu(desc->life_time),
++		     desc->cc33xx_mem.total_mem_blocks);
++}
++
++static int cc33xx_get_spare_blocks(struct cc33xx *cc, bool is_gem)
++{
++	/* If we have keys requiring extra spare, indulge them */
++	if (cc->extra_spare_key_count)
++		return CC33XX_TX_HW_EXTRA_BLOCK_SPARE;
++
++	return CC33XX_TX_HW_BLOCK_SPARE;
++}
++
++int cc33xx_tx_get_queue(int queue)
++{
++	switch (queue) {
++	case 0:
++		return CONF_TX_AC_VO;
++	case 1:
++		return CONF_TX_AC_VI;
++	case 2:
++		return CONF_TX_AC_BE;
++	case 3:
++		return CONF_TX_AC_BK;
++	default:
++		return CONF_TX_AC_BE;
++	}
++}
++
++static int cc33xx_tx_allocate(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			      struct sk_buff *skb, u32 extra, u32 buf_offset,
++			      u8 hlid, bool is_gem,
++			      struct NAB_tx_header *nab_cmd)
++{
++	struct cc33xx_tx_hw_descr *desc;
++	u32 total_blocks;
++	int id, ret = -EBUSY, ac;
++	u32 spare_blocks;
++	u32 total_skb_len = skb->len + extra;
++	/* Add NAB command required for CC33xx architecture */
++	u32 total_len = sizeof(struct NAB_tx_header);
++
++	total_skb_len += sizeof(struct cc33xx_tx_hw_descr);
++	total_len += total_skb_len;
++
++	cc33xx_debug(DEBUG_TX, "cc->tx_blocks_available %d",
++		     cc->tx_blocks_available);
++
++	if (buf_offset + total_len > cc->aggr_buf_size)
++		return -EAGAIN;
++
++	spare_blocks = cc33xx_get_spare_blocks(cc, is_gem);
++
++	/* allocate free identifier for the packet */
++	id = cc33xx_alloc_tx_id(cc, skb);
++	if (id < 0)
++		return id;
++
++	/* memblocks should not include nab descriptor */
++	total_blocks = cc33xx_calc_tx_blocks(cc, total_skb_len, spare_blocks);
++	cc33xx_debug(DEBUG_TX, "total blocks %d", total_blocks);
++
++	if (total_blocks <= cc->tx_blocks_available) {
++		/**
++		 * In CC33XX the packet starts with NAB command,
++		 * only then the descriptor.
++		 */
++		nab_cmd->sync = cpu_to_le32(HOST_SYNC_PATTERN);
++		nab_cmd->opcode = cpu_to_le16(NAB_SEND_CMD);
++
++		/**
++		 * length should include the following 4 bytes
++		 * of the NAB command.
++		 */
++		nab_cmd->len = cpu_to_le16(total_len -
++						sizeof(struct NAB_header));
++		nab_cmd->desc_length = cpu_to_le16(total_len -
++						sizeof(struct NAB_tx_header));
++		nab_cmd->sd = 0;
++		nab_cmd->flags = NAB_SEND_FLAGS;
++
++		desc = skb_push(skb, total_skb_len - skb->len);
++
++		cc33xx_set_tx_desc_blocks(cc, desc, total_blocks, spare_blocks);
++
++		desc->id = id;
++
++		cc33xx_debug(DEBUG_TX,
++			     "tx allocate id %u skb 0x%p tx_memblocks %d",
++			     id, skb, desc->cc33xx_mem.total_mem_blocks);
++
++		cc->tx_blocks_available -= total_blocks;
++		cc->tx_allocated_blocks += total_blocks;
++
++		/* If the FW was empty before, arm the Tx watchdog. Also do
++		 * this on the first Tx after resume, as we always cancel the
++		 * watchdog on suspend.
++		 */
++		if (cc->tx_allocated_blocks == total_blocks ||
++		    test_and_clear_bit(CC33XX_FLAG_REINIT_TX_WDOG, &cc->flags))
++			cc33xx_rearm_tx_watchdog_locked(cc);
++
++		ac = cc33xx_tx_get_queue(skb_get_queue_mapping(skb));
++		desc->ac = ac;
++		cc->tx_allocated_pkts[ac]++;
++
++		if (test_bit(hlid, cc->links_map))
++			cc->links[hlid].allocated_pkts++;
++
++		ret = 0;
++
++		cc33xx_debug(DEBUG_TX,
++			     "tx_allocate: size: %d, blocks: %d, id: %d",
++			     total_len, total_blocks, id);
++	} else {
++		cc33xx_free_tx_id(cc, id);
++	}
++
++	return ret;
++}
++
++static void cc33xx_tx_fill_hdr(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			       struct sk_buff *skb, u32 extra,
++			       struct ieee80211_tx_info *control, u8 hlid)
++{
++	struct cc33xx_tx_hw_descr *desc;
++	int ac, rate_idx;
++	u16 tx_attr = 0;
++	__le16 frame_control;
++	struct ieee80211_hdr *hdr;
++	u8 *frame_start;
++	bool is_dummy;
++
++	desc = (struct cc33xx_tx_hw_descr *)skb->data;
++
++	frame_start = (u8 *)(desc + 1);
++	hdr = (struct ieee80211_hdr *)(frame_start + extra);
++	frame_control = hdr->frame_control;
++
++	/* relocate space for security header */
++	if (extra) {
++		int hdrlen = ieee80211_hdrlen(frame_control);
++
++		memmove(frame_start, hdr, hdrlen);
++		skb_set_network_header(skb, skb_network_offset(skb) + extra);
++	}
++
++	is_dummy = cc33xx_is_dummy_packet(cc, skb);
++	if (is_dummy || !wlvif || wlvif->bss_type != BSS_TYPE_AP_BSS)
++		desc->life_time = cpu_to_le16(TX_HW_MGMT_PKT_LIFETIME_TU);
++	else
++		desc->life_time = cpu_to_le16(TX_HW_AP_MODE_PKT_LIFETIME_TU);
++
++	/* queue */
++	ac = cc33xx_tx_get_queue(skb_get_queue_mapping(skb));
++	desc->tid = skb->priority;
++
++	if (is_dummy) {
++		/* FW expects the dummy packet to have an invalid session id -
++		 * any session id that is different than the one set in the join
++		 */
++		tx_attr = (SESSION_COUNTER_INVALID <<
++			   TX_HW_ATTR_OFST_SESSION_COUNTER) &
++			   TX_HW_ATTR_SESSION_COUNTER;
++
++		tx_attr |= TX_HW_ATTR_TX_DUMMY_REQ;
++	} else if (wlvif) {
++		u8 session_id = cc->session_ids[hlid];
++
++		if (cc->quirks & CC33XX_QUIRK_AP_ZERO_SESSION_ID &&
++		    wlvif->bss_type == BSS_TYPE_AP_BSS)
++			session_id = 0;
++
++		/* configure the tx attributes */
++		tx_attr = session_id << TX_HW_ATTR_OFST_SESSION_COUNTER;
++	}
++
++	desc->hlid = hlid;
++	if (is_dummy || !wlvif) {
++		rate_idx = 0;
++	} else if (wlvif->bss_type != BSS_TYPE_AP_BSS) {
++		/* if the packets are data packets
++		 * send them with AP rate policies (EAPOLs are an exception),
++		 * otherwise use default basic rates
++		 */
++		if (skb->protocol == cpu_to_be16(ETH_P_PAE))
++			rate_idx = wlvif->sta.basic_rate_idx;
++		else if (control->flags & IEEE80211_TX_CTL_NO_CCK_RATE)
++			rate_idx = wlvif->sta.p2p_rate_idx;
++		else if (ieee80211_is_data(frame_control))
++			rate_idx = wlvif->sta.ap_rate_idx;
++		else
++			rate_idx = wlvif->sta.basic_rate_idx;
++	} else {
++		if (hlid == wlvif->ap.global_hlid)
++			rate_idx = wlvif->ap.mgmt_rate_idx;
++		else if (hlid == wlvif->ap.bcast_hlid ||
++			 skb->protocol == cpu_to_be16(ETH_P_PAE) ||
++			 !ieee80211_is_data(frame_control))
++			/* send non-data, bcast and EAPOLs using the
++			 * min basic rate
++			 */
++			rate_idx = wlvif->ap.bcast_rate_idx;
++		else
++			rate_idx = wlvif->ap.ucast_rate_idx[ac];
++	}
++
++	tx_attr |= rate_idx << TX_HW_ATTR_OFST_RATE_POLICY;
++
++	/* for WEP shared auth - no fw encryption is needed */
++	if (ieee80211_is_auth(frame_control) &&
++	    ieee80211_has_protected(frame_control))
++		tx_attr |= TX_HW_ATTR_HOST_ENCRYPT;
++
++	/* send EAPOL frames as voice */
++	if (control->control.flags & IEEE80211_TX_CTRL_PORT_CTRL_PROTO)
++		tx_attr |= TX_HW_ATTR_EAPOL_FRAME;
++
++	desc->tx_attr = cpu_to_le16(tx_attr);
++
++	cc33xx_set_tx_desc_data_len(cc, desc, skb);
++}
++
++/* caller must hold cc->mutex */
++static int cc33xx_prepare_tx_frame(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++				   struct sk_buff *skb, u32 buf_offset, u8 hlid)
++{
++	struct ieee80211_tx_info *info;
++	u32 extra = 0;
++	int ret = 0;
++	u32 total_len;
++	bool is_dummy;
++	bool is_gem = false;
++	struct NAB_tx_header nab_cmd;
++
++	if (!skb) {
++		cc33xx_error("discarding null skb");
++		return -EINVAL;
++	}
++
++	if (hlid == CC33XX_INVALID_LINK_ID) {
++		cc33xx_error("invalid hlid. dropping skb 0x%p", skb);
++		return -EINVAL;
++	}
++
++	info = IEEE80211_SKB_CB(skb);
++
++	is_dummy = cc33xx_is_dummy_packet(cc, skb);
++
++	if ((cc->quirks & CC33XX_QUIRK_TKIP_HEADER_SPACE) &&
++	    info->control.hw_key &&
++	    info->control.hw_key->cipher == WLAN_CIPHER_SUITE_TKIP)
++		extra = CC33XX_EXTRA_SPACE_TKIP;
++
++	if (info->control.hw_key) {
++		bool is_wep;
++		u8 idx = info->control.hw_key->hw_key_idx;
++		u32 cipher = info->control.hw_key->cipher;
++
++		is_wep = (cipher == WLAN_CIPHER_SUITE_WEP40) ||
++			 (cipher == WLAN_CIPHER_SUITE_WEP104);
++
++		if (WARN_ON(is_wep && wlvif && wlvif->default_key != idx)) {
++			ret = cc33xx_set_default_wep_key(cc, wlvif, idx);
++			if (ret < 0)
++				return ret;
++			wlvif->default_key = idx;
++		}
++
++		is_gem = (cipher == CC33XX_CIPHER_SUITE_GEM);
++	}
++
++	/* Add 4 bytes gap, may be filled later on by the PMAC. */
++	extra += IEEE80211_HT_CTL_LEN;
++	ret = cc33xx_tx_allocate(cc, wlvif, skb, extra, buf_offset, hlid,
++				 is_gem, &nab_cmd);
++	cc33xx_debug(DEBUG_TX, "cc33xx_tx_allocate %d", ret);
++
++	if (ret < 0)
++		return ret;
++
++	cc33xx_tx_fill_hdr(cc, wlvif, skb, extra, info, hlid);
++
++	if (!is_dummy && wlvif && wlvif->bss_type == BSS_TYPE_AP_BSS) {
++		cc33xx_tx_ap_update_inconnection_sta(cc, wlvif, skb);
++		cc33xx_tx_regulate_link(cc, wlvif, hlid);
++	}
++
++	/* The length of each packet is stored in terms of
++	 * words. Thus, we must pad the skb data to make sure its
++	 * length is aligned.  The number of padding bytes is computed
++	 * and set in cc33xx_tx_fill_hdr.
++	 * In special cases, we want to align to a specific block size
++	 * (eg. for wl128x with SDIO we align to 256).
++	 */
++	total_len = cc33xx_calc_packet_alignment(cc, skb->len);
++
++	memcpy(cc->aggr_buf + buf_offset,
++	       &nab_cmd, sizeof(struct NAB_tx_header));
++	memcpy(cc->aggr_buf + buf_offset + sizeof(struct NAB_tx_header),
++	       skb->data, skb->len);
++	memset(cc->aggr_buf + buf_offset + sizeof(struct NAB_tx_header)
++		+ skb->len, 0, total_len - skb->len);
++
++	/* Revert side effects in the dummy packet skb, so it can be reused */
++	if (is_dummy)
++		skb_pull(skb, sizeof(struct cc33xx_tx_hw_descr));
++
++	return (total_len + sizeof(struct NAB_tx_header));
++}
++
++u32 cc33xx_tx_enabled_rates_get(struct cc33xx *cc, u32 rate_set,
++				enum nl80211_band rate_band)
++{
++	struct ieee80211_supported_band *band;
++	u32 enabled_rates = 0;
++	int bit;
++
++	band = cc->hw->wiphy->bands[rate_band];
++	for (bit = 0; bit < band->n_bitrates; bit++) {
++		if (rate_set & 0x1)
++			enabled_rates |= band->bitrates[bit].hw_value;
++		rate_set >>= 1;
++	}
++
++	/* MCS rates indication are on bits 16 - 31 */
++	rate_set >>= HW_HT_RATES_OFFSET - band->n_bitrates;
++
++	for (bit = 0; bit < 16; bit++) {
++		if (rate_set & 0x1)
++			enabled_rates |= (CONF_HW_BIT_RATE_MCS_0 << bit);
++		rate_set >>= 1;
++	}
++
++	return enabled_rates;
++}
++
++static inline int cc33xx_tx_get_mac80211_queue(struct cc33xx_vif *wlvif,
++					       int queue)
++{
++	int mac_queue = wlvif->hw_queue_base;
++
++	switch (queue) {
++	case CONF_TX_AC_VO:
++		return mac_queue + 0;
++	case CONF_TX_AC_VI:
++		return mac_queue + 1;
++	case CONF_TX_AC_BE:
++		return mac_queue + 2;
++	case CONF_TX_AC_BK:
++		return mac_queue + 3;
++	default:
++		return mac_queue + 2;
++	}
++}
++
++static void cc33xx_wake_queue(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			      u8 queue, enum cc33xx_queue_stop_reason reason)
++{
++	unsigned long flags;
++	int hwq = cc33xx_tx_get_mac80211_queue(wlvif, queue);
++
++	spin_lock_irqsave(&cc->cc_lock, flags);
++
++	/* queue should not be clear for this reason */
++	WARN_ON_ONCE(!test_and_clear_bit(reason, &cc->queue_stop_reasons[hwq]));
++
++	if (cc->queue_stop_reasons[hwq])
++		goto out;
++
++	ieee80211_wake_queue(cc->hw, hwq);
++
++out:
++	spin_unlock_irqrestore(&cc->cc_lock, flags);
++}
++
++void cc33xx_handle_tx_low_watermark(struct cc33xx *cc)
++{
++	int i;
++	struct cc33xx_vif *wlvif;
++
++	cc33xx_for_each_wlvif(cc, wlvif) {
++		for (i = 0; i < NUM_TX_QUEUES; i++) {
++			if (cc33xx_is_queue_stopped_by_reason(cc, wlvif, i,
++							      CC33XX_QUEUE_STOP_REASON_WATERMARK) &&
++			    wlvif->tx_queue_count[i] <=
++					CC33XX_TX_QUEUE_LOW_WATERMARK)
++				/* firmware buffer has space, restart queues */
++				cc33xx_wake_queue(cc, wlvif, i,
++						  CC33XX_QUEUE_STOP_REASON_WATERMARK);
++		}
++	}
++}
++
++static int cc33xx_select_ac(struct cc33xx *cc)
++{
++	int i, q = -1, ac;
++	u32 min_pkts = 0xffffffff;
++
++	/* Find a non-empty ac where:
++	 * 1. There are packets to transmit
++	 * 2. The FW has the least allocated blocks
++	 *
++	 * We prioritize the ACs according to VO>VI>BE>BK
++	 */
++	for (i = 0; i < NUM_TX_QUEUES; i++) {
++		ac = cc33xx_tx_get_queue(i);
++		if (cc->tx_queue_count[ac] &&
++		    cc->tx_allocated_pkts[ac] < min_pkts) {
++			q = ac;
++			min_pkts = cc->tx_allocated_pkts[q];
++		}
++	}
++
++	return q;
++}
++
++static struct sk_buff *cc33xx_lnk_dequeue(struct cc33xx *cc,
++					  struct cc33xx_link *lnk, u8 q)
++{
++	struct sk_buff *skb;
++	unsigned long flags;
++
++	skb = skb_dequeue(&lnk->tx_queue[q]);
++	if (skb) {
++		spin_lock_irqsave(&cc->cc_lock, flags);
++		WARN_ON_ONCE(cc->tx_queue_count[q] <= 0);
++		cc->tx_queue_count[q]--;
++		if (lnk->wlvif) {
++			WARN_ON_ONCE(lnk->wlvif->tx_queue_count[q] <= 0);
++			lnk->wlvif->tx_queue_count[q]--;
++		}
++		spin_unlock_irqrestore(&cc->cc_lock, flags);
++	}
++
++	return skb;
++}
++
++static bool cc33xx_lnk_high_prio(struct cc33xx *cc, u8 hlid,
++				 struct cc33xx_link *lnk)
++{
++	u8 thold;
++	struct core_fw_status *core_fw_status = &cc->core_status->fw_info;
++	unsigned long suspend_bitmap, fast_bitmap, ps_bitmap;
++
++	suspend_bitmap = le32_to_cpu(core_fw_status->link_suspend_bitmap);
++	fast_bitmap = le32_to_cpu(core_fw_status->link_fast_bitmap);
++	ps_bitmap = le32_to_cpu(core_fw_status->link_ps_bitmap);
++
++	/* suspended links are never high priority */
++	if (test_bit(hlid, &suspend_bitmap))
++		return false;
++
++	/* the priority thresholds are taken from FW */
++	if (test_bit(hlid, &fast_bitmap) && !test_bit(hlid, &ps_bitmap))
++		thold = core_fw_status->tx_fast_link_prio_threshold;
++	else
++		thold = core_fw_status->tx_slow_link_prio_threshold;
++
++	return lnk->allocated_pkts < thold;
++}
++
++static bool cc33xx_lnk_low_prio(struct cc33xx *cc, u8 hlid,
++				struct cc33xx_link *lnk)
++{
++	u8 thold;
++	struct core_fw_status *core_fw_status = &cc->core_status->fw_info;
++	unsigned long suspend_bitmap, fast_bitmap, ps_bitmap;
++
++	suspend_bitmap = le32_to_cpu(core_fw_status->link_suspend_bitmap);
++	fast_bitmap = le32_to_cpu(core_fw_status->link_fast_bitmap);
++	ps_bitmap = le32_to_cpu(core_fw_status->link_ps_bitmap);
++
++	if (test_bit(hlid, &suspend_bitmap))
++		thold = core_fw_status->tx_suspend_threshold;
++	else if (test_bit(hlid, &fast_bitmap) && !test_bit(hlid, &ps_bitmap))
++		thold = core_fw_status->tx_fast_stop_threshold;
++	else
++		thold = core_fw_status->tx_slow_stop_threshold;
++
++	return lnk->allocated_pkts < thold;
++}
++
++static struct sk_buff *cc33xx_lnk_dequeue_high_prio(struct cc33xx *cc,
++						    u8 hlid, u8 ac,
++						    u8 *low_prio_hlid)
++{
++	struct cc33xx_link *lnk = &cc->links[hlid];
++
++	if (!cc33xx_lnk_high_prio(cc, hlid, lnk)) {
++		if (*low_prio_hlid == CC33XX_INVALID_LINK_ID &&
++		    !skb_queue_empty(&lnk->tx_queue[ac]) &&
++		    cc33xx_lnk_low_prio(cc, hlid, lnk))
++			/* we found the first non-empty low priority queue */
++			*low_prio_hlid = hlid;
++
++		return NULL;
++	}
++
++	return cc33xx_lnk_dequeue(cc, lnk, ac);
++}
++
++static struct sk_buff *cc33xx_vif_dequeue_high_prio(struct cc33xx *cc,
++						    struct cc33xx_vif *wlvif,
++						    u8 ac, u8 *hlid,
++						    u8 *low_prio_hlid)
++{
++	struct sk_buff *skb = NULL;
++	int i, h, start_hlid;
++
++	/* start from the link after the last one */
++	start_hlid = (wlvif->last_tx_hlid + 1) % CC33XX_MAX_LINKS;
++
++	/* dequeue according to AC, round robin on each link */
++	for (i = 0; i < CC33XX_MAX_LINKS; i++) {
++		h = (start_hlid + i) % CC33XX_MAX_LINKS;
++
++		/* only consider connected stations */
++		if (!test_bit(h, wlvif->links_map))
++			continue;
++
++		skb = cc33xx_lnk_dequeue_high_prio(cc, h, ac, low_prio_hlid);
++		if (!skb)
++			continue;
++
++		wlvif->last_tx_hlid = h;
++		break;
++	}
++
++	if (!skb)
++		wlvif->last_tx_hlid = 0;
++
++	*hlid = wlvif->last_tx_hlid;
++	return skb;
++}
++
++static struct sk_buff *cc33xx_skb_dequeue(struct cc33xx *cc, u8 *hlid)
++{
++	unsigned long flags;
++	struct cc33xx_vif *wlvif = cc->last_wlvif;
++	struct sk_buff *skb = NULL;
++	int ac;
++	u8 low_prio_hlid = CC33XX_INVALID_LINK_ID;
++
++	ac = cc33xx_select_ac(cc);
++	if (ac < 0)
++		goto out;
++
++	/* continue from last wlvif (round robin) */
++	if (wlvif) {
++		cc33xx_for_each_wlvif_continue(cc, wlvif) {
++			if (!wlvif->tx_queue_count[ac])
++				continue;
++
++			skb = cc33xx_vif_dequeue_high_prio(cc, wlvif, ac, hlid,
++							   &low_prio_hlid);
++			if (!skb)
++				continue;
++
++			cc->last_wlvif = wlvif;
++			break;
++		}
++	}
++
++	/* dequeue from the system HLID before the restarting wlvif list */
++	if (!skb) {
++		skb = cc33xx_lnk_dequeue_high_prio(cc, CC33XX_SYSTEM_HLID,
++						   ac, &low_prio_hlid);
++		if (skb) {
++			*hlid = CC33XX_SYSTEM_HLID;
++			cc->last_wlvif = NULL;
++		}
++	}
++
++	/* Do a new pass over the wlvif list. But no need to continue
++	 * after last_wlvif. The previous pass should have found it.
++	 */
++	if (!skb) {
++		cc33xx_for_each_wlvif(cc, wlvif) {
++			if (!wlvif->tx_queue_count[ac])
++				goto next;
++
++			skb = cc33xx_vif_dequeue_high_prio(cc, wlvif, ac, hlid,
++							   &low_prio_hlid);
++			if (skb) {
++				cc->last_wlvif = wlvif;
++				break;
++			}
++
++next:
++			if (wlvif == cc->last_wlvif)
++				break;
++		}
++	}
++
++	/* no high priority skbs found - but maybe a low priority one? */
++	if (!skb && low_prio_hlid != CC33XX_INVALID_LINK_ID) {
++		struct cc33xx_link *lnk = &cc->links[low_prio_hlid];
++
++		skb = cc33xx_lnk_dequeue(cc, lnk, ac);
++
++		WARN_ON(!skb); /* we checked this before */
++		*hlid = low_prio_hlid;
++
++		/* ensure proper round robin in the vif/link levels */
++		cc->last_wlvif = lnk->wlvif;
++		if (lnk->wlvif)
++			lnk->wlvif->last_tx_hlid = low_prio_hlid;
++	}
++
++out:
++	if (!skb &&
++	    test_and_clear_bit(CC33XX_FLAG_DUMMY_PACKET_PENDING, &cc->flags)) {
++		int q;
++
++		skb = cc->dummy_packet;
++		*hlid = CC33XX_SYSTEM_HLID;
++		q = cc33xx_tx_get_queue(skb_get_queue_mapping(skb));
++		spin_lock_irqsave(&cc->cc_lock, flags);
++		WARN_ON_ONCE(cc->tx_queue_count[q] <= 0);
++		cc->tx_queue_count[q]--;
++		spin_unlock_irqrestore(&cc->cc_lock, flags);
++	}
++
++	return skb;
++}
++
++static void cc33xx_skb_queue_head(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++				  struct sk_buff *skb, u8 hlid)
++{
++	unsigned long flags;
++	int q = cc33xx_tx_get_queue(skb_get_queue_mapping(skb));
++
++	if (cc33xx_is_dummy_packet(cc, skb)) {
++		set_bit(CC33XX_FLAG_DUMMY_PACKET_PENDING, &cc->flags);
++	} else {
++		skb_queue_head(&cc->links[hlid].tx_queue[q], skb);
++
++		/* make sure we dequeue the same packet next time */
++		wlvif->last_tx_hlid = (hlid + CC33XX_MAX_LINKS - 1) %
++				      CC33XX_MAX_LINKS;
++	}
++
++	spin_lock_irqsave(&cc->cc_lock, flags);
++	cc->tx_queue_count[q]++;
++	if (wlvif)
++		wlvif->tx_queue_count[q]++;
++	spin_unlock_irqrestore(&cc->cc_lock, flags);
++}
++
++static inline bool cc33xx_tx_is_data_present(struct sk_buff *skb)
++{
++	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)(skb->data);
++
++	return ieee80211_is_data_present(hdr->frame_control);
++}
++
++/* Returns failure values only in case of failed bus ops within this function.
++ * cc33xx_prepare_tx_frame retvals won't be returned in order to avoid
++ * triggering recovery by higher layers when not necessary.
++ * In case a FW command fails within cc33xx_prepare_tx_frame fails a recovery
++ * will be queued in cc33xx_cmd_send. -EAGAIN/-EBUSY from prepare_tx_frame
++ * can occur and are legitimate so don't propagate. -EINVAL will emit a WARNING
++ * within prepare_tx_frame code but there's nothing we should do about those
++ * as well.
++ */
++int cc33xx_tx_work_locked(struct cc33xx *cc)
++{
++	struct cc33xx_vif *wlvif;
++	struct sk_buff *skb;
++	struct cc33xx_tx_hw_descr *desc;
++	u32 buf_offset = 0, last_len = 0;
++	u32 transfer_len = 0;
++	u32 padding_size = 0;
++	bool sent_packets = false;
++	unsigned long active_hlids[BITS_TO_LONGS(CC33XX_MAX_LINKS)] = {0};
++	int ret = 0;
++	int bus_ret = 0;
++	u8 hlid;
++
++	memset(cc->aggr_buf, 0, 0x300);
++	if (unlikely(cc->state != CC33XX_STATE_ON))
++		return 0;
++
++	while ((skb = cc33xx_skb_dequeue(cc, &hlid))) {
++		struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
++		bool has_data = false;
++
++		cc33xx_debug(DEBUG_TX, "skb dequeue skb: 0x%p data %#lx head %#lx tail %#lx end %#lx",
++			     skb,
++			     (unsigned long)skb->data, (unsigned long)skb->head,
++			     (unsigned long)skb->tail, (unsigned long)skb->end);
++		wlvif = NULL;
++		if (!cc33xx_is_dummy_packet(cc, skb))
++			wlvif = cc33xx_vif_to_data(info->control.vif);
++		else
++			hlid = CC33XX_SYSTEM_HLID;
++
++		has_data = wlvif && cc33xx_tx_is_data_present(skb);
++		ret = cc33xx_prepare_tx_frame(cc, wlvif, skb, buf_offset,
++					      hlid);
++
++		if (ret == -EAGAIN) {
++			/* Aggregation buffer is full.
++			 * Flush buffer and try again.
++			 */
++			cc33xx_skb_queue_head(cc, wlvif, skb, hlid);
++
++			transfer_len = __ALIGN_MASK(buf_offset,
++						    CC33XX_BUS_BLOCK_SIZE * 2 - 1);
++
++			padding_size = transfer_len - buf_offset;
++			memset(cc->aggr_buf + buf_offset, 0x33, padding_size);
++
++			cc33xx_debug(DEBUG_TX, "sdio transaction length: %d ",
++				     transfer_len);
++
++			bus_ret = cc33xx_write(cc, NAB_DATA_ADDR, cc->aggr_buf,
++					       transfer_len, true);
++			if (bus_ret < 0)
++				goto out;
++
++			sent_packets = true;
++			buf_offset = 0;
++			continue;
++		} else if (ret == -EBUSY) {
++			/* Firmware buffer is full.
++			 * Queue back last skb, and stop aggregating.
++			 */
++			cc33xx_skb_queue_head(cc, wlvif, skb, hlid);
++			/* No work left, avoid scheduling redundant tx work */
++			set_bit(CC33XX_FLAG_FW_TX_BUSY, &cc->flags);
++			goto out_ack;
++		} else if (ret < 0) {
++			if (cc33xx_is_dummy_packet(cc, skb))
++				/* fw still expects dummy packet,
++				 * so re-enqueue it
++				 */
++				cc33xx_skb_queue_head(cc, wlvif, skb, hlid);
++			else
++				ieee80211_free_txskb(cc->hw, skb);
++			goto out_ack;
++		}
++
++		last_len = ret;
++		buf_offset += last_len;
++
++		if (has_data) {
++			desc = (struct cc33xx_tx_hw_descr *)skb->data;
++			__set_bit(desc->hlid, active_hlids);
++		}
++	}
++
++out_ack:
++	if (buf_offset) {
++		transfer_len = __ALIGN_MASK(buf_offset,
++					    CC33XX_BUS_BLOCK_SIZE * 2 - 1);
++
++		padding_size = transfer_len - buf_offset;
++		memset(cc->aggr_buf + buf_offset, 0x33, padding_size);
++
++		cc33xx_debug(DEBUG_TX, "sdio transaction (926) length: %d ",
++			     transfer_len);
++
++		bus_ret = cc33xx_write(cc, NAB_DATA_ADDR, cc->aggr_buf,
++				       transfer_len, true);
++		if (bus_ret < 0)
++			goto out;
++
++		sent_packets = true;
++	}
++
++	if (sent_packets)
++		cc33xx_handle_tx_low_watermark(cc);
++
++out:
++	return bus_ret;
++}
++
++void cc33xx_tx_work(struct work_struct *work)
++{
++	struct cc33xx *cc = container_of(work, struct cc33xx, tx_work);
++	int ret;
++
++	mutex_lock(&cc->mutex);
++
++	ret = cc33xx_tx_work_locked(cc);
++	if (ret < 0) {
++		cc33xx_queue_recovery_work(cc);
++		goto out;
++	}
++
++out:
++	mutex_unlock(&cc->mutex);
++}
++
++void cc33xx_tx_reset_link_queues(struct cc33xx *cc, u8 hlid)
++{
++	struct sk_buff *skb;
++	int i;
++	unsigned long flags;
++	struct ieee80211_tx_info *info;
++	int total[NUM_TX_QUEUES];
++	struct cc33xx_link *lnk = &cc->links[hlid];
++
++	for (i = 0; i < NUM_TX_QUEUES; i++) {
++		total[i] = 0;
++		while ((skb = skb_dequeue(&lnk->tx_queue[i]))) {
++			cc33xx_debug(DEBUG_TX, "link freeing skb 0x%p", skb);
++
++			if (!cc33xx_is_dummy_packet(cc, skb)) {
++				info = IEEE80211_SKB_CB(skb);
++				info->status.rates[0].idx = -1;
++				info->status.rates[0].count = 0;
++				ieee80211_tx_status_ni(cc->hw, skb);
++			}
++
++			total[i]++;
++		}
++	}
++
++	spin_lock_irqsave(&cc->cc_lock, flags);
++	for (i = 0; i < NUM_TX_QUEUES; i++) {
++		cc->tx_queue_count[i] -= total[i];
++		if (lnk->wlvif)
++			lnk->wlvif->tx_queue_count[i] -= total[i];
++	}
++	spin_unlock_irqrestore(&cc->cc_lock, flags);
++
++	cc33xx_handle_tx_low_watermark(cc);
++}
++
++/* caller must hold cc->mutex and TX must be stopped */
++void cc33xx_tx_reset_wlvif(struct cc33xx *cc, struct cc33xx_vif *wlvif)
++{
++	int i;
++
++	/* TX failure */
++	for_each_set_bit(i, wlvif->links_map, CC33XX_MAX_LINKS) {
++		if (wlvif->bss_type == BSS_TYPE_AP_BSS &&
++		    i != wlvif->ap.bcast_hlid &&
++		    i != wlvif->ap.global_hlid) {
++			/* this calls cc33xx_clear_link */
++			cc33xx_free_sta(cc, wlvif, i);
++		} else {
++			u8 hlid = i;
++
++			cc33xx_clear_link(cc, wlvif, &hlid);
++		}
++	}
++
++	wlvif->last_tx_hlid = 0;
++
++	for (i = 0; i < NUM_TX_QUEUES; i++)
++		wlvif->tx_queue_count[i] = 0;
++}
++
++int cc33xx_tx_total_queue_count(struct cc33xx *cc)
++{
++	int i, count = 0;
++
++	for (i = 0; i < NUM_TX_QUEUES; i++)
++		count += cc->tx_queue_count[i];
++
++	return count;
++}
++
++/* caller must hold cc->mutex and TX must be stopped */
++void cc33xx_tx_reset(struct cc33xx *cc)
++{
++	int i;
++	struct sk_buff *skb;
++	struct ieee80211_tx_info *info;
++
++	/* only reset the queues if something bad happened */
++	if (cc33xx_tx_total_queue_count(cc) != 0) {
++		for (i = 0; i < CC33XX_MAX_LINKS; i++)
++			cc33xx_tx_reset_link_queues(cc, i);
++
++		for (i = 0; i < NUM_TX_QUEUES; i++)
++			cc->tx_queue_count[i] = 0;
++	}
++
++	/* Make sure the driver is at a consistent state, in case this
++	 * function is called from a context other than interface removal.
++	 * This call will always wake the TX queues.
++	 */
++	cc33xx_handle_tx_low_watermark(cc);
++
++	for (i = 0; i < CC33XX_NUM_TX_DESCRIPTORS; i++) {
++		if (!cc->tx_frames[i])
++			continue;
++
++		skb = cc->tx_frames[i];
++		cc33xx_free_tx_id(cc, i);
++		cc33xx_debug(DEBUG_TX, "freeing skb 0x%p", skb);
++
++		if (!cc33xx_is_dummy_packet(cc, skb)) {
++			/* Remove private headers before passing the skb to
++			 * mac80211
++			 */
++			info = IEEE80211_SKB_CB(skb);
++			skb_pull(skb, sizeof(struct cc33xx_tx_hw_descr));
++			if ((cc->quirks & CC33XX_QUIRK_TKIP_HEADER_SPACE) &&
++			    info->control.hw_key &&
++			    info->control.hw_key->cipher ==
++			    WLAN_CIPHER_SUITE_TKIP) {
++				int hdrlen = ieee80211_get_hdrlen_from_skb(skb);
++
++				memmove(skb->data + CC33XX_EXTRA_SPACE_TKIP,
++					skb->data, hdrlen);
++				skb_pull(skb, CC33XX_EXTRA_SPACE_TKIP);
++			}
++
++			info->status.rates[0].idx = -1;
++			info->status.rates[0].count = 0;
++
++			ieee80211_tx_status_ni(cc->hw, skb);
++		}
++	}
++}
++
++#define CC33XX_TX_FLUSH_TIMEOUT 500000
++
++/* caller must *NOT* hold cc->mutex */
++void cc33xx_tx_flush(struct cc33xx *cc)
++{
++	unsigned long timeout, start_time;
++	int i;
++
++	start_time = jiffies;
++	timeout = start_time + usecs_to_jiffies(CC33XX_TX_FLUSH_TIMEOUT);
++
++	/* only one flush should be in progress, for consistent queue state */
++	mutex_lock(&cc->flush_mutex);
++
++	mutex_lock(&cc->mutex);
++	if (cc->tx_frames_cnt == 0 && cc33xx_tx_total_queue_count(cc) == 0) {
++		mutex_unlock(&cc->mutex);
++		goto out;
++	}
++
++	cc33xx_stop_queues(cc, CC33XX_QUEUE_STOP_REASON_FLUSH);
++
++	while (!time_after(jiffies, timeout)) {
++		cc33xx_debug(DEBUG_MAC80211, "flushing tx buffer: %d %d",
++			     cc->tx_frames_cnt,
++			     cc33xx_tx_total_queue_count(cc));
++
++		/* force Tx and give the driver some time to flush data */
++		mutex_unlock(&cc->mutex);
++		if (cc33xx_tx_total_queue_count(cc))
++			cc33xx_tx_work(&cc->tx_work);
++		msleep(20);
++		mutex_lock(&cc->mutex);
++
++		if (cc->tx_frames_cnt == 0 && cc33xx_tx_total_queue_count(cc) == 0) {
++			cc33xx_debug(DEBUG_MAC80211, "tx flush took %d ms",
++				     jiffies_to_msecs(jiffies - start_time));
++			goto out_wake;
++		}
++	}
++
++	cc33xx_warning("Unable to flush all TX buffers, timed out (timeout %d ms",
++		       CC33XX_TX_FLUSH_TIMEOUT / 1000);
++
++	/* forcibly flush all Tx buffers on our queues */
++	for (i = 0; i < CC33XX_MAX_LINKS; i++)
++		cc33xx_tx_reset_link_queues(cc, i);
++
++out_wake:
++	cc33xx_wake_queues(cc, CC33XX_QUEUE_STOP_REASON_FLUSH);
++	mutex_unlock(&cc->mutex);
++out:
++	mutex_unlock(&cc->flush_mutex);
++}
++
++u32 cc33xx_tx_min_rate_get(struct cc33xx *cc, u32 rate_set)
++{
++	if (WARN_ON(!rate_set))
++		return 0;
++
++	return BIT(__ffs(rate_set));
++}
++
++void cc33xx_stop_queue_locked(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			      u8 queue, enum cc33xx_queue_stop_reason reason)
++{
++	int hwq = cc33xx_tx_get_mac80211_queue(wlvif, queue);
++	bool stopped = !!cc->queue_stop_reasons[hwq];
++
++	/* queue should not be stopped for this reason */
++	WARN_ON_ONCE(test_and_set_bit(reason, &cc->queue_stop_reasons[hwq]));
++
++	if (stopped)
++		return;
++
++	ieee80211_stop_queue(cc->hw, hwq);
++}
++
++void cc33xx_stop_queues(struct cc33xx *cc,
++			enum cc33xx_queue_stop_reason reason)
++{
++	int i;
++	unsigned long flags;
++
++	spin_lock_irqsave(&cc->cc_lock, flags);
++
++	/* mark all possible queues as stopped */
++	for (i = 0; i < CC33XX_NUM_MAC_ADDRESSES * NUM_TX_QUEUES; i++) {
++		WARN_ON_ONCE(test_and_set_bit(reason,
++					      &cc->queue_stop_reasons[i]));
++	}
++
++	/* use the global version to make sure all vifs in mac80211 we don't
++	 * know are stopped.
++	 */
++	ieee80211_stop_queues(cc->hw);
++
++	spin_unlock_irqrestore(&cc->cc_lock, flags);
++}
++
++void cc33xx_wake_queues(struct cc33xx *cc,
++			enum cc33xx_queue_stop_reason reason)
++{
++	int i;
++	unsigned long flags;
++
++	spin_lock_irqsave(&cc->cc_lock, flags);
++
++	/* mark all possible queues as awake */
++	for (i = 0; i < CC33XX_NUM_MAC_ADDRESSES * NUM_TX_QUEUES; i++) {
++		WARN_ON_ONCE(!test_and_clear_bit(reason,
++						 &cc->queue_stop_reasons[i]));
++	}
++
++	/* use the global version to make sure all vifs in mac80211 we don't
++	 * know are woken up.
++	 */
++	ieee80211_wake_queues(cc->hw);
++
++	spin_unlock_irqrestore(&cc->cc_lock, flags);
++}
++
++bool cc33xx_is_queue_stopped_by_reason(struct cc33xx *cc,
++				       struct cc33xx_vif *wlvif, u8 queue,
++				       enum cc33xx_queue_stop_reason reason)
++{
++	unsigned long flags;
++	bool stopped;
++
++	spin_lock_irqsave(&cc->cc_lock, flags);
++	stopped = cc33xx_is_queue_stopped_by_reason_locked(cc, wlvif, queue,
++							   reason);
++	spin_unlock_irqrestore(&cc->cc_lock, flags);
++
++	return stopped;
++}
++
++bool cc33xx_is_queue_stopped_by_reason_locked(struct cc33xx *cc,
++					      struct cc33xx_vif *wlvif, u8 queue,
++				       enum cc33xx_queue_stop_reason reason)
++{
++	int hwq = cc33xx_tx_get_mac80211_queue(wlvif, queue);
++
++	assert_spin_locked(&cc->cc_lock);
++	return test_bit(reason, &cc->queue_stop_reasons[hwq]);
++}
++
++bool cc33xx_is_queue_stopped_locked(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++				    u8 queue)
++{
++	int hwq = cc33xx_tx_get_mac80211_queue(wlvif, queue);
++
++	assert_spin_locked(&cc->cc_lock);
++	return !!cc->queue_stop_reasons[hwq];
++}
++
++static void cc33xx_tx_complete_packet(struct cc33xx *cc, u8 tx_stat_byte,
++				      struct core_fw_status *core_fw_status)
++{
++	struct ieee80211_tx_info *info;
++	struct sk_buff *skb;
++	int id = tx_stat_byte & CC33XX_TX_STATUS_DESC_ID_MASK;
++	bool tx_success;
++	struct cc33xx_tx_hw_descr *tx_desc;
++	u16 desc_session_idx;
++
++	/* check for id legality */
++	if (unlikely(id >= CC33XX_NUM_TX_DESCRIPTORS ||
++		     !cc->tx_frames[id])) {
++		cc33xx_warning("illegal id in tx completion: %d", id);
++
++		print_hex_dump(KERN_DEBUG, "fw_info local:",
++			       DUMP_PREFIX_OFFSET, 16, 4, (u8 *)(core_fw_status),
++			       sizeof(struct core_fw_status), false);
++
++		cc33xx_queue_recovery_work(cc);
++		return;
++	}
++
++	/* a zero bit indicates Tx success */
++	tx_success = !(tx_stat_byte & BIT(CC33XX_TX_STATUS_STAT_BIT_IDX));
++
++	skb = cc->tx_frames[id];
++	info = IEEE80211_SKB_CB(skb);
++	tx_desc = (struct cc33xx_tx_hw_descr *)skb->data;
++
++	if (cc33xx_is_dummy_packet(cc, skb)) {
++		cc33xx_free_tx_id(cc, id);
++		return;
++	}
++
++	/* update the TX status info */
++	if (tx_success && !(info->flags & IEEE80211_TX_CTL_NO_ACK))
++		info->flags |= IEEE80211_TX_STAT_ACK;
++
++	info->status.rates[0].count = 1; /* no data about retries */
++	info->status.ack_signal = -1;
++
++	if (!tx_success)
++		cc->stats.retry_count++;
++
++	/* remove private header from packet */
++	skb_pull(skb, sizeof(struct cc33xx_tx_hw_descr));
++
++	/* remove TKIP header space if present */
++	if ((cc->quirks & CC33XX_QUIRK_TKIP_HEADER_SPACE) &&
++	    info->control.hw_key &&
++	    info->control.hw_key->cipher == WLAN_CIPHER_SUITE_TKIP) {
++		int hdrlen = ieee80211_get_hdrlen_from_skb(skb);
++
++		memmove(skb->data + CC33XX_EXTRA_SPACE_TKIP, skb->data, hdrlen);
++		skb_pull(skb, CC33XX_EXTRA_SPACE_TKIP);
++	}
++
++	cc33xx_debug(DEBUG_TX,
++		     "tx status id %u skb 0x%p success %d, tx_memblocks %d",
++		     id, skb, tx_success, tx_desc->cc33xx_mem.total_mem_blocks);
++
++	/**
++	 * in order to update the memory management
++	 * we should have total_blocks, ac, and hlid
++	 */
++	cc->tx_blocks_available += tx_desc->cc33xx_mem.total_mem_blocks;
++	cc->tx_allocated_blocks -= tx_desc->cc33xx_mem.total_mem_blocks;
++	/* per queue */
++
++	/* prevent wrap-around in freed-packets counter */
++	cc->tx_allocated_pkts[tx_desc->ac]--;
++
++	/* per link */
++	desc_session_idx = (le16_to_cpu(tx_desc->tx_attr) & TX_HW_ATTR_SESSION_COUNTER) >>
++					TX_HW_ATTR_OFST_SESSION_COUNTER;
++
++	if (cc->session_ids[tx_desc->hlid] == desc_session_idx)
++		cc->links[tx_desc->hlid].allocated_pkts--;
++
++	cc33xx_free_tx_id(cc, id);
++
++	/* new mem blocks are available now */
++	clear_bit(CC33XX_FLAG_FW_TX_BUSY, &cc->flags);
++
++	/* return the packet to the stack */
++	skb_queue_tail(&cc->deferred_tx_queue, skb);
++	queue_work(cc->freezable_wq, &cc->netstack_work);
++}
++
++void cc33xx_tx_immediate_complete(struct cc33xx *cc)
++{
++	u8 tx_result_queue_index;
++	struct core_fw_status core_fw_status;
++	u8 i;
++
++	claim_core_status_lock(cc);
++	memcpy(&core_fw_status, &cc->core_status->fw_info,
++	       sizeof(struct core_fw_status));
++
++	tx_result_queue_index = cc->core_status->fw_info.tx_result_queue_index;
++	/* Lock guarantees we shadow tx_result_queue_index NOT during
++	 * an active transaction. Subsequent references to fw_info can be done
++	 * without locking as long we do not pass this index.
++	 */
++	release_core_status_lock(cc);
++
++	cc33xx_debug(DEBUG_TX, "last released desc = %d, current idx = %d",
++		     cc->last_fw_rls_idx, tx_result_queue_index);
++
++	/* nothing to do here */
++	if (cc->last_fw_rls_idx == tx_result_queue_index)
++		return;
++
++	/* freed Tx descriptors */
++
++	if (tx_result_queue_index >= TX_RESULT_QUEUE_SIZE) {
++		cc33xx_error("invalid desc release index %d",
++			     tx_result_queue_index);
++		WARN_ON(1);
++		return;
++	}
++
++	cc33xx_debug(DEBUG_TX, "TX result queue! priv last fw idx %d, current resut index %d ",
++		     cc->last_fw_rls_idx, tx_result_queue_index);
++
++	for (i = cc->last_fw_rls_idx; i != tx_result_queue_index;
++	     i = (i + 1) % TX_RESULT_QUEUE_SIZE) {
++		cc33xx_tx_complete_packet(cc, core_fw_status.tx_result_queue[i],
++					  &core_fw_status);
++	}
++
++	cc->last_fw_rls_idx = tx_result_queue_index;
++}
+diff --git a/drivers/net/wireless/ti/cc33xx/tx.h b/drivers/net/wireless/ti/cc33xx/tx.h
+new file mode 100644
+index 000000000000..9062d50c7c8e
+--- /dev/null
++++ b/drivers/net/wireless/ti/cc33xx/tx.h
+@@ -0,0 +1,160 @@
 +/* SPDX-License-Identifier: GPL-2.0-only
 + *
 + * Copyright (C) 2022-2024 Texas Instruments Incorporated - https://www.ti.com/
 + */
 +
-+#ifndef __CONF_H__
-+#define __CONF_H__
++#ifndef __TX_H__
++#define __TX_H__
 +
-+struct cc33xx_conf_header {
-+	__le32 magic;
-+	__le32 version;
-+	__le32 checksum;
++#define CC33XX_TX_HW_BLOCK_SPARE        1
++/* for special cases - namely, TKIP and GEM */
++#define CC33XX_TX_HW_EXTRA_BLOCK_SPARE  2
++#define CC33XX_TX_HW_BLOCK_SIZE         256
++
++#define CC33XX_TX_STATUS_DESC_ID_MASK    0x7F
++#define CC33XX_TX_STATUS_STAT_BIT_IDX    7
++
++/* Indicates this TX HW frame is not padded to SDIO block size */
++#define CC33XX_TX_CTRL_NOT_PADDED	BIT(7)
++
++#define TX_HW_MGMT_PKT_LIFETIME_TU       2000
++#define TX_HW_AP_MODE_PKT_LIFETIME_TU    8000
++
++#define TX_HW_ATTR_SESSION_COUNTER       (BIT(2) | BIT(3) | BIT(4))
++#define TX_HW_ATTR_TX_DUMMY_REQ          BIT(13)
++#define TX_HW_ATTR_HOST_ENCRYPT          BIT(14)
++#define TX_HW_ATTR_EAPOL_FRAME           BIT(15)
++
++#define TX_HW_ATTR_OFST_SESSION_COUNTER  2
++#define TX_HW_ATTR_OFST_RATE_POLICY      5
++
++#define CC33XX_TX_ALIGN_TO 4
++#define CC33XX_EXTRA_SPACE_TKIP 4
++#define CC33XX_EXTRA_SPACE_AES  8
++#define CC33XX_EXTRA_SPACE_MAX  8
++
++#define CC33XX_TX_EXTRA_HEADROOM	\
++		(sizeof(struct cc33xx_tx_hw_descr) + IEEE80211_HT_CTL_LEN)
++
++/* Used for management frames and dummy packets */
++#define CC33XX_TID_MGMT 7
++
++/* stop a ROC for pending authentication reply after this time (ms) */
++#define CC33XX_PEND_AUTH_ROC_TIMEOUT     1000
++#define CC33xx_PEND_ROC_COMPLETE_TIMEOUT 2000
++
++struct cc33xx_tx_mem {
++	/* Total number of memory blocks allocated by the host for
++	 * this packet.
++	 */
++	u8 total_mem_blocks;
++
++	/* control bits
++	 */
++	u8 ctrl;
 +} __packed;
 +
-+#define CC33XX_CONF_MAGIC	0x10e100ca
-+#define CC33XX_CONF_VERSION	0x01070069
-+#define CC33XX_CONF_MASK	0x0000ffff
-+#define CC33X_CONF_SIZE	(sizeof(struct cc33xx_conf_file))
-+
-+enum {
-+	CONF_HW_BIT_RATE_1MBPS   = BIT(1),
-+	CONF_HW_BIT_RATE_2MBPS   = BIT(2),
-+	CONF_HW_BIT_RATE_5_5MBPS = BIT(3),
-+	CONF_HW_BIT_RATE_11MBPS  = BIT(4),
-+	CONF_HW_BIT_RATE_6MBPS   = BIT(5),
-+	CONF_HW_BIT_RATE_9MBPS   = BIT(6),
-+	CONF_HW_BIT_RATE_12MBPS  = BIT(7),
-+	CONF_HW_BIT_RATE_18MBPS  = BIT(8),
-+	CONF_HW_BIT_RATE_24MBPS  = BIT(9),
-+	CONF_HW_BIT_RATE_36MBPS  = BIT(10),
-+	CONF_HW_BIT_RATE_48MBPS  = BIT(11),
-+	CONF_HW_BIT_RATE_54MBPS  = BIT(12),
-+	CONF_HW_BIT_RATE_MCS_0   = BIT(13),
-+	CONF_HW_BIT_RATE_MCS_1   = BIT(14),
-+	CONF_HW_BIT_RATE_MCS_2   = BIT(15),
-+	CONF_HW_BIT_RATE_MCS_3   = BIT(16),
-+	CONF_HW_BIT_RATE_MCS_4   = BIT(17),
-+	CONF_HW_BIT_RATE_MCS_5   = BIT(18),
-+	CONF_HW_BIT_RATE_MCS_6   = BIT(19),
-+	CONF_HW_BIT_RATE_MCS_7   = BIT(20)
-+};
-+
-+enum {
-+	CONF_HW_RATE_INDEX_1MBPS      = 1,
-+	CONF_HW_RATE_INDEX_2MBPS      = 2,
-+	CONF_HW_RATE_INDEX_5_5MBPS    = 3,
-+	CONF_HW_RATE_INDEX_11MBPS     = 4,
-+	CONF_HW_RATE_INDEX_6MBPS      = 5,
-+	CONF_HW_RATE_INDEX_9MBPS      = 6,
-+	CONF_HW_RATE_INDEX_12MBPS     = 7,
-+	CONF_HW_RATE_INDEX_18MBPS     = 8,
-+	CONF_HW_RATE_INDEX_24MBPS     = 9,
-+	CONF_HW_RATE_INDEX_36MBPS     = 10,
-+	CONF_HW_RATE_INDEX_48MBPS     = 11,
-+	CONF_HW_RATE_INDEX_54MBPS     = 12,
-+	CONF_HW_RATE_INDEX_MCS0       = 13,
-+	CONF_HW_RATE_INDEX_MCS1       = 14,
-+	CONF_HW_RATE_INDEX_MCS2       = 15,
-+	CONF_HW_RATE_INDEX_MCS3       = 16,
-+	CONF_HW_RATE_INDEX_MCS4       = 17,
-+	CONF_HW_RATE_INDEX_MCS5       = 18,
-+	CONF_HW_RATE_INDEX_MCS6       = 19,
-+	CONF_HW_RATE_INDEX_MCS7       = 20,
-+
-+	CONF_HW_RATE_INDEX_MAX        = CONF_HW_RATE_INDEX_MCS7,
-+};
-+
-+enum {
-+	CONF_PREAMBLE_TYPE_SHORT	= 0,
-+	CONF_PREAMBLE_TYPE_LONG		= 1,
-+	CONF_PREAMBLE_TYPE_OFDM		= 2,
-+	CONF_PREAMBLE_TYPE_N_MIXED_MODE	= 3,
-+	CONF_PREAMBLE_TYPE_GREENFIELD	= 4,
-+	CONF_PREAMBLE_TYPE_AX_SU	= 5,
-+	CONF_PREAMBLE_TYPE_AX_MU	= 6,
-+	CONF_PREAMBLE_TYPE_AX_SU_ER	= 7,
-+	CONF_PREAMBLE_TYPE_AX_TB	= 8,
-+	CONF_PREAMBLE_TYPE_AX_TB_NDP_FB	= 9,
-+	CONF_PREAMBLE_TYPE_AC_VHT	= 10,
-+	CONF_PREAMBLE_TYPE_BE_EHT_MU	= 13,
-+	CONF_PREAMBLE_TYPE_BE_EHT_TB	= 14,
-+	CONF_PREAMBLE_TYPE_INVALID	= 0xFF
-+};
-+
-+#define CONF_HW_RXTX_RATE_UNSUPPORTED 0xff
-+
-+enum conf_rx_queue_type {
-+	CONF_RX_QUEUE_TYPE_LOW_PRIORITY,  /* All except the high priority */
-+	CONF_RX_QUEUE_TYPE_HIGH_PRIORITY, /* Management and voice packets */
-+};
-+
-+struct cc33xx_clk_cfg {
-+	u32 n;
-+	u32 m;
-+	u32 p;
-+	u32 q;
-+	u8 swallow;
-+};
-+
-+struct conf_rx_settings {
-+	/* The maximum amount of time, in TU, before the
-+	 * firmware discards the MSDU.
-+	 *
-+	 * Range: 0 - 0xFFFFFFFF
-+	 */
-+	u32 rx_msdu_life_time;
-+
-+	/* Packet detection threshold in the PHY.
-+	 *
-+	 * FIXME: details unknown.
-+	 */
-+	u32 packet_detection_threshold;
-+
-+	/* The longest time the STA will wait to receive traffic from the AP
-+	 * after a PS-poll has been transmitted.
-+	 *
-+	 * Range: 0 - 200000
-+	 */
-+	u16 ps_poll_timeout;
-+	/* The longest time the STA will wait to receive traffic from the AP
-+	 * after a frame has been sent from an UPSD enabled queue.
-+	 *
-+	 * Range: 0 - 200000
-+	 */
-+	u16 upsd_timeout;
-+
-+	/* The number of octets in an MPDU, below which an RTS/CTS
-+	 * handshake is not performed.
-+	 *
-+	 * Range: 0 - 4096
-+	 */
-+	u16 rts_threshold;
-+
-+	/* The RX Clear Channel Assessment threshold in the PHY
-+	 * (the energy threshold).
-+	 *
-+	 * Range: ENABLE_ENERGY_D  == 0x140A
-+	 *        DISABLE_ENERGY_D == 0xFFEF
-+	 */
-+	u16 rx_cca_threshold;
-+
-+	/* Occupied Rx mem-blocks number which requires interrupting the host
-+	 * (0 = no buffering, 0xffff = disabled).
-+	 *
-+	 * Range: uint16_t
-+	 */
-+	u16 irq_blk_threshold;
-+
-+	/* Rx packets number which requires interrupting the host
-+	 * (0 = no buffering).
-+	 *
-+	 * Range: uint16_t
-+	 */
-+	u16 irq_pkt_threshold;
-+
-+	/* Max time in msec the FW may delay RX-Complete interrupt.
-+	 *
-+	 * Range: 1 - 100
-+	 */
-+	u16 irq_timeout;
-+
-+	/* The RX queue type.
-+	 *
-+	 * Range: RX_QUEUE_TYPE_RX_LOW_PRIORITY, RX_QUEUE_TYPE_RX_HIGH_PRIORITY,
-+	 */
-+	u8 queue_type;
-+} __packed;
-+
-+#define CONF_TX_MAX_RATE_CLASSES       10
-+
-+#define CONF_TX_RATE_MASK_UNSPECIFIED  0
-+#define CONF_TX_RATE_MASK_BASIC        (CONF_HW_BIT_RATE_1MBPS | \
-+					CONF_HW_BIT_RATE_2MBPS)
-+#define CONF_TX_RATE_RETRY_LIMIT       10
-+
-+/* basic rates for p2p operations (probe req/resp, etc.) */
-+#define CONF_TX_RATE_MASK_BASIC_P2P    CONF_HW_BIT_RATE_6MBPS
-+
-+/* Rates supported for data packets when operating as STA/AP. Note the absence
-+ * of the 22Mbps rate. There is a FW limitation on 12 rates so we must drop
-+ * one. The rate dropped is not mandatory under any operating mode.
++/* On cc33xx based devices, when TX packets are aggregated, each packet
++ * size must be aligned to the SDIO block size. The maximum block size
++ * is bounded by the type of the padded bytes field that is sent to the
++ * FW. The HW maximum block size is 256 bytes. We use 128 to utilize the
++ * SDIO built-in busy signal when the FIFO is full.
 + */
-+#define CONF_TX_ENABLED_RATES       (CONF_HW_BIT_RATE_1MBPS |    \
-+	CONF_HW_BIT_RATE_2MBPS | CONF_HW_BIT_RATE_5_5MBPS |      \
-+	CONF_HW_BIT_RATE_6MBPS | CONF_HW_BIT_RATE_9MBPS |        \
-+	CONF_HW_BIT_RATE_11MBPS | CONF_HW_BIT_RATE_12MBPS |      \
-+	CONF_HW_BIT_RATE_18MBPS | CONF_HW_BIT_RATE_24MBPS |      \
-+	CONF_HW_BIT_RATE_36MBPS | CONF_HW_BIT_RATE_48MBPS |      \
-+	CONF_HW_BIT_RATE_54MBPS)
++#define CC33XX_BUS_BLOCK_SIZE 128
 +
-+#define CONF_TX_CCK_RATES  (CONF_HW_BIT_RATE_1MBPS |		\
-+	CONF_HW_BIT_RATE_2MBPS | CONF_HW_BIT_RATE_5_5MBPS |	\
-+	CONF_HW_BIT_RATE_11MBPS)
++struct cc33xx_tx_hw_descr {
++	/* Length of packet in words, including descriptor+header+data */
++	__le16 length;
 +
-+#define CONF_TX_OFDM_RATES (CONF_HW_BIT_RATE_6MBPS |             \
-+	CONF_HW_BIT_RATE_12MBPS | CONF_HW_BIT_RATE_24MBPS |      \
-+	CONF_HW_BIT_RATE_36MBPS | CONF_HW_BIT_RATE_48MBPS |      \
-+	CONF_HW_BIT_RATE_54MBPS)
++	struct cc33xx_tx_mem cc33xx_mem;
 +
-+#define CONF_TX_MCS_RATES (CONF_HW_BIT_RATE_MCS_0 |              \
-+	CONF_HW_BIT_RATE_MCS_1 | CONF_HW_BIT_RATE_MCS_2 |        \
-+	CONF_HW_BIT_RATE_MCS_3 | CONF_HW_BIT_RATE_MCS_4 |        \
-+	CONF_HW_BIT_RATE_MCS_5 | CONF_HW_BIT_RATE_MCS_6 |        \
-+	CONF_HW_BIT_RATE_MCS_7)
-+
-+/* Default rates for management traffic when operating in AP mode. This
-+ * should be configured according to the basic rate set of the AP
-+ */
-+#define CONF_TX_AP_DEFAULT_MGMT_RATES  (CONF_HW_BIT_RATE_1MBPS | \
-+	CONF_HW_BIT_RATE_2MBPS | CONF_HW_BIT_RATE_5_5MBPS)
-+
-+/* default rates for working as IBSS (11b and OFDM) */
-+#define CONF_TX_IBSS_DEFAULT_RATES  (CONF_HW_BIT_RATE_1MBPS |       \
-+		CONF_HW_BIT_RATE_2MBPS | CONF_HW_BIT_RATE_5_5MBPS | \
-+		CONF_HW_BIT_RATE_11MBPS | CONF_TX_OFDM_RATES)
-+
-+struct conf_tx_rate_class {
-+	/* The rates enabled for this rate class.
-+	 *
-+	 * Range: CONF_HW_BIT_RATE_* bit mask
-+	 */
-+	u32 enabled_rates;
-+
-+	/* The dot11 short retry limit used for TX retries.
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 short_retry_limit;
-+
-+	/* The dot11 long retry limit used for TX retries.
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 long_retry_limit;
-+
-+	/* Flags controlling the attributes of TX transmission.
-+	 *
-+	 * Range: bit 0: Truncate - when set, FW attempts to send a frame stop
-+	 *               when the total valid per-rate attempts have
-+	 *               been exhausted; otherwise transmissions
-+	 *               will continue at the lowest available rate
-+	 *               until the appropriate one of the
-+	 *               short_retry_limit, long_retry_limit,
-+	 *               dot11_max_transmit_msdu_life_time, or
-+	 *               max_tx_life_time, is exhausted.
-+	 *            1: Preamble Override - indicates if the preamble type
-+	 *               should be used in TX.
-+	 *            2: Preamble Type - the type of the preamble to be used by
-+	 *               the policy (0 - long preamble, 1 - short preamble.
-+	 */
-+	u8 aflags;
-+} __packed;
-+
-+#define CONF_TX_MAX_AC_COUNT 4
-+
-+/* Slot number setting to start transmission at PIFS interval */
-+#define CONF_TX_AIFS_PIFS 1
-+/* Slot number setting to start transmission at DIFS interval normal
-+ * DCF access
-+ */
-+#define CONF_TX_AIFS_DIFS 2
-+
-+enum conf_tx_ac {
-+	CONF_TX_AC_BE = 0,         /* best effort / legacy */
-+	CONF_TX_AC_BK = 1,         /* background */
-+	CONF_TX_AC_VI = 2,         /* video */
-+	CONF_TX_AC_VO = 3,         /* voice */
-+	CONF_TX_AC_CTS2SELF = 4,   /* fictitious AC, follows AC_VO */
-+	CONF_TX_AC_ANY_TID = 0xff
-+};
-+
-+struct conf_sig_weights {
-+	/* RSSI from beacons average weight.
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 rssi_bcn_avg_weight;
-+
-+	/* RSSI from data average weight.
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 rssi_pkt_avg_weight;
-+
-+	/* SNR from beacons average weight.
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 snr_bcn_avg_weight;
-+
-+	/* SNR from data average weight.
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 snr_pkt_avg_weight;
-+} __packed;
-+
-+struct conf_tx_ac_category {
-+	/* The AC class identifier.
-+	 *
-+	 * Range: enum conf_tx_ac
-+	 */
++	/* Packet identifier used also in the Tx-Result. */
++	u8 id;
++	/* The packet TID value (as User-Priority) */
++	u8 tid;
++	/* host link ID (HLID) */
++	u8 hlid;
 +	u8 ac;
-+
-+	/* The contention window minimum size (in slots) for the access
-+	 * class.
-+	 *
-+	 * Range: uint8_t
++	/* Max delay in TUs until transmission. The last device time the
++	 * packet can be transmitted is: start_time + (1024 * life_time)
 +	 */
-+	u8 cw_min;
-+
-+	/* The contention window maximum size (in slots) for the access
-+	 * class.
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u16 cw_max;
-+
-+	/* The AIF value (in slots) for the access class.
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 aifsn;
-+
-+	/* The TX Op Limit (in microseconds) for the access class.
-+	 *
-+	 * Range: uint16_t
-+	 */
-+	u16 tx_op_limit;
-+
-+	/* Is the MU EDCA configured
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 is_mu_edca;
-+
-+	/*  The AIFSN value for the corresonding access class
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 mu_edca_aifs;
-+
-+	/* The ECWmin and ECWmax value is indicating contention window maximum
-+	 * size (in slots) for the access
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 mu_edca_ecw_min_max;
-+
-+	/* The MU EDCA timer (in microseconds) obtaining an EDCA TXOP
-+	 * for STA using MU EDCA parameters
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 mu_edca_timer;
++	__le16 life_time;
++	/* Bitwise fields - see TX_ATTR... definitions above. */
++	__le16 tx_attr;
 +} __packed;
 +
-+#define CONF_TX_MAX_TID_COUNT 8
++struct cc33xx_tx_hw_res_descr {
++	/* Packet Identifier - same value used in the Tx descriptor.*/
++	u8 id;
++	/* The status of the transmission, indicating success or one of
++	 * several possible reasons for failure.
++	 */
++	u8 status;
++	/* Total air access duration including all retrys and overheads.*/
++	__le16 medium_usage;
++	/* The time passed from host xfer to Tx-complete.*/
++	__le32 fw_handling_time;
++	/* Total media delay
++	 * (from 1st EDCA AIFS counter until TX Complete).
++	 */
++	__le32 medium_delay;
++	/* LS-byte of last TKIP seq-num (saved per AC for recovery). */
++	u8 tx_security_sequence_number_lsb;
++	/* Retry count - number of transmissions without successful ACK.*/
++	u8 ack_failures;
++	/* The rate that succeeded getting ACK
++	 * (Valid only if status=SUCCESS).
++	 */
++	u8 rate_class_index;
++	/* for 4-byte alignment. */
++	u8 spare;
++} __packed;
 +
-+/* Allow TX BA on all TIDs but 6,7. These are currently reserved in the FW */
-+#define CONF_TX_BA_ENABLED_TID_BITMAP 0x3F
-+
-+enum {
-+	CONF_CHANNEL_TYPE_DCF = 0,   /* DC/LEGACY*/
-+	CONF_CHANNEL_TYPE_EDCF = 1,  /* EDCA*/
-+	CONF_CHANNEL_TYPE_HCCA = 2,  /* HCCA*/
++enum cc33xx_queue_stop_reason {
++	CC33XX_QUEUE_STOP_REASON_WATERMARK,
++	CC33XX_QUEUE_STOP_REASON_FW_RESTART,
++	CC33XX_QUEUE_STOP_REASON_FLUSH,
++	CC33XX_QUEUE_STOP_REASON_SPARE_BLK, /* 18xx specific */
 +};
 +
-+enum {
-+	CONF_PS_SCHEME_LEGACY = 0,
-+	CONF_PS_SCHEME_UPSD_TRIGGER = 1,
-+	CONF_PS_SCHEME_LEGACY_PSPOLL = 2,
-+	CONF_PS_SCHEME_SAPSD = 3,
-+};
-+
-+enum {
-+	CONF_ACK_POLICY_LEGACY = 0,
-+	CONF_ACK_POLICY_NO_ACK = 1,
-+	CONF_ACK_POLICY_BLOCK = 2,
-+};
-+
-+struct conf_tx_tid {
-+	u8 queue_id;
-+	u8 channel_type;
-+	u8 tsid;
-+	u8 ps_scheme;
-+	u8 ack_policy;
-+	u32 apsd_conf[2];
-+} __packed;
-+
-+struct conf_tx_settings {
-+	/* The TX ED value for TELEC Enable/Disable.
-+	 *
-+	 * Range: 0, 1
-+	 */
-+	u8 tx_energy_detection;
-+
-+	/* Configuration for rate classes for TX (currently only one
-+	 * rate class supported). Used in non-AP mode.
-+	 */
-+	struct conf_tx_rate_class sta_rc_conf;
-+
-+	/* Configuration for access categories for TX rate control.
-+	 */
-+	u8 ac_conf_count;
-+	/*struct conf_tx_ac_category ac_conf[CONF_TX_MAX_AC_COUNT];*/
-+	struct conf_tx_ac_category ac_conf0;
-+	struct conf_tx_ac_category ac_conf1;
-+	struct conf_tx_ac_category ac_conf2;
-+	struct conf_tx_ac_category ac_conf3;
-+
-+	/* AP-mode - allow this number of TX retries to a station before an
-+	 * event is triggered from FW.
-+	 * In AP-mode the hlids of unreachable stations are given in the
-+	 * "sta_tx_retry_exceeded" member in the event mailbox.
-+	 */
-+	u8 max_tx_retries;
-+
-+	/* AP-mode - after this number of seconds a connected station is
-+	 * considered inactive.
-+	 */
-+	u16 ap_aging_period;
-+
-+	/* Configuration for TID parameters.
-+	 */
-+	u8 tid_conf_count;
-+	/* struct conf_tx_tid tid_conf[]; */
-+	struct conf_tx_tid tid_conf0;
-+	struct conf_tx_tid tid_conf1;
-+	struct conf_tx_tid tid_conf2;
-+	struct conf_tx_tid tid_conf3;
-+	struct conf_tx_tid tid_conf4;
-+	struct conf_tx_tid tid_conf5;
-+	struct conf_tx_tid tid_conf6;
-+	struct conf_tx_tid tid_conf7;
-+
-+	/* The TX fragmentation threshold.
-+	 *
-+	 * Range: uint16_t
-+	 */
-+	u16 frag_threshold;
-+
-+	/* Max time in msec the FW may delay frame TX-Complete interrupt.
-+	 *
-+	 * Range: uint16_t
-+	 */
-+	u16 tx_compl_timeout;
-+
-+	/* Completed TX packet count which requires to issue the TX-Complete
-+	 * interrupt.
-+	 *
-+	 * Range: uint16_t
-+	 */
-+	u16 tx_compl_threshold;
-+
-+	/* The rate used for control messages and scanning on the 2.4GHz band
-+	 *
-+	 * Range: CONF_HW_BIT_RATE_* bit mask
-+	 */
-+	u32 basic_rate;
-+
-+	/* The rate used for control messages and scanning on the 5GHz band
-+	 *
-+	 * Range: CONF_HW_BIT_RATE_* bit mask
-+	 */
-+	u32 basic_rate_5;
-+
-+	/* TX retry limits for templates
-+	 */
-+	u8 tmpl_short_retry_limit;
-+	u8 tmpl_long_retry_limit;
-+
-+	/* Time in ms for Tx watchdog timer to expire */
-+	u32 tx_watchdog_timeout;
-+
-+	/* when a slow link has this much packets pending, it becomes a low
-+	 * priority link, scheduling-wise
-+	 */
-+	u8 slow_link_thold;
-+
-+	/* when a fast link has this much packets pending, it becomes a low
-+	 * priority link, scheduling-wise
-+	 */
-+	u8 fast_link_thold;
-+} __packed;
-+
-+enum {
-+	CONF_WAKE_UP_EVENT_BEACON    = 0x00, /* Wake on every Beacon */
-+	CONF_WAKE_UP_EVENT_DTIM      = 0x01, /* Wake on every DTIM */
-+	CONF_WAKE_UP_EVENT_N_DTIM    = 0x02, /* Wake every Nth DTIM */
-+	CONF_WAKE_UP_EVENT_LIMIT     = CONF_WAKE_UP_EVENT_N_DTIM,
-+	/* Not supported: */
-+	CONF_WAKE_UP_EVENT_N_BEACONS = 0x03, /* Wake every Nth beacon */
-+	CONF_WAKE_UP_EVENT_BITS_MASK = 0x0F
-+};
-+
-+#define CONF_MAX_BCN_FILT_IE_COUNT 32
-+
-+#define CONF_BCN_RULE_PASS_ON_CHANGE         BIT(0)
-+#define CONF_BCN_RULE_PASS_ON_APPEARANCE     BIT(1)
-+
-+#define CONF_BCN_IE_OUI_LEN    3
-+#define CONF_BCN_IE_VER_LEN    2
-+
-+struct conf_bcn_filt_rule {
-+	/* IE number to which to associate a rule.
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 ie;
-+
-+	/* Rule to associate with the specific ie.
-+	 *
-+	 * Range: CONF_BCN_RULE_PASS_ON_*
-+	 */
-+	u8 rule;
-+
-+	/* OUI for the vendor specifie IE (221)
-+	 */
-+	u8 oui[3];
-+
-+	/* Type for the vendor specifie IE (221)
-+	 */
-+	u8 type;
-+
-+	/* Version for the vendor specifie IE (221)
-+	 */
-+	u8 version[2];
-+} __packed;
-+
-+enum conf_bcn_filt_mode {
-+	CONF_BCN_FILT_MODE_DISABLED = 0,
-+	CONF_BCN_FILT_MODE_ENABLED = 1
-+};
-+
-+enum conf_bet_mode {
-+	CONF_BET_MODE_DISABLE = 0,
-+	CONF_BET_MODE_ENABLE = 1,
-+};
-+
-+struct conf_conn_settings {
-+	/* Enable or disable the beacon filtering.
-+	 *
-+	 * Range: CONF_BCN_FILT_MODE_*
-+	 */
-+	u8 bcn_filt_mode;
-+
-+	/* Configure Beacon filter pass-thru rules.
-+	 */
-+	u8 bcn_filt_ie_count;
-+	/*struct conf_bcn_filt_rule bcn_filt_ie[CONF_MAX_BCN_FILT_IE_COUNT];*/
-+	/* struct conf_bcn_filt_rule bcn_filt_ie[32]; */
-+	struct conf_bcn_filt_rule bcn_filt_ie0;
-+	struct conf_bcn_filt_rule bcn_filt_ie1;
-+	struct conf_bcn_filt_rule bcn_filt_ie2;
-+	struct conf_bcn_filt_rule bcn_filt_ie3;
-+	struct conf_bcn_filt_rule bcn_filt_ie4;
-+	struct conf_bcn_filt_rule bcn_filt_ie5;
-+	struct conf_bcn_filt_rule bcn_filt_ie6;
-+	struct conf_bcn_filt_rule bcn_filt_ie7;
-+	struct conf_bcn_filt_rule bcn_filt_ie8;
-+	struct conf_bcn_filt_rule bcn_filt_ie9;
-+	struct conf_bcn_filt_rule bcn_filt_ie10;
-+	struct conf_bcn_filt_rule bcn_filt_ie11;
-+	struct conf_bcn_filt_rule bcn_filt_ie12;
-+	struct conf_bcn_filt_rule bcn_filt_ie13;
-+	struct conf_bcn_filt_rule bcn_filt_ie14;
-+	struct conf_bcn_filt_rule bcn_filt_ie15;
-+	struct conf_bcn_filt_rule bcn_filt_ie16;
-+	struct conf_bcn_filt_rule bcn_filt_ie17;
-+	struct conf_bcn_filt_rule bcn_filt_ie18;
-+	struct conf_bcn_filt_rule bcn_filt_ie19;
-+	struct conf_bcn_filt_rule bcn_filt_ie20;
-+	struct conf_bcn_filt_rule bcn_filt_ie21;
-+	struct conf_bcn_filt_rule bcn_filt_ie22;
-+	struct conf_bcn_filt_rule bcn_filt_ie23;
-+	struct conf_bcn_filt_rule bcn_filt_ie24;
-+	struct conf_bcn_filt_rule bcn_filt_ie25;
-+	struct conf_bcn_filt_rule bcn_filt_ie26;
-+	struct conf_bcn_filt_rule bcn_filt_ie27;
-+	struct conf_bcn_filt_rule bcn_filt_ie28;
-+	struct conf_bcn_filt_rule bcn_filt_ie29;
-+	struct conf_bcn_filt_rule bcn_filt_ie30;
-+	struct conf_bcn_filt_rule bcn_filt_ie31;
-+
-+	/* The number of consecutive beacons to lose, before the firmware
-+	 * becomes out of synch.
-+	 *
-+	 * Range: uint32_t
-+	 */
-+	u32 synch_fail_thold;
-+
-+	/* After out-of-synch, the number of TU's to wait without a further
-+	 * received beacon (or probe response) before issuing the BSS_EVENT_LOSE
-+	 * event.
-+	 *
-+	 * Range: uint32_t
-+	 */
-+	u32 bss_lose_timeout;
-+
-+	/* Beacon receive timeout.
-+	 *
-+	 * Range: uint32_t
-+	 */
-+	u32 beacon_rx_timeout;
-+
-+	/* Broadcast receive timeout.
-+	 *
-+	 * Range: uint32_t
-+	 */
-+	u32 broadcast_timeout;
-+
-+	/* Enable/disable reception of broadcast packets in power save mode
-+	 *
-+	 * Range: 1 - enable, 0 - disable
-+	 */
-+	u8 rx_broadcast_in_ps;
-+
-+	/* Consecutive PS Poll failures before sending event to driver
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u8 ps_poll_threshold;
-+
-+	/* Configuration of signal average weights.
-+	 */
-+	struct conf_sig_weights sig_weights;
-+
-+	/* Specifies if beacon early termination procedure is enabled or
-+	 * disabled.
-+	 *
-+	 * Range: CONF_BET_MODE_*
-+	 */
-+	u8 bet_enable;
-+
-+	/* Specifies the maximum number of consecutive beacons that may be
-+	 * early terminated. After this number is reached at least one full
-+	 * beacon must be correctly received in FW before beacon ET
-+	 * resumes.
-+	 *
-+	 * Range 0 - 255
-+	 */
-+	u8 bet_max_consecutive;
-+
-+	/* Specifies the maximum number of times to try PSM entry if it fails
-+	 * (if sending the appropriate null-func message fails.)
-+	 *
-+	 * Range 0 - 255
-+	 */
-+	u8 psm_entry_retries;
-+
-+	/* Specifies the maximum number of times to try PSM exit if it fails
-+	 * (if sending the appropriate null-func message fails.)
-+	 *
-+	 * Range 0 - 255
-+	 */
-+	u8 psm_exit_retries;
-+
-+	/* Specifies the maximum number of times to try transmit the PSM entry
-+	 * null-func frame for each PSM entry attempt
-+	 *
-+	 * Range 0 - 255
-+	 */
-+	u8 psm_entry_nullfunc_retries;
-+
-+	/* Specifies the dynamic PS timeout in ms that will be used
-+	 * by the FW when in AUTO_PS mode
-+	 */
-+	u16 dynamic_ps_timeout;
-+
-+	/* Specifies whether dynamic PS should be disabled and PSM forced.
-+	 * This is required for certain WiFi certification tests.
-+	 */
-+	u8 forced_ps;
-+
-+	/* Specifies the interval of the connection keep-alive null-func
-+	 * frame in ms.
-+	 *
-+	 * Range: 1000 - 3600000
-+	 */
-+	u32 keep_alive_interval;
-+
-+	/* Maximum listen interval supported by the driver in units of beacons.
-+	 *
-+	 * Range: uint16_t
-+	 */
-+	u8 max_listen_interval;
-+
-+	/* Default sleep authorization for a new STA interface. This determines
-+	 * whether we can go to ELP.
-+	 */
-+	u8 sta_sleep_auth;
-+
-+	/* Default RX BA Activity filter configuration
-+	 */
-+	u8 suspend_rx_ba_activity;
-+} __packed;
-+
-+struct conf_itrim_settings {
-+	/* enable dco itrim */
-+	u8 enable;
-+
-+	/* moderation timeout in microsecs from the last TX */
-+	u32 timeout;
-+} __packed;
-+
-+enum conf_fast_wakeup {
-+	CONF_FAST_WAKEUP_ENABLE,
-+	CONF_FAST_WAKEUP_DISABLE,
-+};
-+
-+struct conf_pm_config_settings {
-+	/* Host clock settling time
-+	 *
-+	 * Range: 0 - 30000 us
-+	 */
-+	u32 host_clk_settling_time;
-+
-+	/* Host fast wakeup support
-+	 *
-+	 * Range: enum conf_fast_wakeup
-+	 */
-+	u8 host_fast_wakeup_support;
-+} __packed;
-+
-+struct conf_roam_trigger_settings {
-+	/* The minimum interval between two trigger events.
-+	 *
-+	 * Range: 0 - 60000 ms
-+	 */
-+	u16 trigger_pacing;
-+
-+	/* The weight for rssi/beacon average calculation
-+	 *
-+	 * Range: 0 - 255
-+	 */
-+	u8 avg_weight_rssi_beacon;
-+
-+	/* The weight for rssi/data frame average calculation
-+	 *
-+	 * Range: 0 - 255
-+	 */
-+	u8 avg_weight_rssi_data;
-+
-+	/* The weight for snr/beacon average calculation
-+	 *
-+	 * Range: 0 - 255
-+	 */
-+	u8 avg_weight_snr_beacon;
-+
-+	/* The weight for snr/data frame average calculation
-+	 *
-+	 * Range: 0 - 255
-+	 */
-+	u8 avg_weight_snr_data;
-+} __packed;
-+
-+struct conf_scan_settings {
-+	/* The minimum time to wait on each channel for active scans
-+	 * This value will be used whenever there's a connected interface.
-+	 *
-+	 * Range: uint32_t tu/1000
-+	 */
-+	u32 min_dwell_time_active;
-+
-+	/* The maximum time to wait on each channel for active scans
-+	 * This value will be currently used whenever there's a
-+	 * connected interface. It shouldn't exceed 30000 (~30ms) to avoid
-+	 * possible interference of voip traffic going on while scanning.
-+	 *
-+	 * Range: uint32_t tu/1000
-+	 */
-+	u32 max_dwell_time_active;
-+
-+	/* The minimum time to wait on each channel for active scans
-+	 * when it's possible to have longer scan dwell times.
-+	 * Currently this is used whenever we're idle on all interfaces.
-+	 * Longer dwell times improve detection of networks within a
-+	 * single scan.
-+	 *
-+	 * Range: uint32_t tu/1000
-+	 */
-+	u32 min_dwell_time_active_long;
-+
-+	/* The maximum time to wait on each channel for active scans
-+	 * when it's possible to have longer scan dwell times.
-+	 * See min_dwell_time_active_long
-+	 *
-+	 * Range: uint32_t tu/1000
-+	 */
-+	u32 max_dwell_time_active_long;
-+
-+	/* time to wait on the channel for passive scans (in TU/1000) */
-+	u32 dwell_time_passive;
-+
-+	/* time to wait on the channel for DFS scans (in TU/1000) */
-+	u32 dwell_time_dfs;
-+
-+	/* Number of probe requests to transmit on each active scan channel
-+	 *
-+	 * Range: uint8_t
-+	 */
-+	u16 num_probe_reqs;
-+
-+	/* Scan trigger (split scan) timeout. The FW will split the scan
-+	 * operation into slices of the given time and allow the FW to schedule
-+	 * other tasks in between.
-+	 *
-+	 * Range: uint32_t Microsecs
-+	 */
-+	u32 split_scan_timeout;
-+} __packed;
-+
-+struct conf_sched_scan_settings {
-+	/* The base time to wait on the channel for active scans (in TU/1000).
-+	 * The minimum dwell time is calculated according to this:
-+	 * min_dwell_time = base + num_of_probes_to_be_sent * delta_per_probe
-+	 * The maximum dwell time is calculated according to this:
-+	 * max_dwell_time = min_dwell_time + max_dwell_time_delta
-+	 */
-+	u32 base_dwell_time;
-+
-+	/* The delta between the min dwell time and max dwell time for
-+	 * active scans (in TU/1000s). The max dwell time is used by the FW once
-+	 * traffic is detected on the channel.
-+	 */
-+	u32 max_dwell_time_delta;
-+
-+	/* Delta added to min dwell time per each probe in 2.4 GHz (TU/1000) */
-+	u32 dwell_time_delta_per_probe;
-+
-+	/* Delta added to min dwell time per each probe in 5 GHz (TU/1000) */
-+	u32 dwell_time_delta_per_probe_5;
-+
-+	/* time to wait on the channel for passive scans (in TU/1000) */
-+	u32 dwell_time_passive;
-+
-+	/* time to wait on the channel for DFS scans (in TU/1000) */
-+	u32 dwell_time_dfs;
-+
-+	/* number of probe requests to send on each channel in active scans */
-+	u8 num_probe_reqs;
-+
-+	/* RSSI threshold to be used for filtering */
-+	s8 rssi_threshold;
-+
-+	/* SNR threshold to be used for filtering */
-+	s8 snr_threshold;
-+
-+	/* number of short intervals scheduled scan cycles before
-+	 * switching to long intervals
-+	 */
-+	u8 num_short_intervals;
-+
-+	/* interval between each long scheduled scan cycle (in ms) */
-+	u16 long_interval;
-+} __packed;
-+
-+struct conf_ht_setting {
-+	u8 rx_ba_win_size;
-+	u8 tx_ba_win_size;
-+	u16 inactivity_timeout;
-+
-+	/* bitmap of enabled TIDs for TX BA sessions */
-+	u8 tx_ba_tid_bitmap;
-+
-+	/* DEFAULT / WIDE / SISO20 */
-+	u8 mode;
-+} __packed;
-+
-+struct conf_memory_settings {
-+	/* Number of stations supported in IBSS mode */
-+	u8 num_stations;
-+
-+	/* Number of ssid profiles used in IBSS mode */
-+	u8 ssid_profiles;
-+
-+	/* Number of memory buffers allocated to rx pool */
-+	u8 rx_block_num;
-+
-+	/* Minimum number of blocks allocated to tx pool */
-+	u8 tx_min_block_num;
-+
-+	/* Disable/Enable dynamic memory */
-+	u8 dynamic_memory;
-+
-+	/* Minimum required free tx memory blocks in order to assure optimum
-+	 * performance
-+	 *
-+	 * Range: 0-120
-+	 */
-+	u8 min_req_tx_blocks;
-+
-+	/* Minimum required free rx memory blocks in order to assure optimum
-+	 * performance
-+	 *
-+	 * Range: 0-120
-+	 */
-+	u8 min_req_rx_blocks;
-+
-+	/* Minimum number of mem blocks (free+used) guaranteed for TX
-+	 *
-+	 * Range: 0-120
-+	 */
-+	u8 tx_min;
-+} __packed;
-+
-+struct conf_rx_streaming_settings {
-+	/* RX Streaming duration (in msec) from last tx/rx
-+	 *
-+	 * Range: uint32_t
-+	 */
-+	u32 duration;
-+
-+	/* Bitmap of tids to be polled during RX streaming.
-+	 * (Note: it doesn't look like it really matters)
-+	 *
-+	 * Range: 0x1-0xff
-+	 */
-+	u8 queues;
-+
-+	/* RX Streaming interval.
-+	 * (Note:this value is also used as the rx streaming timeout)
-+	 * Range: 0 (disabled), 10 - 100
-+	 */
-+	u8 interval;
-+
-+	/* enable rx streaming also when there is no coex activity
-+	 */
-+	u8 always;
-+} __packed;
-+
-+struct conf_fwlog {
-+	/* Continuous or on-demand */
-+	u8 mode;
-+
-+	/* Number of memory blocks dedicated for the FW logger
-+	 *
-+	 * Range: 2-16, or 0 to disable the FW logger
-+	 */
-+	u8 mem_blocks;
-+
-+	/* Minimum log level threshold */
-+	u8 severity;
-+
-+	/* Include/exclude timestamps from the log messages */
-+	u8 timestamp;
-+
-+	/* See enum cc33xx_fwlogger_output */
-+	u8 output;
-+
-+	/* Regulates the frequency of log messages */
-+	u8 threshold;
-+} __packed;
-+
-+#define ACX_RATE_MGMT_NUM_OF_RATES 13
-+struct conf_rate_policy_settings {
-+	u16 rate_retry_score;
-+	u16 per_add;
-+	u16 per_th1;
-+	u16 per_th2;
-+	u16 max_per;
-+	u8 inverse_curiosity_factor;
-+	u8 tx_fail_low_th;
-+	u8 tx_fail_high_th;
-+	u8 per_alpha_shift;
-+	u8 per_add_shift;
-+	u8 per_beta1_shift;
-+	u8 per_beta2_shift;
-+	u8 rate_check_up;
-+	u8 rate_check_down;
-+	u8 rate_retry_policy[13];
-+} __packed;
-+
-+struct conf_hangover_settings {
-+	u32 recover_time;
-+	u8 hangover_period;
-+	u8 dynamic_mode;
-+	u8 early_termination_mode;
-+	u8 max_period;
-+	u8 min_period;
-+	u8 increase_delta;
-+	u8 decrease_delta;
-+	u8 quiet_time;
-+	u8 increase_time;
-+	u8 window_size;
-+} __packed;
-+
-+enum {
-+	CLOCK_CONFIG_16_2_M	= 1,
-+	CLOCK_CONFIG_16_368_M,
-+	CLOCK_CONFIG_16_8_M,
-+	CLOCK_CONFIG_19_2_M,
-+	CLOCK_CONFIG_26_M,
-+	CLOCK_CONFIG_32_736_M,
-+	CLOCK_CONFIG_33_6_M,
-+	CLOCK_CONFIG_38_468_M,
-+	CLOCK_CONFIG_52_M,
-+
-+	NUM_CLOCK_CONFIGS,
-+};
-+
-+enum cc33xx_ht_mode {
-+	/* Default - use MIMO, fallback to SISO20 */
-+	HT_MODE_DEFAULT = 0,
-+
-+	/* Wide - use SISO40 */
-+	HT_MODE_WIDE = 1,
-+
-+	/* Use SISO20 */
-+	HT_MODE_SISO20 = 2,
-+};
-+
-+struct conf_ap_sleep_settings {
-+	/* Duty Cycle (20-80% of staying Awake) for IDLE AP
-+	 * (0: disable)
-+	 */
-+	u8 idle_duty_cycle;
-+	/* Duty Cycle (20-80% of staying Awake) for Connected AP
-+	 * (0: disable)
-+	 */
-+	u8 connected_duty_cycle;
-+	/* Maximum stations that are allowed to be connected to AP
-+	 *  (255: no limit)
-+	 */
-+	u8 max_stations_thresh;
-+	/* Timeout till enabling the Sleep Mechanism after data stops
-+	 * [unit: 100 msec]
-+	 */
-+	u8 idle_conn_thresh;
-+} __packed;
-+
-+#define CHANNELS_COUNT 39 /* 14 2.4GHz channels, 25 5GHz channels*/
-+#define PER_CHANNEL_REG_RULE_BYTES 13
-+#define REG_RULES_COUNT (CHANNELS_COUNT * PER_CHANNEL_REG_RULE_BYTES) /* 507 */
-+
-+/* TX Power limitation for a channel, used for reg domain */
-+struct conf_channel_power_limit {
-+	u32 reg_lim_0;
-+	u32 reg_lim_1;
-+	u32 reg_lim_2;
-+	u8  reg_lim_3;
-+} __packed;
-+
-+struct conf_coex_configuration {
-+	/* Work without Coex HW
-+	 *
-+	 * Range: 1 - YES, 0 - NO
-+	 */
-+	u8 disable_coex;
-+	/* Yes/No Choose if External SoC entity is connected
-+	 *
-+	 * Range: 1 - YES, 0 - NO
-+	 */
-+	u8 is_ext_soc_enable;
-+	/* External SoC grant polarity
-+	 *
-+	 * 0 - Active Low
-+	 *
-+	 * 1 - Active High (Default)
-+	 */
-+	u8 ext_soc_grant_polarity;
-+	/* External SoC priority polarity
-+	 *
-+	 * 0 - Active Low (Default)
-+	 *
-+	 * 1 - Active High
-+	 */
-+	u8 ext_soc_priority_polarity;
-+	/* External SoC request polarity
-+	 *
-+	 * 0 - Active Low (Default)
-+	 *
-+	 * 1 - Active High
-+	 */
-+	u8 ext_soc_request_polarity;
-+	u16 ext_soc_min_grant_time;
-+	u16 ext_soc_max_grant_time;
-+	/* Range: 0 - 20 us
-+	 */
-+	u8 ext_soc_t2_time;
-+
-+	u8 ext_soc_to_wifi_grant_delay;
-+	u8 ext_soc_to_ble_grant_delay;
-+} __packed;
-+
-+struct conf_iomux_configuration {
-+	/* For any iomux pull value:
-+	 * 1: Pull up
-+	 * 2: Pull down
-+	 * 3: Pull disable
-+	 * ff: Default value set by HW
-+	 * ANY other value is invalid
-+	 */
-+	u8 slow_clock_in_pull_val;
-+	u8 sdio_clk_pull_val;
-+	u8 sdio_cmd_pull_val;
-+	u8 sdio_d0_pull_val;
-+	u8 sdio_d1_pull_val;
-+	u8 sdio_d2_pull_val;
-+	u8 sdio_d3_pull_val;
-+	u8 host_irq_wl_pull_val;
-+	u8 uart1_tx_pull_val;
-+	u8 uart1_rx_pull_val;
-+	u8 uart1_cts_pull_val;
-+	u8 uart1_rts_pull_val;
-+	u8 coex_priority_pull_val;
-+	u8 coex_req_pull_val;
-+	u8 coex_grant_pull_val;
-+	u8 host_irq_ble_pull_val;
-+	u8 fast_clk_req_pull_val;
-+	u8 ant_sel_pull_val;
-+} __packed;
-+
-+struct conf_ant_diversity {
-+	/* First beacons after antenna switch.
-+	 * In this window we asses our satisfaction from the new antenna.
-+	 */
-+	u8 fast_switching_window;
-+
-+	/* Deltas above this threshold between the curiosity score and
-+	 * the average RSSI will lead to antenna switch.
-+	 */
-+	u8 rssi_delta_for_switching;
-+
-+	/* Used in the first beacons after antenna switch:
-+	 * Deltas above this threshold between the average RSSI and
-+	 * the curiosity score will make us switch back the antennas.
-+	 */
-+	u8 rssi_delta_for_fast_switching;
-+
-+	/* Curiosity punishment in beacon timeout after an antenna switch.
-+	 */
-+	u8 curiosity_punish;
-+
-+	/* Curiosity raise in beacon timeout not after an antenna switch.
-+	 */
-+	u8 curiosity_raise;
-+
-+	/* Used for the average RSSI punishment in beacon timeout
-+	 * not after antenna switch.
-+	 */
-+	u8 consecutive_missed_beacons_threshold;
-+
-+	/* Used in the curiosity metric.
-+	 */
-+	u8 compensation_log;
-+
-+	/* Used in the average RSSI metric.
-+	 */
-+	u8 log_alpha;
-+
-+	/* Curiosity initialization score.
-+	 */
-+	s8 initial_curiosity;
-+
-+	/* MR configuration: should the AP follow the STA antenna or use the default antenna.
-+	 */
-+	u8 ap_follows_sta;
-+
-+	/* MR configuration: should the BLE follow the STA antenna or use the default antenna.
-+	 */
-+	u8 ble_follows_sta;
-+
-+	/* The antenna to use when the diversity mechanism is not in charge.
-+	 */
-+	u8 default_antenna;
-+} __packed;
-+
-+struct cc33xx_core_conf {
-+	u8 enable_5ghz;
-+	u8 enable_ble;
-+	u8 enable_at_test_debug;
-+	u8 disable_beamforming_fftp;
-+	u32 ble_uart_baudrate;
-+	u8 enable_flow_ctrl;
-+	u8 listen_interval;
-+	u8 wake_up_event;
-+	u8 suspend_listen_interval;
-+	u8 suspend_wake_up_event;
-+	u8 per_channel_power_limit[507];
-+	u32 internal_slowclk_wakeup_earlier;
-+	u32 internal_slowclk_open_window_longer;
-+	u32 external_slowclk_wakeup_earlier;
-+	u32 external_slowclk_open_window_longer;
-+	struct conf_coex_configuration coex_configuration;
-+	/* Prevent HW recovery. FW will remain stuck. */
-+	u8 no_recovery;
-+	u8 disable_logger;
-+	u8 mixed_mode_support;
-+	u8 sram_ldo_voltage_trimming;
-+	u32 xtal_settling_time_usec;
-+	struct conf_ant_diversity ant_diversity;
-+	struct conf_iomux_configuration iomux_configuration;
-+} __packed;
-+
-+struct cc33xx_mac_conf {
-+	u8 ps_scheme;
-+	u8 he_enable;
-+	u8 ap_max_num_stations;
-+} __packed;
-+
-+struct cc33xx_phy_conf {
-+	u8 insertion_loss_2_4ghz[2];
-+	u8 insertion_loss_5ghz[2];
-+	u8 reserved_0[2];
-+	u8 ant_gain_2_4ghz[2];
-+	u8 ant_gain_5ghz[2];
-+	u8 reserved_1[2];
-+	u8 ble_ch_lim_1m[40];
-+	u8 ble_ch_lim_2m[40];
-+	u8 one_time_calibration_only;
-+	u8 is_diplexer_present;
-+	u8 num_of_antennas;
-+	u8 reg_domain;
-+	u16 calib_period;
-+} __packed;
-+
-+struct cc33xx_host_conf {
-+	struct conf_rx_settings rx;
-+	struct conf_tx_settings tx;
-+	struct conf_conn_settings conn;
-+	struct conf_itrim_settings itrim;
-+	struct conf_pm_config_settings pm_config;
-+	struct conf_roam_trigger_settings roam_trigger;
-+	struct conf_scan_settings scan;
-+	struct conf_sched_scan_settings sched_scan;
-+	struct conf_ht_setting ht;
-+	struct conf_memory_settings mem;
-+	struct conf_rx_streaming_settings rx_streaming;
-+	struct conf_fwlog fwlog;
-+	struct conf_rate_policy_settings rate;
-+	struct conf_hangover_settings hangover;
-+	struct conf_ap_sleep_settings ap_sleep;
-+
-+} __packed;
-+
-+struct cc33xx_conf_file {
-+	struct cc33xx_conf_header header;
-+	struct cc33xx_phy_conf phy;
-+	struct cc33xx_mac_conf mac;
-+	struct cc33xx_core_conf core;
-+	struct cc33xx_host_conf host_conf;
-+} __packed;
-+
-+#endif
++int cc33xx_tx_get_queue(int queue);
++int cc33xx_tx_total_queue_count(struct cc33xx *cc);
++void cc33xx_tx_immediate_complete(struct cc33xx *cc);
++void cc33xx_tx_work(struct work_struct *work);
++int cc33xx_tx_work_locked(struct cc33xx *cc);
++void cc33xx_tx_reset_wlvif(struct cc33xx *cc, struct cc33xx_vif *wlvif);
++void cc33xx_tx_reset(struct cc33xx *cc);
++void cc33xx_tx_flush(struct cc33xx *cc);
++u8 cc33xx_rate_to_idx(struct cc33xx *cc, u8 rate, enum nl80211_band band);
++u32 cc33xx_tx_enabled_rates_get(struct cc33xx *cc, u32 rate_set,
++				enum nl80211_band rate_band);
++u32 cc33xx_tx_min_rate_get(struct cc33xx *cc, u32 rate_set);
++u8 cc33xx_tx_get_hlid(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++		      struct sk_buff *skb, struct ieee80211_sta *sta);
++void cc33xx_tx_reset_link_queues(struct cc33xx *cc, u8 hlid);
++void cc33xx_handle_tx_low_watermark(struct cc33xx *cc);
++bool cc33xx_is_dummy_packet(struct cc33xx *cc, struct sk_buff *skb);
++unsigned int cc33xx_calc_packet_alignment(struct cc33xx *cc,
++					  unsigned int packet_length);
++void cc33xx_free_tx_id(struct cc33xx *cc, int id);
++void cc33xx_stop_queue_locked(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++			      u8 queue, enum cc33xx_queue_stop_reason reason);
++void cc33xx_stop_queues(struct cc33xx *cc,
++			enum cc33xx_queue_stop_reason reason);
++void cc33xx_wake_queues(struct cc33xx *cc,
++			enum cc33xx_queue_stop_reason reason);
++bool cc33xx_is_queue_stopped_by_reason(struct cc33xx *cc,
++				       struct cc33xx_vif *wlvif, u8 queue,
++				       enum cc33xx_queue_stop_reason reason);
++bool cc33xx_is_queue_stopped_by_reason_locked(struct cc33xx *cc,
++					      struct cc33xx_vif *wlvif,
++					      u8 queue,
++					 enum cc33xx_queue_stop_reason reason);
++bool cc33xx_is_queue_stopped_locked(struct cc33xx *cc, struct cc33xx_vif *wlvif,
++				    u8 queue);
++
++/* from main.c */
++void cc33xx_free_sta(struct cc33xx *cc, struct cc33xx_vif *wlvif, u8 hlid);
++void cc33xx_rearm_tx_watchdog_locked(struct cc33xx *cc);
++
++#endif /* __TX_H__ */
 -- 
 2.25.1
 
