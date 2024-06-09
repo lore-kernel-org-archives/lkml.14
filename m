@@ -1,131 +1,139 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB181D69E;
-	Sun,  9 Jun 2024 13:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD2E42076
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 13:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717939296; cv=none; b=HYfj9/XlLBCmFd67X6SU8YZA9MPD/+68F9tYgJgUpM1LXbi0btlhAiTQldYYlve+9XpLjDS0iVzRjEBZ4xCY2yzPBcAe9lC8IewRVWq0suptrQvvZ8+RnowBsECc4FA3qNeB+/6MgJnW1sl+Nx60EPoOoa+Ka+LbvBY8J9qSqWw=
+	t=1717939411; cv=none; b=LAVslja1px3KvMfm7wYsEt+Qp4xqtv8htKpHCCUR7Tf+HML5JsCzBjTlZO4HBI+Mth0wwnT87qL4896hFtVqrTcXMHI1qv5o1Pb2liDJBUVoTL+98vZa4pNj8kpqPUkYZs9gJksqavleMV3zBgg5YVTu2fFuN8QFCO6Qwf0gEwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717939296; c=relaxed/simple;
-	bh=9pn9W8B7uNfw0jbZo+jlaNOaWeedhFMhqvK+JM4rNFU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fYGmH5VkeBDic/BNqs95jmthpGv+eAF/pxsymzxGpmVBhu9Wvnci4qKwpixds5v2mbBXzGNKUzg4zBGWI2cmZ8zmFru+etwCQfJA7KO8ry6Oucqe4g9J0BEtbFi4bIvDOXyxa5uKRUEfbg7QA8z95HfaLx75IxUnU4RWhwe/XH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kiZMaXM/; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiZMaXM/"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f44b5b9de6so28737335ad.3;
-        Sun, 09 Jun 2024 06:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717939294; x=1718544094; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hy8nW4eF/FXEr1hbXhu1qJIvLH5QkU3nseaSanuQg7o=;
-        b=kiZMaXM/6yr9dNJnIOOvga5Z1OdcI1jZX1W5tnK51KrwXswULAySQR3brfB0Au15k4
-         0227asYnQqZQ5OMPfc4hx0XmdGPklK9g+7ARukmu1Zi+XXwpC7UOH4o0h0mZeyNWTOBm
-         CkK8nh0ryKZMFapzaEgciac8qZR5IHPnyL/yJ3xyYMOFEq6/EwbQnBhers6GxVP2wuWx
-         xR4orSFJTAr4SiclM48lglsim+6RwJqoWe/YtHdIYujyYwob2wan++PTKfsQRZ4kzoUG
-         MhUfbNUINfW+vtvGergBSzF01tkIpWxOW6SKX99i+0Gaiu7rrW2Ojj8z5Gu+Q++4rTCX
-         dBCw==
+	s=arc-20240116; t=1717939411; c=relaxed/simple;
+	bh=B0r8b/jAHsefhlfdZ48avZFS/6czpF9hmwvgYAEAzU4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=R3EduGehJ89Bn4I4YhPkg08Qa2FIVc7UYt19ZGk8h6EFJjkqc/OFaytL0BnZlJVTkbh/mA92g2fSXkVtIf/BqUaLj/C1BsTznykAfzAXL+e66FNZbJ8LMqRbe1WE7x5jCApiXHPuLDoh13w3lv0hYpGcSzzkcF1AJTxdehVrsxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-7eb84511dbfso15099839f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2024 06:23:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717939294; x=1718544094;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hy8nW4eF/FXEr1hbXhu1qJIvLH5QkU3nseaSanuQg7o=;
-        b=dYmUPuajqb2B8MboK43oL+QRZzya5KRT1NALvrHKX6LDVa183iUp8WahcI0/RVYA9r
-         WkqeImWYjPzJk9EfqsLCujdjR6yuvwtyGNi2+VCzxvTjhDHAzVAmPaipd+tlbgIK2eTq
-         pfL3YurvcwnD2E/IOtv1bSnIadDmZDo4LHScGpCoDp+MGCMbhEIORESKNSmWP6ebYsVc
-         cSvmt+CGW3nHolaWj5224fRt+uZkQ0H/+U80oJDjMUGwKEu9wFUlYaWANm2OnWyf8jCV
-         YEUuhw3kowwKx097pos3s9t7V2YiwHoPFym4U4MwXgva/AuY2PkPL0G+pFpvilkbEtvG
-         Zm9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWw7DCvsCVPP1+PDXywAuTJfJOMIA/2dOCQJNS4crYm1iY1XX6iaDSYwUAraj4QtkKQZY6+BgbsWRiB/pUGVIC/n/URYMxeHKh1L8HV4Pb6GGSPOmMR9ahqy1lk9ZZ+ToONyP4u3vZXOgHBGQpulS2s5Zc7Mf5A8Gth95u/wjzQ1pUNufs1
-X-Gm-Message-State: AOJu0YwXDUzjQFo5C1DFQI61ace+R9bLPcmBv3F03+b3OnB+/NXxcX3A
-	zgpk9b9GzWd0hvzHPMkphYjvyF1OQQWZa52+9Xh+yDK+sdRmS7LUFa6ko2ry
-X-Google-Smtp-Source: AGHT+IHfBquKPyzCjJaUZAs94NGY7Yw0e4VVijtTRkCgc02OKqITjVsCc+IKK/5QUnlXzGbopMoC3g==
-X-Received: by 2002:a17:902:ecc8:b0:1f6:f82d:a8c2 with SMTP id d9443c01a7336-1f6f82dab9dmr30255705ad.31.1717939294180;
-        Sun, 09 Jun 2024 06:21:34 -0700 (PDT)
-Received: from dev0.. ([49.43.162.161])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6bd7e071esm64820625ad.201.2024.06.09.06.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 06:21:33 -0700 (PDT)
-From: Abhinav Jain <jain.abhinav177@gmail.com>
-To: horms@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	shuah@kernel.org,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	jain.abhinav177@gmail.com
-Subject: [PATCH v2] sefltests: net: Add on/off checks for network interface non fixed features
-Date: Sun,  9 Jun 2024 13:21:24 +0000
-Message-Id: <20240609132124.51683-1-jain.abhinav177@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1717939409; x=1718544209;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ndDzAK+vS/lqj0cA5nY0ecgAvAllUyEKdFmgWGwIrws=;
+        b=fnlQyzSFYElk1pfuHQIXBoLhqn856Mt5RRVB8zhaBB0jRk2LvBP291RAzDL6OUqbs9
+         wesOhi4l1yO1bl8E2ZSRvO+JgvS+bl3+JSKGbJy+UaCu2Oxup5V5erRovIwtYvmXWtwa
+         hUzjKGtxIwEGgV0DjVqFc9F0lKnVRYta8OMWall2cPwjzTIdy/bOnfJXiLfz0VF+FYYH
+         mSwVFYJLadClkptDtWqmyKtqK2D8aLpr+9LMw/gccnRl03XgJQq3JSy/EgnKpe7soo8r
+         4CmFtHdTbGOqfP2RMUD1Qe+KPiw5bj/FYnPVoaUc5Iav8PZGtpa/zhKuPUJzgxw/p3jo
+         692w==
+X-Forwarded-Encrypted: i=1; AJvYcCXfShqMXY2ziHYbn5TVsFO8xl9kspRekTETZRhvufrMVom8nOYVEoDVEOdFXvCniZcYKZFvfP1E8vQRzp38cLVR0kZrYihcx/wjEfwi
+X-Gm-Message-State: AOJu0YxDbaMnPA8PDlSAOZ1q8Xb83l3WSgoXVTO4kag6OzBe8xlQZxZ0
+	ZQ3VWUe2/vxpTlGv7ZGdmqUcpZLWu0qCFCT3exiCOHWCTxLj3B2M2LtvG7TnTBlzWTvbHYCqW3h
+	4n0HYeVFl4tfxiB+UDQadwFyA+BcvxWekgtTvbjk4UEokbfuErTO47h8=
+X-Google-Smtp-Source: AGHT+IEfPa5yFAkh8lwyvR/wMC8EgcDCwA2xWjDIrZ/+eiIrsLv5+QOog+H8tSRnXXiSlpkjmVz3Jr5sCWHka7n8O56AWVgS9Wf8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:4121:b0:4b7:ca39:5869 with SMTP id
+ 8926c6da1cb9f-4b7ca395b64mr329855173.6.1717939409024; Sun, 09 Jun 2024
+ 06:23:29 -0700 (PDT)
+Date: Sun, 09 Jun 2024 06:23:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000388410061a74f014@google.com>
+Subject: [syzbot] [iommu?] WARNING in iopt_map_pages
+From: syzbot <syzbot+16073ebbc4c64b819b47@syzkaller.appspotmail.com>
+To: iommu@lists.linux.dev, jgg@ziepe.ca, joro@8bytes.org, kevin.tian@intel.com, 
+	linux-kernel@vger.kernel.org, robin.murphy@arm.com, 
+	syzkaller-bugs@googlegroups.com, will@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-This patch addresses the TODO (add non fixed feature on/off check).
-I have tested it manually on my system and made changes as suggested in v1
+Hello,
 
-Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
+syzbot found the following issue on:
+
+HEAD commit:    32f88d65f01b Merge tag 'linux_kselftest-fixes-6.10-rc3' of..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1360240a980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f0e2e3f7ede77526
+dashboard link: https://syzkaller.appspot.com/bug?extid=16073ebbc4c64b819b47
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176155f2980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ef6d64980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/02b9da12baef/disk-32f88d65.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0f0b1ac64a11/vmlinux-32f88d65.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d97bebf9fd91/bzImage-32f88d65.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+16073ebbc4c64b819b47@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5091 at drivers/iommu/iommufd/io_pagetable.c:268 iopt_alloc_area_pages drivers/iommu/iommufd/io_pagetable.c:268 [inline]
+WARNING: CPU: 0 PID: 5091 at drivers/iommu/iommufd/io_pagetable.c:268 iopt_map_pages+0xf95/0x1050 drivers/iommu/iommufd/io_pagetable.c:352
+Modules linked in:
+CPU: 0 PID: 5091 Comm: syz-executor391 Not tainted 6.10.0-rc2-syzkaller-00022-g32f88d65f01b #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+RIP: 0010:iopt_alloc_area_pages drivers/iommu/iommufd/io_pagetable.c:268 [inline]
+RIP: 0010:iopt_map_pages+0xf95/0x1050 drivers/iommu/iommufd/io_pagetable.c:352
+Code: fc e9 a4 f3 ff ff e8 9a 9f 4b fc 41 be e4 ff ff ff e9 8a f3 ff ff e8 8a 9f 4b fc 90 0f 0b 90 e9 37 f5 ff ff e8 7c 9f 4b fc 90 <0f> 0b 90 e9 68 f3 ff ff 48 c7 c1 6c 78 ad 8f 80 e1 07 80 c1 03 38
+RSP: 0018:ffffc90002d4f9e0 EFLAGS: 00010293
+RAX: ffffffff854a7704 RBX: 00000000ffffffef RCX: ffff88801978bc00
+RDX: 0000000000000000 RSI: 00000000ffffffef RDI: 0000000000000000
+RBP: ffffc90002d4fc50 R08: ffffffff854a7290 R09: ffffffff854a70a2
+R10: 0000000000000002 R11: ffff88801978bc00 R12: ffff888021c4b010
+R13: 0000000000000000 R14: 1ffff920005a9f68 R15: ffffc90002d4fd00
+FS:  0000555563931380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000005fdeb8 CR3: 0000000073cd8000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ iommufd_ioas_copy+0x610/0x7b0 drivers/iommu/iommufd/ioas.c:274
+ iommufd_fops_ioctl+0x4d9/0x5a0 drivers/iommu/iommufd/main.c:421
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f83aa0f1b39
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffdd80781a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f83aa0f1b39
+RDX: 0000000020000140 RSI: 0000000000003b83 RDI: 0000000000000003
+RBP: 00007f83aa1645f0 R08: 0000000000000006 R09: 0000000000000006
+R10: 0000000000000006 R11: 0000000000000246 R12: 0000000000000001
+R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+
 ---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-PATCH v1:
-https://lore.kernel.org/all/20240606212714.27472-1-jain.abhinav177@gmail.com/
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Changes since v1:
- - Removed the addition of tail command as it was not required after
-   below change
- - Used read to parse the temp features file rather than using for loop
-   and took out awk/grep/sed from v1
----
- tools/testing/selftests/net/netdevice.sh | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-diff --git a/tools/testing/selftests/net/netdevice.sh b/tools/testing/selftests/net/netdevice.sh
-index e3afcb424710..196b7f985db4 100755
---- a/tools/testing/selftests/net/netdevice.sh
-+++ b/tools/testing/selftests/net/netdevice.sh
-@@ -124,7 +124,27 @@ kci_netdev_ethtool()
- 		return 1
- 	fi
- 	echo "PASS: $netdev: ethtool list features"
--	#TODO for each non fixed features, try to turn them on/off
-+
-+	while read -r FEATURE VALUE FIXED; do
-+		[ "$FEATURE" != "Features" ] || continue # Skip "Features" line
-+		[ "$FIXED" != "[fixed]" ] || continue # Skip fixed features
-+		feature = "${FEATURE%:*}"
-+
-+		ethtool --offload "$netdev" "$feature" off
-+		if [ $? -eq 0 ]; then
-+			echo "PASS: $netdev: Turned off feature: $feature"
-+		else
-+			echo "FAIL: $netdev: Failed to turn off feature: $feature"
-+		fi
-+
-+		ethtool --offload "$netdev" "$feature" on
-+		if [ $? -eq 0 ]; then
-+			echo "PASS: $netdev: Turned on feature: $feature"
-+		else
-+			echo "FAIL: $netdev: Failed to turn on feature: $feature"
-+		fi
-+	done < "$TMP_ETHTOOL_FEATURES"
-+
- 	rm "$TMP_ETHTOOL_FEATURES"
- 
- 	kci_netdev_ethtool_test 74 'dump' "ethtool -d $netdev"
--- 
-2.34.1
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
