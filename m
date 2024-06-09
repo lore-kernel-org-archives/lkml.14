@@ -1,190 +1,92 @@
-Received: from fallback16.i.mail.ru (fallback16.i.mail.ru [79.137.243.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D51617BD3;
-	Sun,  9 Jun 2024 20:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F69C17753
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 20:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717965410; cv=none; b=EO6xeUed6Otsxe9yHOh9lbnTOjnCe5MGjwrW92Y8FXY8eBGa3Eu+kQtmsnn6AAfExnM6MdBc02E2tH1XZ49K0IDycS0xIRt5/ULakf4EnsLB8+/7jgycgpA/G4d5dQg55YpqFD5RcaGNAijf03YWA79XWWE1CMNqigNscKANNqE=
+	t=1717966059; cv=none; b=YLb9sJsBdZGn+Lx79FJpRWwy32yqphLksdmfvUomkNGjwhu7n29+RfL40m6EXT8AmRL0JVyTFDTzxblT4EW3VEgPbE9sHhsCydubQ+lwfSIiZ8y4Aicqg8i1tVReKbGAClR3ewRq17Shg2lbS3qcrEDWotK+4KxHgP3WVWWLIH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717965410; c=relaxed/simple;
-	bh=b07g8Zm6vvFFd+Ji43SJ4CjSgJkVo+8chL6BAggB+WM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LZgaUnnnG425ma5L3h0PUufB+O1370SlzabLdEbK4em+dcqtrQPFoUD+sRCZxXAM209+c03Pz9ZyVThdmRLHDdUld2RDKISm1Jb6Wshoh+3pEWNi9015VYyZwq3/yhTMUIzgghjvdh4wIXs0JWn13CAdGMQD6Zk1tMNInKg6B0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=oIlYTeb3; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=RZVLVMEz; arc=none smtp.client-ip=79.137.243.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+	s=arc-20240116; t=1717966059; c=relaxed/simple;
+	bh=LZPwyVXX6F+Syx9TFtvOV4xYL54mKUOOQam9Dpy50nI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nL4ek2XcFTxEh0RBOyGV/pc8j5V8w+kTkTAQvjyKBEBlDce14i/UGKokb2V+M8tOZLz3LWCcbFcmFDOoSyW1q+XegM/XzTTMaHCECeVSDXyUiLrSJdw4vqaQPBQZYnTQ+KJR3IZ4EtpiCV2szt3z5NTT+xNIB44BsQBqP8J8NbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EPcIuEM4; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="oIlYTeb3";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="RZVLVMEz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=XgCW2Teyxjo1qJ/+v4hXt3hiuRDzeE/1a0ajHqVR6WM=;
-	t=1717965407;x=1718055407; 
-	b=oIlYTeb3J6jAa9rIqyj9ZyW8UFbY6t3fyuQmIfeeKCv5M6RzgXSHEJ8NqfzFD1Dj456DQ3NSO9rX4f3WBh5kxYwqVQyQZHLz9qJScV0BRIynBqAVoi45DVgdjhh5/x2/eYCgHV8PIn8U1Xbb5Wb18PUS1p7c32i+Khw5puhZC+U=;
-Received: from [10.12.4.20] (port=47366 helo=smtp44.i.mail.ru)
-	by fallback16.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1sGPHL-002KB2-3A; Sun, 09 Jun 2024 23:36:39 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=XgCW2Teyxjo1qJ/+v4hXt3hiuRDzeE/1a0ajHqVR6WM=; t=1717965399; x=1718055399; 
-	b=RZVLVMEz3VHBc8zjUTDUNfj8hvs8AEsMW5Z35grcllPtBtaYw2qvI4HIy2edkanJCaJ/zgVi0PS
-	HVe5NRi55bd0RWEfyDXjacMU30kPww9RGaCQ6qSPzB0ovltPWYMSBtctbWstpKC4TFwzplFJY1s8r
-	POJJlv8GWz7j3JwmpMU=;
-Received: by smtp44.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1sGPH5-00000004YbQ-2jgt; Sun, 09 Jun 2024 23:36:24 +0300
-From: Danila Tikhonov <danila@jiaxyga.com>
-To: neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com,
-	sam@ravnborg.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	adrian@travitia.xyz,
-	degdagmohamed@gmail.com,
-	Danila Tikhonov <danila@jiaxyga.com>
-Subject: [PATCH 1/2] dt-bindings: display: panel: Add Samsung AMS639RQ08
-Date: Sun,  9 Jun 2024 23:36:17 +0300
-Message-ID: <20240609203618.49413-2-danila@jiaxyga.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240609203618.49413-1-danila@jiaxyga.com>
-References: <20240609203618.49413-1-danila@jiaxyga.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPcIuEM4"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6b06217d421so610716d6.2
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2024 13:47:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717966057; x=1718570857; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LZPwyVXX6F+Syx9TFtvOV4xYL54mKUOOQam9Dpy50nI=;
+        b=EPcIuEM4wwp8Kqt+eiHXeiny26PM2PRmvQ+rMuofdWXlcb+JgdmlJwg8J0Hl77xL6e
+         UE940pCt0gVMBFt/bUV82JBR1ikn//jnP6Ys1BvZu/8w1h3QdQvypLPjrBahP5CaOp1g
+         llIq4SnfQMliW6VO42TmvvJHhHelCW2t1SCGz7Tdf3It3P06uUJiMrOZUmBk86jOfIex
+         t02CRpZ0xXUYJjqSQ7WA/2vq9TPuLt6AZfEgKzwno+kO4LsV3Yct+fLWtglTpAsQA4uC
+         7RIQO2+WylPFxVwOSVEFwPaKqRctMd+AwoOjN5LwKD06ECK6Y6/UN3YKTIY5O1I4VPva
+         GiLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717966057; x=1718570857;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LZPwyVXX6F+Syx9TFtvOV4xYL54mKUOOQam9Dpy50nI=;
+        b=hTlNxRQKfyzmttJ95U4eg24wWFYX6rUsLJqMGDp02DB2eAXgLUFXhJu/q9OeBMnqXg
+         jyT6L7D23Ui28dvVWIYK0aqGL+5iL9NS0l11xtuqSg8nXjVHWM17Y6j/80lQUya/oPuI
+         YAXeBz5m4C5f/laIYMvxow179yM7Bmt8n5a/WR0h20bCtFSMz1Oyt1tir9ZvmsN0L2Ce
+         1JjFe9bD5O+63EKd6HeVQPPzbT1xqhrcYLzvBn5Tza4TCQkB+QrA/VVd+3VK/G+8xL23
+         Nn3BDcp7PvaOYJuFR2kDRfZRTB3uSKyFN7Hwi5yD3V+8c39dn02AaJsKRVDpvjgAd3aD
+         2Iwg==
+X-Forwarded-Encrypted: i=1; AJvYcCXsHH1Y0U9l/0xgjZcG7BaaZUxvhjqNROQDEnqOFcPgy/lqEHhYM4uQoco55B606ZxcFAd3JAvSik3AXxBfykykhNdG0/v1TI9+ccc7
+X-Gm-Message-State: AOJu0YyvxO9/8NscXYDYoaofnquaIr3fztqwIvHqbKrgurbuJZHRs1aA
+	yaWe93/CvW9Ofh6rL6BZTiOCeNK6vAygwcl5kIHo8Iahs5XVSGa2chZPmxS/BVepvMP7YDI0t2I
+	XjLSKTJTD9KKgJxjBWQ1kzgy1JHc=
+X-Google-Smtp-Source: AGHT+IHsz/3g0QZS8VJvYn/UjZPiE0Rj8KOCfXA4O9U/MnypRs+hJxZsoJ7gLOMcn3hQd0DkQzgp+0SdU4ITeomMHqU=
+X-Received: by 2002:a05:6214:2263:b0:6a0:a4eb:bcdc with SMTP id
+ 6a1803df08f44-6b059cfc759mr87471406d6.3.1717966057153; Sun, 09 Jun 2024
+ 13:47:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD948651DF6EBC8E8B222621CCF380C0F235C86A77A6A247FFB182A05F5380850404E84FBDD82675F9BD4FF92D56319F1972E2138EB373856867A4D2F7B2508D394DC39866218C5191E
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE770FEBAE29342FA8FEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063764BF1E09E94CC6278638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D875E801B35AE15423179B2FEBA43CD57B2C9B4D5420AE7347CC7F00164DA146DAFE8445B8C89999728AA50765F7900637DCE3DBD6F8E38AFD389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8A9FF340AA05FB58CF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C62B3BD3CC35DA5886E0066C2D8992A164AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C3CA64746D51DB396CBA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF4964A708C60C975A1DD303D21008E298D5E8D9A59859A8B65FF0BFC5AEE34BE675ECD9A6C639B01B78DA827A17800CE760469D7ADB81D431731C566533BA786AA5CC5B56E945C8DA
-X-87b9d050: 1
-X-C1DE0DAB: 0D63561A33F958A5177F2A6FBBF53CE75002B1117B3ED6969AF1702879616AB219AC5B239BAD4335823CB91A9FED034534781492E4B8EEAD2B25D9E4C92BC8ACC79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFFC2046D000D58A9CFC2D0F7E31F8481E1B3FB62E9FC0306DC211A96A0D0AF8DD7649A938D59E33ED0FD6CD3E887ECC32FF45B9C3B59D2153AE15ADD81BFA704DCE25B990C371C36E0D035775BAD7A4FF02C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj6D5zjHqYKv1Yl+a1Y8Sf+w==
-X-Mailru-Sender: 9EB879F2C80682A09F26F806C73949817A795F5C603EFD0CAC4385294E02B5FBF47824E877E99CE90547A8BF58688A1D2C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B4B653A1001F6F75E4542571B84DC1CDDAAF24926542F20ADDB647ED114AB003ACCE0692C6BF09384D4547AB07AD1460ADC5F3AE8F7E3F031E3ABB9FCC2388B9EA
-X-7FA49CB5: 0D63561A33F958A5438D42E686A423E79A85A0FF7066BD4E13E058B0BEB7AF308941B15DA834481FA18204E546F3947CD2B897A0B7B208E1F6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F79006371CE0A079F1B3D4BD389733CBF5DBD5E9B5C8C57E37DE458BD96E472CDF7238E0725E5C173C3A84C3B95D3BAC42CD083E35872C767BF85DA2F004C90652538430E4A6367B16DE6309
-X-87b9d050: 1
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj6D5zjHqYKv0tM1y63Q3TmQ==
-X-Mailru-MI: 8000000000000800
-X-Mras: Ok
+References: <CABXGCsN6j9GMTx+f_pYShOpLKL5b6kmJ3w-FeYHHw9nUWYjyHg@mail.gmail.com>
+ <f3c2fafc-dd31-40a4-8585-4a5dfd26e68b@amd.com> <CABXGCsPDwDKpYc+jKCqDCGoQQmSkgEFEHG98fA-9KmKHohsTQA@mail.gmail.com>
+In-Reply-To: <CABXGCsPDwDKpYc+jKCqDCGoQQmSkgEFEHG98fA-9KmKHohsTQA@mail.gmail.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Mon, 10 Jun 2024 01:47:26 +0500
+Message-ID: <CABXGCsNYr=yeN1xWFeEhouy8LNWXBEs-2htM6HD82roDHwxR2g@mail.gmail.com>
+Subject: Re: 6.10/regression/bisected - commit a68c7eaa7a8f cause *ERROR*
+ Trying to clear memory with ring turned off in amdgpu_fill_buffer.
+To: "Paneer Selvam, Arunpravin" <arunpravin.paneerselvam@amd.com>
+Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	felix.kuehling@amd.com, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	"Deucher, Alexander" <Alexander.Deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The Samsung AMS639RQ08 is a 6.39 inch 1080x2340 MIPI-DSI CMD mode
-AMOLED panel used in:
-- Xiaomi Mi 9 Lite / CC9 (sdm710-xiaomi-pyxis)
-- Xiaomi Mi 9T / Redmi K20 (sm7150-xiaomi-davinci)
-- Xiaomi Mi 9T Pro / Redmi K20 Pro (sm8150-xiaomi-raphael)
-Add a dt-binding for it.
+On Fri, May 17, 2024 at 8:59=E2=80=AFPM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
+>
+> Thanks, Arun.
+> With the patch this error did not appear anymore.
+> Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com> on 7900XTX har=
+dware.
+>
 
-Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
----
- .../display/panel/samsung,ams639rq08.yaml     | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,ams639rq08.yaml
+I see that this patch do the same but more correctly:
+https://gitlab.freedesktop.org/mesa/mesa/uploads/034bc23b94c373e5e903e7ce00=
+0aab28/v2-0001-drm-amdgpu-Fix-the-BO-release-clear-memory-warnin.patch
 
-diff --git a/Documentation/devicetree/bindings/display/panel/samsung,ams639rq08.yaml b/Documentation/devicetree/bindings/display/panel/samsung,ams639rq08.yaml
-new file mode 100644
-index 0000000000000..3a561156f5601
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/samsung,ams639rq08.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/samsung,ams639rq08.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung AMS639RQ08 EA8076-based 6.39" 1080x2340 MIPI-DSI Panel
-+
-+maintainers:
-+  - Danila Tikhonov <danila@jiaxyga.com>
-+  - Jens Reidel <adrian@travitia.xyz>
-+
-+description: |
-+  The Samsung AMS639RQ08 is a 6.39 inch 1080x2340 MIPI-DSI CMD mode AMOLED panel.
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: samsung,ams639rq08
-+
-+  reg:
-+    maxItems: 1
-+
-+  vdd3p3-supply:
-+    description: 3.3V source voltage rail
-+
-+  vddio-supply:
-+    description: I/O source voltage rail
-+
-+  vsn-supply:
-+    description: Positive source voltage rail
-+
-+  vsp-supply:
-+    description: Negative source voltage rail
-+
-+  reset-gpios: true
-+  port: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdd3p3-supply
-+  - vddio-supply
-+  - vsn-supply
-+  - vsp-supply
-+  - reset-gpios
-+  - port
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        panel@0 {
-+            compatible = "samsung,ams639rq08";
-+            reg = <0>;
-+
-+            vdd3p3-supply = <&vreg_l18a_2p8>;
-+            vddio-supply = <&vreg_l13a_1p8>;
-+            vsn-supply = <&vreg_ibb>;
-+            vsp-supply = <&vreg_lab>;
-+
-+            reset-gpios = <&pm6150l_gpios 9 GPIO_ACTIVE_LOW>;
-+
-+            port {
-+                panel_in: endpoint {
-+                    remote-endpoint = <&mdss_dsi0_out>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.45.2
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
 
+--=20
+Best Regards,
+Mike Gavrilov.
