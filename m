@@ -1,85 +1,116 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1464E63C7;
-	Sun,  9 Jun 2024 18:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101A5200C7;
+	Sun,  9 Jun 2024 18:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717956349; cv=none; b=eTckUQC9NzV5Mulo5J9AFchDXuPAm4LSJS4OAxoKi5LnJuAnaYZ7vkvpD9b7eQgMuDiFI4Qox4CMI2AQYadAByq11dARntLjc1Dm6QRAXxijc9nN4/bs/dMY9nOI/ryP7O5ye8wcwXC3y7F8iN2SUxMSjRolEUcgrM7wHMCt+6M=
+	t=1717957290; cv=none; b=g6jjhCpL3fWaviJn+JGNcjnh/e229U3Dqw12KLMoV3dVUzCh8E4gx+qPFOAhOUGUB0CbjzRLZl4iMdPItmWALvxKuDuFWjN4qQDIXCpSk4ZQY98yuIh9HgQr5rR5GC5AlH/m4eMrUlZAgJzeTQWT4QMZqEJvjWmAE9nMTcOnKqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717956349; c=relaxed/simple;
-	bh=7fdJx1+lP8/j+XLW/PaQm/1rXuLy8qetAlJzAMA6k3A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ayGosPKLDioHrkMywKg41eQPxMj6viZlbaF8DIDUm6ut1eghIjADP5nhDbpgxcEacOG9MKVjY96nufD5E03yZLiCjmwL9/U5fzVLZzLIhR8kxqE+yjLY8w1Wi7bBY5j+djvNB7pMOKqpUB+cxhuHr8LIdDInCvAHVzvmtd2DrU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hmZU2N9W; arc=none smtp.client-ip=209.85.210.170
+	s=arc-20240116; t=1717957290; c=relaxed/simple;
+	bh=KOkX8jwurDQld+QlBv0V38OKpgKCWjKILaLxBbiPyLE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jF8D7Tr9kNwb+yWVS1dTqSzJsT0BCSUG3Licmq/Y4L8J4glv7245ko8d1niRma3LGTBDqpd/cwKP40Mw0feLLSnj1lNCT5w+mohIqoNofe+2INuSH+J/Bt06cnV4l+sUrW07NuwUsSOWYADremOutJcjwTbcUc/4BZzV39ehiOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k/DY6W/b; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmZU2N9W"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-701b0b0be38so3521783b3a.0;
-        Sun, 09 Jun 2024 11:05:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/DY6W/b"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e73359b900so41312821fa.2;
+        Sun, 09 Jun 2024 11:21:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717956347; x=1718561147; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IANG2WFqu0P+9CPWFfIfVa8HF99uBjdVoBx9tFnaoiM=;
-        b=hmZU2N9Wmjksb51S1IfgIThIZaAzQwsw7aEJxMtFZuBxFiraw+LjPXrMDH30kjqSx1
-         0CxazOS/AvL8vS4o3XIu5qrQt2buCmyCDQs4fES5iwAKOPOdnnsG5d9dB1tMJqsHaUJZ
-         CaxrTaR8Xwiw5QXi+zdgaln62unCmjC4u0uRNiUnWEkZyzrVMeutdmyfFu4o8jG6UZoT
-         dw+iBEmV63jZ0tQ487+sNv6GQKfSbhzLxiNuS1qJ7dcj1d3o5cjHHq4bRuiyCJnXZn0J
-         Xj1RXjYU9HKEGYNH9KYF3ZBtYoxkeKJLBw4YSZm5wukr9siT1UBuLII2iS8KffBm0aXh
-         SgqQ==
+        d=gmail.com; s=20230601; t=1717957287; x=1718562087; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AJ3/N1rRgvqAj4Oiv8BpAZDAAW7UDDeKyFOjASvyBQs=;
+        b=k/DY6W/b6/7BjgDKC8wK6Bi/eG3PfYvg1e0LivCXQHtSJ2vm1GRKIdkWui1+V6Hoq6
+         RWU4Hs2uk0qsLAKwN7KVJLwOc/PBaK8FKHyGbO7Os5tdVU703jRjdM4lS+lxo6tDvRk/
+         tbbu/Kgh6+UMh+3K641eaCR8hRk5nTr4SRF2AQGFjSUEb99c+7lzwFDqKtLeWW/2kYsk
+         q85/SH5mfNLXg/uaG5UgzxH4MHGTdsmTqSjzWYSZ/Heepz3bh/BS8VIDNJSok8iCy1mH
+         7kdiildRRDgwPjZv7MZ7yET0DkgwrbMV86Cg91Lcfdfye6pRKx6yEURdLAr3PhbjmLSE
+         uaRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717956347; x=1718561147;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IANG2WFqu0P+9CPWFfIfVa8HF99uBjdVoBx9tFnaoiM=;
-        b=FojfzxYok+nNiKEVmy1kf4y0USnSjH6E/p5l1R9iwP9YO5LTXoHYTNWQDShyL2PTC9
-         ojfwP4z7Klw+eLfjTMulI6WsYXO7buYIYR3cvVdY5CWMGRs1RxFs56J5YPj8MQqmPCMo
-         wDMdCmt8ob7YhOGA3v/5AliI/4Yw74TSRTraKBuWX4hBKq8DxLyCJ7bAqsz9kezNiXbh
-         1tc8lAmy/tcSl46frZbtRHREXICA2iSeiOKt/2Rh3yw9THzSIZGbARALANOd+xZos7BS
-         ol1g9KIXJSKm4meDqyLOaZq6xVVNKcVid2igYmOc+dTI0WQItByCeOfQEHT13doVoFX4
-         D5EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAb85Iedsdd94t0lsLNBNIhDdUH6aN36XvFX4ZRzx5vxtYjVBS83jKSbZUHIBM1oaZ9PlRrsCiyDk42E6kdrqzLF15WvVdinx8EKRglNg1Dfk2//wfDjhJsyRZGEwUjvQH1uAZqOGimWAHeUVCg6NcgcnKEzdhM/rybGZQzRnyK2TlHg==
-X-Gm-Message-State: AOJu0Yxl+zIIJfDec5XcKmyjO6k6auOZx3WQtSFp2vPqticXPH/aKRVo
-	s6eN5uWpLcsic+IODoQ2Pai6oG0t9xCIbe7O3E6g3vYI5hFxaQg0
-X-Google-Smtp-Source: AGHT+IFd9wbAaBYz16lGAusX0aIPhJpbi5xdvpCGI35zgbY09//watj1ORR0uxVygR0fHo4Mzjq5fQ==
-X-Received: by 2002:a05:6a20:9185:b0:1b6:d9fa:8be with SMTP id adf61e73a8af0-1b6d9fa0af6mr1834751637.40.1717956347100;
-        Sun, 09 Jun 2024 11:05:47 -0700 (PDT)
-Received: from archlinux ([189.101.166.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70426c9f2bfsm2496536b3a.219.2024.06.09.11.05.42
+        d=1e100.net; s=20230601; t=1717957287; x=1718562087;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AJ3/N1rRgvqAj4Oiv8BpAZDAAW7UDDeKyFOjASvyBQs=;
+        b=Cq9e47JeOljZ2pRs+tIMmMrK9Bhu3bh9aIoHUIoAQ9Lleo3wCqovHyZRDR1D2N/+YY
+         akZREuCufaweEwUIWNzGBZJ0g/WWh+nDA14YLNM49vFPAF4+snY6kR0aMCJJYsDgksEw
+         nVQW2K62x0J821vJaRNQ05K1LPvLDBsIoEpEOB61TKendYTirccV91xkkn7RiQKtwelA
+         FIU+u3y+mjAB4SgqXtyUGvCIY6gBto2VzRAxcjX7l63Ovtv3qsL5Z61XSup8yJfHnrS5
+         XWrmuZ8XTzT6Qiqzg7gAoURaMKLoN0OlzUgGP3LtIN7rN/TBMhxXpeXF8Fr/UxBct3fw
+         Xd5w==
+X-Forwarded-Encrypted: i=1; AJvYcCV3tYr6qWWoLa7JAfGFGjozxg3a2PGeyA3lxPhgq+MKK7T+LCZNi/NMV2ENwCiSxzkPpQOrTRlMwIfIgngr6+VRk10pH/KW658RNSW3K1wjZ5sQ+svU2qApheWIPkC5dfUH8bVpnYGs+uXI59FZxdMxc1VYz5gNuted2m4FU8lFVaEUmTLjgBpY+18fraLMSRI8Gj8rELfWScvg8BC8j8zGvg==
+X-Gm-Message-State: AOJu0Yw0iOt3l3ZqrCdfKYS3K393LeOXyDejSByOTTKBVZWkPi/4ASSj
+	doowgyz2UaYcngspIuOtUa3dyzngjhfcw5PbZHxUYNmMHga5xa3Wk4kZwA==
+X-Google-Smtp-Source: AGHT+IHqVEZNjTDF7WWqnYMLstPdIJHXxtv+sg5PyBPBPt3ibxDoQUcjxCsmInu4o7z4jJcEgBbfCw==
+X-Received: by 2002:a2e:9811:0:b0:2eb:d87f:7d78 with SMTP id 38308e7fff4ca-2ebd87f7ecdmr17982411fa.30.1717957286324;
+        Sun, 09 Jun 2024 11:21:26 -0700 (PDT)
+Received: from localhost.localdomain (bza83.neoplus.adsl.tpnet.pl. [83.30.46.83])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ebd5a63bf2sm6679841fa.33.2024.06.09.11.21.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 11:05:46 -0700 (PDT)
-Date: Sun, 9 Jun 2024 15:05:38 -0300
-From: Gustavo Silva <gustavograzs@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	lars@metafoo.de, christophe.jaillet@wanadoo.fr, devicetree@vger.kernel.org, 
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] Add driver for ENS160 sensor
-Message-ID: <g3x3hltujhcb5qs7klppikdvy2baej3lff2fucmx7efmvgg7wj@slcuwwb776kt>
-References: <20240604225747.7212-1-gustavograzs@gmail.com>
- <20240609103655.29a1b53d@jic23-huawei>
+        Sun, 09 Jun 2024 11:21:25 -0700 (PDT)
+From: Adam Skladowski <a39.skl@gmail.com>
+To: 
+Cc: phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Adam Skladowski <a39.skl@gmail.com>,
+	Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Georgi Djakov <djakov@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] msm8937/msm8976/qcs404 icc patches
+Date: Sun,  9 Jun 2024 20:20:53 +0200
+Message-Id: <20240609182112.13032-1-a39.skl@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240609103655.29a1b53d@jic23-huawei>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 09, 2024 at 10:36:55AM GMT, Jonathan Cameron wrote:
-> Series applied with minor tweaks as called out for individual patches.
-> 
-> Applied to the togreg branch of iio.git and pushed out initially as
-> testing for 0-day to see if it can find anything we missed.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
+This series introduce new ICC drivers for some legacy socs
+while at it also updates a bit of qcs404 driver which seems
+to not receive much attention lately.
+Please take in consideration i do not own any qcs404 board
+so i cannot test anything else than if it compiles.
 
-Thank you!
+Adam Skladowski (7):
+  dt-bindings: interconnect: Add Qualcomm MSM8976 DT bindings
+  interconnect: qcom: Add MSM8976 interconnect provider driver
+  dt-bindings: interconnect: Add Qualcomm MSM8937 DT bindings
+  interconnect: qcom: Add MSM8937 interconnect provider driver
+  interconnect: qcom: qcs404: Introduce AP-owned nodes
+  interconnect: qcom: qcs404: Add regmaps and more bus descriptions
+  dt-bindings: interconnect: qcom: msm8939: Fix example
+
+ .../bindings/interconnect/qcom,msm8937.yaml   |   81 +
+ .../bindings/interconnect/qcom,msm8939.yaml   |   22 +-
+ .../bindings/interconnect/qcom,msm8976.yaml   |  107 ++
+ drivers/interconnect/qcom/Kconfig             |   18 +
+ drivers/interconnect/qcom/Makefile            |    4 +
+ drivers/interconnect/qcom/msm8937.c           | 1374 ++++++++++++++++
+ drivers/interconnect/qcom/msm8976.c           | 1443 +++++++++++++++++
+ drivers/interconnect/qcom/qcs404.c            |  126 +-
+ .../dt-bindings/interconnect/qcom,msm8937.h   |   93 ++
+ .../dt-bindings/interconnect/qcom,msm8976.h   |   97 ++
+ 10 files changed, 3354 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8937.yaml
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8976.yaml
+ create mode 100644 drivers/interconnect/qcom/msm8937.c
+ create mode 100644 drivers/interconnect/qcom/msm8976.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,msm8937.h
+ create mode 100644 include/dt-bindings/interconnect/qcom,msm8976.h
+
+-- 
+2.45.1
+
