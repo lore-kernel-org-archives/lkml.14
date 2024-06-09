@@ -1,57 +1,57 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4130673539;
-	Sun,  9 Jun 2024 23:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D91D74410;
+	Sun,  9 Jun 2024 23:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717976322; cv=none; b=RHFdF9ao1PD4MOv65Bw3wo/c/4RW3cFsFBelCribDIMBMgcHEuNwhGlhYGRz5DvBNjy/bZP9npMdXxDS0P/zYI2vb3efbWza/fPXJCaODgENAEkd4Ghfl5p/xEh0n5QERRfp2MnRrezdcVcx/V3IzGp33CfaJv9io7ar236mCAU=
+	t=1717976325; cv=none; b=aRH1l6KC06nW4yPUPIFaxownGP4GY4qZaoX7c/JUhzSujeX7kYkr55EamoqRY57eyOj8EdSC6mgBSXAdU0RJc3CiwKiimBeAK34I1aR4scRXJlJSAq+N782DTQTI+fG6age2R81a4bZDRid8qUg3TO9utJFdMsYjKbhcDNBLWyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717976322; c=relaxed/simple;
-	bh=Hfb3FXLY0jr5pWcGc5sD5mDS5XumgG1uHHXw/e5JYu0=;
+	s=arc-20240116; t=1717976325; c=relaxed/simple;
+	bh=Z5vCLOtayG12+oURNPul0+eUnfkY1Ez/Lqwna0p6jj0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Jv3OdALG+h0bJJKhYQQMIkalMba+JUmtVAMYTaFYpsqZ5nbXY4yoCkXemm5ubSrFbkOtIw8r6ZyDlxw8Z9A4LRZwJV8j8g99bvHb/c5TVp1jWUq33aeRyGCXMSkE4fv5sMLTTs+WAotqHCoxYLOP3c1cccjYkRI/ZS5mXLDNBHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbkdsQ93; arc=none smtp.client-ip=209.85.218.54
+	 MIME-Version; b=UDMCwVP/xyKn2RRz/7I95rnbmJR84sJAs/Bzc5zonUZYvZcH8QIkAIA/0D52efh0Qf4lFtJPuW/axwEjfYtmDpESOlspb6eVRHqFnTq+P70FF/ece7Zop0pkEegSU6s6tekN6I/sWz7j5iiuaETykinARGruZKZHREvDzVymyuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NkF2fHIY; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbkdsQ93"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a6e43dad8ecso370786966b.1;
-        Sun, 09 Jun 2024 16:38:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkF2fHIY"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f1c4800easo59288166b.3;
+        Sun, 09 Jun 2024 16:38:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717976320; x=1718581120; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717976322; x=1718581122; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8DCTb+Pv7ST7rOA5pIjw+wTL/eb7fOtCFb+LXYKEqh8=;
-        b=lbkdsQ93C+nsUWE88O0qmiGMBKe8gF/j5p4MjeSDc+cPsTZpbzDvEJLjbf5nqcBLqa
-         gibv+zIfiKCUHgFcCPFEZoJktAAyXl72BcjzJRhUht5CgAkBWBtLlUrR/dK3fT5Ey7oT
-         oVT2gbVBTXlH86n2S5Omc0rtZ/ujuFxOSwWlilWNCfJBnOJ0LJCvypjLALkJ8GNz0Z7B
-         xGq5A5jGftgkcZM40VtuBauvD+TGmULG0v013mDEUkoaYlC4DzgLgNL7X0VYprLCs7rX
-         GzbkkPQXZqGYdLOWBYgzVesLQ6zRLL5AgQ1eBYGZclf7/8YlGUnmV2XZ7pD1+KEkPXBg
-         cR7Q==
+        bh=xsbnqsAhFK7wuZ2DJC+e/vk6WotV4BxUYJD8eztjyM4=;
+        b=NkF2fHIYjGhV3XlRsGWF/pMiyBBGk6VGurdyQoGQ5u2rPkyJLq8V6bxmZAl967JT/H
+         r/mpgb7LQq8EkkJOBu4gtdDIKJ74vCSij/9SKRhOX5ZZNe3Xw7OAKcUjzWB6Sl0ycD6m
+         ONO+DuxafGnLY1xCbQ5N5ywgnjaUGz2La2KjVNmzNDQa7Jxv/HojdlykNTmSVZ+vl/hq
+         dokhYo3T+b8T55kXRimsPm3kJXTd8FgP0S6cpYT/ZnVEjKmQ7qtyC5IFoJYH8aNsRZxQ
+         o97Yk3SQiJSTnoMPie3kkg06XHJIMWaKb0lILGr6vNRjj0iIUcVgCrSyKYPLRflvwUp8
+         HVRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717976320; x=1718581120;
+        d=1e100.net; s=20230601; t=1717976322; x=1718581122;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8DCTb+Pv7ST7rOA5pIjw+wTL/eb7fOtCFb+LXYKEqh8=;
-        b=MilnMGSqGsKfhuiTgzwEG1o/2X/w0XzcZAtEwQ/PUznTe1Pa0t49tJOQVbblu0cNOY
-         fFX5HEXl5DEF+VpedLIswQJMD42inXEMRYnh/8YbscwCh3PeNr879P5o/0OpaosiPJYu
-         yWKwSqFE+5zhrpw4jXGx7/yiKxFuH2rww3l/7D1YGCIGeuSmJwSrAjHeygqRT2LJaQu4
-         vAtYXdUP5jDfGg80mHiAkW8zjujX8JsTIhBq+nQ8prAbCZYeYLpA43wp0yU3Cqxl8DDg
-         SuXJZJ1YCFXg4Qy6Ne3v3b8eTGp9O0mlha549VJmcJJLuQzEgumrGIQ+hd+EjDsw4fw8
-         qAMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCHIJZIaNwC0u4Rm1432BWEOQ8ufaG7vhBvK79kp8piNFbZ+fufxHX5I63+Appv+DMg2Fw49SUUocjlkjS0Q6MAm+6tT7efxEV9tRO6yGz3tYIDqUHGGRVzk8BUZ15sZc/EwlN4reY
-X-Gm-Message-State: AOJu0YyP3cYuh6wsEWNzyAB2IMxUiJNDscV0J/fQSPsVdxZRibxcZiPM
-	qnXGD5kYL0YScnWxcjj8yJeGnEkGyUd+t8xYgqSAcuJ92DT2AFOYQCMsXQ==
-X-Google-Smtp-Source: AGHT+IFHLm7IU2p83vb2gx+K5EKm7HQ/WiO1JOj+Qus0le7+FIaREqjV4iFyWKLqCKC5C0wD9NhvUQ==
-X-Received: by 2002:a17:906:5589:b0:a6e:feb8:eb15 with SMTP id a640c23a62f3a-a6efeb8f4f8mr283786166b.38.1717976319585;
-        Sun, 09 Jun 2024 16:38:39 -0700 (PDT)
+        bh=xsbnqsAhFK7wuZ2DJC+e/vk6WotV4BxUYJD8eztjyM4=;
+        b=YR+UP1/RE7Qj65ILcrNR7Xmi6tLzO/a3cZlS81vLl8wqomMg4q1eOHYvS/7mKAq1ig
+         RQGAqYNlbcV8yPCYOHL1MBFiKrwnuNEPXS+HTUM6RqVub+wnB9fugzNwC2gVx7jwg7N9
+         yZ53vs3VyoN2RoATcNi81LhirDyBcaUM4nH6WBNQzpKYEstI17JwLxfzoFLgrGBtw3wf
+         KYqjvdh8f0AxsK/6xJzgsTIm0TGmKS1GSYxNJitW59xTHFyw/kNfVHcD6VfTCFU/aNzW
+         r7UiJsOjPIPpEZU8SDjM6KviIJ6NE/kPPBuNaNAdD77xXDxI2tkKfizpApz6Yzb+soug
+         6Vbw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4CrXhwbrdgcHuk31w0fv41TjgLeNyGjmLDkmIbPv92Fj9Kfzv9H87lUdYtlbdxzxZAxhRhJWACyX+zcqZ15FCqQFaRs5C/tbCN/hv42yKcMekMV8t8Y2fkTnhuo0bVygGKMPSwkjx
+X-Gm-Message-State: AOJu0YzGRk2vIlFs1M3xcGzdMMBYD9cWprFNCVaKjc1utHx9IkGeVFsi
+	qEMy/N4uyulTT7FskQut/FJu/CUrEH87j4MyYS0Rx73XUS3gxFwx
+X-Google-Smtp-Source: AGHT+IElQCic8ok5twKsuh/dSk23KfKcO6iepCxu3HeNIJbYt/XVGNBX1igmIR6WHLZc2gY3NgLkew==
+X-Received: by 2002:a17:906:25d3:b0:a6f:18ee:7932 with SMTP id a640c23a62f3a-a6f18ee7a35mr115533766b.20.1717976321864;
+        Sun, 09 Jun 2024 16:38:41 -0700 (PDT)
 Received: from localhost.localdomain ([2a04:ee41:82:7577:635a:738f:880f:9ea5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f20bb1abesm46063366b.172.2024.06.09.16.38.38
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f20bb1abesm46063366b.172.2024.06.09.16.38.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 16:38:39 -0700 (PDT)
+        Sun, 09 Jun 2024 16:38:41 -0700 (PDT)
 From: Vasileios Amoiridis <vassilisamir@gmail.com>
 To: jic23@kernel.org
 Cc: dpfrey@gmail.com,
@@ -61,9 +61,9 @@ Cc: dpfrey@gmail.com,
 	linux-kernel@vger.kernel.org,
 	mike.looijmans@topic.nl,
 	vassilisamir@gmail.com
-Subject: [PATCH v3 08/15] iio: chemical: bme680: Allocate IIO device before chip initialization
-Date: Mon, 10 Jun 2024 01:38:19 +0200
-Message-Id: <20240609233826.330516-9-vassilisamir@gmail.com>
+Subject: [PATCH v3 10/15] iio: chemical: bme680: Make error checks consistent
+Date: Mon, 10 Jun 2024 01:38:21 +0200
+Message-Id: <20240609233826.330516-11-vassilisamir@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240609233826.330516-1-vassilisamir@gmail.com>
 References: <20240609233826.330516-1-vassilisamir@gmail.com>
@@ -75,73 +75,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the IIO device allocation before the actual initialization of the
-chip to be more consistent with most IIO drivers and also to have the
-ability to use any driver specific data for the chip initialization.
+In the majority of the error checks after a regmap_{read,write}()
+operation the following coding style is used:
 
-While at it, fix also a misaligned line.
+	ret = regmap_{read,write}(data->regmap, ...);
+	if (ret < 0) {
+		dev_err(dev, ...);
+		return ret;
+	}
+
+In this particular case it was different so change it for consistency.
 
 Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
 ---
- drivers/iio/chemical/bme680_core.c | 38 +++++++++++++++---------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ drivers/iio/chemical/bme680_core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/iio/chemical/bme680_core.c b/drivers/iio/chemical/bme680_core.c
-index 493d190f4461..7dfe4bf2f2ae 100644
+index 415816a6cc9b..a54460fddc91 100644
 --- a/drivers/iio/chemical/bme680_core.c
 +++ b/drivers/iio/chemical/bme680_core.c
-@@ -837,25 +837,6 @@ int bme680_core_probe(struct device *dev, struct regmap *regmap,
- 	unsigned int val;
- 	int ret;
- 
--	ret = regmap_write(regmap, BME680_REG_SOFT_RESET,
--			   BME680_CMD_SOFTRESET);
--	if (ret < 0) {
--		dev_err(dev, "Failed to reset chip\n");
--		return ret;
--	}
--
--	ret = regmap_read(regmap, BME680_REG_CHIP_ID, &val);
--	if (ret < 0) {
--		dev_err(dev, "Error reading chip ID\n");
--		return ret;
--	}
--
--	if (val != BME680_CHIP_ID_VAL) {
--		dev_err(dev, "Wrong chip ID, got %x expected %x\n",
--				val, BME680_CHIP_ID_VAL);
--		return -ENODEV;
--	}
--
- 	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
- 	if (!indio_dev)
- 		return -ENOMEM;
-@@ -877,6 +858,25 @@ int bme680_core_probe(struct device *dev, struct regmap *regmap,
- 	data->heater_temp = 320; /* degree Celsius */
- 	data->heater_dur = 150;  /* milliseconds */
- 
-+	ret = regmap_write(regmap, BME680_REG_SOFT_RESET,
-+			   BME680_CMD_SOFTRESET);
+@@ -517,10 +517,12 @@ static int bme680_chip_config(struct bme680_data *data)
+ 	ret = regmap_write_bits(data->regmap, BME680_REG_CTRL_MEAS,
+ 				BME680_OSRS_TEMP_MASK | BME680_OSRS_PRESS_MASK,
+ 				osrs);
+-	if (ret < 0)
 +	if (ret < 0) {
-+		dev_err(dev, "Failed to reset chip\n");
+ 		dev_err(dev, "failed to write ctrl_meas register\n");
 +		return ret;
 +	}
-+
-+	ret = regmap_read(regmap, BME680_REG_CHIP_ID, &val);
-+	if (ret < 0) {
-+		dev_err(dev, "Error reading chip ID\n");
-+		return ret;
-+	}
-+
-+	if (val != BME680_CHIP_ID_VAL) {
-+		dev_err(dev, "Wrong chip ID, got %x expected %x\n",
-+			val, BME680_CHIP_ID_VAL);
-+		return -ENODEV;
-+	}
-+
- 	ret = bme680_chip_config(data);
- 	if (ret < 0) {
- 		dev_err(dev, "failed to set chip_config data\n");
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int bme680_gas_config(struct bme680_data *data)
 -- 
 2.25.1
 
