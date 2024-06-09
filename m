@@ -1,212 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515A14D8B3;
-	Sun,  9 Jun 2024 17:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB2247F7A;
+	Sun,  9 Jun 2024 17:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717952964; cv=none; b=BbQNZAXfahGqN6w4mExU8elUT/euXGG/PAHsjjgxtthFN5kZ8CGhRTUmtAGIuV3l1V40V1LHaqGycfGjP1mHreuP5dlad/KWpDR0eWrV/PTJnm8b29hv96MiJXasgz3syopWEPl//pGKz/f9iX8672td41+PsOi6viDrif73hX8=
+	t=1717953645; cv=none; b=fQBVC8P//20zDtNwIq+DoE5xvzdXFhpbP4igGoxoKeAEzKMxblCsptHuEFuak17ixT4Gf2k5YbB6LbG0s18k1ccJVB8c+4DixHwL6YJw7LOW3yzV2OVVZX3bLbCfzVmCwxpG9HmPndE8cJltCo9Ay1pugU9wVgTyZBsk9d8PeL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717952964; c=relaxed/simple;
-	bh=fwdRwtkshBcqDeuP1FhFGHJWYOHNN1ovkmYO50ggPa8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tciUApK1vErtyKTEgzSgLgkDoKq2XiVFwNzXWia+HHz0ZAoivBaPtHpR/4sMLIFZyVBCqlCTyAnhvy/6kjpLDLje9dW+0x/rpDdWx1oq1omSJ/hy0WBKyxg8BKYa4mTW7HEEREm0LLWaYGQ5sT09GgZMhZmkmAjz+mw/hJZORs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Akv8SX1l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717953645; c=relaxed/simple;
+	bh=PDA0QnfyoVo69IIDr8HldwGa5UEInFTR/12LgVC7kMw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=YZjfSyYg4G8Gzy9c2R6eLn6IZvOPJdtBIqH63PMsVYQQaWTAJjoeNENJdagGqfNnY5+5jTmzfT3qEN2NHLRt0XZuPKBAVuEGqMooQ9R87eNV4YHw2AHdL68jB+ON5LH44mBF0DhDtMK39G4NWGNLBsHb0Uy1GpNS9eegPTM5ijE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ne7+itJP; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Akv8SX1l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C241CC4AF49;
-	Sun,  9 Jun 2024 17:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717952964;
-	bh=fwdRwtkshBcqDeuP1FhFGHJWYOHNN1ovkmYO50ggPa8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Akv8SX1lOsEdLATsb8JeKHFMqjeN+sI2Jpup/gjUNgCP0LzzbKNzHQUH+FRhfJGas
-	 wthh8HT/yUT7SX6MQLPQ6Dgw1zbx2iaOwYg6TCR47un8uBdtiMreRlZhxX7mSYYnP8
-	 Qq/reQ5Q0jBWRIy0+ph/wX8vhJIj8E4wZGjX1bH/+R++uWy12st28jRtk7wGsQpxfg
-	 jtene7C6bLl2iz2tFua68D0c/CIB2+PuS25iawYDmkydrtLEV+JCUCoRpzUQYuKay4
-	 W9JF+uHjcTCOHmuC64fGlqJCv4UJXLnX1CfFqD/mV9pShAW6BkvHC7dI77QL2wW86I
-	 EBA7EU9Dw5G8g==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Subject: [PATCH v2 3/3] kbuild: merge temporary vmlinux for BTF and kallsyms
-Date: Mon, 10 Jun 2024 02:04:20 +0900
-Message-ID: <20240609170855.1708665-4-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240609170855.1708665-1-masahiroy@kernel.org>
-References: <20240609170855.1708665-1-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ne7+itJP"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 459Dvjc6007933;
+	Sun, 9 Jun 2024 17:20:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=QmTFdlGWYyA/ILag9RXZOE
+	j0+0c5s9ALptIYs4JMCQo=; b=ne7+itJPDvWoA4KGL/9jKKo4MoISx+tLOfnvtw
+	8HmNUxh3jIGuzPAV3ittmRaKooqFSS7WxTjapjM2GGStC5Sz/405ftBNkCv5exMy
+	GW/I1kkQq/ZXJ4SbdN/al4SRVdaZvYH4NwF11Gt8q9VxJ7jNx1REEsKlzYfZkhW1
+	Z67+glk0t6uCYNXdOZeK0eExpCRVKPcFpqZahcvrkpJdtYDENTM4CK0GIb/18wFG
+	hTvIjjq5k81vOT9Hwu9rFZqm9rZqVy8u+EdTvY5XIYpYmjkFNJ/AI0eFOY9j3Vg9
+	fMKZnCBpJoWhmzlXmmBpNP77b/VF8sLV9+RZGtrp5TLv0GbQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymemghy5a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 09 Jun 2024 17:20:31 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 459HKTog004295
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 9 Jun 2024 17:20:29 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 9 Jun 2024
+ 10:20:28 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Sun, 9 Jun 2024 10:20:27 -0700
+Subject: [PATCH] drm/tiny: add missing MODULE_DESCRIPTION() macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240609-md-drivers-gpu-drm-tiny-v1-1-6905fe4ada50@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAFrkZWYC/x3MQQ6CQAyF4auQrm0ygKJ4FeNiYAo0cUbSAsEQ7
+ k5x977F+zdQEiaFZ7aB0MLK32TILxm0g089IQczFK64usrVGAMG4YVEsR9n2xEnTj/0ZXl3+aP
+ ubpUDe49CHa//8uttbrwSNuJTO5y9D6d5xeh1IoF9PwAx38zJiAAAAA==
+To: Gerd Hoffmann <kraxel@redhat.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>,
+        "Hans de
+ Goede" <hdegoede@redhat.com>
+CC: <virtualization@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Jeff
+ Johnson" <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: QT3iqX2zLqdwJZM9mFcQzj5MnZEEMNwf
+X-Proofpoint-ORIG-GUID: QT3iqX2zLqdwJZM9mFcQzj5MnZEEMNwf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-09_13,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 impostorscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 malwarescore=0 mlxscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406090135
 
-CONFIG_DEBUG_INFO_BTF=y requires one additional link step.
-(.tmp_vmlinux.btf)
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tiny/bochs.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tiny/cirrus.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/tiny/gm12u320.o
 
-CONFIG_KALLSYMS=y requires two additional link steps.
-(.tmp_vmlinux.kallsyms1 and .tmp_vmlinux.kallsyms2)
+Add the missing invocations of the MODULE_DESCRIPTION() macro.
 
-Enabling both requires three additional link steps.
-
-When CONFIG_DEBUG_INFO_BTF=y and CONFIG_KALLSYMS=y, the build steps are
-as follows:
-
-    KSYMS   .tmp_vmlinux.kallsyms0.S
-    AS      .tmp_vmlinux.kallsyms0.o
-    LD      .tmp_vmlinux.btf             # temporary vmlinux for BTF
-    BTF     .btf.vmlinux.bin.o
-    LD      .tmp_vmlinux.kallsyms1       # temporary vmlinux for kallsyms step 1
-    NM      .tmp_vmlinux.kallsyms1.syms
-    KSYMS   .tmp_vmlinux.kallsyms1.S
-    AS      .tmp_vmlinux.kallsyms1.o
-    LD      .tmp_vmlinux.kallsyms2       # temporary vmlinux for kallsyms step 2
-    NM      .tmp_vmlinux.kallsyms2.syms
-    KSYMS   .tmp_vmlinux.kallsyms2.S
-    AS      .tmp_vmlinux.kallsyms2.o
-    LD      vmlinux                      # final vmlinux
-
-This is redundant because the BTF generation and the kallsyms step 1 can
-be performed against the same temporary vmlinux.
-
-When both CONFIG_DEBUG_INFO_BTF and CONFIG_KALLSYMS are enabled, we can
-reduce the number of link steps.
-
-The build steps will be changed as follows:
-
-    KSYMS   .tmp_vmlinux0.kallsyms.S
-    AS      .tmp_vmlinux0.kallsyms.o
-    LD      .tmp_vmlinux1                # temporary vmlinux for BTF and kallsyms step 1
-    BTF     .tmp_vmlinux1.btf.o
-    NM      .tmp_vmlinux1.syms
-    KSYMS   .tmp_vmlinux1.kallsyms.S
-    AS      .tmp_vmlinux1.kallsyms.o
-    LD      .tmp_vmlinux2                # temporary vmlinux for kallsyms step 2
-    NM      .tmp_vmlinux2.syms
-    KSYMS   .tmp_vmlinux2.kallsyms.S
-    AS      .tmp_vmlinux2.kallsyms.o
-    LD      vmlinux                      # final vmlinux
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 ---
+ drivers/gpu/drm/tiny/bochs.c    | 1 +
+ drivers/gpu/drm/tiny/cirrus.c   | 1 +
+ drivers/gpu/drm/tiny/gm12u320.c | 1 +
+ 3 files changed, 3 insertions(+)
 
-Changes in v2:
- - Fix the handling --strip-debug flag
+diff --git a/drivers/gpu/drm/tiny/bochs.c b/drivers/gpu/drm/tiny/bochs.c
+index c23c9f0cf49c..d15f4d3baeab 100644
+--- a/drivers/gpu/drm/tiny/bochs.c
++++ b/drivers/gpu/drm/tiny/bochs.c
+@@ -736,4 +736,5 @@ drm_module_pci_driver_if_modeset(bochs_pci_driver, bochs_modeset);
+ 
+ MODULE_DEVICE_TABLE(pci, bochs_pci_tbl);
+ MODULE_AUTHOR("Gerd Hoffmann <kraxel@redhat.com>");
++MODULE_DESCRIPTION("DRM Support for bochs dispi vga interface (qemu stdvga)");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/gpu/drm/tiny/cirrus.c b/drivers/gpu/drm/tiny/cirrus.c
+index 4e3a152f897a..89484f7084bd 100644
+--- a/drivers/gpu/drm/tiny/cirrus.c
++++ b/drivers/gpu/drm/tiny/cirrus.c
+@@ -760,4 +760,5 @@ static struct pci_driver cirrus_pci_driver = {
+ drm_module_pci_driver(cirrus_pci_driver)
+ 
+ MODULE_DEVICE_TABLE(pci, pciidlist);
++MODULE_DESCRIPTION("Cirrus driver for QEMU emulated device");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/gpu/drm/tiny/gm12u320.c b/drivers/gpu/drm/tiny/gm12u320.c
+index 0187539ff5ea..07c6640022c2 100644
+--- a/drivers/gpu/drm/tiny/gm12u320.c
++++ b/drivers/gpu/drm/tiny/gm12u320.c
+@@ -755,4 +755,5 @@ static struct usb_driver gm12u320_usb_driver = {
+ 
+ module_usb_driver(gm12u320_usb_driver);
+ MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
++MODULE_DESCRIPTION("GM12U320 driver for USB projectors");
+ MODULE_LICENSE("GPL");
 
- scripts/link-vmlinux.sh | 38 ++++++++++++++++++++------------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
-
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 6f2fdc9e4fbf..14aedec224af 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -89,7 +89,8 @@ vmlinux_link()
- 	ldflags="${ldflags} ${wl}--script=${objtree}/${KBUILD_LDS}"
- 
- 	# The kallsyms linking does not need debug symbols included.
--	if [ "$output" != "${output#.tmp_vmlinux.kallsyms}" ] ; then
-+	if [ "$output" != vmlinux ] &&
-+	   (! is_enabled CONFIG_DEBUG_INFO_BTF || [ "$output" != .tmp_vmlinux1 ]) then
- 		ldflags="${ldflags} ${wl}--strip-debug"
- 	fi
- 
-@@ -105,11 +106,10 @@ vmlinux_link()
- 
- # generate .BTF typeinfo from DWARF debuginfo
- # ${1} - vmlinux image
--# ${2} - file to dump raw BTF data into
- gen_btf()
- {
- 	local pahole_ver
--	local btf_data=${2}
-+	local btf_data=${1}.btf.o
- 
- 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
- 		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
-@@ -122,8 +122,6 @@ gen_btf()
- 		return 1
- 	fi
- 
--	vmlinux_link ${1}
--
- 	info BTF "${btf_data}"
- 	LLVM_OBJCOPY="${OBJCOPY}" ${PAHOLE} -J ${PAHOLE_FLAGS} ${1}
- 
-@@ -177,15 +175,13 @@ kallsyms()
- 	kallsymso=${2}.o
- }
- 
--# Perform one step in kallsyms generation, including temporary linking of
--# vmlinux.
--kallsyms_step()
-+# Perform kallsyms for the given temporary vmlinux.
-+sysmap_and_kallsyms()
- {
--	kallsyms_vmlinux=.tmp_vmlinux.kallsyms${1}
-+	mksysmap "${1}" "${1}.syms"
-+	kallsyms "${1}.syms" "${1}.kallsyms"
- 
--	vmlinux_link "${kallsyms_vmlinux}"
--	mksysmap "${kallsyms_vmlinux}" "${kallsyms_vmlinux}.syms"
--	kallsyms "${kallsyms_vmlinux}.syms" "${kallsyms_vmlinux}"
-+	kallsyms_sysmap=${1}.syms
- }
- 
- # Create map file with all symbols from ${1}
-@@ -227,11 +223,15 @@ kallsymso=
- btf_vmlinux_bin_o=
- 
- if is_enabled CONFIG_KALLSYMS; then
--	kallsyms /dev/null .tmp_vmlinux.kallsyms0
-+	kallsyms /dev/null .tmp_vmlinux0.kallsyms
-+fi
-+
-+if is_enabled CONFIG_KALLSYMS || is_enabled CONFIG_DEBUG_INFO_BTF; then
-+	vmlinux_link .tmp_vmlinux1
- fi
- 
- if is_enabled CONFIG_DEBUG_INFO_BTF; then
--	if ! gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
-+	if ! gen_btf .tmp_vmlinux1; then
- 		echo >&2 "Failed to generate BTF for vmlinux"
- 		echo >&2 "Try to disable CONFIG_DEBUG_INFO_BTF"
- 		exit 1
-@@ -264,14 +264,16 @@ if is_enabled CONFIG_KALLSYMS; then
- 	# a)  Verify that the System.map from vmlinux matches the map from
- 	#     ${kallsymso}.
- 
--	kallsyms_step 1
-+	sysmap_and_kallsyms .tmp_vmlinux1
- 	size1=$(${CONFIG_SHELL} "${srctree}/scripts/file-size.sh" ${kallsymso})
- 
--	kallsyms_step 2
-+	vmlinux_link .tmp_vmlinux2
-+	sysmap_and_kallsyms .tmp_vmlinux2
- 	size2=$(${CONFIG_SHELL} "${srctree}/scripts/file-size.sh" ${kallsymso})
- 
- 	if [ $size1 -ne $size2 ] || [ -n "${KALLSYMS_EXTRA_PASS}" ]; then
--		kallsyms_step 3
-+		vmlinux_link .tmp_vmlinux3
-+		sysmap_and_kallsyms .tmp_vmlinux3
- 	fi
- fi
- 
-@@ -295,7 +297,7 @@ fi
- 
- # step a (see comment above)
- if is_enabled CONFIG_KALLSYMS; then
--	if ! cmp -s System.map ${kallsyms_vmlinux}.syms; then
-+	if ! cmp -s System.map "${kallsyms_sysmap}"; then
- 		echo >&2 Inconsistent kallsyms data
- 		echo >&2 'Try "make KALLSYMS_EXTRA_PASS=1" as a workaround'
- 		exit 1
--- 
-2.43.0
+---
+base-commit: 19ca0d8a433ff37018f9429f7e7739e9f3d3d2b4
+change-id: 20240609-md-drivers-gpu-drm-tiny-a3370189f560
 
