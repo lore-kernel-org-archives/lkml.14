@@ -1,111 +1,118 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F376341C89;
-	Sun,  9 Jun 2024 13:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F173EA98
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 13:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717939414; cv=none; b=kGdkRL6uiEwBR2B55rXlniiLR2+NFeLJW3UM3/RBy7p2CWqruExLDzhRK6Z17feMdMvih/aclYAO5tmqyEekPHkdmkZj6clRkbuWkHfDiab7/KXVYJ9rCKoCk7U4bSSEBdMcdChdgf2ijL0srZvRD2fQobwnkjhJ8vZVCR9s7Ag=
+	t=1717939559; cv=none; b=UzPSOuU6D8cZ5TMc3QjLpLkyqeyS2G2I7PAbIvAHKZoYLh4M/Mfi5QGT8o6YqWMTwLDn0A0SW39gpF26/3lkUWsQl3r54H+NObz4z+ctkzntEX7V/mq+IhuUdGGmLxVMTD4Tx1J4fUzySH0yzkOqxHVysEO4mRpVXxe20DOrAOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717939414; c=relaxed/simple;
-	bh=tVK11C9kJ+Hk9fp+TR4FXWWOziEx80YrD6j+XXKzGY4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=n7vHUqg9/8DkgmmRmsCgiloKzzZlFW1dytYH3d7Qg22aChB8aOAlBNm1pPDAH23MgwOzEOkTC+HVDdtEdDgH8ow6fnlyvDm87eNKZwn36/y3O1V2A5zoMdKbhush5L4xj+Ei4ZrDyl2nxjJB+QV0S5CgXg/1lF9lNKpaCc+0OmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Tv63ZLCh; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1717939559; c=relaxed/simple;
+	bh=u+u9QLYNu4HrAWgyPgFZCbJEI/NnuOHhXl5OP6+ZmdI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qc3sRGLCO2hd3dy59gDfHJiLleLirLMGzY4zaILJlirg0+v57859OfmT3fteORXZImP9JdYJdmmF28KT4rd1U3w/+hM6F8HWRapI71oQ+1aVltodhXZ8CNx53oz3dfqBUhAHihMCS3voH7nwfQyNwRflrOPpY1txe3tbCd7+Lcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl-com.20230601.gappssmtp.com header.i=@futuring-girl-com.20230601.gappssmtp.com header.b=YMpbYDsK; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=futuring-girl.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Tv63ZLCh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717939375; x=1718544175; i=markus.elfring@web.de;
-	bh=25tOwBxb8NrUCwMNgIyHSiPtABS50jsxg2aCEapBvJ0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Tv63ZLCh+AiQAEpCr2lPKO97YI1D6aZy7+1HJU5OeYjOR+kLXyhWop5dfdci7tuy
-	 5OoIj0+RF0/1nuGcW6twYpd1MMpmsz48qafJmjAZ0ktyozJMGNdHTOqLYd1dx0Dm3
-	 32b+weBTRZ+Bnme6+eJxP1dCjDI1OS5r4pa4lbyRhrUzqxmWSwfTND9OKz42cvCXD
-	 TUakUnAshr943/vRER4Z57oPLDfOZGBa4v7PVbaxCUGTJCVDDRqQa+gbDVDhqp3So
-	 5TuFsEFEF1N3IyXdHulzixuF0DNKuyWwqnlnfj6snjsc+G7J7RXlLuafdKAdBwxb0
-	 9Mli1YHwFKpUuT15IQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N9LIc-1sSJ2o4BzY-00ys40; Sun, 09
- Jun 2024 15:22:55 +0200
-Message-ID: <9903f5cb-f4e6-42f1-a8b1-b3b5da593dc7@web.de>
-Date: Sun, 9 Jun 2024 15:22:52 +0200
+	dkim=pass (2048-bit key) header.d=futuring-girl-com.20230601.gappssmtp.com header.i=@futuring-girl-com.20230601.gappssmtp.com header.b="YMpbYDsK"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c2c6277ef3so1512668a91.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2024 06:25:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=futuring-girl-com.20230601.gappssmtp.com; s=20230601; t=1717939557; x=1718544357; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8fXq7SaL6D194sQwZh+H3HooqCMUEWewEfZ6pmv61pw=;
+        b=YMpbYDsK3qlD6k9XSWAC8sYjl4/OSBdkyruZWgQ3cKsuUDo5q20x9DnbrVhpswPoAI
+         Nq3D1Rsv+s1TQqSy0/r+ehL7MPRZ/RvoRagti2mRCUfmSj2MnT57KqszzvbVfjihDkBE
+         w73yi0DdnUBrfATzYq31QPPaXV3MQjwocSD15qp4d/eTJ5+r4deirIrnVfhCV3zgyRSv
+         HiJtMLbmjarAcVb13AbiuGGOWwKW2FKHhNJgmM2FuFy81EJ79quV4Zlta4JN5A0OVg1G
+         lwwuAHN19C7C2VXJaHt/SC7Kd66qv2Smekyrpa6hvGM+hJqlvUVLHwoEsQ3Xhgm4pCrK
+         yU2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717939557; x=1718544357;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8fXq7SaL6D194sQwZh+H3HooqCMUEWewEfZ6pmv61pw=;
+        b=D4lKYuqJugbxgazwQiewwzcy89YojOEVF9zzakfMo4tkm14qnvh7NfbUWSU4tyexsm
+         Ut9USKhGBbp7S4Ll5E0Zg3oJeauoOlDT7T/3lhkwvYKDJkTjpU5jjaWvsBCiLD7Y5w+J
+         t00rb9WCUA4d0fUew0T67BPcEHHQaWxffiBRPnBKO5XE2YrprhH3jIwPIP2i8tzFUyAy
+         YbuHAfdlbRUVLxpBQg6tyNuOsTJhN46gLeQ+nsJumkmAWf2WBoyexjaD0L6V1kR0W6Xo
+         Jco02XzV8U0jkP8L5YjQJLcVNKYOyAKCKP2cpCwZTCwWqa3xxdsdwglZoWgZFDyCBXri
+         w0wA==
+X-Forwarded-Encrypted: i=1; AJvYcCXiUzxi1AGhoYni8OF7z9sW2wTmIloSuop7CJLnKKvu50YvwqZdL2w2kSz30dq/W6qWo8O1d6xbaMpM0hly3ItOhXhakJjnu2qn74UJ
+X-Gm-Message-State: AOJu0Yyzl6isAhO8/Df0beeLQjlqW9RpJtsg46FILxqP2EPRn8njyNZR
+	Ut+Zu8Xisu6YgVKgPEtfj7kqbVbpekOX2gfT5Dv/zdcP/C0QY8syRdqZcDgnEpnt7lyddUCFSsP
+	PD3e73QguaUSX+VDdZyySDI3EYklQcWwHFYCLVC14h3LU5BAuED8=
+X-Google-Smtp-Source: AGHT+IE1odL3BBZ9hhvpRx8NNX+yPBmqQqY4qii/zdBs8e8gtpn0Fcfehkq7fp6P+LBk9yP6x1KrUy0lPGjR7Qg/WhM=
+X-Received: by 2002:a17:90b:19d1:b0:2c2:dfc3:eb7c with SMTP id
+ 98e67ed59e1d1-2c2dfc3ed08mr2450309a91.18.1717939557527; Sun, 09 Jun 2024
+ 06:25:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Richard chien <richard.chien@hpe.com>, intel-wired-lan@lists.osuosl.org,
- netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Richard chien <m8809301@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>
-References: <20240609081526.5621-1-richard.chien@hpe.com>
-Subject: Re: [PATCH] igb: Add support for firmware update
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240609081526.5621-1-richard.chien@hpe.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20240609113903.732882729@linuxfoundation.org>
+In-Reply-To: <20240609113903.732882729@linuxfoundation.org>
+From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+Date: Sun, 9 Jun 2024 22:25:46 +0900
+Message-ID: <CAKL4bV5zSAu0iEvfHuiJjUZqi=zgr2e7xiEOaiYsWN70Ur9j8Q@mail.gmail.com>
+Subject: Re: [PATCH 6.6 000/741] 6.6.33-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:z17MGjTFufmAsVzFpzvj8lSI7qMzlUGSGK5xS9coywFkv1zog+w
- Wp6dw5fNs1QCmj4Uv/rpGe5PQxd64GZk8rjmzdz1PhUDzoytNLOmHuzu55Opvkv+RkFYg6y
- jY8uS3C9DRGOdtH0pnTauSUyS4LmRfCRKdRLb4jnwsxKYM9G86cqOgSqr8I9BntdkscaOKW
- zx/RfKIKeqnNYJtNzLzAw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ZxIL5KsKow0=;V6dCDFstKp0XHYVZ9/UBAwozoYr
- XECA/KOp+Ounl5M33wIPnBceHaFMeEL5wVzEkWC1LtlmBCmO2QE2eLycecuhIZzbWhnz2HNHV
- LRHyY76hU+/VmjoV1udf/f5C8TpktOm59wawaVWG0bgO3kTm2j9kmHi0cDCgyNqsjMqYm+6cB
- ptS/9tcTv7qLCDMxyonjFVyjaiPTEuQ4T1HYvOH5rjvBAJGGghs5LFM2y2aFsbHxs38IUVaWe
- MYJUsnmxPZT2BzisCu3drOteDWofKSc9NmAB7wZNZlIAPZBIo7dbgkTxA/bwqBdf5sITAMxpy
- Qxvc3fY3r+FZhFnVGdZt25LS6v6D9uKpZp+xaUrLM6SvnXoTNuKPVC90hvzkTNhqcHQ+Y0Iij
- hoz14aG9ckHx4Pq78NHW4vaDrHSh2ZaHK9RCG/GXfbcTSnQ2mOSwlkFPcoDCJcsyFtiqNQRs7
- SUOhLa3d/MCtS6DtpqYI7QsU28STwB0B7lTjawh8MPdSQ8vDnF3/V1VoIW9ra8fUZ2XGFyg10
- GPX24Km0AGrwdvSqxjnpZ+Y9lFKu3oxiYvdLf55gQ/IlnfPH+LL5n+5ELMgm8iw7SInKxj9lw
- bCQ5z48ZoSUweVVJMOPF38JgbEngj0RxSE79PTZ+5wULVhiOfXTX3YGIJ81eMTnHENBqmU9Ci
- auWzA3i9+HB8ZfjzI+5rSlu2olNdRaHKrDeNEaoNE+kJ7hQm2KaNp6sDoxPPgeX4nhjaVV9Aa
- cu4JQWXum7SBxpXnKiasJ2Qn8KivxlfviLn4o9CmJl/ihC9rn5deQRhpgs0NpJ8AQ/qCx9ery
- ntxfSLdxD+x5eQw15AHGjr71hJVJpd39Bmj/FtL60X+tg=
 
-> This patch adds support for firmware update to the in-tree igb driver an=
-d it is actually a port from the out-of-tree igb driver.
-> In-band firmware update is one of the essential system maintenance tasks=
-. To simplify this task, the Intel online firmware update
-=E2=80=A6
+Hi Greg
 
-Please improve such a change description also according to word wrapping
-because of more desirable text line lengths.
-
-
-=E2=80=A6
-> +++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-> @@ -724,128 +724,282 @@ static void igb_get_regs(struct net_device *netd=
-ev,
->  		regs_buff[739] =3D rd32(E1000_I210_RR2DCDELAY);
->  }
+On Sun, Jun 9, 2024 at 8:41=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> -static int igb_get_eeprom_len(struct net_device *netdev)
-> -{
-> -	struct igb_adapter *adapter =3D netdev_priv(netdev);
-> -	return adapter->hw.nvm.word_size * 2;
-> +static u8 igb_nvmupd_get_module(u32 val)
-> +{
-> +        return (u8)(val & E1000_NVMUPD_MOD_PNT_MASK);
-> +}
-=E2=80=A6
+> This is the start of the stable review cycle for the 6.6.33 release.
+> There are 741 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue, 11 Jun 2024 11:36:08 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.6.33-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Would you like to reconsider the indentation once more for your change app=
-roach?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?h=3Dv6.10-rc2#n18
+6.6.33-rc2 tested.
 
-Regards,
-Markus
+Build successfully completed.
+Boot successfully completed.
+No dmesg regressions.
+Video output normal.
+Sound output normal.
+
+Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
+
+[    0.000000] Linux version 6.6.33-rc2rv
+(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 14.1.1 20240522, GNU ld (GNU
+Binutils) 2.42.0) #1 SMP PREEMPT_DYNAMIC Sun Jun  9 22:02:19 JST 2024
+
+Thanks
+
+Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
