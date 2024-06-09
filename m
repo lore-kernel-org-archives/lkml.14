@@ -1,125 +1,89 @@
-Received: from mail.valinux.co.jp (mail.valinux.co.jp [210.128.90.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B8B1CD3C
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 14:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.128.90.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA0A2233A
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 14:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717942695; cv=none; b=pb969C1e0Bsvo+qzLHNjAuhEQZGepAXJnTBKUY7xlLKE2rBQJF6A5LFwdtoggfoB4HJB0vTvlw+qXCLuCbylm1TrLfN8K4WCFjjMmTa9dGUySceC0CS2A0+TlrefvVRst5/mHJDyFG4aeqc/kcDAKEKaqXRY51BT+WXa7zxMoUM=
+	t=1717943116; cv=none; b=gkojatleMxmlNJ9I3H8JO73PJDqU8j2zRc4YyXNnATrzD9HpRSMwmn1oc2Uv/s5P9TrM41jtZYjxgVlWXTplCzgT0DZOl4E4zjWYMFIHq0knvL0f9INu6qjSbrMguGyhBU8GqnIhE8wk2qTABQYCBt7RbDt8gFGPp08QjHGXWWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717942695; c=relaxed/simple;
-	bh=2o6h+jkbF3j5Xznkz/U08BjHf5jtHcabwfD/Tcq1DGs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AWU9Ssod1YXT/+trlcEFfldKac0HyKMF42+cO4K9X62t/QcsFGHsbQ2PKc4RqQeEfRXax7+IxCwTY9n6FeaCiRyvoAgW2/00xARao8ihbHAdrO3s6xpfKkgGwG38+wfKQDQXr4C5JB0cQNUM1Xtzt6ONcOhwN84z6tZfhG2RCoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; arc=none smtp.client-ip=210.128.90.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valinux.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
-Received: from localhost (localhost [127.0.0.1])
-	by mail.valinux.co.jp (Postfix) with ESMTP id 5112AA9C38;
-	Sun,  9 Jun 2024 23:18:05 +0900 (JST)
-X-Virus-Scanned: Debian amavisd-new at valinux.co.jp
-Received: from mail.valinux.co.jp ([127.0.0.1])
-	by localhost (mail.valinux.co.jp [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id SAkmJ4iE8ZGW; Sun,  9 Jun 2024 23:18:05 +0900 (JST)
-Received: from localhost.localdomain (p10213112-ipngn20001marunouchi.tokyo.ocn.ne.jp [153.220.101.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.valinux.co.jp (Postfix) with ESMTPSA id 0047FA9BFA;
-	Sun,  9 Jun 2024 23:18:04 +0900 (JST)
-From: takakura@valinux.co.jp
-To: alex@ghiti.fr,
-	songshuaishuai@tinylab.org,
-	paul.walmsley@sifive.com
-Cc: palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	guoren@kernel.org,
-	xianting.tian@linux.alibaba.com,
-	takahiro.akashi@linaro.org,
-	takakura@valinux.co.jp,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [-fixes] riscv: kexec: Avoid deadlock in kexec crash path
-Date: Sun,  9 Jun 2024 23:18:02 +0900
-Message-Id: <20240609141802.6976-1-takakura@valinux.co.jp>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <545a7f3e-436e-4fd7-a45f-4f800bd58b20@ghiti.fr>
-References: <545a7f3e-436e-4fd7-a45f-4f800bd58b20@ghiti.fr>
+	s=arc-20240116; t=1717943116; c=relaxed/simple;
+	bh=4DAeBNRuP/ZxcrO8Rw9fTCFAb9nXpRMGSiRThrAiwAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a6UWrlBv0zjY02i2v+0QOzeXfVA6Wpm8FwtSfscsr2UfBmwxKlqmQD79VaBHJ3TtvinH9P61qEKhRLSkYicUDfvhOOefY+61uasraaRzh0ugKiFh+bivJkUkLbNkvo0TxHwWaMCkI7Q0i+irPqO5x7vjOkznZlv4XWlYm8Q+TBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ABCBC2BD10;
+	Sun,  9 Jun 2024 14:25:12 +0000 (UTC)
+Date: Sun, 9 Jun 2024 10:25:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Sam Sun <samsun1006219@gmail.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, syzkaller-bugs@googlegroups.com, peterz@infradead.org,
+ jpoimboe@kernel.org, jbaron@akamai.com, ardb@kernel.org, mingo@redhat.com,
+ Borislav Petkov <bp@alien8.de>, dave.hansen@linux.intel.com, hpa@zytor.com,
+ xrivendell7@gmail.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Tejun Heo <tj@kernel.org>
+Subject: Re: [Linux kernel bug] WARNING in static_key_slow_inc_cpuslocked
+Message-ID: <20240609102530.0a292b07@rorschach.local.home>
+In-Reply-To: <87o78axlbm.ffs@tglx>
+References: <20240609090431.3af238bc@gandalf.local.home>
+	<87o78axlbm.ffs@tglx>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Alex, Song,
+On Sun, 09 Jun 2024 16:06:05 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-On Fri, 24 May 2024, Alexandre Ghiti wrote:
->Hi Song, Ryo,
->
->On 06/05/2024 07:10, takakura@valinux.co.jp wrote:
->> Hi Song and Paul!
->>
->>>> To avoid the deadlock, this patch directly EOI the irq regardless of
->>>> the active status of irqchip.
->>> Taking a quick look at the other architectures, looks like no one else is
->>> doing this.  Is this addressing a RISC-V-only problem?
->>>
->>>> diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
->>>> index f6c7135b00d7..d7ddf4d2b243 100644
->>>> --- a/arch/riscv/kernel/machine_kexec.c
->>>> +++ b/arch/riscv/kernel/machine_kexec.c
->>>> @@ -149,20 +149,12 @@ static void machine_kexec_mask_interrupts(void)
->>>>   
->>>>   	for_each_irq_desc(i, desc) {
->>>>   		struct irq_chip *chip;
->>>> -		int ret;
->>>>   
->>>>   		chip = irq_desc_get_chip(desc);
->>>>   		if (!chip)
->>>>   			continue;
->>>>   
->>>> -		/*
->>>> -		 * First try to remove the active state. If this
->>>> -		 * fails, try to EOI the interrupt.
->>>> -		 */
->>>> -		ret = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
->>>> -
->>>> -		if (ret && irqd_irq_inprogress(&desc->irq_data) &&
->>>> -		    chip->irq_eoi)
->>>> +		if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
->>>>   			chip->irq_eoi(&desc->irq_data);
->> I think this deadlock is relevant to riscv and arm64 as they both
->> acquire irqdesc spinlock by calling irq_set_irqchip_state() during their
->> machine_kexec_mask_interrupts().
->>
->> However, I think calling irq_set_irqchip_state() during
->> machine_kexec_mask_interrupts() is arm64 specific way of handling EOI
->> which is not necessary for riscv.
->> For arm64, its interrupt controller(gic) seems to have two ways of EOIing
->> an interrupt depending on the mode which gic is configured. One of them
->> treats EOI as two step procedure, priority drop and deactivation. I think
->> irq_set_irqchip_state() is there to handle the deactivation part of
->> the procedure.
->> For riscv, EOI only requires irq_eoi handler to complete EOI and I think
->> keeping irq_set_irqchip_state() will only leave this possible deadlock
->> without any use.
->> So I think it's best we simply remove irq_set_irqchip_state() as Song did.
->
->
->I think this ^ is relevant and should be added to the commit log. @Song 
->can you respin another version with the updated commit log? @Ryo can you 
->add your Reviewed-by when it's done?
+> On Sun, Jun 09 2024 at 09:04, Steven Rostedt wrote:
+> > On Sun, 9 Jun 2024 14:33:01 +0800
+> > Sam Sun <samsun1006219@gmail.com> wrote:  
+> >> [   82.310798][ T8020] ------------[ cut here ]------------
+> >> [   82.311236][ T8020] kernel BUG at arch/x86/kernel/jump_label.c:73!  
+> >
+> > This is not a bug with jump labels. It's a bug with whatever is using jump
+> > labels. Looks like something tried to modify a jump label that no longer
+> > exists.  
+> 
+> The jump label exists.
 
-Sure!
+Ah, I missed the set_attr_rdpmc() as something not with a "?" in front :-p
 
->This fix has been lagging behind for quite some time, it would be nice 
->to merge this in 6.10 and backport to stable.
+> 
+> >> [   82.331873][ T8020]  set_attr_rdpmc+0x193/0x270
+> >> [   82.332179][ T8020]  ? get_attr_rdpmc+0x30/0x30
+> >> [   82.332511][ T8020]  ? sysfs_kf_write+0x18d/0x2b0
+> >> [   82.332832][ T8020]  ? sysfs_kf_read+0x370/0x370
+> >> [   82.333159][ T8020]  kernfs_fop_write_iter+0x3ab/0x500  
+> >
+> > So, something in kernfs modified a jump label location that was freed?  
+> 
+> No. What happens is:
+> 
+> CPU 0                           	CPU 1
+> 
+> kernfs_fop_write_iter()			kernfs_fop_write_iter()
+>   set_attr_rdpmc()		  	  set_attr_rdpmc()
+>     arch_jump_label_transform_queue()       arch_jump_label_transform_queue()
+>      mutex_lock(text_mutex)                   mutex_lock(text_mutex)
+>      __jump_label_patch()
+>      text_poke_queue()
+>      mutex_unlokc(text_mutex)
+>                                               __jump_label_patch()
+> 
+> CPU 1 sees the original text and not the expected because CPU 0 did not
+> yet invoke arch_jump_label_transform_apply().
+> 
+> So clearly set_attr_rdpmc() lacks serialization, no?
+> 
 
-Sincerely,
+Hmm, but should jump labels fail when that happens? Or should it catch
+it, and not cause a BUG?
 
-Ryo Takakura
-
->Thanks,
->
->Alex
+-- Steve
