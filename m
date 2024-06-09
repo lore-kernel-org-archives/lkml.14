@@ -1,162 +1,174 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F81EAF9;
-	Sun,  9 Jun 2024 22:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57611CFAF
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 22:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717971545; cv=none; b=fjgDBd8aNzhPESFUu2QFsu9GHpmHfEt34hCX5L8iKZndoDenerMa63uQxNwMMmdKVUK7Q2ThdOdEw+FMmjqGgs+s7dFw1vugmSRbwCfS9yOEQo8yZO0XMxcKgHucC86l/Q2esmnw8Sz1xD2RtLYlCl/CaE5GKkgp92srdsmzUFU=
+	t=1717971635; cv=none; b=VJA372LSrRvFppfyz09YS6OdTF2OjQl9aUDehS2KuTvssOxah7HmZhbLKqNU0NIpi8nHFSCZ90k5Yp75U/vfzkB+AXlsEQH7oFlvG2zWrOGK/t7fCy0uei2RH3hFZB8wvBFeogrX672tSGjZaobiZe3UJuYkUQBWyAxpXuIhfLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717971545; c=relaxed/simple;
-	bh=ySuyf8UbF0zWjzvwoGYc+ew5iXeHZUMDNjl7NU6DiCc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=k05XrsWKwwXHCXereFqBb+aiNd3nXCx2G7hZnNqfVzhYDjdL9LP3COtFRm8Kvcy4HCWiZdL4einEDW5gVBb+l2nIdenUKdfzFbAfMlOdjWdtyr9PSfxY1RATHWiTLnY6+0GkknYuMQatcypIyIK+/qRfwO2cDUZkkhHKuvW9wdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UcG/T8D2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717971635; c=relaxed/simple;
+	bh=9+n4z6PHma9WMp2Smv74h7ErUV/1pq2HGsBupGkD7dA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=awHHPc0ES6E8JdApFcRGZBF4dqfLJki3U0Yg3O27xUD9lQH+O+iMVyJSFy4sirV8z6bCXEAChbilY1eFjuJIawTjuDjzy7hAESz8tFfvtXng3Up1aLge0U7B7R6n5+Def4IGfv8pb0VPLxg9QLLHUaFotyk5I5kJEAb9s8rxWDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=op2Ookdx; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UcG/T8D2"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 459KrZO1025542;
-	Sun, 9 Jun 2024 22:19:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=N5eQqMFkP57lxHjn9HDz4v
-	EB4SJwMNThRpvnJhhQHpw=; b=UcG/T8D211BCdRfNuk8HKiQOqHIZxskACmAEVr
-	lyFv1zz86XpAEDMi6OYEywDEjWf7cQP6RJtFPQeq1hjG7SFs1/i3WePbjHs0ADuV
-	Pw++JbP4fwlXHAueLZQOWk/3hts65pJi7yYGnPiksNTlPu3tnHOlAGaod9kIbUIs
-	/6rRdnobjSZwqZ6NjXX3ts8whHm0uwKPnqPmU0tW45Gnxs2yei4/k3cyYz3Y9FAj
-	3EiWAVu9hRx6wL9PggQOeYOwE89uWstW5zyJG/BW0FTTXp0PL6uYZN4I50bNezB6
-	s8yF/XWrlnXRP0Zzxw1mbwW5GD5ey0Wzn1OhSj7p4WxVXeWg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymfp7a3dg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 09 Jun 2024 22:19:00 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 459MIwr8002475
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 9 Jun 2024 22:18:59 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 9 Jun 2024
- 15:18:58 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Sun, 9 Jun 2024 15:18:58 -0700
-Subject: [PATCH] spi: add missing MODULE_DESCRIPTION() macros
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="op2Ookdx"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-354b722fe81so3245183f8f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2024 15:20:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1717971631; x=1718576431; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oHc0h4ytn0quxx7T9SUT8FUoAjYS+2WFatBpz0qSLT8=;
+        b=op2OokdxRnKRuXEghujswnMB315tnkCrp17dbS4oo/gXjwlzwa9XKecPUAlD2Kq4WE
+         WMQO/Du+E+xZCQGR+Dy/V/G1q2X+Yp0DWF2eK16MiInMqbSt+SnIEWPxR3Dee6DrV/Hm
+         zqF+FN0eON0+qGFSvPPWj+YeV1nyDDpwLEM9953VUz6OnWwtsFAbEShT4VPa99FSz/xq
+         bUbIZOdjbWTlpBTa0WhXp+E7EwFtetmHaq8ekyo6/Hj51uAXWebvSVfD+TWeRyjiAZP/
+         W3rnTAYIIPFNKgVSHjq1laBS2Nt8EwBs/ReTi1Zqkq1rUPP0YjO4xW/W8gaJgZcMIQCy
+         diiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717971631; x=1718576431;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oHc0h4ytn0quxx7T9SUT8FUoAjYS+2WFatBpz0qSLT8=;
+        b=ZHbPPhzSpslOioV2ShEe7n+fNuu6d0cnAFnYsW3XUFQ4Hf1EeWIBZhzrrqkYJgPS0I
+         HvXhS/0AW/6hF4IxP01sAwpUHyGgrpDsVz9ty27EfBIDYsVyCvgvUlqjLZSBGRq9ROKq
+         FGKriDjoHfyceEt27tQnicEk1iuNVjMH/QAqmVkI5Wxm1gPBoLeLWn1wFnnS2EVS4bpv
+         uEc4PwGqyGOE+05fi6Bx8UEO77cX1KHyTzfAoIzy/gLn2K7qwgmlHj/yDMRD2QbDPPlX
+         pOk5p2YqbKhQI+c7c0QvjmdrEfZvUL7fQXYpzQE62kr9UxSiqi6VrhDk5OADl46aRV7L
+         8Yyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXxg++Rnf4rC7WaShKd6ttA+Ej3uRxykGQRN1N4uaH6eF51bDaQ9waNSKCChqlxAC7mSKA3BViLUEK+T85bM5BuLQCT3MOmeI4oMzOv
+X-Gm-Message-State: AOJu0YwPDR1ankiNxR+BhGoDZ0sg0aK8QgiKUSRUh1X/c9oWgpfj3d7G
+	aNA5fawTI/7at+I7InGjVMDkepB1TCze6vF5coi16xSmsojTG64jEk6LETlKHVk=
+X-Google-Smtp-Source: AGHT+IHeyJMWEvfMZi/wZCb6BpC4/fb80QGI+bbYZBWrD7lSEDalPFXwyGcRzY9689gjelOtNXYOyg==
+X-Received: by 2002:a5d:634e:0:b0:35f:1384:de4d with SMTP id ffacd0b85a97d-35f1384e1e3mr2786380f8f.37.1717971631047;
+        Sun, 09 Jun 2024 15:20:31 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421f23d06ddsm3444455e9.8.2024.06.09.15.20.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Jun 2024 15:20:30 -0700 (PDT)
+Date: Sun, 9 Jun 2024 23:20:29 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Christian Loehle <christian.loehle@arm.com>,
+	Hongyan Xia <hongyan.xia2@arm.com>,
+	John Stultz <jstultz@google.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] sched: Consolidate cpufreq updates
+Message-ID: <20240609222029.yebhborjptp3gr6a@airbuntu>
+References: <20240530104653.1234004-1-qyousef@layalina.io>
+ <20240601224017.qku2mhbaz4vsh3a3@airbuntu>
+ <CAKfTPtCHfnDAD-p_ScqHh7cZ=7AXDTw3fE0+ynMHNvCjuG8ogw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240609-md-drivers-spi-v1-1-1c7444f53cde@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAFEqZmYC/x3MQQqDQAxG4atI1g2kIoq9SulixvlbA3UqSSuCe
- PeOLr/Fexs5TOF0qzYyLOr6yQXXS0XDGPILrKmYaqkbaaXnKXEyXWDOPiv3XdcEoE0ShUo0G56
- 6nsP7ozgGB0cLeRiPzVvzb+Up+BdG+/4HTCSgnX8AAAA=
-To: Mark Brown <broonie@kernel.org>
-CC: <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 35kC_feu8IiuVCZfmxFCPlL9L7wanhBE
-X-Proofpoint-ORIG-GUID: 35kC_feu8IiuVCZfmxFCPlL9L7wanhBE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-09_17,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 phishscore=0
- priorityscore=1501 clxscore=1011 bulkscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406090175
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtCHfnDAD-p_ScqHh7cZ=7AXDTw3fE0+ynMHNvCjuG8ogw@mail.gmail.com>
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spi/spi-altera-core.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spi/spi-fsl-lib.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spi/spi-omap2-mcspi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spi/spi-qup.o
+On 06/05/24 14:22, Vincent Guittot wrote:
+> Hi Qais,
+> 
+> On Sun, 2 Jun 2024 at 00:40, Qais Yousef <qyousef@layalina.io> wrote:
+> >
+> > On 05/30/24 11:46, Qais Yousef wrote:
+> >
+> > > +static __always_inline void
+> > > +__update_cpufreq_ctx_switch(struct rq *rq, struct task_struct *prev)
+> > > +{
+> >
+> > I found a problem here. We should check if prev was sugov task. I hit a
+> > corner case where we were constantly switching between RT task and sugov.
+> >
+> >         if (prev && prev->dl.flags & SCHED_FLAG_SUGOV) {
+> >                 /* Sugov just did an update, don't be too aggressive */
+> >                 return;
+> >         }
+> >
+> 
+> I reran my test with this v5 and the fix above but the problem is
+> still there, it waits for the next tick to update the frequency
+> whereas the cpu was idle.
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
+Hurmph. Sorry I forgot to rerun this test. I broke it again with this
+optimization :( Maybe I can replace this with explicit check with util_avg ==
+SCHED_CAPACITY_SCALE, though this is not generic enough..
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/spi/spi-altera-core.c | 1 +
- drivers/spi/spi-fsl-cpm.c     | 1 +
- drivers/spi/spi-fsl-lib.c     | 1 +
- drivers/spi/spi-omap-uwire.c  | 1 +
- drivers/spi/spi-omap2-mcspi.c | 1 +
- drivers/spi/spi-qup.c         | 1 +
- 6 files changed, 6 insertions(+)
+	diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+	index 6d8d569cdb6a..d64d47b4471a 100644
+	--- a/kernel/sched/fair.c
+	+++ b/kernel/sched/fair.c
+	@@ -4702,7 +4702,6 @@ static void detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+	 static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+	 {
+		u64 now = cfs_rq_clock_pelt(cfs_rq);
+	-       unsigned long prev_util_avg = cfs_rq->avg.util_avg;
 
-diff --git a/drivers/spi/spi-altera-core.c b/drivers/spi/spi-altera-core.c
-index 87e37f48f196..7af097929116 100644
---- a/drivers/spi/spi-altera-core.c
-+++ b/drivers/spi/spi-altera-core.c
-@@ -219,4 +219,5 @@ void altera_spi_init_host(struct spi_controller *host)
- }
- EXPORT_SYMBOL_GPL(altera_spi_init_host);
- 
-+MODULE_DESCRIPTION("Altera SPI Controller driver core");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/spi/spi-fsl-cpm.c b/drivers/spi/spi-fsl-cpm.c
-index e335132080bf..23ad1249f121 100644
---- a/drivers/spi/spi-fsl-cpm.c
-+++ b/drivers/spi/spi-fsl-cpm.c
-@@ -415,4 +415,5 @@ void fsl_spi_cpm_free(struct mpc8xxx_spi *mspi)
- }
- EXPORT_SYMBOL_GPL(fsl_spi_cpm_free);
- 
-+MODULE_DESCRIPTION("Freescale SPI controller driver CPM functions");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/spi/spi-fsl-lib.c b/drivers/spi/spi-fsl-lib.c
-index 4fc2c56555b5..bb7a625db5b0 100644
---- a/drivers/spi/spi-fsl-lib.c
-+++ b/drivers/spi/spi-fsl-lib.c
-@@ -158,4 +158,5 @@ int of_mpc8xxx_spi_probe(struct platform_device *ofdev)
- }
- EXPORT_SYMBOL_GPL(of_mpc8xxx_spi_probe);
- 
-+MODULE_DESCRIPTION("Freescale SPI/eSPI controller driver library");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/spi/spi-omap-uwire.c b/drivers/spi/spi-omap-uwire.c
-index 210a98d903fa..03b820e85651 100644
---- a/drivers/spi/spi-omap-uwire.c
-+++ b/drivers/spi/spi-omap-uwire.c
-@@ -541,5 +541,6 @@ static void __exit omap_uwire_exit(void)
- subsys_initcall(omap_uwire_init);
- module_exit(omap_uwire_exit);
- 
-+MODULE_DESCRIPTION("MicroWire interface driver for OMAP");
- MODULE_LICENSE("GPL");
- 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 7e3083b83534..b428990f6931 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -1671,4 +1671,5 @@ static struct platform_driver omap2_mcspi_driver = {
- };
- 
- module_platform_driver(omap2_mcspi_driver);
-+MODULE_DESCRIPTION("OMAP2 McSPI controller driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 2af63040ac6e..1e335cd961a4 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -1369,5 +1369,6 @@ static struct platform_driver spi_qup_driver = {
- };
- module_platform_driver(spi_qup_driver);
- 
-+MODULE_DESCRIPTION("Qualcomm SPI controller with QUP interface");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:spi_qup");
+		/*
+		 * Track task load average for carrying it to new CPU after migrated, and
+	@@ -4736,16 +4735,6 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+		} else if (cfs_rq->decayed && (flags & UPDATE_TG)) {
+			update_tg_load_avg(cfs_rq);
+		}
+	-
+	-       /*
+	-        * This field is used to indicate whether a trigger of cpufreq update
+	-        * is required. When the CPU is saturated, other load signals could
+	-        * still be changing, but util_avg would have settled down, so ensure
+	-        * that we don't trigger unnecessary updates as from fair policy point
+	-        * of view, nothing has changed to cause a cpufreq update.
+	-        */
+	-       if (cfs_rq->decayed && prev_util_avg == cfs_rq->avg.util_avg)
+	-               cfs_rq->decayed = false;
+	 }
 
----
-base-commit: 19ca0d8a433ff37018f9429f7e7739e9f3d3d2b4
-change-id: 20240609-md-drivers-spi-9774aee6d0b0
+	 /*
 
+> 
+> Also continuing here the discussion started on v2:
+> 
+> I agree that in the current implementation we are probably calling way
+> too much cpufreq_update, we can optimize some sequences and using the
+> context switch is a good way to get a better sampling but this is not
+> enough and we still need to call cpufreq_update in some other case
+> involving enqueue. The delay of waiting for the next tick is not
+
+Do you have any suggestions? I'm not sure how to classify different type of
+enqueue events where some would need an update and others don't.
+
+I think cases that involve wakeup preemption not causing a context switch AND
+maybe a large change in util_avg?
+
+> acceptable nor sustainable especially with 250 and lower HZ but I'm
+
+I think it is fine for 250. I have been testing with this and didn't see
+issues. But wider testing could yield different results.
+
+> pretty sure it would be the same for some system using 1000HZ. IIUC
+> new HW is becoming much more efficient at updating the frequency so it
+> would not be a problem for this new system to update performance more
+> frequently especially when it ends up being as simple as writing a
+> value in a memory region without waiting for it to be applied (like
+> cpufreq fast_switch methods). All this to say that always/only waiting
+> for context switch or tick might be suitable for your case but it
+> doesn't look like the right solution for all devices and systems
+
+I just don't want us to end up with probabilistic approach. I am fine with more
+updates, but we need to be more intentional/specific when it's truly needed.
