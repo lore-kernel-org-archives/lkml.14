@@ -1,45 +1,46 @@
 Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8DE46450;
-	Sun,  9 Jun 2024 08:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6407A4AEEF;
+	Sun,  9 Jun 2024 08:28:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717921691; cv=none; b=IjGXWO+0raqIOlIYBFNISPM4QqIp68erIY3xJYKxIT0qcnVgBvGIuVzLhMTXGvFqjuiWFcBIk8QLw6Xwu+Jx4TiRQbQJ2SL8R3+7YEz+DUkY1ePIG6OT2syTbIZDUfw4ahk7mT0RQRj0sJEsCNKYMQnF3GeNrQgF4bh6oFgImjM=
+	t=1717921692; cv=none; b=KgHh4JOULa6nN9zC4PEpQYlhrxkmDi4Vod9pnQmf31b8kxBlO39ebGJgL0hoD0R1LzFzbb+xNHVuH9BgnD6NVoeQxte3YRb4dLzed7yH5izbh464wMo1RIfi1Wea4d5uFDMvBPCbewHzfZZ8T27rA1274RMM2V87aB/JMFU5nbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717921691; c=relaxed/simple;
-	bh=GPl3J34M1d7NjmG00uBdfMYpPYDtbP1uZbBHCNdhJQc=;
+	s=arc-20240116; t=1717921692; c=relaxed/simple;
+	bh=GdljLaLr8e2ac9pRTDj/L0VN9xs0OlSFKWDz1A6N+NQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QQS972VpI44Ka0TYbz1Euw1KMiQ5MQhTqL34Av4ypvicDKwp9xOjXqYbUMF/uomQOeq2+EDGwiMPSAGbMzw0MAeQyI0xuuOliHaNPCASle2t6Y/1NBx+RshtbUtYoLiVd8K76obvBv4TNRslrQUB2yXZIk4f9NAeZnJStyaA2O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=IgQ0MyW2; arc=none smtp.client-ip=192.134.164.83
+	 MIME-Version; b=lBckZwFHtb14FUDfTizyr9FHmYco6F0MRtfEoVeOMx4gaMlZrvQYEW3GaOzDC9Mxl0MzKD6R1zOI3Bmtl82lpFhjr+2BT4/xN+ql2p/z1MrC3kHK+tNrbzOSAzt2t/uYDXB/ME67Wk04WpXfSLnrVvKIjl6UDyWFMrR71ByuPMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=bb3XFAHK; arc=none smtp.client-ip=192.134.164.83
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="IgQ0MyW2"
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="bb3XFAHK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=inria.fr; s=dc;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=YQXnrH/08rhpNkHP4SNUqJ/atSEr8v14IoPZZmef880=;
-  b=IgQ0MyW2rkojQw4XJ41XCYNyMbhdPXIdKBamHkri3xuQXbotjCSMI0PI
-   7bMEDVQSODgpQ5t3pXWVvE1Ck+JMwYJ5vvwSMbuWhDWEOVMQHlCI3Vhsf
-   JKCB30mAP/Y0kzTFt2wadul2Jc2GMBRC04jev/bvyWJj4x6d+13yI4Qgj
-   s=;
+  bh=a78ss3v9OAJO+CKMzQy2rYpVoY9Q0ZyloAHjx8C4Uac=;
+  b=bb3XFAHK0DaOwijmTFrc0riw8PXL4V4YRFwXnaE8buCbFWlGyHgIACL3
+   JEQnoTZ16ALbyqH62TEtlLkcP49cjqDZJIt/tbmXgoVOdNucLX/1BEtyU
+   CxHi4/QSlmFcsJl+Ke5d6RuugzOyOFyeAWFiSeVJMhZFKbGTMkFPaiQ5L
+   I=;
 Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
 X-IronPort-AV: E=Sophos;i="6.08,225,1712613600"; 
-   d="scan'208";a="169696904"
+   d="scan'208";a="169696906"
 Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
   by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2024 10:27:49 +0200
 From: Julia Lawall <Julia.Lawall@inria.fr>
-To: Jens Axboe <axboe@kernel.dk>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Cc: kernel-janitors@vger.kernel.org,
-	linux-block@vger.kernel.org,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org,
 	"Paul E . McKenney" <paulmck@kernel.org>,
 	Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH 09/14] block: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
-Date: Sun,  9 Jun 2024 10:27:21 +0200
-Message-Id: <20240609082726.32742-10-Julia.Lawall@inria.fr>
+Subject: [PATCH 11/14] posix-timers: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+Date: Sun,  9 Jun 2024 10:27:23 +0200
+Message-Id: <20240609082726.32742-12-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20240609082726.32742-1-Julia.Lawall@inria.fr>
 References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
@@ -139,34 +140,31 @@ Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
 ---
- block/blk-ioc.c |    9 +--------
+ kernel/time/posix-timers.c |    9 +--------
  1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/block/blk-ioc.c b/block/blk-ioc.c
-index 25dd4db11121..ce82770c72ab 100644
---- a/block/blk-ioc.c
-+++ b/block/blk-ioc.c
-@@ -32,13 +32,6 @@ static void get_io_context(struct io_context *ioc)
- 	atomic_long_inc(&ioc->refcount);
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index b924f0f096fa..bad5db979664 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -412,18 +412,11 @@ static struct k_itimer * alloc_posix_timer(void)
+ 	return tmr;
  }
  
--static void icq_free_icq_rcu(struct rcu_head *head)
+-static void k_itimer_rcu_free(struct rcu_head *head)
 -{
--	struct io_cq *icq = container_of(head, struct io_cq, __rcu_head);
+-	struct k_itimer *tmr = container_of(head, struct k_itimer, rcu);
 -
--	kmem_cache_free(icq->__rcu_icq_cache, icq);
+-	kmem_cache_free(posix_timers_cache, tmr);
 -}
 -
- /*
-  * Exit an icq. Called with ioc locked for blk-mq, and with both ioc
-  * and queue locked for legacy.
-@@ -102,7 +95,7 @@ static void ioc_destroy_icq(struct io_cq *icq)
- 	 */
- 	icq->__rcu_icq_cache = et->icq_cache;
- 	icq->flags |= ICQ_DESTROYED;
--	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
-+	kfree_rcu(icq, __rcu_head);
+ static void posix_timer_free(struct k_itimer *tmr)
+ {
+ 	put_pid(tmr->it_pid);
+ 	sigqueue_free(tmr->sigq);
+-	call_rcu(&tmr->rcu, k_itimer_rcu_free);
++	kfree_rcu(tmr, rcu);
  }
  
- /*
+ static void posix_timer_unhash_and_free(struct k_itimer *tmr)
 
