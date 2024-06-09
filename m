@@ -1,507 +1,779 @@
-Received: from fallback21.i.mail.ru (fallback21.i.mail.ru [79.137.243.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E98F18C22;
-	Sun,  9 Jun 2024 21:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2249C18C22
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 21:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717968094; cv=none; b=Bi46HpGsUD6TLZCQpLiMeU937Fez3fO6vCjfykVe72GVZNexHYx6pQyemgRhSy7P4w8G2KSmMro/WepGooYuR994oJHVebf1zZzTC4w0q13VoTtbljliMLWpHVeHzMse3P54yWjJYWUByjXs+JVCz6XffUgSamG1NsWSN06XBGA=
+	t=1717968445; cv=none; b=YaQU51+bdLTWw3WGHwKz51YcvQCNBuqrcnT38YPjJfjbD3DAuR8fa9dojScf1bf6htEv3ucnRqH9UAaCoUm/1YOHTRt8ic8Qxo8YSo07DWFNK83NxVWI4bt+dLlFmvqtlbqaRpXnH4sHlHdD1/fx0Wk0ouzVylnU0O4KML40p40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717968094; c=relaxed/simple;
-	bh=16KwHNUlvDsOYAXkcqW5ejfnkolNkWhcpacjuCCszKk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hnzv98LEwICC2Z96++5SiXwWTVbYoh3fOgJ4yHs0b2XdwcZPX5WzypN+r8mg2ggnuyQHXF8Mwe6Mn3rAz5+kV28EoHDT4yFHmCgVCCpiNAOQTIB8NHcYL5eoHv/LdfaRV2PmbHS4Tj8l7LEiZXcX8tAG3ik3l1JyfryK0iiToEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=NO4my1k8; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=r8sUy69O; arc=none smtp.client-ip=79.137.243.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+	s=arc-20240116; t=1717968445; c=relaxed/simple;
+	bh=qw26Rh944yHbSxmUhUHG80a8C8gvkVdDtx5DHHxaei8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=IkxIZs6xHmdrFWUF99if26kX/AnWtt5wIKrEdOwYsqyTs26Q09jiFVv+s/+MDw9Fy1n1Cd9/jfZikARwQG7y04xhm0vvshe1Rdgn6bhKdHLQayxTqCb5CaNHHpqCry3HPtzP1Y4sP7lfJGnLzCbualKLDtbt89ODJEfLzwg8Kws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=aOUvvXVq; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="NO4my1k8";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="r8sUy69O"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=jOnFs9Pdw4UJwdT0ViyG51lgnTVZuupciunTA3I4yKw=;
-	t=1717968090;x=1718058090; 
-	b=NO4my1k8VCZjHuH4MGueJH0vpwgS/VbFMThXNtUIPHTJ9HNHXo7Dxif/fB4Hj1qd4VHI/3ITfnrQ9IjyUaDQBmv4vOYuD3tJexV5r0tJT4wEM8zsPl1nWG4iz2vh6GoBZ+GahVJAJOSyKwC2hPDZR5kXWQBuRd5k5M4KeolsWro=;
-Received: from [10.12.4.20] (port=40770 helo=smtp44.i.mail.ru)
-	by fallback21.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1sGPHN-00857Z-OA; Sun, 09 Jun 2024 23:36:42 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=jOnFs9Pdw4UJwdT0ViyG51lgnTVZuupciunTA3I4yKw=; t=1717965401; x=1718055401; 
-	b=r8sUy69OfenADzpr6+PNPysAaZA6zKx8dQ9S+/Rf0Jnqj4Mw4XOn8wxWpH5zHOiIsSUHGHtcABG
-	EUSVsU5LYhlFdwmfHdcx0sipnXRIZZp0PDwpnIMatiLAmM2TtT06xc3cn99jyhdFwt4RKdfmBkmOG
-	YFEKbRFfRNeHpQ8T3uc=;
-Received: by smtp44.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1sGPH8-00000004YbQ-2Pfq; Sun, 09 Jun 2024 23:36:27 +0300
-From: Danila Tikhonov <danila@jiaxyga.com>
-To: neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com,
-	sam@ravnborg.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	adrian@travitia.xyz,
-	degdagmohamed@gmail.com,
-	Danila Tikhonov <danila@jiaxyga.com>
-Subject: [PATCH 2/2] drm/panel: Add Samsung AMS639RQ08 panel driver
-Date: Sun,  9 Jun 2024 23:36:18 +0300
-Message-ID: <20240609203618.49413-3-danila@jiaxyga.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240609203618.49413-1-danila@jiaxyga.com>
-References: <20240609203618.49413-1-danila@jiaxyga.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="aOUvvXVq"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52bc29c79fdso2441777e87.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2024 14:27:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1717968440; x=1718573240; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZK9TbA5uZ2g+oiphcewNtBOdx+OcpgjCQsrxRZp2eNM=;
+        b=aOUvvXVqaOjSxHsyM02iKrU6+XvchPHWPfi9I1Za8GNDoKF9wM8kB4LS3tPTEFohaq
+         64AV58Hj1iR12+W7QQjc9IyLI4nABN8i4bPDEPady2oc0CHZ/Xf5YIIyQ2/JXAfCZ3hp
+         pcaYrLoB8w8nw+mPwnNaOkcUZCpaSmVl6s1W4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717968440; x=1718573240;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZK9TbA5uZ2g+oiphcewNtBOdx+OcpgjCQsrxRZp2eNM=;
+        b=B9CI4X23XKN+qC6hGkdUBlzquWqUL+zkqiMRvnvfOw6nCW0oOMFNbYfQ1gB8qR6eiy
+         /n/C+rXpuNH4FWI7fJo3K1P9Ez8Krr3WEzAkT4NQtDj4WRP2fo9ezge3gytW3FH5QSho
+         eoi3byMSdqwavMQmXf1QcHoqAylDVDGU+XZ1yDIIW4KVH7jejWVzR5RjqWYNgnXEhqpA
+         dWlM2zdPxyNYpv2I5HSdaUd2NpUbogu1nLiAhNT3sBunJ+7mJXl/yze36Wm48thYrrjP
+         LfkuRsbubvZ2z/r6HEC2hKgr45ZRVRqUxpjksT5Tj40RPzZszzJVlTyIRpArBHucHdpS
+         +etw==
+X-Gm-Message-State: AOJu0YxQquRcPuEjQk8aQm5gDIO8Shw2I9OsV4HiEP5uKGNxvAaGOwNK
+	UCC08JOL2Ha2AIWe0D7I/fG6zvgSBm2ToLffz+BLSt4/T6SghGyaSWP6n7h2on9vN0B7UZtqO3f
+	aFqg=
+X-Google-Smtp-Source: AGHT+IHMUDyIooumoTKlcTldfKVoNDQJQXea1HyCkUdViAUw8v2DnRh++3YiJ77WSuyS4lZgIwhEMQ==
+X-Received: by 2002:a05:6512:234f:b0:52b:9545:85ff with SMTP id 2adb3069b0e04-52bb9fc5db8mr7502785e87.44.1717968439688;
+        Sun, 09 Jun 2024 14:27:19 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52c84cba425sm399386e87.74.2024.06.09.14.27.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Jun 2024 14:27:19 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eaae2a6dc1so76057451fa.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2024 14:27:19 -0700 (PDT)
+X-Received: by 2002:a2e:2c0f:0:b0:2e9:8b8c:88a6 with SMTP id
+ 38308e7fff4ca-2eadce3df96mr60193691fa.13.1717968438048; Sun, 09 Jun 2024
+ 14:27:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-7564579A: B8F34718100C35BD
-X-77F55803: 4F1203BC0FB41BD948651DF6EBC8E8B2188F8FF1D7A42847E98D46F80FDCA15A182A05F538085040AB25166E420DD39FD4FF92D56319F1979572C96781ED0D697A4D2F7B2508D39403D3BFA7FB8E1556
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7E9C44F3538ABC873EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006375E347E1311495C1B8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8837A3E323A8D8C39179B2FEBA43CD57B8608059EA46F5DC7CC7F00164DA146DAFE8445B8C89999728AA50765F7900637CAEE156C82D3D7D9389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8B861051D4BA689FCF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947CBFD98ABA943BD70BAD7EC71F1DB884274AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C394E153B0E57508E5BA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF4964A708C60C975A1DD303D21008E298D5E8D9A59859A8B6D52CD31C43BF465F75ECD9A6C639B01B78DA827A17800CE73E87DEACA6AD0067731C566533BA786AA5CC5B56E945C8DA
-X-87b9d050: 1
-X-C1DE0DAB: 0D63561A33F958A58F23E76FC48228125002B1117B3ED696C43D7F1EB995DD6947A99E6294EE8661823CB91A9FED034534781492E4B8EEAD4DBC88E915B2EE6EC79554A2A72441328621D336A7BC284946AD531847A6065AED8438A78DFE0A9EBDAD6C7F3747799A
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF0A01A9FA2673A563D4C41ACA42B873F02CB7159159A150EB0B2EA79346F95525182FB9261F6240E80FD6CD3E887ECC32B55DD28ADE1C303DAE15ADD81BFA704D7F3A67A32958532C0D035775BAD7A4FF02C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj6D5zjHqYKv1oAB20URx9wA==
-X-Mailru-Sender: 9EB879F2C80682A09F26F806C73949817A795F5C603EFD0C77EA6416FFE467E1D439B38A0A90803DD94AF5FD41F6557E2C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-7564579A: B8F34718100C35BD
-X-77F55803: 6242723A09DB00B4B653A1001F6F75E44B034594CFD8F0612653DF2750D0FA94B647ED114AB003ACCE0692C6BF09384D61594CBE7D4F5FBD3ED7BC112FF8FD5DF28FC8AC7447EBE5
-X-7FA49CB5: 0D63561A33F958A53BA0B39C7E02587334DF14997FFC5BB55A6D8104F7A3E7DE8941B15DA834481FA18204E546F3947CB355ED1E20F5346AF6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F7900637251A55D428191A2F389733CBF5DBD5E9B5C8C57E37DE458BD96E472CDF7238E0725E5C173C3A84C3D248148225A5AE7035872C767BF85DA2F004C90652538430E4A6367B16DE6309
-X-87b9d050: 1
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj6D5zjHqYKv3u/9OIAk/riw==
-X-Mailru-MI: 8000000000000800
-X-Mras: Ok
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 9 Jun 2024 14:27:01 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiK75SY+r3W5hx+Tt_bjhcSKPLdji-Zf_8HjikRPbn9wg@mail.gmail.com>
+Message-ID: <CAHk-=wiK75SY+r3W5hx+Tt_bjhcSKPLdji-Zf_8HjikRPbn9wg@mail.gmail.com>
+Subject: Linux 6.10-rc3
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the driver for Samsung AMS639RQ08 FHD Plus CMD mode panel support
-found in:
-- Xiaomi Mi 9 Lite / CC9 (sdm710-xiaomi-pyxis)
-- Xiaomi Mi 9T / Redmi K20 (sm7150-xiaomi-davinci)
-- Xiaomi Mi 9T Pro / Redmi K20 Pro (sm8150-xiaomi-raphael)
+Hmm. Absolutely nothing stands out here.
 
-Tested-by: Degdag Mohamed <degdagmohamed@gmail.com> # xiaomi-raphael
-Tested-by: Jens Reidel <adrian@travitia.xyz> # xiaomi-davinci
-Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+We've got driver fixes (networking, gpu, HID and x86 platform drivers
+account for the bulk of it), architecture fixes (mostly kvm-related),
+and some core kernel updates (filesystems, mm, core networking). And
+just the regular random fixes.
+
+IOW, nothing looks particularly odd, and size-wise this is also pretty
+much right where you'd expect for an rc3.
+
+So things look good, the water is warm, please jump right in and keep testi=
+ng,
+
+              Linus
+
 ---
- drivers/gpu/drm/panel/Kconfig                 |   9 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- .../gpu/drm/panel/panel-samsung-ams639rq08.c  | 362 ++++++++++++++++++
- 3 files changed, 372 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-samsung-ams639rq08.c
 
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index 2ae0eb0638f32..8a86960ae812a 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -576,6 +576,15 @@ config DRM_PANEL_RONBO_RB070D30
- 	  Say Y here if you want to enable support for Ronbo Electronics
- 	  RB070D30 1024x600 DSI panel.
- 
-+config DRM_PANEL_SAMSUNG_AMS639RQ08
-+	tristate "Samsung AMS639RQ08 panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y or M here if you want to enable support for the
-+	  Samsung AMS639RQ08 FHD Plus (2340x1080@60Hz) CMD mode panel.
-+
- config DRM_PANEL_SAMSUNG_S6E88A0_AMS452EF01
- 	tristate "Samsung AMS452EF01 panel with S6E88A0 DSI video mode controller"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index f0203f6e02f44..eb87bc01b0414 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -58,6 +58,7 @@ obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM692E5) += panel-raydium-rm692e5.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM69380) += panel-raydium-rm69380.o
- obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
-+obj-$(CONFIG_DRM_PANEL_SAMSUNG_AMS639RQ08) += panel-samsung-ams639rq08.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_ATNA33XC20) += panel-samsung-atna33xc20.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_DB7430) += panel-samsung-db7430.o
- obj-$(CONFIG_DRM_PANEL_SAMSUNG_LD9040) += panel-samsung-ld9040.o
-diff --git a/drivers/gpu/drm/panel/panel-samsung-ams639rq08.c b/drivers/gpu/drm/panel/panel-samsung-ams639rq08.c
-new file mode 100644
-index 0000000000000..f9789fdd6c326
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-samsung-ams639rq08.c
-@@ -0,0 +1,362 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2024, Danila Tikhonov <danila@jiaxyga.com>
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <video/mipi_display.h>
-+
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_probe_helper.h>
-+
-+/* Manufacturer Command Set */
-+#define MCS_ACCESS_PROT_OFF	0xb0
-+#define MCS_UNKNOWN_B7		0xb7
-+#define MCS_BIAS_CURRENT_CTRL	0xd1
-+#define MCS_PASSWD1		0xf0
-+#define MCS_PASSWD2		0xfc
-+#define MCS_UNKNOWN_FF		0xff
-+
-+struct ams639rq08 {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
-+	struct gpio_desc *reset_gpio;
-+	struct regulator_bulk_data supplies[4];
-+};
-+
-+static inline struct ams639rq08 *to_ams639rq08(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct ams639rq08, panel);
-+}
-+
-+static void ams639rq08_reset(struct ams639rq08 *ctx)
-+{
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(1000, 2000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	usleep_range(10000, 11000);
-+}
-+
-+static int ams639rq08_on(struct ams639rq08 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	/* Delay 2ms for VCI1 power */
-+	mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD1, 0x5a, 0x5a);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD2, 0x5a, 0x5a);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_ACCESS_PROT_OFF, 0x0c);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_UNKNOWN_FF, 0x10);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_ACCESS_PROT_OFF, 0x2f);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_BIAS_CURRENT_CTRL, 0x01);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD1, 0xa5, 0xa5);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD2, 0xa5, 0xa5);
-+
-+	/* Sleep Out */
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
-+		return ret;
-+	}
-+	usleep_range(10000, 11000);
-+
-+	/* TE OUT (Vsync On) */
-+	mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD1, 0x5a, 0x5a);
-+
-+	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set tear on: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* DBV Smooth Transition */
-+	mipi_dsi_dcs_write_seq(dsi, MCS_UNKNOWN_B7, 0x01, 0x4b);
-+
-+	/* Edge Dimming Speed Setting */
-+	mipi_dsi_dcs_write_seq(dsi, MCS_ACCESS_PROT_OFF, 0x06);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_UNKNOWN_B7, 0x10);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD1, 0xa5, 0xa5);
-+
-+	/* Page Address Set */
-+	ret = mipi_dsi_dcs_set_page_address(dsi, 0x0000, 0x0923);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set page address: %d\n", ret);
-+		return ret;
-+	}
-+
-+	mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD1, 0x5a, 0x5a);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD2, 0x5a, 0x5a);
-+
-+	/* Set DDIC internal HFP */
-+	mipi_dsi_dcs_write_seq(dsi, MCS_ACCESS_PROT_OFF, 0x23);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_BIAS_CURRENT_CTRL, 0x11);
-+
-+	/* OFC Setting 84.1 Mhz */
-+	mipi_dsi_dcs_write_seq(dsi, 0xe9, 0x11, 0x55,
-+				    0xa6, 0x75, 0xa3,
-+				    0xb9, 0xa1, 0x4a,
-+				    0x00, 0x1a, 0xb8);
-+
-+	/* Err_FG Setting */
-+	mipi_dsi_dcs_write_seq(dsi, 0xe1,
-+				    0x00, 0x00, 0x02,
-+				    0x02, 0x42, 0x02);
-+	mipi_dsi_dcs_write_seq(dsi, 0xe2,
-+				    0x00, 0x00, 0x00,
-+				    0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_ACCESS_PROT_OFF, 0x0c);
-+	mipi_dsi_dcs_write_seq(dsi, 0xe1, 0x19);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD1, 0xa5, 0xa5);
-+	mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD2, 0xa5, 0xa5);
-+	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x20);
-+
-+	/* Brightness Control */
-+	ret = mipi_dsi_dcs_set_display_brightness(dsi, 0x0000);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set display brightness: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Display On */
-+	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_POWER_SAVE, 0x00);
-+	msleep(67);
-+
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set display on: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ams639rq08_off(struct ams639rq08 *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set display off: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
-+		return ret;
-+	}
-+	msleep(120);
-+
-+	return 0;
-+}
-+
-+static int ams639rq08_prepare(struct drm_panel *panel)
-+{
-+	struct ams639rq08 *ctx = to_ams639rq08(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ams639rq08_reset(ctx);
-+
-+	ret = ams639rq08_on(ctx);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-+		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ams639rq08_unprepare(struct drm_panel *panel)
-+{
-+	struct ams639rq08 *ctx = to_ams639rq08(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	int ret;
-+
-+	ret = ams639rq08_off(ctx);
-+	if (ret < 0)
-+		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+
-+	return 0;
-+}
-+
-+static const struct drm_display_mode ams639rq08_mode = {
-+	.clock = (1080 + 64 + 20 + 64) * (2340 + 64 + 20 + 64) * 60 / 1000,
-+	.hdisplay = 1080,
-+	.hsync_start = 1080 + 64,
-+	.hsync_end = 1080 + 64 + 20,
-+	.htotal = 1080 + 64 + 20 + 64,
-+	.vdisplay = 2340,
-+	.vsync_start = 2340 + 64,
-+	.vsync_end = 2340 + 64 + 20,
-+	.vtotal = 2340 + 64 + 20 + 64,
-+	.width_mm = 68,
-+	.height_mm = 147,
-+	.type = DRM_MODE_TYPE_DRIVER,
-+};
-+
-+static int ams639rq08_get_modes(struct drm_panel *panel,
-+					struct drm_connector *connector)
-+{
-+	return drm_connector_helper_get_modes_fixed(connector, &ams639rq08_mode);
-+}
-+
-+static const struct drm_panel_funcs ams639rq08_panel_funcs = {
-+	.prepare = ams639rq08_prepare,
-+	.unprepare = ams639rq08_unprepare,
-+	.get_modes = ams639rq08_get_modes,
-+};
-+
-+static int ams639rq08_bl_update_status(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	u16 brightness = backlight_get_brightness(bl);
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_brightness_large(dsi, brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	return 0;
-+}
-+
-+static int ams639rq08_bl_get_brightness(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	u16 brightness;
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_get_display_brightness_large(dsi, &brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	return brightness;
-+}
-+
-+static const struct backlight_ops ams639rq08_bl_ops = {
-+	.update_status = ams639rq08_bl_update_status,
-+	.get_brightness = ams639rq08_bl_get_brightness,
-+};
-+
-+static struct backlight_device *
-+ams639rq08_create_backlight(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	const struct backlight_properties props = {
-+		.type = BACKLIGHT_RAW,
-+		.brightness = 1023,
-+		.max_brightness = 2047,
-+	};
-+
-+	return devm_backlight_device_register(dev, dev_name(dev), dev, dsi,
-+						&ams639rq08_bl_ops, &props);
-+}
-+
-+static int ams639rq08_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct ams639rq08 *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->supplies[0].supply = "vdd3p3";
-+	ctx->supplies[1].supply = "vddio";
-+	ctx->supplies[2].supply = "vsn";
-+	ctx->supplies[3].supply = "vsp";
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
-+								ctx->supplies);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to get regulators\n");
-+
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
-+					"Failed to get reset-gpios\n");
-+
-+	ctx->dsi = dsi;
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+
-+	dsi->lanes = 4;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO_BURST |
-+			  MIPI_DSI_CLOCK_NON_CONTINUOUS | MIPI_DSI_MODE_LPM;
-+
-+	drm_panel_init(&ctx->panel, dev, &ams639rq08_panel_funcs,
-+			DRM_MODE_CONNECTOR_DSI);
-+	ctx->panel.prepare_prev_first = true;
-+
-+	ctx->panel.backlight = ams639rq08_create_backlight(dsi);
-+	if (IS_ERR(ctx->panel.backlight))
-+		return dev_err_probe(dev, PTR_ERR(ctx->panel.backlight),
-+					"Failed to create backlight\n");
-+
-+	drm_panel_add(&ctx->panel);
-+
-+	ret = devm_mipi_dsi_attach(dev, dsi);
-+	if (ret < 0) {
-+		drm_panel_remove(&ctx->panel);
-+		return dev_err_probe(dev, ret, "Failed to attach to DSI host\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static void ams639rq08_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct ams639rq08 *ctx = mipi_dsi_get_drvdata(dsi);
-+
-+	drm_panel_remove(&ctx->panel);
-+}
-+
-+static const struct of_device_id ams639rq08_of_match[] = {
-+	{ .compatible = "samsung,ams639rq08" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ams639rq08_of_match);
-+
-+static struct mipi_dsi_driver ams639rq08_driver = {
-+	.probe = ams639rq08_probe,
-+	.remove = ams639rq08_remove,
-+	.driver = {
-+		.name = "panel-samsung-ams639rq08",
-+		.of_match_table = ams639rq08_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(ams639rq08_driver);
-+
-+MODULE_AUTHOR("Danila Tikhonov <danila@jiaxyga.com>");
-+MODULE_DESCRIPTION("DRM driver for SAMSUNG AMS639RQ08 cmd mode dsi panel");
-+MODULE_LICENSE("GPL");
--- 
-2.45.2
+Aditya Kumar Singh (1):
+      wifi: mac80211: pass proper link id for channel switch started
+notification
 
+Aleksandr Mishin (2):
+      net/mlx5: Fix tainted pointer delete is case of flow rules creation f=
+ail
+      net: wwan: iosm: Fix tainted pointer delete is case of region
+creation fail
+
+Alexander Gordeev (1):
+      s390/crash: Do not use VM info if os_info does not have it
+
+Alexander Potapenko (1):
+      kmsan: do not wipe out origin when doing partial unpoisoning
+
+Alexis Lothor=C3=A9 (3):
+      Revert "wifi: wilc1000: convert list management to RCU"
+      Revert "wifi: wilc1000: set atomic flag on kmemdup in srcu
+critical section"
+      wifi: wilc1000: document SRCU usage instead of SRCU
+
+Andreas Hindborg (1):
+      null_blk: fix validation of block size
+
+Andrew Ballance (1):
+      hid: asus: asus_report_fixup: fix potential read out of bounds
+
+Andrii Nakryiko (2):
+      selftests/bpf: fix inet_csk_accept prototype in test_sk_storage_traci=
+ng.c
+      libbpf: don't close(-1) in multi-uprobe feature detector
+
+Andy Shevchenko (3):
+      PNP: Make dev_is_pnp() to be a function and export it for modules
+      PNP: Hide pnp_bus_type from the non-PNP code
+      platform/x86: touchscreen_dmi: Use 2-argument strscpy()
+
+Ard Biesheuvel (1):
+      efi: Add missing __nocfi annotations to runtime wrappers
+
+Armin Wolf (4):
+      ACPI: EC: Abort address space access upon error
+      ACPI: EC: Avoid returning AE_OK on errors in address space handler
+      platform/x86: dell-smbios: Fix wrong token data in sysfs
+      platform/x86: dell-smbios: Simplify error handling
+
+Arnaldo Carvalho de Melo (12):
+      tools include UAPI: Sync linux/stat.h with the kernel sources
+      tools headers UAPI: Sync linux/prctl.h with the kernel sources
+      tools headers UAPI: Sync fcntl.h with the kernel sources to pick
+F_DUPFD_QUERY
+      perf beauty: Update copy of linux/socket.h with the kernel sources
+      perf trace beauty: Update the arch/x86/include/asm/irq_vectors.h
+copy with the kernel sources to pick POSTED_MSI_NOTIFICATION
+      tools headers: Update the syscall tables and unistd.h, mostly to
+support the new 'mseal' syscall
+      tools arch x86: Sync the msr-index.h copy with the kernel sources
+      tools headers UAPI: Sync kvm headers with the kernel sources
+      tools headers UAPI: Update i915_drm.h with the kernel sources
+      tools headers uapi: Sync linux/stat.h with the kernel sources to
+pick STATX_SUBVOL
+      tools headers arm64: Sync arm64's cputype.h with the kernel sources
+      Revert "perf record: Reduce memory for recording
+PERF_RECORD_LOST_SAMPLES event"
+
+Arnd Bergmann (4):
+      cpufreq: amd-pstate: remove global header file
+      platform/x86: yt2-1380: add CONFIG_EXTCON dependency
+      HID: intel-ish-hid: fix endian-conversion
+      arm64/io: add constant-argument check
+
+Aseda Aboagye (2):
+      input: Add event code for accessibility key
+      input: Add support for "Do Not Disturb"
+
+Ayala Beker (1):
+      wifi: iwlwifi: mvm: properly set 6 GHz channel direct probe option
+
+Baochen Qiang (1):
+      wifi: ath11k: move power type check to ASSOC stage when
+connecting to 6 GHz AP
+
+Baolin Wang (1):
+      mm: drop the 'anon_' prefix for swap-out mTHP counters
+
+Barry Song (2):
+      mm: huge_mm: fix undefined reference to `mthp_stats' for CONFIG_SYSFS=
+=3Dn
+      mm: arm64: fix the out-of-bounds issue in contpte_clear_young_dirty_p=
+tes
+
+Benjamin Berg (1):
+      wifi: iwlwifi: mvm: remove stale STA link data during restart
+
+Bingbu Cao (3):
+      media: intel/ipu6: fix the buffer flags caused by wrong parentheses
+      media: intel/ipu6: update the maximum supported csi2 port number to 6
+      media: intel/ipu6: add csi2 port sanity check in notifier bound
+
+Bitterblue Smith (1):
+      wifi: rtlwifi: Ignore IEEE80211_CONF_CHANGE_RETRY_LIMITS
+
+Breno Leitao (1):
+      wifi: ath11k: Fix error path in ath11k_pcic_ext_irq_config
+
+Carl Huang (1):
+      wifi: ath11k: fix WCN6750 firmware crash caused by 17 num_vdevs
+
+Carlos Llamas (1):
+      locking/atomic: scripts: fix ${atomic}_sub_and_test() kerneldoc
+
+Chanwoo Lee (1):
+      scsi: ufs: mcq: Fix error output and clean up ufshcd_mcq_abort()
+
+Chen Ni (2):
+      HID: nvidia-shield: Add missing check for input_ff_create_memless
+      drm/panel: sitronix-st7789v: Add check for of_drm_get_panel_orientati=
+on
+
+Chengming Zhou (2):
+      mm/ksm: fix ksm_pages_scanned accounting
+      mm/ksm: fix ksm_zero_pages accounting
+
+Christophe JAILLET (5):
+      i2c: synquacer: Remove a clk reference from struct synquacer_i2c
+      media: intel/ipu6: Fix some redundant resources freeing in
+ipu6_pci_remove()
+      media: intel/ipu6: Move isys_remove() close to isys_probe()
+      media: intel/ipu6: Fix an error handling path in isys_probe()
+      HID: nintendo: Fix an error handling path in nintendo_hid_probe()
+
+Chuck Lever (1):
+      SUNRPC: Fix loop termination condition in gss_free_in_token_pages()
+
+Chunguang Xu (1):
+      nvme-fabrics: use reserved tag for reg read/write command
+
+Cong Wang (2):
+      bpf: Fix a potential use-after-free in bpf_link_free()
+      vmalloc: check CONFIG_EXECMEM in is_vmalloc_or_module_addr()
+
+Dan Williams (2):
+      ACPI: APEI: EINJ: Fix einj_dev release leak
+      PCI: Revert the cfg_access_lock lockdep mechanism
+
+Daniel Borkmann (1):
+      vxlan: Fix regression when dropping packets due to invalid src addres=
+ses
+
+Dave Jiang (1):
+      cxl/test: Add missing vmalloc.h for tools/testing/cxl/test/mem.c
+
+David Hildenbrand (1):
+      KVM: s390x: selftests: Add shared zeropage test
+
+David Howells (1):
+      cifs: Don't advance the I/O iterator before terminating subrequest
+
+David Kaplan (1):
+      x86/kexec: Fix bug with call depth tracking
+
+DelphineCCChiu (1):
+      net/ncsi: Fix the multi thread manner of NCSI driver
+
+Deming Wang (1):
+      scsi: mpt3sas: Add missing kerneldoc parameter descriptions
+
+Dhananjay Ugwekar (2):
+      tools/power/cpupower: Fix Pstate frequency reporting on AMD
+Family 1Ah CPUs
+      cpufreq: amd-pstate: Fix the inconsistency in max frequency units
+
+Dmitry Antipov (1):
+      wifi: mac80211: fix UBSAN noise in ieee80211_prep_hw_scan()
+
+Dmitry Baryshkov (1):
+      wifi: ath10k: fix QCOM_RPROC_COMMON dependency
+
+Dmitry Safonov (1):
+      net/tcp: Don't consider TCP_CLOSE in TCP_AO_ESTABLISHED
+
+Dr. David Alan Gilbert (2):
+      drm/komeda: remove unused struct 'gamma_curve_segment'
+      drm/vmwgfx: remove unused struct 'vmw_stdu_dma'
+
+Duoming Zhou (1):
+      ax25: Replace kfree() in ax25_dev_free() with ax25_dev_put()
+
+Emmanuel Grumbach (2):
+      wifi: iwlwifi: mvm: fix a crash on 7265
+      wifi: iwlwifi: mvm: don't read past the mfuart notifcation
+
+Enzo Matsumiya (1):
+      smb: client: fix deadlock in smb2_find_smb_tcon()
+
+Eric Dumazet (7):
+      ipv6: ioam: block BH from ioam6_output()
+      net: ipv6: rpl_iptunnel: block BH in rpl_output() and rpl_input()
+      ipv6: sr: block BH in seg6_output_core() and seg6_input_core()
+      ila: block BH in ila_output()
+      net: dst_cache: add two DEBUG_NET warnings
+      net/sched: taprio: always validate TCA_TAPRIO_ATTR_PRIOMAP
+      ipv6: fix possible race in __fib6_drop_pcpu_from()
+
+Filipe Manana (2):
+      btrfs: ensure fast fsync waits for ordered extents after a write fail=
+ure
+      btrfs: fix leak of qgroup extent records after transaction abort
+
+Frank Wunderlich (1):
+      net: ethernet: mtk_eth_soc: handle dma buffer size soc specific
+
+Fuad Tabba (9):
+      KVM: arm64: Reintroduce __sve_save_state
+      KVM: arm64: Fix prototype for __sve_save_state/__sve_restore_state
+      KVM: arm64: Abstract set/clear of CPTR_EL2 bits behind helper
+      KVM: arm64: Specialize handling of host fpsimd state on trap
+      KVM: arm64: Allocate memory mapped at hyp for host sve state in pKVM
+      KVM: arm64: Eagerly restore host fpsimd/sve state in pKVM
+      KVM: arm64: Consolidate initializing the host data's
+fpsimd_state/sve in pKVM
+      KVM: arm64: Refactor CPACR trap bit setting/clearing to use ELx forma=
+t
+      KVM: arm64: Ensure that SME controls are disabled in protected mode
+
+Gregor Herburger (1):
+      gpio: tqmx86: fix typo in Kconfig label
+
+Guilherme G. Piccoli (1):
+      efi: pstore: Return proper errors on UEFI failures
+
+Hagar Hemdan (2):
+      irqchip/gic-v3-its: Fix potential race condition in its_vlpi_prop_upd=
+ate()
+      io_uring: fix possible deadlock in io_register_iowq_max_workers()
+
+Haifeng Xu (1):
+      perf/core: Fix missing wakeup when waiting for context reference
+
+Hangbin Liu (1):
+      selftests: hsr: add missing config for CONFIG_BRIDGE
+
+Hangyu Hua (1):
+      net: sched: sch_multiq: fix possible OOB write in multiq_tune()
+
+Hans de Goede (2):
+      Input: silead - Always support 10 fingers
+      platform/x86: touchscreen_dmi: Drop "silead,max-fingers" property
+
+Heiner Kallweit (1):
+      i2c: Remove I2C_CLASS_SPD
+
+Heng Qi (3):
+      virtio_net: fix missing lock protection on control_buf access
+      virtio_net: fix possible dim status unrecoverable
+      virtio_net: fix a spurious deadlock issue
+
+Huacai Chen (1):
+      LoongArch: Fix GMAC's phy-mode definitions in dts
+
+Ian Forbes (6):
+      drm/vmwgfx: Filter modes which exceed graphics memory
+      drm/vmwgfx: 3D disabled should not effect STDU memory limits
+      drm/vmwgfx: Remove STDU logic from generic mode_valid function
+      drm/vmwgfx: Standardize use of kibibytes when logging
+      drm/vmwgfx: Don't destroy Screen Target when CRTC is enabled but inac=
+tive
+      drm/vmwgfx: Don't memcmp equivalent pointers
+
+Ilan Peer (1):
+      wifi: iwlwifi: mvm: Fix scan abort handling with HW rfkill
+
+Ilpo J=C3=A4rvinen (2):
+      EDAC/amd64: Convert PCIBIOS_* return codes to errnos
+      EDAC/igen6: Convert PCIBIOS_* return codes to errnos
+
+Isaku Yamahata (1):
+      KVM: x86/mmu: Use SHADOW_NONPRESENT_VALUE for atomic zap in TDP MMU
+
+Jacob Keller (2):
+      ice: fix iteration of TLVs in Preserved Fields Area
+      ice: fix reads from NVM Shadow RAM on E830 and E825-C devices
+
+Jakub Kicinski (2):
+      net: tls: fix marking packets as decrypted
+      rtnetlink: make the "split" NLM_DONE handling generic
+
+Jan Beulich (1):
+      tpm_tis: Do *not* flush uninitialized work
+
+Jason Xing (3):
+      net: rps: fix error when CONFIG_RFS_ACCEL is off
+      tcp: count CLOSE-WAIT sockets for TCP_MIB_CURRESTAB
+      mptcp: count CLOSE-WAIT sockets for MPTCP_MIB_CURRESTAB
+
+Jeff Johnson (4):
+      of: of_test: add MODULE_DESCRIPTION()
+      lib/test_rhashtable: add missing MODULE_DESCRIPTION() macro
+      HID: logitech-hidpp: add missing MODULE_DESCRIPTION() macro
+      gpio: add missing MODULE_DESCRIPTION() macros
+
+Jens Axboe (2):
+      io_uring: check for non-NULL file pointer in io_file_can_poll()
+      io_uring/napi: fix timeout calculation
+
+Jiaxun Yang (4):
+      LoongArch: Fix built-in DTB detection
+      LoongArch: Add all CPUs enabled by fdt to NUMA node 0
+      LoongArch: Fix entry point in kernel image header
+      LoongArch: Override higher address bits in JUMP_VIRT_ADDR
+
+Jiri Olsa (2):
+      bpf: Fix bpf_session_cookie BTF_ID in special_kfunc_set list
+      bpf: Set run context for rawtp test_run callback
+
+Johan Hovold (4):
+      dt-bindings: HID: i2c-hid: add dedicated Ilitek ILI2901 schema
+      dt-bindings: HID: i2c-hid: elan: add Elan eKTH5015M
+      dt-bindings: HID: i2c-hid: elan: add 'no-reset-on-power-off' property
+      HID: i2c-hid: elan: fix reset suspend current leakage
+
+Johannes Berg (8):
+      wifi: cfg80211: validate HE operation element parsing
+      wifi: cfg80211: fully move wiphy work to unbound workqueue
+      wifi: mac80211: apply mcast rate only if interface is up
+      wifi: mac80211: handle tasklet frames before stopping
+      wifi: cfg80211: fix 6 GHz scan request building
+      wifi: iwlwifi: mvm: revert gen2 TX A-MPDU size to 64
+      wifi: iwlwifi: mvm: handle BA session teardown in RF-kill
+      wifi: mt76: mt7615: add missing chanctx ops
+
+Johannes Weiner (1):
+      mm: page_alloc: fix highatomic typing in multi-block buddies
+
+John Hubbard (3):
+      selftests/futex: pass _GNU_SOURCE without a value to the compiler
+      selftests/futex: don't redefine .PHONY targets (all, clean)
+      selftests/futex: don't pass a const char* to asprintf(3)
+
+Jos=C3=A9 Exp=C3=B3sito (1):
+      HID: logitech-dj: Fix memory leak in logi_dj_recv_switch_to_dj_mode()
+
+Justin Stitt (1):
+      scsi: sr: Fix unintentional arithmetic wraparound
+
+Karol Kolacinski (1):
+      ptp: Fix error message on failed pin verification
+
+Kent Overstreet (3):
+      bcachefs: Fix GFP_KERNEL allocation in break_cycle()
+      bcachefs: Rereplicate now moves data off of durability=3D0 devices
+      bcachefs: Fix trans->locked assert
+
+Kun(llfl) (1):
+      iommu/amd: Fix sysfs leak in iommu init
+
+Kuniyuki Iwashima (15):
+      af_unix: Set sk->sk_state under unix_state_lock() for truly
+disconencted peer.
+      af_unix: Annodate data-races around sk->sk_state for writers.
+      af_unix: Annotate data-race of sk->sk_state in unix_inq_len().
+      af_unix: Annotate data-races around sk->sk_state in
+unix_write_space() and poll().
+      af_unix: Annotate data-race of sk->sk_state in unix_stream_connect().
+      af_unix: Annotate data-race of sk->sk_state in unix_accept().
+      af_unix: Annotate data-races around sk->sk_state in sendmsg()
+and recvmsg().
+      af_unix: Annotate data-race of sk->sk_state in unix_stream_read_skb()=
+.
+      af_unix: Annotate data-races around sk->sk_state in UNIX_DIAG.
+      af_unix: Annotate data-races around sk->sk_sndbuf.
+      af_unix: Annotate data-race of net->unx.sysctl_max_dgram_qlen.
+      af_unix: Use unix_recvq_full_lockless() in unix_stream_connect().
+      af_unix: Use skb_queue_empty_lockless() in unix_release_sock().
+      af_unix: Use skb_queue_len_lockless() in sk_diag_show_rqlen().
+      af_unix: Annotate data-race of sk->sk_shutdown in sk_diag_fill().
+
+Lars Kellogg-Stedman (1):
+      ax25: Fix refcount imbalance on inbound connections
+
+Larysa Zaremba (3):
+      ice: remove af_xdp_zc_qps bitmap
+      ice: add flag to distinguish reset from .ndo_bpf in XDP rings config
+      ice: map XDP queues to vectors in ice_vsi_map_rings_to_vectors()
+
+Li Zhijian (1):
+      cxl/region: Fix memregion leaks in devm_cxl_add_region()
+
+Lin Ma (1):
+      wifi: cfg80211: pmsr: use correct nla_get_uX functions
+
+Lingbo Kong (2):
+      wifi: mac80211: fix Spatial Reuse element size check
+      wifi: mac80211: correctly parse Spatial Reuse Parameter Set element
+
+Linus Torvalds (1):
+      Linux 6.10-rc3
+
+Louis Dalibard (1):
+      HID: Ignore battery for ELAN touchscreens 2F2C and 4116
+
+Lu Baolu (1):
+      iommu: Return right value in iommu_sva_bind_device()
+
+Magnus Karlsson (2):
+      Revert "xsk: Support redirect to any socket bound to the same umem"
+      Revert "xsk: Document ability to redirect to any socket bound to
+the same umem"
+
+Marc Zyngier (6):
+      KVM: arm64: Fix AArch32 register narrowing on userspace write
+      KVM: arm64: Allow AArch32 PSTATE.M to be restored as System mode
+      KVM: arm64: AArch32: Fix spurious trapping of conditional instruction=
+s
+      KVM: arm64: nv: Fix relative priorities of exceptions generated by ER=
+ETAx
+      KVM: arm64: nv: Expose BTI and CSV_frac to a guest hypervisor
+      of: property: Fix fw_devlink handling of interrupt-map
+
+Mario Limonciello (1):
+      drm/amd: Fix shutdown (again) on some SMU v13.0.4/11 platforms
+
+Mark Brown (1):
+      kselftest/alsa: Ensure _GNU_SOURCE is defined
+
+Martin K. Petersen (1):
+      scsi: core: Handle devices which return an unusually large VPD page c=
+ount
+
+Martin T=C5=AFma (1):
+      media: mgb4: Fix double debugfs remove
+
+Martin Wilck (1):
+      scsi: core: alua: I/O errors for ALUA state transitions
+
+Masahiro Yamada (6):
+      kconfig: remove unneeded code for user-supplied values being out of r=
+ange
+      kconfig: gconf: give a proper initial state to the Save button
+      kconfig: doc: fix a typo in the note about 'imply'
+      kconfig: doc: document behavior of 'select' and 'imply' followed by '=
+if'
+      kconfig: remove wrong expr_trans_bool()
+      modpost: do not warn about missing MODULE_DESCRIPTION() for vmlinux.o
+
+Masami Hiramatsu (Google) (3):
+      selftests/ftrace: Fix to check required event file
+      selftests/ftrace: Update required config
+      selftests/tracing: Fix event filter test to retry up to 10 times
+
+Matthias Schiffer (3):
+      gpio: tqmx86: introduce shadow register for GPIO output value
+      gpio: tqmx86: store IRQ trigger type and unmask status separately
+      gpio: tqmx86: fix broken IRQ_TYPE_EDGE_BOTH interrupt type
+
+Matthias Stocker (1):
+      vmxnet3: disable rx data ring on dma allocation failure
+
+Matthieu Baerts (NGI0) (3):
+      selftests: net: lib: support errexit with busywait
+      selftests: net: lib: avoid error removing empty netns name
+      selftests: net: lib: set 'i' as local
+
+Michael Ellerman (4):
+      selftests: cachestat: Fix build warnings on ppc64
+      selftests/openat2: Fix build warnings on ppc64
+      selftests/overlayfs: Fix build error on ppc64
+      ata: pata_macio: Fix max_segment_size with PAGE_SIZE =3D=3D 64K
+
+Michal Wajdeczko (1):
+      drm/xe/pf: Update the LMTT when freeing VF GT config
+
+Miri Korenblit (2):
+      wifi: iwlwifi: mvm: don't initialize csa_work twice
+      wifi: iwlwifi: mvm: check n_ssids before accessing the ssids
+
+Mordechay Goodstein (1):
+      wifi: iwlwifi: mvm: set properly mac header
+
+Moshe Shemesh (1):
+      net/mlx5: Stop waiting for PCI if pci channel is offline
+
+Nam Cao (1):
+      riscv: fix overlap of allocated page and PTR_ERR
+
+Namhyung Kim (1):
+      perf bpf: Fix handling of minimal vmlinux.h file when
+interrupting the build
+
+Nathan Chancellor (2):
+      scsi: mpi3mr: Use proper format specifier in mpi3mr_sas_port_add()
+      efi/libstub: zboot.lds: Discard .discard sections
+
+Nicolas Escande (2):
+      wifi: mac80211: mesh: Fix leak of mesh_preq_queue objects
+      wifi: mac80211: mesh: init nonpeer_pm to active by default in mesh sd=
+ata
+
+Nikita Zhandarovich (1):
+      HID: core: remove unnecessary WARN_ON() in implement()
+
+Nikunj A Dadhania (1):
+      KVM: SEV-ES: Prevent MSR access post VMSA encryption
+
+Omar Sandoval (1):
+      btrfs: fix crash on racing fsync and size-extending write into preall=
+oc
+
+Oscar Salvador (1):
+      mm/hugetlb: do not call vma_add_reservation upon ENOMEM
+
+Palmer Dabbelt (1):
+      Revert "riscv: mm: accelerate pagefault when badaccess"
+
+Peter Geis (1):
+      MAINTAINERS: remove Peter Geis
+
+Qu Wenruo (1):
+      btrfs: protect folio::private when attaching extent buffer folios
+
+Quan Zhou (1):
+      RISC-V: KVM: Fix incorrect reg_subtype labels in
+kvm_riscv_vcpu_set_reg_isa_ext function
+
+Rafael J. Wysocki (4):
+      thermal/debugfs: Print initial trip temperature and hysteresis
+in tze_seq_show()
+      thermal/debugfs: Allow tze_seq_show() to print statistics for
+invalid trips
+      thermal: core: Introduce thermal_trip_crossed()
+      thermal: trip: Trigger trip down notifications when trips
+involved in mitigation become invalid
+
+Ravi Bangoria (2):
+      KVM: SEV-ES: Disallow SEV-ES guests when X86_FEATURE_LBRV is absent
+      KVM: SEV-ES: Delegate LBR virtualization to the processor
+
+Remi Pommarel (2):
+      wifi: mac80211: Fix deadlock in ieee80211_sta_ps_deliver_wakeup()
+      wifi: cfg80211: Lock wiphy in cfg80211_get_station
+
+Richard Acayan (1):
+      kbuild: explicitly run mksysmap as sed script from link-vmlinux.sh
+
+Rob Herring (Arm) (3):
+      dt-bindings: arm: sunxi: Fix incorrect '-' usage
+      dt-bindings: arm: stm32: st,mlahb: Drop spurious "reg" property
+from example
+      of/irq: Factor out parsing of interrupt-map parent phandle+args
+from of_irq_parse_raw()
+
+Robin Murphy (1):
+      iommu/dma: Fix domain init
+
+Ryusuke Konishi (2):
+      nilfs2: fix potential kernel bug due to lack of writeback flag waitin=
+g
+      nilfs2: fix nilfs_empty_dir() misjudgment and long loop on I/O errors
+
+Sakari Ailus (3):
+      media: Documentation: v4l: Fix ACTIVE route flag
+      media: mei: csi: Put the IPU device reference
+      media: mei: csi: Warn less verbosely of a missing device fwnode
+
+Samuel Holland (2):
+      clk: sifive: Do not register clkdevs for PRCI clocks
+      irqchip/sifive-plic: Chain to parent IRQ after handlers are ready
+
+Sasha Neftin (1):
+      igc: Fix Energy Efficient Ethernet support declaration
+
+Saurav Kashyap (3):
+      scsi: qedf: Don't process stag work during unload and recovery
+      scsi: qedf: Wait for stag work during unload
+      scsi: qedf: Set qed_slowpath_params to zero before use
+
+Sean Christopherson (11):
+      KVM: VMX: Don't kill the VM on an unexpected #VE
+      KVM: nVMX: Initialize #VE info page for vmcs02 when proving #VE suppo=
+rt
+      KVM: nVMX: Always handle #VEs in L0 (never forward #VEs from L2 to L1=
+)
+      KVM: x86/mmu: Add sanity checks that KVM doesn't create EPT #VE SPTEs
+      KVM: VMX: Dump VMCS on unexpected #VE
+      KVM: x86/mmu: Print SPTEs on unexpected #VE
+      KVM: VMX: Enumerate EPT Violation #VE support in /proc/cpuinfo
+      KVM: x86: Disable KVM_INTEL_PROVE_VE by default
+      KVM: x86: Force KVM_WERROR if the global WERROR is enabled
+      KVM: SVM: WARN on vNMI + NMI window iff NMIs are outright masked
+      KVM: x86: Drop support for hand tuning APIC timer advancement
+from userspace
+
+Sebastian Andrzej Siewior (1):
+      memcg: remove the lockdep assert from __mod_objcg_mlstate()
+
+Shahar S Matityahu (1):
+      wifi: iwlwifi: dbg_ini: move iwl_dbg_tlv_free outside of debugfs ifde=
+f
+
+Shaul Triebitz (1):
+      wifi: iwlwifi: mvm: always set the TWT IE offset
+
+Shay Drory (1):
+      net/mlx5: Always stop health timer during driver removal
+
+Srinivas Pandruvada (1):
+      cpufreq: intel_pstate: Fix unchecked HWP MSR access
+
+Steven Rostedt (Google) (1):
+      tracing/selftests: Fix kprobe event name test for .isra. functions
+
+Su Hui (2):
+      io_uring/io-wq: avoid garbage value of 'match' in io_wq_enqueue()
+      net: ethtool: fix the error condition in ethtool_get_phy_stats_ethtoo=
+l()
+
+Subbaraya Sundeep (1):
+      octeontx2-af: Always allocate PF entries from low prioriy zone
+
+Suma Hegde (1):
+      platform/x86/amd/hsmp: Check HSMP support on AMD family of processors
+
+Sunil V L (1):
+      irqchip/riscv-intc: Prevent memory leak when
+riscv_intc_init_common() fails
+
+Suren Baghdasaryan (1):
+      mm: fix xyz_noprof functions calling profiled functions
+
+Taehee Yoo (1):
+      ionic: fix kernel panic in XDP_TX action
+
+Tao Su (1):
+      KVM: x86/mmu: Don't save mmu_invalidate_seq after checking private at=
+tr
+
+Tasos Sahanidis (1):
+      drm/amdgpu/pptable: Fix UBSAN array-index-out-of-bounds
+
+Tetsuo Handa (1):
+      tomoyo: update project links
+
+Thadeu Lima de Souza Cascardo (1):
+      codetag: avoid race at alloc_slab_obj_exts
+
+Thomas Wei=C3=9Fschuh (1):
+      ACPI: AC: Properly notify powermanagement core about changes
+
+Thorsten Blum (1):
+      bpf, devmap: Remove unnecessary if check in for loop
+
+Tiezhu Yang (1):
+      LoongArch: Remove CONFIG_ACPI_TABLE_UPGRADE in platform_init()
+
+Tony Luck (1):
+      tpm: Switch to new Intel CPU model defines
+
+Tristram Ha (2):
+      net: phy: micrel: fix KSZ9477 PHY issues after suspend/resume
+      net: phy: Micrel KSZ8061: fix errata solution not taking effect probl=
+em
+
+Vadim Fedorenko (1):
+      ethtool: init tsinfo stats if requested
+
+Vasant Hegde (3):
+      iommu/amd: Fix workqueue name
+      iommu/amd: Check EFR[EPHSup] bit before enabling PPR
+      iommu/amd: Fix Invalid wait context issue
+
+Wei Li (1):
+      arm64: armv8_deprecated: Fix warning in isndep cpuhp starting process
+
+Weiwen Hu (1):
+      nvme: fix nvme_pr_* status code parsing
+
+Wen Gu (1):
+      net/smc: avoid overwriting when adjusting sock bufsizes
+
+Yazen Ghannam (1):
+      x86/amd_nb: Check for invalid SMN reads
+
+Yedidya Benshimol (2):
+      wifi: iwlwifi: mvm: d3: fix WoWLAN command version lookup
+      wifi: iwlwifi: mvm: Handle BIGTK cipher in kek_kck cmd
+
+Yong-Xuan Wang (1):
+      RISC-V: KVM: No need to use mask when hart-index-bit is 0
+
+Zhang Lixu (1):
+      HID: intel-ish-hid: Fix build error for COMPILE_TEST
