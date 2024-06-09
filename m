@@ -1,89 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA0A2233A
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 14:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7B92233A
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 14:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717943116; cv=none; b=gkojatleMxmlNJ9I3H8JO73PJDqU8j2zRc4YyXNnATrzD9HpRSMwmn1oc2Uv/s5P9TrM41jtZYjxgVlWXTplCzgT0DZOl4E4zjWYMFIHq0knvL0f9INu6qjSbrMguGyhBU8GqnIhE8wk2qTABQYCBt7RbDt8gFGPp08QjHGXWWU=
+	t=1717943121; cv=none; b=PaeE4CXpj0r20klOla4IUuwDWhEGyla2WsOaq91V3VCUZAzqsPdrfx/C3OA7sDdoIIZceXhJqNohwM40iKm3cHxdkKQ0N5md5NKHjNnZ0J/2Q2jaCba5C5atEsQn58vAjAIRQ0ggywRZKCzJg//ub/F/eCEU4e7UBDdLDP+IlJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717943116; c=relaxed/simple;
-	bh=4DAeBNRuP/ZxcrO8Rw9fTCFAb9nXpRMGSiRThrAiwAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a6UWrlBv0zjY02i2v+0QOzeXfVA6Wpm8FwtSfscsr2UfBmwxKlqmQD79VaBHJ3TtvinH9P61qEKhRLSkYicUDfvhOOefY+61uasraaRzh0ugKiFh+bivJkUkLbNkvo0TxHwWaMCkI7Q0i+irPqO5x7vjOkznZlv4XWlYm8Q+TBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ABCBC2BD10;
+	s=arc-20240116; t=1717943121; c=relaxed/simple;
+	bh=m4kFUi5yytlI5s50Sjpyo9RnzpHFjqiSRFbMf63CocE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=K3SSSMZsbsgJC/tCzpr9rz/wWAr5f03XchWZp9NN1shFbFd1zQuUJ1GCGXAaCEfk6AjQ37eIJ1b1xI2p87ndLyjCcwpN9+cvk9M05tY7hMBdDZXLQNd7oDL878K5saDZI+pJX/WWy6amjno2O53qmm/bnoVN6VcXQJcfjp9P7Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QJcQjzwB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJcQjzwB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717943119;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=m4kFUi5yytlI5s50Sjpyo9RnzpHFjqiSRFbMf63CocE=;
+	b=QJcQjzwBpOaxsARkOzPadH6CFY4Qd23JFEazJH5LcsNSr5oa/QIhhYKc20D/7QEcNNM5U7
+	R4r1435ioSDm9z2B+juA4V+m0vDG5uVYjmytMnBltOn6Tf3sl2oAfkuF8rikva44dBjGCH
+	qWm9Xk321yfaGFyQuXa15vpc/41MlnQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-692-BGEv4eDZPdSoYOjD9RXKPg-1; Sun, 09 Jun 2024 10:25:14 -0400
+X-MC-Unique: BGEv4eDZPdSoYOjD9RXKPg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ADCB2101A528;
+	Sun,  9 Jun 2024 14:25:13 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.58])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 8376D40C24E0;
 	Sun,  9 Jun 2024 14:25:12 +0000 (UTC)
-Date: Sun, 9 Jun 2024 10:25:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Sam Sun <samsun1006219@gmail.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, syzkaller-bugs@googlegroups.com, peterz@infradead.org,
- jpoimboe@kernel.org, jbaron@akamai.com, ardb@kernel.org, mingo@redhat.com,
- Borislav Petkov <bp@alien8.de>, dave.hansen@linux.intel.com, hpa@zytor.com,
- xrivendell7@gmail.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Tejun Heo <tj@kernel.org>
-Subject: Re: [Linux kernel bug] WARNING in static_key_slow_inc_cpuslocked
-Message-ID: <20240609102530.0a292b07@rorschach.local.home>
-In-Reply-To: <87o78axlbm.ffs@tglx>
-References: <20240609090431.3af238bc@gandalf.local.home>
-	<87o78axlbm.ffs@tglx>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun,  9 Jun 2024 16:23:44 +0200 (CEST)
+Date: Sun, 9 Jun 2024 16:23:42 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] exit: kill signal_struct->quick_threads
+Message-ID: <20240609142342.GA11165@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-On Sun, 09 Jun 2024 16:06:05 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
+Hello,
 
-> On Sun, Jun 09 2024 at 09:04, Steven Rostedt wrote:
-> > On Sun, 9 Jun 2024 14:33:01 +0800
-> > Sam Sun <samsun1006219@gmail.com> wrote:  
-> >> [   82.310798][ T8020] ------------[ cut here ]------------
-> >> [   82.311236][ T8020] kernel BUG at arch/x86/kernel/jump_label.c:73!  
-> >
-> > This is not a bug with jump labels. It's a bug with whatever is using jump
-> > labels. Looks like something tried to modify a jump label that no longer
-> > exists.  
-> 
-> The jump label exists.
+Eric, I can't understand why the commit ("signal: Guarantee that
+SIGNAL_GROUP_EXIT is set on process exit") added the new
+quick_threads counter. And why, if we forget about --quick_threads,
+synchronize_group_exit() has to take siglock unconditionally.
+Did I miss something obvious?
 
-Ah, I missed the set_attr_rdpmc() as something not with a "?" in front :-p
+Tejun, could you check the note about css_task_iter_advance() in
+the changelog? And can't it use thread_group_empty() instead?
 
-> 
-> >> [   82.331873][ T8020]  set_attr_rdpmc+0x193/0x270
-> >> [   82.332179][ T8020]  ? get_attr_rdpmc+0x30/0x30
-> >> [   82.332511][ T8020]  ? sysfs_kf_write+0x18d/0x2b0
-> >> [   82.332832][ T8020]  ? sysfs_kf_read+0x370/0x370
-> >> [   82.333159][ T8020]  kernfs_fop_write_iter+0x3ab/0x500  
-> >
-> > So, something in kernfs modified a jump label location that was freed?  
-> 
-> No. What happens is:
-> 
-> CPU 0                           	CPU 1
-> 
-> kernfs_fop_write_iter()			kernfs_fop_write_iter()
->   set_attr_rdpmc()		  	  set_attr_rdpmc()
->     arch_jump_label_transform_queue()       arch_jump_label_transform_queue()
->      mutex_lock(text_mutex)                   mutex_lock(text_mutex)
->      __jump_label_patch()
->      text_poke_queue()
->      mutex_unlokc(text_mutex)
->                                               __jump_label_patch()
-> 
-> CPU 1 sees the original text and not the expected because CPU 0 did not
-> yet invoke arch_jump_label_transform_apply().
-> 
-> So clearly set_attr_rdpmc() lacks serialization, no?
-> 
+Oleg.
 
-Hmm, but should jump labels fail when that happens? Or should it catch
-it, and not cause a BUG?
-
--- Steve
