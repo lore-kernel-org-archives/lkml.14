@@ -1,74 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C33360;
-	Sun,  9 Jun 2024 01:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E9C17F8
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 01:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717896441; cv=none; b=QlCKukF90P9osDUDyxItyc3fHhbWLmVjt1JUMDcVQ91pa25JJEbd/1W0LvcdXU84LBkp9cfoc3+w1esh0Lb2yEpbjMmHKPaKPfqDAbHyl1W7EQG3Dp+cjLaYmalPLRfjzIJTk4nBSK8pVwR5SuCoX0mO2CHFPyQIYVnJj0S+V5Y=
+	t=1717896939; cv=none; b=D1rbxi1QwIxnA5Om57oZwwa/ar0CIgH8VfExbPeZ7KkBMUEwVUf0t/hOEPJtpJ3RPYczZjhVp60n6PzaRsfK2AneBGSCr4mXxq/Njoo9Meg3JE+vxcOdBNNV3W1OluOHVKzc0GNV8bkF6IBgyNwR97230H/DcgBRClzUofSoU8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717896441; c=relaxed/simple;
-	bh=6sl0ZI6qGZzRme/1+79bRsWchE453bSArJoTsSrkLV8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GsSdsPN7rbhofsysfZDIB/RhABA2mcoo1zb1w0ANUZviYc4vRIhJLJuDHBmXlUAYLAixhtlMgopO/K91I2nn1oduFQ/fLe43yEC+ePlN0enO9E3NlmN4kCUuE4o80rCprAowBtAW4IEw1CXeRB3kY9LqN9PO/01gMzUvQC2GppA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qI1m1mCh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717896939; c=relaxed/simple;
+	bh=oJHizDTlgk7iiOeTs8+y1dXRJeUMx1LlY+wokuoqr4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=plM8Hmq1Xz6JrGGvEVQwd8fZ3gVwix4I6FsTiWIA1MO9tpky5aMmLZLYBIgjSHtUSCyJI6S2ygwrpBPb6dlznJ2utoAPh5Jxvd8pYvGXLDyE1O27xAqhNbA7fTbzfmiuLbfuc/61JO3skM0cENzBWy0UxA6bT/8rLOfM/iT6qI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nkl1MMXQ; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qI1m1mCh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A56DC2BD11;
-	Sun,  9 Jun 2024 01:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717896440;
-	bh=6sl0ZI6qGZzRme/1+79bRsWchE453bSArJoTsSrkLV8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qI1m1mChsBBXCMYPrz83KBIxYo8pdVn3C21dc3HrzmLX9OTjIJ74GhDPuOy01VI1e
-	 l320XL3fQ8os1aIIU3BO9R7w/tj5yYZaxJ5LFt8lIICmFEh4ILcKysji9LRyZE1wUQ
-	 RrEN4VhleT3OL/wqDFzaUhG9TEMDPkUzOTPWucPCd6HxQzw1GV6hdG/mqriUsSBSI7
-	 4yjo/QZPaBAiBizEZoV42qRGbXIdoCl2AiR7crymAcCB8cWCH2qJRNI9UcFhBPaGgT
-	 bR3clRSEvCtn+XIfIkSK0HkUuFByizeKc76zAE2+5qolfQqWU83qQCaFrfSSaaDZZV
-	 95EbwlrjNMhTA==
-From: Stephen Boyd <sboyd@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] clk fixes for v6.10-rc2
-Date: Sat,  8 Jun 2024 18:27:18 -0700
-Message-ID: <20240609012719.1748309-1-sboyd@kernel.org>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nkl1MMXQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717896937; x=1749432937;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=oJHizDTlgk7iiOeTs8+y1dXRJeUMx1LlY+wokuoqr4U=;
+  b=nkl1MMXQtzThVuhsSb7WoVTQeyHCOPsiCL0rYgkIy8VQG/mhofXLZ/MV
+   O8OMTnDY8hqxD0vNHiqT4zHv8r6HeHB0CJftNgqfR1z8RIe4TdLykNLe9
+   wmAzLmwGuQcH5j5m4RH8pg6fmOu/hrpE9hx7EIBzu0m614Eny5uf13yqJ
+   RFC7Kodz7ZQAU8Lw+qNfL80pNukYryXhC3WgBA/NWyoltjRVd6hTEsjSF
+   gK9ksNck+zlMx/Zr3WUQ9qk755cAEIuxE43528dWctt5bmGKvVyz2BkYL
+   T9/+/NASDJYHSZ/SvDeE13GfFZHFwWtcrAAnsFoZCNaCytqY0C7lsIJI8
+   A==;
+X-CSE-ConnectionGUID: zQ6EODjOScCfMQpDeCTgpw==
+X-CSE-MsgGUID: nRj/fx1SThuzRcyG6iY80w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11097"; a="32081336"
+X-IronPort-AV: E=Sophos;i="6.08,224,1712646000"; 
+   d="scan'208";a="32081336"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2024 18:35:37 -0700
+X-CSE-ConnectionGUID: +OZUXgVJS92pO40bcZYUVA==
+X-CSE-MsgGUID: 1JBw/102Sviaozy4fTCeLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,224,1712646000"; 
+   d="scan'208";a="69483281"
+Received: from lkp-server01.sh.intel.com (HELO 8967fbab76b3) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 08 Jun 2024 18:35:35 -0700
+Received: from kbuild by 8967fbab76b3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sG7T3-0000jQ-0v;
+	Sun, 09 Jun 2024 01:35:33 +0000
+Date: Sun, 9 Jun 2024 09:35:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: =?iso-8859-1?Q?Jos=E9?= Roberto de Souza <jose.souza@intel.com>,
+	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org
+Cc: oe-kbuild-all@lists.linux.dev, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Mukesh Ojha <quic_mojha@quicinc.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jonathan Cavitt <jonathan.cavitt@intel.com>,
+	=?iso-8859-1?Q?Jos=E9?= Roberto de Souza <jose.souza@intel.com>
+Subject: Re: [PATCH v4 1/2] devcoredump: Add dev_coredumpm_timeout()
+Message-ID: <202406090938.yRretx5x-lkp@intel.com>
+References: <20240607193220.229760-1-jose.souza@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240607193220.229760-1-jose.souza@intel.com>
 
-The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
+Hi José,
 
-  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
+kernel test robot noticed the following build warnings:
 
-are available in the Git repository at:
+[auto build test WARNING on drm-xe/drm-xe-next]
+[also build test WARNING on wireless/main linus/master v6.10-rc2 next-20240607]
+[cannot apply to driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus wireless-next/main]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
+url:    https://github.com/intel-lab-lkp/linux/commits/Jos-Roberto-de-Souza/drm-xe-Increase-devcoredump-timeout/20240608-033441
+base:   https://gitlab.freedesktop.org/drm/xe/kernel.git drm-xe-next
+patch link:    https://lore.kernel.org/r/20240607193220.229760-1-jose.souza%40intel.com
+patch subject: [PATCH v4 1/2] devcoredump: Add dev_coredumpm_timeout()
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240609/202406090938.yRretx5x-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240609/202406090938.yRretx5x-lkp@intel.com/reproduce)
 
-for you to fetch changes up to 2607133196c35f31892ee199ce7ffa717bea4ad1:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406090938.yRretx5x-lkp@intel.com/
 
-  clk: sifive: Do not register clkdevs for PRCI clocks (2024-05-29 12:31:02 -0700)
+All warnings (new ones prefixed by >>):
 
-----------------------------------------------------------------
-One fix for the SiFive PRCI clocks so that the device boots again. This
-driver was registering clkdev lookups that were always going to be
-useless. This wasn't a problem until clkdev started returning an error
-in these cases, causing this driver to fail probe, and thus boot to fail
-because clks are essential for most drivers. The fix is simple, don't
-use clkdev because this is a DT based system where clkdev isn't used.
+   In file included from include/net/bluetooth/hci_core.h:36,
+                    from net/bluetooth/coredump.c:10:
+>> include/net/bluetooth/coredump.h:9: warning: "DEVCOREDUMP_TIMEOUT" redefined
+       9 | #define DEVCOREDUMP_TIMEOUT     msecs_to_jiffies(10000) /* 10 sec */
+         | 
+   In file included from net/bluetooth/coredump.c:6:
+   include/linux/devcoredump.h:16: note: this is the location of the previous definition
+      16 | #define DEVCOREDUMP_TIMEOUT     (HZ * 60 * 5)
+         | 
 
-----------------------------------------------------------------
-Samuel Holland (1):
-      clk: sifive: Do not register clkdevs for PRCI clocks
 
- drivers/clk/sifive/sifive-prci.c | 8 --------
- 1 file changed, 8 deletions(-)
+vim +/DEVCOREDUMP_TIMEOUT +9 include/net/bluetooth/coredump.h
+
+9695ef876fd122 Abhishek Pandit-Subedi 2023-03-30   8  
+9695ef876fd122 Abhishek Pandit-Subedi 2023-03-30  @9  #define DEVCOREDUMP_TIMEOUT	msecs_to_jiffies(10000)	/* 10 sec */
+9695ef876fd122 Abhishek Pandit-Subedi 2023-03-30  10  
 
 -- 
-https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/
-https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
