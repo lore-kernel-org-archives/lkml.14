@@ -1,110 +1,117 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32DF2230F;
-	Sun,  9 Jun 2024 12:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5001374D4
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Jun 2024 13:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717937996; cv=none; b=TfMz2aULYKmuRW24xHP8R3NU5S4adJSmUfpOqx47fo64S51y/M8j9oRpxv99xo3S3tmlGxed4FxspFmJJ3TFSCKTUh+YiG2yFf/Y+nk0nLlSyRCBKRGc5fYFcAudoapHO6hYmbIN2JHk0G51ArftOVyEdesVSfQh96NI1QXQbtI=
+	t=1717938042; cv=none; b=f3CgGYgL1LtPVNUPIXzfd3B6Q4U0L2eoXepq8PQvrYR+KXm0S0ERtbsudKCzw13kAAQQlSJgN/zKT3fB6YpiikEyguyWtOr4v0KUQLxfXhRbphhgmmxqmWCpF/ilM4cE72+bd3fvcHx1u09YfXFlZUPrLeLiT8Ru0rEIzvfUNHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717937996; c=relaxed/simple;
-	bh=ZBEzRfn+mFCbyufKXc/4c7RplCyGr6rZvxeGQzawPT0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GAD3ZT+xqj+G0ARGEX6Qt3my5UV5DQfjSYkum23gpOpuZcdlAu+saYP6N999rFWKeun9PiVzu7qSQnn1ccB0aGjYxgwhKidtR8ltFNSzHsyi2d/YQpswA77Ew68HZSjfFg49F6L/PhSunkWr9OdLV2moGIlBmRoYbZO8FqsZvgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PehTp77C; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717938042; c=relaxed/simple;
+	bh=QigNoW77ClCeqfOYTx4Et4Hd7mgkHkgVnWWc6yIPB28=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=YX9CatcQ2Q4O80VrHcW5fIyM9x2tbboZSKPgBea9FyX65nnDAPcwb2Td9cUb30UYxycAIWptj5colG56rBd4rNGpPAdeAvcMb5Zs2ZE4zov/jhNpUy0M5Wxk47hYGAzG/adlEFOZMG+HauhjC3+YMeUMSgC4EVmK6MBYLmKopsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=WXbHhIcy; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PehTp77C"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c8342af5eso685016e87.3;
-        Sun, 09 Jun 2024 05:59:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="WXbHhIcy"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-35f14af40c2so705493f8f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2024 06:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717937993; x=1718542793; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zvgraGsdwP8qNq0CbLRpBxfSdVjyK/qpe06H5/qHpTM=;
-        b=PehTp77CFUMUerE7WxPgl2P+14sl8WKYQI8JuBiC5+4MtE42hAxZx2CSpm4nbY5BD5
-         gmBgzlTpQ2C602MYeLJGcKIHtqq1jTPTeFtFXwUxMjIn/vOXqp/xPue7qeeCVRa5KHNk
-         0zGv8UEzagiHMHOJuJ1EI3W7BwcYB2HxrbPGE8Ft8ZRghxeT9O1mSgN1BU/ADdDFDtLV
-         qskdsCEXfU1ETYW2xaazqZHcBLbePm+r0waD/Ku+M2mbpcnUWoQKi9vGzvMiw7nG9TsB
-         yr5L4Vw66U/5rle2eDepA2rQb1mbwlpKICZOcNYJOBOrwSBZFWMSWRrE1LmfM9AxhgWl
-         kjTg==
+        d=tuxon.dev; s=google; t=1717938039; x=1718542839; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ky3F7lrTtIDOfgJFvUgAjHSa1goIJaZDc94U4MqRHYw=;
+        b=WXbHhIcye1J5VGA88ZU+HCGB4TDtGMCfeCSgt1FJPs0Ma5WkenDIMhwrH7hoFa/MuX
+         gy3AQjZsZNbLIrpOE+30hshDbePRnpoW9ok0pvjj/Us+lzUe4J1t5miCtQjxwG/1DjcV
+         ZckRz1Hs2aQZeDEHdjH+6K5z7nxvupGLf7SBTbA8LWiJkB+SiROlqjSMJfDojBdkKRRW
+         DbakHmW9v8edYQAegsTOlB5TJ0NUcKhjVPfwrX2WnhDU45VWNteqv2yy8fEU+8CImadg
+         l1nI/bkz6ZxPIBiPJD7u4SDsM85zvt0QZ62Nt6m92AuRlDZ+7gtWM3sjvJrMkm+ewl8z
+         84Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717937993; x=1718542793;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zvgraGsdwP8qNq0CbLRpBxfSdVjyK/qpe06H5/qHpTM=;
-        b=fp+SZyl9Q1FyMRT3vlRpaEjopXXHKBtlPn0N8PTqK/DnmpAFYH5d/TrkwDQeU/z1F3
-         1EChkz7qNw2GAP1NXTm/KNlICO3uVVTw9vMGxxv3yWwVn77QQA4qNN6ZxZQji2KqaoWg
-         ST78Z8swvtVJ2QAdF3iBwiD6cF2wqI1Kx3g+pOq5AO6EjE4MtFTrjZINXVAsKEv9+s9b
-         8PIvkwkwNYmFreSWvZW11oBT4Si3fMkbe8z8q2QH3VRXxnWwxUjrplpWj/OmG18iAn6b
-         ua2rxcShc66fm0UiUrC08ddqDNHt/EQaQVPdQG5nV1gB64Ie6J7lFGbR3sSilyGFxgTg
-         maxA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8bNjDc1emHn/AM2ZvTmOwmO7wPnGAehMigxx9YVyfGvkwCAh1ZXUlI9wB+ZYdh31GlipobBhsSG1oFLh2f1L+0t+bx0KD/iregHVRl6sw6XXvTxTBOXT+TYZ/PIM2bLRH+TJl3wB2uQ==
-X-Gm-Message-State: AOJu0Yy8qTumiTJpJXHHbVmVAYm30TuXA8YkfPbtPCOgNBz09BXiSMr9
-	zCw017BmuCjkqOdQG8XH8OAmLi39nJmCBkdAbq3yHpMiXM5StjeX
-X-Google-Smtp-Source: AGHT+IH0kfJd+mvMseVa+3hYIyeisA8ltLtAHrUOGBmoHFRBwQJplxengofSYzowRy3u69oYOatzLw==
-X-Received: by 2002:ac2:4989:0:b0:52c:7fc9:954e with SMTP id 2adb3069b0e04-52c7fc9976fmr1948585e87.41.1717937992741;
-        Sun, 09 Jun 2024 05:59:52 -0700 (PDT)
-Received: from lmc-playground.localdomain ([188.25.209.252])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f1841fceasm85961266b.70.2024.06.09.05.59.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 05:59:52 -0700 (PDT)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liu Ying <victor.liu@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>
-Cc: laurentiu.mihalcea@nxp.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] Add support for imx8ulp's SIM
-Date: Sun,  9 Jun 2024 15:58:58 +0300
-Message-Id: <20240609125901.76274-1-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1717938039; x=1718542839;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ky3F7lrTtIDOfgJFvUgAjHSa1goIJaZDc94U4MqRHYw=;
+        b=TrHrc+DzF+i65TI8V+t8ozz1jq5oB2JwjhuCT7fsYYLuAmMt83dFhiK7E89j1qfE+O
+         mMlMsJAhkwpQRWZgwQlOzCGsxmPIylRqDHwnJmJzEfgbkBXhjZj1AbUB3U51SQNddDdD
+         judAJOSZELmyCN2WYwGGRCfzrO9nDPL2vp+/iWqOw7+E6dJih3nkP6nHypwGnWS8IjD5
+         CJ6JxoZe3paSPX9zfPSFE8N2LBg5hpPx6uaB6KZEnlbHAHmrAuKL/yK4zrF/6rILzeid
+         jWB5YEk17R/iq5hNcMTeLpbP3Vmq6lIJiEnUMMSjltl1qfTA13cPlo2o4jcZBW5sjOSQ
+         bJUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNgjkzDP3xuG35BBzIGMRw1oY9+FZA7hKywthLjdsv/YCX/6/p8wSXcC2Bf6j9d2DaXarExe4hQb1qKfElIG5Mg43xJ42ibyzrE9E/
+X-Gm-Message-State: AOJu0Yz692vd3pWajCBJnrazUoqwV2gF1sQkWERVCTRkzRh8IE0A39bo
+	Coia3TWerGSdon/DkXR6vmLRloKlD660hQC5CSKZlzz5XqNALzqsarK+fNz4O08=
+X-Google-Smtp-Source: AGHT+IGRsbqTVIFgZ6p18PEJuNiLJHAflv0f2yiem7/+NmsB7nGwV1Zbdr6NLv9+xKSWGMAW3A3S6A==
+X-Received: by 2002:a05:6000:184d:b0:35f:209b:c10f with SMTP id ffacd0b85a97d-35f209bc1bdmr870170f8f.68.1717938038958;
+        Sun, 09 Jun 2024 06:00:38 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.189])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d66cf6sm8521473f8f.49.2024.06.09.06.00.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Jun 2024 06:00:38 -0700 (PDT)
+Message-ID: <8412fc44-d3c1-4283-aceb-7aa4b95606be@tuxon.dev>
+Date: Sun, 9 Jun 2024 16:00:35 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 4/4] ARM: configs: at91: Enable LVDS serializer support
+To: Dharma Balasubiramani <dharma.b@microchip.com>,
+ "dmitry . baryshkov @ linaro . org" <dmitry.baryshkov@linaro.org>,
+ "andrzej . hajda @ intel . com" <andrzej.hajda@intel.com>,
+ "neil . armstrong @ linaro . org" <neil.armstrong@linaro.org>,
+ "rfoss @ kernel . org" <rfoss@kernel.org>,
+ "Laurent . pinchart @ ideasonboard . com"
+ <Laurent.pinchart@ideasonboard.com>, "jonas @ kwiboo . se"
+ <jonas@kwiboo.se>, "jernej . skrabec @ gmail . com"
+ <jernej.skrabec@gmail.com>,
+ "maarten . lankhorst @ linux . intel . com"
+ <maarten.lankhorst@linux.intel.com>,
+ "mripard @ kernel . org" <mripard@kernel.org>,
+ "tzimmermann @ suse . de" <tzimmermann@suse.de>,
+ "airlied @ gmail . com" <airlied@gmail.com>,
+ "daniel @ ffwll . ch" <daniel@ffwll.ch>,
+ "robh+dt @ kernel . org" <robh+dt@kernel.org>,
+ "krzysztof . kozlowski+dt @ linaro . org"
+ <krzysztof.kozlowski+dt@linaro.org>,
+ "conor+dt @ kernel . org" <conor+dt@kernel.org>,
+ "linux @ armlinux . org . uk" <linux@armlinux.org.uk>,
+ "Nicolas . Ferre @ microchip . com" <Nicolas.Ferre@microchip.com>,
+ "alexandre . belloni @ bootlin . com" <alexandre.belloni@bootlin.com>,
+ "Manikandan . M @ microchip . com" <Manikandan.M@microchip.com>,
+ "arnd @ arndb . de" <arnd@arndb.de>,
+ "geert+renesas @ glider . be" <geert+renesas@glider.be>,
+ "Jason @ zx2c4 . com" <Jason@zx2c4.com>,
+ "mpe @ ellerman . id . au" <mpe@ellerman.id.au>,
+ "gerg @ linux-m68k . org" <gerg@linux-m68k.org>,
+ "rdunlap @ infradead . org" <rdunlap@infradead.org>,
+ "vbabka @ suse . cz" <vbabka@suse.cz>,
+ "dri-devel @ lists . freedesktop . org" <dri-devel@lists.freedesktop.org>,
+ "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>,
+ "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
+ "oe-kbuild-all @ lists . linux . dev" <oe-kbuild-all@lists.linux.dev>,
+ "Hari . PrasathGE @ microchip . com" <Hari.PrasathGE@microchip.com>
+References: <20240421011050.43265-1-dharma.b@microchip.com>
+ <20240421011050.43265-5-dharma.b@microchip.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+Content-Language: en-US
+In-Reply-To: <20240421011050.43265-5-dharma.b@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-i.MX8ULP's SIM (System Integration Module) allows
-control and configuration of certain components
-form the domain it's assigned to. Add DT node
-and schema for it. Its child shall also be
-included.
 
----
-Changes in v2:
-- Reset controller is now also a syscon provider.
-- Changed vendor prefix to nxp.
-- Link to v1: https://lore.kernel.org/all/20240516204031.171920-1-laurentiumihalcea111@gmail.com/
+On 21.04.2024 04:10, Dharma Balasubiramani wrote:
+> Enable LVDS serializer support for display pipeline.
+> 
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> Acked-by: Hari Prasath Gujulan Elango <hari.prasathge@microchip.com>
+> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
----
-Laurentiu Mihalcea (3):
-  dt-bindings: reset: add schema for imx8ulp SIM reset
-  reset: add driver for imx8ulp SIM reset controller
-  arm64: dts: imx8ulp: add AVD-SIM node
-
- .../bindings/reset/nxp,imx8ulp-sim-reset.yaml |  68 ++++++++++++
- arch/arm64/boot/dts/freescale/imx8ulp.dtsi    |  13 +++
- drivers/reset/Kconfig                         |   7 ++
- drivers/reset/Makefile                        |   1 +
- drivers/reset/reset-imx8ulp-sim.c             | 103 ++++++++++++++++++
- include/dt-bindings/reset/imx8ulp-sim-reset.h |  16 +++
- 6 files changed, 208 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/nxp,imx8ulp-sim-reset.yaml
- create mode 100644 drivers/reset/reset-imx8ulp-sim.c
- create mode 100644 include/dt-bindings/reset/imx8ulp-sim-reset.h
-
----
-base-commit: fec32ea96dd90bf0af97e001f380d4a240013aa0
+Applied to at91-defconfig, thanks!
