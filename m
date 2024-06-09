@@ -1,49 +1,48 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A327613D;
-	Sun,  9 Jun 2024 03:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18784C79;
+	Sun,  9 Jun 2024 04:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717903929; cv=none; b=ARsGl5fgTaVDp3jEBo1x0fU5dq9QtRPlMuU83jmFgQJo70eObMW5Ebo6Gdg1SOw8EZqB67VOdbfECR1GALxXx00DXQOohtUhW16+ZSpHOeK/OjwQpQ1N6FibnS4bv/gdF2F+LU7CVoQkBGy7BtgPXCx49EPKj+LC3FgKpinrI9Y=
+	t=1717905795; cv=none; b=sGS6J8Yem/vRxB+Qo9jNb+BuZq4hz7z7MMa0oYgHeN/BCCfE1qE2nEFa8BEVr2kcrd5aXauiPOUj2RRC2Xp4UkZtDdMyeP2wx4fdQn/Y5N6yUWQuBZe1O057DJlIDKrUlHfdtf2ReBmBNmy9HepzunTeMWY3mjotYsyHTWtEqDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717903929; c=relaxed/simple;
-	bh=FG21nJMzDgQVBPiWDAMRoSDJCoh5DoD48CK6U3Qv5f8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=AL5geQHemlounEyglOMEM4g2Al6iQ+g6AWxcbdqtVoWFU0V7o/QkcMhslF81z6/3V/Po1fOw3UH0gyJNd0GqMGbcJq4AdZzH4v4hrz6pzKTG29nvVsb7W86sCsd75t8KyvWPB4WExIbsb1GF8j0pYyfXLC8aYXCiRgZKOq3BFmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hS4JOdlY; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1717905795; c=relaxed/simple;
+	bh=+G8rylvToyZMf6Ef92YfIsfhhHIEvlNHkuznkdJlNRc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=K7Pjjyk8QWekaSFWPN1MqA6qtkbqzCUl8/fdLvJsoRSqIRSZ2JM0zwq0Or3aufaT02n90DtyJAEhDXyUoNPSE6HdqUUa4AC1yYzCdDR2bT8P2FW/KDkdxkijqCLDHfP7+Kr6RD1zpzNzmQad+LDEbhqMqNBmLtsSv79UsU6/6Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k9mLrtrI; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hS4JOdlY"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4592KQ4d011123;
-	Sun, 9 Jun 2024 02:38:41 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k9mLrtrI"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4593H8lv021006;
+	Sun, 9 Jun 2024 04:03:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ljGBYLQFC3HKRQ9g+LrdPl9BYHhm2n7q5flQqnt1vP8=; b=hS4JOdlYqy63rPNA
-	McIBKrhyJlrW9jsdELF0Qa4avxyJjz0QLEIZn9FYCBR0QGX99XqCqAcfu0UP07lq
-	SE68dZ2j8KRyEo0ms1Z0G9EXGe+agrvVpEoer9ClrijZH4p37JaaeWEV3QxpxCp4
-	LU5YEwMuAQyV2Qsaz725HT36nc7GRLsTFUoUcutxy5XajLMg0VCGkCKesLwvi8pp
-	S9PTxZfeFQd8U5jzq35OkxQzLYRbIjKZpigft/o5zN/RVlLeNAholi0SFH3OVgsx
-	EHmaPfiM44+9jt4GN1m/74fdv9kSgG1OrCPS3FQ7Cx7B+mUbbBx/hCsP77yjd1Aq
-	4vh0UQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymea6h83e-1
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=YX5GA6YJcJC4DY/xZbHKJk
+	4i8DEHF1YttbfbK+g7ZuA=; b=k9mLrtrIShOS7ep8I3+mP/r+UQjfiX9JQstqA+
+	O/a4kWI0Zvouj0nh5v5SCUeSJw3m0N0zej9fIImLuRbXZUoVAPse8DaYU44NXVGQ
+	xK4+MJb6i757ot0Sf8lktDU20KB8nzHS7J5+u77JKEedbCwOs/UVvToJPp+IO/Hk
+	p3Vq9sRVl5E9+NCVOkGY0+QFJD0x3jkazLPOe+bOot7QdSLpFPskwl41/Hkuh3h+
+	J3JFOHjGzu8/816tBTwkcvMBp4lzh6rqMp1LoGVukcODwzF46zRg4AZcgBPBr0DE
+	tZ21DRXR29cEdg0CUEpE+8vjM6zBhWA4mv2/kCRDgBd9vhmg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yme8rsenf-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 09 Jun 2024 02:38:41 +0000 (GMT)
+	Sun, 09 Jun 2024 04:03:00 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 4592ceem022708
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45942xeH000782
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 9 Jun 2024 02:38:40 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sat, 8 Jun 2024 19:38:33 -0700
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Sun, 9 Jun 2024 08:08:16 +0530
-Subject: [PATCH v14 2/4] dt-bindings: pci: qcom: Add OPP table
+	Sun, 9 Jun 2024 04:02:59 GMT
+Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 8 Jun 2024
+ 21:02:58 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Sat, 8 Jun 2024 21:02:54 -0700
+Subject: [PATCH] power: reset: piix4: add missing MODULE_DESCRIPTION()
+ macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,86 +51,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240609-opp_support-v14-2-801cff862b5a@quicinc.com>
-References: <20240609-opp_support-v14-0-801cff862b5a@quicinc.com>
-In-Reply-To: <20240609-opp_support-v14-0-801cff862b5a@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <johan+linaro@kernel.org>,
-        <bmasney@redhat.com>, <djakov@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
-        <krzysztof.kozlowski@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717900699; l=1082;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=FG21nJMzDgQVBPiWDAMRoSDJCoh5DoD48CK6U3Qv5f8=;
- b=NPJMggX5e093n/vAl987/iJT4IAB9VaFh7iOljrR8qfMTEvzOGAgYyYD2FQYSYuXCEBBolB5f
- 8jRp9pshZ+PDgEcG7Hx2g1/24wodECC3e+uPlTJ1Zp119ghGN9rG4MB
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+Message-ID: <20240608-md-drivers-power-reset-v1-1-08dbc1a546a2@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAG0pZWYC/x3MTQqDMBBA4avIrDuQSoihVyld5GesAzXKjLWCe
+ Hdjl9/ivR2UhEnh0ewgtLLyVCrutwbSEMqbkHM1tKa1xhmPY8YsvJIoztOPBIWUFrTex94523X
+ JQY1noZ63//j5qo5BCaOEkoZr9+Hy3XAMupDAcZx0zAE6hwAAAA==
+To: Sebastian Reichel <sre@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: zy39TvY3FQYoNhYSyc9ZJnzKQYyEKxbk
-X-Proofpoint-ORIG-GUID: zy39TvY3FQYoNhYSyc9ZJnzKQYyEKxbk
+X-Proofpoint-ORIG-GUID: BQcEm8OiJQWmplj-PuWlqaQqsHZQc3WN
+X-Proofpoint-GUID: BQcEm8OiJQWmplj-PuWlqaQqsHZQc3WN
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-08_16,2024-06-06_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- spamscore=0 phishscore=0 mlxlogscore=999 clxscore=1015 lowpriorityscore=0
- malwarescore=0 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406090019
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=999 impostorscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406090029
 
-PCIe needs to choose the appropriate performance state of RPMh power
-domain based on the PCIe gen speed.
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/power/reset/piix4-poweroff.o
 
-Adding the Operating Performance Points table allows to adjust power
-domain performance state and ICC peak bw, depending on the PCIe data
-rate and link width.
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/power/reset/piix4-poweroff.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
-index 1496d6993ab4..d8c0afaa4b19 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
-@@ -69,6 +69,10 @@ properties:
-       - const: msi6
-       - const: msi7
+diff --git a/drivers/power/reset/piix4-poweroff.c b/drivers/power/reset/piix4-poweroff.c
+index 7f308292d7e3..e6822c021000 100644
+--- a/drivers/power/reset/piix4-poweroff.c
++++ b/drivers/power/reset/piix4-poweroff.c
+@@ -106,4 +106,5 @@ static struct pci_driver piix4_poweroff_driver = {
  
-+  operating-points-v2: true
-+  opp-table:
-+    type: object
-+
-   resets:
-     maxItems: 1
- 
+ module_pci_driver(piix4_poweroff_driver);
+ MODULE_AUTHOR("Paul Burton <paul.burton@mips.com>");
++MODULE_DESCRIPTION("Intel PIIX4 power-off driver");
+ MODULE_LICENSE("GPL");
 
--- 
-2.42.0
+---
+base-commit: 19ca0d8a433ff37018f9429f7e7739e9f3d3d2b4
+change-id: 20240608-md-drivers-power-reset-488bf66477c6
 
