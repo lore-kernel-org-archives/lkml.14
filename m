@@ -1,89 +1,190 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fallback16.i.mail.ru (fallback16.i.mail.ru [79.137.243.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00CF1CAAD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D51617BD3;
 	Sun,  9 Jun 2024 20:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717965409; cv=none; b=JTBur3xT2P7xBZ3VLzdrI9nopmA24o1MbkLbe0yzUnbPc2qANQBnDbG2njYSWlPuu/xvNbTonCPBatnoCB6JjZdZJjLxpdeSqMckcOfw+nu67/f+cMX+Pa8kNbM/uRSo7oLKtnjFM+VmnR4SluQvqcwL/4JOAmwC9SZhYWrlb+Q=
+	t=1717965410; cv=none; b=EO6xeUed6Otsxe9yHOh9lbnTOjnCe5MGjwrW92Y8FXY8eBGa3Eu+kQtmsnn6AAfExnM6MdBc02E2tH1XZ49K0IDycS0xIRt5/ULakf4EnsLB8+/7jgycgpA/G4d5dQg55YpqFD5RcaGNAijf03YWA79XWWE1CMNqigNscKANNqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717965409; c=relaxed/simple;
-	bh=uJwcxL7fTbZETpE3JIp5KC3v1ONtZCjWCBG3BxU4g58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cbh/YqPKmoPlPR02tB63DEPm1QbPkxWAWXbEq7cT+DDaTy6dY6986DLHTYl5+Q2jc8pIdoKAlWp8NsqSxv0m1P05O5XhYvxfLiwoQdGRjllRhLp5Og+PZDtz+09AzNgxHEbB9HeP688WV761kvJhDkA/lSRyb++F1uxxdIQWE6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BE2my+bV; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717965410; c=relaxed/simple;
+	bh=b07g8Zm6vvFFd+Ji43SJ4CjSgJkVo+8chL6BAggB+WM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LZgaUnnnG425ma5L3h0PUufB+O1370SlzabLdEbK4em+dcqtrQPFoUD+sRCZxXAM209+c03Pz9ZyVThdmRLHDdUld2RDKISm1Jb6Wshoh+3pEWNi9015VYyZwq3/yhTMUIzgghjvdh4wIXs0JWn13CAdGMQD6Zk1tMNInKg6B0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=oIlYTeb3; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=RZVLVMEz; arc=none smtp.client-ip=79.137.243.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BE2my+bV"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so22172045e9.1;
-        Sun, 09 Jun 2024 13:36:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717965406; x=1718570206; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qWDOI6UMkgE1f+qKAKS/6XLS02d0j4d7NjNR9Xr9Yqg=;
-        b=BE2my+bVoMWpV8CZgxBBOvZw6b0Vq5aLRIKU6w/ZS8ct05KPu88KNkC/Bc7AZx8eS1
-         FoeadCGmEjemZJoFCT1ZM2lKn9ZOKvADA6yiB/oGi4Co+0Wr6qj9skWwX1+mh6m1NNFq
-         yezNlRuKc9V0lgXenx+i0xrOi/CnuvPbzYYJxnfYOvXQusNxuVVTPS8/VzaJeF+kYBGK
-         X7nKB63Cxo24e83X7tDEdTkuicmL79YF1qd2M2ZI/iAD0BNrth4J0e6Mmhuh0LqeBzKU
-         fEvp0BE9xEG9oh4lMAAqnV4OmAczzmcdkQBFBDoctCkUV1T8X8PCi9OXC/pjm2p7H+/8
-         bWig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717965406; x=1718570206;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qWDOI6UMkgE1f+qKAKS/6XLS02d0j4d7NjNR9Xr9Yqg=;
-        b=BZaEAlrR6x9aMpTkco1KNQUdDoWLkKMp8jck3qekTDVFIwLnHHHTQr+ui2fBGxmMOI
-         wOJgf+kiA8mnu7DpU5IA81SN4z6nmtp2V49RcYuIhmuufNKlkS8hxgDL1+Hg/mIY+fZm
-         fDKDUySfN7PVqNdStn7sB3B22G9B0w041sk61NThB0tYmP7LixXHVw+HhduGSGxsDblw
-         X5diZUTrE1o4ghjH9NpaJVpu8Uz0+90k1HoKnW0GRFDgjG4d63RlIK8+1HnHLpa7uqiq
-         sgbmnqXgx5BivXhbTq7ujO9MPMKnHLIvBX+LjE0RyXHWxsCdpLI/FaHhFvPafo6dLgkN
-         AqcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWjaSq0EqqNww7NNw37KhnKCxMNwapAfPvuGYbhnzScu5wfnmIMflM2+YKgMcuUwhCG2YhDABR6qMTnK569PTjhYWyHak863H96qy/v
-X-Gm-Message-State: AOJu0YxaimZHjSMOu7mAbimvj5ZA+6jix5oio1kUyqMSbtztUsJG8tIr
-	E7ws7sLVmxMTNao0LmP9uxlAo7KG3uaeG/MpIsPOvRPwo6OIRn9c
-X-Google-Smtp-Source: AGHT+IHbb4UNa5+vKV0xdC41wzn65JLyMWGJD+HoTgxYjP87QGgrIIMHuf/1+MtlzFHr6/sqQds0jg==
-X-Received: by 2002:a05:600c:3ca7:b0:421:392b:7e13 with SMTP id 5b1f17b1804b1-4215acbf7a8mr109039515e9.4.1717965406025;
-        Sun, 09 Jun 2024 13:36:46 -0700 (PDT)
-Received: from olivier-manjaro (oliv-cloud.duckdns.org. [78.196.47.215])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421661ecda2sm91286865e9.2.2024.06.09.13.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 13:36:45 -0700 (PDT)
-Date: Sun, 9 Jun 2024 22:36:44 +0200
-From: Olivier Dautricourt <olivierdautricourt@gmail.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: dmaengine@vger.kernel.org, Stefan Roese <sr@denx.de>,
-	Vinod Koul <vkoul@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	Eric Schwarz <eas@sw-optimization.com>
-Subject: Re: [PATCH v2 3/3] dmaengine: altera-msgdma: properly free
- descriptor in msgdma_free_descriptor
-Message-ID: <ZmYSXMEN32kl2leH@olivier-manjaro>
-References: <20240608213216.25087-3-olivierdautricourt@gmail.com>
- <6647d607-1424-4366-865c-069a166c61f1@web.de>
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="oIlYTeb3";
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="RZVLVMEz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
+	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=XgCW2Teyxjo1qJ/+v4hXt3hiuRDzeE/1a0ajHqVR6WM=;
+	t=1717965407;x=1718055407; 
+	b=oIlYTeb3J6jAa9rIqyj9ZyW8UFbY6t3fyuQmIfeeKCv5M6RzgXSHEJ8NqfzFD1Dj456DQ3NSO9rX4f3WBh5kxYwqVQyQZHLz9qJScV0BRIynBqAVoi45DVgdjhh5/x2/eYCgHV8PIn8U1Xbb5Wb18PUS1p7c32i+Khw5puhZC+U=;
+Received: from [10.12.4.20] (port=47366 helo=smtp44.i.mail.ru)
+	by fallback16.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
+	id 1sGPHL-002KB2-3A; Sun, 09 Jun 2024 23:36:39 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
+	X-Cloud-Ids:Disposition-Notification-To;
+	bh=XgCW2Teyxjo1qJ/+v4hXt3hiuRDzeE/1a0ajHqVR6WM=; t=1717965399; x=1718055399; 
+	b=RZVLVMEz3VHBc8zjUTDUNfj8hvs8AEsMW5Z35grcllPtBtaYw2qvI4HIy2edkanJCaJ/zgVi0PS
+	HVe5NRi55bd0RWEfyDXjacMU30kPww9RGaCQ6qSPzB0ovltPWYMSBtctbWstpKC4TFwzplFJY1s8r
+	POJJlv8GWz7j3JwmpMU=;
+Received: by smtp44.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1sGPH5-00000004YbQ-2jgt; Sun, 09 Jun 2024 23:36:24 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+To: neil.armstrong@linaro.org,
+	quic_jesszhan@quicinc.com,
+	sam@ravnborg.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	adrian@travitia.xyz,
+	degdagmohamed@gmail.com,
+	Danila Tikhonov <danila@jiaxyga.com>
+Subject: [PATCH 1/2] dt-bindings: display: panel: Add Samsung AMS639RQ08
+Date: Sun,  9 Jun 2024 23:36:17 +0300
+Message-ID: <20240609203618.49413-2-danila@jiaxyga.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240609203618.49413-1-danila@jiaxyga.com>
+References: <20240609203618.49413-1-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6647d607-1424-4366-865c-069a166c61f1@web.de>
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD948651DF6EBC8E8B222621CCF380C0F235C86A77A6A247FFB182A05F5380850404E84FBDD82675F9BD4FF92D56319F1972E2138EB373856867A4D2F7B2508D394DC39866218C5191E
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE770FEBAE29342FA8FEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063764BF1E09E94CC6278638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D875E801B35AE15423179B2FEBA43CD57B2C9B4D5420AE7347CC7F00164DA146DAFE8445B8C89999728AA50765F7900637DCE3DBD6F8E38AFD389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8A9FF340AA05FB58CF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C62B3BD3CC35DA5886E0066C2D8992A164AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C3CA64746D51DB396CBA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF4964A708C60C975A1DD303D21008E298D5E8D9A59859A8B65FF0BFC5AEE34BE675ECD9A6C639B01B78DA827A17800CE760469D7ADB81D431731C566533BA786AA5CC5B56E945C8DA
+X-87b9d050: 1
+X-C1DE0DAB: 0D63561A33F958A5177F2A6FBBF53CE75002B1117B3ED6969AF1702879616AB219AC5B239BAD4335823CB91A9FED034534781492E4B8EEAD2B25D9E4C92BC8ACC79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFFC2046D000D58A9CFC2D0F7E31F8481E1B3FB62E9FC0306DC211A96A0D0AF8DD7649A938D59E33ED0FD6CD3E887ECC32FF45B9C3B59D2153AE15ADD81BFA704DCE25B990C371C36E0D035775BAD7A4FF02C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj6D5zjHqYKv1Yl+a1Y8Sf+w==
+X-Mailru-Sender: 9EB879F2C80682A09F26F806C73949817A795F5C603EFD0CAC4385294E02B5FBF47824E877E99CE90547A8BF58688A1D2C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B4B653A1001F6F75E4542571B84DC1CDDAAF24926542F20ADDB647ED114AB003ACCE0692C6BF09384D4547AB07AD1460ADC5F3AE8F7E3F031E3ABB9FCC2388B9EA
+X-7FA49CB5: 0D63561A33F958A5438D42E686A423E79A85A0FF7066BD4E13E058B0BEB7AF308941B15DA834481FA18204E546F3947CD2B897A0B7B208E1F6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F79006371CE0A079F1B3D4BD389733CBF5DBD5E9B5C8C57E37DE458BD96E472CDF7238E0725E5C173C3A84C3B95D3BAC42CD083E35872C767BF85DA2F004C90652538430E4A6367B16DE6309
+X-87b9d050: 1
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj6D5zjHqYKv0tM1y63Q3TmQ==
+X-Mailru-MI: 8000000000000800
+X-Mras: Ok
 
-On Sun, Jun 09, 2024 at 07:30:04PM +0200, Markus Elfring wrote:
-> > Remove list_del call in msgdma_chan_desc_cleanup, this should be the role
-> > of msgdma_free_descriptor. In consequence replace list_add_tail with
-> > list_move_tail in msgdma_free_descriptor.
-> …
-> 
-> Would you like to add the tag “Fixes”?
+The Samsung AMS639RQ08 is a 6.39 inch 1080x2340 MIPI-DSI CMD mode
+AMOLED panel used in:
+- Xiaomi Mi 9 Lite / CC9 (sdm710-xiaomi-pyxis)
+- Xiaomi Mi 9T / Redmi K20 (sm7150-xiaomi-davinci)
+- Xiaomi Mi 9T Pro / Redmi K20 Pro (sm8150-xiaomi-raphael)
+Add a dt-binding for it.
 
-Right, the Fixes tag will target the first commit
-introducing this driver (a85c6f1b2921)
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+---
+ .../display/panel/samsung,ams639rq08.yaml     | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,ams639rq08.yaml
 
-Thanks,
-Olivier
+diff --git a/Documentation/devicetree/bindings/display/panel/samsung,ams639rq08.yaml b/Documentation/devicetree/bindings/display/panel/samsung,ams639rq08.yaml
+new file mode 100644
+index 0000000000000..3a561156f5601
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/samsung,ams639rq08.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/samsung,ams639rq08.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung AMS639RQ08 EA8076-based 6.39" 1080x2340 MIPI-DSI Panel
++
++maintainers:
++  - Danila Tikhonov <danila@jiaxyga.com>
++  - Jens Reidel <adrian@travitia.xyz>
++
++description: |
++  The Samsung AMS639RQ08 is a 6.39 inch 1080x2340 MIPI-DSI CMD mode AMOLED panel.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: samsung,ams639rq08
++
++  reg:
++    maxItems: 1
++
++  vdd3p3-supply:
++    description: 3.3V source voltage rail
++
++  vddio-supply:
++    description: I/O source voltage rail
++
++  vsn-supply:
++    description: Positive source voltage rail
++
++  vsp-supply:
++    description: Negative source voltage rail
++
++  reset-gpios: true
++  port: true
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - vdd3p3-supply
++  - vddio-supply
++  - vsn-supply
++  - vsp-supply
++  - reset-gpios
++  - port
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        panel@0 {
++            compatible = "samsung,ams639rq08";
++            reg = <0>;
++
++            vdd3p3-supply = <&vreg_l18a_2p8>;
++            vddio-supply = <&vreg_l13a_1p8>;
++            vsn-supply = <&vreg_ibb>;
++            vsp-supply = <&vreg_lab>;
++
++            reset-gpios = <&pm6150l_gpios 9 GPIO_ACTIVE_LOW>;
++
++            port {
++                panel_in: endpoint {
++                    remote-endpoint = <&mdss_dsi0_out>;
++                };
++            };
++        };
++    };
++
++...
+-- 
+2.45.2
+
