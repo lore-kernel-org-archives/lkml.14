@@ -1,147 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCB0D2E5;
-	Sun,  9 Jun 2024 17:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0273F9D5;
+	Sun,  9 Jun 2024 17:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717954407; cv=none; b=YhRzeHwIKMPwQiRyhBu10dQOzG44nHH606W+V6Lbt98eqUZSsypcY+y6P0hSmWLGxfvcpgMSMI91RqrkfDpyAV5e3TmOFVxFzZFnp4twvqJ1mfDmo8a+xbc+KcUJAPUPOMRmgPwGliH5souGyBjTxZ3ku6E0NoLZMoJGF97M4PI=
+	t=1717954500; cv=none; b=BFz20hREUo7svrgKugHH8UZC+5G3SRAbFxSCIKO2Gn9MMX+qVK1lLXYy4QUSXPbyXNF/T67TtFE9tivLIHw+AKd60EjlbhwpjNTT8LjVuRHC8pAqi13xiKFKOIrCVoWTA803FZCXyvHp+I4XoyL2sns3/q3jt1WafPYOxXXBrQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717954407; c=relaxed/simple;
-	bh=CBcnhStXol0Ia+umXn8moK4bXWC4G6yis63nfVjQ67M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fE1bfvVPCmC1J+Iz+FQyAXMBO3AfnGuG0Zpy9IpbByg5WKmvTE4iRWkd1XNnXjd68b2trrJtY8GsikcmD/Ma47h2seLczmuygmiNgHYlWN4J3NCFkWx99+nH0L41klQkixhJ9mYWUcNUo8TFR0o5SFDlN/kulurAp1SDmvmasGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jafSMxQ+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717954500; c=relaxed/simple;
+	bh=hm2q1pAYas67Ju2iLNfJUJWg0g77JqWi5aqqeOyq2mU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VhxE12K2Z31bCjz1rLEU8WJ8ul5RYExcFtS/2cpMVZQd+hQxCqqdQxgPwHg5RAPH0csXDsVt1mLNdeTIycuwHeDle9zcu5gtE0vuBQKEPanIu3whvinZ9A7/WBxsTsu65xVTpefbQCSX1fA/cQKoEE3NagqKp8Gk+/CTD+f+3O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Ic9e9W4Y; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jafSMxQ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A67EC2BD10;
-	Sun,  9 Jun 2024 17:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717954405;
-	bh=CBcnhStXol0Ia+umXn8moK4bXWC4G6yis63nfVjQ67M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jafSMxQ+rfGLKTi2b6pV8wSjMONVIwt2fqfcu96DKNdtOh6peW+TFiWIJ+TjkBI0n
-	 Zu07YZKDxrKwFIbnYGNpiyJ+3nu3zSufIAc4l6FhXVoKzRdPiOICza9H01Zjc4RQWj
-	 FpKcHBg0BbzhFmNTBjMwHYND94bWa+lsrvF5n5OS6Ij8FylUHjcwkfwi80WQlmALrb
-	 69pIqC9KEYvSYSCr70zJ9pGD14i9ECgxuNmuBuK/Z2SjxQ/oezq7YTd7gR9Q2KG2PD
-	 TFJoF0eHtqzCbEaQQc85lI99TdPXPlKfcm6Fzvo7pkQp57fAcmwuAKm3bjV53pEOAn
-	 6IKQc1drKrCxg==
-Date: Sun, 9 Jun 2024 19:33:21 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Dev Jain <dev.jain@arm.com>, linux-man@vger.kernel.org, 
-	mingo@kernel.org, tglx@linutronix.de, mark.rutland@arm.com, ryan.roberts@arm.com, 
-	suzuki.poulose@arm.com, Anshuman.Khandual@arm.com, DeepakKumar.Mishra@arm.com, 
-	AneeshKumar.KizhakeVeetil@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] signal.7: Clearly describe ucontext kernel dump to
- userspace
-Message-ID: <slkndx4223o6we7rygfatca6sa46hsw2fwbiovn2wx3mvyc55c@tyklfmkbe37r>
-References: <20240607123119.769044-1-dev.jain@arm.com>
- <20240607123119.769044-2-dev.jain@arm.com>
- <ZmMptdPt_Zw9Xrlt@finisterre.sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Ic9e9W4Y"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 50297600ED;
+	Sun,  9 Jun 2024 17:34:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1717954494;
+	bh=hm2q1pAYas67Ju2iLNfJUJWg0g77JqWi5aqqeOyq2mU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ic9e9W4Y8BjmcpDTY9+Q/CkfT38xO7CLBYrSEE9ZmBawTBHOQ2yNggOM+d4ggtFJA
+	 LIR7Q8oPjCNLzjg255uXIRFOwfApHPJlvjbJ7K0+FYdn2Vao1F64Bo22O4BA7hVqHk
+	 emdKR5eEiSDKS972m9zuaYZrBIQhAdlDGWljsp+cvO+Gk4/LZE6D67/ZsIpsYsXNgj
+	 ffZKUp0RW417VvfICK/LPjth0X+i3otkZWAjmp5QZLKxp6GxM8KFbEe8J3tj+96luS
+	 grFhSSuuWzGMgY6uw8LPhp4/x0Z6drNOKqjAFWHss8fmaPGcOhKeR1jI1IlU1950uW
+	 U222SYsz2lEnA==
+Received: by x201s (Postfix, from userid 1000)
+	id B0B4D204266; Sun, 09 Jun 2024 17:34:28 +0000 (UTC)
+From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
+To: netdev@vger.kernel.org
+Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Edward Cree <ecree.xilinx@gmail.com>,
+	Martin Habets <habetsm.xilinx@gmail.com>,
+	linux-net-drivers@amd.com,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	linux-rdma@vger.kernel.org,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	Louis Peens <louis.peens@corigine.com>,
+	oss-drivers@corigine.com,
+	linux-kernel@vger.kernel.org,
+	Davide Caratti <dcaratti@redhat.com>,
+	i.maximets@ovn.org
+Subject: [PATCH net-next 2/5] sfc: use flow_rule_is_supp_enc_control_flags()
+Date: Sun,  9 Jun 2024 17:33:52 +0000
+Message-ID: <20240609173358.193178-3-ast@fiberby.net>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240609173358.193178-1-ast@fiberby.net>
+References: <20240609173358.193178-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t7t3p7hirvo5uufk"
-Content-Disposition: inline
-In-Reply-To: <ZmMptdPt_Zw9Xrlt@finisterre.sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Change the existing check for unsupported encapsulation control flags,
+to use the new helper flow_rule_is_supp_enc_control_flags().
 
---t7t3p7hirvo5uufk
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Dev Jain <dev.jain@arm.com>, linux-man@vger.kernel.org, 
-	mingo@kernel.org, tglx@linutronix.de, mark.rutland@arm.com, ryan.roberts@arm.com, 
-	suzuki.poulose@arm.com, Anshuman.Khandual@arm.com, DeepakKumar.Mishra@arm.com, 
-	AneeshKumar.KizhakeVeetil@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] signal.7: Clearly describe ucontext kernel dump to
- userspace
-References: <20240607123119.769044-1-dev.jain@arm.com>
- <20240607123119.769044-2-dev.jain@arm.com>
- <ZmMptdPt_Zw9Xrlt@finisterre.sirena.org.uk>
-MIME-Version: 1.0
-In-Reply-To: <ZmMptdPt_Zw9Xrlt@finisterre.sirena.org.uk>
+No functional change, only compile tested.
 
-Hi Mark, Dev,
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+---
+ drivers/net/ethernet/sfc/tc.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-On Fri, Jun 07, 2024 at 04:39:33PM GMT, Mark Brown wrote:
-> On Fri, Jun 07, 2024 at 06:01:18PM +0530, Dev Jain wrote:
->=20
-> >  .I ucontext_t
-> > -object that is pointed to by the third argument of the signal handler.)
-> > +object that is pointed to by the third argument of the signal handler.
-> > +We emphasize on the fact that this object contains context information
->=20
-> s/We emphasize on the fact that/Note that/
->=20
-> feels more idiomatic.
+diff --git a/drivers/net/ethernet/sfc/tc.c b/drivers/net/ethernet/sfc/tc.c
+index 9d140203e273a..0d93164988fc6 100644
+--- a/drivers/net/ethernet/sfc/tc.c
++++ b/drivers/net/ethernet/sfc/tc.c
+@@ -387,11 +387,8 @@ static int efx_tc_flower_parse_match(struct efx_nic *efx,
+ 		struct flow_match_control fm;
+ 
+ 		flow_rule_match_enc_control(rule, &fm);
+-		if (fm.mask->flags) {
+-			NL_SET_ERR_MSG_FMT_MOD(extack, "Unsupported match on enc_control.flags %#x",
+-					       fm.mask->flags);
++		if (flow_rule_has_enc_control_flags(fm.mask->flags, extack))
+ 			return -EOPNOTSUPP;
+-		}
+ 		if (!IS_ALL_ONES(fm.mask->addr_type)) {
+ 			NL_SET_ERR_MSG_FMT_MOD(extack, "Unsupported enc addr_type mask %u (key %u)",
+ 					       fm.mask->addr_type,
+-- 
+2.45.1
 
-Even more idiomatic is to jump straight to the point, without noting it.
-If it weren't notable, we wouldn't say it.  :)
-
->=20
-> > +of the thread, present before jumping into the handler; the set of
-> > +blocked signals for the current thread would be updated from struct
->=20
-> s/would/will/
->=20
-> > +sigaction only after
-> > +.I ucontext_t
-> > +has been dumped to userspace. This semantically makes sense since the
-
-Please use semantic newlines.  See man-pages:
-
-$ MANWIDTH=3D72 man man-pages | sed -n '/Use semantic newlines/,/^$/p'
-   Use semantic newlines
-     In the source of a manual page, new sentences should be started on
-     new lines, long sentences should be split  into  lines  at  clause
-     breaks  (commas,  semicolons, colons, and so on), and long clauses
-     should be split at phrase boundaries.  This convention,  sometimes
-     known as "semantic newlines", makes it easier to see the effect of
-     patches, which often operate at the level of individual sentences,
-     clauses, or phrases.
-
-> > +context for which the signals have been blocked, remains only during
-> > +execution of the handler.)
->=20
-> I'd drop the "this semantically makes sense" and reword the last bit to
-> be something like "The ucontext reflects the state at the time the
-> signal is delivered rather than in the handler" for idiom reasons.
-
-Thank you both.
-
-Have a lovely day!
-Alex
-
-
---=20
-<https://www.alejandro-colomar.es/>
-
---t7t3p7hirvo5uufk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmZl52EACgkQnowa+77/
-2zISPw//YFBwIkNkOCIegtXdYoUMN4j9lZMglkuqPrE/WMJLHVb6XJ5URr2fDRBD
-yLDzJ+ow05U73WYmRsXwM3q1NwD3t3CCvl50gxCwQ+IGZ1TnBu1NNzo79hoM/lgH
-dgdbBMHGieK6XwYBtiWZLle/shy1wdBVvRae5lcfuCBh8NfYGWwwB5x4hSXf9Xao
-pfeSTRD6OAZoouu3oO6ZKlp/6CcvYbYxdMxR+UEQImPprXp0WyBP9fLIydY5JSpq
-+TloFpJXWkTYrlxbRLe8fcsIwJ5iDtz1hD5GpIPXosp/PHLjexot/d89Ixs/7pa6
-rzdyrXMvrSYF+8vd4wCJjuRB+abewra5mn03b8pBs2Y9Lbqg8rb2QLo/OT3zIom5
-Km5lVLCTpitZCJKnp32rk1eomz7FHiSzYsPdPqXg71DG9J0y0JU20ZBy8ZCu+ZsM
-mzJ+XKkbC9bdAyuGnX1tbPxj43PNhVWfxRq8ZTmDr6/OaJDBoFS8mG+suP0THW13
-rVOANNeljHABKHleiUEpXZKExZTq5n0RaNHCw3C8aoKN2Drsb1iCqLqyuwklin/b
-/ILzChdYE2988Olnpm86pAaWAsR6T6jkHTFZaSDEH4lL0Z55GtpRWV7wF0kVOD6i
-LcCtG0mhXbNwMrXlRost/n+DM3vc0/RfLDPGqDlpHAeh1Ly5s98=
-=W4Or
------END PGP SIGNATURE-----
-
---t7t3p7hirvo5uufk--
