@@ -1,162 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676CC7FBA1;
-	Mon, 10 Jun 2024 12:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FA580C1D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718024203; cv=none; b=LwN4B1xYmzpu+oZt/UC35W8T7VKcUPFI/nHjPpO3t18krvgAdJfmFtw0f2dIdbyvDF32mMAwMd4bH3wkR+hvLVCX56aFes490r3RwmtaKpQhCOLcpgLRA22rJUfUjsXDcFchUlCaRRrXhpobIcKs87cQ7DM/RyqcFoihkKv8bDM=
+	t=1718024244; cv=none; b=XVuIe02WCmklFNAwHjzCMBx2tT4GsgUJdUud0ypk+yhOATO5t/TE8vmV9VtyLJbDjWPfL4pxSIl59zve2ivK6pOx4U5vPNw50XvvMqtX2MOjGL0SIO2wkwN4AyYJhnRj3CsayUZn636WmJqo/I4atYOiX1B8LtWvKs3vA7oJ3UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718024203; c=relaxed/simple;
-	bh=2xYY/lQ1+aSL2j5RQQW3O4t0aAxsC6agFkFzSR1LvTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FuTVrmrf+B3WIPpN1Kgv1X0CKE3ewnqAxOphBdJUR19lwcqqiYnonvBleRhCHKStAWMBHAyTuDmtAZEcMCjJgPa4JsemOW2mcjH5CeFrqs4/G5RDRQHErOKwvWZnH49NyavIA6QDf/N18uqUNrjwQAbjBE9QDQhD31ziOgycYH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YEkQgnft; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718024244; c=relaxed/simple;
+	bh=yg1xPoHNtnIUumoATGu6LmkAR1aS+hHVXOLPzoPOgE0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r/Trv0RHLABELcU6ucv7D1L22iH7DIoCXVkJfI3QrYLTeWXDrCNDmZCy+3rJUhIPjI2hwFc/EaIjY97MDhnotSi1bbvbNTTX37v2f4INqzOEjr+YcGXAehm5FWDI3jNJut5Tzu+/6/t5wCCLhUp6X2FnSOMS5hTVQE0bQznTKrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dJ9yMHim; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YEkQgnft"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718024202; x=1749560202;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2xYY/lQ1+aSL2j5RQQW3O4t0aAxsC6agFkFzSR1LvTI=;
-  b=YEkQgnft+x9dTys5ujSYLNUdNDeNDBCKrkVZtNa8PWyTqX/e0wIG6HzX
-   n7X1UBDi6b5JN4uydocnSEaBDrzcQFtkOVQAiZ8VAA1xD6aeAlOBgeEJd
-   mGTOCXQVv8TNvdxxYS8FUt88UZwavQe1qO9CFOOPGzKeFoHnbJgs6pJh4
-   smX9DGSFVeEDCA/HyQbIgG7JO3Y/hEptFW/tFS6KDcVHA22Oalu1AQnj5
-   sFaJjomyjWmX3vDQ2+sZuDPvA4obw/32iQb6MKjjEVmmmecfTaCWAJ/1j
-   XhCUisCIQNB1AOgQPznzB0Y5Ccqu1JZ1BOWwERy05BBF1BOthJf3YzBGM
-   w==;
-X-CSE-ConnectionGUID: 6Zjs/YNgSNOxp8SItcYbyQ==
-X-CSE-MsgGUID: M5w7oE5zRbm7d5RLgTi9yw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="14517439"
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="14517439"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 05:56:41 -0700
-X-CSE-ConnectionGUID: nZFaa1IzS7CZXv2Fm7+Zkg==
-X-CSE-MsgGUID: zQt3uDrvSmiPQhaLSra/dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="38971919"
-Received: from lkp-server01.sh.intel.com (HELO 8967fbab76b3) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 10 Jun 2024 05:56:39 -0700
-Received: from kbuild by 8967fbab76b3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sGeZg-00029B-2M;
-	Mon, 10 Jun 2024 12:56:36 +0000
-Date: Mon, 10 Jun 2024 20:55:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] iio: bu27034: Add a read only HWARDWAREGAIN
-Message-ID: <202406102012.s3Qrfbm7-lkp@intel.com>
-References: <5e88c7b7b0389c6c011f15e05e065791f7561cf5.1718013518.git.mazziesaccount@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJ9yMHim"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57a677d3d79so9912795a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:57:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718024241; x=1718629041; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=P4YW+LJlPWVCF1oCUQwCJYAu8LrhPqKFR1EwKZrTF2U=;
+        b=dJ9yMHimpc8YQQPWERTOEtoAoO84Fw2Qy1c+fN8TAZVg3dbFaws20GjVQ/6p4U2d8l
+         GsgueHSdLfP4HFNSVKcdkYpqdVwwjyAMPBiCCKoFt71lfhI3rSfnDUEWtP7J72dbpI+/
+         8SKZUOHa7JI6u6UDzyLDbBoJ0YvPcJhxi86XJm2ZXLM6QMVgZbsR/SS6XL6gRwxl82Pe
+         10coWBnbHn5Oy7WRXcMqxkDw/jpuAUVLf7dVEvV0afbGFAaRJiDx6WEnW7Eyhxi+7f6k
+         XCDIEZ5+rHZptr9VOE1RzrGi+GQnBDUGd+51KGFTHw6kPxtaFJM628tIGN8QnVMxvL7e
+         kDqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718024241; x=1718629041;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P4YW+LJlPWVCF1oCUQwCJYAu8LrhPqKFR1EwKZrTF2U=;
+        b=nSlc9XAgd9OOsLR7HlUMOikpu5RmZDYOWTCC96LWyjfaJPbILClSfLh++rZnMgmi5Q
+         Aqlt0+lQMpnACUeOq7trOtgoi5SauCZq9Xkpjm7j+2z3nl4EZwnyiU86hu4tjvLtSLC2
+         Q8BCe/g4qrjoDzug6HOk3hva9tNMz/oi54z4lmmZcOHCB4qdAD+ywW0M3QqeB0btgI0O
+         cxYGHhPY4xDomzp/xK3+aJRo9qOx27PsBrJXbPWXzN4VormDPdbRwhS7gdhhqtoUV1nv
+         HuuqMUQREv/h6EGr+xxgj1MRPUTBWKXR7cHpjhRQcV08cxXxNOc8DQcIqipUaWvyEcrS
+         RlyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQYU0yp3Z3+qw+153AZzT0jH4GeWoF2s9SuMNs7szjKRRQDZTWuIZUwcpjdcWoc5t/5n1SGx94ADlIF1oNp/j1DecBck4DpArWm64I
+X-Gm-Message-State: AOJu0Ywu3wjSwL9caxZIHw0fRuPm50dXxN5XbnATQXDA2OwkbgGgQOFU
+	el6a1OWw4OtKugug5FSU67H3XHckxTXnxjobIsVYVE/dgXmGTan0e7EAkfAltLU=
+X-Google-Smtp-Source: AGHT+IG+FeCeTet+g006PrNx4Oxxdd0ygI0KsztkfpC9VYROLRJPSKBsn/ij3w2B7yqDBKHzj0cmyg==
+X-Received: by 2002:a05:6402:b7b:b0:57c:735f:3967 with SMTP id 4fb4d7f45d1cf-57c735f3978mr2686598a12.8.1718024240999;
+        Mon, 10 Jun 2024 05:57:20 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c8f3a0c33sm87824a12.82.2024.06.10.05.57.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jun 2024 05:57:20 -0700 (PDT)
+Message-ID: <08822480-a909-4724-9250-e7286d5ce90a@linaro.org>
+Date: Mon, 10 Jun 2024 14:57:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5e88c7b7b0389c6c011f15e05e065791f7561cf5.1718013518.git.mazziesaccount@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/7] dt-bindings: interconnect: qcom: msm8939: Fix example
+To: Adam Skladowski <a39.skl@gmail.com>
+Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Georgi Djakov <djakov@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240609182112.13032-1-a39.skl@gmail.com>
+ <20240609182112.13032-8-a39.skl@gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240609182112.13032-8-a39.skl@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matti,
+On 09/06/2024 20:21, Adam Skladowski wrote:
+> For now example list snoc_mm as children of bimc which is obviously
+> not valid, change example and include rest of nocs in it.
+> 
+> Fixes: 462baaf4c628 ("dt-bindings: interconnect: qcom: Fix and separate out MSM8939")
+> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
+> ---
+>  .../bindings/interconnect/qcom,msm8939.yaml   | 22 ++++++++++++-------
+>  1 file changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,msm8939.yaml b/Documentation/devicetree/bindings/interconnect/qcom,msm8939.yaml
+> index fd15ab5014fb..a77e6aa2fbee 100644
+> --- a/Documentation/devicetree/bindings/interconnect/qcom,msm8939.yaml
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,msm8939.yaml
+> @@ -56,19 +56,25 @@ examples:
+>    - |
+>      #include <dt-bindings/clock/qcom,rpmcc.h>
+>  
+> -    snoc: interconnect@580000 {
+> -        compatible = "qcom,msm8939-snoc";
+> -        reg = <0x00580000 0x14000>;
+> -        #interconnect-cells = <1>;
+> -    };
+> -
+>      bimc: interconnect@400000 {
+>          compatible = "qcom,msm8939-bimc";
+>          reg = <0x00400000 0x62000>;
+> -        #interconnect-cells = <1>;
+> +        #interconnect-cells = <2>;
+> +    };
+> +
+> +    pcnoc: interconnect@500000 {
+> +        compatible = "qcom,msm8939-pcnoc";
+> +        reg = <0x00500000 0x11000>;
+> +        #interconnect-cells = <2>;
+> +    };
 
-kernel test robot noticed the following build warnings:
+Don't grow the examples.
 
-[auto build test WARNING on 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0]
+It is enough to have one example to validate the schema and show how the
+binding is used. If schema covers multiple combinations of devices and
+their properties, then more than one example seems reasonable. This is
+not the case. All of this is redundant... and redundant information is
+not good because as this commit shows it leads to something which people
+think is not correct and they find bugs. So just drop the redundant
+information.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Matti-Vaittinen/bu27034-ROHM-BU27034NUC-to-BU27034ANUC/20240610-180426
-base:   1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-patch link:    https://lore.kernel.org/r/5e88c7b7b0389c6c011f15e05e065791f7561cf5.1718013518.git.mazziesaccount%40gmail.com
-patch subject: [PATCH 2/2] iio: bu27034: Add a read only HWARDWAREGAIN
-config: i386-buildonly-randconfig-002-20240610 (https://download.01.org/0day-ci/archive/20240610/202406102012.s3Qrfbm7-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240610/202406102012.s3Qrfbm7-lkp@intel.com/reproduce)
+Keep only one, correct example.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406102012.s3Qrfbm7-lkp@intel.com/
+Best regards,
+Krzysztof
 
-All warnings (new ones prefixed by >>):
-
-   In file included from include/linux/device.h:15,
-                    from drivers/iio/light/rohm-bu27034.c:10:
-   drivers/iio/light/rohm-bu27034.c: In function 'bu27034_write_raw_get_fmt':
->> include/linux/dev_printk.h:138:20: warning: this statement may fall through [-Wimplicit-fallthrough=]
-     137 |         ({                                                              \
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     138 |                 if (0)                                                  \
-         |                 ~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     139 |                         _dev_printk(level, dev, fmt, ##__VA_ARGS__);    \
-         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     140 |         })
-         |         ~~          
-   include/linux/dev_printk.h:171:9: note: in expansion of macro 'dev_no_printk'
-     171 |         dev_no_printk(KERN_DEBUG, dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |         ^~~~~~~~~~~~~
-   drivers/iio/light/rohm-bu27034.c:1055:17: note: in expansion of macro 'dev_dbg'
-    1055 |                 dev_dbg(data->dev,
-         |                 ^~~~~~~
-   drivers/iio/light/rohm-bu27034.c:1057:9: note: here
-    1057 |         default:
-         |         ^~~~~~~
-
-
-vim +138 include/linux/dev_printk.h
-
-af628aae8640c2 Greg Kroah-Hartman 2019-12-09   99  
-ad7d61f159db73 Chris Down         2021-06-15  100  /*
-ad7d61f159db73 Chris Down         2021-06-15  101   * Need to take variadic arguments even though we don't use them, as dev_fmt()
-ad7d61f159db73 Chris Down         2021-06-15  102   * may only just have been expanded and may result in multiple arguments.
-ad7d61f159db73 Chris Down         2021-06-15  103   */
-ad7d61f159db73 Chris Down         2021-06-15  104  #define dev_printk_index_emit(level, fmt, ...) \
-ad7d61f159db73 Chris Down         2021-06-15  105  	printk_index_subsys_emit("%s %s: ", level, fmt)
-ad7d61f159db73 Chris Down         2021-06-15  106  
-ad7d61f159db73 Chris Down         2021-06-15  107  #define dev_printk_index_wrap(_p_func, level, dev, fmt, ...)		\
-ad7d61f159db73 Chris Down         2021-06-15  108  	({								\
-ad7d61f159db73 Chris Down         2021-06-15  109  		dev_printk_index_emit(level, fmt);			\
-ad7d61f159db73 Chris Down         2021-06-15  110  		_p_func(dev, fmt, ##__VA_ARGS__);			\
-ad7d61f159db73 Chris Down         2021-06-15  111  	})
-ad7d61f159db73 Chris Down         2021-06-15  112  
-ad7d61f159db73 Chris Down         2021-06-15  113  /*
-ad7d61f159db73 Chris Down         2021-06-15  114   * Some callsites directly call dev_printk rather than going through the
-ad7d61f159db73 Chris Down         2021-06-15  115   * dev_<level> infrastructure, so we need to emit here as well as inside those
-ad7d61f159db73 Chris Down         2021-06-15  116   * level-specific macros. Only one index entry will be produced, either way,
-ad7d61f159db73 Chris Down         2021-06-15  117   * since dev_printk's `fmt` isn't known at compile time if going through the
-ad7d61f159db73 Chris Down         2021-06-15  118   * dev_<level> macros.
-ad7d61f159db73 Chris Down         2021-06-15  119   *
-ad7d61f159db73 Chris Down         2021-06-15  120   * dev_fmt() isn't called for dev_printk when used directly, as it's used by
-ad7d61f159db73 Chris Down         2021-06-15  121   * the dev_<level> macros internally which already have dev_fmt() processed.
-ad7d61f159db73 Chris Down         2021-06-15  122   *
-ad7d61f159db73 Chris Down         2021-06-15  123   * We also can't use dev_printk_index_wrap directly, because we have a separate
-ad7d61f159db73 Chris Down         2021-06-15  124   * level to process.
-ad7d61f159db73 Chris Down         2021-06-15  125   */
-ad7d61f159db73 Chris Down         2021-06-15  126  #define dev_printk(level, dev, fmt, ...)				\
-ad7d61f159db73 Chris Down         2021-06-15  127  	({								\
-ad7d61f159db73 Chris Down         2021-06-15  128  		dev_printk_index_emit(level, fmt);			\
-ad7d61f159db73 Chris Down         2021-06-15  129  		_dev_printk(level, dev, fmt, ##__VA_ARGS__);		\
-ad7d61f159db73 Chris Down         2021-06-15  130  	})
-ad7d61f159db73 Chris Down         2021-06-15  131  
-c26ec799042a38 Geert Uytterhoeven 2024-02-28  132  /*
-c26ec799042a38 Geert Uytterhoeven 2024-02-28  133   * Dummy dev_printk for disabled debugging statements to use whilst maintaining
-c26ec799042a38 Geert Uytterhoeven 2024-02-28  134   * gcc's format checking.
-c26ec799042a38 Geert Uytterhoeven 2024-02-28  135   */
-c26ec799042a38 Geert Uytterhoeven 2024-02-28  136  #define dev_no_printk(level, dev, fmt, ...)				\
-c26ec799042a38 Geert Uytterhoeven 2024-02-28  137  	({								\
-c26ec799042a38 Geert Uytterhoeven 2024-02-28 @138  		if (0)							\
-c26ec799042a38 Geert Uytterhoeven 2024-02-28  139  			_dev_printk(level, dev, fmt, ##__VA_ARGS__);	\
-c26ec799042a38 Geert Uytterhoeven 2024-02-28  140  	})
-c26ec799042a38 Geert Uytterhoeven 2024-02-28  141  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
