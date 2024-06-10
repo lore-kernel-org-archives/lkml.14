@@ -1,56 +1,60 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1974F5FA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 13:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA6774048
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 13:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718026719; cv=none; b=hiOEkRelmB0taApplAC+gh7hKd4rFRcfYqe0n1zSYoRcmqNFKQTX8A3hlM7gXqq5cgh5iWWzU+dNaf0JC+vTuacf8gPv/uKwCVGNw0gTwvlUbh75vyP0aHS20Lvxyqv2KAe9eWjdoP0V6uMEhwok6VuEkC4i3XBly+IC6gq9kuI=
+	t=1718026771; cv=none; b=jDYwbNiHwVUPWkq/pqVfx+fN//HxNFRv4GUa80CmZ5J5a9hkhy4AxdorLvF7M6QxdRfeB0ELiAhzcwns9ckzKyMu0AmTy4YLChiJy+oxvdQWlMyGv8iD4dJfcC8KXNZ1YyB/NPkMVn8lUIbiCFGN78GxPn4c57rEMpY3551pl/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718026719; c=relaxed/simple;
-	bh=nNiMFN3UUVyLRK8hNS+Knebs+73HcK7zuHQH11+IUf4=;
+	s=arc-20240116; t=1718026771; c=relaxed/simple;
+	bh=VNvjgBuWCWK2hEJ77TrUw1MiOTGVq/NEcqmXKBOQ1Rk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AddwhGRmOTpnHiF7CPInXsF+FDRUZVg3ZkpH+UdoVw9go6xEz2wKMZ+AUpIvj0d34afK1fjDekBos3oOZAckBYQak/AOGUxkjg3CmiqGRw9VgK1A41qAO+ghirqyRKM0cwimJ8pDLdQViGwkA4vdjDmfzZ/tlwj0ypD6rX6L6KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=YZfXVTZA; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
+	 In-Reply-To:Content-Type; b=GDgvOTP7L8MgVFUDLWfrVVTUZMD/dTdEq64BplUTh6PZRII2COj9jOdJ4UjTrHWm7Crt18jTswtNT+n8SQQvizRicyteFHmGLDUuEfsDkie65J7QFvRLSLIa2MGbHjycAwWq/F7Wh2uSbXmekAMguUSwMv5vzpP2IELeDtvjqxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HyZJkLHe; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="YZfXVTZA"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52c89d6b4adso1062336e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 06:38:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HyZJkLHe"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-35dc1d8867eso3455670f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 06:39:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google; t=1718026716; x=1718631516; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1718026768; x=1718631568; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6MVOT7ev6J5lLl/iba6yrd0EhvDJDU0eNfpHSBAIuOY=;
-        b=YZfXVTZAALZBsckulSZUV7g14E6MmT8NndgV0d2sZnmqeHlfdH/7H+gpxNtIH/E1gI
-         GmsnAniYZlJuJZPjObXzgHCDpm2n/97HZQjJAaarmsAHVOoN/iKVTNhyjVoulTRmpCWF
-         X2a8EGWQwyRDxzqkJtEzaeMmgJegKGZeBM5Ys=
+        bh=BXGo4Ghsn84PBkyTy4nR9hzZ+hfFgUawGb7DBhECELs=;
+        b=HyZJkLHeB7L8Eem0CZySDBBXnJgCVZ6FwSlw/bWEB18/FlIy633eBNofDEfzYXcM7O
+         sakeweXD8WtPwGpdpMOq4UVKNeXr1YRad5cdnPWLwvnBbavye4+4ASDbD6aVkaZEQtw4
+         B5T1rV0MyksdbFIYyOMR1s8HxzzZxFSePtmW/Um0lI1Eam9Ufj6ck5tWZzHuCdoTKEsN
+         YMHnLTtEaRVoob1LqfNFtqCk04xnWAZmzZQHOXBpNwvcLlLfw9xlyM32bi8c4n8i6a9A
+         wFBcGwVWESzBKGThs2JF7e+Tu8DqBnnU9O5SbwofmVEfug78vrMHaxtAfSiPrsOoBWlf
+         3p2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718026716; x=1718631516;
+        d=1e100.net; s=20230601; t=1718026768; x=1718631568;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6MVOT7ev6J5lLl/iba6yrd0EhvDJDU0eNfpHSBAIuOY=;
-        b=c6ARL7Ep5KjD3YG2gpKSBd13HhbXl9gdSTVXViqz4THNTXmpwiNxqb6NCfukNiTeEq
-         2de6eP3XnuPwBDwZBHxvYsYFheKsLQ3GeHeNQN/hfm0GSgnV5koo+hZMQPM7lDQ94YjT
-         2T7k4NKCCrDi0I0QN/4muwnSAitFvvJw2vMl1v7ecoyjdg4o/RW/0e1VZIjicCftMOnv
-         cvZljTdo4yz0ChnRX2bz5ISf1uzyzo5lSjFiacS1658FhX6n8mY2AnTO2/Uc5JxcPwUU
-         UaOaYF+950BSm+ES4HZGqzIzy7sG8Nnz4XfVf+zsG4GQHixOQwKfHNsePA5zJ61vnNPb
-         OU3A==
-X-Forwarded-Encrypted: i=1; AJvYcCU3wO8qJxG/UzsF25IP3XmqSf9HCgDFNCnjFR2X5W1+yHgUu/7wALynHMRYZdlPHXlT7J5v7Z35w3GuhiJNlMC/d4vv0we8GbXMc7sZ
-X-Gm-Message-State: AOJu0Ywr62iII6zkKNxkS8dtbR3iO8muhYabKNLdnSLgnAELAxZPZFKd
-	kL9rZQv6NikgWt2K7Cz9Klh9FvbCGgmoiKMVJIx+1L4sWz2gFtEZwxH8WBgzWZ8=
-X-Google-Smtp-Source: AGHT+IH951ow2F1ZsFqXx5A89eENuF5pKIETipiyl7d5mCQzoHtS+0ARN21s6WcTQmJex2EIY9cvBw==
-X-Received: by 2002:a19:641a:0:b0:52b:797d:efd4 with SMTP id 2adb3069b0e04-52bb9f6deafmr5369729e87.16.1718026716105;
-        Mon, 10 Jun 2024 06:38:36 -0700 (PDT)
-Received: from [172.16.11.116] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb41e1bd6sm1668882e87.48.2024.06.10.06.38.35
+        bh=BXGo4Ghsn84PBkyTy4nR9hzZ+hfFgUawGb7DBhECELs=;
+        b=Nw37fjmiNigFSn6FtqvABMfhk2G7sxFdh+vSyocW+j51Jkh+b1hCHiv9+95jhHxc8a
+         TC//4sJINkdZ8s8As264bzO3lv2111NdyyqmW13jd2jsBuBd67ovZ7okV1L0/YylApbQ
+         n0+hqL+exn2NYJNyz4tw6GN64LBFnNoREaJCG+VfkSDoyXNV0we6kmBMzhEip42MBXxC
+         0iiQltTxlJtYxjS6xlDEkbP/mG9vYaJ08vehRBTwQQ3jonTxDyE09jZECDjzxIE1LjM2
+         Mmtt9lCgkI5dG3hrxHOt+AgEINSG3WICMaeOeLprfcGdMe0iXbG0Tgc/yqa8LKbFJ0Di
+         V+Og==
+X-Forwarded-Encrypted: i=1; AJvYcCW4HBg8vPNmcp20wO2qFMuGFvyFdP3e7IYqaMtuJLZmblqPDfUKxaAls7yi07G6PAB2EOIp5YMOOtMwe1ldYPGcIRf1m+tbQBOPcbQr
+X-Gm-Message-State: AOJu0YzFLR3s33GjefqGuLzMQUxAd480cq0UPa6eevJhSQLX0Ca26Qa3
+	6+q30GE5M4Dbj5U066U8Tzf3FCLtbo9ZID1/99/JRe/ndpznW9bYYFlPZqOBcS4eAP9j4uR3iBB
+	E
+X-Google-Smtp-Source: AGHT+IH3TGlVAcwfP6ZmHz/3RzbtahP2MF9yhZIh+3WPUd8VKv+Fo0HktmDdeibBHAqvPrJiOiqI9g==
+X-Received: by 2002:a5d:4d4b:0:b0:35f:1d55:622b with SMTP id ffacd0b85a97d-35f1d55626emr3135273f8f.16.1718026767901;
+        Mon, 10 Jun 2024 06:39:27 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:bb3:9a3a:605f:c4c3? ([2a05:6e02:1041:c10:bb3:9a3a:605f:c4c3])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-35f269f9589sm1818707f8f.105.2024.06.10.06.39.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 06:38:35 -0700 (PDT)
-Message-ID: <f967d835-d26e-47af-af35-c3c79746f7d9@rasmusvillemoes.dk>
-Date: Mon, 10 Jun 2024 15:38:34 +0200
+        Mon, 10 Jun 2024 06:39:27 -0700 (PDT)
+Message-ID: <1ca6f4db-a7cc-4f47-b626-51daf7175885@linaro.org>
+Date: Mon, 10 Jun 2024 15:39:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,54 +62,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86: add 'runtime constant' infrastructure
-To: Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Anvin <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- the arch/x86 maintainers <x86@kernel.org>,
- linux-arch <linux-arch@vger.kernel.org>
-References: <20240608193504.429644-2-torvalds@linux-foundation.org>
- <20240610104352.GT8774@noisy.programming.kicks-ass.net>
-Content-Language: en-US, da
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-In-Reply-To: <20240610104352.GT8774@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 2/8] thermal/debugfs: Do not extend mitigation episodes
+ beyond system resume
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Lukasz Luba <lukasz.luba@arm.com>
+References: <5794974.DvuYhMxLoT@kreacher> <2337425.ElGaqSPkdT@kreacher>
+ <dd446bf6-05ca-4861-b3b1-f113c3528f13@linaro.org>
+ <CAJZ5v0jku1tptD3O=x-rptgUWGQFOQT-U3rsxk9k4XXsyeq3Kw@mail.gmail.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <CAJZ5v0jku1tptD3O=x-rptgUWGQFOQT-U3rsxk9k4XXsyeq3Kw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 10/06/2024 12.43, Peter Zijlstra wrote:
-> On Sat, Jun 08, 2024 at 12:35:05PM -0700, Linus Torvalds wrote:
-
->> Comments?
+On 10/06/2024 13:29, Rafael J. Wysocki wrote:
+> On Mon, Jun 10, 2024 at 10:28 AM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>>
+>> On 28/05/2024 16:53, Rafael J. Wysocki wrote:
+>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>
+>>> Because thermal zone handling by the thermal core is started from
+>>> scratch during resume from system-wide suspend, prevent the debug
+>>> code from extending mitigation episodes beyond that point by ending
+>>> the mitigation episode currently in progress, if any, for each thermal
+>>> zone.
+>>
+>> Why it is done at resume time and not at suspend time ?
 > 
-> It obviously has the constraint of never running the code before the
-> corresponding runtime_const_init() has been done, otherwise things will
-> go sideways in a hurry, but this also makes the whole thing a *lot*
-> simpler.
+> Because it is related to thermal_zone_device_init() which also runs at
+> the resume time, so IMV it's better to keep these two pieces together.
 > 
-> The only thing I'm not sure about is it having a section per symbol,
-> given how jump_label and static_call took off, this might not be
-> scalable.
-> 
-> Yes, the approach is super simple and straight forward, but imagine
-> there being like a 100 symbols soon :/
-> 
-> The below hackery -- it very much needs cleanup and is only compiled on
-> x86_64 and does not support modules, boots for me.
+> Why would it be better to run this during suspend?
 
-As can be seen in my other reply, yes, I'm also worried about the
-scalability and would like to see this applied to more stuff.
+ From a logical point of view, it makes more sense to cancel something 
+at suspend time rather than resume. That prevents future readers to be 
+puzzled by an action done in an unexpected place.
 
-But if we do this, surely that's what scripts/sorttable is for, right?
+Technically speaking there is no difference if it is done during suspend 
+or resume. Well... we want to prevent actions to be done at resume time 
+in order to not increase the resume duration but I'm not sure this code 
+is doing a big difference.
 
-Alternatively, if we just keep emitting to per-symbol
-__runtime_const_##sym sections but collect them in one __runtime_const,
-just using __runtime_const { *(SORT_BY_NAME(__runtime_const_*)) } in the
-linker script should already be enough to allow that binary search to
-work (with whatever : AT(ADDR() ... ) magic is also required), with no
-post-processing at build or runtime required.
+If you want to keep it as is, feel free to add my:
 
-Rasmus
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
