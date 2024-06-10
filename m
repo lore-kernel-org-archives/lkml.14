@@ -1,48 +1,59 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324FB12F5BE;
-	Mon, 10 Jun 2024 14:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF0E12F5BE;
+	Mon, 10 Jun 2024 14:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718030615; cv=none; b=cj6RIaFAVqiwiQ4ODgaDrJyqV9AZjSuSNsmlKIZw83f2V+ZgplnSrVvL1zkLVST38H7Ze7L/b5FXeNnJ86B2Dl5lAszRsGoRdHK209JPTKHXPkbQzuQskiRzXD/XFIBGb1ZgeUEYISxxth8PPtg5gXORhOjZWmK83brIUuA8bp4=
+	t=1718030643; cv=none; b=ljLSn6eZpEXE7rfOf81yIp7JkRR7MGg6gmViO6sx66SQTuXpgl40ju+3z51b9fUO/SB6mZ7eMH/VoUcWb7a1XID5oiqForUrZT07UuB9FDPDrI6j3xaT3PV+uB6jJRMw1CRU08Gvfg/Lai62wnxtp+7E3fEqrj86RlXAjRHYd00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718030615; c=relaxed/simple;
-	bh=AdW/5ZmyQ0sdPt/jZjRQEIa5QlnW52hwp6qF3wI62xE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=s6ONWdohQ/+MHrtiexSEr0mdfZjjz+jw1XrosP7aQD8rPlaohM/VgHxjh0DONOj3naf/hc446ogfhuTtmqEyFQ4l4zH92XeuUWRXpFnybk7JKytx4g+JjerYfvv9pl4N5rOTGu4xfxhdrECZ2dxvyr2v/j6v75aXzQX6ocSdzfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ENvOjd4s; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718030643; c=relaxed/simple;
+	bh=l/Grbzei5fBRjJCWKEoGR/gpM9K22wBlsaDZreuU82w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PM1kA3zCc8VoJ6y09ARq6m6QugWpNke6tTJdImsvDZxvNKuDxJhY9ouDiY1MdHz2SpI4veQJRDbp0uUiC4FzuGHUjlycbUyn57CCC8flP+aGdotpQ6CBOsrGasu+HKWIDrLuIE5Y+Ep3A3PHvofTOD19zK7TT9EGDJ++1V6c8rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W4peIbzu; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ENvOjd4s"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45A0FHmi002948;
-	Mon, 10 Jun 2024 14:43:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/UQQ9H++oZe+xwgJihFR6a+g++Sf6h5Yv7IgtvZo3fk=; b=ENvOjd4sXGajIdHU
-	+7e/xb3ey0KYVCPCPva0Ih461Egi/g+FaTRqpZQlKdFRaqWlQDVMB8+/Kc2ZCuQR
-	HDTburlqOnhEfnwRELlqnmE8lQfmb+z0oTubku4tpGHtiPFeTUbAzFNtG1vvlDZa
-	SInmOrRv9Igxhgjsyz/6ATA52KGs7KBXOO1ikwnIwu47gdzSADGiUkgnajTRomLb
-	sYvj6kEJnHZbBbrpPcxVuXgerpNsH6CBgt/1jn3JYb1RoTmZ3370V+G7oT1THiB7
-	npKJFOwOfXkdPWkllG+47XChiBgkLBk1k+PL3BXzzMaI5sb7fT9CnLWnxS4tteiH
-	JTz6kA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymg2ekx98-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 14:43:22 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45AEhLg1028882
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 14:43:21 GMT
-Received: from [10.48.242.196] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Jun
- 2024 07:43:20 -0700
-Message-ID: <15a49eeb-aeca-4bd7-8761-5e42fe30aee3@quicinc.com>
-Date: Mon, 10 Jun 2024 07:43:19 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4peIbzu"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ebd421a931so23096861fa.1;
+        Mon, 10 Jun 2024 07:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718030640; x=1718635440; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+X8rAX9jRAKaOSNNc0p/ItKQWY3t87U4LU5WMC+wGlk=;
+        b=W4peIbzuwo6EIiAvjds+RRCII15TYDBiV36aD8yoga0M1ZwnBBxXzeTbn7E5eV8Zy8
+         5i86TuxrpFbTLB+5qsfCXDR52J+r9Ybk2e8SPtcUMpDBwXGqqLdf0CICVXonzN7zkX1p
+         TglQSnd+mggjpJVfzs+nsO2oETRIy/spJYsn2XW8eb2wKu39EQc12Qel34ml4qON3H4f
+         F6ZppYTx+2HEfBCeT+kK0BUzk2+sWHMzz1F34d8E3qPlk/hRGb4Lx3Vv5sHCT1w3eE7M
+         gPmDu494XEU7aN0tvoxq46WpjbkNCgE2O4kkZamYyhQcXL1gAQkcPPucvvfh25L96lrl
+         ccmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718030640; x=1718635440;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+X8rAX9jRAKaOSNNc0p/ItKQWY3t87U4LU5WMC+wGlk=;
+        b=oBYqhQFjTp1DzdWqo+6taMQteLmq8HR1J0C0ntydL/iWMMaqvDeNDRqBrG6KIXPV+Z
+         XZX0pu+bXuo7ixMKSrsjg35WISQMchzQ/xgYlnjUKXvVklE+JC86zSCXL2nSBoS4Bvl6
+         rerpbSPA1rjPDBlpVZycd+fJyrieZTvMcl0HJJfJUWSPI80YATTo9wl62IvVeO1qTU3Y
+         ctZ+CtK9YhKvMM6wxqbEdkTDKCz6qi0ZGu2PZ/BqgdWGV/81MH/e9AxaY0WNHNLkFKjZ
+         eqeBJroZyjSnlojkB6tKnlSGzq3pPUK5k26/+wNtM7OcTnZkOwRNHZ1iA+92wl7fMVZb
+         jURA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGdiFty3e1ReP2aiMGPghFemB5fjS4N+fO6fry2gJNt5/8OUg1pFXucEpQGe0/8zJq18ZEN7nPpv5fUhYZC2qsLL7zF6OswBHe5iX6
+X-Gm-Message-State: AOJu0YyD2tXfdd45JwkATBh8RQFNm4r5bRUm81l7XOGBCSXkOi6h6frm
+	YCVvXDMa+AQQDGMuvQGM1qtGoept66Xbfmo5qC3FqdCg3ee5XKlL
+X-Google-Smtp-Source: AGHT+IEqPiXMp7uVz35JdOOGzlUzWqUmfOqh8p/wjktqliXLyYoDdm4rNv+eqVWsaDjHEEKy7jCsbg==
+X-Received: by 2002:a2e:6e16:0:b0:2eb:da38:971f with SMTP id 38308e7fff4ca-2ebda38989cmr30649031fa.44.1718030638594;
+        Mon, 10 Jun 2024 07:43:58 -0700 (PDT)
+Received: from [10.0.0.42] (host-85-29-124-88.kaisa-laajakaista.fi. [85.29.124.88])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2eaec3ba8d7sm13372621fa.1.2024.06.10.07.43.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jun 2024 07:43:58 -0700 (PDT)
+Message-ID: <ce260655-df6e-442f-8d2f-2eff7b4d6a5a@gmail.com>
+Date: Mon, 10 Jun 2024 17:47:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,61 +61,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] regulator: add missing MODULE_DESCRIPTION() macro
+Subject: Re: [PATCH v2 2/2] ASoC: ti: davinci-mcasp: Set min period size using
+ FIFO config
+To: Jai Luthra <j-luthra@ti.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ alsa-devel@alsa-project.org, Devarsh Thakkar <devarsht@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>
+References: <20240610-asoc_next-v2-0-b52aaf5d67c4@ti.com>
+ <20240610-asoc_next-v2-2-b52aaf5d67c4@ti.com>
 Content-Language: en-US
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Matthias Brugger
-	<matthias.bgg@gmail.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20240608-md-drivers-regulator-v1-1-da338665db7a@quicinc.com>
- <29cb4283-34ef-4c90-ad53-ea572576d3fa@collabora.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <29cb4283-34ef-4c90-ad53-ea572576d3fa@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ziACR76-LJqII_3YKXKQuU1PmWJvYdmL
-X-Proofpoint-GUID: ziACR76-LJqII_3YKXKQuU1PmWJvYdmL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- phishscore=0 bulkscore=0 spamscore=0 malwarescore=0 priorityscore=1501
- clxscore=1015 adultscore=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406100112
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <20240610-asoc_next-v2-2-b52aaf5d67c4@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/10/2024 1:43 AM, AngeloGioacchino Del Regno wrote:
-> Il 09/06/24 06:53, Jeff Johnson ha scritto:
->> --- a/drivers/regulator/mtk-dvfsrc-regulator.c
->> +++ b/drivers/regulator/mtk-dvfsrc-regulator.c
->> @@ -211,4 +211,5 @@ static void __exit mtk_dvfsrc_regulator_exit(void)
->>   module_exit(mtk_dvfsrc_regulator_exit);
->>   
->>   MODULE_AUTHOR("Arvin wang <arvin.wang@mediatek.com>");
->> +MODULE_DESCRIPTION("MediaTek DVFSRC regulator driver");
+Hi,
+
+On 6/10/24 1:56 PM, Jai Luthra wrote:
+> The minimum period size was enforced to 64 as older devices integrating
+> McASP with EDMA used an internal FIFO of 64 samples.
 > 
-> Can you please drop this one?
-> I have a series floating that is removing this driver entirely and replacing it
-> with a refactored one. Though, it has the same issue, so I'll have to send a v6.
+> With UDMA based platforms this internal McASP FIFO is optional, as the
+> DMA engine internally does some buffering which is already accounted for
+> when registering the platform. So we should read the actual FIFO
+> configuration (txnumevt/rxnumevt) instead of hardcoding frames.min to
+> 64.
+
+Thank you the patch and the fix,
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+
 > 
-> Anyway, v5 is there:
+> Signed-off-by: Jai Luthra <j-luthra@ti.com>
+> ---
+>  sound/soc/ti/davinci-mcasp.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> https://lore.kernel.org/r/20240424095416.1105639-1-angelogioacchino.delregno@collabora.com
+> diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+> index 1e760c315521..2b1ed91a736c 100644
+> --- a/sound/soc/ti/davinci-mcasp.c
+> +++ b/sound/soc/ti/davinci-mcasp.c
+> @@ -1472,10 +1472,11 @@ static int davinci_mcasp_hw_rule_min_periodsize(
+>  {
+>  	struct snd_interval *period_size = hw_param_interval(params,
+>  						SNDRV_PCM_HW_PARAM_PERIOD_SIZE);
+> +	u8 numevt = *((u8 *)rule->private);
+>  	struct snd_interval frames;
+>  
+>  	snd_interval_any(&frames);
+> -	frames.min = 64;
+> +	frames.min = numevt;
+>  	frames.integer = 1;
+>  
+>  	return snd_interval_refine(period_size, &frames);
+> @@ -1490,6 +1491,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+>  	u32 max_channels = 0;
+>  	int i, dir, ret;
+>  	int tdm_slots = mcasp->tdm_slots;
+> +	u8 *numevt;
+>  
+>  	/* Do not allow more then one stream per direction */
+>  	if (mcasp->substreams[substream->stream])
+> @@ -1589,9 +1591,12 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+>  			return ret;
+>  	}
+>  
+> +	numevt = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
+> +			 &mcasp->txnumevt :
+> +			 &mcasp->rxnumevt;
+>  	snd_pcm_hw_rule_add(substream->runtime, 0,
+>  			    SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
+> -			    davinci_mcasp_hw_rule_min_periodsize, NULL,
+> +			    davinci_mcasp_hw_rule_min_periodsize, numevt,
+>  			    SNDRV_PCM_HW_PARAM_PERIOD_SIZE, -1);
+>  
+>  	return 0;
+> 
 
-Your v5 looks fine to me:
-
-+MODULE_AUTHOR("AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>");
-+MODULE_AUTHOR("Dawei Chien <dawei.chien@mediatek.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("MediaTek DVFSRC driver");
-
-
+-- 
+Péter
