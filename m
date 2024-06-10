@@ -1,138 +1,202 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E396F30A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 20:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3DC6F2FD
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 20:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718052869; cv=none; b=YKvcZlfR+oJeeL5/2d6KAzlc0/U0DWBDHlpj5YkA5rEOkF4WEJHk+SK6Qc6CAJBTYtRSQW67eLtvZBGuV3hYAR22ncdOhKSm+kCXUhw4z+lO34uRDFQi33AtDrLU6pB4G8t2ZMn6UnkUd6/7hCHy+MurwoPsse9tyCqun8DNHLo=
+	t=1718052870; cv=none; b=QJpnu71iR6ab/DfKR2Aa1j1/b0Bpt/QyFhpDFIbOQBxiP8Ch/cXnGt5mZqWfD+i+qVOA732hAmeWzxCXUeq32m9ApguUA7blHGrsWQsJmvLAtr82PwvXjJfozFCe6aKEK3IEbi2wUW9mNkMC14cD1BEmxwo2VvrTaB31ywoCpHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718052869; c=relaxed/simple;
-	bh=3IJ170TfkXxgGvDgJ3RTbvUYPnXkd2ZZUF0wrDSkLBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cDXL+R/t9LsPm9gwl6NpDjFPtgUoPoI1VHEceHxmxtkQvyNiqcnW3cQKUjpj+ACska7F5xmGV8Tigd5GBz2CYlft5DxC/AylhmpX+NNC+NcHupEmt1N/JKUG/PcuVGBpwMTjOFzqsXJRUO89FrzW0IjUxWmkduUPe5ONP0uU7h0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=h4QetuE9; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718052870; c=relaxed/simple;
+	bh=UV93V0MtfJyC3kFzzVhZfURa1qRcTVKvomW70MH3jpU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PI9YosaSzd96QVtlw7hsIRrjxuERCi25KuphKfeiKsiYg20A8U7FufqvIdMimFVoVahSZZnDMaQgedXi7PxsN3APqNAjqeoNat2EIfIOkw1XUoYXon/WaCFAMyrsR2JprzOwJRmBwG6wLy/HxjggI7CnwLAqVSc/H9ce5ZkVUiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1eYfRFM8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=G2vfdYUX; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1eYfRFM8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=G2vfdYUX; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h4QetuE9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=VS6xSyzjS3Rv5GrMxcihCiEJx2R82kJuQhsJU9W0eQI=; b=h4QetuE99k/oK0fB+yhlDQMS7E
-	ASpUJ7PkP1CZkbUAihiNHKnnyYnp0GCutTdDF+rvdWDDb0o9zZh1VQU92ehwOZh+L2RcBfjKL6ICC
-	NeSyV9F7yJoO04n9EtF1CkLfaHuFKnLTMsOQ8AB73DEFfLfaSS7XCJ5V8Bgs+IJVgW2X63DXsVNLW
-	yuDPLVkmEro+0o0d1xeGmtIRXVWhdwEtfwCpVOhJgTTSKvNVZQ7BoeDxst93PhAE/cR0sNMG3HlRy
-	NOZm0ApS/UeFTd7wsbM2Oz6q/oKgYFURlQ11uiIV6JE2aqgaweOmBAh1f3TuCxIn5/BH5KCWK9CAV
-	RE+Cm0uw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGm1i-00000001fHm-3JMy;
-	Mon, 10 Jun 2024 20:54:14 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5BE00300439; Mon, 10 Jun 2024 22:54:05 +0200 (CEST)
-Date: Mon, 10 Jun 2024 22:54:05 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Stephane Eranian <eranian@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Ian Rogers <irogers@google.com>,
-	"Liang, Kan" <kan.liang@intel.com>, Andi Kleen <ak@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	"Narayan, Ananth" <ananth.narayan@amd.com>,
-	"Bangoria, Ravikumar" <ravi.bangoria@amd.com>,
-	Namhyung Kim <namhyung@google.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Zhang Xiong <xiong.y.zhang@intel.com>
-Subject: Re: [RFC] perf_events: exclude_guest impact on
- time_enabled/time_running
-Message-ID: <20240610205405.GA8774@noisy.programming.kicks-ass.net>
-References: <CABPqkBQ3LQ_dXQSQVSrriinvSSXm2fHx4yOms=jRsa2WaXSsog@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1eYfRFM8";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="G2vfdYUX";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1eYfRFM8";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="G2vfdYUX"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DFF47223A3;
+	Mon, 10 Jun 2024 20:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718052866; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=D8EvIpkskRr1vhGK9ri1iDKoIXzTaRUj7OtCPaP0rAI=;
+	b=1eYfRFM8h57O8vZYzfJIqGK1Za2rO4EhW+u4u5kh6HPkEaaAO0qx9Q6hnth9dVSWxqHL0r
+	cjhJj/cBvUBnmgCod+vnj0Yl3cAJK4MW43rw+lkvbmehTpoJQoUhF4w8yJ9vzVxARYpnpL
+	OlUAQHzyTCOEMLw2KfHpShxYYvqt0EM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718052866;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=D8EvIpkskRr1vhGK9ri1iDKoIXzTaRUj7OtCPaP0rAI=;
+	b=G2vfdYUX6E+/CiL22NT2ajbePzW/0qow2pRw0/daEuOXy0dIQI3cHbIiLOqVYWHflF7Q5U
+	XQS2NCrUpPIZCFCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718052866; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=D8EvIpkskRr1vhGK9ri1iDKoIXzTaRUj7OtCPaP0rAI=;
+	b=1eYfRFM8h57O8vZYzfJIqGK1Za2rO4EhW+u4u5kh6HPkEaaAO0qx9Q6hnth9dVSWxqHL0r
+	cjhJj/cBvUBnmgCod+vnj0Yl3cAJK4MW43rw+lkvbmehTpoJQoUhF4w8yJ9vzVxARYpnpL
+	OlUAQHzyTCOEMLw2KfHpShxYYvqt0EM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718052866;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=D8EvIpkskRr1vhGK9ri1iDKoIXzTaRUj7OtCPaP0rAI=;
+	b=G2vfdYUX6E+/CiL22NT2ajbePzW/0qow2pRw0/daEuOXy0dIQI3cHbIiLOqVYWHflF7Q5U
+	XQS2NCrUpPIZCFCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BFBDE13A51;
+	Mon, 10 Jun 2024 20:54:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id I8UqLgJoZ2YOLQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 10 Jun 2024 20:54:26 +0000
+Message-ID: <8b844d71-01f1-472b-a63a-4c9cdb26e9ef@suse.cz>
+Date: Mon, 10 Jun 2024 22:54:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABPqkBQ3LQ_dXQSQVSrriinvSSXm2fHx4yOms=jRsa2WaXSsog@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] slab: make check_object() more consistent
+Content-Language: en-US
+To: "Christoph Lameter (Ampere)" <cl@gentwo.org>,
+ Chengming Zhou <chengming.zhou@linux.dev>
+Cc: Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ zhouchengming@bytedance.com, Kees Cook <keescook@chromium.org>
+References: <20240607-b4-slab-debug-v3-0-bb2a326c4ceb@linux.dev>
+ <20240607-b4-slab-debug-v3-1-bb2a326c4ceb@linux.dev>
+ <63da08b7-7aa3-3fad-55e6-9fc3928a49de@gentwo.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJkBREIBQkRadznAAoJECJPp+fMgqZkNxIQ
+ ALZRqwdUGzqL2aeSavbum/VF/+td+nZfuH0xeWiO2w8mG0+nPd5j9ujYeHcUP1edE7uQrjOC
+ Gs9sm8+W1xYnbClMJTsXiAV88D2btFUdU1mCXURAL9wWZ8Jsmz5ZH2V6AUszvNezsS/VIT87
+ AmTtj31TLDGwdxaZTSYLwAOOOtyqafOEq+gJB30RxTRE3h3G1zpO7OM9K6ysLdAlwAGYWgJJ
+ V4JqGsQ/lyEtxxFpUCjb5Pztp7cQxhlkil0oBYHkudiG8j1U3DG8iC6rnB4yJaLphKx57NuQ
+ PIY0Bccg+r9gIQ4XeSK2PQhdXdy3UWBr913ZQ9AI2usid3s5vabo4iBvpJNFLgUmxFnr73SJ
+ KsRh/2OBsg1XXF/wRQGBO9vRuJUAbnaIVcmGOUogdBVS9Sun/Sy4GNA++KtFZK95U7J417/J
+ Hub2xV6Ehc7UGW6fIvIQmzJ3zaTEfuriU1P8ayfddrAgZb25JnOW7L1zdYL8rXiezOyYZ8Fm
+ ZyXjzWdO0RpxcUEp6GsJr11Bc4F3aae9OZtwtLL/jxc7y6pUugB00PodgnQ6CMcfR/HjXlae
+ h2VS3zl9+tQWHu6s1R58t5BuMS2FNA58wU/IazImc/ZQA+slDBfhRDGYlExjg19UXWe/gMcl
+ De3P1kxYPgZdGE2eZpRLIbt+rYnqQKy8UxlszsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
+ J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
+ /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
+ IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
+ X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
+ wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
+ PVAiT6fnzIKmZAUCZAUSmwUJDK5EZgAKCRAiT6fnzIKmZOJGEACOKABgo9wJXsbWhGWYO7mD
+ 8R8mUyJHqbvaz+yTLnvRwfe/VwafFfDMx5GYVYzMY9TWpA8psFTKTUIIQmx2scYsRBUwm5VI
+ EurRWKqENcDRjyo+ol59j0FViYysjQQeobXBDDE31t5SBg++veI6tXfpco/UiKEsDswL1WAr
+ tEAZaruo7254TyH+gydURl2wJuzo/aZ7Y7PpqaODbYv727Dvm5eX64HCyyAH0s6sOCyGF5/p
+ eIhrOn24oBf67KtdAN3H9JoFNUVTYJc1VJU3R1JtVdgwEdr+NEciEfYl0O19VpLE/PZxP4wX
+ PWnhf5WjdoNI1Xec+RcJ5p/pSel0jnvBX8L2cmniYnmI883NhtGZsEWj++wyKiS4NranDFlA
+ HdDM3b4lUth1pTtABKQ1YuTvehj7EfoWD3bv9kuGZGPrAeFNiHPdOT7DaXKeHpW9homgtBxj
+ 8aX/UkSvEGJKUEbFL9cVa5tzyialGkSiZJNkWgeHe+jEcfRT6pJZOJidSCdzvJpbdJmm+eED
+ w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
+ 1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <63da08b7-7aa3-3fad-55e6-9fc3928a49de@gentwo.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.79 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,intel.com,kvack.org,vger.kernel.org,bytedance.com,chromium.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -2.79
+X-Spam-Flag: NO
 
-On Thu, Jun 06, 2024 at 12:57:35AM -0700, Stephane Eranian wrote:
-> Hi Peter,
+On 6/10/24 7:07 PM, Christoph Lameter (Ampere) wrote:
+> On Fri, 7 Jun 2024, Chengming Zhou wrote:
 > 
-> In the context of the new vPMU passthru patch series, we have to look
-> closer at the definition and implementation of the exclude_guest
-> filter in the perf_event_attr structure. This filter has been in the
-> kernel for many years. See patch:
-> https://lore.kernel.org/all/20240506053020.3911940-8-mizhang@google.com/
+>> There are two inconsistencies in check_object(), which are alignment
+>> padding checking and object padding checking. We only print the error
+>> messages but don't return 0 to tell callers that something is wrong
+>> and needs to be handled. Please see alloc_debug_processing() and
+>> free_debug_processing() for details.
 > 
-> The presumed  definition of the filter is that the user does not want
-> the event to count while the processor is running in guest mode (i.e.,
-> inside the virtual machine guest OS or guest user code).
+> If the error is in the padding and the redzones are ok then its likely 
+> that the objects are ok. So we can actually continue with this slab page 
+> instead of isolating it.
 > 
-> The perf tool sets is by default on all core PMU events:
-> $ perf stat -vv -e cycles sleep 0
-> ------------------------------------------------------------
-> perf_event_attr:
->   size                             112
->   sample_type                      IDENTIFIER
->   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->   disabled                         1
->   inherit                          1
->   enable_on_exec                   1
->   exclude_guest                    1
-> ------------------------------------------------------------
+> We isolate it in the case that the redzones have been violated because 
+> that suggests someone overwrote the end of the object f.e. In that case 
+> objects may be corrupted. Its best to isolate the slab and hope for the 
+> best.
 > 
-> In the kernel, the way this is treated differs between AMD and Intel
-> because AMD does provide a hardware filter for guest vs. host in the
-> PMU counters whereas Intel does not. For the latter, the  kernel
-> simply disables the event in the hardware counters, i.e., the event is
-> not descheduled.  Both approaches produce pretty much the same desired
-> effect, the event is not counted while in guest mode.
-> 
-> The issue I would like to raise has to do with the effects on
-> time_enabled and time_running for exclude_guest=1 events.
-> 
-> Given the event is not scheduled out while in guest mode, even though
-> it is stopped, both time_enabled and time_running continue ticking
-> while in guest mode.  If a measurement is 10s long but only 5s are in
-> non-guest mode, then time_enabled=10s, time_running=10s. The count
-> represents 10s worth of non guest mode, of which only 5s were really
-> actively monitoring, but the user has no way of determining this.
-> 
-> If we look at vPMU passthru, the host event must have exclude_guest=1
-> to avoid going into an error state on context switch to the vCPU
-> thread (with vPMU enabled). But this time, the event is scheduled out,
-> that means that time_enabled keeps counting, but time_running stops.
-> On context switch back in, the host event is scheduled again and
-> time_running restarts ticking. For a 10s measurement, where 5s here in
-> the guest, the event will come out with time_enabled=10s,
-> time_running=5s, and the tool will scale it up because it thinks the
-> event was multiplexed, when in fact it was not. This is not the
-> intended outcome here. The tool should not scale the count, it was not
-> multiplexed, it was descheduled because the filter forced it out.
-> Note that if the event had been multiplexed while running on the host,
-> then the scaling would be appropriate.
-> 
-> In that case, I argue, time_running should be updated to cover the
-> time the event was not running. That would bring us back to the case I
-> was describing earlier.
-> 
-> It boils down to the exact definition of exclude_guest and expected
-> impact on time_enabled and time_running. Then, with or without vPMU
-> passthru, we can fix the kernel to ensure a uniform behavior.
-> 
-> What are your thoughts on this problem?
+> If it was just the padding then the assumption is that this may be a 
+> scribble. So clean it up and continue.
 
-So with those patches having explicit scheduling points, we can actually
-do this time accounting accurately, so I don't see a reason to not do
-the right thing here.
+Hm is it really worth such nuance? We enabled debugging and actually hit a
+bug. I think it's best to keep things as much as they were and not try to
+allow further changes. This e.g. allows more detailed analysis if somebody
+later notices the bug report and decides to get a kdump crash dump (or use
+drgn on live system). Maybe we should even stop doing the restore_bytes()
+stuff, and prevent any further frees in the slab page to happen if possible
+without affecting fast paths (now we mark everything as used but don't
+prevent further frees of objects that were actually allocated before).
 
-Hysterically this was left vague in order to be able to avoid the
-scheduling for these scenarios -- performance raisins etc.
-
-The thing is, if you push this to its limits, we should start time
-accounting for the ring selectors too, and that's going to be painful.
-
-
+Even if some security people enable parts of slub debugging for security
+people it is my impression they would rather panic/reboot or have memory
+leaked than trying to salvage the slab page? (CC Kees)
