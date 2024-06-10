@@ -1,196 +1,128 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC8E14EC47;
-	Mon, 10 Jun 2024 15:21:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750B513E037
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718032871; cv=none; b=CysUMU/1OYqtkwmd1SSpFvc5/2xL3rYRXm5hEojTlAfQIf52qHPsrdl0JDvFQnHuPOXwvEChDY/naJ6p2Yru/+dzzc2DskEDPWMClA9enW1gqji37WjENSBWlniQ0T4cFZldW7GpEOxZ/boprVr2Za+/La6Ija9DedpNjgIil08=
+	t=1718032899; cv=none; b=ojyD+gBQQOdmYPhyAIGyzavBGKqFj8t6S7Z/KdauCx9s8b6QlmSknuv5Kr/0kR+uRLGxyxc0TDvG6SZV5w9ce8u2ZVdwhOTFWja80USdT14bcUCL/nuNeUhJWhNAvwei0F1fGrqKe9ReJuqU7Obi0hjdCAal/nh//TzNLpXxTKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718032871; c=relaxed/simple;
-	bh=I95YfeR4z6uaBo8ShVWAd+z5U0ONBdc/Mf/dNEVoGb8=;
+	s=arc-20240116; t=1718032899; c=relaxed/simple;
+	bh=v3NbPhRj3TrXw1e5IiVzAtGnWpQEWYFv4aBS9pR5LRw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EHlCB1E4b4UaNLXQI9cMZp/hhUZP3iQYxPvh9tp7MqFUhEoCwlJha+f/3GKYFqIxYLfSv7eTeYYfWDRbT3mIopIXF+itqvNFtfR2hukcNyRGIkMUXCZ/B1JNPraKIDBOdv22uN576tlyslF7hYdnrFzB+FCIDJLWB/MsPnLO/eU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=j/XNjI2G; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pHkAvJoUUX7eH2W93iHifDQx3j2npyvsbXDgkQGCIwDAPj5HHJfl/UUfVXggJdrln+LhRTFXFnIhgdgYjcNrsPH44zoenDntdsplnlnFF4A9h3dwqFi079SlHa9LSbEsbsPsliCf/8Gtmot5jtm/lb50oAazqXmG2UrZ/AjL2vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jgn6xPU7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j/XNjI2G"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E1FF239F;
-	Mon, 10 Jun 2024 17:20:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1718032854;
-	bh=I95YfeR4z6uaBo8ShVWAd+z5U0ONBdc/Mf/dNEVoGb8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j/XNjI2GGs5Z/9LaKhn1e+/ugW9C4MVTBR4qApHE+MgdWHq09l2hJyRxVnbxviE8j
-	 uRSrD6FXWV99GtmGdh13jaUrkNlgRvWgcf8mIcMJt4h59gDO3f/YT+wZ+yf9jYrU6z
-	 i8XZQBJnOakj1O0KTeWgw2A7ExpTa0pYiDb+YqwM=
-Date: Mon, 10 Jun 2024 18:20:46 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] media: uvcvideo: Refactor Power Line Frequency limit
- selection
-Message-ID: <20240610152046.GJ26663@pendragon.ideasonboard.com>
-References: <20240318-billion-v1-0-2f7bc0ee2030@chromium.org>
- <20240318-billion-v1-2-2f7bc0ee2030@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jgn6xPU7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0679BC2BBFC;
+	Mon, 10 Jun 2024 15:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718032899;
+	bh=v3NbPhRj3TrXw1e5IiVzAtGnWpQEWYFv4aBS9pR5LRw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=jgn6xPU7DI3mrZxO+uSPvNfAO3sUt+SXtFUPPcNAhGpbkZPmuNp0dU0nHjf9Tn52f
+	 n8/BtRRtQSEEwGn6WgCOfo+99pyUeoEoAlpw8Ao9dzK2vsICNc0EOMTlCO7XG6Eq3S
+	 xzFrCJl+0OuVSuLUaQTkIeqaV5w7kpoZxQR1xeEc4AkH8eZONroWq3cU7WIlpBpNME
+	 gwv0Mn6TH7EcjZgtkGa7TbO2Gp/Vsz40uOtbqke5F41eVM16Pv7DIw0nGFIBhCzUxg
+	 F0kw6BpNOrScb8gBylzLoppwkqQqG7tinzv5gXH2E58epsfypCZo8Pxhm1XcGpp9yZ
+	 CdEu1eXiJkp2A==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id AE4FCCE2373; Mon, 10 Jun 2024 08:21:38 -0700 (PDT)
+Date: Mon, 10 Jun 2024 08:21:38 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>, parri.andrea@gmail.com,
+	will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+	npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+	luc.maranget@inria.fr, akiyks@gmail.com, dlustig@nvidia.com,
+	joel@joelfernandes.org, urezki@gmail.com, quic_neeraju@quicinc.com,
+	frederic@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 0/4] tools/memory-model: Define more of LKMM in
+ tools/memory-model
+Message-ID: <3c46dba3-575a-4b4d-9ec8-bc06e96a9e40@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
+ <88c1ebc8-4805-4d1d-868a-889043899979@rowland.harvard.edu>
+ <bbc3bd10-3bf5-4b1a-a275-dd328c42e307@huaweicloud.com>
+ <cbced924-3f22-484d-8e65-4eebe7c9329a@paulmck-laptop>
+ <1aed7106-cb94-451e-93d1-53062e6f3639@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240318-billion-v1-2-2f7bc0ee2030@chromium.org>
+In-Reply-To: <1aed7106-cb94-451e-93d1-53062e6f3639@huaweicloud.com>
 
-Hi Ricardo,
-
-Thank you for the patch.
-
-On Mon, Mar 18, 2024 at 11:55:24PM +0000, Ricardo Ribalda wrote:
-> Move the PLF mapping logic to its own function. This patch does not
-> introduce any new functionality to the logic, it is just a preparation
-> patch.
+On Mon, Jun 10, 2024 at 10:04:26AM +0200, Jonas Oberhauser wrote:
 > 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_ctrl.c | 93 ++++++++++++++++++++++++----------------
->  1 file changed, 55 insertions(+), 38 deletions(-)
 > 
-> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> index 3e939b4fbaaaf..67522143c6c85 100644
-> --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> @@ -459,6 +459,56 @@ static void uvc_ctrl_set_rel_speed(struct uvc_control_mapping *mapping,
->  	data[first+1] = min_t(int, abs(value), 0xff);
->  }
->  
-> +const struct uvc_control_mapping uvc_ctrl_power_line_mapping_limited = {
-> +	.id		= V4L2_CID_POWER_LINE_FREQUENCY,
-> +	.entity		= UVC_GUID_UVC_PROCESSING,
-> +	.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
-> +	.size		= 2,
-> +	.offset		= 0,
-> +	.v4l2_type	= V4L2_CTRL_TYPE_MENU,
-> +	.data_type	= UVC_CTRL_DATA_TYPE_ENUM,
-> +	.menu_mask	= GENMASK(V4L2_CID_POWER_LINE_FREQUENCY_60HZ,
-> +				  V4L2_CID_POWER_LINE_FREQUENCY_50HZ),
-> +};
-> +
-> +const struct uvc_control_mapping uvc_ctrl_power_line_mapping_uvc11 = {
-> +	.id		= V4L2_CID_POWER_LINE_FREQUENCY,
-> +	.entity		= UVC_GUID_UVC_PROCESSING,
-> +	.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
-> +	.size		= 2,
-> +	.offset		= 0,
-> +	.v4l2_type	= V4L2_CTRL_TYPE_MENU,
-> +	.data_type	= UVC_CTRL_DATA_TYPE_ENUM,
-> +	.menu_mask	= GENMASK(V4L2_CID_POWER_LINE_FREQUENCY_60HZ,
-> +				  V4L2_CID_POWER_LINE_FREQUENCY_DISABLED),
-> +};
-> +
-> +static const struct uvc_control_mapping uvc_ctrl_power_line_mapping_uvc15 = {
-> +	.id		= V4L2_CID_POWER_LINE_FREQUENCY,
-> +	.entity		= UVC_GUID_UVC_PROCESSING,
-> +	.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
-> +	.size		= 2,
-> +	.offset		= 0,
-> +	.v4l2_type	= V4L2_CTRL_TYPE_MENU,
-> +	.data_type	= UVC_CTRL_DATA_TYPE_ENUM,
-> +	.menu_mask	= GENMASK(V4L2_CID_POWER_LINE_FREQUENCY_AUTO,
-> +				  V4L2_CID_POWER_LINE_FREQUENCY_DISABLED),
-> +};
-> +
-> +static int __uvc_ctrl_add_mapping(struct uvc_video_chain *chain,
-> +	struct uvc_control *ctrl, const struct uvc_control_mapping *mapping);
+> Am 6/6/2024 um 6:37 PM schrieb Paul E. McKenney:
+> > On Wed, Jun 05, 2024 at 09:58:42PM +0200, Jonas Oberhauser wrote:
+> > > 
+> > > 
+> > > Am 6/4/2024 um 7:56 PM schrieb Alan Stern:
+> > > > On Tue, Jun 04, 2024 at 05:29:18PM +0200, Jonas Oberhauser wrote:
+> > > > > Currently, the effect of several tag on operations is defined only in
+> > > > > the herd7 tool's OCaml code as syntax transformations, while the effect
+> > > > > of all other tags is defined in tools/memory-model.
+> > > > > This asymmetry means that two seemingly analogous definitions in
+> > > > > tools/memory-model behave quite differently because the generated
+> > > > > representation is sometimes modified by hardcoded behavior in herd7.
+> > > > > 
+> > > > > It also makes it hard to see that the behavior of the formalization
+> > > > > matches the intuition described in explanation.txt without delving into
+> > > > > the implementation of herd7.
+> > > > > 
+> > > > > Furthermore, this hardcoded behavior is hard to maintain inside herd7 and
+> > > > > other tools implementing WMM, and has caused several bugs and confusions
+> > > > > with the tool maintainers, e.g.:
+> > > > > 
+> > > > >     https://github.com/MPI-SWS/genmc/issues/22
+> > > > >     https://github.com/herd/herdtools7/issues/384#issuecomment-1132859904
+> > > > >     https://github.com/hernanponcedeleon/Dat3M/issues/254
+> > > > > 
+> > > > > It also means that potential future extensions of LKMM with new tags may
+> > > > > not work without changing internals of the herd7 tool.
+> > > > > 
+> > > > > In this patch series, we first emulate the effect of herd7 transformations
+> > > > > in tools/memory-model through explicit rules in .cat and .bell files that
+> > > > > reference the transformed tags.
+> > > > > These transformations do not have any immediate effect with the current
+> > > > > herd7 implementation, because they apply after the syntax transformations
+> > > > > have already modified those tags.
+> > > > > 
+> > > > > In a second step, we then distinguish between syntactic tags (that are
+> > > > > placed by the programmer on operations, e.g., an 'ACQUIRE tag on both the
+> > > > > read and write of an xchg_acquire() operation) and sets of events (that
+> > > > > would be defined after the (emulated) transformations, e.g., an Acquire
+> > > > > set that includes only on the read of the xchg_acquire(), but "has been
+> > > > > removed" from the write).
+> > > > > 
+> > > > > This second step is incompatible with the current herd7 implementation,
+> > > > > since herd7 uses hardcoded tag names to decide what to do with LKMM;
+> > > > > therefore, the newly introduced syntactic tags will be ignored or
+> > > > > processed incorrectly by herd7.
+> > > > 
+> > > > The patches look good to me.
+> > > > 
+> > > > Just to clarify: Your first step encompasses patches 1 - 3, and the
+> > > > second step is patch 4.  The first three patches can be applied now, but
+> > > > the last one needs to wait until herd7 has been updated.  Is this all
+> > > > correct?
+> > > 
+> > > Exactly.
+> > 
+> > Just to make sure that I am following along properly...  My belief is
+> > that there will be a new version of this series.  Please let me know if
+> > I am missing something.
+> 
+> At least one :))
 
-I wonder if we could avoid the forward declaration by turning the
-.add_mapping() operation into a .filter_mapping() (name to be
-bikshedded) that would return a replacement mapping instead of adding
-it. The caller (the __uvc_ctrl_add_custom_mapping() function) would then
-call __uvc_ctrl_add_mapping() unconditionally. You could actually call
-the new operation directly in __uvc_ctrl_add_custom_mapping() without
-having to add a new __uvc_ctrl_add_custom_mapping() function. What do
-you think, would that be simpler and more redable ?
+;-) ;-) ;-)
 
-> +
-> +static int uvc_ctrl_add_plf_mapping(struct uvc_video_chain *chain,
-> +	struct uvc_control *ctrl, const struct uvc_control_mapping *mapping)
-> +{
-> +	if (chain->dev->uvc_version < 0x150)
-> +		return __uvc_ctrl_add_mapping(chain, ctrl,
-> +					      &uvc_ctrl_power_line_mapping_uvc11);
-> +
-> +	return __uvc_ctrl_add_mapping(chain, ctrl,
-> +				      &uvc_ctrl_power_line_mapping_uvc15);
-> +}
-> +
->  static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
->  	{
->  		.id		= V4L2_CID_BRIGHTNESS,
-> @@ -748,51 +798,18 @@ static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
->  		.v4l2_type	= V4L2_CTRL_TYPE_BOOLEAN,
->  		.data_type	= UVC_CTRL_DATA_TYPE_BOOLEAN,
->  	},
-> -};
-> -
-> -const struct uvc_control_mapping uvc_ctrl_power_line_mapping_limited = {
-> -	.id		= V4L2_CID_POWER_LINE_FREQUENCY,
-> -	.entity		= UVC_GUID_UVC_PROCESSING,
-> -	.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
-> -	.size		= 2,
-> -	.offset		= 0,
-> -	.v4l2_type	= V4L2_CTRL_TYPE_MENU,
-> -	.data_type	= UVC_CTRL_DATA_TYPE_ENUM,
-> -	.menu_mask	= GENMASK(V4L2_CID_POWER_LINE_FREQUENCY_60HZ,
-> -				  V4L2_CID_POWER_LINE_FREQUENCY_50HZ),
-> -};
-> -
-> -const struct uvc_control_mapping uvc_ctrl_power_line_mapping_uvc11 = {
-> -	.id		= V4L2_CID_POWER_LINE_FREQUENCY,
-> -	.entity		= UVC_GUID_UVC_PROCESSING,
-> -	.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
-> -	.size		= 2,
-> -	.offset		= 0,
-> -	.v4l2_type	= V4L2_CTRL_TYPE_MENU,
-> -	.data_type	= UVC_CTRL_DATA_TYPE_ENUM,
-> -	.menu_mask	= GENMASK(V4L2_CID_POWER_LINE_FREQUENCY_60HZ,
-> -				  V4L2_CID_POWER_LINE_FREQUENCY_DISABLED),
-> +	{
-> +		.entity		= UVC_GUID_UVC_PROCESSING,
-> +		.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
-> +		.add_mapping	= uvc_ctrl_add_plf_mapping,
-> +	},
->  };
->  
->  static const struct uvc_control_mapping *uvc_ctrl_mappings_uvc11[] = {
-> -	&uvc_ctrl_power_line_mapping_uvc11,
->  	NULL, /* Sentinel */
->  };
->  
-> -static const struct uvc_control_mapping uvc_ctrl_power_line_mapping_uvc15 = {
-> -	.id		= V4L2_CID_POWER_LINE_FREQUENCY,
-> -	.entity		= UVC_GUID_UVC_PROCESSING,
-> -	.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
-> -	.size		= 2,
-> -	.offset		= 0,
-> -	.v4l2_type	= V4L2_CTRL_TYPE_MENU,
-> -	.data_type	= UVC_CTRL_DATA_TYPE_ENUM,
-> -	.menu_mask	= GENMASK(V4L2_CID_POWER_LINE_FREQUENCY_AUTO,
-> -				  V4L2_CID_POWER_LINE_FREQUENCY_DISABLED),
-> -};
-> -
->  static const struct uvc_control_mapping *uvc_ctrl_mappings_uvc15[] = {
-> -	&uvc_ctrl_power_line_mapping_uvc15,
->  	NULL, /* Sentinel */
->  };
->  
+I will await a later version, then.
 
--- 
-Regards,
-
-Laurent Pinchart
+								Thanx, Paul
