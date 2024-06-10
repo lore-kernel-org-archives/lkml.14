@@ -1,35 +1,46 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D143537E9
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 11:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7437711A;
+	Mon, 10 Jun 2024 11:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718019673; cv=none; b=SpgUxzwl1Y9IssoUDclN4LasAlPATyPfQXXchG+QPAs+ZX4diNwc/9yXQVlsmOrTksTHSP+7oqR4B/UH2M38Zx8RzfHk6Acysseqvr3m+haKqvm4mgKhrEZKfKPu8pWoxQiuQkt+23Da+cQpQzwEgyqyupVoLEYOCD5gr3W0vrk=
+	t=1718019810; cv=none; b=q8YhLJdZycU7q90F45/XeDV8en6pbe+F7j9ibRmo17b7+l62jRiXIMblgbkXWYqMI8/mS2DdrXxLy1w6KVav0QnfnWcsfBfTjHAD7ee/SSjawPwqNxNiMvP/ON9NIGIJJ9PZIbaNBdm3WnaYcr+pE/ZOYX6s6XI91EMTbGop9kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718019673; c=relaxed/simple;
-	bh=nyqfG2kuYiSkZ7XrIH7o5AupFxSBg0C40ywehmENuIw=;
+	s=arc-20240116; t=1718019810; c=relaxed/simple;
+	bh=A2UrWvpzcV8mD91bwCSuFpb+wTplVoHZLc2I0ye9+58=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxvcKzdsQJ2c5lDY4FCb1OzBSfkjZph+YMaJk3ThgWA12q66T8BQG+N8xY7D6Wc3nBm3E60q6wHZ8DTIozSeWJNuh5DXLnwcBG7+CKQG5vLUoTjEgiTnPSp3myvB5fxARK1y/X/fxt/s+NxpWvORtNX96t/L3bQQ2/h39SwAAf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 215711688
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 04:41:35 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6AE6C3F73B
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 04:41:10 -0700 (PDT)
-Date: Mon, 10 Jun 2024 12:41:00 +0100
-From: Liviu Dudau <liviu.dudau@arm.com>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Lee Jones <lee@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] mfd: add missing MODULE_DESCRIPTION() macros
-Message-ID: <ZmbmTEt2cP4tS2Nn@e110455-lin.cambridge.arm.com>
-References: <20240609-md-drivers-mfd-v1-1-47cdd0b394e9@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=F/aMC2SJpRf2lKR9VgChi2+znViqimudhZIlBrcvCUbcxLANLkTE5WX2SL4N/C1lMXSEjnxxSUe4lddEm4ac8O1QVoZxay7Eov29ktoA44aqNh2I7E1K3BPqnfOYhUiejXmzPiYq4dUJnULhFKnnb4/l1r1Ar+iwN3cCCf5e6y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=tSfnduN5; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tSfnduN5"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 95BB966F;
+	Mon, 10 Jun 2024 13:43:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1718019795;
+	bh=A2UrWvpzcV8mD91bwCSuFpb+wTplVoHZLc2I0ye9+58=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tSfnduN55Y2h/duvE2uu4wyNYNhEvYg3wqCkgr02/GJF0jfWiJPKHLkuq4SE77TDw
+	 SGnipWbyc1DI61bmsR4+Pl2BJ49bmOgcMmhloBVKhMMPQFmdzPh5oHi2JYF6MwQx5O
+	 hfI1O9LiR4O3+lNecMDcsO8jT61tNVGhBAdvE8DY=
+Date: Mon, 10 Jun 2024 14:43:06 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Ricardo Ribalda <ribalda@chromium.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"hn.chen" <hn.chen@sunplusit.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v10 4/6] media: uvcvideo: Allow hw clock updates with
+ buffers not full
+Message-ID: <20240610114306.GR18479@pendragon.ideasonboard.com>
+References: <20240323-resend-hwtimestamp-v10-0-b08e590d97c7@chromium.org>
+ <20240323-resend-hwtimestamp-v10-4-b08e590d97c7@chromium.org>
+ <4kck7oedsnj6kfiv7ykwsjg35qodg5bdktu5t5w3xtg2xuscto@2yh6kfdqwimc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,141 +49,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240609-md-drivers-mfd-v1-1-47cdd0b394e9@quicinc.com>
+In-Reply-To: <4kck7oedsnj6kfiv7ykwsjg35qodg5bdktu5t5w3xtg2xuscto@2yh6kfdqwimc>
 
-On Sun, Jun 09, 2024 at 07:21:28PM -0700, Jeff Johnson wrote:
-> On x86, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/arizona.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/pcf50633-gpio.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/timberdale.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/ssbi.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/rt4831.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/intel_soc_pmic_bxtwc.o
+On Wed, May 29, 2024 at 05:03:08PM +0900, Tomasz Figa wrote:
+> On Sat, Mar 23, 2024 at 10:48:05AM +0000, Ricardo Ribalda wrote:
+> > With UVC 1.5 we get as little as one clock sample per frame. Which means
+> > that it takes 32 frames to move from the software timestamp to the
+> > hardware timestamp method.
+> > 
+> > This results in abrupt changes in the timestamping after 32 frames (~1
+> > second), resulting in noticeable artifacts when used for encoding.
+> > 
+> > With this patch we modify the update algorithm to work with whatever
+> > amount of values are available.
+> > 
+> > Tested-by: HungNien Chen <hn.chen@sunplusit.com>
+> > Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_video.c | 16 ++++++++++++++--
+> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> > index d6ca383f643e3..af25b9f1b53fe 100644
+> > --- a/drivers/media/usb/uvc/uvc_video.c
+> > +++ b/drivers/media/usb/uvc/uvc_video.c
+> > @@ -768,10 +768,10 @@ void uvc_video_clock_update(struct uvc_streaming *stream,
+> >  
+> >  	spin_lock_irqsave(&clock->lock, flags);
+> >  
+> > -	if (clock->count < clock->size)
+> > +	if (clock->count < 2)
+> >  		goto done;
+> >  
+> > -	first = &clock->samples[clock->head];
+> > +	first = &clock->samples[(clock->head - clock->count + clock->size) % clock->size];
+> >  	last = &clock->samples[(clock->head - 1 + clock->size) % clock->size];
+> >  
+> >  	/* First step, PTS to SOF conversion. */
+> > @@ -786,6 +786,18 @@ void uvc_video_clock_update(struct uvc_streaming *stream,
+> >  	if (y2 < y1)
+> >  		y2 += 2048 << 16;
+> >  
+> > +	/*
+> > +	 * Have at least 1/4 of a second of timestamps before we
+> > +	 * try to do any calculation. Otherwise we do not have enough
+> > +	 * precision. This value was determined by running Android CTS
+> > +	 * on different devices.
+> > +	 *
+> > +	 * dev_sof runs at 1KHz, and we have a fixed point precision of
+> > +	 * 16 bits.
+> > +	 */
+> > +	if ((y2 - y1) < ((1000 / 4) << 16))
+> > +		goto done;
 > 
-> Add the missing invocation of the MODULE_DESCRIPTION() macro to all
-> files which have a MODULE_LICENSE().
+> Not a comment for this patch directly, but...
 > 
-> This includes mfd-core.c and vexpress-sysreg.c which, although they
-> did not produce a warning with the x86 allmodconfig configuration, may
-> cause this warning with other configurations.
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
->  drivers/mfd/arizona-core.c         | 1 +
->  drivers/mfd/intel_soc_pmic_bxtwc.c | 1 +
->  drivers/mfd/mfd-core.c             | 1 +
->  drivers/mfd/pcf50633-gpio.c        | 1 +
->  drivers/mfd/rt4831.c               | 1 +
->  drivers/mfd/ssbi.c                 | 1 +
->  drivers/mfd/timberdale.c           | 1 +
->  drivers/mfd/vexpress-sysreg.c      | 1 +
->  8 files changed, 8 insertions(+)
-> 
-> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> index 19a0adf8ce3d..85ff8717d850 100644
-> --- a/drivers/mfd/arizona-core.c
-> +++ b/drivers/mfd/arizona-core.c
-> @@ -1429,4 +1429,5 @@ int arizona_dev_exit(struct arizona *arizona)
->  }
->  EXPORT_SYMBOL_GPL(arizona_dev_exit);
->  
-> +MODULE_DESCRIPTION("Wolfson Arizona core driver");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-> index 8dac0d41f64f..ba32cacfc499 100644
-> --- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-> +++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-> @@ -581,5 +581,6 @@ static struct platform_driver bxtwc_driver = {
->  
->  module_platform_driver(bxtwc_driver);
->  
-> +MODULE_DESCRIPTION("Intel Broxton Whiskey Cove PMIC MFD core driver");
->  MODULE_LICENSE("GPL v2");
->  MODULE_AUTHOR("Qipeng Zha <qipeng.zha@intel.com>");
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index 6ad5c93027af..b2742b1dce0c 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -437,5 +437,6 @@ int devm_mfd_add_devices(struct device *dev, int id,
->  }
->  EXPORT_SYMBOL(devm_mfd_add_devices);
->  
-> +MODULE_DESCRIPTION("Core MFD support");
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("Ian Molton, Dmitry Baryshkov");
-> diff --git a/drivers/mfd/pcf50633-gpio.c b/drivers/mfd/pcf50633-gpio.c
-> index 4d2b53b12eeb..3e368219479a 100644
-> --- a/drivers/mfd/pcf50633-gpio.c
-> +++ b/drivers/mfd/pcf50633-gpio.c
-> @@ -88,4 +88,5 @@ int pcf50633_gpio_power_supply_set(struct pcf50633 *pcf,
->  }
->  EXPORT_SYMBOL_GPL(pcf50633_gpio_power_supply_set);
->  
-> +MODULE_DESCRIPTION("NXP PCF50633 GPIO Driver");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/mfd/rt4831.c b/drivers/mfd/rt4831.c
-> index f8d6dc55b558..1ab8870e4ebf 100644
-> --- a/drivers/mfd/rt4831.c
-> +++ b/drivers/mfd/rt4831.c
-> @@ -115,4 +115,5 @@ static struct i2c_driver rt4831_driver = {
->  module_i2c_driver(rt4831_driver);
->  
->  MODULE_AUTHOR("ChiYuan Huang <cy_huang@richtek.com>");
-> +MODULE_DESCRIPTION("Richtek RT4831 core driver");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/mfd/ssbi.c b/drivers/mfd/ssbi.c
-> index f849f2d34ec7..6e7aff6e2746 100644
-> --- a/drivers/mfd/ssbi.c
-> +++ b/drivers/mfd/ssbi.c
-> @@ -319,6 +319,7 @@ static struct platform_driver ssbi_driver = {
->  };
->  module_platform_driver(ssbi_driver);
->  
-> +MODULE_DESCRIPTION("Qualcomm Single-wire Serial Bus Interface (SSBI) driver");
->  MODULE_LICENSE("GPL v2");
->  MODULE_VERSION("1.0");
->  MODULE_ALIAS("platform:ssbi");
-> diff --git a/drivers/mfd/timberdale.c b/drivers/mfd/timberdale.c
-> index a41e9a3e2064..333d5b874de3 100644
-> --- a/drivers/mfd/timberdale.c
-> +++ b/drivers/mfd/timberdale.c
-> @@ -853,4 +853,5 @@ module_pci_driver(timberdale_pci_driver);
->  
->  MODULE_AUTHOR("Mocean Laboratories <info@mocean-labs.com>");
->  MODULE_VERSION(DRV_VERSION);
-> +MODULE_DESCRIPTION("Timberdale FPGA MFD driver");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/mfd/vexpress-sysreg.c b/drivers/mfd/vexpress-sysreg.c
-> index eab82619ec31..d34d58ce46db 100644
-> --- a/drivers/mfd/vexpress-sysreg.c
-> +++ b/drivers/mfd/vexpress-sysreg.c
-> @@ -132,4 +132,5 @@ static struct platform_driver vexpress_sysreg_driver = {
->  };
->  
->  module_platform_driver(vexpress_sysreg_driver);
-> +MODULE_DESCRIPTION("Versatile Express system registers driver");
->  MODULE_LICENSE("GPL v2");
+> This kind of makes me wonder if we don't want to have some documentation
+> that specifies what the userspace can expect from the timestamps, so
+> that this isn't changed randomly in the future breaking what was fixed
+> by this patch.
 
-For the vexpress-sysreg.c:
+I think timestamp handling should really be moved to userspace. It will
+be easier to handle with floating-point arithmetic there. That would
+have been difficult to manage for applications a while ago, but now that
+we have libcamera, we could implement it there. This isn't high on my
+todo list though.
 
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-
-Best regards,
-Liviu
-
+> Anyway:
 > 
-> ---
-> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-> change-id: 20240609-md-drivers-mfd-ef0e92e2f8da
-> 
+> Reviewed-by: Tomasz Figa <tfiga@chromium.org>
 
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+Regards,
+
+Laurent Pinchart
