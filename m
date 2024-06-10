@@ -1,213 +1,135 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.adeep.su (mx.adeep.su [185.250.0.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492356F318;
-	Mon, 10 Jun 2024 08:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC6A4D8A0;
+	Mon, 10 Jun 2024 08:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.250.0.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718008837; cv=none; b=Ub6jxvVQysZtnLDaB+DxXyoN63A75nVvaUUeX9JU6zriYAjd0M0PFNBySd//GaTQ+h6UBwaLrJDvM4A3Py6sCIw+/A4GGweX489Ijw8g2Z4h+vvMG9xKivNDgIhCCCCQqufaBoXi1DyIGPBF/88E8plZhk1NMjFODTZOxpqroPI=
+	t=1718008874; cv=none; b=a8xzv8l+pJ1QCK6hceyOsRyuh3Elc4/l6J3PQladZp0gxodiyvfZwa51QLdXkTphgIvyWfSNZiBj0gYcMWZKXn+xy7PYEyZ/+B+yySSJcHq0WoP11JhJxzLQ+8m8WOPZR8pURK71d0cnXaUgdT1mlKjMhSb5EIB7CqWYjc0qpHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718008837; c=relaxed/simple;
-	bh=9koIKek7qPhDHbcj/DeFDreV6Tr/KG7823SHacH9DrQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nrqf6oylXHPbdLhtESRGUOTzxzaKSMovdCYvaz0FJHcFRvLOR2qzMkhdPwMQ3UNGrDwFRNHvsLSlCyOUfWqWr/0skVc+xxOX7tzmvaxpJ3zCS9Wndm68dtK0aH2jzisQO3IQYaK6A4iKwwKPJLGgR74XU/eWmWAeiAYHaxwJsvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57c778b5742so1117145a12.2;
-        Mon, 10 Jun 2024 01:40:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718008834; x=1718613634;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TYQOXrTi4xC9EJqXLJeGLPx4jx3qC+GA+AGgjQf+XgM=;
-        b=RG0luP4JWDeifdo84tlIVpaLYMb6B5b7erwLXVrwaBvTBYK8WzTTgztoBej9Ztu1PD
-         vTGBIRe9gKg698PLPuS/W7zc9AbRS9o7zQIaw6B0kh8Qu91IwsrejQ6TPc1JtDKA0YR9
-         /Wpk1OBAlpsNyLXld+sZInMlAXYyqlZgcXrSP2GoLDGv9HWTYzgvno70xG/I3qByBT0J
-         fR3Z1+ozPo5T27K/1aNc7f8vofIf3NmRf+b7JBhIHvCc7eIhnT8L+VDop5x/Pp8y07pq
-         o5K/jgZxPwiEw/lEOaAr+eZv0ihJ8flEW0WdWhKl8/C206Cd1hv1wzR22yH7RxAq6ZVo
-         refw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSGB028f5qhgavkxj3znSU2pwaPCBo+BUFyMYDIf4EpWeN0bZoxS8Ld2SBpqTmPdmDI7kzcKPA8RFPKNAtsVlUqRi27b/YxSqIe/HA
-X-Gm-Message-State: AOJu0YzJU3MtJc2QMo7l+g2nvLHwNIg/iMK/ymZNmaGFU0Nhl3ZVqqMu
-	SCbLazD3lveu1Bgfj7/8D/0o7i5dKLqCjRIvSiwZeVCimGrrXPAa
-X-Google-Smtp-Source: AGHT+IEUssRf7aMIr7nHIHOQxBa4liSgGwzzqhTOMa9jN4/atsscpDFfJBN2AD426jikYbbe2pGgFA==
-X-Received: by 2002:a50:f60d:0:b0:57a:1fef:619e with SMTP id 4fb4d7f45d1cf-57c508a12dfmr5204888a12.18.1718008834380;
-        Mon, 10 Jun 2024 01:40:34 -0700 (PDT)
-Received: from [127.0.0.1] (p200300f6f7253800fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f725:3800:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c72efe054sm3259581a12.66.2024.06.10.01.40.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 01:40:34 -0700 (PDT)
-From: Johannes Thumshirn <jth@kernel.org>
-Date: Mon, 10 Jun 2024 10:40:27 +0200
-Subject: [PATCH 3/3] btrfs: split RAID stripes on deletion
+	s=arc-20240116; t=1718008874; c=relaxed/simple;
+	bh=MnVsMmU7g3peA9glJLlU6ZcqIz63HdOceSwauMxgJ9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FFakBYv4doghYHwN3HQd1HcrgmQv1mc0+QQ+mkKGNTwC3kJsEm6LqVJH3WK8kmF1K+ex+xpMNBjGUnLvqvj9dudef7LQ7gRZ3pI9mnSPc5C54ptD0mmGQSTP7jG6MiITIKQuMWz/keFqBmP39lj6sfOAXtBrUdHZ9Cov6/KXYRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=EJ3IuO7Z; arc=none smtp.client-ip=185.250.0.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="EJ3IuO7Z"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id DDC5AFACA4;
+	Mon, 10 Jun 2024 11:40:44 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
+	t=1718008860; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=KX0WP5RREiDGDx3/PUkOePlvWq8o7D3HqgRLqhu8168=;
+	b=EJ3IuO7ZXTkFnLeqgnsSL+LWgwJVOHnqXujoQN37ycugx5R5+OFSVDaLw0rtmexW7rmeAo
+	eNMqCN9t324oj9IkTOd3s4+AWD+OjlFxnTN9P42f4YvcoNQ/2WTssF5zVYBGVi0Pa5SFcP
+	5U9CBPhwpIQRx+LGohte99gjM2N8PpZCJwXu9gyX2+PrO4p9Uare87/VCPy/83IJCh6IzY
+	F8/m/km/2EwbUbI/QnAbDsh+g1YrNvzjKx4ex9JiI1T31aYYvpGGmmdBKkSbityqVR7rm/
+	R1ZK5+ErcA5FfacM0fgMOuHn/8rVEXB9tnErOioBo3NsLl7U/dFIMibwHYfUxg==
+From: Viacheslav Bocharov <adeep@lexina.in>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org
+Subject: [PATCH v5 0/4] soc: amlogic: add new meson-gx-socinfo-sm driver
+Date: Mon, 10 Jun 2024 11:39:46 +0300
+Message-ID: <20240610084032.3096614-1-adeep@lexina.in>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240610-b4-rst-updates-v1-3-179c1eec08f2@kernel.org>
-References: <20240610-b4-rst-updates-v1-0-179c1eec08f2@kernel.org>
-In-Reply-To: <20240610-b4-rst-updates-v1-0-179c1eec08f2@kernel.org>
-To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
- David Sterba <dsterba@suse.com>
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- JohnnesThumshirn <johannes.thumshirn@wdc.com>, 
- Johnnes Thumshirn <johannes.thumshirn@wdc.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3809; i=jth@kernel.org;
- h=from:subject:message-id; bh=xt1gqPtO3ScxjD8qUPejfcJ4eDxc3zKA784+waQ49mI=;
- b=owGbwMvMwCV2ad4npfVdsu8YT6slMaSl7f53OYHJt+TKzowdGx5+vhXkfvzEgdMPJ09aw/jw3
- CLzswxCbR2lLAxiXAyyYoosx0Nt90uYHmGfcui1GcwcViaQIQxcnAIwkUPxDP8dVf/+2Je3/97R
- 9fvDFk33c5ycOPHLJrPKS/EbHXSnObm1MPwvKjpay326xq6T0Zn3yc97V27phqvfz0xsvHLk+H1
- lv098AA==
-X-Developer-Key: i=jth@kernel.org; a=openpgp;
- fpr=EC389CABC2C4F25D8600D0D00393969D2D760850
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-From: JohnnesThumshirn <johannes.thumshirn@wdc.com>
+The Amlogic Meson SoC Secure Monitor implements a call to retrieve an
+unique SoC ID starting from the GX Family and all new families.
+But GX-family chips (e.g. GXB, GXL and newer) supports also 128-bit
+chip ID. 128-bit chip ID consists 32-bit SoC version and 96-bit OTP data.
 
-The current RAID stripe code assumes, that we will always remove a
-whole stripe entry.
+This is next attempt to publish data from the Amlogic secure monitor
+chipid call. After discussions with Neil Armstrong, it was decided to
+publish the chipid call results through the soc driver. Since
+soc_device_match cannot wait for the soc driver to load, and the secure
+monitor calls in turn depend on the sm driver, it was necessary to create
+a new driver rather than expand an existing one.
 
-But ff we're only removing a part of a RAID stripe we're hitting the
-ASSERT()ion checking for this condition.
+In the patches, in addition to writing the driver:
+- convert commonly used structures and functions of the meson-gx-socinfo
+driver to a header file.
+- add secure-monitor references for amlogic,meson-gx-ao-secure sections
+in dts files of the a1, axg, g12, gx families.
 
-Instead of assuming the complete deletion of a RAID stripe, split the
-stripe if we need to.
 
-Signed-off-by: Johnnes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- fs/btrfs/raid-stripe-tree.c | 101 +++++++++++++++++++++++++++++++++-----------
- 1 file changed, 77 insertions(+), 24 deletions(-)
 
-diff --git a/fs/btrfs/raid-stripe-tree.c b/fs/btrfs/raid-stripe-tree.c
-index 3020820dd6e2..41403217c3e6 100644
---- a/fs/btrfs/raid-stripe-tree.c
-+++ b/fs/btrfs/raid-stripe-tree.c
-@@ -33,42 +33,95 @@ int btrfs_delete_raid_extent(struct btrfs_trans_handle *trans, u64 start, u64 le
- 	if (!path)
- 		return -ENOMEM;
- 
--	while (1) {
--		key.objectid = start;
--		key.type = BTRFS_RAID_STRIPE_KEY;
--		key.offset = length;
-+again:
-+	key.objectid = start;
-+	key.type = BTRFS_RAID_STRIPE_KEY;
-+	key.offset = length;
- 
--		ret = btrfs_search_slot(trans, stripe_root, &key, path, -1, 1);
--		if (ret < 0)
--			break;
--		if (ret > 0) {
--			ret = 0;
--			if (path->slots[0] == 0)
--				break;
--			path->slots[0]--;
--		}
-+	ret = btrfs_search_slot(trans, stripe_root, &key, path, -1, 1);
-+	if (ret < 0)
-+		goto out;
-+	if (ret > 0) {
-+		ret = 0;
-+		if (path->slots[0] == 0)
-+			goto out;
-+		path->slots[0]--;
-+	}
-+
-+	leaf = path->nodes[0];
-+	slot = path->slots[0];
-+	btrfs_item_key_to_cpu(leaf, &key, slot);
-+	found_start = key.objectid;
-+	found_end = found_start + key.offset;
-+
-+	/* That stripe ends before we start, we're done. */
-+	if (found_end <= start)
-+		goto out;
-+
-+	trace_btrfs_raid_extent_delete(fs_info, start, end,
-+				       found_start, found_end);
-+
-+	if (found_start < start) {
-+		u64 diff = start - found_start;
-+		struct btrfs_key new_key;
-+		int num_stripes;
-+		struct btrfs_stripe_extent *stripe_extent;
-+
-+		new_key.objectid = start;
-+		new_key.type = BTRFS_RAID_STRIPE_KEY;
-+		new_key.offset = length - diff;
-+
-+		ret = btrfs_duplicate_item(trans, stripe_root, path,
-+					   &new_key);
-+		if (ret)
-+			goto out;
- 
- 		leaf = path->nodes[0];
- 		slot = path->slots[0];
--		btrfs_item_key_to_cpu(leaf, &key, slot);
--		found_start = key.objectid;
--		found_end = found_start + key.offset;
- 
--		/* That stripe ends before we start, we're done. */
--		if (found_end <= start)
--			break;
-+		num_stripes =
-+			btrfs_num_raid_stripes(btrfs_item_size(leaf, slot));
-+		stripe_extent =
-+			btrfs_item_ptr(leaf, slot, struct btrfs_stripe_extent);
- 
--		trace_btrfs_raid_extent_delete(fs_info, start, end,
--					       found_start, found_end);
-+		for (int i = 0; i < num_stripes; i++) {
-+			struct btrfs_raid_stride *raid_stride =
-+				&stripe_extent->strides[i];
-+			u64 physical =
-+				btrfs_raid_stride_physical(leaf, raid_stride);
- 
--		ASSERT(found_start >= start && found_end <= end);
--		ret = btrfs_del_item(trans, stripe_root, path);
-+			btrfs_set_stack_raid_stride_physical(raid_stride,
-+							     physical + diff);
-+		}
-+
-+		btrfs_mark_buffer_dirty(trans, leaf);
-+		btrfs_release_path(path);
-+		goto again;
-+	}
-+
-+	if (found_end > end) {
-+		u64 diff = found_end - end;
-+		struct btrfs_key new_key;
-+
-+		new_key.objectid = found_start;
-+		new_key.type = BTRFS_RAID_STRIPE_KEY;
-+		new_key.offset = length - diff;
-+
-+		ret = btrfs_duplicate_item(trans, stripe_root, path,
-+					   &new_key);
- 		if (ret)
--			break;
-+			goto out;
- 
-+		btrfs_mark_buffer_dirty(trans, leaf);
- 		btrfs_release_path(path);
-+		goto again;
-+
- 	}
- 
-+	if (found_start == start && found_end == end)
-+		ret = btrfs_del_item(trans, stripe_root, path);
-+
-+ out:
- 	btrfs_free_path(path);
- 	return ret;
- }
+Patch based on top:
+- add new A113X SoC https://lore.kernel.org/linux-kernel/171766521601.3911648.2220702176918701226.b4-ty@linaro.org/T/
+- Add S905L ID https://lore.kernel.org/linux-kernel/171766521524.3911648.14792995642693649032.b4-ty@linaro.org/T/
 
+https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.11/drivers)
+
+Changes
+ v4 [1] -> v5:
+ - split patch for A113X SoC id
+ - fix warnings
+ - add dt-bindings
+ v3 [2] -> v4:
+ - rebase
+ - fix double free of pointers, thanks to Krzysztof Kozlowski
+
+ v2 [3] -> v3:
+ - rebase
+ - update dependency in Kconfig for MESON_GX_SOCINFO_SM
+ - add links to secure-monitor in soc driver sections for A1, AXG, GX, G12
+
+ v1 [4] -> v2:
+ - create cpu_id structure for socinfo variable
+ - create meson_sm_chip_id for result of sm call
+ - remove shared functions
+ - move from funcs for bit operations to C bit fields
+
+
+Links:
+ - [1] https://lore.kernel.org/linux-kernel/20240516112849.3803674-2-adeep@lexina.in/
+ - [2] https://lore.kernel.org/linux-arm-kernel/ZfMJ_Z07QkwFbOuQ@bogus/T/
+ - [3] https://lore.kernel.org/linux-arm-kernel/20240221143654.544444-1-adeep@lexina.in/
+ - [4] https://lore.kernel.org/linux-arm-kernel/202311242104.RjBPI3uI-lkp@intel.com/T/
+
+
+Viacheslav Bocharov (4):
+  soc: amlogic: meson-gx-socinfo: move common code to header file
+  soc: amlogic: meson-gx-socinfo-sm: Add Amlogic secure-monitor SoC
+    Information driver
+  dt-bindings: arm: amlogic: amlogic,meson-gx-ao-secure: add
+    secure-monitor property
+  arm64: dts: meson: add dts links to secure-monitor for soc driver in
+    a1, axg, gx, g12
+
+ .../amlogic/amlogic,meson-gx-ao-secure.yaml   |   4 +
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi     |   1 +
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |   1 +
+ .../boot/dts/amlogic/meson-g12-common.dtsi    |   1 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |   1 +
+ drivers/soc/amlogic/Kconfig                   |  10 +
+ drivers/soc/amlogic/Makefile                  |   1 +
+ .../soc/amlogic/meson-gx-socinfo-internal.h   | 128 ++++++++++++
+ drivers/soc/amlogic/meson-gx-socinfo-sm.c     | 190 ++++++++++++++++++
+ drivers/soc/amlogic/meson-gx-socinfo.c        | 140 ++-----------
+ 10 files changed, 352 insertions(+), 125 deletions(-)
+ create mode 100644 drivers/soc/amlogic/meson-gx-socinfo-internal.h
+ create mode 100644 drivers/soc/amlogic/meson-gx-socinfo-sm.c
+
+
+base-commit: 9584e2b31432a608bf29d074ac39e855eeee2207
 -- 
-2.43.0
+2.45.2
 
