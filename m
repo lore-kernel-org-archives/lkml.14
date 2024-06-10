@@ -1,176 +1,172 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC49158D92
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67192158DCA;
+	Mon, 10 Jun 2024 16:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037787; cv=none; b=g/6eHqr8sxDcJ5tNwuN3Ke9yD5VPhBKftiMFcyX7B4c/sFWI+mHf+7HscF4SytV2psjoGNqtAelFpdc7XDKXHQowGpY0u++4ZWdVSM/tEDP8imxJzz6l/EZN6NfNXOCbAp2SWJTithT5fWz8v5q8u4HSzQdrGi2ZbyuQMBOzZzg=
+	t=1718037789; cv=none; b=fQNVaUQLeV1esEOipyzaG4Ok+8IGzJbAjeOeoHhnjkfs6pUZ2sGVgI/RZVJ6jSMIruay8S5W6XRHJrP4kVKB32+x3lRWS8ylLnFT9dP7X3ouHBmW4L5LFb43Mh678I7xk75J+klQvQklbfqi1teVtSC1xLrKrVukZ56JHLYZasw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718037787; c=relaxed/simple;
-	bh=ojSHAmzDSUCtV20tG0Eic6qt8OMUSGLWdNQCp73/DO0=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=E/Vkqk6zXOVHElUuIqiZKg02I0/UZgbsnOuITCifjRablf+/ZxH7VOlwaWFxNP/CfpCjlv7muCnyq7V3KQ0aykEzYb6T0ZaPK8JoYL8DDGALotnbxgdmz7uGEzJhm+sdXZvdYFHn6ffFJMzg1PmdTCs08Vduq/EeMXephfRWPrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JHBGxA2z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9sue7UHJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1718037789; c=relaxed/simple;
+	bh=IwQTSFOWJavyEcAjjcodGL3Y5hzxqdXA53v2nXnt/u8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G1rEOwdQJGUXCffzdheiDf6OKbe6J0JjuCH1+K9K2931WyDoD9kYup9irjBoE+6EW1TsM29+uC49NDlB1q/l0XYG1d1jlyQSYV2GsziUVzLPj0I9jMogyv8OO/IognXm6z9MBxiCYUnb4+0KYmRfPgT7hE96fZz542yphF9yIME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WGN7TOZO; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JHBGxA2z";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9sue7UHJ"
-Message-ID: <20240610164028.472552548@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037784;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=bzEboz8AUjwt0LmBupDNjtajHSCekoKcw08hOKXcNgs=;
-	b=JHBGxA2zo3ckjoiV+jfcQFRkEegNH5I7sEkHaNRQSFyeYMnVXEo/+80EV3Jn4SLb+mLdyv
-	uV6cuxCfGeg3EJS3gt/22aqX5qpuzwCtpWqqPSp5mKqEfVTRDIqv3gIc+lp++4g6zVEAOU
-	Rqj3k9gBP5idUKSCv6j1vy4EcZ+yP99Ph9Wt9J9nMC6ojAu4V+RIioMFHwVH8LYZc5N7jm
-	jXAIXgKbn1jfQ7nrdb2sq2KkpM+QLtY3M0+EtYCmcWmwjyJbDUsgoBqh27/A6PLj6PQPPd
-	osFyDV2mbp9YK0IuDwwnauy3Zp9g6gI9J2BhB2++izRXT9tU4P21FXTvQoN/cA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037784;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=bzEboz8AUjwt0LmBupDNjtajHSCekoKcw08hOKXcNgs=;
-	b=9sue7UHJ0fM9lfxdYR+ucFA4iFErDrsi1NyiT0OsKC01vB+6fbz6IUP3AhMzjFaG7sRFFN
-	mO+lkdzMXcw2glDA==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>,
- John Stultz <jstultz@google.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Stephen Boyd <sboyd@kernel.org>,
- Eric Biederman <ebiederm@xmission.com>,
- Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 48/51] signal: Queue ignored posixtimers on ignore list
-References: <20240610163452.591699700@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGN7TOZO"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-6819d785528so3075427a12.3;
+        Mon, 10 Jun 2024 09:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718037786; x=1718642586; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aknRXtfNpDT3/xW3+oSc9LSjDIZNf+C1csd3Fn/F4Pc=;
+        b=WGN7TOZOtukQpT1tcpzEXy4aTNFYSqav5snLmMslY8wEDIDGWl6/4Kadmvr8KFiyoD
+         6MDEAmn6I0IvWHd+p76bZZEZOKRgstO5sT0W0U1G1ULwXmxFG9wH1DT4eOSa4nabwyuJ
+         cESrvSpJT6StggS+DLSj+W/ChodXoVYg7wJw7244qaJuWgpnxksJWvI/NzNMm3IniHgH
+         w6hUL5gKjs4tL+t+0LCUwmBZuYJGIO2MBX6fjS8kIvHw4j+6llGJ6JDP8dfxOon+cn9I
+         x8B9MbiO2or52h2E26la5x0Vpd949exOCysyaEgB0gfiu3nONbiAPlBgOnt0Cx4yU29K
+         ZoxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718037786; x=1718642586;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aknRXtfNpDT3/xW3+oSc9LSjDIZNf+C1csd3Fn/F4Pc=;
+        b=UOUEftlUaHv/r2mVvW+6Ma8gAIIabQY1UWGAhhdNKqn0N795xTBgmfriElzPF+5FQT
+         2zn1PTGRAPWLprdQB1XgDnGTP2IS/LhlkdVKKlwA/feVjaG88iP9GG8R03PbCswEfsZG
+         bw/Up3lK1Veay3ePStwTBeQc+zBN9YHJ8T+GcpZsUQaTD5BOvKTEHd9MN89/VUcMxuXm
+         uIcb3gDS0D2/H+bCruf1P0JZgmPLCeN8K1ab3MopmTh2JZr4zGZ1Czu7G0HYWztm3huY
+         viOLsJ0DZNFIF7UztaaXZpJHxMVLYbfOoUQqRGLurD4JDcXnN/g8Bscq6WB4ZQSPfeZE
+         goMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXv9vVKl4cIcwbvMPNRSK8nSFNhkqF1ZzIK8KvYCyzu+qs6Fpxf9vn7HP0ZF3kCZRmARhEGoCi+i6+AnYskRsx4F5bIzj/sranuCLwp
+X-Gm-Message-State: AOJu0YzmtEMuLtrrA7tASWnrTHYjzYLYYodtu/yIOJMNf/napmkCf166
+	zoPbSF69mtScIQ0bk17mQAjYZFPGLrEMoqRfcJTlQSFb3PcTN7qiIWvXSw==
+X-Google-Smtp-Source: AGHT+IGQYbGCW3K8Egt7GL8o0/riJ5NpNxqOn/9udrMNHxZvhUzXPvqmDpxeSsd78eWiFeGORJ2cow==
+X-Received: by 2002:a17:902:c404:b0:1f7:2135:ce7c with SMTP id d9443c01a7336-1f72135cfdfmr15024635ad.28.1718037786016;
+        Mon, 10 Jun 2024 09:43:06 -0700 (PDT)
+Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:83cc:2314:b3bd:bf64])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f72479ab2esm5235845ad.308.2024.06.10.09.43.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 09:43:05 -0700 (PDT)
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: linux-input@vger.kernel.org,
+	Nuno Sa <nuno.sa@analog.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/4] Input: adxl34x - use device core to create driver-specific device attributes
+Date: Mon, 10 Jun 2024 09:42:57 -0700
+Message-ID: <20240610164301.1048482-1-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:43:04 +0200 (CEST)
+Content-Transfer-Encoding: 8bit
 
-Queue posixtimers which have their signal ignored on the ignored list:
+Instead of creating driver-specific device attributes with
+sysfs_create_group() have device core do this by setting up dev_groups
+pointer in the driver structure.
 
-   1) When the timer fires and the signal has SIG_IGN set
-
-   2) When SIG_IGN is installed via sigaction() and a timer signal
-      is queued
-
-This completes the SIG_IGN handling and such timers are not longer self
-rearmed which avoids pointless wakeups.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- kernel/signal.c |   44 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 36 insertions(+), 8 deletions(-)
 
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -722,6 +722,16 @@ void signal_wake_up_state(struct task_st
- 		kick_process(t);
- }
+v2: added Nono's ACK
+
+ drivers/input/misc/adxl34x-i2c.c |  1 +
+ drivers/input/misc/adxl34x-spi.c |  1 +
+ drivers/input/misc/adxl34x.c     | 15 +++++++--------
+ drivers/input/misc/adxl34x.h     |  1 +
+ 4 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/input/misc/adxl34x-i2c.c b/drivers/input/misc/adxl34x-i2c.c
+index d4014e367c77..7531c7b2d657 100644
+--- a/drivers/input/misc/adxl34x-i2c.c
++++ b/drivers/input/misc/adxl34x-i2c.c
+@@ -132,6 +132,7 @@ MODULE_DEVICE_TABLE(of, adxl34x_of_id);
+ static struct i2c_driver adxl34x_driver = {
+ 	.driver = {
+ 		.name = "adxl34x",
++		.dev_groups = adxl34x_groups,
+ 		.pm = pm_sleep_ptr(&adxl34x_pm),
+ 		.of_match_table = adxl34x_of_id,
+ 	},
+diff --git a/drivers/input/misc/adxl34x-spi.c b/drivers/input/misc/adxl34x-spi.c
+index f1094a8ccdd5..2befcc4df0be 100644
+--- a/drivers/input/misc/adxl34x-spi.c
++++ b/drivers/input/misc/adxl34x-spi.c
+@@ -97,6 +97,7 @@ static void adxl34x_spi_remove(struct spi_device *spi)
+ static struct spi_driver adxl34x_driver = {
+ 	.driver = {
+ 		.name = "adxl34x",
++		.dev_groups = adxl34x_groups,
+ 		.pm = pm_sleep_ptr(&adxl34x_pm),
+ 	},
+ 	.probe   = adxl34x_spi_probe,
+diff --git a/drivers/input/misc/adxl34x.c b/drivers/input/misc/adxl34x.c
+index a3f45e0ee0c7..fbe5a56c19d1 100644
+--- a/drivers/input/misc/adxl34x.c
++++ b/drivers/input/misc/adxl34x.c
+@@ -664,6 +664,12 @@ static const struct attribute_group adxl34x_attr_group = {
+ 	.attrs = adxl34x_attributes,
+ };
  
-+static inline void posixtimer_sig_ignore(struct task_struct *tsk, struct sigqueue *q);
++const struct attribute_group *adxl34x_groups[] = {
++	&adxl34x_attr_group,
++	NULL
++};
++EXPORT_SYMBOL_GPL(adxl34x_groups);
 +
-+static void sigqueue_free_ignored(struct task_struct *ptmr_tsk, struct sigqueue *q)
-+{
-+	if (likely(!ptmr_tsk || q->info.si_code != SI_TIMER))
-+		__sigqueue_free(q);
-+	else
-+		posixtimer_sig_ignore(ptmr_tsk, q);
-+}
-+
- /*
-  * Remove signals in mask from the pending set and queue.
-  *
-@@ -740,7 +750,7 @@ static void flush_sigqueue_mask(sigset_t
- 	list_for_each_entry_safe(q, n, &s->list, list) {
- 		if (sigismember(mask, q->info.si_signo)) {
- 			list_del_init(&q->list);
--			__sigqueue_free(q);
-+			sigqueue_free_ignored(ptmr_tsk, q);
- 		}
- 	}
- }
-@@ -1964,9 +1974,8 @@ int posixtimer_send_sigqueue(struct k_it
- 	int sig = q->info.si_signo;
- 	struct task_struct *t;
- 	unsigned long flags;
--	int ret, result;
-+	int result;
- 
--	ret = -1;
- 	rcu_read_lock();
- 
- 	t = posixtimer_get_target(tmr);
-@@ -2012,13 +2021,24 @@ int posixtimer_send_sigqueue(struct k_it
- 	 */
- 	q->info.si_overrun = 0;
- 
--	ret = 1; /* the signal is ignored */
- 	if (!prepare_signal(sig, t, false)) {
- 		result = TRACE_SIGNAL_IGNORED;
-+
-+		/* Paranoia check. Try to survive. */
-+		if (WARN_ON_ONCE(!list_empty(&q->list)))
-+			goto out;
-+
-+		if (hlist_unhashed(&tmr->ignored_list)) {
-+			hlist_add_head(&tmr->ignored_list, &t->signal->ignored_posix_timers);
-+			posixtimer_sigqueue_getref(q);
-+		}
- 		goto out;
+ static int adxl34x_input_open(struct input_dev *input)
+ {
+ 	struct adxl34x *ac = input_get_drvdata(input);
+@@ -823,13 +829,9 @@ struct adxl34x *adxl34x_probe(struct device *dev, int irq,
+ 		goto err_free_mem;
  	}
  
--	ret = 0;
-+	/* This should never happen and leaks a reference count */
-+	if (WARN_ON_ONCE(!hlist_unhashed(&tmr->ignored_list)))
-+		hlist_del_init(&tmr->ignored_list);
-+
- 	if (unlikely(!list_empty(&q->list))) {
- 		/* This holds a reference count already */
- 		result = TRACE_SIGNAL_ALREADY_PENDING;
-@@ -2033,7 +2053,14 @@ int posixtimer_send_sigqueue(struct k_it
- 	unlock_task_sighand(t, &flags);
- ret:
- 	rcu_read_unlock();
--	return ret;
-+	return 0;
-+}
-+
-+static inline void posixtimer_sig_ignore(struct task_struct *tsk, struct sigqueue *q)
-+{
-+	struct k_itimer *tmr = container_of(q, struct k_itimer, sigq);
-+
-+	hlist_add_head(&tmr->ignored_list, &tsk->signal->ignored_posix_timers);
- }
+-	err = sysfs_create_group(&dev->kobj, &adxl34x_attr_group);
+-	if (err)
+-		goto err_free_irq;
+-
+ 	err = input_register_device(input_dev);
+ 	if (err)
+-		goto err_remove_attr;
++		goto err_free_irq;
  
- static void posixtimer_sig_unignore(struct task_struct *tsk, int sig)
-@@ -2082,6 +2109,7 @@ static void posixtimer_sig_unignore(stru
- 	}
- }
- #else /* CONFIG_POSIX_TIMERS */
-+static inline void posixtimer_sig_ignore(struct task_struct *tsk, struct sigqueue *q) { }
- static inline void posixtimer_sig_unignore(struct task_struct *tsk, int sig) { }
- #endif /* !CONFIG_POSIX_TIMERS */
+ 	AC_WRITE(ac, OFSX, pdata->x_axis_offset);
+ 	ac->hwcal.x = pdata->x_axis_offset;
+@@ -889,8 +891,6 @@ struct adxl34x *adxl34x_probe(struct device *dev, int irq,
  
-@@ -4272,9 +4300,9 @@ int do_sigaction(int sig, struct k_sigac
- 		if (sig_handler_ignored(sig_handler(p, sig), sig)) {
- 			sigemptyset(&mask);
- 			sigaddset(&mask, sig);
--			flush_sigqueue_mask(&mask, &p->signal->shared_pending, NULL);
-+			flush_sigqueue_mask(&mask, &p->signal->shared_pending, p);
- 			for_each_thread(p, t)
--				flush_sigqueue_mask(&mask, &t->pending, NULL);
-+				flush_sigqueue_mask(&mask, &t->pending, p);
- 		} else if (was_ignored) {
- 			posixtimer_sig_unignore(p, sig);
- 		}
+ 	return ac;
+ 
+- err_remove_attr:
+-	sysfs_remove_group(&dev->kobj, &adxl34x_attr_group);
+  err_free_irq:
+ 	free_irq(ac->irq, ac);
+  err_free_mem:
+@@ -903,7 +903,6 @@ EXPORT_SYMBOL_GPL(adxl34x_probe);
+ 
+ void adxl34x_remove(struct adxl34x *ac)
+ {
+-	sysfs_remove_group(&ac->dev->kobj, &adxl34x_attr_group);
+ 	free_irq(ac->irq, ac);
+ 	input_unregister_device(ac->input);
+ 	dev_dbg(ac->dev, "unregistered accelerometer\n");
+diff --git a/drivers/input/misc/adxl34x.h b/drivers/input/misc/adxl34x.h
+index f9272a2e7a96..67e0ddc5c3eb 100644
+--- a/drivers/input/misc/adxl34x.h
++++ b/drivers/input/misc/adxl34x.h
+@@ -26,5 +26,6 @@ struct adxl34x *adxl34x_probe(struct device *dev, int irq,
+ void adxl34x_remove(struct adxl34x *ac);
+ 
+ extern const struct dev_pm_ops adxl34x_pm;
++extern const struct attribute_group *adxl34x_groups[];
+ 
+ #endif
+-- 
+2.45.2.505.gda0bf45e8d-goog
 
