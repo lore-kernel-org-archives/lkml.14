@@ -1,164 +1,141 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672637F499
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64BD7E57C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718021792; cv=none; b=YTtMwl78PrUAF3pD1DOLOzTYCWbE1Jlt6238z59nsqiXEstZiaxj2z6TL3EdDck3yZyOoC8/3KHBgIFxwYVjWLKT0fRRlF1vht1DCySTAGrurKxJuQ67XAyBZegrnhhyv3RtdaVTPogC1iPu7L++1+AJtNUCNJCsXze+vyFAZqU=
+	t=1718021906; cv=none; b=LnTLFPdATGI5wqMMS6xlXRh7cmtNtzt/W6Y9VQQ4MZujD2p94x3gw2gPtmQ1q6KZkU5S0xrJJnGte7dXDmJfvtx+yXo0DoibuoFiuJjHUGcUNsl5yQ1tE0Qn62CgnqFxCfm+/s4E8ZCSRaPU1QBzKOldhVXNvobY6WMv1rAXI1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718021792; c=relaxed/simple;
-	bh=wqKQas949IIXrsipBtEwY28UkuazUZ16a21oKmwHiv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gdv5uLUoVSvbuS1s3otV9TvccTmDzKLftmARLxNXpRvs3QGm6J3p81kVIwYM/m7SwbzEEF4VfXou7lga4SVM8s61quujuhRqslvXrtA9S+JVLFqMWvbbWrVoTKS5eD6g6+vbzVSNFOrIPXKbSpVcJ1oezdPfUFIhCiKWzAI1OIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=fqDNmK54; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1718021906; c=relaxed/simple;
+	bh=aQ6jk11K5ysHvETxy4Xlgu0vY/turwVtvB4rc1wailw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P1Da4UtsQ+nn1U7/QBa6DAwNqUvrXltnJ5yuKcopSqE+qPwtgYhhv4K8LZYH2g/EnXZQUUajkXg+mONiR2rqK4LwunNSYX6kYCjHoKg9dTfN78hmFgFnoO5qpb7phYUQPQ9CROgL3wA9OegNHa71ndxa6d3tZ7cXcM6qXEui6l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nYIZ+rDm; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fqDNmK54"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-627f3265898so44560097b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:16:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYIZ+rDm"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5b970e90ab8so2614505eaf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:18:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1718021788; x=1718626588; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sLBhiGTWQPkGSzXF44ZdseZQqm/Ay7CrbOb4xYeFmxw=;
-        b=fqDNmK54kqBa6EQtJoGnldfHFauQ6kcsHN8jJRtx3a3rll3Um/eyPaj3jVHFB+tyw7
-         oWllKFUvqeIWDHF887kAzWvvU2KdZlizeuujfZw56cW3rHyG0oOcnpydIhz7FnSl+hXL
-         U1KjenD06DybeKg4nnOats3t12CBNccFG6N8XmD8XbhnL0U0M5o2hd2PsPLpd5/9lTX1
-         NjMsJx1Nc/2JFedHyuBzS1TuVPQ0pno023UGN7oqWLiAo0tvFSQm4VVsGEzDH5kI2kIh
-         JYXjXf1y56GIE8lsAofXPKrSTQcUoBAoqT3pE/mAb6WpQ96S6WM6PKQTPTnkDqCnPnsn
-         7TJA==
+        d=gmail.com; s=20230601; t=1718021904; x=1718626704; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0+Az1PpLJ4JYTtMedJjbgRRlyQLWkppyc96i5melFic=;
+        b=nYIZ+rDmdHTitQPk69K7ei3+zVFySXuD9h7D2J5zw3L7WPrg/O6X/UgScIqub5BQ9h
+         oOfF1fuA/R5kixjjK38Wkgs+EBNDSjezqjHHFmryy5KVEuAJ7KQ1Dl7b6q/v6BDuMlUq
+         ifMjPCZqGzFo1iRTCZxXlDQvZUdjoeSClan0jp751bAyWxMtfCqmYf8YlqBmedYrzkls
+         dajPV/nXChVuJWHXXPNZ68/FyoMRZB5eGC7K/5X9HJIApxMTETjJQTKKSBkfTdFqwa6i
+         jcdsP1LkYOhUUjed+INi2O1lRLjvcbW6OO7WeBe2NAnZxHl37EUWemz1gNtSjcESwM6i
+         2+Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718021788; x=1718626588;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sLBhiGTWQPkGSzXF44ZdseZQqm/Ay7CrbOb4xYeFmxw=;
-        b=HM6m6A4gB7cJRMObP1lPDP7Mx4MQ/Qucola8x4LXj23QtmojMFT7rbs0WrCsL2VMT9
-         rkAWCeKLmegkNGBfoIA+vZY9tDM9wNM2QqZzOxW6y71gRSptsvcEep/TAYr0xbR6HMUe
-         hUcf6rif88EhyTihI1KHKi+mww0ficqda0GEb/WJa0w1v2lRYWSUtOmbe1s92GwzTxbj
-         ZOGSBq9QP8GmSH74OLpgRSIHBntaV8OiEz8dJBIdfd18bgPo+GmaL7cdjNLr+17VKZeu
-         ZqJgKw6vU1uVEXhAzL7PQVoq+b5GEIjQOPlIAoNKbMD8GwU7EgiwnSjKiu8n0Gi5Xgza
-         pAIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkdF6G9ImXVYSHpBJz4JnhcHj9dgMm/xqi5+jehUo1tDLR1oGjE0oH7TtpF/fC60DnlR67Ma2Yef2e2s5iQtBP+Xf2H4mOHCIHgEoC
-X-Gm-Message-State: AOJu0YzjyGpXQra60a2GtbIwZF6WWqrqyYa6/mrX18uOPH9vKRE7sDsC
-	15hbfclwbLJurVTXac7GsJH4uvGv9Y92RO1jvV7VkDijhgHp6U8dAIa4itcS9EM=
-X-Google-Smtp-Source: AGHT+IHKUHpBEHdEL4hUatHn2U1DbF50V0YQ7tp+HSd+jRZUj7MSdsNfIMBQ/mHVI5dhq2ZCcmRiZw==
-X-Received: by 2002:a81:6fd5:0:b0:627:dca5:407b with SMTP id 00721157ae682-62cd55c0a56mr87073917b3.13.1718021786857;
-        Mon, 10 Jun 2024 05:16:26 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b04f6213dfsm45360126d6.23.2024.06.10.05.16.26
+        d=1e100.net; s=20230601; t=1718021904; x=1718626704;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0+Az1PpLJ4JYTtMedJjbgRRlyQLWkppyc96i5melFic=;
+        b=Phdd1GN6Me2ki8D9iiipc07QxXxg0NPiCgw3RmRvboAVMn7/TjO37KFfk+m3Vksa9y
+         S2XAhczSqxiEAHiAJ7SkAglIkPp6bMekfNLibDw5tkuoa0dbpvkFR080j7TQtu1D9oMC
+         BM7Pwd9kBKb7gbKUQ10W2qwvBSHPBK1NjO6MdNTW9yrGWBlJhOO9hNcIoB5v1Q14avSm
+         EFVpn1qHoMUp9az8VKDjuk2H7ZqUBUfsSzZFeZrUDldmF2P21h4OEA12KhiRXGBtqEFO
+         VlJzcJhjpDscxei5IRar8Tx4Qyk8AwRSOycvSCfS3XS6gR9hh02qnJbj05bJZctPdk0i
+         d9bw==
+X-Forwarded-Encrypted: i=1; AJvYcCXN2OG8Tng+xljWV2UR8dNQtVIDegNgim+Ij610zg0x46qSsP19a5B/R1nupKGc+tSw+K4bw6DrvJeQbn5W1lHKXmMk8Ks+YewSjdR7
+X-Gm-Message-State: AOJu0YwRXa0e/bZ9NbN/jpLZMWyBKm4aI1iMIbO9fKPrRusmADCvNGo5
+	vQmOrNip2HrItVwjoRSq8LiBooMHQ7h7fNKEK/isjV5lA77ZjvUV
+X-Google-Smtp-Source: AGHT+IHlGKS8y91VhGXHAROeBpYgpO4e/NBHK33a/DUHtG9u+8/tE43i3a/RyUN7beMURh6JEM4UUQ==
+X-Received: by 2002:a05:6358:63a3:b0:19f:4d27:fb77 with SMTP id e5c5f4694b2df-19f4d27ff52mr491142255d.5.1718021903745;
+        Mon, 10 Jun 2024 05:18:23 -0700 (PDT)
+Received: from localhost (fwdproxy-ash-007.fbsv.net. [2a03:2880:20ff:7::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b063821c95sm32331886d6.96.2024.06.10.05.18.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 05:16:26 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1sGdwn-00Di9E-NN;
-	Mon, 10 Jun 2024 09:16:25 -0300
-Date: Mon, 10 Jun 2024 09:16:25 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: David Wei <dw@davidwei.uk>, David Ahern <dsahern@kernel.org>,
-	Mina Almasry <almasrymina@google.com>,
-	Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
- custom page providers
-Message-ID: <20240610121625.GI791043@ziepe.ca>
-References: <20240530201616.1316526-3-almasrymina@google.com>
- <ZlqzER_ufrhlB28v@infradead.org>
- <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
- <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
- <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
- <eb237e6e-3626-4435-8af5-11ed3931b0ac@gmail.com>
- <be2d140f-db0f-4d15-967c-972ea6586b5c@kernel.org>
- <20240607145247.GG791043@ziepe.ca>
- <45803740-442c-4298-b47e-2d87ae5a6012@davidwei.uk>
- <54975459-7a5a-46ff-a9ae-dc16ceffbab4@gmail.com>
+        Mon, 10 Jun 2024 05:18:23 -0700 (PDT)
+From: Usama Arif <usamaarif642@gmail.com>
+To: akpm@linux-foundation.org
+Cc: hannes@cmpxchg.org,
+	david@redhat.com,
+	ying.huang@intel.com,
+	hughd@google.com,
+	willy@infradead.org,
+	yosryahmed@google.com,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Usama Arif <usamaarif642@gmail.com>
+Subject: [PATCH v3 0/2] mm: store zero pages to be swapped out in a bitmap
+Date: Mon, 10 Jun 2024 13:15:58 +0100
+Message-ID: <20240610121820.328876-1-usamaarif642@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <54975459-7a5a-46ff-a9ae-dc16ceffbab4@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 10, 2024 at 02:07:01AM +0100, Pavel Begunkov wrote:
-> On 6/10/24 01:37, David Wei wrote:
-> > On 2024-06-07 17:52, Jason Gunthorpe wrote:
-> > > IMHO it seems to compose poorly if you can only use the io_uring
-> > > lifecycle model with io_uring registered memory, and not with DMABUF
-> > > memory registered through Mina's mechanism.
-> > 
-> > By this, do you mean io_uring must be exclusively used to use this
-> > feature?
-> > 
-> > And you'd rather see the two decoupled, so userspace can register w/ say
-> > dmabuf then pass it to io_uring?
-> 
-> Personally, I have no clue what Jason means. You can just as
-> well say that it's poorly composable that write(2) to a disk
-> cannot post a completion into a XDP ring, or a netlink socket,
-> or io_uring's main completion queue, or name any other API.
+Going back to the v1 implementation of the patchseries. The main reason
+is that a correct version of v2 implementation requires another rmap
+walk in shrink_folio_list to change the ptes from swap entry to zero pages to
+work (i.e. more CPU used) [1], is more complex to implement compared to v1
+and is harder to verify correctness compared to v1, where everything is
+handled by swap.
 
-There is no reason you shouldn't be able to use your fast io_uring
-completion and lifecycle flow with DMABUF backed memory. Those are not
-widly different things and there is good reason they should work
-together.
+---
+As shown in the patchseries that introduced the zswap same-filled
+optimization [2], 10-20% of the pages stored in zswap are same-filled.
+This is also observed across Meta's server fleet.
+By using VM counters in swap_writepage (not included in this
+patchseries) it was found that less than 1% of the same-filled
+pages to be swapped out are non-zero pages.
 
-Pretending they are totally different just because two different
-people wrote them is a very siloed view.
+For conventional swap setup (without zswap), rather than reading/writing
+these pages to flash resulting in increased I/O and flash wear, a bitmap
+can be used to mark these pages as zero at write time, and the pages can
+be filled at read time if the bit corresponding to the page is set.
 
-> The devmem TCP callback can implement it in a way feasible to
-> the project, but it cannot directly post events to an unrelated
-> API like io_uring. And devmem attaches buffers to a socket,
-> for which a ring for returning buffers might even be a nuisance.
+When using zswap with swap, this also means that a zswap_entry does not
+need to be allocated for zero filled pages resulting in memory savings
+which would offset the memory used for the bitmap.
 
-If you can't compose your io_uring completion mechanism with a DMABUF
-provided backing store then I think it needs more work.
+A similar attempt was made earlier in [3] where zswap would only track
+zero-filled pages instead of same-filled.
+This patchseries adds zero-filled pages optimization to swap
+(hence it can be used even if zswap is disabled) and removes the
+same-filled code from zswap (as only 1% of the same-filled pages are
+non-zero), simplifying code.
 
-Jason
+This patchseries is based on mm-unstable.
+
+
+[1] https://lore.kernel.org/all/e4d167fe-cb1e-41d1-a144-00bfa14b7148@gmail.com/
+[2] https://lore.kernel.org/all/20171018104832epcms5p1b2232e2236258de3d03d1344dde9fce0@epcms5p1/
+[3] https://lore.kernel.org/lkml/20240325235018.2028408-1-yosryahmed@google.com/
+
+---
+v2->v3:
+- Going back to the v1 version of the implementation (David and Shakeel)
+- convert unatomic bitmap_set/clear to atomic set/clear_bit (Johannes)
+- use clear_highpage instead of folio_page_zero_fill (Yosry)
+
+v1 -> v2:
+- instead of using a bitmap in swap, clear pte for zero pages and let
+  do_pte_missing handle this page at page fault. (Yosry and Matthew)
+- Check end of page first when checking if folio is zero filled as
+  it could lead to better performance. (Yosry)
+ 
+Usama Arif (2):
+  mm: store zero pages to be swapped out in a bitmap
+  mm: remove code to handle same filled pages
+
+ include/linux/swap.h |  1 +
+ mm/page_io.c         | 92 +++++++++++++++++++++++++++++++++++++++++++-
+ mm/swapfile.c        | 21 +++++++++-
+ mm/zswap.c           | 86 ++++-------------------------------------
+ 4 files changed, 119 insertions(+), 81 deletions(-)
+
+-- 
+2.43.0
+
