@@ -1,62 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673CB823A3;
-	Mon, 10 Jun 2024 13:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42B17F490;
+	Mon, 10 Jun 2024 13:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718024570; cv=none; b=M/lDc+Ux5WBWnhBJ5c7NBVFwBBym8L01GTpAUDngQh8ggR2jooo5betxsFix/1pwudOwJ3G06ALJyKhmnTSEIOCQBfQaQHhmVh13LhXL1h+Wvos9DbUETBepoMM/+mtFhGgpAxtcat0wg6GnvcikosEhPvxzUfHcBhrJZ34nvjc=
+	t=1718024671; cv=none; b=PsDXJn2L0JxpvyqnSj+i+MVl6IDoWmJm8ZO3IYW+/ORc+GuWZSXZ+/DdLKcG34MC6/aUeXeKD9dKiv0u6NPpw+k6K9bElW1Hzt6d298NYFzo5xX1JOBgTDPWvbwuFgIbNG+anjYVTVtbApZC489QDuyfFP8Q/3SNHgmL4zbq2ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718024570; c=relaxed/simple;
-	bh=p7sK+lWKq/e0CGwf5/tnpChLf3M+KMSWrSTB9SN8IkA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ahMxJxSKXH5JBCzCwrLyoEp2JCiUR2jEdPcH+y1JIa6qIZjANiIdXY9P2C47uGaDIf8S00jMhCcx1WRkPwEqVzP/EyaFW1bWEarTPDTygXJvRPmDWzhooBW0cWzLrJmQyuuH+tju1NeYLUrjd6DGmM8psGqlzm7F1irZG+Eig9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iy9X2o9C; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718024671; c=relaxed/simple;
+	bh=gFy5uq8seL4hCY4Xr66+ZSvpftxpN7tTfAvbCIN2ksM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qgLaNSz4B+KDJjZPoTM+NGF/ced1iwbyuOAjASYwU2U7DxGbYjlZ4Iwivksa/Kn2fooyTVUskRCXvatsw5MsudUdXZuNX6qfF8H05FY3zEup+GsNBXicpq1z3C+6W9sj5UrnGsbdlrdGuyOmnQBRvYyggWezP/9y/CF/hnDEI+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PeyMyi5x; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iy9X2o9C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718024569; x=1749560569;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=p7sK+lWKq/e0CGwf5/tnpChLf3M+KMSWrSTB9SN8IkA=;
-  b=iy9X2o9Cr8xRSJ7y1cy2KM9UIXJwgfDOLOV1NJmCVWnZkuFeNPN3Jyu5
-   dR9UROPqhpKo/W0yLt8CxmENouA4QYcPM4da16t0UG246FIr3Cv2DBAdp
-   eVdPgngVeZB+hHW0L8cxfxt2TTFNQu5uNa1HIVuxqIiH6XwTsZQHlu9LK
-   eFEu9zz1L9JlfUNjTmCY7S3Ywda4RHRLW0VvVnven/exTimrtGO5GNBs0
-   q/vs4xVwzeA9K/mD9Heo70BMDD+d9nAp3Hvq9ZeWJENuzp9LOnnugxkFD
-   2HY5gZUdFWHulQ1x4Dt7LPPZ/LZdFldk5xQ1XIQx0taboCl6Sohr8kOSr
-   A==;
-X-CSE-ConnectionGUID: SzFBeSPmS6CA6QJUH04wcA==
-X-CSE-MsgGUID: uX7vODkpT8OfASAKp6cLLw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="26094316"
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="26094316"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 06:02:49 -0700
-X-CSE-ConnectionGUID: y2UqLu/4QO6CVC/YWRKhlQ==
-X-CSE-MsgGUID: U6GayEYRQe2D0cKllcktdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="76510597"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by orviesa001.jf.intel.com with SMTP; 10 Jun 2024 06:02:46 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 10 Jun 2024 16:02:45 +0300
-Date: Mon, 10 Jun 2024 16:02:45 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Luca Weiss <luca.weiss@fairphone.com>,
-	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] usb: typec-mux: nb7vpq904m: unregister typec
- switch on probe error and remove
-Message-ID: <Zmb5dVRz46szJtHc@kuha.fi.intel.com>
-References: <20240606-topic-sm8x50-upstream-retimer-broadcast-mode-v2-0-c6f6eae479c3@linaro.org>
- <20240606-topic-sm8x50-upstream-retimer-broadcast-mode-v2-2-c6f6eae479c3@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PeyMyi5x"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57c778b5742so1542554a12.2;
+        Mon, 10 Jun 2024 06:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718024668; x=1718629468; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w3OjOSiZjNWeHaOOIBvf7oQi5YB7w/ApxVFJxVWV++I=;
+        b=PeyMyi5xMn16o+ga1q+c9z5GdP4ztuUVBokqi43gDVT0v2gCPxiPDQh9Cw9ZYNtKkV
+         AZBgwK1B+ce5fI9yFHaP0NzF87jewpz/XvVuFhcWpRkXhwO2aa+85FMgzpC4GikJhpUu
+         hTQfkVg3EKks/hgXvrH5L/eOjMgelC3YEJXr4bKN4BFdaRGJxuDaUq6NDK6zSEHrbvJ6
+         w2wPXwokxhgWs2pRXr9afu7PTZLhAvHZthMkvjkI8pMYD1dhb49IxHZQks5+gARvc/am
+         WSL32S2tnrBUepPNV0+Sr59Ur4LC2JZ5F2Bo5ETTbm/s2ez8oAI9JdmUUXvKzGgRBaJp
+         M78Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718024668; x=1718629468;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w3OjOSiZjNWeHaOOIBvf7oQi5YB7w/ApxVFJxVWV++I=;
+        b=FABlygSoZNKl7YVlSZvfewtsp3ZDAjZYzNZOJA//PBFEefH58zcFZJVKeC6BJ16GrM
+         uBst2R9diEF9F2W1VOTB+gOhYGnXF6uVL5uPO9P7nCFbQBDXFgVsN7mJVxpALlpT+elv
+         Qio+8nbn7q9GzyiIAYgwSS/XDT1o0uVlLiCfkEAIQXzKbs623bPt/1GkAkpTYPeJ0kNQ
+         rKB8Hz/sPbJb+RIBpOf5/bQiwmDLzAvNk/oYTgz9copXkYbQ2edHLqCyAiuhJuNtrNRN
+         xMCUrMImxrLRGRCKA8PXm2Md6KahrjCwDRUcvTL21QQIt3mnbt0Gay2zsmQKPt3CH72j
+         uNgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBYCBW7ERns0XgRxVcONUqKv1slxg7q7W0ZwXDV/aWjZsPruuQT6KyVPaGv2KrkU1PN67cBy6r2re9+z85KrvD08V2EB61KKLRjvOx5A3LAYC/vWUm/bWsgSUkdWtZIoM0BAIKcjH8+0Hz8iPLbab4GfFrLldMfK80gjPJYRm5zPDw
+X-Gm-Message-State: AOJu0Yzs7ZcrYr6tk6HB3qDw3m7s3zxifshgrey0rPtVJt0Mg+zTZMIJ
+	YHqyeg46nlDXMG04K3DYSj3a2wtFE9mr1IN3HHGM5t8XVZMBgsk8
+X-Google-Smtp-Source: AGHT+IGbeFftNngfs9iL+yY74aZcfhDYvjQpagAyudvjfKRUhBWAwokvtihjLWAYPWlZ8CMAiBlLXw==
+X-Received: by 2002:a50:9b4b:0:b0:57c:5f58:58c8 with SMTP id 4fb4d7f45d1cf-57c5f585accmr4550127a12.40.1718024667895;
+        Mon, 10 Jun 2024 06:04:27 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c708136b2sm3888560a12.83.2024.06.10.06.04.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 06:04:27 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 10 Jun 2024 15:04:25 +0200
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: shuah@kernel.org, ast@kernel.org, andrii@kernel.org, eddyz87@gmail.com,
+	daniel@iogearbox.net, olsajiri@gmail.com, quentin@isovalent.com,
+	alan.maguire@oracle.com, acme@kernel.org, mykolal@fb.com,
+	martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+	haoluo@google.com, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH bpf-next v4 06/12] bpf: selftests: Fix
+ bpf_session_cookie() kfunc prototype
+Message-ID: <Zmb52Qp__CBzbgDh@krava>
+References: <cover.1717881178.git.dxu@dxuuu.xyz>
+ <34708481d71ea72c23a78a5209e04a76b261a01d.1717881178.git.dxu@dxuuu.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,56 +76,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240606-topic-sm8x50-upstream-retimer-broadcast-mode-v2-2-c6f6eae479c3@linaro.org>
+In-Reply-To: <34708481d71ea72c23a78a5209e04a76b261a01d.1717881178.git.dxu@dxuuu.xyz>
 
-On Thu, Jun 06, 2024 at 03:11:14PM +0200, Neil Armstrong wrote:
-> Add the missing call to typec_switch_put() when probe fails and
-> the nb7vpq904m_remove() call is called.
+On Sat, Jun 08, 2024 at 03:16:02PM -0600, Daniel Xu wrote:
+> The prototype defined in bpf_kfuncs.h was not in line with how the
+> actual kfunc was defined. This causes compilation errors when kfunc
+> prototypes are generated from BTF.
 > 
-> Fixes: 348359e7c232 ("usb: typec: nb7vpq904m: Add an error handling path in nb7vpq904m_probe()")
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
+> Fix by aligning with actual kfunc definition.
+> 
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
 > ---
->  drivers/usb/typec/mux/nb7vpq904m.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  tools/testing/selftests/bpf/bpf_kfuncs.h                        | 2 +-
+>  tools/testing/selftests/bpf/progs/kprobe_multi_session_cookie.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/usb/typec/mux/nb7vpq904m.c b/drivers/usb/typec/mux/nb7vpq904m.c
-> index ed93194b16cf..569f1162ee2e 100644
-> --- a/drivers/usb/typec/mux/nb7vpq904m.c
-> +++ b/drivers/usb/typec/mux/nb7vpq904m.c
-> @@ -415,7 +415,7 @@ static int nb7vpq904m_probe(struct i2c_client *client)
+> diff --git a/tools/testing/selftests/bpf/bpf_kfuncs.h b/tools/testing/selftests/bpf/bpf_kfuncs.h
+> index be91a6919315..3b6675ab4086 100644
+> --- a/tools/testing/selftests/bpf/bpf_kfuncs.h
+> +++ b/tools/testing/selftests/bpf/bpf_kfuncs.h
+> @@ -77,5 +77,5 @@ extern int bpf_verify_pkcs7_signature(struct bpf_dynptr *data_ptr,
+>  				      struct bpf_key *trusted_keyring) __ksym;
 >  
->  	ret = nb7vpq904m_parse_data_lanes_mapping(nb7);
->  	if (ret)
-> -		return ret;
-> +		goto err_switch_put;
->  
->  	ret = regulator_enable(nb7->vcc_supply);
->  	if (ret)
-> @@ -458,6 +458,9 @@ static int nb7vpq904m_probe(struct i2c_client *client)
->  	gpiod_set_value(nb7->enable_gpio, 0);
->  	regulator_disable(nb7->vcc_supply);
->  
-> +err_switch_put:
-> +	typec_switch_put(nb7->typec_switch);
-> +
->  	return ret;
->  }
->  
-> @@ -471,6 +474,8 @@ static void nb7vpq904m_remove(struct i2c_client *client)
->  	gpiod_set_value(nb7->enable_gpio, 0);
->  
->  	regulator_disable(nb7->vcc_supply);
-> +
-> +	typec_switch_put(nb7->typec_switch);
->  }
->  
->  static const struct i2c_device_id nb7vpq904m_table[] = {
-> 
-> -- 
-> 2.34.1
+>  extern bool bpf_session_is_return(void) __ksym __weak;
+> -extern long *bpf_session_cookie(void) __ksym __weak;
+> +extern __u64 *bpf_session_cookie(void) __ksym __weak;
 
--- 
-heikki
+the original intent was to expose long instead of __u64 :-\
+
+could we rather change the bpf_session_cookie function to return long?
+should be just return value type change
+
+thanks,
+jirka
+
+
+>  #endif
+> diff --git a/tools/testing/selftests/bpf/progs/kprobe_multi_session_cookie.c b/tools/testing/selftests/bpf/progs/kprobe_multi_session_cookie.c
+> index d49070803e22..0835b5edf685 100644
+> --- a/tools/testing/selftests/bpf/progs/kprobe_multi_session_cookie.c
+> +++ b/tools/testing/selftests/bpf/progs/kprobe_multi_session_cookie.c
+> @@ -25,7 +25,7 @@ int BPF_PROG(trigger)
+>  
+>  static int check_cookie(__u64 val, __u64 *result)
+>  {
+> -	long *cookie;
+> +	__u64 *cookie;
+>  
+>  	if (bpf_get_current_pid_tgid() >> 32 != pid)
+>  		return 1;
+> -- 
+> 2.44.0
+> 
