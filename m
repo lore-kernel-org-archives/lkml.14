@@ -1,100 +1,103 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F6114F132
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 21:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024C06BB33;
+	Mon, 10 Jun 2024 21:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718056203; cv=none; b=b+UGm8JBS0yypUqe3n7I5qldizWaF57bNdovDxeMO1ufXBw/MvOPwKI7iPwrJDDR+fi+1fxJcIiOa2pKZfvB2Uuk4SJ8IHrBoN0kjjyrsSf0+w8tA0psBXGQOsogS3vpuQZ5mBBa1uvaorAhcv497AbeecVBlLUT92a0CsikIx8=
+	t=1718056245; cv=none; b=QZr32CZdgTLg50YVhLVTgBrhv6dDD0Jx6O+zJIgXXwkzX30demfoN8MYrr105t9uOZnTd+e+2PYwYMlH2uqwag7bnAKRb1mnosJJvJhYSHKqUK5vfZAKnSrC7KqleuZwKtFfXMvZgOYmy3nn5uBqHaqJmQ4kwx9ulC3eyLRTbu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718056203; c=relaxed/simple;
-	bh=aK+MvmAA8kIOyIRHZX1xsB92zhAqy/GTi5BmrSTv5XA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bz/9A7P2fkmmVy0S81HXygO2o9QtymbWOxLcbGqtZFn+nYxlRUaQDd2RswIebzm5vDL9QMWUqXBuI4snNLrN7pvk9hVGT5J0WWua/3rDzdZbI+7oWOaYYRuwqlcWgA4r+gtK0tkzhP9E9I7QsG/sZe5Sf2KaiCV3up3rmbx+RGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kq/6plVs; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718056245; c=relaxed/simple;
+	bh=TFxV9viCsgGzXh/HDil6hu+fKqnzPH+C9fRoDE52ffg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=uarjn9chKaydyCClIji8lFKWIXmRDdyFsl1MeP2AHFrMaRytvELRgS9xv10GLBUvCYGvqZUOtGj34oMlPd9JzETifppiNrScbnjaFDYakInzYJte5PBQP1scuuJrGmha+bIC5fyknrOwP6kyUX0/JPHgKAFwkGmtuyH97TGDT8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IABCUkKq; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kq/6plVs"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57c8bd6b655so7251a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:50:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718056200; x=1718661000; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eksTqXwNHrouSTPFhnmFlzzMzUPXkraejJkVTgCmu2Y=;
-        b=kq/6plVsRZ6oo66v8nVl5OXkCnnrRNuBXdQHHKKD7UiNlyko4L78ORAq7cdrEMI7wa
-         Y8p1jgmSBtY1lLT1kWaPF74NBdLYMhaQx6FRDips1IENSp+F7+527X3HJ23290XPHO9j
-         c34bcNZGtWGLR0Y0jr/pii8HY4Wbx5AHuuDxdNjS69kjLKddj0D5LAolhaz5qV+OZlPR
-         muxekwYRon/7rzlJVOyTDUWCMjyUw71WtwpoVISkbjASmm09FXdyZEiIDt7vMrN+0Wq1
-         sf0D0uwL+SdtLe3Q1u0IfIpzfwttT4xrXV06veFH0p7BcOakpe718MX4UdIR0of3N9No
-         YWTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718056200; x=1718661000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eksTqXwNHrouSTPFhnmFlzzMzUPXkraejJkVTgCmu2Y=;
-        b=wVbY7/rwfu9tb/kipMie1YwXXnHXtFzaaHzWlLML6KiXgYRWbs9za73FAgw4ySDCmv
-         n9+H3RBl/8/yPGwHItkJWX7+zSwaYtDp6UUlMsPoiMJ0m8ErHlKg6TtntyhFXh4PGQUz
-         Hf9AYc4EYVtFbNmH/uroKl4YqpnLNBdoHS/EuujwnyjTAao+9PVOUbVGOM98sNnVpVIe
-         sJMf7fd4i6sJY/92Ev/d3hMO83HqDAqBmkOZYGJAgW7ACCnYzo9LaYmq0Iu8yS2X0DDx
-         4jo9F2C7zlNh9KTOhRrO6O5f/f4ZcZlEqnp1TF4FGxIpIRE3VbJzrbIFRKrnLW2ydLTo
-         /8YA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7EyuuvkN5bWlZsdiPKbvkMsb/qTNVStxq6aHo2eR4EcLi/oGvVKkd96HuATc4nvm0kUeISgk3arrNTQ7TZnS2NoPnp5CrkWPCV4a3
-X-Gm-Message-State: AOJu0Yy3bkAeSmK8eZ1PywE58AAjjLUHJx5Q65CPg5bxSK4XYQZ0Vp20
-	dpUGwOzbe7TXkSnchyJfTPDwSDc3AcDJKjVo1+d62YWbG5jNrPU3EfHfWBPsQmoazBOP4Rb/QDq
-	qerrh7cYJcTQ52T3r1dQJBr48B4VakbjeM+Mn
-X-Google-Smtp-Source: AGHT+IEozEHs8y0agsnFtGYgTtaJTexOkSr0dHamKFFC+EB2Pbn/u2SuG9c90Sc0TBhIuA40/EQByAp0Kf4h7dBxnoA=
-X-Received: by 2002:a05:6402:746:b0:57c:93b9:1f34 with SMTP id
- 4fb4d7f45d1cf-57c93b91fc2mr3662a12.0.1718056199485; Mon, 10 Jun 2024 14:49:59
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IABCUkKq"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45AEm5f5006815;
+	Mon, 10 Jun 2024 21:50:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Xmr+t7hg7hJrqIQO0ea69r
+	tcJI6nRDI2vfR2R9N+DhQ=; b=IABCUkKqdHHmusndhev+/NzR8jSIa1/Wji0KUI
+	IbeNVJPm2ouMjnED3uyHr5Nb2O8cmyQ6gDJ2jMpUmJMEbyuOCwUhFYWrChmzPuxP
+	eUPHqwqbdLhkin3ixibdjXDeD/KerGa8Sq93dFkya3vO+H++Jb9O89EmOX7uIm3e
+	8AXWfKozY/MHlCXP4d66c15GVdMwN00T3ATSGjIsICh+eEXD+xrQXPmhjYLvC1Im
+	pxC3m07M/UJXYifbHM4ONZvIB31r+qq3MQ4/1Pau0DR/fn89rsKtpN2cdxmzsALn
+	S9D/Rp0zLl0hEEa8I/lUofuB9GeiGDPoAKHA+m/a4m3CkaWA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymgk8vtdk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 21:50:40 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45ALodue027898
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 21:50:39 GMT
+Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Jun
+ 2024 14:50:38 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Mon, 10 Jun 2024 14:50:37 -0700
+Subject: [PATCH] platform/chrome: cros_ec_proto: add missing
+ MODULE_DESCRIPTION() macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZmJJ7lZdQuQop7e5@tahera-OptiPlex-5000> <ZmLEoBfHyUR3nKAV@google.com>
- <ZmNic8S1KtyLcp7i@tahera-OptiPlex-5000> <20240610.Aifee5ingugh@digikod.net>
-In-Reply-To: <20240610.Aifee5ingugh@digikod.net>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 10 Jun 2024 23:49:21 +0200
-Message-ID: <CAG48ez3MBGi6i9Xcj29+pD9Lo1_hKkEtWYn-jNqvOZ_WWQZjYA@mail.gmail.com>
-Subject: Re: [PATCH v3] landlock: Add abstract unix socket connect restriction
-To: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc: Tahera Fahimi <fahimitahera@gmail.com>, =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	outreachy@lists.linux.dev, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240610-md-drivers-platform-chrome-v1-1-f9c75adcc1ca@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIACx1Z2YC/x3MSwqDMBAA0KvIrDuQhCDSq5Qu8hmbAZPIxIog3
+ t20y7d5JzQSpgbP4QShnRvX0qEfA4TkyoeQYzcYZawatcIcMQrvJA3XxW1zlYwhSc2EOkzWj3a
+ yJnjowSo08/HPX+9u7xqhF1dC+pULl++B2bWNBK7rBkT8reuLAAAA
+To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
+        Guenter Roeck <groeck@chromium.org>
+CC: <chrome-platform@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: rV2IW1dhTdhSKeDRxO1BybYEnDh8Pyyd
+X-Proofpoint-ORIG-GUID: rV2IW1dhTdhSKeDRxO1BybYEnDh8Pyyd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_06,2024-06-10_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 clxscore=1011
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406100162
 
-On Mon, Jun 10, 2024 at 6:36=E2=80=AFPM Micka=C3=ABl Sala=C3=BCn <mic@digik=
-od.net> wrote:
-> On Fri, Jun 07, 2024 at 01:41:39PM -0600, Tahera Fahimi wrote:
-> > On Fri, Jun 07, 2024 at 10:28:35AM +0200, G=C3=BCnther Noack wrote:
-> > > Is it intentional that you are both restricting the connection and th=
-e sending
-> > > with the same flag (security_unix_may_send)?  If an existing Unix Dom=
-ain Socket
-> > > gets passed in to a program from the outside (e.g. as stdout), should=
-n't it
-> > > still be possible that the program enables a Landlock policy and then=
- still
-> > > writes to it?  (Does that work?  Am I mis-reading the patch?)
->
-> If a passed socket is already connected, then a write/send should work.
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/chrome/cros_kunit_proto_test.o
 
-If I'm reading unix_dgram_sendmsg() correctly, we'll always hit
-security_unix_may_send() for any UNIX socket type other than
-SOCK_SEQPACKET (meaning SOCK_STREAM and SOCK_DGRAM), even if the
-socket is already connected, and then we'll do the landlock check.
-That's probably not the intended behavior for Landlock, unless I'm
-misreading the code?
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
 
-Maybe to get nice semantics it's necessary to add a parameter to
-security_unix_may_send() that says whether the destination address
-came from the caller or from the socket?
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ drivers/platform/chrome/cros_ec_proto_test.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/chrome/cros_ec_proto_test.c b/drivers/platform/chrome/cros_ec_proto_test.c
+index 41378c2ee6a0..3960f7c16eb0 100644
+--- a/drivers/platform/chrome/cros_ec_proto_test.c
++++ b/drivers/platform/chrome/cros_ec_proto_test.c
+@@ -2740,4 +2740,5 @@ static struct kunit_suite cros_ec_proto_test_suite = {
+ 
+ kunit_test_suite(cros_ec_proto_test_suite);
+ 
++MODULE_DESCRIPTION("Kunit tests for ChromeOS Embedded Controller protocol");
+ MODULE_LICENSE("GPL");
+
+---
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+change-id: 20240610-md-drivers-platform-chrome-1c84b64842cb
+
