@@ -1,230 +1,132 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2013261FF6;
-	Mon, 10 Jun 2024 13:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337BA4501B
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 13:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718025151; cv=none; b=hK5DkvHUHzoiMaQrBmVqRDpQf14L8Xygv2N+xDdrssDre4eCdMxI3PGSIYoFglquDzL7pQnYAP8fQLdPWsyKym203iPGD8i0fhDJclpOitFBX9M5H2EaeUENU7dOV4IXGHemSUXk5hd6ODkV9b1XZLV+de5t5WuqYEjb3MWyEVg=
+	t=1718025348; cv=none; b=NbsgWiFwb2ZyKqz9hkbeM41OBlVTuTzP4UAeMdro+OSv9NfxE4Ojb1IGLPu68dMhrQ/tByLWnAeMvzLP3EDPwxu0se+eD4byJcIxhU9FNi3ObvPUByiW5EdfE5v0QGTXqy+JYHE97NrmLcIVhodGDeVxWDUWO1LtX/oNLj58RyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718025151; c=relaxed/simple;
-	bh=ymeOZU7Z2tgdqyG1BMQRe55vCcHS2BQDdDO3NvijkUg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZfyJcKMrA4CKz2H0XXTpig0GRa6hjB1IEH7EvHTyCyIcGZrU6r2AOtKr55sipqZ0tsEfnu+CtbUvkJHzqrANCZKoEYEkJaM66JcFBp+40Z2Bni0DG79gOjsYZr4uEmWFfDi7CZvKigzVx4MmyuEw838LZB/A4RRIR43j/86fgp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=cZI00csU; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="cZI00csU"
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 5C69A120006;
-	Mon, 10 Jun 2024 16:12:25 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 5C69A120006
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1718025145;
-	bh=IWZrEwuTJkoogvnkxqBjRGrdkBJ1nExW1PH+tGB1JV4=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
-	b=cZI00csUWK7nsz5ngl+sFZ+eEfWCnXrncjuMczxN/ArQhIZ7r7L5u4GAAb68huASr
-	 9tjxRx5AIudNcD5P2QwlaOx3m3PZXeheTRpwO/3vkqS+yzq+YylytunwafIr/aGvQh
-	 Paj8M/Q9hJW1wGGO3EdrUV98EdkuVzX5VYj3aKkDcdd+9VtbS1COF244zaYd5ZmCCm
-	 19sBZVIUftbQbZvIcZkkjYnm4h4wgRi1xVacIFSiJx+6SosLbhKSBfxT8UstcPCHBP
-	 y6m0xWqLnJJodoAdKCHaWLA1+L4ihH0LM7olgnHlGdwZTPGG9kqzcZRbvcXC5OVS8m
-	 zLF1TRnQXxIUg==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Mon, 10 Jun 2024 16:12:25 +0300 (MSK)
-Received: from localhost (100.64.160.123) by p-i-exch-sc-m02.sberdevices.ru
- (172.16.192.103) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 10 Jun
- 2024 16:12:24 +0300
-Date: Mon, 10 Jun 2024 16:12:24 +0300
-From: Dmitry Rokosov <ddrokosov@salutedevices.com>
-To: Jerome Brunet <jbrunet@baylibre.com>
-CC: <neil.armstrong@linaro.org>, <mturquette@baylibre.com>,
-	<sboyd@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <khilman@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>, <jian.hu@amlogic.com>,
-	<kernel@sberdevices.ru>, <rockosov@gmail.com>,
-	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/7] clk: meson: a1: pll: support 'syspll'
- general-purpose PLL for CPU clock
-Message-ID: <20240610131224.u7u4ov245igatavj@CAB-WSD-L081021>
-References: <20240515185103.20256-1-ddrokosov@salutedevices.com>
- <20240515185103.20256-4-ddrokosov@salutedevices.com>
- <1jzfrtp12h.fsf@starbuckisacylon.baylibre.com>
+	s=arc-20240116; t=1718025348; c=relaxed/simple;
+	bh=9bEWqJnLSb5dIy8d++RUCBQVhWWIm218oHNDiRmcECo=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=gadRfjhFuPQOdF5z8O4siYDhStTSM4Gq6Hj//i9ZlsD4SJfaWnSpvPcL83mg0TmVR1SsYCk++FMFNopB2g6+qiIogXJJSbZ3Xv6EpdNjjfcWHxyd8j3cPeDOP30vkdwBvtUODSZC/Vu1J17zMCvSvc2UxL+C5QcwiaYq43XwR6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in02.mta.xmission.com ([166.70.13.52]:34336)
+	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1sGdwM-0068VY-IK; Mon, 10 Jun 2024 06:15:58 -0600
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:49164 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1sGdwL-00AkLa-Aa; Mon, 10 Jun 2024 06:15:58 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  Tejun Heo <tj@kernel.org>,
+  linux-kernel@vger.kernel.org
+References: <20240609142342.GA11165@redhat.com>
+Date: Mon, 10 Jun 2024 07:15:02 -0500
+In-Reply-To: <20240609142342.GA11165@redhat.com> (Oleg Nesterov's message of
+	"Sun, 9 Jun 2024 16:23:42 +0200")
+Message-ID: <87r0d5t2nt.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1jzfrtp12h.fsf@starbuckisacylon.baylibre.com>
-User-Agent: NeoMutt/20220415
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185833 [Jun 10 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/06/10 11:09:00 #25535815
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain
+X-XM-SPF: eid=1sGdwL-00AkLa-Aa;;;mid=<87r0d5t2nt.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1/90GW62Ma1o8FMMT4UgLYPDrWPv3uutuI=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-Level: *
+X-Spam-Virus: No
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.4978]
+	*  1.5 XMNoVowels Alpha-numberic number with no vowels
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa03 1397; Body=1 Fuz1=1 Fuz2=1]
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+	*  0.0 T_TooManySym_02 5+ unique symbols in subject
+	*  0.0 T_TooManySym_03 6+ unique symbols in subject
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+X-Spam-DCC: XMission; sa03 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: *;Oleg Nesterov <oleg@redhat.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 355 ms - load_scoreonly_sql: 0.04 (0.0%),
+	signal_user_changed: 4.4 (1.2%), b_tie_ro: 3.1 (0.9%), parse: 1.02
+	(0.3%), extract_message_metadata: 4.0 (1.1%), get_uri_detail_list:
+	1.78 (0.5%), tests_pri_-2000: 3.0 (0.9%), tests_pri_-1000: 1.94 (0.5%),
+	 tests_pri_-950: 1.09 (0.3%), tests_pri_-900: 0.82 (0.2%),
+	tests_pri_-90: 119 (33.4%), check_bayes: 117 (33.0%), b_tokenize: 4.4
+	(1.2%), b_tok_get_all: 56 (15.8%), b_comp_prob: 2.5 (0.7%),
+	b_tok_touch_all: 51 (14.4%), b_finish: 0.66 (0.2%), tests_pri_0: 205
+	(57.7%), check_dkim_signature: 0.37 (0.1%), check_dkim_adsp: 2.4
+	(0.7%), poll_dns_idle: 1.00 (0.3%), tests_pri_10: 1.75 (0.5%),
+	tests_pri_500: 6 (1.8%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH 0/1] exit: kill signal_struct->quick_threads
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 
-On Mon, Jun 10, 2024 at 12:03:02PM +0200, Jerome Brunet wrote:
-> On Wed 15 May 2024 at 21:47, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
-> 
-> > The 'syspll' PLL, also known as the system PLL, is a general and
-> > essential PLL responsible for generating the CPU clock frequency.
-> > With its wide-ranging capabilities, it is designed to accommodate
-> > frequencies within the range of 768MHz to 1536MHz.
-> >
-> > Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-> > ---
-> >  drivers/clk/meson/a1-pll.c | 72 ++++++++++++++++++++++++++++++++++++++
-> >  drivers/clk/meson/a1-pll.h |  6 ++++
-> >  2 files changed, 78 insertions(+)
-> >
-> > diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
-> > index 60b2e53e7e51..286e83199d17 100644
-> > --- a/drivers/clk/meson/a1-pll.c
-> > +++ b/drivers/clk/meson/a1-pll.c
-> > @@ -138,6 +138,76 @@ static struct clk_regmap hifi_pll = {
-> >  	},
-> >  };
-> >  
-> > +static const struct pll_mult_range sys_pll_mult_range = {
-> > +	.min = 32,
-> > +	.max = 64,
-> > +};
-> > +
-> > +static const struct reg_sequence sys_pll_init_regs[] = {
-> > +	{ .reg = ANACTRL_SYSPLL_CTRL1, .def = 0x01800000 },
-> > +	{ .reg = ANACTRL_SYSPLL_CTRL2, .def = 0x00001100 },
-> > +	{ .reg = ANACTRL_SYSPLL_CTRL3, .def = 0x10022300 },
-> > +	{ .reg = ANACTRL_SYSPLL_CTRL4, .def = 0x00300000 },
-> > +	{ .reg = ANACTRL_SYSPLL_CTRL0, .def = 0x01f18432 },
-> 
-> That last entry is clearly an hard coded rate being poked.
-> Drop it please
-> 
+Oleg Nesterov <oleg@redhat.com> writes:
 
-Ah, of course, you are totally right. I will remove hard coded rate in
-the next version.
+> Hello,
+>
+> Eric, I can't understand why the commit ("signal: Guarantee that
+> SIGNAL_GROUP_EXIT is set on process exit") added the new
+> quick_threads counter. And why, if we forget about --quick_threads,
+> synchronize_group_exit() has to take siglock unconditionally.
+> Did I miss something obvious?
 
-> > +};
-> > +
-> > +static struct clk_regmap sys_pll = {
-> > +	.data = &(struct meson_clk_pll_data){
-> > +		.en = {
-> > +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> > +			.shift   = 28,
-> > +			.width   = 1,
-> > +		},
-> > +		.m = {
-> > +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> > +			.shift   = 0,
-> > +			.width   = 8,
-> > +		},
-> > +		.n = {
-> > +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> > +			.shift   = 10,
-> > +			.width   = 5,
-> > +		},
-> > +		.frac = {
-> > +			.reg_off = ANACTRL_SYSPLL_CTRL1,
-> > +			.shift   = 0,
-> > +			.width   = 19,
-> > +		},
-> > +		.l = {
-> > +			.reg_off = ANACTRL_SYSPLL_STS,
-> > +			.shift   = 31,
-> > +			.width   = 1,
-> > +		},
-> > +		.current_en = {
-> > +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> > +			.shift   = 26,
-> > +			.width   = 1,
-> > +		},
-> > +		.l_detect = {
-> > +			.reg_off = ANACTRL_SYSPLL_CTRL2,
-> > +			.shift   = 6,
-> > +			.width   = 1,
-> > +		},
-> > +		.range = &sys_pll_mult_range,
-> > +		.init_regs = sys_pll_init_regs,
-> > +		.init_count = ARRAY_SIZE(sys_pll_init_regs),
-> > +		/*
-> > +		 * The sys_pll clock is usually enabled and initialized in the
-> > +		 * bootloader stage. Additionally, the cpu_clk is connected to
-> > +		 * sys_pll. As a result, it is not allowed to initialize the
-> > +		 * cpu_clk again, as doing so would prevent the CPU from
-> > +		 * executing any instructions.
-> > +		 */
-> > +		.flags = CLK_MESON_PLL_NOINIT_ENABLED,
-> > +	},
-> > +	.hw.init = &(struct clk_init_data){
-> > +		.name = "sys_pll",
-> > +		.ops = &meson_clk_pll_ops,
-> > +		.parent_names = (const char *[]){ "syspll_in" },
-> > +		.num_parents = 1,
-> > +	},
-> > +};
-> > +
-> >  static struct clk_fixed_factor fclk_div2_div = {
-> >  	.mult = 1,
-> >  	.div = 2,
-> > @@ -283,6 +353,7 @@ static struct clk_hw *a1_pll_hw_clks[] = {
-> >  	[CLKID_FCLK_DIV5]	= &fclk_div5.hw,
-> >  	[CLKID_FCLK_DIV7]	= &fclk_div7.hw,
-> >  	[CLKID_HIFI_PLL]	= &hifi_pll.hw,
-> > +	[CLKID_SYS_PLL]		= &sys_pll.hw,
-> >  };
-> >  
-> >  static struct clk_regmap *const a1_pll_regmaps[] = {
-> > @@ -293,6 +364,7 @@ static struct clk_regmap *const a1_pll_regmaps[] = {
-> >  	&fclk_div5,
-> >  	&fclk_div7,
-> >  	&hifi_pll,
-> > +	&sys_pll,
-> >  };
-> >  
-> >  static struct regmap_config a1_pll_regmap_cfg = {
-> > diff --git a/drivers/clk/meson/a1-pll.h b/drivers/clk/meson/a1-pll.h
-> > index 4be17b2bf383..666d9b2137e9 100644
-> > --- a/drivers/clk/meson/a1-pll.h
-> > +++ b/drivers/clk/meson/a1-pll.h
-> > @@ -18,6 +18,12 @@
-> >  #define ANACTRL_FIXPLL_CTRL0	0x0
-> >  #define ANACTRL_FIXPLL_CTRL1	0x4
-> >  #define ANACTRL_FIXPLL_STS	0x14
-> > +#define ANACTRL_SYSPLL_CTRL0	0x80
-> > +#define ANACTRL_SYSPLL_CTRL1	0x84
-> > +#define ANACTRL_SYSPLL_CTRL2	0x88
-> > +#define ANACTRL_SYSPLL_CTRL3	0x8c
-> > +#define ANACTRL_SYSPLL_CTRL4	0x90
-> > +#define ANACTRL_SYSPLL_STS	0x94
-> >  #define ANACTRL_HIFIPLL_CTRL0	0xc0
-> >  #define ANACTRL_HIFIPLL_CTRL1	0xc4
-> >  #define ANACTRL_HIFIPLL_CTRL2	0xc8
-> 
-> -- 
-> Jerome
+At a minimum it is the exact same locking as everywhere else that sets
+signal->flags, signal->group_exit_code, and signal->group_stop_count
+uses.
 
--- 
-Thank you,
-Dmitry
+So it would probably require some significant reason to not use
+the same locking and complicate reasoning about the code.  I suspect
+setting those values without siglock held is likely to lead to
+interesting races.
+
+May I ask which direction you are coming at this from?  Are you trying
+to reduce the cost of do_exit?  Are you interested in untangling the
+mess that is exiting threads in a process?
+
+I have a branch around that I was slowly working through to detangle
+the entire mess.  And if you are interested I can dig it back up.
+My memory is I had all of the known issues worked through but I still
+needed to feed the code through code review and merge it in small steps
+to ensure I don't introduce regressions.
+
+That is where signal->quick_threads comes from.  In the work it is a
+part of I wind up moving the decrement up much sooner to the point where
+individual threads decide to exit.  The decrement of signal->live comes
+much too late to be useful in that context.
+
+It is also part of me wanting to be able to uniformly use
+SIGNAL_GROUP_EXIT and signal->group_exit_code when talking about the
+process state, and p->exit_code when talking about the per task state.
+
+At the moment I am staring at wait_task_zombie and trying to understand
+how:
+
+	status = (p->signal->flags & SIGNAL_GROUP_EXIT)
+		? p->signal->group_exit_code : p->exit_code;
+
+works without any locks or barriers.
+
+Eric
+
+
+
+
+
+
