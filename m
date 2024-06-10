@@ -1,27 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 152BA156C63;
-	Mon, 10 Jun 2024 13:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE30615746E;
+	Mon, 10 Jun 2024 13:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718027051; cv=none; b=rl6ud1sR22OHxKrAAlF7apVdyCrIb3zhL+MuoEIBaMQzDQhcqEkiInjwyhRpQWg6O57CePTACTkDlF3AXmEqG7I32IP/5PcpyxP6xfAmVnl7Cm62Kfvo346dKjoVn7Eqs0eU60JvWznnCwoLCFCW2zvbUMvRSYrU+5isDAuUU0M=
+	t=1718027053; cv=none; b=diKQq3xxtZzzW7rKqBaMq7rf7zVRmaxTiERLq4jMylbWozyL0yqwPctLbb+SpDHltEzHtqfBP5Xjmtt13lKytg5GZ1SDNN5E5GFtPYJ/+laUh2PGo4b8gIfAJ5aKVn8ZVCE+lIVjxQzc7oaiOmLDgcgUedU/0tlD+kcSA1/J89c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718027051; c=relaxed/simple;
-	bh=DHrgWtMjPlQOlxq9Qv2GmFXRkvhvhqG/t4z8irHqLYQ=;
+	s=arc-20240116; t=1718027053; c=relaxed/simple;
+	bh=P016wlSvBz1tNc5ePWC40PcWZ76iScNAiaoYZd5JHUk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QQHrY8e9fAIdDBecCEoNddXTt+cJwR7XCS3Hb0gTSMN2fiAsdlC0rn0nT6kZkTs1aWoQORbsdnXw1LAABSxs4j2peAS5WrqnwaACsB0/2JiQ7Y7yeiLeXXr/xvF/xAxTLzn/jR0kXXx2LYiRw8hzPvYZrBWjR3z2yR8ksi13EIU=
+	 MIME-Version; b=e/NXhQTNNS6zaVJ/5g6nU/8Npw0WIJsUWFOZangYSdLCQ2dAjO07fHASSzvRvd9LuamHGcojNpxi8MTnBPJdzbjwRO7oo4PP31N9UUyTNbyq9xgj6m2xoWY17uXEDx4j30wXgT3LF1Hv72Bevek+77c5va6GwnYyxeTF95Nmjl4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44F58106F;
-	Mon, 10 Jun 2024 06:44:30 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A995E1692;
+	Mon, 10 Jun 2024 06:44:35 -0700 (PDT)
 Received: from e122027.cambridge.arm.com (e122027.cambridge.arm.com [10.1.35.41])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25DCD3F58B;
-	Mon, 10 Jun 2024 06:44:03 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6DFF3F58B;
+	Mon, 10 Jun 2024 06:44:08 -0700 (PDT)
 From: Steven Price <steven.price@arm.com>
 To: kvm@vger.kernel.org,
 	kvmarm@lists.linux.dev
-Cc: Steven Price <steven.price@arm.com>,
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Marc Zyngier <maz@kernel.org>,
 	Will Deacon <will@kernel.org>,
@@ -36,10 +36,11 @@ Cc: Steven Price <steven.price@arm.com>,
 	Christoffer Dall <christoffer.dall@arm.com>,
 	Fuad Tabba <tabba@google.com>,
 	linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Subject: [PATCH v3 33/43] arm64: rme: Enable PMU support with a realm guest
-Date: Mon, 10 Jun 2024 14:41:52 +0100
-Message-Id: <20240610134202.54893-34-steven.price@arm.com>
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	Steven Price <steven.price@arm.com>
+Subject: [PATCH v3 35/43] arm64: RME: Propagate number of breakpoints and watchpoints to userspace
+Date: Mon, 10 Jun 2024 14:41:54 +0100
+Message-Id: <20240610134202.54893-36-steven.price@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240610134202.54893-1-steven.price@arm.com>
 References: <20240610134202.54893-1-steven.price@arm.com>
@@ -51,178 +52,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use the PMU registers from the RmiRecExit structure to identify when an
-overflow interrupt is due and inject it into the guest. Also hook up the
-configuration option for enabling the PMU within the guest.
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-When entering a realm guest with a PMU interrupt pending, it is
-necessary to disable the physical interrupt. Otherwise when the RMM
-restores the PMU state the physical interrupt will trigger causing an
-immediate exit back to the host. The guest is expected to acknowledge
-the interrupt causing a host exit (to update the GIC state) which gives
-the opportunity to re-enable the physical interrupt before the next PMU
-event.
+The RMM describes the maximum number of BPs/WPs available to the guest
+in the Feature Register 0. Propagate those numbers into ID_AA64DFR0_EL1,
+which is visible to userspace. A VMM needs this information in order to
+set up realm parameters.
 
-Number of PMU counters is configured by the VMM by writing to PMCR.N.
-
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
-Changes since v2:
- * Add a macro kvm_pmu_get_irq_level() to avoid compile issues when PMU
-   support is disabled.
----
- arch/arm64/kvm/arm.c      | 11 +++++++++++
- arch/arm64/kvm/guest.c    |  7 +++++++
- arch/arm64/kvm/pmu-emul.c |  4 +++-
- arch/arm64/kvm/rme.c      |  8 ++++++++
- arch/arm64/kvm/sys_regs.c |  2 +-
- include/kvm/arm_pmu.h     |  4 ++++
- 6 files changed, 34 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/kvm_rme.h |  1 +
+ arch/arm64/kvm/rme.c             | 22 ++++++++++++++++++++++
+ arch/arm64/kvm/sys_regs.c        |  2 +-
+ 3 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index f3743ba8b006..e642484e3611 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -15,6 +15,7 @@
- #include <linux/vmalloc.h>
- #include <linux/fs.h>
- #include <linux/mman.h>
-+#include <linux/perf/arm_pmu.h>
- #include <linux/sched.h>
- #include <linux/kvm.h>
- #include <linux/kvm_irqfd.h>
-@@ -1188,6 +1189,8 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 	run->exit_reason = KVM_EXIT_UNKNOWN;
- 	run->flags = 0;
- 	while (ret > 0) {
-+		bool pmu_stopped = false;
-+
- 		/*
- 		 * Check conditions before entering the guest
- 		 */
-@@ -1219,6 +1222,11 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+index 80c7db964079..8aa02134c461 100644
+--- a/arch/arm64/include/asm/kvm_rme.h
++++ b/arch/arm64/include/asm/kvm_rme.h
+@@ -88,6 +88,7 @@ struct realm_rec {
  
- 		kvm_pmu_flush_hwstate(vcpu);
+ void kvm_init_rme(void);
+ u32 kvm_realm_ipa_limit(void);
++u64 kvm_realm_reset_id_aa64dfr0_el1(struct kvm_vcpu *vcpu, u64 val);
  
-+		if (vcpu_is_rec(vcpu) && kvm_pmu_get_irq_level(vcpu)) {
-+			pmu_stopped = true;
-+			arm_pmu_set_phys_irq(false);
-+		}
-+
- 		local_irq_disable();
+ bool kvm_rme_supports_sve(void);
  
- 		kvm_vgic_flush_hwstate(vcpu);
-@@ -1321,6 +1329,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 
- 		preempt_enable();
- 
-+		if (pmu_stopped)
-+			arm_pmu_set_phys_irq(true);
-+
- 		/*
- 		 * The ARMv8 architecture doesn't give the hypervisor
- 		 * a mechanism to prevent a guest from dropping to AArch32 EL0
-diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index b01d900c89ff..e17679c347ae 100644
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -782,6 +782,8 @@ int kvm_arm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- 	return kvm_arm_sys_reg_get_reg(vcpu, reg);
- }
- 
-+#define KVM_REG_ARM_PMCR_EL0		ARM64_SYS_REG(3, 3, 9, 12, 0)
-+
- /*
-  * The RMI ABI only enables setting the lower GPRs (x0-x7) and PC.
-  * All other registers are reset to architectural or otherwise defined reset
-@@ -800,6 +802,11 @@ static bool validate_realm_set_reg(struct kvm_vcpu *vcpu,
- 		case KVM_REG_ARM_CORE_REG(regs.pc):
- 			return true;
- 		}
-+	} else {
-+		switch (reg->id) {
-+		case KVM_REG_ARM_PMCR_EL0:
-+			return true;
-+		}
- 	}
- 
- 	return false;
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index a35ce10e0a9f..ce7c8e55d904 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -341,7 +341,9 @@ static u64 kvm_pmu_overflow_status(struct kvm_vcpu *vcpu)
- {
- 	u64 reg = 0;
- 
--	if ((kvm_vcpu_read_pmcr(vcpu) & ARMV8_PMU_PMCR_E)) {
-+	if (vcpu_is_rec(vcpu)) {
-+		reg = vcpu->arch.rec.run->exit.pmu_ovf_status;
-+	} else if ((kvm_vcpu_read_pmcr(vcpu) & ARMV8_PMU_PMCR_E)) {
- 		reg = __vcpu_sys_reg(vcpu, PMOVSSET_EL0);
- 		reg &= __vcpu_sys_reg(vcpu, PMCNTENSET_EL0);
- 		reg &= __vcpu_sys_reg(vcpu, PMINTENSET_EL1);
 diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-index 999bd4bf2d73..93757c550394 100644
+index 93757c550394..66e124b4d25a 100644
 --- a/arch/arm64/kvm/rme.c
 +++ b/arch/arm64/kvm/rme.c
-@@ -325,6 +325,11 @@ static int realm_create_rd(struct kvm *kvm)
- 	params->rtt_base = kvm->arch.mmu.pgd_phys;
- 	params->vmid = realm->vmid;
- 
-+	if (kvm->arch.arm_pmu) {
-+		params->pmu_num_ctrs = kvm->arch.pmcr_n;
-+		params->flags |= RMI_REALM_PARAM_FLAG_PMU;
-+	}
-+
- 	params_phys = virt_to_phys(params);
- 
- 	if (rmi_realm_create(rd_phys, params_phys)) {
-@@ -1398,6 +1403,9 @@ int kvm_create_rec(struct kvm_vcpu *vcpu)
- 	if (!vcpu_has_feature(vcpu, KVM_ARM_VCPU_PSCI_0_2))
- 		return -EINVAL;
- 
-+	if (vcpu->kvm->arch.arm_pmu && !kvm_vcpu_has_pmu(vcpu))
-+		return -EINVAL;
-+
- 	BUILD_BUG_ON(sizeof(*params) > PAGE_SIZE);
- 	BUILD_BUG_ON(sizeof(*rec->run) > PAGE_SIZE);
- 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 22b45a15d068..435bcd02ddfd 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1279,7 +1279,7 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
- 	 * implements. Ignore this error to maintain compatibility
- 	 * with the existing KVM behavior.
- 	 */
--	if (!kvm_vm_has_ran_once(kvm) &&
-+	if (!kvm_vm_has_ran_once(kvm) && !kvm_realm_is_created(kvm) &&
- 	    new_n <= kvm_arm_pmu_get_max_counters(kvm))
- 		kvm->arch.pmcr_n = new_n;
- 
-diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
-index 35d4ca4f6122..e2d31640e2e7 100644
---- a/include/kvm/arm_pmu.h
-+++ b/include/kvm/arm_pmu.h
-@@ -76,6 +76,8 @@ void kvm_vcpu_pmu_restore_guest(struct kvm_vcpu *vcpu);
- void kvm_vcpu_pmu_restore_host(struct kvm_vcpu *vcpu);
- void kvm_vcpu_pmu_resync_el0(void);
- 
-+#define kvm_pmu_get_irq_level(vcpu) ((vcpu)->arch.pmu.irq_level)
-+
- #define kvm_vcpu_has_pmu(vcpu)					\
- 	(vcpu_has_feature(vcpu, KVM_ARM_VCPU_PMU_V3))
- 
-@@ -157,6 +159,8 @@ static inline u64 kvm_pmu_get_pmceid(struct kvm_vcpu *vcpu, bool pmceid1)
- 	return 0;
+@@ -286,6 +286,28 @@ u32 kvm_realm_ipa_limit(void)
+ 	return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_S2SZ);
  }
  
-+#define kvm_pmu_get_irq_level(vcpu) (false)
++u64 kvm_realm_reset_id_aa64dfr0_el1(struct kvm_vcpu *vcpu, u64 val)
++{
++	u32 bps = u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_NUM_BPS);
++	u32 wps = u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_NUM_WPS);
++	u32 ctx_cmps;
 +
- #define kvm_vcpu_has_pmu(vcpu)		({ false; })
- static inline void kvm_pmu_update_vcpu_events(struct kvm_vcpu *vcpu) {}
- static inline void kvm_vcpu_pmu_restore_guest(struct kvm_vcpu *vcpu) {}
++	if (!kvm_is_realm(vcpu->kvm))
++		return val;
++
++	/* Ensure CTX_CMPs is still valid */
++	ctx_cmps = FIELD_GET(ID_AA64DFR0_EL1_CTX_CMPs, val) + 1;
++	ctx_cmps = min(bps, ctx_cmps);
++
++	val &= ~(ID_AA64DFR0_EL1_BRPs_MASK | ID_AA64DFR0_EL1_WRPs_MASK |
++		 ID_AA64DFR0_EL1_CTX_CMPs);
++	val |= FIELD_PREP(ID_AA64DFR0_EL1_BRPs_MASK, bps - 1) |
++	       FIELD_PREP(ID_AA64DFR0_EL1_WRPs_MASK, wps - 1) |
++	       FIELD_PREP(ID_AA64DFR0_EL1_CTX_CMPs, ctx_cmps - 1);
++
++	return val;
++}
++
+ static int realm_create_rd(struct kvm *kvm)
+ {
+ 	struct realm *realm = &kvm->arch.realm;
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index 435bcd02ddfd..96d73b1867ad 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -1722,7 +1722,7 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+ 	/* Hide SPE from guests */
+ 	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+ 
+-	return val;
++	return kvm_realm_reset_id_aa64dfr0_el1(vcpu, val);
+ }
+ 
+ static int set_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
 -- 
 2.34.1
 
