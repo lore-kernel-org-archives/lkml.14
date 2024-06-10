@@ -1,492 +1,122 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23076A953;
-	Mon, 10 Jun 2024 10:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4121A953;
+	Mon, 10 Jun 2024 10:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718016238; cv=none; b=b8wHR5XxZCsh0xMwW4/nB/Y01m3T8X0j2MkjBeYcQcxbPDnaOxe37L2c9jKVC9CBYKJf1jxjFfZhu51HwpmBmP6zofi7HvnqmKfUbO5RiNQNsMOj0ilf7EIcz0vxqwCV520cNR4OYHa75drpUhEkudQyAuTkwU3Ww9BzhB77J3A=
+	t=1718016255; cv=none; b=ruJtfeO5WCdr2pGpapkA6Ii/KhqxheEg5rkD6E/I/gN/O9wLykZacjD772fh3r5cyTYoFiunXv8F0DLooOpdJr78HrR2syTdqRoIpYJL76FYaTVd3VjuOXi0nD1JFDNqa6OxgS2FER7zMmS26KGY50+TlG6/9WRhkMcEd++NEog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718016238; c=relaxed/simple;
-	bh=xbOpV55tnYKAL2xoH5MhtRABX8wVgTGWR/KCz2sEnIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZycWjorbp9i6QrnkQ7DR3jDvLBQYxfeWfa8IVcc2D3yBAdfjF1+DizcCF8ooOUgOOD+QTzgAKm0zr+ZzVyYiFOE1IQWYDmTv8FdanfDj3a2DsosTb4iopyxtMHrWQLYtye9aBDKFNZikVILDu/IdMSXidRJUAg2b8GXj/hG70s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=l4x5w6bf; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718016255; c=relaxed/simple;
+	bh=+R6ktbArqrrTQdXWZojOAhLBZuFDaJj1+bBiXK2n6TE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h0LSK3XD0WMss6kh0uRvoof4TP1Tkv724v0ggqZtFbn1bu5tyoBgbzGm4YLoujPp1A6oomJvSpI8Mn3wvYQFTTXN7HiYpVYTQOEEnNCgztmESH4y+pTmh+J9nkXmcMHyY/j8rqXjIulCu7x8+ZV74SwDB3uecp0EzoUREKvCG48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=GdCSF+Jv; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l4x5w6bf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RCp5PQyvd+ZGs5pqurjRzi25/CCJCfeb+DUNbZo1X34=; b=l4x5w6bfNylNn4IocjXwskgIe6
-	mTc97tURiNfahmK5+eoxSaVv0g9dANoXHgXjHqjPMS1BnPjifB/IjHoBiEyQTwmJLwSGUPRgAcY8F
-	vSCnRRzn5CAhfTJyrS23PnIfupVh91S3veuBhDxcNEDy255s2cOmRpAajDo/bx1PfqYMYI7yVEXA2
-	F8CG8v2gR0f+Rw+wVkGySOqwt5is6iKzHGXwx7utA7y0INbVfD6l0nS/fd+QECdjn8tKmTLTmcA74
-	20OOJ7SzcuZ2fDcf/cU80451By5U2syy4nlCTyfTSETED/NgDsuclcSYe8+KTcZflFqOvTnVq13gq
-	yPOe24Pw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGcVE-00000008w2D-2IQd;
-	Mon, 10 Jun 2024 10:43:52 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 265C7300439; Mon, 10 Jun 2024 12:43:52 +0200 (CEST)
-Date: Mon, 10 Jun 2024 12:43:52 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Anvin <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	the arch/x86 maintainers <x86@kernel.org>,
-	linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH] x86: add 'runtime constant' infrastructure
-Message-ID: <20240610104352.GT8774@noisy.programming.kicks-ass.net>
-References: <20240608193504.429644-2-torvalds@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="GdCSF+Jv"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 15B6888452;
+	Mon, 10 Jun 2024 12:44:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1718016245;
+	bh=UGsRKAQcP9Xl+f3DvdpljlZ5s9R51tFrDXOpqku0T3E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GdCSF+Jvh5LOk4DOCcUWT5R6bfzs4ZRtALDz+GLfhVnuJsTfOhKh/dRS5SX5UWVWa
+	 y21C6sCLS/WoifQjjVePn4h4f3von3szlNrJuphrcAu9o4R6dG/N+fJH/MlVkrVhfZ
+	 z81NlvdFoSb77nRWhE0YyNXdAG6lqSQtvw70sK1xpBA2A19c+tTfoEQA0fUQqoJp5k
+	 eA8JGo93OjToYPWfvpMg3uqpZvvnES3kAObiFhnsVQv7st+kFTpvZ7GcSu/HJv9ZQT
+	 l5gcucGYEuRjXShdTsbegqf/XnEbaQxYGbblkwfGnmZ1SV8kkBw/7TgAuQ63WLoptc
+	 XCnN4ZY0Rgrzg==
+Message-ID: <c5cb092d-dccd-48a4-b1da-4f057581618e@denx.de>
+Date: Mon, 10 Jun 2024 12:37:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240608193504.429644-2-torvalds@linux-foundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 09/12] ARM: dts: stm32: add ethernet1 and ethernet2
+ support on stm32mp13
+To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
+ Christophe Roullier <christophe.roullier@foss.st.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, Jose Abreu
+ <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240607095754.265105-1-christophe.roullier@foss.st.com>
+ <20240607095754.265105-10-christophe.roullier@foss.st.com>
+ <6d60bbc6-5ed3-4bb1-ad72-18a2be140b81@denx.de>
+ <036c9f0d-681d-461d-b839-f781fa220e94@foss.st.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <036c9f0d-681d-461d-b839-f781fa220e94@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Sat, Jun 08, 2024 at 12:35:05PM -0700, Linus Torvalds wrote:
-> Needs more comments and testing, but it works, and has a generic
-> fallback for architectures that don't support it.
-> 
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> ---
-> 
-> Notes from the first hack: I renamed the infrastructure from "static
-> const" to "runtime const".  We end up having a number of uses of "static
-> const" that are related to the C language notion of "static const"
-> variables or functions, and "runtime constant" is a bit more descriptive
-> anyway. 
-> 
-> And this now is properly abstracted out, so that any architecture can
-> choose to implement their own version, but it all falls back on "just
-> use the variable".
-> 
-> Josh - sorry for wasting your time on the objtool patch, I ended up
-> using the linker functionality that Rasmus pointed out as existing
-> instead. 
-> 
-> Rasmus - I've cleaned up my patch a lot, and it now compiles fine on
-> other architectures too, although obviously with the fallback of "no
-> constant fixup".  As a result, my patch is actually smaller and much
-> cleaner, and I ended up liking my approach more than your RAI thing
-> after all. 
-> 
-> Ingo / Peter / Borislav - I enabled this for 32-bit x86 too, because it
-> was literally trivial (had to remove a "q" from "movq").  I did a
-> test-build and it looks find, but I didn't actually try to boot it. 
-> 
-> The x86-64 code is actually tested.  It's not like it has a _lot_ of
-> testing, but the patch ends up being pretty small in the end.  Yes, the
-> "shift u32 value right by a constant" is a pretty special case, but the
-> __d_lookup_rcu() function really is pretty hot.
-> 
-> Or rather it *was* pretty hot.  It's actually looking very good with
-> this, imho. 
-> 
-> Build tested with allmodconfig and on arm64, but I'm not claiming that I
-> have necessarily found all special case corners.  That said, it's small
-> and pretty straightforward. 
-> 
-> Comments?
+On 6/10/24 10:06 AM, Alexandre TORGUE wrote:
+> Hi Marek
 
-It obviously has the constraint of never running the code before the
-corresponding runtime_const_init() has been done, otherwise things will
-go sideways in a hurry, but this also makes the whole thing a *lot*
-simpler.
+Hi,
 
-The only thing I'm not sure about is it having a section per symbol,
-given how jump_label and static_call took off, this might not be
-scalable.
+> On 6/7/24 14:48, Marek Vasut wrote:
+>> On 6/7/24 11:57 AM, Christophe Roullier wrote:
+>>
+>> [...]
+>>
+>>> @@ -1505,6 +1511,38 @@ sdmmc2: mmc@58007000 {
+>>>                   status = "disabled";
+>>>               };
+> no space here ?
+>>> +            ethernet1: ethernet@5800a000 {
+>>> +                compatible = "st,stm32mp13-dwmac", "snps,dwmac-4.20a";
+>>> +                reg = <0x5800a000 0x2000>;
+>>> +                reg-names = "stmmaceth";
+>>> +                interrupts-extended = <&intc GIC_SPI 62 
+>>> IRQ_TYPE_LEVEL_HIGH>,
+>>> +                              <&exti 68 1>;
+>>> +                interrupt-names = "macirq", "eth_wake_irq";
+>>> +                clock-names = "stmmaceth",
+>>> +                          "mac-clk-tx",
+>>> +                          "mac-clk-rx",
+>>> +                          "ethstp",
+>>> +                          "eth-ck";
+>>> +                clocks = <&rcc ETH1MAC>,
+>>> +                     <&rcc ETH1TX>,
+>>> +                     <&rcc ETH1RX>,
+>>> +                     <&rcc ETH1STP>,
+>>> +                     <&rcc ETH1CK_K>;
+>>> +                st,syscon = <&syscfg 0x4 0xff0000>;
+>>> +                snps,mixed-burst;
+>>> +                snps,pbl = <2>;
+>>> +                snps,axi-config = <&stmmac_axi_config_1>;
+>>> +                snps,tso;
+>>> +                access-controllers = <&etzpc 48>;
+>>
+>> Keep the list sorted.
+> 
+> The list is currently not sorted. I agree that it is better to have a 
+> common rule to easy the read but it should be applied to all the nodes 
+> for the whole STM32 family. Maybe to address by another series. For the 
+> time being we can keep it as it is.
 
-Yes, the approach is super simple and straight forward, but imagine
-there being like a 100 symbols soon :/
+Why is the st,... and snps,... swapped anyway ? That can be fixed right 
+here.
 
-The below hackery -- it very much needs cleanup and is only compiled on
-x86_64 and does not support modules, boots for me.
-
----
-
-
-Index: linux-2.6/arch/Kconfig
-===================================================================
---- linux-2.6.orig/arch/Kconfig
-+++ linux-2.6/arch/Kconfig
-@@ -1492,6 +1492,9 @@ config HAVE_SPARSE_SYSCALL_NR
- config ARCH_HAS_VDSO_DATA
- 	bool
- 
-+config HAVE_RUNTIME_CONST
-+	bool
-+
- config HAVE_STATIC_CALL
- 	bool
- 
-Index: linux-2.6/arch/x86/Kconfig
-===================================================================
---- linux-2.6.orig/arch/x86/Kconfig
-+++ linux-2.6/arch/x86/Kconfig
-@@ -279,6 +279,7 @@ config X86
- 	select HAVE_STACK_VALIDATION		if HAVE_OBJTOOL
- 	select HAVE_STATIC_CALL
- 	select HAVE_STATIC_CALL_INLINE		if HAVE_OBJTOOL
-+	select HAVE_RUNTIME_CONST
- 	select HAVE_PREEMPT_DYNAMIC_CALL
- 	select HAVE_RSEQ
- 	select HAVE_RUST			if X86_64
-Index: linux-2.6/arch/x86/include/asm/runtime_const.h
-===================================================================
---- /dev/null
-+++ linux-2.6/arch/x86/include/asm/runtime_const.h
-@@ -0,0 +1,62 @@
-+#ifndef _ASM_RUNTIME_CONST_H
-+#define _ASM_RUNTIME_CONST_H
-+
-+#include <asm/asm.h>
-+
-+#define __runtime_const(sym, op, type)			\
-+({							\
-+	typeof(sym) __ret;				\
-+	asm(op " %1, %0\n1:\n"				\
-+	    ".pushsection __runtime_const, \"aw\"\n\t"	\
-+	    ".long %c3 - .      # sym \n\t"		\
-+	    ".long %c2          # size \n\t"		\
-+	    ".long 1b - %c2 - . # addr \n\t"		\
-+	    ".popsection\n\t"				\
-+	    : "=r" (__ret)				\
-+	    : "i" ((type)0x0123456789abcdefull),	\
-+	      "i" (sizeof(type)),			\
-+	      "i" ((void *)&sym));			\
-+	__ret;						\
-+})
-+
-+#define runtime_const(sym)						\
-+({									\
-+ 	typeof(sym) __ret;						\
-+	switch(sizeof(sym)) {						\
-+	case 1: __ret = __runtime_const(sym, "movb", u8); break;	\
-+	case 2: __ret = __runtime_const(sym, "movs", u16); break;	\
-+	case 4: __ret = __runtime_const(sym, "movl", u32); break;	\
-+	case 8: __ret = __runtime_const(sym, "movq", u64); break;	\
-+	default: BUG();							\
-+	}								\
-+	__ret;								\
-+})
-+
-+#define runtime_const_shr32(val, sym)			\
-+({							\
-+	typeof(0u+val) __ret = (val);			\
-+	asm("shrl $12, %k0\n1:\n"			\
-+	    ".pushsection __runtime_const, \"aw\"\n\t"	\
-+	    ".long %c3 - .      # sym \n\t"		\
-+	    ".long %c2          # size \n\t"		\
-+	    ".long 1b - %c2 - . # addr \n\t"		\
-+	    ".popsection\n\t"				\
-+	    : "+r" (__ret)				\
-+	    : "i" ((u8)0x12), 				\
-+	      "i" (sizeof(u8)),				\
-+	      "i" ((void *)&sym));			\
-+	__ret;						\
-+})
-+
-+struct runtime_const_entry {
-+	s32 sym;
-+	u32 size;
-+	s32 addr;
-+};
-+
-+extern struct runtime_const_entry __start___runtime_const[];
-+extern struct runtime_const_entry __stop___runtime_const[];
-+
-+extern void arch_runtime_const_set(struct runtime_const_entry *rc, u64 val);
-+
-+#endif /* _ASM_RUNTIME_CONST_H */
-Index: linux-2.6/include/asm-generic/Kbuild
-===================================================================
---- linux-2.6.orig/include/asm-generic/Kbuild
-+++ linux-2.6/include/asm-generic/Kbuild
-@@ -53,6 +53,7 @@ mandatory-y += shmparam.h
- mandatory-y += simd.h
- mandatory-y += softirq_stack.h
- mandatory-y += switch_to.h
-+mandatory-y += runtime_const.h
- mandatory-y += timex.h
- mandatory-y += tlbflush.h
- mandatory-y += topology.h
-Index: linux-2.6/include/asm-generic/runtime_const.h
-===================================================================
---- /dev/null
-+++ linux-2.6/include/asm-generic/runtime_const.h
-@@ -0,0 +1,7 @@
-+#ifndef _ASM_RUNTIME_CONST_H
-+#define _ASM_RUNTIME_CONST_H
-+
-+#define runtime_const(sym) (sym)
-+#define runtime_const_shr32(val, sym)	((u32)(val) >> (sym))
-+
-+#endif /* _ASM_RUNTIME_CONST_H */
-Index: linux-2.6/include/asm-generic/vmlinux.lds.h
-===================================================================
---- linux-2.6.orig/include/asm-generic/vmlinux.lds.h
-+++ linux-2.6/include/asm-generic/vmlinux.lds.h
-@@ -423,6 +423,14 @@
- #define STATIC_CALL_DATA
- #endif
- 
-+#ifdef CONFIG_HAVE_RUNTIME_CONST
-+#define RUNTIME_CONST_DATA						\
-+	. = ALIGN(8);							\
-+	BOUNDED_SECTION_BY(__runtime_const, ___runtime_const)
-+#else
-+#define RUNTIME_CONST_DATA
-+#endif
-+
- /*
-  * Allow architectures to handle ro_after_init data on their
-  * own by defining an empty RO_AFTER_INIT_DATA.
-@@ -434,6 +442,7 @@
- 	*(.data..ro_after_init)						\
- 	JUMP_TABLE_DATA							\
- 	STATIC_CALL_DATA						\
-+	RUNTIME_CONST_DATA						\
- 	__end_ro_after_init = .;
- #endif
- 
-Index: linux-2.6/include/linux/runtime_const.h
-===================================================================
---- /dev/null
-+++ linux-2.6/include/linux/runtime_const.h
-@@ -0,0 +1,23 @@
-+#ifndef _LINUX_RUNTIME_CONST_H
-+#define _LINUX_RUNTIME_CONST_H
-+
-+#include "asm/runtime_const.h"
-+
-+#ifdef CONFIG_HAVE_RUNTIME_CONST
-+
-+extern void __runtime_const_set(void *sym, int size, u64 val);
-+
-+#define runtime_const_set(sym, val)			\
-+	__runtime_const_set(&(sym), sizeof(val), val)
-+
-+extern void runtime_const_init(void);
-+
-+#else
-+
-+#define runtime_const_set(sym, val)	((sym) = (val))
-+
-+static inline void runtime_const_init(void) { }
-+
-+#endif
-+
-+#endif /* _LINUX_RUNTIME_CONST_H */
-Index: linux-2.6/kernel/Makefile
-===================================================================
---- linux-2.6.orig/kernel/Makefile
-+++ linux-2.6/kernel/Makefile
-@@ -115,6 +115,7 @@ obj-$(CONFIG_KCSAN) += kcsan/
- obj-$(CONFIG_SHADOW_CALL_STACK) += scs.o
- obj-$(CONFIG_HAVE_STATIC_CALL) += static_call.o
- obj-$(CONFIG_HAVE_STATIC_CALL_INLINE) += static_call_inline.o
-+obj-$(CONFIG_HAVE_RUNTIME_CONST) += runtime_const.o
- obj-$(CONFIG_CFI_CLANG) += cfi.o
- obj-$(CONFIG_NUMA) += numa.o
- 
-Index: linux-2.6/kernel/runtime_const.c
-===================================================================
---- /dev/null
-+++ linux-2.6/kernel/runtime_const.c
-@@ -0,0 +1,119 @@
-+
-+#include <linux/sort.h>
-+#include <linux/mutex.h>
-+#include <linux/bsearch.h>
-+#include <linux/bug.h>
-+#include <linux/runtime_const.h>
-+#include <asm/sections.h>
-+#include <asm/text-patching.h>
-+
-+static bool runtime_const_initialized;
-+
-+static unsigned long runtime_const_sym(const struct runtime_const_entry *rc)
-+{
-+	return (unsigned long)&rc->sym + rc->sym;
-+}
-+
-+static unsigned long runtime_const_addr(const struct runtime_const_entry *rc)
-+{
-+	return (unsigned long)&rc->addr + rc->addr;
-+}
-+
-+static int runtime_const_cmp(const void *a, const void *b)
-+{
-+	const struct runtime_const_entry *rca = a;
-+	const struct runtime_const_entry *rcb = b;
-+
-+	if (runtime_const_sym(rca) < runtime_const_sym(rcb))
-+		return -1;
-+
-+	if (runtime_const_sym(rca) > runtime_const_sym(rcb))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static void runtime_const_swap(void *a, void *b, int size)
-+{
-+	long delta = (unsigned long)a - (unsigned long)b;
-+	struct runtime_const_entry *rca = a;
-+	struct runtime_const_entry *rcb = b;
-+	struct runtime_const_entry tmp = *rca;
-+
-+	rca->sym = rcb->sym - delta;
-+	rca->size = rcb->size;
-+	rca->addr = rcb->addr - delta;
-+
-+	rcb->sym = tmp.sym + delta;
-+	rcb->size = tmp.size;
-+	rcb->addr = tmp.addr + delta;
-+}
-+
-+static DEFINE_MUTEX(runtime_const_lock);
-+
-+void __init runtime_const_init(void)
-+{
-+	struct runtime_const_entry *start = __start___runtime_const;
-+	struct runtime_const_entry *stop  = __stop___runtime_const;
-+	unsigned long num = ((unsigned long)stop - (unsigned long)start) / sizeof(*start);
-+
-+	if (runtime_const_initialized)
-+		return;
-+
-+	mutex_lock(&runtime_const_lock);
-+	sort(start, num, sizeof(*start), runtime_const_cmp, runtime_const_swap);
-+	mutex_unlock(&runtime_const_lock);
-+
-+	runtime_const_initialized = true;
-+}
-+
-+static struct runtime_const_entry *rc_find_sym(void *sym)
-+{
-+	struct runtime_const_entry *start = __start___runtime_const;
-+	struct runtime_const_entry *stop  = __stop___runtime_const;
-+	unsigned long num = ((unsigned long)stop - (unsigned long)start) / sizeof(*start);
-+	struct runtime_const_entry k = {
-+		.sym = (unsigned long)sym - (unsigned long)&k.sym,
-+	};
-+	struct runtime_const_entry *i =
-+		bsearch(&k, start, num, sizeof(*start), runtime_const_cmp);
-+	if (!i)
-+		return i;
-+	early_printk("XXX i: %ld s: %d\n", (i - start), i->size);
-+	while (i > start) {
-+		if (runtime_const_sym(i-1) == (unsigned long)sym)
-+			i--;
-+		else
-+			break;
-+	}
-+		early_printk("XXY i: %ld\n", (i - start));
-+	return i;
-+}
-+
-+__weak void arch_runtime_const_set(struct runtime_const_entry *rc, u64 val)
-+{
-+	void *addr = (void *)runtime_const_addr(rc);
-+	switch (rc->size) {
-+	case 1: { *(u8 *)addr = val; break; }
-+	case 2: { *(u16 *)addr = val; break; }
-+	case 4: { *(u32 *)addr = val; break; }
-+	case 8: { *(u64 *)addr = val; break; }
-+	default: BUG();
-+	}
-+}
-+
-+void __runtime_const_set(void *sym, int size, u64 val)
-+{
-+	struct runtime_const_entry *i, *stop = __stop___runtime_const;
-+
-+	mutex_lock(&runtime_const_lock);
-+	
-+	for (i = rc_find_sym(sym);
-+	     i && i < stop && runtime_const_sym(i) == (unsigned long)sym;
-+	     i++) {
-+		WARN_ONCE(i->size != size, "%d != %d\n", i->size, size);
-+		arch_runtime_const_set(i, val);
-+	}
-+
-+	mutex_unlock(&runtime_const_lock);
-+}
-Index: linux-2.6/arch/x86/kernel/setup.c
-===================================================================
---- linux-2.6.orig/arch/x86/kernel/setup.c
-+++ linux-2.6/arch/x86/kernel/setup.c
-@@ -25,6 +25,7 @@
- #include <linux/static_call.h>
- #include <linux/swiotlb.h>
- #include <linux/random.h>
-+#include <linux/runtime_const.h>
- 
- #include <uapi/linux/mount.h>
- 
-@@ -782,6 +783,7 @@ void __init setup_arch(char **cmdline_p)
- 	early_cpu_init();
- 	jump_label_init();
- 	static_call_init();
-+//	runtime_const_init();
- 	early_ioremap_init();
- 
- 	setup_olpc_ofw_pgd();
-Index: linux-2.6/fs/dcache.c
-===================================================================
---- linux-2.6.orig/fs/dcache.c
-+++ linux-2.6/fs/dcache.c
-@@ -97,12 +97,14 @@ EXPORT_SYMBOL(dotdot_name);
-  */
- 
- static unsigned int d_hash_shift __ro_after_init;
--
- static struct hlist_bl_head *dentry_hashtable __ro_after_init;
- 
-+#include <linux/runtime_const.h>
-+
- static inline struct hlist_bl_head *d_hash(unsigned int hash)
- {
--	return dentry_hashtable + (hash >> d_hash_shift);
-+	return runtime_const(dentry_hashtable) +
-+	       runtime_const_shr32(hash, d_hash_shift);
- }
- 
- #define IN_LOOKUP_SHIFT 10
-@@ -3129,6 +3131,11 @@ static void __init dcache_init_early(voi
- 					0,
- 					0);
- 	d_hash_shift = 32 - d_hash_shift;
-+
-+	runtime_const_init();
-+
-+	runtime_const_set(dentry_hashtable, (unsigned long)dentry_hashtable);
-+	runtime_const_set(d_hash_shift, (u8)d_hash_shift);
- }
- 
- static void __init dcache_init(void)
-@@ -3157,6 +3164,9 @@ static void __init dcache_init(void)
- 					0,
- 					0);
- 	d_hash_shift = 32 - d_hash_shift;
-+
-+	runtime_const_set(dentry_hashtable, (unsigned long)dentry_hashtable);
-+	runtime_const_set(d_hash_shift, (u8)d_hash_shift);
- }
- 
- /* SLAB cache for __getname() consumers */
+Why is the access-controllers at the end ? That can be fixed in separate 
+series, since that seems to have proliferated considerably.
