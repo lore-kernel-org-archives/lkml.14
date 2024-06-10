@@ -1,387 +1,157 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0A915A8;
-	Mon, 10 Jun 2024 14:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DA423B0;
+	Mon, 10 Jun 2024 14:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718028613; cv=none; b=qwjKDIT8RZ9amNP92Ldlbn3GT3yuxzkra+dUFE6vvX48AP57h0LA2ZoM2KHknDKdwZK7M99LlMLjPs7EmoBrwxvS72ioKZOMZf+O5wWrRILfYqp6eoqtLEK3xt6FP0rFqDWSSMtCZPnuyKCO/lXr93QA5xtRyt0+XjsSQm/ulKg=
+	t=1718028648; cv=none; b=LCs7aI3mHHQ916BqaTAPAZnQlowyL988hew5shaolyZIJhKch7vTxx6Y52DRg1l/XbmigvWYsxdEbLrQlNbx5l+VxNcnvcHzwFBKpkKDHjVpAzLcZsuadA0vlHeKTw8SG1wZCumXckqbD+bD3Mv6MqJlei1m08O5J5I3Y26bd0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718028613; c=relaxed/simple;
-	bh=yrvsW6NpIyyvUzCuw7XD/v8m6AxV1qlSrNJk9MBhaio=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PMsW195owhTyNdZtF7wVax6iYMmTQCKno32tWpXKTYfnOGRFfRk3ZcFgeCocjExYSYzbfGxqB3jZCtiFu+wuup82lF/HS7S9oVTPl6GpatGYs6xrF5rs/bULcsl7mq7DCP/WERKjIbGQnrhTD2PplVfR/cSxFf/hH9nnpxrLqtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=CLTGjL3B; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1718028648; c=relaxed/simple;
+	bh=2eh5fXSWeeSBjf8qN/ZVFdd9bpC1U/JqDHicBRIk/Pw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S5jl0YU55lyuzNJo9rAsmOtEzCVF2lp7ZuUwlam8hyvZ3TG+kSqrZxAzOpY4rrlqqyLAyhiQepPYFm6dqU24U3XWsfsvElYqHedMV/ON6V9s02ROslqfRW5Rj4FcO2Xax10T5xyR4uIFPzE/NU+ib+h6T9w5sRQPNkj5cBg8a5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VRM1CBXR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="CLTGjL3B"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 83D4A1FB6F;
-	Mon, 10 Jun 2024 16:10:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1718028608;
-	bh=YkGB/2C2PmPaw5Fgoeug/KCYvx1pa2uTv5PzS+7PUHo=; h=From:To:Subject;
-	b=CLTGjL3BIWIdo5p7FKFB94y7rgpgH2kqmc6uPfaI34mtfEcW7dTEPOARknXsrtLhP
-	 zfgR262AEbFmCiziNL4Qm2GpYDgYpIT0zRYqL/aL3Acj+IO283Sd3VqO7JpovZZNtG
-	 IeFU+EUuzuEgh1T+uU3rXZOfiQfWUdej5l5RS1qBGetARADhSLCdAUgw5l51ngt2xn
-	 hUdGSSiC/Cc7EPoqjLTWPiVgQ/Qko9ak4uccdvlPK7SIJ3cWizqp13MuycrAsmXCVt
-	 1vHubB1QXNjiazyjR0XGDSAgot8FhykazyD3/d4BZlQyUa6hGamuqTMB0AKTMD5205
-	 IBIPXe+zzpJGQ==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VRM1CBXR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A755C2BBFC;
+	Mon, 10 Jun 2024 14:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718028647;
+	bh=2eh5fXSWeeSBjf8qN/ZVFdd9bpC1U/JqDHicBRIk/Pw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VRM1CBXRqwMoesfO3Wii8BrMsr5/tU4dKUfTJOL1f0kZY/3iQs6v0UGxgI0vQkJf7
+	 orT66yVpsiQJ2jA/516zMTzxsK/k85RO88j6AEXB++9N6+Z7JAZ0acMcao40QFOWyt
+	 w9TxJdP6PkAg0G6VqOzOJmWBLx8324I/jW+53dkb0WVfYi+f0Z7B14gZBPMaGf3KcW
+	 L3+/P5NHvK5esZyJYqF2oDvdoGXAXgjub6JWdxkfrqnLY8nPlZmuLXeveLF2WeM9uA
+	 2qOU9tuDg03H0jQdXRQ2jpcR2J5xI26Vjx/2glj4jwr3tJVS7YBB/eLbTkHnVFqLF3
+	 V8zaklaa6yM7A==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] arm64: dts: freescale: imx8mp-verdin: add HDMI support
-Date: Mon, 10 Jun 2024 16:10:01 +0200
-Message-Id: <20240610141001.32034-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.2
+Subject: [GIT PULL] vfs fixes
+Date: Mon, 10 Jun 2024 16:09:10 +0200
+Message-ID: <20240610-vfs-fixes-a84527e50cdb@brauner>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4766; i=brauner@kernel.org; h=from:subject:message-id; bh=2eh5fXSWeeSBjf8qN/ZVFdd9bpC1U/JqDHicBRIk/Pw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSlc8asD7dKf5/7cc81ybuSCtmN/vO2pq+QXT09OpeT8 3x68s2IjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIkkXmb4p2UdonB/wduKg9YW vRc/qi9Z7eP03dXNdrXuCtvZxXJxDIwMWw88Yl20dMvWQ+WTAl/cKdRedPpgxfS3CyJZy0/Fvy3 4ywwA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-From: Francesco Dolcini <francesco.dolcini@toradex.com>
+Hey Linus,
 
-Enable HDMI output on Verdin iMX8MP on all the supported carrier boards
-(dev, dahlia, mallow and yavia).
+/* Summary */
+This contains fixes for this merge window:
 
-HDMI DDC I2C is used in regular I2C mode, see link on the related
-dt-bindings patch.
+* Restore debugfs behavior of ignoring unknown mount options.
+* Fix kernel doc for netfs_wait_for_oustanding_io().
+* Remove unneeded fdtable.h include in cachefiles.
+* Fix struct statx comment after new addition for this cycle.
+* Fix data zeroing behavior when an extent spans the block that contains i_size.
+* Restore i_size increasing in iomap_write_end() for now to avoid stale data
+  exposure on xfs with a realtime device.
+* Fix a check in find_next_fd().
+* Improve trace output for cachefiles_obj_{get,put}_ondemand_fd().
+* Remove requests from the request list in cachefiles to prevent accessing
+  already freed requests.
+* Fix UAF when issuing restore command while the daemon is still alive by
+  adding an additional reference count to cachefile requests.
+* Fix UAF in cachefiles by grabbing a reference during xarray lookup with
+  xa_lock() held.
+* Simplify error handling in cachefiles_ondemand_daemon_read().
+* Add consistency checks to cachefiles read and open requests to avoid crashes.
+* Add a spinlock to protect ondemand_id variable which is used to determine
+  whether an anonymous cachefiles fd has already been closed.
+* Make on-demand reads for cachefiles killable allowing to handle broken
+  cachefiles daemon better.
+* Flush all requests after the kernel has been marked dead via CACHEFILES_DEAD
+  to avoid hung-tasks.
+* Ensure that closed requests are marked as such to avoid reusing them with a
+  reopen request.
+* Defer fd_install() until after copy_to_user() succeeded in cachefiles and
+  thereby get rid of having to use close_fd().
+* Ensure that anonymous cachefiles on-demand fds are reused while they are
+  valid to avoid pinning already freed cookies.
 
-Fix CEC and HPD pinctrl, having a pull-down on HPD and a pull-up on CEC.
+/* Testing */
+clang: Debian clang version 16.0.6 (27)
+gcc: (Debian 13.2.0-25) 13.2.0
 
-Link: https://lore.kernel.org/all/20240515062753.111746-1-marex@denx.de/
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- .../dts/freescale/imx8mp-verdin-dahlia.dtsi   | 37 +++++++++++++++++++
- .../boot/dts/freescale/imx8mp-verdin-dev.dtsi | 37 +++++++++++++++++++
- .../dts/freescale/imx8mp-verdin-mallow.dtsi   | 37 +++++++++++++++++++
- .../dts/freescale/imx8mp-verdin-nonwifi.dtsi  |  3 +-
- .../dts/freescale/imx8mp-verdin-wifi.dtsi     |  3 +-
- .../dts/freescale/imx8mp-verdin-yavia.dtsi    | 37 +++++++++++++++++++
- .../boot/dts/freescale/imx8mp-verdin.dtsi     | 13 +++++--
- 7 files changed, 160 insertions(+), 7 deletions(-)
+All patches are based on mainline. No build failures or warnings were observed.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin-dahlia.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin-dahlia.dtsi
-index 6e6b9c2c4640..fbcd93e33aea 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-verdin-dahlia.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin-dahlia.dtsi
-@@ -4,6 +4,18 @@
-  */
- 
- / {
-+	native-hdmi-connector {
-+		compatible = "hdmi-connector";
-+		label = "X21";
-+		type = "a";
-+
-+		port {
-+			native_hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_out>;
-+			};
-+		};
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,bitclock-master = <&codec_dai>;
-@@ -94,6 +106,27 @@ &gpio4 {
- 	pinctrl-0 = <&pinctrl_ctrl_sleep_moci>;
- };
- 
-+/* Verdin HDMI_1 */
-+&hdmi_pvi {
-+	status = "okay";
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			hdmi_tx_out: endpoint {
-+				remote-endpoint = <&native_hdmi_connector_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmi_tx_phy {
-+	status = "okay";
-+};
-+
- /* Current measurement into module VCC */
- &hwmon {
- 	status = "okay";
-@@ -139,6 +172,10 @@ &i2c5 {
- 	status = "okay";
- };
- 
-+&lcdif3 {
-+	status = "okay";
-+};
-+
- /* Verdin PCIE_1 */
- &pcie {
- 	vpcie-supply = <&reg_pcie>;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi
-index 42ed44a11711..09733fea036d 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi
-@@ -4,6 +4,18 @@
-  */
- 
- / {
-+	native-hdmi-connector {
-+		compatible = "hdmi-connector";
-+		label = "X37";
-+		type = "a";
-+
-+		port {
-+			native_hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_out>;
-+			};
-+		};
-+	};
-+
- 	reg_eth2phy: regulator-eth2phy {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
-@@ -103,6 +115,27 @@ &gpio_expander_21 {
- 	vcc-supply = <&reg_1p8v>;
- };
- 
-+/* Verdin HDMI_1 */
-+&hdmi_pvi {
-+	status = "okay";
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			hdmi_tx_out: endpoint {
-+				remote-endpoint = <&native_hdmi_connector_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmi_tx_phy {
-+	status = "okay";
-+};
-+
- /* Current measurement into module VCC */
- &hwmon {
- 	status = "okay";
-@@ -141,6 +174,10 @@ &i2c5 {
- 	status = "okay";
- };
- 
-+&lcdif3 {
-+	status = "okay";
-+};
-+
- /* Verdin PCIE_1 */
- &pcie {
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin-mallow.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin-mallow.dtsi
-index 1d15f7449c58..3a40338cf2d8 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-verdin-mallow.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin-mallow.dtsi
-@@ -11,6 +11,18 @@
- #include <dt-bindings/leds/common.h>
- 
- / {
-+	native-hdmi-connector {
-+		compatible = "hdmi-connector";
-+		label = "X14";
-+		type = "a";
-+
-+		port {
-+			native_hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_out>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -91,6 +103,27 @@ &flexcan2 {
- 	status = "okay";
- };
- 
-+/* Verdin HDMI_1 */
-+&hdmi_pvi {
-+	status = "okay";
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			hdmi_tx_out: endpoint {
-+				remote-endpoint = <&native_hdmi_connector_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmi_tx_phy {
-+	status = "okay";
-+};
-+
- /* Temperature sensor on Mallow */
- &hwmon_temp {
- 	compatible = "ti,tmp1075";
-@@ -117,6 +150,10 @@ &i2c5 {
- 	status = "okay";
- };
- 
-+&lcdif3 {
-+	status = "okay";
-+};
-+
- /* Verdin PCIE_1 */
- &pcie {
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin-nonwifi.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin-nonwifi.dtsi
-index 91d597391b7c..2ee91f31e7f0 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-verdin-nonwifi.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin-nonwifi.dtsi
-@@ -41,8 +41,7 @@ &iomuxc {
- 	pinctrl-0 = <&pinctrl_gpio1>, <&pinctrl_gpio2>,
- 		    <&pinctrl_gpio3>, <&pinctrl_gpio4>,
- 		    <&pinctrl_gpio7>, <&pinctrl_gpio8>,
--		    <&pinctrl_gpio_hog1>, <&pinctrl_gpio_hog2>, <&pinctrl_gpio_hog3>,
--		    <&pinctrl_hdmi_hog>;
-+		    <&pinctrl_gpio_hog1>, <&pinctrl_gpio_hog2>, <&pinctrl_gpio_hog3>;
- };
- 
- /*
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin-wifi.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin-wifi.dtsi
-index ef94f9a57e20..efcab00c0142 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-verdin-wifi.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin-wifi.dtsi
-@@ -55,8 +55,7 @@ &iomuxc {
- 	pinctrl-0 = <&pinctrl_gpio1>, <&pinctrl_gpio2>,
- 		    <&pinctrl_gpio3>, <&pinctrl_gpio4>,
- 		    <&pinctrl_gpio7>, <&pinctrl_gpio8>,
--		    <&pinctrl_gpio_hog2>, <&pinctrl_gpio_hog3>, <&pinctrl_gpio_hog4>,
--		    <&pinctrl_hdmi_hog>;
-+		    <&pinctrl_gpio_hog2>, <&pinctrl_gpio_hog3>, <&pinctrl_gpio_hog4>;
- };
- 
- /* On-module Bluetooth */
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin-yavia.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin-yavia.dtsi
-index a7b261ff3e4c..533b7fe218ce 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-verdin-yavia.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin-yavia.dtsi
-@@ -6,6 +6,18 @@
- #include <dt-bindings/leds/common.h>
- 
- / {
-+	native-hdmi-connector {
-+		compatible = "hdmi-connector";
-+		label = "J15";
-+		type = "a";
-+
-+		port {
-+			native_hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_out>;
-+			};
-+		};
-+	};
-+
- 	/* Carrier Board Supply +V1.8 */
- 	reg_1p8v: regulator-1p8v {
- 		compatible = "regulator-fixed";
-@@ -105,6 +117,27 @@ &gpio4 {
- 	pinctrl-0 = <&pinctrl_ctrl_sleep_moci>;
- };
- 
-+/* Verdin HDMI_1 */
-+&hdmi_pvi {
-+	status = "okay";
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			hdmi_tx_out: endpoint {
-+				remote-endpoint = <&native_hdmi_connector_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmi_tx_phy {
-+	status = "okay";
-+};
-+
- &hwmon_temp {
- 	status = "okay";
- };
-@@ -127,6 +160,10 @@ &i2c5 {
- 	status = "okay";
- };
- 
-+&lcdif3 {
-+	status = "okay";
-+};
-+
- /* Verdin PCIE_1 */
- &pcie {
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi
-index aef4bef4bccd..834236db86fe 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi
-@@ -457,6 +457,13 @@ &gpio4 {
- 			  "SODIMM_44";
- };
- 
-+/* Verdin HDMI_1 */
-+&hdmi_tx {
-+	ddc-i2c-bus = <&i2c5>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hdmi>;
-+};
-+
- /* On-module I2C */
- &i2c1 {
- 	clock-frequency = <400000>;
-@@ -1117,10 +1124,10 @@ pinctrl_gpio_keys: gpiokeysgrp {
- 			<MX8MP_IOMUXC_SAI1_RXFS__GPIO4_IO00		0x1c4>;	/* SODIMM 252 */
- 	};
- 
--	pinctrl_hdmi_hog: hdmihoggrp {
-+	pinctrl_hdmi: hdmigrp {
- 		fsl,pins =
--			<MX8MP_IOMUXC_HDMI_CEC__HDMIMIX_HDMI_CEC	0x40000019>,	/* SODIMM 63 */
--			<MX8MP_IOMUXC_HDMI_HPD__HDMIMIX_HDMI_HPD	0x40000019>;	/* SODIMM 61 */
-+			<MX8MP_IOMUXC_HDMI_CEC__HDMIMIX_HDMI_CEC	0x140>,	/* SODIMM 63 */
-+			<MX8MP_IOMUXC_HDMI_HPD__HDMIMIX_HDMI_HPD	0x180>;	/* SODIMM 61 */
- 	};
- 
- 	/* On-module I2C */
--- 
-2.39.2
+/* Conflicts */
+No known conflicts.
 
+The following changes since commit 2bfcfd584ff5ccc8bb7acde19b42570414bf880b:
+
+  Merge tag 'pmdomain-v6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm (2024-05-27 08:18:31 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.10-rc4.fixes
+
+for you to fetch changes up to f5ceb1bbc98c69536d4673a97315e8427e67de1b:
+
+  iomap: Fix iomap_adjust_read_range for plen calculation (2024-06-05 17:27:03 +0200)
+
+Please consider pulling these changes from the signed vfs-6.10-rc4.fixes tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+vfs-6.10-rc4.fixes
+
+----------------------------------------------------------------
+Baokun Li (11):
+      cachefiles: add output string to cachefiles_obj_[get|put]_ondemand_fd
+      cachefiles: remove requests from xarray during flushing requests
+      cachefiles: fix slab-use-after-free in cachefiles_ondemand_get_fd()
+      cachefiles: fix slab-use-after-free in cachefiles_ondemand_daemon_read()
+      cachefiles: remove err_put_fd label in cachefiles_ondemand_daemon_read()
+      cachefiles: add consistency check for copen/cread
+      cachefiles: add spin_lock for cachefiles_ondemand_info
+      cachefiles: never get a new anonymous fd if ondemand_id is valid
+      cachefiles: defer exposing anon_fd until after copy_to_user() succeeds
+      cachefiles: flush all requests after setting CACHEFILES_DEAD
+      cachefiles: make on-demand read killable
+
+Christian Brauner (3):
+      debugfs: continue to ignore unknown mount options
+      netfs: fix kernel doc for nets_wait_for_outstanding_io()
+      Merge patch series "cachefiles: some bugfixes and cleanups for ondemand requests"
+
+Gao Xiang (1):
+      cachefiles: remove unneeded include of <linux/fdtable.h>
+
+John Garry (1):
+      statx: Update offset commentary for struct statx
+
+Ritesh Harjani (IBM) (1):
+      iomap: Fix iomap_adjust_read_range for plen calculation
+
+Yuntao Wang (1):
+      fs/file: fix the check in find_next_fd()
+
+Zhang Yi (1):
+      iomap: keep on increasing i_size in iomap_write_end()
+
+Zizhi Wo (1):
+      cachefiles: Set object to close if ondemand_id < 0 in copen
+
+ fs/cachefiles/daemon.c            |   3 +-
+ fs/cachefiles/internal.h          |   5 +
+ fs/cachefiles/ondemand.c          | 218 ++++++++++++++++++++++++++++----------
+ fs/debugfs/inode.c                |  10 +-
+ fs/file.c                         |   4 +-
+ fs/iomap/buffered-io.c            |  56 +++++-----
+ include/linux/netfs.h             |   2 +-
+ include/trace/events/cachefiles.h |   8 +-
+ include/uapi/linux/stat.h         |   2 +-
+ 9 files changed, 215 insertions(+), 93 deletions(-)
