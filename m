@@ -1,131 +1,100 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AD914BF89
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 17:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D16414D6FF;
+	Mon, 10 Jun 2024 17:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718040994; cv=none; b=Lssg8jL2k/jOS9i5Um2p8aWeaRu4xH3yVA0BrefTMpySih7FVRiBeMx705/tgLTa+4QJyWiSb8Zs+viCFshHkZ6wDHybcbakJrHAwUQJ6Eki0Y9J0ajZfnEJnLJlz2TOnviwZmAwi/et/81ngQyed4oV7xmnIyVoVlsK0P22tz4=
+	t=1718041000; cv=none; b=Uae6FUHeRTsoraA9uZN0PgAipnSTR99B6Juw6CbNi7ZphG8GfZKQC6SZmVfr/h087QrJdTYwuB8XK4b6qjdwKOFblPY+2cyoDXnsuMnM8s+B2jPbaPtBDfEgIApXK0PMArLmTfJhAVljKZzp07bFRESx+3Ea7TyiNfgjxqOgf6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718040994; c=relaxed/simple;
-	bh=y+uDpOxTiI90Z0rYst7WMhozs021EoRaJXDZTXBdl4Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t/oAI6CczEug/4B6BToBQGxxpecidbql3fWcIKMcYPCk16WD9iE7NBAJNxPZsPdtCgmW4ICo1gHWjqcLTx/gdcMAZqw/ZoVXv4Gq0KGwibI2Bg0PFSXVgnTsJZecun1QC2oWNip6ds1KYxeojmcliY1CpQTXEZ/0i01xwOUQKmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=smQ+bCra; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718041000; c=relaxed/simple;
+	bh=5peT9yE4nDGFeJtvaJ7NLGE1KQp2YckJYIwOYXJbbGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lP9zAeeV7jiRw00+qLVrlo+KI/TsqyNjMxFLOvLWGrpGzKo5l5pd2jDdM35l7GJ3UwbEBEg4MXfbaZiKzJZI/u44J0qfgdRp4iDoPAqgzcPbql5QVkuMAmhtEVkysPugZHx2QZ9tq1gDSD6EYXHtAQqdixbe2K35BcI99fwuG4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=McdIVopN; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smQ+bCra"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6f1c4800easo165200266b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 10:36:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718040991; x=1718645791; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dU1wp/8ID9GZkzO9MN6hzBQi84cW9f85LsgOI6MzdBM=;
-        b=smQ+bCrax6f2Z50WCDNYyedoxZKyOWqR/CYQ7hJ691CRiXFuslzL4yQ3qW/D+Tvbz3
-         XtcmIzAvmCygxmOy5/yOEJh5spMHIHLTdmcRrdW4us8FxFOw1V/1EnyuNkQ9qRkIwZMs
-         I5mGJ4AxF34961opHBEvBGBqoDWSFfuazQTyuchEf9D+rv7RE34xKjRrg4+JFSL2HWR+
-         28AvUqYNt+EWQOk014ZBILHN3Z1j7puA6Cbu/MkfLr+zoPbB+cHLArZ0g85z4JuJVE52
-         gTX0Qghy9GbovsBgcU+tG5VT2qriC+M/iGLefRZYm5EH6g7RYwpXM8Y5jKGuJGPt8UAR
-         CrgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718040991; x=1718645791;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dU1wp/8ID9GZkzO9MN6hzBQi84cW9f85LsgOI6MzdBM=;
-        b=opwmJj4uepJ6kBNq2P4fIoY6UjLtZC+DhZqPmZdBfsY5eIqBBRk4tRBsjxH5s3Tolb
-         hVAqf6bRbpHDIF116mvtbLumlDlwRh4Uw6r1ns76BJU6OwZvjsn0zgNPvtEtchPmt723
-         wZxGoRKQy1P8rKf42OOc55O4gvEAwd/ZbDw0MJMoUDKxCvAC2j0205Cv5cSg7kuzrAsm
-         0JtuZxA4fbJmabLq0fArUzo50Li4guKtHG/rJy8JlmkCRmdcOHLbLfcj9HWrlQTTnCo4
-         tv6rxDgY3U3DBypytzeXRV9nNyUfcLbkkfv30M6JwBl6wDsgI2DZN1njUcDjEAu2iSpB
-         7ivw==
-X-Forwarded-Encrypted: i=1; AJvYcCVEtd9oAbIbnkqoZvct+AthRaFNnAU/qmTTHv+2RNTE8Ry8cZtskTFyKXyoU2g4Bff/wVIh1NkU6LOMnDIQQh5JaqmK1Uc1Z2FQTxbP
-X-Gm-Message-State: AOJu0YyZPVTNsKjOJe4M0NazeCB6Q2BDPK0ns4oxhDn8W6SXnIkolHD/
-	9lbYIh4BCkmXaFvfwnuwSOoO5jJ6tA5a9flnAIHzAV2qKD7isqcbJbeO2jnxc6y8MWTg/aQlvtj
-	+LmPUeCb3n/2UWYG+voksGJzz/WXqyTTZTXow
-X-Google-Smtp-Source: AGHT+IGFJqcSp8XShUaYALJ4Wx844rcf/dAaD5tsaciA5uNA6+bXzdDsjJKkkmvkFTaD/iDvHjV/GNRzuOlKzPKT1+g=
-X-Received: by 2002:a17:906:52d8:b0:a6e:f7b5:3189 with SMTP id
- a640c23a62f3a-a6ef7b539c6mr508030966b.76.1718040990435; Mon, 10 Jun 2024
- 10:36:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="McdIVopN"
+Received: from fedor-21d0 (unknown [5.228.116.47])
+	by mail.ispras.ru (Postfix) with ESMTPSA id DF359407853A;
+	Mon, 10 Jun 2024 17:36:26 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru DF359407853A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1718040987;
+	bh=3mx7J795/y8Yz1JHM3D8D7/9NeMSSgSBgbIlVoPD2Nw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=McdIVopNHE9BRDrwTqPcWXIO+30y9qCb6noHwAH4dDKfyUbq9GDBLoR6aKWr8io2I
+	 BT2j8PVErELdSAd8Q0EivkajK22MF3Znv3dvy255z1Ge/lhT4EBPLvC3z3qzikrNI4
+	 pGMDUX6mSsXL8Nfjm3WqLyyI5oB0K/q8lOoZvA8c=
+Date: Mon, 10 Jun 2024 20:36:19 +0300
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Aleksandr Mishin <amishin@t-argos.ru>, imx@lists.linux.dev, 
+	lvc-project@linuxtesting.org, Shawn Guo <shawnguo@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Oleksij Rempel <o.rempel@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [lvc-project] [PATCH] remoteproc: imx_rproc: Adjust phandle
+ parsing issue while remapping optional addresses in imx_rproc_addr_init()
+Message-ID: <20240610-4fb504648421659114538a50-pchelkin@ispras.ru>
+References: <20240606075204.12354-1-amishin@t-argos.ru>
+ <ZmcuFRfjKRQG9OXI@p14s>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240608023654.3513385-1-yosryahmed@google.com> <2821278f-bc94-c147-d0fe-8cc52dbdccb1@redhat.com>
-In-Reply-To: <2821278f-bc94-c147-d0fe-8cc52dbdccb1@redhat.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 10 Jun 2024 10:35:54 -0700
-Message-ID: <CAJD7tkYepf6z1Q7HiSRAc7-S9OwYCphx=9NcyHxtW0YrkFv0sQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: zswap: handle incorrect attempts to load of large folios
-To: =?UTF-8?Q?Mika_Penttil=C3=A4?= <mpenttil@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Barry Song <21cnbao@gmail.com>, 
-	Chris Li <chrisl@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, 
-	David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZmcuFRfjKRQG9OXI@p14s>
 
-On Fri, Jun 7, 2024 at 9:08=E2=80=AFPM Mika Penttil=C3=A4 <mpenttil@redhat.=
-com> wrote:
->
-> On 6/8/24 05:36, Yosry Ahmed wrote:
-> > diff --git a/mm/zswap.c b/mm/zswap.c
-> > index b9b35ef86d9be..ebb878d3e7865 100644
-> > --- a/mm/zswap.c
-> > +++ b/mm/zswap.c
-> > @@ -1557,6 +1557,26 @@ bool zswap_load(struct folio *folio)
-> >
-> >       VM_WARN_ON_ONCE(!folio_test_locked(folio));
-> >
-> > +     /*
-> > +      * Large folios should not be swapped in while zswap is being use=
-d, as
-> > +      * they are not properly handled. Zswap does not properly load la=
-rge
-> > +      * folios, and a large folio may only be partially in zswap.
-> > +      *
-> > +      * If any of the subpages are in zswap, reading from disk would r=
-esult
-> > +      * in data corruption, so return true without marking the folio u=
-ptodate
-> > +      * so that an IO error is emitted (e.g. do_swap_page() will sigfa=
-ult).
-> > +      *
-> > +      * Otherwise, return false and read the folio from disk.
-> > +      */
-> > +     if (folio_test_large(folio)) {
-> > +             if (xa_find(tree, &offset,
-> > +                         offset + folio_nr_pages(folio) - 1, XA_PRESEN=
-T)) {
-> > +                     WARN_ON_ONCE(1);
-> > +                     return true;
-> > +             }
->
-> How does that work? Should it be xa_find_after() to not always find
-> current entry?
+On Mon, 10. Jun 10:47, Mathieu Poirier wrote:
+> On Thu, Jun 06, 2024 at 10:52:04AM +0300, Aleksandr Mishin wrote:
+> > In imx_rproc_addr_init() "nph = of_count_phandle_with_args()" just counts
+> > number of phandles. But phandles may be empty. So of_parse_phandle() in
+> > the parsing loop (0 < a < nph) may return NULL which is later dereferenced.
+> > Adjust this issue by adding NULL-return check.
+> > 
+> > Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> > 
+> > Fixes: a0ff4aa6f010 ("remoteproc: imx_rproc: add a NXP/Freescale imx_rproc driver")
+> > Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+> > ---
+> >  drivers/remoteproc/imx_rproc.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> > index 5a3fb902acc9..39eacd90af14 100644
+> > --- a/drivers/remoteproc/imx_rproc.c
+> > +++ b/drivers/remoteproc/imx_rproc.c
+> > @@ -726,6 +726,8 @@ static int imx_rproc_addr_init(struct imx_rproc *priv,
+> >  		struct resource res;
+> >  
+> >  		node = of_parse_phandle(np, "memory-region", a);
+> > +		if (!node)
+> 
+> You're missing an "of_node_put()" before continuing.
+> 
 
-By "current entry" I believe you mean the entry corresponding to
-"offset" (i.e. the first subpage of the folio). At this point, we
-haven't checked if that offset has a corresponding entry in zswap or
-not. It may be on disk, or zwap may be disabled.
+The node is NULL in this case so of_node_put() is not needed..?
 
->
-> And does it still mean those subsequent entries map to same folio?
+Btw, there is a "rsc-table" node->name check in the the end of the loop
+body. It was added recently with commit 5e4c1243071d ("remoteproc:
+imx_rproc: support remote cores booted before Linux Kernel"). Seems to me
+it forgot that of_node_put() is called way before that.
 
-If I understand correctly, a folio in the swapcache has contiguous
-swap offsets for its subpages. So I am assuming that the large folio
-swapin case will adhere to that (i.e. we only swapin a large folio if
-the swap offsets are contiguous). Did I misunderstand something here?
+Also commit 61afafe8b938 ("remoteproc: imx_rproc: Fix refcount leak in
+imx_rproc_addr_init") was dealing with the last of_node_put() call here
+but it's still not in the right place I'd say.
 
->
->
-> --Mika
->
->
+> > +			continue;
+> >  		/* Not map vdevbuffer, vdevring region */
+> >  		if (!strncmp(node->name, "vdev", strlen("vdev"))) {
+> >  			of_node_put(node);
+> > -- 
+> > 2.30.2
+> > 
+> > 
