@@ -1,110 +1,179 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88C515A49C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969F415A84D;
+	Mon, 10 Jun 2024 16:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037791; cv=none; b=N8EYAj+DLLUyakJ9dloqJbU3H4BF1SDVcyQ0xNitRIwyGVMPIye38nLXlOJ8xENkH7LS9UsUaPt3jZsB2MIx+fCUT2Jw4l0FeaAj7mOSyuSo2DgozDRhgGgH3WLLcxhfulP6/Mu/rQ5qkaXIV+gv3ZyPjLqDFvA5RcZ3Ldod9bg=
+	t=1718037790; cv=none; b=tPPEDPCWi3PBJ6CFC5bJvFEWac89RB/h6WqvVkHfdIxDEWt3f49VeWCWZQKdYnIoxlGQTiRfSW1lT/0x14qI0gmJEYVVys2Bhs7Rh2zY6o/33xXI94bHnkMclyolTDeygeotQ8rJ1pKbdPfaSRW2Z4OCijJTQtCl0Ako7CrkeGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718037791; c=relaxed/simple;
-	bh=dVOMH7eiDEHVePUyZa4h1ExK1Rjvcqco8G9d9SW/qIU=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=QKzODpsBhzg7NiBWfh6MV/nyMOBUiJj661LihoW2fmEtxHb174+Pod3WirfT3HbavLIV2HZCIU8U8W4FmjLrTeObuVf0NZ0Gpf2UeFqPAeefYgHI7UWr34JziTFDNr0G58qkqhTWMNzoyuyWZvmq5c+uchGQRt8RsZaySOBP4p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=braac+sm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eklJcDEC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1718037790; c=relaxed/simple;
+	bh=usayfudDL15Ak+7O16vBuNWB2nVZsclVG4R2lRWLypI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hB6M1rxZpSBuaoMZOFsFqp5Yq2i7qQepN/Q3r5skWtofMXNuu2wklzX5Svj7n9pt5Rh1ZRjbcKVmDLlkKOogn4+Ttu4+lNth/YHNrZaG4yIo1sc21pqPPgLojN41PcWsMa+e+padpz9nSovJuXy1TAQkW+A0aChxoNhW42Jn2Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnl9aG4z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="braac+sm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eklJcDEC"
-Message-ID: <20240610164028.602391697@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037787;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=HdIXDmhsPUZ2RPLujxzrsxlJ5xE23RHzUivxcwc9L5U=;
-	b=braac+sm3dy3Sj6PI2wRWC5h2tNpmtL6i1ul4xFtWdXaCn8Se2grLPNaS15m1K2azpftr3
-	a5AV9MqnpwnViEb3EHB+V57NUSVQcKGCh7vcqye5bGHdXxOJXCtBqFhUJssrFoDlsf+YSl
-	GJhQD3MoEL6s2Lu425H26W7QCnR2oLbns2SPUwQhD1bXIa5oF6CHzG8e3N/5dYe1JQiCgJ
-	qG7khJkbfQXX2ovn7Lb4AF8xlnz6HbtwHk0MFzfPpfculL/uAhaI7u5sZTO8GA/8HSitYx
-	ZfPIIM9qYGBTi4U1XGJ+vcVu3BSsw+ZblWp1ipoSu2V4T/ooa34yH/mco12vfQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037787;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=HdIXDmhsPUZ2RPLujxzrsxlJ5xE23RHzUivxcwc9L5U=;
-	b=eklJcDEC7895pOTsJCssnGpd5ZjyEg5taghQDWJrmLU86tOjVf4k9d0N2sHaLPlXN0Qszo
-	jSE4fPnw95Aa27AQ==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>,
- John Stultz <jstultz@google.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Stephen Boyd <sboyd@kernel.org>,
- Eric Biederman <ebiederm@xmission.com>,
- Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 50/51] alarmtimers: Remove the throttle mechanism from
- alarm_forward_now()
-References: <20240610163452.591699700@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnl9aG4z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D81CC2BBFC;
+	Mon, 10 Jun 2024 16:43:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718037790;
+	bh=usayfudDL15Ak+7O16vBuNWB2nVZsclVG4R2lRWLypI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tnl9aG4zS3SZQKIX7jsA3xVVvt/+KXo2r4y8CARZk8ZnXuNRvnCIYrqE1kpBBcVJQ
+	 wJF1Mmb5ljFUHrQlPKNlBIPmfvtIQLlnkzUuIrlJHjIr3pNz8Mn4F34Gd83RsOK7WT
+	 ScNHdKu4iK9kkDD9uDhIhU0p8Ndsirr+HB7TmrOWfXhYX48yXY5KiNbD5gAFoDVDLB
+	 SErcM052ykP6CmKGt1puMHJ4hJME6yVYQvE8Us9mYbufiuX1DYvK1QysWp+rKF+5US
+	 gHFXDFEzfDahY43b5xqiutZM2zGCk4p4ETgGOp8MlcqZyHCe9BPBIiH71mn3JhfW70
+	 IUbccCkZBfvGg==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52bc1acb9f0so142230e87.2;
+        Mon, 10 Jun 2024 09:43:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU48N3SB9DQXznRVJKimQRFVcjBVHtYHFwiO8UnqUFrOegRSNDbY8y7shkyAGHhy4yJNk2nEr0GE8ncp2kJ1HmE9+TM524Uxf1zYChl3z7Z+XrL8upZJD9a+bGNjW/Ap5JRFKJYP61em8YMpkk3tg==
+X-Gm-Message-State: AOJu0Yy468B3uRIR3RppsuPlUYx2vVW6nQBKnIzac42gjWj46UBmCAAM
+	Ke25WR7Q9CSguq4IQSK8sWNw79PfTtVw19XgLG8tLhNWqZNZmhxM7sv1hiMARZ27S5u7+7X2zLP
+	/FTfbvdvo6G7QGZ4emy6HNkh1zQ==
+X-Google-Smtp-Source: AGHT+IFbSJGXfUAWn3yeFEE6Vt8lJf4yOwgaLpwSa7ZjrDzQesdqm4cl//megHluZarInI+M0d+bC18lY/X2TjLaXtE=
+X-Received: by 2002:ac2:53a6:0:b0:52b:c0a5:eae8 with SMTP id
+ 2adb3069b0e04-52bc0a5eb76mr5189629e87.14.1718037788484; Mon, 10 Jun 2024
+ 09:43:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:43:07 +0200 (CEST)
+References: <20240607-arm-pmu-3-9-icntr-v1-0-c7bd2dceff3b@kernel.org>
+ <20240607-arm-pmu-3-9-icntr-v1-3-c7bd2dceff3b@kernel.org> <ZmbZG-eaqE4NPcE3@J2N7QTR9R3>
+In-Reply-To: <ZmbZG-eaqE4NPcE3@J2N7QTR9R3>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 10 Jun 2024 10:42:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK5TT1usMUY1Eaxy6qyGoWLj5R8XRNG-L6h-1S3WQfkRg@mail.gmail.com>
+Message-ID: <CAL_JsqK5TT1usMUY1Eaxy6qyGoWLj5R8XRNG-L6h-1S3WQfkRg@mail.gmail.com>
+Subject: Re: [PATCH 3/9] perf: arm_pmu: Remove event index to counter remapping
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Russell King <linux@armlinux.org.uk>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	James Morse <james.morse@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that ignored posix timer signals are requeued and the timers are
-rearmed on signal delivery the workaround to keep such timers alive and
-self rearm them is not longer required.
+On Mon, Jun 10, 2024 at 4:44=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
+ wrote:
+>
+> On Fri, Jun 07, 2024 at 02:31:28PM -0600, Rob Herring (Arm) wrote:
+> > Xscale and Armv6 PMUs defined the cycle counter at 0 and event counters
+> > starting at 1 and had 1:1 event index to counter numbering. On Armv7 an=
+d
+> > later, this changed the cycle counter to 31 and event counters start at
+> > 0. The drivers for Armv7 and PMUv3 kept the old event index numbering
+> > and introduced an event index to counter conversion. The conversion use=
+s
+> > masking to convert from event index to a counter number. This operation
+> > relies on having at most 32 counters so that the cycle counter index 0
+> > can be transformed to counter number 31.
 
-Remove the unused alarm timer parts.
+[...]
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- kernel/time/alarmtimer.c |   28 ++--------------------------
- 1 file changed, 2 insertions(+), 26 deletions(-)
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -469,35 +469,11 @@ u64 alarm_forward(struct alarm *alarm, k
- }
- EXPORT_SYMBOL_GPL(alarm_forward);
- 
--static u64 __alarm_forward_now(struct alarm *alarm, ktime_t interval, bool throttle)
-+u64 alarm_forward_now(struct alarm *alarm, ktime_t interval)
- {
- 	struct alarm_base *base = &alarm_bases[alarm->type];
--	ktime_t now = base->get_ktime();
--
--	if (IS_ENABLED(CONFIG_HIGH_RES_TIMERS) && throttle) {
--		/*
--		 * Same issue as with posix_timer_fn(). Timers which are
--		 * periodic but the signal is ignored can starve the system
--		 * with a very small interval. The real fix which was
--		 * promised in the context of posix_timer_fn() never
--		 * materialized, but someone should really work on it.
--		 *
--		 * To prevent DOS fake @now to be 1 jiffie out which keeps
--		 * the overrun accounting correct but creates an
--		 * inconsistency vs. timer_gettime(2).
--		 */
--		ktime_t kj = NSEC_PER_SEC / HZ;
- 
--		if (interval < kj)
--			now = ktime_add(now, kj);
--	}
--
--	return alarm_forward(alarm, now, interval);
--}
--
--u64 alarm_forward_now(struct alarm *alarm, ktime_t interval)
--{
--	return __alarm_forward_now(alarm, interval, false);
-+	return alarm_forward(alarm, base->get_ktime(), interval);
- }
- EXPORT_SYMBOL_GPL(alarm_forward_now);
- 
+> > @@ -783,7 +767,7 @@ static void armv8pmu_enable_user_access(struct arm_=
+pmu *cpu_pmu)
+> >       struct pmu_hw_events *cpuc =3D this_cpu_ptr(cpu_pmu->hw_events);
+> >
+> >       /* Clear any unused counters to avoid leaking their contents */
+> > -     for_each_clear_bit(i, cpuc->used_mask, cpu_pmu->num_events) {
+> > +     for_each_clear_bit(i, cpuc->used_mask, ARMPMU_MAX_HWEVENTS) {
+> >               if (i =3D=3D ARMV8_IDX_CYCLE_COUNTER)
+> >                       write_pmccntr(0);
+> >               else
+>
+> IIUC this will now hit all unimplemented counters; e.g. for N counters th=
+e body
+> will run for counters N..31, and the else case has:
+>
+>         armv8pmu_write_evcntr(i, 0);
+>
+> ... where the resulting write to PMEVCNTR<n>_EL0 for unimplemented
+> counters is CONSTRAINED UNPREDICTABLE and might be UNDEFINED.
+>
+> We can fix that with for_each_andnot_bit(), e.g.
 
+Good catch. Fixed.
+
+>
+>         for_each_andnot_bit(i, cpu_pmu->cntr_mask, cpuc->used_mask,
+>                             ARMPMU_MAX_HWEVENTS) {
+>                 if (i =3D=3D ARMV8_IDX_CYCLE_COUNTER)
+>                         write_pmccntr(0);
+>                 else
+>                          armv8pmu_write_evcntr(i, 0);
+>         }
+>
+> [...]
+>
+> > @@ -905,7 +889,7 @@ static int armv8pmu_get_single_idx(struct pmu_hw_ev=
+ents *cpuc,
+> >  {
+> >       int idx;
+> >
+> > -     for (idx =3D ARMV8_IDX_COUNTER0; idx < cpu_pmu->num_events; idx++=
+) {
+> > +     for_each_set_bit(idx, cpu_pmu->cntr_mask, 31) {
+> >               if (!test_and_set_bit(idx, cpuc->used_mask))
+> >                       return idx;
+> >       }
+> > @@ -921,7 +905,9 @@ static int armv8pmu_get_chain_idx(struct pmu_hw_eve=
+nts *cpuc,
+> >        * Chaining requires two consecutive event counters, where
+> >        * the lower idx must be even.
+> >        */
+> > -     for (idx =3D ARMV8_IDX_COUNTER0 + 1; idx < cpu_pmu->num_events; i=
+dx +=3D 2) {
+> > +     for_each_set_bit(idx, cpu_pmu->cntr_mask, 31) {
+> > +             if (!(idx & 0x1))
+> > +                     continue;
+> >               if (!test_and_set_bit(idx, cpuc->used_mask)) {
+> >                       /* Check if the preceding even counter is availab=
+le */
+> >                       if (!test_and_set_bit(idx - 1, cpuc->used_mask))
+>
+> It would be nice to replace those instances of '31' with something
+> indicating that this was only covering the generic/programmable
+> counters, but I wasn't able to come up with a nice mnemonic for that.
+> The best I could think of was:
+>
+> #define ARMV8_MAX_NR_GENERIC_COUNTERS 31
+>
+> Maybe it makes sense to define that along with ARMV8_IDX_CYCLE_COUNTER.
+
+I've got nothing better. :) I think there's a few other spots that can use =
+this.
+
+[...]
+
+> >       /* Read the nb of CNTx counters supported from PMNC */
+> > -     *nb_cnt =3D (armv7_pmnc_read() >> ARMV7_PMNC_N_SHIFT) & ARMV7_PMN=
+C_N_MASK;
+> > +     nb_cnt =3D (armv7_pmnc_read() >> ARMV7_PMNC_N_SHIFT) & ARMV7_PMNC=
+_N_MASK;
+> > +     bitmap_set(cpu_pmu->cntr_mask, 0, nb_cnt);
+> >
+> >       /* Add the CPU cycles counter */
+> > -     *nb_cnt +=3D 1;
+> > +     bitmap_set(cpu_pmu->cntr_mask, ARMV7_IDX_CYCLE_COUNTER, 1);
+>
+> This can be:
+>
+>         set_bit(cpu_pmu->cntr_mask, ARMV7_IDX_CYCLE_COUNTER);
+>
+> ... and likewise for the PMUv3 version.
+
+Indeed. The documentation in bitmap.h is not clear that greater than 1
+unsigned long # of bits works given it says there set_bit() is just
+"*addr |=3D bit". I guess I don't use bitops enough...
+
+Rob
