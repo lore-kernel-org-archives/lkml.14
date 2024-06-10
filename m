@@ -1,214 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.rothwell.id.au (gimli.rothwell.id.au [103.230.158.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1A218E2A;
-	Mon, 10 Jun 2024 22:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C18745F4;
+	Mon, 10 Jun 2024 22:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.230.158.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718058064; cv=none; b=n1W7eTroLibYTbxXJ/T4Yb/Gx0QWIn4fCPOhv698C9UK6JQqq/VFKnNNDUvGMBJNniDmYMb+8vypEuBxmTl2PkEAdoVH7cHApaREYwzj2o7g21fzGIKfAVD9ULwMrgWhMaOs1mC/2CLadk3j6bOBzlpJpuoetyLpmRxE932d8LQ=
+	t=1718058082; cv=none; b=HsaZHtob1jj+4OuqGv/N3Jg4vBEawZF6qOYR/Lx8VJM3RHpG2gFcTmvnk+WuQqH86+1pEalspnuW4gqNvjpgeTGlBbRrGVMlmeNpGzphh4DtRAN2JfK1UpCs4lWL7vb/1kPE/JRwLUgnQN+8F0E8YPX+lNfYDjMa3WuMgXjWkEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718058064; c=relaxed/simple;
-	bh=pl6keJwPlGBjGuebt18yLI6GtwU9xIevymMuRab/vLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ea8WqdF4VJpYsCcnmzDNOLhdZDSKnWYukNvXVbmmfMkeAisteq2e3BGBtZ7gbYGUU7baQKctGa/s1cSRmnp94Pz+B8YOBVv7aoIR5mJR/71mhDziJcv8vrKaVh9LRjnuZUdpDYWko/wUaFpKjv6ZfiOrC08u/PYcFUxfKS9oYWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4YSj1We; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718058082; c=relaxed/simple;
+	bh=03Wv3iuJB/txfjVrc2YZH23gRt/Gc/3S3BTnGCY2bu8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oQivhxCjN5dfqCdL38C2mpjUfxx1c7tOYOhNSRratP25wY4zF8X/an3T0LvQlSwG/w4WmqK39tqEhqFEYzW4buDDRZPmayBzPvxg5xMGI/Xp12WGkoyPli1Ode2UBYtZNBxoIpjSnj43PmKxO7K2BFFbeGM+JT0voOiATuhKW74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rothwell.id.au; spf=pass smtp.mailfrom=rothwell.id.au; dkim=pass (2048-bit key) header.d=rothwell.id.au header.i=@rothwell.id.au header.b=pW2ZL601; arc=none smtp.client-ip=103.230.158.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rothwell.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rothwell.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4YSj1We"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 578A9C2BBFC;
-	Mon, 10 Jun 2024 22:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718058064;
-	bh=pl6keJwPlGBjGuebt18yLI6GtwU9xIevymMuRab/vLk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=P4YSj1Wek5SPedwirmW2S6v4vcVcKkM/ixw20phNWnY8ljYuYUOgu7bGEbaN44uA6
-	 GcdJJigQwwTnIyzrEjVL5CGHv70AGx0NlxrI2V2q2YvIxewHElXyzpcRS0Qi6Axd0W
-	 Bw4JRSP+bUWIaFqHV97RDyd9dbvw/h1AVwY+lbcGw+uA2EfhzVyN7H6mfKK/NgfjAJ
-	 0BSPn+eZScC0g0nu+73N40DigghH6sAHBmotrpP2lz3NdzZp8dYCQBxMY39WN/0rJ/
-	 iUMyKdPXTsN/Pj+oEXq0R2MBmkJym0GXu2fn6HjyAKIM2fWl/rEKEsHDN8KMM30JmT
-	 EREj7kR19fo5Q==
-Date: Mon, 10 Jun 2024 16:21:03 -0600
-From: Rob Herring <robh@kernel.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: dt-bindings: convert tas571x.txt to dt-schema
-Message-ID: <20240610222103.GA3160412-robh@kernel.org>
-References: <20240607-topic-amlogic-upstream-bindings-convert-tas57xx-v1-1-ebf1e4919bb1@linaro.org>
+	dkim=pass (2048-bit key) header.d=rothwell.id.au header.i=@rothwell.id.au header.b="pW2ZL601"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rothwell.id.au;
+	s=201702; t=1718057542;
+	bh=o2WHC39aeKi1ObzdV5DagZCOhaGXixNtJPpOUV27h5A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pW2ZL601n5Y+OaMcg5Zrzjv1jlmm+MIyOCxa0crps9iaxbl84bAc28iIHLV+PbaS/
+	 LXlV0PZwFnZ+RxGP+Yz+KOB2LGhP6DVFgEpSp5DvUJj6T1TeDg1N0+H6lthwEnptk9
+	 EPqxjlZFeETolHVQ4GooysVJrybePWRcESHQkixsD+Ui0mSkt61KHrauhUZn+xQoxK
+	 GlEOqXfru7kqTObXU2VcyQkFpUKUPD8sv0Iwb/kb574k1Ds+x/OF3V1a/KkU9hI7VT
+	 NWxncEeN6B0I31Et3gfYWt0Gis7EdPtjR6eVGy8XB5MvM2mpmi8l2SGyCbH0+/PyD+
+	 g9TbRDJxwOK0g==
+Received: from authenticated.rothwell.id.au (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.rothwell.id.au (Postfix) with ESMTPSA id 4VymJ51sWwz57;
+	Tue, 11 Jun 2024 08:12:21 +1000 (AEST)
+Date: Tue, 11 Jun 2024 08:12:17 +1000
+From: Stephen Rothwell <sfr@rothwell.id.au>
+To: Andreas Gruenbacher <agruenba@redhat.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Steven Whitehouse
+ <swhiteho@redhat.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warnings after merge of the gfs2 tree
+Message-ID: <20240611081217.4d2147f2@oak>
+In-Reply-To: <CAHc6FU66Tsg1WZcUwK641rJ-KytbBSkegzrXWFgsEuuhe+PDhQ@mail.gmail.com>
+References: <20240529142455.1c68e65a@canb.auug.org.au>
+	<CAHc6FU7MrnksU9vDvdAvc_tv5knukGpnxXEpqidvdfWqDf1p5Q@mail.gmail.com>
+	<20240531100032.4a112093@canb.auug.org.au>
+	<CAHc6FU66Tsg1WZcUwK641rJ-KytbBSkegzrXWFgsEuuhe+PDhQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607-topic-amlogic-upstream-bindings-convert-tas57xx-v1-1-ebf1e4919bb1@linaro.org>
+Content-Type: multipart/signed; boundary="Sig_/YkyRNdiE3zdYKcMepyqZxEL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, Jun 07, 2024 at 11:54:35AM +0200, Neil Armstrong wrote:
-> Convert the text bindings for the Texas Instruments
-> TAS5711/TAS5717/TAS5719/TAS5721 stereo power amplifiers to
-> dt-schema.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  .../devicetree/bindings/sound/tas571x.txt          |  49 --------
->  .../devicetree/bindings/sound/ti,tas57xx.yaml      | 129 +++++++++++++++++++++
->  2 files changed, 129 insertions(+), 49 deletions(-)
+--Sig_/YkyRNdiE3zdYKcMepyqZxEL
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Looks like 'port' was undocumented and should be added.
+Hi Andreas,
 
-> diff --git a/Documentation/devicetree/bindings/sound/ti,tas57xx.yaml b/Documentation/devicetree/bindings/sound/ti,tas57xx.yaml
-> new file mode 100644
-> index 000000000000..fa6d6c1c8535
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/ti,tas57xx.yaml
-> @@ -0,0 +1,129 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/ti,tas57xx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Texas Instruments TAS5711/TAS5717/TAS5719/TAS5721 stereo power amplifiers
-> +
-> +maintainers:
-> +  - Neil Armstrong <neil.armstrong@linaro.org>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tas5707
-> +      - ti,tas5711
-> +      - ti,tas5717
-> +      - ti,tas5719
-> +      - ti,tas5721
-> +      - ti,tas5733
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: GPIO for the active low reset line
-> +
-> +  pdn-gpios:
-> +    maxItems: 1
-> +    description: GPIO for the active low powerdown line
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: mclk
-> +
-> +  AVDD-supply: true
-> +  DVDD-supply: true
-> +  HPVDD-supply: true
-> +  PVDD_AB-supply: true
-> +  PVDD_CD-supply: true
-> +  PVDD_A-supply: true
-> +  PVDD_B-supply: true
-> +  PVDD_C-supply: true
-> +  PVDD_D-supply: true
-> +  DRVDD-supply: true
-> +  PVDD-supply: true
-> +
-> +  '#sound-dai-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#sound-dai-cells'
-> +
-> +allOf:
-> +  - $ref: dai-common.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - ti,tas5717
-> +              - ti,tas5719
-> +    then:
-> +      properties:
-> +        PVDD_A-supply: false
-> +        PVDD_B-supply: false
-> +        PVDD_C-supply: false
-> +        PVDD_D-supply: false
-> +        DRVDD-supply: false
-> +        PVDD-supply: false
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - ti,tas5711
-> +    then:
-> +      properties:
-> +        HPVDD-supply: false
-> +        PVDD_AB-supply: false
-> +        PVDD_CD-supply: false
-> +        DRVDD-supply: false
-> +        PVDD-supply: false
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - ti,tas5721
-> +    then:
-> +      properties:
-> +        HPVDD-supply: false
-> +        PVDD_AB-supply: false
-> +        PVDD_CD-supply: false
-> +        PVDD_A-supply: false
-> +        PVDD_B-supply: false
-> +        PVDD_C-supply: false
-> +        PVDD_D-supply: false
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +   #include <dt-bindings/gpio/gpio.h>
+On Mon, 10 Jun 2024 14:53:28 +0200 Andreas Gruenbacher <agruenba@redhat.com=
+> wrote:
+>
+> On Fri, May 31, 2024 at 2:00=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.o=
+rg.au> wrote:
+> >
+> > Done.  Who should actually be the contacts for this tree, I currently
+> > have only Steven Whitehouse listed. =20
+>=20
+> Could you please add me, as I'm the maintainer. Steven almost isn't
+> active in the development of gfs2 at all anymore, but still very much
+> on the management side, so it probably makes sense to keep him in the
+> list as well.
 
-You aren't using this.
+Done.
 
-> +   i2c {
-> +     #address-cells = <1>;
-> +     #size-cells = <0>;
+--=20
+Cheers,
+Stephen Rothwell
 
-blank line
+--Sig_/YkyRNdiE3zdYKcMepyqZxEL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> +     codec: codec@2a {
+-----BEGIN PGP SIGNATURE-----
 
-Drop label
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZnekIACgkQAVBC80lX
+0Gx2cggAgGgiYkrTLlv1dqUR/1iyuny+udpr7QOXjZfQOX9fzpPWSTK/kXBf6/qr
+0sf10QPkGdXeCC04Gpb+qvEsanduelo0niPRrsOlN5KN4bwKSHaKZ/qp4sVng7VT
+2WBdiVTa+WPTnclAplsMzvCJ6bQ4OmX36g8MKj+wGCnDII5ILJ3JVYGHsnYeKWRP
+tzkjt/1l8GQTwAAuas4MwEvJ52GRrXYQcCuEBWcNt6VrfocMyw54RCskMQq+Yd7X
+JmQ14kew64VZjfOHMvQwgQFUreMsr5VdIr78xyTeTR39DkD+mOp6o7NsmazHE4CG
+vTc0m8fHrL6qo+Rc2aKry9qze/0K4g==
+=5mop
+-----END PGP SIGNATURE-----
 
-> +       compatible = "ti,tas5717";
-> +       reg = <0x2a>;
-> +       #sound-dai-cells = <0>;
-> +       reset-gpios = <&gpio1 15 0>;
-> +       pdn-gpios = <&gpio1 15 0>;
-> +       AVDD-supply = <&avdd_supply>;
-> +       DVDD-supply = <&dvdd_supply>;
-> +       HPVDD-supply = <&hpvdd_supply>;
-> +       PVDD_AB-supply = <&pvdd_ab_supply>;
-> +       PVDD_CD-supply = <&pvdd_cd_supply>;
-> +     };
-> +   };
-> +
-> +...
-> 
-> ---
-> base-commit: c3f38fa61af77b49866b006939479069cd451173
-> change-id: 20240607-topic-amlogic-upstream-bindings-convert-tas57xx-5af1e564e6a1
-> 
-> Best regards,
-> -- 
-> Neil Armstrong <neil.armstrong@linaro.org>
-> 
+--Sig_/YkyRNdiE3zdYKcMepyqZxEL--
