@@ -1,121 +1,111 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE26F9F5
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 18:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE0A14AD35;
+	Mon, 10 Jun 2024 18:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718043052; cv=none; b=oR45txPg2NHjMX0+BDr5tQTItJV/pMEqNDuZvkzdUk4/QHb/HBlASs1bQJQHVeKc7Rq4gp7ylN5QwVjMb4Gte3s6EeVcwFD7k+IjJ2I+xL5wbgqcflKCNhO+IZqi6dxeqL/t+/fgw856GNVRl8n2hH2dXaYw9O4FolEGtB7Znjg=
+	t=1718043054; cv=none; b=WlHfLdCMi6cQ+Fq0j2QR+UbrX7ycunRCY5t2O2cDTyQRLVvXfmn+xFQS/LCxedlaL0m75v1oC93TlX/r+miZwrn4Wd3hNRMLRf0mydO7PDKWDPJx+vpFIsG7laW3e4Bpy8rNFZKZyMmWX4pqKFEqU+ZcvyuAd1oo3tjTvF5nTX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718043052; c=relaxed/simple;
-	bh=TKJNWw/ctgTnu0aRZKtRjOBDAYS/Wup/cHzbGfyP7p4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m2yUD2sTyQRsOTBmD3ZORdtq+ho+k1/C1NO8ee88tZvkkDXcKG5ByNWT3h5w9/Z0C2rbSmBxmtpM1Gr8Yr+xhBD8RlGtJudQ/XTt/Omm1E/DSSQCMAs22YsqS5bSO1P6jXxFV5SmwmlZMmioyBGpgj2wLeuC4d7e/oHEJT+6zTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ENFNM9lW; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1718043054; c=relaxed/simple;
+	bh=nSKjz0KWv20MSmp1Zba7UhZtqkG9QdgLPUj3njHimJA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LTOBt3+3bnLxRe2FNG/5D/KMqpDOaFFMFVYXgyaOrMP9CeQW0u/1gXXNy1yWHu87H92P+CVg4GtnIIZyXQxs0qoitc4Zlw5BM8hdOt1WEK3Rd+o4PoTrWPaVXeAkdTjM64oaacVrQfPE3e73nZeNR9EpZNhx4/Cly+mcV0QcHf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KGObxygp; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENFNM9lW"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ead2c6b50bso50979711fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 11:10:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGObxygp"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7041f4553ccso2575030b3a.1;
+        Mon, 10 Jun 2024 11:10:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718043049; x=1718647849; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2j2tH1MJf5DFoBED87jcc+yRdvZ3ulPlrgCse54t5gI=;
-        b=ENFNM9lWxQSVACcWqHbWW/n5cACkZN408M52DJeKnkHtCR5GNWoT4xYD8Whd1olWq+
-         ma12keKm1teZ3UWs97GwvftK1JUCGF8dXrhFgmu4XBCrGmvPvRkBF4gwHZAH3DaWSZ9P
-         Swmnyo2UhImKTRWC7Z9vF+pcdHVmV6PtNElBhSwmbzihdxZFKdjm9bthgjrxuLdRItGj
-         JmHENg2wlNM8Ou+eBVorXWeipfKLdyUYzgCHc+grgAlS6fGgXdhEoTclQqkWCiAitkv1
-         9TeBoW7lKFalw5U9kS0IV9yT/qfr5F8/g2WEYmKl6GK0F3CM1/AOxJ84/URStXCgpXoF
-         7ZOA==
+        d=gmail.com; s=20230601; t=1718043052; x=1718647852; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nBodwoDy4NoI0gKU3CfVEoLymIQQPIjGJMUe5cvNy78=;
+        b=KGObxygp2JsmnV4pmbLLNrwLb/UvQDXNDJrLF7YyVrTHx9ZdaHvoh1RsUTlIzaVzRu
+         OYuCnFhYIfHXv3Bs9wSOdvZqq4T7Cyd/uJ3cqUeRGzuEjZkb+3ZtcJHrIo2MRK5XrNx1
+         EsVAXngyqI9+4mRUR7iIX9hfSPWDTKkmDSfpiiOt1WzQA/p6nbC/I3nd2rVRld4I/7SV
+         GVaDUNRA8IuyiZW+wV43dE6RRu/n107XcujigCxRBTj4sPkL9lWtGa5J5GvY2dl3k6jN
+         iLGjiJkQybbsPl+mzEa2Deuu36x3Js2WmBkQEwHvNK0Pa2WckoSNvrsJlt4sIwfXJc9L
+         0TUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718043049; x=1718647849;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2j2tH1MJf5DFoBED87jcc+yRdvZ3ulPlrgCse54t5gI=;
-        b=HEvSt9GCwoGUEwu99C22U5/HmvH4BRzRlGyP6S9aB5iKm9OLF2Gjosf/XWrT7BhRVR
-         ieG2KMtbfvFgicEaarjgUIdDKYSMG75y2XEqqCieZikOACeMiP1vbULn3EnpxubOtL+z
-         QMOLX4jZxO44junAFqhpL8BOJTYnHHosb6ZZQvj/JgvgLolRXvzwh24Z6KS3E8aNGARG
-         yI9erMElvPa0LSbci0qA0pAIHSrlDPHZwLFUwyq3U9lRkoxWq8R3+TdY2qj9yXcOsCs8
-         YnvByIZ4+terFbjJ/IJ+xn7uAZXy+SkSERmeH6vV3b9C7FWatGMgs8clRYE/N2jQgS/K
-         8gvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3cDfAPGx8bkFbwPXdtf53C85ojMECbxqlrrkfWN+uMHnAxJKVpl5dpU6HG2mDFx5wK2mBXPQ4zcHt1EKnPhAsgLHdr7DY4taOgdFt
-X-Gm-Message-State: AOJu0YzFUI84rS+WkE2TCkGp/KnEOSELvG6FbX1o1zyz3qqK4e3dcyka
-	zXqrHo695Tj1gnkfadp7ce+QMUkvf0iHQc4Fu+7X8roqmtrlAkjL
-X-Google-Smtp-Source: AGHT+IGlrL3f6dl5O0yO6FNxoPk33Q3dtwwLC77xKGnjU61vwxCQWfdswQMz6DKtIxqQs9hvzKxMSw==
-X-Received: by 2002:a05:651c:1048:b0:2ea:eaf4:e07b with SMTP id 38308e7fff4ca-2eaeaf4e1ccmr60883731fa.22.1718043049005;
-        Mon, 10 Jun 2024 11:10:49 -0700 (PDT)
-Received: from localhost (p200300f667069eac100880648459ae0d.dip0.t-ipconnect.de. [2003:f6:6706:9eac:1008:8064:8459:ae0d])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2eaea784805sm14562851fa.76.2024.06.10.11.10.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 11:10:48 -0700 (PDT)
-Message-ID: <568312ec-4feb-4e90-93cc-2c119c5a1ae1@gmail.com>
-Date: Mon, 10 Jun 2024 20:10:46 +0200
+        d=1e100.net; s=20230601; t=1718043052; x=1718647852;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nBodwoDy4NoI0gKU3CfVEoLymIQQPIjGJMUe5cvNy78=;
+        b=vBrV+RihUyNqoKYjFPinx9nvxPA4U3mBrxFoktmb8hsqsZbvjA4UE9kYOVRfGbgVAO
+         NRPiTfgIJ5nmecd6/VUWVJYf5zUIe6abO2pzzF4GoNl7VyaVJZpAT7O4RQY144/coDRs
+         t6hfGm7GPwE1a5m9Y5NF9TGI+u2WE0kzlsjGgh0Ei1HCh5IcKGm7xvCrUdkN0BcK2YsR
+         5HWUpANjbQNLOwT3QgCSLuJrA2kblm+MYXzgZ2G5BXEO6LogEmAzpfaOf7TGK4CS+d0q
+         rsUA77+Y4tkUhRYebpw59iHNTCSzzAAfJ3pdcJWiI9Zv+0N4Y/k9HpKJ32NAsYzTmDmC
+         cQug==
+X-Forwarded-Encrypted: i=1; AJvYcCWcj/rIXZiymMjkwIfMpEVqzSBEMbXG2xq1Homx8E+70NjJo62SRP90DLM16+BcuYM/FAiY1+p4hRuEoOpmL4Y+tIbBOsqQG9n0Kztp
+X-Gm-Message-State: AOJu0YyTY6wb8AM1Y1EY/OqpWC9jCMBsF1AyjEgwv0v6DlqVT84/ObUv
+	cKFKJn028UIBZB4ZRVqgi5D4QExkKlBbXFkuhdsgNgulvYX+EKaKI11i1g==
+X-Google-Smtp-Source: AGHT+IE2tFZcUOCIKyL7dElvOves9MyVhE0oBcRixoK4cmeWLfET8JN+rel7uEgGfjpuzQA0DfYwfg==
+X-Received: by 2002:a05:6a00:1996:b0:704:2d99:9ee0 with SMTP id d2e1a72fcca58-7042d99a023mr8198447b3a.33.1718043052084;
+        Mon, 10 Jun 2024 11:10:52 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-704326f9342sm3104637b3a.103.2024.06.10.11.10.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 11:10:51 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+To: linux-hwmon@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Peter Yin <peteryin.openbmc@gmail.com>,
+	Potin Lai <potin.lai.pt@gmail.com>,
+	Daniel Matyas <daniel.matyas@analog.com>,
+	Andrew Davis <afd@ti.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 1/4] hwmon: (pmbus/lm25066) Let enum chips start with index 0
+Date: Mon, 10 Jun 2024 11:10:43 -0700
+Message-Id: <20240610181046.1991436-2-linux@roeck-us.net>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240610181046.1991436-1-linux@roeck-us.net>
+References: <20240610181046.1991436-1-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mtd: spi-nor: winbond: fix w25q128 regression
-To: Michael Walle <mwalle@kernel.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>,
- Pratyush Yadav <pratyush@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240610074809.2180535-1-mwalle@kernel.org>
-Content-Language: en-GB, de-DE
-From: e9hack <e9hack@gmail.com>
-In-Reply-To: <20240610074809.2180535-1-mwalle@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Am 10.06.2024 um 09:48 schrieb Michael Walle:
-> Commit 83e824a4a595 ("mtd: spi-nor: Correct flags for Winbond w25q128")
-> removed the flags for non-SFDP devices. It was assumed that it wasn't in
-> use anymore. This turned out to be wrong. Add the no_sfdp_flags as
-> well as the size again.
-> 
-> Reported-by: e9hack <e9hack@gmail.com>
+Commit ac0c26bae662 ("hwmon: (lm25066) Use i2c_get_match_data()") changed
+enum chips to start with 1 instead of 0, under the assumption that
+the data pointer in of_device_id must not start with 0 (NULL) if
+i2c_get_match_data() is used. However, that is perfectly fine as long as
+there is also an i2c_device_id array with the same data which is used
+as fallback in that case.
 
-Reported-by: Hartmut Birr <e9hack@gmail.com>
+Let enum chips start with 0 to avoid confusion against other drivers
+where the enum starts with 0 and i2c_get_match_data() is used as well.
 
-> Fixes: 83e824a4a595 ("mtd: spi-nor: Correct flags for Winbond w25q128")
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
-> ---
-> Hartmut, Linus, could you please test it on your boards? Also, do
-> you have a real name we should put in the Reported-by tag?
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/hwmon/pmbus/lm25066.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I cannot test it. I'm using OpenWRT on both routers. OpenWRT uses linux 6.6.32. The differences are to big.
-
-Regards,
-Hartmut
-
-> 
-> This will also need a manual backport to the stable kernels due to
-> the new syntax. But that should be straight forward.
-> ---
->   drivers/mtd/spi-nor/winbond.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
-> index ca67bf2c46c3..6b6dec6f8faf 100644
-> --- a/drivers/mtd/spi-nor/winbond.c
-> +++ b/drivers/mtd/spi-nor/winbond.c
-> @@ -105,7 +105,9 @@ static const struct flash_info winbond_nor_parts[] = {
->   	}, {
->   		.id = SNOR_ID(0xef, 0x40, 0x18),
->   		.name = "w25q128",
-> +		.size = SZ_16M,
->   		.flags = SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
-> +		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
->   	}, {
->   		.id = SNOR_ID(0xef, 0x40, 0x19),
->   		.name = "w25q256",
+diff --git a/drivers/hwmon/pmbus/lm25066.c b/drivers/hwmon/pmbus/lm25066.c
+index cfffa4cdc0df..c36c124d1a2d 100644
+--- a/drivers/hwmon/pmbus/lm25066.c
++++ b/drivers/hwmon/pmbus/lm25066.c
+@@ -17,7 +17,7 @@
+ #include <linux/of.h>
+ #include "pmbus.h"
+ 
+-enum chips { lm25056 = 1, lm25066, lm5064, lm5066, lm5066i };
++enum chips { lm25056, lm25066, lm5064, lm5066, lm5066i };
+ 
+ #define LM25066_READ_VAUX		0xd0
+ #define LM25066_MFR_READ_IIN		0xd1
+-- 
+2.39.2
 
