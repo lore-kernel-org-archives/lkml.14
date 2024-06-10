@@ -1,40 +1,50 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FED6BFD4
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 08:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0DE21A0D;
+	Mon, 10 Jun 2024 08:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718007289; cv=none; b=bo1keAC8fNBX3nWpjX3g3H/qvNC5NeCEjS44xlSF4Jbuqzt2mE+28s3SQHWmbo+DfkVRUzt/liFDjyMZew+9GR2i9ggi3p+aL+fHPfzrE+voxfQYk5f4Lhpaershp098UfzLyvTJ7MuPiX7XkMxZxwI+eh5FPhfGccy9ZXU0JDU=
+	t=1718007373; cv=none; b=sfWxg7Ruu5FXXHN8H9yIT0hMBWoyBaBXz4jaFJtbLMO0wX15gUJ9jVT4cu9+G6gdYlhy4PcIlYqUBOAKJHZglF104DE60wHgxKxe4M0+Vft4zDYFqATN3zKYs0OfT+kWKrRjxo/C3qKJQ4rxy6Qo2YQq4Wt/VyPC7HNtKUhQg6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718007289; c=relaxed/simple;
-	bh=hiymsBDkWx+5f+WbKRv/x3OWu8HZLGmoG8GTw35O2Qg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N0+uqBKZpHNXhcj3dS+6yta+RAhtB5Mp+ULt8YJCRTZU5O8SqVf85rk2gYgiT4bKprpyQp7O15O/lJpHyTFYIpk8+DbiEIbD0fve9yNqybJimiSB9MbWW2hrd6w4MoI7kdND9rF18COjHMLI1zsrnmObeQAso/ZBVxADU4rlLXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mOnAwwTG; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718007373; c=relaxed/simple;
+	bh=rRQys8joHD9dH+r0LBeh4CsDcfuPa7n+yqWQ2JDoZlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cPpptO1ZRNgEmYNmaRl1Wv95bGxh+c1k0Z7XgkVXoZmtq7U6zawgBa0gvIQEKPwX/de5wXc848a/u77CW6wDbfa/aaGUf5RPILJBnLWnuPYl6XILFSjB1fAOHsE6VnAJEnJvrvkDln3xqDBKvMjgHyLI8kDKMaKM9kCKT/qvYFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=rZPTBWm0; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mOnAwwTG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718007286;
-	bh=hiymsBDkWx+5f+WbKRv/x3OWu8HZLGmoG8GTw35O2Qg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mOnAwwTGZ+Ixo/GyUOcrUmw/ItEwWb2jBikLWg+TG/bLU8YYLUxxU6f+6g2R3RWES
-	 CitorP61LjJpZ1+DtbgwvXtoVw2WMwX84DL0qmp/NKbsjaBM1159mTZhZZxZlQwa0P
-	 T8D8UO9YNZzIG8fmdqEcAhp5gHeg8iStd10x3sNRFzSz3hEQtpVYB4TznPavzLJN06
-	 gFbyt5UDrs3IP3xU2kecgb2UpBdhFKSQ10Tquhbu6P4BLcwGdE46Isg6wV/ZxSO7c/
-	 2nw0sbVb8uX3YQ6IQk0CegS3iLri1Zj4bA5UGY8Su7U2uW8YS+6JeoquD3Y24do1Yr
-	 Eg+SnN3LnShrA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7FA2A3780575;
-	Mon, 10 Jun 2024 08:14:45 +0000 (UTC)
-Message-ID: <3dd1631a-fbd0-44a5-8119-c03e8a186da0@collabora.com>
-Date: Mon, 10 Jun 2024 10:14:44 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="rZPTBWm0"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 459LdCa7025381;
+	Mon, 10 Jun 2024 10:15:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	luPvYi2+bdeQnMajOwT0mxxtNvrSHDJwHEH0GYgBZKI=; b=rZPTBWm0ZyRUTdUs
+	WQGUpECn8E4EU1jCXf/0waiFKus+/i4Tmh5mvEjeN3RVZkjIMk5x53R459Hsnezh
+	ig2jrKrG74gbb739nA5b/jD9wFs3JlBpUXqAwOnNGw1GCDt9fLfZJvP2HwvVnLEf
+	GMu3rZkR/a/ADJbV9tgiG6h3ekCl8oVgA2zrOHVTqnSkFyv6k1A0UNXly0AzdAPM
+	wx6mHzoQhLLdj6KlEfq3t1sjS1k92jQqIgfvHroQ7rrPU31o5aNqcbqaneK1ttRB
+	xBiUlVIQJcNABkxgOgj8hkG62cSDyAyleV80Ob4btGGTl1wAKhffIybjXGG1eU4T
+	FxyFyg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yme6d5nm4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 10:15:43 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1CDB74002D;
+	Mon, 10 Jun 2024 10:15:38 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 78892211F37;
+	Mon, 10 Jun 2024 10:14:20 +0200 (CEST)
+Received: from [10.48.86.164] (10.48.86.164) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 10 Jun
+ 2024 10:14:18 +0200
+Message-ID: <ef4d2ebb-dd2a-423d-acd1-43fdb42c1896@foss.st.com>
+Date: Mon, 10 Jun 2024 10:14:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,79 +52,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 05/16] drm/mediatek: Set DRM mode configs accordingly
-To: Shawn Sung <shawn.sung@mediatek.com>,
- Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
- Bibby Hsieh <bibby.hsieh@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
- "Nancy . Lin" <nancy.lin@mediatek.com>, Sean Paul <sean@poorly.run>,
- Jason Chen <jason-ch.chen@mediatek.corp-partner.google.com>,
- Fei Shao <fshao@chromium.org>, dri-devel@lists.freedesktop.org,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20240606092635.27981-1-shawn.sung@mediatek.com>
- <20240606092635.27981-6-shawn.sung@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH 1/1] ARM: multi_v7_defconfig: Add MCP23S08 pinctrl support
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "David S . Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>, Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240610080604.291102-1-christophe.roullier@foss.st.com>
+ <06703c03-e1ce-4a94-942d-b556c6084728@linaro.org>
 Content-Language: en-US
-In-Reply-To: <20240606092635.27981-6-shawn.sung@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Christophe ROULLIER <christophe.roullier@foss.st.com>
+In-Reply-To: <06703c03-e1ce-4a94-942d-b556c6084728@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_02,2024-06-06_02,2024-05-17_01
 
-Il 06/06/24 11:26, Shawn Sung ha scritto:
-> From: Hsiao Chien Sung <shawn.sung@mediatek.com>
-> 
-> Set DRM mode configs limitation according to the hardware capabilities
-> and pass the IGT checks as below:
-> 
-> - The test "graphics.IgtKms.kms_plane" requires a frame buffer with
->    width of 4512 pixels (> 4096).
-> - The test "graphics.IgtKms.kms_cursor_crc" checks if the cursor size is
->    defined, and run the test with cursor size from 1x1 to 512x512.
-> 
-> Please notice that the test conditions may change as IGT is updated.
-> 
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
-> ---
->   drivers/gpu/drm/mediatek/mtk_drm_drv.c | 22 ++++++++++++++++++++++
->   drivers/gpu/drm/mediatek/mtk_drm_drv.h |  4 ++++
->   2 files changed, 26 insertions(+)
-> 
+Hi Krzysztof,
 
-..snip..
+On 6/10/24 10:09, Krzysztof Kozlowski wrote:
+> On 10/06/2024 10:06, Christophe Roullier wrote:
+>> Enable MCP23S08 I/O expanders to manage Ethernet PHY
+>> reset in STM32MP135F-DK board.
+>>
+>> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+>> ---
+>>   arch/arm/configs/multi_v7_defconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+>> index 86bf057ac3663..9758f3d41ad70 100644
+>> --- a/arch/arm/configs/multi_v7_defconfig
+>> +++ b/arch/arm/configs/multi_v7_defconfig
+>> @@ -469,6 +469,7 @@ CONFIG_SPI_XILINX=y
+>>   CONFIG_SPI_SPIDEV=y
+>>   CONFIG_SPMI=y
+>>   CONFIG_PINCTRL_AS3722=y
+>> +CONFIG_PINCTRL_MCP23S08=y
+> This is not an on-SoC pinctrl, so it should be module (=m).
 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> index 78d698ede1bf..6cfa790e8df5 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
-> @@ -46,6 +46,10 @@ struct mtk_mmsys_driver_data {
->   	bool shadow_register;
->   	unsigned int mmsys_id;
->   	unsigned int mmsys_dev_num;
-> +
-> +	int max_width;
-> +	int min_width;
-> +	int min_height;
+The stmmac is in built-in, if IO-Expander (MCP23S08) is on module, we 
+have huge of message during kernel boot
 
-Only one nit here.
+because stmmac driver is deferred several times. (need to wait that 
+module are ready)
 
-Since {min,max}_{width,height}:
-  - Will never be negative; and
-  - Will never need more than 16 bits; and
-  - Are local to this driver and anyway copied to drm later
+Thanks
 
-Can you please change them to unsigned 16-bits (u16)?
-
-After which,
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-Cheers,
-Angelo
-
->   };
->   
->   struct mtk_drm_private {
-
-
+>
+> Best regards,
+> Krzysztof
+>
