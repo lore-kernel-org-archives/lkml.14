@@ -1,121 +1,112 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A04157A49;
-	Mon, 10 Jun 2024 13:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4466C1581FA;
+	Mon, 10 Jun 2024 13:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718027055; cv=none; b=qp88rAj7KRZEI3yj0WMJLiwtnWqpTH0jcFWf4bxcrYqB1RNi186adkbaJNNGhgkTbd+Kd2zKXfb/npBWlunL4F+Xluo/WokZqmKjYEE+ml+fqlTIi5a2UcpF51TjKNtDzzhrOrPWaob4P62Do8l5O4iN8fwMrVwkKaiGnvJ8Tl0=
+	t=1718027058; cv=none; b=nVCm49mWVaZa+lmPuP4/zUheZfaXTf7bDHhjhK/Zemmc9f5I/4VMsnfKHwuoefPYhai5RFZ77VQyfSff23UiSfjr8UdJZm/sS5/IBt2/jpXyq6y1M6AhPZ2YGzIkLhNb5nL324F593AO3HRROybXAca7xYfpROjxqk1uIDALuiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718027055; c=relaxed/simple;
-	bh=6whD5BlfPkc/QXVawZYc6zaMAcHZDXkfeq80yqWQhFI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EDtvC97M9ijiwUMvPqzrgzf0m4KBBeCzcsVHjZv8cTeCbcyR0mdlO24aDIA9wDtue0hEz8SdI1LTB9cG5/hhheWjp4pbDgNGbOq5gJQhwLzjOW+uTa2m10EhKkIRso/COqcLWzWIJ3fdJzK8FjaWs6olW9K714KzpMYvK4zd3eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Z7NC400z; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z7NC400z"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45ADi9xj027827;
-	Mon, 10 Jun 2024 08:44:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718027049;
-	bh=vXTNQpYiFCEGscRvW5gsaNUTZPm4hZbQ7RlNRX5SwOg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Z7NC400zQSneRRg3jYzLhE0gmiJObRspKLkJWwL++nI8k/PI1g/+c/gGpYkDkRaMz
-	 Wchxe/byMX/ktu2fvO+bzsnlj33JnQRGuBTPMc5wotjoDlB7iRz6x0aThj0HH5jZei
-	 4vApvXwmgO+iPhI0fXhu4rYLp4LLBGdzHnEMkyFM=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45ADi97k030826
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 10 Jun 2024 08:44:09 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
- Jun 2024 08:44:08 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 10 Jun 2024 08:44:08 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45ADi8T7018764;
-	Mon, 10 Jun 2024 08:44:08 -0500
-Message-ID: <c08d2d51-e2e1-4b68-a4fb-ebf3a919c1b8@ti.com>
-Date: Mon, 10 Jun 2024 08:44:08 -0500
+	s=arc-20240116; t=1718027058; c=relaxed/simple;
+	bh=iBExssQg7cBlqDJX/5mMOc6Kk4mYW3rSU9q6BA/aEKs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Er6MQ0+r5+lgtGykNSTvyIXY5Tgundq+/Va4NY+Gm94hwfWbEU5fzxPLNYcU7qgt2KzhNwhtB09NVlDuVz4TwluHLxrh/cle5WY9fiGb0rMg+jxCbVhMlBvMsvDfjnRGYRmuyeKTB3wW5W7DicnAk7iuaGj9FdnSN5Ug36X61uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2851816A3;
+	Mon, 10 Jun 2024 06:44:41 -0700 (PDT)
+Received: from e122027.cambridge.arm.com (e122027.cambridge.arm.com [10.1.35.41])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D0763F58B;
+	Mon, 10 Jun 2024 06:44:13 -0700 (PDT)
+From: Steven Price <steven.price@arm.com>
+To: kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	Steven Price <steven.price@arm.com>
+Subject: [PATCH v3 37/43] arm64: RME: Initialize PMCR.N with number counter supported by RMM
+Date: Mon, 10 Jun 2024 14:41:56 +0100
+Message-Id: <20240610134202.54893-38-steven.price@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240610134202.54893-1-steven.price@arm.com>
+References: <20240610134202.54893-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] counter: ti-eqep: enable clock at probe
-To: David Lechner <dlechner@baylibre.com>,
-        William Breathitt Gray
-	<wbg@kernel.org>
-CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240609-ti-eqep-enable-clock-v1-1-1e9e7626467e@baylibre.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <20240609-ti-eqep-enable-clock-v1-1-1e9e7626467e@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 
-Hi David,
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-On 6/9/24 3:27 PM, David Lechner wrote:
-> The TI eQEP clock is both a functional and interface clock. Since it is
-> required for the device to function, we should be enabling it at probe.
-> 
-> Up to now, we've just been lucky that the clock was enabled by something
-> else on the system already.
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->   drivers/counter/ti-eqep.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/counter/ti-eqep.c b/drivers/counter/ti-eqep.c
-> index 072b11fd6b32..825ae22c3ebc 100644
-> --- a/drivers/counter/ti-eqep.c
-> +++ b/drivers/counter/ti-eqep.c
-> @@ -6,6 +6,7 @@
->    */
->   
->   #include <linux/bitops.h>
-> +#include <linux/clk.h>
->   #include <linux/counter.h>
->   #include <linux/kernel.h>
->   #include <linux/mod_devicetable.h>
-> @@ -376,6 +377,7 @@ static int ti_eqep_probe(struct platform_device *pdev)
->   	struct counter_device *counter;
->   	struct ti_eqep_cnt *priv;
->   	void __iomem *base;
-> +	struct clk *clk;
->   	int err;
->   
->   	counter = devm_counter_alloc(dev, sizeof(*priv));
-> @@ -415,6 +417,10 @@ static int ti_eqep_probe(struct platform_device *pdev)
->   	pm_runtime_enable(dev);
->   	pm_runtime_get_sync(dev);
->   
-> +	clk = devm_clk_get_enabled(dev, NULL);
-> +	if (IS_ERR(clk))
+Provide an accurate number of available PMU counters to userspace when
+setting up a Realm.
 
-I think it would be nice to have print here in case the we fail to get
-the clock.
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ arch/arm64/include/asm/kvm_rme.h | 1 +
+ arch/arm64/kvm/pmu-emul.c        | 3 +++
+ arch/arm64/kvm/rme.c             | 5 +++++
+ 3 files changed, 9 insertions(+)
 
-~ Judith
-
-> +		return dev_err_probe(dev, PTR_ERR(clk), "failed to enable clock\n");
-> +
->   	err = counter_add(counter);
->   	if (err < 0) {
->   		pm_runtime_put_sync(dev);
-> 
-> ---
-> base-commit: bb3f1c5fc434b0b177449f7f73ea9b112b397dd1
-> change-id: 20240609-ti-eqep-enable-clock-91697095ca81
+diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+index 8aa02134c461..c30d7899f58b 100644
+--- a/arch/arm64/include/asm/kvm_rme.h
++++ b/arch/arm64/include/asm/kvm_rme.h
+@@ -88,6 +88,7 @@ struct realm_rec {
+ 
+ void kvm_init_rme(void);
+ u32 kvm_realm_ipa_limit(void);
++u8 kvm_realm_max_pmu_counters(void);
+ u64 kvm_realm_reset_id_aa64dfr0_el1(struct kvm_vcpu *vcpu, u64 val);
+ 
+ bool kvm_rme_supports_sve(void);
+diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+index ce7c8e55d904..39790736f1e2 100644
+--- a/arch/arm64/kvm/pmu-emul.c
++++ b/arch/arm64/kvm/pmu-emul.c
+@@ -912,6 +912,9 @@ u8 kvm_arm_pmu_get_max_counters(struct kvm *kvm)
+ {
+ 	struct arm_pmu *arm_pmu = kvm->arch.arm_pmu;
+ 
++	if (kvm_is_realm(kvm))
++		return kvm_realm_max_pmu_counters();
++
+ 	/*
+ 	 * The arm_pmu->num_events considers the cycle counter as well.
+ 	 * Ignore that and return only the general-purpose counters.
+diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+index 31e00c52551d..1d355f0bb0eb 100644
+--- a/arch/arm64/kvm/rme.c
++++ b/arch/arm64/kvm/rme.c
+@@ -286,6 +286,11 @@ u32 kvm_realm_ipa_limit(void)
+ 	return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_S2SZ);
+ }
+ 
++u8 kvm_realm_max_pmu_counters(void)
++{
++	return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_PMU_NUM_CTRS);
++}
++
+ u64 kvm_realm_reset_id_aa64dfr0_el1(struct kvm_vcpu *vcpu, u64 val)
+ {
+ 	u32 bps = u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_NUM_BPS);
+-- 
+2.34.1
 
