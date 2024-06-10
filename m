@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B581474B9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0497B147C79
 	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037740; cv=none; b=awrs9MijhTrQW/Vbbc6OtMZEm+kFiwU+R3m+KT0APLoFWlUdmTWr/K5BLhLkyHMziOhc55DhSHtcd01NjYgrJor1/NGOGl9oLPfKObl+ZdQPUrlzgEofLELV6GdWU76y85rfpIePpFlDg8OmFz9XfYNNYmMpNRlJZ2uF2O5L2yk=
+	t=1718037740; cv=none; b=LfY4fItyir8yISckXVTFz3EV1HboKHGcMXDFLIyIeed2IgBh1TxSfOduCVlsIYAjFbwlumSCfkc4UIn9rF9LeDv+Jgr7sSUhgx2M+f3B+U61K4JyEGwLasRdQMHOKFVidjpGKdo/BNB1EOJOADDFc80dzqdcibc0GAvmyF4pPAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718037740; c=relaxed/simple;
-	bh=Qw6a6vr3job2BPNhi3+9A2NeMwWriv1M9zdK8XeX/E8=;
+	bh=5E5SF6djGIEJs9V+wAgKePOcQC5ojpZdVLcsv/5ENUo=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=hiZQJvA0lV7aXgJCEWZMCoK8s3xVXk8YYEgL49GWwUNlmbf02bcD9lzZrm6M2sU3Xa++BAKnnSgEzfl9jXUvabhmMVYinbawZ7fTP1jrImBRfsay/5ntPIzWNqaz2pRzUyqj2QjLd7DJQLRPWJKHqTUhpdZjJLL1pvjrQ8R/g58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bvhOmmGk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=54xHgEiE; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=kNpNeL/k+K6KPyNChNgTUypOj9G5LmXHv4iGFVWs13HPidv3dC78XjHBNMkqyTZkMF7RJCSOTE99500pzcgLjqnyE3LN2i8JY72T+hjDseaozW6FvLgutQ4VS2A5aRRuVy5LYYsJUUmqVIWNy9yiot+rO9ypar8qba8P7JO3ZLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NwpyE9ZS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4Nz0FNd5; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bvhOmmGk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="54xHgEiE"
-Message-ID: <20240610164025.770458477@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NwpyE9ZS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4Nz0FNd5"
+Message-ID: <20240610164025.906237276@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037731;
+	s=2020; t=1718037734;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=7n8Tw6w2v5Y162ZsOpKlDwSopUc0/cD/VnEumBQN9lE=;
-	b=bvhOmmGkK5yGsZZv+PH4sh94JC14KGR+imMTHgyuHuNvk/GI8R5d3X734tdrTOvUsAs8RH
-	5FH4dxdMRdo1VIVSXoUImREQCti9+rYHlTKJeYaHnnVbUIN1iPcJqFPJMePZ7iGphkRtPO
-	yElJGm7TMRmyVTdQp30R1TDARAqMXhaRP2WptHSd6UMzKMlVN9mqmfIHx9u8S6gaysEiDV
-	YfsSYzXLaiBp7A7IpyZfmlI4ehGaGEthPclcAJZEG0PZoGK3JPRXwBMLgP0ZFlNML3gZQS
-	7ynGXXl+/70NMnoDviFFevsMXdJfiSEMwhT+XEiJFxb8zHO+iRu03YpBdjL2Ug==
+	 references:references; bh=+/WP0ANjczawtPlZe0Ru3wamTdkxabLE/EGLxYuvFcc=;
+	b=NwpyE9ZSbI7SUhvVCW4pjpWpoAPKEG4zEymUB9t6tfyuRF1KDxS5/4IAB+JiTuyAOvelIZ
+	0oVv4fjWkf/jgb7H2RaAc1NB9c/NFFhwJCPt6hTO9Cae170e+imtVZ6mVXdCbggt6gZ7V7
+	OA9P5msoUWFDA9YPH1nbe3qJzSFXp7NQ9BPFqX2rAzH37Jg1d08CglEdoJQZW9gqdTlmcw
+	zQRfSA6zRTjymFcObtvNkTEe0P9h3o1P+RQ0iwGXSXGp11rl/O9yQfQozZAJWVu5kjwtAb
+	jz7AAn9PWWtBdYNiu67WjndBkL79d7V4EikFDIJKEw+bZt4EHNs9cWbJWZeY0g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037731;
+	s=2020e; t=1718037734;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=7n8Tw6w2v5Y162ZsOpKlDwSopUc0/cD/VnEumBQN9lE=;
-	b=54xHgEiEfEPgGVu+cv242Ke+UqUqvtMChDKDI8HmYZQOcy2xIiOaFI8MbnRVc7ekb5/U7a
-	IrTCdoiHv4D3fcAA==
+	 references:references; bh=+/WP0ANjczawtPlZe0Ru3wamTdkxabLE/EGLxYuvFcc=;
+	b=4Nz0FNd5QnnxPf9j+V5uVBhIAG0wtvFCbMZDOchf8xsLZIDkRZZXn0tMT6+bEFhP9B+3VG
+	1GxxZzq4eI3GVWCg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
@@ -45,8 +45,7 @@ Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
  Stephen Boyd <sboyd@kernel.org>,
  Eric Biederman <ebiederm@xmission.com>,
  Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 05/51] selftests/timers/posix-timers: Validate
- timer_gettime()
+Subject: [patch V3 07/51] posix-cpu-timers: Split up posix_cpu_timer_get()
 References: <20240610163452.591699700@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,96 +54,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:42:11 +0200 (CEST)
+Date: Mon, 10 Jun 2024 18:42:14 +0200 (CEST)
 
-timer_gettime() must return the correct expiry time for interval timers
-even when the timer is not armed, which is the case when a signal is
-pending but blocked.
+In preparation for addressing issues in the timer_get() and timer_set()
+functions of posix CPU timers.
 
-Works correctly for regular posix timers, but not for posix CPU timers.
-
-Add a selftest to validate the fixes.
+No functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- tools/testing/selftests/timers/posix_timers.c |   58 +++++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+V2: Split out into new patch to make review simpler - Frederic
+---
+ kernel/time/posix-cpu-timers.c |   51 +++++++++++++++++++----------------------
+ 1 file changed, 24 insertions(+), 27 deletions(-)
 
---- a/tools/testing/selftests/timers/posix_timers.c
-+++ b/tools/testing/selftests/timers/posix_timers.c
-@@ -487,10 +487,63 @@ static void check_sigev_none(int which,
- 			 "check_sigev_none %s\n", name);
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -785,33 +785,9 @@ static int posix_cpu_timer_set(struct k_
+ 	return ret;
  }
  
-+static void check_gettime(int which, const char *name)
-+{
-+	struct itimerspec its, prev;
-+	struct timespec start, now;
-+	struct sigevent sev;
-+	timer_t timerid;
-+	int wraps = 0;
-+	sigset_t set;
-+
-+	/* Block the signal */
-+	sigemptyset(&set);
-+	sigaddset(&set, SIGUSR1);
-+	if (sigprocmask(SIG_BLOCK, &set, NULL))
-+		fatal_error(name, "sigprocmask(SIG_BLOCK)");
-+
-+	memset(&sev, 0, sizeof(sev));
-+	sev.sigev_notify = SIGEV_SIGNAL;
-+	sev.sigev_signo = SIGUSR1;
-+
-+	if (timer_create(which, &sev, &timerid))
-+		fatal_error(name, "timer_create()");
-+
-+	/* Start the timer to expire in 100ms and 100ms intervals */
-+	its.it_value.tv_sec = 0;
-+	its.it_value.tv_nsec = 100000000;
-+	its.it_interval.tv_sec = 0;
-+	its.it_interval.tv_nsec = 100000000;
-+	if (timer_settime(timerid, 0, &its, NULL))
-+		fatal_error(name, "timer_settime()");
-+
-+	if (timer_gettime(timerid, &prev))
-+		fatal_error(name, "timer_gettime()");
-+
-+	if (clock_gettime(which, &start))
-+		fatal_error(name, "clock_gettime()");
-+
-+	do {
-+		if (clock_gettime(which, &now))
-+			fatal_error(name, "clock_gettime()");
-+		if (timer_gettime(timerid, &its))
-+			fatal_error(name, "timer_gettime()");
-+		if (its.it_value.tv_nsec > prev.it_value.tv_nsec)
-+			wraps++;
-+		prev = its;
-+
-+	} while (calcdiff_ns(now, start) < NSECS_PER_SEC);
-+
-+	if (timer_delete(timerid))
-+		fatal_error(name, "timer_delete()");
-+
-+	ksft_test_result(wraps > 1, "check_gettime %s\n", name);
+-static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp)
++static void __posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp, u64 now)
+ {
+-	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
+-	struct cpu_timer *ctmr = &timer->it.cpu;
+-	u64 now, expires = cpu_timer_getexpires(ctmr);
+-	struct task_struct *p;
+-
+-	rcu_read_lock();
+-	p = cpu_timer_task_rcu(timer);
+-	if (!p)
+-		goto out;
+-
+-	/*
+-	 * Easy part: convert the reload time.
+-	 */
+-	itp->it_interval = ktime_to_timespec64(timer->it_interval);
+-
+-	if (!expires)
+-		goto out;
+-
+-	/*
+-	 * Sample the clock to take the difference with the expiry time.
+-	 */
+-	if (CPUCLOCK_PERTHREAD(timer->it_clock))
+-		now = cpu_clock_sample(clkid, p);
+-	else
+-		now = cpu_clock_sample_group(clkid, p, false);
++	u64 expires = cpu_timer_getexpires(&timer->it.cpu);
+ 
+ 	if (now < expires) {
+ 		itp->it_value = ns_to_timespec64(expires - now);
+@@ -823,7 +799,28 @@ static void posix_cpu_timer_get(struct k
+ 		itp->it_value.tv_nsec = 1;
+ 		itp->it_value.tv_sec = 0;
+ 	}
+-out:
 +}
 +
- int main(int argc, char **argv)
- {
- 	ksft_print_header();
--	ksft_set_plan(12);
-+	ksft_set_plan(15);
- 
- 	ksft_print_msg("Testing posix timers. False negative may happen on CPU execution \n");
- 	ksft_print_msg("based timers if other threads run on the CPU...\n");
-@@ -518,6 +571,9 @@ int main(int argc, char **argv)
- 	check_delete();
- 	check_sigev_none(CLOCK_MONOTONIC, "CLOCK_MONOTONIC");
- 	check_sigev_none(CLOCK_PROCESS_CPUTIME_ID, "CLOCK_PROCESS_CPUTIME_ID");
-+	check_gettime(CLOCK_MONOTONIC, "CLOCK_MONOTONIC");
-+	check_gettime(CLOCK_PROCESS_CPUTIME_ID, "CLOCK_PROCESS_CPUTIME_ID");
-+	check_gettime(CLOCK_THREAD_CPUTIME_ID, "CLOCK_THREAD_CPUTIME_ID");
- 
- 	ksft_finished();
++static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp)
++{
++	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
++	struct task_struct *p;
++	u64 now;
++
++	rcu_read_lock();
++	p = cpu_timer_task_rcu(timer);
++	if (p) {
++		itp->it_interval = ktime_to_timespec64(timer->it_interval);
++
++		if (cpu_timer_getexpires(&timer->it.cpu)) {
++			if (CPUCLOCK_PERTHREAD(timer->it_clock))
++				now = cpu_clock_sample(clkid, p);
++			else
++				now = cpu_clock_sample_group(clkid, p, false);
++
++			__posix_cpu_timer_get(timer, itp, now);
++		}
++	}
+ 	rcu_read_unlock();
  }
+ 
 
