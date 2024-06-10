@@ -1,86 +1,87 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9895513E8AF;
-	Mon, 10 Jun 2024 15:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBD513DB92;
+	Mon, 10 Jun 2024 15:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718033075; cv=none; b=mE1jOPsCvG4udg5sNHFvCtFP2K1HsMgMfvEeFmyfwaVsqx2j0aDOdWaqFW4Cv6E88ztXBj5rwDxefGny6Qu8V/hAuX2v2KK2Ky9LBPwtf7KUDm7tRJAJdUmI7Y3Kt9JgUMRsuJPH0FVvowKRjdiIsAzKu45xOb7JRAP0EhnpX1o=
+	t=1718033175; cv=none; b=u/JlLq45/f3GJBh01XdjLc6S3XyGLhLOyl45jzKV+M4enoZwjmwylFf7PQQ6vQXV6v4fQ0vS8mxSp45IP0vXvIkykbFS52ceheBpctwqZAq1tzw1esEVq3XtTt9jG6VJcZQy1Z52NnzXOr1VHO3dLt+V+B0s/7zOhNPHaB+RU3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718033075; c=relaxed/simple;
-	bh=q9+FJLbpkmGw2WAIUMbjsJpwfWDGBNPE/bBMMS6IF5Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aR7KYHa8CX/plFFzdj/V1eo2iO59On/v5R2J0TnhYZpEwgOaSc4COAsE3Qolu8xVzMpvMd8Mtadw881u1E62ceFtZc9d0RDpHpbu4YVJ9LoCC5ZS7eedaY6zG9803ZAj7wvm2Y9sor6ne4Mfr6bojBRJPlUUlKVQCU6F6IMbqhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mxfnup4i; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mxfnup4i"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57c7ec8f1fcso1681855a12.0;
-        Mon, 10 Jun 2024 08:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718033072; x=1718637872; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q9+FJLbpkmGw2WAIUMbjsJpwfWDGBNPE/bBMMS6IF5Q=;
-        b=Mxfnup4i74kDWNVbQalM7szw8mF8c6DVlZ9FqVvE8luECfYuGjUSPBjmNiMGHVAplV
-         PeaJYDTHGpniUXnamu2vD8KJz563oEzJRYZrClMsspMxRv3Ncos7hwkjD5fgPO1XHBes
-         ciABWRkqE3BR12BbWcbg8osOc4tiJXWEmkaNuI/Zi+U6/1LoWnI9FtYZyfV8opg13+8f
-         /OXrBwbdXifuUSjyNCHPDePTzXbi8SfjoHFP5Zvz8ifGam5KNiuimyiZVbaShArtxDkY
-         LMDWNcYA0T1aTMxJeEZrNklgKzYBzV46F70kaRJpn3YJ29FzTsYX1xGksCQzrq1qgHjX
-         Mv/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718033072; x=1718637872;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q9+FJLbpkmGw2WAIUMbjsJpwfWDGBNPE/bBMMS6IF5Q=;
-        b=QQyLRb5097h+0OFfOl11TQpUz1WjDtyRSRRD/g8jgZ/sbd3lA/Bbxg7sLH5d5V5Tvq
-         zrIcHAC9pTAIcZRO2ybNoIseFIL7QOdOV0ZE2+aRSKjKUfV/iXUB5X8rg6laDjscgmiM
-         wNN0qV5I80bHybfO4YhEaHeq7ahDFSu/0WZxLrR8zbp3Ki2wk0yn78oGyOXdG4CaT4Q/
-         cJiwa3cv1MUg5E3FarUg+tKMcdkBInRoIZDjKosjlndMRQJUP5CXKl/rtqdKAeWC0Yqa
-         NPHgO5uuv1DQPozobW1sShwZP+xAJ3SmywqCWgJF80p2LItlXq42v75i/Gf64CGTDpC4
-         TOAg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdkJiWH6wNavrdUtwsT2SbUmcLPBaKWXF4PojIj+kpBUKYBJ0YoPo8LkVRQuaosLakXTIPuEkRovR0n2rfani5mbjxW4qkez3ArvHskjwEVJTxRJX+GxoncL3AOnxIKGZ4HQ5rvnVJzg==
-X-Gm-Message-State: AOJu0YxuhiraIB5321EdhhiDsy5uXAYH+M5csHmVbYiWFiWNGbLtrcla
-	RatST1sE/bCV1dCLjDm6BK8sc5VM6f92z2V1oO5Opxq5GHK/+KMCEZeMGRsMrrMB+ypggvhLg0z
-	1usUOv3v8+tSUW/2GmzXgy3XQmWYD3HOb
-X-Google-Smtp-Source: AGHT+IFNyQ15jXyjkoVZr6dT7/WR+f/DHHqul6Tv80j455lbaX93ut+WTVwOmCHosMzgej2TJF5rkgJv+/hwOZox0lk=
-X-Received: by 2002:a17:906:fe07:b0:a6d:b66f:7b24 with SMTP id
- a640c23a62f3a-a6db66f7fdamr753842266b.75.1718033071698; Mon, 10 Jun 2024
- 08:24:31 -0700 (PDT)
+	s=arc-20240116; t=1718033175; c=relaxed/simple;
+	bh=SlQFRSvVdbk5xiE5tYj3MMJfXr3zI7zmkNmvnKGpUzY=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=lJDqo56Zaz3gCRFsuJyksoLE63SD2OHeoHvs/f9delgOJ7zCJmcppPjlbZUzO41ipErgpzS/K+PMUml9BkfPKEu2oCe0751Lv3KQKe3oOS3lrW//EUOjwlPQc2qcN312Frt68kuPQsDU5MCcpnc7WYMMeOw3WmtivK47ELE+M2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id 6A24B3781107;
+	Mon, 10 Jun 2024 15:26:10 +0000 (UTC)
+From: "Shreeya Patel" <shreeya.patel@collabora.com>
+In-Reply-To: <20240609113903.732882729@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240609113903.732882729@linuxfoundation.org>
+Date: Mon, 10 Jun 2024 16:26:10 +0100
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>, "Gustavo Padovan" <gustavo.padovan@collabora.com>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610140548.35358-1-brgl@bgdev.pl> <20240610140548.35358-4-brgl@bgdev.pl>
-In-Reply-To: <20240610140548.35358-4-brgl@bgdev.pl>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 10 Jun 2024 18:23:55 +0300
-Message-ID: <CAHp75VczROHVKwAi8j4fxR=L3oKJ_5om6rEAriDNFxh1dMRxRw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] gpio: sim: use devm_mutex_init()
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <2ac6c7-66671b00-9-234d2f00@171268153>
+Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?6=2E6?= 000/741] 
+ =?utf-8?q?6=2E6=2E33-rc2?= review
+User-Agent: SOGoMail 5.10.0
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 10, 2024 at 5:05=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Drop the hand-coded devres action callback for destroying the mutex in
-> favor of devm_mutex_init().
+On Sunday, June 09, 2024 17:11 IST, Greg Kroah-Hartman <gregkh@linuxfou=
+ndation.org> wrote:
 
-All three LGTM,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Thanks!
+> This is the start of the stable review cycle for the 6.6.33 release.
+> There are 741 patches in this series, all will be posted as a respons=
+e
+> to this one.  If anyone has any issues with these being applied, plea=
+se
+> let me know.
+>=20
+> Responses should be made by Tue, 11 Jun 2024 11:36:08 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6=
+.33-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
+.git linux-6.6.y
+> and the diffstat can be found below.
+>=20
 
---=20
-With Best Regards,
-Andy Shevchenko
+KernelCI report for stable-rc/linux-6.6.y for this week :-
+
+## stable-rc HEAD for linux-6.6.y:
+Date: 2024-06-09
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
+git/log/?h=3D7fa271200aef4ae8f0bed8a8ed81629ecd5ed2ab
+
+## Build failures:
+riscv:
+    - defconfig (gcc-10) and rv32=5Fdefconfig (gcc-10)
+    - Build details :- https://linux.kernelci.org/build/stable-rc/branc=
+h/linux-6.6.y/kernel/v6.6.32-742-g7fa271200aef4/
+    - Errors :-
+arch/riscv/kernel/suspend.c:37:59: error: =E2=80=98RISCV=5FISA=5FEXT=5F=
+XLINUXENVCFG=E2=80=99 undeclared (first use in this function); did you =
+mean =E2=80=98RISCV=5FISA=5FEXT=5FZIFENCEI=E2=80=99?
+
+## Boot failures:
+No **new** boot failures seen for the stable-rc/linux-6.6.y commit head=
+ \o/
+
+Tested-by: kernelci.org bot <bot@kernelci.org>
+
+Thanks,
+Shreeya Patel
+
