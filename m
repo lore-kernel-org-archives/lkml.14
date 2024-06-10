@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47729155A2B
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E050B155A5C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037759; cv=none; b=NIsUsw/tlwcqQmijmlTHfffYnaToCSMN5iutREaFNg1VfNpahwRBhZbxJsHhtKNTLYn6rhTWo7esxzPFGnZ4AXX6Asl/EuEBxqsrTVm1S2DbICKfMDGfsqxkucHZFuphBuYhsJP7Wx+R7CuKuvTnTSlKE/1RfHXz+aVpDUpNChc=
+	t=1718037760; cv=none; b=V3KbXOL3r3TbDaB9kBDxa4errGVpjXll8MJPZe+/oMBQik6uBT5yyrZ7PaXC8hBTlHfnti5fQFSdN181dKPdmZZlQE9oBefZ4pzMVyWHFG20rBkPvw4CpRVF3pq07wiNTa+jhL+cT9O/6c5P+HPpP+y5ELoupLIaJcPG3kq3YII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718037759; c=relaxed/simple;
-	bh=d1BJ7Kja+UEwMgVwc6Tt6tmvcnKhbXaS3H8LE3K80r4=;
+	s=arc-20240116; t=1718037760; c=relaxed/simple;
+	bh=aSmCpittOoF3ezZp87bwESr997wsqcqECssDBgE4Mvw=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=PGoOUDn7vN50wuEld5F43hbUoUxynowObQrPB0afh4GgDXVnGRjqQ4FOm6+nUlIDS8sm0nEqUwqixp/JrilVsmukNrHUFGeJrCtZ7yukdU6/ZLl9RedmusNPD8v7ihTl1MfzB2+0E+V1vBBDBKkV/+3hAhLa7olauZxI0KHNZCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bOl04P/V; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XfXAlRMy; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=FNnwTQfsocI9sSpDCQKaM3wG6hI0w1TH/jD3Dc0wbT2WmxfzGNnB3t6qlgtiEbWBryPqhPzhSIwy/981FlEpXr9E22/I+BZqWunmKUxJuPBohZRUCFOCKvpGkO8AEvoz28+40TR1oicZ5wQv936P7tySKAWBaV7E91Owu48mTD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V/2ZAlKN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7txRKhGm; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bOl04P/V";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XfXAlRMy"
-Message-ID: <20240610164026.992475995@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V/2ZAlKN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7txRKhGm"
+Message-ID: <20240610164027.115004173@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037755;
+	s=2020; t=1718037757;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=Qgv0rOS1X6FuYj5LENG49jFoHaTII1ldHQt4poVGsnc=;
-	b=bOl04P/VxIRlk0A/cs0WrD231whGwrzsLd+OpYoKeVyecflRVg3Yp6TOBUL7QJypZC4FDT
-	l10eCKY0ELR79UMYtZR3V5yjAgO/Xn109WU6YnPlKOVoF0KYjwtsWII3NF8RdRtUVZb1Ow
-	3/acV3dUEujIqqHSEK6w5rlpu2g6lRBQyn3tAQaIR5E62aLPCwgWJkhrv6CA5UmjZYT23y
-	T4kjLF3b1djHKKG7zeqc9e3rEDTPUz1oAxCFzkYQeDg5ZCsOXBiHeIPPJgNn2IAn+Dh2/I
-	CbBizImIDELWodIjSXZo4KuiaYKW+KzyWdq80bh4JLBHXz+ea26W/1cCCXW4SA==
+	 references:references; bh=pJjrzduNqM5JDPsn8IBKNH0/K/D3T9whic02EnoKRWM=;
+	b=V/2ZAlKNJrQFecc+B0zpOVviOaLacLqXGznZ35dLVOFhZ29m7Y/q71sQ6bY+/XirDmMIaH
+	w6AlPrllBkm5C3GP+N9ZCfI/xRnxjur5re4mZ/IKtFpt+XyQFu3wfMyO0ALEFVWYwYevc6
+	DMdfOl5BuhwY+AIls+YCrbLcmkoeGNrpqd8R0RKZN2D6ht5L1dJrfvztaKnyZjwiIqTNsu
+	VSlF5Tn2GEvAk4U04ekKo5e9bM7mAM4Jzt9C2tnnrm0tEXZxv4BxkFrMnAvKm1AWVIysyn
+	qh87i09+GONz6Gps0xkPW/YLo2nCrVi33gr+Q8o1mb4+54BhuAyg/zq46MtxQQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037755;
+	s=2020e; t=1718037757;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=Qgv0rOS1X6FuYj5LENG49jFoHaTII1ldHQt4poVGsnc=;
-	b=XfXAlRMy8hhmQtBX6rTA1Kcq7EoUOaaf+WPuOAY21WOpp7eEjgSrQrt/P2tucKmhetqOo9
-	LtdAtMBa/q/dDXBA==
+	 references:references; bh=pJjrzduNqM5JDPsn8IBKNH0/K/D3T9whic02EnoKRWM=;
+	b=7txRKhGmzu4nE92Kiz6lZaMFxjA7A+FnXb15kEbE3sfmo36Z/fPMDGbd69v48FkaDE/lOx
+	LpUIN3VgEdsfITAQ==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
@@ -45,7 +45,8 @@ Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
  Stephen Boyd <sboyd@kernel.org>,
  Eric Biederman <ebiederm@xmission.com>,
  Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 24/51] signal: Replace BUG_ON()s
+Subject: [patch V3 26/51] signal: Prevent user space from setting
+ si_sys_private
 References: <20240610163452.591699700@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,50 +55,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:42:34 +0200 (CEST)
-
-These really can be handled gracefully without killing the machine.
+Date: Mon, 10 Jun 2024 18:42:37 +0200 (CEST)
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- kernel/signal.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ kernel/signal.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 --- a/kernel/signal.c
 +++ b/kernel/signal.c
-@@ -1940,10 +1940,11 @@ struct sigqueue *sigqueue_alloc(void)
- 
- void sigqueue_free(struct sigqueue *q)
+@@ -3350,6 +3350,14 @@ int copy_siginfo_to_user(siginfo_t __use
+ static int post_copy_siginfo_from_user(kernel_siginfo_t *info,
+ 				       const siginfo_t __user *from)
  {
--	unsigned long flags;
- 	spinlock_t *lock = &current->sighand->siglock;
-+	unsigned long flags;
- 
--	BUG_ON(!(q->flags & SIGQUEUE_PREALLOC));
-+	if (WARN_ON_ONCE(!(q->flags & SIGQUEUE_PREALLOC)))
-+		return;
- 	/*
- 	 * We must hold ->siglock while testing q->list
- 	 * to serialize with collect_signal() or with
-@@ -1971,7 +1972,10 @@ int send_sigqueue(struct sigqueue *q, st
- 	unsigned long flags;
- 	int ret, result;
- 
--	BUG_ON(!(q->flags & SIGQUEUE_PREALLOC));
-+	if (WARN_ON_ONCE(!(q->flags & SIGQUEUE_PREALLOC)))
-+		return 0;
-+	if (WARN_ON_ONCE(q->info.si_code != SI_TIMER))
-+		return 0;
- 
- 	ret = -1;
- 	rcu_read_lock();
-@@ -2006,7 +2010,6 @@ int send_sigqueue(struct sigqueue *q, st
- 		 * If an SI_TIMER entry is already queue just increment
- 		 * the overrun count.
- 		 */
--		BUG_ON(q->info.si_code != SI_TIMER);
- 		q->info.si_overrun++;
- 		result = TRACE_SIGNAL_ALREADY_PENDING;
- 		goto out;
++	/*
++	 * Clear the si_sys_private field for timer signals as that's the
++	 * indicator for rearming a posix timer. User space submitted
++	 * signals are not allowed to inject that.
++	 */
++	if (info->si_code == SI_TIMER)
++		info->si_sys_private = 0;
++
+ 	if (unlikely(!known_siginfo_layout(info->si_signo, info->si_code))) {
+ 		char __user *expansion = si_expansion(from);
+ 		char buf[SI_EXPANSION_SIZE];
 
