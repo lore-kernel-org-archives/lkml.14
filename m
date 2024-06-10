@@ -1,96 +1,140 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04ACB143C45
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077EE143864
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037275; cv=none; b=VL2l/iUz73drBLq3em3pdT8rZgB5BB8m8eHMZaVRgANjUwWMjs9mGxwX0/jfQSkp30vJPbr2ipCYy10VeAPxVgv8JGBPdqqy+/9U8hTfz0rYALpkcm8DW2ckR6l5SHb4O3uRgTcgtWd1vif2ArPAUjNn4XMPCj7HKcnLK4sTbjo=
+	t=1718037493; cv=none; b=bV3LIH0LBRsYFRLDUJAQZU2dmNyLy1Yi7v9oTqmjVeGIuJTd3yU/uPkERAPx0lQv3J00Evp1+Fi0J6MQwRIFx6O9LgUTBxy4kbip12u2AGN0/PRSGTeTSFTo9kiWzx61qbC8r2oHob9EUa5zzxcwmdaTy+Fu1kEYBD0UbmSDUkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718037275; c=relaxed/simple;
-	bh=yllP6g2dm2MsE2mnC1k07LPpw9VCtTWLM/HdffmDV2I=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=NBE86jtJ0zMES69MMvjDJ4iyga+MO8EBAqyp3PYgxl4TfYrwPifPxwrPAsMIzgkbdZ89KnDproDFdpGdnv1fPm87Lh/zdLHrY5wQv733lw+4h+48aNMqJtHfWT+jgZFFrlGMHvS9fs5SmPFuYMx2IyTw09OZobzk2HetwALGkbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WC4i6hb1; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718037493; c=relaxed/simple;
+	bh=kiJ5B+nQ3bNrTcSfOUxREX/Sxo9421n4Dpjf7djMOc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T9jIH/epxPcA/Awa49m+tyZj6gG/Zv99F5f8M+rM7AgGtyrszS8qACrevAK3PkL/Xk625Xc4er7Z9AHynAn288WFqwIA0uPy946w+Qcqcs4tYn7bpQ2gO154qKcdYHZqiAhkIPWaE/bWv5eYydvqeiZ2BCZ7uW/i4VQ+ehHzxiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=eeYpo2mJ; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WC4i6hb1"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfb0c3864e7so3175074276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 09:34:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="eeYpo2mJ"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-70423e8e6c9so1742493b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 09:38:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718037273; x=1718642073; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jZSb9+rs2usNZeKaqhewTAKIWQtnKpWPlA0PtSeTiJQ=;
-        b=WC4i6hb1UOexv2yMtF70U7Mr+7bVg3/h5iGO+NyFEHpJt1dQ52ujTP2PHrzH5KnDC3
-         VWN/py+nwntPscfcIP6xnnycbmJPaLVZtnw8PxgZaaMoRzbhuSOrWNkpQ76fO9ks/j+2
-         vZJATnZLe7ukiOC815CPtAl0xsxUVpmMCUP4w9lgvezGpSdeFfY8yXrugZwf+2MIeRak
-         qrPq0x8cVH3IW8MIf43zcSibGDGwygALEu/ZduaS2Xk3hGkeVmmNe50GMzQoJHwHOGKv
-         fC1c89n++y6/xupaHYUpx+Ju9PMrmMd4gWzpkRZigLizSh6MPTm8W8sPGPYwEp7rvyAR
-         ODoA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718037490; x=1718642290; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NXoCBXdsY/M+q0fRNH+4Z39Lx/Z6bNhqTdLOeE8sP8k=;
+        b=eeYpo2mJKCmltM/YSNkpBTpFbSgBIvZlnOg01HHwTSceDifLDW0QFWMpKWXNf19jUm
+         Lw4bYd3qomSPKP/eB0uhF+trTe5sdQdvRBqfPyCXSNlrsKNlM6pimiR20nPBj1BgpBPE
+         M61J+/XH/qcs1YkO1HwW18msjqxrElztK5401L1PFKPSJyb68iigc7BfdIyjjHSnnJ+k
+         juEEZqHrVLpKuer1c8IZUoPR16mtz+Gh92Fdp7LeDvz9c4Qj7PoDqD66SAkjFzhNWgfR
+         bHKH7e7e1JJ+p2kuk/OewehHMJeU6qvcBvm5i1/l1TkKchqRstlqW0gb7lP4x/tSQ9Yb
+         uKvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718037273; x=1718642073;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZSb9+rs2usNZeKaqhewTAKIWQtnKpWPlA0PtSeTiJQ=;
-        b=JwyVaMQBxu0OqBHXZwam5PK27v/T91dPPr6pj58jY0A0v8uqmr50b+l87QBqK7E5RU
-         329yj0YgXA+Pv+G3FygteWU10g4RRi+UVIe85R/9qElaHnQqsBZBvQF2R2ZL+IFy6v4c
-         mfpYtX0afEaoz1tqL5v1iwWPj1zwHkILPKib8KWpPIQUzYjsAmIuyG/TFzTmxtSw1QXb
-         vLfzjGCSVSQOro0Vc/gE2vPL+WuuLd8CYxgnRE90YKBP7/Lyt/SR03IHg/s6JKP0xr4z
-         39DKcldxMQHhC1E1ZN8Ta8KoBCLNii7O1KB0lLkJToH/PtEAGk/Y7MqqapO0PeVPVuq3
-         t+zg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+rYYsTllFlHPmjoO46moh4gqw/Dl1MCgjDAu1gEKIbzrE6kL2PE0VpvR9PYFBkCgHUgIprWrfDNdUJ+y//bdShOLc6uaRcm75HifS
-X-Gm-Message-State: AOJu0Yzvsfp/XkIO2sK9wRI2lVgKPjtvqsXJS6XDyyJaqvNYrfh33K3A
-	sINS93d+rYt0eBVwQbnHlF4+Ju0i7jG+5lfdfm8zLHnMMakQLJa2ppLhz5meLHDFKQSj4lM83xv
-	5KQ==
-X-Google-Smtp-Source: AGHT+IHHh2RNmvVunFf6h0xc9IRdVIUXMt65AfZopDDW5pG8LuS4lbSICFSmAFOGHkb/0UN6udVF9yYpz8g=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:10c3:b0:dfb:335:427f with SMTP id
- 3f1490d57ef6-dfb0335481emr683064276.4.1718037272968; Mon, 10 Jun 2024
- 09:34:32 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Mon, 10 Jun 2024 09:34:27 -0700
+        d=1e100.net; s=20230601; t=1718037490; x=1718642290;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NXoCBXdsY/M+q0fRNH+4Z39Lx/Z6bNhqTdLOeE8sP8k=;
+        b=Vevccm2YcPkTiYTj2RhrX/XlJ+D3NXFqXY9hzJpBsCamBkdcYtYOAa88JDRvPBLKoM
+         7+Wq4k2IAc5R2WtBrDO46LYk7ELmerogaIOaPXCG7FoJ7BltUybZoBvnvuRmgyaC4RP9
+         OtZXTvLDEv/DQAjcxr6ujI4DJjCSWLd1l+582CS8vuIT1uNbTvMijPwXYmZAS8a8020K
+         IdxRoiBs3ypihlgZK1y0itYkvY060wSzdsZno2EMuf7Pl1Rj/2lzuXH3ZOt3QAswzCi4
+         3kMjzAlBi7mpPY7FK9B7qZoMb8nWabBWuwLeaMwAqKK+wRc/4OgAhvqPA7V8S7NzYrG8
+         HsUw==
+X-Forwarded-Encrypted: i=1; AJvYcCW81kZju3jsrb/t5tMubZtk4s+CRP14vFjLeaOJ/g3lqN/tP50Hn6/8ZsoBMK00+pTjvG8iVQ+akYEgbtsDuQNZOaOhbLv6p/XyvyaP
+X-Gm-Message-State: AOJu0YwBg0SEr0Z3O/OBzlS9K8iQjCBhA3SZZ4ch6hzx06G9FS3kmblK
+	vNb3ZHbRBs655l8QeJU/b1Enn4xsP2Hn2dUqEdtBzF8b1812JvWCxaDHAPAk/hc=
+X-Google-Smtp-Source: AGHT+IE55hp5TAOsUAoyvyS756iP3CfmNdcn1/vY5DaP2UtK03lkcl/o+b2HM769MgzylCW45JEhTg==
+X-Received: by 2002:a05:6a00:138c:b0:705:951e:ed88 with SMTP id d2e1a72fcca58-705951f1f4cmr3638587b3a.25.1718037490325;
+        Mon, 10 Jun 2024 09:38:10 -0700 (PDT)
+Received: from ghost ([2601:647:5700:6860:129d:83bc:830b:8292])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6deb62efb66sm5525307a12.12.2024.06.10.09.38.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 09:38:09 -0700 (PDT)
+Date: Mon, 10 Jun 2024 09:38:06 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Guo Ren <guoren@kernel.org>, Evan Green <evan@rivosinc.com>,
+	Andy Chiu <andy.chiu@sifive.com>, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-sunxi@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 02/13] dt-bindings: thead: add a vlen register length
+ property
+Message-ID: <Zmcr7pP+XEWHYTsy@ghost>
+References: <20240609-xtheadvector-v1-0-3fe591d7f109@rivosinc.com>
+ <20240609-xtheadvector-v1-2-3fe591d7f109@rivosinc.com>
+ <20240610-unaltered-crazily-5b63e224d633@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <20240610163427.3359426-1-seanjc@google.com>
-Subject: [PATCH] MAINTAINERS: Drop Wanpeng Li as a Reviewer for KVM Paravirt support
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610-unaltered-crazily-5b63e224d633@spud>
 
-Drop Wanpeng as a KVM PARAVIRT reviewer as his @tencent.com email is
-bouncing, and according to lore[*], the last activity from his @gmail.com
-address was almost two years ago.
+On Mon, Jun 10, 2024 at 05:29:23PM +0100, Conor Dooley wrote:
+> On Sun, Jun 09, 2024 at 09:45:07PM -0700, Charlie Jenkins wrote:
+> > Add a property analogous to the vlenb CSR so that software can detect
+> > the vector length of each CPU prior to it being brought online.
+> > Currently software has to assume that the vector length read from the
+> > boot CPU applies to all possible CPUs. On T-Head CPUs implementing
+> > pre-ratification vector, reading the th.vlenb CSR may produce an illegal
+> > instruction trap, so this property is required on such systems.
+> > 
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  Documentation/devicetree/bindings/riscv/thead.yaml | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/riscv/thead.yaml b/Documentation/devicetree/bindings/riscv/thead.yaml
+> > index 301912dcd290..5e578df36ac5 100644
+> > --- a/Documentation/devicetree/bindings/riscv/thead.yaml
+> > +++ b/Documentation/devicetree/bindings/riscv/thead.yaml
+> > @@ -28,6 +28,13 @@ properties:
+> >            - const: sipeed,lichee-module-4a
+> >            - const: thead,th1520
+> >  
+> > +thead,vlenb:
+> 
+> This needs to move back into cpus.yaml, this file documents root node
+> compatibles (boards and socs etc) and is not for CPUs. If you want to
+> restrict this to T-Head CPUs only, it must be done in cpus.yaml with
+> a conditional `if: not: ... then: properties: thead,vlenb: false`.
+> 
+> Please test your bindings.
 
-[*] https://lore.kernel.org/all/CANRm+Cwj29M9HU3=JRUOaKDR+iDKgr0eNMWQi0iLkR5THON-bg@mail.gmail.com
+Now that I know `make dt_binding_check` exists I will use that in the
+future!
 
-Cc: Wanpeng Li <kernellwp@gmail.com>
-Cc: Like Xu <like.xu.linux@gmail.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+- Charlie
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aacccb376c28..2c48b67449f5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12382,7 +12382,6 @@ F:	drivers/video/backlight/ktz8866.c
- 
- KVM PARAVIRT (KVM/paravirt)
- M:	Paolo Bonzini <pbonzini@redhat.com>
--R:	Wanpeng Li <wanpengli@tencent.com>
- R:	Vitaly Kuznetsov <vkuznets@redhat.com>
- L:	kvm@vger.kernel.org
- S:	Supported
+> 
+> Thanks,
+> Conor.
+> 
+> > +  $ref: /schemas/types.yaml#/definitions/uint32
+> > +  description:
+> > +    VLEN/8, the vector register length in bytes. This property is required in
+> > +    systems where the vector register length is not identical on all harts, or
+> > +    the vlenb CSR is not available.
+> > +
+> >  additionalProperties: true
+> >  
+> >  ...
+> > 
+> > -- 
+> > 2.44.0
+> > 
 
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
--- 
-2.45.2.505.gda0bf45e8d-goog
 
