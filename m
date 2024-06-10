@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECA7147C6E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363981482EE
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037740; cv=none; b=dPWG1+Pql865kxNYNcSy/XdSq/ZPn/xYQoUCijeoh9B7y1A5RrP22BmI2g37bOxm4yN/KYK7XIuy7JK847aHhRE09kGUsk5M/9dKPjJSq4Dv1N2C3beYHTyzM44nc1PQfiBGFBh1d0N80sVEKyIoXewtEAEbK3uTQvmpeSo3TKk=
+	t=1718037741; cv=none; b=RD1tu75idrYH1x6tTGmiYhh1uJbpJeq3AdGmWvxg9T0C8Wk1cg3RdPY/tHtyv1U/Q09FrKV34sQyyThd3xhr8CtgzqYnkVNU5mD6ErStypjGEPZ1ZOk+3FvWc8C3GnN/Aed9RMRKmf0OIVb3PMVigxOcBmLCH4xTrz/Rl/gYD3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718037740; c=relaxed/simple;
-	bh=dFadCdHIj/hoRcxQcT8VgvmC98onMotQm8AlW+HXtsQ=;
+	s=arc-20240116; t=1718037741; c=relaxed/simple;
+	bh=gUItmgDH5rsS1e6yVmaYPpvSzF4y549YIibjLNxq98E=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=OGYpuSnxgJX2i63mac7IZOHI+XQQpIUbgR/uIryDY9s4BxlSF3s4sn2qIvguR/CfH6klD3GPnMj+CHOlsRRNCtIYMpGeO5LJnVAtl64IVp7HUi/BRKza22NcV1MDnmRp5RDnugk+Mk9bfvvbmMnKofcKNvjkbviUU1Ia4nHsOA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z0W7zjV3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JRFWhPWJ; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=lEMfoyZDKLfOXbJwPgCfLFMJteUdAGIuR8MiDUgnM3C8EpMfugLMQLq4fFlJ76yaAX1cLcaBdqZnGvE5adyO6yQqPXxrJUlPCav7o8Bn0yYe728P3bMpImGkCPLUnX7G343QjbIdFvx4mQTXZnH/pJkPEIdmbUcPP/QPLWG4XD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JQZPudCM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=38II87pf; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z0W7zjV3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JRFWhPWJ"
-Message-ID: <20240610164025.706799004@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JQZPudCM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="38II87pf"
+Message-ID: <20240610164025.971657046@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037730;
+	s=2020; t=1718037735;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=wBuqBPrJ78lfRZ7AX91zzV87OtbmlXth39hEp1fmaS0=;
-	b=z0W7zjV3SoeueiMAK1PqkaS4nh7M77goZqu6u98QpNYvKRwrawvr2IEZYJ5w2slKAFDWtI
-	Toz7vhOIL0uslByig/UIVbfs61G9zDkU+ckZS+7bYM8qThD/tJ+O0fBVnEggCwzV1sYA+l
-	GND2JktPuxWAmL/9lpeQhyJxIeTyfYlR29rjBrdXy3/CVUUe5BYs4MSZRWIAPLeVCVoPuU
-	egbm9n8uRl3yo4TqdWCt1TVlZ1CaMWmh8AHVswjl+T8EfMj5vuJ5N+jlHzbaw5/bUuRASh
-	VOkzydFgoQ3ul0r8kljb0eubFFoyWwrRc6iHn4mJrq2kW4NsQjMc/KCNzmbBJw==
+	 references:references; bh=AfHYSU/HugM7h61r392aP8dR7dmyLHuDBcUa2xZEhTQ=;
+	b=JQZPudCMNolibX4vURulBU39MhGyWu3HXCZHw+FyLSu2rJjt3v0EFcAeQrbMEV6CH5XhPA
+	aQpAtZagWpZ2YLcRWz/jd1EOgNKDhFveJ/IP0B8EBQDLrDf8271t5W2cdwQRN/xePxjLiD
+	Oj/vt9/0QwzS2luBqHZYegq88UrQRXddfcMvSkzxw9II8Hu8q/JCqdO0+EwLetscpr+EcZ
+	NqCVHHQGsnwxGZAf17vThiezgLOehoy4iBqimnFaZed00y2CAotgm0IT5WsaWRBuJBWst7
+	IecLSjlXGvj2UINgr2Vuc+A+8P+g/z9ybTnlGGQ/CS6H7PdtEDvj4bWVsr6yQQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037730;
+	s=2020e; t=1718037735;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=wBuqBPrJ78lfRZ7AX91zzV87OtbmlXth39hEp1fmaS0=;
-	b=JRFWhPWJQ3Mnz25QlCOKArAHswe37JgDMOVj00ac0fSwopU+AFjoE/2D3YJy8jzFgQ/RkR
-	Y533diIUSXFCicAQ==
+	 references:references; bh=AfHYSU/HugM7h61r392aP8dR7dmyLHuDBcUa2xZEhTQ=;
+	b=38II87pfUGOm2DJSi/XlcrNEwOiFG35nAjbqtztPqdpqv3MYV3AUF8UiABpvO97g7LZ+4U
+	L2H6rU7kIN6OFaCQ==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
@@ -45,7 +45,8 @@ Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
  Stephen Boyd <sboyd@kernel.org>,
  Eric Biederman <ebiederm@xmission.com>,
  Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 04/51] selftests/timers/posix-timers: Validate SIGEV_NONE
+Subject: [patch V3 08/51] posix-cpu-timers: Save interval only for armed
+ timers
 References: <20240610163452.591699700@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,106 +55,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:42:10 +0200 (CEST)
+Date: Mon, 10 Jun 2024 18:42:15 +0200 (CEST)
 
-Posix timers with a delivery mode of SIGEV_NONE deliver no signals but the
-remaining expiry time must be readable via timer_gettime() for both one
-shot and interval timers.
-
-That's implemented correctly for regular posix timers but broken for posix
-CPU timers.
-
-Add a self test so the fixes can be verified.
+There is no point to return the interval for timers which have been
+disarmed.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- tools/testing/selftests/timers/posix_timers.c |   53 +++++++++++++++++++++++++-
- 1 file changed, 52 insertions(+), 1 deletion(-)
+V2: Split out into new patch to make review simpler - Frederic
+---
+ kernel/time/posix-cpu-timers.c |   14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
---- a/tools/testing/selftests/timers/posix_timers.c
-+++ b/tools/testing/selftests/timers/posix_timers.c
-@@ -11,6 +11,7 @@
- #include <sys/types.h>
- #include <stdio.h>
- #include <signal.h>
-+#include <stdint.h>
- #include <string.h>
- #include <unistd.h>
- #include <time.h>
-@@ -20,6 +21,7 @@
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -809,17 +809,15 @@ static void posix_cpu_timer_get(struct k
  
- #define DELAY 2
- #define USECS_PER_SEC 1000000
-+#define NSECS_PER_SEC 1000000000
+ 	rcu_read_lock();
+ 	p = cpu_timer_task_rcu(timer);
+-	if (p) {
++	if (p && cpu_timer_getexpires(&timer->it.cpu)) {
+ 		itp->it_interval = ktime_to_timespec64(timer->it_interval);
  
- static void __fatal_error(const char *test, const char *name, const char *what)
- {
-@@ -438,10 +440,57 @@ static void check_delete(void)
- 	ksft_test_result(!tsig.signals, "check_delete\n");
- }
+-		if (cpu_timer_getexpires(&timer->it.cpu)) {
+-			if (CPUCLOCK_PERTHREAD(timer->it_clock))
+-				now = cpu_clock_sample(clkid, p);
+-			else
+-				now = cpu_clock_sample_group(clkid, p, false);
++		if (CPUCLOCK_PERTHREAD(timer->it_clock))
++			now = cpu_clock_sample(clkid, p);
++		else
++			now = cpu_clock_sample_group(clkid, p, false);
  
-+static inline int64_t calcdiff_ns(struct timespec t1, struct timespec t2)
-+{
-+	int64_t diff;
-+
-+	diff = NSECS_PER_SEC * (int64_t)((int) t1.tv_sec - (int) t2.tv_sec);
-+	diff += ((int) t1.tv_nsec - (int) t2.tv_nsec);
-+	return diff;
-+}
-+
-+static void check_sigev_none(int which, const char *name)
-+{
-+	struct timespec start, now;
-+	struct itimerspec its;
-+	struct sigevent sev;
-+	timer_t timerid;
-+
-+	memset(&sev, 0, sizeof(sev));
-+	sev.sigev_notify = SIGEV_NONE;
-+
-+	if (timer_create(which, &sev, &timerid))
-+		fatal_error(name, "timer_create()");
-+
-+	/* Start the timer to expire in 100ms and 100ms intervals */
-+	its.it_value.tv_sec = 0;
-+	its.it_value.tv_nsec = 100000000;
-+	its.it_interval.tv_sec = 0;
-+	its.it_interval.tv_nsec = 100000000;
-+	timer_settime(timerid, 0, &its, NULL);
-+
-+	if (clock_gettime(which, &start))
-+		fatal_error(name, "clock_gettime()");
-+
-+	do {
-+		if (clock_gettime(which, &now))
-+			fatal_error(name, "clock_gettime()");
-+	} while (calcdiff_ns(now, start) < NSECS_PER_SEC);
-+
-+	if (timer_gettime(timerid, &its))
-+		fatal_error(name, "timer_gettime()");
-+
-+	if (timer_delete(timerid))
-+		fatal_error(name, "timer_delete()");
-+
-+	ksft_test_result(its.it_value.tv_sec || its.it_value.tv_nsec,
-+			 "check_sigev_none %s\n", name);
-+}
-+
- int main(int argc, char **argv)
- {
- 	ksft_print_header();
--	ksft_set_plan(10);
-+	ksft_set_plan(12);
- 
- 	ksft_print_msg("Testing posix timers. False negative may happen on CPU execution \n");
- 	ksft_print_msg("based timers if other threads run on the CPU...\n");
-@@ -467,6 +516,8 @@ int main(int argc, char **argv)
- 	check_sig_ign(1);
- 	check_rearm();
- 	check_delete();
-+	check_sigev_none(CLOCK_MONOTONIC, "CLOCK_MONOTONIC");
-+	check_sigev_none(CLOCK_PROCESS_CPUTIME_ID, "CLOCK_PROCESS_CPUTIME_ID");
- 
- 	ksft_finished();
+-			__posix_cpu_timer_get(timer, itp, now);
+-		}
++		__posix_cpu_timer_get(timer, itp, now);
+ 	}
+ 	rcu_read_unlock();
  }
 
