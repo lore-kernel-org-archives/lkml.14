@@ -1,68 +1,72 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2078.outbound.protection.outlook.com [40.107.223.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B74314658E;
-	Mon, 10 Jun 2024 16:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718035241; cv=none; b=B2xmRyovmeFDfmyeaTTvvf4stuZkCEy7PjIUmpiayuc/iOqbI6u34YholMzPewyYhRP6m7w0Z3nB3lARGrjqDMzYRxAdgiqqjOI4UfqWAGpNZRSJ+UPntQ1wzAu/U2NZIPbpNJkP0PQhvHxYydeWIIIYEaBXoUYF1Gv2DRnHR3A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718035241; c=relaxed/simple;
-	bh=+MIiiCbdWxNTXrUyRNbG+b13pi9WFUp7fmDjl+ZCGnU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nWf/2rmH8mAwHPiO6PGxUnEjR9ktU4obntlJEu1FsXajt2MVshS/Adz9JYXT2DF2yx0/kyCv5UKRrKl/EceDMYkiUX9OoaDRgEr8cPZgChVrkXzEMzypgtBphTnQ+xmuAL3vnWNFYrCPZ1v6XCYkK4YeeCBXmcXVM+r/+cpc4FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G8K05pxP; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3A8148841;
+	Mon, 10 Jun 2024 16:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718035244; cv=fail; b=QzZJVtR6FbPCMmg41GLsNpkZl/7g4j/7123nebjl2nG5uOjAx8q+lrOkBi4uO2us4xrwM46ZP6pFVnVm0vKZA9smeIXuGnHCtbdhOIXJ18hHZyU4tmuZcdN3GcOweJ2j1ub4j5qKPnOx15nIhJXBy2UYn8XKdPwTP32lQk0wGhE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718035244; c=relaxed/simple;
+	bh=JSCoRXCk0BDtEzYoYNAYIGS6i581no0AfB7/4XV6tMU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jg7C11nOx82WsNluNezObERahOa2BMJeOsyPQ4sCLgWIg46WxTdCPY7Rybw0PThE7pt4nxdeRXaihBMQwfPft8BSvAQfUIbjgVxje6pd5kOg7VYfj6AWpohj6MvJdAg8k5+wV9EWc3MkccER+MY8xG6geLV8Xk5kxTUUCkVaXKY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oGEgdkqd; arc=fail smtp.client-ip=40.107.223.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8K05pxP"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7046211e455so878373b3a.3;
-        Mon, 10 Jun 2024 09:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718035240; x=1718640040; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e55PJUTGJquoA8apS39Yj2O1Aiis5PKLgqTtAScEy6s=;
-        b=G8K05pxP7qfddRf97gAxXyjPOPgh2EQlsCEFOFhOwjI4js9s5/GR3CqhthitS8VofR
-         47wwbsTd6sqc4XUN+A3k9K2EuxL7Mcdv79hiomWj/lPCuUTa2FoCcBfMjPUwrDfFfgKs
-         zQgJhDFqEh0bnLrSg9cgn1cwB/OVWG6zbQ3DtLQTbH3eziMDIhZ8nMEqgJDiWNBker0F
-         7XdCswziBADBEpJ9QhELct9qYRUYNMeNhvl5BuG4PuKylQar1bXLzAAXhtCNUXzwZOb4
-         IGicMInAV9yJG0GwgUKzBIRs28nv8gAylX1u61KNhgPfTVA2ywJcojpDihhfrfHkMROb
-         sJOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718035240; x=1718640040;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e55PJUTGJquoA8apS39Yj2O1Aiis5PKLgqTtAScEy6s=;
-        b=D6LZgqdIh5ow8/Za5V3KBDzgrnWbNSe+tJUhs/VnOSwrIiPUgYE6X0aX9Jx1YO4j6c
-         c+PIyQNNYJ3zG/wnC+d8qTmDXOCgYNYnIT0GL4QlxDkoWdFYL06hlgO13d/S6oxh2z4R
-         n0kMltMA8tQEGyi81LMIdtBPMOgVo+PQ59dJGHu54rD3gJZXxh4mPlVQCmbRh059H9Gb
-         tXc7c1vsEL9nI95WVZG9vyrfvoQopue+1jrjw64KqvT8EqTuZIJDV3sHRsyANoKc8jMt
-         VaRjGkEcdYcI9j6YsBCbPXdasIzJRnZKPe38emaHQgaeGeANoojQbR/4z22BUjZlzkkS
-         N6bg==
-X-Forwarded-Encrypted: i=1; AJvYcCWzVmvu6ZFxar0H/29tp3LwL67X1id4sXMzbw3bEu69MRI2uSwuyVLENRgaI42MieEj056RrFyrrgl4jlA1QMRPwsfvM5AdNLLNCQssLUCMgtgdhFthWlIWpa3fs/Ivm3Y2H5165kYy6KLj9Q==
-X-Gm-Message-State: AOJu0Yw27Z8/83RjxCdCTjkElu2PVoBYU4K7zqWeqYoWNfWeUPVfnIvL
-	vi1lnQZwQyTOnGBoE2TBDYLzxHqGUtvCCcBjaNCPJTFExmHqPWaW
-X-Google-Smtp-Source: AGHT+IGiEFs8Aut7LobpCXj5NsxQBIaxTqD/6/qlgjEDxm9l2MYyHo4ZKuqutmqOKYkGm7uexbY4WQ==
-X-Received: by 2002:a05:6a20:3948:b0:1b7:edea:e36 with SMTP id adf61e73a8af0-1b7edea118dmr2333039637.22.1718035239641;
-        Mon, 10 Jun 2024 09:00:39 -0700 (PDT)
-Received: from carrot.. (i223-217-185-141.s42.a014.ap.plala.or.jp. [223.217.185.141])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6e4532507casm4872411a12.62.2024.06.10.09.00.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 09:00:39 -0700 (PDT)
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-nilfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH -mm 2/2] nilfs2: do not call inode_attach_wb() directly
-Date: Tue, 11 Jun 2024 01:00:29 +0900
-Message-Id: <20240610160029.7673-3-konishi.ryusuke@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oGEgdkqd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fUbAX8CYa+DthNjDc3KnJI9fcn3aQ6c1RqZwRuy0xiJ/+rf5bSp9WecHkmTeRYIbnw82PfciPUHIhlspic3HE91kk/H7mM9b1y8ah3M//dKF+BxT37xYMWYqoPo9nxdQlaSqnZFXhzp68ZssdPRMwlVcoQPnmrHZeKTAokWEgZtew3tYTulULcZMQ0VWKz9QH65vMjKwrxeK1g1dL6QcEueZSA70wB65sNeOpL5sFPu549NsrFy0CFL40zQ+y6ZJstDoI2Tx+SqtQ0H7ttgfEmz9ln7Lat/A9fgdSZCsS5yoLjopdIP/OBH5W2IuJxuCrh2TnBEwMOByX7kfOpIltw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bbal+O04jUTyZ/CT6Z/M7q7oMnm43JswcqnO5Xq/0cg=;
+ b=LzUIcpl4h/t+R4fqs4ZpEcQlfx4Y0sjqWvbc+Jhioiwan8ti6YuJ5qyE/xN9y27IW9OI32qX6+BSJXVLbBk32Z8lbAzVbNdacVOuC54dlQlryMIUPsoJ6uip1f8fE4ibROrrsDlHWSnr9bVlKv2JGdpTDLT24AvlxiODvSIlvCeDYDhymF+ngB/FUngkyQJPcEMB/KOYkDUry7++Z0ocXYpC4j8PDznZ+W4G9fzb3o7AMrGnNzUHMEI/ir40YFNOQL4ld/Cb2ucvqbXmkWt9d0pEpugfppjIGLdld0oq2wrG/Mw1gAvP6eqCH6sGP8EcTwC7B0QMfHbA1aOSVmLK9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bbal+O04jUTyZ/CT6Z/M7q7oMnm43JswcqnO5Xq/0cg=;
+ b=oGEgdkqdUMBtpI7Eb8j/wmtYEk5tBhyJi/2kTaCTY2WlTY7H313dWRWCw8wAAma3kbl8agPz47gisid2Z51IbyiljE85uCoEy6FqD7pq+3I5f/vur/Y62EQz6/MRn6bhJL3FTQy1PIDrookQoa3WW/umr/qFinOsx3hfn87m85c=
+Received: from PH8PR22CA0017.namprd22.prod.outlook.com (2603:10b6:510:2d1::13)
+ by IA1PR12MB6139.namprd12.prod.outlook.com (2603:10b6:208:3e9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Mon, 10 Jun
+ 2024 16:00:34 +0000
+Received: from SN1PEPF0002529E.namprd05.prod.outlook.com
+ (2603:10b6:510:2d1:cafe::ab) by PH8PR22CA0017.outlook.office365.com
+ (2603:10b6:510:2d1::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7656.25 via Frontend
+ Transport; Mon, 10 Jun 2024 16:00:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002529E.mail.protection.outlook.com (10.167.242.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Mon, 10 Jun 2024 16:00:34 +0000
+Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 10 Jun
+ 2024 11:00:28 -0500
+From: Babu Moger <babu.moger@amd.com>
+To: <fenghua.yu@intel.com>, <reinette.chatre@intel.com>, <shuah@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<ilpo.jarvinen@linux.intel.com>, <babu.moger@amd.com>,
+	<maciej.wieczor-retman@intel.com>, <peternewman@google.com>,
+	<eranian@google.com>
+Subject: [PATCH v2] selftests/resctrl: Fix noncont_cat_run_test for AMD
+Date: Mon, 10 Jun 2024 11:00:22 -0500
+Message-ID: <7679d70a0ea939db13ae9dac20de56644460d6df.1718035091.git.babu.moger@amd.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240610160029.7673-1-konishi.ryusuke@gmail.com>
-References: <20240610160029.7673-1-konishi.ryusuke@gmail.com>
+In-Reply-To: <3a6c9dd9dc6bda6e2582db049bfe853cd836139f.1717622080.git.babu.moger@amd.com>
+References: <3a6c9dd9dc6bda6e2582db049bfe853cd836139f.1717622080.git.babu.moger@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,49 +74,129 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002529E:EE_|IA1PR12MB6139:EE_
+X-MS-Office365-Filtering-Correlation-Id: fbb2086b-7471-4481-5230-08dc8966762d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|1800799015|82310400017|36860700004|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?hueoyezoWxLze2auaQRTuA1FyBtn5MEtVaCIS+byyghb8BCDFL3qpF+wOOle?=
+ =?us-ascii?Q?1e0b+f2w1+eNNTJQNM+lL6bLLyM2rR6oIhcRmTyp6xXpNuyjg+Q79iUI1gAm?=
+ =?us-ascii?Q?alpWyk3jlrCLUKGQ9P0q3ls4avc8rP9q6MNLYKyMHJS94Xg8sg3czqtHrF50?=
+ =?us-ascii?Q?5Fi9Kuchr0InQZ0T48jue6yiMivMDd1mjc3tsD5mdevtR0caYsG4XhWSPEiA?=
+ =?us-ascii?Q?aRtJmcfpIwyaUbZ4cB9aF6uQWJoV/S8sfUESk+zBDx6RES9+0jAsLv3j4Mia?=
+ =?us-ascii?Q?SJEmDWqyKGsBTnb/IBo+7wPrm3C/8Penn7fUZswXVQfwtDwQqXVt+fzZUHsq?=
+ =?us-ascii?Q?jyauTg4/hGfzYHdo+pw+ELcxsMWJJWm1qOXHx1d7ZAPi4F8iXAnOh4gHZPbG?=
+ =?us-ascii?Q?AE52YKDot984PQ0pAN2o5D4aO6rZLSo6W9g9895Fglk1idHvB8h4FwbRUyS+?=
+ =?us-ascii?Q?CW2QniDUraNTBWZz66nbiU3uX9WAuJErhda7NN7bR4iK9xz2DRD/Wf0ds3B6?=
+ =?us-ascii?Q?HhtjcbZdlYmCsq6anmyRhOCC4VgGuWxyFoUT+7VEQOOrnqpeDsTwZdyGnKHd?=
+ =?us-ascii?Q?eymP0sBHbmxrvmLVTfW6fhEjXtQ4aCEHGJDSDcXPSk9bTFG/hKsqaKLXuifU?=
+ =?us-ascii?Q?tD5PAtq07gw3KdzbN+pGAK+LhYwH4G7z/sI6aogmI0wv4MY0xOc8XCoKc5nH?=
+ =?us-ascii?Q?3SDqUWZHiar9raKbw4Mu4H2duFYkDRNlo5z/JB1E/RWbdrQSgga4PWHmG8Kq?=
+ =?us-ascii?Q?MPxL1txYo/uyH/Jn0yHGucAIhyuTiUQ1XdQRIsXYDrSbhJnyXymcLun6djDj?=
+ =?us-ascii?Q?0KjNfV3RhlvExlS818dmHOnUrs28chcIk9JFrrQdFdDqAmImbYi3xzBkrqsJ?=
+ =?us-ascii?Q?djcyvTMdArovVoJRZMXTTIEli9+/KbFAffaM3NphlUvuY5GQPITX80tM5dP9?=
+ =?us-ascii?Q?JiQSjPHM1PddL4M4QntuxVZ/knpQYn+w/wpR+8vZ+M+BqoI0iyt7TwZ9i5wd?=
+ =?us-ascii?Q?EpUqeBSfBmQQU7XQlQ72lXXgRMp7nRqwbkx2NwasBE3stbH//GJa/zktbZ1j?=
+ =?us-ascii?Q?Sag5ud2RdWLZUy9qjkeKMZSuUNLJYO06Xamy8xAjsscTKltSU62C9Zbw5nwe?=
+ =?us-ascii?Q?gxGSoakaBdk/WhWtONPYJ+52AyiQlOBSyPanrSvqt4KA+vr9dKlpjMjcPtoA?=
+ =?us-ascii?Q?UqkrB/zrJLnCn7C76/wFZoa/J8MGH0edwkTZ4QgHRE43XXUoyP4m2qAP85DG?=
+ =?us-ascii?Q?pmqQHuM97h+2DrE/sm2lQ8KjiTtrJnWtO91FrOzFJxge/NX/Yx0mhMtCrqOa?=
+ =?us-ascii?Q?VMyhPaQhwwSKx0RHj2OvxMLtxNHpiFA9VmWQRkADq9VhuO7Dan2bU/W3/AFm?=
+ =?us-ascii?Q?9mOlDzA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(82310400017)(36860700004)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2024 16:00:34.1181
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbb2086b-7471-4481-5230-08dc8966762d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002529E.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6139
 
-Call mark_buffer_dirty() for segment summary and super root block
-buffers on the backing device's page cache, thereby indirectly calling
-inode_attach_wb().
+The selftest noncont_cat_run_test fails on AMD with the warnings. Reason
+is, AMD supports non contiguous CBM masks but does not report it via CPUID.
 
-Then remove the no longer needed call to inode_attach_wb() in
-nilfs_attach_log_writer(), resolving the concern about its
-layer-violating use.
+Update noncont_cat_run_test to check for the vendor when verifying CPUID.
 
-Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Fixes: ae638551ab64 ("selftests/resctrl: Add non-contiguous CBMs CAT test")
+Signed-off-by: Babu Moger <babu.moger@amd.com>
 ---
- fs/nilfs2/segment.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v2: Moved the non contiguous verification to a new function
+    arch_supports_noncont_cat.
 
-diff --git a/fs/nilfs2/segment.c b/fs/nilfs2/segment.c
-index a92609816bc9..36e0bb38e1aa 100644
---- a/fs/nilfs2/segment.c
-+++ b/fs/nilfs2/segment.c
-@@ -1678,6 +1678,7 @@ static void nilfs_prepare_write_logs(struct list_head *logs, u32 seed)
- 	list_for_each_entry(segbuf, logs, sb_list) {
- 		list_for_each_entry(bh, &segbuf->sb_segsum_buffers,
- 				    b_assoc_buffers) {
-+			mark_buffer_dirty(bh);
- 			if (bh->b_folio == bd_folio)
- 				continue;
- 			if (bd_folio) {
-@@ -1694,6 +1695,7 @@ static void nilfs_prepare_write_logs(struct list_head *logs, u32 seed)
- 	/* Prepare to write super root block */
- 	bh = NILFS_LAST_SEGBUF(logs)->sb_super_root;
- 	if (bh) {
-+		mark_buffer_dirty(bh);
- 		if (bh->b_folio != bd_folio) {
- 			folio_lock(bd_folio);
- 			folio_wait_writeback(bd_folio);
-@@ -2843,8 +2845,6 @@ int nilfs_attach_log_writer(struct super_block *sb, struct nilfs_root *root)
- 	if (!nilfs->ns_writer)
- 		return -ENOMEM;
+v1:
+This was part of the series
+https://lore.kernel.org/lkml/cover.1708637563.git.babu.moger@amd.com/
+Sending this as a separate fix per review comments.
+---
+ tools/testing/selftests/resctrl/cat_test.c | 32 +++++++++++++++-------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
+
+diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
+index d4dffc934bc3..742782438ca3 100644
+--- a/tools/testing/selftests/resctrl/cat_test.c
++++ b/tools/testing/selftests/resctrl/cat_test.c
+@@ -288,11 +288,30 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
+ 	return ret;
+ }
  
--	inode_attach_wb(nilfs->ns_bdev->bd_mapping->host, NULL);
++static bool arch_supports_noncont_cat(const struct resctrl_test *test)
++{
++	unsigned int eax, ebx, ecx, edx;
++
++	/* AMD always supports non-contiguous CBM. */
++	if (get_vendor() == ARCH_AMD)
++		return true;
++
++	/* Intel support for non-contiguous CBM needs to be discovered. */
++	if (!strcmp(test->resource, "L3"))
++		__cpuid_count(0x10, 1, eax, ebx, ecx, edx);
++	else if (!strcmp(test->resource, "L2"))
++		__cpuid_count(0x10, 2, eax, ebx, ecx, edx);
++	else
++		return false;
++
++	return ((ecx >> 3) & 1);
++}
++
+ static int noncont_cat_run_test(const struct resctrl_test *test,
+ 				const struct user_params *uparams)
+ {
+ 	unsigned long full_cache_mask, cont_mask, noncont_mask;
+-	unsigned int eax, ebx, ecx, edx, sparse_masks;
++	unsigned int sparse_masks;
+ 	int bit_center, ret;
+ 	char schemata[64];
+ 
+@@ -301,15 +320,8 @@ static int noncont_cat_run_test(const struct resctrl_test *test,
+ 	if (ret)
+ 		return ret;
+ 
+-	if (!strcmp(test->resource, "L3"))
+-		__cpuid_count(0x10, 1, eax, ebx, ecx, edx);
+-	else if (!strcmp(test->resource, "L2"))
+-		__cpuid_count(0x10, 2, eax, ebx, ecx, edx);
+-	else
+-		return -EINVAL;
 -
- 	err = nilfs_segctor_start_thread(nilfs->ns_writer);
- 	if (unlikely(err))
- 		nilfs_detach_log_writer(sb);
+-	if (sparse_masks != ((ecx >> 3) & 1)) {
+-		ksft_print_msg("CPUID output doesn't match 'sparse_masks' file content!\n");
++	if (arch_supports_noncont_cat(test) != sparse_masks) {
++		ksft_print_msg("Hardware and kernel differ on non-contiguous CBM support!\n");
+ 		return 1;
+ 	}
+ 
 -- 
 2.34.1
 
