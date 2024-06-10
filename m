@@ -1,97 +1,103 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E517C7F47F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 11:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42B77E78E;
+	Mon, 10 Jun 2024 11:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718020588; cv=none; b=LUktvq4UIHjsp05xp34nSk5cxGJoU52Uua8GBvUKXNY6nFHGAImVE2mBZ5YnpdrtD9PdhaXJP6P/39yZ94HS+RAj/6weO22yHAgeNMMpjeRuZ68kGMEnFVjq7UF5gQPvdGfUE/osq1+QGlELFEvjhKISMQJJiykB1urofQULgSo=
+	t=1718020596; cv=none; b=lAwH5Y2C7tusT3JoiZcAfFaTtiGhXDK6JgZ39oS6gvwljOlm4G0QS0yfdfVxbUj969637AaDOICkeD8+pCVzZe8rRtBPCDOUxE1g7OTGXWd88aAaqsHaN99sKqKeXzzpGElbl9bHAZPHcAmFh+i9S1P8SVcc/Y/pNC31RjcnbRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718020588; c=relaxed/simple;
-	bh=3zfvzlmcR8N56u/FKlbPmt+e+1fkdR4IKAhj3L5vxzs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=m2vyvS1Iw4dLwgcNroueGr/QgIVWBchcPaDBnUYzcyPtZUYsRUzguF2rh/7EcFXfZSSRy9MKBT4LujwDWSCLrKPf452wDguni8uR2/k44zWgqmw3MzYfgjsUFO+CtH8SFvyb/mr9ltwZ6C3ipjrCx/ZSJDKpxtxFMs4ljCl0sfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3747f77bafcso41186595ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 04:56:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718020586; x=1718625386;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZkZ3+r53EPSlPEfxLkR3ZeP8CW8pwD/hEhLYRJTOsaQ=;
-        b=I92+0A/cqElOkrG7UutLSH/+I23dvuDUOCmoYMje/1xRvAmNJPF5vp6HYg1aw4bND5
-         ubCdb7ZYtvs1Krde7Vw1B1tlGe8Vj1HwCI5LYxNUwTQQSUenssiogiyjyd+eu48RIFDU
-         gUnUB3Kk0vkJCHm+UQhWNzeCmvqcV2n3gnnc9GUkPoz9aWtDUCDZ6hCo6o9RBSy4lRvd
-         m90e1yceZeAfhXi7Bbccsq26AF1VC8ePAZk36F/uWTBiCtaitgszlvBdrAJJUhhk/L18
-         /wyTpVgDNh/rv70Oz8PKLcacYyT68AY7/H46xUaapbzcu7dkk5I5r+voqIxxu2RegfJ2
-         98MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUy/95iaF291MFeQtgz0KlSr7grtqUf2kEVr/Y/XnoglJ9eqbG8A+v2hHSvJxudEeFaUv4d1LgBaj97UdUa9dubEdjdAmXahRam+7Sn
-X-Gm-Message-State: AOJu0YxcF2ugF+RDGcaSy2WGboLHzjpuKmIPYtkuLc1CW4a5eXaRg2B9
-	++oXsz8C0PTxFSNkO9h5wQGft647/uPppjDZEAxUgJPTz972PbKO9hihAJKL6A6fFna9Q58KA2E
-	M5yDr4RA80y4qR9zCRjiHG2+8/TUZnFDgm6ZiSG+vxFWRSkqTBS1rayg=
-X-Google-Smtp-Source: AGHT+IEkaqB6ydyDctJGeDvNtCoQHlYExJ79u/V7cVFMgkdlq2tTHJ64KPaQk/juXHrnZEb840thf0gmF1RT6W3WOiOAOjqGU96Q
+	s=arc-20240116; t=1718020596; c=relaxed/simple;
+	bh=aIZpj99P0sU05RD8b9KavtNB/mKvvZDjucVlsvQeQ18=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rmEK9jHFukGbJngiLFskrfyQj/+UXJkGPALtLJToHf5q32yw4Lug3qXT84anUCg8uGs4Av24lEYXXExevHfRKRVNSXnEiRnKlEfsUVwYy6py/BfNn6YUwLXK4u7muf/4jVKt1DroxGYjlK5fyyJ+KYr7v537n1DCQ0JJgNCI3WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Z2gvYhOR; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Z2gvYhOR"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45A8Xick019005;
+	Mon, 10 Jun 2024 13:56:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	ljxA0CMixUpfWg1txgwTXMZ7NWYzNR9MGl6rj1rR4Us=; b=Z2gvYhORT3qNBZUJ
+	4aIzn/P4fL5XmmKy0Zc2CWu0f3Yev282KotP0hkcZhn+84tHa4l9qWcoav4oQTef
+	oAq2sFzNQ+X1LoTBJsqRK2AjojTRJtr/ssRFjsJTIQiZQcOxdEPzb1+J2KgWscdC
+	/n+k86q6vCdP8A9VmWJNAJALKk90xEGiAFMZ20nnGn4oU6u57FFQqJ45Id6DYh1C
+	zMkUqBzt/nxxp4/Gi0QW7cRAduIIZmgSDiU5w9Qi+j8QaDUrWDRKoSTGKwsMAaxl
+	fDi8WE/NMTHoQ1cxvGfiJYBoniJSa+sD/UGWD47B+9oWPzg8/j+k51XkrUmH1AUf
+	m0SG0A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yn0v14m1r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 13:56:02 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A670B4002D;
+	Mon, 10 Jun 2024 13:55:57 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9E0F921685E;
+	Mon, 10 Jun 2024 13:54:39 +0200 (CEST)
+Received: from [10.48.86.164] (10.48.86.164) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 10 Jun
+ 2024 13:54:38 +0200
+Message-ID: <e4614975-a7a8-4bfa-a1e2-bf9c31547be9@foss.st.com>
+Date: Mon, 10 Jun 2024 13:54:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:786:b0:375:9b4f:5e47 with SMTP id
- e9e14a558f8ab-3759b4f609emr1485945ab.1.1718020585979; Mon, 10 Jun 2024
- 04:56:25 -0700 (PDT)
-Date: Mon, 10 Jun 2024 04:56:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000be90d1061a87d641@google.com>
-Subject: [syzbot] Monthly bluetooth report (Jun 2024)
-From: syzbot <syzbot+listdd264ff43a865b537e43@syzkaller.appspotmail.com>
-To: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	luiz.dentz@gmail.com, marcel@holtmann.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 02/12] net: stmmac: dwmac-stm32: Separate out external
+ clock rate validation
+To: Ratheesh Kannoth <rkannoth@marvell.com>
+CC: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>, Marek Vasut <marex@denx.de>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240607095754.265105-1-christophe.roullier@foss.st.com>
+ <20240607095754.265105-3-christophe.roullier@foss.st.com>
+ <20240610114607.GA3818685@maili.marvell.com>
+Content-Language: en-US
+From: Christophe ROULLIER <christophe.roullier@foss.st.com>
+In-Reply-To: <20240610114607.GA3818685@maili.marvell.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
 
-Hello bluetooth maintainers/developers,
+Hi Ratheesh,
 
-This is a 31-day syzbot report for the bluetooth subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/bluetooth
+On 6/10/24 13:46, Ratheesh Kannoth wrote:
+> On 2024-06-07 at 15:27:44, Christophe Roullier (christophe.roullier@foss.st.com) wrote:
+>> +static int stm32mp1_validate_ethck_rate(struct plat_stmmacenet_data *plat_dat)
+>> +{
+>> +	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+>> +	const u32 clk_rate = clk_get_rate(dwmac->clk_eth_ck);
+> nit: reverse xmas tree, split definitions and assignment.
 
-During the period, 4 new issues were detected and 0 were fixed.
-In total, 53 issues are still open and 63 have been fixed so far.
+It is not possible ;-)
 
-Some of the still happening issues:
+second declaration need first one.
 
-Ref  Crashes Repro Title
-<1>  21745   Yes   possible deadlock in rfcomm_sk_state_change
-                   https://syzkaller.appspot.com/bug?extid=d7ce59b06b3eb14fd218
-<2>  7056    Yes   WARNING in hci_conn_del
-                   https://syzkaller.appspot.com/bug?extid=b2545b087a01a7319474
-<3>  5110    Yes   WARNING in hci_conn_timeout
-                   https://syzkaller.appspot.com/bug?extid=2446dd3cb07277388db6
-<4>  2972    Yes   WARNING in call_timer_fn
-                   https://syzkaller.appspot.com/bug?extid=6fb78d577e89e69602f9
-<5>  2528    Yes   KASAN: slab-use-after-free Read in __hci_req_sync
-                   https://syzkaller.appspot.com/bug?extid=27209997e4015fb4702e
-<6>  1001    No    possible deadlock in __flush_workqueue
-                   https://syzkaller.appspot.com/bug?extid=da0a9c9721e36db712e8
-<7>  680     No    possible deadlock in touch_wq_lockdep_map
-                   https://syzkaller.appspot.com/bug?extid=91dbdfecdd3287734d8e
-<8>  615     Yes   general protection fault in skb_release_data (2)
-                   https://syzkaller.appspot.com/bug?extid=ccfa5775bc1bda21ddd1
-<9>  243     Yes   KASAN: slab-use-after-free Write in sco_sock_timeout
-                   https://syzkaller.appspot.com/bug?extid=4c0d0c4cde787116d465
-<10> 185     Yes   general protection fault in lock_sock_nested
-                   https://syzkaller.appspot.com/bug?extid=d3ccfb78a0dc16ffebe3
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
