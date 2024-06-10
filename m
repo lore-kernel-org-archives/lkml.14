@@ -1,121 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4141420DD;
-	Mon, 10 Jun 2024 15:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873DF15218E;
+	Mon, 10 Jun 2024 15:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718032644; cv=none; b=bbfKVOsv9BHPcHk9KKry//t0O86s91mbvLi5DLJbYUbLYo/jjmxjUCKNUPhrEbrEU0n9LnY228ZxmIeGBCex2L0t/3C8dadX1cA0P+WUKqlWc+mtioZCpIlnC48zbicPCKp3c3EL9ou29yRHFnPLtZOQ+L3mO4pDkWfL5WPL4Ro=
+	t=1718032649; cv=none; b=Pp82xPDPN6MVQ4I4CVLVhnQokuFZCtTEUV4lMYpTBQ6kNnk9utrEgnWvq5cxYV600vM0ZQgBqiADp1sgoLXK8KzyKETBt8bFdFI4vPfyCqhBkLOAzgjl2TofsK7L/+0PiTd83M5igiWb8PTkEzz3dT5TfOOxT7O1lhXQgieUnfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718032644; c=relaxed/simple;
-	bh=eheohbSQURPQS0WEawrCBZbNeF43tCvxTAbYaEVSAm8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ACpUnbot17G+Zckh8XN4UIcg28Gw5tbDUOL/zg81x0Hf4g2z2MRwBYn1WCgdYAm0V4D0A918AJi3X62xN51J87YRT4T8qL2x4dbCm/uBIdLkxP3NiPghRMTbtOEmNBej/fAmZZ4r/HaHKiWRrF5dPXQRH3APOFDUAGhZHalYS6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=As0sHoW9; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718032649; c=relaxed/simple;
+	bh=34IBcVJRT9a1iGd/s4e2KmsiacQ/fwBWEn/GfLuaU84=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SWD/ZeVPJ+yXQk80QcWPTQXPrON2eOImTLiW4K9+Zz/qoBhKwyPjhTJ8nxUO1fSk9aKbG2TeudkudcAHSzE0r9utTGdUnfVYOKhHjm9PC9gCV6NVOH6zvz5cYyGH1uWP2p962jKphL308WL0GTOC+gJcpRmbR+SGL55g2ASsvhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BymZSzbP; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="As0sHoW9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718032644; x=1749568644;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eheohbSQURPQS0WEawrCBZbNeF43tCvxTAbYaEVSAm8=;
-  b=As0sHoW9+/kWnfPXRSYe74WNXKUmRPRYK4844VVLCrzH2mBp8lNZe6WO
-   MoRYUQIAaSYJa0A5VwU4fXq2maF32kIpEzB93AvCzetiH25S8A/n4evDI
-   QglzULCMUZSpxxAOmgKg5r4cIlUzXxk8dgo5e5n5XCT6Cs5qVawRWOJYr
-   Vi9i3jObPAO6Xd7BOBRIwYaR2i3OFuO765dhjz/eWC7xqpNnD2mUVAdVF
-   iNr9w1EqOoaljhEp5hREx4mn+i9Dlrt3GdXLOWqyhi7dQwllDXrH0rDyV
-   UIIDrQM6azCZekQg/scd5WegUAk2QI3XGXpo8zob10eaerltbeTTvqoRq
-   w==;
-X-CSE-ConnectionGUID: NLTR8XymQaOWyxse2p8ylg==
-X-CSE-MsgGUID: dVOu+rf7T0aQoZxsjCpJFg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="26115496"
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="26115496"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 08:17:23 -0700
-X-CSE-ConnectionGUID: i+JHnuP/Rs+mKs2cFE9fIg==
-X-CSE-MsgGUID: MGaG4EiZSPW8wAfTGEH0qw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="44026637"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.194])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 08:17:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kselftest@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Babu Moger <babu.moger@amd.com>,
-	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v7 15/16] selftests/resctrl: Remove mongrp from CMT test
-Date: Mon, 10 Jun 2024 18:14:56 +0300
-Message-Id: <20240610151457.7305-16-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BymZSzbP"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45AFHOmX126249;
+	Mon, 10 Jun 2024 10:17:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718032644;
+	bh=r0k+DvL6KY1JUyaLhso3b+X98/K/2Xw/JXU0kRkC/zo=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=BymZSzbPbO7i5E0wLt2YsTRQ40RnqIjnWrjxCVAp9JDcBa+deQnhZ2+f4MMCxHof7
+	 OdrnI3DQIQkXMDzTcAUXXGvFtblS4GG8AZ605152jsG0Zzb3tMPYKF97MJX1OyZBV9
+	 iZogwg5sqxDowAJSZ2mmoVQpGUvrhuz5BOePqg1s=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45AFHOjQ017905
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 10 Jun 2024 10:17:24 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
+ Jun 2024 10:17:23 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 10 Jun 2024 10:17:23 -0500
+Received: from fllvsmtp7.itg.ti.com ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45AFHMqd017714;
+	Mon, 10 Jun 2024 10:17:23 -0500
+From: Andrew Davis <afd@ti.com>
+To: Hari Nagalla <hnagalla@ti.com>, Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Andrew
+ Davis <afd@ti.com>
+Subject: [PATCH 3/6] remoteproc: omap: Use devm_rproc_add() helper
+Date: Mon, 10 Jun 2024 10:17:18 -0500
+Message-ID: <20240610151721.189472-3-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240610151457.7305-1-ilpo.jarvinen@linux.intel.com>
-References: <20240610151457.7305-1-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20240610151721.189472-1-afd@ti.com>
+References: <20240610151721.189472-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-The CMT selftest instantiates a monitor group to read LLC occupancy.
-Since the test also creates a control group, it is unnecessary to
-create another one for monitoring because control groups already
-provide monitoring too.
+Use the device lifecycle managed add function. This helps prevent mistakes
+like deleting out of order in cleanup functions and forgetting to delete
+on error paths.
 
-Remove the unnecessary monitor group from the CMT selftest.
-
-Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Tested-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Andrew Davis <afd@ti.com>
 ---
+ drivers/remoteproc/omap_remoteproc.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-v7:
-- Fix separator to use 3 dashes
-v4:
-- New patch
----
- tools/testing/selftests/resctrl/cmt_test.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
-index 238f514ba7e6..b63fa1e93307 100644
---- a/tools/testing/selftests/resctrl/cmt_test.c
-+++ b/tools/testing/selftests/resctrl/cmt_test.c
-@@ -17,12 +17,12 @@
- #define MAX_DIFF_PERCENT	15
+diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+index df46be84658f7..9ae2e831456d5 100644
+--- a/drivers/remoteproc/omap_remoteproc.c
++++ b/drivers/remoteproc/omap_remoteproc.c
+@@ -1359,20 +1359,13 @@ static int omap_rproc_probe(struct platform_device *pdev)
  
- #define CON_MON_LCC_OCCUP_PATH		\
--	"%s/%s/mon_groups/%s/mon_data/mon_L3_%02d/llc_occupancy"
-+	"%s/%s/mon_data/mon_L3_%02d/llc_occupancy"
+ 	platform_set_drvdata(pdev, rproc);
  
- static int cmt_init(const struct resctrl_val_param *param, int domain_id)
- {
- 	sprintf(llc_occup_path, CON_MON_LCC_OCCUP_PATH, RESCTRL_PATH,
--		param->ctrlgrp, param->mongrp, domain_id);
-+		param->ctrlgrp, domain_id);
+-	ret = rproc_add(rproc);
++	ret = devm_rproc_add(&pdev->dev, rproc);
+ 	if (ret)
+ 		return ret;
  
  	return 0;
  }
-@@ -146,7 +146,6 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
- 	struct resctrl_val_param param = {
- 		.resctrl_val	= CMT_STR,
- 		.ctrlgrp	= "c1",
--		.mongrp		= "m1",
- 		.filename	= RESULT_FILE_NAME,
- 		.mask		= ~(long_mask << n) & long_mask,
- 		.num_of_runs	= 0,
+ 
+-static void omap_rproc_remove(struct platform_device *pdev)
+-{
+-	struct rproc *rproc = platform_get_drvdata(pdev);
+-
+-	rproc_del(rproc);
+-}
+-
+ static const struct dev_pm_ops omap_rproc_pm_ops = {
+ 	SET_SYSTEM_SLEEP_PM_OPS(omap_rproc_suspend, omap_rproc_resume)
+ 	SET_RUNTIME_PM_OPS(omap_rproc_runtime_suspend,
+@@ -1381,7 +1374,6 @@ static const struct dev_pm_ops omap_rproc_pm_ops = {
+ 
+ static struct platform_driver omap_rproc_driver = {
+ 	.probe = omap_rproc_probe,
+-	.remove_new = omap_rproc_remove,
+ 	.driver = {
+ 		.name = "omap-rproc",
+ 		.pm = &omap_rproc_pm_ops,
 -- 
 2.39.2
 
