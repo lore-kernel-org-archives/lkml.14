@@ -1,46 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB257E78E;
-	Mon, 10 Jun 2024 11:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5712F74414
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 11:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718018828; cv=none; b=Q18Q8Wrloll3Q3g5YPwmTUHwdKfCDsh146lbcD2/WIDkhb9pEYOOH9D3PzNm3kB/2DHXqPFoiIMGDeNU6975oPaH3RAnRlNt98mYzhKXVpppp0+CoG6sfz0mA8AoCwnVslgPsY9uBT83Rtgjlmz8PNEjne2BwQy5umXDS2Vzaf4=
+	t=1718018828; cv=none; b=pTfxckGlMwIpq+it9ousoPN1vPI/X95V+rE8PzwNUavzKBDAuu2xWERlR5XIRzUPIPdOQ74N0u8TZ97dfT/v69y39TTtWtFyoWjQQobEvQCQQBkuG/JjD3iJ7WWHk7ACqVQO9Wb5SzgYK7pLJ+GtIKuaz/LoCAXU3UQQ6xFANJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718018828; c=relaxed/simple;
-	bh=YWp1iPiHIeGBDNvDvreiqYv1vQdWI/GImqbN1VWn/nI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AqAoTBtt2NfLYB8mb1cNkZpNAHakFC0S8QuAPMNfivJUGbzYxJqLgtxfJ/RdO84mNrrnxnWIiyo/dWNFi4AaZJFDjcCE1BSUMfxX8TiDR3GlN8TXo/E7SMmytd5dz6zSQu46NQv7KyZwilFvib8GArVQbln47yiLd4zDJ/qVCak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dt9WQa2p; arc=none smtp.client-ip=10.30.226.201
+	bh=HQ5K2V7ImuQzgY0Z25LLWCsNKSjf75rCGsKc2Gobefw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MZfkBDZOvW8MLDWBwTyCLvap1TwWpJ26XFf4rSKAUpORyxY/XNxfA2sYhd0V6obkBhkukpI/d3RTx6dv3NpGLACMNf3Gf3ZT8ynJKTa2SrT5ijk4ekga7KwYCxmhScrRqO3VTeqNMXzPrX72xf/rDHkYj+XC2DeDNooh3N8sTHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=livBFA0e; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dt9WQa2p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB902C4AF1D;
-	Mon, 10 Jun 2024 11:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718018827;
-	bh=YWp1iPiHIeGBDNvDvreiqYv1vQdWI/GImqbN1VWn/nI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dt9WQa2pVZQEA5iKkUemxtcdDb8LfWC/qRuniwk/stUC3xFMhgWZmyE2J3n31ertE
-	 9AKudK7LS2a06beEdtra+N6Jpel/AUTbuo228cPehjHoKPmBwr/aMmjzDm/L3lnMQ+
-	 4EJ/fHrL897FL8fmyuX2Dx9dxM5ttmZt2UJI/AZMGtgCHhXJPWxaDmIwB1SRNaAWZq
-	 E2UIL26fVE9kn85Z2xies8fTm+nOrz5MLE+fvUN2KnU9pcjtPc2u4eJUCWumPCmaFo
-	 BVW/E4KW7u5Lol/G76mgBcFQy2ifPccQPGYP0xvZz+fIbaRSoex5A3a3GYONZGf/FX
-	 19jZ0KGBTnMqA==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	linux-arch@vger.kernel.org
-Subject: [PATCH v3 2/3] kbuild: remove PROVIDE() for kallsyms symbols
-Date: Mon, 10 Jun 2024 20:25:17 +0900
-Message-ID: <20240610112657.602958-3-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="livBFA0e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=65Hs/UBIIEGh/K
+	jtF098khzUPg6uB3YzgN/ax7OfSBM=; b=livBFA0eYkDxlKayfRaD61UktqpDXR
+	pjujtn2ULSGBrP4rJVymie95LzRWDsN7AbrfhARj1ErAriTVqKGBiFW4zHuW/9UP
+	pwaC7ObVVchJdRrEUqGltkD3DEXWeOM49GSj31QaLrKL4AxJh4+7cFjA3qrOgad1
+	33nTwRTWT9o73FJncRWV72BE+4Yb/ic4God3IQZK2b2r2oVEa6lrM7XRWbWzNfD5
+	Agnd9PSqSl2ONNnvLLq0K/g+DTjtUUWZWTZdgJmAxSuZ3y4Nqe5vms1GINHUAfSN
+	dvaAjpM66z1hR4RP1KfAIU9NAYEl0KzW2VUH9jQ0+W7yE3XpywVbAA1Q==
+Received: (qmail 56150 invoked from network); 10 Jun 2024 13:27:01 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Jun 2024 13:27:01 +0200
+X-UD-Smtp-Session: l3s3148p1@LFySbYcaWuQgAwDPXymAAHMyzy0c7Kdl
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-renesas-soc@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-doc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v9 0/1] gpio: add simple logic analyzer using polling
+Date: Mon, 10 Jun 2024 13:26:58 +0200
+Message-ID: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240610112657.602958-1-masahiroy@kernel.org>
-References: <20240610112657.602958-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,138 +48,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This reimplements commit 951bcae6c5a0 ("kallsyms: Avoid weak references
-for kallsyms symbols") because I am not a big fan of PROVIDE().
+Here is the next version of the sloppy GPIO logic analyzer. Changes
+since v8 are mentioned in the patch itself. For those new to this
+sloppy GPIO logic analyzer, here is a small excerpt from a previous
+cover-letter with the links updated:
 
-As an alternative solution, this commit prepends one more kallsyms step.
+===
 
-    KSYMS   .tmp_vmlinux.kallsyms0.S          # added
-    AS      .tmp_vmlinux.kallsyms0.o          # added
-    LD      .tmp_vmlinux.btf
-    BTF     .btf.vmlinux.bin.o
-    LD      .tmp_vmlinux.kallsyms1
-    NM      .tmp_vmlinux.kallsyms1.syms
-    KSYMS   .tmp_vmlinux.kallsyms1.S
-    AS      .tmp_vmlinux.kallsyms1.o
-    LD      .tmp_vmlinux.kallsyms2
-    NM      .tmp_vmlinux.kallsyms2.syms
-    KSYMS   .tmp_vmlinux.kallsyms2.S
-    AS      .tmp_vmlinux.kallsyms2.o
-    LD      vmlinux
+Here is the next update of the in-kernel logic analyzer based on GPIO
+polling with local irqs disabled. It has been tested locally and
+remotely. It provided satisfactory results. Besides the driver, there is
+also a script which isolates a CPU to achieve the best possible result.
+I am aware of the latency limitations. However, the intention is for
+debugging only, not mass production. Especially for remote debugging and
+to get a first impression, this has already been useful. Documentation
+is within the patch, to get a better idea what this is all about.
 
-Step 0 takes /dev/null as input, and generates .tmp_vmlinux.kallsyms0.o,
-which has a valid kallsyms format with the empty symbol list, and can be
-linked to vmlinux. Since it is really small, the added compile-time cost
-is negligible.
+A branch is here:
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/gpio-logic-analyzer-v9
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
----
+And an eLinux-wiki page with a picture of a result is here:
+https://elinux.org/Kernel_GPIO_Logic_analyzer
 
-(no changes since v1)
+I've used the analyzer in a few more scenarios and on multiple SoCs
+(Renesas R-Car H3 and M3-W) and was happy with the outcome. Looking
+forward to other tests and comments. From my side this is good to go.
 
- include/asm-generic/vmlinux.lds.h | 19 -------------------
- kernel/kallsyms_internal.h        |  5 -----
- scripts/kallsyms.c                |  6 ------
- scripts/link-vmlinux.sh           |  9 +++++++--
- 4 files changed, 7 insertions(+), 32 deletions(-)
+===
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 5703526d6ebf..62b4cb0462e6 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -451,30 +451,11 @@
- #endif
- #endif
- 
--/*
-- * Some symbol definitions will not exist yet during the first pass of the
-- * link, but are guaranteed to exist in the final link. Provide preliminary
-- * definitions that will be superseded in the final link to avoid having to
-- * rely on weak external linkage, which requires a GOT when used in position
-- * independent code.
-- */
--#define PRELIMINARY_SYMBOL_DEFINITIONS					\
--	PROVIDE(kallsyms_addresses = .);				\
--	PROVIDE(kallsyms_offsets = .);					\
--	PROVIDE(kallsyms_names = .);					\
--	PROVIDE(kallsyms_num_syms = .);					\
--	PROVIDE(kallsyms_relative_base = .);				\
--	PROVIDE(kallsyms_token_table = .);				\
--	PROVIDE(kallsyms_token_index = .);				\
--	PROVIDE(kallsyms_markers = .);					\
--	PROVIDE(kallsyms_seqs_of_names = .);
--
- /*
-  * Read only Data
-  */
- #define RO_DATA(align)							\
- 	. = ALIGN((align));						\
--	PRELIMINARY_SYMBOL_DEFINITIONS					\
- 	.rodata           : AT(ADDR(.rodata) - LOAD_OFFSET) {		\
- 		__start_rodata = .;					\
- 		*(.rodata) *(.rodata.*)					\
-diff --git a/kernel/kallsyms_internal.h b/kernel/kallsyms_internal.h
-index 85480274fc8f..925f2ab22639 100644
---- a/kernel/kallsyms_internal.h
-+++ b/kernel/kallsyms_internal.h
-@@ -4,11 +4,6 @@
- 
- #include <linux/types.h>
- 
--/*
-- * These will be re-linked against their real values during the second link
-- * stage. Preliminary values must be provided in the linker script using the
-- * PROVIDE() directive so that the first link stage can complete successfully.
-- */
- extern const unsigned long kallsyms_addresses[];
- extern const int kallsyms_offsets[];
- extern const u8 kallsyms_names[];
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index 47978efe4797..fa53b5eef553 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -259,12 +259,6 @@ static void shrink_table(void)
- 		}
- 	}
- 	table_cnt = pos;
--
--	/* When valid symbol is not registered, exit to error */
--	if (!table_cnt) {
--		fprintf(stderr, "No valid symbol.\n");
--		exit(1);
--	}
- }
- 
- static void read_map(const char *in)
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index 3d9d7257143a..83d605ba7241 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -227,6 +227,10 @@ btf_vmlinux_bin_o=
- kallsymso=
- strip_debug=
- 
-+if is_enabled CONFIG_KALLSYMS; then
-+	kallsyms /dev/null .tmp_vmlinux.kallsyms0
-+fi
-+
- if is_enabled CONFIG_DEBUG_INFO_BTF; then
- 	if ! gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
- 		echo >&2 "Failed to generate BTF for vmlinux"
-@@ -239,9 +243,10 @@ if is_enabled CONFIG_KALLSYMS; then
- 
- 	# kallsyms support
- 	# Generate section listing all symbols and add it into vmlinux
--	# It's a three step process:
-+	# It's a four step process:
-+	# 0)  Generate a dummy __kallsyms with empty symbol list.
- 	# 1)  Link .tmp_vmlinux.kallsyms1 so it has all symbols and sections,
--	#     but __kallsyms is empty.
-+	#     with a dummy __kallsyms.
- 	#     Running kallsyms on that gives us .tmp_kallsyms1.o with
- 	#     the right size
- 	# 2)  Link .tmp_vmlinux.kallsyms2 so it now has a __kallsyms section of
+Thanks and happy hacking,
+
+   Wolfram
+
+Wolfram Sang (1):
+  gpio: add sloppy logic analyzer using polling
+
+ .../dev-tools/gpio-sloppy-logic-analyzer.rst  |  93 +++++
+ Documentation/dev-tools/index.rst             |   1 +
+ drivers/gpio/Kconfig                          |  17 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-sloppy-logic-analyzer.c     | 340 ++++++++++++++++++
+ tools/gpio/gpio-sloppy-logic-analyzer.sh      | 246 +++++++++++++
+ 6 files changed, 698 insertions(+)
+ create mode 100644 Documentation/dev-tools/gpio-sloppy-logic-analyzer.rst
+ create mode 100644 drivers/gpio/gpio-sloppy-logic-analyzer.c
+ create mode 100755 tools/gpio/gpio-sloppy-logic-analyzer.sh
+
 -- 
 2.43.0
 
