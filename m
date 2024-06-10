@@ -1,117 +1,133 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6591BF2A;
-	Mon, 10 Jun 2024 07:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC9B1C6AF
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 07:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718003264; cv=none; b=OpBZyB/eNnZL72gdQ8XPP3FNu7/21cBmc0f6g3iZLHNEyNvz22cb1gU7GplKD8C+rLAitj9PYkNCnBVtyFTYEq41+rSU3UuVX2KOMRiiDWUGKtiedMsmmGQ2ZzfyAwhH0Dj7s9hr+xp1LUIfv8JzXXMhsyd/nzHirA0agN5eSyc=
+	t=1718003303; cv=none; b=K5R10HTx5NbUi8BQhgNTxEr2vKSE++Y22jqf0Kzw6GTotZSRMx9hrthe4LtaZgjIvNKRAhQmvx6tsrR84BDBkRXnodsEiNc5fgaRW4TZGqBGtuI3nRVK+LfdzkIDMdH0W12YEr4r0Xv0LPDcajmGkfqhQfYuK4LUXlE5o3UUKx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718003264; c=relaxed/simple;
-	bh=rclMQqGEozDHSLQO/TvjwfrxT2QCBhUHXn/GOcGA+tU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oEiWVQUl79lxWr0OprT62msg14AeubbZFfwcztBSXR4VQUZ8ea8IaghxI9K/4dk8Ow5XPWxe9ZcaZAlezYkCkpOrHHlC4fgBrBJpg39T19pTYI+4yTT82LvrxgOiavH7fjnh8IkQaC4wynk3u8EvOEC/1HOId4K0Tks2zLNOR8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QlIsVQbT; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718003303; c=relaxed/simple;
+	bh=QEP/zaNAd6rVQEJ7AQSX8sXbT4ui22VLn/jbIusAu0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=InUMVuoxpdwqQmktll4bRtvenYu81Am9xZi9rjYz2s8alRUPtcu3YgG9yhiY7ZeMluvkYKyRbDtDgrPzjgPGMEfE8sOFiSgNPRgyntYXJ0pTXnelEYhg/bMcWIVQWXfc8MxxT9XXTpMHKTuesdF5Vcio/bTqstKdNxnQxn/Qp0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HRJTc3ud; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QlIsVQbT"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57a31d63b6bso5895932a12.0;
-        Mon, 10 Jun 2024 00:07:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HRJTc3ud"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-579fa270e53so5896867a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 00:08:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718003261; x=1718608061; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9XkB6KvYnfdznF+TEx3muL3K/bTdkLsfM+Ybwn3hwEM=;
-        b=QlIsVQbTYJKox1g30KtTY8gm2tm1Jhts7SOHjtlFy3xgSsr/aMW1iYETtdiEO+PUey
-         5qecnEORzqUQCB2XWR8o18gp3cmJ8n00sPRG9kGRALLvHgD14LcopZ23SSeStvclqwpo
-         nUK2hD5JIoQXTTSXJXWc81DVJ3Z8/iBT1tUxH2qVeqSbr8epNkXI8S+j3WT0PDQScoil
-         Q25pupMp4O/x5irwrBKMurrjOZDpCuGNaWgglfc+6/p3jd69A3hc5GDz+8D1PfvkKD94
-         /bDwiP0IbQ4yMbbBDUyomzwLf0BzODrqXq2+w3u0q9aDQV+gPhqDs4ieV6hdDw2Kgz7z
-         Dy2Q==
+        d=suse.com; s=google; t=1718003300; x=1718608100; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=iVrI5GsrQNLTME723VL0GXEMwV6fiHKNH1QpwFztIZA=;
+        b=HRJTc3udHCGHshWdZL93VbqnKKjErnegxjtkRgw1Wo0PKCawTN9ohGQLP9h0TA17Zf
+         fbF+1/U3GipxYUNwSu6y3aMwrASCy4uAZ9ygrvproX7lftE41KqagrEYPt0CFTxv6O9M
+         X2XQLMzeJ27Z4HiQrwbrjiKKKGgxdpIheSgpVfdmiNEreRIUVKFmz2TBdtq5r2iwggQq
+         B6FiXo4l2RHrmgBQanBksYLraQ6VvUJWkzmNBIAM7cL8BLCjvIGhc4Wtz2YZsKIfoNpB
+         DfUv/JM0h+T/98IkMU7unGJESIDudKYyVKxA2iprezwTMdF/gyKVV6xlEiFgkTIwZMlN
+         1CIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718003261; x=1718608061;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9XkB6KvYnfdznF+TEx3muL3K/bTdkLsfM+Ybwn3hwEM=;
-        b=QsaKM28f6S5+vR6XiwdoBZ+T6CfBao1jcoga50KUYaQnRsjiuDjz9i+g4UfwICv0jP
-         OBRi/bvRAX4JnV7Ffu1Xzqb6/ulgU/X99yDpHmHWGXKBASpUPavKTpBAhcewPpjbFX8I
-         kCN1hrUFDWCdfBuxRaJ6rZKEh9niAdraT5dyfT8C7BqzHVeG+7c29QdR+N9zyt9cMwr+
-         eZqexxG4YftGl1zqEwMiLZYYmMDJiqOgRg8+U94j2yeNhPCKKSha6a62U7Qz1fXrGntx
-         2HXvHoPoYUyo6PWN7iuQlnNQl05r3WtFoGG8yADQC/XeRZhc2Y61ZIa0JcgZm5fEPXmE
-         ZQlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVs9+k19Vu7GFF66GJexVgNtkcKIM8tsRFS/eq+JQ9YItr2tcFILBJX+cEoqMnwdrMMOQPp1JuCQj68b3+qYGyTN4SDPgiFXbuydcaNU28htS1xv/B1ty/mb4cyUtAPRNwj7JnSqSkO
-X-Gm-Message-State: AOJu0Yz0nfWstLbTJJAaqU8h5MeDp6DttetU+TdMonE5qiUfN9aJyXeY
-	ClSnSKvetVxSxIYuBEykuFIsL20eN+BVDiCVHneGp3/6nemh5Gpa
-X-Google-Smtp-Source: AGHT+IFd5ye8kICHk3VgJyXo4OhSJyan+mcKf8O/5rH86D2NtLWHg3MWYKcWqREL1nSJQBkHg/pC8A==
-X-Received: by 2002:a50:d743:0:b0:57c:70a6:baf with SMTP id 4fb4d7f45d1cf-57c70a60bcamr2209722a12.40.1718003261044;
-        Mon, 10 Jun 2024 00:07:41 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae13fff4sm7080982a12.53.2024.06.10.00.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 00:07:40 -0700 (PDT)
-Message-ID: <2d7164356496ab910bdbcac471f91d874b9e075d.camel@gmail.com>
-Subject: Re: [PATCH v3 2/4] iio: temperature: ltc2983: convert to
- dev_err_probe()
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>, Nuno Sa <nuno.sa@analog.com>
-Cc: Petr Mladek <pmladek@suse.com>, Lars-Peter Clausen <lars@metafoo.de>, 
- Olivier Moysan <olivier.moysan@foss.st.com>, Jyoti Bhayana
- <jbhayana@google.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Chris Down <chris@chrisdown.name>, John Ogness <john.ogness@linutronix.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andi Shyti
- <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-iio@vger.kernel.org
-Date: Mon, 10 Jun 2024 09:11:28 +0200
-In-Reply-To: <20240608190600.622dfd7f@jic23-huawei>
-References: <20240606-dev-add_dev_errp_probe-v3-0-51bb229edd79@analog.com>
-	 <20240606-dev-add_dev_errp_probe-v3-2-51bb229edd79@analog.com>
-	 <20240608190600.622dfd7f@jic23-huawei>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+        d=1e100.net; s=20230601; t=1718003300; x=1718608100;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iVrI5GsrQNLTME723VL0GXEMwV6fiHKNH1QpwFztIZA=;
+        b=SdYWhclUGNxHQEL91O7uZ4cjryCEkZY0zTZ2M+ZJMmVFFT+X3pZW/f+JCe1ZFAZq4B
+         svsNEX8RKRzWpDtU2+chEX2Lmf6CK2DyClB1lOYOYMcDJJOg+UmtV7MitKNNbPJVS/FE
+         pql/kVJ3Le/OUxLMw4KETayYjLs0tsaqNlq4DA0Z+fU/AACuq6jTc25/IBsK1djHU4zv
+         EFekR4JslO6m4EEf4/ia5wsqNmMocA90meCf/cgKYVO0VIMCbw60WnqTNlDcOweILpiO
+         VvEQCv6ivCW6pkeLCwKeXhIwnzrCgIxawhTlK62sgtt4XX0xoQ4OGR80PzrKCd/7cJty
+         +jEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFcdx0sVw3pos4F7LhCRkx7wtty38lF+w4foQknys+hmzV2jPMYz+uHBaHCnfwsMimQwW3+PxWBu+3t9/xb0n+oC+dQB7TKxEUavQq
+X-Gm-Message-State: AOJu0YwkHFl1c1piwBw0riQlarwt0wHW6dbvuERp+VNArVm5rzhNJydl
+	y7i9qc52CVlNSMnMRQKmlirBP8mM/EYEaESKtCwWfdwXlRtVK+GRJ0Qxwg9gc1k=
+X-Google-Smtp-Source: AGHT+IHrLJutCqFB6QyRHYps/IiSSbjoC3LCsYCwOb37kfga8SmQTAXj6uBl+DbsZS27mM1A/ddGQg==
+X-Received: by 2002:a50:ab1a:0:b0:57c:6c98:b61f with SMTP id 4fb4d7f45d1cf-57c6c98b88emr3430720a12.42.1718003300041;
+        Mon, 10 Jun 2024 00:08:20 -0700 (PDT)
+Received: from ?IPV6:2a10:bac0:b000:7579:f459:e30d:c5ec:5a8e? ([2a10:bac0:b000:7579:f459:e30d:c5ec:5a8e])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c7681d659sm2427026a12.54.2024.06.10.00.08.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jun 2024 00:08:19 -0700 (PDT)
+Message-ID: <d827e5ab-6204-4a47-a8af-a1eedd76b070@suse.com>
+Date: Mon, 10 Jun 2024 10:08:18 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
+From: Nikolay Borisov <nik.borisov@suse.com>
+To: Kees Cook <kees@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com>
+ <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com>
+ <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
+ <202405310923.78257B2B3@keescook>
+ <a54db95c-e22a-4e13-ae4b-6a5a67d1c49b@suse.com>
+Content-Language: en-US
+In-Reply-To: <a54db95c-e22a-4e13-ae4b-6a5a67d1c49b@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, 2024-06-08 at 19:06 +0100, Jonathan Cameron wrote:
-> On Thu, 6 Jun 2024 09:22:38 +0200
-> Nuno Sa <nuno.sa@analog.com> wrote:
->=20
-> > Use dev_err_probe() (and variants) in the probe() path. While at it, ma=
-de
-> > some simple improvements:
-> > =C2=A0* Explicitly included the err.h and errno.h headers;
-> > =C2=A0* Removed some unnecessary line breaks;
-> > =C2=A0* Removed a redundant 'else';
-> > =C2=A0* Added some missing \n to prink.
-> >=20
-> > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
-> > ---
->=20
->=20
-> > @@ -1296,8 +1268,8 @@ static int ltc2983_reg_access(struct iio_dev
-> > *indio_dev,
-> > =C2=A0
-> > =C2=A0	if (readval)
-> > =C2=A0		return regmap_read(st->regmap, reg, readval);
-> > -	else
-> > -		return regmap_write(st->regmap, reg, writeval);
-> > +
-> > +	return regmap_write(st->regmap, reg, writeval);
-> > =C2=A0}
->=20
-> Unrelated.
->=20
-> Otherwise updates look correct to me.
 
-Yeah, I know. It was simple enough that I sneaked it in and did mentioned i=
-t in
-the commit message hoping it would make the change acceptable in here :)
 
-- Nuno S=C3=A1
+On 1.06.24 г. 10:27 ч., Nikolay Borisov wrote:
+> 
+> 
+> On 31.05.24 г. 19:28 ч., Kees Cook wrote:
+>> On Thu, May 30, 2024 at 09:23:36AM -0700, Jeff Johnson wrote:
+>>> On 5/30/2024 8:42 AM, Nikolay Borisov wrote:
+>>>>
+>>>>
+>>>> On 29.05.24 г. 21:09 ч., Jeff Johnson wrote:
+>>>>> As discussed in [1] add a prototype for __fortify_panic() to fix the
+>>>>> 'make W=1 C=1' warning:
+>>>>>
+>>>>> arch/x86/boot/compressed/misc.c:535:6: warning: symbol 
+>>>>> '__fortify_panic' was not declared. Should it be static?
+>>>>
+>>>> Actually doesn't it make sense to have this defined under ../string.h ?
+>>>> Actually given that we don't have any string fortification under the
+>>>> boot/  why have the fortify _* functions at all ?
+>>>
+>>> I'll let Kees answer these questions since I just took guidance from 
+>>> him :)
+>>
+>> Ah-ha, I see what's happening. When not built with
+>> CONFIG_FORTIFY_SOURCE, fortify-string.h isn't included. But since misc.c
+>> has the function definition, we get a warning that the function
+>> declaration was never seen. This is likely the better solution:
+> 
+> fortify-strings.h is used in include/linux/string.h. However all the 
+> files in the decompressor are using a local copy of string.h and not the 
+> kernel-wide. When pre-processing misc.c with FORTIFY_SOURCE enabled 
+> here's the status:
+> 
+> $ grep -i fortify  arch/x86/boot/compressed/misc.i
+> void __fortify_panic(const u8 reason, size_t avail, size_t size)
+> 
+> It seems the decompressor is not using fortify-string at all because 
+> it's not using the global string.h ?
+
+Kees, care to comment about my observation? Have I missed anything? 
+Reading the following articles : 
+https://www.redhat.com/en/blog/enhance-application-security-fortifysource
+
+it seems that fortification comes from using the system header string.h 
+(in our case that'd be include/linux/string.h) which is not being used 
+by the decompressor at all so simply removing the function definition 
+should be the correct fix, no ?
+
+
+
+<snip>
