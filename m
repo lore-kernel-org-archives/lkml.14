@@ -1,380 +1,236 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDC981754;
-	Mon, 10 Jun 2024 16:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD7C81754;
+	Mon, 10 Jun 2024 16:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718036288; cv=none; b=FJ4kdZh8xjsBi0zL/gLPli363Oudgqw5dEYCjeGeAYhJwBPAYzKsDH8qxpY4wranxN0Er6fcRYAKcw0+7TLUvV2KsGqE143qe/S4jXGS/jlmzTk4u//fFg08FcCr6pJjbv6af/GnZULMdJNUmvo2EvOOgai4SVWN5iIcVgMSbQw=
+	t=1718036311; cv=none; b=Hpx/d+XIxJIJnoHKvEItSCOMNlZgHu+5Bj6VjwGMF6uL22mwQH8m+IxD2USJHuVEm0QRTTsbrFaFiglPVMsDzfzGXDmh9sxAPWdNKlrMnOnDceEFjvgKrV0TNrX9XXRw4xc7nHS0d8OZqsyPwxxo3RIqBMNnM0FG+CTTnqT4MbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718036288; c=relaxed/simple;
-	bh=43TfM2P3A++j+EMSf6hEWEfQWdXevV8mRS4jFAB+OkI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Betvdo2eDC5bGeNczqEwkp4aFg1cXUOYM/P1lUJ8hM/FJK12P85Tb2PPVR+iaZdQip9lDvOSbf9oipmruvgGD44KTxszFhdOxuZpHVpnE83SCgSa/4+44LmhK8FGj/4nxiQkeOAqBC1NSpV0eB7li4haY/u+/uFE8SSUa8M1im0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XGm0ldrL; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718036311; c=relaxed/simple;
+	bh=uZtlK/h+IV89qKq/D7HEEGiIqU3n+5uR+aMUW6bSTYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h/X3C/8uf1aNsfF0tFg64gVY3KVSVlLsifbWJkTOcVd5fwa5wPVm4y1M1sZCGz2uF2kvnNj5WlVosE0leE5wtvv2F9ndrHSVUnxQqFHnlXNEGQczE0UXXu4pnPHFeudCIE0LI9es+epw0rhZ9zFMIo1vMNBmlDsncgd7R2xslqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=txBNSTf1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGm0ldrL"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-6c4926bf9baso3480818a12.2;
-        Mon, 10 Jun 2024 09:18:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718036286; x=1718641086; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=YFSU1AMbQmM5JG+1v5JBmBSiiAdcho0ST5jb1i74DvQ=;
-        b=XGm0ldrLTMvZTxFYCHVn8A10iwypp5MoPi/M/LthqQKgWWwkzUKx4DItx7Tu8dj5sS
-         mihNPsyxTpokcR/lnQgX7EL4bAFJo5XFWGmfAlZ6flD19ggFQV4qk7bSY97kM4HSul0B
-         zm0t3nYq5++p7iLN+gvoCNRDzD42WfkdgjF8T53uF4QxyzYDsNsFBV1eX3HTkOFduOfW
-         cyqKhLFckYxyi4oQYdprfdwmShtm/VL+CqUEu+vF+4+UXr4LWNoSTc2dHTGowtl54WYV
-         n3Ih9ZKzvSAksjGgHL17pv5vooaqj3n66bchov+Yj8GnzE7jVZjo7sb07ZXoz0nQFrUE
-         VkGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718036286; x=1718641086;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YFSU1AMbQmM5JG+1v5JBmBSiiAdcho0ST5jb1i74DvQ=;
-        b=qlrajXJcB7hICKMhE/ZnlX/S7Gg4aczGkJ38PbaI2YExlqgrezUlyx4vndKJofWeTc
-         uwXlHvHyBDWXm8WS2caPuqKbJVsTM27vsqFYnd5k+KwUbW7rFFUk18E5kGGK/vUbMaXm
-         xSDNaXV3qt0CZiVc20xITqFxy2GxKkMCb8gRvyRC50KLq8ZPXs/sPStAqnGF8AZPraBO
-         +bENl5DRnpT6ouNVC18WfKrTF1ocN6aVBe6EPG1vdUYbXBwXXdWRV6slROLrisR0/JpH
-         nW0nyavfxLWVbF4nRM0PrWU7Kbzli8asRUD3HIK8LlnVyYmb6DgGVhicIKmsRmjI6pDk
-         tDwg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3x4oBIXId5FbVKJWk641HhfOZ1ZomWST+PZb3SYrZk5h9kvLRlkg9wToAnoCr61gU3uVi51wh7WKZHNOpwYHGbCd3D6aC1Q6NqC8xyqpC4w9DP3ieJHpkeqhnd8e+Cf7N6oxT2SH6d2WfWs5yQz1/oLTafAk0joSXpEWu6mlYAvwll9wope8cvLpAQyhKXeD0wNtrPlVihct5OjOT4l6kH4V5mkCdr6eCZNgpGsAIgv3NIzMvQZs5OV2O
-X-Gm-Message-State: AOJu0YwMvjWTHh7sILz9pIwuregqmV29YcQHR3pq3QPUJDUGr0y96z2C
-	jZac0ZRWdlA4Q6BQcIWk4Hfw7QvzHPNPrr5TtKf62W8DNwPuAAWK
-X-Google-Smtp-Source: AGHT+IEkSY+UaSdOxovkzda/uN7DrJuP1I8025qSaRS7w1qYU1/YCQqd2cBMWHOvwruubsr7nuWTaw==
-X-Received: by 2002:a17:902:c401:b0:1f6:7ee8:8942 with SMTP id d9443c01a7336-1f6d031142bmr109751335ad.40.1718036285903;
-        Mon, 10 Jun 2024 09:18:05 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6e76a272csm57784905ad.177.2024.06.10.09.18.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 09:18:05 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <3c89a559-2e2a-4f2b-842b-8130358d2a36@roeck-us.net>
-Date: Mon, 10 Jun 2024 09:18:02 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="txBNSTf1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 270DCC2BBFC;
+	Mon, 10 Jun 2024 16:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718036311;
+	bh=uZtlK/h+IV89qKq/D7HEEGiIqU3n+5uR+aMUW6bSTYI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=txBNSTf1+1t4Xc9gPPh5vQRc5XfFN8nPv3Ro8SB/Yq/j5yEFp8jrN0I+5Vvp5KhOC
+	 31eIcQtv4gSFNYkJWu5tiUYcRsGWbQIFh2b2tiBQYfLYxsJieRJiOTdFhWwTvQJF/M
+	 fUzjRO+rL2bVJQVsXagyKG+uCYHiF1TBWgw463NfDzmu1rm2XEkNCph2ZdlBvKMPM0
+	 Gr/XbPplhRTbNTmuXHWyp/dAQvRpoJf5jrDLG/1hP72FEcChZfoVi0qm5BQFx6ewcw
+	 vpY5DbRGJh+Zpb2hIoVs4KxbjfSUVKLSS1z59lmFu0jrgvvdpMja9j94fZRFY7GnNT
+	 znfhgKqB0z4zQ==
+Date: Mon, 10 Jun 2024 19:18:26 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: "Zeng, Oak" <oak.zeng@intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	"Brost, Matthew" <matthew.brost@intel.com>,
+	"Hellstrom, Thomas" <thomas.hellstrom@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+	Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	"Tian, Kevin" <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	"jack@suse.com" <jack@suse.com>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+	"Bommu, Krishnaiah" <krishnaiah.bommu@intel.com>,
+	"Ghimiray, Himal Prasad" <himal.prasad.ghimiray@intel.com>
+Subject: Re: [RFC RESEND 00/16] Split IOMMU DMA mapping operation to two steps
+Message-ID: <20240610161826.GA4966@unreal>
+References: <cover.1709635535.git.leon@kernel.org>
+ <SA1PR11MB6991CB2B1398948F4241E51992182@SA1PR11MB6991.namprd11.prod.outlook.com>
+ <20240503164239.GB901876@ziepe.ca>
+ <PH7PR11MB70047236290DC1CFF9150B8592C62@PH7PR11MB7004.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] hwmon: add MP9941 driver
-To: Noah Wang <noahwang.wang@outlook.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, jdelvare@suse.com
-Cc: corbet@lwn.net, Delphine_CC_Chiu@Wiwynn.com, peteryin.openbmc@gmail.com,
- javier.carrasco.cruz@gmail.com, patrick.rudolph@9elements.com,
- bhelgaas@google.com, lukas@wunner.de, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org
-References: <20240607090544.466833-1-noahwang.wang@outlook.com>
- <SEYPR04MB6482644FAB35EC76FD0CC26CFAFB2@SEYPR04MB6482.apcprd04.prod.outlook.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <SEYPR04MB6482644FAB35EC76FD0CC26CFAFB2@SEYPR04MB6482.apcprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <PH7PR11MB70047236290DC1CFF9150B8592C62@PH7PR11MB7004.namprd11.prod.outlook.com>
 
-On 6/7/24 02:05, Noah Wang wrote:
-> Add support for MPS step-down converter mp9941. This driver exposes
-> telemetry and limit value readings and writtings.
+On Mon, Jun 10, 2024 at 03:12:25PM +0000, Zeng, Oak wrote:
+> Hi Jason, Leon,
 > 
-> Signed-off-by: Noah Wang <noahwang.wang@outlook.com>
-> ---
->   Documentation/hwmon/index.rst  |   1 +
->   Documentation/hwmon/mp9941.rst |  92 +++++++++
->   MAINTAINERS                    |   7 +
->   drivers/hwmon/pmbus/Kconfig    |   9 +
->   drivers/hwmon/pmbus/Makefile   |   1 +
->   drivers/hwmon/pmbus/mp9941.c   | 328 +++++++++++++++++++++++++++++++++
->   6 files changed, 438 insertions(+)
->   create mode 100644 Documentation/hwmon/mp9941.rst
->   create mode 100644 drivers/hwmon/pmbus/mp9941.c
+> I come back to this thread to ask a question. Per the discussion in another thread, I have integrated the new dma-mapping API (the first 6 patches of this series) to DRM subsystem. The new API seems fit pretty good to our purpose, better than scatter-gather dma-mapping. So we want to continue work with you to adopt this new API.
+
+Sounds great, thanks for the feedback.
+
 > 
-> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-> index 9d9d55b889f2..9ff8149d9a9d 100644
-> --- a/Documentation/hwmon/index.rst
-> +++ b/Documentation/hwmon/index.rst
-> @@ -169,6 +169,7 @@ Hardware Monitoring Kernel Drivers
->      mp2993
->      mp5023
->      mp5990
-> +   mp9941
->      mpq8785
->      nct6683
->      nct6775
-> diff --git a/Documentation/hwmon/mp9941.rst b/Documentation/hwmon/mp9941.rst
-> new file mode 100644
-> index 000000000000..1274fa20e256
-> --- /dev/null
-> +++ b/Documentation/hwmon/mp9941.rst
-> @@ -0,0 +1,92 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +Kernel driver mp9941
-> +====================
-> +
-> +Supported chips:
-> +
-> +  * MPS mp9941
-> +
-> +    Prefix: 'mp9941'
-> +
-> +  * Datasheet
-> +    https://scnbwymvp-my.sharepoint.com/:f:/g/personal/admin_scnbwy_com/Eth4kX1_J1hMsaASHiOYL4QBHU5a75r-tRfLKbHnJFdKLQ?e=vxj3DF
-> +
-> +Author:
-> +
-> +	Noah Wang <noahwang.wang@outlook.com>
-> +
-> +Description
-> +-----------
-> +
-> +This driver implements support for Monolithic Power Systems, Inc. (MPS)
-> +MP9941 digital step-down converter.
-> +
-> +Device compliant with:
-> +
-> +- PMBus rev 1.3 interface.
-> +
-> +The driver exports the following attributes via the 'sysfs' files
-> +for input voltage:
-> +
-> +**in1_input**
-> +
-> +**in1_label**
-> +
-> +**in1_crit**
-> +
-> +**in1_crit_alarm**
-> +
-> +The driver provides the following attributes for output voltage:
-> +
-> +**in2_input**
-> +
-> +**in2_label**
-> +
-> +**in2_lcrit**
-> +
-> +**in2_lcrit_alarm**
-> +
-> +**in2_rated_max**
-> +
-> +**in2_rated_min**
-> +
-> +The driver provides the following attributes for input current:
-> +
-> +**curr1_input**
-> +
-> +**curr1_label**
-> +
-> +**curr1_max**
-> +
-> +**curr1_max_alarm**
-> +
-> +The driver provides the following attributes for output current:
-> +
-> +**curr2_input**
-> +
-> +**curr2_label**
-> +
-> +The driver provides the following attributes for input power:
-> +
-> +**power1_input**
-> +
-> +**power1_label**
-> +
-> +The driver provides the following attributes for output power:
-> +
-> +**power2_input**
-> +
-> +**power2_label**
-> +
-> +The driver provides the following attributes for temperature:
-> +
-> +**temp1_input**
-> +
-> +**temp1_crit**
-> +
-> +**temp1_crit_alarm**
-> +
-> +**temp1_max**
-> +
-> +**temp1_max_alarm**
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f47f3e13b004..d4600533a3ee 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15265,6 +15265,13 @@ F:	drivers/video/backlight/mp3309c.c
->   +F:	Documentation/hwmon/mp2993.rst
->   +F:	drivers/hwmon/pmbus/mp2993.c
->   
-> ++MPS MP9941 DRIVER
-> ++M:	Noah Wang <noahwang.wang@outlook.com>
-> ++L:	linux-hwmon@vger.kernel.org
-> ++S:	Maintained
-> ++F:	Documentation/hwmon/mp9941.rst
-> ++F:	drivers/hwmon/pmbus/mp9941.c
-> +
->   MR800 AVERMEDIA USB FM RADIO DRIVER
->   M:	Alexey Klimov <klimov.linux@gmail.com>
->   L:	linux-media@vger.kernel.org
-> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index d875d31ce84c..7d32cfc19820 100644
-> --- a/drivers/hwmon/pmbus/Kconfig
-> +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -380,6 +380,15 @@ config SENSORS_MP5990
->   	  This driver can also be built as a module. If so, the module will
->   	  be called mp5990.
->   
-> +config SENSORS_MP9941
-> +	tristate "MPS MP9941"
-> +	help
-> +	  If you say yes here you get hardware monitoring support for MPS
-> +	  MP9941.
-> +
-> +	  This driver can also be built as a module. If so, the module will
-> +	  be called mp9941.
-> +
->   config SENSORS_MPQ7932_REGULATOR
->   	bool "Regulator support for MPQ7932"
->   	depends on SENSORS_MPQ7932 && REGULATOR
-> diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-> index 312d3f0c0540..6c7177fde355 100644
-> --- a/drivers/hwmon/pmbus/Makefile
-> +++ b/drivers/hwmon/pmbus/Makefile
-> @@ -40,6 +40,7 @@ obj-$(CONFIG_SENSORS_MP2975)	+= mp2975.o
->   obj-$(CONFIG_SENSORS_MP2993)	+= mp2993.o
->   obj-$(CONFIG_SENSORS_MP5023)	+= mp5023.o
->   obj-$(CONFIG_SENSORS_MP5990)	+= mp5990.o
-> +obj-$(CONFIG_SENSORS_MP9941)	+= mp9941.o
->   obj-$(CONFIG_SENSORS_MPQ7932)	+= mpq7932.o
->   obj-$(CONFIG_SENSORS_MPQ8785)	+= mpq8785.o
->   obj-$(CONFIG_SENSORS_PLI1209BC)	+= pli1209bc.o
-> diff --git a/drivers/hwmon/pmbus/mp9941.c b/drivers/hwmon/pmbus/mp9941.c
-> new file mode 100644
-> index 000000000000..d24e98671e16
-> --- /dev/null
-> +++ b/drivers/hwmon/pmbus/mp9941.c
-> @@ -0,0 +1,328 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Hardware monitoring driver for MPS Multi-phase Digital VR Controllers(MP9941)
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include "pmbus.h"
-> +
-> +/*
-> + * Vender specific registers. The MFR_ICC_MAX(0x02) is used to
-> + * config the iin scale. The MFR_RESO_SET(0xC7) is used to
-> + * config the vout format. The MFR_VR_MULTI_CONFIG_R1(0x0D) is
-> + * used to identify the vout vid step.
-> + */
-> +#define MFR_ICC_MAX	0x02
-> +#define MFR_RESO_SET	0xC7
-> +#define MFR_VR_MULTI_CONFIG_R1	0x0D
-> +
-> +#define MP9941_VIN_LIMIT_UINT	1
-> +#define MP9941_VIN_LIMIT_DIV	8
-> +#define MP9941_READ_VIN_UINT	1
-> +#define MP9941_READ_VIN_DIV	32
-> +
-> +#define MP9941_PAGE_NUM	1
-> +
-> +#define MP9941_RAIL1_FUNC	(PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | \
-> +							PMBUS_HAVE_IOUT | PMBUS_HAVE_POUT | \
-> +							PMBUS_HAVE_TEMP | PMBUS_HAVE_PIN | \
-> +							PMBUS_HAVE_IIN | \
-> +							PMBUS_HAVE_STATUS_VOUT | \
-> +							PMBUS_HAVE_STATUS_IOUT | \
-> +							PMBUS_HAVE_STATUS_TEMP | \
-> +							PMBUS_HAVE_STATUS_INPUT)
-> +
-> +struct mp9941_data {
-> +	struct pmbus_driver_info info;
-> +	int vid_resolution;
-> +};
-> +
-> +#define to_mp9941_data(x) container_of(x, struct mp9941_data, info)
-> +
-> +static int mp2993_set_vout_format(struct i2c_client *client)
-> +{
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, PMBUS_PAGE, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = i2c_smbus_read_word_data(client, MFR_RESO_SET);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/*
-> +	 * page = 0, MFR_RESO_SET[7:6] defines the vout format
-> +	 * 2'b11 set the vout format as direct
-> +	 */
-> +	ret = (ret & ~GENMASK(7, 6)) | FIELD_PREP(GENMASK(7, 6), 3);
-> +
-> +	ret = i2c_smbus_write_word_data(client, MFR_RESO_SET, ret);
-> +	if (ret < 0)
-> +		return ret;
-> +
+> Did you test the new API in RDMA subsystem? 
 
-i2c_smbus_write_word_data() returns 0 or an error code. The above
-is therefore not necessary.
-	return i2c_smbus_write_word_data(client, MFR_RESO_SET, ret);
-is sufficient. Same everythere else where the same pattern is used.
+This version was tested in our regression tests, but there is a chance
+that you are hitting flows that were not relevant for RDMA case.
 
-Thanks,
-Guenter
+> Or this RFC series was just some untested codes sending out to get people's design feedback? 
 
+RFC was fully tested in VFIO and RDMA paths, but not NVMe patch.
+
+> Do you have refined version for us to try? I ask because we are seeing some issues but not sure whether it is caused by the new API. We are debugging but it would be good to also ask at the same time.
+
+Yes, as an outcome of the feedback in this thread, I implemented a new
+version. Unfortunately, there are some personal matters that are preventing
+from me to send it right away.
+https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git/log/?h=dma-split-v1
+
+There are some differences in the API, but the main idea is the same.
+This version is not fully tested yet.
+
+Thanks
+
+> 
+> Cc Himal/Krishna who are also working/testing the new API.
+> 
+> Thanks,
+> Oak
+> 
+> > -----Original Message-----
+> > From: Jason Gunthorpe <jgg@ziepe.ca>
+> > Sent: Friday, May 3, 2024 12:43 PM
+> > To: Zeng, Oak <oak.zeng@intel.com>
+> > Cc: leon@kernel.org; Christoph Hellwig <hch@lst.de>; Robin Murphy
+> > <robin.murphy@arm.com>; Marek Szyprowski
+> > <m.szyprowski@samsung.com>; Joerg Roedel <joro@8bytes.org>; Will
+> > Deacon <will@kernel.org>; Chaitanya Kulkarni <chaitanyak@nvidia.com>;
+> > Brost, Matthew <matthew.brost@intel.com>; Hellstrom, Thomas
+> > <thomas.hellstrom@intel.com>; Jonathan Corbet <corbet@lwn.net>; Jens
+> > Axboe <axboe@kernel.dk>; Keith Busch <kbusch@kernel.org>; Sagi
+> > Grimberg <sagi@grimberg.me>; Yishai Hadas <yishaih@nvidia.com>;
+> > Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>; Tian, Kevin
+> > <kevin.tian@intel.com>; Alex Williamson <alex.williamson@redhat.com>;
+> > Jérôme Glisse <jglisse@redhat.com>; Andrew Morton <akpm@linux-
+> > foundation.org>; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-block@vger.kernel.org; linux-rdma@vger.kernel.org;
+> > iommu@lists.linux.dev; linux-nvme@lists.infradead.org;
+> > kvm@vger.kernel.org; linux-mm@kvack.org; Bart Van Assche
+> > <bvanassche@acm.org>; Damien Le Moal
+> > <damien.lemoal@opensource.wdc.com>; Amir Goldstein
+> > <amir73il@gmail.com>; josef@toxicpanda.com; Martin K. Petersen
+> > <martin.petersen@oracle.com>; daniel@iogearbox.net; Williams, Dan J
+> > <dan.j.williams@intel.com>; jack@suse.com; Leon Romanovsky
+> > <leonro@nvidia.com>; Zhu Yanjun <zyjzyj2000@gmail.com>
+> > Subject: Re: [RFC RESEND 00/16] Split IOMMU DMA mapping operation to
+> > two steps
+> > 
+> > On Thu, May 02, 2024 at 11:32:55PM +0000, Zeng, Oak wrote:
+> > 
+> > > > Instead of teaching DMA to know these specific datatypes, let's separate
+> > > > existing DMA mapping routine to two steps and give an option to
+> > advanced
+> > > > callers (subsystems) perform all calculations internally in advance and
+> > > > map pages later when it is needed.
+> > >
+> > > I looked into how this scheme can be applied to DRM subsystem and GPU
+> > drivers.
+> > >
+> > > I figured RDMA can apply this scheme because RDMA can calculate the
+> > > iova size. Per my limited knowledge of rdma, user can register a
+> > > memory region (the reg_user_mr vfunc) and memory region's sized is
+> > > used to pre-allocate iova space. And in the RDMA use case, it seems
+> > > the user registered region can be very big, e.g., 512MiB or even GiB
+> > 
+> > In RDMA the iova would be linked to the SVA granual we discussed
+> > previously.
+> > 
+> > > In GPU driver, we have a few use cases where we need dma-mapping. Just
+> > name two:
+> > >
+> > > 1) userptr: it is user malloc'ed/mmap'ed memory and registers to gpu
+> > > (in Intel's driver it is through a vm_bind api, similar to mmap). A
+> > > userptr can be of any random size, depending on user malloc
+> > > size. Today we use dma-map-sg for this use case. The down side of
+> > > our approach is, during userptr invalidation, even if user only
+> > > munmap partially of an userptr, we invalidate the whole userptr from
+> > > gpu page table, because there is no way for us to partially
+> > > dma-unmap the whole sg list. I think we can try your new API in this
+> > > case. The main benefit of the new approach is the partial munmap
+> > > case.
+> > 
+> > Yes, this is one of the main things it will improve.
+> > 
+> > > We will have to pre-allocate iova for each userptr, and we have many
+> > > userptrs of random size... So we might be not as efficient as RDMA
+> > > case where I assume user register a few big memory regions.
+> > 
+> > You are already doing this. dma_map_sg() does exactly the same IOVA
+> > allocation under the covers.
+> > 
+> > > 2) system allocator: it is malloc'ed/mmap'ed memory be used for GPU
+> > > program directly, without any other extra driver API call. We call
+> > > this use case system allocator.
+> > 
+> > > For system allocator, driver have no knowledge of which virtual
+> > > address range is valid in advance. So when GPU access a
+> > > malloc'ed/mmap'ed address, we have a page fault. We then look up a
+> > > CPU vma which contains the fault address. I guess we can use the CPU
+> > > vma size to allocate the iova space of the same size?
+> > 
+> > No. You'd follow what we discussed in the other thread.
+> > 
+> > If you do a full SVA then you'd split your MM space into granuals and
+> > when a fault hits a granual you'd allocate the IOVA for the whole
+> > granual. RDMA ODP is using a 512M granual currently.
+> > 
+> > If you are doing sub ranges then you'd probably allocate the IOVA for
+> > the well defined sub range (assuming the typical use case isn't huge)
+> > 
+> > > But there will be a true difficulty to apply your scheme to this use
+> > > case. It is related to the STICKY flag. As I understand it, the
+> > > sticky flag is designed for driver to mark "this page/pfn has been
+> > > populated, no need to re-populate again", roughly...Unlike userptr
+> > > and RDMA use cases where the backing store of a buffer is always in
+> > > system memory, in the system allocator use case, the backing store
+> > > can be changing b/t system memory and GPU's device private
+> > > memory. Even worse, we have to assume the data migration b/t system
+> > > and GPU is dynamic. When data is migrated to GPU, we don't need
+> > > dma-map. And when migration happens to a pfn with STICKY flag, we
+> > > still need to repopulate this pfn. So you can see, it is not easy to
+> > > apply this scheme to this use case. At least I can't see an obvious
+> > > way.
+> > 
+> > You are already doing this today, you are keeping the sg list around
+> > until you unmap it.
+> > 
+> > Instead of keeping the sg list you'd keep a much smaller datastructure
+> > per-granual. The sticky bit is simply a convient way for ODP to manage
+> > the smaller data structure, you don't have to use it.
+> > 
+> > But you do need to keep track of what pages in the granual have been
+> > DMA mapped - sg list was doing this before. This could be a simple
+> > bitmap array matching the granual size.
+> > 
+> > Looking (far) forward we may be able to have a "replace" API that
+> > allows installing a new page unconditionally regardless of what is
+> > already there.
+> > 
+> > Jason
