@@ -1,56 +1,57 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D32D18633
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DCEF9E8
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717998540; cv=none; b=mlEJgJqJnXeQzN1araEdf5N85I1Kqb3HVQct85F837bYlL6ymjRp2engkfL4MiUT4482HeXCQ1Rih4OENCnRgshol1Hh1SNd1ORSH9wSyO/OlssElTuOydntS4izspoVsZ4RJ/ZsgsR267Xm4D7eHbB93/BqpNne/2kjJow5AjI=
+	t=1717998541; cv=none; b=j1yqYMFweNrNlXR7EM0ZOWPjQQ2ufuKOlWRXx7s/CDXwziYUkglh4AQxTQxrlFezUA1hO6d3h782xg+B4qAmInd9UE3Cp6Us7/S60ZM9B2/1FKP6NKpQO0LakWgVryTe3J/gESceAKMRGS9+ofgW1eDQ2ASl381GpF+iJm/Iwyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717998540; c=relaxed/simple;
-	bh=bms1Ws3k7s8Pn4nPyg6h+fF059moWEuj8WzmZ/gedPM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tLQ5cxtfyQGDbOjFmS7Mv+wWsXlQ1F4+KQnei12LuEfPlKhEN5wv6RriL370QDIh1SIQK6QafFX62RclkFQLZW5qQ1i9kiI1Sx3a1IWGKgp0Maoo4vgVSYT92Qi1T7cgLHryeRFVeyWjaCoXbky2CYxK4homzOQZY9IhuzgH3Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=X4L0ESC3; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1717998541; c=relaxed/simple;
+	bh=t8bUqFZN1owoEoHVvTQ4d2z8i0LYblqwDfyn4BS8DSU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bMVB644twZfGB4330bGbeBlxuMvKu0oDsjddYfZCFyL9iu4tLdyqJZVIsyZzI8v4Zoloh5aLEpxfnEvSbUmdogQkyMIJugQJpiDa1vfw9MxYpQSwmbENzPyes0vWaBrS2Yg6aM4FTjzDizc7iEis7OvJc3zfdsSjkMiMMQZsBAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=P67iGjie; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="X4L0ESC3"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f70509b811so5910245ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2024 22:48:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="P67iGjie"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f68834bfdfso29701435ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2024 22:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=darkphysics.net; s=google; t=1717998537; x=1718603337; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kGXyZQ0AhWdPiVFf18ve/MIj+b/D+nKo1h7kD/lhLtU=;
-        b=X4L0ESC3yBtbOneQ9/GHrHdZXoyQyAnPN2bktyHs2gHd+hk301z8b7WCD705p07Gyk
-         cncQdiuM5aNMsFbaAT/UnFe/Zr37jczAz9aE/6Ks/7sQdVaj9nGGRU98ddNQiKDMoAtJ
-         kWqJzfRU302ceb1XWeuAG8GR8Cwg2gFLIuCFp/oEIvt0gX7qg+rJjQnS8hP/FyN4EOb3
-         dvH2WCJ6CnMTDQaG/dOwZCdGtCvt+SBFjNngGFhY80zh9DhKViTyeIjWx36P6RZy1ZIV
-         /X7rM8cZDkbaK6lbnkOlCJJQz2Gc70taMH0aYCtOKvih2XqFG+8BkQqTGs/bu9IbKuss
-         7Lvw==
+        d=darkphysics.net; s=google; t=1717998539; x=1718603339; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nBV/g926v6WU268d43iPrmXQkFNUHSMZ6p/vRmizITE=;
+        b=P67iGjiebkPtfuipzOs1u9vpxdbdpZv4WCN3uoZon7nuSX1kBGu1YW72D1kyGigndE
+         zl1cFxE26RlctYfmiAlHNXQrqZar9QWRW9ZxnGr77Qa2+g0nAtRo1oWAwYmPuVphoO5E
+         Nzaw1W7nkanM8j7k3wqn6QsJNnk4eDTqakt/uhY6jgVtdqNvEMDRyeO/mrPvfHTZbxr4
+         ofWRoHzmsvsXggcgS9FMAW4WlzelU9Rdg5ljw9Y64iX9DKqKtEPRSafATpDBoxsFLEM6
+         Q5KYFzOfvu0oeKLd2pIFTqyXG24r5rSjyPz7rRN5AjnHEMxtsToZoxjHXzzre/KY9tIx
+         opNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717998537; x=1718603337;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kGXyZQ0AhWdPiVFf18ve/MIj+b/D+nKo1h7kD/lhLtU=;
-        b=WYUUPSszUDpZIx8XkUdFzZGl11y+3LZMuPEAac9P3WJ3p1FhOmZcQa7SzFeCo+yt9x
-         aDeuR6+9p0HgrkbFcZa0Gj2Udio3tYxEGkuDFv+yU9ZqxI5e8bNQUDgJRGcMrepwj2D2
-         PzR4p583S1aThFvGYHaX+MfuGJJFRWEgSpLgNj/T3BTaFQcX30UQn9l9IPdU8g3kvS/L
-         wD7Bqxg8o4wOfy0Rhq/m/O1FignynpIcIpeUuZmqXL+T7fUBRvIxapdmGmIefaPi44/U
-         3XQB4eVxFhrmvGJFiqpo3uQC2bLtZ/1geWpz0kC+xBnw/uagYyj2NawA+uCiFsH2w7fN
-         kFRA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/bgOvx5Vn/xww43q2p1IcLNeMK6NVhVDoE1tjLJPMQlzfv/r45dbTsOuiqwPyGnfzrbv3cIGioSTJdYsPRPe9G+U33B0j3baMuQFI
-X-Gm-Message-State: AOJu0YzSzhtA5U+9DM0Tj+fNzXAwB5NP7UK34wtNwKcdmsPYynfqePsv
-	SUegqJDOCH8L+bMrlYffLQDOJQWRJ1mlhD1wwlmR4Yi+P+I16OcqVm4q6/XnXPZPITJSQvvlslS
-	X8SM=
-X-Google-Smtp-Source: AGHT+IFMxxwA/HgDSWHBK0vQ0QSReULjfORoxLkKeGsZKml2iVYQktdR8yJZIilL5zEqPi0X8+l4jA==
-X-Received: by 2002:a17:902:c408:b0:1f4:7713:8f6 with SMTP id d9443c01a7336-1f6d0388ea1mr104816145ad.52.1717998537417;
-        Sun, 09 Jun 2024 22:48:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717998539; x=1718603339;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nBV/g926v6WU268d43iPrmXQkFNUHSMZ6p/vRmizITE=;
+        b=lQ0P74vQBWoIKUpzZkIJeNwRVXKu+7Zq6rFReCFyQZcSXj/OZ1s+sFdDvXofLh4eAA
+         IGCA42MbJ36Y7Y6BwQh8hYCnVGKY91XSjHodeGeGojzqVnd7AL5jVI9yKf70knU8c9b9
+         1BVh4AEODgh1mj+Zd151Hsfxynd2+HnHsYuSaDUtlWyxIMa51P/knHP1EzemGjgUVePg
+         ceXGmJJFrZDpbP4spoG5XQVjeD9/qUEhHWx5bCoLJMDBUg9pRMVHfh4Ap3uC9RkMkW89
+         FpXAFEIQDoc60ut20N0NZ7w9wQQJT4YsVe5l7x9TTG3MQctZVoKEwFVUxBKH25Nptan5
+         VIdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUerVLEww2l+Z/F46JJA3+TpdTrbB9JabggrUVJvbYUnCc3FcpDTfKeq+eAwnx9rQMq1nGWWsKJJNBaJFIRNLT+l+c/6KeRDuJfeDpp
+X-Gm-Message-State: AOJu0Yzbsujgp68Dcl6sJt5LTKQORykdYlpVgjkVY3q5+69DdDY6Q3s1
+	KCNBaUMqZl7LOmq3Zae8T7hYK5Qri4OR+9CoFBnFmo0uZMfAcBhVvj3mhePKyz0=
+X-Google-Smtp-Source: AGHT+IHjXzYTyqNnCOBveV6jWpuqnfHdjUVpEylW4oFwYpVmuRo5xWs1vZQkRQS7r0zRpzUVfC9BoA==
+X-Received: by 2002:a17:903:2347:b0:1f7:187f:cb5b with SMTP id d9443c01a7336-1f7187fcd7bmr11855255ad.64.1717998539001;
+        Sun, 09 Jun 2024 22:48:59 -0700 (PDT)
 Received: from lunchbox.darkphysics (c-76-146-178-2.hsd1.wa.comcast.net. [76.146.178.2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6f1aced64sm35653725ad.9.2024.06.09.22.48.56
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6f1aced64sm35653725ad.9.2024.06.09.22.48.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Jun 2024 22:48:56 -0700 (PDT)
+        Sun, 09 Jun 2024 22:48:58 -0700 (PDT)
 From: Tree Davies <tdavies@darkphysics.net>
 To: gregkh@linuxfoundation.org,
 	philipp.g.hortmann@gmail.com,
@@ -58,10 +59,12 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Tree Davies <tdavies@darkphysics.net>
-Subject: [PATCH 00/24] Staging: rtl8192e: Maintenance renames and cleanup
-Date: Sun,  9 Jun 2024 22:44:25 -0700
-Message-Id: <20240610054449.71316-1-tdavies@darkphysics.net>
+Subject: [PATCH 02/24] Staging: rtl8192e: Rename variable bIsMulticast
+Date: Sun,  9 Jun 2024 22:44:27 -0700
+Message-Id: <20240610054449.71316-3-tdavies@darkphysics.net>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240610054449.71316-1-tdavies@darkphysics.net>
+References: <20240610054449.71316-1-tdavies@darkphysics.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,57 +73,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series attacks CamelCase variable renames, removes
-un-used variables and adjusts alignment issues found in
-rtllib_rx.c and rtllib_tx.c. 
+Rename variable bIsMulticast to is_multicast
+to fix checkpatch warning Avoid CamelCase.
 
-This completes the last of the remaining checkpatch issues 
-for rtllib_tx.c.
+Signed-off-by: Tree Davies <tdavies@darkphysics.net>
+---
+ drivers/staging/rtl8192e/rtllib_tx.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thank you in advance to all reviewers.
-~Tree
-
-
-Tree Davies (24):
-  Staging: rtl8192e: Rename variable bHwSec
-  Staging: rtl8192e: Rename variable bIsMulticast
-  Staging: rtl8192e: Rename variable HTCurrentOperaRate
-  Staging: rtl8192e: Rename variable HTOpMode
-  Staging: rtl8192e: Rename variable bRTSEnable
-  Staging: rtl8192e: Rename variable bRTSBW
-  Staging: rtl8192e: Rename variable bCTSEnable
-  Staging: rtl8192e: Rename variable bRTSUseShortGI
-  Staging: rtl8192e: Rename variable bforced_tx20Mhz
-  Staging: rtl8192e: Rename variable bPacketBW
-  Staging: rtl8192e: Rename variable bBroadcast
-  Staging: rtl8192e: Rename variable CntAfterLink
-  Staging: rtl8192e: Rename variable bUseShortGI
-  Staging: rtl8192e: Rename function TsStartAddBaProcess()
-  Staging: rtl8192e: Fix spaces/tab alignment to match open parenthesis
-  Staging: rtl8192e: Rename function rtllib_query_BandwidthMode
-  Staging: rtl8192e: Rename function rtllib_query_ShortPreambleMode
-  Staging: rtl8192e: Rename function rtllib_query_HTCapShortGI
-  Staging: rtl8192e: Rename variable bUseShortPreamble
-  Staging: rtl8192e: Rename variable bRTSSTBC
-  Remove parameter bIsAmsdu from rtllib_classify()
-  Remove variable IsAmsdu from rtllib_xmit_inter()
-  Fix space/tab alignment to match open parenthesis in rtllib_tx.c
-  Fix space/tab alignment to match open parenthesis in rtllib_rx.c
-
- .../staging/rtl8192e/rtl8192e/r8192E_dev.c    |  16 +--
- drivers/staging/rtl8192e/rtl8192e/rtl_core.c  |   6 +-
- drivers/staging/rtl8192e/rtl8192e/rtl_dm.c    |   8 +-
- drivers/staging/rtl8192e/rtl8192e/rtl_wx.c    |   2 +-
- drivers/staging/rtl8192e/rtl819x_HTProc.c     |   2 +-
- drivers/staging/rtl8192e/rtl819x_TSProc.c     |   2 +-
- drivers/staging/rtl8192e/rtllib.h             |  28 ++--
- drivers/staging/rtl8192e/rtllib_crypt_ccmp.c  |   4 +-
- drivers/staging/rtl8192e/rtllib_crypt_tkip.c  |  10 +-
- drivers/staging/rtl8192e/rtllib_crypt_wep.c   |   4 +-
- drivers/staging/rtl8192e/rtllib_rx.c          |  45 +++---
- drivers/staging/rtl8192e/rtllib_tx.c          | 131 +++++++++---------
- 12 files changed, 126 insertions(+), 132 deletions(-)
-
+diff --git a/drivers/staging/rtl8192e/rtllib_tx.c b/drivers/staging/rtl8192e/rtllib_tx.c
+index 87d1ff943617..8856191a1228 100644
+--- a/drivers/staging/rtl8192e/rtllib_tx.c
++++ b/drivers/staging/rtl8192e/rtllib_tx.c
+@@ -538,7 +538,7 @@ static int rtllib_xmit_inter(struct sk_buff *skb, struct net_device *dev)
+ 	u8 src[ETH_ALEN];
+ 	struct lib80211_crypt_data *crypt = NULL;
+ 	struct cb_desc *tcb_desc;
+-	u8 bIsMulticast = false;
++	u8 is_multicast = false;
+ 	u8 IsAmsdu = false;
+ 	bool	bdhcp = false;
+ 
+@@ -655,14 +655,14 @@ static int rtllib_xmit_inter(struct sk_buff *skb, struct net_device *dev)
+ 			ether_addr_copy(header.addr3, dest);
+ 	}
+ 
+-	bIsMulticast = is_multicast_ether_addr(header.addr1);
++	is_multicast = is_multicast_ether_addr(header.addr1);
+ 
+ 	header.frame_control = cpu_to_le16(fc);
+ 
+ 	/* Determine fragmentation size based on destination (multicast
+ 	 * and broadcast are not fragmented)
+ 	 */
+-	if (bIsMulticast) {
++	if (is_multicast) {
+ 		frag_size = MAX_FRAG_THRESHOLD;
+ 		qos_ctl |= QOS_CTL_NOTCONTAIN_ACK;
+ 	} else {
+@@ -774,7 +774,7 @@ static int rtllib_xmit_inter(struct sk_buff *skb, struct net_device *dev)
+ 			/* The last fragment has the remaining length */
+ 			bytes = bytes_last_frag;
+ 		}
+-		if ((qos_activated) && (!bIsMulticast)) {
++		if ((qos_activated) && (!is_multicast)) {
+ 			frag_hdr->seq_ctrl =
+ 				 cpu_to_le16(rtllib_query_seqnum(ieee, skb_frag,
+ 								 header.addr1));
+@@ -809,7 +809,7 @@ static int rtllib_xmit_inter(struct sk_buff *skb, struct net_device *dev)
+ 			skb_put(skb_frag, 4);
+ 	}
+ 
+-	if ((qos_activated) && (!bIsMulticast)) {
++	if ((qos_activated) && (!is_multicast)) {
+ 		if (ieee->seq_ctrl[UP2AC(skb->priority) + 1] == 0xFFF)
+ 			ieee->seq_ctrl[UP2AC(skb->priority) + 1] = 0;
+ 		else
 -- 
 2.30.2
 
