@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C7E14387C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F371459E3
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037737; cv=none; b=DE8zkKqqW8XZBZa0AYYTGL386ZBdRt1jCSRAjRfUJQgTbifEZT+qnRkGiVWqtzNZSbks45r0Tba8ASKZFQO1M/2XTYo9GQYIY7U6Jtr6qIgYZre7bnxq0+AC9JP5wEGMumibj+kwqWsQ10rLfKooSve37goEGMJ5Jc1+1yVM0lQ=
+	t=1718037738; cv=none; b=LYcmu4JnorW7cIwIw4CzeBFMlYIWXJxuZbkrxkuV5wYj2Qreev/cJLPEftGgvgFY7gwUkMJ5yTpJU2olI7bNAURH+X312TyQTu9e369/50MqY8e5/Oo0RHdFG9qXXeL4s1SqbmFS5bkICTvJPLCZKer4vJBGiA0Ciu4bwFJ8Jj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718037737; c=relaxed/simple;
-	bh=vz+fAlWfBudifV6kxVCQAtsMqb+wBrh8FfCHN8/yRLk=;
+	s=arc-20240116; t=1718037738; c=relaxed/simple;
+	bh=Jz7RJXZF/wpnmhSKslp2B8lopo6bOLwGJ9GuQe5xSbw=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=Um4eIeBgKkdhrtUzxSTE2wUpMbiQdcIfPAw5NLgX834Jjr0TkBZGzR+I+EyY0jH5JZfjrTNCY7NLWtjTphMLgovnIow+cx9+1ps3uT9Bw5kCD6a/wzuKMkcUM2iXRlPPHmd7ydDXdY9h8vYGcp4wRaHUuDXSrdnzvqOZ+p7eoO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1R5/nSMI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C2oJg0rd; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=ujLs5UudrZs+jb1cOIFnqefvMzxnVOSMuwC6Vm2yta8ZT/+XJeGdG/JcoKhpuEZhOVArnDuKPTnfz9wNuCrXU3IW4Oohcqqzrs14KXyl1mhj+UnysQ97mQYu1XpGw9eiTNt6qYE+ZZe68M4Ocdy7xSKbo3PPZInjf6CJgdLLj2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SLboMHul; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lZ99rRfz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1R5/nSMI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C2oJg0rd"
-Message-ID: <20240610164025.515974472@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SLboMHul";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lZ99rRfz"
+Message-ID: <20240610164025.833739199@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037726;
+	s=2020; t=1718037733;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=DncafhmcWT8Rsehj8z94B5VTVvkoj9TI/ZrdPNRUKUQ=;
-	b=1R5/nSMIRuckNX9bWe7xHc4IaYhBPsCbrUPss0L3TLRiU3+Q+XB4MHyBkC+7l/C9NlfCdg
-	FmQSrc1M0GJp9gnK0K9K2khAnYLNSk93DckMsz+0EvOSNXzKl6YF8XNFhdIjMe1gklZHt3
-	EMuAXdDI8L+oEzjJ+xR2m/VM25OZ/w/TKGbJiy+OHZkeOkLNjyWNyiLOfx7kYjUHKB5jfv
-	Eb/T1Qz+BDVqZipJZOu1Cy4xh6dtMftUs79Ghd21Ut2LWJdXCtYDsIli+lvrkqfb8jc7AV
-	cK5CzhkvvGF0ChUPSwpxjWr6Kv6URWBHX7706K7cqhtESR/05fvx3uAzoaPaDw==
+	 references:references; bh=oS7SrzV2Wd9Ag3yMmGtoq7FlROh6d1Si5LvLo/AXQAY=;
+	b=SLboMHulqbAU78PDwvYlC230/wjCP2JGpchgUKhRDuA/m3MKMfrkT2hOA6sG0M6xcAdACp
+	5BVGhJFhGt5jfV4CzArspK8Xm5ucUFcHyQo5xCs66oVYpHPUsM+WY6IQaivVBTet5xKD0D
+	vfemF24gHqyz4OC0fiJ33VQ0i13b3UZrBRf+ACusWzR184Ez4wy3Bvn6+X5EL6IKfFjMur
+	Yf75OqYbF1yg/eCTUYZwW4P3PFssK4jwlR9izFuTcyOBqeTisuzJTTjuUAJnVQ1waA7i/x
+	jYENJ3xUyQbiDb7Y6orD3hOVb7anqF3v+eCDcE/hwQsGFXD7NuF5Cr8fTI1TeQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037726;
+	s=2020e; t=1718037733;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=DncafhmcWT8Rsehj8z94B5VTVvkoj9TI/ZrdPNRUKUQ=;
-	b=C2oJg0rdH6UpfKG6Kd6MCr2UYlfNCfoSXnrm7IlTOJrMzKFJwwXkzZAGX7lSqF4dy/I6+7
-	r/VU06M9Uj9+/BAQ==
+	 references:references; bh=oS7SrzV2Wd9Ag3yMmGtoq7FlROh6d1Si5LvLo/AXQAY=;
+	b=lZ99rRfzJK1+g1S5HZtI3ARgZ0iPRWDgHoy+IjBeWdkwqbJbWB2DGGCx2L3rytgUpkB6WB
+	ENMMZM7iW/aXlPBA==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
@@ -45,8 +45,8 @@ Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
  Stephen Boyd <sboyd@kernel.org>,
  Eric Biederman <ebiederm@xmission.com>,
  Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 01/51] selftests/timers/posix_timers: Simplify error
- handling
+Subject: [patch V3 06/51] selftests/timers/posix-timers: Validate overrun
+ after unblock
 References: <20240610163452.591699700@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,269 +55,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:42:06 +0200 (CEST)
+Date: Mon, 10 Jun 2024 18:42:12 +0200 (CEST)
 
-No point in returning to main() on fatal errors. Just exit right away.
+When a timer signal is blocked and later unblocked then one signal should
+be delivered with the correct number of overruns since the timer was queued.
+
+Validate that behaviour.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- tools/testing/selftests/timers/posix_timers.c |  151 ++++++++------------------
- 1 file changed, 52 insertions(+), 99 deletions(-)
+ tools/testing/selftests/timers/posix_timers.c |   61 +++++++++++++++++++++++++-
+ 1 file changed, 60 insertions(+), 1 deletion(-)
 
 --- a/tools/testing/selftests/timers/posix_timers.c
 +++ b/tools/testing/selftests/timers/posix_timers.c
-@@ -10,6 +10,7 @@
- #include <sys/time.h>
- #include <stdio.h>
- #include <signal.h>
-+#include <string.h>
- #include <unistd.h>
- #include <time.h>
- #include <pthread.h>
-@@ -19,6 +20,20 @@
- #define DELAY 2
- #define USECS_PER_SEC 1000000
+@@ -540,10 +540,66 @@ static void check_gettime(int which, con
+ 	ksft_test_result(wraps > 1, "check_gettime %s\n", name);
+ }
  
-+static void __fatal_error(const char *test, const char *name, const char *what)
++static void check_overrun(int which, const char *name)
 +{
-+	char buf[64];
++	struct timespec start, now;
++	struct tmrsig tsig = { };
++	struct itimerspec its;
++	struct sigaction sa;
++	struct sigevent sev;
++	timer_t timerid;
++	sigset_t set;
 +
-+	strerror_r(errno, buf, sizeof(buf));
++	sa.sa_flags = SA_SIGINFO;
++	sa.sa_sigaction = siginfo_handler;
++	sigemptyset(&sa.sa_mask);
++	if (sigaction(SIGUSR1, &sa, NULL))
++		fatal_error(name, "sigaction()");
 +
-+	if (name && strlen(name))
-+		ksft_exit_fail_msg("%s %s %s %s\n", test, name, what, buf);
-+	else
-+		ksft_exit_fail_msg("%s %s %s\n", test, what, buf);
++	/* Block the signal */
++	sigemptyset(&set);
++	sigaddset(&set, SIGUSR1);
++	if (sigprocmask(SIG_BLOCK, &set, NULL))
++		fatal_error(name, "sigprocmask(SIG_BLOCK)");
++
++	memset(&sev, 0, sizeof(sev));
++	sev.sigev_notify = SIGEV_SIGNAL;
++	sev.sigev_signo = SIGUSR1;
++	sev.sigev_value.sival_ptr = &tsig;
++	if (timer_create(which, &sev, &timerid))
++		fatal_error(name, "timer_create()");
++
++	/* Start the timer to expire in 100ms and 100ms intervals */
++	its.it_value.tv_sec = 0;
++	its.it_value.tv_nsec = 100000000;
++	its.it_interval.tv_sec = 0;
++	its.it_interval.tv_nsec = 100000000;
++	if (timer_settime(timerid, 0, &its, NULL))
++		fatal_error(name, "timer_settime()");
++
++	if (clock_gettime(which, &start))
++		fatal_error(name, "clock_gettime()");
++
++	do {
++		if (clock_gettime(which, &now))
++			fatal_error(name, "clock_gettime()");
++	} while (calcdiff_ns(now, start) < NSECS_PER_SEC);
++
++	/* Unblock it, which should deliver a signal */
++	if (sigprocmask(SIG_UNBLOCK, &set, NULL))
++		fatal_error(name, "sigprocmask(SIG_UNBLOCK)");
++
++	if (timer_delete(timerid))
++		fatal_error(name, "timer_delete()");
++
++	ksft_test_result(tsig.signals == 1 && tsig.overruns == 9,
++			 "check_overrun %s\n", name);
 +}
 +
-+#define fatal_error(name, what)	__fatal_error(__func__, name, what)
-+
- static volatile int done;
- 
- /* Busy loop in userspace to elapse ITIMER_VIRTUAL */
-@@ -74,24 +89,13 @@ static int check_diff(struct timeval sta
- 	return 0;
- }
- 
--static int check_itimer(int which)
-+static void check_itimer(int which, const char *name)
- {
--	const char *name;
--	int err;
- 	struct timeval start, end;
- 	struct itimerval val = {
- 		.it_value.tv_sec = DELAY,
- 	};
- 
--	if (which == ITIMER_VIRTUAL)
--		name = "ITIMER_VIRTUAL";
--	else if (which == ITIMER_PROF)
--		name = "ITIMER_PROF";
--	else if (which == ITIMER_REAL)
--		name = "ITIMER_REAL";
--	else
--		return -1;
--
- 	done = 0;
- 
- 	if (which == ITIMER_VIRTUAL)
-@@ -101,17 +105,11 @@ static int check_itimer(int which)
- 	else if (which == ITIMER_REAL)
- 		signal(SIGALRM, sig_handler);
- 
--	err = gettimeofday(&start, NULL);
--	if (err < 0) {
--		ksft_perror("Can't call gettimeofday()");
--		return -1;
--	}
-+	if (gettimeofday(&start, NULL) < 0)
-+		fatal_error(name, "gettimeofday()");
- 
--	err = setitimer(which, &val, NULL);
--	if (err < 0) {
--		ksft_perror("Can't set timer");
--		return -1;
--	}
-+	if (setitimer(which, &val, NULL) < 0)
-+		fatal_error(name, "setitimer()");
- 
- 	if (which == ITIMER_VIRTUAL)
- 		user_loop();
-@@ -120,68 +118,41 @@ static int check_itimer(int which)
- 	else if (which == ITIMER_REAL)
- 		idle_loop();
- 
--	err = gettimeofday(&end, NULL);
--	if (err < 0) {
--		ksft_perror("Can't call gettimeofday()");
--		return -1;
--	}
-+	if (gettimeofday(&end, NULL) < 0)
-+		fatal_error(name, "gettimeofday()");
- 
- 	ksft_test_result(check_diff(start, end) == 0, "%s\n", name);
--
--	return 0;
- }
- 
--static int check_timer_create(int which)
-+static void check_timer_create(int which, const char *name)
- {
--	const char *type;
--	int err;
--	timer_t id;
- 	struct timeval start, end;
- 	struct itimerspec val = {
- 		.it_value.tv_sec = DELAY,
- 	};
--
--	if (which == CLOCK_THREAD_CPUTIME_ID) {
--		type = "thread";
--	} else if (which == CLOCK_PROCESS_CPUTIME_ID) {
--		type = "process";
--	} else {
--		ksft_print_msg("Unknown timer_create() type %d\n", which);
--		return -1;
--	}
-+	timer_t id;
- 
- 	done = 0;
--	err = timer_create(which, NULL, &id);
--	if (err < 0) {
--		ksft_perror("Can't create timer");
--		return -1;
--	}
--	signal(SIGALRM, sig_handler);
- 
--	err = gettimeofday(&start, NULL);
--	if (err < 0) {
--		ksft_perror("Can't call gettimeofday()");
--		return -1;
--	}
-+	if (timer_create(which, NULL, &id) < 0)
-+		fatal_error(name, "timer_create()");
- 
--	err = timer_settime(id, 0, &val, NULL);
--	if (err < 0) {
--		ksft_perror("Can't set timer");
--		return -1;
--	}
-+	if (signal(SIGALRM, sig_handler) == SIG_ERR)
-+		fatal_error(name, "signal()");
-+
-+	if (gettimeofday(&start, NULL) < 0)
-+		fatal_error(name, "gettimeofday()");
-+
-+	if (timer_settime(id, 0, &val, NULL) < 0)
-+		fatal_error(name, "timer_settime()");
- 
- 	user_loop();
- 
--	err = gettimeofday(&end, NULL);
--	if (err < 0) {
--		ksft_perror("Can't call gettimeofday()");
--		return -1;
--	}
-+	if (gettimeofday(&end, NULL) < 0)
-+		fatal_error(name, "gettimeofday()");
- 
- 	ksft_test_result(check_diff(start, end) == 0,
--			 "timer_create() per %s\n", type);
--
--	return 0;
-+			 "timer_create() per %s\n", name);
- }
- 
- static pthread_t ctd_thread;
-@@ -209,15 +180,14 @@ static void *ctd_thread_func(void *arg)
- 
- 	ctd_count = 100;
- 	if (timer_create(CLOCK_PROCESS_CPUTIME_ID, NULL, &id))
--		return "Can't create timer\n";
-+		fatal_error(NULL, "timer_create()");
- 	if (timer_settime(id, 0, &val, NULL))
--		return "Can't set timer\n";
--
-+		fatal_error(NULL, "timer_settime()");
- 	while (ctd_count > 0 && !ctd_failed)
- 		;
- 
- 	if (timer_delete(id))
--		return "Can't delete timer\n";
-+		fatal_error(NULL, "timer_delete()");
- 
- 	return NULL;
- }
-@@ -225,19 +195,16 @@ static void *ctd_thread_func(void *arg)
- /*
-  * Test that only the running thread receives the timer signal.
-  */
--static int check_timer_distribution(void)
-+static void check_timer_distribution(void)
- {
--	const char *errmsg;
--
--	signal(SIGALRM, ctd_sighandler);
-+	if (signal(SIGALRM, ctd_sighandler) == SIG_ERR)
-+		fatal_error(NULL, "signal()");
- 
--	errmsg = "Can't create thread\n";
- 	if (pthread_create(&ctd_thread, NULL, ctd_thread_func, NULL))
--		goto err;
-+		fatal_error(NULL, "pthread_create()");
- 
--	errmsg = "Can't join thread\n";
--	if (pthread_join(ctd_thread, (void **)&errmsg) || errmsg)
--		goto err;
-+	if (pthread_join(ctd_thread, NULL))
-+		fatal_error(NULL, "pthread_join()");
- 
- 	if (!ctd_failed)
- 		ksft_test_result_pass("check signal distribution\n");
-@@ -245,10 +212,6 @@ static int check_timer_distribution(void
- 		ksft_test_result_fail("check signal distribution\n");
- 	else
- 		ksft_test_result_skip("check signal distribution (old kernel)\n");
--	return 0;
--err:
--	ksft_print_msg("%s", errmsg);
--	return -1;
- }
- 
  int main(int argc, char **argv)
-@@ -259,17 +222,10 @@ int main(int argc, char **argv)
+ {
+ 	ksft_print_header();
+-	ksft_set_plan(15);
++	ksft_set_plan(18);
+ 
  	ksft_print_msg("Testing posix timers. False negative may happen on CPU execution \n");
  	ksft_print_msg("based timers if other threads run on the CPU...\n");
- 
--	if (check_itimer(ITIMER_VIRTUAL) < 0)
--		ksft_exit_fail();
--
--	if (check_itimer(ITIMER_PROF) < 0)
--		ksft_exit_fail();
--
--	if (check_itimer(ITIMER_REAL) < 0)
--		ksft_exit_fail();
--
--	if (check_timer_create(CLOCK_THREAD_CPUTIME_ID) < 0)
--		ksft_exit_fail();
-+	check_itimer(ITIMER_VIRTUAL, "ITIMER_VIRTUAL");
-+	check_itimer(ITIMER_PROF, "ITIMER_PROF");
-+	check_itimer(ITIMER_REAL, "ITIMER_REAL");
-+	check_timer_create(CLOCK_THREAD_CPUTIME_ID, "CLOCK_THREAD_CPUTIME_ID");
- 
- 	/*
- 	 * It's unfortunately hard to reliably test a timer expiration
-@@ -280,11 +236,8 @@ int main(int argc, char **argv)
- 	 * to ensure true parallelism. So test only one thread until we
- 	 * find a better solution.
- 	 */
--	if (check_timer_create(CLOCK_PROCESS_CPUTIME_ID) < 0)
--		ksft_exit_fail();
--
--	if (check_timer_distribution() < 0)
--		ksft_exit_fail();
-+	check_timer_create(CLOCK_PROCESS_CPUTIME_ID, "CLOCK_PROCESS_CPUTIME_ID");
-+	check_timer_distribution();
+@@ -574,6 +630,9 @@ int main(int argc, char **argv)
+ 	check_gettime(CLOCK_MONOTONIC, "CLOCK_MONOTONIC");
+ 	check_gettime(CLOCK_PROCESS_CPUTIME_ID, "CLOCK_PROCESS_CPUTIME_ID");
+ 	check_gettime(CLOCK_THREAD_CPUTIME_ID, "CLOCK_THREAD_CPUTIME_ID");
++	check_overrun(CLOCK_MONOTONIC, "CLOCK_MONOTONIC");
++	check_overrun(CLOCK_PROCESS_CPUTIME_ID, "CLOCK_PROCESS_CPUTIME_ID");
++	check_overrun(CLOCK_THREAD_CPUTIME_ID, "CLOCK_THREAD_CPUTIME_ID");
  
  	ksft_finished();
  }
