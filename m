@@ -1,101 +1,115 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D7D38FB0
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7CF38FB0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718029883; cv=none; b=hMywQxaDhTJPDF4Bkegv9eP7WfvYbouv4DWRsUBTZHaY18Nc/qd9z68IACHpSASZ165PlTMuDfhALFeEZqJgTOHCZ7wwCLdA5HJZcSVD0IugdF/HFiLV6qvnA9FyBLblD5yzREZpR/M62I9qDwRs0Qo71QQ/nOaAgiIs5+sFId8=
+	t=1718029923; cv=none; b=AOCAddk75Kkxn7ovlS3NQf6S0egtfG9B1iaP87xMbYUzg457J1sULet0txHhKB2Z/MbXvQgvdI7UWRAwAwcGXTn+ipFjju24FRz0lbvwb/jAIedGLwjyjwUblDk/CSyZJ3JXw1O2zJ0os0CALiJRTZLwMqRyNk0QV/ZxrBXHXME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718029883; c=relaxed/simple;
-	bh=VwUpWbn1eWCMUzpw9sv+oHFcN1ZTLQ6ELIhkrq62WKk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JkG2J9c84rT4rB16zwbSqH35K7FxuALWoPxpnIn7IO4OuiSM2/A6SJSy2yJNcFS2lvsxgOUNc3EeZ7m4lT3gyE88k8sgsa1R7CEoAgZ1KBSghR2OHxgYer06ZgkikSivEKAKtRxJR73dl9/NHgE7l1pc6ELQNgIggaN3ivrBkkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IndhcYva; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718029923; c=relaxed/simple;
+	bh=YwIDCtzDhcwh+1uI494r2VXwyUPw8bVwvu4UDqPjf5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pTtc+XuY58RWnum5U8TMpYyE+5fJge9+VCkHr7qWxbyDCG5PlBP5MW3dghxylctLw9dbv+bVBPCwDJ7nSGXaIo4ygB1c3iBrFMDccLRbX/pC7R8+ReP2ELPrE75YSgBYaYIC9gA8cW5kcT+7bNGYtbAn/K+HnMiUB59XVQKMBc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EVEKJivB; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IndhcYva"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-79776e3e351so43958685a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 07:31:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EVEKJivB"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-35f24fabb81so884802f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 07:32:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718029881; x=1718634681; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vmkoYQdN2TcqhXW6bXeE/domfSCU9DERaxqlSrdPGI0=;
-        b=IndhcYvatTFcfkxBcy1lTKkhoAd2iwUa4MMdxYZ5hKJGX02jjZwIVDaLTNmH/+bgXc
-         SDI5HcCMHfoNrr2Ip8oiorAdJ+6GLBLCsdL3aaxcsgePE3D5uUfPV+5IBnW4UhxzkCEK
-         O0WyiJKWvGyFWW9o8nMA77MbNhnXUQKPogRM86+ymPhYob7NnIH7Zw7tpz3IbJzvdy6t
-         f6KrgdnAf9XN9Zo7+xnGv+DFk4mvx2asZI9tck7ySdbe6hvuDEvYfQYPYzHsu+i4won6
-         KXbXqgVEJyLUlwRmn2ziNLjJVgoL+fqrfO0TrWUq2/sT0vwFK+iLrqG+hQBzQd7y9nqW
-         jXtg==
+        d=suse.com; s=google; t=1718029919; x=1718634719; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3MaVOnN+h3M1y5FOd67tuekS93xubaycuhC8Oc45qW0=;
+        b=EVEKJivBGbUjzJqEc0CMn9mnotjVbNs/1tpiymES2xeYbNDQAMcM7y1d4FjXyGfxSe
+         pAZrlGCcESnNv1/lFFRpA5cQWqvLshl5E3XORgDnGXv0l6/+IpcGGZ2aN1jaaZ1tLj+7
+         y/3oilo5U9ER2F9u39NpQD20tCWLJKX4RIF1iqizM1jWlQsXFIF8XBQETObWcd3ObHKY
+         VfjFYcKKCzKVUCVVNLe+Qt5LoxHIkGwKHWfS6w0ao5la0AQT3d8pG1fr2cfK8cvHnAny
+         UKO8BUuD/TaEfXWqS2PE0lArJxxdZsXWCgWqNUiJzJjqadNwTEKOGBwwRH+ZC+NamN6D
+         E2Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718029881; x=1718634681;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vmkoYQdN2TcqhXW6bXeE/domfSCU9DERaxqlSrdPGI0=;
-        b=iZLKWMXM+ixgs5qCEbYoyrblvG5MBezLXLsKKZ/w3de72IH9us8JEoYlWwmq4TynAv
-         hdK9ifeaBVueD/Z2/WcxFBfsc/4hJvUZ9WhOqoM8oiZUJ1qH/n20Q4d+j1+NCZu46HHm
-         CZEGpGhhQg8NaOsJngoN4vyZHPuFuTDpDC4vmHgqN2Vo3kYq6gaZi3yIczoH1f339nwt
-         3yaS5Vnxe7JHvLFevfYkWK5fmFdqXsZouezbfRM8XK81YLwAKGQrjNc1m1xPBNXwKAYg
-         n1EiOd2wARMidqd9nCzBQI9/6mvhGJmZ/J/gecoEk/4FyKTeQ+9LdD4tQnwFmQ2OviX2
-         uFPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1HWBkQHESDVmTVPPbX0aMaHXSHX7qNJEcAGLW5D9TJ9ZZxEGqpA5pCPvtDuhv4VLoexlq9/Kc3HiRYg4Pd6elebwYCaK/AnaXZOYa
-X-Gm-Message-State: AOJu0Yw2J2QfvRYWDHBq/GOtr6z23BSY6MYE6a3eLtYYJBimTMa4lF2g
-	mGa8CI+2rDkA1UnZ35IdsAhqffxIyXCaIIl00e28PRyVyJ3h2ymB
-X-Google-Smtp-Source: AGHT+IFPp5RhKtZQ9MvS14DPNDaymoojuA/+cEjt/zxS95yHDKvW19lgNaZZnsBE9iCx7f/aMTPNsQ==
-X-Received: by 2002:a05:620a:4556:b0:797:a649:bdbf with SMTP id af79cd13be357-797a649c0fdmr156842085a.13.1718029880727;
-        Mon, 10 Jun 2024 07:31:20 -0700 (PDT)
-Received: from localhost (fwdproxy-ash-006.fbsv.net. [2a03:2880:20ff:6::face:b00c])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-795593165e7sm195488185a.65.2024.06.10.07.31.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 07:31:20 -0700 (PDT)
-From: Usama Arif <usamaarif642@gmail.com>
-To: akpm@linux-foundation.org
-Cc: willy@infradead.org,
-	hannes@cmpxchg.org,
-	yosryahmed@google.com,
-	nphamcs@gmail.com,
-	chengming.zhou@linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	Usama Arif <usamaarif642@gmail.com>
-Subject: [PATCH] mm: Do not start/end writeback for pages stored in zswap
-Date: Mon, 10 Jun 2024 15:30:37 +0100
-Message-ID: <20240610143037.812955-1-usamaarif642@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1718029919; x=1718634719;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3MaVOnN+h3M1y5FOd67tuekS93xubaycuhC8Oc45qW0=;
+        b=EBrw1Ytb4ZCxHt/qc/WF2c52gyXVorYhIChE8/uOyy00jEQasvQ6MSaJaWpOXssqOQ
+         rzwK/Vn3pCtWrINCmP3V95KLH18iecPOGdL2E3VEqbc4LfxJ/lkOgmsth1QCbZXCSHJW
+         csNapaDjA7Q274R1t2JCHRIjfVIW5lsTbfokbwBuBx31VO1jbtU+PewdtFbaNEVEL1Mv
+         FOv4R5+68SgRnDo/fWJqdtzakV2EytrKCgnJQNYIJFaILITUjHsOXmCoM6OTxMtWvRn9
+         8bGQwfo6uDI4ySrVTRx+1mHOU0jMFmfD7a5Kw5jUV5c9rZh4kXv7zMLiUi9k5SjXxgwr
+         ucEA==
+X-Gm-Message-State: AOJu0YyJfFJUr05Osu+KS9tSCMX5mqArkL4WaTxGhj11itCmnDCtAK0d
+	RgVq5vCw2IyAzu/W3lVGfjM3q8MEdKPEvOIqwn5eUlf7A1L6IUvxKgtlBnEQkL4=
+X-Google-Smtp-Source: AGHT+IFM0m8eDu9ido96KegdI7AUOr01Ju6ZSbYdJA57J4Z2HgSEkq/gW2EIjFIZmC/4phuZXkgFPw==
+X-Received: by 2002:a5d:4dd0:0:b0:358:4af8:b76e with SMTP id ffacd0b85a97d-35efee2dddbmr6455167f8f.62.1718029919618;
+        Mon, 10 Jun 2024 07:31:59 -0700 (PDT)
+Received: from ?IPV6:2a10:bac0:b000:7579:7285:c2ff:fedd:7e3a? ([2a10:bac0:b000:7579:7285:c2ff:fedd:7e3a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f24ebfbbbsm2714509f8f.61.2024.06.10.07.31.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jun 2024 07:31:59 -0700 (PDT)
+Message-ID: <231a8ee8-b66d-4d40-a9ff-9fdf4918944b@suse.com>
+Date: Mon, 10 Jun 2024 17:31:58 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/cpu: Move identify_cpu_without_cpuid() into main
+ branch
+To: Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20240521124823.486372-1-nik.borisov@suse.com>
+ <87wmmwx5bk.ffs@tglx>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+In-Reply-To: <87wmmwx5bk.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-start/end writeback combination incorrectly increments NR_WRITTEN
-counter, eventhough the pages aren't written to disk. Pages successfully
-stored in zswap should just unlock folio and return from writepage.
 
-Signed-off-by: Usama Arif <usamaarif642@gmail.com>
----
- mm/page_io.c | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/mm/page_io.c b/mm/page_io.c
-index a360857cf75d..501784d79977 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -196,9 +196,7 @@ int swap_writepage(struct page *page, struct writeback_control *wbc)
- 		return ret;
- 	}
- 	if (zswap_store(folio)) {
--		folio_start_writeback(folio);
- 		folio_unlock(folio);
--		folio_end_writeback(folio);
- 		return 0;
- 	}
- 	if (!mem_cgroup_zswap_writeback_enabled(folio_memcg(folio))) {
--- 
-2.43.0
+On 10.06.24 г. 17:03 ч., Thomas Gleixner wrote:
+> On Tue, May 21 2024 at 15:48, Nikolay Borisov wrote:
+>> No point in duplicating if (!have_cpuid_p()) check. Simply move
+>> identify_cpu_without_cpuid() into the else branch. No functional
+>> changes.
+> 
+> You wish :)
+> 
+>> Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
+>> ---
+>>   arch/x86/kernel/cpu/common.c | 4 +---
+>>   1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+>> index 2b170da84f97..69265c0acaea 100644
+>> --- a/arch/x86/kernel/cpu/common.c
+>> +++ b/arch/x86/kernel/cpu/common.c
+>> @@ -1578,9 +1578,6 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+>>   	memset(&c->x86_capability, 0, sizeof(c->x86_capability));
+>>   	c->extended_cpuid_level = 0;
+>>   
+>> -	if (!have_cpuid_p())
+>> -		identify_cpu_without_cpuid(c);
+>> -
+> 
+> You might look what identify_cpu_without_cpuid() does and how the
+> comment right here might be related:
 
+Doh, fair enough. OTOH is Cyrix still relevant? Google says Defunct: 
+November 11, 1997; 26 years ago
+
+
+> 
+>>   	/* cyrix could have cpuid enabled via c_identify()*/
+>>   	if (have_cpuid_p()) {
+> 
+> Thanks,
+> 
+>          tglx
