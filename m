@@ -1,76 +1,82 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916FADDB8;
-	Mon, 10 Jun 2024 06:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E400F10A22
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 06:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717999467; cv=none; b=OwgObNlfycbYt5ns5O5GKkqFb9Us3ZyRf8VFhaqqtVoIPwDKMAr9E+syWD7pppBL6eoVbwpOnjqzGbqD2oHW35kR0+f1XMXJn2w3OEK3eOgSEaXTD2FPfJjzlnGBysqW4RebJIJDVtv9wDeaqW7qO1ViikVEf7CWt3mQiJrCMlE=
+	t=1717999691; cv=none; b=D9MTFEdz6ezUZ0WTG4qSPxLtsJFxtBOkAnq3TsvlrBOJS1SHjFMmKD9yDqi77oLGLNF4Y8fIhTnvLrJJ2eZFjBhLEEU/e/Dm9anVlqviLeR1u+UeHfda/gjanA7Rug28pnD7ELEZuCK7cDIobyvQeOQxB0sKjU5tgQ2uw0llVaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717999467; c=relaxed/simple;
-	bh=cSQdX4BBYMrswHnIrE7sy+aIIFqOv+WYoxhqcbK1I0M=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=R/XUwbzSTgaSWh+VY3O0TAa/6MhrMp2hZ2DQBqsV3bzKs/I+sj93G8ikKkWMxYc9wiSEX9XfEuEK42gMC3dTPgikv8pE4Ibza/P4FUFPvii2HVKBllQ8s0nrnd2XdkCoQnDGKH+dyxORGW3h6s4EKpvXCPJ4Loi+fLCiEbR2d0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=9905c7c8d6=ms@dev.tdt.de>)
-	id 1sGY8d-0081Zp-BT; Mon, 10 Jun 2024 08:04:15 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sGY8c-007Uab-NP; Mon, 10 Jun 2024 08:04:14 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id 581C3240053;
-	Mon, 10 Jun 2024 08:04:14 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id D9D49240050;
-	Mon, 10 Jun 2024 08:04:13 +0200 (CEST)
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-	by mail.dev.tdt.de (Postfix) with ESMTP id 595D9201B0;
-	Mon, 10 Jun 2024 08:04:13 +0200 (CEST)
+	s=arc-20240116; t=1717999691; c=relaxed/simple;
+	bh=5CmpMQ5KRNxApdYrHcBMYUq10a/yj5KAKMjMhnTxKY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qYi8qTQTIERY0nO79QbpifVhG2q2pqSVdPrlsatsYhOncDRJxIVX5bLAo/2DKMpNdl4Minre8DpiSr6rlby8aJyF0urMAnfNpgT4qeVSpmuaXx8NDWwrsiPmLoqMtMvV26kYeW7IcK1QB4OiH/FaYCmpIabebnnm/YU4UoFyRNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CDzeewiR; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CDzeewiR"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42122ac2f38so23579055e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Jun 2024 23:08:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717999688; x=1718604488; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1/J87sE5WWCxANMtnNec2a7KoufmyUGsipNDanWepiQ=;
+        b=CDzeewiRJzeiT3OPvXhe5IjyYKf51tll36d1S6yz02QWAYDiELCL2G0anncQFnJ6T1
+         6goITBf1pn3cRazbTBIuq+xHxgqKIZDCgfVA/jFWhd1HYzssAqnTC/tfdEzacJRLN6/H
+         Z6np+ihT2HyvTWFQtHBNOFkdnJRjrBri8DVlPQ5YKPlphbqBNAHfM7EAQZFpAQvMGe6H
+         BUBCkiN2rrbSamXNQ2HzN6OaxJVP79bCW2qxqGwapeXP8m8OdOR3b89hz/btlJrw9oYS
+         La58m5Z7yTHkwnMZ/ItcUF0EDXcDNU5CSDgMntY8ZihUBpPDmOnaCKjygmeyqnn+AI+t
+         Q0oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717999688; x=1718604488;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1/J87sE5WWCxANMtnNec2a7KoufmyUGsipNDanWepiQ=;
+        b=X3eTE/M+mD02iUR6qM9+MuKywyuIS3vyOUQrkpVwuw8d63Ca+Asbc2cEBun4QZkw+b
+         wNG7tlENPm09cyWPZSdTLk+FLGKEAXdyrnoviwPjjuyd2IEPmqI33r275X7vjiWwX8qh
+         OUs4uITCb1oc5XX1modg5RwABuYznDeMoQHgBY/Fe5sGEqM5nNdE9I9XgjQW/qvBw4bg
+         V1mRa/AmORQ7DoXEoNwA4HXul0QP4twz/HJpDcPG+Rh8Z/vDHXDlEvm4zoMa3UJFD3Ht
+         mDmFiap3dZVro4+3gqsjQBGpVH52UcB+sfjOcpANcErA2r1mGZWtnNA5XVpLfzhS/D4S
+         0uUw==
+X-Forwarded-Encrypted: i=1; AJvYcCVEgy8m/nGw8XltLvPaHJbnwmi+7xvZfCXs7M3o9z9zEJSQbsMY4krdLCqOEeEmgs/FMINUz/DuB42pcTccvJBebInO2kyhvMKr3WZa
+X-Gm-Message-State: AOJu0YxZmQ/OMYPdSpIyAfoKORBKonQUSy/pKW6FPKilPlVkJ3CLpk0Z
+	0YAAfyP1uyrnQFRxqI6BHnwp5MIUNtkuo/UiWwgwP6Dltxy+rKMrwhQnPaqsZTk=
+X-Google-Smtp-Source: AGHT+IGzRdIwGC7ZVECSHelhkNw1xi169Id85SkAxS+xVHhRG655lnQ9cAHpX+PeqgP1/dH1IQAdLw==
+X-Received: by 2002:a05:600c:4f4a:b0:421:20df:c6d7 with SMTP id 5b1f17b1804b1-421649f0744mr86433385e9.4.1717999688003;
+        Sun, 09 Jun 2024 23:08:08 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f0bdce051sm7008759f8f.75.2024.06.09.23.08.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Jun 2024 23:08:07 -0700 (PDT)
+Date: Mon, 10 Jun 2024 09:08:03 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Tree Davies <tdavies@darkphysics.net>
+Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com, anjan@momi.ca,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/24] Staging: rtl8192e: Rename variable bforced_tx20Mhz
+Message-ID: <5ccfa433-f1be-45f6-9138-348cb4093866@moroto.mountain>
+References: <20240610054449.71316-1-tdavies@darkphysics.net>
+ <20240610054449.71316-10-tdavies@darkphysics.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date: Mon, 10 Jun 2024 08:04:13 +0200
-From: Martin Schiller <ms@dev.tdt.de>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: martin.blumenstingl@googlemail.com, hauke@hauke-m.de, andrew@lunn.ch,
- f.fainelli@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 12/13] net: dsa: lantiq_gswip: Add and use a
- GSWIP_TABLE_MAC_BRIDGE_FID macro
-Organization: TDT AG
-In-Reply-To: <ae0811c79a126e9f034beccf37e61991@dev.tdt.de>
-References: <20240606085234.565551-1-ms@dev.tdt.de>
- <20240606085234.565551-13-ms@dev.tdt.de>
- <20240607113652.6ryt5gg72he2madn@skbuf>
- <ae0811c79a126e9f034beccf37e61991@dev.tdt.de>
-Message-ID: <de33cde759363a3dedb24375c76939fa@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.3.17
-X-purgate-type: clean
-X-purgate-ID: 151534::1717999455-C0C438CF-D4D8639C/0/0
-X-purgate: clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610054449.71316-10-tdavies@darkphysics.net>
 
-On 2024-06-07 16:27, Martin Schiller wrote:
-> While looking again at this diff above, I noticed that val[0] is set
-> incorrectly. Shouldn't it be either "port << 4" or (after the previous 
-> patch)
-> "FIELD_PREP(GSWIP_TABLE_MAC_BRIDGE_PORT, port);" instead of 
-> "BIT(port)"?
+On Sun, Jun 09, 2024 at 10:44:34PM -0700, Tree Davies wrote:
+> Rename variable bforced_tx20Mhz to forced_tx_20mhz
+> to fix checkpatch warning Avoid CamelCase.
 
-Please ignore this comment. The format of the port specification differs
-for static and dynamic (learned) entries.
+The correct capitalization for megahertz is MHz.  So the original is
+wrong but the new name is not correct either.
+
+regards,
+dan carpenter
 
