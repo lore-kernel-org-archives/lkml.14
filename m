@@ -1,176 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C35DB7F7F5;
-	Mon, 10 Jun 2024 11:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [91.198.224.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521C38002A;
+	Mon, 10 Jun 2024 11:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.224.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718020516; cv=none; b=MZW/LyMIpt5GrBIqcBM/z8MIhNjxSgVj27Ezhw/kT9lZvlPeQxiAxGYzAg4zpW8o32kfTgdQRFRCQiUoOg716BKPuSioVVyh4/duAWADxQOBWkU5tm2JLMgRBt4bpZOSC5QiFgmJ+AZUBB2fEfPd7i0KYWKDb5W8T3kbBRoUWZA=
+	t=1718020521; cv=none; b=JT4p945NMulPPftR55ZFCB60ZjTuZoJcG0zX1YwOVaI5nJlA5nNgSdOkQRE7M5K/6pVEMgxYd2iGWNn40RWZ/U3gVeyVeA4YiS6g7edyyfH/ICW3YTtqo/VADKqB6/qePjwBG6e4TBrvlYPj8+E8Pm3/GKjjXMFRtgfRQztPlsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718020516; c=relaxed/simple;
-	bh=lHU2JJLgCKo26fwvGAKkI/5vfcLyhRaN2Ta0zIemFAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=peFYEI6abi5dFe8ytIMj0UfEDVVsfNZvywAvbiPGlwv6up9Zxjesvxh8qeT+DQAOZpDZ29/sMowxKU44ZtqlPRNPVshcP1wDvVcemJ4RrTYzRlOEuPLCOWK7ruLJmJu8WHJr6QYKc9Zi2PYp6U5tZpPE59s1k6xbDLzDiBRs8do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3BD112FC;
-	Mon, 10 Jun 2024 04:55:38 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8F903F58B;
-	Mon, 10 Jun 2024 04:55:10 -0700 (PDT)
-Date: Mon, 10 Jun 2024 12:55:08 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH 9/9] perf: arm_pmuv3: Add support for Armv9.4 PMU
- instruction counter
-Message-ID: <ZmbpnHU3YM0q6YeA@J2N7QTR9R3>
-References: <20240607-arm-pmu-3-9-icntr-v1-0-c7bd2dceff3b@kernel.org>
- <20240607-arm-pmu-3-9-icntr-v1-9-c7bd2dceff3b@kernel.org>
+	s=arc-20240116; t=1718020521; c=relaxed/simple;
+	bh=5mzS9U63qJYEr+djD+AKAUEckUE+rEYFhHHlVMt+kNU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rPLe7DWhrTNk9Q8zM9WmMvZeS/Hqak3Tk1EXKRJg3WG/9L5JOwiHVTX/L9ogDzO9bTjqj+TxVtpQ3smk21zsZy9GLw9suVDdYtTc8/xKjAZjWAucAYINss5UKfqJeVzLd7P3cJN4b4ba8eVoWj8eo42chaPaEJ9cAuZZQ9fzCDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=91.198.224.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=9905c7c8d6=ms@dev.tdt.de>)
+	id 1sGdcM-00AE4D-8A; Mon, 10 Jun 2024 13:55:18 +0200
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1sGdcL-00Aikn-Ly; Mon, 10 Jun 2024 13:55:17 +0200
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id 5B2A2240053;
+	Mon, 10 Jun 2024 13:55:17 +0200 (CEST)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id E4FFE240050;
+	Mon, 10 Jun 2024 13:55:16 +0200 (CEST)
+Received: from mschiller1.dev.tdt.de (unknown [10.2.3.20])
+	by mail.dev.tdt.de (Postfix) with ESMTPSA id B7B3E26128;
+	Mon, 10 Jun 2024 13:55:16 +0200 (CEST)
+From: Martin Schiller <ms@dev.tdt.de>
+To: martin.blumenstingl@googlemail.com,
+	hauke@hauke-m.de,
+	andrew@lunn.ch,
+	f.fainelli@gmail.com,
+	olteanv@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ms@dev.tdt.de
+Subject: [PATCH net-next v2 08/12] net: dsa: lantiq_gswip: Change literal 6 to ETH_ALEN
+Date: Mon, 10 Jun 2024 13:53:56 +0200
+Message-ID: <20240610115400.2759500-9-ms@dev.tdt.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240610115400.2759500-1-ms@dev.tdt.de>
+References: <20240610115400.2759500-1-ms@dev.tdt.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607-arm-pmu-3-9-icntr-v1-9-c7bd2dceff3b@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+X-purgate: clean
+X-purgate-type: clean
+X-purgate-ID: 151534::1718020518-28CAA62D-BBAB8480/0/0
 
-On Fri, Jun 07, 2024 at 02:31:34PM -0600, Rob Herring (Arm) wrote:
-> Armv9.4/8.9 PMU adds optional support for a fixed instruction counter
-> similar to the fixed cycle counter. Support for the feature is indicated
-> in the ID_AA64DFR1_EL1 register PMICNTR field. The counter is not
-> accessible in AArch32.
-> 
-> Existing userspace using direct counter access won't know how to handle
-> the fixed instruction counter, so we have to avoid using the counter
-> when user access is requested.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  arch/arm/include/asm/arm_pmuv3.h   | 21 +++++++++++++++++++++
->  arch/arm64/include/asm/arm_pmuv3.h | 29 +++++++++++++++++++++++++++++
->  arch/arm64/kvm/pmu.c               |  8 ++++++--
->  arch/arm64/tools/sysreg            | 25 +++++++++++++++++++++++++
->  drivers/perf/arm_pmuv3.c           | 28 ++++++++++++++++++++++++++--
->  include/linux/perf/arm_pmu.h       |  8 ++++++--
->  include/linux/perf/arm_pmuv3.h     |  4 +++-
->  7 files changed, 116 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/arm_pmuv3.h
-> index ac2cf37b57e3..b836537ddfbf 100644
-> --- a/arch/arm/include/asm/arm_pmuv3.h
-> +++ b/arch/arm/include/asm/arm_pmuv3.h
-> @@ -10,6 +10,7 @@
->  #include <asm/cputype.h>
->  
->  #define ARMV8_PMU_CYCLE_IDX		31
-> +#define ARMV8_PMU_INSTR_IDX		32 /* Not accessible from AArch32 */
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-As with ARMV8_PMU_CYCLE_IDX, I reckon this should live in
-<linux/perf/arm_pmuv3.h> (with the comment above) so that we don't need
-separate definitions for arm & arm64.
+The addr variable in gswip_port_fdb_dump() stores a mac address. Use
+ETH_ALEN to make this consistent across other drivers.
 
-[...]
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+---
+ drivers/net/dsa/lantiq_gswip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-> index 231817a379b5..8ab6e09871de 100644
-> --- a/arch/arm64/tools/sysreg
-> +++ b/arch/arm64/tools/sysreg
-> @@ -2029,6 +2029,31 @@ Sysreg	FAR_EL1	3	0	6	0	0
->  Field	63:0	ADDR
->  EndSysreg
->  
-> +Sysreg	PMICNTR_EL0	3	3	9	4	0
-> +Field	63:0	ICNT
-> +EndSysreg
+diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswi=
+p.c
+index 58c069f964dd..525a62a21601 100644
+--- a/drivers/net/dsa/lantiq_gswip.c
++++ b/drivers/net/dsa/lantiq_gswip.c
+@@ -1413,7 +1413,7 @@ static int gswip_port_fdb_dump(struct dsa_switch *d=
+s, int port,
+ {
+ 	struct gswip_priv *priv =3D ds->priv;
+ 	struct gswip_pce_table_entry mac_bridge =3D {0,};
+-	unsigned char addr[6];
++	unsigned char addr[ETH_ALEN];
+ 	int i;
+ 	int err;
+=20
+--=20
+2.39.2
 
-LGTM per ARM DDI 0487K.a, section D23.5.15, pages 8989 to 8992.
-
-> +
-> +Sysreg	PMICFILTR_EL0	3	3	9	6	0
-> +Res0	63:59
-> +Field	58	SYNC
-> +Field	57:56	VS
-
-The 'VS' field doesn't seem to be in the ARM ARM (ARM DDI 0487K.a); is
-that defined in a supplement?
-
-> +Res0	55:32
-> +Field	31	P
-> +Field	30	U
-> +Field	29	NSK
-> +Field	28	NSU
-> +Field	27	NSH
-> +Field	26	M
-> +Res0	25
-> +Field	24	SH
-> +Field	23	T
-> +Field	22	RLK
-> +Field	21	RLU
-> +Field	20	RLH
-> +Res0	19:16
-> +Field	15:0	evtCount
-> +EndSysreg
-
-Aside from 'VS', this LGTM per ARM DDI 0487K.a, section D23.5.14, pages
-8981 to 8988.
-
-One important thing to note is that this doesn't have the threshold
-controls (TC, TE, TH); so if threshold events make sense for instruction
-events, we cannot place those in the dedicated isntruction counter.
-
-[...]
-
-> @@ -931,6 +939,18 @@ static int armv8pmu_get_event_idx(struct pmu_hw_events *cpuc,
->  				return -EAGAIN;
->  	}
->  
-> +	/*
-> +	 * Always prefer to place a instruction counter into the instruction counter,
-> +	 * but don't expose the instruction counter to userspace access as userspace
-> +	 * may not know how to handle it.
-> +	 */
-> +	if (test_bit(ARMV8_PMU_INSTR_IDX, cpu_pmu->cntr_mask) &&
-> +	    (evtype == ARMV8_PMUV3_PERFCTR_INST_RETIRED) &&
-> +	    !armv8pmu_event_want_user_access(event)) {
-> +		if (!test_and_set_bit(ARMV8_PMU_INSTR_IDX, cpuc->used_mask))
-> +			return ARMV8_PMU_INSTR_IDX;
-> +	}
-
-
-I reckon this'd be a bit clearer if we check the evtype first, as with
-cycles, e.g.
-
-	/*
-	 * Always prefer to place a instruction counter into the instruction counter,
-	 * but don't expose the instruction counter to userspace access as userspace
-	 * may not know how to handle it.
-	 */
-	if (evtype == ARMV8_PMUV3_PERFCTR_INST_RETIRED) {
-		if (test_bit(ARMV8_PMU_INSTR_IDX, cpu_pmu->cntr_mask) &&
-		    !armv8pmu_event_want_user_access(event) &&
-		    !test_and_set_bit(ARMV8_PMU_INSTR_IDX, cpuc->used_mask))
-			return ARMV8_PMU_INSTR_IDX;
-	}
-
-As above, we might need to check for threshold controls, but I'll need
-to go page that in.
-
-Mark.
