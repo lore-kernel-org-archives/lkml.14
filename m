@@ -1,111 +1,166 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8316381729
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E171A824BC;
+	Mon, 10 Jun 2024 14:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718029279; cv=none; b=W/rvqMbS+/x1sx4BZUMStBsA5BXsSfOnHK//wdgiJ6pQbGZca4WuICBgFMxrTEa+GH10tkcpyc82vvoV11hxpriAkYcLzbsU0p6LUxeA8i8gke+dgMHfbj91voYn6JYGuqFwAxUKRYzu6SaiyhbILo7iDIL22kOfB5L8rimpRzg=
+	t=1718029388; cv=none; b=o86G9k92tRiXQynaG6Riz/Mom4SpMG+paoL3t5UBCN6xVO1xFmq/z25Ypqv2wp2Kz9CGMsEf+JLbA3VMpnr9qRRBGJVcXCFJlRgWFfjBCpRwC5iALZjWNxQGfnK/fTYzxqVFoamAHGjmzKhThvdhjKvMAIVkJgEWn5dVqd2uCrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718029279; c=relaxed/simple;
-	bh=AGMqVFffoxlZnc4UMQ2rh9ctrwKxHdLKuKeIt2AGAnU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dOBr9CqvxfLt20RRpdv3DliiUUdjSCWC7MooAPqmjKPmulZuz2NV/nhb95GTBNe+ILEqId5hpPUviKPI+j+NYVFGL5waN4QiPkLwol0FmmyLQ94KeS6NFRThMnBAF4abqnP1fUEgkukP/2AUMWqvYo52LRgeMMds5r978hPA8/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O+KSrTCa; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718029388; c=relaxed/simple;
+	bh=H+f7kBwQGLRlS9stWvV1R4/huvpLOvxicj9vrY72Mwc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ja+wldOxHuwy5m5EJdHx0Rlbooomm9/9KsgNZL+y20pislUPuMFqzzbHqygkgGid7gpMQ2nrCoR5RzLKdnazmcc1PyxSB2LtWkinrfkT8O9WkU9VgMNqLEB2EHx34Jnj3dPNMv8ebdR5DnPil3E9cHrczwWwrEIDq3hkhtDXtyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UaqHKqtP; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O+KSrTCa"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dfafe87b5fbso3298633276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 07:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718029276; x=1718634076; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=609nhEks7Zh1KnZUal4usjWqxEdaNAgYUODDdUetHO8=;
-        b=O+KSrTCaoTXxEKNfTQgOWGIeJGNoipf2C/xrcpNje3t4B7Qc85a2Cb7a+5+RVFW3Yw
-         GDS1hxlcoSMoG8fUEeIzGfnFBbME6cHyat0pGfTH4/3HyKh1K5uVGI8DXog0zY3U1NIT
-         qmwtBwf4UDYTaK5yQFkux3csnJu92JSZS6cDMqJ5YMR0MMvu3vUHftPJ/XASWuRHw5t9
-         1HRVAUANnV/hgLTQsGTLgZaCKK9ZguawojWumBqDmJeW6V7rdPEzxiiJjvpr/ztWyM1B
-         Db3UZbOeF4TywnaNSYcOTEd76S6GQ9sNIAXPjAqmV6rV+chG3cYyqNZ/RDs6N0GFcQL8
-         FkUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718029276; x=1718634076;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=609nhEks7Zh1KnZUal4usjWqxEdaNAgYUODDdUetHO8=;
-        b=G+RN/ZNs11J0QHt+SGCnEPYiBNtNzI+or80dPYkznaiHsbR8sRQ5rcBHy0hyCK/tvf
-         9TvxNfNRrDJBne3+8rcALKOuN4X6xa7C4uYZ51aLgcPQSulXWwjMMUD6BhXQJ1J2MLoU
-         k/J+fcNPacFNf2yjhbL/EeoYgHEGoMLVP1tNWqThg7lGHtDGZFEXoCRpwRBgacGjySbN
-         qWUBF9JHlE9HbraCMlC31t5TlyxJo36msDLqPmOhtPwudOyZyXC4hsT5jBIN+wqxcOq0
-         1fE+2A/4zz2bf41MKvPlhJuCz/sWrnuWKvyYmKUnBr3Iv32Rt7ZXMkR7/CmVNNQk5O8w
-         TVmg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7z8SYBwER2mFgNWQoBJIFUEI/yBwW3D+kJ1sIzdAGdSCUQJwkLq7/jTmLztDf1W/X6LpYHgWnXUfmXBog80Mv5dKTIWCWVr0zErRO
-X-Gm-Message-State: AOJu0YxC1pSxloJHd860O1ijWg3fCKalXE8P7ZFM0XlT78VK0vs8yoGZ
-	50URKXK0y/xWZj5+EdVgLfj+9DshhIi0r/7L4TXbt3VHmZxyA44f5hZNRapyz/ViI/MwP46gfZF
-	b5aVlJFtvx8eWdNEu4f+2A17ZWoi6Zi6C/hN8Ig==
-X-Google-Smtp-Source: AGHT+IHoLwnHudRkBd9FlzoLDTTCeU9TkBRvSaQLs0M46ytBLEBxCuzZWLLsA/eXcLgbGrm/YTtoVzzDIcGtxZj8s10=
-X-Received: by 2002:a25:c744:0:b0:df7:8fdd:1ca9 with SMTP id
- 3f1490d57ef6-dfaf65f730dmr9276763276.1.1718029276379; Mon, 10 Jun 2024
- 07:21:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UaqHKqtP"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45AEDo6D023208;
+	Mon, 10 Jun 2024 14:22:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	IT8sPCRCYHphIwu7Jr5FVfrM/uRqAW7zaQPKoTJM2lQ=; b=UaqHKqtPW3jvY39j
+	JndvfGxIJZFmxlLTgjwDalrrLR0gOfjYvfQIabjSSB1QGXfEMWZ+Eon4O0IogWJi
+	Aq+E4Ilg4bOjmZbRC7mWdR353ZFPHrCgPuz2t5fTbQRTM2Na0M4eQxHWp1Ncn+9c
+	KtYE8ek7nNA76ql43QaSlZAijvQkLPYG8PIky1/I59xCDmZ27s+22I7Wvt3JCKPv
+	OtfQXxL1KBbUI9X1JKCcQQuc9Zo4JyU/M9AFDgMvRKXnWPvFrw7acg4lTWVfnG+B
+	tSIMXbWx6KWOEJ0tktImemzq+8W3zjRd6UV0ZaNafco8FVt30iUneyUssk6HipGD
+	f/pH7A==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymfcv3tbk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 14:22:53 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45AEMqvx032184
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 14:22:52 GMT
+Received: from [10.48.242.196] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Jun
+ 2024 07:22:51 -0700
+Message-ID: <fdf878a7-a2c9-431e-a5c2-c7ba328c1fb3@quicinc.com>
+Date: Mon, 10 Jun 2024 07:22:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605-topic-amlogic-upstream-bindings-fixes-power-domains-mmc-v1-1-4acbb8cc2626@linaro.org>
-In-Reply-To: <20240605-topic-amlogic-upstream-bindings-fixes-power-domains-mmc-v1-1-4acbb8cc2626@linaro.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 10 Jun 2024 16:20:40 +0200
-Message-ID: <CAPDyKFrNGzNqTfsYF6bwbZy8kJtRTcBJ3Xr99HFumtOGZOpxtw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: mmc: meson-gx: add optional power-domains
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-mmc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] regulator: add missing MODULE_DESCRIPTION() macro
+Content-Language: en-US
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Matthias Brugger
+	<matthias.bgg@gmail.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20240608-md-drivers-regulator-v1-1-da338665db7a@quicinc.com>
+ <29cb4283-34ef-4c90-ad53-ea572576d3fa@collabora.com>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <29cb4283-34ef-4c90-ad53-ea572576d3fa@collabora.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: su16xLbBd-LTiqBIk09QJuuGuA-ichmC
+X-Proofpoint-GUID: su16xLbBd-LTiqBIk09QJuuGuA-ichmC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406100109
 
-On Wed, 5 Jun 2024 at 11:34, Neil Armstrong <neil.armstrong@linaro.org> wrote:
->
-> On newer SoCs, the MMC controller can require a power-domain to operate,
-> add it as optional.
->
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+On 6/10/2024 1:43 AM, AngeloGioacchino Del Regno wrote:
+> Il 09/06/24 06:53, Jeff Johnson ha scritto:
+>> On x86, make allmodconfig && make W=1 C=1 reports:
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/da9121-regulator.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/max20411-regulator.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/rt4831-regulator.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/tps6286x-regulator.o
+>>
+>> Add the missing invocation of the MODULE_DESCRIPTION() macro to all files
+>> which have a MODULE_LICENSE(). This includes mtk-dvfsrc-regulator.c, which
+>> did not produce a warning with the x86 allmodconfig, since it may cause
+>> this warning with other configurations.
+>>
+>> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+>> ---
+>>   drivers/regulator/da9121-regulator.c     | 1 +
+>>   drivers/regulator/max20411-regulator.c   | 1 +
+>>   drivers/regulator/mtk-dvfsrc-regulator.c | 1 +
+>>   drivers/regulator/rt4831-regulator.c     | 1 +
+>>   drivers/regulator/tps6286x-regulator.c   | 1 +
+>>   5 files changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/regulator/da9121-regulator.c b/drivers/regulator/da9121-regulator.c
+>> index 96257551bb12..3571b6242e3a 100644
+>> --- a/drivers/regulator/da9121-regulator.c
+>> +++ b/drivers/regulator/da9121-regulator.c
+>> @@ -1192,4 +1192,5 @@ static struct i2c_driver da9121_regulator_driver = {
+>>   
+>>   module_i2c_driver(da9121_regulator_driver);
+>>   
+>> +MODULE_DESCRIPTION("Dialog Semiconductor DA9121/DA9122/DA9220/DA9217/DA9130/DA9131/DA9132 regulator driver");
+>>   MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/regulator/max20411-regulator.c b/drivers/regulator/max20411-regulator.c
+>> index 8c09dc71b16d..6614e767072f 100644
+>> --- a/drivers/regulator/max20411-regulator.c
+>> +++ b/drivers/regulator/max20411-regulator.c
+>> @@ -161,4 +161,5 @@ static struct i2c_driver max20411_i2c_driver = {
+>>   };
+>>   module_i2c_driver(max20411_i2c_driver);
+>>   
+>> +MODULE_DESCRIPTION("Maxim MAX20411 High-Efficiency Single Step-Down Converter driver");
+>>   MODULE_LICENSE("GPL");
+>> diff --git a/drivers/regulator/mtk-dvfsrc-regulator.c b/drivers/regulator/mtk-dvfsrc-regulator.c
+>> index f1280d45265d..1941aad5e247 100644
+>> --- a/drivers/regulator/mtk-dvfsrc-regulator.c
+>> +++ b/drivers/regulator/mtk-dvfsrc-regulator.c
+>> @@ -211,4 +211,5 @@ static void __exit mtk_dvfsrc_regulator_exit(void)
+>>   module_exit(mtk_dvfsrc_regulator_exit);
+>>   
+>>   MODULE_AUTHOR("Arvin wang <arvin.wang@mediatek.com>");
+>> +MODULE_DESCRIPTION("MediaTek DVFSRC regulator driver");
+> 
+> Can you please drop this one?
+> I have a series floating that is removing this driver entirely and replacing it
+> with a refactored one. Though, it has the same issue, so I'll have to send a v6.
+> 
+> Anyway, v5 is there:
+> 
+> https://lore.kernel.org/r/20240424095416.1105639-1-angelogioacchino.delregno@collabora.com
+> 
+> 
+>>   MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/regulator/rt4831-regulator.c b/drivers/regulator/rt4831-regulator.c
+>> index 97e6f7e2a0ba..7d1ba0c82271 100644
+>> --- a/drivers/regulator/rt4831-regulator.c
+>> +++ b/drivers/regulator/rt4831-regulator.c
+>> @@ -202,4 +202,5 @@ static struct platform_driver rt4831_regulator_driver = {
+>>   module_platform_driver(rt4831_regulator_driver);
+>>   
+>>   MODULE_AUTHOR("ChiYuan Huang <cy_huang@richtek.com>");
+>> +MODULE_DESCRIPTION("Richtek RT4831 DSV RegulatorsRichtek RT4831 DSV Regulators driver");
+> 
+> Also, there's a typo here :-)
+> 
+> After dropping mtk-dvfsrc-regulator changes and after fixing the typo:
+> 
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Applied for next, thanks!
+Thanks, will address these in v2
 
-Kind regards
-Uffe
+/jeff
 
-> ---
->  Documentation/devicetree/bindings/mmc/amlogic,meson-gx-mmc.yaml | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx-mmc.yaml b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx-mmc.yaml
-> index bc403ae9e5d9..57646575a13f 100644
-> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx-mmc.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx-mmc.yaml
-> @@ -51,6 +51,9 @@ properties:
->        set when controller's internal DMA engine cannot access the DRAM memory,
->        like on the G12A dedicated SDIO controller.
->
-> +  power-domains:
-> +    maxItems: 1
-> +
->  required:
->    - compatible
->    - reg
->
-> ---
-> base-commit: c3f38fa61af77b49866b006939479069cd451173
-> change-id: 20240605-topic-amlogic-upstream-bindings-fixes-power-domains-mmc-a94d681d2e69
->
-> Best regards,
-> --
-> Neil Armstrong <neil.armstrong@linaro.org>
->
