@@ -1,83 +1,108 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A2E8286A;
-	Mon, 10 Jun 2024 13:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FD57F490;
+	Mon, 10 Jun 2024 13:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718024685; cv=none; b=tJUxDkKrmwkaZbjTddDG/zVp6+NLFzmqimEyKzyBiisUmM9kDgpK+i/tCeVJe1FfGyZPIVSiz1oVs4BMQCJYkWklbytqeD3Scsg4fiHOKgMlLE/7xksruAVGKhh+FXoBsLsIGHymV+7BckM++oKooCNiHKDc1nJ8p5oRNM9JAII=
+	t=1718024743; cv=none; b=mms4yZnzUBSpJ8CZAqPmBrzFLlqPfkdY71YuM5QYKySHbNfUwWUixQm4MXt32bbSTgnS/bUmwNjJyROVcGKQlWUUcosHTNOKCsaE5xZWVB1PYBMoHkxMQk5+zocKlLHFnUir0FqpkE37b1JsbIE2xPYMGwNY6S5QrdnKhOMIuCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718024685; c=relaxed/simple;
-	bh=j3unPiR6cYjkj+QmmQQQODvkHswhgr4ev71KQWbcj1Q=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=CjsGnVAGssUDQEwRzGw+dYRpFY/D5GVOxi/RBR4C9TCeQOcr/0pWMCcaOJxa9/8sIP0Dw0yz8NwwSzCV30a0m7B2nibZViOU55w3rKgP5h5Owm5wJ+G/QLvEY9gUrdYrEazAc6ATNysn8UVBaVl+y0dkI+gbYNPLMUyG1X+f1Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=YWLZW0yx; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="YWLZW0yx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718024645; x=1718629445; i=markus.elfring@web.de;
-	bh=j3unPiR6cYjkj+QmmQQQODvkHswhgr4ev71KQWbcj1Q=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=YWLZW0yxBi+tEZH0kDTStkErGCoHMAKQGxv0mAO78dlsZhrKyCfzmy9qyMNLUxjo
-	 nPLX6SqH0653WhmBZmVWjOtZ93494oob94pGUuXQJjtqC4eITVM4qJ54xQCSA/vql
-	 H844uAOMjcR6N9LkA35IYMSMrYNGtbOcI30me6hNGiMM//U8XEEe1GaTAnU1aTsBQ
-	 mQuFIWPFrhPFx8D4q59DoQGBp+aCXx6jvP/1doOxzpqgCjhrw2qEP9qPneOsmxPbn
-	 jOpgMBq8kH8SMMqRmwr36L9s3jwX8x5jVDDnUYSQmz/C4xhAA6iIYfea6jcFpi3sn
-	 SNlIF5FeAQjVPHOcfg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mxpmc-1scyfj39Be-015VYr; Mon, 10
- Jun 2024 15:04:05 +0200
-Message-ID: <4bd94a7c-370c-4784-aae6-17d4b2a2ace0@web.de>
-Date: Mon, 10 Jun 2024 15:04:02 +0200
+	s=arc-20240116; t=1718024743; c=relaxed/simple;
+	bh=zJgbNNJw/GCorqly4uRVoGjpIM8ilgL2XnXXEjZD+mw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FG5uoGCetUBRtRAscEyI1apKbrL9wxS1gPmPJkcysCZRa1Kn1nIfYb7EImOqnBLtDa9eGnPF+uSu+2Rz9x6BUCzDkvHPf5vzwe2OmOrlsC0T1tgPQflXNc9YBYfRL6xdf6QD60gv7/DgPoVcnGimxOd++nnkyqitww6h7yi3F2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=mail.hallyn.com; arc=none smtp.client-ip=178.63.66.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+	id 4456B579; Mon, 10 Jun 2024 08:05:40 -0500 (CDT)
+Date: Mon, 10 Jun 2024 08:05:40 -0500
+From: "Serge E. Hallyn" <serge@hallyn.com>
+To: Jonathan Calmels <jcalmels@3xx0.net>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>, brauner@kernel.org,
+	ebiederm@xmission.com, Jonathan Corbet <corbet@lwn.net>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	KP Singh <kpsingh@kernel.org>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <kees@kernel.org>, Joel Granados <j.granados@samsung.com>,
+	John Johansen <john.johansen@canonical.com>,
+	David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	containers@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
+	apparmor@lists.ubuntu.com, keyrings@vger.kernel.org,
+	selinux@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] capabilities: Add securebit to restrict userns
+ caps
+Message-ID: <20240610130540.GC2193924@mail.hallyn.com>
+References: <20240609104355.442002-1-jcalmels@3xx0.net>
+ <20240609104355.442002-3-jcalmels@3xx0.net>
+ <20240610023301.GA2183903@mail.hallyn.com>
+ <svpbmv37f5n537seb3cfsylnlzi6ftuad4dqi5unoycylmcf7r@6knq7sibdw7w>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>,
- linux-i2c@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240610025955.2308688-2-aryan.srivastava@alliedtelesis.co.nz>
-Subject: Re: [PATCH v5 1/2] i2c: octeon: refactor hlc r/w operations
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240610025955.2308688-2-aryan.srivastava@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RDyYRvTaajZboBrUhgUvo02yyVdLboN8QBYaBY4rRJSjr6HecjG
- +KOKaIvOm8j0KioFE1Op7ZsUh9DoMPPzUeQDCzHwAnD5f6KOzvGrHEWaColKNp84LdaQSmf
- 6njWQ7VTrUXpgMnVjhXTDrWa03aEAnCw0I5lxxo7R1pqrShEkoimHfmXdiN+GYcalcqbn2G
- oUubC91ZAbDYUPV+f25xQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:CsBIpItxYLU=;reCkyHB7FhGeCbO7+M48dCz99Ei
- STW5LC554tuie/aV1Gb5kQWLGUaH+D83BCoEiN3L24Dp5qupJipz1Ob75MEUj5nLNYcdQOmpo
- 4DDgi7txFOczW6EZ35Gh/eI1TxJmXEzGzaueatzpqFXL01tSWHuub0Gscf0vW33+dKBSfUKrB
- HQxv3jmwuYUhlfbjbwn8W3IRUh1jDX6KaNsRNR+DbVO3yJ9th6WJ/FZWd8dbJGGDBeChkBRLD
- aCAicrBBnL8HTt39ab8ti4LJruUVyYULm7HWgYLU26+14xMr+3hoKFJFXiLLEGuW3Epr6vWF4
- KjQeikQ+vWMOqbQQZJ1OnYj9b3UXY+nkIdH/Di8W8TMan/sK3Xd23qbZCvhR1PX0XR1PFVHn7
- 8HaxCRwVXjPnn1UDyWwduN1c8gGoq7rSe+Lm9qilkHraxrv3ALwk8ZqyAEflNjhmaFAqi08n4
- e6ki4QYZth0zFp/yHL/0ZHErEWLuRMQE+MJcZnDizqS4DCXqmDDDd1QCfB6Gdbo/4jM3H1HK2
- TWo/7qXiAYx6MhU4Q+fGGyaTNmgrnKTG5C3n/5zUW2N+qY+Xz1OEu2lHpfExUxsMyMvVciIWy
- 3Pd5XmZUwiMj4wVEwFVltrFWxTSOuA6XORHUxT/iNHnsh7OClUIVrd4nuWWyWskAyjxPAEllt
- 6JdXtfVL5TCXEztQZvLZCuNg8jm29Cx6GyLOkFsHYQaX9midk8PPCF9kXq57S7FgT8CskRK+h
- vB01/8RrU1OxI6eRwgU5BYHWABRjYRPhosphefH8RRD5GBv07JVP/BJ/BAFBqDRKXo0LM8RHf
- 5BoNHRw7Iphm7Gnc8sdUepy3Ad2y1b9tyaAOq9vxr3MBk=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <svpbmv37f5n537seb3cfsylnlzi6ftuad4dqi5unoycylmcf7r@6knq7sibdw7w>
 
-=E2=80=A6
-> The write commands cannot be made entirely into common
-> code as there are distinct differences in the block mode
-=E2=80=A6
+On Mon, Jun 10, 2024 at 02:46:06AM -0700, Jonathan Calmels wrote:
+> On Sun, Jun 09, 2024 at 09:33:01PM GMT, Serge E. Hallyn wrote:
+> > On Sun, Jun 09, 2024 at 03:43:35AM -0700, Jonathan Calmels wrote:
+> > > This patch adds a new capability security bit designed to constrain a
+> > > task’s userns capability set to its bounding set. The reason for this is
+> > > twofold:
+> > > 
+> > > - This serves as a quick and easy way to lock down a set of capabilities
+> > >   for a task, thus ensuring that any namespace it creates will never be
+> > >   more privileged than itself is.
+> > > - This helps userspace transition to more secure defaults by not requiring
+> > >   specific logic for the userns capability set, or libcap support.
+> > > 
+> > > Example:
+> > > 
+> > >     # capsh --secbits=$((1 << 8)) --drop=cap_sys_rawio -- \
+> > >             -c 'unshare -r grep Cap /proc/self/status'
+> > >     CapInh: 0000000000000000
+> > >     CapPrm: 000001fffffdffff
+> > >     CapEff: 000001fffffdffff
+> > >     CapBnd: 000001fffffdffff
+> > >     CapAmb: 0000000000000000
+> > >     CapUNs: 000001fffffdffff
+> > 
+> > But you are not (that I can see, in this or the previous patch)
+> > keeping SECURE_USERNS_STRICT_CAPS in securebits on the next
+> > level unshare.  Though I think it's ok, because by then both
+> > cap_userns and cap_bset are reduced and cap_userns can't be
+> > expanded.  (Sorry, just thinking aloud here)
+> 
+> Right this is safe to reset, but maybe we do keep it if the secbit is
+> locked? This is kind of a special case compared to the other bits.
 
-You may put more than 56 characters into text lines of such change descrip=
-tions.
+I don't think it would be worth the extra complication in the
+secbits code, and it's semantically very different from the
+cap_userns.
 
-Regards,
-Markus
+> > > +	/* Limit userns capabilities to our parent's bounding set. */
+> > 
+> > In the case of userns_install(), it will be the target user namespace
+> > creator's bounding set, right?  Not "our parent's"?
+> 
+> Good point, I should reword this comment.
