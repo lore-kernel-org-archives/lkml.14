@@ -1,97 +1,96 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BD27E78E;
-	Mon, 10 Jun 2024 11:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC6C7F48A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 11:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718020548; cv=none; b=DkaHQ5P7WebDAv4AQd7D4I70eeJ0aeg7oaUUNvbg3Og/3phREieKKWMWtfNGfJ+KSRtiu1PRL2/TArTm+yh8ilH+vDMUke3DHcFAViYxgtPVAdXm3o9Qlkpw8UhiwDp6qXeWOE31Z4EJqZUtXyjh/dk7L2HFkEEqEI1mV0NA2Jc=
+	t=1718020588; cv=none; b=WhuWoUdEl5a80stsAHW2bgiIJpW+txb5hWz4Ne1NIIpUn8mvZ6DBKuESQvVYPzTau0yieTCQRfj7KpyndSR4wCjz1o66GHb+PWjDTqHsaUoowBKvESNWER8bfgravnIfbutCDljjJ/XEUyWrElzFrzc4z9jkKUwq6Gez3LZn6bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718020548; c=relaxed/simple;
-	bh=53P6Z5xrcrAHsR1uywk051yi7OsJuOQYoZ2Ng+oB2po=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GikKowMjG0Y03sU/pDk1wISvVKMGqiXoYYCnle9V4N4g/BpM5ejJQVM3D4vW34Ya2TyJeSgeyUVArxGF6O4q012mV0jqe3RDYTjHCH8ahH/UqbMF5Jh+/UYYfUlehcVgCsqsIAJrPgtObDNMOnyfIUWh+bHmFQWwlp5x8AJFDSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=9905c7c8d6=ms@dev.tdt.de>)
-	id 1sGdcn-000x9d-BW; Mon, 10 Jun 2024 13:55:45 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sGdcm-00BBXX-QJ; Mon, 10 Jun 2024 13:55:44 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id 7C060240053;
-	Mon, 10 Jun 2024 13:55:44 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id 0FFF4240050;
-	Mon, 10 Jun 2024 13:55:44 +0200 (CEST)
-Received: from mschiller1.dev.tdt.de (unknown [10.2.3.20])
-	by mail.dev.tdt.de (Postfix) with ESMTPSA id D749626128;
-	Mon, 10 Jun 2024 13:55:43 +0200 (CEST)
-From: Martin Schiller <ms@dev.tdt.de>
-To: martin.blumenstingl@googlemail.com,
-	hauke@hauke-m.de,
-	andrew@lunn.ch,
-	f.fainelli@gmail.com,
-	olteanv@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ms@dev.tdt.de
-Subject: [PATCH net-next v2 12/12] net: dsa: lantiq_gswip: Improve error message in gswip_port_fdb()
-Date: Mon, 10 Jun 2024 13:54:00 +0200
-Message-ID: <20240610115400.2759500-13-ms@dev.tdt.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240610115400.2759500-1-ms@dev.tdt.de>
-References: <20240610115400.2759500-1-ms@dev.tdt.de>
+	s=arc-20240116; t=1718020588; c=relaxed/simple;
+	bh=K52nylIbtVGwpoFEvp+klLGscHlbN8NzK5pbrvNYjiQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hDUPoLnthrJSjJAkGtIvr/rYe4SMl/MIoGi5CawSS/+SrHHLUV4qNHNr+zcO20njmYpwRTJPsDEKPGbQCSxLe2OEXgCxKpEmiJOnlcZHvoNefvk76AFm1/9O5GhyUmPAoxRKnjVrXnpIGXEAtXZ5cWhN5P6PDTwnsdcNxGLG8Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7eb01189491so544670739f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 04:56:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718020586; x=1718625386;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xA4ca/H7Pmgrnbw/NchvsBd76PXlaIQBXBo41MMl9Ww=;
+        b=MrsaaPema8awKeRQTadWsRYGRUKvLGc8wwBoyv5MFkftdAEjoFR6t1wGEb0LVwJkpj
+         f1ARTFvaK2OqS1zbfMA5HZ9FXKpzqyMWBA+Kc6gKZ5dpADK7e/H/f+hXdU4h8bOHfxVG
+         K0HpLz8AQ/4aebjivkFVtmibdePEV2ePaQEPuIy823bhMpoVwmaiyczJ5FrAdZOqGpVe
+         0QbFi2IIFnUQ08adjL6ttCa/LBYNhBNaQySOtg+khF4a1A3PSsm8PdK+n7k5T2N6C7LU
+         NhKFl4bZVFgI1svYiN8sLk4cjJccytNp+VaxqciR+crCJ64+K3wCiLYeTRNSkAyNXIG1
+         kVOg==
+X-Gm-Message-State: AOJu0Yw1Cy0dcMKt7LVsZAcjcvZpzYH0xvBelpTmasCESFWvZJVj4OB0
+	ittZxF0SljHG67e5fRhMSUUtx9zGn8WYH9O2FdTQFqvqmsHdEpujjv8RwFeEhETXhi7SzqM2lAi
+	oRUSiUaImflXJEDsi6Hh1jc/EgxNT38DSq+/wi38tVnjxjII0FZa3rA4=
+X-Google-Smtp-Source: AGHT+IGPa80KdKvehD4oNyzcwIRHfqGRmK9BKMuArSUhjJxQ0xIFiu1fkY07+hDKwslQz+7kc0jlHFUmpwgOIyO9kHTQ72HMMpUl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-purgate-ID: 151534::1718020545-82CB3642-C77B72EE/0/0
-X-purgate: clean
-X-purgate-type: clean
+X-Received: by 2002:a05:6638:1642:b0:4b4:cf36:c09f with SMTP id
+ 8926c6da1cb9f-4b7b167393cmr401481173.5.1718020586232; Mon, 10 Jun 2024
+ 04:56:26 -0700 (PDT)
+Date: Mon, 10 Jun 2024 04:56:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c26f45061a87d6e1@google.com>
+Subject: [syzbot] Monthly usb report (Jun 2024)
+From: syzbot <syzbot+listb516818c4565cc7c4df6@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Hello usb maintainers/developers,
 
-Print that no FID is found for bridge %s instead of the incorrect
-message that the port is not part of a bridge.
+This is a 31-day syzbot report for the usb subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/usb
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+During the period, 7 new issues were detected and 2 were fixed.
+In total, 76 issues are still open and 338 have been fixed so far.
+
+Some of the still happening issues:
+
+Ref  Crashes Repro Title
+<1>  3414    Yes   KMSAN: uninit-value in dib3000mb_attach (2)
+                   https://syzkaller.appspot.com/bug?extid=c88fc0ebe0d5935c70da
+<2>  883     Yes   WARNING in ar5523_submit_rx_cmd/usb_submit_urb
+                   https://syzkaller.appspot.com/bug?extid=6101b0c732dea13ea55b
+<3>  870     Yes   general protection fault in ir_raw_event_store_with_filter
+                   https://syzkaller.appspot.com/bug?extid=34008406ee9a31b13c73
+<4>  651     Yes   INFO: task hung in usbdev_open (2)
+                   https://syzkaller.appspot.com/bug?extid=b73659f5bb96fac34820
+<5>  646     Yes   INFO: task hung in hub_port_init (3)
+                   https://syzkaller.appspot.com/bug?extid=b6f11035e572f08bc20f
+<6>  406     Yes   INFO: task hung in r871xu_dev_remove
+                   https://syzkaller.appspot.com/bug?extid=f39c1dad0b7db49ca4a8
+<7>  363     Yes   INFO: rcu detected stall in hub_event
+                   https://syzkaller.appspot.com/bug?extid=ec5f884c4a135aa0dbb9
+<8>  304     Yes   KASAN: use-after-free Read in v4l2_fh_init
+                   https://syzkaller.appspot.com/bug?extid=c025d34b8eaa54c571b8
+<9>  302     Yes   INFO: rcu detected stall in syscall_exit_to_user_mode (2)
+                   https://syzkaller.appspot.com/bug?extid=a68ef3b1f46bc3aced5c
+<10> 277     No    INFO: task hung in hub_event (3)
+                   https://syzkaller.appspot.com/bug?extid=a7edecbf389d11a369d4
+
 ---
- drivers/net/dsa/lantiq_gswip.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswi=
-p.c
-index 2aa9381dac41..91813d4a6500 100644
---- a/drivers/net/dsa/lantiq_gswip.c
-+++ b/drivers/net/dsa/lantiq_gswip.c
-@@ -1371,7 +1371,8 @@ static int gswip_port_fdb(struct dsa_switch *ds, in=
-t port,
- 	}
-=20
- 	if (fid =3D=3D -1) {
--		dev_err(priv->dev, "Port not part of a bridge\n");
-+		dev_err(priv->dev, "no FID found for bridge %s\n",
-+			bridge->name);
- 		return -EINVAL;
- 	}
-=20
---=20
-2.39.2
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
