@@ -1,102 +1,80 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C40A823CE
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD2F80045
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718023602; cv=none; b=Zr66wlL8crVoLb08oCYvEKSsJxpkk4fOkv0C8dmhurVNJOOVOqo+wCN24WFPhpZx3TIYjwMU8nofBO/X1BH490HdX34hbVY8C5+y+yoNFJddt3ymj0pfO4Mb+3jScC+uj/BfjExON0PCGSV79XLJ6iltBtYV5rtxn0aa6JbF+fw=
+	t=1718023688; cv=none; b=moptNn465pTrOcGvOSBWzAjzAXBAW6DZU7jLAUXbQmZCMxQN+UFdauFW7srnt5MWYX1Vf5R5lKOvg3Q8htjqaTmbus3vw3Y1UOLdMnA6aiThkPj16AVql0J1ey/yHKgsYXu9ub3vsYNThTkuHEOOVRYNFyv9e5BdJ0PZb1ZXAhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718023602; c=relaxed/simple;
-	bh=DzfzfEOYrS5hRroqqM63QoncLtcbJosXf0SN2GkmGYw=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=HnNFMKrR4KNkhOf4vsixE8LzykmsvGtlCZ9TgEm+V7i3qlXg2yDJDPzK/l6Us3A0FKaPINywVmaRQZRKpA2ZOVT/IfCtmgxtkPiSaGNd7wo3dIhGz+ykOaKani7zVR52WzChgFrlTFFCfFzt5Vxr4JeePNPW6TE2pDl7zpzVwt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1ae8f6d+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rdmqu4fD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1718023688; c=relaxed/simple;
+	bh=+ecHLff7v1OpVQFUWVfCE9rGpM2sM5huV/0sdhzdtVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ETAmx7ieawo+8Ir+EtRP3IN0ApHVnpZWEvaIv9iOWwn4a0aH65hV3qlZ3czyFTPZeDZdt5XH8ek6LFjLnqoPRbixkmFnD8Nx4IZ9FH5KdvM/gt5mwsmg419hQr7It2Ca0aybaTYjEGLQ8KPA1i1/sjHfE5df+s1F29XqZ0BKNPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=i0ShZLRm; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1ae8f6d+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rdmqu4fD"
-Message-ID: <20240610124406.548322963@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718023599;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=6YG0UjVZ2COICpcGaXkn7bT56v/DQnx1rLutVdszFN8=;
-	b=1ae8f6d+738dLW/DcQCym/msZK5WZIsZijFafDFY4feUxd4pZuUcKa1BSXnKmDRBHjD5Tr
-	GEj5hH48cj/TffXwAAO4JQZ960K9kmMyua9fASlTNhUy+ZcQDEnZriSxohCPVjLNNVh1Zh
-	hUwLZQUs3aQmUqtGoxCjRkJAE+WmU53gwGgyKncnVpWCr/ThLVrwn9y+djrzytF3gOHnLA
-	Z6W1S/CqE30hNkSsB+2fCEh+dThO36lyeUjll6LzStW8a9/0QIOGDQD/ude6jGuzupQgAU
-	mF8h8e4bJqaqtNW8s48dwm1OEa5C7we76cMX94jSPk/azXpHgOasrN8MCZuWMQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718023599;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=6YG0UjVZ2COICpcGaXkn7bT56v/DQnx1rLutVdszFN8=;
-	b=rdmqu4fDZwdgg9hVq+KvgzLnTfjhJWIvHjiU3TN/Lvq6deQbPWM/rQ0gGTjx9XgtcBOcQN
-	IT7F1TAyJYzaasAg==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Sam Sun <samsun1006219@gmail.com>,
- x86@kernel.org,
- syzkaller-bugs@googlegroups.com,
- xrivendell7@gmail.com
-Subject: [patch 4/4] jump_label: Simplify and clarify
- static_key_fast_inc_cpus_locked()
-References: <87bk49xf15.ffs@tglx>
- <20240610124258.109097511@linutronix.de>
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="i0ShZLRm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1718023677; bh=+ecHLff7v1OpVQFUWVfCE9rGpM2sM5huV/0sdhzdtVw=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=i0ShZLRmqI9v9z2T54xJpJpCVR+0XfKrrmbHrBWPfwLyQxzaIrE/THGBNslgtTeVn
+	 fdNvdGMyM+gc8hFllcAVpaeu2i6jeLH9ZbnJMvoyIVF+iwCcuT9n5o83hGo6Rb0U4y
+	 M9V0DFz/BmnF+wVU9CuUE/WWSuwG1QzV2kvUCCjc=
+Date: Mon, 10 Jun 2024 14:47:57 +0200
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v2 0/3] Move blender setup from individual planes to crtc
+ commit in sun4i-drm
+Message-ID: <55gzdgev6oq5mqc5rdybncn4yc3jahqrfqbldkfftyn2s25o3k@kysjowztftde>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Maxime Ripard <mripard@kernel.org>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20240224150604.3855534-1-megi@xff.cz>
+ <171801637114.423417.15912541590264684056.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 14:46:39 +0200 (CEST)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <171801637114.423417.15912541590264684056.b4-ty@kernel.org>
 
-Make the code more obvious and add proper comments to avoid future head
-scratching.
+On Mon, Jun 10, 2024 at 12:46:11PM GMT, Maxime Ripard wrote:
+> On Sat, 24 Feb 2024 16:05:57 +0100, Ondřej Jirman wrote:
+> > From: Ondrej Jirman <megi@xff.cz>
+> > 
+> > This series refactors blender setup from individual planes to a common
+> > place where it can be performed at once and is easier to reason about.
+> > 
+> > In the process this fixes a few bugs that allowed blender pipes to be
+> > disabled while corresponding DRM planes were requested to be enabled.
+> > 
+> > [...]
+> 
+> Applied to misc/kernel.git (drm-misc-next).
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- kernel/jump_label.c |   20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+Thank you. :)
 
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -162,22 +162,24 @@ bool static_key_slow_inc_cpuslocked(stru
- 	if (static_key_fast_inc_not_disabled(key))
- 		return true;
- 
--	jump_label_lock();
--	if (atomic_read(&key->enabled) == 0) {
--		atomic_set(&key->enabled, -1);
-+	guard(mutex)(&jump_label_mutex);
-+	/* Try to mark it as 'enabling in progress. */
-+	if (!atomic_cmpxchg(&key->enabled, 0, -1)) {
- 		jump_label_update(key);
- 		/*
--		 * Ensure that if the above cmpxchg loop observes our positive
--		 * value, it must also observe all the text changes.
-+		 * Ensure that when static_key_fast_inc_not_disabled() or
-+		 * static_key_slow_try_dec() observe the positive value,
-+		 * they must also observe all the text changes.
- 		 */
- 		atomic_set_release(&key->enabled, 1);
- 	} else {
--		if (WARN_ON_ONCE(!static_key_fast_inc_not_disabled(key))) {
--			jump_label_unlock();
-+		/*
-+		 * While holding the mutex this should never observe
-+		 * anything else than a value >= 1 and succeed
-+		 */
-+		if (WARN_ON_ONCE(!static_key_fast_inc_not_disabled(key)))
- 			return false;
--		}
- 	}
--	jump_label_unlock();
- 	return true;
- }
- 
+Kind regards,
+	o.
 
+> Thanks!
+> Maxime
+> 
