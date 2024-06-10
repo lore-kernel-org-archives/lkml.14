@@ -1,163 +1,1205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from alln-iport-8.cisco.com (alln-iport-8.cisco.com [173.37.142.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3053612F5B6;
-	Mon, 10 Jun 2024 21:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4558914F9DD;
+	Mon, 10 Jun 2024 21:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.142.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718056602; cv=none; b=EoQHNGAHr7XKY3TeF9cvb884npOUufYvj+CxvU0ZaPUN101L1ZnFTanxJmnfP0FIpA0yQK5a+8y3KKKyXauaFNAa62KRfV2YmCwoBSBP0+iBFj2lFutedtMC3D1N7cGfFTtbU7PoqDjw+e5CUKHSXGQjyZU+A7yx8tV2p3KIYug=
+	t=1718056608; cv=none; b=Oa6PSgyLC6gGoLOl0jHo3uEGHgKnzmT9okavdMyKx/DmRYTj+hR+WBPkNZ8iz7PjQ5KksgFCfbcVzY78j0dbIus3yDugxKXsPWcq6Mx9KL/38DmWmLNwhxZljrevIDr8lvO/gHNUPowApEA94PIJ5vuLPhrHHkkNqUC5Bbz8yI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718056602; c=relaxed/simple;
-	bh=KoFsY2QSqRbBiXfDzmXBOyy6f22jp0uRonBy4MZFEPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k6Fgb64T5kCb06EKgmZDHWnFYy+0giAjmEsPxhiz6lk2xvf3hBmJ+3bCujffpnd7GRRUv6OpXU7EVtgAJBvatVe2dMe/YQUQ65ioJTaXFdNaO6hho7XIT6tJm3AFKdv6yevfGxDq8auVy1Ra67aF54LBdPG0kJ2dynrczXUsFk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILZonLi4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718056608; c=relaxed/simple;
+	bh=r9tNqwGjV72cP5+qDYx8Jx8cKDTp9tcm1pisdxazUUY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BJhg17h5CZa4rcSxaf/jbjLCOaR16vf464fV5S561hFhGxVTEKSWJwaerXoff7faG3V7dTwPfjPhGL9IECFBl8h83duXHljNF+lj+tZ8asFRWMFGOh114jX5pBd+FQUpFNVbn+XuduZa0fWuZQVtHXS7hFeIaZo3B95hqNr5ESo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=fKmC4W2E; arc=none smtp.client-ip=173.37.142.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILZonLi4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10E41C2BBFC;
-	Mon, 10 Jun 2024 21:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718056601;
-	bh=KoFsY2QSqRbBiXfDzmXBOyy6f22jp0uRonBy4MZFEPs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ILZonLi4KYvvONkwpufTrioY+XFWyVKpzIZHgquP+P20woB+3RxuhH9AkzOkzEyPc
-	 uTW/hkuY+AzkUu06YGBpDZbJGiglOn3VeOfqIKQ8FyVIUXyERAOPc3n+9DidVLTO9s
-	 2aqx4PxwMGnnSdBd2RvJhEjPXahAigoBZior1fuhL2L7ppPcnz/iy3gs0cuc6Cfhcb
-	 gB3ngKFf3TCnVsnbUMTtItPYlTjieGCXMSo59GMdJX/KTLv9Wj8ETcQjSc6ITifhWx
-	 ACDwjW8WMqAdfrbVwvAk0RuHbv+/oPVaaCpygkbgkipXus/BtmPumlmZVGQb6k5y9b
-	 pyycPHtwSIiHg==
-Date: Mon, 10 Jun 2024 22:56:35 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, Jesse Taube <jesse@rivosinc.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Atish Patra <atishp@rivosinc.com>
-Subject: Re: [PATCH v0] RISC-V: Use Zkr to seed KASLR base address
-Message-ID: <20240610-earplugs-anybody-ebd04a5fa777@spud>
-References: <20240531162327.2436962-1-jesse@rivosinc.com>
- <20240531-uselessly-spied-262ecf44e694@spud>
- <b199fde6-c24e-4c18-9c38-fdc923294551@ghiti.fr>
- <20240603-stinking-roster-cfad46696ae5@spud>
- <ZmNWmxak9Rc80Kpb@debug.ba.rivosinc.com>
- <c288f739-2a1a-4fd7-884b-12e360a33142@rivosinc.com>
- <20240610-qualm-chalice-72d0cc743658@wendy>
- <01547275-8c8c-43cf-9da0-64825c234707@rivosinc.com>
- <Zmdq6kszPBxAvLdD@debug.ba.rivosinc.com>
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="fKmC4W2E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=cisco.com; i=@cisco.com; l=38296; q=dns/txt;
+  s=iport; t=1718056605; x=1719266205;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=2DkosmU1mlHl4x/hCG90FSlEAUzH4/P/6anfGibEHoE=;
+  b=fKmC4W2Ev55ai47nz6ZXryUAMGGXHEIWanam5HUKSeTSLLbLPK63zcr2
+   0wm+EU0H6d7f9fZ9i4FovyTfMsjV9MsEceTs8kjxuk4PSbKjN91c6cTH8
+   ABl3vJeTlmD486snFHeIH7Wgw6CsjdfB7hUTjb0bLPs522gfmau8JsZI0
+   A=;
+X-CSE-ConnectionGUID: 5L4K/dLASIaUyghT/eSXNg==
+X-CSE-MsgGUID: ff1/D8pOQtm6N5jbRZmdYA==
+X-IronPort-AV: E=Sophos;i="6.08,227,1712620800"; 
+   d="scan'208";a="294327956"
+Received: from alln-core-4.cisco.com ([173.36.13.137])
+  by alln-iport-8.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 21:55:36 +0000
+Received: from localhost.cisco.com ([10.193.101.253])
+	(authenticated bits=0)
+	by alln-core-4.cisco.com (8.15.2/8.15.2) with ESMTPSA id 45ALpBCW012699
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 10 Jun 2024 21:55:36 GMT
+From: Karan Tilak Kumar <kartilak@cisco.com>
+To: sebaddel@cisco.com
+Cc: arulponn@cisco.com, djhawar@cisco.com, gcboffa@cisco.com, mkai2@cisco.com,
+        satishkh@cisco.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Karan Tilak Kumar <kartilak@cisco.com>
+Subject: [PATCH 08/14] scsi: fnic: Add functionality in fnic to support FDLS
+Date: Mon, 10 Jun 2024 14:50:54 -0700
+Message-Id: <20240610215100.673158-9-kartilak@cisco.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240610215100.673158-1-kartilak@cisco.com>
+References: <20240610215100.673158-1-kartilak@cisco.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mWdS1ikOOxMEfGUM"
-Content-Disposition: inline
-In-Reply-To: <Zmdq6kszPBxAvLdD@debug.ba.rivosinc.com>
+Content-Transfer-Encoding: 8bit
+X-Authenticated-User: kartilak@cisco.com
+X-Outbound-SMTP-Client: 10.193.101.253, [10.193.101.253]
+X-Outbound-Node: alln-core-4.cisco.com
 
+Add interfaces in fnic to use FDLS services.
+Modify link up and link down functionality to use FDLS.
+Replace existing interfaces to handle new functionality
+provided by FDLS.
+Modify data types of some data members to handle new
+functionality.
+Add processing of tports and handling of tports.
 
---mWdS1ikOOxMEfGUM
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
+Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
+Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
+Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
+---
+ drivers/scsi/fnic/fdls_disc.c |  74 +++++
+ drivers/scsi/fnic/fip.c       |  27 +-
+ drivers/scsi/fnic/fnic.h      |  20 +-
+ drivers/scsi/fnic/fnic_fcs.c  | 498 ++++++++++++++++++++++++----------
+ drivers/scsi/fnic/fnic_main.c |  10 +-
+ drivers/scsi/fnic/fnic_scsi.c | 127 +++++++--
+ 6 files changed, 587 insertions(+), 169 deletions(-)
 
-On Mon, Jun 10, 2024 at 02:06:50PM -0700, Deepak Gupta wrote:
-> On Mon, Jun 10, 2024 at 11:16:42AM +0200, Cl=E9ment L=E9ger wrote:
-> > On 10/06/2024 11:02, Conor Dooley wrote:
-> > > On Mon, Jun 10, 2024 at 10:33:34AM +0200, Cl=E9ment L=E9ger wrote:
-> > > > On 07/06/2024 20:51, Deepak Gupta wrote:
-> > > > > On Mon, Jun 03, 2024 at 01:47:40PM +0100, Conor Dooley wrote:
-> > > > > > On Mon, Jun 03, 2024 at 11:14:49AM +0200, Alexandre Ghiti wrote:
-> > > > > I don't know all the details but on first glance it seems like in=
-stead
-> > > > > of ACPI,
-> > > > > may be FWFT is a better place for discovery ?
-> > > > > https://lists.riscv.org/g/tech-prs/topic/patch_v12_add_firmware/1=
-06479571
-> > > >=20
-> > > > IMHO, doing discovery in FWFT is not the goal of this extension. I =
-think
-> > > > the "real" solution would be to wait for the unified discovery task
-> > > > group to come up with something for that (which is their goal I thi=
-nk) [1]
->=20
-> Yeah I understand the conundrum here.
->=20
-> > >=20
-> > > I'm curious to see how that works out. The proposal documents an m-mo=
-de
-> > > csr, so we'd have to smuggle the information to s-mode somehow...
-> >=20
-> > Ahem, yeah, I spoke a bit too fast. Looked at the proposal and the
-> > mconfigptr CSR will be accessible by M-mode only so I guess we will have
-> > to find another way...
->=20
-> That's not the only problem. Even if you get mconfigptr access, parsing t=
-he format
-> is another thing that has to be done. This is early in boot. Although its=
- strictly (pun
-> intended) not a firmware feature extension, I think it's much easier to a=
-sk underlying
-> firmware if platform is `Sstrict`. or may be expose something like below
->=20
-> `ENABLE_SSTRICT`.
-> Platforms which support `Sstrict` can return success for this while platf=
-orms which don't
-> have `Sstrict` can return error code (not supported or not implemented).
-> This way its not feature discovery.
+diff --git a/drivers/scsi/fnic/fdls_disc.c b/drivers/scsi/fnic/fdls_disc.c
+index 42127a70c369..952b5924e42b 100644
+--- a/drivers/scsi/fnic/fdls_disc.c
++++ b/drivers/scsi/fnic/fdls_disc.c
+@@ -239,6 +239,11 @@ static void fdls_start_fabric_timer(struct fnic_iport_s *iport,
+ 			int timeout);
+ static void fdls_tport_timer_callback(struct timer_list *t);
+ 
++void fdls_init_tgt_oxid_pool(struct fnic_iport_s *iport)
++{
++	memset(iport->tgt_oxid_pool, 0, FDLS_TGT_OXID_POOL_SZ);
++}
++
+ static uint16_t fdls_alloc_tgt_oxid(struct fnic_iport_s *iport,
+ 									uint16_t base)
+ {
+@@ -2532,6 +2537,12 @@ fdls_process_flogi_rsp(struct fnic_iport_s *iport, struct fc_hdr_s *fchdr,
+ 
+ 		fnic_fdls_learn_fcoe_macs(iport, rx_frame, fcid);
+ 
++		if (fnic_fdls_register_portid(iport, iport->fcid, rx_frame) != 0) {
++			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++						 "0x%x: FLOGI registration failed", iport->fcid);
++			break;
++		}
++
+ 		memcpy(&fcmac[3], fcid, 3);
+ 		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
+ 			 "Adding vNIC device MAC addr: %02x:%02x:%02x:%02x:%02x:%02x",
+@@ -3402,6 +3413,29 @@ fdls_process_rscn(struct fnic_iport_s *iport, struct fc_hdr_s *fchdr)
+ 	fdls_send_rscn_resp(iport, fchdr);
+ }
+ 
++void fnic_fdls_disc_start(struct fnic_iport_s *iport)
++{
++	struct fnic *fnic = iport->fnic;
++
++	if (IS_FNIC_FCP_INITIATOR(fnic)) {
++		fc_host_fabric_name(iport->fnic->lport->host) = 0;
++		fc_host_post_event(iport->fnic->lport->host, fc_get_event_number(),
++						   FCH_EVT_LIPRESET, 0);
++	}
++
++	if (!iport->usefip) {
++		if (iport->flags & FNIC_FIRST_LINK_UP) {
++			spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
++			fnic_scsi_fcpio_reset(iport->fnic);
++			spin_lock_irqsave(&fnic->fnic_lock, fnic->lock_flags);
++
++			iport->flags &= ~FNIC_FIRST_LINK_UP;
++		}
++		fnic_fdls_start_flogi(iport);
++	} else
++		fnic_fdls_start_plogi(iport);
++}
++
+ static void
+ fdls_process_adisc_req(struct fnic_iport_s *iport, struct fc_hdr_s *fchdr)
+ {
+@@ -3801,3 +3835,43 @@ void fnic_fdls_recv_frame(struct fnic_iport_s *iport, void *rx_frame,
+ 	}
+ }
+ 
++
++void fnic_fdls_disc_init(struct fnic_iport_s *iport)
++{
++	fdls_init_tgt_oxid_pool(iport);
++	fdls_set_state((&iport->fabric), FDLS_STATE_INIT);
++}
++
++void fnic_fdls_link_down(struct fnic_iport_s *iport)
++{
++	struct fnic_tport_s *tport, *next;
++	struct fnic *fnic = iport->fnic;
++
++	FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "0x%x: FDLS processing link down", iport->fcid);
++
++	fdls_set_state((&iport->fabric), FDLS_STATE_LINKDOWN);
++	iport->fabric.flags = 0;
++
++	if (IS_FNIC_FCP_INITIATOR(fnic)) {
++		spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
++		fnic_scsi_fcpio_reset(iport->fnic);
++		spin_lock_irqsave(&fnic->fnic_lock, fnic->lock_flags);
++		fdls_init_tgt_oxid_pool(iport);
++
++		list_for_each_entry_safe(tport, next, &iport->tport_list, links) {
++			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++						 "removing rport: 0x%x", tport->fcid);
++			fdls_delete_tport(iport, tport);
++		}
++	}
++
++	if ((fnic_fdmi_support == 1) && (iport->fabric.fdmi_pending > 0)) {
++		del_timer_sync(&iport->fabric.fdmi_timer);
++		iport->fabric.fdmi_pending = 0;
++	}
++
++	FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "0x%x: FDLS finish processing link down", iport->fcid);
++}
++
+diff --git a/drivers/scsi/fnic/fip.c b/drivers/scsi/fnic/fip.c
+index 8d4f6b98407b..0c4a412cfd7b 100644
+--- a/drivers/scsi/fnic/fip.c
++++ b/drivers/scsi/fnic/fip.c
+@@ -459,6 +459,7 @@ void fnic_fcoe_process_flogi_resp(struct fnic *fnic,
+ 			iport->state = FNIC_IPORT_STATE_FABRIC_DISC;
+ 			FNIC_FIP_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
+ 						 "iport->state:%d\n", iport->state);
++			fnic_fdls_disc_start(iport);
+ 			if (!((iport->selected_fcf.ka_disabled)
+ 				  || (iport->selected_fcf.fka_adv_period == 0))) {
+ 				u64 tov;
+@@ -543,6 +544,7 @@ void fnic_fcoe_process_cvl(struct fnic *fnic, struct fip_header_s *fiph)
+ 	struct fip_cvl_s *cvl_msg = (struct fip_cvl_s *) fiph;
+ 	int i;
+ 	int found = FALSE;
++	int max_count = 0;
+ 
+ 	FNIC_FIP_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
+ 				 "fnic 0x%p clear virtual link handler\n", fnic);
+@@ -580,6 +582,26 @@ void fnic_fcoe_process_cvl(struct fnic *fnic, struct fip_header_s *fiph)
+ 			return;
+ 		fnic_common_fip_cleanup(fnic);
+ 
++		while (fnic->reset_in_progress == IN_PROGRESS) {
++			spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
++			wait_for_completion_timeout(&fnic->reset_completion_wait,
++							msecs_to_jiffies(5000));
++			spin_lock_irqsave(&fnic->fnic_lock, fnic->lock_flags);
++			max_count++;
++			if (max_count >= FIP_FNIC_RESET_WAIT_COUNT) {
++				FNIC_FIP_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "Rthr waited too long. Skipping handle link event %p\n",
++					 fnic);
++				return;
++			}
++			FNIC_FIP_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "fnic reset in progress. Link event needs to wait %p",
++				 fnic);
++		}
++		fnic->reset_in_progress = IN_PROGRESS;
++		fnic_fdls_link_down(iport);
++		fnic->reset_in_progress = NOT_IN_PROGRESS;
++		complete(&fnic->reset_completion_wait);
+ 		fnic_fcoe_send_vlan_req(fnic);
+ 	}
+ }
+@@ -637,8 +659,10 @@ void fnic_work_on_fip_timer(struct work_struct *work)
+ 					 "FCF Discovery timeout\n");
+ 		if (memcmp(iport->selected_fcf.fcf_mac, zmac, ETH_ALEN) != 0) {
+ 
+-			if (iport->flags & FNIC_FIRST_LINK_UP)
++			if (iport->flags & FNIC_FIRST_LINK_UP) {
++				fnic_scsi_fcpio_reset(iport->fnic);
+ 				iport->flags &= ~FNIC_FIRST_LINK_UP;
++			}
+ 
+ 			fnic_fcoe_start_flogi(fnic);
+ 			if (!((iport->selected_fcf.ka_disabled)
+@@ -852,6 +876,7 @@ void fnic_work_on_fcs_ka_timer(struct work_struct *work)
+ 
+ 	fnic_common_fip_cleanup(fnic);
+ 	spin_lock_irqsave(&fnic->fnic_lock, fnic->lock_flags);
++	fnic_fdls_link_down(iport);
+ 	iport->state = FNIC_IPORT_STATE_FIP;
+ 	spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
+ 
+diff --git a/drivers/scsi/fnic/fnic.h b/drivers/scsi/fnic/fnic.h
+index 0c7926627663..5fbd5cf23bfe 100644
+--- a/drivers/scsi/fnic/fnic.h
++++ b/drivers/scsi/fnic/fnic.h
+@@ -79,6 +79,7 @@
+ 
+ #define IS_FNIC_FCP_INITIATOR(fnic) (fnic->role == FNIC_ROLE_FCP_INITIATOR)
+ 
++#define FNIC_FW_RESET_TIMEOUT        60000	/* mSec   */
+ /* Retry supported by rport (returned by PRLI service parameters) */
+ #define FNIC_FC_RP_FLAGS_RETRY            0x1
+ 
+@@ -200,6 +201,12 @@ static inline u64 fnic_flags_and_state(struct scsi_cmnd *cmd)
+ #define fnic_clear_state_flags(fnicp, st_flags)  \
+ 	__fnic_set_state_flags(fnicp, st_flags, 1)
+ 
++enum reset_states {
++	NOT_IN_PROGRESS = 0,
++	IN_PROGRESS,
++	RESET_ERROR
++};
++
+ extern unsigned int fnic_fdmi_support;
+ extern unsigned int fnic_log_level;
+ extern unsigned int io_completions;
+@@ -352,6 +359,7 @@ struct fnic {
+ 	unsigned int wq_count;
+ 	unsigned int cq_count;
+ 
++	struct completion reset_completion_wait;
+ 	struct mutex sgreset_mutex;
+ 	spinlock_t sgreset_lock; /* lock for sgreset */
+ 	struct scsi_cmnd *sgreset_sc;
+@@ -369,6 +377,8 @@ struct fnic {
+ 
+ 	struct completion *remove_wait; /* device remove thread blocks */
+ 
++	struct completion *fw_reset_done;
++	u32 reset_in_progress;
+ 	atomic_t in_flight;		/* io counter */
+ 	bool internal_reset_inprogress;
+ 	u32 _reserved;			/* fill hole */
+@@ -382,6 +392,7 @@ struct fnic {
+ 	u64 fcp_input_bytes;		/* internal statistic */
+ 	u64 fcp_output_bytes;		/* internal statistic */
+ 	u32 link_down_cnt;
++	u32 soft_reset_count;
+ 	int link_status;
+ 
+ 	struct list_head list;
+@@ -404,7 +415,7 @@ struct fnic {
+ 	struct work_struct link_work;
+ 	struct work_struct frame_work;
+ 	struct work_struct flush_work;
+-	struct sk_buff_head frame_queue;
++	struct list_head frame_queue;
+ 	struct list_head tx_queue;
+ 	struct work_struct tport_work;
+ 	struct list_head tport_event_list;
+@@ -464,6 +475,7 @@ int fnic_request_intr(struct fnic *fnic);
+ int fnic_send(struct fc_lport *, struct fc_frame *);
+ void fnic_free_wq_buf(struct vnic_wq *wq, struct vnic_wq_buf *buf);
+ void fnic_handle_frame(struct work_struct *work);
++void fnic_tport_event_handler(struct work_struct *work);
+ void fnic_handle_link(struct work_struct *work);
+ void fnic_handle_event(struct work_struct *work);
+ int fnic_rq_cmpl_handler(struct fnic *fnic, int);
+@@ -475,7 +487,8 @@ void fnic_update_mac_locked(struct fnic *, u8 *new);
+ int fnic_queuecommand(struct Scsi_Host *, struct scsi_cmnd *);
+ int fnic_abort_cmd(struct scsi_cmnd *);
+ int fnic_device_reset(struct scsi_cmnd *);
+-int fnic_host_reset(struct scsi_cmnd *);
++int fnic_eh_host_reset_handler(struct scsi_cmnd *sc);
++int fnic_host_reset(struct Scsi_Host *shost);
+ int fnic_reset(struct Scsi_Host *);
+ void fnic_scsi_cleanup(struct fc_lport *);
+ void fnic_scsi_abort_io(struct fc_lport *);
+@@ -510,5 +523,8 @@ void fnic_dump_fchost_stats(struct Scsi_Host *, struct fc_host_statistics *);
+ void fnic_free_txq(struct list_head *head);
+ int fnic_get_desc_by_devid(struct pci_dev *pdev, char **desc,
+ 						   char **subsys_desc);
++void fnic_fdls_link_status_change(struct fnic *fnic, int linkup);
++void fnic_delete_fcp_tports(struct fnic *fnic);
++void fnic_flush_tport_event_list(struct fnic *fnic);
+ 
+ #endif /* _FNIC_H_ */
+diff --git a/drivers/scsi/fnic/fnic_fcs.c b/drivers/scsi/fnic/fnic_fcs.c
+index 8a7c471d3ff5..6f5414fba0ee 100644
+--- a/drivers/scsi/fnic/fnic_fcs.c
++++ b/drivers/scsi/fnic/fnic_fcs.c
+@@ -25,6 +25,8 @@
+ #include "cq_enet_desc.h"
+ #include "cq_exch_desc.h"
+ 
++#define MAX_RESET_WAIT_COUNT    64
++
+ extern struct workqueue_struct *fnic_fip_queue;
+ struct workqueue_struct *fnic_event_queue;
+ 
+@@ -78,6 +80,39 @@ static inline  void fnic_fdls_set_fcoe_dstmac(struct fnic *fnic,
+ 	memcpy(fnic->iport.fcfmac, dst_mac, 6);
+ }
+ 
++void fnic_fdls_link_status_change(struct fnic *fnic, int linkup)
++{
++	struct fnic_iport_s *iport = &fnic->iport;
++
++	FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "link up: %d, usefip: %d", linkup, iport->usefip);
++
++	spin_lock_irqsave(&fnic->fnic_lock, fnic->lock_flags);
++
++	if (linkup) {
++		if (iport->usefip) {
++			iport->state = FNIC_IPORT_STATE_FIP;
++			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++						 "link up: %d, usefip: %d", linkup, iport->usefip);
++			fnic_fcoe_send_vlan_req(fnic);
++		} else {
++			iport->state = FNIC_IPORT_STATE_FABRIC_DISC;
++			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++						 "iport->state: %d", iport->state);
++			fnic_fdls_disc_start(iport);
++		}
++	} else {
++		iport->state = FNIC_IPORT_STATE_LINK_WAIT;
++		if (!is_zero_ether_addr(iport->fpma))
++			vnic_dev_del_addr(fnic->vdev, iport->fpma);
++		fnic_common_fip_cleanup(fnic);
++		fnic_fdls_link_down(iport);
++
++	}
++	spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
++}
++
++
+ /*
+  * FPMA can be either taken from ethhdr(dst_mac) or flogi resp
+  * or derive from FC_MAP and FCID combination. While it should be
+@@ -107,147 +142,144 @@ void fnic_fdls_learn_fcoe_macs(struct fnic_iport_s *iport, void *rx_frame,
+ 	fnic_fdls_set_fcoe_dstmac(fnic, ethhdr->src_mac);
+ }
+ 
++void fnic_fdls_init(struct fnic *fnic, int usefip)
++{
++	struct fnic_iport_s *iport = &fnic->iport;
++
++	/* Initialize iPort structure */
++	iport->state = FNIC_IPORT_STATE_INIT;
++	iport->fnic = fnic;
++	iport->usefip = usefip;
++
++	FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "iportsrcmac: %02x:%02x:%02x:%02x:%02x:%02x",
++				 iport->hwmac[0], iport->hwmac[1], iport->hwmac[2],
++				 iport->hwmac[3], iport->hwmac[4], iport->hwmac[5]);
++
++	INIT_LIST_HEAD(&iport->tport_list);
++	INIT_LIST_HEAD(&iport->tport_list_pending_del);
++
++	fnic_fdls_disc_init(iport);
++}
++
+ void fnic_handle_link(struct work_struct *work)
+ {
+ 	struct fnic *fnic = container_of(work, struct fnic, link_work);
+-	unsigned long flags;
+ 	int old_link_status;
+ 	u32 old_link_down_cnt;
+-	u64 old_port_speed, new_port_speed;
++	int max_count = 0;
+ 
+-	spin_lock_irqsave(&fnic->fnic_lock, flags);
++	if (vnic_dev_get_intr_mode(fnic->vdev) != VNIC_DEV_INTR_MODE_MSI)
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "Interrupt mode is not MSI\n");
+ 
+-	fnic->link_events = 1;      /* less work to just set everytime*/
++	spin_lock_irqsave(&fnic->fnic_lock, fnic->lock_flags);
+ 
+ 	if (fnic->stop_rx_link_events) {
+-		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++		spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "Stop link rx events\n");
++		return;
++	}
++
++	/* Do not process if the fnic is already in transitional state */
++	if ((fnic->state != FNIC_IN_ETH_MODE)
++		&& (fnic->state != FNIC_IN_FC_MODE)) {
++		spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++			 "fnic in transitional state: %d. link up: %d ignored",
++			 fnic->state, vnic_dev_link_status(fnic->vdev));
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++			 "Current link status: %d iport state: %d\n",
++			 fnic->link_status, fnic->iport.state);
+ 		return;
+ 	}
+ 
+ 	old_link_down_cnt = fnic->link_down_cnt;
+ 	old_link_status = fnic->link_status;
+-	old_port_speed = atomic64_read(
+-			&fnic->fnic_stats.misc_stats.current_port_speed);
+-
+ 	fnic->link_status = vnic_dev_link_status(fnic->vdev);
+ 	fnic->link_down_cnt = vnic_dev_link_down_cnt(fnic->vdev);
+ 
+-	new_port_speed = vnic_dev_port_speed(fnic->vdev);
+-	atomic64_set(&fnic->fnic_stats.misc_stats.current_port_speed,
+-			new_port_speed);
+-	if (old_port_speed != new_port_speed)
++	while (fnic->reset_in_progress == IN_PROGRESS) {
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++			 "fnic reset in progress. Link event needs to wait\n");
++
++		spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
+ 		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
+-				"Current vnic speed set to: %llu\n",
+-				new_port_speed);
+-
+-	switch (vnic_dev_port_speed(fnic->vdev)) {
+-	case DCEM_PORTSPEED_10G:
+-		fc_host_speed(fnic->lport->host)   = FC_PORTSPEED_10GBIT;
+-		fnic->lport->link_supported_speeds = FC_PORTSPEED_10GBIT;
+-		break;
+-	case DCEM_PORTSPEED_20G:
+-		fc_host_speed(fnic->lport->host)   = FC_PORTSPEED_20GBIT;
+-		fnic->lport->link_supported_speeds = FC_PORTSPEED_20GBIT;
+-		break;
+-	case DCEM_PORTSPEED_25G:
+-		fc_host_speed(fnic->lport->host)   = FC_PORTSPEED_25GBIT;
+-		fnic->lport->link_supported_speeds = FC_PORTSPEED_25GBIT;
+-		break;
+-	case DCEM_PORTSPEED_40G:
+-	case DCEM_PORTSPEED_4x10G:
+-		fc_host_speed(fnic->lport->host)   = FC_PORTSPEED_40GBIT;
+-		fnic->lport->link_supported_speeds = FC_PORTSPEED_40GBIT;
+-		break;
+-	case DCEM_PORTSPEED_100G:
+-		fc_host_speed(fnic->lport->host)   = FC_PORTSPEED_100GBIT;
+-		fnic->lport->link_supported_speeds = FC_PORTSPEED_100GBIT;
+-		break;
+-	default:
+-		fc_host_speed(fnic->lport->host)   = FC_PORTSPEED_UNKNOWN;
+-		fnic->lport->link_supported_speeds = FC_PORTSPEED_UNKNOWN;
+-		break;
++					 "waiting for reset completion\n");
++		wait_for_completion_timeout(&fnic->reset_completion_wait,
++									msecs_to_jiffies(5000));
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "woken up from reset completion wait\n");
++		spin_lock_irqsave(&fnic->fnic_lock, fnic->lock_flags);
++
++		max_count++;
++		if (max_count >= MAX_RESET_WAIT_COUNT) {
++			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "Rstth waited for too long. Skipping handle link event\n");
++			spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
++			return;
++		}
++	}
++	FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "Marking fnic reset in progress\n");
++	fnic->reset_in_progress = IN_PROGRESS;
++
++	if ((vnic_dev_get_intr_mode(fnic->vdev) != VNIC_DEV_INTR_MODE_MSI) ||
++		(fnic->link_status != old_link_status)) {
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "old link status: %d link status: %d\n",
++					 old_link_status, (int) fnic->link_status);
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "old down count %d down count: %d\n",
++					 old_link_down_cnt, (int) fnic->link_down_cnt);
+ 	}
+ 
+ 	if (old_link_status == fnic->link_status) {
+ 		if (!fnic->link_status) {
+ 			/* DOWN -> DOWN */
+-			spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+-			fnic_fc_trace_set_data(fnic->lport->host->host_no,
+-				FNIC_FC_LE, "Link Status: DOWN->DOWN",
+-				strlen("Link Status: DOWN->DOWN"));
++			spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
+ 			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
+-					"down->down\n");
++						 "down->down\n");
+ 		} else {
+ 			if (old_link_down_cnt != fnic->link_down_cnt) {
+ 				/* UP -> DOWN -> UP */
+-				fnic->lport->host_stats.link_failure_count++;
+-				spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+-				fnic_fc_trace_set_data(
+-					fnic->lport->host->host_no,
+-					FNIC_FC_LE,
+-					"Link Status:UP_DOWN_UP",
+-					strlen("Link_Status:UP_DOWN_UP")
+-					);
+-				FNIC_FCS_DBG(KERN_DEBUG, fnic->lport->host, fnic->fnic_num,
+-					     "link down\n");
+-				fcoe_ctlr_link_down(&fnic->ctlr);
+-				if (fnic->config.flags & VFCF_FIP_CAPABLE) {
+-					/* start FCoE VLAN discovery */
+-					fnic_fc_trace_set_data(
+-						fnic->lport->host->host_no,
+-						FNIC_FC_LE,
+-						"Link Status: UP_DOWN_UP_VLAN",
+-						strlen(
+-						"Link Status: UP_DOWN_UP_VLAN")
+-						);
+-					fnic_fcoe_send_vlan_req(fnic);
+-					return;
+-				}
++				spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
++				FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++							 "up->down. Link down\n");
++				fnic_fdls_link_status_change(fnic, 0);
++
+ 				FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
+-						"up->down->up: Link up\n");
+-				fcoe_ctlr_link_up(&fnic->ctlr);
++							 "down->up. Link up\n");
++				fnic_fdls_link_status_change(fnic, 1);
+ 			} else {
+ 				/* UP -> UP */
+-				spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+-				fnic_fc_trace_set_data(
+-					fnic->lport->host->host_no, FNIC_FC_LE,
+-					"Link Status: UP_UP",
+-					strlen("Link Status: UP_UP"));
++				spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
+ 				FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
+-						"up->up\n");
++							 "up->up\n");
+ 			}
+ 		}
+ 	} else if (fnic->link_status) {
+ 		/* DOWN -> UP */
+-		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+-		if (fnic->config.flags & VFCF_FIP_CAPABLE) {
+-			/* start FCoE VLAN discovery */
+-			fnic_fc_trace_set_data(fnic->lport->host->host_no,
+-					       FNIC_FC_LE, "Link Status: DOWN_UP_VLAN",
+-					       strlen("Link Status: DOWN_UP_VLAN"));
+-			fnic_fcoe_send_vlan_req(fnic);
+-
+-			return;
+-		}
+-
++		spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
+ 		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
+-				"down->up: Link up\n");
+-		fnic_fc_trace_set_data(fnic->lport->host->host_no, FNIC_FC_LE,
+-				       "Link Status: DOWN_UP", strlen("Link Status: DOWN_UP"));
+-		fcoe_ctlr_link_up(&fnic->ctlr);
++					 "down->up. Link up\n");
++		fnic_fdls_link_status_change(fnic, 1);
+ 	} else {
+ 		/* UP -> DOWN */
+-		fnic->lport->host_stats.link_failure_count++;
+-		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++		spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
+ 		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
+-				"up->down: Link down\n");
+-		fnic_fc_trace_set_data(
+-			fnic->lport->host->host_no, FNIC_FC_LE,
+-			"Link Status: UP_DOWN",
+-			strlen("Link Status: UP_DOWN"));
+-		fcoe_ctlr_link_down(&fnic->ctlr);
++					 "up->down. Link down\n");
++		fnic_fdls_link_status_change(fnic, 0);
+ 	}
+ 
++	spin_lock_irqsave(&fnic->fnic_lock, fnic->lock_flags);
++	fnic->reset_in_progress = NOT_IN_PROGRESS;
++	complete(&fnic->reset_completion_wait);
++
++	FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "Marking fnic reset completion\n");
++	spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
+ }
+ 
+ /*
+@@ -256,35 +288,47 @@ void fnic_handle_link(struct work_struct *work)
+ void fnic_handle_frame(struct work_struct *work)
+ {
+ 	struct fnic *fnic = container_of(work, struct fnic, frame_work);
+-	struct fc_lport *lp = fnic->lport;
+-	unsigned long flags;
+-	struct sk_buff *skb;
+-	struct fc_frame *fp;
+-
+-	while ((skb = skb_dequeue(&fnic->frame_queue))) {
++	struct fnic_frame_list *cur_frame, *next;
++	int fchdr_offset = 0;
++	struct fc_hdr_s *fchdr;
+ 
+-		spin_lock_irqsave(&fnic->fnic_lock, flags);
++	spin_lock_irqsave(&fnic->fnic_lock, fnic->lock_flags);
++	list_for_each_entry_safe(cur_frame, next, &fnic->frame_queue, links) {
+ 		if (fnic->stop_rx_link_events) {
+-			spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+-			dev_kfree_skb(skb);
++			list_del(&cur_frame->links);
++			spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
++			kfree(cur_frame->fp);
++			kfree(cur_frame);
+ 			return;
+ 		}
+-		fp = (struct fc_frame *)skb;
+ 
+ 		/*
+ 		 * If we're in a transitional state, just re-queue and return.
+ 		 * The queue will be serviced when we get to a stable state.
+ 		 */
+ 		if (fnic->state != FNIC_IN_FC_MODE &&
+-		    fnic->state != FNIC_IN_ETH_MODE) {
+-			skb_queue_head(&fnic->frame_queue, skb);
+-			spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++			fnic->state != FNIC_IN_ETH_MODE) {
++			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "Cannot process frame in transitional state\n");
++			spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
+ 			return;
+ 		}
+-		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+ 
+-		fc_exch_recv(lp, fp);
++		list_del(&cur_frame->links);
++
++		/* Frames from FCP_RQ will have ethhdrs stripped off */
++		fchdr_offset = (cur_frame->rx_ethhdr_stripped) ?
++			0 : FNIC_FCOE_FCHDR_OFFSET;
++		fchdr =
++			(struct fc_hdr_s *) ((uint8_t *) cur_frame->fp + fchdr_offset);
++
++		fnic_fdls_recv_frame(&fnic->iport, cur_frame->fp,
++							 cur_frame->frame_len, fchdr_offset);
++
++		kfree(cur_frame->fp);
++		kfree(cur_frame);
+ 	}
++	spin_unlock_irqrestore(&fnic->fnic_lock, fnic->lock_flags);
+ }
+ 
+ void fnic_handle_fip_frame(struct work_struct *work)
+@@ -500,6 +544,10 @@ static void fnic_rq_cmpl_frame_recv(struct vnic_rq *rq, struct cq_desc
+ 	frame_elem->rx_ethhdr_stripped = ethhdr_stripped;
+ 	frame_elem->frame_len = bytes_written;
+ 
++	spin_lock_irqsave(&fnic->fnic_lock, flags);
++	list_add_tail(&frame_elem->links, &fnic->frame_queue);
++	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++
+ 	queue_work(fnic_event_queue, &fnic->frame_work);
+ 	return;
+ 
+@@ -530,7 +578,7 @@ int fnic_rq_cmpl_handler(struct fnic *fnic, int rq_work_to_do)
+ 		cur_work_done = vnic_cq_service(&fnic->cq[i], rq_work_to_do,
+ 						fnic_rq_cmpl_handler_cont,
+ 						NULL);
+-		if (cur_work_done) {
++		if (cur_work_done && fnic->stop_rx_link_events != 1) {
+ 			err = vnic_rq_fill(&fnic->rq[i], fnic_alloc_rq_frame);
+ 			if (err)
+ 				shost_printk(KERN_ERR, fnic->lport->host,
+@@ -551,46 +599,43 @@ int fnic_rq_cmpl_handler(struct fnic *fnic, int rq_work_to_do)
+ int fnic_alloc_rq_frame(struct vnic_rq *rq)
+ {
+ 	struct fnic *fnic = vnic_dev_priv(rq->vdev);
+-	struct sk_buff *skb;
++	void *buf;
+ 	u16 len;
+ 	dma_addr_t pa;
+-	int r;
++	int ret;
+ 
+-	len = FC_FRAME_HEADROOM + FC_MAX_FRAME + FC_FRAME_TAILROOM;
+-	skb = dev_alloc_skb(len);
+-	if (!skb) {
+-		FNIC_FCS_DBG(KERN_DEBUG, fnic->lport->host, fnic->fnic_num,
+-			     "Unable to allocate RQ sk_buff\n");
++	len = FNIC_FRAME_HT_ROOM;
++	buf = kmalloc(len, GFP_ATOMIC);
++	if (!buf) {
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "Unable to allocate RQ buffer of size: %d\n", len);
+ 		return -ENOMEM;
+ 	}
+-	skb_reset_mac_header(skb);
+-	skb_reset_transport_header(skb);
+-	skb_reset_network_header(skb);
+-	skb_put(skb, len);
+-	pa = dma_map_single(&fnic->pdev->dev, skb->data, len, DMA_FROM_DEVICE);
++
++	pa = dma_map_single(&fnic->pdev->dev, buf, len, DMA_FROM_DEVICE);
+ 	if (dma_mapping_error(&fnic->pdev->dev, pa)) {
+-		r = -ENOMEM;
+-		printk(KERN_ERR "PCI mapping failed with error %d\n", r);
+-		goto free_skb;
++		ret = -ENOMEM;
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "PCI mapping failed with error %d\n", ret);
++		goto free_buf;
+ 	}
+ 
+-	fnic_queue_rq_desc(rq, skb, pa, len);
++	fnic_queue_rq_desc(rq, buf, pa, len);
+ 	return 0;
+-
+-free_skb:
+-	kfree_skb(skb);
+-	return r;
++free_buf:
++	kfree(buf);
++	return ret;
+ }
+ 
+ void fnic_free_rq_buf(struct vnic_rq *rq, struct vnic_rq_buf *buf)
+ {
+-	struct fc_frame *fp = buf->os_buf;
++	void *rq_buf = buf->os_buf;
+ 	struct fnic *fnic = vnic_dev_priv(rq->vdev);
+ 
+ 	dma_unmap_single(&fnic->pdev->dev, buf->dma_addr, buf->len,
+ 			 DMA_FROM_DEVICE);
+ 
+-	dev_kfree_skb(fp_skb(fp));
++	kfree(rq_buf);
+ 	buf->os_buf = NULL;
+ }
+ 
+@@ -839,13 +884,11 @@ static void fnic_wq_complete_frame_send(struct vnic_wq *wq,
+ 					struct cq_desc *cq_desc,
+ 					struct vnic_wq_buf *buf, void *opaque)
+ {
+-	struct sk_buff *skb = buf->os_buf;
+-	struct fc_frame *fp = (struct fc_frame *)skb;
+ 	struct fnic *fnic = vnic_dev_priv(wq->vdev);
+ 
+ 	dma_unmap_single(&fnic->pdev->dev, buf->dma_addr, buf->len,
+ 			 DMA_TO_DEVICE);
+-	dev_kfree_skb_irq(fp_skb(fp));
++	kfree(buf->os_buf);
+ 	buf->os_buf = NULL;
+ }
+ 
+@@ -883,13 +926,182 @@ int fnic_wq_cmpl_handler(struct fnic *fnic, int work_to_do)
+ 
+ void fnic_free_wq_buf(struct vnic_wq *wq, struct vnic_wq_buf *buf)
+ {
+-	struct fc_frame *fp = buf->os_buf;
+ 	struct fnic *fnic = vnic_dev_priv(wq->vdev);
+ 
+ 	dma_unmap_single(&fnic->pdev->dev, buf->dma_addr, buf->len,
+ 			 DMA_TO_DEVICE);
+ 
+-	dev_kfree_skb(fp_skb(fp));
++	kfree(buf->os_buf);
+ 	buf->os_buf = NULL;
+ }
+ 
++void
++fnic_fdls_add_tport(struct fnic_iport_s *iport, struct fnic_tport_s *tport,
++					unsigned long flags)
++{
++	struct fnic *fnic = iport->fnic;
++	struct fc_rport *rport;
++	struct fc_rport_identifiers ids;
++	struct rport_dd_data_s *rdd_data;
++
++	FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "Adding rport fcid: 0x%x", tport->fcid);
++
++	ids.node_name = tport->wwnn;
++	ids.port_name = tport->wwpn;
++	ids.port_id = tport->fcid;
++	ids.roles = FC_RPORT_ROLE_FCP_TARGET;
++
++	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++	rport = fc_remote_port_add(fnic->lport->host, 0, &ids);
++	spin_lock_irqsave(&fnic->fnic_lock, flags);
++	if (!rport) {
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "Failed to add rport for tport: 0x%x", tport->fcid);
++		return;
++	}
++
++	FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				 "Added rport fcid: 0x%x", tport->fcid);
++
++	/* Mimic these assignments in queuecommand to avoid timing issues */
++	rport->maxframe_size = FNIC_FC_MAX_PAYLOAD_LEN;
++	rport->supported_classes = FC_COS_CLASS3 | FC_RPORT_ROLE_FCP_TARGET;
++	rdd_data = rport->dd_data;
++	rdd_data->tport = tport;
++	rdd_data->iport = iport;
++	tport->rport = rport;
++	tport->flags |= FNIC_FDLS_SCSI_REGISTERED;
++}
++
++void
++fnic_fdls_remove_tport(struct fnic_iport_s *iport,
++					   struct fnic_tport_s *tport, unsigned long flags)
++{
++	struct fnic *fnic = iport->fnic;
++	struct rport_dd_data_s *rdd_data;
++
++	struct fc_rport *rport;
++
++	if (!tport)
++		return;
++
++	fdls_set_tport_state(tport, FDLS_TGT_STATE_OFFLINE);
++	rport = tport->rport;
++
++	if (rport) {
++		/* tport resource release will be done
++		 * after fnic_terminate_rport_io()
++		 */
++		tport->flags |= FNIC_FDLS_TPORT_DELETED;
++		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++
++		/* Interface to scsi_fc_transport  */
++		fc_remote_port_delete(rport);
++
++		spin_lock_irqsave(&fnic->fnic_lock, flags);
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++		 "Deregistered and freed tport fcid: 0x%x from scsi transport fc",
++		 tport->fcid);
++
++		/*
++		 * the dd_data is allocated by fc transport
++		 * of size dd_fcrport_size
++		 */
++		rdd_data = rport->dd_data;
++		rdd_data->tport = NULL;
++		rdd_data->iport = NULL;
++		list_del(&tport->links);
++		kfree(tport);
++	} else {
++		fnic_del_tport_timer_sync();
++		list_del(&tport->links);
++		kfree(tport);
++	}
++}
++
++void fnic_delete_fcp_tports(struct fnic *fnic)
++{
++	struct fnic_tport_s *tport, *next;
++	unsigned long flags;
++
++	spin_lock_irqsave(&fnic->fnic_lock, flags);
++	list_for_each_entry_safe(tport, next, &fnic->iport.tport_list, links) {
++		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "removing fcp rport fcid: 0x%x", tport->fcid);
++		fdls_set_tport_state(tport, FDLS_TGT_STATE_OFFLINING);
++		fnic_fdls_remove_tport(&fnic->iport, tport, flags);
++		fnic_del_tport_timer_sync();
++	}
++	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++}
++
++/**
++ * fnic_tport_work() - Handler for remote port events in the tport_event_queue
++ * @work: Handle to the remote port being dequeued
++ */
++void fnic_tport_event_handler(struct work_struct *work)
++{
++	struct fnic *fnic = container_of(work, struct fnic, tport_work);
++	struct fnic_tport_event_s *cur_evt, *next;
++	unsigned long flags;
++	struct fnic_tport_s *tport;
++
++	spin_lock_irqsave(&fnic->fnic_lock, flags);
++	list_for_each_entry_safe(cur_evt, next, &fnic->tport_event_list, links) {
++		tport = cur_evt->arg1;
++		switch (cur_evt->event) {
++		case TGT_EV_RPORT_ADD:
++			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++						 "Add rport event");
++			if (tport->state == FDLS_TGT_STATE_READY) {
++				fnic_fdls_add_tport(&fnic->iport,
++					(struct fnic_tport_s *) cur_evt->arg1, flags);
++			} else {
++				FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					 "Target not ready. Add rport event dropped: 0x%x",
++					 tport->fcid);
++			}
++			break;
++		case TGT_EV_RPORT_DEL:
++			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++						 "Remove rport event");
++			if (tport->state == FDLS_TGT_STATE_OFFLINING) {
++				fnic_fdls_remove_tport(&fnic->iport,
++					   (struct fnic_tport_s *) cur_evt->arg1, flags);
++			} else {
++				FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++							 "remove rport event dropped tport fcid: 0x%x",
++							 tport->fcid);
++			}
++			break;
++		case TGT_EV_TPORT_DELETE:
++			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++						 "Delete tport event");
++			fdls_delete_tport(tport->iport, tport);
++			break;
++		default:
++			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++						 "Unknown tport event");
++			break;
++		}
++		list_del(&cur_evt->links);
++		kfree(cur_evt);
++	}
++	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++}
++
++void fnic_flush_tport_event_list(struct fnic *fnic)
++{
++	struct fnic_tport_event_s *cur_evt, *next;
++	unsigned long flags;
++
++	spin_lock_irqsave(&fnic->fnic_lock, flags);
++	list_for_each_entry_safe(cur_evt, next, &fnic->tport_event_list, links) {
++		list_del(&cur_evt->links);
++		kfree(cur_evt);
++	}
++	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++}
++
++
+diff --git a/drivers/scsi/fnic/fnic_main.c b/drivers/scsi/fnic/fnic_main.c
+index d850ce4b743d..1310e8b46f82 100644
+--- a/drivers/scsi/fnic/fnic_main.c
++++ b/drivers/scsi/fnic/fnic_main.c
+@@ -110,7 +110,7 @@ static const struct scsi_host_template fnic_host_template = {
+ 	.eh_timed_out = fc_eh_timed_out,
+ 	.eh_abort_handler = fnic_abort_cmd,
+ 	.eh_device_reset_handler = fnic_device_reset,
+-	.eh_host_reset_handler = fnic_host_reset,
++	.eh_host_reset_handler = fnic_eh_host_reset_handler,
+ 	.slave_alloc = fnic_slave_alloc,
+ 	.change_queue_depth = scsi_change_queue_depth,
+ 	.this_id = -1,
+@@ -923,8 +923,10 @@ static int fnic_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	INIT_WORK(&fnic->link_work, fnic_handle_link);
+ 	INIT_WORK(&fnic->frame_work, fnic_handle_frame);
+-	skb_queue_head_init(&fnic->frame_queue);
++	INIT_WORK(&fnic->tport_work, fnic_tport_event_handler);
++	INIT_LIST_HEAD(&fnic->frame_queue);
+ 	INIT_LIST_HEAD(&fnic->tx_queue);
++	INIT_LIST_HEAD(&fnic->tport_event_list);
+ 
+ 	fc_fabric_login(lp);
+ 
+@@ -1006,7 +1008,7 @@ static void fnic_remove(struct pci_dev *pdev)
+ 	 * be no event queued for this fnic device in the workqueue
+ 	 */
+ 	flush_workqueue(fnic_event_queue);
+-	skb_queue_purge(&fnic->frame_queue);
++	fnic_free_txq(&fnic->frame_queue);
+ 	fnic_free_txq(&fnic->tx_queue);
+ 
+ 	if (fnic->config.flags & VFCF_FIP_CAPABLE) {
+@@ -1044,8 +1046,6 @@ static void fnic_remove(struct pci_dev *pdev)
+ 	 */
+ 	fnic_cleanup(fnic);
+ 
+-	BUG_ON(!skb_queue_empty(&fnic->frame_queue));
+-
+ 	spin_lock_irqsave(&fnic_list_lock, flags);
+ 	list_del(&fnic->list);
+ 	spin_unlock_irqrestore(&fnic_list_lock, flags);
+diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
+index 295dcda4ec16..5d5d1205e984 100644
+--- a/drivers/scsi/fnic/fnic_scsi.c
++++ b/drivers/scsi/fnic/fnic_scsi.c
+@@ -183,7 +183,7 @@ int fnic_fw_reset_handler(struct fnic *fnic)
+ 	/* indicate fwreset to io path */
+ 	fnic_set_state_flags(fnic, FNIC_FLAGS_FWRESET);
+ 
+-	skb_queue_purge(&fnic->frame_queue);
++	fnic_free_txq(&fnic->frame_queue);
+ 	fnic_free_txq(&fnic->tx_queue);
+ 
+ 	/* wait for io cmpl */
+@@ -2575,23 +2575,30 @@ int fnic_reset(struct Scsi_Host *shost)
+  * host is offlined by SCSI.
+  *
+  */
+-int fnic_host_reset(struct scsi_cmnd *sc)
++int fnic_host_reset(struct Scsi_Host *shost)
+ {
+ 	int ret;
+ 	unsigned long wait_host_tmo;
+-	struct Scsi_Host *shost = sc->device->host;
+-	struct fc_lport *lp = shost_priv(shost);
+-	struct fnic *fnic = lport_priv(lp);
++	struct fnic *fnic = *((struct fnic **) shost_priv(shost));
+ 	unsigned long flags;
++	struct fnic_iport_s *iport = &fnic->iport;
+ 
+ 	spin_lock_irqsave(&fnic->fnic_lock, flags);
+-	if (!fnic->internal_reset_inprogress) {
+-		fnic->internal_reset_inprogress = true;
++	if (fnic->reset_in_progress == NOT_IN_PROGRESS) {
++		fnic->reset_in_progress = IN_PROGRESS;
+ 	} else {
+ 		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+-		FNIC_SCSI_DBG(KERN_DEBUG, fnic->lport->host, fnic->fnic_num,
+-			"host reset in progress skipping another host reset\n");
+-		return SUCCESS;
++		wait_for_completion_timeout(&fnic->reset_completion_wait,
++									msecs_to_jiffies(10000));
++
++		spin_lock_irqsave(&fnic->fnic_lock, flags);
++		if (fnic->reset_in_progress == IN_PROGRESS) {
++			spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++			FNIC_SCSI_DBG(KERN_WARNING, fnic->lport->host, fnic->fnic_num,
++			  "Firmware reset in progress. Skipping another host reset\n");
++			return SUCCESS;
++		}
++		fnic->reset_in_progress = IN_PROGRESS;
+ 	}
+ 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+ 
+@@ -2600,23 +2607,33 @@ int fnic_host_reset(struct scsi_cmnd *sc)
+ 	 * scsi-ml tries to send a TUR to every device if host reset is
+ 	 * successful, so before returning to scsi, fabric should be up
+ 	 */
+-	ret = (fnic_reset(shost) == 0) ? SUCCESS : FAILED;
+-	if (ret == SUCCESS) {
++	fnic_reset(shost);
++
++	spin_lock_irqsave(&fnic->fnic_lock, flags);
++	fnic->reset_in_progress = NOT_IN_PROGRESS;
++	complete(&fnic->reset_completion_wait);
++	fnic->soft_reset_count++;
++
++	/* wait till the link is up */
++	if (fnic->link_status) {
+ 		wait_host_tmo = jiffies + FNIC_HOST_RESET_SETTLE_TIME * HZ;
+ 		ret = FAILED;
+ 		while (time_before(jiffies, wait_host_tmo)) {
+-			if ((lp->state == LPORT_ST_READY) &&
+-			    (lp->link_up)) {
++			if (iport->state != FNIC_IPORT_STATE_READY
++				&& fnic->link_status) {
++				spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++				ssleep(1);
++				spin_lock_irqsave(&fnic->fnic_lock, flags);
++			} else {
+ 				ret = SUCCESS;
+ 				break;
+ 			}
+-			ssleep(1);
+ 		}
+ 	}
+-
+-	spin_lock_irqsave(&fnic->fnic_lock, flags);
+-	fnic->internal_reset_inprogress = false;
+ 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++
++	FNIC_SCSI_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				  "host reset return status: %d\n", ret);
+ 	return ret;
+ }
+ 
+@@ -2809,3 +2826,77 @@ int fnic_is_abts_pending(struct fnic *fnic, struct scsi_cmnd *lr_sc)
+ 
+ 	return iter_data.ret;
+ }
++
++/*
++ * SCSI Error handling calls driver's eh_host_reset if all prior
++ * error handling levels return FAILED. If host reset completes
++ * successfully, and if link is up, then Fabric login begins.
++ *
++ * Host Reset is the highest level of error recovery. If this fails, then
++ * host is offlined by SCSI.
++ *
++ */
++int fnic_eh_host_reset_handler(struct scsi_cmnd *sc)
++{
++	int ret = 0;
++	struct Scsi_Host *shost = sc->device->host;
++	struct fnic *fnic = *((struct fnic **) shost_priv(shost));
++
++	FNIC_SCSI_DBG(KERN_ERR, fnic->lport->host, fnic->fnic_num,
++				  "SCSI error handling: fnic host reset");
++
++	ret = fnic_host_reset(shost);
++	return ret;
++}
++
++
++void fnic_scsi_fcpio_reset(struct fnic *fnic)
++{
++	unsigned long flags;
++	enum fnic_state old_state;
++	struct fnic_iport_s *iport = &fnic->iport;
++	DECLARE_COMPLETION_ONSTACK(fw_reset_done);
++	int time_remain;
++
++	/* issue fw reset */
++	spin_lock_irqsave(&fnic->fnic_lock, flags);
++	if (unlikely(fnic->state == FNIC_IN_FC_TRANS_ETH_MODE)) {
++		/* fw reset is in progress, poll for its completion */
++		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++		FNIC_SCSI_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++			  "fnic is in unexpected state: %d for fw_reset\n",
++			  fnic->state);
++		return;
++	}
++
++	old_state = fnic->state;
++	fnic->state = FNIC_IN_FC_TRANS_ETH_MODE;
++
++	fnic_update_mac_locked(fnic, iport->hwmac);
++	fnic->fw_reset_done = &fw_reset_done;
++	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++
++	FNIC_SCSI_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				  "Issuing fw reset\n");
++	if (fnic_fw_reset_handler(fnic)) {
++		spin_lock_irqsave(&fnic->fnic_lock, flags);
++		if (fnic->state == FNIC_IN_FC_TRANS_ETH_MODE)
++			fnic->state = old_state;
++		spin_unlock_irqrestore(&fnic->fnic_lock, flags);
++	} else {
++		FNIC_SCSI_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					  "Waiting for fw completion\n");
++		time_remain = wait_for_completion_timeout(&fw_reset_done,
++						  msecs_to_jiffies(FNIC_FW_RESET_TIMEOUT));
++		FNIC_SCSI_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++					  "Woken up after fw completion timeout\n");
++		if (time_remain == 0) {
++			FNIC_SCSI_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
++				  "FW reset completion timed out after %d ms)\n",
++				  FNIC_FW_RESET_TIMEOUT);
++		}
++	}
++	fnic->fw_reset_done = NULL;
++}
++
++
+-- 
+2.31.1
 
-I mean, it's feature discovery in all but name. You're calling it
-enable, but the behaviour you describe is feature discovery - not that I
-am against this being feature discovery since it gets us out of an
-annoying bind.
-
-I forget which extension Alex and I discussed previously, but there's
-some mm-related things that you're gonna have to probe super early and=20
-we need to figure out if we can get that info from ACPI or not. I know
-we discussed it w.r.t. one of the T-Head vendor extensions, but I think
-another standard one got mentioned too.
-
-> It seems like arm64 parses fdt and it reads certain CSRs too
-> (`arch/arm64/kernel/pi/kaslr_early.c`). Although it doesn't look like it =
-has to do any
-> discovery for them.
-
-A decree from the Palmer that we don't support things that do not conform
-in this manner would allow us to do what arm64 does. I brought this up
-originally because it's been discussed before that we cannot rely on
-conformance because we want to support people's platforms, whether they
-comply or not. I'd be wary of making this an exception now, and then
-later on someone makes a platform we want to support that doesn't
-conform and hey presto, we regress KASLR support - even if I think it is
-pretty unlikely that someone is going to repurpose the Zkr CSRs.
-
-One of the problems with only supporting conforming platforms is that
-the definition of conforming changes over time! This has happened with
-the Andes PMU for example, which I believe uses an interrupt number that
-was later co-opted by AIA spec. That conformed at the time, but doesn't
-anymore - do they get to mark themselves as Sstrict?
-
-Maybe we can do this on a case-by-case basis, but it's up to Palmer
-whether or not we can do that.
-
---mWdS1ikOOxMEfGUM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmd2kwAKCRB4tDGHoIJi
-0jiYAQCTudtf2cIt7L8o1XdE+wFCII3X2/gtf2RZ78X2JJF0SQD9H3PFBbLUuQ+e
-xhlLbZGztObPUHowGMnO5LqjIaJCbwc=
-=Dq40
------END PGP SIGNATURE-----
-
---mWdS1ikOOxMEfGUM--
