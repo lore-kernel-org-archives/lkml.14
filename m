@@ -1,164 +1,311 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E5F14EC6B;
-	Mon, 10 Jun 2024 18:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F9A142E79
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 18:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718044497; cv=none; b=cURhOd++I9tNdIZ7XFpWzLocBrJW9qUAU9jOpjXIcq9z8lWf4EW/McIR7HYXgDzu1XiLjChIpjIRjShbiPeRX2SbEynxSolm48V2IjR7JX8JfksK5K35wfkq6t661Iq1HVby3YM9cytdQ7NDHC3d51YqBur/LdXDF9fkllgTf7s=
+	t=1718044540; cv=none; b=qwBDMn/AJ+jZA4r+r7qpL/p4VVfo8HGyanojA3PsobfMRAQCbqXjCLKOS2I6mnjSUqz+vab6nZeIcLMpqme/B0XrnFZyxnPB7QMrRVWZ1tjVgr6Q8+qzrNI7FxJlbLc1HBwbD4hgPioZohDXmYWpl62YxwPCXIEhwuklcLHff38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718044497; c=relaxed/simple;
-	bh=Z3Nw5/tyLSNqaZ7DVijOdre0xPE2VjfLzb4qNvkgbls=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gnuxDVKmKWhFfF9NXFGyuX45hlKlkClViXT6G+U+ZNeuf2tuYyMyts6H5H0fHqSnWVcXV4fEM549Y9xZTb01Xuechi3Mhrmmp7hzF6sBM0oMVYaLj2zu2RXxJYSFjBclb1+TIQpY3UvIgD7s8vJ5j/NdGCbyvq1WQ0MK3OiwCco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AgiXegXm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718044540; c=relaxed/simple;
+	bh=be68LBU+fr4IIPUdrsajL4e2NAXqJ07WQJ1vShJ4zG8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XyXYZ7NeX7B5is0WpEDM381VNeNkADya8AdgOOeFg5cksRXGk/vkStSdJKP5bSR9hbM8/EKNvHyD2sbkwwYA/4XaanJ7ZuKO4z4unUSlRQYx7lpRbhUJp9by37BFKEM1oUB6LELlVKoOZZ9KHs+8bdCSEMYLbi3UwGjgb7ygA8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PaHC/Dmx; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AgiXegXm"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ACaO7j003466;
-	Mon, 10 Jun 2024 18:34:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	88MKYxAVF1tS+dQlIVLJZJLnTYICvWwO37guWgXPbPI=; b=AgiXegXmaxJ2wI2+
-	aR81xPtGfHJTfq1i1v4kKftQZ8av1SdXXOGKqJvyvPxBoGrKJwfxeVqQIppkG5AK
-	qQvWwGSyiawouko3YhxOj1A1qifRpwon+UbCWNTlKIaYKqLPwL3/lVwj+/tk0bIU
-	J4oX1uAUsihG7GIj7usfrQJM+ie2+LaAB6mbhgkKx9QF4kX+Zth+GA1I8P/twI4u
-	IgIPe3g+g/BvTX2Lpq641wHAn19hDNmGFkjvbCFl+eWHZSzzmAU4u9Eflb91zAbX
-	lDPde66T2nMdwCaA4FbhhaSUp89vxFDAnTm+EGkfE5JZEgeURJBBi6+KND3a+ini
-	WaPUiw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymfh34xyf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 18:34:50 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45AIYoLo007698
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 18:34:50 GMT
-Received: from [10.110.107.105] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Jun
- 2024 11:34:49 -0700
-Message-ID: <4b81e0f0-ecc6-44b3-9388-aacf54230788@quicinc.com>
-Date: Mon, 10 Jun 2024 11:34:48 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PaHC/Dmx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718044539; x=1749580539;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=be68LBU+fr4IIPUdrsajL4e2NAXqJ07WQJ1vShJ4zG8=;
+  b=PaHC/Dmxj51wVLNmCO3weSIvHenv1TM4+neX6zlNY1SgI3mDE6/kRUwr
+   AIXCCH+IlhTjInRGtoMC0UzT/7j2KQc7muA1E+0Nj/BW3VP9fsnCtTqi9
+   bjP1kIkbRyHUS/JOVeHptOjhoWTO46iAFz6tdJDirlC22vzcjddM0bMsq
+   JzawfbyHOaCG59kBaCQ0VvpDPna8tTUqPcTuYOwlfBe1d7R1fUvOFI3Hp
+   11bKiU+tRbfUtOOo+UqWTf0wRbCmKRSS5CQ+A5AG0F4KmMkeRu/6K5d4h
+   c7hokZhJ4hEeZ4DPt8lVbNaW1eU6MXckD1VyRMP2ybMztXjdPfmulLbA5
+   A==;
+X-CSE-ConnectionGUID: gGrTM7KZRSm3tQGO53y4Vg==
+X-CSE-MsgGUID: vQmQoV2YQR62ADgvwXgXrA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="12004775"
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="12004775"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 11:35:37 -0700
+X-CSE-ConnectionGUID: ic3ZZqWqRGWNrDzdzz5HRg==
+X-CSE-MsgGUID: buGIWCnaScq7U8iEjZWABQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="43576549"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 11:35:37 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>,
+	Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>
+Cc: x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v20 01/18] x86/resctrl: Prepare for new domain scope
+Date: Mon, 10 Jun 2024 11:35:11 -0700
+Message-ID: <20240610183528.349198-2-tony.luck@intel.com>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240610183528.349198-1-tony.luck@intel.com>
+References: <20240610183528.349198-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: Enable runtime pm of the host bridge
-To: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        Bjorn Helgaas
-	<bhelgaas@google.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Rafael J.
- Wysocki" <rjw@rjwysocki.net>, <quic_vbadigan@quicinc.com>,
-        <quic_ramkri@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_parass@quicinc.com>
-References: <20240609-runtime_pm-v3-1-3d0460b49d60@quicinc.com>
-Content-Language: en-US
-From: Mayank Rana <quic_mrana@quicinc.com>
-In-Reply-To: <20240609-runtime_pm-v3-1-3d0460b49d60@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: jPRQHcozO5L75rz3lKhCu8sR-YCJ3qyB
-X-Proofpoint-GUID: jPRQHcozO5L75rz3lKhCu8sR-YCJ3qyB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-10_04,2024-06-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=0 clxscore=1011 bulkscore=0 phishscore=0 adultscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406100139
+Content-Transfer-Encoding: 8bit
 
+Resctrl resources operate on subsets of CPUs in the system with the
+defining attribute of each subset being an instance of a particular
+level of cache. E.g. all CPUs sharing an L3 cache would be part of the
+same domain.
 
-On 6/8/2024 8:14 PM, Krishna chaitanya chundru wrote:
-> The Controller driver is the parent device of the PCIe host bridge,
-> PCI-PCI bridge and PCIe endpoint as shown below.
-> 
->          PCIe controller(Top level parent & parent of host bridge)
->                          |
->                          v
->          PCIe Host bridge(Parent of PCI-PCI bridge)
->                          |
->                          v
->          PCI-PCI bridge(Parent of endpoint driver)
->                          |
->                          v
->                  PCIe endpoint driver
-> 
-> Now, when the controller device goes to runtime suspend, PM framework
-> will check the runtime PM state of the child device (host bridge) and
-> will find it to be disabled. So it will allow the parent (controller
-> device) to go to runtime suspend. Only if the child device's state was
-> 'active' it will prevent the parent to get suspended.
-> 
-> Since runtime PM is disabled for host bridge, the state of the child
-> devices under the host bridge is not taken into account by PM framework
-> for the top level parent, PCIe controller. So PM framework, allows
-> the controller driver to enter runtime PM irrespective of the state
-> of the devices under the host bridge. And this causes the topology
-> breakage and also possible PM issues like controller driver goes to
-> runtime suspend while endpoint driver is doing some transfers.
-> 
-> So enable runtime PM for the host bridge, so that controller driver
-> goes to suspend only when all child devices goes to runtime suspend.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
-> Changes in v3:
-> - Moved the runtime API call's from the dwc driver to PCI framework
->    as it is applicable for all (suggested by mani)
-> - Updated the commit message.
-> - Link to v3: https://lore.kernel.org/all/20240305-runtime_pm_enable-v2-1-a849b74091d1@quicinc.com
-> Changes in v2:
-> - Updated commit message as suggested by mani.
-> - Link to v1: https://lore.kernel.org/r/20240219-runtime_pm_enable-v1-1-d39660310504@quicinc.com
-> ---
-> 
-> ---
->   drivers/pci/probe.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 20475ca30505..b7f9ff75b0b3 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -3108,6 +3108,10 @@ int pci_host_probe(struct pci_host_bridge *bridge)
->   		pcie_bus_configure_settings(child);
->   
->   	pci_bus_add_devices(bus);
-> +
-> +	pm_runtime_set_active(&bridge->dev);
-> +	pm_runtime_enable(&bridge->dev);
-Can you consider using devm_pm_runtime_enable() instead of 
-pm_runtime_enable() ?
-It serves calling pm_runtime_disable() when bridge device is removed as 
-seeing pcie driver is using pci_host_probe() after allocating bridge 
-device, and as part of pcie driver removal calls pci_remove_host_bus(), 
-and bridge device would be freed, but it doesn't call 
-pm_runtime_disable() on it. I don't see any specific functionality issue 
-here as bridge device would be freed anyway, although as we have way to 
-undo what is probe() is doing when bridge device is binding with bridge 
-device. Perhaps we can use available mechanism.
+In preparation for features that are scoped at the NUMA node level
+change the code from explicit references to "cache_level" to a more
+generic scope. At this point the only options for this scope are groups
+of CPUs that share an L2 cache or L3 cache.
 
-Regards,
-Mayank
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(pci_host_probe);
-> 
-> ---
-> base-commit: 30417e6592bfc489a78b3fe564cfe1960e383829
-> change-id: 20240609-runtime_pm-7e6de1190113
-> 
-> Best regards,
+Clean up the error handling when looking up domains. Report invalid id's
+before calling rdt_find_domain() in preparation for better messages when
+scope can be other than cache scope. This means that rdt_find_domain()
+will never return an error. So remove checks for error from the callsites.
+
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ include/linux/resctrl.h                   |  9 ++++-
+ arch/x86/kernel/cpu/resctrl/core.c        | 46 ++++++++++++++++-------
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  2 +-
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c |  6 ++-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    |  5 ++-
+ 5 files changed, 49 insertions(+), 19 deletions(-)
+
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index a365f67131ec..ed693bfe474d 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -150,13 +150,18 @@ struct resctrl_membw {
+ struct rdt_parse_data;
+ struct resctrl_schema;
+ 
++enum resctrl_scope {
++	RESCTRL_L2_CACHE = 2,
++	RESCTRL_L3_CACHE = 3,
++};
++
+ /**
+  * struct rdt_resource - attributes of a resctrl resource
+  * @rid:		The index of the resource
+  * @alloc_capable:	Is allocation available on this machine
+  * @mon_capable:	Is monitor feature available on this machine
+  * @num_rmid:		Number of RMIDs available
+- * @cache_level:	Which cache level defines scope of this resource
++ * @scope:		Scope of this resource
+  * @cache:		Cache allocation related data
+  * @membw:		If the component has bandwidth controls, their properties.
+  * @domains:		RCU list of all domains for this resource
+@@ -174,7 +179,7 @@ struct rdt_resource {
+ 	bool			alloc_capable;
+ 	bool			mon_capable;
+ 	int			num_rmid;
+-	int			cache_level;
++	enum resctrl_scope	scope;
+ 	struct resctrl_cache	cache;
+ 	struct resctrl_membw	membw;
+ 	struct list_head	domains;
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index a113d9aba553..f85b2ff40eef 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -68,7 +68,7 @@ struct rdt_hw_resource rdt_resources_all[] = {
+ 		.r_resctrl = {
+ 			.rid			= RDT_RESOURCE_L3,
+ 			.name			= "L3",
+-			.cache_level		= 3,
++			.scope			= RESCTRL_L3_CACHE,
+ 			.domains		= domain_init(RDT_RESOURCE_L3),
+ 			.parse_ctrlval		= parse_cbm,
+ 			.format_str		= "%d=%0*x",
+@@ -82,7 +82,7 @@ struct rdt_hw_resource rdt_resources_all[] = {
+ 		.r_resctrl = {
+ 			.rid			= RDT_RESOURCE_L2,
+ 			.name			= "L2",
+-			.cache_level		= 2,
++			.scope			= RESCTRL_L2_CACHE,
+ 			.domains		= domain_init(RDT_RESOURCE_L2),
+ 			.parse_ctrlval		= parse_cbm,
+ 			.format_str		= "%d=%0*x",
+@@ -96,7 +96,7 @@ struct rdt_hw_resource rdt_resources_all[] = {
+ 		.r_resctrl = {
+ 			.rid			= RDT_RESOURCE_MBA,
+ 			.name			= "MB",
+-			.cache_level		= 3,
++			.scope			= RESCTRL_L3_CACHE,
+ 			.domains		= domain_init(RDT_RESOURCE_MBA),
+ 			.parse_ctrlval		= parse_bw,
+ 			.format_str		= "%d=%*u",
+@@ -108,7 +108,7 @@ struct rdt_hw_resource rdt_resources_all[] = {
+ 		.r_resctrl = {
+ 			.rid			= RDT_RESOURCE_SMBA,
+ 			.name			= "SMBA",
+-			.cache_level		= 3,
++			.scope			= RESCTRL_L3_CACHE,
+ 			.domains		= domain_init(RDT_RESOURCE_SMBA),
+ 			.parse_ctrlval		= parse_bw,
+ 			.format_str		= "%d=%*u",
+@@ -392,9 +392,6 @@ struct rdt_domain *rdt_find_domain(struct rdt_resource *r, int id,
+ 	struct rdt_domain *d;
+ 	struct list_head *l;
+ 
+-	if (id < 0)
+-		return ERR_PTR(-ENODEV);
+-
+ 	list_for_each(l, &r->domains) {
+ 		d = list_entry(l, struct rdt_domain, list);
+ 		/* When id is found, return its domain. */
+@@ -484,6 +481,19 @@ static int arch_domain_mbm_alloc(u32 num_rmid, struct rdt_hw_domain *hw_dom)
+ 	return 0;
+ }
+ 
++static int get_domain_id_from_scope(int cpu, enum resctrl_scope scope)
++{
++	switch (scope) {
++	case RESCTRL_L2_CACHE:
++	case RESCTRL_L3_CACHE:
++		return get_cpu_cacheinfo_id(cpu, scope);
++	default:
++		break;
++	}
++
++	return -EINVAL;
++}
++
+ /*
+  * domain_add_cpu - Add a cpu to a resource's domain list.
+  *
+@@ -499,7 +509,7 @@ static int arch_domain_mbm_alloc(u32 num_rmid, struct rdt_hw_domain *hw_dom)
+  */
+ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+ {
+-	int id = get_cpu_cacheinfo_id(cpu, r->cache_level);
++	int id = get_domain_id_from_scope(cpu, r->scope);
+ 	struct list_head *add_pos = NULL;
+ 	struct rdt_hw_domain *hw_dom;
+ 	struct rdt_domain *d;
+@@ -507,12 +517,14 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+ 
+ 	lockdep_assert_held(&domain_list_lock);
+ 
+-	d = rdt_find_domain(r, id, &add_pos);
+-	if (IS_ERR(d)) {
+-		pr_warn("Couldn't find cache id for CPU %d\n", cpu);
++	if (id < 0) {
++		pr_warn_once("Can't find domain id for CPU:%d scope:%d for resource %s\n",
++			     cpu, r->scope, r->name);
+ 		return;
+ 	}
+ 
++	d = rdt_find_domain(r, id, &add_pos);
++
+ 	if (d) {
+ 		cpumask_set_cpu(cpu, &d->cpu_mask);
+ 		if (r->cache.arch_has_per_cpu_cfg)
+@@ -552,15 +564,21 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
+ 
+ static void domain_remove_cpu(int cpu, struct rdt_resource *r)
+ {
+-	int id = get_cpu_cacheinfo_id(cpu, r->cache_level);
++	int id = get_domain_id_from_scope(cpu, r->scope);
+ 	struct rdt_hw_domain *hw_dom;
+ 	struct rdt_domain *d;
+ 
+ 	lockdep_assert_held(&domain_list_lock);
+ 
++	if (id < 0) {
++		pr_warn_once("Can't find domain id for CPU:%d scope:%d for resource %s\n",
++			     cpu, r->scope, r->name);
++		return;
++	}
++
+ 	d = rdt_find_domain(r, id, NULL);
+-	if (IS_ERR_OR_NULL(d)) {
+-		pr_warn("Couldn't find cache id for CPU %d\n", cpu);
++	if (!d) {
++		pr_warn("Couldn't find domain with id=%d for CPU %d\n", id, cpu);
+ 		return;
+ 	}
+ 	hw_dom = resctrl_to_arch_dom(d);
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+index b7291f60399c..2bf021d42500 100644
+--- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -577,7 +577,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
+ 
+ 	r = &rdt_resources_all[resid].r_resctrl;
+ 	d = rdt_find_domain(r, domid, NULL);
+-	if (IS_ERR_OR_NULL(d)) {
++	if (!d) {
+ 		ret = -ENOENT;
+ 		goto out;
+ 	}
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 1bbfd3c1e300..201011f0ed0b 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -292,9 +292,13 @@ static void pseudo_lock_region_clear(struct pseudo_lock_region *plr)
+  */
+ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
+ {
++	enum resctrl_scope scope = plr->s->res->scope;
+ 	struct cacheinfo *ci;
+ 	int ret;
+ 
++	if (WARN_ON_ONCE(scope != RESCTRL_L2_CACHE && scope != RESCTRL_L3_CACHE))
++		return -ENODEV;
++
+ 	/* Pick the first cpu we find that is associated with the cache. */
+ 	plr->cpu = cpumask_first(&plr->d->cpu_mask);
+ 
+@@ -305,7 +309,7 @@ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
+ 		goto out_region;
+ 	}
+ 
+-	ci = get_cpu_cacheinfo_level(plr->cpu, plr->s->res->cache_level);
++	ci = get_cpu_cacheinfo_level(plr->cpu, scope);
+ 	if (ci) {
+ 		plr->line_size = ci->coherency_line_size;
+ 		plr->size = rdtgroup_cbm_to_size(plr->s->res, plr->d, plr->cbm);
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index cb68a121dabb..50f5876a3020 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1454,8 +1454,11 @@ unsigned int rdtgroup_cbm_to_size(struct rdt_resource *r,
+ 	struct cacheinfo *ci;
+ 	int num_b;
+ 
++	if (WARN_ON_ONCE(r->scope != RESCTRL_L2_CACHE && r->scope != RESCTRL_L3_CACHE))
++		return size;
++
+ 	num_b = bitmap_weight(&cbm, r->cache.cbm_len);
+-	ci = get_cpu_cacheinfo_level(cpumask_any(&d->cpu_mask), r->cache_level);
++	ci = get_cpu_cacheinfo_level(cpumask_any(&d->cpu_mask), r->scope);
+ 	if (ci)
+ 		size = ci->size / r->cache.cbm_len * num_b;
+ 
+-- 
+2.45.0
+
