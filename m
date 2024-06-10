@@ -1,58 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7271145FEF;
-	Mon, 10 Jun 2024 17:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2EA8F6D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 17:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718040533; cv=none; b=aohNyqK1Xy37WfTp00oCeRsml1JLSme8FiGO5XBDBjfOYcAsUQZStPJIrPDhL2T02zJtN5d+ED8EXyxGPPq2QDk2d6QjUpO9a4Zt09ehNEK0EC7hRoyadSFANzixoBtY/A1pi/cc/blfiZwMjyHvPtOI5V9ql1idTJazEBwWBik=
+	t=1718040689; cv=none; b=uD0fymWmvqnwFihZyVZ/8EIVMML6dGucg5NQaEH77wGEoE24ttvpSjVaoq401il8isv+Jqwz5HROqSJZIqme+5mupP+/GRm3YKHuYr7cnp5qDD5RZ7+hPG9muKBw7UB8szpYOr8/nphfkoCKijGpBjtGEXoEqWxLOKz76TQKWMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718040533; c=relaxed/simple;
-	bh=hsXdp2QwbthzBhOSFd6YbbgLNTqyXSDvwcDh62NNNiI=;
+	s=arc-20240116; t=1718040689; c=relaxed/simple;
+	bh=n9rffRvvZDo46Wm4EmkIP9rTg/Dg4fSh/n65t+tFCaQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uNpc9Vhw66yefjY3JIvi0ZZ5Q3xqfmTSvDagfbYrAFQVXC/utjgbhH54e0Jckhg1qa0Ev7uqIzK9lSBxmwMZk/1pAsosZJl6w4tMC52WivIwr8LxU/2hY6RBMnTmBJQCrP5TTPNFDxpfaIOG4y8owxz46XQWeiCz/TmADJSZPKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNpdFrgy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zohlf/f6/egYbsxc+nmw4fq/Jq4S905gnZAnSgBMmCQDGcUWxptqPg2iZEeOR53erPgcNZCCUBJ02qu/N8wvRjSP0Z3MUOijkcrTvX9M8fcZNVM5b+G8LUel0xr9PehAizeYMFJXmZUAOTNAif93BavOIszPGTp+TwN+asldA0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ej3yi98M; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNpdFrgy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D87C2BBFC;
-	Mon, 10 Jun 2024 17:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718040533;
-	bh=hsXdp2QwbthzBhOSFd6YbbgLNTqyXSDvwcDh62NNNiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aNpdFrgy5Zza1DDVY23kZJNbw/0JA56+1KNloDqPZnNNfPbTnlj+hn4pOK4Czyakl
-	 /mOUHYorQi9awPhEnKK70KmfiZViAMbYcH7p/uuDpVqq+RsHyylTJp1EIZDPGb4n7M
-	 L2UZeq/Vv0BDdJwq9PsThFKWQX7c9U0hzvbtX8AoIMUEMKXqHuyfx82Ltmhb2ql5Qw
-	 rwP7azFkzipdwQanc/NhpRb7JaqUFsQhRjsVZiYPXxzQoRmJZFC732CmFuKeuubuI5
-	 zdBKP4p1y+1aWACQ75TI5Ta2ITCt4yWds0rtsqyvm+HYlZedAG8K5ODb1zqGI6Z5hy
-	 MY6Yi5AEWDmng==
-Date: Mon, 10 Jun 2024 10:28:52 -0700
-From: Kees Cook <kees@kernel.org>
-To: Erick Archer <erick.archer@outlook.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <202406101010.E1C77AE9D@keescook>
-References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ej3yi98M"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2506fc3a6cfso2297497fac.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 10:31:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1718040687; x=1718645487; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mLPNuDrUNKDp5u92gqFlS+I5przmPvAZoMgl2TmV6Gw=;
+        b=ej3yi98MUBQOprm9CDvAr6Skn3VwYbw46Y5ZHRwl9iFzGWfWTgAf4Qfz2mvMkYwWpA
+         qfY0+nUqCv5Nuz7kiwblVFQLbXjKfwlN9n9LlL44iEsHn0zEbp5XoPkhz8x+UM5Kd9yq
+         iMhbHxXilxbFuzlBal80MGMb0RHHqRh1fL2hW0KEaS9sS2H4h48/Q030XUIyuDCvjxdk
+         rOn8hu7eTcHBMdwNVEMYuVE4UeRuF5IrOvLvxTg0/PkhufMeLRmctvZTJoRMZg4bDxeH
+         6mIvf4B8580auN7EnGCCCX3UsXhGyNAF8KdYD0bd6u1ovV+MrQqY7NknTZrP4fUcg6t6
+         Ie9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718040687; x=1718645487;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mLPNuDrUNKDp5u92gqFlS+I5przmPvAZoMgl2TmV6Gw=;
+        b=STH03KO1MppbW7t+ho4uxD+63qTLp3Jcme9WMe4sy9Aj9yY3z51Yw0LjJwM1R9tb+n
+         veVs3mJ3RCrgknhTIUeN22wkCeEFuAyX8Mlm0PaOcGQkh6H/y2FB8QntB89aT/PAh40m
+         JIaOiFyUFnkK88QmeP3QEi0ynHp97hXOslCjnWxIAXmXh9Mz+7s4Z3830Na/n/7PcUWf
+         LaCePjS+k2/1B7pJUugiBSo/TS70Fel80km9rMmdb2Cux0iBiI8WjAuJtB7zGXNKaQVg
+         Wdy9stYm2sDApk9mIcQCkcDGi3lLCXm2+KEu97JipGmDCm8dOJgTE/Pr98HBEJfO1qK0
+         OW7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWmh90WS2VW0NpFjB2pcwW5A3cr8sK9NEP+U7FJxKb9iXWLDZ87W+IuFHD2jX+XBEw2aeYHeJbpOo3I6od2zE8XsBwGJTfSfGzI1eCX
+X-Gm-Message-State: AOJu0YxD2zhWlb2OdsQ+aR020N5PqsebFZk43elCiXm26JVn90HeHeJo
+	p2tLvSyr9dHr0alAquit5tnoEBTTrLSVdbROaaGsEZb5AQAVdHDia7A8VYpVoqE=
+X-Google-Smtp-Source: AGHT+IFXpbUysE/xAsd86TbRqWbmmSWkpKf5x4NJLkNSutmjNPooTKdkJFVMwrKZ0jmXH4RSO4kJuw==
+X-Received: by 2002:a05:6870:ae81:b0:24c:ad9d:417f with SMTP id 586e51a60fabf-25464475e26mr11011556fac.7.1718040686697;
+        Mon, 10 Jun 2024 10:31:26 -0700 (PDT)
+Received: from ziepe.ca ([128.77.69.89])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-79550c14b4bsm266991585a.29.2024.06.10.10.31.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 10:31:26 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sGirc-00Eq4E-Gf;
+	Mon, 10 Jun 2024 14:31:24 -0300
+Date: Mon, 10 Jun 2024 14:31:24 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] iommu: Make iommu_sva_domain_alloc() static
+Message-ID: <20240610173124.GK791043@ziepe.ca>
+References: <20240528045458.81458-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,88 +74,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+In-Reply-To: <20240528045458.81458-1-baolu.lu@linux.intel.com>
 
-On Sat, Jun 01, 2024 at 06:56:15PM +0200, Erick Archer wrote:
-> Hi everyone,
+On Tue, May 28, 2024 at 12:54:58PM +0800, Lu Baolu wrote:
+> iommu_sva_domain_alloc() is only called in iommu-sva.c, hence make it
+> static.
 > 
-> This is an effort to get rid of all multiplications from allocation
-> functions in order to prevent integer overflows [1][2].
+> On the other hand, iommu_sva_domain_alloc() should not return NULL anymore
+> after commit <80af5a452024> ("iommu: Add ops->domain_alloc_sva()"), the
+> removal of inline code avoids potential confusion.
+> 
+> Fixes: 80af5a452024 ("iommu: Add ops->domain_alloc_sva()")
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  include/linux/iommu.h     | 8 --------
+>  drivers/iommu/iommu-sva.c | 6 ++++--
+>  2 files changed, 4 insertions(+), 10 deletions(-)
 
-I didn't actually see these 3 patches in this thread nor via lore.
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-> In the first patch, the "struct amd_uncore_ctx" can be refactored to
-> use a flex array for the "events" member. This way, the allocation/
-> freeing of the memory can be simplified. Then, the struct_size()
-> helper can be used to do the arithmetic calculation for the memory
-> to be allocated.
-
-I like this patch because it reduces the allocation from 2 to 1. This
-isn't what Peter might see as "churn": this is an improvement in resource
-utilization.
-
-I think it's here:
-https://lore.kernel.org/linux-hardening/AS8PR02MB7237E4848B44A5226BD3551C8BE02@AS8PR02MB7237.eurprd02.prod.outlook.com/
-
-> In the second patch, as the "struct intel_uncore_box" ends in a
-> flexible array, the preferred way in the kernel is to use the
-> struct_size() helper to do the arithmetic instead of the calculation
-> "size + count * size" in the kzalloc_node() function.
-
-This is
-https://lore.kernel.org/linux-hardening/AS8PR02MB7237F4D39BF6AA0FF40E91638B392@AS8PR02MB7237.eurprd02.prod.outlook.com/
-
-I prefer this style, as it makes things unambiguous ("this will never
-wrap around") without having to check the associated types and doesn't make
-the resulting binary code different in the "can never overflow" case.
-
-In this particular case:
-
-int size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
-
-"int numshared" comes from struct intel_uncore_type::num_shared_regs,
-which is:
-
-        unsigned num_shared_regs:8;
-
-And the struct sizes are:
-
-$ pahole -C intel_uncore_box gcc-boot/vmlinux | grep size:
-        /* size: 488, cachelines: 8, members: 19 */
-$ pahole -C intel_uncore_extra_reg gcc-boot/vmlinux | grep size:
-        /* size: 96, cachelines: 2, members: 5 */
-
-So we have:
-
-s32 size = 488 + u8 * 96
-
-Max size here is 24968 so it can never overflow an s32, so I can see
-why Peter views this as "churn".
-
-I still think the patch is a coding style improvement, but okay.
-
-> In the third patch, as the "struct perf_buffer" also ends in a
-> flexible array, the preferred way in the kernel is to use the
-> struct_size() helper to do the arithmetic instead of the calculation
-> "size + count * size" in the kzalloc_node() functions. At the same
-> time, prepare for the coming implementation by GCC and Clang of the
-> __counted_by attribute.
-
-This is
-https://lore.kernel.org/linux-hardening/AS8PR02MB72379B4807F3951A1B926BA58BE02@AS8PR02MB7237.eurprd02.prod.outlook.com/
-
-This provides __counted_by coverage, and I think this is important to
-gain in ever place we can. Given that this is part of a ring buffer
-implementation that is arbitrarily sized, this is exactly the kind of
-place I'd like to see __counted_by used. This is a runtime robustness
-improvement, so I don't see this a "churn" at all.
-
-
-Peter, for patches 1 and 3, if you'd prefer not to carry them, I could
-put them in the hardening tree to keep them out of your way. It seems
-clear you don't want patch 2 at all.
-
--Kees
-
--- 
-Kees Cook
+Jason
