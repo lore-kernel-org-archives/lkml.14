@@ -1,172 +1,132 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D487E1EA8F;
-	Mon, 10 Jun 2024 16:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B081EA8F;
+	Mon, 10 Jun 2024 16:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718038684; cv=none; b=DOHFIIyKbZluj6rlNf71lDm2XcbFYKqVd13/4+qmlMi/YY2D5ccLqY0ND1BPqrTbgnzsjnxfBt6oMuIX6e1SDvPh1iF4uWHvq2Am1qV4URKfgU76377MolCa9mrrJ4H0ksGD+jgksOHv7oC7Za0VLe+WL5/JFn4XPkGl2oC/1Wg=
+	t=1718038749; cv=none; b=V1LRQ6utXvcvfFcBrZ5ftyvnSbwpOQZMeFvM3XfiMeTpNuerfIWCxasvgfma/n9IamC24k4tDkv3Wc7s5gEyHVaQ/QFKTeVsRqSPOE5Qdr7DKLAJR3ydhPaAvcQYXDgUuJiKZPf9hvEgikiE9FcGyJKMaqjcvYH2sWQy3UqdRQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718038684; c=relaxed/simple;
-	bh=GbHdTLYub+sD5dM94PZbMo3MaJnKZiE5cFXrl5fkjXg=;
+	s=arc-20240116; t=1718038749; c=relaxed/simple;
+	bh=9D3+hG1aRfAFePtrgS5rz7tAOYVp4aSm+73FoWh/he4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DqeVDBCYyUl27SO4GCnuPxiGcD4lnSpSNdQA/DhSKQJr1o+FDHu3hDD+A/oaND+YYUdsntpYswgpE+H1ElTfooXeZ5aPFdxGY8icnK+Ha2EXY6KlrxfMYPlP5J2gyfgXC9FDzN2yY+M9y+qYCSjOam95Cdnn7F/QRX4HItE/tmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lucW27f2; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QzwINx5WIdvvfc0HaU3HTyzPweR6QmLt0LmTsHXmwG6w1SP7gOnBZOmzg9SRbd7GcRaXMZDzCe86jlZAMfFVY2efNTaKj4+wO5yyPqeQa5rI5KUWgdE9oqXwafrWKOJq24dwaCPXCW+cRmOYeSjcw1zmSBU2d1MtKFe1pe+9EiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MxLVmKdS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lucW27f2"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-35f1e35156cso1449206f8f.1;
-        Mon, 10 Jun 2024 09:58:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718038681; x=1718643481; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=YzhH3IOabREM20REb/myGlikn8tIz8znLMQG7lX39H0=;
-        b=lucW27f288qBMrV/Y6MmNrn0ShEVENXd3LS+2Cf2OI5DNUtnoiBjB5xQ0fMPtg5ejg
-         e465ImeOi+Xd8yPb9v0ukyWOsmmJppURrfa7WyTu5bDgM8vleNC4im1XSQ+QuwX3MxmF
-         b+7zcYrXybEPMxkuHtENbefRmAexdBqiF/wYLN9In4pBuPu2p0NapkA4/cKWZ4Jv+o3X
-         yzd7Ky/7dlQZcTbxHe3SJaSc0hEvZuI3S28BjPTMo22trRt7VbkktLz2j/9GQKFsNMw7
-         9IyaOBHtwrvPYgtA7WgOYkmGRGOqxY9qc6sXqnritkEzQjdUwUsJOgG55CLkt8be/tm7
-         Ue/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718038681; x=1718643481;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YzhH3IOabREM20REb/myGlikn8tIz8znLMQG7lX39H0=;
-        b=NBsFVhvfy/m7Sr+FMS4O1fPEghYwOHyWCOB4Jg0frdjb0KvZGZjG7D5HxuKeCXXZXw
-         vAHZ9RygUei6Uzosv76p1B0icY+f6Xw7Hijf4D3+948KhwakW4GWJRfzIyEe/ECyZMuF
-         wenNGFnVqD0mbhiV2nVYey1NwUEzhuM7/5G/sfCl+POokq7ePfCapeQYIe7XFgBOyZgf
-         zhajeU/kZFtB+owvjDlkwrjqJC5CJwPjBnq6vxe/jKgnVNo2xvChv0UnqmnFhlbp6ul/
-         teQ1Wu/L6hONS7NPax64vvo1/Z2FJY+3lFwTWe35FL7ISC+cgDRDJC5ihPw4IqvB6/oL
-         T+Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCUb1M23iM+nu8I0TA0yk7k4wVTsCqawRzvCbbHtv+FrMKpG1ksAvv9YA5EIjvN0/d9vB42tj3X0H2A23V03N1kPpVK7NTYqvUb0drpM/P5kcEUlYR5bJkPdrBqORFy7nVpdKV4O6K6DUBg=
-X-Gm-Message-State: AOJu0Yx6bessLHYRKMB9G81iq2GfIpltRmEiH+CN0dUISLbwDyIJ9YAn
-	s0Xka3Ur/SJKXttd9i1anwwjEGmvyWqDmErxwBNioJepNsAFNQ2t
-X-Google-Smtp-Source: AGHT+IG+QPm7gKyzny8UH/DTLMeR8S6+4sdE41Ci4AqJdc31dcZI00ajdyOAPOBqiAWKX9RhsM3lkA==
-X-Received: by 2002:a5d:53c3:0:b0:35f:234a:9c0e with SMTP id ffacd0b85a97d-35f234a9cd9mr2638920f8f.30.1718038681005;
-        Mon, 10 Jun 2024 09:58:01 -0700 (PDT)
-Received: from fedora ([213.94.26.172])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f25dc3f07sm2554737f8f.79.2024.06.10.09.57.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 09:58:00 -0700 (PDT)
-Date: Mon, 10 Jun 2024 18:57:58 +0200
-From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Arnd Bergmann <arnd@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Rahul Rameshbabu <rrameshbabu@nvidia.com>,
-	Fabio Baltieri <fabiobaltieri@chromium.org>,
-	Ivan Gorinov <linux-kernel@altimeter.info>,
-	Johannes Roith <johannes@gnu-linux.rocks>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: uclogic: avoid linking common code into multiple
- modules
-Message-ID: <Zmcwlt6Kfpt09tKi@fedora>
-References: <20240529094816.1859073-1-arnd@kernel.org>
- <ZmSi5_-4mD4AaIJW@fedora>
- <54c19328-35e2-4506-aa3a-a0b08813d873@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MxLVmKdS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0C5C32786;
+	Mon, 10 Jun 2024 16:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718038748;
+	bh=9D3+hG1aRfAFePtrgS5rz7tAOYVp4aSm+73FoWh/he4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MxLVmKdSgBkH6q2ubwseqrRXZQ96btSv8+fPdDoV/au92GQCR7N4oaPEy+pXxhY8v
+	 AS10HSs5e49HbTCYjrPWg8+tjXGaeflr0/QdEO1e/eGgaLI4aB3+AepDyI+8xbqZJ1
+	 AL9afjm6ei9MwRbnmWkY7B3oC/UTdjKb0WdFdPA3qIiMElk/ikhAUdrduTh2+1RWbY
+	 6X5A8YaAmc6IwTBjF8fS6aASNC3MARvaIRlUtzn2pL7jIJKJbLOL68XPXQ2HkWHLaf
+	 iGYb92zGA5c8Fw4IQuprDoC9LbnE7fw4gi/vwB0dNonMpwShTtpm4vtXWzVe8WyoDd
+	 r2CsodAQoKX/g==
+Date: Mon, 10 Jun 2024 09:59:08 -0700
+From: Kees Cook <kees@kernel.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Amer Al Shanawany <amer.shanawany@gmail.com>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2] selftests: seccomp: fix format-zero-length warnings
+Message-ID: <202406100957.750569FFD1@keescook>
+References: <be032a65-e61b-40e0-a982-cb622ccca548@linuxfoundation.org>
+ <20240607124117.66769-2-amer.shanawany@gmail.com>
+ <a461ba9f-b171-4b49-b282-1f4e2830f31e@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <54c19328-35e2-4506-aa3a-a0b08813d873@app.fastmail.com>
+In-Reply-To: <a461ba9f-b171-4b49-b282-1f4e2830f31e@linuxfoundation.org>
 
-On Mon, Jun 10, 2024 at 08:24:51AM +0200, Arnd Bergmann wrote:
-> On Sat, Jun 8, 2024, at 20:28, José Expósito wrote:
-> > On Wed, May 29, 2024 at 11:48:05AM +0200, Arnd Bergmann wrote:
+On Fri, Jun 07, 2024 at 02:58:47PM -0600, Shuah Khan wrote:
+> On 6/7/24 06:41, Amer Al Shanawany wrote:
+> > fix the following errors by removing empty print statements:
+> > seccomp_benchmark.c:197:24: warning: zero-length gnu_printf format
+> >   string [-Wformat-zero-length]
+> >    197 |         ksft_print_msg("");
+> >        |                        ^~
+> > seccomp_benchmark.c:202:24: warning: zero-length gnu_printf format
+> >   string [-Wformat-zero-length]
+> >    202 |         ksft_print_msg("");
+> >        |                        ^~
+> > seccomp_benchmark.c:204:24: warning: zero-length gnu_printf format
+> >   string [-Wformat-zero-length]
+> >    204 |         ksft_print_msg("");
+> >        |                        ^~
+> > 
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202312260235.Uj5ug8K9-lkp@intel.com/
+> > Signed-off-by: Amer Al Shanawany <amer.shanawany@gmail.com>
+> > ---
+> > Changes v1 -> v2:
+> > removed empty print statements
 > 
-> >> @@ -154,10 +152,8 @@ obj-$(CONFIG_HID_WINWING)	+= hid-winwing.o
-> >>  obj-$(CONFIG_HID_SENSOR_HUB)	+= hid-sensor-hub.o
-> >>  obj-$(CONFIG_HID_SENSOR_CUSTOM_SENSOR)	+= hid-sensor-custom.o
-> >>  
-> >> -hid-uclogic-test-objs		:= hid-uclogic-rdesc.o \
-> >> -				   hid-uclogic-params.o \
-> >> -				   hid-uclogic-rdesc-test.o
-> >> -obj-$(CONFIG_HID_KUNIT_TEST)	+= hid-uclogic-test.o
-> >> +hid-uclogic-test-objs		:= hid-uclogic-rdesc-test.o
-> >> +obj-$(CONFIG_HID_KUNIT_TEST)	+= hid-uclogic-test.o hid-uclogic-params.o hid-uclogic-params.o
-> >>  
-> >>  obj-$(CONFIG_USB_HID)		+= usbhid/
-> >>  obj-$(CONFIG_USB_MOUSE)		+= usbhid/
-> >
-> > I tested your patch with:
-> >
-> > 	hid-uclogic-objs		:= hid-uclogic-core.o \
-> > 					   hid-uclogic-rdesc.o \
-> > 					   hid-uclogic-params.o
-> > 	obj-$(CONFIG_HID_UCLOGIC)	+= hid-uclogic.o
-> > 	[...]
-> > 	hid-uclogic-test-objs		:= hid-uclogic-rdesc-test.o
-> > 	obj-$(CONFIG_HID_KUNIT_TEST)	+= hid-uclogic.o hid-uclogic-test.o
-> >
-> > And I think it is a bit more clear and it looks like it does the trick
-> > removing the warning.
+> Kees,
 > 
-> Right, that seems fine.
+> Is this change okay with you. I didn't see any use for
+> these empty ksft_print_msg().
 > 
-> > Also, with that change only "EXPORT_SYMBOL_GPL(uclogic_rdesc_template_apply);"
-> > is required. The other EXPORT_SYMBOL_GPL can be removed.
-> >
-> > However, I'm not sure about what are the best practices using EXPORT_SYMBOL_GPL
-> > and if it should be used for each function/data in the .h file. Maybe that's
-> > why you added them.
-> 
-> No, having only the single export is better here, you should
-> have as few of them as possible. I did picked the more complicated
-> approach as I wasn't sure if loading the entire driver from the
-> test module caused any problems. Let's use your simpler patch
-> then.
-> 
->      Arnd
+> I will take this patch if you are okay with the change.
 
-Turns out that, since the last time I checked the KUnit docs,
-we have "EXPORT_SYMBOL_IF_KUNIT" available now.
+Dropping these means that the "#" marks go missing. Currently:
 
-I think we can use it and your final patch, without the MODULE_*
-changes, could look like:
+# Running on:
+# Linux proton 6.5.0-25-generic #25~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Feb 20 16:09:15 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
 
-diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
-index ce71b53ea6c5..e40f1ddebbb7 100644
---- a/drivers/hid/Makefile
-+++ b/drivers/hid/Makefile
-@@ -154,10 +154,8 @@ obj-$(CONFIG_HID_WINWING)  += hid-winwing.o
- obj-$(CONFIG_HID_SENSOR_HUB)   += hid-sensor-hub.o
- obj-$(CONFIG_HID_SENSOR_CUSTOM_SENSOR) += hid-sensor-custom.o
- 
--hid-uclogic-test-objs          := hid-uclogic-rdesc.o \
--                                  hid-uclogic-params.o \
--                                  hid-uclogic-rdesc-test.o
--obj-$(CONFIG_HID_KUNIT_TEST)   += hid-uclogic-test.o
-+hid-uclogic-test-objs          := hid-uclogic-rdesc-test.o
-+obj-$(CONFIG_HID_KUNIT_TEST)   += hid-uclogic.o hid-uclogic-test.o
- 
- obj-$(CONFIG_USB_HID)          += usbhid/
- obj-$(CONFIG_USB_MOUSE)                += usbhid/
-diff --git a/drivers/hid/hid-uclogic-rdesc.c b/drivers/hid/hid-uclogic-rdesc.c
-index b6dfdf6356a6..6c7a90417569 100644
---- a/drivers/hid/hid-uclogic-rdesc.c
-+++ b/drivers/hid/hid-uclogic-rdesc.c
-@@ -17,6 +17,7 @@
- #include "hid-uclogic-rdesc.h"
- #include <linux/slab.h>
- #include <asm/unaligned.h>
-+#include <kunit/visibility.h>
- 
- /* Fixed WP4030U report descriptor */
- __u8 uclogic_rdesc_wp4030u_fixed_arr[] = {
-@@ -1242,3 +1243,4 @@ __u8 *uclogic_rdesc_template_apply(const __u8 *template_ptr,
- 
-        return rdesc_ptr;
- }
-+EXPORT_SYMBOL_IF_KUNIT(uclogic_rdesc_template_apply);
+with the proposed patch:
 
-I hope that helps,
-Jose
+# Running on:
+Linux proton 6.5.0-25-generic #25~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Feb 20 16:09:15 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+
+This breaks the TAP syntax for the test, so we should find a different
+solution.
+
+Perhaps:
+
+ksft_print_msg("%s", "");
+
+?
+
+-Kees
+
+
+> 
+> > ---
+> >   tools/testing/selftests/seccomp/seccomp_benchmark.c | 3 ---
+> >   1 file changed, 3 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/seccomp/seccomp_benchmark.c b/tools/testing/selftests/seccomp/seccomp_benchmark.c
+> > index b83099160fbc..6fe34be6c693 100644
+> > --- a/tools/testing/selftests/seccomp/seccomp_benchmark.c
+> > +++ b/tools/testing/selftests/seccomp/seccomp_benchmark.c
+> > @@ -194,14 +194,11 @@ int main(int argc, char *argv[])
+> >   	ksft_set_plan(7);
+> >   	ksft_print_msg("Running on:\n");
+> > -	ksft_print_msg("");
+> >   	system("uname -a");
+> >   	ksft_print_msg("Current BPF sysctl settings:\n");
+> >   	/* Avoid using "sysctl" which may not be installed. */
+> > -	ksft_print_msg("");
+> >   	system("grep -H . /proc/sys/net/core/bpf_jit_enable");
+> > -	ksft_print_msg("");
+> >   	system("grep -H . /proc/sys/net/core/bpf_jit_harden");
+> >   	affinity();
+> 
+> 
+> thanks,
+> -- Shuah
+
+-- 
+Kees Cook
