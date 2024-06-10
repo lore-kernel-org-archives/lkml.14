@@ -1,301 +1,164 @@
-Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220378249B;
-	Mon, 10 Jun 2024 12:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034FF7FBA8
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718024287; cv=none; b=ThAgZxt7Yd6t2bC+iavO6+j9ulbjhEofvxVrrZtXRyPjbWcjfI8emWj87irQVKvDz//XmEru56Bz/cjnNCmV0SdXmh5UohP2AbaWyBMRshmrEw9sDrLaywc5TBlTOY2upD4TQp8jPZWpFdrz79krrXf2U2WNhovI5fYM2C3t0zM=
+	t=1718024329; cv=none; b=Th7dKPv/tF6Muqm5QxHPj31CCrVtmuW1Ol5J0N5Us7GnZ7oZo45+yH7OwL6PlmtfB6rdpNVOS48bIu16kNgtSEAkF3lOJcM9GJCekW9roxbbMViYcoR5z+Zt/6G/g0QbuRd4jSsgwLiOpAj25IRlUTXTBoCQFvNAg0wUoOHqsr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718024287; c=relaxed/simple;
-	bh=cF0E+B4FPxCw3NIksfU88VpweuvV/RgdxQYyL+4mq08=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GkhvVOy/DIsY3cN9s5PAYfg/xK2x+58gsBnmD6syN8WBZsXuWtAaWHEKP26sYvcjM6Ex9UYygsBym6/2oANjm0v2BeiG4nf/7CQUQzB+gZqpmNl/j67w2GzCtziRZo7a+7hEIj5VWlStSOZRCptb4o3OxCLP4amu5dRQX1glKE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=WHBeDpKY; arc=none smtp.client-ip=99.78.197.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1718024329; c=relaxed/simple;
+	bh=69yZ/2KQxzDzZZIRemtwFN2dhIn84qTlZc+PTH2+QiU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Porso8XpSy4dmTDWlzUYCH/7fQfQsXenvgNryY54TI87QAzIlL+oUkUKpKO3XPvx68Yrj1S5zpQSk3VpXXSVQvvz/KlRRM94wrrS8PlW/y/anM/rR0yuknjXNmet4F5oGnAaDUj02DeMNe0b/7NCXQH3wLJr1Gdm0jfallJ6AW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o99VGThd; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="WHBeDpKY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o99VGThd"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57864327f6eso6450968a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:58:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1718024286; x=1749560286;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6Nf6ZLgbfMQjavUbn1ucKixnNPi219iSyqSVZoondaE=;
-  b=WHBeDpKYK7kx74ODFfNqzuhr6BWxaq1ra3etcxnhAI/pKZ6NqIzUhG6B
-   5HZR0JgWnP/MgD8RpeRNXcbTU/Y2GrnV/RxDgvcGpAkHUlwnSNXG7V2og
-   hLcizaQ4TbD3muN58id5gOVKgPlqfSlXtntl8Iy1S1RA51CGek+yPVQwO
-   M=;
-X-IronPort-AV: E=Sophos;i="6.08,227,1712620800"; 
-   d="scan'208";a="95641674"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 12:58:01 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.10.100:27556]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.0.45:2525] with esmtp (Farcaster)
- id 0bb2c816-ac3a-4ec2-a296-3d9a6dc8de2e; Mon, 10 Jun 2024 12:58:00 +0000 (UTC)
-X-Farcaster-Flow-ID: 0bb2c816-ac3a-4ec2-a296-3d9a6dc8de2e
-Received: from EX19D007EUA001.ant.amazon.com (10.252.50.133) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 10 Jun 2024 12:57:54 +0000
-Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.204) by
- EX19D007EUA001.ant.amazon.com (10.252.50.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 10 Jun 2024 12:57:53 +0000
-Received: from dev-dsk-fgriffo-1c-69b51a13.eu-west-1.amazon.com
- (10.13.244.152) by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34 via Frontend Transport; Mon, 10 Jun 2024 12:57:49 +0000
-From: Fred Griffoul <fgriffo@amazon.co.uk>
-To: <griffoul@gmail.com>
-CC: Fred Griffoul <fgriffo@amazon.co.uk>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Alex Williamson
-	<alex.williamson@redhat.com>, Waiman Long <longman@redhat.com>, Zefan Li
-	<lizefan.x@bytedance.com>, Tejun Heo <tj@kernel.org>, Johannes Weiner
-	<hannes@cmpxchg.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier
-	<maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, Mark Brown
-	<broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Joey Gouly
-	<joey.gouly@arm.com>, Ryan Roberts <ryan.roberts@arm.com>, Jeremy Linton
-	<jeremy.linton@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yi Liu
-	<yi.l.liu@intel.com>, Kevin Tian <kevin.tian@intel.com>, Eric Auger
-	<eric.auger@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, "Christian
- Brauner" <brauner@kernel.org>, Ankit Agrawal <ankita@nvidia.com>, "Reinette
- Chatre" <reinette.chatre@intel.com>, Ye Bin <yebin10@huawei.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <cgroups@vger.kernel.org>
-Subject: [PATCH v5 2/2] vfio/pci: add msi interrupt affinity support
-Date: Mon, 10 Jun 2024 12:57:08 +0000
-Message-ID: <20240610125713.86750-3-fgriffo@amazon.co.uk>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240610125713.86750-1-fgriffo@amazon.co.uk>
-References: <20240610125713.86750-1-fgriffo@amazon.co.uk>
+        d=linaro.org; s=google; t=1718024326; x=1718629126; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=KAUSKKQr31j0lfTllkRYhCjky92C69fh0mBqZOOmhtQ=;
+        b=o99VGThdJeuGk0QU6HRTEiuKmSq+eEkka6C8Qas9tsQHprqiOJg1TShKz2lJqs+HNi
+         gJLXFCxGkWB5WllaJwDGVwjsYj5qf8DaY+OmtVoCPSRUS3hDMGBNjzxQMDrrsyiTzsQh
+         F/eFX3vp6VKQWIIg1XOJRUk1hsYtJQ8/AYlz5Yr0tNXseM3ghn/kwps8TNLmoHVdfpyj
+         DWeWWRkyz/tIdDqMQ0Q4n0yGdvIIXiAIOb5fZVas05oIgx8ZDY0fIXhLsu6uCMGbHYnl
+         QoTDGjQJvQ57GO9DvorFOYb1wMhDceBgQ5OahCJz2fy5F2wle+7ydLhXtxhdYjmwibKA
+         zHsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718024326; x=1718629126;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KAUSKKQr31j0lfTllkRYhCjky92C69fh0mBqZOOmhtQ=;
+        b=YskN9rEbV3Jvjo1ZYP8LeSqknkOJoiwWAzlX2M4vqvg/8Azraf/SZgthSzsEeZKbwx
+         FefJiQA6FRPM/Dec/Y9MIS3KUeRZ4ffzFM/cRk+LLfVJYyDMo7vvRQaC0dfq/pd9cAvh
+         kOwezRp3lLsN6ua1kJWHzDavb4vHVNKGKc/DYu0lCLhIdJFxoYPwB5bfea9yneMWb82U
+         e33ZTRR/jTDeZVLqGdEqPo3Sr9oLgUSZYj69wW8jMmwLsrf87iimZ/MypT+ZC4JU9GHw
+         VFneo3/ifQtC2uK87cFvVhyFR4+VE/5uwHlGLRIKO61VLz29k6ZOW53MHsvroXdXGeh7
+         YvVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXHo1qRgCqJ2ddJUWEvDTQ/bTjhX25myWdfsJCZqHsLAzsRxrjZiyRUaZ2reugVYkEs5OeRppyY8pUu78wBNYUfoCA/XbllKSAYh4uN
+X-Gm-Message-State: AOJu0YwxuKiVZlnXK3eZg+huK0ej4/q8N1W0ZTbnE7r1dExKjN9m/WQi
+	1mg2l6t94B/GTEvCVRdNPszpj+vrRlZqGcfWeKWJJ8jgiDBUQlVLITNf+WcKCsM=
+X-Google-Smtp-Source: AGHT+IEF2KnAADfbdRtjjWnR2KUo3BAEuzWm3ctSGFFiz4WPn91BY12s9PEsAp3i8HayF5Tp6Xgw+g==
+X-Received: by 2002:a50:9e6d:0:b0:579:fa8e:31a0 with SMTP id 4fb4d7f45d1cf-57aa5410e6bmr9682767a12.10.1718024326380;
+        Mon, 10 Jun 2024 05:58:46 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae20238asm7451990a12.73.2024.06.10.05.58.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jun 2024 05:58:45 -0700 (PDT)
+Message-ID: <8256bca3-5175-4c0a-a3f0-6a9087efd0df@linaro.org>
+Date: Mon, 10 Jun 2024 14:58:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] ARM: multi_v7_defconfig: Add MCP23S08 pinctrl support
+To: Christophe ROULLIER <christophe.roullier@foss.st.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Richard Cochran <richardcochran@gmail.com>, Jose Abreu
+ <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Marek Vasut <marex@denx.de>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240610080604.291102-1-christophe.roullier@foss.st.com>
+ <06703c03-e1ce-4a94-942d-b556c6084728@linaro.org>
+ <ef4d2ebb-dd2a-423d-acd1-43fdb42c1896@foss.st.com>
+ <e7f1ea08-41af-47e0-b478-652e67e5aebb@linaro.org>
+ <ede482e3-58a1-4664-84b1-f80e59841e28@foss.st.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ede482e3-58a1-4664-84b1-f80e59841e28@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The usual way to configure a device interrupt from userland is to write
-the /proc/irq/<irq>/smp_affinity or smp_affinity_list files. When using
-vfio to implement a device driver or a virtual machine monitor, this may
-not be ideal: the process managing the vfio device interrupts may not be
-granted root privilege, for security reasons. Thus it cannot directly
-control the interrupt affinity and has to rely on an external command.
+On 10/06/2024 14:52, Christophe ROULLIER wrote:
+> 
+> On 6/10/24 14:27, Krzysztof Kozlowski wrote:
+>> On 10/06/2024 10:14, Christophe ROULLIER wrote:
+>>>>> @@ -469,6 +469,7 @@ CONFIG_SPI_XILINX=y
+>>>>>    CONFIG_SPI_SPIDEV=y
+>>>>>    CONFIG_SPMI=y
+>>>>>    CONFIG_PINCTRL_AS3722=y
+>>>>> +CONFIG_PINCTRL_MCP23S08=y
+>>>> This is not an on-SoC pinctrl, so it should be module (=m).
+>>> The stmmac is in built-in, if IO-Expander (MCP23S08) is on module, we
+>>> have huge of message during kernel boot
+>>>
+>>> because stmmac driver is deferred several times. (need to wait that
+>>> module are ready)
+>> Which is normal and not a reason to change defconfig. It it was a
+>> problem, you should solve it not in defconfig but in kernel. That's just
+>> defconfig, an example, reference or debugging tool if you wish, so
+>> fixing issue here is not a fix at all.
+> Ok so it will not be possible to boot in NFS mode
 
-This patch extends the VFIO_DEVICE_SET_IRQS ioctl() with a new data flag
-to specify the affinity of interrupts of a vfio pci device.
+Why? You need to fix your initrd, not change defconfig. We all work with
+initrds and modules are not a problem at all.
 
-The CPU affinity mask argument must be a subset of the process cpuset,
-otherwise an error -EPERM is returned.
+Really, this is jut a defconfig, not a distro config! And even distro
+config would make it a module...
 
-The vfio_irq_set argument shall be set-up in the following way:
-
-- the 'flags' field have the new flag VFIO_IRQ_SET_DATA_AFFINITY set
-as well as VFIO_IRQ_SET_ACTION_TRIGGER.
-
-- the variable-length 'data' field is a cpu_set_t structure, as
-for the sched_setaffinity() syscall, the size of which is derived
-from 'argsz'.
-
-Signed-off-by: Fred Griffoul <fgriffo@amazon.co.uk>
----
- drivers/vfio/pci/vfio_pci_core.c  | 27 +++++++++++++++++----
- drivers/vfio/pci/vfio_pci_intrs.c | 39 +++++++++++++++++++++++++++++++
- drivers/vfio/vfio_main.c          | 13 +++++++----
- include/uapi/linux/vfio.h         | 10 +++++++-
- 4 files changed, 80 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 80cae87fff36..2e3419560480 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -1192,6 +1192,7 @@ static int vfio_pci_ioctl_set_irqs(struct vfio_pci_core_device *vdev,
- {
- 	unsigned long minsz = offsetofend(struct vfio_irq_set, count);
- 	struct vfio_irq_set hdr;
-+	cpumask_var_t mask;
- 	u8 *data = NULL;
- 	int max, ret = 0;
- 	size_t data_size = 0;
-@@ -1207,9 +1208,22 @@ static int vfio_pci_ioctl_set_irqs(struct vfio_pci_core_device *vdev,
- 		return ret;
- 
- 	if (data_size) {
--		data = memdup_user(&arg->data, data_size);
--		if (IS_ERR(data))
--			return PTR_ERR(data);
-+		if (hdr.flags & VFIO_IRQ_SET_DATA_AFFINITY) {
-+			if (!zalloc_cpumask_var(&mask, GFP_KERNEL))
-+				return -ENOMEM;
-+
-+			if (copy_from_user(mask, &arg->data, data_size)) {
-+				ret = -EFAULT;
-+				goto out;
-+			}
-+
-+			data = (u8 *)mask;
-+
-+		} else {
-+			data = memdup_user(&arg->data, data_size);
-+			if (IS_ERR(data))
-+				return PTR_ERR(data);
-+		}
- 	}
- 
- 	mutex_lock(&vdev->igate);
-@@ -1218,7 +1232,12 @@ static int vfio_pci_ioctl_set_irqs(struct vfio_pci_core_device *vdev,
- 				      hdr.count, data);
- 
- 	mutex_unlock(&vdev->igate);
--	kfree(data);
-+
-+out:
-+	if (hdr.flags & VFIO_IRQ_SET_DATA_AFFINITY && data_size)
-+		free_cpumask_var(mask);
-+	else
-+		kfree(data);
- 
- 	return ret;
- }
-diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
-index 8382c5834335..fe01303cf94e 100644
---- a/drivers/vfio/pci/vfio_pci_intrs.c
-+++ b/drivers/vfio/pci/vfio_pci_intrs.c
-@@ -19,6 +19,7 @@
- #include <linux/vfio.h>
- #include <linux/wait.h>
- #include <linux/slab.h>
-+#include <linux/cpuset.h>
- 
- #include "vfio_pci_priv.h"
- 
-@@ -675,6 +676,41 @@ static int vfio_pci_set_intx_trigger(struct vfio_pci_core_device *vdev,
- 	return 0;
- }
- 
-+static int vfio_pci_set_msi_affinity(struct vfio_pci_core_device *vdev,
-+				     unsigned int start, unsigned int count,
-+				     struct cpumask *irq_mask)
-+{
-+	struct vfio_pci_irq_ctx *ctx;
-+	cpumask_var_t allowed_mask;
-+	unsigned int i;
-+	int err = 0;
-+
-+	if (!alloc_cpumask_var(&allowed_mask, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	cpuset_cpus_allowed(current, allowed_mask);
-+	if (!cpumask_subset(irq_mask, allowed_mask)) {
-+		err = -EPERM;
-+		goto finish;
-+	}
-+
-+	for (i = start; i < start + count; i++) {
-+		ctx = vfio_irq_ctx_get(vdev, i);
-+		if (!ctx) {
-+			err = -EINVAL;
-+			break;
-+		}
-+
-+		err = irq_set_affinity(ctx->producer.irq, irq_mask);
-+		if (err)
-+			break;
-+	}
-+
-+finish:
-+	free_cpumask_var(allowed_mask);
-+	return err;
-+}
-+
- static int vfio_pci_set_msi_trigger(struct vfio_pci_core_device *vdev,
- 				    unsigned index, unsigned start,
- 				    unsigned count, uint32_t flags, void *data)
-@@ -713,6 +749,9 @@ static int vfio_pci_set_msi_trigger(struct vfio_pci_core_device *vdev,
- 	if (!irq_is(vdev, index))
- 		return -EINVAL;
- 
-+	if (flags & VFIO_IRQ_SET_DATA_AFFINITY)
-+		return vfio_pci_set_msi_affinity(vdev, start, count, data);
-+
- 	for (i = start; i < start + count; i++) {
- 		ctx = vfio_irq_ctx_get(vdev, i);
- 		if (!ctx)
-diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-index e97d796a54fb..e75c5d66681c 100644
---- a/drivers/vfio/vfio_main.c
-+++ b/drivers/vfio/vfio_main.c
-@@ -1505,23 +1505,28 @@ int vfio_set_irqs_validate_and_prepare(struct vfio_irq_set *hdr, int num_irqs,
- 		size = 0;
- 		break;
- 	case VFIO_IRQ_SET_DATA_BOOL:
--		size = sizeof(uint8_t);
-+		size = hdr->count * sizeof(uint8_t);
- 		break;
- 	case VFIO_IRQ_SET_DATA_EVENTFD:
--		size = sizeof(int32_t);
-+		size = size_mul(hdr->count, sizeof(int32_t));
-+		break;
-+	case VFIO_IRQ_SET_DATA_AFFINITY:
-+		size = hdr->argsz - minsz;
-+		if (size > cpumask_size())
-+			size = cpumask_size();
- 		break;
- 	default:
- 		return -EINVAL;
- 	}
- 
- 	if (size) {
--		if (hdr->argsz - minsz < hdr->count * size)
-+		if (hdr->argsz - minsz < size)
- 			return -EINVAL;
- 
- 		if (!data_size)
- 			return -EINVAL;
- 
--		*data_size = hdr->count * size;
-+		*data_size = size;
- 	}
- 
- 	return 0;
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index 2b68e6cdf190..5ba2ca223550 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -580,6 +580,12 @@ struct vfio_irq_info {
-  *
-  * Note that ACTION_[UN]MASK specify user->kernel signaling (irqfds) while
-  * ACTION_TRIGGER specifies kernel->user signaling.
-+ *
-+ * DATA_AFFINITY specifies the affinity for the range of interrupt vectors.
-+ * It must be set with ACTION_TRIGGER in 'flags'. The variable-length 'data'
-+ * array is a CPU affinity mask 'cpu_set_t' structure, as for the
-+ * sched_setaffinity() syscall argument: the 'argsz' field is used to check
-+ * the actual cpu_set_t size.
-  */
- struct vfio_irq_set {
- 	__u32	argsz;
-@@ -587,6 +593,7 @@ struct vfio_irq_set {
- #define VFIO_IRQ_SET_DATA_NONE		(1 << 0) /* Data not present */
- #define VFIO_IRQ_SET_DATA_BOOL		(1 << 1) /* Data is bool (u8) */
- #define VFIO_IRQ_SET_DATA_EVENTFD	(1 << 2) /* Data is eventfd (s32) */
-+#define VFIO_IRQ_SET_DATA_AFFINITY	(1 << 6) /* Data is cpu_set_t */
- #define VFIO_IRQ_SET_ACTION_MASK	(1 << 3) /* Mask interrupt */
- #define VFIO_IRQ_SET_ACTION_UNMASK	(1 << 4) /* Unmask interrupt */
- #define VFIO_IRQ_SET_ACTION_TRIGGER	(1 << 5) /* Trigger interrupt */
-@@ -599,7 +606,8 @@ struct vfio_irq_set {
- 
- #define VFIO_IRQ_SET_DATA_TYPE_MASK	(VFIO_IRQ_SET_DATA_NONE | \
- 					 VFIO_IRQ_SET_DATA_BOOL | \
--					 VFIO_IRQ_SET_DATA_EVENTFD)
-+					 VFIO_IRQ_SET_DATA_EVENTFD | \
-+					 VFIO_IRQ_SET_DATA_AFFINITY)
- #define VFIO_IRQ_SET_ACTION_TYPE_MASK	(VFIO_IRQ_SET_ACTION_MASK | \
- 					 VFIO_IRQ_SET_ACTION_UNMASK | \
- 					 VFIO_IRQ_SET_ACTION_TRIGGER)
--- 
-2.40.1
+Best regards,
+Krzysztof
 
