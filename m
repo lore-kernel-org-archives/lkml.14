@@ -1,57 +1,58 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0F7153580
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 23:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09B71552ED
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 23:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718061002; cv=none; b=InWmF3wBxnxdDlY7Zi21jVg8fk6+LotR3DN4Jh3ObCaSYQ7nWiEOsH0sZ1bqn2XL6yVE9armZ7V8noNAyrJulzRxRPr6a35OjYsw09+9ciuXqdRtD2WEabOwmp3LAe/1p4aGpx2A9tqTMrmQewQNbMz7E8whtf9NIpt2MTjgl/w=
+	t=1718061005; cv=none; b=g9ADe7c5X705z6guvx1z5HATRT1geEmj2G89il4aCYCFy2fzIb2HplcqmeLyeGh5qmIW0WdRTpHHNVBv0vE85TomB+DlsxBhdamBm1eHZaSSQcpf07Vi4COmTnlW+EzsAz2JI3YgG9ga3inhp059yAfhZeA7dsXgrpJijxn4seE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718061002; c=relaxed/simple;
-	bh=OUIAEYxW2pt7xlzXmaotUnfEstFIYjmqTiX5MYoVVRg=;
+	s=arc-20240116; t=1718061005; c=relaxed/simple;
+	bh=3YQ1MREPZcXZY8Rzdf2ucSaUl0qgCLccvMpvwcUdRxw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SrGp2RITtPphdg93t876CTP68nuDMzZ+5YU2sPos48Vf/QnnkoQhzL/ecsM3qzYZgUNnX7pejvLSJLHDfN9RqkTv8NeeRk9ebC/PM5jGThi3vVOqLyYuEZ+Oc7wqOKu9RNv5kaFK2HY8RnhTG58y0Fqqlcx/bUPyjWdqXHCTmvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lcxFhA/Q; arc=none smtp.client-ip=209.85.161.42
+	 In-Reply-To:To:Cc; b=USlT3NjOg2QCN6neKDc9CUXTK62dDtrdI7sz9murW7byG0+sspuL+gr+ixVBVWMN2Uumww11kOel5owxB/YqOav1B9aBQGD70oK4q7uhKn4+yYILhj8LjP2dzAEqfejipk2pZphLp5l3h24FN5QbDAOnUpPhS4/7RzgRyggjpq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=M7dQmIL4; arc=none smtp.client-ip=209.85.161.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lcxFhA/Q"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5bacd59e562so1629613eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:10:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M7dQmIL4"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5b9776123a3so2534303eaf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:10:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718061000; x=1718665800; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1718061003; x=1718665803; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hm98dOi0/zRzUBfFNpcElUy3e9wDhIJ4KCCov/nGFTQ=;
-        b=lcxFhA/QvMiB5odiKSNsODLs2xDUqc8EUHOGLPGoQyfuWTyCCBMuNMwdptmeaugV5j
-         KX+yec+tggkrBjmbHtWZjMpu9xUItgo2VTgg2Nw3viO/Tsv4+fXfyNCxjclVdoIDD4xU
-         X1jwxWszNmhW4eSIp6rn71OOf3gqpXfvna6x8=
+        bh=BOfU1pocYD2Scfhf5kButvETql9ENuAv9ka+WIo4LyM=;
+        b=M7dQmIL40ddmTKpyo9O1PINEm/XLjvqsWwa6sqa437yr1uDbzKH0502VeC1sBoKrrC
+         45soHcL4ZS7jAi+ZYxxejaRiFsHMBAhCPVRTBOdqrlIBOFFpg2X2rsKckfmXNlcsmSHz
+         sUq6qvMSu9DDYg2EIfg+MNmJb1qRV7ciX1Ce0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718061000; x=1718665800;
+        d=1e100.net; s=20230601; t=1718061003; x=1718665803;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hm98dOi0/zRzUBfFNpcElUy3e9wDhIJ4KCCov/nGFTQ=;
-        b=lYIJRvGYd7vAdPuP5FKUi0FgFAVvrghyExEovRMILxHl8Tl1Whqa8NlJDUZg9dAESI
-         ubMix4A5nK+KRawV+7pjA3fXZ5SXHlkjtJ2j7ZTeoshWSlDZuDdAx+voDZjgxi6YmgNX
-         +VTebhVwlIhAmf8UlaT0TaPgzbAyWOyFZwKw5QbnCB1u41z8nsc2AP5E2khv1UtWobpO
-         vkoVtsxvhkn6LJpiTblr28QKK6zgdz/O/8HD6ccjDNz6IA74F4wc+e1A8oAxjGu4DssV
-         MTBKW29IVTdsrYlFjbarW8jm3PF/TE/0lpF7ctVY46fEgygk+EnNyN7jsFCveImihcQr
-         5ECw==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ8QbD9gklrAY1GR4ndjc4rvt2q3aXpsYKUmx8Ma4kyj0oUHToFQjEPe9bUjr1M6fmaOBlKOkFVjkkQR8OuKybcyp9HnNST6b+fM4K
-X-Gm-Message-State: AOJu0YzdItBqFUlENZL2OiYzx3NtKf2qaHQ+ssYA9Eb2uakyxQSPHN/2
-	ErFg8Rfb2BdQOpILI3LszMQDShvPF3ToKDbzDN+/XY9vjbi7Z/W3AqIjQ5+zUA==
-X-Google-Smtp-Source: AGHT+IEceemHixBzieP2KZfovugvjCMFKfE0k8sKaMP22e3NHBGqtiLQaG5XPws0aTira0s0kS/A3g==
-X-Received: by 2002:a05:6358:840b:b0:19f:5b1f:91b1 with SMTP id e5c5f4694b2df-19f5b1f9254mr115528755d.14.1718061000049;
-        Mon, 10 Jun 2024 16:10:00 -0700 (PDT)
+        bh=BOfU1pocYD2Scfhf5kButvETql9ENuAv9ka+WIo4LyM=;
+        b=fh4Tu9/Dn2w24gUdc/b8X6pA7hQNznibWdcZ6/p8Y3L+5RpQLGccTrjsBQPoSTo76P
+         DHUmjKF6GzO9E27JdSYI40KaIwfrT2FkGYkgTuStL6stM44sX86Gyvq8ZaFqd07c4t0x
+         n70cX7wAdi3nt76roLFPUokgWC8BoxWcdmuBpmPcLW1kFcBGwKxI2vuiof5s5VBaVkYG
+         TZdE1ADbQTOmJNJMA03dCm5s6prs6aTz8FYoK/zKhfUjyb839+nly1HMRq7GcZDoAoe6
+         gRiKzwAFWBmhUYPCdsspT/RPbQ7/tl0p5xQNv6aKU6Yym4g+waDP7qnoNUJ3ShmmCn8v
+         Mhlw==
+X-Forwarded-Encrypted: i=1; AJvYcCXO8cv0mOKITlkSU7SNAd+yFU7QcfYKnBijCRkAeTw+ddXdz6voeciWi1JPvihj9Oscgv9O5MRaFTo1Id+WauRtKrgDy33us+IrW0Ct
+X-Gm-Message-State: AOJu0YwyccPwfbyBRIj0PlEq032UB8Gtdnhnh54cmhI0R3MeHxOadatR
+	3d7XT+NK1fkcPSirLMnvxjYsMl0/FgVDlx/ZnCT3674TMbkrGrukfXADrCIy3g==
+X-Google-Smtp-Source: AGHT+IFGj2VK+72l/JFB5SBb2/B+u/t8MIDQowXQChyupB5qIsFTtEzAdZedl985d4NSC3brJeqMYQ==
+X-Received: by 2002:a05:6358:57a3:b0:19f:4553:5514 with SMTP id e5c5f4694b2df-19f45535aadmr801047355d.29.1718061002738;
+        Mon, 10 Jun 2024 16:10:02 -0700 (PDT)
 Received: from denia.c.googlers.com (123.178.145.34.bc.googleusercontent.com. [34.145.178.123])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b06519d521sm35256946d6.65.2024.06.10.16.09.58
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b06519d521sm35256946d6.65.2024.06.10.16.10.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 16:09:58 -0700 (PDT)
+        Mon, 10 Jun 2024 16:10:01 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 10 Jun 2024 23:09:56 +0000
-Subject: [PATCH v2 5/7] media: uvcvideo: Remove PLF device quirking
+Date: Mon, 10 Jun 2024 23:09:58 +0000
+Subject: [PATCH v2 7/7] media: uvcvideo: Replace get_mapping with
+ filter_mapping
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +61,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240610-billion-v2-5-38e861475f85@chromium.org>
+Message-Id: <20240610-billion-v2-7-38e861475f85@chromium.org>
 References: <20240610-billion-v2-0-38e861475f85@chromium.org>
 In-Reply-To: <20240610-billion-v2-0-38e861475f85@chromium.org>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
@@ -70,206 +71,141 @@ Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.4
 
-We can use heuristics to figure out the proper range of the control
-instead of quirking every single device.
+If the callback returns a mapping instead of adding it, the codeflow is
+more clean and we do not need a forward declaration of
+__uvc_ctrl_add_mapping_to_list().
 
-Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/usb/uvc/uvc_ctrl.c   |   4 +-
- drivers/media/usb/uvc/uvc_driver.c | 122 -------------------------------------
- drivers/media/usb/uvc/uvcvideo.h   |   2 -
- 3 files changed, 2 insertions(+), 126 deletions(-)
+ drivers/media/usb/uvc/uvc_ctrl.c | 40 ++++++++++++++++++----------------------
+ drivers/media/usb/uvc/uvcvideo.h |  6 +++---
+ 2 files changed, 21 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-index efc46f53ac81..d74019cb27fe 100644
+index 1c1710e3c486..4a13f2685d9e 100644
 --- a/drivers/media/usb/uvc/uvc_ctrl.c
 +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-@@ -459,7 +459,7 @@ static void uvc_ctrl_set_rel_speed(struct uvc_control_mapping *mapping,
- 	data[first+1] = min_t(int, abs(value), 0xff);
+@@ -495,11 +495,8 @@ static const struct uvc_control_mapping uvc_ctrl_power_line_mapping_uvc15 = {
+ 				  V4L2_CID_POWER_LINE_FREQUENCY_DISABLED),
+ };
+ 
+-static int __uvc_ctrl_add_mapping_to_list(struct uvc_video_chain *chain,
+-	struct uvc_control *ctrl, const struct uvc_control_mapping *mapping);
+-
+-static int uvc_ctrl_add_plf_mapping(struct uvc_video_chain *chain,
+-	struct uvc_control *ctrl, const struct uvc_control_mapping *mapping)
++static const struct uvc_control_mapping *uvc_ctrl_filter_plf_mapping
++		(struct uvc_video_chain *chain, struct uvc_control *ctrl)
+ {
+ 	const struct uvc_control_mapping *out_mapping =
+ 					&uvc_ctrl_power_line_mapping_uvc11;
+@@ -509,7 +506,7 @@ static int uvc_ctrl_add_plf_mapping(struct uvc_video_chain *chain,
+ 
+ 	buf = kmalloc(sizeof(*buf), GFP_KERNEL);
+ 	if (!buf)
+-		return -ENOMEM;
++		return NULL;
+ 
+ 	/* Save the default PLF value, so we can restore it. */
+ 	ret = uvc_query_ctrl(chain->dev, UVC_GET_CUR, ctrl->entity->id,
+@@ -517,7 +514,7 @@ static int uvc_ctrl_add_plf_mapping(struct uvc_video_chain *chain,
+ 			     buf, sizeof(*buf));
+ 	/* If we cannot read the control skip it. */
+ 	if (ret)
+-		return ret;
++		return NULL;
+ 	init_val = *buf;
+ 
+ 	/* If PLF value cannot be set to off, it is limited. */
+@@ -526,8 +523,7 @@ static int uvc_ctrl_add_plf_mapping(struct uvc_video_chain *chain,
+ 			     chain->dev->intfnum, ctrl->info.selector,
+ 			     buf, sizeof(*buf));
+ 	if (ret)
+-		return __uvc_ctrl_add_mapping_to_list(chain, ctrl,
+-					&uvc_ctrl_power_line_mapping_limited);
++		return &uvc_ctrl_power_line_mapping_limited;
+ 
+ 	/* UVC 1.1 does not define auto, we can exit. */
+ 	if (chain->dev->uvc_version < 0x150)
+@@ -548,7 +544,7 @@ static int uvc_ctrl_add_plf_mapping(struct uvc_video_chain *chain,
+ 		       chain->dev->intfnum, ctrl->info.selector,
+ 		       buf, sizeof(*buf));
+ 
+-	return __uvc_ctrl_add_mapping_to_list(chain, ctrl, out_mapping);
++	return out_mapping;
  }
  
--const struct uvc_control_mapping uvc_ctrl_power_line_mapping_limited = {
-+static const struct uvc_control_mapping uvc_ctrl_power_line_mapping_limited = {
- 	.id		= V4L2_CID_POWER_LINE_FREQUENCY,
- 	.entity		= UVC_GUID_UVC_PROCESSING,
- 	.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
-@@ -471,7 +471,7 @@ const struct uvc_control_mapping uvc_ctrl_power_line_mapping_limited = {
- 				  V4L2_CID_POWER_LINE_FREQUENCY_50HZ),
+ static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
+@@ -843,7 +839,7 @@ static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
+ 	{
+ 		.entity		= UVC_GUID_UVC_PROCESSING,
+ 		.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
+-		.add_mapping	= uvc_ctrl_add_plf_mapping,
++		.filter_mapping	= uvc_ctrl_filter_plf_mapping,
+ 	},
  };
  
--const struct uvc_control_mapping uvc_ctrl_power_line_mapping_uvc11 = {
-+static const struct uvc_control_mapping uvc_ctrl_power_line_mapping_uvc11 = {
- 	.id		= V4L2_CID_POWER_LINE_FREQUENCY,
- 	.entity		= UVC_GUID_UVC_PROCESSING,
- 	.selector	= UVC_PU_POWER_LINE_FREQUENCY_CONTROL,
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index bbd90123a4e7..5f689fee60a9 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -2383,20 +2383,6 @@ MODULE_PARM_DESC(timeout, "Streaming control requests timeout");
-  * Driver initialization and cleanup
+@@ -2411,8 +2407,9 @@ static int uvc_ctrl_add_info(struct uvc_device *dev, struct uvc_control *ctrl,
+ /*
+  * Add a control mapping to a given control.
   */
+-static int __uvc_ctrl_add_mapping_to_list(struct uvc_video_chain *chain,
+-	struct uvc_control *ctrl, const struct uvc_control_mapping *mapping)
++static int __uvc_ctrl_add_mapping(struct uvc_video_chain *chain,
++				  struct uvc_control *ctrl,
++				  const struct uvc_control_mapping *mapping)
+ {
+ 	struct uvc_control_mapping *map;
+ 	unsigned int size;
+@@ -2485,14 +2482,6 @@ static int __uvc_ctrl_add_mapping_to_list(struct uvc_video_chain *chain,
+ 	return -ENOMEM;
+ }
  
--static const struct uvc_device_info uvc_ctrl_power_line_limited = {
--	.mappings = (const struct uvc_control_mapping *[]) {
--		&uvc_ctrl_power_line_mapping_limited,
--		NULL, /* Sentinel */
--	},
--};
+-static int __uvc_ctrl_add_mapping(struct uvc_video_chain *chain,
+-	struct uvc_control *ctrl, const struct uvc_control_mapping *mapping)
+-{
+-	if (mapping && mapping->add_mapping)
+-		return mapping->add_mapping(chain, ctrl, mapping);
+-	return __uvc_ctrl_add_mapping_to_list(chain, ctrl, mapping);
+-}
 -
--static const struct uvc_device_info uvc_ctrl_power_line_uvc11 = {
--	.mappings = (const struct uvc_control_mapping *[]) {
--		&uvc_ctrl_power_line_mapping_uvc11,
--		NULL, /* Sentinel */
--	},
--};
--
- static const struct uvc_device_info uvc_quirk_probe_minmax = {
- 	.quirks = UVC_QUIRK_PROBE_MINMAX,
- };
-@@ -2427,33 +2413,6 @@ static const struct uvc_device_info uvc_quirk_force_y8 = {
-  * though they are compliant.
-  */
- static const struct usb_device_id uvc_ids[] = {
--	/* Quanta USB2.0 HD UVC Webcam */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x0408,
--	  .idProduct		= 0x3090,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= 0,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
--	/* Quanta USB2.0 HD UVC Webcam */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x0408,
--	  .idProduct		= 0x4030,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= 0,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
--	/* Quanta USB2.0 HD UVC Webcam */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x0408,
--	  .idProduct		= 0x4034,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= UVC_PC_PROTOCOL_15,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
- 	/* LogiLink Wireless Webcam */
- 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
-@@ -2583,42 +2542,6 @@ static const struct usb_device_id uvc_ids[] = {
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
- 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_RESTRICT_FRAME_RATE) },
--	/* Chicony EasyCamera */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x04f2,
--	  .idProduct		= 0xb5eb,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= 0,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
--	/* Chicony Electronics Co., Ltd Integrated Camera */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x04f2,
--	  .idProduct		= 0xb67c,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= UVC_PC_PROTOCOL_15,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_uvc11 },
--	/* Chicony EasyCamera */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x04f2,
--	  .idProduct		= 0xb6ba,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= 0,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
--	/* Chicony EasyCamera */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x04f2,
--	  .idProduct		= 0xb746,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= 0,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
- 	/* Alcor Micro AU3820 (Future Boy PC USB Webcam) */
- 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
-@@ -3003,51 +2926,6 @@ static const struct usb_device_id uvc_ids[] = {
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
- 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_BPP) },
--	/* SunplusIT Inc HD Camera */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x2b7e,
--	  .idProduct		= 0xb752,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= UVC_PC_PROTOCOL_15,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_uvc11 },
--	/* Lenovo Integrated Camera */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x30c9,
--	  .idProduct		= 0x0093,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= UVC_PC_PROTOCOL_15,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_uvc11 },
--	/* Sonix Technology USB 2.0 Camera */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x3277,
--	  .idProduct		= 0x0072,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= 0,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
--	/* Acer EasyCamera */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x5986,
--	  .idProduct		= 0x1172,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= 0,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
--	/* Acer EasyCamera */
--	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
--				| USB_DEVICE_ID_MATCH_INT_INFO,
--	  .idVendor		= 0x5986,
--	  .idProduct		= 0x1180,
--	  .bInterfaceClass	= USB_CLASS_VIDEO,
--	  .bInterfaceSubClass	= 1,
--	  .bInterfaceProtocol	= 0,
--	  .driver_info		= (kernel_ulong_t)&uvc_ctrl_power_line_limited },
- 	/* Intel D410/ASR depth camera */
- 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
+ int uvc_ctrl_add_mapping(struct uvc_video_chain *chain,
+ 	const struct uvc_control_mapping *mapping)
+ {
+@@ -2681,7 +2670,14 @@ static void uvc_ctrl_init_ctrl(struct uvc_video_chain *chain,
+ 
+ 	/* Process common mappings. */
+ 	for (i = 0; i < ARRAY_SIZE(uvc_ctrl_mappings); ++i) {
+-		const struct uvc_control_mapping *mapping = &uvc_ctrl_mappings[i];
++		const struct uvc_control_mapping *mapping = NULL;
++
++		/* Try to get a custom mapping from the device. */
++		if (uvc_ctrl_mappings[i].filter_mapping)
++			mapping = uvc_ctrl_mappings[i].filter_mapping(chain,
++								      ctrl);
++		if (!mapping)
++			mapping = &uvc_ctrl_mappings[i];
+ 
+ 		if (uvc_entity_match_guid(ctrl->entity, mapping->entity) &&
+ 		    ctrl->info.selector == mapping->selector)
 diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index fa0396dd5b35..4df02a40c74f 100644
+index ff9545dcf716..a9547795fe22 100644
 --- a/drivers/media/usb/uvc/uvcvideo.h
 +++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -753,8 +753,6 @@ int uvc_status_start(struct uvc_device *dev, gfp_t flags);
- void uvc_status_stop(struct uvc_device *dev);
+@@ -125,9 +125,9 @@ struct uvc_control_mapping {
+ 	s32 master_manual;
+ 	u32 slave_ids[2];
  
- /* Controls */
--extern const struct uvc_control_mapping uvc_ctrl_power_line_mapping_limited;
--extern const struct uvc_control_mapping uvc_ctrl_power_line_mapping_uvc11;
- extern const struct v4l2_subscribed_event_ops uvc_ctrl_sub_ev_ops;
- 
- int uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+-	int (*add_mapping)(struct uvc_video_chain *chain,
+-			   struct uvc_control *ctrl,
+-			   const struct uvc_control_mapping *mapping);
++	const struct uvc_control_mapping *(*filter_mapping)
++				(struct uvc_video_chain *chain,
++				struct uvc_control *ctrl);
+ 	s32 (*get)(struct uvc_control_mapping *mapping, u8 query,
+ 		   const u8 *data);
+ 	void (*set)(struct uvc_control_mapping *mapping, s32 value,
 
 -- 
 2.45.2.505.gda0bf45e8d-goog
