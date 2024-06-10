@@ -1,122 +1,82 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02FE130AFC
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5911082D75;
+	Mon, 10 Jun 2024 14:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718030043; cv=none; b=bKQNimeOoElur9JWhs4V3AeElcL0UFwWIPhxi2VU4imM4VVOi0iqrhEraDaznK7d0/lmPjod6GYLtjQhAThPSoyFPdKbJKNA2/G1hm/pefCGT/1WmHs7TXhxyTzmS53BiR0cTPmYiIkPl9Ts+goZF7Zri0HTLsT5wDEtaVNOPSA=
+	t=1718030062; cv=none; b=kQbaAeJBfOFEcxzcCZ0wsSqbaDqwbKkWOQn0J07+KZJBMOT0l6DaZv0ATU/3HuUJFs1jBFUk6x2nYMpRfdkDywQdYR9dxIDfClOk9c5DuTQcMU2u2bClxfUKYCxJL0cxsQIiYDBSbIYOjoWLYNMrNX7x2/rm3jgebpsjhr+QnTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718030043; c=relaxed/simple;
-	bh=KaiotnnIG7JlV5ktLvb4ITJmEDcfEaWy8aXFTBSPAWw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=q5jhtEg9q7p8yeQY65cf2kDtKrz0YrQs3vyUQ36zYPYjijbL/TivE8Idkd1ZbIkVbjUw/RlpQYBW1aC3M9LdyZxiQ2vb/kUsumdr3upFcgNluGVdsSSZuRMVrfTxWUx6QV7sxndIQMn6xU8eRBgnfThpbb9zVQJjXKGPhV+HwvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VoDT1lQd; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718030062; c=relaxed/simple;
+	bh=yIDvmjEUKxEiKRe55dQzVZEHPz85XspzzrpNaGz2DIM=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NBXkDcFpWkeMm1yk98LQInjHWXtaM6CbcDrjyPsGfoxOuJwfKLDhV9f7fQcdrLZKDWnSJaGHYMnVr69goDQZVMywf3qTnh4VDlnWbqp1nMObC6ZCifkfd9wzOCikL7fIG/L/Q1zFpRvVGbO+GmXIfTAW1+81KQIGXlhtBS+ruKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=OlZYgA38; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoDT1lQd"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a6f09b457fdso177713466b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 07:34:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718030040; x=1718634840; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=E3GG5XXobvKjAZfA7PiVHtxRsMACN+t5KN+R+O7yXqM=;
-        b=VoDT1lQdP2sG9p8GWMVL3nRjuX2mIzi/yzIJHA2oz0zh+IxAF04cxjB/HktGO1+tVf
-         1x4hcNDRPPkDmK8xYF9brQx81MoC3PPIoC/3JWvyLVosxYDtaGch94GkIH76lHVogJiU
-         E5k76nRPTZyebXr4tMFBPXfSEiUQZoC+w+WbR7tWUqUoM7Pn0c2DMV1XQMczA4NQinKB
-         UGOuoAmAWGaTP47MiN6UEdRqfXgtEe7cs6N9n8lLH0Wf2gchHe6taCZxB/aVK0hVhYmx
-         aIi4W3lH/cIt1i24N5ULDJvracWFlwTx3WdvM3DpF06arDaNb4cCe149JYpuiQGUD8jn
-         GzxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718030040; x=1718634840;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E3GG5XXobvKjAZfA7PiVHtxRsMACN+t5KN+R+O7yXqM=;
-        b=mPcQ7Hgn7tNmhxjpiCcGupPSBWFxWDk28basGC96d2PMeMNjPaXkGLj/uKQWfpkaJD
-         GSR+CYmnB60U3EQ7D7mOoLmVBSewLGZFtjNrFVttUkkutWnfuK7PL4CqlljHO+44Vaej
-         7+IuJyYPmqkHAB47hZvTlin7lWA87T5yV+eA9RK28sFwMTYu1chHa+cmRTh0ZOu5EYcg
-         bFIuKNQp7vaVzBkmr98ugTMIoBfX6Om/ZSxRWVN2wJBcnL/71Bvt5fscv5qXFfrJA6P8
-         Fq37tEzbR7js1ajtcbVW9MHWtmWh6L0bW9Io7RFLIOJMMWrTDPcAvQ/iJ1bb/JkoBqKL
-         b2ZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUbMeP2v8sBPl5a0pCfq86RSpXKbjHX23kXTpKPMjq8HngCb8ha/Ia4pU1XDmSPKArKbVDkzKlT/DkkRACTSL33/sHn1caYh0g8yIr
-X-Gm-Message-State: AOJu0Yx7PJy2uj5MyGWM03QuLPyAwx4AaA8VbZ96GMp5I3HyqiDIou2i
-	BQIoTCFjcQ2MxYX9itqbb80EsOJ13zv3Qf6UihpHANaQD3bDdoTO
-X-Google-Smtp-Source: AGHT+IEXptukpboZLCf6DOn3vAUsLYvh18GiqGT8z6pVfXgmN374h/RR/lx3N7wpxf43P9IJYFrXzw==
-X-Received: by 2002:a17:906:3e09:b0:a6d:ff12:5bd1 with SMTP id a640c23a62f3a-a6dff125c77mr503625766b.41.1718030040172;
-        Mon, 10 Jun 2024 07:34:00 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1126:4:eb:d0d0:c7fd:c82c? ([2620:10d:c092:500::7:493])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f01a060dcsm337538366b.182.2024.06.10.07.33.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 07:33:59 -0700 (PDT)
-Message-ID: <1ca65f97-572a-412a-b6fa-b1e811592094@gmail.com>
-Date: Mon, 10 Jun 2024 15:33:59 +0100
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OlZYgA38"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45AEXkc9001490;
+	Mon, 10 Jun 2024 09:33:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718030026;
+	bh=yIDvmjEUKxEiKRe55dQzVZEHPz85XspzzrpNaGz2DIM=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date;
+	b=OlZYgA389TA/1Rv7kHMlJXFpOS9eaRVkSKZ8GJD+CWyAONDNSJrGDZ0XSvQUM93U+
+	 pIFFMI3p8+zu9gKvdNsUWJPywdWiYJvH1tGpWCkm0R6NRChmZ8zCamDdo00LvFwf0I
+	 c0LN78IOuJ7cBpUUU0AahXeVX3zava2nrvv2igAw=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45AEXk2t011040
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 10 Jun 2024 09:33:46 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
+ Jun 2024 09:33:45 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 10 Jun 2024 09:33:46 -0500
+Received: from localhost (kamlesh.dhcp.ti.com [172.24.227.123])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45AEXjU1075052;
+	Mon, 10 Jun 2024 09:33:45 -0500
+From: Kamlesh Gurudasani <kamlesh@ti.com>
+To: <herbert@gondor.apana.org.au>, <kristo@kernel.org>, <will@kernel.org>
+CC: <akpm@linux-foundation.org>, <davem@davemloft.net>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <vigneshr@ti.com>, <catalin.marinas@arm.com>,
+        <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3 0/6] Add support for MCRC64 engine to calculate
+ 64-bit CRC in Full-CPU mode
+In-Reply-To: <20240524-mcrc64-upstream-v3-0-24b94d8e8578@ti.com>
+References: <20240524-mcrc64-upstream-v3-0-24b94d8e8578@ti.com>
+Date: Mon, 10 Jun 2024 20:03:44 +0530
+Message-ID: <87tti098af.fsf@kamlesh.i-did-not-set--mail-host-address--so-tickle-me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] mm: store zero pages to be swapped out in a bitmap
-From: Usama Arif <usamaarif642@gmail.com>
-To: Matthew Wilcox <willy@infradead.org>, hannes@cmpxchg.org,
- yosryahmed@google.com, nphamcs@gmail.com
-Cc: akpm@linux-foundation.org, david@redhat.com, ying.huang@intel.com,
- hughd@google.com, chengming.zhou@linux.dev, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, kernel-team@meta.com
-References: <20240610121820.328876-1-usamaarif642@gmail.com>
- <20240610121820.328876-2-usamaarif642@gmail.com>
- <Zmb6r6vrP2UTDQrK@casper.infradead.org>
- <acb76cdb-a54e-48e0-ba18-a2272d84f0ab@gmail.com>
- <ZmcITDhdBzUGEHuY@casper.infradead.org>
- <2d52b1a5-4c44-4cea-bccf-57972ca79f04@gmail.com>
-Content-Language: en-US
-In-Reply-To: <2d52b1a5-4c44-4cea-bccf-57972ca79f04@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+<kamlesh@ti.com> writes:
 
-On 10/06/2024 15:14, Usama Arif wrote:
+> From: Kamlesh Gurudasani <kamlesh@ti.com>
 >
-> On 10/06/2024 15:06, Matthew Wilcox wrote:
->> On Mon, Jun 10, 2024 at 02:56:09PM +0100, Usama Arif wrote:
->>> I am guessing what you are suggesting is just do this?
->>>
->>>      if (is_folio_zero_filled(folio)) {
->>>          swap_zeromap_folio_set(folio);
->>>          folio_unlock(folio);
->>>          return 0;
->>>      }
->> Right.
->
-> Thanks! Will change to this in the next revision.
->
->>> If we have zswap enabled, the zero filled pages (infact any page 
->>> that is
->>> compressed), will be saved in zswap_entry and NR_WRITTEN will be 
->>> wrongly
->>> incremented. So the behaviour for NR_WRITTEN does not change in this 
->>> patch
->>> when encountering zero pages with zswap enabled (even if its wrong).
->> We should fiz zswap too.
->>
-> Will send the below diff as a separate patch for zswap:
->
-> diff --git a/mm/page_io.c b/mm/page_io.c index 
-> 2cac1e11fb85..82796b9f08c7 100644 --- a/mm/page_io.c +++ 
-> b/mm/page_io.c @@ -281,9 +281,7 @@ int swap_writepage(struct page 
-> *page, struct writeback_control *wbc) } 
-> swap_zeromap_folio_clear(folio); if (zswap_store(folio)) { - 
-> folio_start_writeback(folio); folio_unlock(folio); - 
-> folio_end_writeback(folio); return 0; }
+> MCRC64 engine calculates 64-bit cyclic redundancy checks (CRC)
+> according to the ISO 3309 standard.
 >
 
-My mail client seems to have messed up the diff, but have sent the patch 
-here 
-(https://lore.kernel.org/all/20240610143037.812955-1-usamaarif642@gmail.com/). 
-Tested with test_zswap kselftest.
+Hi Herbert,
 
+Could you please review this and let me know if any changes are needed
+to get it merged.
+
+Thanks,
+Kamlesh
