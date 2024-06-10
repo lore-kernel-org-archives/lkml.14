@@ -1,115 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1F043146;
-	Mon, 10 Jun 2024 16:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD5014373F
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718036390; cv=none; b=NquIehsDORvGBBgPKFjc9o87ZTp0+pMyViL+We8/V0mwgYUYlM2avI0T6srY2rfpfXt3AH0eKUifwaAEcd/YXHsnmkgGvzghdn3Io/XnHpWhXd0gC4nuP3us9mX09SjNgEo0ZSZGIC3EXhLJiL8em+gXe1vaz2Vka5PY9BnHgZw=
+	t=1718036397; cv=none; b=hZqhvERKpfC01sEkQnfKpzFWhq3eSxmNuJao2N6YcZZ9/TJNbPMpKGaVQq1nV4vClTHrRnbct9HGZqvo8NZvvH7+fW8dIrFRsuUWmi3Z8aOnCSwMS3NehB68h6oI61BDltju58fbFdp/ODRED7vvoLzxlwh4IblvaxBLOuJSHS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718036390; c=relaxed/simple;
-	bh=R6WzIULq9+fnQYcQS1bKOAdon3jwK1WH/CKRPxb9Dg0=;
+	s=arc-20240116; t=1718036397; c=relaxed/simple;
+	bh=UvPKv+li/SINxAK7aM9lX1lje5YFH7WAMPntdkSblq4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qj/hwgUyvSoonkv3miGfcWmZ4Zg7y1Q8mH5UcqcS+ZdCWveXrELnVEmuq7JFr0wCZ6ux3m+6lOOQAF05D7pxRId2E2VOkEDpaMRoxbroIF2uufUazXyLEKjO2ezZbrJ7fQPStSmhI8+M78LsJg4gITC63HmRWjSKuETizNNfHF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WcUCHTx2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kvz9CtDrwm2vUYBrmdTSltKtacoPp9uXW7D87HTyDXsGRTRxfT0RwQvlJgOHdOCuB9Vy4X4pZdXy0heb/hPQaB2OmIcz1ShrfUk3g1A1RiJJnXlO9oLWpVvPRGihc6OU27+deTZlImADAR7EbGBFqjMWcKdHMcs7OK0fxmFf5io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SWDVWxGl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WcUCHTx2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D7CBC2BBFC;
-	Mon, 10 Jun 2024 16:19:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718036389;
-	bh=R6WzIULq9+fnQYcQS1bKOAdon3jwK1WH/CKRPxb9Dg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WcUCHTx2EYJ/GmvexbgWlXn/OfbnPQSqd7Ez4p3BHSxY17Zysbn59If0ApIbKoL8X
-	 dfuMWERYIYCSIfs9Y+5D9NXh8Sa+ovgFSVd9ZWe4w/HdTpVWeyQoVkGuQvskYmi03w
-	 jRS1wiQ9jpbd+YasQZ7/8IzhTbbgL7ycFng863AT5ChQnNdvVgh2USaFXEwAStnpQi
-	 pEErYLW8kKB8/VnkteCKuf9zsk4OVBNTXYvcRLZV91t52Tf9jUbpww3YL4ojm82zD7
-	 N7RLatbkOjGPMs/W4md3UjI8PPNu4xVmmMB4fOXqzamMy7L8+CTP029x76g2W8c2I2
-	 ubSRFZdU3vO6A==
-Date: Mon, 10 Jun 2024 17:19:44 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Julien Stephan <jstephan@baylibre.com>,
-	Louis Kuo <louis.kuo@mediatek.com>,
-	Phi-Bang Nguyen <pnguyen@baylibre.com>,
-	Andy Hsieh <andy.hsieh@mediatek.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Florian Sylvestre <fsylvestre@baylibre.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Paul Elder <paul.elder@ideasonboard.com>,
-	Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 1/5] dt-bindings: media: add mediatek ISP3.0 sensor
- interface
-Message-ID: <20240610-eligibly-gainfully-7b1caad07aaa@spud>
-References: <20240110141443.364655-1-jstephan@baylibre.com>
- <20240110141443.364655-2-jstephan@baylibre.com>
- <e0bf8667-cbb8-49ba-bb44-3edf93b019b8@linaro.org>
- <CAEHHSvYt-aqFahi=B_si=duJH8xDgy_9nndgR-P0+U5THX69uw@mail.gmail.com>
- <20240607144154.GD18479@pendragon.ideasonboard.com>
- <cf49fbb3-9de6-4e57-bc38-d720f76118a7@linaro.org>
- <20240610085424.GH26663@pendragon.ideasonboard.com>
- <e9a44b0b-1930-42fa-ab5e-a7eac1470041@linaro.org>
- <20240610-roping-ninja-56074ad61f77@spud>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SWDVWxGl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718036394;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gf4fTgOHmlHgU0q+hImhFWNpPhswAm3czG7DXf3LyZU=;
+	b=SWDVWxGlxLTcAYJFkjICJO5abWNh9X3CUKDprOiZCh35P5BdvmKQna56kK8+I/zoC03keR
+	hIaw+RccqBGM2n9ZgYBnMatwBFY0K1lqBeP5HFzEIoqqS3Ee8EBWXzQdUBcaxlUDaR2+Ul
+	7x1Fz+LX/wajj/4Q4mcvk//0B0/3yBs=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-587-3Luzm_U-PoqUbBNU8riUcg-1; Mon,
+ 10 Jun 2024 12:19:51 -0400
+X-MC-Unique: 3Luzm_U-PoqUbBNU8riUcg-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6D9B319560AD;
+	Mon, 10 Jun 2024 16:19:50 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.117])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 59E5D19560AB;
+	Mon, 10 Jun 2024 16:19:47 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 10 Jun 2024 18:18:20 +0200 (CEST)
+Date: Mon, 10 Jun 2024 18:18:17 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/1] exit: kill signal_struct->quick_threads
+Message-ID: <20240610161816.GE20640@redhat.com>
+References: <20240609142342.GA11165@redhat.com>
+ <87r0d5t2nt.fsf@email.froward.int.ebiederm.org>
+ <20240610152902.GC20640@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="krd0kZavuSZAemTC"
-Content-Disposition: inline
-In-Reply-To: <20240610-roping-ninja-56074ad61f77@spud>
-
-
---krd0kZavuSZAemTC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240610152902.GC20640@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon, Jun 10, 2024 at 05:10:51PM +0100, Conor Dooley wrote:
-> On Mon, Jun 10, 2024 at 12:18:12PM +0200, Krzysztof Kozlowski wrote:
-> > On 10/06/2024 10:54, Laurent Pinchart wrote:
-> > >>
-> > >>> There's also the camsv IP in the same series that needs a generic n=
-ame.
-> > >>> I really don't know what to propose for it. Could you recommend
-> > >>> something that would make you happy ?
-> > >>
-> > >> Sorry,that's almost half year old thread. Not present in my inbox.
-> > >=20
-> > > I remember someone presenting a talk titled "Beginner Linux kernel
-> > > maintainer's toolbox" in Prague last year. The talk mentioned a tool
-> > > call b4. I highly recommend it ;-)
-> >=20
-> > Wouldn't solve it. I would need to download the thread and import to
-> > mailbox (several clicks needed) or open in some other tool just to see
-> > the email. Or find it on lore.kernel.org - anyway just not convenient.
->=20
-> Apparently you can use b4 from within mutt to populate threads, but I am
-> yet to figure out if it works with non-local maildirs:
-> https://b4.docs.kernel.org/en/latest/maintainer/mbox.html#using-with-mutt
+On 06/10, Oleg Nesterov wrote:
+>
+> > At the moment I am staring at wait_task_zombie and trying to understand
+> > how:
+> >
+> > 	status = (p->signal->flags & SIGNAL_GROUP_EXIT)
+> > 		? p->signal->group_exit_code : p->exit_code;
+> >
+> > works without any locks or barriers.
+>
+> Agreed, at first glance this looks worrying without siglock... I'll try
+> to take a look, perhaps we can simply kill the SIGNAL_GROUP_EXIT check,
+> not sure.
 
-That should read "how to make it work", I know it doesn't work like
-documented there with non-local mailboxes.
+Still not sure, will check tomorrow, but probably yes. We can rely on the
+the exit_state == EXIT_ZOMBIE check in the caller and tasklist_lock.
+OTOH, we should probably take ptrace into account...
 
+In short, I am still not sure ;) but I agree this code needs some changes,
+the comments at least.
 
+> But this patch should not make any difference ?
 
---krd0kZavuSZAemTC
-Content-Type: application/pgp-signature; name="signature.asc"
+Yes.
 
------BEGIN PGP SIGNATURE-----
+Oleg.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmcnoAAKCRB4tDGHoIJi
-0qtrAP9YPh0+sV/kjtNmXMwP7T5usLhhX5vZzAjPc0mwr5965wD/Wx7GB6CXgeXI
-q3vmSBs2jnhda3KzpGbgmbxGrNjp0Qw=
-=HyAB
------END PGP SIGNATURE-----
-
---krd0kZavuSZAemTC--
