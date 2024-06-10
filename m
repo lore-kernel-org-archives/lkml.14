@@ -1,88 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977C0A953
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3AB13C3E6;
+	Mon, 10 Jun 2024 15:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718034250; cv=none; b=MiTPMAgwS/ZsqGzOIOzdmeybXni5kA7JlzKzCTfvEtvL2eXCaKxfd8qwzONI7+JEYpmAtePVSBB1SSzdWUcxFXp04Vepeoo/KqtkSz8H7Y7nWJTYmCvpOHWibCUN1PNOBo99OeNuVnuOErlRej0+ktrLHqR4i8YZknjjrBWeJG8=
+	t=1718034303; cv=none; b=D92HjTXZwUv+XrxfvyeZevmENLnGnrFXaozl8ESVOvFDZcz76cM2yVGyxRCtD2zXd4vXP1Af9ToTiZU6TIwJNabuo4tJXcCCjz4s9xc/7xCUuKWTQRkZ9CKZTSY23aV8MV1Y8dAzIXJuh/rgEW1zpqH4oU5KOs8L6jSUF7+kumY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718034250; c=relaxed/simple;
-	bh=HLc+fvDIRaaMlBOSzyUtzanU6pOiNOst/nVuD8ZtJzI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YvyFYheRyYEI70gOLhZ1M5eH6RAXPn7chKIrNpQ7rBRdI8BB+KHs6IQKuA/4JFzSJexpYDckR0H+TqyZcPTSR6r/O9JuU/TfPO3SwR8PNJ37gGRwfLqPLKXPWDVgG84nifE18CAKT2i2LoooqpSra4Snk7ZEXugKJ4qCtzvRaR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fKvM3120; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718034303; c=relaxed/simple;
+	bh=ds9g/JKEqawI/ajkSavWOl6Obm7xM2HBK3q/teNQHeQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ACs58CJNvdr/S5T3txQlRAb+A7V5f0LXiIip69Hi8gzzKefcgnoRsnKpq9uLQqQmBnKR1CfAPsiEkO3p2sXO+gH4IdLNwnTKVsa5m3nbd+my1EbZG15LSvyO+cDooc426IqxdE82SFamYvEWZELUICCRb+c9XrrOiuyPyg3qAnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VWn/11Ul; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKvM3120"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718034247;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T2EqbctTT1xHHn0V6/YoWQcjmYAW5mNOc777pbvK9Ik=;
-	b=fKvM3120J6xUwmFpMfLGPzloGlPfsPdwODd+f9ZWXBK1WEeje15N6hIs7MkrRPQAZY/N+Z
-	w438HGqtbWF9IiyFXxWibqZ0byJycZgorX/meFkjgWIKKGFnJQ37yTQ3XHuVHc5JsxYVnu
-	InvOz4uiA22aZyeQtfcjq1+L3702qqg=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-683-nhYQIaqWNPyujwhJpVPi3w-1; Mon,
- 10 Jun 2024 11:44:04 -0400
-X-MC-Unique: nhYQIaqWNPyujwhJpVPi3w-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DD34F1956064;
-	Mon, 10 Jun 2024 15:44:02 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.117])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C4F8619560AA;
-	Mon, 10 Jun 2024 15:44:00 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 10 Jun 2024 17:42:32 +0200 (CEST)
-Date: Mon, 10 Jun 2024 17:42:29 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/1] exit: kill signal_struct->quick_threads
-Message-ID: <20240610154229.GD20640@redhat.com>
-References: <20240609142342.GA11165@redhat.com>
- <87r0d5t2nt.fsf@email.froward.int.ebiederm.org>
- <20240610152902.GC20640@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VWn/11Ul"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718034301; x=1749570301;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ds9g/JKEqawI/ajkSavWOl6Obm7xM2HBK3q/teNQHeQ=;
+  b=VWn/11Ul9DNMz5/EQxd2uxjzzOkShnIR7MSRgf2PgHQqVjw43+kjFJAo
+   Krg4WH9mf1z7+va/jQUasj11Mj5RR9xVxJ5mbkmfG2sh718gsj9E+nR2e
+   JQepmskEgcK1V0+eE8S0iJCcD447z7nZcJ9ZiYRCtla517qNwoOky1Ay/
+   IcQ5nafWFq7uIF+ZIXrz0nVFNyQEv3tWlmlq6ecO5lzqEzo0TgB4yO/+d
+   8jLIHOg3kNt1JlRfj14AmrIxNgydQqzhsoYJ7FdLXsm6/8EI6rEsIjzUR
+   IeVpfV7FE3zx7Hvs/QJPjOo+QANEDa6CocmE07A3MreAho9AqkQvhbN95
+   Q==;
+X-CSE-ConnectionGUID: psWTxMC2Sr2ReAiBFTdxBA==
+X-CSE-MsgGUID: 8pdGu4WxT22ze9YX4NAV0A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="26119830"
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="26119830"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 08:45:00 -0700
+X-CSE-ConnectionGUID: YSJi+AyAS96z2cNVxtFXyg==
+X-CSE-MsgGUID: 5mxwVqsETaORA2iS9NgDPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="43679757"
+Received: from irvmail002.ir.intel.com ([10.43.11.120])
+  by fmviesa004.fm.intel.com with ESMTP; 10 Jun 2024 08:44:55 -0700
+Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id 4A7AE312D4;
+	Mon, 10 Jun 2024 16:44:40 +0100 (IST)
+From: Larysa Zaremba <larysa.zaremba@intel.com>
+To: intel-wired-lan@lists.osuosl.org
+Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	magnus.karlsson@intel.com,
+	Michal Kubiak <michal.kubiak@intel.com>
+Subject: [PATCH iwl-net 0/3] ice: fix synchronization between .ndo_bpf() and reset
+Date: Mon, 10 Jun 2024 17:37:12 +0200
+Message-ID: <20240610153716.31493-1-larysa.zaremba@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240610152902.GC20640@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Transfer-Encoding: 8bit
 
-Forgot to mention ...
+Fix the problems that are triggered by tx_timeout and ice_xdp() calls,
+including both pool and program operations.
 
-On 06/10, Oleg Nesterov wrote:
->
-> I guess I was not clear. Of course, SIGNAL_GROUP_EXIT must be always
-> set under ->siglock. But I think synchronize_group_exit() can just
-> return if SIGNAL_GROUP_EXIT is already set? If nothing else, this is
-> what do_group_exit() does.
+PF reset can be triggered asynchronously, e.g. by tx_timeout. With some
+unfortunate timings both reset and .ndo_bpf will try to access and modify
+XDP rings at the same time, causing system crash, such as the one below:
 
-Just in case... I guess do_group_exit() needs some cleanups too. For
-example,
+[ +1.999878] ice 0000:b1:00.0: Registered XDP mem model MEM_TYPE_XSK_BUFF_POOL on Rx ring 14
+[ +2.002992] ice 0000:b1:00.0: Registered XDP mem model MEM_TYPE_XSK_BUFF_POOL on Rx ring 18
+[Mar15 18:17] ice 0000:b1:00.0 ens801f0np0: NETDEV WATCHDOG: CPU: 38: transmit queue 14 timed out 80692736 ms
+[ +0.000093] ice 0000:b1:00.0 ens801f0np0: tx_timeout: VSI_num: 6, Q 14, NTC: 0x0, HW_HEAD: 0x0, NTU: 0x0, INT: 0x4000001
+[ +0.000012] ice 0000:b1:00.0 ens801f0np0: tx_timeout recovery level 1, txqueue 14
+[ +0.394718] ice 0000:b1:00.0: PTP reset successful
+[ +0.006184] BUG: kernel NULL pointer dereference, address: 0000000000000098
+[ +0.000045] #PF: supervisor read access in kernel mode
+[ +0.000023] #PF: error_code(0x0000) - not-present page
+[ +0.000023] PGD 0 P4D 0
+[ +0.000018] Oops: 0000 [#1] PREEMPT SMP NOPTI
+[ +0.000023] CPU: 38 PID: 7540 Comm: kworker/38:1 Not tainted 6.8.0-rc7 #1
+[ +0.000031] Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0014.082620210524 08/26/2021
+[ +0.000036] Workqueue: ice ice_service_task [ice]
+[ +0.000183] RIP: 0010:ice_clean_tx_ring+0xa/0xd0 [ice]
+[...]
+[ +0.000013] Call Trace:
+[ +0.000016] <TASK>
+[ +0.000014] ? __die+0x1f/0x70
+[ +0.000029] ? page_fault_oops+0x171/0x4f0
+[ +0.000029] ? schedule+0x3b/0xd0
+[ +0.000027] ? exc_page_fault+0x7b/0x180
+[ +0.000022] ? asm_exc_page_fault+0x22/0x30
+[ +0.000031] ? ice_clean_tx_ring+0xa/0xd0 [ice]
+[ +0.000194] ice_free_tx_ring+0xe/0x60 [ice]
+[ +0.000186] ice_destroy_xdp_rings+0x157/0x310 [ice]
+[ +0.000151] ice_vsi_decfg+0x53/0xe0 [ice]
+[ +0.000180] ice_vsi_rebuild+0x239/0x540 [ice]
+[ +0.000186] ice_vsi_rebuild_by_type+0x76/0x180 [ice]
+[ +0.000145] ice_rebuild+0x18c/0x840 [ice]
+[ +0.000145] ? delay_tsc+0x4a/0xc0
+[ +0.000022] ? delay_tsc+0x92/0xc0
+[ +0.000020] ice_do_reset+0x140/0x180 [ice]
+[ +0.000886] ice_service_task+0x404/0x1030 [ice]
+[ +0.000824] process_one_work+0x171/0x340
+[ +0.000685] worker_thread+0x277/0x3a0
+[ +0.000675] ? preempt_count_add+0x6a/0xa0
+[ +0.000677] ? _raw_spin_lock_irqsave+0x23/0x50
+[ +0.000679] ? __pfx_worker_thread+0x10/0x10
+[ +0.000653] kthread+0xf0/0x120
+[ +0.000635] ? __pfx_kthread+0x10/0x10
+[ +0.000616] ret_from_fork+0x2d/0x50
+[ +0.000612] ? __pfx_kthread+0x10/0x10
+[ +0.000604] ret_from_fork_asm+0x1b/0x30
+[ +0.000604] </TASK>
 
-	if (sig->flags & SIGNAL_GROUP_EXIT)
-		exit_code = sig->group_exit_code;
+Larysa Zaremba (3):
+  ice: synchronize XDP setup with reset
+  ice: fix locking in ice_xsk_pool_setup()
+  ice: make NAPI setting code aware that rtnl-locked request is waiting
 
-without siglock is racy, exit_code can be wrong (not a big problem).
-LOAD(sig->flags) can make KCSAN unhappy. Etc.
+ drivers/net/ethernet/intel/ice/ice.h      |  2 ++
+ drivers/net/ethernet/intel/ice/ice_lib.c  | 23 ++++++++++---
+ drivers/net/ethernet/intel/ice/ice_main.c | 39 ++++++++++++++++++++---
+ drivers/net/ethernet/intel/ice/ice_xsk.c  | 12 ++-----
+ 4 files changed, 57 insertions(+), 19 deletions(-)
 
-But this all has nothing to do with 1/1 ?
-
-Oleg.
+-- 
+2.43.0
 
