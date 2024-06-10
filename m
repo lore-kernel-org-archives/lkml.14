@@ -1,220 +1,299 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E6E15991E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90CD15A85B;
+	Mon, 10 Jun 2024 16:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037792; cv=none; b=kDo7KL3EpX8DgnE0yxVFXfCVuuWz/qCsQH/rnQIzbvqr0o6rx6VZwvcVJ1CLiSOf6fQ4iTHf8paDHVsMUD+SziSOPWzF18o0m7IBwGKcPRdsbyG5gGxUS6RbKdplTybqhFXsw7e3AjAKDgs2c4Xy7UhgBltEs0Dpw8kpuZtderg=
+	t=1718037792; cv=none; b=rMu0f0RZ4uAtZAryIW/ZbDpFPBqHg4/zvL9P2NIDWPho1j60QB0fJCGUpIyUkEHWBUcfeP79Zz7iguRU+q6+BhYQvbJLxbrawHc7osd+b5ToKE9V3m2eF7tPOK3v1EFAIgjTeJLNdRTgInV+tYH8HngkTGOTeAFZ9YUhJh2vN9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718037792; c=relaxed/simple;
-	bh=VFiMQKyOoL+mDJlBq/h+g4Nftt1Jj5QgaCKxsBJg4zs=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=SR0KGLd0jrEG0wgTI2auK/0ATXdgF964fgZ7UEnIeEph4Ix8SEVEsDXUwLzCW1eC0LN+mLzR30NuZT0bx9awURWmpitSplPiIYCItSL2FcQaBvfzKXQIDwfy43Xk+iIniaNnkzTrNvdKMUr26voeVrIycrBQhJ9nxNFQ5DqR0QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZEiyNnJz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OOZH/UvE; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=rZZNbu/TdlMBnedn8skGNOsh5ktrxPuwHA5pvH2c9ec=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Z3uuyV9DOAI7aoPcyDQoFcpc/eXRenPXvfoc15e1/saT502P+iP/2aazWED1iFQT5ZR+DGy9Avy5b/zH0gRE6Sj04G407tPt9xWSfaRvt2xJR08jSeYtr37zPxx4cakGiNdFNxlrxBcOEsdpEyO8oVR2/GCQd6zvaZSTM1kj0rA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fupLVECF; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZEiyNnJz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OOZH/UvE"
-Message-ID: <20240610164028.660846109@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=a/VQUBOvvL1gBabTFPPMD8zLuxnFJjH7wVLI37j0UKo=;
-	b=ZEiyNnJzuiMIy/h3VszLZ1/kiv1GEpz5vJy1eZCFM9cm29X7Hj0BGVlnUSpe4SxX9tXAWf
-	xjp8aiOCIpUeduJn4hBegdnDfLehRFirwv/mKv94jmkGV+yZY6oBw0dbfBw6gokGWNZxBh
-	qgAK1jyg7QFxcNHpJyoOuY0L1pIHwQCuHjnHT+sGyrSM5UNZmC+cV8qw8JwczudNSn63Vc
-	nBWAm4UQIceYSS2hOIN1w2f7Sm9nRHLTsP1FkzzNthoZmu5lVRyKZsL7NQXHRki1WBvBWl
-	+747MpLOvsSKjeVGDz4ZZ5TIRcJixANxOm4WOYOPay05FhMEldApp6c9+PpCiA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=a/VQUBOvvL1gBabTFPPMD8zLuxnFJjH7wVLI37j0UKo=;
-	b=OOZH/UvEgMW34Kgb8IwP5qDL4JTMUVGFIBUzTWVdo0Ju5M6rklqLUaDfzdigjkDHdg3h3Q
-	Oaay2W1nvpi/pGCQ==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>,
- John Stultz <jstultz@google.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Stephen Boyd <sboyd@kernel.org>,
- Eric Biederman <ebiederm@xmission.com>,
- Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 51/51] alarmtimers: Remove return value from alarm
- functions
-References: <20240610163452.591699700@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fupLVECF"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f6a837e9a3so27323855ad.1;
+        Mon, 10 Jun 2024 09:43:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718037790; x=1718642590; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eQOdkb8MufKmsG2+IsraeNOgODLMgveSPl2B8xwfpUE=;
+        b=fupLVECF9JRH2zoRpTQuZM5pd89iQinoG5iYI4S1Bu8ROh68repNAZw/wKE0RUzQoD
+         5zm/wp8LnKZqCK/XzOAuQxCHXhyOzTTtwD5GvJilAzzSCzxvpZzcSjw12uEhtYxn4to6
+         RkINbQdVcZ7GlaiCx2VCwe5a4ZDpWrblHjmQScaZwSmzr22S9qqoYL3dmFfQBmfFUdzr
+         PoBCj56Jp0FdzyM5Nnz/W7C9qBONwAS73aAzOb9zirDyo7TJia9C6G0+D95KB0r51cMe
+         stvd4ttl2eJNsKfIni4J7JKUgjfMWgoqnqCiMr7OST4mYMLj7ZV8jpChfJ3oJKNnEL+G
+         5niw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718037790; x=1718642590;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eQOdkb8MufKmsG2+IsraeNOgODLMgveSPl2B8xwfpUE=;
+        b=HXDSu6/n64d5gcWxUMCqBTcyT84L/6ukEyMZVRY6I1hiZNXntd9dU3qTnOlb4c8Xbs
+         7xpx9vQgdQa4NawzTRQgNcy2ZmpLgCSoltuRr+SVeZYbBQXYkJRqZXCFrXeiQyTPZMY1
+         vHF89iFvqhleb2k6DSpsV1j80V/bHdjuvnjBDV58v3F2jIm0E8x26I8KyehNDBNSJFe+
+         DvXyCVCaPyWhOVFCfpvUqelnClsD+Ap0GvfhoJ4LIHTqtspMvNqREtI6WPt1jWTBKG1B
+         p4FPSEcKP3i0YlePlfYfpizB09BQprZL5Wc2SIjmQeR4j2bZB2mpvp30RZjJozyb37wC
+         qiXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnnUBLIS8fdN/8qdOwAzLrVGhFrLs6hQC0l1juQpiitBUZl3U7gwUPVJS/qOKyUq+/VDLcpTlaGCjprMURcgC1Z1PC0kkdC6neBTkR
+X-Gm-Message-State: AOJu0YzKxqJJee2eTlwr88j9liFIs0lWVlcGzWfI3jUJpnGkd4TikfH1
+	OfKTdSWixCxD8f8eCM1aw80+7uJMlvhvZVJGVT4Irgyh/DAj7yr8QyhG5A==
+X-Google-Smtp-Source: AGHT+IEUcivt30f5arFkHcXNd1AS2Br2ntpmYNguwgYImJk72/a8SMn2LycP1blQiiXifpBaAGW26w==
+X-Received: by 2002:a17:902:728a:b0:1f6:6de6:9274 with SMTP id d9443c01a7336-1f6d039b5f6mr92018665ad.59.1718037789393;
+        Mon, 10 Jun 2024 09:43:09 -0700 (PDT)
+Received: from dtor-ws.sjc.corp.google.com ([2620:15c:9d:2:83cc:2314:b3bd:bf64])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f72479ab2esm5235845ad.308.2024.06.10.09.43.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 09:43:08 -0700 (PDT)
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: linux-input@vger.kernel.org,
+	Nuno Sa <nuno.sa@analog.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/4] Input: adxl34x- switch to using "guard" notation
+Date: Mon, 10 Jun 2024 09:43:00 -0700
+Message-ID: <20240610164301.1048482-4-dmitry.torokhov@gmail.com>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+In-Reply-To: <20240610164301.1048482-1-dmitry.torokhov@gmail.com>
+References: <20240610164301.1048482-1-dmitry.torokhov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:43:08 +0200 (CEST)
+Content-Transfer-Encoding: 8bit
 
-Now that the SIG_IGN problem is solved in the core code, the alarmtimer
-callbacks do not require a return value anymore.
+Switch to using guard(mutex)() notation to acquire and automatically
+release mutexes.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/power/supply/charger-manager.c |    3 +--
- fs/timerfd.c                           |    4 +---
- include/linux/alarmtimer.h             |   10 ++--------
- kernel/time/alarmtimer.c               |   16 +++++-----------
- net/netfilter/xt_IDLETIMER.c           |    4 +---
- 5 files changed, 10 insertions(+), 27 deletions(-)
 
---- a/drivers/power/supply/charger-manager.c
-+++ b/drivers/power/supply/charger-manager.c
-@@ -1412,10 +1412,9 @@ static inline struct charger_desc *cm_ge
- 	return dev_get_platdata(&pdev->dev);
+v2: added Nono's ACK
+
+ drivers/input/misc/adxl34x.c | 61 ++++++++++++------------------------
+ 1 file changed, 20 insertions(+), 41 deletions(-)
+
+diff --git a/drivers/input/misc/adxl34x.c b/drivers/input/misc/adxl34x.c
+index c6c34005f5d2..7cafbf8d5f1a 100644
+--- a/drivers/input/misc/adxl34x.c
++++ b/drivers/input/misc/adxl34x.c
+@@ -241,7 +241,8 @@ static void adxl34x_get_triple(struct adxl34x *ac, struct axis_triple *axis)
+ 
+ 	ac->bops->read_block(ac->dev, DATAX0, DATAZ1 - DATAX0 + 1, buf);
+ 
+-	mutex_lock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
++
+ 	ac->saved.x = (s16) le16_to_cpu(buf[0]);
+ 	axis->x = ac->saved.x;
+ 
+@@ -250,7 +251,6 @@ static void adxl34x_get_triple(struct adxl34x *ac, struct axis_triple *axis)
+ 
+ 	ac->saved.z = (s16) le16_to_cpu(buf[2]);
+ 	axis->z = ac->saved.z;
+-	mutex_unlock(&ac->mutex);
  }
  
--static enum alarmtimer_restart cm_timer_func(struct alarm *alarm, ktime_t now)
-+static void cm_timer_func(struct alarm *alarm, ktime_t now)
+ static void adxl34x_service_ev_fifo(struct adxl34x *ac)
+@@ -416,15 +416,13 @@ static int adxl34x_suspend(struct device *dev)
  {
- 	cm_timer_set = false;
--	return ALARMTIMER_NORESTART;
- }
+ 	struct adxl34x *ac = dev_get_drvdata(dev);
  
- static int charger_manager_probe(struct platform_device *pdev)
---- a/fs/timerfd.c
-+++ b/fs/timerfd.c
-@@ -79,13 +79,11 @@ static enum hrtimer_restart timerfd_tmrp
- 	return HRTIMER_NORESTART;
- }
+-	mutex_lock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
  
--static enum alarmtimer_restart timerfd_alarmproc(struct alarm *alarm,
--	ktime_t now)
-+static void timerfd_alarmproc(struct alarm *alarm, ktime_t now)
- {
- 	struct timerfd_ctx *ctx = container_of(alarm, struct timerfd_ctx,
- 					       t.alarm);
- 	timerfd_triggered(ctx);
--	return ALARMTIMER_NORESTART;
- }
+ 	if (!ac->suspended && !ac->disabled && ac->opened)
+ 		__adxl34x_disable(ac);
  
- /*
---- a/include/linux/alarmtimer.h
-+++ b/include/linux/alarmtimer.h
-@@ -20,12 +20,6 @@ enum alarmtimer_type {
- 	ALARM_BOOTTIME_FREEZER,
- };
+ 	ac->suspended = true;
  
--enum alarmtimer_restart {
--	ALARMTIMER_NORESTART,
--	ALARMTIMER_RESTART,
--};
+-	mutex_unlock(&ac->mutex);
 -
+ 	return 0;
+ }
+ 
+@@ -432,15 +430,13 @@ static int adxl34x_resume(struct device *dev)
+ {
+ 	struct adxl34x *ac = dev_get_drvdata(dev);
+ 
+-	mutex_lock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
+ 
+ 	if (ac->suspended && !ac->disabled && ac->opened)
+ 		__adxl34x_enable(ac);
+ 
+ 	ac->suspended = false;
+ 
+-	mutex_unlock(&ac->mutex);
 -
- #define ALARMTIMER_STATE_INACTIVE	0x00
- #define ALARMTIMER_STATE_ENQUEUED	0x01
+ 	return 0;
+ }
  
-@@ -42,14 +36,14 @@ enum alarmtimer_restart {
- struct alarm {
- 	struct timerqueue_node	node;
- 	struct hrtimer		timer;
--	enum alarmtimer_restart	(*function)(struct alarm *, ktime_t now);
-+	void			(*function)(struct alarm *, ktime_t now);
- 	enum alarmtimer_type	type;
- 	int			state;
- 	void			*data;
- };
+@@ -464,7 +460,7 @@ static ssize_t adxl34x_disable_store(struct device *dev,
+ 	if (error)
+ 		return error;
  
- void alarm_init(struct alarm *alarm, enum alarmtimer_type type,
--		enum alarmtimer_restart (*function)(struct alarm *, ktime_t));
-+		void (*function)(struct alarm *, ktime_t));
- void alarm_start(struct alarm *alarm, ktime_t start);
- void alarm_start_relative(struct alarm *alarm, ktime_t start);
- void alarm_restart(struct alarm *alarm);
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -323,7 +323,7 @@ static int alarmtimer_resume(struct devi
+-	mutex_lock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
  
- static void
- __alarm_init(struct alarm *alarm, enum alarmtimer_type type,
--	     enum alarmtimer_restart (*function)(struct alarm *, ktime_t))
-+	     void (*function)(struct alarm *, ktime_t))
- {
- 	timerqueue_init(&alarm->node);
- 	alarm->timer.function = alarmtimer_fired;
-@@ -339,7 +339,7 @@ static void
-  * @function: callback that is run when the alarm fires
-  */
- void alarm_init(struct alarm *alarm, enum alarmtimer_type type,
--		enum alarmtimer_restart (*function)(struct alarm *, ktime_t))
-+		void (*function)(struct alarm *, ktime_t))
- {
- 	hrtimer_init(&alarm->timer, alarm_bases[type].base_clockid,
- 		     HRTIMER_MODE_ABS);
-@@ -532,7 +532,7 @@ static enum alarmtimer_type clock2alarm(
-  *
-  * Return: whether the timer is to be restarted
-  */
--static enum alarmtimer_restart alarm_handle_timer(struct alarm *alarm, ktime_t now)
-+static void alarm_handle_timer(struct alarm *alarm, ktime_t now)
- {
- 	struct k_itimer *ptr = container_of(alarm, struct k_itimer, it.alarm.alarmtimer);
- 	unsigned long flags;
-@@ -540,8 +540,6 @@ static enum alarmtimer_restart alarm_han
- 	spin_lock_irqsave(&ptr->it_lock, flags);
- 	posix_timer_queue_signal(ptr);
- 	spin_unlock_irqrestore(&ptr->it_lock, flags);
+ 	if (!ac->suspended && ac->opened) {
+ 		if (val) {
+@@ -478,8 +474,6 @@ static ssize_t adxl34x_disable_store(struct device *dev,
+ 
+ 	ac->disabled = !!val;
+ 
+-	mutex_unlock(&ac->mutex);
 -
--	return ALARMTIMER_NORESTART;
+ 	return count;
  }
  
- /**
-@@ -702,18 +700,14 @@ static int alarm_timer_create(struct k_i
-  * @now: time at the timer expiration
-  *
-  * Wakes up the task that set the alarmtimer
-- *
-- * Return: ALARMTIMER_NORESTART
-  */
--static enum alarmtimer_restart alarmtimer_nsleep_wakeup(struct alarm *alarm,
--								ktime_t now)
-+static void alarmtimer_nsleep_wakeup(struct alarm *alarm, ktime_t now)
+@@ -489,16 +483,13 @@ static ssize_t adxl34x_calibrate_show(struct device *dev,
+ 				      struct device_attribute *attr, char *buf)
  {
- 	struct task_struct *task = alarm->data;
+ 	struct adxl34x *ac = dev_get_drvdata(dev);
+-	ssize_t count;
  
- 	alarm->data = NULL;
- 	if (task)
- 		wake_up_process(task);
--	return ALARMTIMER_NORESTART;
+-	mutex_lock(&ac->mutex);
+-	count = sprintf(buf, "%d,%d,%d\n",
+-			ac->hwcal.x * 4 + ac->swcal.x,
+-			ac->hwcal.y * 4 + ac->swcal.y,
+-			ac->hwcal.z * 4 + ac->swcal.z);
+-	mutex_unlock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
+ 
+-	return count;
++	return sprintf(buf, "%d,%d,%d\n",
++		       ac->hwcal.x * 4 + ac->swcal.x,
++		       ac->hwcal.y * 4 + ac->swcal.y,
++		       ac->hwcal.z * 4 + ac->swcal.z);
  }
  
- /**
-@@ -765,7 +759,7 @@ static int alarmtimer_do_nsleep(struct a
+ static ssize_t adxl34x_calibrate_store(struct device *dev,
+@@ -512,7 +503,8 @@ static ssize_t adxl34x_calibrate_store(struct device *dev,
+ 	 * We use HW calibration and handle the remaining bits in SW. (4mg/LSB)
+ 	 */
  
- static void
- alarm_init_on_stack(struct alarm *alarm, enum alarmtimer_type type,
--		    enum alarmtimer_restart (*function)(struct alarm *, ktime_t))
-+		    void (*function)(struct alarm *, ktime_t))
+-	mutex_lock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
++
+ 	ac->hwcal.x -= (ac->saved.x / 4);
+ 	ac->swcal.x = ac->saved.x % 4;
+ 
+@@ -525,7 +517,6 @@ static ssize_t adxl34x_calibrate_store(struct device *dev,
+ 	AC_WRITE(ac, OFSX, (s8) ac->hwcal.x);
+ 	AC_WRITE(ac, OFSY, (s8) ac->hwcal.y);
+ 	AC_WRITE(ac, OFSZ, (s8) ac->hwcal.z);
+-	mutex_unlock(&ac->mutex);
+ 
+ 	return count;
+ }
+@@ -553,15 +544,13 @@ static ssize_t adxl34x_rate_store(struct device *dev,
+ 	if (error)
+ 		return error;
+ 
+-	mutex_lock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
+ 
+ 	ac->pdata.data_rate = RATE(val);
+ 	AC_WRITE(ac, BW_RATE,
+ 		 ac->pdata.data_rate |
+ 			(ac->pdata.low_power_mode ? LOW_POWER : 0));
+ 
+-	mutex_unlock(&ac->mutex);
+-
+ 	return count;
+ }
+ 
+@@ -588,7 +577,7 @@ static ssize_t adxl34x_autosleep_store(struct device *dev,
+ 	if (error)
+ 		return error;
+ 
+-	mutex_lock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
+ 
+ 	if (val)
+ 		ac->pdata.power_mode |= (PCTL_AUTO_SLEEP | PCTL_LINK);
+@@ -598,8 +587,6 @@ static ssize_t adxl34x_autosleep_store(struct device *dev,
+ 	if (!ac->disabled && !ac->suspended && ac->opened)
+ 		AC_WRITE(ac, POWER_CTL, ac->pdata.power_mode | PCTL_MEASURE);
+ 
+-	mutex_unlock(&ac->mutex);
+-
+ 	return count;
+ }
+ 
+@@ -610,14 +597,11 @@ static ssize_t adxl34x_position_show(struct device *dev,
+ 				 struct device_attribute *attr, char *buf)
  {
- 	hrtimer_init_on_stack(&alarm->timer, alarm_bases[type].base_clockid,
- 			      HRTIMER_MODE_ABS);
---- a/net/netfilter/xt_IDLETIMER.c
-+++ b/net/netfilter/xt_IDLETIMER.c
-@@ -107,14 +107,12 @@ static void idletimer_tg_expired(struct
- 	schedule_work(&timer->work);
+ 	struct adxl34x *ac = dev_get_drvdata(dev);
+-	ssize_t count;
+ 
+-	mutex_lock(&ac->mutex);
+-	count = sprintf(buf, "(%d, %d, %d)\n",
+-			ac->saved.x, ac->saved.y, ac->saved.z);
+-	mutex_unlock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
+ 
+-	return count;
++	return sprintf(buf, "(%d, %d, %d)\n",
++		       ac->saved.x, ac->saved.y, ac->saved.z);
  }
  
--static enum alarmtimer_restart idletimer_tg_alarmproc(struct alarm *alarm,
--							  ktime_t now)
-+static void idletimer_tg_alarmproc(struct alarm *alarm, ktime_t now)
+ static DEVICE_ATTR(position, S_IRUGO, adxl34x_position_show, NULL);
+@@ -638,9 +622,8 @@ static ssize_t adxl34x_write_store(struct device *dev,
+ 	if (error)
+ 		return error;
+ 
+-	mutex_lock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
+ 	AC_WRITE(ac, val >> 8, val & 0xFF);
+-	mutex_unlock(&ac->mutex);
+ 
+ 	return count;
+ }
+@@ -674,15 +657,13 @@ static int adxl34x_input_open(struct input_dev *input)
  {
- 	struct idletimer_tg *timer = alarm->data;
+ 	struct adxl34x *ac = input_get_drvdata(input);
  
- 	pr_debug("alarm %s expired\n", timer->attr.attr.name);
- 	schedule_work(&timer->work);
--	return ALARMTIMER_NORESTART;
+-	mutex_lock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
+ 
+ 	if (!ac->suspended && !ac->disabled)
+ 		__adxl34x_enable(ac);
+ 
+ 	ac->opened = true;
+ 
+-	mutex_unlock(&ac->mutex);
+-
+ 	return 0;
  }
  
- static int idletimer_check_sysfs_name(const char *name, unsigned int size)
+@@ -690,14 +671,12 @@ static void adxl34x_input_close(struct input_dev *input)
+ {
+ 	struct adxl34x *ac = input_get_drvdata(input);
+ 
+-	mutex_lock(&ac->mutex);
++	guard(mutex)(&ac->mutex);
+ 
+ 	if (!ac->suspended && !ac->disabled)
+ 		__adxl34x_disable(ac);
+ 
+ 	ac->opened = false;
+-
+-	mutex_unlock(&ac->mutex);
+ }
+ 
+ struct adxl34x *adxl34x_probe(struct device *dev, int irq,
+-- 
+2.45.2.505.gda0bf45e8d-goog
 
