@@ -1,72 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96BA14B963;
-	Mon, 10 Jun 2024 22:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD4F14F11E;
+	Mon, 10 Jun 2024 22:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718057201; cv=none; b=exVDwuoerIEop7NRc0bolP/2+32yO+6hXoIhUTd45RwAQNE4X9YuaFupfllp/i3UvmP2tnxnbJCihm1kqiSZQMEXuOh2QrcLMMUU0mul3yCKLlzVdFZ7UBwfbznx8bRRJYfN3IrfRY0y8gACEqzB41jtaOf0ga9tI4Lm7VdGs7A=
+	t=1718057703; cv=none; b=jATy/IkwhYywTsqM5CnLcUaLNcGPr23rdTqHeLKkPfG6Gkl6aRjp/nlGX2S1cS06abWqVLhJsHDcLTAThvlT0y2H4PxienzammFr512akXaPFf/PmDrdCNfcGvGToplUyHEAWAxCYLPBQqYxA7OHnq/chiQGx/nO91pZhsjaZ8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718057201; c=relaxed/simple;
-	bh=00WZSUWsTSDnwN0Kckc1HGo/AvqBUGNJWg5D8kzWBPA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ApMgw75jArac6b7VD2ztWt9HOQjoLqrgTgEipUuZ8ZvivUVmjQZXNPU8qkeaxdDToMNnjnCCz1y2B3KJdrCRavpeZsAg6aH9tVwO8DrGOdgt9EbHPRlF/ezRIkSR1Sz30M1/5ymn02o55Ts8Uy0fEOl3kwim3PQxvE5TnXS2wVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MVIkwt9z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718057703; c=relaxed/simple;
+	bh=Fzp1Ro2brqxBH+/S89PixECc+WC9J8oJVkmAvtW8d88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GL/o7xmm94962A3QetZITGx8dnElzQpHhyTViFzHLTO8LP328Eya4uyAEEnq9BnuG2LwAq82G79FnKpospb6GlitXzGbU9N/BnE7iR2V+lB4ZNz9Q+wptkVtWJg0SG4f48GiCKEu2atZfsjo1Ugz2x8gGbloAseRlI3I+ZiXPtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=mPtzH5VD; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MVIkwt9z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F38C2BBFC;
-	Mon, 10 Jun 2024 22:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718057201;
-	bh=00WZSUWsTSDnwN0Kckc1HGo/AvqBUGNJWg5D8kzWBPA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MVIkwt9zMRkkZ5EjY9c/KjYV3s+zdy+xWvd8nO/1sKsswV5A7OpRHK569D/TgsZrx
-	 UdXfw0XNmcYvMkr/e42sKD2Y0Uc21Z4IgQmyKRluI/332aRK0FeZmwXmafbsIxTrsq
-	 wLCw+LvHOrV4usi2eQ01Q+bx2faAYmiX4neg9b36zlBQrJtfKFmXySuDlP86l5kuaR
-	 0eL8ImZkZo41C9VL/SbfGHLeBi8EU3+cZ63EgCCOJMK/BCAcc3RqfnhxdhtXaS4BBs
-	 iVUWrFX9Y2B2ny3JU6pli/Uo1vsEAmzSRCc4bxJ/TbzNI8Tz0wBEVV27f0D7uWlQ+H
-	 dXaWsyMqJin+g==
-Date: Mon, 10 Jun 2024 16:06:40 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: devicetree@vger.kernel.org,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: clock: renesas,rzg2l-cpg: Update
- description for #reset-cells
-Message-ID: <171805719826.3150710.5828109706727349472.robh@kernel.org>
-References: <20240606161047.663833-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mPtzH5VD"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45AME0ff089276;
+	Mon, 10 Jun 2024 17:14:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718057640;
+	bh=+R6XyuQFmufPzDUNFzaePY3006xEVsSzvf2JAdm6Ojw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=mPtzH5VD6tTUq7SU+uuDDYg+ra4Mf5vad5vLgZGPygH7Sdga0w6l+E8Kxix/7PiNu
+	 saLO4oh7PRSyGrNTVFVB65znORL2z9uuSifvHD1X8PCL/EvFnTbq7zqsS9a2cuqFQ8
+	 LQSePT13nCVD2JLZ9r5OkGk9UXuGwMwPyD+FFAA4=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45AME0hv009845
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 10 Jun 2024 17:14:00 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
+ Jun 2024 17:13:59 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 10 Jun 2024 17:13:59 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45AMDxFJ033817;
+	Mon, 10 Jun 2024 17:13:59 -0500
+Message-ID: <01433df1-aa19-4abb-9d87-c54e4c0dff17@ti.com>
+Date: Mon, 10 Jun 2024 17:13:59 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606161047.663833-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/8] dt-bindings: counter: Add new ti,am62-eqep
+ compatible
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Rob
+ Herring <robh@kernel.org>
+CC: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        David
+ Lechner <david@lechnology.com>, Nishanth Menon <nm@ti.com>,
+        William Breathitt
+ Gray <wbg@kernel.org>
+References: <20240610144637.477954-1-jm@ti.com>
+ <20240610144637.477954-2-jm@ti.com>
+ <5ad5cf7a-c5c6-449e-9ed9-3d9f74959a19@linaro.org>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <5ad5cf7a-c5c6-449e-9ed9-3d9f74959a19@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 
-On Thu, 06 Jun 2024 17:10:47 +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> For the RZ/G2L and similar SoCs, the reset specifier is the reset number
-> and not the module number. Reflect this in the description for the
-> '#reset-cells' property.
-> 
-> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/clock/renesas,rzg2l-cpg.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Hi Krzysztof,
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+On 6/10/24 9:58 AM, Krzysztof Kozlowski wrote:
+> On 10/06/2024 16:46, Judith Mendez wrote:
+>> Add new compatible ti,am62-eqep for TI K3 devices. If a device
+>> uses this compatible, require power-domains property.
+>>
+>> Since there is only one functional and interface clock for eqep,
+>> clock-names is not really required, so removed from required
+>> section, make it optional for ti,am3352-eqep compatible, and
+>> update the example.
+>>
+> 
+> ...
+> 
+> 
+>>           interrupts = <79>;
+>>       };
+>>   
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>> +
+>> +    bus {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        eqep1: counter@23210000 {
+> 
+> No need for label
+> 
+>> +          compatible = "ti,am62-eqep";
+>> +          reg = <0x00 0x23210000 0x00 0x100>;
+>> +          power-domains = <&k3_pds 60 TI_SCI_PD_EXCLUSIVE>;
+>> +          clocks = <&k3_clks 60 0>;
+>> +          interrupts = <GIC_SPI 117 IRQ_TYPE_EDGE_RISING>;
+>> +          status = "disabled";
+> 
+> Drop... which also points to another comment - since this was no-op and
+> example is basically the same, then just don't add it. No point.
+
+Ok, then I will drop the new example, thanks.
+
+BTW..
+In the existing example for ti,am3352-eqep compatible,
+do you know if it is appropriate to drop clock-names
+from the example if it is no longer required?
+
+~ Judith
+
+> 
+>> +        };
+>> +    };
+>>   ...
+> 
+> Best regards,
+> Krzysztof
+> 
 
