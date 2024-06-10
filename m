@@ -1,54 +1,70 @@
-Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F29181737;
-	Mon, 10 Jun 2024 12:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467CF7FBA1
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718024332; cv=none; b=mA/bZfO/jro9L2zhz/pEsRGawjygUb4C78adep/99Udb9laDivaY/O/uQrLhk9w7gE7tOiU7GB0GKXPFp8v8D5cPyfh5ejl23SBTzclfQW732t0P2S5ob/zjzXyjmtbgbRn9acjCANsIfVBVf/YTbJaVT79eghG3m+DPu1+3JxQ=
+	t=1718024399; cv=none; b=udJsUBTObPbCAu3jbgqBcUTjTz0OjEigNEmnNG9HpHpWiKEJuvA4I0+UGnKOx3KTR4rtVQN1lafebiqTh2XD+74YldHRNGV4C9ECGdL23WQGRXtFGV6f6ui0a9gvy88jEGyynZt7NVXLPPzmjPdXSi8YxMsR6l8iz9G854M7OXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718024332; c=relaxed/simple;
-	bh=hs5yvBjMe5zbyXlRtFi3yH+jXaDN2jYG6b3IpAmMi7o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WjF/5slPkMg4uRSzKoPzbunmbQsGDbW2XH/yFtSwNP0VFrsXyPZNtYJ5iFM05QpKVDQ5cBKsC8sWz3X6Bn9eJJKG2oeilY/ix4ATwUicY1oVjdpvmWNFMplcllezVl7Rn3W8LIE9HyOLshX4JTPpvwUQw33lfkh64kTxrogP/Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=azl33DBy; arc=none smtp.client-ip=46.19.9.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
+	s=arc-20240116; t=1718024399; c=relaxed/simple;
+	bh=bM81m61bwS2UN2Svbu/r1zfl/LDb+tjGoL6u8SEWQWE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jbqb5eG1geV4Q8GQejib0JEiQ+A4ZAYrCvLuep24Ol8dlj6OXDgDhV4R8GzO99bxjXQCzCurolaqvLhNS2xqSwLhUPMugVsHSz4e88QBXRWiHQpyNXIsGkQvZy6UwljLZ7/R2siHfYwYIqgWlLtBVmTOblWSY6Sn2pZ/OWdA8ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=MfYKvQU+; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="azl33DBy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=lqCp3QFYEQgLNcRwyp3g/NgBK3T6HGS8y29EGKEsL5Y=; b=azl33DByNfd1A9DZ9NIx0IA3mN
-	WURR8bsMqFqZhOEttXkXv+u5vLA6Fg3S6pZ963/hjZUjqHjyuMPqxwrub0keq1vxGqUxkMt1Bw1Ln
-	/ctOmoK0k9zn5no43SUCp7aEY5JpGlF1ECcvD0ZrkTZVAL21aZi71XowGd6Ufa5uFl1rM7HtLF0fa
-	f0CdCsTkg5VkSfrgF4STHqT0TUjb+fRR0dXVftvT+GBIWkGhVZDmulU4p97GqRBUNgL7yDxoA/JGi
-	j+gRdMqJipRG1iMgvCWY+fQejRbeoMwkZcLWr4t3aiPnNk4eDgzNiQ6cliuexnMv8MJs67ukdkUv9
-	+NaI2vnQ==;
-Received: from [89.212.21.243] (port=36862 helo=localhost.localdomain)
-	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <primoz.fiser@norik.com>)
-	id 1sGebo-00CJLR-0O;
-	Mon, 10 Jun 2024 14:58:48 +0200
-From: Primoz Fiser <primoz.fiser@norik.com>
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-	Jarkko Nikula <jarkko.nikula@bitmer.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	alsa-devel@alsa-project.org,
-	linux-omap@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: upstream@lists.phytec.de
-Subject: [PATCH v2] ASoC: ti: omap-hdmi: Fix too long driver name
-Date: Mon, 10 Jun 2024 14:58:47 +0200
-Message-Id: <20240610125847.773394-1-primoz.fiser@norik.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MfYKvQU+"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45ACxTM1010160;
+	Mon, 10 Jun 2024 07:59:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718024369;
+	bh=UUkIu/8Qmux6+/va5NpKSfNIFMGEqp8ObO5jfrobR38=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=MfYKvQU+50NmBlRsRK4gnQkcG5nLX5QmL/9ANDT46GgQ5P2B6QM33aAG7+UcEXmPf
+	 cCXdm48FU7OoXMqI0CVkfcEmQvc4rl+bFGG0qK9sp/t7ziEEmdrnYlH4CU6n456fV3
+	 7uUsaHeKyLfpkQaYGy+IuxVVFo9ftDvHo32cVrfo=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45ACxTd7040422
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 10 Jun 2024 07:59:29 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 10
+ Jun 2024 07:59:29 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 10 Jun 2024 07:59:29 -0500
+Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45ACxP7Z064068;
+	Mon, 10 Jun 2024 07:59:28 -0500
+From: Andrew Davis <afd@ti.com>
+To: Andre Przywara <andre.przywara@arm.com>,
+        Russell King
+	<linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer
+	<s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian
+ Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement
+	<gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian
+ Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <imx@lists.linux.dev>, Andrew Davis <afd@ti.com>
+Subject: [PATCH 6/6] ARM: vt8500: Switch to new sys-off handler API
+Date: Mon, 10 Jun 2024 07:59:24 -0500
+Message-ID: <20240610125924.86003-6-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240610125924.86003-1-afd@ti.com>
+References: <20240610125924.86003-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,47 +72,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.siel.si
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
-X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Set driver name to "HDMI". This simplifies the code and gets rid of
-the following error messages:
+Kernel now supports chained power-off handlers. Use
+register_platform_power_off() that registers a platform level power-off
+handler. Legacy pm_power_off() will be removed once all drivers and archs
+are converted to the new sys-off API.
 
-  ASoC: driver name too long 'HDMI 58040000.encoder' -> 'HDMI_58040000_e'
-
-Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
+Signed-off-by: Andrew Davis <afd@ti.com>
 ---
-Changes in v2:
-- use "HDMI" instead of DRV_NAME (requested)
+ arch/arm/mach-vt8500/vt8500.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- sound/soc/ti/omap-hdmi.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/sound/soc/ti/omap-hdmi.c b/sound/soc/ti/omap-hdmi.c
-index 639bc83f4263..cf43ac19c4a6 100644
---- a/sound/soc/ti/omap-hdmi.c
-+++ b/sound/soc/ti/omap-hdmi.c
-@@ -354,11 +354,7 @@ static int omap_hdmi_audio_probe(struct platform_device *pdev)
- 	if (!card)
- 		return -ENOMEM;
- 
--	card->name = devm_kasprintf(dev, GFP_KERNEL,
--				    "HDMI %s", dev_name(ad->dssdev));
--	if (!card->name)
--		return -ENOMEM;
--
-+	card->name = "HDMI";
- 	card->owner = THIS_MODULE;
- 	card->dai_link =
- 		devm_kzalloc(dev, sizeof(*(card->dai_link)), GFP_KERNEL);
+diff --git a/arch/arm/mach-vt8500/vt8500.c b/arch/arm/mach-vt8500/vt8500.c
+index 0ab40087ae1cc..1d294255d7083 100644
+--- a/arch/arm/mach-vt8500/vt8500.c
++++ b/arch/arm/mach-vt8500/vt8500.c
+@@ -141,7 +141,7 @@ static void __init vt8500_init(void)
+ 			pr_err("%s:ioremap(power_off) failed\n", __func__);
+ 	}
+ 	if (pmc_base)
+-		pm_power_off = &vt8500_power_off;
++		register_platform_power_off(vt8500_power_off);
+ 	else
+ 		pr_err("%s: PMC Hibernation register could not be remapped, not enabling power off!\n", __func__);
+ }
 -- 
-2.25.1
+2.39.2
 
