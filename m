@@ -1,103 +1,224 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024C06BB33;
-	Mon, 10 Jun 2024 21:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86601879
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 21:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718056245; cv=none; b=QZr32CZdgTLg50YVhLVTgBrhv6dDD0Jx6O+zJIgXXwkzX30demfoN8MYrr105t9uOZnTd+e+2PYwYMlH2uqwag7bnAKRb1mnosJJvJhYSHKqUK5vfZAKnSrC7KqleuZwKtFfXMvZgOYmy3nn5uBqHaqJmQ4kwx9ulC3eyLRTbu0=
+	t=1718056337; cv=none; b=uZe0/h+bO6mcwlUZAGkI0Mr2Dgw7MYAzYsivlbfVKetZSJmMTZI14FTaiQy6vTVFC+6z2FG9j8HiB/s/Xlrhggo1gCuRBZiACA4UBXNUyEofur3CrY1aPa4AVuMXuJalX67OpdQDSWwffSBwgPRehpTCJ/H5htv/LZ4h07LRzW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718056245; c=relaxed/simple;
-	bh=TFxV9viCsgGzXh/HDil6hu+fKqnzPH+C9fRoDE52ffg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=uarjn9chKaydyCClIji8lFKWIXmRDdyFsl1MeP2AHFrMaRytvELRgS9xv10GLBUvCYGvqZUOtGj34oMlPd9JzETifppiNrScbnjaFDYakInzYJte5PBQP1scuuJrGmha+bIC5fyknrOwP6kyUX0/JPHgKAFwkGmtuyH97TGDT8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IABCUkKq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718056337; c=relaxed/simple;
+	bh=gmcqo4mZQVYUP8msDqMkp5FlW36i1BK9aU0wcAftSSM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gM+sTxeUMddctypo4we+WDuZSBizl9ldFDtMPtGaK6JpzhONhp0vHHYj8ZN7qTVkCWegLrQlsNDUvWiL2oBUAAc+jWmbbNNwHIZYgZL/8zuLiyiX6KfzDqJROecX3ynP07A1f+FhISF4DusYqlxRcnEELrSG7a4+igrimRMf1EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D8dJ4tPW; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IABCUkKq"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45AEm5f5006815;
-	Mon, 10 Jun 2024 21:50:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=Xmr+t7hg7hJrqIQO0ea69r
-	tcJI6nRDI2vfR2R9N+DhQ=; b=IABCUkKqdHHmusndhev+/NzR8jSIa1/Wji0KUI
-	IbeNVJPm2ouMjnED3uyHr5Nb2O8cmyQ6gDJ2jMpUmJMEbyuOCwUhFYWrChmzPuxP
-	eUPHqwqbdLhkin3ixibdjXDeD/KerGa8Sq93dFkya3vO+H++Jb9O89EmOX7uIm3e
-	8AXWfKozY/MHlCXP4d66c15GVdMwN00T3ATSGjIsICh+eEXD+xrQXPmhjYLvC1Im
-	pxC3m07M/UJXYifbHM4ONZvIB31r+qq3MQ4/1Pau0DR/fn89rsKtpN2cdxmzsALn
-	S9D/Rp0zLl0hEEa8I/lUofuB9GeiGDPoAKHA+m/a4m3CkaWA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymgk8vtdk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 21:50:40 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45ALodue027898
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 21:50:39 GMT
-Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Jun
- 2024 14:50:38 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Mon, 10 Jun 2024 14:50:37 -0700
-Subject: [PATCH] platform/chrome: cros_ec_proto: add missing
- MODULE_DESCRIPTION() macro
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D8dJ4tPW"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f0e153eddso269026866b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718056334; x=1718661134; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MeA9AyChYLDPZo5d1TS51emX8dw5ttciiCSkWSyJMyg=;
+        b=D8dJ4tPW9t3i0xJSvsf3Feb+fo+d//aH+B02Dw0MLdWmxOnWGmbJGFGUeVEoU1xnCw
+         1oHcJAaqpBBTqQzdnf+T1Zw9r8LVGEqJC2defRnDDyDBhqrhyd4mgPxhdqfrOXHIf5zn
+         gmhozjFxZsXa4m3rb9D1yCgGYHJoIphlDZEZE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718056334; x=1718661134;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MeA9AyChYLDPZo5d1TS51emX8dw5ttciiCSkWSyJMyg=;
+        b=c+mxKMTTp35b6YqTzCY5keHzGV9O0uOUN3uy5RE4lmojT/MFa/bm69WHC51qBipwT2
+         Zq9keyq2/We/6VKNHOM0l9UA7yNDPSt2IBKlaVaiCm3WL+anGXAXZq++sESzVbeclibM
+         1LC1qljiyAMazT5N/6TpJOa5eq7jgGOwlvSAKfxAJ+qhg1pLQV1a/ItreuqKBdtb4iTp
+         sIpFBBCH7gvBcRM14uJ67tMykd701YJ37BmWErzR3DC+w4qJOAx+pPY1I2Gv1ReaJRk+
+         EWTTsSw9AfUxiopZFAAGalucys1Cs4M8JfphcnMgr2WcfpMna2W0DgLeTuhse7Q9l4Re
+         dFlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwC30vRBVSXVVCbb/fLVJb8YE/atedCJnvsBhNlIKt1moDnnq2qUGLZTOWqLZ/sfjZeIsWNHu3SkOyBPnPt/KzpE7UU1FnAWGDI42m
+X-Gm-Message-State: AOJu0YxRdczCKPozPwsr2OHYzK+xOgV/6wjczM+oUHYBXif1tOId/SK2
+	kBSP3fMQ9G1EK44ws720frtNE57xTn+Pj0UFxfk1o2bWacYTslPEV3wffgBX2ofbPXjQvA2XZZE
+	oX28z
+X-Google-Smtp-Source: AGHT+IGxNlduPw4N8RobNZbRIqbzT3VJWeSoF5fQdrgHcfqBFoIJRqNGvcA6i2AM+kCf5NUruB/I+w==
+X-Received: by 2002:a17:907:7211:b0:a6e:a97c:fc9a with SMTP id a640c23a62f3a-a6ea97cfd20mr755106466b.8.1718056333661;
+        Mon, 10 Jun 2024 14:52:13 -0700 (PDT)
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com. [209.85.218.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0b5371d2sm362082366b.39.2024.06.10.14.52.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jun 2024 14:52:13 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a6f09eaf420so242012366b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:52:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXkt5rl7buBfN4nrUuqZbG2jqe5zTQ6JwHa+y0OI7wEL2/4R22rj+opmo5zqA4TDQL87Cug/0UQVl3NCU41uJKDgGUFR73djObKUQ+9
+X-Received: by 2002:a17:907:1006:b0:a6e:f52a:c34f with SMTP id
+ a640c23a62f3a-a6ef52ac3fbmr547977766b.18.1718056332086; Mon, 10 Jun 2024
+ 14:52:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240610-md-drivers-platform-chrome-v1-1-f9c75adcc1ca@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIACx1Z2YC/x3MSwqDMBAA0KvIrDuQhCDSq5Qu8hmbAZPIxIog3
- t20y7d5JzQSpgbP4QShnRvX0qEfA4TkyoeQYzcYZawatcIcMQrvJA3XxW1zlYwhSc2EOkzWj3a
- yJnjowSo08/HPX+9u7xqhF1dC+pULl++B2bWNBK7rBkT8reuLAAAA
-To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
-        Guenter Roeck <groeck@chromium.org>
-CC: <chrome-platform@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: rV2IW1dhTdhSKeDRxO1BybYEnDh8Pyyd
-X-Proofpoint-ORIG-GUID: rV2IW1dhTdhSKeDRxO1BybYEnDh8Pyyd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-10_06,2024-06-10_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 clxscore=1011
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406100162
+References: <20240318-billion-v1-0-2f7bc0ee2030@chromium.org>
+ <20240318-billion-v1-3-2f7bc0ee2030@chromium.org> <20240610141402.GB13744@pendragon.ideasonboard.com>
+In-Reply-To: <20240610141402.GB13744@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 10 Jun 2024 23:51:55 +0200
+X-Gmail-Original-Message-ID: <CANiDSCsNdZyKMM82q9SqZ-hQH2Pch24rVCqSs=L6mFL=RbJqQg@mail.gmail.com>
+Message-ID: <CANiDSCsNdZyKMM82q9SqZ-hQH2Pch24rVCqSs=L6mFL=RbJqQg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] media: uvcvideo: Probe the PLF characteristics
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/chrome/cros_kunit_proto_test.o
+Hi Laurent
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+On Mon, 10 Jun 2024 at 16:14, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Ricardo,
+>
+> Thank you for the patch.
+>
+> On Mon, Mar 18, 2024 at 11:55:25PM +0000, Ricardo Ribalda wrote:
+> > The UVC 1.5 standard defines 4 values for the PLF control: Off, 50Hz,
+> > 60Hz and Auto. But it does not clearly define if all the values must be
+> > implemented or not.
+> >
+> > Instead of just using the UVC version to determine what the PLF control
+> > can do, probe it.
+> >
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_ctrl.c | 54 +++++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 50 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> > index 67522143c6c85..9a0b81aca30d1 100644
+> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> > @@ -501,12 +501,58 @@ static int __uvc_ctrl_add_mapping(struct uvc_video_chain *chain,
+> >  static int uvc_ctrl_add_plf_mapping(struct uvc_video_chain *chain,
+> >       struct uvc_control *ctrl, const struct uvc_control_mapping *mapping)
+> >  {
+> > +     const struct uvc_control_mapping *out_mapping =
+> > +                                     &uvc_ctrl_power_line_mapping_uvc11;
+> > +     u8 init_val;
+> > +     u8 *buf;
+>
+>         u8 *buf __free(kfree) = NULL;
+>
+> will simplify the exit paths.
+>
+> > +     int ret;
+> > +
+> > +     buf = kmalloc(sizeof(*buf), GFP_KERNEL);
+> > +     if (!buf)
+> > +             return -ENOMEM;
+> > +
+> > +     /* Save the default PLF value, so we can restore it. */
+> > +     ret = uvc_query_ctrl(chain->dev, UVC_GET_CUR, ctrl->entity->id,
+> > +                          chain->dev->intfnum, ctrl->info.selector,
+> > +                          buf, sizeof(*buf));
+>
+> That's the current value, not the default. Is that intended ?
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/platform/chrome/cros_ec_proto_test.c | 1 +
- 1 file changed, 1 insertion(+)
+Yes, the driver does not init the other controls to the default value.
+So I'd rather be consistent.
 
-diff --git a/drivers/platform/chrome/cros_ec_proto_test.c b/drivers/platform/chrome/cros_ec_proto_test.c
-index 41378c2ee6a0..3960f7c16eb0 100644
---- a/drivers/platform/chrome/cros_ec_proto_test.c
-+++ b/drivers/platform/chrome/cros_ec_proto_test.c
-@@ -2740,4 +2740,5 @@ static struct kunit_suite cros_ec_proto_test_suite = {
- 
- kunit_test_suite(cros_ec_proto_test_suite);
- 
-+MODULE_DESCRIPTION("Kunit tests for ChromeOS Embedded Controller protocol");
- MODULE_LICENSE("GPL");
+>
+> > +     /* If we cannot read the control skip it. */
+> > +     if (ret) {
+> > +             kfree(buf);
+> > +             return ret;
+> > +     }
+> > +     init_val = *buf;
+> > +
+> > +     /* If PLF value cannot be set to off, it is limited. */
+> > +     *buf = V4L2_CID_POWER_LINE_FREQUENCY_DISABLED;
+> > +     ret = uvc_query_ctrl(chain->dev, UVC_SET_CUR, ctrl->entity->id,
+> > +                          chain->dev->intfnum, ctrl->info.selector,
+> > +                          buf, sizeof(*buf));
+> > +     if (ret) {
+> > +             out_mapping = &uvc_ctrl_power_line_mapping_limited;
+> > +             goto end;
+>
+> If setting the value failed you don't need to restore it, do you ?
+>
+> > +     }
+> > +
+> > +     /* UVC 1.1 does not define auto, we can exit. */
+> >       if (chain->dev->uvc_version < 0x150)
+> > -             return __uvc_ctrl_add_mapping(chain, ctrl,
+> > -                                           &uvc_ctrl_power_line_mapping_uvc11);
+> > +             goto end;
+> > +
+> > +     /* Check if the device supports auto. */
+> > +     *buf = V4L2_CID_POWER_LINE_FREQUENCY_AUTO;
+> > +     ret = uvc_query_ctrl(chain->dev, UVC_SET_CUR, ctrl->entity->id,
+> > +                          chain->dev->intfnum, ctrl->info.selector,
+> > +                          buf, sizeof(*buf));
+>
+> Now for the real annoying question. I've encountered quite a few devices
+> that would crash when the driver tried to get/set lots of controls at
+> probe time. This is why the control cache is populated the first time a
+> control is queried, and not when the device is probed. I'm always
+> worried when adding more control accesses at probe time that some
+> devices will behave improperly.
 
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240610-md-drivers-platform-chrome-1c84b64842cb
+If we encounter a device like that we could quirk it.
 
+>
+> Given the number of UVC users I tend to be on the conservative side, but
+> obviously, if we were to strictly avoid new access patterns to the
+> device, the driver wouldn't be able to evolve. I do like patches 4/5 and
+> 5/5, so I'm tempted to take the risk and revert this series later if
+> needed. That would likely make some other users unhappy if they rely on
+> the heuristic.
+>
+> Another issue is how to get vendors to implement the power line
+> frequency control correctly. With the series applied, vendors won't
+> notice they're doing something wrong. Of course, they probably don't
+> check the behaviour of their devices with Linux in the first place, so
+> I'm not sure what we could do.
+
+We can add the check to v4l2-compliance....
+
+Although I would love to see a uvc-compliance tool. If the tool can be
+easily run in windows/linux without a driver I guess ISP vendors will
+run it to validate their code.
+Right now there is no way to validate a usb camera beyond: it runs in
+windows and in cheese.
+
+>
+> > +     if (!ret)
+> > +             out_mapping = &uvc_ctrl_power_line_mapping_uvc15;
+> > +
+> > +end:
+> > +     /* Restore initial value and add mapping. */
+> > +     *buf = init_val;
+> > +     uvc_query_ctrl(chain->dev, UVC_SET_CUR, ctrl->entity->id,
+> > +                    chain->dev->intfnum, ctrl->info.selector,
+> > +                    buf, sizeof(*buf));
+> >
+> > -     return __uvc_ctrl_add_mapping(chain, ctrl,
+> > -                                   &uvc_ctrl_power_line_mapping_uvc15);
+> > +     kfree(buf);
+> > +     return __uvc_ctrl_add_mapping(chain, ctrl, out_mapping);
+> >  }
+> >
+> >  static const struct uvc_control_mapping uvc_ctrl_mappings[] = {
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+
+
+-- 
+Ricardo Ribalda
