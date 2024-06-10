@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E513A158D77
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:43:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC49158D92
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037786; cv=none; b=nN290zwm7GHkTGU/jghi+5fwrZTrPDsuL73ZjWP+qY5CP5qH0+BXyiwPfD/akE3UMfBfaZDynGQRYR+5PGGok+YfqyPheW1FkbSj+zu718YvzvT/xOsYXS460YztNSa05y0TOe1JQ1DPV0HVOd0kIdlJRdn8KXNPH3vUidLDSnc=
+	t=1718037787; cv=none; b=g/6eHqr8sxDcJ5tNwuN3Ke9yD5VPhBKftiMFcyX7B4c/sFWI+mHf+7HscF4SytV2psjoGNqtAelFpdc7XDKXHQowGpY0u++4ZWdVSM/tEDP8imxJzz6l/EZN6NfNXOCbAp2SWJTithT5fWz8v5q8u4HSzQdrGi2ZbyuQMBOzZzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718037786; c=relaxed/simple;
-	bh=S6JUDkyUPN6u68oQn5OUPewj7arp5+lzXuIlS/xwEHU=;
+	s=arc-20240116; t=1718037787; c=relaxed/simple;
+	bh=ojSHAmzDSUCtV20tG0Eic6qt8OMUSGLWdNQCp73/DO0=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=DEyc7S4HkRPx2vHk/4V7inxIWWkIMdb4CEP6u3CKXq8sUz8eJ6l3KpVm/MFG26bShuBQHJoKEtUilPJlcLp9Hob6ula+2KoLdOQp0+w5UBiJtY5GVAigofa+AJBSN4cZoccqTpL5yy8DjJeQW4brOfirriDP8G3qLyU9xBBTstU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fI9SObHD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HyMuCgd7; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=E/Vkqk6zXOVHElUuIqiZKg02I0/UZgbsnOuITCifjRablf+/ZxH7VOlwaWFxNP/CfpCjlv7muCnyq7V3KQ0aykEzYb6T0ZaPK8JoYL8DDGALotnbxgdmz7uGEzJhm+sdXZvdYFHn6ffFJMzg1PmdTCs08Vduq/EeMXephfRWPrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JHBGxA2z; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9sue7UHJ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fI9SObHD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HyMuCgd7"
-Message-ID: <20240610164028.349232422@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JHBGxA2z";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9sue7UHJ"
+Message-ID: <20240610164028.472552548@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037782;
+	s=2020; t=1718037784;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=h6hDrXB0chXNrUH4sCnb+tErkyrDv3iJrXtwT3bPMl8=;
-	b=fI9SObHDM9O6wikpox0ex9IAcR01YvcTqVRh8/mNFLPytHBI4CkQfZcZQ0SdF2e+c5h1FL
-	067m/aa8KMmO28Ab/6jlVYVUlKyJwnNaXHi60H9cVf6OZZOy2zrPRVC0LEjLjZeHSMWL/D
-	sLXRIJqi97aimIRRy1TES1EVsJaolvH+tjJIOd/F6dZxgJIS1OO/JtsilvbNjvuPM0DDt0
-	EcPPKGRukN17EU3vhYkbfavXzKyaJ79O9r3PTy2g95+ig1AbIdo9SdE10lh0NDkPflF+J9
-	z3/gyTZ9vnk4esFhsdrVa3OT2VaC9MI8I83XGToLjDQQ3novEn3Hi9MomWETJQ==
+	 references:references; bh=bzEboz8AUjwt0LmBupDNjtajHSCekoKcw08hOKXcNgs=;
+	b=JHBGxA2zo3ckjoiV+jfcQFRkEegNH5I7sEkHaNRQSFyeYMnVXEo/+80EV3Jn4SLb+mLdyv
+	uV6cuxCfGeg3EJS3gt/22aqX5qpuzwCtpWqqPSp5mKqEfVTRDIqv3gIc+lp++4g6zVEAOU
+	Rqj3k9gBP5idUKSCv6j1vy4EcZ+yP99Ph9Wt9J9nMC6ojAu4V+RIioMFHwVH8LYZc5N7jm
+	jXAIXgKbn1jfQ7nrdb2sq2KkpM+QLtY3M0+EtYCmcWmwjyJbDUsgoBqh27/A6PLj6PQPPd
+	osFyDV2mbp9YK0IuDwwnauy3Zp9g6gI9J2BhB2++izRXT9tU4P21FXTvQoN/cA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037782;
+	s=2020e; t=1718037784;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=h6hDrXB0chXNrUH4sCnb+tErkyrDv3iJrXtwT3bPMl8=;
-	b=HyMuCgd7e3EwTD6aSkoRg6Qhqf6hHQgB+svRqdC4DlihL0iwEAf6J0sMTgl2HIi1hyfg24
-	zcmW/OHD9AdmSmBA==
+	 references:references; bh=bzEboz8AUjwt0LmBupDNjtajHSCekoKcw08hOKXcNgs=;
+	b=9sue7UHJ0fM9lfxdYR+ucFA4iFErDrsi1NyiT0OsKC01vB+6fbz6IUP3AhMzjFaG7sRFFN
+	mO+lkdzMXcw2glDA==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
@@ -45,7 +45,7 @@ Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
  Stephen Boyd <sboyd@kernel.org>,
  Eric Biederman <ebiederm@xmission.com>,
  Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 46/51] posix-timers: Handle ignored list on delete and exit
+Subject: [patch V3 48/51] signal: Queue ignored posixtimers on ignore list
 References: <20240610163452.591699700@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,87 +54,123 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:43:02 +0200 (CEST)
+Date: Mon, 10 Jun 2024 18:43:04 +0200 (CEST)
 
-To handle posix timer signals on sigaction(SIG_IGN) properly, the timers
-will be queued on a separate ignored list.
+Queue posixtimers which have their signal ignored on the ignored list:
 
-Add the necessary cleanup code for timer_delete() and exit_itimers().
+   1) When the timer fires and the signal has SIG_IGN set
+
+   2) When SIG_IGN is installed via sigaction() and a timer signal
+      is queued
+
+This completes the SIG_IGN handling and such timers are not longer self
+rearmed which avoids pointless wakeups.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/posix-timers.h |    4 +++-
- kernel/time/posix-timers.c   |   20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+), 1 deletion(-)
+ kernel/signal.c |   44 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 8 deletions(-)
 
---- a/include/linux/posix-timers.h
-+++ b/include/linux/posix-timers.h
-@@ -151,7 +151,8 @@ static inline void posix_cputimers_init_
- 
- /**
-  * struct k_itimer - POSIX.1b interval timer structure.
-- * @list:		List head for binding the timer to signals->posix_timers
-+ * @list:		List node for binding the timer to tsk::signal::posix_timers
-+ * @ignored_list:	List node for tracking ignored timers in tsk::signal::ignored_posix_timers
-  * @t_hash:		Entry in the posix timer hash table
-  * @it_lock:		Lock protecting the timer
-  * @kclock:		Pointer to the k_clock struct handling this timer
-@@ -174,6 +175,7 @@ static inline void posix_cputimers_init_
-  */
- struct k_itimer {
- 	struct hlist_node	list;
-+	struct hlist_node	ignored_list;
- 	struct hlist_node	t_hash;
- 	spinlock_t		it_lock;
- 	const struct k_clock	*kclock;
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -1036,6 +1036,18 @@ int common_timer_del(struct k_itimer *ti
- 	return 0;
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -722,6 +722,16 @@ void signal_wake_up_state(struct task_st
+ 		kick_process(t);
  }
  
-+/*
-+ * If the deleted timer is on the ignored list, remove it and
-+ * drop the associated reference.
-+ */
-+static inline void posix_timer_cleanup_ignored(struct k_itimer *tmr)
++static inline void posixtimer_sig_ignore(struct task_struct *tsk, struct sigqueue *q);
++
++static void sigqueue_free_ignored(struct task_struct *ptmr_tsk, struct sigqueue *q)
 +{
-+	if (!hlist_unhashed(&tmr->ignored_list)) {
-+		hlist_del_init(&tmr->ignored_list);
-+		posixtimer_putref(tmr);
-+	}
++	if (likely(!ptmr_tsk || q->info.si_code != SI_TIMER))
++		__sigqueue_free(q);
++	else
++		posixtimer_sig_ignore(ptmr_tsk, q);
 +}
 +
- static inline int timer_delete_hook(struct k_itimer *timer)
- {
- 	const struct k_clock *kc = timer->kclock;
-@@ -1068,6 +1080,7 @@ SYSCALL_DEFINE1(timer_delete, timer_t, t
- 
- 	spin_lock(&current->sighand->siglock);
- 	hlist_del(&timer->list);
-+	posix_timer_cleanup_ignored(timer);
- 	spin_unlock(&current->sighand->siglock);
- 	/*
- 	 * A concurrent lookup could check timer::it_signal lockless. It
-@@ -1119,6 +1132,8 @@ static void itimer_delete(struct k_itime
+ /*
+  * Remove signals in mask from the pending set and queue.
+  *
+@@ -740,7 +750,7 @@ static void flush_sigqueue_mask(sigset_t
+ 	list_for_each_entry_safe(q, n, &s->list, list) {
+ 		if (sigismember(mask, q->info.si_signo)) {
+ 			list_del_init(&q->list);
+-			__sigqueue_free(q);
++			sigqueue_free_ignored(ptmr_tsk, q);
+ 		}
  	}
- 	hlist_del(&timer->list);
+ }
+@@ -1964,9 +1974,8 @@ int posixtimer_send_sigqueue(struct k_it
+ 	int sig = q->info.si_signo;
+ 	struct task_struct *t;
+ 	unsigned long flags;
+-	int ret, result;
++	int result;
  
-+	posix_timer_cleanup_ignored(timer);
+-	ret = -1;
+ 	rcu_read_lock();
+ 
+ 	t = posixtimer_get_target(tmr);
+@@ -2012,13 +2021,24 @@ int posixtimer_send_sigqueue(struct k_it
+ 	 */
+ 	q->info.si_overrun = 0;
+ 
+-	ret = 1; /* the signal is ignored */
+ 	if (!prepare_signal(sig, t, false)) {
+ 		result = TRACE_SIGNAL_IGNORED;
 +
- 	/*
- 	 * Setting timer::it_signal to NULL is technically not required
- 	 * here as nothing can access the timer anymore legitimately via
-@@ -1151,6 +1166,11 @@ void exit_itimers(struct task_struct *ts
- 	/* The timers are not longer accessible via tsk::signal */
- 	while (!hlist_empty(&timers))
- 		itimer_delete(hlist_entry(timers.first, struct k_itimer, list));
++		/* Paranoia check. Try to survive. */
++		if (WARN_ON_ONCE(!list_empty(&q->list)))
++			goto out;
 +
-+	/* Mop up timers which are on the ignored list */
-+	hlist_move_list(&tsk->signal->ignored_posix_timers, &timers);
-+	while (!hlist_empty(&timers))
-+		posix_timer_cleanup_ignored(hlist_entry(timers.first, struct k_itimer, list));
++		if (hlist_unhashed(&tmr->ignored_list)) {
++			hlist_add_head(&tmr->ignored_list, &t->signal->ignored_posix_timers);
++			posixtimer_sigqueue_getref(q);
++		}
+ 		goto out;
+ 	}
+ 
+-	ret = 0;
++	/* This should never happen and leaks a reference count */
++	if (WARN_ON_ONCE(!hlist_unhashed(&tmr->ignored_list)))
++		hlist_del_init(&tmr->ignored_list);
++
+ 	if (unlikely(!list_empty(&q->list))) {
+ 		/* This holds a reference count already */
+ 		result = TRACE_SIGNAL_ALREADY_PENDING;
+@@ -2033,7 +2053,14 @@ int posixtimer_send_sigqueue(struct k_it
+ 	unlock_task_sighand(t, &flags);
+ ret:
+ 	rcu_read_unlock();
+-	return ret;
++	return 0;
++}
++
++static inline void posixtimer_sig_ignore(struct task_struct *tsk, struct sigqueue *q)
++{
++	struct k_itimer *tmr = container_of(q, struct k_itimer, sigq);
++
++	hlist_add_head(&tmr->ignored_list, &tsk->signal->ignored_posix_timers);
  }
  
- SYSCALL_DEFINE2(clock_settime, const clockid_t, which_clock,
+ static void posixtimer_sig_unignore(struct task_struct *tsk, int sig)
+@@ -2082,6 +2109,7 @@ static void posixtimer_sig_unignore(stru
+ 	}
+ }
+ #else /* CONFIG_POSIX_TIMERS */
++static inline void posixtimer_sig_ignore(struct task_struct *tsk, struct sigqueue *q) { }
+ static inline void posixtimer_sig_unignore(struct task_struct *tsk, int sig) { }
+ #endif /* !CONFIG_POSIX_TIMERS */
+ 
+@@ -4272,9 +4300,9 @@ int do_sigaction(int sig, struct k_sigac
+ 		if (sig_handler_ignored(sig_handler(p, sig), sig)) {
+ 			sigemptyset(&mask);
+ 			sigaddset(&mask, sig);
+-			flush_sigqueue_mask(&mask, &p->signal->shared_pending, NULL);
++			flush_sigqueue_mask(&mask, &p->signal->shared_pending, p);
+ 			for_each_thread(p, t)
+-				flush_sigqueue_mask(&mask, &t->pending, NULL);
++				flush_sigqueue_mask(&mask, &t->pending, p);
+ 		} else if (was_ignored) {
+ 			posixtimer_sig_unignore(p, sig);
+ 		}
 
