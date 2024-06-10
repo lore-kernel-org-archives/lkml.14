@@ -1,159 +1,206 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5D17EF09
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 11:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2C47E0E8;
+	Mon, 10 Jun 2024 11:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718019540; cv=none; b=NEl4IwlFnkk78FtGVUrqpAq0dtW8puyho/UifZL/9nqttNwyhhfLqEkBbgeR5tbSwNVdwTN4ZtdFbtTPs8BuoWWTrmwzYUTVYzNxcyqHXYuq4DmFppOJQnvOr4uHir1bmt2qOBrFYbsJtuL0V6/3Ytco83U214OT9+NfNGozp9k=
+	t=1718019571; cv=none; b=lk+2hajQAUN7s1HNEhqWUGYx2LxYtBcnf7fx1mGEHlQ/o/o08VViCNgPh3O080T9E1jn8aROVUrp4nU2UsFyUgzqsBl0JhqGlTjZTy/3BPbdL9+cMzgb8SpuFTlcJnT0Y31k2faD2Fwu0aN8XWUTj1QBBaitJmFIXKCYap7D9YE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718019540; c=relaxed/simple;
-	bh=4g0jh8mVTXXIWWd6K8v/g22BWViRX2KKtDtoBlE5OWo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
-	 References; b=bxORjaa7pWDqPTw00jH3G2wSOygFSa6uxLbTk2I5eV7yW0DKw8/vGVfn8sO99zo+dFN4jvFZSZbGAzZDtpTvU6XfSgn7mEIqT0Rr/CaZHnUr4pncd86EKt9cnvVw6soRSYzG0bCCTwtZVIpYmQSV8WgyvxOnpiJ4sYBn+94Eg3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=t55c8XQt; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1718019571; c=relaxed/simple;
+	bh=OiP6Bx2iI8AAJBotZLPsERecn+WuQKicWwj+JsxImZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P7mqwRrccKNZciA/etNX7V7y14DdEoxkMsPxhka5xjjtbxsp7OFlKQU/JEoNGEgvmOpb67lkf6iGxUxkbYQcleXTOH1Zwl9BOKklCNe20XOcY/uNke1tEFW8UgyfrjkaYIdHvE5w345U9BN7s9YIwV4kyQaA7HdOOHupjloZY6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=hhcPhmlB; arc=none smtp.client-ip=46.19.9.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="t55c8XQt"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240610113850epoutp023127d4f45ad13d102fc7931b846c69af~XoakMCuHC0095700957epoutp02u
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 11:38:50 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240610113850epoutp023127d4f45ad13d102fc7931b846c69af~XoakMCuHC0095700957epoutp02u
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1718019530;
-	bh=CYNsfsElRoaTG9v3KypueJ6qSMPhqLeAdpy+lkpm4r0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t55c8XQtKtc9f09itfza3EDkv6W7X6wMTdP9vT6ovF24m75lblYCRfWl/JZLMgKhY
-	 6ZiQLPcp2KAWHhoZUWYQMitMIRNrOmYeJg2XkkzinbSbVZThOue7ge3NwAXI+B0rDh
-	 q7DL3qj1LxRFrzAZk3chOgIJNHKUZhgu9MOzofxQ=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20240610113849epcas2p388dc65dc0f10e659b47a897794f7946b~Xoaj3mQwl2563025630epcas2p3g;
-	Mon, 10 Jun 2024 11:38:49 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.89]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4VyVF52xsYz4x9Pv; Mon, 10 Jun
-	2024 11:38:49 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-	epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C2.F3.09485.9C5E6666; Mon, 10 Jun 2024 20:38:49 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240610113848epcas2p3742cffc295e0ebb35713a761c06e1c47~Xoai0nwFN2563025630epcas2p3f;
-	Mon, 10 Jun 2024 11:38:48 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240610113848epsmtrp18a605a9b73dccedda64478d9dbc69a99~Xoai0CNZ92145221452epsmtrp1c;
-	Mon, 10 Jun 2024 11:38:48 +0000 (GMT)
-X-AuditID: b6c32a46-19bfa7000000250d-56-6666e5c96fff
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BF.57.18846.8C5E6666; Mon, 10 Jun 2024 20:38:48 +0900 (KST)
-Received: from ubuntu.dsn.sec.samsung.com (unknown [10.229.95.128]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240610113848epsmtip2812169bd042b5df7bfa52ac1001c6990~Xoain6lk21349813498epsmtip2d;
-	Mon, 10 Jun 2024 11:38:48 +0000 (GMT)
-From: Daehwan Jung <dh10.jung@samsung.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thinh Nguyen
-	<Thinh.Nguyen@synopsys.com>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: linux-usb@vger.kernel.org (open list:USB SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list), h10.kim@samsung.com, Daehwan Jung
-	<dh10.jung@samsung.com>
-Subject: [PATCH v3 1/3] usb: dwc3: Support quirk for writing high-low order
-Date: Mon, 10 Jun 2024 20:39:11 +0900
-Message-Id: <1718019553-111939-2-git-send-email-dh10.jung@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1718019553-111939-1-git-send-email-dh10.jung@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJKsWRmVeSWpSXmKPExsWy7bCmue7Jp2lpBhcbhC3uLJjGZNG8eD2b
-	xd/bF1ktLu+aw2axaFkrs0XzpimsFqsWHGB3YPdYvOclk8f+uWvYPfq2rGL02LL/M6PH501y
-	AaxR2TYZqYkpqUUKqXnJ+SmZeem2St7B8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QGco
-	KZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgrMC/SKE3OLS/PS9fJSS6wMDQyMTIEK
-	E7IzGn4pFNzgqeg8MIuxgfEwVxcjJ4eEgInEnitXWUBsIYEdjBKv2zS7GLmA7E+MEstamhkh
-	EkDO9m2aMA075h9mhyjaySix7ms3lPODUWLjlQXMXYwcHGwCWhLfFzKCxEUEOhgljj4/zQbi
-	MAssYJR4cHIRI0iRsIC3xOLLViBTWQRUJRYencwKEuYVcJPYv0oMYpmcxM1zncwgNqeAu8TL
-	+X9ZQMZICBxjl1i8rZ8RoshFYv+388wQtrDEq+Nb2CFsKYmX/W1QdrHErefPmCGaWxglVrxq
-	gWowlpj1rB3sHmYBTYn1u/RBTAkBZYkjt8ChwizAJ9Fx+C87RJhXoqNNCKJRWWL65QmsELak
-	xMHX56AGekj09nWxQoJkFqPExHN3GScwys1CWLCAkXEVo1hqQXFuemqxUYERPLqS83M3MYLT
-	mJbbDsYpbz/oHWJk4mA8xCjBwawkwiuUkZwmxJuSWFmVWpQfX1Sak1p8iNEUGHYTmaVEk/OB
-	iTSvJN7QxNLAxMzM0NzI1MBcSZz3XuvcFCGB9MSS1OzU1ILUIpg+Jg5OqQamwrX/RPatYpwZ
-	Ev7huuyapY81AkuK8/tvOyju3/vEIjrs2s0p9W57Zc0rXgZV/1dKXLG91iEm5b7VpvDj7fK9
-	zB/KZs5Zc7zRNOvRDnGBLYX/OX99TT7wrclJz7Jotq+WVOMMofWclxS7tL+tnf9cXy5s/cKV
-	K44cd7v92uCIoMPkjsrfFl3PQkPvcem/bWSRfXxHj9X1dWFMmGtcYmQ62wr9T9lCwpdFOy70
-	dj6o3Pt9DZ/lhjmmF6cf/rNDS7y1Mf3y/S+CIoGcv28ELvNaFbGh3dpzuR7P9Re3L5Zl/nrT
-	l71bTYtjoerafQsChR3XsvdtPvRm38zT2+MFtVNU7ut8M47RaW78LGxtbnlNiaU4I9FQi7mo
-	OBEAGHbrGewDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprALMWRmVeSWpSXmKPExsWy7bCSvO6Jp2lpBpe+a1ncWTCNyaJ58Xo2
-	i7+3L7JaXN41h81i0bJWZovmTVNYLVYtOMDuwO6xeM9LJo/9c9ewe/RtWcXosWX/Z0aPz5vk
-	AlijuGxSUnMyy1KL9O0SuDIafikU3OCp6Dwwi7GB8TBXFyMnh4SAicSO+YfZQWwhge2MEl+X
-	10PEJSWWzr3BDmELS9xvOcLaxcgFVPONUeLpg58sXYwcHGwCWhLfFzKCxEUEuhglHmy6wwLi
-	MAssYpR403uHEaRIWMBbYvFlK5BBLAKqEguPTmYFCfMKuEnsXyUGMV9O4ua5TmYQm1PAXeLl
-	/L8sEPe4SZw9vYplAiPfAkaGVYyiqQXFuem5yQWGesWJucWleel6yfm5mxjBgaYVtINx2fq/
-	eocYmTgYDzFKcDArifAKZSSnCfGmJFZWpRblxxeV5qQWH2KU5mBREudVzulMERJITyxJzU5N
-	LUgtgskycXBKNTDlTLxVuPzYiYZVQjZGwTNvMG2fwWI/Jflayr0Jxi1lCfd8hAJlJhquu/iq
-	tKVm4c21a0yXOb01SRFxzBM9klI44fv/p6LMq7V5812O3pLcMnH5w1f2dYdvLaj7x5vzpeEU
-	v1zK+nVMN59791k6HWv/3vzn/wznD6Iv9ktKMy7Kb/1yR7TPmO3TgVlPvlUz+SQsX9IdfMn8
-	dPyEbQsC95b4sfBftZnSWrXllWr6Mv6yK+xTszuKDGVv/bitNTX6U5fOrDlmP+8+m2JWtDid
-	5cb1X/O2SL44cmFG0LmDrlJTpX4dvK3q+b6Jv8U6rXeT7kO2xLNWhYd0DVZLrpsgWX+ob/GO
-	iFOf58rkm6xRK/5YpsRSnJFoqMVcVJwIANFQsLqjAgAA
-X-CMS-MailID: 20240610113848epcas2p3742cffc295e0ebb35713a761c06e1c47
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240610113848epcas2p3742cffc295e0ebb35713a761c06e1c47
-References: <1718019553-111939-1-git-send-email-dh10.jung@samsung.com>
-	<CGME20240610113848epcas2p3742cffc295e0ebb35713a761c06e1c47@epcas2p3.samsung.com>
+	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="hhcPhmlB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=yXg8ExlqjWnKLMYOlLaWW7wX0EdTDT1fjpBKYh1NfqU=; b=hhcPhmlB99XIy0K+waoY6iousa
+	vtZgnYLiwy+GQKn/AaUVP1W7SYmLZZbVOaW4HUUPGGfS8QL7GOxyH2m79nut+BpXcMmHGe04j568J
+	97irjGfNlp7qdK2pjwFpijZBuqzO/5pwMVh9IlFtFZLDv//MsJ/0zX1JR7qSnGWJLEjgyAURZsbba
+	G3Hp7xLQ/vP9zInEvljPhW3/EdOArL7CorWEOA/uYNkjYzTWElrFl2iv/PWTNxkcHwrtV4cZ2yk1l
+	3LGmZXUNnxsl4oI1+GtTm0Z5i7enLUWSo3LZss0GLayjGpY7CQUGvVSLk5hcJIw7ZKo1BANYzSrkv
+	0AU56lxQ==;
+Received: from 89-212-21-243.static.t-2.net ([89.212.21.243]:42114 helo=[192.168.69.116])
+	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <primoz.fiser@norik.com>)
+	id 1sGdMv-00Bzgp-24;
+	Mon, 10 Jun 2024 13:39:21 +0200
+Message-ID: <00ec4120-19ca-4b20-85d0-754c05bdc669@norik.com>
+Date: Mon, 10 Jun 2024 13:39:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] OPP: ti: Use devm_pm_opp_set_config_regulators
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, upstream@lists.phytec.de
+References: <20240606113334.396693-1-primoz.fiser@norik.com>
+ <20240606113334.396693-2-primoz.fiser@norik.com>
+ <20240610042250.xccda2pr277v6asf@vireshk-i7>
+From: Primoz Fiser <primoz.fiser@norik.com>
+Content-Language: en-US
+Organization: Norik systems d.o.o.
+In-Reply-To: <20240610042250.xccda2pr277v6asf@vireshk-i7>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.siel.si
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - norik.com
+X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
+X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-There's the limitation of Synopsys dwc3 controller with ERST programming in
-supporting separate ERSTBA_HI and ERSTBA_LO programming. It's supported when
-the ERSTBA is programmed ERSTBA_HI before ERSTBA_LO. But, writing operations
-in xHCI is done low-high order following xHCI spec. xHCI specification 5.1
-"Register Conventions" states that 64 bit registers should be written in
-low-high order. Synopsys dwc3 needs workaround for high-low order. That's why
-adding new quirk is needed to support this.
+Hi Viresh,
 
-Signed-off-by: Daehwan Jung <dh10.jung@samsung.com>
----
-v1 -> v2:
-- this patch is added newly in the patchset
-- add a property in dwc3 structure
-v2 -> v3:
-- add change note
-- add description in commit message
-- remove the property in dwc3 structure to pass it unconditionally
----
- drivers/usb/dwc3/host.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 10. 06. 24 06:22, Viresh Kumar wrote:
+> Hi Primoz,
+> 
+> Thanks for your changes, they look exactly as we discussed earlier, but .. 
+> 
+> On 06-06-24, 13:33, Primoz Fiser wrote:
+>> Function ti_opp_supply_probe() since commit 6baee034cb55 ("OPP: ti:
+>> Migrate to dev_pm_opp_set_config_regulators()") returns wrong values
+>> when all goes well and hence driver probing eventually fails.
+>>
+>> Switch to using devm_pm_opp_set_config_regulators() function that
+>> correctly handles return values and doesn't require us to handle
+>> returned tokens.
+>>
+>> Fixes: 6baee034cb55 ("OPP: ti: Migrate to dev_pm_opp_set_config_regulators()")
+>> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
+>> ---
+>>  drivers/opp/ti-opp-supply.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/opp/ti-opp-supply.c b/drivers/opp/ti-opp-supply.c
+>> index e3b97cd1fbbf..8a4bcc5fb9dc 100644
+>> --- a/drivers/opp/ti-opp-supply.c
+>> +++ b/drivers/opp/ti-opp-supply.c
+>> @@ -392,7 +392,7 @@ static int ti_opp_supply_probe(struct platform_device *pdev)
+>>  			return ret;
+>>  	}
+>>  
+>> -	ret = dev_pm_opp_set_config_regulators(cpu_dev, ti_opp_config_regulators);
+>> +	ret = devm_pm_opp_set_config_regulators(cpu_dev, ti_opp_config_regulators);
+>>  	if (ret < 0)
+>>  		_free_optimized_voltages(dev, &opp_data);
+> 
+> -- I made a mistake.
 
-diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-index a171b27..e0533ce 100644
---- a/drivers/usb/dwc3/host.c
-+++ b/drivers/usb/dwc3/host.c
-@@ -126,7 +126,7 @@ static int dwc3_host_get_irq(struct dwc3 *dwc)
- 
- int dwc3_host_init(struct dwc3 *dwc)
- {
--	struct property_entry	props[5];
-+	struct property_entry	props[6];
- 	struct platform_device	*xhci;
- 	int			ret, irq;
- 	int			prop_idx = 0;
-@@ -162,6 +162,8 @@ int dwc3_host_init(struct dwc3 *dwc)
- 
- 	props[prop_idx++] = PROPERTY_ENTRY_BOOL("xhci-sg-trb-cache-size-quirk");
- 
-+	props[prop_idx++] = PROPERTY_ENTRY_BOOL("write-64-hi-lo-quirk");
-+
- 	if (dwc->usb3_lpm_capable)
- 		props[prop_idx++] = PROPERTY_ENTRY_BOOL("usb3-lpm-capable");
- 
--- 
-2.7.4
+:(
 
+> 
+> The driver gets probed with a platform device, while
+> devm_pm_opp_set_config_regulators() works with cpu device. And so the
+> issue related to module insertion/removal/insertion will still be
+> there :(.
+> 
+> Did you try that though ?
+
+I didn't because of:
+
+config ARM_TI_CPUFREQ
+
+        bool "Texas Instruments CPUFreq support"
+
+
+is a built-in driver.
+
+Anyway, I guess one could trigger this also with:
+
+$ cd /sys/devices/platform/ocp/4a003b20.opp-supply/driver
+$ echo 4a003b20.opp-supply > unbind
+$ echo 4a003b20.opp-supply > bind
+
+[  164.231781] ------------[ cut here ]------------
+[  164.236450] WARNING: CPU: 1 PID: 230 at drivers/opp/core.c:2474
+dev_pm_opp_set_config+0x384/0x634
+[  164.245422] Modules linked in: sha256_generic libsha256 sha256_arm
+cfg80211 uas usb_storage xhci_plat_hcd xhci_hcd usbcore dwc3 roles
+udc_core pru_rproc irq_pruss_intc usb_common rpmsg_ctrl rpmsg_char etnaviv
+ ti_vpe ti_vip snd_soc_simple_card gpu_sched ti_sc bq27xxx_battery_hdq
+bq27xxx_battery snd_soc_simple_card_utils pvrsrvkm(O) snd_soc_omap_hdmi
+ahci_dwc ti_csc libahci_platform v4l2_mem2mem ti_vpdma libahci omap_
+aes_driver videobuf2_dma_contig libaes videobuf2_memops videobuf2_v4l2
+c_can_platform pruss libata videobuf2_common c_can omap_wdt
+phy_omap_usb2 can_dev omap_hdq dwc3_omap omap_des
+snd_soc_tlv320aic3x_i2c snd_so
+c_tlv320aic3x libdes rtc_omap wire at24 omap_crypto palmas_pwrbutton
+extcon_palmas rtc_palmas omap_sham crypto_engine omap_remoteproc
+virtio_rpmsg_bus rpmsg_ns sch_fq_codel cryptodev(O) cmemk(O)
+[  164.318298] CPU: 1 PID: 230 Comm: sh Tainted: G           O
+6.1.80-bsp-yocto-ampliphy-am57x-kirkstone #1
+[  164.328369] Hardware name: Generic DRA74X (Flattened Device Tree)
+[  164.334472]  unwind_backtrace from show_stack+0x10/0x14
+[  164.339752]  show_stack from dump_stack_lvl+0x40/0x4c
+[  164.344818]  dump_stack_lvl from __warn+0x94/0xc0
+[  164.349578]  __warn from warn_slowpath_fmt+0x1a4/0x1ac
+[  164.354736]  warn_slowpath_fmt from dev_pm_opp_set_config+0x384/0x634
+[  164.361236]  dev_pm_opp_set_config from devm_pm_opp_set_config+0xc/0x44
+[  164.367889]  devm_pm_opp_set_config from ti_opp_supply_probe+0x1c8/0x2f4
+[  164.374633]  ti_opp_supply_probe from platform_probe+0x5c/0xbc
+[  164.380493]  platform_probe from really_probe+0xc8/0x2ec
+[  164.385833]  really_probe from __driver_probe_device+0x88/0x1a0
+[  164.391815]  __driver_probe_device from device_driver_attach+0x40/0x98
+[  164.398376]  device_driver_attach from bind_store+0x80/0xec
+[  164.403991]  bind_store from kernfs_fop_write_iter+0x10c/0x1cc
+[  164.409851]  kernfs_fop_write_iter from vfs_write+0x2a0/0x3c8
+[  164.415649]  vfs_write from ksys_write+0x5c/0xd4
+[  164.420288]  ksys_write from ret_fast_syscall+0x0/0x4c
+[  164.425445] Exception stack(0xf2359fa8 to 0xf2359ff0)
+[  164.430511] 9fa0:                   00000014 00539568 00000001
+00539568 00000014 00000000
+[  164.438751] 9fc0: 00000014 00539568 b6f5c5a0 00000004 00000014
+0050cc08 00000000 00000000
+[  164.446960] 9fe0: 00000004 bed839d8 b6e80827 b6e01ae6
+[  164.452056] ---[ end trace 0000000000000000 ]---
+[  164.456726] ti_opp_supply: probe of 4a003b20.opp-supply failed with
+error -16
+-sh: echo: write error: Device or resource busy
+
+so the error comes from drivers/opp/core.c block:
+
+	/* This should be called before OPPs are initialized */
+	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
+		ret = -EBUSY;
+		goto err;
+	}
+
+
+> 
+> The only way to get this solved is probably by introducing a remove()
+> method, which clears the OPP config and stores the token returned by
+> dev_pm_opp_set_config_regulators().
+> 
+
+I did some additional experiments today by adding .remove_new callback
+and calling dev_pm_opp_clear_config() in it.
+
+However I still get the same error as above.
+
+Unforunatelly, I cannot test on latest master since it doesn't boot yet
+on my board (still using linux-ti 6.1).
+
+Shall we store token and not call dev_pm_opp_set_config_regulators() in
+probe() if token has been already aquired once?
+
+BR,
+Primoz
