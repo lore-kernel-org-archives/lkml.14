@@ -1,125 +1,121 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3817406A;
-	Mon, 10 Jun 2024 09:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56D574BE4
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 09:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718011421; cv=none; b=QZsRRecUapmVhWUPVRC5UXlayux/h4du6CADwxaiUNi69LkdhzQoSmhKEvcqYwF4YenqOor5Lo7MIGedzpSP2CP8JEWsgtboW7sNJivJ5RbSbi/H8JAhUe6bMJHnk0ENfYHUi74PD5h5jvn3MC959Nq9xdL4lZcGHTlw3rK73us=
+	t=1718011444; cv=none; b=fDP/TIDBRdcfJ8JyHpPkTv1QLxB3lwWCGlw0qrEC34TR1VhOn+3/Iy5wENT2wkSPAKONenkQFn2CVVjqieAy+YihykCcoykGKwOnd2/xpvfud1mu4PqLvmuN93zwKZ9zEK/QXoypVp7ppEmPR+a0DUobAH6eSU0re6J2AByYiQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718011421; c=relaxed/simple;
-	bh=MIk+bEBU0QLUp/D8INS2W8Ha6kIdaCi6god1JOJ+eWQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nKhPxgSTyUOHQTlmA4UekbNaTDTTmDJrbbMY7io/cABV0QcPYn81VmCLsoDqM0NfKObpceWSB2EAFJrnGRYoy5n7bSV3dz7IFSLscSm39xqFPUqnu+OgpC4U/69UVHVeb2cQRqWMWzDOUqwaxr45oBxQ0GGo9AVifwjXWvUk1w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QNe1029m; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718011444; c=relaxed/simple;
+	bh=nBZ9dF+0OABWdV1iqoE6bc8ju4Dqou9rPp9kvXoJsYU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ownz06VabQy+CEX9e++rWD+JVRe40KvAyEKL75QPaI/NX+rUGlMTmrM2RaI7AhkV8eUB+JLsL0W27RamxHUAwLEfoTdsnAhjaVQLGQeDenqPzwlX6xJhVQFt85bAMT7FbCtXNBLxgOcFiWoNxF8BU7n1laB8Tsa+gSIwribsRvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ddhqNHm4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNe1029m"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-652fd0bb5e6so3656334a12.0;
-        Mon, 10 Jun 2024 02:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718011419; x=1718616219; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=URK2Ozhs5KbL4aw49CG/ifndI/mBkWV5rsNcJfrG55c=;
-        b=QNe1029mkxV69vPioEE9fEITcNr8hoi7ar05ONga2XMK+Hs8I+M30TUCbAIw2n3yvm
-         jioRriuxDkcXLfMFFstkvg5NbjSmsytxle50bQpKbugqm02m01eqNY4pv7xkJdOqWzVq
-         M0FMHp7JYltBOcf6b48O33lx8XuFpJZsBNnvWyQAuopi7LkTm7FD9WSAuAm+4LQlUBjQ
-         I0B3y/DiDu1DBghkwzI2BxkqRvVaAmLtj/BlFwk8/Mce+N+XiG+ugSDr/lcrKzfOAwnQ
-         RpnF/7/RQnEEFMt0XKIj4olaUmYku0/Xw34k5+JjEU9s2FAB1WX06Lg38+5qM+7C6Nan
-         qfgg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ddhqNHm4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718011441;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nBZ9dF+0OABWdV1iqoE6bc8ju4Dqou9rPp9kvXoJsYU=;
+	b=ddhqNHm4DzoXp4zniIsBzeb3YgFTjXrRpMZKP7RJzOW8nDiChYOQQC/QsLjEQu0R3Jn/1T
+	l/5vg58LmF3ys6ojwdE+fu1v/+/v80oOEoH600q/tBjZbCoLR8TmS1q0wdhYYQp3Jz5keB
+	wlyfw5ZkMIefyzozUbKLz/+VBKfBJ4g=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-68-KbwgnETxNFy_nZDJzeXV9w-1; Mon, 10 Jun 2024 05:23:58 -0400
+X-MC-Unique: KbwgnETxNFy_nZDJzeXV9w-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-35f0b9c5bd4so1114466f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 02:23:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718011419; x=1718616219;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1718011437; x=1718616237;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=URK2Ozhs5KbL4aw49CG/ifndI/mBkWV5rsNcJfrG55c=;
-        b=HY9kJSscF64pW7krhbgOH2Y93ObMrslQU3DunAVZaNE9lBh5NpQ1RAuQis06TEkcBg
-         mHrRL/7uwYg0n1T9C+sXGk/5xu/7vtIG6E+Tq17emoUGRC6UEKygjoZlx+TFurIYr/XP
-         pAl2igKczYo0i+BrnkQ2ZSeFWA2TSOwLsnU6VgDqm+rMUzhZ44gUvLNFNrLiEpzpvh9v
-         U1Z1UBTrEcmeuXrmfz8QZ2Jo1CnZTjoMeIg3GSZPwkRNESEr40G/pWjYR0Pyw3mvkztW
-         Bnri7s22t0FDmf8uGIZZPkQFnaV5jfj4VzY97VqzEzO+BoRzGvSBPJMj7IUTKKqo33s2
-         zLNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVu4wD9FfhZqMlfgGkmjInVhZ4q+cucALh4pt37itlIsWjDXzdl8JNbuRHflgFvzZc7QIPuX6t0So+YbdC8+PYC2hd2RE+mYpl3XJ2Yfgh3lQdhBR21MiBIYR14HRggBsRtpM513Q==
-X-Gm-Message-State: AOJu0YzPsvZM6dSLTieo24DuxVd7FQb/2JUGL49OBB+iivU4zeeS3Jnp
-	w3QlgOq684c5c2ZE3Dss3gVEJLCkRf4OE6oeByOXQFOqjvncewWvqth1lg==
-X-Google-Smtp-Source: AGHT+IEO3yv96Ra6/QmPyXyRqSF9S1kCV/k0qKCG3xgA2PNgHVyBcfDM6auP59WUvB6KjKmv3/UDzg==
-X-Received: by 2002:a05:6a20:8417:b0:1b2:b60a:a42d with SMTP id adf61e73a8af0-1b2f968d9f8mr10458016637.4.1718011419450;
-        Mon, 10 Jun 2024 02:23:39 -0700 (PDT)
-Received: from rigel.home.arpa ([118.209.204.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6efa2a319sm41318395ad.108.2024.06.10.02.23.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 02:23:39 -0700 (PDT)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	brgl@bgdev.pl,
-	corbet@lwn.net,
-	drankinatty@gmail.com
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 2/2] Documentation: gpio: Clarify effect of active low flag on line edges
-Date: Mon, 10 Jun 2024 17:21:57 +0800
-Message-Id: <20240610092157.9147-3-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240610092157.9147-1-warthog618@gmail.com>
-References: <20240610092157.9147-1-warthog618@gmail.com>
+        bh=nBZ9dF+0OABWdV1iqoE6bc8ju4Dqou9rPp9kvXoJsYU=;
+        b=h+/Lr5aWM8NCADJO8vpWwP/wiw0QTmXWPFTtH+++bqt9LeWh1q3xvB3h0JJDlBueJ3
+         9Hsrb4AdVdj0yUo58SJw2fzAaifJ9lVowDI3wMLmiJpNmNEIQrKvUYiEpIiUJbe5w14Q
+         Aoo+2vFdHxMGZ8rq7BwqR9pEuVMOoAnW0nQjuVfCGYD03gOa0O31i8fOAwtw7j9Z/WsU
+         RX/G8pN3vJX8pZya1jMz5gdl5erdWpYmXV9nCCtZo1Ody42MM5lyWMvuA8gcBrV8TtC9
+         G5aTdrc4BpLnwCZ3L3yRSaic1ZH7CKkadXGX77KaaRuAktQzTfqdoWbIu+NexP6b7gcN
+         aMYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWOibtrMvqMUtDibYCtn5iOD5W75O35FwuQlE1tGvBCi74oW4MRPzHrnTOdN0tZ+9izxNYIBm+ItWWSZjSE5KrimWMFo/dNhu2Nmx3
+X-Gm-Message-State: AOJu0YzUnabV9fC1jtkT/j+4XUaREbZfc0e1RsM9aBh6hbXxiUeJusIl
+	rHUxPa46Zl/EtVmj8CvqoHxRS8isVjfLW2wPPfexvS7nMA+Stx6Ui0uxBFi0yEB4AZG5W2KOoFu
+	zJSoq3Lh/Xnev/a12xmwccbQxUZ5x3XSr0rJx7sP5FsqcuYo2yX38KgGcvLXFgEJbX6yaA1zFvA
+	TMOWnN5qQZi9wYGPERYgCiOLFrE5C3rxdgkLB7
+X-Received: by 2002:a05:6000:b0b:b0:35f:20e6:43b7 with SMTP id ffacd0b85a97d-35f20e64490mr3111350f8f.46.1718011437382;
+        Mon, 10 Jun 2024 02:23:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEnD4OricjHIzeZrQUhiUfQSyNi2612qbHoQWqNdACOC0oufkWPT8VkmnBnvIprzUGJFTPIyjwrWV8EUkAWz2I=
+X-Received: by 2002:a05:6000:b0b:b0:35f:20e6:43b7 with SMTP id
+ ffacd0b85a97d-35f20e64490mr3111338f8f.46.1718011437042; Mon, 10 Jun 2024
+ 02:23:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240530210714.364118-1-rick.p.edgecombe@intel.com>
+ <20240530210714.364118-10-rick.p.edgecombe@intel.com> <CABgObfbzjLtzFX9wC_FU2GKGF_Wq8og+O=pSnG_yD8j1Dn3jAg@mail.gmail.com>
+ <b1306914ee4ca844f9963fcd77b8bf9a30d05249.camel@intel.com>
+ <CABgObfb1L4SLGLOPwUKTBusN9bVKACJp7cyvgL8LPhGz0QTNAA@mail.gmail.com> <9c5f7aae312325c0e880baf411f956d4cce3c6d1.camel@intel.com>
+In-Reply-To: <9c5f7aae312325c0e880baf411f956d4cce3c6d1.camel@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Mon, 10 Jun 2024 11:23:43 +0200
+Message-ID: <CABgObfYd4TWq4ObUzkDruj_e111cTniWtXckzB_Ft7SOdv7YMQ@mail.gmail.com>
+Subject: Re: [PATCH v2 09/15] KVM: x86/tdp_mmu: Support mirror root for TDP MMU
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "seanjc@google.com" <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
+	"sagis@google.com" <sagis@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
+	"Aktas, Erdem" <erdemaktas@google.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"dmatlack@google.com" <dmatlack@google.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The documentation does not make sufficiently clear that edge polarity is
-based on changes to the logical line values, and that the physical
-polarity of edges is dependent on the active low flag.
+On Mon, Jun 10, 2024 at 2:09=E2=80=AFAM Edgecombe, Rick P
+<rick.p.edgecombe@intel.com> wrote:
+> Agreed that this is less TDX specific and it means that this part of the =
+generic
+> MMU code doesn't need to know that the mirror/direct matches to private v=
+s
+> shared. I don't love that it has such a complicated conditional for the n=
+ormal
+> VM case, though. Just for readability.
+>
+> The previous versions checked kvm_gfn_shared_mask() more readily in vario=
+us open
+> coded spots. In this v2 we tried to reduce this and instead always rely o=
+n
+> the "private" concept to switch between the roots in the generic code. I =
+think
+> it's arguably a little easier to understand if we stick to a single way o=
+f
+> deciding which root to use.
 
-Clarify the relationship between the active low flag and edge polarity
-for the functions that read edge events.
+But there isn't any other place that relies on is_private, right? So...
 
-Suggested-by: David C. Rankin <drankinatty@gmail.com>
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- .../userspace-api/gpio/gpio-lineevent-data-read.rst          | 5 +++++
- Documentation/userspace-api/gpio/gpio-v2-line-event-read.rst | 5 +++++
- 2 files changed, 10 insertions(+)
+> But I don't feel like any of these solutions discussed is perfectly clean=
+. So
+> I'm ok taking the benefits you prefer. I guess doing bitwise operations w=
+hen
+> possible is kind of the KVM way, haha. :)
 
-diff --git a/Documentation/userspace-api/gpio/gpio-lineevent-data-read.rst b/Documentation/userspace-api/gpio/gpio-lineevent-data-read.rst
-index 68b8d4f9f604..d1e7e2383b0d 100644
---- a/Documentation/userspace-api/gpio/gpio-lineevent-data-read.rst
-+++ b/Documentation/userspace-api/gpio/gpio-lineevent-data-read.rst
-@@ -44,6 +44,11 @@ Edge detection must be enabled for the input line using either
- both. Edge events are then generated whenever edge interrupts are detected on
- the input line.
- 
-+Edges are defined in terms of changes to the logical line value, so an inactive
-+to active transition is a rising edge.  If ``GPIOHANDLE_REQUEST_ACTIVE_LOW`` is
-+set then logical polarity is the opposite of physical polarity, and
-+``GPIOEVENT_REQUEST_RISING_EDGE`` then corresponds to a falling physical edge.
-+
- The kernel captures and timestamps edge events as close as possible to their
- occurrence and stores them in a buffer from where they can be read by
- userspace at its convenience using `read()`.
-diff --git a/Documentation/userspace-api/gpio/gpio-v2-line-event-read.rst b/Documentation/userspace-api/gpio/gpio-v2-line-event-read.rst
-index 6513c23fb7ca..1312668e0f6a 100644
---- a/Documentation/userspace-api/gpio/gpio-v2-line-event-read.rst
-+++ b/Documentation/userspace-api/gpio/gpio-v2-line-event-read.rst
-@@ -40,6 +40,11 @@ Edge detection must be enabled for the input line using either
- both. Edge events are then generated whenever edge interrupts are detected on
- the input line.
- 
-+Edges are defined in terms of changes to the logical line value, so an inactive
-+to active transition is a rising edge.  If ``GPIO_V2_LINE_FLAG_ACTIVE_LOW`` is
-+set then logical polarity is the opposite of physical polarity, and
-+``GPIO_V2_LINE_FLAG_EDGE_RISING`` then corresponds to a falling physical edge.
-+
- The kernel captures and timestamps edge events as close as possible to their
- occurrence and stores them in a buffer from where they can be read by
- userspace at its convenience using `read()`.
--- 
-2.39.2
+... while I'm definitely guilty of that, :) it does seem the cleanest
+option to use fault->addr to go from struct kvm_page_fault to the kind
+of root.
+
+If you prefer, you can introduce a bool kvm_is_addr_direct(struct kvm
+*kvm, gpa_t gpa), and use it here as kvm_is_addr_direct(kvm,
+fault->addr). Maybe that's the best of both worlds.
+
+Paolo
 
