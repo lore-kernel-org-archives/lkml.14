@@ -1,115 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80570823C8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6406681ACB
 	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 08:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718009961; cv=none; b=jjkceryJs/2ZrFsPIOA+kaxES+VtbHfaRlSsHfdyVyNKAulme4hVNBlteRjutoF8MZhPwnTSru6lk/iNo1SiN2kdOARGsQjs04K6KEyGwCZrLWLfenw6WipbAKM89LRRTYvcTLToc1GBaSPW61WdIcpBdhxiX80lAzj4ugj5i18=
+	t=1718009962; cv=none; b=HWkvL5jZ7jzI3vktwYB3fRFo+NTwt4/4O0tDnXIoHpBhR25Iq7javgmZhDVgPd5H3sSNlocrH1OrLsVd2r4flNJ35sSVY8Obsh6HNQL3TniM1e53aMbsJhqAkqejZzyYFRVIlPW3Ti4WmYEnQyrquvGJgAsLfurwDhmDICNISDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718009961; c=relaxed/simple;
-	bh=kDJcZN33ntEvZZurzXrpsoEVgCNzk8vicnqImPO/kUg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aYPRzqpta1+6Hp9hwHhQM4DVpNLt1jJAvjUcev9QVUux8oh+tPBGspnx3W/wc1vcb8HymmLkLbMb+0CuTyzQjUur9xhMbht+Xkwx2xzcNs8+U4ffl/hmdH5GpAXq8GhnNEp18L+uf4xPD79MIS4G7wNnQ3vhUgC67RC4TTjmSrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d5ixajlR; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718009962; c=relaxed/simple;
+	bh=vHneDFUBNs0GqnfTI6Q7Qcn+foJQXhLeHMKZSlyD3T8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J48lcHPydaOSrCwkQjo7qQV5/tlnXhgZQpuKAU1oP/peXluX2L1S0jFsS4y3dMnmOHkL4HQWFb6Uq+T2p4hm257isoI1aGChpp5K/Q/kWgD1HmXd2Z/opZTPzSlkPMLHLkPjDXwAd5IljTUdHYMjELZz4tJCfNRC6xntRa4ayl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QsO458Bh; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d5ixajlR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718009960; x=1749545960;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kDJcZN33ntEvZZurzXrpsoEVgCNzk8vicnqImPO/kUg=;
-  b=d5ixajlR0VlEDAD6p0Trd1HWwg/4Sbfztg9worcJAzO8YDfzHnxb3Y5k
-   s61SUUaRqBL49HF/pGhwZznQJlLTeI+tsZNFRoxLNrxDpGBNXBjX6Ix7m
-   l3wee7jXg9tCmbobH+UCUyRlQIgQtILlKZbth2hBz0j+X7YV70+zW6ZlG
-   M8i/ueETI0KBA1kG0eDjEzLXZglEl5wJ+RfwSlFoX+5LRHXKM+IgIPVEO
-   WWELbQkISUvlUC0XgyNgxukbCeBkF78ZLBQGU26IABHSRbt8fTgtoIaE1
-   zu0nmZIk5xvLiAC+SltQHO8DhZyXt9UuVJB+8hrqwlWYKUP7G0qG/+Kj4
-   w==;
-X-CSE-ConnectionGUID: yR8fbHLPQ4GQ6EGhOw9ZjQ==
-X-CSE-MsgGUID: FsyRLOtBTU6RW2SjUzGmsg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11098"; a="17581797"
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="17581797"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 01:59:18 -0700
-X-CSE-ConnectionGUID: NfOkwSpKThicZbLMfICvvA==
-X-CSE-MsgGUID: AQGFlrAZSA+rn/BX4z4/mg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="43432718"
-Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
-  by fmviesa003.fm.intel.com with ESMTP; 10 Jun 2024 01:59:14 -0700
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>
-Cc: Yi Liu <yi.l.liu@intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Kalle Valo <kvalo@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	mst@redhat.com,
-	Jason Wang <jasowang@redhat.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	ath10k@lists.infradead.org,
-	ath11k@lists.infradead.org,
-	iommu@lists.linux.dev,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v3 12/21] remoteproc: Use iommu_paging_domain_alloc()
-Date: Mon, 10 Jun 2024 16:55:46 +0800
-Message-Id: <20240610085555.88197-13-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240610085555.88197-1-baolu.lu@linux.intel.com>
-References: <20240610085555.88197-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QsO458Bh"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-42165f6645fso22039065e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 01:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718009959; x=1718614759; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VvSu55HWnwB5FrLzdsKEOL90pn7dtAat3/WOLZaHz4c=;
+        b=QsO458BhIkRDEeNxOpbXcA/hsD4PLvekklndhhaGCcmfSH5pNZ0l7F1edVIYHcYi2/
+         b5SKvI8+Td75JjUkC62tFgdbhPhukYnZyBs2YVtTftdMErC5mFvp4yT4bU/wlLK58bgf
+         XGLPn00idANzRESNoWr/gyrzqr7n4Soy1RiDC5tZ+Aju22/bHSqlryHL2y/mAvnDcLsO
+         hbaVU2j61i+amhv0QvDbNpX6QgynLm/gZiVTegOI7zQl6VCDL07De47d13oV8MpKxSSm
+         eeUW0TbyEKZu1p7fh4iDK83dRF8xCSFTwqCzP0c84MFsmT6/g6VEiSjhi208kWg1LFiF
+         uQuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718009959; x=1718614759;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VvSu55HWnwB5FrLzdsKEOL90pn7dtAat3/WOLZaHz4c=;
+        b=lYsUo1Y1/lQ1AryHu1iz8KhrmPoMI5TOXrKCbDjU6esN2C6dS0gbfKhy0Xz61X2q4a
+         JjF7iZj9jqEg5A9sXbzX8waOScBwGbh4cIAbkfJarQpUDAwv2ACRHnWckdhouvrBoBJ7
+         mqCGRc/2HNc+fiTDyqdX0DtNH5B9lOz4z4nFAU3BiaXlb7he6cXwiCSHMkFgJDHiGvtH
+         nJFbDkhywl9ZdBIwQjQTnzaycEegWXK7ED4icPB/e0IvMnKV/eKulyeHeb7vGX7xLGzQ
+         ++ATZ71u4V9cSQmAu/8vEmmynNdQxNzRz9jgbG4AwBH+x+7K6nBMEhjLAqp+zoHnmGhp
+         GM1g==
+X-Gm-Message-State: AOJu0YzlG7ynbjqgGHds9qr6Kc2kN6mEIUEsCNIMsvqHJMXSf2JgocAf
+	L2rkGnd1z407j7263x14Hen/DCzA2+Y5P/iaZ3p3GtrMPU9hFQVlrr+CoGlRukQ=
+X-Google-Smtp-Source: AGHT+IHgamB6ykVfBUAH6mSf0Uvt0ewso3ix2AMmR+6+4Uj9SJGPp1d1Wu+SEngslWbR4dwQwvPXNg==
+X-Received: by 2002:a05:600c:a01:b0:421:6475:abee with SMTP id 5b1f17b1804b1-42164a038b6mr68198995e9.23.1718009958670;
+        Mon, 10 Jun 2024 01:59:18 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:bb3:9a3a:605f:c4c3? ([2a05:6e02:1041:c10:bb3:9a3a:605f:c4c3])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4215c2cd247sm138237425e9.40.2024.06.10.01.59.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jun 2024 01:59:18 -0700 (PDT)
+Message-ID: <ad4f1cfb-28f0-4d80-8c0b-dc42b01ecfa7@linaro.org>
+Date: Mon, 10 Jun 2024 10:59:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/8] thermal/debugfs: Adjust check for trips without
+ statistics in tze_seq_show()
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>
+References: <5794974.DvuYhMxLoT@kreacher> <8389302.T7Z3S40VBb@kreacher>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <8389302.T7Z3S40VBb@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-An iommu domain is allocated in rproc_enable_iommu() and is attached to
-rproc->dev.parent in the same function.
+On 28/05/2024 16:57, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Initialize the trip_temp field in struct trip_stats to
+> THERMAL_TEMP_INVALID and adjust the check for trips without
+> statistics in tze_seq_show() to look at that field instead of
+> comparing min and max.
+> 
+> This will mostly be useful to simplify subsequent changes.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
 
-Use iommu_paging_domain_alloc() to make it explicit.
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/remoteproc/remoteproc_core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index f276956f2c5c..eb66f78ec8b7 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -109,10 +109,10 @@ static int rproc_enable_iommu(struct rproc *rproc)
- 		return 0;
- 	}
- 
--	domain = iommu_domain_alloc(dev->bus);
--	if (!domain) {
-+	domain = iommu_paging_domain_alloc(dev);
-+	if (IS_ERR(domain)) {
- 		dev_err(dev, "can't alloc iommu domain\n");
--		return -ENOMEM;
-+		return PTR_ERR(domain);
- 	}
- 
- 	iommu_set_fault_handler(domain, rproc_iommu_fault, rproc);
 -- 
-2.34.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
