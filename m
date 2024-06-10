@@ -1,118 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DCE15217E;
-	Mon, 10 Jun 2024 20:48:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FB45381A;
+	Mon, 10 Jun 2024 20:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718052538; cv=none; b=U3/hrJA7DIZC9cMEE7g8m1Xa0vGs8yfAe6BcaXEg/HPKikS4gVWPwyR1hXPtHlzaxNQZclkYRj/UMKwofF47Y5smVVxXRcDU07fDMAEXLEVE+koewfV5vBd50ATjjqHp2PvtfRnBABhNnLLBeTbaDsIFMWgd8xbot1yiBCJfZGM=
+	t=1718052751; cv=none; b=RVv8h1l+4CzbqYbk11/0xSxXbkIBahoY5/MfCUpoKqkUAW96YFPqCWEEVumKVXPc23c5jzv7TbjpXxLajv1CbNrVm4r1XfJhkYATBSn3dt6AA8nDp//a8POs4IB8+OWnSo7P2cOYMrtzoggicQkIQdWoMAjdhF+UI3aZAtd60/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718052538; c=relaxed/simple;
-	bh=ZLKP+8SlFBbrksEeWgQE5JXZVIKp4sUqZEnPm1wWp08=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DmQmGWsbsFaV0WwYhbBAvHQMrK4eKeGFueAFv+n0znOjbrvD0cihqYEcZBv1WGR4TKFn4TaEiINUrlU9vqY8nR5/3JZ7Ern4v8gK6M98ai0VqlFfrOGV+P2PXWrKxX7RHuyixIzmQKnH4eietw0jSkYy6GVlAkVPk4Egsz5a1sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=oW6YdVQZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718052751; c=relaxed/simple;
+	bh=4hIjoTr6HdWSvD0G3QUg4Lr3Kco2HBimTods46JnAXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CdAFbZ7UWy9K6bPFyz45McsxpW9ZXWQofToj09MOBTblarm7a8WIT2Tpe0TfRkn7EMqTpPT3UjlvIJxdhEU1EaONVhulMgTHNjRpC/2oq7ryaueQ0JkdCIJLmMhGJUljWXPI666rwrCMF3Ai1+gnJ731RkYV2UrdUtk/tviz5rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHdfPePU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="oW6YdVQZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A8B8C2BBFC;
-	Mon, 10 Jun 2024 20:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1718052537;
-	bh=ZLKP+8SlFBbrksEeWgQE5JXZVIKp4sUqZEnPm1wWp08=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oW6YdVQZvb7pT3RZFzWwOH0DwmEzdPSEz6ug0yrQT5f7eFcIFPll+TIRF/JYMqYAN
-	 IPuGjDiAiCBVYcvtkSVVlzyLqnVfjT59DCr4d/zHaCDWs3pNa9EDzgXhxWifioijEi
-	 SB0wd1qaiCK27TsS/Cb+VMdqMj9GjYqEaSE5JufY=
-From: Linus Torvalds <torvalds@linux-foundation.org>
-To: Peter Anvin <hpa@zytor.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	the arch/x86 maintainers <x86@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHdfPePU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 991A2C4AF48;
+	Mon, 10 Jun 2024 20:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718052750;
+	bh=4hIjoTr6HdWSvD0G3QUg4Lr3Kco2HBimTods46JnAXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sHdfPePUc+heQmnwI98OvWFT6GG9U899x+utPnguM+6uox9EWwky8p1YE7XfixdXR
+	 kgh+MOa8NDAyGqa2l20VYBAqScvFquLCPmShl8mQ1c2tVpOF+P5h3ssi19dYum9GJK
+	 rFd2yJd9x8uEj4YfERBeL6vy/tdXkyexdtk8lyDLuvnOXP/mV0R/PmE37pPX56FX5C
+	 eWeKjKs6s4Zt/vbRDXeeKUUnVkCKHWSgPAOD3ewEVHGoYNTztAywle8OfdvyV0ehUk
+	 roDXW7X3SpY9dZ8+Q19NgDAbwTzcrIi5BRozgrTCc2wEjLgfNJIn9efUAP6ShrO491
+	 uO5piI9NL+QOQ==
+Date: Mon, 10 Jun 2024 14:52:28 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-arch <linux-arch@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 7/7] arm64: access_ok() optimization
-Date: Mon, 10 Jun 2024 13:48:21 -0700
-Message-ID: <20240610204821.230388-8-torvalds@linux-foundation.org>
-X-Mailer: git-send-email 2.45.1.209.gc6f12300df
-In-Reply-To: <20240610204821.230388-1-torvalds@linux-foundation.org>
-References: <20240610204821.230388-1-torvalds@linux-foundation.org>
+	Conor Dooley <conor.dooley@microchip.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>, imx@lists.linux.dev,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: interrupt-controller: fsl,irqsteer:
+ Add imx8mp/imx8qxp support
+Message-ID: <171805274611.3064088.2841677280217853044.robh@kernel.org>
+References: <20240528071141.92003-1-alexander.stein@ew.tq-group.com>
+ <20240528071141.92003-2-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528071141.92003-2-alexander.stein@ew.tq-group.com>
 
-The TBI setup on arm64 is very strange: HW is set up to always do TBI,
-but the kernel enforcement for system calls is purely a software
-contract, and user space is supposed to mask off the top bits before the
-system call.
 
-Except all the actual brk/mmap/etc() system calls then mask it in kernel
-space anyway, and accept any TBI address.
+On Tue, 28 May 2024 09:11:40 +0200, Alexander Stein wrote:
+> Some SoC like i.MX8MP or i.MX8QXP use a power-domain for this IP. Add
+> SoC-specific compatibles, which also requires a power-domain.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  .../interrupt-controller/fsl,irqsteer.yaml    | 23 ++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
 
-This basically unifies things and makes access_ok() also ignore it.
-
-This is an ABI change, but the current situation is very odd, and this
-change avoids the current mess and makes the kernel more permissive, and
-as such is unlikely to break anything.
-
-The way forward - for some possible future situation when people want to
-use more bits - is probably to introduce a new "I actually want the full
-64-bit address space" prctl.  But we should make sure that the software
-and hardware rules actually match at that point.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
----
- arch/arm64/include/asm/uaccess.h | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
-index 4ab3938290ab..a435eff4ee93 100644
---- a/arch/arm64/include/asm/uaccess.h
-+++ b/arch/arm64/include/asm/uaccess.h
-@@ -30,23 +30,20 @@ static inline int __access_ok(const void __user *ptr, unsigned long size);
- 
- /*
-  * Test whether a block of memory is a valid user space address.
-- * Returns 1 if the range is valid, 0 otherwise.
-  *
-- * This is equivalent to the following test:
-- * (u65)addr + (u65)size <= (u65)TASK_SIZE_MAX
-+ * We only care that the address cannot reach the kernel mapping, and
-+ * that an invalid address will fault.
-  */
--static inline int access_ok(const void __user *addr, unsigned long size)
-+static inline int access_ok(const void __user *p, unsigned long size)
- {
--	/*
--	 * Asynchronous I/O running in a kernel thread does not have the
--	 * TIF_TAGGED_ADDR flag of the process owning the mm, so always untag
--	 * the user address before checking.
--	 */
--	if (IS_ENABLED(CONFIG_ARM64_TAGGED_ADDR_ABI) &&
--	    (current->flags & PF_KTHREAD || test_thread_flag(TIF_TAGGED_ADDR)))
--		addr = untagged_addr(addr);
-+	unsigned long addr = (unsigned long)p;
- 
--	return likely(__access_ok(addr, size));
-+	/* Only bit 55 of the address matters */
-+	addr |= addr+size;
-+	addr = (addr >> 55) & 1;
-+	size >>= 55;
-+
-+	return !(addr | size);
- }
- #define access_ok access_ok
- 
--- 
-2.45.1.209.gc6f12300df
+Applied, thanks!
 
