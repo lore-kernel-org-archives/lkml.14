@@ -1,127 +1,285 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CCC142E91
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6E1142E9F;
+	Mon, 10 Jun 2024 15:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718032609; cv=none; b=ZGM63Z5qvZ0lSNp0prIDjyZQob0ju1LcJbn7zfdrhbmfx9/dopFZCNJSqh0J3WbCM0UHwJtwwuIeUPbIlwetnP8SpIJycjAieShKxWoKDeslHRaLM7iUQxd4LiFT30SZwn4JGpikD5KNVN77dMs6kd1n4gAk4+PlUFfyGA35WrQ=
+	t=1718032609; cv=none; b=HI/wM/JCKUSDA1k7NM/DQmjyKPN6w1ecgJCIoI3BPxxKFQUDnvkEowFaUA7FJzIInEd1DGbr864b5/eSp1YqL8eXqnllvgPayyOZd+a7H7jmKw2gF4owr1lJM7dZHWpfDG1RIJ+xwi+PcpPD2sTm9HfBRLF8Q6LH1SoGfPlhy98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718032609; c=relaxed/simple;
-	bh=+yw+G1cK7msJnEFsszzGBfU6Rf3R11uCYw2YDyUvmeE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f8wmtJUGZyjwNOIMyfDGIcWRgzf8CgWfFFj6M24LfXdJEyqKRIjqC9Gs4aiHeo4ZF4gWATUufUjF4mU0DzZMT1VrllHU2Jf5hHtbgxz6UhpfQdMfQw4yZZLFi6+e9NtQ85mgiqUIC1B7QZZjz5/+96iTCl5JsPy4Iru7dzylU1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=j4y9v3/N; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	bh=8fNKtFL3CtfQLyiz6ot0DC/N2nWcqlKXrNEHHl2jlBU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CVJYOfzQ5PU/nGI1Mw3j2256PVZ7K12S/Nk/aeSwDLXwuBvkLPNN434TBj+paVrTyyiMl1ClqWgHUP2HcQg2iEYYrMH41yahY/45YkjocvHHPkK8qSUM2nsUioxSamSgLuRiKpzqa9jyif3nC277rvcm4hcoBwNUYxAwtPcJ0z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wz8dzEXL; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j4y9v3/N"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-704313fa830so1128255b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 08:16:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718032607; x=1718637407; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dik3EIAdL8x8Xf94kk8jsTPxO3oLRvZX6r2IYoPGz1Y=;
-        b=j4y9v3/NbE7jqrOlYVMMbQFLljUB8pbITvDV8nWTr3odI+H4558hu7FT+FWHDGX0Hq
-         kOg5dKqFwVS6+lGCcBBYMmOLjSyeSY969ibayyetg+oXh4BC8A8KuUjP82ho+jL+sLmL
-         BL4zrcH0b2TeOb/+RHYxbms6/aG3wgBSyc4jg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718032607; x=1718637407;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dik3EIAdL8x8Xf94kk8jsTPxO3oLRvZX6r2IYoPGz1Y=;
-        b=gYFRbH4XuBuKH62DHecNgz+WKdXRH3X3Zn5rJ534dQN9B56gEfKmqYOS5X/qIeCJE6
-         u1vChm2sOENsF7cPpFPfP2mb2bzhyEX4v5HwIO2HtzYsT34xks0XY/XZey4INkNHSLkq
-         IfcWXH0wUrgMbjpkSxZBjNemSvJnJzLVNcy2yEZBtngnd6lWk5TNt5B3FwonfGbCB0dS
-         VgrUBbD0oHpTe0AwWY4BYRP+N2wuhnXammOe5eksFOUIeebE9jtqUK99dwbVBXFGFWAK
-         PdApGkw4LBOTC/9SC9pPJk3HIKYlDue9omBXYS4Vk237gb9W4Ek3Wg93Ao2ucchHdNRu
-         lxyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlcRJt7FYtZ//uT7Ko/NLnQ3d0tZGOFfh+ZGWjhmJnBNSR3tri5D5HSTxPa9+OaX0z8n6w9pH88EacsQA+4guR4HqwejSLXogOQfC7
-X-Gm-Message-State: AOJu0YxZpKPn1C8TfcRl2yjh6sI4EdjYTMxLxwCvhg6MEQ8HFDXEwPpm
-	t7CbzfReeAI4N29/Qju1e8fnFqYwpIWGfYbuifoQk5bKyGAUOBgDZL+w6MzUNgEk4db9AoJYRuu
-	cBPoQj/RberdqAycFFfEKzYi1mRAvWOpJOUhF
-X-Google-Smtp-Source: AGHT+IGEqz2uPEUm9ZazQWGHr75wT8JeslBVWFP0h+6GsPtIVGespsgLdRo07/SkXqM14x2ZwkuYUCMo24PKwfJ7rkY=
-X-Received: by 2002:a17:90a:b383:b0:2bd:f3dc:62d0 with SMTP id
- 98e67ed59e1d1-2c2bcc6336amr8441829a91.37.1718032607324; Mon, 10 Jun 2024
- 08:16:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wz8dzEXL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718032607; x=1749568607;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8fNKtFL3CtfQLyiz6ot0DC/N2nWcqlKXrNEHHl2jlBU=;
+  b=Wz8dzEXL3n2nDVNWXEK2xYiZZLHaiM8SkIEAiE9mfTMcv6l8cJno2PuQ
+   Dr0M33Xkvc9XRNItS0jlpTJAYLndRWdOofIwznSxEWtktixedtaXkZOUU
+   omuiKXlyaVb0sSNDXl1Nx03fq6PwLp1Ocqx0lMSrvuehezR4bpoXBfaSc
+   SYItyGj17rDGCv319bKosGbvYZwR2pd4kFh0E5lQfUaQJ0wmPPkTq3lpa
+   IlAKU3977YXqSWDKPIcP+b5rMIwPtWuYCqcGqrboGX7vV/UI6w8wiKn+g
+   O9CO1TrY1kX2mngV87Gvo1aQn0vXjgYWONB1KDAOws/lFU4fJiu51g3fB
+   A==;
+X-CSE-ConnectionGUID: /ptQtSGFRbiSMnDoGGAOIA==
+X-CSE-MsgGUID: bqYoy6WOTt6AZi5tfR/plw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="25807842"
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="25807842"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 08:16:47 -0700
+X-CSE-ConnectionGUID: Grf50bwiRsuzBZLBGwPfNA==
+X-CSE-MsgGUID: 74FbzUpDS8Wr3yIz9a8RTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="39017031"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.194])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 08:16:43 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Shuah Khan <shuah@kernel.org>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Babu Moger <babu.moger@amd.com>,
+	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	linux-kernel@vger.kernel.org,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v7 11/16] selftests/resctrl: Simplify bandwidth report type handling
+Date: Mon, 10 Jun 2024 18:14:52 +0300
+Message-Id: <20240610151457.7305-12-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240610151457.7305-1-ilpo.jarvinen@linux.intel.com>
+References: <20240610151457.7305-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605094843.4141730-1-wenst@chromium.org>
-In-Reply-To: <20240605094843.4141730-1-wenst@chromium.org>
-From: Simon Glass <sjg@chromium.org>
-Date: Mon, 10 Jun 2024 09:16:36 -0600
-Message-ID: <CAFLszTjX=ixC3pRRGJeaP=ie_yc+KcCRyQ06MBFeSZnBepaXaw@mail.gmail.com>
-Subject: Re: [PATCH] scripts/make_fit: Support decomposing DTBs
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Chen-Yu,
+bw_report is only needed for selecting the correct value from the
+values IMC measured. It is a member in the resctrl_val_param struct and
+is always set to "reads". The value is then checked in resctrl_val()
+using validate_bw_report_request() that besides validating the input,
+assumes it can mutate the string which is questionable programming
+practice.
 
-On Wed, 5 Jun 2024 at 03:48, Chen-Yu Tsai <wenst@chromium.org> wrote:
->
-> The kernel tree builds some "composite" DTBs, where the final DTB is the
-> result of applying one or more DTB overlays on top of a base DTB with
-> fdtoverlay.
->
-> The FIT image specification already supports configurations having one
-> base DTB and overlays applied on top. It is then up to the bootloader to
-> apply said overlays and either use or pass on the final result. This
-> allows the FIT image builder to reuse the same FDT images for multiple
-> configurations, if such cases exist.
->
-> The decomposition function depends on the kernel build system, reading
-> back the .cmd files for the to-be-packaged DTB files to check for the
-> fdtoverlay command being called. This will not work outside the kernel
-> tree. The function is off by default to keep compatibility with possible
-> existing users.
->
-> To facilitate the decomposition and keep the code clean, the model and
-> compatitble string extraction have been moved out of the output_dtb
-> function. The FDT image description is replaced with the base file name
-> of the included image.
->
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
-> This is a feature I alluded to in my replies to Simon's original
-> submission of the make_fit.py script [1].
->
-> This is again made a runtime argument as not all firmware out there
-> that boot FIT images support applying overlays. Like my previous
-> submission for disabling compression for included FDT images, the
-> bootloader found in RK3399 and MT8173 Chromebooks do not support
-> applying overlays. Another case of this is U-boot shipped by development
-> board vendors in binary form (without upstream) in an image or in
-> SPI flash on the board that were built with OF_LIBFDT_OVERLAY=n.
-> These would fail to boot FIT images with DT overlays. One such
-> example is my Hummingboard Pulse. In these cases the firmware is
-> either not upgradable or very hard to upgrade.
->
-> I believe there is value in supporting these cases. A common script
-> shipped with the kernel source that can be shared by distros means
-> the distro people don't have to reimplement this in their downstream
-> repos or meta-packages. For ChromeOS this means reducing the amount
-> of package code we have in shell script.
->
-> [1] https://lore.kernel.org/linux-kbuild/20231207142723.GA3187877@google.com/
-> [2]
->
->  scripts/Makefile.lib |  1 +
->  scripts/make_fit.py  | 70 ++++++++++++++++++++++++++++++--------------
->  2 files changed, 49 insertions(+), 22 deletions(-)
+Simplify handling bw_report:
 
-This is a clever way to discover the included files. Does it need to
-rely on the Linux build information, or could this information somehow
-be in the .dtb files? I had expected some sort of overlay scheme in
-the source, but perhaps people have given up on that?
+- Convert validate_bw_report_request() into get_bw_report_type() that
+  inputs and returns const char *. Use NULL to indicate error.
 
-Regards,
-Simon
+- Validate the report types inside measure_mem_bw(), not in
+  resctrl_val().
+
+- Pass bw_report to measure_mem_bw() from ->measure() hook because
+  resctrl_val() no longer needs bw_report for anything.
+
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Tested-by: Babu Moger <babu.moger@amd.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+v5:
+- Use imperative tone in commit message
+v2:
+- Rebased on top of next to resolve conflict in resctrl.h
+---
+ tools/testing/selftests/resctrl/mba_test.c    |  3 +--
+ tools/testing/selftests/resctrl/mbm_test.c    |  3 +--
+ tools/testing/selftests/resctrl/resctrl.h     |  7 +++----
+ tools/testing/selftests/resctrl/resctrl_val.c | 19 +++++++++----------
+ tools/testing/selftests/resctrl/resctrlfs.c   | 13 ++++++-------
+ 5 files changed, 20 insertions(+), 25 deletions(-)
+
+diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
+index 0a95c42f1616..9c9a4f22e529 100644
+--- a/tools/testing/selftests/resctrl/mba_test.c
++++ b/tools/testing/selftests/resctrl/mba_test.c
+@@ -67,7 +67,7 @@ static int mba_setup(const struct resctrl_test *test,
+ static int mba_measure(const struct user_params *uparams,
+ 		       struct resctrl_val_param *param, pid_t bm_pid)
+ {
+-	return measure_mem_bw(uparams, param, bm_pid);
++	return measure_mem_bw(uparams, param, bm_pid, "reads");
+ }
+ 
+ static bool show_mba_info(unsigned long *bw_imc, unsigned long *bw_resc)
+@@ -168,7 +168,6 @@ static int mba_run_test(const struct resctrl_test *test, const struct user_param
+ 		.ctrlgrp	= "c1",
+ 		.mongrp		= "m1",
+ 		.filename	= RESULT_FILE_NAME,
+-		.bw_report	= "reads",
+ 		.init		= mba_init,
+ 		.setup		= mba_setup,
+ 		.measure	= mba_measure,
+diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
+index 00e60b01188a..27b936fe60bc 100644
+--- a/tools/testing/selftests/resctrl/mbm_test.c
++++ b/tools/testing/selftests/resctrl/mbm_test.c
+@@ -121,7 +121,7 @@ static int mbm_setup(const struct resctrl_test *test,
+ static int mbm_measure(const struct user_params *uparams,
+ 		       struct resctrl_val_param *param, pid_t bm_pid)
+ {
+-	return measure_mem_bw(uparams, param, bm_pid);
++	return measure_mem_bw(uparams, param, bm_pid, "reads");
+ }
+ 
+ static void mbm_test_cleanup(void)
+@@ -135,7 +135,6 @@ static int mbm_run_test(const struct resctrl_test *test, const struct user_param
+ 		.resctrl_val	= MBM_STR,
+ 		.ctrlgrp	= "c1",
+ 		.filename	= RESULT_FILE_NAME,
+-		.bw_report	= "reads",
+ 		.init		= mbm_init,
+ 		.setup		= mbm_setup,
+ 		.measure	= mbm_measure,
+diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+index d3fbb957309d..4446a0e493ef 100644
+--- a/tools/testing/selftests/resctrl/resctrl.h
++++ b/tools/testing/selftests/resctrl/resctrl.h
+@@ -85,7 +85,6 @@ struct resctrl_test {
+  * @ctrlgrp:		Name of the control monitor group (con_mon grp)
+  * @mongrp:		Name of the monitor group (mon grp)
+  * @filename:		Name of file to which the o/p should be written
+- * @bw_report:		Bandwidth report type (reads vs writes)
+  * @init:		Callback function to initialize test environment
+  * @setup:		Callback function to setup per test run environment
+  * @measure:		Callback that performs the measurement (a single test)
+@@ -95,7 +94,6 @@ struct resctrl_val_param {
+ 	char		ctrlgrp[64];
+ 	char		mongrp[64];
+ 	char		filename[64];
+-	char		*bw_report;
+ 	unsigned long	mask;
+ 	int		num_of_runs;
+ 	int		(*init)(const struct resctrl_val_param *param,
+@@ -135,7 +133,7 @@ int filter_dmesg(void);
+ int get_domain_id(const char *resource, int cpu_no, int *domain_id);
+ int mount_resctrlfs(void);
+ int umount_resctrlfs(void);
+-int validate_bw_report_request(char *bw_report);
++const char *get_bw_report_type(const char *bw_report);
+ bool resctrl_resource_exists(const char *resource);
+ bool resctrl_mon_feature_exists(const char *resource, const char *feature);
+ bool resource_info_file_exists(const char *resource, const char *file);
+@@ -154,7 +152,8 @@ void fill_cache_read(unsigned char *buf, size_t buf_size, bool once);
+ int run_fill_buf(size_t buf_size, int memflush, int op, bool once);
+ int initialize_mem_bw_imc(void);
+ int measure_mem_bw(const struct user_params *uparams,
+-		   struct resctrl_val_param *param, pid_t bm_pid);
++		   struct resctrl_val_param *param, pid_t bm_pid,
++		   const char *bw_report);
+ void initialize_mem_bw_resctrl(const struct resctrl_val_param *param,
+ 			       int domain_id);
+ int resctrl_val(const struct resctrl_test *test,
+diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
+index ecbf46c4f3ea..0a0abc860a7f 100644
+--- a/tools/testing/selftests/resctrl/resctrl_val.c
++++ b/tools/testing/selftests/resctrl/resctrl_val.c
+@@ -349,7 +349,7 @@ static void do_imc_mem_bw_test(void)
+  *
+  * Return: = 0 on success. < 0 on failure.
+  */
+-static int get_mem_bw_imc(char *bw_report, float *bw_imc)
++static int get_mem_bw_imc(const char *bw_report, float *bw_imc)
+ {
+ 	float reads, writes, of_mul_read, of_mul_write;
+ 	int imc;
+@@ -556,6 +556,7 @@ static int print_results_bw(char *filename, pid_t bm_pid, float bw_imc,
+  * @uparams:		User supplied parameters
+  * @param:		Parameters passed to resctrl_val()
+  * @bm_pid:		PID that runs the benchmark
++ * @bw_report:		Bandwidth report type (reads, writes)
+  *
+  * Measure memory bandwidth from resctrl and from another source which is
+  * perf imc value or could be something else if perf imc event is not
+@@ -563,13 +564,18 @@ static int print_results_bw(char *filename, pid_t bm_pid, float bw_imc,
+  * 1 sec to measure the data.
+  */
+ int measure_mem_bw(const struct user_params *uparams,
+-		   struct resctrl_val_param *param, pid_t bm_pid)
++		   struct resctrl_val_param *param, pid_t bm_pid,
++		   const char *bw_report)
+ {
+ 	unsigned long bw_resc, bw_resc_start, bw_resc_end;
+ 	FILE *mem_bw_fp;
+ 	float bw_imc;
+ 	int ret;
+ 
++	bw_report = get_bw_report_type(bw_report);
++	if (!bw_report)
++		return -1;
++
+ 	mem_bw_fp = open_mem_bw_resctrl(mbm_total_path);
+ 	if (!mem_bw_fp)
+ 		return -1;
+@@ -590,7 +596,7 @@ int measure_mem_bw(const struct user_params *uparams,
+ 	if (ret < 0)
+ 		goto close_imc;
+ 
+-	ret = get_mem_bw_imc(param->bw_report, &bw_imc);
++	ret = get_mem_bw_imc(bw_report, &bw_imc);
+ 	if (ret < 0)
+ 		goto close_imc;
+ 
+@@ -694,13 +700,6 @@ int resctrl_val(const struct resctrl_test *test,
+ 		return ret;
+ 	}
+ 
+-	if (!strncmp(resctrl_val, MBA_STR, sizeof(MBA_STR)) ||
+-	    !strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR))) {
+-		ret = validate_bw_report_request(param->bw_report);
+-		if (ret)
+-			return ret;
+-	}
+-
+ 	/*
+ 	 * If benchmark wasn't successfully started by child, then child should
+ 	 * kill parent, so save parent's pid
+diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
+index 917d677adbba..9e4cda154d66 100644
+--- a/tools/testing/selftests/resctrl/resctrlfs.c
++++ b/tools/testing/selftests/resctrl/resctrlfs.c
+@@ -837,22 +837,21 @@ int filter_dmesg(void)
+ 	return 0;
+ }
+ 
+-int validate_bw_report_request(char *bw_report)
++const char *get_bw_report_type(const char *bw_report)
+ {
+ 	if (strcmp(bw_report, "reads") == 0)
+-		return 0;
++		return bw_report;
+ 	if (strcmp(bw_report, "writes") == 0)
+-		return 0;
++		return bw_report;
+ 	if (strcmp(bw_report, "nt-writes") == 0) {
+-		strcpy(bw_report, "writes");
+-		return 0;
++		return "writes";
+ 	}
+ 	if (strcmp(bw_report, "total") == 0)
+-		return 0;
++		return bw_report;
+ 
+ 	fprintf(stderr, "Requested iMC bandwidth report type unavailable\n");
+ 
+-	return -1;
++	return NULL;
+ }
+ 
+ int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+-- 
+2.39.2
+
