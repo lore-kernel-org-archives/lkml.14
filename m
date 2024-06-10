@@ -1,345 +1,476 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762EB84E13
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 20:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B483B405E6
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 20:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718050677; cv=none; b=uyAP5hUu7lKQCg3XIr24SNgyEnqn4LuCPi1NT/JTRq2VKwMrzRjsZ1xcx+VqeAWxwaTVmPClMwq8eHm7TqGHPMd+3+S88tsXTFApKBxeD7v2iCt8iqNuMnqaJOKoV5lISsiJfiylK2r5/LSvKod84M/FtlesOiKMJmyRHXEqMNw=
+	t=1718050694; cv=none; b=cycjsGF26pfUy44m+s+iuLvkfuO3x7TCEBt0NRt9IR2BGAvMUjojxuzkF9l84jR45qxYq2VdNuM0o+4fjldKLCwR7ICJ9sKMVBGbQCro7D0QDjVPEx45bYeJsmQClLDIwQjzWzXri0Oh0fvd3PAGl7dykQTLmPpaLrQ4pwfD4PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718050677; c=relaxed/simple;
-	bh=J2FebDahKQmxPFRCbzi8Nbm436OKuxJ7hLP7TbqTAYQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=otIMxd77nhDHZcts2ptU+MTfp7sm6OX4A3xamo8UejQIaugJv81nkfRXj+Gw9P4COH1ir1yOnWV9t/TB/WGmrIQoiG4E/y+ihrFuZ48dNW6IC1PoeqAj/QhlupSfavofP5HGsy7QIM6c30QM2p/TRewGqPOpXZgrs1pFlbgQkvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BycwVVc+; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718050694; c=relaxed/simple;
+	bh=XLvDQMRnxnxR1QpuBv3otWyLwyAS26uJa/S62PwMgc8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QC4kjDvOM0Nry5y1ie98odbXTuY92/Qf45f/PeEFfryoP7KCxv7hbNCXcMl4pZEj+Gntm5GPKlwKJWSqUXWr2hUW/lDJdxBn+Scm20WZhy88TJIzo1kgxmRo/P15SnU4RMeWmF1jajzJlyc1Iq2plFtfmlGYK/omI0VnU9N5xqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=inGjXsBn; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BycwVVc+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718050675; x=1749586675;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=J2FebDahKQmxPFRCbzi8Nbm436OKuxJ7hLP7TbqTAYQ=;
-  b=BycwVVc+9Kop4k+LhIZnCuyHWnf+vEVzoSHtm13uoYZqP6iVe/3KpQlF
-   ZZEtORhMRXMFe8Rc9XPRO5vhw80VUBBqKMLAwROBKVBWHEJWkLq2aL0wv
-   ZkKwQoLIVR5oU3sKT4C1QqsftZgXSHgpRPTfu2OuH8j1CSdEJNgtPPM0U
-   XU73RNGHqOHnE60EDSYLPUBvpbZ22dtQXdMendt+SRqcuH+4Wc2cRxYj/
-   MuX7QIMNMY4Wf9eXHIeVyMqUhJ9zX3dgVg2IfzdA2Lqo6wlwZt1Bu5hls
-   2r//d/S9B1ZQR1HgWaPGFPbmJzv0NQNbvPEbyBV16GcOL84+wowvMvKZM
-   g==;
-X-CSE-ConnectionGUID: VMtUVlJcSuWrS1M9hDX14Q==
-X-CSE-MsgGUID: PPxKiFIdQh+xKNC063dQNw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="18561537"
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="18561537"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 13:17:52 -0700
-X-CSE-ConnectionGUID: M2QXLFkkTI6k9fAK2qFsbQ==
-X-CSE-MsgGUID: NaTJf/ppRsmABibVfFqHIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="39169103"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa008.fm.intel.com with ESMTP; 10 Jun 2024 13:17:51 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	eranian@google.com,
-	ak@linux.intel.com,
-	yunying.sun@intel.com,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 7/8] perf/x86/uncore: Cleanup unused unit structure
-Date: Mon, 10 Jun 2024 13:16:18 -0700
-Message-Id: <20240610201619.884021-8-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240610201619.884021-1-kan.liang@linux.intel.com>
-References: <20240610201619.884021-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="inGjXsBn"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7046e87e9afso308348b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 13:18:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718050692; x=1718655492; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MKkcb2jM+ppusduMNChAJbzryvmYnsifTYRBBBChgrY=;
+        b=inGjXsBn2F3NQnDiYPosVg04/cSukY93I+bpExPYhHwk8Qm4AC+d+d9jeVUadTDZml
+         b+2z9Pwa5vawMOo4Wx9KWTC6o8N5DB7gmq29U/mb7DrWNChNt0o/r4dbcc96oR5D7qWN
+         0vA22AniME5U7IBKYrRxbsvSVFJM3Gupe0MINemBd6oHWB9wJ10klAxltPC0zF6poaU4
+         fbBv9dbiKKweJew3dGsne4DR+ifdJ4njX2SCeovXpqiMF7YwayxXJ7uSHtjKJHpxVWMe
+         c5yLFmJgNSewYioLeiSrNaaGz2JC7EFJGyI7I5lKskwstUyQuBhU0Gm3MNJa95u3pX+D
+         F3XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718050692; x=1718655492;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MKkcb2jM+ppusduMNChAJbzryvmYnsifTYRBBBChgrY=;
+        b=LAkb1Ow+pukDi/h4nZdW5pxaHiNQWuKFHUzRgSyM0ayzjVu5xuNhqnhFro9cx+7Ihq
+         Ol+62SQOCn+ejiekJH1OZ8iuMAnRlmQRni/6RrN1p75ruGzpSoe1YMX6+oTV0vXcay5d
+         g2CG9xIwQWWEKi/McNK0SDVApPLH5JtpM0l7x0OQf7CYtHXFyt0WbnUNgSBLnJ2kt4C6
+         SGbi0SaVLrxqJSXzBLU1mwS8Y3dFxnRo84XoLs1vB56ougrj+aB0vPGrpsKvkJnUhYUZ
+         8xxDikFZ2ZN0ynNrtaa5+Yo3iatjQ55aZZzzqInEJt6vDB3SVc++Hos2s3FMaTi5zQhg
+         Qm3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXXFRQsUsVBkP3xcf8v+4ooEnPRF8EhmCuM+V3xwfc0FRiCUkKUA6MmJPc4w6arS+Ef++FBZm52NYmcOOepU68UsxmiBtxNFM7aUZau
+X-Gm-Message-State: AOJu0YwwsbpauwhiayU88p3N5j7mz0UvXAT95VwhF619qvLsNB7cRQeC
+	oQVSXDLV7PA3S81YzNQkxHQqKS7f2V1lfNdxPu/aXmqdlRA9BqihbIQb9LVqDBg=
+X-Google-Smtp-Source: AGHT+IGtX0mOQaeyJ7B4/4ZfngkkRnMuLSJkJ0kxXpLB8KDJspPlM8KiqqKvpe/+bS+7e2p1GCfXsQ==
+X-Received: by 2002:a05:6a00:190c:b0:704:3afb:e9cd with SMTP id d2e1a72fcca58-7043afbeff3mr3861856b3a.34.1718050691723;
+        Mon, 10 Jun 2024 13:18:11 -0700 (PDT)
+Received: from [10.4.10.38] (pool-108-26-179-17.bstnma.fios.verizon.net. [108.26.179.17])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7041ec6f9cesm4781831b3a.78.2024.06.10.13.18.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Jun 2024 13:18:11 -0700 (PDT)
+Message-ID: <192d7bf0-9e9f-45b9-8c15-be249c40ce2f@rivosinc.com>
+Date: Mon, 10 Jun 2024 16:17:55 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] RISC-V: Detect unaligned vector accesses supported.
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ Charlie Jenkins <charlie@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley
+ <conor.dooley@microchip.com>, Evan Green <evan@rivosinc.com>,
+ Andrew Jones <ajones@ventanamicro.com>, Xiao Wang <xiao.w.wang@intel.com>,
+ Andy Chiu <andy.chiu@sifive.com>, Greentime Hu <greentime.hu@sifive.com>,
+ Heiko Stuebner <heiko@sntech.de>, Guo Ren <guoren@kernel.org>,
+ =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+ Costa Shulyupin <costa.shul@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Zong Li <zong.li@sifive.com>,
+ Ben Dooks <ben.dooks@codethink.co.uk>, Erick Archer <erick.archer@gmx.com>,
+ Vincent Chen <vincent.chen@sifive.com>,
+ Joel Granados <j.granados@samsung.com>, linux-kernel@vger.kernel.org
+References: <20240606183215.416829-1-jesse@rivosinc.com>
+ <20240606183215.416829-2-jesse@rivosinc.com> <ZmIqM3Cuui0HAwN1@ghost>
+ <5284ad23-9870-41cd-893e-f17170af90f8@rivosinc.com>
+Content-Language: en-US
+From: Jesse Taube <jesse@rivosinc.com>
+In-Reply-To: <5284ad23-9870-41cd-893e-f17170af90f8@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-The unit control and ID information are retrieved from the unit control
-RB tree. No one uses the old structure anymore. Remove them.
 
-Tested-by: Yunying Sun <yunying.sun@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/intel/uncore.c           |   7 +-
- arch/x86/events/intel/uncore.h           |   2 -
- arch/x86/events/intel/uncore_discovery.c | 110 +++--------------------
- arch/x86/events/intel/uncore_discovery.h |   5 --
- 4 files changed, 12 insertions(+), 112 deletions(-)
+On 6/10/24 04:23, Clément Léger wrote:
+> 
+> 
+> On 06/06/2024 23:29, Charlie Jenkins wrote:
+>> On Thu, Jun 06, 2024 at 02:32:14PM -0400, Jesse Taube wrote:
+>>> Run a unaligned vector access to test if the system supports
+>>> vector unaligned access. Add the result to a new key in hwprobe.
+>>> This is useful for usermode to know if vector misaligned accesses are
+>>> supported and if they are faster or slower than equivalent byte accesses.
+>>>
+>>> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+>>> ---
+>>>   arch/riscv/include/asm/cpufeature.h        |  2 +
+>>>   arch/riscv/include/asm/hwprobe.h           |  2 +-
+>>>   arch/riscv/include/asm/vector.h            |  1 +
+>>>   arch/riscv/include/uapi/asm/hwprobe.h      |  6 ++
+>>>   arch/riscv/kernel/sys_hwprobe.c            | 34 +++++++++
+>>>   arch/riscv/kernel/traps_misaligned.c       | 84 ++++++++++++++++++++--
+>>>   arch/riscv/kernel/unaligned_access_speed.c |  4 ++
+>>>   arch/riscv/kernel/vector.c                 |  2 +-
+>>>   8 files changed, 129 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
+>>> index 347805446151..a012c8490a27 100644
+>>> --- a/arch/riscv/include/asm/cpufeature.h
+>>> +++ b/arch/riscv/include/asm/cpufeature.h
+>>> @@ -35,9 +35,11 @@ void riscv_user_isa_enable(void);
+>>>   
+>>>   #if defined(CONFIG_RISCV_MISALIGNED)
+>>>   bool check_unaligned_access_emulated_all_cpus(void);
+>>> +bool check_vector_unaligned_access_all_cpus(void);
+>>>   void unaligned_emulation_finish(void);
+>>>   bool unaligned_ctl_available(void);
+>>>   DECLARE_PER_CPU(long, misaligned_access_speed);
+>>> +DECLARE_PER_CPU(long, vector_misaligned_access);
+>>>   #else
+>>>   static inline bool unaligned_ctl_available(void)
+>>>   {
+>>> diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hwprobe.h
+>>> index 630507dff5ea..150a9877b0af 100644
+>>> --- a/arch/riscv/include/asm/hwprobe.h
+>>> +++ b/arch/riscv/include/asm/hwprobe.h
+>>> @@ -8,7 +8,7 @@
+>>>   
+>>>   #include <uapi/asm/hwprobe.h>
+>>>   
+>>> -#define RISCV_HWPROBE_MAX_KEY 6
+>>> +#define RISCV_HWPROBE_MAX_KEY 7
+>>>   
+>>>   static inline bool riscv_hwprobe_key_is_valid(__s64 key)
+>>>   {
+>>> diff --git a/arch/riscv/include/asm/vector.h b/arch/riscv/include/asm/vector.h
+>>> index 731dcd0ed4de..776af9b37e23 100644
+>>> --- a/arch/riscv/include/asm/vector.h
+>>> +++ b/arch/riscv/include/asm/vector.h
+>>> @@ -21,6 +21,7 @@
+>>>   
+>>>   extern unsigned long riscv_v_vsize;
+>>>   int riscv_v_setup_vsize(void);
+>>> +bool insn_is_vector(u32 insn_buf);
+>>>   bool riscv_v_first_use_handler(struct pt_regs *regs);
+>>>   void kernel_vector_begin(void);
+>>>   void kernel_vector_end(void);
+>>> diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
+>>> index 060212331a03..ebacff86f134 100644
+>>> --- a/arch/riscv/include/uapi/asm/hwprobe.h
+>>> +++ b/arch/riscv/include/uapi/asm/hwprobe.h
+>>> @@ -68,6 +68,12 @@ struct riscv_hwprobe {
+>>>   #define		RISCV_HWPROBE_MISALIGNED_UNSUPPORTED	(4 << 0)
+>>>   #define		RISCV_HWPROBE_MISALIGNED_MASK		(7 << 0)
+>>>   #define RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE	6
+>>> +#define RISCV_HWPROBE_VEC_KEY_MISALIGNED_PERF	7
+>>> +#define		RISCV_HWPROBE_VEC_MISALIGNED_UNKNOWN		0
+>>> +#define		RISCV_HWPROBE_VEC_MISALIGNED_SUPPORTED		1
+>>> +#define		RISCV_HWPROBE_VEC_MISALIGNED_SLOW		2
+>>> +#define		RISCV_HWPROBE_VEC_MISALIGNED_FAST		3
+>>> +#define		RISCV_HWPROBE_VEC_MISALIGNED_UNSUPPORTED	4
+>>>   /* Increase RISCV_HWPROBE_MAX_KEY when adding items. */
+>>>   
+>>>   /* Flags */
+>>> diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
+>>> index b286b73e763e..ce641cc6e47a 100644
+>>> --- a/arch/riscv/kernel/sys_hwprobe.c
+>>> +++ b/arch/riscv/kernel/sys_hwprobe.c
+>>> @@ -184,6 +184,36 @@ static u64 hwprobe_misaligned(const struct cpumask *cpus)
+>>>   }
+>>>   #endif
+>>>   
+>>> +#if defined(CONFIG_RISCV_PROBE_UNALIGNED_ACCESS)
+>>> +static u64 hwprobe_vec_misaligned(const struct cpumask *cpus)
+>>> +{
+>>> +	int cpu;
+>>> +	u64 perf = -1ULL;
+>>> +
+>>> +	for_each_cpu(cpu, cpus) {
+>>> +		int this_perf = per_cpu(vector_misaligned_access, cpu);
+>>> +
+>>> +		if (perf == -1ULL)
+>>> +			perf = this_perf;
+>>> +
+>>> +		if (perf != this_perf) {
+>>> +			perf = RISCV_HWPROBE_VEC_MISALIGNED_UNKNOWN;
+>>> +			break;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	if (perf == -1ULL)
+>>> +		return RISCV_HWPROBE_VEC_MISALIGNED_UNKNOWN;
+>>> +
+>>> +	return perf;
+>>> +}
+>>> +#else
+>>> +static u64 hwprobe_vec_misaligned(const struct cpumask *cpus)
+>>> +{
+>>> +	return RISCV_HWPROBE_VEC_MISALIGNED_UNKNOWN;
+>>> +}
+>>> +#endif
+>>> +
+>>>   static void hwprobe_one_pair(struct riscv_hwprobe *pair,
+>>>   			     const struct cpumask *cpus)
+>>>   {
+>>> @@ -211,6 +241,10 @@ static void hwprobe_one_pair(struct riscv_hwprobe *pair,
+>>>   		pair->value = hwprobe_misaligned(cpus);
+>>>   		break;
+>>>   
+>>> +	case RISCV_HWPROBE_VEC_KEY_MISALIGNED_PERF:
+>>> +		pair->value = hwprobe_vec_misaligned(cpus);
+>>> +		break;
+>>> +
+>>>   	case RISCV_HWPROBE_KEY_ZICBOZ_BLOCK_SIZE:
+>>>   		pair->value = 0;
+>>>   		if (hwprobe_ext0_has(cpus, RISCV_HWPROBE_EXT_ZICBOZ))
+>>> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+>>> index 2adb7c3e4dd5..8f26c3d92230 100644
+>>> --- a/arch/riscv/kernel/traps_misaligned.c
+>>> +++ b/arch/riscv/kernel/traps_misaligned.c
+>>> @@ -16,6 +16,7 @@
+>>>   #include <asm/entry-common.h>
+>>>   #include <asm/hwprobe.h>
+>>>   #include <asm/cpufeature.h>
+>>> +#include <asm/vector.h>
+>>>   
+>>>   #define INSN_MATCH_LB			0x3
+>>>   #define INSN_MASK_LB			0x707f
+>>> @@ -413,10 +414,6 @@ int handle_misaligned_load(struct pt_regs *regs)
+>>>   
+>>>   	perf_sw_event(PERF_COUNT_SW_ALIGNMENT_FAULTS, 1, regs, addr);
+>>>   
+>>> -#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
+>>> -	*this_cpu_ptr(&misaligned_access_speed) = RISCV_HWPROBE_MISALIGNED_EMULATED;
+>>> -#endif
+>>> -
+>>>   	if (!unaligned_enabled)
+>>>   		return -1;
+>>>   
+>>> @@ -426,6 +423,17 @@ int handle_misaligned_load(struct pt_regs *regs)
+>>>   	if (get_insn(regs, epc, &insn))
+>>>   		return -1;
+>>>   
+>>> +#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
+>>> +	if (insn_is_vector(insn) &&
+>>> +	    *this_cpu_ptr(&vector_misaligned_access) == RISCV_HWPROBE_VEC_MISALIGNED_SUPPORTED) {
+>>> +		*this_cpu_ptr(&vector_misaligned_access) = RISCV_HWPROBE_VEC_MISALIGNED_UNSUPPORTED;
+>>> +		regs->epc = epc + INSN_LEN(insn);
+>>> +		return 0;
+>>> +	}
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 8859162adc94..64ca8625eb58 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -869,7 +869,7 @@ static inline int uncore_get_box_id(struct intel_uncore_type *type,
- 	if (type->boxes)
- 		return intel_uncore_find_discovery_unit_id(type->boxes, -1, pmu->pmu_idx);
- 
--	return type->box_ids ? type->box_ids[pmu->pmu_idx] : pmu->pmu_idx;
-+	return pmu->pmu_idx;
- }
- 
- void uncore_get_alias_name(char *pmu_name, struct intel_uncore_pmu *pmu)
-@@ -981,10 +981,7 @@ static void uncore_type_exit(struct intel_uncore_type *type)
- 		kfree(type->pmus);
- 		type->pmus = NULL;
- 	}
--	if (type->box_ids) {
--		kfree(type->box_ids);
--		type->box_ids = NULL;
--	}
-+
- 	kfree(type->events_group);
- 	type->events_group = NULL;
- }
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 05c429c8cb93..027ef292c602 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -62,7 +62,6 @@ struct intel_uncore_type {
- 	unsigned fixed_ctr;
- 	unsigned fixed_ctl;
- 	unsigned box_ctl;
--	u64 *box_ctls;	/* Unit ctrl addr of the first box of each die */
- 	union {
- 		unsigned msr_offset;
- 		unsigned mmio_offset;
-@@ -76,7 +75,6 @@ struct intel_uncore_type {
- 		u64 *pci_offsets;
- 		u64 *mmio_offsets;
- 	};
--	unsigned *box_ids;
- 	struct event_constraint unconstrainted;
- 	struct event_constraint *constraints;
- 	struct intel_uncore_pmu *pmus;
-diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-index 866493fda47c..571e44b49691 100644
---- a/arch/x86/events/intel/uncore_discovery.c
-+++ b/arch/x86/events/intel/uncore_discovery.c
-@@ -89,10 +89,6 @@ add_uncore_discovery_type(struct uncore_unit_discovery *unit)
- 	if (!type)
- 		return NULL;
- 
--	type->box_ctrl_die = kcalloc(__uncore_max_dies, sizeof(u64), GFP_KERNEL);
--	if (!type->box_ctrl_die)
--		goto free_type;
--
- 	type->units = RB_ROOT;
- 
- 	type->access_type = unit->access_type;
-@@ -102,12 +98,6 @@ add_uncore_discovery_type(struct uncore_unit_discovery *unit)
- 	rb_add(&type->node, &discovery_tables, __type_less);
- 
- 	return type;
--
--free_type:
--	kfree(type);
--
--	return NULL;
--
- }
- 
- static struct intel_uncore_discovery_type *
-@@ -230,13 +220,10 @@ void uncore_find_add_unit(struct intel_uncore_discovery_unit *node,
- 
- static void
- uncore_insert_box_info(struct uncore_unit_discovery *unit,
--		       int die, bool parsed)
-+		       int die)
- {
- 	struct intel_uncore_discovery_unit *node;
- 	struct intel_uncore_discovery_type *type;
--	unsigned int *ids;
--	u64 *box_offset;
--	int i;
- 
- 	if (!unit->ctl || !unit->ctl_offset || !unit->ctr_offset) {
- 		pr_info("Invalid address is detected for uncore type %d box %d, "
-@@ -253,79 +240,21 @@ uncore_insert_box_info(struct uncore_unit_discovery *unit,
- 	node->id = unit->box_id;
- 	node->addr = unit->ctl;
- 
--	if (parsed) {
--		type = search_uncore_discovery_type(unit->box_type);
--		if (!type) {
--			pr_info("A spurious uncore type %d is detected, "
--				"Disable the uncore type.\n",
--				unit->box_type);
--			kfree(node);
--			return;
--		}
--
--		uncore_find_add_unit(node, &type->units, &type->num_units);
--
--		/* Store the first box of each die */
--		if (!type->box_ctrl_die[die])
--			type->box_ctrl_die[die] = unit->ctl;
-+	type = get_uncore_discovery_type(unit);
-+	if (!type) {
-+		kfree(node);
- 		return;
- 	}
- 
--	type = get_uncore_discovery_type(unit);
--	if (!type)
--		goto free_node;
--
--	box_offset = kcalloc(type->num_boxes + 1, sizeof(u64), GFP_KERNEL);
--	if (!box_offset)
--		goto free_node;
--
--	ids = kcalloc(type->num_boxes + 1, sizeof(unsigned int), GFP_KERNEL);
--	if (!ids)
--		goto free_box_offset;
--
- 	uncore_find_add_unit(node, &type->units, &type->num_units);
- 
- 	/* Store generic information for the first box */
--	if (!type->num_boxes) {
--		type->box_ctrl = unit->ctl;
--		type->box_ctrl_die[die] = unit->ctl;
-+	if (type->num_units == 1) {
- 		type->num_counters = unit->num_regs;
- 		type->counter_width = unit->bit_width;
- 		type->ctl_offset = unit->ctl_offset;
- 		type->ctr_offset = unit->ctr_offset;
--		*ids = unit->box_id;
--		goto end;
- 	}
--
--	for (i = 0; i < type->num_boxes; i++) {
--		ids[i] = type->ids[i];
--		box_offset[i] = type->box_offset[i];
--
--		if (unit->box_id == ids[i]) {
--			pr_info("Duplicate uncore type %d box ID %d is detected, "
--				"Drop the duplicate uncore unit.\n",
--				unit->box_type, unit->box_id);
--			goto free_ids;
--		}
--	}
--	ids[i] = unit->box_id;
--	box_offset[i] = unit->ctl - type->box_ctrl;
--	kfree(type->ids);
--	kfree(type->box_offset);
--end:
--	type->ids = ids;
--	type->box_offset = box_offset;
--	type->num_boxes++;
--	return;
--
--free_ids:
--	kfree(ids);
--
--free_box_offset:
--	kfree(box_offset);
--
--free_node:
--	kfree(node);
- }
- 
- static bool
-@@ -404,7 +333,7 @@ static int parse_discovery_table(struct pci_dev *dev, int die,
- 		if (uncore_ignore_unit(&unit, ignore))
- 			continue;
- 
--		uncore_insert_box_info(&unit, die, *parsed);
-+		uncore_insert_box_info(&unit, die);
- 	}
- 
- 	*parsed = true;
-@@ -474,7 +403,6 @@ void intel_uncore_clear_discovery_tables(void)
- 			rb_erase(node, &type->units);
- 			kfree(pos);
- 		}
--		kfree(type->box_ctrl_die);
- 		kfree(type);
- 	}
- }
-@@ -738,41 +666,23 @@ static bool uncore_update_uncore_type(enum uncore_access_type type_id,
- 				      struct intel_uncore_discovery_type *type)
- {
- 	uncore->type_id = type->type;
--	uncore->num_boxes = type->num_boxes;
- 	uncore->num_counters = type->num_counters;
- 	uncore->perf_ctr_bits = type->counter_width;
--	uncore->box_ids = type->ids;
-+	uncore->perf_ctr = (unsigned int)type->ctr_offset;
-+	uncore->event_ctl = (unsigned int)type->ctl_offset;
-+	uncore->boxes = &type->units;
-+	uncore->num_boxes = type->num_units;
- 
- 	switch (type_id) {
- 	case UNCORE_ACCESS_MSR:
- 		uncore->ops = &generic_uncore_msr_ops;
--		uncore->perf_ctr = (unsigned int)type->ctr_offset;
--		uncore->event_ctl = (unsigned int)type->ctl_offset;
--		uncore->box_ctl = (unsigned int)type->box_ctrl;
--		uncore->msr_offsets = type->box_offset;
--		uncore->boxes = &type->units;
--		uncore->num_boxes = type->num_units;
- 		break;
- 	case UNCORE_ACCESS_PCI:
- 		uncore->ops = &generic_uncore_pci_ops;
--		uncore->perf_ctr = (unsigned int)UNCORE_DISCOVERY_PCI_BOX_CTRL(type->box_ctrl) + type->ctr_offset;
--		uncore->event_ctl = (unsigned int)UNCORE_DISCOVERY_PCI_BOX_CTRL(type->box_ctrl) + type->ctl_offset;
--		uncore->box_ctl = (unsigned int)UNCORE_DISCOVERY_PCI_BOX_CTRL(type->box_ctrl);
--		uncore->box_ctls = type->box_ctrl_die;
--		uncore->pci_offsets = type->box_offset;
--		uncore->boxes = &type->units;
--		uncore->num_boxes = type->num_units;
- 		break;
- 	case UNCORE_ACCESS_MMIO:
- 		uncore->ops = &generic_uncore_mmio_ops;
--		uncore->perf_ctr = (unsigned int)type->ctr_offset;
--		uncore->event_ctl = (unsigned int)type->ctl_offset;
--		uncore->box_ctl = (unsigned int)type->box_ctrl;
--		uncore->box_ctls = type->box_ctrl_die;
--		uncore->mmio_offsets = type->box_offset;
- 		uncore->mmio_map_size = UNCORE_GENERIC_MMIO_SIZE;
--		uncore->boxes = &type->units;
--		uncore->num_boxes = type->num_units;
- 		break;
- 	default:
- 		return false;
-diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
-index 0acf9b681f3b..0e94aa7db8e7 100644
---- a/arch/x86/events/intel/uncore_discovery.h
-+++ b/arch/x86/events/intel/uncore_discovery.h
-@@ -124,18 +124,13 @@ struct intel_uncore_discovery_unit {
- struct intel_uncore_discovery_type {
- 	struct rb_node	node;
- 	enum uncore_access_type	access_type;
--	u64		box_ctrl;	/* Unit ctrl addr of the first box */
--	u64		*box_ctrl_die;	/* Unit ctrl addr of the first box of each die */
- 	struct rb_root	units;		/* Unit ctrl addr for all units */
- 	u16		type;		/* Type ID of the uncore block */
- 	u8		num_counters;
- 	u8		counter_width;
- 	u8		ctl_offset;	/* Counter Control 0 offset */
- 	u8		ctr_offset;	/* Counter 0 offset */
--	u16		num_boxes;	/* number of boxes for the uncore block */
- 	u16		num_units;	/* number of units */
--	unsigned int	*ids;		/* Box IDs */
--	u64		*box_offset;	/* Box offset */
- };
- 
- bool intel_uncore_has_discovery_tables(int *ignore);
--- 
-2.35.1
+I'm going to add
 
+
++	/* If vector instruction we don't emulate it yet */
++	if (insn_is_vector(insn)) {
++		regs->epc = epc;
++		return -1;
++	}
+
+>>> +
+>>> +	*this_cpu_ptr(&misaligned_access_speed) = RISCV_HWPROBE_MISALIGNED_EMULATED;
+>>
+>> This unconditionally sets scalar unaligned accesses even if the
+>> unaligned access is caused by vector. Scalar unaligned accesses should
+>> only be set to emulated if this function is entered from a scalar
+>> unaligned load.
+>>
+
+Im sorry I missunderstood what you were reffering to. The check above 
+does return, but you are saying when a misaligned vector does come here.
+
+If a misaligned vector load trap does happen when we arent checking
+it will still cause a fault as `vector_misaligned_access != 
+RISCV_HWPROBE_VEC_MISALIGNED_SUPPORTED`. Basicaly the return 0 above 
+will only ever be posible duing check_vector_unaligned_access.
+
+>> The rest of this function handles how scalar unaligned accesses are
+>> emulated, and the equivalent needs to happen for vector.
+
+I am hesitant to do so because I have very little knowlage of how RVV 
+works. It will maintain the previous behavoir of trapping if
+VEC_MISALIGNED_UNSUPPORTED.
+
+> You need to add
+>> routines that manually load the data from the memory address into the
+>> vector register. When Clément did this for scalar, he provided a test
+>> case to help reviewers [1]. Please add onto these test cases or make
+>> your own for vector.
+>>
+>> Link: https://github.com/clementleger/unaligned_test [1]
+
+I will add a test.
+
+> 
+> Hi Jesse,
+> 
+> I already mentionned that in a previous message and got no answer [1].
+> Please address all feedback before sending another version. Adding a
+> cover letter for such series would also be appreciated.
+
+Sorry I didnt understand and thought your question was the same as
+charlies.
+
+Thanks,
+Jesse Taube
+
+> 
+> Thanks,
+> 
+> Clément
+> 
+> Link :https://lore.kernel.org/all/2c355b76-c768-46b1-9f37
+> fd1991a54bfd@rivosinc.com/ [1]
+> 
+>>
+>>> +#endif
+>>> +
+>>>   	regs->epc = 0;
+>>>   
+>>>   	if ((insn & INSN_MASK_LW) == INSN_MATCH_LW) {
+>>> @@ -625,6 +633,74 @@ static bool check_unaligned_access_emulated(int cpu)
+>>>   	return misaligned_emu_detected;
+>>>   }
+>>>   
+>>> +#ifdef CONFIG_RISCV_ISA_V
+>>> +static void check_vector_unaligned_access(struct work_struct *unused)
+>>
+>> Can you standardize this name with the scalar version by writing
+>> emulated in it?
+>>
+>> "check_vector_unaligned_access_emulated_all_cpus"
+>>
+>>> +{
+>>> +	int cpu = smp_processor_id();
+>>> +	long *mas_ptr = this_cpu_ptr(&vector_misaligned_access);
+>>> +	unsigned long tmp_var;
+>>> +
+>>> +	if (!riscv_isa_extension_available(hart_isa[cpu].isa, v))
+>>> +		return;
+>>> +
+>>> +	*mas_ptr = RISCV_HWPROBE_VEC_MISALIGNED_SUPPORTED;
+>>> +
+>>> +	local_irq_enable();
+>>> +	kernel_vector_begin();
+>>> +	__asm__ __volatile__ (
+>>> +		".balign 4\n\t"
+>>> +		".option push\n\t"
+>>> +		".option arch, +v\n\t"
+>>> +		"       vsetivli zero, 1, e16, m1, ta, ma\n\t"	// Vectors of 16b
+>>> +		"	vle16.v v0, (%[ptr])\n\t"		// Load bytes
+>>> +		".option pop\n\t"
+>>> +		: : [ptr] "r" ((u8 *)&tmp_var + 1) : "v0", "memory");
+>>
+>> memory is being read from, but not written to, so there is no need to
+>> have a memory clobber.
+>>
+>>> +	kernel_vector_end();
+>>> +
+>>> +	if (*mas_ptr == RISCV_HWPROBE_VEC_MISALIGNED_UNKNOWN)
+>>> +		*mas_ptr = RISCV_HWPROBE_VEC_MISALIGNED_SUPPORTED;
+>>> +}
+>>> +
+>>> +bool check_vector_unaligned_access_all_cpus(void)
+>>> +{
+>>> +	int cpu;
+>>> +	bool ret = true;
+>>> +
+>>> +	for_each_online_cpu(cpu)
+>>> +		if (riscv_isa_extension_available(hart_isa[cpu].isa, ZICCLSM))
+>>
+>> zicclsm is not specific to vector so it can be extracted out of this
+>> vector specific function. Assuming that hardware properly reports the
+>> extension, if zicclsm is present then it is known that both vector and
+>> scalar unaligned accesses are supported.
+>>
+>>> +			per_cpu(vector_misaligned_access, cpu) = RISCV_HWPROBE_VEC_MISALIGNED_SUPPORTED;
+>>
+>> Please use the exising UNKNOWN terminology instead of renaming to
+>> SUPPORTED. Any option that is not UNSUPPORTED implies that unaligned
+>> accesses are supported.
+>>
+>>> +		else
+>>> +			ret = false;
+>>> +
+>>> +
+>>> +	if (ret)
+>>> +		return true;
+>>> +	ret = true;
+>>> +
+>>> +	schedule_on_each_cpu(check_vector_unaligned_access);
+>>> +
+>>> +	for_each_online_cpu(cpu)
+>>> +		if (per_cpu(vector_misaligned_access, cpu)
+>>> +		    != RISCV_HWPROBE_VEC_MISALIGNED_SUPPORTED)
+>>> +			return false;
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +#else
+>>
+>> If CONFIG_RISCV_ISA_V is not set, there is no value in checking if
+>> vector unaligned accesses are supported because userspace will not be
+>> allowed to use vector instructions anyway.
+>>
+>> - Charlie
+>>
+>>> +bool check_vector_unaligned_access_all_cpus(void)
+>>> +{
+>>> +	int cpu;
+>>> +
+>>> +	for_each_online_cpu(cpu)
+>>> +		if (riscv_isa_extension_available(hart_isa[cpu].isa, ZICCLSM))
+>>> +			per_cpu(vector_misaligned_access, cpu) = RISCV_HWPROBE_VEC_MISALIGNED_SUPPORTED;
+>>> +		else
+>>> +			per_cpu(vector_misaligned_access, cpu) = RISCV_HWPROBE_VEC_MISALIGNED_UNSUPPORTED;
+>>> +
+>>> +	return false;
+>>> +}
+>>> +#endif
+>>> +
+>>>   bool check_unaligned_access_emulated_all_cpus(void)
+>>>   {
+>>>   	int cpu;
+>>> diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
+>>> index a9a6bcb02acf..92a84239beaa 100644
+>>> --- a/arch/riscv/kernel/unaligned_access_speed.c
+>>> +++ b/arch/riscv/kernel/unaligned_access_speed.c
+>>> @@ -20,6 +20,7 @@
+>>>   #define MISALIGNED_COPY_SIZE ((MISALIGNED_BUFFER_SIZE / 2) - 0x80)
+>>>   
+>>>   DEFINE_PER_CPU(long, misaligned_access_speed);
+>>> +DEFINE_PER_CPU(long, vector_misaligned_access) = RISCV_HWPROBE_VEC_MISALIGNED_UNKNOWN;
+>>>   
+>>>   #ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
+>>>   static cpumask_t fast_misaligned_access;
+>>> @@ -264,6 +265,8 @@ static int check_unaligned_access_all_cpus(void)
+>>>   {
+>>>   	bool all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
+>>>   
+>>> +	check_vector_unaligned_access_all_cpus();
+>>> +
+>>>   	if (!all_cpus_emulated)
+>>>   		return check_unaligned_access_speed_all_cpus();
+>>>   
+>>> @@ -273,6 +276,7 @@ static int check_unaligned_access_all_cpus(void)
+>>>   static int check_unaligned_access_all_cpus(void)
+>>>   {
+>>>   	check_unaligned_access_emulated_all_cpus();
+>>> +	check_vector_unaligned_access_all_cpus();
+>>>   
+>>>   	return 0;
+>>>   }
+>>> diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
+>>> index 6727d1d3b8f2..2cceab739b2c 100644
+>>> --- a/arch/riscv/kernel/vector.c
+>>> +++ b/arch/riscv/kernel/vector.c
+>>> @@ -66,7 +66,7 @@ void __init riscv_v_setup_ctx_cache(void)
+>>>   #endif
+>>>   }
+>>>   
+>>> -static bool insn_is_vector(u32 insn_buf)
+>>> +bool insn_is_vector(u32 insn_buf)
+>>>   {
+>>>   	u32 opcode = insn_buf & __INSN_OPCODE_MASK;
+>>>   	u32 width, csr;
+>>> -- 
+>>> 2.43.0
+>>>
