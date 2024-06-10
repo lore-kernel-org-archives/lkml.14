@@ -1,60 +1,58 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DFB839E2
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 13:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565EF8563F
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 13:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718027620; cv=none; b=oFYnwvNPg+8YuB6cKl81ThmDLrsdJiGH8ks6jEmTFrb9uHMsTQVbwjcsks3AS+ps0a89DzbCfWZiQWlm7yHsNjX/lXmCCtxFYG9nS0MPvCcvgom+p8XRybR5mWksRNDxweq8mjVGuJDiyBtXPLV/ocqIqhWyUXBXKU7ypIbKS2U=
+	t=1718027698; cv=none; b=AgdhCIPZBcizwG6Gk0G4TMxYGqYEjZmI2NNN7qsM823tykaUe5r41SBGQGUnDHjucIcDcy4TViAFhWgJ4u2DcwrDjjiXJAxkhzLWMBRlofqpRv2La5Gx5CeB9lnbJuGznkXDrAz9EWUnpjx+w4nRnN4C+popNJTon6X9yqLCg7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718027620; c=relaxed/simple;
-	bh=pUwhWLC6cR4vURpqvQ+y+aCC5IaU7/FGQTa28IVLaiQ=;
+	s=arc-20240116; t=1718027698; c=relaxed/simple;
+	bh=ki43rmTAZ2DSDh0LcmlMo01yj3pL0uFTjHOQnIDSoMU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KhNlIIbBQkheqcuPhjrONOU+b0FhvVfHhq7+7AdAh2nY0Cjeg1a9awIYYyjPJqtnzjmB8deI2lDjhep2N1rEpk70coOLNna2zcpfqNQPpET/84QBBOpXqv6xmRF7N5ZFVkWMkQHC38P6ZNB4Ox/ZDe3oUcqfMLgEXQNtk5KVkRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lZeZR7s8; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=AOichNQ8MkoeJ6eLSE7ckXL00WzxnxILKuc7N3z/YGvob5xjQXTX/EUn45dfEist5/V4fRnyOV+Lli0tu5vmFXyIU7fp5mHRjkz5JyRF+tbB3tOeYQnaTgeDrCZ9fkoPzcol7zP0c4pzg/RocUEzmdk1qt7IZNhb0kbY8nNqvsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N1fIm3Xf; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lZeZR7s8"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5ba33b08550so2347194eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 06:53:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N1fIm3Xf"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-421d32fda86so9360345e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 06:54:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718027617; x=1718632417; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1718027695; x=1718632495; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PMGNAPlCBzzHg+7F/6Pguyh8dwXxKCu/BC3Navp4aRA=;
-        b=lZeZR7s8Pb50lVkTgUIbnUtEZBDys6iBp0VDvklgaR5nR/OjqDqBlViMyCr+tJRy93
-         GzzX3NeFWVpHZhvPq9bgXdQ6dxv7ZmshFdfePTS5U17V6c9W2faZRalsUa5Ny5gAc1LT
-         CTeF/a6Dxm1v1GcuDBZ4poEmo8tpXpWvxul3MQFvktUh8ZLpAE7tdYnmpSbEyUZiRYoW
-         Mw0ugaaj0tr2z++j0fWWwgTseKgNz5k86p7DrNrVl8p7kBGgLsfN2jDsP4M9VQTvreLq
-         GcviiC6+B7a/UDLGIHitUSQVIvDZWBTdbaJjGz2MlU97pjsKh/M1yGQPBoeTxzjZ1pPO
-         35lA==
+        bh=B5jcR5L02HgHvX5QCY1ajcgsHfEcPMZGN1IDlOIPxyo=;
+        b=N1fIm3XfD0PwKjTrdYvCY4Htvk03K9bzgw06xSMBBRfFTFMf7nLkqrPkJ4gqwz03mE
+         31PG4N71mJ586ur0iA7dcFZMa7c/kK4CP2GR4HAFfAc9nP2+C6C0NhjScNWUyGvMe5FA
+         wiiSAMF1gHjivT97nwprVkgKSUzkVzLbrgXH3mDADgzupvFJavn+3KPqAFjwMuZnbAHQ
+         ickq4pCtr9wOMAmP7gEOTCbRoVzjSVl38644a93IDfIYwaP9jmf5A8DfTnYy4dEh7Wav
+         dg3CvVBxgkiE9EXhPAMdcn8zBijtglKMfOMZu3shcYqCNGbQQSXS1cLRL8Q30B1+sfMv
+         w1og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718027617; x=1718632417;
+        d=1e100.net; s=20230601; t=1718027695; x=1718632495;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PMGNAPlCBzzHg+7F/6Pguyh8dwXxKCu/BC3Navp4aRA=;
-        b=r0d2OvFD3YCyNSiBzPykaXfDB5LpGf/InsV1sAxsOp8bZKAzoTOJoapNkaZFGaKdTo
-         sAhxFMiGfnj7qRa6QxHhnwXORS06RssdtrglC0BIxHfUkJOclLRoe91/x8wfN0scuvXz
-         +1MBOVXKcHkuzfbZPKf8sNdj6eFGeyyblkf3mdY3sWhA4iNQldOjOJFgRK05WivrEB7Y
-         lLptprNk83jUTXQrnK8+5W3IhEqocsBPrO9yzQagdypkk1RXgPQURbE7bX6UZemQQj+X
-         bV9z5LJcG+X2E7b41GG3DRnFkvyYmR/l9yVJJqKrhxd9qv+Kt5MH14UYW9WNIcV/yL6/
-         Dhtg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgarBE7h9FxmpBwAT9QVq9T/sIiyVGSub3UN7MR9DNeEJvR/jRvxLJEMQpc3DOpUckvtMBhLLTOhWx/AArssMH1l2mKCGGatorwY9M
-X-Gm-Message-State: AOJu0YxDjD4YYK4FMaF4x3csm1xeuHw75lhdZ5RGVrByTPZKFZXRJkUs
-	lueeFRlcdfbbkji8H8efjzSxPaLseLxP66usOfQLMWs65IOvEE69tYdnMIR4WM/l2EXNhrOwbHy
-	l
-X-Google-Smtp-Source: AGHT+IEx1Ddazj3ZOZLiTh7HE72thFf86UuGLsT9yoBsbmv3nlme1jArw/gpLO1XraEeXBrVnu9Dsg==
-X-Received: by 2002:a05:6820:2813:b0:5ba:e995:3f03 with SMTP id 006d021491bc7-5bae9955f59mr3363948eaf.6.1718027616859;
-        Mon, 10 Jun 2024 06:53:36 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5bae9f61bb1sm612751eaf.19.2024.06.10.06.53.36
+        bh=B5jcR5L02HgHvX5QCY1ajcgsHfEcPMZGN1IDlOIPxyo=;
+        b=RIDD7dpYwfl5D4CIWf4JZMA16U6m18DwtOnBAZ6PuA3exqEs5cxNCiX2L2s9hUPrKV
+         fyQ6V5msg05ztc1DWFGLPL7KUQ+4NxT/ruhjFbZZcQt+keqZGXIipy8O304EouXLf4QZ
+         QyXYC47OdvKjl/BB2sv1a3F9/ubf6J9U8PslerRAl1gzxikYjO871cIAmcsO5Y3GnGoq
+         Lt0qH390zBhzOK7wef+xUr8szbF8T67h47ofF7wUz7iz0CfCEY8itQJz67yTtVtpLcwd
+         jDkBKSjlVy4kfEw7axwB0jdPx+gfuG2Lq4O2iMy1ZWfNqnWlEp/9H/LIlG5UcpF3vH4g
+         P5hQ==
+X-Gm-Message-State: AOJu0YzEqie9OuiQ8pbjbClJa2RfhScGqlsCHB2fPRDcgWr/jzsotuRT
+	9z5xnFhsND4kytculYYaDA47hmK1S0yyhfcQelRvg2i8rTIpvqAO4eufWHOgEvs=
+X-Google-Smtp-Source: AGHT+IH7jGU+FiZVAF0GNsVMTgnY/OvN2Iz19z/aTtH6QgaSwKjyFpwy6xOKmUeEakpoCZEdqiiL2w==
+X-Received: by 2002:a05:600c:4748:b0:421:edf4:1e89 with SMTP id 5b1f17b1804b1-421edf42181mr23334825e9.4.1718027694682;
+        Mon, 10 Jun 2024 06:54:54 -0700 (PDT)
+Received: from ?IPV6:2a05:6e02:1041:c10:bb3:9a3a:605f:c4c3? ([2a05:6e02:1041:c10:bb3:9a3a:605f:c4c3])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-42182ed2b23sm50824965e9.18.2024.06.10.06.54.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 06:53:36 -0700 (PDT)
-Message-ID: <e1c7bc9f-3ecd-446f-a6a2-f97d6a8aa78d@baylibre.com>
-Date: Mon, 10 Jun 2024 08:53:35 -0500
+        Mon, 10 Jun 2024 06:54:54 -0700 (PDT)
+Message-ID: <ee2b258c-8155-49e3-b922-ffe8a0fd1d13@linaro.org>
+Date: Mon, 10 Jun 2024 15:54:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,76 +60,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] counter: ti-eqep: enable clock at probe
-To: Judith Mendez <jm@ti.com>, William Breathitt Gray <wbg@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240609-ti-eqep-enable-clock-v1-1-1e9e7626467e@baylibre.com>
- <c08d2d51-e2e1-4b68-a4fb-ebf3a919c1b8@ti.com>
+Subject: Re: [PATCH v2 1/5] thermal: trip: Rename __thermal_zone_set_trips()
+ to thermal_zone_set_trips()
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>
+References: <12458899.O9o76ZdvQC@kreacher> <4937015.31r3eYUQgx@kreacher>
 Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <c08d2d51-e2e1-4b68-a4fb-ebf3a919c1b8@ti.com>
-Content-Type: text/plain; charset=UTF-8
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <4937015.31r3eYUQgx@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 6/10/24 8:44 AM, Judith Mendez wrote:
-> Hi David,
+On 28/05/2024 18:50, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> On 6/9/24 3:27 PM, David Lechner wrote:
->> The TI eQEP clock is both a functional and interface clock. Since it is
->> required for the device to function, we should be enabling it at probe.
->>
->> Up to now, we've just been lucky that the clock was enabled by something
->> else on the system already.
->>
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
->> ---
->>   drivers/counter/ti-eqep.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/counter/ti-eqep.c b/drivers/counter/ti-eqep.c
->> index 072b11fd6b32..825ae22c3ebc 100644
->> --- a/drivers/counter/ti-eqep.c
->> +++ b/drivers/counter/ti-eqep.c
->> @@ -6,6 +6,7 @@
->>    */
->>     #include <linux/bitops.h>
->> +#include <linux/clk.h>
->>   #include <linux/counter.h>
->>   #include <linux/kernel.h>
->>   #include <linux/mod_devicetable.h>
->> @@ -376,6 +377,7 @@ static int ti_eqep_probe(struct platform_device *pdev)
->>       struct counter_device *counter;
->>       struct ti_eqep_cnt *priv;
->>       void __iomem *base;
->> +    struct clk *clk;
->>       int err;
->>         counter = devm_counter_alloc(dev, sizeof(*priv));
->> @@ -415,6 +417,10 @@ static int ti_eqep_probe(struct platform_device *pdev)
->>       pm_runtime_enable(dev);
->>       pm_runtime_get_sync(dev);
->>   +    clk = devm_clk_get_enabled(dev, NULL);
->> +    if (IS_ERR(clk))
+> Drop the pointless double underline prefix from the function name as per
+> the subject.
 > 
-> I think it would be nice to have print here in case the we fail to get
-> the clock.
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
 
-Do you mean that we should call devm_clk_get() and clk_prepare_enable()
-separately so that we get two different error messages?
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-The dev_err_probe() below will already print a message on any error
-(other that EPROBE_DEFER).
 
-> 
-> ~ Judith
-> 
->> +        return dev_err_probe(dev, PTR_ERR(clk), "failed to enable clock\n");
->> +
->>       err = counter_add(counter);
->>       if (err < 0) {
->>           pm_runtime_put_sync(dev);
->>
->> ---
->> base-commit: bb3f1c5fc434b0b177449f7f73ea9b112b397dd1
->> change-id: 20240609-ti-eqep-enable-clock-91697095ca81
-> 
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
