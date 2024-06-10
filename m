@@ -1,147 +1,67 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BE214F9CA;
-	Mon, 10 Jun 2024 20:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D941BF2A;
+	Mon, 10 Jun 2024 20:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718049969; cv=none; b=rmXfymatjVuwwqTb/kYJW78uYdoP424QOZ0NOsNNjt+VHVgkC+X97YIsYbu7aR2okrP4IbPJJssDVVz6byVY60NWyejRivH9XGfH9/0+OeM5vYoMYlblYgdSq1uwyS9WxlY8p6zsY7KtGgGTSlg43+RQN/38YQ659zAnFKwwjjk=
+	t=1718050053; cv=none; b=EeJODszRJDI+mfia87QL3dZlNPIfLmVWA0Tige44rSphLKt/tqhWx6wr5IJlAZNKQwJPaanCIVepPle1pJ1cmNLm78cRhaRwSqUkIvi01y0doL/5y2fvVNz0KgstLg3vwrtouBJg9j+xCC24ZjbC/oKiePOpSM/JYyQi74SzhHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718049969; c=relaxed/simple;
-	bh=zbr0m3jaUR9OElayeL3+Puu8aP5BQ6bEGe0ASP77bQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tqknMBg5lMy5z9G7c5WIMkgSLzoFrreqdoRoDCjfghHDECqq76VuWf9oFQiA8t+VeJwNSHELOj57VyDOXHJGPvQ+sw2ntTWkQaykXiHjJfqgG2IvSBBcdO7AleaVcCCKTAqvTb3lOc19wSy9O/SG1ileBxKoSTGkhDEAkVadaho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iOmHeJ0J; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718050053; c=relaxed/simple;
+	bh=gsBPbPnYKAP9lMCqyZCeXmja+Pyc5B6zW7EZJXPlBQA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H+I7CCU4eEfscR6VEaJPO3T/eVZbLLGrzbKMCZJw/aHSij+nKZ6lrFBPspsHKf5oNYtZCsYdIUnFxGpwDmuTJpYgVakJwlW5SMRJidPesDp/TCZE8RNuw68XxzvU1WHRjL8uZWRlYT5OlhccIMNFfA04ruIIq5uvzsyP1BtBDC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=QFQj0aQ9; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iOmHeJ0J"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fYZ++efrlLdLgl5+5kduErcCwGNkwJxHYJIyw8lDqdM=; b=iOmHeJ0Jsu8Eo6JoXABlbGd0I0
-	bJe+wGiDRyomn+cVqKpgC3q8gDZQQub9Loev8/dZ/XdSZ+MBoea7mS17HbhdVpAlBZE84aGr2xXHw
-	zUvtSHQrQOuBekbu1pUQ743nu1a/ALB8evE0HROV8wKgT2CQleyGaXzXwH6znHymn/CI6yriPHJXW
-	NAuK3OSAKk9PV2kgr1QR6xuuN3pg71/ZDghzKeRvrOb3msh7K+Dm2jYth7NwdfaksTpGj6nq7hbvA
-	4z0ebh713bwfrGtq1LrUWVF3tox2dTC2r25lq4knpgIehmS4xdVoo6fWbRKH5ffXgHhmdURj3I85d
-	0fyzIu6A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGlGw-00000001dwA-2wkK;
-	Mon, 10 Jun 2024 20:05:52 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id F156A300439; Mon, 10 Jun 2024 22:05:44 +0200 (CEST)
-Date: Mon, 10 Jun 2024 22:05:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <20240610200544.GY8774@noisy.programming.kicks-ass.net>
-References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202406101010.E1C77AE9D@keescook>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="QFQj0aQ9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1718050042; x=1718309242;
+	bh=YaudkvTAFLJ++bghqSZYe4gWhD1sK1cupANwv9nOdZM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=QFQj0aQ9UrLzFPF+gUn/CRwt+AHtSb9LsJY4rF4T2VFnEqLHBmNtCZBr4e6aT2bkV
+	 0Rlas9rDr3JslF05T+X3blo3fG7H3RznctbNms5RALorGyqc5KYbdigVI+3ob01Mkw
+	 tj/fp4+NItpsf3IWKVU0Bcs1symzYPWXe7ko/49glT/fvmBg22SyQbEqhCUQyRU/xs
+	 Fo5kLuVlUuy0hfU00FRUBZkcJx9HArKjNZURqsK8pUqqXI3tQjQdC2aTJtD+uBKq0K
+	 ZUdA9B+9VJZG7wHxWZCQSNoZzmLeROleKM6lwudahQ4KvMSav+1M6I2ON4tnkwji7T
+	 BN99wZZ0a0kJw==
+Date: Mon, 10 Jun 2024 20:07:15 +0000
+To: Andreas Hindborg <nmi@metaspace.dk>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Bart Van Assche <bvanassche@acm.org>, Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Andreas Hindborg <a.hindborg@samsung.com>, Greg KH <gregkh@linuxfoundation.org>, Matthew Wilcox <willy@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Chaitanya Kulkarni <chaitanyak@nvidia.com>, Luis Chamberlain <mcgrof@kernel.org>, Yexuan Yang <1182282462@bupt.edu.cn>, =?utf-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>, Joel Granados <j.granados@samsung.com>, "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, Daniel Gomez <da.gomez@samsung.com>, Niklas Cassel <Niklas.Cassel@wdc.com>, Philipp Stanner <pstanner@redhat.com>, Conor Dooley <conor@kernel.org>, Johannes Thumshirn <Johannes.Thumshirn@wdc.com>, =?utf-8?Q?Matias_Bj=C3=B8rling?= <m@bjorling.me>, open list <linux-kernel@vger.kernel.org>,
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>, "gost.dev@samsung.com" <gost.dev@samsung.com>
+Subject: Re: [PATCH v5 2/3] rust: block: add rnull, Rust null_blk implementation
+Message-ID: <f05832b5-de63-46a0-b623-ae9ef18c2648@proton.me>
+In-Reply-To: <20240603191455.968301-3-nmi@metaspace.dk>
+References: <20240603191455.968301-1-nmi@metaspace.dk> <20240603191455.968301-3-nmi@metaspace.dk>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: e8280eca314cd33587780377548bd7cae8afc414
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202406101010.E1C77AE9D@keescook>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 10, 2024 at 10:28:52AM -0700, Kees Cook wrote:
-> On Sat, Jun 01, 2024 at 06:56:15PM +0200, Erick Archer wrote:
-> > Hi everyone,
-> > 
-> > This is an effort to get rid of all multiplications from allocation
-> > functions in order to prevent integer overflows [1][2].
-> 
-> I didn't actually see these 3 patches in this thread nor via lore.
+On 03.06.24 21:14, Andreas Hindborg wrote:
+> From: Andreas Hindborg <a.hindborg@samsung.com>
+>=20
+> This patch adds an initial version of the Rust null block driver.
+>=20
+> Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
+> ---
+>  drivers/block/Kconfig  |  9 ++++++
+>  drivers/block/Makefile |  3 ++
+>  drivers/block/rnull.rs | 73 ++++++++++++++++++++++++++++++++++++++++++
 
-He managed to break threading between 0/n and the rest.
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 
-> > In the first patch, the "struct amd_uncore_ctx" can be refactored to
-> > use a flex array for the "events" member. This way, the allocation/
-> > freeing of the memory can be simplified. Then, the struct_size()
-> > helper can be used to do the arithmetic calculation for the memory
-> > to be allocated.
-> 
-> I like this patch because it reduces the allocation from 2 to 1. This
-> isn't what Peter might see as "churn": this is an improvement in resource
-> utilization.
+---
+Cheers,
+Benno
 
-But then he went and used that struct_size() abomination :/
-
-> I prefer this style, as it makes things unambiguous ("this will never
-> wrap around") without having to check the associated types and doesn't make
-> the resulting binary code different in the "can never overflow" case.
-> 
-> In this particular case:
-> 
-> int size = sizeof(*box) + numshared * sizeof(struct intel_uncore_extra_reg);
-> 
-> "int numshared" comes from struct intel_uncore_type::num_shared_regs,
-> which is:
-> 
->         unsigned num_shared_regs:8;
-> 
-> And the struct sizes are:
-> 
-> $ pahole -C intel_uncore_box gcc-boot/vmlinux | grep size:
->         /* size: 488, cachelines: 8, members: 19 */
-> $ pahole -C intel_uncore_extra_reg gcc-boot/vmlinux | grep size:
->         /* size: 96, cachelines: 2, members: 5 */
-> 
-> So we have:
-> 
-> s32 size = 488 + u8 * 96
-> 
-> Max size here is 24968 so it can never overflow an s32, so I can see
-> why Peter views this as "churn".
-> 
-> I still think the patch is a coding style improvement, but okay.
-
-I really detest this thing because it makes what was trivially readable
-into something opaque. Get me that type qualifier that traps on overflow
-and write plain C. All this __builtin_overflow garbage is just that,
-unreadable nonsense.
-
-> This provides __counted_by coverage, and I think this is important to
-> gain in ever place we can. Given that this is part of a ring buffer
-> implementation that is arbitrarily sized, this is exactly the kind of
-> place I'd like to see __counted_by used. This is a runtime robustness
-> improvement, so I don't see this a "churn" at all.
-
-Again, mixed in with that other crap. Anyway, remind me wth this
-__counted_by thing actually does?
-
-> Peter, for patches 1 and 3, if you'd prefer not to carry them, I could
-> put them in the hardening tree to keep them out of your way. It seems
-> clear you don't want patch 2 at all.
-
-I prefer to not have struct_size() anywhere at all. Please just write
-readable code.
-
-Again, if you really care about that overflow muck, get a useable C type
-qualifier or something so we can write readable code.
