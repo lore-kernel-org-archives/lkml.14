@@ -1,108 +1,77 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4031E4A0;
-	Mon, 10 Jun 2024 15:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038471E4A0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718032420; cv=none; b=T6kDDBWDSEPnI3oXnsqdRAfuKPBvKTXnec2JL1TVyocZD59HnPJ3mKb7ZxcoM4fLf7RWNeRRu7yxQR8iIb1VJk9T02g5UafBiIAoc4b2kOXMqsFe1yXpyGIl1ns3rDv9K0NK0nf8L+jr26hSeoZKJnvNDnJihHYgKbvcP4jV3tY=
+	t=1718032429; cv=none; b=gRUBXf3WkLg+viTIVi//1+lZBptNTOk00bUa6f6Yyh5OvBl4VWK+ImpMEZl3vLxz7I+HlA6Pa/LTZD/Bbq9glxYt+dqF55etxzG3wNY8Xnp07PCiQEyLE5wcTm29MEYLbrCXh4UyUdIJvPWrjzsKV99QvLMqtL2q6/1jWtmbXA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718032420; c=relaxed/simple;
-	bh=dbA4Q3NljLWwLfg/8YvXVrf5EDb7VvwfPHiP54AJwxw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dADORH0e9fLKP0HGHpsP2fhxoEUw9++3ZQ105nYvaQMsqK+NODCicX54bPFOUVgbk9gLYURaghVFPXddwYiMVgdImHlOYPdKLuNyxMWJvkgrSDzhpQBZf5PiEbPcONYukJ0p+ybeNw0HNiXWIOQsB6Xk0SHRCRwxX+M8AaNYLIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=YmM5T9X9; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718032429; c=relaxed/simple;
+	bh=CmL2clMiceh98ITdDb3nHytGm31ml3VGWT8md7qDVwo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VIE3lWTZM4eXIXLz+zKxCo4wV8UZdU+W7zMJrvt6HEeCv3Pw7mzA0wqfdIPmvmqUB+3cu9m3/vRVrezCh+/HAIvrOHp3qG5K7dXDmtpIcruOZVaRN01CO9vP1GzZoVK9sML8f/otXYKLmWLyCyoqtDh0nvHzFFOOUB17gSRMTEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=JLlg+p4V; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="YmM5T9X9"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ACQgw7001003;
-	Mon, 10 Jun 2024 17:13:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	d59bYfJuaPhoU7eyu8V9rWLVgMTR5ee1jrq+gL9cAfo=; b=YmM5T9X9g0Ajhl9n
-	q4RYmKMuOkch3NNYlz/4DIM51JmMNpCPejovRQ1bHRAcBe6MHXzA2GwnAppYQLOf
-	A1MaI7uysbtMJfZDeJic7Bh2LVh1VVDgE5I6ttmOj3BPcxSyigT7mMPd47PXeXnw
-	R7xr3TExnWQ5wsnvvpQqLLz8vtmguHa23hzoa9EFjjPWDw/HU/AD5QsRsmwqUf9o
-	cvpuxTZplbSIzUv0Ae8jJAzLvG790iXyOqZBlFfcroCbktD6nMKqt6Uy+qKCDHJR
-	mZqcpRCykjflJaKf6GMi0wIPBVPHGaYLsRGV+3wiCsCjJ8rN1iYFYpcpZAdbRTK3
-	QqooJw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yn28hw854-1
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="JLlg+p4V"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45AEODuh023922;
+	Mon, 10 Jun 2024 10:13:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=oPwV6DNi2iZ8a+TnR3
+	efBN2gwSgK39HaMgBTQJnht74=; b=JLlg+p4VYPz8ilvfWSFJTE0HSrJQ4frDxh
+	p2hLGcgK8M2GR2/naflIlT+9bXewM+By3kece5B6+DdnIPUCtTx400GDFS4gKOhG
+	s+tjhwrg4l7I/O7a0dDYRDeskV0p+2KLt/u5l1xRiy4IHOnvMYtzqgKlVcjgH5m5
+	1LpMb0/z+IUP3q8VQoYWtizbH4XxiTe4ucuzywjyv8NDJQ/5umuYy02kCJ2yIOds
+	B2fXX0E0zGAbb+tlScmcmmaONuNhcEqGLeslKrl3r86s9XQLOgSButeTF/ufzqN8
+	gbkFCNbHlXeA7dUlFCo3fKLY/+diVsQG01haB8WShDHUd/0lFeNQ==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3ymkqhstmp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 17:13:29 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CD79840045;
-	Mon, 10 Jun 2024 17:13:25 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0EA2221B537;
-	Mon, 10 Jun 2024 17:12:48 +0200 (CEST)
-Received: from localhost (10.130.72.241) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 10 Jun
- 2024 17:12:47 +0200
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Sylvain Petinot <sylvain.petinot@foss.st.com>,
-        Sakari Ailus
-	<sakari.ailus@linux.intel.com>,
-        Laurent Pinchart
-	<laurent.pinchart@ideasonboard.com>
-CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Mugnier
-	<benjamin.mugnier@foss.st.com>
-Subject: [PATCH 2/3] media: vgxy61: Add legacy compatible string
-Date: Mon, 10 Jun 2024 17:08:14 +0200
-Message-ID: <20240610150815.228790-3-benjamin.mugnier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240610150815.228790-1-benjamin.mugnier@foss.st.com>
-References: <20240610150815.228790-1-benjamin.mugnier@foss.st.com>
+	Mon, 10 Jun 2024 10:13:28 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 10 Jun
+ 2024 16:13:27 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Mon, 10 Jun 2024 16:13:27 +0100
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 16B69820249;
+	Mon, 10 Jun 2024 15:13:27 +0000 (UTC)
+Date: Mon, 10 Jun 2024 15:13:26 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC: Lee Jones <lee@kernel.org>, Richard Fitzgerald <rf@opensource.cirrus.com>,
+        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH 1/2] mfd: arizona: Simplify with
+ spi_get_device_match_data()
+Message-ID: <ZmcYFgEKgg0plA7k@opensource.cirrus.com>
+References: <20240606142457.130553-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240606142457.130553-1-krzysztof.kozlowski@linaro.org>
+X-Proofpoint-GUID: ohGpH9_75i7nI5hbz6N2WSEP-b4nldDS
+X-Proofpoint-ORIG-GUID: ohGpH9_75i7nI5hbz6N2WSEP-b4nldDS
+X-Proofpoint-Spam-Reason: safe
 
-As the driver has been renamed from 'st-vgxy61' to 'vgxy61', its
-compatible string has been updated to reflect this change. Therefore old
-device trees will not work anymore.
-Add the old driver name as another compatible name to handle the
-retro compatibility.
+On Thu, Jun 06, 2024 at 04:24:56PM +0200, Krzysztof Kozlowski wrote:
+> Use spi_get_device_match_data() helper to simplify a bit the driver.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
 
-Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
----
- drivers/media/i2c/vgxy61.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-diff --git a/drivers/media/i2c/vgxy61.c b/drivers/media/i2c/vgxy61.c
-index 30378e962016..ca3b43608dad 100644
---- a/drivers/media/i2c/vgxy61.c
-+++ b/drivers/media/i2c/vgxy61.c
-@@ -1867,6 +1867,11 @@ static void vgxy61_remove(struct i2c_client *client)
- }
- 
- static const struct of_device_id vgxy61_dt_ids[] = {
-+	{ .compatible = "st,vgxy61" },
-+	/*
-+	 * Previously the driver was named 'st-vgxy61' instead of simply
-+	 * 'vgxy61', keep it for retrocompatibility purposes.
-+	 */
- 	{ .compatible = "st,st-vgxy61" },
- 	{ /* sentinel */ }
- };
--- 
-2.25.1
-
+Thanks,
+Charles
