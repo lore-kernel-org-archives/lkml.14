@@ -1,109 +1,111 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCAC1E4A0;
-	Mon, 10 Jun 2024 15:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5F61E4A0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718032303; cv=none; b=oilyJXRrlbR+NOwmHkoioYR2udPqUnNtn6XxAmgh8MkjzNmuzCEe56y7eIHoWD+/1+re48J7kY4qt7l6t5resnNKus4DEotcu8YS43LOjqG4CJVPFPIMghgcQsg3yIKUHig6qfpRpiqo/PuHpXw9Xl2au7qq3fVVfkij4KTqU0A=
+	t=1718032322; cv=none; b=gutLfEIcOxxKqZrdfvmpgy1JQXOCsbahBoh/ws0bXOkjnfGlL2SYorh+d4df0d4+aSt1doj0GkJxtYg+zbps0Ds/1CDcB1qs82WS3Yv511Ep8wr97G4fIthKjKfhYk7UDa8Zb2zsQ2MwSW8+1fjWwr+MkGV23acscR2fJvlrV2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718032303; c=relaxed/simple;
-	bh=tpHyKPGu/MAWjoatWWjJZ50Flk36rDbQoSmxaJRTcUs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Re3BHOJj6TjaUl1b9V0MACM+FZXANa4Wty+esr/c6s93x6s+oXFdUx4GCgYU/fY9/lLhAqnmqtV9pKPW+2hfeOzZ230LTJ7xaT3+NWkTSYxGaSBK5q2ukeDSENpiW9SoFyhfncMknyM+5lZktsyOpxbC/48h3lossXY+gc/2rvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=8DB3wpxx; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="8DB3wpxx"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ACQpDH023421;
-	Mon, 10 Jun 2024 17:11:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=Nw0npG5Je8L9GpDDDrmZQv
-	OmOFQeiNRiS9yVch0TPfQ=; b=8DB3wpxxw2Lj/nNcdFxXNQzSMVtVpyd0cqr+FU
-	QXIhTOtDBMkyPokSP4kn37ctCTBxs5P1Shdahn/CEebRzuUAzCNC1pZzC1X2snY2
-	I9SH4rPzL7lzSjLWtCi8nYAD7I7jMuNTobPRf6+FQJExc+I29C4FewnPZu16u1Zo
-	K2MTW6vfeKAyCZy1ks0q2t37WjetxMfB7jwFG2ofWRueMEAqbxocE11pMhT2tzCi
-	hJvQvKynBMB4s0uM3Sxxt7mV/YRV7Cq22UpQwNAwwDyQHt1AtleBbPOe7ozc8GLC
-	jMA7mX+zuXHm9KAAnXYG7KLzil6MKDyYk5o45diFrmZtSPKQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yn0v15d67-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 17:11:31 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8002C4002D;
-	Mon, 10 Jun 2024 17:11:26 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1B1B821ED2D;
-	Mon, 10 Jun 2024 17:10:45 +0200 (CEST)
-Received: from localhost (10.130.72.241) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 10 Jun
- 2024 17:10:44 +0200
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Sylvain Petinot <sylvain.petinot@foss.st.com>,
-        Sakari Ailus
-	<sakari.ailus@linux.intel.com>,
-        Laurent Pinchart
-	<laurent.pinchart@ideasonboard.com>
-CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Mugnier
-	<benjamin.mugnier@foss.st.com>
-Subject: [PATCH 0/3] media: vgxy61: Remove vendor prefix from driver name
-Date: Mon, 10 Jun 2024 17:08:12 +0200
-Message-ID: <20240610150815.228790-1-benjamin.mugnier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1718032322; c=relaxed/simple;
+	bh=pmr3IaJucK5vtXikM3GHEO/xGVGpp9EtqrqVvOdNDDk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GGd1TU3lrbzNr50lXePJj/cXF66PewyiNqxPOupgLy3peI3rMhyw6GGAA00gorgo5TBYsOVyjF0nseu6JPMmRcQmswcKrwTc1HgivxW65YLYEu+QXlFulQderPmrnEpj38xs7+KhL3OrDvRBplRFISDkKYEX0iSjyDkWlctVbFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-25-87.elisa-laajakaista.fi [88.113.25.87])
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id c7fddaa1-273b-11ef-ab0e-005056bdd08f;
+	Mon, 10 Jun 2024 18:11:58 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 10 Jun 2024 18:11:58 +0300
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Haibo Chen <haibo.chen@nxp.com>
+Subject: Re: [PATCH v4 2/4] mfd: adp5585: Add Analog Devices ADP5585 core
+ support
+Message-ID: <ZmcXvnVH6g2k8zam@surfacebook.localdomain>
+References: <20240608141633.2562-1-laurent.pinchart@ideasonboard.com>
+ <20240608141633.2562-3-laurent.pinchart@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240608141633.2562-3-laurent.pinchart@ideasonboard.com>
 
-This is a follow up of the discussion we had [1] on drivers naming scheme.
-Basically the vendor prefix should not be part of the driver's name.
+Sat, Jun 08, 2024 at 05:16:31PM +0300, Laurent Pinchart kirjoitti:
+> From: Haibo Chen <haibo.chen@nxp.com>
+> 
+> The ADP5585 is a 10/11 input/output port expander with a built in keypad
+> matrix decoder, programmable logic, reset generator, and PWM generator.
+> This driver supports the chip by modelling it as an MFD device, with two
+> child devices for the GPIO and PWM functions.
+> 
+> The driver is derived from an initial implementation from NXP, available
+> in commit 8059835bee19 ("MLK-25917-1 mfd: adp5585: add ADI adp5585 core
+> support") in their BSP kernel tree. It has been extensively rewritten.
 
-This series renames the driver from 'st-vgxy61' to 'vgxy61' and the device tree
-compatible string from 'st,st-vgxy61' to 'st-vgxy61', therefore avoiding the
-vendor prefix duplication.
-Backward compatibility is preserved.
-Makes the vgxy64 driver consistent with the soon to come v3 of the vd56g3
-series.
+...
 
-Thanks,
-Benjamin
+> +#include <linux/array_size.h>
+> +#include <linux/device.h>
 
-[1] https://lore.kernel.org/lkml/ZlToLtUkVqzrZf4p@valkosipuli.retiisi.eu/
++ err.h
 
-Benjamin Mugnier (3):
-  media: vgxy61: Fix driver name
-  media: vgxy61: Add legacy compatible string
-  media: vgxy61: Add MODULE_ALIAS()
+> +#include <linux/i2c.h>
+> +#include <linux/mfd/adp5585.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/types.h>
 
- .../media/i2c/{st,st-vgxy61.yaml => st,vgxy61.yaml}       | 6 +++---
- Documentation/userspace-api/media/drivers/index.rst       | 2 +-
- .../media/drivers/{st-vgxy61.rst => vgxy61.rst}           | 0
- MAINTAINERS                                               | 8 ++++----
- drivers/media/i2c/Kconfig                                 | 2 +-
- drivers/media/i2c/Makefile                                | 2 +-
- drivers/media/i2c/{st-vgxy61.c => vgxy61.c}               | 8 +++++++-
- 7 files changed, 17 insertions(+), 11 deletions(-)
- rename Documentation/devicetree/bindings/media/i2c/{st,st-vgxy61.yaml => st,vgxy61.yaml} (95%)
- rename Documentation/userspace-api/media/drivers/{st-vgxy61.rst => vgxy61.rst} (100%)
- rename drivers/media/i2c/{st-vgxy61.c => vgxy61.c} (99%)
+...
+
+> +static const struct mfd_cell adp5585_devs[] = {
+> +	{ .name = "adp5585-gpio", },
+> +	{ .name = "adp5585-pwm", },
+
+Inner commas are not needed.
+
+> +};
+
+...
+
+> +#define		ADP5585_Rx_PULL_CFG_PU_300K	0
+> +#define		ADP5585_Rx_PULL_CFG_PD_300K	1
+> +#define		ADP5585_Rx_PULL_CFG_PU_100K	2
+> +#define		ADP5585_Rx_PULL_CFG_DISABLE	3
+> +#define		ADP5585_Rx_PULL_CFG_MASK	3
+
+Still supplying MASK is strange, why not supplying DISABLE?
+
+...
+
+> +#define		ADP5585_OSC_EN			BIT(7)
+> +#define		ADP5585_OSC_FREQ_50KHZ		(0U << 5)
+> +#define		ADP5585_OSC_FREQ_100KHZ		(1U << 5)
+> +#define		ADP5585_OSC_FREQ_200KHZ		(2U << 5)
+> +#define		ADP5585_OSC_FREQ_500KHZ		(3U << 5)
+> +#define		ADP5585_OSC_FREQ_MASK		(3U << 5)
+
+GENMASK() ? And possible the similar question as per above.
 
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
