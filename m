@@ -1,47 +1,58 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF14D79DD4;
-	Mon, 10 Jun 2024 11:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE597A702
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 11:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718017820; cv=none; b=q+PT2wGRpV0XrbfXGJxtWpFti7k3taRbAsnTrQRyED5UGWjVhuXTaPFyqc+MXmWzwitNhZ2nBFfCvFLOCRfM9aozXTnr6cZqp0Bf2fUREfyD3+jXdku6BjmezVwgDdu5YgSwXCL1xF41xv1NzcPsEoy/3nzuOpMda84hYHNYd5E=
+	t=1718017836; cv=none; b=JJigLoUx3Hsa1bTQuxx7N+gk1pDLmY2qCy6XLQAAv7ocSPY+lsgThEOMSJkSf9xKqo5sdVzjIszktx57fYV4imOOey6RBSzceNwqhuNl4awgY950Fpj20EaWIxBiP8d1DRGOgDMqCa/dDC6l3QmIr8Q4Vpd1+NP8WPHPYWxpbYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718017820; c=relaxed/simple;
-	bh=t8YAAYThVnVgT7x/11d4Zu4WwbrMMvSN6ZQtxSBGXPY=;
+	s=arc-20240116; t=1718017836; c=relaxed/simple;
+	bh=BoPTxfeDEbyvV28yFmdnIkcBko44Dr+qdq4z0jGqZm0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KmaDLUQYqqpIzBjf5x9v9+pfu5OtE/oFNa3xQt9ErmjoLWKzgurw7w2C48vHT5z/DoNtPKwzgJrHsQCkH49m4w2Lqfl1yB7iDKniNBF0XrQth7Po16JYkuktgX2XK+RkwIfiQWoUmzwWJMcnit27wfaLIGXwl8eKXlxawdNISfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C59B312FC;
-	Mon, 10 Jun 2024 04:10:41 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E56843F73B;
-	Mon, 10 Jun 2024 04:10:13 -0700 (PDT)
-Date: Mon, 10 Jun 2024 12:10:11 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH 6/9] KVM: arm64: pmu: Use generated define for
- PMSELR_EL0.SEL access
-Message-ID: <ZmbfE_0n65lMxRb1@J2N7QTR9R3>
-References: <20240607-arm-pmu-3-9-icntr-v1-0-c7bd2dceff3b@kernel.org>
- <20240607-arm-pmu-3-9-icntr-v1-6-c7bd2dceff3b@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=iCEHTx6DvCUdJIfnjl0sjNE+ziDC05h77NmbIcI7v8fVYgRg8+VwX/hDUm7XDvHQFGddPIEmEVR3naVqwtHQOt9sdqgNHcGq5JWiRRbEJAQjpXRbWnz0zdVN+wNT00w65dCtoG1rVRE5zzxFvTRSJT5DFpU/zxq+vVkPpeTCRxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dp/ot4c5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dp/ot4c5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718017833;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ouFRMuOm0IWqoGx+yiBe7RuD+elI541Nr6zBjwlU0fI=;
+	b=dp/ot4c5rjZ4tdebFCo5tmXDRl0WEpsHqCs8m0EkKPHgK9S8htGePyQ7RX04R0lJcB89yg
+	b4kJ5pf/rKXiZQcxX9TMaeN94uzzhp8FQuTvLuZNhvXEtjyqX+RfNbHYvhFrXtEq4QJ1la
+	bofSqrH3TTRFa5Ysn1Dcjfj1RJ2jkUI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-269-s6WuHZtcO5a9BYhe-rt-BA-1; Mon,
+ 10 Jun 2024 07:10:28 -0400
+X-MC-Unique: s6WuHZtcO5a9BYhe-rt-BA-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1CD7E195608B;
+	Mon, 10 Jun 2024 11:10:27 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.117])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 2968419560AB;
+	Mon, 10 Jun 2024 11:10:23 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 10 Jun 2024 13:08:56 +0200 (CEST)
+Date: Mon, 10 Jun 2024 13:08:52 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Tejun Heo <tj@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: Q: css_task_iter_advance() && dying_tasks
+Message-ID: <20240610110852.GA21828@redhat.com>
+References: <20240609142342.GA11165@redhat.com>
+ <20240610105028.GA21586@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,115 +61,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240607-arm-pmu-3-9-icntr-v1-6-c7bd2dceff3b@kernel.org>
+In-Reply-To: <20240610105028.GA21586@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Fri, Jun 07, 2024 at 02:31:31PM -0600, Rob Herring (Arm) wrote:
-> ARMV8_PMU_COUNTER_MASK is really a mask for the PMSELR_EL0.SEL register
-> field. Make that clear by adding a standard sysreg definition for the
-> register, and using it instead.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  arch/arm64/include/asm/sysreg.h |  1 -
->  arch/arm64/kvm/sys_regs.c       | 10 +++++-----
->  arch/arm64/tools/sysreg         |  5 +++++
->  include/linux/perf/arm_pmuv3.h  |  1 -
->  4 files changed, 10 insertions(+), 7 deletions(-)
+Sorry for the spam, forgot to mention. Either way the usage of group_dead
+or atomic_read(signal->live) in these paths doesn't look "perfect", but
+this is another thing. The pseudo code below tries to mimic the current
+logic but again, I'm afraid I misread this code completely.
 
-This looks good to me; I checked the reg values match those in the
-latest ARM ARM (ARM DDI 0487K.a pages 9016 to 9018), and they also match
-the eixsting values in the kernel. The changes to use the new mask name
-and to use SYS_FIELD_GET() all look good to me.
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+On 06/10, Oleg Nesterov wrote:
+>
+> I never understood the code in kernel/cgroup/ even remotely, most probably
+> I missed something, but let me ask a couple of stupid questions anyway.
+>
+> cgroup_exit() does
+>
+> 	css_set_move_task(tsk, cset, NULL, false);
+> 	list_add_tail(&tsk->cg_list, &cset->dying_tasks);
+>
+> but unless I am totally confused css_task_iter_advance() always ignores
+> the "dying" sub-threads, so perhaps it should do, say,
+>
+> 	css_set_move_task(tsk, cset, NULL, false);
+> 	if (delay_group_leader(tsk))
+> 		list_add_tail(&tsk->cg_list, &cset->dying_tasks);
+>
+> and then cgroup_release() can check list_empty(cg_list) before it takes
+> css_set_lock.
+>
+> No ?
+>
+> Or, perhaps we can do even better? Can't cgroup_exit() do something like
+>
+> 	// group_dead should be passed from do_exit()
+>
+> 	css_set_move_task(tsk, cset, NULL, false);
+>
+> 	if (thread_group_leader(tsk) && !group_dead)
+> 		list_add_tail(&tsk->cg_list, &cset->dying_tasks);
+>
+> 	else if (!thread_group_leader(tsk) && group_dead) {
+> 		leader = tsk->group_leader;
+> 		if (!list_empty(leader->cg_list) {
+> 			css_set_skip_task_iters(task_css_set(leader), leader);
+> 			list_del_init(&leader->cg_list);
+> 		}
+> 	}
+>
+> and then
+>
+> 	- kill the atomic_read(&task->signal->live)) check in
+> 	  css_task_iter_advance()
+>
+> 	- kill the code under css_set_lock in cgroup_release()
+>
+> Oleg.
 
-Mark.
-
-> 
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index af3b206fa423..b0d6c33f9ecc 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -403,7 +403,6 @@
->  #define SYS_PMCNTENCLR_EL0		sys_reg(3, 3, 9, 12, 2)
->  #define SYS_PMOVSCLR_EL0		sys_reg(3, 3, 9, 12, 3)
->  #define SYS_PMSWINC_EL0			sys_reg(3, 3, 9, 12, 4)
-> -#define SYS_PMSELR_EL0			sys_reg(3, 3, 9, 12, 5)
->  #define SYS_PMCEID0_EL0			sys_reg(3, 3, 9, 12, 6)
->  #define SYS_PMCEID1_EL0			sys_reg(3, 3, 9, 12, 7)
->  #define SYS_PMCCNTR_EL0			sys_reg(3, 3, 9, 13, 0)
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 22b45a15d068..f8b5db48ea8a 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -880,7 +880,7 @@ static u64 reset_pmevtyper(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
->  static u64 reset_pmselr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
->  {
->  	reset_unknown(vcpu, r);
-> -	__vcpu_sys_reg(vcpu, r->reg) &= ARMV8_PMU_COUNTER_MASK;
-> +	__vcpu_sys_reg(vcpu, r->reg) &= PMSELR_EL0_SEL_MASK;
->  
->  	return __vcpu_sys_reg(vcpu, r->reg);
->  }
-> @@ -972,7 +972,7 @@ static bool access_pmselr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
->  	else
->  		/* return PMSELR.SEL field */
->  		p->regval = __vcpu_sys_reg(vcpu, PMSELR_EL0)
-> -			    & ARMV8_PMU_COUNTER_MASK;
-> +			    & PMSELR_EL0_SEL_MASK;
->  
->  	return true;
->  }
-> @@ -1040,8 +1040,8 @@ static bool access_pmu_evcntr(struct kvm_vcpu *vcpu,
->  			if (pmu_access_event_counter_el0_disabled(vcpu))
->  				return false;
->  
-> -			idx = __vcpu_sys_reg(vcpu, PMSELR_EL0)
-> -			      & ARMV8_PMU_COUNTER_MASK;
-> +			idx = SYS_FIELD_GET(PMSELR_EL0, SEL,
-> +					    __vcpu_sys_reg(vcpu, PMSELR_EL0));
->  		} else if (r->Op2 == 0) {
->  			/* PMCCNTR_EL0 */
->  			if (pmu_access_cycle_counter_el0_disabled(vcpu))
-> @@ -1091,7 +1091,7 @@ static bool access_pmu_evtyper(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
->  
->  	if (r->CRn == 9 && r->CRm == 13 && r->Op2 == 1) {
->  		/* PMXEVTYPER_EL0 */
-> -		idx = __vcpu_sys_reg(vcpu, PMSELR_EL0) & ARMV8_PMU_COUNTER_MASK;
-> +		idx = SYS_FIELD_GET(PMSELR_EL0, SEL, __vcpu_sys_reg(vcpu, PMSELR_EL0));
->  		reg = PMEVTYPER0_EL0 + idx;
->  	} else if (r->CRn == 14 && (r->CRm & 12) == 12) {
->  		idx = ((r->CRm & 3) << 3) | (r->Op2 & 7);
-> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-> index a4c1dd4741a4..231817a379b5 100644
-> --- a/arch/arm64/tools/sysreg
-> +++ b/arch/arm64/tools/sysreg
-> @@ -2153,6 +2153,11 @@ Field	4	P
->  Field	3:0	ALIGN
->  EndSysreg
->  
-> +Sysreg	PMSELR_EL0	3	3	9	12	5
-> +Res0	63:5
-> +Field	4:0	SEL
-> +EndSysreg
-> +
->  SysregFields	CONTEXTIDR_ELx
->  Res0	63:32
->  Field	31:0	PROCID
-> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
-> index 46377e134d67..caa09241ad4f 100644
-> --- a/include/linux/perf/arm_pmuv3.h
-> +++ b/include/linux/perf/arm_pmuv3.h
-> @@ -7,7 +7,6 @@
->  #define __PERF_ARM_PMUV3_H
->  
->  #define ARMV8_PMU_MAX_COUNTERS	32
-> -#define ARMV8_PMU_COUNTER_MASK	(ARMV8_PMU_MAX_COUNTERS - 1)
->  
->  /*
->   * Common architectural and microarchitectural event numbers.
-> 
-> -- 
-> 2.43.0
-> 
