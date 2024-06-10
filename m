@@ -1,154 +1,98 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7988F7F49B
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906E97E767;
+	Mon, 10 Jun 2024 12:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718022485; cv=none; b=Xfu8LLMQdWqv+zqtGXa72ywW8EXCGmsbIrZw9C9Gv+ry81zk3J/RFhYxZI5WFm0+nhuIqhnHmn/8HCdBJcMgClnsiVNQbQ/9fFGjYHuJsZd44sYZ/z3JtnKJcNn7z4J4BL7ub+Ty/Q3JBM95qcWBbv9g3wvwkNvwk2FOhKryYos=
+	t=1718022589; cv=none; b=ngw5RDXLZugvKD5fca63PptDvhcMi66veR1Ey8ElkCTjQTwPSb9QZL2RtcOam9h9B5G1LX2VDYem5fSsxCr8/n8YBzp4rv3e05vGQtD5A+ICGKPb0gYYJ5qb7jij5HT+xyRiagrz7JC/j8WH9Ot/0u4A3u1WKf7Enm6agDIVzFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718022485; c=relaxed/simple;
-	bh=E4HhaWSrfChuK+AFfOFfWL+kTIf2PvgBxh22wAhJBdk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uvxDIdePrv6fcSC24Dah7YwGJx07s//bMYyQZYcTilqqWVvbItHgFO+1qmKoyYMKCBhqmrT6sdVSZLU83ub0UuonLnpZYQlX+s4WLNmEoacKgMP4lfyb772xet003WK8eXqw+7nlbjhjEQYf+OVNSWXl9sB/hVVVL1onAVBBJNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cNCjm9jU; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cNCjm9jU"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6f0e153eddso194796466b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718022482; x=1718627282; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=wlIpn5WdH/08Kvt9ZvSkBm6R/DJgI6946Y8EIE7Nqng=;
-        b=cNCjm9jULm8oPQjs8omnDbFDX5oWAp++ABcVKlcu4Y2hUwoV4rtjfKirReJK8vZuBO
-         V4/jTxTfnJh7k7ZmGQKSTLHcEWugsl/bd536w0FFhumqKwUFsaHt63y7gVLMWCGOQB+t
-         XoZJ6cpvsyQU3BOZi9g+HfVmB+ndZWvCxZLHRQixNcmFgIwz+4Kf2qV2RfISnLxEHKXC
-         vGWd6dHg07Hc8rGKpV/1Pc4dk5e44IHDTfNWdVriJV2BWI3FuSSMxDS02fyiZARyX1TW
-         wX15Xl99rVI99Qd2088n2FhwcCSYdtA+e75iFGMzd0UqV9EKtLPFzxNBxHa9Xc2Piepf
-         ctcg==
+	s=arc-20240116; t=1718022589; c=relaxed/simple;
+	bh=VIqDUZJagne6zz+2zSLweAY3KkWozkQKO/O688GBJLI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bscEzQY+7EokYcyPRF2gyvfsQIZWXHVx7paMWxS7HBnUXFOsbQrs1khZS0JmO97033+nCnQqbHI8KsDex52YZ7YZftOt8R0fsSVfXCYlZzoJaivpStfRgBPXTWDtd8xExMySbUBgRbJL+C5Zk8vpjiJJCK24xhJ+ZL5pcPvpKCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dfa48f505dfso4726712276.3;
+        Mon, 10 Jun 2024 05:29:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718022482; x=1718627282;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wlIpn5WdH/08Kvt9ZvSkBm6R/DJgI6946Y8EIE7Nqng=;
-        b=p/U4BBIfFReB3mzicduuPdxlam6oLChTwyz7rKCaCPXtMUSCvEt/y5rnZgXDKOSXP+
-         PBlg+1+sQpRudtTEUH/a8D2HdPBX8aQy4n/zuR3HZsIjp3ksXFj91snL97akqwsm1x+2
-         bathXpdskFADqifEQrQI+yezEhNo73tzCMb1ERGZ2GlFXTVpvyd54IhsSXSAK4UMHFfq
-         4/MtiU3/PiqW9C1d6uTseS07w4NF5HJSYdUeHVkgdReJNrtd7wKrVgG817bg+abDZMfb
-         l3MOatSkudFVxHT/ut/M0qxGBvLys+yEQ9IvQP3he3c9XTMJN08oIouVWrxvY0ZWGAL1
-         nrhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXLyNzKolXu+eC2JMIxozt7tBIvr3I9rCVegTGSqc94dicN5QXEduSL2pzbd3FS7KBtaaMEjD4TckkHttAlpdJXhWYjOC8I+suVibKG
-X-Gm-Message-State: AOJu0YzpRqUARCbNFA+G8eKjx2oKQL+XPLyJ/aN9Z/jxi6vJymQGWPtF
-	Z4yTkw5CK01dSqOvIuKfUwLpKcB3P7EJ3eZIELHjIKtbF9Np34ShCZmgb3pT6WM=
-X-Google-Smtp-Source: AGHT+IGLO4q9AFXQ4noQ4QP1C+eRP27S9HYvMhN/Xt5BeOQATrg8C1LkiARojsivZibUXJf6uYZLDQ==
-X-Received: by 2002:a17:907:6d22:b0:a6f:201a:299a with SMTP id a640c23a62f3a-a6f201a2c1bmr185225766b.60.1718022481713;
-        Mon, 10 Jun 2024 05:28:01 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f1e6795b9sm139051866b.174.2024.06.10.05.28.00
+        d=1e100.net; s=20230601; t=1718022584; x=1718627384;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G0B9aDmcWue3KnNlLkfet4LKN9uGSsJqdVbpd70/2GI=;
+        b=Xz8daYen5gZXJBi/zChs5BNd+kAnu5oo9CGiPYAuDNlxW/APEY45A21wZ/i10LjYbh
+         by48eJCaGPib5lvOidVrbQUiUdT4DUi0lf30oRo7fhDg5MpI0Yb9cezFH3T23foo3pZe
+         D/1cOgO/0ZfdQSNhZc/8+T0c1i/wF7apHv2BwGWBj3TFYV9DRGw3insJ2wpbewfFXAho
+         lL9kQosC3stLJCCsrGajNDg8xrDTuYx5F86uC4JtXEVFPbLrPKbAFsv7BOA0KwE8wW17
+         dLG0lW73AgBoZmYoimUV39AuRVB10NxtoyC1OVQO6f+SGEHjD8V9BR/rg3jZ+N9Gmdmv
+         qSvg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5CrLnMZSDpveZX30ZljwlVgnJa0pvi9Bou5r//upKw91BrlX7oZb72t4HcELgcufDENfYqemP/2rEgWifIwboQ3GV8KdC3jvL/YiPSOvusfUqd+D5bPGdZrtbA1gKOTdPSLVVePILzNgNq71Aum0=
+X-Gm-Message-State: AOJu0YztQsIB7NW8TKTJQjVXeIfLJlx9sUHWMHQRHADyl1r+ynJ3iihm
+	hAq6ZjhsnrHZv/5RvyKmAtRsy558aDo1p8aQswNO5HIMiq4+Q2NOAMTgfoXQ
+X-Google-Smtp-Source: AGHT+IGAqFtQ9rXh0+V2oTzRdbhH914JMzDzpxBkDSy5SrUE/wgKIBXF+D77w//qWLMJnrD+/gnKfg==
+X-Received: by 2002:a25:ae44:0:b0:de5:a13d:92a1 with SMTP id 3f1490d57ef6-dfaf6532148mr9163409276.27.1718022584441;
+        Mon, 10 Jun 2024 05:29:44 -0700 (PDT)
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dfae515a8f6sm1612730276.0.2024.06.10.05.29.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 05:28:01 -0700 (PDT)
-Message-ID: <e7f1ea08-41af-47e0-b478-652e67e5aebb@linaro.org>
-Date: Mon, 10 Jun 2024 14:27:58 +0200
+        Mon, 10 Jun 2024 05:29:44 -0700 (PDT)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-62a0849f5a8so42271277b3.2;
+        Mon, 10 Jun 2024 05:29:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW6bdksejr/jrS8sKevU6QLCC39OsVB5pcCcCc8rT0wTR/IuA7wXHrx6gPyxMiOlFX8cVAoi0lIeABvvpPwQ4/DYLax7Tzk23Vc7ZftbJjsgGL6zqlsJsMekD5IZx817TZEjHMoaTw4RDwQmzm5f40=
+X-Received: by 2002:a81:b1c9:0:b0:622:f7ef:7bc4 with SMTP id
+ 00721157ae682-62cd55f6e71mr87651227b3.31.1718022583526; Mon, 10 Jun 2024
+ 05:29:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] ARM: multi_v7_defconfig: Add MCP23S08 pinctrl support
-To: Christophe ROULLIER <christophe.roullier@foss.st.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Richard Cochran <richardcochran@gmail.com>, Jose Abreu
- <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Marek Vasut <marex@denx.de>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240610080604.291102-1-christophe.roullier@foss.st.com>
- <06703c03-e1ce-4a94-942d-b556c6084728@linaro.org>
- <ef4d2ebb-dd2a-423d-acd1-43fdb42c1896@foss.st.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ef4d2ebb-dd2a-423d-acd1-43fdb42c1896@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240605153708.613610-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240605153708.613610-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Jun 2024 14:29:31 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX=w6OokwpexaSeJABWXtwG1VDOZEBQE1UP5pQ3gbj+dg@mail.gmail.com>
+Message-ID: <CAMuHMdX=w6OokwpexaSeJABWXtwG1VDOZEBQE1UP5pQ3gbj+dg@mail.gmail.com>
+Subject: Re: [RESEND RFC PATCH] reset: Add devm_reset_control_deassert helper
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/06/2024 10:14, Christophe ROULLIER wrote:
->>> @@ -469,6 +469,7 @@ CONFIG_SPI_XILINX=y
->>>   CONFIG_SPI_SPIDEV=y
->>>   CONFIG_SPMI=y
->>>   CONFIG_PINCTRL_AS3722=y
->>> +CONFIG_PINCTRL_MCP23S08=y
->> This is not an on-SoC pinctrl, so it should be module (=m).
-> 
-> The stmmac is in built-in, if IO-Expander (MCP23S08) is on module, we 
-> have huge of message during kernel boot
-> 
-> because stmmac driver is deferred several times. (need to wait that 
-> module are ready)
+On Wed, Jun 5, 2024 at 5:37=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.co=
+m> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> A typical code pattern for reset_control_deassert() call is to call it in
+> the _probe function and to call reset_control_assert() both from _probe
+> error path and from _remove function.
+>
+> Add helper function to replace this bolierplate piece of code. Calling
+> devm_reset_control_deassert() removes the need for calling
+> reset_control_assert() both in the probe()'s error path and in the
+> remove() function.
+>
+> Suggested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Which is normal and not a reason to change defconfig. It it was a
-problem, you should solve it not in defconfig but in kernel. That's just
-defconfig, an example, reference or debugging tool if you wish, so
-fixing issue here is not a fix at all.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Best regards,
-Krzysztof
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
