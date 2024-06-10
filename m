@@ -1,86 +1,67 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C986F7E576;
-	Mon, 10 Jun 2024 12:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F067FBA1
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718023584; cv=none; b=G7Mge9CPS1Fxb5WLkG3Gq8TilZN8Yof4hoBLGSX26DR5JLI1/iitfejYDcQqnMzl7jPmqSzA2E6c2pUm4YRl9HRKt4neEIRyTGDVNAJ6ypNLOGhSqxzCimVdiEdvo0QPlqIPL2kO8UnYvxkvojG3nw0lJHFuISAVv6rq4PYJfwU=
+	t=1718023598; cv=none; b=BirR6r4AYpoJApkwAZaXOLa+iByqOS6hcu18tVJWUbsQ99X7dSD/FiJp4WUWtb1mEg71ik+Hk0F+d7WqKYkysfLBqH09bFcikeQhT4ETz53hmucTLaqDgMEFl5zj7BooTxGRFeRaknM157nCyx1M+YnLRqfFGZwVZuOaWkcPSXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718023584; c=relaxed/simple;
-	bh=1KSrYV9LSAMiVSDqg4YllA/qK2mV4TYwx0hJ+/HkKLw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S2TEGWkrQL1o62qNslenOWIj6Lrp8F8RIXV6gQXOSDFV84Tymv/MO3C9jnkY7ymobOWvyZPdWH5onfhLzu/LocEzWCJHfJMWYOBH3n56r8Y6iIWZMYws5a7uYvI59+mdISMdptrBer7ZgoYtEvjGvmZ1BkrZNxLgXMX6S5I6Tjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BwVfcNT6; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1718023598; c=relaxed/simple;
+	bh=/TsoKlPKgUwADkaNAkW362K82F2Nen4EV7XUBkZ1CHc=;
+	h=Message-ID:From:To:Cc:References:Subject:Date; b=ktlbt/JiXrE8tUJZ9+vU/DcDTc0Gq2Yo4k/awDtueOzMC7DuHul/3HxpOmfUyf97BGy974QtlzEJaiah6UNWzq3Trf2Ou1G5yBT4zjlFR+OSuJr2mQRcj5LohacwT+wkr25XWoO7tHaifYCUCsCkrxTFXgz9SJ+tr0TMBqwogtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MO0KJjuY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UxyEC6a3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BwVfcNT6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=bN/MqI/H7ST5s3XZJ2g/NEy+WWWfgWgz/Insw+RA3PA=; b=BwVfcNT6d9uK+bJOp8evPMyN3M
-	Aoi5RqklnpHf7t6Xbf+RFXQdS4BMeQ5EHqxTtbQJA+hDCjY27zmkG9wythBzIaj+6rffWvt8/7Xcw
-	j0tp9VGMcW4LIQDvCAz7xuGoFlDfbfoj5mJdJgVxV0fmnf4wsgW7i53lKO/CaE20z1jI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sGePX-00HISO-TM; Mon, 10 Jun 2024 14:46:07 +0200
-Date: Mon, 10 Jun 2024 14:46:07 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Vineeth Karumanchi <vineeth.karumanchi@amd.com>
-Cc: nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux@armlinux.org.uk, vadim.fedorenko@linux.dev,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, git@amd.com
-Subject: Re: [PATCH net-next v4 3/4] net: macb: Add ARP support to WOL
-Message-ID: <b46427d8-2b8c-4b26-b53a-6dcc3d0ea27f@lunn.ch>
-References: <20240610053936.622237-1-vineeth.karumanchi@amd.com>
- <20240610053936.622237-4-vineeth.karumanchi@amd.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MO0KJjuY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UxyEC6a3"
+Message-ID: <20240610124258.109097511@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718023594;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:references:references;
+	bh=FsQNfIfCZdpRIUYvcxVTP8HeQd6Yn4tO5uFSTgix0J0=;
+	b=MO0KJjuYdNlTHf3FHMWGoHd94zfX+T6d04MNFHGXcLyqaul1fMLiLjLxbY5H3i9H4zICKz
+	OGUJJ+WBuc1UCkC8ecPJvTQAf2978QYS4SWD4STLNfEMkLUsr57lAgwD115ZRgK4KmuPJE
+	qEsYZ6REdg4bIbhRoMj3hpeO2pRk5wpGF1hypTmEP42g5xhXREPB2I2NjKigjRSyT5+laq
+	LYo/Ty9SyLmU3DswnMAMUELqS5OFguhCGb1NYx1Fi+yogWSCa5haOHwoSCNE8Bc07lFwGW
+	fe+Mq3DKDMXbmN+bV9rUUC3QY6JQsR0U0nzAyXLWlVbtryd76u37bzZTRcyFeg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718023594;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:references:references;
+	bh=FsQNfIfCZdpRIUYvcxVTP8HeQd6Yn4tO5uFSTgix0J0=;
+	b=UxyEC6a3kfMYPZzVcCiaGPW+0lI81F54Pj3sk1PYLYVjHW5PE8aVCITziQQPLc46B8ZEEc
+	+mhVExej2M8Z6GDQ==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Sam Sun <samsun1006219@gmail.com>,
+ x86@kernel.org,
+ syzkaller-bugs@googlegroups.com,
+ xrivendell7@gmail.com
+References: <87bk49xf15.ffs@tglx>
+Subject: [patch 0/4] perf/x86, jump_label: Cure serialization issues
+Date: Mon, 10 Jun 2024 14:46:34 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240610053936.622237-4-vineeth.karumanchi@amd.com>
 
-> @@ -3294,22 +3292,15 @@ static int macb_set_wol(struct net_device *netdev, struct ethtool_wolinfo *wol)
->  
->  	/* Pass the order to phylink layer */
->  	ret = phylink_ethtool_set_wol(bp->phylink, wol);
-> -	/* Don't manage WoL on MAC if handled by the PHY
-> -	 * or if there's a failure in talking to the PHY
-> -	 */
-> -	if (!ret || ret != -EOPNOTSUPP)
-> +	/* Don't manage WoL on MAC if there's a failure in talking to the PHY */
-> +	if (!!ret && ret != -EOPNOTSUPP)
->  		return ret;
+Yue and Xingwei reported a syzkaller crash related to the rdpmc attribute
+file and jump labels. It turns out to be lack of serialization in the
+attribute write path and non-robustness on the jump label side.
 
-The comment is wrong. You could be happily talking to the PHY, it just
-does not support what you asked it to do.
+The following series addresses these issues.
 
-> @@ -5257,6 +5247,12 @@ static int __maybe_unused macb_suspend(struct device *dev)
->  		return 0;
->  
->  	if (bp->wol & MACB_WOL_ENABLED) {
-> +		/* Check for IP address in WOL ARP mode */
-> +		ifa = rcu_dereference(__in_dev_get_rcu(bp->dev)->ifa_list);
-> +		if ((bp->wolopts & WAKE_ARP) && !ifa) {
-> +			netdev_err(netdev, "IP address not assigned\n");
+Thanks,
 
-"IP address not assigned" on its own does not give a user whos suspend
-fails a very good idea why.  "IP address not assigned as required by
-WoL walk ARP" would be better.
-
-
-    Andrew
-
+	tglx
 ---
-pw-bot: cr
+ arch/x86/events/core.c |    3 ++
+ kernel/jump_label.c    |   67 ++++++++++++++++++++++++++++---------------------
+ 2 files changed, 42 insertions(+), 28 deletions(-)
+
+
