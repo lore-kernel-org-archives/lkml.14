@@ -1,113 +1,214 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D6F14658E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AE712DDBF;
+	Mon, 10 Jun 2024 16:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718038043; cv=none; b=bgkNSUYfmuaT6/fiFD9vAk+kkdKKIwaDsrwemWTFSi/d/nFKltFHjgMxiPc0sFeAqs+YLwh/YniM7zX+iu+qtrtiw9UOlLP/g1GnB95XamqYqlsGs7E0IhyREDPm/S2Ax4hcjP9jdEpKlOgpU9IBDOjbLWMGAsxp4rn4YKTgv3U=
+	t=1718038220; cv=none; b=aC3G35f3z1ipj0JXLDOA9623thb0vDpepYv7mUZp068pzap0XKg2drUnQR+uAOiz0l1yV02VjOKyWGtUlE6ufq7g+ZhJIAfBOQQSgyZ1zPzf+0aposX0yHkbr8CUuV82KATGRHvSAmdWQzYYPbzPfEybUMYNOspegqtsbLnLbZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718038043; c=relaxed/simple;
-	bh=4Hj9IG1LMlzHH3A3y0qYTvhcNtKcDqLmxJ6EzjUt+qQ=;
+	s=arc-20240116; t=1718038220; c=relaxed/simple;
+	bh=2Pysp2MIMTNGwRVr9lAmW3t1K3ysiVl+gKSN5E4c1WY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PABKVWyoPRzn63oZeP5jz+rL2bmQdRDBK8ise98Fb3eAFVR+unIBRI3xNuOtVTrQ1oFOnrgCtA7dwW5LCRmliycdOFp6bZmt7YsEJJy81p9donBBT/XsUQwcOxGW6n6MgDF7tlcfijGPBizoX8D7lsOSBewGIJaEne9JBIck1ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CEmR3EIJ; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=D+zUc2w/JjrwnxZL+hI9NX9PmJIpM3uHUzfMbm2bk7KfIfsMEzVqge7ei84WdisUCGSCrykXvQ6mrEmoE/KVpEyd6Ob2c628wuLtwoLsBpmMcyhNOmB6qbh3zopXfOwF4YWOUNKe5qIwKq6+j0+TXaYIx6Ht6v2kAQ2M1q21oB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0ByqorSj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tyx90Pd1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CEmR3EIJ"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-704261a1f67so156028b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 09:47:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718038041; x=1718642841; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GltpCEOROqdEZtPzqZDYIjfn931I+xP8uUPheSuWph8=;
-        b=CEmR3EIJ4PoH1DfyHnjBX5hNlJ9uYuGFk88XT3SmMao9uI6Yhe9HXqP6qybWOG58NH
-         fnhSlY5S46dpm4rzVDVm+NMbaXkIcTPyznOTFHXaTX/ofyA6DreOeUZInOV3JlCdgWyg
-         2WGbd+J+2ugZEXDzReyiifJU272zUmi2XbvSaQR5tIO9ihLHh/2Qfybd5K0U8QqUk0P7
-         PI5fL5kHL9laNZZkQq+hMaea4cWSyZGw1lBGGt5tL3pn7YOzZVCYBvk9YpYhEjH43uSW
-         ++THTrMQ0oFbUjDDKsaGL1knxZCPu6MWHYQDHqec5YBNdnqyxAhH+IawtAoFdcCfP+Aw
-         sEdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718038041; x=1718642841;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GltpCEOROqdEZtPzqZDYIjfn931I+xP8uUPheSuWph8=;
-        b=gp3Zb3Rdr4Ra+3SVQFghrON7gua6BPPHNFcdUqLEljR+TVODsmA5Mni/Nbz71hsfRz
-         eu2H1fJHBO+Ih0E0vsFKBEhCOQjiZ/J1PfYAIF6Dald0yhKsW6iLvnPY+aD8Mv0YqlK8
-         hLM7CU4KJHpw5pnm+bANl57Uuia8HdUdXlVmEUkVY8HSEi/my+CHJbULwAOlG9skez+r
-         9jBO3Wcg8qTE+ze5qFXdmkoaLHyWjsxmhP4esC+bQKY4s62dIBs1qNi8oVW/BUGh+ue4
-         RqUN7UgAwv/LeWWnDlAbP6aahOAo3KDyJk/MDMSfFuCJnosR49PCnXtlMLG9Fg3EgkKX
-         wD5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVePgDDnOvdPsNBPzvIUTs0cqNu0i6Eo4AS4RltJjBJDLJj60lmq3FKgbjKlvBQ+Kdn9lKaOFbkS0YS/FcUPMY3jGeNYE1y46LriYlO
-X-Gm-Message-State: AOJu0YyiktO2lGYx9kyDXvgBwS2Gavsekr6CPi6xJXLoDnfVGSJ3+XdI
-	ee+uaIVOT5KEbA1s9uEMBtuN8U9mBd3u4/ItpVdcDNffuFKDxzqHMEa76xi7Jjs=
-X-Google-Smtp-Source: AGHT+IGb/lXCCC+JbIDGUdr375qb0RgEL7LsqGDkkx+quxB1SnI5zlcCI8SeIz3Y9Zc+WyklRsuyOQ==
-X-Received: by 2002:a05:6a00:8506:b0:704:25de:f297 with SMTP id d2e1a72fcca58-70425def3f2mr4676511b3a.29.1718038041356;
-        Mon, 10 Jun 2024 09:47:21 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:9b34:fecc:a6c:e2bc])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70426cc74f3sm4045691b3a.35.2024.06.10.09.47.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 09:47:20 -0700 (PDT)
-Date: Mon, 10 Jun 2024 10:47:17 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Aleksandr Mishin <amishin@t-argos.ru>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH] remoteproc: imx_rproc: Adjust phandle parsing issue
- while remapping optional addresses in imx_rproc_addr_init()
-Message-ID: <ZmcuFRfjKRQG9OXI@p14s>
-References: <20240606075204.12354-1-amishin@t-argos.ru>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0ByqorSj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tyx90Pd1"
+Date: Mon, 10 Jun 2024 18:50:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718038216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZUG8qT1jsbNQmFGMO0jjotiUr6xGaSvGZ7FTw1KrNLE=;
+	b=0ByqorSjazMn8M2XIEnEhO48pkpn9COrv/EkcBqZwsLeJqnRm4+408sO1yGSdxDymrtYRw
+	RlznT1rpxRT2KvWzDHwTgIS7EoqHsn+JSyNuO0XRxjhQO2y7mcznORbUkj7ItFk9PRaULt
+	DvrQyGM4mVnb7ii8JP+bEl4F/xtOTFYmjE+i1ACssWSPfcouxzgGClq1ynEc40YZEgd5tt
+	M8QRJ4cE/tD2iqE+a6iym0IhGq5uARoSfpO9ULNgXQFZ0Qt34jrblh5wMU1kcuu+x9BNsC
+	Koc3CQvFChHC4OqgkR2js6gbOLoAX3ea+4JpYXciGpnnFS3ru5CvOCzFs7h95Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718038216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZUG8qT1jsbNQmFGMO0jjotiUr6xGaSvGZ7FTw1KrNLE=;
+	b=tyx90Pd14x/Bvtq0Buh0VU7Pp4BJaXnt7eyfGHvApZgLFw6vHD+QX2jjH/0cbGqK+EgTIx
+	Rb42yDJC1c1L/VBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Yonghong Song <yonghong.song@linux.dev>, bpf@vger.kernel.org
+Subject: Re: [PATCH v5 net-next 14/15] net: Reference bpf_redirect_info via
+ task_struct on PREEMPT_RT.
+Message-ID: <20240610165014.uWp_yZuW@linutronix.de>
+References: <20240607070427.1379327-1-bigeasy@linutronix.de>
+ <20240607070427.1379327-15-bigeasy@linutronix.de>
+ <045e3716-3c3a-4238-b38a-3616c8974e2c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240606075204.12354-1-amishin@t-argos.ru>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <045e3716-3c3a-4238-b38a-3616c8974e2c@kernel.org>
 
-On Thu, Jun 06, 2024 at 10:52:04AM +0300, Aleksandr Mishin wrote:
-> In imx_rproc_addr_init() "nph = of_count_phandle_with_args()" just counts
-> number of phandles. But phandles may be empty. So of_parse_phandle() in
-> the parsing loop (0 < a < nph) may return NULL which is later dereferenced.
-> Adjust this issue by adding NULL-return check.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Fixes: a0ff4aa6f010 ("remoteproc: imx_rproc: add a NXP/Freescale imx_rproc driver")
-> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
-> ---
->  drivers/remoteproc/imx_rproc.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 5a3fb902acc9..39eacd90af14 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -726,6 +726,8 @@ static int imx_rproc_addr_init(struct imx_rproc *priv,
->  		struct resource res;
->  
->  		node = of_parse_phandle(np, "memory-region", a);
-> +		if (!node)
+On 2024-06-07 13:51:25 [+0200], Jesper Dangaard Brouer wrote:
+> The memset can be further optimized as it currently clears 64 bytes, but
+> it only need to clear 40 bytes, see pahole below.
+>=20
+> Replace memset with something like:
+>  memset(&bpf_net_ctx->ri, 0, offsetof(struct bpf_net_context, ri.nh));
+>=20
+> This is an optimization, because with 64 bytes this result in a rep-stos
+> (repeated string store operation) that on Intel touch CPU-flags (to be
+> IRQ safe) which is slow, while clearing 40 bytes doesn't cause compiler
+> to use this instruction, which is faster.  Memset benchmarked with [1]
 
-You're missing an "of_node_put()" before continuing.
+I've been playing along with this and have to say that "rep stosq" is
+roughly 3x slower vs "movq" for 64 bytes on all x86 I've been looking
+at.
+For gcc the stosq vs movq depends on the CPU settings. The generic uses
+movq up to 40 bytes, skylake uses movq even for 64bytes. clang=E2=80=A6
+This could be tuned via -mmemset-strategy=3Dlibcall:64:align,rep_8byte:-1:a=
+lign
 
-> +			continue;
->  		/* Not map vdevbuffer, vdevring region */
->  		if (!strncmp(node->name, "vdev", strlen("vdev"))) {
->  			of_node_put(node);
-> -- 
-> 2.30.2
-> 
-> 
+I folded this into the last two patches:
+
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index d2b4260d9d0be..1588d208f1348 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -744,27 +744,40 @@ struct bpf_redirect_info {
+ 	struct bpf_nh_params nh;
+ };
+=20
++enum bpf_ctx_init_type {
++	bpf_ctx_ri_init,
++	bpf_ctx_cpu_map_init,
++	bpf_ctx_dev_map_init,
++	bpf_ctx_xsk_map_init,
++};
++
+ struct bpf_net_context {
+ 	struct bpf_redirect_info ri;
+ 	struct list_head cpu_map_flush_list;
+ 	struct list_head dev_map_flush_list;
+ 	struct list_head xskmap_map_flush_list;
++	unsigned int flags;
+ };
+=20
++static inline bool bpf_net_ctx_need_init(struct bpf_net_context *bpf_net_c=
+tx,
++					 enum bpf_ctx_init_type flag)
++{
++	return !(bpf_net_ctx->flags & (1 << flag));
++}
++
++static inline bool bpf_net_ctx_set_flag(struct bpf_net_context *bpf_net_ct=
+x,
++					enum bpf_ctx_init_type flag)
++{
++	return bpf_net_ctx->flags |=3D 1 << flag;
++}
++
+ static inline struct bpf_net_context *bpf_net_ctx_set(struct bpf_net_conte=
+xt *bpf_net_ctx)
+ {
+ 	struct task_struct *tsk =3D current;
+=20
+ 	if (tsk->bpf_net_context !=3D NULL)
+ 		return NULL;
+-	memset(&bpf_net_ctx->ri, 0, sizeof(bpf_net_ctx->ri));
+-
+-	if (IS_ENABLED(CONFIG_BPF_SYSCALL)) {
+-		INIT_LIST_HEAD(&bpf_net_ctx->cpu_map_flush_list);
+-		INIT_LIST_HEAD(&bpf_net_ctx->dev_map_flush_list);
+-	}
+-	if (IS_ENABLED(CONFIG_XDP_SOCKETS))
+-		INIT_LIST_HEAD(&bpf_net_ctx->xskmap_map_flush_list);
++	bpf_net_ctx->flags =3D 0;
+=20
+ 	tsk->bpf_net_context =3D bpf_net_ctx;
+ 	return bpf_net_ctx;
+@@ -785,6 +798,11 @@ static inline struct bpf_redirect_info *bpf_net_ctx_ge=
+t_ri(void)
+ {
+ 	struct bpf_net_context *bpf_net_ctx =3D bpf_net_ctx_get();
+=20
++	if (bpf_net_ctx_need_init(bpf_net_ctx, bpf_ctx_ri_init)) {
++		memset(&bpf_net_ctx->ri, 0, offsetof(struct bpf_net_context, ri.nh));
++		bpf_net_ctx_set_flag(bpf_net_ctx, bpf_ctx_ri_init);
++	}
++
+ 	return &bpf_net_ctx->ri;
+ }
+=20
+@@ -792,6 +810,11 @@ static inline struct list_head *bpf_net_ctx_get_cpu_ma=
+p_flush_list(void)
+ {
+ 	struct bpf_net_context *bpf_net_ctx =3D bpf_net_ctx_get();
+=20
++	if (bpf_net_ctx_need_init(bpf_net_ctx, bpf_ctx_cpu_map_init)) {
++		INIT_LIST_HEAD(&bpf_net_ctx->cpu_map_flush_list);
++		bpf_net_ctx_set_flag(bpf_net_ctx, bpf_ctx_cpu_map_init);
++	}
++
+ 	return &bpf_net_ctx->cpu_map_flush_list;
+ }
+=20
+@@ -799,6 +822,11 @@ static inline struct list_head *bpf_net_ctx_get_dev_fl=
+ush_list(void)
+ {
+ 	struct bpf_net_context *bpf_net_ctx =3D bpf_net_ctx_get();
+=20
++	if (bpf_net_ctx_need_init(bpf_net_ctx, bpf_ctx_dev_map_init)) {
++		INIT_LIST_HEAD(&bpf_net_ctx->dev_map_flush_list);
++		bpf_net_ctx_set_flag(bpf_net_ctx, bpf_ctx_dev_map_init);
++	}
++
+ 	return &bpf_net_ctx->dev_map_flush_list;
+ }
+=20
+@@ -806,6 +834,11 @@ static inline struct list_head *bpf_net_ctx_get_xskmap=
+_flush_list(void)
+ {
+ 	struct bpf_net_context *bpf_net_ctx =3D bpf_net_ctx_get();
+=20
++	if (bpf_net_ctx_need_init(bpf_net_ctx, bpf_ctx_xsk_map_init)) {
++		INIT_LIST_HEAD(&bpf_net_ctx->xskmap_map_flush_list);
++		bpf_net_ctx_set_flag(bpf_net_ctx, bpf_ctx_xsk_map_init);
++	}
++
+ 	return &bpf_net_ctx->xskmap_map_flush_list;
+ }
+=20
+
+Sebastian
