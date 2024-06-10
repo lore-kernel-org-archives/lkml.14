@@ -1,116 +1,205 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8365A282EA
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 10:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54CE282EA
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 10:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718013802; cv=none; b=bUcPyY8seAfT1iH54ClTsBbVfTDbKyzS9y9oA0TNWNClHbkWVyoK9gMF6WWOyEKBdlC34i076q4dE5TzODQboGA8ARLulA0cqoYRsOJS+Vp6B7wfj20hb4cC36gQ2f20ERD/YKTid/RHqJsHrVDveQNE7rc0IbakMdn4XgL2rGo=
+	t=1718013853; cv=none; b=AslIFMbMNLmKRZ6gzkSVZsyPCrxz+PIvMbkPODt3btBLnsD04kH1aWRSbg2gzvf8qlsFVYShPR+vcwlha8Tk6XPwSZcJUWSabgoh42djzII5EjVFFClY55vJjg1XcgLPTWAVpDB4EFWFK5F0OpbQSCUn+ukfg6dAowP6PqiuHLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718013802; c=relaxed/simple;
-	bh=O4eiKS04y/mJNA2a+wGR3xNIR6Msr41jQF9cKUECQDg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FpPXXimwYHyRjflywGPBQcqwOLyi5tnw7/H+ZY8IOlqjXoJ+eHTmHHMzmE8CiWCQk9MscLiZoSVKqdAw1BHxFSi2U1krjYQffEHnMsChI6B/BXEgUicEgBA60NrgrDesTqaYAcd3n5j4hHFbDxWsLu6YaQ5LzHComoOk7hp6Sgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N5Wucjtg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718013853; c=relaxed/simple;
+	bh=M+z9EGehKc7WekRDesUv7b2e6+dLTQHN5H+ZQO0R5LA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DUk6eoFHTYqIsVUN35ypCdQuBp5+Lxa7iEgY5cs70DFjwrBMjNoFHORoI1uEEHZ9fGRrLW6tFceq0mI+rPFUTqd7inIkB+NNaXsCztGf6gDOl73XSXHJiyJyVg1Me71JJ149N5onfFNEC4PKWKlXwAuEBTxZ/0a9/VMkhIGSoBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=p4fUkysN; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N5Wucjtg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718013799;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6SjRN+Ta23NhBrV4wAjIcv/ybzI9M6kM5ZjqQZnSysQ=;
-	b=N5Wucjtg/FSp0rFXAcz/YYuxdjkMi0lKS69fpfYHXoEMedR6X7mXDT2XRxPaQKbS3Q1Aor
-	wZj1QaS8DEECvNpkfWjiqyTHGZKoqFzOiDyy7pIc0pjOzU2iVUqxMbtWo25cUkfuFFDOwT
-	cqGDmt3rorHToU0y8Ih/+M/nI0S4QdI=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-600-UHajX1EVNbi7Hpo5cs4OoQ-1; Mon,
- 10 Jun 2024 06:03:12 -0400
-X-MC-Unique: UHajX1EVNbi7Hpo5cs4OoQ-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5D7E41954213;
-	Mon, 10 Jun 2024 10:03:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.117])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 764EC1956089;
-	Mon, 10 Jun 2024 10:03:05 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 10 Jun 2024 12:01:40 +0200 (CEST)
-Date: Mon, 10 Jun 2024 12:01:34 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave@sr71.net>, Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>
-Subject: Re: [PATCH 6/9] x86/fpu: Make sure x86_task_fpu() doesn't get called
- for PF_KTHREAD tasks during exit
-Message-ID: <20240610100133.GA20640@redhat.com>
-References: <20240608073134.264210-1-mingo@kernel.org>
- <20240608073134.264210-7-mingo@kernel.org>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="p4fUkysN"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-354b722fe81so3635336f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 03:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1718013850; x=1718618650; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hgW8B70Q8zX7acFGE+7FKzyC1rI3PYnZTOkuVMqMUeM=;
+        b=p4fUkysNAAmS3y6BvkkKl96K1aimot1o+27iV3h8jsAJt2J0oDjoEHQwARrrDRU1+9
+         J3SlTk7QaYoQhhBMydqdopBM4xSDFInp2E8VWVaESmUR6o5pJz+AxiMtg6tixUbzFn/3
+         t1+KfW8AX+IWqzM8whW2HHyYjrn1vtiTmGIzaaQ7Z1C/Z9s/itAWG2y+JhZYXqku0dfN
+         Pa5uIXMGsCitU4MzV0+dga0dg3gRWxz5llPYeRd+CSK85s0aSvA79YQkrvobY6bXlKNy
+         OcU7NgFFqgjL06UzvZ5nglK8L+fHfxMBk3ocq2DR+lomrRcLVchJ1ENH691HJXTnmgc5
+         yfLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718013850; x=1718618650;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hgW8B70Q8zX7acFGE+7FKzyC1rI3PYnZTOkuVMqMUeM=;
+        b=sjAHoTq6+FCtIJtXbGp20Oek7p9OFPUhagE7CvVFaWL1iBP/kryEpTCiAPmysr7AJ/
+         8TEDkucFcgl5i+nvjSxZPIgOTFaQB0c0tevprQynHe6nLTn3axnOWO/AxLrNj9cM6Ujo
+         +xe9u1gNhCLNiiCyFrlkmqzN6zgQ78eJ8+yZfeLM61OVCKGNjqU9aXAdGXl+IKNbj1iX
+         VKuYz9Rep6p8pdORxl+7SfKW9vZ4H0WxTi1VmuH+qvKQ4jf+UuvXFreYije4WqXPN93e
+         zxNey/Iprooh+BIkiuJxt0QLCB88htians9wHIdQgggfDgox5Fi5J9xjdEnO5jBjOe3p
+         6gRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWM2+mv9AZ4J2vW7iJkZHEs7iX610RTkRxfk33LnkA9SiGntSasHbrSy1l/DQuTAFd7/yuDPTPP9rSDOo3/pbtUIqZsMxBpKGc7uhoc
+X-Gm-Message-State: AOJu0YxV5tjOKCj4l0idO/LqktPYGImUvJbcZzN4RTNBC4Ci9Iazvu+d
+	Se+pvIP05p6mjra4W/HcIfq5kLtQkm5dvOsmMARtLhAI1by6U4f03gLgzxU2l5M=
+X-Google-Smtp-Source: AGHT+IGSgkd3LqLIyxqDoIX0DW/WYOv65XykZ7jmOpZ9kbZonCQsXNHJT+NKtkJEDBC3j4DrawCjIw==
+X-Received: by 2002:adf:f6c4:0:b0:35f:16a4:6b99 with SMTP id ffacd0b85a97d-35f16a46c11mr2450784f8f.4.1718013850018;
+        Mon, 10 Jun 2024 03:04:10 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:afd3:66ee:5486:4249])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f0e49e898sm6844132f8f.22.2024.06.10.03.04.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 03:04:09 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Dmitry Rokosov <ddrokosov@salutedevices.com>
+Cc: <neil.armstrong@linaro.org>,  <mturquette@baylibre.com>,
+  <sboyd@kernel.org>,  <robh+dt@kernel.org>,
+  <krzysztof.kozlowski+dt@linaro.org>,  <khilman@baylibre.com>,
+  <martin.blumenstingl@googlemail.com>,  <jian.hu@amlogic.com>,
+  <kernel@sberdevices.ru>,  <rockosov@gmail.com>,
+  <linux-amlogic@lists.infradead.org>,  <linux-clk@vger.kernel.org>,
+  <devicetree@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-arm-kernel@lists.infradead.org>,  Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 6/7] dt-bindings: clock: meson: add A1 CPU clock
+ controller bindings
+In-Reply-To: <20240515185103.20256-7-ddrokosov@salutedevices.com> (Dmitry
+	Rokosov's message of "Wed, 15 May 2024 21:47:29 +0300")
+References: <20240515185103.20256-1-ddrokosov@salutedevices.com>
+	<20240515185103.20256-7-ddrokosov@salutedevices.com>
+Date: Mon, 10 Jun 2024 12:04:09 +0200
+Message-ID: <1jtti1p10m.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240608073134.264210-7-mingo@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain
 
-The whole series looks good to me, and afaics 7/9 allows more
-cleanups / improvements.
+On Wed 15 May 2024 at 21:47, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
 
-But let me ask a stupid question about fpu__drop(), I know nothing
-about fpu asm.
-
-fpu__drop() does
-
-	/* Ignore delayed exceptions from user space */
-	asm volatile("1: fwait\n"
-
-and this comment predates the git history. Could someone explain
-why exactly the exiting user-space thread needs fwait ?
-
-And if it is needed, suppose that a kernel thread exits right
-after kernel_fpu_end(), can this lead to the delayed exception?
-
-
-And otoh, perhaps fpu__drop() can set TIF_NEED_FPU_LOAD to avoid
-switch_fpu_prepare()->save_fpregs_to_fpstate() on its path to the
-final schedule?
-
-
-On 06/08, Ingo Molnar wrote:
+> Add the documentation and dt bindings for Amlogic A1 CPU clock
+> controller.
 >
->  void fpu__drop(struct task_struct *tsk)
->  {
-> -	struct fpu *fpu = x86_task_fpu(tsk);
-> +	struct fpu *fpu;
+> This controller consists of the general 'cpu_clk' and two main parents:
+> 'cpu fixed clock' and 'syspll'. The 'cpu fixed clock' is an internal
+> fixed clock, while the 'syspll' serves as an external input from the A1
+> PLL clock controller.
+>
+> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/clock/amlogic,a1-cpu-clkc.yaml   | 64 +++++++++++++++++++
+>  .../dt-bindings/clock/amlogic,a1-cpu-clkc.h   | 19 ++++++
+>  2 files changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-cpu-clkc.yaml
+>  create mode 100644 include/dt-bindings/clock/amlogic,a1-cpu-clkc.h
+>
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-cpu-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-cpu-clkc.yaml
+> new file mode 100644
+> index 000000000000..f4958b315ed4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-cpu-clkc.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/amlogic,a1-cpu-clkc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	/* PF_KTHREAD tasks do not use the FPU context area: */
-> +	if (tsk->flags & PF_KTHREAD)
-> +		return;
+> +title: Amlogic A1 CPU Clock Control Unit
+> +
+> +maintainers:
+> +  - Neil Armstrong <neil.armstrong@linaro.org>
+> +  - Jerome Brunet <jbrunet@baylibre.com>
+> +  - Dmitry Rokosov <ddrokosov@salutedevices.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: amlogic,a1-cpu-clkc
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: input fixed pll div2
+> +      - description: input fixed pll div3
+> +      - description: input sys pll
+> +      - description: input oscillator (usually at 24MHz)
 
-I think it can already do
+According to the documentation, fdiv5 is also an input of the CPU clock
+tree.
 
-	if (tsk->flags & (PF_KTHREAD | PF_USER_WORKER))
-		return;
+That is typically the kind of things we'd prefer to get right from the
+beginning to avoid modifying the bindings later.
 
-This matches other similar checks. But I won't insist, and I
-think all these checks need some cleanups anyway.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: fclk_div2
+> +      - const: fclk_div3
+> +      - const: sys_pll
+> +      - const: xtal
+> +
+> +required:
+> +  - compatible
+> +  - '#clock-cells'
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/amlogic,a1-pll-clkc.h>
+> +    apb {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        clock-controller@fd000000 {
+> +            compatible = "amlogic,a1-cpu-clkc";
+> +            reg = <0 0xfd000080 0 0x8>;
 
-Oleg.
+If reg is <0 0xfd000080 0 0x8> then node name should be clock-controller@fd000080
 
+> +            #clock-cells = <1>;
+> +            clocks = <&clkc_pll CLKID_FCLK_DIV2>,
+> +                     <&clkc_pll CLKID_FCLK_DIV3>,
+> +                     <&clkc_pll CLKID_SYS_PLL>,
+> +                     <&xtal>;
+> +            clock-names = "fclk_div2", "fclk_div3", "sys_pll", "xtal";
+> +        };
+> +    };
+> diff --git a/include/dt-bindings/clock/amlogic,a1-cpu-clkc.h b/include/dt-bindings/clock/amlogic,a1-cpu-clkc.h
+> new file mode 100644
+> index 000000000000..1d321c6eddb7
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/amlogic,a1-cpu-clkc.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
+> +/*
+> + * Copyright (c) 2024, SaluteDevices. All Rights Reserved.
+> + * Author: Dmitry Rokosov <ddrokosov@salutedevices.com>
+> + */
+> +
+> +#ifndef __A1_CPU_CLKC_H
+> +#define __A1_CPU_CLKC_H
+> +
+> +#define CLKID_CPU_FSOURCE_SEL0	0
+> +#define CLKID_CPU_FSOURCE_DIV0	1
+> +#define CLKID_CPU_FSEL0		2
+> +#define CLKID_CPU_FSOURCE_SEL1	3
+> +#define CLKID_CPU_FSOURCE_DIV1	4
+> +#define CLKID_CPU_FSEL1		5
+> +#define CLKID_CPU_FCLK		6
+> +#define CLKID_CPU_CLK		7
+> +
+> +#endif /* __A1_CPU_CLKC_H */
+
+-- 
+Jerome
