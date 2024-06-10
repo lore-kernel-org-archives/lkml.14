@@ -1,151 +1,142 @@
-Received: from flow1-smtp.messagingengine.com (flow1-smtp.messagingengine.com [103.168.172.136])
+Received: from mail115-24.sinamail.sina.com.cn (mail115-24.sinamail.sina.com.cn [218.30.115.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E991DFD0;
-	Mon, 10 Jun 2024 09:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF517406A
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 09:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718012463; cv=none; b=ZXcq+8u6IJt5XKh9lDmPCzr+QcIM0TFxEaiXTaO3/rDZOC8eP/bVRugA5cWlRaP2j3zMY2UpqPmPu1WoT9sEUnlfiaxGkp5qxqJ/7kNg4ngtdsgtf2BZyiswt1f7mm26Rp8Zza67mTem+wbB7T/e5SOx98nyZRSUMI60nt0oDRU=
+	t=1718012632; cv=none; b=mKMkiVnMClM5AxMcJ1EPGbUzhMcQT9+T9Qv/WLtjnqjJVvoAMqgKYbZrI26vJGq+oNy01/R/KjxF1woarsJw/ZSba516TPuQ6OpuSj46MVTqE7i2qGPYIzbgymSkeNpn7iHj4dSUog7o//+c4LTDpuOg8EOs6mvhBzaYCFJY8p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718012463; c=relaxed/simple;
-	bh=KNKCKklTuYVMpCezbUE7O/dEuK5srQjktU+JvcvNVFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ray4flBOg0A/9wGOjrVmFWjz2jI2hvpmFvY7YtQblUaTiWuvP/Cy9hNbDzk13ariUrL6gwx8JG9HtItIv95tzIMvwXUHeg+oYcrRdTZ0r9jToDgXVl0SyhhMrsyOuBzR6siQkq/Q1hxTR7tZUJK/HJLZJnw9vs4hnSdCCs1TrIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=RabQY3O+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LEIkqa0S; arc=none smtp.client-ip=103.168.172.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="RabQY3O+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LEIkqa0S"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailflow.nyi.internal (Postfix) with ESMTP id 963B22005E8;
-	Mon, 10 Jun 2024 05:41:00 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 10 Jun 2024 05:41:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1718012460;
-	 x=1718016060; bh=+ir2CVbBvWnglzlujH/fXHt0aYyVxse9Z8DINg2urHY=; b=
-	RabQY3O+4UNdZ0WFareLb30ij2ij24ABk6Lbynu1oSJqzBNhkIQQWgVpYAt6nxZs
-	xtCHgP0hZbwR5BCOd3+A6byK5nCv8/C39etwGTzwROaBpProdCKhOoilOPHqfX4G
-	9BPEw8rqUJ2b4bKJGD097P+GyZmNRYnlE9r5l/3qfgNTjwSIOS5iRdJ2/lcaKWol
-	Ags4NKBIAEP4oDf6E5eP9xySuXZbbf3Rf+ZjrT1E/LFJ3zILwD3bPZl1TONdqocr
-	gWE553KoKC/NxwfzjGl7vRY02Hm/52TNnjdQsoEmz4LyEbSX88ictmd9TYed7QO8
-	Vi4saa1D9ANVTGK3GtTJ1Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718012460; x=
-	1718016060; bh=+ir2CVbBvWnglzlujH/fXHt0aYyVxse9Z8DINg2urHY=; b=L
-	EIkqa0ScrIZM+LbM+UQmyBMYTjnw/MyuAVysR6rU8V05ivy3cj/G/xnKynMg4RwD
-	eolvhub/c6EaaAHYadJ+LHXze9kE8kbNYL8xHi+ro2PkwCbmS7v5nIj546/lDQk9
-	yJwzxlK8VjIJ/0IDp2oqBanZ0aNkMNYqHjbhqleFLcoB499khNfsSlT1yTzGh7v9
-	EmPyHRchH8a+BvKi2JzSqd9BNH9HaOU+crMxGt5PAY7FNdjtc9zGlv90XwpX/kNt
-	z61R4Y3DicCu3qYARJku45VG37c3eRLbXkqD58xvt5HnwEavfIXbEfD+lINrb+ee
-	2mSP7VhAJ0kfxhctfS5Hw==
-X-ME-Sender: <xms:LMpmZkGE-eflvtIEwsg6gkccJ5iKsFDRlanTQlH5RisFANCJdKJnyA>
-    <xme:LMpmZtXR8YOXh-iU4niksBMDtYtw-CmQPn8lCGVt2gaM45IzD-8NGWoyXDI4nWDoL
-    kkOeYccTP4-FZd7dtM>
-X-ME-Received: <xmr:LMpmZuINOI586a9DVmBFpEqsB_OfZXOtQGQ0GqS9akWHKky-9_zNVRIlXhBtNkRDHXLyNKqvefaOW-1i3zckVOU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedutddgudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkefstddttdejnecuhfhrohhmpeflohhn
-    rghthhgrnhcuvegrlhhmvghlshcuoehjtggrlhhmvghlshesfeiggidtrdhnvghtqeenuc
-    ggtffrrghtthgvrhhnpeetgedutdfggeetleefhfeuhedtheduteekieduvdeigeegvdev
-    vddtieekiedvheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpehjtggrlhhmvghlshesfeiggidtrdhnvght
-X-ME-Proxy: <xmx:LMpmZmFhkvdeqlm-6M4BTtRkSBGnJu2kqG8SVUIoAI2XSG7pv1KIXQ>
-    <xmx:LMpmZqVggAwTWlvn6rCYXTiNLWrcaJIw9cfxq4zj3Pn-ofQbzZexnQ>
-    <xmx:LMpmZpMAgFgbzUj73s7QZU5vvEe0Q_iTEiktwCD-tvDzkRrejVc9lg>
-    <xmx:LMpmZh3iJSOiy9Hq-l1xA5WL35QxoPplcGdH5uexvRTvlDPFSPP6Sw>
-    <xmx:LMpmZjUhtKFQlMDDlAkcUK3LjflnnZDUVoqCSrR42egFwU8ZMoeN9jzO>
-Feedback-ID: i76614979:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Jun 2024 05:40:56 -0400 (EDT)
-Date: Mon, 10 Jun 2024 02:46:06 -0700
-From: Jonathan Calmels <jcalmels@3xx0.net>
-To: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: brauner@kernel.org, ebiederm@xmission.com,
- 	Jonathan Corbet <corbet@lwn.net>, Paul Moore <paul@paul-moore.com>,
- 	James Morris <jmorris@namei.org>, KP Singh <kpsingh@kernel.org>,
- 	Matt Bobrowski <mattbobrowski@google.com>,
- Alexei Starovoitov <ast@kernel.org>,
- 	Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>,
- 	Martin KaFai Lau <martin.lau@linux.dev>,
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- 	Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>,
- 	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, 	Luis Chamberlain <mcgrof@kernel.org>,
- Kees Cook <kees@kernel.org>, 	Joel Granados <j.granados@samsung.com>,
- John Johansen <john.johansen@canonical.com>,
- 	David Howells <dhowells@redhat.com>,
- Jarkko Sakkinen <jarkko@kernel.org>,
- 	Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, 	Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, containers@lists.linux.dev,
- 	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-doc@vger.kernel.org, 	linux-security-module@vger.kernel.org,
- bpf@vger.kernel.org, apparmor@lists.ubuntu.com,
- 	keyrings@vger.kernel.org, selinux@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] capabilities: Add securebit to restrict userns
- caps
-Message-ID: <svpbmv37f5n537seb3cfsylnlzi6ftuad4dqi5unoycylmcf7r@6knq7sibdw7w>
-References: <20240609104355.442002-1-jcalmels@3xx0.net>
- <20240609104355.442002-3-jcalmels@3xx0.net>
- <20240610023301.GA2183903@mail.hallyn.com>
+	s=arc-20240116; t=1718012632; c=relaxed/simple;
+	bh=VDzE3RSwnrxU/yC/vUrKtkweZzQ3kekLxfWWailNru4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Ii2VuU3mIy4CNJBDkXC9KeBDGO7DHGGgFSMx190yYa8KZNZKEQXpicSCMhCubyEK1Qc7BHXQKoFPVkX7Xb/t3ForVEb5FL4IkEzj0Ljorsn7dLULDDe4pZO0CwCabVBDvMDTm985AkT6o8Wlggco8gfguhWyMJu0M26SOmkl3NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.88.51.173])
+	by sina.com (10.75.12.45) with ESMTP
+	id 6666CAC600006219; Mon, 10 Jun 2024 17:43:37 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 40054931457759
+X-SMAIL-UIID: 3FB5AC4B5CAB4E03AA8A8F19874F619D-20240610-174337-1
+From: Hillf Danton <hdanton@sina.com>
+To: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
+Cc: kbusch@kernel.org,
+	sagi@grimberg.me,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	sachinp@linux.vnet.com
+Subject: Re: Kernel OOPS while creating a NVMe Namespace
+Date: Mon, 10 Jun 2024 17:43:25 +0800
+Message-Id: <20240610094325.2156-1-hdanton@sina.com>
+In-Reply-To: <2312e6c3-a069-4388-a863-df7e261b9d70@linux.vnet.ibm.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240610023301.GA2183903@mail.hallyn.com>
 
-On Sun, Jun 09, 2024 at 09:33:01PM GMT, Serge E. Hallyn wrote:
-> On Sun, Jun 09, 2024 at 03:43:35AM -0700, Jonathan Calmels wrote:
-> > This patch adds a new capability security bit designed to constrain a
-> > task’s userns capability set to its bounding set. The reason for this is
-> > twofold:
-> > 
-> > - This serves as a quick and easy way to lock down a set of capabilities
-> >   for a task, thus ensuring that any namespace it creates will never be
-> >   more privileged than itself is.
-> > - This helps userspace transition to more secure defaults by not requiring
-> >   specific logic for the userns capability set, or libcap support.
-> > 
-> > Example:
-> > 
-> >     # capsh --secbits=$((1 << 8)) --drop=cap_sys_rawio -- \
-> >             -c 'unshare -r grep Cap /proc/self/status'
-> >     CapInh: 0000000000000000
-> >     CapPrm: 000001fffffdffff
-> >     CapEff: 000001fffffdffff
-> >     CapBnd: 000001fffffdffff
-> >     CapAmb: 0000000000000000
-> >     CapUNs: 000001fffffdffff
+On Mon, 10 Jun 2024 13:21:00 +0530 Venkat Rao Bagalkote wrote:
+> Greetings!!!
 > 
-> But you are not (that I can see, in this or the previous patch)
-> keeping SECURE_USERNS_STRICT_CAPS in securebits on the next
-> level unshare.  Though I think it's ok, because by then both
-> cap_userns and cap_bset are reduced and cap_userns can't be
-> expanded.  (Sorry, just thinking aloud here)
-
-Right this is safe to reset, but maybe we do keep it if the secbit is
-locked? This is kind of a special case compared to the other bits.
-
-> > +	/* Limit userns capabilities to our parent's bounding set. */
+> Observing Kernel OOPS, while creating namespace on a NVMe device.
 > 
-> In the case of userns_install(), it will be the target user namespace
-> creator's bounding set, right?  Not "our parent's"?
+> [  140.209777] BUG: Unable to handle kernel data access at 
+> 0x18d7003065646fee
+> [  140.209792] Faulting instruction address: 0xc00000000023b45c
+> [  140.209798] Oops: Kernel access of bad area, sig: 11 [#1]
+> [  140.209802] LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=8192 NUMA pSeries
+> [  140.209809] Modules linked in: rpadlpar_io rpaphp xsk_diag 
+> nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet 
+> nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat 
+> bonding nf_conntrack tls nf_defrag_ipv6 nf_defrag_ipv4 rfkill ip_set 
+> nf_tables nfnetlink vmx_crypto pseries_rng binfmt_misc fuse xfs 
+> libcrc32c sd_mod sg ibmvscsi scsi_transport_srp ibmveth nvme nvme_core 
+> t10_pi crc64_rocksoft_generic crc64_rocksoft crc64
+> [  140.209864] CPU: 2 PID: 129 Comm: kworker/u65:3 Kdump: loaded Not 
+> tainted 6.10.0-rc3 #2
+> [  140.209870] Hardware name: IBM,9009-42A POWER9 (raw) 0x4e0202 
+> 0xf000005 of:IBM,FW950.A0 (VL950_141) hv:phyp pSeries
+> [  140.209876] Workqueue: nvme-wq nvme_scan_work [nvme_core]
+> [  140.209889] NIP:  c00000000023b45c LR: c008000006a96b20 CTR: 
+> c00000000023b42c
+> [  140.209894] REGS: c0000000506078a0 TRAP: 0380   Not tainted (6.10.0-rc3)
+> [  140.209899] MSR:  800000000280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  
+> CR: 24000244  XER: 00000000
+> [  140.209915] CFAR: c008000006aa80ac IRQMASK: 0
+> [  140.209915] GPR00: c008000006a96b20 c000000050607b40 c000000001573700 
+> c000000004291ee0
+> [  140.209915] GPR04: 0000000000000000 c000000006150080 00000000c0080005 
+> fffffffffffe0000
+> [  140.209915] GPR08: 0000000000000000 18d7003065646f6e 0000000000000000 
+> c008000006aa8098
+> [  140.209915] GPR12: c00000000023b42c c00000000f7cdf00 c0000000001a151c 
+> c000000004f2be80
+> [  140.209915] GPR16: 0000000000000000 0000000000000000 0000000000000000 
+> 0000000000000000
+> [  140.209915] GPR20: c000000004dbcc00 0000000000000006 0000000000000002 
+> c000000004911270
+> [  140.209915] GPR24: 0000000000000000 0000000000000000 c0000000ee254ffc 
+> c0000000049111f0
+> [  140.209915] GPR28: 0000000000000000 c000000004911260 c000000004291ee0 
+> c000000004911260
+> [  140.209975] NIP [c00000000023b45c] synchronize_srcu+0x30/0x1c0
+> [  140.209984] LR [c008000006a96b20] nvme_ns_remove+0x80/0x2d8 [nvme_core]
+> [  140.209994] Call Trace:
+> [  140.209997] [c000000050607b90] [c008000006a96b20] 
+> nvme_ns_remove+0x80/0x2d8 [nvme_core]
+> [  140.210008] [c000000050607bd0] [c008000006a972b4] 
+> nvme_remove_invalid_namespaces+0x144/0x1ac [nvme_core]
+> [  140.210020] [c000000050607c60] [c008000006a9dbd4] 
+> nvme_scan_ns_list+0x19c/0x370 [nvme_core]
+> [  140.210032] [c000000050607d70] [c008000006a9dfc8] 
+> nvme_scan_work+0xc8/0x278 [nvme_core]
+> [  140.210043] [c000000050607e40] [c00000000019414c] 
+> process_one_work+0x20c/0x4f4
+> [  140.210051] [c000000050607ef0] [c0000000001950cc] 
+> worker_thread+0x378/0x544
+> [  140.210058] [c000000050607f90] [c0000000001a164c] kthread+0x138/0x140
+> [  140.210065] [c000000050607fe0] [c00000000000df98] 
+> start_kernel_thread+0x14/0x18
+> [  140.210072] Code: 3c4c0134 384282d4 7c0802a6 60000000 7c0802a6 
+> fbc1fff0 fba1ffe8 fbe1fff8 7c7e1b78 f8010010 f821ffb1 e9230010 
+> <e9290080> 7c2004ac 71290003 41820008
+> [  140.210093] ---[ end trace 0000000000000000 ]---
+> 
+> 
+> Issue is introduced by the patch: be647e2c76b27f409cdd520f66c95be888b553a3.
+> 
+> Reverting it, issue is not seen.
 
-Good point, I should reword this comment.
+See if refcnt leak existed before be647e2c76b2
+
+--- x/drivers/nvme/host/core.c
++++ y/drivers/nvme/host/core.c
+@@ -4078,6 +4078,7 @@ static void nvme_scan_work(struct work_s
+ 		return;
+ 	}
+ 
++	nvme_get_ctrl(ctrl);
+ 	if (test_and_clear_bit(NVME_AER_NOTICE_NS_CHANGED, &ctrl->events)) {
+ 		dev_info(ctrl->device, "rescanning namespaces.\n");
+ 		nvme_clear_changed_ns_log(ctrl);
+@@ -4097,6 +4098,7 @@ static void nvme_scan_work(struct work_s
+ 			nvme_scan_ns_sequential(ctrl);
+ 	}
+ 	mutex_unlock(&ctrl->scan_lock);
++	nvme_put_ctrl(ctrl);
+ }
+ 
+ /*
+--
