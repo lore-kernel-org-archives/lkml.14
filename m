@@ -1,76 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from alln-iport-6.cisco.com (alln-iport-6.cisco.com [173.37.142.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64185558A5;
-	Mon, 10 Jun 2024 21:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9AD1879;
+	Mon, 10 Jun 2024 21:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.142.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718056739; cv=none; b=ehrws0CovnecZDIgV4TDuN3uVzno2HpJ2+WYKre0wUVKaWs1UtZfgBzdCCYMHlEU87q+3HU7fFGz/NydlnfQF40BleBFTXtfdEEaMBR+QV6xuXnrubds4EUuvdQ2GutCNJdiIb4UdQO9PAMEa41hO0uzL+VdN7mSGv29CXhHEwE=
+	t=1718056753; cv=none; b=KOwZt6A5i4Xkl3Xltgd459YHB9H9mm0Q0Zf9PoX7uRQdfNT33jD1WgJtBNyBhkcMjVKV73IFYcYLphLEh+40qbwa/rPStrG30wtc1vOMbbw/8oh5fp3/4iJK3HHApmHrvBCQkgRB4CdTqsbp9X+KIhaBgKVVqTywWvpCnIDo/gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718056739; c=relaxed/simple;
-	bh=3+G51pF9+5TTxrYCW+LOYlmhyGNeooEaJCa+EPjFDwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r1iKhBbdk40MvLK7TY2VidhZtH8gGA8FhlwmJcc4vdtSM+OTlbqB1nnPvYNscDcdRyzGlwzdM0MvlZCICdu8h6ShOqdArPAkohBxWzjzwRX3cSG4j/ITcR+BuhLRY6DMowDLcW4J/U+01BSuvbRtKFYusvifCkV3zJvlPpr7K0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lF/qV0tg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718056753; c=relaxed/simple;
+	bh=s6AKf2rw41CuqIC+ov9OURowxloV3qJ1rpMVfuh3PZY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Y8UUZPPHJXOwNSa0LHGxwqqY6cV5zjVgAimsFwtuKWZ1Q21XyxiLD3xLHgavv5ACjuhNATpDJ4YJ3myrHyZILfq5ijKzdI/LB9IIc3R0y7tr0sdA3VIpCuWxz9bceM4IZYHhVnJamabxwevNxk7dfZcEFVm2zOjQuZfFCTjUfH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=bS6Qn4Fh; arc=none smtp.client-ip=173.37.142.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lF/qV0tg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ECEDC2BBFC;
-	Mon, 10 Jun 2024 21:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718056738;
-	bh=3+G51pF9+5TTxrYCW+LOYlmhyGNeooEaJCa+EPjFDwQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lF/qV0tg9QnCE5AFbg5IKgjBp4KPr+9Jg4wZHRRzb7/c9uiIECEpNNcnvFAh597Jn
-	 dZNo/NdYPFm+1F6FmUqfUb3facW9x8fwkt+fMV10i7tj4zyBpyBF7PUNA+yxp7g48y
-	 pvw5aVY1MmQU4NMgTf/ztN3Ue0iVMlyarM6Wa+bHgA6ttraJByB3kKb5L/kDc51dnr
-	 qdOcBNPQXhMEDX18e6+wBk9OSTBL3Tb2bxedWfK/wQBbluYnX7wCusr2eHoo0qCTE2
-	 M2LHNGXG6wJFwEfRQ/V7TOWrRGpdLa+qK8xawDaj3ZfvjlZ+911arOMjlxNYwoa7Nj
-	 djIm7Pwz2IwFA==
-Date: Mon, 10 Jun 2024 15:58:57 -0600
-From: Rob Herring <robh@kernel.org>
-To: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: dt-bindings: linux,spdif: Convert
- spdif-reciever.txt to dtschema
-Message-ID: <20240610215857.GA3135318-robh@kernel.org>
-References: <20240606041212.78428-1-animeshagarwal28@gmail.com>
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="bS6Qn4Fh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=cisco.com; i=@cisco.com; l=797; q=dns/txt; s=iport;
+  t=1718056751; x=1719266351;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=tAh2Y+dzo30unDYIsvmEMV6pDuRIP7jOTBLF69yuE5c=;
+  b=bS6Qn4Fhn3Mgc0zw4LOfyZnoUcLhWRtXDz3eyyypOEnH23HF1SVnAKOR
+   ygiKv+LRJiRkZmCk/Yhvf8rh71ydeUn9FKSr35rCWwkFYqUsVKgJxNMf7
+   UwaqNHw3h5zfF7WxuI+DmIfYZxbeLrycEBNhfb+SfSBShh1CzkhsEe1Re
+   M=;
+X-CSE-ConnectionGUID: zcg7fJCsR1W/lANtoA3ImA==
+X-CSE-MsgGUID: p9xZx8UASzK7c9ZBxLXkzw==
+X-IronPort-AV: E=Sophos;i="6.08,227,1712620800"; 
+   d="scan'208";a="293601214"
+Received: from alln-core-4.cisco.com ([173.36.13.137])
+  by alln-iport-6.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 21:59:10 +0000
+Received: from localhost.cisco.com ([10.193.101.253])
+	(authenticated bits=0)
+	by alln-core-4.cisco.com (8.15.2/8.15.2) with ESMTPSA id 45ALpBCc012699
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 10 Jun 2024 21:59:10 GMT
+From: Karan Tilak Kumar <kartilak@cisco.com>
+To: sebaddel@cisco.com
+Cc: arulponn@cisco.com, djhawar@cisco.com, gcboffa@cisco.com, mkai2@cisco.com,
+        satishkh@cisco.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Karan Tilak Kumar <kartilak@cisco.com>
+Subject: [PATCH 14/14] scsi: fnic: Increment driver version
+Date: Mon, 10 Jun 2024 14:51:00 -0700
+Message-Id: <20240610215100.673158-15-kartilak@cisco.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20240610215100.673158-1-kartilak@cisco.com>
+References: <20240610215100.673158-1-kartilak@cisco.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606041212.78428-1-animeshagarwal28@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Authenticated-User: kartilak@cisco.com
+X-Outbound-SMTP-Client: 10.193.101.253, [10.193.101.253]
+X-Outbound-Node: alln-core-4.cisco.com
 
-On Thu, Jun 06, 2024 at 09:42:00AM +0530, Animesh Agarwal wrote:
-> Convert the dummy SPDIF receiver bindings to DT schema.
+Increment driver version to 1.8.0.0
 
-Really the subject should be something like "Merge linux,spdif-dir into 
-linux,spdif-dit". Then the commit message should say why (they are the 
-same other than compatible. "sound-name-prefix" wasn't documented for 
-linux,spdif-dir, but is in use already.)
+Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
+Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
+Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
+Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
+Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
+---
+ drivers/scsi/fnic/fnic.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
-> Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> 
-> ---
-> Changes	in v2:
-> - Add linux,spdif-dir compatible in existing linux,spdif-dit.yaml
-> instead of creating new yaml file specifically for dummy SPDIF receiver.
-> - Change file name to support both transmitter and receiver bindings.
-> ---
->  .../sound/{linux,spdif-dit.yaml => linux,spdif.yaml}   |  8 +++++---
->  .../devicetree/bindings/sound/spdif-receiver.txt       | 10 ----------
->  2 files changed, 5 insertions(+), 13 deletions(-)
->  rename Documentation/devicetree/bindings/sound/{linux,spdif-dit.yaml => linux,spdif.yaml} (75%)
->  delete mode 100644 Documentation/devicetree/bindings/sound/spdif-receiver.txt
+diff --git a/drivers/scsi/fnic/fnic.h b/drivers/scsi/fnic/fnic.h
+index bcf2aaed0b1f..8bdfdd67f08c 100644
+--- a/drivers/scsi/fnic/fnic.h
++++ b/drivers/scsi/fnic/fnic.h
+@@ -30,7 +30,7 @@
+ 
+ #define DRV_NAME		"fnic"
+ #define DRV_DESCRIPTION		"Cisco FCoE HBA Driver"
+-#define DRV_VERSION		"1.7.0.0"
++#define DRV_VERSION		"1.8.0.0"
+ #define PFX			DRV_NAME ": "
+ #define DFX                     DRV_NAME "%d: "
+ 
+-- 
+2.31.1
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
