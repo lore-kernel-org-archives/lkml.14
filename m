@@ -1,136 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7891145328
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 17:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BC477F2F;
+	Mon, 10 Jun 2024 17:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718039523; cv=none; b=tunhm3eZHxwHcIVT5t0cRpmX2ACpeTK5Scymn6zUTIKRXt1NlnA7CvihJR+VVa9Qt9SzEygy8+DV9BaY2d3FUGfiRUrvU91PQGXvf0pfQWR5G0MwUk8Vqbsq1co24lIaJSyAkDTcW9P0reFGUwCiMjubb0OocU/sCRcF82oCy4A=
+	t=1718039723; cv=none; b=YsXSXwMCxLfx2Y8zpyk36QUC6XDWx6WXY+dd2KnbeNV0vGvVNjzlEQOhinfgOTJpbas9V5u0I6HH2YJXXJi9ME9QNr4MXgVZIG3JYpQoFImWOgiiMzTe1T1t8ors7drKkGIEd+wDaIoHLV0hmejXtpq46j6ezHNfvATgyZo34Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718039523; c=relaxed/simple;
-	bh=i7Mp3njgnUyN6z/w9Oq4Haw9SH5wnRUWpgAjai2AWow=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I9UxwXEbJ53+TEaQsjCY3z7jNl3VkdsA1+L+Sap2MkINHBFO356vSHT6aYmoEhcXf2SBoU2TDy4MIFwiRIpHpQw9u9bESx/pB2SSWvy5rFAStU5wJ9bxxqOidohEKCwi0ovITeoVEVKui9ACJdO0c3jASc/WXy1R3ipG5LFjUMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BIa2RXOW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718039723; c=relaxed/simple;
+	bh=tZhK0yK9PUCBDyPTcAJrUy48YWTdR49HUbCN3uazuz0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TKMkTotGI9/l59H10SOz1UZ94xrFdxIR3wSgDF4Pu+b2nELB1vyKdgKyy8KKdEZhkFjTu9KJNLae0gXQ5PeK7VImHpmeNF/M4OqVdk+ug0bPLXnfyPXnAV1E0sTwfiE18nHTCCvT6Ni+/5ENB44TKZ4Kcuyy4u3iF5QDdd2iG8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=DnX772Ec; arc=none smtp.client-ip=4.36.192.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BIa2RXOW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718039520;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wXFcktEbxkN4ZgnPgOmnqMYkkKSi2uvyDdwHZMWpgWU=;
-	b=BIa2RXOWYNKwXbc57M+HXm3NwNxViyOz3EjCzyCS03jHly6yomWOaEI/lZiw9Sl7b6D/CK
-	f68JCcctuAES/NbvWe5yKrSlIiEXJWO6xIwYbmJoV2w80cQl7mcN/DAzKAFZ8EnHQBmZ4v
-	BZ6iWIR4R333lOkayY+cIy3bNPTY1Es=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-sxKqSlOGN5ep_CpUqxr6UA-1; Mon,
- 10 Jun 2024 13:11:55 -0400
-X-MC-Unique: sxKqSlOGN5ep_CpUqxr6UA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A61DF1955F35;
-	Mon, 10 Jun 2024 17:11:53 +0000 (UTC)
-Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (bmarzins-01.fast.eng.rdu2.dc.redhat.com [10.6.23.12])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0889C1956051;
-	Mon, 10 Jun 2024 17:11:52 +0000 (UTC)
-Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (localhost [127.0.0.1])
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.2/8.17.1) with ESMTPS id 45AHBdiG800812
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 13:11:39 -0400
-Received: (from bmarzins@localhost)
-	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.17.2/8.17.2/Submit) id 45AHBd0o800811;
-	Mon, 10 Jun 2024 13:11:39 -0400
-Date: Mon, 10 Jun 2024 13:11:39 -0400
-From: Benjamin Marzinski <bmarzins@redhat.com>
-To: Abhinav Jain <jain.abhinav177@gmail.com>
-Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
-        dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com
-Subject: Re: [PATCH] dm: Add support for escaped characters in
- str_field_delimit()
-Message-ID: <Zmczy8EijOK-D7ZE@redhat.com>
-References: <20240609141721.52344-1-jain.abhinav177@gmail.com>
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="DnX772Ec"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
+	bh=tZhK0yK9PUCBDyPTcAJrUy48YWTdR49HUbCN3uazuz0=; b=DnX772Ecy7Sytu4dDSC25WhQIM
+	p5J1nPDMk23g5W9HIGqwfixQXSHf83CTiGTFcbIG2EtOfYpF1nbnMN4YIecI9884NVGDBMKen38lx
+	H5A17OKO6ibWhAVY6DtoBGmmJe3P2sjGNsycECNyftwTeT74mFPKtsqkRDQ5H7m6GxIOHmcNDK8xB
+	f/ZPLptOxLwz897jhfiz716tUV14MPVge41NhrFJYrM3savy+WZ+fBG1fn2KHLi2FDuyp7Ht2MrjI
+	faduXUalJ6gir2AtcAqDE1HZu5VMSRtquUGHVqLX2x+lr7mZNrNiWJLrOzYvHJvZDHBgKyJ8MSvz5
+	6BNpqxqA==;
+Received: from [10.69.139.13] (helo=uriel.localnet)
+	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <zfigura@codeweavers.com>)
+	id 1sGiM6-00H4i2-0f;
+	Mon, 10 Jun 2024 11:58:50 -0500
+From: Elizabeth Figura <zfigura@codeweavers.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+ wine-devel@winehq.org,
+ =?ISO-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+ Wolfram Sang <wsa@kernel.org>, Arkadiusz Hiler <ahiler@codeweavers.com>,
+ Andy Lutomirski <luto@kernel.org>, linux-doc@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+ Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [PATCH v5 00/28] NT synchronization primitive driver
+Date: Mon, 10 Jun 2024 11:58:48 -0500
+Message-ID: <2325658.ElGaqSPkdT@uriel>
+In-Reply-To: <20240519202454.1192826-1-zfigura@codeweavers.com>
+References: <20240519202454.1192826-1-zfigura@codeweavers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240609141721.52344-1-jain.abhinav177@gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Sun, Jun 09, 2024 at 02:17:21PM +0000, Abhinav Jain wrote:
-> Add a new variable for escaped characters.
-> 
-> If an escaped character (\) is found before the separator, and if the 
-> separator is not found or if the escaped character is located before the
-> separator, then move the separator ahead and continue searching for the
-> next separator.
-> 
-> Return the pointer to remainder string after the delimiter. If the
-> separator was found, return a pointer to the character immediately after
-> the delimiter (s + 1). If the separator was not found, return NULL.
+On Sunday, May 19, 2024 3:24:26=E2=80=AFPM CDT Elizabeth Figura wrote:
+> This patch series implements a new char misc driver, /dev/ntsync, which is
+> used to implement Windows NT synchronization primitives.
+>=20
+> NT synchronization primitives are unique in that the wait functions both =
+are
+> vectored, operate on multiple types of object with different behaviour
+> (mutex, semaphore, event), and affect the state of the objects they wait
+> on. This model is not compatible with existing kernel synchronization
+> objects or interfaces, and therefore the ntsync driver implements its own
+> wait queues and locking.
+>=20
+> This patch series is rebased against the "char-misc-next" branch of
+> gregkh/char-misc.git.
 
-This doesn't do anything to the escape character. Presumably you want to
-pass the field containing a separator down to dm_eary_create(). But you
-don't want to pass the escape character itself.
+Hi Peter,
 
-To work correctly, this code needs to remove all those escape characters
-that come before separators. It probably needs to do something like:
+Sorry to bother, but now that the Linux merge window is closed could I
+request a review of this revision of the ntsync patch set, please (or a
+review from another locking maintainer)?
 
-1. Find a next non-escaped separator and change it to NULL, so you have
-your field string.
+I believe I've addressed all of the comments from the last review,
+except those which would have changed the existing userspace API
+(although since the driver isn't really functional yet, maybe this
+would have been fine to do anyway?)
 
-2. Find all the escaped separators in the field string, and shift the
-rest of the string over to overwrite the escape character with the rest
-of the string.
+Thanks,
+Zeb
 
--Ben
-
-> 
-> Signed-off-by: Abhinav Jain <jain.abhinav177@gmail.com>
-> ---
->  drivers/md/dm-init.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/md/dm-init.c b/drivers/md/dm-init.c
-> index 2a71bcdba92d..bef6a582a4ae 100644
-> --- a/drivers/md/dm-init.c
-> +++ b/drivers/md/dm-init.c
-> @@ -87,11 +87,21 @@ static void __init dm_setup_cleanup(struct list_head *devices)
->   */
->  static char __init *str_field_delimit(char **str, char separator)
->  {
-> -	char *s;
-> +	char *s, *escaped;
->  
-> -	/* TODO: add support for escaped characters */
->  	*str = skip_spaces(*str);
->  	s = strchr(*str, separator);
-> +
-> +	/* Check for escaped character */
-> +	escaped = strchr(*str, '\\');
-> +	if (escaped && (s == NULL || escaped < s)) {
-> +		/*
-> +		 * If escaped character comes before the separator, move
-> +		 * the separator ahead & continue searching for next one.
-> +		 */
-> +		s = strchr(escaped + 1, separator);
-> +	}
-> +
->  	/* Delimit the field and remove trailing spaces */
->  	if (s)
->  		*s = '\0';
-> -- 
-> 2.34.1
-> 
 
