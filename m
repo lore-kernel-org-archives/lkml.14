@@ -1,51 +1,82 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F5C77113
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0BDBA53
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718020860; cv=none; b=OJ42J07kFYTChe9gp0zdJZA+FwRV9VeE+0cANu9wwKG/zHBBexq+lHJy9HX8n+MuVzRyqQq036CSoL9RJkSru6fwQDxjuGcpcrCGvuggmqpd98cixt0CmQVtlG/ptppEHUfCQyOt37nkobLFjrh482njjvz9xJFHi/LuwxpgPlI=
+	t=1718020943; cv=none; b=Fw8LYprMotUxyBH/w33tJgyvX3S5eClspzENQrzVHQpw8lqOmDF7YddkUpQJPmBQbRM4BxcqkPrWeUDkRCii9TxNG2+ayLkVj8R/ioW0KoUeXDBlcDTvfHCGgcnxxe+wh/vb9Y3PfKvKkTW0MHsQaKBi0sq1WxJUqQpsA5P33jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718020860; c=relaxed/simple;
-	bh=S87b0AoCg4zTupdBjkHp463O4Vqz7rMJKPouOx5ONS0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JPZwpLShdxhaH3hgqXxMcyq85D3ZU/0gL+lQQP7EtAWAhJddt0K41+5JrbT10pLJFKAqswcV4DSqkqaPhYTA0OupgWz9cJjYpg+5v+q0rm31QsDDwv+XeaQ3nCFFn9jGlSFoidNWlzQ52yGRN396MRC+i6JrofmHVnNwJFdXIIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=nD1aEVXk; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1718020943; c=relaxed/simple;
+	bh=aQFP7gNPrNXTh2IHcUhusTtvEa4HHQK5PtH55IE5+CE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kMdEWBEEVjxKYrqQI+Ndn7vo/YNJwWJp3LYXuKukBIim8YSp+q4345h5bDiUBRegm40t0gzHvbmF142XtpWdZVuGz/ydAUDhjNjKk9xrPJHXnOyVHwI2KVs/wD1XbtKpgCKwO9KFi9yGG3WRtJDmoc0L+/wzFCsVNU8WZBYSOpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gt559jjE; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="nD1aEVXk"
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 06D6E120011;
-	Mon, 10 Jun 2024 15:00:56 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 06D6E120011
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1718020856;
-	bh=hdDozi5lsGbUD6cyN4ZLmx54z1ydzCykUd3pd8uPLHM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=nD1aEVXkwLz16U2BYjwWe1b5PbwbDmmcOEiMFH1kpAEtTrpSB/azqpCEv1vM06Xbh
-	 TxgKK+BgE0nac8Wvo6yKmnZJGN2sHDi9SHFld5HV+o2TsrHzs0whCIGEn6XDDs54Fp
-	 Qvu5wUuFLDJ+fJ4slxOdCgNoV5GdCesh2HbW/ysHyKhaPdn1ZZOLEMycScJDIwBAYL
-	 q5SBQJaPNb9OGpGlzj1UTEPzmVIiKZKnExgKd5oUXDvZuHfElGMjAz0ZuUJ5lsPCN2
-	 IhD10D2NYUyQ/vKLFedIrVRLaYAus53BAIohwDDCtYo4NASVnx23Z4OLkiXQJ/IgB2
-	 EYGFJMZ1TbtLA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Mon, 10 Jun 2024 15:00:55 +0300 (MSK)
-Received: from localhost.localdomain (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 10 Jun 2024 15:00:55 +0300
-From: George Stark <gnstark@salutedevices.com>
-To: <broonie@kernel.org>, <lgirdwood@gmail.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kernel@salutedevices.com>, George Stark <gnstark@salutedevices.com>
-Subject: [PATCH 0/1] pwm-regulator with voltage table problem
-Date: Mon, 10 Jun 2024 15:00:24 +0300
-Message-ID: <20240610120025.405062-1-gnstark@salutedevices.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gt559jjE"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c199e37f4eso3636699a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718020941; x=1718625741; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=26tuUrqnEQfFAp3h3pgs/MAqgYUu2Sg0W6tKE5DaxLQ=;
+        b=Gt559jjEYDTV3H1vTGqtTJWt9aAOwk0l6F/kU2g4jYtTgHqhoc40wLOeUC0w3ha9e7
+         qAGOpCFQuOm5YZCZxhTqKJ48HLUH7NdwKVA61Rp9zPnNX4phO7U/v3rfLI6SrFvNIv7a
+         zhAqZTwFPuo4EPsLTAXE8eEhz0GJ54hzxR00R1L3JQCbXbv2FyNvS3ZL5xDrGkWG5h01
+         euKvz/DHt4vXX8V8CZTrhgoGS82YylXATf7caJjRCalD2YX6hpl3LkBo6GZapzqUrjFT
+         Et8aWYy+aCGXG3ApwNm80+FajfbqLWbpCoI4KQnduc4LIQAcO0DXe2FA5jNa4/vNPHzx
+         QYiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718020941; x=1718625741;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=26tuUrqnEQfFAp3h3pgs/MAqgYUu2Sg0W6tKE5DaxLQ=;
+        b=qrEVM7MRX4gz7eTb0Wq6EZPwVb3Hj+r1MWQDpJERej1HF8mM1+4mlNt7wPJKQT3Scf
+         qR/n05RHPoEGGLBN8ySMJxn9Y5LIPaqmPjSwx3pQyrlqYowYeA7JhKqRUr3IUmIWX4/k
+         B1UfyTTqHT0lIfviYvLZOg+VR5P3WCAxYd+Av3fs87dYxCqvSOBRjhtSfCinxyQr9V5Q
+         Bfha/GDTsQpd+wXdw5JAK9vhEjvg0SIPb+fLN8JDx8VQHy5Xtt+3bbVxUJpKVIxHDsk4
+         0IGbclL6e1OeRI4d2skZbJ8Qrb6KVFui9eGSr5ipzX2yIjFcIMle24NzRoEaW0BBKnCV
+         oqIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZEUvjYX57vk57m0qPE4jiP/expqS9RsBOgY51GDDNXpfcERxLWGQGUq9hmrdc08P6zXme/8RoUKqdbs/3NtKZTvpoA6IaVf1rvYBm
+X-Gm-Message-State: AOJu0Yxc0Q7J8g5bL0XmI96gGnVKf2qnb9K7n9j3x2XfUbu4i6OBtyqd
+	Z8HOtDUwldpKShKNc/JlyYbJyTlOm6fPJ/wFVLQhQ24T3PL8gI8t
+X-Google-Smtp-Source: AGHT+IFBudSl4WgItCCnP5LfGTAa8cr1lbmtKS+NCmJH2FoXqV6FA1FwxGmVoAyBzdfwCVxMYS/NSg==
+X-Received: by 2002:a17:90b:817:b0:2c2:f2d6:60d4 with SMTP id 98e67ed59e1d1-2c2f2d664aamr3884336a91.8.1718020940887;
+        Mon, 10 Jun 2024 05:02:20 -0700 (PDT)
+Received: from LancedeMBP.lan.lan ([2403:2c80:6::304c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c302f0ebdcsm2478478a91.23.2024.06.10.05.02.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 05:02:20 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+To: akpm@linux-foundation.org
+Cc: willy@infradead.org,
+	sj@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	maskray@google.com,
+	ziy@nvidia.com,
+	ryan.roberts@arm.com,
+	david@redhat.com,
+	21cnbao@gmail.com,
+	mhocko@suse.com,
+	fengwei.yin@intel.com,
+	zokeefe@google.com,
+	shy828301@gmail.com,
+	xiehuan09@gmail.com,
+	libang.li@antgroup.com,
+	wangkefeng.wang@huawei.com,
+	songmuchun@bytedance.com,
+	peterx@redhat.com,
+	minchan@kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Lance Yang <ioworker0@gmail.com>
+Subject: [PATCH v7 0/4] Reclaim lazyfree THP without splitting
+Date: Mon, 10 Jun 2024 20:02:05 +0800
+Message-Id: <20240610120209.66311-1-ioworker0@gmail.com>
+X-Mailer: git-send-email 2.33.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,59 +84,123 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185831 [Jun 10 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/06/10 11:09:00 #25535815
-X-KSMG-AntiVirus-Status: Clean, skipped
 
-Here is the situation we've met on an ARM SoC:
+Hi all,
 
-We have an ARM SoC with dedicated power input for CPU core and supports different
-CPU clocks. CPU core power is supplied by external regulator, it's controlled by
-PWM channel from the SoC. DTS has node for pwm-regulator with voltage table
-(voltage table is used instead of range apparently to use only fine-tuned
-duty-cycle values) and with boot-on and always-on properties. This regulator is
-bound to cpu node. The pwm-regulator is inited at very early stage before bootloader
-in vendor closed-source code.
+This series adds support for reclaiming PMD-mapped THP marked as lazyfree
+without needing to first split the large folio via split_huge_pmd_address().
 
-When a pwm-regulator is probed in the kernel it gets pwm current state and search
-voltage table by dutycycle to figure out the current voltage. If that search failed
-then the regulator goes to notrecoverbale state and the core sets the minimal power
-for the regulator.
+When the user no longer requires the pages, they would use madvise(MADV_FREE)
+to mark the pages as lazy free. Subsequently, they typically would not re-write
+to that memory again.
 
-The situation: bootloader sets mean cpu power and mean cpu clock.
-but that cpu power is not found in the voltage table (value is between table items)
-due to different versions of bootloader and kernel and the regulator core sets
-the minimal power but cpu clock stays the same. CPU hangs somewhere during boot.
+During memory reclaim, if we detect that the large folio and its PMD are both
+still marked as clean and there are no unexpected references(such as GUP), so we
+can just discard the memory lazily, improving the efficiency of memory
+reclamation in this case.
 
-The core problem as I see it is if regulator is bound to CPU (or some other
-complex consumer) it can't be changed except by the consumer at any stage. So
-the regulator driver (core part) should wait for the own consumer to init
-it properly but regulator can't be in unknown state after probing.
+Performance Testing
+===================
 
-What you think? The least should be done is to report about the situation.
+On an Intel i5 CPU, reclaiming 1GiB of lazyfree THPs using
+mem_cgroup_force_empty() results in the following runtimes in seconds
+(shorter is better):
 
-George Stark (1):
-  regulator: core: add warning for not-recoverable state
+--------------------------------------------
+|     Old       |      New       |  Change  |
+--------------------------------------------
+|   0.683426    |    0.049197    |  -92.80% |
+--------------------------------------------
 
- drivers/regulator/core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+---
 
---
-2.25.1
+Changes since v6 [6]
+====================
+ - mm/rmap: remove duplicated exit code in pagewalk loop
+    - Pick RB from David - thanks!
+ - mm/rmap: add helper to restart pgtable walk on changes
+    - Add the page_vma_mapped_walk_restart() helper to handle scenarios
+      where the page table walk needs to be restarted due to changes in
+      the page table (suggested by David)
+ - mm/rmap: integrate PMD-mapped folio splitting into pagewalk loop
+    - Pass 'pvmw.address' to split_huge_pmd_locked() (per David)
+    - Drop the check for PMD-mapped THP that is missing the mlock (per David)
+ - mm/vmscan: avoid split lazyfree THP during shrink_folio_list()
+    - Rename the function __discard_trans_pmd_locked() to
+      __discard_anon_folio_pmd_locked() (per David)
+
+Changes since v5 [5]
+====================
+ - mm/rmap: remove duplicated exit code in pagewalk loop
+    - Pick RB from Baolin Wang - thanks!
+ - mm/mlock: check for THP missing the mlock in try_to_unmap_one()
+    - Merge this patch into patch 2 (per Baolin Wang)
+ - mm/vmscan: avoid split lazyfree THP during shrink_folio_list()
+    - Mark a folio as being backed by swap space if the folio or its PMD
+      was redirtied (per Baolin Wang)
+    - Use pmdp_huge_clear_flush() to get and flush a PMD entry
+      (per Baolin Wang)
+
+Changes since v4 [4]
+====================
+ - mm/rmap: remove duplicated exit code in pagewalk loop
+    - Pick RB from Zi Yan - thanks!
+ - mm/rmap: integrate PMD-mapped folio splitting into pagewalk loop
+    - Remove the redundant alignment (per Baolin Wang)
+    - Set pvmw.ptl to NULL after unlocking the PTL (per Baolin Wang)
+ - mm/mlock: check for THP missing the mlock in try_to_unmap_one()
+    - Check whether the mlock of PMD-mapped THP was missed
+      (suggested by Baolin Wang)
+ - mm/vmscan: avoid split lazyfree THP during shrink_folio_list()
+    - No need to check the TTU_SPLIT_HUGE_PMD flag for unmap_huge_pmd_locked()
+      (per Zi Yan)
+    - Drain the local mlock batch after folio_remove_rmap_pmd()
+      (per Baolin Wang)
+
+Changes since v3 [3]
+====================
+ - mm/rmap: integrate PMD-mapped folio splitting into pagewalk loop
+    - Resolve compilation errors by handling the case where
+      CONFIG_PGTABLE_HAS_HUGE_LEAVES is undefined (thanks to SeongJae Park)
+ - mm/vmscan: avoid split lazyfree THP during shrink_folio_list()
+    - Remove the unnecessary conditional compilation directives
+      (thanks to Barry Song)
+    - Resolve compilation errors due to undefined references to
+      unmap_huge_pmd_locked and split_huge_pmd_locked (thanks to Barry)
+
+Changes since v2 [2]
+====================
+ - Update the changelog (thanks to David Hildenbrand)
+ - Support try_to_unmap_one() to unmap PMD-mapped folios
+   (thanks a lot to David Hildenbrand and Zi Yan)
+
+Changes since v1 [1]
+====================
+ - Update the changelog
+ - Follow the exact same logic as in try_to_unmap_one() (per David Hildenbrand)
+ - Remove the extra code from rmap.c (per Matthew Wilcox)
+
+[1] https://lore.kernel.org/linux-mm/20240417141111.77855-1-ioworker0@gmail.com
+[2] https://lore.kernel.org/linux-mm/20240422055213.60231-1-ioworker0@gmail.com
+[3] https://lore.kernel.org/linux-mm/20240429132308.38794-1-ioworker0@gmail.com
+[4] https://lore.kernel.org/linux-mm/20240501042700.83974-1-ioworker0@gmail.com
+[5] https://lore.kernel.org/linux-mm/20240513074712.7608-1-ioworker0@gmail.com
+[6] https://lore.kernel.org/linux-mm/20240521040244.48760-1-ioworker0@gmail.com
+
+Lance Yang (4):
+  mm/rmap: remove duplicated exit code in pagewalk loop
+  mm/rmap: add helper to restart pgtable walk on changes
+  mm/rmap: integrate PMD-mapped folio splitting into pagewalk loop
+  mm/vmscan: avoid split lazyfree THP during shrink_folio_list()
+
+ include/linux/huge_mm.h |  15 +++++
+ include/linux/rmap.h    |  22 ++++++++
+ mm/huge_memory.c        | 122 +++++++++++++++++++++++++++++++++-------
+ mm/rmap.c               |  77 ++++++++++++++-----------
+ 4 files changed, 184 insertions(+), 52 deletions(-)
+
+
+base-commit: 6b77d01728f219a091f55ca3142bbc4e4057ca50
+-- 
+2.33.1
 
