@@ -1,539 +1,557 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0046A5588B
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 21:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6506823A3;
+	Mon, 10 Jun 2024 21:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718055209; cv=none; b=h52J5YVe9/wWZk6BzQTKVrGc5FDjsiEDOCnXI/xd+slx5l6TMeFO6gVR+uVZ1+JoJrqrDYbHsBqWQPUk8IYn1uAczKbWi5IR5oIZ4oKxu5nhIRn83E+H0JvrESHm0wQ55ImWYQnAwBg4XCb+uxaQhDfDSMHskGLk4qkNCEk/hRQ=
+	t=1718055211; cv=none; b=b1SMNeWHy0chnCKrrM9gJogL2z0hH0XXPRDOzo833RyqgO7XM3KE41tij2EJ+hM66SCRV8YmDH0Vw3KpOoq1nR4QTx/jcBzRkL8Ypvyz/hjAZeIdgxytzW2nqbsdwXK+p0oTva+5UWSpwN5qN0oUk+PDYw7CfA/RYmQ2yckL59k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718055209; c=relaxed/simple;
-	bh=0yBu0GixRXi4Ppeqwbh5M4bwKPiAv3KfPRnL1nr9SJ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YsjWmZyqeegLBeGdce7E0TorXZIATcBAuH8ZR5nQj0NEkunrJWqV2XGyJVQKoA/vuSMIMH8n+AFOzGL6RzN+uEzHZ8n6+nXaLE6zTsMrWfwXFDnxPyGExJ9HX+tzjmoXxtgTEk0xk3CkZ4QY3oYbqlm2i6bWkkygj4zwNQ4a6s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YJGsVmyn; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718055211; c=relaxed/simple;
+	bh=GRnlzHKq5aMXH2GhwxdxPnYAkFdUtWZSo+OWffpaVfE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SS/p25Bg0A2+By65L/8HLQZHnktD/zk/D16oxRbK/pNmr1MLbVY+v4MyAp/qJpPM/6wl8YOiyVuMmDf1QKLuatV0IGdG7cOztfkesAae9MegcV9rRJwk5Pxhx8X7qM4PbBpFSi2ZcL87pB0vqUlu86ndq0WkllkmJfQnUwgVlKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAc91S7n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YJGsVmyn"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4405cf01a7fso44791cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718055206; x=1718660006; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k/1MZYkvJqGzXwxdxyKaiV/jOC5GN5vlXbEcMG/wWjo=;
-        b=YJGsVmynJJtxmsp/Q1yx7d5kh7BZSBu5xnF1kpogxfrEgbfmLbtFY8E1FZkWqtjH1V
-         8CCvJVIMcq0HjtrbA+7YnB7fQywT6Seto0CRAaNRgXHDGgNiH2KzeVXLQHpHUZhudpVY
-         Seifi8i9VvYw6RbBc4j5oxKBk4gMuK4fdGUhnyt9m/x+7/5CXpRn2E7Fzp5q8Xjf5lUN
-         NMqOjup3IVfBJ5tcnKCNp6LwYCDZyt/EayQ/bE+OBEIw9FL9K6KDduD9IHjE9P1Hi1Z8
-         6XVghQYJeZUHTu4NTWjTJ3m1uucDujfbyeQEvFLzaEL7+jgXW6EI2LjcZexecwd2AhM+
-         rkrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718055206; x=1718660006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k/1MZYkvJqGzXwxdxyKaiV/jOC5GN5vlXbEcMG/wWjo=;
-        b=TGk9pCFmT61pn8VUBlJKyqQG/5V3E/qTzRsqGBIkUWIz63W5gfOpaVwEkeZiBY27jN
-         FG6QiF+/DxFaJwo8PErkvkwaQuhHGBElxHxFHxWZV/PXS5Xzl3kZx/dK/RXy5YWECQL/
-         dRVd1PpljpPZKs9Kt96cwXv50dGYgpD5DpN5CrAvcpwk45n2XaBBTEuuqYIQn4IL96Y3
-         C1DbCjesdv5f8dts3Of1D9VgTNdpSzlRePJ8BBOEH5ey3b+7hHiR5bRQieExtdKqWDug
-         9JFtVMCvFY/LbGhOtVE6E+Yo9Ub2nfLz9l6MXhXMdwMnM+doLy2e8q53Ic7Q0v+fpztS
-         3gSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXElWSRPXso5VsEE9SOffs9VfFlKGRnWtqRg8RcJ5GKa5dJ9cdpjwPcfS7G1LxBTC83ntlLJjUah2AU2axyiwhhuCJ2b3VLOFdpDB91
-X-Gm-Message-State: AOJu0YxchGPCVzrSEgREgPZFw7+I0ACLbgTaS07hoTbRG1xvbyZUHhjH
-	cOnjGN7ZdFpyZIGpIsY5jaWfgcC1Q2py47v0EVh4zY/C2VVPAhqAmBPr0SLehFcnLJqqymf1gPx
-	ZWzK+1T87W90/Gu9pRkZ1bJ7V1S8sbdQNjAV/
-X-Google-Smtp-Source: AGHT+IE2oVD7QAe0nD/gru3sJCBjYJQssg/NRVaZrMCqHZ96jYj3WmoKmOINKGmHa8llrdJDzXC5Q+nKjyn8PK92kgE=
-X-Received: by 2002:a05:622a:4114:b0:440:5441:56bf with SMTP id
- d75a77b69052e-4413ec32cd5mr1245251cf.0.1718055205534; Mon, 10 Jun 2024
- 14:33:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAc91S7n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFC95C4AF1C;
+	Mon, 10 Jun 2024 21:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718055210;
+	bh=GRnlzHKq5aMXH2GhwxdxPnYAkFdUtWZSo+OWffpaVfE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JAc91S7nbFtkADGUTbMbHpC2IcLORyoMvAXxg6Sbm5+ebymJwnwvMBm+uBDAi8F5R
+	 qxipyNMP7NyKPOB0k232lSARvfzlfrfH6TTH46T4cwe/SYcQ8dCFYXgnoEaUJUwF7E
+	 jmL1poJDtXvpIZ6bAXWA+qPk9OkcgSIh+v4BXP+Q0ScoyOyG87/K38TGcGbUwxtqFB
+	 drYZN1E58Fy1FPlN/iibnvsDDsDPNRA8oIdjr+/OzNmfujyP1Bmokf4ObAv5ZQWNbq
+	 zakxmAQWSd2gXHkoOArzY9Fe8xBQR/0OMCKhKQSpyF+MBmM+Vo2z3i+lOsYjUsP/HF
+	 sMGdM8qlgr+Fw==
+From: Kees Cook <kees@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Vitor Massaru Iha <vitor@massaru.org>,
+	Ivan Orlov <ivan.orlov0322@gmail.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 2/2] usercopy: Convert test_user_copy to KUnit test
+Date: Mon, 10 Jun 2024 14:33:29 -0700
+Message-Id: <20240610213330.1310156-2-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240610213055.it.075-kees@kernel.org>
+References: <20240610213055.it.075-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240608172147.2779890-1-howardchu95@gmail.com>
-In-Reply-To: <20240608172147.2779890-1-howardchu95@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 10 Jun 2024 14:33:10 -0700
-Message-ID: <CAP-5=fVW0coox1KFpoVTq5wf54yyppM0JgXNT5mLfLOCX_Jugg@mail.gmail.com>
-Subject: Re: [PATCH] perf trace: Fix syscall untraceable bug
-To: Howard Chu <howardchu95@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	mic@digikod.net, gnoack@google.com, brauner@kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=17970; i=kees@kernel.org; h=from:subject; bh=GRnlzHKq5aMXH2GhwxdxPnYAkFdUtWZSo+OWffpaVfE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmZ3EplFH97VNa3dWpoXuKJ2EVjs8oxzqd6qqbq dSJlbhHUimJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZmdxKQAKCRCJcvTf3G3A JhupD/oChI8KvX6ELI7TU1GIrmMet6CGbY+03yqABngtaU548/GGjFk4yQcjNAfDxHHObrOAWXj FgBGdIzFXvwvXHafCmwqgicebuczS+j8hxrCHrylf6PDr0epnjDBNgO006+lZA1uoISYq4OlWso u3765Y4mbNL6S2D+QNwdQ4s9Llb5bzt5FY6gmrnMr/dBIG3fYT7JnJDRt1nYKUyiYtK+/y87PW6 20Si4AzK6CDutoZ40n2oo6sICpPLYVv1ge8LP4XFcG7xqsEfCEqI5j62bAehL5dFZKnmtKt5+8N wrWAyIUd4tnsmPgmC8EVHSgu3qH2ZnLPWmkXuMPahTV/XL7soGUz2ToEQjS8zUa94zCAY6UJGwK iFoCt4SlLv5ualrcWQImHsjps/5AQh/AzRHKhu7iYuMFgE7c6dJ3aq0frMG+/UNHhQ2XLOLDbJi E4779kLqffHu2gEqUJH5nhMvGEwrbi/hMZMRnsz6gSlw44qVmciTn5i5b8sLXxOLd7MaG8MAaLo Wx8xvtqFWMekVJWYPT4PVXPik6tL6VVpK876zuV8s1IjCojQRa+W2rx24vmnUCht0NGp4J6rg9m HZNJHt2/Q3CqoBb52UWDPy/F8NK4R/uh0F4drh9UDYbH/984to9lP79WUWF9AKfaFbtmFSGl20p pNVmTUIKssE49/A==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 8, 2024 at 10:21=E2=80=AFAM Howard Chu <howardchu95@gmail.com> =
-wrote:
->
-> This is a bug found when implementing pretty-printing for the
-> landlock_add_rule system call, I decided to send this patch separately
-> because this is a serious bug that should be fixed fast.
->
-> I wrote a test program to do landlock_add_rule syscall in a loop,
-> yet perf trace -e landlock_add_rule freezes, giving no output.
->
-> This bug is introduced by the false understanding of the variable "key"
-> below:
-> ```
-> for (key =3D 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
->         struct syscall *sc =3D trace__syscall_info(trace, NULL, key);
->         ...
-> }
-> ```
-> The code above seems right at the beginning, but when looking at
-> syscalltbl.c, I found these lines:
->
-> ```
-> for (i =3D 0; i <=3D syscalltbl_native_max_id; ++i)
->         if (syscalltbl_native[i])
->                 ++nr_entries;
->
-> entries =3D tbl->syscalls.entries =3D malloc(sizeof(struct syscall) * nr_=
-entries);
-> ...
->
-> for (i =3D 0, j =3D 0; i <=3D syscalltbl_native_max_id; ++i) {
->         if (syscalltbl_native[i]) {
->                 entries[j].name =3D syscalltbl_native[i];
->                 entries[j].id =3D i;
->                 ++j;
->         }
-> }
-> ```
->
-> meaning the key is merely an index to traverse the syscall table,
-> instead of the actual syscall id for this particular syscall.
+Convert the runtime tests of hardened usercopy to standard KUnit tests.
 
+Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+Link: https://lore.kernel.org/r/20200721174654.72132-1-vitor@massaru.org
+Tested-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ MAINTAINERS                                |   1 +
+ lib/Kconfig.debug                          |  21 +-
+ lib/Makefile                               |   2 +-
+ lib/{test_user_copy.c => usercopy_kunit.c} | 273 ++++++++++-----------
+ 4 files changed, 142 insertions(+), 155 deletions(-)
+ rename lib/{test_user_copy.c => usercopy_kunit.c} (47%)
 
-Thanks Howard, I'm not following this. Doesn't it make sense to use
-the syscall number as its id?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8754ac2c259d..0cd171ec6010 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11962,6 +11962,7 @@ F:	arch/*/configs/hardening.config
+ F:	include/linux/overflow.h
+ F:	include/linux/randomize_kstack.h
+ F:	kernel/configs/hardening.config
++F:	lib/usercopy_kunit.c
+ F:	mm/usercopy.c
+ K:	\b(add|choose)_random_kstack_offset\b
+ K:	\b__check_(object_size|heap_object)\b
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 59b6765d86b8..561e346f5cb0 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2505,18 +2505,6 @@ config TEST_VMALLOC
+ 
+ 	  If unsure, say N.
+ 
+-config TEST_USER_COPY
+-	tristate "Test user/kernel boundary protections"
+-	depends on m
+-	help
+-	  This builds the "test_user_copy" module that runs sanity checks
+-	  on the copy_to/from_user infrastructure, making sure basic
+-	  user/kernel boundary testing is working. If it fails to load,
+-	  a regression has been detected in the user/kernel memory boundary
+-	  protections.
+-
+-	  If unsure, say N.
+-
+ config TEST_BPF
+ 	tristate "Test BPF filter functionality"
+ 	depends on m && NET
+@@ -2814,6 +2802,15 @@ config SIPHASH_KUNIT_TEST
+ 	  This is intended to help people writing architecture-specific
+ 	  optimized versions.  If unsure, say N.
+ 
++config USERCOPY_KUNIT_TEST
++	tristate "KUnit Test for user/kernel boundary protections"
++	depends on KUNIT
++	default KUNIT_ALL_TESTS
++	help
++	  This builds the "usercopy_kunit" module that runs sanity checks
++	  on the copy_to/from_user infrastructure, making sure basic
++	  user/kernel boundary testing is working.
++
+ config TEST_UDELAY
+ 	tristate "udelay test driver"
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index 3b1769045651..fae5cc67b95a 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -78,7 +78,6 @@ obj-$(CONFIG_TEST_LKM) += test_module.o
+ obj-$(CONFIG_TEST_VMALLOC) += test_vmalloc.o
+ obj-$(CONFIG_TEST_RHASHTABLE) += test_rhashtable.o
+ obj-$(CONFIG_TEST_SORT) += test_sort.o
+-obj-$(CONFIG_TEST_USER_COPY) += test_user_copy.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_keys.o
+ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+ obj-$(CONFIG_TEST_DYNAMIC_DEBUG) += test_dynamic_debug.o
+@@ -388,6 +387,7 @@ CFLAGS_fortify_kunit.o += $(call cc-disable-warning, stringop-truncation)
+ CFLAGS_fortify_kunit.o += $(DISABLE_STRUCTLEAK_PLUGIN)
+ obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
+ obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
++obj-$(CONFIG_USERCOPY_KUNIT_TEST) += usercopy_kunit.o
+ 
+ obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
+ 
+diff --git a/lib/test_user_copy.c b/lib/usercopy_kunit.c
+similarity index 47%
+rename from lib/test_user_copy.c
+rename to lib/usercopy_kunit.c
+index 5ff04d8fe971..f1689f2c5c7b 100644
+--- a/lib/test_user_copy.c
++++ b/lib/usercopy_kunit.c
+@@ -15,7 +15,7 @@
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+-#include <linux/vmalloc.h>
++#include <kunit/test.h>
+ 
+ /*
+  * Several 32-bit architectures support 64-bit {get,put}_user() calls.
+@@ -31,26 +31,27 @@
+ # define TEST_U64
+ #endif
+ 
+-#define test(condition, msg, ...)					\
+-({									\
+-	int cond = (condition);						\
+-	if (cond)							\
+-		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
+-	cond;								\
+-})
++struct usercopy_test_priv {
++	char *kmem;
++	char __user *umem;
++	size_t size;
++};
+ 
+ static bool is_zeroed(void *from, size_t size)
+ {
+ 	return memchr_inv(from, 0x0, size) == NULL;
+ }
+ 
+-static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
++/* Test usage of check_nonzero_user(). */
++static void usercopy_test_check_nonzero_user(struct kunit *test)
+ {
+-	int ret = 0;
+ 	size_t start, end, i, zero_start, zero_end;
++	struct usercopy_test_priv *priv = test->priv;
++	char __user *umem = priv->umem;
++	char *kmem = priv->kmem;
++	size_t size = priv->size;
+ 
+-	if (test(size < 2 * PAGE_SIZE, "buffer too small"))
+-		return -EINVAL;
++	KUNIT_ASSERT_GE_MSG(test, size, 2 * PAGE_SIZE, "buffer too small");
+ 
+ 	/*
+ 	 * We want to cross a page boundary to exercise the code more
+@@ -84,8 +85,8 @@ static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
+ 	for (i = zero_end; i < size; i += 2)
+ 		kmem[i] = 0xff;
+ 
+-	ret |= test(copy_to_user(umem, kmem, size),
+-		    "legitimate copy_to_user failed");
++	KUNIT_EXPECT_EQ_MSG(test, copy_to_user(umem, kmem, size), 0,
++		"legitimate copy_to_user failed");
+ 
+ 	for (start = 0; start <= size; start++) {
+ 		for (end = start; end <= size; end++) {
+@@ -93,35 +94,32 @@ static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
+ 			int retval = check_zeroed_user(umem + start, len);
+ 			int expected = is_zeroed(kmem + start, len);
+ 
+-			ret |= test(retval != expected,
+-				    "check_nonzero_user(=%d) != memchr_inv(=%d) mismatch (start=%zu, end=%zu)",
+-				    retval, expected, start, end);
++			KUNIT_EXPECT_EQ_MSG(test, retval, expected,
++				"check_nonzero_user(=%d) != memchr_inv(=%d) mismatch (start=%zu, end=%zu)",
++				retval, expected, start, end);
+ 		}
+ 	}
+-
+-	return ret;
+ }
+ 
+-static int test_copy_struct_from_user(char *kmem, char __user *umem,
+-				      size_t size)
++/* Test usage of copy_struct_from_user(). */
++static void usercopy_test_copy_struct_from_user(struct kunit *test)
+ {
+-	int ret = 0;
+ 	char *umem_src = NULL, *expected = NULL;
++	struct usercopy_test_priv *priv = test->priv;
++	char __user *umem = priv->umem;
++	char *kmem = priv->kmem;
++	size_t size = priv->size;
+ 	size_t ksize, usize;
+ 
+-	umem_src = kmalloc(size, GFP_KERNEL);
+-	ret = test(umem_src == NULL, "kmalloc failed");
+-	if (ret)
+-		goto out_free;
++	umem_src = kunit_kmalloc(test, size, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, umem_src);
+ 
+-	expected = kmalloc(size, GFP_KERNEL);
+-	ret = test(expected == NULL, "kmalloc failed");
+-	if (ret)
+-		goto out_free;
++	expected = kunit_kmalloc(test, size, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, expected);
+ 
+ 	/* Fill umem with a fixed byte pattern. */
+ 	memset(umem_src, 0x3e, size);
+-	ret |= test(copy_to_user(umem, umem_src, size),
++	KUNIT_ASSERT_EQ_MSG(test, copy_to_user(umem, umem_src, size), 0,
+ 		    "legitimate copy_to_user failed");
+ 
+ 	/* Check basic case -- (usize == ksize). */
+@@ -131,9 +129,9 @@ static int test_copy_struct_from_user(char *kmem, char __user *umem,
+ 	memcpy(expected, umem_src, ksize);
+ 
+ 	memset(kmem, 0x0, size);
+-	ret |= test(copy_struct_from_user(kmem, ksize, umem, usize),
++	KUNIT_EXPECT_EQ_MSG(test, copy_struct_from_user(kmem, ksize, umem, usize), 0,
+ 		    "copy_struct_from_user(usize == ksize) failed");
+-	ret |= test(memcmp(kmem, expected, ksize),
++	KUNIT_EXPECT_EQ_MSG(test, memcmp(kmem, expected, ksize), 0,
+ 		    "copy_struct_from_user(usize == ksize) gives unexpected copy");
+ 
+ 	/* Old userspace case -- (usize < ksize). */
+@@ -144,9 +142,9 @@ static int test_copy_struct_from_user(char *kmem, char __user *umem,
+ 	memset(expected + usize, 0x0, ksize - usize);
+ 
+ 	memset(kmem, 0x0, size);
+-	ret |= test(copy_struct_from_user(kmem, ksize, umem, usize),
++	KUNIT_EXPECT_EQ_MSG(test, copy_struct_from_user(kmem, ksize, umem, usize), 0,
+ 		    "copy_struct_from_user(usize < ksize) failed");
+-	ret |= test(memcmp(kmem, expected, ksize),
++	KUNIT_EXPECT_EQ_MSG(test, memcmp(kmem, expected, ksize), 0,
+ 		    "copy_struct_from_user(usize < ksize) gives unexpected copy");
+ 
+ 	/* New userspace (-E2BIG) case -- (usize > ksize). */
+@@ -154,7 +152,7 @@ static int test_copy_struct_from_user(char *kmem, char __user *umem,
+ 	usize = size;
+ 
+ 	memset(kmem, 0x0, size);
+-	ret |= test(copy_struct_from_user(kmem, ksize, umem, usize) != -E2BIG,
++	KUNIT_EXPECT_EQ_MSG(test, copy_struct_from_user(kmem, ksize, umem, usize), -E2BIG,
+ 		    "copy_struct_from_user(usize > ksize) didn't give E2BIG");
+ 
+ 	/* New userspace (success) case -- (usize > ksize). */
+@@ -162,78 +160,46 @@ static int test_copy_struct_from_user(char *kmem, char __user *umem,
+ 	usize = size;
+ 
+ 	memcpy(expected, umem_src, ksize);
+-	ret |= test(clear_user(umem + ksize, usize - ksize),
++	KUNIT_EXPECT_EQ_MSG(test, clear_user(umem + ksize, usize - ksize), 0,
+ 		    "legitimate clear_user failed");
+ 
+ 	memset(kmem, 0x0, size);
+-	ret |= test(copy_struct_from_user(kmem, ksize, umem, usize),
++	KUNIT_EXPECT_EQ_MSG(test, copy_struct_from_user(kmem, ksize, umem, usize), 0,
+ 		    "copy_struct_from_user(usize > ksize) failed");
+-	ret |= test(memcmp(kmem, expected, ksize),
++	KUNIT_EXPECT_EQ_MSG(test, memcmp(kmem, expected, ksize), 0,
+ 		    "copy_struct_from_user(usize > ksize) gives unexpected copy");
+-
+-out_free:
+-	kfree(expected);
+-	kfree(umem_src);
+-	return ret;
+ }
+ 
+-static int __init test_user_copy_init(void)
++/*
++ * Legitimate usage: none of these copies should fail.
++ */
++static void usercopy_test_valid(struct kunit *test)
+ {
+-	int ret = 0;
+-	char *kmem;
+-	char __user *usermem;
+-	char *bad_usermem;
+-	unsigned long user_addr;
+-	u8 val_u8;
+-	u16 val_u16;
+-	u32 val_u32;
+-#ifdef TEST_U64
+-	u64 val_u64;
+-#endif
+-
+-	kmem = kmalloc(PAGE_SIZE * 2, GFP_KERNEL);
+-	if (!kmem)
+-		return -ENOMEM;
++	struct usercopy_test_priv *priv = test->priv;
++	char __user *usermem = priv->umem;
++	char *kmem = priv->kmem;
+ 
+-	user_addr = vm_mmap(NULL, 0, PAGE_SIZE * 2,
+-			    PROT_READ | PROT_WRITE | PROT_EXEC,
+-			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
+-	if (user_addr >= (unsigned long)(TASK_SIZE)) {
+-		pr_warn("Failed to allocate user memory\n");
+-		kfree(kmem);
+-		return -ENOMEM;
+-	}
+-
+-	usermem = (char __user *)user_addr;
+-	bad_usermem = (char *)user_addr;
+-
+-	/*
+-	 * Legitimate usage: none of these copies should fail.
+-	 */
+ 	memset(kmem, 0x3a, PAGE_SIZE * 2);
+-	ret |= test(copy_to_user(usermem, kmem, PAGE_SIZE),
+-		    "legitimate copy_to_user failed");
++	KUNIT_EXPECT_EQ_MSG(test, 0, copy_to_user(usermem, kmem, PAGE_SIZE),
++	     "legitimate copy_to_user failed");
+ 	memset(kmem, 0x0, PAGE_SIZE);
+-	ret |= test(copy_from_user(kmem, usermem, PAGE_SIZE),
+-		    "legitimate copy_from_user failed");
+-	ret |= test(memcmp(kmem, kmem + PAGE_SIZE, PAGE_SIZE),
+-		    "legitimate usercopy failed to copy data");
+-
+-#define test_legit(size, check)						  \
+-	do {								  \
+-		val_##size = check;					  \
+-		ret |= test(put_user(val_##size, (size __user *)usermem), \
+-		    "legitimate put_user (" #size ") failed");		  \
+-		val_##size = 0;						  \
+-		ret |= test(get_user(val_##size, (size __user *)usermem), \
+-		    "legitimate get_user (" #size ") failed");		  \
+-		ret |= test(val_##size != check,			  \
+-		    "legitimate get_user (" #size ") failed to do copy"); \
+-		if (val_##size != check) {				  \
+-			pr_info("0x%llx != 0x%llx\n",			  \
+-				(unsigned long long)val_##size,		  \
+-				(unsigned long long)check);		  \
+-		}							  \
++	KUNIT_EXPECT_EQ_MSG(test, 0, copy_from_user(kmem, usermem, PAGE_SIZE),
++	     "legitimate copy_from_user failed");
++	KUNIT_EXPECT_EQ_MSG(test, 0, memcmp(kmem, kmem + PAGE_SIZE, PAGE_SIZE),
++	     "legitimate usercopy failed to copy data");
++
++#define test_legit(size, check)						\
++	do {								\
++		size val_##size = (check);				\
++		KUNIT_EXPECT_EQ_MSG(test, 0,				\
++			put_user(val_##size, (size __user *)usermem),	\
++			"legitimate put_user (" #size ") failed");	\
++		val_##size = 0;						\
++		KUNIT_EXPECT_EQ_MSG(test, 0,				\
++			get_user(val_##size, (size __user *)usermem),	\
++			"legitimate get_user (" #size ") failed");	\
++		KUNIT_EXPECT_EQ_MSG(test, val_##size, check,		\
++			"legitimate get_user (" #size ") failed to do copy"); \
+ 	} while (0)
+ 
+ 	test_legit(u8,  0x5a);
+@@ -243,27 +209,30 @@ static int __init test_user_copy_init(void)
+ 	test_legit(u64, 0x5a5b5c5d6a6b6c6d);
+ #endif
+ #undef test_legit
++}
+ 
+-	/* Test usage of check_nonzero_user(). */
+-	ret |= test_check_nonzero_user(kmem, usermem, 2 * PAGE_SIZE);
+-	/* Test usage of copy_struct_from_user(). */
+-	ret |= test_copy_struct_from_user(kmem, usermem, 2 * PAGE_SIZE);
+-
+-	/*
+-	 * Invalid usage: none of these copies should succeed.
+-	 */
++/*
++ * Invalid usage: none of these copies should succeed.
++ */
++static void usercopy_test_invalid(struct kunit *test)
++{
++	struct usercopy_test_priv *priv = test->priv;
++	char __user *usermem = priv->umem;
++	char *bad_usermem = (char *)usermem;
++	char *kmem = priv->kmem;
++	u64 *kmem_u64 = (u64 *)kmem;
+ 
+ 	/* Prepare kernel memory with check values. */
+ 	memset(kmem, 0x5a, PAGE_SIZE);
+ 	memset(kmem + PAGE_SIZE, 0, PAGE_SIZE);
+ 
+ 	/* Reject kernel-to-kernel copies through copy_from_user(). */
+-	ret |= test(!copy_from_user(kmem, (char __user *)(kmem + PAGE_SIZE),
+-				    PAGE_SIZE),
++	KUNIT_EXPECT_NE_MSG(test, copy_from_user(kmem, (char __user *)(kmem + PAGE_SIZE),
++						 PAGE_SIZE), 0,
+ 		    "illegal all-kernel copy_from_user passed");
+ 
+ 	/* Destination half of buffer should have been zeroed. */
+-	ret |= test(memcmp(kmem + PAGE_SIZE, kmem, PAGE_SIZE),
++	KUNIT_EXPECT_EQ_MSG(test, memcmp(kmem + PAGE_SIZE, kmem, PAGE_SIZE), 0,
+ 		    "zeroing failure for illegal all-kernel copy_from_user");
+ 
+ #if 0
+@@ -273,30 +242,31 @@ static int __init test_user_copy_init(void)
+ 	 * to be tested in LKDTM instead, since this test module does not
+ 	 * expect to explode.
+ 	 */
+-	ret |= test(!copy_from_user(bad_usermem, (char __user *)kmem,
+-				    PAGE_SIZE),
++	KUNIT_EXPECT_NE_MSG(test, copy_from_user(bad_usermem, (char __user *)kmem,
++						 PAGE_SIZE), 0,
+ 		    "illegal reversed copy_from_user passed");
+ #endif
+-	ret |= test(!copy_to_user((char __user *)kmem, kmem + PAGE_SIZE,
+-				  PAGE_SIZE),
++	KUNIT_EXPECT_NE_MSG(test, copy_to_user((char __user *)kmem, kmem + PAGE_SIZE,
++					       PAGE_SIZE), 0,
+ 		    "illegal all-kernel copy_to_user passed");
+-	ret |= test(!copy_to_user((char __user *)kmem, bad_usermem,
+-				  PAGE_SIZE),
++	KUNIT_EXPECT_NE_MSG(test, copy_to_user((char __user *)kmem, bad_usermem,
++					       PAGE_SIZE), 0,
+ 		    "illegal reversed copy_to_user passed");
+ 
+-#define test_illegal(size, check)					    \
+-	do {								    \
+-		val_##size = (check);					    \
+-		ret |= test(!get_user(val_##size, (size __user *)kmem),	    \
+-		    "illegal get_user (" #size ") passed");		    \
+-		ret |= test(val_##size != (size)0,			    \
+-		    "zeroing failure for illegal get_user (" #size ")");    \
+-		if (val_##size != (size)0) {				    \
+-			pr_info("0x%llx != 0\n",			    \
+-				(unsigned long long)val_##size);	    \
+-		}							    \
+-		ret |= test(!put_user(val_##size, (size __user *)kmem),	    \
+-		    "illegal put_user (" #size ") passed");		    \
++#define test_illegal(size, check)							\
++	do {										\
++		size val_##size = (check);						\
++		/* get_user() */							\
++		KUNIT_EXPECT_NE_MSG(test, get_user(val_##size, (size __user *)kmem), 0,	\
++		    "illegal get_user (" #size ") passed");				\
++		KUNIT_EXPECT_EQ_MSG(test, val_##size, 0,				\
++		    "zeroing failure for illegal get_user (" #size ")");		\
++		/* put_user() */							\
++		*kmem_u64 = 0xF09FA4AFF09FA4AF;						\
++		KUNIT_EXPECT_NE_MSG(test, put_user(val_##size, (size __user *)kmem), 0,	\
++		    "illegal put_user (" #size ") passed");				\
++		KUNIT_EXPECT_EQ_MSG(test, *kmem_u64, 0xF09FA4AFF09FA4AF,		\
++		    "illegal put_user (" #size ") wrote to kernel memory!");		\
+ 	} while (0)
+ 
+ 	test_illegal(u8,  0x5a);
+@@ -306,26 +276,45 @@ static int __init test_user_copy_init(void)
+ 	test_illegal(u64, 0x5a5b5c5d6a6b6c6d);
+ #endif
+ #undef test_illegal
++}
+ 
+-	vm_munmap(user_addr, PAGE_SIZE * 2);
+-	kfree(kmem);
++static int usercopy_test_init(struct kunit *test)
++{
++	struct usercopy_test_priv *priv;
++	unsigned long user_addr;
+ 
+-	if (ret == 0) {
+-		pr_info("tests passed.\n");
+-		return 0;
+-	}
++	priv = kunit_kzalloc(test, sizeof(*priv), GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv);
++	test->priv = priv;
++	priv->size = PAGE_SIZE * 2;
+ 
+-	return -EINVAL;
+-}
++	priv->kmem = kunit_kmalloc(test, priv->size, GFP_KERNEL);
++	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv->kmem);
+ 
+-module_init(test_user_copy_init);
++	user_addr = kunit_vm_mmap(test, NULL, 0, priv->size,
++			    PROT_READ | PROT_WRITE | PROT_EXEC,
++			    MAP_ANONYMOUS | MAP_PRIVATE, 0);
++	KUNIT_ASSERT_LT_MSG(test, user_addr, (unsigned long)TASK_SIZE,
++		"Failed to allocate user memory");
++	priv->umem = (char __user *)user_addr;
+ 
+-static void __exit test_user_copy_exit(void)
+-{
+-	pr_info("unloaded.\n");
++	return 0;
+ }
+ 
+-module_exit(test_user_copy_exit);
+-
+-MODULE_AUTHOR("Kees Cook <keescook@chromium.org>");
++static struct kunit_case usercopy_test_cases[] = {
++	KUNIT_CASE(usercopy_test_valid),
++	KUNIT_CASE(usercopy_test_invalid),
++	KUNIT_CASE(usercopy_test_check_nonzero_user),
++	KUNIT_CASE(usercopy_test_copy_struct_from_user),
++	{}
++};
++
++static struct kunit_suite usercopy_test_suite = {
++	.name = "usercopy",
++	.init = usercopy_test_init,
++	.test_cases = usercopy_test_cases,
++};
++
++kunit_test_suites(&usercopy_test_suite);
++MODULE_AUTHOR("Kees Cook <kees@kernel.org>");
+ MODULE_LICENSE("GPL");
+-- 
+2.34.1
 
->
->
-> So if one uses key to do trace__syscall_info(trace, NULL, key), because
-> key only goes up to trace->sctbl->syscalls.nr_entries, for example, on
-> my X86_64 machine, this number is 373, it will end up neglecting all
-> the rest of the syscall, in my case, everything after `rseq`, because
-> the traversal will stop at 373, and `rseq` is the last syscall whose id
-> is lower than 373
->
-> in tools/perf/arch/x86/include/generated/asm/syscalls_64.c:
-> ```
->         ...
->         [334] =3D "rseq",
->         [424] =3D "pidfd_send_signal",
->         ...
-> ```
->
-> The reason why the key is scrambled but perf trace works well is that
-> key is used in trace__syscall_info(trace, NULL, key) to do
-> trace->syscalls.table[id], this makes sure that the struct syscall return=
-ed
-> actually has an id the same value as key, making the later bpf_prog
-> matching all correct.
-
-
-Could we create a test for this? We have tests that list all perf
-events and then running a perf command on them. It wouldn't be
-possible to guarantee output.
-
->
-> After fixing this bug, I can do perf trace on 38 more syscalls, and
-> because more syscalls are visible, we get 8 more syscalls that can be
-> augmented.
->
-> before:
->
-> perf $ perf trace -vv --max-events=3D1 |& grep Reusing
-> Reusing "open" BPF sys_enter augmenter for "stat"
-> Reusing "open" BPF sys_enter augmenter for "lstat"
-> Reusing "open" BPF sys_enter augmenter for "access"
-> Reusing "connect" BPF sys_enter augmenter for "accept"
-> Reusing "sendto" BPF sys_enter augmenter for "recvfrom"
-> Reusing "connect" BPF sys_enter augmenter for "bind"
-> Reusing "connect" BPF sys_enter augmenter for "getsockname"
-> Reusing "connect" BPF sys_enter augmenter for "getpeername"
-> Reusing "open" BPF sys_enter augmenter for "execve"
-> Reusing "open" BPF sys_enter augmenter for "truncate"
-> Reusing "open" BPF sys_enter augmenter for "chdir"
-> Reusing "open" BPF sys_enter augmenter for "mkdir"
-> Reusing "open" BPF sys_enter augmenter for "rmdir"
-> Reusing "open" BPF sys_enter augmenter for "creat"
-> Reusing "open" BPF sys_enter augmenter for "link"
-> Reusing "open" BPF sys_enter augmenter for "unlink"
-> Reusing "open" BPF sys_enter augmenter for "symlink"
-> Reusing "open" BPF sys_enter augmenter for "readlink"
-> Reusing "open" BPF sys_enter augmenter for "chmod"
-> Reusing "open" BPF sys_enter augmenter for "chown"
-> Reusing "open" BPF sys_enter augmenter for "lchown"
-> Reusing "open" BPF sys_enter augmenter for "mknod"
-> Reusing "open" BPF sys_enter augmenter for "statfs"
-> Reusing "open" BPF sys_enter augmenter for "pivot_root"
-> Reusing "open" BPF sys_enter augmenter for "chroot"
-> Reusing "open" BPF sys_enter augmenter for "acct"
-> Reusing "open" BPF sys_enter augmenter for "swapon"
-> Reusing "open" BPF sys_enter augmenter for "swapoff"
-> Reusing "open" BPF sys_enter augmenter for "delete_module"
-> Reusing "open" BPF sys_enter augmenter for "setxattr"
-> Reusing "open" BPF sys_enter augmenter for "lsetxattr"
-> Reusing "openat" BPF sys_enter augmenter for "fsetxattr"
-> Reusing "open" BPF sys_enter augmenter for "getxattr"
-> Reusing "open" BPF sys_enter augmenter for "lgetxattr"
-> Reusing "openat" BPF sys_enter augmenter for "fgetxattr"
-> Reusing "open" BPF sys_enter augmenter for "listxattr"
-> Reusing "open" BPF sys_enter augmenter for "llistxattr"
-> Reusing "open" BPF sys_enter augmenter for "removexattr"
-> Reusing "open" BPF sys_enter augmenter for "lremovexattr"
-> Reusing "fsetxattr" BPF sys_enter augmenter for "fremovexattr"
-> Reusing "open" BPF sys_enter augmenter for "mq_open"
-> Reusing "open" BPF sys_enter augmenter for "mq_unlink"
-> Reusing "fsetxattr" BPF sys_enter augmenter for "add_key"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "request_key"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "inotify_add_watch"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "mkdirat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "mknodat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "fchownat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "futimesat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "newfstatat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "unlinkat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "linkat"
-> Reusing "open" BPF sys_enter augmenter for "symlinkat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "readlinkat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "fchmodat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "faccessat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "utimensat"
-> Reusing "connect" BPF sys_enter augmenter for "accept4"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "name_to_handle_at"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "renameat2"
-> Reusing "open" BPF sys_enter augmenter for "memfd_create"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "execveat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "statx"
->
-> after
->
-> perf $ perf trace -vv --max-events=3D1 |& grep Reusing
-> Reusing "open" BPF sys_enter augmenter for "stat"
-> Reusing "open" BPF sys_enter augmenter for "lstat"
-> Reusing "open" BPF sys_enter augmenter for "access"
-> Reusing "connect" BPF sys_enter augmenter for "accept"
-> Reusing "sendto" BPF sys_enter augmenter for "recvfrom"
-> Reusing "connect" BPF sys_enter augmenter for "bind"
-> Reusing "connect" BPF sys_enter augmenter for "getsockname"
-> Reusing "connect" BPF sys_enter augmenter for "getpeername"
-> Reusing "open" BPF sys_enter augmenter for "execve"
-> Reusing "open" BPF sys_enter augmenter for "truncate"
-> Reusing "open" BPF sys_enter augmenter for "chdir"
-> Reusing "open" BPF sys_enter augmenter for "mkdir"
-> Reusing "open" BPF sys_enter augmenter for "rmdir"
-> Reusing "open" BPF sys_enter augmenter for "creat"
-> Reusing "open" BPF sys_enter augmenter for "link"
-> Reusing "open" BPF sys_enter augmenter for "unlink"
-> Reusing "open" BPF sys_enter augmenter for "symlink"
-> Reusing "open" BPF sys_enter augmenter for "readlink"
-> Reusing "open" BPF sys_enter augmenter for "chmod"
-> Reusing "open" BPF sys_enter augmenter for "chown"
-> Reusing "open" BPF sys_enter augmenter for "lchown"
-> Reusing "open" BPF sys_enter augmenter for "mknod"
-> Reusing "open" BPF sys_enter augmenter for "statfs"
-> Reusing "open" BPF sys_enter augmenter for "pivot_root"
-> Reusing "open" BPF sys_enter augmenter for "chroot"
-> Reusing "open" BPF sys_enter augmenter for "acct"
-> Reusing "open" BPF sys_enter augmenter for "swapon"
-> Reusing "open" BPF sys_enter augmenter for "swapoff"
-> Reusing "open" BPF sys_enter augmenter for "delete_module"
-> Reusing "open" BPF sys_enter augmenter for "setxattr"
-> Reusing "open" BPF sys_enter augmenter for "lsetxattr"
-> Reusing "openat" BPF sys_enter augmenter for "fsetxattr"
-> Reusing "open" BPF sys_enter augmenter for "getxattr"
-> Reusing "open" BPF sys_enter augmenter for "lgetxattr"
-> Reusing "openat" BPF sys_enter augmenter for "fgetxattr"
-> Reusing "open" BPF sys_enter augmenter for "listxattr"
-> Reusing "open" BPF sys_enter augmenter for "llistxattr"
-> Reusing "open" BPF sys_enter augmenter for "removexattr"
-> Reusing "open" BPF sys_enter augmenter for "lremovexattr"
-> Reusing "fsetxattr" BPF sys_enter augmenter for "fremovexattr"
-> Reusing "open" BPF sys_enter augmenter for "mq_open"
-> Reusing "open" BPF sys_enter augmenter for "mq_unlink"
-> Reusing "fsetxattr" BPF sys_enter augmenter for "add_key"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "request_key"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "inotify_add_watch"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "mkdirat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "mknodat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "fchownat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "futimesat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "newfstatat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "unlinkat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "linkat"
-> Reusing "open" BPF sys_enter augmenter for "symlinkat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "readlinkat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "fchmodat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "faccessat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "utimensat"
-> Reusing "connect" BPF sys_enter augmenter for "accept4"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "name_to_handle_at"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "renameat2"
-> Reusing "open" BPF sys_enter augmenter for "memfd_create"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "execveat"
-> Reusing "fremovexattr" BPF sys_enter augmenter for "statx"
->
-> TL;DR:
->
-> These are the new syscalls that can be augmented
-> Reusing "openat" BPF sys_enter augmenter for "open_tree"
-> Reusing "openat" BPF sys_enter augmenter for "openat2"
-> Reusing "openat" BPF sys_enter augmenter for "mount_setattr"
-> Reusing "openat" BPF sys_enter augmenter for "move_mount"
-> Reusing "open" BPF sys_enter augmenter for "fsopen"
-> Reusing "openat" BPF sys_enter augmenter for "fspick"
-> Reusing "openat" BPF sys_enter augmenter for "faccessat2"
-> Reusing "openat" BPF sys_enter augmenter for "fchmodat2"
->
-> as for the perf trace output:
->
-> before
->
-> perf $ perf trace -e faccessat2 --max-events=3D1
-> [no output]
->
-> after
->
-> perf $ ./perf trace -e faccessat2 --max-events=3D1
->      0.000 ( 0.037 ms): waybar/958 faccessat2(dfd: 40, filename: "uevent"=
-)                               =3D 0
->
-> P.S. The reason why this bug was not found in the past five years is
-> probably because it only happens to the newer syscalls whose id is
-> greater, for instance, faccessat2 of id 439, which not a lot of people
-> care about when using perf trace.
->
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> ---
->  tools/perf/builtin-trace.c   | 32 +++++++++++++++++++++-----------
->  tools/perf/util/syscalltbl.c | 21 +++++++++------------
->  tools/perf/util/syscalltbl.h |  5 +++++
->  3 files changed, 35 insertions(+), 23 deletions(-)
->
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index c42bc608954e..5cbe1748911d 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -3354,7 +3354,8 @@ static int trace__bpf_prog_sys_exit_fd(struct trace=
- *trace, int id)
->  static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trac=
-e *trace, struct syscall *sc)
->  {
->         struct tep_format_field *field, *candidate_field;
-> -       int id;
-> +       struct __syscall *scs =3D trace->sctbl->syscalls.entries;
-> +       int id, _id;
->
->         /*
->          * We're only interested in syscalls that have a pointer:
-> @@ -3368,10 +3369,13 @@ static struct bpf_program *trace__find_usable_bpf=
-_prog_entry(struct trace *trace
->
->  try_to_find_pair:
->         for (id =3D 0; id < trace->sctbl->syscalls.nr_entries; ++id) {
-> -               struct syscall *pair =3D trace__syscall_info(trace, NULL,=
- id);
-> +               struct syscall *pair;
->                 struct bpf_program *pair_prog;
->                 bool is_candidate =3D false;
->
-> +               _id =3D scs[id].id;
-> +               pair =3D trace__syscall_info(trace, NULL, _id);
-> +
->                 if (pair =3D=3D NULL || pair =3D=3D sc ||
->                     pair->bpf_prog.sys_enter =3D=3D trace->skel->progs.sy=
-scall_unaugmented)
->                         continue;
-> @@ -3456,23 +3460,26 @@ static int trace__init_syscalls_bpf_prog_array_ma=
-ps(struct trace *trace)
->  {
->         int map_enter_fd =3D bpf_map__fd(trace->skel->maps.syscalls_sys_e=
-nter);
->         int map_exit_fd  =3D bpf_map__fd(trace->skel->maps.syscalls_sys_e=
-xit);
-> -       int err =3D 0, key;
-> +       int err =3D 0, key, id;
-> +       struct __syscall *scs =3D trace->sctbl->syscalls.entries;
->
->         for (key =3D 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
->                 int prog_fd;
->
-> -               if (!trace__syscall_enabled(trace, key))
-> +               id =3D scs[key].id;
-> +
-> +               if (!trace__syscall_enabled(trace, id))
->                         continue;
->
-> -               trace__init_syscall_bpf_progs(trace, key);
-> +               trace__init_syscall_bpf_progs(trace, id);
->
->                 // It'll get at least the "!raw_syscalls:unaugmented"
-> -               prog_fd =3D trace__bpf_prog_sys_enter_fd(trace, key);
-> -               err =3D bpf_map_update_elem(map_enter_fd, &key, &prog_fd,=
- BPF_ANY);
-> +               prog_fd =3D trace__bpf_prog_sys_enter_fd(trace, id);
-> +               err =3D bpf_map_update_elem(map_enter_fd, &id, &prog_fd, =
-BPF_ANY);
->                 if (err)
->                         break;
-> -               prog_fd =3D trace__bpf_prog_sys_exit_fd(trace, key);
-> -               err =3D bpf_map_update_elem(map_exit_fd, &key, &prog_fd, =
-BPF_ANY);
-> +               prog_fd =3D trace__bpf_prog_sys_exit_fd(trace, id);
-> +               err =3D bpf_map_update_elem(map_exit_fd, &id, &prog_fd, B=
-PF_ANY);
->                 if (err)
->                         break;
->         }
-> @@ -3506,10 +3513,13 @@ static int trace__init_syscalls_bpf_prog_array_ma=
-ps(struct trace *trace)
->          * array tail call, then that one will be used.
->          */
->         for (key =3D 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
-> -               struct syscall *sc =3D trace__syscall_info(trace, NULL, k=
-ey);
-> +               struct syscall *sc;
->                 struct bpf_program *pair_prog;
->                 int prog_fd;
->
-> +               id =3D scs[key].id;
-> +               sc =3D trace__syscall_info(trace, NULL, id);
-> +
->                 if (sc =3D=3D NULL || sc->bpf_prog.sys_enter =3D=3D NULL)
->                         continue;
->
-> @@ -3535,7 +3545,7 @@ static int trace__init_syscalls_bpf_prog_array_maps=
-(struct trace *trace)
->                  * with the fd for the program we're reusing:
->                  */
->                 prog_fd =3D bpf_program__fd(sc->bpf_prog.sys_enter);
-> -               err =3D bpf_map_update_elem(map_enter_fd, &key, &prog_fd,=
- BPF_ANY);
-> +               err =3D bpf_map_update_elem(map_enter_fd, &id, &prog_fd, =
-BPF_ANY);
->                 if (err)
->                         break;
->         }
-> diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
-> index 63be7b58761d..16aa886c40f0 100644
-> --- a/tools/perf/util/syscalltbl.c
-> +++ b/tools/perf/util/syscalltbl.c
-> @@ -44,22 +44,17 @@ const int syscalltbl_native_max_id =3D SYSCALLTBL_LOO=
-NGARCH_MAX_ID;
->  static const char *const *syscalltbl_native =3D syscalltbl_loongarch;
->  #endif
->
-> -struct syscall {
-> -       int id;
-> -       const char *name;
-> -};
-> -
->  static int syscallcmpname(const void *vkey, const void *ventry)
->  {
->         const char *key =3D vkey;
-> -       const struct syscall *entry =3D ventry;
-> +       const struct __syscall *entry =3D ventry;
->
->         return strcmp(key, entry->name);
->  }
->
->  static int syscallcmp(const void *va, const void *vb)
->  {
-> -       const struct syscall *a =3D va, *b =3D vb;
-> +       const struct __syscall *a =3D va, *b =3D vb;
->
->         return strcmp(a->name, b->name);
->  }
-> @@ -67,13 +62,14 @@ static int syscallcmp(const void *va, const void *vb)
->  static int syscalltbl__init_native(struct syscalltbl *tbl)
->  {
->         int nr_entries =3D 0, i, j;
-> -       struct syscall *entries;
-> +       struct __syscall *entries;
->
->         for (i =3D 0; i <=3D syscalltbl_native_max_id; ++i)
->                 if (syscalltbl_native[i])
->                         ++nr_entries;
->
-> -       entries =3D tbl->syscalls.entries =3D malloc(sizeof(struct syscal=
-l) * nr_entries);
-> +       entries =3D tbl->syscalls.entries =3D malloc(sizeof(struct __sysc=
-all) *
-> +                                                nr_entries);
->         if (tbl->syscalls.entries =3D=3D NULL)
->                 return -1;
->
-> @@ -85,7 +81,8 @@ static int syscalltbl__init_native(struct syscalltbl *t=
-bl)
->                 }
->         }
->
-> -       qsort(tbl->syscalls.entries, nr_entries, sizeof(struct syscall), =
-syscallcmp);
-> +       qsort(tbl->syscalls.entries, nr_entries, sizeof(struct __syscall)=
-,
-> +             syscallcmp);
->         tbl->syscalls.nr_entries =3D nr_entries;
->         tbl->syscalls.max_id     =3D syscalltbl_native_max_id;
->         return 0;
-> @@ -116,7 +113,7 @@ const char *syscalltbl__name(const struct syscalltbl =
-*tbl __maybe_unused, int id
->
->  int syscalltbl__id(struct syscalltbl *tbl, const char *name)
->  {
-> -       struct syscall *sc =3D bsearch(name, tbl->syscalls.entries,
-> +       struct __syscall *sc =3D bsearch(name, tbl->syscalls.entries,
->                                      tbl->syscalls.nr_entries, sizeof(*sc=
-),
->                                      syscallcmpname);
->
-> @@ -126,7 +123,7 @@ int syscalltbl__id(struct syscalltbl *tbl, const char=
- *name)
->  int syscalltbl__strglobmatch_next(struct syscalltbl *tbl, const char *sy=
-scall_glob, int *idx)
->  {
->         int i;
-> -       struct syscall *syscalls =3D tbl->syscalls.entries;
-> +       struct __syscall *syscalls =3D tbl->syscalls.entries;
->
->         for (i =3D *idx + 1; i < tbl->syscalls.nr_entries; ++i) {
->                 if (strglobmatch(syscalls[i].name, syscall_glob)) {
-> diff --git a/tools/perf/util/syscalltbl.h b/tools/perf/util/syscalltbl.h
-> index a41d2ca9e4ae..6e93a0874c40 100644
-> --- a/tools/perf/util/syscalltbl.h
-> +++ b/tools/perf/util/syscalltbl.h
-> @@ -2,6 +2,11 @@
->  #ifndef __PERF_SYSCALLTBL_H
->  #define __PERF_SYSCALLTBL_H
->
-
-It'd be  nice to document the struct with examples that explain the
-confusion that's happened and is fixed here.
-
-Thanks,
-Ian
-
-> +struct __syscall {
-> +       int id;
-> +       const char *name;
-> +};
-> +
->  struct syscalltbl {
->         int audit_machine;
->         struct {
-> --
-> 2.45.2
->
