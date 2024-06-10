@@ -1,84 +1,101 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E1518C31;
-	Mon, 10 Jun 2024 09:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AFD74054;
+	Mon, 10 Jun 2024 09:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718011354; cv=none; b=hRqOZy700FsL5FPtFTqisINKBTA8dRwDYD2/t1pGe0So5S2+QlKBV2P8fHo8270c1evLBO7s2DSM0dX0aQkHXvL4PbbGL67OnuEfdrPcjC5Hj/t2nhIyaY0w2icDXnm5WmV3NbbQ5E5OlBTQnGMe89n8HFZ3J4RSA0VpQlCEl8k=
+	t=1718011391; cv=none; b=VHq8ePDFJTYrAewYzAT0JRcosTR1FtDnMfPFNcNPRYLTvu0W8INfZJ2UkIZtg5Vg8f+qFnFexbQi9oeh4B8dNlYu+ueZQ9+T4lpDbQFfnV4dcc36X32/1zj797HakKjO3UkyCpzt/FzfJMPqvTSMehEg7I+wbokdGjH00N7XV7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718011354; c=relaxed/simple;
-	bh=j9A/rBwDhxLLDCI7vyau1r8sh17/Qb17QTv36WldZwI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pG0d6UNccaDDCzG3l7LLnbKysjZiH1RMMp3nbyLU8rK7U4Z9s8mE/+lbN7+OKVmW3ZpFcyUcfb0dgY/ErG2GYi9HgcCyvk6cf0TqTVKsxBWD5xO7+ZAv5udJjNUKbc5WHiptFDV+Yb5FJu7k8Pz7DbI0AzmAlMPOtwVxNsPsiZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KvqkuG4j; arc=none smtp.client-ip=209.85.208.48
+	s=arc-20240116; t=1718011391; c=relaxed/simple;
+	bh=2UiqJBiAjg925Mv8BoowfUF9MSCJtuTrlQ3zMSsUDyo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QDVQFwhZwIMcU6UpSQdpBUaeIIDkUiu/RQpcjAAIGBDUBMXyqk3hDuDwr2KKFPVPJPlx4CvwYF1625CJxLa0Ymn7n4pkChNAZM6W/puZ01+NQan5nTRyogvwJMp2Sm5gRV/6S9Zm5tJSuc9JaIYOSwBhrA4N3GDk97qJGdZpSPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c8lmwmSj; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvqkuG4j"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57c5c51cb89so3152354a12.2;
-        Mon, 10 Jun 2024 02:22:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c8lmwmSj"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f4a0050b9aso34848495ad.2;
+        Mon, 10 Jun 2024 02:23:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718011350; x=1718616150; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=j9A/rBwDhxLLDCI7vyau1r8sh17/Qb17QTv36WldZwI=;
-        b=KvqkuG4jkd/6b49mtHXnw3SWUI3imM2bNn+Dt/eSgJLJ6etyhESeHCTOYLv0BI7DGF
-         U1qNlf+zBepXeEB5lw5QisgRDMSnwzC9mtacKeiAspoEIdtmI4F97oBCq7VSgxfVW1oC
-         /0GOYsRYnBi8FV0vYESxPs0IDPcI3o0wLRT/7CxSxkiFYC8dzlGyyDZPw5msfA/mHv57
-         535KEc7B+Smau5UmlQFaTDPYX3Z86FiXQ3b1+my5nHqQMODXhZuVOdXEOqfScXeQE3we
-         4TpACA+zsNUJwej4ZR/ZRZ9zHbtwULn8hoGiCG/edb6iWEiDRBVj0cb4xGMMrQ0MWsa3
-         tr6A==
+        d=gmail.com; s=20230601; t=1718011388; x=1718616188; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZBBzEslwLKDs7+wwf/Rd0uuhAioTAEZ+jnOaZqf3V2M=;
+        b=c8lmwmSjLtdAm0mvpsq6ffQDae6DXhPgBVtaGypPAo8C8TGJGFP+5pRefjQ4f9NiHl
+         biK50hqEudKjG3uaiTvoeCXRuHuFdEYkf9jbwsAwBRz/Xy6EtdDnqEB5qddRMsutgW+p
+         EKJXlsk+KnQFe+KYgOcfL932hnr5J0augr5gPgPUn9eSksNK16Ig+LJqxe3qa9DB9wDv
+         xF3aXwuXbA9erpDRMGRgSPi7/e1sDFT+3zdHyj1R9qKQS/8WNbKmsLfN0ZP8YjpYJCgF
+         oDXvteG2UgAdgaKXImuXDbVRCf3h40GGmj2M9LCWukyC2ni7Lt/1rYS7IB+6k9TjrWMt
+         eIAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718011350; x=1718616150;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j9A/rBwDhxLLDCI7vyau1r8sh17/Qb17QTv36WldZwI=;
-        b=C5jWcUBBFWt3y6LSqgeYY0TzEZruQxI05KKRh79Uum1y9ZwMx8B7vrxZ/PRD/fAeOY
-         hlCqXAQeTCnD/S4rezHZoPVospzFm/pJK1BW716N9JVE4PoYCpLWEXkzUsU+MIlLTIYe
-         zv+TeV6j4xjho0uMT1ZyECuyRvT+kLVtdGQw2Nlv9i6wS02BK9+Ibk4fr43etxH3emg8
-         fhUAdSAz2McOPQ7ov43kDaQ3NEv/FdMscGjNUp7VFiIRIq619Vrs0urlV6pdE7O0AifK
-         gu42EKj4YNMgwS7n6QAv612k9iJodIqtxGM9lJCHKp0kTV3ouN6nCyh9t1BOTtv6tcGn
-         y8sw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2Fku2epBAkPTmseamcx9CxG2rzcw2rHIKaihDMXDQnhSrg++mLpimSBu2KMwFERSMCrCWT6GkzSVsWKR+QWjulZ+Su9to7ygkzyAGsIPqxB2Igb4WWOKlBkqFZipq1Z9fiUAQxdgbHxc=
-X-Gm-Message-State: AOJu0Yzab9Wn5GIHY2WINLuiwakb4hQ7aLEADZHvbdAooFd6kXFOX4Bw
-	gqFd98IQkS4TWurmpy/JtxM4GUnd13WLOm+e314aykfuk4wIt1cF
-X-Google-Smtp-Source: AGHT+IFlYbCXBRu3JVxA9Oyw9DxIPbdy4/XMF+m85UANVbqTTgmxVTnSW/xQIVTtXSsI4wF2xc2Ypg==
-X-Received: by 2002:a50:9f49:0:b0:57c:7f2a:c13f with SMTP id 4fb4d7f45d1cf-57c7f2ac1demr2253610a12.26.1718011350084;
-        Mon, 10 Jun 2024 02:22:30 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c69d06729sm4233854a12.56.2024.06.10.02.22.29
+        d=1e100.net; s=20230601; t=1718011388; x=1718616188;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZBBzEslwLKDs7+wwf/Rd0uuhAioTAEZ+jnOaZqf3V2M=;
+        b=msVOai0LO3nHMfRJ1IZbHWbnDzp0XWe5ugVRz89AUPlsPi2UVEO91dQ6sPTUbxPNqS
+         FSe60I6Zd5k32k5clp8LRQWF13KwdNbORThpEdMwuzyC+9+aGey5q5MCpXLc9dGtG9ee
+         5KmOIa2lUA3TOcpXKY/Nz+4FtFKwHVzSoCTre4IHb93JSIwfNt/lNhBWw7gi9uvR7ojg
+         X9m4dSMuYUCP2kBo7zl6JnQrDDvnUsAJQCMOdw+nL7pj8mspb3teqcSliTjVCdc/u9so
+         UDnE9e8gFl4vxftBnvmoY0C0dMvYE9Chol1B4c024E1zGTMg1XT6eftucMzjNLrFo1sp
+         2cvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJZsCJ9jqSQACuKzfLRq7n0h0r9Xs6f8DIfyD6/s1QVRAKzb/TtmQPGeOsL5X2gZ7WaTiq9RQgw3SUceDojnFE/eJmV9jNDyn01yskuYzbMpAlMMTOTRRsA0kOZeuWe0rg4/W0mg==
+X-Gm-Message-State: AOJu0YwWS5/sD8S93+YX4G79LSVuoRFMziHoF1gm4rMBJrFY34ckFBbh
+	tsloiKefUA+CEwr5ibfBIxcgj1KsxXdmE/LWwi4u4T1rEKD5wX8fHhDmCQ==
+X-Google-Smtp-Source: AGHT+IEhVekrwr8a8hID/dU1DA8uY+yhBliXrdKeDmzy/Xx+MqoIFAjee9VwRsS7wjU8WrVFLjjNIQ==
+X-Received: by 2002:a17:903:230c:b0:1f7:2134:e8a4 with SMTP id d9443c01a7336-1f72134eaeamr2835145ad.49.1718011388292;
+        Mon, 10 Jun 2024 02:23:08 -0700 (PDT)
+Received: from rigel.home.arpa ([118.209.204.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6efa2a319sm41318395ad.108.2024.06.10.02.23.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 02:22:29 -0700 (PDT)
-Message-ID: <15af47e6005286c02b70b232d96b1ba1a49659b9.camel@gmail.com>
-Subject: Re: [PATCH 3/3] Input: adxl34x- switch to using "guard" notation
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
-Cc: Michael Hennerich <michael.hennerich@analog.com>, 
-	linux-kernel@vger.kernel.org
-Date: Mon, 10 Jun 2024 11:26:18 +0200
-In-Reply-To: <20240609234122.603796-3-dmitry.torokhov@gmail.com>
-References: <20240609234122.603796-1-dmitry.torokhov@gmail.com>
-	 <20240609234122.603796-3-dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+        Mon, 10 Jun 2024 02:23:07 -0700 (PDT)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	brgl@bgdev.pl,
+	corbet@lwn.net,
+	drankinatty@gmail.com
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH 0/2] Documentation: gpio: clarify that line values are logical
+Date: Mon, 10 Jun 2024 17:21:55 +0800
+Message-Id: <20240610092157.9147-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sun, 2024-06-09 at 16:41 -0700, Dmitry Torokhov wrote:
-> Switch to using guard(mutex)() notation to acquire and automatically
-> release mutexes.
->=20
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
+The line values passed by the GPIO uAPI are logical values, and the edges
+returned are based on changes to logical line values.  While the
+documentation consistently uses active/inactive terminology to identify
+the values as logical, this is never explicitly spelt out.
+This series clarifies those points, with paricular emphasis on the
+effect the active low flag has on values and edge polarity.
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+Patch 1 provides clarification for ioctls passing line values.
 
+Patch 2 provides clarification for functions returning edge events.
+
+Cheers,
+Kent.
+
+Kent Gibson (2):
+  Documentation: gpio: Clarify effect of active low flag on line values
+  Documentation: gpio: Clarify effect of active low flag on line edges
+
+ .../gpio/gpio-handle-get-line-values-ioctl.rst             | 7 +++++++
+ .../gpio/gpio-handle-set-line-values-ioctl.rst             | 7 +++++++
+ .../userspace-api/gpio/gpio-lineevent-data-read.rst        | 5 +++++
+ .../userspace-api/gpio/gpio-v2-line-event-read.rst         | 5 +++++
+ .../userspace-api/gpio/gpio-v2-line-get-values-ioctl.rst   | 7 +++++++
+ .../userspace-api/gpio/gpio-v2-line-set-values-ioctl.rst   | 7 +++++++
+ 6 files changed, 38 insertions(+)
+
+--
+2.39.2
 
