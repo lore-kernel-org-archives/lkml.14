@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B87154BEB
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FCF15532C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037753; cv=none; b=ryGuFVm/MM63PeKzQJXq8d2MSP3tsn85lE0TYyS6OQ1yTLUf8fPgGFGwBk7F8Fx2OfKm/0eA3QK4x0QFBNBU/6xIO3zuK10ht/1wx1Enmpy6JpS1apXbY2WcfPcDujV4Pe6IH/+YsQP/iA7jSL5wtV1MQ5VdMYWE6BYEIDYWpIw=
+	t=1718037756; cv=none; b=RrB4t3MguVIvYN1CVab9c9G8rD2bbtzxzixqOUZ41oiOcQ3qCjJ3UjRHUs8zUTmh8sMa3sHSjpFTdTQuIXqTW6aq+oWCWpdL0wyhnZya7+n24R93FG47yFqjauHVQ6MlZ3bR0jwUkfzUb9FSlPoaD+uYYC1iRUFZITuU+kS+4Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718037753; c=relaxed/simple;
-	bh=pmCbpSGE0XRK0ukKqo1U6qxPo/JyzQDl0umJpcWyXGY=;
+	s=arc-20240116; t=1718037756; c=relaxed/simple;
+	bh=vhFqJQGzuzFxet5n8aXmRbKfqxdROxlKhbpES6yLgrw=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=JTUBX0Zg0HduJ6uRr/pW89DMqCQbmiG4Dbwc20mN1n4AEdFf2zzIvMLncyZikizAPUuG5lzIR8JQGnNImPUlHtg634+cGyyu7RoQD3RVzpXjfHJGE//f3PRVxblMiqzq08a5FWWBUm/T4scO8Cwe3L3PgxJYyTjAn0Ud+RaIHWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sw7pA3PX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ho83ImrH; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=mDQ3f+qDXEbS9ty57abXLrwYUZzOpkkU+FSH3lu4Bc/iCkLpf6slg2O8G9GMbgYpDQXLy62rRfHXiMN2xxdaSMMXClFJjLapct5RsIUGkM6o0X2Z9KL4QxTF0OhNWhGYhmBX82+w4lbU8NoQ8DaaxFS5gsQvcn9sU+Kap3mcu+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d/QtOnsL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RpXGGtna; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sw7pA3PX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ho83ImrH"
-Message-ID: <20240610164026.682500732@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d/QtOnsL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RpXGGtna"
+Message-ID: <20240610164026.806827615@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037749;
+	s=2020; t=1718037751;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=6GMzkiAHRvFkC+fzhDyL20WSpzWzUN7g85C6W+O5hxI=;
-	b=sw7pA3PXxHKq7CZr5wAVHO3A03j1R10jIzoElGKiBGmx2kYMOBaWxgdJMLDGlWT4iL34WF
-	QyEKhbgtNs2z7j/FUuTJer8SqTWakAvz+1KPBdt9RQrWZUV3X+9TbonSdqQOChad4FXfMP
-	dkHzDof8kAgd9b9HnRL57YQVrF9BwKWDw5lT1BqRIaO79Hp0CRlYZ4d0MCZ5QJ0t9c6MEg
-	u/06K2jlOAWKTCR3WNa5xODdHl/a+LwCKBjrp+VH98pJMDMH2wij/AO9Rsv9KuKKnaVr5q
-	GoPR0Sr82dzCdCRGQD+IyranA4hma4Kih/zMhr4oAAhtNZ/72KX++zI94W1kQQ==
+	 references:references; bh=ftWWtT5tkPA9yVyOVqrZETMprBLvt80uYl9BSpWJ448=;
+	b=d/QtOnsLXwSrRyD4OQFjbIWOO9L0WzgvJMrFQGNL6KQP87UpFEY1RFRj8PC+PhVaO4rt8L
+	xNSP2IpyhWJjzpHShGWc148GPKN3Hg5mP8UdFCH63+xZ/q+GEB43POzUiVCtabVXWVRsY3
+	J4Bf12YfNFyyqHpheXqAB+njkJ7bRvzzrilpXXncQHWfi6fZB3FNVwQ9pZUUkAVKZYbRyu
+	Lems3DOVkFWV8+XGBH0rjJnKUmH1cwJSwd5tbJi4gW0rHCrtTzKZjCd33IAihb4qv/jbil
+	tuhVOfQK2pNBJeuoiTlLuQBBEfSJP6pjbIYAjvT6RlZG1zakVPGgLBzdS9jhCA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037749;
+	s=2020e; t=1718037751;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=6GMzkiAHRvFkC+fzhDyL20WSpzWzUN7g85C6W+O5hxI=;
-	b=ho83ImrHdAR2pJ3+KDkZpNjDdUjR22xniGCePaACo6ZBmtY2MsHmYeWB5wyjEpMD5+ZhLI
-	ce6MZyH4SPoUhWDQ==
+	 references:references; bh=ftWWtT5tkPA9yVyOVqrZETMprBLvt80uYl9BSpWJ448=;
+	b=RpXGGtnaW6cMxPb2HqkPy4S73HLLyYlLKCi+DZ7ybVHtpoEr1TBWUiZ35Yc4yjIeMtY8Ya
+	xb6CJ+fGuS7fB1DA==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
@@ -45,7 +45,8 @@ Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
  Stephen Boyd <sboyd@kernel.org>,
  Eric Biederman <ebiederm@xmission.com>,
  Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 19/51] posix-timers: Convert timer list to hlist
+Subject: [patch V3 21/51] posix-cpu-timers: Make k_itimer::it_active
+ consistent
 References: <20240610163452.591699700@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,147 +55,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:42:28 +0200 (CEST)
+Date: Mon, 10 Jun 2024 18:42:31 +0200 (CEST)
 
-No requirement for a real list. Spare a few bytes.
+Posix CPU timers are not updating k_itimer::it_active which makes it
+impossible to base decisions in the common posix timer code on it.
+
+Update it when queueing or dequeueing posix CPU timers.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
- fs/proc/base.c               |    6 +++---
- include/linux/posix-timers.h |    2 +-
- include/linux/sched/signal.h |    2 +-
- init/init_task.c             |    2 +-
- kernel/fork.c                |    2 +-
- kernel/time/posix-timers.c   |   19 ++++++++-----------
- 6 files changed, 15 insertions(+), 18 deletions(-)
+V2: Move the clearing to cpu_timer_fire() - Frederic
+---
+ kernel/time/posix-cpu-timers.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -2456,13 +2456,13 @@ static void *timers_start(struct seq_fil
- 	if (!tp->sighand)
- 		return ERR_PTR(-ESRCH);
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -453,6 +453,7 @@ static void disarm_timer(struct k_itimer
+ 	struct cpu_timer *ctmr = &timer->it.cpu;
+ 	struct posix_cputimer_base *base;
  
--	return seq_list_start(&tp->task->signal->posix_timers, *pos);
-+	return seq_hlist_start(&tp->task->signal->posix_timers, *pos);
- }
- 
- static void *timers_next(struct seq_file *m, void *v, loff_t *pos)
- {
- 	struct timers_private *tp = m->private;
--	return seq_list_next(v, &tp->task->signal->posix_timers, pos);
-+	return seq_hlist_next(v, &tp->task->signal->posix_timers, pos);
- }
- 
- static void timers_stop(struct seq_file *m, void *v)
-@@ -2491,7 +2491,7 @@ static int show_timer(struct seq_file *m
- 		[SIGEV_THREAD] = "thread",
- 	};
- 
--	timer = list_entry((struct list_head *)v, struct k_itimer, list);
-+	timer = hlist_entry((struct hlist_node *)v, struct k_itimer, list);
- 	notify = timer->it_sigev_notify;
- 
- 	seq_printf(m, "ID: %d\n", timer->it_id);
---- a/include/linux/posix-timers.h
-+++ b/include/linux/posix-timers.h
-@@ -158,7 +158,7 @@ static inline void posix_cputimers_init_
-  * @rcu:		RCU head for freeing the timer.
-  */
- struct k_itimer {
--	struct list_head	list;
-+	struct hlist_node	list;
- 	struct hlist_node	t_hash;
- 	spinlock_t		it_lock;
- 	const struct k_clock	*kclock;
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -137,7 +137,7 @@ struct signal_struct {
- 
- 	/* POSIX.1b Interval Timers */
- 	unsigned int		next_posix_timer_id;
--	struct list_head	posix_timers;
-+	struct hlist_head	posix_timers;
- 
- 	/* ITIMER_REAL timer for the process */
- 	struct hrtimer real_timer;
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -29,7 +29,7 @@ static struct signal_struct init_signals
- 	.cred_guard_mutex = __MUTEX_INITIALIZER(init_signals.cred_guard_mutex),
- 	.exec_update_lock = __RWSEM_INITIALIZER(init_signals.exec_update_lock),
- #ifdef CONFIG_POSIX_TIMERS
--	.posix_timers = LIST_HEAD_INIT(init_signals.posix_timers),
-+	.posix_timers	= HLIST_HEAD_INIT,
- 	.cputimer	= {
- 		.cputime_atomic	= INIT_CPUTIME_ATOMIC,
- 	},
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1876,7 +1876,7 @@ static int copy_signal(unsigned long clo
- 	prev_cputime_init(&sig->prev_cputime);
- 
- #ifdef CONFIG_POSIX_TIMERS
--	INIT_LIST_HEAD(&sig->posix_timers);
-+	INIT_HLIST_HEAD(&sig->posix_timers);
- 	hrtimer_init(&sig->real_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	sig->real_timer.function = it_real_fn;
- #endif
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -515,7 +515,7 @@ static int do_timer_create(clockid_t whi
- 	spin_lock_irq(&current->sighand->siglock);
- 	/* This makes the timer valid in the hash table */
- 	WRITE_ONCE(new_timer->it_signal, current->signal);
--	list_add(&new_timer->list, &current->signal->posix_timers);
-+	hlist_add_head(&new_timer->list, &current->signal->posix_timers);
- 	spin_unlock_irq(&current->sighand->siglock);
- 	/*
- 	 * After unlocking sighand::siglock @new_timer is subject to
-@@ -1025,7 +1025,7 @@ SYSCALL_DEFINE1(timer_delete, timer_t, t
- 	}
- 
- 	spin_lock(&current->sighand->siglock);
--	list_del(&timer->list);
-+	hlist_del(&timer->list);
- 	spin_unlock(&current->sighand->siglock);
- 	/*
- 	 * A concurrent lookup could check timer::it_signal lockless. It
-@@ -1075,7 +1075,7 @@ static void itimer_delete(struct k_itime
- 
- 		goto retry_delete;
- 	}
--	list_del(&timer->list);
-+	hlist_del(&timer->list);
- 
- 	/*
- 	 * Setting timer::it_signal to NULL is technically not required
-@@ -1096,22 +1096,19 @@ static void itimer_delete(struct k_itime
-  */
- void exit_itimers(struct task_struct *tsk)
- {
--	struct list_head timers;
--	struct k_itimer *tmr;
-+	struct hlist_head timers;
- 
--	if (list_empty(&tsk->signal->posix_timers))
-+	if (hlist_empty(&tsk->signal->posix_timers))
++	timer->it_active = 0;
+ 	if (!cpu_timer_dequeue(ctmr))
  		return;
  
- 	/* Protect against concurrent read via /proc/$PID/timers */
- 	spin_lock_irq(&tsk->sighand->siglock);
--	list_replace_init(&tsk->signal->posix_timers, &timers);
-+	hlist_move_list(&tsk->signal->posix_timers, &timers);
- 	spin_unlock_irq(&tsk->sighand->siglock);
+@@ -559,6 +560,7 @@ static void arm_timer(struct k_itimer *t
+ 	struct cpu_timer *ctmr = &timer->it.cpu;
+ 	u64 newexp = cpu_timer_getexpires(ctmr);
  
- 	/* The timers are not longer accessible via tsk::signal */
--	while (!list_empty(&timers)) {
--		tmr = list_first_entry(&timers, struct k_itimer, list);
--		itimer_delete(tmr);
--	}
-+	while (!hlist_empty(&timers))
-+		itimer_delete(hlist_entry(timers.first, struct k_itimer, list));
- }
++	timer->it_active = 1;
+ 	if (!cpu_timer_enqueue(&base->tqhead, ctmr))
+ 		return;
  
- SYSCALL_DEFINE2(clock_settime, const clockid_t, which_clock,
+@@ -584,6 +586,7 @@ static void cpu_timer_fire(struct k_itim
+ {
+ 	struct cpu_timer *ctmr = &timer->it.cpu;
+ 
++	timer->it_active = 0;
+ 	if (unlikely(timer->sigq == NULL)) {
+ 		/*
+ 		 * This a special case for clock_nanosleep,
+@@ -668,6 +671,7 @@ static int posix_cpu_timer_set(struct k_
+ 		ret = TIMER_RETRY;
+ 	} else {
+ 		cpu_timer_dequeue(ctmr);
++		timer->it_active = 0;
+ 	}
+ 
+ 	/*
 
