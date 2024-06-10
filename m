@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FCF15532C
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E2E155381
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037756; cv=none; b=RrB4t3MguVIvYN1CVab9c9G8rD2bbtzxzixqOUZ41oiOcQ3qCjJ3UjRHUs8zUTmh8sMa3sHSjpFTdTQuIXqTW6aq+oWCWpdL0wyhnZya7+n24R93FG47yFqjauHVQ6MlZ3bR0jwUkfzUb9FSlPoaD+uYYC1iRUFZITuU+kS+4Ms=
+	t=1718037757; cv=none; b=FGcx2hayA02PPoaQFlvycH68id6EUA0S3CPoXQDOC1V5xPJ6hNA0GCjOUiERiHY3zYn36z9ysJGEG6JQrx1r34mfHcja5I7+VK//QQTYddMrvo4LmOqGbMrrgomeKaar7UlFEXOGkNtXi8+jlWYMRpE7cMa+b0S1d5heWg3AcaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718037756; c=relaxed/simple;
-	bh=vhFqJQGzuzFxet5n8aXmRbKfqxdROxlKhbpES6yLgrw=;
+	s=arc-20240116; t=1718037757; c=relaxed/simple;
+	bh=+8eJhLmLaBhsdGTxPY+WrOPg4LBJu0d/eL03Sd/TxJs=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=mDQ3f+qDXEbS9ty57abXLrwYUZzOpkkU+FSH3lu4Bc/iCkLpf6slg2O8G9GMbgYpDQXLy62rRfHXiMN2xxdaSMMXClFJjLapct5RsIUGkM6o0X2Z9KL4QxTF0OhNWhGYhmBX82+w4lbU8NoQ8DaaxFS5gsQvcn9sU+Kap3mcu+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d/QtOnsL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RpXGGtna; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=mUwa/LrONYnMOKsxaLnGT3pH/mF+NP3G5PPWCAb0522sIVR5hsGiHByUpjIOKlyWstEAGKMlhBaGLeH3NZRnZz2XDg/OfN+m+RLKpYiX/7VZE9+/bhU8IFyOCu1z/1alHhZRMS1LUjwboTxjzDF9luW/dWMD8+skIybl40QhSR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n3W1Hu20; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PVSxu5x8; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d/QtOnsL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RpXGGtna"
-Message-ID: <20240610164026.806827615@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n3W1Hu20";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PVSxu5x8"
+Message-ID: <20240610164026.929337144@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037751;
+	s=2020; t=1718037754;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=ftWWtT5tkPA9yVyOVqrZETMprBLvt80uYl9BSpWJ448=;
-	b=d/QtOnsLXwSrRyD4OQFjbIWOO9L0WzgvJMrFQGNL6KQP87UpFEY1RFRj8PC+PhVaO4rt8L
-	xNSP2IpyhWJjzpHShGWc148GPKN3Hg5mP8UdFCH63+xZ/q+GEB43POzUiVCtabVXWVRsY3
-	J4Bf12YfNFyyqHpheXqAB+njkJ7bRvzzrilpXXncQHWfi6fZB3FNVwQ9pZUUkAVKZYbRyu
-	Lems3DOVkFWV8+XGBH0rjJnKUmH1cwJSwd5tbJi4gW0rHCrtTzKZjCd33IAihb4qv/jbil
-	tuhVOfQK2pNBJeuoiTlLuQBBEfSJP6pjbIYAjvT6RlZG1zakVPGgLBzdS9jhCA==
+	 references:references; bh=Uf6CyGlUDp6ZuYdKBwWfggnizxjbUvxBehy8Wo6qoQk=;
+	b=n3W1Hu20fjU+TPQ3CcsNkobldImCjKMtoXzFo1J2iVqeaXrCADKhwDBntwsSWlwQetD/8S
+	PCoyJ/67OgDyI2yLXtGx5HIH8t0nLrGmarBv/vuvUAKadUDKuFQ83v0OBNOnWMi/6IUUAX
+	O8wsvvjA392UL2fMJG4Gi8JoZcnOdARszK914P6Mp8y10gtU828b51Z3w0wmz3BXhHg1q7
+	e4alGwlQcckXqiF7/y/9b7+yIPzNKyiS33pAnsvX74twnV3/YyRUTFVlxvD0Z2Jymjgqwi
+	AZgDhasuefxchmFz+8pnW/e3Yufv3ogk0DB8H0j9WtVFv7p4GT5rnbWS6oWNzw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037751;
+	s=2020e; t=1718037754;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=ftWWtT5tkPA9yVyOVqrZETMprBLvt80uYl9BSpWJ448=;
-	b=RpXGGtnaW6cMxPb2HqkPy4S73HLLyYlLKCi+DZ7ybVHtpoEr1TBWUiZ35Yc4yjIeMtY8Ya
-	xb6CJ+fGuS7fB1DA==
+	 references:references; bh=Uf6CyGlUDp6ZuYdKBwWfggnizxjbUvxBehy8Wo6qoQk=;
+	b=PVSxu5x8RiiGKvQESDosM+e4/uD8tBBqN5iVjWpwqlpE5uGJFX4rKVxYu0v5crEOdA/v0Z
+	4kKALu2Rql99aeBg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
@@ -45,8 +45,7 @@ Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
  Stephen Boyd <sboyd@kernel.org>,
  Eric Biederman <ebiederm@xmission.com>,
  Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 21/51] posix-cpu-timers: Make k_itimer::it_active
- consistent
+Subject: [patch V3 23/51] signal: Remove task argument from dequeue_signal()
 References: <20240610163452.591699700@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,52 +54,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:42:31 +0200 (CEST)
+Date: Mon, 10 Jun 2024 18:42:33 +0200 (CEST)
 
-Posix CPU timers are not updating k_itimer::it_active which makes it
-impossible to base decisions in the common posix timer code on it.
+The task pointer which is handed to dequeue_signal() is always current. The
+argument along with the first comment about signalfd in that function is
+confusing at best. Remove it and use current internally.
 
-Update it when queueing or dequeueing posix CPU timers.
+Update the stale comment for dequeue_signal() while at it.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 ---
-V2: Move the clearing to cpu_timer_fire() - Frederic
----
- kernel/time/posix-cpu-timers.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/signalfd.c                |    4 ++--
+ include/linux/sched/signal.h |    5 ++---
+ kernel/signal.c              |   23 ++++++++++-------------
+ 3 files changed, 14 insertions(+), 18 deletions(-)
 
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -453,6 +453,7 @@ static void disarm_timer(struct k_itimer
- 	struct cpu_timer *ctmr = &timer->it.cpu;
- 	struct posix_cputimer_base *base;
+--- a/fs/signalfd.c
++++ b/fs/signalfd.c
+@@ -160,7 +160,7 @@ static ssize_t signalfd_dequeue(struct s
+ 	DECLARE_WAITQUEUE(wait, current);
  
-+	timer->it_active = 0;
- 	if (!cpu_timer_dequeue(ctmr))
- 		return;
+ 	spin_lock_irq(&current->sighand->siglock);
+-	ret = dequeue_signal(current, &ctx->sigmask, info, &type);
++	ret = dequeue_signal(&ctx->sigmask, info, &type);
+ 	switch (ret) {
+ 	case 0:
+ 		if (!nonblock)
+@@ -175,7 +175,7 @@ static ssize_t signalfd_dequeue(struct s
+ 	add_wait_queue(&current->sighand->signalfd_wqh, &wait);
+ 	for (;;) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
+-		ret = dequeue_signal(current, &ctx->sigmask, info, &type);
++		ret = dequeue_signal(&ctx->sigmask, info, &type);
+ 		if (ret != 0)
+ 			break;
+ 		if (signal_pending(current)) {
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -276,8 +276,7 @@ static inline void signal_set_stop_flags
+ extern void flush_signals(struct task_struct *);
+ extern void ignore_signals(struct task_struct *);
+ extern void flush_signal_handlers(struct task_struct *, int force_default);
+-extern int dequeue_signal(struct task_struct *task, sigset_t *mask,
+-			  kernel_siginfo_t *info, enum pid_type *type);
++extern int dequeue_signal(sigset_t *mask, kernel_siginfo_t *info, enum pid_type *type);
  
-@@ -559,6 +560,7 @@ static void arm_timer(struct k_itimer *t
- 	struct cpu_timer *ctmr = &timer->it.cpu;
- 	u64 newexp = cpu_timer_getexpires(ctmr);
- 
-+	timer->it_active = 1;
- 	if (!cpu_timer_enqueue(&base->tqhead, ctmr))
- 		return;
- 
-@@ -584,6 +586,7 @@ static void cpu_timer_fire(struct k_itim
+ static inline int kernel_dequeue_signal(void)
  {
- 	struct cpu_timer *ctmr = &timer->it.cpu;
+@@ -287,7 +286,7 @@ static inline int kernel_dequeue_signal(
+ 	int ret;
  
-+	timer->it_active = 0;
- 	if (unlikely(timer->sigq == NULL)) {
+ 	spin_lock_irq(&task->sighand->siglock);
+-	ret = dequeue_signal(task, &task->blocked, &__info, &__type);
++	ret = dequeue_signal(&task->blocked, &__info, &__type);
+ 	spin_unlock_irq(&task->sighand->siglock);
+ 
+ 	return ret;
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -618,20 +618,18 @@ static int __dequeue_signal(struct sigpe
+ }
+ 
+ /*
+- * Dequeue a signal and return the element to the caller, which is
+- * expected to free it.
+- *
+- * All callers have to hold the siglock.
++ * Try to dequeue a signal. If a deliverable signal is found fill in the
++ * caller provided siginfo and return the signal number. Otherwise return
++ * 0.
+  */
+-int dequeue_signal(struct task_struct *tsk, sigset_t *mask,
+-		   kernel_siginfo_t *info, enum pid_type *type)
++int dequeue_signal(sigset_t *mask, kernel_siginfo_t *info, enum pid_type *type)
+ {
++	struct task_struct *tsk = current;
+ 	bool resched_timer = false;
+ 	int signr;
+ 
+-	/* We only dequeue private signals from ourselves, we don't let
+-	 * signalfd steal them
+-	 */
++	lockdep_assert_held(&tsk->sighand->siglock);
++
+ 	*type = PIDTYPE_PID;
+ 	signr = __dequeue_signal(&tsk->pending, mask, info, &resched_timer);
+ 	if (!signr) {
+@@ -2787,8 +2785,7 @@ bool get_signal(struct ksignal *ksig)
+ 		type = PIDTYPE_PID;
+ 		signr = dequeue_synchronous_signal(&ksig->info);
+ 		if (!signr)
+-			signr = dequeue_signal(current, &current->blocked,
+-					       &ksig->info, &type);
++			signr = dequeue_signal(&current->blocked, &ksig->info, &type);
+ 
+ 		if (!signr)
+ 			break; /* will return 0 */
+@@ -3642,7 +3639,7 @@ static int do_sigtimedwait(const sigset_
+ 	signotset(&mask);
+ 
+ 	spin_lock_irq(&tsk->sighand->siglock);
+-	sig = dequeue_signal(tsk, &mask, info, &type);
++	sig = dequeue_signal(&mask, info, &type);
+ 	if (!sig && timeout) {
  		/*
- 		 * This a special case for clock_nanosleep,
-@@ -668,6 +671,7 @@ static int posix_cpu_timer_set(struct k_
- 		ret = TIMER_RETRY;
- 	} else {
- 		cpu_timer_dequeue(ctmr);
-+		timer->it_active = 0;
+ 		 * None ready, temporarily unblock those we're interested
+@@ -3661,7 +3658,7 @@ static int do_sigtimedwait(const sigset_
+ 		spin_lock_irq(&tsk->sighand->siglock);
+ 		__set_task_blocked(tsk, &tsk->real_blocked);
+ 		sigemptyset(&tsk->real_blocked);
+-		sig = dequeue_signal(tsk, &mask, info, &type);
++		sig = dequeue_signal(&mask, info, &type);
  	}
+ 	spin_unlock_irq(&tsk->sighand->siglock);
  
- 	/*
 
