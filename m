@@ -1,186 +1,96 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC1CD304
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CECA935;
+	Mon, 10 Jun 2024 05:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717996789; cv=none; b=Qs0XXfvslYo0PKYaboeL9Y5amna30IGvz0Q3pykP1scJjMXjCETvqnw1NfUv0ef/XtwqS2ihDWBIe11zS9+NTl84isA+ah9flHftPhCtNbCsopqiypKD1bi7ANFD7ycXHahUZpZOJfn+9eqYoWi8MaRLZSh2TZy/FRoFoqoP1SI=
+	t=1717996891; cv=none; b=YP4BA/A+p8oRgOz2mXfUQC+CHSI7ObuR/xMPw4GEAWKD2TlSezQ7HO/aqvqMF6aznZD+bztQY5i7Oq8wxCB0hgYS0Np5zG0KlOvdMgC1PD0RsYobPH03UybHUTWsqnmOwRG75hVT1ipCk7EtxFaarEfJUch+l8FLAE8vQBZLkZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717996789; c=relaxed/simple;
-	bh=g8i8kFB4TIVpY3Nz/WcNPFscAVNpwKVeg3EK32oUVTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t4k0GqgAP0W/pssrUVqNOKviT/YV5LRQzhAdsxGtSz698H/jL/OPiqqSncrZVoa7WEPApA7Qd8yVWrRKuCJGmgPqYVrML6XO3mU+c5nJ9LyLOV08A1pKKlvg14RXoKK7WumjNHacuxcoVsWg2SFFG5krjiakTNn/zPtl+8a//sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sGXO8-0004F8-Mh; Mon, 10 Jun 2024 07:16:12 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sGXO5-001E4V-Tt; Mon, 10 Jun 2024 07:16:09 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1sGXO5-002foM-2g;
-	Mon, 10 Jun 2024 07:16:09 +0200
-Date: Mon, 10 Jun 2024 07:16:09 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dent Project <dentproject@linuxfoundation.org>,
-	kernel@pengutronix.de
-Subject: Re: [PATCH net-next v2 2/8] net: ethtool: pse-pd: Expand C33 PSE
- status with class, power and extended state
-Message-ID: <ZmaMGWMOvILHy8Iu@pengutronix.de>
-References: <20240607-feature_poe_power_cap-v2-0-c03c2deb83ab@bootlin.com>
- <20240607-feature_poe_power_cap-v2-2-c03c2deb83ab@bootlin.com>
+	s=arc-20240116; t=1717996891; c=relaxed/simple;
+	bh=nLzdTiP3EARNEnbPxQYRy79wXc10LD+pYFR32/b0o/U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qaeewWr4YQATUWvJ7cpFs3hotog8k2dSzE3/Z+ktf8WQzm7SEaT1J7MeeV0lR5kkq+FigIFEbpIvKskKaqRPOWKN8fjwhlELFsxgvfbz3Iz/pQrlFPoJPR+qNqav+1O9boOpgAT3LKBSckb0g3hOgFaVPvG9qbA2vxkgr1QrkT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=vhff1sVB; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="vhff1sVB"
+From: Dragan Simic <dsimic@manjaro.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1717996887;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=h/XUnRjyn1afFwbgacDGxBOr6+wZiVfhFNcVw8jYbcU=;
+	b=vhff1sVBl+bNStIFEgmLQkD/jxOe3xFvX+VnLvYZadWxDFU7XOBeNX5R3JoP1GTlMY/jgC
+	QNdNo1HOWATkXDx/K+86Fj1BShZU07XrzZz1yXTGX14Ji4N3e9N1lfK0bfKOqlEKIsKVaJ
+	LlxpHjbAscwzlnc9Kf4l89IG+0X5ehgJfyocQp6t7Xo6FEdii7xPuOr2J5MIeGnGRvYECk
+	qx/aQiPTAnQZXCJSN2CRCDwVZRtBbrM6N1TZYR0GMzH2am5DHpnDlN6RpITvyBoUaQ657X
+	RMfVLQsNXHOze3m2UYiJ6vSIcPfByuAyKIwjaSfH7ADH6IgBXxAJrohFlPEcWQ==
+To: linux-kbuild@vger.kernel.org
+Cc: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas@fjasle.eu,
+	linux-kernel@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	Diederik de Haas <didi.debian@cknow.org>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] kbuild: Install dtb files as 0644 in Makefile.dtbinst
+Date: Mon, 10 Jun 2024 07:21:12 +0200
+Message-Id: <e1fd1b659711f59c61ec48dc43912dddccbb4d92.1717996742.git.dsimic@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240607-feature_poe_power_cap-v2-2-c03c2deb83ab@bootlin.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Hi Köry,
+The compiled dtb files aren't executable, so install them with 0644 as their
+permission mode, instead of defaulting to 0755 for the permission mode and
+installing them with the executable bits set.
 
-Thank you for your work.
+Some Linux distributions, including Debian, [1][2][3] already include fixes
+in their kernel package build recipes to change the dtb file permissions to
+0644 in their kernel packages.  These changes, when additionally propagated
+into the long-term kernel versions, will allow such distributions to remove
+their downstream fixes.
 
-On Fri, Jun 07, 2024 at 09:30:19AM +0200, Kory Maincent wrote:
-> From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
+[1] https://salsa.debian.org/kernel-team/linux/-/merge_requests/642
+[2] https://salsa.debian.org/kernel-team/linux/-/merge_requests/749
+[3] https://salsa.debian.org/kernel-team/linux/-/blob/master/debian/rules.real?ref_type=heads#L193
 
-...
+Cc: Diederik de Haas <didi.debian@cknow.org>
+Cc: stable@vger.kernel.org
+Fixes: aefd80307a05 ("kbuild: refactor Makefile.dtbinst more")
+Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+---
 
->  /**
-> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-> index 8733a3117902..ef65ad4612d2 100644
-> --- a/include/uapi/linux/ethtool.h
-> +++ b/include/uapi/linux/ethtool.h
-> @@ -752,6 +752,47 @@ enum ethtool_module_power_mode {
->  	ETHTOOL_MODULE_POWER_MODE_HIGH,
->  };
->  
-> +/* C33 PSE extended state */
-> +enum ethtool_c33_pse_ext_state {
-> +	ETHTOOL_C33_PSE_EXT_STATE_UNKNOWN = 1,
+Notes:
+    Changes in v2:
+      - Improved the patch description, to include additional details and
+        to address the patch submission issues pointed out by Greg K-H [4]
+      - No changes were made to the patch itself
+    
+    Link to v1: https://lore.kernel.org/linux-kbuild/ae087ef1715142f606ba6477ace3e4111972cf8b.1717961381.git.dsimic@manjaro.org/T/#u
+    
+    [4] https://lore.kernel.org/linux-kbuild/2024061006-ladylike-paving-a36b@gregkh/
 
-I assume, In case the state is unknown, better to set it to 0 and not
-report it to the user space in the first place. Do we really need it?
+ scripts/Makefile.dtbinst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	ETHTOOL_C33_PSE_EXT_STATE_DETECTION,
-> +	ETHTOOL_C33_PSE_EXT_STATE_CLASSIFICATION_FAILURE,
-> +	ETHTOOL_C33_PSE_EXT_STATE_HARDWARE_ISSUE,
-> +	ETHTOOL_C33_PSE_EXT_STATE_VOLTAGE_ISSUE,
-> +	ETHTOOL_C33_PSE_EXT_STATE_CURRENT_ISSUE,
-> +	ETHTOOL_C33_PSE_EXT_STATE_POWER_BUDGET_EXCEEDED,
-
-What is the difference between POWER_BUDGET_EXCEEDED and
-STATE_CURRENT_ISSUE->CRT_OVERLOAD? If there is some difference, it
-should be commented.
-
-Please provide comments describing how all of this states and substates
-should be used.
-
-> +	ETHTOOL_C33_PSE_EXT_STATE_CONFIG,
-> +	ETHTOOL_C33_PSE_EXT_STATE_TEMP_ISSUE,
-> +};
-
-...
-
->  /**
->   * enum ethtool_pse_types - Types of PSE controller.
->   * @ETHTOOL_PSE_UNKNOWN: Type of PSE controller is unknown
-> diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-> index b49b804b9495..ccbe8294dfd5 100644
-> --- a/include/uapi/linux/ethtool_netlink.h
-> +++ b/include/uapi/linux/ethtool_netlink.h
-> @@ -915,6 +915,10 @@ enum {
->  	ETHTOOL_A_C33_PSE_ADMIN_STATE,		/* u32 */
->  	ETHTOOL_A_C33_PSE_ADMIN_CONTROL,	/* u32 */
->  	ETHTOOL_A_C33_PSE_PW_D_STATUS,		/* u32 */
-> +	ETHTOOL_A_C33_PSE_PW_CLASS,		/* u32 */
-> +	ETHTOOL_A_C33_PSE_ACTUAL_PW,		/* u32 */
-> +	ETHTOOL_A_C33_PSE_EXT_STATE,		/* u8 */
-> +	ETHTOOL_A_C33_PSE_EXT_SUBSTATE,		/* u8 */
-
-Please, increase the size to u32 for state and substate.
-
->  	/* add new constants above here */
->  	__ETHTOOL_A_PSE_CNT,
-> diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
-> index 2c981d443f27..3d74cfe7765b 100644
-> --- a/net/ethtool/pse-pd.c
-> +++ b/net/ethtool/pse-pd.c
-> @@ -86,7 +86,14 @@ static int pse_reply_size(const struct ethnl_req_info *req_base,
->  		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ADMIN_STATE */
->  	if (st->c33_pw_status > 0)
->  		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_D_STATUS */
-> -
-> +	if (st->c33_pw_class > 0)
-> +		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_CLASS */
-> +	if (st->c33_actual_pw > 0)
-> +		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ACTUAL_PW */
-> +	if (st->c33_ext_state_info.c33_pse_ext_state)
-> +		len += nla_total_size(sizeof(u8)); /* _C33_PSE_EXT_STATE */
-> +	if (st->c33_ext_state_info.__c33_pse_ext_substate)
-> +		len += nla_total_size(sizeof(u8)); /* _C33_PSE_EXT_SUBSTATE */
-
-Substate can be properly decoded only if state is not zero.
-
->  	return len;
->  }
->  
-> @@ -117,6 +124,26 @@ static int pse_fill_reply(struct sk_buff *skb,
->  			st->c33_pw_status))
->  		return -EMSGSIZE;
->  
-> +	if (st->c33_pw_class > 0 &&
-> +	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_PW_CLASS,
-> +			st->c33_pw_class))
-> +		return -EMSGSIZE;
-> +
-> +	if (st->c33_actual_pw > 0 &&
-> +	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_ACTUAL_PW,
-> +			st->c33_actual_pw))
-> +		return -EMSGSIZE;
-> +
-> +	if (st->c33_ext_state_info.c33_pse_ext_state > 0 &&
-> +	    nla_put_u8(skb, ETHTOOL_A_C33_PSE_EXT_STATE,
-> +		       st->c33_ext_state_info.c33_pse_ext_state))
-> +		return -EMSGSIZE;
-> +
-> +	if (st->c33_ext_state_info.__c33_pse_ext_substate > 0 &&
-> +	    nla_put_u8(skb, ETHTOOL_A_C33_PSE_EXT_SUBSTATE,
-> +		       st->c33_ext_state_info.__c33_pse_ext_substate))
-> +		return -EMSGSIZE;
-
-ditto.
-
-Please update Documentation/networking/ethtool-netlink.rst
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+diff --git a/scripts/Makefile.dtbinst b/scripts/Makefile.dtbinst
+index 67956f6496a5..9d920419a62c 100644
+--- a/scripts/Makefile.dtbinst
++++ b/scripts/Makefile.dtbinst
+@@ -17,7 +17,7 @@ include $(srctree)/scripts/Kbuild.include
+ dst := $(INSTALL_DTBS_PATH)
+ 
+ quiet_cmd_dtb_install = INSTALL $@
+-      cmd_dtb_install = install -D $< $@
++      cmd_dtb_install = install -D -m 0644 $< $@
+ 
+ $(dst)/%: $(obj)/%
+ 	$(call cmd,dtb_install)
