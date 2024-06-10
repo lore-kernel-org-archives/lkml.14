@@ -1,103 +1,118 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42B77E78E;
-	Mon, 10 Jun 2024 11:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB4078C9C
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 11:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718020596; cv=none; b=lAwH5Y2C7tusT3JoiZcAfFaTtiGhXDK6JgZ39oS6gvwljOlm4G0QS0yfdfVxbUj969637AaDOICkeD8+pCVzZe8rRtBPCDOUxE1g7OTGXWd88aAaqsHaN99sKqKeXzzpGElbl9bHAZPHcAmFh+i9S1P8SVcc/Y/pNC31RjcnbRo=
+	t=1718020648; cv=none; b=tkMae3Xvab2qSDLuwXobE3Z6awpbEvFvjpDQ5gerBncjrHFcXWxg+XdovEYUnyViwgWhgUq63myNcBf5GIyhZNxazquWOP/jYTWaUOaaWXi25u/dw3F8yAGSuAxxDHcdAZ5tW94cHeCKwJK37hWWkO70U0I5YqIbnd3HAIvorYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718020596; c=relaxed/simple;
-	bh=aIZpj99P0sU05RD8b9KavtNB/mKvvZDjucVlsvQeQ18=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rmEK9jHFukGbJngiLFskrfyQj/+UXJkGPALtLJToHf5q32yw4Lug3qXT84anUCg8uGs4Av24lEYXXExevHfRKRVNSXnEiRnKlEfsUVwYy6py/BfNn6YUwLXK4u7muf/4jVKt1DroxGYjlK5fyyJ+KYr7v537n1DCQ0JJgNCI3WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Z2gvYhOR; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718020648; c=relaxed/simple;
+	bh=5qBxDQUXasngRYkylw5SsgPhp9hRTNTgYYxtIvVzhuw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s5GxQY6RQkgDOYmR4rvQ2q9qC6M4QDf3JXcB3jCrN5v3fez3JnHn22JH1BO+a1AABF+GolsJ6mLP0APrLGs0y2Zav7VbQnWTxRfoslv4ojhb+BYfjmxuCuQY6jtP5gxi9Y4OuSO62P7xewxzDVs9RH7Go+C55++Vdj5zz0om7Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=HWmo+Dxe; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=HWmo+Dxe; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Z2gvYhOR"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45A8Xick019005;
-	Mon, 10 Jun 2024 13:56:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	ljxA0CMixUpfWg1txgwTXMZ7NWYzNR9MGl6rj1rR4Us=; b=Z2gvYhORT3qNBZUJ
-	4aIzn/P4fL5XmmKy0Zc2CWu0f3Yev282KotP0hkcZhn+84tHa4l9qWcoav4oQTef
-	oAq2sFzNQ+X1LoTBJsqRK2AjojTRJtr/ssRFjsJTIQiZQcOxdEPzb1+J2KgWscdC
-	/n+k86q6vCdP8A9VmWJNAJALKk90xEGiAFMZ20nnGn4oU6u57FFQqJ45Id6DYh1C
-	zMkUqBzt/nxxp4/Gi0QW7cRAduIIZmgSDiU5w9Qi+j8QaDUrWDRKoSTGKwsMAaxl
-	fDi8WE/NMTHoQ1cxvGfiJYBoniJSa+sD/UGWD47B+9oWPzg8/j+k51XkrUmH1AUf
-	m0SG0A==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yn0v14m1r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Jun 2024 13:56:02 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A670B4002D;
-	Mon, 10 Jun 2024 13:55:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9E0F921685E;
-	Mon, 10 Jun 2024 13:54:39 +0200 (CEST)
-Received: from [10.48.86.164] (10.48.86.164) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 10 Jun
- 2024 13:54:38 +0200
-Message-ID: <e4614975-a7a8-4bfa-a1e2-bf9c31547be9@foss.st.com>
-Date: Mon, 10 Jun 2024 13:54:37 +0200
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="HWmo+Dxe";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="HWmo+Dxe"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AFACC21A4D;
+	Mon, 10 Jun 2024 11:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1718020644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=/TdWq8PyXuXVwPR8Hv+sr1APX3Q4DXtBA/3pEQPpwp0=;
+	b=HWmo+Dxe5K/yvlC1OWu7k0Zr5LtVLLDAi658wUHUu3i+nH1NbdOEb2NGyCMuKdC/jmBnAW
+	TPhYi8oJc8o9jzA6YdgH1Ovs/qfLjJQW2dLp9vXv/sOhP0QwQoHFhaLH1nIXeqFX1G4OPf
+	mC3vom045mH3Aicxtlz8grGCfXw6Wow=
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1718020644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=/TdWq8PyXuXVwPR8Hv+sr1APX3Q4DXtBA/3pEQPpwp0=;
+	b=HWmo+Dxe5K/yvlC1OWu7k0Zr5LtVLLDAi658wUHUu3i+nH1NbdOEb2NGyCMuKdC/jmBnAW
+	TPhYi8oJc8o9jzA6YdgH1Ovs/qfLjJQW2dLp9vXv/sOhP0QwQoHFhaLH1nIXeqFX1G4OPf
+	mC3vom045mH3Aicxtlz8grGCfXw6Wow=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 662E113A7F;
+	Mon, 10 Jun 2024 11:57:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id qpOeFiTqZma9GAAAD6G6ig
+	(envelope-from <nik.borisov@suse.com>); Mon, 10 Jun 2024 11:57:24 +0000
+From: Nikolay Borisov <nik.borisov@suse.com>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kees@kernel.org,
+	bp@alien8.de,
+	Nikolay Borisov <nik.borisov@suse.com>
+Subject: [PATCH] x86/boot: Remove unused function __fortify_panic()
+Date: Mon, 10 Jun 2024 14:57:22 +0300
+Message-Id: <20240610115722.107780-1-nik.borisov@suse.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/12] net: stmmac: dwmac-stm32: Separate out external
- clock rate validation
-To: Ratheesh Kannoth <rkannoth@marvell.com>
-CC: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>, Marek Vasut <marex@denx.de>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240607095754.265105-1-christophe.roullier@foss.st.com>
- <20240607095754.265105-3-christophe.roullier@foss.st.com>
- <20240610114607.GA3818685@maili.marvell.com>
-Content-Language: en-US
-From: Christophe ROULLIER <christophe.roullier@foss.st.com>
-In-Reply-To: <20240610114607.GA3818685@maili.marvell.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [0.20 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.992];
+	MIME_GOOD(-0.10)[text/plain];
+	BAYES_HAM(-0.00)[25.82%];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: 0.20
+X-Spam-Flag: NO
 
-Hi Ratheesh,
+That functino is only used when the kernel is compiled with
+FORTIFY_SOURCE and when the kernel proper string.h header is used. The
+decompressor code doesn't use the kernel proper header but has local
+copy which doesn't contain any fortified implementations of the various
+string functions. As such __fortify_panic can never be called from the
+decompressor so let's remove it.
 
-On 6/10/24 13:46, Ratheesh Kannoth wrote:
-> On 2024-06-07 at 15:27:44, Christophe Roullier (christophe.roullier@foss.st.com) wrote:
->> +static int stm32mp1_validate_ethck_rate(struct plat_stmmacenet_data *plat_dat)
->> +{
->> +	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
->> +	const u32 clk_rate = clk_get_rate(dwmac->clk_eth_ck);
-> nit: reverse xmas tree, split definitions and assignment.
+Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
+---
+ arch/x86/boot/compressed/misc.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-It is not possible ;-)
-
-second declaration need first one.
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index b70e4a21c15f..944454306ef4 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -531,8 +531,3 @@ asmlinkage __visible void *extract_kernel(void *rmode, unsigned char *output)
+ 
+ 	return output + entry_offset;
+ }
+-
+-void __fortify_panic(const u8 reason, size_t avail, size_t size)
+-{
+-	error("detected buffer overflow");
+-}
+-- 
+2.34.1
 
