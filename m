@@ -1,92 +1,102 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A6514389E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2FF1459EF;
+	Mon, 10 Jun 2024 16:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718036980; cv=none; b=BU3kXXBK52kdVCVPVCv83UaTjv0D47ztiFd3BPJFH3oWYpCLjjwF731gDprN2AVyMvxrs8FnNHFJB3jqX81y5HfdP7++f+jAoW5lIWRryxvKpB7HCgSE39CuSs3Bl7rpGFSnjDamFYO4ZwW0G/sRgsNF9SAdQHa8W1x4LmNvELk=
+	t=1718036990; cv=none; b=XnWtXzjr0VT+S8bgN91CJN3afcLUVzTHLISkLgo75FbkEppOzDlQ0Xk1nvz2rpTfCT8hNoIwtAiq/CDdN3vPkBNSWbybHeMUCEtTDWekAMvqF9rTuKNaAGarhCMH8MwAzrEkS/C22Odn+hJWU9oCqhX2SMJ/Z//5gY1pUdS1zQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718036980; c=relaxed/simple;
-	bh=KD17DpYA+Own+2mjA4cap4Dn43A4ySTl2BcRMlYQn6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iq0r7cXQ11igrJ2444uZmqtgZ033HUs8cOJ63POsK6T5GkkzjLMMPfgLAORi9rb8XSGcVQmpR1MQR4dnuwIkCKjLHc6lt3u76WSjCQU6IYvdlDb7TKVUL+J9236XLGtKko1VzH5HfAWoemQYSAnXWIJfIVHdh2ZXfbpLxVtIweU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=X7KHTk1Z; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1718036990; c=relaxed/simple;
+	bh=hG+WGtxwsZuR+f62hkW67KZ+t1AQjeby7UbLM/4qRZ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qTX2I0kx+coJrHZx0GgDDAHad6iBx4oq0Lur/f7O9w14uw33n2MhyN90CZ8Dr5lLaXdnwm1/kEZoOrXfozQzXMQPvfmVNSzZvILvxbMU0MvOtUoeipgoOowroGJ7IzLxMjLttbSNA0Iat9ELKWy7B4NK9ubV0rLt07tfKk80ol4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EbpC3E39; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="X7KHTk1Z"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 33D9140E0081;
-	Mon, 10 Jun 2024 16:29:36 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id BF5qESk6-YgZ; Mon, 10 Jun 2024 16:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718036972; bh=PX4lzbqfUw6c6qfToKtLJI03DW8O5Lp76nqw+hcKEJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X7KHTk1ZOmV6ZnzxCNPgATfL3e6BlNcFu+ZWNUGSvcfOnr2WkMUfSeqiqkL1rF6fN
-	 aUobxa6Z01NcKqqgDi9EP4/NZWPrb5pD7stNHJBQBxTVqwrOh401E/eKZB2iF+7pQv
-	 BYALAllMfn62rTtuVIS71RBkdFZ83WVBg7DvLftV0uYvowaCivjR/ABDVXwi3uhPHY
-	 WVWukEZQrkax+GJHkCO5I/8PlqDp3lRCykFnW6wEWV2S4r9TWmhvLVcG0gEiulYj0y
-	 dvNCW7PwpZLW616pf56/qnEiUNFaA0k9+MlgkIb9sV6jST+QLUM5n5daMCWxXa/Ho0
-	 W9nNtzwUxRBY1N1mQU5tEPPjaOj9a56F4DUcdPZyrftKBIwQIytYAtl/38SLmLfIur
-	 wY4qDxiCggAuIY41Sgn/8zBiF3cj009xw6zXIGIcwxPLHAQS2gaws3GMpCcnFEoejV
-	 6SR6hgFMiXXMfBfjh59P8YfIUYXu7augzEsyyAL7k9nYXOJD26xhq8hy90zumQpS6+
-	 l7TgARrzQXFKAQnw5P4f9afcFmKHj4ujNqup1XwY5Z9iRJH/6WGTSVHGIAKPJWxrc3
-	 qaEgKowcS1BlsboKASJJaezOVyQzLXVEJQfmjCMSmWoWNUuut/hAMumJUIh+o+Wc+Z
-	 Zs5HAypeWLH8mE+JWElvgvlg=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D158B40E0027;
-	Mon, 10 Jun 2024 16:29:28 +0000 (UTC)
-Date: Mon, 10 Jun 2024 18:29:23 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kees@kernel.org
-Subject: Re: [PATCH] x86/boot: Remove unused function __fortify_panic()
-Message-ID: <20240610162923.GGZmcp4zRfJcTghSeg@fat_crate.local>
-References: <20240610115722.107780-1-nik.borisov@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EbpC3E39"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a6f0c3d0792so12177166b.3;
+        Mon, 10 Jun 2024 09:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718036987; x=1718641787; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tTzeLr/JnQOlBuaDILNqwfiL1947Rz1K+v45ebNmSsw=;
+        b=EbpC3E39qikKu1ZxQoypZu1ouOA5bTytnAxdB8IicHjlQaSgHsoPGJOhRnL3LcZAwx
+         1H78zS8eOGbLeJ+d6O2xGI98rAV8qfOO1tvZ4DmfaxSFFQPor8+18Lf8ZuPXXoPO4jyR
+         voxKsnu1/OpUTqTyeY3q5B78OK/aOVGK81uVq6GYf3c8uaS2zwilDYGWArytteuUeiEy
+         Wep4vXKLjFXfb5aY32m0kLSNQye1hlvyAU8Uc9sxtnbZdy4qshCiS5BD9F4MqMGxOeab
+         8gP5szihmt5l8HuBRshFL/jFv0M55idtY9vwFfaGXswEBDj0T+/g/3yS8sFP/CDefbck
+         c3eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718036987; x=1718641787;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tTzeLr/JnQOlBuaDILNqwfiL1947Rz1K+v45ebNmSsw=;
+        b=IWYeDmxRxByXkIof7JqWt797DaAe+QtlgFQEEpTxeJ5mzs6wWaU/SDm/Rl0FJImXM2
+         js2S7zg7AlKTXKx/siMRTmflGJNA1e+A74pyK5mkxTABPWgRXIHcRe+k+denA8082VDa
+         Rmbj6xkoS+JiLx3Q5QbP75yzzU8UnxhKrgV+tXkBMoisLyF9Ix0g3TBYS3NzuT9rY5IQ
+         pYw9/ZqagN0oYvstVejGWgEzUYNQEAGtObFDwo3p66Qa/pTWQ4OWqFzEO/2zJyJtG1y3
+         AwXJ16zzNzWgd07+pkxyINi6SmKZJabBdezHW6OpTByIulJCfTvv9Ww1aaplJw/KBGYj
+         +iUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWIRFWeuQ0gtpZVQgXhCZHF4X7lcP9lpneyk6YCthd8MRV3JYdVPOb7n9/ZgtzZE01S6f3TNIiF8W4hBIujlb3CJshlHDp/x1FTwzOXBOO0LeCv9tizpQiolGulVGPhgnNlwUspU0YMrvAXDlmdW/yIukw0C4bvrKofPRERJpgPSN0=
+X-Gm-Message-State: AOJu0YxBDo+xamtqujK1ikRITTx4fDv5CbqaclyZr1sM1lqo7RnY9bu9
+	Aw4IOo+VqdF7Vo8ZisY8d7Xixkh651mbRQ1IGghhY8dHnkqVkaBDIeSt841/zq6vF/Ctm4XI/QC
+	zaaxSHC7P8Xg3YMZjMJcXEtvx4L4=
+X-Google-Smtp-Source: AGHT+IH+aJ31YhcT+XCnHzzB7ZwuqIPk0c7mJiRny1L23ls65d4QvH+gFk0LcdXDK0qX9slKWat8i3itVJ7PacbDWEY=
+X-Received: by 2002:a17:906:2844:b0:a6f:1d3e:d1af with SMTP id
+ a640c23a62f3a-a6f1d3ed202mr254217966b.5.1718036986539; Mon, 10 Jun 2024
+ 09:29:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240610115722.107780-1-nik.borisov@suse.com>
+References: <20240608141633.2562-1-laurent.pinchart@ideasonboard.com>
+ <20240608141633.2562-4-laurent.pinchart@ideasonboard.com> <ZmcYnDf0YIWA9A85@surfacebook.localdomain>
+ <20240610152555.GV18479@pendragon.ideasonboard.com>
+In-Reply-To: <20240610152555.GV18479@pendragon.ideasonboard.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 10 Jun 2024 19:29:09 +0300
+Message-ID: <CAHp75Vd-TZYsm+fe+o1XvDYGHO6sDqZhMFqojowRx2scwxEhLw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Haibo Chen <haibo.chen@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 10, 2024 at 02:57:22PM +0300, Nikolay Borisov wrote:
-> That functino is only used when the kernel is compiled with
-       ^^^^^^^^^
+On Mon, Jun 10, 2024 at 6:26=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> On Mon, Jun 10, 2024 at 06:15:40PM +0300, Andy Shevchenko wrote:
+> > Sat, Jun 08, 2024 at 05:16:32PM +0300, Laurent Pinchart kirjoitti:
 
-Please introduce a spellchecker into your patch creation workflow.
+...
 
-Like, run the thing through the spellchecker on the system or you can
-even use my python script which checks patches and can do that for you:
+> > > +static const struct platform_device_id adp5585_gpio_id_table[] =3D {
+> > > +   { "adp5585-gpio" },
+> >
+> > > +   { /* Sentinel */ },
+> >
+> > Drop the comma.
+>
+> I prefer keeping it.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=vp
+For what reason?
+The sentinel should be runtime and compile time one. Why should we
+make our lives worse by neglecting help from a compiler?
 
-> FORTIFY_SOURCE and when the kernel proper string.h header is used. The
-> decompressor code doesn't use the kernel proper header but has local
-> copy which doesn't contain any fortified implementations of the various
-> string functions. As such __fortify_panic can never be called from the
-> decompressor so let's remove it.
+> > > +};
 
-Yap, might as well whack it.
-
-We can always resurrect it if it is really needed as it is trivial.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--=20
+With Best Regards,
+Andy Shevchenko
