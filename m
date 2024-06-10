@@ -1,95 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74642200C7
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 08:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F562B9D4;
+	Mon, 10 Jun 2024 08:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718006422; cv=none; b=sPeT5ADHXiBdLjmW55XjKICXdoADJP2J884hYaBZ6/IJUs6V5YB4/SDvZ/1TX2Mf2JKRTcw1A3FK5z5S1fz/DSEt5tfk9Oqp3xNm0zaOcO36HgmbRaCY1akQhhOwwNKvgYG6GfX5Vn5uHPcZTyOYewYran1VrjAMhJw4mpKjbd8=
+	t=1718006461; cv=none; b=aijPMY/0k06MG319ByyVD247kcx05rQWL3iUTWnPM/Cioi9ei0mZmd2Rp7ssg4ewE8pE2YEcTjncpvbeLd38lDldwa8bb18rUXMfHSXRYSoZ+7zpRXl8ELmocgIBSt66AqTYRI2lwyaTqJoO713N3z1Pu6vRkglzPrqH+PCjS6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718006422; c=relaxed/simple;
-	bh=8wxMSYoRONwrF9RsGHTh53kHDh3LzFcEbYhcNxkNjwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aAjRijo6skyJI4k//rO5Ovb/G8yQ3AGmE2kS89h1myWwDVXTJcQ9j8rQsehuzON9rAim57isAHy2W7YxL6y167vnUpkcgUXpggHPh8UFg1mdyI/eGMx0NV4HZiz3txWWm5BHEj3tRVmMZBfn+fGwUqXn0iKDjBCLYB7ILvdnaO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BC+ZXPTL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718006461; c=relaxed/simple;
+	bh=1qc8sEPJXgX5QVHao+W1jv64OvLM7kYZ9yU+Gf0Z1dI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GCYD8uCflWRNlj71PV9OHQuG3ZY2ZxdyLbgsMcNlDYyvzilpWoM7pzfgD6jpteiK90wf6pdA84F5GAiNLevkaTz044D949+eL6Ms6szn1Pncx2916gjj+5bIblPOttFxXfrOH5OWT067dQFJcDLGFKTJvJ6TN+at9xe09Dl+usY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=E0dNFPWF; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BC+ZXPTL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83604C2BBFC;
-	Mon, 10 Jun 2024 08:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718006421;
-	bh=8wxMSYoRONwrF9RsGHTh53kHDh3LzFcEbYhcNxkNjwg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BC+ZXPTL+jwX4mfe92NOxrgQvbL+EdnWkjljsQog0TJyWKhZXb9lai3UkJ/Q2nPHO
-	 xmE+466/LRVFUHawik9RphG7uFt8WhUP9R3Q75m81o+TBs9VIPedcJRs90CdpahcNL
-	 uVksCmlxY7jOlnlo4KtrmN62Y2ioB+rSUDMeB/8c=
-Date: Mon, 10 Jun 2024 10:00:18 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	Evgeniy Dushistov <dushistov@mail.ru>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fs/ufs: Use LUT for dir entry types
-Message-ID: <2024061008-granddad-aspirin-4208@gregkh>
-References: <20240610034219.14711-1-luis.hernandez093@gmail.com>
- <0485dd2d-488a-40e9-b0f7-24236b9c00ab@web.de>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="E0dNFPWF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718006457;
+	bh=1qc8sEPJXgX5QVHao+W1jv64OvLM7kYZ9yU+Gf0Z1dI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=E0dNFPWFdu9QwVQ4mckqkzCeoKk+njabiRFivBjbv15atGBo7I9qaQPBmaW7/n6Uc
+	 3X3nXznhVVgzRjDCKXiBHSrwf8uH9+5XcjX7PneBkrSZonZZ0bholbelAR5GMynrKP
+	 M1zLUkSI4x65uIz3V3SlFVXoGCfXab9tc3iZbFaIfwtSEhOCfsRL8D6EvAIiw577VJ
+	 NJsd6JIp7RTwYZNluGNt+1Z9n+ex0jMkaE7lYtqDIPp0/jlF1Qu1eEJTyPR6vM3MLs
+	 04o9wsTQ2sRbMYpQFf0QjwrMnspMkN2pVwlhjDRiofbx3NigwoeW9PLdWONe53j33Q
+	 Z8ATGX7jzsuIw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id E996B3780575;
+	Mon, 10 Jun 2024 08:00:55 +0000 (UTC)
+Message-ID: <e71a38a9-7a92-4156-a7f0-52f71d461d61@collabora.com>
+Date: Mon, 10 Jun 2024 10:00:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0485dd2d-488a-40e9-b0f7-24236b9c00ab@web.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] dt-bindings: iio: adc: Add MediaTek MT6359 PMIC
+ AUXADC
+To: Rob Herring <robh@kernel.org>
+Cc: jic23@kernel.org, lars@metafoo.de, krzk+dt@kernel.org,
+ conor+dt@kernel.org, matthias.bgg@gmail.com, lee@kernel.org,
+ andy@kernel.org, nuno.sa@analog.com, bigunclemax@gmail.com,
+ dlechner@baylibre.com, marius.cristea@microchip.com,
+ marcelo.schmitt@analog.com, fr0st61te@gmail.com, mitrutzceclan@gmail.com,
+ mike.looijmans@topic.nl, marcus.folkesson@gmail.com,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, andy.shevchenko@gmail.com,
+ kernel@collabora.com
+References: <20240604123008.327424-1-angelogioacchino.delregno@collabora.com>
+ <20240604123008.327424-2-angelogioacchino.delregno@collabora.com>
+ <20240605235239.GA3455504-robh@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240605235239.GA3455504-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 10, 2024 at 09:48:09AM +0200, Markus Elfring wrote:
-> > As per the original TODO, replacing the switch statement with a lookup
-> > table results in more concise mapping logic and improved performance.
-> …
+Il 06/06/24 01:52, Rob Herring ha scritto:
+> On Tue, Jun 04, 2024 at 02:30:04PM +0200, AngeloGioacchino Del Regno wrote:
+>> Add a new binding for the MT6350 Series (MT6357/8/9) PMIC AUXADC,
+>> providing various ADC channels for both internal temperatures and
+>> voltages, audio accessory detection (hp/mic/hp+mic and buttons,
+>> usually on a 3.5mm jack) other than some basic battery statistics
+>> on boards where the battery is managed by this PMIC.
+>>
+>> Also add the necessary dt-binding headers for devicetree consumers.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   .../iio/adc/mediatek,mt6359-auxadc.yaml       | 33 +++++++++++++++++++
+>>   .../iio/adc/mediatek,mt6357-auxadc.h          | 21 ++++++++++++
+>>   .../iio/adc/mediatek,mt6358-auxadc.h          | 22 +++++++++++++
+>>   .../iio/adc/mediatek,mt6359-auxadc.h          | 22 +++++++++++++
+>>   4 files changed, 98 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
+>>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6357-auxadc.h
+>>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6358-auxadc.h
+>>   create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6359-auxadc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml b/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
+>> new file mode 100644
+>> index 000000000000..6497c416094d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
+>> @@ -0,0 +1,33 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/iio/adc/mediatek,mt6359-auxadc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: MediaTek MT6350 series PMIC AUXADC
+>> +
+>> +maintainers:
+>> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> +
+>> +description:
+>> +  The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
+>> +  in some MediaTek PMICs, performing various PMIC related measurements
+>> +  such as battery and PMIC internal voltage regulators temperatures,
+>> +  accessory detection resistance (usually, for a 3.5mm audio jack)
+>> +  other than voltages for various PMIC internal components.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - mediatek,mt6357-auxadc
+>> +      - mediatek,mt6358-auxadc
+>> +      - mediatek,mt6359-auxadc
+>> +
+>> +  "#io-channel-cells":
+>> +    const: 1
 > 
-> Can imperative wordings be relevant for another improved change description?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.10-rc2#n94
-> 
-> 
-> …
-> > +++ b/fs/ufs/util.h
-> …
-> >  static inline void
-> >  ufs_set_de_type(struct super_block *sb, struct ufs_dir_entry *de, int mode)
-> …
-> > +	if (mode_index < ARRAY_SIZE(ufs_mode_to_dt))
-> > +		de->d_u.d_44.d_type = ufs_mode_to_dt[mode_index];
-> > +	else
-> >  		de->d_u.d_44.d_type = DT_UNKNOWN;
-> …
-> 
-> May a conditional operator expression be applied at this source code place?
-> 
-> Regards,
-> Markus
+> Why do you need a node here? Just add #io-channel-cells to the parent
+> node.
 > 
 
-Hi,
+Because some boards will want to avoid probing the related driver, as that will
+trigger a reset and this may not play well with ECs (namely, some Chromebooks),
+which are reading the same AUXADC block.
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+If I avoid using a new node, instead of just using `status`, I'll have to add a
+"mediatek,disable-auxadc" property to the parent node, which isn't pretty...
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+Cheers,
+Angelo
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - "#io-channel-cells"
+>> +
+>> +additionalProperties: false
 
-thanks,
 
-greg k-h's patch email bot
