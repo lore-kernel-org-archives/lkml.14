@@ -1,285 +1,215 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2089.outbound.protection.outlook.com [40.107.249.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620E51534E1;
-	Mon, 10 Jun 2024 15:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718032654; cv=none; b=C4vQF94nsTFztqkJSNRFBDgbgVlGhCPtKvzye/4sR5QmfpgQ5sFnt1+6kEH7MpFnsFVyh314dEsHMRBcaxaE/1aPHo8jQQEy6UBaLmINaoA2qrlpDPK7UYIwoQMqLC5xGWGarKA4KlGCPNKP65cUpA1IgVgNbWDdvCUrpmrfw4Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718032654; c=relaxed/simple;
-	bh=tdEJvJpxvwCdxprYWxJiuGsT2mSzbkWvLQMmzdY1JwU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JRWadZNJvvammQcVvS2SnxRdHPWbbkounh021Vik+bYB7lwvm/JSjjir181LdSZ/PXDte1tXZi8hOmhSLfhtLD/y1D19VDu2eeAuwPrNBnrROMKFQfLnO7VNxnvlW2crhV3rGG0LyOv83b5KlDJ2MzfdCrMhfWaR4mPtPOfAnPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WPhPRV1R; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2AB81754;
+	Mon, 10 Jun 2024 15:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718032672; cv=fail; b=ficmlSGC8xLOH7IHAD1qne2JoOm/L3AsZLIuzIJIfJv7YcvWXN3eIpfsHKhpjmQ9d7xZGiFulUCY3TFQhyD9VkTGlWx/v1q+JSfyDwlfAqDoXn2pZL449v1DJCZBz+j79eB+bYCbcqzPz+bS6K5wzWFAljQaDbXbPSGhgEZZI4w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718032672; c=relaxed/simple;
+	bh=UPquH0Xx5B1KBhKAIEjH60hINXd3/J5QmZNr/K77F2s=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=crmHW5PIn5LXmVVxY1BT9Ndv3iFpjWQ1bA5Xdw0d7lGZeFdrs09NqJSbiX/0vxux+sN0lKFE2Obfrqm9KcMO8MndDmhDfUWm+zbwffMIXAH/KmnhmzfwcUqZS9WVRxQ5YURC29oIIdIoKU8Wg3Wa+g3qbsXyMwBMltrovJH4QCU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Z28A4Rja; arc=fail smtp.client-ip=40.107.249.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WPhPRV1R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718032652; x=1749568652;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tdEJvJpxvwCdxprYWxJiuGsT2mSzbkWvLQMmzdY1JwU=;
-  b=WPhPRV1RrA+3wRgENKa/D3AyU+fH/UlHBFfCjPttVCJUDk1RV9Y5vYmT
-   tsrqrzu1xzu2NFTvTMmriYbK94yvtsHGug/WDC/9cH6PEqwrGPwxetiGk
-   jexT4UrYabvzqP4Ywe3Up7bx/IbrD1MZvRRJwfyR9Af1F7V33lejXf+sW
-   TTLQa9MqWTJsUQ+F8m9usFE0SK2yX4txuyyvjMliDktP/kRa7NlQgnvoW
-   8eXKm5M7iBUSY+McZ0L0ICJ9qEIKrv9X+W0uIO1lxCMTEHpksU6rsi+KA
-   nqd0B+qExDb05qO9igGsQzrhDStvDXmOeBcBvOtqM5/c7fRs+gzoPXCAA
-   w==;
-X-CSE-ConnectionGUID: FRULMywrRFW0q/g2i/XueA==
-X-CSE-MsgGUID: PESf+YeiRAe6v2jWCGdv2A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="18531167"
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="18531167"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 08:17:32 -0700
-X-CSE-ConnectionGUID: E3owf/gvTlaAZHKP4BiGjg==
-X-CSE-MsgGUID: dm6NEcT1SoSojWLe8uRStg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="39650927"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.194])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 08:17:28 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kselftest@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Babu Moger <babu.moger@amd.com>,
-	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z28A4Rja"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dsh/p2jxYN0EK6znYa/jdD6Hn6hhgpi6XBSqO23wAdJIIZcmkLPQ06FX85XEddB0Pt34ZZU1j/dFFAeAtvqBZWJTg3vagTQydF77yhTugm3Lqd7UGuaSsCpWeJXs72jbTi3GZKWhT4JFMKXGZNCNbQfN07b4tJZCXacSpp8VcCM13qSmeuG9sBtY1SuWlYAFTjj4VmI2S7CgjtH80un8NSJBntcnc++xSvihSuPsSXWO++54uxuwoZ3iRKa1yhaXACwOaI2anO5TZLaXRRDPQS6rQjn6cnQXRNnCpWfVVztTK1bIX+Se36ew1Jx31R66tulAssMJbLxTrXbF8Er3qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8FnKMxcRjOSfC4FvKkOmz8vcKvoSRA4N6QqvD/2qA7A=;
+ b=msAQUV63H5LIoBTIySkFIxcFXp6LTzgqry+c7x2OeNEVBVlkVHxACPhiIALh5gSnGov2T3rA1+rHrksVpBRggilgoWRbRcxhj4YD+kmvPhLyftz1O0CrE4zNN4CHf9HoScqaud+csqmzkwJLXVUeYZuQLPYzlt1qC4GYBQTMbVRHZIkNaSMGjGDRIyod83sdWZtxIbzS1aqr1hNvGwCS4l1VyzgXLT+jvJhEjq/Mn1r/mWQnkQBSxNEcZMJQbTr/MxjI8jv+eYSqFqbGvmC7EtfImPTrXbkeA71lUKJldm3FzCA9GNLgZ00qskJo7mobI84C/PWF8B5tp4tqoeJl0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8FnKMxcRjOSfC4FvKkOmz8vcKvoSRA4N6QqvD/2qA7A=;
+ b=Z28A4Rja0QVBvbyyAJF43PYqidHRhAA/vShN270Fth3viPEuursenOoRaVBpcU/yHZ8dh0OPFToynQXT1xZ6QtU3oH8AafTnQXpkKAiVhSr6bBO+7WSqp7He+FT/HSg0ucwwAeeSgUy3fAs6tfFGhUau80Cnn4j8RlERk4j+OkE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DB9PR04MB9259.eurprd04.prod.outlook.com (2603:10a6:10:371::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Mon, 10 Jun
+ 2024 15:17:47 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7633.036; Mon, 10 Jun 2024
+ 15:17:46 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: krzk@kernel.org
+Cc: Frank.li@nxp.com,
+	andersson@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	festevam@gmail.com,
+	imx@lists.linux.dev,
+	kernel@pengutronix.de,
+	krzk+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v7 16/16] selftests/resctrl: Remove test name comparing from write_bm_pid_to_resctrl()
-Date: Mon, 10 Jun 2024 18:14:57 +0300
-Message-Id: <20240610151457.7305-17-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240610151457.7305-1-ilpo.jarvinen@linux.intel.com>
-References: <20240610151457.7305-1-ilpo.jarvinen@linux.intel.com>
+	linux-remoteproc@vger.kernel.org,
+	mathieu.poirier@linaro.org,
+	peng.fan@nxp.com,
+	robh@kernel.org,
+	s.hauer@pengutronix.de,
+	shawnguo@kernel.org
+Subject: [PATCH v3 1/1] dt-bindings: remoteproc: imx_rproc: add minItems for power-domain
+Date: Mon, 10 Jun 2024 11:17:21 -0400
+Message-Id: <20240610151721.274424-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0072.namprd05.prod.outlook.com
+ (2603:10b6:a03:332::17) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB9259:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1198caf-cc27-4935-d52c-08dc89607bdf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|52116005|7416005|376005|366007|1800799015|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4+KpHsJSS66vZF/UfMnNXHaHNFIbaoX8ZEjYu1+bofC0CZWwLu8gaL8G5L/+?=
+ =?us-ascii?Q?U3WwoTaE44dUCI4lL4LguIFfP+AR5DuRKu8CG75iTtNd5ZTTDfQ7oYcEQW2u?=
+ =?us-ascii?Q?pog93aGdRJE3ZCtGhNHiI70Gbh+mUJOixUF1/CdzbGStCnUiU25b2tWsELZp?=
+ =?us-ascii?Q?5FzQZpdc7MUB0HTfkujPuwkqM0HyppBqYyGVz+rdgQsAd/MmtMn+7kL3U1jM?=
+ =?us-ascii?Q?Sx8UssS6mrl+/WAq/jV9KPKp6w9PbOpaQOLKrWdcnnQLNTWw4B9yv8q+h8b9?=
+ =?us-ascii?Q?/6y7c94jQBZWOn693CTA33rMQbUMX9VbowL5Cj7qSuljaLnNCxkptjmw32l3?=
+ =?us-ascii?Q?8vL3LZv7DA5V/l2FacdnOI404qTm25DIUkKxq7HYzQ/DYTW8y+ygJv4Jrwrl?=
+ =?us-ascii?Q?db1gvYjKB27Oug+Ek6GdrNrw7luu8YABQ0RgKR4aB5fZNaY6E77Xt14gUcNT?=
+ =?us-ascii?Q?tN5e30tocGX5OPv6+RfUmduhKfg8Lq1BSC2f6ILWzcwqLCpwFwl5TKmlh/s2?=
+ =?us-ascii?Q?oqCsEeMcT2XQB4IN64VN3S/S7TGcKMAOl93Ucczl/x0iMV7oAtniGgXI/e5f?=
+ =?us-ascii?Q?51CWnjMzG9Sr0L5lfEcIdjsdiraau3mppXAjw+PIeU0f4tnFafOHY0piCxl4?=
+ =?us-ascii?Q?RLCwj+WJJ8PHnQTFaElXwtLQKIYIJqSCURMjpp8LQyNIuhIKWCmo3il8titv?=
+ =?us-ascii?Q?BEEDeWcryOP6PsYIazOsFufdLJK0Amp5GB1ETHcHSRENoTsdKNS7xmjNuYt3?=
+ =?us-ascii?Q?hSD65+IWPwEwPrKLeAmHuJFEYmJA0CHZSNtvjNT5AyHbl6my/Fnpr8rUnR77?=
+ =?us-ascii?Q?rxYr8yj7RkEu3+d5VPpPRyDQD9iwS9knQpUuKHCy+gX5C7Lp63+81tTqtofY?=
+ =?us-ascii?Q?EOojmG5OAUqHS1cKgsKzaCuYXykgG2hmPRtrYK+GKxEkUQ70savEshJcSenB?=
+ =?us-ascii?Q?Iy04tHhIrPF0KSfh/Lq5SRbtOu7Shm2KxyUWQaszOgFfVWTs5EFUlROR5ZQ1?=
+ =?us-ascii?Q?GgF0DhPFRuRtb1uI3FnhIZEtEesWps4yGcg6tA0J+niceab3qTfWtrD99kVC?=
+ =?us-ascii?Q?Job7gR1Nujo5LeIXpXQpBvVKoV1GHfGiGlj8gUcdwt6Jd10oRpcMV7vLRl7P?=
+ =?us-ascii?Q?TTB4GxYDdqxiLX17kLIYaNcUB9n6kd8MMZMkZNrUDuBs1jIPdlH/S1KNYvZ1?=
+ =?us-ascii?Q?i3Jp2ZMwoTJTsQjrg1rdtq13SBcnxxeU5XSliB42FgJPDEVzhg6Mjw+OE8+g?=
+ =?us-ascii?Q?/0LYV+8Pwyg+gPypbgkUMx+so8tHLmvO13WVg8CvQtteC4nVPIcXAlPH2CzC?=
+ =?us-ascii?Q?wGonS1tKLo1/KYz2XtXDOxrR6BrsfKsf3bGDXf2LqOLnlu8nSSEjX1K0s7T1?=
+ =?us-ascii?Q?ZMmh6UE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(7416005)(376005)(366007)(1800799015)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?35Ym1Nz8w7ebgky+n0iofjUQsQID1Vqa9B1YuyE0kQ/g/bQRi4hbWzFLW+wR?=
+ =?us-ascii?Q?sZO8ZSRAisDGUBQ/r+y8dHTGZBiira9/FsXLf7si8WfJdiBny4hRZz3M/QbO?=
+ =?us-ascii?Q?E3MXqZDkRvHUpg6r1jzesYb9NtC7AQKJEkeq2OiTFAjQhDtSIA6AaGxO/Z7Y?=
+ =?us-ascii?Q?LY/JQFNw38Auiyudj/nEK6FcUQa14vlAguOPu5zJtJBdyVKMO/L5SilM/pjZ?=
+ =?us-ascii?Q?RAW5xKvnCOy+W6nsaEIoR/WLW848wnLYYWbaTwP68WqF3yiDP3h9zk4o0PVn?=
+ =?us-ascii?Q?2E3pSHBYwC2ICYSk08IfNa8yb4oAfB8pEueFUfMbFF6FdLLr2DdxulDUI1v+?=
+ =?us-ascii?Q?U8xCf/9CI3CiYA1/JYpG7CV0nC5jNUmQnsOi6fUi0gsWaQOjd91gcreVQXdR?=
+ =?us-ascii?Q?b7f/5Bek0iCFBhgENlxhGlWn3QdX8LHOd/DUvCLkvQJfueqsv9j4OfJiWjNF?=
+ =?us-ascii?Q?gLppE/q+rrqvPIp6pr164EHHnRn5jYVTmWrdAGcvbA+NIWyRYZx3+2cs3mO6?=
+ =?us-ascii?Q?QX1q+47hF2/bqmJ8D4+PMZxZ+6KKzaQMP3ha3toIdfT0wqXXYhCbK9+vbK9R?=
+ =?us-ascii?Q?Hw0D5ehbVrZmfIb2n27JxaZab+Ttk387d32jbUtnIBGmJwv+kAS2rqMPBy9e?=
+ =?us-ascii?Q?AmOF42L9/Td1TN3I8xIva5VItI45N7tkBbBDIRFwtGcaofcLxlbgQmNRp8m3?=
+ =?us-ascii?Q?ozomHcJPl19mDLM0jhSX/w22a4XOtqw0js/LNEQoLk1lAGdslMnYywbxZFIk?=
+ =?us-ascii?Q?5wpP79DfnB6bK/1l59iP6RwBbrjnmZBR0oMpsLp8+urhiVfE3kpc2WDp9pqs?=
+ =?us-ascii?Q?IQbDMhtqrBBUrqe0BdXxmt89OpPRC3u2ZG4SWdtaXfQYni0mFVMCmP9SFBoa?=
+ =?us-ascii?Q?/DvnubthfzV99t4qFrmAh63QFjKs2CGgH4RtdKHu2FNsR+TjChDfWcmuq2yF?=
+ =?us-ascii?Q?dxYKwH2O6xjFa9bA6iHelxly3lBbOsJ27JpVrEr65AN1tB5CbbencoYfnDfd?=
+ =?us-ascii?Q?P+DbEbP5U72ney22eIrk2rQauscZTGTpivgfgbAYqWXP9QKnjpwlis/o+2L1?=
+ =?us-ascii?Q?ZEBFh8FkDmZf1UwsledpAXkKGclV1OaAkBc3eK+I5jb+Cu5zIV9p2LdwTo/q?=
+ =?us-ascii?Q?RR0NiQ9Ar37j047je8FwIq5Cc6VzKLB1Ra4jQA/XKkWTZLfX+czHljFyYwPp?=
+ =?us-ascii?Q?/rf7qXkoVqcPJQveU6TYnKTE5RMgH1znS1TwEUocY2dV1/DBUNKBVNqnGQiy?=
+ =?us-ascii?Q?/ODBDWqtwtKXEfnMR9L2VEG8l6p2tAcjBSQ3rVSiB6JvRzRk34t8r/EQdfDi?=
+ =?us-ascii?Q?LOb9ONTWHJnb5mdF3F9D8pLbdYXdgK13qdEkUPNGq8zu/zjgUZGY909QaE5s?=
+ =?us-ascii?Q?PQosgvyKMsFfPrQxuzAVl4HdH8lYLqPCWjNqkGROO4kMCYyUbG6HRc4F7vrB?=
+ =?us-ascii?Q?glgzaoncge0E22l3wyYq9Dhpq8Jyt5db5uQLYwBAa6BE1DOytt7VTP/NWfLx?=
+ =?us-ascii?Q?6HZ3lsW7A6g76sREDsK+NdaL5uteKs8iNRSHh2ibwAgEXhFBfPm3uTEwqZsG?=
+ =?us-ascii?Q?cpvuwz+JuksAX4AE9p+jK8Lp2j2dwK7DDR1tCOYS?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1198caf-cc27-4935-d52c-08dc89607bdf
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2024 15:17:46.9353
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TlToZKl0dz8g4Yh0EZyw5oeTtfj4tT4wmaf86rCEwVr4/3qXmyGhBGnsRWMce3MSR1jHzK/JIVC/oM6Ehp2ugg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9259
 
-write_bm_pid_to_resctrl() uses resctrl_val to check test name which is
-not a good interface generic resctrl FS functions should provide.
+"fsl,imx8qxp-cm4" and "fsl,imx8qm-cm4" need minimum 2 power domains. Other
+platform doesn't require 'power-domain'.
 
-Tests define mongrp when needed. Remove the test name check in
-write_bm_pid_to_resctrl() to only rely on the mongrp parameter being
-non-NULL.
-
-Remove write_bm_pid_to_resctrl() resctrl_val parameter and resctrl_val
-member from the struct resctrl_val_param that are not used anymore.
-Similarly, remove the test name constants that are no longer used.
-
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Tested-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- tools/testing/selftests/resctrl/cat_test.c    |  5 +--
- tools/testing/selftests/resctrl/cmt_test.c    |  1 -
- tools/testing/selftests/resctrl/mba_test.c    |  1 -
- tools/testing/selftests/resctrl/mbm_test.c    |  1 -
- tools/testing/selftests/resctrl/resctrl.h     | 10 +-----
- tools/testing/selftests/resctrl/resctrl_val.c |  4 +--
- tools/testing/selftests/resctrl/resctrlfs.c   | 33 ++++++++-----------
- 7 files changed, 17 insertions(+), 38 deletions(-)
 
-diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-index c7686fb6641a..d4dffc934bc3 100644
---- a/tools/testing/selftests/resctrl/cat_test.c
-+++ b/tools/testing/selftests/resctrl/cat_test.c
-@@ -158,7 +158,6 @@ static int cat_test(const struct resctrl_test *test,
- 		    struct resctrl_val_param *param,
- 		    size_t span, unsigned long current_mask)
- {
--	char *resctrl_val = param->resctrl_val;
- 	struct perf_event_read pe_read;
- 	struct perf_event_attr pea;
- 	cpu_set_t old_affinity;
-@@ -178,8 +177,7 @@ static int cat_test(const struct resctrl_test *test,
- 		return ret;
+Notes:
+    Change from v2 to v3
+    - only imx8qxp and imx8qm need power-domain, other platform don't need it.
+    - update commit message.
+    
+    Change from v1 to v2
+    - set minitem to 2 at top
+    - Add imx8qm compatible string also
+    - use not logic to handle difference compatible string restriction
+    - update commit message.
+    
+    pass dt_binding_check.
+    
+    make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,imx-rproc.yaml
+      SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+      CHKDT   Documentation/devicetree/bindings
+      LINT    Documentation/devicetree/bindings
+      DTEX    Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.example.dts
+      DTC_CHK Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.example.dtb
+
+ .../bindings/remoteproc/fsl,imx-rproc.yaml        | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+index df36e29d974ca..57d75acb0b5e5 100644
+--- a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
++++ b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+@@ -59,6 +59,7 @@ properties:
+     maxItems: 32
  
- 	/* Write benchmark to specified con_mon grp, mon_grp in resctrl FS*/
--	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp,
--				      resctrl_val);
-+	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp);
- 	if (ret)
- 		goto reset_affinity;
+   power-domains:
++    minItems: 2
+     maxItems: 8
  
-@@ -272,7 +270,6 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
- 	start_mask = create_bit_mask(start, n);
+   fsl,auto-boot:
+@@ -99,6 +100,20 @@ allOf:
+       properties:
+         fsl,iomuxc-gpr: false
  
- 	struct resctrl_val_param param = {
--		.resctrl_val	= CAT_STR,
- 		.ctrlgrp	= "c1",
- 		.filename	= RESULT_FILE_NAME,
- 		.num_of_runs	= 0,
-diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
-index b63fa1e93307..d1c272743eb2 100644
---- a/tools/testing/selftests/resctrl/cmt_test.c
-+++ b/tools/testing/selftests/resctrl/cmt_test.c
-@@ -144,7 +144,6 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
- 	}
- 
- 	struct resctrl_val_param param = {
--		.resctrl_val	= CMT_STR,
- 		.ctrlgrp	= "c1",
- 		.filename	= RESULT_FILE_NAME,
- 		.mask		= ~(long_mask << n) & long_mask,
-diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
-index 5e0b1e794295..1f2a7dc73b62 100644
---- a/tools/testing/selftests/resctrl/mba_test.c
-+++ b/tools/testing/selftests/resctrl/mba_test.c
-@@ -164,7 +164,6 @@ static void mba_test_cleanup(void)
- static int mba_run_test(const struct resctrl_test *test, const struct user_params *uparams)
- {
- 	struct resctrl_val_param param = {
--		.resctrl_val	= MBA_STR,
- 		.ctrlgrp	= "c1",
- 		.filename	= RESULT_FILE_NAME,
- 		.init		= mba_init,
-diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
-index 27b936fe60bc..39aa70374154 100644
---- a/tools/testing/selftests/resctrl/mbm_test.c
-+++ b/tools/testing/selftests/resctrl/mbm_test.c
-@@ -132,7 +132,6 @@ static void mbm_test_cleanup(void)
- static int mbm_run_test(const struct resctrl_test *test, const struct user_params *uparams)
- {
- 	struct resctrl_val_param param = {
--		.resctrl_val	= MBM_STR,
- 		.ctrlgrp	= "c1",
- 		.filename	= RESULT_FILE_NAME,
- 		.init		= mbm_init,
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index a999fbc13fd3..2dda56084588 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -81,7 +81,6 @@ struct resctrl_test {
- 
- /*
-  * resctrl_val_param:	resctrl test parameters
-- * @resctrl_val:	Resctrl feature (Eg: mbm, mba.. etc)
-  * @ctrlgrp:		Name of the control monitor group (con_mon grp)
-  * @mongrp:		Name of the monitor group (mon grp)
-  * @filename:		Name of file to which the o/p should be written
-@@ -90,7 +89,6 @@ struct resctrl_test {
-  * @measure:		Callback that performs the measurement (a single test)
-  */
- struct resctrl_val_param {
--	char		*resctrl_val;
- 	const char	*ctrlgrp;
- 	const char	*mongrp;
- 	char		filename[64];
-@@ -113,11 +111,6 @@ struct perf_event_read {
- 	} values[2];
- };
- 
--#define MBM_STR			"mbm"
--#define MBA_STR			"mba"
--#define CMT_STR			"cmt"
--#define CAT_STR			"cat"
--
- /*
-  * Memory location that consumes values compiler must not optimize away.
-  * Volatile ensures writes to this location cannot be optimized away by
-@@ -143,8 +136,7 @@ int taskset_benchmark(pid_t bm_pid, int cpu_no, cpu_set_t *old_affinity);
- int taskset_restore(pid_t bm_pid, cpu_set_t *old_affinity);
- int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
- 		   const char *resource);
--int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
--			    const char *mongrp, const char *resctrl_val);
-+int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp, const char *mongrp);
- int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
- 		    int group_fd, unsigned long flags);
- unsigned char *alloc_buffer(size_t buf_size, int memflush);
-diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
-index 0a0abc860a7f..8c275f6b4dd7 100644
---- a/tools/testing/selftests/resctrl/resctrl_val.c
-+++ b/tools/testing/selftests/resctrl/resctrl_val.c
-@@ -684,7 +684,6 @@ int resctrl_val(const struct resctrl_test *test,
- 		const char * const *benchmark_cmd,
- 		struct resctrl_val_param *param)
- {
--	char *resctrl_val = param->resctrl_val;
- 	struct sigaction sigact;
- 	int ret = 0, pipefd[2];
- 	char pipe_message = 0;
-@@ -775,8 +774,7 @@ int resctrl_val(const struct resctrl_test *test,
- 		goto out;
- 
- 	/* Write benchmark to specified control&monitoring grp in resctrl FS */
--	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp,
--				      resctrl_val);
-+	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp);
- 	if (ret)
- 		goto out;
- 
-diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
-index e2d1ecb55d51..250c320349a7 100644
---- a/tools/testing/selftests/resctrl/resctrlfs.c
-+++ b/tools/testing/selftests/resctrl/resctrlfs.c
-@@ -522,7 +522,6 @@ static int write_pid_to_tasks(char *tasks, pid_t pid)
-  * @bm_pid:		PID that should be written
-  * @ctrlgrp:		Name of the control monitor group (con_mon grp)
-  * @mongrp:		Name of the monitor group (mon grp)
-- * @resctrl_val:	Resctrl feature (Eg: mbm, mba.. etc)
-  *
-  * If a con_mon grp is requested, create it and write pid to it, otherwise
-  * write pid to root con_mon grp.
-@@ -532,8 +531,7 @@ static int write_pid_to_tasks(char *tasks, pid_t pid)
-  *
-  * Return: 0 on success, < 0 on error.
-  */
--int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
--			    const char *mongrp, const char *resctrl_val)
-+int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp, const char *mongrp)
- {
- 	char controlgroup[128], monitorgroup[512], monitorgroup_p[256];
- 	char tasks[1024];
-@@ -553,22 +551,19 @@ int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
- 	if (ret)
- 		goto out;
- 
--	/* Create mon grp and write pid into it for "mbm" and "cmt" test */
--	if (!strncmp(resctrl_val, CMT_STR, sizeof(CMT_STR)) ||
--	    !strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR))) {
--		if (mongrp) {
--			sprintf(monitorgroup_p, "%s/mon_groups", controlgroup);
--			sprintf(monitorgroup, "%s/%s", monitorgroup_p, mongrp);
--			ret = create_grp(mongrp, monitorgroup, monitorgroup_p);
--			if (ret)
--				goto out;
--
--			sprintf(tasks, "%s/mon_groups/%s/tasks",
--				controlgroup, mongrp);
--			ret = write_pid_to_tasks(tasks, bm_pid);
--			if (ret)
--				goto out;
--		}
-+	/* Create monitor group and write pid into if it is used */
-+	if (mongrp) {
-+		sprintf(monitorgroup_p, "%s/mon_groups", controlgroup);
-+		sprintf(monitorgroup, "%s/%s", monitorgroup_p, mongrp);
-+		ret = create_grp(mongrp, monitorgroup, monitorgroup_p);
-+		if (ret)
-+			goto out;
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - fsl,imx8qxp-cm4
++              - fsl,imx8qm-cm4
++    then:
++      required:
++        - power-domains
++    else:
++      properties:
++        power-domains: false
 +
-+		sprintf(tasks, "%s/mon_groups/%s/tasks",
-+			controlgroup, mongrp);
-+		ret = write_pid_to_tasks(tasks, bm_pid);
-+		if (ret)
-+			goto out;
- 	}
+ additionalProperties: false
  
- out:
+ examples:
 -- 
-2.39.2
+2.34.1
 
