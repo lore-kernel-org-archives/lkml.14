@@ -1,178 +1,151 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FA580C1D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FE180C1D;
+	Mon, 10 Jun 2024 12:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718024244; cv=none; b=XVuIe02WCmklFNAwHjzCMBx2tT4GsgUJdUud0ypk+yhOATO5t/TE8vmV9VtyLJbDjWPfL4pxSIl59zve2ivK6pOx4U5vPNw50XvvMqtX2MOjGL0SIO2wkwN4AyYJhnRj3CsayUZn636WmJqo/I4atYOiX1B8LtWvKs3vA7oJ3UQ=
+	t=1718024250; cv=none; b=gTqP09ty8eACRD5zDn+qeTZ4RlSANhEaofT0RnmMJzbQUxrNlo2xjj8povIx3trjZZpHiTXv7kuBVFwkevJ6te1ESpmZNvPI8WmP1Jxa4ETTsda+PfEdODCw/hhsZfiOWfCr4RzGceH8/0ohNemao10OEATi6avESH26nZJl8/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718024244; c=relaxed/simple;
-	bh=yg1xPoHNtnIUumoATGu6LmkAR1aS+hHVXOLPzoPOgE0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r/Trv0RHLABELcU6ucv7D1L22iH7DIoCXVkJfI3QrYLTeWXDrCNDmZCy+3rJUhIPjI2hwFc/EaIjY97MDhnotSi1bbvbNTTX37v2f4INqzOEjr+YcGXAehm5FWDI3jNJut5Tzu+/6/t5wCCLhUp6X2FnSOMS5hTVQE0bQznTKrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dJ9yMHim; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718024250; c=relaxed/simple;
+	bh=nJlLLJ2rBh0pTmSFO7XatNSh6LfP0lAb9qJiPmFoxzY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pixwywIv1CdoPerKS828X9wp/3di2Je9+5ERgHG4l7ij/ewa0Wt/F8ot+ealaB8DBZiKI1JmMd4jPt1lvNuW5iAhxx+t96wAuzhnizoABevmkUYTcuX1FRZbJ7YG6x7eBimgOANC6FGsVIedAcM0QWZ0FoxosdWEl/rTaMZvldU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=dXvxT2wI; arc=none smtp.client-ip=52.119.213.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJ9yMHim"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57a677d3d79so9912795a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:57:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="dXvxT2wI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718024241; x=1718629041; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=P4YW+LJlPWVCF1oCUQwCJYAu8LrhPqKFR1EwKZrTF2U=;
-        b=dJ9yMHimpc8YQQPWERTOEtoAoO84Fw2Qy1c+fN8TAZVg3dbFaws20GjVQ/6p4U2d8l
-         GsgueHSdLfP4HFNSVKcdkYpqdVwwjyAMPBiCCKoFt71lfhI3rSfnDUEWtP7J72dbpI+/
-         8SKZUOHa7JI6u6UDzyLDbBoJ0YvPcJhxi86XJm2ZXLM6QMVgZbsR/SS6XL6gRwxl82Pe
-         10coWBnbHn5Oy7WRXcMqxkDw/jpuAUVLf7dVEvV0afbGFAaRJiDx6WEnW7Eyhxi+7f6k
-         XCDIEZ5+rHZptr9VOE1RzrGi+GQnBDUGd+51KGFTHw6kPxtaFJM628tIGN8QnVMxvL7e
-         kDqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718024241; x=1718629041;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=P4YW+LJlPWVCF1oCUQwCJYAu8LrhPqKFR1EwKZrTF2U=;
-        b=nSlc9XAgd9OOsLR7HlUMOikpu5RmZDYOWTCC96LWyjfaJPbILClSfLh++rZnMgmi5Q
-         Aqlt0+lQMpnACUeOq7trOtgoi5SauCZq9Xkpjm7j+2z3nl4EZwnyiU86hu4tjvLtSLC2
-         Q8BCe/g4qrjoDzug6HOk3hva9tNMz/oi54z4lmmZcOHCB4qdAD+ywW0M3QqeB0btgI0O
-         cxYGHhPY4xDomzp/xK3+aJRo9qOx27PsBrJXbPWXzN4VormDPdbRwhS7gdhhqtoUV1nv
-         HuuqMUQREv/h6EGr+xxgj1MRPUTBWKXR7cHpjhRQcV08cxXxNOc8DQcIqipUaWvyEcrS
-         RlyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQYU0yp3Z3+qw+153AZzT0jH4GeWoF2s9SuMNs7szjKRRQDZTWuIZUwcpjdcWoc5t/5n1SGx94ADlIF1oNp/j1DecBck4DpArWm64I
-X-Gm-Message-State: AOJu0Ywu3wjSwL9caxZIHw0fRuPm50dXxN5XbnATQXDA2OwkbgGgQOFU
-	el6a1OWw4OtKugug5FSU67H3XHckxTXnxjobIsVYVE/dgXmGTan0e7EAkfAltLU=
-X-Google-Smtp-Source: AGHT+IG+FeCeTet+g006PrNx4Oxxdd0ygI0KsztkfpC9VYROLRJPSKBsn/ij3w2B7yqDBKHzj0cmyg==
-X-Received: by 2002:a05:6402:b7b:b0:57c:735f:3967 with SMTP id 4fb4d7f45d1cf-57c735f3978mr2686598a12.8.1718024240999;
-        Mon, 10 Jun 2024 05:57:20 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c8f3a0c33sm87824a12.82.2024.06.10.05.57.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 05:57:20 -0700 (PDT)
-Message-ID: <08822480-a909-4724-9250-e7286d5ce90a@linaro.org>
-Date: Mon, 10 Jun 2024 14:57:18 +0200
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazon201209; t=1718024249; x=1749560249;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ib8x6MUsFnm8OLqTHSSQ95s+8p+vISoBQLrMEQteYyg=;
+  b=dXvxT2wIfzS5ZMLQ8zutroDw3BOPn/LhHzHaaqTE6Et3L147a4gZg9Fx
+   HFORkWCUlOoiW7Bpq5nmg3Nd7PujLagNiNROqvnZG6gOJ4xZEXgsNV5Lz
+   LacB6gy66Wkq0ihLdt1gFRpM+v3xUS0BNaGrIdDETgChp5QJMeJbTU5jE
+   U=;
+X-IronPort-AV: E=Sophos;i="6.08,227,1712620800"; 
+   d="scan'208";a="3967790"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 12:57:27 +0000
+Received: from EX19MTAEUB001.ant.amazon.com [10.0.10.100:53360]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.26.236:2525] with esmtp (Farcaster)
+ id 9d700111-131b-461d-9914-1613d0d80b56; Mon, 10 Jun 2024 12:57:25 +0000 (UTC)
+X-Farcaster-Flow-ID: 9d700111-131b-461d-9914-1613d0d80b56
+Received: from EX19D007EUA004.ant.amazon.com (10.252.50.76) by
+ EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 10 Jun 2024 12:57:25 +0000
+Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.204) by
+ EX19D007EUA004.ant.amazon.com (10.252.50.76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 10 Jun 2024 12:57:24 +0000
+Received: from dev-dsk-fgriffo-1c-69b51a13.eu-west-1.amazon.com
+ (10.13.244.152) by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34 via Frontend Transport; Mon, 10 Jun 2024 12:57:20 +0000
+From: Fred Griffoul <fgriffo@amazon.co.uk>
+To: <griffoul@gmail.com>
+CC: Fred Griffoul <fgriffo@amazon.co.uk>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Alex Williamson
+	<alex.williamson@redhat.com>, Waiman Long <longman@redhat.com>, Zefan Li
+	<lizefan.x@bytedance.com>, Tejun Heo <tj@kernel.org>, Johannes Weiner
+	<hannes@cmpxchg.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier
+	<maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, Mark Brown
+	<broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Joey Gouly
+	<joey.gouly@arm.com>, Ryan Roberts <ryan.roberts@arm.com>, Jeremy Linton
+	<jeremy.linton@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Yi Liu
+	<yi.l.liu@intel.com>, Kevin Tian <kevin.tian@intel.com>, Eric Auger
+	<eric.auger@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, "Christian
+ Brauner" <brauner@kernel.org>, Ankit Agrawal <ankita@nvidia.com>, "Reinette
+ Chatre" <reinette.chatre@intel.com>, Ye Bin <yebin10@huawei.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<kvm@vger.kernel.org>, <cgroups@vger.kernel.org>
+Subject: [PATCH v5 0/2] vfio/pci: add msi interrupt affinity support
+Date: Mon, 10 Jun 2024 12:57:06 +0000
+Message-ID: <20240610125713.86750-1-fgriffo@amazon.co.uk>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] dt-bindings: interconnect: qcom: msm8939: Fix example
-To: Adam Skladowski <a39.skl@gmail.com>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Georgi Djakov <djakov@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240609182112.13032-1-a39.skl@gmail.com>
- <20240609182112.13032-8-a39.skl@gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240609182112.13032-8-a39.skl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 09/06/2024 20:21, Adam Skladowski wrote:
-> For now example list snoc_mm as children of bimc which is obviously
-> not valid, change example and include rest of nocs in it.
-> 
-> Fixes: 462baaf4c628 ("dt-bindings: interconnect: qcom: Fix and separate out MSM8939")
-> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
-> ---
->  .../bindings/interconnect/qcom,msm8939.yaml   | 22 ++++++++++++-------
->  1 file changed, 14 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,msm8939.yaml b/Documentation/devicetree/bindings/interconnect/qcom,msm8939.yaml
-> index fd15ab5014fb..a77e6aa2fbee 100644
-> --- a/Documentation/devicetree/bindings/interconnect/qcom,msm8939.yaml
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,msm8939.yaml
-> @@ -56,19 +56,25 @@ examples:
->    - |
->      #include <dt-bindings/clock/qcom,rpmcc.h>
->  
-> -    snoc: interconnect@580000 {
-> -        compatible = "qcom,msm8939-snoc";
-> -        reg = <0x00580000 0x14000>;
-> -        #interconnect-cells = <1>;
-> -    };
-> -
->      bimc: interconnect@400000 {
->          compatible = "qcom,msm8939-bimc";
->          reg = <0x00400000 0x62000>;
-> -        #interconnect-cells = <1>;
-> +        #interconnect-cells = <2>;
-> +    };
-> +
-> +    pcnoc: interconnect@500000 {
-> +        compatible = "qcom,msm8939-pcnoc";
-> +        reg = <0x00500000 0x11000>;
-> +        #interconnect-cells = <2>;
-> +    };
+v5:
+ - vfio_pci_ioctl_set_irqs(): fix copy_from_user() check when copying
+   the cpumask argument. Reported by Dan Carpenter
+   <dan.carpenter@linaro.org>
+ - vfio_set_irqs_validate_and_prepare(): use size_mul() to compute the
+   data size of a VFIO_IRQ_SET_DATA_EVENTFD ioctl() to avoid a possible
+   overflow on 32-bit system. Reported by Dan Carpenter
+   <dan.carpenter@linaro.org>
+ - export system_32bit_el0_cpumask() to fix yet another missing symbol
+   for arm64 architecture.
 
-Don't grow the examples.
+v4:
+ - export arm64_mismatched_32bit_el0 to compile the vfio driver as
+   a kernel module on arm64 if CONFIG_CPUSETS is not defined.
+ - vfio_pci_ioctl_set_irqs(): free the cpumask_var_t only if data_size
+   is not zero, otherwise it was not allocated.
+ - vfio_pci_set_msi_trigger(): call the new function
+   vfio_pci_set_msi_affinity() later, after the DATA_EVENTFD
+   processing and the vdev index check.
 
-It is enough to have one example to validate the schema and show how the
-binding is used. If schema covers multiple combinations of devices and
-their properties, then more than one example seems reasonable. This is
-not the case. All of this is redundant... and redundant information is
-not good because as this commit shows it leads to something which people
-think is not correct and they find bugs. So just drop the redundant
-information.
+v3:
+ - add a first patch to export cpuset_cpus_allowed() to be able to
+   compile the vfio driver as a kernel module.
 
-Keep only one, correct example.
+v2:
+ - change the ioctl() interface to use a cpu_set_t in vfio_irq_set
+   'data' to keep the 'start' and 'count' semantic, as suggested by
+    David Woodhouse <dwmw2@infradead.org>
 
-Best regards,
-Krzysztof
+v1:
+
+The usual way to configure a device interrupt from userland is to write
+the /proc/irq/<irq>/smp_affinity or smp_affinity_list files. When using
+vfio to implement a device driver or a virtual machine monitor, this may
+not be ideal: the process managing the vfio device interrupts may not be
+granted root privilege, for security reasons. Thus it cannot directly
+control the interrupt affinity and has to rely on an external command.
+
+This patch extends the VFIO_DEVICE_SET_IRQS ioctl() with a new data flag
+to specify the affinity of a vfio pci device interrupt.
+
+The affinity argument must be a subset of the process cpuset, otherwise
+an error -EPERM is returned.
+
+The vfio_irq_set argument shall be set-up in the following way:
+
+- the 'flags' field have the new flag VFIO_IRQ_SET_DATA_AFFINITY set
+as well as VFIO_IRQ_SET_ACTION_TRIGGER.
+
+- the 'start' field is the device interrupt index. Only one interrupt
+can be configured per ioctl().
+
+- the variable-length array consists of one or more CPU index
+encoded as __u32, the number of entries in the array is specified in the
+'count' field.
+
+
+Fred Griffoul (2):
+  cgroup/cpuset: export cpuset_cpus_allowed()
+  vfio/pci: add msi interrupt affinity support
+
+ arch/arm64/kernel/cpufeature.c    |  2 ++
+ drivers/vfio/pci/vfio_pci_core.c  | 27 +++++++++++++++++----
+ drivers/vfio/pci/vfio_pci_intrs.c | 39 +++++++++++++++++++++++++++++++
+ drivers/vfio/vfio_main.c          | 13 +++++++----
+ include/uapi/linux/vfio.h         | 10 +++++++-
+ kernel/cgroup/cpuset.c            |  1 +
+ 6 files changed, 83 insertions(+), 9 deletions(-)
+
+
+base-commit: cbb325e77fbe62a06184175aa98c9eb98736c3e8
+--
+2.40.1
 
