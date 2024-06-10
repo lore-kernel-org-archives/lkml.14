@@ -1,319 +1,415 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0C947A40
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 21:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0EB1879
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 21:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718053939; cv=none; b=G7Bdh0XKlBrgMyGiqP0xl+Ghhj33q3sRG+iy4HXeWivT9CLUi4b2EiAAgubXAc3xCWsidPMH1oGVA2HYrNhL+ANT9zzWZttnU9EFX0Cvoyg2JCJjkz/AK9SEwMEwEu6sQRbFnlNUCUgYyqtZzaPew3cgUAjxVIogbZVbE41dbCw=
+	t=1718054033; cv=none; b=JnN1VxoCw3OL7zSlzfmelau9rhgxvZRBVqM1N0bgbA53wAbZDnPziXhMnnm9AjAMtkzMu/0kkHm9JQWrGSBzIKVamaSlYdJbZvBcB8WO2JzYZ8aPhPrBB/Y39a+jh9k5qrwwWrkB6ijqjzUiyJ4XGF8QBOuT1ClZlSvY8CyoL/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718053939; c=relaxed/simple;
-	bh=6HhADaMBbEyoScJs8v/thCbLenv1FNwaIsawu+YyByE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=imbprcDPxU7Mp/hPQlNHt1Fk5s/uN7C+Bjb2F8Ep4qiTcGW+37bU5Cb/Ag0KeLr7EK9u//cWMAdCbHRRZL9MqCPSXE/eL3AZxQvRN+VgJFINyXkXl0HE83bZrdG4mE73M6HQx35KtJJpX+gvlYH2QIX9HIj+NGrTiNjGpXKc6fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E75d12JX; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718054033; c=relaxed/simple;
+	bh=uLLOWbGzkYJa/5ueKKs2Rflht3VwAfI/HmVMCbLohSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Th165A+6eHoxf39mnATv0D3TFWbzRF38DV4ET1EfPSv9Ol4TGynkEVkk152iD0KfhhIiJE6zzkFN3l031jRxTykfy7DCdv/Hpp2N4grT5B/YjHK4VadzdFnchpyu/5fXLKn16823KudYbNdn75c0tSdLsHSeoDfniWB2jCIjjuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hi6Qgmzc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E75d12JX"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a6efe62f583so28095166b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:12:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718053936; x=1718658736; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Uy3FcrR56dAJ33BptXmeq82zQbFLSxbtr1pm6OxI94=;
-        b=E75d12JXgFIRLQ2/fRUzMkO4+N/oFAyBXT4oB7zeyA+6PZsTg+5PtaYcO9fBVXAopk
-         PfQo+GoyzTprIlFePNPgfqxDz1mHBMzvT0k8kV5jwSQrhma0DKdGSMqFeg1Yx7HZbP9K
-         6TYj92u5r7kcWyX5a4pY8qGaH7hZXDkqG6Yaq5qAHiXgN9Z1mvF8GZc7z3mX6XmSXBeq
-         WDwNWnmJtej9SlezbmGx7X2VmOzDfqU7rBDgH6tWIPVtlhsHOEKtae+B2vPBNmviuI7V
-         zwz4XXuMERlVNGo7OjjI8rhafCxmOXvfoNkPPZyd03oLSZ6LbT9C0UvGr7ddCMJMdLJj
-         lhsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718053936; x=1718658736;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7Uy3FcrR56dAJ33BptXmeq82zQbFLSxbtr1pm6OxI94=;
-        b=A77+MhMilCFradBXkCmYy1LLU5cKTG80X0Mp0zpgLIH1vnAjXHWNu3ReeH0kY7f/Pn
-         PEiqZZ/xrBi6YXL5d825htmtzFqHotCO7AyMdW075Hpq1Fj2S+gTSbji2L/zw+O0ZkV0
-         NkkY3m2FGbgRuxhTEqD4vekNGyxt8F/gQBk468JnQv1HzDjfdNRiQ7vPygJbxG9Tj/fE
-         5zO5SrF6jIwTnjyB9AsaL4Hl/PuHqVDaIqcAIUEv1imNTjulqciewpftlQ48JOq0etuW
-         VmReCktiiO/Q5zEIWpkvCsdU1CsxLVnEb4jytxskKG8TtxIt21RcgymwN8BqRD0BVYRg
-         loCA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+R4x5LHjDIJPD5KGXWTYSLO1y76XzSYVoL+bX0OfrNA7J8oo4MCzrAHhPm1oTMxhF1EcixFpm90zvkf9PNj1CeF7dgIxaRmwycUep
-X-Gm-Message-State: AOJu0YyysAgxsoSArNwNf0kU9AnFgFaatBRineHdGD1rGd+cjFMZ9bnX
-	dAHlvJJglAZ/Fs2VB47CkFJDOkgGAl0ruTMU6JoIBZQN6xYMf2PK6IqiPpQWqSXb44arETjVgPU
-	+yei/IYFJ+D5Gl/RFAw6NALi3pKmweWzoDd9F
-X-Google-Smtp-Source: AGHT+IEASnD5ua9yfrdUtvIzu+Lw46QXFzbx9CRxofl4dQ+vje03VpXXKBLIh1iGcqO9u1jSSMdugvsncTIN1lM0/tY=
-X-Received: by 2002:a17:906:7fd0:b0:a6e:2275:95b8 with SMTP id
- a640c23a62f3a-a6e2275962emr460685966b.64.1718053935639; Mon, 10 Jun 2024
- 14:12:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hi6Qgmzc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438CCC2BBFC;
+	Mon, 10 Jun 2024 21:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718054033;
+	bh=uLLOWbGzkYJa/5ueKKs2Rflht3VwAfI/HmVMCbLohSA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hi6Qgmzceo7QwVsu2iTcigbMjLujwb6T0IqzpgCEgFv+pVLBUY4h8SRpDlqoIqEEH
+	 +C1RLz+noGt4rTKimAVkfAEcYx0KRabFujlVvKMbNds7rX0WfT4I+4sa2zeSzFKfz6
+	 u95V3aJ+WOFlJNPRVnZQHuOrbqO+yx3v2AYKd7V37yZqc9jXcw4k6JsetSazRrCCHc
+	 9MOj1x8+8ZV9A/1ohV9AD3IUy22ih+lKuIT5nsL1X8SEjjCziVvqc7bHa6Qe1HVuMm
+	 pH5Jgcoav2hsBkutl7Wpeao6BBLomClMva3RRwB1SDqztvdsKf5cRLaltH8iCG4ZNR
+	 v2nnVwWRbPQpA==
+Date: Mon, 10 Jun 2024 14:13:50 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dave Hansen <dave@sr71.net>, Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>
+Subject: Re: [PATCH 3/9] x86/fpu: Make task_struct::thread constant size
+Message-ID: <20240610211350.GA1613053@thelio-3990X>
+References: <20240608073134.264210-1-mingo@kernel.org>
+ <20240608073134.264210-4-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240608023654.3513385-1-yosryahmed@google.com>
- <CAGsJ_4yVmDKtcKKAdjPOkOMWB+=ZT5TrrWz188xJaTV4EpM1Bw@mail.gmail.com>
- <CAJD7tkaHLVcjUgiUFfBK+ztCqxBTRfyVbSVH9vytK=5JYOw+Sw@mail.gmail.com>
- <CAGsJ_4w-magFysq4uLBm46AzHLD+r=v6pJphwmQn+OFvECHjrA@mail.gmail.com>
- <CAJD7tkYdq533Z7nubjFT5jQYuS4oq2u15RAz2oGHGxYSk5Oicg@mail.gmail.com> <CAGsJ_4zNxC5u088RRnKeM18skEJvwTd22mB_FWSA67K3S-CKPw@mail.gmail.com>
-In-Reply-To: <CAGsJ_4zNxC5u088RRnKeM18skEJvwTd22mB_FWSA67K3S-CKPw@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 10 Jun 2024 14:11:36 -0700
-Message-ID: <CAJD7tkb0Rv4mSPS3DXqF888iVwd++nd99N3WrZYuJhLPDN+dhA@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: zswap: handle incorrect attempts to load of large folios
-To: Barry Song <21cnbao@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chris Li <chrisl@kernel.org>, 
-	Ryan Roberts <ryan.roberts@arm.com>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240608073134.264210-4-mingo@kernel.org>
 
-On Mon, Jun 10, 2024 at 2:00=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
-e:
->
-> On Tue, Jun 11, 2024 at 4:12=E2=80=AFAM Yosry Ahmed <yosryahmed@google.co=
-m> wrote:
-> >
-> > On Mon, Jun 10, 2024 at 1:06=E2=80=AFPM Barry Song <21cnbao@gmail.com> =
-wrote:
-> > >
-> > > On Tue, Jun 11, 2024 at 1:42=E2=80=AFAM Yosry Ahmed <yosryahmed@googl=
-e.com> wrote:
-> > > >
-> > > > On Fri, Jun 7, 2024 at 9:13=E2=80=AFPM Barry Song <21cnbao@gmail.co=
-m> wrote:
-> > > > >
-> > > > > On Sat, Jun 8, 2024 at 10:37=E2=80=AFAM Yosry Ahmed <yosryahmed@g=
-oogle.com> wrote:
-> > > > > >
-> > > > > > Zswap does not support storing or loading large folios. Until p=
-roper
-> > > > > > support is added, attempts to load large folios from zswap are =
-a bug.
-> > > > > >
-> > > > > > For example, if a swapin fault observes that contiguous PTEs ar=
-e
-> > > > > > pointing to contiguous swap entries and tries to swap them in a=
-s a large
-> > > > > > folio, swap_read_folio() will pass in a large folio to zswap_lo=
-ad(), but
-> > > > > > zswap_load() will only effectively load the first page in the f=
-olio. If
-> > > > > > the first page is not in zswap, the folio will be read from dis=
-k, even
-> > > > > > though other pages may be in zswap.
-> > > > > >
-> > > > > > In both cases, this will lead to silent data corruption. Proper=
- support
-> > > > > > needs to be added before large folio swapins and zswap can work
-> > > > > > together.
-> > > > > >
-> > > > > > Looking at callers of swap_read_folio(), it seems like they are=
- either
-> > > > > > allocated from __read_swap_cache_async() or do_swap_page() in t=
-he
-> > > > > > SWP_SYNCHRONOUS_IO path. Both of which allocate order-0 folios,=
- so
-> > > > > > everything is fine for now.
-> > > > > >
-> > > > > > However, there is ongoing work to add to support large folio sw=
-apins
-> > > > > > [1]. To make sure new development does not break zswap (or get =
-broken by
-> > > > > > zswap), add minimal handling of incorrect loads of large folios=
- to
-> > > > > > zswap.
-> > > > > >
-> > > > > > First, move the call folio_mark_uptodate() inside zswap_load().
-> > > > > >
-> > > > > > If a large folio load is attempted, and any page in that folio =
-is in
-> > > > > > zswap, return 'true' without calling folio_mark_uptodate(). Thi=
-s will
-> > > > > > prevent the folio from being read from disk, and will emit an I=
-O error
-> > > > > > because the folio is not uptodate (e.g. do_swap_fault() will re=
-turn
-> > > > > > VM_FAULT_SIGBUS). It may not be reliable recovery in all cases,=
- but it
-> > > > > > is better than nothing.
-> > > > > >
-> > > > > > This was tested by hacking the allocation in __read_swap_cache_=
-async()
-> > > > > > to use order 2 and __GFP_COMP.
-> > > > > >
-> > > > > > In the future, to handle this correctly, the swapin code should=
-:
-> > > > > > (a) Fallback to order-0 swapins if zswap was ever used on the m=
-achine,
-> > > > > > because compressed pages remain in zswap after it is disabled.
-> > > > > > (b) Add proper support to swapin large folios from zswap (fully=
- or
-> > > > > > partially).
-> > > > > >
-> > > > > > Probably start with (a) then followup with (b).
-> > > > > >
-> > > > > > [1]https://lore.kernel.org/linux-mm/20240304081348.197341-6-21c=
-nbao@gmail.com/
-> > > > > >
-> > > > > > Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
-> > > > > > ---
-> > > > > >
-> > > > > > v1: https://lore.kernel.org/lkml/20240606184818.1566920-1-yosry=
-ahmed@google.com/
-> > > > > >
-> > > > > > v1 -> v2:
-> > > > > > - Instead of using VM_BUG_ON() use WARN_ON_ONCE() and add some =
-recovery
-> > > > > >   handling (David Hildenbrand).
-> > > > > >
-> > > > > > ---
-> > > > > >  mm/page_io.c |  1 -
-> > > > > >  mm/zswap.c   | 22 +++++++++++++++++++++-
-> > > > > >  2 files changed, 21 insertions(+), 2 deletions(-)
-> > > > > >
-> > > > > > diff --git a/mm/page_io.c b/mm/page_io.c
-> > > > > > index f1a9cfab6e748..8f441dd8e109f 100644
-> > > > > > --- a/mm/page_io.c
-> > > > > > +++ b/mm/page_io.c
-> > > > > > @@ -517,7 +517,6 @@ void swap_read_folio(struct folio *folio, s=
-truct swap_iocb **plug)
-> > > > > >         delayacct_swapin_start();
-> > > > > >
-> > > > > >         if (zswap_load(folio)) {
-> > > > > > -               folio_mark_uptodate(folio);
-> > > > > >                 folio_unlock(folio);
-> > > > > >         } else if (data_race(sis->flags & SWP_FS_OPS)) {
-> > > > > >                 swap_read_folio_fs(folio, plug);
-> > > > > > diff --git a/mm/zswap.c b/mm/zswap.c
-> > > > > > index b9b35ef86d9be..ebb878d3e7865 100644
-> > > > > > --- a/mm/zswap.c
-> > > > > > +++ b/mm/zswap.c
-> > > > > > @@ -1557,6 +1557,26 @@ bool zswap_load(struct folio *folio)
-> > > > > >
-> > > > > >         VM_WARN_ON_ONCE(!folio_test_locked(folio));
-> > > > > >
-> > > > > > +       /*
-> > > > > > +        * Large folios should not be swapped in while zswap is=
- being used, as
-> > > > > > +        * they are not properly handled. Zswap does not proper=
-ly load large
-> > > > > > +        * folios, and a large folio may only be partially in z=
-swap.
-> > > > > > +        *
-> > > > > > +        * If any of the subpages are in zswap, reading from di=
-sk would result
-> > > > > > +        * in data corruption, so return true without marking t=
-he folio uptodate
-> > > > > > +        * so that an IO error is emitted (e.g. do_swap_page() =
-will sigfault).
-> > > > > > +        *
-> > > > > > +        * Otherwise, return false and read the folio from disk=
-.
-> > > > > > +        */
-> > > > > > +       if (folio_test_large(folio)) {
-> > > > > > +               if (xa_find(tree, &offset,
-> > > > > > +                           offset + folio_nr_pages(folio) - 1,=
- XA_PRESENT)) {
-> > > > > > +                       WARN_ON_ONCE(1);
-> > > > > > +                       return true;
-> > > > > > +               }
-> > > > > > +               return false;
-> > > > >
-> > > > > IMHO, this appears to be over-designed. Personally, I would opt t=
-o
-> > > > > use
-> > > > >
-> > > > >  if (folio_test_large(folio))
-> > > > >                return true;
-> > > >
-> > > > I am sure you mean "return false" here. Always returning true means=
- we
-> > > > will never read a large folio from either zswap or disk, whether it=
-'s
-> > > > in zswap or not. Basically guaranteeing corrupting data for large
-> > > > folio swapin, even if zswap is disabled :)
-> > > >
-> > > > >
-> > > > > Before we address large folio support in zswap, it=E2=80=99s esse=
-ntial
-> > > > > not to let them coexist. Expecting valid data by lunchtime is
-> > > > > not advisable.
-> > > >
-> > > > The goal here is to enable development for large folio swapin witho=
-ut
-> > > > breaking zswap or being blocked on adding support in zswap. If we
-> > > > always return false for large folios, as you suggest, then even if =
-the
-> > > > folio is in zswap (or parts of it), we will go read it from disk. T=
-his
-> > > > will result in silent data corruption.
-> > > >
-> > > > As you mentioned before, you spent a week debugging problems with y=
-our
-> > > > large folio swapin series because of a zswap problem, and even afte=
-r
-> > > > then, the zswap_is_enabled() check you had is not enough to prevent
-> > > > problems as I mentioned before (if zswap was enabled before). So we
-> > > > need stronger checks to make sure we don't break things when we
-> > > > support large folio swapin.
-> > > >
-> > > > Since we can't just check if zswap is enabled or not, we need to
-> > > > rather check if the folio (or any part of it) is in zswap or not. W=
-e
-> > > > can only WARN in that case, but delivering the error to userspace i=
-s a
-> > > > couple of extra lines of code (not set uptodate), and will make the
-> > > > problem much easier to notice.
-> > > >
-> > > > I am not sure I understand what you mean. The alternative is to
-> > > > introduce a config option (perhaps internal) for large folio swapin=
-,
-> > > > and make this depend on !CONFIG_ZSWAP, or make zswap refuse to get
-> > > > enabled if large folio swapin is enabled (through config or boot
-> > > > option). This is until proper handling is added, of course.
-> > >
-> > > Hi Yosry,
-> > > My point is that anybody attempts to do large folios swap-in should
-> > > either
-> > > 1. always use small folios if zswap has been once enabled before or n=
-ow
-> > > or
-> > > 2. address the large folios swapin issues in zswap
-> > >
-> > > there is no 3rd way which you are providing.
-> > >
-> > > it is over-designed to give users true or false based on if data is z=
-swap
-> > > as there is always a chance data could be in zswap. so before approac=
-h
-> > > 2 is done, we should always WARN_ON large folios and report data
-> > > corruption.
-> >
-> > We can't always WARN_ON for large folios, as this will fire even if
-> > zswap was never enabled. The alternative is tracking whether zswap was
-> > ever enabled, and checking that instead of checking if any part of the
-> > folio is in zswap.
-> >
-> > Basically replacing xa_find(..) with zswap_was_enabled(..) or something=
-.
->
-> My point is that mm core should always fallback
->
-> if (zswap_was_or_is_enabled())
->      goto fallback;
->
-> till zswap fixes the issue. This is the only way to enable large folios s=
-wap-in
-> development before we fix zswap.
+Hi Ingo,
 
-I agree with this, I just want an extra fallback in zswap itself in
-case something was missed during large folio swapin development (which
-can evidently happen).
+On Sat, Jun 08, 2024 at 09:31:28AM +0200, Ingo Molnar wrote:
+> Turn thread.fpu into a pointer. Since most FPU code internals work by passing
+> around the FPU pointer already, the code generation impact is small.
+> 
+> This allows us to remove the old kludge of task_struct being variable size:
+> 
+>   struct task_struct {
+> 
+>        ...
+>        /*
+>         * New fields for task_struct should be added above here, so that
+>         * they are included in the randomized portion of task_struct.
+>         */
+>        randomized_struct_fields_end
+> 
+>        /* CPU-specific state of this task: */
+>        struct thread_struct            thread;
+> 
+>        /*
+>         * WARNING: on x86, 'thread_struct' contains a variable-sized
+>         * structure.  It *MUST* be at the end of 'task_struct'.
+>         *
+>         * Do not put anything below here!
+>         */
+>   };
+> 
+> ... which creates a number of problems, such as requiring thread_struct to be
+> the last member of the struct - not allowing it to be struct-randomized, etc.
+> 
+> But the primary motivation is to allow the decoupling of task_struct from
+> hardware details (<asm/processor.h> in particular), and to eventually allow
+> the per-task infrastructure:
+> 
+>    DECLARE_PER_TASK(type, name);
+>    ...
+>    per_task(current, name) = val;
+> 
+> ... which requires task_struct to be a constant size struct.
+> 
+> The fpu_thread_struct_whitelist() quirk to hardened usercopy can be removed,
+> now that the FPU structure is not embedded in the task struct anymore, which
+> reduces text footprint a bit.
+> 
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: H. Peter Anvin <hpa@zytor.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Uros Bizjak <ubizjak@gmail.com>
+> Link: https://lore.kernel.org/r/20240605083557.2051480-2-mingo@kernel.org
+> ---
+>  arch/x86/include/asm/processor.h | 20 +++++++++-----------
+>  arch/x86/kernel/fpu/core.c       | 23 ++++++++++++-----------
+>  arch/x86/kernel/fpu/init.c       | 19 ++++++++++++-------
+>  arch/x86/kernel/process.c        |  2 +-
+>  include/linux/sched.h            | 13 +++----------
+>  5 files changed, 37 insertions(+), 40 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> index 35aa8f652964..64509c7f26c8 100644
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -504,21 +504,19 @@ struct thread_struct {
+>  #endif
+>  
+>  	/* Floating point and extended processor state */
+> -	struct fpu		fpu;
+> -	/*
+> -	 * WARNING: 'fpu' is dynamically-sized.  It *MUST* be at
+> -	 * the end.
+> -	 */
+> +	struct fpu		*fpu;
+>  };
+>  
+> -#define x86_task_fpu(task) (&(task)->thread.fpu)
+> +#define x86_task_fpu(task) ((task)->thread.fpu)
+>  
+> -extern void fpu_thread_struct_whitelist(unsigned long *offset, unsigned long *size);
+> -
+> -static inline void arch_thread_struct_whitelist(unsigned long *offset,
+> -						unsigned long *size)
+> +/*
+> + * X86 doesn't need any embedded-FPU-struct quirks:
+> + */
+> +static inline void
+> +arch_thread_struct_whitelist(unsigned long *offset, unsigned long *size)
+>  {
+> -	fpu_thread_struct_whitelist(offset, size);
+> +	*offset = 0;
+> +	*size = 0;
+>  }
+>  
+>  static inline void
+> diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+> index ca6745f8ac2a..f0c4367804b3 100644
+> --- a/arch/x86/kernel/fpu/core.c
+> +++ b/arch/x86/kernel/fpu/core.c
+> @@ -584,8 +584,19 @@ static int update_fpu_shstk(struct task_struct *dst, unsigned long ssp)
+>  int fpu_clone(struct task_struct *dst, unsigned long clone_flags, bool minimal,
+>  	      unsigned long ssp)
+>  {
+> +	/*
+> +	 * We allocate the new FPU structure right after the end of the task struct.
+> +	 * task allocation size already took this into account.
+> +	 *
+> +	 * This is safe because task_struct size is a multiple of cacheline size.
+> +	 */
+>  	struct fpu *src_fpu = x86_task_fpu(current);
+> -	struct fpu *dst_fpu = x86_task_fpu(dst);
+> +	struct fpu *dst_fpu = (void *)dst + sizeof(*dst);
+> +
+> +	BUILD_BUG_ON(sizeof(*dst) % SMP_CACHE_BYTES != 0);
+> +	BUG_ON(!src_fpu);
+> +
+> +	dst->thread.fpu = dst_fpu;
+>  
+>  	/* The new task's FPU state cannot be valid in the hardware. */
+>  	dst_fpu->last_cpu = -1;
+> @@ -654,16 +665,6 @@ int fpu_clone(struct task_struct *dst, unsigned long clone_flags, bool minimal,
+>  	return 0;
+>  }
+>  
+> -/*
+> - * Whitelist the FPU register state embedded into task_struct for hardened
+> - * usercopy.
+> - */
+> -void fpu_thread_struct_whitelist(unsigned long *offset, unsigned long *size)
+> -{
+> -	*offset = offsetof(struct thread_struct, fpu.__fpstate.regs);
+> -	*size = fpu_kernel_cfg.default_size;
+> -}
+> -
+>  /*
+>   * Drops current FPU state: deactivates the fpregs and
+>   * the fpstate. NOTE: it still leaves previous contents
+> diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
+> index ad5cb2943d37..4e8d37b5a90b 100644
+> --- a/arch/x86/kernel/fpu/init.c
+> +++ b/arch/x86/kernel/fpu/init.c
+> @@ -71,8 +71,17 @@ static bool __init fpu__probe_without_cpuid(void)
+>  	return fsw == 0 && (fcw & 0x103f) == 0x003f;
+>  }
+>  
+> +static struct fpu x86_init_fpu __read_mostly;
+> +
+>  static void __init fpu__init_system_early_generic(void)
+>  {
+> +	int this_cpu = smp_processor_id();
+> +
+> +	fpstate_reset(&x86_init_fpu);
+> +	current->thread.fpu = &x86_init_fpu;
+> +	per_cpu(fpu_fpregs_owner_ctx, this_cpu) = &x86_init_fpu;
+> +	x86_init_fpu.last_cpu = this_cpu;
+> +
+>  	if (!boot_cpu_has(X86_FEATURE_CPUID) &&
+>  	    !test_bit(X86_FEATURE_FPU, (unsigned long *)cpu_caps_cleared)) {
+>  		if (fpu__probe_without_cpuid())
+> @@ -150,6 +159,8 @@ static void __init fpu__init_task_struct_size(void)
+>  {
+>  	int task_size = sizeof(struct task_struct);
+>  
+> +	task_size += sizeof(struct fpu);
+> +
+>  	/*
+>  	 * Subtract off the static size of the register state.
+>  	 * It potentially has a bunch of padding.
+> @@ -164,14 +175,9 @@ static void __init fpu__init_task_struct_size(void)
+>  
+>  	/*
+>  	 * We dynamically size 'struct fpu', so we require that
+> -	 * it be at the end of 'thread_struct' and that
+> -	 * 'thread_struct' be at the end of 'task_struct'.  If
+> -	 * you hit a compile error here, check the structure to
+> -	 * see if something got added to the end.
+> +	 * 'state' be at the end of 'it:
+>  	 */
+>  	CHECK_MEMBER_AT_END_OF(struct fpu, __fpstate);
+> -	CHECK_MEMBER_AT_END_OF(struct thread_struct, fpu);
+> -	CHECK_MEMBER_AT_END_OF(struct task_struct, thread);
+>  
+>  	arch_task_struct_size = task_size;
+>  }
+> @@ -213,7 +219,6 @@ static void __init fpu__init_system_xstate_size_legacy(void)
+>   */
+>  void __init fpu__init_system(void)
+>  {
+> -	fpstate_reset(x86_task_fpu(current));
+>  	fpu__init_system_early_generic();
+>  
+>  	/*
+> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+> index adfeefd6375a..5bb73bc0e31a 100644
+> --- a/arch/x86/kernel/process.c
+> +++ b/arch/x86/kernel/process.c
+> @@ -97,7 +97,7 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+>  	dst->thread.vm86 = NULL;
+>  #endif
+>  	/* Drop the copied pointer to current's fpstate */
+> -	x86_task_fpu(dst)->fpstate = NULL;
+> +	dst->thread.fpu = NULL;
+>  
+>  	return 0;
+>  }
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 61591ac6eab6..215a7380e41c 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1554,21 +1554,14 @@ struct task_struct {
+>  	struct user_event_mm		*user_event_mm;
+>  #endif
+>  
+> +	/* CPU-specific state of this task: */
+> +	struct thread_struct		thread;
+> +
+>  	/*
+>  	 * New fields for task_struct should be added above here, so that
+>  	 * they are included in the randomized portion of task_struct.
+>  	 */
+>  	randomized_struct_fields_end
+> -
+> -	/* CPU-specific state of this task: */
+> -	struct thread_struct		thread;
+> -
+> -	/*
+> -	 * WARNING: on x86, 'thread_struct' contains a variable-sized
+> -	 * structure.  It *MUST* be at the end of 'task_struct'.
+> -	 *
+> -	 * Do not put anything below here!
+> -	 */
+>  };
+>  
+>  #define TASK_REPORT_IDLE	(TASK_REPORT + 1)
+> -- 
+> 2.43.0
+> 
+
+I am seeing a crash with this change in -next as
+commit 018d456409d6 ("x86/fpu: Make task_struct::thread constant size")
+and I still see it in WIP.x86/fpu from commit 4f4a9b399357 ("x86/fpu:
+Make task_struct::thread constant size").
+
+$ make -skj"$(nproc)" ARCH=i386 CROSS_COMPILE=i386-linux- defconfig bzImage
+
+$ qemu-system-i386 \
+    -display none \
+    -nodefaults \
+    -M q35 \
+    -d unimp,guest_errors \
+    -append 'console=ttyS0 earlycon=uart8250,io,0x3f8' \
+    -kernel arch/x86/boot/bzImage \
+    -initrd rootfs.cpio \
+    -cpu host \
+    -enable-kvm \
+    -m 512m \
+    -smp 8 \
+    -serial mon:stdio
+[    0.000000] Linux version 6.10.0-rc2-00003-g4f4a9b399357 (nathan@thelio-3990X) (i386-linux-gcc (GCC) 13.2.0, GNU ld (GNU Binutils) 2.41) #1 SMP PREEMPT_DYNAMIC Mon Jun 10 13:58:20 MST 2024
+...
+[    0.337514] ------------[ cut here ]------------
+[    0.338184] Bad FPU state detected at restore_fpregs_from_fpstate+0x38/0x6c, reinitializing FPU registers.
+[    0.338195] WARNING: CPU: 2 PID: 100 at arch/x86/mm/extable.c:127 fixup_exception+0x41e/0x45c
+[    0.340506] Modules linked in:
+[    0.340905] CPU: 2 PID: 100 Comm: modprobe Not tainted 6.10.0-rc2-00003-g4f4a9b399357 #1
+[    0.341939] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[    0.343363] EIP: fixup_exception+0x41e/0x45c
+[    0.343916] Code: e8 cb c0 00 00 0f 0b eb cb 0f 0b ba 4c e9 7f da eb b6 b2 01 88 15 16 bf 6c da 89 44 24 04 c7 04 24 18 39 3b da e8 a6 c0 00 00 <0f> 0b e9 ee fd ff ff 8d b4 26 00 00 00 00 0f 0b ba 4c e9 7f da e9
+[    0.346288] EAX: 0000005e EBX: da4e53f0 ECX: 00000000 EDX: da5d606c
+[    0.347082] ESI: c1ba5ef0 EDI: 0000000d EBP: c1ba5e58 ESP: c1ba5dd8
+[    0.347882] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010086
+[    0.348744] CR0: 80050033 CR2: bfe4afcb CR3: 012f5000 CR4: 00350ed0
+[    0.349540] Call Trace:
+[    0.349855]  ? show_regs+0x4d/0x54
+[    0.350300]  ? fixup_exception+0x41e/0x45c
+[    0.350828]  ? __warn+0x84/0x150
+[    0.351242]  ? fixup_exception+0x41e/0x45c
+[    0.351765]  ? fixup_exception+0x41e/0x45c
+[    0.352289]  ? report_bug+0x186/0x1b0
+[    0.352756]  ? exc_overflow+0x50/0x50
+[    0.353230]  ? handle_bug+0x2d/0x50
+[    0.353675]  ? exc_invalid_op+0x1b/0x70
+[    0.354171]  ? console_unlock+0x53/0xc4
+[    0.354658]  ? handle_exception+0x14b/0x14b
+[    0.355196]  ? exc_overflow+0x50/0x50
+[    0.355663]  ? fixup_exception+0x41e/0x45c
+[    0.356184]  ? exc_overflow+0x50/0x50
+[    0.356651]  ? fixup_exception+0x41e/0x45c
+[    0.357172]  ? restore_fpregs_from_fpstate+0x38/0x6c
+[    0.357809]  ? _get_random_bytes+0x65/0x190
+[    0.358341]  ? mt_find+0xd1/0x458
+[    0.358766]  ? exc_bounds+0xac/0xac
+[    0.359213]  exc_general_protection+0x97/0x358
+[    0.359775]  ? randomize_page+0x37/0x54
+[    0.360271]  ? exc_bounds+0xac/0xac
+[    0.360722]  handle_exception+0x14b/0x14b
+[    0.361232] EIP: restore_fpregs_from_fpstate+0x38/0x6c
+[    0.361885] Code: 7d fc 89 ca eb 09 cc cc cc db e2 0f 77 db 03 3e 8d 74 26 00 8b 3d ec 31 46 da 8b 0d e8 31 46 da 21 fa 8d 7b 40 21 c8 0f c7 1f <8b> 5d f8 8b 7d fc 89 ec 5d c3 66 90 3e 8d 74 26 00 0f ae 4b 40 8b
+[    0.364284] EAX: 00000007 EBX: c1a73860 ECX: 00000007 EDX: 00000000
+[    0.365077] ESI: c1a73820 EDI: c1a738a0 EBP: c1ba5f54 ESP: c1ba5f4c
+[    0.365870] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010002
+[    0.366728]  ? exc_bounds+0xac/0xac
+[    0.367171]  ? exc_bounds+0xac/0xac
+[    0.367621]  ? restore_fpregs_from_fpstate+0x35/0x6c
+[    0.368255]  switch_fpu_return+0x49/0xd0
+[    0.368756]  syscall_exit_to_user_mode+0x181/0x1a8
+[    0.369364]  ? call_usermodehelper_exec_async+0xbe/0x1ac
+[    0.370040]  ? call_usermodehelper+0x8c/0x8c
+[    0.370586]  ret_from_fork+0x23/0x44
+[    0.371048]  ? call_usermodehelper+0x8c/0x8c
+[    0.371592]  ret_from_fork_asm+0x12/0x18
+[    0.372092]  entry_INT80_32+0x108/0x108
+[    0.372581] EIP: 0xb7f77087
+[    0.372941] Code: Unable to access opcode bytes at 0xb7f7705d.
+[    0.373679] EAX: 00000000 EBX: 00000000 ECX: 00000000 EDX: 00000000
+[    0.374477] ESI: 00000000 EDI: 00000000 EBP: 00000000 ESP: bfe4aed0
+[    0.375271] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 007b EFLAGS: 00000200
+[    0.376134] ---[ end trace 0000000000000000 ]---
+...
+
+The rootfs is from [1] if you should need it (x86-rootfs.cpio.zst,
+decompress with zstd first). I am more than happy to provide any
+additional information or test patches as necessary.
+
+[1]: https://github.com/ClangBuiltLinux/boot-utils/releases
+
+Cheers,
+Nathan
+
+# bad: [d35b2284e966c0bef3e2182a5c5ea02177dd32e4] Add linux-next specific files for 20240607
+# good: [8a92980606e3585d72d510a03b59906e96755b8a] Merge tag 'scsi-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
+git bisect start 'd35b2284e966c0bef3e2182a5c5ea02177dd32e4' '8a92980606e3585d72d510a03b59906e96755b8a'
+# good: [faef37a085e57f29479f853624948cdc7df6e366] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git
+git bisect good faef37a085e57f29479f853624948cdc7df6e366
+# good: [822946749b5f02d9f49dde4b4cb8f2535c247ce5] Merge branch 'drm-xe-next' of https://gitlab.freedesktop.org/drm/xe/kernel
+git bisect good 822946749b5f02d9f49dde4b4cb8f2535c247ce5
+# bad: [9ffebdc86bc23fdf0622eb0c38d395c2b99b7f32] Merge branch 'next' of git://git.kernel.org/pub/scm/virt/kvm/kvm.git
+git bisect bad 9ffebdc86bc23fdf0622eb0c38d395c2b99b7f32
+# good: [9a85e49be89a9150fd2ec9964f48013a00c261d1] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
+git bisect good 9a85e49be89a9150fd2ec9964f48013a00c261d1
+# bad: [0435675ef6ba0b3e14859bd4c6edb0d81093d28e] Merge branch 'edac-for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git
+git bisect bad 0435675ef6ba0b3e14859bd4c6edb0d81093d28e
+# bad: [8f4652aac08030f2d5110be87229ad0f15c33496] Merge branch into tip/master: 'timers/core'
+git bisect bad 8f4652aac08030f2d5110be87229ad0f15c33496
+# bad: [0724c2b228bef4ea71cf5be0ab64de1065e32299] Merge branch into tip/master: 'irq/core'
+git bisect bad 0724c2b228bef4ea71cf5be0ab64de1065e32299
+# good: [51d8bfbcae9aeedee48cddefe6776c96acb2d83e] Merge branch into tip/master: 'x86/urgent'
+git bisect good 51d8bfbcae9aeedee48cddefe6776c96acb2d83e
+# bad: [80b691d02d005beafcd120a3b92c951155db543a] x86/fpu: Use 'fpstate' variable names consistently
+git bisect bad 80b691d02d005beafcd120a3b92c951155db543a
+# bad: [eb6428fd2eb4f72c735ba6fddd62147ac8d544c2] x86/fpu: Remove the thread::fpu pointer
+git bisect bad eb6428fd2eb4f72c735ba6fddd62147ac8d544c2
+# bad: [7329f3c69f07a502eb2ab5a6b4d27cd6a067579b] x86/fpu: Introduce the x86_task_fpu() helper method
+git bisect bad 7329f3c69f07a502eb2ab5a6b4d27cd6a067579b
+# bad: [018d456409d6c9ef4046eb5db95ce357acfeba23] x86/fpu: Make task_struct::thread constant size
+git bisect bad 018d456409d6c9ef4046eb5db95ce357acfeba23
+# first bad commit: [018d456409d6c9ef4046eb5db95ce357acfeba23] x86/fpu: Make task_struct::thread constant size
