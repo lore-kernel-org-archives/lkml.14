@@ -1,93 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD5014373F
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984CB43146;
+	Mon, 10 Jun 2024 16:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718036397; cv=none; b=hZqhvERKpfC01sEkQnfKpzFWhq3eSxmNuJao2N6YcZZ9/TJNbPMpKGaVQq1nV4vClTHrRnbct9HGZqvo8NZvvH7+fW8dIrFRsuUWmi3Z8aOnCSwMS3NehB68h6oI61BDltju58fbFdp/ODRED7vvoLzxlwh4IblvaxBLOuJSHS8=
+	t=1718036465; cv=none; b=OQkE0rca4bWq49ISH8GcxHQiFq7N5QLni1zR2MCy78LhFgM/SKo5iVcxtgju7Wpzv7RZdYQtL9vXKAy5FZ5fmgk7l64Enj/c7h9cPjdU6usDiXsdML2oumzYMyzfqmAiY4DTzIb+nXWXZ43zBxyOdmQfGhx7+Tc8j3AzXG78w2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718036397; c=relaxed/simple;
-	bh=UvPKv+li/SINxAK7aM9lX1lje5YFH7WAMPntdkSblq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kvz9CtDrwm2vUYBrmdTSltKtacoPp9uXW7D87HTyDXsGRTRxfT0RwQvlJgOHdOCuB9Vy4X4pZdXy0heb/hPQaB2OmIcz1ShrfUk3g1A1RiJJnXlO9oLWpVvPRGihc6OU27+deTZlImADAR7EbGBFqjMWcKdHMcs7OK0fxmFf5io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SWDVWxGl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718036465; c=relaxed/simple;
+	bh=25JnKzM0oSveF/yU7V7v0D6gw5AxNyK/vndNnfQoSrU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Zh4PxSCGdmUy9qNAZysqnOcCYLh75KXFfAtTqLekkfmt3T3q2LAeYXouN8qpzVYKroaqOvXJVaQ8rLhyLbNbL6n2zzndewoR/Cpl4A29FlkzeOBDm7wXxT21q7zjLKsouIrwu7d11W/tLY8k3qpqFLYxxSR+9x0ISDhYj7AbHmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XnlQn7cc; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SWDVWxGl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718036394;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gf4fTgOHmlHgU0q+hImhFWNpPhswAm3czG7DXf3LyZU=;
-	b=SWDVWxGlxLTcAYJFkjICJO5abWNh9X3CUKDprOiZCh35P5BdvmKQna56kK8+I/zoC03keR
-	hIaw+RccqBGM2n9ZgYBnMatwBFY0K1lqBeP5HFzEIoqqS3Ee8EBWXzQdUBcaxlUDaR2+Ul
-	7x1Fz+LX/wajj/4Q4mcvk//0B0/3yBs=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-587-3Luzm_U-PoqUbBNU8riUcg-1; Mon,
- 10 Jun 2024 12:19:51 -0400
-X-MC-Unique: 3Luzm_U-PoqUbBNU8riUcg-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6D9B319560AD;
-	Mon, 10 Jun 2024 16:19:50 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.117])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 59E5D19560AB;
-	Mon, 10 Jun 2024 16:19:47 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 10 Jun 2024 18:18:20 +0200 (CEST)
-Date: Mon, 10 Jun 2024 18:18:17 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/1] exit: kill signal_struct->quick_threads
-Message-ID: <20240610161816.GE20640@redhat.com>
-References: <20240609142342.GA11165@redhat.com>
- <87r0d5t2nt.fsf@email.froward.int.ebiederm.org>
- <20240610152902.GC20640@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XnlQn7cc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718036463; x=1749572463;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=25JnKzM0oSveF/yU7V7v0D6gw5AxNyK/vndNnfQoSrU=;
+  b=XnlQn7ccB54t/oSEA5JGo/6LiKG3dyaTLoz1SWkF0ga1XQwbV77MC8od
+   CY+EX0RN/Lvmny5jm2AUXqoR81dJJ0hhAv+VM8x3geq+mufKNygtwm+Ii
+   Kuz+Co0z8Xd7B4x6aAoor5M9CSkpIoJQrf0Jfc3JW8f6Jl43Fuk18RRY9
+   SNp14vmBsbVy3j6ZAC5+L5YB+z2jvRrtnHXGASgh3G/1sPPsX5BBgvNKf
+   SgeIdLkma7QNoip/FcnnBPBcNBG/wUHSDawq6OUPV2I7qBJyIfz/4BcWf
+   pGVkIRwkId8E2vWj+w/nHhdwBytk94ByYsAGSK10ssGoytVFLqBfoEM4p
+   Q==;
+X-CSE-ConnectionGUID: AnObiPa7SBm2+07YT3aV0A==
+X-CSE-MsgGUID: 3yg7AYAyQXy+U37OR09pYA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="12001676"
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="12001676"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 09:21:03 -0700
+X-CSE-ConnectionGUID: VQzS7yZASHyNN6S6cncpoQ==
+X-CSE-MsgGUID: F8rUVy+KQdCCIr86/WK5nQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="39672367"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.194])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 09:20:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 10 Jun 2024 19:20:55 +0300 (EEST)
+To: Babu Moger <babu.moger@amd.com>
+cc: fenghua.yu@intel.com, Reinette Chatre <reinette.chatre@intel.com>, 
+    shuah@kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-kselftest@vger.kernel.org, 
+    =?ISO-8859-15?Q?Maciej_Wiecz=F3r-Retman?= <maciej.wieczor-retman@intel.com>, 
+    peternewman@google.com, eranian@google.com
+Subject: Re: [PATCH v2] selftests/resctrl: Fix noncont_cat_run_test for AMD
+In-Reply-To: <7679d70a0ea939db13ae9dac20de56644460d6df.1718035091.git.babu.moger@amd.com>
+Message-ID: <91052cec-071b-7cc7-5f85-4fa29ec2aea4@linux.intel.com>
+References: <3a6c9dd9dc6bda6e2582db049bfe853cd836139f.1717622080.git.babu.moger@amd.com> <7679d70a0ea939db13ae9dac20de56644460d6df.1718035091.git.babu.moger@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240610152902.GC20640@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; CHARSET=US-ASCII
+Content-ID: <048478a2-4626-4610-9ef9-7e66f358abf2@linux.intel.com>
 
-On 06/10, Oleg Nesterov wrote:
->
-> > At the moment I am staring at wait_task_zombie and trying to understand
-> > how:
-> >
-> > 	status = (p->signal->flags & SIGNAL_GROUP_EXIT)
-> > 		? p->signal->group_exit_code : p->exit_code;
-> >
-> > works without any locks or barriers.
->
-> Agreed, at first glance this looks worrying without siglock... I'll try
-> to take a look, perhaps we can simply kill the SIGNAL_GROUP_EXIT check,
-> not sure.
+On Mon, 10 Jun 2024, Babu Moger wrote:
 
-Still not sure, will check tomorrow, but probably yes. We can rely on the
-the exit_state == EXIT_ZOMBIE check in the caller and tasklist_lock.
-OTOH, we should probably take ptrace into account...
+> The selftest noncont_cat_run_test fails on AMD with the warnings. Reason
 
-In short, I am still not sure ;) but I agree this code needs some changes,
-the comments at least.
+noncont_cat_run_test()
 
-> But this patch should not make any difference ?
+(In general, use () when refering to a function, same thing in the 
+shortlog).
 
-Yes.
+"the warnings" sounds like I should know about what warning it fails with
+but there's no previous context which tells that information. I suggest 
+you either use "a warning" or quote the warning it fails with into the 
+commit message.
 
-Oleg.
+> is, AMD supports non contiguous CBM masks but does not report it via CPUID.
 
+non-contiguous
+
+> Update noncont_cat_run_test to check for the vendor when verifying CPUID.
+
+()
+
+> Fixes: ae638551ab64 ("selftests/resctrl: Add non-contiguous CBMs CAT test")
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> ---
+> v2: Moved the non contiguous verification to a new function
+>     arch_supports_noncont_cat.
+> 
+> v1:
+> This was part of the series
+> https://lore.kernel.org/lkml/cover.1708637563.git.babu.moger@amd.com/
+> Sending this as a separate fix per review comments.
+> ---
+>  tools/testing/selftests/resctrl/cat_test.c | 32 +++++++++++++++-------
+>  1 file changed, 22 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
+> index d4dffc934bc3..742782438ca3 100644
+> --- a/tools/testing/selftests/resctrl/cat_test.c
+> +++ b/tools/testing/selftests/resctrl/cat_test.c
+> @@ -288,11 +288,30 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
+>  	return ret;
+>  }
+>  
+> +static bool arch_supports_noncont_cat(const struct resctrl_test *test)
+> +{
+> +	unsigned int eax, ebx, ecx, edx;
+> +
+> +	/* AMD always supports non-contiguous CBM. */
+> +	if (get_vendor() == ARCH_AMD)
+> +		return true;
+> +
+> +	/* Intel support for non-contiguous CBM needs to be discovered. */
+> +	if (!strcmp(test->resource, "L3"))
+> +		__cpuid_count(0x10, 1, eax, ebx, ecx, edx);
+> +	else if (!strcmp(test->resource, "L2"))
+> +		__cpuid_count(0x10, 2, eax, ebx, ecx, edx);
+> +	else
+> +		return false;
+> +
+> +	return ((ecx >> 3) & 1);
+> +}
+> +
+>  static int noncont_cat_run_test(const struct resctrl_test *test,
+>  				const struct user_params *uparams)
+>  {
+>  	unsigned long full_cache_mask, cont_mask, noncont_mask;
+> -	unsigned int eax, ebx, ecx, edx, sparse_masks;
+> +	unsigned int sparse_masks;
+>  	int bit_center, ret;
+>  	char schemata[64];
+>  
+> @@ -301,15 +320,8 @@ static int noncont_cat_run_test(const struct resctrl_test *test,
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (!strcmp(test->resource, "L3"))
+> -		__cpuid_count(0x10, 1, eax, ebx, ecx, edx);
+> -	else if (!strcmp(test->resource, "L2"))
+> -		__cpuid_count(0x10, 2, eax, ebx, ecx, edx);
+> -	else
+> -		return -EINVAL;
+> -
+> -	if (sparse_masks != ((ecx >> 3) & 1)) {
+> -		ksft_print_msg("CPUID output doesn't match 'sparse_masks' file content!\n");
+> +	if (arch_supports_noncont_cat(test) != sparse_masks) {
+> +		ksft_print_msg("Hardware and kernel differ on non-contiguous CBM support!\n");
+>  		return 1;
+
+This looks better than the previous version, thanks.
+
+
+-- 
+ i.
