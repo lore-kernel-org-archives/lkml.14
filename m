@@ -1,167 +1,76 @@
-Received: from e2i411.smtp2go.com (e2i411.smtp2go.com [103.2.141.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851B5142E97
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.141.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C4D13DDCE
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718032812; cv=none; b=FVe714HlqCC5597gBzcBpBeHXpw1lEgEyBms/vcXkUIqR27fYckaeHpTgwa03BgY6HAL9ORY6oqqILJZpOfsjYdrEWZ1kx4d9XAfDHXz5WyW85Xy0PZlWtzO+2HmD24Di4gw9UQi/nopQOogD174VZJf7DOYSGYo2EurJRLSyVc=
+	t=1718032862; cv=none; b=NQXM065E4vcOMC6w+uWaEf7o+UVmoYJWpciNBxL/pIY1FhtS8S7U+W2oBXoZj5wdSjSUoAZcaXtyIfngxcnqggL1oRGepPN9oQgKRRkd3Oma5/kTZ4g6cs4RSNhmI6Yt+qUrESREaMX6kkSXkp0DjVIBHAwvMQNoqSPcoEGuznI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718032812; c=relaxed/simple;
-	bh=kxNj0ZVeNkElcPtWPQix8aAJ+poPiEk20mwi+FyEiHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ALZh0P0tRdjJQfpktolmOXtgbwyx6vZpcwwCmcztardfTzVkLn4LLiEdAmkLkhdKXfovBdH7jS/4vCafb0hDYgldX+QHznHD8KTF1CObZGbzkFboA2HjehW0zOjGRid7TOOP2HSgy5JFsHhQBGAL98WVSh+lDpILvRTzHQFMbsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=ktGD7Ta9 reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=TVmnXCU5; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=T0a5Z8z3; arc=none smtp.client-ip=103.2.141.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
+	s=arc-20240116; t=1718032862; c=relaxed/simple;
+	bh=wrEyc/XOccK5lcvUAFHZMzKW2b4TGOK8NRquUO/ZqfQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Yc5uWXu6rodpgKEA/N274yWeoXij+loTB6JUQ+gFlrdhP2nSe8zXiD1TfybcPTKy0mUSFWUqlnw4Xn5p8i1Hv49K7yTDFlcdTL6H0E+WCvVZZf7s8GkSU9noNpN6A6OBWnNF1NTWVfrtD/ps1ik17iMgeyoImk8aoAv9qzSD7xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YF4agIZL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="ktGD7Ta9";
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="TVmnXCU5";
-	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="T0a5Z8z3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1718033703; h=Feedback-ID:
-	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
-	List-Unsubscribe:List-Unsubscribe-Post;
-	bh=vQoHrYF9OOJVsItZVr7XOj46Z1AabogKCVDMzdKF77k=; b=ktGD7Ta9j6z+WKRfBX0IVYfhTQ
-	pWSMFU/95bPTdWEx09s8xAw5zCxTi4j8VqLlSyVgyA8kioCPaVUvhli5VVWxP2SPHjUwL/o9hpdev
-	aBrAG0hDyxVum6o2RjVaCbuS27jNk4XcBt7OypmD9eqeSfzwqkkY6QfR8xGezw9Q9z2n2EpiEalIP
-	PL982RTawVNhUpkjF7CME0mB1iI74hB2eiAqI2W3asdnmglbJOfKQcuA8Mq59oGUAjmDiqwRcCmj6
-	rkt3sZLZ6LkRooApaWz95Z3UAm3IyhC2biuRMWI3oxAALnX8XusIp+ZlDncFxfOqIfOKKQXnUlAtw
-	qlqbUX6w==;
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
- i=@fjasle.eu; q=dns/txt; s=s1174286; t=1718032803; h=from : subject :
- to : message-id : date;
- bh=vQoHrYF9OOJVsItZVr7XOj46Z1AabogKCVDMzdKF77k=;
- b=TVmnXCU5bTyRwRi3Ur/ISUYbF25n+0xBvZ78v/bHU9GnLoKuyEahZ+zmQ5Qzi2j2bh6Gp
- lHwJwqOL7YQJ7xSe2L+nOhw8pINWDyPXBC5y3bNS0/8tfb0v+6f0dsWT6JThV4wBNIcN38q
- 9CEj7JigbyEbbX73Zfhfv6LbyWS7rImkXVWWviCtaFjV7EJfxZlUQuwotKdD2sABUBiltKk
- M94jnSHlJU9O5HhE5XHh0hSizJ6cbA4Q2P0+rjuNROi7dW2APl0jnHvKEHD9zxAgdgA9VVL
- RUf565XtA41Wr0e/rDEpG3N7QN5IBeZnnr5XGsncOPfHNahJzNKwGVBQBaNA==
-Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1sGgnR-TRk6qx-8T; Mon, 10 Jun 2024 15:18:58 +0000
-Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
- by smtpcorp.com with esmtpsa
- (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
- (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
- id 1sGgnS-4o5NDgrmh8E-kNoA; Mon, 10 Jun 2024 15:18:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
- t=1718032735; bh=kxNj0ZVeNkElcPtWPQix8aAJ+poPiEk20mwi+FyEiHY=;
- h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
- b=T0a5Z8z30r1iVhdVISPBwi+GY4h/CJgav387QmCnhhy/p5gbCtYB+9pvLo5sc2XQP
- vn5C64RVh2OrE1cmvlXTAzJPDcJ7fDH6DE6o4lOC4GFRAPjOLwajcMo2jO3TGzPjUU
- v0b46JGmtDSVIAqOBoY2zAhqvE+Fmr5xuMRO6l/A=
-Received: by leknes.fjasle.eu (Postfix, from userid 1000)
- id A81023C8B4; Mon, 10 Jun 2024 17:18:54 +0200 (CEST)
-Date: Mon, 10 Jun 2024 17:18:54 +0200
-From: Nicolas Schier <nicolas@fjasle.eu>
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: linux-kbuild@vger.kernel.org, masahiroy@kernel.org, nathan@kernel.org,
- linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
- Diederik de Haas <didi.debian@cknow.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] kbuild: Install dtb files as 0644 in Makefile.dtbinst
-Message-ID: <ZmcZXuETxg_C7KI8@fjasle.eu>
-References: <e1fd1b659711f59c61ec48dc43912dddccbb4d92.1717996742.git.dsimic@manjaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YF4agIZL"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0ACC2C32786;
+	Mon, 10 Jun 2024 15:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718032862;
+	bh=wrEyc/XOccK5lcvUAFHZMzKW2b4TGOK8NRquUO/ZqfQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=YF4agIZLqnty+hVCpPe+arb55voccu/wz5PLFlNZmY+GFV+SflhWRnHCJG2ZXHxzr
+	 2RPTZekLP0XqSVRu5Abbl9bPPzZLlSBtQm1sOAQttObYjIvHe4mFilJcxk/srfyuLW
+	 MTqX4YgK36BXSb5HawiX9+23BAF65cX5Ta4e3grtys+Oj9bY9E4pH3ffMFo/wsOCeD
+	 CCbJZFd9A91k1eGN08MtSCWbJTZAd6quINEi48uEGpB1kDVJyPJ3oAMwKdI1dM9XFQ
+	 niMlJEn4vZHY5l0+m2/p40JmciPmyb1HDmYHyWVqBJ2PBoeypPJ3NlrpVQ+xv6jYay
+	 U8iASVN5VEm0Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F18CBE7C76F;
+	Mon, 10 Jun 2024 15:21:01 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature"; boundary="1ZrVfO6RKau8OEqg"
-Content-Disposition: inline
-In-Reply-To: <e1fd1b659711f59c61ec48dc43912dddccbb4d92.1717996742.git.dsimic@manjaro.org>
-X-Smtpcorp-Track: s0AnpcI-4aHy.0j2y6zd2moHh.zPPq9AuQDAf
-Feedback-ID: 1174286m:1174286a9YXZ7r:1174286swy0Xjnx8o
-X-Report-Abuse: Please forward a copy of this message, including all headers,
- to <abuse-report@smtp2go.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [GIT PULL] RISC-V Fixes for 6.10-rc3
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <171803286198.3082.7486991860696715697.git-patchwork-notify@kernel.org>
+Date: Mon, 10 Jun 2024 15:21:01 +0000
+References: <mhng-1afb5c2b-25de-4eb4-a911-523495ad3939@palmer-ri-x1c9>
+In-Reply-To: <mhng-1afb5c2b-25de-4eb4-a911-523495ad3939@palmer-ri-x1c9>
+To: Palmer Dabbelt <palmer@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, torvalds@linux-foundation.org,
+ linux-kernel@vger.kernel.org
+
+Hello:
+
+This pull request was applied to riscv/linux.git (fixes)
+by Linus Torvalds <torvalds@linux-foundation.org>:
+
+On Fri, 07 Jun 2024 07:25:49 -0700 (PDT) you wrote:
+> The following changes since commit c3f38fa61af77b49866b006939479069cd451173:
+> 
+>   Linux 6.10-rc2 (2024-06-02 15:44:56 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.10-rc3
+> 
+> [...]
+
+Here is the summary with links:
+  - [GIT,PULL] RISC-V Fixes for 6.10-rc3
+    https://git.kernel.org/riscv/c/0a02756d9145
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
---1ZrVfO6RKau8OEqg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 10, 2024 at 07:21:12AM +0200 Dragan Simic wrote:
-> The compiled dtb files aren't executable, so install them with 0644 as th=
-eir
-> permission mode, instead of defaulting to 0755 for the permission mode and
-> installing them with the executable bits set.
->=20
-> Some Linux distributions, including Debian, [1][2][3] already include fix=
-es
-> in their kernel package build recipes to change the dtb file permissions =
-to
-> 0644 in their kernel packages.  These changes, when additionally propagat=
-ed
-> into the long-term kernel versions, will allow such distributions to remo=
-ve
-> their downstream fixes.
->=20
-> [1] https://salsa.debian.org/kernel-team/linux/-/merge_requests/642
-> [2] https://salsa.debian.org/kernel-team/linux/-/merge_requests/749
-> [3] https://salsa.debian.org/kernel-team/linux/-/blob/master/debian/rules=
-=2Ereal?ref_type=3Dheads#L193
->=20
-> Cc: Diederik de Haas <didi.debian@cknow.org>
-> Cc: stable@vger.kernel.org
-> Fixes: aefd80307a05 ("kbuild: refactor Makefile.dtbinst more")
-> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
-> ---
->=20
-> Notes:
->     Changes in v2:
->       - Improved the patch description, to include additional details and
->         to address the patch submission issues pointed out by Greg K-H [4]
->       - No changes were made to the patch itself
->    =20
->     Link to v1: https://lore.kernel.org/linux-kbuild/ae087ef1715142f606ba=
-6477ace3e4111972cf8b.1717961381.git.dsimic@manjaro.org/T/#u
->    =20
->     [4] https://lore.kernel.org/linux-kbuild/2024061006-ladylike-paving-a=
-36b@gregkh/
->=20
->  scripts/Makefile.dtbinst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/scripts/Makefile.dtbinst b/scripts/Makefile.dtbinst
-> index 67956f6496a5..9d920419a62c 100644
-> --- a/scripts/Makefile.dtbinst
-> +++ b/scripts/Makefile.dtbinst
-> @@ -17,7 +17,7 @@ include $(srctree)/scripts/Kbuild.include
->  dst :=3D $(INSTALL_DTBS_PATH)
-> =20
->  quiet_cmd_dtb_install =3D INSTALL $@
-> -      cmd_dtb_install =3D install -D $< $@
-> +      cmd_dtb_install =3D install -D -m 0644 $< $@
-> =20
->  $(dst)/%: $(obj)/%
->  	$(call cmd,dtb_install)
-
-Thanks for the patch.
-
-Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
-
---1ZrVfO6RKau8OEqg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmZnGVcACgkQB1IKcBYm
-EmnNrRAAnKc299Uv4LXbaLkPY/Bi3m3PR2SVFR1zYfcuvOU2PYgYKlKv4Yx9o+Y4
-52yJrRJ9em1QyAeYqL4F37dTsGZm1IzxZON7vaqKUzdBjq8LbH+cKAhvzyuhO4lB
-28pVDwVhVD38ylQe6soSv2t190TpBX6diDlAnAe/8c63Ao6RJ8qA9MEDeLQxTY4T
-+FTo3cRHDSAhgcmv/sYO44gd+/TPrELa5aBOsY4ohGQRKhqfa4G3gceRuz6GaJt3
-QK3GmrEOk6GH6zxo9RxB8CDyv7Bu0Q5XTjK+HLvzS6IJ53y288KU2BIDtD81T01T
-OzR1f3HfjKX0komAk2Iqw8M35kOLqMVlv+39pttbT3cLEslma0vs8LGyuc1FabHd
-D+3HR2+3VeWmwHbfEHzQjz73XMPSeqhSvhxfRStXwyiz0BeVpkDiz3tLEchIv2hD
-XQdXCQldYlh2AKNXzZomBES30lU42BKs1lyDFCusJM+E1TIkQjWcv5xIrkyQNzES
-5gPS24+8HQ9EvRXATZRNNoe7NDt1BTTKtzAZn723UnrSIbi4gfLfVl4zrxf2rQYC
-uSJaoQsGqTx7SwETNHSyULk3RNvjyG2JSAv/n3+pszYhw/Qa3tcj7Jd7LWHIT4Nd
-gsyro6LCplLpxICG7SLmTl8ZErRUlXBxwndXuiYkklJHLFGlcxE=
-=ckY9
------END PGP SIGNATURE-----
-
---1ZrVfO6RKau8OEqg--
