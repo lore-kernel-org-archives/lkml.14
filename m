@@ -1,46 +1,46 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA1B3EA86;
-	Mon, 10 Jun 2024 08:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492356F318;
+	Mon, 10 Jun 2024 08:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718008836; cv=none; b=itFYV9vawmAf1WUA9a7m/1xJvR4YnhIFXRNTUmTfefmBp0oN2/cwZFKm7FGqbW8p+6N7Ci2LdVI53de+GHWo1Gtf9vMfxbE85/X1TBLQRf1zmstd1Cxx0myvGVwFCmXU/ZbgImCkpaSLI5FfFbEGTy87Dji4byX/nKGRb8HPeSo=
+	t=1718008837; cv=none; b=Ub6jxvVQysZtnLDaB+DxXyoN63A75nVvaUUeX9JU6zriYAjd0M0PFNBySd//GaTQ+h6UBwaLrJDvM4A3Py6sCIw+/A4GGweX489Ijw8g2Z4h+vvMG9xKivNDgIhCCCCQqufaBoXi1DyIGPBF/88E8plZhk1NMjFODTZOxpqroPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718008836; c=relaxed/simple;
-	bh=JPY8tVqMOJipo1DorjDsnC+tAZXnS8c3lxL1U0CFXIE=;
+	s=arc-20240116; t=1718008837; c=relaxed/simple;
+	bh=9koIKek7qPhDHbcj/DeFDreV6Tr/KG7823SHacH9DrQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FFlUeSWtpXUoSaxHJ8CTVSEvJJTpA1o99H4kYXZYnuuKak8tp+DNq/EWKSM+yjH1IyxE4iGtwGDm6KzII2UXgzBdUJ7s65caJE9AyIWsgtNvqfMq1OVAd0iWDL8Cq91F/7PkoRnQ0czq6W0BX03YLPfoaZGIUytaS53B2MbeKY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
+	 In-Reply-To:To:Cc; b=nrqf6oylXHPbdLhtESRGUOTzxzaKSMovdCYvaz0FJHcFRvLOR2qzMkhdPwMQ3UNGrDwFRNHvsLSlCyOUfWqWr/0skVc+xxOX7tzmvaxpJ3zCS9Wndm68dtK0aH2jzisQO3IQYaK6A4iKwwKPJLGgR74XU/eWmWAeiAYHaxwJsvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a68b41ef3f6so449697266b.1;
-        Mon, 10 Jun 2024 01:40:34 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-57c778b5742so1117145a12.2;
+        Mon, 10 Jun 2024 01:40:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718008833; x=1718613633;
+        d=1e100.net; s=20230601; t=1718008834; x=1718613634;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=R+eJEFjxldYnixSnwYdNSI70ueCp+KRkHgoV9hazIIc=;
-        b=lBcyiNhh7SXtYoe/m0ueNhDgcfTVmQJ3QEJkEd+5QfxCHon3Fb2Cv6Wu3MeRBI/NS7
-         0ds5kMxW4kO0ssQGNQ1ew9/YIPU9QmbU/ME4Ip94yfxZMoTwuruI6tdYRSWEpFRkuq8I
-         Bz2CzIEyhT/n57hEKxDbosij6kwDuPieY4gSX3RoCXOxhRHdJxElVw51x+ao7LaEwukw
-         MgXQR5Kf90TfZpa3lrBEJ0N8S0bnwSGtS/yVEKodnFnIYwWhtPVzUPV2hy36YgclmdSc
-         2hgZrYH912tv0TYCYV2Vp02i0NzL7V5ipa+ew2e/5jqjLqh1pxiq+gIw4LXXstjFBX2P
-         O5bg==
-X-Forwarded-Encrypted: i=1; AJvYcCUobL6XibZInSpoBvkWW7UNGOav+rzNrboOTFmzshZj7yCyGCfxyik8stFM4i0gYMVCWqQ0HaO1WMxTraN2HIIOxNnlrfX78i5mJjnY
-X-Gm-Message-State: AOJu0YxyemYXNYLS8J/Bup46rfbhAVUpazJpEAt2kCUij/mDTL9MEWuS
-	t/EWJ/UaiBDuTRiG00a2rzpDIxZ1hZgzc9RaIm/a/B1B0+W3Wi1V/Ev86Q==
-X-Google-Smtp-Source: AGHT+IHDYorhX7Q4PIHPkKfC/GOau2fl6U9o8TrTlziYQxa6i9+2+i//VAaD3wic6MVmzHZMHhzBzg==
-X-Received: by 2002:a17:906:c0d8:b0:a68:e161:b765 with SMTP id a640c23a62f3a-a6cd665c27emr509480566b.29.1718008832751;
-        Mon, 10 Jun 2024 01:40:32 -0700 (PDT)
+        bh=TYQOXrTi4xC9EJqXLJeGLPx4jx3qC+GA+AGgjQf+XgM=;
+        b=RG0luP4JWDeifdo84tlIVpaLYMb6B5b7erwLXVrwaBvTBYK8WzTTgztoBej9Ztu1PD
+         vTGBIRe9gKg698PLPuS/W7zc9AbRS9o7zQIaw6B0kh8Qu91IwsrejQ6TPc1JtDKA0YR9
+         /Wpk1OBAlpsNyLXld+sZInMlAXYyqlZgcXrSP2GoLDGv9HWTYzgvno70xG/I3qByBT0J
+         fR3Z1+ozPo5T27K/1aNc7f8vofIf3NmRf+b7JBhIHvCc7eIhnT8L+VDop5x/Pp8y07pq
+         o5K/jgZxPwiEw/lEOaAr+eZv0ihJ8flEW0WdWhKl8/C206Cd1hv1wzR22yH7RxAq6ZVo
+         refw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSGB028f5qhgavkxj3znSU2pwaPCBo+BUFyMYDIf4EpWeN0bZoxS8Ld2SBpqTmPdmDI7kzcKPA8RFPKNAtsVlUqRi27b/YxSqIe/HA
+X-Gm-Message-State: AOJu0YzJU3MtJc2QMo7l+g2nvLHwNIg/iMK/ymZNmaGFU0Nhl3ZVqqMu
+	SCbLazD3lveu1Bgfj7/8D/0o7i5dKLqCjRIvSiwZeVCimGrrXPAa
+X-Google-Smtp-Source: AGHT+IEUssRf7aMIr7nHIHOQxBa4liSgGwzzqhTOMa9jN4/atsscpDFfJBN2AD426jikYbbe2pGgFA==
+X-Received: by 2002:a50:f60d:0:b0:57a:1fef:619e with SMTP id 4fb4d7f45d1cf-57c508a12dfmr5204888a12.18.1718008834380;
+        Mon, 10 Jun 2024 01:40:34 -0700 (PDT)
 Received: from [127.0.0.1] (p200300f6f7253800fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f725:3800:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c72efe054sm3259581a12.66.2024.06.10.01.40.31
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c72efe054sm3259581a12.66.2024.06.10.01.40.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 01:40:32 -0700 (PDT)
+        Mon, 10 Jun 2024 01:40:34 -0700 (PDT)
 From: Johannes Thumshirn <jth@kernel.org>
-Date: Mon, 10 Jun 2024 10:40:25 +0200
-Subject: [PATCH 1/3] btrfs: rst: remove encoding field from stripe_extent
+Date: Mon, 10 Jun 2024 10:40:27 +0200
+Subject: [PATCH 3/3] btrfs: split RAID stripes on deletion
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,198 +49,164 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240610-b4-rst-updates-v1-1-179c1eec08f2@kernel.org>
+Message-Id: <20240610-b4-rst-updates-v1-3-179c1eec08f2@kernel.org>
 References: <20240610-b4-rst-updates-v1-0-179c1eec08f2@kernel.org>
 In-Reply-To: <20240610-b4-rst-updates-v1-0-179c1eec08f2@kernel.org>
 To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
  David Sterba <dsterba@suse.com>
 Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Johannes Thumshirn <johannes.thumshirn@wdc.com>
+ JohnnesThumshirn <johannes.thumshirn@wdc.com>, 
+ Johnnes Thumshirn <johannes.thumshirn@wdc.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7154; i=jth@kernel.org;
- h=from:subject:message-id; bh=U4tM6VSGUfSvCYcn0kHPFwtPUTrQwDO8nUqFnyLGY5Q=;
- b=owGbwMvMwCV2ad4npfVdsu8YT6slMaSl7f6XeTDYYjOb3ppzNll2KYLTFd5OO1B7tj3dW3H+s
- cPCZ/Z2d5SyMIhxMciKKbIcD7XdL2F6hH3KoddmMHNYmUCGMHBxCsBEnHYz/FN8yll9OGKdjab3
- 7eme7pKxc+bOmd5XbbXM8g5rs+lTm0yG/26dxmkS6/j5D9zxna5uV5j/n6U/d27Kh0nJv9fpBze
- 2MwEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3809; i=jth@kernel.org;
+ h=from:subject:message-id; bh=xt1gqPtO3ScxjD8qUPejfcJ4eDxc3zKA784+waQ49mI=;
+ b=owGbwMvMwCV2ad4npfVdsu8YT6slMaSl7f53OYHJt+TKzowdGx5+vhXkfvzEgdMPJ09aw/jw3
+ CLzswxCbR2lLAxiXAyyYoosx0Nt90uYHmGfcui1GcwcViaQIQxcnAIwkUPxDP8dVf/+2Je3/97R
+ 9fvDFk33c5ycOPHLJrPKS/EbHXSnObm1MPwvKjpay326xq6T0Zn3yc97V27phqvfz0xsvHLk+H1
+ lv098AA==
 X-Developer-Key: i=jth@kernel.org; a=openpgp;
  fpr=EC389CABC2C4F25D8600D0D00393969D2D760850
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+From: JohnnesThumshirn <johannes.thumshirn@wdc.com>
 
-Remove the encoding field from 'struct btrfs_stripe_extent'. It was
-originally intended to encode the RAID type as well as if we're a data
-or a parity stripe.
+The current RAID stripe code assumes, that we will always remove a
+whole stripe entry.
 
-But the RAID type can be inferred form the block-group and the data vs.
-parity differentiation can be done easier with adding a new key type
-for parity stripes in the RAID stripe tree.
+But ff we're only removing a part of a RAID stripe we're hitting the
+ASSERT()ion checking for this condition.
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Instead of assuming the complete deletion of a RAID stripe, split the
+stripe if we need to.
+
+Signed-off-by: Johnnes Thumshirn <johannes.thumshirn@wdc.com>
 ---
- fs/btrfs/accessors.h            |  3 ---
- fs/btrfs/print-tree.c           |  5 -----
- fs/btrfs/raid-stripe-tree.c     | 13 -------------
- fs/btrfs/raid-stripe-tree.h     |  3 +--
- fs/btrfs/tree-checker.c         | 19 -------------------
- include/uapi/linux/btrfs_tree.h | 14 +-------------
- 6 files changed, 2 insertions(+), 55 deletions(-)
+ fs/btrfs/raid-stripe-tree.c | 101 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 77 insertions(+), 24 deletions(-)
 
-diff --git a/fs/btrfs/accessors.h b/fs/btrfs/accessors.h
-index 6c3deaa3e878..b2eb9cde2c5d 100644
---- a/fs/btrfs/accessors.h
-+++ b/fs/btrfs/accessors.h
-@@ -315,11 +315,8 @@ BTRFS_SETGET_FUNCS(timespec_nsec, struct btrfs_timespec, nsec, 32);
- BTRFS_SETGET_STACK_FUNCS(stack_timespec_sec, struct btrfs_timespec, sec, 64);
- BTRFS_SETGET_STACK_FUNCS(stack_timespec_nsec, struct btrfs_timespec, nsec, 32);
- 
--BTRFS_SETGET_FUNCS(stripe_extent_encoding, struct btrfs_stripe_extent, encoding, 8);
- BTRFS_SETGET_FUNCS(raid_stride_devid, struct btrfs_raid_stride, devid, 64);
- BTRFS_SETGET_FUNCS(raid_stride_physical, struct btrfs_raid_stride, physical, 64);
--BTRFS_SETGET_STACK_FUNCS(stack_stripe_extent_encoding,
--			 struct btrfs_stripe_extent, encoding, 8);
- BTRFS_SETGET_STACK_FUNCS(stack_raid_stride_devid, struct btrfs_raid_stride, devid, 64);
- BTRFS_SETGET_STACK_FUNCS(stack_raid_stride_physical, struct btrfs_raid_stride, physical, 64);
- 
-diff --git a/fs/btrfs/print-tree.c b/fs/btrfs/print-tree.c
-index 7e46aa8a0444..9f1e5e11bf71 100644
---- a/fs/btrfs/print-tree.c
-+++ b/fs/btrfs/print-tree.c
-@@ -208,11 +208,6 @@ static void print_raid_stripe_key(const struct extent_buffer *eb, u32 item_size,
- 				  struct btrfs_stripe_extent *stripe)
- {
- 	const int num_stripes = btrfs_num_raid_stripes(item_size);
--	const u8 encoding = btrfs_stripe_extent_encoding(eb, stripe);
--
--	pr_info("\t\t\tencoding: %s\n",
--		(encoding && encoding < BTRFS_NR_RAID_TYPES) ?
--		btrfs_raid_array[encoding].raid_name : "unknown");
- 
- 	for (int i = 0; i < num_stripes; i++)
- 		pr_info("\t\t\tstride %d devid %llu physical %llu\n",
 diff --git a/fs/btrfs/raid-stripe-tree.c b/fs/btrfs/raid-stripe-tree.c
-index 6af6b4b9a32e..e6f7a234b8f6 100644
+index 3020820dd6e2..41403217c3e6 100644
 --- a/fs/btrfs/raid-stripe-tree.c
 +++ b/fs/btrfs/raid-stripe-tree.c
-@@ -80,7 +80,6 @@ static int btrfs_insert_one_raid_extent(struct btrfs_trans_handle *trans,
- 	struct btrfs_key stripe_key;
- 	struct btrfs_root *stripe_root = fs_info->stripe_root;
- 	const int num_stripes = btrfs_bg_type_to_factor(bioc->map_type);
--	u8 encoding = btrfs_bg_flags_to_raid_index(bioc->map_type);
- 	struct btrfs_stripe_extent *stripe_extent;
- 	const size_t item_size = struct_size(stripe_extent, strides, num_stripes);
- 	int ret;
-@@ -94,7 +93,6 @@ static int btrfs_insert_one_raid_extent(struct btrfs_trans_handle *trans,
+@@ -33,42 +33,95 @@ int btrfs_delete_raid_extent(struct btrfs_trans_handle *trans, u64 start, u64 le
+ 	if (!path)
+ 		return -ENOMEM;
  
- 	trace_btrfs_insert_one_raid_extent(fs_info, bioc->logical, bioc->size,
- 					   num_stripes);
--	btrfs_set_stack_stripe_extent_encoding(stripe_extent, encoding);
- 	for (int i = 0; i < num_stripes; i++) {
- 		u64 devid = bioc->stripes[i].dev->devid;
- 		u64 physical = bioc->stripes[i].physical;
-@@ -159,7 +157,6 @@ int btrfs_get_raid_extent_offset(struct btrfs_fs_info *fs_info,
- 	struct extent_buffer *leaf;
- 	const u64 end = logical + *length;
- 	int num_stripes;
--	u8 encoding;
- 	u64 offset;
- 	u64 found_logical;
- 	u64 found_length;
-@@ -222,16 +219,6 @@ int btrfs_get_raid_extent_offset(struct btrfs_fs_info *fs_info,
+-	while (1) {
+-		key.objectid = start;
+-		key.type = BTRFS_RAID_STRIPE_KEY;
+-		key.offset = length;
++again:
++	key.objectid = start;
++	key.type = BTRFS_RAID_STRIPE_KEY;
++	key.offset = length;
  
- 	num_stripes = btrfs_num_raid_stripes(btrfs_item_size(leaf, slot));
- 	stripe_extent = btrfs_item_ptr(leaf, slot, struct btrfs_stripe_extent);
--	encoding = btrfs_stripe_extent_encoding(leaf, stripe_extent);
--
--	if (encoding != btrfs_bg_flags_to_raid_index(map_type)) {
--		ret = -EUCLEAN;
--		btrfs_handle_fs_error(fs_info, ret,
--				      "on-disk stripe encoding %d doesn't match RAID index %d",
--				      encoding,
--				      btrfs_bg_flags_to_raid_index(map_type));
--		goto out;
--	}
+-		ret = btrfs_search_slot(trans, stripe_root, &key, path, -1, 1);
+-		if (ret < 0)
+-			break;
+-		if (ret > 0) {
+-			ret = 0;
+-			if (path->slots[0] == 0)
+-				break;
+-			path->slots[0]--;
+-		}
++	ret = btrfs_search_slot(trans, stripe_root, &key, path, -1, 1);
++	if (ret < 0)
++		goto out;
++	if (ret > 0) {
++		ret = 0;
++		if (path->slots[0] == 0)
++			goto out;
++		path->slots[0]--;
++	}
++
++	leaf = path->nodes[0];
++	slot = path->slots[0];
++	btrfs_item_key_to_cpu(leaf, &key, slot);
++	found_start = key.objectid;
++	found_end = found_start + key.offset;
++
++	/* That stripe ends before we start, we're done. */
++	if (found_end <= start)
++		goto out;
++
++	trace_btrfs_raid_extent_delete(fs_info, start, end,
++				       found_start, found_end);
++
++	if (found_start < start) {
++		u64 diff = start - found_start;
++		struct btrfs_key new_key;
++		int num_stripes;
++		struct btrfs_stripe_extent *stripe_extent;
++
++		new_key.objectid = start;
++		new_key.type = BTRFS_RAID_STRIPE_KEY;
++		new_key.offset = length - diff;
++
++		ret = btrfs_duplicate_item(trans, stripe_root, path,
++					   &new_key);
++		if (ret)
++			goto out;
  
- 	for (int i = 0; i < num_stripes; i++) {
- 		struct btrfs_raid_stride *stride = &stripe_extent->strides[i];
-diff --git a/fs/btrfs/raid-stripe-tree.h b/fs/btrfs/raid-stripe-tree.h
-index c9c258f84903..1ac1c21aac2f 100644
---- a/fs/btrfs/raid-stripe-tree.h
-+++ b/fs/btrfs/raid-stripe-tree.h
-@@ -48,8 +48,7 @@ static inline bool btrfs_need_stripe_tree_update(struct btrfs_fs_info *fs_info,
+ 		leaf = path->nodes[0];
+ 		slot = path->slots[0];
+-		btrfs_item_key_to_cpu(leaf, &key, slot);
+-		found_start = key.objectid;
+-		found_end = found_start + key.offset;
  
- static inline int btrfs_num_raid_stripes(u32 item_size)
- {
--	return (item_size - offsetof(struct btrfs_stripe_extent, strides)) /
--		sizeof(struct btrfs_raid_stride);
-+	return item_size / sizeof(struct btrfs_raid_stride);
- }
+-		/* That stripe ends before we start, we're done. */
+-		if (found_end <= start)
+-			break;
++		num_stripes =
++			btrfs_num_raid_stripes(btrfs_item_size(leaf, slot));
++		stripe_extent =
++			btrfs_item_ptr(leaf, slot, struct btrfs_stripe_extent);
  
- #endif
-diff --git a/fs/btrfs/tree-checker.c b/fs/btrfs/tree-checker.c
-index a2c3651a3d8f..1e140f6dabc6 100644
---- a/fs/btrfs/tree-checker.c
-+++ b/fs/btrfs/tree-checker.c
-@@ -1682,9 +1682,6 @@ static int check_inode_ref(struct extent_buffer *leaf,
- static int check_raid_stripe_extent(const struct extent_buffer *leaf,
- 				    const struct btrfs_key *key, int slot)
- {
--	struct btrfs_stripe_extent *stripe_extent =
--		btrfs_item_ptr(leaf, slot, struct btrfs_stripe_extent);
--
- 	if (unlikely(!IS_ALIGNED(key->objectid, leaf->fs_info->sectorsize))) {
- 		generic_err(leaf, slot,
- "invalid key objectid for raid stripe extent, have %llu expect aligned to %u",
-@@ -1698,22 +1695,6 @@ static int check_raid_stripe_extent(const struct extent_buffer *leaf,
- 		return -EUCLEAN;
+-		trace_btrfs_raid_extent_delete(fs_info, start, end,
+-					       found_start, found_end);
++		for (int i = 0; i < num_stripes; i++) {
++			struct btrfs_raid_stride *raid_stride =
++				&stripe_extent->strides[i];
++			u64 physical =
++				btrfs_raid_stride_physical(leaf, raid_stride);
+ 
+-		ASSERT(found_start >= start && found_end <= end);
+-		ret = btrfs_del_item(trans, stripe_root, path);
++			btrfs_set_stack_raid_stride_physical(raid_stride,
++							     physical + diff);
++		}
++
++		btrfs_mark_buffer_dirty(trans, leaf);
++		btrfs_release_path(path);
++		goto again;
++	}
++
++	if (found_end > end) {
++		u64 diff = found_end - end;
++		struct btrfs_key new_key;
++
++		new_key.objectid = found_start;
++		new_key.type = BTRFS_RAID_STRIPE_KEY;
++		new_key.offset = length - diff;
++
++		ret = btrfs_duplicate_item(trans, stripe_root, path,
++					   &new_key);
+ 		if (ret)
+-			break;
++			goto out;
+ 
++		btrfs_mark_buffer_dirty(trans, leaf);
+ 		btrfs_release_path(path);
++		goto again;
++
  	}
  
--	switch (btrfs_stripe_extent_encoding(leaf, stripe_extent)) {
--	case BTRFS_STRIPE_RAID0:
--	case BTRFS_STRIPE_RAID1:
--	case BTRFS_STRIPE_DUP:
--	case BTRFS_STRIPE_RAID10:
--	case BTRFS_STRIPE_RAID5:
--	case BTRFS_STRIPE_RAID6:
--	case BTRFS_STRIPE_RAID1C3:
--	case BTRFS_STRIPE_RAID1C4:
--		break;
--	default:
--		generic_err(leaf, slot, "invalid raid stripe encoding %u",
--			    btrfs_stripe_extent_encoding(leaf, stripe_extent));
--		return -EUCLEAN;
--	}
--
- 	return 0;
++	if (found_start == start && found_end == end)
++		ret = btrfs_del_item(trans, stripe_root, path);
++
++ out:
+ 	btrfs_free_path(path);
+ 	return ret;
  }
- 
-diff --git a/include/uapi/linux/btrfs_tree.h b/include/uapi/linux/btrfs_tree.h
-index d24e8e121507..cb103c76d398 100644
---- a/include/uapi/linux/btrfs_tree.h
-+++ b/include/uapi/linux/btrfs_tree.h
-@@ -747,21 +747,9 @@ struct btrfs_raid_stride {
- 	__le64 physical;
- } __attribute__ ((__packed__));
- 
--/* The stripe_extent::encoding, 1:1 mapping of enum btrfs_raid_types. */
--#define BTRFS_STRIPE_RAID0	1
--#define BTRFS_STRIPE_RAID1	2
--#define BTRFS_STRIPE_DUP	3
--#define BTRFS_STRIPE_RAID10	4
--#define BTRFS_STRIPE_RAID5	5
--#define BTRFS_STRIPE_RAID6	6
--#define BTRFS_STRIPE_RAID1C3	7
--#define BTRFS_STRIPE_RAID1C4	8
--
- struct btrfs_stripe_extent {
--	__u8 encoding;
--	__u8 reserved[7];
- 	/* An array of raid strides this stripe is composed of. */
--	struct btrfs_raid_stride strides[];
-+	__DECLARE_FLEX_ARRAY(struct btrfs_raid_stride, strides);
- } __attribute__ ((__packed__));
- 
- #define BTRFS_HEADER_FLAG_WRITTEN	(1ULL << 0)
 
 -- 
 2.43.0
