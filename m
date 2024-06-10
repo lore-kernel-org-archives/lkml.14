@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB6B14EC73
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 18:35:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7829314E2EA
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 18:35:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718044545; cv=none; b=JcBqwUByAQDOwZEgBtMPb6pst7ypZ6RDBhvVo0QlFmGYQ1aJtojTXo6p/PT57p2x1/N2Ioie2lrYDjtH28KEq4sBZcSs/+U+g5+bShK37FvwOvqxg6dkJJbwlSlLl5ZvvYMs+F4J/J/4CgX6s8AZs4s1sXOW/Cq9NDwbnbBSHYo=
+	t=1718044546; cv=none; b=aM6uq1mil7ntIl9Q6HUdEnngc0MGpWHkDnR/UZBFycFJU4mVUKE5baV8w4y9V4J8FIq5cA3dgXlDMMkT14mFcPhMy6wGEAGtR5zN62JlXKzzc/4WlKg+oJUzPPjoJdcSfwslfnwQVrl4AFtBUllXLzK1NSHaWvf1n4V9jypNHNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718044545; c=relaxed/simple;
-	bh=n/UgyX1U4zOUKAVlm2WMJOCOaWfvqKc/RRK5WzMIgI0=;
+	s=arc-20240116; t=1718044546; c=relaxed/simple;
+	bh=trkSesWB4tFV2q3Q20dRF9Du3uBUDy6ngniRBxlmqCg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qBU8VW+k3DtjyZ16CfFqJrxDj827o0pr1QvnsoQZDVRypDXf5m6LfhBhXu1qkDtsxIT+W2aXzvnGZHLGYvPlEQy7MdY/ZNeWd9vHZ/tesgI0KeGlXQSp25uBq3n7huI3NZOHvswsef+MGP7keaUC0VgYLv1Ob28xbzaOLWTOSjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gp0yIfuy; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version; b=k/AADr5DtEH0cxmwDsJweMq2uz53983FOlw/tCT9MzyL5FdHmEbJ7eckZeVNV7iThKCXGbfMKza1ylV2vsaiEHS6tvYEOT5CKdfJZtrsI6liI3LxsX25OHdi+d4mQuczsvnbEeHBrsb68mIcPCCNur/HFWGYHrDuiD+c6D6fmOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EZWvxHUF; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gp0yIfuy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EZWvxHUF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1718044544; x=1749580544;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=n/UgyX1U4zOUKAVlm2WMJOCOaWfvqKc/RRK5WzMIgI0=;
-  b=gp0yIfuy+F3+UXeqIemJfMJ5AwPTkr8cBCbEnxOXS/cQ7Opwmh8g5wTU
-   t6LObajZmJzQMh1fehsQjZ9tjlrY3WLI2LiLVeQZnl9dJepBFYG5/PzOT
-   c/aMi2+139uU/K+nQbuNmgDfr12qM32XbotcRhC916L4cs7Er9Bfq5+1d
-   JzPMsXJzQ+KgxIpLkTK0fVbT/pslvBErO0l01o/qQ7VJaCyiTeVQE0rzh
-   x8ws1ZKw6gsMp2TPgsIpwguwv/KArBoFmhzECRIAbaxUQ9694KLnJNh6G
-   cBBZLdorhBVG6wf+TWqR9dhh/olkO2TiO4zyP17AyOS+234Ah+ebUvIcD
-   w==;
-X-CSE-ConnectionGUID: JLDMLsFrQECEAU0cobKICQ==
-X-CSE-MsgGUID: AZ/q95EoSR2ERE/JYinCkQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="12004834"
+  bh=trkSesWB4tFV2q3Q20dRF9Du3uBUDy6ngniRBxlmqCg=;
+  b=EZWvxHUF/JBIdceVUSOIivnXVQPJ6Y2wC1yta4rxMdZhdRvft6oU+21c
+   GTUQSnYGy+E69wmcxbdOiEUrMo9QSdl3HZVuJQnx521UZXP2tVuYW52HB
+   DIXUXeaCDhybytozhNu3aYhz0V1YBD6mVfJg94xetZM6C44l8dEk77aOO
+   VwyBDr1PprGrz+4bGCzO32dgRNRmj3+i8qBBSjTBofgjEnTGi1V6YydUH
+   PrdXBOYDhWKnkgUHE+0fSCFdxx3DC8HbHQOJ7tzP0g8A5w3DoeK1k3ORp
+   r0djxYJu3ujA2gZ4/6ZdxaTTb+7KFUhreHgPPdkl8lknx9YOOr/5HJ7RH
+   g==;
+X-CSE-ConnectionGUID: V5/3Os/cRhar0qaVtaz8MQ==
+X-CSE-MsgGUID: Gz9Sxz7qTWSbkV1EnKIt4w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="12004846"
 X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="12004834"
+   d="scan'208";a="12004846"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
   by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 11:35:38 -0700
-X-CSE-ConnectionGUID: zStku52nQu6uU60eIgGNUQ==
-X-CSE-MsgGUID: ZrrWjfSVTKmHoaoioOdLrg==
+X-CSE-ConnectionGUID: 3q3p+jN1QD+YKEm54Rc/Sw==
+X-CSE-MsgGUID: ow8kalNWRJG1e76SUtn8Bw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="43576575"
+   d="scan'208";a="43576582"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
   by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 11:35:38 -0700
 From: Tony Luck <tony.luck@intel.com>
@@ -56,9 +56,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v20 09/18] x86/resctrl: Add a new field to struct rmid_read for summation of domains
-Date: Mon, 10 Jun 2024 11:35:19 -0700
-Message-ID: <20240610183528.349198-10-tony.luck@intel.com>
+Subject: [PATCH v20 11/18] x86/resctrl: Allocate a new field in union mon_data_bits
+Date: Mon, 10 Jun 2024 11:35:21 -0700
+Message-ID: <20240610183528.349198-12-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240610183528.349198-1-tony.luck@intel.com>
 References: <20240610183528.349198-1-tony.luck@intel.com>
@@ -70,59 +70,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When a user reads a monitor file rdtgroup_mondata_show() calls
-mon_event_read() to package up all the required details into an rmid_read
-structure which is passed across the smp_call*() infrastructure to code
-that will read data from hardware and return the value (or error status)
-in the rmid_read structure.
+When Sub-NUMA Cluster (SNC) mode is enabled the legacy monitor reporting
+files must report the sum of the data from all of the SNC nodes that
+share the L3 cache that is referenced by the monitor file.
 
-Sub-NUMA Cluster (SNC) mode adds files with new semantics. These require
-the smp_call-ed code to sum event data from all domains that share an
-L3 cache.
+Resctrl squeezes all the attributes of these files into 32-bits so they
+can be stored in the "priv" field of struct kernfs_node.
 
-Add a pointer to the L3 "cacheinfo" structure to struct rmid_read
-for the data collection routines to use to pick the domains to be
-summed.
+Currently only three monitor events are defined by enum resctrl_event_id
+so reducing it from 8-bits to 7-bits still provides more than enough
+space to represent all the known event types. But note that this choice
+was arbitrary. The "rid" field is also far wider than needed for the
+current number of resource id types.  This structure is purely internal
+to resctrl, no ABI issues with modifying it. Subsequent changes may
+rearrange the allocation of bits between each of the fields as needed.
 
-Reinette suggested that the rmid_read structure has become complex
-enough to warrant documentation of each of its fields. Add the kerneldoc
-documentation for struct rmid_read.
+Give the bit to a new "sum" field that indicates that reading this file
+must sum across SNC nodes. This bit also indicates that the domid field
+is the id of an L3 cache (instead of a domain id) to find which domains
+must be summed.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/internal.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/x86/kernel/cpu/resctrl/internal.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 99f601d05f3b..d29c7b58c151 100644
+index d29c7b58c151..77da29ced7eb 100644
 --- a/arch/x86/kernel/cpu/resctrl/internal.h
 +++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -145,12 +145,25 @@ union mon_data_bits {
+@@ -133,14 +133,20 @@ struct mon_evt {
+  *                     as kernfs private data
+  * @rid:               Resource id associated with the event file
+  * @evtid:             Event id associated with the event file
+- * @domid:             The domain to which the event file belongs
++ * @sum:               Set when event must be summed across multiple
++ *                     domains.
++ * @domid:             When @sum is zero this is the domain to which
++ *                     the event file belongs. When @sum is one this
++ *                     is the id of the L3 cache that all domains to be
++ *                     summed share.
+  * @u:                 Name of the bit fields struct
+  */
+ union mon_data_bits {
+ 	void *priv;
+ 	struct {
+ 		unsigned int rid		: 10;
+-		enum resctrl_event_id evtid	: 8;
++		enum resctrl_event_id evtid	: 7;
++		unsigned int sum		: 1;
+ 		unsigned int domid		: 14;
  	} u;
  };
- 
-+/**
-+ * struct rmid_read - Data passed across smp_call*() to read event count
-+ * @rgrp:	Resctrl group
-+ * @r:		Resource
-+ * @d:		Domain. If NULL then sum all domains in @r sharing L3 @ci.id
-+ * @evtid:	Which monitor event to read
-+ * @first:	Initializes MBM counter when true
-+ * @ci:		Cacheinfo for L3. Used when summing domains
-+ * @err:	Return error indication
-+ * @val:	Return value of event counter
-+ * @arch_mon_ctx: Hardware monitor allocated for this read request (MPAM only)
-+ */
- struct rmid_read {
- 	struct rdtgroup		*rgrp;
- 	struct rdt_resource	*r;
- 	struct rdt_mon_domain	*d;
- 	enum resctrl_event_id	evtid;
- 	bool			first;
-+	struct cacheinfo	*ci;
- 	int			err;
- 	u64			val;
- 	void			*arch_mon_ctx;
 -- 
 2.45.0
 
