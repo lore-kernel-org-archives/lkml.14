@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476C415380D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDD7154BE7
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 16:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718037750; cv=none; b=kQW5weaEWeVHE+HvsdXrqr/nFPeO2xlvLDvpv/yi2kxBvtib/hKurbaFIm9pUqLiGWNhhdiCI/Ebd1NBnnZUS7VWxWuodlLt+ho4S0H39Z33jxgcrK/Gw34/4VzD0LTCc2o3MPvLpGoGJM9Kn3dKFBQdVj1idDUogiXET3GowSE=
+	t=1718037753; cv=none; b=cv5yxTyWEnOlLtyGHAVR9vCO8ogmIrRFxMan/X55LoXInBqyq7vxYB19QEQtWt8VnKQDV3dT//NmoTIa0MeTETMILaDEhnpIzY6zVFVC9JigF7VVymA0LAz/Pbroo4q63K++Yu9JEjkQGa4uPJTJenxcVH40nQ700FYteTYbsaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718037750; c=relaxed/simple;
-	bh=M9Q7ax6L6HgZ2sYcMaynew0ayWNP6jxDDhPzY9nkD8E=;
+	s=arc-20240116; t=1718037753; c=relaxed/simple;
+	bh=YN6n6j+MA0nG5Yheb3hxrtVPCRI7lZJF9lPKtB8/yQI=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=ESO8t8iJ9IHBCwTWf5126QI0UQUafluDoeuKtzOEZw4kApcQZWOI0SiHsb/pzwOoxe7CrRBuChvwZqXSOD+usdys1SXh/I9dyN2Xz5S7B/AYHr01AvVhnHeQQbjyIAhC+skoOJ8XnACP5xAviiyVtxLj/44dnhBNgJuJfNTaiBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QGjhEL8r; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l6CWizxc; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=Af4SduirEJ5ML4RFeOfcCtwXPXXTOF2D7mapYsqYZSJUz3QIMV1SoOCf9Yu6nGSSLLau9OjDSnINuhU9zgCyLT+9GSohniLmi7QSYsSdRxhaJPPVGa+yyIHrN09eW1rihnDCBQmlJY15KcULGjggX2oFD+x+mFtKBMSSV3twPYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PRGjbPfD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v7/PUROh; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QGjhEL8r";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l6CWizxc"
-Message-ID: <20240610164026.552899255@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PRGjbPfD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v7/PUROh"
+Message-ID: <20240610164026.745025149@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718037746;
+	s=2020; t=1718037750;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=a4kBoLxoimUoUZk3ev7GSbKQUyXJ3UwY85qwVJP4oio=;
-	b=QGjhEL8rgUf4LT4XnfB9hwh3Joy0TpJofyy3Zzciwpqy16jIm74JFa2pE9d88WtHtzhcw+
-	YU1uZNVe/NP5Ln74Gl6w2LvLAyxSO5s5lw4ChUDTI3TFDz+91wLG2ZBlSzzaerBojQzRQY
-	fPz9Rw356u4q4P0kfeGJ+7zbwieLSFcTPKj6CAL4PzV7MRyI9tQduMUKgCdhEQYEcIVyH7
-	ey1HHEPNqawr/B0rjYJVk3eZERlTsHFRUFP2XyXj6Wl7kVN6ufn0HcznsI7k6EhkdLm0gB
-	yBiVpomKR/omMT8rnUJfMzqIaCvZUKEqBHeJi2VjoHbXMLsM3dWqpy1yd5TeBw==
+	 references:references; bh=ITJ/+5vbw/2+B5QmAsO44YK98eSbLVo+fKwi2ezjk6Q=;
+	b=PRGjbPfDH68t0dYNiy88B06M/VtRZ2xeiYHWvof/yK2r4hkGDCUY9L+c2a1GzIPXghtKBN
+	cS/+35OnwtBi6DaugfsYZxWI7T4IlcIBI9V7VmtC/ryOz8LaFyJk/1yHJ/MCtPZqjV4IM8
+	jUrJEhZOSam/akm93/EHE3GVclApjv+1VZ3kVND4m2suoTeyvjGP4LaN6nS2bXvb875pJz
+	TUMe60atA6g83Vh4IR89cX0iH+bhrmYNH5yKlWU+to2OlLNlrsTTObUGamHFHQTns1XgOY
+	VqEIJy7hZZqz1BzJfDzWmGWQVWlgaXOJNaPqLIN9Iew9P09sAVUbaga8Mnc6xQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718037746;
+	s=2020e; t=1718037750;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=a4kBoLxoimUoUZk3ev7GSbKQUyXJ3UwY85qwVJP4oio=;
-	b=l6CWizxcP/W4v72SIhiaaF1M463VhiMlQJ2B0UjZXbp0QYE48s2XaSzfSqdPAD8+heHtNZ
-	PLW4LmA9Lz4jgNDw==
+	 references:references; bh=ITJ/+5vbw/2+B5QmAsO44YK98eSbLVo+fKwi2ezjk6Q=;
+	b=v7/PUROh4vTq5uSr6p3pNSo3/dOWxos8/CxW93Ux5hgLxO1vQAAVpi2VqZ7t8aoe8EsUE2
+	K9nq2MsHUGJlPnBw==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
@@ -45,8 +45,7 @@ Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
  Stephen Boyd <sboyd@kernel.org>,
  Eric Biederman <ebiederm@xmission.com>,
  Oleg Nesterov <oleg@redhat.com>
-Subject: [patch V3 17/51] posix-timers: Retrieve interval in common
- timer_settime() code
+Subject: [patch V3 20/51] posix-timers: Consolidate timer setup
 References: <20240610163452.591699700@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,71 +54,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Mon, 10 Jun 2024 18:42:26 +0200 (CEST)
+Date: Mon, 10 Jun 2024 18:42:30 +0200 (CEST)
 
-No point in doing this all over the place.
+hrtimer based and CPU timers have their own way to install the new interval
+and to reset overrun and signal handling related data.
+
+Create a helper function and do the same operation for all variants.
+
+This also makes the handling of the interval consistent. It's only stored
+when the timer is actually armed, i.e. timer->it_value != 0. Before that it
+was stored unconditionally for posix CPU timers and conditionally for the
+other posix timers.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
-V2: Removed the timer_gettime() part - Frederic
----
- kernel/time/posix-cpu-timers.c |   10 ++--------
- kernel/time/posix-timers.c     |    5 ++++-
- 2 files changed, 6 insertions(+), 9 deletions(-)
+ kernel/time/posix-cpu-timers.c |   15 +--------------
+ kernel/time/posix-timers.c     |   25 +++++++++++++++++++------
+ kernel/time/posix-timers.h     |    1 +
+ 3 files changed, 21 insertions(+), 20 deletions(-)
 
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -622,8 +622,8 @@ static int posix_cpu_timer_set(struct k_
- {
- 	bool sigev_none = timer->it_sigev_notify == SIGEV_NONE;
- 	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
--	u64 old_expires, new_expires, old_incr, now;
- 	struct cpu_timer *ctmr = &timer->it.cpu;
-+	u64 old_expires, new_expires, now;
- 	struct sighand_struct *sighand;
- 	struct task_struct *p;
- 	unsigned long flags;
-@@ -660,10 +660,7 @@ static int posix_cpu_timer_set(struct k_
- 		return -ESRCH;
+@@ -714,21 +714,8 @@ static int posix_cpu_timer_set(struct k_
  	}
  
+ 	unlock_task_sighand(p, &flags);
 -	/*
--	 * Disarm any old timer after extracting its expiry time.
+-	 * Install the new reload setting, and
+-	 * set up the signal and overrun bookkeeping.
 -	 */
--	old_incr = timer->it_interval;
-+	/* Retrieve the current expiry time before disarming the timer */
- 	old_expires = cpu_timer_getexpires(ctmr);
+-	timer->it_interval = timespec64_to_ktime(new->it_interval);
  
- 	if (unlikely(timer->it.cpu.firing)) {
-@@ -742,9 +739,6 @@ static int posix_cpu_timer_set(struct k_
- 		cpu_timer_fire(timer);
- out:
- 	rcu_read_unlock();
--	if (old)
--		old->it_interval = ns_to_timespec64(old_incr);
--
- 	return ret;
- }
+-	/*
+-	 * This acts as a modification timestamp for the timer,
+-	 * so any automatic reload attempt will punt on seeing
+-	 * that we have reset the timer manually.
+-	 */
+-	timer->it_requeue_pending = (timer->it_requeue_pending + 2) &
+-		~REQUEUE_PENDING;
+-	timer->it_overrun_last = 0;
+-	timer->it_overrun = -1;
++	posix_timer_set_common(timer, new);
  
+ 	/*
+ 	 * If the new expiry time was already in the past the timer was not
 --- a/kernel/time/posix-timers.c
 +++ b/kernel/time/posix-timers.c
-@@ -904,7 +904,7 @@ static int do_timer_settime(timer_t time
- 	const struct k_clock *kc;
- 	struct k_itimer *timr;
- 	unsigned long flags;
--	int error = 0;
-+	int error;
+@@ -856,6 +856,23 @@ static struct k_itimer *timer_wait_runni
+ 	return lock_timer(timer_id, flags);
+ }
  
- 	if (!timespec64_valid(&new_spec64->it_interval) ||
- 	    !timespec64_valid(&new_spec64->it_value))
-@@ -918,6 +918,9 @@ static int do_timer_settime(timer_t time
- 	if (!timr)
- 		return -EINVAL;
- 
-+	if (old_spec64)
-+		old_spec64->it_interval = ktime_to_timespec64(timr->it_interval);
++/*
++ * Set up the new interval and reset the signal delivery data
++ */
++void posix_timer_set_common(struct k_itimer *timer, struct itimerspec64 *new_setting)
++{
++	if (new_setting->it_value.tv_sec || new_setting->it_value.tv_nsec)
++		timer->it_interval = timespec64_to_ktime(new_setting->it_interval);
++	else
++		timer->it_interval = 0;
 +
- 	kc = timr->kclock;
- 	if (WARN_ON_ONCE(!kc || !kc->timer_set))
- 		error = -EINVAL;
++	/* Prevent reloading in case there is a signal pending */
++	timer->it_requeue_pending = (timer->it_requeue_pending + 2) & ~REQUEUE_PENDING;
++	/* Reset overrun accounting */
++	timer->it_overrun_last = 0;
++	timer->it_overrun = -1LL;
++}
++
+ /* Set a POSIX.1b interval timer. */
+ int common_timer_set(struct k_itimer *timr, int flags,
+ 		     struct itimerspec64 *new_setting,
+@@ -878,16 +895,12 @@ int common_timer_set(struct k_itimer *ti
+ 		return TIMER_RETRY;
+ 
+ 	timr->it_active = 0;
+-	timr->it_requeue_pending = (timr->it_requeue_pending + 2) &
+-		~REQUEUE_PENDING;
+-	timr->it_overrun_last = 0;
+-	timr->it_overrun = -1LL;
++	posix_timer_set_common(timr, new_setting);
+ 
+-	/* Switch off the timer when it_value is zero */
++	/* Keep timer disarmed when it_value is zero */
+ 	if (!new_setting->it_value.tv_sec && !new_setting->it_value.tv_nsec)
+ 		return 0;
+ 
+-	timr->it_interval = timespec64_to_ktime(new_setting->it_interval);
+ 	expires = timespec64_to_ktime(new_setting->it_value);
+ 	if (flags & TIMER_ABSTIME)
+ 		expires = timens_ktime_to_host(timr->it_clock, expires);
+--- a/kernel/time/posix-timers.h
++++ b/kernel/time/posix-timers.h
+@@ -42,4 +42,5 @@ void common_timer_get(struct k_itimer *t
+ int common_timer_set(struct k_itimer *timr, int flags,
+ 		     struct itimerspec64 *new_setting,
+ 		     struct itimerspec64 *old_setting);
++void posix_timer_set_common(struct k_itimer *timer, struct itimerspec64 *new_setting);
+ int common_timer_del(struct k_itimer *timer);
 
