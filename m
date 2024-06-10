@@ -1,119 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02B846BFA3;
-	Mon, 10 Jun 2024 09:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45CF6BFA3;
+	Mon, 10 Jun 2024 09:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718010671; cv=none; b=ZA16oQVBdc/hsNg6ws12ianBQNXkfmzBBuVaEiMlGTt2F5NT+tdj9PtUqW5HYWtWqviltB+tCf1imDyUDwwlwHYIsoMzU8WRy4j6qnNG13l5VWYju2CVC2m/bDSUdxG6lFd31gnJ9KisVDN3BS9DdLgu8/6DO0Dp0fRaze4Avvg=
+	t=1718010803; cv=none; b=bVI6DpWB2rzhTXre4GGikEYk2eOa70wrq/qE2gtTRYPHDrxGhkHo+Rs6dV2lpcLz0ipz1vul7Z56rIe5huELBkFk1fHpWVxDQmoE8q2qn1ZkV5gW5TOq86a29U9UEX3LvY5RyGbc4bb2fCZywPWhDb2DqMBnfHwgAG3GZQ7ZX0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718010671; c=relaxed/simple;
-	bh=h0vH6BRr2TnAPPCehOMOST6X8bmut1Pgvhshrf+Rcos=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=usDg0TJh/WvC4NfpG4ApfTNDrCgLXkIyiEowu6wehNA457bsGTB1OjjAtZlPJDavt6D32hgXQ+xCFhSqkPhPKUn1UoMcpVWxXE9zZGXmiaiWs59KiwwmDOqZX0kGULtTDpV7gjEjHfSBqeMqXIzk9ON8sL85C48/XQqawK8J69k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CD2F12FC;
-	Mon, 10 Jun 2024 02:11:27 -0700 (PDT)
-Received: from [10.57.71.68] (unknown [10.57.71.68])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F5A23F73B;
-	Mon, 10 Jun 2024 02:11:01 -0700 (PDT)
-Message-ID: <569b7923-d7ba-49a9-a88d-906f44903d20@arm.com>
-Date: Mon, 10 Jun 2024 10:11:01 +0100
+	s=arc-20240116; t=1718010803; c=relaxed/simple;
+	bh=5ujLML2QXMFKALZISgEcgTJDQ7PnkNQE3qzbK5GW+QQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ezaU6iFbp2xC5KGQ1xZLKhMLzZ7S62OuEzFNmi9/eUeNVcLCvBs/rUNgmlxktTq1tJSFcyexocfbsS+4AY231fWhjO0Okd6ubgmiO0R5rje1DxYwd8onXyT/SCUWA1tHuuinx9db7G9xYyk61UqZY8yGxcQE3Vm6vcMb1+vI9C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Twer1ZAu; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Twer1ZAu"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57a1fe63947so5233461a12.1;
+        Mon, 10 Jun 2024 02:13:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718010800; x=1718615600; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5ujLML2QXMFKALZISgEcgTJDQ7PnkNQE3qzbK5GW+QQ=;
+        b=Twer1ZAu4wG+VHC+owo6ZOXgH1jgF9InZsY+oQ2+9tBb7h7JIgwtnUvfT0OgQiJJCc
+         zKtYWEFZ37zRVn+rF5ppDzxtL8OjhkyRTCyjabAvSpJ/YxFci8mxyc/g9/XRN9ZeFCBL
+         6kU58d8WenwFxjwG/Dt2XkBA20rXqtkXGtsTCs+hQCItx3Fq6iiBtSvSyd3u2Ujv2mBd
+         2MwW7mVeG95ceYRIBVlKphT8UEKpFc+5tADkQuD1aDoHgM8QzHfX52gg+CYqb5f51EuX
+         vqwK10duJcTaM5Z6XkvOdSbMnAnXMcb/uQa+BIe0SmbeDwmE5nCT6Nvgz+iFeYCGsCbM
+         ipsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718010800; x=1718615600;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5ujLML2QXMFKALZISgEcgTJDQ7PnkNQE3qzbK5GW+QQ=;
+        b=YpLarWe50Jw7nXbYK2QNX76qg3CzARPRyGHhSkV0cFvmQdDJeJ/sMcqHzYQwKzFfOz
+         LrCJk+tBBNmLqArE6BTwAEx7spFYcrrKJj5Mcler0yFlrCJ7lcxcozA4GFeQc7L5PLxm
+         Skk3a6UoT2cejeF3ypAQY57MRx7zEol+rBCmLDAarXa/Hx0gBCZ8S5YXOiwqj72nfXoV
+         la4CICscIQ6OZ7FtfRjc5GNBSIJjvYSYhXguNe2VmYUiUh98Ypi4TNQVtZ5II5RSz7pu
+         19la5FUSYX+JV49h2sGfX/DcRZ6teipZQnQvobvBUyjlGyN0J4BSIdrJ6MjiK46sr9gx
+         56XA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzApuGgo0EQh9W0uNPWVzBtuMw8ABGLAkFEv+lEta7KllTqpBeU2nMd9zh8o0YIR7o0HnCFk4XrNz8E+yvygX8NFAgI7hNO0ZjNe4VwDeQqrjv6nGCTRJB1fC3V2uaK8ktwgFs5TxOtL0=
+X-Gm-Message-State: AOJu0YxsepPw8Q9jeGfTZT04aLWPMH2sBPmnJGSUA1pTbMGHz9LinRfk
+	j1984E6qX10pzb6RB8bbUJrHuzUX+EQ5dh2PNcNrYNwlc/aPunNa
+X-Google-Smtp-Source: AGHT+IE1VXfFnRLBeCfrtWvYW8NWm++kwAp4y4wKNXbofIUDpVeN/X7Q9HfRtVJdC98xJcXNbviqgg==
+X-Received: by 2002:a50:8e55:0:b0:57c:75a1:2a14 with SMTP id 4fb4d7f45d1cf-57c8c30766dmr385139a12.12.1718010799677;
+        Mon, 10 Jun 2024 02:13:19 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae23a0d7sm7124719a12.95.2024.06.10.02.13.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 02:13:19 -0700 (PDT)
+Message-ID: <9d76c55ccc1602ae329e33ac382e3ae68916d882.camel@gmail.com>
+Subject: Re: [PATCH 1/3] Input: adxl34x - use device core to create
+ driver-specific device attributes
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
+Cc: Michael Hennerich <michael.hennerich@analog.com>, 
+	linux-kernel@vger.kernel.org
+Date: Mon, 10 Jun 2024 11:17:07 +0200
+In-Reply-To: <20240609234122.603796-1-dmitry.torokhov@gmail.com>
+References: <20240609234122.603796-1-dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] cpuidle: teo: Increase util-threshold
-To: Qais Yousef <qyousef@layalina.io>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- rafael@kernel.org, vincent.guittot@linaro.org, peterz@infradead.org,
- daniel.lezcano@linaro.org, anna-maria@linutronix.de,
- kajetan.puchalski@arm.com, lukasz.luba@arm.com, dietmar.eggemann@arm.com
-References: <20240606090050.327614-1-christian.loehle@arm.com>
- <20240606090050.327614-2-christian.loehle@arm.com>
- <20240609224701.pc6om2o5ep6btywe@airbuntu>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <20240609224701.pc6om2o5ep6btywe@airbuntu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 6/9/24 23:47, Qais Yousef wrote:
-> On 06/06/24 10:00, Christian Loehle wrote:
->> Increase the util-threshold by a lot as it was low enough for some
->> minor load to always be active, especially on smaller CPUs.
->>
->> For small cap CPUs (Pixel6) the util threshold is as low as 1.
->> For CPUs of capacity <64 it is 0. So ensure it is at a minimum, too.
->>
->> Fixes: 9ce0f7c4bc64 ("cpuidle: teo: Introduce util-awareness")
->> Reported-by: Qais Yousef <qyousef@layalina.io>
->> Reported-by: Vincent Guittot <vincent.guittot@linaro.org>
->> Suggested-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
->> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
->> ---
->>  drivers/cpuidle/governors/teo.c | 11 +++++------
->>  1 file changed, 5 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/cpuidle/governors/teo.c b/drivers/cpuidle/governors/teo.c
->> index 7244f71c59c5..45f43e2ee02d 100644
->> --- a/drivers/cpuidle/governors/teo.c
->> +++ b/drivers/cpuidle/governors/teo.c
->> @@ -146,13 +146,11 @@
->>   * The number of bits to shift the CPU's capacity by in order to determine
->>   * the utilized threshold.
->>   *
->> - * 6 was chosen based on testing as the number that achieved the best balance
->> - * of power and performance on average.
->> - *
->>   * The resulting threshold is high enough to not be triggered by background
->> - * noise and low enough to react quickly when activity starts to ramp up.
->> + * noise.
->>   */
->> -#define UTIL_THRESHOLD_SHIFT 6
->> +#define UTIL_THRESHOLD_SHIFT 2
->> +#define UTIL_THRESHOLD_MIN 50
->>  
->>  /*
->>   * The PULSE value is added to metrics when they grow and the DECAY_SHIFT value
->> @@ -671,7 +669,8 @@ static int teo_enable_device(struct cpuidle_driver *drv,
->>  	int i;
->>  
->>  	memset(cpu_data, 0, sizeof(*cpu_data));
->> -	cpu_data->util_threshold = max_capacity >> UTIL_THRESHOLD_SHIFT;
->> +	cpu_data->util_threshold = max(UTIL_THRESHOLD_MIN,
->> +				max_capacity >> UTIL_THRESHOLD_SHIFT);
-> 
-> Thanks for trying to fix this. But I am afraid this is not a solution. There's
-> no magic number that can truly work here - we tried. As I tried to explain
-> before, a higher util value doesn't mean long idle time is unlikely. And
-> blocked load can cause problems where a decay can take too long.
-> 
-> We are following up with the suggestions I have thrown back then and we'll
-> share results if anything actually works.
+On Sun, 2024-06-09 at 16:41 -0700, Dmitry Torokhov wrote:
+> Instead of creating driver-specific device attributes with
+> sysfs_create_group() have device core do this by setting up dev_groups
+> pointer in the driver structure.
+>=20
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
 
-Namely watching increase / decrease of utilization?
-I think you would have to watch at least a couple of values before entering such
-a logic and at that point the intercepts logic will handle it anyway.
-Furthermore IMO we should be wary about introducing any state in teo that persists
-across calls if not absolutely necessary (like intercept-detection) as it really
-makes teo much less predictable.
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-> 
-> For now, I think a revert is more appropriate. There was some perf benefit, but
-> the power regressions were bad and there's no threshold value that actually
-> works. The thresholding concept itself is incorrect and flawed - it seemed the
-> correct thing back then, yes. But in a hindsight now it doesn't work.
-
-Unfortunate :/
-OK. I'll do some more testing with that, too. From what I can see a revert wouldn't
-have terrible fallout with the series altogether, so I might just change this for
-v2 and drop 2/6.
-
-Kind Regards,
-Christian
 
