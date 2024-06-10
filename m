@@ -1,172 +1,150 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D3938FB0;
-	Mon, 10 Jun 2024 14:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E3213213D
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718029878; cv=none; b=dbFrqVBr5yOuetPn36ajTSATmFcoR5v0bL0mxZ5Sg4p57Qxdc9443qcTgKIQ6myNkUd1Q4M0wnLcVd5syXRYQ3abTqjt/Js4KquNMuU59lpyzH7rG95C+WMTsddB4BI8Yr4Xmj/ooTUxZFO9oqJjvBzf7GxPfqDWs4IiL3fLC8o=
+	t=1718029880; cv=none; b=USNh2f84/EDHI1b0F1oGpgu8cy13VnX5LmR3FMKJ1lc2wEBNoYl2kgn0v3hbCZt41ZXCyt19vI0TCPDzbgI5xDOcHF5F3cvFRWFwFLFyhB2F1p2QdMpRY1UHgamUUdpV6z+xQF14dMiZSrFWyuotla9kdNi5E7XUbN2vLRzvzZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718029878; c=relaxed/simple;
-	bh=tZ/qdhdw8oAofl919/+MTxRzoITOMXF3xSmh1AJgjHI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pzzWpUvaPwGAkMYfFfwt/KEbTpGaCVT1fpQYFdh4/2WIFlpW8LsJZYaKQjM8m+kHt9X9oQBwlROGOV73avswKZJzmkl8rIA1ecGY6NDnyiVZrRKeMp+8YcPtYxFLJ/53uA2QpX4fF0cnOU3GR1hMYni/0iyR9rFENn5mc80xK8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkUQs4GQ; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718029880; c=relaxed/simple;
+	bh=V1664uLxF5b82ZVSpeCZtQWSqHB1NRXdy49enW9INw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TGmuUdNHFGyMwAW/Hy0sS0v4ZXG0/hyn5j0778mZY2e6eAjKrKcI1O6acI8A28mzY2obZidtBMKdtK79qUJ8icjgMCJ+6xITSUmIuJTcLH24N4RVTcZ/cSUhRsXPcFIvsnLjK1nPySsyLr5Qqk6Wf7jIhu294CxViV0JsVYBH7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VdpOOJRm; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkUQs4GQ"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a6f1da33826so130548766b.0;
-        Mon, 10 Jun 2024 07:31:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718029875; x=1718634675; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Wubzf2zJb6GjH7z1ypQ19XWF4Q2q1Y3h2F+rVP2N73A=;
-        b=GkUQs4GQQGuFxpmjUSNSZPX+HiUQN2VaDfoEg72kNGJ8pczLicPDA1l8DOfQSr2kAW
-         P6IY4+ybLYO/ZV4qppegV2o2gUrDBb8eOxE4nGB5z/ltl7/LsLDVNp4G94QSidyrEGxy
-         kAnN6UCX9LzSjZURwE0hMgbEtvfe1ZtODCsEfRsZP6a388pJno/BkFlopEugrBfbWJzO
-         p3XVg0Fm0Zrz4h28ea1pD574AcSS5qdTfq2YjT5FO1wLGl27iKkGOJmBoDM4oCG44pis
-         UVELILDwKsmR6PhSEn35F3qeT6ufb2qaCTHIuSpE9sHhq6rrG24D7BztEJNf568ejsQd
-         9SfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718029875; x=1718634675;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wubzf2zJb6GjH7z1ypQ19XWF4Q2q1Y3h2F+rVP2N73A=;
-        b=Cm2WRPOp8Wj+Hhn4am9UsXd/DL4k10M2rzVOC2WtKmuXtW2w+oAypjaQimQYHRhx9Z
-         6GUxjpMixjUFkYhDzyZY8X0GdMQuCXm0ab5gjxmAnSXZHBmQ53DwwyjSHUhTGN8qb7zL
-         6bylGVRskQklhkpHlmJmnSoPrqLDQI3fAXQFMLnTN6zK1wQI+N9++D3UjtXHn6QZJgsQ
-         tF+ZtkCJBfMm98IkdCZjwZwOIB9SoyBy4U8NycDevsglCXndybOjBkdBEmjOIRM9/Uy7
-         XftUoXXFZ921dXFrsXjQOaqCHRsKPIwFQ/MFlJCEGnmou+vnJT5kExVBKvfbWfV4JwJo
-         nRjA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8TihQ+bqK9n16NT6zWsGz5WRo0RKYzIAlfwMNiD6TD1kkVPuFl9fv/VGE8DOJZXly1/4TFMg6ItjSPkWmQ0wSVN7dA7Nq9hQXqSgNzUSlgsS4qEDpdraBo7gjyPomMDUG8niTuVUA/IfJy+DgyPBdoWHOvr0r0XWge7UECa8Q/r2p6g==
-X-Gm-Message-State: AOJu0YzPvAUTKNeEkcaQU4XARUw2wRpVhK/9ipgBGCqSf4MYRQKck25O
-	oS/lEI3c1kmu3KUbkPjzJgbU3XMQxqGNCkjEn1EUu8cU38oK97VS
-X-Google-Smtp-Source: AGHT+IFbcHvTRVo6FA4x4itzs10Qk0di57LCggffsz/jstUoeFqJUdFWy72rw8Hxd1lRLzz91eAafA==
-X-Received: by 2002:a17:907:1c05:b0:a6d:de5b:5b1d with SMTP id a640c23a62f3a-a6dde5b5d36mr910450966b.18.1718029874403;
-        Mon, 10 Jun 2024 07:31:14 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c75ab6297sm3172511a12.14.2024.06.10.07.31.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 07:31:13 -0700 (PDT)
-Message-ID: <3340e6136ff03a64e839ac59c501e3be081ebf5c.camel@gmail.com>
-Subject: Re: [PATCH v7 5/9] iio: adc: ad7173: refactor ain and vref selection
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: dumitru.ceclan@analog.com
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- David Lechner <dlechner@baylibre.com>,  linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org, Dumitru Ceclan
- <mitrutzceclan@gmail.com>
-Date: Mon, 10 Jun 2024 16:35:01 +0200
-In-Reply-To: <8cb3752a46f83fbadbc6d33105004f2986a470f5.camel@gmail.com>
-References: <20240607-ad4111-v7-0-97e3855900a0@analog.com>
-	 <20240607-ad4111-v7-5-97e3855900a0@analog.com>
-	 <8cb3752a46f83fbadbc6d33105004f2986a470f5.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VdpOOJRm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718029879; x=1749565879;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V1664uLxF5b82ZVSpeCZtQWSqHB1NRXdy49enW9INw0=;
+  b=VdpOOJRmYj7wRufBUV6ZVxZArimN27EATiGSdbp4my6c23p7GKaZQC6v
+   sboc/9XB1OIXVGKTEa0X6hNjPh1RIZJJ4K4dXvr7bM2ms7kZIfZRq+tti
+   YP/oX6Fly4MCMcXh6X/U7FPZA1BY/4INzlbR9ykCLRsKoOYKiQ6WNiru7
+   ljjHRNrY0BN17NdkVicd7DAhHYEegt3ngQkdZ+yFbeczDPED4tp4lbdTJ
+   vkZQ18jLhU3amTwVigt5NurJCa9h0IZMJoeaYwcrDCiiBO9bcwE0YwzqL
+   9fsggqbRy+fry0lHGl/lYPQj8OZzaE0c+RxU7TmjfLwJTAh8CYZZuxjRd
+   g==;
+X-CSE-ConnectionGUID: 7IO0izl3TZK/nc2WsXfhWA==
+X-CSE-MsgGUID: Bz1uICMbTo6GGDIBHXqW+Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="18479011"
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="18479011"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 07:31:19 -0700
+X-CSE-ConnectionGUID: L87bjZU3T/qAYUEqdtGp5A==
+X-CSE-MsgGUID: FnG0LBQfSWOZuDsm57oIyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="39528182"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP; 10 Jun 2024 07:31:16 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 770921FD; Mon, 10 Jun 2024 17:31:14 +0300 (EEST)
+Date: Mon, 10 Jun 2024 17:31:14 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, cho@microsoft.com, decui@microsoft.com, 
+	John.Starks@microsoft.com
+Subject: Re: [PATCH] x86/tdx: Generate SIGBUS on userspace MMIO
+Message-ID: <ajxusvtisufqbl644hkdnq6c3tpamoppvjifhbj4nqctl4vyt7@nhak7gkergqf>
+References: <20240528100919.520881-1-kirill.shutemov@linux.intel.com>
+ <4df2ebee-40c0-4ea3-8909-13b90f049ff1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4df2ebee-40c0-4ea3-8909-13b90f049ff1@intel.com>
 
-On Mon, 2024-06-10 at 09:23 +0200, Nuno S=C3=A1 wrote:
-> On Fri, 2024-06-07 at 17:53 +0300, Dumitru Ceclan via B4 Relay wrote:
-> > From: Dumitru Ceclan <dumitru.ceclan@analog.com>
-> >=20
-> > Move validation of analog inputs and reference voltage selection to
-> > separate functions to reduce the size of the channel config parsing
-> > function and improve readability.
-> > Add defines for the number of analog inputs in a channel.
-> >=20
-> > Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
-> > ---
->=20
-> One minor nit that maybe can be tweaked while applying. Anyways, no need =
-for
-> v8
-> just because of it:
->=20
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
->=20
-> > =C2=A0drivers/iio/adc/ad7173.c | 62 +++++++++++++++++++++++++++++++++--=
-----------
-> > --
-> > -
-> > =C2=A01 file changed, 43 insertions(+), 19 deletions(-)
-> >=20
-> > diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-> > index 8631f218b69e..1257303b0cf6 100644
-> > --- a/drivers/iio/adc/ad7173.c
-> > +++ b/drivers/iio/adc/ad7173.c
-> > @@ -60,6 +60,7 @@
-> > =C2=A0#define AD7173_CH_SETUP_AINPOS_MASK	GENMASK(9, 5)
-> > =C2=A0#define AD7173_CH_SETUP_AINNEG_MASK	GENMASK(4, 0)
-> > =C2=A0
-> > +#define AD7173_NO_AINS_PER_CHANNEL	2
-> > =C2=A0#define AD7173_CH_ADDRESS(pos, neg) \
-> > =C2=A0	(FIELD_PREP(AD7173_CH_SETUP_AINPOS_MASK, pos) | \
-> > =C2=A0	 FIELD_PREP(AD7173_CH_SETUP_AINNEG_MASK, neg))
-> > @@ -906,13 +907,48 @@ static int ad7173_register_clk_provider(struct ii=
-o_dev
-> > *indio_dev)
-> > =C2=A0					=C2=A0=C2=A0 &st->int_clk_hw);
-> > =C2=A0}
-> > =C2=A0
-> > +static int ad7173_validate_voltage_ain_inputs(struct ad7173_state *st,
-> > +					=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int ain0, unsigned
-> > int
-> > ain1)
-> > +{
-> > +	struct device *dev =3D &st->sd.spi->dev;
-> > +
-> > +	if (ain0 >=3D st->info->num_inputs ||
-> > +	=C2=A0=C2=A0=C2=A0 ain1 >=3D st->info->num_inputs)
-> > +		return dev_err_probe(dev, -EINVAL,
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 "Input pin number out of range for
-> > pair
-> > (%d %d).\n",
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 ain0, ain1);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int ad7173_validate_reference(struct ad7173_state *st, int ref_=
-sel)
-> > +{
-> > +	struct device *dev =3D &st->sd.spi->dev;
-> > +	int ret;
-> > +
-> > +	if (ref_sel =3D=3D AD7173_SETUP_REF_SEL_INT_REF && !st->info-
-> > > has_int_ref)
-> > +		return dev_err_probe(dev, -EINVAL,
-> > +			"Internal reference is not available on current
-> > model.\n");
-> > +
-> > +	if (ref_sel =3D=3D AD7173_SETUP_REF_SEL_EXT_REF2 && !st->info-
-> > >has_ref2)
-> > +		return dev_err_probe(dev, -EINVAL,
-> > +			"External reference 2 is not available on current
-> > model.\n");
-> > +
-> > +	ret =3D ad7173_get_ref_voltage_milli(st, ref_sel);
-> > +	if (ret < 0)
-> > +		return dev_err_probe(dev, ret, "Cannot use reference %u\n",
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0 ref_sel);
-> > +
-> > +	return 0;
->=20
-> could be return ad7173_get_ref_voltage_milli()...
->=20
+On Mon, Jun 10, 2024 at 06:55:56AM -0700, Dave Hansen wrote:
+> On 5/28/24 03:09, Kirill A. Shutemov wrote:
+> > Currently, attempting to perform MMIO from userspace in a TDX guest
+> > leads to a warning about an unexpected #VE and SIGSEGV being delivered
+> > to the process.
+> 
+> Does it _always_ result in a #VE?  Or is this only when guests mmap()
+> something like from a driver and the host doesn't back the shared memory?
 
-Bahh, disregard my comment. We went over this in v6 :facepalm:
+See below.
 
-- Nuno S=C3=A1
+> > Enlightened userspace may choose to handle MMIO on their own if the
+> > kernel does not emulate it.
+> > 
+> > Handle the EPT_VIOLATION exit reason for userspace and deliver SIGBUS
+> > instead of SIGSEGV. SIGBUS is more appropriate for the MMIO situation.
+> 
+> Is any userspace _actually_ doing this?  Sure, SIGBUS is more
+> appropriate but in practice unprepared userspace crashes either way.
+
+Microsoft folks have plans to do this. I don't know if any current code
+handles SIGBUS this way.
+
+> > @@ -641,17 +647,20 @@ static int virt_exception_user(struct pt_regs *regs, struct ve_info *ve)
+> >  	switch (ve->exit_reason) {
+> >  	case EXIT_REASON_CPUID:
+> >  		return handle_cpuid(regs, ve);
+> > +	case EXIT_REASON_EPT_VIOLATION:
+> > +		if (is_private_gpa(ve->gpa))
+> > +			panic("Unexpected EPT-violation on private memory.");
+> > +
+> > +		force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)ve->gla);
+> > +
+> > +		/* Return 0 to avoid incrementing RIP */
+> > +		return 0;
+> 
+> This _really_ needs a comment, probably even a helper function where you
+> can actually explain what is going on.
+> 
+> I could barely remember what this is for today.  There's no hope for me
+> in a couple of years.
+> 
+> Just thinking through the possibilities here:
+> 
+> Private=> Private      	: no #VE
+> Private=> Anything else	: fatal shutdown
+> Shared => Shared	: no #VE
+> Shared => Private	: #VE (end up here)
+> Shared => !Present      : #VE (end up here)
+
+Are you talking about page state vs. page mapping here?
+
+It is wrong frame to think about it.
+
+We get here as result of EPT violation. Either shared or secret EPT.
+So we don't have an present EPT entry for the page or allowed permissions
+doesn't match the access.
+
+The is_private_gpa() check catches cases when private EPT doesn't have a
+valid entry for page accessed via private mapping: page is not accepted or
+removed by VMM. This case is only reachable for debug-TD. In for non-debug
+TD it leads to unrecoverable TD exit. The same story as for kernel
+addresses.
+
+Normal shared memory doesn't cause #VE even if the memory was not
+converted to shared explicitly. On the first access to a page via shared
+mapping VMM will allocate a new page and fill EPT[*]. Except for GPA
+ranges dedicated for MMIO. For these VMM will not fill EPT and it causes
+#VE which interpreted as MMIO access.
+
+Note that only emulated devices require such mechanism to get MMIO
+working. For device passthrough, device MMIO range mapped directly into
+the guest and handled transparently for the guest kernel.
+
+Does it make sense?
+
+[*] I don't like this implicit conversion to shared. I would prefer #VE
+here too, but it is what we have.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
