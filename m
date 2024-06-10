@@ -1,144 +1,109 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8E013959A
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCAC1E4A0;
+	Mon, 10 Jun 2024 15:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718032258; cv=none; b=ZVM1oW6+q5CaFmpZbfxY0c61S7O3G+Tux5ZhzfvNFaei247anX4FCLkVQtcDRYQ0gk2gdLqWqdgwuKnRpiC813A+R9auQVdAvCSguMEdjXuO4lQnBO/R+q+ctfg163MaNi7ZYvaJZGP2hIR6dOKKMAA2brzj/ut4LZXFolQ8DZ8=
+	t=1718032303; cv=none; b=oilyJXRrlbR+NOwmHkoioYR2udPqUnNtn6XxAmgh8MkjzNmuzCEe56y7eIHoWD+/1+re48J7kY4qt7l6t5resnNKus4DEotcu8YS43LOjqG4CJVPFPIMghgcQsg3yIKUHig6qfpRpiqo/PuHpXw9Xl2au7qq3fVVfkij4KTqU0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718032258; c=relaxed/simple;
-	bh=ERuOVVdn5GsO46O7DDRbGcmv/ifApz+1KsqrXPoPF7A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lVSLSuivCWNM0TBeKcMe3FOsEy9ElcC5dDtKKaayG6cg5DLh5M5RqO80VQDcrPKIKSYVMsUCVzYpQRB8fctaKhrxU6Jmfi2mTX6qVNn0AS9Xm0EKGAvIK8t3H+VifGJVm6u0klRACerMjBRdV1Jh/6ac2iPdMEc4ybLl6ZRDzFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDyhZWhS; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718032303; c=relaxed/simple;
+	bh=tpHyKPGu/MAWjoatWWjJZ50Flk36rDbQoSmxaJRTcUs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Re3BHOJj6TjaUl1b9V0MACM+FZXANa4Wty+esr/c6s93x6s+oXFdUx4GCgYU/fY9/lLhAqnmqtV9pKPW+2hfeOzZ230LTJ7xaT3+NWkTSYxGaSBK5q2ukeDSENpiW9SoFyhfncMknyM+5lZktsyOpxbC/48h3lossXY+gc/2rvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=8DB3wpxx; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDyhZWhS"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-804ee8b03afso1300359241.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 08:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718032255; x=1718637055; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cycnwNbB2QbkiUYzy7U9ut8XvQ6A+eLFN2UjpJnGLXE=;
-        b=CDyhZWhSg8kFmnHloRpT/QLPvZk93+jwTKxDYE787mn05m0VSws0DoS3cLyUgop45Y
-         PscYumdM7geKthqIUmDpD8/6mpD90nUtYT0ZB0Vbj/tamXA10V8/8PPKrrk8IWZx+9QU
-         v6ejSq4TVSPxvYir/SoUfEXnSLYIZMNoQjLKhnUmss97fnPnUSACgHGkq7J9KEkNlKTP
-         tnfXyO1jNftig4+ql3QaUK+qhHTice41ZsrLm/PmBHxPL8ZuQRXJeP6tcajTOQZuO96i
-         z1AzGsIFUe4PwlYJr8cu88umqgXKSMV6uj8FUbJaBFWZZi5hukdqjdrhVAiSwmbDlFrw
-         IWog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718032255; x=1718637055;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cycnwNbB2QbkiUYzy7U9ut8XvQ6A+eLFN2UjpJnGLXE=;
-        b=e456t3GPpPVXZry+ashS7PBy6cB8iTcbASMWMO6axs9DEmzMRdg4Ema0hC9SI/C/YX
-         IcOkAR29ViO4CmiVnPc3TfXmSuS8+AeGsq9rS9Hbnxi0oR7FKZsnk+qouHLrvwswhSFd
-         mOh4TZmfncQ750kw/gyrE80jE+xyxuNkUf6NhLALIk4tPvtwsP68ibCFSLBxRjG8j4MH
-         HrtmUEeGugx+d7iLY+G6ntKgK7gIuNs08QLNJtjtbKzsngJYP14r7rKkmSIVyz/uFeZl
-         ambX1idJ1YjrN1Tg1GxZsSlng4W+P3VcyHvmLweXdkcSWqsWLcoovFv2rHcrMagx1Geq
-         ArzA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8D7iv7CYu9eDwt73StMuVE1l2Yv20n40Ri52vLgtmRxzB8zDRbCmZy1R3+NyWm4Cvz1sxJjm5ufJCrkn0qYF1Yzu335OeSwJlGv5d
-X-Gm-Message-State: AOJu0YyOkAXAg8fv+vRFK1lbgFSmAla9q0l4cHIAV9oNHGU0Ts5UYJ7Y
-	vS+qzHTFmrIwoW5//6lNmru5BNXuxOPBiizHSlS3xvsbXO2jX7OKssZeM+c7ILlOder1EOszDlC
-	wwT+2CU7Txk4+AKCwflbq8etVGmCGns+q
-X-Google-Smtp-Source: AGHT+IE1bBht3Q/RKtsJwKtDwwtiDOLpGrE5Ye4Ip0oqyDxrr1J0UcUl9iVD/cn4DnAfDoA5lFDmV46W8zkQB61nLSE=
-X-Received: by 2002:a05:6122:298a:b0:4df:4498:cc with SMTP id
- 71dfb90a1353d-4eb562325d3mr10040880e0c.6.1718032254029; Mon, 10 Jun 2024
- 08:10:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="8DB3wpxx"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ACQpDH023421;
+	Mon, 10 Jun 2024 17:11:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=Nw0npG5Je8L9GpDDDrmZQv
+	OmOFQeiNRiS9yVch0TPfQ=; b=8DB3wpxxw2Lj/nNcdFxXNQzSMVtVpyd0cqr+FU
+	QXIhTOtDBMkyPokSP4kn37ctCTBxs5P1Shdahn/CEebRzuUAzCNC1pZzC1X2snY2
+	I9SH4rPzL7lzSjLWtCi8nYAD7I7jMuNTobPRf6+FQJExc+I29C4FewnPZu16u1Zo
+	K2MTW6vfeKAyCZy1ks0q2t37WjetxMfB7jwFG2ofWRueMEAqbxocE11pMhT2tzCi
+	hJvQvKynBMB4s0uM3Sxxt7mV/YRV7Cq22UpQwNAwwDyQHt1AtleBbPOe7ozc8GLC
+	jMA7mX+zuXHm9KAAnXYG7KLzil6MKDyYk5o45diFrmZtSPKQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yn0v15d67-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 17:11:31 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8002C4002D;
+	Mon, 10 Jun 2024 17:11:26 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1B1B821ED2D;
+	Mon, 10 Jun 2024 17:10:45 +0200 (CEST)
+Received: from localhost (10.130.72.241) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 10 Jun
+ 2024 17:10:44 +0200
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sylvain Petinot <sylvain.petinot@foss.st.com>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>,
+        Laurent Pinchart
+	<laurent.pinchart@ideasonboard.com>
+CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Mugnier
+	<benjamin.mugnier@foss.st.com>
+Subject: [PATCH 0/3] media: vgxy61: Remove vendor prefix from driver name
+Date: Mon, 10 Jun 2024 17:08:12 +0200
+Message-ID: <20240610150815.228790-1-benjamin.mugnier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606095213.4087668-1-chao@kernel.org> <d38a2712-f7cc-4aea-a343-00335a5215a0@kernel.org>
-In-Reply-To: <d38a2712-f7cc-4aea-a343-00335a5215a0@kernel.org>
-From: Daeho Jeong <daeho43@gmail.com>
-Date: Mon, 10 Jun 2024 08:10:41 -0700
-Message-ID: <CACOAw_x3s2m70-cBhA0X0h5AetCQgDzVh7hRM00OVm=0Od5FUA@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: fix to add missing sb_{start,
- end}_intwrite() for ckpt thread
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, Daeho Jeong <daehojeong@google.com>, linux-kernel@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
 
-On Sat, Jun 8, 2024 at 5:36=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
->
-> On 2024/6/6 17:52, Chao Yu wrote:
-> > After commit 261eeb9c1585 ("f2fs: introduce checkpoint_merge mount
-> > option"), checkpoint can be triggered in background thread, it missed
-> > to cover f2fs inner checkpoint operation w/ sb_{start,end}_intwrite(),
-> > fix it.
->
-> It needs to use sb_start_intwrite_trylock(), otherwise, it will cause
-> deadlock as below:
->
-> - freeze_super
->   - sb_wait_write(SB_FREEZE_WRITE)
->   - sb_wait_write(SB_FREEZE_PAGEFAULT)
->   - sb_wait_write(SB_FREEZE_FS)
->                                         - sync
->                                          - iterate_supers
->                                           - super_lock_shared
->                                            - down_read(&sb->s_umount)
->                                            - sync_fs_one_sb
->                                             - f2fs_sync_fs
->                                              - f2fs_issue_checkpoint
->                                               - wait_for_completion
->                                                                         -=
- issue_checkpoint_thread
->                                                                          =
-- sb_start_intwrite(sbi->sb);
->
-> - thaw_super
->   - super_lock_excl
->    - down_write(&sb->s_umount)
->
-> Thanks,
->
-> >
-> > Fixes: 261eeb9c1585 ("f2fs: introduce checkpoint_merge mount option")
-> > Cc: Daeho Jeong <daehojeong@google.com>
-> > Signed-off-by: Chao Yu <chao@kernel.org>
-> > ---
-> >   fs/f2fs/checkpoint.c | 5 ++++-
-> >   1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> > index 55d444bec5c0..66eaad591b60 100644
-> > --- a/fs/f2fs/checkpoint.c
-> > +++ b/fs/f2fs/checkpoint.c
-> > @@ -1828,8 +1828,11 @@ static int issue_checkpoint_thread(void *data)
-> >       if (kthread_should_stop())
-> >               return 0;
-> >
-> > -     if (!llist_empty(&cprc->issue_list))
-> > +     if (!llist_empty(&cprc->issue_list)) {
-> > +             sb_start_intwrite(sbi->sb);
-> >               __checkpoint_and_complete_reqs(sbi);
-> > +             sb_end_intwrite(sbi->sb);
-> > +     }
-> >
-> >       wait_event_interruptible(*q,
-> >               kthread_should_stop() || !llist_empty(&cprc->issue_list))=
-;
->
->
+This is a follow up of the discussion we had [1] on drivers naming scheme.
+Basically the vendor prefix should not be part of the driver's name.
 
-Reviewed-by: Daeho Jeong <daehojeong@google.com>
+This series renames the driver from 'st-vgxy61' to 'vgxy61' and the device tree
+compatible string from 'st,st-vgxy61' to 'st-vgxy61', therefore avoiding the
+vendor prefix duplication.
+Backward compatibility is preserved.
+Makes the vgxy64 driver consistent with the soon to come v3 of the vd56g3
+series.
 
-Thanks.
+Thanks,
+Benjamin
 
+[1] https://lore.kernel.org/lkml/ZlToLtUkVqzrZf4p@valkosipuli.retiisi.eu/
 
+Benjamin Mugnier (3):
+  media: vgxy61: Fix driver name
+  media: vgxy61: Add legacy compatible string
+  media: vgxy61: Add MODULE_ALIAS()
 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+ .../media/i2c/{st,st-vgxy61.yaml => st,vgxy61.yaml}       | 6 +++---
+ Documentation/userspace-api/media/drivers/index.rst       | 2 +-
+ .../media/drivers/{st-vgxy61.rst => vgxy61.rst}           | 0
+ MAINTAINERS                                               | 8 ++++----
+ drivers/media/i2c/Kconfig                                 | 2 +-
+ drivers/media/i2c/Makefile                                | 2 +-
+ drivers/media/i2c/{st-vgxy61.c => vgxy61.c}               | 8 +++++++-
+ 7 files changed, 17 insertions(+), 11 deletions(-)
+ rename Documentation/devicetree/bindings/media/i2c/{st,st-vgxy61.yaml => st,vgxy61.yaml} (95%)
+ rename Documentation/userspace-api/media/drivers/{st-vgxy61.rst => vgxy61.rst} (100%)
+ rename drivers/media/i2c/{st-vgxy61.c => vgxy61.c} (99%)
+
+-- 
+2.25.1
+
