@@ -1,85 +1,87 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361A0335A7
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB4A80034
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 12:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718023293; cv=none; b=efTHf6bei2ihWXjmaTTLLQkKVYp2gHg4X5s42PWLIupw4zL+eKZJlM0muT4m4uibhfq2BDF5YHCcDaWjOMWxaNWMh8hm94mYgGHKGkXsUZe8+BFoEaL31oCJ2+1gMhbRhXbbSN6OtwPi5Qa417d/8p0hIXp2zpX4q9heyR5g8U8=
+	t=1718023293; cv=none; b=o59Izicm2f5Z8aevRYRytGRV8k9zOKWqosPTU3FOw/ycXn7MCrAIQGr1vbDKoRhaaLkkbnHtmLMninU8iHwuJjJo6ha7wkwNct2I2+Wv4FBoWvyWoleXbW7FWkQ27TIho+yKEyL3Ob8K5HykqjWp115fSQksceAssNgLrqKiNXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718023293; c=relaxed/simple;
-	bh=JKbuw7H95NRbTlC5bfeeeL2RtSCFi1rLLto23fHGowA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OnkG+RUQHrKu0QRPlKu4zOjKTq/caP9Zl/+Ke8J+6KwR8YEZqTUtRrc9Wo41rnh/N2BHb3k//4hVEJ+3wVrT/+ElzOIzekQHMDSxDxbr/GH21WYbZSZbFZ+aU88/Ae7rCeKl1AS1JLO/7mGXb1prUzaNAv0gG3xOYYsiSS+weQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+	bh=DA77A8YAHSe8JU7F+/GD/pa/ejxm7v+N5Nh/jow5Cgc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=VfMEV4s4NXlRRhJ3T8jPpTNQll2DKLF3ZlIDuSMk5l/0sOdCoKtjf8mURDzzNET8guy+DuGfmDmFV8kybx1iPTM2M+mLlevH9p6x5U9/6b7VHhtJqf01mD6g8bhdUFjgycnSmMmeJiWOitoqWLRGFUm19nwwJRMqh2tirkYdfzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7eb80de5e7dso126311239f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:41:31 -0700 (PDT)
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7eb7e13522bso154755239f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 05:41:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1718023291; x=1718628091;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=WA7CbT2GeS+VoIChUYRDpZPjnEpS9X9+0FDiSdP3wow=;
-        b=SuAFSggpaVp7b3AC/0zc3JdF1tGEWGvn+sh43k+JEAfh7QYwfBSYK6Cq7ZhqP0SjSW
-         Yafiz1DmvDmmT7cNKewQJCUDetN4FTDvEPoYZilsyuDA8V5C8Cq7M6SlVLm0dtgbB0yy
-         Ch1ahOfbJ+BtNCDq35G1VO9y7TWL3Iq0Vjwf5X2rYtNIcJw3sSObh74/dKeIF+9qI9WB
-         qc8i7T6RoO6vGD44Q/qsK7TLecjNLvP0gmHPbrqM80gVUPSVDPi0QhHMRkQHp/Jk0yGB
-         C+rAY5rTBVHJiZ2HWyOjSnpNYzsc25Pr0qxxyGijjY4ocufdvJLitKB53cnXKvDEJ8dh
-         IwDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfQaBlvgLpHV2io/hoSfE+seuAJW8gy8UnMnLUKKfBqVmnmujkXHlpxBFvddnkR9tMrxSU8+cFdrtWW+8kzqa/utPGW3W/TtxAdpCi
-X-Gm-Message-State: AOJu0YzCaoPFgDmt6IczKViaGlAZDxvHnqKbSU/f0dEXdmbFC39UWYed
-	6rXPmn1JPmFOLzGPK/9USrBnwS/3G0s1KlVE+36/35wwd/E+Y++L7VqBeQnr1EMHSUJduVBoH1I
-	5xo48ikcn6xIU+Sqh3PD140eZWHtK4Z5Kq3ddnTi96bccyG7e6Uemkfk=
-X-Google-Smtp-Source: AGHT+IE/szJDvjRFoP+iOxRSIYxsZAy/fRvJRJ8zV9zkfPmRib5LLKkFoNrFfgfYcCabm5kWrMhbFsf+KU/cuk5dz5IfSAvsSMV4
+        bh=BCMkQeD1xNxViM3XomxwPQ71fS171Gbimn0jnC4MuAw=;
+        b=KbwpbSgzPVzoj1YmsQWOCG1A2EwsU1kXtgzv1VEybdtmKLt0TMksNn36YyltZyjkZA
+         mFci0phMhPDYwCkpqx+nR7IJarRLc3RiZW2GshsAmEm6EdexS7yLsire65Ka/6cmlTG+
+         wFNZlMMlbbHb/GtkXAEerxs+o+WYjGDwOyUYxdP/RamZxDZkP19mJn3kodLuwZ0Vyz6p
+         LL0coyLF6fRWiCrIbJ+GzIox41IUsUzhftIV1ozGRKiyQ1KTMPoQhMn8zeH229Mw5/Lm
+         bBUsqNOAy8VMIdexvw2X5cKqsd4PgmAYHiq4nKmOTfGHpvVqMsk4C4mZNCMpqgjCtKpg
+         mwvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUX8dXqXwok0T6tiIdUMfzB/d5Ym6Pwdn3M2mKrD+zkzzDlStTEX3yi10WqZbHDrBSWxME0bQkW3SC2JZ39tiGwO517EE5B5zJnNWOS
+X-Gm-Message-State: AOJu0Yz5PPvTYfIQ9O67LTBdUIZyXGE4QCxuINGXImkDBCU//d0Uw4t4
+	IdfmAXeaVrxyx1t5gZtUlU/31BXyDern0qO/JuS6YVIHhgrAeYGsfucgdbUP0/967Y5TljgCoac
+	hblBJkmwKHlPYolkNKPY1Tq6boM8XJ7i9AlwbWhVcAogs74aM4F4fh/4=
+X-Google-Smtp-Source: AGHT+IGrGjiNH+9FmfHarI8DR/5L8W/JwMgALZZAvpD6utcEzq31maichB4/VJ2EXCgaRrn9Sv2vvbVqiAOCEJlLvBchjDrISgYM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8527:b0:4b9:fb0:fd43 with SMTP id
- 8926c6da1cb9f-4b90fb1070emr219303173.3.1718023291348; Mon, 10 Jun 2024
+X-Received: by 2002:a05:6602:2dd5:b0:7eb:75e9:8f42 with SMTP id
+ ca18e2360f4ac-7eb75e992fcmr17530339f.3.1718023291583; Mon, 10 Jun 2024
  05:41:31 -0700 (PDT)
 Date: Mon, 10 Jun 2024 05:41:31 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ff3857061a8877b7@google.com>
-Subject: [syzbot] Monthly dri report (Jun 2024)
-From: syzbot <syzbot+list9e784dfd03fd1005cfe1@syzkaller.appspotmail.com>
-To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000002cc68061a8878e4@google.com>
+Subject: [syzbot] Monthly ntfs3 report (Jun 2024)
+From: syzbot <syzbot+list8fdb856cc132bfdfb91f@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
+	ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello dri maintainers/developers,
+Hello ntfs3 maintainers/developers,
 
-This is a 31-day syzbot report for the dri subsystem.
+This is a 31-day syzbot report for the ntfs3 subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/dri
+https://syzkaller.appspot.com/upstream/s/ntfs3
 
-During the period, 2 new issues were detected and 0 were fixed.
-In total, 18 issues are still open and 31 have been fixed so far.
+During the period, 4 new issues were detected and 0 were fixed.
+In total, 38 issues are still open and 48 have been fixed so far.
 
 Some of the still happening issues:
 
-Ref Crashes Repro Title
-<1> 462     Yes   WARNING in drm_syncobj_array_find
-                  https://syzkaller.appspot.com/bug?extid=95416f957d84e858b377
-<2> 335     Yes   inconsistent lock state in sync_timeline_debug_remove
-                  https://syzkaller.appspot.com/bug?extid=7dcd254b8987a29f6450
-<3> 277     Yes   inconsistent lock state in sync_info_debugfs_show
-                  https://syzkaller.appspot.com/bug?extid=007bfe0f3330f6e1e7d1
-<4> 265     Yes   WARNING in vkms_get_vblank_timestamp (2)
-                  https://syzkaller.appspot.com/bug?extid=93bd128a383695391534
-<5> 17      Yes   WARNING in drm_gem_prime_fd_to_handle
-                  https://syzkaller.appspot.com/bug?extid=268d319a7bfd92f4ae01
-<6> 10      Yes   divide error in drm_mode_vrefresh
-                  https://syzkaller.appspot.com/bug?extid=622bba18029bcde672e1
-<7> 9       Yes   general protection fault in udmabuf_create (2)
-                  https://syzkaller.appspot.com/bug?extid=40c7dad27267f61839d4
-<8> 6       No    WARNING in drm_atomic_helper_wait_for_vblanks (3)
-                  https://syzkaller.appspot.com/bug?extid=0ac28002caff799b9e57
-<9> 3       Yes   divide error in drm_mode_convert_to_umode
-                  https://syzkaller.appspot.com/bug?extid=0d7a3627fb6a42cf0863
+Ref  Crashes Repro Title
+<1>  11937   Yes   VFS: Busy inodes after unmount (use-after-free)
+                   https://syzkaller.appspot.com/bug?extid=0af00f6a2cba2058b5db
+<2>  8302    Yes   KMSAN: uninit-value in longest_match_std (2)
+                   https://syzkaller.appspot.com/bug?extid=08d8956768c96a2c52cf
+<3>  5508    Yes   possible deadlock in ntfs_read_folio
+                   https://syzkaller.appspot.com/bug?extid=8ef76b0b1f86c382ad37
+<4>  4666    Yes   possible deadlock in mi_read
+                   https://syzkaller.appspot.com/bug?extid=bc7ca0ae4591cb2550f9
+<5>  3679    Yes   possible deadlock in ni_fiemap
+                   https://syzkaller.appspot.com/bug?extid=c300ab283ba3bc072439
+<6>  3351    Yes   KASAN: out-of-bounds Write in end_buffer_read_sync
+                   https://syzkaller.appspot.com/bug?extid=3f7f291a3d327486073c
+<7>  2584    Yes   possible deadlock in attr_data_get_block
+                   https://syzkaller.appspot.com/bug?extid=36bb70085ef6edc2ebb9
+<8>  1679    Yes   kernel BUG in dnotify_free_mark
+                   https://syzkaller.appspot.com/bug?extid=06cc05ddc896f12b7ec5
+<9>  807     Yes   possible deadlock in ntfs_fiemap
+                   https://syzkaller.appspot.com/bug?extid=96cee7d33ca3f87eee86
+<10> 397     Yes   possible deadlock in ntfs_set_state (2)
+                   https://syzkaller.appspot.com/bug?extid=c2ada45c23d98d646118
 
 ---
 This report is generated by a bot. It may contain errors.
