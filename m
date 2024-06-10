@@ -1,150 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E3213213D
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D7D38FB0
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 14:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718029880; cv=none; b=USNh2f84/EDHI1b0F1oGpgu8cy13VnX5LmR3FMKJ1lc2wEBNoYl2kgn0v3hbCZt41ZXCyt19vI0TCPDzbgI5xDOcHF5F3cvFRWFwFLFyhB2F1p2QdMpRY1UHgamUUdpV6z+xQF14dMiZSrFWyuotla9kdNi5E7XUbN2vLRzvzZQ=
+	t=1718029883; cv=none; b=hMywQxaDhTJPDF4Bkegv9eP7WfvYbouv4DWRsUBTZHaY18Nc/qd9z68IACHpSASZ165PlTMuDfhALFeEZqJgTOHCZ7wwCLdA5HJZcSVD0IugdF/HFiLV6qvnA9FyBLblD5yzREZpR/M62I9qDwRs0Qo71QQ/nOaAgiIs5+sFId8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718029880; c=relaxed/simple;
-	bh=V1664uLxF5b82ZVSpeCZtQWSqHB1NRXdy49enW9INw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TGmuUdNHFGyMwAW/Hy0sS0v4ZXG0/hyn5j0778mZY2e6eAjKrKcI1O6acI8A28mzY2obZidtBMKdtK79qUJ8icjgMCJ+6xITSUmIuJTcLH24N4RVTcZ/cSUhRsXPcFIvsnLjK1nPySsyLr5Qqk6Wf7jIhu294CxViV0JsVYBH7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VdpOOJRm; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718029883; c=relaxed/simple;
+	bh=VwUpWbn1eWCMUzpw9sv+oHFcN1ZTLQ6ELIhkrq62WKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JkG2J9c84rT4rB16zwbSqH35K7FxuALWoPxpnIn7IO4OuiSM2/A6SJSy2yJNcFS2lvsxgOUNc3EeZ7m4lT3gyE88k8sgsa1R7CEoAgZ1KBSghR2OHxgYer06ZgkikSivEKAKtRxJR73dl9/NHgE7l1pc6ELQNgIggaN3ivrBkkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IndhcYva; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VdpOOJRm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718029879; x=1749565879;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=V1664uLxF5b82ZVSpeCZtQWSqHB1NRXdy49enW9INw0=;
-  b=VdpOOJRmYj7wRufBUV6ZVxZArimN27EATiGSdbp4my6c23p7GKaZQC6v
-   sboc/9XB1OIXVGKTEa0X6hNjPh1RIZJJ4K4dXvr7bM2ms7kZIfZRq+tti
-   YP/oX6Fly4MCMcXh6X/U7FPZA1BY/4INzlbR9ykCLRsKoOYKiQ6WNiru7
-   ljjHRNrY0BN17NdkVicd7DAhHYEegt3ngQkdZ+yFbeczDPED4tp4lbdTJ
-   vkZQ18jLhU3amTwVigt5NurJCa9h0IZMJoeaYwcrDCiiBO9bcwE0YwzqL
-   9fsggqbRy+fry0lHGl/lYPQj8OZzaE0c+RxU7TmjfLwJTAh8CYZZuxjRd
-   g==;
-X-CSE-ConnectionGUID: 7IO0izl3TZK/nc2WsXfhWA==
-X-CSE-MsgGUID: Bz1uICMbTo6GGDIBHXqW+Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="18479011"
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="18479011"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 07:31:19 -0700
-X-CSE-ConnectionGUID: L87bjZU3T/qAYUEqdtGp5A==
-X-CSE-MsgGUID: FnG0LBQfSWOZuDsm57oIyw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="39528182"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 10 Jun 2024 07:31:16 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 770921FD; Mon, 10 Jun 2024 17:31:14 +0300 (EEST)
-Date: Mon, 10 Jun 2024 17:31:14 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, cho@microsoft.com, decui@microsoft.com, 
-	John.Starks@microsoft.com
-Subject: Re: [PATCH] x86/tdx: Generate SIGBUS on userspace MMIO
-Message-ID: <ajxusvtisufqbl644hkdnq6c3tpamoppvjifhbj4nqctl4vyt7@nhak7gkergqf>
-References: <20240528100919.520881-1-kirill.shutemov@linux.intel.com>
- <4df2ebee-40c0-4ea3-8909-13b90f049ff1@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IndhcYva"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-79776e3e351so43958685a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 07:31:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718029881; x=1718634681; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vmkoYQdN2TcqhXW6bXeE/domfSCU9DERaxqlSrdPGI0=;
+        b=IndhcYvatTFcfkxBcy1lTKkhoAd2iwUa4MMdxYZ5hKJGX02jjZwIVDaLTNmH/+bgXc
+         SDI5HcCMHfoNrr2Ip8oiorAdJ+6GLBLCsdL3aaxcsgePE3D5uUfPV+5IBnW4UhxzkCEK
+         O0WyiJKWvGyFWW9o8nMA77MbNhnXUQKPogRM86+ymPhYob7NnIH7Zw7tpz3IbJzvdy6t
+         f6KrgdnAf9XN9Zo7+xnGv+DFk4mvx2asZI9tck7ySdbe6hvuDEvYfQYPYzHsu+i4won6
+         KXbXqgVEJyLUlwRmn2ziNLjJVgoL+fqrfO0TrWUq2/sT0vwFK+iLrqG+hQBzQd7y9nqW
+         jXtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718029881; x=1718634681;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vmkoYQdN2TcqhXW6bXeE/domfSCU9DERaxqlSrdPGI0=;
+        b=iZLKWMXM+ixgs5qCEbYoyrblvG5MBezLXLsKKZ/w3de72IH9us8JEoYlWwmq4TynAv
+         hdK9ifeaBVueD/Z2/WcxFBfsc/4hJvUZ9WhOqoM8oiZUJ1qH/n20Q4d+j1+NCZu46HHm
+         CZEGpGhhQg8NaOsJngoN4vyZHPuFuTDpDC4vmHgqN2Vo3kYq6gaZi3yIczoH1f339nwt
+         3yaS5Vnxe7JHvLFevfYkWK5fmFdqXsZouezbfRM8XK81YLwAKGQrjNc1m1xPBNXwKAYg
+         n1EiOd2wARMidqd9nCzBQI9/6mvhGJmZ/J/gecoEk/4FyKTeQ+9LdD4tQnwFmQ2OviX2
+         uFPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1HWBkQHESDVmTVPPbX0aMaHXSHX7qNJEcAGLW5D9TJ9ZZxEGqpA5pCPvtDuhv4VLoexlq9/Kc3HiRYg4Pd6elebwYCaK/AnaXZOYa
+X-Gm-Message-State: AOJu0Yw2J2QfvRYWDHBq/GOtr6z23BSY6MYE6a3eLtYYJBimTMa4lF2g
+	mGa8CI+2rDkA1UnZ35IdsAhqffxIyXCaIIl00e28PRyVyJ3h2ymB
+X-Google-Smtp-Source: AGHT+IFPp5RhKtZQ9MvS14DPNDaymoojuA/+cEjt/zxS95yHDKvW19lgNaZZnsBE9iCx7f/aMTPNsQ==
+X-Received: by 2002:a05:620a:4556:b0:797:a649:bdbf with SMTP id af79cd13be357-797a649c0fdmr156842085a.13.1718029880727;
+        Mon, 10 Jun 2024 07:31:20 -0700 (PDT)
+Received: from localhost (fwdproxy-ash-006.fbsv.net. [2a03:2880:20ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-795593165e7sm195488185a.65.2024.06.10.07.31.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 07:31:20 -0700 (PDT)
+From: Usama Arif <usamaarif642@gmail.com>
+To: akpm@linux-foundation.org
+Cc: willy@infradead.org,
+	hannes@cmpxchg.org,
+	yosryahmed@google.com,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Usama Arif <usamaarif642@gmail.com>
+Subject: [PATCH] mm: Do not start/end writeback for pages stored in zswap
+Date: Mon, 10 Jun 2024 15:30:37 +0100
+Message-ID: <20240610143037.812955-1-usamaarif642@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4df2ebee-40c0-4ea3-8909-13b90f049ff1@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 10, 2024 at 06:55:56AM -0700, Dave Hansen wrote:
-> On 5/28/24 03:09, Kirill A. Shutemov wrote:
-> > Currently, attempting to perform MMIO from userspace in a TDX guest
-> > leads to a warning about an unexpected #VE and SIGSEGV being delivered
-> > to the process.
-> 
-> Does it _always_ result in a #VE?  Or is this only when guests mmap()
-> something like from a driver and the host doesn't back the shared memory?
+start/end writeback combination incorrectly increments NR_WRITTEN
+counter, eventhough the pages aren't written to disk. Pages successfully
+stored in zswap should just unlock folio and return from writepage.
 
-See below.
+Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+---
+ mm/page_io.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> > Enlightened userspace may choose to handle MMIO on their own if the
-> > kernel does not emulate it.
-> > 
-> > Handle the EPT_VIOLATION exit reason for userspace and deliver SIGBUS
-> > instead of SIGSEGV. SIGBUS is more appropriate for the MMIO situation.
-> 
-> Is any userspace _actually_ doing this?  Sure, SIGBUS is more
-> appropriate but in practice unprepared userspace crashes either way.
-
-Microsoft folks have plans to do this. I don't know if any current code
-handles SIGBUS this way.
-
-> > @@ -641,17 +647,20 @@ static int virt_exception_user(struct pt_regs *regs, struct ve_info *ve)
-> >  	switch (ve->exit_reason) {
-> >  	case EXIT_REASON_CPUID:
-> >  		return handle_cpuid(regs, ve);
-> > +	case EXIT_REASON_EPT_VIOLATION:
-> > +		if (is_private_gpa(ve->gpa))
-> > +			panic("Unexpected EPT-violation on private memory.");
-> > +
-> > +		force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)ve->gla);
-> > +
-> > +		/* Return 0 to avoid incrementing RIP */
-> > +		return 0;
-> 
-> This _really_ needs a comment, probably even a helper function where you
-> can actually explain what is going on.
-> 
-> I could barely remember what this is for today.  There's no hope for me
-> in a couple of years.
-> 
-> Just thinking through the possibilities here:
-> 
-> Private=> Private      	: no #VE
-> Private=> Anything else	: fatal shutdown
-> Shared => Shared	: no #VE
-> Shared => Private	: #VE (end up here)
-> Shared => !Present      : #VE (end up here)
-
-Are you talking about page state vs. page mapping here?
-
-It is wrong frame to think about it.
-
-We get here as result of EPT violation. Either shared or secret EPT.
-So we don't have an present EPT entry for the page or allowed permissions
-doesn't match the access.
-
-The is_private_gpa() check catches cases when private EPT doesn't have a
-valid entry for page accessed via private mapping: page is not accepted or
-removed by VMM. This case is only reachable for debug-TD. In for non-debug
-TD it leads to unrecoverable TD exit. The same story as for kernel
-addresses.
-
-Normal shared memory doesn't cause #VE even if the memory was not
-converted to shared explicitly. On the first access to a page via shared
-mapping VMM will allocate a new page and fill EPT[*]. Except for GPA
-ranges dedicated for MMIO. For these VMM will not fill EPT and it causes
-#VE which interpreted as MMIO access.
-
-Note that only emulated devices require such mechanism to get MMIO
-working. For device passthrough, device MMIO range mapped directly into
-the guest and handled transparently for the guest kernel.
-
-Does it make sense?
-
-[*] I don't like this implicit conversion to shared. I would prefer #VE
-here too, but it is what we have.
-
+diff --git a/mm/page_io.c b/mm/page_io.c
+index a360857cf75d..501784d79977 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -196,9 +196,7 @@ int swap_writepage(struct page *page, struct writeback_control *wbc)
+ 		return ret;
+ 	}
+ 	if (zswap_store(folio)) {
+-		folio_start_writeback(folio);
+ 		folio_unlock(folio);
+-		folio_end_writeback(folio);
+ 		return 0;
+ 	}
+ 	if (!mem_cgroup_zswap_writeback_enabled(folio_memcg(folio))) {
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.43.0
+
