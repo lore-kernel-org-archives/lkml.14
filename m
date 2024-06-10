@@ -1,64 +1,76 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E9474076;
-	Mon, 10 Jun 2024 08:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E9674043
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 08:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718009874; cv=none; b=Sz1TmUu69Q2hLJaLXjh89da2TzzeRWOvMTiKNUE3ITV1C6VtemZt0WSLdSQYPczznxLe6BhZbKUhE3XfdWmth5hg90GpuHFEW2SznJbDq+nqJJcVFLdgq32TgQHVrxOhcjFyh5uOWSCBVl8Rl4lwTHOziJ0BXnE85qpTXyDiWdo=
+	t=1718009899; cv=none; b=WxQXmtCn4aFLuPJyhDwJoFl6uhWs+N/N8oBpueL7O+hG+wHjWJwuAHpLTMypAQxxLJVpfXBlCKPzCX4DPuyhBl+ysuAbN1Dw3cgJQwqwGpgaO1q8ovgdsb7bhfTOzXcyrTXhIaguf1Jsmj/S+RzgpMA3Og8ctiWTBm6Ka62rWlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718009874; c=relaxed/simple;
-	bh=P2DRe2wL/une2JzXiOTZb0PRbaoha7Lnj9v/CwIy5mU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AiPZ6PoSor9YlIz8vrqsLVWmj9Fbe/prL2/h7mFyClmIOoiegGcBdrLc0LDOcgxU4C55cNC+T4irsvAFxMuAW3DDLLmadyvfbGxL6PcdtJEJSkUK6x0o8ardvHtoG877kBb06u4s6vwmnsp54Bi2s+Qp7WoEvd2+IQLg7cssuOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=sjqbeUsx; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718009899; c=relaxed/simple;
+	bh=0vujK8zNCKvKagqP+H4Q/hFUwMNe4QRoYI5wcH4k1DU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OeKdJDCHKYx4sJqslENRqovmTxkpvvWWabtKey+GPVjoilSUHvGH4/7yS4brVR2aTOW7Mnz7yUMOR/wUc9XuaYkqglboSwqcE2RcT1xaGvunlRa4LOptJUZJKaMbKILmqcPxC4L/8/Xfdn9s363bX0Bfjdh6lViY1tpkhnEsst8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cP3vc7YY; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="sjqbeUsx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718009870;
-	bh=P2DRe2wL/une2JzXiOTZb0PRbaoha7Lnj9v/CwIy5mU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sjqbeUsxotlrV+Udp0Ui/fH5BVWnHre9vNAT6CWJkCSrGafFBugAqlvTvele+ASIF
-	 xe64RwG+bIaAbtqaRbBhz7BWDIaZoddcbeCOhJu25Yw4gfZiD4TAMCAKzbZ18X/7o4
-	 /AWaSb3WTS+FCoNQ7bFYxwdjbndUHfI30bfCLyirrxGSNhJ4bvCUT2GGZHTuSir93k
-	 DcPLwPoyT6SmMBSFwwmxD4wyzgLAqbDNKkx9HItIFtGnmi89D4TM0+a+bi2gG4QpbS
-	 FNSqwGSq9BT4gwkcisEpYQQnTAYZjNUbL+mWzSE7bynL+uiXj51I+ZxqSO+O5YPeWS
-	 pnR1BZkINHveA==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0604A378217A;
-	Mon, 10 Jun 2024 08:57:48 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: djakov@kernel.org
-Cc: robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	keescook@chromium.org,
-	gustavoars@kernel.org,
-	henryc.chen@mediatek.com,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cP3vc7YY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718009897; x=1749545897;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0vujK8zNCKvKagqP+H4Q/hFUwMNe4QRoYI5wcH4k1DU=;
+  b=cP3vc7YYeR7c4mMzApc6KumDA0O+3ffsf/vze5Fp9yFovbzMelFziqbe
+   QABgx3L6KoU/zRK1BcxQ2bE0f/MaO+oYWInAwAMbpDT5VBvuPob47BLBL
+   02AT3GMB1B5O5pIJdyERc8kRjSnGhu/F2lMhCj5eVdAnoxhjddjfhe4Ye
+   MjCEvj/CS6BxXero+mFQMmQqvU5D7SIoKAUgNsYrtPcx48YRI84LnsZZc
+   wWmWt8NXQgcAsPt3XeYVHgojDxQ3Y9rNfhw49w8cBjJAqBzp6Dyj1yGVV
+   datSiCfslXIGp2BAs6g6elhSUcACvI3Z3rSnw9GBcOSWxA9ZPWDRvg5A7
+   g==;
+X-CSE-ConnectionGUID: fsfebzGDTIGJABTwKC+y3A==
+X-CSE-MsgGUID: w1JZCXjnTsms8JYqKhBq8A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11098"; a="17581490"
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="17581490"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 01:58:17 -0700
+X-CSE-ConnectionGUID: DFrvvBhUT0CHyUEqQL0Vhg==
+X-CSE-MsgGUID: ar5nZaOiT0efo7DDRkQyLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="43432400"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by fmviesa003.fm.intel.com with ESMTP; 10 Jun 2024 01:58:12 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>
+Cc: Yi Liu <yi.l.liu@intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	mst@redhat.com,
+	Jason Wang <jasowang@redhat.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	ath10k@lists.infradead.org,
+	ath11k@lists.infradead.org,
+	iommu@lists.linux.dev,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	kernel@collabora.com,
-	wenst@chromium.org,
-	amergnat@baylibre.com
-Subject: [PATCH v6 7/7] interconnect: mediatek: Add MediaTek MT8183/8195 EMI Interconnect driver
-Date: Mon, 10 Jun 2024 10:57:35 +0200
-Message-ID: <20240610085735.147134-8-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240610085735.147134-1-angelogioacchino.delregno@collabora.com>
-References: <20240610085735.147134-1-angelogioacchino.delregno@collabora.com>
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v3 00/21] iommu: Refactoring domain allocation interface
+Date: Mon, 10 Jun 2024 16:55:34 +0800
+Message-Id: <20240610085555.88197-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,818 +79,106 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add an interconnect driver for the External Memory Interface (EMI),
-voting for bus bandwidth over the Dynamic Voltage and Frequency Scaling
-Resource Collector (DVFSRC).
+The IOMMU subsystem has undergone some changes, including the removal
+of iommu_ops from the bus structure. Consequently, the existing domain
+allocation interface, which relies on a bus type argument, is no longer
+relevant:
 
-             ICC provider         ICC Nodes
-                              ----          ----
-             ---------       |CPU |   |--- |VPU |
-    -----   |         |-----  ----    |     ----
-   |DRAM |--|DRAM     |       ----    |     ----
-   |     |--|scheduler|----- |GPU |   |--- |DISP|
-   |     |--|(EMI)    |       ----    |     ----
-   |     |--|         |       -----   |     ----
-    -----   |         |----- |MMSYS|--|--- |VDEC|
-             ---------        -----   |     ----
-               /|\                    |     ----
-                |change DRAM freq     |--- |VENC|
-             ----------               |     ----
-            |  DVFSR   |              |
-            |          |              |     ----
-             ----------               |--- |IMG |
-                                      |     ----
-                                      |     ----
-                                      |--- |CAM |
-                                            ----
+    struct iommu_domain *iommu_domain_alloc(struct bus_type *bus)
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/interconnect/Kconfig            |   1 +
- drivers/interconnect/Makefile           |   1 +
- drivers/interconnect/mediatek/Kconfig   |  29 ++
- drivers/interconnect/mediatek/Makefile  |   5 +
- drivers/interconnect/mediatek/icc-emi.c | 153 +++++++++++
- drivers/interconnect/mediatek/icc-emi.h |  40 +++
- drivers/interconnect/mediatek/mt8183.c  | 143 ++++++++++
- drivers/interconnect/mediatek/mt8195.c  | 339 ++++++++++++++++++++++++
- 8 files changed, 711 insertions(+)
- create mode 100644 drivers/interconnect/mediatek/Kconfig
- create mode 100644 drivers/interconnect/mediatek/Makefile
- create mode 100644 drivers/interconnect/mediatek/icc-emi.c
- create mode 100644 drivers/interconnect/mediatek/icc-emi.h
- create mode 100644 drivers/interconnect/mediatek/mt8183.c
- create mode 100644 drivers/interconnect/mediatek/mt8195.c
+This series is designed to refactor the use of this interface. It
+proposes a new interface iommu_paging_domain_alloc() to replace
+iommu_domain_alloc(). This interface is for allocating iommu paging
+domains for kernel drivers. It takes a device pointer as a parameter,
+which better reflects the current design of the IOMMU subsystem.
 
-diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
-index 5faa8d2aecff..f2e49bd97d31 100644
---- a/drivers/interconnect/Kconfig
-+++ b/drivers/interconnect/Kconfig
-@@ -12,6 +12,7 @@ menuconfig INTERCONNECT
- if INTERCONNECT
- 
- source "drivers/interconnect/imx/Kconfig"
-+source "drivers/interconnect/mediatek/Kconfig"
- source "drivers/interconnect/qcom/Kconfig"
- source "drivers/interconnect/samsung/Kconfig"
- 
-diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
-index d0888babb9a1..b0a9a6753b9d 100644
---- a/drivers/interconnect/Makefile
-+++ b/drivers/interconnect/Makefile
-@@ -5,6 +5,7 @@ icc-core-objs				:= core.o bulk.o debugfs-client.o
- 
- obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
- obj-$(CONFIG_INTERCONNECT_IMX)		+= imx/
-+obj-$(CONFIG_INTERCONNECT_MTK)		+= mediatek/
- obj-$(CONFIG_INTERCONNECT_QCOM)		+= qcom/
- obj-$(CONFIG_INTERCONNECT_SAMSUNG)	+= samsung/
- 
-diff --git a/drivers/interconnect/mediatek/Kconfig b/drivers/interconnect/mediatek/Kconfig
-new file mode 100644
-index 000000000000..985c849efac3
---- /dev/null
-+++ b/drivers/interconnect/mediatek/Kconfig
-@@ -0,0 +1,29 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+config INTERCONNECT_MTK
-+	bool "MediaTek interconnect drivers"
-+	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	help
-+	  Support for MediaTek's bus interconnect hardware.
-+
-+config INTERCONNECT_MTK_DVFSRC_EMI
-+	tristate "MediaTek DVFSRC EMI interconnect driver"
-+	depends on INTERCONNECT_MTK && MTK_DVFSRC
-+	help
-+	  This is a driver for the MediaTek External Memory Interface
-+	  interconnect on SoCs equipped with the integrated Dynamic
-+	  Voltage Frequency Scaling Resource Collector (DVFSRC) MCU
-+
-+config INTERCONNECT_MTK_MT8183
-+	tristate "MediaTek MT8183 interconnect driver"
-+	depends on INTERCONNECT_MTK_DVFSRC_EMI
-+	help
-+	  This is a driver for the MediaTek bus interconnect on MT8183-based
-+	  platforms.
-+
-+config INTERCONNECT_MTK_MT8195
-+	tristate "MediaTek MT8195 interconnect driver"
-+	depends on INTERCONNECT_MTK_DVFSRC_EMI
-+	help
-+	  This is a driver for the MediaTek bus interconnect on MT8195-based
-+	  platforms.
-diff --git a/drivers/interconnect/mediatek/Makefile b/drivers/interconnect/mediatek/Makefile
-new file mode 100644
-index 000000000000..8e2283a9a5b5
---- /dev/null
-+++ b/drivers/interconnect/mediatek/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+obj-$(CONFIG_INTERCONNECT_MTK_DVFSRC_EMI) += icc-emi.o
-+obj-$(CONFIG_INTERCONNECT_MTK_MT8183) += mt8183.o
-+obj-$(CONFIG_INTERCONNECT_MTK_MT8195) += mt8195.o
-diff --git a/drivers/interconnect/mediatek/icc-emi.c b/drivers/interconnect/mediatek/icc-emi.c
-new file mode 100644
-index 000000000000..d420c55682d0
---- /dev/null
-+++ b/drivers/interconnect/mediatek/icc-emi.c
-@@ -0,0 +1,153 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * MediaTek External Memory Interface (EMI) Interconnect driver
-+ *
-+ * Copyright (c) 2021 MediaTek Inc.
-+ * Copyright (c) 2024 Collabora Ltd.
-+ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-+ */
-+
-+#include <linux/interconnect.h>
-+#include <linux/interconnect-provider.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/soc/mediatek/dvfsrc.h>
-+
-+#include "icc-emi.h"
-+
-+static int mtk_emi_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-+				 u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-+{
-+	struct mtk_icc_node *in = node->data;
-+
-+	*agg_avg += avg_bw;
-+	*agg_peak = max_t(u32, *agg_peak, peak_bw);
-+
-+	in->sum_avg = *agg_avg;
-+	in->max_peak = *agg_peak;
-+
-+	return 0;
-+}
-+
-+static int mtk_emi_icc_set(struct icc_node *src, struct icc_node *dst)
-+{
-+	struct mtk_icc_node *node = dst->data;
-+	struct device *dev;
-+	int ret;
-+
-+	if (unlikely(!src->provider))
-+		return -EINVAL;
-+
-+	dev = src->provider->dev;
-+
-+	switch (node->ep) {
-+	case 0:
-+		break;
-+	case 1:
-+		ret = mtk_dvfsrc_send_request(dev, MTK_DVFSRC_CMD_PEAK_BW, node->max_peak);
-+		if (ret) {
-+			dev_err(dev, "Cannot send peak bw request: %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = mtk_dvfsrc_send_request(dev, MTK_DVFSRC_CMD_BW, node->sum_avg);
-+		if (ret) {
-+			dev_err(dev, "Cannot send bw request: %d\n", ret);
-+			return ret;
-+		}
-+		break;
-+	case 2:
-+		ret = mtk_dvfsrc_send_request(dev, MTK_DVFSRC_CMD_HRT_BW, node->sum_avg);
-+		if (ret) {
-+			dev_err(dev, "Cannot send HRT bw request: %d\n", ret);
-+			return ret;
-+		}
-+		break;
-+	default:
-+		dev_err(src->provider->dev, "Unknown endpoint %u\n", node->ep);
-+		return -EINVAL;
-+	};
-+
-+	return 0;
-+}
-+
-+int mtk_emi_icc_probe(struct platform_device *pdev)
-+{
-+	const struct mtk_icc_desc *desc;
-+	struct device *dev = &pdev->dev;
-+	struct icc_node *node;
-+	struct icc_onecell_data *data;
-+	struct icc_provider *provider;
-+	struct mtk_icc_node **mnodes;
-+	int i, j, ret;
-+
-+	desc = of_device_get_match_data(dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	mnodes = desc->nodes;
-+
-+	provider = devm_kzalloc(dev, sizeof(*provider), GFP_KERNEL);
-+	if (!provider)
-+		return -ENOMEM;
-+
-+	data = devm_kzalloc(dev, struct_size(data, nodes, desc->num_nodes), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	provider->dev = pdev->dev.parent;
-+	provider->set = mtk_emi_icc_set;
-+	provider->aggregate = mtk_emi_icc_aggregate;
-+	provider->xlate = of_icc_xlate_onecell;
-+	INIT_LIST_HEAD(&provider->nodes);
-+	provider->data = data;
-+
-+	for (i = 0; i < desc->num_nodes; i++) {
-+		if (!mnodes[i])
-+			continue;
-+
-+		node = icc_node_create(mnodes[i]->id);
-+		if (IS_ERR(node)) {
-+			ret = PTR_ERR(node);
-+			goto err;
-+		}
-+
-+		node->name = mnodes[i]->name;
-+		node->data = mnodes[i];
-+		icc_node_add(node, provider);
-+
-+		for (j = 0; j < mnodes[i]->num_links; j++)
-+			icc_link_create(node, mnodes[i]->links[j]);
-+
-+		data->nodes[i] = node;
-+	}
-+	data->num_nodes = desc->num_nodes;
-+
-+	ret = icc_provider_register(provider);
-+	if (ret)
-+		goto err;
-+
-+	platform_set_drvdata(pdev, provider);
-+
-+	return 0;
-+err:
-+	icc_nodes_remove(provider);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(mtk_emi_icc_probe);
-+
-+void mtk_emi_icc_remove(struct platform_device *pdev)
-+{
-+	struct icc_provider *provider = platform_get_drvdata(pdev);
-+
-+	icc_provider_deregister(provider);
-+	icc_nodes_remove(provider);
-+}
-+EXPORT_SYMBOL_GPL(mtk_emi_icc_remove);
-+
-+MODULE_AUTHOR("AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>");
-+MODULE_AUTHOR("Henry Chen <henryc.chen@mediatek.com>");
-+MODULE_DESCRIPTION("MediaTek External Memory Interface interconnect driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/interconnect/mediatek/icc-emi.h b/drivers/interconnect/mediatek/icc-emi.h
-new file mode 100644
-index 000000000000..9512a50db6fa
---- /dev/null
-+++ b/drivers/interconnect/mediatek/icc-emi.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2021 MediaTek Inc.
-+ * Copyright (c) 2024 Collabora Ltd.
-+ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-+ */
-+
-+#ifndef __DRIVERS_INTERCONNECT_MEDIATEK_ICC_EMI_H
-+#define __DRIVERS_INTERCONNECT_MEDIATEK_ICC_EMI_H
-+
-+/**
-+ * struct mtk_icc_node - Mediatek EMI Interconnect Node
-+ * @name:      The interconnect node name which is shown in debugfs
-+ * @ep:        Type of this endpoint
-+ * @id:        Unique node identifier
-+ * @sum_avg:   Current sum aggregate value of all average bw requests in kBps
-+ * @max_peak:  Current max aggregate value of all peak bw requests in kBps
-+ * @num_links: The total number of @links
-+ * @links:     Array of @id linked to this node
-+ */
-+struct mtk_icc_node {
-+	unsigned char *name;
-+	int ep;
-+	u16 id;
-+	u64 sum_avg;
-+	u64 max_peak;
-+
-+	u16 num_links;
-+	u16 links[] __counted_by(num_links);
-+};
-+
-+struct mtk_icc_desc {
-+	struct mtk_icc_node **nodes;
-+	size_t num_nodes;
-+};
-+
-+int mtk_emi_icc_probe(struct platform_device *pdev);
-+void mtk_emi_icc_remove(struct platform_device *pdev);
-+
-+#endif /* __DRIVERS_INTERCONNECT_MEDIATEK_ICC_EMI_H */
-diff --git a/drivers/interconnect/mediatek/mt8183.c b/drivers/interconnect/mediatek/mt8183.c
-new file mode 100644
-index 000000000000..24245085c7a9
---- /dev/null
-+++ b/drivers/interconnect/mediatek/mt8183.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2021 MediaTek Inc.
-+ * Copyright (c) 2024 Collabora Ltd.
-+ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/interconnect.h>
-+#include <linux/interconnect-provider.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <dt-bindings/interconnect/mediatek,mt8183.h>
-+
-+#include "icc-emi.h"
-+
-+static struct mtk_icc_node ddr_emi = {
-+	.name = "ddr-emi",
-+	.id = SLAVE_DDR_EMI,
-+	.ep = 1,
-+};
-+
-+static struct mtk_icc_node mcusys = {
-+	.name = "mcusys",
-+	.id = MASTER_MCUSYS,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node gpu = {
-+	.name = "gpu",
-+	.id = MASTER_MFG,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node mmsys = {
-+	.name = "mmsys",
-+	.id = MASTER_MMSYS,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node mm_vpu = {
-+	.name = "mm-vpu",
-+	.id = MASTER_MM_VPU,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_disp = {
-+	.name = "mm-disp",
-+	.id = MASTER_MM_DISP,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_vdec = {
-+	.name = "mm-vdec",
-+	.id = MASTER_MM_VDEC,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_venc = {
-+	.name = "mm-venc",
-+	.id = MASTER_MM_VENC,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_cam = {
-+	.name = "mm-cam",
-+	.id = MASTER_MM_CAM,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_img = {
-+	.name = "mm-img",
-+	.id = MASTER_MM_IMG,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_mdp = {
-+	.name = "mm-mdp",
-+	.id = MASTER_MM_MDP,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node *mt8183_emi_icc_nodes[] = {
-+	[SLAVE_DDR_EMI] = &ddr_emi,
-+	[MASTER_MCUSYS] = &mcusys,
-+	[MASTER_MFG] = &gpu,
-+	[MASTER_MMSYS] = &mmsys,
-+	[MASTER_MM_VPU] = &mm_vpu,
-+	[MASTER_MM_DISP] = &mm_disp,
-+	[MASTER_MM_VDEC] = &mm_vdec,
-+	[MASTER_MM_VENC] = &mm_venc,
-+	[MASTER_MM_CAM] = &mm_cam,
-+	[MASTER_MM_IMG] = &mm_img,
-+	[MASTER_MM_MDP] = &mm_mdp
-+};
-+
-+static const struct mtk_icc_desc mt8183_emi_icc = {
-+	.nodes = mt8183_emi_icc_nodes,
-+	.num_nodes = ARRAY_SIZE(mt8183_emi_icc_nodes),
-+};
-+
-+static const struct of_device_id mtk_mt8183_emi_icc_of_match[] = {
-+	{ .compatible = "mediatek,mt8183-emi", .data = &mt8183_emi_icc },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, mtk_mt8183_emi_icc_of_match);
-+
-+static struct platform_driver mtk_emi_icc_mt8183_driver = {
-+	.driver = {
-+		.name = "emi-icc-mt8183",
-+		.of_match_table = mtk_mt8183_emi_icc_of_match,
-+		.sync_state = icc_sync_state,
-+	},
-+	.probe = mtk_emi_icc_probe,
-+	.remove_new = mtk_emi_icc_remove,
-+
-+};
-+module_platform_driver(mtk_emi_icc_mt8183_driver);
-+
-+MODULE_AUTHOR("AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>");
-+MODULE_DESCRIPTION("MediaTek MT8183 EMI ICC driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/interconnect/mediatek/mt8195.c b/drivers/interconnect/mediatek/mt8195.c
-new file mode 100644
-index 000000000000..710e14c5447c
---- /dev/null
-+++ b/drivers/interconnect/mediatek/mt8195.c
-@@ -0,0 +1,339 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2021 MediaTek Inc.
-+ * Copyright (c) 2024 Collabora Ltd.
-+ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/interconnect.h>
-+#include <linux/interconnect-provider.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <dt-bindings/interconnect/mediatek,mt8195.h>
-+
-+#include "icc-emi.h"
-+
-+static struct mtk_icc_node ddr_emi = {
-+	.name = "ddr-emi",
-+	.id = SLAVE_DDR_EMI,
-+	.ep = 1,
-+};
-+
-+static struct mtk_icc_node mcusys = {
-+	.name = "mcusys",
-+	.id = MASTER_MCUSYS,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node gpu = {
-+	.name = "gpu",
-+	.id = MASTER_GPUSYS,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node mmsys = {
-+	.name = "mmsys",
-+	.id = MASTER_MMSYS,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node mm_vpu = {
-+	.name = "mm-vpu",
-+	.id = MASTER_MM_VPU,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_disp = {
-+	.name = "mm-disp",
-+	.id = MASTER_MM_DISP,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_vdec = {
-+	.name = "mm-vdec",
-+	.id = MASTER_MM_VDEC,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_venc = {
-+	.name = "mm-venc",
-+	.id = MASTER_MM_VENC,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_cam = {
-+	.name = "mm-cam",
-+	.id = MASTER_MM_CAM,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_img = {
-+	.name = "mm-img",
-+	.id = MASTER_MM_IMG,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node mm_mdp = {
-+	.name = "mm-mdp",
-+	.id = MASTER_MM_MDP,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MMSYS }
-+};
-+
-+static struct mtk_icc_node vpusys = {
-+	.name = "vpusys",
-+	.id = MASTER_VPUSYS,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node vpu_port0 = {
-+	.name = "vpu-port0",
-+	.id = MASTER_VPU_0,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_VPUSYS }
-+};
-+
-+static struct mtk_icc_node vpu_port1 = {
-+	.name = "vpu-port1",
-+	.id = MASTER_VPU_1,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_VPUSYS }
-+};
-+
-+static struct mtk_icc_node mdlasys = {
-+	.name = "mdlasys",
-+	.id = MASTER_MDLASYS,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node mdla_port0 = {
-+	.name = "mdla-port0",
-+	.id = MASTER_MDLA_0,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_MDLASYS }
-+};
-+
-+static struct mtk_icc_node ufs = {
-+	.name = "ufs",
-+	.id = MASTER_UFS,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node pcie0 = {
-+	.name = "pcie0",
-+	.id = MASTER_PCIE_0,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node pcie1 = {
-+	.name = "pcie1",
-+	.id = MASTER_PCIE_1,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node usb = {
-+	.name = "usb",
-+	.id = MASTER_USB,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node wifi = {
-+	.name = "wifi",
-+	.id = MASTER_WIFI,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node bt = {
-+	.name = "bt",
-+	.id = MASTER_BT,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node netsys = {
-+	.name = "netsys",
-+	.id = MASTER_NETSYS,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node dbgif = {
-+	.name = "dbgif",
-+	.id = MASTER_DBGIF,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node hrt_ddr_emi = {
-+	.name = "hrt-ddr-emi",
-+	.id = SLAVE_HRT_DDR_EMI,
-+	.ep = 2,
-+};
-+
-+static struct mtk_icc_node hrt_mmsys = {
-+	.name = "hrt-mmsys",
-+	.id = MASTER_HRT_MMSYS,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_HRT_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node hrt_mm_disp = {
-+	.name = "hrt-mm-disp",
-+	.id = MASTER_HRT_MM_DISP,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_HRT_MMSYS }
-+};
-+
-+static struct mtk_icc_node hrt_mm_vdec = {
-+	.name = "hrt-mm-vdec",
-+	.id = MASTER_HRT_MM_VDEC,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_HRT_MMSYS }
-+};
-+
-+static struct mtk_icc_node hrt_mm_venc = {
-+	.name = "hrt-mm-venc",
-+	.id = MASTER_HRT_MM_VENC,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_HRT_MMSYS }
-+};
-+
-+static struct mtk_icc_node hrt_mm_cam = {
-+	.name = "hrt-mm-cam",
-+	.id = MASTER_HRT_MM_CAM,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_HRT_MMSYS }
-+};
-+
-+static struct mtk_icc_node hrt_mm_img = {
-+	.name = "hrt-mm-img",
-+	.id = MASTER_HRT_MM_IMG,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_HRT_MMSYS }
-+};
-+
-+static struct mtk_icc_node hrt_mm_mdp = {
-+	.name = "hrt-mm-mdp",
-+	.id = MASTER_HRT_MM_MDP,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { MASTER_HRT_MMSYS }
-+};
-+
-+static struct mtk_icc_node hrt_dbgif = {
-+	.name = "hrt-dbgif",
-+	.id = MASTER_HRT_DBGIF,
-+	.ep = 0,
-+	.num_links = 1,
-+	.links = { SLAVE_HRT_DDR_EMI }
-+};
-+
-+static struct mtk_icc_node *mt8195_emi_icc_nodes[] = {
-+	[SLAVE_DDR_EMI] = &ddr_emi,
-+	[MASTER_MCUSYS] = &mcusys,
-+	[MASTER_GPUSYS] = &gpu,
-+	[MASTER_MMSYS] = &mmsys,
-+	[MASTER_MM_VPU] = &mm_vpu,
-+	[MASTER_MM_DISP] = &mm_disp,
-+	[MASTER_MM_VDEC] = &mm_vdec,
-+	[MASTER_MM_VENC] = &mm_venc,
-+	[MASTER_MM_CAM] = &mm_cam,
-+	[MASTER_MM_IMG] = &mm_img,
-+	[MASTER_MM_MDP] = &mm_mdp,
-+	[MASTER_VPUSYS] = &vpusys,
-+	[MASTER_VPU_0] = &vpu_port0,
-+	[MASTER_VPU_1] = &vpu_port1,
-+	[MASTER_MDLASYS] = &mdlasys,
-+	[MASTER_MDLA_0] = &mdla_port0,
-+	[MASTER_UFS] = &ufs,
-+	[MASTER_PCIE_0] = &pcie0,
-+	[MASTER_PCIE_1] = &pcie1,
-+	[MASTER_USB] = &usb,
-+	[MASTER_WIFI] = &wifi,
-+	[MASTER_BT] = &bt,
-+	[MASTER_NETSYS] = &netsys,
-+	[MASTER_DBGIF] = &dbgif,
-+	[SLAVE_HRT_DDR_EMI] = &hrt_ddr_emi,
-+	[MASTER_HRT_MMSYS] = &hrt_mmsys,
-+	[MASTER_HRT_MM_DISP] = &hrt_mm_disp,
-+	[MASTER_HRT_MM_VDEC] = &hrt_mm_vdec,
-+	[MASTER_HRT_MM_VENC] = &hrt_mm_venc,
-+	[MASTER_HRT_MM_CAM] = &hrt_mm_cam,
-+	[MASTER_HRT_MM_IMG] = &hrt_mm_img,
-+	[MASTER_HRT_MM_MDP] = &hrt_mm_mdp,
-+	[MASTER_HRT_DBGIF] = &hrt_dbgif
-+};
-+
-+static struct mtk_icc_desc mt8195_emi_icc = {
-+	.nodes = mt8195_emi_icc_nodes,
-+	.num_nodes = ARRAY_SIZE(mt8195_emi_icc_nodes),
-+};
-+
-+static const struct of_device_id mtk_mt8195_emi_icc_of_match[] = {
-+	{ .compatible = "mediatek,mt8195-emi", .data = &mt8195_emi_icc },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, mtk_mt8195_emi_icc_of_match);
-+
-+static struct platform_driver mtk_emi_icc_mt8195_driver = {
-+	.driver = {
-+		.name = "emi-icc-mt8195",
-+		.of_match_table = mtk_mt8195_emi_icc_of_match,
-+		.sync_state = icc_sync_state,
-+	},
-+	.probe = mtk_emi_icc_probe,
-+	.remove_new = mtk_emi_icc_remove,
-+
-+};
-+module_platform_driver(mtk_emi_icc_mt8195_driver);
-+
-+MODULE_AUTHOR("AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>");
-+MODULE_DESCRIPTION("MediaTek MT8195 EMI ICC driver");
-+MODULE_LICENSE("GPL");
+The majority of device drivers currently using iommu_domain_alloc() do
+so to allocate a domain for a specific device and then attach that
+domain to the device. These cases can be straightforwardly migrated to
+the new interface.
+
+The drm/tegra driver is a bit different in that the device pointer
+passed to the helper, which allocates the iommu domain, is not the one
+that will be used for the kernel DMA API. Move the existing logic in
+iommu_domain_alloc() into the driver to ensure it works as intended.
+
+Now that all consumers of iommu_domain_alloc() have switched to the new
+interface, we can finally remove iommu_domain_alloc(). This removal
+paves the way for the IOMMU subsystem to support multiple iommu drivers.
+Additionally, the individual iommu driver implementation for domain
+allocation could also be simplified, as there will always be a valid
+device pointer passed along the path.
+
+The whole series is also available on GitHub:
+https://github.com/LuBaolu/intel-iommu/commits/iommu-domain-allocation-refactor-v3
+
+Change log:
+
+v3:
+ - Remove the proposed iommu_user_domain_alloc() interface.
+
+v2: https://lore.kernel.org/linux-iommu/20240604015134.164206-1-baolu.lu@linux.intel.com/
+ - Drop the vt-d patches which implement paging domain support from this
+   series. I will post them in a separate series later.
+ - Convert all drivers that call iommu_domain_alloc() to use the new
+   interface and remove iommu_domain_alloc() from the tree.
+ - For the drm/msm driver, make the code compatible with the no-IOMMU
+   case.
+ - Various cleanups and refinements.
+
+v1: https://lore.kernel.org/linux-iommu/20240529053250.91284-1-baolu.lu@linux.intel.com/
+
+Lu Baolu (20):
+  iommu: Add iommu_paging_domain_alloc() interface
+  iommufd: Use iommu_paging_domain_alloc()
+  vfio/type1: Use iommu_paging_domain_alloc()
+  vhost-vdpa: Use iommu_paging_domain_alloc()
+  drm/msm: Use iommu_paging_domain_alloc()
+  drm/nouveau/tegra: Use iommu_paging_domain_alloc()
+  gpu: host1x: Use iommu_paging_domain_alloc()
+  media: nvidia: tegra: Use iommu_paging_domain_alloc()
+  media: venus: firmware: Use iommu_paging_domain_alloc()
+  wifi: ath10k: Use iommu_paging_domain_alloc()
+  wifi: ath11k: Use iommu_paging_domain_alloc()
+  remoteproc: Use iommu_paging_domain_alloc()
+  soc/fsl/qbman: Use iommu_paging_domain_alloc()
+  RDMA/usnic: Use iommu_paging_domain_alloc()
+  iommu/vt-d: Add helper to allocate paging domain
+  ARM: dma-mapping: Use iommu_paging_domain_alloc()
+  drm/rockchip: Use iommu_paging_domain_alloc()
+  drm/tegra: Remove call to iommu_domain_alloc()
+  iommu: Remove iommu_present()
+  iommu: Remove iommu_domain_alloc()
+
+Robin Murphy (1):
+  ARM: dma-mapping: Pass device to arm_iommu_create_mapping()
+
+ include/linux/iommu.h                         | 12 +--
+ arch/arm/include/asm/dma-iommu.h              |  2 +-
+ arch/arm/mm/dma-mapping.c                     | 12 +--
+ drivers/gpu/drm/exynos/exynos_drm_dma.c       |  2 +-
+ drivers/gpu/drm/msm/msm_iommu.c               |  7 +-
+ .../drm/nouveau/nvkm/engine/device/tegra.c    |  4 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c   | 10 ++-
+ drivers/gpu/drm/tegra/drm.c                   | 34 ++++++--
+ drivers/gpu/host1x/dev.c                      |  7 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c      |  6 +-
+ drivers/iommu/intel/iommu.c                   | 87 +++++++++++++++++--
+ drivers/iommu/iommu.c                         | 63 +++-----------
+ drivers/iommu/iommufd/hw_pagetable.c          |  7 +-
+ drivers/iommu/ipmmu-vmsa.c                    |  3 +-
+ drivers/iommu/mtk_iommu_v1.c                  |  3 +-
+ .../media/platform/nvidia/tegra-vde/iommu.c   |  7 +-
+ drivers/media/platform/qcom/venus/firmware.c  |  6 +-
+ drivers/media/platform/ti/omap3isp/isp.c      |  2 +-
+ drivers/net/wireless/ath/ath10k/snoc.c        |  6 +-
+ drivers/net/wireless/ath/ath11k/ahb.c         |  6 +-
+ drivers/remoteproc/remoteproc_core.c          |  6 +-
+ drivers/soc/fsl/qbman/qman_portal.c           |  5 +-
+ drivers/vfio/vfio_iommu_type1.c               |  7 +-
+ drivers/vhost/vdpa.c                          | 14 ++-
+ 24 files changed, 183 insertions(+), 135 deletions(-)
+
 -- 
-2.45.2
+2.34.1
 
