@@ -1,55 +1,57 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D1C3C0C;
-	Mon, 10 Jun 2024 23:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992CA450F2;
+	Mon, 10 Jun 2024 23:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718062353; cv=none; b=q6b2nHXCnpnwgnObe7Ib5hb/IfCZfUG8e1OzxglGhpBm7/3xQkdiaWQW7MnpqDGc62LeWYRIGECQxk8XZQcAMcG0F/6HtgNPoo3YVI5Tlghh81A7NOhTAydSM5nnI+jy0AjmNoXKhabpn2oA7FOpClZ36rwia1ZEKbQazdVNHe4=
+	t=1718062355; cv=none; b=VFhmIOwzTHWAGyhmglb76uifO6dRhKbQk/ytDJ3fhmXBBKXMK9h6MMHpmtwF8ihekG2XbnVvoKNFylEBVXTiDNB+ar4ln3Xy5OonoSigVoIRRfMUgzBuVGGV4yay5iOzsqH17BylezMCaxSzqMgu1/3GJqrU7f6Aq7eqXV+vQMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718062353; c=relaxed/simple;
-	bh=uQqeXMrqY9jIY6Rwlu2dWwe8qTUS/JIRMkkk1O9hI/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EPt2IKiiz849guDDHj50mXiyW3mO6ulU+LMzTS100RohKc4iEAqiCHJN7tDLO1ocvuqAedbrFvFkijrMYLjnLk1H125kSEiO8T3Y0YCi/qDwymDuQrA7+mhVdx+/CWpxKxmrVRXkJQYMkS4XPVzsC8DV4sF6wA+uY9MSmxKwEFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PTfUTrBr; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1718062355; c=relaxed/simple;
+	bh=BBbhcx4+rlXMh6XezfxZ7t5k1cjKOvvFmBxTyZjqwEA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=exkGpKih64Fbx+I6DwxG7SDzBnAWoFKPPeune03+GANAbsqcTNgrDGLObEhAtBUa3d7tvO8jnxctRHqpTd1NSU+H69WOS7148W4avZO38lmTsOVbIfsEpmjCxpsTbKc4Sr1o+tAcKGy1u0iEdi8QSFEsrYYj9SBqW5FeyUsWDUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QB84OxM+; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTfUTrBr"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4210aa012e5so6731675e9.0;
-        Mon, 10 Jun 2024 16:32:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QB84OxM+"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-421798185f0so23774285e9.1;
+        Mon, 10 Jun 2024 16:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718062350; x=1718667150; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AtmGbALiQyWQp+92PG+UfrEgPA1Ooa3Ezx/gnPyCfis=;
-        b=PTfUTrBrUdb92IGVRMN93O6l21RfIU4W2rXyfQSrF2F0+yG68AbJSQjoFW3bAZngEN
-         X+94wceEcIOsk7pZgHYBSBM+G0UjcUv4np1VbbRn3It4/0l2pr0WsCeUKLw6IO3we2wO
-         KT7RbHI6Rwi4uEB41nKcce3m4F48mEPAL8x1eV0FyowyRJpao3HOLArt17TLDSl1XsrR
-         pwORG4zWKI6MjkyYTC/KWUxUPvQ9Ujv8zmbrYDkyPsK0rRq3HbUksWcJvOzll1FHAQFd
-         y+DjzWRG09Zjp62mnnNF4bzytfLVZ81f/OOh0I/IEzfz0JImAvuU9cF2Ll73MWi3H5RV
-         02gQ==
+        d=gmail.com; s=20230601; t=1718062352; x=1718667152; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aronCIgLI52+LRuTPhhK/Ei7TFcTK6BH3jrY3yZ5m2M=;
+        b=QB84OxM+CzBM2ppv87USQ/XQ0E++2R5D3Xj34yfPeLS80+3WOVYqH+oXwHJAVMDP5R
+         5Z8f/8XPAaJiKDSIn1gEAv/qeI1k08Gh7UDTmO1kQK6V+7neQAkLJ8RxXAiEPP6eIreY
+         uogWCynfslZbkbhznbYQlLxMxUQQZRtc+DyMu5YkwEqX4Jbc+L/8PKJZr6dz6rJ2VfSY
+         xsaB65LVnxYBmScctRGiXhJ3CZledLxQI+xPJ42Y3CKG2E+9zub3O+y1aQETyS0k5bkS
+         4UH4Zbbk2nbwMXJyCsKoEnkMatlaZZz21N+1xasF8zVo2+zN2xRmuVgb0ah92UDRYrvg
+         UiFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718062350; x=1718667150;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AtmGbALiQyWQp+92PG+UfrEgPA1Ooa3Ezx/gnPyCfis=;
-        b=LZJh6IWnDrlrkUWP8UH7uWQ8nyIhvFh4UZSa8V6j9TN19UaP75JGC7szNt5a1gvo4i
-         7vaizrLa7zvvZoVkyE6OZ+GMyz21L3ctWfXSMCnfp5f4EkU5o9KT+0x3oDx19+hU95bn
-         h+UsLxvFqVQuzv5wv0QGRjug7NpBtWTfTNXA0t7UsVN3nZxeG7+IHOKkUWJ2kVT7Mad5
-         A95Pg+MAzFC62VmRQlk8vfWoUPq0gQRvrEQEoyo6UXuQ2ey5PBR7NsY+VWK9TMc3nVGv
-         8MXN6jtT3+91Am/ZZRfP+LcztQXjIrvIr8uYYCMv7OkX5fRM/RW6BoQassfBcmancNgs
-         wfAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMfP9ZvpvFixcFYvffbJXhgFMMw/k7iiUJ5auVd/lfhCOiz1dGJx9u8hMAh7WsVUJj9THnTD+t6il8iBXNQeSA2L3Nrn9KxWo7aIkdD8zq6ii0Gd72nxlhkM0xziknKGBJ/BaoMa4X2SxMWQ/SRfpHlbOCXXveblza0ZDstZc3qtSRFg==
-X-Gm-Message-State: AOJu0YwCVga0Ix0qAtNUewn66PYt1d876ZJsfBuWVGu4KX0c5cHXBqP+
-	pvC7qTho6yOdTx0SAabH7Zc12pqAEe3ebnep+QTF/3XNCXWzG1tq
-X-Google-Smtp-Source: AGHT+IGMCK9IHk80wAOrOg3oZafxcIdyswUQfOY+bDYmdRokib8LCYcLfKY8Ypb9kW7rqzvvoXN3XA==
-X-Received: by 2002:a05:600c:1c16:b0:421:8445:4f8d with SMTP id 5b1f17b1804b1-421844556c5mr46414895e9.38.1718062349954;
-        Mon, 10 Jun 2024 16:32:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718062352; x=1718667152;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aronCIgLI52+LRuTPhhK/Ei7TFcTK6BH3jrY3yZ5m2M=;
+        b=cv6PoxRhtgkkxijckuqiZQSV2YBvCkzEMgv7Oqypc2+XWVDRUJUZ/sPqB7zUsC3MD8
+         cbUA0te7reqrYCQJX+zLnDyTWFPQ9nYYl/RkoQfGEKGi9FLvQAJxxT0RcJqYmWQRD55+
+         MBYmlnNeSv1QO1C65GaoynBuIQ/gGy+UZhM2DXfMK1O73zcdjGKGXOUTWnoilMmDLhp9
+         lUIVKJGapDpSmIrgP67zcIQWQZOwy9RkYFBQOO5LVnF24jBG3S6f8ycQgdKX+UebdEzk
+         Nc4OA0k/Ef4mS1uInH40a7Lt6U3wmV7lClh0wYjbkgv6xYG8EoBXmp8UtvkQIdNgArwj
+         lM4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUAWQYypZWKfLP28hC7jk2ZOmDdkvLx4VwMm8kVBgm8hebki9mxfQzY4cK317UsE2o9+CDveYeLDB8Jc0fU3Bt+XHe0eyMFDp5MYmzuzYAdCpBfv4CFWrq1/srl7PqhMEhIM8lObwUZkbzab3e9XL5g8jw7+wo+e6rWkxwQ86LXAFtYwA==
+X-Gm-Message-State: AOJu0YxTsDpraD8QEsPdqmmVomafy+UF4N+Qxf/jWsO1F92bSgitq70M
+	ce2MbBuNTvkp+7Srq/2VwptJIZ+yQwMB1Ahyd79tLiVNFZkvTlne
+X-Google-Smtp-Source: AGHT+IEJTpMsgsu0MXtfzihBzdAZaBdNFAQ2JoJSFxCojDnvXLdpLGLQ8ONJCnxkqtadeuNY3SRwhw==
+X-Received: by 2002:a05:600c:46cd:b0:422:5c5d:1b89 with SMTP id 5b1f17b1804b1-4225c5d1c73mr169415e9.0.1718062351911;
+        Mon, 10 Jun 2024 16:32:31 -0700 (PDT)
 Received: from prasmi.home ([2a00:23c8:2500:a01:74ea:e666:238d:5e76])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f1efe9a74sm5447698f8f.104.2024.06.10.16.32.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f1efe9a74sm5447698f8f.104.2024.06.10.16.32.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 16:32:29 -0700 (PDT)
+        Mon, 10 Jun 2024 16:32:31 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -66,10 +68,12 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Prabhakar <prabhakar.csengg@gmail.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [RFC PATCH v2 0/4] Add CPG support for RZ/V2H(P) SoC
-Date: Tue, 11 Jun 2024 00:32:17 +0100
-Message-Id: <20240610233221.242749-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [RFC PATCH v2 2/4] dt-bindings: clock: Add R9A09G057 core clocks
+Date: Tue, 11 Jun 2024 00:32:19 +0100
+Message-Id: <20240610233221.242749-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240610233221.242749-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240610233221.242749-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,56 +84,47 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hi All,
+Define RZ/V2H(P) (R9A09G057) Clock Pulse Generator core clocks.
 
-This patch series aims to add the CPG support for the Renesas
-RZ/V2H(P) SoC.
-
-Im sending this as an RFC as I have dropped the module clk macros to
-avoid adding reserved macros and instead now using the combination of
-register index and bits as unique number for clks and resets.
-
-v1->RFC v2
-- Updated commit message
-- Updated description for binding as suggested by Geert
-- Updated descriptions for clocks and resets property
-- Renamed extal->qextal
-- Updated '#power-domain-cells' value
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+v1->v2
 - Dropped the module clocks and just added the core clocks
-- Introduced family specific config option
-- Now using register indexes for CLKON/CLKMON/RST/RSTMON
-- Introduced PLL_CONF macro
-- Dropped function pointer to get PLL_CLK1/2 offsets
-- Added range check for core clks
-- Dropped NULLified clocks check
-- Dropped pll_clk1/clk2_offset
-- Made r9a09g057_mod_clks/r9a09g057_resets as static const
 
-v1: https://patchwork.kernel.org/project/linux-renesas-soc/cover/20240524082800.333991-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
-
-Cheers,
-Prabhakar
-
-Lad Prabhakar (4):
-  dt-bindings: clock: renesas: Document RZ/V2H(P) SoC CPG
-  dt-bindings: clock: Add R9A09G057 core clocks
-  clk: renesas: Add family-specific clock driver for RZ/V2H(P)
-  clk: renesas: Add RZ/V2H(P) CPG driver
-
- .../bindings/clock/renesas,rzv2h-cpg.yaml     |  81 +++
- drivers/clk/renesas/Kconfig                   |   9 +
- drivers/clk/renesas/Makefile                  |   2 +
- drivers/clk/renesas/r9a09g057-cpg.c           |  77 ++
- drivers/clk/renesas/rzv2h-cpg.c               | 676 ++++++++++++++++++
- drivers/clk/renesas/rzv2h-cpg.h               | 164 +++++
- include/dt-bindings/clock/r9a09g057-cpg.h     |  21 +
- 7 files changed, 1030 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
- create mode 100644 drivers/clk/renesas/r9a09g057-cpg.c
- create mode 100644 drivers/clk/renesas/rzv2h-cpg.c
- create mode 100644 drivers/clk/renesas/rzv2h-cpg.h
+Note the core clocks are the once which are listed as part
+of section 4.4.2 which cannot be controlled by CLKON register.
+---
+ include/dt-bindings/clock/r9a09g057-cpg.h | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
  create mode 100644 include/dt-bindings/clock/r9a09g057-cpg.h
 
+diff --git a/include/dt-bindings/clock/r9a09g057-cpg.h b/include/dt-bindings/clock/r9a09g057-cpg.h
+new file mode 100644
+index 000000000000..04653d90d78d
+--- /dev/null
++++ b/include/dt-bindings/clock/r9a09g057-cpg.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++ *
++ * Copyright (C) 2024 Renesas Electronics Corp.
++ */
++#ifndef __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
++#define __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
++
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
++
++/* Core Clock list */
++#define R9A09G057_SYS_0_PCLK			0
++#define R9A09G057_CA55_0_CORE_CLK0		1
++#define R9A09G057_CA55_0_CORE_CLK1		2
++#define R9A09G057_CA55_0_CORE_CLK2		3
++#define R9A09G057_CA55_0_CORE_CLK3		4
++#define R9A09G057_CA55_0_PERIPHCLK		5
++#define R9A09G057_CM33_CLK0			6
++#define R9A09G057_CST_0_SWCLKTCK		7
++#define R9A09G057_IOTOP_0_SHCLK			8
++
++#endif /* __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__ */
 -- 
 2.34.1
 
