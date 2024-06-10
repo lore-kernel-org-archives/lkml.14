@@ -1,156 +1,99 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322AB1E51E
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D2712FF86
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718033769; cv=none; b=pf3aifeMdYcqdiRRbaDt8bWlhx9+sPz/nBC0kaW2za88NtRWVdyaN5/Xqy6kPmNmN0kzqRVNKsbgDskO/V6iyDh/7JztIu1t5Msve2qE2T7eJNL9oXbEKOZPtXNE8hpSj4+m2W8+OjmqwuqOdP0a/8uOmCInd98DSLgcvOPrI1I=
+	t=1718033861; cv=none; b=QQLs41+WqyvEKWHS113BdklEHM0EUu47KGhMZaNDydJAL11qYoqoU5yBroqHCqHNzEihVHyf0yH/14GxbxALxiUa/VsqhUYxb763vCwWte2auhGhd1wsS7fcnPvtxv8KLZEoK9z82ZPfEZMKv09NzLYTJWlUIVzxGuduQJIrIa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718033769; c=relaxed/simple;
-	bh=Ah1Pc9Tx+SfASALqTWximD0HQRflB2G4Tq5TvplHIfo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SHksrQ+UTeHOVxrd1J0rIb8w+fJzQMeAyYLSpMAC3KL2h096BcGBHSqcvQE8Hgz6UAVhN9tB6JcGpjqxMwtJniJrH4NWcfsUAab0GZtoJq1gwT2bQ0MYZtOBiG+H4Gdd0O1+NoP24OnwPTEUfg763Jm+9s5SuWMLQjxGNgoCzW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W3DwxLEa; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718033861; c=relaxed/simple;
+	bh=DS3uBb7Unwhd1jiU6S/xkwKPy764hQ4TYvNxIj8Dvus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rCgbWxp1Wqqw5MOxCMZ4Ip+2MI7ykoNqT0U7cSJjmADkHfh1OJGo0qQy1Yag7t0HmRF3s1U2qWweSbDV1ZH56+0FJr/huNr7ksdE2umDLCrUKV9wWE+SuZDgVMSWbg57b0unpVCfiyRPU20FRzx66crZA61gplL/N1ekxdkyfkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UFi6707w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W3DwxLEa"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6f09eaf420so212072666b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 08:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718033766; x=1718638566; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/+E80Q5rdxeGOmqKds9oqdRbVVK3jiXABymm7gK6I9o=;
-        b=W3DwxLEao055/FJbiiegaFShy2Gp7ZZpAxHo+9DFcBIzeRvZfoN+qH5olox0adrC3Y
-         1swITSxaueFdDObUpDUxP28yJj/AHUGbPsxQ/PlWiuEyzqGnWXemjfTlFcm+jpI/72cr
-         aDzjwERhxzJhCPjFsUXtPFpr+98pg3V4Q4QQ7Kk5UTkouMP0366BdWJTkBBLgLSemsuG
-         Asqd5vUT7vGbq3rb2DdSdMGErwP+YHBEzArg5Bs3ZVxRNK/yNb3cEyOc+q0E7MFXROOn
-         tMujokhk8rdih0V3qPTrHsHDp2NGflO68cfEBTabgxlgAOrqalaK2mynzFqeDC9M+FSQ
-         qbnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718033766; x=1718638566;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/+E80Q5rdxeGOmqKds9oqdRbVVK3jiXABymm7gK6I9o=;
-        b=Noa+ebYkeOMdH2WUXHjFSP+6gQGr6wUHTncC/WYRAhRcHw2efjyjIi594pdU0DkfaF
-         QScwmviyYAq3Bx5LCmGr6531Jdtb4M50p2VUoy7pF47AHY8w4uYYqSOjmSWf02yKXR8C
-         6YWUiqpc7EFyVvN6MOL4UGEQXsAMTtP7K4pZc+7GUb8fbrcOb+hdB63xAJle0VdMpYW9
-         tPqURL8EoM3Kac7zAxJZx5XOEBD7aCEqRwtt9d3DGJ/vgM9NGjDTsqmCu3taZcD0l5NK
-         kuIy47IGFT6f1OtWHXQD7BjCfQ668/bPMxKDLCaGwTMY0zdn1NeWOqTUgCmnF2Fp5Vmr
-         +P3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXpJC0VvueIRay6WWNxDhyA8kXzydMdxENoLYTD0SpInje2p5WtA57HirW045QFvGOJ1o/Qmem4akdyAU3a3u/+mb7TpMF8cTa8daxk
-X-Gm-Message-State: AOJu0Yy62mvJZveNsxVOIFmt0IJsFEHriARVjfdlotXG/6NZvcqU3lgo
-	lPc2zzN4pkd2Pdz221PY72SA7XbX7xa9DcH1X6K6y8O4eXrIvKlp+9BVJEfrgks=
-X-Google-Smtp-Source: AGHT+IGECHz6J6eLlLoS1mhmDrqUcykuz5pFaLMgXUzzL7Qbv358E5AMAFWML4yz8R0kd+585prxAQ==
-X-Received: by 2002:a17:907:76d4:b0:a6f:23a:9151 with SMTP id a640c23a62f3a-a6f023a9299mr421078866b.55.1718033766498;
-        Mon, 10 Jun 2024 08:36:06 -0700 (PDT)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a6e00b47420sm486088366b.42.2024.06.10.08.36.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jun 2024 08:36:05 -0700 (PDT)
-Message-ID: <ab5c2a6d-6819-48eb-a3c5-178fa37204bb@linaro.org>
-Date: Mon, 10 Jun 2024 16:36:05 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFi6707w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93ECAC32786;
+	Mon, 10 Jun 2024 15:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718033860;
+	bh=DS3uBb7Unwhd1jiU6S/xkwKPy764hQ4TYvNxIj8Dvus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UFi6707wcUbSi/lMOM/1R/3w4Tp0Nhzr1BaLI7BOl+P6JZYyX8C7QoxmYJ39wbldC
+	 3+t/MxWxvdx5yYbREMJzMAz2RUBROKuMAKKhu+9tsa6hQTZygr5lZl+Gbe9JMbRhCU
+	 YB7IOee4GcNJLYCcQCAgKyWnN9H6McvJxFQpRMBgJ7Xce4wHeUePpOWzztdmRe7I8L
+	 Oza/7bj9F+jkKZmJnmnPacw9cnpk/ZpLAmRx8bczk1ZHZ2bhZFnov3XvHGiOxIS3n/
+	 Zyvc6IHupMLlQXSKMjbpU6tbdtehqHfbkVrsnydpkhOc1qzbrCI1VAT6lA6ZkzAhHL
+	 eZBImHbP6TUuQ==
+Date: Mon, 10 Jun 2024 16:37:34 +0100
+From: Mark Brown <broonie@kernel.org>
+To: George Stark <gnstark@salutedevices.com>
+Cc: lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel@salutedevices.com
+Subject: Re: [PATCH 0/1] pwm-regulator with voltage table problem
+Message-ID: <Zmcdvm7XbtU1JlQr@finisterre.sirena.org.uk>
+References: <20240610120025.405062-1-gnstark@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/4] ASoC: qcom: display port changes
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: broonie@kernel.org, perex@perex.cz, lgirdwood@gmail.com,
- alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, krzk+dt@kernel.org
-References: <20240606104922.114229-1-srinivas.kandagatla@linaro.org>
- <i6jwqycgywrq42u4km6pjppgvvhsbvuh7m6mzyqy2qcge32ihy@n3lrowkyouv2>
- <3ea05a12-27a8-46df-9fb3-28501404a399@linaro.org>
- <CAA8EJpqMk9vujHAmF+xSKBDzR1LM9w-M7a8vxcCkXey9VpHBhA@mail.gmail.com>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <CAA8EJpqMk9vujHAmF+xSKBDzR1LM9w-M7a8vxcCkXey9VpHBhA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3aWJOhdwdUY4seBS"
+Content-Disposition: inline
+In-Reply-To: <20240610120025.405062-1-gnstark@salutedevices.com>
+X-Cookie: Your love life will be... interesting.
 
 
+--3aWJOhdwdUY4seBS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 08/06/2024 15:56, Dmitry Baryshkov wrote:
-> On Sat, 8 Jun 2024 at 12:12, Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->>
->> Thanks Dmitry for testing this out.
->>
->> On 08/06/2024 03:23, Dmitry Baryshkov wrote:
->>> On Thu, Jun 06, 2024 at 11:49:18AM +0100, srinivas.kandagatla@linaro.org wrote:
->>>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>>
->>>> This patchset adds support for.
->>>>       1. parse Display Port module tokens from ASoC topology
->>>>       2. add support to DP/HDMI Jack events.
->>>>       3. fixes a typo in function name in sm8250
->>>>
->>>> Verified these patches on X13s along with changes to tplg in
->>>> https://git.codelinaro.org/linaro/qcomlt/audioreach-topology/-/tree/topic/x13s-dp?ref_type=heads
->>>> and ucm changes from https://github.com/Srinivas-Kandagatla/alsa-ucm-conf/tree/topic/x13s-dp
->>>>
->>>> x1e80100 is verified by Krzysztof with his changes in tplg
->>>>
->>>> https://git.codelinaro.org/linaro/qcomlt/audioreach-topology/-/merge_requests/7/commits
->>>>
->>>> Thanks,
->>>> Srini
->>>>
->>>
->>> I have been testing this patchset on X13s, switching between speakers,
->>> connected and disconnected DP output.
->>>
->>
->> This series changed the Jack event names by removing HDMI string from it
->> as suggested, did you update the UCM to reflect this?
-> 
-> Yes, I did. The pipewire properly reports 'unconnected' state, but
-> nothing stops user from selecting the unconnected device / verb.
+On Mon, Jun 10, 2024 at 03:00:24PM +0300, George Stark wrote:
 
-No, the jack events should prevent that from happening. You should not 
-see them in output devices in settings->Sound.
+> The situation: bootloader sets mean cpu power and mean cpu clock.
+> but that cpu power is not found in the voltage table (value is between table items)
+> due to different versions of bootloader and kernel and the regulator core sets
+> the minimal power but cpu clock stays the same. CPU hangs somewhere during boot.
 
+Why not just add this OPP to the table the kernel knows about?  Clearly
+it's something the vendor set and presumably thinks the device can
+actually operate at.  As far as I can tell you're only having problems
+here because you've got a software defined regulator but haven't given
+the software information about this configuration so it's got no idea
+what's going on when bootstrapping.
 
-> 
->> I have pushed changes required to
->> https://github.com/Srinivas-Kandagatla/alsa-ucm-conf/tree/topic/x13s-dp
->>
-...
+> The core problem as I see it is if regulator is bound to CPU (or some other
+> complex consumer) it can't be changed except by the consumer at any stage. So
+> the regulator driver (core part) should wait for the own consumer to init
+> it properly but regulator can't be in unknown state after probing.
 
->> kernel:
->> https://git.codelinaro.org/srinivas.kandagatla/linux/-/tree/dp/sc8280xp-6.10-rc1?ref_type=heads
->> ucm: https://github.com/Srinivas-Kandagatla/alsa-ucm-conf/tree/topic/x13s-dp
->> tplg:
->> https://git.codelinaro.org/linaro/qcomlt/audioreach-topology/-/tree/topic/x13s-dp?ref_type=heads
->>
->>
->> with the above on my x13s, I can properly do switching between dp0,dp1
->> and speakers with no issues.
-> 
-> Have you tried switching to the unconnected sink? Starting the
-> pipewire when the previously selected sink is now disconnected?
-> 
->>
->> Can you try them?
-> 
-> Is the changing of the JACK names the only change in the UCM? compared
-> to your previous version?
+If the regulator is configured outside the constraints configured for it
+in the binding then the core will bring the regulator within those
+constraints, some systems with regulator configurations fixed in
+silicon rely on this for correct performance.  Regulators with
+unreadable hardware are very much an edge case when it comes to this,
+what works for one system will be broken for another one so we just have
+to pick a behaviour that will hopefully work more often than it breaks.
+We can't rely on consumers setting a voltage since consumers are only
+expected to set a voltage if they are actively managing it at runtime,
+other consumers should rely on system configuration.
 
-Yes.
+--3aWJOhdwdUY4seBS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> I've used the following topology, fom the topology repo / x13s-dp branch
-> 
-> 5206af2e1915b8dba52da2e59fb5ebff audioreach-tplg.bin
-> 
-> 
-> 
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZnHb0ACgkQJNaLcl1U
+h9BW6Qf/WIuMS8uIx2ZHM7+DDfzW8oMEPSZhAn+6hAHbZBFtXbaN9EV+/5XBs3Nf
+8FxLWoXL3BAnNBWyjJ+9czOV1j9HN9tkafoxo18nQszEKymJ2YpDqV5bQr+02UpE
+9RZkGX2nQneh4K8sM7wQkYCfSZL5GsrgnW8qDtOkDNyhjyZ08qZ9OhmHzmeg2EZl
+FbzerDL3ScuXNIrGoTOz2F+VecOae2hA/rQ3/MyK5Ia0GGRA4wdQi66FmzUxY4QQ
+WknYteXBroHzq1eBn08gdug5PdrLjBCN+m0VBUlI+bjAarEpehVH6/PTt3nJRypP
+pKryb9HMCkXp8RfNmfqMcR1GigqWBQ==
+=zXqV
+-----END PGP SIGNATURE-----
+
+--3aWJOhdwdUY4seBS--
