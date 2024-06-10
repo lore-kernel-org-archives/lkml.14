@@ -1,93 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C47824BC;
-	Mon, 10 Jun 2024 14:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8998F824BC;
+	Mon, 10 Jun 2024 14:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718029538; cv=none; b=MdkgsGYIUdlGu22cQ3l2t16BqD+pidGZhCqjae2DRvtTKA4F+i8IUJyZROlrTLcoDAjLnLqM4cePDtytIPeOPLBz37FP2lDDQ212t9OIOB4luZH5w9am41I+01VwYFuyQF9OnetenhEUTlHye9dHOJ3ydYIOVjTGsVZQyW90Qik=
+	t=1718029561; cv=none; b=sNBL3C3NAYWmfDks54Nyj37EcQzV2wbzlwxNGXvg6qhLwFy/b2IwZyyFP5VtGlTifKklMUp2caWJaXKiPvGne1ZG9Gr3K6wv+8fmQp7I6ID5JjJQ5pKDAMqN00+uBJmAiyDUjQuiBchpiY0yre/nPG9fqjAG6t0GQbeSV4zvbQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718029538; c=relaxed/simple;
-	bh=2oNIHC1/qajiws6A5qnA832XS8nRceNwT6VYS3zw6hI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ay8+TVbGiRvzD7KdlBLANJLWmNvlnPmDPPVKXu1heqvokmjfXaLj2u/l0ZDXHclUJGogNCpxVRUnhwtzWxfbya9KgkP/a/WPhDOwv8BCcTUA/6kp6RU5H1t7fkgU0FSZGVvJyf3q+/Ze5zvgxIQ4cKmJay1fI3mT3HvPIgfTiPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AMsgFN04; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718029561; c=relaxed/simple;
+	bh=1MALhVTCXvaaSPsLKS6EA4XQxIwuQjsSEcf83lfWSVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CvTDuDoCYVtH2QMA6zVorB+sOaHvf5VcKG02Xy3Ew59vF6zkoniMBnWBzvuRbjeXCm9vSRGslXDNe/EEG11OAg6YCsSAAuRkJhTcv5wWvLrsvwU+eN9/4Z7//Xfx+IhoCasN4r0BEXo8x3ae1P0a7Q61cqPiDXM6YY1SMWJJHGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=D0QsAhn6; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AMsgFN04"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9743EC2BBFC;
-	Mon, 10 Jun 2024 14:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718029538;
-	bh=2oNIHC1/qajiws6A5qnA832XS8nRceNwT6VYS3zw6hI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AMsgFN04/6zYDUEgta/tqx/wvy22e6q2954Ge7IN7SZBJYplQ/VoYBC9o3ahbfNkD
-	 88s0GBrWAYIRjnlmUCe1JpsucKPgK1A8Qcu7RkZcwVKUKyIBXHVaudEoKWyM2mPiwq
-	 MAFfFovh5oDJOOLCGB/9RZvBxUmnDEBTk3wgFrYqdkADlME2kbjJuouPWhjozNjEYC
-	 wvPvkNh3nwCk9e0NytDHcTFZRbqcm/jYLCjh7wzh6CBfodscXwF5x9Ftyooiys5Ixx
-	 641yfrmnEdSaqlWxTvd8jVctvwYc/D8v0hFfyKyCsO5dVtp33mnl14l2zSNdtBr6nH
-	 BCIA9iCtr/IjQ==
-Date: Mon, 10 Jun 2024 15:25:30 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 11/12] regulator: add pm8008 pmic regulator driver
-Message-ID: <ZmcM2v02IXHM-xld@finisterre.sirena.org.uk>
-References: <20240608155526.12996-1-johan+linaro@kernel.org>
- <20240608155526.12996-12-johan+linaro@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="D0QsAhn6"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45ADvAEo029547;
+	Mon, 10 Jun 2024 14:25:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=9
+	A1fnRaAIAcs+I/+xS5/n4SQRErLpAGc0NlZwmylIis=; b=D0QsAhn6REYN+fay+
+	+OO1bpl4LVfs9ntfPkLSHqjU+w2hfUnm2vJPx3jONjvfFNjSfrhjmRlkNtvEkcHA
+	AewNK55brvhVho5rNbutXJBuSanRwYC2fGU7XAkrWVQDHKEnmVXZ6xIWkHTFukj9
+	xT2Fcv6waLclTcpqelOUbgE6f0xAzmZeYQyaegje4rz09gos/duySwqOScOKehC1
+	b8UxbekNaoXOf8vdaX5B/L+vxTj71qp0gMpkXfLD3fVtNx11XmrRAfqZCavQwiRg
+	dnirHulAoLU0ok0hvqMKd2O8SydktJLt1QuSXs/mYelPo8CqttPrO7wiY+/WkYcv
+	KAzzg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yp2ddr50e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 14:25:51 +0000 (GMT)
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45AEPoNb009931;
+	Mon, 10 Jun 2024 14:25:50 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yp2ddr4wq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 14:25:50 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45ABxWOj023597;
+	Mon, 10 Jun 2024 14:22:45 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn3um7pw6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 14:22:45 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45AEMenM31195834
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Jun 2024 14:22:42 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2085120043;
+	Mon, 10 Jun 2024 14:22:40 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BC0AB20040;
+	Mon, 10 Jun 2024 14:22:36 +0000 (GMT)
+Received: from [9.43.26.142] (unknown [9.43.26.142])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 10 Jun 2024 14:22:36 +0000 (GMT)
+Message-ID: <92752ed4-0091-4a98-8af7-dd58bc5432bc@linux.ibm.com>
+Date: Mon, 10 Jun 2024 19:52:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nDGQNZhoUiVNni7Y"
-Content-Disposition: inline
-In-Reply-To: <20240608155526.12996-12-johan+linaro@kernel.org>
-X-Cookie: Your love life will be... interesting.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] tools/perf: Fix the nrcpus in perf bench futex to
+ enable the run when all CPU's are not online
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+        namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+References: <20240607044354.82225-1-atrajeev@linux.vnet.ibm.com>
+Content-Language: en-GB
+From: Disha Goel <disgoel@linux.ibm.com>
+In-Reply-To: <20240607044354.82225-1-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: V2sqOEVqikLkB1I9rixbBRJHFTgczB4i
+X-Proofpoint-ORIG-GUID: pLw8LKytb_MEOT5m2C01hvqqU2knd3E_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_02,2024-06-10_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1011 suspectscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 phishscore=0 adultscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406100109
 
+On 07/06/24 10:13 am, Athira Rajeev wrote:
 
---nDGQNZhoUiVNni7Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Perf bench futex fails as below when attempted to run on
+> on a powerpc system:
+>
+>   ./perf bench futex all
+>   Running futex/hash benchmark...
+> Run summary [PID 626307]: 80 threads, each operating on 1024 [private] futexes for 10 secs.
+>
+> perf: pthread_create: No such file or directory
+>
+> In the setup where this perf bench was ran, difference was that
+> partition had 640 CPU's, but not all CPUs were online. 80 CPUs
+> were online. While blocking the threads with futex_wait, code
+> sets the affinity using cpumask. The cpumask size used is 80
+> which is picked from "nrcpus = perf_cpu_map__nr(cpu)". Here the
+> benchmark reports fail while setting affinity for cpu number which
+> is greater than 80 or higher, because it attempts to set a bit
+> position which is not allocated on the cpumask. Fix this by changing
+> the size of cpumask to number of possible cpus and not the number
+> of online cpus.
+>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-On Sat, Jun 08, 2024 at 05:55:25PM +0200, Johan Hovold wrote:
-> The Qualcomm PM8008 is an I2C-controlled PMIC containing seven LDO
-> regulators.
->=20
-> The driver is based on a driver submitted by Satya Priya, but it has
-> been cleaned up and reworked to match the new devicetree binding which
-> no longer describes each regulator as a separate device.
+Thanks for the fix patches, Athira.
+I have tested all three patches on a power machine (both small and max config),
+and the perf bench futex and epoll tests run fine.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+For the series:
+Tested-by: Disha Goel <disgoel@linux.ibm.com>
 
---nDGQNZhoUiVNni7Y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZnDNkACgkQJNaLcl1U
-h9DhtQf9FEs9YHno5v2nXIHxCEySbIXyo4E4uiBYgMdUgo2xSADqPu+47muKU0dc
-MUMjal9spLFWGwmEZYfeIIZcXy37mqHltnjzb9ukwjkif0XVqG6EiBkYH71CgWoL
-Kk7ynxUURlvq/mRcOHxhXo5e3hbJ9sqwTZsPxqWcl11gy8dp5OcyjqxZisueB/3W
-e8/Nvb6uEEbvHe0u1fq7pqVq2A9e6kpGVRPlyUDvaRbnFnlAIwbnrGK560TBiyzm
-EMP+xJdubQSlxCeAjkyzlcRnD2RkvyYePyEuW541I3B5mZt3KewJEEpq6+HxZzan
-c8wP9JrbazrvCvopPADDELl1v/6NSw==
-=mFc2
------END PGP SIGNATURE-----
-
---nDGQNZhoUiVNni7Y--
+> ---
+>   tools/perf/bench/futex-hash.c          | 2 +-
+>   tools/perf/bench/futex-lock-pi.c       | 2 +-
+>   tools/perf/bench/futex-requeue.c       | 2 +-
+>   tools/perf/bench/futex-wake-parallel.c | 2 +-
+>   tools/perf/bench/futex-wake.c          | 2 +-
+>   5 files changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
+> index 0c69d20efa32..b472eded521b 100644
+> --- a/tools/perf/bench/futex-hash.c
+> +++ b/tools/perf/bench/futex-hash.c
+> @@ -174,7 +174,7 @@ int bench_futex_hash(int argc, const char **argv)
+>   	pthread_attr_init(&thread_attr);
+>   	gettimeofday(&bench__start, NULL);
+>   
+> -	nrcpus = perf_cpu_map__nr(cpu);
+> +	nrcpus = cpu__max_cpu().cpu;
+>   	cpuset = CPU_ALLOC(nrcpus);
+>   	BUG_ON(!cpuset);
+>   	size = CPU_ALLOC_SIZE(nrcpus);
+> diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
+> index 7a4973346180..0416120c091b 100644
+> --- a/tools/perf/bench/futex-lock-pi.c
+> +++ b/tools/perf/bench/futex-lock-pi.c
+> @@ -122,7 +122,7 @@ static void create_threads(struct worker *w, struct perf_cpu_map *cpu)
+>   {
+>   	cpu_set_t *cpuset;
+>   	unsigned int i;
+> -	int nrcpus =  perf_cpu_map__nr(cpu);
+> +	int nrcpus =  cpu__max_cpu().cpu;
+>   	size_t size;
+>   
+>   	threads_starting = params.nthreads;
+> diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
+> index d9ad736c1a3e..aad5bfc4fe18 100644
+> --- a/tools/perf/bench/futex-requeue.c
+> +++ b/tools/perf/bench/futex-requeue.c
+> @@ -125,7 +125,7 @@ static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
+>   {
+>   	cpu_set_t *cpuset;
+>   	unsigned int i;
+> -	int nrcpus = perf_cpu_map__nr(cpu);
+> +	int nrcpus = cpu__max_cpu().cpu;
+>   	size_t size;
+>   
+>   	threads_starting = params.nthreads;
+> diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/futex-wake-parallel.c
+> index b66df553e561..90a5b91bf139 100644
+> --- a/tools/perf/bench/futex-wake-parallel.c
+> +++ b/tools/perf/bench/futex-wake-parallel.c
+> @@ -149,7 +149,7 @@ static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
+>   {
+>   	cpu_set_t *cpuset;
+>   	unsigned int i;
+> -	int nrcpus = perf_cpu_map__nr(cpu);
+> +	int nrcpus = cpu__max_cpu().cpu;
+>   	size_t size;
+>   
+>   	threads_starting = params.nthreads;
+> diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
+> index 690fd6d3da13..49b3c89b0b35 100644
+> --- a/tools/perf/bench/futex-wake.c
+> +++ b/tools/perf/bench/futex-wake.c
+> @@ -100,7 +100,7 @@ static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
+>   	cpu_set_t *cpuset;
+>   	unsigned int i;
+>   	size_t size;
+> -	int nrcpus = perf_cpu_map__nr(cpu);
+> +	int nrcpus = cpu__max_cpu().cpu;
+>   	threads_starting = params.nthreads;
+>   
+>   	cpuset = CPU_ALLOC(nrcpus);
