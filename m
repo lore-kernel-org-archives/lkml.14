@@ -1,136 +1,174 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7385B12FB34
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 15:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784E013F450;
+	Mon, 10 Jun 2024 15:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718033443; cv=none; b=Dm6HEGB925ONKpM81JxHbsXVGqjoS9EEcmzsfX18B9SbfDiQVV5iNIaP2y15Io/gI0G0YFfbFJps1kf9pKgldm1kMTfPoggvOGdtu6qPTOmkajh5hKiTRXe0Hvuu0KAUJcZ/s9BRU3OOw5f2nGc+MFxdg7j2ho8nEFzxLfGNwCs=
+	t=1718033456; cv=none; b=Bbw4WFSgAk/6Ro73Hz/oJVbGLru8kzhIs7LK65IhAkXxXK46LhqcXwYVk6D7bsDt/6fG2ykq2cVqJ6dWv8l185Mf6b+v+ML5p+XPVbhgPXsy7u0roJQUhrDqEy/E6lkqrQGCQvPh33uqq5kwnpQTl5veu3GUVrGHTfvdumHS0NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718033443; c=relaxed/simple;
-	bh=Istud4qCqYqq73UZC0sVn9z3Zj4w5osCP+6Eby9OE1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XovdTeg+KaMx0Fpuyvke9Y98x32Gfh42DUJG/cuFLU/aWxRxgb0bW6I6ka2OEmBZerMm4XIRPXxU5x9ibiVmMTSoc2ytOvcAhtfAl6uF4D8krtYTHK91AfzUlbMhZOA1qxfd6q0D9xgNTIHv2glROJV/TSaRcjOHfMSpo64bZmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yzo0oYLe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718033456; c=relaxed/simple;
+	bh=iKyqX56r+EgSOmMQluTvLMOh9m7hcIcp9NB6Ui81e2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GERjR7jmurAAjiBLD/qKi0Tw45uTGaND91V5/gs3C8p1d1G/I2Dz7kwsMLGulbfVspzqVHvsEXSbUUSutXW8TOllhZXN+zZRi19ZcsIj+rJdLOvzRBAMfLC09CEFx03b2fWctFxxuJwLFo4w0Ti6Eo8ReiUXl/MtABkMTyU6bdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W/cDA5Mv; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yzo0oYLe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718033441;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7PZDk4vp4nL/ROlBCKtZCvfKec6ibW5k+B7eKz8dX1I=;
-	b=Yzo0oYLeeinMaJt3jhXhwHKZuj0/RdZQkNv/KE0tlOGBV/HqM4ZCh/NpuOW5w6xaMZRmRd
-	uiro/ZXSXX0ku/J3Bwk1wnmX/m5iNKFh1ygTsihpAiblM+ultL9kxeyrqGoA+zTFK9DNvI
-	sISdRZSiEt2EgatkHK2HO1uXTr67qh0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-gBFvI-MjPHexSoZMvQn31A-1; Mon,
- 10 Jun 2024 11:30:37 -0400
-X-MC-Unique: gBFvI-MjPHexSoZMvQn31A-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A69411956063;
-	Mon, 10 Jun 2024 15:30:35 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.117])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C018B1956055;
-	Mon, 10 Jun 2024 15:30:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 10 Jun 2024 17:29:05 +0200 (CEST)
-Date: Mon, 10 Jun 2024 17:29:02 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/1] exit: kill signal_struct->quick_threads
-Message-ID: <20240610152902.GC20640@redhat.com>
-References: <20240609142342.GA11165@redhat.com>
- <87r0d5t2nt.fsf@email.froward.int.ebiederm.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W/cDA5Mv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718033454; x=1749569454;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iKyqX56r+EgSOmMQluTvLMOh9m7hcIcp9NB6Ui81e2A=;
+  b=W/cDA5MvuVlgsycJPzyEVl0sJcwz7JRflyACIkiTyE77aWwvu1w8mYRp
+   cr8GeQZK5PpEHhc5YDXrfkGTB5l8+6A8XtgmoqD/MSL6Ipb8d8MAL+4vL
+   AE2y79PLNCbqLZB143gwgl+pneptPDRe5FVnU+rsrf3pUZEuSnY4UaZHr
+   qPwFYmWMMgzRRojpf0jlv2ghTo0xWDu3i/c6H9a3RcHSpAC+Q6bLMavpx
+   Jw3vidV8yAhbNE4XcupNjThS4Z7w8Stt4E+2kiLw7eiCCpJ+RF27sdvaU
+   dVodRkbEK35xb9kjpP2aHBAqdkMLwfCmNxBQ6S7hvJuDRx7QwX44mDHYS
+   Q==;
+X-CSE-ConnectionGUID: bGjccpmITCKRMQNrMIX4wg==
+X-CSE-MsgGUID: pOP0lA+yS2y32thDSEomrQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="14854893"
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="14854893"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 08:30:54 -0700
+X-CSE-ConnectionGUID: OvsHo99mTbmHyP838esLMA==
+X-CSE-MsgGUID: cZ9jOguASvm+QrACeEky3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
+   d="scan'208";a="70267100"
+Received: from unknown (HELO [10.125.110.62]) ([10.125.110.62])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 08:30:53 -0700
+Message-ID: <aa8b551a-a2ba-408b-aaaf-8af363bed961@intel.com>
+Date: Mon, 10 Jun 2024 08:30:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r0d5t2nt.fsf@email.froward.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: switchtec: make switchtec_class constant
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+ Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+ Logan Gunthorpe <logang@deltatee.com>, Jon Mason <jdmason@kudzu.us>,
+ Allen Hubbe <allenbh@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ ntb@lists.linux.dev
+References: <2024061053-online-unwound-b173@gregkh>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <2024061053-online-unwound-b173@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Eric, thanks for looking at this.
 
-Let me answer your questions out-of-order. But, before anything else,
-do you see anything wrong in 1/1 ?
 
-On 06/10, Eric W. Biederman wrote:
->
-> May I ask which direction you are coming at this from?  Are you trying
-> to reduce the cost of do_exit?  Are you interested in untangling the
-> mess that is exiting threads in a process?
+On 6/10/24 1:20 AM, Greg Kroah-Hartman wrote:
+> Now that the driver core allows for struct class to be in read-only
+> memory, we should make all 'class' structures declared at build time
+> placing them into read-only memory, instead of having to be dynamically
+> allocated at runtime.
+> 
+> Cc: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Jon Mason <jdmason@kudzu.us>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Allen Hubbe <allenbh@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: ntb@lists.linux.dev
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-I am trying to understand why do we need another counter.
-
-And, I'd like to cleanup the usage of task->signal->live, I think it
-should be avoided (if possible) when task != current. IIRC, we even
-discussed this some time ago but I can't find any reference.
-
-See also another thread about css_task_iter_advance().
-
-> > Eric, I can't understand why the commit ("signal: Guarantee that
-> > SIGNAL_GROUP_EXIT is set on process exit") added the new
-> > quick_threads counter. And why, if we forget about --quick_threads,
-> > synchronize_group_exit() has to take siglock unconditionally.
-> > Did I miss something obvious?
->
-> At a minimum it is the exact same locking as everywhere else that sets
-> signal->flags, signal->group_exit_code, and signal->group_stop_count
-> uses.
->
-> So it would probably require some significant reason to not use
-> the same locking and complicate reasoning about the code.  I suspect
-> setting those values without siglock held is likely to lead to
-> interesting races.
-
-I guess I was not clear. Of course, SIGNAL_GROUP_EXIT must be always
-set under ->siglock. But I think synchronize_group_exit() can just
-return if SIGNAL_GROUP_EXIT is already set? If nothing else, this is
-what do_group_exit() does.
-
-Or I misunderstood you?
-
-> That is where signal->quick_threads comes from.  In the work it is a
-> part of I wind up moving the decrement up much sooner to the point where
-> individual threads decide to exit.  The decrement of signal->live comes
-> much too late to be useful in that context.
-
-And that is why this patch moves the decrement of signal->live to the
-start of do_exit().
-
-> It is also part of me wanting to be able to uniformly use
-> SIGNAL_GROUP_EXIT and signal->group_exit_code when talking about the
-> process state, and p->exit_code when talking about the per task state.
-
-Agreed,
-
-> At the moment I am staring at wait_task_zombie and trying to understand
-> how:
->
-> 	status = (p->signal->flags & SIGNAL_GROUP_EXIT)
-> 		? p->signal->group_exit_code : p->exit_code;
->
-> works without any locks or barriers.
-
-Agreed, at first glance this looks worrying without siglock... I'll try
-to take a look, perhaps we can simply kill the SIGNAL_GROUP_EXIT check,
-not sure.
-
-But this patch should not make any difference ?
-
-Oleg.
-
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/ntb/hw/mscc/ntb_hw_switchtec.c |  2 +-
+>  drivers/pci/switch/switchtec.c         | 16 ++++++++--------
+>  include/linux/switchtec.h              |  2 +-
+>  3 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> index d6bbcc7b5b90..31946387badf 100644
+> --- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> +++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
+> @@ -1565,7 +1565,7 @@ static struct class_interface switchtec_interface  = {
+>  
+>  static int __init switchtec_ntb_init(void)
+>  {
+> -	switchtec_interface.class = switchtec_class;
+> +	switchtec_interface.class = &switchtec_class;
+>  	return class_interface_register(&switchtec_interface);
+>  }
+>  module_init(switchtec_ntb_init);
+> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+> index 5a4adf6c04cf..c7e1089ffdaf 100644
+> --- a/drivers/pci/switch/switchtec.c
+> +++ b/drivers/pci/switch/switchtec.c
+> @@ -37,7 +37,9 @@ MODULE_PARM_DESC(nirqs, "number of interrupts to allocate (more may be useful fo
+>  static dev_t switchtec_devt;
+>  static DEFINE_IDA(switchtec_minor_ida);
+>  
+> -struct class *switchtec_class;
+> +const struct class switchtec_class = {
+> +	.name = "switchtec",
+> +};
+>  EXPORT_SYMBOL_GPL(switchtec_class);
+>  
+>  enum mrpc_state {
+> @@ -1363,7 +1365,7 @@ static struct switchtec_dev *stdev_create(struct pci_dev *pdev)
+>  
+>  	dev = &stdev->dev;
+>  	device_initialize(dev);
+> -	dev->class = switchtec_class;
+> +	dev->class = &switchtec_class;
+>  	dev->parent = &pdev->dev;
+>  	dev->groups = switchtec_device_groups;
+>  	dev->release = stdev_release;
+> @@ -1851,11 +1853,9 @@ static int __init switchtec_init(void)
+>  	if (rc)
+>  		return rc;
+>  
+> -	switchtec_class = class_create("switchtec");
+> -	if (IS_ERR(switchtec_class)) {
+> -		rc = PTR_ERR(switchtec_class);
+> +	rc = class_register(&switchtec_class);
+> +	if (rc)
+>  		goto err_create_class;
+> -	}
+>  
+>  	rc = pci_register_driver(&switchtec_pci_driver);
+>  	if (rc)
+> @@ -1866,7 +1866,7 @@ static int __init switchtec_init(void)
+>  	return 0;
+>  
+>  err_pci_register:
+> -	class_destroy(switchtec_class);
+> +	class_unregister(&switchtec_class);
+>  
+>  err_create_class:
+>  	unregister_chrdev_region(switchtec_devt, max_devices);
+> @@ -1878,7 +1878,7 @@ module_init(switchtec_init);
+>  static void __exit switchtec_exit(void)
+>  {
+>  	pci_unregister_driver(&switchtec_pci_driver);
+> -	class_destroy(switchtec_class);
+> +	class_unregister(&switchtec_class);
+>  	unregister_chrdev_region(switchtec_devt, max_devices);
+>  	ida_destroy(&switchtec_minor_ida);
+>  
+> diff --git a/include/linux/switchtec.h b/include/linux/switchtec.h
+> index 8d8fac1626bd..cdb58d61c152 100644
+> --- a/include/linux/switchtec.h
+> +++ b/include/linux/switchtec.h
+> @@ -521,6 +521,6 @@ static inline struct switchtec_dev *to_stdev(struct device *dev)
+>  	return container_of(dev, struct switchtec_dev, dev);
+>  }
+>  
+> -extern struct class *switchtec_class;
+> +extern const struct class switchtec_class;
+>  
+>  #endif
