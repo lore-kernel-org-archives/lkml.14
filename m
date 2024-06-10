@@ -1,170 +1,79 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A7077F2F;
-	Mon, 10 Jun 2024 17:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E55A145328;
+	Mon, 10 Jun 2024 17:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718039936; cv=none; b=Q6vk5NQ52PWV4uUPEu6GAvSzWB5hDzMmLKYMzUyR2hYuOJmPvUypPQEOS6aMlw/qyJtXGtf5Jiz3uZkh36aIE5I8/rxpnTzPMg/JZ9wLLvHKEg00/AwZi/Ed2ADZCxxzK4a9TdIFAW6cwRQw/dr8/FlXm3gYR7J8JA6J5Fr5KcE=
+	t=1718039979; cv=none; b=Ypl0IYYvUff8MEZ58+uv2wQKqVRsKHxjhGvdrTFEjN+KZssMV3ADXrUgpc9ZBZsdDTHf3Nd2VUEYwRKF0uEEe7iel4RnGrbERLwk1AiEUJN8fs3tRbVISrbpiE0sKlsr1XhisBp7XtKZjaiWeqXzYVVeALQBplwQtzkz0ZexrrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718039936; c=relaxed/simple;
-	bh=YPbe293cXp4wyBnBVn8gJciGNlMCnXOyG2JdGgRfpd0=;
+	s=arc-20240116; t=1718039979; c=relaxed/simple;
+	bh=41nEsnnCsKwXDdxo654ikec4MjyqGigRJTVzBXlKI2U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XZ1wSts56UjhKaxD9GImwAYYsstqMIAgwuOWDUt+WQQ4WnFhmbQRyqweeLN9NtORz8W/P9MRQV+zaIKDnMOKgzn7v+V+BWb5z54TtV0N9XtIENBAcPpBPdaRQ3Tc+1xdLoKlEBWko8lc0K39XEaAQUo4ZJwmNa3JqqFT5RnSufU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Z1M/GYrl; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=IiUfXrmY; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Z1M/GYrl";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="IiUfXrmY"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CAD4B21DCE;
-	Mon, 10 Jun 2024 17:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1718039932; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kHNTBGmWI5UU4pjcTxxfF0+a8c0HPOaWXn4XHmPpvTk=;
-	b=Z1M/GYrl2RndZumXJTD8bjtRrpy4rAb+dThD/e8tru4g9hPZKVRnOiNavpjzakKVnORHOv
-	mJBs+ENX6Aol2QkPdRxtkVc4713Nzmgor6trMd1Eobd7iOdd2xYYHYmB7kncC6Yp9F7FPp
-	bH2hnov3NeSWXMT7t0SRY5zeZLFUADs=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=IiUfXrmY
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1718039931; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kHNTBGmWI5UU4pjcTxxfF0+a8c0HPOaWXn4XHmPpvTk=;
-	b=IiUfXrmYjAzS90tV1UmbKYkM6puviM0k8GocVwsTmk4jL/ihdGyg62Hespuk3eSt7ZE2gJ
-	DhvY9dLNruiv+eq6ykY4DBaRkOFt5I/YyxFA+s80cMPZBRB0pg/dTKMfc5/kN+M0DA5gAg
-	bL36frFXF7kG0vC8rivfgoofdl/ro5o=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BC80413A51;
-	Mon, 10 Jun 2024 17:18:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kOCRLXs1Z2Y/dgAAD6G6ig
-	(envelope-from <mkoutny@suse.com>); Mon, 10 Jun 2024 17:18:51 +0000
-Date: Mon, 10 Jun 2024 19:18:50 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Xavier <ghostxavier@sina.com>
-Cc: longman@redhat.com, lizefan.x@bytedance.com, tj@kernel.org, 
-	hannes@cmpxchg.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] cpuset: use Union-Find to optimize the merging of
- cpumasks
-Message-ID: <wu4m2m5igc752s5vrmtsnd7ekaq6opeqdtrzegs7oxlwgypdcx@qhcnow5txxiv>
-References: <20240531024837.255293-1-ghostxavier@sina.com>
- <20240603123101.590760-1-ghostxavier@sina.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=T7+MUlM4L4yrqT9gwUPZ4clVdi9fsxaRR5fPMd7MdBdOnCPZmx2Yjb6l/kLnHEOLj/WKvz+USR/D/O0oL2Kt/qUdDmuPs0M+Gv1eOAwnebMCAwjruNzNg9G0m60RucMw+NAEL2eQyrCJBOHuadtT3ki0sz/abs0h6CQWVt9ARRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sGi0z-0000qj-00; Mon, 10 Jun 2024 18:37:01 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 7FBF4C031A; Mon, 10 Jun 2024 17:17:44 +0200 (CEST)
+Date: Mon, 10 Jun 2024 17:17:44 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-mips@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH v2 0/3] Add support for the Mobileye EyeQ6H SoC
+Message-ID: <ZmcZGC0Q91rd6uSI@alpha.franken.de>
+References: <20240513-eyeq6h-v2-0-ae8c1974b52b@bootlin.com>
+ <87zfrsetws.fsf@BLaptop.bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fekhs4szurscavjp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240603123101.590760-1-ghostxavier@sina.com>
-X-Spam-Flag: NO
-X-Spam-Score: -3.42
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: CAD4B21DCE
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.42 / 50.00];
-	SIGNED_PGP(-2.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	BAYES_HAM(-0.31)[75.36%];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[sina.com];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FREEMAIL_TO(0.00)[sina.com];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim]
+In-Reply-To: <87zfrsetws.fsf@BLaptop.bootlin.com>
 
+On Mon, Jun 10, 2024 at 04:47:47PM +0200, Gregory CLEMENT wrote:
+> > Following the support of the EyeQ5 SoC, this series adds the initial
+> > support for a newer SoC, the EyeQ6H.
+> >
+> > The EyeQ6H (or "High") from Mobileye is still based on the MIPS I6500
+> > architecture as the EyeQ5. The 2 clusters of this SoC contain 4 cores
+> > each, which are capable of running 4 threads per core. Besides this,
+> > it features multiple controllers such as the classic UART, high-speed
+> > I2C, SPI, as well as CAN-FD, PCIe Gen4, Octal/Quad SPI Flash
+> > interface, Gigabit Ethernet, MIPI CSI-2, MIPI DSI, and eMMC 5.1. It
+> > also includes a Hardware Security Module, Functional Safety Hardware,
+> > and video encoders, among other features.
+> >
+> > For now, this series just adds initial support with UART and Pinctrl
+> > support. Another current limitation pointed out in patch 3 is that
+> > only one CPU is actually running. This limitation will be solved with
+> > upcoming series.
+> >
+> > The main change in this new version is the use of the new way to name
+> > the clock nodes.
+> 
+> I sent this second version a month ago and the first version even before
+> that, and I still haven't received any feedback from your side. Does it
+> mean that you will merge it?
 
---fekhs4szurscavjp
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I will this week. The second version came around merge window, so I didn't
+want to include it.
 
-Hello.
+Thomas.
 
-On Mon, Jun 03, 2024 at 08:31:01PM GMT, Xavier <ghostxavier@sina.com> wrote:
-> The process of constructing scheduling domains involves multiple loops
-> and repeated evaluations, leading to numerous redundant and ineffective
-> assessments that impact code efficiency.
->=20
-> Here, we use Union-Find to optimize the merging of cpumasks. By employing
-> path compression and union by rank, we effectively reduce the number of
-> lookups and merge comparisons.
-
-Nice that you found such an application. (As Waiman wrote, the
-efficiency is not so important here and it may not be dencreased but I
-still think it makes the code more understandable by using standard data
-structures.)
-
-Have you looked whether there are other instances of U-F in the kernel?
-(My quick search didn't show any.) Still, I think it'd be a good idea to
-decouple this into two commits -- 1) implementation of the new U-F (into
-lib/), 2) application within cpuset.
-
-> +/*define a union find node struct*/
-> +struct uf_node {
-> +	int parent;
-
-I think this would be better as `struct uf_node *`.
-
-> +	int rank;
-> +};
-
-`unsigned int` if rank cannot be negative?
-
-> +	/* Each node is initially its own parent */
-> +	for (i =3D 0; i < csn; i++) {
-> +		nodes[i].parent =3D i;
-> +		nodes[i].rank =3D 0;
-> +	}
-
-With the suggestion above, nodes could start with parent =3D NULL and
-self-parent be corrected during the first find_root -- thus whole array
-could be simply init'd to zeroes with kzalloc.
-
-
-My 0.02=E2=82=AC,
-Michal
-
---fekhs4szurscavjp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZmc1eAAKCRAGvrMr/1gc
-jvyLAQDIN3U4NIzzpH9PYRDkt6vi5r2Od5Fva82LPD+KYsJk0AD+MVtyOpfg+GiR
-jomUt+u2dcuyjjPN2cfbN3PhSJVFnwk=
-=y5ot
------END PGP SIGNATURE-----
-
---fekhs4szurscavjp--
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
