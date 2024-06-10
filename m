@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E25E3BB30
-	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 20:17:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFE04D9EA
+	for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 20:17:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718050674; cv=none; b=pC4oRhvAneetU+UaoLv2wOk7o7+SSQktIwznViNEkGqPEW6IZyaQlknmG7mkrLIgeyr0Oy+UbAod2Z08T+ETH0gBCAGwHyN1vEyEMqbV5OCNxuS4LGsapdFWPahnv38QvwAalEi+2QmBwvuxqT/RmkBY//OFQr8WJVJcTIfqetg=
+	t=1718050675; cv=none; b=pDk73c6OsoymJV5wp6HM+qClDTSrbhADxBuJxi8wrTnGNQ4CRHuG2PsOFrNMu/cWWwHq7cQ1anWXjStPFZmheA/64HMMY0PP+9iwqwYyjGMzMwKhA3uFHoFrFT8CASbgVeJTlXlY7sxwy5/kTrUasUhatKKUMfqbGI5su0sjkfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718050674; c=relaxed/simple;
-	bh=L0/yW/UcPP6hekdsH5azueKdah7861QCbkHHSO1J14w=;
+	s=arc-20240116; t=1718050675; c=relaxed/simple;
+	bh=kLr54QFbf/02KbIzN+8gT4RlmHSZj0T4yj3bzu8+hYQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WKD01y9orPiK2iFSXo6LEPFRcCnKeY4ZyeoOOwihM1kvP46qABdGShYBLVI0cY5vk1DfRW/NONElEFgR7jQcmwxR9WJdLWzCNheKbXZ7XlPzAQPdszFhAZaL/Zjlw3Ncecg1UeGm89s2LNDrmtKCE8BsQxal9ZKRO1RvRKBYZYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hrV/dcMS; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version; b=ruVv8Z5cLHarQKH6y68QCqIKz28udkJo62D05BPh7ZAFoH9gebN5nDz4KUbAtah8ZqzdZK9nQxcLoyabo2DVCs7xyFWmQCc+UlvaibM0HORkmHQVc19+ChPb4M7DhboUfjQfNxsWoQ16wBe+LMTKUNI/ZJ0VHFNWga7EXCIcFec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nPcaH5ZS; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hrV/dcMS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nPcaH5ZS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718050672; x=1749586672;
+  t=1718050674; x=1749586674;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=L0/yW/UcPP6hekdsH5azueKdah7861QCbkHHSO1J14w=;
-  b=hrV/dcMSLiljZaEwkXP/qbeOxCdPAzQVbRXSvyYRrqj+MPSFwhl78cA7
-   gn8N5VE6Ki72oPLCyImL+//Sip3bmN5f+EWyu6bx8K3w1nEkPxZzZ0LKR
-   4RGAjFyfqoH8IWFqkASKVciYSGn998V7CVlwfCstlf7lNadJ5YoZ0AP6I
-   ZAWDIhS68g2NlTx3ZxIta6bmaE8t0VRS2tduqePQvaoXbGnY7O/ADThju
-   WLd2Y0aL+FWDijhTGEem3vH6LKNX7ZDggXT5Udvd1+DiP6JV9L2/eZez2
-   jbhZLjCMzWGbCVZUzn/9TGUQ06+OgagXGoYKLdZVBiYgyQlzNMpcgB6ik
+  bh=kLr54QFbf/02KbIzN+8gT4RlmHSZj0T4yj3bzu8+hYQ=;
+  b=nPcaH5ZSdvNJziepX4aGzplrsSOY1H68E4sViZYGB26Dek3q3V5qvXzd
+   tPGm88fKBjBHZ3fL5CKkDiig41c8x5exjqpa659KUuHLxIc/WThUAIMnL
+   e8ghDvkFk2U8egb70E+X2BYM5NgkOqz2m+GHRrhco4LBLKTcvxfUUqKfF
+   3PHrp/1Jl4rvPliNJI4UdK0eepHbPc9jogjW9ldX6GVZQZV2IbFCpmA1l
+   3RFOjuZFKx2QPEG96WohylNg7IsGoVKXT5/IUGQHfamZmArVE7fOH2XRz
+   tE4CsP28omt5iwpD+kUd87jkFAXUKXn2Fm/HEliQ4/bo+XufJAm7kbBLG
    w==;
-X-CSE-ConnectionGUID: YcJUlA8YThibBebO6PHqXg==
-X-CSE-MsgGUID: SI8ZqCzpRJafZdppGwK6VA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="18561511"
+X-CSE-ConnectionGUID: uRVDsYuoQ1CtkXUYOpyoZA==
+X-CSE-MsgGUID: HWzTxfZwTO+RTawVYhvqcw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="18561527"
 X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="18561511"
+   d="scan'208";a="18561527"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 13:17:50 -0700
-X-CSE-ConnectionGUID: WLcs/KRZSqmBEicctQQazg==
-X-CSE-MsgGUID: 3SMmswVBQ4mAtpMVRARA6A==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2024 13:17:51 -0700
+X-CSE-ConnectionGUID: eN/u640+ToeRuuwkN9L3gQ==
+X-CSE-MsgGUID: BrwsKLQqSS+ofUP6RTDigA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,227,1712646000"; 
-   d="scan'208";a="39169077"
+   d="scan'208";a="39169095"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa008.fm.intel.com with ESMTP; 10 Jun 2024 13:17:50 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 10 Jun 2024 13:17:51 -0700
 From: kan.liang@linux.intel.com
 To: peterz@infradead.org,
 	mingo@kernel.org,
@@ -54,9 +54,9 @@ Cc: acme@kernel.org,
 	ak@linux.intel.com,
 	yunying.sun@intel.com,
 	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 2/8] perf/x86/uncore: Support per PMU cpumask
-Date: Mon, 10 Jun 2024 13:16:13 -0700
-Message-Id: <20240610201619.884021-3-kan.liang@linux.intel.com>
+Subject: [PATCH 5/8] perf/x86/uncore: Apply the unit control RB tree to MSR uncore units
+Date: Mon, 10 Jun 2024 13:16:16 -0700
+Message-Id: <20240610201619.884021-6-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20240610201619.884021-1-kan.liang@linux.intel.com>
 References: <20240610201619.884021-1-kan.liang@linux.intel.com>
@@ -70,207 +70,181 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The cpumask of some uncore units, e.g., CXL uncore units, may be wrong
-under some configurations. Perf may access an uncore counter of a
-non-existent uncore unit.
+The unit control RB tree has the unit control and unit ID information
+for all the MSR units. Use them to replace the box_ctl and
+uncore_msr_box_ctl() to get an accurate unit control address for MSR
+uncore units.
 
-The uncore driver assumes that all uncore units are symmetric among
-dies. A global cpumask is shared among all uncore PMUs. However, some
-CXL uncore units may only be available on some dies.
+Add intel_generic_uncore_assign_hw_event(), which utilizes the accurate
+unit control address from the unit control RB tree to calculate the
+config_base and event_base.
 
-A per PMU cpumask is introduced to track the CPU mask of this PMU.
-The driver searches the unit control RB tree to check whether the PMU is
-available on a given die, and updates the per PMU cpumask accordingly.
+The unit id related information should be retrieved from the unit
+control RB tree as well.
 
 Tested-by: Yunying Sun <yunying.sun@intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/uncore.c           | 31 +++++++++++--
- arch/x86/events/intel/uncore.h           |  2 +
- arch/x86/events/intel/uncore_discovery.c | 58 ++++++++++++++++++++++++
- arch/x86/events/intel/uncore_discovery.h |  3 ++
- 4 files changed, 89 insertions(+), 5 deletions(-)
+ arch/x86/events/intel/uncore.c           |  3 ++
+ arch/x86/events/intel/uncore_discovery.c | 49 +++++++++++++++++++++---
+ arch/x86/events/intel/uncore_discovery.h |  2 +
+ arch/x86/events/intel/uncore_snbep.c     | 16 +++++---
+ 4 files changed, 59 insertions(+), 11 deletions(-)
 
 diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index c68f5b39952b..075c92e0e4bc 100644
+index 27a0cda5cc91..bdb253a1bc3b 100644
 --- a/arch/x86/events/intel/uncore.c
 +++ b/arch/x86/events/intel/uncore.c
-@@ -844,7 +844,9 @@ static void uncore_pmu_disable(struct pmu *pmu)
- static ssize_t uncore_get_attr_cpumask(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
--	return cpumap_print_to_pagebuf(true, buf, &uncore_cpu_mask);
-+	struct intel_uncore_pmu *pmu = container_of(dev_get_drvdata(dev), struct intel_uncore_pmu, pmu);
-+
-+	return cpumap_print_to_pagebuf(true, buf, &pmu->cpu_mask);
- }
- 
- static DEVICE_ATTR(cpumask, S_IRUGO, uncore_get_attr_cpumask, NULL);
-@@ -1454,6 +1456,18 @@ static void uncore_pci_exit(void)
+@@ -264,6 +264,9 @@ static void uncore_assign_hw_event(struct intel_uncore_box *box,
+ 		return;
  	}
+ 
++	if (intel_generic_uncore_assign_hw_event(event, box))
++		return;
++
+ 	hwc->config_base = uncore_event_ctl(box, hwc->idx);
+ 	hwc->event_base  = uncore_perf_ctr(box, hwc->idx);
+ }
+diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+index ece761c9f17a..076ec1efe9cc 100644
+--- a/arch/x86/events/intel/uncore_discovery.c
++++ b/arch/x86/events/intel/uncore_discovery.c
+@@ -499,19 +499,31 @@ static const struct attribute_group generic_uncore_format_group = {
+ 	.attrs = generic_uncore_formats_attr,
+ };
+ 
++static u64 intel_generic_uncore_box_ctl(struct intel_uncore_box *box)
++{
++	struct intel_uncore_discovery_unit *unit;
++
++	unit = intel_uncore_find_discovery_unit(box->pmu->type->boxes,
++						-1, box->pmu->pmu_idx);
++	if (WARN_ON_ONCE(!unit))
++		return 0;
++
++	return unit->addr;
++}
++
+ void intel_generic_uncore_msr_init_box(struct intel_uncore_box *box)
+ {
+-	wrmsrl(uncore_msr_box_ctl(box), GENERIC_PMON_BOX_CTL_INT);
++	wrmsrl(intel_generic_uncore_box_ctl(box), GENERIC_PMON_BOX_CTL_INT);
  }
  
-+static bool uncore_die_has_box(struct intel_uncore_type *type,
-+			       int die, unsigned int pmu_idx)
+ void intel_generic_uncore_msr_disable_box(struct intel_uncore_box *box)
+ {
+-	wrmsrl(uncore_msr_box_ctl(box), GENERIC_PMON_BOX_CTL_FRZ);
++	wrmsrl(intel_generic_uncore_box_ctl(box), GENERIC_PMON_BOX_CTL_FRZ);
+ }
+ 
+ void intel_generic_uncore_msr_enable_box(struct intel_uncore_box *box)
+ {
+-	wrmsrl(uncore_msr_box_ctl(box), 0);
++	wrmsrl(intel_generic_uncore_box_ctl(box), 0);
+ }
+ 
+ static void intel_generic_uncore_msr_enable_event(struct intel_uncore_box *box,
+@@ -539,6 +551,31 @@ static struct intel_uncore_ops generic_uncore_msr_ops = {
+ 	.read_counter		= uncore_msr_read_counter,
+ };
+ 
++bool intel_generic_uncore_assign_hw_event(struct perf_event *event,
++					  struct intel_uncore_box *box)
 +{
-+	if (!type->boxes)
-+		return true;
++	struct hw_perf_event *hwc = &event->hw;
++	u64 box_ctl;
 +
-+	if (intel_uncore_find_discovery_unit_id(type->boxes, die, pmu_idx) < 0)
++	if (!box->pmu->type->boxes)
 +		return false;
++
++	if (box->pci_dev || box->io_addr) {
++		hwc->config_base = uncore_pci_event_ctl(box, hwc->idx);
++		hwc->event_base  = uncore_pci_perf_ctr(box, hwc->idx);
++		return true;
++	}
++
++	box_ctl = intel_generic_uncore_box_ctl(box);
++	if (!box_ctl)
++		return false;
++
++	hwc->config_base = box_ctl + box->pmu->type->event_ctl + hwc->idx;
++	hwc->event_base  = box_ctl + box->pmu->type->perf_ctr + hwc->idx;
 +
 +	return true;
 +}
 +
- static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
- 				   int new_cpu)
+ void intel_generic_uncore_pci_init_box(struct intel_uncore_box *box)
  {
-@@ -1469,18 +1483,25 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
- 
- 		if (old_cpu < 0) {
- 			WARN_ON_ONCE(box->cpu != -1);
--			box->cpu = new_cpu;
-+			if (uncore_die_has_box(type, die, pmu->pmu_idx)) {
-+				box->cpu = new_cpu;
-+				cpumask_set_cpu(new_cpu, &pmu->cpu_mask);
-+			}
- 			continue;
- 		}
- 
--		WARN_ON_ONCE(box->cpu != old_cpu);
-+		WARN_ON_ONCE(box->cpu != -1 && box->cpu != old_cpu);
- 		box->cpu = -1;
-+		cpumask_clear_cpu(old_cpu, &pmu->cpu_mask);
- 		if (new_cpu < 0)
- 			continue;
- 
-+		if (!uncore_die_has_box(type, die, pmu->pmu_idx))
-+			continue;
- 		uncore_pmu_cancel_hrtimer(box);
- 		perf_pmu_migrate_context(&pmu->pmu, old_cpu, new_cpu);
- 		box->cpu = new_cpu;
-+		cpumask_set_cpu(new_cpu, &pmu->cpu_mask);
- 	}
- }
- 
-@@ -1503,7 +1524,7 @@ static void uncore_box_unref(struct intel_uncore_type **types, int id)
- 		pmu = type->pmus;
- 		for (i = 0; i < type->num_boxes; i++, pmu++) {
- 			box = pmu->boxes[id];
--			if (box && atomic_dec_return(&box->refcnt) == 0)
-+			if (box && box->cpu >= 0 && atomic_dec_return(&box->refcnt) == 0)
- 				uncore_box_exit(box);
- 		}
- 	}
-@@ -1593,7 +1614,7 @@ static int uncore_box_ref(struct intel_uncore_type **types,
- 		pmu = type->pmus;
- 		for (i = 0; i < type->num_boxes; i++, pmu++) {
- 			box = pmu->boxes[id];
--			if (box && atomic_inc_return(&box->refcnt) == 1)
-+			if (box && box->cpu >= 0 && atomic_inc_return(&box->refcnt) == 1)
- 				uncore_box_init(box);
- 		}
- 	}
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 4838502d89ae..0a49e304fe40 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -86,6 +86,7 @@ struct intel_uncore_type {
- 	const struct attribute_group *attr_groups[4];
- 	const struct attribute_group **attr_update;
- 	struct pmu *pmu; /* for custom pmu ops */
-+	struct rb_root *boxes;
- 	/*
- 	 * Uncore PMU would store relevant platform topology configuration here
- 	 * to identify which platform component each PMON block of that type is
-@@ -125,6 +126,7 @@ struct intel_uncore_pmu {
- 	int				func_id;
- 	bool				registered;
- 	atomic_t			activeboxes;
-+	cpumask_t			cpu_mask;
- 	struct intel_uncore_type	*type;
- 	struct intel_uncore_box		**boxes;
- };
-diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
-index ce520e69a3c1..e61e460520a8 100644
---- a/arch/x86/events/intel/uncore_discovery.c
-+++ b/arch/x86/events/intel/uncore_discovery.c
-@@ -122,6 +122,64 @@ get_uncore_discovery_type(struct uncore_unit_discovery *unit)
- 	return add_uncore_discovery_type(unit);
- }
- 
-+static inline int pmu_idx_cmp(const void *key, const struct rb_node *b)
-+{
-+	struct intel_uncore_discovery_unit *unit;
-+	const unsigned int *id = key;
-+
-+	unit = rb_entry(b, struct intel_uncore_discovery_unit, node);
-+
-+	if (unit->pmu_idx > *id)
-+		return -1;
-+	else if (unit->pmu_idx < *id)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static struct intel_uncore_discovery_unit *
-+intel_uncore_find_discovery_unit(struct rb_root *units, int die,
-+				 unsigned int pmu_idx)
-+{
-+	struct intel_uncore_discovery_unit *unit;
-+	struct rb_node *pos;
-+
-+	if (!units)
-+		return NULL;
-+
-+	pos = rb_find_first(&pmu_idx, units, pmu_idx_cmp);
-+	if (!pos)
-+		return NULL;
-+	unit = rb_entry(pos, struct intel_uncore_discovery_unit, node);
-+
-+	if (die < 0)
-+		return unit;
-+
-+	for (; pos; pos = rb_next(pos)) {
-+		unit = rb_entry(pos, struct intel_uncore_discovery_unit, node);
-+
-+		if (unit->pmu_idx != pmu_idx)
-+			break;
-+
-+		if (unit->die == die)
-+			return unit;
-+	}
-+
-+	return NULL;
-+}
-+
-+int intel_uncore_find_discovery_unit_id(struct rb_root *units, int die,
-+					unsigned int pmu_idx)
-+{
-+	struct intel_uncore_discovery_unit *unit;
-+
-+	unit = intel_uncore_find_discovery_unit(units, die, pmu_idx);
-+	if (unit)
-+		return unit->id;
-+
-+	return -1;
-+}
-+
- static inline bool unit_less(struct rb_node *a, const struct rb_node *b)
- {
- 	struct intel_uncore_discovery_unit *a_node, *b_node;
+ 	struct pci_dev *pdev = box->pci_dev;
+@@ -697,10 +734,12 @@ static bool uncore_update_uncore_type(enum uncore_access_type type_id,
+ 	switch (type_id) {
+ 	case UNCORE_ACCESS_MSR:
+ 		uncore->ops = &generic_uncore_msr_ops;
+-		uncore->perf_ctr = (unsigned int)type->box_ctrl + type->ctr_offset;
+-		uncore->event_ctl = (unsigned int)type->box_ctrl + type->ctl_offset;
++		uncore->perf_ctr = (unsigned int)type->ctr_offset;
++		uncore->event_ctl = (unsigned int)type->ctl_offset;
+ 		uncore->box_ctl = (unsigned int)type->box_ctrl;
+ 		uncore->msr_offsets = type->box_offset;
++		uncore->boxes = &type->units;
++		uncore->num_boxes = type->num_units;
+ 		break;
+ 	case UNCORE_ACCESS_PCI:
+ 		uncore->ops = &generic_uncore_pci_ops;
 diff --git a/arch/x86/events/intel/uncore_discovery.h b/arch/x86/events/intel/uncore_discovery.h
-index 5190017aba51..96265cf1fc86 100644
+index 96265cf1fc86..4a7a7c819d6f 100644
 --- a/arch/x86/events/intel/uncore_discovery.h
 +++ b/arch/x86/events/intel/uncore_discovery.h
-@@ -166,3 +166,6 @@ u64 intel_generic_uncore_pci_read_counter(struct intel_uncore_box *box,
+@@ -169,3 +169,5 @@ intel_uncore_generic_init_uncores(enum uncore_access_type type_id, int num_extra
  
- struct intel_uncore_type **
- intel_uncore_generic_init_uncores(enum uncore_access_type type_id, int num_extra);
-+
-+int intel_uncore_find_discovery_unit_id(struct rb_root *units, int die,
-+					unsigned int pmu_idx);
+ int intel_uncore_find_discovery_unit_id(struct rb_root *units, int die,
+ 					unsigned int pmu_idx);
++bool intel_generic_uncore_assign_hw_event(struct perf_event *event,
++					  struct intel_uncore_box *box);
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index 74b8b21e8990..8b1cabff7ee3 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -5933,10 +5933,11 @@ static int spr_cha_hw_config(struct intel_uncore_box *box, struct perf_event *ev
+ 	struct hw_perf_event_extra *reg1 = &event->hw.extra_reg;
+ 	bool tie_en = !!(event->hw.config & SPR_CHA_PMON_CTL_TID_EN);
+ 	struct intel_uncore_type *type = box->pmu->type;
++	int id = intel_uncore_find_discovery_unit_id(type->boxes, -1, box->pmu->pmu_idx);
+ 
+ 	if (tie_en) {
+ 		reg1->reg = SPR_C0_MSR_PMON_BOX_FILTER0 +
+-			    HSWEP_CBO_MSR_OFFSET * type->box_ids[box->pmu->pmu_idx];
++			    HSWEP_CBO_MSR_OFFSET * id;
+ 		reg1->config = event->attr.config1 & SPR_CHA_PMON_BOX_FILTER_TID;
+ 		reg1->idx = 0;
+ 	}
+@@ -6460,18 +6461,21 @@ uncore_find_type_by_id(struct intel_uncore_type **types, int type_id)
+ static int uncore_type_max_boxes(struct intel_uncore_type **types,
+ 				 int type_id)
+ {
++	struct intel_uncore_discovery_unit *unit;
+ 	struct intel_uncore_type *type;
+-	int i, max = 0;
++	struct rb_node *node;
++	int max = 0;
+ 
+ 	type = uncore_find_type_by_id(types, type_id);
+ 	if (!type)
+ 		return 0;
+ 
+-	for (i = 0; i < type->num_boxes; i++) {
+-		if (type->box_ids[i] > max)
+-			max = type->box_ids[i];
+-	}
++	for (node = rb_first(type->boxes); node; node = rb_next(node)) {
++		unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
+ 
++		if (unit->id > max)
++			max = unit->id;
++	}
+ 	return max + 1;
+ }
+ 
 -- 
 2.35.1
 
