@@ -1,445 +1,226 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB0A17966E;
-	Tue, 11 Jun 2024 10:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA121411DF
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 10:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718101008; cv=none; b=eJ/+P0ZdbilZggiTFzqHa7O42/ZmCHmKX5r9Uid8hBWiQ1SDRZdOR/Q6RIjwnc1Ljw7YBWxBcN/006HgCwAa/cMHk6jgxmR8JU4LSVcVBZbHBTHGjJj/cOrcUZ5+ECflHWg1WYyVT7J589j6/LGchdv64wP6EcZbv4ZM8rOs92Y=
+	t=1718101042; cv=none; b=CvBM7Ou6MC+D3wZNmaMksui0cUWA/p6wW81K4h8zX0xAC8NczP0gqXki8fthS12Gfa9nmIrybZLlOikNN3rm2I6p9k+/V6kQ1cJ8S2mSM3DpMsoJq2uL0nP/AM40tbV5Udz+hOBQLvOVZ0mIVTwTXFCXgx8++1P+LRNRFchXtiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718101008; c=relaxed/simple;
-	bh=GJip/5Xaea9HOgfvAdnPM1xRHYd1ANP/E+2tcG5b1Cw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lmOn7zxEZBsjreF5Ih0C7rA/8bIEkbtQ+Jx4DdTbDGihNc3b5QGUGo50wPcGVLvUNBuUfVEx4QIMZ1KB6NcC0F+VE03DBm1IS9ODt/UT/mtkjPQoTxYfjTNIY6tnyxQAPOGEDeDCztSwE/jphPj6CBz6LV3RfKbSWc86DxnTih0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gqp4SDkd; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718101042; c=relaxed/simple;
+	bh=k3/Xfch+8JRLfzst3r5TstYfBgevM+EiUGucl7lOnRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Flmga6qQzEOUN8cU1xOVwpU5kKeEoEN3iRv7a4PizieVMh8wCcs7cKpW5NiiEgr2zE/woWIALEO0uWPsFJ8mDCRen0FDil/Wdi4VCk2eplRCa31GBKy4u1ZI5xgtdLzWAQK04oirS+a1acvaZGYKMog+7XNepDrzHGiN6YeLaB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=HlteUoJ5; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gqp4SDkd"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-421eab59723so14831975e9.3;
-        Tue, 11 Jun 2024 03:16:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="HlteUoJ5"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-374528b81ddso21532815ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 03:17:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718101005; x=1718705805; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tfbpp2/Mza4Dhnt7fnAbluGpGy7jve6tKErJLwOJn64=;
-        b=Gqp4SDkdzadXzhOPG5hTWIBHPdNGCdQE8VP8NTnjNWvzRcWpT13aiTLwh8v5lNnS61
-         sYpRiuWpjhnNMigNVAQzZgtC0N3+aBmb8HpkiPe/lTKxp2aLtnr3Pnsmt0Zoggwbwk37
-         JDZvDlqrxhWgpy52PqgjZxCM4Dgi3qtdQ9VhHxAOlaMuU8jrxiUbLSfkctvkfHT4y4at
-         FkOCHnvgpjghmXNP4sxw11xaWGqHHkUAXER6TS44oF5UYJF0ZIvQ/HTUgpUO2b0FRXxs
-         iVXN77FlzLkewdRD+byJKgALnAfpj+RrnCfSBHIVHCA3lpItFEfeAzevO7BDbsJNnprx
-         +p2A==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1718101040; x=1718705840; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=m4LuA/lhIOUGu97DVKfnfxIsZ/80sojqdo/2YGHirbU=;
+        b=HlteUoJ5jYT55Fo+1mBXgOv2jxL7mfOz8WCqc7FPH5Bio/wIYJhD2y01uKc3gP2kku
+         hUiRBjfcQvcSGcc3B7E50nOewdO0Lc8L1JIIDTUlBrmK4o3R8VAx203fhoCrg9HDT8li
+         DYpCSPeddcUaZnD9EVDP+g5kFcVDzW8PQKNz2QfXcrsKQrxNT9rXMlqwwBV5NSyqn/oO
+         FxlZ5aumeCzhyCIYWRGmURrtkrYjih/QAd0g1S9YX7GUdVzgHf6DO5EOlZWMF9V/W4WO
+         q+j5VPbBWDd5JXeSZRxHluTz650wFpK6izDlXCX1nyTZStUH6Iykg0egWq2STchZ/w0D
+         toKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718101005; x=1718705805;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tfbpp2/Mza4Dhnt7fnAbluGpGy7jve6tKErJLwOJn64=;
-        b=spWlAh/Hq1oWONBibR0bcCXmplThI/K61qmJYckcqMAVmvr+kg1fgMXPfb4HcKRRWe
-         tORJfgvcKEHcPGrBPDsE9j3rJdlD/NytwfYYQcoIxKs8dJiep8iW4lFYA4WHk3I4IYUr
-         Q5BglNjtCS9jtWaWQzHgYBZWO1plIx/ATqVe7TpFZHGW8STfKfhS2RPAQIUZvTGiGigi
-         nKtZ8OLQLlZTffLUAZq8oJXdymSkQFl2aqoVpokPkFgywi3Yo5qDpZcnsGxOCkmh06AW
-         OtV5su7xcWMK64flPJpf48ArMkq3t/R/pmphnTfToWCXClxYQhbmvKZXMnNNfW+tt0gX
-         5e/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUaGjM4dYuJ05AXqAUp3BgYRxFK405FFDic09bmJeAc2PRD4pI4/+AryGrjcaqD+aeasvaO7kpt/CaQouUWru+5Nt1PAot08smvyqo58JkCY71vslriOBQDRrvmyaUPRSJfAkAH71PGvlc41NFmDE5yk5VMHfSdSuUhksPpu3/yiKtAiar9MQYk
-X-Gm-Message-State: AOJu0YwN3MSKy3sBAw9RDtd8QyMPbYCqLZYTrDmeKmRbjI74PVLjiLGv
-	rgU5rpMY6+abqy/FEDwNz5ttM1ZwdeVMtCjW28r33VI+s0FwBJaw
-X-Google-Smtp-Source: AGHT+IGZ40s/t4zXuxLEDbT6UwuDMtm6fHT/AGDshxOxG50vum1oVRjFwldavwWZQsA7wE4vIzEFKw==
-X-Received: by 2002:a05:600c:4e8a:b0:421:7ee4:bbe8 with SMTP id 5b1f17b1804b1-4217ee4be2dmr61477825e9.19.1718101004717;
-        Tue, 11 Jun 2024 03:16:44 -0700 (PDT)
-Received: from f.. (cst-prg-65-249.cust.vodafone.cz. [46.135.65.249])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c1aa1desm173481275e9.11.2024.06.11.03.16.42
+        d=1e100.net; s=20230601; t=1718101040; x=1718705840;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m4LuA/lhIOUGu97DVKfnfxIsZ/80sojqdo/2YGHirbU=;
+        b=fpozc8owoI5mbwNs1Q9//9qg8tgqNWXVU+LnMLZhV57dKt+ABnM272405W48wzq5tY
+         XUtzBUEo2hRpkUk2f70PR8XwUh27T+A4QFKgEvxuVMFNSs8E1pxoUqZtUIy4NsCuiERG
+         tNUWc0p20W0oHR4+Ga0tLNesdzZJU5r5Jtq9bjHd6r0lW7C7LTAuNq0srVDt6Nv6YeRX
+         GGcrtavkSNo5xH5wvaLOkNe+gTImXI/0TGw+pD2B+0/WFieTkn43T5bNNUCxCxcLjrTn
+         Z/zrwzTpWy72EhHyVQmCBfYGiOa4eMBab7w9LrDUTV+mhREl0uER25lmIAvr3EA+yOIr
+         Fn6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVLbfwHf4FVQrbCT+Yhj+JkdRxOvuNBhrZGLhaTU1/BqxRI4WATHHund7Au7GD8btaCgKk0AqRtNkj68a2b+V7IBiKriaD/fCrl3DA8
+X-Gm-Message-State: AOJu0Yz7EnuNuKD2aeB9L9pLNbflw7fAOq/4+c3nUvbKdHIMuiAgUn40
+	05EJetTH8ujJTYBFaK1kz4QLknLPjgc0sjBPPLiZhlS6hEYcrgph+lJFzjAt13E=
+X-Google-Smtp-Source: AGHT+IGY0IadXfqerv0+OKl3gobPvnHsnmmpFsJTebOzIVe3wgFPCeUh8EY90kLowEveWUptqmn4Xw==
+X-Received: by 2002:a05:6e02:2166:b0:374:93d5:e37e with SMTP id e9e14a558f8ab-3758031ede4mr145832495ab.17.1718101039747;
+        Tue, 11 Jun 2024 03:17:19 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6de200849b7sm7411675a12.18.2024.06.11.03.17.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 03:16:44 -0700 (PDT)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	josef@toxicpanda.com,
-	hch@infradead.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v3 1/2] vfs: add rcu-based find_inode variants for iget ops
-Date: Tue, 11 Jun 2024 12:16:31 +0200
-Message-ID: <20240611101633.507101-2-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240611101633.507101-1-mjguzik@gmail.com>
-References: <20240611101633.507101-1-mjguzik@gmail.com>
+        Tue, 11 Jun 2024 03:17:19 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sGyZ2-00C3lj-1n;
+	Tue, 11 Jun 2024 20:17:16 +1000
+Date: Tue, 11 Jun 2024 20:17:16 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH] vfs: add rcu-based find_inode variants for iget ops
+Message-ID: <ZmgkLHa6LoV8yzab@dread.disaster.area>
+References: <20240606140515.216424-1-mjguzik@gmail.com>
+ <ZmJqyrgPXXjY2Iem@dread.disaster.area>
+ <bujynmx7n32tzl2xro7vz6zddt5p7lf5ultnaljaz2p2ler64c@acr7jih3wad7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bujynmx7n32tzl2xro7vz6zddt5p7lf5ultnaljaz2p2ler64c@acr7jih3wad7>
 
-Instantiating a new inode normally takes the global inode hash lock
-twice:
-1. once to check if it happens to already be present
-2. once to add it to the hash
+On Fri, Jun 07, 2024 at 09:51:51AM +0200, Mateusz Guzik wrote:
+> On Fri, Jun 07, 2024 at 12:04:58PM +1000, Dave Chinner wrote:
+> > On Thu, Jun 06, 2024 at 04:05:15PM +0200, Mateusz Guzik wrote:
+> > > Instantiating a new inode normally takes the global inode hash lock
+> > > twice:
+> > > 1. once to check if it happens to already be present
+> > > 2. once to add it to the hash
+> > > 
+> > > The back-to-back lock/unlock pattern is known to degrade performance
+> > > significantly, which is further exacerbated if the hash is heavily
+> > > populated (long chains to walk, extending hold time). Arguably hash
+> > > sizing and hashing algo need to be revisited, but that's beyond the
+> > > scope of this patch.
+> > > 
+> > > A long term fix would introduce fine-grained locking, this was attempted
+> > > in [1], but that patchset was already posted several times and appears
+> > > stalled.
+> > 
+> > Why not just pick up those patches and drive them to completion?
+> > 
+> 
+> Time constraints on my end aside.
+> 
+> From your own e-mail [1] last year problems are:
+> 
+> > - A lack of recent validation against ext4, btrfs and other
+> > filesystems.
+> > - the loss of lockdep coverage by moving to bit locks
+> > - it breaks CONFIG_PREEMPT_RT=y because we nest other spinlocks
+> >   inside the inode_hash_lock and we can't do that if we convert the
+> >   inode hash to bit locks because RT makes spinlocks sleeping locks.
+> > - There's been additions for lockless RCU inode hash lookups from
+> >   AFS and ext4 in weird, uncommon corner cases and I have no idea
+> >   how to validate they still work correctly with hash-bl. I suspect
+> >   they should just go away with hash-bl, but....
+> 
+> > There's more, but these are the big ones.
+> 
+> I did see the lockdep and preempt_rt problem were patched up in a later
+> iteration ([2]).
+> 
+> What we both agree on is that the patchset adds enough complexity that
+> it needs solid justification. I assumed one was there on your end when
+> you posted it.
+> 
+> For that entire patchset I don't have one. I can however justify the
+> comparatively trivial thing I posted in this thread.
 
-The back-to-back lock/unlock pattern is known to degrade performance
-significantly, which is further exacerbated if the hash is heavily
-populated (long chains to walk, extending hold time). Arguably hash
-sizing and hashing algo need to be revisited, but that's beyond the
-scope of this patch.
+I didn't suggest you pick up the entire patchset, I suggested you
+pull the inode cache conversion to hash-bl from it and use that
+instead of hacking RCU lookups into the inode cache.
 
-A long term fix would introduce finer-grained locking. An attempt was
-made several times, most recently in [1], but the effort appears
-stalled.
+> That aside if I had to make the entire thing scale I would approach
+> things differently, most notably in terms of locking granularity. Per
+> your own statement things can be made to look great in microbenchmarks,
+> but that does not necessarily mean they help. A lot of it is a tradeoff
+> and making everything per-cpu for this particular problem may be taking
+> it too far.
 
-A simpler idea which solves majority of the problem and which may be
-good enough for the time being is to use RCU for the initial lookup.
-Basic RCU support is already present in the hash. This being a temporary
-measure I tried to keep the change as small as possible.
+The hash-bl conversion doesn't make anything per-cpu, so I don't
+know what you are complaining about here.
 
-iget_locked consumers (notably ext4) get away without any changes
-because inode comparison method is built-in.
+> For the inode hash it may be the old hack of having a lock array would
+> do it more than well enough -- say 32 locks (or some other number
+> dependent on hash size) each covering a dedicated subset.
 
-iget5_locked and ilookup5_nowait consumers pass a custom callback. Since
-removal of locking adds more problems (inode can be changing) it's not
-safe to assume all filesystems happen to cope.  Thus iget5_locked_rcu,
-ilookup5_rcu and ilookup5_nowait_rcu get added, requiring manual
-conversion.
+No, that's a mid 1990s-era hack that was done because we didn't know
+any better ways to scale global algorithms back then. 
+It's not a scalable algorithm, it's a global algorithm that
+has been sharded a few times to try to keep global scope operations
+apart. The moment you have subset collisions because of a specific
+workload pattern, then the scalability problem comes straight back.
 
-In order to reduce code duplication find_inode and find_inode_fast grow
-an argument indicating whether inode hash lock is held, which is passed
-down should sleeping be necessary. They always rcu_read_lock, which is
-redundant but harmless. Doing it conditionally reduces readability for
-no real gain that I can see. RCU-alike restrictions were already put on
-callbacks due to the hash spinlock being held.
+We have been doing better than this for years, and it's not a viable
+solution for things like core OS cache indexing. We need a construct
+that is inherently scalable and has little cost to that inherent
+scalability.
 
-There is a real cache-busting workload scanning millions of files in
-parallel (it's a backup server thing), where the initial lookup is
-guaranteed to fail resulting in the 2 lock acquires.
+We have an inhernetly scalable solution already - hash-bl adds
+fine-grained locking without changing locking behaviour nor
+consuming extra memory. And it scales lookup, insert and remove with
+a common locking scheme across all operations.
 
-Implemented below is a synthehic benchmark which provides the same
-behavior. [I shall note the workload is not running on Linux, instead it
-was causing trouble elsewhere. Benchmark below was used while addressing
-said problems and was found to adequately represent the real workload.]
+Your patch, however, just converts *some* of the lookup API
+operations to use RCU. It adds complexity for things like inserts
+which are going to need inode hash locking if the RCU lookup fails,
+anyway.
 
-Total real time fluctuates by 1-2s.
+Hence your patch optimises the case where the inode is in cache but
+the dentry isn't, but we'll still get massive contention on lookup
+when the RCU lookup on the inode cache and inserts are always going
+to be required.
 
-With 20 threads each walking a dedicated 1000 dirs * 1000 files
-directory tree to stat(2) on a 32 core + 24GB RAM vm:
+IOWs, even RCU lookups are not going to prevent inode hash lock
+contention for parallel cold cache lookups. Hence, with RCU,
+applications are going to see unpredictable contention behaviour
+dependent on the memory footprint of the caches at the time of the
+lookup. Users will have no way of predicting when the behaviour will
+change, let alone have any way of mitigating it. Unpredictable
+variable behaviour is the thing we want to avoid the most with core
+OS caches.
 
-ext4 (needed mkfs.ext4 -N 24000000):
-before:	3.77s user 890.90s system 1939% cpu 46.118 total
-after:  3.24s user 397.73s system 1858% cpu 21.581 total (-53%)
+In comparison, hash-bl based inode cache lookups will have the same
+behaviour for both cache hits and cache misses. There will be
+nearly zero contention for both types of lookups, as the insert can
+be done immediately under the same lock that the is held for the
+lookup. Hence performance will be predictable and largely
+deterministic under a wide variety of workloads and changing memory
+pressure. This is how we want the inode cache to behave.
 
-Benchmark can be found here: https://people.freebsd.org/~mjg/fstree.tgz
+IOWs, the hash-bl solution is superior to RCU lookups for many
+reasons. RCU lookups might be fast, but it's not the best solution
+to every problem that requires scalable behaviour.
 
-[1] https://lore.kernel.org/all/20231206060629.2827226-1-david@fromorbit.com/
+> All that said, if someone(tm) wants to pick up your patchset and even
+> commit it the way it is right now I'm not going to protest anything.
+>
+> I don't have time nor justification to do full work My Way(tm).
 
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
- fs/inode.c         | 135 +++++++++++++++++++++++++++++++++++++++------
- include/linux/fs.h |  12 +++-
- 2 files changed, 129 insertions(+), 18 deletions(-)
+You *always* say this sort of thing when someone asks you to do
+something different.
 
-diff --git a/fs/inode.c b/fs/inode.c
-index 3a41f83a4ba5..95a093c257ad 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -886,36 +886,45 @@ long prune_icache_sb(struct super_block *sb, struct shrink_control *sc)
- 	return freed;
- }
- 
--static void __wait_on_freeing_inode(struct inode *inode);
-+static void __wait_on_freeing_inode(struct inode *inode, bool locked);
- /*
-  * Called with the inode lock held.
-  */
- static struct inode *find_inode(struct super_block *sb,
- 				struct hlist_head *head,
- 				int (*test)(struct inode *, void *),
--				void *data)
-+				void *data, bool locked)
- {
- 	struct inode *inode = NULL;
- 
-+	if (locked)
-+		lockdep_assert_held(&inode_hash_lock);
-+	else
-+		lockdep_assert_not_held(&inode_hash_lock);
-+
-+	rcu_read_lock();
- repeat:
--	hlist_for_each_entry(inode, head, i_hash) {
-+	hlist_for_each_entry_rcu(inode, head, i_hash) {
- 		if (inode->i_sb != sb)
- 			continue;
- 		if (!test(inode, data))
- 			continue;
- 		spin_lock(&inode->i_lock);
- 		if (inode->i_state & (I_FREEING|I_WILL_FREE)) {
--			__wait_on_freeing_inode(inode);
-+			__wait_on_freeing_inode(inode, locked);
- 			goto repeat;
- 		}
- 		if (unlikely(inode->i_state & I_CREATING)) {
- 			spin_unlock(&inode->i_lock);
-+			rcu_read_unlock();
- 			return ERR_PTR(-ESTALE);
- 		}
- 		__iget(inode);
- 		spin_unlock(&inode->i_lock);
-+		rcu_read_unlock();
- 		return inode;
- 	}
-+	rcu_read_unlock();
- 	return NULL;
- }
- 
-@@ -924,29 +933,39 @@ static struct inode *find_inode(struct super_block *sb,
-  * iget_locked for details.
-  */
- static struct inode *find_inode_fast(struct super_block *sb,
--				struct hlist_head *head, unsigned long ino)
-+				struct hlist_head *head, unsigned long ino,
-+				bool locked)
- {
- 	struct inode *inode = NULL;
- 
-+	if (locked)
-+		lockdep_assert_held(&inode_hash_lock);
-+	else
-+		lockdep_assert_not_held(&inode_hash_lock);
-+
-+	rcu_read_lock();
- repeat:
--	hlist_for_each_entry(inode, head, i_hash) {
-+	hlist_for_each_entry_rcu(inode, head, i_hash) {
- 		if (inode->i_ino != ino)
- 			continue;
- 		if (inode->i_sb != sb)
- 			continue;
- 		spin_lock(&inode->i_lock);
- 		if (inode->i_state & (I_FREEING|I_WILL_FREE)) {
--			__wait_on_freeing_inode(inode);
-+			__wait_on_freeing_inode(inode, locked);
- 			goto repeat;
- 		}
- 		if (unlikely(inode->i_state & I_CREATING)) {
- 			spin_unlock(&inode->i_lock);
-+			rcu_read_unlock();
- 			return ERR_PTR(-ESTALE);
- 		}
- 		__iget(inode);
- 		spin_unlock(&inode->i_lock);
-+		rcu_read_unlock();
- 		return inode;
- 	}
-+	rcu_read_unlock();
- 	return NULL;
- }
- 
-@@ -1161,7 +1180,7 @@ struct inode *inode_insert5(struct inode *inode, unsigned long hashval,
- 
- again:
- 	spin_lock(&inode_hash_lock);
--	old = find_inode(inode->i_sb, head, test, data);
-+	old = find_inode(inode->i_sb, head, test, data, true);
- 	if (unlikely(old)) {
- 		/*
- 		 * Uhhuh, somebody else created the same inode under us.
-@@ -1245,6 +1264,37 @@ struct inode *iget5_locked(struct super_block *sb, unsigned long hashval,
- }
- EXPORT_SYMBOL(iget5_locked);
- 
-+/**
-+ * iget5_locked_rcu - obtain an inode from a mounted file system
-+ * @sb:		super block of file system
-+ * @hashval:	hash value (usually inode number) to get
-+ * @test:	callback used for comparisons between inodes
-+ * @set:	callback used to initialize a new struct inode
-+ * @data:	opaque data pointer to pass to @test and @set
-+ *
-+ * This is equivalent to iget5, except the @test callback must
-+ * tolerate the inode not being stable, including being mid-teardown.
-+ */
-+struct inode *iget5_locked_rcu(struct super_block *sb, unsigned long hashval,
-+		int (*test)(struct inode *, void *),
-+		int (*set)(struct inode *, void *), void *data)
-+{
-+	struct inode *inode = ilookup5_rcu(sb, hashval, test, data);
-+
-+	if (!inode) {
-+		struct inode *new = alloc_inode(sb);
-+
-+		if (new) {
-+			new->i_state = 0;
-+			inode = inode_insert5(new, hashval, test, set, data);
-+			if (unlikely(inode != new))
-+				destroy_inode(new);
-+		}
-+	}
-+	return inode;
-+}
-+EXPORT_SYMBOL_GPL(iget5_locked_rcu);
-+
- /**
-  * iget_locked - obtain an inode from a mounted file system
-  * @sb:		super block of file system
-@@ -1263,9 +1313,7 @@ struct inode *iget_locked(struct super_block *sb, unsigned long ino)
- 	struct hlist_head *head = inode_hashtable + hash(sb, ino);
- 	struct inode *inode;
- again:
--	spin_lock(&inode_hash_lock);
--	inode = find_inode_fast(sb, head, ino);
--	spin_unlock(&inode_hash_lock);
-+	inode = find_inode_fast(sb, head, ino, false);
- 	if (inode) {
- 		if (IS_ERR(inode))
- 			return NULL;
-@@ -1283,7 +1331,7 @@ struct inode *iget_locked(struct super_block *sb, unsigned long ino)
- 
- 		spin_lock(&inode_hash_lock);
- 		/* We released the lock, so.. */
--		old = find_inode_fast(sb, head, ino);
-+		old = find_inode_fast(sb, head, ino, true);
- 		if (!old) {
- 			inode->i_ino = ino;
- 			spin_lock(&inode->i_lock);
-@@ -1419,13 +1467,35 @@ struct inode *ilookup5_nowait(struct super_block *sb, unsigned long hashval,
- 	struct inode *inode;
- 
- 	spin_lock(&inode_hash_lock);
--	inode = find_inode(sb, head, test, data);
-+	inode = find_inode(sb, head, test, data, true);
- 	spin_unlock(&inode_hash_lock);
- 
- 	return IS_ERR(inode) ? NULL : inode;
- }
- EXPORT_SYMBOL(ilookup5_nowait);
- 
-+/**
-+ * ilookup5_nowait_rcu - search for an inode in the inode cache
-+ * @sb:		super block of file system to search
-+ * @hashval:	hash value (usually inode number) to search for
-+ * @test:	callback used for comparisons between inodes
-+ * @data:	opaque data pointer to pass to @test
-+ *
-+ * This is equivalent to ilookup5_nowait, except the @test callback must
-+ * tolerate the inode not being stable, including being mid-teardown.
-+ */
-+struct inode *ilookup5_nowait_rcu(struct super_block *sb, unsigned long hashval,
-+		int (*test)(struct inode *, void *), void *data)
-+{
-+	struct hlist_head *head = inode_hashtable + hash(sb, hashval);
-+	struct inode *inode;
-+
-+	inode = find_inode(sb, head, test, data, false);
-+
-+	return IS_ERR(inode) ? NULL : inode;
-+}
-+EXPORT_SYMBOL_GPL(ilookup5_nowait_rcu);
-+
- /**
-  * ilookup5 - search for an inode in the inode cache
-  * @sb:		super block of file system to search
-@@ -1460,6 +1530,33 @@ struct inode *ilookup5(struct super_block *sb, unsigned long hashval,
- }
- EXPORT_SYMBOL(ilookup5);
- 
-+/**
-+ * ilookup5 - search for an inode in the inode cache
-+ * @sb:		super block of file system to search
-+ * @hashval:	hash value (usually inode number) to search for
-+ * @test:	callback used for comparisons between inodes
-+ * @data:	opaque data pointer to pass to @test
-+ *
-+ * This is equivalent to ilookup5, except the @test callback must
-+ * tolerate the inode not being stable, including being mid-teardown.
-+ */
-+struct inode *ilookup5_rcu(struct super_block *sb, unsigned long hashval,
-+		int (*test)(struct inode *, void *), void *data)
-+{
-+	struct inode *inode;
-+again:
-+	inode = ilookup5_nowait_rcu(sb, hashval, test, data);
-+	if (inode) {
-+		wait_on_inode(inode);
-+		if (unlikely(inode_unhashed(inode))) {
-+			iput(inode);
-+			goto again;
-+		}
-+	}
-+	return inode;
-+}
-+EXPORT_SYMBOL_GPL(ilookup5_rcu);
-+
- /**
-  * ilookup - search for an inode in the inode cache
-  * @sb:		super block of file system to search
-@@ -1474,7 +1571,7 @@ struct inode *ilookup(struct super_block *sb, unsigned long ino)
- 	struct inode *inode;
- again:
- 	spin_lock(&inode_hash_lock);
--	inode = find_inode_fast(sb, head, ino);
-+	inode = find_inode_fast(sb, head, ino, true);
- 	spin_unlock(&inode_hash_lock);
- 
- 	if (inode) {
-@@ -2235,17 +2332,21 @@ EXPORT_SYMBOL(inode_needs_sync);
-  * wake_up_bit(&inode->i_state, __I_NEW) after removing from the hash list
-  * will DTRT.
-  */
--static void __wait_on_freeing_inode(struct inode *inode)
-+static void __wait_on_freeing_inode(struct inode *inode, bool locked)
- {
- 	wait_queue_head_t *wq;
- 	DEFINE_WAIT_BIT(wait, &inode->i_state, __I_NEW);
- 	wq = bit_waitqueue(&inode->i_state, __I_NEW);
- 	prepare_to_wait(wq, &wait.wq_entry, TASK_UNINTERRUPTIBLE);
- 	spin_unlock(&inode->i_lock);
--	spin_unlock(&inode_hash_lock);
-+	rcu_read_unlock();
-+	if (locked)
-+		spin_unlock(&inode_hash_lock);
- 	schedule();
- 	finish_wait(wq, &wait.wq_entry);
--	spin_lock(&inode_hash_lock);
-+	if (locked)
-+		spin_lock(&inode_hash_lock);
-+	rcu_read_lock();
- }
- 
- static __initdata unsigned long ihash_entries;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index bfc1e6407bf6..9d4109fd22c9 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3037,15 +3037,25 @@ extern void d_mark_dontcache(struct inode *inode);
- extern struct inode *ilookup5_nowait(struct super_block *sb,
- 		unsigned long hashval, int (*test)(struct inode *, void *),
- 		void *data);
-+struct inode *ilookup5_nowait_rcu(struct super_block *sb, unsigned long hashval,
-+		int (*test)(struct inode *, void *), void *data);
- extern struct inode *ilookup5(struct super_block *sb, unsigned long hashval,
- 		int (*test)(struct inode *, void *), void *data);
-+struct inode *ilookup5_rcu(struct super_block *sb, unsigned long hashval,
-+		int (*test)(struct inode *, void *), void *data);
-+
- extern struct inode *ilookup(struct super_block *sb, unsigned long ino);
- 
- extern struct inode *inode_insert5(struct inode *inode, unsigned long hashval,
- 		int (*test)(struct inode *, void *),
- 		int (*set)(struct inode *, void *),
- 		void *data);
--extern struct inode * iget5_locked(struct super_block *, unsigned long, int (*test)(struct inode *, void *), int (*set)(struct inode *, void *), void *);
-+struct inode *iget5_locked(struct super_block *, unsigned long,
-+			   int (*test)(struct inode *, void *),
-+			   int (*set)(struct inode *, void *), void *);
-+struct inode *iget5_locked_rcu(struct super_block *, unsigned long,
-+			       int (*test)(struct inode *, void *),
-+			       int (*set)(struct inode *, void *), void *);
- extern struct inode * iget_locked(struct super_block *, unsigned long);
- extern struct inode *find_inode_nowait(struct super_block *,
- 				       unsigned long,
+If you don't agree with the reviewer's comments, you make some
+statement about how you "don't care enough to fix it properly" or
+that you don't have time to fix it properly, or that you think the
+reviewing is asking you to "fix everything" rather than just one
+line in your patch so you reject all the reviewers comment, or you
+say "if the maintainers want something" as a way of saying "you
+don't have any authority, so I'm not going to listen to you at all",
+or ....
+
+> I did have time to hack up the initial rcu lookup, which imo does not
+> require much to justify inclusion and does help the case I'm interested
+> in.
+
+I thin kit requires a lot more justification than you have given,
+especially given the fact changing memory pressure, access patterns
+and cache balance will have a great impact on whether the RCU path
+makes any different to inode hash lock contention at all.
+
+The hash-bl conversion is a much a better solution and the
+work is mostly done. If you want your workload case to perform
+better, then please pick up the inode hash lock conversion to
+hash-bl.
+
+-Dave.
 -- 
-2.43.0
-
+Dave Chinner
+david@fromorbit.com
