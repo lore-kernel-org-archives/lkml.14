@@ -1,151 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C835438F97
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 15:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49BC24AEE9;
+	Tue, 11 Jun 2024 15:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718118232; cv=none; b=eFdQjpW/nZblRw4rwrMQqJNzF7HNGDBH5pIiCNViH1N4U0MmBPwuqIAcbmUCKIJ67KcGdXWILu3GdOq3tVKYt9UAEb4NhVC7i9lmVKReN5cygWts6jt2mwUXJbVdb22uWWseJ+aoRjf9ZfSZ9pJjPwHjVPrtQi6Xf4k8bDTdGOc=
+	t=1718118237; cv=none; b=sX9TxSJBGNtRHG96J593JXydh2/EWibwsIdDRI9aSdKPujDN0LOTrKgHVCNGZKF19QNbVQjDqGNz4YvuiJnjTN46+Mbv6d7itZBMIafrhO5JjZAE4uekhHHdsa9nSdAWnnMDcH7jkUqBf4cMHmu7wittmSVbI32D+G7FIIgQOJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718118232; c=relaxed/simple;
-	bh=DxHuSRyS2182VbMMPg8ECusV9XWBUw9c0Ua7Tz0GQfQ=;
-	h=From:References:MIME-Version:In-Reply-To:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RaX7dom/dbZnSCs2qNEvth8AiaZJyXawtlQaBelHRIxPkvBU9W0Q6hvBCJy4zURwf5CKvPJr8SAsGE++0si+eNxiXgJq67faIjbDGXFY9wE57j7dGSXpRHfrHdR5tEIR9bgXrxtTkYJr8S7de/9u8esrsHFFm8vqJnRQISooR30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AuymG5cx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AuymG5cx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718118229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1KOD3tvw2yUOuCBwejEuRkcEMN7XtQ6ZYq07uFnoBqQ=;
-	b=AuymG5cxKaOvyz314SY3mNHcTZLXKJJymaTtldiI1iISYTRrgM/tC8lMiUh4r4i5b83Bx3
-	QsjBmzBmZ5vuRqyMAMbd+wrsRFZXOHvScJGIaH+uc4Xz7m0xGdoYVPBaU4AXteZjguiaa7
-	XFubKaOCh6p9oWmJT7bLKWle4fkbZ2o=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-237-gz2S817AM5uy0qeyoImtcg-1; Tue, 11 Jun 2024 11:03:48 -0400
-X-MC-Unique: gz2S817AM5uy0qeyoImtcg-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6ab80cb23beso42804486d6.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 08:03:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718118227; x=1718723027;
-        h=cc:to:subject:message-id:date:in-reply-to:mime-version:references
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1KOD3tvw2yUOuCBwejEuRkcEMN7XtQ6ZYq07uFnoBqQ=;
-        b=BFDciYHYBIzMDL4eNqjouvR4ZpmE6MGSYmiP3a4Q+RcHCXFOBZpEE1O7ZKKOOaim/r
-         FS+1Uqttbtqi1pM9YcWW3KyjmWmQEXRm+kwq9x5ygzYmBIREdBMVIEXDuWI9Xij5jYzp
-         ZL8BAHTQX3eoefXD5t4AKBM5YI1F7YQVpujav5OlNrLRoQprjqze7lIq2NTzNL944qwT
-         w+xXGoRQMO2JvUfeynzKxonCRnOv/+9WEOTMMaVkfGVoPkMupJdEoM45uOHjdFbxDzWz
-         BUiZ7p7S+Cg4XHOuTwnIVfhpvFaK9dmxSuQ7uvbxnm+0DBb3MSilweZVZc4dFHcBi/CL
-         H2vg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcqlcU2BD6a+dA3heYVtuvIAdQPW2JwNYb4YD0WT+f8NVEUbsZ5dEOnLTGIG43PbqhUUD5BE/DmneGqNOcJSrmaJiBiDbcwpdTmkh+
-X-Gm-Message-State: AOJu0YzJpqAJF41GolvwEqaYDz+tD4UnHLcqUDKD1VOAe+TCxqaoxIc3
-	1VNffkCM1hByyfuLkmWgU7Z+AyupVOUpKy4mTA2B2CUWa7YmdW+SoZinn7NuUxBRue06deE8gEt
-	MljujgGLUnKfwiPTmi6+22pmMtus87ddqMT2XeT2pk0+RA0sWxK8lTEKQjMSNroLS5pYq4fu0kB
-	nC4mMsAsNt6LAHcCjWa6MrcCfo6rBpviL7f8zTcqhx7aM8
-X-Received: by 2002:a05:6214:5889:b0:6af:cd13:3adf with SMTP id 6a1803df08f44-6b059f15a02mr146830826d6.41.1718118226570;
-        Tue, 11 Jun 2024 08:03:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE8Fk310YG6KaykuurRnRYjKcqZ4xXhNfdb+Ut2CJiNwgIs0lhWrDGpn077i7CC8byIrzT0pPeZlUrEsg7upM4=
-X-Received: by 2002:a05:6214:5889:b0:6af:cd13:3adf with SMTP id
- 6a1803df08f44-6b059f15a02mr146830506d6.41.1718118226132; Tue, 11 Jun 2024
- 08:03:46 -0700 (PDT)
-Received: from 311643009450 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 11 Jun 2024 15:03:45 +0000
-From: =?UTF-8?Q?Adri=C3=A1n_Moreno?= <amorenoz@redhat.com>
-References: <20240603183121.2305013-1-amorenoz@redhat.com> <20240603183121.2305013-2-amorenoz@redhat.com>
- <f7t5xup26jt.fsf@redhat.com>
+	s=arc-20240116; t=1718118237; c=relaxed/simple;
+	bh=h3XxyN6IXydL8e0zIIIS9V4ZStSl00kff0Mk919Sp94=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mYzzdVh1Fd0zK3gLYEpEW05rVSU2blSaChWA/Y43VWsSUMN5wBxY68hPXb3lWy72xrYPK8fsyCL5RC07Qg/Nxrv7Zm/BGYZmlW49/kRV6Vo40kIcYD+YOLDcd5/GFnuvFKkzzbTmQcRswEw6seudqrnThVEgQSkWErJQ8j141ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FB80152B;
+	Tue, 11 Jun 2024 08:04:20 -0700 (PDT)
+Received: from e127643.arm.com (unknown [10.57.41.181])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AF1CA3F64C;
+	Tue, 11 Jun 2024 08:03:51 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	gankulkarni@os.amperecomputing.com,
+	mike.leach@linaro.org,
+	leo.yan@linux.dev,
+	anshuman.khandual@arm.com
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v3 10/14] coresight: Make CPU id map a property of a trace ID map
+Date: Tue, 11 Jun 2024 16:02:21 +0100
+Message-Id: <20240611150228.1802828-11-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240611150228.1802828-1-james.clark@arm.com>
+References: <20240611150228.1802828-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <f7t5xup26jt.fsf@redhat.com>
-Date: Tue, 11 Jun 2024 15:03:45 +0000
-Message-ID: <CAG=2xmN+fp5B_b1KQq2T9DKrTQ_+Kqr6WbmrY0Gk1j3zZnY1YA@mail.gmail.com>
-Subject: Re: [PATCH net-next 2/2] selftests: openvswitch: set value to nla flags
-To: Aaron Conole <aconole@redhat.com>
-Cc: netdev@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	dev@openvswitch.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 03, 2024 at 03:02:46PM GMT, Aaron Conole wrote:
-> Adrian Moreno <amorenoz@redhat.com> writes:
->
-> > Netlink flags, although they don't have payload at the netlink level,
-> > are represented as having a "True" value in pyroute2.
-> >
-> > Without it, trying to add a flow with a flag-type action (e.g: pop_vlan)
-> > fails with the following traceback:
-> >
-> > Traceback (most recent call last):
-> >   File "[...]/ovs-dpctl.py", line 2498, in <module>
-> >     sys.exit(main(sys.argv))
-> >              ^^^^^^^^^^^^^^
-> >   File "[...]/ovs-dpctl.py", line 2487, in main
-> >     ovsflow.add_flow(rep["dpifindex"], flow)
-> >   File "[...]/ovs-dpctl.py", line 2136, in add_flow
-> >     reply = self.nlm_request(
-> >             ^^^^^^^^^^^^^^^^^
-> >   File "[...]/pyroute2/netlink/nlsocket.py", line 822, in nlm_request
-> >     return tuple(self._genlm_request(*argv, **kwarg))
-> >                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> >   File "[...]/pyroute2/netlink/generic/__init__.py", line 126, in
-> > nlm_request
-> >     return tuple(super().nlm_request(*argv, **kwarg))
-> >            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> >   File "[...]/pyroute2/netlink/nlsocket.py", line 1124, in nlm_request
-> >     self.put(msg, msg_type, msg_flags, msg_seq=msg_seq)
-> >   File "[...]/pyroute2/netlink/nlsocket.py", line 389, in put
-> >     self.sendto_gate(msg, addr)
-> >   File "[...]/pyroute2/netlink/nlsocket.py", line 1056, in sendto_gate
-> >     msg.encode()
-> >   File "[...]/pyroute2/netlink/__init__.py", line 1245, in encode
-> >     offset = self.encode_nlas(offset)
-> >              ^^^^^^^^^^^^^^^^^^^^^^^^
-> >   File "[...]/pyroute2/netlink/__init__.py", line 1560, in encode_nlas
-> >     nla_instance.setvalue(cell[1])
-> >   File "[...]/pyroute2/netlink/__init__.py", line 1265, in setvalue
-> >     nlv.setvalue(nla_tuple[1])
-> >                  ~~~~~~~~~^^^
-> > IndexError: list index out of range
-> >
-> > Signed-off-by: Adrian Moreno <amorenoz@redhat.com>
-> > ---
->
-> Acked-by: Aaron Conole <aconole@redhat.com>
->
-> I don't know which pyroute2 version I had used when I tested this
-> previously, but even on my current system I get this error now.  Thanks
-> for the fix.
->
+The global CPU ID mappings won't work for per-sink ID maps so move it to
+the ID map struct. coresight_trace_id_release_all_pending() is hard
+coded to operate on the default map, but once Perf sessions use their
+own maps the pending release mechanism will be deleted. So it doesn't
+need to be extended to accept a trace ID map argument at this point.
 
-Thanks Aaron. I'll resend as v2 with your ack as a stand-alone patch
-since the other patch of this series will be fixed by your soon-to-come
-series.
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-trace-id.c | 16 +++++++++-------
+ include/linux/coresight.h                        |  1 +
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
-> >  tools/testing/selftests/net/openvswitch/ovs-dpctl.py | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-> > index b76907ac0092..a2395c3f37a1 100644
-> > --- a/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-> > +++ b/tools/testing/selftests/net/openvswitch/ovs-dpctl.py
-> > @@ -537,7 +537,7 @@ class ovsactions(nla):
-> >              for flat_act in parse_flat_map:
-> >                  if parse_starts_block(actstr, flat_act[0], False):
-> >                      actstr = actstr[len(flat_act[0]):]
-> > -                    self["attrs"].append([flat_act[1]])
-> > +                    self["attrs"].append([flat_act[1], True])
-> >                      actstr = actstr[strspn(actstr, ", ") :]
-> >                      parsed = True
->
+diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+index 5561989a03fa..8a777c0af6ea 100644
+--- a/drivers/hwtracing/coresight/coresight-trace-id.c
++++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+@@ -13,10 +13,12 @@
+ #include "coresight-trace-id.h"
+ 
+ /* Default trace ID map. Used in sysfs mode and for system sources */
+-static struct coresight_trace_id_map id_map_default;
++static DEFINE_PER_CPU(atomic_t, id_map_default_cpu_ids) = ATOMIC_INIT(0);
++static struct coresight_trace_id_map id_map_default = {
++	.cpu_map = &id_map_default_cpu_ids
++};
+ 
+-/* maintain a record of the mapping of IDs and pending releases per cpu */
+-static DEFINE_PER_CPU(atomic_t, cpu_id) = ATOMIC_INIT(0);
++/* maintain a record of the pending releases per cpu */
+ static cpumask_t cpu_id_release_pending;
+ 
+ /* perf session active counter */
+@@ -49,7 +51,7 @@ static void coresight_trace_id_dump_table(struct coresight_trace_id_map *id_map,
+ /* unlocked read of current trace ID value for given CPU */
+ static int _coresight_trace_id_read_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+ {
+-	return atomic_read(&per_cpu(cpu_id, cpu));
++	return atomic_read(per_cpu_ptr(id_map->cpu_map, cpu));
+ }
+ 
+ /* look for next available odd ID, return 0 if none found */
+@@ -145,7 +147,7 @@ static void coresight_trace_id_release_all_pending(void)
+ 		clear_bit(bit, id_map->pend_rel_ids);
+ 	}
+ 	for_each_cpu(cpu, &cpu_id_release_pending) {
+-		atomic_set(&per_cpu(cpu_id, cpu), 0);
++		atomic_set(per_cpu_ptr(id_map_default.cpu_map, cpu), 0);
+ 		cpumask_clear_cpu(cpu, &cpu_id_release_pending);
+ 	}
+ 	spin_unlock_irqrestore(&id_map_lock, flags);
+@@ -181,7 +183,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
+ 		goto get_cpu_id_out_unlock;
+ 
+ 	/* allocate the new id to the cpu */
+-	atomic_set(&per_cpu(cpu_id, cpu), id);
++	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
+ 
+ get_cpu_id_clr_pend:
+ 	/* we are (re)using this ID - so ensure it is not marked for release */
+@@ -215,7 +217,7 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
+ 	} else {
+ 		/* otherwise clear id */
+ 		coresight_trace_id_free(id, id_map);
+-		atomic_set(&per_cpu(cpu_id, cpu), 0);
++		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+ 	}
+ 
+ 	spin_unlock_irqrestore(&id_map_lock, flags);
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index c16c61a8411d..7d62b88bfb5c 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -234,6 +234,7 @@ struct coresight_sysfs_link {
+ struct coresight_trace_id_map {
+ 	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
+ 	DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
++	atomic_t __percpu *cpu_map;
+ };
+ 
+ /**
+-- 
+2.34.1
 
