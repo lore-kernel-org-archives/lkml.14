@@ -1,198 +1,115 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C44D39FF2;
-	Tue, 11 Jun 2024 15:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A372651016
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 15:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718118266; cv=none; b=aWmmjZH8zmsGNgWcDvnRxCx2j4vREjVsBUvvB6iQGpXP7xO1lRhGUXzbqo6+qiNGeDMpc5Qc7q6jfnGXTe7hOhF2R4UhGThoERW5RcxjdLyIvNaysIr+Zkw0vOVFpZkH6DIYWaA6w0zCZua5YrL+7R7aiu+PtF4dvqKXy1TH8F0=
+	t=1718118270; cv=none; b=RaaHPHmfgeQX3DHpWmyL6rIx8ViH7jO1O48zjlsFwW7nBIgMB2/EtCnoNnKqlbR5rAK079nDrCwkLxFvV0VyPL9rdno86vcv00p/B5xhfBKtPxmKwQ+IQYIgZqrUcB18AxLs9O0UQ51MKAfKu4qWY/H067tV7EcUKkg9vb0Lnpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718118266; c=relaxed/simple;
-	bh=qFgNbWqKqw9PxGuyaC1m+PSrSLUDlaGl12Oo39hymxo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s2wWCd0GUNHUhezgpR9wd4/YKg92cWkrLf6jy+ZNHCPEwuU1JBpg4hf+elis6W3W5CLNCmf23Papqz8GGo2xdQpg4TNCxxdeeqSHGCbpGGScBCIjcfp6OcaFNODPHPTMdGd24BP513zCLwn28VWlLcMmJKfUiKvEs0EPM0dC+H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7796016F3;
-	Tue, 11 Jun 2024 08:04:49 -0700 (PDT)
-Received: from e127643.arm.com (unknown [10.57.41.181])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 054703F64C;
-	Tue, 11 Jun 2024 08:04:20 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: coresight@lists.linaro.org,
-	suzuki.poulose@arm.com,
-	gankulkarni@os.amperecomputing.com,
-	mike.leach@linaro.org,
-	leo.yan@linux.dev,
-	anshuman.khandual@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 13/14] coresight: Emit sink ID in the HW_ID packets
-Date: Tue, 11 Jun 2024 16:02:24 +0100
-Message-Id: <20240611150228.1802828-14-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240611150228.1802828-1-james.clark@arm.com>
-References: <20240611150228.1802828-1-james.clark@arm.com>
+	s=arc-20240116; t=1718118270; c=relaxed/simple;
+	bh=AkUd3nITwa1Nsrx5FGIDh+oFc9gDF9r3YGUNfEDGOdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ktH/zHvPAI0Tpg9BXDSMLVNOwbtBgSmJ1jZ6G9nvmytpaQPgSYjM1fhT6e9kKsS6v8GxVH/2eelYVpGkQL1oyMwCbPIRZci/PSig2zRJU2eR+UvMlgaFMvt5twdAjOgqjmRYJx4bbzuIr0M6qiz1vbdaHQrkGQHFKorwFweqmko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=f2YWHNa+; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="f2YWHNa+"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3d22323a3ccso169336b6e.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 08:04:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1718118266; x=1718723066; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U1vw+2ACNqWtSlz7WiuesM2J8QxhMf27utzH+YpcgUU=;
+        b=f2YWHNa+NzKq6p06NcHmTrhmFPxBNtf57gmsdOhfH8ZMkjt7WXez7KiFFABFba2guQ
+         E7R9Hk3EWcEqvvov7f37ydSrEy0UyhahCv+hphrtrbf/ghRwesyD9P3jOjFUKYTuFWkb
+         5VyPBtCQk4a45pX81xHF894pzb9xnol4pxoRY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718118266; x=1718723066;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U1vw+2ACNqWtSlz7WiuesM2J8QxhMf27utzH+YpcgUU=;
+        b=swf5SZzoE7Bsc+/079Sv5WufdesauU1qY5LpQtn2pxBwXpc/GezesOKoYfRt2D+lpt
+         nXfagP910J3LoOHQtwP3CIien6puhnMuexyEXejsnqELculpAPLuKvJEXj1CFunlUMII
+         EMk2c3bTIeD8VBC3DkCrakXAz3qC5YVrAFWyGHMdsAV8s/bAJpdIYyMCWFPI4aOvZ79M
+         nV8lYwMtDMIEQQDYt34Io1lvF3b/Zfxoo1d2EpNTNJOJfN9ezNtJsG8VKY270IEw0vr/
+         Xff2d9sP+KNUJ6ArHcR5j0BIlMU9SjF9DyebedGVNZEDJCOSo9MQqlBXI3va6U10t/vh
+         oKlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZgRrILmEg5FOhcl1CBCiokMpnW+4D8xULQyFAJsM/qZ8CTUF+uU7fSjDOk+taLc2dDi0nv2JZNogRz6ir+LwLR1hzQ9L53+JQqYKu
+X-Gm-Message-State: AOJu0YwbbySN81iGARlNtZAyOG4/+8MRNue9ptlK1Qjd44FfF1Lbh3W9
+	+c1gUqMtLdyubVTIXwLKIDB/vq3bnVQGgF0fa5aMcAoGu+A2h+tfiGowi5l01pY=
+X-Google-Smtp-Source: AGHT+IGlfmuk878CG8En5W5lnHLDlQmd3V99IlMUJd8rH48VkCqYhG6rTzSfb4MZ//slpZJu5TCXQw==
+X-Received: by 2002:a05:6808:1b08:b0:3d2:2356:d271 with SMTP id 5614622812f47-3d22356d368mr9188713b6e.1.1718118266435;
+        Tue, 11 Jun 2024 08:04:26 -0700 (PDT)
+Received: from ?IPV6:2607:fb91:213b:a129:544a:cc06:ea0:4045? ([2607:fb91:213b:a129:544a:cc06:ea0:4045])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62ccacadc00sm20643537b3.1.2024.06.11.08.04.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jun 2024 08:04:26 -0700 (PDT)
+Message-ID: <0556ee55-6bdf-4392-8933-03539768f671@linuxfoundation.org>
+Date: Tue, 11 Jun 2024 09:04:24 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests: proc: remove unreached code and fix build
+ warning
+To: Alexey Dobriyan <adobriyan@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Amer Al Shanawany <amer.shanawany@gmail.com>,
+ Shuah Khan <shuah@kernel.org>,
+ Swarup Laxman Kotiaklapudi <swarupkotikalapudi@gmail.com>,
+ Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ kernel test robot <lkp@intel.com>, Shuah Khan <skhan@linuxfoundation.org>
+References: <202404010211.ygidvMwa-lkp@intel.com>
+ <20240603124220.33778-1-amer.shanawany@gmail.com>
+ <14f55053-2ff8-4086-8aac-b8ee2d50a427@p183>
+ <20240604202531.5d559ec4daed484a7a23592c@linux-foundation.org>
+ <eb9b2d6e-91eb-4fdc-b352-b3d0c290da2f@p183>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <eb9b2d6e-91eb-4fdc-b352-b3d0c290da2f@p183>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-For Perf to be able to decode when per-sink trace IDs are used, emit the
-sink that's being written to for each ETM.
+On 6/7/24 09:25, Alexey Dobriyan wrote:
+> On Tue, Jun 04, 2024 at 08:25:31PM -0700, Andrew Morton wrote:
+>> On Mon, 3 Jun 2024 17:24:47 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+>>
+>>> On Mon, Jun 03, 2024 at 02:42:20PM +0200, Amer Al Shanawany wrote:
+>>>> fix the following warning:
+>>>> proc-empty-vm.c:385:17: warning: ignoring return value of ‘write’
+>>>
+>>>> --- a/tools/testing/selftests/proc/proc-empty-vm.c
+>>>> +++ b/tools/testing/selftests/proc/proc-empty-vm.c
+>>>> @@ -381,9 +381,6 @@ static int test_proc_pid_statm(pid_t pid)
+>>>
+>>>> -	if (0) {
+>>>> -		write(1, buf, rv);
+>>>> -	}
+>>>
+>>> no thanks
+>>
+>> Why not?
+>>
+>> Why does that code exist anyway?  It at least needs a comment.
+> 
+> OK, whatever.
+> 
+> If test fails, it better record buggy output somewhere (to coredump or to terminal).
 
-Perf currently errors out if it sees a newer packet version so instead
-of bumping it, add a new minor version field. This can be used to
-signify new versions that have backwards compatible fields. Considering
-this change is only for high core count machines, it doesn't make sense
-to make a breaking change for everyone.
++1 on reporting results - the best way to do this is to add a meaningful message
+for users to understand what went wrong.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- drivers/hwtracing/coresight/coresight-core.c  | 26 ++++++++++---------
- .../hwtracing/coresight/coresight-etm-perf.c  | 16 ++++++++----
- drivers/hwtracing/coresight/coresight-priv.h  |  1 +
- include/linux/coresight-pmu.h                 | 17 +++++++++---
- 4 files changed, 39 insertions(+), 21 deletions(-)
+Please suggest how you would like this warning addressed and report the error.
 
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index faf560ba8d64..c427e9344a84 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -487,23 +487,25 @@ struct coresight_device *coresight_get_sink(struct list_head *path)
- 	return csdev;
- }
- 
-+u32 coresight_get_sink_id(struct coresight_device *csdev)
-+{
-+	if (!csdev->ea)
-+		return 0;
-+
-+	/*
-+	 * See function etm_perf_add_symlink_sink() to know where
-+	 * this comes from.
-+	 */
-+	return (u32) (unsigned long) csdev->ea->var;
-+}
-+
- static int coresight_sink_by_id(struct device *dev, const void *data)
- {
- 	struct coresight_device *csdev = to_coresight_device(dev);
--	unsigned long hash;
- 
- 	if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
--	     csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
--
--		if (!csdev->ea)
--			return 0;
--		/*
--		 * See function etm_perf_add_symlink_sink() to know where
--		 * this comes from.
--		 */
--		hash = (unsigned long)csdev->ea->var;
--
--		if ((u32)hash == *(u32 *)data)
-+	    csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
-+		if (coresight_get_sink_id(csdev) == *(u32 *)data)
- 			return 1;
- 	}
- 
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 17fa29969643..9bbc41f4b0af 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -453,6 +453,7 @@ static void etm_event_start(struct perf_event *event, int flags)
- 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
- 	struct list_head *path;
- 	u64 hw_id;
-+	u8 trace_id;
- 
- 	if (!csdev)
- 		goto fail;
-@@ -505,11 +506,16 @@ static void etm_event_start(struct perf_event *event, int flags)
- 	 */
- 	if (!cpumask_test_cpu(cpu, &event_data->aux_hwid_done)) {
- 		cpumask_set_cpu(cpu, &event_data->aux_hwid_done);
--		hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
--				   CS_AUX_HW_ID_CURR_VERSION);
--		hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
--				    coresight_trace_id_read_cpu_id_map(cpu,
--								       &sink->perf_sink_id_map));
-+
-+		trace_id = coresight_trace_id_read_cpu_id_map(cpu, &sink->perf_sink_id_map);
-+
-+		hw_id = FIELD_PREP(CS_AUX_HW_ID_MAJOR_VERSION_MASK,
-+				CS_AUX_HW_ID_MAJOR_VERSION);
-+		hw_id |= FIELD_PREP(CS_AUX_HW_ID_MINOR_VERSION_MASK,
-+				CS_AUX_HW_ID_MINOR_VERSION);
-+		hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, trace_id);
-+		hw_id |= FIELD_PREP(CS_AUX_HW_ID_SINK_ID_MASK, coresight_get_sink_id(sink));
-+
- 		perf_report_aux_output_id(event, hw_id);
- 	}
- 
-diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-index 61a46d3bdcc8..05f891ca6b5c 100644
---- a/drivers/hwtracing/coresight/coresight-priv.h
-+++ b/drivers/hwtracing/coresight/coresight-priv.h
-@@ -148,6 +148,7 @@ int coresight_make_links(struct coresight_device *orig,
- 			 struct coresight_device *target);
- void coresight_remove_links(struct coresight_device *orig,
- 			    struct coresight_connection *conn);
-+u32 coresight_get_sink_id(struct coresight_device *csdev);
- 
- #if IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM3X)
- extern int etm_readl_cp14(u32 off, unsigned int *val);
-diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-index 51ac441a37c3..89b0ac0014b0 100644
---- a/include/linux/coresight-pmu.h
-+++ b/include/linux/coresight-pmu.h
-@@ -49,12 +49,21 @@
-  * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
-  * Used to associate a CPU with the CoreSight Trace ID.
-  * [07:00] - Trace ID - uses 8 bits to make value easy to read in file.
-- * [59:08] - Unused (SBZ)
-- * [63:60] - Version
-+ * [39:08] - Sink ID - as reported in /sys/bus/event_source/devices/cs_etm/sinks/
-+ *	      Added in minor version 1.
-+ * [55:40] - Unused (SBZ)
-+ * [59:56] - Minor Version - previously existing fields are compatible with
-+ *	      all minor versions.
-+ * [63:60] - Major Version - previously existing fields mean different things
-+ *	      in new major versions.
-  */
- #define CS_AUX_HW_ID_TRACE_ID_MASK	GENMASK_ULL(7, 0)
--#define CS_AUX_HW_ID_VERSION_MASK	GENMASK_ULL(63, 60)
-+#define CS_AUX_HW_ID_SINK_ID_MASK	GENMASK_ULL(39, 8)
- 
--#define CS_AUX_HW_ID_CURR_VERSION 0
-+#define CS_AUX_HW_ID_MINOR_VERSION_MASK	GENMASK_ULL(59, 56)
-+#define CS_AUX_HW_ID_MAJOR_VERSION_MASK	GENMASK_ULL(63, 60)
-+
-+#define CS_AUX_HW_ID_MAJOR_VERSION 0
-+#define CS_AUX_HW_ID_MINOR_VERSION 1
- 
- #endif
--- 
-2.34.1
-
+thanks,
+-- Shuah
