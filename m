@@ -1,142 +1,85 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1229617C221;
-	Tue, 11 Jun 2024 13:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E286F17D35F;
+	Tue, 11 Jun 2024 13:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718114026; cv=none; b=cmxSZi4Wu70aStWiSY7ZIb3A8v/FS6o9vQTFx59ocNRcZWIJXo2Iv2JMqUGz4Vz1u6MXyrDgTpCY+1nDipKdCisjwu28LNgjyBzUf/7nd4c0smbyvQGRQwZMeAeF+jZ6egVp/FFTnZTqeZJlrbj2LVPIvWLZkggcGp09Yu7wBPY=
+	t=1718114062; cv=none; b=im2qvnihqdpsCC0DMIvkfj+TkJGJ7wz+f+DzAcdChkYox5doJv6AZY1XTUlRa1JQxLhf/IEjIIyVc8pEmU+9PZ53owb7xmjtUCdwbNnFxfuQ6Jyw/idw8s7RoWMWmKa4cTqL2uVfsB4PHPJ/H0fCsFyUqxTFhj+G/xu6IX+Tbs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718114026; c=relaxed/simple;
-	bh=0Q4yHJdDN6fFzURbHUhwnLVXmMBVrY14VDTQpc9SOdM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XwGA4+eJAFmrpu7hDlDdPJazssrDC+/j9f19DcCoMeHh9qoFVqTS77ODeBlRfY7cJjZn2xohcG/kHP6/HKTln4x/uvg5VRIFKtx9GMmhCd81OoXEGd78h4W+QKwrLsLgikY9iH3KaNLW9pFh3IEykWXBIqu+j1MV+CGK3jNAQc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VZiwh1Wv; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718114062; c=relaxed/simple;
+	bh=2UrUxNi+bMQB1JygFOWiEiOyAXps9fRZhWY9jaLZb8c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bcS52XwRU4L0rvIgNoElXiNIEqYZJGlTHrXCe1rcuH6ewhd56NZrWibVBBDBHS+nzw58XVB5NtrqxFuojXcaR3PEkTObpglE+HbBvBdFyM7EIhzal3Rw62zFOZgeUUia6Ylicele9pmUAdXKXDKUovdgkk90cSvYa3OAPadAvAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=g0320USq; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VZiwh1Wv"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45BDqmZc020929;
-	Tue, 11 Jun 2024 08:52:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718113969;
-	bh=EtD85aOQjnjw+uq24TpicW0xsz3EbF9jhHpe/YAcGyY=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=VZiwh1WvLE0TLnBz3hn2BLqTrP/d4whLjlxgUKs7U1+yRzJsCZbbknoCGGmR1iV1c
-	 CG2ZgbL2xlcdVdNLB/4cX1DByba8dINIqsOn5QSih7aZ2MutT2xpBNHey8lV2+hQNr
-	 isZS/DSzbCleydpbvFWy2pY9MMDH2210HkFdg6DY=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45BDqmAA043441
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 11 Jun 2024 08:52:48 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 11
- Jun 2024 08:52:48 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 11 Jun 2024 08:52:48 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45BDqmwV089179;
-	Tue, 11 Jun 2024 08:52:48 -0500
-Message-ID: <3c87646c-a247-4b0e-a052-a294b87aeae1@ti.com>
-Date: Tue, 11 Jun 2024 08:52:48 -0500
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="g0320USq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=tRijnAHcosKtI4xo+uB32Jb7iLe726hGK7jy+SHjT44=;
+	t=1718114061; x=1719323661; b=g0320USqhdrXiF0suv82ucQB0mzvJDPqKEev29gN6jz/C0y
+	P35a2kiQOJlriGy0eacKl0Y0Aq8xc8RsDhtZ0RxWliFV5U6PCExrXGrst2waGq+5E4MQThW4JHP0y
+	pp4BGHpZ2Kzn5okm22aCPfQwWnvyW/jTidkwugJrwn3DRjpCaG4kkTssRm4HhneJYtxcTrHyGi6kn
+	ACMdnePRaQWwyOs2Kk28qB0pbLYL46YoZTYVdKqnY2rfmMk1Lawc80RQOqCmWpitim1Wn+Ytt4NM7
+	fyKcuvbW6Pgpht1QP1hylsWZHQyjjBxlpXvI8/VOk4Ze7uHmK6S/CLx4o9UC8+VA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1sH1x4-00000008h5l-00Ha;
+	Tue, 11 Jun 2024 15:54:18 +0200
+Message-ID: <95163ee547da95964c16f87a38d3326ae4da3253.camel@sipsolutions.net>
+Subject: Re: iwlwifi: Regression after migrating to 6.6.32
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: miriam.rachel.korenblit@intel.com, kvalo@kernel.org, Jakub Kicinski
+	 <kuba@kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, 
+ linux-kernel <linux-kernel@vger.kernel.org>
+Date: Tue, 11 Jun 2024 15:54:16 +0200
+In-Reply-To: <CAOMZO5Aufe7zAE7TFVprvRreamYd9=RHjybjaEz2O9WaPksV=Q@mail.gmail.com>
+References: 
+	<CAOMZO5A7+nxACoBPY0k8cOpVQByZtEV_N1489MK5wETHF_RXWA@mail.gmail.com>
+	 <3fbb5317d9ff33ef1b60ca8297537335ce86a79d.camel@sipsolutions.net>
+	 <CAOMZO5Aufe7zAE7TFVprvRreamYd9=RHjybjaEz2O9WaPksV=Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/8] dt-bindings: counter: Add new ti,am62-eqep
- compatible
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Rob
- Herring <robh@kernel.org>
-CC: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        David
- Lechner <david@lechnology.com>, Nishanth Menon <nm@ti.com>,
-        William Breathitt
- Gray <wbg@kernel.org>
-References: <20240610144637.477954-1-jm@ti.com>
- <20240610144637.477954-2-jm@ti.com>
- <5ad5cf7a-c5c6-449e-9ed9-3d9f74959a19@linaro.org>
- <01433df1-aa19-4abb-9d87-c54e4c0dff17@ti.com>
- <b72164f9-1b1b-4329-8d4a-66fc626c45fe@linaro.org>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <b72164f9-1b1b-4329-8d4a-66fc626c45fe@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-malware-bazaar: not-scanned
 
-Hi,
+Hi Fabio,
 
-On 6/11/24 1:51 AM, Krzysztof Kozlowski wrote:
-> On 11/06/2024 00:13, Judith Mendez wrote:
->>
->> Hi Krzysztof,
->>
->> On 6/10/24 9:58 AM, Krzysztof Kozlowski wrote:
->>> On 10/06/2024 16:46, Judith Mendez wrote:
->>>> Add new compatible ti,am62-eqep for TI K3 devices. If a device
->>>> uses this compatible, require power-domains property.
->>>>
->>>> Since there is only one functional and interface clock for eqep,
->>>> clock-names is not really required, so removed from required
->>>> section, make it optional for ti,am3352-eqep compatible, and
->>>> update the example.
->>>>
->>>
->>> ...
->>>
->>>
->>>>            interrupts = <79>;
->>>>        };
->>>>    
->>>> +  - |
->>>> +    #include <dt-bindings/interrupt-controller/irq.h>
->>>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
->>>> +
->>>> +    bus {
->>>> +        #address-cells = <2>;
->>>> +        #size-cells = <2>;
->>>> +        eqep1: counter@23210000 {
->>>
->>> No need for label
->>>
->>>> +          compatible = "ti,am62-eqep";
->>>> +          reg = <0x00 0x23210000 0x00 0x100>;
->>>> +          power-domains = <&k3_pds 60 TI_SCI_PD_EXCLUSIVE>;
->>>> +          clocks = <&k3_clks 60 0>;
->>>> +          interrupts = <GIC_SPI 117 IRQ_TYPE_EDGE_RISING>;
->>>> +          status = "disabled";
->>>
->>> Drop... which also points to another comment - since this was no-op and
->>> example is basically the same, then just don't add it. No point.
->>
->> Ok, then I will drop the new example, thanks.
->>
->> BTW..
->> In the existing example for ti,am3352-eqep compatible,
->> do you know if it is appropriate to drop clock-names
->> from the example if it is no longer required?
->>
-> 
-> It does not really matter.
-> 
-Understood, thanks.
+>=20
+> I did as suggested:
+>=20
+> --- a/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/rx.c
+> @@ -266,7 +266,8 @@ static void iwl_pcie_rxmq_restock(struct iwl_trans *t=
+rans,
+>                 list_del(&rxb->list);
+>                 rxb->invalid =3D false;
+>                 /* some low bits are expected to be unset (depending on h=
+w) */
+> -               WARN_ON(rxb->page_dma & trans_pcie->supported_dma_mask);
+> +               WARN_ONCE(rxb->page_dma & trans_pcie->supported_dma_mask,
+> +                         "rxb->offset is %d trans_pcie->rx_buf_bytes
+> is %d\n", rxb->offset, trans_pcie->rx_buf_bytes);
+>=20
 
-> Best regards,
-> Krzysztof
-> 
+> [    5.038174] rxb->offset is 0 trans_pcie->rx_buf_bytes is 4096
 
+so that looks pretty normal?
+
+Might be useful to see rx->page_dma too, supported_dma_mask should be
+4095 or 2047 depending on the device, but I'm not sure how you could end
+up with a DMA mapping for a page that's not at least 11 bit aligned?
+
+johannes
