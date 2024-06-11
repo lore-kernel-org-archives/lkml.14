@@ -1,79 +1,116 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5034B17C7A6;
-	Tue, 11 Jun 2024 12:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEB938DD1
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718110664; cv=none; b=gxnD28mAWB6XZSURuRkHAWN2ZCWwTtHxYw0OtsYGYxutNhJwwylqeLQUIMmZxHrz2c/jVxM5gDc0h3ivqMn/OFDuqzcmCYv9BRaFkO8Iw07DRYOmV4CyeGfO36vLwiqWqP9x4/PplfiZ0sWzqhm0M72CVylUzJMCWL182fk4lGc=
+	t=1718110873; cv=none; b=NRMir1sImrFykafzmT8vzVi7Sv534P/G4YHfpGP52kxAquFbyaH6ZWbcGnVl96FGLLSikUkxk/EN0CQN5u4KXmm4RiRr27CDLTTLp13e/DDKpGr2bb7AOFELaiSH/intgeN00Ye5y28HmmHCYu7BNGbNNTcc1zBHk2n92i+Z/d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718110664; c=relaxed/simple;
-	bh=2CHV3JqDCTzemfzBFGBrj/c0ALmTXYa8bakw+BsFzDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AJd5YOVrqQP0YteYYLvU4lXASXs6QKUu9X8LT6qYSIFlAnmkymNsts9A2HQc57XgBwJ08RIC0M1iF/TIFrGXNQn6Caa8Nkzq3Kk9nXqEUB2/7B3CG1SuSy46Txjt38L26f/kHlRkBQgcwSQM8TYGzKQighWCq+nSU2Ke7mS+QIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=RNrk4ENy; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1718110873; c=relaxed/simple;
+	bh=sB0+sZLP/Y2Sqmo8oadg2kS/jbqmOBdH66Ld8QA5FGA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GNXk+eUptMk0Y6xLAwsQRGjsOmpOcPvd5BHjXAPQNwroyStHJrTNTKBKXXVJQfaf4U95YMWHPDS0PWIhJ1/Rm9tQTomJ6jEGiKJpTR5pDYYYaFD+lweLyFm9S7VGZgmdRGA5yJec3aybZB5ckQAlH/YQgqoxqDFiiwWSgVKbH8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yeOTu4Nw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RNrk4ENy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=43M/sVt50RU4a9KtHKnWJdS5bCQ8XkR5rl3Sgok+z+Y=; b=RNrk4ENyXK9TwbH6pjcRUATroF
-	oIKSsEXmnKu0n1NjLvnG0dgEgtThhhGXxKut1BQNZNWfsMuLhUYm51woR2aF/iAeOaliuZtvlI0X+
-	ZDFx+88r3tzTtrMC70b6yTmkrHusdpj25JnW8sBShX1JwvrAghXoODdm2g2iVNjAsEJA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sH13t-00HO4O-T0; Tue, 11 Jun 2024 14:57:17 +0200
-Date: Tue, 11 Jun 2024 14:57:17 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Vineeth Karumanchi <vineeth.karumanchi@amd.com>
-Cc: nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux@armlinux.org.uk, vadim.fedorenko@linux.dev,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, git@amd.com
-Subject: Re: [PATCH net-next v4 3/4] net: macb: Add ARP support to WOL
-Message-ID: <a95e3b77-bdda-428e-9d25-f9be017fd40a@lunn.ch>
-References: <20240610053936.622237-1-vineeth.karumanchi@amd.com>
- <20240610053936.622237-4-vineeth.karumanchi@amd.com>
- <b46427d8-2b8c-4b26-b53a-6dcc3d0ea27f@lunn.ch>
- <6c01bed7-580e-4f1a-9986-39c20f063e67@amd.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yeOTu4Nw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AE75C2BD10;
+	Tue, 11 Jun 2024 13:01:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718110872;
+	bh=sB0+sZLP/Y2Sqmo8oadg2kS/jbqmOBdH66Ld8QA5FGA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=yeOTu4Nw5B/k9fiQpxL5S+CIpUCqo+iaPeqQO2fD0qZ+io7d92FuN7Z2IhPKrTH6K
+	 +pHmQbFPf4wjeBaekkTHVdlyTRpClIok/A9JLY1TUmU4aIMzRYjKV9ouk/FihB/fld
+	 coJT7ncjVwfxoWcyL2VUXPh9+2YMe8cOfTGkbX1s=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH 2/6] driver core: platform: fix ups for constant struct device_driver
+Date: Tue, 11 Jun 2024 15:01:05 +0200
+Message-ID: <20240611130103.3262749-8-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240611130103.3262749-7-gregkh@linuxfoundation.org>
+References: <20240611130103.3262749-7-gregkh@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c01bed7-580e-4f1a-9986-39c20f063e67@amd.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2060; i=gregkh@linuxfoundation.org; h=from:subject; bh=sB0+sZLP/Y2Sqmo8oadg2kS/jbqmOBdH66Ld8QA5FGA=; b=owGbwMvMwCRo6H6F97bub03G02pJDGkZXhO1G6bd2xfCfka0/omXHMeB0MCDEufsxEvbLDPMJ p2afaa7I5aFQZCJQVZMkeXLNp6j+ysOKXoZ2p6GmcPKBDKEgYtTACbiocKw4HrT3Y5lr2uP1a15 77pope6hi3vv32WY71lUuMprj+q5I0ZbOPscg0QU8ouKAQ==
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
+Content-Transfer-Encoding: 8bit
 
-> > > +	/* Don't manage WoL on MAC if there's a failure in talking to the PHY */
-> > > +	if (!!ret && ret != -EOPNOTSUPP)
-> > >   		return ret;
-> > 
-> > The comment is wrong. You could be happily talking to the PHY, it just
-> > does not support what you asked it to do.
-> > 
-> 
-> 
-> These are the 3 possible return scenarios
-> 
-> 1. -EOPNOTSUPP. : When there is no PHY or no set_wol() in PHY driver.
-> 2. 0 : Success
-> 3. any error (-EINVAL, ... ) from set_wol()
-> 
-> we are returning in case 3.
-> 
-> The comment can be "Don't manage WoL on MAC, if PHY set_wol() fails"
+Fix up a few places in the platform core code that can easily handle
+struct device_driver being constant.  This is part of the work to make
+all struct device_driver pointers be constant.
 
-O.K.
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/base/platform.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-You don't need the !! on ret.
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index c8aa1be70526..a6884479f4ac 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -1122,7 +1122,7 @@ static int platform_legacy_resume(struct device *dev)
+ 
+ int platform_pm_suspend(struct device *dev)
+ {
+-	struct device_driver *drv = dev->driver;
++	const struct device_driver *drv = dev->driver;
+ 	int ret = 0;
+ 
+ 	if (!drv)
+@@ -1140,7 +1140,7 @@ int platform_pm_suspend(struct device *dev)
+ 
+ int platform_pm_resume(struct device *dev)
+ {
+-	struct device_driver *drv = dev->driver;
++	const struct device_driver *drv = dev->driver;
+ 	int ret = 0;
+ 
+ 	if (!drv)
+@@ -1162,7 +1162,7 @@ int platform_pm_resume(struct device *dev)
+ 
+ int platform_pm_freeze(struct device *dev)
+ {
+-	struct device_driver *drv = dev->driver;
++	const struct device_driver *drv = dev->driver;
+ 	int ret = 0;
+ 
+ 	if (!drv)
+@@ -1180,7 +1180,7 @@ int platform_pm_freeze(struct device *dev)
+ 
+ int platform_pm_thaw(struct device *dev)
+ {
+-	struct device_driver *drv = dev->driver;
++	const struct device_driver *drv = dev->driver;
+ 	int ret = 0;
+ 
+ 	if (!drv)
+@@ -1198,7 +1198,7 @@ int platform_pm_thaw(struct device *dev)
+ 
+ int platform_pm_poweroff(struct device *dev)
+ {
+-	struct device_driver *drv = dev->driver;
++	const struct device_driver *drv = dev->driver;
+ 	int ret = 0;
+ 
+ 	if (!drv)
+@@ -1216,7 +1216,7 @@ int platform_pm_poweroff(struct device *dev)
+ 
+ int platform_pm_restore(struct device *dev)
+ {
+-	struct device_driver *drv = dev->driver;
++	const struct device_driver *drv = dev->driver;
+ 	int ret = 0;
+ 
+ 	if (!drv)
+-- 
+2.45.2
 
-	Andrew
