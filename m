@@ -1,59 +1,39 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3D838FA1
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 18:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3597738FA1;
+	Tue, 11 Jun 2024 18:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718131426; cv=none; b=oBz/X4mLDxZ6pTXdeTwtzD3MWSf6XqsQBY6YeDKWAL9Fq9MFyzeHOwkn6eRTOHxGuHjnlzB7/ohDmRMLJrBm/b5d6WiW7FerMuvBTHSG8Exg/asG0dnVLrthXe4w6vzcFKHq0vuYOeo1kPa4lWlSRoafgNhVqlrFTlLcJ8uwLos=
+	t=1718131456; cv=none; b=I0ILCpgmaNEqJQo9c8iIN3TCsdRtkpGFuiZ8bnWLhgIVFPUd0k0bmXM8hdgkE1mnpiTtlot24VPKck30nbo3EZnTqWsaNRugK//u8ioUHoNDjHVCYp6cnHBJPSDw8jDBkZmTesPh0/H3L80yL7LhUTCG9JtLK3g5odngtgYF6h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718131426; c=relaxed/simple;
-	bh=W6u7PIhX5knHCDdAk1xxEbG7NBM76Nhk0BJW4zS9M6o=;
+	s=arc-20240116; t=1718131456; c=relaxed/simple;
+	bh=g1Q7qhG14yUPW9rk+97eEEMsOIkCtIcGn38GoRYuZSU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=te7W8axOOyKvXN1H/RoSW65+sz1rJBGHGn5LqN8S89EWNwSawDxSXN0uV7w29DZ8WfSTsC3KvOItPTsc8R759dXv2VopehiZX5CEXDge6+Uxak4dgapxfT1VEpRkqHgIxMi241FsknLsE8z+n+2rCJVOMo2s0ARY/OZwtBXV8yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YkDd2u3G; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=qa569DxaucX2GkIRSX9O+pfUSQhs7tS89ZfI5vJcqoMu9jcsDqXERiOO/O6NFCgIKw/XJvp5d5cagg8w5TttUSmDSg7yt6mzgIs7a7v9xr946T+bHasF2d5kg8yhvJp0rHdNxbghXb281ojc3NXJHOQeZW5zLWFUH588B+jIWJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=qeF2Gg3q; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkDd2u3G"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57c60b13a56so5232568a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 11:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718131422; x=1718736222; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3B4dRZiAZKLlssSkuibM6VAi10SgS6TbPgd/0zmbDxc=;
-        b=YkDd2u3GcT+fPLhCfaRNDe/2UaCJ1hLINto4gANqaDTTGP6M7HENnB9SBVwdOPyktf
-         x4XuDfj2hgVbLedKcCx0FMU3zBw9AaHprE+jOTrZacx7JrkIjP5PuusKwSfv3Fq9gCxh
-         ENKMgqdHdDUCjo49WAWFd+Peh1pOlTkWwDKqMln9y6dj7goI/sfsFjB6OritODiEDQyx
-         eqoJiyUMG/cfB34wXwCVY2aVqCyAsH3sm5DHtY4IEGAi06ENAowpEo4SHoNMJ6Wp1vsT
-         11lx5qDnagYlLJPsHOp23lYBwwsiUXzMmcDQAZJCoxtBBp1C/Q+DeAAGuo501ueNhPuA
-         Uypw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718131422; x=1718736222;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3B4dRZiAZKLlssSkuibM6VAi10SgS6TbPgd/0zmbDxc=;
-        b=VpoHR6LuqjnzeXG0ynIIGlFeVqsSn8Hwfq3uFbNpERJCWJ9ly191tw+2haBihECZEJ
-         35Lbje99u2c12DFf99fwEnydp4cRZDAN9tMkqSw6Z1U+xXkrtQTP5eAMMESlUy2s0ebf
-         D1ZxGlVGzr2xu5iHHj1RLGDtIl6wlKLghN2K3s2eLXQeQ35W+eRRniCdeyCHmxAnw05/
-         Z7IqRR3BBSFtTif/72aOVVK99rIdKYaVH/0k8hlUZTEXq9AOH1ns3gXNbwRhwOVsHhue
-         Ysicyt43Up8e3LCRXZMrVxO1ri4A6aQPdijlVEWwvene5kFsn+SwcpVlJCH0TfrEMGc1
-         ku8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWg3WhOYB/S/2Q9/Gat2qX3qIWIawCOeFf45UyUhzktwVgLxngBxISsW6jQyW4tBVG5mcj1IWFjDuV7lOHTefLLlxZKAaJZQlhrRQUI
-X-Gm-Message-State: AOJu0Yz0M+6I9QDmbzwt6zPYclV5N7t0pEFGcaXliymd9wEUR1ShzALw
-	2r3XEFevl0nZVmPJLNQCSFdVNvC4kdwHE2sdfCaiEhMshDZqckj7
-X-Google-Smtp-Source: AGHT+IE3zSTRh8xAH8Py1sMJDx/BjKoKZNHDkSiAjCEUIwefZi48SYXnfFRQ122iGGSTZAIEXbm/XA==
-X-Received: by 2002:a50:8e11:0:b0:57c:8049:a9a with SMTP id 4fb4d7f45d1cf-57c80490adfmr4008291a12.2.1718131422174;
-        Tue, 11 Jun 2024 11:43:42 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1126:4:eb:d0d0:c7fd:c82c? ([2620:10d:c092:500::7:57b4])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c7fcfc67fsm4635790a12.31.2024.06.11.11.43.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 11:43:41 -0700 (PDT)
-Message-ID: <622bc591-ad14-448e-a9f3-988976fbb98a@gmail.com>
-Date: Tue, 11 Jun 2024 19:43:41 +0100
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qeF2Gg3q"
+Received: from [IPV6:2601:646:8002:4640:7285:c2ff:fefb:fd4] ([IPv6:2601:646:8002:4640:7285:c2ff:fefb:fd4])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45BIMaUu3409249
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 11 Jun 2024 11:22:37 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45BIMaUu3409249
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024051501; t=1718130158;
+	bh=3mnT2Bwkk0vQJgnckDkHQNv+VtpPWp5qOEVzxmzIxI4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qeF2Gg3qVflPKKclkjRTOBCOM/fqAUAO37scpIV5HUO7ia+egHSHYeaqjigZtI1Ce
+	 On1u308bBkJB3xoX3lKeU4nz9j0E7Mel0Frwxpbe/x28yKYDsAH5oWeA2bIxQwDgAN
+	 zhVPged9gzWdCPLznRUmnE45KmYRRhgNp6gJSl1Dde1k3qaZOT68jkQVOqhTDZmLaU
+	 uAQywa2fnm+Cp07NacwmXf/d1VihLnGcesvfZK8gqNHzcBCk+kBECEYtZ2an4lKMZA
+	 r19zG8VyHgjCaVUz6CK301py09Ujezshi0i1hUnzOpPoEX32aJKaXGiFmToyCLrD4Z
+	 DZ2eTm8vf068Q==
+Message-ID: <c380a87d-a5b2-4782-8bb0-2a10ed4fb9ad@zytor.com>
+Date: Tue, 11 Jun 2024 11:22:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,197 +41,163 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] mm: store zero pages to be swapped out in a bitmap
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: 21cnbao@gmail.com, akpm@linux-foundation.org, hannes@cmpxchg.org,
- david@redhat.com, ying.huang@intel.com, hughd@google.com,
- willy@infradead.org, nphamcs@gmail.com, chengming.zhou@linux.dev,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
- Shakeel Butt <shakeel.butt@linux.dev>
-References: <20240610121820.328876-1-usamaarif642@gmail.com>
- <20240610121820.328876-2-usamaarif642@gmail.com>
- <CAJD7tkbpXjg00CRSrXU_pbaHwEaW1b3k8AQgu8y2PAh7EkTOug@mail.gmail.com>
- <d822ec8b-3b7d-4e5c-ac96-b6fda63da5d4@gmail.com>
- <CAJD7tkZoaM=dWim7GPqEERDZyxp3PqMNctzXQCPDMO=8kQSwfw@mail.gmail.com>
- <9ddfe544-636d-4638-ae0e-053674e47322@gmail.com>
- <CAJD7tkY0F-Tczq4j861HxKATzEOfkVv=76m8zFcJHuh8E3VMEw@mail.gmail.com>
- <08ea43f2-13d2-4b27-ae62-42cebc185c7b@gmail.com>
- <CAJD7tkZC8e8ZTBSOGZH-1srTeC=jqxwWchd-BjvNsV2FR0oT8Q@mail.gmail.com>
+Subject: Re: [PATCH] x86: add 'runtime constant' infrastructure
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+References: <20240608193504.429644-2-torvalds@linux-foundation.org>
+ <20240610104352.GT8774@noisy.programming.kicks-ass.net>
+ <20240610120201.GAZmbrOYmcA21kD8NB@fat_crate.local>
+ <CAHk-=wgb98nSCvJ-gL42mt+jt6Eyp-0QSMJLovmAoJOkQ_G3gQ@mail.gmail.com>
+ <71FE7A14-62F6-45D3-9BC4-BE09E06F7863@zytor.com>
+ <CAHk-=wjTzFYo2+eQJpb56Df8sNDW7JEV=_6Di2v-M5x2kv06_g@mail.gmail.com>
+ <CAHk-=wjdsN=dH41MO+gASWZkexCgrwK6CGT=NvpA3xsVXEhxBw@mail.gmail.com>
 Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <CAJD7tkZC8e8ZTBSOGZH-1srTeC=jqxwWchd-BjvNsV2FR0oT8Q@mail.gmail.com>
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <CAHk-=wjdsN=dH41MO+gASWZkexCgrwK6CGT=NvpA3xsVXEhxBw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 6/10/24 18:24, Linus Torvalds wrote:
+> On Mon, 10 Jun 2024 at 18:09, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> Doing it in general is actually very very painful. Feel free to try -
+>> but I can almost guarantee that you will throw out the "Keep It Simple
+>> Stupid" approach and your patch will be twice the size if you do some
+>> "rewrite the whole instruction" stuff.
+>>
+>> I really think there's a fundamental advantage to keeping things simple.
+> 
+> I guess the KISS approach would be to have a debug mode that just adds
+> an 'int3' instruction *after* the constant. And then the constant
+> rewriting rewrites the constant and just changes the 'int3' into the
+> standard single-byte 'nop' instruction.
+> 
+> That wouldn't be complicated, and the cost would be minimal. But I
+> don't see it being worth it, at least not for the current use where
+> the unrewritten constant will just cause an oops on use.
+> 
 
-On 11/06/2024 18:51, Yosry Ahmed wrote:
-> [..]
->>>> I think its better to handle this in Barrys patch. I feel this series is
->>>> close to its final state, i.e. the only diff I have for the next
->>>> revision is below to remove start/end_writeback for zer_filled case. I
->>>> will comment on Barrys patch once the I send out the next revision of this.
->>> Sorry I did not make myself clearer. I did not mean that you should
->>> handle the large folio swapin here. This needs to be handled at a
->>> higher level because as you mentioned, a large folio may be partially
->>> in the zeromap, zswap, swapcache, disk, etc.
->>>
->>> What I meant is that we should probably have a debug check to make
->>> sure this doesn't go unhandled. For zswap, I am trying to add a
->>> warning and fail the swapin operation if a large folio slips through
->>> to zswap. We can do something similar here if folks agree this is the
->>> right way in the interim:
->>> https://lore.kernel.org/lkml/20240611024516.1375191-3-yosryahmed@google.com/.
->>>
->>> Maybe I am too paranoid, but I think it's easy to mess up these things
->>> when working on large folio swapin imo.
->> So there is a difference between zswap and this optimization. In this
->> optimization, if the zeromap is set for all the folio bits, then we
->> should do large folio swapin. There still needs to be a change in Barrys
->> patch in alloc_swap_folio, but apart from that does the below diff over
->> v3 make it better? I will send a v4 with this if it sounds good.
->>
->>
->> diff --git a/mm/page_io.c b/mm/page_io.c
->> index 6400be6e4291..bf01364748a9 100644
->> --- a/mm/page_io.c
->> +++ b/mm/page_io.c
->> @@ -234,18 +234,24 @@ static void swap_zeromap_folio_clear(struct folio
->> *folio)
->>           }
->>    }
->>
->> -static bool swap_zeromap_folio_test(struct folio *folio)
->> +/*
->> + * Return the index of the first subpage which is not zero-filled
->> + * according to swap_info_struct->zeromap.
->> + * If all pages are zero-filled according to zeromap, it will return
->> + * folio_nr_pages(folio).
->> + */
->> +static long swap_zeromap_folio_test(struct folio *folio)
->>    {
->>           struct swap_info_struct *sis = swp_swap_info(folio->swap);
->>           swp_entry_t entry;
->> -       unsigned int i;
->> +       long i;
-> Why long?
+A general enough way to do it would be to put an int $3 and replace it 
+with a ds: dummy prefix.
+
+The issue there is "current use". I'm really, really worried about 
+someone in the future putting this where it won't get properly patched 
+and then all hell will be breaking loose.
+
+Perhaps a better idea would be to provide the initial value as part of 
+the declaration, so that the value is never "uninitialized" (much like a 
+static variable can be initialized at compile time)?
+
+In other words:
+
+runtime_const_ptr(sym,init)
+
+Unfortunately gas doesn't seem to properly implement the {nooptimize} 
+prefix that is documented. This does require some gentle assembly hacking:
+
+- Loading a pointer/long requires using the "movabs" mnemonic on x86-64. 
+Combining that with
+
+  (but not on x86-32 as there are no compacted forms of mov immediate; 
+on x86-32 it is also legit to allow =rm rather than =r, but for an 8-bit 
+immediate "=qm" has to be used.)
+
+A size/type-generic version (one nice thing here is that init also ends 
+up specifying the type):
+
+#define _RUNTIME_CONST(where, sym, size) 				\
+	"\n\t"							\
+	".pushsection \"runtime_const_" #sym "\",\"a\"\n\t"	\
+	".long (" #where ") - (" #size ") - .\n\t"		\
+	".popsection"
+
+extern void __noreturn __runtime_const_bad_size(void);
+
+#define runtime_const(_sym, _init) ({ 				\
+	typeof(_init) __ret; 					\
+	const size_t __sz = sizeof(__ret); 			\
+	switch (__sz) { 					\
+	case 1:							\
+		asm_inline("mov %[init],%[ret]\n1:"		\
+		    _RUNTIME_CONST(1b, _sym, 1)			\
+		    : [ret] "=qm" (__ret)			\
+		    : [init] "i" (_init));			\
+		break;						\
+	case 8:							\
+		asm_inline("movabs %[init],%[ret]\n1:"		\
+		    _RUNTIME_CONST(1b, _sym, 8)			\
+		    : [ret] "=r" (__ret)			\
+		    : [init] "i" (_init));			\
+		break;						\
+	default:						\
+		asm_inline("mov %[init],%[ret]\n1:"		\
+		    _RUNTIME_CONST(1b, _sym, %c[sz])		\
+		    : [ret] "=rm" (__ret)			\
+		    : [init] "i" (_init), [sz] "n" (__sz)));	\
+		break;						\
+	}							\
+	__ret; })
 
 
-folio_nr_pages returns long, but I just checked that 
-folio->_folio_nr_pages is unsigned int, but that will probably be 
-typecasted to long :). I will switch to unsigned int as its not really 
-going to go to long for CONFIG_64BIT
+- For a shift count, it is unfortunately necessary to explicitly stitch 
+together the instruction using .insn to avoid truncating the case where 
+the operand is 1.
 
->>           for (i = 0; i < folio_nr_pages(folio); i++) {
->>                   entry = page_swap_entry(folio_page(folio, i));
->>                   if (!test_bit(swp_offset(entry), sis->zeromap))
->> -                       return false;
->> +                       return i;
->>           }
->> -       return true;
->> +       return i;
->>    }
->>
->>    /*
->> @@ -581,6 +587,7 @@ void swap_read_folio(struct folio *folio, bool
->> synchronous,
->>    {
->>           struct swap_info_struct *sis = swp_swap_info(folio->swap);
->>           bool workingset = folio_test_workingset(folio);
->> +       long first_non_zero_page_idx;
->>           unsigned long pflags;
->>           bool in_thrashing;
->>
->> @@ -598,10 +605,19 @@ void swap_read_folio(struct folio *folio, bool
->> synchronous,
->>                   psi_memstall_enter(&pflags);
->>           }
->>           delayacct_swapin_start();
->> -       if (swap_zeromap_folio_test(folio)) {
->> +       first_non_zero_page_idx = swap_zeromap_folio_test(folio);
->> +       if (first_non_zero_page_idx == folio_nr_pages(folio)) {
->>                   folio_zero_fill(folio);
->>                   folio_mark_uptodate(folio);
->>                   folio_unlock(folio);
->> +       } else if (first_non_zero_page_idx != 0) {
->> +               /*
->> +                * The case for when only *some* of subpages being
->> swapped-in were recorded
->> +                * in sis->zeromap, while the rest are in zswap/disk is
->> currently not handled.
->> +                * WARN in this case and return without marking the
->> folio uptodate so that
->> +                * an IO error is emitted (e.g. do_swap_page() will sigbus).
->> +                */
->> +                WARN_ON_ONCE(1);
->>           } else if (zswap_load(folio)) {
->>                   folio_mark_uptodate(folio);
->>                   folio_unlock(folio);
->>
->>
-> This is too much noise for swap_read_folio(). How about adding
-> swap_read_folio_zeromap() that takes care of this and decides whether
-> or not to call folio_mark_uptodate()?
+Size- and operand-generic version:
 
-Sounds good, will do as below. Thanks!
+#define _runtime_const_shift(_val, _sym, _init, _op2) ({ 	\
+	typeof(_val) __ret = (_val); 				\
+	switch (sizeof(__ret)) {				\
+	case 1:							\
+		asm_inline(".insn 0xc0/%c[op2],%[ret],%[init]{:u8}\n1:" \
+			_RUNTIME_CONST(1b, _sym, 1)		\
+			: [ret] "+qm" (__ret)			\
+			: [init] "i" ((u8)(_init)),		\
+		 	  [op2] "n" (_op2));			\
+		break; 						\
+	default:						\
+		asm_inline(".insn 0xc1/%c[op2],%[ret],%[init]{:u8}\n1:" \
+			_RUNTIME_CONST(1b, _sym, 1)		\
+			: [ret] "+rm" (__ret)			\
+			: [init] "i" ((u8)(_init)),		\
+		  	  [op2] "n" (_op2));			\
+		break;						\
+	}							\
+	__ret; })						\
 
->
-> -static bool swap_zeromap_folio_test(struct folio *folio)
-> +/*
-> + * Return the index of the first subpage which is not zero-filled according to
-> + * swap_info_struct->zeromap.  If all pages are zero-filled according to
-> + * zeromap, it will return folio_nr_pages(folio).
-> + */
-> +static unsigned int swap_zeromap_folio_test(struct folio *folio)
->   {
->          struct swap_info_struct *sis = swp_swap_info(folio->swap);
->          swp_entry_t entry;
-> @@ -243,9 +248,9 @@ static bool swap_zeromap_folio_test(struct folio *folio)
->          for (i = 0; i < folio_nr_pages(folio); i++) {
->                  entry = page_swap_entry(folio_page(folio, i));
->                  if (!test_bit(swp_offset(entry), sis->zeromap))
-> -                       return false;
-> +                       return i;
->          }
-> -       return true;
-> +       return i;
->   }
->
->   /*
-> @@ -511,6 +516,25 @@ static void sio_read_complete(struct kiocb *iocb, long ret)
->          mempool_free(sio, sio_pool);
->   }
->
-> +static bool swap_read_folio_zeromap(struct folio *folio)
-> +{
-> +       unsigned int idx = swap_zeromap_folio_test(folio);
-> +
-> +       if (idx == 0)
-> +               return false;
-> +
-> +       /*
-> +        * Swapping in a large folio that is partially in the zeromap is not
-> +        * currently handled. Return true without marking the folio uptodate so
-> +        * that an IO error is emitted (e.g.  do_swap_page() will sigbus).
-> +        */
-> +       if (WARN_ON_ONCE(idx < folio_nr_pages(folio)))
-> +               return true;
-> +
-> +       folio_zero_fill(folio);
-> +       folio_mark_uptodate(folio);
-> +       return true
-> +}
-> +
->   static void swap_read_folio_fs(struct folio *folio, struct swap_iocb **plug)
->   {
->          struct swap_info_struct *sis = swp_swap_info(folio->swap);
-> @@ -600,9 +624,7 @@ void swap_read_folio(struct folio *folio, bool synchronous,
->                  psi_memstall_enter(&pflags);
->          }
->          delayacct_swapin_start();
-> -       if (swap_zeromap_folio_test(folio)) {
-> -               folio_zero_fill(folio);
-> -               folio_mark_uptodate(folio);
-> +       if (swap_read_folio_zeromap(folio)) {
->                  folio_unlock(folio);
->          } else if (zswap_load(folio)) {
->                  folio_mark_uptodate(folio);
+#define runtime_const_rol(v,s,i) _runtime_const_shift(v,s,i,0)
+#define runtime_const_ror(v,s,i) _runtime_const_shift(v,s,i,1)
+#define runtime_const_shl(v,s,i) _runtime_const_shift(v,s,i,4)
+#define runtime_const_shr(v,s,i) _runtime_const_shift(v,s,i,5)
+#define runtime_const_sar(v,s,i) _runtime_const_shift(v,s,i,7)
+
+I am not sure if I'm missing something, but there really isn't a reason 
+to use different section names for the shift counts specifically, is there?
+
+NOTE: if we are *not* making these type-generic there is no reason 
+whatsoever to not make these inlines...
+
+	***
+
+
+Also: one thing I would *really* like to see this being used for is 
+cr4_pinned_bits, in which case one can, indeed, safely use a zero value 
+at init time as long as cr4_pinned_mask is patched at the same time, 
+which very much goes along with the above.
+
+Again, this is a slightly less minimal versus what I had which was a 
+maximal solution.
+
+My approach would pretty much have targeted doing this for nearly all 
+instances, which I eventually felt called for compiler support (or C++!) 
+as adding a bunch of static_imm_*() macros all over the kernel really 
+felt unpleasant.
+
+	-hpa
