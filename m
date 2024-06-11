@@ -1,149 +1,215 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4566318EAB
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 22:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF1D152789
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 22:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718144411; cv=none; b=M3S92zmxSjWfdU/boRvNNBQVpFUV5VdwoaH5E8gQqpQEmOFApDoXJD9ekJTWwFBcxptXkAZ3XzyaS/jtKtMgkgz0LdaxrvUoYJXKuY20vvE3AuPcPffr/tKa9b/NTYZfZOwMmx9EOOB4cnZTi0bg4OoUGC8qXvCzZ8n9OQP56ko=
+	t=1718144491; cv=none; b=hb95fAk/bjilNsbRR0bfrKc7m/WI5N96aH67ORiiceZQbQJWW+h1GOTDCxrchFf7AwvlfUnLwnIT7sDcPPLMTIlI2YkLtHSio6Rw+NroaY9XjSdoDhK20l3SqSQUWjpVFHjSgjW9pj+bQbQXRynxEhJeqaT2IaG+zhuFQ9JtRsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718144411; c=relaxed/simple;
-	bh=Luzz8SE63QZXxbCDkOElzpZzSqBJuROxHhvtQ3lKmJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o0e1j/hs/ZlQn9LepQlPeWfXn2R1CKHxnpmdvwyF8B2tYy88XZf6+Fl6YMmeBGa7HEZ/du7j2DRmBHuqk6aGYIfIgU22m4vGl/tHL3Fp452jiZ5I2fD5RLlbsdQ5eFfYhClpm5LB9x2EWSaTfdP5s4JASh38Fb3ivYEU/g0AQDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dtqLYQEZ; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718144491; c=relaxed/simple;
+	bh=1BaXhoKSY0jcaVNcI4emnVP144YL7TFNPcNk9dMJmrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iii3/c2VrhV2aMcEO/YKDuinPnJPcrghEyToZ324NQrDcUwVaHBIEtVbOgqYLo5n0SYAj8Qq07bv7KxTW/bWruFQllGWEueHSreqvos1QI9LyXTRK5rrL5y1DvjhBI9Fo7Ss+K8G7UGYG/71gecdj4TbRsHPlhS3sHkQL32NzeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BiF201h8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dtqLYQEZ"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dfe41f7852cso170238276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 15:20:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718144409; x=1718749209; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tWvoilUykDD9/rgz0mp3zLYBtz2E5uf7UCO+Al15jwE=;
-        b=dtqLYQEZxXdTHsxgez4wF7TLPrRwHuk6AJd06eIYPpyzq4rmGuBA6kyD+3UlzdcfcN
-         EXWj9vzPkPX3PYM6Jl1VC/93LrbK/vCVzDAsdcnmOd0sK1yUYhv8DdPkUI4VniI4w34R
-         k0b3KeZ3zNPYxdO+CNnJgSm38VXCBMaNpUq/gx0+nw7jPTsGYlzOuyvNGA7UaZ8JAUAW
-         8N0rqil50993VvKu9AY9mqRXbFW0A7RkOQjznPemN9yxvGGUrjE8tcc7AtDwDOPuC4hd
-         NkYUilaLNNGJNqoCUPWXwCkyfYUcW1IPGOIKgh64UbfPkKcyPDsDUq31SZOD5fjsdYHg
-         kWoQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BiF201h8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718144489;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DatEcFGN+0ZIwiKEmnb9vwdAqYXlhMMgpgcnDRaoZ+o=;
+	b=BiF201h83vEJkyB3nsHuk40OJ49MqflKkH8kqvTjsfQTIyLLQpS2yDe5x+/9TzrtNNmdT6
+	7s5qTeT0zlm6VV4EzjyMx9iR73DezAHVhtjy3T+VaAr7hjTT5wpptq1TuDN9WLRTbMxDfJ
+	8FaaGB3qD/mrqMxLdydbt2whF2nNhMI=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-351-7mDjMVn1N_yRtGy9hEHEjw-1; Tue, 11 Jun 2024 18:21:25 -0400
+X-MC-Unique: 7mDjMVn1N_yRtGy9hEHEjw-1
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6f8ee93828fso1449804a34.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 15:21:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718144409; x=1718749209;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tWvoilUykDD9/rgz0mp3zLYBtz2E5uf7UCO+Al15jwE=;
-        b=pegzBL4oFYRgKdmnHSg+DeDr3fVJRAIbyfaR/h/oycVdK+ojqE5SHU7lVK3Cc8KR51
-         f4uCMPTOh4Ce8iNcOcjyOud9+IlRaRzLZEo2+5kY6Bqqd5uv94AhnQ0Z74jdD4JXSkUE
-         cUIFjsa8PzkKUxgsnd9S4bWDmUp1ahZJe42fcgzUt7DyoSr0tMCOjPC30xJ4g2K9+4k7
-         XFUixVDU2IfmJJyLYXk0EhSkdipW/pzZJ6HmBlKuc4WcyDaeHjeHzN+m9YfZHAYSWRDa
-         okuxyjfF5NitY4WSHr9UEboTcKPTC+PbEzh+jwu+haoxzp9sXZog3tCswhoJkDyeKGi2
-         b1Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCV9fcvta2snVdmBgbEuQQM/W8dDv/pN0mSkbU4qg3S2GxHNg9ZKPYMgvqZVk+nqfALLfF0CAwSeW20xGd9+ItVe8Nf1SrX8Uy8tYKFQ
-X-Gm-Message-State: AOJu0Yx3VWMxbXdYKrogYPsZCPaBRA9QVcMem2JVZOssp1140IFo3ho9
-	Pqb2onfLO4MWPJFW7SoivwWa4dd7v+ejW2e+lK46QaWtl9Rtavpr67t3PPpHvcca5CzDhyT7gon
-	Kv0uprQ1MFZN1IEoBND2d8AKqG5g=
-X-Google-Smtp-Source: AGHT+IED8SIQCLlOTJ3/mg4iIlebKngKR0y316II+f7atzv0vSoCaGqhsB7kaH/nn00uvkjSU0JyapO85dSqnBAyLYM=
-X-Received: by 2002:a25:5f4f:0:b0:dfa:7e09:21c4 with SMTP id
- 3f1490d57ef6-dfe66464f86mr72064276.3.1718144409057; Tue, 11 Jun 2024 15:20:09
- -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718144485; x=1718749285;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DatEcFGN+0ZIwiKEmnb9vwdAqYXlhMMgpgcnDRaoZ+o=;
+        b=bxkZaNIqxemo/7l0mwF8niAz+zWLkr7cXCMcKrQ08mBal8eqZ5qp4mG/SRJU2C5QHn
+         o+Sw5NO3ODyr4lo2lnErF7knVKRtSuzz7IJxH6Ke19xOosyRanAMed+QOTQ5WMpkNnDa
+         GDiGA49lvXgHtsrsPP7l23z3+IVDg3U1+3XZBOOb5J0FDUMEUPkeZrqrpfXdfevsV+7P
+         J2ibBJqEk/ECDzmZWFrLdbYL0cxtT3K+A5RVLR67m0NdC3yAr95j+bfwrGGaVPeaM2YY
+         a+I2U9skUmHJ3D3/+K/4IMKNsxdiCSsnesSFNeJFoDsqeXX9vmXYVQEbVkq3zRe5LOcD
+         OJqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkyXCTTnRb+gXM64GUDhTFlk0SKc10OJPjW2YkX8EUiHctfZ4ZxFMd5EX6odhCoDhZ6XCkYsPufQdNEERlbvdEjMY8qhPrgj/IdJx1
+X-Gm-Message-State: AOJu0Yz6vW4TmX1avKNs2Ha49f5SmKf/KJQ0qyBOl1ZDEjTMJ/I4gR6L
+	7Apdt+3CC6PVX9gOWacE/2/047lgsk1jv5CbBKN0XyC6GmkPOLqMVtfRuA+/N7/t7N5X23q4piu
+	QCyyluO6X0xveyu6Iw+aJLtSaRnj0mZ9S+R0AI/FTRi10gog40adIeFmPIt+YpL3wSbAuWQ==
+X-Received: by 2002:a05:6830:1e1c:b0:6f9:ecfb:6c98 with SMTP id 46e09a7af769-6fa1c222978mr73367a34.24.1718144484475;
+        Tue, 11 Jun 2024 15:21:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHWqJsi/lpTX61iOR3KZ19pif3tSW4wF5q5hqI6RDE+uV2Q3A4Wf86dWHbtNQ/mVPuv8gWCFw==
+X-Received: by 2002:a05:6830:1e1c:b0:6f9:ecfb:6c98 with SMTP id 46e09a7af769-6fa1c222978mr73350a34.24.1718144484027;
+        Tue, 11 Jun 2024 15:21:24 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f96bf1c127sm1557633a34.74.2024.06.11.15.21.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 15:21:23 -0700 (PDT)
+Date: Tue, 11 Jun 2024 16:21:19 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: David Hildenbrand <david@redhat.com>, Gerald Schaefer
+ <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+ <svens@linux.ibm.com>, Gerd Bayer <gbayer@linux.ibm.com>, Matthew Rosato
+ <mjrosato@linux.ibm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Suren
+ Baghdasaryan <surenb@google.com>, linux-s390@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] s390/pci: Fix s390_mmio_read/write syscall page
+ fault handling
+Message-ID: <20240611162119.6bc04d61.alex.williamson@redhat.com>
+In-Reply-To: <b38b571b753441314c090c3eb51c49c0e28a19d5.camel@linux.ibm.com>
+References: <20240529-vfio_pci_mmap-v3-0-cd217d019218@linux.ibm.com>
+	<20240529-vfio_pci_mmap-v3-1-cd217d019218@linux.ibm.com>
+	<98de56b1ba37f51639b9a2c15a745e19a45961a0.camel@linux.ibm.com>
+	<30ecb17b7a3414aeb605c51f003582c7f2cf6444.camel@linux.ibm.com>
+	<db10735e74d5a89aed73ad3268e0be40394efc31.camel@linux.ibm.com>
+	<ce7b9655-aaeb-4a13-a3ac-bd4a70bbd173@redhat.com>
+	<32b515269a31e177779f4d2d4fe2c05660beccc4.camel@linux.ibm.com>
+	<89c74380-6a60-4091-ba57-93c75d9a37d7@redhat.com>
+	<b38b571b753441314c090c3eb51c49c0e28a19d5.camel@linux.ibm.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611024516.1375191-1-yosryahmed@google.com>
- <20240611024516.1375191-2-yosryahmed@google.com> <CAGsJ_4w3LDE1OuDiX_LAeTxEGUFPVOwqMxoOF+Dr55bdLUZQ7w@mail.gmail.com>
- <CAJD7tkY6h1RkbYHbaQcTuVXOsY-t=arytf5HtcKfx7A75x06bg@mail.gmail.com>
-In-Reply-To: <CAJD7tkY6h1RkbYHbaQcTuVXOsY-t=arytf5HtcKfx7A75x06bg@mail.gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Wed, 12 Jun 2024 10:19:58 +1200
-Message-ID: <CAGsJ_4xAHR-fMP6c8w6Xf5cVF2OJYwChiGn5Y66qvM_qiEnEDQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] mm: zswap: add zswap_never_enabled()
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Chris Li <chrisl@kernel.org>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 12, 2024 at 9:55=E2=80=AFAM Yosry Ahmed <yosryahmed@google.com>=
- wrote:
->
-> On Tue, Jun 11, 2024 at 2:53=E2=80=AFPM Barry Song <21cnbao@gmail.com> wr=
-ote:
-> >
-> > On Tue, Jun 11, 2024 at 2:45=E2=80=AFPM Yosry Ahmed <yosryahmed@google.=
-com> wrote:
-> > >
-> > > Add zswap_never_enabled() to skip the xarray lookup in zswap_load() i=
-f
-> > > zswap was never enabled on the system. It is implemented using static
-> > > branches for efficiency, as enabling zswap should be a rare event. Th=
-is
-> > > could shave some cycles off zswap_load() when CONFIG_ZSWAP is used bu=
-t
-> > > zswap is never enabled.
-> > >
-> > > However, the real motivation behind this patch is two-fold:
-> > > - Incoming large folio swapin work will need to fallback to order-0
-> > >   folios if zswap was ever enabled, because any part of the folio cou=
-ld
-> > >   be in zswap, until proper handling of large folios with zswap is
-> > >   added.
-> > >
-> > > - A warning and recovery attempt will be added in a following change =
-in
-> > >   case the above was not done incorrectly. Zswap will fail the read i=
-f
-> > >   the folio is large and it was ever enabled.
-> > >
-> > > Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
-> > > ---
-> > >  mm/zswap.c | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >
-> > > diff --git a/mm/zswap.c b/mm/zswap.c
-> > > index a8c8dd8cfe6f5..7fcd751e847d6 100644
-> > > --- a/mm/zswap.c
-> > > +++ b/mm/zswap.c
-> > > @@ -83,6 +83,7 @@ static bool zswap_pool_reached_full;
-> > >  static int zswap_setup(void);
-> > >
-> > >  /* Enable/disable zswap */
-> > > +static DEFINE_STATIC_KEY_MAYBE(CONFIG_ZSWAP_DEFAULT_ON, zswap_ever_e=
-nabled);
-> > >  static bool zswap_enabled =3D IS_ENABLED(CONFIG_ZSWAP_DEFAULT_ON);
-> > >  static int zswap_enabled_param_set(const char *,
-> > >                                    const struct kernel_param *);
-> > > @@ -136,6 +137,11 @@ bool zswap_is_enabled(void)
-> > >         return zswap_enabled;
-> > >  }
-> > >
-> > > +static bool zswap_never_enabled(void)
-> > > +{
-> > > +       return !static_branch_maybe(CONFIG_ZSWAP_DEFAULT_ON, &zswap_e=
-ver_enabled);
-> > > +}
-> >
-> > Will we "extern" this one so that mm-core can use it to fallback
-> > to small folios?
-> > or you prefer this to be done within the coming swapin series?
->
-> My intention was to keep it static for now, and expose it in the
-> header when needed (in the swapin series). If others think it's better
-> to do this now to avoid the churn I am happy to do it as well.
+On Tue, 11 Jun 2024 17:37:20 +0200
+Niklas Schnelle <schnelle@linux.ibm.com> wrote:
 
-Personally, I'd vote for exposing it now to avoid one more patch which migh=
-t
-come shortly. And this patchset serves the clear purpose of drawing attenti=
-on
-from mm-core to fallback to small folios.
+> On Tue, 2024-06-11 at 17:10 +0200, David Hildenbrand wrote:
+> > > > 
+> > > > which checks mmap_assert_write_locked().
+> > > > 
+> > > > Setting VMA flags would be racy with the mmap lock in read mode.
+> > > > 
+> > > > 
+> > > > remap_pfn_range() documents: "this is only safe if the mm semaphore is
+> > > > held when called." which doesn't spell out if it needs to be held in
+> > > > write mode (which I think it does) :)  
+> > > 
+> > > Logically this makes sense to me. At the same time it looks like
+> > > fixup_user_fault() expects the caller to only hold mmap_read_lock() as
+> > > I do here. In there it even retakes mmap_read_lock(). But then wouldn't
+> > > any fault handling by its nature need to hold the write lock?  
+> > 
+> > Well, if you're calling remap_pfn_range() right now the expectation is 
+> > that we hold it in write mode. :)
+> > 
+> > Staring at some random users, they all call it from mmap(), where you 
+> > hold the mmap lock in write mode.
+> > 
+> > 
+> > I wonder why we are not seeing that splat with vfio all of the time?
+> > 
+> > That mmap lock check was added "recently". In 1c71222e5f23 we started 
+> > using vm_flags_set(). That (including the mmap_assert_write_locked()) 
+> > check was added via bc292ab00f6c almost 1.5 years ago.
+> > 
+> > Maybe vfio is a bit special and was never really run with lockdep?
+> >   
+> > >   
+> > > > 
+> > > > 
+> > > > My best guess is: if you are using remap_pfn_range() from a fault
+> > > > handler (not during mmap time) you are doing something wrong, that's why
+> > > > you get that report.  
+> > > 
+> > > @Alex: I guess so far the vfio_pci_mmap_fault() handler is only ever
+> > > triggered by "normal"/"actual" page faults where this isn't a problem?
+> > > Or could it be a problem there too?
+> > >   
+> > 
+> > I think we should see it there as well, unless I am missing something.  
+> 
+> Well good news for me, bad news for everyone else. I just reproduced
+> the same problem on my x86_64 workstation. I "ported over" (hacked it
+> until it compiles) an x86 version of my trivial vfio-pci user-space
+> test code that mmaps() the BAR 0 of an NVMe and MMIO reads the NVMe
+> version field at offset 8. On my x86_64 box this leads to the following
+> splat (still on v6.10-rc1).
 
-Thanks
-Barry
+There's already a fix for this queued[1] in my for-linus branch for
+v6.10.  The problem has indeed existed with lockdep for some time but
+only with the recent lockdep changes to generate a warning regardless
+of debug kernel settings has it gone from just sketchy to having a fire
+under it.  There's still an outstanding question of whether we
+can/should insert as many pfns as we can during the fault[2] to reduce
+the new overhead and hopefully at some point we'll have an even cleaner
+option to use huge_fault for pfnmaps, but currently
+vmf_insert_pfn_{pmd,pud} don't work with those pfnmaps.
+
+So hopefully this problem disappears on current linux-next, but let me
+know if there's still an issue.  Thanks,
+
+Alex
+
+[1]https://lore.kernel.org/all/20240530045236.1005864-1-alex.williamson@redhat.com/
+[2]https://lore.kernel.org/all/20240607035213.2054226-1-alex.williamson@redhat.com/
+
+> [  555.396773] ------------[ cut here ]------------
+> [  555.396774] WARNING: CPU: 3 PID: 1424 at include/linux/rwsem.h:85 remap_pfn_range_notrack+0x625/0x650
+> [  555.396778] Modules linked in: vfio_pci <-- 8< -->
+> [  555.396877] CPU: 3 PID: 1424 Comm: vfio-test Tainted: G        W          6.10.0-rc1-niks-00007-gb19d6d864df1 #4 d09afec01ce27ca8218580af28295f25e2d2ed53
+> [  555.396880] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./X570 Creator, BIOS P3.40 01/28/2021
+> [  555.396881] RIP: 0010:remap_pfn_range_notrack+0x625/0x650
+> [  555.396884] Code: a8 00 00 00 75 39 44 89 e0 48 81 c4 b0 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d e9 26 a7 e5 00 cc 0f 0b 41 bc ea ff ff ff eb c9 <0f> 0b 49 8b 47 10 e9 72 fa ff ff e8 8b 56 b5 ff e9 c0 fa ff ff e8
+> [  555.396887] RSP: 0000:ffffaf8b04ed3bc0 EFLAGS: 00010246
+> [  555.396889] RAX: ffff9ea747cfe300 RBX: 00000000000ee200 RCX: 0000000000000100
+> [  555.396890] RDX: 00000000000ee200 RSI: ffff9ea747cfe300 RDI: ffff9ea76db58fd0
+> [  555.396892] RBP: 00000000ffffffea R08: 8000000000000035 R09: 0000000000000000
+> [  555.396894] R10: ffff9ea76d9bbf40 R11: ffffffff96e5ce50 R12: 0000000000004000
+> [  555.396895] R13: 00007f23b988a000 R14: ffff9ea76db58fd0 R15: ffff9ea76db58fd0
+> [  555.396897] FS:  00007f23b9561740(0000) GS:ffff9eb66e780000(0000) knlGS:0000000000000000
+> [  555.396899] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  555.396901] CR2: 00007f23b988a008 CR3: 0000000136bde000 CR4: 0000000000350ef0
+> [  555.396903] Call Trace:
+> [  555.396904]  <TASK>
+> [  555.396905]  ? __warn+0x18c/0x2a0
+> [  555.396908]  ? remap_pfn_range_notrack+0x625/0x650
+> [  555.396911]  ? report_bug+0x1bb/0x270
+> [  555.396915]  ? handle_bug+0x42/0x70
+> [  555.396917]  ? exc_invalid_op+0x1a/0x50
+> [  555.396920]  ? asm_exc_invalid_op+0x1a/0x20
+> [  555.396923]  ? __pfx_is_ISA_range+0x10/0x10
+> [  555.396926]  ? remap_pfn_range_notrack+0x625/0x650
+> [  555.396929]  ? asm_exc_invalid_op+0x1a/0x20
+> [  555.396933]  ? track_pfn_remap+0x170/0x180
+> [  555.396936]  remap_pfn_range+0x6f/0xc0
+> [  555.396940]  vfio_pci_mmap_fault+0xf3/0x1b0 [vfio_pci_core 6df3b7ac5dcecb63cb090734847a65c799a8fef2]
+> [  555.396946]  __do_fault+0x11b/0x210
+> [  555.396949]  do_pte_missing+0x239/0x1350
+> [  555.396953]  handle_mm_fault+0xb10/0x18b0
+> [  555.396959]  do_user_addr_fault+0x293/0x710
+> [  555.396963]  exc_page_fault+0x82/0x1c0
+> [  555.396966]  asm_exc_page_fault+0x26/0x30
+> [  555.396968] RIP: 0033:0x55b0ea8bb7ac
+> [  555.396972] Code: 00 00 b0 00 e8 e5 f8 ff ff 31 c0 48 83 c4 20 5d c3 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 48 89 7d f8 48 8b 45 f8 <8b> 00 89 c0 5d c3 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 55 48
+> [  555.396974] RSP: 002b:00007fff80973530 EFLAGS: 00010202
+> [  555.396976] RAX: 00007f23b988a008 RBX: 00007fff80973738 RCX: 00007f23b988a000
+> [  555.396978] RDX: 0000000000000001 RSI: 00007fff809735e8 RDI: 00007f23b988a008
+> [  555.396979] RBP: 00007fff80973530 R08: 0000000000000005 R09: 0000000000000000
+> [  555.396981] R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000002
+> [  555.396982] R13: 0000000000000000 R14: 00007f23b98c8000 R15: 000055b0ea8bddc0
+> [  555.396986]  </TASK>
+> [  555.396987] ---[ end trace 0000000000000000 ]---
+> 
+
