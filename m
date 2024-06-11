@@ -1,105 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ADD17554;
-	Tue, 11 Jun 2024 07:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D650172773;
+	Tue, 11 Jun 2024 07:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718090863; cv=none; b=gjGV8R3jBZuFLGGqUTlI5ICb8iCMzbSyqhgqririlxgnNeNdfiOKWjB2pwWFfsJAAsRpT5ar+/Q/8g4ujmTxJvaQyc0J8hJIbaoHbBfpob9yCnmZXd5ZbDn5wrZx+YWJ+/wu/zf8OBzEiVMecahVL9blLBsQlyro9FNPsTg7Y+k=
+	t=1718091009; cv=none; b=Ws6VtvibiL0xGt2bxMHuVjXOi/SkRq0hMQv3wpYiFwlbI2wB6a2dTOn23Zuvzb/5El0KkTswwv8Koks1+jmPHKdlQC3lpMXqEeVUy5uHSr5Hg2MCX/V6sAxsshcPpQ93OXD8yjlCkt4bzj2J8Li9zyd52etcD0hrM8YNqu/jY2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718090863; c=relaxed/simple;
-	bh=ybjtdLWrtnoLW7hIFYeyWp46DqlzKqBE48jT2JWGv6k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L6/SqVR68oL5jjIiX65NkKdw2pbRKx9Jg1Q/BSMEhWbIeINLy7c8mkHrOQvfiRlizFac5+NBmJQeSQP9s8UnaC2gCgiOEHJIcWUWF5zQSQzpDLDMuLT2AdDeN3bxalhVWVoWaL2yjud3cII7cvDFgWdBI6akLE9wSY2k6sY0qkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1ozq8jwn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718091009; c=relaxed/simple;
+	bh=uf0SF1oNbuDXzEY9wmV/rDi/IXN4m+CWwdsB3yedEhM=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=JTVDJiavN2gA6gpkdeIc82GC7VljPOOGho7TNqWzUd/vUDvK+tmobVfStRP/wjOq5VBa79olH6SuVHDw1u6GBtrjGJpMyCSxN4YxPrxkFsQvsewQxHn5QkSieQEWddB7EYIfpQqFMeOen6UpodKaoK6uIzfFdjuFP0ip4STcNoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=wPU4n/Gw; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1ozq8jwn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03B5CC2BD10;
-	Tue, 11 Jun 2024 07:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718090863;
-	bh=ybjtdLWrtnoLW7hIFYeyWp46DqlzKqBE48jT2JWGv6k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=1ozq8jwnSqsNCBZsKHhofDpQnrjrjhau6mjljFLZ3Ao5/tAJ5XMrSLOoGrsG7WTvk
-	 T8wUVm9OWUyogUNjQqMEO7+e/F0GmtNGkVmXhanl741U0AQML9rU+3M/Es2y9LjyX5
-	 wCxoAAqDVi1pxJIgYPDrV6tDvngaExrMNr4tsmGo=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: masahiroy@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danny Lin <danny@kdrag0n.dev>,
-	=?UTF-8?q?=C3=8D=C3=B1igo=20Huguet?= <ihuguet@redhat.com>,
-	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Subject: [PATCH v2] .editorconfig: remove trim_trailing_whitespace option
-Date: Tue, 11 Jun 2024 09:27:38 +0200
-Message-ID: <2024061137-jawless-dipped-e789@gregkh>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="wPU4n/Gw"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1818; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=ybjtdLWrtnoLW7hIFYeyWp46DqlzKqBE48jT2JWGv6k=; b=owGbwMvMwCRo6H6F97bub03G02pJDGnpf7I42x2TSs93x/vYCybs6RWVu24/S1zywO0Pi6yMj KxivLk7YlkYBJkYZMUUWb5s4zm6v+KQopeh7WmYOaxMIEMYuDgFYCI7TBjmCvE7tW0OnbjwQ4B5 +UKFtoaELo0YhgXLjOW1ne/fWGJ8fGuHh5nz+Su5IbYA
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1718091002;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vdaMoEnTDtvgD8I+Uno75VA5I/ban+WgDT8n3yc4lCA=;
+	b=wPU4n/Gw+9Saq9zhwbu7iND2gCs2KaWziMCtXASBaApTumAjl52W2/m181X+WtIL0C1tve
+	79mSNgKHdXGi4S+Mos7Zwgg1YDHEFWxkohdcFzEv2ETWWNmmRa2IF00d2AahEQN1Zq05TY
+	LJBVZM9YWqyzc0bdWEl8K2gX1/nHlI92ks8dxsv1RfY4IFlaTbReO8smj0qXFdzu06YbXR
+	0QsAhmD+7X1nCElNS/Thx2h59V0cJL1iSUyKT80SpnPZMWTNwkPcoZ4W008NWhWTC5G07b
+	QZ2vqrLrgiIj7HwrHy9/h9jZpaPWYRIZa8lfocGhj3NeYG00E/yhe1/17hpMOw==
+Date: Tue, 11 Jun 2024 09:29:59 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, linux-mmc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] mmc: add missing MODULE_DESCRIPTION() macros
+In-Reply-To: <20240610-md-drivers-mmc-v1-1-c2a2593e4121@quicinc.com>
+References: <20240610-md-drivers-mmc-v1-1-c2a2593e4121@quicinc.com>
+Message-ID: <8f2e755bd711b566274119762b19505d@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Some editors (like the vim variants), when seeing "trim_whitespace"
-decide to do just that for all of the whitespace in the file you are
-saving, even if it is not on a line that you have modified.  This plays
-havoc with diffs and is NOT something that should be intended.
+Hello Jeff,
 
-As the "only trim whitespace on modified files" is not part of the
-editorconfig standard yet, just delete these lines from the
-.editorconfig file so that we don't end up with diffs that are
-automatically rejected by maintainers for containing things they
-shouldn't.
+Thanks for the patch.  Please see a few comments below.
 
-Cc: Danny Lin <danny@kdrag0n.dev>
-Cc: Íñigo Huguet <ihuguet@redhat.com>
-Cc: Mickaël Salaün <mic@digikod.net>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Fixes: 5a602de99797 ("Add .editorconfig file for basic formatting")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
-v2: - only remove the lines, don't move the whole file to Documentation
-    - add Fixes: tag
+On 2024-06-10 16:17, Jeff Johnson wrote:
+> make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in 
+> drivers/mmc/host/of_mmc_spi.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in
+> drivers/mmc/host/tmio_mmc_core.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in
+> drivers/mmc/host/renesas_sdhi_core.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in 
+> drivers/mmc/core/mmc_core.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in
+> drivers/mmc/core/pwrseq_simple.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in
+> drivers/mmc/core/pwrseq_sd8787.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in 
+> drivers/mmc/core/pwrseq_emmc.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in 
+> drivers/mmc/core/sdio_uart.o
+> 
+> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> ---
+> Corrections to these descriptions are welcomed. I'm not an expert in
+> this code so in most cases I've taken these descriptions directly from
+> code comments, Kconfig descriptions, or git logs.  History has shown
+> that in some cases these are originally wrong due to cut-n-paste
+> errors, and in other cases the drivers have evolved such that the
+> original information is no longer accurate.
+> ---
+>  drivers/mmc/core/core.c              | 1 +
+>  drivers/mmc/core/pwrseq_emmc.c       | 1 +
+>  drivers/mmc/core/pwrseq_sd8787.c     | 1 +
+>  drivers/mmc/core/pwrseq_simple.c     | 1 +
+>  drivers/mmc/core/sdio_uart.c         | 1 +
+>  drivers/mmc/host/of_mmc_spi.c        | 1 +
+>  drivers/mmc/host/renesas_sdhi_core.c | 1 +
+>  drivers/mmc/host/tmio_mmc_core.c     | 1 +
+>  8 files changed, 8 insertions(+)
+> 
+> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> index a8c17b4cd737..d6c819dd68ed 100644
+> --- a/drivers/mmc/core/core.c
+> +++ b/drivers/mmc/core/core.c
+> @@ -2362,4 +2362,5 @@ static void __exit mmc_exit(void)
+>  subsys_initcall(mmc_init);
+>  module_exit(mmc_exit);
+> 
+> +MODULE_DESCRIPTION("MMC core driver");
+>  MODULE_LICENSE("GPL");
+> diff --git a/drivers/mmc/core/pwrseq_emmc.c 
+> b/drivers/mmc/core/pwrseq_emmc.c
+> index 3b6d69cefb4e..fff30330574f 100644
+> --- a/drivers/mmc/core/pwrseq_emmc.c
+> +++ b/drivers/mmc/core/pwrseq_emmc.c
+> @@ -115,4 +115,5 @@ static struct platform_driver 
+> mmc_pwrseq_emmc_driver = {
+>  };
+> 
+>  module_platform_driver(mmc_pwrseq_emmc_driver);
+> +MODULE_DESCRIPTION("HW reset support for eMMC");
 
+"Hardware reset support for eMMC" would read a bit better.
 
- .editorconfig | 3 ---
- 1 file changed, 3 deletions(-)
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/mmc/core/pwrseq_sd8787.c 
+> b/drivers/mmc/core/pwrseq_sd8787.c
+> index 0c5808fc3206..f24bbd68e251 100644
+> --- a/drivers/mmc/core/pwrseq_sd8787.c
+> +++ b/drivers/mmc/core/pwrseq_sd8787.c
+> @@ -130,4 +130,5 @@ static struct platform_driver 
+> mmc_pwrseq_sd8787_driver = {
+>  };
+> 
+>  module_platform_driver(mmc_pwrseq_sd8787_driver);
+> +MODULE_DESCRIPTION("Power sequence support for Marvell SD8787 BT + 
+> Wifi chip");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/mmc/core/pwrseq_simple.c 
+> b/drivers/mmc/core/pwrseq_simple.c
+> index df9588503ad0..97f6d69d9c80 100644
+> --- a/drivers/mmc/core/pwrseq_simple.c
+> +++ b/drivers/mmc/core/pwrseq_simple.c
+> @@ -159,4 +159,5 @@ static struct platform_driver 
+> mmc_pwrseq_simple_driver = {
+>  };
+> 
+>  module_platform_driver(mmc_pwrseq_simple_driver);
+> +MODULE_DESCRIPTION("Simple HW reset support for MMC");
 
-diff --git a/.editorconfig b/.editorconfig
-index 854773350cc5..29a30ccfc07b 100644
---- a/.editorconfig
-+++ b/.editorconfig
-@@ -5,7 +5,6 @@ root = true
- [{*.{awk,c,dts,dtsi,dtso,h,mk,s,S},Kconfig,Makefile,Makefile.*}]
- charset = utf-8
- end_of_line = lf
--trim_trailing_whitespace = true
- insert_final_newline = true
- indent_style = tab
- indent_size = 8
-@@ -13,7 +12,6 @@ indent_size = 8
- [*.{json,py,rs}]
- charset = utf-8
- end_of_line = lf
--trim_trailing_whitespace = true
- insert_final_newline = true
- indent_style = space
- indent_size = 4
-@@ -26,7 +24,6 @@ indent_size = 8
- [*.yaml]
- charset = utf-8
- end_of_line = lf
--trim_trailing_whitespace = unset
- insert_final_newline = true
- indent_style = space
- indent_size = 2
--- 
-2.45.2
+"Simple power sequence management for MMC" would be more accurate.
 
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/mmc/core/sdio_uart.c 
+> b/drivers/mmc/core/sdio_uart.c
+> index 575ebbce378e..6b7471dba3bf 100644
+> --- a/drivers/mmc/core/sdio_uart.c
+> +++ b/drivers/mmc/core/sdio_uart.c
+> @@ -1162,4 +1162,5 @@ module_init(sdio_uart_init);
+>  module_exit(sdio_uart_exit);
+> 
+>  MODULE_AUTHOR("Nicolas Pitre");
+> +MODULE_DESCRIPTION("SDIO UART/GPS driver");
+>  MODULE_LICENSE("GPL");
+> diff --git a/drivers/mmc/host/of_mmc_spi.c 
+> b/drivers/mmc/host/of_mmc_spi.c
+> index bf54776fb26c..05939f30a5ae 100644
+> --- a/drivers/mmc/host/of_mmc_spi.c
+> +++ b/drivers/mmc/host/of_mmc_spi.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/mmc/core.h>
+>  #include <linux/mmc/host.h>
+> 
+> +MODULE_DESCRIPTION("OpenFirmware bindings for the MMC-over-SPI 
+> driver");
+>  MODULE_LICENSE("GPL");
+> 
+>  struct of_mmc_spi {
+> diff --git a/drivers/mmc/host/renesas_sdhi_core.c
+> b/drivers/mmc/host/renesas_sdhi_core.c
+> index 12f4faaaf4ee..d62a4ed86775 100644
+> --- a/drivers/mmc/host/renesas_sdhi_core.c
+> +++ b/drivers/mmc/host/renesas_sdhi_core.c
+> @@ -1162,4 +1162,5 @@ void renesas_sdhi_remove(struct platform_device 
+> *pdev)
+>  }
+>  EXPORT_SYMBOL_GPL(renesas_sdhi_remove);
+> 
+> +MODULE_DESCRIPTION("Renesas SDHI driver");
+
+"Renesas SDHI core driver" would be a bit more accurate.
+
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/mmc/host/tmio_mmc_core.c 
+> b/drivers/mmc/host/tmio_mmc_core.c
+> index 93e912afd3ae..c1a4ade5f949 100644
+> --- a/drivers/mmc/host/tmio_mmc_core.c
+> +++ b/drivers/mmc/host/tmio_mmc_core.c
+> @@ -1319,4 +1319,5 @@ int tmio_mmc_host_runtime_resume(struct device 
+> *dev)
+>  EXPORT_SYMBOL_GPL(tmio_mmc_host_runtime_resume);
+>  #endif
+> 
+> +MODULE_DESCRIPTION("TMIO MMC core driver");
+>  MODULE_LICENSE("GPL v2");
+> 
+> ---
+> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+> change-id: 20240610-md-drivers-mmc-cb5f273b5b33
