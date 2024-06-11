@@ -1,100 +1,72 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A7D4C634
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 17:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689504F883
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 17:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718126981; cv=none; b=h02HbZxHzU+ossot4uGvlr7axVhvIueFtnWGhB2DyXa8QRLGnMIDQO6AUWpQlberD4V17qf2FIeAfaAnC9O52mQumtddaRqt2LJdAj4uPf+0xoa40YTj7T4ND8H97azZ+tnkFA7u7pNLW2A9Dr4rkDltX6OLSUD9/DJioxHr0TQ=
+	t=1718127007; cv=none; b=AsOXkLI5zf+pGavN8SsWEBl42yENKZAtLhVsukbtrfzJh4E6Zz5L9+C6VjTb/KynbFDuIr+UDw8vRtBLFpT+/mqcIWuVOyPiiP84XL0XVGebPDhsydTN8aMtzfbX/hepVjEXLoLBgUutjydqdqwIyWkhJ0i+fBmVJiYHEk9meGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718126981; c=relaxed/simple;
-	bh=yp8LNB0GKkmC9XyBsr9Fvc4xrn1FcALdJ82VET9mehc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IUOo0eUfVCZCzzjXAX5L13sTEz0s4ENPMEROeMHbusJGQtwDECjy+6XAcSXx8io6ck9vd8VJ9t6p7WBnPuEDXUQhgn3dmw5r/IfF3vYUJ49r9WO+kSCTz5OyN6XDu9iz3zhmtH08qk7PqsqxodT4ISDCld0euBBGznKZMY743Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UaF4ZQK5; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718127007; c=relaxed/simple;
+	bh=T3EWslxjAsU7h6lchFAg4Shsv2DXVnhbls8Bv1615MM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Sv3SCiPHxoEF4yncIbJOfLjuilh1O2IhIT/TDHIZcxaVgY+ac7b5f4sEtIZ9CCajqNxd+beVK42lo8XnEQ7DBsKG4RhtheWozIlq2q7dwxgoLF/LUwq6MJ+H/3FYdys8SzPirxnXd+k1U4YzTp7U5M8X90GhqMHyBcMIDaDqUVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=2MCxWJVL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UaF4ZQK5"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52c525257feso4366918e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 10:29:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718126978; x=1718731778; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yp8LNB0GKkmC9XyBsr9Fvc4xrn1FcALdJ82VET9mehc=;
-        b=UaF4ZQK5uzvo61KcZcvhfZGFcILV1mzGc+kEzBfRj2ykk8OEwhvgD3HvJhzBnAVPAJ
-         z9Ka7zWeywzlktMXD/4DxWAWZqyE4qa2c9eEq4qVmSJH6tFVUREuWH9kTX+TT5kUahjo
-         obBUe2ktSS52QUYHhbP+nX/Di8NsAci4jgrxmzMWD3BhRjkOBZRE0l7VeDwIPVzaLos2
-         +l5sjCgbis08YBScXoujWpiB3yQn6vPHKe3HUH/3wx9ZdklY06fpiLFfpq9tcLcVW/0L
-         JkEcSEwYcaFxYArvReleVE37Qb9BSHQ4IwKbYyZCGYf9eLqkYn1FO9zCOQ7+kELkRjiO
-         ds7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718126978; x=1718731778;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yp8LNB0GKkmC9XyBsr9Fvc4xrn1FcALdJ82VET9mehc=;
-        b=GthINqVt+k/sRS4Ah07PQnKBzuxc/bP/UOkwXUuqzYN46pW/qNyhET0XWzDV8du12/
-         qThDuSjNyl6SakY6cHGVf0Ol983wOr6Q7pWBGKwgnNCoWip6lROaaonbBwVahNcCbcAP
-         5sXgyFft4CVSiSHRPPO8KRLt5wx3Jwd2klNiTrccyEDKxyWXABvpqCyHSHXMvZh8NruZ
-         Nlek6ZmQIAtaMe3WcAAKByP6MEo/Ienou/9osz6aIsqBoTOdTyZbe1JLPx0YibRqQVX9
-         vi1/57XW3aQZYFIImdlWAw6zPknXjuDzm0Vwuhh2HfAZ3eqkqRxgqyu2kRURLDDtgfFt
-         p06A==
-X-Forwarded-Encrypted: i=1; AJvYcCU8fsJguUqrmb4FGwO+SQJN6mVe/GgRTVZiDGb+JO8ElpIdhLkWGdHpsQ8cPRhQYpZtu+wHP15vrtRkOHnJDso3GGM/fhG6ZUhmTia/
-X-Gm-Message-State: AOJu0YwAGQx4cVnkUYsY51AhxaQDamkOjcAJerdjvsPXj4vEVXY6csKq
-	U3ymO9x1U89ygz1d8Jr8kZ3YImlrRCbLEebk8G3UZXbhPWBB7ko+OTR5Qrloai/24Fo3UUCuFXo
-	LhbVZGMckYxviIGkT5zyWC8SfpM6TH8DouRtf
-X-Google-Smtp-Source: AGHT+IHL1hLDhEaq3Esy5ZXWYpAWtACT5oztAwPrX67iPYV+FLA+aPsYxkzmVK/KOCK9+1FjZWc3fJTdN63zzKzI6XI=
-X-Received: by 2002:ac2:4989:0:b0:52c:7fc9:954e with SMTP id
- 2adb3069b0e04-52c7fc9976fmr5385958e87.41.1718126977999; Tue, 11 Jun 2024
- 10:29:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="2MCxWJVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D8A7C2BD10;
+	Tue, 11 Jun 2024 17:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1718127006;
+	bh=T3EWslxjAsU7h6lchFAg4Shsv2DXVnhbls8Bv1615MM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=2MCxWJVLaV4p9IUJ3yEQKhjBd+GDc+KxqDvDeyLYngyo97242qa6hNuQFycP/1qoG
+	 +zjH3FrCKNXaBPmM93H4M4N4qBjEW4kgUhP7joC/iWwQW9pk/TwWSEbIqDYonKMlZ6
+	 vYGlWstDDrAhGpxdTDiPagwHQBLFZHYDp4FGz/9k=
+Date: Tue, 11 Jun 2024 10:30:05 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: syzbot <syzbot+569ed13f4054f271087b@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, muchun.song@linux.dev,
+ syzkaller-bugs@googlegroups.com, Vivek Kasireddy
+ <vivek.kasireddy@intel.com>
+Subject: Re: [syzbot] [mm?] general protection fault in
+ dequeue_hugetlb_folio_nodemask (2)
+Message-Id: <20240611103005.ae4170608bd15d63adee2492@linux-foundation.org>
+In-Reply-To: <0000000000004f12bb061a9acf07@google.com>
+References: <0000000000004f12bb061a9acf07@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240610143037.812955-1-usamaarif642@gmail.com> <ohcrgrlmcl7ym6dlfy524g3ht63pask2qjeqy5m242xrvxojt2@36gqaboyzmn2>
-In-Reply-To: <ohcrgrlmcl7ym6dlfy524g3ht63pask2qjeqy5m242xrvxojt2@36gqaboyzmn2>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Tue, 11 Jun 2024 10:28:59 -0700
-Message-ID: <CAJD7tkYxtfxwmVXxiDUacaPenDLU9v_MZo7vEqquA_1fVdB2wA@mail.gmail.com>
-Subject: Re: [PATCH] mm: Do not start/end writeback for pages stored in zswap
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Usama Arif <usamaarif642@gmail.com>, akpm@linux-foundation.org, willy@infradead.org, 
-	hannes@cmpxchg.org, nphamcs@gmail.com, chengming.zhou@linux.dev, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 11, 2024 at 10:16=E2=80=AFAM Shakeel Butt <shakeel.butt@linux.d=
-ev> wrote:
->
-> On Mon, Jun 10, 2024 at 03:30:37PM GMT, Usama Arif wrote:
-> > start/end writeback combination incorrectly increments NR_WRITTEN
-> > counter, eventhough the pages aren't written to disk. Pages successfull=
-y
-> > stored in zswap should just unlock folio and return from writepage.
-> >
-> > Signed-off-by: Usama Arif <usamaarif642@gmail.com>
->
-> If Andrew has not picked this up, send a v2 with more detailed commit
-> message, particularly why it is safe apply this change. You can use the
-> explanation given by Yosry in response to my email. Also add text
-> answering the other questions raised by Yosry.
->
-> If Andrew has already picked it up, just request him to update the
-> commit message.
+On Tue, 11 Jun 2024 03:34:25 -0700 syzbot <syzbot+569ed13f4054f271087b@syzkaller.appspotmail.com> wrote:
 
-Yes please, thanks Shakeel. I wanted to ask for this but got derailed :)
+> Hello,
+> 
+> syzbot found the following issue on:
 
-With the updated commit log feel free to add:
-Acked-by: Yosry Ahmed <yosryahmed@google.com>
+Thanks.
 
->
-> You can add:
->
-> Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
->
+> Call Trace:
+>  <TASK>
+>  alloc_hugetlb_folio_nodemask+0xae/0x3f0 mm/hugetlb.c:2603
+>  memfd_alloc_folio+0x15e/0x390 mm/memfd.c:75
+>  memfd_pin_folios+0x1066/0x1720 mm/gup.c:3864
+>  udmabuf_create+0x658/0x11c0 drivers/dma-buf/udmabuf.c:353
+>  udmabuf_ioctl_create drivers/dma-buf/udmabuf.c:420 [inline]
+>  udmabuf_ioctl+0x304/0x4f0 drivers/dma-buf/udmabuf.c:451
+>  vfs_ioctl fs/ioctl.c:51 [inline]
+>  __do_sys_ioctl fs/ioctl.c:907 [inline]
+>  __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+I think we can pretty confidently point at the series "mm/gup:
+Introduce memfd_pin_folios() for pinning memfd folios".  I'll drop the
+v14 series.  
