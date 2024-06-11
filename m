@@ -1,48 +1,48 @@
 Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC62B174EE3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAAD171070;
 	Tue, 11 Jun 2024 08:38:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718095089; cv=none; b=JVWhgEsVKv5h+DJpRNPehXfBXrvFy7sNr7zCVT1Yc3AI7o+2smgw9x68HreeX0a3JVV9pxHVYnMoMyQQ8WHgVSa62SDvpy4TL+11kpGdbngIgPPl1zVJwXj6Map3gdVBdM/nQcEfEFMFrc4n0UaaVkgH/Q5TUC6YcEU7YM8uGVg=
+	t=1718095089; cv=none; b=b88vZzciV8V4SvEKxgXrHe/FFJbUDUl1/XZjq6Usy4FgKddqiHxx8hHwNISDc2FfxK8zT0/0LDfiARFjhLGqNY1OEaxp4RK0ts9maLMOFAZ99LIiASejDIHdmfyQag/17LvBw7cZAs+WU2Ia4CfaM1QmV4nxLX3NoEMZg3+6VRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718095089; c=relaxed/simple;
-	bh=7BYihXQBuufqkwpNgBcCE/uLyRVIlbtJP8Cq26n3umo=;
+	bh=rGcaZ0VGv8udXfKFLKOy28TL4PVRCK+Ax7blDy7Y90o=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q6d7wMHXm+hXxLZ5Co4xq/T14szStNx85JKk06cicZgFOqlj8IKru5S8Jp4mznyBHLeYXDiU+m6Au/HekrIJHZyNXoMsmUjrehNN6CQQaL/9rZPTzBp1Fa+jxWD7VHAC1QnIhCTfVNQfWJvHxoxg7ddfoD7D1SxNoEqpWlFjN7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=H8ClqFHy; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=GETGMDY4ZRYMj6k+lqZbLAc4FgR5xVEbgFeoKpx5HeOAHopht0y+9+cOh8qC7Lgn26i8Wdxiy444/QJz13LAfUqg5DvaBX27jOTPGzTSNxldKPZNiC53gNlXWlb2sbLi/wEZaT1FHfmjirRAlTeqrA6I6+e8Z16qxWznKHq4Hh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=cPXdHUPh; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="H8ClqFHy"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B7YHI6027547;
-	Tue, 11 Jun 2024 10:37:40 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="cPXdHUPh"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B7Xube012243;
+	Tue, 11 Jun 2024 10:37:39 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	RmDzsMQhZ0rQkoG+NfxdcgkuNRhG+uLFD5UX9v+sIl8=; b=H8ClqFHyn+VuzgdH
-	ckM88DP87fXvaSz1ua9a2qihiSP1DD4wRexr2hSG1/tm81moh2PKtPFEKlkB/tf6
-	GrKihJKTlYawSELVgZyMy/nAW2Mgu1UT/VWSGUjjGpLRmzJE2uTOfzcl/JO94HVn
-	d6rkoJYKGp66mK4WA5QOoUjsY/gMvgYGM7L7IBe+8m2sEWMD2YSEdl/MdEIBBHEL
-	xvKE8e9t6FqUE9KjVOfPsgg/RGcthTM0IjDSTiLNmNzRsOuzPY2DsK1jxs6Xj7Kj
-	Y5yEjOZ7WngvHSPNavOAPkX97dyv7kcazTQKMbSw5H4kLY7EX04vcCF1F9GeNhfy
-	UL9xXA==
+	AmLKDPb0oT6lLe6SQe3GR2w8UgmNAhsCLM0PNSYGh9g=; b=cPXdHUPh1Ysy+xWh
+	x69Gpz8FJl6JSBHL7auQ+lYzBcFY22aKxPcII0gmc6RqlqDK2NDKHH+HQ2M/IGqb
+	z4mNR1QzGN4J7QyFCqlybD51OKu6k0OVsW/hrSmr1sZcb7zkOl4z4IS4PjOEi1de
+	6/UfZjC9x5QAblLfdcriYA2WntYWW/pCopZGwspj9xmoBX9glZ1RKIdbsUKFyC8L
+	Fk/tZVs89pL2Eq7pp+c7dHKkLCYPpHh1Pnmzl/YuQXMzr6bkDMYfYGMsG5LZZ9CB
+	0cX0xuIePwonJkMOaGa1OMG3YzWbQBze6Ilm1HyO0uMPQ4Aa38jO9nin8H/69HmQ
+	pKI6TA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ypbp41s44-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ypbp3srxn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 11 Jun 2024 10:37:39 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3D5FB4002D;
-	Tue, 11 Jun 2024 10:37:33 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4101F40046;
+	Tue, 11 Jun 2024 10:37:34 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D9FFD210F68;
-	Tue, 11 Jun 2024 10:36:19 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 618192115EF;
+	Tue, 11 Jun 2024 10:36:21 +0200 (CEST)
 Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 11 Jun
- 2024 10:36:18 +0200
+ 2024 10:36:20 +0200
 From: Christophe Roullier <christophe.roullier@foss.st.com>
 To: "David S . Miller" <davem@davemloft.net>,
         Eric Dumazet
@@ -65,9 +65,9 @@ To: "David S . Miller" <davem@davemloft.net>,
 CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [net-next,PATCH v7 1/8] dt-bindings: net: add STM32MP13 compatible in documentation for stm32
-Date: Tue, 11 Jun 2024 10:35:59 +0200
-Message-ID: <20240611083606.733453-2-christophe.roullier@foss.st.com>
+Subject: [net-next,PATCH v7 3/8] net: stmmac: dwmac-stm32: Separate out external clock selector
+Date: Tue, 11 Jun 2024 10:36:01 +0200
+Message-ID: <20240611083606.733453-4-christophe.roullier@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240611083606.733453-1-christophe.roullier@foss.st.com>
 References: <20240611083606.733453-1-christophe.roullier@foss.st.com>
@@ -85,100 +85,135 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-11_04,2024-06-11_01,2024-05-17_01
 
-New STM32 SOC have 2 GMACs instances.
-GMAC IP version is SNPS 4.20.
+From: Marek Vasut <marex@denx.de>
 
+Pull the external clock selector into a separate function, to avoid
+conflating it with external clock rate validation and clock mux
+register configuration. This should make the code easier to read and
+understand.
+
+The dwmac->enable_eth_ck variable in the end indicates whether the MAC
+clock are supplied by external oscillator (true) or internal RCC clock
+IP (false). The dwmac->enable_eth_ck value is set based on multiple DT
+properties, some of them deprecated, some of them specific to bus mode.
+
+The following DT properties and variables are taken into account. In
+each case, if the property is present or true, MAC clock is supplied
+by external oscillator.
+- "st,ext-phyclk", assigned to variable dwmac->ext_phyclk
+  - Used in any mode (MII/RMII/GMII/RGMII)
+  - The only non-deprecated DT property of the three
+- "st,eth-clk-sel", assigned to variable dwmac->eth_clk_sel_reg
+  - Valid only in GMII/RGMII mode
+  - Deprecated property, backward compatibility only
+- "st,eth-ref-clk-sel", assigned to variable dwmac->eth_ref_clk_sel_reg
+  - Valid only in RMII mode
+  - Deprecated property, backward compatibility only
+
+The stm32mp1_select_ethck_external() function handles the aforementioned
+DT properties and sets dwmac->enable_eth_ck accordingly.
+
+The stm32mp1_set_mode() is adjusted to call stm32mp1_select_ethck_external()
+first and then only use dwmac->enable_eth_ck to determine hardware clock mux
+settings.
+
+No functional change intended.
+
+Signed-off-by: Marek Vasut <marex@denx.de>
 Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- .../devicetree/bindings/net/stm32-dwmac.yaml  | 43 ++++++++++++++++---
- 1 file changed, 36 insertions(+), 7 deletions(-)
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 50 ++++++++++++++-----
+ 1 file changed, 38 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-index 7ccf75676b6d5..f6e5e0626a3fb 100644
---- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-@@ -22,18 +22,17 @@ select:
-         enum:
-           - st,stm32-dwmac
-           - st,stm32mp1-dwmac
-+          - st,stm32mp13-dwmac
-   required:
-     - compatible
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 2fd2620ebed69..767994061ea82 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -157,6 +157,37 @@ static int stm32_dwmac_init(struct plat_stmmacenet_data *plat_dat, bool resume)
+ 	return stm32_dwmac_clk_enable(dwmac, resume);
+ }
  
--allOf:
--  - $ref: snps,dwmac.yaml#
--
- properties:
-   compatible:
-     oneOf:
-       - items:
-           - enum:
-               - st,stm32mp1-dwmac
-+              - st,stm32mp13-dwmac
-           - const: snps,dwmac-4.20a
-       - items:
-           - enum:
-@@ -75,12 +74,15 @@ properties:
-   st,syscon:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     items:
--      - items:
-+      - minItems: 2
-+        items:
-           - description: phandle to the syscon node which encompases the glue register
-           - description: offset of the control register
-+          - description: field to set mask in register
-     description:
-       Should be phandle/offset pair. The phandle to the syscon node which
--      encompases the glue register, and the offset of the control register
-+      encompases the glue register, the offset of the control register and
-+      the mask to set bitfield in control register
- 
-   st,ext-phyclk:
-     description:
-@@ -112,12 +114,39 @@ required:
- 
- unevaluatedProperties: false
- 
-+allOf:
-+  - $ref: snps,dwmac.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - st,stm32mp1-dwmac
-+              - st,stm32-dwmac
-+    then:
-+      properties:
-+        st,syscon:
-+          items:
-+            minItems: 2
-+            maxItems: 2
++static int stm32mp1_select_ethck_external(struct plat_stmmacenet_data *plat_dat)
++{
++	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
 +
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - st,stm32mp13-dwmac
-+    then:
-+      properties:
-+        st,syscon:
-+          items:
-+            minItems: 3
-+            maxItems: 3
++	switch (plat_dat->mac_interface) {
++	case PHY_INTERFACE_MODE_MII:
++		dwmac->enable_eth_ck = dwmac->ext_phyclk;
++		return 0;
++	case PHY_INTERFACE_MODE_GMII:
++		dwmac->enable_eth_ck = dwmac->eth_clk_sel_reg ||
++				       dwmac->ext_phyclk;
++		return 0;
++	case PHY_INTERFACE_MODE_RMII:
++		dwmac->enable_eth_ck = dwmac->eth_ref_clk_sel_reg ||
++				       dwmac->ext_phyclk;
++		return 0;
++	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++		dwmac->enable_eth_ck = dwmac->eth_clk_sel_reg ||
++				       dwmac->ext_phyclk;
++		return 0;
++	default:
++		dwmac->enable_eth_ck = false;
++		dev_err(dwmac->dev, "Mode %s not supported",
++			phy_modes(plat_dat->mac_interface));
++		return -EINVAL;
++	}
++}
 +
- examples:
-   - |
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/clock/stm32mp1-clks.h>
--    #include <dt-bindings/reset/stm32mp1-resets.h>
--    #include <dt-bindings/mfd/stm32h7-rcc.h>
-     //Example 1
-      ethernet0: ethernet@5800a000 {
-            compatible = "st,stm32mp1-dwmac", "snps,dwmac-4.20a";
+ static int stm32mp1_validate_ethck_rate(struct plat_stmmacenet_data *plat_dat)
+ {
+ 	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+@@ -194,28 +225,25 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ 	u32 reg = dwmac->mode_reg;
+ 	int val, ret;
+ 
+-	dwmac->enable_eth_ck = false;
++	ret = stm32mp1_select_ethck_external(plat_dat);
++	if (ret)
++		return ret;
++
+ 	switch (plat_dat->mac_interface) {
+ 	case PHY_INTERFACE_MODE_MII:
+-		if (dwmac->ext_phyclk)
+-			dwmac->enable_eth_ck = true;
+ 		val = SYSCFG_PMCR_ETH_SEL_MII;
+ 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
+ 		break;
+ 	case PHY_INTERFACE_MODE_GMII:
+ 		val = SYSCFG_PMCR_ETH_SEL_GMII;
+-		if (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk) {
+-			dwmac->enable_eth_ck = true;
++		if (dwmac->enable_eth_ck)
+ 			val |= SYSCFG_PMCR_ETH_CLK_SEL;
+-		}
+ 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
+ 		break;
+ 	case PHY_INTERFACE_MODE_RMII:
+ 		val = SYSCFG_PMCR_ETH_SEL_RMII;
+-		if (dwmac->eth_ref_clk_sel_reg || dwmac->ext_phyclk) {
+-			dwmac->enable_eth_ck = true;
++		if (dwmac->enable_eth_ck)
+ 			val |= SYSCFG_PMCR_ETH_REF_CLK_SEL;
+-		}
+ 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RMII\n");
+ 		break;
+ 	case PHY_INTERFACE_MODE_RGMII:
+@@ -223,10 +251,8 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ 	case PHY_INTERFACE_MODE_RGMII_RXID:
+ 	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		val = SYSCFG_PMCR_ETH_SEL_RGMII;
+-		if (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk) {
+-			dwmac->enable_eth_ck = true;
++		if (dwmac->enable_eth_ck)
+ 			val |= SYSCFG_PMCR_ETH_CLK_SEL;
+-		}
+ 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RGMII\n");
+ 		break;
+ 	default:
 -- 
 2.25.1
 
