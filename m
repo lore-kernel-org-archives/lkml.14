@@ -1,93 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE2017623D;
-	Tue, 11 Jun 2024 12:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23234171E60;
+	Tue, 11 Jun 2024 12:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718107341; cv=none; b=TYcmAWF7HlArEzlhTOKTzW7Qdy5GR7ryZodbnEdKvVsgGTl35j/Na1UnY2VuXF9TCKmFvGgZp+zvSrm24f6oVPTNavJ51Bt9sMut2RGx17/SiyCgdHYwwzwxipb457nCEd9IJowDyV4uSEiKkJaWErXZSm0A0Ie4j59sKQ493DM=
+	t=1718107429; cv=none; b=JzSwVYetZYhZdQVoEKoB55570RtMIKx1ECeFOr0lkeToq9siLIjoF4RymkLsoLc7gEh3Ihy3RgbKzHFLBXRHU7K9asCzm4e4GI0pbq7cKvbOmND4nwGsvCGdgtgKacx57LsISgKpJM7VF+4cq5eWDasg+8bn+bvX7rPU2BLnM7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718107341; c=relaxed/simple;
-	bh=CVnXtj7dn7R4jP36tYffAg5QjTJwaLN8wgb/nx5uVVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VhcCuMXijHDKG1B6fS9Lr4fMELpFuhA0snUbiF2Kh4CIsyN/Cz6BSpTbF6ES0LBK3MF1uAZo4J12qFHBnC3LVjKjVXGRoVyil38exOZVytVDK/axhZ0TWRGU03lKspssbhpfdpTzKvo9XPLVxIWEIcF/1VkRTt0fskLfZSZTN3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJJ/zKWv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718107429; c=relaxed/simple;
+	bh=6iL5d5+TpVoppRR7mPjEQaHzLpdbiQSHhhT9BJKLh3I=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=NvvxSbtX9/7l6oyWZko3P0joa/f+1FXFszmF5krQRnj43rjXqMdnxOx0TxbXQMS7H6G+yYqWyoMyPoTfO05WGd45cDId0u4zwZUyxSq59r1CONz4BDHX9SGNdGFzoNx304OQ49Xljqfj9ot8qoWT8V8Zuq3UVo03iSCfT5x0u8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=v4UzXkw7; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJJ/zKWv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AB0BC32789;
-	Tue, 11 Jun 2024 12:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718107341;
-	bh=CVnXtj7dn7R4jP36tYffAg5QjTJwaLN8wgb/nx5uVVM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XJJ/zKWvRiyqgeI+ApQhnRndzGu9PygAixIX0q/qDR8eRcwJG0wY1hW+Osb/iuqbq
-	 lDotrOT+lklfU6UGVcKy4bfqPhyXHW9tgEBi5QWPV8xeI/VTn3t34Ufmy0AoPzsoQ+
-	 c0g3rdr9IHuGozdVDEzk2Wbq/fgf4Ul7Y+1Q5tFZ4riDaH75fH8Cc/JQR2oNkaqmf/
-	 N4ysbZ5rBYb2OmBi38sB9tHrKVPW7+IHZ9QwaZiMdsPa/7P0ZaeeGz/N4JyuLbnzR1
-	 fM/Cji6L+TAX48aJqIKG9oDazxcNYO3bltbrn7U+y2428eiRmqjxVXfyUn1iZIQ5lS
-	 3aZ4x3x7gE2PQ==
-Received: from johan by theta with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1sH0Cd-000000008k4-1zj5;
-	Tue, 11 Jun 2024 14:02:15 +0200
-Date: Tue, 11 Jun 2024 14:02:15 +0200
-From: Johan Hovold <johan@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Steev Klimaszewski <steev@kali.org>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: cpufreq/thermal regression in 6.10
-Message-ID: <Zmg8x6JXQW1dqOr4@hovoldconsulting.com>
-References: <ZmVfcEOxmjUHZTSX@hovoldconsulting.com>
- <CAJZ5v0gVnjVyd_O6KgXy2sXr3b3M3vyTLyUCasyxP0GrAXro4Q@mail.gmail.com>
- <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="v4UzXkw7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718107378; x=1718712178; i=markus.elfring@web.de;
+	bh=v4MG0q9MnuPY4++cJH4EjME8ABWNsolzfGyYD+ZIsYU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=v4UzXkw7bizGPdAA35we5ZahpMfu+ZtwZNGftCytLLW7WsytaCSWwTVnydrGfkf1
+	 oK/ZgNXHm3vpMwOwPNJaTR1ozrYCotWRwmkEjkvwqSxaKtXnFCdvWl7BWkUzIqFCS
+	 gIZagFE4szymyPe2/f4PTzw8l/ZSBWTr6Javsc6tAMAUPJBNgae9OxCZAV80jPYbh
+	 NaigegF64eXlcvvhNoh0riYBNQAcs9DfWfqcn5GNVlVHnCuc6XKWXtoPFQveEsvl2
+	 ywNmQI4Yqagr0EUDQODHk9pq5lLKLP27RCYJ1ytTAQJG7IzSDUY5u0ZSF4xH3Od3g
+	 ph0NW7vK707lcLT9gQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mc1ZT-1sq3Jt0QsJ-00jIxb; Tue, 11
+ Jun 2024 14:02:58 +0200
+Message-ID: <32303d99-c5ba-4fec-8981-9b9966dc3291@web.de>
+Date: Tue, 11 Jun 2024 14:02:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0iz7gwhpvT53CH0ZEA_q3U=dnn6XR8HdLk6LpP3ye4Zkg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+To: Kamlesh Gurudasani <kamlesh@ti.com>, devicetree@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ Herbert Xu <herbert@gondor.apana.org.au>, Tero Kristo <kristo@kernel.org>,
+ Will Deacon <will@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh@kernel.org>,
+ Vignesh Raghavendra <vigneshr@ti.com>
+References: <20240524-mcrc64-upstream-v3-4-24b94d8e8578@ti.com>
+Subject: Re: [PATCH v3 4/6] crypto: ti - add driver for MCRC64 engine
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240524-mcrc64-upstream-v3-4-24b94d8e8578@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:TJ+M3A+ZwHBv8zbRqkd8DEM7qjVhITuWZRUhZtq7FNJIWGkAGBW
+ 3CoM26cD78kPrZKl9pVWI0m31RFhWOtge/YrCgXqxxV5jOYOmntQo7ZymX+uPbr1E54hC4g
+ 2xYdC00lN417YXdoybmTuYwz5Fszf18GbPLT86PKnchC2KQ7FeKSSpyNPzVqFKprfp7WCKK
+ iS3XbhLEABKTBCzWlaBZw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:YogUS1Yz1Ys=;phEEUBQ3iH6xYdFv8skbZzBR14h
+ X+6Sz3DaRZye53CTBaNq5iAc3w2zfBrL0OMLLDI7LbCNNbCdBr/D4WTeCEoTtVjJ6Xg3Cz636
+ yXCpyBv1pv97bbuTZMENguGkw8NMIl0r1j3svqVgPM9Ga5wOd+gLLqhscwaPD0vi2gyTrWBqj
+ w2ONOFtEUdjQx7Vj3gpWrxfNDbqVklHCu5zaZX5b9OKbpKyRI5JIx0rJ5JNGRYqhC4qidhpTb
+ zQj2fIl/nIJd7l9KmtF4gvONU3TndNcRrwkGf0Vof27i6MienOPKxS4ds+a7nZ73MBIyXb/R2
+ 1w391fKmFkSuaRPjaYn8Lt1xC0NRVXS8w7j3nYT2DvEf8Yp+7i7PcE3/zYwBXBfQOo2RvKFyT
+ 3s7OHuqCJygN0ECVZ57Aiat6FL2evaSmaAvpl46VGhruRblcmRIvwNMdmo3hCz3SRlQf3VDnP
+ aO59pXvfXJvR2DbVUWPtCaCKbyww/Fi/lRfMS/J0rKEOxOz8qJ6gzaErPnBn1VZHDJUdi2KVG
+ wDHqn9Y8MKbM3GHjUv289hSAXlWFLdkND2BnKcFdoMYLAo7T2L2vVeSOgK0SYgh+cPtTrCL9u
+ Pg/A2En23qftgKq6bluP9KC1QKm3Zbj4g3azip3R2avn8d51eaMrR3S/9jhOiDvhPFctnQAD3
+ Yy3WkRkUk6KgmJAIMH+PDeZpLRObzXy+N5DUqgnXbaZwNVRh30u+GjhvAODjj10La3DRLkxOq
+ 6qN1/0vPgbsSgGmnPVzYQtiL1+WEjnexyZ+u6mBa5/KDVF9MA+AzYPfIbS7+erBP0mYnvA4zG
+ Eez1Dz4hRxH5b4QSa6kObgEBkhBJI0lV9uv4wEB1k1EmY=
 
-On Tue, Jun 11, 2024 at 12:54:25PM +0200, Rafael J. Wysocki wrote:
-> On Mon, Jun 10, 2024 at 1:17 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > On Sun, Jun 9, 2024 at 9:53 AM Johan Hovold <johan@kernel.org> wrote:
+=E2=80=A6
+> +++ b/drivers/crypto/ti/mcrc64.c
+=E2=80=A6
+> +static int mcrc64_probe(struct platform_device *pdev)
+> +{
+=E2=80=A6
+> +	platform_set_drvdata(pdev, dev_data);
+> +
+> +	spin_lock(&mcrc64_dev_list.lock);
+> +	list_add(&dev_data->list, &mcrc64_dev_list.dev_list);
+> +	spin_unlock(&mcrc64_dev_list.lock);
+> +
+> +	mutex_lock(&refcnt_lock);
+> +	if (!refcnt) {
+> +		ret =3D crypto_register_shashes(algs, ARRAY_SIZE(algs));
+=E2=80=A6
+> +	}
+> +	refcnt++;
+> +	mutex_unlock(&refcnt_lock);
+=E2=80=A6
 
-> > > Steev reported to me off-list that the CPU frequency of the big cores on
-> > > the Lenovo ThinkPad X13s sometimes appears to get stuck at a low
-> > > frequency with 6.10-rc2.
-> > >
-> > > I just confirmed that once the cores are fully throttled (using the
-> > > stepwise thermal governor) due to the skin temperature reaching the
-> > > first trip point, scaling_max_freq gets stuck at the next OPP:
-> > >
-> > >         cpu4/cpufreq/scaling_max_freq:940800
-> > >         cpu5/cpufreq/scaling_max_freq:940800
-> > >         cpu6/cpufreq/scaling_max_freq:940800
-> > >         cpu7/cpufreq/scaling_max_freq:940800
-> > >
-> > > when the temperature drops again.
+Would you become interested to apply lock guards?
+https://elixir.bootlin.com/linux/v6.10-rc2/source/include/linux/cleanup.h#=
+L124
 
-> If this is the step-wise governor, the problem might have been
-> introduced by commit
-> 
-> 042a3d80f118 thermal: core: Move passive polling management to the core
-> 
-> which removed passive polling count updates from that governor, so if
-> the thermal zone in question has passive polling only and no regular
-> polling, temperature updates may stop coming before the governor drops
-> the cooling device states to the "no target" level.
-> 
-> So please test the attached partial revert of the above commit when you can.
-
-Thanks for the quick fix. The partial revert seems to do the trick:
-
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-
-Johan
+Regards,
+Markus
