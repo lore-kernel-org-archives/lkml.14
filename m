@@ -1,75 +1,101 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252EA17334D;
-	Tue, 11 Jun 2024 08:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8035A173321;
+	Tue, 11 Jun 2024 08:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718093987; cv=none; b=c0/F/5q3R2ckdxVo/pHlbfvXNSeYRF2CNkcdFxXn/NyDu83O3aekNkgwfwy9y4VHnoj0Bi0xB51tWksv0PXygfFnMnJA1IgEozONUbcWm0tcrFTy2P3b4EJ60EYuEIQyutON3lzhYlegg+6owS9gyD/w3iMf2V2PMzuUknFVcuk=
+	t=1718094074; cv=none; b=kqUXJbjzQUKhUGS1lONBT1OAIfVknDo6u5jlfbJPWGEx5NGZoyO1L1fSVsgY7XIfipUC1w6sdzGWQz+wumgbKaP5onw24VZfuS1ljmzeObyg/CXTy1REZArjqNCV7rgzEVo/9iUNjRrqAa/h6ag1RFZYw8oLE15Y5xtOuJldSTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718093987; c=relaxed/simple;
-	bh=/Jpq7EjOx9Ak4Ee2TneFpD6LvsLd6xd35TVUysLlRA4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bgSA8dTivjxzgZmq2fJ/96J5c/dPx357fPLzIqEZ6wYuwkjKCgguFJ52rFe8GvW5X0fMNLav7Et3Cdza3mLLeoE6yZi7ITR7zEEn+mXw14MlzskWB6Q63ORaQ5SklKDfsFKrDdsAgAA1uOfiIfdpCVXb4p1HVISF+Cj2yPvFiE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vz1gC3K2Yz67lZ9;
-	Tue, 11 Jun 2024 16:14:47 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 48E9E140A70;
-	Tue, 11 Jun 2024 16:19:41 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 11 Jun
- 2024 09:19:40 +0100
-Date: Tue, 11 Jun 2024 09:19:44 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-CC: Arnd Bergmann <arnd@arndb.de>, Ke Sun <sunke@kylinos.cn>, "Linux Kernel
- Mailing List" <linux-kernel@vger.kernel.org>, Linux Next Mailing List
-	<linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the iio tree
-Message-ID: <20240611091944.0000448a@Huawei.com>
-In-Reply-To: <20240611151820.63a404bc@canb.auug.org.au>
-References: <20240611151820.63a404bc@canb.auug.org.au>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1718094074; c=relaxed/simple;
+	bh=o9R63W2h+PXHJFvU1TUtUAN5DVlFkM8X+Kj+TFyexv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lN6aPUkBjpYgMlfTQZY6IWBPBMa3h7872ffKuiR7eow1ZRZGcpGWiGn018EspcbhP0RlxvYESAXxeX7cUwinplN47Z5WyqOAC3ur00HJVTCse7/Q/srkr9ZX/NvYTsEoxGmRpleCq4LjD75XXpQtV6QrwY+XTMWSXAH+D9jwyoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BqAJrxqW; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BqAJrxqW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718094072; x=1749630072;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=o9R63W2h+PXHJFvU1TUtUAN5DVlFkM8X+Kj+TFyexv8=;
+  b=BqAJrxqWoCY9gYA3/dRpGAhXmnLm6Dhg/KIP6OI1CryqrjQ0EucPWL4A
+   VJsydrqZrJcf3BrQhCYO++4zEZcmhprFPgdOdzJQqeDABMHyweqwUKUAa
+   K6U+fH4Gap/w4NrEzsiEZqhCkA9PwcviBr8KcEaK+ntgjLn1ka8pl9HkL
+   iFOVmwT9pP1Pno5Tvh2eOSWOfo7kULyz0NkOcbl0I9OaGWNEQORsVVt48
+   70vHgK2b6fBclW5Ou0wnwIoxtX01g63KT6S4/EVwi7ZQHEp+gQkRiwkKZ
+   yV2bBcwycUa2PqbITggYMaio2MewNuMDKKpKuYfdjCcfTmwAVJQG1Uuvr
+   w==;
+X-CSE-ConnectionGUID: PhAadFqxRViDHIRPWMif8A==
+X-CSE-MsgGUID: WmaUPN6fRtex9iwCf1uNjg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="14940359"
+X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
+   d="scan'208";a="14940359"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 01:21:12 -0700
+X-CSE-ConnectionGUID: AZKl3105TiaPL+FtfswRXA==
+X-CSE-MsgGUID: bzNw9UUfQDCfTzhwKg3M+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
+   d="scan'208";a="39299831"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 01:21:09 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 00D5D11F9C0;
+	Tue, 11 Jun 2024 11:21:07 +0300 (EEST)
+Date: Tue, 11 Jun 2024 08:21:06 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sylvain Petinot <sylvain.petinot@foss.st.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] media: vgxy61: Add MODULE_ALIAS()
+Message-ID: <ZmgI8nET4sdhdwQx@kekkonen.localdomain>
+References: <20240610150815.228790-1-benjamin.mugnier@foss.st.com>
+ <20240610150815.228790-4-benjamin.mugnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610150815.228790-4-benjamin.mugnier@foss.st.com>
 
-On Tue, 11 Jun 2024 15:18:20 +1000
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Hi Benjamin,
 
-> Hi all,
+On Mon, Jun 10, 2024 at 05:08:15PM +0200, Benjamin Mugnier wrote:
+> Preserve user space retro compatibility after the device rename.
 > 
-> The following commits are also in the iio-fixes tree as different
-> commits (but the same patches):
+> Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+> ---
+>  drivers/media/i2c/vgxy61.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->   f8a5217d06e2 ("iio: dac: ad9739a: drop COMPILE_TEST option")
-> 
-> This is commit
-> 
->   75183e461ce0 ("iio: dac: fix ad9739a random config compile error")
-> 
-> in the iio-fixes tree.
-> 
+> diff --git a/drivers/media/i2c/vgxy61.c b/drivers/media/i2c/vgxy61.c
+> index ca3b43608dad..c85f356946ca 100644
+> --- a/drivers/media/i2c/vgxy61.c
+> +++ b/drivers/media/i2c/vgxy61.c
+> @@ -1898,3 +1898,4 @@ MODULE_AUTHOR("Mickael Guene <mickael.guene@st.com>");
+>  MODULE_AUTHOR("Sylvain Petinot <sylvain.petinot@foss.st.com>");
+>  MODULE_DESCRIPTION("VGXY61 camera subdev driver");
+>  MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:st-vgxy61");
 
-Thanks Stephen,
+Perhaps just "st-vgxy61" so that the module still loads if someone loads it
+explicitly? That's what you'd want, right, as the old compatible string
+will remain?
 
-Indeed my mess up. I picked up Arnd's the wrong branch and then
-failed to remember it when Ke Sun posted a similar fix.
-I'll drop one of them and do a pull request for the fix in the next
-few days (as I gather this one is particularly irritating for some
-of the build testers on mainline).
+-- 
+Kind regards,
 
-Jonathan
+Sakari Ailus
