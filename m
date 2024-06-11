@@ -1,163 +1,187 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2066.outbound.protection.outlook.com [40.107.104.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989F22230F
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718098577; cv=none; b=O1+K1HQjeW0tJg7OxqdmfLtjVDPnCcyotBfjScN6UdhxxEmuRLmok21dU8rJ9wYmBxIchk5H9XRyTfWpZTJlQvtFhJrKXBo0kOoiFop23zRaoYASUWSvUirvGS7IIVXMiO2uV7XjjvqOtduA4fwndHx8yQFoAmKCSBaJ8/eysQo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718098577; c=relaxed/simple;
-	bh=dDF82/WVEMJLMp6RKwaMKit1ulza66VoYaoZYIYpjww=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nOgfIIay7J8RSOnhI9xCNluWyYzXr5V72hKK+PmllF7m7FHZV9DD+hCG/pKnc7eq74hRJWBK9+W0tEj2g3L/XBvzTTlEOEtmP/GPUKc0Q7GSBn9JbsCPVXGhKeL9umVXcNgmWmGg32R6jBGWRxgizRgf3BTMHpnM56uDTMZNKUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=isSpu8Mi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6022230F;
+	Tue, 11 Jun 2024 09:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718098596; cv=fail; b=opLk2bEnzleR/wZfbHdExMmUDPxredk4TuVBXOfJIcY4aoj9v67ehywFwFBAP7UoCSzdi6murYZ8Kv+E9Yo1SL444xddM6ZnnIuqHVX8nv/I+NOK+7JkYNSe6U0RRoUtxdF/NzHfRx65pr39DSWbjBkvzXfB8rvzwynTaJwDYFQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718098596; c=relaxed/simple;
+	bh=Aygr9R2mzS920fDPrA/NTOlPcNvSxjrZ/xf52JNeZeg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=bSwl+qHysBU5LSXHYtfDn2qcLi3dYPdFsceEDP5uDy+8iOI+2jDOVzgg8kJegg+tj5FVJa2leqlJ0LmiH3Uh6pJJDwrpPPOQ2ySo+pvaiZp9h4xJTy+ffbghBI8czi4Sf/j8gl2R2K6Kg9q5lzGtHTlGc7VoVl48Ps+gxxUnAZE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=FEDB4X7p; arc=fail smtp.client-ip=40.107.104.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="isSpu8Mi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718098574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=TlB7F7lscejzuVTo3t1wMraq8CrMqmylVI6BgXXCdcI=;
-	b=isSpu8MiUOcQPaHtS9U1RjBEp4Utj6H10cKoWUhx3hwRJGDeRsD9W4zB2rQ3zNXftWsKPH
-	cxr3aRz6FiiTatPOJYtIEWUfb3qDRjee/3fvkTJDAH3qcBHBHycTB6lVN7p/XuHkPu6Rof
-	XQp0IG9MJbv76Y92ZvbHR6fCkGVJ5cE=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-92-2Zy_113MMoysCTxrhtX7Ew-1; Tue, 11 Jun 2024 05:36:10 -0400
-X-MC-Unique: 2Zy_113MMoysCTxrhtX7Ew-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ebd7556679so24741691fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 02:36:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718098569; x=1718703369;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TlB7F7lscejzuVTo3t1wMraq8CrMqmylVI6BgXXCdcI=;
-        b=Feyi7nHX6TxKudO5PW/qUtSoplFkcVaqbT7N+yqoYs7WhwujcrkDJx6x8eYWALPtug
-         BlTBlvYa4dqlsH70b5s08K9yzcADcYj/up5Nx1AnwD+8EykJkgzThhGR5XQD6qUxjVPb
-         GzE6WHmLf51F8b8cFc0b2wSZK/6bL2rxO/YwvxuixW5vxukp0exYbl1rs7BVNrfquc5t
-         JveGGhGWVzSTKW0F0aY8BHT4dM/qbYpvH+pqQSXU9F52o6DEDpMWhbCmlHYw8jaPq8yi
-         rLund1rKM2eeM8Y81uSB27fAZ8qFvZF3uiA+XwU9U7/H+eyJI/Hn4/p9xCg0gsBsIa+O
-         DqYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOQsRAeL/odzGnNEkvH6W6+yLiLBplSig3prIiYf86wr1kErYxW2J0QIR6fRrsaOT2OkY6I++GlKA1v5HqE396Azyw6YzcXjftyyvj
-X-Gm-Message-State: AOJu0YwH3YKPnVjsS4eoobGi2gD6WCRbXYNAJrQirHyzMfkNDSDfi4Vs
-	g25lFLt2jfCkMXmi3SgH7MX3lINTNO3p7/U8DMkteJ5HJ6tBZtADQVUAKtSCwVaNkoLMxAJ87mm
-	Nf9bxw0BThp+bbDN0FEjFG/QR/U215tPPUaPY4LiKX9bRdGk6wxG5xxL81Wpw2w==
-X-Received: by 2002:a2e:8e97:0:b0:2eb:ee03:f5e4 with SMTP id 38308e7fff4ca-2ebee03f623mr22790771fa.26.1718098568819;
-        Tue, 11 Jun 2024 02:36:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNp2sevQyfiC69YnEOTxSqiVOgujok/h0CX14g0NhU6HUh+1k242chVMmfp1m+LeDXZiGLuA==
-X-Received: by 2002:a2e:8e97:0:b0:2eb:ee03:f5e4 with SMTP id 38308e7fff4ca-2ebee03f623mr22790591fa.26.1718098568334;
-        Tue, 11 Jun 2024 02:36:08 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c748:ba00:1c00:48ea:7b5a:c12b? (p200300cbc748ba001c0048ea7b5ac12b.dip0.t-ipconnect.de. [2003:cb:c748:ba00:1c00:48ea:7b5a:c12b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c2c6900sm171291355e9.36.2024.06.11.02.36.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 02:36:07 -0700 (PDT)
-Message-ID: <b5dd99c7-866b-467c-9f76-d043e887394c@redhat.com>
-Date: Tue, 11 Jun 2024 11:36:06 +0200
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="FEDB4X7p"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Sc/KHlG4L5Us6raHXTnGcSxERDwSLZhMkIfIg00wX5ogbEjfnsL5E3lio980Ycq7BZthdAdKE75/tSW6niVAhyh1+jZM+WBNQwpICE7sy/ZEeZH6BtRfPqy53nHsY7HdQAg+9fjAPz5vwHSmi3VB32GzdVC34NJySl9881QCKrMqc4K0+e2V3e11DgfM4kZQELe1AMG252OxlxjkIi4t5nkA7Z161Qe1Ite2c01LNcgaL925i9tznEL6XvvF6lrLI/hPFhArbnabTA/FodM4Y5OWyqJhoF0z6w9y87Qu6ZQtiSaXPdNdIy0kEiFF0A81fwreJiZIF9vJxvXDNvzzOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SnN5xWXK/p4vK+PGPC8m1Os43S1H1QsdFOPx/XaGFYI=;
+ b=XRyEz0mqoE+mi3kAooY+EFZ2/sdshmVAdpxuaCNM3VNTzxLRBOPv+b2D272tFATKg0wvIywhdu1LBLw5XkIz5Uh08Wq/XzuP61BSNFR5A9Bgd5rk/xE2BD7w3vSLj+0XRiZJt63b8lcO1P7x99XCWhxv6W67kHURNeo0gisP0CXac4CHNZ6Ekvdy/za7iwpf0UslPwee84LlY5/BdETA6p8H3mpUOo6mnZvyjGBK/OpEgKAx/Sbg+g+AnzeZhEpGauxN+MUgpUwgoTKd+MsuF9eksCrJ3dlcx6IfuKSZw1LMawENKMQie/XQ9KE8v0QcozV013Fn9bWqboxEcFYTHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=kernel.org smtp.mailfrom=axis.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SnN5xWXK/p4vK+PGPC8m1Os43S1H1QsdFOPx/XaGFYI=;
+ b=FEDB4X7pEqNx4G7uwC6TYfoYujs8n1aNnKXUfefJK+U8dmC8tCuK7S/66nHCNBEsXgM1kjAg7bvTL2USsr1qMIhudHKcEcLI6QKZ4tYZQS5b8csVy17DRV5xh9IxUi8OAj/PeTFGQg8O4dqFxF1dbVUGn87r/VSujmYzGl8OPYQ=
+Received: from DUZPR01CA0184.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4b3::7) by AM9PR02MB6643.eurprd02.prod.outlook.com
+ (2603:10a6:20b:2ce::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Tue, 11 Jun
+ 2024 09:36:26 +0000
+Received: from DB1PEPF000509ED.eurprd03.prod.outlook.com
+ (2603:10a6:10:4b3:cafe::d6) by DUZPR01CA0184.outlook.office365.com
+ (2603:10a6:10:4b3::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.17 via Frontend
+ Transport; Tue, 11 Jun 2024 09:36:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ DB1PEPF000509ED.mail.protection.outlook.com (10.167.242.71) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Tue, 11 Jun 2024 09:36:30 +0000
+Received: from SE-MAILARCH01W.axis.com (10.20.40.15) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Jun
+ 2024 11:36:28 +0200
+Received: from se-mail02w.axis.com (10.20.40.8) by SE-MAILARCH01W.axis.com
+ (10.20.40.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 11 Jun
+ 2024 11:36:28 +0200
+Received: from se-intmail01x.se.axis.com (10.0.5.60) by se-mail02w.axis.com
+ (10.20.40.8) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Tue, 11 Jun 2024 11:36:28 +0200
+Received: from lnxamnaw.se.axis.com (unknown [10.92.129.190])
+	by se-intmail01x.se.axis.com (Postfix) with ESMTP id 468923D46;
+	Tue, 11 Jun 2024 11:36:28 +0200 (CEST)
+Received: by lnxamnaw.se.axis.com (Postfix, from userid 12778)
+	id 448CA205FB3; Tue, 11 Jun 2024 11:36:28 +0200 (CEST)
+From: Amna Waseem <Amna.Waseem@axis.com>
+Date: Tue, 11 Jun 2024 11:36:25 +0200
+Subject: [PATCH v4 1/2] dt-bindings: hwmon: ti,ina2xx: Add
+ ti,alert-polarity-active-high property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] cleanups, fixes, and progress towards avoiding "make
- headers"
-To: John Hubbard <jhubbard@nvidia.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jeff Xu <jeffxu@chromium.org>,
- Shuah Khan <shuah@kernel.org>
-Cc: Andrei Vagin <avagin@google.com>,
- Axel Rasmussen <axelrasmussen@google.com>,
- Christian Brauner <brauner@kernel.org>, Kees Cook <kees@kernel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Peter Xu <peterx@redhat.com>, Rich Felker <dalias@libc.org>,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240608021023.176027-1-jhubbard@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240608021023.176027-1-jhubbard@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-ID: <20240611-apol-ina2xx-fix-v4-1-8df1d2282fc5@axis.com>
+References: <20240611-apol-ina2xx-fix-v4-0-8df1d2282fc5@axis.com>
+In-Reply-To: <20240611-apol-ina2xx-fix-v4-0-8df1d2282fc5@axis.com>
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>
+CC: Krzysztof Kozlowski <krzk@kernel.org>, <linux-hwmon@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Amna Waseem
+	<Amna.Waseem@axis.com>, <kernel@axis.com>
+X-Mailer: b4 0.13.0
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB1PEPF000509ED:EE_|AM9PR02MB6643:EE_
+X-MS-Office365-Filtering-Correlation-Id: 56702498-1fff-468c-7fbb-08dc89f9f98d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|82310400017|376005|1800799015|36860700004;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NUhvdDBUa05mMjdxVWM2a3lUdWgrTHN1c0ZZQktoRnh2SVpIa3JreWlTa2Ji?=
+ =?utf-8?B?RWdQOFJaSlZhN2NKcUFaK3R5a0lobjErNm9pQnl0NERTSVgvSG5RanFGZlAw?=
+ =?utf-8?B?eXNkc2c4akVMNjlwVllqcmpIUzk0TGF1SFJpUEVQbnZVSmdjNHpzOG1jWk1z?=
+ =?utf-8?B?Q0p2ZlRIbUY1QVFvREpiSmtFNnF6NzJSekdnb2JKU2l5b1BiRy9vV1VhTE9H?=
+ =?utf-8?B?Z0p3ZzEyeXFaRk5NQ0FMbGNoYnF0VytrNHFyNzIrYlhMRW9WbnZRVkZoVXc4?=
+ =?utf-8?B?K2ZCcjNqUVYwUW16MGpmaUkyOVhOV1BidzlKZkFVZCtRVFp2ZXdOV0pFWTBE?=
+ =?utf-8?B?YUlKajk3RzFCa2s2blJvR0QyZG5KY21pTlZxTWlCTmpMdmYvU1dsMUtHOHFp?=
+ =?utf-8?B?clNlMFB2WS9EUXdjUDNrQ0V1RW9ZVDlkSkZLdVducEhPWFlwc29OZ1lSekxL?=
+ =?utf-8?B?UDFRTXdlaVhqaldJUTZxVlU0bWhaLzdOelk0M1ZITkx3SURrWXBVdGQ1REZN?=
+ =?utf-8?B?cXF2UnlON2FhalJNUFBJK0FUQmNxMnhCVGxUM3crUlY3VjFnLzRLOWxwMEVa?=
+ =?utf-8?B?MStYNGk2dmdZa3h3d0tJSCtKQWlvdVFwNDFwdmxMRGlzd1Q2aGVlRVJGOTlN?=
+ =?utf-8?B?RlRsUjAwSDBYNUwwTzMrR3pzbVk1d2dGUEpGMWpzeWUwOTA0aG14TVExU0xM?=
+ =?utf-8?B?SFdyQkpWQmtBczU5Ukg5azdkOVdyL1NJbzVLNDNoTk5oZVR3UXl0UXQzSTk3?=
+ =?utf-8?B?Qk9wMXpyNG95STdFMlR4WTloS3FoRm5ONkMrQ3BZem1OTzdMVmJDMjNKelhy?=
+ =?utf-8?B?U0p6VFpxR2MzcFdudDdaRVVDOTdJaUE2K3puY1l4UklNaU53QjZ3azY4bHpz?=
+ =?utf-8?B?WkU1MlZJSGhZR2IzOW5IN1Rkd245d0NmV05EOHJyWlJ5aFJyL1ZVeEU0RlYx?=
+ =?utf-8?B?KzJRSHZWdS9xbmk5NjNKai93eFFPeGUvbjVCeUNwb0hrTmZtQjhFbWl5M3R1?=
+ =?utf-8?B?N0NEa3lHOUpHdDB3S1VIUkt0b3NHRFl6Sm90QUdLUXYxL3VrTi9iMmQxRTM0?=
+ =?utf-8?B?T0puc2EzZXVJT1NidUdMKzVyNVlodGU4eC9oSEovM1B3dW9lcnk4SHUvVitv?=
+ =?utf-8?B?d1B6c2ZRenNLRjhVZmlCNFlDZ1ZZMjBkdmRzZ0M0Ky9ZQ0tjNDhEMy94UG01?=
+ =?utf-8?B?WVhNT0JZOG9OdXNjVzR2UWoyQ1NIaHZzZ29tUlRNRnBhMlRmbFR2V0d4eXh4?=
+ =?utf-8?B?Ym0yRGdCS3RwMFZ0RWhKTG81ZHJqUCtiTkxXSWRyWkRaMFY4TENBZ25TVUpr?=
+ =?utf-8?B?ZUM4QWgvZVZCY0lnblBnKzBpeXM4VHplN29xNlMzZ1dnQWtLQnBLN0lXTUxn?=
+ =?utf-8?B?aFNXV0x5dU0vRU9UdWVZMFNFVzRYMXJtYVY5OVZpR09TeTMvNGNHME9Qcjk3?=
+ =?utf-8?B?OWF0WXMzSkFCcWsrdXdSeVY2TWwza25BT01jcnVqNDFXUmZRVTljNXJMblZy?=
+ =?utf-8?B?SjZaZTNvMzA2WTlyMW9EekJENlhYdFdBY0t6Rlo2clRvR2RJOUM1OEI2c0ty?=
+ =?utf-8?B?ZDJSeFE5K09uZkc1ekJYK29zKzRqblJrRUppWE1DYmVlcUNicldxeUJCZ3A0?=
+ =?utf-8?B?cHVYbEdHdWVmN1JMbGtZSWhoWGdsemcyaHFxVmJEWHBnQStLcE1kbjFXZjlS?=
+ =?utf-8?B?Rkw0dXJaTXhnYVJGZUpneG5DZ0dzRnR0WjkxRkVsM01LV1R4emRBdm51bkJj?=
+ =?utf-8?B?bXIrQm1xR1JhckQrMVkzV1RFWVE4YXdkM05UN0E1K3JDQVgwbmt3RzIzVTFX?=
+ =?utf-8?B?UWlqQjJSRklNQ2Z2bkVXa3RXbFhBVkdOdVFRdVc1QVRQK3V0S0I4Z3VTeXh3?=
+ =?utf-8?B?c0Vnc0R4TXBNTElNK0VicWp0STdYdk1BQ25uTlU5OHkxZ2c9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400017)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2024 09:36:30.5648
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56702498-1fff-468c-7fbb-08dc89f9f98d
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF000509ED.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR02MB6643
 
-On 08.06.24 04:10, John Hubbard wrote:
-> Eventually, once the build succeeds on a sufficiently old distro, the
-> idea is to delete $(KHDR_INCLUDES) from the selftests/mm build, and then
-> after that, from selftests/lib.mk and all of the other selftest builds.
-> 
-> For now, this series merely achieves a clean build of selftests/mm on a
-> not-so-old distro: Ubuntu 23.04:
+Add a property to the binding to configure the Alert Polarity.
+Alert pin is asserted based on the value of Alert Polarity bit of
+Mask/Enable register. It is by default 0 which means Alert pin is
+configured to be active low open collector. Value of 1 maps to
+Inverted (active high open collector).
 
-Wasn't the plan to rely on the tools/include headers, and pull in there 
-whatever we need?
+Signed-off-by: Amna Waseem <Amna.Waseem@axis.com>
+---
+ Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> 
-> 1. Add __NR_mseal.
-> 
-
-For example, making sure that tools/include/uapi/asm-generic/unistd.h is 
-updated to contain __NR_mseal?
-
-... to avoid hand-crafted defines we have to maintain for selftests.
-
-But maybe I am remembering something outdated.
+diff --git a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+index df86c2c92037..9190ef0bda54 100644
+--- a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
++++ b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+@@ -66,6 +66,14 @@ properties:
+     description: phandle to the regulator that provides the VS supply typically
+       in range from 2.7 V to 5.5 V.
+ 
++  ti,alert-polarity-active-high:
++    description: Alert pin is asserted based on the value of Alert polarity Bit
++      of Mask/Enable register. Default value is Normal (0 which maps to
++      active-low open collector). The other value is Inverted
++      (1 which maps to active-high open collector). Specify this property to set
++      the alert polarity to active-high. 
++    $ref: /schemas/types.yaml#/definitions/flag
++
+ required:
+   - compatible
+   - reg
+@@ -88,5 +96,6 @@ examples:
+             label = "vdd_3v0";
+             shunt-resistor = <1000>;
+             vs-supply = <&vdd_3v0>;
++            ti,alert-polarity-active-high;
+         };
+     };
 
 -- 
-Cheers,
-
-David / dhildenb
+2.30.2
 
