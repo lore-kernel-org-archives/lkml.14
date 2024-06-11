@@ -1,99 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301F2433C4;
-	Tue, 11 Jun 2024 05:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B31C6433C4;
+	Tue, 11 Jun 2024 05:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718083839; cv=none; b=AwVDATx7ORXQBbj8OgalcjjCsYbUXlXRvnVXe/tQzePte2sAT41CYhoYX5PPqQYqU1XtfnSHzo/ZE4hWzQthe1hE+U++PCs2S5JbodbryEp0KwTVG7oTA2CtjKWtRPKMU/fFJgmhDKJkqaiRiHi5sdu/YhRuMc79RL44XlOFWbw=
+	t=1718083913; cv=none; b=awMWsy7AVbP5ctfCIGPfGD69m6sslidJdS14OFt47T518lGrHvSlCOZkX2Zuy/J95ay1LIy5TIvNrCvdXJ6wDqpyHal+SlsLTGcDjBBCEyksMVw0HcnDqyZNN+jrVnH3eRgYxlh0hZCylfrQh2etzt1vQvn6vp9pniGK10/MQkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718083839; c=relaxed/simple;
-	bh=mYrRznVRP3/LER6a3P+Bz/NvuHfeT8MQQDa9NDjpK+w=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=GLsW750wyHlz9eUDlp0hdKjPRSPzv2tH895kNMl7aWIhCuo+Jot9O34azvVdXhd7Ipz1OiNjhPYba9qdJs4IdHjb58s9pjVpR2W7ppFA/vuwPyTe/545/grWQdBscNs4E7juuP68zd5K4c1rvolZXsMzf1npoGs21BPfO4OLzh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QuB7FUOu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718083913; c=relaxed/simple;
+	bh=wTgHUoRXGB8qJoR4h9Pr5wfL0FU6959WzxM5R7bvukk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=di86FrygPfAL3c99FdhagLdezSjVCwjBXyL4zqdDehcvrPdtdlBmGUyt2zni4Phj/w4b+omo7NDsK9EXsmK0NmehuBkdYNPPULtHJES7MArAYzqpBmJCtAwUCDHEelYpBRaQKTB+TAwOZ1IB3WYW4nphG+Wuq4OdOBvUAfR648k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=OTXxlE4p; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QuB7FUOu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D9A1C3277B;
-	Tue, 11 Jun 2024 05:30:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718083838;
-	bh=mYrRznVRP3/LER6a3P+Bz/NvuHfeT8MQQDa9NDjpK+w=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=QuB7FUOuWPKOZp5mRnLxVa54EASLNyohTlp038o5kMMOJ9Xzs4HjBrFT2JnBOfZ0K
-	 dIILW20JcO/FU8XPH8ib8jxIn92zmBjyLJyE3/R7WJV1ff+QoEw/3fXP6wuDb6PCIY
-	 MQAVluODUz5CbjhwUcw9+NnOHJ8e+AgNGekwEy/hLA9iQIdTmejX3qIVSQp5AT5SUY
-	 Yqa+J/xwz8eQhbR9aI1gXD1zOYIgQmI/xHk0bGDGfVLnz0gV0z8LJYbSFVIi+G0nbf
-	 61OLFqJbwuQfZsUg/rgO14OF7OpNe3BF0d05rau+44abQHM9LJNLXVDJVZo8y5b5Js
-	 h8tP9ZlOKTvmg==
-Date: Mon, 10 Jun 2024 23:30:37 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="OTXxlE4p"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 1174B20B915A; Mon, 10 Jun 2024 22:31:51 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1174B20B915A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1718083911;
+	bh=r6S0G3Lmx1ajN1WsB9gfo8FcV54B6HHSqOabKV392fw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OTXxlE4p5/ddsVzESS8fcIGl0XfyJJuNk+XTi6QFJPPGA7Qv12BK7PGS0N9ZMAnGB
+	 HTGg+2pKyxCAL+tEe11V62Af7jiC1pmwxhyL45/HUTM1BKRv552wfWzWvQLIVOoio+
+	 HUrt5B3mU9Hp5FB4UPO1Oz37rlaAQFFED+RwZPlU=
+Date: Mon, 10 Jun 2024 22:31:51 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Simon Horman <horms@kernel.org>
+Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Long Li <longli@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
+ table
+Message-ID: <20240611053151.GA7510@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20240604093349.GP491852@kernel.org>
+ <20240605083906.GA15889@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20240606163334.GO791188@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Kanak Shilledar <kanakshilledar@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- William Zhang <william.zhang@broadcom.com>, 
- Kanak Shilledar <kanakshilledar111@protonmail.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, 
- Kursad Oney <kursad.oney@broadcom.com>, devicetree@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Anand Gore <anand.gore@broadcom.com>
-In-Reply-To: <20240611035329.33648-2-kanakshilledar@gmail.com>
-References: <20240611035329.33648-2-kanakshilledar@gmail.com>
-Message-Id: <171808383738.4093720.10401571726065539411.robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: reset: brcm,bcm63138-pmb: convert to yaml
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240606163334.GO791188@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-
-On Tue, 11 Jun 2024 09:23:23 +0530, Kanak Shilledar wrote:
-> Convert the Broadcom BCM63138 Processor Monitor Bus to newer DT
-> schema. Created DT schema based on the .txt file which had `compatible`,
-> `reg` and `"#reset-cells" as required properties.
-> Added one line description which was missing in the original .txt file.
-> Added Philipp Zabel as the maintainer (took from MAINTAINERS file).
+On Thu, Jun 06, 2024 at 05:33:34PM +0100, Simon Horman wrote:
+> On Wed, Jun 05, 2024 at 01:39:06AM -0700, Shradha Gupta wrote:
+> > On Tue, Jun 04, 2024 at 10:33:49AM +0100, Simon Horman wrote:
+> > > On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
+> > > > Allow variable size indirection table allocation in MANA instead
+> > > > of using a constant value MANA_INDIRECT_TABLE_SIZE.
+> > > > The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
+> > > > indirection table is allocated dynamically.
+> > > > 
+> > > > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > > > Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> > > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > > 
+> > > ...
+> > > 
+> > > > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> > > 
+> > > ...
+> > > 
+> > > > @@ -2344,11 +2352,33 @@ static int mana_create_vport(struct mana_port_context *apc,
+> > > >  	return mana_create_txq(apc, net);
+> > > >  }
+> > > >  
+> > > > +static int mana_rss_table_alloc(struct mana_port_context *apc)
+> > > > +{
+> > > > +	if (!apc->indir_table_sz) {
+> > > > +		netdev_err(apc->ndev,
+> > > > +			   "Indirection table size not set for vPort %d\n",
+> > > > +			   apc->port_idx);
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	apc->indir_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
+> > > > +	if (!apc->indir_table)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	apc->rxobj_table = kcalloc(apc->indir_table_sz, sizeof(mana_handle_t), GFP_KERNEL);
+> > > > +	if (!apc->rxobj_table) {
+> > > > +		kfree(apc->indir_table);
+> > > 
+> > > Hi, Shradha
+> > > 
+> > > Perhaps I am on the wrong track here, but I have some concerns
+> > > about clean-up paths.
+> > > 
+> > > Firstly.  I think that apc->indir_table should be to NULL here for
+> > > consistency with other clean-up paths. Or alternatively, fields of apc
+> > > should not set to NULL elsewhere after being freed.
+> > 
+> > Hi Simon,
+> > 
+> > Thanks for the comments. This makes sense, I am planning of consistently
+> > removing the NULLify from other places too as per Leon's comments.
 > 
-> Signed-off-by: Kanak Shilledar <kanakshilledar@gmail.com>
-> ---
->  .../bindings/reset/brcm,bcm63138-pmb.txt      | 19 --------
->  .../bindings/reset/brcm,bcm63138-pmb.yaml     | 43 +++++++++++++++++++
->  2 files changed, 43 insertions(+), 19 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm63138-pmb.txt
->  create mode 100644 Documentation/devicetree/bindings/reset/brcm,bcm63138-pmb.yaml
+> Great!
 > 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/reset/brcm,bcm63138-pmb.example.dtb: reset-controller@4800c0: '#power-domain-cells' is a required property
-	from schema $id: http://devicetree.org/schemas/power/brcm,bcm-pmb.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/reset/brcm,bcm63138-pmb.example.dtb: reset-controller@4800c0: '#reset-cells' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/power/brcm,bcm-pmb.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240611035329.33648-2-kanakshilledar@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> > > In looking into this I noticed that mana_probe() does not call
+> > > mana_remove() or return an error in the cases where mana_probe_port()
+> > > or mana_attach() fail unless add_adev also fails. If so, is that
+> > > intentional?
+> > 
+> > Right, so most calls like mana_probe_port(), mana_attach() cleanup after
+> > themselves in the code if there is any error. So, not having to call
+> > mana_remove() in these cases in mana_probe() is intentional. But I do
+> > agree that an error is returned in mana_probe() only if add_adev also
+> > fails. I'll fix that too in the next version
+> 
+> I'm not entirely sure, but perhaps that is a candidate for a separate patch.
+> 
+> > > 
+> > > In any case, I would suggest as a follow-up, arranging things so that
+> > > when an error occurs in a function, anything that was allocated is
+> > > unwound before returning an error.
+> > > 
+> > > I think this would make allocation/deallocation easier to reason with.
+> > > And I suspect it would avoid both the need for fields of structures to
+> > > be zeroed after being freed, and the need to call mana_remove() from
+> > > mana_probe().
+> > 
+> > Agreed
+> > > 
+> > > > +		return -ENOMEM;
+> > > > +	}
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > >  static void mana_rss_table_init(struct mana_port_context *apc)
+> > > >  {
+> > > >  	int i;
+> > > >  
+> > > > -	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
+> > > > +	for (i = 0; i < apc->indir_table_sz; i++)
+> > > >  		apc->indir_table[i] =
+> > > >  			ethtool_rxfh_indir_default(i, apc->num_queues);
+> > > >  }
+> > > 
+> > > ...
+> > > 
+> > > > @@ -2739,11 +2772,17 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+> > > >  	err = register_netdev(ndev);
+> > > >  	if (err) {
+> > > >  		netdev_err(ndev, "Unable to register netdev.\n");
+> > > > -		goto reset_apc;
+> > > > +		goto free_indir;
+> > > >  	}
+> > > >  
+> > > >  	return 0;
+> > > >  
+> > > > +free_indir:
+> > > > +	apc->indir_table_sz = 0;
+> > > > +	kfree(apc->indir_table);
+> > > > +	apc->indir_table = NULL;
+> > > > +	kfree(apc->rxobj_table);
+> > > > +	apc->rxobj_table = NULL;
+> > > >  reset_apc:
+> > > >  	kfree(apc->rxqs);
+> > > >  	apc->rxqs = NULL;
+> > > 
+> > > nit: Not strictly related to this patch, but the reset_apc code should
+> > >      probably be a call to mana_cleanup_port_context() as it is the dual of
+> > >      mana_init_port_context() which is called earlier in mana_probe_port()
+> > 
+> > Sure, let me do that too.
+> 
+> FWIIW, I think it would be appropriate to put that change in a separate patch.
+Fixing this and other similar changes in a different patch. Thanks
+> 
+> > > 
+> > > ...
+> > > 
+> > > > @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+> > > >  		}
+> > > >  
+> > > >  		unregister_netdevice(ndev);
+> > > > +		apc->indir_table_sz = 0;
+> > > > +		kfree(apc->indir_table);
+> > > > +		apc->indir_table = NULL;
+> > > > +		kfree(apc->rxobj_table);
+> > > > +		apc->rxobj_table = NULL;
+> > > 
+> > > The code to free and zero indir_table_sz and indir_table appears twice
+> > > in this patch. Perhaps a helper to do this, which would be the dual
+> > > of mana_rss_table_alloc is in order.
+> > Makes sense, will change this too.
+> 
+> Thanks.
