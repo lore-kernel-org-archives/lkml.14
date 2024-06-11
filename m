@@ -1,153 +1,203 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35C5816;
-	Tue, 11 Jun 2024 00:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0140364C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 00:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718065109; cv=none; b=PDkL6gYph2la4IG/gM+N8T/qjdRTxVU4f/JeMEI9YmbDwe3h3gYMW4ROZ81QrG07L+/djsszCU8zq8oTdXVrN6R/Pc6BqpyaTlefM8wTOK906FsaiCJe+EsPHTRA//06kAysd1Lisf/jsR8GfsY7zXRlzp+opAtGdmWY4er3Od4=
+	t=1718065322; cv=none; b=qgswX4dqUjLWUCeeZR3H1LDQYn9agPWJ+xqbYqGEIkDtRvsYM09N6IgCO4tVmjiyfRqAg72pclnSVz68Sa3Bk1zag1c3rsQoO6IbR5IEttG81n1i52MBMBXczG1EKcjijX8ysU+Oozy2yJplHK5H996nEhIwSIfFY9Q25tOPjII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718065109; c=relaxed/simple;
-	bh=nMrmdxH2krB9TNtdBkPh3f0n33LvkwFYa6vLckHWB6g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DoAHpU9xABVdG9/advCF80VZNUT153Yd17escALdZjdInaUmwq5jWgcvMAghU12evf5CRrX20OTRRgOuc6/3afiFxBtpVX9PvJEYwGTvrxqJBwuCT++wbT6JxBok8qDi0Ikndn5/3mmRXPBChOL63y04GtSvIeDE1aouAJs/AxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HFY/djF6; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718065322; c=relaxed/simple;
+	bh=3uniXobaC5MSPEfsx9girsouEiiMtIw1qVVGwDeZOIQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gx19sFdmvhi4HeA74GqdTnwJi6qLuY7LP3ea/OnazN05HTl7l2UFQEmkPXnZmEEWoN3IYbkBRcndaXIYHwLt/BA82sFYkbjHSA1jrxxPrK5S02/cRFyXVIKFwW7D0GqBr7LRLGF3oPmmIKSmQtCnMgURC3ZRVSVSqmni9pNJsCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rU12+Nyv; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HFY/djF6"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c2c9199568so2749315a91.0;
-        Mon, 10 Jun 2024 17:18:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rU12+Nyv"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-627f382fb97so95025817b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 17:21:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718065107; x=1718669907; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7fSYaAf9r3FBONbZVYpTG+GGCmR1/EAf+YALJ9whtTk=;
-        b=HFY/djF69zWZmKEPs877Gzh2aPa1g/nBLVr/dXPKsN6jRUnHB3LMTBF0h5Iwodhr7c
-         PLWWVToS3lLJ/l1ZH2bu1q6gaTNABP6OPM08L6eZxu0Ki0fzIblKUJROT3GqsCoPuB10
-         iapKjEPgQpys3WpBXaVLO2FR43iZrT+OM8NHEtyv+gojQuzDfINYWsRx/m+BHqoZqgOw
-         SFHz80dxkzsocqddR5vWOTw7mV8THru2Lc9uufEUU8H0LYfksnjqi545VF56qlgrAgAQ
-         MIRypYYFtwzjp3eSDQp+X8fb0p/mUzVx0PTi5yAHRbcl2yY3TWxtJaDQDafBqtPF7YNa
-         yJLg==
+        d=google.com; s=20230601; t=1718065319; x=1718670119; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=znnebkeVSvsFTLm00akjOWCV2leg9gyqu/Y0G491TkM=;
+        b=rU12+NyvhRvDDBpw1TyJSYf3OF/yayTkJXOYrmIdmOD15Y8ncVO68+Thx6BRlnvm39
+         c1YI/u7Le2kfa0/YhpFvnHkvf9chQfc9uh/e4kigZFmELam6n2ESc8fdTRjVXWMRvi9j
+         JYRHM8uCnA8GldSAXl1azgh6BPyNKaBqqGiIuG1SoMUrFtjnZhOgrFgrtihpQf3VD3ub
+         Bc91E1ctt64/im63+jfOik8j9gVW23XwJJ9Pm9PvUC3fxpoxZ35TSLpo5DDuj4Ld3lFf
+         XOuyUGsCsgpNp1uMl3WIuZS8ckISi/E0YplEUUMjOWR5+5vkbIRR33AIL6LuKUSTOw/r
+         GagA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718065107; x=1718669907;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7fSYaAf9r3FBONbZVYpTG+GGCmR1/EAf+YALJ9whtTk=;
-        b=Fulhr+QXef75D3LBt6G16B3RnfVD0YIAM+kQGB1sUi8CFQBWtnrHQOeOQ0vjXV3PKV
-         LQI6e2sNPoHikquYp/CFA8zDIyZ0PcZFyTLBAPGAXslHWOXMASuiVSBfQdSvrdUjinlO
-         RVZRf8jT+4oT9UdJaQEZijtHqOSx45SOcYvKf5pJU9G1k3tPo82H3HIC3c5ldblmc0d0
-         Fig7VJUeHwWh6uehe2wnEshWjNEsjrdgPTRVxvv4vwn7WQXuEcHBYVMb1o2axJxavg3k
-         K2mJyQFaqEDwRyf+ihJFKk2rA1EDBd71LgQAmFIH3GAj5A5fkWugEXvj6vpG8YB0e6A8
-         lVHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUIJGwP6XpbE4R66n99N/MsenQ5Y+hnqZ1ZFtEn15wDuDT6vkjC2x/Xz5qheE2PbI7a442/8gWfaiq07UnuAlzNclQLktaAEvfZ7gapAe0pZSwb9Hq9mCK3/ePadSiqji8QssRq9Lnuw==
-X-Gm-Message-State: AOJu0YxoFOQNByEFbKkbdl7e+gAQtxBWzIzFvTGyxRRE66UvduXZkJBE
-	cqRp1RLknHogbN/7iAiS38BEOHRF9fUGCkGHtfh46PdAs5ygJXBT
-X-Google-Smtp-Source: AGHT+IFrBqNcje/3jAquFBaQ9JR15hWOcJpeEYREpF3zM173bx+0pTRw68iouNl4w0H0l0uNQC3leg==
-X-Received: by 2002:a17:90a:688d:b0:2c3:725:a376 with SMTP id 98e67ed59e1d1-2c30725a46emr3950743a91.11.1718065106725;
-        Mon, 10 Jun 2024 17:18:26 -0700 (PDT)
-Received: from mari.. ([2804:431:cfd3:42f5:c7f2:2bf:5df8:1d46])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c2e638edfesm5141526a91.26.2024.06.10.17.18.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 17:18:26 -0700 (PDT)
-From: Marilene A Garcia <marilene.agarcia@gmail.com>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	Julia Lawall <julia.lawall@inria.fr>
-Cc: Marilene A Garcia <marilene.agarcia@gmail.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH linux-next] leds: tlc591xx: Replace of_node_put to __free
-Date: Mon, 10 Jun 2024 21:17:40 -0300
-Message-Id: <20240611001740.10490-1-marilene.agarcia@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1718065319; x=1718670119;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=znnebkeVSvsFTLm00akjOWCV2leg9gyqu/Y0G491TkM=;
+        b=ro61L8OqBZ6KlbI22aO07ZZT06Zj53ZqKQnQpL0pVF+h0ZtVP2mCYPmhC1Z7w+rjrI
+         C1d/qtnFW2w98y8t+KxLRGAj58T1tiriND+cETFNdblLh6RTWTcplDoGzA02QJqsoICA
+         0AKe0eUe9smpdAwPphjiR5jN9snmDJ/kUcjZQT/fHr8KMO/knngT6/Q+gdFb8kryrxfA
+         U6PZPIEYL0yxoihdumhlujMHjVO+d4uydAXRjDTFxM1PA2/nKfQIypAHx/EhPOqwXD2U
+         /Ys1IY9aMYYOtg35eHVCDEizWUnwT16HxLd2CPz4yBuLG4KUEt9QQhrY2He5tYxBq1uv
+         pAiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUo1h0jbEs7e9pUxSccGNifRgeq0uR9sShrG5rqiGFxNGMjmMEq04nhLfRwRPXxzpGgVkw9KMABDlNzWCapCygO5mNZtR5NWNnOVt1t
+X-Gm-Message-State: AOJu0YztI27fa0VLxjwgr+yLyYmk7lhismHqRIgLiBe6BwQvXd2iL/Gc
+	wtLe+1xFK7MtpTiUxiIkQLenyNWstg4wAUQbF7nlZR7seTaFD68dOuvgDNscNVhRSRPbx/0W1Xa
+	CPwZEk7V5U1xuMWrr8g==
+X-Google-Smtp-Source: AGHT+IHAQpzXE/JP1O7Hg4+Kq/h9j2tVw1U1SGU5I2M7dDYM3/uT/d6pwcmk2+n0+ICjilMbsMpRbG4g7tWO2ExY
+X-Received: from jthoughton.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:2a4f])
+ (user=jthoughton job=sendgmr) by 2002:a05:690c:6612:b0:62d:21:3f66 with SMTP
+ id 00721157ae682-62d0021471dmr22261127b3.1.1718065319010; Mon, 10 Jun 2024
+ 17:21:59 -0700 (PDT)
+Date: Tue, 11 Jun 2024 00:21:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Message-ID: <20240611002145.2078921-1-jthoughton@google.com>
+Subject: [PATCH v5 0/9] mm: multi-gen LRU: Walk secondary MMU page tables
+ while aging
+From: James Houghton <jthoughton@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Ankit Agrawal <ankita@nvidia.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, David Matlack <dmatlack@google.com>, 
+	David Rientjes <rientjes@google.com>, James Houghton <jthoughton@google.com>, 
+	James Morse <james.morse@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Raghavendra Rao Ananta <rananta@google.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Sean Christopherson <seanjc@google.com>, 
+	Shaoqin Huang <shahuang@redhat.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Wei Xu <weixugc@google.com>, Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
-Use __free() for device_node values, and thus drop calls to
-of_node_put().
+This patchset makes it possible for MGLRU to consult secondary MMUs
+while doing aging, not just during eviction. This allows for more
+accurate reclaim decisions, which is especially important for proactive
+reclaim.
 
-The variable attribute __free() adds a scope based cleanup to
-the device node. The goal is to reduce memory management issues
-in the kernel code.
+This series does the following:
+ 1. Improve locking for the existing test/clear_young notifiers for x86
+    and arm64.
+ 2. Add a new notifier test_clear_young_fast_only(), implemented only by
+    KVM/x86.
+ 3. Incorporate test_clear_young_fast_only() into MGLRU aging.
 
-The for_each_available_child_of_node() was replaced to the equivalent 
-for_each_available_child_of_node_scoped() which uses the __free().
+To make aging work for more than just x86, the
+test_clear_young_fast_only() notifier must be implemented by those other
+architectures.
 
-Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-Signed-off-by: Marilene A Garcia <marilene.agarcia@gmail.com>
----
-Hello,
-These are the changes related to adding the new __free cleanup 
-in the tlc591xx led driver.
+access_tracking_perf_test now has a mode (-p) to check performance of
+MGLRU aging while the VM is faulting memory in. See the v4 cover
+letter[1] for performance data collected with this test.
 
-Thank you.
+Previous versions of this series included logic in MGLRU and KVM to
+support batching the updates to secondary page tables. This version
+removes this logic, as it was complex and not necessary to enable
+proactive reclaim. This optimization, as well as the additional
+optimizations for arm64 and powerpc, can be done in a later series.
 
- drivers/leds/leds-tlc591xx.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+=== Previous Versions ===
 
-diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
-index 945e831ef4ac..6605e08a042a 100644
---- a/drivers/leds/leds-tlc591xx.c
-+++ b/drivers/leds/leds-tlc591xx.c
-@@ -146,7 +146,7 @@ MODULE_DEVICE_TABLE(of, of_tlc591xx_leds_match);
- static int
- tlc591xx_probe(struct i2c_client *client)
- {
--	struct device_node *np, *child;
-+	struct device_node *np;
- 	struct device *dev = &client->dev;
- 	const struct tlc591xx *tlc591xx;
- 	struct tlc591xx_priv *priv;
-@@ -182,22 +182,20 @@ tlc591xx_probe(struct i2c_client *client)
- 	if (err < 0)
- 		return err;
- 
--	for_each_available_child_of_node(np, child) {
-+	for_each_available_child_of_node_scoped(np, child) {
- 		struct tlc591xx_led *led;
- 		struct led_init_data init_data = {};
- 
- 		init_data.fwnode = of_fwnode_handle(child);
- 
- 		err = of_property_read_u32(child, "reg", &reg);
--		if (err) {
--			of_node_put(child);
-+		if (err)
- 			return err;
--		}
-+
- 		if (reg < 0 || reg >= tlc591xx->max_leds ||
--		    priv->leds[reg].active) {
--			of_node_put(child);
-+		    priv->leds[reg].active)
- 			return -EINVAL;
--		}
-+
- 		led = &priv->leds[reg];
- 
- 		led->active = true;
-@@ -207,12 +205,10 @@ tlc591xx_probe(struct i2c_client *client)
- 		led->ldev.max_brightness = TLC591XX_MAX_BRIGHTNESS;
- 		err = devm_led_classdev_register_ext(dev, &led->ldev,
- 						     &init_data);
--		if (err < 0) {
--			of_node_put(child);
-+		if (err < 0)
- 			return dev_err_probe(dev, err,
- 					     "couldn't register LED %s\n",
- 					     led->ldev.name);
--		}
- 	}
- 	return 0;
- }
+This v5 re-adds a lot of logic that was present in v3 and earlier
+versions of the series. There is an important difference I want to call
+out:
+
+ - should_look_around() can sometimes require two notifiers instead of
+   one. This is necessary if I forbid myself from modifying
+   mmu_notifier_clear_young().
+
+   It may simply be better to do what v2/v3 did have and not have a
+   fast-only notifier, and merge them all. This makes the API slightly
+   more complex. I'm not sure which is better.
+
+Change log:
+
+Since v4[1]:
+ - Removed Kconfig that controlled when aging was enabled. Aging will
+   be done whenever the architecture supports it (thanks Yu).
+ - Added a new MMU notifier, test_clear_young_fast_only(), specifically
+   for MGLRU to use.
+ - Add kvm_fast_{test_,}age_gfn, implemented by x86.
+ - Fix locking for clear_flush_young().
+ - Added KVM_MMU_NOTIFIER_YOUNG_LOCKLESS to clean up locking changes
+   (thanks Sean).
+ - Fix WARN_ON and other cleanup for the arm64 locking changes
+   (thanks Oliver).
+
+Since v3[2]:
+ - Vastly simplified the series (thanks David). Removed mmu notifier
+   batching logic entirely.
+ - Cleaned up how locking is done for mmu_notifier_test/clear_young
+   (thanks David).
+ - Look-around is now only done when there are no secondary MMUs
+   subscribed to MMU notifiers.
+ - CONFIG_LRU_GEN_WALKS_SECONDARY_MMU has been added.
+ - Fixed the lockless implementation of kvm_{test,}age_gfn for x86
+   (thanks David).
+ - Added MGLRU functional and performance tests to
+   access_tracking_perf_test (thanks Axel).
+ - In v3, an mm would be completely ignored (for aging) if there was a
+   secondary MMU but support for secondary MMU walking was missing. Now,
+   missing secondary MMU walking support simply skips the notifier
+   calls (except for eviction).
+ - Added a sanity check for that range->lockless and range->on_lock are
+   never both provided for the memslot walk.
+
+For the changes since v2[3], see v3.
+
+Based on 6.10-rc3.
+
+[1]: https://lore.kernel.org/linux-mm/20240529180510.2295118-1-jthoughton@google.com/
+[2]: https://lore.kernel.org/linux-mm/20240401232946.1837665-1-jthoughton@google.com/
+[3]: https://lore.kernel.org/kvmarm/20230526234435.662652-1-yuzhao@google.com/
+
+James Houghton (8):
+  KVM: Add lockless memslot walk to KVM
+  KVM: x86: Relax locking for kvm_test_age_gfn and kvm_age_gfn
+  KVM: arm64: Relax locking for kvm_test_age_gfn and kvm_age_gfn
+  mm: Add test_clear_young_fast_only MMU notifier
+  KVM: Add kvm_fast_age_gfn and kvm_fast_test_age_gfn
+  KVM: x86: Implement kvm_fast_test_age_gfn and kvm_fast_age_gfn
+  mm: multi-gen LRU: Have secondary MMUs participate in aging
+  KVM: selftests: Add multi-gen LRU aging to access_tracking_perf_test
+
+Yu Zhao (1):
+  KVM: x86: Move tdp_mmu_enabled and shadow_accessed_mask
+
+ Documentation/admin-guide/mm/multigen_lru.rst |   6 +-
+ arch/arm64/kvm/Kconfig                        |   1 +
+ arch/arm64/kvm/hyp/pgtable.c                  |  15 +-
+ arch/arm64/kvm/mmu.c                          |  26 +-
+ arch/x86/include/asm/kvm_host.h               |  14 +
+ arch/x86/kvm/Kconfig                          |   2 +
+ arch/x86/kvm/mmu.h                            |   6 -
+ arch/x86/kvm/mmu/mmu.c                        |  60 ++-
+ arch/x86/kvm/mmu/spte.h                       |   1 -
+ arch/x86/kvm/mmu/tdp_iter.h                   |  27 +-
+ arch/x86/kvm/mmu/tdp_mmu.c                    |  67 ++-
+ include/linux/kvm_host.h                      |   8 +
+ include/linux/mmu_notifier.h                  |  50 +++
+ include/linux/mmzone.h                        |   6 +-
+ include/trace/events/kvm.h                    |  22 +
+ mm/mmu_notifier.c                             |  26 ++
+ mm/rmap.c                                     |   9 +-
+ mm/vmscan.c                                   | 185 +++++++--
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/access_tracking_perf_test.c | 365 ++++++++++++++--
+ .../selftests/kvm/include/lru_gen_util.h      |  55 +++
+ .../testing/selftests/kvm/lib/lru_gen_util.c  | 391 ++++++++++++++++++
+ virt/kvm/Kconfig                              |   7 +
+ virt/kvm/kvm_main.c                           |  73 +++-
+ 24 files changed, 1283 insertions(+), 140 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/include/lru_gen_util.h
+ create mode 100644 tools/testing/selftests/kvm/lib/lru_gen_util.c
+
+
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
 -- 
-2.34.1
+2.45.2.505.gda0bf45e8d-goog
 
