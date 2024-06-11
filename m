@@ -1,184 +1,265 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E260B1514D8
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 19:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2621534EA;
+	Tue, 11 Jun 2024 19:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718135462; cv=none; b=THnyAKauKhR8WRs4/kPGYlrMZDIeh3L9PkaaLSEsAc73wEqjuzQ3ksjBsqGjrwuIVR+eygrbVgGMSpGwqxSal4wzF+A/GgDsA57sVQSpfIVXzm54UDrdJu2VpeL5xZW4PgeolXD6R1feTymQ1TUv9gtNbC8a7mp4wjNYCeAiWFY=
+	t=1718135463; cv=none; b=Xcw5KNFWAn5sjfWtxft07USxjiZhuDCk8vqk4HxkDMSt7/NEutb7//s7u+Oqueg4xy7YJu9db8olpgeoIJH8i2EKCqvAh7euGPyXqg92YH/qHWbBDevPhiU4pBVHSZTe4y2dQkNRXl/va2YWr2NVyWVe1Pfq9CzRYLnoOr85DDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718135462; c=relaxed/simple;
-	bh=tLhF0gzIDb0MMKkTBdWoOAVCCwxF0E4J4wjD9vy2SBU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FrwaX6TRX9Jyu+1HR8k0R68wPmdG4WIH0dO4FodW2PxEG0ESB0NWGjqbMngxeN9nuwofh4AQT45q9dQjmwjLkaNEmje6w9cg2MUFWj4IAdo+DPeKoZWIxNq+5/1MiylFJWppnj1cDoDd245FzAiMbsCEfahkbaxuwNUij+7Q1Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LIHd12/+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718135463; c=relaxed/simple;
+	bh=MuiG8AjfkDOJYyP8PAX6pDf8PzjRMpV+WgtH4FRb9Hg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XZCMC5tasZLsyRpymKAnpU0Dqz5OA41cW9BnaCvz+2i6/LD5fu25MuA6W2YPtpaV/5oOyQiVEejUqEn7MpAaVR0CdBl5J6mg6iWN3qaSdDEC/2L8FLFuljyLCBIFSG+WLhLGN0CM6PxKI4tsOEv+SzMWnxp4yXXN3cyag/HEpyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XFgODGf7; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LIHd12/+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718135457;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VC/FKQpyiv8QuT0prkiboQ+mv2U8+abllOC5cV7bqrg=;
-	b=LIHd12/+iiuaD64VAKpt0kUPqHDOin39OncI1af6A8GWSipj7qOYseukDigUEiwfZD20IY
-	KvQgDisbRAwu7xDPn+gMuGJtbsuvyRV7QRURfLzED9ZkOTqiVm/B18xWLCEc6RvIFs9lo4
-	aW6DmYh144JfkVJ9Ak4Q/qUJUWcMrEY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-12-MAwHma3fM5ii77aLpsyykw-1; Tue, 11 Jun 2024 15:50:56 -0400
-X-MC-Unique: MAwHma3fM5ii77aLpsyykw-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-421e17ae038so18629125e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 12:50:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XFgODGf7"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f1f33486eso158177766b.3;
+        Tue, 11 Jun 2024 12:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718135460; x=1718740260; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cpHorWpFXkyaD7lGP655nNnlrJvJ0HHxDtEJDmoiKB8=;
+        b=XFgODGf7ER3NnYETT5WmyreYA5A4F9G4hJsMa8RWqvGhYIwRs96ggii6bIM0itZ4gU
+         4L3FQGkN+ZwZ0ktCI4D6b4xN2C+h5/h9o+4YHfjxeCNMuiWdVgTV/OsRo2HMjz6X4+Q6
+         /ZX6wVfFf62Hs/3zQXcNUvQ6arfZWfbZsSTbnTcLUAjJGjm4YQODcXXBJtyh2n9sPg3o
+         Qdp12hMfAeaWimy5mDh0gKgiNW6fa/p8z0DqlEyMEaJC8CAPkmiUY7cPVgH7RIetgX4E
+         uClZr+ddGbzJ5wlUDLYiZrvM3Df56lRu6F5kal8YjU1EAF7qA0CuhYPHh9X/4P5tMyQM
+         lSWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718135455; x=1718740255;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VC/FKQpyiv8QuT0prkiboQ+mv2U8+abllOC5cV7bqrg=;
-        b=oYejyjLrI2Lao4SHlIIqxiC78i1jOBE0djTEjqEMexDfym8FFkGkbhFuurkpDaf/SE
-         KPQmxOddKFYWVSjkZb5CCvxRKkpFuvhC2FxduO4jcEIGoIg4idp60RW0nuDKqTdkaYlZ
-         yOqPC3OkPoXLViGYG8NngkkFgXKzXeRB2TQDeJ1JQiRDqE60IG8MD0r8fPbztDWdTj0Y
-         xoolesu44eppw1DXrrKpMfDTEtE7lBMMJGdxuERNNKqsXR1gAnpclGRKZMk7VJwaJb+e
-         vFNCgumoylEPwUa2Mi9WjhKz2ycR3CWJpLLv+w7o4YeQ4CwPs1NRB1iPyD99nJMngBqo
-         7V5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU4DQgDNW3NS0iwMr66x4dVbQn0D/hDMc3Whw9/340JH5BKQMVjIVWwepehNVehYTxmqRvpEfNL8l7JTtZ0tmPAl/1OI48+P6iJQW5G
-X-Gm-Message-State: AOJu0Yz65d2IVcqNrUiGCMy4HBPwRD1K+mC/cEOO8ga7j5jFJNjXbANU
-	XRpZTI8T1NsL/RED1RGgyzPcXGgXfLTvG/cQEMGv9Pc2UwAfS6UtZES9/qr+wN1JS0alo/jNbRU
-	DX5JtTioWT2sPNxmW6lRly+QD3pbYDADtNBbuUf+BItEIf1OIezr9s32yL+ZQ5g==
-X-Received: by 2002:a05:600c:1c91:b0:421:8028:a507 with SMTP id 5b1f17b1804b1-4218028a5f6mr70330335e9.18.1718135455358;
-        Tue, 11 Jun 2024 12:50:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEeIZw5rvJCb1LtW+k52Hf6likkqbQ5y9zsOlyQgFY0I2VYm+kIPKpawNjMsNjEje9W3JPASg==
-X-Received: by 2002:a05:600c:1c91:b0:421:8028:a507 with SMTP id 5b1f17b1804b1-4218028a5f6mr70330165e9.18.1718135454911;
-        Tue, 11 Jun 2024 12:50:54 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c748:ba00:1c00:48ea:7b5a:c12b? (p200300cbc748ba001c0048ea7b5ac12b.dip0.t-ipconnect.de. [2003:cb:c748:ba00:1c00:48ea:7b5a:c12b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42274379b83sm16254225e9.28.2024.06.11.12.50.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 12:50:54 -0700 (PDT)
-Message-ID: <fff6e4d3-4a11-4481-b28c-edfb072daf35@redhat.com>
-Date: Tue, 11 Jun 2024 21:50:52 +0200
+        d=1e100.net; s=20230601; t=1718135460; x=1718740260;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cpHorWpFXkyaD7lGP655nNnlrJvJ0HHxDtEJDmoiKB8=;
+        b=pzz63td9ok28IZa0i5gsmBf4mhu0BrsD7Al2LT6uvl/X5CGvEaUysz/+5jLh7nQDsn
+         zGwCq5bSJW4MjtYiRqmDLYEYClPcm0YBAq/d06MjIvlRX4c+ckq+NKpCzlKsp+B96+4F
+         gRyEHJ+Q2LY1ZaY/7Fvn4P7jW32VOU2u9s+TOSb24pOr20ZKDK7Ah8/zgC/Dxf6d/Fy2
+         BxRG/3QNcNAKV4UdLn//uYg6ILYNnQQ5m6s8g8ZxbOpafB7ueFF603zXkcByNiO/no8o
+         Bw4OycDWCxh4HCT4NRNZgkgsApPOBbGEVi3pJaWZ96GtcReNNB/fqEH71eXXukpMCWbA
+         tf3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV2pIfEE3Pj2C63cSTGXHi2I/hKk2QMVrypz1YgterYrZ2Zs/qpVZ8NBvJcczxKmUwBYXavXDtHfgNbuOKzA4GjZYsDlR5H1VtiYwgy
+X-Gm-Message-State: AOJu0YzlbXjcKK9OqK3b8bd57gb++D691SZ938gBoB3p8ISE3QOEiVLW
+	SJ/ogO6ia+l5izEPUAvSm4b9P3UVGjJuc/xwoc1wxMjVFdwQErJf5qPxpbOpHcA=
+X-Google-Smtp-Source: AGHT+IHM+9kcFfX6O+6VrNVJVUu0E1wOP2WB5lGNlNvHmG2ABQPobNr4CJpxqr+191aMPjvlerf4Mw==
+X-Received: by 2002:a50:bb28:0:b0:57a:4c22:b3 with SMTP id 4fb4d7f45d1cf-57c5085e6ecmr11924082a12.1.1718135459464;
+        Tue, 11 Jun 2024 12:50:59 -0700 (PDT)
+Received: from WBEC325.dom.lan ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c7650b371sm5286737a12.76.2024.06.11.12.50.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 12:50:59 -0700 (PDT)
+From: Pawel Dembicki <paweldembicki@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Pawel Dembicki <paweldembicki@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com,
+	Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 01/12] net: dsa: vsc73xx: add port_stp_state_set function
+Date: Tue, 11 Jun 2024 21:49:53 +0200
+Message-Id: <20240611195007.486919-2-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240611195007.486919-1-paweldembicki@gmail.com>
+References: <20240611195007.486919-1-paweldembicki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/3] mm: pass meminit_context to __free_pages_core()
-To: Tim Chen <tim.c.chen@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
- kasan-dev@googlegroups.com, Andrew Morton <akpm@linux-foundation.org>,
- Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
- Dmitry Vyukov <dvyukov@google.com>
-References: <20240607090939.89524-1-david@redhat.com>
- <20240607090939.89524-2-david@redhat.com>
- <80532f73e52e2c21fdc9aac7bce24aefb76d11b0.camel@linux.intel.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <80532f73e52e2c21fdc9aac7bce24aefb76d11b0.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11.06.24 21:41, Tim Chen wrote:
-> On Fri, 2024-06-07 at 11:09 +0200, David Hildenbrand wrote:
->> In preparation for further changes, let's teach __free_pages_core()
->> about the differences of memory hotplug handling.
->>
->> Move the memory hotplug specific handling from generic_online_page() to
->> __free_pages_core(), use adjust_managed_page_count() on the memory
->> hotplug path, and spell out why memory freed via memblock
->> cannot currently use adjust_managed_page_count().
->>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>   mm/internal.h       |  3 ++-
->>   mm/kmsan/init.c     |  2 +-
->>   mm/memory_hotplug.c |  9 +--------
->>   mm/mm_init.c        |  4 ++--
->>   mm/page_alloc.c     | 17 +++++++++++++++--
->>   5 files changed, 21 insertions(+), 14 deletions(-)
->>
->> diff --git a/mm/internal.h b/mm/internal.h
->> index 12e95fdf61e90..3fdee779205ab 100644
->> --- a/mm/internal.h
->> +++ b/mm/internal.h
->> @@ -604,7 +604,8 @@ extern void __putback_isolated_page(struct page *page, unsigned int order,
->>   				    int mt);
->>   extern void memblock_free_pages(struct page *page, unsigned long pfn,
->>   					unsigned int order);
->> -extern void __free_pages_core(struct page *page, unsigned int order);
->> +extern void __free_pages_core(struct page *page, unsigned int order,
->> +		enum meminit_context);
-> 
-> Shouldn't the above be
-> 		enum meminit_context context);
+This isn't a fully functional implementation of 802.1D, but
+port_stp_state_set is required for a future tag8021q operations.
 
-Although C allows parameters without names in declarations, this was 
-unintended.
+This implementation handles properly all states, but vsc73xx doesn't
+forward STP packets.
 
-Thanks!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+---
+v1:
+  - resend only
+---
+Before patch series split:
+https://patchwork.kernel.org/project/netdevbpf/list/?series=841034&state=%2A&archive=both
+v7:
+  - implement 'vsc73xx_refresh_fwd_map' simplification
+v6:
+  - fix inconsistent indenting
+v5:
+  - remove unneeded 'RECVMASK' operations
+  - reorganise vsc73xx_refresh_fwd_map function
+v4:
+  - fully reworked port_stp_state_set
+v3:
+  - use 'VSC73XX_MAX_NUM_PORTS' define
+  - add 'state == BR_STATE_DISABLED' condition
+  - fix style issues
+v2:
+  - fix kdoc
 
+ drivers/net/dsa/vitesse-vsc73xx-core.c | 96 +++++++++++++++++++++++---
+ 1 file changed, 85 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
+index 4b031fefcec6..ebeea259f019 100644
+--- a/drivers/net/dsa/vitesse-vsc73xx-core.c
++++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
+@@ -164,6 +164,10 @@
+ #define VSC73XX_AGENCTRL	0xf0
+ #define VSC73XX_CAPRST		0xff
+ 
++#define VSC73XX_SRCMASKS_CPU_COPY		BIT(27)
++#define VSC73XX_SRCMASKS_MIRROR			BIT(26)
++#define VSC73XX_SRCMASKS_PORTS_MASK		GENMASK(7, 0)
++
+ #define VSC73XX_MACACCESS_CPU_COPY		BIT(14)
+ #define VSC73XX_MACACCESS_FWD_KILL		BIT(13)
+ #define VSC73XX_MACACCESS_IGNORE_VLAN		BIT(12)
+@@ -623,9 +627,6 @@ static int vsc73xx_setup(struct dsa_switch *ds)
+ 	vsc73xx_write(vsc, VSC73XX_BLOCK_SYSTEM, 0, VSC73XX_GMIIDELAY,
+ 		      VSC73XX_GMIIDELAY_GMII0_GTXDELAY_2_0_NS |
+ 		      VSC73XX_GMIIDELAY_GMII0_RXDELAY_2_0_NS);
+-	/* Enable reception of frames on all ports */
+-	vsc73xx_write(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_RECVMASK,
+-		      0x5f);
+ 	/* IP multicast flood mask (table 144) */
+ 	vsc73xx_write(vsc, VSC73XX_BLOCK_ANALYZER, 0, VSC73XX_IFLODMSK,
+ 		      0xff);
+@@ -788,10 +789,6 @@ static void vsc73xx_mac_link_down(struct phylink_config *config,
+ 	/* Allow backward dropping of frames from this port */
+ 	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
+ 			    VSC73XX_SBACKWDROP, BIT(port), BIT(port));
+-
+-	/* Receive mask (disable forwarding) */
+-	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
+-			    VSC73XX_RECVMASK, BIT(port), 0);
+ }
+ 
+ static void vsc73xx_mac_link_up(struct phylink_config *config,
+@@ -844,10 +841,6 @@ static void vsc73xx_mac_link_up(struct phylink_config *config,
+ 	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
+ 			    VSC73XX_ARBDISC, BIT(port), 0);
+ 
+-	/* Enable port (forwarding) in the receive mask */
+-	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
+-			    VSC73XX_RECVMASK, BIT(port), BIT(port));
+-
+ 	/* Disallow backward dropping of frames from this port */
+ 	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ARBITER, 0,
+ 			    VSC73XX_SBACKWDROP, BIT(port), 0);
+@@ -1039,6 +1032,86 @@ static void vsc73xx_phylink_get_caps(struct dsa_switch *dsa, int port,
+ 	config->mac_capabilities = MAC_SYM_PAUSE | MAC_10 | MAC_100 | MAC_1000;
+ }
+ 
++static void vsc73xx_refresh_fwd_map(struct dsa_switch *ds, int port, u8 state)
++{
++	struct dsa_port *other_dp, *dp = dsa_to_port(ds, port);
++	struct vsc73xx *vsc = ds->priv;
++	u16 mask;
++
++	if (state != BR_STATE_FORWARDING) {
++		/* Ports that aren't in the forwarding state must not
++		 * forward packets anywhere.
++		 */
++		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
++				    VSC73XX_SRCMASKS + port,
++				    VSC73XX_SRCMASKS_PORTS_MASK, 0);
++
++		dsa_switch_for_each_available_port(other_dp, ds) {
++			if (other_dp == dp)
++				continue;
++			vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
++					    VSC73XX_SRCMASKS + other_dp->index,
++					    BIT(port), 0);
++		}
++
++		return;
++	}
++
++	/* Forwarding ports must forward to the CPU and to other ports
++	 * in the same bridge
++	 */
++	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
++			    VSC73XX_SRCMASKS + CPU_PORT, BIT(port), BIT(port));
++
++	mask = BIT(CPU_PORT);
++
++	dsa_switch_for_each_user_port(other_dp, ds) {
++		int other_port = other_dp->index;
++
++		if (port == other_port || !dsa_port_bridge_same(dp, other_dp) ||
++		    other_dp->stp_state != BR_STATE_FORWARDING)
++			continue;
++
++		mask |= BIT(other_port);
++
++		vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
++				    VSC73XX_SRCMASKS + other_port,
++				    BIT(port), BIT(port));
++	}
++
++	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
++			    VSC73XX_SRCMASKS + port,
++			    VSC73XX_SRCMASKS_PORTS_MASK, mask);
++}
++
++/* FIXME: STP frames aren't forwarded at this moment. BPDU frames are
++ * forwarded only from and to PI/SI interface. For more info see chapter
++ * 2.7.1 (CPU Forwarding) in datasheet.
++ * This function is required for tag_8021q operations.
++ */
++static void vsc73xx_port_stp_state_set(struct dsa_switch *ds, int port,
++				       u8 state)
++{
++	struct vsc73xx *vsc = ds->priv;
++	u32 val;
++
++	val = (state == BR_STATE_BLOCKING || state == BR_STATE_DISABLED) ?
++	      0 : BIT(port);
++	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
++			    VSC73XX_RECVMASK, BIT(port), val);
++
++	val = (state == BR_STATE_LEARNING || state == BR_STATE_FORWARDING) ?
++	      BIT(port) : 0;
++	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
++			    VSC73XX_LEARNMASK, BIT(port), val);
++
++	/* CPU Port should always forward packets when user ports are forwarding
++	 * so let's configure it from other ports only.
++	 */
++	if (port != CPU_PORT)
++		vsc73xx_refresh_fwd_map(ds, port, state);
++}
++
+ static const struct phylink_mac_ops vsc73xx_phylink_mac_ops = {
+ 	.mac_config = vsc73xx_mac_config,
+ 	.mac_link_down = vsc73xx_mac_link_down,
+@@ -1057,6 +1130,7 @@ static const struct dsa_switch_ops vsc73xx_ds_ops = {
+ 	.port_disable = vsc73xx_port_disable,
+ 	.port_change_mtu = vsc73xx_change_mtu,
+ 	.port_max_mtu = vsc73xx_get_max_mtu,
++	.port_stp_state_set = vsc73xx_port_stp_state_set,
+ 	.phylink_get_caps = vsc73xx_phylink_get_caps,
+ };
+ 
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
