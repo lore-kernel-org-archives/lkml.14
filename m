@@ -1,171 +1,73 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [167.172.40.54])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08B03FB83
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 15:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.172.40.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9483D3839C
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 15:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718121135; cv=none; b=dTsfxtHLq0TLAHEomRgSh/Rsn9s3J0V0MAjYqv31uqTJ9LC/nFYdAVtW9JDXSzkwpr5uUIBwb4aN2H9T4iQU+ojGWnCyMt7C6+Apx4NzJMIFCYUzy5PyttOdzqFcWummulWMOrHmnXezhI6IKEhdu4i2z+ZZTYz2grRBRZTIFsU=
+	t=1718121185; cv=none; b=UDZLE3eHNPsYILw0tmceWUo9s8fwXq8W7bUcJKOZV6dghvd57JihXJf2gHh5J837dM9bDLulNdVHGVd9HSuutqJP98zPks4sl49K1GtHXHl5NDOn1TdBFCsIqEr4OAUeZFsbfFdbVW+jIfG+epI8sPH+vhlZ9FqgZ/PHF8HyPSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718121135; c=relaxed/simple;
-	bh=mTH7O8SoMceV83GJW8Kvwdx4Xu7+K6crQrZP50zx1Wc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XQHb5P4z2ihIJ6xcxtjXRoqbsfdqd/6qxW5EziBfCSzxNIUMd4nNpGYfB1bdPUMhKVf7tbVIHYRgEyLzc1u4sFD/BpAYcHiTZqRkHsId2r5xfq/9fGSHS05RqIPPxuz4Rzum62t3WvHIH/LnhNVSdC+88QW5On18z4raXChJyPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=KMcCShrj; arc=none smtp.client-ip=167.172.40.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="KMcCShrj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
- Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1718121117; bh=EkSsGxXsV4hgJZkNTSQ1UhXjCwhQtYShQRypQ33Ng4Q=;
- b=KMcCShrjgrH3qHS9P/uAK6eRYbaKJdS18XeGPrOz3XFNtD7wWOfNnhDjnD0XX4Z2OSbbiv/a9
- jwZR9HYb38xeW6BPYjuHdHEqOgNNFh8/EZRt8DVarXhH0jfT7fdZKH+8tyu4SfKgURxdJoQDJu+
- mo3ZBMOcsb9NJrjB9/bGcXGUTNg+gTp/XqR6reSZAzvPAp8X98jrHUfSBU4vZUit39evXwK1Dm8
- fPIiGL0O0AaYXIwbXtSiaOy7z4Og9wCDSts5BI5Qp9ePwjow2vn+pBR2dQHp6wzgIldT4Z+uB7R
- imR7oMhVg19OW6Hbs2ps/KETi6zhSTw8d2Eyo1sInxng==
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] drm: bridge: dw_hdmi: Use display_info is_hdmi and has_audio
-Date: Tue, 11 Jun 2024 15:51:00 +0000
-Message-ID: <20240611155108.1436502-9-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240611155108.1436502-1-jonas@kwiboo.se>
-References: <20240611155108.1436502-1-jonas@kwiboo.se>
+	s=arc-20240116; t=1718121185; c=relaxed/simple;
+	bh=4YWTAY4k/NT07i2PrAMgV8Tt2wCvS+q0e0VohlzadUM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=n3n8xup4yq1R8uMTQHjX5but+zw6KxjgeMOh8RqtDouJxkEO2pFCBioeO64j/vpjHBqhc6fWwOfextyaJyLFC10dzLL7xCVsYNUXoFuWo1cuQsTcNqIZaOw5Rm2HtCLWaJH3X9YdLcoJtIhPNUVjvR0H81HbjahRTmX2RXxt8SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3745fb76682so60978525ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 08:53:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718121182; x=1718725982;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XFjbHNvcgSLNXhJqn3uZ0hKKgUPVLUjPjtWE4E1qJgU=;
+        b=CpVlzZeoKF7CSGO/KXVP+1UP6mUDPV/VS/vJS1c7pT8eExIWTQ+Bdv3nyO9so8Fd2k
+         C+DO/AVOJDisLqHTEhmkPrwfYBRx2zm/2mbena40h0DCXTilOM6do7yVSFujO+7XheM1
+         bKkdp/AQ5vgZj3YulLp/Xvwb0I7ZqJGePopVDzdgGJyg5gAiAwZAeSb/0tJmDxcY3ixs
+         FQ90Gqyt8QGQlo4iQk8R511uiw0tHOWWJNKy6ni8YC5yC/YXSWwzDK4CZ0Du7UosOU34
+         T3p4YZhPM6Vu1BnnYzltSVk9CRWzPN9d26th3lGv/CCddFnl+LP7tT985mY4FUTDGLjB
+         CuOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ15qONh0orpzDoYlC9pyYZtf9wbKngG8bBQkAcXZK1yhZNE6Sdl8E/6sj0Tkk/t33aFwA9+fsRWbSLYl1AaRdHN4ZFMgpDJWL1z0n
+X-Gm-Message-State: AOJu0Yyhj+l2jSflGS07Uf2BjZgTmA9x61oRQExj0oC/OcabdAfiT++K
+	fNA3kJ4obASpPERkJ1V2BL6RW7vpgX7BNbne3Ta6rNS3oxmVS5YmWrifmWo8VCUsUkOpXeOeUmk
+	QRbseZgtlZRzrc3qyLNc1KURee6e7jv4VqkFIBaD8ZhLCgQQESG711DU=
+X-Google-Smtp-Source: AGHT+IGX4GhvZg4jJi7qIRxkQJLJsCVxY7kkD2G+PAaxGMOK9zdGU2RuivPQudvigA1TlgfuRyax4v+kmchvaBlro09kIzvP63XE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 167.172.40.54
-X-ForwardEmail-ID: 66687298b913b04293b6dcb2
+X-Received: by 2002:a92:cd82:0:b0:374:a16b:6f7e with SMTP id
+ e9e14a558f8ab-375803c4cd0mr8494635ab.4.1718121182777; Tue, 11 Jun 2024
+ 08:53:02 -0700 (PDT)
+Date: Tue, 11 Jun 2024 08:53:02 -0700
+In-Reply-To: <23b1962c-044d-4dbd-a705-58754f0914cb@rowland.harvard.edu>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c7e169061a9f42e8@google.com>
+Subject: Re: [syzbot] [usb?] INFO: rcu detected stall in raw_ioctl
+From: syzbot <syzbot+5f996b83575ef4058638@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, stern@rowland.harvard.edu, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-drm_edid_connector_update() is being called from bridge connector ops
-and from detect and get_modes ops for dw-hdmi connector.
+Hello,
 
-Change to use is_hdmi and has_audio from display_info directly instead
-of keeping our own state in sink_is_hdmi and sink_has_audio.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Also remove the old and unused edid struct member and related define.
+Reported-and-tested-by: syzbot+5f996b83575ef4058638@syzkaller.appspotmail.com
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 32 ++++-------------------
- 1 file changed, 5 insertions(+), 27 deletions(-)
+Tested on:
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index a9c39584d31b..e162c2786178 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -43,8 +43,6 @@
- #define DDC_CI_ADDR		0x37
- #define DDC_SEGMENT_ADDR	0x30
- 
--#define HDMI_EDID_LEN		512
--
- /* DW-HDMI Controller >= 0x200a are at least compliant with SCDC version 1 */
- #define SCDC_MIN_SOURCE_VERSION	0x1
- 
-@@ -148,8 +146,6 @@ struct dw_hdmi {
- 
- 	int vic;
- 
--	u8 edid[HDMI_EDID_LEN];
--
- 	struct {
- 		const struct dw_hdmi_phy_ops *ops;
- 		const char *name;
-@@ -159,8 +155,6 @@ struct dw_hdmi {
- 
- 	struct i2c_adapter *ddc;
- 	void __iomem *regs;
--	bool sink_is_hdmi;
--	bool sink_has_audio;
- 
- 	struct pinctrl *pinctrl;
- 	struct pinctrl_state *default_state;
-@@ -2041,7 +2035,7 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
- 		HDMI_FC_INVIDCONF_IN_I_P_INTERLACED :
- 		HDMI_FC_INVIDCONF_IN_I_P_PROGRESSIVE;
- 
--	inv_val |= hdmi->sink_is_hdmi ?
-+	inv_val |= display->is_hdmi ?
- 		HDMI_FC_INVIDCONF_DVI_MODEZ_HDMI_MODE :
- 		HDMI_FC_INVIDCONF_DVI_MODEZ_DVI_MODE;
- 
-@@ -2275,7 +2269,7 @@ static int dw_hdmi_poweron(struct dw_hdmi *hdmi,
- 	if (hdmi->hdmi_data.enc_out_bus_format == MEDIA_BUS_FMT_FIXED)
- 		hdmi->hdmi_data.enc_out_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
- 
--	hdmi->hdmi_data.rgb_limited_range = hdmi->sink_is_hdmi &&
-+	hdmi->hdmi_data.rgb_limited_range = display->is_hdmi &&
- 		drm_default_rgb_quant_range(mode) ==
- 		HDMI_QUANTIZATION_RANGE_LIMITED;
- 
-@@ -2295,7 +2289,7 @@ static int dw_hdmi_poweron(struct dw_hdmi *hdmi,
- 	/* HDMI Initialization Step B.3 */
- 	dw_hdmi_enable_video_path(hdmi);
- 
--	if (hdmi->sink_has_audio) {
-+	if (display->has_audio) {
- 		dev_dbg(hdmi->dev, "sink has audio support\n");
- 
- 		/* HDMI Initialization Step E - Configure audio */
-@@ -2304,7 +2298,7 @@ static int dw_hdmi_poweron(struct dw_hdmi *hdmi,
- 	}
- 
- 	/* not for DVI mode */
--	if (hdmi->sink_is_hdmi) {
-+	if (display->is_hdmi) {
- 		dev_dbg(hdmi->dev, "%s HDMI mode\n", __func__);
- 
- 		/* HDMI Initialization Step F - Configure AVI InfoFrame */
-@@ -2418,29 +2412,13 @@ static const struct drm_edid *dw_hdmi_edid_read(struct dw_hdmi *hdmi,
- 						struct drm_connector *connector)
- {
- 	const struct drm_edid *drm_edid;
--	const struct edid *edid;
- 
- 	if (!hdmi->ddc)
- 		return NULL;
- 
- 	drm_edid = drm_edid_read_ddc(connector, hdmi->ddc);
--	if (!drm_edid) {
-+	if (!drm_edid)
- 		dev_dbg(hdmi->dev, "failed to get edid\n");
--		return NULL;
--	}
--
--	/*
--	 * FIXME: This should use connector->display_info.is_hdmi and
--	 * connector->display_info.has_audio from a path that has read the EDID
--	 * and called drm_edid_connector_update().
--	 */
--	edid = drm_edid_raw(drm_edid);
--
--	dev_dbg(hdmi->dev, "got edid: width[%d] x height[%d]\n",
--		edid->width_cm, edid->height_cm);
--
--	hdmi->sink_is_hdmi = drm_detect_hdmi_monitor(edid);
--	hdmi->sink_has_audio = drm_detect_monitor_audio(edid);
- 
- 	return drm_edid;
- }
--- 
-2.45.2
+commit:         8867bbd4 mm: arm64: Fix the out-of-bounds issue in con..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=11bcfa36980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3b4350cf56c61c80
+dashboard link: https://syzkaller.appspot.com/bug?extid=5f996b83575ef4058638
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17790922980000
 
+Note: testing is done by a robot and is best-effort only.
