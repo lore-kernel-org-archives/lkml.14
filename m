@@ -1,240 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF83417D363;
-	Tue, 11 Jun 2024 13:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF3417E453;
+	Tue, 11 Jun 2024 13:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718113180; cv=none; b=jBLneT4BOhUqfD/hm2EY8fuD1pJIn1okD1tuRNx+cMIkq2y3emptk6k6GFNl4xmvcxTYc/Ix7nVzw+tTIbiEbeSD+3zchsVoPKpSs/G9d+836Prpl9v9XXiEVCXRa09cs8tHitkSKlpIavEa0d1HqCBBDXJkowe2JH5IKiq1F08=
+	t=1718113186; cv=none; b=VtAJiJYj3aBnKKwJQFvcMZZsIELt+A0kau4udhXv1NjvVxtqGMaNBBewUbJ5CRG3J+zubaE22okQ19yEwgtBiwQ7Bd+JGCIHRWy8WN+Q52l1BFFcp+IbvxngCfi8UOPbki4Xf4vFRUGLr5wfYM7/hOTeYpAOO1lRzT8AmKruu9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718113180; c=relaxed/simple;
-	bh=Tn9aGOOYb+LH+bFDSFJ3gb5u4+83blw2N03mcxJkcPo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tCtdHD9c8EYgRwb+XDB2EPMEXdzuZ1i/iJmycKivwFSUvvHgGkr9Vn6Rm6hiOarznTdvQYJywB17s6r0TmqcWSDGa5DhrYpCyACgVE30CJcz+4/SfyUIWgZxrdqLm2VW+kirZvSjnbj/lC7SkhRLPCA5TZoi5XfohKnT3u1q37A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9V0wJQ0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718113186; c=relaxed/simple;
+	bh=UUX2kRBxg/IP6qeOnyd2a/qpqGLsQaNhpWvcCTP3zFg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IKK4JaF5xJeVOie946KUTILnafB1NtBwJpxxzYKOtdevOyTvq9Zhmq4PNwBhEGyJiXD1wSqYV4vdf0tvsbrYMKqIjEFNEbql2I4O+qaH3tVf18xyyi4txtGeaFr8VM+YnInueQlVOL3GgRkbX+yWoPxgqtni0fF6NTNEpkXwXjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y+W5V6hD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9V0wJQ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61911C32789;
-	Tue, 11 Jun 2024 13:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718113180;
-	bh=Tn9aGOOYb+LH+bFDSFJ3gb5u4+83blw2N03mcxJkcPo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=d9V0wJQ0TR4PWiyRJB7suPif/f/9P8jN1s2raC2Yyt/25BVEXZHt3NFTRbAqyV7Kj
-	 UshYLZNhNX7CfT8hSjiHzqKjEISQSgFlX0lloEC6qxlMI9dL8wZIiGeNzQsK8E2mxp
-	 W4rou+XM6DRmGS9lDZCeid961euyOKV0GBsYu8BA/4areCsiGjtAuj4f7KIQRbpyrt
-	 l8yPAI8t25NqyFkyOllFI6O++CFoI7p3yVmboF7mPaCj6K+21YmRJuzr4zDGiT0K4R
-	 FsS3BQdY3pdT8OuGmhkEoryuxLnY62cyzXv6MsTxNUkzIovaA0MyoSFMzuhd+Rier/
-	 s92BhHAKwuhRA==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c9034860dso2007361e87.2;
-        Tue, 11 Jun 2024 06:39:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWKxN8xb9LVp/LCPe5QXcE0CrZCCKh4vZSh/nuKv2PUymb3/qww59I6jPpo36QP4ry7F24vKK5ZpW9uzfPogd3LojowawtRbhhSShPAKcMdLzmiKOcnThKVJhe2dFrWDrU+HTN+RQxpfdEfRMMDGCIHsznkwqDGRYHfHng4iPWzZlHEfO8=
-X-Gm-Message-State: AOJu0YwS2ZdRRTxcC0nKuNbMdzY2ViVOHwrgP71nsQK3HjZd60r+VNsV
-	MXc1CHaopLAt6AZGsOQeKkHqRZQfD9IYZ38mER5xAZVFpUcT6joAVO0vNyyWS8kYcTcJLWN8OBD
-	fEPterh5zVBj8YivsLJF7/QBwhA==
-X-Google-Smtp-Source: AGHT+IGFUiU6exeIzAEFH36DTSIP2uz/FoyVESFoi5eHT5vpw31YK47X/5GhyzpZlDYY7TRlOrRvzOT6Gll+o03Kb2w=
-X-Received: by 2002:a05:6512:3d23:b0:52c:868f:a28d with SMTP id
- 2adb3069b0e04-52c868fa524mr5757868e87.50.1718113178740; Tue, 11 Jun 2024
- 06:39:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y+W5V6hD"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45BC2wc3032603;
+	Tue, 11 Jun 2024 13:39:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	uw3u4OQfeLiKU3pmEDkUXX8ynTd/GeHRxMEzqZYtUqw=; b=Y+W5V6hDBd8oYdvX
+	bfwTSHBhIrXijzkoAT2yFsSeN9xUhKXYeMoMElpkWYbEGPdKfoqwcyalo0UVeZAP
+	O3btd/Gc0ZMSfEFKUNA/UaVMZ/G2zUyw89FpxxGfViJLkJ8Uqs8XML5Zqz+vFi/z
+	g3CrTJiF49aVpklKBpbVHJg+zZOe7uamAsz8mMgcXHBG1As9VIaeN7ctSUOIQ5R8
+	TgfTF7Nil9l3Y+hdi5OiMbDN8TbRMRERketBJmxZ4XiRhdYsOQyPBdZIyMHaZqeQ
+	f/sOJ4ovcKMRTg4GgQ3MOYGWBNiHCaH1LhIwyxN9I83U4wFo30NXhkGyHt9TtpIa
+	iyQDtA==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ypp87r9cx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Jun 2024 13:39:41 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45BDdeVN025075
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Jun 2024 13:39:40 GMT
+Received: from hu-ajipan-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 11 Jun 2024 06:39:35 -0700
+From: Ajit Pandey <quic_ajipan@quicinc.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Vladimir Zapolskiy
+	<vladimir.zapolskiy@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Taniya Das
+	<quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH V4 6/8] dt-bindings: clock: qcom: add GPUCC clocks on SM4450
+Date: Tue, 11 Jun 2024 19:07:50 +0530
+Message-ID: <20240611133752.2192401-7-quic_ajipan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240611133752.2192401-1-quic_ajipan@quicinc.com>
+References: <20240611133752.2192401-1-quic_ajipan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606111611.371463-1-andreas@kemnade.info>
-In-Reply-To: <20240606111611.371463-1-andreas@kemnade.info>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 11 Jun 2024 07:39:25 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+9v0i-6xvPY6cvnJUSLV1d4irqcPv60p+KwC5sx7WDDg@mail.gmail.com>
-Message-ID: <CAL_Jsq+9v0i-6xvPY6cvnJUSLV1d4irqcPv60p+KwC5sx7WDDg@mail.gmail.com>
-Subject: Re: [PATCH v4] dt-bindings: regulator: twl-regulator: convert to yaml
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: lee@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: REMCKshSL1xbfCHeeL2rnAM1NqcDRSYK
+X-Proofpoint-ORIG-GUID: REMCKshSL1xbfCHeeL2rnAM1NqcDRSYK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-11_07,2024-06-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ spamscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ bulkscore=0 mlxscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406110099
 
-On Thu, Jun 6, 2024 at 5:16=E2=80=AFAM Andreas Kemnade <andreas@kemnade.inf=
-o> wrote:
->
-> Convert the regulator bindings to yaml.
->
-> Drop one twl5030 compatible due to no documentation on mfd side and no
-> users of the twl5030.
->
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
-> Changes in v4:
-> - remove a sentence in the commit message which only applies
->   to v1 design
-> - add R-by
->
-> Changes in v3:
-> - define regulator stuff in toplevel
-> - simplified regulator-inital-mode
-> - extended example to contain both regulator-initial-mode and
->   retain-on-reset
->
-> Changes in v2:
-> - add regulators directly to ti,twl.yaml
-> - less restrictions on regulator node name
->
->  .../devicetree/bindings/mfd/ti,twl.yaml       | 166 +++++++++++++++++-
->  .../bindings/regulator/twl-regulator.txt      |  80 ---------
->  2 files changed, 164 insertions(+), 82 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/regulator/twl-regul=
-ator.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/ti,twl.yaml b/Document=
-ation/devicetree/bindings/mfd/ti,twl.yaml
-> index c2357fecb56c..2cbdd238f48f 100644
-> --- a/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-> @@ -22,6 +22,32 @@ allOf:
->            contains:
->              const: ti,twl4030
->      then:
-> +      patternProperties:
-> +        "^regulator-":
-> +          properties:
-> +            compatible:
-> +              enum:
-> +                - ti,twl4030-vaux1
-> +                - ti,twl4030-vaux2
-> +                - ti,twl4030-vaux3
-> +                - ti,twl4030-vaux4
-> +                - ti,twl4030-vmmc1
-> +                - ti,twl4030-vmmc2
-> +                - ti,twl4030-vpll1
-> +                - ti,twl4030-vpll2
-> +                - ti,twl4030-vsim
-> +                - ti,twl4030-vdac
-> +                - ti,twl4030-vintana2
-> +                - ti,twl4030-vio
-> +                - ti,twl4030-vdd1
-> +                - ti,twl4030-vdd2
-> +                - ti,twl4030-vintana1
-> +                - ti,twl4030-vintdig
-> +                - ti,twl4030-vusb1v5
-> +                - ti,twl4030-vusb1v8
-> +                - ti,twl4030-vusb3v1
-> +            ti,retain-on-reset: false
-> +
->        properties:
->          madc:
->            type: object
-> @@ -50,13 +76,34 @@ allOf:
->            properties:
->              compatible:
->                const: ti,twl4030-wdt
-> -
->    - if:
->        properties:
->          compatible:
->            contains:
->              const: ti,twl6030
->      then:
-> +      patternProperties:
-> +        "^regulator-":
-> +          properties:
-> +            compatible:
-> +              enum:
-> +                - ti,twl6030-vaux1
-> +                - ti,twl6030-vaux2
-> +                - ti,twl6030-vaux3
-> +                - ti,twl6030-vmmc
-> +                - ti,twl6030-vpp
-> +                - ti,twl6030-vusim
-> +                - ti,twl6030-vana
-> +                - ti,twl6030-vcxio
-> +                - ti,twl6030-vdac
-> +                - ti,twl6030-vusb
-> +                - ti,twl6030-v1v8
-> +                - ti,twl6030-v2v1
-> +                - ti,twl6030-vdd1
-> +                - ti,twl6030-vdd2
-> +                - ti,twl6030-vdd3
-> +            regulator-initial-mode: false
-> +
->        properties:
->          gpadc:
->            type: object
-> @@ -69,6 +116,25 @@ allOf:
->            contains:
->              const: ti,twl6032
->      then:
-> +      patternProperties:
-> +        "^regulator-":
-> +          properties:
-> +            compatible:
-> +              enum:
-> +                - ti,twl6032-ldo1
-> +                - ti,twl6032-ldo2
-> +                - ti,twl6032-ldo3
-> +                - ti,twl6032-ldo4
-> +                - ti,twl6032-ldo5
-> +                - ti,twl6032-ldo6
-> +                - ti,twl6032-ldo7
-> +                - ti,twl6032-ldoln
-> +                - ti,twl6032-ldousb
-> +                - ti,twl6032-smps3
-> +                - ti,twl6032-smps4
-> +                - ti,twl6032-vio
-> +            regulator-initial-mode: false
-> +
->        properties:
->          gpadc:
->            type: object
-> @@ -112,6 +178,27 @@ properties:
->        interrupts:
->          maxItems: 1
->
-> +patternProperties:
-> +  "^regulator-":
-> +    type: object
-> +    unevaluatedProperties: false
-> +    $ref: /schemas/regulator/regulator.yaml
-> +    properties:
-> +      compatible: true
-> +      regulator-initial-mode:
-> +        enum:
-> +          - 0x08 # Sleep mode, the nominal output voltage is maintained
-> +                 # with low power consumption with low load current capa=
-bility
-> +          - 0x0e # Active mode, the regulator can deliver its nominal ou=
-tput
-> +                 # voltage with full-load current capability
-> +      ti,retain-on-reset:
-> +        description:
-> +          Does not turn off the supplies during warm
-> +          reset. Could be needed for VMMC, as TWL6030
-> +          reset sequence for this signal does not comply
-> +          with the SD specification.
-> +        type: boolean
-> +
->  unevaluatedProperties: false
->
->  required:
-> @@ -131,9 +218,84 @@ examples:
->          compatible =3D "ti,twl6030";
->          reg =3D <0x48>;
->          interrupts =3D <39>; /* IRQ_SYS_1N cascaded to gic */
-> +        interrupt-parent =3D <&gic>;
->          interrupt-controller;
->          #interrupt-cells =3D <1>;
-> -        interrupt-parent =3D <&gic>;
-> +
-> +        gpadc {
-> +          compatible =3D "ti,twl6030-gpadc";
-> +          interrupts =3D <6>;
+Add device tree bindings for the graphics clock controller on
+Qualcomm SM4450 platform.
 
-Now a warning in linux-next:
+Signed-off-by: Ajit Pandey <quic_ajipan@quicinc.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../bindings/clock/qcom,sm8450-gpucc.yaml     |  2 +
+ include/dt-bindings/clock/qcom,sm4450-gpucc.h | 62 +++++++++++++++++++
+ 2 files changed, 64 insertions(+)
+ create mode 100644 include/dt-bindings/clock/qcom,sm4450-gpucc.h
 
-Documentation/devicetree/bindings/mfd/ti,twl.example.dtb: gpadc:
-'#io-channel-cells' is a required property
-        from schema $id:
-http://devicetree.org/schemas/iio/adc/ti,twl6030-gpadc.yaml#
+diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8450-gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8450-gpucc.yaml
+index 36974309cf69..8ea4ccf6eb1c 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,sm8450-gpucc.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,sm8450-gpucc.yaml
+@@ -14,6 +14,7 @@ description: |
+   domains on Qualcomm SoCs.
+ 
+   See also::
++    include/dt-bindings/clock/qcom,sm4450-gpucc.h
+     include/dt-bindings/clock/qcom,sm8450-gpucc.h
+     include/dt-bindings/clock/qcom,sm8550-gpucc.h
+     include/dt-bindings/reset/qcom,sm8450-gpucc.h
+@@ -23,6 +24,7 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - qcom,sm4450-gpucc
+       - qcom,sm8450-gpucc
+       - qcom,sm8550-gpucc
+       - qcom,sm8650-gpucc
+diff --git a/include/dt-bindings/clock/qcom,sm4450-gpucc.h b/include/dt-bindings/clock/qcom,sm4450-gpucc.h
+new file mode 100644
+index 000000000000..304f83e5f645
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,sm4450-gpucc.h
+@@ -0,0 +1,62 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#ifndef _DT_BINDINGS_CLK_QCOM_GPU_CC_SM4450_H
++#define _DT_BINDINGS_CLK_QCOM_GPU_CC_SM4450_H
++
++/* GPU_CC clocks */
++#define GPU_CC_AHB_CLK						0
++#define GPU_CC_CB_CLK						1
++#define GPU_CC_CRC_AHB_CLK					2
++#define GPU_CC_CX_FF_CLK					3
++#define GPU_CC_CX_GFX3D_CLK					4
++#define GPU_CC_CX_GFX3D_SLV_CLK					5
++#define GPU_CC_CX_GMU_CLK					6
++#define GPU_CC_CX_SNOC_DVM_CLK					7
++#define GPU_CC_CXO_AON_CLK					8
++#define GPU_CC_CXO_CLK						9
++#define GPU_CC_DEMET_CLK					10
++#define GPU_CC_DEMET_DIV_CLK_SRC				11
++#define GPU_CC_FF_CLK_SRC					12
++#define GPU_CC_FREQ_MEASURE_CLK					13
++#define GPU_CC_GMU_CLK_SRC					14
++#define GPU_CC_GX_CXO_CLK					15
++#define GPU_CC_GX_FF_CLK					16
++#define GPU_CC_GX_GFX3D_CLK					17
++#define GPU_CC_GX_GFX3D_CLK_SRC					18
++#define GPU_CC_GX_GFX3D_RDVM_CLK				19
++#define GPU_CC_GX_GMU_CLK					20
++#define GPU_CC_GX_VSENSE_CLK					21
++#define GPU_CC_HUB_AHB_DIV_CLK_SRC				22
++#define GPU_CC_HUB_AON_CLK					23
++#define GPU_CC_HUB_CLK_SRC					24
++#define GPU_CC_HUB_CX_INT_CLK					25
++#define GPU_CC_HUB_CX_INT_DIV_CLK_SRC				26
++#define GPU_CC_MEMNOC_GFX_CLK					27
++#define GPU_CC_MND1X_0_GFX3D_CLK				28
++#define GPU_CC_PLL0						29
++#define GPU_CC_PLL1						30
++#define GPU_CC_SLEEP_CLK					31
++#define GPU_CC_XO_CLK_SRC					32
++#define GPU_CC_XO_DIV_CLK_SRC					33
++
++/* GPU_CC power domains */
++#define GPU_CC_CX_GDSC						0
++#define GPU_CC_GX_GDSC						1
++
++/* GPU_CC resets */
++#define GPU_CC_ACD_BCR						0
++#define GPU_CC_CB_BCR						1
++#define GPU_CC_CX_BCR						2
++#define GPU_CC_FAST_HUB_BCR					3
++#define GPU_CC_FF_BCR						4
++#define GPU_CC_GFX3D_AON_BCR					5
++#define GPU_CC_GMU_BCR						6
++#define GPU_CC_GX_BCR						7
++#define GPU_CC_XO_BCR						8
++#define GPU_CC_GX_ACD_IROOT_BCR					9
++#define GPU_CC_RBCPR_BCR					10
++
++#endif
+-- 
+2.25.1
+
