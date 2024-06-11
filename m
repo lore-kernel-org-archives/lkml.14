@@ -1,229 +1,559 @@
-Received: from zg8tmtu5ljy1ljeznc42.icoremail.net (zg8tmtu5ljy1ljeznc42.icoremail.net [159.65.134.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06DD416F8EC;
-	Tue, 11 Jun 2024 04:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.65.134.6
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0543B170821
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 04:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718080068; cv=none; b=fa5Fm+Q8gfqQYGPKt2Jw5KzLUgFwPTkfdqOuofNakwwBpGxRZtRnCtiL4NSNJYRd7SwS+IH9B/XuIy59FoIssqKQYtkuQckfebBC0McSXef+N3nw2d1hvz85awvPbygYU/H2imeJMHE2xEqpAn3qRw83DgMx0IgnaCCjnlg+ZU4=
+	t=1718080072; cv=none; b=n1x8Deqv5NGHLwndxdZ5MekZD2jCFup51XzXmlH+RfLGGyfhfcXyHDvmiSmhYgQAtqiFCk1oONez6SAGGOxUnzkLOVnGh29lW8xgDIfhNfggMz8A6hEeFq4gCqOxyrBYPQlriF/3GgamBuXFrmXGPtFp637abc85LtIPVWcqc/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718080068; c=relaxed/simple;
-	bh=t2++JIhllqYUwW/zYQAoDEmiowKgDn4TBzR4Ww3SfOI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Z00oX3pxh5pWvs6DtlEa0/z/qerRocxEGNW+ne1NMnJ7HL8FsbQRMdd/180lGdvWWomiejge3PP+jxrE9AXQzS0RYffokuQDL2imKGlBBQtkJ2KO3QhgG05akK0HARMLfKUOjf53bNwm0JhzpIr5Uk7N44g3mym48XwDfAyb8ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=159.65.134.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
-Received: from hust.edu.cn (unknown [172.16.0.52])
-	by app2 (Coremail) with SMTP id HwEQrAB3qcUD0mdmPTxsAQ--.38325S2;
-	Tue, 11 Jun 2024 12:26:43 +0800 (CST)
-Received: from pride-poweredge-r740.. (unknown [222.20.126.129])
-	by gateway (Coremail) with SMTP id _____wBXbyX_0WdmIpMBAQ--.9148S2;
-	Tue, 11 Jun 2024 12:26:40 +0800 (CST)
-From: Dongliang Mu <dzm91@hust.edu.cn>
-To: Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Dongliang Mu <dzm91@hust.edu.cn>,
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs/zh_CN: add process/researcher-guidelines Chinese translation
-Date: Tue, 11 Jun 2024 12:25:01 +0800
-Message-Id: <20240611042515.61387-1-dzm91@hust.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718080072; c=relaxed/simple;
+	bh=R11Fz8CMWAdSmi2lcWYQk27qmS1GHLlt16YLGoG5YaY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gM8Um648ZvZJ0Eys6htqRL7FDldyCaGiasUe2gKEF7heVpn1HuK8XXzEmdZLf94ubRrhtAmMZXVrbMdiVMhqnKNUY25WDU4NBww4W4bn1+70uUvSDvpepOXvoA+w1HWlS8faQcM+NMM0BqBqBZKMG/SFOvRZYcGgwAjBLJlst8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LETOhCIo; arc=none smtp.client-ip=209.85.160.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LETOhCIo"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-254aec5a084so1104181fac.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 21:27:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718080070; x=1718684870; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5tkT2r/H8bywOCL29jQ9dOiEqES2E4TnDM1Uu+21t2c=;
+        b=LETOhCIoLtfI1D3itdfNcKXGqQZRgY0qeVa+hrjA5EEv2qVlHM/kf3qmROA+ImAYIl
+         Six/SRUIcmT5RNUZrO8tHNriknG9K9eFzbZf69gkXa7Acg/Nd1n1tNmS9R6pUAz4+rGo
+         qxKQwe0oSZvLJ3qwf/JNNybsl8xcNeLnYiHaU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718080070; x=1718684870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5tkT2r/H8bywOCL29jQ9dOiEqES2E4TnDM1Uu+21t2c=;
+        b=ayTEibXIcUKbflV4k3Uw1I7nYm71OAt3o2XmCGLIy/4WG0dLIt2eQphMuh2RNLxIR5
+         3WvWmzSKcgHnsMfN+MyUWGXG5OKyTYCJVDDrQLFCmlCbhZW9NRBUHQEa4M/mDGhXeROk
+         xlZjQ8sBmMbUXn6x8tk/nD8Dd1dPsMzUJJwD+qvoK+2JTz6etkFrb7cFZMpAkk7/z6zY
+         Q5cs0M9xUH1mIpDZIAP1SHPpSxWlsXJQcFn6hMCJfLPrMVhF+9+x8XBW6a7b2y6K5/h+
+         pqawR/8HIiGIX6aCgIoAoqSJmPEG7U2Ob8+nUf8GtIvzShA68gfHgadDQQ/wjtYV9ACg
+         3Aog==
+X-Forwarded-Encrypted: i=1; AJvYcCUPAlUZqCBlmUm8Kt81lMktKFN64GdJpOuBZHZ99Ff1qn79V1jFEX5PryN82nWkNqoLYWjQoAN3rwNsRIvZzwlJPy2VicBDSVlUb89w
+X-Gm-Message-State: AOJu0Yy3UEdvKP3YEBcFcEI2j4dh4mUlFnAv/HdGXWPF20bEeA05ZDif
+	pkfslH1PrwV38S8YDYPtb09kSOzWQ6bG2o0IvcrdFZKqETcX5fBZNQdtUA8h5rpF40uMTcT+gsz
+	nv9WHUdYbBo7RzSuG3LUqkfN3B7FfDDusClD3
+X-Google-Smtp-Source: AGHT+IGvwQIkjiBkVYzpGSHTTqzmipObtEx9jWLxFxS1ErZDL3K0AvJpjFZrfUag8P1aiWtGde0J9gLS6s3SgZZN50Y=
+X-Received: by 2002:a05:6871:729:b0:254:8a91:4b71 with SMTP id
+ 586e51a60fabf-2548a916a59mr10122918fac.56.1718080069954; Mon, 10 Jun 2024
+ 21:27:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HwEQrAB3qcUD0mdmPTxsAQ--.38325S2
-Authentication-Results: app2; spf=neutral smtp.mail=dzm91@hust.edu.cn;
-X-Coremail-Antispam: 1UD129KBjvJXoWxKr1kJw4xCF1UXrW5GFyDKFg_yoWfKw1UpF
-	ZFg3s3ta1xKFn7J3yfKF10gF4rWFZ7CFW7Kw1kJFyrAwn3Ar92qa17trySvFW3W34Iya4U
-	ZrWjgrWrCr1Iv37anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQIb7Iv0xC_KF4lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
-	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_JF
-	0_Jw1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
-	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r
-	4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx0Ec7CjxVAajcxG14v26F4j6r4UJwAm
-	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42
-	xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uFyUJr1UMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUn0Ap5UUUUU==
-X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
+References: <20240608021023.176027-1-jhubbard@nvidia.com> <20240608021023.176027-6-jhubbard@nvidia.com>
+In-Reply-To: <20240608021023.176027-6-jhubbard@nvidia.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Mon, 10 Jun 2024 21:27:39 -0700
+Message-ID: <CABi2SkUnQQC4cXhwV6BN==umEFsNpFRptxMKy3bHthPUv+pXwA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] selftests/mm: mseal, self_elf: rename TEST_END_CHECK
+ to REPORT_TEST_PASS
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
+	Andrei Vagin <avagin@google.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Christian Brauner <brauner@kernel.org>, David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, Peter Xu <peterx@redhat.com>, 
+	Rich Felker <dalias@libc.org>, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Finish the translation of researcher-guidelines and add it to the
-index file.
+Hi
 
-Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
----
- .../translations/zh_CN/process/index.rst      |   2 +-
- .../zh_CN/process/researcher-guidelines.rst   | 129 ++++++++++++++++++
- 2 files changed, 130 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/translations/zh_CN/process/researcher-guidelines.rst
+On Fri, Jun 7, 2024 at 7:10=E2=80=AFPM John Hubbard <jhubbard@nvidia.com> w=
+rote:
+>
+> Now that the test macros are factored out into their final location, and
+> simplified, it's time to rename TEST_END_CHECK to something that
+> represents its new functionality: REPORT_TEST_PASS.
+>
+> Cc: Jeff Xu <jeffxu@chromium.org>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-diff --git a/Documentation/translations/zh_CN/process/index.rst b/Documentation/translations/zh_CN/process/index.rst
-index 5c6c8ccdd50d..5a5cd7c01c62 100644
---- a/Documentation/translations/zh_CN/process/index.rst
-+++ b/Documentation/translations/zh_CN/process/index.rst
-@@ -64,6 +64,7 @@ TODOLIST:
-    management-style
-    stable-kernel-rules
-    submit-checklist
-+   researcher-guidelines
- 
- TODOLIST:
- 
-@@ -71,7 +72,6 @@ TODOLIST:
- * kernel-docs
- * deprecated
- * maintainers
--* researcher-guidelines
- * contribution-maturity-model
- 
- 
-diff --git a/Documentation/translations/zh_CN/process/researcher-guidelines.rst b/Documentation/translations/zh_CN/process/researcher-guidelines.rst
-new file mode 100644
-index 000000000000..462b5aeef184
---- /dev/null
-+++ b/Documentation/translations/zh_CN/process/researcher-guidelines.rst
-@@ -0,0 +1,129 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+.. _cn_submittingpatches:
-+
-+:Original: Documentation/process/researcher-guidelines.rst
-+
-+:译者:
-+ - 慕冬亮 Dongliang Mu <dzm91@hust.edu.cn>
-+
-+研究人员指南
-++++++++++++++++++++++
-+
-+Linux 内核社区欢迎对 Linux 内核及其开发过程中涉及的活动与任何其他副产品
-+进行透明的研究。Linux 从这种研究中受益匪浅，其多方面均由某种形式的研究所推动。
-+
-+社区非常感谢研究人员在公开研究结果之前能分享初步发现，特别是涉及安全的研究。
-+早期参与有助于提高研究质量并使 Linux 受益。无论如何，推荐研究人员与社区分享
-+已发表研究的开放访问副本。
-+
-+本文旨在澄清研究开展过程中 Linux 内核社区认可与不认可的一些做法。至少，这类
-+研究及相关活动应遵循标准的研究伦理规则。有关研究伦理、技术伦理以及开发者社区
-+研究的更多背景信息，请查阅：
-+
-+* `研究伦理史 <https://www.unlv.edu/research/ORI-HSR/history-ethics>`_
-+* `IEEE 伦理 <https://www.ieee.org/about/ethics/index.html>`_
-+* `开发者和研究人员对开源项目实验伦理的看法 <https://arxiv.org/pdf/2112.13217.pdf>`_
-+
-+Linux 内核社区期望与项目互动的每个人都是真诚地为了使 Linux 变得更好。
-+对 Linux 内核社区产生的任何公开可用的成果（包括但不限于源代码）的研究
-+是受欢迎的，但对开发者的研究必须明确选择加入。
-+
-+完全基于公开可用资源（包括公共邮件列表的帖子和公开代码库的提交）的被动研究
-+显然是允许的。不过，和任何研究一样，仍需遵循标准伦理。
-+
-+然而，针对开发者行为的主动研究必须在获得相关开发者的明确同意和完全披露的情况下进行。
-+未经同意，不得与开发者互动或对其进行实验；这也是标准的研究伦理。
-+
-+调查
-+=======
-+
-+研究通常采用调查问卷的形式发送给维护者或贡献者。然而，内核社区通常从这些调查问卷中获益
-+甚少。内核开发过程之所以有效，是因为每个开发者都从中受益，即使与目标不同的人一起工作。
-+而回应调查则是对繁忙开发者的单向需求，对他们自己或整个内核社区没有相应的好处。因此，
-+这种研究方法不被鼓励。
-+
-+内核社区成员已经收到过多的电子邮件，可能会将调查请求视为对他们时间的又一要求。发送
-+此类请求会剥夺社区宝贵的贡献者时间，且不太可能产生有统计意义的回应。
-+
-+作为替代，研究人员应考虑参加开发者活动，举办研讨会来介绍研究项目及其对参与者的益处，
-+并直接与社区互动。该方式获得的信息将比电子邮件调查问卷丰富得多，且社区也能从中学习
-+到您的见解。
-+
-+补丁
-+=======
-+
-+澄清：向开发者发送补丁**是**与他们互动，但他们已经同意接收**善意贡献**。故意发送有缺陷/
-+有漏洞的补丁或在讨论中提供误导信息是不被同意的。这种交流会对开发者造成损害
-+（例如，消耗时间、精力和士气），并通过破坏整个开发者社区对贡献者（及其所在组织）
-+的信任而损害项目，削弱为贡献者提供建设性反馈的努力，并使最终用户面临软件缺陷的风险。
-+
-+研究人员参与 Linux 本身的开发与其他人一样受到欢迎和鼓励。研究 Linux 代码是常见
-+做法，尤其是在开发或运行可产生可操作结果的分析工具时。
-+
-+在与开发者社区互动时，发送补丁历来是产生影响的最佳方式。Linux 已经有很多已知的
-+漏洞 -- 更有帮助的是经过审核的修复。在贡献之前，请仔细阅读相关文档：
-+
-+* Documentation/process/development-process.rst
-+* Documentation/process/submitting-patches.rst
-+* Documentation/admin-guide/reporting-issues.rst
-+* Documentation/process/security-bugs.rst
-+
-+然后发送补丁（包括所有如下详细信息的提交日志）并跟进其他开发者的任何反馈。
-+
-+当发送因研究而产生的补丁时，提交日志应至少包含以下详细信息，以便开发者有适当的上下文
-+来理解贡献。回答：
-+
-+* 找到了什么具体问题？
-+* 在运行系统上如何触发这个问题？
-+* 遇到这个问题对系统会有什么影响？
-+* 如何发现这个问题？具体包括任何测试、静态或动态分析程序及其他用于执行工作的工具或方法的详细信息。
-+* 在哪个版本的 Linux 上发现了这个问题？强烈推荐使用最新的发布版本或最近的 linux-next 分支（参见 Documentation/process/howto.rst）。
-+* 进行了哪些更改来修复这个问题，为什么认为这些更改是正确的？
-+* 如何进行构建测试和运行时测试？
-+* 此更改修复了哪个先前的提交？这应该在 "Fixes:" 标签中，如文档所述。
-+* 还有谁审查了这个补丁？这应该在适当的 "Reviewed-by:" 标签中注明；见下文。
-+
-+例如::
-+
-+  From: Author <author@email>
-+  Subject: [PATCH] drivers/foo_bar: Add missing kfree()
-+
-+  The error path in foo_bar driver does not correctly free the allocated
-+  struct foo_bar_info. This can happen if the attached foo_bar device
-+  rejects the initialization packets sent during foo_bar_probe(). This
-+  would result in a 64 byte slab memory leak once per device attach,
-+  wasting memory resources over time.
-+
-+  This flaw was found using an experimental static analysis tool we are
-+  developing, LeakMagic[1], which reported the following warning when
-+  analyzing the v5.15 kernel release:
-+
-+   path/to/foo_bar.c:187: missing kfree() call?
-+
-+  Add the missing kfree() to the error path. No other references to
-+  this memory exist outside the probe function, so this is the only
-+  place it can be freed.
-+
-+  x86_64 and arm64 defconfig builds with CONFIG_FOO_BAR=y using GCC
-+  11.2 show no new warnings, and LeakMagic no longer warns about this
-+  code path. As we don't have a FooBar device to test with, no runtime
-+  testing was able to be performed.
-+
-+  [1] https://url/to/leakmagic/details
-+
-+  Reported-by: Researcher <researcher@email>
-+  Fixes: aaaabbbbccccdddd ("Introduce support for FooBar")
-+  Signed-off-by: Author <author@email>
-+  Reviewed-by: Reviewer <reviewer@email>
-+
-+如果您是第一次参与贡献，建议在补丁在发布到公共列表前请其他人私下进行审核。（如果明确
-+告诉您补丁需要更仔细的内部审查，则这是必需的。）这些人预计会在最终的补丁中包含他们的
-+"Reviewed-by" 标签。找到熟悉 Linux 贡献的其他开发者，特别是您自己组织内的开发者，
-+并在将补丁发送到公共邮件列表前请他们帮助审核，往往会显著提高补丁的质量，从而减少
-+其他开发者的负担。
-+
-+如果你找不到人内部审核补丁且需要帮助找到这样的人，或者如果您对本文档和开发者社区的期望
-+有任何其他问题，请联系技术咨询委员会私有邮件列表：<tech-board@groups.linuxfoundation.org>。
-\ No newline at end of file
--- 
-2.34.1
+Reviewed-by: Jeff Xu <jeffxu@chromium.org>
+Tested-by: Jeff Xu <jeffxu@chromium.org>
 
+> ---
+>  tools/testing/selftests/mm/mseal_helpers.h |  2 +-
+>  tools/testing/selftests/mm/mseal_test.c    | 92 +++++++++++-----------
+>  tools/testing/selftests/mm/seal_elf.c      |  2 +-
+>  3 files changed, 48 insertions(+), 48 deletions(-)
+>
+> diff --git a/tools/testing/selftests/mm/mseal_helpers.h b/tools/testing/s=
+elftests/mm/mseal_helpers.h
+> index 8c3bf77dcf19..65ece62fdd0c 100644
+> --- a/tools/testing/selftests/mm/mseal_helpers.h
+> +++ b/tools/testing/selftests/mm/mseal_helpers.h
+> @@ -22,7 +22,7 @@
+>                 }                                                       \
+>         } while (0)
+>
+> -#define TEST_END_CHECK() ksft_test_result_pass("%s\n", __func__)
+> +#define REPORT_TEST_PASS() ksft_test_result_pass("%s\n", __func__)
+>
+>  #ifndef PKEY_DISABLE_ACCESS
+>  #define PKEY_DISABLE_ACCESS    0x1
+> diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/self=
+tests/mm/mseal_test.c
+> index a29935d82027..f8e1c59f298e 100644
+> --- a/tools/testing/selftests/mm/mseal_test.c
+> +++ b/tools/testing/selftests/mm/mseal_test.c
+> @@ -240,7 +240,7 @@ static void test_seal_addseal(void)
+>         ret =3D sys_mseal(ptr, size);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_unmapped_start(void)
+> @@ -268,7 +268,7 @@ static void test_seal_unmapped_start(void)
+>         ret =3D sys_mseal(ptr + 2 * page_size, 2 * page_size);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_unmapped_middle(void)
+> @@ -300,7 +300,7 @@ static void test_seal_unmapped_middle(void)
+>         ret =3D sys_mseal(ptr + 3 * page_size, page_size);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_unmapped_end(void)
+> @@ -329,7 +329,7 @@ static void test_seal_unmapped_end(void)
+>         ret =3D sys_mseal(ptr, 2 * page_size);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_multiple_vmas(void)
+> @@ -360,7 +360,7 @@ static void test_seal_multiple_vmas(void)
+>         ret =3D sys_mseal(ptr, size);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_split_start(void)
+> @@ -385,7 +385,7 @@ static void test_seal_split_start(void)
+>         ret =3D sys_mseal(ptr + page_size, 3 * page_size);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_split_end(void)
+> @@ -410,7 +410,7 @@ static void test_seal_split_end(void)
+>         ret =3D sys_mseal(ptr, 3 * page_size);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_invalid_input(void)
+> @@ -445,7 +445,7 @@ static void test_seal_invalid_input(void)
+>         ret =3D sys_mseal(ptr - page_size, 5 * page_size);
+>         FAIL_TEST_IF_FALSE(ret < 0);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_zero_length(void)
+> @@ -469,7 +469,7 @@ static void test_seal_zero_length(void)
+>         ret =3D sys_mprotect(ptr, size, PROT_READ | PROT_WRITE);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_zero_address(void)
+> @@ -495,7 +495,7 @@ static void test_seal_zero_address(void)
+>         ret =3D sys_mprotect(ptr, size, PROT_READ | PROT_WRITE);
+>         FAIL_TEST_IF_FALSE(ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_twice(void)
+> @@ -515,7 +515,7 @@ static void test_seal_twice(void)
+>         ret =3D sys_mseal(ptr, size);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mprotect(bool seal)
+> @@ -539,7 +539,7 @@ static void test_seal_mprotect(bool seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_start_mprotect(bool seal)
+> @@ -569,7 +569,7 @@ static void test_seal_start_mprotect(bool seal)
+>                         PROT_READ | PROT_WRITE);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_end_mprotect(bool seal)
+> @@ -599,7 +599,7 @@ static void test_seal_end_mprotect(bool seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mprotect_unalign_len(bool seal)
+> @@ -628,7 +628,7 @@ static void test_seal_mprotect_unalign_len(bool seal)
+>                         PROT_READ | PROT_WRITE);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mprotect_unalign_len_variant_2(bool seal)
+> @@ -656,7 +656,7 @@ static void test_seal_mprotect_unalign_len_variant_2(=
+bool seal)
+>                         PROT_READ | PROT_WRITE);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mprotect_two_vma(bool seal)
+> @@ -691,7 +691,7 @@ static void test_seal_mprotect_two_vma(bool seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mprotect_two_vma_with_split(bool seal)
+> @@ -738,7 +738,7 @@ static void test_seal_mprotect_two_vma_with_split(boo=
+l seal)
+>                         PROT_READ | PROT_WRITE);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mprotect_partial_mprotect(bool seal)
+> @@ -764,7 +764,7 @@ static void test_seal_mprotect_partial_mprotect(bool =
+seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mprotect_two_vma_with_gap(bool seal)
+> @@ -807,7 +807,7 @@ static void test_seal_mprotect_two_vma_with_gap(bool =
+seal)
+>         ret =3D sys_mprotect(ptr + 3 * page_size, page_size, PROT_READ);
+>         FAIL_TEST_IF_FALSE(ret =3D=3D 0);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mprotect_split(bool seal)
+> @@ -844,7 +844,7 @@ static void test_seal_mprotect_split(bool seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mprotect_merge(bool seal)
+> @@ -878,7 +878,7 @@ static void test_seal_mprotect_merge(bool seal)
+>         ret =3D sys_mprotect(ptr + 2 * page_size, 2 * page_size, PROT_REA=
+D);
+>         FAIL_TEST_IF_FALSE(ret =3D=3D 0);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_munmap(bool seal)
+> @@ -903,7 +903,7 @@ static void test_seal_munmap(bool seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  /*
+> @@ -943,7 +943,7 @@ static void test_seal_munmap_two_vma(bool seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  /*
+> @@ -981,7 +981,7 @@ static void test_seal_munmap_vma_with_gap(bool seal)
+>         ret =3D sys_munmap(ptr, size);
+>         FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_munmap_start_freed(bool seal)
+> @@ -1021,7 +1021,7 @@ static void test_munmap_start_freed(bool seal)
+>                 FAIL_TEST_IF_FALSE(size =3D=3D 0);
+>         }
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_munmap_end_freed(bool seal)
+> @@ -1051,7 +1051,7 @@ static void test_munmap_end_freed(bool seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_munmap_middle_freed(bool seal)
+> @@ -1095,7 +1095,7 @@ static void test_munmap_middle_freed(bool seal)
+>                 FAIL_TEST_IF_FALSE(size =3D=3D 0);
+>         }
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mremap_shrink(bool seal)
+> @@ -1124,7 +1124,7 @@ static void test_seal_mremap_shrink(bool seal)
+>
+>         }
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mremap_expand(bool seal)
+> @@ -1156,7 +1156,7 @@ static void test_seal_mremap_expand(bool seal)
+>
+>         }
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mremap_move(bool seal)
+> @@ -1189,7 +1189,7 @@ static void test_seal_mremap_move(bool seal)
+>
+>         }
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mmap_overwrite_prot(bool seal)
+> @@ -1217,7 +1217,7 @@ static void test_seal_mmap_overwrite_prot(bool seal=
+)
+>         } else
+>                 FAIL_TEST_IF_FALSE(ret2 =3D=3D ptr);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mmap_expand(bool seal)
+> @@ -1248,7 +1248,7 @@ static void test_seal_mmap_expand(bool seal)
+>         } else
+>                 FAIL_TEST_IF_FALSE(ret2 =3D=3D ptr);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mmap_shrink(bool seal)
+> @@ -1276,7 +1276,7 @@ static void test_seal_mmap_shrink(bool seal)
+>         } else
+>                 FAIL_TEST_IF_FALSE(ret2 =3D=3D ptr);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mremap_shrink_fixed(bool seal)
+> @@ -1307,7 +1307,7 @@ static void test_seal_mremap_shrink_fixed(bool seal=
+)
+>         } else
+>                 FAIL_TEST_IF_FALSE(ret2 =3D=3D newAddr);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mremap_expand_fixed(bool seal)
+> @@ -1338,7 +1338,7 @@ static void test_seal_mremap_expand_fixed(bool seal=
+)
+>         } else
+>                 FAIL_TEST_IF_FALSE(ret2 =3D=3D newAddr);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mremap_move_fixed(bool seal)
+> @@ -1368,7 +1368,7 @@ static void test_seal_mremap_move_fixed(bool seal)
+>         } else
+>                 FAIL_TEST_IF_FALSE(ret2 =3D=3D newAddr);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mremap_move_fixed_zero(bool seal)
+> @@ -1400,7 +1400,7 @@ static void test_seal_mremap_move_fixed_zero(bool s=
+eal)
+>
+>         }
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mremap_move_dontunmap(bool seal)
+> @@ -1429,7 +1429,7 @@ static void test_seal_mremap_move_dontunmap(bool se=
+al)
+>
+>         }
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_mremap_move_dontunmap_anyaddr(bool seal)
+> @@ -1463,7 +1463,7 @@ static void test_seal_mremap_move_dontunmap_anyaddr=
+(bool seal)
+>
+>         }
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>
+> @@ -1556,7 +1556,7 @@ static void test_seal_merge_and_split(void)
+>         FAIL_TEST_IF_FALSE(size =3D=3D  22 * page_size);
+>         FAIL_TEST_IF_FALSE(prot =3D=3D 0x4);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_discard_ro_anon_on_rw(bool seal)
+> @@ -1585,7 +1585,7 @@ static void test_seal_discard_ro_anon_on_rw(bool se=
+al)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_discard_ro_anon_on_pkey(bool seal)
+> @@ -1632,7 +1632,7 @@ static void test_seal_discard_ro_anon_on_pkey(bool =
+seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_discard_ro_anon_on_filebacked(bool seal)
+> @@ -1669,7 +1669,7 @@ static void test_seal_discard_ro_anon_on_filebacked=
+(bool seal)
+>                 FAIL_TEST_IF_FALSE(!ret);
+>         close(fd);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_discard_ro_anon_on_shared(bool seal)
+> @@ -1698,7 +1698,7 @@ static void test_seal_discard_ro_anon_on_shared(boo=
+l seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  static void test_seal_discard_ro_anon(bool seal)
+> @@ -1728,7 +1728,7 @@ static void test_seal_discard_ro_anon(bool seal)
+>         else
+>                 FAIL_TEST_IF_FALSE(!ret);
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  int main(int argc, char **argv)
+> diff --git a/tools/testing/selftests/mm/seal_elf.c b/tools/testing/selfte=
+sts/mm/seal_elf.c
+> index 0fd129259647..131fc13cd422 100644
+> --- a/tools/testing/selftests/mm/seal_elf.c
+> +++ b/tools/testing/selftests/mm/seal_elf.c
+> @@ -127,7 +127,7 @@ static void test_seal_elf(void)
+>         FAIL_TEST_IF_FALSE(ret < 0);
+>         ksft_print_msg("somestr is sealed, mprotect is rejected\n");
+>
+> -       TEST_END_CHECK();
+> +       REPORT_TEST_PASS();
+>  }
+>
+>  int main(int argc, char **argv)
+> --
+> 2.45.2
+>
