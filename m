@@ -1,368 +1,150 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0426FCC
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 00:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55434C81
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 00:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718067091; cv=none; b=BTmNlXA4ICltCgjHn554N++DBRjpgz1ZQEsWJvrcErMvMh14ccWCcJZK8kvurJYxTzR8cJOQc8i0zja9MvqQo4yGcYGdr6YgHsAsBuPA4Zv18LkK+nXMRtHTG/4JUTisnX/waZZmQuLjZ1e50eBLeizrNOYlAJibuGCwWGyDQd8=
+	t=1718067401; cv=none; b=F4CGS1sIR+xLO5K99/5tjzJKNwl+GBH4j2kLufmzVEudTmEVecXjD9dm9jp4GOwX2O4LrGo6qw9mm1RxSlg1M9ZAeNAfw2xwgfukWUVp4qa5W1fZ7EMc4aRIiPC9fNkBBoX65bCR4phuyESfVEt1CCajEgjFw6MPWVXh8YkGMOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718067091; c=relaxed/simple;
-	bh=4tGsZXuoCnAYaQks7DUaHqHmrE2xVhNvtR6tBHdIssQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mmwWOkrLJZjYLWoovQAq3y+J7wrSi5MttSsGEllOBcho8ZSMUbCtEZb8pYiZNQ6edfevl4O9k7IYY4KLaqycz9zjEU4F7vaaL6MxpWiPOpAHykwR8gtMrxvG+Dl+sBiAe4Zh6yz/Fj1GalyqgRCIa3K8FcEbrAaT4Qgi2j8W9/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ii0A2SFr; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718067401; c=relaxed/simple;
+	bh=pWf61BOW6LDJhVR+p7Jr3ddwtK37jvFhbQjHtR1senQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HPABuDF3EoSA5lFFcB0dko94RUcxxQQ7/oBiymbLT4YBogTWIipGP2OuyFq7bAqEhF3rZ74jm49/Z1Eh8TfZw7ajwOlRLOF5u4fXiZZoj0LAjlte0xm07c3MvrW4J1xW6RGSEfP4VW0X+RXCb4zh9i871pyCUJt3vNh4JbqE7Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gS2WFbgv; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ii0A2SFr"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2c2d89be34cso474364a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 17:51:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gS2WFbgv"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a6f1c4800easo194048366b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 17:56:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718067089; x=1718671889; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ngaY7gpQRpIirX5s53yfK0/qc/j88qyKxzdVZ+iIXkA=;
-        b=Ii0A2SFr7vXeUEFqjuMnASfs96nwEXd4dmzN59Gj0oFdZ4d6D+qLZvPwZEWjM7XRII
-         WVBLaPRxF7lH6t08Gl90ltosKAaU5IlD/Q/85VnFXUAoT3viJjmMHbi/rg83oupWW5sj
-         ClxMpV7OuV8hlBaVp/m8DhzYXSYVYvtpHQdA2MtbyyfegkTGvDBvuZ7Rmxme0anevB12
-         dzTNIazbg6djOjD7BXVA7J+uOAJpL9qNvhA0+EX+1W3H+whGgq8J6QB02EHH9CgZ9Kt7
-         WzejXlNjSxAlLqYkAkJJbqrhqUg/T6wcOS6ZF4rdQ6bore33ItQKUSZWbc/sT18JQYVg
-         pkTw==
+        d=gmail.com; s=20230601; t=1718067398; x=1718672198; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JsnMWiRsFgyQvUVQ9cK3PkkXIy3mFEoHC4cpzhwBfS0=;
+        b=gS2WFbgvNuFMST0ySHSNykEdjMWiaMnYhEr0nmdeYt77xXxrq9CFUWMHxnFoCLn00H
+         nsMy+9JwH4YOXY45x3s+KFK+CPKMHNFiXxfeuJ8a0+BzhSm0xTqijEn7bZvm7DF/ca43
+         1V17Qkz2XXv2mAzOKIjHHJnPy99IQKQDu9WLcEq63fUG8cp5CScPWezjD9R0x1Ju1JNu
+         dpievKpoHp8ttgIqTw2gzo73/DUaOIuMBJTwOrc2i4UYHCYALMn5xuwHmATOv/k+y+pD
+         MY5htcIfk/PyQIi8Ep2OI3LhiS1m2x6+oWMRwseOsRII2JJ9i1cAS4A9sxmjMpiRtEuU
+         xMoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718067089; x=1718671889;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ngaY7gpQRpIirX5s53yfK0/qc/j88qyKxzdVZ+iIXkA=;
-        b=D2k7dXO8Rdaj4ti+BFDBAZLh/k5Vk4Jc+yBswUElRhQEjnHeo78R7LqWfTFEBNQ3zQ
-         vtfuC62hKXOGjWnmnuZ38+VYKqKR8qasepRPvtseWPB6wt5+cpU3OP/img71y3eu4PLw
-         j4gyIDoayhnsbew0vmUdc46aosmvvGH8rA6J+zY7bQ++3HM1nuqTWdnCLckkZcvypJVa
-         INF0UTkzpoW1gOyb3IcjO+dwjBtv52xCbO4rJZ5QwM8k/wO1TGP1WvQ1EkcZJuRbT2VM
-         DAF87a2WTEYsZ++lW4yUdEYLl3OXRw0YydPqxF1/iBkGdKvvrsvGDJmBsYnSgUpoIQlm
-         Kaow==
-X-Forwarded-Encrypted: i=1; AJvYcCUS5iGEH15RXi9L8PIpRZPDmw7JJ/ToJkDM9OeKGI0lcmM7TkbMSkWvpdOjuvX+xz8/QwE6l73AmD6yWH0fJNV8Z1ZaZUUbWTcoJa2i
-X-Gm-Message-State: AOJu0YzeG+XuqUmPe4106EGmxgME25qQD4H7+6kPTYVYq8Ou2J86N9Ey
-	mtjZ4LZvSaWL6Bt9waz/SB6CegYtij8iWNRw8dgopVGq5foIEo2afyX5uccnL0H/qK39etem+QT
-	VVg==
-X-Google-Smtp-Source: AGHT+IHmfJ/VJwnV/Ts9WgwV+Kr1dfTAHQeRT1T5YAUGH65g5e5V/RyAuMx5Gd4OsNR/LuxIsWYovt4RqT8=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:bb08:b0:2c2:dd50:a0b5 with SMTP id
- 98e67ed59e1d1-2c2dd50a22bmr104092a91.0.1718067088517; Mon, 10 Jun 2024
- 17:51:28 -0700 (PDT)
-Date: Mon, 10 Jun 2024 17:51:26 -0700
-In-Reply-To: <09b11d24e957056c621e3bf2d6c9d78bd4f7461b.1718043121.git.reinette.chatre@intel.com>
+        d=1e100.net; s=20230601; t=1718067398; x=1718672198;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=JsnMWiRsFgyQvUVQ9cK3PkkXIy3mFEoHC4cpzhwBfS0=;
+        b=PMEWGEAJvsq5JXZYIA0fzMhy4qgAtDkiURl/kQ+6xD82Dv0xKZxKsaRfn6sXSCUUyV
+         i0TUk4whqjyXG5CH0QiOL9wp8G4sd2c8lj7upN1H8VuBaocbh89AUGoXANKBLucjutzY
+         sASpL9KgVNaOQNx5z6z+DtOTCA+PI9y67sF8OcExNrTaGUWpM0SsWIagA/5hvuIOlH6U
+         ICskt+ejtLRcv48hEPRZIUxzvEmZbq4x6s0pylJH5f+Eio5E06ero+siYtQPKhyyql0W
+         VazyiT3V7KGwUnlzqk11HvXHZ6HIafXXoXNK+lDYtDWtwKbThD8HC3lUxgkps4LkstjD
+         H+dg==
+X-Forwarded-Encrypted: i=1; AJvYcCWKX4Gs9OHohvWVW8noDT0vwLM+tRLM1z1xKvyCT4pLBokQzHpUH8KEG60wyIAvAts+lLc1kJq7QrphimkCaxcXEQwcawh5xM8CjVxq
+X-Gm-Message-State: AOJu0YyHqYti5sb+UQNr6ZJKlKcTVTBCveahcLWP9/cO+rGMuc9kpEsb
+	OmOjuWHxwKmjqgGFSo52Of6Kss5ZiHb3vyRf3zhyrFLAwhlidmy3EE7wWy9/
+X-Google-Smtp-Source: AGHT+IGZIQqjy50dC/ZcZUGCR1hSV1V7Qo3MXBqgDQ4ubjDi1o9VqVgSC+CY9Zbw3GKbOrOTJAAOCQ==
+X-Received: by 2002:a17:906:b4d:b0:a6f:238:85c8 with SMTP id a640c23a62f3a-a6f02389247mr472356466b.71.1718067397868;
+        Mon, 10 Jun 2024 17:56:37 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f1226c190sm309544166b.93.2024.06.10.17.56.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Jun 2024 17:56:37 -0700 (PDT)
+Date: Tue, 11 Jun 2024 00:56:36 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v1 2/2] mm/highmem: make nr_free_highpages() return
+ "unsigned long"
+Message-ID: <20240611005636.g6525rkqpos43yds@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20240607083711.62833-1-david@redhat.com>
+ <20240607083711.62833-3-david@redhat.com>
+ <ZmZ1x6QQYPFSOd7O@localhost.localdomain>
+ <99073d55-5b18-4ed2-b860-8c09e056f585@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1718043121.git.reinette.chatre@intel.com> <09b11d24e957056c621e3bf2d6c9d78bd4f7461b.1718043121.git.reinette.chatre@intel.com>
-Message-ID: <ZmefjsFArRSnC71I@google.com>
-Subject: Re: [PATCH V8 2/2] KVM: selftests: Add test for configure of x86 APIC
- bus frequency
-From: Sean Christopherson <seanjc@google.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: isaku.yamahata@intel.com, pbonzini@redhat.com, erdemaktas@google.com, 
-	vkuznets@redhat.com, vannapurve@google.com, jmattson@google.com, 
-	mlevitsk@redhat.com, xiaoyao.li@intel.com, chao.gao@intel.com, 
-	rick.p.edgecombe@intel.com, yuan.yao@intel.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <99073d55-5b18-4ed2-b860-8c09e056f585@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-On Mon, Jun 10, 2024, Reinette Chatre wrote:
-> diff --git a/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c b/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
-> new file mode 100644
-> index 000000000000..602cec91d8ee
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
-> @@ -0,0 +1,219 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2024 Intel Corporation
-> + *
-> + * Verify KVM correctly emulates the APIC bus frequency when the VMM configures
-> + * the frequency via KVM_CAP_X86_APIC_BUS_CYCLES_NS.  Start the APIC timer by
-> + * programming TMICT (timer initial count) to the largest value possible (so
-> + * that the timer will not expire during the test).  Then, after an arbitrary
-> + * amount of time has elapsed, verify TMCCT (timer current count) is within 1%
-> + * of the expected value based on the time elapsed, the APIC bus frequency, and
-> + * the programmed TDCR (timer divide configuration register).
-> + */
-> +
-> +#include "apic.h"
-> +#include "test_util.h"
-> +
-> +/*
-> + * Pick 25MHz for APIC bus frequency. Different enough from the default 1GHz.
-> + * User can override via command line.
-> + */
-> +unsigned long apic_hz = 25 * 1000 * 1000;
+On Mon, Jun 10, 2024 at 10:22:49AM +0200, David Hildenbrand wrote:
+>On 10.06.24 05:40, Oscar Salvador wrote:
+>> On Fri, Jun 07, 2024 at 10:37:11AM +0200, David Hildenbrand wrote:
+>> > It looks rather weird that totalhigh_pages() returns an
+>> > "unsigned long" but nr_free_highpages() returns an "unsigned int".
+>> > 
+>> > Let's return an "unsigned long" from nr_free_highpages() to be
+>> > consistent.
+>> > 
+>> > While at it, use a plain "0" instead of a "0UL" in the !CONFIG_HIGHMEM
+>> > totalhigh_pages() implementation, to make these look alike as well.
+>> > 
+>> > Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ...
+>> > -static inline unsigned int nr_free_highpages(void) { return 0; }
+>> > -static inline unsigned long totalhigh_pages(void) { return 0UL; }
+>> > +static inline unsigned long nr_free_highpages(void) { return 0; }
+>> > +static inline unsigned long totalhigh_pages(void) { return 0; }
+>> 
+>> Although I doubt it has any consequences, I would just leave them both with UL,
+>> so the return type is consistent with what we are returning.
+>
+>These suffixes are only required when using constants that would not fit
+>into the native (int) type, or converting from that native (int) type to
+>something else automatically by the compiler would mess things up (for example,
+>undesired sign extension). For 0 that is certainly impossible :)
+>
+>
+>That's also the reason why in include/linux we now have:
+>
+>t14s: ~/git/linux/include/linux $ git grep "return 0UL;"
+>skbuff.h:       return 0UL;
+>uaccess.h:static inline unsigned long user_access_save(void) { return 0UL; }
+>t14s: ~/git/linux/include/linux $ git grep "0UL;"
+>bitmap.h:               *dst = ~0UL;
+>dax.h:          return ~0UL;
+>mtd/map.h:                      r.x[i] = ~0UL;
+>netfilter.h:    return ((ul1[0] ^ ul2[0]) | (ul1[1] ^ ul2[1])) == 0UL;
+>skbuff.h:       return 0UL;
+>uaccess.h:static inline unsigned long user_access_save(void) { return 0UL; }
+>
+>
+>... compared to a long list if "unsigned long" functions that simply "return 0;"
+>
 
-static, and maybe a uint64_t to match the other stuff?
+Seems this is the current status. 
 
-> +/*
-> + * Possible TDCR values with matching divide count. Used to modify APIC
-> + * timer frequency.
-> + */
-> +struct {
-> +	uint32_t tdcr;
-> +	uint32_t divide_count;
-> +} tdcrs[] = {
-> +	{0x0, 2},
-> +	{0x1, 4},
-> +	{0x2, 8},
-> +	{0x3, 16},
-> +	{0x8, 32},
-> +	{0x9, 64},
-> +	{0xa, 128},
-> +	{0xb, 1},
-> +};
-> +
-> +void guest_verify(uint64_t tsc_cycles, uint32_t apic_cycles, uint32_t divide_count)
+Then my question is do we have a guide line for this? Or 0 is the special
+case? Sounds positive value has no sign extension problem. If we need to
+return 1, we suppose to use 1 or 1UL? I found myself confused.
 
-uin64_t for apic_cycles?  And maybe something like guest_check_apic_count(), to
-make it more obvious what is being verified?  Actually, it should be quite easy
-to have the two flavors share the bulk of the code.
+I grepped "return 1" and do find some cases without UL:
 
-> +{
-> +	unsigned long tsc_hz = tsc_khz * 1000;
-> +	uint64_t freq;
-> +
-> +	GUEST_ASSERT(tsc_cycles > 0);
+backing-dev.h: wb_stat_error() return 1 for unsigned long.
+pgtable.h: pte_batch_hint() return 1 for unsigned int.
 
-Is this necessary?  Won't the "freq < ..." check fail?  I love me some paranoia,
-but this seems unnecessary.
+So the guide line is for positive value, it is not necessary to use UL?
 
-> +	freq = apic_cycles * divide_count * tsc_hz / tsc_cycles;
-> +	/* Check if measured frequency is within 1% of configured frequency. */
-> +	GUEST_ASSERT(freq < apic_hz * 101 / 100);
-> +	GUEST_ASSERT(freq > apic_hz * 99 / 100);
-> +}
-> +
-> +void x2apic_guest_code(void)
-> +{
-> +	uint32_t tmict, tmcct;
-> +	uint64_t tsc0, tsc1;
-> +	int i;
-> +
-> +	x2apic_enable();
-> +
-> +	/*
-> +	 * Setup one-shot timer.  The vector does not matter because the
-> +	 * interrupt should not fire.
-> +	 */
-> +	x2apic_write_reg(APIC_LVTT, APIC_LVT_TIMER_ONESHOT | APIC_LVT_MASKED);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(tdcrs); i++) {
-> +		x2apic_write_reg(APIC_TDCR, tdcrs[i].tdcr);
-> +
-> +		/* Set the largest value to not trigger the interrupt. */
+>
+>So I prefer to just drop it.
+>
+>Thanks!
+>
+>-- 
+>Cheers,
+>
+>David / dhildenb
 
-Nit, the goal isn't to avoid triggering the interrupt, e.g. the above masking
-takes care of that.  The goal is to prevent the timer from expiring, because if
-the timer expires it stops counting and will trigger a false failure because the
-TSC doesn't stop counting.
-
-Honestly, I would just delete the comment.  Same with the "busy wait for 100 msec"
-and "Read APIC timer and TSC" comments.  They state the obvious.  Loading the max
-TMICT is mildly interesting, but that's covered by the file-level comment.
-
-> +		tmict = ~0;
-
-This really belongs outside of the loop, e.g.
-
-	const uint32_t tmict = ~0u;
-
-> +		x2apic_write_reg(APIC_TMICT, tmict);
-> +
-> +		/* Busy wait for 100 msec. */
-
-Hmm, should this be configurable?
-
-> +		tsc0 = rdtsc();
-> +		udelay(100000);
-> +		/* Read APIC timer and TSC. */
-> +		tmcct = x2apic_read_reg(APIC_TMCCT);
-> +		tsc1 = rdtsc();
-> +
-> +		/* Stop timer. */
-
-This comment is a bit more interesting, as readers might not know writing '0'
-stops the timer.  But that's even more interesting is the ordering, e.g. it's
-not at all unreasonable to think that the timer should be stopped _before_ reading
-the current count.  E.g. something like:
-
-		/*
-		 * Stop the timer _after_ reading the current, final count, as
-		 * writing the initial counter also modifies the current count.
-		 */
-
-> +		x2apic_write_reg(APIC_TMICT, 0);
-> +
-> +		guest_verify(tsc1 - tsc0, tmict - tmcct, tdcrs[i].divide_count);
-> +	}
-> +
-> +	GUEST_DONE();
-> +}
-> +
-> +void xapic_guest_code(void)
-> +{
-> +	uint32_t tmict, tmcct;
-> +	uint64_t tsc0, tsc1;
-> +	int i;
-> +
-> +	xapic_enable();
-> +
-> +	/*
-> +	 * Setup one-shot timer.  The vector does not matter because the
-> +	 * interrupt should not fire.
-> +	 */
-> +	xapic_write_reg(APIC_LVTT, APIC_LVT_TIMER_ONESHOT | APIC_LVT_MASKED);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(tdcrs); i++) {
-> +		xapic_write_reg(APIC_TDCR, tdcrs[i].tdcr);
-> +
-> +		/* Set the largest value to not trigger the interrupt. */
-> +		tmict = ~0;
-> +		xapic_write_reg(APIC_TMICT, tmict);
-> +
-> +		/* Busy wait for 100 msec. */
-> +		tsc0 = rdtsc();
-> +		udelay(100000);
-> +		/* Read APIC timer and TSC. */
-> +		tmcct = xapic_read_reg(APIC_TMCCT);
-> +		tsc1 = rdtsc();
-> +
-> +		/* Stop timer. */
-> +		xapic_write_reg(APIC_TMICT, 0);
-> +
-> +		guest_verify(tsc1 - tsc0, tmict - tmcct, tdcrs[i].divide_count);
-
-That's some nice copy+paste :-)
-
-This test isn't writing ICR, so the whole 32-bit vs. 64-bit weirdness with xAPIC
-vs X2APIC is irrevelant.  Two tiny helpers, a global flag, and you can avoid a
-pile of copy+paste, and the need to find a better name than guest_verify().
-
-static bool is_x2apic;
-
-static uint32_t apic_read_reg(unsigned int reg)
-{
-	return is_x2apic ? x2apic_read_reg(reg) : xapic_read_reg(reg);
-}
-
-static void apic_read_write(unsigned int reg, uint32_t val)
-{
-	if (is_x2apic)
-		x2apic_write_reg(reg, val);
-	else
-		xapic_write_reg(reg, val);
-	return is_x2apic ? x2apic_read_reg(reg) : xapic_read_reg(reg);
-}
-
-> +	}
-> +
-> +	GUEST_DONE();
-> +}
-> +
-> +void test_apic_bus_clock(struct kvm_vcpu *vcpu)
-> +{
-> +	bool done = false;
-> +	struct ucall uc;
-> +
-> +	while (!done) {
-> +		vcpu_run(vcpu);
-> +		TEST_ASSERT_KVM_EXIT_REASON(vcpu, KVM_EXIT_IO);
-> +
-> +		switch (get_ucall(vcpu, &uc)) {
-> +		case UCALL_DONE:
-> +			done = true;
-> +			break;
-> +		case UCALL_ABORT:
-> +			REPORT_GUEST_ASSERT(uc);
-> +			break;
-> +		default:
-> +			TEST_FAIL("Unknown ucall %lu", uc.cmd);
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +void run_apic_bus_clock_test(bool xapic)
-> +{
-> +	struct kvm_vcpu *vcpu;
-> +	struct kvm_vm *vm;
-> +	int ret;
-> +
-> +	vm = vm_create(1);
-> +
-> +	sync_global_to_guest(vm, apic_hz);
-> +
-> +	vm_enable_cap(vm, KVM_CAP_X86_APIC_BUS_CYCLES_NS,
-> +		      NSEC_PER_SEC / apic_hz);
-> +
-> +	vcpu = vm_vcpu_add(vm, 0, xapic ? xapic_guest_code : x2apic_guest_code);
-> +
-> +	ret = __vm_enable_cap(vm, KVM_CAP_X86_APIC_BUS_CYCLES_NS,
-> +			      NSEC_PER_SEC / apic_hz);
-> +	TEST_ASSERT(ret < 0 && errno == EINVAL,
-> +		    "Setting of APIC bus frequency after vCPU is created should fail.");
-> +
-> +	if (xapic)
-> +		virt_pg_map(vm, APIC_DEFAULT_GPA, APIC_DEFAULT_GPA);
-> +
-> +	test_apic_bus_clock(vcpu);
-> +	kvm_vm_free(vm);
-> +}
-> +
-> +void run_xapic_bus_clock_test(void)
-> +{
-> +	run_apic_bus_clock_test(true);
-> +}
-> +
-> +void run_x2apic_bus_clock_test(void)
-> +{
-> +	run_apic_bus_clock_test(false);
-> +}
-> +
-> +void help(char *name)
-> +{
-> +	puts("");
-> +	printf("usage: %s [-h] [-a APIC bus freq]\n", name);
-> +	puts("");
-> +	printf("-a: The APIC bus frequency (in Hz) to be configured for the guest.\n");
-> +	puts("");
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	int opt;
-> +
-> +	TEST_REQUIRE(kvm_has_cap(KVM_CAP_X86_APIC_BUS_CYCLES_NS));
-> +	TEST_REQUIRE(kvm_has_cap(KVM_CAP_GET_TSC_KHZ));
-> +
-> +	while ((opt = getopt(argc, argv, "a:h")) != -1) {
-> +		switch (opt) {
-> +		case 'a':
-
-Maybe -f for frequency instead of -a for APIC?  And if we make the delay
-configurable, -d (delay)?
-
-> +			apic_hz = atol(optarg);
-> +			break;
-> +		case 'h':
-> +			help(argv[0]);
-> +			exit(0);
-> +		default:
-> +			help(argv[0]);
-> +			exit(1);
-> +		}
-> +	}
-> +
-> +	run_xapic_bus_clock_test();
-> +	run_x2apic_bus_clock_test();
-> +}
-> -- 
-> 2.34.1
-> 
+-- 
+Wei Yang
+Help you, Help me
