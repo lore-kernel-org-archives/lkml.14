@@ -1,178 +1,210 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31175661
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 02:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC94A94B
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 02:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718071247; cv=none; b=BEev54P/epFt1aqzLZK36I6uvByXFjPLnJeN2QfyKLSgxmnxaE1dnqWNmewFnb+mpNqZ7Fo2JguhotgS5/fkTEmwRmEXXCglAxRvFP6paKT3d7Fn6SrDW6LX6wkqVQjER41mp52nJ/TNaofOlKPB10p04kKgrnk13S0fcQ10ovs=
+	t=1718071486; cv=none; b=ZhaNW9VOIawJxewXZgAUC2ijxewXzeNDh+oBFhBgkDQUwiWf9Q8fW33YrqCaOw/p7oDYfnzG+2t6kZmpWHnJu/JyOdKYKt/pR+voQo4OB7oaAepww7F8uWfNitTO6oY0VPeGKSY4CHvIwcqI0l0MzHtFfKyLbikTIdoHFQXIsHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718071247; c=relaxed/simple;
-	bh=+DSf+TQt/ykv0XritXEDrZm1XQB4nWMsT88cdtUciK4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cUFLWzH3ebfsyUFdyeyTiamISY/kA5U1swRqG13exKbZocU4zuwciXLxMclbzFYQ9PssyPkG+KjP/zMBngp8y8DCklh3fgyM8TxuLKjWV1nMqVRZaNhYwdQi8BeWCOIQ2QOfRkZFNIf3vB9mjkJZnAh8bchXSN9zKwwgqujdkUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=lHUN7OiI; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1718071486; c=relaxed/simple;
+	bh=KHMWCLwiS57Nz16itqOWI3JbubOZ0uAVAJGTbNUd2Iw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fBd6bONdAX0alAM4fkgF2i8MsFCkQj0crZC8au3ft0pBqqXUdLaPXAfpE0Ya7UMRll6If64dDNofdsyYOjuSG/Pm6JONvPQXj/hQ8NFy6W7T1Lp01YtK8TzoxfQ3y69SzUjPF1dA4utoHrP5GsRpu17/kcnTf2iLqXUR8E9lKbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=t/b2HW8t; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="lHUN7OiI"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2c19bba897bso4161812a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 19:00:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718071245; x=1718676045; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+DSf+TQt/ykv0XritXEDrZm1XQB4nWMsT88cdtUciK4=;
-        b=lHUN7OiIIYLra2o+vI//EAgcxdKhKdA0sNjputGNmY0MWDVyftbRczZYO6Qgu9YA7r
-         m+cwItEMs5vzR8QK4BpEgRtEGlnkPz4F2SsOsVsCi51OS7wD4C/kPjdb+ID+2FVgI3gv
-         Y41LZaPxo8Hq4Asbwypc0IhX5X/IZiViy21IOtVGt4jeAtxQVgBWG+2mktUsVfUR5v8S
-         oO1Ab9Hmqy3fSithVorbhaMw/whBzGqs8MM9IZBUfsgDZYEokCEP4jYDsWZy4pwhSPoe
-         OTmKOAWhGlPAf8/IGxNAx1Xz4d6BG/PtQ3GNr5zP8CcBNTTc6nm5TeKFJXh9ystGvXmA
-         7tQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718071245; x=1718676045;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+DSf+TQt/ykv0XritXEDrZm1XQB4nWMsT88cdtUciK4=;
-        b=vqSUJM3Q3AIvzH2PXlgFnaLeKgFNNamzJEaYb3W+ve96aMV62uW3S4J0DVV9Y0cD0V
-         Ivi6YDXze6GP85daAtoGtT9aCWPol91FdlAoY5RFOrmGzy+WjmlvtpMepflzGXGVByhi
-         GOCY1befGcHZmi+iln1fyqlJi767g8se7zbssaZiFfv7iB7vIsa7Tid4uDbgH0B6EZf/
-         BGZ8XvdJYdtiy50Fi03oCxvnf8rvIaHCsBDnbZgB8Bb6Wze10q83V9/54zFFF3Cull4t
-         ymjsrT3SIrFdvxuhbr1mTnWW7jKGFrWjjG30IEMZ3L7e7egwh0z6HbLWUH0PXZot/I0f
-         Lyzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUG93kEYXx/yoZX9XnTPHfjzakPvXPi70ofHYEGG7APHPN0fg1i/4YZQQOQfTq5HeBXhYja39K0mr3LI2ULOJ7zSwNJhXBFWy99nf1R
-X-Gm-Message-State: AOJu0Yxocoz4QcQUbp7A0/j4U3L5WAQDbdMrp97EYmpLWYcLDG89+Sbx
-	c1jS8D9BXmz7ofPSj7hlubFClKEGki+56eaP90FqPQN4//M1eaqUe2vcaHPe8Jykqv6NiU3HEC1
-	7XqFm5dwv09te6sYMudkKid7q0QrEmszSldnmxg==
-X-Google-Smtp-Source: AGHT+IFaEf66/Vg3vZYbnuRls+xXc/YHx5d34274xkIrynnlPOHBe1Yws9C0iL9BtwTmDzbsneqNZTkOP1VlcYJjqz4=
-X-Received: by 2002:a17:90a:12c2:b0:2c2:5341:7ed6 with SMTP id
- 98e67ed59e1d1-2c2bcc5a26emr10217116a91.38.1718071245048; Mon, 10 Jun 2024
- 19:00:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="t/b2HW8t"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718071474; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=7j4g4SdK/dgS0J/c8Twl0jOBteQXn2uqyypbDOrvpVM=;
+	b=t/b2HW8t/Wflliv86LLSBqZpwduSb1VCrfnnUln9w/tmvS/8L7nNGOcrxa+S2U7nLfeGcMaXnX/hKST3LiskawF83M16TVkLQ5tQ5n39WYM6XYyTRIp6oWqwdtVSi13Tuc33P+whfzZy8+heTLAZfE1giXdpaRVN7/FzF3Y+3ZM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032014031;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W8EY.xP_1718071471;
+Received: from 30.97.56.68(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8EY.xP_1718071471)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Jun 2024 10:04:32 +0800
+Message-ID: <6c7a8602-5b88-424c-a8c4-8a9502865d94@linux.alibaba.com>
+Date: Tue, 11 Jun 2024 10:04:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1716578450.git.tjeznach@rivosinc.com> <e18ec8ac169ae7f76e9044c26d0768e6469bad19.1716578450.git.tjeznach@rivosinc.com>
- <CANXhq0p4gERQeROSCSKqxnRZq9-fGfmROGV8JZyqFaenNpnsLA@mail.gmail.com>
- <20240610174934.GM791043@ziepe.ca> <CAH2o1u4c6ttUWTb1zrc8DScDMuDJJYR-tTHCPYW_3FV4uuQDtA@mail.gmail.com>
- <20240610222051.GO791043@ziepe.ca>
-In-Reply-To: <20240610222051.GO791043@ziepe.ca>
-From: Tomasz Jeznach <tjeznach@rivosinc.com>
-Date: Mon, 10 Jun 2024 19:00:34 -0700
-Message-ID: <CAH2o1u7X2zu42ZYA9wBe4bmCXN9v+d6j9vo5DMifJA3BUew91w@mail.gmail.com>
-Subject: Re: [PATCH v6 5/7] iommu/riscv: Device directory management.
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Zong Li <zong.li@sifive.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Anup Patel <apatel@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Nick Kossifidis <mick@ics.forth.gr>, Sebastien Boeuf <seb@rivosinc.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux@rivosinc.com, 
-	Lu Baolu <baolu.lu@linux.intel.com>, Jim Shu <jim.shu@sifive.com>, 
-	Vincent Chen <vincent.chen@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/6] mm: shmem: add multi-size THP sysfs interface for
+ anonymous shmem
+To: Daniel Gomez <da.gomez@samsung.com>
+Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "hughd@google.com" <hughd@google.com>,
+ "willy@infradead.org" <willy@infradead.org>,
+ "david@redhat.com" <david@redhat.com>,
+ "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
+ "ying.huang@intel.com" <ying.huang@intel.com>,
+ "21cnbao@gmail.com" <21cnbao@gmail.com>,
+ "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+ "shy828301@gmail.com" <shy828301@gmail.com>, "ziy@nvidia.com"
+ <ziy@nvidia.com>, "ioworker0@gmail.com" <ioworker0@gmail.com>,
+ Pankaj Raghav <p.raghav@samsung.com>, "linux-mm@kvack.org"
+ <linux-mm@kvack.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1717495894.git.baolin.wang@linux.alibaba.com>
+ <119966ae28bf2e2d362ae3d369ac1a1cd27ba866.1717495894.git.baolin.wang@linux.alibaba.com>
+ <CGME20240610122305eucas1p21bfd8a8c999b3fc8bfce04e5feea7bf7@eucas1p2.samsung.com>
+ <denilwdvfb772l432ezexwmy46rzv7disxhryf2ktqmtfk5khe@ghq3sohl5z3w>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <denilwdvfb772l432ezexwmy46rzv7disxhryf2ktqmtfk5khe@ghq3sohl5z3w>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 10, 2024 at 3:20=E2=80=AFPM Jason Gunthorpe <jgg@ziepe.ca> wrot=
-e:
->
-> On Mon, Jun 10, 2024 at 11:48:23AM -0700, Tomasz Jeznach wrote:
-> > > Right, this is why I asked about negative caching.
-> > >
-> > > The VMMs are a prime example of negative caching, in something like
-> > > the SMMU implementation the VMM will cache the V=3D0 STE until they s=
-ee
-> > > an invalidation.
-> > >
-> > > Driving the VMM shadowing/caching entirely off of the standard
-> > > invalidation mechanism is so much better than any other option.
-> > >
-> > > IMHO you should have the RISCV spec revised to allow negative caching
-> > > in any invalidated data structure to permit the typical VMM design
-> > > driven off of shadowing triggered by invalidation commands.
-> > >
-> > > Once the spec permits negative caching then the software would have t=
-o
-> > > invalidate after going V=3D0 -> V=3D1.
-> > >
-> > > Jason
-> >
-> > Allowing negative cacheing by the spec (e.g. for VMM use cases) and
-> > documenting required invalidation sequences would definitely help
-> > here.
->
-> Yes, you probably should really do that.
->
-> > I'm hesitating adding IODIR.INVAL that is not required by the
-> > spec [1],
->
-> If you expect to rapidly revise the spec then you should add it right
-> now so that all SW implementations that exist are
-> conforming. Otherwise you'll have compatability problems when you come
-> to implement nesting.
->
-> Obviously the VMM can't rely on a negative caching technique unless
-> the spec says it can.
->
-> > but this is something that can be controlled by a
-> > capabilities/feature bit once added to the specification or based on
-> > VID:DID of the emulated Risc-V IOMMU.
->
-> I'm not sure it really can. Once you start shipping SW people will run
-> it in a VM and the VMM will have to forever work without negative
-> caching.
->
-> My strong advice is to not expect the VMM trap random pages in guest
-> memory, that is a huge mess to implement and will delay your VMM side.
->
-> > Another option to consider for VMM is to utilize the WARL property of
-> > DDTP, and provide fixed location of the single level DDTP, pointing to
-> > MMIO region, where DDTE updates will result in vmm exit / fault
-> > handler. This will likely not be as efficient as IODIR.INVAL issued
-> > for any DDTE updates.
->
-> I don't know what all those things mean, but if you mean to have the
-> VMM supply faulting MMIO space that the VM is forced to put the DDTE
-> table into, then that would be better. It is still quite abnormal from
-> the VMM side..
->
-> My strong advice is to fix this. It is trivial to add the negative
-> caching language to the spec and will cause insignificant extra work
-> in this driver.
->
-> The gains on at least the ease of VMM implementation and architectural
-> similarity to other arches are well worth the effort. Otherwise I fear
-> it will be a struggle to get nesting support completed :(
->
-> Jason
->
 
-Thanks for the comments, it definitely makes sense.
 
-We will revise the wording in the RISC-V IOMMU spec to note that
-certain implementations may require invalidating commands to be issued
-when making DDT entries valid, and device tree / ACPI may be used to
-report such requirement.
+On 2024/6/10 20:23, Daniel Gomez wrote:
+> Hi Baolin,
+> On Tue, Jun 04, 2024 at 06:17:47PM +0800, Baolin Wang wrote:
+>> To support the use of mTHP with anonymous shmem, add a new sysfs interface
+>> 'shmem_enabled' in the '/sys/kernel/mm/transparent_hugepage/hugepages-kB/'
+>> directory for each mTHP to control whether shmem is enabled for that mTHP,
+>> with a value similar to the top level 'shmem_enabled', which can be set to:
+>> "always", "inherit (to inherit the top level setting)", "within_size", "advise",
+>> "never". An 'inherit' option is added to ensure compatibility with these
+>> global settings, and the options 'force' and 'deny' are dropped, which are
+>> rather testing artifacts from the old ages.
+>>
+>> By default, PMD-sized hugepages have enabled="inherit" and all other hugepage
+>> sizes have enabled="never" for '/sys/kernel/mm/transparent_hugepage/hugepages-xxkB/shmem_enabled'.
+>>
+>> In addition, if top level value is 'force', then only PMD-sized hugepages
+>> have enabled="inherit", otherwise configuration will be failed and vice versa.
+>> That means now we will avoid using non-PMD sized THP to override the global
+>> huge allocation.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> ---
+>>   Documentation/admin-guide/mm/transhuge.rst | 23 ++++++
+>>   include/linux/huge_mm.h                    | 10 +++
+>>   mm/huge_memory.c                           | 11 +--
+>>   mm/shmem.c                                 | 96 ++++++++++++++++++++++
+>>   4 files changed, 132 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+>> index d414d3f5592a..b76d15e408b3 100644
+>> --- a/Documentation/admin-guide/mm/transhuge.rst
+>> +++ b/Documentation/admin-guide/mm/transhuge.rst
+>> @@ -332,6 +332,29 @@ deny
+>>   force
+>>       Force the huge option on for all - very useful for testing;
+>>   
+>> +Shmem can also use "multi-size THP" (mTHP) by adding a new sysfs knob to control
+>> +mTHP allocation: '/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/shmem_enabled',
+>> +and its value for each mTHP is essentially consistent with the global setting.
+>> +An 'inherit' option is added to ensure compatibility with these global settings.
+>> +Conversely, the options 'force' and 'deny' are dropped, which are rather testing
+>> +artifacts from the old ages.
+>> +always
+>> +    Attempt to allocate <size> huge pages every time we need a new page;
+>> +
+>> +inherit
+>> +    Inherit the top-level "shmem_enabled" value. By default, PMD-sized hugepages
+>> +    have enabled="inherit" and all other hugepage sizes have enabled="never";
+>> +
+>> +never
+>> +    Do not allocate <size> huge pages;
+>> +
+>> +within_size
+>> +    Only allocate <size> huge page if it will be fully within i_size.
+>> +    Also respect fadvise()/madvise() hints;
+>> +
+>> +advise
+>> +    Only allocate <size> huge pages if requested with fadvise()/madvise();
+>> +
+>>   Need of application restart
+>>   ===========================
+>>   
+>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>> index 020e2344eb86..fac21548c5de 100644
+>> --- a/include/linux/huge_mm.h
+>> +++ b/include/linux/huge_mm.h
+>> @@ -6,6 +6,7 @@
+>>   #include <linux/mm_types.h>
+>>   
+>>   #include <linux/fs.h> /* only for vma_is_dax() */
+>> +#include <linux/kobject.h>
+>>   
+>>   vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf);
+>>   int copy_huge_pmd(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+>> @@ -63,6 +64,7 @@ ssize_t single_hugepage_flag_show(struct kobject *kobj,
+>>   				  struct kobj_attribute *attr, char *buf,
+>>   				  enum transparent_hugepage_flag flag);
+>>   extern struct kobj_attribute shmem_enabled_attr;
+>> +extern struct kobj_attribute thpsize_shmem_enabled_attr;
+>>   
+>>   /*
+>>    * Mask of all large folio orders supported for anonymous THP; all orders up to
+>> @@ -265,6 +267,14 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+>>   	return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
+>>   }
+>>   
+>> +struct thpsize {
+>> +	struct kobject kobj;
+>> +	struct list_head node;
+>> +	int order;
+>> +};
+>> +
+>> +#define to_thpsize(kobj) container_of(kobj, struct thpsize, kobj)
+>> +
+>>   enum mthp_stat_item {
+>>   	MTHP_STAT_ANON_FAULT_ALLOC,
+>>   	MTHP_STAT_ANON_FAULT_FALLBACK,
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 8e49f402d7c7..1360a1903b66 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -449,14 +449,6 @@ static void thpsize_release(struct kobject *kobj);
+>>   static DEFINE_SPINLOCK(huge_anon_orders_lock);
+>>   static LIST_HEAD(thpsize_list);
+>>   
+>> -struct thpsize {
+>> -	struct kobject kobj;
+>> -	struct list_head node;
+>> -	int order;
+>> -};
+>> -
+>> -#define to_thpsize(kobj) container_of(kobj, struct thpsize, kobj)
+>> -
+>>   static ssize_t thpsize_enabled_show(struct kobject *kobj,
+>>   				    struct kobj_attribute *attr, char *buf)
+>>   {
+>> @@ -517,6 +509,9 @@ static struct kobj_attribute thpsize_enabled_attr =
+>>   
+>>   static struct attribute *thpsize_attrs[] = {
+>>   	&thpsize_enabled_attr.attr,
+>> +#ifdef CONFIG_SHMEM
+>> +	&thpsize_shmem_enabled_attr.attr,
+>> +#endif
+>>   	NULL,
+>>   };
+>>   
+>> diff --git a/mm/shmem.c b/mm/shmem.c
+>> index ae358efc397a..643ff7516b4d 100644
+>> --- a/mm/shmem.c
+>> +++ b/mm/shmem.c
+>> @@ -131,6 +131,14 @@ struct shmem_options {
+>>   #define SHMEM_SEEN_QUOTA 32
+>>   };
+>>   
+>> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>> +static unsigned long huge_anon_shmem_orders_always __read_mostly;
+>> +static unsigned long huge_anon_shmem_orders_madvise __read_mostly;
+>> +static unsigned long huge_anon_shmem_orders_inherit __read_mostly;
+>> +static unsigned long huge_anon_shmem_orders_within_size __read_mostly;
+>> +static DEFINE_SPINLOCK(huge_anon_shmem_orders_lock);
+>> +#endif
+> 
+> Since we are also applying the new sysfs knob controls to tmpfs and anon mm,
+> should we rename this to get rid of the anon prefix?
 
-For now, I'll change the implementation to assume negative caching for
-DDTE and will follow up with device tree / driver updates to make the
-invalidation optional when revised specifications will be available.
-
-Best,
-- Tomasz
-
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux+unsubscribe@rivosinc.com.
-> To view this discussion on the web visit https://groups.google.com/a/rivo=
-sinc.com/d/msgid/linux/20240610222051.GO791043%40ziepe.ca.
-> For more options, visit https://groups.google.com/a/rivosinc.com/d/optout=
-.
+Sure. I want to do this in the patch set of mTHP support tmpfs 
+originally, but yes, I can just drop the 'anon' prefix as a preparation.
