@@ -1,50 +1,59 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30B017BB24;
-	Tue, 11 Jun 2024 13:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF11178CCF;
+	Tue, 11 Jun 2024 13:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718111325; cv=none; b=YeyBp3ZA/4n8Psx4sWo9pU4467nOsSR/wydmyE2Lj/Ap1QJK3UZ9O6ZDdFyUF2mUTVbDSLrG8wjcky8oGtcLoK6SKm+mYTfFF9JeSB3XDQbdqntguKGOsOAIFUvnFn9waxy/nW2BvY1nU8n8Zr7aAHHyFXpVdC0uRy42gr6IIio=
+	t=1718111412; cv=none; b=nxVj0Mxmo80d7NqIU4hfpE9Fze129L9egrvpBJUekp+JuOIhtOvMhOIvSzPMZP0FEhyNHOweSljX2BDwvfT7OgV6WYWfKsKgGRP3A14SzADSZa+A/LbOpSkr3JPh3FUkM8IbLzpvdf8T/ZGCW6G61OTw7MSm6i3TRD8t0ANJsww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718111325; c=relaxed/simple;
-	bh=RBXIIMQFGgjhWjPSF2j6pQP/VP+rBTgY2xxLTrIS/iI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ag61a5dhM+iQkDQXZbv655bC6yTZCHki9LSZNN+cQ2mZZv5HdqzZSmornQrNVcTtcRFu/6sbW4uoqocGlMSIEsNcksAuCw8dvfPabFoWgOZWR7zCyXYa+wrGzOtTsMvmvIRwme2B13D2LVMlWJE87dGvhkHGr6DFND+ewCL/2Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=DEuOBgTt; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1718111412; c=relaxed/simple;
+	bh=OowM0yWGrJhu0NXdFvYdfVRs47ccKT5LTXLr4eZ/AB0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MBat7MUsNSUopHroqyvYJKxRlUOWincdchV1KjxeQIwefrF51pXUx/GGJTm9x2NnwbOeUxx6OY00Z5F0+Xv9S9wCGF+duL86IBIiWMXg2yNtnotTwdxHwYPNTesPatBjSIDLbhQuTA1EtMKz8c/6PN4lyuItb39aaObLA7B/jX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NV+qCNHE; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="DEuOBgTt"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45BBZ44P016764;
-	Tue, 11 Jun 2024 15:08:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	KPKiv/4s/k/v6qSTDKufLgo3SaRNC45wOYFv8SveObU=; b=DEuOBgTtMVWZXCab
-	ZhBw2CY7dZanzEEyh8ErLRmvycHiFJlhXmIRakLWkOlJ7OeX5T71saq1tStbsZlR
-	2bWjGQ8KTZVuIWpEC3Rpzevef4KCg7aNKFmsta3Qd/9N4d0FjFM8nM1ahcNvLQT8
-	P9tLmbVLO1Hrexx5ZPexOWmZGPTSFxJKIDk5QxIRXlcJUb71FNvmk5JV53hnsef8
-	wnlIZ+qB6YHG9BV0LyBlZSN6c0vAyuNZ6+ALJ0bEPTIPC74VtE+rKIEp9KldcXoI
-	HKuwxril4C/uIeIhFtpFwlhFiMbYJL0fLMDFloLzrKkavO9kvI7AlT5c/UnXFBh/
-	Y5A2Rw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ypbp4b332-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 15:08:34 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E4EBD4002D;
-	Tue, 11 Jun 2024 15:08:25 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9DEEC216ECA;
-	Tue, 11 Jun 2024 15:07:42 +0200 (CEST)
-Received: from [10.130.72.241] (10.130.72.241) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 11 Jun
- 2024 15:07:42 +0200
-Message-ID: <11cb5143-3c0e-4e7d-bcdb-6e8371bb1c0c@foss.st.com>
-Date: Tue, 11 Jun 2024 15:07:41 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NV+qCNHE"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4214b2c5d40so1729075e9.1;
+        Tue, 11 Jun 2024 06:10:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718111409; x=1718716209; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nP2FCmhHcIdR/M9PordkCciczQFKsAS9qu2g/hHc4U0=;
+        b=NV+qCNHEUuAzMdD2OMV1imUQi2C1shiVGuc2lVtmF6bZJxsbYIytV0V/a8LTAo66tk
+         QfBbIr7KabBAXptNWALu3zpmFq7f3wYu0lpmhZqVvpkJAQ5+uiSteecYBo+Vx/umCVhc
+         ZySq/CAZSEz5jVga6Sieys/q3NjLrGtpau/FSZEVVPg5kmaLQrP4WsKPcW+8unGmamPI
+         nZtaEWhG8YktZlXNIzf3HFjktAciQM8sqX0pgD0AwG2YGlFlekayVu0ZJKonDWb2AXYK
+         oxS5yY16fRFNT8ZrbDb4b0pRe/EwxZFCQ35yAIcC8ywtHGAuAfX5SF1B1SGfIs3tuCdR
+         pBFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718111409; x=1718716209;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nP2FCmhHcIdR/M9PordkCciczQFKsAS9qu2g/hHc4U0=;
+        b=jsiovjiq5qEKGBbzUN97YuXcuxg1MonBAOjP2B2bFucQJNrHipEME+EzTl/3yrNMLr
+         KMEOJsrElUKSGLifWGyeCqJJGJZiS9kVEXOzlXqAOt7p7B6lJq1C2AxwhOZgBK6MBst1
+         j0Gt3JHNBVGZv+xM9Mow5aaLbIJN3vllUi1TlK28eVS2uylo4BqGWK0PEB3veOrXLR2N
+         WM3c+5h90/1mBBdyOGTxzQ1Ufwp+1D2QHnpnTz1ca84lh2hVN26/lyLqWM8NqbVuYQQ6
+         g0clyOI7CwoQv6WsQlSvuZgDDLS4mwHGBpzxYpgzxVYpqQFPktAw4WLXdf7qD0KkXSox
+         OE2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXuhsy5onbQbht4cN9iPOoRf2cZZKGQpfProN2r0oOI+hXeaFX3OViKc5EbISQq1pUzdAj+j7sENRSdEC2gYH8qCKiqQQLMG8un5IGjdNXUc2WVl15Bzjf9Cpdmp8a1w8oK9M+QaVBs0os1Rrfg
+X-Gm-Message-State: AOJu0YxV97DZe+AGZRCNePmkfAfwD06l+HujEdhaFJZdOOZzhwGrRCWN
+	I7y9aMI341Gp1F7NuDEsXKKNm76Ic1masBJZ+MEznV9BWypDqGl4FqcZwQ==
+X-Google-Smtp-Source: AGHT+IFz7C5d9d2H9NIq+F7CzqjYo5tbxwiko3N+2to1x/djg53BXuHXLQfdN9V37tjl/D06kzUHDw==
+X-Received: by 2002:a05:600c:1d17:b0:421:de31:84 with SMTP id 5b1f17b1804b1-421de312004mr36040145e9.2.1718111408537;
+        Tue, 11 Jun 2024 06:10:08 -0700 (PDT)
+Received: from [172.16.102.219] ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4225443988dsm24058795e9.47.2024.06.11.06.10.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jun 2024 06:10:08 -0700 (PDT)
+Message-ID: <37fcb821-e49f-4f9e-a1d2-1d18d40ea61c@gmail.com>
+Date: Tue, 11 Jun 2024 14:10:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,148 +61,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] media: vgxy61: Add legacy compatible string
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Sakari Ailus
-	<sakari.ailus@linux.intel.com>
-CC: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Sylvain Petinot <sylvain.petinot@foss.st.com>,
-        Laurent Pinchart
-	<laurent.pinchart@ideasonboard.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240610150815.228790-1-benjamin.mugnier@foss.st.com>
- <20240610150815.228790-3-benjamin.mugnier@foss.st.com>
- <b4de42ba-d884-44b1-9f0e-12f5818c6781@kernel.org>
- <ZmgIiaqJy1tWL4Yz@kekkonen.localdomain>
- <b7514285-7a05-4874-a0fd-59ef16d5bce1@kernel.org>
- <458f8b1c-d750-424c-99dd-d31fde036314@foss.st.com>
- <4fd73e81-4573-4e1c-9623-c2f7f153d43a@kernel.org>
+Subject: Re: [PATCH 5/5] kunit: Merge assertion test into kunit-test.c
+To: David Gow <davidgow@google.com>
+Cc: brendan.higgins@linux.dev, rmoar@google.com,
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org
+References: <20240604123204.10412-1-ivan.orlov0322@gmail.com>
+ <20240604123204.10412-6-ivan.orlov0322@gmail.com>
+ <CABVgOSkc+t0J2tbgRHnsao9mhhDDKcjp+62R+F_fUQv7aBvTbA@mail.gmail.com>
 Content-Language: en-US
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-In-Reply-To: <4fd73e81-4573-4e1c-9623-c2f7f153d43a@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From: Ivan Orlov <ivan.orlov0322@gmail.com>
+In-Reply-To: <CABVgOSkc+t0J2tbgRHnsao9mhhDDKcjp+62R+F_fUQv7aBvTbA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-11_07,2024-06-11_01,2024-05-17_01
 
-Hi Krzysztof,
-
-On 6/11/24 14:17, Krzysztof Kozlowski wrote:
-> On 11/06/2024 13:57, Benjamin Mugnier wrote:
->> Hi Sakari and Krzysztof,
+On 6/8/24 10:20, David Gow wrote:
+> On Tue, 4 Jun 2024 at 20:32, Ivan Orlov <ivan.orlov0322@gmail.com> wrote:
 >>
->> On 6/11/24 10:38, Krzysztof Kozlowski wrote:
->>> On 11/06/2024 10:19, Sakari Ailus wrote:
->>>> Hi Krzysztof,
->>>>
->>>> On Tue, Jun 11, 2024 at 08:47:25AM +0200, Krzysztof Kozlowski wrote:
->>>>> On 10/06/2024 17:08, Benjamin Mugnier wrote:
->>>>>> As the driver has been renamed from 'st-vgxy61' to 'vgxy61', its
->>>>>> compatible string has been updated to reflect this change. Therefore old
->>>>>> device trees will not work anymore.
->>>>>> Add the old driver name as another compatible name to handle the
->>>>>> retro compatibility.
->>>>>>
->>>>>> Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
->>>>>> ---
->>>>>>  drivers/media/i2c/vgxy61.c | 5 +++++
->>>>>>  1 file changed, 5 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/media/i2c/vgxy61.c b/drivers/media/i2c/vgxy61.c
->>>>>> index 30378e962016..ca3b43608dad 100644
->>>>>> --- a/drivers/media/i2c/vgxy61.c
->>>>>> +++ b/drivers/media/i2c/vgxy61.c
->>>>>> @@ -1867,6 +1867,11 @@ static void vgxy61_remove(struct i2c_client *client)
->>>>>>  }
->>>>>>  
->>>>>>  static const struct of_device_id vgxy61_dt_ids[] = {
->>>>>> +	{ .compatible = "st,vgxy61" },
->>>>>> +	/*
->>>>>> +	 * Previously the driver was named 'st-vgxy61' instead of simply
->>>>>> +	 * 'vgxy61', keep it for retrocompatibility purposes.
->>>>>
->>>>> NAK.
->>>>
->>>> Is that because the comment says "driver" rather than "device"?
->>>>
+>> Since assert_test covers the part of the KUnit core (the assertion
+>> formatting functions), I believe it would be better to have it merged
+>> into kunit-test (as it is done for other tests for the KUnit core).
 >>
->> You're correct, I'll replace all occurrences for the series.
->>
->>>> Please try to express clearer what you'd expect from the patch author.
->>>
->>> There is almost never a need to rename compatible or add new compatible
->>> matching existing one. There are exceptions, like development or work in
->>> progress with no users at all (and really no users!).
->>>
->>> The commit did not provide any rationale for binding change.
->>>
->>> Additionally, it does not make any sense. There is no point in doing it
->>> at all. No benefit.
->>>
->>
->> Thanks, here is a draft of a new commit message for v2 highlighting the
->> rationale :
->>
->> The previous binding 'st,st-vgxy61' did not reflect the actual device
->> name : vgxy61 (and not st-vgxy61 as ST is the vendor prefix), and was
->> changed to 'st,vgxy61'.
+>> Signed-off-by: Ivan Orlov <ivan.orlov0322@gmail.com>
+>> ---
 > 
-> That's not really a reason to change binding.
+> Personally, I don't mind if the assert tests are in a separate file,
+> but do think it's worth having them in the same module.
 > 
->> Still some device trees uses the old binding. This commit adds back the
->> 'st,vgxy61' binding in addition to the new one to ensure retro
->> compatibility.
+> Do you think it'd be better to keep them as separate source files (but
+> put them in the same module via the Makefile), or is having a single
+> source file cleaner?
 > 
-> "Adds back"? This means it was there but was removed, so please document
-> it with commit references.
+> Either way, I think this should be merged with the previous patch (see
+> my comments there.)
 > 
 
-My bad, patch 1/3 on this series changes the binding, only to be added
-back by this one (2/3).
-I'll do it the other way around : patch 1/3 will *not* change the
-binding, and patch 2/3 will add the new binding instead. Way cleaner.
+Hi David,
 
->>
->> Will this be ok for you ? Tell me your thoughts.
-> 
-> It seems you are making some changes assuming there is some error to be
-> fixed, but there is none. Compatible is just some unique string, so the
-> original compatible, although unfortunate, is okay and must not be
-> changed. I already explained that adding new compatibles for such cases
-> is only for exceptions. Is this exception? No. You provided no rationale
-> to make it an exception.
+Thank you for the review and sorry for the late reply.
 
-Thank you. I think I failed to provide some details :
+I believe having the assert test in the same file as other kunit core 
+tests would be more consistent with the existing test structure 
+(otherwise, the tests for other parts of the kunit core should be 
+extracted to separate files as well).
 
-The change is motivated by a will of consistency in naming.
-As you correctly mentioned in the vd56g3 series [1], bindings should be
-'vendor,device'. This will be changed for the vd56g3 series v3 by
-Sylvain, but the vgxy61 binding is already badly named.
-We will then have these 2 bindings in the wild : st,vd56g3 and
-st,st-vgxy61, for very similar sensors. Hence the will to add a
-st,vgxy61 binding for consistency.
-This also prepares the ground for new camera sensor drivers we plan to
-submit later on, and that will respect the st,device binding naming scheme.
-
-Is it the correct way to go ?
-
-I will add something along these lines to the commit message.
-
-
-[1] https://lkml.org/lkml/2024/5/27/670
-
-> 
-> Best regards,
-> Krzysztof
-> 
+What do you think is more appropriate?
 
 -- 
-Regards,
+Kind regards,
+Ivan Orlov
 
-Benjamin
