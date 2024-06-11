@@ -1,67 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FD43839D;
-	Tue, 11 Jun 2024 16:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C81338FA0
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 16:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718123434; cv=none; b=sMIRmh+aXPVbsqigzU1Fqt3pnry5G/kr+b37cF97C6mwLRGWVX5U+uUkMYhLiykt0MeMK44Bbd8zcK6tlglB4C+zJ/18c3+VBf1m6ahhNYQWkD19LJz0gshASy7IRkeDvBy8+FoPeMvNGmuXALXRecBPzDAuRqIlPKAzEmywMsw=
+	t=1718123576; cv=none; b=NbQcTcmDihoG8EYFvstEJw2MD/WemNhzPmpdMyvDDxVmvgbYDxSs5mjwPIhNmmnQS0YC8fcIjnR9WLeke4afWuTGwC58rAkMkAweYNm/mik1efRNFJJmaX8CbqtO5DTHsrCitAhp782USlQ+W/7MGn/PBS3eMGs5bg0jmiR//YI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718123434; c=relaxed/simple;
-	bh=5cpAqCueMiul15O4cnq2Z/clOXb3h3yGx7cGR9jOKg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=acnjW9bJ8WDWDdd+6PFuYPehxnpgfP8dqtAoc2Q53Ksj3K1TfjtcnPIoHE0NK1/qXmMCB+hWw1O6Tl6yw6xBL7QSwfczKNhZuT5Ds2/EsDSkdGCAdZ42tu8puzKdGCXel9Go0/yEdfk8jd3LfVjVnbTEENCaLAVtC/nPk41S5UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A34C2BD10;
-	Tue, 11 Jun 2024 16:30:30 +0000 (UTC)
-Date: Tue, 11 Jun 2024 17:30:28 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Maxwell Bland <mbland@motorola.com>
-Cc: "open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)" <bpf@vger.kernel.org>,
-	Will Deacon <will@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Zi Shen Lim <zlim.lnx@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	open list <linux-kernel@vger.kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Puranjay Mohan <puranjay12@gmail.com>
-Subject: Re: [PATCH bpf-next v5 1/3] cfi: add C CFI type macro
-Message-ID: <Zmh7pIpTlexcCyOL@arm.com>
-References: <mafwhrai2nz3u4wn4fu72kvzjm6krs57klc3qqvd2sz2mham6d@x4ukf6xqp4f4>
- <cwhnmpn5yvg6ma7mvjviy4p7z6gdoba57daeprpc4zcokfhpv2@44gvdmcfuspt>
+	s=arc-20240116; t=1718123576; c=relaxed/simple;
+	bh=PfL/6AgJasVkbCS8dVXqo5yRf1/3Wobmr0iuiQOC/Dg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=IbIqyjiLKqWbTTYGecWM1AuB0Ittb2Te0CF6qf//fZP510L4wsFJ+0ZSPde4qXdLW46P9sygzq6b3P+rMD3oxsk8UxDZ0w8KKs9zsLdSHsZiQASYpQ0EmuT1nxzqWihKb+hA7al/lyn28gnUNA9xz8EoOVQ83LezOTc2J++hr3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qLd0phHN; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qLd0phHN"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6c380e03048so868784a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:32:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718123575; x=1718728375; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c4xBvCLscNy4YUa29ei3FsIjxDWpzTmRoOerBpLD1P4=;
+        b=qLd0phHNv1lZYJU+KCPtfLnW27S9VcZvh31IhDtCElrYfr19En09w3FgB1w6szsVH+
+         uIFNIXIlrNpoVVQgI+L7PueLBrF3EcECmsqY+VM6qTL4N9N0aq//FFRndn/bD+fJ2Wx3
+         aq5M6Ba1kmyaU3jRg5hVsx3CqEbJKYPY/2QRmaxMHqeml1PIkBh8s3IGb/oDBxgDRkSv
+         Nr0Jx8FgDopvRVSBvjDRSp7L0yk5Y6NXlWJEN534WZB9G09JVCe8DtiHbz+XmrXxt4Us
+         fU44963FMEBV0Zv4ZqD6nEzkgLZs11NxL05lj9+bxaXwEvz3CWGqwPDdsKRru7sUB9fZ
+         /+Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718123575; x=1718728375;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c4xBvCLscNy4YUa29ei3FsIjxDWpzTmRoOerBpLD1P4=;
+        b=JfWug30N3QXl1JL67z9w5IxNUlUwfPkkR7K38z9A9GCzHCg4nPMWbzOVYc0g1E4tao
+         U+QxG9Y1SXrwGl31Y6vXpKrtNYs+x9LoZyJGRPtlTRNEGcsd9iv30JaVfAD421uteyf5
+         H6w31gL65744xboCnwus1PI/o/l2KYjTijUW8fOdxv1hrcuM2IngxwYUS/vMuzKN80tb
+         UfkUG5wTYry1Wa+BVLEtBKHymvph9ig6GcA1BH2Cao+H+ELKnXLd/V2JJ69IePqA7+7l
+         TYvohRqWk9ZkFjKLy9VXw4oU0GV0vmuuJ8Fko+0omqA5crKZSMQcyTndS6Blcw6qJ5c9
+         rHSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/p45mtXFM9pdVEfblB54VpOLqf8CWEJvgMbPkm/foS2k5DdxSLmgUsA7mYhz2DoVkDGIl50QWtld7Tx7nCHudE2DE2lpnWYUveW4o
+X-Gm-Message-State: AOJu0YyHcdH/nH1l75Dr6gfoySUgtWij43P30FQshh8z6ouePrXrOaQp
+	8ls0YdKucRVEfP4p+dNJrEUsvnrBtgV0tY/Y1iVuHGg7ka9rN1zZG91e7bNKXOx1qVyGOxRAYrZ
+	+5w==
+X-Google-Smtp-Source: AGHT+IE50t/ZHsq1AIZB33K6XZDZtywKxE9M5cylfsZLOz1Oan4m5rBZ+Vk8rt4fL4gs+UygXTLU7vZVMGE=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a63:3342:0:b0:6f8:2594:7ca6 with SMTP id
+ 41be03b00d2f7-6f825947dbdmr3071a12.2.1718123574775; Tue, 11 Jun 2024 09:32:54
+ -0700 (PDT)
+Date: Tue, 11 Jun 2024 09:32:53 -0700
+In-Reply-To: <ZmhaRr5Lr4pOHcm7@chao-email>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cwhnmpn5yvg6ma7mvjviy4p7z6gdoba57daeprpc4zcokfhpv2@44gvdmcfuspt>
+Mime-Version: 1.0
+References: <20240410143446.797262-1-chao.gao@intel.com> <20240410143446.797262-10-chao.gao@intel.com>
+ <ZmepkZfLIvj_st5W@google.com> <ZmgrkMLuComwPl1X@chao-email>
+ <ZmhSeZpyoYxACs-n@google.com> <ZmhaRr5Lr4pOHcm7@chao-email>
+Message-ID: <Zmh8NSzd5xK-6urr@google.com>
+Subject: Re: [RFC PATCH v3 09/10] KVM: VMX: Advertise MITI_CTRL_BHB_CLEAR_SEQ_S_SUPPORT
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	daniel.sneddon@linux.intel.com, pawan.kumar.gupta@linux.intel.com, 
+	Zhang Chen <chen.zhang@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Jun 10, 2024 at 01:06:33PM -0500, Maxwell Bland wrote:
-> From: Mark Rutland <mark.rutland@arm.com>
+On Tue, Jun 11, 2024, Chao Gao wrote:
+> On Tue, Jun 11, 2024 at 06:34:49AM -0700, Sean Christopherson wrote:
+> >> As said, this requires some tweaks to KVM_CAP_FORCE_SPEC_CTRL, such as making
+> >> the mask and shadow values adjustable and applicable on a per-vCPU basis. The
+> >> tweaks are not necessarily for Intel-defined virtual MSRs; if there were other
+> >> preferable interfaces, they could also benefit from these changes.
+> >> 
+> >> Any objections to these tweaks to KVM_CAP_FORCE_SPEC_CTRL?
+> >
+> >Why does KVM_CAP_FORCE_SPEC_CTRL need to be per-vCPU?  Won't the CPU bugs and
+> >mitigations be system-wide / VM-wide?
 > 
-> Currently x86 and riscv open-code 4 instances of the same logic to
-> define a u32 variable with the KCFI typeid of a given function.
-> 
-> Replace the duplicate logic with a common macro.
-> 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Because spec_ctrl is per-vCPU and Intel-defined virtual MSRs are also per-vCPU.
 
-This patch is missing your signed-off-by (the same with the second
-patch). Since you are submitting it, you should also add yours in
-addition to the author's s-o-b.
+I figured that was the answer, but part of me was hopeful :-)
 
--- 
-Catalin
+> i.e., a guest __can__ configure different values to virtual MSRs on different
+> vCPUs even though a sane guest won't do this. If KVM doesn't want to rule out
+> the possibility of supporting Intel-defined virtual MSRs in userspace or any
+> other per-vCPU interfaces, KVM_CAP_FORCE_SPEC_CTRL needs to be per-vCPU.
+> 
+> implementation-wise, being per-vCPU is simpler because, otherwise, once userspace
+> adjusts the hardware mitigations to enforce, KVM needs to kick all vCPUs. This
+> will add more complexity.
+
++1, I even typed up as much before reading this paragraph.
+
+> And IMO, requiring guests to deploy same mitigations on vCPUs is an unnecessary
+> limitation.
+
+Yeah, I can see how it would make things weird for no good reason.
+ 
+So yeah, if the only thing stopping us from letting userspace deal with the virtual
+MSRs is converting to a vCPU-scoped ioctl(), then by all means, lets do that.
