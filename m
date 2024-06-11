@@ -1,125 +1,120 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF7C3BBEB;
-	Tue, 11 Jun 2024 15:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97489381D1
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 15:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718121076; cv=none; b=cqsQWx71L+C4XXrbsRMZaVqtZBr0v98BVPWqYxaxgDEi1z7CCzDpVVkHLvKM2kTmvWURedfhnWemTJZb0Xvr8EsBStSEvxOJq59bLmZY1ulCMgztoMi6HjygnSig9gRqVuPObdKaGYR63dUCsS83lffMkPY19gcoGLGUuEv/syo=
+	t=1718121106; cv=none; b=menW//hJLml+170XhfhK42C5s83j4hoC1tEOU3fRpdSQPowNTWQH+G64zHi+F4TxQIrcfiCSxfCYfdeIsi3DW9mf5rC1lt3DueeiI7/yL4rCwbVbVoA38oYvI+VwSkUN7fXD63dsBqvmvu2U71Akv5mOK2J5Fau1cXlt649tLEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718121076; c=relaxed/simple;
-	bh=pgGuDE+XrbAgHUHE3XCxL9tGB/eU0RinDylZrRbr6yM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pGd6aVSYGQtjHlUw3ePVkgX83+KnttMxoskBIPH9VZgsms3fJu7ZKPuIvpS3QhZ1meH2xg8Z+FpjMC9e2hkBSMTjcDsgmCdfls3CM+M/1kSAuaEvjQ7ZAs1TNHCS4Q8W1u3uARieiZR24HbqXzohVkL04FqUVurWWktXT1fy5lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZCcpyX5; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718121106; c=relaxed/simple;
+	bh=Dd5D3QgnITJ2MQp+d5Qg8fdGjvry8Cbr+aPoA/xGNh4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UBeuXaM7XPIVELi6IX4vfC96H9qpYq9Yn0wjW+2ZKr+bFXFYPEf8ncBLO+xVthr0qiBVSQtwiqZHl1K2nufCKm45KRzbdquKrvZU8gMfm1Y8/N4FgcE6MsbUnKc8k3KO/ZP5UPWD0caDkgf4sqkPkEmBGUKAkaQqy9y2GDc1Vck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=JhV59uOa; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZCcpyX5"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-df771959b5bso5817931276.1;
-        Tue, 11 Jun 2024 08:51:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718121073; x=1718725873; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pgGuDE+XrbAgHUHE3XCxL9tGB/eU0RinDylZrRbr6yM=;
-        b=nZCcpyX5G6f0IdSUW3uLZ9up63jEtgCHUCMWkgHtuEpmkC1EKk6RpMW5PKkZcDcCrv
-         WqrhOFOVaCJ5TD+RHHnanoAmDBTmT4PIghwLiwxtWdkYhVspSWI6FQ/YblZykoOnaYoa
-         uuyikdSOQTILpZmeRG2YPcBIQH7no1ppRZqcyUB7q0q0GlO7RYW5MpOYwarQgtaf4s7f
-         vHYeN8UACp5EibbcrGDOQmVrQHkAEiN9CRWG2yYRZvfyZP/n3GsFH6MgQT4rrMPcp1FC
-         riC/AQwbpsvjMHqYWs5Pg8uKhI62dwDC5nI1gkO+GkQw4JDYsTAp46zv3NmKrL2D2oWg
-         fbvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718121073; x=1718725873;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pgGuDE+XrbAgHUHE3XCxL9tGB/eU0RinDylZrRbr6yM=;
-        b=szgT7Giugph8OtF1IGcFg+1MVWKTTuchTA4R/lAEJB8hi/CmPqIdeNX30EUPSJKhFT
-         CiLGiQYKV+UxUxq4sLlix1ci6vdPzvmtkCswXur6ddyQlka9tEE03jIpKZp5B/UcSt4O
-         62K6hyDgCS0HyYzszixchbcCps57QhYA+Co6QBhXeX/uSj0DR5q++Bm3ddITYLlrmAIx
-         QZdGo7IeZlaQJzRG6yhAmrUz9wSnaBmPbgKfW+wod/6LbS7LS867cFzFTjAZVQbsMr+P
-         gQD1Jn7+GRaptdjHg7T3lZD+CeaYBm4hjkyCMaFpM15FJzXWJld8nUVcK/+5s+jmejfV
-         DUEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ8WtLJxfxuvqXfsgA+YuWoaGbA8nJrw5fhmt7lcPaIiNt6P9Akm+kwG/LX0jmImoOZWa2ddlGMxo5caBeW69onHzH4BfCDDhn5Y/wjQC39Jb4sYHDDa92GUfROPXE2+z6saZftpCf
-X-Gm-Message-State: AOJu0YyT9tfsdvvuvpDe21pfFMg1EOO2Wy3yl8eQl7pPoaQ2+FAC4pkh
-	YAvfFWW/qDYhYm6pTxbI25/7yak3xk/d1IdpcgkrRjglJsYXaOJI/1CDRYH07/VThmgvAlIjbkA
-	6NX61JAkDkYds1/hjpHkm6DTs/jfZ+okV
-X-Google-Smtp-Source: AGHT+IHNNEtnsE4csjfuwepPpDKNjhB/oWwbjvYHlUleiX67QfVK6AwXQmjdNC8kRnlAGwWx3GMQw0USiyj3gZlMLaI=
-X-Received: by 2002:a25:ef45:0:b0:df7:695a:1cee with SMTP id
- 3f1490d57ef6-dfaf66d1473mr12865314276.50.1718121073472; Tue, 11 Jun 2024
- 08:51:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="JhV59uOa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
+ Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
+ t=1718121097; bh=jp6QnjORNUnb+kYtVjyvzeeY+7er+nxl30wpAzBC1Yo=;
+ b=JhV59uOayCh60chJ0OY3As0zjnKEjbQd0z9pw2hXsbwhtPvcgv/9wqSjlPH35XJ8NoWOsm2am
+ 45tSNN7eiXUh0D3mDrZ/82yf1076fMY8lP4KOEagU7KG6VBYOuADcY7v7LtUdxt5LJir5tTBy4I
+ 6skv+R3PV29GxTsMT6chgZ5QYJ548P+jfKYDZ17fO/hifocCWNSC99agMR0FbDaAmGliKmGW/hc
+ Hu+IdJUochqG/UL5jluGOYS9QsuuQ7bwmtqUvEgrAiKcBeKIZVj3C3t1apl7/2fJquwN3HI140Z
+ sFl9zk3wGgVVWjfuyQ0WATHwc6tw2X22dfRwHcOt7s7g==
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
+ Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/8] drm: bridge: dw_hdmi: Remove previous_mode and mode_set
+Date: Tue, 11 Jun 2024 15:50:56 +0000
+Message-ID: <20240611155108.1436502-5-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240611155108.1436502-1-jonas@kwiboo.se>
+References: <20240611155108.1436502-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240608155316.451600-1-flintglass@gmail.com> <20240608155316.451600-3-flintglass@gmail.com>
- <CAJD7tkZAkzUfbXY3C0QOGqCyjQZeiuGzkZac4hmogOoh=yoZsw@mail.gmail.com> <CAPpoddf0ysCG=s5ixbOZkXjmcB0t_eqLOs9xhdqZHiWnYY4_Wg@mail.gmail.com>
-In-Reply-To: <CAPpoddf0ysCG=s5ixbOZkXjmcB0t_eqLOs9xhdqZHiWnYY4_Wg@mail.gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 11 Jun 2024 08:51:02 -0700
-Message-ID: <CAKEwX=NSaRAjiKjGtYxPwh9ByBZ_DK+h3T6LS5-eNpxS4s4zPA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] mm: zswap: fix global shrinker error handling logic
-To: Takero Funaki <flintglass@gmail.com>
-Cc: Yosry Ahmed <yosryahmed@google.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Domenico Cerasuolo <cerasuolodomenico@gmail.com>, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 66687285b913b04293b6dc66
 
-On Tue, Jun 11, 2024 at 8:21=E2=80=AFAM Takero Funaki <flintglass@gmail.com=
-> wrote:
->
->
-> Since shrink_worker evicts only one page per tree walk when there is
-> only one memcg using zswap, I believe this is the intended behavior.
+With the use of adjusted_mode directly from the crtc_state there is no
+longer a need to store a copy in previous_mode, remove it and the now
+unneeded mode_set ops.
 
-I don't think this is the intended behavior :) It's a holdover from
-the old zswap reclaiming behaviors.
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+---
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 19 +------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
 
-1. In the past, we used to shrink one object per shrink worker call.
-This is crazy.
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index 76048fc9fd14..9ecf038f551e 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -157,8 +157,6 @@ struct dw_hdmi {
+ 		bool enabled;
+ 	} phy;
+ 
+-	struct drm_display_mode previous_mode;
+-
+ 	struct i2c_adapter *ddc;
+ 	void __iomem *regs;
+ 	bool sink_is_hdmi;
+@@ -168,7 +166,7 @@ struct dw_hdmi {
+ 	struct pinctrl_state *default_state;
+ 	struct pinctrl_state *unwedge_state;
+ 
+-	struct mutex mutex;		/* for state below and previous_mode */
++	struct mutex mutex;		/* for state below */
+ 	enum drm_connector_force force;	/* mutex-protected force state */
+ 	struct drm_connector *curr_conn;/* current connector (only valid when !disabled) */
+ 	bool disabled;			/* DRM has disabled our bridge */
+@@ -2895,20 +2893,6 @@ dw_hdmi_bridge_mode_valid(struct drm_bridge *bridge,
+ 	return mode_status;
+ }
+ 
+-static void dw_hdmi_bridge_mode_set(struct drm_bridge *bridge,
+-				    const struct drm_display_mode *orig_mode,
+-				    const struct drm_display_mode *mode)
+-{
+-	struct dw_hdmi *hdmi = bridge->driver_private;
+-
+-	mutex_lock(&hdmi->mutex);
+-
+-	/* Store the display mode for plugin/DKMS poweron events */
+-	drm_mode_copy(&hdmi->previous_mode, mode);
+-
+-	mutex_unlock(&hdmi->mutex);
+-}
+-
+ static void dw_hdmi_bridge_atomic_disable(struct drm_bridge *bridge,
+ 					  struct drm_bridge_state *old_state)
+ {
+@@ -2972,7 +2956,6 @@ static const struct drm_bridge_funcs dw_hdmi_bridge_funcs = {
+ 	.atomic_get_input_bus_fmts = dw_hdmi_bridge_atomic_get_input_bus_fmts,
+ 	.atomic_enable = dw_hdmi_bridge_atomic_enable,
+ 	.atomic_disable = dw_hdmi_bridge_atomic_disable,
+-	.mode_set = dw_hdmi_bridge_mode_set,
+ 	.mode_valid = dw_hdmi_bridge_mode_valid,
+ 	.detect = dw_hdmi_bridge_detect,
+ 	.edid_read = dw_hdmi_bridge_edid_read,
+-- 
+2.45.2
 
-2. We then move the LRU from the allocator level to zswap level, and
-shrink one object at a time until the pool can accept new pages (i.e
-under the acceptance threshold).
-
-3. When we separate the LRU to per-(memcg, node), we keep the
-shrink-one-at-a-time part, but do it round-robin style on each of the
-(memcg, node) combination.
-
-It's time to optimize this. 4th time's the charm!
-
-> Even if we choose to break the loop more aggressively, it would only
-> be postponing the problem because pool_limit_hit will trigger the
-> worker again.
->
-> I agree the existing approach is inefficient. It might be better to
-> change the 1 page in a round-robin strategy.
-
-We can play with a bigger batch.
-
-1. Most straightforward idea is to just use a bigger constant (32? 64? 128?=
-)
-
-2. We can try to shrink until accept for each memcg, hoping that the
-round robin selection maintains fairness in the long run - but this
-can be a bad idea in the short run for the memcg selected. At the very
-least, this should try to respect the protected area for each lruvec.
-This might still come into conflict with the zswap shrinker though
-(since the protection is best-effort).
-
-3. Proportional reclaim - a variant of what we're doing in
-get_scan_count() for page reclaim?
-
-scan =3D lruvec_size - lruvec_size * protection / (cgroup_size + 1);
-
-protection is derived from memory.min or memory.low of the cgroup, and
-cgroup_size is the memory usage of the cgroup. lruvec_size maybe we
-can substitute with the number of (reclaimable/unprotected?) zswap
-objects in the (node, memcg) lru?
