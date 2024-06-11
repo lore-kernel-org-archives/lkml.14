@@ -1,199 +1,83 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65B817D8A0;
-	Tue, 11 Jun 2024 13:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542F417CA1D
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718112364; cv=none; b=HcpmPT2+clRtx01/WNVJWX+CO4V2o1fzZ6OyvrF0tZn6Z2vSy5S3yTSr6xT6ocwu4WtXXL31yMZJUk9UVFgQLaiDHnQKo11AhnQeckywyioyCLNfKjd11JJusbdLYdzQYZQmvbOlURlS8a94TuEJfv5NOhqIuzcGS7IDoVtAsak=
+	t=1718112378; cv=none; b=qVnaRjHqh0MSuKgOHQrdMbTb9reWycMNaUwZiZAPh0vzN/KDBSLd3rg/H6F/E7QyGeWlbx/m6I6Dn9IQCgRcghY27tIdKq0dy+H4purKcFhYkMqQbc4eW6G3cinL3Qk2pdyNhXnsRG85KvOiQ+SC2fH2T7OlSr1qLIlWmPkcViU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718112364; c=relaxed/simple;
-	bh=LMY+etQsozLuXx9o40Dtn0k1umd+GpgYM37h1yNZL3Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=put453OSc2R85/XcFJlfG9lLPsX4SDJXh/JxwSLf4EPh3dHQF8MVuo0hWe5PmXW2QqDWzLt3xb1QTmUsYdmq0bWbY9GBYQR9YjBlRP8K9UOAfO07EfyfGXN1zqqIokV5gMtkMpB444cZOQxcHbxITA2+wXj2LcK9I33Kl3TPZrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=B0Jd/mCw; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1718112378; c=relaxed/simple;
+	bh=ajXBz2ktbB1pyarbdNgc0OYhAYmvu8ktAdBboXko+64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iLM2bfoXtB0i9UC4xDiWfkxKe2pU1ZG8A+Yd9siwZC+xy6XaH3F0KUVBT4mF8RqEwUnRepLS6ci8qL8Yt77uoWHL5gGj9SgdAxe6lSacDculDb4DEqHRT8s9R6P0ODNbjAlKYqMZ71BigIdUVJV85RpWstGtCLHAUoYo28H476E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=S2Yfa9KS; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="B0Jd/mCw"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B4c4Ku010402;
-	Tue, 11 Jun 2024 08:25:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=DuurR0jE2iRLqiYyaQ5KjwGN5hMIK7uHSdNWCwP6haw=; b=
-	B0Jd/mCwO4rGADGvFtWhqqB5mAK0T0LI786BA+KqbE59Cqwqgg52PZrIZsiwqQy2
-	WhXecr5Xsfot8Ybm9pDqVULO2CF96pko4ToZv9v+/HgP1IcN9B1bxGtma6XG3EvG
-	Ztr7vW4yYijHi0r89ON/QDsWQ/x4ylwmFRHeS8tTChhfQ0e6Xw8BasuRljAy2C4+
-	b5NWoxPFzI+Bgj+eSx2v4pwyldbUmWJaYBP6x/LC5vkmfwt7mh64cNuPt31RmeEp
-	4U/W3bYPnB2BqiE7gq0f13CCMC/FALuZmRoDqBTTn0ssMi34ThkRQKjVdBNlEGPQ
-	N3G3McmoE1M1wOxmmmnzVA==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3ymkqhtuvb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 08:25:58 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
- 2024 14:25:56 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Tue, 11 Jun 2024 14:25:56 +0100
-Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id B9312820249;
-	Tue, 11 Jun 2024 13:25:56 +0000 (UTC)
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <broonie@kernel.org>
-CC: <lgirdwood@gmail.com>, <linux-sound@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH 2/3] spi: cs42l43: Add speaker id support to the bridge configuration
-Date: Tue, 11 Jun 2024 14:25:55 +0100
-Message-ID: <20240611132556.1557075-2-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240611132556.1557075-1-ckeepax@opensource.cirrus.com>
-References: <20240611132556.1557075-1-ckeepax@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S2Yfa9KS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=WvNhp+Fkus5gZ4B/gqjVnlOIUixgCRQNYsydZIjO7mI=; b=S2Yfa9KSJEpQ5cREEQUiyIfCMI
+	AQ64vGntshyatBw0QbiAOEUdttu3MV5mSrJZDH8oGmasviTjulLFZsqfBpMXqLXue+6l1PELg0CiJ
+	mcoIKakqsl0vU1UnyO263SLgVOFXe89qRTpuxnj/8ajBW6BucT0dOvnMz3pti+vxNDDsuJXL4euo2
+	d+gndTEN7XRJ0YSX1o1C2m3XIc0PjX57b8HREmJotCCPJzmDJWQBzvccCG8u4qSEuvkf0fxmAyV6o
+	8h+OzLuqAeodcRJYvY2N9oAekRITUmAaHh2iTuEv/TRsAvhvUy1OlQos+IXXB2bljW4EWnmzC+xrx
+	87ZyZcUg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sH1Vp-0000000BOlI-38uH;
+	Tue, 11 Jun 2024 13:26:11 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 27C2C302792; Tue, 11 Jun 2024 15:26:09 +0200 (CEST)
+Date: Tue, 11 Jun 2024 15:26:09 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Borislav Petkov <bp@kernel.org>
+Cc: X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>
+Subject: Re: [PATCH v1 00/14] x86/alternatives: Nest them
+Message-ID: <20240611132609.GH8774@noisy.programming.kicks-ass.net>
+References: <20240607111701.8366-1-bp@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: L_K7qD8R29fjxR3D-OoIjBIErxXYBm2b
-X-Proofpoint-ORIG-GUID: L_K7qD8R29fjxR3D-OoIjBIErxXYBm2b
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240607111701.8366-1-bp@kernel.org>
 
-From: Simon Trimmer <simont@opensource.cirrus.com>
+On Fri, Jun 07, 2024 at 01:16:47PM +0200, Borislav Petkov wrote:
 
-OEMs can connect a number of types of speakers to the sidecar cs35l56
-amplifiers and a different speaker requires a different firmware
-configuration.
+> Borislav Petkov (AMD) (13):
+>   x86/alternative: Zap alternative_ternary()
+>   x86/alternative: Convert alternative()
+>   x86/alternative: Convert alternative_2()
+>   x86/alternative: Convert alternative_input()
+>   x86/alternative: Convert alternative_io()
+>   x86/alternative: Convert alternative_call()
+>   x86/alternative: Convert alternative_call_2()
+>   x86/alternative: Convert ALTERNATIVE_TERNARY()
+>   x86/alternative: Convert ALTERNATIVE_3()
+>   x86/alternative: Convert the asm ALTERNATIVE() macro
+>   x86/alternative: Convert the asm ALTERNATIVE_2() macro
+>   x86/alternative: Convert the asm ALTERNATIVE_3() macro
+>   x86/alternative: Replace the old macros
+> 
+> Peter Zijlstra (1):
+>   x86/alternatives: Add nested alternatives macros
+> 
+>  arch/x86/include/asm/alternative.h | 225 +++++++++--------------------
+>  arch/x86/kernel/alternative.c      |  20 ++-
+>  arch/x86/kernel/fpu/xstate.h       |  14 +-
+>  tools/objtool/arch/x86/special.c   |  23 +++
+>  tools/objtool/special.c            |  16 +-
+>  5 files changed, 125 insertions(+), 173 deletions(-)
 
-When the cs42l43 ACPI includes a property indicating a particular type
-of speaker has been installed this should be passed to the cs35l56
-driver instances as a device property.
+The whole back and forth with the n_foo things ia weird, but sure, have
+at.
 
-Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/spi/spi-cs42l43.c | 74 ++++++++++++++++++++++++++++-----------
- 1 file changed, 53 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/spi/spi-cs42l43.c b/drivers/spi/spi-cs42l43.c
-index 0a4475ae931b..5b8ed65f8094 100644
---- a/drivers/spi/spi-cs42l43.c
-+++ b/drivers/spi/spi-cs42l43.c
-@@ -9,6 +9,7 @@
- #include <linux/array_size.h>
- #include <linux/bits.h>
- #include <linux/bitfield.h>
-+#include <linux/cleanup.h>
- #include <linux/device.h>
- #include <linux/errno.h>
- #include <linux/gpio/machine.h>
-@@ -44,28 +45,10 @@ static const unsigned int cs42l43_clock_divs[] = {
- 	2, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30
- };
- 
--static const struct software_node ampl = {
--	.name			= "cs35l56-left",
--};
--
--static const struct software_node ampr = {
--	.name			= "cs35l56-right",
--};
--
--static struct spi_board_info ampl_info = {
-+static struct spi_board_info amp_info_template = {
- 	.modalias		= "cs35l56",
- 	.max_speed_hz		= 11 * HZ_PER_MHZ,
--	.chip_select		= 0,
- 	.mode			= SPI_MODE_0,
--	.swnode			= &ampl,
--};
--
--static struct spi_board_info ampr_info = {
--	.modalias		= "cs35l56",
--	.max_speed_hz		= 11 * HZ_PER_MHZ,
--	.chip_select		= 1,
--	.mode			= SPI_MODE_0,
--	.swnode			= &ampr,
- };
- 
- static const struct software_node cs42l43_gpiochip_swnode = {
-@@ -273,6 +256,39 @@ static struct fwnode_handle *cs42l43_find_xu_node(struct fwnode_handle *fwnode)
- 	return NULL;
- }
- 
-+static struct spi_board_info *cs42l43_create_bridge_amp(struct cs42l43_spi *priv,
-+							const char * const name,
-+							int cs, int spkid)
-+{
-+	struct property_entry *props = NULL;
-+	struct software_node *swnode;
-+	struct spi_board_info *info;
-+
-+	if (spkid >= 0) {
-+		props = devm_kmalloc(priv->dev, sizeof(*props), GFP_KERNEL);
-+		if (!props)
-+			return NULL;
-+
-+		*props = PROPERTY_ENTRY_U32("cirrus,speaker-id", spkid);
-+	}
-+
-+	swnode = devm_kmalloc(priv->dev, sizeof(*swnode), GFP_KERNEL);
-+	if (!swnode)
-+		return NULL;
-+
-+	*swnode = SOFTWARE_NODE(name, props, NULL);
-+
-+	info = devm_kmemdup(priv->dev, &amp_info_template,
-+			    sizeof(amp_info_template), GFP_KERNEL);
-+	if (!info)
-+		return NULL;
-+
-+	info->chip_select = cs;
-+	info->swnode = swnode;
-+
-+	return info;
-+}
-+
- static void cs42l43_release_of_node(void *data)
- {
- 	fwnode_handle_put(data);
-@@ -367,11 +383,27 @@ static int cs42l43_spi_probe(struct platform_device *pdev)
- 				     "Failed to register SPI controller\n");
- 
- 	if (nsidecars) {
--		if (!spi_new_device(priv->ctlr, &ampl_info))
-+		struct spi_board_info *ampl_info;
-+		struct spi_board_info *ampr_info;
-+		int spkid = -EINVAL;
-+
-+		fwnode_property_read_u32(xu_fwnode, "01fa-spk-id-val", &spkid);
-+
-+		dev_dbg(priv->dev, "Found speaker ID %d\n", spkid);
-+
-+		ampl_info = cs42l43_create_bridge_amp(priv, "cs35l56-left", 0, spkid);
-+		if (!ampl_info)
-+			return -ENOMEM;
-+
-+		ampr_info = cs42l43_create_bridge_amp(priv, "cs35l56-right", 1, spkid);
-+		if (!ampr_info)
-+			return -ENOMEM;
-+
-+		if (!spi_new_device(priv->ctlr, ampl_info))
- 			return dev_err_probe(priv->dev, -ENODEV,
- 					     "Failed to create left amp slave\n");
- 
--		if (!spi_new_device(priv->ctlr, &ampr_info))
-+		if (!spi_new_device(priv->ctlr, ampr_info))
- 			return dev_err_probe(priv->dev, -ENODEV,
- 					     "Failed to create right amp slave\n");
- 	}
--- 
-2.39.2
-
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
