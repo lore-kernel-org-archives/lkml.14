@@ -1,96 +1,80 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700B614287
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 19:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6825D57CAE;
+	Tue, 11 Jun 2024 19:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718133358; cv=none; b=BzJvCkbWX5tJKPd7kf539GQsdgHU3fWaWXKIzVACe2Z6kNXAiZI6Q8UNiL0qDKeDkvyFppjXtDLbc77136UQN/L2AhPM2llsASM9S7UFRK9670MkQ5ThiqixAscuN8MgK8BPrdl3kfIzUPwxcKrPjrFpJmOX2LV3aHxtPj8ECNQ=
+	t=1718133584; cv=none; b=AJH5uZ5eOpLMJSLM9nw3IvGtmCKv4fU2fTNUE5N0es54qiATMZ05vnwXDBuqhrf5/Qaiw8mi5WgKfFS9llzN7W88UC6aEIMUjH5ywO//7iOIqos0mh4cdzesdmNV0M4UUTq6LcWhjCBHqrhoUDVsl4nqGe3CrI91FCovGv3TRkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718133358; c=relaxed/simple;
-	bh=w1tHpoNflMHLU1BMbnQsRhT8eRZjHEXH0n4iT8Vx5VU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A6yDHZCWciLgm0FP084hJvja5kycwYffpzcfvYbNTOL993tAXI4eX3G4peeUVY5R3XSO+f2R8teDwGEQNoSjBOQV37WFHbnadaE1pc+M/MYESHtIxgBnv4oylPU0J0zN65eLrKuW0ik84OVtrs6ewBIK1L3fvwsg5agxUToXoGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IVtjbNMa; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1718133584; c=relaxed/simple;
+	bh=AUJ44aafNBmr/yleRRZzaXjkALQuPOf50mYZh00Z5XE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=iWjYZx9Ur+l7WUoOOV6LcXy232K8fmzqXC+FVlzUXZAQDzjmyfqqoKfrwgUCxYmd59jhs924Y4Q0qi0RD7ZoJ08RlZqKi0pLtdX0Gq9t9kfiSuQEHvMcvsq7Zh+bytTQ4V+1w11U9emOT/p9dNGNNMwQUGzEXJ06uHdkFadZXSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=eEh1Bqsw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IVtjbNMa"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57c923e03caso1683667a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 12:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1718133355; x=1718738155; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RqPB8BlA8DCladvuPMlN1eyIX4+W0uRp0KQVO/oj8jY=;
-        b=IVtjbNMat8DhfkLXTB7fWvgVVScplayPLjSEUOyTfiaJVrPci9dTFQYOGe7appPH8C
-         QdG+RnqyFSMIfukRa1k+t9zAUTdzsPBqNfnzXhQbYdvugky/ZuwydLfyzI0tzccVbjqu
-         6KMzP4mCbcswq/CVcvskeTGCak2MXcv9GVs7A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718133355; x=1718738155;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RqPB8BlA8DCladvuPMlN1eyIX4+W0uRp0KQVO/oj8jY=;
-        b=ko9UWYy239vWTgOP3rLHTYyl8u8mBjGWj7YL993VlzTJbRIp73OhoAsUFz6wmsTY5n
-         Qo/ZKO/ifxfCB3c5UGdjgabkvO44uXzRUQ52Bu0RPIMCpk/6Sc8jIYMRrj2BoEHuVLBq
-         C20dGdez2J/fzYCnCX44NJqZ5ZWjaaDHhE7imtb6Z/e6vzfIWIfETIuA87G8H6bBKntY
-         DUlDhSO4CT75TLM0fJf9UGsxW/gGi2ox40t9jWOfKxGT5H1vRrn5G0kxdgwU+yPKvLZo
-         irMumptZibjby37ICmuQsGUAW2oJIkv06aVO3TkFjYuXRtyP1fz6JVmA/KODutmDA4lm
-         YrMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTr+d+DVn673GhjfcJzw6RV/9Av6AxVDJw0kNHu5t78fWnnLBvLzt2LsSLH37BhcIt7x9ShhUGQdppJz15jo3WvEiiTk4ExLzRVM57
-X-Gm-Message-State: AOJu0YzEuCuS4CU3RsOvEDlR3qbQQEJ+nmTvHT9Mnqux8Ch1wutEq0BT
-	Tk81mmLCPpdrI0CHOhNnr07xxddFDVv5D4vJddFkjXPf1lqGrM6kjEFVznFtmJZadlTTwzbpFDB
-	diDjEQA==
-X-Google-Smtp-Source: AGHT+IHCUqI0QTH+cO8YMWT8kRCEC+0Yhd+qUF2Yh/DOTuBnf8aOK95+oIowYF6BrcB+3SngaUpP0g==
-X-Received: by 2002:a50:96d2:0:b0:57c:8027:534d with SMTP id 4fb4d7f45d1cf-57c802753e7mr4292303a12.27.1718133354582;
-        Tue, 11 Jun 2024 12:15:54 -0700 (PDT)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c84e9018esm3641551a12.51.2024.06.11.12.15.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 12:15:53 -0700 (PDT)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57c923e03caso1683649a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 12:15:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUNBLPEYRiZdqIg84rctGiGvvxsLLmyu95EoAq+5Bfb6Pqk/1OMfmlyqyYAWgH1nLABPqRsgW5UTN9/nKjRNUroJx59kktnrnQhyGlI
-X-Received: by 2002:a17:906:ca0b:b0:a6e:fc25:27b6 with SMTP id
- a640c23a62f3a-a6efc252c38mr551476666b.38.1718133353529; Tue, 11 Jun 2024
- 12:15:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="eEh1Bqsw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CA6EC2BD10;
+	Tue, 11 Jun 2024 19:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1718133584;
+	bh=AUJ44aafNBmr/yleRRZzaXjkALQuPOf50mYZh00Z5XE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eEh1BqswoHduG9oop33Az9TKXljfW3F9d2mhubpTL00w+7sI2Bxwr+YQyOGwZl7sK
+	 MhJWEusJFvap0UM4BgBZ5H75YgdngB52ZuTWLHaFqC+jP2aZPOLpyM8OKdLaQDRdBi
+	 79cuL9urUZBnnBw995W3elJj3j5pLY0GIPM3fFx0=
+Date: Tue, 11 Jun 2024 12:19:42 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ xen-devel@lists.xenproject.org, kasan-dev@googlegroups.com, Mike Rapoport
+ <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>, "K. Y. Srinivasan"
+ <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+ <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?ISO-8859-1?Q?P=E9rez?=
+ <eperezma@redhat.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>, Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>, Alexander Potapenko <glider@google.com>,
+ Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH v1 1/3] mm: pass meminit_context to __free_pages_core()
+Message-Id: <20240611121942.050a2215143af0ecb576122f@linux-foundation.org>
+In-Reply-To: <2ed64218-7f3b-4302-a5dc-27f060654fe2@redhat.com>
+References: <20240607090939.89524-1-david@redhat.com>
+	<20240607090939.89524-2-david@redhat.com>
+	<2ed64218-7f3b-4302-a5dc-27f060654fe2@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240610-vfs-fixes-a84527e50cdb@brauner>
-In-Reply-To: <20240610-vfs-fixes-a84527e50cdb@brauner>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 11 Jun 2024 12:15:36 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgojM8mH8Bm3iNL6P+O7qcN24OrhpbpfR02J+ePUp_J9w@mail.gmail.com>
-Message-ID: <CAHk-=wgojM8mH8Bm3iNL6P+O7qcN24OrhpbpfR02J+ePUp_J9w@mail.gmail.com>
-Subject: Re: [GIT PULL] vfs fixes
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 10 Jun 2024 at 07:10, Christian Brauner <brauner@kernel.org> wrote:
->
-> This contains fixes for this merge window:
->
-> * Restore debugfs behavior of ignoring unknown mount options.
-[...]
+On Tue, 11 Jun 2024 12:06:56 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-Note: I organized this a bit differently to make it more obvious what
-areas the fixes were to.
+> On 07.06.24 11:09, David Hildenbrand wrote:
+> > In preparation for further changes, let's teach __free_pages_core()
+> > about the differences of memory hotplug handling.
+> > 
+> > Move the memory hotplug specific handling from generic_online_page() to
+> > __free_pages_core(), use adjust_managed_page_count() on the memory
+> > hotplug path, and spell out why memory freed via memblock
+> > cannot currently use adjust_managed_page_count().
+> > 
+> > Signed-off-by: David Hildenbrand <david@redhat.com>
+> > ---
+> 
+> @Andrew, can you squash the following?
 
-I tried to be careful, but I may have gotten it wrong.
+Sure.
 
-I do like being able to read the merge messages and get more of a
-"toplevel feel" for what changed, though, which is why I did it (as
-opposed to it being a "list of details").
+I queued it against "mm: pass meminit_context to __free_pages_core()",
+not against
 
-I'm mentioning this in the hopes that your generally excellent
-summaries would be even more excellent in the future in case you agree
-with my changed merge log.
+> Subject: [PATCH] fixup: mm/highmem: make nr_free_highpages() return "unsigned
+>   long"
 
-              Linus
