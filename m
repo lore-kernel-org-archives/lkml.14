@@ -1,117 +1,251 @@
-Received: from wflow1-smtp.messagingengine.com (wflow1-smtp.messagingengine.com [64.147.123.136])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1533A172764;
-	Tue, 11 Jun 2024 08:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD79E16F8EC;
+	Tue, 11 Jun 2024 08:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718094507; cv=none; b=f+M+XkzO3Jc3+enS1o9u6nJSelzb45mEB0XjifF15mMp9+iqqokpjhEb5EyWPaoHvx5vxRRk5paxmIWGpRH655jl6O1zZgAAUn9bGDxhRvo8vN6+FdTd8MiVeZLxqykiwcvniz+uvglvPiN2P+PX1rbGWAcAopy2M2SR3EuPhLc=
+	t=1718094515; cv=none; b=g9rNJidMsh8FZu2j+pRnpvhVNRVK7br3GNActiXokggK3ga/lpQpCgnxwJlTJ8WmCRzMQJg4nlzpHrP+7nuimW3RntsYZeRsXT4WxXheAussRxO3l+YXkzNzV0+wV5IviMAUT9v1jw5YkHAoQOdLVEmju/3AsWgzCD7sgOppMoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718094507; c=relaxed/simple;
-	bh=WlCLV+10vurnCj41WSYI9fw9oRJL9wgxuJfNi2U9UP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nDAfADCdJ1dWulLVX1YgpZ5AZ66ACs1AfrExLF3sbG8CLUpPMOGeCM+AG/QcZ4jIkjs/4cWcTT8Vl8mlRtEMzrMSaeu1nB/04Wvu9zEeOdvTMNmu8lr46839CQGPM+uIgUd1W4+X8wwTRrCc+4npCdIVqCFN0feWkUwzIDnepjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=osE7N0Wu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZOqPDh57; arc=none smtp.client-ip=64.147.123.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
+	s=arc-20240116; t=1718094515; c=relaxed/simple;
+	bh=9wfu9ULIvAQVA8zlI1u4jmyHSBhMau9KYUPmAlNR/1o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uA6Lx/xvy7D/I5UErmfOET7KPhb29Sxj7MIEtcoQKwaGOSBjEoMyAC1OGSoVyQBgulxm4dHOLDH5cQqhBHiwxt7orCAu9a2gKwlggT221BNghmbCWYF+8benGkForf54QNjLv9c4tVINdZ+KI5LlGGUPxguAXYmukiqbYuazXxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Oo+S0u8W; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="osE7N0Wu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZOqPDh57"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailflow.west.internal (Postfix) with ESMTP id BAE8E2CC0168;
-	Tue, 11 Jun 2024 04:28:22 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Tue, 11 Jun 2024 04:28:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1718094502; x=1718098102; bh=bQpdgobU82
-	YWZriN3d7BiIoR2BmrlzIuuKqmODIu3NA=; b=osE7N0WuCRJ4jr/zq9XEthfsSB
-	JaihG8TMRtsCQYH3e74lkFjSBml+3s1i0xShAwaaxUYVSMbjVGY3pBd6oD9V/xFA
-	4EQhcALk8KlAvXfna0DVEdgCOAgwRrrT0U84FNNmYmgSoQ1eAYZB8pQIE+uKJZTL
-	JBwCXT+3w99jaMOnc5iKeo4Xc/RT9DaxqEcwXKiDL8A31Xl2rs2eHq6cjafmsUko
-	XdVeMrXsMNOYWXX2KVJ8fiRwhqHIWbiajSn5Ff0SlrUUq0vCVusalLSHryvxB/nE
-	naWH9GSK8CH0p6CRpNRg3O95uOWQw0GrLj3Kq2JlsrDkuo0hMXXDxpOpe/EQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718094502; x=1718098102; bh=bQpdgobU82YWZriN3d7BiIoR2Bmr
-	lzIuuKqmODIu3NA=; b=ZOqPDh57FHfBZoeMW5VTOtiPNI5X6qPdO47jp8figGmz
-	rQUBRMnwR8xaLGfRDS/mEc5jYRLplg98K4VVw6rd/IEyvLDiVhXi+d/6x2LpFnIt
-	jKtQvuFLkQS7TXGAfFPv2l0Zvqcg38jpCgfK+HrE/ZvNuQMx2b2waDYQzPyAiHRf
-	zwHElFx3sT7n/kv/GUbWI/KVZlR9UJrB++qghkJUqjqckGq7+ZzecK+mKPPJ8/dJ
-	QLZCU9od/qU2AYLno3ZZXyuEm/cqRZ9+WIvA6ydTL/K/wx2E0OTp2UbklsAygM/Z
-	lrbV70srVgC0egd6MnTWjINW3FB1/DBsBwa4DdwVYg==
-X-ME-Sender: <xms:pgpoZvHNoVLJZbvLBBx9zFSFJzjc3tBW9UvbNLH_EEhz7hUrZ9eJYQ>
-    <xme:pgpoZsVRDa5XD2bB9RpI24nGiyrXg-nm5rbo01f73VnNF46kAmDY4tAdomQp12gSc
-    gcOQgNGh2G4X5djpn8>
-X-ME-Received: <xmr:pgpoZhInH0L3g_lSzDHyFn_04fwDolaKCC-XKra6rrhvqOIupxIfTMIpiszoXDXEEtflWn32cYxoDR8u5AoKrwQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeduvddgtdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtjeenucfhrhhomheplfhonhgr
-    thhhrghnucevrghlmhgvlhhsuceojhgtrghlmhgvlhhsseefgiigtddrnhgvtheqnecugg
-    ftrfgrthhtvghrnhepkeekteegfefgvdefgfefffeufeffjedvudeijeehjeehffekjeek
-    leffueelgffgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepjhgtrghlmhgvlhhsseefgiigtddrnhgvth
-X-ME-Proxy: <xmx:pgpoZtE62QlC7KH4a1-Foj7m6SuGeo1__iLpVx3kWrNlKBtZDBGEXw>
-    <xmx:pgpoZlWVRQ_p8fUh5gFYj3sWLfDDqVe2tMDDZAU1gqBXHf7mYlnMMQ>
-    <xmx:pgpoZoOPDeZrLcNPr8SiDMzORypHNbn-VXsYWGSfv1UBbph_1w1i6w>
-    <xmx:pgpoZk1eF3x0f-nXXHLkc3aOXfnwdUUVFZsttwxxSOhu5TFpp2cacg>
-    <xmx:pgpoZqUhWZIGf2kTk6xnb51pDwG2k0o0o69dvVdgwO0G37IIm-rtNfGI>
-Feedback-ID: i76614979:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Jun 2024 04:28:18 -0400 (EDT)
-Date: Tue, 11 Jun 2024 01:33:29 -0700
-From: Jonathan Calmels <jcalmels@3xx0.net>
-To: Josef Bacik <josef@toxicpanda.com>
-Cc: brauner@kernel.org, ebiederm@xmission.com,
- 	Jonathan Corbet <corbet@lwn.net>, Paul Moore <paul@paul-moore.com>,
- 	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- 	KP Singh <kpsingh@kernel.org>,
- Matt Bobrowski <mattbobrowski@google.com>,
- 	Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- 	Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- 	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- 	Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>,
- 	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, 	Luis Chamberlain <mcgrof@kernel.org>,
- Kees Cook <kees@kernel.org>, 	Joel Granados <j.granados@samsung.com>,
- John Johansen <john.johansen@canonical.com>,
- 	David Howells <dhowells@redhat.com>,
- Jarkko Sakkinen <jarkko@kernel.org>,
- 	Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, 	Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, containers@lists.linux.dev,
- 	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-doc@vger.kernel.org, 	linux-security-module@vger.kernel.org,
- bpf@vger.kernel.org, apparmor@lists.ubuntu.com,
- 	keyrings@vger.kernel.org, selinux@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Introduce user namespace capabilities
-Message-ID: <tqvnpbrdmfj3q7rc2m365nxvwgb6hsvipiz7l473cdwyacdb6s@b22nvrk7vbok>
-References: <20240609104355.442002-1-jcalmels@3xx0.net>
- <20240610201227.GD235772@perftesting>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Oo+S0u8W"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45B8SMvD122465;
+	Tue, 11 Jun 2024 03:28:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718094502;
+	bh=yXqXojAPYeVrmMnZLU+Kz1unQf08/a8UgG8WDqDAolo=;
+	h=From:To:CC:Subject:Date;
+	b=Oo+S0u8WzxJPa2C7S2P5Hpx+9r5DEW7IaII6yycn9nXbZc0GgXTQCo0zAnyZDRpUP
+	 /ngRRWYeB548QmFj4Cb1zTW3f3l5mLwGXqIhNvi4gbwgzMuZZ7PPfKeUVMVJ75XZbW
+	 ghdCIkXqcmiL9suYIvp+W3nZ0jHR21lKxmL8uT1A=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45B8SMvF105975
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 11 Jun 2024 03:28:22 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 11
+ Jun 2024 03:28:22 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 11 Jun 2024 03:28:21 -0500
+Received: from localhost (jayesh-hp-probook-440-g8-notebook-pc.dhcp.ti.com [172.24.227.55])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45B8SLYE025626;
+	Tue, 11 Jun 2024 03:28:21 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <linux-kernel@vger.kernel.org>, <nm@ti.com>, <vigneshr@ti.com>,
+        <j-luthra@ti.com>, <u-kumar1@ti.com>, <j-choudhary@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>
+Subject: [PATCH] arm64: dts: ti: k3-j722s-evm: Enable analog audio support
+Date: Tue, 11 Jun 2024 13:58:19 +0530
+Message-ID: <20240611082820.17442-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240610201227.GD235772@perftesting>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, Jun 10, 2024 at 04:12:27PM GMT, Josef Bacik wrote:
-> Where are the tests for this patchset?  I see you updated the bpf tests for the
-> bpf lsm bits, but there's nothing to validate this new behavior or exercise the
-> new ioctl you've added.  Thanks,
+The audio support on J722S-EVM is using TLV320AIC3106[0] codec
+connected to McASP1 serializers.
 
-Apologies, I haven't had much time to spend on it so I prioritized the
-rest. But yes, we should certainly update the capabilities selftests
-once we agreed on the different behaviors.
+- Add the nodes for sound-card, audio codec and McASP1.
+- Add hog for TRC_MUX_SEL to select between McASP and TRACE signals
+- Add hogs for GPIO_AUD_RSTn and MCASP1_FET_SEL which is used to
+  switch between HDMI audio and codec audio.
+- Add pinmux for MCASP1 and AUDIO_EXT_REFCLK1.
+- Add syscon node for audio_refclk1 to set the enable bit in
+  CTRL_MMR reg and select the parent clock for the external clock.
+
+[0]: <https://www.ti.com/lit/gpn/TLV320AIC3106>
+
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
+
+This patch depends upon the bcdma driver fix posted upstream:
+<https://lore.kernel.org/all/20240607-bcdma_chan_cnt-v2-1-bf1a55529d91@ti.com/>
+
+ arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 121 ++++++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+index bf3c246d13d1..c040dcdebf88 100644
+--- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
+@@ -105,6 +105,16 @@ vdd_sd_dv: regulator-TLV71033 {
+ 			 <3300000 0x1>;
+ 	};
+ 
++	vcc_3v3_aud: regulator-vcc3v3 {
++		/* Output of LM5140 */
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	vsys_io_1v8: regulator-vsys-io-1v8 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vsys_io_1v8";
+@@ -122,6 +132,35 @@ vsys_io_1v2: regulator-vsys-io-1v2 {
+ 		regulator-always-on;
+ 		regulator-boot-on;
+ 	};
++
++	codec_audio: sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "J722S-EVM";
++		simple-audio-card,widgets =
++			"Headphone",	"Headphone Jack",
++			"Line",		"Line In",
++			"Microphone",	"Microphone Jack";
++		simple-audio-card,routing =
++			"Headphone Jack",	"HPLOUT",
++			"Headphone Jack",	"HPROUT",
++			"LINE1L",		"Line In",
++			"LINE1R",		"Line In",
++			"MIC3R",		"Microphone Jack",
++			"Microphone Jack",	"Mic Bias";
++		simple-audio-card,format = "dsp_b";
++		simple-audio-card,bitclock-master = <&sound_master>;
++		simple-audio-card,frame-master = <&sound_master>;
++		simple-audio-card,bitclock-inversion;
++
++		simple-audio-card,cpu {
++			sound-dai = <&mcasp1>;
++		};
++
++		sound_master: simple-audio-card,codec {
++			sound-dai = <&tlv320aic3106>;
++			clocks = <&audio_refclk1>;
++		};
++	};
+ };
+ 
+ &main_pmx0 {
+@@ -202,6 +241,21 @@ J722S_IOPAD(0x0130, PIN_OUTPUT, 0) /* (AG26) RGMII1_TXC */
+ 			J722S_IOPAD(0x012c, PIN_OUTPUT, 0) /* (AF25) RGMII1_TX_CTL */
+ 		>;
+ 	};
++
++	main_mcasp1_pins_default: main-mcasp1-default-pins {
++		pinctrl-single,pins = <
++			J722S_IOPAD(0x0090, PIN_INPUT, 2) /* (U24) GPMC0_BE0n_CLE.MCASP1_ACLKX */
++			J722S_IOPAD(0x0098, PIN_INPUT, 2) /* (AA24) GPMC0_WAIT0.MCASP1_AFSX */
++			J722S_IOPAD(0x008c, PIN_OUTPUT, 2) /* (T25) GPMC0_WEn.MCASP1_AXR0 */
++			J722S_IOPAD(0x0084, PIN_INPUT, 2) /* (R25) GPMC0_ADVn_ALE.MCASP1_AXR2 */
++		>;
++	};
++
++	audio_ext_refclk1_pins_default: audi-ext-refclk1-pins-default {
++		pinctrl-single,pins = <
++			J722S_IOPAD(0x0a0, PIN_OUTPUT, 1) /* (N24) GPMC0_WPn.AUDIO_EXT_REFCLK1 */
++		>;
++	};
+ };
+ 
+ &cpsw3g {
+@@ -277,6 +331,12 @@ &wkup_i2c0 {
+ 	bootph-all;
+ };
+ 
++&k3_clks {
++	/* Configure AUDIO_EXT_REFCLK1 pin as output */
++	pinctrl-names = "default";
++	pinctrl-0 = <&audio_ext_refclk1_pins_default>;
++};
++
+ &main_i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&main_i2c0_pins_default>;
+@@ -301,6 +361,41 @@ exp1: gpio@23 {
+ 				  "PCIe0_1L_RC_RSTz", "PCIe0_1L_PRSNT#",
+ 				  "ENET1_EXP_SPARE2", "ENET1_EXP_PWRDN",
+ 				  "PD_I2ENET1_I2CMUX_SELC_IRQ", "ENET1_EXP_RESETZ";
++
++		p01_hog: p01-hog {
++			/* P01 - TRC_MUX_SEL */
++			gpio-hog;
++			gpios = <0 GPIO_ACTIVE_HIGH>;
++			output-low;
++			line-name = "TRC_MUX_SEL";
++		};
++
++		p02_hog: p02-hog {
++			/* P02 - MCASP1_FET_SEL */
++			gpio-hog;
++			gpios = <2 GPIO_ACTIVE_HIGH>;
++			output-high;
++			line-name = "MCASP1_FET_SEL";
++		};
++
++		p13_hog: p13-hog {
++			/* P13 - GPIO_AUD_RSTn */
++			gpio-hog;
++			gpios = <13 GPIO_ACTIVE_HIGH>;
++			output-high;
++			line-name = "GPIO_AUD_RSTn";
++		};
++	};
++
++	tlv320aic3106: audio-codec@1b {
++		#sound-dai-cells = <0>;
++		compatible = "ti,tlv320aic3106";
++		reg = <0x1b>;
++		ai3x-micbias-vg = <1>;  /* 2.0V */
++		AVDD-supply = <&vcc_3v3_aud>;
++		IOVDD-supply = <&vcc_3v3_aud>;
++		DRVDD-supply = <&vcc_3v3_aud>;
++		DVDD-supply = <&vsys_io_1v8>;
+ 	};
+ };
+ 
+@@ -384,3 +479,29 @@ &sdhci1 {
+ 	status = "okay";
+ 	bootph-all;
+ };
++
++&mcasp1 {
++	status = "okay";
++	#sound-dai-cells = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_mcasp1_pins_default>;
++	op-mode = <0>; /* MCASP_IIS_MODE */
++	tdm-slots = <2>;
++	serial-dir = < /* 0: INACTIVE, 1: TX, 2: RX */
++	       1 0 2 0
++	       0 0 0 0
++	       0 0 0 0
++	       0 0 0 0
++	>;
++};
++
++&main_conf {
++	audio_refclk1: clock@82e4 {
++		compatible = "ti,am62-audio-refclk";
++		reg = <0x82e4 0x4>;
++		clocks = <&k3_clks 157 18>;
++		assigned-clocks = <&k3_clks 157 18>;
++		assigned-clock-parents = <&k3_clks 157 33>;
++		#clock-cells = <0>;
++	};
++};
+-- 
+2.25.1
+
