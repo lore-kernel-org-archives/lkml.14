@@ -1,115 +1,219 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A907171C4;
-	Tue, 11 Jun 2024 21:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDCA2033E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 21:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718141773; cv=none; b=pTS4e4Memxver3qQt3NGtEN7r4LHoQaVnUKYWBzvU0dISiooMI6e+kt+uNx/bfEpjSzxszItol6ddcCEkygOK1Ebdg/P8EDPR4N96VCxyymLotLzLq75Kpx3NGgRgVfh7Wq+Ijx4yUitHp1Wmnx0c5HMmGm+vK4t/FQ4iuJPkvc=
+	t=1718141888; cv=none; b=f/fWs58GTM0xkGfbTY54A3++R1SMoyEHfmw8YeLOljSZzA7LmawWgoTff2288nwgysdw2UflU82CGZRLFNkvMjzjoH0l+v6Ot3pByQ+2uH5Gxqeo6A/JoWfwWHqUqP/2XqY5J85qdUDx0EPc9AUKZ0D/4/V/e840FBPVK+9m/MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718141773; c=relaxed/simple;
-	bh=mK7u4g6d/FI3I+GEvjf9//kaQbqPpB8MdX7WJi8RqPU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sBIYrYYIRM6gkHK6zr3jB6Qu1OME58b5nVeoyfLIdFKzoUTM9J1vJJEcyqMKEWW6B4OR4nN6kIxdn9ycuz9LIFrnnlGT4l4hKfJ8oLh9lSvAEo2TmXNzGyepb6rCEbC2hxjNgwIfBqyAa6mSBuUhivft0YYk4ie63W26pvKtnqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ilJ4Ps5L; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718141888; c=relaxed/simple;
+	bh=ySqUTx0evazFjjELB84p1DsaP5eR3ADWvtGXHiLCUdM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hxr5TcQAY4EJfOu2KP+fzEg8Yzz26OzigTIM1dwsD1ybx0Tu6yYr/1pl1z63tauFhzA28BM4RAITUK9YeJ5iZYaiaIYWeaz4QwzjIJ4bqKbxEAn9GvWpqicQeVSlTsQz2WFzYfF0seotcdy0J0Dz8yZtpdSSyhMgn1iuY53BXI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ppe/Mzfv; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ilJ4Ps5L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718141772; x=1749677772;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mK7u4g6d/FI3I+GEvjf9//kaQbqPpB8MdX7WJi8RqPU=;
-  b=ilJ4Ps5LxZVtRFV2eIcql0keGyLajegz2XyHporx8/FzjNOKdwA4nHa3
-   2r+KCUlbGAlnCWmhcO2lvR+XgDbp9QG+kJlxYJsgaI43Io5AvLcN2aUna
-   riNnquya+PyunOTywyXOcbbT9MZnapNAPJAuqrHYmFw1EokvfK+WwE3ka
-   h9MskPsMwMSiYG5Q/7dOAtm7KHkrlckWJRJxVqiA8K3HGBQMoi5DbaGdQ
-   dsoAQhaS6I2peFOMCAU88QJe7/AZDVNxfxYYlPkhP/A2rL5mR2qnIdt2e
-   M9KlookXYbr2/zsq6wv3k+MCvZSAHuBuXPODRaPxc8QBJC1QHu3+QZDgW
-   w==;
-X-CSE-ConnectionGUID: oUTCdiiBSOuiMX3knd/6SA==
-X-CSE-MsgGUID: A0P77sSXTsCoCP6nb8J4yA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="32418501"
-X-IronPort-AV: E=Sophos;i="6.08,231,1712646000"; 
-   d="scan'208";a="32418501"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 14:36:11 -0700
-X-CSE-ConnectionGUID: FGVX40QAQWq/aqGRgohnqA==
-X-CSE-MsgGUID: aDbVzrA0Txqqvl36OVnTIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,231,1712646000"; 
-   d="scan'208";a="62744724"
-Received: from cbae1-mobl.amr.corp.intel.com (HELO cbae1-mobl.intel.com) ([10.124.132.58])
-  by fmviesa002.fm.intel.com with ESMTP; 11 Jun 2024 14:36:10 -0700
-From: "Chang S. Bae" <chang.seok.bae@intel.com>
-To: ebiggers@kernel.org,
-	linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	bernie.keany@intel.com,
-	chang.seok.bae@intel.com
-Subject: [PATCH v9b 12/14] x86/Kconfig: Add symbols for Key Locker
-Date: Tue, 11 Jun 2024 14:36:09 -0700
-Message-Id: <20240611213609.253115-1-chang.seok.bae@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240329015346.635933-13-chang.seok.bae@intel.com>
-References: <20240329015346.635933-13-chang.seok.bae@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ppe/Mzfv"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5b9a5be6668so715839eaf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 14:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718141885; x=1718746685; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SpKLP3/PYYk2S5W110YgI1G09xFxTWkXzi4V4Rve3Bg=;
+        b=Ppe/MzfvI7EL7WIa/qDMvSU6ouHVhrJTG2hk/2uxNbyVF6lm0T3/Ex0GoMFMMoN+hw
+         jNXRC52H6HiNIfWVKLasHJ+/gcL7ojr59sEpx0RnKD4fXHJm7qVjKsKV4U9JZjj+8waq
+         /kU5DjwBDkhB4OCVGTTicLV/gDmHpcEisCAFbLbS7QgVg79ZuO5JiQgsUL5g2TqbLbCI
+         ybdcsLgxrRTDv/R1aOy+CuhlhFrIITsv2XY1GNcwnomwyNy/62QoAapdJB7wZU4n9lnp
+         GlL3kxb/ZT11tBtZYJtEhLjL/YSzg+zfrL5WNrPal3RlcSqfTlyujQAioYbjBe+lxymb
+         4Qug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718141885; x=1718746685;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SpKLP3/PYYk2S5W110YgI1G09xFxTWkXzi4V4Rve3Bg=;
+        b=l5fSwTr2R04GSJrWXlZqei4Ml1YfEo5XhKvYJrSwhOoJ9I6LjPxdKi9gDxIK2oOOzM
+         CE2fI+tod/ZfocYzT3fBGszKe+043Vc5pd8g4PlXKt+EkSeRROPRxix++ad9OiVAGPcd
+         KQF5vaeKBhjU3q7/cW6vJruoV81CpgZgrq26AqzBV1yU2vj8+StDMBFCemfLh/rUH0Cy
+         iFeAzf0O4E0VsN+YuVuL/+LodjzUIiFMtW3xWbSkRAWGMsgDlTrTpvAjUlVXfD3rZ4pu
+         tgKY+QIfuKcHrIrvcvAHW5VJ672UhEB0EB/QDmpZgxH6zHvDQWkGXCwNsKThzAMu5nfB
+         gPbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQX2PgUVdgRTvGk9pnREaFzTCjBzNLS0zpzM3S0xVTV2wMFybK0c06ZDYNKWhzxWOgvLcmbrGEcHfN2ORGcyKMTuuV8i3kYNFOvbQ8
+X-Gm-Message-State: AOJu0YzWzmTtg/OgsQuza5tb1QbVy0CaGA1vEWV94TcSWHRyTxSfsImZ
+	2uNWpPEMa+IdJgo10dBzC4xm1jYLWNN7UIzwnszwx2Q6cQduvql+
+X-Google-Smtp-Source: AGHT+IFaNdobBN4HbuBoXAPQXnoOTWeSKZhfmlCo9gp66hdSTlHzKfS6h39kIEf2QODmThRg01SyLA==
+X-Received: by 2002:a05:6358:914a:b0:19f:3a23:87a with SMTP id e5c5f4694b2df-19f69d9c14amr20293355d.20.1718141885077;
+        Tue, 11 Jun 2024 14:38:05 -0700 (PDT)
+Received: from localhost ([216.228.127.131])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6de200843afsm8051313a12.10.2024.06.11.14.38.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 14:38:04 -0700 (PDT)
+Date: Tue, 11 Jun 2024 14:38:02 -0700
+From: Yury Norov <yury.norov@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Andi Shyti <andi.shyti@kernel.org>, Lee Jones <lee@kernel.org>,
+	Arseniy Krasnov <AVKrasnov@sberdevices.ru>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Robert Richter <rrichter@amd.com>, Vinod Koul <vkoul@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Nikita Kravets <teackot@gmail.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Eric Biggers <ebiggers@google.com>,
+	Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	John Johansen <john.johansen@canonical.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Mark Brown <broonie@kernel.org>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	David Howells <dhowells@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Peter De Schrijver <pdeschrijver@nvidia.com>,
+	Prashant Gaikwad <pgaikwad@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Pavel Machek <pavel@ucw.cz>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Sebastian Reichel <sre@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jason Baron <jbaron@akamai.com>, Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with
+ sysfs_match_string()
+Message-ID: <Zmi9bVdd8uNeqkWl@yury-ThinkPad>
+References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+ <87tti9cfry.fsf@intel.com>
+ <CACRpkdZFPG_YLici-BmYfk9HZ36f4WavCN3JNotkk8cPgCODCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZFPG_YLici-BmYfk9HZ36f4WavCN3JNotkk8cPgCODCg@mail.gmail.com>
 
-Add CONFIG_X86_KEYLOCKER to control whether Key Locker is initialized at
-boot. Additionally, add the AS_KEYLOCKER config symbol to indicate
-whether the assembler supports Key Locker.
+On Mon, Jun 10, 2024 at 10:08:00AM +0200, Linus Walleij wrote:
+> On Tue, Jun 4, 2024 at 9:46 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
+> 
+> [Maybe slightly off-topic, ranty]
+> 
+> > Why do we think it's a good idea to increase and normalize the use of
+> > double-underscore function names across the kernel, like
+> > __match_string() in this case? It should mean "reserved for the
+> > implementation, not to be called directly".
+> >
+> > If it's to be used directly, it should be named accordingly, right?
+> 
+> It's a huge mess. "__" prefix is just so ambiguous I think it just
+> shouldn't be used or prolifierated, and it usually breaks Rusty Russells
+> API rules times over.
+> 
+> Consider __set_bit() from <linux/bitops.h>, used all over the place,
+> in contrast with set_bit() for example, what does "__" represent in
+> this context that makes __set_bit() different from set_bit()?
+> 
+> It means "non-atomic"...
+> 
+> How does a random contributor know this?
+> 
+> Yeah, you guess it. By the token of "everybody knows that".
+> (Grep, google, repeat for the number of contributors to the kernel.)
+> 
+> I was considering to send a script to Torvalds to just change all
+> this to set_bit_nonatomic() (etc) but was hesitating because that
+> makes the name unambiguous but long. I think I stayed off it
+> because changing stuff like that all over the place creates churn
+> and churn is bad.
 
-The former will be selected, and the latter will be referenced by the Key
-Locker cipher module CRYPTO_AES_KL, to be added in a later patch.
+Hi Linus,
 
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
----
-Changes from v9:
-* Include AS_KEYLOCKER symbol (Eric Biggers).
-* Revoke the earlier tag.
----
- arch/x86/Kconfig           | 3 +++
- arch/x86/Kconfig.assembler | 5 +++++
- 2 files changed, 8 insertions(+)
+I think about renaming set_bit() stuff for atomicity at least twice
+a year. But it would be over 15000 renames for set and clear_bit only:
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 1d7122a1883e..ce4e4c1641da 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1881,6 +1881,9 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
- 
- 	  If unsure, say y.
- 
-+config X86_KEYLOCKER
-+	bool
-+
- choice
- 	prompt "TSX enable mode"
- 	depends on CPU_SUP_INTEL
-diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
-index 59aedf32c4ea..e6ce80d23113 100644
---- a/arch/x86/Kconfig.assembler
-+++ b/arch/x86/Kconfig.assembler
-@@ -35,6 +35,11 @@ config AS_VPCLMULQDQ
- 	help
- 	  Supported by binutils >= 2.30 and LLVM integrated assembler
- 
-+config AS_KEYLOCKER
-+	def_bool $(as-instr,encodekey256 %eax$(comma)%eax)
-+	help
-+	  Supported by binutils >= 2.36 and LLVM integrated assembler >= V12
-+
- config AS_WRUSS
- 	def_bool $(as-instr,wrussq %rax$(comma)(%rbx))
- 	help
--- 
-2.34.1
+yury:linux$ git grep -w -E "set_bit|clear_bit"|wc -l
+12972
+yury:linux$ git grep -w -E "__set_bit|__clear_bit"|wc -l
+2914
 
+Anyways, if someone is brave enough to do that... The main problem is
+that set_bit() is heavily abused because people don't bother putting
+the '__' thing, which leads to using atomic helpers where non-atomic
+versions are enough. 
+
+So the right path for renaming would be:
+
+s/set_bit/atomic_set_bit
+s/__set_bit/nonatomic_set_bit
+/* Wait for a full release cycle or two to let people get used, then */
+#define set_bit nonatomic_set_bit
+
+Thanks,
+Yury
+
+PS. Had to drop all maillists except for LKML and some random victims
+because my gmail account doesn't allow more that 100 recipients. If
+you guys know how to increase the limit, please advise.
