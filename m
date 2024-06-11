@@ -1,111 +1,117 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from wflow1-smtp.messagingengine.com (wflow1-smtp.messagingengine.com [64.147.123.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57044152178;
-	Tue, 11 Jun 2024 08:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1533A172764;
+	Tue, 11 Jun 2024 08:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718094466; cv=none; b=hCPcLR8y1oSPLG+Gjv/3REPdg8GDhtztPOQvRR3FMbERA6ft38SjUMrPk+cGFgcBPQ02AkbsPSkcPGAQK9Gsljy+KL+x4VCW8XcPtzuhzWQYpLvt0QFnYdSFnR930/8Qffm6KIQi+511bF1hXajpfI8owVqIOClmgLOM6+++w9o=
+	t=1718094507; cv=none; b=f+M+XkzO3Jc3+enS1o9u6nJSelzb45mEB0XjifF15mMp9+iqqokpjhEb5EyWPaoHvx5vxRRk5paxmIWGpRH655jl6O1zZgAAUn9bGDxhRvo8vN6+FdTd8MiVeZLxqykiwcvniz+uvglvPiN2P+PX1rbGWAcAopy2M2SR3EuPhLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718094466; c=relaxed/simple;
-	bh=S9etYCrjDhnD286GdZJel9VZyLYtyY1IIfEvrHkgZdk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UAdXdh8/ekI9CUs1XQO4tVV2YNE/MtgfNy2c/Td0LWs9rMtD6KwkMdMz9tm5BykP+gi6jwWR/bq7lkcXgC9sCD+w+WRYlLhFSBr9uB97BFBFk2SHnqhxFUk6GJx02PrzUck8VhAxs3qmDcjVUoJ632hPG1mAASbcar8979ZE6dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=Kd07t7jM; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1718094507; c=relaxed/simple;
+	bh=WlCLV+10vurnCj41WSYI9fw9oRJL9wgxuJfNi2U9UP0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nDAfADCdJ1dWulLVX1YgpZ5AZ66ACs1AfrExLF3sbG8CLUpPMOGeCM+AG/QcZ4jIkjs/4cWcTT8Vl8mlRtEMzrMSaeu1nB/04Wvu9zEeOdvTMNmu8lr46839CQGPM+uIgUd1W4+X8wwTRrCc+4npCdIVqCFN0feWkUwzIDnepjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=osE7N0Wu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZOqPDh57; arc=none smtp.client-ip=64.147.123.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="Kd07t7jM"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id C2600100002;
-	Tue, 11 Jun 2024 11:27:16 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1718094436; bh=oFr2YS8xOkbzW4Son0Mqyup2AFLMMw+xc2c2p9yDb7s=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=Kd07t7jMBRIFed/W7eTPu1CdgJuCtfVSQNreUt0PqSJ1O3Ih5aRM3+1+MRpb4WnLr
-	 ukcuhYepphPn0jHijbkF9R9uwDgEUfD6xftTW2KsmpARvacqeP+a/hVlc+flbvxekL
-	 bMGvXEIoFMpCdJd0XF6jbb8hR6kAhErW5X2kyOKf4PcFNZLoW+1eEPYERvewqHcOXW
-	 wrqKPg68KIwfsC9KxL2NfNFv9iuIV1jfG77AXDhrzqbIoJR+hTg9MzN86LtAkcO5or
-	 nl1jZEq9sq+5FhoWbFko22nDCEbvz8pAK4UrxeN8ZBahfaoJ/WFRHVP5DIkrDKZdVi
-	 ZfGAcYcAeh2qQ==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Tue, 11 Jun 2024 11:26:15 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.5) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
- 2024 11:25:54 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Edwin Peer <edwin.peer@broadcom.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Michael Chan
-	<michael.chan@broadcom.com>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Wojciech
- Drewek <wojciech.drewek@intel.com>
-Subject: [PATCH net v3] bnxt_en: Adjust logging of firmware messages in case of released token in __hwrm_send()
-Date: Tue, 11 Jun 2024 11:25:46 +0300
-Message-ID: <20240611082547.12178-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="osE7N0Wu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZOqPDh57"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailflow.west.internal (Postfix) with ESMTP id BAE8E2CC0168;
+	Tue, 11 Jun 2024 04:28:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Tue, 11 Jun 2024 04:28:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1718094502; x=1718098102; bh=bQpdgobU82
+	YWZriN3d7BiIoR2BmrlzIuuKqmODIu3NA=; b=osE7N0WuCRJ4jr/zq9XEthfsSB
+	JaihG8TMRtsCQYH3e74lkFjSBml+3s1i0xShAwaaxUYVSMbjVGY3pBd6oD9V/xFA
+	4EQhcALk8KlAvXfna0DVEdgCOAgwRrrT0U84FNNmYmgSoQ1eAYZB8pQIE+uKJZTL
+	JBwCXT+3w99jaMOnc5iKeo4Xc/RT9DaxqEcwXKiDL8A31Xl2rs2eHq6cjafmsUko
+	XdVeMrXsMNOYWXX2KVJ8fiRwhqHIWbiajSn5Ff0SlrUUq0vCVusalLSHryvxB/nE
+	naWH9GSK8CH0p6CRpNRg3O95uOWQw0GrLj3Kq2JlsrDkuo0hMXXDxpOpe/EQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1718094502; x=1718098102; bh=bQpdgobU82YWZriN3d7BiIoR2Bmr
+	lzIuuKqmODIu3NA=; b=ZOqPDh57FHfBZoeMW5VTOtiPNI5X6qPdO47jp8figGmz
+	rQUBRMnwR8xaLGfRDS/mEc5jYRLplg98K4VVw6rd/IEyvLDiVhXi+d/6x2LpFnIt
+	jKtQvuFLkQS7TXGAfFPv2l0Zvqcg38jpCgfK+HrE/ZvNuQMx2b2waDYQzPyAiHRf
+	zwHElFx3sT7n/kv/GUbWI/KVZlR9UJrB++qghkJUqjqckGq7+ZzecK+mKPPJ8/dJ
+	QLZCU9od/qU2AYLno3ZZXyuEm/cqRZ9+WIvA6ydTL/K/wx2E0OTp2UbklsAygM/Z
+	lrbV70srVgC0egd6MnTWjINW3FB1/DBsBwa4DdwVYg==
+X-ME-Sender: <xms:pgpoZvHNoVLJZbvLBBx9zFSFJzjc3tBW9UvbNLH_EEhz7hUrZ9eJYQ>
+    <xme:pgpoZsVRDa5XD2bB9RpI24nGiyrXg-nm5rbo01f73VnNF46kAmDY4tAdomQp12gSc
+    gcOQgNGh2G4X5djpn8>
+X-ME-Received: <xmr:pgpoZhInH0L3g_lSzDHyFn_04fwDolaKCC-XKra6rrhvqOIupxIfTMIpiszoXDXEEtflWn32cYxoDR8u5AoKrwQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeduvddgtdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtjeenucfhrhhomheplfhonhgr
+    thhhrghnucevrghlmhgvlhhsuceojhgtrghlmhgvlhhsseefgiigtddrnhgvtheqnecugg
+    ftrfgrthhtvghrnhepkeekteegfefgvdefgfefffeufeffjedvudeijeehjeehffekjeek
+    leffueelgffgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepjhgtrghlmhgvlhhsseefgiigtddrnhgvth
+X-ME-Proxy: <xmx:pgpoZtE62QlC7KH4a1-Foj7m6SuGeo1__iLpVx3kWrNlKBtZDBGEXw>
+    <xmx:pgpoZlWVRQ_p8fUh5gFYj3sWLfDDqVe2tMDDZAU1gqBXHf7mYlnMMQ>
+    <xmx:pgpoZoOPDeZrLcNPr8SiDMzORypHNbn-VXsYWGSfv1UBbph_1w1i6w>
+    <xmx:pgpoZk1eF3x0f-nXXHLkc3aOXfnwdUUVFZsttwxxSOhu5TFpp2cacg>
+    <xmx:pgpoZqUhWZIGf2kTk6xnb51pDwG2k0o0o69dvVdgwO0G37IIm-rtNfGI>
+Feedback-ID: i76614979:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 11 Jun 2024 04:28:18 -0400 (EDT)
+Date: Tue, 11 Jun 2024 01:33:29 -0700
+From: Jonathan Calmels <jcalmels@3xx0.net>
+To: Josef Bacik <josef@toxicpanda.com>
+Cc: brauner@kernel.org, ebiederm@xmission.com,
+ 	Jonathan Corbet <corbet@lwn.net>, Paul Moore <paul@paul-moore.com>,
+ 	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ 	KP Singh <kpsingh@kernel.org>,
+ Matt Bobrowski <mattbobrowski@google.com>,
+ 	Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ 	Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>,
+ 	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ 	Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ 	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, 	Luis Chamberlain <mcgrof@kernel.org>,
+ Kees Cook <kees@kernel.org>, 	Joel Granados <j.granados@samsung.com>,
+ John Johansen <john.johansen@canonical.com>,
+ 	David Howells <dhowells@redhat.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>,
+ 	Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>, 	Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, containers@lists.linux.dev,
+ 	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-doc@vger.kernel.org, 	linux-security-module@vger.kernel.org,
+ bpf@vger.kernel.org, apparmor@lists.ubuntu.com,
+ 	keyrings@vger.kernel.org, selinux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Introduce user namespace capabilities
+Message-ID: <tqvnpbrdmfj3q7rc2m365nxvwgb6hsvipiz7l473cdwyacdb6s@b22nvrk7vbok>
+References: <20240609104355.442002-1-jcalmels@3xx0.net>
+ <20240610201227.GD235772@perftesting>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185852 [Jun 11 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/06/11 07:24:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/11 05:58:00 #25560715
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240610201227.GD235772@perftesting>
 
-In case of token is released due to token->state == BNXT_HWRM_DEFERRED,
-released token (set to NULL) is used in log messages. This issue is
-expected to be prevented by HWRM_ERR_CODE_PF_UNAVAILABLE error code. But
-this error code is returned by recent firmware. So some firmware may not
-return it. This may lead to NULL pointer dereference.
-Adjust this issue by adding token pointer check.
+On Mon, Jun 10, 2024 at 04:12:27PM GMT, Josef Bacik wrote:
+> Where are the tests for this patchset?  I see you updated the bpf tests for the
+> bpf lsm bits, but there's nothing to validate this new behavior or exercise the
+> new ioctl you've added.  Thanks,
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 8fa4219dba8e ("bnxt_en: add dynamic debug support for HWRM messages")
-Suggested-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
-Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
----
-v1->v2: Preserve the error message by replacing 'token' with 'ctx->req->seq_id' as suggested by Michael.
- As the patch didn't change significantly, add Wojciech's Reviewed-by tag from the previous version.
-v2->v3: Fix missing alignment.
-
- drivers/net/ethernet/broadcom/bnxt/bnxt_hwrm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_hwrm.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_hwrm.c
-index 1df3d56cc4b5..d2fd2d04ed47 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_hwrm.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_hwrm.c
-@@ -680,7 +680,7 @@ static int __hwrm_send(struct bnxt *bp, struct bnxt_hwrm_ctx *ctx)
- 			    req_type);
- 	else if (rc && rc != HWRM_ERR_CODE_PF_UNAVAILABLE)
- 		hwrm_err(bp, ctx, "hwrm req_type 0x%x seq id 0x%x error 0x%x\n",
--			 req_type, token->seq_id, rc);
-+			 req_type, le16_to_cpu(ctx->req->seq_id), rc);
- 	rc = __hwrm_to_stderr(rc);
- exit:
- 	if (token)
--- 
-2.30.2
-
+Apologies, I haven't had much time to spend on it so I prioritized the
+rest. But yes, we should certainly update the capabilities selftests
+once we agreed on the different behaviors.
