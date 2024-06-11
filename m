@@ -1,108 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD98171E7C;
-	Tue, 11 Jun 2024 07:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B39171E7C;
+	Tue, 11 Jun 2024 07:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718091366; cv=none; b=CJlsyWksYazfmxLVdX1XbRMfj9/fxOCh2gIKK0ZqnYwKr3Bim4b4XnOIuKcTlD0mTDMQUORTs3L/zfw4aaIkbSkY68Y3xQk0BYsU3yTbZko5FkQWB+HDF5X9/2072///T8MEXVRSO7qeAJ1rzK7PlvKiOsaS+0jP7+ak/wqBQkA=
+	t=1718091375; cv=none; b=hz2PrdguC9HSQM2o2r+70q/+vw5lznaXOPLFdBq+MxfBmLl5rx1yzgjY3ZcG9giJoPngPxpK5lEqaPL1c4ohFBI5XI+3PHzQPSNtlCyyLYsFUWoxHeylU5cKXwXSfuPDJATaqgOGi0sil3S2Pv01CwKHqk2P5kjCzXkoWa59E1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718091366; c=relaxed/simple;
-	bh=h5lWjlmg4j2trX70zrGXvV0gKEBmsyN3kR6SWh2/Xik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XDqM3V/qdOkrF0Di58BDsibAY8El4SjYBt3vmwwcog96ktcJ0fwmfRkNXpqYswZ7Opykj215M1OKK+JAFcn4hoh0ZHQ47JLg76bIVutTU4yM2CqxIzt7BcelQBMy5oTlTFsXLc0JIIK/Fh/A7ajpP2/5NNkYsi8VHr3UqdP/6bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aKd5cXl5; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aKd5cXl5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718091364; x=1749627364;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=h5lWjlmg4j2trX70zrGXvV0gKEBmsyN3kR6SWh2/Xik=;
-  b=aKd5cXl58N/2m+3heoUmgZ6qN920lDq3wvuKJAaL7XaSVFPb9OAqZAnF
-   RXD1JqAAw6zN9QFmRLvfzP+dLubVxe4e/tSOGpoGalU98aNiY/b1r+Vsm
-   w0U6baCB+ois+1l2KnWSZATmzlYWOek6d8UUxwGG1FQqRrS+CpyYVU5Ra
-   bFnx6bNva/tZ4utYa6C/ft+7ZnIoTzz/YYUzhBvYjtNst2x9YVJtWGlVX
-   Ze4zD+kGXhFRpLUQTS2OUnMUqsNGzpILJU05KwxR53fGdl+kWzzB8eoUO
-   7gn1Jz/4B57qRIkCQkrF/diSAPec1gORJycYoacHwIXYILogSPxNczQNg
-   w==;
-X-CSE-ConnectionGUID: qTOGRrSLSpKA3Cz0JchD2g==
-X-CSE-MsgGUID: bwHUADkWTjulqxbyxbgS3Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="25448850"
-X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
-   d="scan'208";a="25448850"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 00:36:04 -0700
-X-CSE-ConnectionGUID: WFtqwmd2SqGqXWeXlVpBrQ==
-X-CSE-MsgGUID: fGQrY9XXROaEisoh+KQgPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
-   d="scan'208";a="44282695"
-Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 11 Jun 2024 00:36:00 -0700
-Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sGw2v-0000Bd-2E;
-	Tue, 11 Jun 2024 07:35:57 +0000
-Date: Tue, 11 Jun 2024 15:35:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Beleswar Padhi <b-padhi@ti.com>, nm@ti.com, vigneshr@ti.com
-Cc: oe-kbuild-all@lists.linux.dev, kristo@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, vaishnav.a@ti.com, j-choudhary@ti.com,
-	u-kumar1@ti.com
-Subject: Re: [PATCH 1/3] arm64: dts: ti: Add R5F and C7x remote processor
- nodes
-Message-ID: <202406111537.bNPc0hYx-lkp@intel.com>
-References: <20240607090433.488454-2-b-padhi@ti.com>
+	s=arc-20240116; t=1718091375; c=relaxed/simple;
+	bh=ARZe1loMVP74ruyMn8+10+hSh8A6o2hBc6fLxjaGuTA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MYg5YZKrAVal/FzZr9d5AmE4fuH1fdno9m9eA9KUyDJvKRVHXvNVjPuYXV2eqxCAPvHZgLMCpXhDIPAlfU5OObablyl+IeGuKB6t4Vo941VEZtxWIzn6CLf9nIzlElYUz2l1SF0kWqYX0JadIyEMw/fxq4ozu/6yFxXiYh/kEjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a6e43dad8ecso594600566b.1;
+        Tue, 11 Jun 2024 00:36:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718091372; x=1718696172;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zARE2ykaZLKe2LSa6sB/L8tQ+x3s44Gn7f7syKk8L1k=;
+        b=foLsM6UlNRXv87BpSHSJxCC7g93rfxfVUd5/NJ/CYblOa/GsjV0GappyfHaakKdhto
+         XCSQaXjb5mTyaoDoQw49DsZ2+E+Mbp57EJo28wtjUN11FMD2AX9DYo5vYMgcMNgOA23J
+         IXjqssL+Thk0XKDi2eAj/KDh1fQpkOAZoRBjQes+tUk0iBXOKH5AUtLVS5DV41mWMf60
+         EJEKgqZiOA5BtKKwNMAtpGsTT5ABr+Xjv7ssZVgPh+i5wTLGog7lKvNreH4M5kdq4oib
+         VGElMvlder9KttrdRuLjCgl5QQrUHNTz7e+Tdt3vWUoh0GIC9pudYqK9iR7pj4/jxKzS
+         WfrA==
+X-Forwarded-Encrypted: i=1; AJvYcCXd/mUoQF8n7h1bmkTvHiO5RLThD2zEubtI74BWzGmS7qevbtDG7nODmlgjhVqLNhvwZWgYhFvGOSwG7pqzmnQfN3lS1d3eOU+s/+sER3ZMpCkmp4jhLEBaYaqVERJlHtKPNxnyr3wz5N/PZQ==
+X-Gm-Message-State: AOJu0YyXRi1M3jwAzcfYSBYknVFjsIoLWbjjz1XRXIVIxR7b3Co5cNLo
+	jlRYIbQj5KYxxtyOklWh8dovX035/ahsFfjE93TN7+YCP/oNylTZ
+X-Google-Smtp-Source: AGHT+IGifzxIzPgrUuvBOKMpLojTJWEC748lXgYAK6UW8TVQ3vyaf2l/29NCw2JCSi2KAWJ/maByfQ==
+X-Received: by 2002:a17:906:b885:b0:a6e:fdc8:ae42 with SMTP id a640c23a62f3a-a6f34cb468bmr116133866b.12.1718091371938;
+        Tue, 11 Jun 2024 00:36:11 -0700 (PDT)
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c80727e04sm721596766b.188.2024.06.11.00.36.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jun 2024 00:36:11 -0700 (PDT)
+Message-ID: <5e46e5dc-cb38-4851-875f-732c99c5f34f@kernel.org>
+Date: Tue, 11 Jun 2024 09:36:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607090433.488454-2-b-padhi@ti.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/15] tty: serial: switch from circ_buf to kfifo
+To: Ferry Toth <fntoth@gmail.com>, neil.armstrong@linaro.org,
+ gregkh@linuxfoundation.org
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Al Cooper <alcooperx@gmail.com>, Alexander Shiyan <shc_work@mail.ru>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, Baruch Siach
+ <baruch@tkos.co.il>, Bjorn Andersson <andersson@kernel.org>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ "David S. Miller" <davem@davemloft.net>, Fabio Estevam <festevam@gmail.com>,
+ Hammer Hsieh <hammerh0314@gmail.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Chunyan Zhang <zhang.lyra@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Kevin Hilman <khilman@baylibre.com>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
+ Laxman Dewangan <ldewangan@nvidia.com>,
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ "Maciej W. Rozycki" <macro@orcam.me.uk>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <michal.simek@amd.com>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Nicholas Piggin <npiggin@gmail.com>, Orson Zhai <orsonzhai@gmail.com>,
+ =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ Peter Korsgaard <jacmet@sunsite.dk>,
+ Richard Genoud <richard.genoud@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, Stefani Seibold <stefani@seibold.net>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Taichi Sugaya <sugaya.taichi@socionext.com>,
+ Takao Orito <orito.takao@socionext.com>,
+ Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
+ Thierry Reding <thierry.reding@gmail.com>, Timur Tabi <timur@kernel.org>,
+ Vineet Gupta <vgupta@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+References: <20240405060826.2521-1-jirislaby@kernel.org>
+ <daf06969-15fd-470e-88b8-a717066fe312@linaro.org>
+ <cebad7f8-3f47-4e6a-93b7-32fcf2367874@kernel.org>
+ <f42ef4a3-4bfe-4354-9220-ed742e093c86@gmail.com>
+ <364fbb96-006f-4582-a0f8-a0f9edd50f6f@gmail.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <364fbb96-006f-4582-a0f8-a0f9edd50f6f@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Beleswar,
+On 10. 06. 24, 22:16, Ferry Toth wrote:
+>> One question though: in 8250_dma.c serial8250_tx_dma() you mention "/* 
+>> kfifo can do more than one sg, we don't (quite yet) */".
+>>
+>> I see the opportunity to use 2 sg entries to get all the data out in 
+>> one dma transfer, but there doesn't seem to be much documentation or 
+>> examples on how to do that. It seems just increasing nents to 2 would 
+>> do the trick?
+> 
+> Nevertheless I got this to work. Very nice. Thanks for this series.
+> I am seeing only 2 interrupts (x2 as each interrupt happens twice), one 
+> for dma complete. The 2nd, not sure but likely, uart tx done.
+> In any case the whole buffer is transferred without interchar gaps.
+> 
+>> So, what was the reason to "don't (quite yet)"?
+> 
+> Before considering to send out a patch for this, are there any caveats 
+> that I'm overlooking?
 
-kernel test robot noticed the following build warnings:
+Not any I am aware of. It just needed testers.
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master v6.10-rc3 next-20240607]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Please send a patch.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Beleswar-Padhi/arm64-dts-ti-Add-R5F-and-C7x-remote-processor-nodes/20240607-170843
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240607090433.488454-2-b-padhi%40ti.com
-patch subject: [PATCH 1/3] arm64: dts: ti: Add R5F and C7x remote processor nodes
-config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20240611/202406111537.bNPc0hYx-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d7d2d4f53fc79b4b58e8d8d08151b577c3699d4a)
-dtschema version: 2024.6.dev1+g833054f
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240611/202406111537.bNPc0hYx-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406111537.bNPc0hYx-lkp@intel.com/
-
-dtcheck warnings: (new ones prefixed by >>)
->> arch/arm64/boot/dts/ti/k3-j722s-evm.dtb: dsp@7e000000: reg: [[0, 2113929216, 0, 2097152]] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
->> arch/arm64/boot/dts/ti/k3-j722s-evm.dtb: dsp@7e000000: reg-names: ['l2sram'] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
->> arch/arm64/boot/dts/ti/k3-j722s-evm.dtb: dsp@7e200000: reg: [[0, 2116026368, 0, 2097152]] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
->> arch/arm64/boot/dts/ti/k3-j722s-evm.dtb: dsp@7e200000: reg-names: ['l2sram'] is too short
-   	from schema $id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
-
+thanks,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+js
+suse labs
+
