@@ -1,98 +1,151 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [91.198.224.70])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE79517F50A;
-	Tue, 11 Jun 2024 11:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.224.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F240C176237;
+	Tue, 11 Jun 2024 11:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718106121; cv=none; b=KXMzsVi4x49vAhDiHZdTNXeNFJSdXyYU37OASlBYV9JedItHnuw4UnsJJLvSpLlC0wtx0f/1pWNrH/Fm4cxQ593aAZR1TGOITbTlxdlB/s8RePr7N5E4DXUT4NXTF4KwmbWo/YN0VkVVNeTYv13E7QHi9OurLKueNJa9kH72LTg=
+	t=1718106159; cv=none; b=hn+ZkKW+l23yHA8O3K3pRi7HXFWqN6dhuHVhApLTiHYn6nTW86TA/kWzUGLPkxhMwr1RxSfnpgz19P27WhyCzaLhT0uTIjRz+brnFy2fsCb/t7AFgY6TmtezwY2MBgJzdghzajVb6Bqj+aWi59+AbyU3SIVVKJgjGIkyFerMs9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718106121; c=relaxed/simple;
-	bh=hZekxdzg6/DbdtqVNiroTrOJ0Q1iP2Vz3e229k+G84U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fb6BAIuLsqD+4A4JU0L+OVLVOojKhFY3Baxc3P3xyk/jMowu7E2qN1LfMQQ5XeYhToa2RCIRgPaJVe3e508sWWWLORoAslFqiOkGlIYu7G9OBNzBBNfb9ZJE3tFP/uGyACFnxrwiHV4inZAYFO408zsV+b+sJ3Qnc2zwA1Qj8iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=91.198.224.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=9906f4c1d5=ms@dev.tdt.de>)
-	id 1sGzsz-002Z1m-PD; Tue, 11 Jun 2024 13:41:57 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sGzsz-0003Ow-7s; Tue, 11 Jun 2024 13:41:57 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id F0D7A240053;
-	Tue, 11 Jun 2024 13:41:56 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id 84486240050;
-	Tue, 11 Jun 2024 13:41:56 +0200 (CEST)
-Received: from mschiller1.dev.tdt.de (unknown [10.2.3.20])
-	by mail.dev.tdt.de (Postfix) with ESMTPSA id 5158829768;
-	Tue, 11 Jun 2024 13:41:56 +0200 (CEST)
-From: Martin Schiller <ms@dev.tdt.de>
-To: martin.blumenstingl@googlemail.com,
-	hauke@hauke-m.de,
-	andrew@lunn.ch,
-	f.fainelli@gmail.com,
-	olteanv@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ms@dev.tdt.de
-Subject: [PATCH net-next v4 13/13] net: dsa: lantiq_gswip: Improve error message in gswip_port_fdb()
-Date: Tue, 11 Jun 2024 13:40:27 +0200
-Message-ID: <20240611114027.3136405-14-ms@dev.tdt.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240611114027.3136405-1-ms@dev.tdt.de>
-References: <20240611114027.3136405-1-ms@dev.tdt.de>
+	s=arc-20240116; t=1718106159; c=relaxed/simple;
+	bh=ZYt9Ce6a5vvrReHnVDTq0y2clVGZm/xWSkAGdTqH350=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=QeENseVbLIJPAhrMzAPJSNvGQIQyqOb1pbwzzzvsgjCv8mfybqO08J6lvvkD5+lgbIuasAC85nbn99aAPw4Ivn/ZLog462HAWtxPZW4cDFviP8EBxbgbh3CN24yvqDsIxGWRm8Dbxzm50wVmoQ/UksCEcLxJtcpgH2oKyThXh2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=w/WNpD8j; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="w/WNpD8j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:Subject
+	:Reply-To:Cc:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To:
+	Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=M4yhGTk/Aq3f5EgmMM+txoxBQjY0Pv36q1oxhk38U80=; t=1718106157;
+	x=1718538157; b=w/WNpD8jL8xuU49Ewtl+leZ3LJFMb4uEfLU6FXz9eOlEDWu0VWgASB2ayoInF
+	q827Rum9MK68CZm3jBq/fa2pGloNt0COkaPRmq8koZXMzlB+G1gHGaShx2asx+tgn0qOoWlIQliQi
+	6JupgdBYpzBXTWoEwVwhEzwcH6h223VjmKPX8Jo6Qda2/prRyOLDg4ddhlwQhm2IkBL5vYWJ5em4+
+	enBWTsAh2+TZXnKApjuTuCerbeD+97T4S2xyRjdifFMQCpsrfj3e8p5j2GyEZcJ7WrywJwtSYws8o
+	JNBt9CUxiUUt1r+N95YhYbhCT7s4GjuZBl63QfxLXyVgsYG1BQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sGzta-0004kl-N7; Tue, 11 Jun 2024 13:42:34 +0200
+Message-ID: <af575951-d884-4148-977f-a3450ceaee82@leemhuis.info>
+Date: Tue, 11 Jun 2024 13:42:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-purgate-ID: 151534::1718106117-34A72D11-D8C64E16/0/0
-X-purgate-type: clean
-X-purgate: clean
+User-Agent: Mozilla Thunderbird
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: [regression] ac and battery readings for asus laptops (gu605) broken
+ since "ACPI: EC: Install address space handler at the namespace root"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718106157;900dab38;
+X-HE-SMSGID: 1sGzta-0004kl-N7
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Print that no FID is found for bridge %s instead of the incorrect
-message that the port is not part of a bridge.
+Rafael, I noticed a report about a regression in bugzilla.kernel.org
+that (if I understood things correctly, which in this case I'm not
+entirely sure of) appears to be caused by a change of yours:
+60fa6ae6e6d09e ("ACPI: EC: Install address space handler at the
+namespace root")
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
----
- drivers/net/dsa/lantiq_gswip.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to write this mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=218945 :
 
-diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswi=
-p.c
-index ec52c62eadce..fcd4505f4925 100644
---- a/drivers/net/dsa/lantiq_gswip.c
-+++ b/drivers/net/dsa/lantiq_gswip.c
-@@ -1370,7 +1370,8 @@ static int gswip_port_fdb(struct dsa_switch *ds, in=
-t port,
- 	}
-=20
- 	if (fid =3D=3D -1) {
--		dev_err(priv->dev, "Port not part of a bridge\n");
-+		dev_err(priv->dev, "no FID found for bridge %s\n",
-+			bridge->name);
- 		return -EINVAL;
- 	}
-=20
---=20
-2.39.2
+>  VitaliiT 2024-06-07 12:43:14 UTC
+> 
+> Created attachment 306438 [details]
+> Workaround for asus gu605
+> 
+> Creating this ticket to highlight a regression introduced with a fix
+> proposed in https://bugzilla.kernel.org/show_bug.cgi?id=218789
+>
+> Actually that patch breaks ac and battery modules.
+> Sysfs readings for gu605 reported:
+> - that AC is always online independently if power source connected
+> - battery readings are wrong: capacity always 100, voltage is always
+> 5000, current is always 1000000; charge_full and charge_full_design is
+> always 5000. All values are not correct.
+> 
+> I've updated defect 218789 with a workaround patch that makes ac and
+> battery modules working again with 6.10 source tree.
+> 
+> Unfortunately, I can not provide correct solution since I am not acpi
+> expert, but I feel that Lenovo laptop might need quirks or separate
+> logic for EC initialization flow.
+> 
+> Additionally, not sure if it is correct to use ACPI_ROOT_OBJECT as
+> acpi_handle when actual acpi_ec requested for initialization. An ACPI
+> expert might need to look into this.
+> 
+> Here are some results of investigation:
+> 
+> In 218789 due to reported error proposed to use ACPI_ROOT_OBJECT which
+> supposed to initalize EC's, but on asus laptops this change breaks
+> backward compatibility.
+> 
+> So ec_install_handlers is called from acpi_ec_setup and first_ec will be
+> set to ec in the beginning, so in ec_install_handlers() ACPI_ROOT_OBJECT
+> will be used as handler.
+>  static int ec_install_handlers(struct acpi_ec *ec, struct acpi_device
+> *device,
+>                                bool call_reg)
+>  {
+>        acpi_handle scope_handle = ec == first_ec ? ACPI_ROOT_OBJECT :
+> ec->handle;
+> 
+> And this method is called from acpi_ec_setup where first_ec will be set
+> to ec:
+> 
+> static int acpi_ec_setup(struct acpi_ec *ec, struct acpi_device *device,
+> bool call_reg)
+> {
+> 	int ret;
+> 
+> 	/* First EC capable of handling transactions */
+> 	if (!first_ec)
+> 		first_ec = ec;
+> 
+> I understand th> VitaliiT 2024-06-07 12:43:14 UTC
+at original defect should be fixed, but preserving things
+> which used to work should be also priority.
+> 
+> Please let me know if additional information is needed.
+> 
+> The fix which just works (probably it is not "proper" fix, but that
+> patch makes asus battery and ac modules working as supposed to).
 
+See the ticket for more details. Note, you have to use bugzilla to reach
+the reporter, as I sadly[1] can not CCed them in mails like this.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
+
+P.S.: let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: 60fa6ae6e6d09e
+#regzbot title: ACPI: EC: ac and battery readings for asus laptops
+(gu605) broken
+#regzbot from: VitaliiT
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218945
+#regzbot ignore-activity
