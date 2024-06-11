@@ -1,51 +1,219 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 9ECC75336D
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 14:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B5B5336D;
+	Tue, 11 Jun 2024 14:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718116958; cv=none; b=QsrEEkJ+yHASFFb2rQL0zzAF7XV+pTj5DY8EmYjf9CrA2SSiwvK2+yXNTLhJCN5dLxxE0ujVe7XkhMYSpfny2aub6rNB4Iz0fQepk3R7Yhz7J0p1Wi+/I1dRoh68phVKIHxhl6vzoIhwKRll+6HRzPVAS3Qp7eRL58xrHfP9ER8=
+	t=1718117005; cv=none; b=mxpnqQIvD1Qp0BYmrWRRf64q4B7z/m4IpsMAncd8dAhxv90GpLHQwRnKOPHY5JEB3ZGw0P6xgg7qW0Xrg4jJTXXHulQiUCF8i89lbqIIdmvl7urHIYPF4h0Gz2tu0WIA5H+BaNtWLqwlI6pjGDQKc6+ks0cKubFMpFVWvf8+H3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718116958; c=relaxed/simple;
-	bh=lpL6QNJjXCBFbtv3R8mkFrzu5fnUyyaC2qtaiWa87M8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Q7UsXdUcSTuMqbTo441rTwKEu7Ue95YedXt+oUPxdVkpT9pJNZN1mivDPYnauC0uLDJ7zKxMynaoFMRH24NSCOVIVTCONuM87omlEp11LmJRFmlkkmPa6tm/ejcT78wNtc0v4w0Sob68zsso3rWUNhEoLfuANQ3Lm+rVPIhVbTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 187946 invoked by uid 1000); 11 Jun 2024 10:35:12 -0400
-Date: Tue, 11 Jun 2024 10:35:12 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Greg KH <gregkh@linuxfoundation.org>, Oliver Neukum <oneukum@suse.com>
-Cc: USB mailing list <linux-usb@vger.kernel.org>,
-  Kernel development list <linux-kernel@vger.kernel.org>
-Subject: USB Denial Of Service
-Message-ID: <40dfa45b-5f21-4eef-a8c1-51a2f320e267@rowland.harvard.edu>
+	s=arc-20240116; t=1718117005; c=relaxed/simple;
+	bh=ku6qOjGqxKvBFbmOLLJ5xchcQT1HGT23J6TUWkvY6NY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lVV1UC2UxIsiPRbI7uEcBUIhYVyqP1dtS2hN1GME29CK0ieFl4y/LZbL7DFULALXANaEkseq76LkmeSimeBYUXLFZIHmbXgO52CAHCrcRiNixWZPtV73oeN/qPSswIFKIzSX3LPDA2xzHMkzMF8vsKopgwr+ZI6V22dOQF4BgBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=O5UyJSFe; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="O5UyJSFe"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E372920009;
+	Tue, 11 Jun 2024 14:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718117000;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qWHfpv+jXiy2o9uspnLye8WVPnOeDHAl++BqV0w7CAE=;
+	b=O5UyJSFeA2xPnA/OYrMwNbImlf+JqBITKgrNDlruVVA74nZbE8la1RTak3sR+cQPD66/PS
+	ucxHox0AAUqO7xw8PPEgJz0V0Ni771LgSFDfhz/sp0KyDW+lYM/826n3jy4FvoYaM+FFOE
+	5oeASV2NlTjgEj4F7ed5X3Mtpm+3rsMnay+dOGoBd8+KMCeQjXjQtOYIjLi+pchGVpWpie
+	ElX1jduFhWIqZkkTj45eIdaU20f0QoQO/QA8e1ygU3EpYj7epRCNEiazShVpIWNi2oSDmz
+	+7ZYyOeK9zSqiG68gxeXn5AeXkTnDMos+F+vjy34NXp6OCOIEbnWIX6vnD7PLQ==
+Date: Tue, 11 Jun 2024 16:43:15 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Derek Kiernan
+ <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, Paul Kocialkowski
+ <contact@paulk.fr>, =?UTF-8?Q?Herv=C3=A9?= Codina
+ <herve.codina@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Paul
+ Kocialkowski <paul.kocialkowski@bootlin.com>, Srinivas Kandagatla
+ <srinivas.kandagatla@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: connector: add GE SUNH hotplug
+ addon connector
+Message-ID: <20240611164315.64414552@booty>
+In-Reply-To: <20240605144531.GA2642279-robh@kernel.org>
+References: <20240510-hotplug-drm-bridge-v2-0-ec32f2c66d56@bootlin.com>
+	<20240510-hotplug-drm-bridge-v2-1-ec32f2c66d56@bootlin.com>
+	<20240510163625.GA336987-robh@kernel.org>
+	<20240514185125.58225238@booty>
+	<20240605144531.GA2642279-robh@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Greg, Oliver, or anyone else:
+Hello Rob,
 
-Questions:
+thanks for the follow up. I still have a couple questions for you
+before I see a clear direction forward, see below.
 
-If a broken or malicious device causes a USB class driver to add a 
-thousand (or more) error messages per second to the kernel log, 
-indefinitely, would that be considered a form of DOS?
+On Wed, 5 Jun 2024 08:45:31 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-Should the driver be fixed?
+[...]
 
-What is an acceptable rate for an unending stream of error messages?  
-Once a second?  Once a minute?
+> > > > +  # "base" overlay describing the common components on every add-o=
+n that
+> > > > +  # are required to read the model ID   =20
+> > >=20
+> > > This is located on the add-on board, right? =20
+> >=20
+> > Exactly. Each add-on has an EEPROM with the add-on model ID stored
+> > along with other data.
+> >  =20
+> > > Is it really any better to have this as a separate overlay rather tha=
+n=20
+> > > just making it an include? Better to have just 1 overlay per board=20
+> > > applied atomically than splitting it up. =20
+> >=20
+> > (see below)
+> >  =20
+> > > > +  - |
+> > > > +    &i2c1 {   =20
+> > >=20
+> > > Generally, I think everything on an add-on board should be underneath=
+=20
+> > > the connector node. For starters, that makes controlling probing and=
+=20
+> > > removal of devices easier. For example, you'll want to handle=20
+> > > reset-gpios and powergood-gpios before any devices 'appear'. Otherwis=
+e,=20
+> > > you add devices on i2c1, start probing them, and then reset them at s=
+ome=20
+> > > async time? =20
+> >=20
+> > This is not a problem because the code is asserting reset before
+> > loading the first overlay. From patch 5/5: =20
+>=20
+> What if the bootloader happened to load the overlay already? Or you=20
+> kexec into a new kernel?
 
-At what point should the driver give up and stop trying to communicate 
-with the device?
+When an overlay is loaded by the bootloader, IIRC it becomes an
+integral part of the live device tree and is not removable anymore.
+This does not make sense for a physically removable add-on: as the
+add-on can be physically removed, its device tree representation must
+be removable as well.
 
-(These are not moot questions.  There are indeed drivers, and probably 
-not just in the USB subsystem, subject to this sort of behavior.)
+And the main board is able to work autonomously without the add-on, so
+I don't see any reason for loading the overlay in the bootloader.
 
-Alan Stern
+For the kexec case, the main use cases I can think of involves 'kexec
+--dtb=3D...' to loads its own copy of the base DT (without overlays). So
+everything will probe again, and the overlays will be loaded again
+by the connector driver if/whan the add-on is connected.
+
+And if there are use cases of kexec when the 2nd kernel finds the DT
+with the overlays already loaded, this is just as wrong as in the
+bootloader case.
+
+> Keeping things underneath a connector node makes managing the=20
+> dependencies easier. It also can allow us to have some control over what=
+=20
+> overlays can and can't modify. It also reflects reality that these=20
+> devices sit behind the connector.
+
+=46rom my limited point of view, these points appear all nice to have but
+not strictly needed. About the last one, referring to your example:
+
+> > > For i2c, it could look something like this:
+> > >=20
+> > > connector {
+> > >   i2c {
+> > > 	i2c-parent =3D <&i2c1>;
+> > >=20
+> > > 	eeprom@50 {...};
+> > >   };
+> > > }; =20
+
+I definitely understand the usefulness of such an additional level of
+indirection in the most general case, to decouple the add-on side of the
+I2C bus from the base board side of it, thus allowing multiple different
+base board models and even helping with having multiple connectors
+(multiple add-ons at the same time) on the same main board.
+
+But I also see drawbacks.
+
+The first one is added complexity.
+
+The second is that this representation seems to suggest that the 'i2c'
+node above is another bus w.r.t. '&i2c1', somewhat similarly to what
+happens with child busses of an i2c mux being a different node from the
+parent bus. But in this case they are really the same bus on the same
+electrical lines (when the add-on is connected).
+
+So I think both representations have pros and cons.
+
+Back to the specific product I'm working on: there is only one base
+board model, and also only one connector per main board, and this is by
+the very nature of the product, i.e. it would not make sense to have
+two connectors on the same board.
+
+So in the specific case of this product, do you think it would be OK to
+keep the representation I proposed initially?
+
+> > > Do you load the first overlay and then from it decide which=20
+> > > specific overlay to apply? =20
+> >=20
+> > Exactly.
+> >=20
+> > The first overlay (the example you quoted above) describes enough to
+> > reach the model ID in the EEPROM, and this is identical for all add-on
+> > models. The second add-on is model-specific, there is one for each
+> > model, and the model ID allows to know which one to load. =20
+>=20
+> So you don't really need an overlay for this unless the EEPROM model=20
+> changes or the model-id offset changes.
+
+The EEPROM model is the same on all add-on models, or at least it's
+fully compatible. Otherwise finding out the model ID would become very
+annoying.
+
+However the EEPROM is on the add-on, so describing it in the main DT
+would be wrong. Not only conceptually, as hardware not present should
+not be in the live DT, but also practically, as when the add-on is
+removed and then a possibly different add-on is connected we need the
+EEPROM driver to probe again, in order to do any initialization that
+might be needed in the EEPROM driver probe function.
+
+So I see no option but adding the EEPROM in an overlay. But it cannot
+be the "full" overlay because before accessing the EEPROM we don't know
+which model is loaded.
+
+Do you have in mind a better approach that I just didn't think about?
+
+Best regards,
+Luca
+
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
