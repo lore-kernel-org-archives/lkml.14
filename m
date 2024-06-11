@@ -1,559 +1,115 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0543B170821
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 04:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C529386
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 04:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718080072; cv=none; b=n1x8Deqv5NGHLwndxdZ5MekZD2jCFup51XzXmlH+RfLGGyfhfcXyHDvmiSmhYgQAtqiFCk1oONez6SAGGOxUnzkLOVnGh29lW8xgDIfhNfggMz8A6hEeFq4gCqOxyrBYPQlriF/3GgamBuXFrmXGPtFp637abc85LtIPVWcqc/s=
+	t=1718080444; cv=none; b=jTK+ws/Gyaxmqsgt5xf5ECHwkPLd99POyX4xy+Yo0CkQpVW1KUa6y0gbmxOd913wB7ihBkkHdfroYGrRE21hlhYvSLB7OTZmgw3F+pALE9hAtrBZRVtNrM/TTbbXNbie+zgmRjX7w4hahLVIW/eh8n8y9bnDF0K37Nut1Iq6XX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718080072; c=relaxed/simple;
-	bh=R11Fz8CMWAdSmi2lcWYQk27qmS1GHLlt16YLGoG5YaY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gM8Um648ZvZJ0Eys6htqRL7FDldyCaGiasUe2gKEF7heVpn1HuK8XXzEmdZLf94ubRrhtAmMZXVrbMdiVMhqnKNUY25WDU4NBww4W4bn1+70uUvSDvpepOXvoA+w1HWlS8faQcM+NMM0BqBqBZKMG/SFOvRZYcGgwAjBLJlst8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LETOhCIo; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LETOhCIo"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-254aec5a084so1104181fac.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 21:27:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718080070; x=1718684870; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5tkT2r/H8bywOCL29jQ9dOiEqES2E4TnDM1Uu+21t2c=;
-        b=LETOhCIoLtfI1D3itdfNcKXGqQZRgY0qeVa+hrjA5EEv2qVlHM/kf3qmROA+ImAYIl
-         Six/SRUIcmT5RNUZrO8tHNriknG9K9eFzbZf69gkXa7Acg/Nd1n1tNmS9R6pUAz4+rGo
-         qxKQwe0oSZvLJ3qwf/JNNybsl8xcNeLnYiHaU=
+	s=arc-20240116; t=1718080444; c=relaxed/simple;
+	bh=MxWSdzZ0Ki+RWTUzGHGRft2VmSoEvygFYKzpBnQivwk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=AksxAb7sbRZ1DfzKQe5/kZgHg0Bq5Beote/OVl7zkUO1egvGRY0mulZiYg0COhcKp7b2fhOrkO9VTEvJNlIiUob5IhI8JjrN5nF+XFVK2gpKQiRLXjKao8MO9bpAv34nYKOD2eoqj9eWiCGNlBb+F8fLo4DbeNEnU/WP5ZRDY0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7eaa9ddad99so74304539f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 21:34:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718080070; x=1718684870;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5tkT2r/H8bywOCL29jQ9dOiEqES2E4TnDM1Uu+21t2c=;
-        b=ayTEibXIcUKbflV4k3Uw1I7nYm71OAt3o2XmCGLIy/4WG0dLIt2eQphMuh2RNLxIR5
-         3WvWmzSKcgHnsMfN+MyUWGXG5OKyTYCJVDDrQLFCmlCbhZW9NRBUHQEa4M/mDGhXeROk
-         xlZjQ8sBmMbUXn6x8tk/nD8Dd1dPsMzUJJwD+qvoK+2JTz6etkFrb7cFZMpAkk7/z6zY
-         Q5cs0M9xUH1mIpDZIAP1SHPpSxWlsXJQcFn6hMCJfLPrMVhF+9+x8XBW6a7b2y6K5/h+
-         pqawR/8HIiGIX6aCgIoAoqSJmPEG7U2Ob8+nUf8GtIvzShA68gfHgadDQQ/wjtYV9ACg
-         3Aog==
-X-Forwarded-Encrypted: i=1; AJvYcCUPAlUZqCBlmUm8Kt81lMktKFN64GdJpOuBZHZ99Ff1qn79V1jFEX5PryN82nWkNqoLYWjQoAN3rwNsRIvZzwlJPy2VicBDSVlUb89w
-X-Gm-Message-State: AOJu0Yy3UEdvKP3YEBcFcEI2j4dh4mUlFnAv/HdGXWPF20bEeA05ZDif
-	pkfslH1PrwV38S8YDYPtb09kSOzWQ6bG2o0IvcrdFZKqETcX5fBZNQdtUA8h5rpF40uMTcT+gsz
-	nv9WHUdYbBo7RzSuG3LUqkfN3B7FfDDusClD3
-X-Google-Smtp-Source: AGHT+IGvwQIkjiBkVYzpGSHTTqzmipObtEx9jWLxFxS1ErZDL3K0AvJpjFZrfUag8P1aiWtGde0J9gLS6s3SgZZN50Y=
-X-Received: by 2002:a05:6871:729:b0:254:8a91:4b71 with SMTP id
- 586e51a60fabf-2548a916a59mr10122918fac.56.1718080069954; Mon, 10 Jun 2024
- 21:27:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718080442; x=1718685242;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eyvKrG3Jol7r+bSHllwa0xIuvW0ZO4EU61YwcfEtQX4=;
+        b=v8j5GKuM+Z123RaBPhdxkbf+s/c8lM2qA5pSSOmUcnhEENqj8NhRPksk5TDq4jIJaq
+         EWLk9PZ+DjkmbWJshIIpGT+aLWi7W4o92zQ89Ts3w0yDPT2ucwMw6H70Gspz8RjM/85m
+         3wpQuvAqmBv1RlCHomz63kiVl43xX83Ywbif3aoXEvRUwY3UFBUguDXcVrIfCXcvv0I3
+         LX0qsXx6WEIR/asEox5H524G4i5CRS6sjmXkmFYOpFpni97w8Zh7s2RPT1ePsxfmi27j
+         KpZsPScMBkZmndE68C+dLChP0CftgefOanN50bs6uqFzAJitLcw7oMtgafyI5o70rO1Q
+         3+5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWpCWm2utaLNq0ITjsUQtX7tcc3ZXhm8LHFm2D6uA4LXBLSy8nrwnZQzfaE1x2TZy6YWNyi3YzM3Uz0fSOi/CofC0OtyZYqPFydmk9O
+X-Gm-Message-State: AOJu0YyfE7cm5OekoMmvUyCgN0bSH9ejSbI/1JzKegpDiSRwzOWqvVhA
+	ZFJEVykFgluwq5OJi54fyvyTd48fyPuR+io/q5WufO373i57BGVnXC+ZXOwYf2lK+Qp0m7GZYCW
+	ceXLDM3lc8W7KBEmAufMB5erpmdJVkTZsSv7QLavqxytuTJPD1UrweWY=
+X-Google-Smtp-Source: AGHT+IEP1KlpwNoN2WwLIxaNEKxlvBELxTkmkLW6I5Pv1TDfg5n6YiOL0wOKerF0GBhao0r8kOQGAyr0rGRCL/YeehhnOeYehHi7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240608021023.176027-1-jhubbard@nvidia.com> <20240608021023.176027-6-jhubbard@nvidia.com>
-In-Reply-To: <20240608021023.176027-6-jhubbard@nvidia.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 10 Jun 2024 21:27:39 -0700
-Message-ID: <CABi2SkUnQQC4cXhwV6BN==umEFsNpFRptxMKy3bHthPUv+pXwA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] selftests/mm: mseal, self_elf: rename TEST_END_CHECK
- to REPORT_TEST_PASS
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Andrei Vagin <avagin@google.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Christian Brauner <brauner@kernel.org>, David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, Peter Xu <peterx@redhat.com>, 
-	Rich Felker <dalias@libc.org>, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a05:6638:850b:b0:4b9:fb0:fd49 with SMTP id
+ 8926c6da1cb9f-4b90fb1077dmr195265173.3.1718080442184; Mon, 10 Jun 2024
+ 21:34:02 -0700 (PDT)
+Date: Mon, 10 Jun 2024 21:34:02 -0700
+In-Reply-To: <tencent_0036E097CA36A84BFA74C177EF66FC3CAF09@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000073c4f2061a95c6d7@google.com>
+Subject: Re: [syzbot] [bluetooth?] general protection fault in l2cap_sock_recv_cb
+From: syzbot <syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi
+Hello,
 
-On Fri, Jun 7, 2024 at 7:10=E2=80=AFPM John Hubbard <jhubbard@nvidia.com> w=
-rote:
->
-> Now that the test macros are factored out into their final location, and
-> simplified, it's time to rename TEST_END_CHECK to something that
-> represents its new functionality: REPORT_TEST_PASS.
->
-> Cc: Jeff Xu <jeffxu@chromium.org>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+WARNING: held lock freed in l2cap_sock_recv_cb
 
-Reviewed-by: Jeff Xu <jeffxu@chromium.org>
-Tested-by: Jeff Xu <jeffxu@chromium.org>
+=========================
+WARNING: held lock freed!
+6.10.0-rc1-syzkaller-00267-gcc8ed4d0a848-dirty #0 Not tainted
+-------------------------
+kworker/u9:3/6458 is freeing memory ffff88802f212000-ffff88802f2127ff, with a lock still held there!
+ffff88802f212258 (sk_lock-AF_BLUETOOTH-BTPROTO_L2CAP){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1602 [inline]
+ffff88802f212258 (sk_lock-AF_BLUETOOTH-BTPROTO_L2CAP){+.+.}-{0:0}, at: l2cap_sock_recv_cb+0x58/0x6f0 net/bluetooth/l2cap_sock.c:1488
+3 locks held by kworker/u9:3/6458:
+ #0: ffff888079178148 ((wq_completion)hci1#2){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3206 [inline]
+ #0: ffff888079178148 ((wq_completion)hci1#2){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3312
+ #1: ffffc90004347d00 ((work_completion)(&hdev->rx_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3207 [inline]
+ #1: ffffc90004347d00 ((work_completion)(&hdev->rx_work)){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3312
+ #2: ffff88802f212258 (sk_lock-AF_BLUETOOTH-BTPROTO_L2CAP){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1602 [inline]
+ #2: ffff88802f212258 (sk_lock-AF_BLUETOOTH-BTPROTO_L2CAP){+.+.}-{0:0}, at: l2cap_sock_recv_cb+0x58/0x6f0 net/bluetooth/l2cap_sock.c:1488
 
-> ---
->  tools/testing/selftests/mm/mseal_helpers.h |  2 +-
->  tools/testing/selftests/mm/mseal_test.c    | 92 +++++++++++-----------
->  tools/testing/selftests/mm/seal_elf.c      |  2 +-
->  3 files changed, 48 insertions(+), 48 deletions(-)
->
-> diff --git a/tools/testing/selftests/mm/mseal_helpers.h b/tools/testing/s=
-elftests/mm/mseal_helpers.h
-> index 8c3bf77dcf19..65ece62fdd0c 100644
-> --- a/tools/testing/selftests/mm/mseal_helpers.h
-> +++ b/tools/testing/selftests/mm/mseal_helpers.h
-> @@ -22,7 +22,7 @@
->                 }                                                       \
->         } while (0)
->
-> -#define TEST_END_CHECK() ksft_test_result_pass("%s\n", __func__)
-> +#define REPORT_TEST_PASS() ksft_test_result_pass("%s\n", __func__)
->
->  #ifndef PKEY_DISABLE_ACCESS
->  #define PKEY_DISABLE_ACCESS    0x1
-> diff --git a/tools/testing/selftests/mm/mseal_test.c b/tools/testing/self=
-tests/mm/mseal_test.c
-> index a29935d82027..f8e1c59f298e 100644
-> --- a/tools/testing/selftests/mm/mseal_test.c
-> +++ b/tools/testing/selftests/mm/mseal_test.c
-> @@ -240,7 +240,7 @@ static void test_seal_addseal(void)
->         ret =3D sys_mseal(ptr, size);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_unmapped_start(void)
-> @@ -268,7 +268,7 @@ static void test_seal_unmapped_start(void)
->         ret =3D sys_mseal(ptr + 2 * page_size, 2 * page_size);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_unmapped_middle(void)
-> @@ -300,7 +300,7 @@ static void test_seal_unmapped_middle(void)
->         ret =3D sys_mseal(ptr + 3 * page_size, page_size);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_unmapped_end(void)
-> @@ -329,7 +329,7 @@ static void test_seal_unmapped_end(void)
->         ret =3D sys_mseal(ptr, 2 * page_size);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_multiple_vmas(void)
-> @@ -360,7 +360,7 @@ static void test_seal_multiple_vmas(void)
->         ret =3D sys_mseal(ptr, size);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_split_start(void)
-> @@ -385,7 +385,7 @@ static void test_seal_split_start(void)
->         ret =3D sys_mseal(ptr + page_size, 3 * page_size);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_split_end(void)
-> @@ -410,7 +410,7 @@ static void test_seal_split_end(void)
->         ret =3D sys_mseal(ptr, 3 * page_size);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_invalid_input(void)
-> @@ -445,7 +445,7 @@ static void test_seal_invalid_input(void)
->         ret =3D sys_mseal(ptr - page_size, 5 * page_size);
->         FAIL_TEST_IF_FALSE(ret < 0);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_zero_length(void)
-> @@ -469,7 +469,7 @@ static void test_seal_zero_length(void)
->         ret =3D sys_mprotect(ptr, size, PROT_READ | PROT_WRITE);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_zero_address(void)
-> @@ -495,7 +495,7 @@ static void test_seal_zero_address(void)
->         ret =3D sys_mprotect(ptr, size, PROT_READ | PROT_WRITE);
->         FAIL_TEST_IF_FALSE(ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_twice(void)
-> @@ -515,7 +515,7 @@ static void test_seal_twice(void)
->         ret =3D sys_mseal(ptr, size);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mprotect(bool seal)
-> @@ -539,7 +539,7 @@ static void test_seal_mprotect(bool seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_start_mprotect(bool seal)
-> @@ -569,7 +569,7 @@ static void test_seal_start_mprotect(bool seal)
->                         PROT_READ | PROT_WRITE);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_end_mprotect(bool seal)
-> @@ -599,7 +599,7 @@ static void test_seal_end_mprotect(bool seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mprotect_unalign_len(bool seal)
-> @@ -628,7 +628,7 @@ static void test_seal_mprotect_unalign_len(bool seal)
->                         PROT_READ | PROT_WRITE);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mprotect_unalign_len_variant_2(bool seal)
-> @@ -656,7 +656,7 @@ static void test_seal_mprotect_unalign_len_variant_2(=
-bool seal)
->                         PROT_READ | PROT_WRITE);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mprotect_two_vma(bool seal)
-> @@ -691,7 +691,7 @@ static void test_seal_mprotect_two_vma(bool seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mprotect_two_vma_with_split(bool seal)
-> @@ -738,7 +738,7 @@ static void test_seal_mprotect_two_vma_with_split(boo=
-l seal)
->                         PROT_READ | PROT_WRITE);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mprotect_partial_mprotect(bool seal)
-> @@ -764,7 +764,7 @@ static void test_seal_mprotect_partial_mprotect(bool =
-seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mprotect_two_vma_with_gap(bool seal)
-> @@ -807,7 +807,7 @@ static void test_seal_mprotect_two_vma_with_gap(bool =
-seal)
->         ret =3D sys_mprotect(ptr + 3 * page_size, page_size, PROT_READ);
->         FAIL_TEST_IF_FALSE(ret =3D=3D 0);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mprotect_split(bool seal)
-> @@ -844,7 +844,7 @@ static void test_seal_mprotect_split(bool seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mprotect_merge(bool seal)
-> @@ -878,7 +878,7 @@ static void test_seal_mprotect_merge(bool seal)
->         ret =3D sys_mprotect(ptr + 2 * page_size, 2 * page_size, PROT_REA=
-D);
->         FAIL_TEST_IF_FALSE(ret =3D=3D 0);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_munmap(bool seal)
-> @@ -903,7 +903,7 @@ static void test_seal_munmap(bool seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  /*
-> @@ -943,7 +943,7 @@ static void test_seal_munmap_two_vma(bool seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  /*
-> @@ -981,7 +981,7 @@ static void test_seal_munmap_vma_with_gap(bool seal)
->         ret =3D sys_munmap(ptr, size);
->         FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_munmap_start_freed(bool seal)
-> @@ -1021,7 +1021,7 @@ static void test_munmap_start_freed(bool seal)
->                 FAIL_TEST_IF_FALSE(size =3D=3D 0);
->         }
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_munmap_end_freed(bool seal)
-> @@ -1051,7 +1051,7 @@ static void test_munmap_end_freed(bool seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_munmap_middle_freed(bool seal)
-> @@ -1095,7 +1095,7 @@ static void test_munmap_middle_freed(bool seal)
->                 FAIL_TEST_IF_FALSE(size =3D=3D 0);
->         }
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mremap_shrink(bool seal)
-> @@ -1124,7 +1124,7 @@ static void test_seal_mremap_shrink(bool seal)
->
->         }
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mremap_expand(bool seal)
-> @@ -1156,7 +1156,7 @@ static void test_seal_mremap_expand(bool seal)
->
->         }
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mremap_move(bool seal)
-> @@ -1189,7 +1189,7 @@ static void test_seal_mremap_move(bool seal)
->
->         }
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mmap_overwrite_prot(bool seal)
-> @@ -1217,7 +1217,7 @@ static void test_seal_mmap_overwrite_prot(bool seal=
-)
->         } else
->                 FAIL_TEST_IF_FALSE(ret2 =3D=3D ptr);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mmap_expand(bool seal)
-> @@ -1248,7 +1248,7 @@ static void test_seal_mmap_expand(bool seal)
->         } else
->                 FAIL_TEST_IF_FALSE(ret2 =3D=3D ptr);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mmap_shrink(bool seal)
-> @@ -1276,7 +1276,7 @@ static void test_seal_mmap_shrink(bool seal)
->         } else
->                 FAIL_TEST_IF_FALSE(ret2 =3D=3D ptr);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mremap_shrink_fixed(bool seal)
-> @@ -1307,7 +1307,7 @@ static void test_seal_mremap_shrink_fixed(bool seal=
-)
->         } else
->                 FAIL_TEST_IF_FALSE(ret2 =3D=3D newAddr);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mremap_expand_fixed(bool seal)
-> @@ -1338,7 +1338,7 @@ static void test_seal_mremap_expand_fixed(bool seal=
-)
->         } else
->                 FAIL_TEST_IF_FALSE(ret2 =3D=3D newAddr);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mremap_move_fixed(bool seal)
-> @@ -1368,7 +1368,7 @@ static void test_seal_mremap_move_fixed(bool seal)
->         } else
->                 FAIL_TEST_IF_FALSE(ret2 =3D=3D newAddr);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mremap_move_fixed_zero(bool seal)
-> @@ -1400,7 +1400,7 @@ static void test_seal_mremap_move_fixed_zero(bool s=
-eal)
->
->         }
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mremap_move_dontunmap(bool seal)
-> @@ -1429,7 +1429,7 @@ static void test_seal_mremap_move_dontunmap(bool se=
-al)
->
->         }
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_mremap_move_dontunmap_anyaddr(bool seal)
-> @@ -1463,7 +1463,7 @@ static void test_seal_mremap_move_dontunmap_anyaddr=
-(bool seal)
->
->         }
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->
-> @@ -1556,7 +1556,7 @@ static void test_seal_merge_and_split(void)
->         FAIL_TEST_IF_FALSE(size =3D=3D  22 * page_size);
->         FAIL_TEST_IF_FALSE(prot =3D=3D 0x4);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_discard_ro_anon_on_rw(bool seal)
-> @@ -1585,7 +1585,7 @@ static void test_seal_discard_ro_anon_on_rw(bool se=
-al)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_discard_ro_anon_on_pkey(bool seal)
-> @@ -1632,7 +1632,7 @@ static void test_seal_discard_ro_anon_on_pkey(bool =
-seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_discard_ro_anon_on_filebacked(bool seal)
-> @@ -1669,7 +1669,7 @@ static void test_seal_discard_ro_anon_on_filebacked=
-(bool seal)
->                 FAIL_TEST_IF_FALSE(!ret);
->         close(fd);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_discard_ro_anon_on_shared(bool seal)
-> @@ -1698,7 +1698,7 @@ static void test_seal_discard_ro_anon_on_shared(boo=
-l seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  static void test_seal_discard_ro_anon(bool seal)
-> @@ -1728,7 +1728,7 @@ static void test_seal_discard_ro_anon(bool seal)
->         else
->                 FAIL_TEST_IF_FALSE(!ret);
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  int main(int argc, char **argv)
-> diff --git a/tools/testing/selftests/mm/seal_elf.c b/tools/testing/selfte=
-sts/mm/seal_elf.c
-> index 0fd129259647..131fc13cd422 100644
-> --- a/tools/testing/selftests/mm/seal_elf.c
-> +++ b/tools/testing/selftests/mm/seal_elf.c
-> @@ -127,7 +127,7 @@ static void test_seal_elf(void)
->         FAIL_TEST_IF_FALSE(ret < 0);
->         ksft_print_msg("somestr is sealed, mprotect is rejected\n");
->
-> -       TEST_END_CHECK();
-> +       REPORT_TEST_PASS();
->  }
->
->  int main(int argc, char **argv)
-> --
-> 2.45.2
->
+stack backtrace:
+CPU: 0 PID: 6458 Comm: kworker/u9:3 Not tainted 6.10.0-rc1-syzkaller-00267-gcc8ed4d0a848-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+Workqueue: hci1 hci_rx_work
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_freed_lock_bug kernel/locking/lockdep.c:6538 [inline]
+ debug_check_no_locks_freed+0x3c5/0x4a0 kernel/locking/lockdep.c:6571
+ slab_free_hook mm/slub.c:2159 [inline]
+ slab_free mm/slub.c:4436 [inline]
+ kfree+0xfa/0x360 mm/slub.c:4557
+ sk_prot_free net/core/sock.c:2116 [inline]
+ __sk_destruct+0x476/0x5f0 net/core/sock.c:2208
+ sock_put include/net/sock.h:1879 [inline]
+ l2cap_sock_recv_cb+0x596/0x6f0 net/bluetooth/l2cap_sock.c:1546
+ l2cap_conless_channel net/bluetooth/l2cap_core.c:6780 [inline]
+ l2cap_recv_frame+0x8b6d/0x10670 net/bluetooth/l2cap_core.c:6833
+ hci_acldata_packet net/bluetooth/hci_core.c:3842 [inline]
+ hci_rx_work+0x50f/0xca0 net/bluetooth/hci_core.c:4079
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3312
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Bluetooth: hci1: command tx timeout
+
+
+Tested on:
+
+commit:         cc8ed4d0 Merge tag 'drm-fixes-2024-06-01' of https://g..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=1082c82e980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=47d282ddffae809f
+dashboard link: https://syzkaller.appspot.com/bug?extid=b7f6f8c9303466e16c8a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1706587a980000
+
