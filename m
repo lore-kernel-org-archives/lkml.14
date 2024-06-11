@@ -1,88 +1,223 @@
-Received: from out203-205-251-59.mail.qq.com (out203-205-251-59.mail.qq.com [203.205.251.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737D614F9FA
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 02:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0DA16F847;
+	Tue, 11 Jun 2024 02:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718073294; cv=none; b=e9Q4R7oX4d5M4apWsNb3cg7hv2kbVcv2BB0ojbKTiy0HtMx2KLmbioJ/IonTuOs+dOBj06u+WqWXOC2lmXFYw0SCC+TwoAf35udHg5CcGqcZsynTCs3Xt3h9B06Pk6rSXNgJU1rhr6mhR9PYMT47LrRGd1IqkCgYRTSRmuCUsO0=
+	t=1718073305; cv=none; b=MLhBAN2a5Y/4bPKdBeRWfOt+rovKBTtPNA42vIsPeV8cDFHfjEMaDAWmUMkQoUqeZrqOSE+8Tts02U2CU7Q+6fPWiIq5lorw9D8SY0z8xXK5/YCFcY3nUpsFyiphJEd0XXqCaCCwGDjVim8otY9HVDR5QoqA5hLosMqYDGVEhS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718073294; c=relaxed/simple;
-	bh=KnAmKro879fRFq+RiQ5LefGpzSwBeLfGvMuFjATxW2E=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=gFmmWNXwQMP1NQCpWENfSh3XBWvTcdzbB51n2gICT/4TuvVfaXwpW2xuhRuUcKGqwVWPFFUCQpIM+eUA7b0Mn0zWUeXp8heEQ03pFkIYPoVmssDOfSFLnbALZXqt93jcsDKkg+PuVp1WBnnofzXCJWPVbshoBMYd/sStrjGzfek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=d4CCwgxD; arc=none smtp.client-ip=203.205.251.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1718073305; c=relaxed/simple;
+	bh=uX23ExG6CnBtKrCFcOoTf4iiV2uXPJwIj4H+fGp/ph8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L87jCjGmJOe10UKSzQGQ3SW0aZ3WeQg3fZYaBLtI2H0iFaukcAds1ZwF0wINFkF/aRyOpOlYOkxmRU/mvX8a5kFm5b2TIb/zhtGkdpc+dKZe1DruhWeKFsjnylPIIQbPLcOvnu+O3GWJpA2C2YuMujhTNkJmZMNbJBr8qjVisKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cv0kkC45; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="d4CCwgxD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1718073285; bh=RqDYlNEj89LVooht78uM6N9w3lcGxiYS1Vsrlw1PlCQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=d4CCwgxDBm2ARJXRMLW+zBIMvfgFdxQB0sKXvu6gRqe5YPgzO5wGisuDIpsWb8z2z
-	 dSaGM1wKGi+Ir3XvlZh4NQVFJ/Q4JMaLAcaQyQNGJAsgPdzv5j8BXnpbfGsschBkof
-	 Cb/II2bJehaO/bhCxdjspoq2I+MbSC+EPASa8IvQ=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id 7209947C; Tue, 11 Jun 2024 10:28:32 +0800
-X-QQ-mid: xmsmtpt1718072912tb3d1endf
-Message-ID: <tencent_DC337C9ECD1BAD4BFC1B4C25ACBAF1BB7E08@qq.com>
-X-QQ-XMAILINFO: N7/wgsuYk0Vx7zKEW34DSnHyfNSWFmm4pwThrtf0saieUV8rdGNVzRA/u/Etfi
-	 reQ+rVGrftYSvNnCjhcZj1o6m5Oa6vCRshwAyACiLFp8UWB/L+jO/rVd2Ur6zJOR9RxXtYyG+3SN
-	 mTn9o6Exo7IdrgWup4oCg7AhNpBBIKFDBjfN2owJb610sTtE6rv5Hyi3bTmxAdenI7i8a5MKQC1l
-	 9eaFvjy8ED72h90jQ0HIqHKFMM076kdtsM7uDb+/GC6DG2uwcVKBpihXBDgoo8vKEB29IdNQ7rKo
-	 Pm3eaT+SOBL0RF3GdRRjUK0DTtIMzdIX4Mx7z8QkLZNyfHCAVQJknjwvxvhkepDoRsFPvTJG+sF5
-	 nPB44nYE1QYLfIbZzVYIn9TyGk6EaFwDiHxQxgaS+1I735twTuyim8jQ8VmR8pN05IckY+bTcp4H
-	 4IgSkJLh04tR4nP0YgOkf6JIjPC0XeiM1GLnblQEkk0JHkKAQYhZpKXx92jzUOI2qtoBRfaLzjSh
-	 w4HR3JgLEUmiKuOV4+KGryumlTUPd+XmW01LclCr02Y1CIeIDfR7uAYEnkHuDPy6RQ26L6Wr2pyN
-	 o3mox7VCN9SUFag8G96RzhVJfAySxt8qOOoFNAylVoHa/SNC/EgqriuKYF/vUZweqkXFAixxtE0x
-	 ust1h0bya1x9x2qn9Dn3CGtdASwbBbzA3iMceMdaLObrDchoeIRdfOO1irqZ7a7V6OWe8aMzmQH5
-	 iF8FmP1NkUnfQ+0CEMdU43hzZZs1QO409UkllmGpujcmVnI/GsQqmdJu1JRwzInNymUwj4B0oYt5
-	 rIS0cICv/5P+mW4ejGzO04HBszqCRtu3b+Tuo1xz7laTodnh+QXwNbj3fi3Vfmhks2MRv2a4PCaO
-	 l4CLhKl3L5Z44YWeb7AeYUxbthEcx7WEqQoQkPE+4tvgfJh7SAowhvMbMRwvATgA==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bluetooth?] general protection fault in l2cap_sock_recv_cb
-Date: Tue, 11 Jun 2024 10:28:33 +0800
-X-OQ-MSGID: <20240611022832.1419703-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000b0906d061a468b93@google.com>
-References: <000000000000b0906d061a468b93@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cv0kkC45"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3737dc4a669so3109545ab.0;
+        Mon, 10 Jun 2024 19:35:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718073302; x=1718678102; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Gfi1U2YocN7eKZd+4TAjGD3Blv7pzKIBpTmBX7SoCw=;
+        b=Cv0kkC45AbIB8qZfkBxjGB/uY47FiMFZ4m/BFpOa806f7BkXLME3lDBp9vER5wzQXb
+         LwBIxi6sBmgjOhG93kzB1dtXb+sxe56ZtwbpcZVquNBHPSfaTG5g0S79Wd0VUkrV81Xw
+         zSNHTZgMEhwG28xwYaQswNaW8rk5yYtHViFe/+pSw63kBP02ytPNXaKhmpSMBa3Hu4BT
+         c1F2d0+KVrSGcTVt5+rR6g6++MWZCftdQ8CAo0/sggVsjUKDx6StSQAkZdsHk0FNaA2u
+         vZWA7ynpyIoKwQEPStrIPAZBUWqnIIw3v8NJdgwAm3e4+fea3a4RLHF4nSPAAmPdNdbQ
+         AMJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718073302; x=1718678102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Gfi1U2YocN7eKZd+4TAjGD3Blv7pzKIBpTmBX7SoCw=;
+        b=Awg0PF22R6SYi/wbjiIrnzPFZv6ri2KLR2qqO2IN+eh7zFS04qc7wDWhwisNLdgnhV
+         fXhhGisdyNZ2ipC5iARq2HLmLdAlsgvRIGPDK7AJlmzRq7mxYb4Xz7yNXyD6pgpxByoK
+         2XAk1oymQMqxOlPYDMMUeeJ67Z86dxkivFWroVqbKgQLMk2KwBwJO2D1x1nTDstR2dtK
+         sbyTjbtuXvFDp3kTO1KS52YyjV+48IUDadYZovm7fZL7PrCT1QcxlsB3m0UwK41ugSUG
+         MusXw9s9uRELXyvdkBzjiAb442hpn0HGwOu6Rhqqm6qa+8Q9SkmEmN0BL0xoJykpmApK
+         Gd6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUrqxG3yyYtwx1Ba+D6wpWhdcIFrPc/5jPLu/6dmKQJiHDWIW9qmt3ml0bii+VgTH3pXakUYZRhRHR+tXdtkDW2HtxR6pUPimP1nJTGho2T+AqlEnmPxSDzR7Tv4JxFDWL2VUnXw5zopWmbwGoBpL7AIR/3vYCwlSk6QSf30HBOEHhOig==
+X-Gm-Message-State: AOJu0YxGZUVVuVHKtExYT5pXXqhs6HKS0r4mx0CQHM67GKtgKrD/44gW
+	8IBhTHSNlVDT4f/T94jc8YeqZSzfWa+UFT9gcwa0U2IKFcjRVvD7OAxBWxb7w9DnhRUu3LEWtMQ
+	bV5wl9Kx1ffzR/ns7oKsPNqraX8U=
+X-Google-Smtp-Source: AGHT+IFMzXCoGvT54xrVUmElOG6ITA/pDCGx5P7kEv4zMKFvgLbChT4GvzIFhyASquV0eQSJFmz3vN3JDrgQJHAkFK0=
+X-Received: by 2002:a92:dac1:0:b0:375:88ec:811b with SMTP id
+ e9e14a558f8ab-37588ec880emr95209215ab.10.1718073301702; Mon, 10 Jun 2024
+ 19:35:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1717036278-3515-1-git-send-email-shengjiu.wang@nxp.com>
+ <1717036278-3515-3-git-send-email-shengjiu.wang@nxp.com> <20240530085115.ttmzx4dve4x6nep2@pengutronix.de>
+In-Reply-To: <20240530085115.ttmzx4dve4x6nep2@pengutronix.de>
+From: Shengjiu Wang <shengjiu.wang@gmail.com>
+Date: Tue, 11 Jun 2024 10:34:50 +0800
+Message-ID: <CAA+D8AP++bNzE4cccKP_NaxDK-MWN3jtkcB_P5jj0tNiZYYFSg@mail.gmail.com>
+Subject: Re: [PATCH v6 2/5] clk: imx: clk-audiomix: Add reset controller
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, p.zabel@pengutronix.de, abelvesa@kernel.org, 
+	peng.fan@nxp.com, mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org, 
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
+	marex@denx.de, linux-clk@vger.kernel.org, imx@lists.linux.dev, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-please test null ptr defref in l2cap_sock_recv_cb
+On Thu, May 30, 2024 at 4:51=E2=80=AFPM Marco Felsch <m.felsch@pengutronix.=
+de> wrote:
+>
+> On 24-05-30, Shengjiu Wang wrote:
+> > Audiomix block control can be a reset controller for
+> > Enhanced Audio Return Channel (EARC), which is one of
+> > modules in this audiomix subsystem.
+> >
+> > The reset controller is supported by the auxiliary device
+> > framework.
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  drivers/clk/imx/Kconfig               |  1 +
+> >  drivers/clk/imx/clk-imx8mp-audiomix.c | 60 +++++++++++++++++++++++++++
+> >  2 files changed, 61 insertions(+)
+> >
+> > diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
+> > index 6da0fba68225..9edfb030bea9 100644
+> > --- a/drivers/clk/imx/Kconfig
+> > +++ b/drivers/clk/imx/Kconfig
+> > @@ -81,6 +81,7 @@ config CLK_IMX8MP
+> >       tristate "IMX8MP CCM Clock Driver"
+> >       depends on ARCH_MXC || COMPILE_TEST
+> >       select MXC_CLK
+> > +     select AUXILIARY_BUS
+> >       help
+> >           Build the driver for i.MX8MP CCM Clock Driver
+> >
+> > diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/cl=
+k-imx8mp-audiomix.c
+> > index b381d6f784c8..a3dc2f3606ee 100644
+> > --- a/drivers/clk/imx/clk-imx8mp-audiomix.c
+> > +++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
+> > @@ -5,6 +5,7 @@
+> >   * Copyright (C) 2022 Marek Vasut <marex@denx.de>
+> >   */
+> >
+> > +#include <linux/auxiliary_bus.h>
+> >  #include <linux/clk-provider.h>
+> >  #include <linux/device.h>
+> >  #include <linux/io.h>
+> > @@ -13,6 +14,7 @@
+> >  #include <linux/of.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm_runtime.h>
+> > +#include <linux/slab.h>
+> >
+> >  #include <dt-bindings/clock/imx8mp-clock.h>
+> >
+> > @@ -217,6 +219,60 @@ struct clk_imx8mp_audiomix_priv {
+> >       struct clk_hw_onecell_data clk_data;
+> >  };
+> >
+> > +#if IS_ENABLED(CONFIG_RESET_CONTROLLER)
+> > +
+> > +static void clk_imx8mp_audiomix_reset_unregister_adev(void *_adev)
+> > +{
+> > +     struct auxiliary_device *adev =3D _adev;
+> > +
+> > +     auxiliary_device_delete(adev);
+> > +     auxiliary_device_uninit(adev);
+> > +}
+> > +
+> > +static void clk_imx8mp_audiomix_reset_adev_release(struct device *dev)
+> > +{
+> > +     struct auxiliary_device *adev =3D to_auxiliary_dev(dev);
+> > +
+> > +     kfree(adev);
+> > +}
+> > +
+> > +static int clk_imx8mp_audiomix_reset_controller_register(struct device=
+ *dev,
+> > +                                                      struct clk_imx8m=
+p_audiomix_priv *priv)
+> > +{
+> > +     struct auxiliary_device *adev __free(kfree) =3D NULL;
+> > +     int ret;
+>
+> Since the reset-controller is optional you need to check the existence
+> of the '#reset-cells' property before you register it.
+>
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git cc8ed4d0a848
+ok, will add it.
 
-diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
-index 6db60946c627..6f01920586e6 100644
---- a/net/bluetooth/l2cap_sock.c
-+++ b/net/bluetooth/l2cap_sock.c
-@@ -1486,6 +1486,8 @@ static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
- 	int err;
- 
- 	lock_sock(sk);
-+	l2cap_chan_hold(chan);
-+	l2cap_chan_lock(chan);
- 
- 	if (chan->mode == L2CAP_MODE_ERTM && !list_empty(&pi->rx_busy)) {
- 		err = -ENOMEM;
-@@ -1534,6 +1536,8 @@ static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
- 	}
- 
- done:
-+	l2cap_chan_unlock(chan);
-+	l2cap_chan_put(chan);
- 	release_sock(sk);
- 
- 	return err;
+best regards
+Shengjiu Wang
 
+> Regards,
+>   Marco
+>
+> > +
+> > +     adev =3D kzalloc(sizeof(*adev), GFP_KERNEL);
+> > +     if (!adev)
+> > +             return -ENOMEM;
+> > +
+> > +     adev->name =3D "reset";
+> > +     adev->dev.parent =3D dev;
+> > +     adev->dev.release =3D clk_imx8mp_audiomix_reset_adev_release;
+> > +
+> > +     ret =3D auxiliary_device_init(adev);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     ret =3D auxiliary_device_add(adev);
+> > +     if (ret) {
+> > +             auxiliary_device_uninit(adev);
+> > +             return ret;
+> > +     }
+> > +
+> > +     return devm_add_action_or_reset(dev, clk_imx8mp_audiomix_reset_un=
+register_adev,
+> > +                                     no_free_ptr(adev));
+> > +}
+> > +
+> > +#else /* !CONFIG_RESET_CONTROLLER */
+> > +
+> > +static int clk_imx8mp_audiomix_reset_controller_register(struct clk_im=
+x8mp_audiomix_priv *priv)
+> > +{
+> > +     return 0;
+> > +}
+> > +
+> > +#endif /* !CONFIG_RESET_CONTROLLER */
+> > +
+> >  static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool =
+save)
+> >  {
+> >       struct clk_imx8mp_audiomix_priv *priv =3D dev_get_drvdata(dev);
+> > @@ -337,6 +393,10 @@ static int clk_imx8mp_audiomix_probe(struct platfo=
+rm_device *pdev)
+> >       if (ret)
+> >               goto err_clk_register;
+> >
+> > +     ret =3D clk_imx8mp_audiomix_reset_controller_register(dev, priv);
+> > +     if (ret)
+> > +             goto err_clk_register;
+> > +
+> >       pm_runtime_put_sync(dev);
+> >       return 0;
+> >
+> > --
+> > 2.34.1
+> >
+> >
+> >
