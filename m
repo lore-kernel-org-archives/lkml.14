@@ -1,192 +1,222 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FA316F8F0
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE9816F8F0
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718098196; cv=none; b=MzBIhZOcIfiwNxILq9iYAT1eqggsBPPRvjJmittMoi/Q1Ea0OO0JMtr5N9l6YJe5gyvdZrxt6faL6Xj5qL4mKFXppXJo2gxxppfSM5JY4tIcTWIehfsoMl69vUwwGqFGZiRs9V4O1fSxtnUo/k13s9jSqo11boidp+5DzYPswYM=
+	t=1718098203; cv=none; b=g3s+x4yOeTD+TsXwkLy4Ht3DMMzFJvEcnY0h4/a/nEh6MxS2wZbAg5oqRF01oG5gIr2Zi6PfcTcYGqHtuwXO4wFyA9Ujt84rMk71Y7T+CU01iqFis5YzWaB+Ox8huiLgTQV8DLf33husMp9IjMl9lwbm4FYICI2g6xXfCabUaoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718098196; c=relaxed/simple;
-	bh=3Aoz75UnNeUnvxc1QOtRosq9IqKP7sN+gEDcX5YvvgA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=in6d8CbvJuIlvIFt6kNxg5zEwSlQCDcZdSzEYk/iyqtBtnXm9h8XgnPWJ+g5CLGDi6jzrkVB4F4bOwOmKwU8uyvcjqSLVTo5866PzyRJb4Ykqmsdmczh835fM39iZF2TfRIvqoIjErKrbhRFrjPEUjlXWlOddJJPuQFGsmO+3W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tURrsmZA; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718098203; c=relaxed/simple;
+	bh=s1dnQlqbB+oKn6d4e+SsAyCH94pCIYjTwN23JQQSAdk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E9tVaSHD1cJt1Qcae+IK66YVanDqijJHFjO8VSiCwNTBawS8rBVZTXaAjOqMWP7JGcVBtKLR146g/623WUIQvjNRL2xZa7jmJi6wCEDzIdjOdcGIu+6JnpM4I9N0zNOx3rntQ7n6gj/O7uv8YGHm8HW23PUk7KGu0rd+Id8aYpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AaByh0sr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AiMsvu2C; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AaByh0sr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AiMsvu2C; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tURrsmZA"
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-80acfd81899so248457241.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 02:29:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718098194; x=1718702994; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+rt7Mipe8sWYGdIRzG0MkGoo+3Z/PRr0+fx5ZM1nCaw=;
-        b=tURrsmZAWpKl1eZ+fV2RRmBzCEipcNwupSyOgTb7T3KOgWh1Jdp2VH/CnLC/Hr1oWd
-         jWnPe33+SdptdeqqkebyAe9EqXq+jm8nRqQhscdoxwh4YgCzYJO/H7jHatmCxoBSBX3L
-         1WI244myU+BrLnvquRqeYtdoHTTNJZm8hJO0MCq3GInu2Qjd/E+6+Ll0O2c0zkIQBAQZ
-         PXDOz6kGnKfqORa3YjktjpFyYey49nxMZoS7tCSs5AEQZ+bi2oVjaeeZYbr4uzDQzcQT
-         ZtkbjFapLBkCWWgKbpENFMUKWgyyuc/Vmr7sCLuoV6MffsCd+H2dCANaFAoFq/zf4Pha
-         ffSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718098194; x=1718702994;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+rt7Mipe8sWYGdIRzG0MkGoo+3Z/PRr0+fx5ZM1nCaw=;
-        b=W4NiCIRh/wzeRXF3DBlaR/moILemxdCjRGzbY601XUsXWTjza8vvXcgp4smS/JBGyI
-         VfZxsYA2dMgQoRmJo20Df+VXvieYR6Fa1DzVCxpT6j6uCm+NhH11ZvIMNiwsbBjggCpm
-         TPbI53owBvdLjLivXIBUihHKe/3CKpaaoRjUHDYGye7Qjuru70EgSMmwC6dwos0KbI2z
-         i2unqXvEDLvIRp7W6EE88aNp/Op96zDlrqbxCCQOBGCL91FBb79Jjfv6nZ7+GUd5A44Y
-         xUGUGOqz42EdQ95gv9PkVid23xzjrbb2l+GNdmC20jciLzrP1Khh17V6VtIRYI/aIkRQ
-         PwaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXy6kgNDermsAL58Bp7fmWy/BYzzWRO18DYWM/uBIFL+iXTZaVHKvDFxrkxHUI9Dqk0aN9InxG62mnyl/A0YFGe5VBP8YPK+/XlO/BN
-X-Gm-Message-State: AOJu0Yw9PmXia2QOh86c2cB9eWlh1n32uKXb8x9nuNPhTc6fyjsUfxre
-	qF/rUziEkfOSzaC/BySsbCpcbi7nLINrqSxkb02EmqWcpwwMBEozhh1fLKx6AU/AEBrmxMAkAJV
-	Zs/BQPBaY3yaFGKyzTwd4/Q6uWDirp5eOCKkz
-X-Google-Smtp-Source: AGHT+IFk2bf8NLM/Xp+BnEG73lHRwaU4NnL3zsrDQI8eIqEJLKxiVVxHVVEgxlseTLFTYxDEE5Ml744TLJd+OgpGFqA=
-X-Received: by 2002:a05:6102:2373:b0:48c:3ed0:fc1f with SMTP id
- ada2fe7eead31-48c3ed0fe39mr7197711137.19.1718098194047; Tue, 11 Jun 2024
- 02:29:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AaByh0sr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AiMsvu2C";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AaByh0sr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AiMsvu2C"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9170822E1F;
+	Tue, 11 Jun 2024 09:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718098199; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=s/o7VjVdqSKyQbEH+helGX2BBAgyr/42owpuqUXceM0=;
+	b=AaByh0srZuo09sSn0VzAJHHjwggDxW+xTBhD8+R5edDdbvE1QuAyu8dO8CMxyvqPNjE67n
+	w2FaNLWwFCnO3UTstj9JEh+1Fz5t4DvPjShtWfEXmgfqxnkyeVCnIC6vD2KwgcdEXgDC8Z
+	2QTqBaUTWr5EOWRPjeaRbmYs07UexB0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718098199;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=s/o7VjVdqSKyQbEH+helGX2BBAgyr/42owpuqUXceM0=;
+	b=AiMsvu2CXcGwvNRRk2YapVJJSfp0YAhg+3aQZ+elkwqZGzEPDZfpTC+/RAoiOOLhrB+NUl
+	ofsAQXm3eKfqTXDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718098199; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=s/o7VjVdqSKyQbEH+helGX2BBAgyr/42owpuqUXceM0=;
+	b=AaByh0srZuo09sSn0VzAJHHjwggDxW+xTBhD8+R5edDdbvE1QuAyu8dO8CMxyvqPNjE67n
+	w2FaNLWwFCnO3UTstj9JEh+1Fz5t4DvPjShtWfEXmgfqxnkyeVCnIC6vD2KwgcdEXgDC8Z
+	2QTqBaUTWr5EOWRPjeaRbmYs07UexB0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718098199;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=s/o7VjVdqSKyQbEH+helGX2BBAgyr/42owpuqUXceM0=;
+	b=AiMsvu2CXcGwvNRRk2YapVJJSfp0YAhg+3aQZ+elkwqZGzEPDZfpTC+/RAoiOOLhrB+NUl
+	ofsAQXm3eKfqTXDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5249A13A55;
+	Tue, 11 Jun 2024 09:29:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id JI2iEhcZaGYkcwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 11 Jun 2024 09:29:59 +0000
+Message-ID: <6c01bee4-c3f5-496e-8b4f-a29c97954808@suse.de>
+Date: Tue, 11 Jun 2024 11:29:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1718092070.git.dvyukov@google.com> <7662127c97e29da1a748ad1c1539dd7b65b737b2.1718092070.git.dvyukov@google.com>
-In-Reply-To: <7662127c97e29da1a748ad1c1539dd7b65b737b2.1718092070.git.dvyukov@google.com>
-From: Marco Elver <elver@google.com>
-Date: Tue, 11 Jun 2024 11:29:16 +0200
-Message-ID: <CANpmjNPhpd45cmQ98WK+RAtsPhxa1cCSnasZ293Q5eYV8dt7eA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] kcov: add interrupt handling self test
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller@googlegroups.com, glider@google.com, nogikh@google.com, 
-	tarasmadan@google.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/fbdev-dma: fix getting smem_start
+To: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,
+ Javier Martinez Canillas <javierm@redhat.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240604080328.4024838-1-peng.fan@oss.nxp.com>
+ <8f4a6d80-dd3e-422f-88af-d26f50c973ff@suse.de>
+ <AM6PR04MB59415B3F01D02024A255BFB988C72@AM6PR04MB5941.eurprd04.prod.outlook.com>
+ <766908de-922c-4d71-bb04-29dbe4d1d64d@suse.de>
+ <AM6PR04MB5941216A69AE325A79689C5888C72@AM6PR04MB5941.eurprd04.prod.outlook.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <AM6PR04MB5941216A69AE325A79689C5888C72@AM6PR04MB5941.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[nxp.com,oss.nxp.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,redhat.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -4.29
+X-Spam-Flag: NO
 
-On Tue, 11 Jun 2024 at 09:50, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> Add a boot self test that can catch sprious coverage from interrupts.
-> The coverage callback filters out interrupt code, but only after the
-> handler updates preempt count. Some code periodically leaks out
-> of that section and leads to spurious coverage.
-> Add a best-effort (but simple) test that is likely to catch such bugs.
-> If the test is enabled on CI systems that use KCOV, they should catch
-> any issues fast.
->
-> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> Reviewed-by: Alexander Potapenko <glider@google.com>
-> Cc: x86@kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: syzkaller@googlegroups.com
+Hi
 
-Reviewed-by: Marco Elver <elver@google.com>
+Am 11.06.24 um 10:23 schrieb Peng Fan:
+>> Subject: Re: [PATCH] drm/fbdev-dma: fix getting smem_start
+>>
+>> Hi
+>>
+>> Am 11.06.24 um 03:00 schrieb Peng Fan:
+>>>> Subject: Re: [PATCH] drm/fbdev-dma: fix getting smem_start
+>>>>
+>>>> Hi
+>>>>
+>>>> Am 04.06.24 um 10:03 schrieb Peng Fan (OSS):
+>>>>> From: Peng Fan <peng.fan@nxp.com>
+>>>>>
+>>>>> If 'info->screen_buffer' locates in vmalloc address space,
+>>>>> virt_to_page will not be able to get correct results. With
+>>>>> CONFIG_DEBUG_VM and CONFIG_DEBUG_VIRTUAL enabled on ARM64,
+>>>> there is dump below:
+>>>>
+>>>> Which graphics driver triggers this bug?
+>>> It is NXP i.MX95 DPU driver which is still in NXP downstream repo.
+>> Which DRM memory manager does that driver use?
+> DRM_GEM_DMA_DRIVER_OPS
 
-> ---
+So fbdev-dma would be correct. But with the gem-dma allocator, wouldn't 
+you allocate from one of these dma_alloc_() calls at [1] ? How does the 
+drivers end up with vmalloc'd fbdev memory? Specifically in the light of 
+the docs at [2].
+
+[1] 
+https://elixir.bootlin.com/linux/v6.9/source/drivers/gpu/drm/drm_gem_dma_helper.c#L146
+[2] 
+https://elixir.bootlin.com/linux/v6.9/source/Documentation/core-api/dma-api-howto.rst#L124
+
+Best regards
+Thomas
+
 >
-> Changed since v1:
->  - renamed KCOV_TEST to KCOV_SELFTEST
->  - improved the config description
->  - loop for exactly 300ms in the test
+>> I'm asking because if the driver allocates BOs via vmalloc(), should it really
+>> use fbdev-dma?
+> We use it for fbdev emulation. If drm_kms_helper.fbdev_emulation is 0,
+> fbdev emulation could be disabled.
 >
-> In my local testing w/o the previous fix,
-> it immidiatly produced the following splat:
->
-> kcov: running selftest
-> BUG: TASK stack guard page was hit at ffffc90000147ff8
-> Oops: stack guard page: 0000 [#1] PREEMPT SMP KASAN PTI
-> ...
->  kvm_set_cpu_l1tf_flush_l1d+0x5/0x20
->  sysvec_call_function+0x15/0xb0
->  asm_sysvec_call_function+0x1a/0x20
->  kcov_init+0xe4/0x130
->  do_one_initcall+0xbc/0x470
->  kernel_init_freeable+0x4fc/0x930
->  kernel_init+0x1c/0x2b0
-> ---
->  kernel/kcov.c     | 31 +++++++++++++++++++++++++++++++
->  lib/Kconfig.debug |  8 ++++++++
->  2 files changed, 39 insertions(+)
->
-> diff --git a/kernel/kcov.c b/kernel/kcov.c
-> index c3124f6d5536..72a5bf55107f 100644
-> --- a/kernel/kcov.c
-> +++ b/kernel/kcov.c
-> @@ -11,6 +11,7 @@
->  #include <linux/fs.h>
->  #include <linux/hashtable.h>
->  #include <linux/init.h>
-> +#include <linux/jiffies.h>
->  #include <linux/kmsan-checks.h>
->  #include <linux/mm.h>
->  #include <linux/preempt.h>
-> @@ -1057,6 +1058,32 @@ u64 kcov_common_handle(void)
->  }
->  EXPORT_SYMBOL(kcov_common_handle);
->
-> +#ifdef CONFIG_KCOV_SELFTEST
-> +static void __init selftest(void)
-> +{
-> +       unsigned long start;
-> +
-> +       pr_err("running self test\n");
-> +       /*
-> +        * Test that interrupts don't produce spurious coverage.
-> +        * The coverage callback filters out interrupt code, but only
-> +        * after the handler updates preempt count. Some code periodically
-> +        * leaks out of that section and leads to spurious coverage.
-> +        * It's hard to call the actual interrupt handler directly,
-> +        * so we just loop here for a bit waiting for a timer interrupt.
-> +        * We set kcov_mode to enable tracing, but don't setup the area,
-> +        * so any attempt to trace will crash. Note: we must not call any
-> +        * potentially traced functions in this region.
-> +        */
-> +       start = jiffies;
-> +       current->kcov_mode = KCOV_MODE_TRACE_PC;
-> +       while ((jiffies - start) * MSEC_PER_SEC / HZ < 300)
-> +               ;
-> +       current->kcov_mode = 0;
-> +       pr_err("done running self test\n");
-> +}
-> +#endif
-> +
->  static int __init kcov_init(void)
->  {
->         int cpu;
-> @@ -1076,6 +1103,10 @@ static int __init kcov_init(void)
->          */
->         debugfs_create_file_unsafe("kcov", 0600, NULL, NULL, &kcov_fops);
->
-> +#ifdef CONFIG_KCOV_SELFTEST
-> +       selftest();
-> +#endif
-> +
->         return 0;
->  }
->
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 59b6765d86b8..695a437a52d9 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2171,6 +2171,14 @@ config KCOV_IRQ_AREA_SIZE
->           soft interrupts. This specifies the size of those areas in the
->           number of unsigned long words.
->
-> +config KCOV_SELFTEST
-> +       bool "Perform short selftests on boot"
-> +       depends on KCOV
-> +       help
-> +         Run short KCOV coverage collection selftests on boot.
-> +         On test failure, causes the kernel to panic. Recommended to be
-> +         enabled, ensuring critical functionality works as intended.
-> +
->  menuconfig RUNTIME_TESTING_MENU
->         bool "Runtime Testing"
->         default y
-> --
-> 2.45.2.505.gda0bf45e8d-goog
->
+> Thanks
+> Peng
+>> Best regards
+>> Thomas
+>>
+>>> Thanks,
+>>> Peng.
+>> --
+>> --
+>> Thomas Zimmermann
+>> Graphics Driver Developer
+>> SUSE Software Solutions Germany GmbH
+>> Frankenstrasse 146, 90461 Nuernberg, Germany
+>> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman HRB
+>> 36809 (AG Nuernberg)
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
