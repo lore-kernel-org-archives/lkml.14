@@ -1,72 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F183A27B;
-	Tue, 11 Jun 2024 19:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F0C84A21;
+	Tue, 11 Jun 2024 19:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718134573; cv=none; b=Sw4wm3LAfPv+IXqW3L3a8zGQijJtafZoE9MVMMzBFgQOKq9gl8IZbG5p2A1A36IJk4clD1r6ctx5GrEWJwz3Sh/XWKkMEvAGZSb5jz4TNzjRb12cuDG9U+jb51z6do7RVVcZZJRIqg2Kl2w8WibkfgtobZpgFDbh09r7dTAyUxk=
+	t=1718134741; cv=none; b=ukkKTwVYcfUVR+1/QqWfy1xbF+JbaZxaVy7yr/OutacfZDE2jqZnSYhixi77yExUmrZrpZ6t4pYH3KLlS6VJHWjEe9m5RtFHBjStxa3TBB5pDBji8cGWUi+KZ/x+CC5ee/81vqpeO1t1roTSeiyE04hzE6r/ncGmuS8LRW+OZ5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718134573; c=relaxed/simple;
-	bh=GdA6KT5UlfpnGhC3psTeDTcc9QB/a0N+IRhJ64cOBEU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=WTusb77Dtgm/OxnEMrzlxsPHP6k4KWmdZ4sC3DeO84Isl+MHS7lVuntUvGvOQAZV5RuePVip/hRzoBQl+estIhfmUxhl09DZoI4MUyrWaA5bXq5BgYbH9e0qbAPmevPHMmpY+MCIQSEp3iQwy/GG8JR2iYhCRQWNbQM8uPCM7v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JB948CVY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JB948CVY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5183C2BD10;
-	Tue, 11 Jun 2024 19:36:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1718134572;
-	bh=GdA6KT5UlfpnGhC3psTeDTcc9QB/a0N+IRhJ64cOBEU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JB948CVYmQmTc/5A4rHdUtUx98VRAUbQLgcPx7ZLb7Ixz24iZxaAzJDVfs+JRO5YW
-	 CCPvVl85B+g0dyiNojTR+kxGEPc9ZgbqQD2ZBp34OLwozipdz5vU+CNeaE3NaT5REm
-	 svy2ZcgGUGTCQSvDFEiwKvklcemFxCLjWAbltRSA=
-Date: Tue, 11 Jun 2024 12:36:11 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- xen-devel@lists.xenproject.org, kasan-dev@googlegroups.com, Mike Rapoport
- <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>, "K. Y. Srinivasan"
- <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
- <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?ISO-8859-1?Q?P=E9rez?=
- <eperezma@redhat.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>, Oleksandr Tyshchenko
- <oleksandr_tyshchenko@epam.com>, Alexander Potapenko <glider@google.com>,
- Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: initialize memmap of
- !ZONE_DEVICE with PageOffline() instead of PageReserved()
-Message-Id: <20240611123611.36d0633c65ec8171152fe803@linux-foundation.org>
-In-Reply-To: <824c319a-530e-4153-80f5-20e2c463fa81@redhat.com>
-References: <20240607090939.89524-1-david@redhat.com>
-	<20240607090939.89524-3-david@redhat.com>
-	<824c319a-530e-4153-80f5-20e2c463fa81@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1718134741; c=relaxed/simple;
+	bh=w2c2G6obsMPgsfkn18lzhEJVlZV+GkjZQ8kXfu4gBA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HkoAlpo9ANDI9xZQpOCwI88EZm6X9V9KrqJm7pg9hQJyq6IkW+248wTp9ToFyk2lsipYJgSIFqXWfbS7ZHWhLiYWmHG3u8YKEHLbKUj/0usROwRH9Tcv6VkfCjCTS2nHjz4F2vKaeVvKB9CvZmA5HAErFob1sMKfk5rwew4FA54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7AE7C4AF48;
+	Tue, 11 Jun 2024 19:38:57 +0000 (UTC)
+Date: Tue, 11 Jun 2024 15:39:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Kees Cook
+ <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Guenter
+ Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
+ wklin@google.com, Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel
+ Fernandes <joel@joelfernandes.org>, Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard Biesheuvel
+ <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v2 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <20240611153913.1568be52@gandalf.local.home>
+In-Reply-To: <20240611111218.71e57e0f@gandalf.local.home>
+References: <20240606150143.876469296@goodmis.org>
+	<20240606150316.751642266@goodmis.org>
+	<20240611144029.h7egl4aif5mjlrwf@master>
+	<20240611111218.71e57e0f@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 11 Jun 2024 11:42:56 +0200 David Hildenbrand <david@redhat.com> wrote:
+On Tue, 11 Jun 2024 11:12:18 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > We'll leave the ZONE_DEVICE case alone for now.
+> > >+	p++;
+> > >+	err = reserved_mem_add(start, size, p);
+> > >+	if (err) {
+> > >+		memblock_phys_free(start, size);
+> > >+		return err;
+> > >+	}
+> > >+
+> > >+	p += strlen(p);
+> > >+
+> > >+	return *p == '\0' ? 0: -EINVAL;    
 > > 
-> 
-> @Andrew, can we add here:
-> 
-> "Note that self-hosted vmemmap pages will no longer be marked as 
-> reserved. This matches ordinary vmemmap pages allocated from the buddy 
-> during memory hotplug. Now, really only vmemmap pages allocated from 
-> memblock during early boot will be marked reserved. Existing 
-> PageReserved() checks seem to be handling all relevant cases correctly 
-> even after this change."
+> > We won't free the memory if return -EINVAL?  
 
-Done, thanks.
+I actually copied this from parse_memmap_one() in arch/x86/kernel/e820.c
+and now looking at it, it's a pretty stupid check.
+
+It does: p += strlen(p); which requires p ending with '\0'. So this will
+likely bug if there is no '\0'.
+
+I'm going to remove this, but still check to make sure that the name has
+some length before the allocation.
+
+-- Steve
