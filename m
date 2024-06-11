@@ -1,130 +1,298 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E44C17C20E;
-	Tue, 11 Jun 2024 12:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57A9E1E86F
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 12:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718110159; cv=none; b=gPxaS4qxqabGxm9DJj/2XaQ5M85nUmmFEp1yiwLPu7mPzrj9p+1t9yF6+dnnNh6Ex2tS75lZ6xKI8tMAaoehXR7v0pCX30zk7ArlAMsvSz5EIQ2uU22HjN1+vxMKJtyNqsKXi1N4kccHvDp1iql/qJlwXz/hUGz5mTwB938b/Jo=
+	t=1718110267; cv=none; b=CgUnF63HLh233vNNKgQNbi3NzhkGU23yUC5gpkicRiBvYYtlFexgdHoihuKUriok28f+Cb24MQSUAW068EsJ8JDjS7kny4z7GxXHJR2ndes0XyYXaH0fFDI+HUfYZJCcNcrsrBZRNq4QQscc5x1HbOw13uSGhB/0N+v7R9guSh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718110159; c=relaxed/simple;
-	bh=+QxKwaQcofH/vz7EI40+6zzWU5vWLDbTcmb2UoPBdts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G4hvdW1XlA0rEa+ztlvC31l/iuKjQ/EsBurfMW4mBPrLQKRp8ySpPN9Vf8CDukI9Qa/SEg6+2MnuToJyW+fvuxn4Z6m3DarV3bF3a7fG88bDc/KMMqleBtiHAWqDwBvERIAo7ayikwuQ0azopljhd0IpTvjip50cH72cAiX1QP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UnED1n3G; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UnED1n3G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718110158; x=1749646158;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+QxKwaQcofH/vz7EI40+6zzWU5vWLDbTcmb2UoPBdts=;
-  b=UnED1n3GEhxRvqM8ZbnAhjPoOQGh4kAqhkUTpo5GzSd+/T0OkY6QCTju
-   2mlYOmSOieOfvV7k0k1cwOR2jHW7AuRJe3WfnwFAobk7ohV5AOC0KdHUa
-   3FyDQeA1NsLsqyuWSYeZtShIr7S4NwYIZ2W2r5E/iQPeqpXsJZVJFWHhS
-   JPBhOS/PhA4NqhDSNnjyVTZRjLwRuyYtQFMQ2w0zBMBoY83SZnWF25rdO
-   TtLO9neCYMAVQz+vUbBot4vL43nlUEeM8PlxnwUXDgzyFb0I/0OxlxfJT
-   g5MYQIJcqE6qRk48BC41xqZcIzgoysJrYSLFG9o7YSmwmNR49QHha6loR
-   A==;
-X-CSE-ConnectionGUID: FJgiGhNmTEumiDXML0ffNA==
-X-CSE-MsgGUID: 2nTlOlT7SROv9E9HaGye7w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="40217850"
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="40217850"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 05:49:09 -0700
-X-CSE-ConnectionGUID: A6HISGOJQiatQg6STih/Yw==
-X-CSE-MsgGUID: 9c4C8P1+TnSTbPenn1WmuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="40124797"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 05:49:06 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1sH0vv-0000000FXSj-1RHd;
-	Tue, 11 Jun 2024 15:49:03 +0300
-Date: Tue, 11 Jun 2024 15:49:02 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>,
-	Dmitry Osipenko <digetx@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>, paulmck@kernel.org,
-	apopple@nvidia.com, Michael van der Westhuizen <rmikey@meta.com>,
-	"open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
-	"open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] [i2c-tegra] Do not mark ACPI devices as irq safe
-Message-ID: <ZmhHvpHlkxe4kid7@smile.fi.intel.com>
-References: <20240606132708.1610308-1-leitao@debian.org>
+	s=arc-20240116; t=1718110267; c=relaxed/simple;
+	bh=SAS5xA1uyYT/aeAKQMvhN0fZ18l+uHHHMzjeFHH2YAQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MFYzCTm36wWp2kxDNK/Sdk2tUZPLItGkkJ8RRHmHeGfU/z4B7HNmGg9CYVcYfI/HgTzG5/9BeI7plpidJoHQL+cPkqnAGau+T4mKPtm+U6ZBmroTsshXGqM2EdQlW32ajm8bReJNJTwARp20o+jqRZt1S0dm8T+lPS5nwKKueO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.185])
+	by gateway (Coremail) with SMTP id _____8Axz+s2SGhmBaoFAA--.7232S3;
+	Tue, 11 Jun 2024 20:51:02 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.185])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axw8Q0SGhmowQcAA--.57937S2;
+	Tue, 11 Jun 2024 20:51:00 +0800 (CST)
+From: Song Gao <gaosong@loongson.cn>
+To: linux-kernel@vger.kernel.org
+Cc: chenhuacai@kernel.org,
+	jiaxun.yang@flygoat.com,
+	tglx@linutronix.de,
+	maobibo@loongson.cn
+Subject: [PATCH v2] irqchip/loongson-eiointc: Add extioi virt extension support
+Date: Tue, 11 Jun 2024 20:33:48 +0800
+Message-Id: <20240611123348.8374-1-gaosong@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240606132708.1610308-1-leitao@debian.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Axw8Q0SGhmowQcAA--.57937S2
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Thu, Jun 06, 2024 at 06:27:07AM -0700, Breno Leitao wrote:
-> On ACPI machines, the tegra i2c module encounters an issue due to a
-> mutex being called inside a spinlock. This leads to the following bug:
-> 
-> 	BUG: sleeping function called from invalid context at kernel/locking/mutex.c:585
-> 	in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 1282, name: kssif0010
-> 	preempt_count: 0, expected: 0
-> 	RCU nest depth: 0, expected: 0
-> 	irq event stamp: 0
-> 
-> 	Call trace:
-> 	dump_backtrace+0xf0/0x140
-> 	show_stack (./arch/x86/include/asm/current.h:49
-> 		     arch/x86/kernel/dumpstack.c:312)
-> 	dump_stack_lvl (lib/dump_stack.c:89 lib/dump_stack.c:115)
-> 	dump_stack (lib/earlycpio.c:61)
-> 	__might_resched (./arch/x86/include/asm/current.h:49
-> 			 kernel/sched/core.c:10297)
-> 	__might_sleep (./include/linux/lockdep.h:231
-> 			 kernel/sched/core.c:10236)
-> 	__mutex_lock_common+0x5c/0x2190
-> 	mutex_lock_nested (kernel/locking/mutex.c:751)
-> 	acpi_subsys_runtime_resume+0xb8/0x160
-> 	__rpm_callback+0x1cc/0x4b0
-> 	rpm_resume+0xa60/0x1078
-> 	__pm_runtime_resume+0xbc/0x130
-> 	tegra_i2c_xfer+0x74/0x398
-> 	__i2c_transfer (./include/trace/events/i2c.h:122 drivers/i2c/i2c-core-base.c:2258)
+Interrupts can be routed to maximal four virtual CPUs with one external
+hardware interrupt. Add the extioi virt extension support so that
+Interrupts can be routed to 256 vcpus on hypervior mode.
 
-Please, read
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces-in-commit-messages
-and follow the advice on how to improve your commit message.
+Signed-off-by: Song Gao <gaosong@loongson.cn>
+---
+v2:
+- Simplify commit messages and code.
+- Follow the documented tip tree coding style.
+- Add the virtual extended interrupt model to the documentation.
+- Link to v1: https://lore.kernel.org/all/20240605070229.2569875-1-gaosong@loongson.cn/
 
-> The problem arises because during __pm_runtime_resume(), the spinlock
-> &dev->power.lock is acquired before rpm_resume() is called. Later,
-> rpm_resume() invokes acpi_subsys_runtime_resume(), which relies on
-> mutexes, triggering the error.
-> 
-> To address this issue, devices on ACPI are now marked as not IRQ-safe,
-> considering the dependency of acpi_subsys_runtime_resume() on mutexes.
+ .../arch/loongarch/irq-chip-model.rst         |  28 +++++
+ arch/loongarch/include/asm/irq.h              |   1 +
+ drivers/irqchip/irq-loongson-eiointc.c        | 104 ++++++++++++++----
+ 3 files changed, 113 insertions(+), 20 deletions(-)
 
-...
-
-While it's a move in the right direction, the real fix is to get rid of
-the IRQ safe PM hack completely. Look at how OMAP code was modified for
-the last few years and now it's pm_runtime_irq_safe()-free. The main
-(ab)users are SH code followed by Tegra drivers.
-
-So, can we fix this once for all?
-
+diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
+index 7988f4192363..7c10d070b318 100644
+--- a/Documentation/arch/loongarch/irq-chip-model.rst
++++ b/Documentation/arch/loongarch/irq-chip-model.rst
+@@ -85,6 +85,34 @@ to CPUINTC directly::
+     | Devices |
+     +---------+
+ 
++Virt extended IRQ model
++=======================
++
++This model only work on hypervior mode. In this model, IPI (Inter-Processor Interrupt)
++and CPU Local Timer interrupt go to CPUINTC directly, CPU UARTS interrupts go to
++PCH_PIC, while all other devices interrupts go to PCH-PIC/PCH-LPC/PCH-MSI and
++gathered by V-EIOINTC(Virt Extended I/O Interrupt Controller), and then go to
++CPUINTC directly::
++
++       +-----+    +-------------------+     +-------+
++       | IPI |--> | CPUINTC(0-255vcpu)| <-- | Timer |
++       +-----+    +-------------------+     +-------+
++                            ^
++                            |
++                      +-----------+
++                      | V-EIOINTC |
++                      +-----------+
++                       ^         ^
++                       |         |
++                +---------+ +---------+
++                | PCH-PIC | | PCH-MSI |
++                +---------+ +---------+
++                  ^      ^          ^
++                  |      |          |
++           +--------+ +---------+ +---------+
++           | UARTs  | | Devices | | Devices |
++           +--------+ +---------+ +---------+
++
+ ACPI-related definitions
+ ========================
+ 
+diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
+index 480418bc5071..c97a7ab0e56f 100644
+--- a/arch/loongarch/include/asm/irq.h
++++ b/arch/loongarch/include/asm/irq.h
+@@ -53,6 +53,7 @@ struct acpi_vector_group {
+ extern struct acpi_vector_group pch_group[MAX_IO_PICS];
+ extern struct acpi_vector_group msi_group[MAX_IO_PICS];
+ 
++#define MAX_CORES_PER_EIO_NODE	256
+ #define CORES_PER_EIO_NODE	4
+ 
+ #define LOONGSON_CPU_UART0_VEC		10 /* CPU UART0 */
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index c7ddebf312ad..430fda9e8ce5 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -23,15 +23,43 @@
+ #define EIOINTC_REG_ISR		0x1800
+ #define EIOINTC_REG_ROUTE	0x1c00
+ 
++#define EXTIOI_VIRT_FEATURES           0x40000000
++#define  EXTIOI_HAS_VIRT_EXTENSION     BIT(0)
++#define  EXTIOI_HAS_ENABLE_OPTION      BIT(1)
++#define  EXTIOI_HAS_INT_ENCODE         BIT(2)
++#define  EXTIOI_HAS_CPU_ENCODE         BIT(3)
++#define EXTIOI_VIRT_CONFIG             0x40000004
++#define  EXTIOI_ENABLE                 BIT(1)
++#define  EXTIOI_ENABLE_INT_ENCODE      BIT(2)
++#define  EXTIOI_ENABLE_CPU_ENCODE      BIT(3)
++
+ #define VEC_REG_COUNT		4
+ #define VEC_COUNT_PER_REG	64
+ #define VEC_COUNT		(VEC_REG_COUNT * VEC_COUNT_PER_REG)
+ #define VEC_REG_IDX(irq_id)	((irq_id) / VEC_COUNT_PER_REG)
+ #define VEC_REG_BIT(irq_id)     ((irq_id) % VEC_COUNT_PER_REG)
+ #define EIOINTC_ALL_ENABLE	0xffffffff
++#define EIOINTC_ALL_ENABLE_VEC_MASK(vector) 	\
++	(EIOINTC_ALL_ENABLE & ~BIT(vector & 0x1F))
++#define EIOINTC_REG_ENABLE_VEC(vector)		\
++	(EIOINTC_REG_ENABLE + ((vector >> 5) << 2))
+ 
+ #define MAX_EIO_NODES		(NR_CPUS / CORES_PER_EIO_NODE)
+ 
++/*
++ * Routing registers contain four vectors and have an offset of four to
++ * the base. The routing information is 8 bit wide.
++ */
++
++#define EIOINTC_REG_ROUTE_VEC(vector)		\
++	(EIOINTC_REG_ROUTE + (vector & ~0x03))
++
++#define EIOINTC_REG_ROUTE_VEC_SHIFT(vector) 	\
++	((vector & 0x03) << 3)
++
++#define EIOINTC_REG_ROUTE_VEC_MASK(vector)	\
++	(0xff << EIOINTC_REG_ROUTE_VEC_SHIFT(vector))
++
+ static int nr_pics;
+ 
+ struct eiointc_priv {
+@@ -41,6 +69,7 @@ struct eiointc_priv {
+ 	cpumask_t		cpuspan_map;
+ 	struct fwnode_handle	*domain_handle;
+ 	struct irq_domain	*eiointc_domain;
++	bool			cpu_encoded;
+ };
+ 
+ static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
+@@ -56,7 +85,9 @@ static void eiointc_enable(void)
+ 
+ static int cpu_to_eio_node(int cpu)
+ {
+-	return cpu_logical_map(cpu) / CORES_PER_EIO_NODE;
++	int cores = cpu_has_hypervisor ? MAX_CORES_PER_EIO_NODE : CORES_PER_EIO_NODE;
++
++	return cpu_logical_map(cpu) / cores;
+ }
+ 
+ #ifdef CONFIG_SMP
+@@ -88,6 +119,16 @@ static void eiointc_set_irq_route(int pos, unsigned int cpu, unsigned int mnode,
+ 
+ static DEFINE_RAW_SPINLOCK(affinity_lock);
+ 
++static void virt_extioi_set_irq_route(unsigned int vector, unsigned int cpu)
++{
++	unsigned long reg = EIOINTC_REG_ROUTE_VEC(vector);
++	u32 data = iocsr_read32(reg);
++
++	data &= ~EIOINTC_REG_ROUTE_VEC_MASK(vector);
++	data |= cpu_logical_map(cpu) << EIOINTC_REG_ROUTE_VEC_SHIFT(vector);
++	iocsr_write32(data, reg);
++}
++
+ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *affinity, bool force)
+ {
+ 	unsigned int cpu;
+@@ -104,18 +145,24 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
+ 	}
+ 
+ 	vector = d->hwirq;
+-	regaddr = EIOINTC_REG_ENABLE + ((vector >> 5) << 2);
+-
+-	/* Mask target vector */
+-	csr_any_send(regaddr, EIOINTC_ALL_ENABLE & (~BIT(vector & 0x1F)),
+-			0x0, priv->node * CORES_PER_EIO_NODE);
+-
+-	/* Set route for target vector */
+-	eiointc_set_irq_route(vector, cpu, priv->node, &priv->node_map);
+-
+-	/* Unmask target vector */
+-	csr_any_send(regaddr, EIOINTC_ALL_ENABLE,
+-			0x0, priv->node * CORES_PER_EIO_NODE);
++	regaddr = EIOINTC_REG_ENABLE_VEC(vector);
++
++	if (priv->cpu_encoded) {
++		iocsr_write32(EIOINTC_ALL_ENABLE_VEC_MASK(vector), regaddr);
++		virt_extioi_set_irq_route(vector, cpu);
++		iocsr_write32(EIOINTC_ALL_ENABLE, regaddr);
++	} else {
++		/* Mask target vector */
++		csr_any_send(regaddr, EIOINTC_ALL_ENABLE_VEC_MASK(vector),
++			     0x0, priv->node * CORES_PER_EIO_NODE);
++
++		/* Set route for target vector */
++		eiointc_set_irq_route(vector, cpu, priv->node, &priv->node_map);
++
++		/* Unmask target vector */
++		csr_any_send(regaddr, EIOINTC_ALL_ENABLE,
++			     0x0, priv->node * CORES_PER_EIO_NODE);
++	}
+ 
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ 
+@@ -139,17 +186,20 @@ static int eiointc_index(int node)
+ 
+ static int eiointc_router_init(unsigned int cpu)
+ {
+-	int i, bit;
+-	uint32_t data;
+-	uint32_t node = cpu_to_eio_node(cpu);
+-	int index = eiointc_index(node);
++	uint32_t data, node;
++	int i, bit, cores, index;
++
++	node = cpu_to_eio_node(cpu);
++	index = eiointc_index(node);
+ 
+ 	if (index < 0) {
+ 		pr_err("Error: invalid nodemap!\n");
+-		return -1;
++		return -EINVAL;
+ 	}
+ 
+-	if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) == 0) {
++	cores = (cpu_has_hypervisor ? MAX_CORES_PER_EIO_NODE : CORES_PER_EIO_NODE);
++
++	if ((cpu_logical_map(cpu) % cores) == 0) {
+ 		eiointc_enable();
+ 
+ 		for (i = 0; i < eiointc_priv[0]->vec_count / 32; i++) {
+@@ -165,7 +215,9 @@ static int eiointc_router_init(unsigned int cpu)
+ 
+ 		for (i = 0; i < eiointc_priv[0]->vec_count / 4; i++) {
+ 			/* Route to Node-0 Core-0 */
+-			if (index == 0)
++			if (eiointc_priv[index]->cpu_encoded)
++				bit = cpu_logical_map(0);
++			else if (index == 0)
+ 				bit = BIT(cpu_logical_map(0));
+ 			else
+ 				bit = (eiointc_priv[index]->node << 4) | 1;
+@@ -369,6 +421,7 @@ static int __init acpi_cascade_irqdomain_init(void)
+ static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
+ 			       u64 node_map)
+ {
++	u32 val;
+ 	int i;
+ 
+ 	node_map = node_map ? node_map : -1ULL;
+@@ -389,6 +442,17 @@ static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
+ 		return -ENOMEM;
+ 	}
+ 
++	if (cpu_has_hypervisor) {
++		val = iocsr_read32(EXTIOI_VIRT_FEATURES);
++		if (val & BIT(EXTIOI_HAS_CPU_ENCODE)) {
++			val = iocsr_read32(EXTIOI_VIRT_CONFIG);
++			val |= BIT(EXTIOI_ENABLE_CPU_ENCODE);
++			iocsr_write32(val, EXTIOI_VIRT_CONFIG);
++			priv->cpu_encoded = true;
++			pr_info("loongson-extioi: enable cpu encodig \n");
++		}
++	}
++
+ 	eiointc_priv[nr_pics++] = priv;
+ 	eiointc_router_init(0);
+ 	irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.3
 
