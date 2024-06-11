@@ -1,95 +1,129 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D9E481B7
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 16:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C9F1CFA9;
+	Tue, 11 Jun 2024 16:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718123589; cv=none; b=KiJMf+yinAm7Rwy0kdjo+xLcRboIyrxY7eqn3+Wjd3vsZSGU0maFt7IfPkiAhZ5FtzYs9w9Yx7kxZAfUnj35+vFmXuqbHXIiu+kkG55BRqCyZc0GMYsigA1vxnwZ1tBvylhF0OiEB2oHQ+zmokKH/3LKjgIZBCJ+iPwhNDpmdl8=
+	t=1718123653; cv=none; b=eaqiPkwIbjGoJJz8sdhYMFzxspjwrqkEcECIYIM+yQdbQ8ChyI6zMugevz0omobWdJlFZWjlnbsPA0bX9pDWPl+O+L8H8QN3ucZcz+wtwujGUaLmhTwrJzzOtyrtEaB0hCU+6JHa+3IFuah4+aEtoN4+Tdkru0Ha3IbX9ltxFDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718123589; c=relaxed/simple;
-	bh=THmJ90m9cYRnkYlDMu4a/cd1GwGNBcBPB6kbdS5FHTQ=;
+	s=arc-20240116; t=1718123653; c=relaxed/simple;
+	bh=32Qg2s2ft1DIK6vq4J5SomgbyYmYFs3dtDaha8oUJoc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vBtzaLkgM9QSJFWnB0mVNYg0VeGUIS5hTjgGEMTd7VsUlAwSc3tFbg+pSUJJsXUmiK/tn6trj/Xgj0od31w+1FOW7pmTdEwTlzWuPahYbvvcWttIGCQpJxKYkQlfqcWMpkV8HetSYm15NMWcvXEiJ8Wy+TL5AHjvdOr5DF5cwZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EcPSHsYf; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=sz43XKqdwNHzQVuc2TQNZeTRhFbTX83euS0C1393OlMkjQ9kvJqOxqfhLs6nMa4j+ab1mkOQuHUfDCoNyKOspqqPJIaj042RApQMpg/CDmodm2RID3B40y+MW6sZfY+ZQg+AaBaVHL6/SBXa3piLn0FjJ/Nbmg0O61zsp20TFZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1/u4aXu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EcPSHsYf"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5b97539a4a5so3176809eaf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718123587; x=1718728387; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WDlO2YjOSVSSgyeqWjNamYw1STHKmx/Pjf3CpiwkrYs=;
-        b=EcPSHsYfVpXpbla2NWQ7jXNr0Qguh1qt/6RyR/p4WmaxRhww130TCb2PgrvyDB03CH
-         vMap8ioetlQDrLE5Wj7NtdDCDIozRGt+Km3MWMKOXJBSuZTP+5sffUPn/A4CmeXjziMX
-         I4whaVrNvwpYHChnypLL+S+0u1SDx/cY+ZkPqaSpFemLElRj3xo2WMYlEFxmcIhzoKsy
-         FXGZWP8w7zTu63Ylx8uxjK31oZyI57SjxFMCZvjJTzv3KZS5NxOnv5EBpMDx2hHHyQXx
-         mniJdKJ08LA3IpbMOQlv1paz4TBqBbB/LRz2kQeUHxn9SXxIGAsFwS5321m+h+eqk8R/
-         AvYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718123587; x=1718728387;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WDlO2YjOSVSSgyeqWjNamYw1STHKmx/Pjf3CpiwkrYs=;
-        b=AcYEVQu0ahaGIoaRc0j6yeDMqHKl8uiG7GZ4d++DPORk5sJ9JWN7+gictY069QZEvi
-         j+gc8amhJWG0dh4XhYEBsk2jBDOwET+5FgC3CzPgbxcTxp1BaKGJfqrBrdSfuNFc9SFB
-         +lt7q0eEhAQEfGOyWqNFjON2rYgmTQn4dw1ZN34w86kVV8pu8HFBaSNwbVG9Dp1sFxKz
-         GhYTH1oZM/klDGZFWtO3huwgx6F2hOk8HynQ8wRHzeSi6HYgPVisLC1SwgZM38vKp7q0
-         5WbiPdS1KZ7y3H7ccVQ6QlMDFTfLFLg5oqAtT/rYz1qdvLUTUgRtts9FFOk2X6Bzl3N3
-         zaIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjjQ9w9nW0B4pubKxzxRj/Jcnhr425MQ5nCz0vkOSLSWqM30l0P55wroGE9W4EEcXqMiFcT1Wr7pgU+bPfFsqxKB0J0jm7BW6sBip2
-X-Gm-Message-State: AOJu0Yxy18SxrvP5PSVAr9amoclXBwtg8u/HrCcmqMFcD2y1ehqrCQN9
-	aX354PNhZAIItgUz06DeG/eGBDqAZ8aVg+VTsjMlxsjBfh1+RBWMP8ghLT8gLcJqCF4PQ4XiOeM
-	L0+RieBwF8Kpx7IF+Gfpgk7SgG9E=
-X-Google-Smtp-Source: AGHT+IHKy2kKJu7lLa44h5138CPHNVyiUkGxGWBZQONRY3V8yRql/hmDtBfr8vyACzy7zPU3H7G6Jwu+z+gc4DxfQEc=
-X-Received: by 2002:a05:6358:71c8:b0:19f:4c4e:d3c2 with SMTP id
- e5c5f4694b2df-19f4c4ed5b2mr898974355d.15.1718123586898; Tue, 11 Jun 2024
- 09:33:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1/u4aXu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 924A9C4AF48;
+	Tue, 11 Jun 2024 16:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718123652;
+	bh=32Qg2s2ft1DIK6vq4J5SomgbyYmYFs3dtDaha8oUJoc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=i1/u4aXuXgm1Pq+N8swSQeQopqXSPBd7MRu6eVN6FBO5Sa1kGq1A2SuVFLSS1Vgw/
+	 OTacK5dH+jA1cf/U00ZY/z/QE/ofQ6s1kUZ1I/gAMuJA6FE8VQg+wN5CVYl7vWidsp
+	 zSYIqlXA07LPnj/N1e0SJkloichkCyRydihXrha5X+v8/rDKu3X40IC20wjBQ6gGfL
+	 ZIQecuZ28bB75A0USed6QTGCjhzGX6lC8kSDpae4C3tx/4GCLlYO0UlqNr/V5hEd/3
+	 n1n47dPqQpBFhioMbndi4S2pT4obIy+Yl/QqWvG7oki3NKGxn3e27JlpZh8RUKQQ6S
+	 z3IPhFa3T98wA==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2ebe40673d8so12168841fa.3;
+        Tue, 11 Jun 2024 09:34:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXttVVNJ7GD40l96vUdLG0PXiFKzuu91lFA1oR6QsTdSa98wp83By1xBOIIYNQK0tKdi+cRr5x/0PPL0ph9TJbR1G+UXgs/8+5t9sQ8
+X-Gm-Message-State: AOJu0Yw5XA+ZXTRjOHptgvht2Svp9HJnnLEulO77/HqxGSwv5TeIilW9
+	UlThXgKpKJbPju2ZfOSUPn9RqX6bbkNT3Y0/Mp0NzxBNfnWIm4LOtDGR9PE9FoE9adnmMl7xDMa
+	9mRX04iP4Xfy0M2Ce93BMZJh40OA=
+X-Google-Smtp-Source: AGHT+IGwUqOWspDrKwcqCPBzP/5c87/EKuWQ30oA7IUSD+5KCAAuLEKcBxZl7jXd07s7Mx8X8kTDWB4R6pr/MPdcy1U=
+X-Received: by 2002:ac2:4e8e:0:b0:52c:81ad:77f8 with SMTP id
+ 2adb3069b0e04-52c81ad8048mr5110349e87.32.1718123651263; Tue, 11 Jun 2024
+ 09:34:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611024516.1375191-1-yosryahmed@google.com> <20240611024516.1375191-2-yosryahmed@google.com>
-In-Reply-To: <20240611024516.1375191-2-yosryahmed@google.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 11 Jun 2024 09:32:56 -0700
-Message-ID: <CAKEwX=OatEx57bOFBb5KNwvDhp4gMZhpjKw356fj4xzanqMJHw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] mm: zswap: add zswap_never_enabled()
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Barry Song <21cnbao@gmail.com>, 
-	Chris Li <chrisl@kernel.org>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240610163856.693110-1-aquini@redhat.com> <CAK7LNASe0q4W2cuLnLnpJbWtyoOoZ6Gi+wJw=JiRyZrT9KdNEQ@mail.gmail.com>
+ <Zmh1NXtY5W63BmRt@optiplex-fbsd>
+In-Reply-To: <Zmh1NXtY5W63BmRt@optiplex-fbsd>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 12 Jun 2024 01:33:34 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATxSePzOrHaQvS1MQo4mpAwdfwrDu3iuUsYZ+RL=LiirA@mail.gmail.com>
+Message-ID: <CAK7LNATxSePzOrHaQvS1MQo4mpAwdfwrDu3iuUsYZ+RL=LiirA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: rpm-pkg: fix rpmbuild warnings for kernel.spec
+To: Rafael Aquini <aquini@redhat.com>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 10, 2024 at 7:45=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com>=
- wrote:
+On Wed, Jun 12, 2024 at 1:03=E2=80=AFAM Rafael Aquini <aquini@redhat.com> w=
+rote:
 >
-> Add zswap_never_enabled() to skip the xarray lookup in zswap_load() if
-> zswap was never enabled on the system. It is implemented using static
-> branches for efficiency, as enabling zswap should be a rare event. This
-> could shave some cycles off zswap_load() when CONFIG_ZSWAP is used but
-> zswap is never enabled.
+> On Wed, Jun 12, 2024 at 12:00:18AM +0900, Masahiro Yamada wrote:
+> > On Tue, Jun 11, 2024 at 1:39=E2=80=AFAM Rafael Aquini <aquini@redhat.co=
+m> wrote:
+> > >
+> > > Newer revisions of rpmbuild are throwing warnings about the current
+> > > kernel.spec template having an unversioned kernel-headers in the
+> > > 'Obsoletes:' field and not being able to source the epoch's date from
+> > > the spec's missing '%changelog' section:
+> > >
+> > >   $ make srcrpm-pkg
+> > >     UPD     include/config/kernel.release
+> > >     GEN     rpmbuild/SPECS/kernel.spec
+> > >     UPD     .tmp_HEAD
+> > >     ARCHIVE linux.tar.gz
+> > >   rpmbuild -bs rpmbuild/SPECS/kernel.spec --define=3D'_topdir /mnt/nf=
+s/work/kernel/linux/rpmbuild'
+> > >   warning: line 34: It's not recommended to have unversioned Obsolete=
+s: Obsoletes: kernel-headers
+> > >   warning: source_date_epoch_from_changelog set but %changelog is mis=
+sing
+> > >   Wrote: /mnt/nfs/work/kernel/linux/rpmbuild/SRPMS/kernel-6.10.0_rc3-=
+1.src.rpm
+> > >
+> > >   RPM build warnings:
+> > >       line 34: It's not recommended to have unversioned Obsoletes: Ob=
+soletes: kernel-headers
+> > >       source_date_epoch_from_changelog set but %changelog is missing
+> > >
+> > > This patch addresses both RPM build warnings.
+> > >
+> > > Signed-off-by: Rafael Aquini <aquini@redhat.com>
+> > > ---
+> > >  scripts/package/kernel.spec | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spe=
+c
+> > > index e095eb1e290e..4d58b29c03ad 100644
+> > > --- a/scripts/package/kernel.spec
+> > > +++ b/scripts/package/kernel.spec
+> > > @@ -1,3 +1,5 @@
+> > > +%global source_date_epoch_from_changelog 0
+> > >
+> >
+> >
+> > Another possibility might be to add %changelog section.
+> >
+> > In Debian packaging, debian/changelog is a requirement.
+> >
+> > scripts/package/mkdebian generates a very small
+> > debian/changelog with a single log entry.
+> >
 >
-> However, the real motivation behind this patch is two-fold:
-> - Incoming large folio swapin work will need to fallback to order-0
->   folios if zswap was ever enabled, because any part of the folio could
->   be in zswap, until proper handling of large folios with zswap is
->   added.
->
-> - A warning and recovery attempt will be added in a following change in
->   case the above was not done incorrectly. Zswap will fail the read if
->   the folio is large and it was ever enabled.
->
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+> I'll take a stab at it, then. Thanks for the pointer!
 
-This LGTM.
-Reviewed-by: Nhat Pham <nphamcs@gmail.com>
+
+
+When you send v2, please split it into two patches.
+
+You are addressing two warnings.
+These are separate issues.
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
