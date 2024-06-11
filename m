@@ -1,199 +1,167 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CB6EBE
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 00:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A895515A5
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 00:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718065323; cv=none; b=rVVzXBxEgiHVr/+60h9hf551CxwWkLrY3ogm7wgtbHwDsjZTYzEx7Sl8f2LuQ2uYEibRGmikOq+MxLeDpxit2oDbmeeKtmfIEoAg0Wa4GUQVom4i9Obvg1e831GmE8M3NiSCEz2KW9aTOzwwLqL+/PdTIf6PtwgG+2sj84LPXUY=
+	t=1718065324; cv=none; b=sw1voDzrcvk7SC3qN4icupexlLMmVM06OChdl+ZLCAKb6Q23J0+o2VOklYBhDcHWBOQN+sQNFP8toAklHmZFCFY/aH2Vuv7RhCUOgnFvuS8K30pFjXl6Sd1TyIMEas8mmm2609/g727Xu78S4o/1ZKc9MR57lLl+V7MdIXzVx4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718065323; c=relaxed/simple;
-	bh=IMzEBBV4IPFmaMdvHVInrQZr7OKJx2Kta2GVtSnPoRs=;
+	s=arc-20240116; t=1718065324; c=relaxed/simple;
+	bh=oS1Hvez5sA7LSPE446f6TZ4Jeo1f2nqSdvepYSaw6dk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JCTpbwnf865Ng4yqHsharjCce8pVnHZm8XBENccbjJk9lu4N/4OuJol9dOHWw5o6raaLFtKAqlPkn0GbRTos3jAiVDcQgjxiXXwy8FbFJ5mYcmjADfQCsmQ90Sr6b/QuLUJMVbggAd58o6Om7pML7FPflpMrC5nm9zICf0t+5SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TQ1W1hNF; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=LDxwnbO5NwGh+EyZmh3Icogfv6oatIBm4v5Dgrk8nfmTW+hiUcMm/bx2pmUE+/GaSDhmh5Eqf6OrRZOjaASK/QUdIvgebsbXJKG53sYQVziD0yOUkleXoDkryW2BNR6MIleDUH3PVJ8u0kw+7v0M1N6jxD6W3zaIJx156aZA5g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CiLFzm4w; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TQ1W1hNF"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-62cf0ed7761so30292167b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 17:22:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CiLFzm4w"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfa77d54cd2so8093831276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 17:22:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718065320; x=1718670120; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718065321; x=1718670121; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UYg8xBfSHgODLvTlV3mxh03y8s3TyTlow0j+6oXRZyE=;
-        b=TQ1W1hNFMy7cNANL+VpkoZgQ7JSKRKZ4OcC5WoaHK4RSOMZkBMq5+OXXEvZfvaiSKj
-         MwAIq+V69sfqHZAQDZDHt4/PDHGzlcQNtZG5tEVbV0JCx62dq1X+w80V4HKLCvvpmf1i
-         /iIItw0K/V4ByA1fepeR6LjAFVNlWu8xO5ygP+aSMTwy+gsVXUATnx4UNDlMIkEQ10sU
-         J9FqGQipxQtPCBcj1UKKtiyVz8er0OCazq5wzPjuSUFWqdYdi98RUrDWOImPfN/WOg1F
-         cS/Gky0kIlDR3lGPXEz+yqXltWIUV4JfwBrli7EyKkDRuXQsMw8mDdiSaXe0U4vw3Zue
-         0L3A==
+        bh=tSfrTQEO+boV0tcg4fzpJ40AhwinPFP7IWz6IBIfER8=;
+        b=CiLFzm4wROzC65YN0NiJocwCsp1VYlHntyCc4188A8ghF48vngND7ohMXBPQnM64q7
+         LgJ0k3F62HMHUc0C7VDp3nwF0IR/UYTaPJXYLYJdAGnenSfmwbkrrTlIr1+8BAXYJB1Q
+         zKq8AA2IN8+hwWfnSL3YwaI7+gVM1wZ1i7w/3tfaRFWI6JbPZYL8k9ObrLufrVU6qrYz
+         xd6Sa85Nl4Cb9JGybe9nk8mgzYrTsI71ZeqOoTxk1fNtCS7xBB3+KXEHEV4FuiYebGPY
+         lS4EIlw/dSfEqvupO93RwU+bddvGPkCVh7affQPTYLzyV/O6d3q7Jff0lQ0E9JkN492+
+         zjwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718065320; x=1718670120;
+        d=1e100.net; s=20230601; t=1718065321; x=1718670121;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UYg8xBfSHgODLvTlV3mxh03y8s3TyTlow0j+6oXRZyE=;
-        b=iMOnyzmhTBPTBIWTw4Yni3mFKoFCf8WAbIv/tAqvVJZeDs7ukiWNb+kZ1m8uK4kKIh
-         du0NivtJUvQsYHJc9yZV2L24Ty1RVSxPw0T4CVjGtyWuNLF9jTcLk2EPSNds7b4X/mO9
-         jx01NVuZZXBoJRQXN8e1+RQuVwNvzsfjhL3SKFxbO3SSzipl9jfIH3QzhC2rf+c7b8Dj
-         E8VtIivWJMSHhDk3gwozGSUjX9/4QaGAdTzC0PNwJIbihoBJX74hYNaCqb6M739mlzu9
-         mF9z94O9gZEjMXcOLSKMM78Qiqk/IPALbf6a/+B7BA74TmxvKm/ov2IDq2Undkvy+VUd
-         jzDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNWncTxLCWNA3GmQwzH3WRoRWKN76riBWPTtuT78PyvgehAvgxdh3lQ1p/yk4d9ezKri/y4jk/C1Cnd/0XgQnb8PKHzj3qEeofrvOJ
-X-Gm-Message-State: AOJu0YzIbhtPjC3Ojb4g+TtHUbukwdGvBn1uJOpW3KJ+tMFdDdr6rLvi
-	vHQjLc+4uKUtpxsLP1R9dEx0IdaLVpNLm/yqEjE2cwD621S+CZ/5movtd/F0F38edla25hSKiCp
-	QpoxU/v6Eo0JQ1VrYNw==
-X-Google-Smtp-Source: AGHT+IEGsmdXMyxgJ1Cj/3hdc6/ErG88swxZnK/rdFuCwoqmhzkdtuuICPRcxc2axyqsks7ulwYmlzACcQfHnSLC
-X-Received: from jthoughton.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:2a4f])
- (user=jthoughton job=sendgmr) by 2002:a05:6902:1003:b0:dd9:20c1:85b6 with
- SMTP id 3f1490d57ef6-dfd9fcb617bmr288182276.2.1718065319751; Mon, 10 Jun 2024
- 17:21:59 -0700 (PDT)
-Date: Tue, 11 Jun 2024 00:21:37 +0000
-In-Reply-To: <20240611002145.2078921-1-jthoughton@google.com>
+        bh=tSfrTQEO+boV0tcg4fzpJ40AhwinPFP7IWz6IBIfER8=;
+        b=FD3KeXc3myAqO6MtlQ/4cKqyu58LROrg8T98KidouS8VF5WjEtHJurnroFZx6gtsem
+         EL264PXQXqgvF+OADkpxPAwRoZtB2V03X2oA0aznxYEtkQ3GDPW4xIJ48Uz0nU0zkrW2
+         AF3bcjzPI30JJpYU1ZS782TYtwucTH+WwXMjyALDn0l5XgFq1PkSE83tklc7rq54WouS
+         NPMhE/+8Ne9ShW4Nfdr0ZMWU89L7rkS2ZRHIxNTngI/yP6mGadus2AJdof2TMdtx3bM7
+         vyQPGmyiRZg5oB1lhQ/f+t8Om9tUk/qgSHu/8rhxxMIMgljU/mbGK+dz4mj9OPnMukGF
+         Ur5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVShrxs0oxfHmKg0F8zqtXZzKZI95/nAjrSmvR4EiFULD53nBGaZV6/6m6Hjxq9h5RHkYFsjvFvFuezMB9a8TdAQS7qmQsYJZvyeKqG
+X-Gm-Message-State: AOJu0YxSX/vNaklEDsCwCqbPpUQXIfjGr/Ps1dItw0u3SZbJ1dn6AzfV
+	wVLTf9I6krwC2UfL5uUbzC8bIgC7cE54HKvWgd+0+C/l30VnWe49jwfVzUkVgzW2+qe/hiBXEdF
+	UQA==
+X-Google-Smtp-Source: AGHT+IGQJBJFkotW2vsOmbzwfrFZdll5ruBgmE5Wy0gcHaY5UPMHPJLdSb7fePIylsTHu3oFBkLPivwSMf0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:2b13:b0:dfa:b47e:b99f with SMTP id
+ 3f1490d57ef6-dfb1c346c78mr644443276.2.1718065320730; Mon, 10 Jun 2024
+ 17:22:00 -0700 (PDT)
+Date: Mon, 10 Jun 2024 17:21:59 -0700
+In-Reply-To: <ad03cb58323158c1ea14f485f834c5dfb7bf9063.1718043121.git.reinette.chatre@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240611002145.2078921-1-jthoughton@google.com>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <20240611002145.2078921-2-jthoughton@google.com>
-Subject: [PATCH v5 1/9] KVM: Add lockless memslot walk to KVM
-From: James Houghton <jthoughton@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: Ankit Agrawal <ankita@nvidia.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, David Matlack <dmatlack@google.com>, 
-	David Rientjes <rientjes@google.com>, James Houghton <jthoughton@google.com>, 
-	James Morse <james.morse@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Raghavendra Rao Ananta <rananta@google.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Sean Christopherson <seanjc@google.com>, 
-	Shaoqin Huang <shahuang@redhat.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Wei Xu <weixugc@google.com>, Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+References: <cover.1718043121.git.reinette.chatre@intel.com> <ad03cb58323158c1ea14f485f834c5dfb7bf9063.1718043121.git.reinette.chatre@intel.com>
+Message-ID: <ZmeYp8Sornz36ZkO@google.com>
+Subject: Re: [PATCH V8 1/2] KVM: selftests: Add x86_64 guest udelay() utility
+From: Sean Christopherson <seanjc@google.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: isaku.yamahata@intel.com, pbonzini@redhat.com, erdemaktas@google.com, 
+	vkuznets@redhat.com, vannapurve@google.com, jmattson@google.com, 
+	mlevitsk@redhat.com, xiaoyao.li@intel.com, chao.gao@intel.com, 
+	rick.p.edgecombe@intel.com, yuan.yao@intel.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Provide flexibility to the architecture to synchronize as optimally as
-they can instead of always taking the MMU lock for writing.
+On Mon, Jun 10, 2024, Reinette Chatre wrote:
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> index 8eb57de0b587..b473f210ba6c 100644
+> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
+> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> @@ -23,6 +23,7 @@
+>  
+>  extern bool host_cpu_is_intel;
+>  extern bool host_cpu_is_amd;
+> +extern unsigned int tsc_khz;
+>  
+>  /* Forced emulation prefix, used to invoke the emulator unconditionally. */
+>  #define KVM_FEP "ud2; .byte 'k', 'v', 'm';"
+> @@ -815,6 +816,20 @@ static inline void cpu_relax(void)
+>  	asm volatile("rep; nop" ::: "memory");
+>  }
+>  
+> +static inline void udelay(unsigned long usec)
 
-Architectures that do their own locking must select
-CONFIG_KVM_MMU_NOTIFIER_YOUNG_LOCKLESS.
+uint64_t instead of unsigned long?  Practically speaking it doesn't change anything,
+but I don't see any reason to mix "unsigned long" and "uint64_t", e.g. the max
+delay isn't a property of the address space.
 
-The immediate application is to allow architectures to implement the
-test/clear_young MMU notifiers more cheaply.
+> +{
+> +	unsigned long cycles = tsc_khz / 1000 * usec;
+> +	uint64_t start, now;
+> +
+> +	start = rdtsc();
+> +	for (;;) {
+> +		now = rdtsc();
+> +		if (now - start >= cycles)
+> +			break;
+> +		cpu_relax();
+> +	}
+> +}
+> +
+>  #define ud2()			\
+>  	__asm__ __volatile__(	\
+>  		"ud2\n"	\
+> diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> index c664e446136b..ff579674032f 100644
+> --- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> +++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+> @@ -25,6 +25,7 @@ vm_vaddr_t exception_handlers;
+>  bool host_cpu_is_amd;
+>  bool host_cpu_is_intel;
+>  bool is_forced_emulation_enabled;
+> +unsigned int tsc_khz;
 
-Suggested-by: Yu Zhao <yuzhao@google.com>
-Signed-off-by: James Houghton <jthoughton@google.com>
----
- include/linux/kvm_host.h |  1 +
- virt/kvm/Kconfig         |  3 +++
- virt/kvm/kvm_main.c      | 26 +++++++++++++++++++-------
- 3 files changed, 23 insertions(+), 7 deletions(-)
+Slight preference for uint32_t, mostly because KVM stores its version as a u32.
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 692c01e41a18..4d7c3e8632e6 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -266,6 +266,7 @@ struct kvm_gfn_range {
- 	gfn_t end;
- 	union kvm_mmu_notifier_arg arg;
- 	bool may_block;
-+	bool lockless;
- };
- bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range);
- bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
-diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index 29b73eedfe74..0404857c1702 100644
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -97,6 +97,9 @@ config KVM_GENERIC_MMU_NOTIFIER
-        select MMU_NOTIFIER
-        bool
- 
-+config KVM_MMU_NOTIFIER_YOUNG_LOCKLESS
-+       bool
-+
- config KVM_GENERIC_MEMORY_ATTRIBUTES
-        depends on KVM_GENERIC_MMU_NOTIFIER
-        bool
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 14841acb8b95..d8fa0d617f12 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -558,6 +558,7 @@ struct kvm_mmu_notifier_range {
- 	on_lock_fn_t on_lock;
- 	bool flush_on_ret;
- 	bool may_block;
-+	bool lockless;
- };
- 
- /*
-@@ -612,6 +613,10 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- 			 IS_KVM_NULL_FN(range->handler)))
- 		return r;
- 
-+	/* on_lock will never be called for lockless walks */
-+	if (WARN_ON_ONCE(range->lockless && !IS_KVM_NULL_FN(range->on_lock)))
-+		return r;
-+
- 	idx = srcu_read_lock(&kvm->srcu);
- 
- 	for (i = 0; i < kvm_arch_nr_memslot_as_ids(kvm); i++) {
-@@ -643,15 +648,18 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- 			gfn_range.start = hva_to_gfn_memslot(hva_start, slot);
- 			gfn_range.end = hva_to_gfn_memslot(hva_end + PAGE_SIZE - 1, slot);
- 			gfn_range.slot = slot;
-+			gfn_range.lockless = range->lockless;
- 
- 			if (!r.found_memslot) {
- 				r.found_memslot = true;
--				KVM_MMU_LOCK(kvm);
--				if (!IS_KVM_NULL_FN(range->on_lock))
--					range->on_lock(kvm);
--
--				if (IS_KVM_NULL_FN(range->handler))
--					break;
-+				if (!range->lockless) {
-+					KVM_MMU_LOCK(kvm);
-+					if (!IS_KVM_NULL_FN(range->on_lock))
-+						range->on_lock(kvm);
-+
-+					if (IS_KVM_NULL_FN(range->handler))
-+						break;
-+				}
- 			}
- 			r.ret |= range->handler(kvm, &gfn_range);
- 		}
-@@ -660,7 +668,7 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- 	if (range->flush_on_ret && r.ret)
- 		kvm_flush_remote_tlbs(kvm);
- 
--	if (r.found_memslot)
-+	if (r.found_memslot && !range->lockless)
- 		KVM_MMU_UNLOCK(kvm);
- 
- 	srcu_read_unlock(&kvm->srcu, idx);
-@@ -681,6 +689,8 @@ static __always_inline int kvm_handle_hva_range(struct mmu_notifier *mn,
- 		.on_lock	= (void *)kvm_null_fn,
- 		.flush_on_ret	= true,
- 		.may_block	= false,
-+		.lockless	=
-+			IS_ENABLED(CONFIG_KVM_MMU_NOTIFIER_YOUNG_LOCKLESS),
- 	};
- 
- 	return __kvm_handle_hva_range(kvm, &range).ret;
-@@ -699,6 +709,8 @@ static __always_inline int kvm_handle_hva_range_no_flush(struct mmu_notifier *mn
- 		.on_lock	= (void *)kvm_null_fn,
- 		.flush_on_ret	= false,
- 		.may_block	= false,
-+		.lockless	=
-+			IS_ENABLED(CONFIG_KVM_MMU_NOTIFIER_YOUNG_LOCKLESS),
- 	};
- 
- 	return __kvm_handle_hva_range(kvm, &range).ret;
--- 
-2.45.2.505.gda0bf45e8d-goog
+>  static void regs_dump(FILE *stream, struct kvm_regs *regs, uint8_t indent)
+>  {
+> @@ -616,6 +617,8 @@ void assert_on_unhandled_exception(struct kvm_vcpu *vcpu)
+>  
+>  void kvm_arch_vm_post_create(struct kvm_vm *vm)
+>  {
+> +	int r;
+> +
+>  	vm_create_irqchip(vm);
+>  	vm_init_descriptor_tables(vm);
+>  
+> @@ -628,6 +631,15 @@ void kvm_arch_vm_post_create(struct kvm_vm *vm)
+>  
+>  		vm_sev_ioctl(vm, KVM_SEV_INIT2, &init);
+>  	}
+> +
+> +	if (kvm_has_cap(KVM_CAP_GET_TSC_KHZ)) {
 
+I think we should make this a TEST_REQUIRE(), or maybe even a TEST_ASSERT().
+Support for KVM_GET_TSC_KHZ predates KVM selftests by 7+ years.
+
+> +		r = __vm_ioctl(vm, KVM_GET_TSC_KHZ, NULL);
+> +		if (r < 0)
+
+Heh, the docs are stale.  KVM hasn't returned an error since commit cc578287e322
+("KVM: Infrastructure for software and hardware based TSC rate scaling"), which
+again predates selftests by many years (6+ in this case).  To make our lives
+much simpler, I think we should assert that KVM_GET_TSC_KHZ succeeds, and maybe
+throw in a GUEST_ASSERT(thz_khz) in udelay()?
+
+E.g. as is, if KVM_GET_TSC_KHZ is allowed to fail, then we risk having to deal
+with weird failures due to udelay() unexpectedly doing nothing.
+
+
+> +			tsc_khz = 0;
+> +		else
+> +			tsc_khz = r;
+> +		sync_global_to_guest(vm, tsc_khz);
+> +	}
+>  }
+>  
+>  void vcpu_arch_set_entry_point(struct kvm_vcpu *vcpu, void *guest_code)
+> -- 
+> 2.34.1
+> 
