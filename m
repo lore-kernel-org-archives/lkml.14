@@ -1,129 +1,136 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 816B710A1C
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 01:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4146FC5
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 01:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718068243; cv=none; b=fZLnliqwJH/qMYujuTlewvjXFpMF84HHN1FB0A9QLRYDEk0wwfGgWtDwoAdL4pR/KGMChZfboZjKRLQmFJ9V5KQDunWOOCld3jrq07DHfMMXWpDsYkr1UNDtH4GQzNEAtjMhvbjqqnGv0mSlffiyKGTKcy9tSSVt/TPsUeI4pLk=
+	t=1718068649; cv=none; b=pkcbLdRbXO8zhZXPcmmyUFFAF5IjvpPFWUVA8qOrnUowZUG77/b86gsEnWrDuDI/y6yEVYcGGala4Rtqm9V6WEu8DlKL5dBYHOWmmdbcRS/15+JjvqjxsftAHeGia+GO24wJfDBVxCz2Al5W70fMJ+7L4JpIj0QM0/C2Muic1H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718068243; c=relaxed/simple;
-	bh=jRaCH5nIF7gKU8dxlxss/0Oj+TUSsI7RXOAmfrxgvuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iUUfipeQzdjYnPJCOlb3L/8wbBGcOlyiWE1w9jXk2p2YZpYyK1KKuVi2y6JGV70iYiDCu4EQbSzDGIzSg4YfpBDBYCQXnQVawRyaNT/CjVv4K3SEH0kjNAqS5LSLhm3TM+7Y/6cklMWde5S+vIxvHIcg+RSYE6bMVVa1LEfDey8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-3f-6667a0816763
-Date: Tue, 11 Jun 2024 09:55:23 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
-	Dave Hansen <dave.hansen@intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Byungchul Park <lkml.byungchul.park@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, akpm@linux-foundation.org,
-	ying.huang@intel.com, vernhao@tencent.com,
-	mgorman@techsingularity.net, hughd@google.com, peterz@infradead.org,
-	luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, rjgolo@gmail.com
-Subject: Re: [PATCH v11 09/12] mm: implement LUF(Lazy Unmap Flush) defering
- tlb flush when folios get unmapped
-Message-ID: <20240611005523.GA4384@system.software.com>
-References: <CAHyrMpxETdVewTH3MCS4qPyD6Xf1zRUfWZf-8SCdpCFj2Pj_Wg@mail.gmail.com>
- <f17f33e8-1c1f-460f-8c5a-713476f524a3@intel.com>
- <26dc4594-430b-483c-a26c-7e68bade74b0@redhat.com>
- <20240603093505.GA12549@system.software.com>
- <d650c29b-129f-4fac-9a9d-ea1fbdae2c3a@intel.com>
- <35866f91-7d96-462a-aa0a-ac8a6b8cbcf8@redhat.com>
- <196481bb-b86d-4959-b69b-21fda4daae77@intel.com>
- <Zl320dWODSYw-PgV@casper.infradead.org>
- <20240604003448.GA26609@system.software.com>
- <Zmb-ZZHbeNNjcs68@tiehlicka>
+	s=arc-20240116; t=1718068649; c=relaxed/simple;
+	bh=cDG4sBmtaLwX3BcWuqNAVreT/h9JlC27J2E+qHFs6b4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=u/Jr+sLy2yi3rxe9AqD3ucv5Zq1ynSY1WRcB4+wYxjQVNS6/9DsnfGJYxp2wE0duURVP/dL6mWETA61noheY0i0XcymZvqHGwvNPnsssaCuo9xWdFn32CLeKujW3J8cxYWvEMJ5i4gajIhmWrRvV8g/0SRTgM+H8mUL8WyyAX/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=okUFOnC5; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="okUFOnC5"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2c2dfa5cfa5so2378613a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 18:17:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718068646; x=1718673446; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lD/LO/gxXCIGTZKmzDO3IySUcSGm5VYiE8jvdtRhgQQ=;
+        b=okUFOnC5kQPxvERe3gp1C9v8dcFAFH/DpCyD5cqahTmZW9If8wno8KTBmLyKgjfO2a
+         s412FXhgyXXreAcq9Ot1nF7g5LKP1HZXs+SpBf9IMioUrlJ8tOcARhgW+g/JJbYe8v/7
+         b5hP1L44HQwt9S+C8v2ZESy+MLKA4NBCnH39WdgbMuRP2SO7h44eBQxr5ijzux2iFd/y
+         jJ/JPlX4c/YNekGgqc87OQAx6z4T34RFQaIxbU242nSd6GJvqpivwL1lam7bWgeJRJTb
+         LNRHGsqoviW6o6Fn0Oo8+hJzotLYIVo3xZg8slxLlY9TO2tthQnYZQOBqwpNO+E/gHKg
+         Oteg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718068646; x=1718673446;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lD/LO/gxXCIGTZKmzDO3IySUcSGm5VYiE8jvdtRhgQQ=;
+        b=OGpTG4sjV+fvi3OF1buI2zyDcp4bztCJUxMK8F/YAg5hYoM3Rtr4erX4L3i8ldQDs2
+         hfRux69sVB6Nv0au3fWFbcgXggzw6VR8uGCNrq8329V5om5M6LjPqr+KZtWc6Irlr0Sv
+         +53L2E/kjH+MolOlRj9KfSh2Kyc37RQv6IMgrVeoGNPaH5jAxmpgXNLHbboQJ2EvL0d8
+         5NNBPDV/LiQAHYY8INztFW9levMgTXUrRR4FfUNZDyEKFa1uoi7YvGDTYJu5U0N9k62V
+         ZDTZMJ+fg1LjfoJm6AnkWo+mC0mP3VKzWq7MoUiZj40vW2eRKrO9wypKnJtnIDP5K6KV
+         bCGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqpcawCdpq2k88qcJbROYgii/qWpScoWC9MgAWeJykuIwq1aAi8ZddLC19qOMcfpHzh8uXjTjr/nFdtD9Nte2FQCfe5j9J///SKZL1
+X-Gm-Message-State: AOJu0YwYA7Oi5f/37RhWefh5f5qrej6YjdH8PKugxWrSJDU4og1RZlrS
+	exDdWinqcTnDxgq05gwy8P3WiImBYDhkOLCTkULK9PR0bMnlcYg9CQtxZFn1xKoz3ZW1kRbiDvX
+	MYg==
+X-Google-Smtp-Source: AGHT+IHhAcgd3utbJYDRGxgrLzP9SGACR5u04abW5bR8SQQdYf0g+W+AAgne/wgHvaBuqh1i70Q6FxoEe/M=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:807:b0:2c3:2e2:8391 with SMTP id
+ 98e67ed59e1d1-2c302e283cdmr13494a91.0.1718068646422; Mon, 10 Jun 2024
+ 18:17:26 -0700 (PDT)
+Date: Mon, 10 Jun 2024 18:17:24 -0700
+In-Reply-To: <20240509075423.156858-2-weijiang.yang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zmb-ZZHbeNNjcs68@tiehlicka>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsXC9ZZnkW7jgvQ0gytrRS3mrF/DZvF5wz82
-	i08vHzBavNjQzmjxdf0vZounn/pYLC7vmsNmcW/Nf1aLo52bmC3O71rLarFj6T4mi/t9DhaX
-	Dixgsjjee4DJYv69z2wWmzdNZbY4PmUqo8XvH0BdJ2dNZnEQ9vje2sfisXPWXXaPBZtKPTav
-	0PJYvOclk8emVZ1sHps+TWL3eHfuHLvHiRm/WTzmnQz0eL/vKpvH+i1XWTy2/rLzaJx6jc3j
-	8ya5AP4oLpuU1JzMstQifbsErow1P9cxFhwRrNjU3MLawHiQt4uRk0NCwETiz/7HTDD2j8Nn
-	gGwODhYBVYkr7eIgYTYBdYkbN34yg9giAkoSXZt3snUxcnEwC/xnlvgx7xgbSEJYoEDi1YRJ
-	7CA2r4C5xMwNT9lBioQEfjBL/DlzhxEiIShxcuYTFhCbWUBL4sa/l2DLmAWkJZb/4wAxOQU0
-	Jbqe1INUiAooSxzYdpwJZIyEwDl2iYa3q6DulJQ4uOIGywRGgVlIps5CMnUWwtQFjMyrGIUy
-	88pyEzNzTPQyKvMyK/SS83M3MQKjdVntn+gdjJ8uBB9iFOBgVOLhPfExLU2INbGsuDL3EKME
-	B7OSCO+ZmPQ0Id6UxMqq1KL8+KLSnNTiQ4zSHCxK4rxG38pThATSE0tSs1NTC1KLYLJMHJxS
-	DYwOOyZz7//i8jvcxmgK/wyfs8nS/bvlz6//MlvLyeSqFUPyCQNpdr9bemU6913Xt4rfVDl4
-	7NC+67t51M4u3nn4UvxEq3AZvzMxdZn+bO1b5p2O2rjh0KveDN51nr+YNPuLDy37vqNW6oWJ
-	bH9AXg2LCEeucNPvto2Ksronlr+ODY7eZcCz01yJpTgj0VCLuag4EQDau6sG0gIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsXC5WfdrNu4ID3N4NwVVos569ewWXze8I/N
-	4tPLB4wWLza0M1p8Xf+L2eLppz4Wi8NzT7JaXN41h83i3pr/rBZHOzcxW5zftZbVYsfSfUwW
-	9/scLC4dWMBkcbz3AJPF/Huf2Sw2b5rKbHF8ylRGi98/gLpOzprM4iDi8b21j8Vj56y77B4L
-	NpV6bF6h5bF4z0smj02rOtk8Nn2axO7x7tw5do8TM36zeMw7Gejxft9VNo/FLz4weazfcpXF
-	Y+svO4/GqdfYPD5vkgsQiOKySUnNySxLLdK3S+DKWPNzHWPBEcGKTc0trA2MB3m7GDk5JARM
-	JH4cPsPUxcjBwSKgKnGlXRwkzCagLnHjxk9mEFtEQEmia/NOti5GLg5mgf/MEj/mHWMDSQgL
-	FEi8mjCJHcTmFTCXmLnhKTtIkZDAD2aJP2fuMEIkBCVOznzCAmIzC2hJ3Pj3EmwZs4C0xPJ/
-	HCAmp4CmRNeTepAKUQFliQPbjjNNYOSdhaR5FpLmWQjNCxiZVzGKZOaV5SZm5pjqFWdnVOZl
-	Vugl5+duYgTG3rLaPxN3MH657H6IUYCDUYmH98THtDQh1sSy4srcQ4wSHMxKIrxnYtLThHhT
-	EiurUovy44tKc1KLDzFKc7AoifN6hacmCAmkJ5akZqemFqQWwWSZODilGhg7KlXuf3J6L5x2
-	TVVA9YHfacl3xg7GKf76T0TzzdOW2feydeyRPZpT91xH2Znz+yMlkc3z/XzXxT/00fn2+irH
-	4ftrlr7+eXIlS++7wG3X93K4Pj9/wPJuyfzgun+TkmNN/m1uYjq//eMfY4+jh82m3BaPMjX5
-	dLrNi+X8E86k7yy+TyPmy8xXYinOSDTUYi4qTgQAvvh5wrkCAAA=
-X-CFilter-Loop: Reflected
+Mime-Version: 1.0
+References: <20240509075423.156858-1-weijiang.yang@intel.com> <20240509075423.156858-2-weijiang.yang@intel.com>
+Message-ID: <ZmelpPm5YfGifhIj@google.com>
+Subject: Re: [RFC PATCH 2/2] KVM: x86: Enable guest SSP read/write interface
+ with new uAPIs
+From: Sean Christopherson <seanjc@google.com>
+To: Yang Weijiang <weijiang.yang@intel.com>
+Cc: pbonzini@redhat.com, mlevitsk@redhat.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Jun 10, 2024 at 03:23:49PM +0200, Michal Hocko wrote:
-> On Tue 04-06-24 09:34:48, Byungchul Park wrote:
-> > On Mon, Jun 03, 2024 at 06:01:05PM +0100, Matthew Wilcox wrote:
-> > > On Mon, Jun 03, 2024 at 09:37:46AM -0700, Dave Hansen wrote:
-> > > > Yeah, we'd need some equivalent of a PTE marker, but for the page cache.
-> > > >  Presumably some xa_value() that means a reader has to go do a
-> > > > luf_flush() before going any farther.
-> > > 
-> > > I can allocate one for that.  We've got something like 1000 currently
-> > > unused values which can't be mistaken for anything else.
-> > > 
-> > > > That would actually have a chance at fixing two issues:  One where a new
-> > > > page cache insertion is attempted.  The other where someone goes to look
-> > > > in the page cache and takes some action _because_ it is empty (I think
-> > > > NFS is doing some of this for file locks).
-> > > > 
-> > > > LUF is also pretty fundamentally built on the idea that files can't
-> > > > change without LUF being aware.  That model seems to work decently for
-> > > > normal old filesystems on normal old local block devices.  I'm worried
-> > > > about NFS, and I don't know how seriously folks take FUSE, but it
-> > > > obviously can't work well for FUSE.
-> > > 
-> > > I'm more concerned with:
-> > > 
-> > >  - page goes back to buddy
-> > >  - page is allocated to slab
-> > 
-> > At this point, tlb flush needed will be performed in prep_new_page().
+On Thu, May 09, 2024, Yang Weijiang wrote:
+> Enable guest shadow stack pointer(SSP) access interface with new uAPIs.
+> CET guest SSP is HW register which has corresponding VMCS field to save
+> /restore guest values when VM-{Exit,Entry} happens. KVM handles SSP as
+> a synthetic MSR for userspace access.
 > 
-> But that does mean that an unaware caller would get an additional
-> overhead of the flushing, right? I think it would be just a matter of
+> Use a translation helper to set up mapping for SSP synthetic index and
+> KVM-internal MSR index so that userspace doesn't need to take care of
+> KVM's management for synthetic MSRs and avoid conflicts.
+> 
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/include/uapi/asm/kvm.h |  3 +++
+>  arch/x86/kvm/x86.c              |  7 +++++++
+>  arch/x86/kvm/x86.h              | 10 ++++++++++
+>  3 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+> index ca2a47a85fa1..81c8d9ea2e58 100644
+> --- a/arch/x86/include/uapi/asm/kvm.h
+> +++ b/arch/x86/include/uapi/asm/kvm.h
+> @@ -420,6 +420,9 @@ struct kvm_x86_reg_id {
+>  	__u16 rsvd16;
+>  };
+>  
+> +/* KVM synthetic MSR index staring from 0 */
+> +#define MSR_KVM_GUEST_SSP	0
 
-pcp for locality is already a better source of side channel attack.  FYI,
-tlb flush gets barely performed only if pending tlb flush exists.
+Do we want to have "SYNTHETIC" in the name?  E.g. to try and differentiate from
+KVM's paravirtual MSRs?
 
-> time before somebody can turn that into a side channel attack, not to
-> mention unexpected latencies introduced.
+Hmm, but the PV MSRs are synthetic too.  Maybe it's the MSR part that's bad, e.g.
+the whole point of these shenanigans is to let KVM use its internal MSR framework
+without exposing those details to userspace.
 
-Nope.  The pending tlb flush performed in prep_new_page() is the one
-that would've done already with the vanilla kernel.  It's not additional
-tlb flushes but it's subset of all the skipped ones.
+So rather than, KVM_X86_REG_SYNTHETIC_MSR, what if we go with KVM_X86_REG_SYNTHETIC?
+And then this becomes something like KVM_SYNTHETIC_GUEST_SSP?
 
-It's worth noting all the existing mm reclaim mechaisms have already
-introduced worse unexpected latencies.
+Aha!  And then to prepare for a future where we add synthetic registers that
+aren't routed through the MSR framework (which seems unlikely, but its trivially
+easy to handle, so why not):
 
-	Byungchul
+static int kvm_translate_synthetic_reg(struct kvm_x86_reg_id *reg)
+{
+	switch (reg->index) {
+	case MSR_KVM_GUEST_SSP:
+		reg->type = KVM_X86_REG_MSR;
+		reg->index = MSR_KVM_INTERNAL_GUEST_SSP;
+		break;
+	default:
+		return -EINVAL;
+	}
+	return 0;
+}
 
-> -- 
-> Michal Hocko
-> SUSE Labs
+and then the caller would have slightly different ordering:
+
+        if (id->type == KVM_X86_REG_SYNTHETIC_MSR) {
+                r = kvm_translate_synthetic_msr(&id->index);
+                if (r)
+                        break;
+        }
+
+        r = -EINVAL;
+        if (id->type != KVM_X86_REG_MSR)
+                break;
