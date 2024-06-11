@@ -1,99 +1,85 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail.andestech.com (59-120-53-16.hinet-ip.hinet.net [59.120.53.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDA917D378
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F5024211;
+	Tue, 11 Jun 2024 13:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=59.120.53.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718111656; cv=none; b=DAvKYJ9L55v8d68mdb6WdUOBSwqmnne8e109IdfJWDZ1YwfMf+elhmFyjjm1d2lHwFTRmcFaVuioUH4l3LZgBtLscDt0oT4wu8tJBE05VhzvRAg0rY22UZ/AKwaUrq4fgPM5tVtXqvg2D0JCm1X7ROzWdcTz7TEvMBII6nz7j3Q=
+	t=1718111779; cv=none; b=K4bOxYMY6/rvsUgtri7UCWq4haNm0d4FxHiqtowo0vn/ZNuHDltHZb1lrHwoWUo0b6neYqTcj8RRmo3K2Ap3JAN7iSMOGTT1ltla0znjxGioM0s/c8SdxuP2wrZ47g229YK190fL6oCmuSOOL8f4tB1p4aS0PzVR4vnuy2Vr+rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718111656; c=relaxed/simple;
-	bh=S6N9yC288X6gryfChW2ktbFCp196YoFEzJpWyYA5Nyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nyPpG8pFBxRC+gGJqXuSPb4eAYp6cXTNYB7+SV3DBdOEXrmFOjbfrN04CVra5fpWIeCSD/deRUUxv0oSzcjc566wpNRgkQU+PEm4GsqcZ0OUQxo3DNDjBJi1V711eeBZHn0hTjvE6FsRj+jIeXdlIQZutdzwyXUkPyE9jkttTno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RIc0qDhp; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RIc0qDhp"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c7fbad011so3538180e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 06:14:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718111652; x=1718716452; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QV5K0Ro3eY4f2QViP69c0fhla1OvAvhf/tnKE0VUbIg=;
-        b=RIc0qDhpnHtKZQP9/OLQwYa6G3ehQCNbQLTMyBJrKHprTgFu5wLy/GYsawk5hc8J0p
-         a+YNGcNnm818eFB0IyJxelf5lInYbnFm+4oJe4JYiJbBzUyfCQdbInMKKIF4CGrfKiuY
-         JNoos/5b9H9udKNp55VxyJYir3b48b9DQwNeu3l0jCYtGEtoKc0V/92Su/WFgAgr2T8Q
-         wXxyhdq+Z3uaWqUYceQjXLkb8GRNXWLczVsE+yYx7jCAZQaDFKnlBZYZHG0aIW90D6Rz
-         WlpXg4M6J2Ju8FbZGwVkD3QW1bBkqG+WsrJb7UoDdPXl4kPybYg4W7V+gQu3XDG+YlyS
-         vK1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718111652; x=1718716452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QV5K0Ro3eY4f2QViP69c0fhla1OvAvhf/tnKE0VUbIg=;
-        b=TGHKefF5f2Y3xgAq4S5fsRz593ilWqfLWNQUXmdt3RR/QqHn4SR2kTLvRZGSd4wTtg
-         Qn2CUVxxea8YRpYoK8qSFQaeGpO1E83j4LcCH4akMd4T74CvEOufTR6OiThEk/ps+XG3
-         PDgq5dlBiVsMeP61qdeZWikDFUN0k9MHWDyZ44Puc1aRF7vpTHz8bwV43uirFE40VE3B
-         ZO3mHOdCTgEQSabR8/9ly9ur2RqexynXGRsZfwqvvWdtfjSHIlAObPYuEg4TviUPGo5i
-         gNRkcBIt0IksPzBnt2iCB9SpJko92LkduDvLiUXWXGSUdqtjLKbgVRaF2GWYvgIb/AG/
-         9wbw==
-X-Forwarded-Encrypted: i=1; AJvYcCWk69yzOs0taDk+3wDUQy7713UeMeR2+kyn9LE1sWKOgN5J7ay3vhOZq7Ob5Jdc1gV0d+85l/JJknRpBfvTjqMD4YXs/6eJjBeC3b0K
-X-Gm-Message-State: AOJu0YxDx5DenMz82jZ9w5ga/cVEITlPBoKOUS4rtKa4TQA8phbxbure
-	NeL8kDreDdDCveWir1WoXDkgT03S4fxzd5eicgmF+gGRy8TqXljtZasoX0LRIHIh9TbjQIV/LAy
-	HUZNGGDsyvz9Uw7SDu2PYxiTEDjFgWs3bwE2YgQ==
-X-Google-Smtp-Source: AGHT+IF2Jwr6mle3VYNit5lXohZkzWkv9DlMg9O9TILeDdaKuQee+IU2Jv/y1ncE9tDVgUoKH69MUibYVhklRfOIPqo=
-X-Received: by 2002:a05:6512:693:b0:52c:85aa:a597 with SMTP id
- 2adb3069b0e04-52c85aaa64amr4870009e87.36.1718111652171; Tue, 11 Jun 2024
- 06:14:12 -0700 (PDT)
+	s=arc-20240116; t=1718111779; c=relaxed/simple;
+	bh=A8/SxLeo0g/QJrVx1kZZfMcvIx9lsikrYLFelitJ4Hg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eKncQzlagRoCh+QoJYemT4dCA81cMqf2r1Y4/yRXNOZKFrM2i/d4iu67K9Zdn9SUTbUeRR4j3LcUPjfpQLc96eD9P2eDQ/apfjLlB9HleHCc9LRvy8krLRLmUqVGq4CxDPYzyiFJzHWgm5sZurlfp2wnn6Oa2ykiiCWC1kr9jPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=59.120.53.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
+Received: from swlinux02.andestech.com (10.0.15.183) by ATCPCS34.andestech.com
+ (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.7; Tue, 11 Jun
+ 2024 21:13:06 +0800
+From: Leo Yu-Chi Liang <ycliang@andestech.com>
+To: <akpm@linux-foundation.org>, <urezki@gmail.com>, <hch@infradead.org>,
+	<lstoakes@gmail.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <rick.p.edgecombe@intel.com>
+CC: <patrick@andestech.com>, Leo Yu-Chi Liang <ycliang@andestech.com>
+Subject: [RFC PATCH 1/1] mm/vmalloc: Modify permission reset procedure to avoid invalid access
+Date: Tue, 11 Jun 2024 21:13:01 +0800
+Message-ID: <20240611131301.2988047-1-ycliang@andestech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
-In-Reply-To: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 11 Jun 2024 15:14:00 +0200
-Message-ID: <CACRpkda9q53s95K5egjvDii1VsEc2E=bJxbeij56RFZ5=cS4uA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] Configure GbEth for RGMII on RZ/G2L family
-To: Paul Barker <paul.barker.ct@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
+ ATCPCS34.andestech.com (10.0.1.134)
 
-On Tue, Jun 11, 2024 at 1:32=E2=80=AFPM Paul Barker
-<paul.barker.ct@bp.renesas.com> wrote:
+The previous reset procedure is
+1. Set direct map attribute to invalid
+2. Flush TLB
+3. Reset direct map attribute to default
 
-> For devices in the RZ/G2L family, we have so far relied on U-Boot
-> correctly configuring the Ethernet interfaces in RGMII mode with
-> PVDD=3D1.8V before the kernel is booted. Instead, the required
-> configuration should be described in the device tree and activated
-> within the pinctrl driver.
->
-> Changes v1-v2:
->   * Rebased on next-20240611.
->   * Changed the approach taken in the pinctrl patches to be compatible
->     with changes made by Prabhakar for RZ/V2H support. I haven't picked
->     up Reviewed-by tags on these patches as they've changed a lot.
->   * Clarified that patch 6/9 also affects RZ/Five.
->   * No major changes to the dts patches so I've picked up Geert's
->     Reviewed-by tags for these.
+It is possible that kernel forks another process
+on another core that access the invalid mappings after
+sync_kernel_mappings.
 
-LGTM
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+We could reproduce this scenario by running LTP/bpf_prog
+multiple times on RV32 kernel on QEMU.
 
-But I expect Geert to pick up the patches and send me a pull request when
-he's pleased with this.
+Therefore, the following procedure is proposed
+to avoid mappings being invalid.
+1. Reset direct map attribute to default
+2. Flush TLB
 
-Yours,
-Linus Walleij
+Signed-off-by: Leo Yu-Chi Liang <ycliang@andestech.com>
+---
+ mm/vmalloc.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 45e1506d58c3..58ef2fc51e43 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -3248,14 +3248,9 @@ static void vm_reset_perms(struct vm_struct *area)
+ 		}
+ 	}
+ 
+-	/*
+-	 * Set direct map to something invalid so that it won't be cached if
+-	 * there are any accesses after the TLB flush, then flush the TLB and
+-	 * reset the direct map permissions to the default.
+-	 */
+-	set_area_direct_map(area, set_direct_map_invalid_noflush);
+-	_vm_unmap_aliases(start, end, flush_dmap);
++	/* Reset direct map permissions to default, then flush the TLB */
+ 	set_area_direct_map(area, set_direct_map_default_noflush);
++	_vm_unmap_aliases(start, end, flush_dmap);
+ }
+ 
+ static void delayed_vfree_work(struct work_struct *w)
+-- 
+2.34.1
+
