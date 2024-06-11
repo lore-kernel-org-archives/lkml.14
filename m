@@ -1,219 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04D9176FB2;
-	Tue, 11 Jun 2024 14:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD2A28E37;
+	Tue, 11 Jun 2024 14:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718116412; cv=none; b=lgdN93DitEMr4g4HfkCuRzAZ717qGRA7rxP0C8lu1iEmkEIXIgObio83+iVMNxDNcx5OTAoTpdsUQftw7LovYx9oMe82bfIuYXoRKXA74qpYuayIOLxgHkcsNa+FTUjMXDdpAn/kQwkkiN8mNUjMnl7IWckjtT/DELmjEMhh0yU=
+	t=1718116616; cv=none; b=B90GGvdwBc9EELWel4saBKRu5x28yAV0vFeN8TNkJodAKxym1d5g1G1BWy2rf0gGen1tZ0YoiIYcmTlSojAaVLBfZ08MqAyT9XLvNdluSf/YC9zfYagFh2Nqj3o4tIRkGmw3V8wzVYSqN94YGYW0KR6qiZ5GqQL+Os89ZfgpFNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718116412; c=relaxed/simple;
-	bh=jjTUpPeIaaEwR6z44PyJWedATHRYe37OVHXra4vOKog=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kZkVPaLfe3aWvVIjbp76Wdm8RP+WQeI4wFG/Z05GZBVSce640bKRnmx4dxiujdr2DZt9GIt2xP6JBWSHk+DenRr369Ag3atDsbxy/N3a1El7acMyAdxlxHudwCtUC0usGgxbr3o6uyP6n0AAWT7xDbJdWTtY5NL+3PSiZLeM3pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A2gJq4xW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718116616; c=relaxed/simple;
+	bh=tWcDkq4uWRdUF6EuhEA2zFi4IWIjqvVCt7HqoOzeRZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M8vlFgA7GFWsx/zbFHEr9yO+FkfEA5yN5HrfSSl/KHPiwfOHI7rNNvs2TVqb+aoy/ijWK5c2AXgAQlnjN9zCzkulAPEZKxO4EMSX0eBKnGoa8kzsfBKqvxVs7SYiPPDQKOLUYlKOQofjmbyGAiZfMPtNfxtYWWGb9/x+hLIHekA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=c5/xd8vN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zlVkt2Si; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=c5/xd8vN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zlVkt2Si; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A2gJq4xW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380E3C32789;
-	Tue, 11 Jun 2024 14:33:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718116411;
-	bh=jjTUpPeIaaEwR6z44PyJWedATHRYe37OVHXra4vOKog=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A2gJq4xWaEuR130bkInxJ765QmHvgA71Pxhb/7MCBsPkHlsN6hnjDBOjvvHPqKEg6
-	 r4+7dDnrHc/qV3dq1bdgfTLX3A6GNFDMpoRgt7wZLMgABd41rwdMQBbfEw9QTO+bSv
-	 niKWUSaXtvqcejRqjRsLP2XBMPgKSX6HdxJXci0th8CsB1MAibRTPbf8e1arjp3t7N
-	 7bgoEo9hWKITAKk/jVZy4mInqdLrkQkIMJLFchhhmS6QUgymZOXHzxCyt/uDXqTAme
-	 1ANQIeclW4zST/pGiM+3ZC6b8up3pMdA/eJgy/C8zc0L1nSFw4DdWiEuDrTj1B3twY
-	 A8FFz4GgXbwyg==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52c84a21c62so2857125e87.1;
-        Tue, 11 Jun 2024 07:33:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVKn3tE29w81TKfMnoT4Z8WXPxax1tSSlfueoulRnAazA2heGZB9++xOA/wXawjEty8SiNzqe6MMPasbNTDWZ4fkbcURelyZrHkYuFOUJjMyQmLQc341CHtgBIMJG2OUXN5SD6k3AJs93jR
-X-Gm-Message-State: AOJu0YwrlSOe0ntoSvMEJWeotp+Zd2fqY36XQWPkwq6SrSGUrDPp7vu+
-	NykP6MIVbVU14UYEdQzDdH3GdMk5Vxbn6SBn7P/jkE/IMKpPvTmmgiNF8wdNeaadqiEVswaohi9
-	UmBPoabFCw6rimy4htMIsmHOlkRM=
-X-Google-Smtp-Source: AGHT+IHwS67lNos2R5ogGz+mg0hSjQxVPgdwgwfzJU3OcO1GifI/cPKg1+stC2S9RVd24EzZotQeFtjmVlA4iKw9OAc=
-X-Received: by 2002:a05:6512:1388:b0:52c:8416:69ec with SMTP id
- 2adb3069b0e04-52c84166f27mr5811929e87.9.1718116409866; Tue, 11 Jun 2024
- 07:33:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="c5/xd8vN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zlVkt2Si";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="c5/xd8vN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zlVkt2Si"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 942B933827;
+	Tue, 11 Jun 2024 14:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718116612;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DowVRu9TFhrP0/nfeu3duZvffZXs5zr4XS8fPsedEvo=;
+	b=c5/xd8vNp8MVzFxcfmqufezFuaJY5T5e32YjnvVsHMD6fOyV0vdlHK/d5qWWQWlLUE+CFD
+	gXYVz982X9KPm2Wcx366kWnOfY66KuHvmw3zF1NqBAn2r3JBYfMZ3VcP9g+/F37YrM2e0o
+	eSayR5syyjybxPQ5H/01Uod48UDnjUg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718116612;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DowVRu9TFhrP0/nfeu3duZvffZXs5zr4XS8fPsedEvo=;
+	b=zlVkt2SiawzLhwW0p+dUkhnFAzMr8r4LpJ+RgwdIwlcNUorPSFcvRJ4YqpLopgwc2+nCkn
+	xKcmngYLFjxSWUDQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1718116612;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DowVRu9TFhrP0/nfeu3duZvffZXs5zr4XS8fPsedEvo=;
+	b=c5/xd8vNp8MVzFxcfmqufezFuaJY5T5e32YjnvVsHMD6fOyV0vdlHK/d5qWWQWlLUE+CFD
+	gXYVz982X9KPm2Wcx366kWnOfY66KuHvmw3zF1NqBAn2r3JBYfMZ3VcP9g+/F37YrM2e0o
+	eSayR5syyjybxPQ5H/01Uod48UDnjUg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1718116612;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DowVRu9TFhrP0/nfeu3duZvffZXs5zr4XS8fPsedEvo=;
+	b=zlVkt2SiawzLhwW0p+dUkhnFAzMr8r4LpJ+RgwdIwlcNUorPSFcvRJ4YqpLopgwc2+nCkn
+	xKcmngYLFjxSWUDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7A05E137DF;
+	Tue, 11 Jun 2024 14:36:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id sy6lHQRhaGaKUgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Tue, 11 Jun 2024 14:36:52 +0000
+Date: Tue, 11 Jun 2024 16:36:51 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Johannes Thumshirn <jth@kernel.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: Re: [PATCH 1/3] btrfs: rst: remove encoding field from stripe_extent
+Message-ID: <20240611143651.GH18508@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20240610-b4-rst-updates-v1-0-179c1eec08f2@kernel.org>
+ <20240610-b4-rst-updates-v1-1-179c1eec08f2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605094843.4141730-1-wenst@chromium.org>
-In-Reply-To: <20240605094843.4141730-1-wenst@chromium.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 11 Jun 2024 23:32:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQrPfpScYKKg_Mwoj2RyWe5_e_xn6YZRm+t_w2X4+3kYw@mail.gmail.com>
-Message-ID: <CAK7LNAQrPfpScYKKg_Mwoj2RyWe5_e_xn6YZRm+t_w2X4+3kYw@mail.gmail.com>
-Subject: Re: [PATCH] scripts/make_fit: Support decomposing DTBs
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Simon Glass <sjg@chromium.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610-b4-rst-updates-v1-1-179c1eec08f2@kernel.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.98%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spam-Level: 
 
-On Wed, Jun 5, 2024 at 6:48=E2=80=AFPM Chen-Yu Tsai <wenst@chromium.org> wr=
-ote:
->
-> The kernel tree builds some "composite" DTBs, where the final DTB is the
-> result of applying one or more DTB overlays on top of a base DTB with
-> fdtoverlay.
->
-> The FIT image specification already supports configurations having one
-> base DTB and overlays applied on top. It is then up to the bootloader to
-> apply said overlays and either use or pass on the final result. This
-> allows the FIT image builder to reuse the same FDT images for multiple
-> configurations, if such cases exist.
->
-> The decomposition function depends on the kernel build system, reading
-> back the .cmd files for the to-be-packaged DTB files to check for the
-> fdtoverlay command being called. This will not work outside the kernel
-> tree. The function is off by default to keep compatibility with possible
-> existing users.
->
-> To facilitate the decomposition and keep the code clean, the model and
-> compatitble string extraction have been moved out of the output_dtb
-> function. The FDT image description is replaced with the base file name
-> of the included image.
->
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
-> This is a feature I alluded to in my replies to Simon's original
-> submission of the make_fit.py script [1].
->
-> This is again made a runtime argument as not all firmware out there
-> that boot FIT images support applying overlays. Like my previous
-> submission for disabling compression for included FDT images, the
-> bootloader found in RK3399 and MT8173 Chromebooks do not support
-> applying overlays. Another case of this is U-boot shipped by development
-> board vendors in binary form (without upstream) in an image or in
-> SPI flash on the board that were built with OF_LIBFDT_OVERLAY=3Dn.
-> These would fail to boot FIT images with DT overlays. One such
-> example is my Hummingboard Pulse. In these cases the firmware is
-> either not upgradable or very hard to upgrade.
->
-> I believe there is value in supporting these cases. A common script
-> shipped with the kernel source that can be shared by distros means
-> the distro people don't have to reimplement this in their downstream
-> repos or meta-packages. For ChromeOS this means reducing the amount
-> of package code we have in shell script.
->
-> [1] https://lore.kernel.org/linux-kbuild/20231207142723.GA3187877@google.=
-com/
-> [2]
->
->  scripts/Makefile.lib |  1 +
->  scripts/make_fit.py  | 70 ++++++++++++++++++++++++++++++--------------
->  2 files changed, 49 insertions(+), 22 deletions(-)
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 9f06f6aaf7fc..d78b5d38beaa 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -522,6 +522,7 @@ quiet_cmd_fit =3D FIT     $@
->        cmd_fit =3D $(MAKE_FIT) -o $@ --arch $(UIMAGE_ARCH) --os linux \
->                 --name '$(UIMAGE_NAME)' \
->                 $(if $(findstring 1,$(KBUILD_VERBOSE)),-v) \
-> +               $(if $(FIT_DECOMPOSE_DTBS),--decompose-dtbs) \
->                 --compress $(FIT_COMPRESSION) -k $< @$(word 2,$^)
->
->  # XZ
-> diff --git a/scripts/make_fit.py b/scripts/make_fit.py
-> index 263147df80a4..120f13e1323c 100755
-> --- a/scripts/make_fit.py
-> +++ b/scripts/make_fit.py
-> @@ -22,6 +22,11 @@ the entire FIT.
->  Use -c to compress the data, using bzip2, gzip, lz4, lzma, lzo and
->  zstd algorithms.
->
-> +Use -d to decompose "composite" DTBs into their base components and
-> +deduplicate the resulting base DTBs and DTB overlays. This requires the
-> +DTBs to be sourced from the kernel build directory, as the implementatio=
-n
-> +looks at the .cmd files produced by the kernel build.
-> +
->  The resulting FIT can be booted by bootloaders which support FIT, such
->  as U-Boot, Linuxboot, Tianocore, etc.
->
-> @@ -64,6 +69,8 @@ def parse_args():
->            help=3D'Specifies the architecture')
->      parser.add_argument('-c', '--compress', type=3Dstr, default=3D'none'=
-,
->            help=3D'Specifies the compression')
-> +    parser.add_argument('-d', '--decompose-dtbs', action=3D'store_true',
-> +          help=3D'Decompose composite DTBs into base DTB and overlays')
->      parser.add_argument('-E', '--external', action=3D'store_true',
->            help=3D'Convert the FIT to use external data')
->      parser.add_argument('-n', '--name', type=3Dstr, required=3DTrue,
-> @@ -140,12 +147,12 @@ def finish_fit(fsw, entries):
->      fsw.end_node()
->      seq =3D 0
->      with fsw.add_node('configurations'):
-> -        for model, compat in entries:
-> +        for model, compat, files in entries:
->              seq +=3D 1
->              with fsw.add_node(f'conf-{seq}'):
->                  fsw.property('compatible', bytes(compat))
->                  fsw.property_string('description', model)
-> -                fsw.property_string('fdt', f'fdt-{seq}')
-> +                fsw.property('fdt', b''.join([b'fdt-%d\x00' % x for x in=
- files]))
->                  fsw.property_string('kernel', 'kernel')
->      fsw.end_node()
->
-> @@ -193,21 +200,9 @@ def output_dtb(fsw, seq, fname, arch, compress):
->          fname (str): Filename containing the DTB
->          arch: FIT architecture, e.g. 'arm64'
->          compress (str): Compressed algorithm, e.g. 'gzip'
+On Mon, Jun 10, 2024 at 10:40:25AM +0200, Johannes Thumshirn wrote:
+> -#define BTRFS_STRIPE_RAID5	5
+> -#define BTRFS_STRIPE_RAID6	6
+> -#define BTRFS_STRIPE_RAID1C3	7
+> -#define BTRFS_STRIPE_RAID1C4	8
 > -
-> -    Returns:
-> -        tuple:
-> -            str: Model name
-> -            bytes: Compatible stringlist
->      """
->      with fsw.add_node(f'fdt-{seq}'):
-> -        # Get the compatible / model information
-> -        with open(fname, 'rb') as inf:
-> -            data =3D inf.read()
-> -        fdt =3D libfdt.FdtRo(data)
-> -        model =3D fdt.getprop(0, 'model').as_str()
-> -        compat =3D fdt.getprop(0, 'compatible')
-> -
-> -        fsw.property_string('description', model)
-> +        fsw.property_string('description', os.path.basename(fname))
->          fsw.property_string('type', 'flat_dt')
->          fsw.property_string('arch', arch)
->          fsw.property_string('compression', compress)
-> @@ -215,7 +210,6 @@ def output_dtb(fsw, seq, fname, arch, compress):
->          with open(fname, 'rb') as inf:
->              compressed =3D compress_data(inf, compress)
->          fsw.property('data', compressed)
-> -    return model, compat
->
->
->  def build_fit(args):
-> @@ -235,6 +229,7 @@ def build_fit(args):
->      fsw =3D libfdt.FdtSw()
->      setup_fit(fsw, args.name)
->      entries =3D []
-> +    fdts =3D collections.OrderedDict()
+>  struct btrfs_stripe_extent {
+> -	__u8 encoding;
+> -	__u8 reserved[7];
+>  	/* An array of raid strides this stripe is composed of. */
+> -	struct btrfs_raid_stride strides[];
+> +	__DECLARE_FLEX_ARRAY(struct btrfs_raid_stride, strides);
 
-
-I am fine with this patch.
-
-Just a nit.
-
-Is there any reason why you used OrderedDict() instead of
-the normal dictionary, "fdts =3D {}" ?
-
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+Is there a reason to use the __ underscore macro? I see no difference
+between that and DECLARE_FLEX_ARRAY and underscore usually means that
+it's special in some way.
