@@ -1,99 +1,95 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3983176FB7
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 11:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B745317BB12
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 11:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718106993; cv=none; b=pgMwxkLNCdSJW9UmyzIkmnxFvqAY/j2SAQWHY2oW9RUbr6s0uxbcGcTKB4nSVyJWNJ0ssXx0U/HHUpW2NZD2k83s7EgIRBXSpKN/z6g3itcvuts0BpDUWXLzTXBz4c9QYeAq0xqvS1OjeNLRNKKr1U3NsCbakvM7MzSB8FK3YfU=
+	t=1718107085; cv=none; b=bNxTMuCnR6AKzJ24+2XyqBVMh+WcUyWP7LJJSnOnEgsiKk2xhxeNmeBqb4H45c51K0+sCRFQ2LtdTMl8+PdkCwQ4rlFdIXBGuF665upWuFENrH1KE/GsZtLWMDezmJU68q8xuZtz3uXKR1N2xa+YMqexFDNKjlCdOdtnxE1/hug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718106993; c=relaxed/simple;
-	bh=W1uTW0uou/2g/48D5Fc/QCRPCK1v20x3VE4SAKIKhHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iv0MuHSGW3j+wr0myP+XLW/oX3Fy3sDCEhSk7yuoh3uJ6gbOInLgqEcxJ2ykvm6E0VBCDNOYRqwJ3tigLtwkTIQta4jZACaMeaEDm6H42jBxu6mwrEjtTrb2nco6Qf8TbP3zVGjx260pWk5fqz3BmVaNgjeQsiCmEqRnDZhtgaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LZGBVHT0; arc=none smtp.client-ip=209.85.208.179
+	s=arc-20240116; t=1718107085; c=relaxed/simple;
+	bh=KQOQMNe/0O2p5NcAx9Wr8YU3xBI8taSDf2dxsX8eN+U=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=QWpsv4bKSzlZ/mz8F7N/Nc/fnzYU4D3DFaH4aZ0yKj3YtAghIGYWUcUwaZM4Kqj9R3/IyCElDT8JSL2W3ZbgaRqzVNAgKT9EkOfiC70Vr02qgesHiPbUej35OZUbR7GsyTYTZ/ZcCQKWY2h8wptQHnnCmsf+yuu0fjPQv30moK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LTXKZQhE; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LZGBVHT0"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ebeefb9b56so11683401fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 04:56:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LTXKZQhE"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57c61165af6so4590020a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 04:58:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718106990; x=1718711790; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UCtSkX41R6sJ1nBhx8bB86pNgXlKqe3D1DzJJjI5VBA=;
-        b=LZGBVHT0CXX+Ipz0pCZP08A9F+InzuwioupJovvC4jQJwqaVpi5dnveZrewIDyLpVp
-         umGs6t3TxjFv6/s9GSJcSrQ6U7XpduECh50+Cu76KAcDXTXFdMLJk0WAEWumaIY/ErmZ
-         tlTz6z6cf9LegOoGj1kyOl3iYV1TYsxCYeTInvIMgUyNbltezG3IPs940imupRtvY/WX
-         ilE/fhT+fYyhxAQEWHBnmVCBWRb+k6Zr2fc1A9TA/5D0JNCBJMZdmf+TE6qoIRXE05F5
-         4nBF2LJnKDMyQ2oX11dXimbsvjgJ83ZcxXB3YvFuH/o6/sq+HiELoLSMymdPz5I2cs4w
-         guAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718106990; x=1718711790;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1718107082; x=1718711882; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UCtSkX41R6sJ1nBhx8bB86pNgXlKqe3D1DzJJjI5VBA=;
-        b=uvA+MmfzVxahbuwLwr048kxObsCN+pdrUuw87z7OqkEXvosHoWGakfcDZ8AvjVBkqN
-         em4bTs7KP8RjO7Qj4McvofFU4sXMgWEOEQJROfwvaAK8U1UktdrZbBgrA5CF+MKCTopF
-         v5x1O9ZR4MvIc61UsdV1VIqG9+Z+Mn2mAX+Q4PhUUzc/rbZFyG7HlSEAkY13kTnrmxxo
-         bKGPRSOYM8Nv6q48D4VsbIF+NdSoa8QQ1DncXSPV/XtQNJWnJJfLyBs8WiSOZ+ATM+WF
-         AQB1IOMrBEs9xFeNnbSiz8s+DImCybOr5+pfiOjp3oRQcCMokFVjeMVU5rt0pfJ8nc2W
-         9CyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIickJwqlAABNoEOtNCbPK+BSGdxoXRqph2ChZWkpr8Af5IFo/C6CE3Naqafa+5xIW++v+vOD62SRMtsrCK5S/6XHVHntHRw5L0CcE
-X-Gm-Message-State: AOJu0YxVW2IRzypbd928PFOzPDYsNRv/Qh3LKdqNISuQ+UxOQ+5fgDm2
-	RYTaWJoFqxH70Y/F/l1EYJNXOymjhPtm2tlsOjfC6uDEfIdC5DhCwQEnvGr5rx4=
-X-Google-Smtp-Source: AGHT+IFNtdJSAv2AvYvNCQCWgYsYSG5yVjWDjp3ColP0ww+Rnj66j7tn3npEM2iuvVYpscst9Hb2sQ==
-X-Received: by 2002:a2e:b615:0:b0:2eb:d77a:850c with SMTP id 38308e7fff4ca-2ebd77a88b7mr69409961fa.4.1718106989081;
-        Tue, 11 Jun 2024 04:56:29 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ebd4c83217sm15268501fa.109.2024.06.11.04.56.28
+        bh=8km0fCrQgO57gFXBsXFIYcrjuKczDYZLAASbYW83aek=;
+        b=LTXKZQhECbbfKv/qkZCqUXiwri9YSZmnMzOpcOcBiGAxiX//EtvEs8CaahYh4Hlavk
+         NdJVYFn6ZRh0wfmkpsI6XgV/oHsQNI87gpiReGDii1AFcIfO2QLPkZTdS92ChNjXUKHU
+         VbVzQ3dHKh8wgXN/OQaLpOKMxiykQBSrW+rDA5aXq7GXDxfnRe1IUBwQlc6F+73JBngb
+         CMdw5KdbQU85kcTzttxuSsCrYRNZbCH2dpkjXcB7Yy2x5ZqQSXjz5Z6KMSUr0cRUJpVk
+         650bUQFLGSG64x653XGcQwCzDwR6azGKRzbHW9sjY+boMPUAGvTZexbMm9avCX7Gkzle
+         uNGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718107082; x=1718711882;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8km0fCrQgO57gFXBsXFIYcrjuKczDYZLAASbYW83aek=;
+        b=iSV0apFVEvwxJERkXNbpAVpILkDLykzJjlCUQzGqot0MKrUHbnl9FqP1Ji/D3txr9x
+         q/q7GWIckXI5f6EeUVMKl85b7yggIzd6c1+MK+vMVEdEioQzS8b3t+HmG7b8gYl9gSmu
+         esbyaly1MB2oXGGZrL7FvCbuzaAKd99HfiawMyyrZeGpXYGIIGtwfuZPJ8Z+mmwbwbkq
+         v8u5AvWhaDgDDss1/hywsceeS03iEFd4SWBYGfwhQ+B3KH3jV39wcxjQTiXm02r3gGTC
+         +E2nN/aXZZoVU01RT4MqWacS5n9sgqo1JKOaijNn9dQmqH/jv9hIzBpeL7joXx9A2hrY
+         rwGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXdXu3RGMh8fYf8o4ANCPQVDKIKCIlC1poysbFjwQYpr4ohc4o2VUD/ZQryGF2KltIGwpH0fiL2PCuJCtLLrAvI0/2Q2nApJUtFL4R2
+X-Gm-Message-State: AOJu0Yyj4c/t0tBTxsLX9ESbfJvHlcgyiu5ygqiOUQgRleVtALeHpByk
+	L8O/MidD3xHriL7BlOForGpLRwdWDNjQFQvYuIQBwNvyPWT89LfATx07P14gNDE=
+X-Google-Smtp-Source: AGHT+IFE/E3oXsA/j5Sw46isYeAbfSwDcm+QTBQfzlRN7+BbqOoeqoLghf4L6f7cDyPU3Yb2H/A/fA==
+X-Received: by 2002:a17:906:4eca:b0:a6e:f75f:be04 with SMTP id a640c23a62f3a-a6ef75fc386mr549563966b.38.1718107082022;
+        Tue, 11 Jun 2024 04:58:02 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c6aa014c1sm6226784a12.41.2024.06.11.04.58.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 04:56:28 -0700 (PDT)
-Date: Tue, 11 Jun 2024 14:56:27 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Ekansh Gupta <quic_ekangupt@quicinc.com>
-Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
-	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
-	quic_chennak@quicinc.com, stable <stable@kernel.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>
-Subject: Re: [PATCH v5 4/7] misc: fastrpc: Avoid updating PD type for
- capability request
-Message-ID: <lmygcblukqlrobkdnwadgatwf2ldum6tfbcxjr2ooi4thbv4bo@qjxv4fo7tluu>
-References: <20240611103442.27198-1-quic_ekangupt@quicinc.com>
- <20240611103442.27198-5-quic_ekangupt@quicinc.com>
+        Tue, 11 Jun 2024 04:58:01 -0700 (PDT)
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Amol Maheshwari <amahesh@qti.qualcomm.com>, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel@quicinc.com, kernel-janitors@vger.kernel.org
+In-Reply-To: <20240603-md-misc-fastrpc-v1-1-6e6d73d08315@quicinc.com>
+References: <20240603-md-misc-fastrpc-v1-1-6e6d73d08315@quicinc.com>
+Subject: Re: (subset) [PATCH] misc: fastrpc: add missing
+ MODULE_DESCRIPTION() macro
+Message-Id: <171810708104.74168.2910983617658418174.b4-ty@linaro.org>
+Date: Tue, 11 Jun 2024 12:58:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611103442.27198-5-quic_ekangupt@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.2
 
-On Tue, Jun 11, 2024 at 04:04:37PM +0530, Ekansh Gupta wrote:
-> When user is requesting for DSP capability, the process pd type is
-> getting updated to USER_PD which is incorrect as DSP will assume the
-> process which is making the request is a user PD and this will never
-> get updated back to the original value. The actual PD type should not
-> be updated for capability request and it should be serviced by the
-> respective PD on DSP side. Don't change process's PD type for DSP
-> capability request.
+
+On Mon, 03 Jun 2024 12:58:08 -0700, Jeff Johnson wrote:
+> make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/misc/fastrpc.o
 > 
-> Fixes: 6c16fd8bdd40 ("misc: fastrpc: Add support to get DSP capabilities")
-> Cc: stable <stable@kernel.org>
-> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
-> Reviewed-by: Caleb Connolly <caleb.connolly@linaro.org>
-> ---
->  drivers/misc/fastrpc.c | 1 -
->  1 file changed, 1 deletion(-)
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> 
 > 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Applied, thanks!
 
+[1/1] misc: fastrpc: add missing MODULE_DESCRIPTION() macro
+      commit: 6814f03445b30f6a136ff043cb54c0a86e3de982
 
+Best regards,
 -- 
-With best wishes
-Dmitry
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
