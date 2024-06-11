@@ -1,91 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A34178397;
-	Tue, 11 Jun 2024 10:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E71AA54750;
+	Tue, 11 Jun 2024 10:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718103302; cv=none; b=mUDAsIbAOpY7n0JXi5WloBvahY372p6eRVB3SvZaM3dbAmQp/CZWK0KoO7b81fwTJQASaXgFuruVQV476lcHlnTf3lY+MWnfb1qFxU3deuQaZFRjiHZncrA/vmJZflYDyysx9Qn3i+V4tV+VGQZ/vS9TQ5HUVRV0ts2Jucv0Dv8=
+	t=1718103346; cv=none; b=EElGbodMI4rWYrfUTaWC8s+KLs+qMM1S0G7VWjmtHzT3dArrvCzWN6KsLsAHVW6CeIAhUn3W1aqECzXXCh2Rv8tYLFl3JOk1AmAuK5/9GKqEWVP24absKEtNQ4lN9zrp6/xn9A7uM9PS/4XqnCgKnvOZiWjpSVrxzrtwNsDjvfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718103302; c=relaxed/simple;
-	bh=jlkrZlfi9ghdkUD3E+YQZLw8Uwi95sOx5QwBDSFwqik=;
+	s=arc-20240116; t=1718103346; c=relaxed/simple;
+	bh=7PiVZWBQ7T3V+IYy6XeibQQwd31KDTQIRC1F4q0R7QA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fx9Ezr1Zknt40Z3bo7hIr2/WwPd8o5gFxgGzlTtQvRxFoojeMYItLTjocKXtfvYpAar4yrQ/R/aCPvTZEgfmubLn88II3R0Asknsr6r7OcfTBOCVsdK1p2eH0NPICuPtH0J1PGRougWs1jKaWyYJanwIMyecGElgvn8zz0TQoDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ViJLsjnz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ViJLsjnz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3AB7C2BD10;
-	Tue, 11 Jun 2024 10:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718103302;
-	bh=jlkrZlfi9ghdkUD3E+YQZLw8Uwi95sOx5QwBDSFwqik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ViJLsjnznSCAqntRUt+vVROX6ipD0i7CPY5CavHj1LwNYeL0Zn2bbgeBRw+N5VgJ6
-	 Zxzd0KVrXnYAnIKAPJ0fU9BZktLfb6FOu+Kt/Jg6/773uB/zy+KGJZCgv7Es5wam7D
-	 8C3g6bBWoeuUFwGeedS0VGUHMWGQkW7pMExb/cG8qA/T91TxbT3f3S1nkZNZOFBZL+
-	 J3buyUDvYzYpOHYT9UzTZar0Q7pNDswTlvxcLYv/VXQS4vvQj2N+I+CnIfi1BcJMhD
-	 zi9Q2a/A4GYbUuKuppzrS3eIRmCSnZqIsT/lAdtAiUmndK+qTKMz6NawlZPPotNl6p
-	 /63AQwl8+pJ7w==
-Date: Tue, 11 Jun 2024 11:54:59 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Dev Jain <dev.jain@arm.com>
-Cc: shuah@kernel.org, oleg@redhat.com, stsp2@yandex.ru, mingo@kernel.org,
-	tglx@linutronix.de, mark.rutland@arm.com, ryan.roberts@arm.com,
-	suzuki.poulose@arm.com, Anshuman.Khandual@arm.com,
-	DeepakKumar.Mishra@arm.com, AneeshKumar.KizhakeVeetil@arm.com,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] selftests: Rename sigaltstack to generic signal
-Message-ID: <ZmgtA_GW_GPgPM1E@finisterre.sirena.org.uk>
-References: <20240611075650.814397-1-dev.jain@arm.com>
- <20240611075650.814397-2-dev.jain@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=FPD/0B0iPZU6HtKzkGuVxNl6c/3mh6K+pqeeHpR0CXwLx+SwIiiKxz0LJpEpOVkcLAcM4mvQ1Lg4Ng7ClOBW1njtcF9Ob38W9vh4Dmc01qXoChI5V8Un7u351bfEizYP/sEaS67bbg7HJFPyI5IIERxk5CGeDgtblIev3KIoyAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sGzAC-0001OE-00; Tue, 11 Jun 2024 12:55:40 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 9E694C0120; Tue, 11 Jun 2024 10:54:33 +0200 (CEST)
+Date: Tue, 11 Jun 2024 10:54:33 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] MIPS: Alchemy: Switch to use kmemdup_array()
+Message-ID: <ZmgQyXq83Pscu2Pv@alpha.franken.de>
+References: <20240606165145.3032150-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="M7ZRx99x+Njm+IQK"
-Content-Disposition: inline
-In-Reply-To: <20240611075650.814397-2-dev.jain@arm.com>
-X-Cookie: Your love life will be... interesting.
-
-
---M7ZRx99x+Njm+IQK
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240606165145.3032150-1-andriy.shevchenko@linux.intel.com>
 
-On Tue, Jun 11, 2024 at 01:26:49PM +0530, Dev Jain wrote:
-> Rename sigaltstack to signal, and rename the existing test to
-> sigaltstack.c.
->=20
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
+On Thu, Jun 06, 2024 at 07:51:45PM +0300, Andy Shevchenko wrote:
+> Let the kememdup_array() take care about multiplication and possible
+> overflows.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
+>  arch/mips/alchemy/common/platform.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-If people review patches and give a tag for them you should carry the
-tag forward to avoid having to duplicate the review.  From v1:
+applied to mips-next.
 
-I think this is reasonable if we're going to add more generic signal
-tests - sigaltstack is a fairly small bit of functionality and having it
-covered as part of a broader signal suite and the overhead of setting up
-the suite separately is probably not worth it.
+Thomas.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---M7ZRx99x+Njm+IQK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZoLQIACgkQJNaLcl1U
-h9D3Kgf/WuphRjuFoS2YT244+k2nuqqetLVxqWOMOV/vt1NxuYL7bbhpz0EqhBqv
-I6nqG70xVWuTHeR+4Q38vg2kT0r1ruQIxISVMTnb8P44j8Bs+5aZqUJwz87y8cdo
-h/IZdHwz2wR6sSz2kT6U2hJUiL89dy46I6u4IwAdRLOgezildFig095w/hf0pc4E
-Yh1+9hznungjj85Gbn7mO5W5op0j0IakA/Uzx+5c9IJ2a3rG4CcDBqZ9Oeyi828t
-U/WX73qatb4E6X0kKqG2qOQf+FmSa74lkbJ/84yqIyoJCXWt+VnDrYFQzwPq8os9
-6VvejhYY7PQAILNcUTRYFWZVwPgJUQ==
-=ydvO
------END PGP SIGNATURE-----
-
---M7ZRx99x+Njm+IQK--
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
