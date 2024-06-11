@@ -1,101 +1,119 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492561CD06
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 19:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E9B1CD06;
+	Tue, 11 Jun 2024 19:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718135393; cv=none; b=szECHKURvCcCAYZf6B1tOWzqQ43r9/9Vm0BitQQAMvsko+0Uu9KWEXLgq5ZU55PCNgyqzQU1bKLfxRIuzU9JYNhY4kpbUA1DhDwsWgQiSImEROHPw9dPK8qDIObR+N1/AuXgu6bSOZ3OHt8QCo+FNifpbzZUZWwHeBr7u6fEigo=
+	t=1718135457; cv=none; b=MPZ0l7SOw0IOav9rXxX3um7wBF2cq439/Rtg4HFRaGa5VaiHQcU8X56s4zmUz5WICJJE67Qe2XznWQudYDNXpFHtsQ7TEkePNkXXrZ9iMPWsc5gOL9l6iNJZ0nHqhaxF3oYW/EcALy0THD+sAF1FjN8bF2WWQf436SpY0fb+TU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718135393; c=relaxed/simple;
-	bh=/NwHUZCZvevcGs9AY7lN4MhT6WOwaqpKh7KDLpz5U4w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Z8F6aZC39QHEwgDN9om0ToaG7Y8JvPyvQmGQw+yl7r6tGjadXuXcoeori4qMxretRN5b3Jmg4xwBgL3/bJi6YUduVzhpUTXfoXCGMNyyK903iMFZ55NbU8iPv05JzU0HiPjpl4R7ePjfW+1d4tcmMRmSrRQDt9n2j+tMSTIop+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=psDrwT0a; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718135457; c=relaxed/simple;
+	bh=bBcXJRMWXXxKsR9BQ8+HwxQJVJqVPsLxdGAD6l/y1zs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hBOzzx5N9DBSb6xV8aO2JBX1vrxmgrounOBUVEFBTA/NjDXu8U7UGhXxJJXoBJJqHAftvJ+LcxWPJE9MAEvlEPnlZiI4o53lyY/LAjJbKCnwNkTPf8dc66EAsGkHCoGpBi08vI4ayC/SL3TmM7bfSB6koc9AYfl48AD0RayDxXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=PGt6yIav; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="psDrwT0a"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-62a3dec382eso2138377b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 12:49:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718135391; x=1718740191; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NsScqjx9mfx0RxKgLYLDE8PLKJt3i+CjnwDIOhR5gSU=;
-        b=psDrwT0aT/+zOWt7TodmD8clrHhJGj0QJNuitdF9JFwwFohoyYco0Rx8Kn66EBTbPS
-         f2nxYuWSycH/oQZJmu+e3NE3idLxOKo3e98Ld+o+DvlK4DHfP16wYnpenX3DpbuzqyGh
-         fSXMNgEckdMNyVIYf0VeELQdZNJYzNxpSC9pKC3gh9mDImV31wWcku6W+QSME/2tHxuj
-         X4R0YW3kdp77qVPukRwQ7DRO65e9bcg+Bdjv8i1fLqjrButL4e6aFb5ykpJ1T8SZtXyY
-         lg46tK6/Z4NJrEtnA3M1/P1AJss0hVT8oM/o++D5LGgB3W41FSFLFHt9AmAucUAkXUlh
-         QsXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718135391; x=1718740191;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NsScqjx9mfx0RxKgLYLDE8PLKJt3i+CjnwDIOhR5gSU=;
-        b=KoQhToNvkrg6Gx3wzGiis1xdaTMsV828BJljXBdDMOAJ0yXxLq11hucD6zF3yyy+Rt
-         iIhlXhTvg7aHQ3mtZyg1U0X3LinzugFgyKJS6Miom9r25uPQJGkVvpPxFWOWwbHbDC+2
-         RLIPAkU+W07qFgOe54Wv5tZ/tUVMg176B24LaE6SxGIttFP+m6QQgkIFyjqLRWHuXRod
-         2LIAooCd0wrfIhBkoKVZMn/sqOhm8SVMvcq/XQJRk+bzH3L2pkvCIR3bZHFxsTFN9EmF
-         iaF3f87mYi6MO35Qk1km6+KAnNet2JSQOzSfc5Y0x3ruWdzKsC73RxzNUddY5N5a87dV
-         09xw==
-X-Forwarded-Encrypted: i=1; AJvYcCWF7huB0SjdZCVKBvB0APV8YsiUQO4Ba7AMTQ3WGuO9IbFtDnP+VPczFcJkoWEfelhdA6GRNZ5kv5m9NnfbCU9FRf31n2jQAixMUzn7
-X-Gm-Message-State: AOJu0Ywv942pnimVw/n6t998+XOVaa2nQhJeIQKdXbBMEJf11hGIGFiA
-	SX8mZr+NqY2AnBqO3nZXQX1QZvv7HL1ep5cytY8C3rDrVB84CHJLJIrFyvTzk2XBbrO+EGzeaSV
-	rJg==
-X-Google-Smtp-Source: AGHT+IHKfAK7pE+6MrNjEhC62+VdpwmGAN149yNl7QeE40CZzlXANYBAeDvy6+hs91vFlM0KeuUkc8js0Mw=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a0d:ca09:0:b0:627:edcb:cbe2 with SMTP id
- 00721157ae682-62f171e8601mr6018567b3.5.1718135391323; Tue, 11 Jun 2024
- 12:49:51 -0700 (PDT)
-Date: Tue, 11 Jun 2024 12:49:49 -0700
-In-Reply-To: <ZmidYAWKU1HANKU6@linux.dev>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="PGt6yIav"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 3A504883CF;
+	Tue, 11 Jun 2024 21:50:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1718135452;
+	bh=npnYqV9J2WoKJ9LDtrzlpjRBywAdFkb0PaBEMohzQpg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PGt6yIavQt96y3TUxCeFwwWxA9EbReZ4eHCEu4QB66aznmJItlmSV+FKjI9y6rLmr
+	 qgXJlbHxmbCN/zefXX7dVlBtv4XySbs3gxd52feZikASCbD55TJmg1Oq1SjQjR/DtF
+	 30arv7jOgCGQooNWJ+Bxezm0f9PyYP0bRJ4UvAKsLCTDT0RGkl1S33QBPB7vuwEvaC
+	 nmAzH3rLw8Tfnb4d/qyj1BSujK4MyUBkbqjm6lVvQExC9fOPbXFodcy4vOa9DpTjOp
+	 u+2wfT3EwXfyGytHZ/2TS/79XyrjgVgP+CPyNhMBVaBM5jtRun07nw4gM2qnj0msTd
+	 wCf73U/Gxq96Q==
+Message-ID: <e0b9b074-3aad-4b2d-9f4e-99ad2eebbb6b@denx.de>
+Date: Tue, 11 Jun 2024 18:16:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240611002145.2078921-1-jthoughton@google.com>
- <20240611002145.2078921-5-jthoughton@google.com> <CAOUHufYGqbd45shZkGCpqeTV9wcBDUoo3iw1SKiDeFLmrP0+=w@mail.gmail.com>
- <CADrL8HVHcKSW3hiHzKTit07gzo36jtCZCnM9ZpueyifgNdGggw@mail.gmail.com> <ZmidYAWKU1HANKU6@linux.dev>
-Message-ID: <ZmiqXUwMXtUGanQc@google.com>
-Subject: Re: [PATCH v5 4/9] mm: Add test_clear_young_fast_only MMU notifier
-From: Sean Christopherson <seanjc@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: James Houghton <jthoughton@google.com>, Yu Zhao <yuzhao@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Ankit Agrawal <ankita@nvidia.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, David Matlack <dmatlack@google.com>, 
-	David Rientjes <rientjes@google.com>, James Morse <james.morse@arm.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Shaoqin Huang <shahuang@redhat.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Wei Xu <weixugc@google.com>, Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next,PATCH v7 7/8] net: stmmac: dwmac-stm32: Mask support
+ for PMCR configuration
+To: Christophe ROULLIER <christophe.roullier@foss.st.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Richard Cochran <richardcochran@gmail.com>, Jose Abreu
+ <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240611083606.733453-1-christophe.roullier@foss.st.com>
+ <20240611083606.733453-8-christophe.roullier@foss.st.com>
+ <ee101ca5-4444-4610-9473-1a725a542c91@denx.de>
+ <7999f3df-da1e-4902-b58a-6bb58546a634@foss.st.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <7999f3df-da1e-4902-b58a-6bb58546a634@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Tue, Jun 11, 2024, Oliver Upton wrote:
-> On Tue, Jun 11, 2024 at 09:49:59AM -0700, James Houghton wrote:
-> > I think consolidating the callbacks is cleanest, like you had it in
-> > v2. I really wasn't sure about this change honestly, but it was my
-> > attempt to incorporate feedback like this[3] from v4. I'll consolidate
-> > the callbacks like you had in v2.
+On 6/11/24 3:32 PM, Christophe ROULLIER wrote:
 > 
-> My strong preference is to have the callers expectations of the
-> secondary MMU be explicit. Having ->${BLAH}_fast_only() makes this
-> abundantly clear both at the callsite and in the implementation.
+> On 6/11/24 15:07, Marek Vasut wrote:
+>> On 6/11/24 10:36 AM, Christophe Roullier wrote:
+>>
+>> [...]
+>>
+>>>   static void stm32_dwmac_clk_disable(struct stm32_dwmac *dwmac, bool 
+>>> suspend)
+>>> @@ -348,8 +352,15 @@ static int stm32_dwmac_parse_data(struct 
+>>> stm32_dwmac *dwmac,
+>>>           return PTR_ERR(dwmac->regmap);
+>>>         err = of_property_read_u32_index(np, "st,syscon", 1, 
+>>> &dwmac->mode_reg);
+>>> -    if (err)
+>>> +    if (err) {
+>>>           dev_err(dev, "Can't get sysconfig mode offset (%d)\n", err);
+>>> +        return err;
+>>> +    }
+>>> +
+>>> +    dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
+>>> +    err = of_property_read_u32_index(np, "st,syscon", 2, 
+>>> &dwmac->mode_mask);
+>>> +    if (err)
+>>> +        dev_dbg(dev, "Warning sysconfig register mask not set\n");
+>>
+>> My comment on V6 was not addressed I think ?
+> 
+> Hi Marek,
+> 
+> I put the modification in patch which introduce MP13 (V7 8/8) ;-)
+> 
+>       err = of_property_read_u32_index(np, "st,syscon", 2, 
+> &dwmac->mode_mask);
+> -    if (err)
+> -        dev_dbg(dev, "Warning sysconfig register mask not set\n");
+> +    if (err) {
+> +        if (dwmac->ops->is_mp13)
+> +            dev_err(dev, "Sysconfig register mask must be set (%d)\n", 
+> err);
+> +        else
+> +            dev_dbg(dev, "Warning sysconfig register mask not set\n");
+> +    }
 
-Partially agreed.  We don't need a dedicated mmu_notifier API to achieve that
-for the callsites, e.g. ptep_clear_young_notify() passes fast_only=false, and a
-new ptep_clear_young_notify_fast_only() does the obvious.
+That isn't right, is it ?
 
-On the back end, odds are very good KVM is going to squish the "fast" and "slow"
-paths back into a common helper, so IMO having dedicated fast_only() APIs for the
-mmu_notifier hooks doesn't add much value in the end.
-
-I'm not opposed to dedicated hooks, but I after poking around a bit, I suspect
-that passing a fast_only flag will end up being less cleaner for all parties.
+For MP2 , this still checks the presence of syscon , which shouldn't be 
+checked at all for MP2 as far as I understand it ?
