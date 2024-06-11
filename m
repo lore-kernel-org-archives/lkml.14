@@ -1,93 +1,173 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF4E18E;
-	Tue, 11 Jun 2024 00:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C4E803;
+	Tue, 11 Jun 2024 00:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718064837; cv=none; b=RoEbR6gZktsR/56aXDmrk+RzxZ7FvpVaODAca/HqmqATi7w03Zs5JmhjBtawaOEUyWn+3fpX+t/w/LoQ/xxmddvTtBQOHd3gg00ueBljyxL/oj7BHgEay3LyshJgzczxlo7SB/3tQsaVzGR5vsphgTm1uANOFFwOLkMF4a7O3Rw=
+	t=1718065085; cv=none; b=TdXBZkYPziEDQX9wpQOPP8zG/F/iD+bWlc7XFvOvRM9Ln980nGjiprV9UES6pyH01p9zF6kIa7g83RJTqGRlpZvqY7wv5X2H8pTz7hvh6Awnt9HyIOLHMfleheJ8ISyalXr6VAG0kW7liYq8y+IjoI4FJUEqT1WPgVsUtZXrZgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718064837; c=relaxed/simple;
-	bh=MMoChjlubO/CbVraXX3twISoR0b4Z6eqTKCHUDdUxC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LwkTwERL3pozRuty2zEQG23Y39Hr5Jthe5xi+32KHa3S9lCIhTEuD0HIhDeyeNO/G92g1Bvbyb2MfzZomIg06lvrAZQUPO2zeRsEE5mw1JECxE6UpRuctkyL6PPjKVpjAucMp0rcuX6CjbCRkIvtUy7tS1kO+SpYJqMLVZ0G1DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=0SdWZn32; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0SdWZn32"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=6qqJ9a7fy1RSScoIqniM3oXpUHSrRaKPvWxc35OkLzU=; b=0SdWZn3202PSUPM5JzGe2tkxLj
-	i9hXcZkBqU+yZIPszxSJ736JtKiJvrjIpRHacnfgWUdnKPFL/uT8fjbIFI8TuNfvZpJZv0Ix0nslt
-	54navFKiPCmsnFvcZSmB14xoCS2MT6caLXYAxWYYJee5eCZyB9sv/nZ1Yhtmt1RZkGbg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sGp8u-00HL6z-Dw; Tue, 11 Jun 2024 02:13:40 +0200
-Date: Tue, 11 Jun 2024 02:13:40 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Michal Simek <michal.simek@amd.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-	linux-kernel@vger.kernel.org,
-	"David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next 3/3] net: xilinx: axienet: Add statistics support
-Message-ID: <7c06c9d7-ad11-4acd-8c80-fbeb902da40d@lunn.ch>
-References: <20240610231022.2460953-1-sean.anderson@linux.dev>
- <20240610231022.2460953-4-sean.anderson@linux.dev>
+	s=arc-20240116; t=1718065085; c=relaxed/simple;
+	bh=GyghYEv0X82cGi7Oik5zQ6/zwcOSNDNjHdgQcuZoQpk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HZI8MATrS3pSpw1YdxKNVjleZFA8pQD9bTm9ddlg2jn7J5lWFV3HpTeglpRXZMb6IE2aANv1h5hxBaWKWWZ/DlLBVpHyQv7cR1gFx7jbiEk+oHeIpTMXLpB5OfTThY5Y5aBS0Pib4Gkhx26hYa5o6SwbW3g4rdb+S1cAG8ly/Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F12C2BBFC;
+	Tue, 11 Jun 2024 00:18:02 +0000 (UTC)
+Date: Mon, 10 Jun 2024 20:18:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH 2/3] tracing/kprobe: Remove unneeded WARN_ON_ONCE() in
+ selftests
+Message-ID: <20240610201813.319d6500@gandalf.local.home>
+In-Reply-To: <171805480405.52471.13982671291270977479.stgit@devnote2>
+References: <171805478534.52471.6269290579314514778.stgit@devnote2>
+	<171805480405.52471.13982671291270977479.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240610231022.2460953-4-sean.anderson@linux.dev>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 10, 2024 at 07:10:22PM -0400, Sean Anderson wrote:
-> Add support for reading the statistics counters, if they are enabled.
-> The counters may be 64-bit, but we can't detect this as there's no
-> ability bit for it and the counters are read-only. Therefore, we assume
-> the counters are 32-bits.
+On Tue, 11 Jun 2024 06:26:44 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> +static void axienet_stats_update(struct axienet_local *lp)
-> +{
-> +	enum temac_stat stat;
-> +
-> +	lockdep_assert_held(&lp->stats_lock);
-> +
-> +	u64_stats_update_begin(&lp->hw_stat_sync);
-> +	for (stat = 0; stat < STAT_COUNT; stat++) {
-> +		u32 counter = axienet_ior(lp, XAE_STATS_OFFSET + stat * 8);
-
-The * 8 here suggests the counters are spaced so that they could be 64
-bit wide, even when only 32 bits are used. Does the documentation say
-anything about the upper 32 bits when the counters are only 32 bits?
-Are they guaranteed to read as zero? I'm just wondering if the code
-should be forward looking and read all 64 bits? 
-
->  static int __axienet_device_reset(struct axienet_local *lp)
->  {
->  	u32 value;
->  	int ret;
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Since the kprobe-events selftest shows OK or NG with the reason, the
+> WARN_ON_ONCE()s for each place are redundant. Let's remove it.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_kprobe.c |   26 +++++++++++++-------------
+>  1 file changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 16383247bdbf..4abed36544d0 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -2023,18 +2023,18 @@ static __init int kprobe_trace_self_tests_init(void)
+>  	pr_info("Testing kprobe tracing: ");
 >  
-> +	/* Save statistics counters in case they will be reset */
-> +	if (lp->features & XAE_FEATURE_STATS) {
-> +		mutex_lock(&lp->stats_lock);
-> +		axienet_stats_update(lp);
-> +	}
+>  	ret = create_or_delete_trace_kprobe("p:testprobe kprobe_trace_selftest_target $stack $stack0 +0($stack)");
+> -	if (WARN_ON_ONCE(ret)) {
+> +	if (ret) {
+>  		pr_warn("error on probing function entry.\n");
 
-It is a pretty unusual pattern to split a mutex lock/unlock like this
-on an if statement. Maybe just unconditionally hold the mutex? This
-does not appear to be anyway hot path, so the overhead should not
-matter.
+Actually, you can consolidate this to:
 
-	Andrew
+	if (WARN_ONCE(ret, "error on probing function entry."))
+
+>  		warn++;
+>  	} else {
+>  		/* Enable trace point */
+>  		tk = find_trace_kprobe("testprobe", KPROBE_EVENT_SYSTEM);
+> -		if (WARN_ON_ONCE(tk == NULL)) {
+> +		if (tk == NULL) {
+>  			pr_warn("error on getting new probe.\n");
+
+And this to:
+
+		if (WARN_ONCE(tk == NULL, "error on getting new probe."))
+
+end so on.
+
+-- Steve
+
+>  			warn++;
+>  		} else {
+>  			file = find_trace_probe_file(tk, top_trace_array());
+> -			if (WARN_ON_ONCE(file == NULL)) {
+> +			if (file == NULL) {
+>  				pr_warn("error on getting probe file.\n");
+>  				warn++;
+>  			} else
+> @@ -2044,18 +2044,18 @@ static __init int kprobe_trace_self_tests_init(void)
+>  	}
+>  
+>  	ret = create_or_delete_trace_kprobe("r:testprobe2 kprobe_trace_selftest_target $retval");
+> -	if (WARN_ON_ONCE(ret)) {
+> +	if (ret) {
+>  		pr_warn("error on probing function return.\n");
+>  		warn++;
+>  	} else {
+>  		/* Enable trace point */
+>  		tk = find_trace_kprobe("testprobe2", KPROBE_EVENT_SYSTEM);
+> -		if (WARN_ON_ONCE(tk == NULL)) {
+> +		if (tk == NULL) {
+>  			pr_warn("error on getting 2nd new probe.\n");
+>  			warn++;
+>  		} else {
+>  			file = find_trace_probe_file(tk, top_trace_array());
+> -			if (WARN_ON_ONCE(file == NULL)) {
+> +			if (file == NULL) {
+>  				pr_warn("error on getting probe file.\n");
+>  				warn++;
+>  			} else
+> @@ -2079,7 +2079,7 @@ static __init int kprobe_trace_self_tests_init(void)
+>  
+>  	/* Disable trace points before removing it */
+>  	tk = find_trace_kprobe("testprobe", KPROBE_EVENT_SYSTEM);
+> -	if (WARN_ON_ONCE(tk == NULL)) {
+> +	if (tk == NULL) {
+>  		pr_warn("error on getting test probe.\n");
+>  		warn++;
+>  	} else {
+> @@ -2089,7 +2089,7 @@ static __init int kprobe_trace_self_tests_init(void)
+>  		}
+>  
+>  		file = find_trace_probe_file(tk, top_trace_array());
+> -		if (WARN_ON_ONCE(file == NULL)) {
+> +		if (file == NULL) {
+>  			pr_warn("error on getting probe file.\n");
+>  			warn++;
+>  		} else
+> @@ -2098,7 +2098,7 @@ static __init int kprobe_trace_self_tests_init(void)
+>  	}
+>  
+>  	tk = find_trace_kprobe("testprobe2", KPROBE_EVENT_SYSTEM);
+> -	if (WARN_ON_ONCE(tk == NULL)) {
+> +	if (tk == NULL) {
+>  		pr_warn("error on getting 2nd test probe.\n");
+>  		warn++;
+>  	} else {
+> @@ -2108,7 +2108,7 @@ static __init int kprobe_trace_self_tests_init(void)
+>  		}
+>  
+>  		file = find_trace_probe_file(tk, top_trace_array());
+> -		if (WARN_ON_ONCE(file == NULL)) {
+> +		if (file == NULL) {
+>  			pr_warn("error on getting probe file.\n");
+>  			warn++;
+>  		} else
+> @@ -2117,20 +2117,20 @@ static __init int kprobe_trace_self_tests_init(void)
+>  	}
+>  
+>  	ret = create_or_delete_trace_kprobe("-:testprobe");
+> -	if (WARN_ON_ONCE(ret)) {
+> +	if (ret) {
+>  		pr_warn("error on deleting a probe.\n");
+>  		warn++;
+>  	}
+>  
+>  	ret = create_or_delete_trace_kprobe("-:testprobe2");
+> -	if (WARN_ON_ONCE(ret)) {
+> +	if (ret) {
+>  		pr_warn("error on deleting a probe.\n");
+>  		warn++;
+>  	}
+>  
+>  end:
+>  	ret = dyn_events_release_all(&trace_kprobe_ops);
+> -	if (WARN_ON_ONCE(ret)) {
+> +	if (ret) {
+>  		pr_warn("error on cleaning up probes.\n");
+>  		warn++;
+>  	}
+
