@@ -1,80 +1,194 @@
-Received: from mailrelay5-1.pub.mailoutpod3-cph3.one.com (mailrelay5-1.pub.mailoutpod3-cph3.one.com [46.30.211.244])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2053.outbound.protection.outlook.com [40.107.243.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1481509A7
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 20:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.244
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718139306; cv=none; b=HiZzsTkYZjcUzA3ooD5OhL4IvL+1PXP99FLc9ylqdgakjxHKN9mN00D9p4Eln8eJy311QPc3kyOF+VmtV67S1SJiTPqtKo0OJwhf2gWpbEIAA9nOYRs2EUCO1mO74GlIEuzDr6BjX79irVcxl8lkPO351IzA/lGW8fmi7GcEXRw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6F61514E2;
+	Tue, 11 Jun 2024 20:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718139306; cv=fail; b=hDcsHDKkSovIG3hnRqukhy64xu7/+FP0cyF+SliF92dRFe/5dacwcfEXSYob0qa/OjWhyLD/V+QqjxGv11vCnAIqNT1kFYp3DUWbGWDO1hxOAzGCexmN2BNUNBjOptAP+RZsMhz/+IRQG38vRnZFiL6N9q0LTUP9XobxbIbmD7g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718139306; c=relaxed/simple;
-	bh=tTiQIOR5fXfoTAL0Ccw5hIwFJl0c8eM1AKdXxiCxyRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nA0DFuztRazEcHKz0fgQEKoZD43eijZL12rdP0PCgh8E+thyIPcEY4ppuuN1HDkERUNSZzmfi+0wpjyD1vn8h914NwYjYAtd8sjgkGU7Zs2bg1fuBcDSlVtkPX78LbuR+9+C7Vlgu8pxO1MnjI8tvDWpa7zUddUxCHegttkQJ5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=AiulmEbX; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=y8bJqY1F; arc=none smtp.client-ip=46.30.211.244
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+	bh=lBcDB8pEG/CCLy+tAJJD6+dh1wrgKjMiaGNZIoMFsl8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FfD3SiTO4faIWxEhs4yNIP3e8rnTjRBS9FGDsTwV9LDUyEZBWltMHCul1og+KVeI92ap2FpuAow8hG+6flgxOe1wzg0EjrAMtH96hcOet2YdMXYrMLkcZtuEEmOht1SO+Hp4fOvbkXZBT0qpKVojNRhoVdYDG6xyi5UvLXRuSj0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hfcYK48T; arc=fail smtp.client-ip=40.107.243.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="AiulmEbX";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="y8bJqY1F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa1;
-	h=in-reply-to:content-transfer-encoding:content-type:mime-version:references:
-	 message-id:subject:cc:to:from:date:from;
-	bh=k3ERBR7pPMabLon7+j+2K3RUQpylljUKVmTxI1gsd+4=;
-	b=AiulmEbX+BwDK4kBlV7SqhmTnhf1udadW8kzRtO+NusdCn3B0+7bNSxasJVkji5utbjqdOuaGK4wE
-	 xVmFjT8tIIykEzVzI2VxaS1dkb8sE3AvuDuIq+eVNCQDkz2L0K6WNxxxeTUAc4JQkytjycnPAZhebB
-	 Tj51a9nw2JPv7eBCcyQ/v2eiwye7uWCnB4BdcCR0Y/IHMEPI1+uTu4N2XFQeBIf6W9XB5In1aS5WBc
-	 0RCMzDvHuXcG1Kq7cDikgZ2Hw6tD0LNI+Ovx839KkLq1jA8GgoKwbc3I4iWwCdfHlCKZY0vmMqETKw
-	 xtQRkfJUYZOi1DufeOO8L2ae7HAipKw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed1;
-	h=in-reply-to:content-transfer-encoding:content-type:mime-version:references:
-	 message-id:subject:cc:to:from:date:from;
-	bh=k3ERBR7pPMabLon7+j+2K3RUQpylljUKVmTxI1gsd+4=;
-	b=y8bJqY1FxZO9r/gLtSUOuwA9y9IhgmjIkq1Sqkv/6i/IFYmftufvg+5MUsKotboMU6JDflf/WJ0Wz
-	 B8ZnwiiBQ==
-X-HalOne-ID: b4f7f42f-2834-11ef-97e2-e973630cf47d
-Received: from ravnborg.org (2-105-16-150-cable.dk.customer.tdc.net [2.105.16.150])
-	by mailrelay5.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id b4f7f42f-2834-11ef-97e2-e973630cf47d;
-	Tue, 11 Jun 2024 20:53:54 +0000 (UTC)
-Date: Tue, 11 Jun 2024 22:53:52 +0200
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andreas Larsson <andreas@gaisler.com>, linux-kernel@vger.kernel.org,
-	sparclinux@vger.kernel.org
-Subject: Re: Build regressions/improvements in v6.10-rc3
-Message-ID: <20240611205352.GA557485@ravnborg.org>
-References: <CAHk-=wiK75SY+r3W5hx+Tt_bjhcSKPLdji-Zf_8HjikRPbn9wg@mail.gmail.com>
- <20240610071049.933142-1-geert@linux-m68k.org>
- <46c5a25-ea8c-4a1-5241-df88a9848a9@linux-m68k.org>
- <20240611173739.GB545417@ravnborg.org>
- <CAMuHMdW__Uak2qkUAJc1b1eK1nOzGy=+cneRrtmj_QgBTanK-Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hfcYK48T"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Mlwea7e3cO0sWBCcDCD3+u7fTldjNMeNTUkr96oFIiONo+j0WKgp/rlKIqbFafm0w5LiXF7sFFIX2pjINsR71hTglTMWSKiHXGBdVwa6ME8XpbfWiX7eBEsvfUkDB7ap7hpZlrTeOS2nNeS6vdbGzqyh5gbcDsJn/zEtmwfzUnTB7x221M+x2cq1q5ejuYYO2bQCnBxzl4ktKv17payBoWmEAsRB2IU+QrPFwWeUwFjsVgqVt3iZ//grXJJWNmK5ITohfWYMICHRfZprvrPqV5OAleRwSxD141HY05L8zIwJlMipvglyCNgEcLaQlNgVAhG2dROmBjxewzBDOyx6Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XUyxsFbNMo6UmpP+hpDpf1R+2sNM7yNLcbqRr4A/AXg=;
+ b=SMJSu60Da+UkyzNRLbM9C7zh/23qN9S+dSXFdgGa4yvCd7zSF+pgPyQt6/JObAg+0iDT9WfChQn0GKCdvTPGT+uSoGSJuD/hwMjH1Ox451IYFubYbmGf5yNUZmGzETnSKwFrLvWn1RWpj4SWhEYF54IOrCASkeSOf0eXqPd7zOnDLP1IV3K1Pkwkv9FencyC/TPSpu8eEUYZi7/oI1xclckjg0s1kIVMOaCFrLXx4RDjt02owswgk/pqL8KCE9pNG9ZckBWUyhcomVCAEWhISedsHUCEdmPtYIQxBEh11m4Xb0/Usk6uqe/yyOCiSe61GvTVKM+ddDo4W+1v8loADg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XUyxsFbNMo6UmpP+hpDpf1R+2sNM7yNLcbqRr4A/AXg=;
+ b=hfcYK48TUs5VtSisjx+mRnwpxz6B9PEq+tyB4Aya98CEe3rLYTDxSHGSAkY6J+pzD+Yg7QBMJt+RKvKJM+L8PG5sJVaswt6SdnEvFwO3Q7YnkzLqEQf4KbeTg/bZXFMw2Fc9GzdR965hbyUkB/0TCiDtbahrEpbK8Vf52w9T0hn4RNzDnKZglwvFK+XDZbtwjHe36Q0136NOrP3Ch8/quhEj/ljhYNgU+MzlA1ennYR39JpAuVSiggud5H5kZkQP3QPRRXxxy1HWDVPowmZY1qhTOd3EUN8gkLbEQvNelD45K4mSpc0KC5cjSUZ3CBrhppb+2fBABKRHsP/buC89eg==
+Received: from BN9PR03CA0343.namprd03.prod.outlook.com (2603:10b6:408:f6::18)
+ by PH8PR12MB7109.namprd12.prod.outlook.com (2603:10b6:510:22f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Tue, 11 Jun
+ 2024 20:55:01 +0000
+Received: from BN1PEPF00004684.namprd03.prod.outlook.com
+ (2603:10b6:408:f6:cafe::12) by BN9PR03CA0343.outlook.office365.com
+ (2603:10b6:408:f6::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.17 via Frontend
+ Transport; Tue, 11 Jun 2024 20:55:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BN1PEPF00004684.mail.protection.outlook.com (10.167.243.90) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7677.15 via Frontend Transport; Tue, 11 Jun 2024 20:55:00 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 11 Jun
+ 2024 13:54:42 -0700
+Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 11 Jun
+ 2024 13:54:41 -0700
+Message-ID: <c1277bf6-a211-49eb-80af-726f16ca1802@nvidia.com>
+Date: Tue, 11 Jun 2024 13:54:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdW__Uak2qkUAJc1b1eK1nOzGy=+cneRrtmj_QgBTanK-Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] cleanups, fixes, and progress towards avoiding "make
+ headers"
+To: David Hildenbrand <david@redhat.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Jeff Xu <jeffxu@chromium.org>, Shuah Khan
+	<shuah@kernel.org>
+CC: Andrei Vagin <avagin@google.com>, Axel Rasmussen
+	<axelrasmussen@google.com>, Christian Brauner <brauner@kernel.org>, Kees Cook
+	<kees@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, "Liam R .
+ Howlett" <Liam.Howlett@oracle.com>, Muhammad Usama Anjum
+	<usama.anjum@collabora.com>, Peter Xu <peterx@redhat.com>, Rich Felker
+	<dalias@libc.org>, <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+References: <20240608021023.176027-1-jhubbard@nvidia.com>
+ <b5dd99c7-866b-467c-9f76-d043e887394c@redhat.com>
+Content-Language: en-US
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <b5dd99c7-866b-467c-9f76-d043e887394c@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF00004684:EE_|PH8PR12MB7109:EE_
+X-MS-Office365-Filtering-Correlation-Id: 97363ccb-2568-45b7-539e-08dc8a58c2a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230032|82310400018|36860700005|376006|7416006|1800799016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TStKMGpkbVVOWWRYYXNDdzVvc05ZZGc1Y0NYNCsrNTZkeWtrMXJFZXIyeXZo?=
+ =?utf-8?B?SzVZZ0pIcnNsZ0RyZm8wT0cwL0xXRCsvTXl4dHZ2UXNFWVZEK0hJTWp2bzNJ?=
+ =?utf-8?B?ZERXT3NhT2s2TS9kYWlweU14Q2FaTEo1WkZicVlDUnpEdXNnajNMOU10bC9j?=
+ =?utf-8?B?ZHpaY1lPNUVDOHlsNEJKWnQvTGgxTDBGbVZkcXhMZFZva212aWZob2N2VFEz?=
+ =?utf-8?B?RFdnTjgzZDZzTEJTVEN1cUNnWXU0TzJvc3UxZi8xenMxVzlmOFJUQUdlenBv?=
+ =?utf-8?B?MDJVc2ZVZjlQTVJDZEM2ZzZTSGNIbFpsWFJvSG82eEozVlhvSHZhTGxnMnk5?=
+ =?utf-8?B?RTBLZXZuZnpjRzRCdVFrOTZJWHlyLzQ3ZVovZUYzaFpkMU9MWk1mMDlaSXlh?=
+ =?utf-8?B?M1hRRGhSRXNLQ2R6TTJNU1Z6Y0NBUTV3ejViTjJNaUZhQmkrSG83WlBTVWox?=
+ =?utf-8?B?ZkpCL2VraTgxU0pua25VS25IY2JENFhvaDRLZlZZMW0xLzcwQjQzalE0cnJ4?=
+ =?utf-8?B?OTNqeEg4WWFjNXZyUkJCc0JYd204NVdNbWZqbmcwUFJzend6UzNsMjZ6Q1hI?=
+ =?utf-8?B?eEpCUUovN0dFaXNKWFp0YWtlU2hxd29NVVNTNjBXb05iUEE0dGJPc3hIRXVY?=
+ =?utf-8?B?OEVsMzVtblVRa2tDdmhVSEFRV2RKUncyZE1RSC94NGd1R0lFM1ZQa2tRNHAv?=
+ =?utf-8?B?RGJOcTFqdWNKTzI2ZmtDKzZqajg0RkZzT05SbWZoWTVvcE9DWk5CZVh1c0d2?=
+ =?utf-8?B?R2FuZ21MMS9uQW83Yk5GUHhrbFJnOXBxSXdrMHhkcUQ2WkNXNG5IdzFMaW1W?=
+ =?utf-8?B?NW1ETEttcWwxMnBZWXZtSWx3TGE3Mm0zcHd4RiswblRiRlhBQSsyN3BWcXhQ?=
+ =?utf-8?B?NG9NOGQxNDBrYUpTUkZUZWFFeDJnZXFUd2Roa1ZuNkNTR3JvekkvNHVMS0xz?=
+ =?utf-8?B?ZmxDV2tHbWhmUk9JUFRERW94d0RNaHFDVGRqNE95Z1IyUTRtOGpKWGQxZnZu?=
+ =?utf-8?B?WVZjbVhBa08waitxR2dteVdFemVrc1VldjRQMm5ZTnFxUXVOZStzcEVNRnkz?=
+ =?utf-8?B?SFRMRC8raFpOUFQzaFpNeDMxTTRxdS84UzN1MUwxRGk2THZYWkgrUFEvYzI0?=
+ =?utf-8?B?V0U3K0MxS0pHWnl5QUVNK1pZUjhDenRncHpvUWphcFpUUUVOTTBLMFMrdXA2?=
+ =?utf-8?B?ZWU1czlJaVVnZmZVbVRGWVBRQW93SWp1WE4rMzNZNDZBSHZ0TnZCU05lZzRs?=
+ =?utf-8?B?T2o2Ly9FQ0Mrc3FISGRLVFRUWTRCeGh6YmNuWStKRzZQTGs4VktFM3U1Z2d5?=
+ =?utf-8?B?ZmpaSDl5RGt5cEZLOWVKRUxsTUxVazU4c0dJT0YxTGs2Q0JZaGlzZHRqY3VM?=
+ =?utf-8?B?VXhFaG1LT0ZxdzFTUzN6L3d0OVJMaTR4M2JMTlFpam5ETXdlSkFtNlJEMStE?=
+ =?utf-8?B?UWpWUElTMjlyR05WTG1FSTRrY0FZSnRaOTIvbEZ0L3Y4S1NjKzdnM1pEVm50?=
+ =?utf-8?B?SnB6dWZZcFIvLzR1U2xKUWpRK2lWTldTdnJteUpKejE5SmlTaHJZdDh0c0F5?=
+ =?utf-8?B?OHpsK202TEtEVEkzMUNVM0MrcWd3Z0U3a05LY2FsazVIeU9xL2d2YWhDTVV1?=
+ =?utf-8?B?NFZ2U2Y3YXRzcm56SFBwbXZZS0lhOW9ObXRoSW1JYlAvaDVyR2VYeHlxUUtF?=
+ =?utf-8?B?ZWdSRmdKUjZlWDdwcUI0NHhOWFNRY1hDUjV6cndtRmROc2UydUg4alJHdnYy?=
+ =?utf-8?B?dGpUSTlYWkFJNitnZSszMlFVaFplV1VQSE5JZ0NIOTJpUGJ1UTNzd3Z5TTc4?=
+ =?utf-8?B?a0tqdjFlS2FyTm9lMlZ1U0U5R2JLb0NHa2dpZWJqVUpCeWJQWjJILzNyVHpj?=
+ =?utf-8?B?djI4b2ZyOW9uekxucTl6Y2diN3VabWQwcWtQQk12alFiK2c9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230032)(82310400018)(36860700005)(376006)(7416006)(1800799016);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2024 20:55:00.4843
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97363ccb-2568-45b7-539e-08dc8a58c2a1
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF00004684.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7109
 
-On Tue, Jun 11, 2024 at 09:50:41PM +0200, Geert Uytterhoeven wrote:
-> Hi Sam,
+On 6/11/24 2:36 AM, David Hildenbrand wrote:
+> On 08.06.24 04:10, John Hubbard wrote:
+>> Eventually, once the build succeeds on a sufficiently old distro, the
+>> idea is to delete $(KHDR_INCLUDES) from the selftests/mm build, and then
+>> after that, from selftests/lib.mk and all of the other selftest builds.
+>>
+>> For now, this series merely achieves a clean build of selftests/mm on a
+>> not-so-old distro: Ubuntu 23.04:
 > 
-> On Tue, Jun 11, 2024 at 7:37 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> > On Mon, Jun 10, 2024 at 09:28:25AM +0200, Geert Uytterhoeven wrote:
-> > > On Mon, 10 Jun 2024, Geert Uytterhoeven wrote:
-> > >   + {standard input}: Error: pcrel too far: 1095, 1074, 1022, 1020, 1021, 1096, 1126 => 1074, 1021, 1255, 1096, 1095, 1020, 1022, 1126, 1254
-> > >   + {standard input}: Error: unknown pseudo-op: `.al':  => 1270
-> > Hmm, strange..
+> Wasn't the plan to rely on the tools/include headers, and pull in there whatever we need?
+
+Yes, it is. You are correct.
+
 > 
-> Just in case you missed that: these are not SPARC build issues,
-> but SH build issues (gcc ICE).
+>>
+>> 1. Add __NR_mseal.
+>>
+> 
+> For example, making sure that tools/include/uapi/asm-generic/unistd.h is updated to contain __NR_mseal?
 
-Thanks, I saw that as sparc64 issues. Then I will ignore them :-)
+Well, here it gets less clear cut, because the selftests pull in *lots* of
+system headers. In this case /usr/include/unistd.h gets pulled in. If we
+force tools/include/uapi/asm-generic/unistd.h to be included, then we'll
+get many many warnings of redefinitions of __NR_* items.
 
-	Sam
+So what's really going on here is that we have this uneasy mix of system
+headers from the test machine, and newer versions of some of those headers
+in the kernel tree. And some of those are easier to combine with system
+headers, than others. unistd.h is clearly not going quietly, which is
+why, I believe, the "#ifndef __NR_* " approach has flowered in the
+selftests.
+
+> 
+> ... to avoid hand-crafted defines we have to maintain for selftests.
+> 
+> But maybe I am remembering something outdated.
+> 
+
+You remembered correctly, but the situation is slighly muddier than
+one would prefer. :)
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
