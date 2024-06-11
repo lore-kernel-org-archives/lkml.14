@@ -1,122 +1,119 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE59176222;
-	Tue, 11 Jun 2024 11:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C5117B43F;
+	Tue, 11 Jun 2024 11:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718106049; cv=none; b=uktYCnz65evCEUlBFVkrxvpS6myvDNZj01JTwA6wmrWaXJRoyj0AgVQpn1sJ2mkjn0ucPDPVoiT7YZWe+Igc1EiXzY3beyuF6W02/FacoGcx7lTPts87lkk99KgSpYgop9kKopt7ZRBzwO1zPfmBOKz40+45RTJCL9sIfqTcBrs=
+	t=1718106051; cv=none; b=Eddlpwe7kKYCUJdYKqAYT7vg5c029XoxgFmgZRWfrIy66dIM4QR6w5G5T1XoRV6u8CUhSP7nGQ9fh8huxW1BE3v9pzGX8AJfbMT8rX6HjJXf9RCd3+z35YpuwBk0Ir8NIBBYPWK3O8A9/8og51QaqaHct389EyN0xjtbAcIPrpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718106049; c=relaxed/simple;
-	bh=F6aNZ82jzGo7qYFC7MrfPogbayEkCaiexBmsAELEUC0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OY0RyJ/jKb9HbDZ+b7TU+/2HaR7Wzivx7aOtIHd9nu4dVGa58bboV8jFhVftQ4Rj/RYxU/2oVtNeWgbub40Yjnelznk49tNMooTe2+hlaxhHd3TFik0AeQsMAhCWDA0GU3o4PiE8GG9tCWvQUWdEilMOCgsVk6eaGtMHAd43nkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=9906f4c1d5=ms@dev.tdt.de>)
-	id 1sGzrp-00EEyR-2L; Tue, 11 Jun 2024 13:40:45 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sGzro-0026E0-HT; Tue, 11 Jun 2024 13:40:44 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id 3F6CB240053;
-	Tue, 11 Jun 2024 13:40:44 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id C2EE7240050;
-	Tue, 11 Jun 2024 13:40:43 +0200 (CEST)
-Received: from mschiller1.dev.tdt.de (unknown [10.2.3.20])
-	by mail.dev.tdt.de (Postfix) with ESMTPSA id 823DA29768;
-	Tue, 11 Jun 2024 13:40:43 +0200 (CEST)
-From: Martin Schiller <ms@dev.tdt.de>
-To: martin.blumenstingl@googlemail.com,
-	hauke@hauke-m.de,
-	andrew@lunn.ch,
-	f.fainelli@gmail.com,
-	olteanv@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ms@dev.tdt.de
-Subject: [PATCH net-next v4 00/13] net: dsa: lantiq_gswip: code improvements
-Date: Tue, 11 Jun 2024 13:40:14 +0200
-Message-ID: <20240611114027.3136405-1-ms@dev.tdt.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1718106051; c=relaxed/simple;
+	bh=YeyXKtlCu8QG4qMRA8+2qFlxo89AdJ1zUyTJx043lfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UGEWu02ytXTWruWY+lZ599d9bJP4AdWhenfU3sQMoYDLLi4aUkEQ+QabLAfxV6CkYEWlPjrS5asR2o6adtBqhaq8SIOMuKgX6dPMDgywAWuhy5rhxKuYNM6Kgcni23TL2fgtwcEc271r16RNeXRHS7a3cb81UYQJqCSQGY9j6AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jsDoxiZi; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jsDoxiZi"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52c8c0d73d3so2550834e87.1;
+        Tue, 11 Jun 2024 04:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718106047; x=1718710847; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L8XxjvcCgXk/Pl/HdvcUec+tIi9qW/w8D9MOpEhghSw=;
+        b=jsDoxiZiXVD7I9jTTFkj/QV89S34+p2HAotfp3i+luhUFz76XkVXTSYpliq/3YwL4Y
+         8LxtCgVboyHxg7pAjo1FNA71xeOh1JpLDyql/zn7uIHplBomZqA+s7BVRRPXbPmlsoOD
+         DIK6wWzKGQPmzS+9Zn1zUssrIla8BpJhWbEFadhiJDZVDInbJ0gb7mgTMTe7kwWa6aBh
+         jdoLY0mBHlk3OvXl+QE01MzGMvw/ZG/VlaCJ3sQCJZuO9b3sL7ExkMHe+Q8wNwzboo1u
+         +1TJVYMpkne6nAlbyaCc7FYigIAXaD/fN8KScLiUx4gKe28+WP2QXW0+hFOVW3iXPGCO
+         h9dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718106047; x=1718710847;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L8XxjvcCgXk/Pl/HdvcUec+tIi9qW/w8D9MOpEhghSw=;
+        b=N6j/OKnwZFs4U9lVxMJxrFB1W9mJEtBbzHsYq9SqXcf5g8ArRc6m7eCbsAm8a2UJV9
+         u42pHruSkGIZThh+dhz2xU5vVMEwhwN/8Rv4X2caTBWYzf9JWwEFylUa0INkJl5btBpa
+         E8FNRRDQYXelv0ZtyrFzKXllFXKaJe4x61dtG03JItegUJdfuBaY0PwpqTpyzrzP4WU7
+         tT3i0uxVBG7oCm21fnO10BB3qTvmK/o+K2MM4pAbmjJDkWqZ8V7ze6Hg0nyJrHRjz70Y
+         UFVfz6vr+XMV/NB1ERr1EeQw9tkQem1uVQAFmi2NAfZy201eqt37IFvSc46dDdPJoJMI
+         /vzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkkfAJXDQ95xTXQHx36n+jesaesZFv2qtPMp8sdWwmlk/uSuKfs33hVgWl6d48/DEjZgiQ14pIqn5qZJ95B46nxnb5P26C+iBvCqIX/zROE5oB11v/6CPzbbbQfCn6mNwRiUFaa6w/B1HBkjumI6YwlO3vVl7+Na0utWSlg3JG5SWpo3AL4dRy
+X-Gm-Message-State: AOJu0Yw0SxPw8rrJOhoilYayO7574NXgcHcdpSFIup2yf+90phB00avW
+	m5J4QF0MEpCRJR+ZAwrlG749WV1ls4tOjojsjBbhEmBWbA6fDHjx
+X-Google-Smtp-Source: AGHT+IERbDwVmhIESs931NWqqFELi2rg1koDN0thpr+FI0e//xVSCLH20AdXJ7EgJX3zslCQB9lLYA==
+X-Received: by 2002:a05:6512:3041:b0:52b:bdbd:2c43 with SMTP id 2adb3069b0e04-52bbdbd3144mr8397626e87.61.1718106047032;
+        Tue, 11 Jun 2024 04:40:47 -0700 (PDT)
+Received: from f (cst-prg-65-249.cust.vodafone.cz. [46.135.65.249])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f0e49e898sm9819416f8f.22.2024.06.11.04.40.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 04:40:46 -0700 (PDT)
+Date: Tue, 11 Jun 2024 13:40:37 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Jan Kara <jack@suse.cz>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	josef@toxicpanda.com, hch@infradead.org
+Subject: Re: [PATCH v3 1/2] vfs: add rcu-based find_inode variants for iget
+ ops
+Message-ID: <2aoxtcshqzrrqfvjs2xger5omq2fjkfifhkdjzvscrtybisca7@eoisrrcki2vw>
+References: <20240611101633.507101-1-mjguzik@gmail.com>
+ <20240611101633.507101-2-mjguzik@gmail.com>
+ <20240611105011.ofuqtmtdjddskbrt@quack3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-purgate-ID: 151534::1718106045-2DD88746-4E7E3647/0/0
-X-purgate: clean
-X-purgate-type: clean
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240611105011.ofuqtmtdjddskbrt@quack3>
 
+On Tue, Jun 11, 2024 at 12:50:11PM +0200, Jan Kara wrote:
+> On Tue 11-06-24 12:16:31, Mateusz Guzik wrote:
+> > +/**
+> > + * ilookup5 - search for an inode in the inode cache
+>       ^^^ ilookup5_rcu
+> 
 
-This patchset for the lantiq_gswip driver is a collection of minor fixes
-and coding improvements by Martin Blumenstingl without any real changes
-in the actual functionality.
+fixed in my branch
 
-=3D=3D=3D Changelog =3D=3D=3D
-From v3:
-- convert lantiq,gswip bindings to YAML schema
-- Add Hauke's acked-by as mentioned in the cover letter in v1
+> > + * @sb:		super block of file system to search
+> > + * @hashval:	hash value (usually inode number) to search for
+> > + * @test:	callback used for comparisons between inodes
+> > + * @data:	opaque data pointer to pass to @test
+> > + *
+> > + * This is equivalent to ilookup5, except the @test callback must
+> > + * tolerate the inode not being stable, including being mid-teardown.
+> > + */
+> ...
+> > +struct inode *ilookup5_nowait_rcu(struct super_block *sb, unsigned long hashval,
+> > +		int (*test)(struct inode *, void *), void *data);
+> 
+> I'd prefer wrapping the above so that it fits into 80 columns.
+> 
 
-From v2:
-- removed unused variable max_ports in gswip_add_single_port_br()
+the last comma is precisely at 80, but i can wrap it if you insist
 
-From v1:
-- signal that we only update example code in dt-bindings
-- don't use the word 'fix' if not appropriate
-- new patch: add terminating '\n' where missing
-- renamed MAC_BRIDGE macros to make it obvious which register field is
-  used
-- new patch: remove dead code from gswip_add_single_port_br()
-- updated error message if FID not found in gswip_port_fdb()
+> Otherwise feel free to add:
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> 
 
-Martin Blumenstingl (9):
-  dt-bindings: net: dsa: lantiq,gswip: Add missing CPU port phy-mode and
-    fixed-link to example
-  net: dsa: lantiq_gswip: Only allow phy-mode =3D "internal" on the CPU
-    port
-  net: dsa: lantiq_gswip: Use dev_err_probe where appropriate
-  net: dsa: lantiq_gswip: Don't manually call gswip_port_enable()
-  net: dsa: lantiq_gswip: Use dsa_is_cpu_port() in
-    gswip_port_change_mtu()
-  net: dsa: lantiq_gswip: Change literal 6 to ETH_ALEN
-  net: dsa: lantiq_gswip: Consistently use macros for the mac bridge
-    table
-  net: dsa: lantiq_gswip: Update comments in gswip_port_vlan_filtering()
-  net: dsa: lantiq_gswip: Improve error message in gswip_port_fdb()
+thanks
 
-Martin Schiller (4):
-  dt-bindings: net: dsa: lantiq,gswip: convert to YAML schema
-  net: dsa: lantiq_gswip: add terminating \n where missing
-  net: dsa: lantiq_gswip: do also enable or disable cpu port
-  net: dsa: lantiq_gswip: Remove dead code from
-    gswip_add_single_port_br()
+I'm going to wait for more feedback, tweak the commit message to stress
+that this goes from 2 hash lock acquires to 1, maybe fix some typos and
+submit a v4.
 
- .../bindings/net/dsa/lantiq,gswip.yaml        | 201 ++++++++++++++++++
- .../bindings/net/dsa/lantiq-gswip.txt         | 146 -------------
- MAINTAINERS                                   |   1 +
- drivers/net/dsa/lantiq_gswip.c                | 123 +++++------
- 4 files changed, 257 insertions(+), 214 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/lantiq,gswi=
-p.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/dsa/lantiq-gswi=
-p.txt
+past that if people want something faster they are welcome to implement
+or carry it over the finish line themselves.
 
---=20
-2.39.2
-
+> 									Honza
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
