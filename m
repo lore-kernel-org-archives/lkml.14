@@ -1,404 +1,219 @@
-Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D556433C4;
-	Tue, 11 Jun 2024 05:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8FB433C4
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 05:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718083932; cv=none; b=Qi0MxykqKZPbABkmUzy1LFz//mIFSd6Y1M+0gUPVJLXsbwYZQPtOyhg47lhu4Iir5scQwW4qIleBX7ZsLAXOKG4JhKZ3eSeM6fSD3XZpuUGc3ZQm/yAcDiQ4VyaqRXRURkA3LGZuUXonz5MNcNfIXJ/R/tvJANSwohhh+m5/Ed4=
+	t=1718083978; cv=none; b=qI6y5nSiYmZkT7+yL9xqzNrGgIJtkizg8bEzrWgKAte1Z6iT5sr3PwyMcnEs++GXnI6yHFvye2ncykeoEaKCryovH2DUUWXsNiTtIOsGT5NEZUcprH1F4SzeHTf3UN+2iagYSn7dPIOMBBxIA4avtTtT0BUlQBGLMPhOyK+bweY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718083932; c=relaxed/simple;
-	bh=u2U/nIsQXihsnyQpm+gt2EBSNlUi/HjRQ5mYzQEGbfQ=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=FJJFQpIfg+ze3uE7GgK1vn7ZMQaqjo1xYyZZxDqYPxn29CPRvMyhuDbyNzRht6SbuJCqqKyL3xVkw/xrbWVYzg4UlyMScgcudWWSPCWq0VcF4hlK9dXKO3fcaJdAd760oIPl9PkktibatkkSN6QneRu4Jh3HBjpza9TEkSbu8CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=MxAgL5J7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZLPgDZSw; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1718083978; c=relaxed/simple;
+	bh=RxfXH2ZFb7Id4zlG5fVIVyfD9EzHBt+idquBieWGYcw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=spi6FFusU9h4a/KS2TDL75rvbU6HXmShPaTWyXJINYj+rGZfvHGaL57qCWc2cUxWhz2UJkxRmQ94AxQqSOPjcGi1fXt7unIVMioNjWg3E9Aww+0FXAF7HacoRXa8uhMGbgdQ5pYWqvt3ROBvKNp1mRVOfaNaS0OxnLdJ1amUW5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b3NbzL7z; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="MxAgL5J7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZLPgDZSw"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 6901613800F1;
-	Tue, 11 Jun 2024 01:32:08 -0400 (EDT)
-Received: from imap41 ([10.202.2.91])
-  by compute2.internal (MEProxy); Tue, 11 Jun 2024 01:32:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1718083928; x=1718170328; bh=EY2KLqHw7h
-	7zEwaWpg4jQ9kWyeLRsbn8gKaf04sD43U=; b=MxAgL5J7BqKfXenzWNzdVTGDXf
-	frWnYBRYum9fTTYxpkB33E3eRw+/J4wmZsRrNGgZU88hWOsuoCxoM+JXkqWE6tNG
-	6Ti2/32s4yzlbxie2/t2Qfy7tPgXDfGEizKBdRtSV1oKqo2c7yBe/qL5zgce53dq
-	hSE3pJd+rNJTgSTnA+VYkApbxcJq6Sj3wUCOPwwNJQmnFQhMIWf3u6NaSG1jbyum
-	j7vTDCeEd/WYFAnce6mlJewo2rhxed4lpmnITuHyFHLVQUoQ/vFL7jw1fmQM6RWe
-	Ofi96Shr3HnlIhX23tu/xBk94EIJ8khEaeqMEJ5so+BWXl4JK20vDUXH/CLA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718083928; x=1718170328; bh=EY2KLqHw7h7zEwaWpg4jQ9kWyeLR
-	sbn8gKaf04sD43U=; b=ZLPgDZSw6pLEoCaUgJ3J24ujoyyBX8a/uGBK9i8pQf7q
-	6cm6JlftTfCb5DgXNpjbNaFtq+QSwzZkBr1N1VoISYXWdMMLE/li99mQJVVyyi+n
-	V8QSz39ksIQWnrWypzFXhqKwY65x7dMa49sgtCo7Rp4HUakdvN9D9n+DIoqE5uk6
-	rHOYrD5/IPykgWOeiPkBRI6SJS68KiXsrLHMx6toV6f2dGU52POXzJ7qOwEP+JS+
-	1V5sU7c3BHZgKWDCcQGwa2i3PV54TrgUElnPi4IyRyIlhJTESWieNom+2sRFXQyj
-	vUUZVhhn2jd4q7OgyNGC3/WFtjaBljUeXHefcrXHeA==
-X-ME-Sender: <xms:V-FnZgzPR_FvWqSPFLeiHSHunLzeiFQ705lCaynu6QOK4d87IdDfQQ>
-    <xme:V-FnZkQMns67w5xTYKTetmr-czu_RxXjTN_E55_CBryN3kTsfmMAZfry97BABLD3Q
-    qDoj-C-ho85rBEdFFE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeduuddgleefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfnfhu
-    khgvucflohhnvghsfdcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtth
-    gvrhhnpedutdelgfdvgeekueeuteevffelfedukeeitedugfdvtdeutdetjeduudeuvdeg
-    gfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
-    hkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:V-FnZiWpYDbGcrzh19yL7f_s8YfrzaYQ1oTHvHFb0qC32xWR5N9Opg>
-    <xmx:V-FnZuiuHkiQ0jRmBwYPBmA9voSEOCysIVa0fOdo7EjsZ7tBLc0urg>
-    <xmx:V-FnZiCtWPCTEb8fYwmtJ8P_sI3lDPvwFIyyV_CRzR1xELmZTWF9yA>
-    <xmx:V-FnZvISs9s7iLOukJh2WzTl9RxEgcT3tt7ecTZYthOe2118hTAZaA>
-    <xmx:WOFnZl_fCOJZ5dw_pzZwTqyjtWboH8VU8eqzmBDjQASgkFlvtjvmBwRK>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 30E3B2340080; Tue, 11 Jun 2024 01:32:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-515-g87b2bad5a-fm-20240604.001-g87b2bad5
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b3NbzL7z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718083973;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rjMLPcN4lf4hILs75qKFb2X8tj4fMICRG7d9Mi8k40Q=;
+	b=b3NbzL7zyEWC28fAQjEA1wnAZKX+AwcCcWSaBOrpUrTXOU+NQcJ9gpYLHqLvVQcgWGy4kC
+	OqK6y44uZh/h7PzmRiX8wAaCrbcwVqhs4hbd4bkQHWFoXIFrAzfuwn+8yjkBFuiH5Ck3MS
+	UFVml2I059cfcibEoT9JodiQr6p91vA=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-111-_V8BYhHVPAey9ah6ri3acA-1; Tue,
+ 11 Jun 2024 01:32:50 -0400
+X-MC-Unique: _V8BYhHVPAey9ah6ri3acA-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 199A719560BD;
+	Tue, 11 Jun 2024 05:32:49 +0000 (UTC)
+Received: from server.redhat.com (unknown [10.72.112.77])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7CAC11956048;
+	Tue, 11 Jun 2024 05:32:42 +0000 (UTC)
+From: Cindy Lu <lulu@redhat.com>
+To: lulu@redhat.com,
+	dtatulea@nvidia.com,
+	mst@redhat.com,
+	jasowang@redhat.com,
+	virtualization@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH 1/2] vdpa: support set mac address from vdpa tool
+Date: Tue, 11 Jun 2024 13:32:32 +0800
+Message-ID: <20240611053239.516996-1-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <9daef2c6-6df4-4f61-966c-239450de7b4e@app.fastmail.com>
-In-Reply-To: <20240609144849.2532-2-mohamed.ghanmi@supcom.tn>
-References: <20240609144849.2532-1-mohamed.ghanmi@supcom.tn>
- <20240609144849.2532-2-mohamed.ghanmi@supcom.tn>
-Date: Tue, 11 Jun 2024 17:31:46 +1200
-From: "Luke Jones" <luke@ljones.dev>
-To: "Mohamed Ghanmi" <mohamed.ghanmi@supcom.tn>,
- "Hans de Goede" <hdegoede@redhat.com>
-Cc: corentin.chary@gmail.com,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] platform/x86: asus-wmi: add support for vivobook fan
- profiles
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
+Add new UAPI to support the mac address from vdpa tool
+Function vdpa_nl_cmd_dev_config_set_doit() will get the
+MAC address from the vdpa tool and then set it to the device.
 
+The usage is: vdpa dev set name vdpa_name mac **:**:**:**:**:**
 
-On Mon, 10 Jun 2024, at 2:48 AM, Mohamed Ghanmi wrote:
-> Add support for vivobook fan profiles wmi call on the ASUS VIVOBOOK
-> to adjust power limits.
-> 
-> These fan profiles have a different device id than the ROG series
-> and different order. This reorders the existing modes.
-> 
-> As part of keeping the patch clean the throttle_thermal_policy_available
-> boolean stored in the driver struct is removed and
-> throttle_thermal_policy_dev is used in place (as on init it is zeroed).
-> 
-> Signed-off-by: Mohamed Ghanmi <mohamed.ghanmi@supcom.tn>
-> Co-developed-by: Luke D. Jones <luke@ljones.dev>
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
-> drivers/platform/x86/asus-wmi.c            | 125 ++++++++++++---------
-> include/linux/platform_data/x86/asus-wmi.h |   1 +
-> 2 files changed, 76 insertions(+), 50 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 3c61d75a3..2e3d8d8fb 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -97,6 +97,12 @@ module_param(fnlock_default, bool, 0444);
-> #define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST 1
-> #define ASUS_THROTTLE_THERMAL_POLICY_SILENT 2
->  
-> +#define ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO 0
-> +#define ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO 1
-> +#define ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO 2
-> +
-> +#define PLATFORM_PROFILE_MAX 2
-> +
-> #define USB_INTEL_XUSB2PR 0xD0
-> #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI 0x9c31
->  
-> @@ -293,8 +299,8 @@ struct asus_wmi {
-> u32 kbd_rgb_dev;
-> bool kbd_rgb_state_available;
->  
-> - bool throttle_thermal_policy_available;
-> u8 throttle_thermal_policy_mode;
-> + u32 throttle_thermal_policy_dev;
->  
-> bool cpu_fan_curve_available;
-> bool gpu_fan_curve_available;
-> @@ -3152,7 +3158,7 @@ static int fan_curve_get_factory_default(struct asus_wmi *asus, u32 fan_dev)
-> int err, fan_idx;
-> u8 mode = 0;
->  
-> - if (asus->throttle_thermal_policy_available)
-> + if (asus->throttle_thermal_policy_dev)
-> mode = asus->throttle_thermal_policy_mode;
-> /* DEVID_<C/G>PU_FAN_CURVE is switched for OVERBOOST vs SILENT */
-> if (mode == 2)
-> @@ -3359,7 +3365,7 @@ static ssize_t fan_curve_enable_store(struct device *dev,
-> * For machines with throttle this is the only way to reset fans
-> * to default mode of operation (does not erase curve data).
-> */
-> - if (asus->throttle_thermal_policy_available) {
-> + if (asus->throttle_thermal_policy_dev) {
-> err = throttle_thermal_policy_write(asus);
-> if (err)
-> return err;
-> @@ -3576,8 +3582,8 @@ static const struct attribute_group asus_fan_curve_attr_group = {
-> __ATTRIBUTE_GROUPS(asus_fan_curve_attr);
->  
-> /*
-> - * Must be initialised after throttle_thermal_policy_check_present() as
-> - * we check the status of throttle_thermal_policy_available during init.
-> + * Must be initialised after throttle_thermal_policy_dev is set as
-> + * we check the status of throttle_thermal_policy_dev during init.
->   */
-> static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
-> {
-> @@ -3618,38 +3624,13 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
-> }
->  
-> /* Throttle thermal policy ****************************************************/
-> -
-> -static int throttle_thermal_policy_check_present(struct asus_wmi *asus)
-> -{
-> - u32 result;
-> - int err;
-> -
-> - asus->throttle_thermal_policy_available = false;
-> -
-> - err = asus_wmi_get_devstate(asus,
-> -     ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-> -     &result);
-> - if (err) {
-> - if (err == -ENODEV)
-> - return 0;
-> - return err;
-> - }
-> -
-> - if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
-> - asus->throttle_thermal_policy_available = true;
-> -
-> - return 0;
-> -}
-> -
-> static int throttle_thermal_policy_write(struct asus_wmi *asus)
-> {
-> - int err;
-> - u8 value;
-> + u8 value = asus->throttle_thermal_policy_mode;
-> u32 retval;
-> + int err;
->  
-> - value = asus->throttle_thermal_policy_mode;
-> -
-> - err = asus_wmi_set_devstate(ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
-> + err = asus_wmi_set_devstate(asus->throttle_thermal_policy_dev,
->     value, &retval);
->  
-> sysfs_notify(&asus->platform_device->dev.kobj, NULL,
-> @@ -3679,7 +3660,7 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
->  
-> static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
-> {
-> - if (!asus->throttle_thermal_policy_available)
-> + if (!asus->throttle_thermal_policy_dev)
-> return 0;
->  
-> asus->throttle_thermal_policy_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-> @@ -3691,7 +3672,7 @@ static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
-> u8 new_mode = asus->throttle_thermal_policy_mode + 1;
-> int err;
->  
-> - if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-> + if (new_mode > PLATFORM_PROFILE_MAX)
-> new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
->  
-> asus->throttle_thermal_policy_mode = new_mode;
-> @@ -3730,7 +3711,7 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
-> if (result < 0)
-> return result;
->  
-> - if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
-> + if (new_mode > PLATFORM_PROFILE_MAX)
-> return -EINVAL;
->  
-> asus->throttle_thermal_policy_mode = new_mode;
-> @@ -3747,10 +3728,56 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
-> return count;
-> }
->  
-> -// Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
-> +/*
-> + * Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
-> + */
-> static DEVICE_ATTR_RW(throttle_thermal_policy);
->  
-> /* Platform profile ***********************************************************/
-> +static int asus_wmi_platform_profile_to_vivo(struct asus_wmi *asus,
-> +   int mode)
+Here is sample:
+root@L1# vdpa -jp dev config show vdpa0
+{
+    "config": {
+        "vdpa0": {
+            "mac": "82:4d:e9:5d:d7:e6",
+            "link ": "up",
+            "link_announce ": false,
+            "mtu": 1500
+        }
+    }
+}
 
-Given the internals of this function I'm still not sure if this naming makes sense. Perhaps "maybe_platform_profile_to_vivo()"
+root@L1# vdpa dev set name vdpa0 mac 00:11:22:33:44:55
 
-> +{
-> + bool vivo;
-> +
-> + vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-> +
-> + if (vivo) {
-> + switch (mode) {
-> + case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
-> + return ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO;
-> + case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST:
-> + return ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO;
-> + case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
-> + return ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO;
-> + }
-> + }
-> +
-> + return mode;
-> +
-> +}
-> +
-> +static int asus_wmi_platform_profile_mode_from_vivo(struct asus_wmi *asus,
-> +   int mode)
+root@L1# vdpa -jp dev config show vdpa0
+{
+    "config": {
+        "vdpa0": {
+            "mac": "00:11:22:33:44:55",
+            "link ": "up",
+            "link_announce ": false,
+            "mtu": 1500
+        }
+    }
+}
 
-Same as the last function.
+Signed-off-by: Cindy Lu <lulu@redhat.com>
+---
+ drivers/vdpa/vdpa.c       | 71 +++++++++++++++++++++++++++++++++++++++
+ include/linux/vdpa.h      |  2 ++
+ include/uapi/linux/vdpa.h |  1 +
+ 3 files changed, 74 insertions(+)
 
-> +{
-> + bool vivo;
-> +
-> + vivo = asus->throttle_thermal_policy_dev == ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-> +
-> + if (vivo) {
-> + switch (mode) {
-> + case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT_VIVO:
-> + return ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
-> + case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST_VIVO:
-> + return ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST;
-> + case ASUS_THROTTLE_THERMAL_POLICY_SILENT_VIVO:
-> + return ASUS_THROTTLE_THERMAL_POLICY_SILENT;
-> + }
-> + }
-> +
-> + return mode;
-> +
-> +}
-> +
-> static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
-> enum platform_profile_option *profile)
-> {
-> @@ -3758,10 +3785,9 @@ static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
-> int tp;
->  
-> asus = container_of(pprof, struct asus_wmi, platform_profile_handler);
-> -
-> tp = asus->throttle_thermal_policy_mode;
->  
-> - switch (tp) {
-> + switch (asus_wmi_platform_profile_mode_from_vivo(asus, tp)) {
-> case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
-> *profile = PLATFORM_PROFILE_BALANCED;
-> break;
-> @@ -3775,6 +3801,7 @@ static int asus_wmi_platform_profile_get(struct platform_profile_handler *pprof,
-> return -EINVAL;
-> }
->  
-> +
-> return 0;
-> }
->  
-> @@ -3800,7 +3827,7 @@ static int asus_wmi_platform_profile_set(struct platform_profile_handler *pprof,
-> return -EOPNOTSUPP;
-> }
->  
-> - asus->throttle_thermal_policy_mode = tp;
-> + asus->throttle_thermal_policy_mode = asus_wmi_platform_profile_to_vivo(asus, tp);
-> return throttle_thermal_policy_write(asus);
-> }
->  
-> @@ -3813,7 +3840,7 @@ static int platform_profile_setup(struct asus_wmi *asus)
-> * Not an error if a component platform_profile relies on is unavailable
-> * so early return, skipping the setup of platform_profile.
-> */
-> - if (!asus->throttle_thermal_policy_available)
-> + if (!asus->throttle_thermal_policy_dev)
-> return 0;
->  
-> dev_info(dev, "Using throttle_thermal_policy for platform_profile support\n");
-> @@ -4228,7 +4255,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
-> if (code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_TTP) {
-> if (asus->fan_boost_mode_available)
-> fan_boost_mode_switch_next(asus);
-> - if (asus->throttle_thermal_policy_available)
-> + if (asus->throttle_thermal_policy_dev)
-> throttle_thermal_policy_switch_next(asus);
-> return;
->  
-> @@ -4436,7 +4463,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
-> else if (attr == &dev_attr_fan_boost_mode.attr)
-> ok = asus->fan_boost_mode_available;
-> else if (attr == &dev_attr_throttle_thermal_policy.attr)
-> - ok = asus->throttle_thermal_policy_available;
-> + ok = asus->throttle_thermal_policy_dev != 0;
-> else if (attr == &dev_attr_ppt_pl2_sppt.attr)
-> devid = ASUS_WMI_DEVID_PPT_PL2_SPPT;
-> else if (attr == &dev_attr_ppt_pl1_spl.attr)
-> @@ -4745,16 +4772,15 @@ static int asus_wmi_add(struct platform_device *pdev)
-> else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_MODE2))
-> asus->kbd_rgb_dev = ASUS_WMI_DEVID_TUF_RGB_MODE2;
->  
-> + if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY))
-> + asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY;
-> + else if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO))
-> + asus->throttle_thermal_policy_dev = ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO;
-> +
-> err = fan_boost_mode_check_present(asus);
-> if (err)
-> goto fail_fan_boost_mode;
->  
-> - err = throttle_thermal_policy_check_present(asus);
-> - if (err)
-> - goto fail_throttle_thermal_policy;
-> - else
-> - throttle_thermal_policy_set_default(asus);
-> -
-> err = platform_profile_setup(asus);
-> if (err)
-> goto fail_platform_profile_setup;
-> @@ -4849,7 +4875,6 @@ static int asus_wmi_add(struct platform_device *pdev)
-> fail_input:
-> asus_wmi_sysfs_exit(asus->platform_device);
-> fail_sysfs:
-> -fail_throttle_thermal_policy:
-> fail_custom_fan_curve:
-> fail_platform_profile_setup:
-> if (asus->platform_profile_support)
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 3eb5cd677..982a63774 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -64,6 +64,7 @@
-> #define ASUS_WMI_DEVID_SCREENPAD_LIGHT 0x00050032
-> #define ASUS_WMI_DEVID_FAN_BOOST_MODE 0x00110018
-> #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY 0x00120075
-> +#define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO 0x00110019
->  
-> /* Misc */
-> #define ASUS_WMI_DEVID_PANEL_OD 0x00050019
-> -- 
-> 2.44.0
-> 
+diff --git a/drivers/vdpa/vdpa.c b/drivers/vdpa/vdpa.c
+index a7612e0783b3..347ae6e7749d 100644
+--- a/drivers/vdpa/vdpa.c
++++ b/drivers/vdpa/vdpa.c
+@@ -1149,6 +1149,72 @@ static int vdpa_nl_cmd_dev_config_get_doit(struct sk_buff *skb, struct genl_info
+ 	return err;
+ }
  
-If Hans and Ilpo don't have any requirements then:
-
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
++static int vdpa_nl_cmd_dev_config_set_doit(struct sk_buff *skb,
++					   struct genl_info *info)
++{
++	struct vdpa_dev_set_config set_config = {};
++	struct nlattr **nl_attrs = info->attrs;
++	struct vdpa_mgmt_dev *mdev;
++	const u8 *macaddr;
++	const char *name;
++	int err = 0;
++	struct device *dev;
++	struct vdpa_device *vdev;
++
++	if (!info->attrs[VDPA_ATTR_DEV_NAME])
++		return -EINVAL;
++
++	name = nla_data(info->attrs[VDPA_ATTR_DEV_NAME]);
++
++	down_write(&vdpa_dev_lock);
++	dev = bus_find_device(&vdpa_bus, NULL, name, vdpa_name_match);
++	if (!dev) {
++		NL_SET_ERR_MSG_MOD(info->extack, "device not found");
++		err = -ENODEV;
++		goto dev_err;
++	}
++	vdev = container_of(dev, struct vdpa_device, dev);
++	if (!vdev->mdev) {
++		NL_SET_ERR_MSG_MOD(
++			info->extack,
++			"Fail to find the specified management device");
++		err = -EINVAL;
++		goto mdev_err;
++	}
++	mdev = vdev->mdev;
++	if (nl_attrs[VDPA_ATTR_DEV_NET_CFG_MACADDR]) {
++		if (!(mdev->supported_features & BIT_ULL(VIRTIO_NET_F_MAC))) {
++			NL_SET_ERR_MSG_FMT_MOD(
++				info->extack,
++				"Missing features 0x%llx for provided attributes",
++				BIT_ULL(VIRTIO_NET_F_MAC));
++			err = -EINVAL;
++			goto mdev_err;
++		}
++		macaddr = nla_data(nl_attrs[VDPA_ATTR_DEV_NET_CFG_MACADDR]);
++		memcpy(set_config.net.mac, macaddr, ETH_ALEN);
++		set_config.mask |= BIT_ULL(VDPA_ATTR_DEV_NET_CFG_MACADDR);
++		if (mdev->ops->set_mac) {
++			err = mdev->ops->set_mac(mdev, vdev, &set_config);
++		} else {
++			NL_SET_ERR_MSG_FMT_MOD(
++				info->extack,
++				"%s device not support set mac address ", name);
++		}
++
++	} else {
++		NL_SET_ERR_MSG_FMT_MOD(info->extack,
++				       "%s device not support this config ",
++				       name);
++	}
++
++mdev_err:
++	put_device(dev);
++dev_err:
++	up_write(&vdpa_dev_lock);
++	return err;
++}
++
+ static int vdpa_dev_config_dump(struct device *dev, void *data)
+ {
+ 	struct vdpa_device *vdev = container_of(dev, struct vdpa_device, dev);
+@@ -1285,6 +1351,11 @@ static const struct genl_ops vdpa_nl_ops[] = {
+ 		.doit = vdpa_nl_cmd_dev_stats_get_doit,
+ 		.flags = GENL_ADMIN_PERM,
+ 	},
++	{
++		.cmd = VDPA_CMD_DEV_CONFIG_SET,
++		.doit = vdpa_nl_cmd_dev_config_set_doit,
++		.flags = GENL_ADMIN_PERM,
++	},
+ };
+ 
+ static struct genl_family vdpa_nl_family __ro_after_init = {
+diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+index db15ac07f8a6..c97f4f1da753 100644
+--- a/include/linux/vdpa.h
++++ b/include/linux/vdpa.h
+@@ -581,6 +581,8 @@ struct vdpa_mgmtdev_ops {
+ 	int (*dev_add)(struct vdpa_mgmt_dev *mdev, const char *name,
+ 		       const struct vdpa_dev_set_config *config);
+ 	void (*dev_del)(struct vdpa_mgmt_dev *mdev, struct vdpa_device *dev);
++	int (*set_mac)(struct vdpa_mgmt_dev *mdev, struct vdpa_device *dev,
++		       const struct vdpa_dev_set_config *config);
+ };
+ 
+ /**
+diff --git a/include/uapi/linux/vdpa.h b/include/uapi/linux/vdpa.h
+index 54b649ab0f22..53f249fb26bc 100644
+--- a/include/uapi/linux/vdpa.h
++++ b/include/uapi/linux/vdpa.h
+@@ -19,6 +19,7 @@ enum vdpa_command {
+ 	VDPA_CMD_DEV_GET,		/* can dump */
+ 	VDPA_CMD_DEV_CONFIG_GET,	/* can dump */
+ 	VDPA_CMD_DEV_VSTATS_GET,
++	VDPA_CMD_DEV_CONFIG_SET,
+ };
+ 
+ enum vdpa_attr {
+-- 
+2.45.0
 
