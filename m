@@ -1,236 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BEAB2C182;
-	Tue, 11 Jun 2024 15:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1D12628D;
+	Tue, 11 Jun 2024 15:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718118176; cv=none; b=uzBbrShcCfeRgZ3aWra7rn2lZkFtsjX8Z3bx1kFkRA2e6JFoOcYCVm2GCgljGWyNpOn24qhFbQnHaDlVWYKovjus1L5aGxmzlo20IZod1xvT17zaPwSCkl3kl0Lhl0hqmmVpUZAwXQntm1TQQtQtYKvHkQiPxxZOmsyoO8Pj7wI=
+	t=1718118175; cv=none; b=HDUTSZ8YogVqAcpyLAFgVEwbgN+7WKrElbQ9EB32UjilxVPZmhk3FPW3JvuCNyA3DUWqHo2ZwoXnZ6R9qTilSSB8OrIixAwFBgmFL3rsstqI8xKhoRatFdoNvSfI4gP+TvhJsnH0uzb1FGxWBcHKooY9uFpvcJw/CbK5n4PCvt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718118176; c=relaxed/simple;
-	bh=m5MKYq+sbY/RyNjY39bpEhwKF6st/PRM8qPP5HXfLKU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GkoH/FCKKoaVvm0sXUCU8QxX4ngadHI4e6hzRFMuzh0vcoegOjeI4NtRipIHxv8AlVfEgTVT8BCNrNOsVmzvyn4dxtxarAU0PB+nsblzMTgTAGpqAyuXJTld0fGF2EnxYAF/cpHEl7Kw1p1w30+RlEDkGL5cbXrWbhw3e63E3ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 202ED152B;
-	Tue, 11 Jun 2024 08:03:19 -0700 (PDT)
-Received: from e127643.arm.com (unknown [10.57.41.181])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9CEA93F64C;
-	Tue, 11 Jun 2024 08:02:50 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: coresight@lists.linaro.org,
-	suzuki.poulose@arm.com,
-	gankulkarni@os.amperecomputing.com,
-	mike.leach@linaro.org,
-	leo.yan@linux.dev,
-	anshuman.khandual@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 02/14] perf: cs-etm: Allocate queues for all CPUs
-Date: Tue, 11 Jun 2024 16:02:13 +0100
-Message-Id: <20240611150228.1802828-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240611150228.1802828-1-james.clark@arm.com>
-References: <20240611150228.1802828-1-james.clark@arm.com>
+	s=arc-20240116; t=1718118175; c=relaxed/simple;
+	bh=+UbdLhSNYQv78MjKDiWzxOsZG+Gz2YXkxyOtDXrPCgw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TS+pME7pAa8p31efc1x4edesB4vP+4WwhyK32RMpt5W2KJGYMdslVvupACXshIz5KSKAes6cIPBitG2B9ZB087YSce4h3QBoKvmiJhTp22BaBJ7oUWG4sBDdNwImrnolazC0b3XCAcrpSzi7gsL6VWBcRRKn8eDX7VBFfipiG9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=RS8balMM; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="RS8balMM"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 196CEA0A9B;
+	Tue, 11 Jun 2024 17:02:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=Lfl1G8RKSgEODerdsMc2
+	QohfW3q4Aoax5ZnKXqVT58E=; b=RS8balMMGmSzN0u+cqYv75MBVl/svMTc1Tad
+	t87iAPcyrWFhi8cb17oaKlqKpC6tSxzTIkWQy76IQnUS0rRcwPO+abI3Y5Fxg0a/
+	ToLWg6O+/ADL09pY5h4sb+oVTZB3SZSgdZCr/mkW6TkMLJB+cxAZBoQHmyrrwKcg
+	ghZbdja6ACrHy0obFeNwIq+cSXKWuXqh45c8MLe86hWtdV5bDCN+PebnNoJZGTU6
+	Zf/UfeM9ju8z5hbIQgcuWxuge1M3i2CTOLYZP/vObxlnMxFPdbCRm3Bb9HA+tAec
+	ji78BrgThbTx3IQBWcVmTN+hjM3e6UsSjjrsPSPMTDga8h35utErrahrtxSLfwpy
+	tncXh8+SMXYoVaLAycdsYcd/CdF9sjkoHIqWtVFIiG3VlvZiPKFebSGHV359aUf8
+	JelA6jRZOn87QnkoRnDEc15k1h8bsITDmmn7+NOXeS/9TYoP1plPfmNuM0mr7T1W
+	JyGDbip/IU02oGgf/FVeVGigKGZTL+Y2CW21Fd2fl83KOOFCw2M9fYdD/D3BwnxR
+	VvIW9ZexnVqhcSfaYOcb+dfl0VAg1dFGVRjw6/Y0yqk2AX0lnLixkw2pZOg/YwNh
+	43j6L2i0MKGOqLbCptdANPFmpiVvJxTOtIpWNAxdiAxUof1c/ZnhsrD6H0jsyty/
+	RbfZL7Y=
+Message-ID: <7ce6bbf4-738b-4bd4-b842-7d3e97b57583@prolan.hu>
+Date: Tue, 11 Jun 2024 17:02:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] net: fec: Add ECR bit macros, fix FEC_ECR_EN1588 being
+ cleared on link-down
+To: Andrew Lunn <andrew@lunn.ch>
+CC: <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
+	<shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Richard Cochran
+	<richardcochran@gmail.com>
+References: <20240607081855.132741-1-csokas.bence@prolan.hu>
+ <46892275-619c-4dfb-9214-3bbb14b78093@lunn.ch>
+ <d6d6c080-b001-4911-83bc-4aca7701cdff@prolan.hu>
+ <c49a5e28-e030-4fc1-ab30-9afd997f03bc@lunn.ch>
+Content-Language: en-US
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <c49a5e28-e030-4fc1-ab30-9afd997f03bc@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2945A12957627C65
 
-Make cs_etm__setup_queue() setup a queue even if it's empty, and
-pre-allocate queues based on the max CPU that was recorded. In per-CPU
-mode aux queues are indexed based on CPU ID even if all CPUs aren't
-recorded, sparse queue arrays aren't used.
+Hi!
 
-This will allow HW_IDs to be saved even if no aux data was received in
-that queue without having to call cs_etm__setup_queue() from two
-different places.
+On 6/11/24 15:06, Andrew Lunn wrote:
+> On Tue, Jun 11, 2024 at 10:04:39AM +0200, Csókás Bence wrote:
+>> Hi!
+>>
+>> On 6/10/24 21:13, Andrew Lunn wrote:
+>>> On Fri, Jun 07, 2024 at 10:18:55AM +0200, Csókás, Bence wrote:
+>>>> FEC_ECR_EN1588 bit gets cleared after MAC reset in `fec_stop()`, which
+>>>> makes all 1588 functionality shut down on link-down. However, some
+>>>> functionality needs to be retained (e.g. PPS) even without link.
+>>>
+>>> I don't know much about PPS. Could you point to some documentation,
+>>> list email etc, which indicated PPS without link is expected to work.
+>>>
+>>> Please also Cc: Richard Cochran for changes like this.
+>>>
+>>> Thanks
+>>> 	Andrew
+>>
+>> This is what Richard said two years ago on the now-reverted patch:
+>>
+>> Link: https://lore.kernel.org/netdev/YvRdTwRM4JBc5RuV@hoboy.vegasvil.org
+> 
+> Thanks.
+> 
+> So when you have sync, you have a 1Hz clock, synchronised to the grand
+> master. When the link is down, or communication with the grand master
+> is lost, you get a free running clock of around 1Hz. I presume that if
+> the link does up again and communication to the grand master is
+> restored, there is a phase shift in the 1Hz clock, and a frequency
+> correction? The hardware has to cope with this.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/cs-etm.c | 55 ++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 28 deletions(-)
+Correct. And PTP4Linux is already capable of re-syncing (or at least it 
+would be, if it weren't for the ENET controller reset. We still need to 
+restore all the values of ATIME, ATCORR etc. registers, but that'll come 
+in a future patch, when I figure out how to get out of the locking hell).
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index f09004c4ba44..e40dfd09d3ed 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -104,6 +104,7 @@ struct cs_etm_queue {
- 	unsigned int queue_nr;
- 	u8 pending_timestamp_chan_id;
- 	bool formatted;
-+	bool formatted_set;
- 	u64 offset;
- 	const unsigned char *buf;
- 	size_t buf_len, buf_used;
-@@ -1056,16 +1057,11 @@ static struct cs_etm_queue *cs_etm__alloc_queue(void)
- 
- static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 			       struct auxtrace_queue *queue,
--			       unsigned int queue_nr, bool formatted)
-+			       unsigned int queue_nr)
- {
- 	struct cs_etm_queue *etmq = queue->priv;
- 
--	if (etmq && formatted != etmq->formatted) {
--		pr_err("CS_ETM: mixed formatted and unformatted trace not supported\n");
--		return -EINVAL;
--	}
--
--	if (list_empty(&queue->head) || etmq)
-+	if (etmq)
- 		return 0;
- 
- 	etmq = cs_etm__alloc_queue();
-@@ -1078,7 +1074,6 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 	etmq->queue_nr = queue_nr;
- 	queue->cpu = queue_nr; /* Placeholder, may be reset to -1 in per-thread mode */
- 	etmq->offset = 0;
--	etmq->formatted = formatted;
- 
- 	return 0;
- }
-@@ -2791,17 +2786,6 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
- 		if (err)
- 			return err;
- 
--		/*
--		 * Knowing if the trace is formatted or not requires a lookup of
--		 * the aux record so only works in non-piped mode where data is
--		 * queued in cs_etm__queue_aux_records(). Always assume
--		 * formatted in piped mode (true).
--		 */
--		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
--					  idx, true);
--		if (err)
--			return err;
--
- 		if (dump_trace)
- 			if (auxtrace_buffer__get_data(buffer, fd)) {
- 				cs_etm__dump_event(etm->queues.queue_array[idx].priv, buffer);
-@@ -2918,7 +2902,6 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 	struct perf_record_auxtrace *auxtrace_event;
- 	union perf_event auxtrace_fragment;
- 	__u64 aux_offset, aux_size;
--	__u32 idx;
- 	bool formatted;
- 
- 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
-@@ -2985,6 +2968,8 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 
- 	if (aux_offset >= auxtrace_event->offset &&
- 	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
-+		struct cs_etm_queue *etmq = etm->queues.queue_array[auxtrace_event->idx].priv;
-+
- 		/*
- 		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
- 		 * based on the sizes of the aux event, and queue that fragment.
-@@ -3001,10 +2986,14 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 		if (err)
- 			return err;
- 
--		idx = auxtrace_event->idx;
- 		formatted = !(aux_event->flags & PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW);
--
--		return cs_etm__setup_queue(etm, &etm->queues.queue_array[idx], idx, formatted);
-+		if (etmq->formatted_set && formatted != etmq->formatted) {
-+			pr_err("CS_ETM: mixed formatted and unformatted trace not supported\n");
-+			return -EINVAL;
-+		}
-+		etmq->formatted = formatted;
-+		etmq->formatted_set = true;
-+		return 0;
- 	}
- 
- 	/* Wasn't inside this buffer, but there were no parse errors. 1 == 'not found' */
-@@ -3256,6 +3245,7 @@ static int cs_etm__create_decoders(struct cs_etm_auxtrace *etm)
- 		 * Don't create decoders for empty queues, mainly because
- 		 * etmq->formatted is unknown for empty queues.
- 		 */
-+		assert(empty == !etmq->formatted_set);
- 		if (empty)
- 			continue;
- 
-@@ -3275,10 +3265,10 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	int event_header_size = sizeof(struct perf_event_header);
- 	int total_size = auxtrace_info->header.size;
- 	int priv_size = 0;
--	int num_cpu;
-+	int num_cpu, max_cpu = 0;
- 	int err = 0;
- 	int aux_hw_id_found;
--	int i, j;
-+	int i;
- 	u64 *ptr = NULL;
- 	u64 **metadata = NULL;
- 
-@@ -3309,7 +3299,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	 * required by the trace decoder to properly decode the trace due
- 	 * to its highly compressed nature.
- 	 */
--	for (j = 0; j < num_cpu; j++) {
-+	for (int j = 0; j < num_cpu; j++) {
- 		if (ptr[i] == __perf_cs_etmv3_magic) {
- 			metadata[j] =
- 				cs_etm__create_meta_blk(ptr, &i,
-@@ -3333,6 +3323,9 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 			err = -ENOMEM;
- 			goto err_free_metadata;
- 		}
-+
-+		if ((int) metadata[j][CS_ETM_CPU] > max_cpu)
-+			max_cpu = metadata[j][CS_ETM_CPU];
- 	}
- 
- 	/*
-@@ -3362,10 +3355,16 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	 */
- 	etm->pid_fmt = cs_etm__init_pid_fmt(metadata[0]);
- 
--	err = auxtrace_queues__init(&etm->queues);
-+	err = auxtrace_queues__init_nr(&etm->queues, max_cpu + 1);
- 	if (err)
- 		goto err_free_etm;
- 
-+	for (unsigned int j = 0; j < etm->queues.nr_queues; ++j) {
-+		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[j], j);
-+		if (err)
-+			goto err_free_queues;
-+	}
-+
- 	if (session->itrace_synth_opts->set) {
- 		etm->synth_opts = *session->itrace_synth_opts;
- 	} else {
-@@ -3487,7 +3486,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	zfree(&etm);
- err_free_metadata:
- 	/* No need to check @metadata[j], free(NULL) is supported */
--	for (j = 0; j < num_cpu; j++)
-+	for (int j = 0; j < num_cpu; j++)
- 		zfree(&metadata[j]);
- 	zfree(&metadata);
- err_free_traceid_list:
--- 
-2.34.1
+> Thanks
+> 
+> 	Andrew
+> 
+
+Bence
 
