@@ -1,97 +1,91 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5254317D887;
-	Tue, 11 Jun 2024 14:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77D617D372;
+	Tue, 11 Jun 2024 14:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718115106; cv=none; b=R0ZhqzbxFPh1jexdJlWvXexUC8CtkLuOGwlrUmkqKDZnD1V5qYkDkn+vD2zmUvBR7//rvPsvN7v7QyS90bJMGo1N88FNcTyxnmN1TNqUIw5EzsRu8kzoupuqN5zxbGWdyPPppMwroqIIGEFQtfA7RZgUJl5OqfX79fOaBj7Ejas=
+	t=1718115144; cv=none; b=Mf8eI2aXGRBJSG22oUym2j2p+0laRBWKwds4p3XRLN5P9WxA6X6I65jc/5/I1vt0BBn6U0uu7iQea303zM0wMownMDRfhJFS2rbWcrJbQbqgSdp2Gzo2oO5Ws1n4Ybcyjs01vGjRWwVvfdhg8iuMHPPwYraNe6HH1DW2aCU/9R8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718115106; c=relaxed/simple;
-	bh=ogJBOT3jxjmLFCMjRiIfHExdGIpJwUHEgc3x+6zuUyo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l99m/KYSLuRW23S3g9xtyHmKeUO1bmZ/26bts2THq3FJiDRa0AdiwU+bfN2HonrV2GAc4tMEHnZMxHGQD4+pIfY0uaoPxlALVPYu6NgEMvpwQwh4FolAhkzvnKJH6yLak/m61qoSxxTOffKcvetyB8NZeI4/FfWLpMufGUzMc2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 253BA61E5FE05;
-	Tue, 11 Jun 2024 16:10:33 +0200 (CEST)
-Message-ID: <12441f87-6e61-4618-a2f5-a2b2b202b26e@molgen.mpg.de>
-Date: Tue, 11 Jun 2024 16:10:32 +0200
+	s=arc-20240116; t=1718115144; c=relaxed/simple;
+	bh=YY724BGhiyIEaylXd+UnLjm1nNWqWKv7YVra5OWy9Oo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rXUkUe9FaZwQCHt0/WU0G6Ee6I80yuh9KRzcefGv9lu8Bh4GhDpY2s7tc3qIAZPo29lm8fmFO2Vtmf0MXW/CedsuBE1tEfj2p/WGB0o2CQQ/pGY+PEf88pAPvcXY6RF0Ab5oe/QddvuolH3tDiyJVSbrBnyuQqRqEMgnWndVUiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 305C9C2BD10;
+	Tue, 11 Jun 2024 14:12:23 +0000 (UTC)
+Date: Tue, 11 Jun 2024 10:12:38 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+ kernel-janitors@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ "workflows@vger.kernel.org" <workflows@vger.kernel.org>, Thorsten Leemhuis
+ <linux@leemhuis.info>
+Subject: Re: [PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <20240611101238.6db5e4a7@gandalf.local.home>
+In-Reply-To: <2024061143-transfer-jalapeno-afa0@gregkh>
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+	<20240609082726.32742-6-Julia.Lawall@inria.fr>
+	<20240610112223.151faf65@rorschach.local.home>
+	<b647eacd-f6f3-4960-acfd-36c30f376995@paulmck-laptop>
+	<20240610163606.069d552a@gandalf.local.home>
+	<70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
+	<2024061143-transfer-jalapeno-afa0@gregkh>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 md-6.11 00/12] md: refacotor and some fixes related to
- sync_thread
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
- xni@redhat.com, mariusz.tkaczyk@linux.intel.com, dm-devel@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
- yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
-References: <20240611132251.1967786-1-yukuai1@huaweicloud.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240611132251.1967786-1-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Dear Yu,
+On Tue, 11 Jun 2024 08:23:11 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-
-Thank you for your series.
-
-
-Am 11.06.24 um 15:22 schrieb Yu Kuai:
-> From: Yu Kuai <yukuai3@huawei.com>
-
-It’d be great if you wrote a small summary, what the same fixes are, are 
-what patches are that.
-
-Nit: Small typo in the summary/title: refacotor → refactor.
-
-> Changes from v1:
->   - respin on the top of md-6.11 branch
+> > Depends-on: c9929f0e344a ("mm/slob: remove CONFIG_SLOB")  
 > 
-> Changes from RFC:
->   - fix some typos;
->   - add patch 7 to prevent some mdadm tests failure;
->   - add patch 12 to fix BUG_ON() panic by mdadm test 07revert-grow;
+> Ick, no, use the documented way of handling this as described in the
+> stable kernel rules file.
+
+You mentioned this before, I guess you mean this:
+
+> To send additional instructions to the stable team, use a shell-style inline
+> comment to pass arbitrary or predefined notes:
 > 
-> Yu Kuai (12):
->    md: rearrange recovery_flags
->    md: add a new enum type sync_action
->    md: add new helpers for sync_action
->    md: factor out helper to start reshape from action_store()
->    md: replace sysfs api sync_action with new helpers
->    md: remove parameter check_seq for stop_sync_thread()
->    md: don't fail action_store() if sync_thread is not registered
->    md: use new helers in md_do_sync()
-
-hel*p*ers
-
->    md: replace last_sync_action with new enum type
->    md: factor out helpers for different sync_action in md_do_sync()
->    md: pass in max_sectors for pers->sync_request()
->    md/raid5: avoid BUG_ON() while continue reshape after reassembling
+> * Specify any additional patch prerequisites for cherry picking::
 > 
->   drivers/md/dm-raid.c |   2 +-
->   drivers/md/md.c      | 437 ++++++++++++++++++++++++++-----------------
->   drivers/md/md.h      | 124 +++++++++---
->   drivers/md/raid1.c   |   5 +-
->   drivers/md/raid10.c  |   8 +-
->   drivers/md/raid5.c   |  23 ++-
->   6 files changed, 388 insertions(+), 211 deletions(-)
+>     Cc: <stable@vger.kernel.org> # 3.3.x: a1f84a3: sched: Check for idle
+>     Cc: <stable@vger.kernel.org> # 3.3.x: 1b9508f: sched: Rate-limit newidle
+>     Cc: <stable@vger.kernel.org> # 3.3.x: fd21073: sched: Fix affinity logic
+>     Cc: <stable@vger.kernel.org> # 3.3.x
+>     Signed-off-by: Ingo Molnar <mingo@elte.hu>
+> 
+>   The tag sequence has the meaning of::
+> 
+>     git cherry-pick a1f84a3
+>     git cherry-pick 1b9508f
+>     git cherry-pick fd21073
+>     git cherry-pick <this commit>
+> 
+>   Note that for a patch series, you do not have to list as prerequisites the
+>   patches present in the series itself. For example, if you have the following
+>   patch series::
+> 
+>     patch1
+>     patch2
+> 
+>   where patch2 depends on patch1, you do not have to list patch1 as
+>   prerequisite of patch2 if you have already marked patch1 for stable
+>   inclusion.
 
+What's with the "3.3.x"? Isn't that obsolete? And honestly, I find the
+above much more "ick" than "Depends-on:". That's because I like to read
+human readable tags and not machine processing tags. I'm a human, not a machine.
 
-Kind regards,
-
-Paul
+-- Steve
