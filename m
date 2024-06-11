@@ -1,34 +1,40 @@
-Received: from mx.adeep.su (mx.adeep.su [185.250.0.168])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F022314F9F0;
-	Tue, 11 Jun 2024 10:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.250.0.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877FD54750;
+	Tue, 11 Jun 2024 10:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718101545; cv=none; b=DEVux3wLL3kQOiOYb4X10sESIMU9VRiT8tHIfpxrJmJ7ZTaK6WY0FxUFad6gW2TRj5thbaf/3rqzUUtAOMaP+IXeR7CQaSLhCOJmkxd23PdoraUyzyOkWZa+9tLJSjpqNkNc/UOqn3zIJbn1uxVuuXQovmIA0GW6cHnWAJgow5o=
+	t=1718101630; cv=none; b=E7wnskbiykMLbhdp3RrlGHE/1J92edCTm4sdRFCzRWcN4oXuIKcjDx90lcduWGpuPybA0xXpx6SllEusz3dxoAMouUmAscIQho5I92ypBsV187kjW/Cx/KrMRWIZJ5yiAczKf1Eoq+pTgsWnC9mjpxjspRGFuOLcraDjyn666qI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718101545; c=relaxed/simple;
-	bh=qyQC/+nHWKRiwRIjTlFbMH4bzMl2g+3evAo+vGkwdOg=;
+	s=arc-20240116; t=1718101630; c=relaxed/simple;
+	bh=YjCgBc+r+06nJ6IVpW13RFBeFFzWdG5LhXvUogE3Vjo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MB3bg5BgxCHu/8AIkHn+RSvw+vuwBgecifD+WmHA7bhYDSaRT+710lv/d6niBYe8kbrL+91UmOvoZB5H6Sp/If+g/PL5L2CN/WauF3PFJdIeA4cvVBss4uSkLYiuRNLDEcEOPXsby3Cdz8lg7TKgkeZpbXBW/yWKQUy8KgpodAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=JDHn4zCx; arc=none smtp.client-ip=185.250.0.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
+	 In-Reply-To:Content-Type; b=CT6oQbADF0EHrAbdcxlYjQFZVQkFm1t/87ZlMl4VT8QjLtEkgB0mYF0KfHLVapYz3sLdewTjKArt4rIkcvYJeX7q6uFc2s3YEcLKd8nabg1XFBwhNROC6WgxdicQX2RbvDFhv853w3eSj0OcDb/QZFfqxoxfaYtF5oKT0NJnUc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=T1wzQjsn; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="JDHn4zCx"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 703C81CE260;
-	Tue, 11 Jun 2024 13:25:13 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1718101531; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references:autocrypt;
-	bh=MEdCQgjM3nOB37rAToIyGZH6oxZZXWG+KBwDS6+xGt4=;
-	b=JDHn4zCxz7fjwFmmRTyuplQ6iWIukT2rjvhLsh46T/+wWRBfRLt0wzV93kHjxOhnNZm/tK
-	MuoQi0A847lVu3zOVC1kmfhWRLEdVOTnUBTa8WGkScxk4VaLPgCIbOoSgbxhNBSDMvjuWp
-	P4pqi7BIfY6K5yUbGcXHsCMcY7unXN3j/s5b6pj7xRR78218KROk0whZizGhjDPziGM5Gl
-	EGh9laBchUFBJoob4tyjDsJCVHmDfb627bsWY6Kekkwi9gfs0z7TvjAd002nqPqt/usXzi
-	+AG3/h0NrU3INMLUzx8DgbaohLbmJg/VGHo4Mg8LSvNwsH5IvW0bNUraHy0y1g==
-Message-ID: <4866f6d4-2e3c-40c7-a8cb-ba4e422ffef6@lexina.in>
-Date: Tue, 11 Jun 2024 13:25:11 +0300
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="T1wzQjsn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718101626;
+	bh=YjCgBc+r+06nJ6IVpW13RFBeFFzWdG5LhXvUogE3Vjo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=T1wzQjsnI/PhpuS+7t5fBwGZr6+q2ZAxBqLXqQMriXE7BFH57QT/sDcseACk0hDbf
+	 mHUK99ISk7TYaw9IvJz4Xm7/Msho3y10Pk6CMVUBQYEqCG+1Ej59FukA/UQ5wJFC8I
+	 oVoWIgnJte49b4dtn9P85C2PivUVwZocQfrRDJ97i8rroBx750ogE3mmEFdPUBqUjJ
+	 i/LBCZuyz+fTPYHH1Ff1dXDOYKvtyP418oMSiCapdk2sHf7eX/KpklshnpPfaOlRlU
+	 C8MdxapQvg9t/dnqMlIFQZwAoQOn2tna9za2GKGJjRbmIruV1oX/VQrIVf6Pc9G1yr
+	 T45pI9gg3cHSA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D799237804C6;
+	Tue, 11 Jun 2024 10:27:04 +0000 (UTC)
+Message-ID: <6d4173cd-ffe1-427d-ac04-bb9374b4b8d8@collabora.com>
+Date: Tue, 11 Jun 2024 12:27:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,117 +42,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/4] dt-bindings: arm: amlogic:
- amlogic,meson-gx-ao-secure: add secure-monitor property
-To: Conor Dooley <conor@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, devicetree@vger.kernel.org
-References: <20240610084032.3096614-1-adeep@lexina.in>
- <20240610084032.3096614-4-adeep@lexina.in>
- <20240610-dropout-compress-6d6a9b749524@spud>
-Content-Language: en-US, ru-RU
-From: Viacheslav <adeep@lexina.in>
-Autocrypt: addr=adeep@lexina.in; keydata=
- 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
-In-Reply-To: <20240610-dropout-compress-6d6a9b749524@spud>
+Subject: Re: [PATCH] PCI: controller: add missing MODULE_DESCRIPTION() macros
+To: Jeff Johnson <quic_jjohnson@quicinc.com>,
+ Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Rob Herring <robh@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Will Deacon <will@kernel.org>,
+ Joyce Ooi <joyce.ooi@intel.com>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Marc Zyngier <maz@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
+ Jianjun Wang <jianjun.wang@mediatek.com>,
+ Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Nirmal Patel <nirmal.patel@linux.intel.com>,
+ Jonathan Derrick <jonathan.derrick@linux.dev>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, kernel-janitors@vger.kernel.org
+References: <20240610-md-drivers-pci-controller-v1-1-b998c242df55@quicinc.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240610-md-drivers-pci-controller-v1-1-b998c242df55@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-Hi!
-
-10/06/2024 19.08, Conor Dooley wrote:
-> On Mon, Jun 10, 2024 at 11:39:49AM +0300, Viacheslav Bocharov wrote:
->> Add secure-monitor property to schema for meson-gx-socinfo-sm driver.
+Il 11/06/24 03:04, Jeff Johnson ha scritto:
+> When ARCH=x86, make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/dwc/pci-exynos.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pci-host-generic.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-altera.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-altera-msi.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mediatek.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mediatek-gen3.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/vmd.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-apple.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pci/controller/pcie-mt7621.o
 > 
-> "bindings are for hardware, not drivers". Why purpose does the "secure
-> monitor" serve that the secure firmware needs a reference to it?
-
-This driver is an extension to the meson-gx-socinfo driver: it 
-supplements information obtained from the register with information from 
-the SM_GET_CHIP_ID secure monitor call. Due to the specifics of the 
-module loading order, we cannot do away with meson-gx-socinfo, as it is 
-used for platform identification in some drivers. Therefore, the 
-extended information is formatted as a separate driver, which is loaded 
-after the secure-monitor driver.
-
-The ability to obtain additional information depends on the support for 
-the call in the secure-monitor, which can be described by an additional 
-link from the amlogic,meson-gx-ao-secure node to the secure-monitor 
-node, similar to how it is done for amlogic,meson-gxbb-efuse.
-
+> Add the missing invocations of the MODULE_DESCRIPTION() macro.
 > 
-> Thanks,
-> Conor.
-> 
->>
->> Signed-off-by: Viacheslav Bocharov <adeep@lexina.in>
->> ---
->>   .../bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml      | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
->> index 7dff32f373cb..1128a794ec89 100644
->> --- a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
->> +++ b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.yaml
->> @@ -32,6 +32,10 @@ properties:
->>     reg:
->>       maxItems: 1
->>   
->> +  secure-monitor:
-> 
-> Missing a vendor prefix.
-> 
->> +    description: phandle to the secure-monitor node
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +
->>     amlogic,has-chip-id:
->>       description: |
->>         A firmware register encodes the SoC type, package and revision
->> -- 
->> 2.45.2
->>
->>
->> _______________________________________________
->> linux-amlogic mailing list
->> linux-amlogic@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
---
-with regards,
-Viacheslav
+For MediaTek
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+
