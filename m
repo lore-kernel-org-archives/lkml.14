@@ -1,133 +1,111 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0967A78C88;
-	Tue, 11 Jun 2024 16:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E89143AAE;
+	Tue, 11 Jun 2024 16:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718122977; cv=none; b=WreQ4/8AAmFxL6Gju2JI/S6NY4BRPPcPCQ66qN7plA1np686UxCgjWi4as9ihaTEnHKYyJhhS4wJGCUpgslvjv8cVx2UapgyIBdceI01LkEsHBCP6o7rdA7f4rUg+/UklojfHToBcmVlXB9iLbqCOnMycnUe6W4MhKSvQoq44rc=
+	t=1718122989; cv=none; b=PfPF3eQJrU5zmdVVdNXH7YkhkZbYYfjna8/bV+UATCCde/Iya4WgsDuxhmogFznh9raDPIsYFaDBikCjt6qRIgpLBur5z6q3mDhnslMS7nRT0qrEp4pXYMfRqW9W3LEVVgXZO4WVwNSlYhpWt8sNpVD5wLoXx4+lNlZAEi/SlR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718122977; c=relaxed/simple;
-	bh=/vZvduUP4Jcb/xXodAzJYL1w7O4WoH/d8cEZ9PInfPU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cVzzFLNx395K5IP4qd4ZoBpl8vfXf7uy/rRE/XoGY2Xaag1bOu249C8JtCv1UpCJGPPsGDtJGARM0+xrMGT+3aW+0wxmG0QOM8RrWfE/chx+E37csGapdBCTgHCmLXd8bvrOf0giUz3bXoKmhpQeZxuDyA21RTaEId7VNrCBYQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=MMK+u8aJ; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1718122989; c=relaxed/simple;
+	bh=yEpTP94eDr5A3s9VgS5dBduy8ufIp19ilct/d2eDhsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LndVmy8s6edFa5v/xeZF67rjIJSZoqvGvqav4gBoX9mQ3XMOtTayQU9Ci9tsuZr+7Hj0RquNVdFGtvWiqQFCD86Bx7WV5hUWOo1nhuGSGFjUiM6l5CUmKQJ9+DHq0sEyf/k/oQpcF+ODi+voNeXzA5+OfVwt99GYunq35Zb8ZCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAd5OW5H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="MMK+u8aJ"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45BGJSN5024152;
-	Tue, 11 Jun 2024 09:22:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=oCCqOfpNqYQ9/lY5Wf/iO4M7x
-	nfMhpvsc28RqiMHpCE=; b=MMK+u8aJ1fU5Iy/hEfuJ4u6II0NNqu9YR8G7du8VZ
-	S5su4OjEZ2S8qPaNnNsW4Hz0Ii+1h0cTuzenAlJlKdXVMkYneBiqkdoR9tdHrHQZ
-	WEiXndSuNfXdPcr5dXvnJgAsKExfjU5PoRK1DqYasAG1OkQhjhrBttIdbCOxIRYs
-	ax2Io/vY9kCycuI1k/85+tA60Xc92F7VmIDURT0ImVqepINgMBFP2uAEnmvGU60q
-	oQ7aFxiCdG9qeUYet4gxKnrV5Q8C7NRqp1toj76RBNHI4gp6ZXoM9d4MPrYwMRdi
-	wJl9R4yRtf1w2/8mA6xRRpaVtQcimW8NdrJM2ADLy5Pww==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3ympthaya6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 09:22:46 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 11 Jun 2024 09:22:46 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 11 Jun 2024 09:22:45 -0700
-Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id D015D3F7059;
-	Tue, 11 Jun 2024 09:22:42 -0700 (PDT)
-From: Geetha sowjanya <gakula@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
-        <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
-        <sbhatta@marvell.com>, <hkelam@marvell.com>
-Subject: [net-next PATCH v4 08/10] octeontx2-pf: Configure VF mtu via representor
-Date: Tue, 11 Jun 2024 21:52:11 +0530
-Message-ID: <20240611162213.22213-9-gakula@marvell.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240611162213.22213-1-gakula@marvell.com>
-References: <20240611162213.22213-1-gakula@marvell.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAd5OW5H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55621C2BD10;
+	Tue, 11 Jun 2024 16:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718122988;
+	bh=yEpTP94eDr5A3s9VgS5dBduy8ufIp19ilct/d2eDhsU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GAd5OW5HPNWu95j/Nh5a6vrZrlRAA4jImqvTUch1p5+DD8kOrtJHaHonbYOXoyqJG
+	 uat5emaBVryTRAqWHV9CDqTjgodJqo/gD+PL0AkQxTj8W1w8ZJsw7lvmTyElXICI/3
+	 MUlGVHy4YbkxHsU3TGNmQIEoIJttsxnk+P11wRUnGfqGno0g/44uzWMKflQRXudg2q
+	 A3H5P/GJSbNd/Ufj6BMgB4PlunQXccK0tzOz0BHVg46KQJJUQc89AQZty/tDjE1M/s
+	 qaXfei4mU3+FCTZeLBhbCwDIHdNCrg9r3YomMosOoK7a38ogkOx8GFqLGabTy51w2z
+	 r/WyyfsOBBXwQ==
+Date: Tue, 11 Jun 2024 17:23:04 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Shengyu Qu <wiagn233@outlook.com>
+Cc: kernel@esmil.dk, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, jszhang@kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] riscv: dts: starfive: Set EMMC vqmmc maximum voltage to
+ 3.3V on JH7110 boards
+Message-ID: <20240611-entourage-churn-8b69966848fc@spud>
+References: <TY3P286MB2611936BD43C24D34B442E6D98C72@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-GUID: 3roULdbkhpDk0sStHT2LESr_19xW1dqs
-X-Proofpoint-ORIG-GUID: 3roULdbkhpDk0sStHT2LESr_19xW1dqs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-11_09,2024-06-11_01,2024-05-17_01
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5qjNIfeTE8upxu8l"
+Content-Disposition: inline
+In-Reply-To: <TY3P286MB2611936BD43C24D34B442E6D98C72@TY3P286MB2611.JPNP286.PROD.OUTLOOK.COM>
 
-Add support to manage the mtu configuration for VF through representor.
-On update of representor mtu a mbox notification is send
-to VF to update its mtu.
 
-Signed-off-by: Sai Krishna <saikrishnag@marvell.com>
-Signed-off-by: Geetha sowjanya <gakula@marvell.com>
----
- .../ethernet/marvell/octeontx2/nic/otx2_pf.c    |  5 +++++
- .../net/ethernet/marvell/octeontx2/nic/rep.c    | 17 +++++++++++++++++
- 2 files changed, 22 insertions(+)
+--5qjNIfeTE8upxu8l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-index 0f17e8af4f76..91a458c5028a 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-@@ -854,6 +854,11 @@ static int otx2_mbox_up_handler_rep_event_up_notify(struct otx2_nic *pf,
- {
- 	struct net_device *netdev = pf->netdev;
- 
-+	if (info->event == RVU_EVENT_MTU_CHANGE) {
-+		netdev->mtu = info->evt_data.mtu;
-+		return 0;
-+	}
-+
- 	if (info->event == RVU_EVENT_PORT_STATE) {
- 		if (info->evt_data.port_state) {
- 			pf->flags |= OTX2_FLAG_PORT_UP;
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-index 6a527b824f33..d984b7d9dc64 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-@@ -79,6 +79,22 @@ int rvu_event_up_notify(struct otx2_nic *pf, struct rep_event *info)
- 	return 0;
- }
- 
-+static int rvu_rep_change_mtu(struct net_device *dev, int new_mtu)
-+{
-+	struct rep_dev *rep = netdev_priv(dev);
-+	struct otx2_nic *priv = rep->mdev;
-+	struct rep_event evt = {0};
-+
-+	netdev_info(dev, "Changing MTU from %d to %d\n",
-+		    dev->mtu, new_mtu);
-+	dev->mtu = new_mtu;
-+
-+	evt.evt_data.mtu = new_mtu;
-+	evt.pcifunc = rep->pcifunc;
-+	rvu_rep_notify_pfvf(priv, RVU_EVENT_MTU_CHANGE, &evt);
-+	return 0;
-+}
-+
- static void rvu_rep_get_stats(struct work_struct *work)
- {
- 	struct delayed_work *del_work = to_delayed_work(work);
-@@ -226,6 +242,7 @@ static const struct net_device_ops rvu_rep_netdev_ops = {
- 	.ndo_stop		= rvu_rep_stop,
- 	.ndo_start_xmit		= rvu_rep_xmit,
- 	.ndo_get_stats64	= rvu_rep_get_stats64,
-+	.ndo_change_mtu		= rvu_rep_change_mtu,
- };
- 
- static int rvu_rep_napi_init(struct otx2_nic *priv,
--- 
-2.25.1
+On Tue, Jun 11, 2024 at 10:56:41PM +0800, Shengyu Qu wrote:
+> Currently, for JH7110 boards with EMMC slot, vqmmc voltage for EMMC is
+> fixed to 1.8V, while the spec needs it to be 3.3V on low speed mode and
+> should support switching to 1.8V when using higher speed mode. Since
+> there are no other peripherals using the same voltage source of EMMC's
+> vqmmc(ALDO4) on every board currently supported by mainline kernel,
+> regulator-max-microvolt of ALDO4 should be set to 3.3V.
+>=20
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Shengyu Qu <wiagn233@outlook.com>
+> Fixes: ac9a37e2d6b6 ("riscv: dts: starfive: introduce a common board dtsi=
+ for jh7110 based boards")
 
+I don't think this fixes tag is correct, it just moved in that commit.
+It has been there since commit 7dafcfa79cc9 ("riscv: dts: starfive: enable
+DCDC1&ALDO4 node in axp15060").
+
+Thanks,
+Conor.
+
+> ---
+>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv=
+/boot/dts/starfive/jh7110-common.dtsi
+> index 37b4c294ffcc..c7a549ec7452 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> @@ -244,7 +244,7 @@ emmc_vdd: aldo4 {
+>  				regulator-boot-on;
+>  				regulator-always-on;
+>  				regulator-min-microvolt =3D <1800000>;
+> -				regulator-max-microvolt =3D <1800000>;
+> +				regulator-max-microvolt =3D <3300000>;
+>  				regulator-name =3D "emmc_vdd";
+>  			};
+>  		};
+> --=20
+> 2.34.1
+>=20
+
+--5qjNIfeTE8upxu8l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmh56AAKCRB4tDGHoIJi
+0r8qAP4x+AYwI1YvlFyfOl2OTqSjrgW71fGQWfNwAfKUONuP3gEAxPVa2gMI5JtD
+zE/H/i7djgXlxQmv+nrgtuqcARn3Cww=
+=mz3Z
+-----END PGP SIGNATURE-----
+
+--5qjNIfeTE8upxu8l--
