@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4B3152789;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB41150993;
 	Tue, 11 Jun 2024 19:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718134133; cv=none; b=fawYRHaE+Qxv29I9ucxCVba8LXyiXI/kORbKNjzzCGA6o4K6WfQntwHsz4MpyFoR3SPILlroc5mniUKWp9cQw551504b+WykGyAYxmKXSaLyevkr7XcGK52kbCf7KFex10JvTs7EaQSWyMoqTR943GEJaiC8peG1L2MKu/l+Pjk=
+	t=1718134132; cv=none; b=eRpBS9lMx/QWahGOF78/L2Dx0Iae9G8FmYacBwjiFVCNYUMUrFDML1euVmeR19DkyWaiVo1ktpD4CYYjnojOHY6nqfPfrAwgSswCNFTFteE8jV0UfwURcdS8YKJ1+2nId5wU1+5tYffVEPJgnrXyBhq/UcJTa4M+hPMIfwD7cEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718134133; c=relaxed/simple;
-	bh=mZTyYJB2LiFL7vhNFEBQuD6v2hbJlYmFFJs3Rt2sAQA=;
+	s=arc-20240116; t=1718134132; c=relaxed/simple;
+	bh=K4KJPf4QB6jOf5u0u06FknhYoLg3UPKgp828zEyhmLA=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=WHEn0D6kRV6xMu2NvTOcODzC7Ic8Rsd73rywsPWSV5ZqDNI7+SuEYVS1iaAY8fDdoUUgj4AbJLR2dx0LKLfhVF0VRWH25qmeFVG+ExuerwllOFYioT5iuRurrU0lzGXmYLcO+TgTK9mjGMsPN0qMiMW8NMJZJBsEi/iQiQBpJFA=
+	 Content-Type; b=XnB+52edg4vuA9tpJ1TxQpJa7vtCLwU405INRNiElrFRog/59BhZKsre+/ZQpcZTYczEhHNQeKYxBODz2WONRaec/m8BiF8iHcv0aiGTrs/ucOCZtLRYeJiPQ4g+zUDJ/LKm5Nzl2wRHC4R/RDnMW4ZpNgvL0tKwmlTtqcMV028=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73094C4DE03;
-	Tue, 11 Jun 2024 19:28:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E64B3C4DDF1;
+	Tue, 11 Jun 2024 19:28:51 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sH7B6-00000001TuR-45zg;
+	id 1sH7B6-00000001Tsv-25wa;
 	Tue, 11 Jun 2024 15:29:08 -0400
-Message-ID: <20240611192908.835949908@goodmis.org>
+Message-ID: <20240611192908.362267880@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 15:28:38 -0400
+Date: Tue, 11 Jun 2024 15:28:35 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -49,7 +49,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [PATCH v4 10/13] tracing/ring-buffer: Add last_boot_info file to boot instance
+Subject: [PATCH v4 07/13] ring-buffer: Validate boot range memory events
 References: <20240611192828.691638177@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,191 +61,257 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-If an instance is mapped to memory on boot up, create a new file called
-"last_boot_info" that will hold information that can be used to properly
-parse the raw data in the ring buffer.
+Make sure all the events in each of the sub-buffers that were mapped in a
+memory region are valid. This moves the code that walks the buffers for
+time-stamp validation out of the CONFIG_RING_BUFFER_VALIDATE_TIME_DELTAS
+ifdef block and is used to validate the content. Only the ring buffer
+event meta data and time stamps are checked and not the data load.
 
-It will export the delta of the addresses for text and data from what it
-was from the last boot. It does not expose actually addresses (unless you
-knew what the actual address was from the last boot).
-
-The output will look like:
-
- # cat last_boot_info
- text delta:	-268435456
- data delta:	-268435456
-
-The text and data are kept separate in case they are ever made different.
+This also has a second purpose. The buffer_page structure that points to
+the data sub-buffers has accounting that keeps track of the number of
+events that are on the sub-buffer. This updates that counter as well. That
+counter is used in reading the buffer and knowing if the ring buffer is
+empty or not.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ring_buffer.h |  3 +++
- kernel/trace/ring_buffer.c  | 23 ++++++++++++++++++
- kernel/trace/trace.c        | 47 ++++++++++++++++++++++++++++++++++++-
- kernel/trace/trace.h        |  2 ++
- 4 files changed, 74 insertions(+), 1 deletion(-)
+ kernel/trace/ring_buffer.c | 189 +++++++++++++++++++++++++++++--------
+ 1 file changed, 151 insertions(+), 38 deletions(-)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index a50b0223b1d3..55de3798a9b9 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -94,6 +94,9 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 					       unsigned long range_size,
- 					       struct lock_class_key *key);
- 
-+bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
-+				 long *data);
-+
- /*
-  * Because the ring buffer is generic, if other users of the ring buffer get
-  * traced by ftrace, it can produce lockdep warnings. We need to keep each
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index ab6b8a0ee8e1..8c1d7ea01e6f 100644
+index aecd4a7d62be..86f03c0ba4c0 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -2394,6 +2394,29 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
- 	return alloc_buffer(size, flags, order, start, start + range_size, key);
+@@ -1674,10 +1674,151 @@ static bool rb_meta_valid(struct ring_buffer_meta *meta, int cpu,
+ 		subbuf = (void *)subbuf + subbuf_size;
+ 	}
+ 
+-	pr_info("Ring buffer meta is from previous boot!\n");
+ 	return true;
  }
  
-+/**
-+ * ring_buffer_last_boot_delta - return the delta offset from last boot
-+ * @buffer: The buffer to return the delta from
-+ * @text: Return text delta
-+ * @data: Return data delta
-+ *
-+ * Returns: The true if the delta is non zero
-+ */
-+bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
-+				 long *data)
++static int rb_meta_subbuf_idx(struct ring_buffer_meta *meta, void *subbuf);
++
++static int rb_read_data_buffer(struct buffer_data_page *dpage, int tail, int cpu,
++			       unsigned long long *timestamp, u64 *delta_ptr)
 +{
-+	if (!buffer)
-+		return false;
++	struct ring_buffer_event *event;
++	u64 ts, delta;
++	int events = 0;
++	int e;
 +
-+	if (!buffer->last_text_delta)
-+		return false;
++	*delta_ptr = 0;
++	*timestamp = 0;
 +
-+	*text = buffer->last_text_delta;
-+	*data = buffer->last_data_delta;
++	ts = dpage->time_stamp;
 +
-+	return true;
++	for (e = 0; e < tail; e += rb_event_length(event)) {
++
++		event = (struct ring_buffer_event *)(dpage->data + e);
++
++		switch (event->type_len) {
++
++		case RINGBUF_TYPE_TIME_EXTEND:
++			delta = rb_event_time_stamp(event);
++			ts += delta;
++			break;
++
++		case RINGBUF_TYPE_TIME_STAMP:
++			delta = rb_event_time_stamp(event);
++			if (delta < ts) {
++				*delta_ptr = delta;
++				*timestamp = ts;
++				return -1;
++			}
++			ts = delta;
++			break;
++
++		case RINGBUF_TYPE_PADDING:
++			if (event->time_delta == 1)
++				break;
++			fallthrough;
++		case RINGBUF_TYPE_DATA:
++			events++;
++			ts += event->time_delta;
++			break;
++
++		default:
++			return -1;
++		}
++	}
++	*timestamp = ts;
++	return events;
 +}
 +
- /**
-  * ring_buffer_free - free a ring buffer.
-  * @buffer: the buffer to free.
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index dfde26aa3211..dc4eee33d920 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6041,6 +6041,18 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 	return ret;
- }
- 
-+static void update_last_data(struct trace_array *tr)
++static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
 +{
-+	if (!tr->text_delta && !tr->data_delta)
++	unsigned long long ts;
++	u64 delta;
++	int tail;
++
++	tail = local_read(&dpage->commit);
++	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
++}
++
++/* If the meta data has been validated, now validate the events */
++static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
++{
++	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
++	struct buffer_page *head_page;
++	unsigned long entry_bytes = 0;
++	unsigned long entries = 0;
++	int ret;
++	int i;
++
++	if (!meta || !meta->head_buffer)
 +		return;
 +
-+	/* Clear old data */
-+	tracing_reset_online_cpus(&tr->array_buffer);
++	/* Do the reader page first */
++	ret = rb_validate_buffer(cpu_buffer->reader_page->page, cpu_buffer->cpu);
++	if (ret < 0) {
++		pr_info("Ring buffer reader page is invalid\n");
++		goto invalid;
++	}
++	entries += ret;
++	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
++	local_set(&cpu_buffer->reader_page->entries, ret);
 +
-+	/* Using current data now */
-+	tr->text_delta = 0;
-+	tr->data_delta = 0;
++	head_page = cpu_buffer->head_page;
++
++	/* If both the head and commit are on the reader_page then we are done. */
++	if (head_page == cpu_buffer->reader_page &&
++	    head_page == cpu_buffer->commit_page)
++		goto done;
++
++	/* Iterate until finding the commit page */
++	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
++
++		/* Reader page has already been done */
++		if (head_page == cpu_buffer->reader_page)
++			continue;
++
++		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
++		if (ret < 0) {
++			pr_info("Ring buffer meta [%d] invalid buffer page\n",
++				cpu_buffer->cpu);
++			goto invalid;
++		}
++		entries += ret;
++		entry_bytes += local_read(&head_page->page->commit);
++		local_set(&cpu_buffer->head_page->entries, ret);
++
++		if (head_page == cpu_buffer->commit_page)
++			break;
++	}
++
++	if (head_page != cpu_buffer->commit_page) {
++		pr_info("Ring buffer meta [%d] commit page not found\n",
++			cpu_buffer->cpu);
++		goto invalid;
++	}
++ done:
++	local_set(&cpu_buffer->entries, entries);
++	local_set(&cpu_buffer->entries_bytes, entry_bytes);
++
++	pr_info("Ring buffer meta [%d] is from previous boot!\n", cpu_buffer->cpu);
++	return;
++
++ invalid:
++	/* The content of the buffers are invalid, reset the meta data */
++	meta->head_buffer = 0;
++	meta->commit_buffer = 0;
++
++	/* Reset the reader page */
++	local_set(&cpu_buffer->reader_page->entries, 0);
++	local_set(&cpu_buffer->reader_page->page->commit, 0);
++
++	/* Reset all the subbuffers */
++	for (i = 0; i < meta->nr_subbufs - 1; i++, rb_inc_page(&head_page)) {
++		local_set(&head_page->entries, 0);
++		local_set(&head_page->page->commit, 0);
++	}
 +}
- 
- /**
-  * tracing_update_buffers - used by tracing facility to expand ring buffers
-@@ -6058,6 +6070,9 @@ int tracing_update_buffers(struct trace_array *tr)
- 	int ret = 0;
- 
- 	mutex_lock(&trace_types_lock);
 +
-+	update_last_data(tr);
-+
- 	if (!tr->ring_buffer_expanded)
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
-@@ -6113,6 +6128,8 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 
- 	mutex_lock(&trace_types_lock);
- 
-+	update_last_data(tr);
-+
- 	if (!tr->ring_buffer_expanded) {
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
-@@ -6860,6 +6877,21 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
+ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ {
+ 	struct ring_buffer_meta *meta;
+@@ -1756,8 +1897,6 @@ static void *rbm_next(struct seq_file *m, void *v, loff_t *pos)
+ 	return rbm_start(m, pos);
  }
  
-+static ssize_t
-+tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
-+{
-+	struct trace_array *tr = filp->private_data;
-+	struct seq_buf seq;
-+	char buf[64];
-+
-+	seq_buf_init(&seq, buf, 64);
-+
-+	seq_buf_printf(&seq, "text delta:\t%ld\n", tr->text_delta);
-+	seq_buf_printf(&seq, "data delta:\t%ld\n", tr->data_delta);
-+
-+	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
-+}
-+
- static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
+-static int rb_meta_subbuf_idx(struct ring_buffer_meta *meta, void *subbuf);
+-
+ static int rbm_show(struct seq_file *m, void *v)
  {
- 	struct trace_array *tr = inode->i_private;
-@@ -7499,6 +7531,13 @@ static const struct file_operations trace_time_stamp_mode_fops = {
- 	.release	= tracing_single_release_tr,
- };
+ 	struct ring_buffer_per_cpu *cpu_buffer = m->private;
+@@ -2010,6 +2149,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 	if (ret < 0)
+ 		goto fail_free_reader;
  
-+static const struct file_operations last_boot_fops = {
-+	.open		= tracing_open_generic_tr,
-+	.read		= tracing_last_boot_read,
-+	.llseek		= generic_file_llseek,
-+	.release	= tracing_release_generic_tr,
-+};
++	rb_meta_validate_events(cpu_buffer);
 +
- #ifdef CONFIG_TRACER_SNAPSHOT
- static const struct file_operations snapshot_fops = {
- 	.open		= tracing_snapshot_open,
-@@ -9242,6 +9281,9 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
- 		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
- 						      tr->range_addr_start,
- 						      tr->range_addr_size);
-+
-+		ring_buffer_last_boot_delta(buf->buffer,
-+					    &tr->text_delta, &tr->data_delta);
- 		/*
- 		 * This is basically the same as a mapped buffer,
- 		 * with the same restrictions.
-@@ -9751,7 +9793,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 		MEM_FAIL(1, "Could not allocate function filter files");
+ 	/* If the boot meta was valid then this has already been updated */
+ 	meta = cpu_buffer->ring_meta;
+ 	if (!meta || !meta->head_buffer ||
+@@ -3954,11 +4095,10 @@ static void check_buffer(struct ring_buffer_per_cpu *cpu_buffer,
+ 			 struct rb_event_info *info,
+ 			 unsigned long tail)
+ {
+-	struct ring_buffer_event *event;
+ 	struct buffer_data_page *bpage;
+ 	u64 ts, delta;
+ 	bool full = false;
+-	int e;
++	int ret;
  
- #ifdef CONFIG_TRACER_SNAPSHOT
--	if (!tr->range_addr_start) {
-+	if (tr->range_addr_start) {
-+		trace_create_file("last_boot_info", TRACE_MODE_READ, d_tracer,
-+				  tr, &last_boot_fops);
-+	} else {
- 		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
- 				  tr, &snapshot_fops);
+ 	bpage = info->tail_page->page;
+ 
+@@ -3984,39 +4124,12 @@ static void check_buffer(struct ring_buffer_per_cpu *cpu_buffer,
+ 	if (atomic_inc_return(this_cpu_ptr(&checking)) != 1)
+ 		goto out;
+ 
+-	ts = bpage->time_stamp;
+-
+-	for (e = 0; e < tail; e += rb_event_length(event)) {
+-
+-		event = (struct ring_buffer_event *)(bpage->data + e);
+-
+-		switch (event->type_len) {
+-
+-		case RINGBUF_TYPE_TIME_EXTEND:
+-			delta = rb_event_time_stamp(event);
+-			ts += delta;
+-			break;
+-
+-		case RINGBUF_TYPE_TIME_STAMP:
+-			delta = rb_event_time_stamp(event);
+-			delta = rb_fix_abs_ts(delta, ts);
+-			if (delta < ts) {
+-				buffer_warn_return("[CPU: %d]ABSOLUTE TIME WENT BACKWARDS: last ts: %lld absolute ts: %lld\n",
+-						   cpu_buffer->cpu, ts, delta);
+-			}
+-			ts = delta;
+-			break;
+-
+-		case RINGBUF_TYPE_PADDING:
+-			if (event->time_delta == 1)
+-				break;
+-			fallthrough;
+-		case RINGBUF_TYPE_DATA:
+-			ts += event->time_delta;
+-			break;
+-
+-		default:
+-			RB_WARN_ON(cpu_buffer, 1);
++	ret = rb_read_data_buffer(bpage, tail, cpu_buffer->cpu, &ts, &delta);
++	if (ret < 0) {
++		if (delta < ts) {
++			buffer_warn_return("[CPU: %d]ABSOLUTE TIME WENT BACKWARDS: last ts: %lld absolute ts: %lld\n",
++					   cpu_buffer->cpu, ts, delta);
++			goto out;
+ 		}
  	}
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 2efa4cccdd3b..611be17fdc70 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -347,6 +347,8 @@ struct trace_array {
- 	/* The below is for memory mapped ring buffer */
- 	unsigned long		range_addr_start;
- 	unsigned long		range_addr_size;
-+	long			text_delta;
-+	long			data_delta;
- 
- 	struct trace_pid_list	__rcu *filtered_pids;
- 	struct trace_pid_list	__rcu *filtered_no_pids;
+ 	if ((full && ts > info->ts) ||
 -- 
 2.43.0
 
