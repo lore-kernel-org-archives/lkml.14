@@ -1,55 +1,55 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8A0BE47
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 00:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CA81859
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 00:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718065326; cv=none; b=Ks7+xNZVCyq2ap0Gfvl7QgaooSeyMhLYyxHyHPbNdDgiZ3Hs39ONRCnVNWp9gGhYQMW6QtW5wMIT0k96bnL01wCPNd6tHSRTKJIgDeXt0/4yqOJmgob/cs5conr/nss7f3gjiyHp6+oUEUpgulMZfsV2uMMXKGi2AuYdrUJOXs8=
+	t=1718065328; cv=none; b=nrRv91iH9pkK+w8Thojs3VDbtZVhnYCgz4ZE42jSH+s7H51jLdBLsVaZaW3vTMGhL6SNRKvMQYh6Ji812fj4OvqgjZU6rkOXygwvCR2SEwlcwveqN4npiiGvapVCza40bvREJV9dzsZoAHqsU7rkWyZpGLX2TKcgupIPKZhc7ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718065326; c=relaxed/simple;
-	bh=l1kb8WAhH7ZZEnNCv7caRH5R11IxtoWpLxiHG3YPghg=;
+	s=arc-20240116; t=1718065328; c=relaxed/simple;
+	bh=TLFRX+aqWmviYS3ujVoFIt3OR1s8HN7oRYUrNpwybnQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MZdUAc21uq5DhAQSwFLRk9P/V5i3Pey5BaHyIEJqFqnOPzI53i31hOdKaxS+fmYBvUWTY/8wK/33q9LuATZM4kLFoySKsUthwRXMquy37jDxPzoKIR7OgoB7ECHTrR9+IjggpctP8dLIIDaneYSeaeATYTtkpHtbSNhA16yXVlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kAwitgTJ; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=Elv3o2ijhydD8ErlwE5OZty/C4B4xR50VIeyASOtXzGultKZJmsHRaON+psqryXsrs7DWU4v+tJcYhnGj0GhkTvjqZkt3x7WAQUKjP4F5v8238EloYE2b+JyjqbGVGqCrfg3cyc7fXC5VNeatbGP/odCU9qFt3I3XCN97/QaYi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TZjEK4WZ; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kAwitgTJ"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-62a084a0573so89101307b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 17:22:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TZjEK4WZ"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62ca03fc1ceso9705887b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 17:22:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718065323; x=1718670123; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718065325; x=1718670125; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JyxqE8JQbjAibPP1L18H/WB5ae5upDraVd7kSoejAF4=;
-        b=kAwitgTJAEsVLjJILkRH+txVpp4zbwURiYkW/bc8pAKSSVaokMDVw/9KHcHcprl5Sy
-         jgnrrMcgUgM7cjlffBddG9pnqilLBTyYnXZqTIFzyhped4aDftzrtIkxeqnYpcjXewYY
-         QRgWHMpkfTEJlEQcdHL+SOPQceNSjmo0Rfb2eWm8/6frtw+nYxULIMf5UWHUVNz07ZiD
-         yZoPJ30tZUbHOejNOzKXqaGS21PN/meJqT+p+Ex7zO3BACemZZkMYNtIPX1ZMnUKYr1W
-         DluFf1veWMoKNqFUm8FtLtXs1A7Vea/mWiERSU0SPMD2CAYdsj7dD/ERstVwoj40iA1s
-         hLfA==
+        bh=jRq1E0P4aXnPxzizQoW47AD5YHVJpyUxzEyvFYZC4Cg=;
+        b=TZjEK4WZwZ76giyek/t3eOXFi+uTvRozz66gAy0/6tplI1prNKfNY+9srtusq1Qnfi
+         7yHnN8Kcony3GRhEb36lxiNA0dbz8t0SzLM89zGHxAk+c0gcani93hNDC9jec5Gc1cjE
+         am0jgkEGtfnUAn4grOC5X+DAPasQyOh+NUvLXfu+RtwVYGjlGPHkXjUSnsxh/Oo1Hl5w
+         Uc9XvcQTl8NDjmuURlhezE0iC0s9TKyasXpiAJERxsD1Lkv4phQ4dYsDDR3dMSFuK825
+         UOneVzphlQsFSh2ZcFRSP+L7OrpeWeXo2LfRssAR+j2AshUchDiDMsrivfsnt7B8MfS9
+         874g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718065323; x=1718670123;
+        d=1e100.net; s=20230601; t=1718065325; x=1718670125;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JyxqE8JQbjAibPP1L18H/WB5ae5upDraVd7kSoejAF4=;
-        b=jSrph4oPPLK/jjO9D28/KZRiSSmqPJoR4e7TMmSODE3cqMbpeSuNT5eKPLUFJ8SLfM
-         fOWR6/6SN6IGA3H4e3p9k1YACwy81tVsssMz9cqtutrQGHqUWJsXadx8jtJhF3orisZz
-         gmFSEMdZRUXe1j+sFEGuD12ZFv3qcYti/NFVMRBEwsD1kNqmrqUwVxD5jgRMCqfWIwlD
-         JcU7hmcdaPektkYr662HCwA/b30LKPHB1GtfeW6VzV7ETIiQy9MiphPf27qvrLexSstB
-         yRj5tZTotaTogKrxewSDdtF+a5K4yI6FbwsyUsOKmXqOEX26ZCEiZill0l6zPwFZqsc3
-         8nVA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnKUXSvaerp+Xe8g1apn0FTVtXNyVY9uS216pMGhCalnQ+vQsmY0QhZ/sCFVH3jriRGKgkZN9iGOAix2CKWncULQ9i9nK9WT1zMAhX
-X-Gm-Message-State: AOJu0Yyi+MA+wnKNFz3vbJOwCMiAEYcLRYG9D46WbFU2X/bOgcgtoO/b
-	AZ1IQE+v2l8hRvqlEPyUXq9F6KcYmHxX4KQMqdNGZ3z2SmQmMYKZCSmO1BjSuOmGmxI+vv5wYUs
-	klfmfHxJ4riAHlij0xw==
-X-Google-Smtp-Source: AGHT+IE2AKcYsstInOqgudHKTQp6Jdm0LGHMNfnLB4IVzasoq6oW0Y69RVWgTVatpoFZnw0nHcf4J+vZvg80MMrE
+        bh=jRq1E0P4aXnPxzizQoW47AD5YHVJpyUxzEyvFYZC4Cg=;
+        b=WuWKKvderwbmZC0CP8VYFg1Bhzx2fXRuCNPi1b+ZVw3iNWpBHkGjrtjUnJs6u5udX3
+         gCEX6OLJfclb5OKVUb5adVCIdH5svRxtTA6uuryBTvTIo4wnhJZksYIWGqRto302ZyvT
+         ZiUH3ZAd/T9ZxNjqgf0XsOKROr4XG/5WkWe88UJ7tJ3LhkWPw/o29lB4i8SYvYydua9h
+         SEFlTZwj33ZSTToHwbF6l0hj373P9IOimg3iQLUDTT4YxG5KP1b2/LZpXTO5zYf78JKK
+         XsPUywPeD3hLme/+a3PJrNXE1+2SPUCdl+kZsdDVxn5ewJ6jpZk2wRaa/3Qz6B4rC/v7
+         uuTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrGrzHl35klCnOANCckJJkNjD+DjmvE6H2NpRZfX4EJ7x/NH4da2KTau/qS0MZF+K0t63cqp2iDAnbYzNUXrt0H4RG4OSd7qETUdw0
+X-Gm-Message-State: AOJu0YwJcF9aO7y9NkNYQLaTQwkuEEony3LjtBpB9mgRjKie8DWvpbDy
+	RrWi05vi2b9/qIolSYPCgYVublNr9jlpoB7cIbIxZ/zU8c4ftljwWgSbnGsYbwO+L41qi0XqYxp
+	ahXmcGwuTTw3+Yoirgg==
+X-Google-Smtp-Source: AGHT+IFmXdVsVq2jHeT0x/0hUnfSFWa7WYtFFT8Isj0HD4sG8F4BOnOmk4JS+KLDOFafX3S7G6SXbQD7sfuchknU
 X-Received: from jthoughton.c.googlers.com ([fda3:e722:ac3:cc00:14:4d90:c0a8:2a4f])
- (user=jthoughton job=sendgmr) by 2002:a05:690c:6101:b0:62a:2a39:ccd9 with
- SMTP id 00721157ae682-62cd5663caemr27714337b3.6.1718065323356; Mon, 10 Jun
- 2024 17:22:03 -0700 (PDT)
-Date: Tue, 11 Jun 2024 00:21:41 +0000
+ (user=jthoughton job=sendgmr) by 2002:a05:690c:fca:b0:62c:fa1a:21d2 with SMTP
+ id 00721157ae682-62cfa1a282cmr21119147b3.1.1718065324978; Mon, 10 Jun 2024
+ 17:22:04 -0700 (PDT)
+Date: Tue, 11 Jun 2024 00:21:43 +0000
 In-Reply-To: <20240611002145.2078921-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240611002145.2078921-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <20240611002145.2078921-6-jthoughton@google.com>
-Subject: [PATCH v5 5/9] KVM: Add kvm_fast_age_gfn and kvm_fast_test_age_gfn
+Message-ID: <20240611002145.2078921-8-jthoughton@google.com>
+Subject: [PATCH v5 7/9] KVM: x86: Implement kvm_fast_test_age_gfn and kvm_fast_age_gfn
 From: James Houghton <jthoughton@google.com>
 To: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: Ankit Agrawal <ankita@nvidia.com>, Axel Rasmussen <axelrasmussen@google.com>, 
@@ -76,191 +76,134 @@ Cc: Ankit Agrawal <ankita@nvidia.com>, Axel Rasmussen <axelrasmussen@google.com>
 	linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 
-Provide the basics for allowing architectures to implement
-mmu_notifier_test_clear_young_fast_only().
+The fast-only notifier will only report an accurate result when the
+shadow MMU is not in use.
 
-Add CONFIG_HAVE_KVM_YOUNG_FAST_ONLY_NOTIFIER that architectures will set
-if they implement the fast-only notifier.
-
-kvm_fast_age_gfn and kvm_fast_test_age_gfn both need to support
-returning a tri-state state of:
-  1. fast && young,
-  2. fast && !young,
-  3. !fast
-This could be done by making gfn_handler_t return int, but that would
-mean a lot of churn. Instead, include a new kvm_mmu_notifier_arg
-'bool *failed' for kvm_fast_{test,}_age_gfn to optionally use.
+Implement kvm_arch_young_notifier_likely_fast(), as MGLRU will check
+this function to see if it should even be attempting the fast-only
+notifier. We only want to attempt the notifier if there is a chance that
+it will succeed (i.e., that we're using the TDP MMU).
 
 Signed-off-by: James Houghton <jthoughton@google.com>
 ---
- include/linux/kvm_host.h   |  7 ++++++
- include/trace/events/kvm.h | 22 ++++++++++++++++++
- virt/kvm/Kconfig           |  4 ++++
- virt/kvm/kvm_main.c        | 47 ++++++++++++++++++++++++++++++--------
- 4 files changed, 71 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  7 +++++
+ arch/x86/kvm/Kconfig            |  1 +
+ arch/x86/kvm/mmu/mmu.c          | 50 ++++++++++++++++++++++++++++++---
+ 3 files changed, 54 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 4d7c3e8632e6..e4efeba51222 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -258,6 +258,9 @@ int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu);
- #ifdef CONFIG_KVM_GENERIC_MMU_NOTIFIER
- union kvm_mmu_notifier_arg {
- 	unsigned long attributes;
-+#ifdef CONFIG_HAVE_KVM_YOUNG_FAST_ONLY_NOTIFIER
-+	bool *failed;
-+#endif
- };
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 0dc1fa99cdbb..ca2fbc162e51 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -2338,4 +2338,11 @@ int memslot_rmap_alloc(struct kvm_memory_slot *slot, unsigned long npages);
+  */
+ #define KVM_EXIT_HYPERCALL_MBZ		GENMASK_ULL(31, 1)
  
- struct kvm_gfn_range {
-@@ -271,7 +274,11 @@ struct kvm_gfn_range {
- bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range);
- bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
- bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
-+#ifdef CONFIG_HAVE_KVM_YOUNG_FAST_ONLY_NOTIFIER
-+bool kvm_fast_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
-+bool kvm_fast_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
- #endif
-+#endif /* CONFIG_KVM_GENERIC_MMU_NOTIFIER */
- 
- enum {
- 	OUTSIDE_GUEST_MODE,
-diff --git a/include/trace/events/kvm.h b/include/trace/events/kvm.h
-index 74e40d5d4af4..7ba6c35c2426 100644
---- a/include/trace/events/kvm.h
-+++ b/include/trace/events/kvm.h
-@@ -489,6 +489,28 @@ TRACE_EVENT(kvm_test_age_hva,
- 	TP_printk("mmu notifier test age hva: %#016lx", __entry->hva)
- );
- 
-+TRACE_EVENT(kvm_fast_test_age_hva,
-+	TP_PROTO(unsigned long start, unsigned long end, bool clear),
-+	TP_ARGS(start, end, clear),
-+
-+	TP_STRUCT__entry(
-+		__field(	unsigned long,	start		)
-+		__field(	unsigned long,	end		)
-+		__field(	bool,		clear		)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->start		= start;
-+		__entry->end		= end;
-+		__entry->clear		= clear;
-+	),
-+
-+	TP_printk("mmu notifier fast test age: hva: %#016lx -- %#016lx "
-+		  "clear: %d",
-+		  __entry->start, __entry->end,
-+		  __entry->clear)
-+);
-+
- #endif /* _TRACE_KVM_MAIN_H */
- 
- /* This part must be outside protection */
-diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index 0404857c1702..77ac680af60c 100644
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -100,6 +100,10 @@ config KVM_GENERIC_MMU_NOTIFIER
- config KVM_MMU_NOTIFIER_YOUNG_LOCKLESS
-        bool
- 
-+config HAVE_KVM_YOUNG_FAST_ONLY_NOTIFIER
-+       select KVM_GENERIC_MMU_NOTIFIER
-+       bool
-+
- config KVM_GENERIC_MEMORY_ATTRIBUTES
-        depends on KVM_GENERIC_MMU_NOTIFIER
-        bool
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index d8fa0d617f12..aa930a8b903f 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -699,7 +699,8 @@ static __always_inline int kvm_handle_hva_range(struct mmu_notifier *mn,
- static __always_inline int kvm_handle_hva_range_no_flush(struct mmu_notifier *mn,
- 							 unsigned long start,
- 							 unsigned long end,
--							 gfn_handler_t handler)
-+							 gfn_handler_t handler,
-+							 bool *failed)
- {
- 	struct kvm *kvm = mmu_notifier_to_kvm(mn);
- 	const struct kvm_mmu_notifier_range range = {
-@@ -711,6 +712,7 @@ static __always_inline int kvm_handle_hva_range_no_flush(struct mmu_notifier *mn
- 		.may_block	= false,
- 		.lockless	=
- 			IS_ENABLED(CONFIG_KVM_MMU_NOTIFIER_YOUNG_LOCKLESS),
-+		.arg.failed	= failed,
- 	};
- 
- 	return __kvm_handle_hva_range(kvm, &range).ret;
-@@ -901,7 +903,7 @@ static int kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
- 	 * cadence. If we find this inaccurate, we might come up with a
- 	 * more sophisticated heuristic later.
- 	 */
--	return kvm_handle_hva_range_no_flush(mn, start, end, kvm_age_gfn);
-+	return kvm_handle_hva_range_no_flush(mn, start, end, kvm_age_gfn, NULL);
- }
- 
- static int kvm_mmu_notifier_test_young(struct mmu_notifier *mn,
-@@ -911,9 +913,32 @@ static int kvm_mmu_notifier_test_young(struct mmu_notifier *mn,
- 	trace_kvm_test_age_hva(address);
- 
- 	return kvm_handle_hva_range_no_flush(mn, address, address + 1,
--					     kvm_test_age_gfn);
-+					     kvm_test_age_gfn, NULL);
- }
- 
-+#ifdef CONFIG_HAVE_KVM_YOUNG_FAST_ONLY_NOTIFIER
-+static int kvm_mmu_notifier_test_clear_young_fast_only(struct mmu_notifier *mn,
-+						       struct mm_struct *mm,
-+						       unsigned long start,
-+						       unsigned long end,
-+						       bool clear)
++#define kvm_arch_young_notifier_likely_fast kvm_arch_young_notifier_likely_fast
++static inline bool kvm_arch_young_notifier_likely_fast(void)
 +{
-+	gfn_handler_t handler;
-+	bool failed = false, young;
-+
-+	trace_kvm_fast_test_age_hva(start, end, clear);
-+
-+	handler = clear ? kvm_fast_age_gfn : kvm_fast_test_age_gfn;
-+
-+	young = kvm_handle_hva_range_no_flush(mn, start, end, handler, &failed);
-+
-+	if (failed)
-+		return MMU_NOTIFIER_FAST_FAILED;
-+
-+	return young ? MMU_NOTIFIER_FAST_YOUNG : 0;
++	return IS_ENABLED(CONFIG_X86_64) && tdp_mmu_enabled &&
++		shadow_accessed_mask;
 +}
-+#endif
 +
- static void kvm_mmu_notifier_release(struct mmu_notifier *mn,
- 				     struct mm_struct *mm)
- {
-@@ -926,12 +951,16 @@ static void kvm_mmu_notifier_release(struct mmu_notifier *mn,
+ #endif /* _ASM_X86_KVM_HOST_H */
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 9dda7f8c72ed..84ae043c7d43 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -24,6 +24,7 @@ config KVM
+ 	select KVM_COMMON
+ 	select KVM_GENERIC_MMU_NOTIFIER
+ 	select KVM_MMU_NOTIFIER_YOUNG_LOCKLESS
++	select HAVE_KVM_YOUNG_FAST_ONLY_NOTIFIER
+ 	select HAVE_KVM_IRQCHIP
+ 	select HAVE_KVM_PFNCACHE
+ 	select HAVE_KVM_DIRTY_RING_TSO
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 51061f1fb3d1..ed50e78755ab 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1629,11 +1629,15 @@ static void rmap_add(struct kvm_vcpu *vcpu, const struct kvm_memory_slot *slot,
+ 	__rmap_add(vcpu->kvm, cache, slot, spte, gfn, access);
  }
  
- static const struct mmu_notifier_ops kvm_mmu_notifier_ops = {
--	.invalidate_range_start	= kvm_mmu_notifier_invalidate_range_start,
--	.invalidate_range_end	= kvm_mmu_notifier_invalidate_range_end,
--	.clear_flush_young	= kvm_mmu_notifier_clear_flush_young,
--	.clear_young		= kvm_mmu_notifier_clear_young,
--	.test_young		= kvm_mmu_notifier_test_young,
--	.release		= kvm_mmu_notifier_release,
-+	.invalidate_range_start		= kvm_mmu_notifier_invalidate_range_start,
-+	.invalidate_range_end		= kvm_mmu_notifier_invalidate_range_end,
-+	.clear_flush_young		= kvm_mmu_notifier_clear_flush_young,
-+	.clear_young			= kvm_mmu_notifier_clear_young,
-+	.test_young			= kvm_mmu_notifier_test_young,
-+#ifdef CONFIG_HAVE_KVM_YOUNG_FAST_ONLY_NOTIFIER
-+	.test_clear_young_fast_only	=
-+		kvm_mmu_notifier_test_clear_young_fast_only,
-+#endif
-+	.release			= kvm_mmu_notifier_release,
- };
+-bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
++static int __kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range,
++			 bool fast_only)
+ {
+ 	bool young = false;
  
- static int kvm_init_mmu_notifier(struct kvm *kvm)
+ 	if (kvm_memslots_have_rmaps(kvm)) {
++		if (fast_only)
++			return -1;
++
+ 		write_lock(&kvm->mmu_lock);
+ 		young = kvm_handle_gfn_range(kvm, range, kvm_age_rmap);
+ 		write_unlock(&kvm->mmu_lock);
+@@ -1642,14 +1646,18 @@ bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+ 	if (tdp_mmu_enabled)
+ 		young |= kvm_tdp_mmu_age_gfn_range(kvm, range);
+ 
+-	return young;
++	return (int)young;
+ }
+ 
+-bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
++static int __kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range,
++			      bool fast_only)
+ {
+ 	bool young = false;
+ 
+ 	if (kvm_memslots_have_rmaps(kvm)) {
++		if (fast_only)
++			return -1;
++
+ 		write_lock(&kvm->mmu_lock);
+ 		young = kvm_handle_gfn_range(kvm, range, kvm_test_age_rmap);
+ 		write_unlock(&kvm->mmu_lock);
+@@ -1658,7 +1666,41 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+ 	if (tdp_mmu_enabled)
+ 		young |= kvm_tdp_mmu_test_age_gfn(kvm, range);
+ 
+-	return young;
++	return (int)young;
++}
++
++bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
++{
++	return __kvm_age_gfn(kvm, range, false);
++}
++
++bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
++{
++	return __kvm_test_age_gfn(kvm, range, false);
++}
++
++bool kvm_fast_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
++{
++	int ret = __kvm_age_gfn(kvm, range, true);
++
++	if (ret < 0) {
++		*range->arg.failed = true;
++		return false;
++	}
++
++	return ret != 0;
++}
++
++bool kvm_fast_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
++{
++	int ret = __kvm_test_age_gfn(kvm, range, true);
++
++	if (ret < 0) {
++		*range->arg.failed = true;
++		return false;
++	}
++
++	return ret != 0;
+ }
+ 
+ static void kvm_mmu_check_sptes_at_free(struct kvm_mmu_page *sp)
 -- 
 2.45.2.505.gda0bf45e8d-goog
 
