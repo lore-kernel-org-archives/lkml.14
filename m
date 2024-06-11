@@ -1,60 +1,55 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904F02868D;
-	Tue, 11 Jun 2024 15:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BEAB2C182;
+	Tue, 11 Jun 2024 15:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718118176; cv=none; b=IWH98dlPHrDmttp2UEYPgq8QUWUzm4ElUBhOaO5oKQp8wkuaqMdzOEccqiHrkczg9o4SR5Tq83pSgEst2wCsWvv/22Dq1YT1g5l/1atU6ouTZ1VCrNyuNYPZSSIZdZfVYH3toUHu7PSIUJV18Z8Isc3L9CMbw+CCaqnamCMLWr4=
+	t=1718118176; cv=none; b=uzBbrShcCfeRgZ3aWra7rn2lZkFtsjX8Z3bx1kFkRA2e6JFoOcYCVm2GCgljGWyNpOn24qhFbQnHaDlVWYKovjus1L5aGxmzlo20IZod1xvT17zaPwSCkl3kl0Lhl0hqmmVpUZAwXQntm1TQQtQtYKvHkQiPxxZOmsyoO8Pj7wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718118176; c=relaxed/simple;
-	bh=SD9Ox2uEgLQshHdPNaSlBqTcE1dEXOGR6zfPNYTOHgQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=gRg0h3g8AMpgDt+iiNFVrobDSQs7LXwU0Y4T73GRULf9WYk67jSoOMk1Ylqx/8w7/Oj/dudX+2LaTgid8DbTDg2aYLWJjMYFRR4wkVZtNbiu5iID89hHTVDrRqCYNNNoCNvXqEbeplWvNaKLppCcsLdwNnQuA7ixG5KkfELJxD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=f42GHxX+; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="f42GHxX+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1718118165; bh=EYZJeMpHWJRkQqovyVl3G5DqtUj1NtUFyItaVN67Ogk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=f42GHxX+j+2EYRXI3DgQqOOzhfCb1/4MUj2V49+H5LEvRrxnPjG9SJL3EvyuQGROY
-	 fHxwfiQK+gIAouaqOYeYLQHeI2KmfWjrix+fUP3lVf20Kql43B4glSyVYJZvV29OxT
-	 Kfmena5swtfEepp8mvkTVJ6CmbqvqzhGj2tp8EBs=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id C9107ACF; Tue, 11 Jun 2024 22:50:17 +0800
-X-QQ-mid: xmsmtpt1718117417tpy0idpsl
-Message-ID: <tencent_0CCE4C90A7C306FCD2EE466AC9882EFFAE06@qq.com>
-X-QQ-XMAILINFO: MB5+LsFw85NotV1rPa9aT9fXzjVDRjmoVre1tPCLpk+PR3dw+8o/OClgcieWx/
-	 Z+J5aQb0hcyNQhrKegLlWcSOX1GZT+vxFZChIuE9eoFfdg8zrOdWFS45YmTJ1zxgm49m2a5Yv597
-	 ayyBDbo595mOsHMJG253NmqW2lX91Y1WXnha9C1NdTJ9+aT5y8rrRGataNf1TqhDOVqC8YC5EBvg
-	 j8Rh1bP5ieC+tMEDRD9jogUAKLrFFnS4/Xiy4XoZPQ5ukc22+2YfjFoNofsOe07X//cghIuYcUkG
-	 1QgFad5EkH57Nhoa2lukc8qcxFFH4CnSrB5Fx/v11Pi1BUwj6TZ1/7irlxVF3BsfAlCSMmiFnZIA
-	 weQoZ88Y6+NjeMyqKbnL6NHmEvTMo5aBfq2Gt25MZSPBBhuGBZNiRDhm9YhZqbbGVS7oslzoHvdL
-	 CpI0MUeQzrTJNFVNuYO+CmuEVgtIeZp/RdWW2ATCXFf+BPHJk5fL5kHQv3hS8OYTlHRmmyqVzYQC
-	 bOeHuPDBrQI9h0oT6+NP4h92rTJCfmeHvW5BUMW6ItkgUhiZhINnrnRFM7qIMHcajXPY6K1WLtOx
-	 mgH3/Vx32vYLjMyK7H+2EY3uWDCOhqiExPVKfLnM7QljgC7RnRob6nIVL+nUKcZBaaFVgjsLukiR
-	 OmY9M9eRpQlzLuKoPdaE9+t5yysAT9cZmOkj6A4st8wCsSRv5JJTmEMn1eYFqvGk06yl6+tDrnD7
-	 omiAWwxi7fdqAL/Q31TAT4PeMzl6NUoYGKRg8HVv/JyIi9GwJcO2Z6WeowkdGoTtFAiOD1BZx8CD
-	 FgKuiaL+FnsEJ9xhgYPruS3mJFuvxXbVPxvDX9adD+bRDJ+MdtCWHzs2yeTXElhe2U0/QqAhNvZ5
-	 +/RF+6PmJ4ubmXwi2AXDmDrr9LhAXrIhE1TG5oHOn0tE/q/X8ecCrIcw/xT1U2uAMtsvipmo2K
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com
-Cc: johan.hedberg@gmail.com,
-	linux-bluetooth@vger.kernel.org,
+	bh=m5MKYq+sbY/RyNjY39bpEhwKF6st/PRM8qPP5HXfLKU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GkoH/FCKKoaVvm0sXUCU8QxX4ngadHI4e6hzRFMuzh0vcoegOjeI4NtRipIHxv8AlVfEgTVT8BCNrNOsVmzvyn4dxtxarAU0PB+nsblzMTgTAGpqAyuXJTld0fGF2EnxYAF/cpHEl7Kw1p1w30+RlEDkGL5cbXrWbhw3e63E3ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 202ED152B;
+	Tue, 11 Jun 2024 08:03:19 -0700 (PDT)
+Received: from e127643.arm.com (unknown [10.57.41.181])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9CEA93F64C;
+	Tue, 11 Jun 2024 08:02:50 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	gankulkarni@os.amperecomputing.com,
+	mike.leach@linaro.org,
+	leo.yan@linux.dev,
+	anshuman.khandual@arm.com
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	luiz.dentz@gmail.com,
-	marcel@holtmann.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] bluetooth/l2cap: sync sock recv cb and release
-Date: Tue, 11 Jun 2024 22:50:17 +0800
-X-OQ-MSGID: <20240611145016.2085712-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000b0906d061a468b93@google.com>
-References: <000000000000b0906d061a468b93@google.com>
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v3 02/14] perf: cs-etm: Allocate queues for all CPUs
+Date: Tue, 11 Jun 2024 16:02:13 +0100
+Message-Id: <20240611150228.1802828-3-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240611150228.1802828-1-james.clark@arm.com>
+References: <20240611150228.1802828-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,78 +58,179 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The problem occurs between the system call to close the sock and hci_rx_work,
-where the former releases the sock and the latter accesses it without lock protection.
+Make cs_etm__setup_queue() setup a queue even if it's empty, and
+pre-allocate queues based on the max CPU that was recorded. In per-CPU
+mode aux queues are indexed based on CPU ID even if all CPUs aren't
+recorded, sparse queue arrays aren't used.
 
-           CPU0                       CPU1
-           ----                       ----
-           sock_close                 hci_rx_work
-	   l2cap_sock_release         hci_acldata_packet
-	   l2cap_sock_kill            l2cap_recv_frame
-	   sk_free                    l2cap_conless_channel
-	                              l2cap_sock_recv_cb
+This will allow HW_IDs to be saved even if no aux data was received in
+that queue without having to call cs_etm__setup_queue() from two
+different places.
 
-If hci_rx_work processes the data that needs to be received before the sock is
-closed, then everything is normal; Otherwise, the work thread may access the
-released sock when receiving data.
-
-Add a chan mutex in the rx callback of the sock to achieve synchronization between
-the sock release and recv cb.
-
-Reported-and-tested-by: syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Signed-off-by: James Clark <james.clark@arm.com>
 ---
- net/bluetooth/l2cap_sock.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ tools/perf/util/cs-etm.c | 55 ++++++++++++++++++++--------------------
+ 1 file changed, 27 insertions(+), 28 deletions(-)
 
-diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
-index 6db60946c627..f3e9236293e1 100644
---- a/net/bluetooth/l2cap_sock.c
-+++ b/net/bluetooth/l2cap_sock.c
-@@ -1413,6 +1413,8 @@ static int l2cap_sock_release(struct socket *sock)
- 	l2cap_chan_hold(chan);
- 	l2cap_chan_lock(chan);
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index f09004c4ba44..e40dfd09d3ed 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -104,6 +104,7 @@ struct cs_etm_queue {
+ 	unsigned int queue_nr;
+ 	u8 pending_timestamp_chan_id;
+ 	bool formatted;
++	bool formatted_set;
+ 	u64 offset;
+ 	const unsigned char *buf;
+ 	size_t buf_len, buf_used;
+@@ -1056,16 +1057,11 @@ static struct cs_etm_queue *cs_etm__alloc_queue(void)
  
-+	if (refcount_read(&sk->sk_refcnt) == 1)
-+		chan->data = NULL;
- 	sock_orphan(sk);
- 	l2cap_sock_kill(sk);
- 
-@@ -1481,12 +1483,22 @@ static struct l2cap_chan *l2cap_sock_new_connection_cb(struct l2cap_chan *chan)
- 
- static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
+ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
+ 			       struct auxtrace_queue *queue,
+-			       unsigned int queue_nr, bool formatted)
++			       unsigned int queue_nr)
  {
--	struct sock *sk = chan->data;
--	struct l2cap_pinfo *pi = l2cap_pi(sk);
-+	struct sock *sk;
-+	struct l2cap_pinfo *pi;
- 	int err;
+ 	struct cs_etm_queue *etmq = queue->priv;
  
--	lock_sock(sk);
-+	l2cap_chan_hold(chan);
-+	l2cap_chan_lock(chan);
-+	sk = chan->data;
-+
-+	if (!sk) {
-+		l2cap_chan_unlock(chan);
-+		l2cap_chan_put(chan);
-+		return -ENXIO;
-+	}
+-	if (etmq && formatted != etmq->formatted) {
+-		pr_err("CS_ETM: mixed formatted and unformatted trace not supported\n");
+-		return -EINVAL;
+-	}
+-
+-	if (list_empty(&queue->head) || etmq)
++	if (etmq)
+ 		return 0;
  
-+	pi = l2cap_pi(sk);
-+	lock_sock(sk);
- 	if (chan->mode == L2CAP_MODE_ERTM && !list_empty(&pi->rx_busy)) {
- 		err = -ENOMEM;
- 		goto done;
-@@ -1535,6 +1547,8 @@ static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
+ 	etmq = cs_etm__alloc_queue();
+@@ -1078,7 +1074,6 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
+ 	etmq->queue_nr = queue_nr;
+ 	queue->cpu = queue_nr; /* Placeholder, may be reset to -1 in per-thread mode */
+ 	etmq->offset = 0;
+-	etmq->formatted = formatted;
  
- done:
- 	release_sock(sk);
-+	l2cap_chan_unlock(chan);
-+	l2cap_chan_put(chan);
- 
- 	return err;
+ 	return 0;
  }
+@@ -2791,17 +2786,6 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
+ 		if (err)
+ 			return err;
+ 
+-		/*
+-		 * Knowing if the trace is formatted or not requires a lookup of
+-		 * the aux record so only works in non-piped mode where data is
+-		 * queued in cs_etm__queue_aux_records(). Always assume
+-		 * formatted in piped mode (true).
+-		 */
+-		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
+-					  idx, true);
+-		if (err)
+-			return err;
+-
+ 		if (dump_trace)
+ 			if (auxtrace_buffer__get_data(buffer, fd)) {
+ 				cs_etm__dump_event(etm->queues.queue_array[idx].priv, buffer);
+@@ -2918,7 +2902,6 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 	struct perf_record_auxtrace *auxtrace_event;
+ 	union perf_event auxtrace_fragment;
+ 	__u64 aux_offset, aux_size;
+-	__u32 idx;
+ 	bool formatted;
+ 
+ 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
+@@ -2985,6 +2968,8 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 
+ 	if (aux_offset >= auxtrace_event->offset &&
+ 	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
++		struct cs_etm_queue *etmq = etm->queues.queue_array[auxtrace_event->idx].priv;
++
+ 		/*
+ 		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
+ 		 * based on the sizes of the aux event, and queue that fragment.
+@@ -3001,10 +2986,14 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 		if (err)
+ 			return err;
+ 
+-		idx = auxtrace_event->idx;
+ 		formatted = !(aux_event->flags & PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW);
+-
+-		return cs_etm__setup_queue(etm, &etm->queues.queue_array[idx], idx, formatted);
++		if (etmq->formatted_set && formatted != etmq->formatted) {
++			pr_err("CS_ETM: mixed formatted and unformatted trace not supported\n");
++			return -EINVAL;
++		}
++		etmq->formatted = formatted;
++		etmq->formatted_set = true;
++		return 0;
+ 	}
+ 
+ 	/* Wasn't inside this buffer, but there were no parse errors. 1 == 'not found' */
+@@ -3256,6 +3245,7 @@ static int cs_etm__create_decoders(struct cs_etm_auxtrace *etm)
+ 		 * Don't create decoders for empty queues, mainly because
+ 		 * etmq->formatted is unknown for empty queues.
+ 		 */
++		assert(empty == !etmq->formatted_set);
+ 		if (empty)
+ 			continue;
+ 
+@@ -3275,10 +3265,10 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	int event_header_size = sizeof(struct perf_event_header);
+ 	int total_size = auxtrace_info->header.size;
+ 	int priv_size = 0;
+-	int num_cpu;
++	int num_cpu, max_cpu = 0;
+ 	int err = 0;
+ 	int aux_hw_id_found;
+-	int i, j;
++	int i;
+ 	u64 *ptr = NULL;
+ 	u64 **metadata = NULL;
+ 
+@@ -3309,7 +3299,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	 * required by the trace decoder to properly decode the trace due
+ 	 * to its highly compressed nature.
+ 	 */
+-	for (j = 0; j < num_cpu; j++) {
++	for (int j = 0; j < num_cpu; j++) {
+ 		if (ptr[i] == __perf_cs_etmv3_magic) {
+ 			metadata[j] =
+ 				cs_etm__create_meta_blk(ptr, &i,
+@@ -3333,6 +3323,9 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 			err = -ENOMEM;
+ 			goto err_free_metadata;
+ 		}
++
++		if ((int) metadata[j][CS_ETM_CPU] > max_cpu)
++			max_cpu = metadata[j][CS_ETM_CPU];
+ 	}
+ 
+ 	/*
+@@ -3362,10 +3355,16 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	 */
+ 	etm->pid_fmt = cs_etm__init_pid_fmt(metadata[0]);
+ 
+-	err = auxtrace_queues__init(&etm->queues);
++	err = auxtrace_queues__init_nr(&etm->queues, max_cpu + 1);
+ 	if (err)
+ 		goto err_free_etm;
+ 
++	for (unsigned int j = 0; j < etm->queues.nr_queues; ++j) {
++		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[j], j);
++		if (err)
++			goto err_free_queues;
++	}
++
+ 	if (session->itrace_synth_opts->set) {
+ 		etm->synth_opts = *session->itrace_synth_opts;
+ 	} else {
+@@ -3487,7 +3486,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	zfree(&etm);
+ err_free_metadata:
+ 	/* No need to check @metadata[j], free(NULL) is supported */
+-	for (j = 0; j < num_cpu; j++)
++	for (int j = 0; j < num_cpu; j++)
+ 		zfree(&metadata[j]);
+ 	zfree(&metadata);
+ err_free_traceid_list:
 -- 
-2.43.0
+2.34.1
 
