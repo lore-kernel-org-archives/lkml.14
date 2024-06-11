@@ -1,159 +1,180 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B3A43ABD
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 16:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7719944366;
+	Tue, 11 Jun 2024 16:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718124598; cv=none; b=anOmx3WX4dL/zr/wHPRmvLu//bhARX2q1cFEPjWe+eWW+A//uRpXIF1Smm5XS08exEca1687q1rSQXT9kvM4IwqlXkT/8Y825tGT4H4OrlRECOgJNLVsYeGQ483FtFPeG0idpcqjIlC8+bbzLqw+u95u4ZOvKD4r/R0Hop70igY=
+	t=1718124599; cv=none; b=GgKhU2+vLlnF6IoTcpFxvBQKLJdfa/GKd3QorCKOdbMPruxUhQHaajqou/zUaBneelbrVOWWJkHnfqFXH5Ugz6C3bTDkGdfYXJo7dz/6Ii1eIVgh3kPz/elGpdK0wvOgPGgc09MTwaDxtnLMRKKCp/mfM/rhaY9vYY8RW54x968=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718124598; c=relaxed/simple;
-	bh=MreIlMooNRf639ruyk8R4KbSz88+aCksPZ1DbVVAbvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G3WZ8RauPu0ryOkxymbAAZ+ZbCb0zWUbbA9dcdGbj0wyqZaxnuvreLeoFraOJHqgh+elm+Hl42zBBgslRkRL0O8Jcz/EzD5G1Ltg2nRS04axObaWVAWcdbJQDxcWY+zM7Osa7FtTC9984HqUOXWkS3cwEAnGec9g/kx5vqPowWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=y3SMqKoQ; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
+	s=arc-20240116; t=1718124599; c=relaxed/simple;
+	bh=HNox1emeC2Q0I7wPCD9sdTztt+r5s8hf6WB0DNGMFy0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OQ9BilrjPWCo87hKynghVhgyKwQkCSwMMKuyWUrNBQoSWAnOwhU2kK7DznkUivQsNDCwXxCnI6bb2LzjX9AX0fUJv2ff8z1iL+CN/MM2uV6vfN6tt90rmS5iYlbKrCJ/uldk6zNaz2NAsOch5H7eUyrDr7n0NoAmUamsKAUAzPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BfmHAZDl; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="y3SMqKoQ"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-df771b6cc9cso1333826276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:49:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1718124596; x=1718729396; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7JnGMgyfSYYWtEjlzPfN4hmoXT439HFNz0d94uVz2J4=;
-        b=y3SMqKoQgWwszJShEg4lM1emGCZL8Rm/0WYtO5K38Jm2MRszr7rWq3D0eAVUUMXZ/6
-         ksK7ms/M3wagkL2167CtQ5tB/hrKz4XSRBOAmGQjg9KpQwymGGR0BLBLX0aLF49Vkghv
-         k3RfQgoF/ho0RMT0sT6ZGAJVJsTMzqeZYHBFDuDhgE6DxquzjFLcyT0GNZnXaLs0fFx2
-         MmECccXLMaEjzPNyEgW9FhdtR9PPtWtjYiYDf0g9R1y5ncQljfLQk+otWRr2Gi44P+JK
-         HiNafNxTpT4LO16567hhGBFOHyyRT9Ui0mHUZt+pGrMYlIqraG8Ds4gxD5S7dnA1md7w
-         AQGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718124596; x=1718729396;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7JnGMgyfSYYWtEjlzPfN4hmoXT439HFNz0d94uVz2J4=;
-        b=SJYytbOiFhGdgTW99Lw86vnC+81GcbGLDtUdm7NooqpEZ+cRhQuwG6bVbtjnJjQCc7
-         IELxc9AAC9szMkN9JD20MGrXRf6MohqXpzuy8ick3DKWsHrUmpIZWoTn5hvcr2QqG2YM
-         ghvLG3abn+FtkNuo6hnYRddnN+4qeBawgXjvJ6jsgdsWy0n3YXLA5XrBc6g576szEVgi
-         XdZ4Ll4g4WcIWRE89lnT8mDLDfkjTcVHZZ42/+4lQrsZx8tVLclYR3Zav/ywKkDHwZjh
-         pR3RuiFmeX5LzdR1qXWOzxqfdQ3sl4DNYAYADqwysNm75HlObuKl9zcKePm5WiGcId/Y
-         R/qw==
-X-Forwarded-Encrypted: i=1; AJvYcCX62nRM+QO+LR57toldwbHs22Ly/X5VFbGXPu/3tNZGvBb+Qm/sWfNDY9lThbYz8z08JJBOM4ZxAaIYqxy2emVk2sFTDCurqM/QzF+I
-X-Gm-Message-State: AOJu0YwuS4aDUvqt/g49JHpAR7fpEKYekxOjoqPHz/yC1/5YDPza61jo
-	7KbPkff8Loxb+aLFbZDy5fpdJZfmFbOBNFpVLUepTH74L+EHGybYPcrKWg4Cf18=
-X-Google-Smtp-Source: AGHT+IEgSQHZ9Ca/meY6ChiB+OY2zTSlD3WY3Cf/xA7fFzm7DHmZml5zF09haqocKRev36lx9709fA==
-X-Received: by 2002:a81:5215:0:b0:627:972f:baba with SMTP id 00721157ae682-62cd55f7322mr129115757b3.31.1718124595699;
-        Tue, 11 Jun 2024 09:49:55 -0700 (PDT)
-Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62cfb6e4638sm11635327b3.75.2024.06.11.09.49.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 09:49:55 -0700 (PDT)
-Date: Tue, 11 Jun 2024 12:49:53 -0400
-From: Josef Bacik <josef@toxicpanda.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, hch@infradead.org
-Subject: Re: [PATCH v3 0/2] rcu-based inode lookup for iget*
-Message-ID: <20240611164953.GC247672@perftesting>
-References: <20240611101633.507101-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BfmHAZDl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718124598; x=1749660598;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=HNox1emeC2Q0I7wPCD9sdTztt+r5s8hf6WB0DNGMFy0=;
+  b=BfmHAZDlxI6qmVr6PtY/dcEY5g84bABIJfu5e5wnxpfCUWOExWvhoR1h
+   EJFykaRd3mdgYaVWps8mwbLP85hTOmb75yrMysfdal8suMyx9Vqwl5BrR
+   4lx/hY2my3DDRSwNJiV0dTAAycd+9PYLpedPwDeuT6m9FfQ0d1umO5O41
+   Z3ESILXlhHHMAWL8VJxn82pZ3Y25u8Sgwtgu/jtNf1MT4qlrxfe5QInNp
+   /je6m4YcRUNLXb9TjO8aS/7CEqZGO3i8RiynFUnGj5g7KXmjBP7MMt1A+
+   2W7dNVr+Bj+d4rKo5V3fMoqLTwIVWisEsy22vgs7vHfgHI6lO2kOx2Im2
+   g==;
+X-CSE-ConnectionGUID: Jc9fWml3ScGxiQbRcmF8BA==
+X-CSE-MsgGUID: wLo35MSPR5S3Ra/r68gK5g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="40249625"
+X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
+   d="scan'208";a="40249625"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:49:57 -0700
+X-CSE-ConnectionGUID: YnCDOfRNS4208s3OZZjK6g==
+X-CSE-MsgGUID: Ve1/eBHCTzCU9E41uxp6Vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
+   d="scan'208";a="40103299"
+Received: from jacob-builder.jf.intel.com ([10.54.39.125])
+  by orviesa008.jf.intel.com with ESMTP; 11 Jun 2024 09:49:57 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: X86 Kernel <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Ingo Molnar" <mingo@redhat.com>,
+	"Borislav Petkov" <bp@alien8.de>,
+	linux-perf-users@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Andi Kleen <andi.kleen@intel.com>,
+	"Xin Li" <xin3.li@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 1/6] x86/irq: Add enumeration of NMI source reporting CPU feature
+Date: Tue, 11 Jun 2024 09:54:52 -0700
+Message-Id: <20240611165457.156364-2-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
+References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611101633.507101-1-mjguzik@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 11, 2024 at 12:16:30PM +0200, Mateusz Guzik wrote:
-> I think the appropriate blurb which needs to land here also needs to be
-> in the commit message for the first patch, so here it is copy pasted
-> with some modifications at the end:
-> 
-> [quote]
-> Instantiating a new inode normally takes the global inode hash lock
-> twice:
-> 1. once to check if it happens to already be present
-> 2. once to add it to the hash
-> 
-> The back-to-back lock/unlock pattern is known to degrade performance
-> significantly, which is further exacerbated if the hash is heavily
-> populated (long chains to walk, extending hold time). Arguably hash
-> sizing and hashing algo need to be revisited, but that's beyond the
-> scope of this patch.
-> 
-> A long term fix would introduce finer-grained locking. An attempt was
-> made several times, most recently in [1], but the effort appears
-> stalled.
-> 
-> A simpler idea which solves majority of the problem and which may be
-> good enough for the time being is to use RCU for the initial lookup.
-> Basic RCU support is already present in the hash. This being a temporary
-> measure I tried to keep the change as small as possible.
-> 
-> iget_locked consumers (notably ext4) get away without any changes
-> because inode comparison method is built-in.
-> 
-> iget5_locked and ilookup5_nowait consumers pass a custom callback. Since
-> removal of locking adds more problems (inode can be changing) it's not
-> safe to assume all filesystems happen to cope.  Thus iget5_locked_rcu,
-> ilookup5_rcu and ilookup5_nowait_rcu get added, requiring manual
-> conversion.
-> 
-> In order to reduce code duplication find_inode and find_inode_fast grow
-> an argument indicating whether inode hash lock is held, which is passed
-> down should sleeping be necessary. They always rcu_read_lock, which is
-> redundant but harmless. Doing it conditionally reduces readability for
-> no real gain that I can see. RCU-alike restrictions were already put on
-> callbacks due to the hash spinlock being held.
-> 
-> There is a real cache-busting workload scanning millions of files in
-> parallel (it's a backup server thing), where the initial lookup is
-> guaranteed to fail resulting in the 2 lock acquires.
-> 
-> Implemented below is a synthehic benchmark which provides the same
-> behavior. [I shall note the workload is not running on Linux, instead it
-> was causing trouble elsewhere. Benchmark below was used while addressing
-> said problems and was found to adequately represent the real workload.]
-> 
-> Total real time fluctuates by 1-2s.
-> 
-> With 20 threads each walking a dedicated 1000 dirs * 1000 files
-> directory tree to stat(2) on a 32 core + 24GB RAM vm:
-> [/quote]
-> 
-> Specific results:
-> 
-> ext4 (needed mkfs.ext4 -N 24000000):
-> before:	3.77s user 890.90s system 1939% cpu 46.118 total
-> after:  3.24s user 397.73s system 1858% cpu 21.581 total (-53%)
-> 
-> btrfs (s/iget5_locked/iget5_locked_rcu in fs/btrfs/inode.c):
-> before: 3.54s user 892.30s system 1966% cpu 45.549 total
-> after:  3.28s user 738.66s system 1955% cpu 37.932 total (-16.7%)
-> 
-> btrfs bottlenecks itself on its own locks here.
-> 
-> Benchmark can be found here: https://people.freebsd.org/~mjg/fstree.tgz
-> 
-> fs rundown is as follows:
-> - ext4 patched implicitly
-> - xfs does not use the inode hash
-> - bcachefs is out of the picture as Kent decided to implement his own
->   inode hashing based on rhashtable, for now private to his fs.
-> 
-> I have not looked at others.
-> 
-> [1] https://lore.kernel.org/all/20231206060629.2827226-1-david@fromorbit.com/
-> 
+The lack of a mechanism to pinpoint the origins of Non-Maskable Interrupts
+(NMIs) necessitates that the NMI vector 2 handler consults each NMI source
+handler individually. This approach leads to inefficiencies, delays, and
+the occurrence of unnecessary NMIs, thereby also constraining the potential
+applications of NMIs.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+A new CPU feature, known as NMI source reporting, has been introduced as
+part of the Flexible Return and Event Delivery (FRED) spec. This feature
+enables the NMI vector 2 handler to directly obtain information about the
+NMI source from the FRED event data.
 
-Thanks,
+The functionality of NMI source reporting is tied to the FRED. Although it
+is enumerated by a unique CPUID feature bit, it cannot be turned off
+independently once FRED is activated.
 
-Josef
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+---
+v2: Removed NMI source from static CPU ID dependency table (HPA)
+---
+ arch/x86/Kconfig                         | 9 +++++++++
+ arch/x86/include/asm/cpufeatures.h       | 1 +
+ arch/x86/include/asm/disabled-features.h | 8 +++++++-
+ arch/x86/kernel/traps.c                  | 4 +++-
+ 4 files changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 1d7122a1883e..b8b15f20b94e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -511,12 +511,21 @@ config X86_CPU_RESCTRL
+ config X86_FRED
+ 	bool "Flexible Return and Event Delivery"
+ 	depends on X86_64
++	select X86_NMI_SOURCE
+ 	help
+ 	  When enabled, try to use Flexible Return and Event Delivery
+ 	  instead of the legacy SYSCALL/SYSENTER/IDT architecture for
+ 	  ring transitions and exception/interrupt handling if the
+ 	  system supports it.
+ 
++config X86_NMI_SOURCE
++	def_bool n
++	help
++	  Once enabled, information on NMI originator/source can be provided
++	  via FRED event data. This makes NMI processing more efficient in that
++	  NMI handler does not need to check for every possible source at
++	  runtime when NMI is delivered.
++
+ config X86_BIGSMP
+ 	bool "Support for big SMP systems with more than 8 CPUs"
+ 	depends on SMP && X86_32
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 3c7434329661..ec78d361e685 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -327,6 +327,7 @@
+ #define X86_FEATURE_FRED		(12*32+17) /* Flexible Return and Event Delivery */
+ #define X86_FEATURE_LKGS		(12*32+18) /* "" Load "kernel" (userspace) GS */
+ #define X86_FEATURE_WRMSRNS		(12*32+19) /* "" Non-serializing WRMSR */
++#define X86_FEATURE_NMI_SOURCE		(12*32+20) /* NMI source reporting */
+ #define X86_FEATURE_AMX_FP16		(12*32+21) /* "" AMX fp16 Support */
+ #define X86_FEATURE_AVX_IFMA            (12*32+23) /* "" Support for VPMADD52[H,L]UQ */
+ #define X86_FEATURE_LAM			(12*32+26) /* Linear Address Masking */
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index c492bdc97b05..3856c4737d65 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -123,6 +123,12 @@
+ # define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
+ #endif
+ 
++#ifdef CONFIG_X86_NMI_SOURCE
++# define DISABLE_NMI_SOURCE	0
++#else
++# define DISABLE_NMI_SOURCE	(1 << (X86_FEATURE_NMI_SOURCE & 31))
++#endif
++
+ #ifdef CONFIG_KVM_AMD_SEV
+ #define DISABLE_SEV_SNP		0
+ #else
+@@ -145,7 +151,7 @@
+ #define DISABLED_MASK10	0
+ #define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
+ 			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
+-#define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
++#define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM|DISABLE_NMI_SOURCE)
+ #define DISABLED_MASK13	0
+ #define DISABLED_MASK14	0
+ #define DISABLED_MASK15	0
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 4fa0b17e5043..465f04e4a79f 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -1427,8 +1427,10 @@ early_param("fred", fred_setup);
+ 
+ void __init trap_init(void)
+ {
+-	if (cpu_feature_enabled(X86_FEATURE_FRED) && !enable_fred)
++	if (cpu_feature_enabled(X86_FEATURE_FRED) && !enable_fred) {
+ 		setup_clear_cpu_cap(X86_FEATURE_FRED);
++		setup_clear_cpu_cap(X86_FEATURE_NMI_SOURCE);
++	}
+ 
+ 	/* Init cpu_entry_area before IST entries are set up */
+ 	setup_cpu_entry_areas();
+-- 
+2.25.1
+
