@@ -1,82 +1,153 @@
-Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43F2B2F2C;
-	Tue, 11 Jun 2024 21:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9D415444F;
+	Tue, 11 Jun 2024 21:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718142465; cv=none; b=DuPJsQDKaZsIOQrYNOyAgmle0pGE4shgOoyQD0TcQedJ48RR6BaxxdxCsF+DYsBpMoBcX5RjzZqcWRWP97MWnD43gk7t/VNjKu2A2hHAuf34TIRf7AAVxVuKH3jWq3gYidXS8QdzGEJxX5m1qLd22HMZjXLKeTGLP2qejhJ4XPY=
+	t=1718142470; cv=none; b=LBTLoz/4CBDhVGRwqklusiq5CUzZedfRCOmsbmek9u3vY5lHnBSADdA5HEfS6MU/8B87DGYPxAql3mKMbEI4E5bJhswSqOAB9BlYoYIJoGafUa0KJESkq61wWgNSaM5n/xchZ+1m6qt6L5hcVo7qOFnCXyvZa31IhxU5tzX+3os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718142465; c=relaxed/simple;
-	bh=2I1tHmbp82p4i0lqosKETBKEgxq2gJiVR+S18NV8Cm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZRsw5zdA3tBTYy6Rk2yKXcrcV02va45T9ggjjPuXRO3fpS/tcInP3weds2skw34VH8CEkC1RHKhNkHa73QZ0pu/J1sN+EwVV8Lcb04SM8z6RebcJC5l+wh/t9MR5415LOZztce0nAevNF2ZeSV+5hhgRuRvUGz35mQeCTRGoTLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=jQlQvzNU; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1718142470; c=relaxed/simple;
+	bh=Ehq8/IZNDfsi3peqk0Yh7gAgFUTkVobt/ARHwtkD0fs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mYVpmdEl4TzWSUQoEKrWz3bf2SczmpTj7U/61qD0bPfs1s6IqZaHqt27HjYvbjPdu/ujSSgpcgq2SYeCLBvVCwYwK1N4v9ouIkk5pjFTRDpAh0rgjdFoGhb1uHlnuXHmXHzWNKwX8S/QHmbqT5EMdlrt9wynjqGYlmCnLbM9ZMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LIH7Ycb9; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="jQlQvzNU"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 0CA8A14C1E1;
-	Tue, 11 Jun 2024 23:38:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1718141905;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SkG8r/ezxubJtJGFN02+piiW7O8HV16/3VEHvWIhVI4=;
-	b=jQlQvzNUsGTH+DR/bkCcW0PnaMBJwKoabsSR6kw739Mo3ilOcI6cZr/cbQ4bLvsdW/gasF
-	BP3GYfX+2GI6z2ws04M633S9Mvu0srnlFCDOdJ2MrtTsYISWQQ6fcn2xOd7Wrl/A5Vaz3g
-	Bb3UKBm6NQtcjucNLcpfDC+vMX+HoYZ2Ae4c3GMONmxE+l28D8SkLz/AiuA+ywXF1RZbnE
-	aSiAJx86N9kcGdyqQ4AW6xQrSUFRqKANxA5VwYh5Oyub8kSkCIxoZUYFtkt3orweVisTsA
-	QQEQByz+fSfGSquI0iXratb0jS5HwgRjzYlXFp2/gTFNp/9WZqJxGK4LJOygwA==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 18dd1f79;
-	Tue, 11 Jun 2024 21:38:17 +0000 (UTC)
-Date: Wed, 12 Jun 2024 06:38:02 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: dwarves@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	bpf@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>,
-	Jiri Olsa <jolsa@kernel.org>, Jan Engelhardt <jengelh@inai.de>,
-	Matthias Schwarzott <zzam@gentoo.org>,
-	Viktor Malik <vmalik@redhat.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Jan Alexander Steffens <heftig@archlinux.org>,
-	Domenico Andreoli <cavok@debian.org>,
-	Dominique Leuenberger <dimstar@opensuse.org>,
-	Daniel Xu <dxu@dxuuu.xyz>, Yonghong Song <yonghong.song@linux.dev>
-Subject: Re: ANNOUNCE: pahole v1.27 (reproducible builds, BTF kfuncs)
-Message-ID: <ZmjDuv_zuhA3Xp2m@codewreck.org>
-References: <ZmjBHWw-Q5hKBiwA@x1>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LIH7Ycb9"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45BLRjWE024941;
+	Tue, 11 Jun 2024 21:47:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=VjP68oGVm6iHuk2iiz3FujUs9s
+	fk6Hx1GoeUGywuxao=; b=LIH7Ycb984tmQxdURdA8D6Quo5TTBLhS3JfN/hGNvF
+	TgF0kzWsIWV44u9ASFtt37nHUOGmL40WwKdCRNJ5FfBwk2Cx71u/Zy9sACJHyBjr
+	eQ9hCtUmen93SNs/9GIVfYgFQFE7s4dak/NEXP6aklbuLZjRjE1ZHvRFM+EBKE7O
+	J6vV+mZt34VOkJsgxrd45HURJR8997OtUFpHxnJbuDMGjVQvPEH3++i+ZhDU4f6f
+	4UlbKb7AE6tNXFTop01KdXJTKzhcihBsiG23Xo7SuOa8sSPrEdQ2xzz+Uydw3q/9
+	E5NN+n4QgWl9HbIa3aIQ1XmGWAbeHUMCaWgPmeKdV2Vw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ypx3603tq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Jun 2024 21:47:46 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45BLljJc026317;
+	Tue, 11 Jun 2024 21:47:45 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ypx3603tm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Jun 2024 21:47:45 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45BK3Mbi004368;
+	Tue, 11 Jun 2024 21:47:44 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn2mpre2t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Jun 2024 21:47:44 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45BLlcG414745950
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Jun 2024 21:47:40 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5C5A620043;
+	Tue, 11 Jun 2024 21:47:38 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0B16720040;
+	Tue, 11 Jun 2024 21:47:38 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 11 Jun 2024 21:47:37 +0000 (GMT)
+From: Halil Pasic <pasic@linux.ibm.com>
+To: Cornelia Huck <cohuck@redhat.com>, Halil Pasic <pasic@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux.dev, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Boqiao Fu <bfu@redhat.com>, Sebastian Mitterle <smitterl@redhat.com>
+Subject: [PATCH 1/1] s390/virtio_ccw: fix config change notifications
+Date: Tue, 11 Jun 2024 23:47:16 +0200
+Message-Id: <20240611214716.1002781-1-pasic@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZmjBHWw-Q5hKBiwA@x1>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: IB-ygfj5wSJhE-ZsTfj4HUom5pI0BZ4g
+X-Proofpoint-ORIG-GUID: 2XFA4JZYbJ9ICPrnlQ8fL292oEluDiMp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-11_10,2024-06-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ suspectscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406110145
 
-Hi,
+Commit e3e9bda38e6d ("s390/virtio_ccw: use DMA handle from DMA API")
+broke configuration change notifications for virtio-ccw by putting the
+DMA address of *indicatorp directly into ccw->cda disregarding the fact
+that if !!(vcdev->is_thinint) then the function
+virtio_ccw_register_adapter_ind() will overwrite that ccw->cda value
+with the address of the virtio_thinint_area so it can actually set up
+the adapter interrupts via CCW_CMD_SET_IND_ADAPTER.  Thus we end up
+pointing to the wrong object for both CCW_CMD_SET_IND if setting up the
+adapter interrupts fails, and for CCW_CMD_SET_CONF_IND regardless
+whether it succeeds or fails.
 
-Arnaldo Carvalho de Melo wrote on Tue, Jun 11, 2024 at 06:26:53PM -0300:
-> 	The v1.27 release of pahole and its friends is out, supporting
-> parallel reproducible builds and encoding kernel kfuncs in BTF, allowing
-> tools such as bpftrace to enumerate the available kfuncs and obtain its
-> function signatures and return types.
-> 
-> Main git repo:
-> 
->    https://git.kernel.org/pub/scm/devel/pahole/pahole.git
+To fix this, let us save away the dma address of *indicatorp in a local
+variable, and copy it to ccw->cda after the "vcdev->is_thinint" branch.
 
-It looks like the v1.27 tag has not been pushed to the git repos (either
-this or github), we're using git snapshots for nixpkgs, so it'd be great
-if a tag could be pushed out.
-(I think some release monitoring tools left and right also use tags,
-even if that's less important if you Cc other distro maintainers... I
-just happened to see the mail on bpf@vger.)
+Reported-by: Boqiao Fu <bfu@redhat.com>
+Reported-by: Sebastian Mitterle <smitterl@redhat.com>
+Fixes: e3e9bda38e6d ("s390/virtio_ccw: use DMA handle from DMA API")
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+---
+I know that checkpatch.pl complains about a missing 'Closes' tag.
+Unfortunately I don't have an appropriate URL at hand. @Sebastian,
+@Boqiao: do you have any suggetions?
+---
+ drivers/s390/virtio/virtio_ccw.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks,
+diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+index d7569f395559..d6491fc84e8c 100644
+--- a/drivers/s390/virtio/virtio_ccw.c
++++ b/drivers/s390/virtio/virtio_ccw.c
+@@ -698,6 +698,7 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+ 	dma64_t *indicatorp = NULL;
+ 	int ret, i, queue_idx = 0;
+ 	struct ccw1 *ccw;
++	dma32_t indicatorp_dma = 0;
+ 
+ 	ccw = ccw_device_dma_zalloc(vcdev->cdev, sizeof(*ccw), NULL);
+ 	if (!ccw)
+@@ -725,7 +726,7 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+ 	*/
+ 	indicatorp = ccw_device_dma_zalloc(vcdev->cdev,
+ 					   sizeof(*indicatorp),
+-					   &ccw->cda);
++					   &indicatorp_dma);
+ 	if (!indicatorp)
+ 		goto out;
+ 	*indicatorp = indicators_dma(vcdev);
+@@ -735,6 +736,7 @@ static int virtio_ccw_find_vqs(struct virtio_device *vdev, unsigned nvqs,
+ 			/* no error, just fall back to legacy interrupts */
+ 			vcdev->is_thinint = false;
+ 	}
++	ccw->cda = indicatorp_dma;
+ 	if (!vcdev->is_thinint) {
+ 		/* Register queue indicators with host. */
+ 		*indicators(vcdev) = 0;
+
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
 -- 
-Dominique Martinet | Asmadeus
+2.40.1
+
