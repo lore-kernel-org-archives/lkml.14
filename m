@@ -1,127 +1,157 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www381.your-server.de (www381.your-server.de [78.46.137.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9801D1C06
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 01:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7313163B8;
+	Tue, 11 Jun 2024 01:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.137.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718067687; cv=none; b=KIgFO3Efe+JbXoRsmXMT9PhNa/vcJQ2opZ+zpPeTen17LSn6v09lHZRRN0NwwKfdrCzWFXoumZMDkTnft80lmEee0eEBHvsUOghFYFFORqLMS9U+NwkzL90ReJql3iHcYBJYAcx+aVB1YDQaCDuCiHZi2cft6+rjFnI8pVCca7w=
+	t=1718067836; cv=none; b=JLhHQkmExdLZlK1zCAQHNaPrXELF6xuavrl0nmx/DdGm2MJ62H9Ij16I/cAfv0NKRxMJnt2Q165kUScX0nPRH9llKfSqTfxe3TG3uudB8QKL4iH+4X5pnSyMX1IpZW9gdi18518sNIuLw/xNnp3lSTUJWR45U+OiTprSMc1ySiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718067687; c=relaxed/simple;
-	bh=DGas9z7MXThnadiXv3ugauth7mz+wM97HrLiYPv1e5Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZB3TPeeQnUilwyETXqEMRaYEhJWziS+sgWKora4TVnqV5BvCMxD/L3GmiHku2HCNPQPi62d7oBSCiSwBl7dFJCvffD0v/NZBJ6E40/oYcd7EuB1OiCPPMUXq9YqSy98Y174yAP+n4S0bZwKhUfSu4LX48cC/RmXroVrQ0DmRngY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YyXFvBPA; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718067836; c=relaxed/simple;
+	bh=dhKRHtF4SgAN+8QKhbvAqBOVF8bJZ+pKcc9susdjNyc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iioirkBRVa4U3JeUVqfeDXwR5cWiwO5fH+zHq59QJIapETrzHNCRe+ZUPBA4gorNnHxGBxL5YYgyj8BTYyAcF+FMwS5HVrGFMf7kFD5LF6gYLZbZaYClx0cJg5YTFBduIQRKfQLpN8krvDnrAMe3j8+pxXHzlQNTVOmP38zDoz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metafoo.de; spf=pass smtp.mailfrom=metafoo.de; dkim=pass (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b=XhB5QTbi; arc=none smtp.client-ip=78.46.137.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metafoo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=metafoo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YyXFvBPA"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a6ef46d25efso384267566b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 18:01:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718067683; x=1718672483; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FSNTtz/at1WTiMqb7i86cg24k7jE9tp+NSVg083Ut9k=;
-        b=YyXFvBPA442Gn4inrTkFrzERB3/IjhngZL+nwGkXDlQy6ffmJO3qm8BOvKq4cJirnt
-         RjBuqdsQrt3r9uoCqMev0aq9Sanog/2LtTfn1y0KVxE3kOKArrFoEauNFsrv5aMdQ2+V
-         8pROfu/1r7fQXb9qzMKESvzhyrbhOISomNR3Q0EWQjgBMGMmvn4PxDncgMOEH8oztpjn
-         w2iY6oi/XXyCfGpaDsZ9OilxL3VsrxKYFduVkKikWF1dkTrrMmuUGrhjLsXVGCh+S9lq
-         LvJDfXM7l5XIwz4QZvrkwBBWVmPEevffbvTBGFNGwV6xydaJKzX0TJndjeETo3pwYY9t
-         CndQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718067683; x=1718672483;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FSNTtz/at1WTiMqb7i86cg24k7jE9tp+NSVg083Ut9k=;
-        b=pdzLNP/y9shT8YHESDlkIk5FxX5QC+n+7hpfeuKNRsJlBlbEEKdnH6OMekdenNYfxG
-         JqjrryFVMmRx2P97bJi7LiDSl6BGxt5rbOKxHFiSlVU5kM2y/rhpG5wZG/CZbItyZlOQ
-         DP0+wr2Biu5YGJ1M2KLUXA3EAeaIGjwXv/8LF8hXhKT/lkmI2B3CvGFH/XFo69cXUO4K
-         +o3VqQNGVl/mAKDFv/fW2YHQl53EOPK9Tm/uBh12L59Rr9zaVbMxdlm8dZ2czDJn58lA
-         BG8BrLbTiFRnLLeWmAMC8cOspKJ3d2lVLP/qu9UdbMWhRgFVqX4XXbTZj+m3kA6B0LrU
-         D/cA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0IVIQJg+T7mZToOrdF97xnVcJbxeK/o7ThuOjMQ3Ty/Mmp0DVlOuyDSb2Rz/AjndPREqkcQNZbEeEY2LpC2d97DQuRDO6jdkpRfcM
-X-Gm-Message-State: AOJu0Yz5sJqvB2LaYmC0ScMRArqKghHOocMTodcAg1VfMyBH3lkzltJ5
-	imjozqZOr7VisGYz2TtwZAl0AfsHeYUjWA74xIMmciwMZE7zQS5R
-X-Google-Smtp-Source: AGHT+IFFffUltp37Z9nK2ZtPZUEWCPN0/mAsYCmDoJHL7XHqn9Fst112PCLQTkS03m497XXLVWx7eg==
-X-Received: by 2002:a17:906:7741:b0:a6f:efb:b347 with SMTP id a640c23a62f3a-a6f0efbce1cmr405382766b.70.1718067682617;
-        Mon, 10 Jun 2024 18:01:22 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f335878cbsm54218366b.214.2024.06.10.18.01.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Jun 2024 18:01:22 -0700 (PDT)
-Date: Tue, 11 Jun 2024 01:01:21 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, linux-kernel@vger.kernel.org,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>, Steve Wahl <steve.wahl@hpe.com>
-Subject: Re: [Patch v3] x86/head/64: remove redundant check on
- level2_kernel_pgt's _PAGE_PRESENT bit
-Message-ID: <20240611010121.cvi3w62stj6g25si@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20240523123539.14260-1-richard.weiyang@gmail.com>
- <9e9669a6-de37-4140-bdc5-7d660b8427c3@intel.com>
+	dkim=pass (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="XhB5QTbi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+	s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=jWkaSxfNx+pzsfSK1fY94WQ4Jtn8QLkhhm2QngdCkpA=; b=XhB5QTbiDTZ0gTP04i5yOGIXAj
+	14BvTDKEOtr0ApCPNT/sfFqCixnn8O9csTMMUXe2pQy1YADBClpCkgjyF/RnF46cVMgNg6++tfIqH
+	JlorxJ5baLZ05f3TI+akEBTuq46ojoty1UE+HJC2IMglqjvNFP/tgT96+rj7yfM6u0EQj7B7Qjye0
+	dRvx7PwFExfMuR4ccyJn56ugKioQwRhfbFZZ9I6K2DLpN0S+C6y2RynWEURzdyL3FYpALb/Ee1gVM
+	XjCJcJOIa0S7qXed0Gzm3e1HHZuNuETOMMCSN6aJaFPfHWyMq9DOfAlncGXNfz8Wn50drVwX9mbfK
+	rzY/EU8A==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+	by www381.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <lars@metafoo.de>)
+	id 1sGpe8-000MIq-UQ; Tue, 11 Jun 2024 02:45:56 +0200
+Received: from [136.25.87.181] (helo=[192.168.86.26])
+	by sslproxy05.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <lars@metafoo.de>)
+	id 1sGpe8-000ME2-2Z;
+	Tue, 11 Jun 2024 02:45:56 +0200
+Message-ID: <3557bd0f-86b4-4dce-90dd-59303f4f1154@metafoo.de>
+Date: Mon, 10 Jun 2024 17:45:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e9669a6-de37-4140-bdc5-7d660b8427c3@intel.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] ALSA: dmaengine: Synchronize dma channel in
+ prepare()
+To: Jai Luthra <j-luthra@ti.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ alsa-devel@alsa-project.org, Devarsh Thakkar <devarsht@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>
+References: <20240610-asoc_next-v2-0-b52aaf5d67c4@ti.com>
+ <20240610-asoc_next-v2-1-b52aaf5d67c4@ti.com>
+Content-Language: en-US
+From: Lars-Peter Clausen <lars@metafoo.de>
+In-Reply-To: <20240610-asoc_next-v2-1-b52aaf5d67c4@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27302/Mon Jun 10 10:25:43 2024)
 
-On Mon, Jun 03, 2024 at 11:50:06AM -0700, Dave Hansen wrote:
->On 5/23/24 05:35, Wei Yang wrote:
->> --- a/arch/x86/kernel/head64.c
->> +++ b/arch/x86/kernel/head64.c
->> @@ -260,8 +260,7 @@ unsigned long __head __startup_64(unsigned long physaddr,
->>  
->>  	/* fixup pages that are part of the kernel image */
->>  	for (; i <= pmd_index((unsigned long)_end); i++)
->> -		if (pmd[i] & _PAGE_PRESENT)
->> -			pmd[i] += load_delta;
->> +		pmd[i] += load_delta;
+On 6/10/24 03:56, Jai Luthra wrote:
+> Sometimes the stream may be stopped due to XRUN events, in which case
+> the userspace can call snd_pcm_drop() and snd_pcm_prepare() to stop and
+> start the stream again.
 >
->So, I think this is correct.  But, man, I wish folks would go through
->the git history and make it clear that they understand _how_ the code
->got the way it is.
->
->I suspect that the original _PAGE_PRESENT check wasn't even necessary if
->cleanup_highmap() really did fix things up.  But this commit:
->
->	2aa85f246c18 ("x86/boot/64: Make level2_kernel_pgt pages invalid
->		       outside kernel area")
->
->tweaked things to actively clear out PMDs that weren't populated in
->Kirill's original loop.  It didn't touch the _PAGE_PRESENT check.  But
->it certainly did imply that the PMD doesn't have any holes in it and
->there's nothing int he middle that needs _PAGE_PRESENT cleared.
->
->> level2_kernel_pgt compiled with _PAGE_PRESENT set. The check is
->> redundant
->
->This isn't super reassuring.  It also depends on nothing having munged
->the page tables up to this point.  The code is also a bit cruel in that
->it manipulates two different sets of PMDs with the same 'pmd' variable.
->
->Also, is this comment still accurate after '2aa85f246c18'?
->
->>          * Fixup the kernel text+data virtual addresses. Note that
->>          * we might write invalid pmds, when the kernel is relocated
->>          * cleanup_highmap() fixes this up along with the mappings
->>          * beyond _end.
+> In these cases, we must wait for the DMA channel to synchronize before
+> marking the stream as prepared for playback, as the DMA channel gets
+> stopped by snd_pcm_drop() without any synchronization.
 
-Hi, Dave
 
-Do you have other suggestions? What do I expect to do next?
+We should really implement the sync_stop() PCM callback and let the ALSA 
+core let care of the sync.
 
--- 
-Wei Yang
-Help you, Help me
+
+> Reviewed-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+> Signed-off-by: Jai Luthra <j-luthra@ti.com>
+> ---
+>   include/sound/dmaengine_pcm.h         |  1 +
+>   sound/core/pcm_dmaengine.c            | 10 ++++++++++
+>   sound/soc/soc-generic-dmaengine-pcm.c |  8 ++++++++
+>   3 files changed, 19 insertions(+)
+>
+> diff --git a/include/sound/dmaengine_pcm.h b/include/sound/dmaengine_pcm.h
+> index c11aaf8079fb..9c5800e5659f 100644
+> --- a/include/sound/dmaengine_pcm.h
+> +++ b/include/sound/dmaengine_pcm.h
+> @@ -36,6 +36,7 @@ snd_pcm_uframes_t snd_dmaengine_pcm_pointer_no_residue(struct snd_pcm_substream
+>   int snd_dmaengine_pcm_open(struct snd_pcm_substream *substream,
+>   	struct dma_chan *chan);
+>   int snd_dmaengine_pcm_close(struct snd_pcm_substream *substream);
+> +int snd_dmaengine_pcm_prepare(struct snd_pcm_substream *substream);
+>   
+>   int snd_dmaengine_pcm_open_request_chan(struct snd_pcm_substream *substream,
+>   	dma_filter_fn filter_fn, void *filter_data);
+> diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
+> index 12aa1cef11a1..dbf5c6136d68 100644
+> --- a/sound/core/pcm_dmaengine.c
+> +++ b/sound/core/pcm_dmaengine.c
+> @@ -349,6 +349,16 @@ int snd_dmaengine_pcm_open_request_chan(struct snd_pcm_substream *substream,
+>   }
+>   EXPORT_SYMBOL_GPL(snd_dmaengine_pcm_open_request_chan);
+>   
+> +int snd_dmaengine_pcm_prepare(struct snd_pcm_substream *substream)
+> +{
+> +	struct dmaengine_pcm_runtime_data *prtd = substream_to_prtd(substream);
+> +
+> +	dmaengine_synchronize(prtd->dma_chan);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(snd_dmaengine_pcm_prepare);
+> +
+>   /**
+>    * snd_dmaengine_pcm_close - Close a dmaengine based PCM substream
+>    * @substream: PCM substream
+> diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+> index ea3bc9318412..078fcb0ba8a2 100644
+> --- a/sound/soc/soc-generic-dmaengine-pcm.c
+> +++ b/sound/soc/soc-generic-dmaengine-pcm.c
+> @@ -318,6 +318,12 @@ static int dmaengine_copy(struct snd_soc_component *component,
+>   	return 0;
+>   }
+>   
+> +static int dmaengine_pcm_prepare(struct snd_soc_component *component,
+> +				 struct snd_pcm_substream *substream)
+> +{
+> +	return snd_dmaengine_pcm_prepare(substream);
+> +}
+> +
+>   static const struct snd_soc_component_driver dmaengine_pcm_component = {
+>   	.name		= SND_DMAENGINE_PCM_DRV_NAME,
+>   	.probe_order	= SND_SOC_COMP_ORDER_LATE,
+> @@ -327,6 +333,7 @@ static const struct snd_soc_component_driver dmaengine_pcm_component = {
+>   	.trigger	= dmaengine_pcm_trigger,
+>   	.pointer	= dmaengine_pcm_pointer,
+>   	.pcm_construct	= dmaengine_pcm_new,
+> +	.prepare	= dmaengine_pcm_prepare,
+>   };
+>   
+>   static const struct snd_soc_component_driver dmaengine_pcm_component_process = {
+> @@ -339,6 +346,7 @@ static const struct snd_soc_component_driver dmaengine_pcm_component_process = {
+>   	.pointer	= dmaengine_pcm_pointer,
+>   	.copy		= dmaengine_copy,
+>   	.pcm_construct	= dmaengine_pcm_new,
+> +	.prepare	= dmaengine_pcm_prepare,
+>   };
+>   
+>   static const char * const dmaengine_pcm_dma_channel_names[] = {
+>
+
