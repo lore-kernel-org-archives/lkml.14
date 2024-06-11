@@ -1,30 +1,29 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CB3E57E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 10:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B79176ACE
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 10:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718100685; cv=none; b=q+V8ASJwMQ1vMpt0/AJCReUgWkhBen2q/cevKixnFsTKDsWk4noc/4ZpRWSrWh/fFPfwa3yQA4VZS5gvvEQFysM0tCpjtPdNp/0eyMq6b4hoIkMo+EP8/qt8IURH/a5uKoveEw0tMvvaw6MUh3KoQEza4T1eOLc1zHpVTk0kTmU=
+	t=1718100687; cv=none; b=f3Ka104MIdcp6GIVOeYqtC/TYwHQZdMLvgfzFF+orgR1JWRnBpfrjnhqoELTMVG06k1wFhIeiahjhq+PRS15tET5HInzRQjphPIG4np0rqo8M/uhZQJYIPhX9PH4Jn+VPqf01a0rXGDMY7rcHe1ufJkhL+WNSp6uWa6xXVqJaoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718100685; c=relaxed/simple;
-	bh=7IKpLQeAk/PwE+XF6sHfhIKOPcGYzFBQ1rJnTW0WlxY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n5xYzM9nwEK8ooT1/evy29FWXhLPcpJMcIW3Hxv427Zgf/vghvZv8tvSYhJ3Wkct8w/RsfQDZm7S4Ktq6eOyLaoErcCjxCUuJ9vj3rhrcdTfexm8oWhX0em5nHmwLLLFRLPytlFD5fATiDn0SNaGvmyepCPGkrubknps2drBtLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=G+S8m3CJ; arc=none smtp.client-ip=115.124.30.132
+	s=arc-20240116; t=1718100687; c=relaxed/simple;
+	bh=hcr3QntiY1hJlMED7LNJYXLvbYdUvoN0GePDdH6BPEE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X4yXtJsgykp/PJjOAsdEzbu2scpnSdZdTpul6uGq2nQ1e9bRYk7nbR+x7R3Teym40PG34J26nJmjOQzGt8k1mvaoC1zGaqdB+W+sZtnMIyXYwn0nLZMACk9HNbiWXrCqGagbYnyeqy6cqK8psFusehnrlltmWoM3gKmD6TuyVFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=coBKcjYZ; arc=none smtp.client-ip=115.124.30.113
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="G+S8m3CJ"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="coBKcjYZ"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1718100679; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=sk0VCEBLx9HEPQafud6f811f0Tz6WgnTKVbuudZtsuE=;
-	b=G+S8m3CJeaGO/N3L6M/HIQFECjbieubXUYafz8SHfbvukr+zHxZjC7+yrkmKRvRxj22CHcIrRDKBMQ1s1tSrCP813AzIOuhW/3RFu71gmbwIj3oy7wu2P/gk7y44omrPCbRGc3Gjwa5QeAqP4+yMB1F0ycSZD6O1ExuD5yGIZBw=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W8G1Jqm_1718100677;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8G1Jqm_1718100677)
+	t=1718100677; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=UejwwPwOxMBtGoIPmc4qXddgYNZAKKSFUqrAwuYbAKM=;
+	b=coBKcjYZJuRgPrLe/z93e9HzV5S7p5gDKHtFBCn9YWFi5oX02mL/RnClw0mlBzIf0Q6qMsXc76i2sgkkqLAn5Qlbl9rRsjXGQ0xyfPWvg8r7jXm91NC0JYnvi6kVlBdgkv8Zxvi+pDhfgdLTsRXxGWdJdrUr+I2YyQP2q8nP6qI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W8G1Jpi_1718100674;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8G1Jpi_1718100674)
           by smtp.aliyun-inc.com;
-          Tue, 11 Jun 2024 18:11:17 +0800
+          Tue, 11 Jun 2024 18:11:15 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org,
 	hughd@google.com
@@ -42,12 +41,10 @@ Cc: willy@infradead.org,
 	baolin.wang@linux.alibaba.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/6] mm: shmem: add THP validation for PMD-mapped THP related statistics
-Date: Tue, 11 Jun 2024 18:11:06 +0800
-Message-Id: <c4b04cbd51e6951cc2436a87be8eaa4a1516faec.1718090413.git.baolin.wang@linux.alibaba.com>
+Subject: [PATCH v5 0/6] add mTHP support for anonymous shmem
+Date: Tue, 11 Jun 2024 18:11:04 +0800
+Message-Id: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
-References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,47 +53,107 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In order to extend support for mTHP, add THP validation for PMD-mapped THP
-related statistics to avoid statistical confusion.
+Anonymous pages have already been supported for multi-size (mTHP) allocation
+through commit 19eaf44954df, that can allow THP to be configured through the
+sysfs interface located at '/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled'.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Reviewed-by: Barry Song <v-songbaohua@oppo.com>
----
- mm/shmem.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+However, the anonymous shmem will ignore the anonymous mTHP rule configured
+through the sysfs interface, and can only use the PMD-mapped THP, that is not
+reasonable. Many implement anonymous page sharing through mmap(MAP_SHARED |
+MAP_ANONYMOUS), especially in database usage scenarios, therefore, users expect
+to apply an unified mTHP strategy for anonymous pages, also including the
+anonymous shared pages, in order to enjoy the benefits of mTHP. For example,
+lower latency than PMD-mapped THP, smaller memory bloat than PMD-mapped THP,
+contiguous PTEs on ARM architecture to reduce TLB miss etc.
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 6868c0af3a69..ae358efc397a 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1647,7 +1647,7 @@ static struct folio *shmem_alloc_and_add_folio(gfp_t gfp,
- 			return ERR_PTR(-E2BIG);
- 
- 		folio = shmem_alloc_folio(gfp, HPAGE_PMD_ORDER, info, index);
--		if (!folio)
-+		if (!folio && pages == HPAGE_PMD_NR)
- 			count_vm_event(THP_FILE_FALLBACK);
- 	} else {
- 		pages = 1;
-@@ -1665,7 +1665,7 @@ static struct folio *shmem_alloc_and_add_folio(gfp_t gfp,
- 		if (xa_find(&mapping->i_pages, &index,
- 				index + pages - 1, XA_PRESENT)) {
- 			error = -EEXIST;
--		} else if (huge) {
-+		} else if (pages == HPAGE_PMD_NR) {
- 			count_vm_event(THP_FILE_FALLBACK);
- 			count_vm_event(THP_FILE_FALLBACK_CHARGE);
- 		}
-@@ -2031,7 +2031,8 @@ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
- 		folio = shmem_alloc_and_add_folio(huge_gfp,
- 				inode, index, fault_mm, true);
- 		if (!IS_ERR(folio)) {
--			count_vm_event(THP_FILE_ALLOC);
-+			if (folio_test_pmd_mappable(folio))
-+				count_vm_event(THP_FILE_ALLOC);
- 			goto alloced;
- 		}
- 		if (PTR_ERR(folio) == -EEXIST)
+As discussed in the bi-weekly MM meeting[1], the mTHP controls should control
+all of shmem, not only anonymous shmem, but support will be added iteratively.
+Therefore, this patch set starts with support for anonymous shmem.
+
+The primary strategy is similar to supporting anonymous mTHP. Introduce
+a new interface '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled',
+which can have almost the same values as the top-level
+'/sys/kernel/mm/transparent_hugepage/shmem_enabled', with adding a new
+additional "inherit" option and dropping the testing options 'force' and
+'deny'. By default all sizes will be set to "never" except PMD size, which
+is set to "inherit". This ensures backward compatibility with the anonymous
+shmem enabled of the top level, meanwhile also allows independent control of
+anonymous shmem enabled for each mTHP.
+
+Use the page fault latency tool to measure the performance of 1G anonymous shmem
+with 32 threads on my machine environment with: ARM64 Architecture, 32 cores,
+125G memory:
+base: mm-unstable
+user-time    sys_time    faults_per_sec_per_cpu     faults_per_sec
+0.04s        3.10s         83516.416                  2669684.890
+
+mm-unstable + patchset, anon shmem mTHP disabled
+user-time    sys_time    faults_per_sec_per_cpu     faults_per_sec
+0.02s        3.14s         82936.359                  2630746.027
+
+mm-unstable + patchset, anon shmem 64K mTHP enabled
+user-time    sys_time    faults_per_sec_per_cpu     faults_per_sec
+0.08s        0.31s         678630.231                 17082522.495
+
+From the data above, it is observed that the patchset has a minimal impact when
+mTHP is not enabled (some fluctuations observed during testing). When enabling 64K
+mTHP, there is a significant improvement of the page fault latency.
+
+[1] https://lore.kernel.org/all/f1783ff0-65bd-4b2b-8952-52b6822a0835@redhat.com/
+
+Changes from v4:
+ - Fix the unused variable warning reported by kernel test robot.
+ - Drop the 'anon' prefix for variables and functions, per Daniel.
+
+Changes from v3:
+ - Drop 'force' and 'deny' testing options for each mTHP.
+ - Use new helper update_mmu_tlb_range(), per Lance.
+ - Update documentation to drop "anonymous thp" terminology, per David.
+ - Initialize the 'suitable_orders' in shmem_alloc_and_add_folio(),
+   reported by kernel test robot.
+ - Fix the highest mTHP order in shmem_get_unmapped_area().
+ - Update some commit message.
+
+Changes from v2:
+ - Rebased to mm/mm-unstable.
+ - Remove 'huge' parameter for shmem_alloc_and_add_folio(), per Lance.
+
+Changes from v1:
+ - Drop the patch that re-arranges the position of highest_order() and
+   next_order(), per Ryan.
+ - Modify the finish_fault() to fix VA alignment issue, per Ryan and
+   David.
+ - Fix some building issues, reported by Lance and kernel test robot.
+ - Update some commit message.
+
+Changes from RFC:
+ - Rebase the patch set against the new mm-unstable branch, per Lance.
+ - Add a new patch to export highest_order() and next_order().
+ - Add a new patch to align mTHP size in shmem_get_unmapped_area().
+ - Handle the uffd case and the VMA limits case when building mapping for
+   large folio in the finish_fault() function, per Ryan.
+ - Remove unnecessary 'order' variable in patch 3, per Kefeng.
+ - Keep the anon shmem counters' name consistency.
+ - Modify the strategy to support mTHP for anonymous shmem, discussed with
+   Ryan and David.
+ - Add reviewed tag from Barry.
+ - Update the commit message.
+
+Baolin Wang (6):
+  mm: memory: extend finish_fault() to support large folio
+  mm: shmem: add THP validation for PMD-mapped THP related statistics
+  mm: shmem: add multi-size THP sysfs interface for anonymous shmem
+  mm: shmem: add mTHP support for anonymous shmem
+  mm: shmem: add mTHP size alignment in shmem_get_unmapped_area
+  mm: shmem: add mTHP counters for anonymous shmem
+
+ Documentation/admin-guide/mm/transhuge.rst |  23 ++
+ include/linux/huge_mm.h                    |  23 ++
+ mm/huge_memory.c                           |  17 +-
+ mm/memory.c                                |  57 +++-
+ mm/shmem.c                                 | 344 ++++++++++++++++++---
+ 5 files changed, 403 insertions(+), 61 deletions(-)
+
 -- 
 2.39.3
 
