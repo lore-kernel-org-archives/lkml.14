@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C23917CA1C
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:01:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB9717D357
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:01:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718110880; cv=none; b=rleYi5PSXSkTWl52TSW55Me/H4yifvZs4iZIemAGUwwnPbT9nzB7yH+AscqM8zodlCkDDt2j8wp6coyJUOtZyZfrkm4doztxE9Q94ztA7QQypAsJViIgWLIEWYtoxuX7G8LvcpanwUvX/wpTCiO8IrICyKyFEntYBWEUZKMwVxA=
+	t=1718110883; cv=none; b=Ja/UqgbiT0JOLh8tM/unrJujrMGgvs4FUGekxZH++h9TxNF02VykUNEVUuzFshSPM6xbXgGrdHxc/Q875qPYa2A2UjdwndLuLHtxEhwAULcs/xvQ1osZqeWJTDWg1cpP/piuoatj8ZX6HPwWC3dwSC/PVKhIcijY4kNC3o4tAW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718110880; c=relaxed/simple;
-	bh=FU/6iPiDrX2Ki4l7e9j9OyGkg+UQtIgHZ5MD4/NbJKU=;
+	s=arc-20240116; t=1718110883; c=relaxed/simple;
+	bh=N5PoFHKoWvFUydSF++A0qAzk4rZ0C9suWHG8tjZ6f+E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VBLDq+YV2r/NT4ry5KyBGX9NbxosP9vAF/gyRVWPCXwRX3TI4EaeXN/36YLOJ3AwgmPVODIJxWPBae7Uhj0UtEmXWmNz6w8C9hjwewD85YStEFzEzM03uFPyRd5C0rDAOGOIEvTvTiclgP2ZKivntdBheHpezeso32/R2/3Hrq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QzPahklF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=D5zBT65dV+1/jHzaIOMaChA5Mekk+ybGyEfLkUzX5hk9sNwFOUoDBbtwzspjKr49MxveHaXCy5d6v/aS+quBAhZpCVtZcuUK+ElU5PMQv4I1gIICvMTF1ml/blp9LELByskijnkbumedRr8sSszvXU6BTGt+Z8Ych245NQe9qRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=L94lrCQd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QzPahklF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAA6BC3277B;
-	Tue, 11 Jun 2024 13:01:19 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="L94lrCQd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4195C32789;
+	Tue, 11 Jun 2024 13:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718110880;
-	bh=FU/6iPiDrX2Ki4l7e9j9OyGkg+UQtIgHZ5MD4/NbJKU=;
+	s=korg; t=1718110883;
+	bh=N5PoFHKoWvFUydSF++A0qAzk4rZ0C9suWHG8tjZ6f+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QzPahklFBMInwUg8SOxZYVzG3DM53urnMtWv6DkOPGTie+xne1Q1/gpeBh+ZtshsF
-	 s00MYP7KNP+crR9RvD9nM4TROgVlZutGt9K3gmNbL0V3naLfs5UAECTiBN1EU8VurN
-	 nO/Xh0HKdM/lKkupXbJ3utgSvwH6hOHPinTRWBAM=
+	b=L94lrCQdz78HEeBprwZNyKW4PCTH4eZDeUATzdbu/Kohtt2+zoLs/vWveUKQ/ha9+
+	 E0hxA6qNnW8GRIQDjMiDhx6DxvA2Psn2j40F6rEARHVnyChWXN/3XakihFpYYg0+Bc
+	 Bl6ybg23up+nyQz17TvyJ+HLoMspaaJi3bNtAQS4=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH 3/6] driver core: driver: mark driver_add/remove_groups constant
-Date: Tue, 11 Jun 2024 15:01:06 +0200
-Message-ID: <20240611130103.3262749-9-gregkh@linuxfoundation.org>
+Subject: [PATCH 4/6] driver core: make device_release_driver_internal() take a const *
+Date: Tue, 11 Jun 2024 15:01:07 +0200
+Message-ID: <20240611130103.3262749-10-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240611130103.3262749-7-gregkh@linuxfoundation.org>
 References: <20240611130103.3262749-7-gregkh@linuxfoundation.org>
@@ -39,55 +39,46 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1845; i=gregkh@linuxfoundation.org; h=from:subject; bh=FU/6iPiDrX2Ki4l7e9j9OyGkg+UQtIgHZ5MD4/NbJKU=; b=kA0DAAIRMUfUDdst+ykByyZiAGZoSpKhOael1iKxPJ05oFvNqdwkNPEh56kminJbjUeYkpziX IhdBAARAgAdFiEE9LYMxb94wiFKMT3LMUfUDdst+ykFAmZoSpIACgkQMUfUDdst+ykfzACfQwaC DsDxH3dHcU1SkMS8Gj/zyTsAn3FoIF3Hayqk6RDXxFMpgFJxrAfG
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1411; i=gregkh@linuxfoundation.org; h=from:subject; bh=N5PoFHKoWvFUydSF++A0qAzk4rZ0C9suWHG8tjZ6f+E=; b=owGbwMvMwCRo6H6F97bub03G02pJDGkZXpPO6s/gEPJ/um4Sh1sJz2nuiQUtctnZqRP8f99// Od756PZHbEsDIJMDLJiiixftvEc3V9xSNHL0PY0zBxWJpAhDFycAjCRaRsYZrPXhpx596jiUfyn MCe7mWJmiywP72RYcCri9bZ9ChcrT1rs3KO+J9hn0j8LAwA=
 X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
 
-driver_add_groups() and driver_remove_groups should take a constant
-pointer as the structure is not modified, so make the change.
+Change device_release_driver_internal() to take a const struct
+device_driver * as it is not modifying it at all.
 
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/base/base.h   | 4 ++--
- drivers/base/driver.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/base/base.h | 2 +-
+ drivers/base/dd.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/base/base.h b/drivers/base/base.h
-index db4f910e8e36..cba8307908c7 100644
+index cba8307908c7..d332b87cde9e 100644
 --- a/drivers/base/base.h
 +++ b/drivers/base/base.h
-@@ -175,8 +175,8 @@ static inline void dev_sync_state(struct device *dev)
- 		dev->driver->sync_state(dev);
+@@ -155,7 +155,7 @@ bool bus_is_registered(const struct bus_type *bus);
+ 
+ int bus_add_driver(struct device_driver *drv);
+ void bus_remove_driver(struct device_driver *drv);
+-void device_release_driver_internal(struct device *dev, struct device_driver *drv,
++void device_release_driver_internal(struct device *dev, const struct device_driver *drv,
+ 				    struct device *parent);
+ 
+ void driver_detach(struct device_driver *drv);
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 83d352394fdf..c24eca917d41 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -1284,7 +1284,7 @@ static void __device_release_driver(struct device *dev, struct device *parent)
  }
  
--int driver_add_groups(struct device_driver *drv, const struct attribute_group **groups);
--void driver_remove_groups(struct device_driver *drv, const struct attribute_group **groups);
-+int driver_add_groups(const struct device_driver *drv, const struct attribute_group **groups);
-+void driver_remove_groups(const struct device_driver *drv, const struct attribute_group **groups);
- void device_driver_detach(struct device *dev);
- 
- int devres_release_all(struct device *dev);
-diff --git a/drivers/base/driver.c b/drivers/base/driver.c
-index c8436c26ed6a..85b4c00df078 100644
---- a/drivers/base/driver.c
-+++ b/drivers/base/driver.c
-@@ -199,13 +199,13 @@ void driver_remove_file(struct device_driver *drv,
- }
- EXPORT_SYMBOL_GPL(driver_remove_file);
- 
--int driver_add_groups(struct device_driver *drv,
-+int driver_add_groups(const struct device_driver *drv,
- 		      const struct attribute_group **groups)
+ void device_release_driver_internal(struct device *dev,
+-				    struct device_driver *drv,
++				    const struct device_driver *drv,
+ 				    struct device *parent)
  {
- 	return sysfs_create_groups(&drv->p->kobj, groups);
- }
- 
--void driver_remove_groups(struct device_driver *drv,
-+void driver_remove_groups(const struct device_driver *drv,
- 			  const struct attribute_group **groups)
- {
- 	sysfs_remove_groups(&drv->p->kobj, groups);
+ 	__device_driver_lock(dev, parent);
 -- 
 2.45.2
 
