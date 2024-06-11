@@ -1,148 +1,245 @@
-Received: from flow5-smtp.messagingengine.com (flow5-smtp.messagingengine.com [103.168.172.140])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A618017578;
-	Tue, 11 Jun 2024 16:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F56B1EB31;
+	Tue, 11 Jun 2024 17:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718125113; cv=none; b=IT6S1momMkxjGP3+GCAx0TbzdhQvbw/b5IB4LEA17VaY3AK0MgaSmqkKQfDluEZz+0FpPPzIaCnvthy2wfgoDPmnQnAByZB5R0yXJTJCFiDqjpkxnlM33eQfj3ZvP8YuoJl4L2sEA4gy2HWbMi969dcJxkFU4aI1Krz22zPmFuA=
+	t=1718125338; cv=none; b=GocXEXtQ3dUaYNDFPkZivFRq5eHsrWoSb+0zFS6U6Gy4g4i1wM3+IYUkH/VdqCHLAo1f7jjJM6eG6s7SHAlKzJOanV9Lk3gIQHO/+bEEuLGEjubJBbnS1XuMSXo1ZLF7BzLo0Ff+PAKd65hZnn9AYhpfo/smu9QuMe27SdsrKsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718125113; c=relaxed/simple;
-	bh=8SY4dECWglq57tFvEFA6sQZdC/024FgtdpPZQqJybcc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T+Xh7pDPfVWWgmde+8dJ42exvDzMJOMTBWzpi+NM5boymp4qGHpuwQZKYmbqrrXaaaU5xs64BT7W/d2Nd8Dpd59QNT87jIHaUt+VW3DDrxqQGOtW/Th7JlEc51czBrInpyXTligqC1H2XY9KAKEeP47PjgU/fy4DFEHbPfTlqlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=HNtxPS6+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GMEzhY5L; arc=none smtp.client-ip=103.168.172.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="HNtxPS6+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GMEzhY5L"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailflow.nyi.internal (Postfix) with ESMTP id 8382F2002AF;
-	Tue, 11 Jun 2024 12:58:29 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 11 Jun 2024 12:58:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1718125109; x=1718132309; bh=kTsf/XjG12
-	FVk17WuA7d1tL6MKxw/YBHpNOowUqpZbY=; b=HNtxPS6+iCZ8+1cfY/sSZ9/ZXF
-	1LGHuCUvt7fcxZptXUMepaOnq6oloZQL5QQ5lYITEwc+t7OGBlscIZ6vcSDTPAjX
-	DffAB4D9d15G8SXoloFnaqYzP8S3zOBEiWtsf6tFCTDt7I0PbylnQ2zcK+AsIYUW
-	CIbLPLpJljyZKf+1SbkveJg4jT02SkZH/eDfTK39P0WpemggYhQ7nzifkZBS3Krm
-	wQptVOAvf48gu+iweeV+PIySbDrkOegngkpZW12fafUWEHqcPPdAAaYfM8N1b2BP
-	fR1ErsJZmlsCioybyE8WUR0VKn+0PsMNAwFGtg7Y/3/rqHyuV86Aphqn+F5g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718125109; x=1718132309; bh=kTsf/XjG12FVk17WuA7d1tL6MKxw
-	/YBHpNOowUqpZbY=; b=GMEzhY5LVS51kXJlSwbADAeUgsXzI+lP1nAdPnU6CZtv
-	KrLVpLhAjPFLpbE29GO3hNGm4G8TJwRJGBotWW3AIMcv7y/z6R5JQhrFEv2GQFt3
-	xuwza32TGSptHqX1k3F9meZF68IBSnoXfiOa4J58GwjnNxmG3HAYIC2O2ViAH4sg
-	sn7ZZ0FiY5cJ8JZxSSAYnKdqQhSiCYARmwrPQapRZ+zRS4reRQzNcaBAOlSvNMnP
-	WiEgG/axJmyvKBUityiHIrsy3vguZed7ecK2gL7LsYTUdomDkPQ+75xqWVeL/yIE
-	e+oSB07ou/DhjgvqpoR7enNMxzo1UcNIdwTaaNZVRw==
-X-ME-Sender: <xms:NYJoZkVtsmI9UE_5Ce1q1cC6FgvLfGDaRhx602DPw50Ucofyj8-yuQ>
-    <xme:NYJoZomgti10pZ2RaBjjyeXoWs5GzSE7k1LFzfL9sah-Rx0E1PdbliGPpwxlfYSgK
-    X04DpU3sOtL7HdvJQ>
-X-ME-Received: <xmr:NYJoZobIqU5CKd6mWbjxUZN_1TY_eBPgc1YEr6pHkIdTnzjKPnAZNf3F2TW40Fb5g7-e99lyvEj9bXjbJ4st8jdmA-r00EGItw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeduvddguddtiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enfghrlhcuvffnffculdejtddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdt
-    tddtvdenucfhrhhomhepffgrnhhivghlucgiuhcuoegugihusegugihuuhhurdighiiiqe
-    enucggtffrrghtthgvrhhnpedvfeekteduudefieegtdehfeffkeeuudekheduffduffff
-    gfegiedttefgvdfhvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpegugihusegugihuuhhurdighiii
-X-ME-Proxy: <xmx:NYJoZjUx3lzU5hr4G3Z7pP1IIfHMRXQVYn-HGRZYnxU5ELp7av2PWQ>
-    <xmx:NYJoZulV8Lkn0Uc0c5MiS3-6oN7nd3Rsv8TTMgVs3OL17RnCYKl84A>
-    <xmx:NYJoZoeGNtrJacC1w1GDL6SXLfHe7_tqF3CpeNYYCgDktxLwGEvzAA>
-    <xmx:NYJoZgEjJm8QGAoxV94augFby2UHmxYIskbrGcWyRRy3rvwQMx6M9A>
-    <xmx:NYJoZtedwF1u9vgxn3g7M2RCV5JVvw96N8fC1cQdUBpzUhbDiQAt6eu3>
-Feedback-ID: i6a694271:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Jun 2024 12:58:27 -0400 (EDT)
-Date: Tue, 11 Jun 2024 10:58:26 -0600
-From: Daniel Xu <dxu@dxuuu.xyz>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: shuah@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	eddyz87@gmail.com, ast@kernel.org, quentin@isovalent.com, alan.maguire@oracle.com, 
-	acme@kernel.org, martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com, 
-	mykolal@fb.com, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH bpf-next v4 03/12] bpf: selftests: Fix fentry test kfunc
- prototypes
-Message-ID: <gwrlw7wtc72vz3ky2pltvpoadtjlezv6kdrs6wf3ptsecyu2sh@aexbk4rotm3x>
-References: <cover.1717881178.git.dxu@dxuuu.xyz>
- <1f493cb7a7e5349f99e2badf0880b75dd6681898.1717881178.git.dxu@dxuuu.xyz>
- <Zmb_hJQqxi44Nj5B@krava>
+	s=arc-20240116; t=1718125338; c=relaxed/simple;
+	bh=vqJwh1ZTKRcGC6rpPG/75qkN5daDxSCuDaDr2116EpM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=paZ1zJOQxYvuLygofhLZ3ydUls4Rgs4FojUc7liooR4juyggExZSiba9+9W9cnYsuLuHZvxeXRVuTxqSO52EnEvLBGdm9UWuZYYILKJmyxdhTy83j2LijeA+CaYAv5nyoRjYt5i3aFftCYBAnsOQqEEPM4imWrBcv0EQEaZT6ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VzFGS2VWmz6J9x8;
+	Wed, 12 Jun 2024 00:57:36 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 337E0140516;
+	Wed, 12 Jun 2024 01:02:12 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 11 Jun
+ 2024 18:02:11 +0100
+Date: Tue, 11 Jun 2024 18:02:10 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Petar Stoykov <pd.pstoykov@gmail.com>
+CC: Jonathan Cameron <jic23@kernel.org>, <linux-iio@vger.kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Lars-Peter Clausen
+	<lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>, Angel Iglesias
+	<ang.iglesiasg@gmail.com>, Conor Dooley <conor+dt@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] iio: pressure: Add driver for Sensirion SDP500
+Message-ID: <20240611180210.00006f23@Huawei.com>
+In-Reply-To: <CADFWO8FGqD5GyrRtvFptjMdYBhfFFwOzgZ1XnVVEPeY3E8CZPg@mail.gmail.com>
+References: <CADFWO8EQUkGcbE=RXjxXbub2tZge9+ss=gB-Q6wngFAvwFygRg@mail.gmail.com>
+	<20240505181829.49864540@jic23-huawei>
+	<CADFWO8FGqD5GyrRtvFptjMdYBhfFFwOzgZ1XnVVEPeY3E8CZPg@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zmb_hJQqxi44Nj5B@krava>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Mon, Jun 10, 2024 at 03:28:36PM GMT, Jiri Olsa wrote:
-> On Sat, Jun 08, 2024 at 03:15:59PM -0600, Daniel Xu wrote:
-> > The prototypes in progs/get_func_ip_test.c were not in line with how the
-> > actual kfuncs are defined in net/bpf/test_run.c. This causes compilation
-> > errors when kfunc prototypes are generated from BTF.
-> > 
-> > Fix by aligning with actual kfunc definitions.
-> > 
-> > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-> > ---
-> >  .../testing/selftests/bpf/progs/get_func_ip_test.c | 14 +++++++-------
-> >  1 file changed, 7 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/tools/testing/selftests/bpf/progs/get_func_ip_test.c b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> > index 8956eb78a226..a89596f7585d 100644
-> > --- a/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> > +++ b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-> > @@ -5,13 +5,13 @@
-> >  
-> >  char _license[] SEC("license") = "GPL";
-> >  
-> > -extern const void bpf_fentry_test1 __ksym;
-> > -extern const void bpf_fentry_test2 __ksym;
-> > -extern const void bpf_fentry_test3 __ksym;
-> > -extern const void bpf_fentry_test4 __ksym;
-> > -extern const void bpf_modify_return_test __ksym;
-> > -extern const void bpf_fentry_test6 __ksym;
-> > -extern const void bpf_fentry_test7 __ksym;
-> > +extern int bpf_fentry_test1(int a) __ksym;
-> 
-> hum, the only registered one as kfunc is bpf_fentry_test1, to allow fmodret
-> also there's bpf_fentry_test9 as kfunc, which AFAICS is not really needed
+On Mon, 10 Jun 2024 10:58:35 +0200
+Petar Stoykov <pd.pstoykov@gmail.com> wrote:
 
-I think bpf_modify_return_test() is also registered. But otherwise yeah,
-I think I was overaggressive here. Are you thinking something like this?
+> On Sun, May 5, 2024 at 7:18=E2=80=AFPM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+> >
+> > On Tue, 30 Apr 2024 17:27:24 +0200
+> > Petar Stoykov <pd.pstoykov@gmail.com> wrote:
+> > =20
+> > > From 6ae7537517f551540121ca6fb3b99080b7580410 Mon Sep 17 00:00:00 2001
+> > > From: Petar Stoykov <pd.pstoykov@gmail.com>
+> > > Date: Mon, 15 Jan 2024 12:21:26 +0100
+> > > Subject: [PATCH 2/3] iio: pressure: Add driver for Sensirion SDP500
+> > >
+> > > Sensirion SDP500 is a digital differential pressure sensor. The senso=
+r is
+> > > accessed over I2C.
+> > >
+> > > Signed-off-by: Petar Stoykov <pd.pstoykov@gmail.com> =20
+> > Hi Petar
+> >
+> > Ignoring the patch formatting which others have already given feedback =
+on,
+> > a few minor comments inline.
+> >
+> > Also, I'd expect some regulator handling to turn the power on.
+> > Obviously on your particular board there may be nothing to do but good =
+to
+> > have the support in place anyway and it will be harmless if the power
+> > is always on.
+> >
+> > Jonathan
+> > =20
+> Hi Jonathan,
+>=20
+> Thank you for looking past the formatting!
+>=20
+> I wrongly assumed the power regulator would be handled automatically :)
+> I see examples of how to do it in other pressure drivers now.
+>=20
+> > >  st_pressure-$(CONFIG_IIO_BUFFER) +=3D st_pressure_buffer.o
+> > > diff --git a/drivers/iio/pressure/sdp500.c b/drivers/iio/pressure/sdp=
+500.c
+> > > new file mode 100644
+> > > index 000000000000..7efcc69e829c
+> > > --- /dev/null
+> > > +++ b/drivers/iio/pressure/sdp500.c
+> > > @@ -0,0 +1,144 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +#include <linux/i2c.h>
+> > > +#include <linux/crc8.h>
+> > > +#include <linux/iio/iio.h>
+> > > +#include <asm/unaligned.h>
+> > > +
+> > > +#define SDP500_CRC8_POLYNOMIAL  0x31   // x8 + x5 + x4 + 1 (normaliz=
+ed to 0x31)
+> > > +#define SDP500_READ_SIZE        3
+> > > +#define SDP500_CRC8_WORD_LENGTH 2 =20
+> >
+> > As below. I'd establish these off the data the are the lengths of by us=
+ing
+> > a structure definition.  That will be more obvious and less fragile than
+> > defines hiding up here.
+> >
+> > =20
+> > > +#define SDP500_CRC8_INIT        0x00 =20
+> >
+> > I'd just use the number inline.  Can't see what the define is adding. =
+=20
+>=20
+> I've been taught to avoid magic numbers as much as possible.
+> Giving it a define directly explains what the number is, even if it's use=
+d once.
+> But I'll follow the community (in this case, you) for this.
+
+Normally I agree with the magic number case, but this
+is an actual value.  We are saying continue the CRC from
+0 (i.e. nothing). It's kind of the logical default value
+so seeing it in line makes it clear we aren't continuing form
+a prior crc etc.
+
+...
+
+> > =20
+> > > +    },
+> > > +};
+> > > +
+> > > +static int sdp500_read_raw(struct iio_dev *indio_dev,
+> > > +              struct iio_chan_spec const *chan,
+> > > +              int *val, int *val2, long mask)
+> > > +{
+> > > +    int ret;
+> > > +    u8 rxbuf[SDP500_READ_SIZE]; =20
+> > You could define this as a struct so all the data types are obvious.
+> >
+> >         struct {
+> >                 __be16 data;
+> >                 u8 crc;
+> >         } __packed rxbuf;
+> > The  __packed let's you use sizeof(rxbuf) for the transfer size.
+> > Beware though as IIRC that will mean data is not necessarily aligned
+> > so you'll still need the unaligned accessors.
+> > =20
+>=20
+> I know, but I prefer to receive data in simple arrays and then deal with =
+it.
+The disadvantage is you loose the readability a structure brings, but
+meh, I don't care that much.=20
+
+>=20
+> > > +    u8 rec_crc, calculated_crc;
+> > > +    s16 dec_value;
+> > > +    struct sdp500_data *data =3D iio_priv(indio_dev);
+> > > +    struct i2c_client *client =3D to_i2c_client(data->dev);
+> > > +
+> > > +    switch (mask) {
+> > > +    case IIO_CHAN_INFO_PROCESSED:
+> > > +        ret =3D i2c_master_recv(client, rxbuf, SDP500_READ_SIZE);
+> > > +        if (ret < 0) {
+> > > +            dev_err(indio_dev->dev.parent, "Failed to receive data");
+> > > +            return ret;
+> > > +        }
+> > > +        if (ret !=3D SDP500_READ_SIZE) {
+> > > +            dev_err(indio_dev->dev.parent, "Data is received wrongly=
+"); =20
+> >
+> > I'd guess indio_dev->dev.parent =3D=3D data->dev
+> > If so use data->dev as more compact and that's where you are getting the
+> > i2c_client from.
+> > =20
+>=20
+> Makes sense.
+>=20
+> > > +            return -EIO;
+> > > +        }
+> > > +
+> > > +        rec_crc =3D rxbuf[2];
+> > > +        calculated_crc =3D crc8(sdp500_crc8_table, rxbuf,
+> > > SDP500_CRC8_WORD_LENGTH, =20
+> >
+> > I'd use the number 2 for length directly as it's useful to know this is=
+ the
+> > __be16 only, or sizeof(__be16)
+> > What is the point in rec_crc local variable? =20
+>=20
+> Ok, I will use sizeof(rxbuff) - 1 instead of the define.
+That's obscure and another reason I'd rather see a structure so this
+becomes sizeof(a.data)
+
+> The rec_crc is again for readability, like the SDP500_CRC8_INIT define.
+> I will change it to "received_crc" which is clearer though.
+The fact you compare it with the crc makes that pretty obvious, but
+fair enough I guess if you think it helps.
+
+>=20
+> > =20
+> > > +            SDP500_CRC8_INIT);
+> > > +        if (rec_crc !=3D calculated_crc) {
+> > > +            dev_err(indio_dev->dev.parent, "calculated crc =3D 0x%.2=
+X,
+> > > received 0x%.2X",
+> > > +                calculated_crc, rec_crc);
+> > > +            return -EIO;
+> > > +        }
+> > > +
+> > > +        dec_value =3D get_unaligned_be16(rxbuf);
+> > > +        dev_dbg(indio_dev->dev.parent, "dec value =3D %d", dec_value=
+); =20
+> >
+
+>=20
+> > > +};
+> > > +module_i2c_driver(sdp500_driver);
+> > > +
+> > > +MODULE_AUTHOR("Thomas Sioutas <thomas.sioutas@prodrive-technologies.=
+com>");
+> > > +MODULE_DESCRIPTION("Driver for Sensirion SDP500 differential pressur=
+e sensor");
+> > > +MODULE_LICENSE("GPL"); =20
+> > =20
+>=20
+> I will test the driver with the suggested changes as soon as I get the
+> hardware again
+> and I will try using the b4 tool with "web submission endpoint". Thanks a=
+gain!
+>=20
+Good luck! (it should be fine but I've never tried it :)
+
+Jonathan
 
 
-diff --git a/tools/testing/selftests/bpf/progs/get_func_ip_test.c b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-index a89596f7585d..2011cacdeb18 100644
---- a/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-+++ b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
-@@ -6,12 +6,11 @@
- char _license[] SEC("license") = "GPL";
-
- extern int bpf_fentry_test1(int a) __ksym;
--extern int bpf_fentry_test2(int a, __u64 b) __ksym;
--extern int bpf_fentry_test3(char a, int b, __u64 c) __ksym;
--extern int bpf_fentry_test4(void *a, char b, int c, __u64 d) __ksym;
- extern int bpf_modify_return_test(int a, int *b) __ksym;
--extern int bpf_fentry_test6(__u64 a, void *b, short c, int d, void *e, __u64 f) __ksym;
--extern int bpf_fentry_test7(struct bpf_fentry_test_t *arg) __ksym;
-+
-+extern const void bpf_fentry_test2 __ksym;
-+extern const void bpf_fentry_test3 __ksym;
-+extern const void bpf_fentry_test4 __ksym;
-
- extern bool CONFIG_X86_KERNEL_IBT __kconfig __weak;
