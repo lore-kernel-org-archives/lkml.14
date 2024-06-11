@@ -1,115 +1,188 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A372651016
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 15:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 478862C6BD;
+	Tue, 11 Jun 2024 15:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718118270; cv=none; b=RaaHPHmfgeQX3DHpWmyL6rIx8ViH7jO1O48zjlsFwW7nBIgMB2/EtCnoNnKqlbR5rAK079nDrCwkLxFvV0VyPL9rdno86vcv00p/B5xhfBKtPxmKwQ+IQYIgZqrUcB18AxLs9O0UQ51MKAfKu4qWY/H067tV7EcUKkg9vb0Lnpw=
+	t=1718118278; cv=none; b=Icsuz8O68fN0trTRntJEYP25aJhGAofHSkv/7VZOYwCuNNl23dmOgH1L1LRnDypepsgPkUO4hA7kR9ExJibf9IaxpzHUKspUBTDF9JG04+h+6+GXVJgCZqEEDB8hq1C1+SVVdVK4St08N0q70S/jY10DaHKYP0SF44pZPVK1U2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718118270; c=relaxed/simple;
-	bh=AkUd3nITwa1Nsrx5FGIDh+oFc9gDF9r3YGUNfEDGOdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ktH/zHvPAI0Tpg9BXDSMLVNOwbtBgSmJ1jZ6G9nvmytpaQPgSYjM1fhT6e9kKsS6v8GxVH/2eelYVpGkQL1oyMwCbPIRZci/PSig2zRJU2eR+UvMlgaFMvt5twdAjOgqjmRYJx4bbzuIr0M6qiz1vbdaHQrkGQHFKorwFweqmko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=f2YWHNa+; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="f2YWHNa+"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3d22323a3ccso169336b6e.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 08:04:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1718118266; x=1718723066; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U1vw+2ACNqWtSlz7WiuesM2J8QxhMf27utzH+YpcgUU=;
-        b=f2YWHNa+NzKq6p06NcHmTrhmFPxBNtf57gmsdOhfH8ZMkjt7WXez7KiFFABFba2guQ
-         E7R9Hk3EWcEqvvov7f37ydSrEy0UyhahCv+hphrtrbf/ghRwesyD9P3jOjFUKYTuFWkb
-         5VyPBtCQk4a45pX81xHF894pzb9xnol4pxoRY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718118266; x=1718723066;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U1vw+2ACNqWtSlz7WiuesM2J8QxhMf27utzH+YpcgUU=;
-        b=swf5SZzoE7Bsc+/079Sv5WufdesauU1qY5LpQtn2pxBwXpc/GezesOKoYfRt2D+lpt
-         nXfagP910J3LoOHQtwP3CIien6puhnMuexyEXejsnqELculpAPLuKvJEXj1CFunlUMII
-         EMk2c3bTIeD8VBC3DkCrakXAz3qC5YVrAFWyGHMdsAV8s/bAJpdIYyMCWFPI4aOvZ79M
-         nV8lYwMtDMIEQQDYt34Io1lvF3b/Zfxoo1d2EpNTNJOJfN9ezNtJsG8VKY270IEw0vr/
-         Xff2d9sP+KNUJ6ArHcR5j0BIlMU9SjF9DyebedGVNZEDJCOSo9MQqlBXI3va6U10t/vh
-         oKlw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZgRrILmEg5FOhcl1CBCiokMpnW+4D8xULQyFAJsM/qZ8CTUF+uU7fSjDOk+taLc2dDi0nv2JZNogRz6ir+LwLR1hzQ9L53+JQqYKu
-X-Gm-Message-State: AOJu0YwbbySN81iGARlNtZAyOG4/+8MRNue9ptlK1Qjd44FfF1Lbh3W9
-	+c1gUqMtLdyubVTIXwLKIDB/vq3bnVQGgF0fa5aMcAoGu+A2h+tfiGowi5l01pY=
-X-Google-Smtp-Source: AGHT+IGlfmuk878CG8En5W5lnHLDlQmd3V99IlMUJd8rH48VkCqYhG6rTzSfb4MZ//slpZJu5TCXQw==
-X-Received: by 2002:a05:6808:1b08:b0:3d2:2356:d271 with SMTP id 5614622812f47-3d22356d368mr9188713b6e.1.1718118266435;
-        Tue, 11 Jun 2024 08:04:26 -0700 (PDT)
-Received: from ?IPV6:2607:fb91:213b:a129:544a:cc06:ea0:4045? ([2607:fb91:213b:a129:544a:cc06:ea0:4045])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62ccacadc00sm20643537b3.1.2024.06.11.08.04.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 08:04:26 -0700 (PDT)
-Message-ID: <0556ee55-6bdf-4392-8933-03539768f671@linuxfoundation.org>
-Date: Tue, 11 Jun 2024 09:04:24 -0600
+	s=arc-20240116; t=1718118278; c=relaxed/simple;
+	bh=+CPbZPwm6idt1BjhNLaLWLEAeeaJnKpKlDcqDQnTcn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=awgq3pDBwUH/V6rCMA6JMK9itYndMiQ9hd6vL2JoKQgW5VZohtokPwHW1jtNpsv5nQccFl3AXYJ6wQlTX6BDOY3IA6ELSKJ/1IEr5uQBhiN2CETpDhF5CJws1ds/eKhFE/rfsbMlIgFsBJXx82sysvB4MOxUEMY4vJLBahyRbKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CBD3106F;
+	Tue, 11 Jun 2024 08:05:01 -0700 (PDT)
+Received: from e127643.arm.com (unknown [10.57.41.181])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9B2FD3F64C;
+	Tue, 11 Jun 2024 08:04:32 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	gankulkarni@os.amperecomputing.com,
+	mike.leach@linaro.org,
+	leo.yan@linux.dev,
+	anshuman.khandual@arm.com
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v3 14/14] coresight: Make trace ID map spinlock local to the map
+Date: Tue, 11 Jun 2024 16:02:25 +0100
+Message-Id: <20240611150228.1802828-15-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240611150228.1802828-1-james.clark@arm.com>
+References: <20240611150228.1802828-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests: proc: remove unreached code and fix build
- warning
-To: Alexey Dobriyan <adobriyan@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Amer Al Shanawany <amer.shanawany@gmail.com>,
- Shuah Khan <shuah@kernel.org>,
- Swarup Laxman Kotiaklapudi <swarupkotikalapudi@gmail.com>,
- Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- kernel test robot <lkp@intel.com>, Shuah Khan <skhan@linuxfoundation.org>
-References: <202404010211.ygidvMwa-lkp@intel.com>
- <20240603124220.33778-1-amer.shanawany@gmail.com>
- <14f55053-2ff8-4086-8aac-b8ee2d50a427@p183>
- <20240604202531.5d559ec4daed484a7a23592c@linux-foundation.org>
- <eb9b2d6e-91eb-4fdc-b352-b3d0c290da2f@p183>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <eb9b2d6e-91eb-4fdc-b352-b3d0c290da2f@p183>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 6/7/24 09:25, Alexey Dobriyan wrote:
-> On Tue, Jun 04, 2024 at 08:25:31PM -0700, Andrew Morton wrote:
->> On Mon, 3 Jun 2024 17:24:47 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
->>
->>> On Mon, Jun 03, 2024 at 02:42:20PM +0200, Amer Al Shanawany wrote:
->>>> fix the following warning:
->>>> proc-empty-vm.c:385:17: warning: ignoring return value of ‘write’
->>>
->>>> --- a/tools/testing/selftests/proc/proc-empty-vm.c
->>>> +++ b/tools/testing/selftests/proc/proc-empty-vm.c
->>>> @@ -381,9 +381,6 @@ static int test_proc_pid_statm(pid_t pid)
->>>
->>>> -	if (0) {
->>>> -		write(1, buf, rv);
->>>> -	}
->>>
->>> no thanks
->>
->> Why not?
->>
->> Why does that code exist anyway?  It at least needs a comment.
-> 
-> OK, whatever.
-> 
-> If test fails, it better record buggy output somewhere (to coredump or to terminal).
+Reduce contention on the lock by replacing the global lock with one for
+each map.
 
-+1 on reporting results - the best way to do this is to add a meaningful message
-for users to understand what went wrong.
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-core.c  |  1 +
+ .../hwtracing/coresight/coresight-trace-id.c  | 26 +++++++++----------
+ include/linux/coresight.h                     |  1 +
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-Please suggest how you would like this warning addressed and report the error.
+diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+index c427e9344a84..ea38ecf26fcb 100644
+--- a/drivers/hwtracing/coresight/coresight-core.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -1164,6 +1164,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ 
+ 	if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
+ 	    csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
++		spin_lock_init(&csdev->perf_sink_id_map.lock);
+ 		csdev->perf_sink_id_map.cpu_map = alloc_percpu(atomic_t);
+ 		if (!csdev->perf_sink_id_map.cpu_map) {
+ 			kfree(csdev);
+diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+index 1e70892f5beb..82bb70c1ad73 100644
+--- a/drivers/hwtracing/coresight/coresight-trace-id.c
++++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+@@ -15,12 +15,10 @@
+ /* Default trace ID map. Used in sysfs mode and for system sources */
+ static DEFINE_PER_CPU(atomic_t, id_map_default_cpu_ids) = ATOMIC_INIT(0);
+ static struct coresight_trace_id_map id_map_default = {
+-	.cpu_map = &id_map_default_cpu_ids
++	.cpu_map = &id_map_default_cpu_ids,
++	.lock = __SPIN_LOCK_UNLOCKED(id_map_default.lock)
+ };
+ 
+-/* lock to protect id_map and cpu data  */
+-static DEFINE_SPINLOCK(id_map_lock);
+-
+ /* #define TRACE_ID_DEBUG 1 */
+ #if defined(TRACE_ID_DEBUG) || defined(CONFIG_COMPILE_TEST)
+ 
+@@ -124,11 +122,11 @@ static void coresight_trace_id_release_all(struct coresight_trace_id_map *id_map
+ 	unsigned long flags;
+ 	int cpu;
+ 
+-	spin_lock_irqsave(&id_map_lock, flags);
++	spin_lock_irqsave(&id_map->lock, flags);
+ 	bitmap_zero(id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
+ 	for_each_possible_cpu(cpu)
+ 		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+-	spin_unlock_irqrestore(&id_map_lock, flags);
++	spin_unlock_irqrestore(&id_map->lock, flags);
+ 	DUMP_ID_MAP(id_map);
+ }
+ 
+@@ -137,7 +135,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
+ 	unsigned long flags;
+ 	int id;
+ 
+-	spin_lock_irqsave(&id_map_lock, flags);
++	spin_lock_irqsave(&id_map->lock, flags);
+ 
+ 	/* check for existing allocation for this CPU */
+ 	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
+@@ -164,7 +162,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
+ 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
+ 
+ get_cpu_id_out_unlock:
+-	spin_unlock_irqrestore(&id_map_lock, flags);
++	spin_unlock_irqrestore(&id_map->lock, flags);
+ 
+ 	DUMP_ID_CPU(cpu, id);
+ 	DUMP_ID_MAP(id_map);
+@@ -181,12 +179,12 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
+ 	if (!id)
+ 		return;
+ 
+-	spin_lock_irqsave(&id_map_lock, flags);
++	spin_lock_irqsave(&id_map->lock, flags);
+ 
+ 	coresight_trace_id_free(id, id_map);
+ 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+ 
+-	spin_unlock_irqrestore(&id_map_lock, flags);
++	spin_unlock_irqrestore(&id_map->lock, flags);
+ 	DUMP_ID_CPU(cpu, id);
+ 	DUMP_ID_MAP(id_map);
+ }
+@@ -196,10 +194,10 @@ static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *i
+ 	unsigned long flags;
+ 	int id;
+ 
+-	spin_lock_irqsave(&id_map_lock, flags);
++	spin_lock_irqsave(&id_map->lock, flags);
+ 	/* prefer odd IDs for system components to avoid legacy CPU IDS */
+ 	id = coresight_trace_id_alloc_new_id(id_map, 0, true);
+-	spin_unlock_irqrestore(&id_map_lock, flags);
++	spin_unlock_irqrestore(&id_map->lock, flags);
+ 
+ 	DUMP_ID(id);
+ 	DUMP_ID_MAP(id_map);
+@@ -210,9 +208,9 @@ static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
+ {
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&id_map_lock, flags);
++	spin_lock_irqsave(&id_map->lock, flags);
+ 	coresight_trace_id_free(id, id_map);
+-	spin_unlock_irqrestore(&id_map_lock, flags);
++	spin_unlock_irqrestore(&id_map->lock, flags);
+ 
+ 	DUMP_ID(id);
+ 	DUMP_ID_MAP(id_map);
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 197949fd2c35..c13342594278 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -233,6 +233,7 @@ struct coresight_trace_id_map {
+ 	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
+ 	atomic_t __percpu *cpu_map;
+ 	atomic_t perf_cs_etm_session_active;
++	spinlock_t lock;
+ };
+ 
+ /**
+-- 
+2.34.1
 
-thanks,
--- Shuah
