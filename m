@@ -1,298 +1,99 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57A9E1E86F
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 12:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1F21E86F;
+	Tue, 11 Jun 2024 12:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718110267; cv=none; b=CgUnF63HLh233vNNKgQNbi3NzhkGU23yUC5gpkicRiBvYYtlFexgdHoihuKUriok28f+Cb24MQSUAW068EsJ8JDjS7kny4z7GxXHJR2ndes0XyYXaH0fFDI+HUfYZJCcNcrsrBZRNq4QQscc5x1HbOw13uSGhB/0N+v7R9guSh4=
+	t=1718110320; cv=none; b=opsmv9KuxOrM/oS15E9pnOZgCK+79CvOqtngFDnBIt15uRlnT9hAofUddA8W/9KcxD+M5CSyFb3lwufuBW7GqAZ91kgI2uYuzgPeg6XuV6L8+1vdouj7HanQxn4rvyBs9zA7iBRJxmcmC2IumsOd/clkvGI7fWjw7vOk4BL9Vds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718110267; c=relaxed/simple;
-	bh=SAS5xA1uyYT/aeAKQMvhN0fZ18l+uHHHMzjeFHH2YAQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MFYzCTm36wWp2kxDNK/Sdk2tUZPLItGkkJ8RRHmHeGfU/z4B7HNmGg9CYVcYfI/HgTzG5/9BeI7plpidJoHQL+cPkqnAGau+T4mKPtm+U6ZBmroTsshXGqM2EdQlW32ajm8bReJNJTwARp20o+jqRZt1S0dm8T+lPS5nwKKueO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.185])
-	by gateway (Coremail) with SMTP id _____8Axz+s2SGhmBaoFAA--.7232S3;
-	Tue, 11 Jun 2024 20:51:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.185])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axw8Q0SGhmowQcAA--.57937S2;
-	Tue, 11 Jun 2024 20:51:00 +0800 (CST)
-From: Song Gao <gaosong@loongson.cn>
-To: linux-kernel@vger.kernel.org
-Cc: chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com,
-	tglx@linutronix.de,
-	maobibo@loongson.cn
-Subject: [PATCH v2] irqchip/loongson-eiointc: Add extioi virt extension support
-Date: Tue, 11 Jun 2024 20:33:48 +0800
-Message-Id: <20240611123348.8374-1-gaosong@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+	s=arc-20240116; t=1718110320; c=relaxed/simple;
+	bh=XHrBjFoYko9UAaT8tZQIEHqbp8GqsjyvWzgXJ7PXR9A=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=NbSh2rUwOvmTkAgm2TjwfD398G/hqkTauvhqAcDZ58LuXRt9uJNf3P/jqRLx2ZRFHDPY3oURdtOgdTepcyl5A3GR0zhMIXBbUhHP+GiQaepJ4Vu6VT4HVfbVfMS1cLnqFQSG7PE1Rx3nC/vBdw2POGMylXE4AnHc87d3HxQNZNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sF/FWSJt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sF/FWSJt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACF92C2BD10;
+	Tue, 11 Jun 2024 12:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718110320;
+	bh=XHrBjFoYko9UAaT8tZQIEHqbp8GqsjyvWzgXJ7PXR9A=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=sF/FWSJt7xAsi3jeJ/VE2Ukk92VC6RullSODoTuBbUkl1C+s2zfTxNu7Q/dScW71T
+	 NJSCBEI4AGTfnyghHf4GbIcJbosHjf2DITOoptwqYu5/1ZRxlXOitjezy8i3XO9r8H
+	 MWjFaDsX9lMIYpLneCjK2cigaF+gMv9UPZLWFxz7lcjQkutWCkey81ohHTWtTsO1zQ
+	 z72ND1wmpJjbMxMq7PVA1qSlQ7FPGXyvqXVfSQymWowEHgDkpyGNLaYMbINwzQ7FMh
+	 SMWkOP9J1F6MwmK9speF2EaONVch8oOWOBTBGmBoh03Q4LHOUzuYk3NgR5qukr1feo
+	 8T6F4wZCW0itw==
+Date: Tue, 11 Jun 2024 06:51:58 -0600
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Axw8Q0SGhmowQcAA--.57937S2
-X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Martin Schiller <ms@dev.tdt.de>
+Cc: hauke@hauke-m.de, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ linux-kernel@vger.kernel.org, edumazet@google.com, andrew@lunn.ch, 
+ davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+ netdev@vger.kernel.org, f.fainelli@gmail.com, devicetree@vger.kernel.org, 
+ olteanv@gmail.com, martin.blumenstingl@googlemail.com
+In-Reply-To: <20240611114027.3136405-2-ms@dev.tdt.de>
+References: <20240611114027.3136405-1-ms@dev.tdt.de>
+ <20240611114027.3136405-2-ms@dev.tdt.de>
+Message-Id: <171811031870.1486987.3222041734647742398.robh@kernel.org>
+Subject: Re: [PATCH net-next v4 01/13] dt-bindings: net: dsa: lantiq,gswip:
+ convert to YAML schema
 
-Interrupts can be routed to maximal four virtual CPUs with one external
-hardware interrupt. Add the extioi virt extension support so that
-Interrupts can be routed to 256 vcpus on hypervior mode.
 
-Signed-off-by: Song Gao <gaosong@loongson.cn>
----
-v2:
-- Simplify commit messages and code.
-- Follow the documented tip tree coding style.
-- Add the virtual extended interrupt model to the documentation.
-- Link to v1: https://lore.kernel.org/all/20240605070229.2569875-1-gaosong@loongson.cn/
+On Tue, 11 Jun 2024 13:40:15 +0200, Martin Schiller wrote:
+> Convert the lantiq,gswip bindings to YAML format.
+> 
+> Also add this new file to the MAINTAINERS file.
+> 
+> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+> ---
+>  .../bindings/net/dsa/lantiq,gswip.yaml        | 195 ++++++++++++++++++
+>  .../bindings/net/dsa/lantiq-gswip.txt         | 146 -------------
+>  MAINTAINERS                                   |   1 +
+>  3 files changed, 196 insertions(+), 146 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/dsa/lantiq,gswip.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/net/dsa/lantiq-gswip.txt
+> 
 
- .../arch/loongarch/irq-chip-model.rst         |  28 +++++
- arch/loongarch/include/asm/irq.h              |   1 +
- drivers/irqchip/irq-loongson-eiointc.c        | 104 ++++++++++++++----
- 3 files changed, 113 insertions(+), 20 deletions(-)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
-index 7988f4192363..7c10d070b318 100644
---- a/Documentation/arch/loongarch/irq-chip-model.rst
-+++ b/Documentation/arch/loongarch/irq-chip-model.rst
-@@ -85,6 +85,34 @@ to CPUINTC directly::
-     | Devices |
-     +---------+
- 
-+Virt extended IRQ model
-+=======================
-+
-+This model only work on hypervior mode. In this model, IPI (Inter-Processor Interrupt)
-+and CPU Local Timer interrupt go to CPUINTC directly, CPU UARTS interrupts go to
-+PCH_PIC, while all other devices interrupts go to PCH-PIC/PCH-LPC/PCH-MSI and
-+gathered by V-EIOINTC(Virt Extended I/O Interrupt Controller), and then go to
-+CPUINTC directly::
-+
-+       +-----+    +-------------------+     +-------+
-+       | IPI |--> | CPUINTC(0-255vcpu)| <-- | Timer |
-+       +-----+    +-------------------+     +-------+
-+                            ^
-+                            |
-+                      +-----------+
-+                      | V-EIOINTC |
-+                      +-----------+
-+                       ^         ^
-+                       |         |
-+                +---------+ +---------+
-+                | PCH-PIC | | PCH-MSI |
-+                +---------+ +---------+
-+                  ^      ^          ^
-+                  |      |          |
-+           +--------+ +---------+ +---------+
-+           | UARTs  | | Devices | | Devices |
-+           +--------+ +---------+ +---------+
-+
- ACPI-related definitions
- ========================
- 
-diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
-index 480418bc5071..c97a7ab0e56f 100644
---- a/arch/loongarch/include/asm/irq.h
-+++ b/arch/loongarch/include/asm/irq.h
-@@ -53,6 +53,7 @@ struct acpi_vector_group {
- extern struct acpi_vector_group pch_group[MAX_IO_PICS];
- extern struct acpi_vector_group msi_group[MAX_IO_PICS];
- 
-+#define MAX_CORES_PER_EIO_NODE	256
- #define CORES_PER_EIO_NODE	4
- 
- #define LOONGSON_CPU_UART0_VEC		10 /* CPU UART0 */
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index c7ddebf312ad..430fda9e8ce5 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -23,15 +23,43 @@
- #define EIOINTC_REG_ISR		0x1800
- #define EIOINTC_REG_ROUTE	0x1c00
- 
-+#define EXTIOI_VIRT_FEATURES           0x40000000
-+#define  EXTIOI_HAS_VIRT_EXTENSION     BIT(0)
-+#define  EXTIOI_HAS_ENABLE_OPTION      BIT(1)
-+#define  EXTIOI_HAS_INT_ENCODE         BIT(2)
-+#define  EXTIOI_HAS_CPU_ENCODE         BIT(3)
-+#define EXTIOI_VIRT_CONFIG             0x40000004
-+#define  EXTIOI_ENABLE                 BIT(1)
-+#define  EXTIOI_ENABLE_INT_ENCODE      BIT(2)
-+#define  EXTIOI_ENABLE_CPU_ENCODE      BIT(3)
-+
- #define VEC_REG_COUNT		4
- #define VEC_COUNT_PER_REG	64
- #define VEC_COUNT		(VEC_REG_COUNT * VEC_COUNT_PER_REG)
- #define VEC_REG_IDX(irq_id)	((irq_id) / VEC_COUNT_PER_REG)
- #define VEC_REG_BIT(irq_id)     ((irq_id) % VEC_COUNT_PER_REG)
- #define EIOINTC_ALL_ENABLE	0xffffffff
-+#define EIOINTC_ALL_ENABLE_VEC_MASK(vector) 	\
-+	(EIOINTC_ALL_ENABLE & ~BIT(vector & 0x1F))
-+#define EIOINTC_REG_ENABLE_VEC(vector)		\
-+	(EIOINTC_REG_ENABLE + ((vector >> 5) << 2))
- 
- #define MAX_EIO_NODES		(NR_CPUS / CORES_PER_EIO_NODE)
- 
-+/*
-+ * Routing registers contain four vectors and have an offset of four to
-+ * the base. The routing information is 8 bit wide.
-+ */
-+
-+#define EIOINTC_REG_ROUTE_VEC(vector)		\
-+	(EIOINTC_REG_ROUTE + (vector & ~0x03))
-+
-+#define EIOINTC_REG_ROUTE_VEC_SHIFT(vector) 	\
-+	((vector & 0x03) << 3)
-+
-+#define EIOINTC_REG_ROUTE_VEC_MASK(vector)	\
-+	(0xff << EIOINTC_REG_ROUTE_VEC_SHIFT(vector))
-+
- static int nr_pics;
- 
- struct eiointc_priv {
-@@ -41,6 +69,7 @@ struct eiointc_priv {
- 	cpumask_t		cpuspan_map;
- 	struct fwnode_handle	*domain_handle;
- 	struct irq_domain	*eiointc_domain;
-+	bool			cpu_encoded;
- };
- 
- static struct eiointc_priv *eiointc_priv[MAX_IO_PICS];
-@@ -56,7 +85,9 @@ static void eiointc_enable(void)
- 
- static int cpu_to_eio_node(int cpu)
- {
--	return cpu_logical_map(cpu) / CORES_PER_EIO_NODE;
-+	int cores = cpu_has_hypervisor ? MAX_CORES_PER_EIO_NODE : CORES_PER_EIO_NODE;
-+
-+	return cpu_logical_map(cpu) / cores;
- }
- 
- #ifdef CONFIG_SMP
-@@ -88,6 +119,16 @@ static void eiointc_set_irq_route(int pos, unsigned int cpu, unsigned int mnode,
- 
- static DEFINE_RAW_SPINLOCK(affinity_lock);
- 
-+static void virt_extioi_set_irq_route(unsigned int vector, unsigned int cpu)
-+{
-+	unsigned long reg = EIOINTC_REG_ROUTE_VEC(vector);
-+	u32 data = iocsr_read32(reg);
-+
-+	data &= ~EIOINTC_REG_ROUTE_VEC_MASK(vector);
-+	data |= cpu_logical_map(cpu) << EIOINTC_REG_ROUTE_VEC_SHIFT(vector);
-+	iocsr_write32(data, reg);
-+}
-+
- static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *affinity, bool force)
- {
- 	unsigned int cpu;
-@@ -104,18 +145,24 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
- 	}
- 
- 	vector = d->hwirq;
--	regaddr = EIOINTC_REG_ENABLE + ((vector >> 5) << 2);
--
--	/* Mask target vector */
--	csr_any_send(regaddr, EIOINTC_ALL_ENABLE & (~BIT(vector & 0x1F)),
--			0x0, priv->node * CORES_PER_EIO_NODE);
--
--	/* Set route for target vector */
--	eiointc_set_irq_route(vector, cpu, priv->node, &priv->node_map);
--
--	/* Unmask target vector */
--	csr_any_send(regaddr, EIOINTC_ALL_ENABLE,
--			0x0, priv->node * CORES_PER_EIO_NODE);
-+	regaddr = EIOINTC_REG_ENABLE_VEC(vector);
-+
-+	if (priv->cpu_encoded) {
-+		iocsr_write32(EIOINTC_ALL_ENABLE_VEC_MASK(vector), regaddr);
-+		virt_extioi_set_irq_route(vector, cpu);
-+		iocsr_write32(EIOINTC_ALL_ENABLE, regaddr);
-+	} else {
-+		/* Mask target vector */
-+		csr_any_send(regaddr, EIOINTC_ALL_ENABLE_VEC_MASK(vector),
-+			     0x0, priv->node * CORES_PER_EIO_NODE);
-+
-+		/* Set route for target vector */
-+		eiointc_set_irq_route(vector, cpu, priv->node, &priv->node_map);
-+
-+		/* Unmask target vector */
-+		csr_any_send(regaddr, EIOINTC_ALL_ENABLE,
-+			     0x0, priv->node * CORES_PER_EIO_NODE);
-+	}
- 
- 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
- 
-@@ -139,17 +186,20 @@ static int eiointc_index(int node)
- 
- static int eiointc_router_init(unsigned int cpu)
- {
--	int i, bit;
--	uint32_t data;
--	uint32_t node = cpu_to_eio_node(cpu);
--	int index = eiointc_index(node);
-+	uint32_t data, node;
-+	int i, bit, cores, index;
-+
-+	node = cpu_to_eio_node(cpu);
-+	index = eiointc_index(node);
- 
- 	if (index < 0) {
- 		pr_err("Error: invalid nodemap!\n");
--		return -1;
-+		return -EINVAL;
- 	}
- 
--	if ((cpu_logical_map(cpu) % CORES_PER_EIO_NODE) == 0) {
-+	cores = (cpu_has_hypervisor ? MAX_CORES_PER_EIO_NODE : CORES_PER_EIO_NODE);
-+
-+	if ((cpu_logical_map(cpu) % cores) == 0) {
- 		eiointc_enable();
- 
- 		for (i = 0; i < eiointc_priv[0]->vec_count / 32; i++) {
-@@ -165,7 +215,9 @@ static int eiointc_router_init(unsigned int cpu)
- 
- 		for (i = 0; i < eiointc_priv[0]->vec_count / 4; i++) {
- 			/* Route to Node-0 Core-0 */
--			if (index == 0)
-+			if (eiointc_priv[index]->cpu_encoded)
-+				bit = cpu_logical_map(0);
-+			else if (index == 0)
- 				bit = BIT(cpu_logical_map(0));
- 			else
- 				bit = (eiointc_priv[index]->node << 4) | 1;
-@@ -369,6 +421,7 @@ static int __init acpi_cascade_irqdomain_init(void)
- static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
- 			       u64 node_map)
- {
-+	u32 val;
- 	int i;
- 
- 	node_map = node_map ? node_map : -1ULL;
-@@ -389,6 +442,17 @@ static int __init eiointc_init(struct eiointc_priv *priv, int parent_irq,
- 		return -ENOMEM;
- 	}
- 
-+	if (cpu_has_hypervisor) {
-+		val = iocsr_read32(EXTIOI_VIRT_FEATURES);
-+		if (val & BIT(EXTIOI_HAS_CPU_ENCODE)) {
-+			val = iocsr_read32(EXTIOI_VIRT_CONFIG);
-+			val |= BIT(EXTIOI_ENABLE_CPU_ENCODE);
-+			iocsr_write32(val, EXTIOI_VIRT_CONFIG);
-+			priv->cpu_encoded = true;
-+			pr_info("loongson-extioi: enable cpu encodig \n");
-+		}
-+	}
-+
- 	eiointc_priv[nr_pics++] = priv;
- 	eiointc_router_init(0);
- 	irq_set_chained_handler_and_data(parent_irq, eiointc_irq_dispatch, priv);
--- 
-2.39.3
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/dsa/lantiq,gswip.example.dtb: switch@e108000: ports:port@6: 'phy-mode' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/lantiq,gswip.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/dsa/lantiq,gswip.example.dtb: switch@e108000: ports:port@6: 'oneOf' conditional failed, one must be fixed:
+	'fixed-link' is a required property
+	'phy-handle' is a required property
+	'managed' is a required property
+	from schema $id: http://devicetree.org/schemas/net/dsa/lantiq,gswip.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/dsa/lantiq,gswip.example.dtb: switch@e108000: Unevaluated properties are not allowed ('dsa,member', 'ports' were unexpected)
+	from schema $id: http://devicetree.org/schemas/net/dsa/lantiq,gswip.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240611114027.3136405-2-ms@dev.tdt.de
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
