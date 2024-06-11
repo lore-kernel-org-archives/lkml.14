@@ -1,152 +1,86 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E120817B4F9;
-	Tue, 11 Jun 2024 11:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705F114F9E4;
+	Tue, 11 Jun 2024 12:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718107194; cv=none; b=PcVBoWZOw6WG8U5dkVi/MOP/8BqLah9M9pfiel5XliRqAci2Ei6yaz8kL2MZ7TRt3iM06XHD1J1mviHLXV/XiwR7QiEsEjA/hCgUvD4zYoW9TVqB1T5Viy4pySoWfUURfSJMt5y2heLVsd6IwPPICX5iDJrgDamww+Osd0CC898=
+	t=1718107286; cv=none; b=gYP/MEXwLKuGzBOj4nDIC8hbeBX7Pm3zGjUouzjAgjmAKHiG+QpX5EViZmKGU28Lsms1NYb9hUdAKmpwV/vXwdvfmMvobA8MRxbP4JbXjPUJa6vkXn1s4czYWhlPB9GuPhcYX70jD+L/bb2EZ8cMa5K0o0uZ3yXArsWahF8QKLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718107194; c=relaxed/simple;
-	bh=bD1uQZQ6VtPXlxktaFO9REv2bZmj6NZhK+/8EWaPwIE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oZp25UyUfZ+//rfOUJ6YZMPWSYYQeFwOp34f8C42EtfYBIoXNZ9SZsnvrv9ShEUHeNM6fVa4cx1M1RS+j98i70QC6+ObSRdHvqhxHZ4ICMgtZ8pJNxV4j4c/b5DH8q7FLdNygpjdwEaYHZoAH8VliUGMNS0Q91sHePOk5lemtmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=lExcCKRe; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1718107286; c=relaxed/simple;
+	bh=Zix90JJZPkY0LLrFX9F0TYZzTEx6XBUzy2tS9s+6vZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JDObJLpx3BN/i5B5ePXoZS5oDPs7Buu72PyNQtivz+E7vHqTEU/7GHnIcRkzCPjTxpfNvFxFccS2AenfyZT20h8qcJQe2eUfUf88AQoLNMPvaCqBFejJzRSw5VEnO608cfhX7kbXCHrAyYL2rq3UtvX0xNRjaprnFv7S/i/PkfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OjrT0zA6; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lExcCKRe"
-X-UUID: 1885960a27ea11efa54bbfbb386b949c-20240611
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=OQ8chaPOw4A6iAHKeGgGa/xCeVHWlZM1KN2sfBtT4YM=;
-	b=lExcCKReTdlfKb03kImMHS/DYm1whSH6LjMcXEvmgiy+YPltrNADawmpj3STAZ3/Zlb2n5bfPhVRCXA6uUY8D/e7uAHMOEqBpdneCtAkaosALwg2DyfSrsiaS85AqfIVun8ABH6g14pdVHaYE6O0JAPzSmmunoY8/ZD12JdVdI8=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:556ab7fc-b7bd-4eb7-b1fd-cfd83c392a95,IP:0,U
-	RL:0,TC:0,Content:34,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:34
-X-CID-META: VersionHash:393d96e,CLOUDID:06de7144-4544-4d06-b2b2-d7e12813c598,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:4,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 1885960a27ea11efa54bbfbb386b949c-20240611
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
-	(envelope-from <poshao.chen@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1645407644; Tue, 11 Jun 2024 19:59:45 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Tue, 11 Jun 2024 19:59:43 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Tue, 11 Jun 2024 19:59:43 +0800
-From: PoShao Chen <poshao.chen@mediatek.com>
-To: <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<rafael@kernel.org>, <viresh.kumar@linaro.org>
-CC: <clive.lin@mediatek.com>, <ccj.yeh@mediatek.com>,
-	<ching-hao.hsu@mediatek.com>, <poshao.chen@mediatek.com>
-Subject: [PATCH] cpufreq: Fix per-policy boost behavior after CPU hotplug
-Date: Tue, 11 Jun 2024 19:59:20 +0800
-Message-ID: <20240611115920.28665-1-poshao.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OjrT0zA6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F24A41C0005;
+	Tue, 11 Jun 2024 12:01:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1718107276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Zix90JJZPkY0LLrFX9F0TYZzTEx6XBUzy2tS9s+6vZo=;
+	b=OjrT0zA6QibB5CusNH85occjMBlrP6MQKaCMNyIoKNt05KrYw2oRXDKkXX7nlW3/H97wm/
+	8tWXFFiTzcjy4LL8I5HJCP80rBkyYlDOYHIZI+/9/58+MNDrxosShqzMx7fRBwiiXXUreb
+	zhj0eowSnq1BJY4lpZDTendl8jk5r3D/flE6RBDYRy0Sj6qstnxVGCWbdR8oJlJdWEp5dm
+	ZyQiYocC5cLciRPgyWaB7R2D2XeaNlkq0ftCY7b0grhixvojDBn77hSZHJ/qMW3fbdTGP7
+	ckZwfe0vKBOvL3yQMTz81rdIedkCpoy+9ocjynct4iyNvUrGSRVM4qhnGmSV+g==
+Date: Tue, 11 Jun 2024 14:01:15 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dent Project
+ <dentproject@linuxfoundation.org>, kernel@pengutronix.de
+Subject: Re: [PATCH net-next v2 2/8] net: ethtool: pse-pd: Expand C33 PSE
+ status with class, power and extended state
+Message-ID: <20240611140115.4e857e46@kmaincent-XPS-13-7390>
+In-Reply-To: <ZmgFLlWscicJmnxX@pengutronix.de>
+References: <20240607-feature_poe_power_cap-v2-0-c03c2deb83ab@bootlin.com>
+ <20240607-feature_poe_power_cap-v2-2-c03c2deb83ab@bootlin.com>
+ <ZmaMGWMOvILHy8Iu@pengutronix.de>
+ <20240610112559.57806b8c@kmaincent-XPS-13-7390>
+ <ZmgFLlWscicJmnxX@pengutronix.de>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--4.915700-8.000000
-X-TMASE-MatchedRID: angWuI+ZklD2aJrWQVCF0KEtILqFekmX7h2RrsKOiu27+NPPxj+R6px5
-	iJEn6aBLCrMpAjvWT1MRhs8ZJJXuwmNvKIW9g24oA9lly13c/gHt/okBLaEo+MUmcSma304T42W
-	Ouy++C8Pg7PmXyAh8kagjAnjVJgVlszLAY5oHhBCzLD5kmcW6ZFY5BBJri9sdmyiLZetSf8mfop
-	0ytGwvXiq2rl3dzGQ1GpeevGsoI5fZBtMWO+YKbXYGrvKGRAu9Q0lfOr+bFrzC5D54Rup5JQ2Gg
-	aVtth9BFEdlR3DDyofDpl0rUP4mccRofWagfcNVy7ksesgLCKAXRoPmWO3jekxwdkPqCq7vDEyN
-	+J8hd+jCS9WgDXVPCn7cGd19dSFd
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--4.915700-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: 67E9FD33A2FD7A6F82D0C102646374AC708AF05208AE82E3C5422A827FEE1CB92000:8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-This patch fixes the behavior of the cpufreq boost when the
-global boost flag is toggled during CPU hotplug offline. This action
-previously led to incorrect scaling_max_freq values when the CPU was
-brought back online. The issue also manifested as incorrect
-scaling_cur_freq under the performance governor.
+On Tue, 11 Jun 2024 10:05:02 +0200
+Oleksij Rempel <o.rempel@pengutronix.de> wrote:
 
-For example, after the following operations, even if the global boost
-is disabled, the resulting scaling_max_freq and scaling_cur_freq
-will still reflect the settings of an enabled boost.
+> On Mon, Jun 10, 2024 at 11:25:59AM +0200, Kory Maincent wrote:
+=20
+> > The enum errors I wrote is a bit subjective and are taken from the PD69=
+2x0
+> > port status list. Go ahead to purpose any change, I have tried to make
+> > categories that make sense but I might have made wrong choice. =20
+>=20
+> Here is my proposal aligned with IEEE 802.3-2022 33.2.4.4:
 
-$ echo performance > /sys/devices/system/cpu/cpufreq/policy7/scaling_governor
-$ cat /sys/devices/system/cpu/cpufreq/policy7/scaling_cur_freq
-3200000
-$ cat /sys/devices/system/cpu/cpufreq/policy7/scaling_max_freq
-3200000
+Hello Oleksij,
 
-$ echo 1 > /sys/devices/system/cpu/cpufreq/boost
-$ cat /sys/devices/system/cpu/cpufreq/policy7/scaling_cur_freq
-3250000
-$ cat /sys/devices/system/cpu/cpufreq/policy7/scaling_max_freq
-3250000
+Wow! You fully rewrite the netlink UAPI.
+Thanks, this is more standard complaint than my proposal!
+I will remove the PD692x0 specific description and update my patch series
+accordingly.
 
-$ echo 0 > /sys/devices/system/cpu/cpu7/online
-$ echo 0 > /sys/devices/system/cpu/cpufreq/boost
-$ echo 1 > /sys/devices/system/cpu/cpu7/online
-$ cat /sys/devices/system/cpu/cpufreq/policy7/scaling_cur_freq
-3250000
-$ cat /sys/devices/system/cpu/cpufreq/policy7/scaling_max_freq
-3250000
-
-Signed-off-by: PoShao Chen <poshao.chen@mediatek.com>
----
- drivers/cpufreq/cpufreq.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index a45aac17c20f..1f067d91a0b0 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -1495,6 +1495,35 @@ static int cpufreq_online(unsigned int cpu)
- 
- 		blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
- 				CPUFREQ_CREATE_POLICY, policy);
-+	} else {
-+		/*
-+		 * Call freq_qos_update_request() for the per-policy boost flag mirror
-+		 * the cpufreq_driver boost during hotplug online.
-+		 * Register an online callback if the default mirroring of the global
-+		 * boost setting is not intended.
-+		 */
-+		if (!cpufreq_driver->online) {
-+			ret = freq_qos_update_request(policy->max_freq_req, policy->max);
-+			if (ret)
-+				pr_err("%s: freq qos update failed\n", __func__);
-+		} else {
-+			/*
-+			 * Let the per-policy boost flag mirror the cpufreq_driver
-+			 * boost if an illegal state occurs after hotplug
-+			 */
-+			if (policy->boost_enabled && !cpufreq_driver->boost_enabled) {
-+				pr_info("%s: per-policy boost flag mirror the cpufreq_driver
-+					boost\n", __func__);
-+				policy->boost_enabled = cpufreq_driver->boost_enabled;
-+				ret = cpufreq_driver->set_boost(policy,
-+							cpufreq_driver->boost_enabled);
-+				if (ret) {
-+					policy->boost_enabled = !policy->boost_enabled;
-+					pr_err("%s: per-policy boost flag mirror the cpufreq_driver
-+						boost failed\n", __func__);
-+				}
-+			}
-+		}
- 	}
- 
- 	if (cpufreq_driver->get && has_target()) {
--- 
-2.18.0
-
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
