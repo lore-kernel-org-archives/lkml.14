@@ -1,100 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C1E43AC5;
-	Tue, 11 Jun 2024 16:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D9E481B7
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 16:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718123580; cv=none; b=DKuinD71/eXNacXUV+qzzRfCp38pDgswnKy7QkGSqR0+dczBSGoi7nIFXmnqkA/KxgyNJVCYAmxg0sowgyyAZSlWNcnFg8dW+ai9ktE/7rtNbjMQdN3B7M/ocws+o54zkt17vC2IWfT5T7epE9Gpz9LUcX07PQgMeJjWWa4uRfU=
+	t=1718123589; cv=none; b=KiJMf+yinAm7Rwy0kdjo+xLcRboIyrxY7eqn3+Wjd3vsZSGU0maFt7IfPkiAhZ5FtzYs9w9Yx7kxZAfUnj35+vFmXuqbHXIiu+kkG55BRqCyZc0GMYsigA1vxnwZ1tBvylhF0OiEB2oHQ+zmokKH/3LKjgIZBCJ+iPwhNDpmdl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718123580; c=relaxed/simple;
-	bh=lMxIU0XrRl1uDi4V9mQvR4uYAOJm3ABeMJ3659SyNfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YT4jXQFFVRX14SPPRyXV3JVgQDFt47/1iYHk7kFLLaF8WPWGhB3ZN3RnBtezLQr7+M6aMJ1ZkA1eiWLV/LRPvmUoJTHbvNgfvmcXnFhDjgkA4nta7YXYEqpJty1G8jbute7dQVCHiCuaaYXsnHRosBp6h3AMhNyYkTwvOI8TfC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0SeGOy3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718123589; c=relaxed/simple;
+	bh=THmJ90m9cYRnkYlDMu4a/cd1GwGNBcBPB6kbdS5FHTQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vBtzaLkgM9QSJFWnB0mVNYg0VeGUIS5hTjgGEMTd7VsUlAwSc3tFbg+pSUJJsXUmiK/tn6trj/Xgj0od31w+1FOW7pmTdEwTlzWuPahYbvvcWttIGCQpJxKYkQlfqcWMpkV8HetSYm15NMWcvXEiJ8Wy+TL5AHjvdOr5DF5cwZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EcPSHsYf; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0SeGOy3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3BE2C2BD10;
-	Tue, 11 Jun 2024 16:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718123579;
-	bh=lMxIU0XrRl1uDi4V9mQvR4uYAOJm3ABeMJ3659SyNfk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r0SeGOy39UxoSlhAVdG/eluwXKp2QUawAC6eypf/lhxLj2IwA1gM1z8lmQek294p+
-	 GLzRrfwOaIjPKGOBjrQyqnAZuX2GsKHDggIVMiZBtedF7VIN+zFpE23EE3qFnZ+m/Y
-	 mChR4oemg9D9kd47zNiYzEYJhGlUemQtN6DtWwFZB14M/JHL6FGy+fEptHHt968qTu
-	 cb624KQo3PzMm+RZ5w7xryiNG4sCp74j2XCTNoEMvTBWNwrwy8GtHfMIF+RONjOUdn
-	 iiII/twh0quHERH/7BmNby08G2J3iqHq5xrIJy9hrrV6fTyEQ8sXh+3DKZXSSiBMzI
-	 GJv3BakXu2fZw==
-Date: Tue, 11 Jun 2024 19:30:47 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-	Ross Zwisler <zwisler@google.com>, wklin@google.com,
-	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2 1/2] mm/memblock: Add "reserve_mem" to reserved named
- memory at boot up
-Message-ID: <Zmh7t8kupN2pbCF0@kernel.org>
-References: <20240606150143.876469296@goodmis.org>
- <20240606150316.751642266@goodmis.org>
- <20240611144029.h7egl4aif5mjlrwf@master>
- <20240611111218.71e57e0f@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EcPSHsYf"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5b97539a4a5so3176809eaf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718123587; x=1718728387; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WDlO2YjOSVSSgyeqWjNamYw1STHKmx/Pjf3CpiwkrYs=;
+        b=EcPSHsYfVpXpbla2NWQ7jXNr0Qguh1qt/6RyR/p4WmaxRhww130TCb2PgrvyDB03CH
+         vMap8ioetlQDrLE5Wj7NtdDCDIozRGt+Km3MWMKOXJBSuZTP+5sffUPn/A4CmeXjziMX
+         I4whaVrNvwpYHChnypLL+S+0u1SDx/cY+ZkPqaSpFemLElRj3xo2WMYlEFxmcIhzoKsy
+         FXGZWP8w7zTu63Ylx8uxjK31oZyI57SjxFMCZvjJTzv3KZS5NxOnv5EBpMDx2hHHyQXx
+         mniJdKJ08LA3IpbMOQlv1paz4TBqBbB/LRz2kQeUHxn9SXxIGAsFwS5321m+h+eqk8R/
+         AvYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718123587; x=1718728387;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WDlO2YjOSVSSgyeqWjNamYw1STHKmx/Pjf3CpiwkrYs=;
+        b=AcYEVQu0ahaGIoaRc0j6yeDMqHKl8uiG7GZ4d++DPORk5sJ9JWN7+gictY069QZEvi
+         j+gc8amhJWG0dh4XhYEBsk2jBDOwET+5FgC3CzPgbxcTxp1BaKGJfqrBrdSfuNFc9SFB
+         +lt7q0eEhAQEfGOyWqNFjON2rYgmTQn4dw1ZN34w86kVV8pu8HFBaSNwbVG9Dp1sFxKz
+         GhYTH1oZM/klDGZFWtO3huwgx6F2hOk8HynQ8wRHzeSi6HYgPVisLC1SwgZM38vKp7q0
+         5WbiPdS1KZ7y3H7ccVQ6QlMDFTfLFLg5oqAtT/rYz1qdvLUTUgRtts9FFOk2X6Bzl3N3
+         zaIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjjQ9w9nW0B4pubKxzxRj/Jcnhr425MQ5nCz0vkOSLSWqM30l0P55wroGE9W4EEcXqMiFcT1Wr7pgU+bPfFsqxKB0J0jm7BW6sBip2
+X-Gm-Message-State: AOJu0Yxy18SxrvP5PSVAr9amoclXBwtg8u/HrCcmqMFcD2y1ehqrCQN9
+	aX354PNhZAIItgUz06DeG/eGBDqAZ8aVg+VTsjMlxsjBfh1+RBWMP8ghLT8gLcJqCF4PQ4XiOeM
+	L0+RieBwF8Kpx7IF+Gfpgk7SgG9E=
+X-Google-Smtp-Source: AGHT+IHKy2kKJu7lLa44h5138CPHNVyiUkGxGWBZQONRY3V8yRql/hmDtBfr8vyACzy7zPU3H7G6Jwu+z+gc4DxfQEc=
+X-Received: by 2002:a05:6358:71c8:b0:19f:4c4e:d3c2 with SMTP id
+ e5c5f4694b2df-19f4c4ed5b2mr898974355d.15.1718123586898; Tue, 11 Jun 2024
+ 09:33:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611111218.71e57e0f@gandalf.local.home>
+References: <20240611024516.1375191-1-yosryahmed@google.com> <20240611024516.1375191-2-yosryahmed@google.com>
+In-Reply-To: <20240611024516.1375191-2-yosryahmed@google.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 11 Jun 2024 09:32:56 -0700
+Message-ID: <CAKEwX=OatEx57bOFBb5KNwvDhp4gMZhpjKw356fj4xzanqMJHw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] mm: zswap: add zswap_never_enabled()
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Barry Song <21cnbao@gmail.com>, 
+	Chris Li <chrisl@kernel.org>, David Hildenbrand <david@redhat.com>, 
+	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 11, 2024 at 11:12:18AM -0400, Steven Rostedt wrote:
-> On Tue, 11 Jun 2024 14:40:29 +0000
-> Wei Yang <richard.weiyang@gmail.com> wrote:
-> 
-> > >+
-> > >+	align = memparse(p+1, &p);
-> > >+	if (*p != ':')
-> > >+		return -EINVAL;
-> > >+  
-> >
-> > Make sure command line parameters are valid before doing the allocation.
-> 
-> You mean that size is non zero?
-> 
-> I don't know if we care what the align is. Zero is valid.
+On Mon, Jun 10, 2024 at 7:45=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com>=
+ wrote:
+>
+> Add zswap_never_enabled() to skip the xarray lookup in zswap_load() if
+> zswap was never enabled on the system. It is implemented using static
+> branches for efficiency, as enabling zswap should be a rare event. This
+> could shave some cycles off zswap_load() when CONFIG_ZSWAP is used but
+> zswap is never enabled.
+>
+> However, the real motivation behind this patch is two-fold:
+> - Incoming large folio swapin work will need to fallback to order-0
+>   folios if zswap was ever enabled, because any part of the folio could
+>   be in zswap, until proper handling of large folios with zswap is
+>   added.
+>
+> - A warning and recovery attempt will be added in a following change in
+>   case the above was not done incorrectly. Zswap will fail the read if
+>   the folio is large and it was ever enabled.
+>
+> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
 
-memblock won't like zero align, it should be SMP_CACHE_BYTES at least.
-No point requiring it from user, just update the alignment if the user passed
-zero.
- 
-> > >+	start = memblock_phys_alloc(size, align);
-> > >+	if (!start)
-> > >+		return -ENOMEM;
-> > >+
-
--- 
-Sincerely yours,
-Mike.
+This LGTM.
+Reviewed-by: Nhat Pham <nphamcs@gmail.com>
