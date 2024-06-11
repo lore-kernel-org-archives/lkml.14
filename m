@@ -1,129 +1,97 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928FD1CFB2
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 16:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251783B2A2;
+	Tue, 11 Jun 2024 16:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718122713; cv=none; b=ETg4Rijl0jj8znZh1qVP3DZoq0tnlwfP9lyJmX3SQJrK9RbzCOPTHJWp3pLZu9bLl8Xb7IXygWEP/wp4UpxeUGZpmZ6Gx/tiNeXVBTfx5wRfehN14WIRobNXSNc76Bv9To3Z6UEtJkyB8m9S7UsMrvBdm28tpspOf3A59Y7/D98=
+	t=1718122880; cv=none; b=XNMrR0Qh024m7nI34EFec9PiSlvcftFj0WYMcMWK9W21zyLvEl+RDSOE38iTiIPTba4cDlBABIh8xS68E405EvSByyWkgIza8oikIxmdmjYcGN3+VbiQf+5dzlzSeT52lzA1iQQ3GCIyuFMmcx54neSHZpQDmDvuZxAsW9XzPHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718122713; c=relaxed/simple;
-	bh=VkplcyEAK/CqqPuprQXUn75nzjvEwusfyevOKBqtIL8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=loSFuaBu/egeMmtue8kp2DvCx54o+wMTSOevw6x1wTT4wmlPgfuaBSg8GKS1EVg3gwOp/ou38NYuhJa1roC96QiAO2F/A13gkgSB11BQhWQS2O4DJo6zIlsO6BpYY/GDBzWNe6hQ+mrrtBF+ODHCJg56SW9DFa6+oLgSlH/JV6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SPKC9XXl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718122880; c=relaxed/simple;
+	bh=vB1Z8owwQFnccUD4CBUpS3sE/qzWmtYubLamM2KiaQ8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pVZ5JKuvOF414TmmFGkmysI9VRE4Iy3Teq5lm0rSkp0Et+92cXN7iG8lUKyGRc7nbZeNSNc89yfCSnyoCRJFimO3txd+E8oWNji2mWzRQRotjEk6q0QRZg/6UuUdyt73obMxesumJMYaLpqfFteAz4+YpLc01B/uheLCGwwqmzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=e28medZ8; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SPKC9XXl"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45BA7vJR016951;
-	Tue, 11 Jun 2024 16:18:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NbIGTfkXL7QFDB2dDvLKDcIZZq590Hs4Si1rtkYPMcA=; b=SPKC9XXlebuNa6in
-	pO1bOsxvDBh70f/1o7lUDSwFXcl/1p20DsN+FdUgiCwgZrmGeNJIZxiSYzhHwNB5
-	zaqTS2LhCjc14tdZF4LP6K/2z5fdMuNkQmac4AbJKeoMm1GaF3jRJQ+BYRpryOPb
-	OEO8mnGmy6NRW5UDrtDqJz3/Wz6uCxAuYwF9+qI+yOigvbWeeR6sH98cG2EowQhB
-	2l9E5gGuKj+3uw+rGjpk1LWeCWJ7G2cBSuHMZoxpFe331PRUhARu5Ekju9k4bCzG
-	4FfJ4dTm8wzeJzcm6oKAGZ3vQV8c8CetlJnivV1i320hQG75VZd+5Q5rjlogIN46
-	tjytwA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ypmjas08h-1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="e28medZ8"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45BC0Q6m016205;
+	Tue, 11 Jun 2024 18:20:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=yyuPGJTfdCHwwLsvwEMk87
+	kB7VvmjgA9WbN3NWRLHL4=; b=e28medZ86wJBqEN9AjMftTIgb0FGGRqFkp7FKN
+	ap64/W+Iz1LtR1p4hKeZcYdsZNjWh8A3VcPJ37BnSLvEYQQuVFUWPOvUAd8flQek
+	IDZP6Tos+Zmpp4yO+wAxyvgSkEaypvW1xePzxscQaWqU5cgXNdZUh0UU/DL2qSZs
+	wO26bJ+ngO9Z/jlyN9RmV4roITWcvrsWO3MGvWT9tRLzJuOUw5CbmI275qlKgb8D
+	MiHV97TaXHrElR8uUIWSI4QGSaRygDSxVNrgqfDG/t64Qmjqge+ZuP89zuGN/Caq
+	vpaFUBlM0jd+jhhlo1cAfbIH6zkUJH7668uisSv24NFC3uXw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ypbp4kusv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 16:18:21 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45BGIKIv024411
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 16:18:20 GMT
-Received: from [10.71.108.229] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
- 2024 09:18:20 -0700
-Message-ID: <b1ce756e-c9c0-49bd-b5f4-e6db79dc8f1d@quicinc.com>
-Date: Tue, 11 Jun 2024 09:18:19 -0700
+	Tue, 11 Jun 2024 18:20:55 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7C75F4002D;
+	Tue, 11 Jun 2024 18:20:48 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8CEFA21B503;
+	Tue, 11 Jun 2024 18:20:11 +0200 (CEST)
+Received: from localhost (10.48.86.111) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 11 Jun
+ 2024 18:20:11 +0200
+From: Valentin Caron <valentin.caron@foss.st.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Valentin Caron <valentin.caron@foss.st.com>
+Subject: [PATCH 0/2] rtc: stm32: introduce new st,stm32mp25-rtc compatible
+Date: Tue, 11 Jun 2024 18:19:56 +0200
+Message-ID: <20240611161958.469209-1-valentin.caron@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/panel : himax-hx83102: fix incorrect argument to
- mipi_dsi_msleep
-Content-Language: en-US
-To: Tejas Vipin <tejasvipin76@gmail.com>, <neil.armstrong@linaro.org>
-CC: <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <1b7c19ec-536f-4f28-a68f-b03c1b51b99b@gmail.com>
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <1b7c19ec-536f-4f28-a68f-b03c1b51b99b@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 7dwBttWeolFO5AeyFJd4qyLAd8mRFZXA
-X-Proofpoint-ORIG-GUID: 7dwBttWeolFO5AeyFJd4qyLAd8mRFZXA
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-11_09,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- clxscore=1011 mlxscore=0 impostorscore=0 mlxlogscore=999
- lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406110115
 
+Introduce new st,stm32mp25-rtc compatible. It is based on st,stm32mp1-rtc.
 
+Difference is that stm32mp25 SoC implements a triple protection on RTC
+registers:
+- Secure bit based protection
+- Privileged context based protection
+- Compartment ID filtering based protection
+This driver will now check theses configurations before probing to avoid
+exceptions and fake reads on register.
 
-On 6/11/2024 7:05 AM, Tejas Vipin wrote:
-> mipi_dsi_msleep expects struct mipi_dsi_multi_context to be passed as a
-> value and not as a reference.
-> 
-> Fixes: a2ab7cb169da ("drm/panel: himax-hx83102: use wrapped MIPI DCS functions")
-> 
-> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+Link: https://www.st.com/resource/en/reference_manual/rm0457-stm32mp25xx-advanced-armbased-3264bit-mpus-stmicroelectronics.pdf#page=4081
 
-Hi Tejas,
+Valentin Caron (2):
+  dt-bindings: rtc: stm32: introduce new st,stm32mp25-rtc compatible
+  rtc: stm32: add new st,stm32mp25-rtc compatible and check RIF
+    configuration
 
-(for future reference, you don't need an extra newline between the Fixes 
-and Signed-off-by tags)
+ .../devicetree/bindings/rtc/st,stm32-rtc.yaml |  5 +-
+ drivers/rtc/rtc-stm32.c                       | 78 +++++++++++++++++++
+ 2 files changed, 82 insertions(+), 1 deletion(-)
 
-LGTM,
+-- 
+2.25.1
 
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-
-Thanks,
-
-Jessica Zhang
-
-> ---
-> 
-> Changes in v2:
->      - Add Fixes tag
-> 
-> v1: https://lore.kernel.org/all/d9f4546f-c2f9-456d-ba75-85cc195dd9b8@gmail.com/
-> 
-> ---
->   drivers/gpu/drm/panel/panel-himax-hx83102.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-himax-hx83102.c b/drivers/gpu/drm/panel/panel-himax-hx83102.c
-> index 6009a3fe1b8f..ab00fd92cce0 100644
-> --- a/drivers/gpu/drm/panel/panel-himax-hx83102.c
-> +++ b/drivers/gpu/drm/panel/panel-himax-hx83102.c
-> @@ -479,7 +479,7 @@ static int hx83102_disable(struct drm_panel *panel)
->   	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
->   	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
->   
-> -	mipi_dsi_msleep(&dsi_ctx, 150);
-> +	mipi_dsi_msleep(dsi_ctx, 150);
->   
->   	return dsi_ctx.accum_err;
->   }
-> -- 
-> 2.45.2
-> 
