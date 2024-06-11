@@ -1,119 +1,457 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout70.expurgate.net (mxout70.expurgate.net [91.198.224.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C5117B43F;
-	Tue, 11 Jun 2024 11:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BA517C21D;
+	Tue, 11 Jun 2024 11:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.224.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718106051; cv=none; b=Eddlpwe7kKYCUJdYKqAYT7vg5c029XoxgFmgZRWfrIy66dIM4QR6w5G5T1XoRV6u8CUhSP7nGQ9fh8huxW1BE3v9pzGX8AJfbMT8rX6HjJXf9RCd3+z35YpuwBk0Ir8NIBBYPWK3O8A9/8og51QaqaHct389EyN0xjtbAcIPrpk=
+	t=1718106058; cv=none; b=kzBhocQVO11hiYYcFxDLyOgbZFR69/QzUj/C6DOW/Z6HuZiyIe8IWA15XPKDkvfrKWj+ukOxzE5gNOBqNzRJXHKjB5u5tPtd/28O9FLd5Am6Us5+gBzNEkWHRijy96TXQN0k/tI+9LZW1aAhsDqChuJ9VlTa8aBx2+MOS0CbGtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718106051; c=relaxed/simple;
-	bh=YeyXKtlCu8QG4qMRA8+2qFlxo89AdJ1zUyTJx043lfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UGEWu02ytXTWruWY+lZ599d9bJP4AdWhenfU3sQMoYDLLi4aUkEQ+QabLAfxV6CkYEWlPjrS5asR2o6adtBqhaq8SIOMuKgX6dPMDgywAWuhy5rhxKuYNM6Kgcni23TL2fgtwcEc271r16RNeXRHS7a3cb81UYQJqCSQGY9j6AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jsDoxiZi; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jsDoxiZi"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52c8c0d73d3so2550834e87.1;
-        Tue, 11 Jun 2024 04:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718106047; x=1718710847; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L8XxjvcCgXk/Pl/HdvcUec+tIi9qW/w8D9MOpEhghSw=;
-        b=jsDoxiZiXVD7I9jTTFkj/QV89S34+p2HAotfp3i+luhUFz76XkVXTSYpliq/3YwL4Y
-         8LxtCgVboyHxg7pAjo1FNA71xeOh1JpLDyql/zn7uIHplBomZqA+s7BVRRPXbPmlsoOD
-         DIK6wWzKGQPmzS+9Zn1zUssrIla8BpJhWbEFadhiJDZVDInbJ0gb7mgTMTe7kwWa6aBh
-         jdoLY0mBHlk3OvXl+QE01MzGMvw/ZG/VlaCJ3sQCJZuO9b3sL7ExkMHe+Q8wNwzboo1u
-         +1TJVYMpkne6nAlbyaCc7FYigIAXaD/fN8KScLiUx4gKe28+WP2QXW0+hFOVW3iXPGCO
-         h9dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718106047; x=1718710847;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L8XxjvcCgXk/Pl/HdvcUec+tIi9qW/w8D9MOpEhghSw=;
-        b=N6j/OKnwZFs4U9lVxMJxrFB1W9mJEtBbzHsYq9SqXcf5g8ArRc6m7eCbsAm8a2UJV9
-         u42pHruSkGIZThh+dhz2xU5vVMEwhwN/8Rv4X2caTBWYzf9JWwEFylUa0INkJl5btBpa
-         E8FNRRDQYXelv0ZtyrFzKXllFXKaJe4x61dtG03JItegUJdfuBaY0PwpqTpyzrzP4WU7
-         tT3i0uxVBG7oCm21fnO10BB3qTvmK/o+K2MM4pAbmjJDkWqZ8V7ze6Hg0nyJrHRjz70Y
-         UFVfz6vr+XMV/NB1ERr1EeQw9tkQem1uVQAFmi2NAfZy201eqt37IFvSc46dDdPJoJMI
-         /vzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkkfAJXDQ95xTXQHx36n+jesaesZFv2qtPMp8sdWwmlk/uSuKfs33hVgWl6d48/DEjZgiQ14pIqn5qZJ95B46nxnb5P26C+iBvCqIX/zROE5oB11v/6CPzbbbQfCn6mNwRiUFaa6w/B1HBkjumI6YwlO3vVl7+Na0utWSlg3JG5SWpo3AL4dRy
-X-Gm-Message-State: AOJu0Yw0SxPw8rrJOhoilYayO7574NXgcHcdpSFIup2yf+90phB00avW
-	m5J4QF0MEpCRJR+ZAwrlG749WV1ls4tOjojsjBbhEmBWbA6fDHjx
-X-Google-Smtp-Source: AGHT+IERbDwVmhIESs931NWqqFELi2rg1koDN0thpr+FI0e//xVSCLH20AdXJ7EgJX3zslCQB9lLYA==
-X-Received: by 2002:a05:6512:3041:b0:52b:bdbd:2c43 with SMTP id 2adb3069b0e04-52bbdbd3144mr8397626e87.61.1718106047032;
-        Tue, 11 Jun 2024 04:40:47 -0700 (PDT)
-Received: from f (cst-prg-65-249.cust.vodafone.cz. [46.135.65.249])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f0e49e898sm9819416f8f.22.2024.06.11.04.40.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 04:40:46 -0700 (PDT)
-Date: Tue, 11 Jun 2024 13:40:37 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Jan Kara <jack@suse.cz>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	josef@toxicpanda.com, hch@infradead.org
-Subject: Re: [PATCH v3 1/2] vfs: add rcu-based find_inode variants for iget
- ops
-Message-ID: <2aoxtcshqzrrqfvjs2xger5omq2fjkfifhkdjzvscrtybisca7@eoisrrcki2vw>
-References: <20240611101633.507101-1-mjguzik@gmail.com>
- <20240611101633.507101-2-mjguzik@gmail.com>
- <20240611105011.ofuqtmtdjddskbrt@quack3>
+	s=arc-20240116; t=1718106058; c=relaxed/simple;
+	bh=9LeKIJJsUQXyr3hksLnvvOz4U4uKfPe/bH5MsE+TiL8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O4GjBgmNT8NgIReix6Nhwkd6+mVJqINM5BLkdokGu5IZ5rOHTuL5ms5wpt6Kunwtp0XRgfxPxJPBbC3ktwWhi7WTi/yuvkJtaq3361rKSfGcd3Hed/u9uIrZM0Bd6HqgXsWWhccZfaLpw3UD7umdKQcgKhY7zNpqmFs2yX8TByg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=91.198.224.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+Received: from [127.0.0.1] (helo=localhost)
+	by relay.expurgate.net with smtp (Exim 4.92)
+	(envelope-from <prvs=9906f4c1d5=ms@dev.tdt.de>)
+	id 1sGzrv-002YnG-Ep; Tue, 11 Jun 2024 13:40:51 +0200
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ms@dev.tdt.de>)
+	id 1sGzru-00EF3p-SR; Tue, 11 Jun 2024 13:40:50 +0200
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+	by securemail.tdt.de (Postfix) with ESMTP id 87F5A240053;
+	Tue, 11 Jun 2024 13:40:50 +0200 (CEST)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+	by securemail.tdt.de (Postfix) with ESMTP id 18186240050;
+	Tue, 11 Jun 2024 13:40:50 +0200 (CEST)
+Received: from mschiller1.dev.tdt.de (unknown [10.2.3.20])
+	by mail.dev.tdt.de (Postfix) with ESMTPSA id 6FC6B29768;
+	Tue, 11 Jun 2024 13:40:49 +0200 (CEST)
+From: Martin Schiller <ms@dev.tdt.de>
+To: martin.blumenstingl@googlemail.com,
+	hauke@hauke-m.de,
+	andrew@lunn.ch,
+	f.fainelli@gmail.com,
+	olteanv@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ms@dev.tdt.de
+Subject: [PATCH net-next v4 01/13] dt-bindings: net: dsa: lantiq,gswip: convert to YAML schema
+Date: Tue, 11 Jun 2024 13:40:15 +0200
+Message-ID: <20240611114027.3136405-2-ms@dev.tdt.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240611114027.3136405-1-ms@dev.tdt.de>
+References: <20240611114027.3136405-1-ms@dev.tdt.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240611105011.ofuqtmtdjddskbrt@quack3>
+Content-Transfer-Encoding: quoted-printable
+X-purgate: clean
+X-purgate-ID: 151534::1718106051-36EB2D11-628F7943/0/0
+X-purgate-type: clean
 
-On Tue, Jun 11, 2024 at 12:50:11PM +0200, Jan Kara wrote:
-> On Tue 11-06-24 12:16:31, Mateusz Guzik wrote:
-> > +/**
-> > + * ilookup5 - search for an inode in the inode cache
->       ^^^ ilookup5_rcu
-> 
+Convert the lantiq,gswip bindings to YAML format.
 
-fixed in my branch
+Also add this new file to the MAINTAINERS file.
 
-> > + * @sb:		super block of file system to search
-> > + * @hashval:	hash value (usually inode number) to search for
-> > + * @test:	callback used for comparisons between inodes
-> > + * @data:	opaque data pointer to pass to @test
-> > + *
-> > + * This is equivalent to ilookup5, except the @test callback must
-> > + * tolerate the inode not being stable, including being mid-teardown.
-> > + */
-> ...
-> > +struct inode *ilookup5_nowait_rcu(struct super_block *sb, unsigned long hashval,
-> > +		int (*test)(struct inode *, void *), void *data);
-> 
-> I'd prefer wrapping the above so that it fits into 80 columns.
-> 
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+---
+ .../bindings/net/dsa/lantiq,gswip.yaml        | 195 ++++++++++++++++++
+ .../bindings/net/dsa/lantiq-gswip.txt         | 146 -------------
+ MAINTAINERS                                   |   1 +
+ 3 files changed, 196 insertions(+), 146 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/lantiq,gswi=
+p.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/dsa/lantiq-gswi=
+p.txt
 
-the last comma is precisely at 80, but i can wrap it if you insist
+diff --git a/Documentation/devicetree/bindings/net/dsa/lantiq,gswip.yaml =
+b/Documentation/devicetree/bindings/net/dsa/lantiq,gswip.yaml
+new file mode 100644
+index 000000000000..14ef48d6a0ee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dsa/lantiq,gswip.yaml
+@@ -0,0 +1,195 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/dsa/lantiq,gswip.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Lantiq GSWIP Ethernet switches
++
++allOf:
++  - $ref: dsa.yaml#/$defs/ethernet-ports
++
++maintainers:
++  - Hauke Mehrtens <hauke@hauke-m.de>
++
++properties:
++  compatible:
++    enum:
++      - lantiq,xrx200-gswip
++      - lantiq,xrx300-gswip
++      - lantiq,xrx330-gswip
++
++  reg:
++    minItems: 3
++    maxItems: 3
++  reg-names:
++    items:
++      - const: switch
++      - const: mdio
++      - const: mii
++
++  mdio:
++    $ref: /schemas/net/mdio.yaml#
++    unevaluatedProperties: false
++
++    properties:
++      compatible:
++        const: lantiq,xrx200-mdio
++
++    required:
++      - compatible
++
++  gphy-fw:
++    type: object
++    properties:
++      '#address-cells':
++        const: 1
++      '#size-cells':
++        const: 0
++
++      compatible:
++        allOf:
++          - items:
++              - enum:
++                  - lantiq,xrx200-gphy-fw
++                  - lantiq,xrx300-gphy-fw
++                  - lantiq,xrx330-gphy-fw
++              - const: lantiq,gphy-fw
++
++      lantiq,rcu:
++        $ref: /schemas/types.yaml#/definitions/phandle
++        description: phandle to the RCU syscon
++
++    patternProperties:
++      "^gphy@[0-9a-f]+$":
++        type: object
++
++        properties:
++          reg:
++            minimum: 0
++            maximum: 255
++            description:
++              Offset of the GPHY firmware register in the RCU register r=
+ange
++
++          resets:
++            items:
++              - description: GPHY reset line
++
++          reset-names:
++            items:
++              - const: gphy
++
++        required:
++          - reg
++
++        additionalProperties: false
++
++    required:
++      - compatible
++      - lantiq,rcu
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    switch@e108000 {
++            compatible =3D "lantiq,xrx200-gswip";
++            reg =3D <0xe108000 0x3100>,  /* switch */
++                  <0xe10b100 0xd8>,    /* mdio */
++                  <0xe10b1d8 0x130>;   /* mii */
++            dsa,member =3D <0 0>;
++
++            ports {
++                    #address-cells =3D <1>;
++                    #size-cells =3D <0>;
++
++                    port@0 {
++                            reg =3D <0>;
++                            label =3D "lan3";
++                            phy-mode =3D "rgmii";
++                            phy-handle =3D <&phy0>;
++                    };
++
++                    port@1 {
++                            reg =3D <1>;
++                            label =3D "lan4";
++                            phy-mode =3D "rgmii";
++                            phy-handle =3D <&phy1>;
++                    };
++
++                    port@2 {
++                            reg =3D <2>;
++                            label =3D "lan2";
++                            phy-mode =3D "internal";
++                            phy-handle =3D <&phy11>;
++                    };
++
++                    port@4 {
++                            reg =3D <4>;
++                            label =3D "lan1";
++                            phy-mode =3D "internal";
++                            phy-handle =3D <&phy13>;
++                    };
++
++                    port@5 {
++                            reg =3D <5>;
++                            label =3D "wan";
++                            phy-mode =3D "rgmii";
++                            phy-handle =3D <&phy5>;
++                    };
++
++                    port@6 {
++                            reg =3D <0x6>;
++                            ethernet =3D <&eth0>;
++                    };
++            };
++
++            mdio {
++                    #address-cells =3D <1>;
++                    #size-cells =3D <0>;
++                    compatible =3D "lantiq,xrx200-mdio";
++
++                    phy0: ethernet-phy@0 {
++                            reg =3D <0x0>;
++                    };
++                    phy1: ethernet-phy@1 {
++                            reg =3D <0x1>;
++                    };
++                    phy5: ethernet-phy@5 {
++                            reg =3D <0x5>;
++                    };
++                    phy11: ethernet-phy@11 {
++                            reg =3D <0x11>;
++                    };
++                    phy13: ethernet-phy@13 {
++                            reg =3D <0x13>;
++                    };
++            };
++
++            gphy-fw {
++                    #address-cells =3D <1>;
++                    #size-cells =3D <0>;
++                    compatible =3D "lantiq,xrx200-gphy-fw", "lantiq,gphy=
+-fw";
++                    lantiq,rcu =3D <&rcu0>;
++
++                    gphy@20 {
++                            reg =3D <0x20>;
++
++                            resets =3D <&reset0 31 30>;
++                            reset-names =3D "gphy";
++                    };
++
++                    gphy@68 {
++                            reg =3D <0x68>;
++
++                            resets =3D <&reset0 29 28>;
++                            reset-names =3D "gphy";
++                    };
++            };
++    };
+diff --git a/Documentation/devicetree/bindings/net/dsa/lantiq-gswip.txt b=
+/Documentation/devicetree/bindings/net/dsa/lantiq-gswip.txt
+deleted file mode 100644
+index 8bb1eff21cb1..000000000000
+--- a/Documentation/devicetree/bindings/net/dsa/lantiq-gswip.txt
++++ /dev/null
+@@ -1,146 +0,0 @@
+-Lantiq GSWIP Ethernet switches
+-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+-
+-Required properties for GSWIP core:
+-
+-- compatible	: "lantiq,xrx200-gswip" for the embedded GSWIP in the
+-		  xRX200 SoC
+-		  "lantiq,xrx300-gswip" for the embedded GSWIP in the
+-		  xRX300 SoC
+-		  "lantiq,xrx330-gswip" for the embedded GSWIP in the
+-		  xRX330 SoC
+-- reg		: memory range of the GSWIP core registers
+-		: memory range of the GSWIP MDIO registers
+-		: memory range of the GSWIP MII registers
+-
+-See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of
+-additional required and optional properties.
+-
+-
+-Required properties for MDIO bus:
+-- compatible	: "lantiq,xrx200-mdio" for the MDIO bus inside the GSWIP
+-		  core of the xRX200 SoC and the PHYs connected to it.
+-
+-See Documentation/devicetree/bindings/net/mdio.txt for a list of additio=
+nal
+-required and optional properties.
+-
+-
+-Required properties for GPHY firmware loading:
+-- compatible	: "lantiq,xrx200-gphy-fw", "lantiq,gphy-fw"
+-		  "lantiq,xrx300-gphy-fw", "lantiq,gphy-fw"
+-		  "lantiq,xrx330-gphy-fw", "lantiq,gphy-fw"
+-		  for the loading of the firmware into the embedded
+-		  GPHY core of the SoC.
+-- lantiq,rcu	: reference to the rcu syscon
+-
+-The GPHY firmware loader has a list of GPHY entries, one for each
+-embedded GPHY
+-
+-- reg		: Offset of the GPHY firmware register in the RCU
+-		  register range
+-- resets	: list of resets of the embedded GPHY
+-- reset-names	: list of names of the resets
+-
+-Example:
+-
+-Ethernet switch on the VRX200 SoC:
+-
+-switch@e108000 {
+-	#address-cells =3D <1>;
+-	#size-cells =3D <0>;
+-	compatible =3D "lantiq,xrx200-gswip";
+-	reg =3D <	0xe108000 0x3100	/* switch */
+-		0xe10b100 0xd8		/* mdio */
+-		0xe10b1d8 0x130		/* mii */
+-		>;
+-	dsa,member =3D <0 0>;
+-
+-	ports {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+-		port@0 {
+-			reg =3D <0>;
+-			label =3D "lan3";
+-			phy-mode =3D "rgmii";
+-			phy-handle =3D <&phy0>;
+-		};
+-
+-		port@1 {
+-			reg =3D <1>;
+-			label =3D "lan4";
+-			phy-mode =3D "rgmii";
+-			phy-handle =3D <&phy1>;
+-		};
+-
+-		port@2 {
+-			reg =3D <2>;
+-			label =3D "lan2";
+-			phy-mode =3D "internal";
+-			phy-handle =3D <&phy11>;
+-		};
+-
+-		port@4 {
+-			reg =3D <4>;
+-			label =3D "lan1";
+-			phy-mode =3D "internal";
+-			phy-handle =3D <&phy13>;
+-		};
+-
+-		port@5 {
+-			reg =3D <5>;
+-			label =3D "wan";
+-			phy-mode =3D "rgmii";
+-			phy-handle =3D <&phy5>;
+-		};
+-
+-		port@6 {
+-			reg =3D <0x6>;
+-			ethernet =3D <&eth0>;
+-		};
+-	};
+-
+-	mdio {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-		compatible =3D "lantiq,xrx200-mdio";
+-		reg =3D <0>;
+-
+-		phy0: ethernet-phy@0 {
+-			reg =3D <0x0>;
+-		};
+-		phy1: ethernet-phy@1 {
+-			reg =3D <0x1>;
+-		};
+-		phy5: ethernet-phy@5 {
+-			reg =3D <0x5>;
+-		};
+-		phy11: ethernet-phy@11 {
+-			reg =3D <0x11>;
+-		};
+-		phy13: ethernet-phy@13 {
+-			reg =3D <0x13>;
+-		};
+-	};
+-
+-	gphy-fw {
+-		compatible =3D "lantiq,xrx200-gphy-fw", "lantiq,gphy-fw";
+-		lantiq,rcu =3D <&rcu0>;
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+-		gphy@20 {
+-			reg =3D <0x20>;
+-
+-			resets =3D <&reset0 31 30>;
+-			reset-names =3D "gphy";
+-		};
+-
+-		gphy@68 {
+-			reg =3D <0x68>;
+-
+-			resets =3D <&reset0 29 28>;
+-			reset-names =3D "gphy";
+-		};
+-	};
+-};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cd3277a98cfe..ca1050f6691b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12449,6 +12449,7 @@ LANTIQ / INTEL Ethernet drivers
+ M:	Hauke Mehrtens <hauke@hauke-m.de>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/net/dsa/lantiq,gswip.yaml
+ F:	drivers/net/dsa/lantiq_gswip.c
+ F:	drivers/net/dsa/lantiq_pce.h
+ F:	drivers/net/ethernet/lantiq_xrx200.c
+--=20
+2.39.2
 
-> Otherwise feel free to add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> 
-
-thanks
-
-I'm going to wait for more feedback, tweak the commit message to stress
-that this goes from 2 hash lock acquires to 1, maybe fix some typos and
-submit a v4.
-
-past that if people want something faster they are welcome to implement
-or carry it over the finish line themselves.
-
-> 									Honza
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
