@@ -1,221 +1,365 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3E4174EE2;
-	Tue, 11 Jun 2024 10:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792E54776E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 10:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718100940; cv=none; b=l4GtfwUBA/ivfNCXzqEZm2u6BkhcTpStK/oi8fpzEixmm9JaH+2USlYMBe1xXKWTQM3QpM3Ie7/FMNRie3Lw7ImS8r2wD50y0XXw3ASFtq7l8GLvktOgSOc7CyBY2fdlknIBAW1saq61nrqDpZ+E6g5ivHsjjhRLNX2u4/6gQos=
+	t=1718101001; cv=none; b=ShmHtmYWuomajzgQfL7A7L12Z9egL4JApJAaO9bOE2Xqn/7kstfe1h4fVaDFrDDCD+T7aBOjcbNM6SxIpscz9cmVMCD0DdM3ON66j10lxenjbpWVdqAuJHMVBPE+N6sl992OIdNZXPl8L/6LcIX/QQtuz3eeMQl23z7k50/6p9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718100940; c=relaxed/simple;
-	bh=lwtvF8TxyoK5ymJEUqL+Fdnx72KICz4bi8hcR1ZN2pk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uBK9ri1mFDNK2vC/yVIJchG+Qyydw4S4RWqrml7r4tZcPsJlmT1EiFJbxJl1M/DDqtg71PTnkUKGvmRc43VbxE4uwFV2SR4mNhIzip/M3v21U0xTODIaCXiWK3fLfmS8WVY8Lb5LcPY1T/YtA+6XnPXKNAVYbf3+Phz/1TiW9Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCcERj+i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718101001; c=relaxed/simple;
+	bh=Qyg4RQW/tyLB/2+2YTI8s9itFRONl0NonB3uJIomYHA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Oj96WG1njyx0JtIbic3Z0UbOywFLZnAXXBY14KP07oU8xBP1MaoNqVvVKxwf9/K4jy8YK1gdP5vnG8aVkX2+kDlhq5CYAPvQ/9pToUg8pbEKsIHHVNKaOlcnBoOiz3y5vuTJo0Qv0jhDbg/KO5tk1v48MOpd2Oy5qTkElVIOPAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=o6h4VfbQ; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCcERj+i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EAA0C2BD10;
-	Tue, 11 Jun 2024 10:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718100940;
-	bh=lwtvF8TxyoK5ymJEUqL+Fdnx72KICz4bi8hcR1ZN2pk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WCcERj+iqpu+bZrTYQgOyGthvcZ/X2gu2+GqD1bh3N3awgteDMG9mU+ACV+3pLH4R
-	 XskRK+Cwj2BK6OmWFJ2prqWvoXbpWi/fv0AAcF5SCxPI5dvLkplU1gG5bF4BquXc48
-	 3FdozzoIzVNDlT4MU0bfZCi6cy9FWQp16bUJNxTf/CQs380s3QWDQw7ZXKShlr6mv1
-	 +roaCUeCOoUwe03l9bXJIY26YI51b0e/VuqHM45uIb/tLDkv4kJi9AVCWPUCkv24aG
-	 48WWBZQ34zOGhJhiuJ5Ot9doIBsmw89AEGSiNn1Mvbca22RkVbLntiBFZI4A/C/Evd
-	 oo0NoeTHwe1rQ==
-Message-ID: <6cd2897f-a61d-4351-abac-714bae2ab154@kernel.org>
-Date: Tue, 11 Jun 2024 12:15:31 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="o6h4VfbQ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718100997; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=d0UcBrIAWPKoJXUZ8qfKGS/skuBxjMLJJmhrq6myW0M=;
+	b=o6h4VfbQjXLLSCDp/jcWODQoKUzZQ3kV5xNmgjET5KuAib1ZkxXc/rTmawnaYem+zLeUtE10yphqTgIEcUvYjwXV00ZjgUv6nbyxXYSYSf8GWE4/4lTeLWA23UjFBJwjyvIwcYXmiXEZ5Y7vOI4xygjQSeZgnKEvK+TpVwuJppw=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W8G5NWO_1718100679;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8G5NWO_1718100679)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Jun 2024 18:11:19 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	hughd@google.com
+Cc: willy@infradead.org,
+	david@redhat.com,
+	wangkefeng.wang@huawei.com,
+	ying.huang@intel.com,
+	21cnbao@gmail.com,
+	ryan.roberts@arm.com,
+	shy828301@gmail.com,
+	ziy@nvidia.com,
+	ioworker0@gmail.com,
+	da.gomez@samsung.com,
+	p.raghav@samsung.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 4/6] mm: shmem: add mTHP support for anonymous shmem
+Date: Tue, 11 Jun 2024 18:11:08 +0800
+Message-Id: <65796c1e72e51e15f3410195b5c2d5b6c160d411.1718090413.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
+References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 1/2] ASoC: fsl: Add i2s and pcm drivers for LPC32xx
- CPUs
-To: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>,
- Russell King <linux@armlinux.org.uk>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Chancel Liu <chancel.liu@nxp.com>,
- Arnd Bergmann <arnd@arndb.de>, Michael Ellerman <mpe@ellerman.id.au>,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
-References: <[PATCH] ASoC: fsl: Add i2s and pcm drivers for LPC32xx CPUs>
- <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/06/2024 11:47, Piotr Wojtaszczyk wrote:
-> This driver was ported from an old version in linux 2.6.27 and adjusted
-> for the new ASoC framework and DMA API.
-> 
-> Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-> ---
-> Changes for v2:
-> - Coding Style cleanup
-> - Use dev_err_probe() for error handling in probe function
-> - Removed unneded err_clk_disable label
-> - Removed empty function
-> - Droped of_match_ptr in lpc32xx_i2s_match DT match table
-> - ASoC struct adjustmes for the latest 6.10-rc3 kernel
-> 
->  MAINTAINERS                            |   7 +
+Commit 19eaf44954df adds multi-size THP (mTHP) for anonymous pages, that
+can allow THP to be configured through the sysfs interface located at
+'/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled'.
 
-1:
->  arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi |   4 +
+However, the anonymous shmem will ignore the anonymous mTHP rule
+configured through the sysfs interface, and can only use the PMD-mapped
+THP, that is not reasonable. Users expect to apply the mTHP rule for
+all anonymous pages, including the anonymous shmem, in order to enjoy
+the benefits of mTHP. For example, lower latency than PMD-mapped THP,
+smaller memory bloat than PMD-mapped THP, contiguous PTEs on ARM architecture
+to reduce TLB miss etc. In addition, the mTHP interfaces can be extended
+to support all shmem/tmpfs scenarios in the future, especially for the
+shmem mmap() case.
 
-2:
->  arch/arm/mach-lpc32xx/phy3250.c        |  60 ++++
+The primary strategy is similar to supporting anonymous mTHP. Introduce
+a new interface '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled',
+which can have almost the same values as the top-level
+'/sys/kernel/mm/transparent_hugepage/shmem_enabled', with adding a new
+additional "inherit" option and dropping the testing options 'force' and
+'deny'. By default all sizes will be set to "never" except PMD size,
+which is set to "inherit". This ensures backward compatibility with the
+anonymous shmem enabled of the top level, meanwhile also allows independent
+control of anonymous shmem enabled for each mTHP.
 
-3:
->  sound/soc/fsl/Kconfig                  |   7 +
->  sound/soc/fsl/Makefile                 |   2 +
->  sound/soc/fsl/lpc3xxx-i2s.c            | 383 +++++++++++++++++++++++++
->  sound/soc/fsl/lpc3xxx-i2s.h            |  94 ++++++
->  sound/soc/fsl/lpc3xxx-pcm.c            |  75 +++++
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+ include/linux/huge_mm.h |  10 +++
+ mm/shmem.c              | 187 +++++++++++++++++++++++++++++++++-------
+ 2 files changed, 167 insertions(+), 30 deletions(-)
 
-Three separate subsystems, so three separate patches.
-
->  8 files changed, 632 insertions(+)
->  create mode 100644 sound/soc/fsl/lpc3xxx-i2s.c
->  create mode 100644 sound/soc/fsl/lpc3xxx-i2s.h
->  create mode 100644 sound/soc/fsl/lpc3xxx-pcm.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index aacccb376c28..7616f61d6327 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8909,6 +8909,13 @@ S:	Maintained
->  F:	sound/soc/fsl/fsl*
->  F:	sound/soc/fsl/imx*
->  
-> +FREESCALE SOC LPC32XX SOUND DRIVERS
-> +M:	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-> +L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
-> +L:	linuxppc-dev@lists.ozlabs.org
-> +S:	Orphan
-
-Not sure if we want it in the first place. Why would we like to support
-orphaned drivers? Sorry, if there is no one to care about it, then it
-should not be merged.
-
-...
-
-> +
-> +static int lpc32xx_i2s_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct lpc3xxx_i2s_info *i2s_info_p;
-> +	struct resource *res;
-> +	void __iomem *iomem;
-> +	int ret;
-> +
-> +	i2s_info_p = devm_kzalloc(dev, sizeof(*i2s_info_p), GFP_KERNEL);
-> +	if (!i2s_info_p)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, i2s_info_p);
-> +	i2s_info_p->dev = dev;
-> +
-> +	iomem = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
-> +	if (IS_ERR(iomem))
-> +		return dev_err_probe(dev, PTR_ERR(iomem), "Can't map registers\n");
-> +
-> +	i2s_info_p->regs = devm_regmap_init_mmio(dev, iomem, &lpc32xx_i2s_regconfig);
-> +	if (IS_ERR(i2s_info_p->regs))
-> +		return dev_err_probe(dev, PTR_ERR(i2s_info_p->regs),
-> +				     "failed to init register map: %d\n", ret);
-> +
-> +	i2s_info_p->clk = devm_clk_get(dev, "i2s_clk");
-> +	if (IS_ERR(i2s_info_p->clk))
-> +		return dev_err_probe(dev, PTR_ERR(i2s_info_p->clk), "Can't get clock\n");
-> +
-> +	i2s_info_p->clkrate = clk_get_rate(i2s_info_p->clk);
-> +	if (i2s_info_p->clkrate == 0)
-> +		return dev_err_probe(dev, -EINVAL, "Invalid returned clock rate\n");
-> +
-> +	mutex_init(&i2s_info_p->lock);
-> +
-> +	ret = devm_snd_soc_register_component(dev, &lpc32xx_i2s_component,
-> +					      &lpc3xxx_i2s_dai_driver, 1);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Can't register cpu_dai component\n");
-> +
-> +	i2s_info_p->playback_dma_config.addr = (dma_addr_t)(res->start + I2S_TX_FIFO);
-> +	i2s_info_p->playback_dma_config.maxburst = 4;
-> +	i2s_info_p->playback_dma_config.filter_data = "i2s-tx";
-> +	i2s_info_p->capture_dma_config.addr = (dma_addr_t)(res->start + I2S_RX_FIFO);
-> +	i2s_info_p->capture_dma_config.maxburst = 4;
-> +	i2s_info_p->capture_dma_config.filter_data = "i2s-rx";
-> +
-> +	ret = lpc3xxx_pcm_register(pdev);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Can't register pcm component\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static int lpc32xx_i2s_remove(struct platform_device *pdev)
-> +{
-> +	return 0;
-> +}
-
-You did not respond to comment about this. Drop.
-
-
-Best regards,
-Krzysztof
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index fac21548c5de..909cfc67521d 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -575,6 +575,16 @@ static inline bool thp_migration_supported(void)
+ {
+ 	return false;
+ }
++
++static inline int highest_order(unsigned long orders)
++{
++	return 0;
++}
++
++static inline int next_order(unsigned long *orders, int prev)
++{
++	return 0;
++}
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+ static inline int split_folio_to_list_to_order(struct folio *folio,
+diff --git a/mm/shmem.c b/mm/shmem.c
+index bb19ea2770e3..e849c88452b2 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1611,6 +1611,107 @@ static gfp_t limit_gfp_mask(gfp_t huge_gfp, gfp_t limit_gfp)
+ 	return result;
+ }
+ 
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++static unsigned long shmem_allowable_huge_orders(struct inode *inode,
++				struct vm_area_struct *vma, pgoff_t index,
++				bool global_huge)
++{
++	unsigned long mask = READ_ONCE(huge_shmem_orders_always);
++	unsigned long within_size_orders = READ_ONCE(huge_shmem_orders_within_size);
++	unsigned long vm_flags = vma->vm_flags;
++	/*
++	 * Check all the (large) orders below HPAGE_PMD_ORDER + 1 that
++	 * are enabled for this vma.
++	 */
++	unsigned long orders = BIT(PMD_ORDER + 1) - 1;
++	loff_t i_size;
++	int order;
++
++	if ((vm_flags & VM_NOHUGEPAGE) ||
++	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
++		return 0;
++
++	/* If the hardware/firmware marked hugepage support disabled. */
++	if (transparent_hugepage_flags & (1 << TRANSPARENT_HUGEPAGE_UNSUPPORTED))
++		return 0;
++
++	/*
++	 * Following the 'deny' semantics of the top level, force the huge
++	 * option off from all mounts.
++	 */
++	if (shmem_huge == SHMEM_HUGE_DENY)
++		return 0;
++
++	/*
++	 * Only allow inherit orders if the top-level value is 'force', which
++	 * means non-PMD sized THP can not override 'huge' mount option now.
++	 */
++	if (shmem_huge == SHMEM_HUGE_FORCE)
++		return READ_ONCE(huge_shmem_orders_inherit);
++
++	/* Allow mTHP that will be fully within i_size. */
++	order = highest_order(within_size_orders);
++	while (within_size_orders) {
++		index = round_up(index + 1, order);
++		i_size = round_up(i_size_read(inode), PAGE_SIZE);
++		if (i_size >> PAGE_SHIFT >= index) {
++			mask |= within_size_orders;
++			break;
++		}
++
++		order = next_order(&within_size_orders, order);
++	}
++
++	if (vm_flags & VM_HUGEPAGE)
++		mask |= READ_ONCE(huge_shmem_orders_madvise);
++
++	if (global_huge)
++		mask |= READ_ONCE(huge_shmem_orders_inherit);
++
++	return orders & mask;
++}
++
++static unsigned long shmem_suitable_orders(struct inode *inode, struct vm_fault *vmf,
++					   struct address_space *mapping, pgoff_t index,
++					   unsigned long orders)
++{
++	struct vm_area_struct *vma = vmf->vma;
++	unsigned long pages;
++	int order;
++
++	orders = thp_vma_suitable_orders(vma, vmf->address, orders);
++	if (!orders)
++		return 0;
++
++	/* Find the highest order that can add into the page cache */
++	order = highest_order(orders);
++	while (orders) {
++		pages = 1UL << order;
++		index = round_down(index, pages);
++		if (!xa_find(&mapping->i_pages, &index,
++			     index + pages - 1, XA_PRESENT))
++			break;
++		order = next_order(&orders, order);
++	}
++
++	return orders;
++}
++#else
++static unsigned long shmem_allowable_huge_orders(struct inode *inode,
++				struct vm_area_struct *vma, pgoff_t index,
++				bool global_huge)
++{
++	return 0;
++}
++
++static unsigned long shmem_suitable_orders(struct inode *inode, struct vm_fault *vmf,
++					   struct address_space *mapping, pgoff_t index,
++					   unsigned long orders)
++{
++	return 0;
++}
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
++
+ static struct folio *shmem_alloc_folio(gfp_t gfp, int order,
+ 		struct shmem_inode_info *info, pgoff_t index)
+ {
+@@ -1625,38 +1726,55 @@ static struct folio *shmem_alloc_folio(gfp_t gfp, int order,
+ 	return folio;
+ }
+ 
+-static struct folio *shmem_alloc_and_add_folio(gfp_t gfp,
+-		struct inode *inode, pgoff_t index,
+-		struct mm_struct *fault_mm, bool huge)
++static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
++		gfp_t gfp, struct inode *inode, pgoff_t index,
++		struct mm_struct *fault_mm, unsigned long orders)
+ {
+ 	struct address_space *mapping = inode->i_mapping;
+ 	struct shmem_inode_info *info = SHMEM_I(inode);
+-	struct folio *folio;
++	struct vm_area_struct *vma = vmf ? vmf->vma : NULL;
++	unsigned long suitable_orders = 0;
++	struct folio *folio = NULL;
+ 	long pages;
+-	int error;
++	int error, order;
+ 
+ 	if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
+-		huge = false;
++		orders = 0;
+ 
+-	if (huge) {
+-		pages = HPAGE_PMD_NR;
+-		index = round_down(index, HPAGE_PMD_NR);
++	if (orders > 0) {
++		if (vma && vma_is_anon_shmem(vma)) {
++			suitable_orders = shmem_suitable_orders(inode, vmf,
++							mapping, index, orders);
++		} else if (orders & BIT(HPAGE_PMD_ORDER)) {
++			pages = HPAGE_PMD_NR;
++			suitable_orders = BIT(HPAGE_PMD_ORDER);
++			index = round_down(index, HPAGE_PMD_NR);
+ 
+-		/*
+-		 * Check for conflict before waiting on a huge allocation.
+-		 * Conflict might be that a huge page has just been allocated
+-		 * and added to page cache by a racing thread, or that there
+-		 * is already at least one small page in the huge extent.
+-		 * Be careful to retry when appropriate, but not forever!
+-		 * Elsewhere -EEXIST would be the right code, but not here.
+-		 */
+-		if (xa_find(&mapping->i_pages, &index,
+-				index + HPAGE_PMD_NR - 1, XA_PRESENT))
+-			return ERR_PTR(-E2BIG);
++			/*
++			 * Check for conflict before waiting on a huge allocation.
++			 * Conflict might be that a huge page has just been allocated
++			 * and added to page cache by a racing thread, or that there
++			 * is already at least one small page in the huge extent.
++			 * Be careful to retry when appropriate, but not forever!
++			 * Elsewhere -EEXIST would be the right code, but not here.
++			 */
++			if (xa_find(&mapping->i_pages, &index,
++				    index + HPAGE_PMD_NR - 1, XA_PRESENT))
++				return ERR_PTR(-E2BIG);
++		}
+ 
+-		folio = shmem_alloc_folio(gfp, HPAGE_PMD_ORDER, info, index);
+-		if (!folio && pages == HPAGE_PMD_NR)
+-			count_vm_event(THP_FILE_FALLBACK);
++		order = highest_order(suitable_orders);
++		while (suitable_orders) {
++			pages = 1UL << order;
++			index = round_down(index, pages);
++			folio = shmem_alloc_folio(gfp, order, info, index);
++			if (folio)
++				goto allocated;
++
++			if (pages == HPAGE_PMD_NR)
++				count_vm_event(THP_FILE_FALLBACK);
++			order = next_order(&suitable_orders, order);
++		}
+ 	} else {
+ 		pages = 1;
+ 		folio = shmem_alloc_folio(gfp, 0, info, index);
+@@ -1664,6 +1782,7 @@ static struct folio *shmem_alloc_and_add_folio(gfp_t gfp,
+ 	if (!folio)
+ 		return ERR_PTR(-ENOMEM);
+ 
++allocated:
+ 	__folio_set_locked(folio);
+ 	__folio_set_swapbacked(folio);
+ 
+@@ -1958,7 +2077,8 @@ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
+ 	struct mm_struct *fault_mm;
+ 	struct folio *folio;
+ 	int error;
+-	bool alloced;
++	bool alloced, huge;
++	unsigned long orders = 0;
+ 
+ 	if (WARN_ON_ONCE(!shmem_mapping(inode->i_mapping)))
+ 		return -EINVAL;
+@@ -2030,14 +2150,21 @@ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
+ 		return 0;
+ 	}
+ 
+-	if (shmem_is_huge(inode, index, false, fault_mm,
+-			  vma ? vma->vm_flags : 0)) {
++	huge = shmem_is_huge(inode, index, false, fault_mm,
++			     vma ? vma->vm_flags : 0);
++	/* Find hugepage orders that are allowed for anonymous shmem. */
++	if (vma && vma_is_anon_shmem(vma))
++		orders = shmem_allowable_huge_orders(inode, vma, index, huge);
++	else if (huge)
++		orders = BIT(HPAGE_PMD_ORDER);
++
++	if (orders > 0) {
+ 		gfp_t huge_gfp;
+ 
+ 		huge_gfp = vma_thp_gfp_mask(vma);
+ 		huge_gfp = limit_gfp_mask(huge_gfp, gfp);
+-		folio = shmem_alloc_and_add_folio(huge_gfp,
+-				inode, index, fault_mm, true);
++		folio = shmem_alloc_and_add_folio(vmf, huge_gfp,
++				inode, index, fault_mm, orders);
+ 		if (!IS_ERR(folio)) {
+ 			if (folio_test_pmd_mappable(folio))
+ 				count_vm_event(THP_FILE_ALLOC);
+@@ -2047,7 +2174,7 @@ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
+ 			goto repeat;
+ 	}
+ 
+-	folio = shmem_alloc_and_add_folio(gfp, inode, index, fault_mm, false);
++	folio = shmem_alloc_and_add_folio(vmf, gfp, inode, index, fault_mm, 0);
+ 	if (IS_ERR(folio)) {
+ 		error = PTR_ERR(folio);
+ 		if (error == -EEXIST)
+@@ -2058,7 +2185,7 @@ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
+ 
+ alloced:
+ 	alloced = true;
+-	if (folio_test_pmd_mappable(folio) &&
++	if (folio_test_large(folio) &&
+ 	    DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE) <
+ 					folio_next_index(folio) - 1) {
+ 		struct shmem_sb_info *sbinfo = SHMEM_SB(inode->i_sb);
+-- 
+2.39.3
 
