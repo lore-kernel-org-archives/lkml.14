@@ -1,158 +1,207 @@
-Received: from wflow1-smtp.messagingengine.com (wflow1-smtp.messagingengine.com [64.147.123.136])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8680F2AF11;
-	Tue, 11 Jun 2024 08:04:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD0B172BD0
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 08:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718093058; cv=none; b=LpRQaluXdGoY9wdkM0LDCP2nWoyRcndKsrHuryRKk/9BpO26aPUQcJsshSSGXdaZspDc97Dg/GhP3aftLokTGPDCgWfi3uoenQZWotQitOda0av5MHwuVXxgzXf02rk/LqgCNc1caiakLGW2QuH1BlD5PRSZUlUZL3GUFS9GwwQ=
+	t=1718093071; cv=none; b=JUmjLpspZPeYOmwVMtY1ivEWbZm2pLX1Oe/VIh2E9yMKuDUYNlXB+77iERUEEItAS7NiJcyZPcoHMzpJG3KEPg+x7vW3v7uvaa2VvCJV251Sn5scuVKxtDyzXpV5sM3YzaTryPauyJnghcpiBsTdYsG/It+o4FODG2uhqJxTUaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718093058; c=relaxed/simple;
-	bh=i5PCbp0/q6PWz4TVWQpu/XHWdtU4gQtsM/eIXXS5bCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ndaXJxABZVuXLCM7HDiVozNF3AcEvkenzxNJktu9GPWi5pNyxrhh/Z0cJ0cv6bJgTbW09F3os1xaPZ+kMeEQg3S54G/hR7e3meuB6edA/LcQu9eK+iEdINOcass02d2GF55W6Ezj8UdgVrWOfebkwfhxvQ3ESqrANUImEp2FsKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=mZQbjnu5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CSZrK0Kd; arc=none smtp.client-ip=64.147.123.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
+	s=arc-20240116; t=1718093071; c=relaxed/simple;
+	bh=IGkPU0Scjshr8UBWNnXfhsHmwWKbEoHOCDVcv+syyFo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o7fuHr2QfmU4EAdbnef2oW5BddQBJ0KbXWKPkyIMP2N2YrOLYg/hpsOC+jveDSQ55F4OZG7o/AYI/90AnkSBQRBLEKIA37bxjUAywSz8tcqqr0V6QSpVDBhcTsFJ9zSApTpRKZc98uptHhbawzK+cvQlEU/VkiP8Xsdw0ZQ4KFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XKBGw0Xr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="mZQbjnu5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CSZrK0Kd"
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailflow.west.internal (Postfix) with ESMTP id 282092CC0167;
-	Tue, 11 Jun 2024 04:04:12 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 11 Jun 2024 04:04:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1718093051;
-	 x=1718096651; bh=T/+yVl2zv0+WWZAFjJjZWDjIEaS6BfN4J4jIExynF6o=; b=
-	mZQbjnu5j3Y6c5s3NSn+f0d3nDl8PoIpV2J7xwyMi9/WvD/RY1kTze8DRKg5Ob/9
-	qdcDzg8z1JIHwDnn25DSApXsXTn6/bVuJosk8d9RnWp8rWzskRXM9PaWfzjSQcbO
-	L/pICtn0oU8vqHYGhaUI1WhxzlfiEW2Clz2RiIucnveZEE0r7ic4GSTumjSm/+sx
-	TwBH7RXzTN8uCCs8xL8Sbb4/3Mi1fvUv0uRTk5azsCKbpc82kY8WVMIrYDFbESmz
-	tAKWOi8hA8Yb3/3nHam8loFLXet5LCOSdm5CHxishmCypoFw7WMqzrS6+GZqpoKW
-	KSv/GyUZaUeeojOfo+9Vzg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718093051; x=
-	1718096651; bh=T/+yVl2zv0+WWZAFjJjZWDjIEaS6BfN4J4jIExynF6o=; b=C
-	SZrK0KdQEkfShTQPNyvj4mlnKZ0Xbt96wH2Bk8SLgKtBosrmcGOS62Nxz2GgpRKh
-	RM+s1SmAOHc8jwTQYcbXY4HfhyvA1X/BpdzYexyb3voF546hIMFrftL6byx/8Gq5
-	CyxDkiIDN9oLRqT0Nf/LaUiqqX05eT1btd9UsyUmbwFpTvbGTA6DT3DuQvwfUBKc
-	qA52qqMKRKtPR/9fjA9TbeDBTjsdN+FQxV3vQB7Zo6Dn7FU+V32DBRBd2xsUo4KD
-	epx9fxt2GbDP3IDJj7N9Sx6AiW6gmuCXgkH2QW1AZX1ds1Dhu6HORajf9Tf9GL0+
-	Sd5Mo8tvMorsvB3tmZk0Q==
-X-ME-Sender: <xms:-wRoZpXrMrwrS2LBoRUf1CscHpzfEOrNAJKNPFtQhnL2ou4ekXBebw>
-    <xme:-wRoZplIqIz-jLey3ypWwohXbLo_axCWylNtXJSop0FrUIU_rmjonZ32jdlWwBPFT
-    iyChc6HdYd2moNtCsY>
-X-ME-Received: <xmr:-wRoZla3TKdjigG_1iaNu_jfnqUKH-kmyaTaQ8PEpjIy_KzdOf026xrOdaJZbZ3hsIKHSjAW1_0YIc-XzHE-Kz8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeduuddguddvfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtugfgjgestheksfdttddtjeenucfhrhhomheplfho
-    nhgrthhhrghnucevrghlmhgvlhhsuceojhgtrghlmhgvlhhsseefgiigtddrnhgvtheqne
-    cuggftrfgrthhtvghrnhepleekffehueelieehveekjeeggfdufefffeeuvdetkeeigefg
-    veekvedtfeegffegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdplhgruhhntghhph
-    grugdrnhgvthenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehjtggrlhhmvghlshesfeiggidtrdhnvght
-X-ME-Proxy: <xmx:-wRoZsW_jAS-81zAUR-g6jdd9E8ilJENs9OUd1rRv-1c8UA21Ym8_A>
-    <xmx:-wRoZjlpGEBpk6d50L2m4A98pvBaAsuSdPz6BQm4X_y5dld9sd84LA>
-    <xmx:-wRoZpefYCike81RvCyTXCdE9YDoVGo62yxfwbbeJ0ekaL6W3FmwhA>
-    <xmx:-wRoZtEuV4QOEfDqcw9_xN4BTBgS0yEpp8zMtZ8VcYlL1hMBle_ObQ>
-    <xmx:-wRoZtmBixysWk2mkeQa9y_IPYYypQgmdhR9RwxVXuUx8F-uV7TEZXxX>
-Feedback-ID: i76614979:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Jun 2024 04:04:07 -0400 (EDT)
-Date: Tue, 11 Jun 2024 01:09:18 -0700
-From: Jonathan Calmels <jcalmels@3xx0.net>
-To: Paul Moore <paul@paul-moore.com>
-Cc: brauner@kernel.org, ebiederm@xmission.com,
- 	Jonathan Corbet <corbet@lwn.net>, James Morris <jmorris@namei.org>,
- 	"Serge E. Hallyn" <serge@hallyn.com>, KP Singh <kpsingh@kernel.org>,
- 	Matt Bobrowski <mattbobrowski@google.com>,
- Alexei Starovoitov <ast@kernel.org>,
- 	Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>,
- 	Martin KaFai Lau <martin.lau@linux.dev>,
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- 	Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>,
- 	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, 	Luis Chamberlain <mcgrof@kernel.org>,
- Kees Cook <kees@kernel.org>, 	Joel Granados <j.granados@samsung.com>,
- John Johansen <john.johansen@canonical.com>,
- 	David Howells <dhowells@redhat.com>,
- Jarkko Sakkinen <jarkko@kernel.org>,
- 	Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, 	Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, containers@lists.linux.dev,
- 	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-doc@vger.kernel.org, 	linux-security-module@vger.kernel.org,
- bpf@vger.kernel.org, apparmor@lists.ubuntu.com,
- 	keyrings@vger.kernel.org, selinux@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] bpf,lsm: Allow editing capabilities in BPF-LSM
- hooks
-Message-ID: <z2bgjrzeq7crqx24chdbxnaanuhczbjnq6da3xw6al6omjj5xz@mqbzzzfva5sw>
-References: <20240609104355.442002-1-jcalmels@3xx0.net>
- <20240609104355.442002-5-jcalmels@3xx0.net>
- <CAHC9VhT5XWbhoY2Nw5jQz4GxpDriUdHw=1YsQ4xLVUtSnFxciA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XKBGw0Xr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718093069;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hqXBYKFMfHuGo/oWXFTKDIQ0hmdU9g1oFp9QTADLe9k=;
+	b=XKBGw0XrWYUCsq2mdo5zolp5K6UuLivCO3tOFB40IbvdgtDgmFj0yiXxa2GYGdZ1006pAp
+	oOtxj1SanBXDrBrSCESUgJ7f9RNmTOgBOYc+mrqiRL/FWacBs7HTeOmk5IkiuV9E8KhIkP
+	9XITJXfoGN5Bvc9nlATiDSDNRsXJS20=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-609-UwfAC1--PBCuGftdbUhiLA-1; Tue, 11 Jun 2024 04:04:19 -0400
+X-MC-Unique: UwfAC1--PBCuGftdbUhiLA-1
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2ebe77b877eso15124911fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 01:04:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718093058; x=1718697858;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hqXBYKFMfHuGo/oWXFTKDIQ0hmdU9g1oFp9QTADLe9k=;
+        b=GgbIEtJH55GXPs0Van7AhbjzgH7ziua8OmoLvsbuxOxkXQCGk6n/iqcJ6YQoh/AI1y
+         /puk+Ftt4RD9FJ2Fv4eXzpG/vbe2rFF8zIVf3YC3N1UqAitMdq8pO/IHFeIT47TeETLn
+         xPXDbw3p8HsEMpuYvmd9t/Oo3HjAfRdoi/wCFgnJqZ3K3B7sGYDCrav5i5t/2E3D5Fye
+         ztt5OfW3xlFSC71iXrCYshUs35CTaB7D2GZRRA3SJmcGARKwQpAwQrbYr6i8DxntNme0
+         Rq3mn6kutoL1SraxC4eqp9t6AUD+DRVcpC4bHEd5/1dnTrgyPa0pgo83UaXtNpADjlzz
+         MSLQ==
+X-Gm-Message-State: AOJu0YxX4g3/N7katzVAdQNf5st0XSBQW6k/LJ2ggj2QPAgsYQrd7+/m
+	XE/9rsZl4U2soQOOU08iiYGgAevQuUL6KP/7+b33boDtBixx4lg04qMxrHx/wlwoPids8hHBwTN
+	HPAwfFgs5af/15mFFqA6CXYqsrU1j7zoNBh/IppJ/gFSFMi6CjFiXUZwhOmX/tA==
+X-Received: by 2002:a2e:87cb:0:b0:2eb:f82a:d8d2 with SMTP id 38308e7fff4ca-2ebf82adfe7mr159451fa.41.1718093058327;
+        Tue, 11 Jun 2024 01:04:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFKToayglVvfmqXbbZxIgMw6bY+YaaS9CFQLQWFoPjFHVHH1W6TdHfgwTXUw4yHKqwXuMGUGQ==
+X-Received: by 2002:a2e:87cb:0:b0:2eb:f82a:d8d2 with SMTP id 38308e7fff4ca-2ebf82adfe7mr159231fa.41.1718093057647;
+        Tue, 11 Jun 2024 01:04:17 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c748:ba00:1c00:48ea:7b5a:c12b? (p200300cbc748ba001c0048ea7b5ac12b.dip0.t-ipconnect.de. [2003:cb:c748:ba00:1c00:48ea:7b5a:c12b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42182ed2b23sm75337235e9.18.2024.06.11.01.04.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jun 2024 01:04:17 -0700 (PDT)
+Message-ID: <30b5d493-b7c2-4e63-86c1-dcc73d21dc15@redhat.com>
+Date: Tue, 11 Jun 2024 10:04:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHC9VhT5XWbhoY2Nw5jQz4GxpDriUdHw=1YsQ4xLVUtSnFxciA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: initialize memmap of
+ !ZONE_DEVICE with PageOffline() instead of PageReserved()
+To: Oscar Salvador <osalvador@suse.de>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ xen-devel@lists.xenproject.org, kasan-dev@googlegroups.com,
+ Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>
+References: <20240607090939.89524-1-david@redhat.com>
+ <20240607090939.89524-3-david@redhat.com>
+ <ZmZ_3Xc7fdrL1R15@localhost.localdomain>
+ <5d9583e1-3374-437d-8eea-6ab1e1400a30@redhat.com>
+ <ZmgAsolx7SAHeDW7@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZmgAsolx7SAHeDW7@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 09, 2024 at 08:18:48PM GMT, Paul Moore wrote:
-> On Sun, Jun 9, 2024 at 6:40 AM Jonathan Calmels <jcalmels@3xx0.net> wrote:
-> >
-> > This patch allows modifying the various capabilities of the struct cred
-> > in BPF-LSM hooks. More specifically, the userns_create hook called
-> > prior to creating a new user namespace.
-> >
-> > With the introduction of userns capabilities, this effectively provides
-> > a simple way for LSMs to control the capabilities granted to a user
-> > namespace and all its descendants.
-> >
-> > Update the selftests accordingly by dropping CAP_SYS_ADMIN in
-> > namespaces and checking the resulting task's bounding set.
-> >
-> > Signed-off-by: Jonathan Calmels <jcalmels@3xx0.net>
-> > ---
-> >  include/linux/lsm_hook_defs.h                 |  2 +-
-> >  include/linux/security.h                      |  4 +-
-> >  kernel/bpf/bpf_lsm.c                          | 55 +++++++++++++++++++
-> >  security/apparmor/lsm.c                       |  2 +-
-> >  security/security.c                           |  6 +-
-> >  security/selinux/hooks.c                      |  2 +-
-> >  .../selftests/bpf/prog_tests/deny_namespace.c | 12 ++--
-> >  .../selftests/bpf/progs/test_deny_namespace.c |  7 ++-
-> >  8 files changed, 76 insertions(+), 14 deletions(-)
+On 11.06.24 09:45, Oscar Salvador wrote:
+> On Mon, Jun 10, 2024 at 10:56:02AM +0200, David Hildenbrand wrote:
+>> There are fortunately not that many left.
+>>
+>> I'd even say marking them (vmemmap) reserved is more wrong than right: note
+>> that ordinary vmemmap pages after memory hotplug are not reserved! Only
+>> bootmem should be reserved.
 > 
-> I'm not sure we want to go down the path of a LSM modifying the POSIX
-> capabilities of a task, other than the capabilities/commoncap LSM.  It
-> sets a bad precedent and could further complicate issues around LSM
-> ordering.
+> Ok, that is a very good point that I missed.
+> I thought that hotplugged-vmemmap pages (not selfhosted) were marked as
+> Reserved, that is why I thought this would be inconsistent.
+> But then, if that is the case, I think we are safe as kernel can already
+> encounter vmemmap pages that are not reserved and it deals with them
+> somehow.
+> 
+>> Let's take at the relevant core-mm ones (arch stuff is mostly just for MMIO
+>> remapping)
+>>
+> ...
+>> Any PageReserved user that I am missing, or why we should handle these
+>> vmemmap pages differently than the ones allocated during ordinary memory
+>> hotplug?
+> 
+> No, I cannot think of a reason why normal vmemmap pages should behave
+> different than self-hosted.
+> 
+> I was also confused because I thought that after this change
+> pfn_to_online_page() would be different for self-hosted vmemmap pages,
+> because I thought that somehow we relied on PageOffline(), but it is not
+> the case.
 
-Well unless I'm misunderstanding, this does allow modifying the
-capabilities/commoncap LSM through BTF. The reason for allowing
-`userns_create` to be modified is that it is functionally very similar
-to `cred_prepare` in that it operates with new creds (but specific to
-user namespaces because of reasons detailed in [1]). 
+Fortunately not :) PageFakeOffline() or PageLogicallyOffline()  might be 
+clearer, but I don't quite like these names. If you have a good idea, 
+please let me know.
 
-There were some concerns in previous threads that the userns caps by
-themselves wouldn't be granular enough, hence the LSM integration.
-Ubuntu for example, currently has to resort to a hardcoded profile
-transition to achieve this [2].
+> 
+>> In the future, we might want to consider using a dedicated page type for
+>> them, so we can stop using a bit that doesn't allow to reliably identify
+>> them. (we should mark all vmemmap with that type then)
+> 
+> Yes, a all-vmemmap pages type would be a good thing, so we do not have
+> to special case.
+> 
+> Just one last thing.
+> Now self-hosted vmemmap pages will have the PageOffline cleared, and that
+> will still remain after the memory-block they belong to has gone
+> offline, which is ok because those vmemmap pages lay around until the
+> chunk of memory gets removed.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7cd4c5c2101cb092db00f61f69d24380cf7a0ee8
-[2] https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/noble/commit/?id=43a6c29532f517179fea8c94949d657d71f4fc13
+Yes, and that memmap might even get poisoned in debug kernels to catch 
+any wrong access.
+
+> 
+> Ok, just wanted to convince myself that there will no be surprises.
+> 
+> Thanks David for claryfing.
+
+Thanks for the review and raising that. I'll add more details to the 
+patch description!
+
+-- 
+Cheers,
+
+David / dhildenb
+
