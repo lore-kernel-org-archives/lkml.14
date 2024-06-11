@@ -1,58 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9590454F87
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 17:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B4445948;
+	Tue, 11 Jun 2024 17:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718127630; cv=none; b=NTNFxDVQ6KRyDBEvDUgRpj3RzNBCsTVUbuW2KXyRsdUK0Q7FeZznjgUo/B9xSIRB6nX7lThKmjPy//v5Wu8iM62TYsWn859okAZegkWeBdD8Xjqm4mS2Vs9d9k27fCkIqQUmFvh0NBh/JcACcDdDD6F+sQagS7YbqiLB/16FtHg=
+	t=1718127636; cv=none; b=OtJKNONc6JVeC1sHCR//c+C6UwR6xs9aVMbw87T5UYw+g/tH6wR96itBjM7IA63ti67xWQSWvVM0sEC3JF0gFPKd3XqsbVDWAcwG69zTAptgt5th7oYaIYiipZ8pX6+Ck61a7sEWYdRbgmOVnhJtSluQD1JAkTUvVcBfQDnA4SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718127630; c=relaxed/simple;
-	bh=97DFckhjjMfBzy/3ADAZ+Y35CuvleTLYTO6QoxMTf+4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JsVGEtYe6qYmUX4Zj7R5ONPuooykc8vAsZjuDk/q11MXh5FFLju3uSeHJbV7iKkpcg39FGu0+AKz+YZkZh9WEpGibmhSSYSp67/dnrv9Dh8YyVxGl3HNjX/vy69tPCw1BiEkBozWAP+Lr6mQNPhRjkJMxhcKwmR1JwAldmcQ9yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SQgfZ3Ow; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718127636; c=relaxed/simple;
+	bh=hy0G9epWXDKCaCY0Upw52ePQXUvJJEtIwYGUMPEBuio=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oUDRjMTnGdrGp31oQ7qx9aOdqYL7prZtBn4TNDgXc4xsOE3wYwpvlwT0ODABlBdu4qoUnHuqYgkHi7F0YdPt+rhEyZvlJcjsuRk+3aopopkK0vgTLg+2X2XV9pkWSeJVCtP3zD0csBHpULmQNIzo6GudEnVrySXr4JAjxs6U24c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jss80Oh4; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SQgfZ3Ow"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718127629; x=1749663629;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=97DFckhjjMfBzy/3ADAZ+Y35CuvleTLYTO6QoxMTf+4=;
-  b=SQgfZ3OwdtwE6EbhHqitwK3Q4oqn58/hSAsZbOCvDO7FRcc/23eMO8eT
-   eh3gYoZqT3w3SY4Zu2B4rbcSu/+daRz8OoT2guZ05ZdTopb+nR1iOSA4k
-   INjkFfrdEjHJ2CHHU/CAcMmDGBD192yaIuwUUuY8LwjIMFRAp/AkGs2mN
-   3GIgkpeEcAgaAT1F5qwNA7ZO/2dCftsipC1cGM866jbBciUauyqUMp3Hf
-   cgjGC2iOO+8ID+4V8n4B10mIylq6j3e/wSmOCbJZGaMo9rE4cpMnBk1oM
-   vrFQzKWPkw+S32Vn6dzbmIYG7XQoG8+D5DtylOp2iqpfGc8h4uWr0VF6L
-   w==;
-X-CSE-ConnectionGUID: lnDp6PZGQMybsNCiFZ+ZQg==
-X-CSE-MsgGUID: 43B0jzk5S96VoIsfoMcRVA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="14982407"
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="14982407"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 10:40:29 -0700
-X-CSE-ConnectionGUID: LdhaYpJnRfmju9siYbPJPw==
-X-CSE-MsgGUID: 2zU+NP6LQRGlwaxEEpJlQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="76978030"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 10:40:28 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Chanwoo Choi <cw00.choi@samsung.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Hans de Goede <hdegoede@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v6 39/49 RESEND] extcon: axp288: Switch to new Intel CPU model defines
-Date: Tue, 11 Jun 2024 10:40:16 -0700
-Message-ID: <20240611174016.352953-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jss80Oh4"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42165f6645fso11523155e9.2;
+        Tue, 11 Jun 2024 10:40:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718127633; x=1718732433; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x2jtscPaj1s5RfDyKqr1Qb7Lh4VydRrL5+CNXWVwjXQ=;
+        b=jss80Oh4ar8c6ifkIlcyuVN0OQesAbwWWm/CJQtONweXNZ2H3FTAU69d61clQqXoPI
+         7FznvzJE6bIIcCRDFk0lISGUg1kl61kB5fBRSlW28HpA5bzoLb+wWio2ppXVkVYcgMU+
+         MWsnYfIAg8Qmsphct1ObVYcEU7sZWeq6o7zOBD8nHK3dFkGMxGlK/PO6kJaofYrYLr81
+         P43ZSD00g6vQTls/0rmWJWncUOR5kM58ZxgeVj3GwmAFk7eFRwhf98CuF2NNwS/uiu1t
+         k4xy3gCPz9xkDT5F/4ZT70ktpLOnHdb4b0ffLaEkaPiVbgfHvsjCuJRuoUl7jgeXtW+q
+         rBPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718127633; x=1718732433;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x2jtscPaj1s5RfDyKqr1Qb7Lh4VydRrL5+CNXWVwjXQ=;
+        b=m9eIwYd8RE2eU/WMb2KFAPA99BIBLDjg1RwLM66PBJuQYK80GgjaM12o+GfckjQLQ9
+         69Zbpfegp3TxinBSceNqVE4nnIgMDIUp4BvQe1pmLt0tH+L9/OvwWyqO+XlSfJoqOk1A
+         GDMKn3RDDNFy86Bng68mD5LQ55uY4shWZ7FIPuwvNlR6XYa9JwkL9YShcwnudb//U8cQ
+         D0g2gnKEvJq6SVmMksdLfZzfCNj3/yAs7DR8gdieXNPpPRmON9LAt1TZ7uad29A0C4K0
+         DScdNB56IOjV+66gpawzwWOzzmBrAOHaFnsaDaIuQmoR0qxsoeAP5jMMCOlhCTAvg+K0
+         G7hA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7EwaacVF6zuNJTTnLSi+Cna5BT6mjAYpRqAfSabYZbzcpUNnkx+T4VlXhs4tbIePZGleHbyK11IdSBTo4tJgTt1Ezdz2gbGWHtO6DmsVchLwIzWK/5X25hrSoBlwwVeqQLGEtldtqBrk7qU4iyYu8se+BSyCJnKC98E+e1KAk1zf8wRCekYtY
+X-Gm-Message-State: AOJu0YwBjme5jTAttrKcI651yGgNPWxaT6FLx7fWv1ej+Ti1vrJmOFGY
+	uwQ86zTorJTQkGuQsCXPnwoX8XqQrsqlS/nIElOv9zcq81dNwJch
+X-Google-Smtp-Source: AGHT+IG2KjEUTAFMQXwtUY+IRSQMPDXj2Mbd0IGeuliD4OJO5OiISRZysMdmipTrV+NDZCjJvP69/w==
+X-Received: by 2002:a05:600c:35c8:b0:421:81b8:139a with SMTP id 5b1f17b1804b1-42181b813a0mr63599075e9.12.1718127633270;
+        Tue, 11 Jun 2024 10:40:33 -0700 (PDT)
+Received: from f.. (cst-prg-65-249.cust.vodafone.cz. [46.135.65.249])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421be4f0a06sm87232435e9.21.2024.06.11.10.40.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 10:40:32 -0700 (PDT)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: brauner@kernel.org
+Cc: viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-btrfs@vger.kernel.org,
+	josef@toxicpanda.com,
+	hch@infradead.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH v4 0/2] rcu-based inode lookup for iget*
+Date: Tue, 11 Jun 2024 19:38:21 +0200
+Message-ID: <20240611173824.535995-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,33 +72,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-New CPU #defines encode vendor and family as well as model.
+I revamped the commit message for patch 1, explicitly spelling out a
+bunch of things and adding bpftrace output. Please read it.
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
-All: get_maintainer.pl lists ll on the To: list as mainatiner for this
-file.
+There was some massaging of lines in the include/linux/fs.h header
+files. If you don't like it I would appreciate if you adjusted it
+however you see fit on your own.
 
-I'm tracking changes that haven't made it to linux-next and this is one
-of a handful remaining. Which tree to patches to this file pass through
-on the way to Linus?
+This adjusts the state to what was suggested by Christian.
 
- drivers/extcon/extcon-axp288.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Specific results:
 
-diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
-index a703a8315634..d3bcbe839c09 100644
---- a/drivers/extcon/extcon-axp288.c
-+++ b/drivers/extcon/extcon-axp288.c
-@@ -108,7 +108,7 @@ struct axp288_extcon_info {
- };
- 
- static const struct x86_cpu_id cherry_trail_cpu_ids[] = {
--	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	NULL),
-+	X86_MATCH_VFM(INTEL_ATOM_AIRMONT,	NULL),
- 	{}
- };
- 
+ext4 (needed mkfs.ext4 -N 24000000):
+before:	3.77s user 890.90s system 1939% cpu 46.118 total
+after:  3.24s user 397.73s system 1858% cpu 21.581 total (-53%)
+
+btrfs (s/iget5_locked/iget5_locked_rcu in fs/btrfs/inode.c):
+before: 3.54s user 892.30s system 1966% cpu 45.549 total
+after:  3.28s user 738.66s system 1955% cpu 37.932 total (-16.7%)
+
+btrfs bottlenecks itself on its own locks here.
+
+Benchmark info in the commit message to the first patch.
+
+fs rundown is as follows:
+- ext4 patched implicitly
+- xfs does not use the inode hash
+- bcachefs is out of the picture as Kent decided to implement his own
+  inode hashing based on rhashtable, for now private to his fs.
+- btrfs handled in the patchset
+
+I have not looked at others.
+
+v4:
+- only provide iget5_locked_rcu
+- add a btrfs ack
+
+v3:
+- export new routines with _GPL
+- don't use the extern keyword
+- add ilookup5_rcu to follow iget5_locked scheme
+
+v2:
+- add argument lists to new routines
+- assert the inode hash lock is not held as applicable
+- real btrfs patch included
+
+Mateusz Guzik (2):
+  vfs: add rcu-based find_inode variants for iget ops
+  btrfs: use iget5_locked_rcu
+
+ fs/btrfs/inode.c   |   2 +-
+ fs/inode.c         | 119 ++++++++++++++++++++++++++++++++++++++-------
+ include/linux/fs.h |  10 +++-
+ 3 files changed, 112 insertions(+), 19 deletions(-)
+
 -- 
-2.45.0
+2.43.0
 
