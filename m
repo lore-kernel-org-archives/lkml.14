@@ -1,117 +1,130 @@
-Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A6C17995E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144F51E535;
+	Tue, 11 Jun 2024 13:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718112806; cv=none; b=YCZ8WaRGDqAAQ1/kuDQR/7X9kAzUar8vVKwWd8MnBREvxtkBoh9Z7TeEpFi4b3wiYEnpeL0Q0XUZNsSQKks+ulsYRqFQaijrA8lWhj8A+tGjAFvukseAke2nLmFNvyEO3UpfXM76WzJQ9UjA1rAmOKhO9YxzGNAcOLQGmTxkhfo=
+	t=1718112846; cv=none; b=ZE0OyG6qVdvTpFX2g5odxl/oB+L5SXtW08TIGBVy8KzaPmaN98OKyJMIEDkkuPVrPOmdts8/SuNTW3NK6iH8sF/WOhD9KtnM1CmPV0pRJ/h/O5h7FvVKCrZ/8qcPWTcqoCiPfZYQVdjnHlZWa4Xn4xYFLNFL/YaJ7tGLmIbLNgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718112806; c=relaxed/simple;
-	bh=AZrVg5iRAyrbtVUsnP3zN2ge0bp2e4THWQb69Q6ta4Y=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=qX8OaON+0BuL13uRgwqIXm8CTW+LhVKw5Wl56q9vJwFW8jOx/vZB5k2H3pJ1x8qOJOzTmWL9NZL+LlsSn6zsO0ULD4DGFk7gZHtCcNF+x+kwJiAiz3EQXwIReeezZ+yIMV6vHfH3ig4iYPG50UqResnLIwcdHBFWTp4AJE833wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=WCrmGdJZ; arc=none smtp.client-ip=203.205.221.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1718112846; c=relaxed/simple;
+	bh=a43EvLdzT3hjNYienRevQQ9EadCb/AzgEwa5kSDbq5s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ozO8d52efrDxH86+7AffPFqvweDGWMYW/Gk/r5D75NFrY0u7famjd3vc7WXxJ/DNU/afxGMMoPVEh6jvme8RbaXfS0FBRmqcUiOhv2No5KdZKKEN9AHAJz+jRljzfMGXxVayEZHh92UwqeejMhhHOIvQVEe3s/TIAXZU3b4Jg+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=p/Rld3O2; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="WCrmGdJZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1718112796; bh=JOpNX/uZxyBIcKljIPD/1YcSOOMRXDuCkoZcUwCNW0k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WCrmGdJZGydSNfXDjg6EvMUXDRQDyEYEG0/h9xuYF6XkyxhrLAjlD45WfslWvw+ux
-	 D08Ukp1te8+gIMI5e1xTU7H2+ZuvsN74rBBZD+KIEXi4Pq2N4nQSPhOl5ZI201Ojqg
-	 7pRh1esuOsV+AbU8WsklDTloMxWhbefz7eUDKzoc=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 6C5964C5; Tue, 11 Jun 2024 21:27:05 +0800
-X-QQ-mid: xmsmtpt1718112425tz4nnqr33
-Message-ID: <tencent_A26D4970C3B204575761576126CCF3696305@qq.com>
-X-QQ-XMAILINFO: MyirvGjpKb1jhjE6VrM0t1AsvPsP8aIXP3HcDEWebV/Wl4edAmItruJqXsHmUI
-	 oFUXWVVQxSR3fTbp+80eWWUu8nJPefTi0RVsiLcjPhZy+SrcgoGRSsvt2f22dCSD/ZfFgWhLdGp2
-	 fdHWBm4zs27YTXcD8liGG8Bgvgsdgg/QkW6AUTgkcPVlNsraHOJ0ciCHvr65qmyag+os+60yaqGa
-	 89zeEZ8feC8ubwlnaJ9s771BLuI3RjeoLkaNGIMW+yUljhOUO2Mh6KqEkrN1MwlmrQ/EbbfomX4d
-	 8GZjeiQf5ZVbWfT2rPjQNjnypyPpn93bq5Nk0RoBuCn5UNx5RKgIqIH5QdcN8E5iPGEHppdgMSMB
-	 zI2OJJGj2YSNbEZP475j3NerST0saUHtdomS4VBQv87r8pG0KI9FjEQ5DP7mkHXVJATn5zuQ/u1K
-	 U9DKT4PSk83ZhDeZtd0Ya17gP24MDwQ+c/axzD+bLE8ITh91xfbEllhLPruq7zA3ujzUgySC7isw
-	 4mXD+I1xEbd7r8AIk+vvACcTryDPj3hKtaLt/iRorz9gi31BATAHDwqtdFwO8tblEcGXP2Ga8xHW
-	 AnsWox4wJgLUjeoXaMbdtaWg2tM9PsT/ay21tiOfzlKisu9Ys/MGH3hB0XZCB9xelAJwF1yF4XRu
-	 JXwZcV5YTjx84+b0exJH2Nq8bSE4pVXoBzmzGwN0GBP+vw9Uk7o0H1FncZuQqWS5lVDPYFP4aFwX
-	 6/GN3rmq5M05KxuAmO1fi8z97E23jfeOtoPrs5qBK3vtzWGwMSWThE8seF+y5OkcMUcHr7GmU3+4
-	 BRRMlxpaYm0h+RLZiwZWWEObS16OagHUarRYZVJ8acb83AML5mB1BWL/yrcsSFD6BiNIScO05nYc
-	 qpejEFQ1R2MgDRo4xupnsOX3hT019E0Ka5lKP3dmUpvf6PHigjwN/74fCXOq9W3315L7uzEypJPE
-	 s3z0K6R8U=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+b7f6f8c9303466e16c8a@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bluetooth?] general protection fault in l2cap_sock_recv_cb
-Date: Tue, 11 Jun 2024 21:27:06 +0800
-X-OQ-MSGID: <20240611132705.2012752-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000b0906d061a468b93@google.com>
-References: <000000000000b0906d061a468b93@google.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="p/Rld3O2"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45BCI3c7027544;
+	Tue, 11 Jun 2024 15:33:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	yc4KsdWifRz6rWcxt8D4eZPRcwDWS3GJ2TG1rWFVqRo=; b=p/Rld3O29KvUSLHb
+	0AWiU0UliT8PMxuaA7PA2/iLR8IHkBHkNlHlYjW0rxLicuqwGztFOBW6/MbtznWv
+	frCWj/2YKwxc48GTk7YWziKkUzNZIa3J37VIGy/xjS019Vq/ThQ/e3ex1inRWSob
+	ur9A7Vn76oAR0Ko6jMcCXJ70ZsI9pbXDAFJlyTzuS8uLHmBq5PdrrN3fXLtAMaUQ
+	ZgoAl/f3XszurgUOI3Ko0RjXImVNYxJ/jxAf4RLKUHivcsNc3gglawMJkGc9RU+m
+	ZWlY1CeDcTFnOGM4/E8tsQSxumiA6mCVL7g8rEG5vitiJ245RESCn2lfjfSiGJ64
+	/dNMiw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ypbp432sq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Jun 2024 15:33:21 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id ADC9140044;
+	Tue, 11 Jun 2024 15:33:16 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A5298215BEA;
+	Tue, 11 Jun 2024 15:32:11 +0200 (CEST)
+Received: from [10.48.86.164] (10.48.86.164) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 11 Jun
+ 2024 15:32:10 +0200
+Message-ID: <7999f3df-da1e-4902-b58a-6bb58546a634@foss.st.com>
+Date: Tue, 11 Jun 2024 15:32:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next,PATCH v7 7/8] net: stmmac: dwmac-stm32: Mask support
+ for PMCR configuration
+To: Marek Vasut <marex@denx.de>, "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo
+ Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Richard Cochran
+	<richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240611083606.733453-1-christophe.roullier@foss.st.com>
+ <20240611083606.733453-8-christophe.roullier@foss.st.com>
+ <ee101ca5-4444-4610-9473-1a725a542c91@denx.de>
+Content-Language: en-US
+From: Christophe ROULLIER <christophe.roullier@foss.st.com>
+In-Reply-To: <ee101ca5-4444-4610-9473-1a725a542c91@denx.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-11_07,2024-06-11_01,2024-05-17_01
 
-please test null ptr defref in l2cap_sock_recv_cb
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git cc8ed4d0a848
+On 6/11/24 15:07, Marek Vasut wrote:
+> On 6/11/24 10:36 AM, Christophe Roullier wrote:
+>
+> [...]
+>
+>>   static void stm32_dwmac_clk_disable(struct stm32_dwmac *dwmac, bool 
+>> suspend)
+>> @@ -348,8 +352,15 @@ static int stm32_dwmac_parse_data(struct 
+>> stm32_dwmac *dwmac,
+>>           return PTR_ERR(dwmac->regmap);
+>>         err = of_property_read_u32_index(np, "st,syscon", 1, 
+>> &dwmac->mode_reg);
+>> -    if (err)
+>> +    if (err) {
+>>           dev_err(dev, "Can't get sysconfig mode offset (%d)\n", err);
+>> +        return err;
+>> +    }
+>> +
+>> +    dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
+>> +    err = of_property_read_u32_index(np, "st,syscon", 2, 
+>> &dwmac->mode_mask);
+>> +    if (err)
+>> +        dev_dbg(dev, "Warning sysconfig register mask not set\n");
+>
+> My comment on V6 was not addressed I think ?
 
+Hi Marek,
 
-diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
-index 6db60946c627..9938d3681772 100644
---- a/net/bluetooth/l2cap_sock.c
-+++ b/net/bluetooth/l2cap_sock.c
-@@ -1413,6 +1413,8 @@ static int l2cap_sock_release(struct socket *sock)
- 	l2cap_chan_hold(chan);
- 	l2cap_chan_lock(chan);
- 
-+	if (refcount_read(&sk->sk_refcnt) == 1)
-+		chan->data = NULL;
- 	sock_orphan(sk);
- 	l2cap_sock_kill(sk);
- 
-@@ -1481,12 +1483,23 @@ static struct l2cap_chan *l2cap_sock_new_connection_cb(struct l2cap_chan *chan)
- 
- static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
- {
--	struct sock *sk = chan->data;
--	struct l2cap_pinfo *pi = l2cap_pi(sk);
-+	struct sock *sk;
-+	struct l2cap_pinfo *pi;
- 	int err;
- 
--	lock_sock(sk);
-+	l2cap_chan_hold(chan);
-+	l2cap_chan_lock(chan);
-+	sk = chan->data;
-+
-+	if (!sk) {
-+		printk("%s\n", __func__);
-+		l2cap_chan_unlock(chan);
-+		l2cap_chan_put(chan);
-+		return -ENXIO;
+I put the modification in patch which introduce MP13 (V7 8/8) ;-)
+
+  	err = of_property_read_u32_index(np, "st,syscon", 2, &dwmac->mode_mask);
+-	if (err)
+-		dev_dbg(dev, "Warning sysconfig register mask not set\n");
++	if (err) {
++		if (dwmac->ops->is_mp13)
++			dev_err(dev, "Sysconfig register mask must be set (%d)\n", err);
++		else
++			dev_dbg(dev, "Warning sysconfig register mask not set\n");
 +	}
- 
-+	pi = l2cap_pi(sk);
-+	lock_sock(sk);
- 	if (chan->mode == L2CAP_MODE_ERTM && !list_empty(&pi->rx_busy)) {
- 		err = -ENOMEM;
- 		goto done;
-@@ -1535,6 +1548,8 @@ static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
- 
- done:
- 	release_sock(sk);
-+	l2cap_chan_unlock(chan);
-+	l2cap_chan_put(chan);
- 
- 	return err;
- }
 
