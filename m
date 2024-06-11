@@ -1,144 +1,112 @@
-Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B604157CB5;
-	Tue, 11 Jun 2024 18:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E55340856
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 18:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718131487; cv=none; b=mzQXsULubCZLU17byRNMgXkxPL6MPnanMlqV5ZC0z1yZiASQeGO3aJDz1GrFp0++CKEBOWjEyIJioOogNRhDUrDYfODW2iFY0NwDAv0EtzGMUF8AANotiPKUq5rDf5roUhyORnOaT2+K7uMwNx6dDxZ2KgFz4ozat3I90vRprKM=
+	t=1718131659; cv=none; b=DpuXvEWW0WfpW9bCmxgPsXLjg3W31bVCApbJnW0AKH4IKUGDvYTIR3qnw9eGq8BCY5hPoDKsqJbLPbVtUconNMR+0xlxF/WDxing1oLSJ4MqHqOR6hSMacrrcwPNrTYBr58W0RRk4DgoAEwz32m6rzc4/zUB2aXHk/QhD3OycJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718131487; c=relaxed/simple;
-	bh=yWm+CV/ol6Yb0FRVj/f//Za7SwasM3ugj7xYp1INfAQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZN9+ADkh7hO/oQXjq/iG5PRcbq/NCch5CrolkDmsEKdKzonsCdsPqeGDlpWwHn1Hhh5IvE+sMrEvCu5O5I02AdlIeTJtxRNhK8xLSv8HOlwiLZ/rmrbuxUWmWosCway00Wq6SBHyP24WluzkGWTpdt4ix5Xy4h2jMarZudpqujU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=okEtiCOV; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1718131659; c=relaxed/simple;
+	bh=CuJAwLG9LD8w9aYyFBwyEggR06cYlNMKlS01h950GC0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aVDEmftKe4DIA5HGx7cXBhZPVWoA9fs6ncuA5gGrFVNrKuQPrKspkzYmvpeZ7PkW+0t0upgNMGObbjTmf0mt9VVxmMCFjoVoDThFUfEf/r0vrnLZzgldoUsBVbI0aQuAaj1AASk+64MddFnX9jWznLeyW6XrlqaJU3NUstL8lSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ewdcFDLv; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="okEtiCOV"
-Received: from [IPV6:2601:646:8002:4640:7285:c2ff:fefb:fd4] ([IPv6:2601:646:8002:4640:7285:c2ff:fefb:fd4])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45BIQOXg3417874
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 11 Jun 2024 11:26:24 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45BIQOXg3417874
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024051501; t=1718130387;
-	bh=OHa9DhySlaaVhhVOAe30IsVHYFteIibUy4qxaCqMzfc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=okEtiCOVX3HdSiQvDxNYgYr+0HqgJLKnG2m/rlhjGnPh3XRakqH86Oe0HdFjQ8vb8
-	 lCLlJW7zSBSPM1bA8ax15thRrIwWFaFPa+o+EdL0rZXm/4/srmUbr6CHP65bznGV6W
-	 /KqQ2D4aqxtZUQuY/R1ri1KUYKGzgNTcj5gKCQDmB9GzuFD1tce5uDmWNtkEv67UBQ
-	 IMwXQ4AT2ur45vH1k3ay4KEUOfF1/sbHVKDC6HZDl/Rr6CAEEJOpoq0nP6p/4NCCle
-	 bBvwdvwS9QuAK9Xc12EimU7dTn6UCMfkGN+YTd5x4KhT3RxS5dyR7XQZEkI5pnsssf
-	 IW/2FxDzYYpCw==
-Message-ID: <5c8b3ee9-64c2-4ff3-9cca-ba2672b9635e@zytor.com>
-Date: Tue, 11 Jun 2024 11:26:17 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ewdcFDLv"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a6f13dddf7eso371460666b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 11:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718131656; x=1718736456; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JNeYgHGOcCIEUgcCulHv8MogYMF1pawsllmpPlBDkvY=;
+        b=ewdcFDLv38Ii9fsRVigY5jYc3LoHzchxhuPUuyyWBpA4M4Vb6jXW2WwMZ7ACgdwNom
+         0Gvsagc5Rg6k2ovzBTCiO7+vYj1bF27mabH/rW8vH+RZwtCMJVa7hp7wu/T9AZG026QR
+         TtZm1Bd/4Hn/0a6yxULMiFnMAGuNhrGCcoKWrV4NC+JSXXZQZ3ngjo8BAGkCKAuYgjTF
+         +KZXWWR4RhMN/VlEKvdoRyd+Nf2dRroPJUTYkiqwBGAkYqgArUAHBQeaDyBlYN2VOGWs
+         9oeKSjoysjUBN1cm1xtiqph3ASR+DL3JBMYAwpgF+fYqdXx+Dx4kVZ39Fsu6FO1GiAVT
+         CQcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718131656; x=1718736456;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JNeYgHGOcCIEUgcCulHv8MogYMF1pawsllmpPlBDkvY=;
+        b=s4B9eN1FeSsRPhCuJQL31VuzR8iheSBaBgLhyXw82QGkxzuOHIWoUHZ+hyXpE6LLKi
+         ATb7YDrB0KDAMJX+pi0Z140SDeTLy6v0pjuDiabmV9D1mm7Vj2muUjDaULZ+LdqEV9//
+         Zs22lE8flDW77P90TpTB/pOYJe8vAuNUafvgHhjI7AdVag66wRJ5OXJn+21NYtqcZQtO
+         HcI3eludd7Bnwyi/PM85hGrDmolqyiV0ZJW4kiUl2OZ2Nw0CY7FRSk//RsO3RxE1anSO
+         GjbR3JxnNbycCwZDQ8kQ3P7AIDo1+u31YJcTzT1C3FxJEphxr20mCRQLInRozerQWH8/
+         iz+w==
+X-Forwarded-Encrypted: i=1; AJvYcCVrNiQmke/obFfcZPHy580TOkB5MGeAr+1IdtSfAp8Xl20JPowPKYZmOJR8meavM9F6BSj2L2Cev/1SLMdd5f/rDRRdDQZ2pPEB7GBj
+X-Gm-Message-State: AOJu0YxfHhrvkDJRlXnVfdeGILvUF86spxSuiReqzKiTNHyNL6iRcz2s
+	y7z922VKH/KHInB+k7MrzURR2yey/IUNmetgPXs4FFcnWGAGmf1zQq3EV5zCCuudp2zxmaxkhev
+	+yfZeubDU8IyagQg+ystCb7hVJgraj8d4EMrH
+X-Google-Smtp-Source: AGHT+IHNoz6xrivvG2mtwG02p42fYi6bLD6cDom6BDtt8rlcH6ypU0fOpoYNCG82KwChYvI000hS+u624px6T+v4VyM=
+X-Received: by 2002:a17:906:a082:b0:a59:dd90:baeb with SMTP id
+ a640c23a62f3a-a6cdb6d16demr818238766b.48.1718131655412; Tue, 11 Jun 2024
+ 11:47:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
- confusion
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Borislav Petkov <bp@alien8.de>
-Cc: Nikolay Borisov <nik.borisov@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Kalra, Ashish"
- <ashish.kalra@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "Huang, Kai" <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Baoquan He <bhe@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
-        linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
- <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
- <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
- <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
- <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
- <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
-Content-Language: en-US
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240610121820.328876-1-usamaarif642@gmail.com>
+ <20240610121820.328876-2-usamaarif642@gmail.com> <CAKEwX=PnwjmZKPLX2=ubD6+-+ZAqpXnczkHe4=1QY1hizOE8WQ@mail.gmail.com>
+In-Reply-To: <CAKEwX=PnwjmZKPLX2=ubD6+-+ZAqpXnczkHe4=1QY1hizOE8WQ@mail.gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Tue, 11 Jun 2024 11:46:56 -0700
+Message-ID: <CAJD7tkZdtK3CB_0bt_+EMNCc8+7FF3jPv4VwA2u8PntrC=1jrA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] mm: store zero pages to be swapped out in a bitmap
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: Usama Arif <usamaarif642@gmail.com>, akpm@linux-foundation.org, hannes@cmpxchg.org, 
+	david@redhat.com, ying.huang@intel.com, hughd@google.com, willy@infradead.org, 
+	chengming.zhou@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/4/24 08:21, Kirill A. Shutemov wrote:
-> 
->  From b45fe48092abad2612c2bafbb199e4de80c99545 Mon Sep 17 00:00:00 2001
-> From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Date: Fri, 10 Feb 2023 12:53:11 +0300
-> Subject: [PATCHv11.1 06/19] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
-> 
-> TDX guests run with MCA enabled (CR4.MCE=1b) from the very start. If
-> that bit is cleared during CR4 register reprogramming during boot or
-> kexec flows, a #VE exception will be raised which the guest kernel
-> cannot handle it.
-> 
-> Therefore, make sure the CR4.MCE setting is preserved over kexec too and
-> avoid raising any #VEs.
-> 
-> The change doesn't affect non-TDX-guest environments.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> ---
->   arch/x86/kernel/relocate_kernel_64.S | 17 ++++++++++-------
->   1 file changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-> index 085eef5c3904..9c2cf70c5f54 100644
-> --- a/arch/x86/kernel/relocate_kernel_64.S
-> +++ b/arch/x86/kernel/relocate_kernel_64.S
-> @@ -5,6 +5,8 @@
->    */
->   
->   #include <linux/linkage.h>
-> +#include <linux/stringify.h>
-> +#include <asm/alternative.h>
->   #include <asm/page_types.h>
->   #include <asm/kexec.h>
->   #include <asm/processor-flags.h>
-> @@ -145,14 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
->   	 * Set cr4 to a known state:
->   	 *  - physical address extension enabled
->   	 *  - 5-level paging, if it was enabled before
-> +	 *  - Machine check exception on TDX guest, if it was enabled before.
-> +	 *    Clearing MCE might not be allowed in TDX guests, depending on setup.
-> +	 *
-> +	 * Use R13 that contains the original CR4 value, read in relocate_kernel().
-> +	 * PAE is always set in the original CR4.
->   	 */
-> -	movl	$X86_CR4_PAE, %eax
-> -	testq	$X86_CR4_LA57, %r13
-> -	jz	.Lno_la57
-> -	orl	$X86_CR4_LA57, %eax
-> -.Lno_la57:
-> -
-> -	movq	%rax, %cr4
-> +	andl	$(X86_CR4_PAE | X86_CR4_LA57), %r13d
-> +	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %r13d), X86_FEATURE_TDX_GUEST
-> +	movq	%r13, %cr4
->   
+[..]
+> > @@ -1336,6 +1347,7 @@ static void swap_entry_free(struct swap_info_struct *p, swp_entry_t entry)
+> >         count = p->swap_map[offset];
+> >         VM_BUG_ON(count != SWAP_HAS_CACHE);
+> >         p->swap_map[offset] = 0;
+> > +       clear_bit(offset, p->zeromap);
+>
+> Hmm so clear_bit() is done at the swap_entry_free() point. I wonder if
+> we can have a problem, where:
+>
+> 1. The swap entry has its zeromap bit set, and is freed to the swap
+> slot cache (free_swap_slot() in mm/swap_slots.c). For instance, it is
+> reclaimed from the swap cache, and all the processes referring to it
+> are terminated, which decrements the swap count to 0 (swap_free() ->
+> __swap_entry_free() -> free_swap_slots())
+>
+> 2. The swap slot is then re-used in swap space allocation
+> (add_to_swap()) - its zeromap bit is never cleared.
 
-If this is the case, I don't really see a reason to clear MCE per se as 
-I'm guessing a machine check here will be fatal anyway? It just changes 
-the method of death.
+I do not think this can happen before swap_entry_free() is called.
+Note that when a swap entry is freed to the swap slot cache in
+free_swap_slot(), it is added to cache->slots_ret, not cache->slots.
+The former are swap entries cached to be later freed using
+swap_entry_free().
 
-Also, is there a reason to save %cr4, run code, and *then* clear the 
-relevant bits? Wouldn't it be better to sanitize %cr4 as soon as possible?
+>
+> 3. swap_writepage() writes that non-zero page to swap
+>
+> 4. swap_read_folio() checks the bitmap, sees that the zeromap bit for
+> the entry is set, so populates a zero page for it.
+>
+> zswap in the past has to carefully invalidate these leftover entries
+> quite carefully. Chengming then move the invalidation point to
+> free_swap_slot(), massively simplifying the logic.
 
-	-hpa
+I think the main benefit of moving the invalidation point was avoiding
+leaving the compressed page in zswap until swap_entry_free() is
+called, which will happen only when the swap slot caches are drained.
+
+>
+> I wonder if we need to do the same here?
