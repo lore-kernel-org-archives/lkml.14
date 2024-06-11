@@ -1,92 +1,80 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7201D556;
-	Tue, 11 Jun 2024 17:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9311D556;
+	Tue, 11 Jun 2024 17:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718125761; cv=none; b=Q8rK4QkTpv7yZnDu243TYj7AJ7ijXdaWxKhXb98b5pddQX+gMRDsIiNilneeN9h/7nL11M7SvikLubUMFafCV89Ar5niCkkQO4PMXHbCwtEDytpiPR/bNLg9Mi6iG5IEdoiV4r7tmYURvAJ/JJnFA32o/Ak4t4BHMoWfqzu0dU0=
+	t=1718125856; cv=none; b=UFPCflXEi4dFFABun9kl+QQU5EJisJ46bSqK49GaAIK691Fb2cRdP5vEWbNIGYznzNuoVuQn8P9gGQDFPhYRhQbLiA4dMwaAzoFRvkziUubqVkqQTVPLD4GAvjJptCEykMFJ3+gBUuBg/9jHbOxfIrxol2y0KcBzx5reIfre3P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718125761; c=relaxed/simple;
-	bh=dYgsw05Lo16Ag/IxvPvdK+EMqjmf3VE9WltXmI0XKMk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eJLVKUbSpdDEkE1wRtzT7nPvg3+cGOVrSb84KuffYS4K2XseOYaAdy5/YCjwTT+GrmofCBMoAZVQHYOpUVpDe7egAEn/2cwk0+Yem0p0B//ZKvb5gLYq+94JsayVScjxFVvUHHvDJHogVTd2D7qzy7Nqnew08V3pCKCiXuoNpws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=PXJxWVIS; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1718125856; c=relaxed/simple;
+	bh=gFYHyJOp+GLvLO8caFrC+bAJxiiQYs3SDuhR95Pp0qo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mc9JQ2KWoJEfQeC+nYGulwXzZhAlfhXkCHxOhPbLjBXsDN5YhM5qzlWrqex2jJi/O5R7/QrHYYPiwU6qGNe69EWAiYgSwXlSjruZWKbUfi+507gxXVxD/YqE/KOYDNU920BCJ+bul/EU+z3/WHSZTrFhxZd/51gyT+JMGWrPyFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rrKsbTQu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="PXJxWVIS"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VzFWy4pNsz6CmR07;
-	Tue, 11 Jun 2024 17:09:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1718125754; x=1720717755; bh=3VVTPR0M/NALXqh4EpubQH9z
-	bsUNZAmwZku1/KglkEk=; b=PXJxWVISEXZjM3Dcrc21AGooxtc1JJQ1Mw6FIDyL
-	XvfoFjvtUNoZFchtRQCezqGc7dsFBBe4d1TP6zj5ApBYmY68rr9tPNsS3OsAVF1b
-	wJg3oJ9qb2vTRNwkeOCQdFy4+ufWuV28dbMUK8xAz33OLSNLGX248x1s2eJVlzo4
-	q4oHLQ1hHwrNobcdU6qp/IoZ9TV8bO7B09CaAmzNq8jg3x0nux2LwlMZL5rl4d9K
-	LdJLK65TBlgipBqRy8onUDMTBmHX+OwPjdhqqTrtnx1oOh2gmByyn9gzGPL975EC
-	cI/qWNFidFMG9XwTVr6mSafPLsMBDAoQFCG5qOzAJOltSw==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id ljpgvnq9GFne; Tue, 11 Jun 2024 17:09:14 +0000 (UTC)
-Received: from [100.96.154.26] (unknown [104.132.0.90])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VzFWr5phWz6Cnv3Q;
-	Tue, 11 Jun 2024 17:09:12 +0000 (UTC)
-Message-ID: <be0dc105-e205-4b0e-9bd4-49690249fd26@acm.org>
-Date: Tue, 11 Jun 2024 10:09:12 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rrKsbTQu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A9CBC2BD10;
+	Tue, 11 Jun 2024 17:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718125856;
+	bh=gFYHyJOp+GLvLO8caFrC+bAJxiiQYs3SDuhR95Pp0qo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rrKsbTQu+g8sy3y1sNoL/1cLUJzwsI+jSnaeJF/MUDr9qBxDOXI6yVew9zke6UlYs
+	 Niwyn9lfbTuT9Cr+QujfSQQaieXHLWYZh8rj7ssbarEupC2Bv9YsZPcMBG8kEBJPd/
+	 rkjLST5yzg4X8QJWMXnjfCELmLrrgbuPsFerKYAYDP2FBD5vq9FJW4/rSVDGwLTN6x
+	 QzCcItvo6D4CYccoG8wXEpusNaq9STs0AOH6kH5KHTJm/5rmKxbH9ZN6UYu9MuQcMJ
+	 URp2sqtJbHh5fD7Xt5Ks4nOMQ7g3u4aGSYpsXvt5xO+iMbHTGBJDxXbI6vifW1gyAI
+	 U/Slc4E54/X0g==
+Date: Tue, 11 Jun 2024 12:10:54 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: conor@kernel.org, Daire McNamara <daire.mcnamara@microchip.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v1 2/2] PCI: microchip: rework reg region handing
+Message-ID: <20240611171054.GA989979@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] block: Add ioprio to block_rq tracepoint
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Dongliang Cui <dongliang.cui@unisoc.com>, axboe@kernel.dk,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, ebiggers@kernel.org,
- ke.wang@unisoc.com, hongyu.jin.cn@gmail.com, niuzhiguo84@gmail.com,
- hao_hao.wang@unisoc.com, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, akailash@google.com, cuidongliang390@gmail.com
-References: <20240611073519.323680-1-dongliang.cui@unisoc.com>
- <86eb3dd0-77a1-4d1d-8e62-38c46bd7563a@acm.org>
- <20240611125440.6d095270@gandalf.local.home>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240611125440.6d095270@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240527-flint-whacky-4fb21c38476b@wendy>
 
-On 6/11/24 9:54 AM, Steven Rostedt wrote:
-> On Tue, 11 Jun 2024 09:26:54 -0700
-> Bart Van Assche <bvanassche@acm.org> wrote:
+On Mon, May 27, 2024 at 10:37:17AM +0100, Conor Dooley wrote:
+> The PCI host controller on PolarFire SoC has multiple "instances", each
+> with their own bridge and ctrl address spaces. The original binding has
+> an "apb" register region, and it is expected to be set to the base
+> address of the host controllers register space. Defines in the driver
+> were used to compute the addresses of the bridge and ctrl address ranges
+> corresponding to instance1. Some customers want to use instance0 however
+> and that requires changing the defines in the driver, which is clearly
+> not a portable solution.
 > 
->> On 6/11/24 12:35 AM, Dongliang Cui wrote:
->>> +#define IOPRIO_CLASS_STRINGS \
->>> +	{ IOPRIO_CLASS_NONE,	"none" }, \
->>> +	{ IOPRIO_CLASS_RT,	"rt" }, \
->>> +	{ IOPRIO_CLASS_BE,	"be" }, \
->>> +	{ IOPRIO_CLASS_IDLE,	"idle" }, \
->>> +	{ IOPRIO_CLASS_INVALID,	"invalid"}
->>
->> Shouldn't this array be defined in a C file instead of in a header file?
+> The binding has been changed from a single register region to a pair,
+> corresponding to the bridge and ctrl regions respectively, so modify the
+> driver to read these regions directly from the devicetree rather than
+> compute them from the base address of the abp region.
 > 
-> The way the TRACE_EVENT() macro works, this will not work in a C file.
+> To maintain backwards compatibility with the existing binding, the
+> driver retains code to handle the "abp" reg and computes the base
+> address of the bridge and ctrl regions using the defines if it is
+> present. reg-names has always been a required property, so this is
+> safe to do.
 
-Hmm ... if the above array is terminated with a { -1, NULL } sentinel and if
-__print_symbolic() is changed into trace_print_symbols_seq(p, ...) then the above
-array can be moved into a C file, isn't it?
+When you update this, can you add something about the objective to the
+subject line?  "rework reg region handling" just says "we did
+something", but not why or what the benefit is.
 
-Thanks,
+The cover letter ("support using either instance 1 or 2") has good
+information that could be part of this.
 
-Bart.
-
+Bjorn
