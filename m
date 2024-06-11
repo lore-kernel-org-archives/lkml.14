@@ -1,43 +1,71 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7F717CA1E;
-	Tue, 11 Jun 2024 11:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D8117CA12;
+	Tue, 11 Jun 2024 11:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718105590; cv=none; b=QEn87gkalcAG7Pe1zM09tTNlahH5tm+9yK6XOk7Skhe5alLmH6ECdBzo2ZY57eOR2SPESQu51C7DNI5aeCMS0ST/jrHpYFfcFZebfSHGg6EUZrA07wM/Hihyif1GbQKRnt7fTG7uYG6bKF66jgBJvHatq03dB3Vw5rNSKK4By20=
+	t=1718105589; cv=none; b=Zz4RexWR5kUhvXiEFdXUtXJSrH6u3nzGXFpORrC8vyqCOfoW3xM+kI/sjMHNwoOsrEWq0yo+IbZmiNqBXoHnynAUvcPu/69/knKmbR+4rzHlbjB64F7sS+4489E8SIJTzbBxQJ0jGFiW39/sPHLEVbaBaFeFNdn7Sz21NkPUZVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718105590; c=relaxed/simple;
-	bh=nFI3j7Hbsnyjz37WEKhI9GvJ+E+TRQvc/iFf8KLB4dQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hS2lsMdd77cdsfDJT3c4zwNvluR4CBErVnDLgHM1w0NuT52FhuPx0lbIlp3nOGTMumh8HDLQyFz0pwIf7PNxEUIuvrrXRpEl/xH+kYDPiy6n2NG6zhqCAuT/16SMXva9GFWtcyzhNuxXKPKgN/MKX8YTAFxPXKX3TB++8Ww6uq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.08,229,1712588400"; 
-   d="scan'208";a="211449646"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 11 Jun 2024 20:33:08 +0900
-Received: from renesas-deb12.mshome.net (unknown [10.226.92.82])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id EE59C4006DF4;
-	Tue, 11 Jun 2024 20:33:03 +0900 (JST)
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/9] arm64: dts: renesas: rzg2l: Enable Ethernet TXC output
-Date: Tue, 11 Jun 2024 12:31:58 +0100
-Message-Id: <20240611113204.3004-5-paul.barker.ct@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
-References: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
+	s=arc-20240116; t=1718105589; c=relaxed/simple;
+	bh=DKCEeBKb6zTzx+KUvUYnkQTiMPCaOizcQv9q6x3j1n4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tEjb0PYDvU6lmM6a0895ipnhizrGHABD7gDPWYDdBFw759j4O4XPYBu/ocDhRfxHbxEpsKMKlVwrwzQzZvdiuzB958l/9ChqIwGnDpDb5Ir7t6wsoALaQKUPibaYi9b0CjbeYUYKKRqOjuh1d1zhTXAa0dO37XgCM5PZj7DTCxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=sCGiROwR; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sCGiROwR"
+X-UUID: 5c75436427e611efa54bbfbb386b949c-20240611
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=RfXxZqRO1iT2ixVp89TG5IOSKAmXlSsHm4PrhfIZCQc=;
+	b=sCGiROwRu5OuGKl9ieJJbZk1DoBKtd5UeqsD6lKSizrhD3+rWRpJg0YgAENSxmLtE4lr7zOqWDaAUE6/UluFJ9UNzzAwHUtGl/b6nPVRvvSADxqzGwa7SzBNwsAKqtF+MeuuzKTB0x4JCsejXJAELv7Q8l2a63NeNS5mOp8S+SE=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.39,REQID:00e293eb-c7d6-4c5a-9d88-9226fffd4e11,IP:0,U
+	RL:25,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-META: VersionHash:393d96e,CLOUDID:7432db93-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 5c75436427e611efa54bbfbb386b949c-20240611
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
+	(envelope-from <zhi.mao@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1415718033; Tue, 11 Jun 2024 19:33:01 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 11 Jun 2024 19:33:00 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 11 Jun 2024 19:32:59 +0800
+From: Zhi Mao <zhi.mao@mediatek.com>
+To: <mchehab@kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <sakari.ailus@linux.intel.com>
+CC: <laurent.pinchart@ideasonboard.com>, <shengnan.wang@mediatek.com>,
+	<yaya.chang@mediatek.com>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, <yunkec@chromium.org>,
+	<conor+dt@kernel.org>, <matthias.bgg@gmail.com>,
+	<angelogioacchino.delregno@collabora.com>, <jacopo.mondi@ideasonboard.com>,
+	<zhi.mao@mediatek.com>, <10572168@qq.com>, <hverkuil-cisco@xs4all.nl>,
+	<heiko@sntech.de>, <jernej.skrabec@gmail.com>, <macromorgan@hotmail.com>,
+	<linus.walleij@linaro.org>, <hdegoede@redhat.com>,
+	<tomi.valkeinen@ideasonboard.com>, <gerald.loacker@wolfvision.net>,
+	<andy.shevchenko@gmail.com>, <bingbu.cao@intel.com>,
+	<dan.scally@ideasonboard.com>, <linux-media@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v6 1/3] media: dt-bindings: i2c: add GalaxyCore GC05A2 image sensor
+Date: Tue, 11 Jun 2024 19:32:34 +0800
+Message-ID: <20240611113236.16513-2-zhi.mao@mediatek.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240611113236.16513-1-zhi.mao@mediatek.com>
+References: <20240611113236.16513-1-zhi.mao@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,109 +73,138 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-Configure ET0_TXC and ET1_TXC as outputs on the Renesas RZ/[GV]2L SMARC
-SoMs, as per RGMII specification.
+Add YAML device tree binding for GC05A2 CMOS image sensor,
+and the relevant MAINTAINERS entries.
 
-Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
 ---
-Changes v1->v2:
-  * Picked up Geert's Reviewed-by tag.
+ .../bindings/media/i2c/galaxycore,gc05a2.yaml | 112 ++++++++++++++++++
+ 1 file changed, 112 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/galaxycore,gc05a2.yaml
 
- .../boot/dts/renesas/rzg2l-smarc-som.dtsi     | 76 +++++++++++--------
- 1 file changed, 44 insertions(+), 32 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi
-index 4409c47239b9..2b5e037ea9fa 100644
---- a/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi
-@@ -180,41 +180,53 @@ adc_pins: adc {
- 	};
- 
- 	eth0_pins: eth0 {
--		pinmux = <RZG2L_PORT_PINMUX(28, 1, 1)>, /* ET0_LINKSTA */
--			 <RZG2L_PORT_PINMUX(27, 1, 1)>, /* ET0_MDC */
--			 <RZG2L_PORT_PINMUX(28, 0, 1)>, /* ET0_MDIO */
--			 <RZG2L_PORT_PINMUX(20, 0, 1)>, /* ET0_TXC */
--			 <RZG2L_PORT_PINMUX(20, 1, 1)>, /* ET0_TX_CTL */
--			 <RZG2L_PORT_PINMUX(20, 2, 1)>, /* ET0_TXD0 */
--			 <RZG2L_PORT_PINMUX(21, 0, 1)>, /* ET0_TXD1 */
--			 <RZG2L_PORT_PINMUX(21, 1, 1)>, /* ET0_TXD2 */
--			 <RZG2L_PORT_PINMUX(22, 0, 1)>, /* ET0_TXD3 */
--			 <RZG2L_PORT_PINMUX(24, 0, 1)>, /* ET0_RXC */
--			 <RZG2L_PORT_PINMUX(24, 1, 1)>, /* ET0_RX_CTL */
--			 <RZG2L_PORT_PINMUX(25, 0, 1)>, /* ET0_RXD0 */
--			 <RZG2L_PORT_PINMUX(25, 1, 1)>, /* ET0_RXD1 */
--			 <RZG2L_PORT_PINMUX(26, 0, 1)>, /* ET0_RXD2 */
--			 <RZG2L_PORT_PINMUX(26, 1, 1)>, /* ET0_RXD3 */
--			 <RZG2L_PORT_PINMUX(1, 0, 1)>;  /* IRQ2 */
-+		txc {
-+			pinmux = <RZG2L_PORT_PINMUX(20, 0, 1)>; /* ET0_TXC */
-+			output-enable;
-+		};
+diff --git a/Documentation/devicetree/bindings/media/i2c/galaxycore,gc05a2.yaml b/Documentation/devicetree/bindings/media/i2c/galaxycore,gc05a2.yaml
+new file mode 100644
+index 000000000000..0e7a7b5ac89f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/galaxycore,gc05a2.yaml
+@@ -0,0 +1,112 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright (c) 2023 MediaTek Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/galaxycore,gc05a2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+		mux {
-+			pinmux = <RZG2L_PORT_PINMUX(28, 1, 1)>, /* ET0_LINKSTA */
-+				 <RZG2L_PORT_PINMUX(27, 1, 1)>, /* ET0_MDC */
-+				 <RZG2L_PORT_PINMUX(28, 0, 1)>, /* ET0_MDIO */
-+				 <RZG2L_PORT_PINMUX(20, 1, 1)>, /* ET0_TX_CTL */
-+				 <RZG2L_PORT_PINMUX(20, 2, 1)>, /* ET0_TXD0 */
-+				 <RZG2L_PORT_PINMUX(21, 0, 1)>, /* ET0_TXD1 */
-+				 <RZG2L_PORT_PINMUX(21, 1, 1)>, /* ET0_TXD2 */
-+				 <RZG2L_PORT_PINMUX(22, 0, 1)>, /* ET0_TXD3 */
-+				 <RZG2L_PORT_PINMUX(24, 0, 1)>, /* ET0_RXC */
-+				 <RZG2L_PORT_PINMUX(24, 1, 1)>, /* ET0_RX_CTL */
-+				 <RZG2L_PORT_PINMUX(25, 0, 1)>, /* ET0_RXD0 */
-+				 <RZG2L_PORT_PINMUX(25, 1, 1)>, /* ET0_RXD1 */
-+				 <RZG2L_PORT_PINMUX(26, 0, 1)>, /* ET0_RXD2 */
-+				 <RZG2L_PORT_PINMUX(26, 1, 1)>, /* ET0_RXD3 */
-+				 <RZG2L_PORT_PINMUX(1, 0, 1)>;  /* IRQ2 */
-+		};
- 	};
- 
- 	eth1_pins: eth1 {
--		pinmux = <RZG2L_PORT_PINMUX(37, 2, 1)>, /* ET1_LINKSTA */
--			 <RZG2L_PORT_PINMUX(37, 0, 1)>, /* ET1_MDC */
--			 <RZG2L_PORT_PINMUX(37, 1, 1)>, /* ET1_MDIO */
--			 <RZG2L_PORT_PINMUX(29, 0, 1)>, /* ET1_TXC */
--			 <RZG2L_PORT_PINMUX(29, 1, 1)>, /* ET1_TX_CTL */
--			 <RZG2L_PORT_PINMUX(30, 0, 1)>, /* ET1_TXD0 */
--			 <RZG2L_PORT_PINMUX(30, 1, 1)>, /* ET1_TXD1 */
--			 <RZG2L_PORT_PINMUX(31, 0, 1)>, /* ET1_TXD2 */
--			 <RZG2L_PORT_PINMUX(31, 1, 1)>, /* ET1_TXD3 */
--			 <RZG2L_PORT_PINMUX(33, 1, 1)>, /* ET1_RXC */
--			 <RZG2L_PORT_PINMUX(34, 0, 1)>, /* ET1_RX_CTL */
--			 <RZG2L_PORT_PINMUX(34, 1, 1)>, /* ET1_RXD0 */
--			 <RZG2L_PORT_PINMUX(35, 0, 1)>, /* ET1_RXD1 */
--			 <RZG2L_PORT_PINMUX(35, 1, 1)>, /* ET1_RXD2 */
--			 <RZG2L_PORT_PINMUX(36, 0, 1)>, /* ET1_RXD3 */
--			 <RZG2L_PORT_PINMUX(1, 1, 1)>;  /* IRQ3 */
-+		txc {
-+			pinmux = <RZG2L_PORT_PINMUX(29, 0, 1)>; /* ET1_TXC */
-+			output-enable;
-+		};
++title: GalaxyCore gc05a2 1/5" 5M Pixel MIPI CSI-2 sensor
 +
-+		mux {
-+			pinmux = <RZG2L_PORT_PINMUX(37, 2, 1)>, /* ET1_LINKSTA */
-+				 <RZG2L_PORT_PINMUX(37, 0, 1)>, /* ET1_MDC */
-+				 <RZG2L_PORT_PINMUX(37, 1, 1)>, /* ET1_MDIO */
-+				 <RZG2L_PORT_PINMUX(29, 1, 1)>, /* ET1_TX_CTL */
-+				 <RZG2L_PORT_PINMUX(30, 0, 1)>, /* ET1_TXD0 */
-+				 <RZG2L_PORT_PINMUX(30, 1, 1)>, /* ET1_TXD1 */
-+				 <RZG2L_PORT_PINMUX(31, 0, 1)>, /* ET1_TXD2 */
-+				 <RZG2L_PORT_PINMUX(31, 1, 1)>, /* ET1_TXD3 */
-+				 <RZG2L_PORT_PINMUX(33, 1, 1)>, /* ET1_RXC */
-+				 <RZG2L_PORT_PINMUX(34, 0, 1)>, /* ET1_RX_CTL */
-+				 <RZG2L_PORT_PINMUX(34, 1, 1)>, /* ET1_RXD0 */
-+				 <RZG2L_PORT_PINMUX(35, 0, 1)>, /* ET1_RXD1 */
-+				 <RZG2L_PORT_PINMUX(35, 1, 1)>, /* ET1_RXD2 */
-+				 <RZG2L_PORT_PINMUX(36, 0, 1)>, /* ET1_RXD3 */
-+				 <RZG2L_PORT_PINMUX(1, 1, 1)>;  /* IRQ3 */
-+		};
- 	};
- 
- 	gpio-sd0-pwr-en-hog {
++maintainers:
++  - Zhi Mao <zhi.mao@mediatek.com>
++
++description:
++  The gc05a2 is a raw image sensor with an MIPI CSI-2 image data
++  interface and CCI (I2C compatible) control bus. The output format
++  is raw Bayer.
++
++properties:
++  compatible:
++    const: galaxycore,gc05a2
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  dovdd-supply: true
++
++  avdd-supply: true
++
++  dvdd-supply: true
++
++  reset-gpios:
++    description: Reference to the GPIO connected to the RESETB pin.
++    maxItems: 1
++
++  port:
++    $ref: /schemas/graph.yaml#/$defs/port-base
++    additionalProperties: false
++    description:
++      Output port node, single endpoint describing the CSI-2 transmitter.
++
++    properties:
++      endpoint:
++        $ref: /schemas/media/video-interfaces.yaml#
++        unevaluatedProperties: false
++
++        properties:
++          data-lanes:
++            oneOf:
++              - items:
++                  - const: 1
++                  - const: 2
++                  - const: 3
++                  - const: 4
++              - items:
++                  - const: 1
++                  - const: 2
++
++          link-frequencies: true
++
++        required:
++          - data-lanes
++          - link-frequencies
++
++    required:
++      - endpoint
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - dovdd-supply
++  - avdd-supply
++  - dvdd-supply
++  - reset-gpios
++  - port
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        sensor@37 {
++            compatible =  "galaxycore,gc05a2";
++            reg = <0x37>;
++
++            clocks = <&gc05a2_clk>;
++
++            reset-gpios = <&pio 21 GPIO_ACTIVE_LOW>;
++
++            avdd-supply = <&gc05a2_avdd>;
++            dovdd-supply = <&gc05a2_dovdd>;
++            dvdd-supply = <&gc05a2_dvdd>;
++
++            port {
++                sensor_out: endpoint {
++                    data-lanes = <1 2>;
++                    link-frequencies = /bits/ 64 <448000000 224000000>;
++                    remote-endpoint = <&seninf_csi_port_1_in>;
++                };
++            };
++        };
++    };
++
++...
 -- 
-2.39.2
+2.25.1
 
