@@ -1,61 +1,106 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59DA17D372
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8238C17D358;
+	Tue, 11 Jun 2024 13:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718112325; cv=none; b=dHCgVIFKSf2g+66i56RTZpxSEsQnwvPA2YKuzPTGYKDB2whiAtEqcBRQQEpr/xi+vXzli71vDsGQHDYLEfADI6EvwDPD+ktu/OcS9utLIYihASyNFhQr5E174xY8oyJgfWDwhfQ7S+mpKsvt96lnPtKzFkIjzqZm/Iyc2pMx3qk=
+	t=1718112364; cv=none; b=htS6RKCEormN41BVYecSf7or3Fqe/QW//M7eWKreBDXk2Lh8APUwnEt8XkVK9jmG05W/2cZIjya2n3Tp2bH0NyT9pE1Rzbx1j8bMgRhlTs6+pbkKZETn1xrpJTlMOZ4AHiazq2WrTaJ7AzjOBfFwwcep5h3Kl4atdZhOl1eFqV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718112325; c=relaxed/simple;
-	bh=mKkhzXW/ASFN57eSiiHglp/2fuVN5NEP5Kv15ktDi2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hhKI/hmYRHpZCTsmn0iayIJ58EjBTw8xU181xvFQbk7pEv0eB2YHrjkhiCaP+HZzKa+6xTnVsyUb4+yY2azFfLDqK0ov6+nrF+UAbIeo6HDO5R1KrqEWztC7BizL0mEtHM/bkx0fmUTWVeNzxy5BGKjU7ZA2AFB5pLhMQz/WceQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dtPM3bza; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718112364; c=relaxed/simple;
+	bh=08k+wAcbql/lsu9rymmUxtWIFDkESLOMHf5F/uImiHc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d83Bp7SwmCyJykqqDb1+7nnINRZEk0KiU6SRkwzucp+GM36hmj7oT6yfW95hCTfn0ZJ1Wm1Ys6uZq0RV9kqUGvLiT193HvDbysqO0ltWjdj7g0ZX7glOlRXbsPkkyeEDJSTtDF9p8Z0XoSM8/SqZQbL1SKoiPOIWl5uXcexO0Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=WwcsRWRV; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dtPM3bza"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RelhGyxlTxFvdioe1ErNIrfed8XzIly9QmvYbzKEvzA=; b=dtPM3bzacnvWlLZJ4x+GJmqeit
-	U+GYcJPIunRpVZxY97umWo3/5Y4HtoZTdVXuAqHZAHGV2BGpL+fABVMMcauo7wlPx8ATSsiJB62ND
-	s7HhSwHKfHb6uw4HB0WthP9Wa3mPmFzcqW53nxEc3EwA6nFhWG7LFyiIN92OS2qMF0vmnjPfdO/xn
-	4cy5WGGfbll/UWZNtdls4qvHJLpj+LNlCKv4D8eRA4oe3GYmKA5Y833EmHW/sbpN1KTukhGyqxQgy
-	1UBWFFWfdd7V1zsRqjlhb/WBfo1Nrp0VNpSgZtfUur5v9gPgg4jDBhNE+K4a/ZWSp7apNY2hckM1x
-	IlyJ4a2w==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sH1Uv-00000002BPn-0sMk;
-	Tue, 11 Jun 2024 13:25:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C54A8302792; Tue, 11 Jun 2024 15:25:15 +0200 (CEST)
-Date: Tue, 11 Jun 2024 15:25:15 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Borislav Petkov <bp@kernel.org>
-Cc: X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>
-Subject: Re: [PATCH v1 14/14] x86/alternative: Replace the old macros
-Message-ID: <20240611132515.GG8774@noisy.programming.kicks-ass.net>
-References: <20240607111701.8366-1-bp@kernel.org>
- <20240607111701.8366-15-bp@kernel.org>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="WwcsRWRV"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B5xVav021424;
+	Tue, 11 Jun 2024 08:25:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=bY/YYO0JK9L565n9PzZjzHjTXNAAU0kC6wTI1GzcH0w=; b=
+	WwcsRWRVwd8rPsDNmuSn+0cKb/iwfkFujmPNQUteJrI2iANNucTetADPI8eRGdyS
+	WZlVnzpITd+2ttg+pWzkT/Q3+nFOZ3EC7BrHkbJK/TJFZ0Qvn6E0Og4sIda2QSVd
+	E6NEe2lhDzrPlsOH9VB8gAf9i9PazdTWllcrZLuU9Z13bUiuk8OYfGjL52jCB713
+	2ptSPUJYHyaGpVDQE3tKzWGLVYSmVULsanv2SzHyjT2UNcHaKCZdQJFSbG3IL6vq
+	JzCRLJ3N92o0CzLYLGW+fj96TNuorC8gnX95QlE8FxCDuJu82xZaCJolvKWk85Ni
+	RmQT9NmV0CtCiO9+8PT7vQ==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3ymkqhtuva-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Jun 2024 08:25:58 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
+ 2024 14:25:56 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Tue, 11 Jun 2024 14:25:56 +0100
+Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id BDC9D82024A;
+	Tue, 11 Jun 2024 13:25:56 +0000 (UTC)
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: <broonie@kernel.org>
+CC: <lgirdwood@gmail.com>, <linux-sound@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH 3/3] ASoC: cs35l56: Attempt to read from cirrus,speaker-id device property first
+Date: Tue, 11 Jun 2024 14:25:56 +0100
+Message-ID: <20240611132556.1557075-3-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240611132556.1557075-1-ckeepax@opensource.cirrus.com>
+References: <20240611132556.1557075-1-ckeepax@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240607111701.8366-15-bp@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: cOWaB2ODgemJ1AfYcaeFaYYJTdZ059-H
+X-Proofpoint-ORIG-GUID: cOWaB2ODgemJ1AfYcaeFaYYJTdZ059-H
+X-Proofpoint-Spam-Reason: safe
 
-On Fri, Jun 07, 2024 at 01:17:01PM +0200, Borislav Petkov wrote:
-> From: "Borislav Petkov (AMD)" <bp@alien8.de>
-> 
-> Now that the new macros have been gradually put in place, replace the
-> old ones. Leave the new label numbers starting at 7xx as a hint that the
-> new nested alternatives are being used now.
+From: Simon Trimmer <simont@opensource.cirrus.com>
 
-You forgot to kill alt_max_[23]().
+When cs35l56 is connected via cs42l43 there isn't an ACPI node for the
+cs35l56 so all properties are under the cs42l43 ACPI node. We're adding
+a property as a way for the cs42l43 driver to pass this info in via a
+software node.
+
+Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ sound/soc/codecs/cs35l56-shared.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/codecs/cs35l56-shared.c b/sound/soc/codecs/cs35l56-shared.c
+index 8af89a263594..e89027cd40d1 100644
+--- a/sound/soc/codecs/cs35l56-shared.c
++++ b/sound/soc/codecs/cs35l56-shared.c
+@@ -853,9 +853,16 @@ EXPORT_SYMBOL_NS_GPL(cs35l56_hw_init, SND_SOC_CS35L56_SHARED);
+ int cs35l56_get_speaker_id(struct cs35l56_base *cs35l56_base)
+ {
+ 	struct gpio_descs *descs;
+-	int speaker_id;
++	u32 speaker_id;
+ 	int i, ret;
+ 
++	/* Attempt to read the speaker type from a device property first */
++	ret = device_property_read_u32(cs35l56_base->dev, "cirrus,speaker-id", &speaker_id);
++	if (!ret) {
++		dev_dbg(cs35l56_base->dev, "Speaker ID = %d\n", speaker_id);
++		return speaker_id;
++	}
++
+ 	/* Read the speaker type qualifier from the motherboard GPIOs */
+ 	descs = gpiod_get_array_optional(cs35l56_base->dev, "spk-id", GPIOD_IN);
+ 	if (!descs) {
+-- 
+2.39.2
+
