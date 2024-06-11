@@ -1,39 +1,39 @@
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AD517CA01;
-	Tue, 11 Jun 2024 13:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF4617D34F;
+	Tue, 11 Jun 2024 13:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718112550; cv=none; b=CHL382og7xomiUgM8vmwPP3rh7B7Mgx4DJVmhcVMGx3YKFAAFhsgk/d0x2qx5mimklL0I3p6PPFFHl1SH4pHWoZ4JHFm34E+eMkGz+mh8042qwJmrQ4WznPGFfHp8uvpTWy4qwgFXl94qtKvs3MEz3JTyGg2v3TvWe9eqa7VbL4=
+	t=1718112552; cv=none; b=O/Ru4NjVbBM9tvJkopGDFVJtRnv+3arDS/8BJ9UnXF78WXUnnRvVYEs8v4TwitgN37EvlSdnDLeljQlz9he/RKsaCRoOwDlQ87KvRJuxA/NAS/xkG9ldepnOGkXRSO7YjyyVUHumcxySWWsgAvaEiu+NC7X2Q/glstNC/hIko6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718112550; c=relaxed/simple;
-	bh=BMP9w47+jx4M2agblJj0+ixb5r1r7O+4fLzBZBqWW3k=;
+	s=arc-20240116; t=1718112552; c=relaxed/simple;
+	bh=S8kq1YKPY2YCYXE468OBoSzyuhbV4hblKCD/W3a2KBw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TDG+Z24v3htYvB0rj/w7uz5YzY5+GvVSeBgirNgDpzLuzxCbHZTjiCE4/LNkNz1OpNum7dHnMpd/L9l38rIVOnbJmDAS9IIzYyzwvOaDkDS33GiKqyqBwDwvDd7Es0aH6UfI0qAQIhWURM2KgSTTAx/ZHBBkEg0Y9Dz7Ib5hKW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=acRpc38v; arc=none smtp.client-ip=85.214.62.61
+	 In-Reply-To:Content-Type; b=UpBy1Py3X/JkQ7rglYTjTLcMsnB3aaJ0zrcmyoptbxnqWa+xszAb2hvBmEkzyQcs9SJSK6aVSwnvGBd9rGTfJ5lOC2mAE12RNk8IMDcuEVPoUEfhf8kUf30QV8+Nc7RR2bs14r6A441T0kIIglKSCCGVoXWAAojCq2mYxSr9ItI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=l4M1o7OC; arc=none smtp.client-ip=85.214.62.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="acRpc38v"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="l4M1o7OC"
 Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
 	(No client certificate requested)
 	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 4364C886AE;
-	Tue, 11 Jun 2024 15:28:59 +0200 (CEST)
+	by phobos.denx.de (Postfix) with ESMTPSA id 4D6D188660;
+	Tue, 11 Jun 2024 15:29:01 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1718112541;
-	bh=HemWINfH/epw+LZFgUcstNjd+LDPJilMaixFK22+03Y=;
+	s=phobos-20191101; t=1718112542;
+	bh=7LztJLOQjw+XAg+XEIr7kZCsERJxxOYihnXImFPkkvU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=acRpc38vKy22z8IOCx6o/g1Z8cXPaHREocz/f0ymJuu/zSVZ/NdhDO1t0LhouEEPc
-	 rp6XJBfvRdHSTfxOR0kaB5mGKoT7CxxzIBcXMmH+LuMeqMzPDJPWDa5Jv/Bl9/buEH
-	 2IRH9fHbaP9iaDmE26pCk+2KAdeqI2yW8uU6kiSGZSyN4m/U1andbOEe6dM8dIjlLi
-	 35fbfnglEeWiYNXyf/uL7HgN5Fq+YYAlh/MnZ4QRJLshxBWVtIBGlVDH8LMFQh7zfD
-	 u8bN0jDc7qBRuIzi4Zs+mzs+UGguNDtZduItpB8pizQfnS82yd9EZ11PJs31X9QvL0
-	 hKofLqcYUCxSQ==
-Message-ID: <de1625ea-1ba8-4ebd-9442-59c7d9a6d04c@denx.de>
-Date: Tue, 11 Jun 2024 15:05:53 +0200
+	b=l4M1o7OCYl/dvkVYQ/gVTUxO5H8WmdwW6wYCO18/FhCWi6iOhr24pSYUn+k8qvQP8
+	 fHesy9waWPJOAJPEAZWHRCr883+AT4Zj++F45dWOMtmtIAX2aITK76JXYrq/AHJaIy
+	 2kOr5BPz3dIVZ2n88vorYGBcXlaaZX+vVTGJ5a1Nqvax4dEs1oNuymGg0bPuauQCbU
+	 JSKIl4GVx7MEF7Z2B2tDyJfr07QITjIwMCTED7iiZJ8wo0IeafezCZ9nEPrj3AX68n
+	 OLepqilR0f5rtmQDJ4Yaz7ZYFRm8i1w5V14xT/6z+lq/Fph9cQrrVLydPk3n/pWXWu
+	 laQYJ2zEWl6Tw==
+Message-ID: <ee101ca5-4444-4610-9473-1a725a542c91@denx.de>
+Date: Tue, 11 Jun 2024 15:07:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +41,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] ARM: dts: stm32: add ethernet1 and ethernet2
- support on stm32mp13
+Subject: Re: [net-next,PATCH v7 7/8] net: stmmac: dwmac-stm32: Mask support
+ for PMCR configuration
 To: Christophe Roullier <christophe.roullier@foss.st.com>,
  "David S . Miller" <davem@davemloft.net>, Eric Dumazet
  <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
@@ -57,20 +57,34 @@ To: Christophe Roullier <christophe.roullier@foss.st.com>,
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
  linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240611130110.841591-1-christophe.roullier@foss.st.com>
- <20240611130110.841591-2-christophe.roullier@foss.st.com>
+References: <20240611083606.733453-1-christophe.roullier@foss.st.com>
+ <20240611083606.733453-8-christophe.roullier@foss.st.com>
 Content-Language: en-US
 From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240611130110.841591-2-christophe.roullier@foss.st.com>
+In-Reply-To: <20240611083606.733453-8-christophe.roullier@foss.st.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
 X-Virus-Status: Clean
 
-On 6/11/24 3:01 PM, Christophe Roullier wrote:
-> Both instances ethernet based on GMAC SNPS IP on stm32mp13.
-> GMAC IP version is SNPS 4.20.
-> 
-> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+On 6/11/24 10:36 AM, Christophe Roullier wrote:
 
-Reviewed-by: Marek Vasut <marex@denx.de>
+[...]
+
+>   static void stm32_dwmac_clk_disable(struct stm32_dwmac *dwmac, bool suspend)
+> @@ -348,8 +352,15 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
+>   		return PTR_ERR(dwmac->regmap);
+>   
+>   	err = of_property_read_u32_index(np, "st,syscon", 1, &dwmac->mode_reg);
+> -	if (err)
+> +	if (err) {
+>   		dev_err(dev, "Can't get sysconfig mode offset (%d)\n", err);
+> +		return err;
+> +	}
+> +
+> +	dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
+> +	err = of_property_read_u32_index(np, "st,syscon", 2, &dwmac->mode_mask);
+> +	if (err)
+> +		dev_dbg(dev, "Warning sysconfig register mask not set\n");
+
+My comment on V6 was not addressed I think ?
