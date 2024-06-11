@@ -1,39 +1,30 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FC621DDF4;
-	Tue, 11 Jun 2024 14:14:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3264C17D8A1;
+	Tue, 11 Jun 2024 14:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718115295; cv=none; b=FEK+/ayTHNL/jWlenb0XGcl7u/p9qwv8rbV8hoL9tPx9ZxERBVBoBP/Ckdjg5rQSgQzihEJJKmYYOKirGSibgYeg8I4Wsl8hWDeuduGIPVyXj87Qov/+UBgtQy3XszM/NQsJ48k8v5J7AL8hbk7NfkjqxctXUCayP0D6Hnjjy/Q=
+	t=1718115303; cv=none; b=OEpz4o94Fr7GC7fCq0Gv4y0cYmkq8EpHddjTsr55wiUPFoedYWe01MCa8Q+SG149iYlIkvhK0avEzpJcjp1EQTO/bFmNn5onkKd1MWH5Jon0t5Q9lj9RuUbTjoNB/WFf6El0T1D18ttrew+mV0UkwMNobaSEc7JR3EFKw5KJjHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718115295; c=relaxed/simple;
-	bh=wQbEJocG3DYWCV/bbjuTe2rWvWiRPGvtjmOpsxe4i7E=;
+	s=arc-20240116; t=1718115303; c=relaxed/simple;
+	bh=S7HvbhMJrqKrjrCA9+q8Ja1NL2gugbk9fO8O7O/IQB4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N9vCELntNBJjYje6Z8dvBIcjgmUKTCo66euCjlRpgxTLmNE1SjW1ZN3wJ2WcpDajJJL7iif+zSxtVShxXhvw46h3qdlW3qqozQDGnFVRMx0lSxfQxuIfHVa9WENzmIxlAylFxbxBKjSGn7q6IBxpL+E3Lm22VtHZKgKT76Wg3Tc=
+	 Content-Type:Content-Disposition:In-Reply-To; b=LIBgf0RLeaG9KvVfeNTxX3WkwrssB64a+ElXDW/FmMwu13+Nm23NeP89FvhRupkuWf0pd3XXQCf9ohuVl3OdWpTlVCDWucLOlzSLCFa+PfMGjWJB3XP7DeiLG8s1ZmbRZJTJBjKfDdMa2Etw28TsYLtMTxGQqao/0oF+BvfVbO8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1sH2Gu-00034I-00; Tue, 11 Jun 2024 16:14:48 +0200
+	id 1sH2Gu-00034G-00; Tue, 11 Jun 2024 16:14:48 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 54997C0411; Tue, 11 Jun 2024 16:12:57 +0200 (CEST)
-Date: Tue, 11 Jun 2024 16:12:57 +0200
+	id DBE9AC0120; Tue, 11 Jun 2024 16:12:18 +0200 (CEST)
+Date: Tue, 11 Jun 2024 16:12:18 +0200
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	=?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>,
-	linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/5] mips: bmips: BCM6358: make sure CBR is correctly
- set
-Message-ID: <ZmhbaZQbLf6Q3yoz@alpha.franken.de>
-References: <20240611113538.9004-1-ansuelsmth@gmail.com>
- <20240611113538.9004-2-ansuelsmth@gmail.com>
+To: Martin Schiller <ms@dev.tdt.de>
+Cc: hauke@hauke-m.de, dmitry.torokhov@gmail.com, rdunlap@infradead.org,
+	robh@kernel.org, bhelgaas@google.com, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] MIPS: pci: lantiq: restore reset gpio polarity
+Message-ID: <ZmhbQgXxyhZ7shBh@alpha.franken.de>
+References: <20240607090400.1816612-1-ms@dev.tdt.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,27 +33,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240611113538.9004-2-ansuelsmth@gmail.com>
+In-Reply-To: <20240607090400.1816612-1-ms@dev.tdt.de>
 
-On Tue, Jun 11, 2024 at 01:35:33PM +0200, Christian Marangi wrote:
-> It was discovered that some device have CBR address set to 0 causing
-> kernel panic when arch_sync_dma_for_cpu_all is called.
+On Fri, Jun 07, 2024 at 11:04:00AM +0200, Martin Schiller wrote:
+> Commit 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using gpiod API") not
+> only switched to the gpiod API, but also inverted / changed the polarity
+> of the GPIO.
 > 
-> This was notice in situation where the system is booted from TP1 and
-> BMIPS_GET_CBR() returns 0 instead of a valid address and
-> !!(read_c0_brcm_cmt_local() & (1 << 31)); not failing.
+> According to the PCI specification, the RST# pin is an active-low
+> signal. However, most of the device trees that have been widely used for
+> a long time (mainly in the openWrt project) define this GPIO as
+> active-high and the old driver code inverted the signal internally.
 > 
-> The current check whether RAC flush should be disabled or not are not
-> enough hence lets check if CBR is a valid address or not.
+> Apparently there are actually boards where the reset gpio must be
+> operated inverted. For this reason, we cannot use the GPIOD_OUT_LOW/HIGH
+> flag for initialization. Instead, we must explicitly set the gpio to
+> value 1 in order to take into account any "GPIO_ACTIVE_LOW" flag that
+> may have been set.
 > 
-> Fixes: ab327f8acdf8 ("mips: bmips: BCM6358: disable RAC flush for TP1")
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> In order to remain compatible with all these existing device trees, we
+> should therefore keep the logic as it was before the commit.
+> 
+> Fixes: 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using gpiod API")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
 > ---
->  arch/mips/bmips/setup.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  arch/mips/pci/pci-lantiq.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-applied to mips-fixes.
+applied to mips-fixes
 
 Thomas.
 
