@@ -1,158 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D21F7602B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 18:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04356F301;
+	Tue, 11 Jun 2024 18:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718129458; cv=none; b=BSyCyg75OzAGYzXGDjnVrCpQxiMZGG2TfrOk0Kn76UUacPNKRR+grFjWNNbTv3YKOP+Qtcne8jRX7+RHujGvqhKzVFwCz5Zsd1J4sLQ0zJ7MROaFuOdIBZpQpDI5485FoNv2fm4nj5Nalv8bJ1Wn+xf93n4mJs/+43jdruzuztA=
+	t=1718129466; cv=none; b=fySkpygTHB90phzCdU/vEOpYje5VUW+P3WWYjRjZjyTq1XBPPYFi+1Wk1HIMtf2FkNVya6ZMmLunJkp2GrtHNEM2x8rU53YgZ9AMNGykprvo+9mVaseTmI/GzwS8HhT+oOn5+Lyqs642ZzLMzMwpqIS06Q7mtHc8q4QL645KzbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718129458; c=relaxed/simple;
-	bh=l3xNCzXk3xmwDmD+pMtsOXU0f7Jhky/gbT9eRPh2iQk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=gfF+rID58oA3a6PWm+sCIYl9TyfMoQgEMReyKdG2i2W6xypJNc27vKzBdCoyewkOi2jplPtv0mBQAPncX8Bqa5SLgx4dioQUfZG6KfDtcujp44nzWE/a+meKGOwHQfhxPIfBGCiqyaq29so9tX5Xe6Z1WM+FZ0JTIJZ68YuedQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DMsWpWn9; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718129466; c=relaxed/simple;
+	bh=/xKGhKlVtckIy/7F23998tEUprsrx5eNTrMKCF2kraE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UD8P4WRudq0qg6Ss616OJIapaxG65Q/bieHZIfhFG6VxHjgAJIPLqgUrc/8i7J0l1lT4HxPRqT9wGpB9oBeb8UWBGTlE+bkP2LN0O78OaS9dzix1bvZedgBbO6pTYpMUtmqjf9ldUaVLj44V7K6ymYaHqVrI3ZTonW0BEUpE4hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MfbDL/sC; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DMsWpWn9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718129456; x=1749665456;
-  h=date:from:to:cc:subject:message-id;
-  bh=l3xNCzXk3xmwDmD+pMtsOXU0f7Jhky/gbT9eRPh2iQk=;
-  b=DMsWpWn9yJ8JE4rcVz5lxV75cY29hrV/GfzmIZHxy2eNzGsBo1kcjVHH
-   fLS6II3jTFBn22OXdQvmjt2W5/ub2YM28yGUYLBohsctfHgiO4fik0CH1
-   VdwvTN6E9LoUBK8UJ9utjw6NNK1/YM8xyU2az6bDjdC17hiP6xOC0VOZA
-   0ev9pPAiO2rzRRV9zlFOpRftM038wgsE0Iy2zCzP5XcyZBv37bRQX10QQ
-   fBuTYF0xT17UxSs0znsDHZemtcKfV88SqlDkLsisfdE8j6FhqYbm19oc7
-   rkaQdQg3TjCPlgrS5k9ID8o38zz1rrKy8acsoIflLp0HIlKlvZgBowkSx
-   g==;
-X-CSE-ConnectionGUID: A1LgJFoKQNSOM3ntEOa5dQ==
-X-CSE-MsgGUID: hB8dVEOnScCfljTNCuoqJA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="14988059"
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="14988059"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 11:10:56 -0700
-X-CSE-ConnectionGUID: eiZXIeMERKW1giHk/dv5mQ==
-X-CSE-MsgGUID: RMU0jF7lQny+9DUu9HxGyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="44646002"
-Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 11 Jun 2024 11:10:55 -0700
-Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sH5xM-0000kM-20;
-	Tue, 11 Jun 2024 18:10:52 +0000
-Date: Wed, 12 Jun 2024 02:10:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/cache] BUILD SUCCESS
- f385f024639431bec3e70c33cdbc9563894b3ee5
-Message-ID: <202406120237.NrMycO3N-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MfbDL/sC"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f480624d0fso11486855ad.1;
+        Tue, 11 Jun 2024 11:11:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718129464; x=1718734264; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6yx/QSwtRUfzJxtU0mEMF/+Zp84UMg5zsjelSYKknQk=;
+        b=MfbDL/sCQptPLKB1qjR5CHtcba1aJHmifFXazh1NnlqUE502ROiOgqDAvBX/bGV0tX
+         fMV8kSKFWkKa58okiGqz0cljaVVkVCTvtby55vCFK1XpBMzApZFk6AqIvba5eBhfm6RV
+         OmkgyYaRhgLGsIJf14SbUixDexr/wM1DMtnYOriRLJoaF8P7wXwhi/S+utt/UAMzfN/v
+         QYdManooHChT/vDS5EqE6mwI48m+4cG8uRydRLh4ZWAOQ9Ks9ui1qxDUiD2y1qjuSs+4
+         d+dqGMuGn9OBRMsN0J8kbAjW0vjIRonHC2BC3LVL2xfkcsEjg6neS2IYhGR5qpPCXDE6
+         deAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718129464; x=1718734264;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6yx/QSwtRUfzJxtU0mEMF/+Zp84UMg5zsjelSYKknQk=;
+        b=o7/cHQMt95j58dOWctLOcQ44RFgrcU9tulGOZlTF1QhiOr6ztbDxOqCxy+yF/BQfjF
+         FD9NbS7Y9b+3mO8KttG0W/b/p30uyPuScvTYX1hgzNfu+RdJnbRGGDzzh0nK0SLOrPtv
+         I39zS4ASnX3nayfWfNX0e4NObFDwYzO9wOMUQumDhhEr/99lNUFGXuK2JRvHSuDDoS11
+         YL0vsp6CfDNdOsTm8DnGpCdCl1bONfh+Mg+KnEzvPskNYexReIGOBrafRbOqNDcuKHIc
+         xGoJrcymobHPc7hPH1v5K8AfEljw85bFbEtWYUAh5f9ezSHuik10DKeXpTs3aCD7IHF7
+         UDNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQPZa7WWKVgTI1qPsXRD5f4HhaFiyd9S8XgLWEQIEB8ng+RvUnyzf5+8WueWNUA7+upohtXGppoqmpcW7M6puUBgEIill7E5zCwTY5oFhp5IHc6ushaYcao1/rtnlfSjspXGgUaxQ7nWjX4p1A/rMuRRy4OTJ4RWt8bNgdu+DX4YoAoNOa
+X-Gm-Message-State: AOJu0YwOGbVWkLcSl19DYizL67YuSftXwKZOfkmYYlm7hphIoDSDakdY
+	zmp/Gk1tifYYtzeHfIGuVnnZk1r5XLtO4huQXdv49Q4ZhVcUsTTLwzHllg==
+X-Google-Smtp-Source: AGHT+IGCIHAzQY/mnDlVo5lnk26RTRbDcrjvObXR8MxjwovVfl11tONs9+ylnI51Lr9jyeCjcjK5IQ==
+X-Received: by 2002:a17:902:ea0e:b0:1f7:2dca:ea42 with SMTP id d9443c01a7336-1f72dcaf4acmr29493525ad.60.1718129463715;
+        Tue, 11 Jun 2024 11:11:03 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:d73f:b49c:626c:fac7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6ed8ee0f1sm71482315ad.124.2024.06.11.11.11.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 11:11:03 -0700 (PDT)
+Date: Tue, 11 Jun 2024 11:11:00 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Daisuke Nojiri <dnojiri@chromium.org>
+Cc: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Reka Norman <rekanorman@chromium.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Pavan Holla <pholla@chromium.org>,
+	Gwendal Grignou <gwendal@chromium.org>,
+	Lukasz Majczak <lma@chromium.org>,
+	Ching-Kang Yen <chingkang@chromium.org>,
+	Stephen Boyd <swboyd@chromium.org>,
+	Prashant Malani <pmalani@chromium.org>,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] platform/chrome: Add struct
+ ec_response_get_next_event_v3
+Message-ID: <ZmiTNEjxE-ZCotNu@google.com>
+References: <cover.1717779167.git.dnojiri@chromium.org>
+ <979b1fdaa5b3d3165e53f5429470c42581394d14.1717779167.git.dnojiri@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <979b1fdaa5b3d3165e53f5429470c42581394d14.1717779167.git.dnojiri@chromium.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/cache
-branch HEAD: f385f024639431bec3e70c33cdbc9563894b3ee5  x86/resctrl: Replace open coded cacheinfo searches
+Hi Daisuke,
 
-elapsed time: 1457m
+On Fri, Jun 07, 2024 at 10:02:56AM -0700, Daisuke Nojiri wrote:
+> Add struct ec_response_get_next_event_v3 to upgrade
+> EC_CMD_GET_NEXT_EVENT to version 3.
+> 
+> Signed-off-by: Daisuke Nojiri <dnojiri@chromium.org>
+> ---
+>  .../linux/platform_data/cros_ec_commands.h    | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
+> diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+> index 070e49c5381e..fff191a8d413 100644
+> --- a/include/linux/platform_data/cros_ec_commands.h
+> +++ b/include/linux/platform_data/cros_ec_commands.h
+> @@ -3527,6 +3527,34 @@ union __ec_align_offset1 ec_response_get_next_data_v1 {
+>  };
+>  BUILD_ASSERT(sizeof(union ec_response_get_next_data_v1) == 16);
+>  
+> +union __ec_align_offset1 ec_response_get_next_data_v3 {
+> +	uint8_t key_matrix[18];
+> +
+> +	/* Unaligned */
+> +	uint32_t host_event;
+> +	uint64_t host_event64;
+> +
+> +	struct __ec_todo_unpacked {
+> +		/* For aligning the fifo_info */
+> +		uint8_t reserved[3];
+> +		struct ec_response_motion_sense_fifo_info info;
+> +	} sensor_fifo;
+> +
+> +	uint32_t buttons;
+> +
+> +	uint32_t switches;
+> +
+> +	uint32_t fp_events;
+> +
+> +	uint32_t sysrq;
+> +
+> +	/* CEC events from enum mkbp_cec_event */
+> +	uint32_t cec_events;
+> +
+> +	uint8_t cec_message[16];
+> +};
+> +BUILD_ASSERT(sizeof(union ec_response_get_next_data_v3) == 18);
+> +
+>  struct ec_response_get_next_event {
+>  	uint8_t event_type;
+>  	/* Followed by event data if any */
+> @@ -3539,6 +3567,12 @@ struct ec_response_get_next_event_v1 {
+>  	union ec_response_get_next_data_v1 data;
+>  } __ec_align1;
+>  
+> +struct ec_response_get_next_event_v3 {
+> +	uint8_t event_type;
+> +	/* Followed by event data if any */
+> +	union ec_response_get_next_data_v3 data;
+> +} __ec_align1;
+> +
 
-configs tested: 81
-configs skipped: 3
+It is not really obvious that ec_response_get_next_event and
+ec_response_get_next_event_v3 are layout compatible. I would simply
+extend the union and add key_matrix_v3 field instead of defining
+a brand new union.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+And I would drop ec_response_get_next_event_v1 and added missing fields
+to the original union as well...
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                             allnoconfig   gcc-13.2.0
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                               defconfig   gcc-13.2.0
-arc                              allmodconfig   gcc-13.2.0
-arc                               allnoconfig   gcc  
-arc                               allnoconfig   gcc-13.2.0
-arc                                 defconfig   gcc  
-arc                                 defconfig   gcc-13.2.0
-arm                               allnoconfig   clang
-arm                                 defconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                             allnoconfig   gcc-13.2.0
-arm64                               defconfig   gcc  
-arm64                               defconfig   gcc-13.2.0
-csky                              allnoconfig   gcc  
-csky                              allnoconfig   gcc-13.2.0
-csky                                defconfig   gcc  
-csky                                defconfig   gcc-13.2.0
-hexagon                          allmodconfig   clang-19
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang-19
-hexagon                             defconfig   clang
-i386         buildonly-randconfig-003-20240611   clang
-i386                  randconfig-001-20240611   clang
-i386                  randconfig-004-20240611   clang
-i386                  randconfig-006-20240611   clang
-i386                  randconfig-011-20240611   clang
-i386                  randconfig-013-20240611   clang
-i386                  randconfig-015-20240611   clang
-i386                  randconfig-016-20240611   clang
-loongarch                        allmodconfig   gcc-13.2.0
-loongarch                         allnoconfig   gcc  
-loongarch                         allnoconfig   gcc-13.2.0
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc-13.2.0
-m68k                              allnoconfig   gcc  
-m68k                              allnoconfig   gcc-13.2.0
-m68k                             allyesconfig   gcc-13.2.0
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc-13.2.0
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc-13.2.0
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc-13.2.0
-nios2                            allmodconfig   gcc-13.2.0
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc-13.2.0
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc-13.2.0
-s390                                defconfig   clang
-sh                               allmodconfig   gcc-13.2.0
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc-13.2.0
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc-13.2.0
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                               allyesconfig   gcc-13
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang-18
-x86_64                              defconfig   gcc-13
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc  
+Thanks.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Dmitry
