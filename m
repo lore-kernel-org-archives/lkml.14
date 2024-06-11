@@ -1,94 +1,142 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFBF14F9ED;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A641509A6;
 	Tue, 11 Jun 2024 19:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718135460; cv=none; b=Vvfkl/FBGR7gQYv5hw67/17JxhR4YGTZjfoITQFtxXcv+794chlCU7XgR49L7NkM4ln52mzhxSMIDvKwGuWJZmjgINiNYQH9rQaFjU3mCLGJWgqAb6oz3qGdPA8lN/p8ihQqL0mS85VqLvJPKkBwMSBD0SopXXeqCvlzPNBTM4I=
+	t=1718135460; cv=none; b=hGrz5BR4qw0D6qT1XAa8fBkfqkyCbwBseZ4Ze2+N5YtR8rGW+58o2j6+IYw1gevGxMWjHGgtsTyzoULxah36n7IilVu95eBKtPc3BFjmLga2PFhl3TfnQUMw2hqeBaTM2PjVdjnQPdZTaLkJQcq3d6qfc/ZTQv4fjoEJGYppgNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718135460; c=relaxed/simple;
-	bh=TrgoARjs7ThYWQ1Zax5XgzNUc6x1JMOv/8bIggoKkyo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MGHKKVkBp0tYaAyFZiNl+TbUpIInfXoGZYYqK8f8bpJmCb6YqwdFs99+Zdx8kwlKLOpMjM0NRkk+nZ7Ct9rjazDgeyZKwqb7jnbgYNnpS+eEdLEPS8VWEu/97f6HoWykBrmbx1VYOtrdulrxdkmQpxdBVYf2XYPI1EHXuysOJAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	bh=HzqcVLgLFPi42NaNdIhRWUIJxrsIoPw50BWUznbNunY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NAMR+bneLERYbIOiF8dvVwXztnapG2PWyxQFaMQIAWkBdma49jNcQFrJ2+naZomQpXAbWAejmyoBlS6djgbIFFvJweooSARotj3L88lZnYxMM1kNpggBroyRU/qTFDpgsRDuC2E2saW5UMMMC3uXt+kg76N9IHjgRt41TETL74I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UvD5/ojr; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c84a21c62so3234458e87.1;
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvD5/ojr"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52c525257feso4529618e87.1;
         Tue, 11 Jun 2024 12:50:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718135456; x=1718740256; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K+DQW8mEWgMpkm6H9SEcHthcwoLYLPs2cBM5ZY3afc4=;
+        b=UvD5/ojrWxYryxvtpOONe7NtJHHC5fp3Ok9n6sTGxEqvAzeezam6AQ4ECwc5xm8iuH
+         zzU7GRPp8kW1D0ghd926iHuetMI+oydDEv5R770bRcs15BXxGtKHLTrH2OvnlUZ/P1nT
+         xe4vfk9jfy04SQWeaZGHSgxC0OCFial9qSgUBjo2PX/Ypujx6TaV4CGeNG73dpPQQTyU
+         YiCTNFRiEexVL8HiK9GQ7TWrTByDoJ7Aj+c7mtYli6LXJ1FB8rzxQpq6uKgxyxNOMbx2
+         VmY8n0TOhmsBOQIv7b+aqd47Cl9+hLBOKXy1Wo7AL8v9+FgqoBaWP7Q7Nk5oRwEOHmAb
+         xihg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718135455; x=1718740255;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7eXZ8+T5QNNII5GeGoRAsMrF7X6NWE3VbH6k9q/af+g=;
-        b=UltwJOCUOmza9Ewmv00X0SKViFajiCyilS5DbuS2ucj0BF/9IE6BHCc/wBABM50p3V
-         dW1GKjQjGdljuDLUP1WdukLnPbUFInoNCc+XASxj4E9rnjMbXBCTiczvvgVIIQqmOprU
-         rBsgEr7GMVpg8Oa3Ib9tf+XpzOZd4jTYoqQKCDLoyRX7KNi+DLMFe2KbJcASg1rX5567
-         8oVb7K2lv/gcVi2EACELcII2/+DWwg6G1NRSotrbQRqQUzgIA6G1vSDdnJzqWs4K1yCX
-         6jP7kOOUmfunXjT4T6ru8LZYTKAbhSuknxDncqqHF4zEmvMfQmUGBrZbq+xacI3VzJMj
-         AHmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ45uLCYB+E+UajH4xyZit/FC7sh72Mn1Jys+Xtrn+eVcJU9NWIzZqTiO4V/CEXa+cVyIpZt9uykFt1kXccsRiENSDU0qENVQkyDtDLFqtcC3uN+DPuIwWZwlmEdHgI4BNFunqNTrVQw==
-X-Gm-Message-State: AOJu0Yxnvrjwj5B+ODFG7YKYtZzwWNIiSJ2EUMgEKP9AHplc8LJcfxaZ
-	uAgVkbOwQ8JcP90jCubNkVQyK9O8457511LSTA7m/ckEF+8iNEWwuLyTHHfGEUs=
-X-Google-Smtp-Source: AGHT+IHbfvOLQbzltn9ppiEf4S9LdE6FO/nSopWZEZIOSQbGhM6/qe/9CWsh0eqbtGVlZZzwZOWHlA==
-X-Received: by 2002:a05:6512:12c4:b0:52c:8a12:3d3b with SMTP id 2adb3069b0e04-52c8a123eacmr5335573e87.56.1718135455348;
+        d=1e100.net; s=20230601; t=1718135456; x=1718740256;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K+DQW8mEWgMpkm6H9SEcHthcwoLYLPs2cBM5ZY3afc4=;
+        b=hwuWNr4iz8zR/sQaT2/nIEePzZxK7cXXlYo6ASRohKpZOd2Fcj6JoyCZMAiDnNsgsG
+         Zx9TzP2D86oVauYEZyZ6G4WqOFBptXm/IYkwPtw/OPbRSdtf2tFss/G8tX91x+JEurzq
+         +674BIn/mS2avQEk8rerpG2E3hDu1A1PCpNLVuxscIjVD479G3qp+ACxFlvioORoFkXb
+         IAZQK8lCrzkKCi6ONwGHSfd9mp4fVElNaApDll7g9HiknQ0JBjEN05o/zEd0zYxD5N3T
+         kdIXEgy5AJyzPwtglVvEOAMY3dXVMAQWOktARIU1hfUZFkmSmBSu/JTV1p2RcvDl2rjH
+         Ah+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWLiaOCRvgT12fLU/hpI6Vh52ZAh83k1vsNRht9xiukXmwzWNwGNApxqlA80wfVTnrGENFdZ4pX1oY5JuEF4XHibsOo/JkLraGg/mp3
+X-Gm-Message-State: AOJu0Yz1O/B5i7ymgbmSj+aOQbPMMZ5yt8P/flARHhfppoFwRfaiiqrz
+	Np49OI5H/7KPqdwqNGRl3bh1Hr9RMFC6HdXtNLLD2fTIlxcswARAnvdlsT7ThrQ=
+X-Google-Smtp-Source: AGHT+IGxx+GedmwUCdxuIKlFvLE8lRy7drxxAwBYA7ggKBPqJarKQdP2QW/N98aL0bmQa5x+WXSeOw==
+X-Received: by 2002:ac2:4e0b:0:b0:52c:896c:c10f with SMTP id 2adb3069b0e04-52c896cc334mr4751992e87.53.1718135456111;
+        Tue, 11 Jun 2024 12:50:56 -0700 (PDT)
+Received: from WBEC325.dom.lan ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c7650b371sm5286737a12.76.2024.06.11.12.50.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 11 Jun 2024 12:50:55 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52bb423db88sm2216098e87.223.2024.06.11.12.50.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 12:50:55 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so65978871fa.3;
-        Tue, 11 Jun 2024 12:50:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXaOPdF/oqFBuLDEgyyeuqNIT/4PZsLTSDJeFHkSD+jG48lsmY4pmMw9wxMkW1AURNDS/32MuVOlH+qLN2DheYnaNlAUpkfOebPIMUEYVF3sBHc78QjcW5frg3budzihFHI6Gpm5tiV0Q==
-X-Received: by 2002:a2e:b889:0:b0:2eb:f8ae:1cb0 with SMTP id
- 38308e7fff4ca-2ebf8ae1ce0mr12433271fa.37.1718135454888; Tue, 11 Jun 2024
- 12:50:54 -0700 (PDT)
+From: Pawel Dembicki <paweldembicki@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Pawel Dembicki <paweldembicki@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com,
+	Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 00/12] net: dsa: vsc73xx: Implement VLAN operations
+Date: Tue, 11 Jun 2024 21:49:52 +0200
+Message-Id: <20240611195007.486919-1-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wiK75SY+r3W5hx+Tt_bjhcSKPLdji-Zf_8HjikRPbn9wg@mail.gmail.com>
- <20240610071049.933142-1-geert@linux-m68k.org> <46c5a25-ea8c-4a1-5241-df88a9848a9@linux-m68k.org>
- <20240611173739.GB545417@ravnborg.org>
-In-Reply-To: <20240611173739.GB545417@ravnborg.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 11 Jun 2024 21:50:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW__Uak2qkUAJc1b1eK1nOzGy=+cneRrtmj_QgBTanK-Q@mail.gmail.com>
-Message-ID: <CAMuHMdW__Uak2qkUAJc1b1eK1nOzGy=+cneRrtmj_QgBTanK-Q@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v6.10-rc3
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Andreas Larsson <andreas@gaisler.com>, linux-kernel@vger.kernel.org, 
-	sparclinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Sam,
+This patch series is a result of splitting a larger patch series [0],
+where some parts was merged before.
 
-On Tue, Jun 11, 2024 at 7:37=E2=80=AFPM Sam Ravnborg <sam@ravnborg.org> wro=
-te:
-> On Mon, Jun 10, 2024 at 09:28:25AM +0200, Geert Uytterhoeven wrote:
-> > On Mon, 10 Jun 2024, Geert Uytterhoeven wrote:
-> >   + {standard input}: Error: pcrel too far: 1095, 1074, 1022, 1020, 102=
-1, 1096, 1126 =3D> 1074, 1021, 1255, 1096, 1095, 1020, 1022, 1126, 1254
-> >   + {standard input}: Error: unknown pseudo-op: `.al':  =3D> 1270
-> Hmm, strange..
+The first patch implements port state configuration, which is required
+for bridge functionality. STP frames are not forwarded at this moment.
+BPDU frames are only forwarded from/to the PI/SI interface.
+For more information, see chapter 2.7.1 (CPU Forwarding) in the
+datasheet.
 
-Just in case you missed that: these are not SPARC build issues,
-but SH build issues (gcc ICE).
+Patches 2, 7-9 and 11 provide a basic implementation of tag_8021q
+functionality with QinQ support, without VLAN filtering in
+the bridge and simple VLAN awareness in VLAN filtering mode.
 
-Gr{oetje,eeting}s,
+Patches 3-6 came from Vladimir Oltean. They prepare for making
+tag8021q more common. VSC73XX uses very similar tag recognition,
+and some code from tag_sja1105 could be moved to tag_8021q for
+common use.
 
-                        Geert
+Patch 10 is preparation for use tag_8021q bridge functions as generic
+implementation of the 'ds->ops->port_bridge_*()'.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Patch 12 is required to avoid problem with learning on standalone ports.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+[0] https://patchwork.kernel.org/project/netdevbpf/list/?series=841034&state=%2A&archive=both
+
+Pawel Dembicki (8):
+  net: dsa: vsc73xx: add port_stp_state_set function
+  net: dsa: vsc73xx: Add vlan filtering
+  net: dsa: vsc73xx: introduce tag 8021q for vsc73xx
+  net: dsa: vsc73xx: Implement the tag_8021q VLAN operations
+  net: dsa: Define max num of bridges in tag8021q implementation
+  net: dsa: prepare 'dsa_tag_8021q_bridge_join' for standalone use
+  net: dsa: vsc73xx: Add bridge support
+  net: dsa: vsc73xx: start treating the BR_LEARNING flag
+
+Vladimir Oltean (4):
+  net: dsa: tag_sja1105: absorb logic for not overwriting precise info
+    into dsa_8021q_rcv()
+  net: dsa: tag_sja1105: absorb entire sja1105_vlan_rcv() into
+    dsa_8021q_rcv()
+  net: dsa: tag_sja1105: prefer precise source port info on SJA1110 too
+  net: dsa: tag_sja1105: refactor skb->dev assignment to
+    dsa_tag_8021q_find_user()
+
+ drivers/net/dsa/Kconfig                |   2 +-
+ drivers/net/dsa/sja1105/sja1105_main.c |   8 +-
+ drivers/net/dsa/vitesse-vsc73xx-core.c | 668 ++++++++++++++++++++++++-
+ drivers/net/dsa/vitesse-vsc73xx.h      |  42 ++
+ include/linux/dsa/8021q.h              |   8 +-
+ include/net/dsa.h                      |   2 +
+ net/dsa/Kconfig                        |   6 +
+ net/dsa/Makefile                       |   1 +
+ net/dsa/tag_8021q.c                    |  86 +++-
+ net/dsa/tag_8021q.h                    |   7 +-
+ net/dsa/tag_ocelot_8021q.c             |   2 +-
+ net/dsa/tag_sja1105.c                  |  72 +--
+ net/dsa/tag_vsc73xx_8021q.c            |  68 +++
+ 13 files changed, 874 insertions(+), 98 deletions(-)
+ create mode 100644 net/dsa/tag_vsc73xx_8021q.c
+
+-- 
+2.34.1
+
