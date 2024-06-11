@@ -1,163 +1,83 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6577D17D8A3;
-	Tue, 11 Jun 2024 13:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD5517D357
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718113203; cv=none; b=qZSvsdkDU3WWtFEKGYMYx+Rkeu25uWH77HAlX/QO8b9XWn+vCTvejQOcsrbkbcSyyIQqhYhrsYvJvkQcH+klsU8tcGypMflVaJLFKzsSf/ZXW+wL/6ny2pvVaFegTGM2ebmMGoJRqB/XWq6tpP+ZLsycxH+Q2I0s2dw0xTlwMNM=
+	t=1718113226; cv=none; b=WFchS8/uqGB1oKz1FFQYYYpB4sUb43I7sKeCJaXO4RcUbU0bz+3E4cH4CTY+3lJqUKyCqh+Z8WL5ToT9b5YcV27cGOxpHVF5sb2Nt/Pcs+Mof/Tss/F2GL5dvFYOFtvR5dnaO4NdOTu99TaDtVFk5z1ZJMcPOejGbM7tHpeFJj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718113203; c=relaxed/simple;
-	bh=vDGZgQ7d5Q+m3KmN0tfKVcSqnjvHGILwo3+BDQbQtZI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F5hG2UGsSiOaK9wYJkPmM4hKhquQiBwyidcoj0+Ubc7mHOpHYjjuD5UFNLJaGaOfuhIyA/yQaZcfd3lr3ZtdCEK236QrpHs266FsL50ffZoAVjrdkbPy+sUQe35cJhkanjiQ+SMGgadV58Ag3Qrv2BGL+CcZSp89cUL0VmqsyGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ETJtlXqv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ETJtlXqv"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B6wK0R001684;
-	Tue, 11 Jun 2024 13:39:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pcy6dURWO36Am+KzTv+fEfO8f+AJqgoWh9CdkLC0kxs=; b=ETJtlXqvg9lr2edw
-	P8uF8oTcAsFdgqiX35pVAxskVwm50LqEtJWhi1tVt6wARUmipozuOLVNj7TowNPO
-	+gO3mvp/SMC6rdRrBe7FibtJkUWroNrQVK2KXJ4+wbERNoAr6JMrw5TEe5EYWdu9
-	tdDnDL7FDaZo9Y/QrBjUpDIxXF/XLc6fWZ+b076dga7yLKwCtIRJG7ilfbWsZ+OU
-	GcRpijdkCT/mTI9XhCfDwqXBvPJHeFCektz6OZ1qt53Ehu+hAdKJ/tcpwta5x4/i
-	KlE8QwXGvsnvmsTzIfp6SKWY6+xX7A8yGy/CpAF8UVQ4pLkt35iFROZ9Xq94LI30
-	oMn3tg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yphsas1n2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 13:39:58 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45BDdwWH001470
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 13:39:58 GMT
-Received: from hu-ajipan-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 11 Jun 2024 06:39:52 -0700
-From: Ajit Pandey <quic_ajipan@quicinc.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Vladimir Zapolskiy
-	<vladimir.zapolskiy@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Taniya Das
-	<quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Satya Priya Kakitapalli
-	<quic_skakitap@quicinc.com>,
-        Ajit Pandey <quic_ajipan@quicinc.com>
-Subject: [PATCH V4 8/8] arm64: dts: qcom: sm4450: add camera, display and gpu clock controller
-Date: Tue, 11 Jun 2024 19:07:52 +0530
-Message-ID: <20240611133752.2192401-9-quic_ajipan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240611133752.2192401-1-quic_ajipan@quicinc.com>
-References: <20240611133752.2192401-1-quic_ajipan@quicinc.com>
+	s=arc-20240116; t=1718113226; c=relaxed/simple;
+	bh=Q+spwWSJC9x9li46TIO+VakRkC5shkNw/e/ETJaivJQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=e/LQzuKkNn7VMn+UYS5LirDRK7Rjq0YCiq6qHYIO00+S//IQuQGGQtjI12MyBjRsIcftmzDBEKiRCslvyFRirCq/cIj9Mf/f81kxLFxcTmf25k65mINe/w9HuL5qt7U/q7DUch0onfTxIxVIOUVt/4GEDVtViOTFraBKEE2hJgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7eb5cbe815dso496578739f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 06:40:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718113224; x=1718718024;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=40gVOiowLJOudabCaHorAkpoqJRBZmmZN7J4HzK5TFQ=;
+        b=U+uULZ1595u4txAOZgKsuD6EoZBn/6Fz/QGoBwGBHiAU/V9KL9bzQCZy+DZvV+2igU
+         Lyctwi0OdJ3+SrNncGsMzE27Hrj3fufJ7dnRhZ+lkiphKpl/FdqT5KthbZMVYuk7JVHv
+         pQRmcqwFSZEYdbH82iYB9vYv3MjG/Iw5y///uTIHzVzQi2zNxM4PyQvEXflfQA2UYylw
+         G3FhHvOHV9u856kM6guQAea7UX0IQoTRP21gazn1FAoc4Lwo6HhyrIWYGwwtfLv6x0yH
+         yEnqGutxHWb1iUFxoess28FeLmj/XL5vWhRCYQ60v8OfHi6B/fGHFfvDJktR4B9KMuSq
+         +yqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXgTMpZ3AjuRDC2XcJY4IVZaj3DJD/u44crj7bnAazlJ6DxIXjnUEozmMCTsvYbrydJLOQU7YkQR70+cdQCepLKNzfPfuMNddxCgIJ1
+X-Gm-Message-State: AOJu0Yz7DddOqCanlJDa3UqaA5T7B8Uj+DIjQv2bE+4IzQb2ImK9guL+
+	pprjBqB49o2gQi72G7JVa5EpnhnnXiizvgiQ+lOOG7bNKLUgl2oz+O5aJLABHv0ZC6NLB01Jzun
+	kJafi9Lenpu6JM/NBZUcWZ4yDFtKp5OHf5UOckThXCRrQunse3Lr3yDo=
+X-Google-Smtp-Source: AGHT+IH8SMgjq5IU+Dt5xKArR1nGq1tgA3n51pYNKcPNEzR4RzydNrCHnJiZr+7XwrIrgYWSylZDQhm/bO5m+r1JqVqh6NnTBx51
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: FKZeT07I3VVxaplddcgpC83T0QELm1Ba
-X-Proofpoint-GUID: FKZeT07I3VVxaplddcgpC83T0QELm1Ba
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-11_07,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- adultscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- lowpriorityscore=0 clxscore=1015 phishscore=0 mlxscore=0
- priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2406110099
+X-Received: by 2002:a05:6602:2ccf:b0:7eb:a74b:8895 with SMTP id
+ ca18e2360f4ac-7eba74b9f08mr17226239f.4.1718113224328; Tue, 11 Jun 2024
+ 06:40:24 -0700 (PDT)
+Date: Tue, 11 Jun 2024 06:40:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006b9744061a9d68ce@google.com>
+Subject: [syzbot] Monthly hams report (Jun 2024)
+From: syzbot <syzbot+list7d9abc7f0e8798d518c5@syzkaller.appspotmail.com>
+To: linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add device node for camera, display and graphics clock controller on
-Qualcomm SM4450 platform.
+Hello hams maintainers/developers,
 
-Signed-off-by: Ajit Pandey <quic_ajipan@quicinc.com>
+This is a 31-day syzbot report for the hams subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/hams
+
+During the period, 1 new issues were detected and 1 were fixed.
+In total, 9 issues are still open and 34 have been fixed so far.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 162     Yes   KMSAN: uninit-value in ax25cmp (3)
+                  https://syzkaller.appspot.com/bug?extid=74161d266475935e9c5d
+<2> 25      No    WARNING: refcount bug in ax25_release (3)
+                  https://syzkaller.appspot.com/bug?extid=33841dc6aa3e1d86b78a
+<3> 5       No    KASAN: slab-use-after-free Read in rose_get_neigh
+                  https://syzkaller.appspot.com/bug?extid=e04e2c007ba2c80476cb
+
 ---
- arch/arm64/boot/dts/qcom/sm4450.dtsi | 38 ++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm4450.dtsi b/arch/arm64/boot/dts/qcom/sm4450.dtsi
-index 9c9919e78fbd..1e05cd00b635 100644
---- a/arch/arm64/boot/dts/qcom/sm4450.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm4450.dtsi
-@@ -4,7 +4,10 @@
-  */
- 
- #include <dt-bindings/clock/qcom,rpmh.h>
-+#include <dt-bindings/clock/qcom,sm4450-camcc.h>
-+#include <dt-bindings/clock/qcom,sm4450-dispcc.h>
- #include <dt-bindings/clock/qcom,sm4450-gcc.h>
-+#include <dt-bindings/clock/qcom,sm4450-gpucc.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-@@ -422,6 +425,41 @@ tcsr_mutex: hwlock@1f40000 {
- 			#hwlock-cells = <1>;
- 		};
- 
-+		gpucc: clock-controller@3d90000 {
-+			compatible = "qcom,sm4450-gpucc";
-+			reg = <0x0 0x03d90000 0x0 0xa000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
-+				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		camcc: clock-controller@ade0000 {
-+			compatible = "qcom,sm4450-camcc";
-+			reg = <0x0 0x0ade0000 0x0 0x20000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_CAMERA_AHB_CLK>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		dispcc: clock-controller@af00000 {
-+			compatible = "qcom,sm4450-dispcc";
-+			reg = <0x0 0x0af00000 0x0 0x20000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK_A>,
-+				 <&gcc GCC_DISP_AHB_CLK>,
-+				 <&sleep_clk>,
-+				 <0>,
-+				 <0>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sm4450-pdc", "qcom,pdc";
- 			reg = <0 0x0b220000 0 0x30000>, <0 0x174000f0 0 0x64>;
--- 
-2.25.1
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
