@@ -1,106 +1,70 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59321BF2A
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98683172BB4
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718098227; cv=none; b=Xdf5ApI+po3QnvpNVsMzqcGdoNH5vbjZPWWtdkO3W/T1PHPKbcpcoMvZH05x79xfIz9cTi0ZHtP05Fgn3jRwxUoH6vKxGcO0pwJDpsVc7MBSdL4jpJwe/D3IJrg55hAHct7iUwkzaV5lCR9kZvWVxgYiScLil1xoKzh1OYqAa7s=
+	t=1718098296; cv=none; b=EHJY/UdivLj5cayjPMUxG6WMtPiDaZcD/g38GQNns5ngecrdw2WGQ+0ykAEUhGlAN5YllnXGanQibQM+cZIzE2OiRbtMOG73wdhlqPzNEsP6vxLfpYzQyMguTPPpgOYJVaob1vMgDJ9hh/2luTyw4pxZS4u7ieFg06M8Vr3+a14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718098227; c=relaxed/simple;
-	bh=nXEsdQt4QyeAtiAdCClsdUMroXo5h2/rqQshG483cYk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b4goXo4yR+RCLYfE00NaFlFCrzXTqOwevC9BAE15sfqJG/SO9+O+Oz47FAXfarohB4kgf8zwZ4wQjd57U7rjIcvqcEBNTaD3aoUfFWx61e1BCYBWGY9YyrZDsUPlH7XJCs9xX/5TrQmZg6XtGkOLeK7YMXG3Yrx46eu5JoI6tTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VVoEClD5; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VVoEClD5"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ebd95f136bso8696061fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 02:30:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718098224; x=1718703024; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=H1NZkrJnLAv7l2APwu+NKyronseBdr2OqFI4XMkfgYg=;
-        b=VVoEClD5FT9pFUKU6YMTo37/3hzDfOsJG6Smc14E5UtqtCnguuppo50FHVhWiVxjDv
-         Vl5EB1L9tx53DHITzP06HNfR2vLkdMcLv3zq3TB0ujiCKCKrMx2kjo91VRVSz7g/jGoc
-         XRg2UOpcXCpj4rXXe5iD9+wMgl6BInKa5hBmDq1jn/0fEhhjSK6V2lAo20m/2O3+kR+A
-         JqiqkH9WgsCQruXh1PXdPI/Odq+rZIxB4UN1n8FB+QBgaVI7/fFUqgDRO+1yqa9jOCD1
-         G+V/6NVcTaJX6reN3g7j8JWHr4bficlrVh5R+qRcqjzcRZ2cU0S411xTGRd9wM//PB/K
-         K2Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718098224; x=1718703024;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H1NZkrJnLAv7l2APwu+NKyronseBdr2OqFI4XMkfgYg=;
-        b=UqrxmTts58lLPYVC3ELRJfVsi2LWQXRUaY70Xv4eVbHaK+Zmp+tJNlZpgFjeQoWuQK
-         xqLg8gshhL0xT1suCr2MIUubosGSxrP4o7BttftpjIORg9OGIMZKWhCGFwAKbJ8865Im
-         ZsoJlTY8SebE2/384GbIPVXQyCDr8Cb6NlSNrxs87JP8HbZTFEwTb7ErzQfdhuFtQ3r7
-         FcCSKfKkwdodcByvyb+zNVxhtT1Fu+N8cfo6GVohsNZjSGLrS8tF9xj6qjMwZnw5yHop
-         FP1anVydpqJvzGzGjZenR8FjZozG8aPnAlGP0ArxEwQ30gGWxWOr6XZ4sj1JZpobYK0X
-         307w==
-X-Forwarded-Encrypted: i=1; AJvYcCUQuzU5ZUXQdHtUoyH0qMp/5n4brWbnGNqrCvMK+GnIDidzCAwYumyXQWFTbM0rJobgNzUXrJ72QWuOCBoLs1YvJPwXK8Wyb6b813y5
-X-Gm-Message-State: AOJu0YxRunVCnKKZf/VOwvzceU9qK1AePKfHvIVfcuWE/kB9k5QEPHuz
-	JCm4Fyqupgug65fT9pY4FkEsG9QTAq5l+mJAr+og2qveGmbzsBANlobBqg86ak8rywXL/vAKnzJ
-	aDI+zPbwmDZyqZCft+lwV5OJFIvqk+1RT2UoG
-X-Google-Smtp-Source: AGHT+IH4tkEZxz4vqD6nVOICFGZhCKhY6mHQQxJBjR0fKsf1eo2l0BF0rZJ2jKW/7+AvD07sUJzvhowhHTTwAchfwxU=
-X-Received: by 2002:a2e:8752:0:b0:2eb:120c:1a59 with SMTP id
- 38308e7fff4ca-2eb120c1b22mr57720031fa.16.1718098223559; Tue, 11 Jun 2024
- 02:30:23 -0700 (PDT)
+	s=arc-20240116; t=1718098296; c=relaxed/simple;
+	bh=gPE9ecK322dZPly/Tq/DdkWYuVy7hgxwgVaWhEWbTxk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lmmj1fS/y/5+PeA2qmm+qOTwtd0BmD6SN6C/FrxlKcFdTOW+9cPqKw9vlYtM88kL42Tv/JtrPO6RpTDI8+ARhD0ZLHXdjhAO54UN3Gp6yKjbfTuZHEZFIPXEWnJb37NsfDzk8sfcJD4efjAUG44dEC4sSda4ri8B5ptYw7xCDok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-25-87.elisa-laajakaista.fi [88.113.25.87])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 61bcbe87-27d5-11ef-80ea-005056bdfda7;
+	Tue, 11 Jun 2024 12:31:31 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Jacky Huang <ychuang3@nuvoton.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Tomer Maimon <tmaimon77@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	openbmc@lists.ozlabs.org
+Cc: Shan-Chun Hung <schung@nuvoton.com>,
+	Avi Fishman <avifishman70@gmail.com>,
+	Tali Perry <tali.perry1@gmail.com>,
+	Patrick Venture <venture@google.com>,
+	Nancy Yuen <yuenn@google.com>,
+	Benjamin Fair <benjaminfair@google.com>,
+	=?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH v1 0/4] pinctrl: nuvoton: A few cleanups
+Date: Tue, 11 Jun 2024 12:30:21 +0300
+Message-ID: <20240611093127.90210-1-andy.shevchenko@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1718092070.git.dvyukov@google.com> <bc0cf790b4839c5e38e2fafc64271f620568a39e.1718092070.git.dvyukov@google.com>
-In-Reply-To: <bc0cf790b4839c5e38e2fafc64271f620568a39e.1718092070.git.dvyukov@google.com>
-From: Marco Elver <elver@google.com>
-Date: Tue, 11 Jun 2024 11:29:41 +0200
-Message-ID: <CANpmjNOyu-76um2psqoeQQJZDiDhwhMX5Ht6d+9k0h7LOG1uBQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] module: Fix KCOV-ignored file name
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller@googlegroups.com, glider@google.com, nogikh@google.com, 
-	tarasmadan@google.com, Aaron Tomlin <atomlin@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Jun 2024 at 09:50, Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> Module.c was renamed to main.c, but the Makefile directive
-> was copy-pasted verbatim with the old file name.
-> Fix up the file name.
->
-> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> Reviewed-by: Alexander Potapenko <glider@google.com>
-> Fixes: cfc1d277891e ("module: Move all into module/")
-> Cc: Aaron Tomlin <atomlin@redhat.com>
-> Cc: x86@kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: syzkaller@googlegroups.com
+Convert Nuvoton drivers to use pin control provided data types
+and more of device property APIs.
 
-Reviewed-by: Marco Elver <elver@google.com>
+Not tested.
 
-> ---
->  kernel/module/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/module/Makefile b/kernel/module/Makefile
-> index a10b2b9a6fdf..50ffcc413b54 100644
-> --- a/kernel/module/Makefile
-> +++ b/kernel/module/Makefile
-> @@ -5,7 +5,7 @@
->
->  # These are called from save_stack_trace() on slub debug path,
->  # and produce insane amounts of uninteresting coverage.
-> -KCOV_INSTRUMENT_module.o := n
-> +KCOV_INSTRUMENT_main.o := n
->
->  obj-y += main.o
->  obj-y += strict_rwx.o
-> --
-> 2.45.2.505.gda0bf45e8d-goog
->
+Andy Shevchenko (4):
+  pinctrl: nuvoton: Convert to use struct pingroup and
+    PINCTRL_PINGROUP()
+  pinctrl: nuvoton: Make use of struct pinfunction and
+    PINCTRL_PINFUNCTION()
+  pinctrl: nuvoton: Convert to use struct group_desc
+  pinctrl: nuvoton: Reduce use of OF-specific APIs
+
+ drivers/pinctrl/nuvoton/pinctrl-ma35.c    | 116 ++++++++++------------
+ drivers/pinctrl/nuvoton/pinctrl-ma35d1.c  |   1 -
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c |  43 ++------
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c |  29 ++----
+ drivers/pinctrl/nuvoton/pinctrl-wpcm450.c |  11 +-
+ 5 files changed, 71 insertions(+), 129 deletions(-)
+
+-- 
+2.45.2
+
