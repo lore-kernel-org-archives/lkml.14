@@ -1,90 +1,66 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF4617D34F;
-	Tue, 11 Jun 2024 13:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B0217CA06;
+	Tue, 11 Jun 2024 13:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718112552; cv=none; b=O/Ru4NjVbBM9tvJkopGDFVJtRnv+3arDS/8BJ9UnXF78WXUnnRvVYEs8v4TwitgN37EvlSdnDLeljQlz9he/RKsaCRoOwDlQ87KvRJuxA/NAS/xkG9ldepnOGkXRSO7YjyyVUHumcxySWWsgAvaEiu+NC7X2Q/glstNC/hIko6Y=
+	t=1718112565; cv=none; b=tH3Civ+jD0c3lTxzhbJuCK5B20IFeAzjgGGpo0xT47G74N59pfjMz/nW/h2YEaIiZuajvznqsHDM1rIpTWVeVxnCTBV0wXZUjS0I+pH7lba6cWIqEdWBw9M8oAyMiIQTaF0kah+9fGI4BrOGfAq/om0tM5OO2vx6hHIPi71b8V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718112552; c=relaxed/simple;
-	bh=S8kq1YKPY2YCYXE468OBoSzyuhbV4hblKCD/W3a2KBw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UpBy1Py3X/JkQ7rglYTjTLcMsnB3aaJ0zrcmyoptbxnqWa+xszAb2hvBmEkzyQcs9SJSK6aVSwnvGBd9rGTfJ5lOC2mAE12RNk8IMDcuEVPoUEfhf8kUf30QV8+Nc7RR2bs14r6A441T0kIIglKSCCGVoXWAAojCq2mYxSr9ItI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=l4M1o7OC; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1718112565; c=relaxed/simple;
+	bh=InuOlaVNE1oo9SB9Gz9Wqxu487yf8TriEQHN/x2DggE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q21mJ7aUqSiNjApAXLB0YQXv+Qkue/Tpvhq9terGaEW65dewaVU8C3MZs7NGEl8gSPw/n+0ZGV/BYJesNmSEFJixPN0q9qw9zqQRZXi0T0wGD7ZLQl07X+9C+LmS9geRurGE7FE/ihBSjEr9SQcl+GYvnNKW40uQj4hndSlc/C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Eshwi2Kz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="l4M1o7OC"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 4D6D188660;
-	Tue, 11 Jun 2024 15:29:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1718112542;
-	bh=7LztJLOQjw+XAg+XEIr7kZCsERJxxOYihnXImFPkkvU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l4M1o7OCYl/dvkVYQ/gVTUxO5H8WmdwW6wYCO18/FhCWi6iOhr24pSYUn+k8qvQP8
-	 fHesy9waWPJOAJPEAZWHRCr883+AT4Zj++F45dWOMtmtIAX2aITK76JXYrq/AHJaIy
-	 2kOr5BPz3dIVZ2n88vorYGBcXlaaZX+vVTGJ5a1Nqvax4dEs1oNuymGg0bPuauQCbU
-	 JSKIl4GVx7MEF7Z2B2tDyJfr07QITjIwMCTED7iiZJ8wo0IeafezCZ9nEPrj3AX68n
-	 OLepqilR0f5rtmQDJ4Yaz7ZYFRm8i1w5V14xT/6z+lq/Fph9cQrrVLydPk3n/pWXWu
-	 laQYJ2zEWl6Tw==
-Message-ID: <ee101ca5-4444-4610-9473-1a725a542c91@denx.de>
-Date: Tue, 11 Jun 2024 15:07:52 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Eshwi2Kz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87102C2BD10;
+	Tue, 11 Jun 2024 13:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718112565;
+	bh=InuOlaVNE1oo9SB9Gz9Wqxu487yf8TriEQHN/x2DggE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Eshwi2KzINlHj58yYBOiu64/bM/6BwportMUM+oe9Ft63a3NoJlqO5wvMKaPjkS0s
+	 4tv27t7IhFIdtAwsfzVEE1gkckwnKhlXnsLyzaOqht6TkViomuwUAgDVJp/+E7IR0i
+	 1yGB503D3ITqm290pHeRAB79pcKhkf8Er0FBnzQk=
+Date: Tue, 11 Jun 2024 15:29:22 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, rafael@kernel.org, mcgrof@kernel.org,
+	russell.h.weight@intel.com, ojeda@kernel.org, alex.gaynor@gmail.com,
+	wedsonaf@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@samsung.com,
+	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com,
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] rust: add abstraction for struct device
+Message-ID: <2024061136-unbridle-confirm-c653@gregkh>
+References: <20240610180318.72152-1-dakr@redhat.com>
+ <20240610180318.72152-2-dakr@redhat.com>
+ <ZmdID8AlXtoxUfC1@boqun-archlinux>
+ <ZmhPW9yq7y6jbmIg@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next,PATCH v7 7/8] net: stmmac: dwmac-stm32: Mask support
- for PMCR configuration
-To: Christophe Roullier <christophe.roullier@foss.st.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Richard Cochran <richardcochran@gmail.com>, Jose Abreu
- <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240611083606.733453-1-christophe.roullier@foss.st.com>
- <20240611083606.733453-8-christophe.roullier@foss.st.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240611083606.733453-8-christophe.roullier@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZmhPW9yq7y6jbmIg@pollux>
 
-On 6/11/24 10:36 AM, Christophe Roullier wrote:
+On Tue, Jun 11, 2024 at 03:21:31PM +0200, Danilo Krummrich wrote:
+> ...hence, I agree we should indeed add to the #Invariants and #Safety section
+> that `->release` must be callable  from any thread.
+> 
+> However, this is just theory, do we actually have cases where `device::release`
+> is not allowed to be called from any thread? If so, this would be very confusing
+> for a reference counted type from a design point of view...
 
-[...]
+What do you mean exactly "by any thread"?  Maybe not from interrupt
+context, but any other normal thread (i.e. that you can sleep in), it
+should be fine to call release() in.
 
->   static void stm32_dwmac_clk_disable(struct stm32_dwmac *dwmac, bool suspend)
-> @@ -348,8 +352,15 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
->   		return PTR_ERR(dwmac->regmap);
->   
->   	err = of_property_read_u32_index(np, "st,syscon", 1, &dwmac->mode_reg);
-> -	if (err)
-> +	if (err) {
->   		dev_err(dev, "Can't get sysconfig mode offset (%d)\n", err);
-> +		return err;
-> +	}
-> +
-> +	dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
-> +	err = of_property_read_u32_index(np, "st,syscon", 2, &dwmac->mode_mask);
-> +	if (err)
-> +		dev_dbg(dev, "Warning sysconfig register mask not set\n");
+thanks,
 
-My comment on V6 was not addressed I think ?
+greg k-h
