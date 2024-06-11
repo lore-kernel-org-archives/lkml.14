@@ -1,220 +1,240 @@
-Received: from 10.mo591.mail-out.ovh.net (10.mo591.mail-out.ovh.net [46.105.55.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72B617DE0F
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.105.55.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF83417D363;
+	Tue, 11 Jun 2024 13:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718113176; cv=none; b=J+OieF9rGtRxlONHkqJ7ZVDOWh/A/Cookna9jXxCcldUCStpr1ecW3wHfiUa5clxqB/FGGqC1eo3LtcrvlyFT6x6HeXBuUpL3cnwaAV2Ac1pYRcVI4jyAkaNHxpKN7Bj5Wa2mly1vGBQcqKAEqc2WGDsOkPDYmrXsUUeWY2DAaM=
+	t=1718113180; cv=none; b=jBLneT4BOhUqfD/hm2EY8fuD1pJIn1okD1tuRNx+cMIkq2y3emptk6k6GFNl4xmvcxTYc/Ix7nVzw+tTIbiEbeSD+3zchsVoPKpSs/G9d+836Prpl9v9XXiEVCXRa09cs8tHitkSKlpIavEa0d1HqCBBDXJkowe2JH5IKiq1F08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718113176; c=relaxed/simple;
-	bh=1Yg1SrEZkzsLZuXedN93roDqOCgT2OVs9TDKSiPkt7o=;
-	h=Date:Message-ID:From:To:Content-type:Subject; b=r5HyXsxjFTUfVZ/qzum9P9FavMqn/Y3TedLHs6XJbE7wAKVUzdaAiiqCDaRX7d6KufmMJfUDZt8zwszccboUVe8VMtOUOiMqZLCx12jazEyi2rcJpsm+g2DlGZv+xzD32vXyFe6VR4VcBul1BXz6QlkWoI/69pa/J/DXueGNvqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=institut-mingmen.fr; spf=pass smtp.mailfrom=institut-mingmen.fr; arc=none smtp.client-ip=46.105.55.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=institut-mingmen.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=institut-mingmen.fr
-Received: from mx1.ovh.net (unknown [10.110.168.182])
-	by mo591.mail-out.ovh.net (Postfix) with SMTP id 4Vz83w5fQPz16L5
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:03:08 +0000 (UTC)
-Received: from localhost (HELO queueml) (127.0.0.1)
-	by localhost with SMTP; 11 Jun 2024 15:03:08 +0200
-Mailing-List: contact contact29-help@institut-mingmen.fr; run by ezmlm
-Date: 11 Jun 2024 13:03:08 -0000
-Message-ID: <1718110988.32038.ezmlm-warn@institut-mingmen.fr>
-From: contact29-help@institut-mingmen.fr
-To: linux-kernel@vger.kernel.org
-Content-type: text/plain; charset=utf-8
-Subject: ezmlm warning
-X-Ovh-Tracer-Id: 5407697256108911067
-X-VR-SPAMSTATE: BOUNCE
-X-VR-SPAMSCORE: 10114
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfeduvddgheekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucfpohhtihhfihgtrghtihhonhculddutdduudegmdenucfjughrpeffkffhvfgtufesthdtredttddtjeenucfhrhhomheptghonhhtrggtthdvledqhhgvlhhpsehinhhsthhithhuthdqmhhinhhgmhgvnhdrfhhrnecuggftrfgrthhtvghrnhepheehlefgudehgfdufedvvedtheegleejveekffelueefueehleevuddvgedvtdfhnecuffhomhgrihhnpehovhhhrdhnvghtpdhmohhnkhgvhigslhgruggvrdhnvghtpdhmohhnkhgvhigslhgruggvrdhnvghtrdhimhenucfkphepuddvjedrtddrtddrudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomheptghonhhtrggtthdvledqrhgvthhurhhnqdifrghrnhdqudejudekuddutdelkeekrdgrhhhfohhokhgthhgufhhmjhgsjhhhughkjhgvvgdqlhhinhhugidqkhgvrhhnvghlpehvghgvrhdrkhgvrhhnvghlrdhorhhgsehinhhsthhithhuthdqmhhinhhgmhgvnhdrfhhrpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehledupdhmohguvgepshhmthhpohhuth
+	s=arc-20240116; t=1718113180; c=relaxed/simple;
+	bh=Tn9aGOOYb+LH+bFDSFJ3gb5u4+83blw2N03mcxJkcPo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tCtdHD9c8EYgRwb+XDB2EPMEXdzuZ1i/iJmycKivwFSUvvHgGkr9Vn6Rm6hiOarznTdvQYJywB17s6r0TmqcWSDGa5DhrYpCyACgVE30CJcz+4/SfyUIWgZxrdqLm2VW+kirZvSjnbj/lC7SkhRLPCA5TZoi5XfohKnT3u1q37A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9V0wJQ0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9V0wJQ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61911C32789;
+	Tue, 11 Jun 2024 13:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718113180;
+	bh=Tn9aGOOYb+LH+bFDSFJ3gb5u4+83blw2N03mcxJkcPo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=d9V0wJQ0TR4PWiyRJB7suPif/f/9P8jN1s2raC2Yyt/25BVEXZHt3NFTRbAqyV7Kj
+	 UshYLZNhNX7CfT8hSjiHzqKjEISQSgFlX0lloEC6qxlMI9dL8wZIiGeNzQsK8E2mxp
+	 W4rou+XM6DRmGS9lDZCeid961euyOKV0GBsYu8BA/4areCsiGjtAuj4f7KIQRbpyrt
+	 l8yPAI8t25NqyFkyOllFI6O++CFoI7p3yVmboF7mPaCj6K+21YmRJuzr4zDGiT0K4R
+	 FsS3BQdY3pdT8OuGmhkEoryuxLnY62cyzXv6MsTxNUkzIovaA0MyoSFMzuhd+Rier/
+	 s92BhHAKwuhRA==
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c9034860dso2007361e87.2;
+        Tue, 11 Jun 2024 06:39:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWKxN8xb9LVp/LCPe5QXcE0CrZCCKh4vZSh/nuKv2PUymb3/qww59I6jPpo36QP4ry7F24vKK5ZpW9uzfPogd3LojowawtRbhhSShPAKcMdLzmiKOcnThKVJhe2dFrWDrU+HTN+RQxpfdEfRMMDGCIHsznkwqDGRYHfHng4iPWzZlHEfO8=
+X-Gm-Message-State: AOJu0YwS2ZdRRTxcC0nKuNbMdzY2ViVOHwrgP71nsQK3HjZd60r+VNsV
+	MXc1CHaopLAt6AZGsOQeKkHqRZQfD9IYZ38mER5xAZVFpUcT6joAVO0vNyyWS8kYcTcJLWN8OBD
+	fEPterh5zVBj8YivsLJF7/QBwhA==
+X-Google-Smtp-Source: AGHT+IGFUiU6exeIzAEFH36DTSIP2uz/FoyVESFoi5eHT5vpw31YK47X/5GhyzpZlDYY7TRlOrRvzOT6Gll+o03Kb2w=
+X-Received: by 2002:a05:6512:3d23:b0:52c:868f:a28d with SMTP id
+ 2adb3069b0e04-52c868fa524mr5757868e87.50.1718113178740; Tue, 11 Jun 2024
+ 06:39:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-
-Bonjour ! Je suis le programme ezmlm. Je m'occupe de la liste
-de diffusion contact29@institut-mingmen.fr.
-
-Un certain nombre de messages provenant de la liste de diffusion
-contact29 n'ont pas pu vous etre remis correctement. En attachement, vous trouverez
-une copie du premier message de retour a l'envoyeur que j'ai recu.
-
-Si le message que vous lisez actuellement ne parvient pas non plus a
-destination, un dernier message vous sera envoye. Si celui-ci echoue aussi,
-votre adresse sera malheureusement retiree de la liste contact29.
-
-J'ai conserve une liste des messages de la liste de diffusion contact29 qui
-n'ont temporairement pas pu etre delivres a votre adresse.
-
-Voici les numeros des messages en question :
-   1
-
---- Ci-dessous se trouve une copie du message problematique qui m'est revenu :
-Return-Path: <>
-Received: from localhost (HELO queue) (127.0.0.1)
-	by localhost with SMTP; 5 Jun 2023 16:46:18 +0200
-Received: from unknown (HELO output48.mail.ovh.net) (192.168.13.27)
-  by 192.168.9.10 with AES256-GCM-SHA384 encrypted SMTP; 5 Jun 2023 16:46:18 +0200
-Received: from vr44.mail.ovh.net (unknown [10.101.8.44])
-	by out48.mail.ovh.net (Postfix) with ESMTP id 4QZbyf2gLzzTCWtXS
-	for <contact29-return-1-linux-kernel=vger.kernel.org@institut-mingmen.fr>; Mon,  5 Jun 2023 14:46:18 +0000 (UTC)
-Received: from in32.mail.ovh.net (unknown [10.101.4.32])
-	by vr44.mail.ovh.net (Postfix) with ESMTP id 4QZbyf0BCSz3Hywng
-	for <contact29-return-1-linux-kernel=vger.kernel.org@institut-mingmen.fr>; Mon,  5 Jun 2023 14:46:18 +0000 (UTC)
-Received-SPF: None (no SPF record) identity=no SPF record; client-ip=23.128.96.19; helo=lindbergh.monkeyblade.net; envelope-from=<>; receiver=contact29-return-1-linux-kernel=vger.kernel.org@institut-mingmen.fr 
-Authentication-Results: in32.mail.ovh.net; dkim=none; dkim-atps=neutral
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
-	by in32.mail.ovh.net (Postfix) with ESMTPS id 4QZbyd3YSRz2Dq2GF
-	for <contact29-return-1-linux-kernel=vger.kernel.org@institut-mingmen.fr>; Mon,  5 Jun 2023 14:46:17 +0000 (UTC)
-Received: by lindbergh.monkeyblade.net (Postfix)
-	id 1702FF7; Mon,  5 Jun 2023 07:46:09 -0700 (PDT)
-Date: Mon,  5 Jun 2023 07:46:09 -0700 (PDT)
-From: MAILER-DAEMON@lindbergh.monkeyblade.net (Mail Delivery System)
-Subject: Undelivered Mail Returned to Sender
-To: contact29-return-1-linux-kernel=vger.kernel.org@institut-mingmen.fr
-Auto-Submitted: auto-replied
 MIME-Version: 1.0
-Content-Type: multipart/report; report-type=delivery-status;
-	boundary="CC6E2FD.1685976369/lindbergh.monkeyblade.net"
-Message-Id: <20230605144609.1702FF7@lindbergh.monkeyblade.net>
-X-OVH-Remote: 23.128.96.19 (lindbergh.monkeyblade.net)
-X-Ovh-Tracer-Id: 17670154613071447430
-X-VR-SPAMSTATE: BOUNCE
-X-VR-SPAMSCORE: 10000
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvhedrfeelledgkeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucfpohhtihhfihgtrghtihhonhculddutddttddtmdenucfjughrpeffhffuvfggtgesphdttdertddtvdenucfhrhhomhepofetkffngfftqdfftefgoffqpfeslhhinhgusggvrhhghhdrmhhonhhkvgihsghlrgguvgdrnhgvthculdforghilhcuffgvlhhivhgvrhihucfuhihsthgvmhdmnecuggftrfgrthhtvghrnhephfevueetuddvteelhfehjedtveeufedvkeevkedvgedugedvvedujeeuheduuedvnecuffhomhgrihhnpehmohhnkhgvhigslhgruggvrdhnvghtrdhimhenucfkphepvdefrdduvdekrdeliedrudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdefrdduvdekrdeliedrudelpdhmrghilhhfrhhomhepoeeqpdhnsggprhgtphhtthhopedupdhrtghpthhtoheptghonhhtrggtthdvledqrhgvthhurhhnqdduqdhlihhnuhigqdhkvghrnhgvlhepvhhgvghrrdhkvghrnhgvlhdrohhrghesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhdpoffvtefjohhsthepvhhrgeegpdgukhhimhepphgrshhspdhrvghvkffrpehlihhnuggsvghrghhhrdhmohhnkhgvhigslhgruggvrdhnvght
-X-Ovh-Spam-Status: OK
-X-Ovh-Spam-Reason: vr: BOUNCE; dkim: disabled; spf: disabled
-X-Ovh-Message-Type: BOUNCE
+References: <20240606111611.371463-1-andreas@kemnade.info>
+In-Reply-To: <20240606111611.371463-1-andreas@kemnade.info>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 11 Jun 2024 07:39:25 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+9v0i-6xvPY6cvnJUSLV1d4irqcPv60p+KwC5sx7WDDg@mail.gmail.com>
+Message-ID: <CAL_Jsq+9v0i-6xvPY6cvnJUSLV1d4irqcPv60p+KwC5sx7WDDg@mail.gmail.com>
+Subject: Re: [PATCH v4] dt-bindings: regulator: twl-regulator: convert to yaml
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: lee@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is a MIME-encapsulated message.
+On Thu, Jun 6, 2024 at 5:16=E2=80=AFAM Andreas Kemnade <andreas@kemnade.inf=
+o> wrote:
+>
+> Convert the regulator bindings to yaml.
+>
+> Drop one twl5030 compatible due to no documentation on mfd side and no
+> users of the twl5030.
+>
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+> Changes in v4:
+> - remove a sentence in the commit message which only applies
+>   to v1 design
+> - add R-by
+>
+> Changes in v3:
+> - define regulator stuff in toplevel
+> - simplified regulator-inital-mode
+> - extended example to contain both regulator-initial-mode and
+>   retain-on-reset
+>
+> Changes in v2:
+> - add regulators directly to ti,twl.yaml
+> - less restrictions on regulator node name
+>
+>  .../devicetree/bindings/mfd/ti,twl.yaml       | 166 +++++++++++++++++-
+>  .../bindings/regulator/twl-regulator.txt      |  80 ---------
+>  2 files changed, 164 insertions(+), 82 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/twl-regul=
+ator.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/ti,twl.yaml b/Document=
+ation/devicetree/bindings/mfd/ti,twl.yaml
+> index c2357fecb56c..2cbdd238f48f 100644
+> --- a/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+> @@ -22,6 +22,32 @@ allOf:
+>            contains:
+>              const: ti,twl4030
+>      then:
+> +      patternProperties:
+> +        "^regulator-":
+> +          properties:
+> +            compatible:
+> +              enum:
+> +                - ti,twl4030-vaux1
+> +                - ti,twl4030-vaux2
+> +                - ti,twl4030-vaux3
+> +                - ti,twl4030-vaux4
+> +                - ti,twl4030-vmmc1
+> +                - ti,twl4030-vmmc2
+> +                - ti,twl4030-vpll1
+> +                - ti,twl4030-vpll2
+> +                - ti,twl4030-vsim
+> +                - ti,twl4030-vdac
+> +                - ti,twl4030-vintana2
+> +                - ti,twl4030-vio
+> +                - ti,twl4030-vdd1
+> +                - ti,twl4030-vdd2
+> +                - ti,twl4030-vintana1
+> +                - ti,twl4030-vintdig
+> +                - ti,twl4030-vusb1v5
+> +                - ti,twl4030-vusb1v8
+> +                - ti,twl4030-vusb3v1
+> +            ti,retain-on-reset: false
+> +
+>        properties:
+>          madc:
+>            type: object
+> @@ -50,13 +76,34 @@ allOf:
+>            properties:
+>              compatible:
+>                const: ti,twl4030-wdt
+> -
+>    - if:
+>        properties:
+>          compatible:
+>            contains:
+>              const: ti,twl6030
+>      then:
+> +      patternProperties:
+> +        "^regulator-":
+> +          properties:
+> +            compatible:
+> +              enum:
+> +                - ti,twl6030-vaux1
+> +                - ti,twl6030-vaux2
+> +                - ti,twl6030-vaux3
+> +                - ti,twl6030-vmmc
+> +                - ti,twl6030-vpp
+> +                - ti,twl6030-vusim
+> +                - ti,twl6030-vana
+> +                - ti,twl6030-vcxio
+> +                - ti,twl6030-vdac
+> +                - ti,twl6030-vusb
+> +                - ti,twl6030-v1v8
+> +                - ti,twl6030-v2v1
+> +                - ti,twl6030-vdd1
+> +                - ti,twl6030-vdd2
+> +                - ti,twl6030-vdd3
+> +            regulator-initial-mode: false
+> +
+>        properties:
+>          gpadc:
+>            type: object
+> @@ -69,6 +116,25 @@ allOf:
+>            contains:
+>              const: ti,twl6032
+>      then:
+> +      patternProperties:
+> +        "^regulator-":
+> +          properties:
+> +            compatible:
+> +              enum:
+> +                - ti,twl6032-ldo1
+> +                - ti,twl6032-ldo2
+> +                - ti,twl6032-ldo3
+> +                - ti,twl6032-ldo4
+> +                - ti,twl6032-ldo5
+> +                - ti,twl6032-ldo6
+> +                - ti,twl6032-ldo7
+> +                - ti,twl6032-ldoln
+> +                - ti,twl6032-ldousb
+> +                - ti,twl6032-smps3
+> +                - ti,twl6032-smps4
+> +                - ti,twl6032-vio
+> +            regulator-initial-mode: false
+> +
+>        properties:
+>          gpadc:
+>            type: object
+> @@ -112,6 +178,27 @@ properties:
+>        interrupts:
+>          maxItems: 1
+>
+> +patternProperties:
+> +  "^regulator-":
+> +    type: object
+> +    unevaluatedProperties: false
+> +    $ref: /schemas/regulator/regulator.yaml
+> +    properties:
+> +      compatible: true
+> +      regulator-initial-mode:
+> +        enum:
+> +          - 0x08 # Sleep mode, the nominal output voltage is maintained
+> +                 # with low power consumption with low load current capa=
+bility
+> +          - 0x0e # Active mode, the regulator can deliver its nominal ou=
+tput
+> +                 # voltage with full-load current capability
+> +      ti,retain-on-reset:
+> +        description:
+> +          Does not turn off the supplies during warm
+> +          reset. Could be needed for VMMC, as TWL6030
+> +          reset sequence for this signal does not comply
+> +          with the SD specification.
+> +        type: boolean
+> +
+>  unevaluatedProperties: false
+>
+>  required:
+> @@ -131,9 +218,84 @@ examples:
+>          compatible =3D "ti,twl6030";
+>          reg =3D <0x48>;
+>          interrupts =3D <39>; /* IRQ_SYS_1N cascaded to gic */
+> +        interrupt-parent =3D <&gic>;
+>          interrupt-controller;
+>          #interrupt-cells =3D <1>;
+> -        interrupt-parent =3D <&gic>;
+> +
+> +        gpadc {
+> +          compatible =3D "ti,twl6030-gpadc";
+> +          interrupts =3D <6>;
 
---CC6E2FD.1685976369/lindbergh.monkeyblade.net
-Content-Description: Notification
-Content-Type: text/plain; charset=us-ascii
+Now a warning in linux-next:
 
-This is the mail system at host lindbergh.monkeyblade.net.
-
-I'm sorry to have to inform you that your message could not
-be delivered to one or more recipients. It's attached below.
-
-For further assistance, please send mail to postmaster.
-
-If you do so, please include this problem report. You can
-delete your own text from the attached returned message.
-
-                   The mail system
-
-<linux-kernel@vger.kernel.org>: host 23.128.96.18[23.128.96.18] said: 550 5.7.1
-    Content-Policy reject msg: The message contains HTML subpart, therefore we
-    consider it SPAM or Outlook Virus.  TEXT/PLAIN is accepted.! BF:<S
-    0.999997>; S229489AbjFEOqI (in reply to end of DATA command)
-
---CC6E2FD.1685976369/lindbergh.monkeyblade.net
-Content-Description: Delivery report
-Content-Type: message/delivery-status
-
-Reporting-MTA: dns; lindbergh.monkeyblade.net
-X-Postfix-Queue-ID: CC6E2FD
-X-Postfix-Sender: rfc822; contact29-return-1-linux-kernel=vger.kernel.org@institut-mingmen.fr
-Arrival-Date: Mon,  5 Jun 2023 07:46:01 -0700 (PDT)
-
-Final-Recipient: rfc822; linux-kernel@vger.kernel.org
-Original-Recipient: rfc822;linux-kernel@vger.kernel.org
-Action: failed
-Status: 5.7.1
-Remote-MTA: dns; 23.128.96.18
-Diagnostic-Code: smtp; 550 5.7.1 Content-Policy reject msg: The message
-    contains HTML subpart, therefore we consider it SPAM or Outlook Virus.
-    TEXT/PLAIN is accepted.! BF:<S 0.999997>; S229489AbjFEOqI
-
---CC6E2FD.1685976369/lindbergh.monkeyblade.net
-Content-Description: Undelivered Message Headers
-Content-Type: text/rfc822-headers
-
-Return-Path: <contact29-return-1-linux-kernel=vger.kernel.org@institut-mingmen.fr>
-X-Greylist: delayed 4198 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 05 Jun 2023 07:46:01 PDT
-Received: from 5.mo586.mail-out.ovh.net (5.mo586.mail-out.ovh.net [188.165.36.69])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC6E2FD
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Jun 2023 07:46:01 -0700 (PDT)
-Received: from mx1.ovh.net (unknown [10.110.171.142])
-	by mo586.mail-out.ovh.net (Postfix) with SMTP id BB8A6202E9
-	for <linux-kernel@vger.kernel.org>; Mon,  5 Jun 2023 11:07:32 +0000 (UTC)
-Received: from localhost (HELO queueml) (127.0.0.1)
-	by localhost with SMTP; 5 Jun 2023 13:06:48 +0200
-Mailing-List: contact contact29-help@institut-mingmen.fr; run by ezmlm
-Precedence: bulk
-X-No-Archive: yes
-List-Post: <mailto:contact29@institut-mingmen.fr>
-List-Help: <mailto:contact29-help@institut-mingmen.fr>
-List-Unsubscribe: <mailto:contact29-unsubscribe@institut-mingmen.fr>
-List-Subscribe: <mailto:contact29-subscribe@institut-mingmen.fr>
-Delivered-To: mailing list contact29@institut-mingmen.fr
-Delivered-To: moderator for contact29@institut-mingmen.fr
-Received: from localhost (HELO queue) (127.0.0.1)
-	by localhost with SMTP; 5 Jun 2023 13:06:28 +0200
-Received: from unknown (HELO output34.mail.ovh.net) (192.168.13.87)
-  by 192.168.9.18 with AES256-GCM-SHA384 encrypted SMTP; 5 Jun 2023 13:06:28 +0200
-Received: from vr35.mail.ovh.net (unknown [10.101.8.35])
-	by out34.mail.ovh.net (Postfix) with ESMTP id 4QZW502BfYzTMnZMs
-	for <contact29@institut-mingmen.fr>; Mon,  5 Jun 2023 11:06:28 +0000 (UTC)
-Received: from in32.mail.ovh.net (unknown [10.101.4.32])
-	by vr35.mail.ovh.net (Postfix) with ESMTP id 4QZW500BVsz3Ksy0q
-	for <contact29@institut-mingmen.fr>; Mon,  5 Jun 2023 11:06:28 +0000 (UTC)
-Received-SPF: Pass (mailfrom) identity=mailfrom; client-ip=46.105.57.200; helo=7.mo561.mail-out.ovh.net; envelope-from=info@institut-mingmen.fr; receiver=contact29@institut-mingmen.fr 
-Authentication-Results: in32.mail.ovh.net; dkim=none; dkim-atps=neutral
-Received: from 7.mo561.mail-out.ovh.net (7.mo561.mail-out.ovh.net [46.105.57.200])
-	by in32.mail.ovh.net (Postfix) with ESMTPS id 4QZW4z6s96z2DnqHV
-	for <contact29@institut-mingmen.fr>; Mon,  5 Jun 2023 11:06:27 +0000 (UTC)
-Received: from director9.ghost.mail-out.ovh.net (unknown [10.109.146.106])
-	by mo561.mail-out.ovh.net (Postfix) with ESMTP id BE045280C1
-	for <contact29@institut-mingmen.fr>; Mon,  5 Jun 2023 11:06:27 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-fknqs (unknown [10.109.146.209])
-	by director9.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 64D761FE48
-	for <contact29@institut-mingmen.fr>; Mon,  5 Jun 2023 11:06:26 +0000 (UTC)
-Received: from institut-mingmen.fr ([37.59.142.109])
-	by ghost-submission-6684bf9d7b-fknqs with ESMTPSA
-	id PyuMEbLBfWSyAg8AJNpUsQ
-	(envelope-from <info@institut-mingmen.fr>)
-	for <contact29@institut-mingmen.fr>; Mon, 05 Jun 2023 11:06:26 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-109S00383631d16-11c3-483a-8b74-7bf727858074,
-                    E5EE630566390D91EACAC72814F3E2251F827395) smtp.auth=info@institut-mingmen.fr
-X-OVh-ClientIp:31.33.134.5
-From: <info@institut-mingmen.fr>
-To: <contact29@institut-mingmen.fr>
-References: <01df01d96ddb$8d041260$a70c3720$@institut-mingmen.fr>      <00f401d9834b$1f836170$5e8a2450$@institut-mingmen.fr>      <022601d9840f$6c7da610$4578f230$@institut-mingmen.fr>          
-In-Reply-To: 
-Date: Mon, 5 Jun 2023 13:06:24 +0200
-Message-ID: <019e01d9979d$c50a5a70$4f1f0f50$@institut-mingmen.fr>
-MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="----=_NextPart_000_019F_01D997AE.8897E560"
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHoS/JIcvuPTynWqFhf1gsExGLsyAHEylOuAkF9uLcCBGpEL68uTbXQ
-Content-Language: fr
-X-Ovh-Tracer-Id: 13957499672468158019
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvhedrfeelledgfeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfhfjgfufffkgggtofhtsehrtdhgpedvtddunecuhfhrohhmpeeoihhnfhhosehinhhsthhithhuthdqmhhinhhgmhgvnhdrfhhrqeenucggtffrrghtthgvrhhnpeetieehteegjeevueefvdekveevleegieetfefgieeivdevkeehuefhgffggfetvdenucffohhmrghinhepihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhenucfkphepuddvjedrtddrtddruddpfedurdeffedrudefgedrhedpfeejrdehledrudegvddruddtleenuceurggutfgvphhuthfgmhgrihhlpehinhhfohesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhdpuhhnshhusghstghrihgsvgesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepoehinhhfohesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrheqpdhnsggprhgtphhtthhopedupdhrtghpthhtoheptghonhhtrggtthdvleesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhdpoffvtefjohhsthepmhhoheeiuddpmhhouggvpehsmhhtphhouhht
-X-OVH-Remote: 46.105.57.200 (7.mo561.mail-out.ovh.net)
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvhedrfeelledgfeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfhfjgfufffkgggtofhtsehrtdhgpedvtddunecuhfhrohhmpeeoihhnfhhosehinhhsthhithhuthdqmhhinhhgmhgvnhdrfhhrqeenucggtffrrghtthgvrhhnpeetieehteegjeevueefvdekveevleegieetfefgieeivdevkeehuefhgffggfetvdenucffohhmrghinhepihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhenucfkphepgeeirddutdehrdehjedrvddttddpfedurdeffedrudefgedrhedpfeejrdehledrudegvddruddtleenuceurggutfgvphhuthfgmhgrihhlpehinhhfohesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhdpuhhnshhusghstghrihgsvgesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeegiedruddthedrheejrddvtddtpdhmrghilhhfrhhomhepoehinhhfohesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrheqpdhnsggprhgtphhtthhopedupdhrtghpthhtoheptghonhhtrggtthdvleesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhdpoffvtefjohhsthepvhhrfeehpdgukhhimhepphgrshhspdhgvghokffrpefhtfdprhgvvhfkrfepjedrmhhoheeiud
- drmhgrihhlqdhouhhtrdhovhhhrdhnvght
-X-Ovh-Spam-Status: OK
-X-Ovh-Spam-Reason: vr: OK; dkim: disabled; spf: disabled
-X-Ovh-Message-Type: OK
-Subject: [contact29] =?iso-8859-1?Q?Pensez_la_Sant=E9_autrement...?=
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 20
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvhedrfeelledgfeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucforghilhhinhhgqdfnihhsthdqqdfgiihmlhhmucdlvddtmdenucfjughrpefhvfhfjgffkfggtgfothfusehrtdhgpedvtddunecuhfhrohhmpeeoihhnfhhosehinhhsthhithhuthdqmhhinhhgmhgvnhdrfhhrqeenucggtffrrghtthgvrhhnpeehveevleevuefhledvudekgfelgffftdevueeivdeiveevveelvdeufeehvddtkeenucffohhmrghinhepihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhenucfkphepgeeirddutdehrdehjedrvddttddpfedurdeffedrudefgedrhedpfeejrdehledrudegvddruddtleenuceurggutfgvphhuthfgmhgrihhlpehinhhfohesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhdpuhhnshhusghstghrihgsvgesihhnshhtihhtuhhtqdhmihhnghhmvghnrdhfrhenucevlhhushhtvghrufhiiigvpeegheehnecurfgrrhgrmhepihhnvghtpeegiedruddthedrheejrddvtddtpdhhvghlohepjedrmhhoheeiuddrmhgrihhlqdhouhhtrdhovhhhrdhnvghtpdhmrghilhhfrhhomhepoegtohhnthgrtghtvdelqdhrvghtuhhrnhdquddqlhhinhhugidqkhgvrhhnvghlpehvghgvrhdrkhgvrhhnvghlrdhorhhgsehinhhsthhithhuthdqmhhinhhgmhgvnh
- drfhhrqedpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekiedpmhhouggvpehsmhhtphhouhhtpdhsphhfpehprghsshdpughkihhmpehnohhnvg
-X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_50,HTML_MESSAGE,
-	MAILING_LIST_MULTI,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
-
---CC6E2FD.1685976369/lindbergh.monkeyblade.net--
+Documentation/devicetree/bindings/mfd/ti,twl.example.dtb: gpadc:
+'#io-channel-cells' is a required property
+        from schema $id:
+http://devicetree.org/schemas/iio/adc/ti,twl6030-gpadc.yaml#
