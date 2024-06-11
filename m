@@ -1,114 +1,552 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1D12628D;
-	Tue, 11 Jun 2024 15:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96FD339FD0;
+	Tue, 11 Jun 2024 15:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718118175; cv=none; b=HDUTSZ8YogVqAcpyLAFgVEwbgN+7WKrElbQ9EB32UjilxVPZmhk3FPW3JvuCNyA3DUWqHo2ZwoXnZ6R9qTilSSB8OrIixAwFBgmFL3rsstqI8xKhoRatFdoNvSfI4gP+TvhJsnH0uzb1FGxWBcHKooY9uFpvcJw/CbK5n4PCvt0=
+	t=1718118184; cv=none; b=VO4hYkdlbXBzOkLEINDOvjSTfHKHLmwrL4uGefRDXoB+/Vx9cTg1RKooeMhFZMMtEcqrYJXYy2ntMmLskJvl3J2R1ickgIUZyDYkcdj27ur8IdGFnsCpUrWvUr1IsItA/je7gK1oYaBMdFzX8lYFXPUYxWcG+xoGLnEv+Kqkh8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718118175; c=relaxed/simple;
-	bh=+UbdLhSNYQv78MjKDiWzxOsZG+Gz2YXkxyOtDXrPCgw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TS+pME7pAa8p31efc1x4edesB4vP+4WwhyK32RMpt5W2KJGYMdslVvupACXshIz5KSKAes6cIPBitG2B9ZB087YSce4h3QBoKvmiJhTp22BaBJ7oUWG4sBDdNwImrnolazC0b3XCAcrpSzi7gsL6VWBcRRKn8eDX7VBFfipiG9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=RS8balMM; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="RS8balMM"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 196CEA0A9B;
-	Tue, 11 Jun 2024 17:02:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=Lfl1G8RKSgEODerdsMc2
-	QohfW3q4Aoax5ZnKXqVT58E=; b=RS8balMMGmSzN0u+cqYv75MBVl/svMTc1Tad
-	t87iAPcyrWFhi8cb17oaKlqKpC6tSxzTIkWQy76IQnUS0rRcwPO+abI3Y5Fxg0a/
-	ToLWg6O+/ADL09pY5h4sb+oVTZB3SZSgdZCr/mkW6TkMLJB+cxAZBoQHmyrrwKcg
-	ghZbdja6ACrHy0obFeNwIq+cSXKWuXqh45c8MLe86hWtdV5bDCN+PebnNoJZGTU6
-	Zf/UfeM9ju8z5hbIQgcuWxuge1M3i2CTOLYZP/vObxlnMxFPdbCRm3Bb9HA+tAec
-	ji78BrgThbTx3IQBWcVmTN+hjM3e6UsSjjrsPSPMTDga8h35utErrahrtxSLfwpy
-	tncXh8+SMXYoVaLAycdsYcd/CdF9sjkoHIqWtVFIiG3VlvZiPKFebSGHV359aUf8
-	JelA6jRZOn87QnkoRnDEc15k1h8bsITDmmn7+NOXeS/9TYoP1plPfmNuM0mr7T1W
-	JyGDbip/IU02oGgf/FVeVGigKGZTL+Y2CW21Fd2fl83KOOFCw2M9fYdD/D3BwnxR
-	VvIW9ZexnVqhcSfaYOcb+dfl0VAg1dFGVRjw6/Y0yqk2AX0lnLixkw2pZOg/YwNh
-	43j6L2i0MKGOqLbCptdANPFmpiVvJxTOtIpWNAxdiAxUof1c/ZnhsrD6H0jsyty/
-	RbfZL7Y=
-Message-ID: <7ce6bbf4-738b-4bd4-b842-7d3e97b57583@prolan.hu>
-Date: Tue, 11 Jun 2024 17:02:44 +0200
+	s=arc-20240116; t=1718118184; c=relaxed/simple;
+	bh=m2ap/GWDsjhy7jg/hf1RUcQBudohgasIlZ/dQz75a60=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dZ/YZu2GicPt7suvzdsDsJ8QVPLksZ9SY8WoyyUXZISvdmCBg+nzITRJfDdxOKMlTnSpUQXb50r4npfi1wykJXTLjkSPrmLS4CA68R/FIvM9tlr4izqJLLA8vqaozsKQ6ZqX6XGyU6r4rVGMwDtbYKuQMT/JmkBnXS8OXIOB6EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91F67152B;
+	Tue, 11 Jun 2024 08:03:26 -0700 (PDT)
+Received: from e127643.arm.com (unknown [10.57.41.181])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1BADC3F64C;
+	Tue, 11 Jun 2024 08:02:57 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	gankulkarni@os.amperecomputing.com,
+	mike.leach@linaro.org,
+	leo.yan@linux.dev,
+	anshuman.khandual@arm.com
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v3 03/14] perf: cs-etm: Move traceid_list to each queue
+Date: Tue, 11 Jun 2024 16:02:14 +0100
+Message-Id: <20240611150228.1802828-4-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240611150228.1802828-1-james.clark@arm.com>
+References: <20240611150228.1802828-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] net: fec: Add ECR bit macros, fix FEC_ECR_EN1588 being
- cleared on link-down
-To: Andrew Lunn <andrew@lunn.ch>
-CC: <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
-	<shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Richard Cochran
-	<richardcochran@gmail.com>
-References: <20240607081855.132741-1-csokas.bence@prolan.hu>
- <46892275-619c-4dfb-9214-3bbb14b78093@lunn.ch>
- <d6d6c080-b001-4911-83bc-4aca7701cdff@prolan.hu>
- <c49a5e28-e030-4fc1-ab30-9afd997f03bc@lunn.ch>
-Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <c49a5e28-e030-4fc1-ab30-9afd997f03bc@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2945A12957627C65
 
-Hi!
+The global list won't work for per-sink trace ID allocations, so put a
+list in each queue where the IDs will be unique to that queue.
 
-On 6/11/24 15:06, Andrew Lunn wrote:
-> On Tue, Jun 11, 2024 at 10:04:39AM +0200, Csókás Bence wrote:
->> Hi!
->>
->> On 6/10/24 21:13, Andrew Lunn wrote:
->>> On Fri, Jun 07, 2024 at 10:18:55AM +0200, Csókás, Bence wrote:
->>>> FEC_ECR_EN1588 bit gets cleared after MAC reset in `fec_stop()`, which
->>>> makes all 1588 functionality shut down on link-down. However, some
->>>> functionality needs to be retained (e.g. PPS) even without link.
->>>
->>> I don't know much about PPS. Could you point to some documentation,
->>> list email etc, which indicated PPS without link is expected to work.
->>>
->>> Please also Cc: Richard Cochran for changes like this.
->>>
->>> Thanks
->>> 	Andrew
->>
->> This is what Richard said two years ago on the now-reverted patch:
->>
->> Link: https://lore.kernel.org/netdev/YvRdTwRM4JBc5RuV@hoboy.vegasvil.org
-> 
-> Thanks.
-> 
-> So when you have sync, you have a 1Hz clock, synchronised to the grand
-> master. When the link is down, or communication with the grand master
-> is lost, you get a free running clock of around 1Hz. I presume that if
-> the link does up again and communication to the grand master is
-> restored, there is a phase shift in the 1Hz clock, and a frequency
-> correction? The hardware has to cope with this.
+To keep the same behavior as before, for version 0 of the HW_ID packets,
+copy all the HW_ID mappings into all queues.
 
-Correct. And PTP4Linux is already capable of re-syncing (or at least it 
-would be, if it weren't for the ENET controller reset. We still need to 
-restore all the values of ATIME, ATCORR etc. registers, but that'll come 
-in a future patch, when I figure out how to get out of the locking hell).
+This change doesn't effect the decoders, only trace ID lookups on the
+Perf side. The decoders are still created with global mappings which
+will be fixed in a later commit.
 
-> Thanks
-> 
-> 	Andrew
-> 
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  28 +--
+ tools/perf/util/cs-etm.c                      | 195 ++++++++++--------
+ tools/perf/util/cs-etm.h                      |   2 +-
+ 3 files changed, 126 insertions(+), 99 deletions(-)
 
-Bence
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+index e917985bbbe6..0c9c48cedbf1 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+@@ -388,7 +388,8 @@ cs_etm_decoder__reset_timestamp(struct cs_etm_packet_queue *packet_queue)
+ }
+ 
+ static ocsd_datapath_resp_t
+-cs_etm_decoder__buffer_packet(struct cs_etm_packet_queue *packet_queue,
++cs_etm_decoder__buffer_packet(struct cs_etm_queue *etmq,
++			      struct cs_etm_packet_queue *packet_queue,
+ 			      const u8 trace_chan_id,
+ 			      enum cs_etm_sample_type sample_type)
+ {
+@@ -398,7 +399,7 @@ cs_etm_decoder__buffer_packet(struct cs_etm_packet_queue *packet_queue,
+ 	if (packet_queue->packet_count >= CS_ETM_PACKET_MAX_BUFFER - 1)
+ 		return OCSD_RESP_FATAL_SYS_ERR;
+ 
+-	if (cs_etm__get_cpu(trace_chan_id, &cpu) < 0)
++	if (cs_etm__get_cpu(etmq, trace_chan_id, &cpu) < 0)
+ 		return OCSD_RESP_FATAL_SYS_ERR;
+ 
+ 	et = packet_queue->tail;
+@@ -436,7 +437,7 @@ cs_etm_decoder__buffer_range(struct cs_etm_queue *etmq,
+ 	int ret = 0;
+ 	struct cs_etm_packet *packet;
+ 
+-	ret = cs_etm_decoder__buffer_packet(packet_queue, trace_chan_id,
++	ret = cs_etm_decoder__buffer_packet(etmq, packet_queue, trace_chan_id,
+ 					    CS_ETM_RANGE);
+ 	if (ret != OCSD_RESP_CONT && ret != OCSD_RESP_WAIT)
+ 		return ret;
+@@ -496,7 +497,8 @@ cs_etm_decoder__buffer_range(struct cs_etm_queue *etmq,
+ }
+ 
+ static ocsd_datapath_resp_t
+-cs_etm_decoder__buffer_discontinuity(struct cs_etm_packet_queue *queue,
++cs_etm_decoder__buffer_discontinuity(struct cs_etm_queue *etmq,
++				     struct cs_etm_packet_queue *queue,
+ 				     const uint8_t trace_chan_id)
+ {
+ 	/*
+@@ -504,18 +506,19 @@ cs_etm_decoder__buffer_discontinuity(struct cs_etm_packet_queue *queue,
+ 	 * reset time statistics.
+ 	 */
+ 	cs_etm_decoder__reset_timestamp(queue);
+-	return cs_etm_decoder__buffer_packet(queue, trace_chan_id,
++	return cs_etm_decoder__buffer_packet(etmq, queue, trace_chan_id,
+ 					     CS_ETM_DISCONTINUITY);
+ }
+ 
+ static ocsd_datapath_resp_t
+-cs_etm_decoder__buffer_exception(struct cs_etm_packet_queue *queue,
++cs_etm_decoder__buffer_exception(struct cs_etm_queue *etmq,
++				 struct cs_etm_packet_queue *queue,
+ 				 const ocsd_generic_trace_elem *elem,
+ 				 const uint8_t trace_chan_id)
+ {	int ret = 0;
+ 	struct cs_etm_packet *packet;
+ 
+-	ret = cs_etm_decoder__buffer_packet(queue, trace_chan_id,
++	ret = cs_etm_decoder__buffer_packet(etmq, queue, trace_chan_id,
+ 					    CS_ETM_EXCEPTION);
+ 	if (ret != OCSD_RESP_CONT && ret != OCSD_RESP_WAIT)
+ 		return ret;
+@@ -527,10 +530,11 @@ cs_etm_decoder__buffer_exception(struct cs_etm_packet_queue *queue,
+ }
+ 
+ static ocsd_datapath_resp_t
+-cs_etm_decoder__buffer_exception_ret(struct cs_etm_packet_queue *queue,
++cs_etm_decoder__buffer_exception_ret(struct cs_etm_queue *etmq,
++				     struct cs_etm_packet_queue *queue,
+ 				     const uint8_t trace_chan_id)
+ {
+-	return cs_etm_decoder__buffer_packet(queue, trace_chan_id,
++	return cs_etm_decoder__buffer_packet(etmq, queue, trace_chan_id,
+ 					     CS_ETM_EXCEPTION_RET);
+ }
+ 
+@@ -599,7 +603,7 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+ 	case OCSD_GEN_TRC_ELEM_EO_TRACE:
+ 	case OCSD_GEN_TRC_ELEM_NO_SYNC:
+ 	case OCSD_GEN_TRC_ELEM_TRACE_ON:
+-		resp = cs_etm_decoder__buffer_discontinuity(packet_queue,
++		resp = cs_etm_decoder__buffer_discontinuity(etmq, packet_queue,
+ 							    trace_chan_id);
+ 		break;
+ 	case OCSD_GEN_TRC_ELEM_INSTR_RANGE:
+@@ -607,11 +611,11 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+ 						    trace_chan_id);
+ 		break;
+ 	case OCSD_GEN_TRC_ELEM_EXCEPTION:
+-		resp = cs_etm_decoder__buffer_exception(packet_queue, elem,
++		resp = cs_etm_decoder__buffer_exception(etmq, packet_queue, elem,
+ 							trace_chan_id);
+ 		break;
+ 	case OCSD_GEN_TRC_ELEM_EXCEPTION_RET:
+-		resp = cs_etm_decoder__buffer_exception_ret(packet_queue,
++		resp = cs_etm_decoder__buffer_exception_ret(etmq, packet_queue,
+ 							    trace_chan_id);
+ 		break;
+ 	case OCSD_GEN_TRC_ELEM_TIMESTAMP:
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index e40dfd09d3ed..be858aed26c4 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -111,16 +111,18 @@ struct cs_etm_queue {
+ 	/* Conversion between traceID and index in traceid_queues array */
+ 	struct intlist *traceid_queues_list;
+ 	struct cs_etm_traceid_queue **traceid_queues;
++	/* Conversion between traceID and metadata pointers */
++	struct intlist *traceid_list;
+ };
+ 
+-/* RB tree for quick conversion between traceID and metadata pointers */
+-static struct intlist *traceid_list;
+-
+ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm);
+ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+ 					   pid_t tid);
+ static int cs_etm__get_data_block(struct cs_etm_queue *etmq);
+ static int cs_etm__decode_data_block(struct cs_etm_queue *etmq);
++static int cs_etm__metadata_get_trace_id(u8 *trace_chan_id, u64 *cpu_metadata);
++static u64 *get_cpu_data(struct cs_etm_auxtrace *etm, int cpu);
++static int cs_etm__metadata_set_trace_id(u8 trace_chan_id, u64 *cpu_metadata);
+ 
+ /* PTMs ETMIDR [11:8] set to b0011 */
+ #define ETMIDR_PTM_VERSION 0x00000300
+@@ -146,12 +148,12 @@ static u32 cs_etm__get_v7_protocol_version(u32 etmidr)
+ 	return CS_ETM_PROTO_ETMV3;
+ }
+ 
+-static int cs_etm__get_magic(u8 trace_chan_id, u64 *magic)
++static int cs_etm__get_magic(struct cs_etm_queue *etmq, u8 trace_chan_id, u64 *magic)
+ {
+ 	struct int_node *inode;
+ 	u64 *metadata;
+ 
+-	inode = intlist__find(traceid_list, trace_chan_id);
++	inode = intlist__find(etmq->traceid_list, trace_chan_id);
+ 	if (!inode)
+ 		return -EINVAL;
+ 
+@@ -160,12 +162,12 @@ static int cs_etm__get_magic(u8 trace_chan_id, u64 *magic)
+ 	return 0;
+ }
+ 
+-int cs_etm__get_cpu(u8 trace_chan_id, int *cpu)
++int cs_etm__get_cpu(struct cs_etm_queue *etmq, u8 trace_chan_id, int *cpu)
+ {
+ 	struct int_node *inode;
+ 	u64 *metadata;
+ 
+-	inode = intlist__find(traceid_list, trace_chan_id);
++	inode = intlist__find(etmq->traceid_list, trace_chan_id);
+ 	if (!inode)
+ 		return -EINVAL;
+ 
+@@ -217,30 +219,86 @@ enum cs_etm_pid_fmt cs_etm__get_pid_fmt(struct cs_etm_queue *etmq)
+ 	return etmq->etm->pid_fmt;
+ }
+ 
+-static int cs_etm__map_trace_id(u8 trace_chan_id, u64 *cpu_metadata)
++static int cs_etm__insert_trace_id_node(struct cs_etm_queue *etmq,
++					u8 trace_chan_id, u64 *cpu_metadata)
+ {
+-	struct int_node *inode;
+-
+ 	/* Get an RB node for this CPU */
+-	inode = intlist__findnew(traceid_list, trace_chan_id);
++	struct int_node *inode = intlist__findnew(etmq->traceid_list, trace_chan_id);
+ 
+ 	/* Something went wrong, no need to continue */
+ 	if (!inode)
+ 		return -ENOMEM;
+ 
+-	/*
+-	 * The node for that CPU should not be taken.
+-	 * Back out if that's the case.
+-	 */
+-	if (inode->priv)
+-		return -EINVAL;
++	/* Disallow re-mapping a different traceID to metadata pair. */
++	if (inode->priv) {
++		u64 *curr_cpu_data = inode->priv;
++		u8 curr_chan_id;
++		int err;
++
++		if (curr_cpu_data[CS_ETM_CPU] != cpu_metadata[CS_ETM_CPU]) {
++			pr_err("CS_ETM: map mismatch between HW_ID packet CPU and Trace ID\n");
++			return -EINVAL;
++		}
++
++		/* check that the mapped ID matches */
++		err = cs_etm__metadata_get_trace_id(&curr_chan_id, curr_cpu_data);
++		if (err)
++			return err;
+ 
+-	/* All good, associate the traceID with the metadata pointer */
++		if (curr_chan_id != trace_chan_id) {
++			pr_err("CS_ETM: mismatch between CPU trace ID and HW_ID packet ID\n");
++			return -EINVAL;
++		}
++
++		/* Skip re-adding the same mappings if everything matched */
++		return 0;
++	}
++
++	/* Not one we've seen before, associate the traceID with the metadata pointer */
+ 	inode->priv = cpu_metadata;
+ 
+ 	return 0;
+ }
+ 
++static int cs_etm__map_trace_id_v0(struct cs_etm_auxtrace *etm, u8 trace_chan_id,
++				   u64 *cpu_metadata)
++{
++	/* Version 0 trace IDs are global so save them into every queue */
++	for (unsigned int i = 0; i < etm->queues.nr_queues; ++i) {
++		int ret;
++		struct cs_etm_queue *etmq = etm->queues.queue_array[i].priv;
++
++		ret = cs_etm__insert_trace_id_node(etmq, trace_chan_id,
++						   cpu_metadata);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int cs_etm__process_trace_id_v0(struct cs_etm_auxtrace *etm, int cpu,
++				       u64 hw_id)
++{
++	int err;
++	u64 *cpu_data;
++	u8 trace_chan_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
++
++	cpu_data = get_cpu_data(etm, cpu);
++	if (cpu_data == NULL)
++		return -EINVAL;
++
++	err = cs_etm__map_trace_id_v0(etm, trace_chan_id, cpu_data);
++	if (err)
++		return err;
++
++	/*
++	 * if we are picking up the association from the packet, need to plug
++	 * the correct trace ID into the metadata for setting up decoders later.
++	 */
++	return cs_etm__metadata_set_trace_id(trace_chan_id, cpu_data);
++}
++
+ static int cs_etm__metadata_get_trace_id(u8 *trace_chan_id, u64 *cpu_metadata)
+ {
+ 	u64 cs_etm_magic = cpu_metadata[CS_ETM_MAGIC];
+@@ -324,17 +382,13 @@ static int cs_etm__process_aux_output_hw_id(struct perf_session *session,
+ {
+ 	struct cs_etm_auxtrace *etm;
+ 	struct perf_sample sample;
+-	struct int_node *inode;
+ 	struct evsel *evsel;
+-	u64 *cpu_data;
+ 	u64 hw_id;
+ 	int cpu, version, err;
+-	u8 trace_chan_id, curr_chan_id;
+ 
+ 	/* extract and parse the HW ID */
+ 	hw_id = event->aux_output_hw_id.hw_id;
+ 	version = FIELD_GET(CS_AUX_HW_ID_VERSION_MASK, hw_id);
+-	trace_chan_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
+ 
+ 	/* check that we can handle this version */
+ 	if (version > CS_AUX_HW_ID_CURR_VERSION) {
+@@ -362,43 +416,7 @@ static int cs_etm__process_aux_output_hw_id(struct perf_session *session,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* See if the ID is mapped to a CPU, and it matches the current CPU */
+-	inode = intlist__find(traceid_list, trace_chan_id);
+-	if (inode) {
+-		cpu_data = inode->priv;
+-		if ((int)cpu_data[CS_ETM_CPU] != cpu) {
+-			pr_err("CS_ETM: map mismatch between HW_ID packet CPU and Trace ID\n");
+-			return -EINVAL;
+-		}
+-
+-		/* check that the mapped ID matches */
+-		err = cs_etm__metadata_get_trace_id(&curr_chan_id, cpu_data);
+-		if (err)
+-			return err;
+-		if (curr_chan_id != trace_chan_id) {
+-			pr_err("CS_ETM: mismatch between CPU trace ID and HW_ID packet ID\n");
+-			return -EINVAL;
+-		}
+-
+-		/* mapped and matched - return OK */
+-		return 0;
+-	}
+-
+-	cpu_data = get_cpu_data(etm, cpu);
+-	if (cpu_data == NULL)
+-		return err;
+-
+-	/* not one we've seen before - lets map it */
+-	err = cs_etm__map_trace_id(trace_chan_id, cpu_data);
+-	if (err)
+-		return err;
+-
+-	/*
+-	 * if we are picking up the association from the packet, need to plug
+-	 * the correct trace ID into the metadata for setting up decoders later.
+-	 */
+-	err = cs_etm__metadata_set_trace_id(trace_chan_id, cpu_data);
+-	return err;
++	return cs_etm__process_trace_id_v0(etm, cpu, hw_id);
+ }
+ 
+ void cs_etm__etmq_set_traceid_queue_timestamp(struct cs_etm_queue *etmq,
+@@ -851,6 +869,7 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
+ 
+ static void cs_etm__free_queue(void *priv)
+ {
++	struct int_node *inode, *tmp;
+ 	struct cs_etm_queue *etmq = priv;
+ 
+ 	if (!etmq)
+@@ -858,6 +877,14 @@ static void cs_etm__free_queue(void *priv)
+ 
+ 	cs_etm_decoder__free(etmq->decoder);
+ 	cs_etm__free_traceid_queues(etmq);
++
++	/* First remove all traceID/metadata nodes for the RB tree */
++	intlist__for_each_entry_safe(inode, tmp, etmq->traceid_list)
++		intlist__remove(etmq->traceid_list, inode);
++
++	/* Then the RB tree itself */
++	intlist__delete(etmq->traceid_list);
++
+ 	free(etmq);
+ }
+ 
+@@ -880,19 +907,12 @@ static void cs_etm__free_events(struct perf_session *session)
+ static void cs_etm__free(struct perf_session *session)
+ {
+ 	int i;
+-	struct int_node *inode, *tmp;
+ 	struct cs_etm_auxtrace *aux = container_of(session->auxtrace,
+ 						   struct cs_etm_auxtrace,
+ 						   auxtrace);
+ 	cs_etm__free_events(session);
+ 	session->auxtrace = NULL;
+ 
+-	/* First remove all traceID/metadata nodes for the RB tree */
+-	intlist__for_each_entry_safe(inode, tmp, traceid_list)
+-		intlist__remove(traceid_list, inode);
+-	/* Then the RB tree itself */
+-	intlist__delete(traceid_list);
+-
+ 	for (i = 0; i < aux->num_cpu; i++)
+ 		zfree(&aux->metadata[i]);
+ 
+@@ -1050,9 +1070,24 @@ static struct cs_etm_queue *cs_etm__alloc_queue(void)
+ 
+ 	etmq->traceid_queues_list = intlist__new(NULL);
+ 	if (!etmq->traceid_queues_list)
+-		free(etmq);
++		goto out_free;
++
++	/*
++	 * Create an RB tree for traceID-metadata tuple.  Since the conversion
++	 * has to be made for each packet that gets decoded, optimizing access
++	 * in anything other than a sequential array is worth doing.
++	 */
++	etmq->traceid_list = intlist__new(NULL);
++	if (!etmq->traceid_list)
++		goto out_free;
+ 
+ 	return etmq;
++
++out_free:
++	intlist__delete(etmq->traceid_queues_list);
++	free(etmq);
++
++	return NULL;
+ }
+ 
+ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
+@@ -2202,7 +2237,7 @@ static int cs_etm__set_sample_flags(struct cs_etm_queue *etmq,
+ 					      PERF_IP_FLAG_TRACE_END;
+ 		break;
+ 	case CS_ETM_EXCEPTION:
+-		ret = cs_etm__get_magic(packet->trace_chan_id, &magic);
++		ret = cs_etm__get_magic(etmq, packet->trace_chan_id, &magic);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -3119,7 +3154,8 @@ static bool cs_etm__has_virtual_ts(u64 **metadata, int num_cpu)
+ }
+ 
+ /* map trace ids to correct metadata block, from information in metadata */
+-static int cs_etm__map_trace_ids_metadata(int num_cpu, u64 **metadata)
++static int cs_etm__map_trace_ids_metadata(struct cs_etm_auxtrace *etm, int num_cpu,
++					  u64 **metadata)
+ {
+ 	u64 cs_etm_magic;
+ 	u8 trace_chan_id;
+@@ -3141,7 +3177,7 @@ static int cs_etm__map_trace_ids_metadata(int num_cpu, u64 **metadata)
+ 			/* unknown magic number */
+ 			return -EINVAL;
+ 		}
+-		err = cs_etm__map_trace_id(trace_chan_id, metadata[i]);
++		err = cs_etm__map_trace_id_v0(etm, trace_chan_id, metadata[i]);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -3272,23 +3308,12 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	u64 *ptr = NULL;
+ 	u64 **metadata = NULL;
+ 
+-	/*
+-	 * Create an RB tree for traceID-metadata tuple.  Since the conversion
+-	 * has to be made for each packet that gets decoded, optimizing access
+-	 * in anything other than a sequential array is worth doing.
+-	 */
+-	traceid_list = intlist__new(NULL);
+-	if (!traceid_list)
+-		return -ENOMEM;
+-
+ 	/* First the global part */
+ 	ptr = (u64 *) auxtrace_info->priv;
+ 	num_cpu = ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
+ 	metadata = zalloc(sizeof(*metadata) * num_cpu);
+-	if (!metadata) {
+-		err = -ENOMEM;
+-		goto err_free_traceid_list;
+-	}
++	if (!metadata)
++		return -ENOMEM;
+ 
+ 	/* Start parsing after the common part of the header */
+ 	i = CS_HEADER_VERSION_MAX;
+@@ -3467,7 +3492,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 		err = cs_etm__clear_unused_trace_ids_metadata(num_cpu, metadata);
+ 	/* otherwise, this is a file with metadata values only, map from metadata */
+ 	else
+-		err = cs_etm__map_trace_ids_metadata(num_cpu, metadata);
++		err = cs_etm__map_trace_ids_metadata(etm, num_cpu, metadata);
+ 
+ 	if (err)
+ 		goto err_free_queues;
+@@ -3489,7 +3514,5 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	for (int j = 0; j < num_cpu; j++)
+ 		zfree(&metadata[j]);
+ 	zfree(&metadata);
+-err_free_traceid_list:
+-	intlist__delete(traceid_list);
+ 	return err;
+ }
+diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+index 4696267a32f0..f4f69f7cc0f3 100644
+--- a/tools/perf/util/cs-etm.h
++++ b/tools/perf/util/cs-etm.h
+@@ -252,7 +252,7 @@ enum cs_etm_pid_fmt {
+ 
+ #ifdef HAVE_CSTRACE_SUPPORT
+ #include <opencsd/ocsd_if_types.h>
+-int cs_etm__get_cpu(u8 trace_chan_id, int *cpu);
++int cs_etm__get_cpu(struct cs_etm_queue *etmq, u8 trace_chan_id, int *cpu);
+ enum cs_etm_pid_fmt cs_etm__get_pid_fmt(struct cs_etm_queue *etmq);
+ int cs_etm__etmq_set_tid_el(struct cs_etm_queue *etmq, pid_t tid,
+ 			    u8 trace_chan_id, ocsd_ex_level el);
+-- 
+2.34.1
 
