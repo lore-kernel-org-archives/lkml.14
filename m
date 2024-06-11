@@ -1,139 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wflow1-smtp.messagingengine.com (wflow1-smtp.messagingengine.com [64.147.123.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8DA2AF11;
-	Tue, 11 Jun 2024 08:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57F03F8C7;
+	Tue, 11 Jun 2024 08:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718093660; cv=none; b=uQNLUWOzW4cvlW+aOVZwg3ScCqu95AJkh62vr6i12CN2FiRLxuRSLQnWGVixYttB566MAcP039iCwoMyp9vjDNz8ARiPTZbkWlOHq06P/zS0423ArMZO03OOtaGEzSPP7z2f7KnQkSdiI8DE11oS/u3HrilUKtTz72+xg60pAos=
+	t=1718093739; cv=none; b=rYX/8Juy/KVXENGvSFn6eBQPvXAdYF0Hi82IqBImV2PeWGfR9AY8hXRMVRt5y7Ymc+m7i/0Ot8mK7BmiGVwRDp3WhF7SrQ6ofEpLU9Kkrm1uv8oOInxQLh7wX+Obrwtx+m58NkEudTN6+DE8UAxw39WjUg/1UcOWchvjgdiV3nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718093660; c=relaxed/simple;
-	bh=qKklO2/0IzUpWC2mnVvYrITg/AldogrbkQZ0Zp4CLew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JD6kU1Rmhd68YYVtGB7gq8mqVvRYbNV+vTXOmQf+TucwJVpLmYz+OIQixk11Nc7xcCQoHi4MCXi1gx/H6ameu0cmccvSF64eUFCWD2tQV6TcffqGd7UbI1KIGlR+9Fv5fkYR/z3rNVpz2/OeIgFprRfMe3kGE9RJhJm7hubVhDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+5lu3N4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718093739; c=relaxed/simple;
+	bh=z43s94CnLrweY/tQQTWD/T164eJu5lCBbRFTHO2hCys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BGyJ1FIh+Ev3pFy8c1ZGH+Lr4ssu33UkggZZtY4z/iAjfKKo9PwKzge4os0RdFhQwCzRkP+zXzw/nMHu3Rqe7VVsLpzGJPqfubgDM3A3ddkVCQYGyG4CBjLqWSjH5v+LKd6JP6Regs6G2LUPm6JQcZx4b2r9I36oYilGp8YAhu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=J/rYoVfI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=knDhbLDt; arc=none smtp.client-ip=64.147.123.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+5lu3N4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F47EC2BD10;
-	Tue, 11 Jun 2024 08:14:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718093659;
-	bh=qKklO2/0IzUpWC2mnVvYrITg/AldogrbkQZ0Zp4CLew=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p+5lu3N4W/oVf25Zb7MPEW8VaDrMztoBFQQ0O2BQuDCHj86dEKHcavAO9EcR7f67p
-	 P3DJRiZTHdSnLGlRaVEsFp1V3GcexyQzMMC/91Gak9jqERu8jN0G4eHPnyDylTi6JM
-	 Vq/PWL0Mp79l5kauUoMhaxZ3n4Mfbc9L4LfS9lyfuFG8RtrZ3knkLPPmUKlsFfkzxS
-	 RrINqRaeSc5E/HExpjv6OvcTrBgI4GUFlntsSMUzjU23lKk6NMMgzG+sM8bRLu/uYY
-	 TVsIRLfbvfqirXMabb7IcSrGvzyjfA3uUBsBUz5O5uHpgRWUu5a/L7aGOIDcje2E/C
-	 iNYcXZBK7mjcQ==
-Message-ID: <f669ccf9-8a69-4d2b-a8b1-f486d97413fe@kernel.org>
-Date: Tue, 11 Jun 2024 10:14:12 +0200
+	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="J/rYoVfI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="knDhbLDt"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailflow.west.internal (Postfix) with ESMTP id 57A532CC01C9;
+	Tue, 11 Jun 2024 04:15:34 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Tue, 11 Jun 2024 04:15:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1718093733; x=1718097333; bh=FHmyaqd99K
+	ibuNFcHRNSHKPpvreyC45H6/JsNKHxzgM=; b=J/rYoVfIrIPfb3R2Z5VsoocWAy
+	9b2ZNUviqa5JVMGRCXBoiGRPeEeflfhkWFoS4xp0wjGjjSoSzjr9/Ry2HM1NQBN3
+	rGqBL30RWZBG73M3IR0nPjnmrU3Sz21PdFoKWDbMJzhPW3O6iAMidFE01i0ne35m
+	ZCifgOEBmaiySDmPBUt0jV5RVgES7tcTELewog99jLkcFGyJRB8tLQTfAuJ5fzWU
+	NvC+jd9iAPGpwbp55drVsng9u6fA/WRQbuNVFLgVl4Q6G7g9XnWXU3XoTYp415xB
+	qCvlyQPcfOV73rrJSbvTeUD+H6r87uB59hI4zB3Q1HHFT3ENM1XmjkFWtMsg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1718093733; x=1718097333; bh=FHmyaqd99KibuNFcHRNSHKPpvrey
+	C45H6/JsNKHxzgM=; b=knDhbLDtDZHXqot+UutYHGqxS+ybOwLtEfM2l9Qv3Bwk
+	xRNVii1WuqbblONh3bapyi6jj+y6ihyLWa0qNKKjHiIl7XFMm7fgR+5L+xCTF92K
+	GWHUzRyxh9lghsjWzQ9gBVJ9hjKTS/HWxw2ShAhRKgm7Vm8yRx40W3qpoNsSCaGu
+	aqquX1GrReuK45wM0FrT8SBTo3nZHK/2eH89ywUAXSuW5VUSDZmD4xm60JzA6TSe
+	giAHdHgi2K8JXuiZ7rHtmgxSaDO6GemHKVygtxIh52B0oRqDmtyKfd4UH0PMBIWP
+	mYiMgkVPIG2EZJBxX48gzPmFFkCXkWkL2HNPICsi/Q==
+X-ME-Sender: <xms:pQdoZnJwpUwMJ5aSh754SMicBUig2Yo7cuxFIWBG488MykM7DOVeAg>
+    <xme:pQdoZrJohRL0fRPyBWFyomxQw_Wntfm3Hi8KpMnHjHHAFSi3UgnvVIf_nrppUfvqp
+    nbk4c5IYdmGH_HX-Us>
+X-ME-Received: <xmr:pQdoZvvXVZYadnWUMnwqdouS2UsXYPZmppj5ffgA80HwlxeFKqUKT3Tckwlj9nuA14nh00vFXkes2Lh_2rgy-v4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeduvdcutefuodetggdotefrodftvfcurf
+    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdfstddttdejnecuhfhrohhmpeflohhnrghthhgr
+    nhcuvegrlhhmvghlshcuoehjtggrlhhmvghlshesfeiggidtrdhnvghtqeenucggtffrrg
+    htthgvrhhnpeekkeetgeefgfdvfefgfeffueefffejvdduieejheejheffkeejkeelffeu
+    lefggfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hjtggrlhhmvghlshesfeiggidtrdhnvght
+X-ME-Proxy: <xmx:pQdoZgbk3yz2iWEH2OCd2tzORrTqUi8Xy8tlfWlgEJ7aFszfgufoNA>
+    <xmx:pQdoZuY-_ecrn57VvpsDzZQxq0DRPaeHlkGlaWPxohtt9RKsQqVRjw>
+    <xmx:pQdoZkAIRT6rZ72ReWB9WCp__6QSGkYRSShFTuVyOTissCzd__D53w>
+    <xmx:pQdoZsaUaxZf6hlV2VqKqE-kV3pGikI5Wpp7thyLHw9MpGq7NOr0AQ>
+    <xmx:pQdoZioJsRbSnszbs1P2taAhZGEiLrtjH4FHUkxUUaOwAvhnVOVqp5RG>
+Feedback-ID: i76614979:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 11 Jun 2024 04:15:29 -0400 (EDT)
+Date: Tue, 11 Jun 2024 01:20:40 -0700
+From: Jonathan Calmels <jcalmels@3xx0.net>
+To: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Andrew Morgan <morgan@kernel.org>, brauner@kernel.org,
+ 	ebiederm@xmission.com, Jonathan Corbet <corbet@lwn.net>,
+ 	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ KP Singh <kpsingh@kernel.org>,
+ 	Matt Bobrowski <mattbobrowski@google.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ 	Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ 	Martin KaFai Lau <martin.lau@linux.dev>,
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ 	Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ 	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, 	Luis Chamberlain <mcgrof@kernel.org>,
+ Kees Cook <kees@kernel.org>, 	Joel Granados <j.granados@samsung.com>,
+ John Johansen <john.johansen@canonical.com>,
+ 	David Howells <dhowells@redhat.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>,
+ 	Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>, 	Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, containers@lists.linux.dev,
+ 	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-doc@vger.kernel.org, 	linux-security-module@vger.kernel.org,
+ bpf@vger.kernel.org, apparmor@lists.ubuntu.com,
+ 	keyrings@vger.kernel.org, selinux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] capabilities: Add user namespace capabilities
+Message-ID: <o5llgu7tzei7g2alssdqvy4g2gn66b73tcsir3xqktfqs765ke@wyofd2abvdbj>
+References: <20240609104355.442002-1-jcalmels@3xx0.net>
+ <20240609104355.442002-2-jcalmels@3xx0.net>
+ <20240610130057.GB2193924@mail.hallyn.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: reset: brcm,bcm63138-pmb: convert to yaml
-To: Kanak Shilledar <kanakshilledar@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, William Zhang <william.zhang@broadcom.com>,
- Anand Gore <anand.gore@broadcom.com>, Kursad Oney
- <kursad.oney@broadcom.com>, Florian Fainelli
- <florian.fainelli@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Kanak Shilledar <kanakshilledar111@protonmail.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240611035329.33648-2-kanakshilledar@gmail.com>
- <398ee3a7-513e-4dd6-8ff9-b7585f005d28@kernel.org>
- <CAGLn_=u9jnKL1Y=-+d2-A6BrO7xDZJS4VHtwO=mBHnww6qOaew@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CAGLn_=u9jnKL1Y=-+d2-A6BrO7xDZJS4VHtwO=mBHnww6qOaew@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240610130057.GB2193924@mail.hallyn.com>
 
-On 11/06/2024 09:23, Kanak Shilledar wrote:
-> On Tue, Jun 11, 2024 at 12:28 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 11/06/2024 05:53, Kanak Shilledar wrote:
->>> Convert the Broadcom BCM63138 Processor Monitor Bus to newer DT
->>> schema. Created DT schema based on the .txt file which had `compatible`,
->>> `reg` and `"#reset-cells" as required properties.
->>> Added one line description which was missing in the original .txt file.
->>> Added Philipp Zabel as the maintainer (took from MAINTAINERS file).
->>
->> One of the necessary steps EVERYTIME you make conversion of some random
->> binding is to grep. git grep. You grep for stale paths and usage of
->> compatible in DTS. Sometimes you find nothing, sometimes you would find
->> something.
->>
->> `git grep bcm63138-pmb` gives you:
->> 1. stale path which you did not fix,
->> 2. duplicated schema...
+On Mon, Jun 10, 2024 at 08:00:57AM GMT, Serge E. Hallyn wrote:
 > 
-> There is `brcm,bcm63138-pmb` defined in "/power/brcm,bcm-pmb.yaml" and
-> "/reset/brcm,bcm63138-pmb.txt" but they both are for different purposes.
+> Now, one thing that does occur to me here is that there is a
+> very mild form of sendmail-capabilities vulnerability that
+> could happen here.  Unpriv user joe can drop CAP_SYS_ADMIN
+> from cap_userns, then run a setuid-root program which starts
+> a container which expects CAP_SYS_ADMIN.  This could be a
+> shared container, and so joe could be breaking expected
+> behavior there.
+> 
+> I *think* we want to say we don't care about this case, but
+> if we did, I suppose we could say that the normal cap raise
+> rules on setuid should apply to cap_userns?
+> 
 
-What do you mean by "different purposes"? It is the same device. You
-cannot have same device with same compatible and two different bindings.
-Testing also told you that: warnings.
+Right, good catch. If we do want to fix it, we could just check for
+setuid no? Or do we want to follow the normal root inheritance rules
+too? Essentially something like this:
 
-> By stale path are you referring that I will need to convert
-> "/arm/bcm/brcm,bcm63138.txt"
-> to DT Schema as well?
-
-No, I mean each wrong/stale path needs to be fixed. E.g. dropped or
-updated, depending on the case.
-
-Best regards,
-Krzysztof
-
+pU' = is_suid(root) ? X : pU
