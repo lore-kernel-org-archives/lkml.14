@@ -1,204 +1,217 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2078.outbound.protection.outlook.com [40.107.6.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB0423D2
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 03:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718076707; cv=none; b=tOCbpgDrrNGQGWzZ9mHmsFJMvRltL6AwJIUPxDhXc5Jk7tXglZr4dwCQMTj5yuX13w/x5386uc9Qq1af1R8CVLnXTOA+7DRJQMLYbh4QHWUVMn+YpX2rfouHQcOUPUTbtbFxEnTGSGSTy9lpWCXj3/wL0EQSVwpW8jGg5hQrLxQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718076707; c=relaxed/simple;
-	bh=XYRgPRqsUZtl/GLL2YXIuGD5Izp4hyFdPEYTD+nVN8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UJvDtnokfHJs+4tw8j7lW6qw75oX/xoF9dUTbZFd/4VKFIaaMUH56H7Fv4VefX2eOtD+LpXQmkAXexOC1Cq5gSd+vVn8r70hnsrPW1cr74+PKyyNsTMhCJGIee35QVqhByZS+ExHqoK9FoZ3TrImPffBzyBlLunPp6G9t0+b4n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Qu5BMh5v; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8E82A1C0;
+	Tue, 11 Jun 2024 03:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718076768; cv=fail; b=IoSdu5fEhRl/S4HZoMWips0KBidOJX8XJ2M4fgKRi4o/haZt2CYjoaokhUGyu4gaEP8WIq/OlwJ/VlCzE9vgQQzERI5R2Tifc3nU49nCxykdZW6Bxe8iWZyYsMJfOnWJ+JZyw9npR6RneNiX6sEPWNEiRWOXUpHrs7dN8y4RlCY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718076768; c=relaxed/simple;
+	bh=jcBb3qZS6c/ePJputobjCs6bTQ79qJlZvRH0VA65nm4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=T3daCz2ty8oGGpW3D/kK3DjqAfYXuqPKc56npHRZqVuYvvzWhHv/jWyL+rBbREQxkZxRFbQAF781B3aONcgEhzzmO8RL/hC6ogVr1JjOZV9TQ+akDhG6oATMXm8DihclA2WojKX9RLJy7TTLYLNK7p7pLvn6lYKB228podsbYRE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=gmG0ROf2; arc=fail smtp.client-ip=40.107.6.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Qu5BMh5v"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1718076703; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=V4mjA+2MP8zAV5Ww2U2WGaYSldk2hCBukxkFLeMugYE=;
-	b=Qu5BMh5v85oodHnegWj1ru9uZDVvHOMCKajPzZlG9eBaaa2Ig0JGgadK/puSKD9yM2NwGaxWh7+MSKmFzi6n14LRL+RzhytXXzWgjf4JuzmTo0e2NX92QL8xzqMhRog4AbTuIMK6/3CH1QolatOKR1B5IZGO9At4zmPQ9g7Zg1Q=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R571e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W8EoriA_1718076700;
-Received: from 30.97.56.68(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8EoriA_1718076700)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Jun 2024 11:31:41 +0800
-Message-ID: <99ba4e0d-ef36-4516-a275-014cf5eb22fd@linux.alibaba.com>
-Date: Tue, 11 Jun 2024 11:31:39 +0800
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gmG0ROf2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NEehlCyPMe2OQerVtR0r+CmgTuTHXj8U4NdFG9VdCRjSa6IMGHhAMdUTUaNkmFyTMVsxcAV1QmEGK8dM0tOSLm1n4cbGRCh1UerRCVz+Pc6APXOmCW9mjDawNamZSk8oot1zqlISQPCfvfsm3Yag/tgV6RT8AQqO9zw+XZ5CKK5SgejYSfPO3zy38zjyxEZ5n9PbeZJNvajC9JZADJcu+dWooAo909trbDGbGdWu2vmRvZZe+sRtDDSKDB5HyGWdSO8JnyIEGG4dVnhWcCDxNWduZDhpkjPD4iDrELDnWNKX7cqsMDLh5F0Mbjjn84Ufdlp5mnmQFgACMn92hKXZAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WkD6Rdu3GLB65uytV/HXkA5QQRJvxKiHBbMOZ5jnHtI=;
+ b=mlYW9cz2zHEkq7ykOcnBQtqH0+tBtWEFEpSUWOslQdodxbsWfanwqI6ncURiV/iIj1Pqfmt1u+XtPDxMbaqLke3d0kB7Wp4VGrn69/rmwX2mi+E+hd94lh870ZW+U3lZq40Ocr71koJwb5GhhyK1cF2aeTVzyiEppPY2b1TVA/DIHH7yKfdcvNvnKBH/DFP2CJJvgTXX8H9desnLlaYZ3JtpmYGNOflSOrtczZLR0+0SOj7VmR9pPdrZh9uO+zrfWQT7khJgN21cpq61f9CGgmuVE6m6+766jhii7S1XoQrjnPKeKCdiGBOwfZUAz38jz//28kAiyLkM0lbDcz8AZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WkD6Rdu3GLB65uytV/HXkA5QQRJvxKiHBbMOZ5jnHtI=;
+ b=gmG0ROf2+rLA0mlucGMcRljUQD8+CmaCYzVI9CjM1W8A58xsF2On1B4gfj6tzm1I+gsgJvWZIZ6GiAZtxl/rlHiExzllV7evMCoyzf5YELZA54sBjjdH1YTzMJkF3wJ7QocZ2U34QRrVajRv6NgVMb+t++V1IVCmURBTmdswcos=
+Received: from AM6PR04MB5941.eurprd04.prod.outlook.com (2603:10a6:20b:9e::16)
+ by PAXPR04MB8959.eurprd04.prod.outlook.com (2603:10a6:102:20e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Tue, 11 Jun
+ 2024 03:32:43 +0000
+Received: from AM6PR04MB5941.eurprd04.prod.outlook.com
+ ([fe80::9f4e:b695:f5f0:5256]) by AM6PR04MB5941.eurprd04.prod.outlook.com
+ ([fe80::9f4e:b695:f5f0:5256%5]) with mapi id 15.20.7633.036; Tue, 11 Jun 2024
+ 03:32:43 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>, "Peng Fan (OSS)"
+	<peng.fan@oss.nxp.com>
+CC: Conor Dooley <conor+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, Alexander Stein
+	<alexander.stein@ew.tq-group.com>, Fabio Estevam <festevam@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sascha Hauer
+	<s.hauer@pengutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Shawn Guo
+	<shawnguo@kernel.org>, Conor Dooley <conor.dooley@microchip.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>
+Subject: RE: [PATCH v6 0/3] arm64: dts: add i.MX95 and EVK board
+Thread-Topic: [PATCH v6 0/3] arm64: dts: add i.MX95 and EVK board
+Thread-Index: AQHatuWaNpa58GNnAE+tz7U0TpMpsrG5JgmAgAjK5OA=
+Date: Tue, 11 Jun 2024 03:32:43 +0000
+Message-ID:
+ <AM6PR04MB59419EE033E7952042B902AE88C72@AM6PR04MB5941.eurprd04.prod.outlook.com>
+References: <20240605-imx95-dts-v3-v6-0-2ce275ed0e80@nxp.com>
+ <171759285255.2201583.2972532239106295355.robh@kernel.org>
+In-Reply-To: <171759285255.2201583.2972532239106295355.robh@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM6PR04MB5941:EE_|PAXPR04MB8959:EE_
+x-ms-office365-filtering-correlation-id: 53e1dd8b-ae08-4f51-2120-08dc89c727c1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|366007|1800799015|7416005|376005|38070700009;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?1mZefLV3LIOHEDRqbaScSyPjZkfWQRTLBEOlhfrfpJMBCWZay+8pJkZzXi0P?=
+ =?us-ascii?Q?7uVRaxxjF7Z/UTOnKGaTjYNlhc7lA8Tup2+YjInbQhVwM+543vQvoFcoMrvq?=
+ =?us-ascii?Q?o4WSm3WfTax5ERSBCdWLgUEEsemsSo53E1woMFcmZwnx10Ttaq36EKL76Qq3?=
+ =?us-ascii?Q?yH2iQ2NKmVW35dIZNeu36Mzr6+nCV30cohCTyy4eVi2dqIRrn2bUfdFYfNAK?=
+ =?us-ascii?Q?aY14BX7drOCzWG5pqEyYDvdv7hMnNINzD6KwmRW5IESg3vj+6fc39sx28awa?=
+ =?us-ascii?Q?DK9jxvWQr/CgC/J8bdbryjz9Z61W3ayXoWr4AIJiq67sPlKPqWbNjQaK53HW?=
+ =?us-ascii?Q?jl+R4jqVDsYX7EQQrGM5IT36FAhAHWwUjk+zPPVdCthaXIyBSjLME4EpBSx1?=
+ =?us-ascii?Q?oO1PV5qR/I3T3Tvp1uO928zFzFMd29LDw3Hmgy1nU56uZeKoPd0PDi3mmx7F?=
+ =?us-ascii?Q?CozPf94dSvAuXDykysAWciX1E8YicLOI55iD7yxXC0oIdjIHOqCrkGxTdSxZ?=
+ =?us-ascii?Q?tlehyqoaZ4xA+Nj/sX4eg5TSBhgJEGKl4rCsZ7CVHhQGmji/f8pI3sasAHmc?=
+ =?us-ascii?Q?z4hOMvJ8ZK/uyowImqRZVlC9r2bbF+oCxAx+07kqRrvN2B+NYIQ3TMj0YSRm?=
+ =?us-ascii?Q?twp5GkuGnmMJQQEGTCljeclMI0+PajcIo4W1GNYdYJYcu6/QQOQHMjHx+Dpv?=
+ =?us-ascii?Q?5ykDAsQLQNpvjXYFIfJF+gCeb3sSswqGfLIEm3Jt9z4RFGUa8AskoS2Cb/bu?=
+ =?us-ascii?Q?megUjqn95Pn3dFeN8Pj2R3XX4HdILROL+b8VmH0+5BiZm586DsGgff+N/Hpd?=
+ =?us-ascii?Q?Km4TbyWKFVaZDEq0EGpoWlS/ajJwj1HQerBh3rRlC5OUPY1bteftp7IA2C48?=
+ =?us-ascii?Q?auJ44RbXGQEcieJ+HFmLT17tSjC6yRXfefM6aW1Wqm8CFChfmBxLacEwjBC4?=
+ =?us-ascii?Q?//s+/l9dccjfKQ93l4oMxo2DIYXt1UXwnDe5/tl04tqxmum82OfcUqmNBIgp?=
+ =?us-ascii?Q?tcBHCpwV2CEkVB+WjlKEI4fOo57+fjT8S9hDUu7waKVPjtcFa4fqbyb2wNlo?=
+ =?us-ascii?Q?b7xOIEtyUTZlXYa4n2YRTfDQl1A5k+JtTrA3WA0WXeLiMRa4C1/f1/w/PZOI?=
+ =?us-ascii?Q?TrPKYPepOUSMUkbiucP5tFKBCrGq8Svus+eT82AoKUqut+BHSwbLpkAVJ0DR?=
+ =?us-ascii?Q?BPwY/K/2mHoNuepo4kOjK2moQu6qfokMtnt+ed6eaQTuxJCQbek08yFhioJX?=
+ =?us-ascii?Q?emPaYWmJDtMpMmeL+L7+FTRxlcPMYG7FR4kuHi1ppbIDMNQZki2GuclGdDuH?=
+ =?us-ascii?Q?YPtPLg0klG/3se8szPfaR29ntHAcs+MB5Aubp2PWmchB+446w+ipCHWZ5e/s?=
+ =?us-ascii?Q?pO/ItPQ=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5941.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(7416005)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?6jXUSvasbQTkuy2FTlvpKjYBAlK9qWhWTjoWlFnLES059GzEDLs3G0cxTWpm?=
+ =?us-ascii?Q?2/Ig2bca2UQpOFU2cVw+/ZJJeeak44/uupj7Cvye2V9uEiEDA0zayjD69Map?=
+ =?us-ascii?Q?+UF6RV9fJsNq19qs4eOaoHYhcMqgcoVxpMIHh9j61+kpXhsESinVUllrJrL2?=
+ =?us-ascii?Q?sjOeI2Y+eysHDDLzpZTnRj9lJbpPI2/xbZbQz4GCPVclueqv6rMFV6szWdOB?=
+ =?us-ascii?Q?YcXUKZOhVk0r+ZnobzDJuTWGcdnqvbH5b0PcMmYu8to+J0xqbhN8sOERm/iU?=
+ =?us-ascii?Q?9l9ZaUe8c80LLI7UhH0zw2OZIK6iOnngcWrH9ykYcBvjkDoMzoi9YuQhXwm0?=
+ =?us-ascii?Q?JZzmMKzJ/OWQEGz0b+l0P1K2T1B+s21miY1Ezl6oAZ4wqA90da2r+f20Y0zD?=
+ =?us-ascii?Q?DKrfDs+pqAs9iq03NmbKpk7pKvbieu43r8LJTVARV9FmP7EjcISPOR6kIx2Z?=
+ =?us-ascii?Q?5pk3nKjLikSli5uDNN1mLQIa2OzOPNCsitYRT8a0De7vQX4tLPFjILs8bBVa?=
+ =?us-ascii?Q?FaqDhSPtEBFh0STlrlvK5EtuWXIJkf6IeR4TiOEJ7t+k4L4hpgxlV12ZGt8D?=
+ =?us-ascii?Q?LlZ4h9TwBGXkOwKbtpvsisFrOg6JvBd2qHE7R1mPKlZdmIPJSkJh/gNzj5cC?=
+ =?us-ascii?Q?ZcAGBDOPuD0YOaStSO5jMmFNUz+3ZlIaJ/ENMg+uuhl9Ywe9ghMbx0/WLT4o?=
+ =?us-ascii?Q?yEwpQ+6pjzWglj7xaXCSUu9pX7Q3TZylDr76sck13QEO0gZvUH5PQKNA+j86?=
+ =?us-ascii?Q?V5PyMc0w8BJQ5ti844Gmar63mGP3JE1BkWGzfTa0ScWYFQwJeX90oJMGdxRx?=
+ =?us-ascii?Q?GLh9dKBfamTriVGibhseLG+lNRaHCfmbH7HfGE7L2tENM5U1eIRvw4S5BO0o?=
+ =?us-ascii?Q?ShnD+twyaBpyhwpAXK9MLR5gFFDP7R/yw8ZkYKmgtNyiQKDj0z9JJuHDcRyr?=
+ =?us-ascii?Q?QJAOMBtiYUhpc0xrLlbsWalxQSsk1blElmYy52WUYBdM3HhPYfi9LGoHfcA+?=
+ =?us-ascii?Q?7SSAR7S6qfMvLDx07oH2BN1PorKMggBx9lBxI2jBiEGVArI+0CoIFFYWMwNv?=
+ =?us-ascii?Q?zGeddUrOKr8jZAhnn/s9838BU1O5cCC6mQ3JHDMmEHN8pvtt2Hsfwoo1EN1I?=
+ =?us-ascii?Q?YroQCQu3WE2IdX5jdIVuZzfQLKujQS/Ho+YC3iG9Om09ltXXTpuMdJzehYQV?=
+ =?us-ascii?Q?o+YB/w8B8TdlR3SuqUX8h4tLG09TcVrmXbDAVkn3H+7LqjuivxQjWrZ1M6SU?=
+ =?us-ascii?Q?IL2QjhkgunNgKJaljgFukddl8KO0mwcqQPnMgpvL7LO2QJnemC0wOUQQeO74?=
+ =?us-ascii?Q?0eyawaNjUOGWUKjoZgkuPljH6OVs5Urg4nrHW8suEqLKj63Y7FdcsQEdWoMT?=
+ =?us-ascii?Q?L/p58a7jaz64sHXr62ldsrZrg1CLLcv0/2Xd0bbdcucBz94uM+fwUmZrzFDK?=
+ =?us-ascii?Q?LJL+b2Tc4O1WeoVKnh3d6AC66g+nEEryE3ohy0JbuP92a7laYKmQ6mEoQ5Dn?=
+ =?us-ascii?Q?Ygd79w/S3tWpKL6m2ODMDRRFoxcTcidE2EmAIhmlwv43cqXHm6J/pe2u3DUJ?=
+ =?us-ascii?Q?Si6+kZAgdpGGnAXlY4A=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] mm: add new 'orders' parameter for find_get_entries()
- and find_lock_entries()
-To: Daniel Gomez <da.gomez@samsung.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "hughd@google.com" <hughd@google.com>,
- "willy@infradead.org" <willy@infradead.org>,
- "david@redhat.com" <david@redhat.com>,
- "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
- "chrisl@kernel.org" <chrisl@kernel.org>,
- "ying.huang@intel.com" <ying.huang@intel.com>,
- "21cnbao@gmail.com" <21cnbao@gmail.com>,
- "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
- "shy828301@gmail.com" <shy828301@gmail.com>, "ziy@nvidia.com"
- <ziy@nvidia.com>, "ioworker0@gmail.com" <ioworker0@gmail.com>,
- Pankaj Raghav <p.raghav@samsung.com>, "linux-mm@kvack.org"
- <linux-mm@kvack.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <cover.1717673614.git.baolin.wang@linux.alibaba.com>
- <5304c4c54868336985b396d2c46132c2e0cdf803.1717673614.git.baolin.wang@linux.alibaba.com>
- <CGME20240610152307eucas1p10417f113fcc5e1729bdf638f370d54e4@eucas1p1.samsung.com>
- <v3dqmzgrfpqmfckqnl4voelofevm56q4n4lbk2fq5o5rfclylb@wmtz6ms22ep2>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <v3dqmzgrfpqmfckqnl4voelofevm56q4n4lbk2fq5o5rfclylb@wmtz6ms22ep2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5941.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53e1dd8b-ae08-4f51-2120-08dc89c727c1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2024 03:32:43.7723
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: llfOrOVNtqQEhJL6n6sq9o7xBQF1lRBSkIN+btrQ3MwaJ/h1EQL43rPounM4h931+746UWAtwBjiZg3uZovyNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8959
 
+Hi Rob, Shawn
 
+> Subject: Re: [PATCH v6 0/3] arm64: dts: add i.MX95 and EVK board
+>=20
+>=20
+> On Wed, 05 Jun 2024 09:22:47 +0800, Peng Fan (OSS) wrote:
+> > Add a minimal i.MX95 dtsi and EVK board dts.
+> > i.MX95 has a M33 running SCMI firmware that supports
+> > pinctrl/power/perf/clock and etc.
+> >
+> > imx95-pinfunc.h will trigger checkpatch error, that is expected and
+> > same as other i.MX platforms.
+> >
+> > In v6, I added back a dependency on pinctrl, because [1] has got
+> > A-b/R-b from Maintainers, so it would be soon got merged.
+> >
+> > There will be dtbs_check error before [1] got landed. With [1] merged,
+> > there will be no dtbs_check error.
+> >
 
-On 2024/6/10 23:23, Daniel Gomez wrote:
-> Hi Baolin,
-> 
-> On Thu, Jun 06, 2024 at 07:58:55PM +0800, Baolin Wang wrote:
->> In the following patches, shmem will support the swap out of large folios,
->> which means the shmem mappings may contain large order swap entries, so an
->> 'orders' array is added for find_get_entries() and find_lock_entries() to
->> obtain the order size of shmem swap entries, which will help in the release
->> of shmem large folio swap entries.
->>
->> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->> ---
->>   mm/filemap.c  | 27 +++++++++++++++++++++++++--
->>   mm/internal.h |  4 ++--
->>   mm/shmem.c    | 17 +++++++++--------
->>   mm/truncate.c |  8 ++++----
->>   4 files changed, 40 insertions(+), 16 deletions(-)
->>
->> diff --git a/mm/filemap.c b/mm/filemap.c
->> index 37061aafd191..47fcd9ee6012 100644
->> --- a/mm/filemap.c
->> +++ b/mm/filemap.c
->> @@ -2036,14 +2036,24 @@ static inline struct folio *find_get_entry(struct xa_state *xas, pgoff_t max,
->>    * Return: The number of entries which were found.
->>    */
->>   unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
->> -		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices)
->> +		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices,
->> +		int *orders)
->>   {
->>   	XA_STATE(xas, &mapping->i_pages, *start);
->>   	struct folio *folio;
->> +	int order;
->>   
->>   	rcu_read_lock();
->>   	while ((folio = find_get_entry(&xas, end, XA_PRESENT)) != NULL) {
->>   		indices[fbatch->nr] = xas.xa_index;
->> +		if (orders) {
->> +			if (!xa_is_value(folio))
->> +				order = folio_order(folio);
->> +			else
->> +				order = xa_get_order(xas.xa, xas.xa_index);
->> +
->> +			orders[fbatch->nr] = order;
->> +		}
->>   		if (!folio_batch_add(fbatch, folio))
->>   			break;
->>   	}
->> @@ -2056,6 +2066,8 @@ unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
->>   		folio = fbatch->folios[idx];
->>   		if (!xa_is_value(folio))
->>   			nr = folio_nr_pages(folio);
->> +		else if (orders)
->> +			nr = 1 << orders[idx];
->>   		*start = indices[idx] + nr;
->>   	}
->>   	return folio_batch_count(fbatch);
->> @@ -2082,10 +2094,12 @@ unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
->>    * Return: The number of entries which were found.
->>    */
->>   unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
->> -		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices)
->> +		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices,
->> +		int *orders)
->>   {
->>   	XA_STATE(xas, &mapping->i_pages, *start);
->>   	struct folio *folio;
->> +	int order;
->>   
->>   	rcu_read_lock();
->>   	while ((folio = find_get_entry(&xas, end, XA_PRESENT))) {
->> @@ -2099,9 +2113,16 @@ unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
->>   			if (folio->mapping != mapping ||
->>   			    folio_test_writeback(folio))
->>   				goto unlock;
->> +			if (orders)
->> +				order = folio_order(folio);
->>   			VM_BUG_ON_FOLIO(!folio_contains(folio, xas.xa_index),
->>   					folio);
->> +		} else if (orders) {
->> +			order = xa_get_order(xas.xa, xas.xa_index);
->>   		}
->> +
->> +		if (orders)
->> +			orders[fbatch->nr] = order;
->>   		indices[fbatch->nr] = xas.xa_index;
->>   		if (!folio_batch_add(fbatch, folio))
->>   			break;
->> @@ -2120,6 +2141,8 @@ unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
->>   		folio = fbatch->folios[idx];
->>   		if (!xa_is_value(folio))
->>   			nr = folio_nr_pages(folio);
->> +		else if (orders)
->> +			nr = 1 << orders[idx];
->>   		*start = indices[idx] + nr;
->>   	}
->>   	return folio_batch_count(fbatch);
->> diff --git a/mm/internal.h b/mm/internal.h
->> index 3419c329b3bc..0b5adb6c33cc 100644
->> --- a/mm/internal.h
->> +++ b/mm/internal.h
->> @@ -339,9 +339,9 @@ static inline void force_page_cache_readahead(struct address_space *mapping,
->>   }
->>   
->>   unsigned find_lock_entries(struct address_space *mapping, pgoff_t *start,
->> -		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices);
->> +		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices, int *orders);
->>   unsigned find_get_entries(struct address_space *mapping, pgoff_t *start,
->> -		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices);
->> +		pgoff_t end, struct folio_batch *fbatch, pgoff_t *indices, int *orders);
->>   void filemap_free_folio(struct address_space *mapping, struct folio *folio);
->>   int truncate_inode_folio(struct address_space *mapping, struct folio *folio);
->>   bool truncate_inode_partial_folio(struct folio *folio, loff_t start,
->> diff --git a/mm/shmem.c b/mm/shmem.c
->> index 0ac71580decb..28ba603d87b8 100644
->> --- a/mm/shmem.c
->> +++ b/mm/shmem.c
->> @@ -840,14 +840,14 @@ static void shmem_delete_from_page_cache(struct folio *folio, void *radswap)
->>    * Remove swap entry from page cache, free the swap and its page cache.
->>    */
->>   static int shmem_free_swap(struct address_space *mapping,
->> -			   pgoff_t index, void *radswap)
->> +			   pgoff_t index, void *radswap, int order)
->>   {
->>   	void *old;
-> 
-> Matthew Wilcox suggested [1] returning the number of pages freed in shmem_free_swap().
-> 
-> [1] https://lore.kernel.org/all/ZQRf2pGWurrE0uO+@casper.infradead.org/
-> 
-> Which I submitted here:
-> https://lore.kernel.org/all/20231028211518.3424020-5-da.gomez@samsung.com/
-> 
-> Do you agree with the suggestion? If so, could we update my patch to use
-> free_swap_and_cache_nr() or include that here?
+....
+> >
+> >
+> >
+>=20
+>=20
+> My bot found new DTB warnings on the .dts files added or changed in this
+> series.
+>=20
+> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+> are fixed by another series. Ultimately, it is up to the platform maintai=
+ner
+> whether these warnings are acceptable or not. No need to reply unless the
+> platform maintainer has comments.
+>=20
+> If you already ran DT checks and didn't see these error(s), then make sur=
+e dt-
+> schema is up to date:
+>=20
+>   pip3 install dtschema --upgrade
+>=20
+>=20
+> New warnings running 'make CHECK_DTBS=3Dy freescale/imx95-19x19-evk.dtb'
+> for 20240605-imx95-dts-v3-v6-0-2ce275ed0e80@nxp.com:
+>=20
+> arch/arm64/boot/dts/freescale/imx95-19x19-evk.dtb: scmi: protocol@19:
+> Unevaluated properties are not allowed ('regusdhc2vmmcgrp', 'uart1grp',
+> 'usdhc1-100mhzgrp', 'usdhc1-200mhzgrp', 'usdhc1grp', 'usdhc2-100mhzgrp',
+> 'usdhc2-200mhzgrp', 'usdhc2gpiogrp', 'usdhc2grp' were unexpected)
+> 	from schema $id:
 
-Yes, this looks good to me. But we still need some modification for 
-find_lock_entries() and find_get_entries() to update the '*start' 
-correctly. I will include your changes into this patch in next version. 
-Thanks.
+Since Linus has applied the pinctrl patchset[1], the check will pass.
+
+[1] https://lore.kernel.org/all/CACRpkdbpL=3DHUXj0hFAo+JNki_R
+A9aix2sW1cg13g9=3D89d93PZw@mail.gmail.com/
+
+Shawn,
+In patch 3, there is one minor comment, do you expect me to send v7
+or you could help update it?
+
+Thanks,
+Peng.
+>=20
+>=20
+>=20
+
