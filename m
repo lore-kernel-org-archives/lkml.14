@@ -1,91 +1,115 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47CD22095;
-	Tue, 11 Jun 2024 04:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F382A16F915
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 04:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718079429; cv=none; b=RgbE6cXVwS9et0Himpk/ixc9hCJBLZ43jTPB00zIT73WDFOdmO90S4hKHGRitSvViiLX4DDnoN2poMoBXfMKi3O1dXE00GBvERR+7hz/Ly85SqzF17nT0Gfk8UOtbdamrVntd15YhQJ9dPoRytqNcNrXh01Ep0zbHGXs9WKRBzY=
+	t=1718079687; cv=none; b=AGq0CKtfC+QL/LSCnTkmFITfAcvGLv5kZky7KFXKJp7XhwP637X4lRJA0dh9QDS4a/7xbtpFbgJqFtTSPoi6jAGBo3U7Wp7HyuDj3Umg2FGxFO0T0+ILYrZkvc6sdbV9wJ3zAJki1slRhgrwzt+NIwqQRMEPUnlosslmEw9b8Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718079429; c=relaxed/simple;
-	bh=pOqxnzpHsqOorNOTPo+6rMsXtOAA9gSB1Pi1l3jkIyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6fT1CQ3FxfQL57j39sY++mYcPEu1Gi6PVWRZgJVFblotDB65ewNhP5D7OaXMYzcZLkf8GOYCkTqVsz7i27TkO+M7Hnq4hcatfpqJqC2iaLsM+ph9Wu+sodQaqwfg+t9mmi+3DdbTcWPqfgKCcp/H8t+Z9YLMvZXseQhC+aTvrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=fqdbYVdI; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1718079687; c=relaxed/simple;
+	bh=b44GjkyNBqeujCH+NPzsvRUdiEqakkwjTTaJH94UXZY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iVLZxe5gxaeIFv1jquOgOJsqHtN7wLzbvG6M5teuglq/X6panhv8fqTTbiKJrQY3EcmlDo6Jltvvv90uxURoMySn2f5MgiN1WtA8fhIXdzPTZjo1+oPq+d862Po6JM53EbfdOIRq7ezY0x2ltaLzARSHAd0RGVnOeKlq32bWjlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=l8fthV5o; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="fqdbYVdI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1718079423;
-	bh=pOqxnzpHsqOorNOTPo+6rMsXtOAA9gSB1Pi1l3jkIyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fqdbYVdISC27qrrAvuV+Kb8aqggOdTRwNbAKDNHhALa+nHwlBqh61kx2cv2uP37hD
-	 V3KOLUU4EUEkmJl7Z3MQoWywK78uTVjAmByvSBO+dkY9cs6i6z8+Ogo3PLh6/oBPi9
-	 sggBP+WGlZ6IjSKX1xasoaDRvmCIj55DVx7GUzKU=
-Date: Tue, 11 Jun 2024 06:17:02 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
-	Dustin Howett <dustin@howett.net>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Stephen Horvath <s.horvath@outlook.com.au>, chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH 0/5] hwmon: (cros_ec): fan target, fan pwm control and
- temperature thresholds
-Message-ID: <26d68031-233f-432a-b395-cdbafc31191b@t-8ch.de>
-References: <20240608-cros_ec-hwmon-pwm-v1-0-d29dfc26fbc3@weissschuh.net>
- <536e51a1-5968-4493-96ce-287167b89288@roeck-us.net>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l8fthV5o"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6f971cb3c9cso404194a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Jun 2024 21:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718079685; x=1718684485; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EklVdHyvDTr3/lo2FpeHs1y2+JvBE7tPTVB+SmPAdQ4=;
+        b=l8fthV5odZYqGeWe6LixQUjf3z2WeX1cN7e9dRUbkeoIv/YhzHonPGj8fqTqNXX2ft
+         k8UUV7KE4GuYtBhMIlrj5s0ZDCsY8ymYq24cF+aB2HNJN6yNbZ3LxDe9830sIcQeTRQg
+         TLWHgHwVDtrBWYCgo4ldSP5a9ELMbXoDFAItA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718079685; x=1718684485;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EklVdHyvDTr3/lo2FpeHs1y2+JvBE7tPTVB+SmPAdQ4=;
+        b=ZrE7PqvZeUyrNsdYDsgjuPsknpAqSF5N3TLjxg5VJeX1CuoOar1seGCJsAxOi7f57D
+         fx6VMq5FlDUlora2HlTz3/Iyp5r4KaCVL3w8ZPm10PWYNEz6YXJ6QS6SVaCSIaSPx333
+         pBIR8fpCwHXRT9ewubqbhemz77DMbLLwTvCSfzNwDOR/oaJO0b6bwhyfLhWCYJbVZUwn
+         LdZpI8Hse7GhOUTC4Q+duAucLkzuS9zMzbneS7VOIiChBfC200Il7o9vEKIvkzugxZpJ
+         53jLN6QuDwmaAWysmtGXdxfAC/CFjAGA7vFJYCkt91blq050/1g/3T1zFM4Nqax7UJq1
+         iYHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWP+rdxabUt2KjJ+JRuQHXsGAK/2BNrp3DQUYPMsRkbAyM2m4jaJep00CeQZQGNR1M4Nq5nODEgomfII+F2U37CJuLpkXfjFxYqXEUz
+X-Gm-Message-State: AOJu0YxZ4flIGr0uYikC2iiz16s2B9x7PGutRA+NWXdGCO0ubYLLIFW4
+	FJmHWKWTax48+2XmruaPxJNYA4HZ4QsB0HfJOU7oH3mNL9YyewzPKp/VNV76Bckf8mlcN5JpWzL
+	OCkYidWGCvrUJ8+dvzQ+Tlj1jIck6XJpjiL+A
+X-Google-Smtp-Source: AGHT+IEeRKtmtjxMmre/EUaXcUHS9SCDfRXDteIausMJyVW1Gdf5SYIeYK/MjKfHWpWWOOhhqHhMBUFCuUsJFlAg34E=
+X-Received: by 2002:a05:6870:231a:b0:24f:c9e3:b76f with SMTP id
+ 586e51a60fabf-2546441a4e7mr13254702fac.19.1718079685006; Mon, 10 Jun 2024
+ 21:21:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <536e51a1-5968-4493-96ce-287167b89288@roeck-us.net>
+References: <20240608021023.176027-1-jhubbard@nvidia.com>
+In-Reply-To: <20240608021023.176027-1-jhubbard@nvidia.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Mon, 10 Jun 2024 21:21:13 -0700
+Message-ID: <CABi2SkVoNyXLrfU71gnv1qVUAADpUmFXiDoKKPc54MLb5JpB+Q@mail.gmail.com>
+Subject: Re: [PATCH 0/5] cleanups, fixes, and progress towards avoiding "make headers"
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
+	Andrei Vagin <avagin@google.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Christian Brauner <brauner@kernel.org>, David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, Peter Xu <peterx@redhat.com>, 
+	Rich Felker <dalias@libc.org>, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-06-10 18:18:05+0000, Guenter Roeck wrote:
-> On 6/8/24 01:12, Thomas Weißschuh wrote:
-> > Add support to cros_ec_hwmon for
-> > * fan target speed for fan 1
-> > * fan pwm control for all fans
-> > * fan temperature thresholds (RW) for all temp sensors
-> > 
-> > The EC also supports tempY_auto_pointZ_{pwm,temp} but that does not yet
-> > seem to be usable from "struct hwmon_channel_info".
-> > Guenter, is this intentional, do you want me to add support for it?
-> > 
-> 
-> When I wrote the _info API, I figured it was too chip specific to make
-> it generic. It is also at least somewhat questionable if it makes sense
-> to have all that configurable through sysfs in the first place; normally
-> the ranges are device specific and should be configured through the
-> thermal subsystem using devicetree properties and not be touched by
-> the user. There might even be warranty implications by playing with
-> thermal parameters if someone manages to overheat the system as result.
-> I really don't want to help enabling that.
+Hi
 
-Fair enough.
 
-> Which leads to the next question - we are going way beyond just reporting
-> system operational parameters with your patches. What is the actual use
-> case ?
+On Fri, Jun 7, 2024 at 7:10=E2=80=AFPM John Hubbard <jhubbard@nvidia.com> w=
+rote:
+>
+> Eventually, once the build succeeds on a sufficiently old distro, the
+> idea is to delete $(KHDR_INCLUDES) from the selftests/mm build, and then
+> after that, from selftests/lib.mk and all of the other selftest builds.
+>
+> For now, this series merely achieves a clean build of selftests/mm on a
+> not-so-old distro: Ubuntu 23.04:
+>
+> 1. Add __NR_mseal.
+>
+> 2. Add fs.h, taken as usual from a snapshot of ./usr/include/linux/fs.h
+> after running "make headers". This is how we have agreed to do this sort
+> of thing, see [1].
+>
+What is the "official" way to build selftests/mm ?
+I tried a few ways, but it never worked, i.e. due to head missing.
 
-The pwm control is something that many users want.
-There are a custom daemon [0], its gnome-shell-extension [1] and quite a
-few scripts shared in the Framework forums to adjust the fan pwm through
-ectool.
+1>
+cd tools/testing/selftests/mm
+make
 
-Personally I'd like to avoid some thermal throttling for shorter compute
-tasks where the default curves are not aggressive enough.
+migration.c:10:10: fatal error: numa.h: No such file or directory
+   10 | #include <numa.h>
+      |          ^~~~~~~~
+compilation terminated.
 
-For the others, it's mostly because the information was already there.
+2>
+make headers
+make -C tools/testing/selftests
 
-I'd be fine with dropping the write access to the thresholds,
-not even ectool exposes that.
+make[1]: Entering directory
+'/usr/local/google/home/jeffxu/mm/tools/testing/selftests/mm'
+  CC       migration
+migration.c:10:10: fatal error: numa.h: No such file or directory
+   10 | #include <numa.h>
 
-[0] https://github.com/TamtamHero/fw-fanctrl
-[1] https://extensions.gnome.org/extension/7053/fw-fanctrl/
+Thanks!
+-Jeff
