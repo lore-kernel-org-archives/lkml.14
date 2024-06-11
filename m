@@ -1,64 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AB43BB25;
-	Tue, 11 Jun 2024 16:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A4C3A1DB;
+	Tue, 11 Jun 2024 16:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718122374; cv=none; b=he9sC1lCR6KYzlq/4vgRM9Bl0zngvp7/GZeYEFGpAghFNVfCkPY2JRD+2PvXFiDA3CC/P7GUJzuHG8ysgsH5bqSbahQtO0cbmv0UmULeyspoqa2dTtZt3V3/AkSghIN1OJhNki0SVuyxBdrHtnmKQwCH7bpelbR0Rb+P12EjUck=
+	t=1718122406; cv=none; b=OU+gJ/WpmpA7R1PEAxEtmXAkJp83yQweFCFcHinxG2kpzziXDtVBI9xfLVLo1LrxOyentJU/1F9HgXB1yxpza2wBsAhlr3BdIhIhwHS9jGI1OOueG/C7LceG7SknmWeGUa5PK0t7jTPkAnW7JXBm4ecMnY3lRY6o3pDNXt82RfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718122374; c=relaxed/simple;
-	bh=aPD5BY/1I90SQGbcQ68RrIeaNtfo2nOIAdiK3DWiy+U=;
+	s=arc-20240116; t=1718122406; c=relaxed/simple;
+	bh=F6ZD0XFreojkJRIifp45Aag+6kPp9Gpgrodi6PHSTwM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LwePZaf2I1BYBvCNoMotKJaVgwnontq2DZYSQ4EXbWBWpWu6X5iXPBlE2hgxgDVYN3LGBNrKflVmKRP9fAsmi+WL+PJH5Q6CdS8lRSuqb03gBd+bN4Qf83tdtWASmxd5nygsEPQF055lsD5cjmzNaVoTY0WjOMnNWKxsK0CV1Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dhXcPV19; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AdsPN1G/xRwEOouUc0eurIn1ZXVOuYZk8c9Pni8tZBS2Jxga7CpXaMZtslDnNvq8atgyL3/XjcWe1upCSbzcPACPvuNFKc6vaZSMBwAmpGoUo+7sHCO72GBAb6JHVPww2GcPtfKixhJCbpK20xf19Tp9YDtsgNzo7R+9zO2ZfwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e0YXyceM; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dhXcPV19"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718122371; x=1749658371;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aPD5BY/1I90SQGbcQ68RrIeaNtfo2nOIAdiK3DWiy+U=;
-  b=dhXcPV19RwmgjtuEiNftd4FARCQM/m6J0Yexho6aRLktTyPYuUGGlevg
-   MAtfrXXIIVsNS5d7U7DjyEuTbbvvjrdWY+YVgxWw58I/5TWYNJJvx7udf
-   IzBNry77z+LLRq6kAiDf9HH7oZl8EafGuoC5VXT4f58s2cTtkBgl+Mm4b
-   Ls4PCnAwCzetDxVpYOhhVaCr/suGvjJkd/IyJRr28dRe0j4SPh/el4ftZ
-   r2Ys0h7QOfN9KVL+IhGMTsisU7iAMoYeQuGjqc1iBb3dl7Q5z0bfKDSVd
-   OWtr7wzyHmHOUaXOgW4QkROfm+KFtUbCEN4JcsgwdkFloeaqdiMr8o1m3
-   g==;
-X-CSE-ConnectionGUID: leJJVD2eTC6dV54EwW1pag==
-X-CSE-MsgGUID: TBW2DkdISXOmhqMLb5q23Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="18673551"
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="18673551"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:12:49 -0700
-X-CSE-ConnectionGUID: P3LRiBSUS0y2lK76H7d94g==
-X-CSE-MsgGUID: 7XtO6liXQha1Hl60rbxGeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="43888609"
-Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 11 Jun 2024 09:12:46 -0700
-Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sH472-0000eA-0H;
-	Tue, 11 Jun 2024 16:12:44 +0000
-Date: Wed, 12 Jun 2024 00:12:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Karan Tilak Kumar <kartilak@cisco.com>, sebaddel@cisco.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, arulponn@cisco.com,
-	djhawar@cisco.com, gcboffa@cisco.com, mkai2@cisco.com,
-	satishkh@cisco.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Karan Tilak Kumar <kartilak@cisco.com>
-Subject: Re: [PATCH 03/14] scsi: fnic: Add support for fabric based solicited
- requests and responses
-Message-ID: <202406112309.8GiDUvIM-lkp@intel.com>
-References: <20240610215100.673158-4-kartilak@cisco.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0YXyceM"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7955e1bf5f8so152060885a.0;
+        Tue, 11 Jun 2024 09:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718122404; x=1718727204; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m3qkehPhiEg5p5Wsrjh0SlVJ72RTKHPiKpUZCPq0j9I=;
+        b=e0YXyceMdUpHdebQWghzJ6t3zpW7zu6S6hut5iwNFoAzo9z2iWvFuH0ur02D6BW60b
+         M1dcyYbO79YQDlPE3W4UPtdyuGpzYbEXxLHIxFjkG4OnlsCidobBU2fYPy5wE0K55Q8n
+         T/UFFO8HlWgdkc6CLyWhu8SnWghf2LLjWxL3c0oqGiVAd3d64aX3f0dkao+ekU0Biycj
+         W/JHlejdVPlYm63lbfsYN6AT86T3XrZdRPoznp+XLjluTJbZp5GYTbnCcqnJho5hWdqU
+         K8PLbQEYerj/vKUNUcehVj816XWviNRDr5D0AJNUSA3xugHpSQks+FnedQgFxSmVITtv
+         hTbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718122404; x=1718727204;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m3qkehPhiEg5p5Wsrjh0SlVJ72RTKHPiKpUZCPq0j9I=;
+        b=V6wVmCcE2jQKgnfEXtwgHov0n6FXgIx9ayvPbctmH36fho0fBR+bruC8kJLo1LNYlW
+         89UOQjw8UpuO9G7As3YMmUfnn7f8oScogjNOpTiFG0dFoWDazW6fXduZJZlRXSVVJDKS
+         PZpacguDBIta+iSl2UnlyG3nX8C4oY9u2c71sgickJ6gLhlgutqBoIRk19Am2Ed3zr9t
+         hxGpi7qE+AV9hPMS1qKmt9pCzKA6zxaZQuBx6O44v+aPqkbMHyA3ZrDvJP+SXFhqdjjI
+         G8jFcHlLBa024tWXSVPiieIFlq7YVTBMEhNa1Tgkqo2xIx4ERG70eeEpKFMGYoh5raQr
+         ZwIw==
+X-Forwarded-Encrypted: i=1; AJvYcCWt/6kujvmeZc8bXQaF2AECcN6jOhek1HMiwX+WQb16eEcFAPQujQ2UC31grex0GoI8V8GidioV3W6AHdDZ+nvmdzL/Hxx6Uk/qWjWcPMWiRGIWkydoITZe57SDMD1poLwiywdOsCSiNU5YzzE=
+X-Gm-Message-State: AOJu0YwjEJgtf5XNyDOxolLjmKPU7WolnzeLh/EumCHO3t2baoGtiuYx
+	YtReTkX68SfHoq/RuzngVM9d6SSaq36tfQUJ1VTn7tvEAZQuqWX2
+X-Google-Smtp-Source: AGHT+IHuMnB/9CF0x1BTKPGYThx2Q2dZ6rtKgAawF98s7Wp7i/7IZNsMGas991xqX5HKOEmsIN02Vg==
+X-Received: by 2002:a05:620a:1929:b0:795:4e64:dbbe with SMTP id af79cd13be357-7954e64dcd5mr1422885385a.0.1718122403850;
+        Tue, 11 Jun 2024 09:13:23 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-795758dfe3asm230193485a.105.2024.06.11.09.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 09:13:23 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id A61561200068;
+	Tue, 11 Jun 2024 12:13:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 11 Jun 2024 12:13:22 -0400
+X-ME-Sender: <xms:ondoZqKEt0cp8gXpwBJGpQmzTvQlV5dE_8Q1qanXEdtJWBLKoSl4qg>
+    <xme:ondoZiIhm3M3nS0FuqjAR5VQ-ac_nSYeR5UDmtSWPiGkuLbeiLdmzCcmrTeUHU8wW
+    G_X2Rk9DRa-ukMR-A>
+X-ME-Received: <xmr:ondoZqv_iZdTAh06QYdDT5pnECD57x5fFltEVN_RpGirwPmqZ8vNQma2NA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeduvddgleeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeevieeujefgtdetveevieevudegvefhvddvkeeivefhgfejgedtgedvhfek
+    veeufeenucffohhmrghinheprhhushhtqdhfohhrqdhlihhnuhigrdgtohhmnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgv
+    shhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehhe
+    ehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:ondoZvbp_MEHFEZAazs5QcsTClApVBaDj8O5q7PmVMsfZMeL-rtqJg>
+    <xmx:ondoZhZm7hFVdZqgy1KN9jOwHFbIyg7AvaPpOa2FsZozITpIQ-Do-w>
+    <xmx:ondoZrDXZ4MJ6QImEXwUZypYwPP5dcBVTwnbdwLwbCtanKdtJLNYrQ>
+    <xmx:ondoZnaH3CcP3Jo4EhNej9tTpeZveqPmAxZsG5c8B2q3fDjy3ZgDeA>
+    <xmx:ondoZhp-EliidevCcbciZULB1TjI_OJLaX4LiWIVST7DAljUNjzWaWaK>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 11 Jun 2024 12:13:21 -0400 (EDT)
+Date: Tue, 11 Jun 2024 09:13:20 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Danilo Krummrich <dakr@redhat.com>, rafael@kernel.org,
+	mcgrof@kernel.org, russell.h.weight@intel.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, wedsonaf@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, pstanner@redhat.com, ajanulgu@redhat.com,
+	lyude@redhat.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] rust: add abstraction for struct device
+Message-ID: <Zmh3oN9sWamaYHOD@Boquns-Mac-mini.home>
+References: <20240610180318.72152-1-dakr@redhat.com>
+ <20240610180318.72152-2-dakr@redhat.com>
+ <ZmdID8AlXtoxUfC1@boqun-archlinux>
+ <ZmhPW9yq7y6jbmIg@pollux>
+ <2024061136-unbridle-confirm-c653@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,177 +105,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240610215100.673158-4-kartilak@cisco.com>
+In-Reply-To: <2024061136-unbridle-confirm-c653@gregkh>
 
-Hi Karan,
+On Tue, Jun 11, 2024 at 03:29:22PM +0200, Greg KH wrote:
+> On Tue, Jun 11, 2024 at 03:21:31PM +0200, Danilo Krummrich wrote:
+> > ...hence, I agree we should indeed add to the #Invariants and #Safety section
+> > that `->release` must be callable  from any thread.
+> > 
+> > However, this is just theory, do we actually have cases where `device::release`
 
-kernel test robot noticed the following build warnings:
+@Danilo, right, it's only theorical, but it's good to call it out since
+it's the requirement for a safe Rust abstraction.
 
-[auto build test WARNING on mkp-scsi/for-next]
-[also build test WARNING on jejb-scsi/for-next linus/master v6.10-rc3 next-20240611]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > is not allowed to be called from any thread? If so, this would be very confusing
+> > for a reference counted type from a design point of view...
+> 
+> What do you mean exactly "by any thread"?  Maybe not from interrupt
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Karan-Tilak-Kumar/scsi-fnic-Replace-shost_printk-with-pr_info-pr_err/20240611-060227
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git for-next
-patch link:    https://lore.kernel.org/r/20240610215100.673158-4-kartilak%40cisco.com
-patch subject: [PATCH 03/14] scsi: fnic: Add support for fabric based solicited requests and responses
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20240611/202406112309.8GiDUvIM-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240611/202406112309.8GiDUvIM-lkp@intel.com/reproduce)
+The `Send` trait here doesn't really differ between interrupt contexts
+and process contexts, so "by any thread", it includes all the contexts.
+However, we rely on klint[1] to detect context mismatch in compile time
+(it's still a WIP though). For this case, we would need to mark the
+`Device::dec_ref` function as might sleep.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406112309.8GiDUvIM-lkp@intel.com/
+Regards,
+Boqun
 
-All warnings (new ones prefixed by >>):
+[1]: https://rust-for-linux.com/klint
 
-   drivers/scsi/fnic/fdls_disc.c:894:10: warning: variable 'reason_code' set but not used [-Wunused-but-set-variable]
-     894 |         uint8_t reason_code;
-         |                 ^
->> drivers/scsi/fnic/fdls_disc.c:1009:26: warning: variable 'els_rjt' set but not used [-Wunused-but-set-variable]
-    1009 |         struct fc_els_reject_s *els_rjt;
-         |                                 ^
->> drivers/scsi/fnic/fdls_disc.c:1520:11: warning: variable 's_id' set but not used [-Wunused-but-set-variable]
-    1520 |         uint32_t s_id = 0;
-         |                  ^
->> drivers/scsi/fnic/fdls_disc.c:1521:11: warning: variable 'd_id' set but not used [-Wunused-but-set-variable]
-    1521 |         uint32_t d_id = 0;
-         |                  ^
-   drivers/scsi/fnic/fdls_disc.c:627:13: warning: unused function 'fnic_fdls_start_flogi' [-Wunused-function]
-     627 | static void fnic_fdls_start_flogi(struct fnic_iport_s *iport)
-         |             ^~~~~~~~~~~~~~~~~~~~~
-   5 warnings generated.
-
-
-vim +/els_rjt +1009 drivers/scsi/fnic/fdls_disc.c
-
-  1000	
-  1001	static void
-  1002	fdls_process_flogi_rsp(struct fnic_iport_s *iport, struct fc_hdr_s *fchdr,
-  1003						   void *rx_frame)
-  1004	{
-  1005		struct fnic_fdls_fabric_s *fabric = &iport->fabric;
-  1006		struct fc_els_s *flogi_rsp = (struct fc_els_s *) fchdr;
-  1007		uint8_t *fcid;
-  1008		int rdf_size;
-> 1009		struct fc_els_reject_s *els_rjt;
-  1010		uint8_t fcmac[6] = { 0x0E, 0XFC, 0x00, 0x00, 0x00, 0x00 };
-  1011		struct fnic *fnic = iport->fnic;
-  1012	
-  1013		FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1014					 "0x%x: FDLS processing FLOGI response", iport->fcid);
-  1015	
-  1016		if (fdls_get_state(fabric) != FDLS_STATE_FABRIC_FLOGI) {
-  1017			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1018						 "FLOGI response received in state (%d). Dropping frame",
-  1019						 fdls_get_state(fabric));
-  1020			return;
-  1021		}
-  1022	
-  1023		switch (flogi_rsp->command) {
-  1024		case FC_LS_ACC:
-  1025			if (iport->fabric.timer_pending) {
-  1026				FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1027							 "iport fcid: 0x%x Canceling fabric disc timer\n",
-  1028							 iport->fcid);
-  1029				fnic_del_fabric_timer_sync();
-  1030			}
-  1031	
-  1032			iport->fabric.timer_pending = 0;
-  1033			iport->fabric.retry_counter = 0;
-  1034			fcid = FNIC_GET_D_ID(fchdr);
-  1035			iport->fcid = ntoh24(fcid);
-  1036			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1037						 "0x%x: FLOGI response accepted", iport->fcid);
-  1038	
-  1039			/* Learn the Service Params */
-  1040			rdf_size = ntohs(flogi_rsp->u.csp_flogi.b2b_rdf_size);
-  1041			if ((rdf_size >= FNIC_MIN_DATA_FIELD_SIZE)
-  1042				&& (rdf_size < FNIC_FC_MAX_PAYLOAD_LEN))
-  1043				iport->max_payload_size = MIN(rdf_size,
-  1044									  iport->max_payload_size);
-  1045	
-  1046			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1047						 "max_payload_size from fabric: %d set: %d", rdf_size,
-  1048						 iport->max_payload_size);
-  1049	
-  1050			iport->r_a_tov = ntohl(flogi_rsp->u.csp_flogi.r_a_tov);
-  1051			iport->e_d_tov = ntohl(flogi_rsp->u.csp_flogi.e_d_tov);
-  1052	
-  1053			if (flogi_rsp->u.csp_flogi.features & FNIC_FC_EDTOV_NSEC)
-  1054				iport->e_d_tov = iport->e_d_tov / FNIC_NSEC_TO_MSEC;
-  1055	
-  1056			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1057						 "From fabric: R_A_TOV: %d E_D_TOV: %d",
-  1058						 iport->r_a_tov, iport->e_d_tov);
-  1059	
-  1060			if (IS_FNIC_FCP_INITIATOR(fnic)) {
-  1061				fc_host_fabric_name(iport->fnic->lport->host) =
-  1062					get_unaligned_be64(&flogi_rsp->node_name);
-  1063				fc_host_port_id(iport->fnic->lport->host) = iport->fcid;
-  1064			}
-  1065	
-  1066			fnic_fdls_learn_fcoe_macs(iport, rx_frame, fcid);
-  1067	
-  1068			memcpy(&fcmac[3], fcid, 3);
-  1069			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1070				 "Adding vNIC device MAC addr: %02x:%02x:%02x:%02x:%02x:%02x",
-  1071				 fcmac[0], fcmac[1], fcmac[2], fcmac[3], fcmac[4],
-  1072				 fcmac[5]);
-  1073			vnic_dev_add_addr(iport->fnic->vdev, fcmac);
-  1074	
-  1075			if (fdls_get_state(fabric) == FDLS_STATE_FABRIC_FLOGI) {
-  1076				fnic_fdls_start_plogi(iport);
-  1077				FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1078							 "FLOGI response received. Starting PLOGI");
-  1079			} else {
-  1080				/* From FDLS_STATE_FABRIC_FLOGI state fabric can only go to
-  1081				 * FDLS_STATE_LINKDOWN
-  1082				 * state, hence we don't have to worry about undoing:
-  1083				 * the fnic_fdls_register_portid and vnic_dev_add_addr
-  1084				 */
-  1085				FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1086					 "FLOGI response received in state (%d). Dropping frame",
-  1087					 fdls_get_state(fabric));
-  1088			}
-  1089			break;
-  1090	
-  1091		case FC_LS_REJ:
-  1092			els_rjt = (struct fc_els_reject_s *) fchdr;
-  1093			if (fabric->retry_counter < iport->max_flogi_retries) {
-  1094				FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1095					 "FLOGI returned FC_LS_REJ BUSY. Retry from timer routine %p",
-  1096					 iport);
-  1097	
-  1098				/* Retry Flogi again from the timer routine. */
-  1099				fabric->flags |= FNIC_FDLS_RETRY_FRAME;
-  1100	
-  1101			} else {
-  1102				FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1103						 "FLOGI returned FC_LS_REJ. Halting discovery %p", iport);
-  1104				if (iport->fabric.timer_pending) {
-  1105					FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1106								 "iport 0x%p Canceling fabric disc timer\n",
-  1107								 iport);
-  1108					fnic_del_fabric_timer_sync();
-  1109				}
-  1110				fabric->timer_pending = 0;
-  1111				fabric->retry_counter = 0;
-  1112			}
-  1113			break;
-  1114	
-  1115		default:
-  1116			FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-  1117						 "FLOGI response not accepted: 0x%x",
-  1118						 flogi_rsp->command);
-  1119			break;
-  1120		}
-  1121	}
-  1122	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> context, but any other normal thread (i.e. that you can sleep in), it
+> should be fine to call release() in.
+> 
+> thanks,
+> 
+> greg k-h
