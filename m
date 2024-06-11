@@ -1,130 +1,122 @@
-Received: from wflow1-smtp.messagingengine.com (wflow1-smtp.messagingengine.com [64.147.123.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57F03F8C7;
-	Tue, 11 Jun 2024 08:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C98318643;
+	Tue, 11 Jun 2024 08:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718093739; cv=none; b=rYX/8Juy/KVXENGvSFn6eBQPvXAdYF0Hi82IqBImV2PeWGfR9AY8hXRMVRt5y7Ymc+m7i/0Ot8mK7BmiGVwRDp3WhF7SrQ6ofEpLU9Kkrm1uv8oOInxQLh7wX+Obrwtx+m58NkEudTN6+DE8UAxw39WjUg/1UcOWchvjgdiV3nU=
+	t=1718093805; cv=none; b=slc2lzrIVD2n+h5h+3ABcm+g8GKIEQ+yaPnX8bTKhJm+zY5LgnqTQBdRsrqLIeMTJr9jDdypHqPHCGgHVumiLa0FIJ0S7bdXux8m9iTTULZk6aZXfMK2qesV4GgWd0dzlODuwlO/tIZZONhmR+aKMnz++e6zHLMUdNMycZzsffw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718093739; c=relaxed/simple;
-	bh=z43s94CnLrweY/tQQTWD/T164eJu5lCBbRFTHO2hCys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BGyJ1FIh+Ev3pFy8c1ZGH+Lr4ssu33UkggZZtY4z/iAjfKKo9PwKzge4os0RdFhQwCzRkP+zXzw/nMHu3Rqe7VVsLpzGJPqfubgDM3A3ddkVCQYGyG4CBjLqWSjH5v+LKd6JP6Regs6G2LUPm6JQcZx4b2r9I36oYilGp8YAhu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=J/rYoVfI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=knDhbLDt; arc=none smtp.client-ip=64.147.123.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="J/rYoVfI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="knDhbLDt"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailflow.west.internal (Postfix) with ESMTP id 57A532CC01C9;
-	Tue, 11 Jun 2024 04:15:34 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 11 Jun 2024 04:15:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1718093733; x=1718097333; bh=FHmyaqd99K
-	ibuNFcHRNSHKPpvreyC45H6/JsNKHxzgM=; b=J/rYoVfIrIPfb3R2Z5VsoocWAy
-	9b2ZNUviqa5JVMGRCXBoiGRPeEeflfhkWFoS4xp0wjGjjSoSzjr9/Ry2HM1NQBN3
-	rGqBL30RWZBG73M3IR0nPjnmrU3Sz21PdFoKWDbMJzhPW3O6iAMidFE01i0ne35m
-	ZCifgOEBmaiySDmPBUt0jV5RVgES7tcTELewog99jLkcFGyJRB8tLQTfAuJ5fzWU
-	NvC+jd9iAPGpwbp55drVsng9u6fA/WRQbuNVFLgVl4Q6G7g9XnWXU3XoTYp415xB
-	qCvlyQPcfOV73rrJSbvTeUD+H6r87uB59hI4zB3Q1HHFT3ENM1XmjkFWtMsg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718093733; x=1718097333; bh=FHmyaqd99KibuNFcHRNSHKPpvrey
-	C45H6/JsNKHxzgM=; b=knDhbLDtDZHXqot+UutYHGqxS+ybOwLtEfM2l9Qv3Bwk
-	xRNVii1WuqbblONh3bapyi6jj+y6ihyLWa0qNKKjHiIl7XFMm7fgR+5L+xCTF92K
-	GWHUzRyxh9lghsjWzQ9gBVJ9hjKTS/HWxw2ShAhRKgm7Vm8yRx40W3qpoNsSCaGu
-	aqquX1GrReuK45wM0FrT8SBTo3nZHK/2eH89ywUAXSuW5VUSDZmD4xm60JzA6TSe
-	giAHdHgi2K8JXuiZ7rHtmgxSaDO6GemHKVygtxIh52B0oRqDmtyKfd4UH0PMBIWP
-	mYiMgkVPIG2EZJBxX48gzPmFFkCXkWkL2HNPICsi/Q==
-X-ME-Sender: <xms:pQdoZnJwpUwMJ5aSh754SMicBUig2Yo7cuxFIWBG488MykM7DOVeAg>
-    <xme:pQdoZrJohRL0fRPyBWFyomxQw_Wntfm3Hi8KpMnHjHHAFSi3UgnvVIf_nrppUfvqp
-    nbk4c5IYdmGH_HX-Us>
-X-ME-Received: <xmr:pQdoZvvXVZYadnWUMnwqdouS2UsXYPZmppj5ffgA80HwlxeFKqUKT3Tckwlj9nuA14nh00vFXkes2Lh_2rgy-v4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeduvdcutefuodetggdotefrodftvfcurf
-    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdfstddttdejnecuhfhrohhmpeflohhnrghthhgr
-    nhcuvegrlhhmvghlshcuoehjtggrlhhmvghlshesfeiggidtrdhnvghtqeenucggtffrrg
-    htthgvrhhnpeekkeetgeefgfdvfefgfeffueefffejvdduieejheejheffkeejkeelffeu
-    lefggfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hjtggrlhhmvghlshesfeiggidtrdhnvght
-X-ME-Proxy: <xmx:pQdoZgbk3yz2iWEH2OCd2tzORrTqUi8Xy8tlfWlgEJ7aFszfgufoNA>
-    <xmx:pQdoZuY-_ecrn57VvpsDzZQxq0DRPaeHlkGlaWPxohtt9RKsQqVRjw>
-    <xmx:pQdoZkAIRT6rZ72ReWB9WCp__6QSGkYRSShFTuVyOTissCzd__D53w>
-    <xmx:pQdoZsaUaxZf6hlV2VqKqE-kV3pGikI5Wpp7thyLHw9MpGq7NOr0AQ>
-    <xmx:pQdoZioJsRbSnszbs1P2taAhZGEiLrtjH4FHUkxUUaOwAvhnVOVqp5RG>
-Feedback-ID: i76614979:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 11 Jun 2024 04:15:29 -0400 (EDT)
-Date: Tue, 11 Jun 2024 01:20:40 -0700
-From: Jonathan Calmels <jcalmels@3xx0.net>
-To: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Andrew Morgan <morgan@kernel.org>, brauner@kernel.org,
- 	ebiederm@xmission.com, Jonathan Corbet <corbet@lwn.net>,
- 	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
- KP Singh <kpsingh@kernel.org>,
- 	Matt Bobrowski <mattbobrowski@google.com>,
- Alexei Starovoitov <ast@kernel.org>,
- 	Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>,
- 	Martin KaFai Lau <martin.lau@linux.dev>,
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- 	Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>,
- 	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, 	Luis Chamberlain <mcgrof@kernel.org>,
- Kees Cook <kees@kernel.org>, 	Joel Granados <j.granados@samsung.com>,
- John Johansen <john.johansen@canonical.com>,
- 	David Howells <dhowells@redhat.com>,
- Jarkko Sakkinen <jarkko@kernel.org>,
- 	Stephen Smalley <stephen.smalley.work@gmail.com>,
- Ondrej Mosnacek <omosnace@redhat.com>, 	Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, containers@lists.linux.dev,
- 	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-doc@vger.kernel.org, 	linux-security-module@vger.kernel.org,
- bpf@vger.kernel.org, apparmor@lists.ubuntu.com,
- 	keyrings@vger.kernel.org, selinux@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] capabilities: Add user namespace capabilities
-Message-ID: <o5llgu7tzei7g2alssdqvy4g2gn66b73tcsir3xqktfqs765ke@wyofd2abvdbj>
-References: <20240609104355.442002-1-jcalmels@3xx0.net>
- <20240609104355.442002-2-jcalmels@3xx0.net>
- <20240610130057.GB2193924@mail.hallyn.com>
+	s=arc-20240116; t=1718093805; c=relaxed/simple;
+	bh=zJJ45T+EkNxfJ1lntg1XIT+bWbsPNOtek2btucIw8dE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Js82FruHYhDpnbcm8atC0XeY4JMQL5bVBFj8MUAKVjykcObpmiXa/PmyF+ehzQ+gfublEsUXbgH3/g1Ft1K3UjoywTSoHO2bqJqgdGQbdatNySXBCh2mouIMBlFEbboKXo+PvuEJNoMWRyPxZbS5BLhPRZiddxF21QgBPB34eN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c2eb98a64fso2131616a91.2;
+        Tue, 11 Jun 2024 01:16:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718093802; x=1718698602;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R6g564VKiL0eMr15/61Xj8es8OXMxMV9Cr2DrDtu5sA=;
+        b=BiluWINgr5OB0XMp8KRAldJcB15dvn/AScAOY+Kjy3ZhIJMBsMejLf4ppJOL6AIdc0
+         BQ/Lu/R1fi/IE9Pw+nRT534nSeNEcy7KjB/6v3Swkfk1xVZ4CmsmL9Hx1e2RDOk5xRsu
+         QW8ygOHsnnuOJ+F29EJAUxna2GAolMd6Xm9X087iqG3pUgyrfxqa7J1wWdmM6lp03QLl
+         Vf2bYZbUrVERsrguKiWdg638HKnP8fchYfq8TWH8gbJBWQGCZvL+dzKfkrDodo2QJ5jO
+         l62jiKUKryWAVjwGR7En+hNjUNVqkuux8r0kltdGGDwgpLEf8FQqX7clkkFcZJcJtoDc
+         Hyuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkAHMkpZ+rSPNu7ZsmuZ5bVwStY84R+w/UBe7kWTX5c3SapFBSpSQexYu7yRjFCtfb6mZiA2YIDANqclSDNw5z3X5iww9biBIzUkHAtcbNfJnlLMqIQJ+ywkrI4R4oC41ii5wv8krv
+X-Gm-Message-State: AOJu0Yz87xHZXeYmyEAnl5tLf8+gQIvwuRXGTXEjOw/uUq77bvk3J07t
+	ICIsBtPedy7m8T5oz1SN0PQR2/OgedZnqmfmXdMpUb4y7MpD08OY04k/dMZnt4pahMb3djmtNeE
+	RbNognfs4WQ9SHEJaXMifWj1h5c8=
+X-Google-Smtp-Source: AGHT+IE68mWPrj8nhNuwhdBTZDW+/PhBliP6ZlYVn0gmb/ZzESVIUaoYHMt+xNGiGfbr3Q21axU0LJ/XLzBOrdxIaxo=
+X-Received: by 2002:a17:90b:ec8:b0:2c2:cee8:bd6e with SMTP id
+ 98e67ed59e1d1-2c2cee8c23emr8492707a91.49.1718093801440; Tue, 11 Jun 2024
+ 01:16:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240610130057.GB2193924@mail.hallyn.com>
+References: <2024061137-jawless-dipped-e789@gregkh>
+In-Reply-To: <2024061137-jawless-dipped-e789@gregkh>
+From: Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
+Date: Tue, 11 Jun 2024 17:16:30 +0900
+Message-ID: <CAMZ6Rq+rS=LO2EL7Mzurdsv3LVMmiJ3C9a9yEsdMJeqBaRbLMg@mail.gmail.com>
+Subject: Re: [PATCH v2] .editorconfig: remove trim_trailing_whitespace option
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: masahiroy@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, Danny Lin <danny@kdrag0n.dev>, 
+	=?UTF-8?B?w43DsWlnbyBIdWd1ZXQ=?= <ihuguet@redhat.com>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 10, 2024 at 08:00:57AM GMT, Serge E. Hallyn wrote:
-> 
-> Now, one thing that does occur to me here is that there is a
-> very mild form of sendmail-capabilities vulnerability that
-> could happen here.  Unpriv user joe can drop CAP_SYS_ADMIN
-> from cap_userns, then run a setuid-root program which starts
-> a container which expects CAP_SYS_ADMIN.  This could be a
-> shared container, and so joe could be breaking expected
-> behavior there.
-> 
-> I *think* we want to say we don't care about this case, but
-> if we did, I suppose we could say that the normal cap raise
-> rules on setuid should apply to cap_userns?
-> 
+On Tue. 11 juin 2024 at 16:27, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> Some editors (like the vim variants), when seeing "trim_whitespace"
+> decide to do just that for all of the whitespace in the file you are
+> saving, even if it is not on a line that you have modified.  This plays
+> havoc with diffs and is NOT something that should be intended.
+>
+> As the "only trim whitespace on modified files" is not part of the
+> editorconfig standard yet, just delete these lines from the
+> .editorconfig file so that we don't end up with diffs that are
+> automatically rejected by maintainers for containing things they
+> shouldn't.
+>
+> Cc: Danny Lin <danny@kdrag0n.dev>
+> Cc: =C3=8D=C3=B1igo Huguet <ihuguet@redhat.com>
+> Cc: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+> Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Fixes: 5a602de99797 ("Add .editorconfig file for basic formatting")
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Right, good catch. If we do want to fix it, we could just check for
-setuid no? Or do we want to follow the normal root inheritance rules
-too? Essentially something like this:
+Thanks, this v2 is way better!
 
-pU' = is_suid(root) ? X : pU
+Acked-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+
+> ---
+> v2: - only remove the lines, don't move the whole file to Documentation
+>     - add Fixes: tag
+>
+>
+>  .editorconfig | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/.editorconfig b/.editorconfig
+> index 854773350cc5..29a30ccfc07b 100644
+> --- a/.editorconfig
+> +++ b/.editorconfig
+> @@ -5,7 +5,6 @@ root =3D true
+>  [{*.{awk,c,dts,dtsi,dtso,h,mk,s,S},Kconfig,Makefile,Makefile.*}]
+>  charset =3D utf-8
+>  end_of_line =3D lf
+> -trim_trailing_whitespace =3D true
+>  insert_final_newline =3D true
+>  indent_style =3D tab
+>  indent_size =3D 8
+> @@ -13,7 +12,6 @@ indent_size =3D 8
+>  [*.{json,py,rs}]
+>  charset =3D utf-8
+>  end_of_line =3D lf
+> -trim_trailing_whitespace =3D true
+>  insert_final_newline =3D true
+>  indent_style =3D space
+>  indent_size =3D 4
+> @@ -26,7 +24,6 @@ indent_size =3D 8
+>  [*.yaml]
+>  charset =3D utf-8
+>  end_of_line =3D lf
+> -trim_trailing_whitespace =3D unset
+>  insert_final_newline =3D true
+>  indent_style =3D space
+>  indent_size =3D 2
+> --
+> 2.45.2
+>
