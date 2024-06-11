@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B892D17D357
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:01:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF7817D88E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:01:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718110887; cv=none; b=basxfu0v9mavOiJT7+4fHPEdRfAk/rCXJc5aRZSWY7oICdpGbC2naPAvwIityI7sfuc4gDkkyEIPSUPXhd1s3CAOjeTRCGQZ7QCtk95UYJfKLaNSInXg9+9OSmB1BBrmYF/IGjECyW87eg5mMY1G7m7W3Eo1wHSb2d30i8Yj8Xo=
+	t=1718110889; cv=none; b=Kx+hZP6LAN7pysEXKhJQOUEnsMZKG7Dit9kfGM49FiSpvmX/dECqWA4iYqoe3Gxt1Z7i5BwALYMYxPTU4PU3s4a5j8K+O6SRNrCUXGgEkE7eOTR6123C7sY6LbHYxezHx+53x4sktI2rJihWtxVW38c4DqF9eHIyD6EZZMLySM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718110887; c=relaxed/simple;
-	bh=Ewiq4xx5eBrJ6zT/nXIgeEyinKpoSQ+oZEBy9wIt8XA=;
+	s=arc-20240116; t=1718110889; c=relaxed/simple;
+	bh=xtPXOUuB/wx/UU4cCnsOq18427qwbgXoc0E4MoJVc2I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hLNu3fTp8wkW+CZdsDjeRToQU1ZwIUI9wOCoCXHqfZPOVY9n+KGvEuKiwJU0XMYw/oeYop3tKP0ah2Iiavvkn4ONJWqSNJeVRJZWjVQZqqNR6ZNYXqnAdSz6myb0qmcRKgTAJ5OpmC0Q2ISSk5QwD3/EV0i/K+px2KWtucLk728=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ExpJfHUt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kI5Eu3/lXFRK3U3WT6QjC9l8nuOoprdUmGwlZoT6rkH7+KltPZiEz6biEi83OE6MP7bg9EpOkSWP1wb1uO1cVnWRQR0lTr3ouh/m27ksXeCzc2CP86BHpQmDOY7HSBZZJDarbQPevCQr8kdKQRsEvbPqcP29pH/WKtmSFqmnvnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rcbNm3cf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ExpJfHUt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E71EAC2BD10;
-	Tue, 11 Jun 2024 13:01:25 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rcbNm3cf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F05C4AF49;
+	Tue, 11 Jun 2024 13:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718110886;
-	bh=Ewiq4xx5eBrJ6zT/nXIgeEyinKpoSQ+oZEBy9wIt8XA=;
+	s=korg; t=1718110889;
+	bh=xtPXOUuB/wx/UU4cCnsOq18427qwbgXoc0E4MoJVc2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ExpJfHUtZVpo3xPrxe61mCjd28c9S6PDLKJqYjBXt549dNl0JuXG+A9ETEYZ3ta92
-	 JzrZw476EKyMXQfqqCdAlk0dRuoEYbghtku5f6cWP0S8HI343QjzVnDthp+MdeXteB
-	 iHoLdn9dHMhEZqy2tumDYd2T5qggqibr8tL98/dQ=
+	b=rcbNm3cfoURrrctq1sU+5U837WEiUPojwtuJa7WKnNWgCS+iWc21L1rfZ9UpqsynD
+	 1qmwgAlvU0V9XrkWNsDsAkjDOypOXgux/2gfutyLB71N45rQCE0BKZOODJKBjDNdz0
+	 dM0AdB41N4uzJjsDj2m/5CljcJleiBpW2ZsFO8po=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH 5/6] driver core: make driver_detach() take a const *
-Date: Tue, 11 Jun 2024 15:01:08 +0200
-Message-ID: <20240611130103.3262749-11-gregkh@linuxfoundation.org>
+Subject: [PATCH 6/6] driver core: mark async_driver as a const *
+Date: Tue, 11 Jun 2024 15:01:09 +0200
+Message-ID: <20240611130103.3262749-12-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240611130103.3262749-7-gregkh@linuxfoundation.org>
 References: <20240611130103.3262749-7-gregkh@linuxfoundation.org>
@@ -39,57 +39,105 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1951; i=gregkh@linuxfoundation.org; h=from:subject; bh=Ewiq4xx5eBrJ6zT/nXIgeEyinKpoSQ+oZEBy9wIt8XA=; b=owGbwMvMwCRo6H6F97bub03G02pJDGkZXpN+35bSqHKum7PbhdOlpW1hzOmu3/+s+tebTTjaz vLt8cvFHbEsDIJMDLJiiixftvEc3V9xSNHL0PY0zBxWJpAhDFycAjARv9cM82sTD9ulR9Wo3Nnj Ib9YM+iy+YXHvgwL9gs8fZelM3nJpR06Z62aFimrKF4IAwA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3617; i=gregkh@linuxfoundation.org; h=from:subject; bh=xtPXOUuB/wx/UU4cCnsOq18427qwbgXoc0E4MoJVc2I=; b=owGbwMvMwCRo6H6F97bub03G02pJDGkZXpMq0nsfWN1qf8KlPzPxkv4iizuzNrhMSnb+cipT+ +stW2OhjlgWBkEmBlkxRZYv23iO7q84pOhlaHsaZg4rE8gQBi5OAZjIZD2GBVvN2jsmBLbE7rq9 f8La+bv/T1Thr2WYn7BJ0IRRtd3W48HG9zVLGHZJ89btBgA=
 X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
 
-driver_detach() does not modify the driver itself, so make the pointer
-constant.  In doing so, the function driver_allows_async_probing() also
-needs to be changed so that the pointer type passes through to that
-function properly.
+Within struct device_private, mark the async_driver * as const as it is
+never modified.  This requires some internal-to-the-driver-core
+functions to also have their parameters marked as constant, and there is
+one place where we cast _back_ from the const pointer to a real one, as
+the driver core still wants to modify the structure in a number of
+remaining places.
 
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/base/base.h | 2 +-
- drivers/base/dd.c   | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/base/base.h |  2 +-
+ drivers/base/dd.c   | 15 ++++++++-------
+ 2 files changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/base/base.h b/drivers/base/base.h
-index d332b87cde9e..9df8028c3201 100644
+index 9df8028c3201..50151e7db796 100644
 --- a/drivers/base/base.h
 +++ b/drivers/base/base.h
-@@ -158,7 +158,7 @@ void bus_remove_driver(struct device_driver *drv);
- void device_release_driver_internal(struct device *dev, const struct device_driver *drv,
- 				    struct device *parent);
- 
--void driver_detach(struct device_driver *drv);
-+void driver_detach(const struct device_driver *drv);
- void driver_deferred_probe_del(struct device *dev);
- void device_set_deferred_probe_reason(const struct device *dev, struct va_format *vaf);
- static inline int driver_match_device(struct device_driver *drv,
+@@ -112,7 +112,7 @@ struct device_private {
+ 	struct klist_node knode_bus;
+ 	struct klist_node knode_class;
+ 	struct list_head deferred_probe;
+-	struct device_driver *async_driver;
++	const struct device_driver *async_driver;
+ 	char *deferred_probe_reason;
+ 	struct device *device;
+ 	u8 dead:1;
 diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index c24eca917d41..76b26096b033 100644
+index 76b26096b033..8ec22229e259 100644
 --- a/drivers/base/dd.c
 +++ b/drivers/base/dd.c
-@@ -863,7 +863,7 @@ static int __init save_async_options(char *buf)
+@@ -568,7 +568,7 @@ static void device_remove(struct device *dev)
+ 		dev->driver->remove(dev);
  }
- __setup("driver_async_probe=", save_async_options);
  
--static bool driver_allows_async_probing(struct device_driver *drv)
-+static bool driver_allows_async_probing(const struct device_driver *drv)
+-static int call_driver_probe(struct device *dev, struct device_driver *drv)
++static int call_driver_probe(struct device *dev, const struct device_driver *drv)
  {
- 	switch (drv->probe_type) {
- 	case PROBE_PREFER_ASYNCHRONOUS:
-@@ -1333,7 +1333,7 @@ void device_driver_detach(struct device *dev)
-  * driver_detach - detach driver from all devices it controls.
-  * @drv: driver.
+ 	int ret = 0;
+ 
+@@ -599,7 +599,7 @@ static int call_driver_probe(struct device *dev, struct device_driver *drv)
+ 	return ret;
+ }
+ 
+-static int really_probe(struct device *dev, struct device_driver *drv)
++static int really_probe(struct device *dev, const struct device_driver *drv)
+ {
+ 	bool test_remove = IS_ENABLED(CONFIG_DEBUG_TEST_DRIVER_REMOVE) &&
+ 			   !drv->suppress_bind_attrs;
+@@ -628,7 +628,8 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ 	}
+ 
+ re_probe:
+-	dev->driver = drv;
++	// FIXME - this cast should not be needed "soon"
++	dev->driver = (struct device_driver *)drv;
+ 
+ 	/* If using pinctrl, bind pins now before probing */
+ 	ret = pinctrl_bind_pins(dev);
+@@ -727,7 +728,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ /*
+  * For initcall_debug, show the driver probe time.
   */
--void driver_detach(struct device_driver *drv)
-+void driver_detach(const struct device_driver *drv)
+-static int really_probe_debug(struct device *dev, struct device_driver *drv)
++static int really_probe_debug(struct device *dev, const struct device_driver *drv)
  {
- 	struct device_private *dev_prv;
- 	struct device *dev;
+ 	ktime_t calltime, rettime;
+ 	int ret;
+@@ -774,7 +775,7 @@ void wait_for_device_probe(void)
+ }
+ EXPORT_SYMBOL_GPL(wait_for_device_probe);
+ 
+-static int __driver_probe_device(struct device_driver *drv, struct device *dev)
++static int __driver_probe_device(const struct device_driver *drv, struct device *dev)
+ {
+ 	int ret = 0;
+ 
+@@ -819,7 +820,7 @@ static int __driver_probe_device(struct device_driver *drv, struct device *dev)
+  *
+  * If the device has a parent, runtime-resume the parent before driver probing.
+  */
+-static int driver_probe_device(struct device_driver *drv, struct device *dev)
++static int driver_probe_device(const struct device_driver *drv, struct device *dev)
+ {
+ 	int trigger_count = atomic_read(&deferred_trigger_count);
+ 	int ret;
+@@ -1137,7 +1138,7 @@ EXPORT_SYMBOL_GPL(device_driver_attach);
+ static void __driver_attach_async_helper(void *_dev, async_cookie_t cookie)
+ {
+ 	struct device *dev = _dev;
+-	struct device_driver *drv;
++	const struct device_driver *drv;
+ 	int ret;
+ 
+ 	__device_driver_lock(dev, dev->parent);
 -- 
 2.45.2
 
