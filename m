@@ -1,97 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781881E4AF;
-	Tue, 11 Jun 2024 14:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC241DFF8;
+	Tue, 11 Jun 2024 14:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718114510; cv=none; b=GkG+gWodqvobWW+BRypLMfADNXZZK4i4Q3x15c4z6Cl8LK3FtbLZP2ppdt3hUyGim5dwJDYu7Vkn4T5zv5OnP7Qvx7TrMsK3PbqJP26CKXzSuuqMa2dHGTikg1LIeYcoIl5/HrEBrZSZlHUyuDIFx80yZp5Gj0HnD+8eFZZ6bOo=
+	t=1718114561; cv=none; b=JilrWbqaXMQ4VWrsPvYKHoYMklwefUpQ0qKoZsjwDFw/3pOCumzYua1JdkAK+HFFG+jICoTTYBQ2tvFWvriNFuepOIy0gDoo/Rtwa18fmUKk5l9ejI8NX+F0DQygU4z9itOew4RlcjSG6gCEz1vM1/TjNGd9UCvOelEjhey6g50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718114510; c=relaxed/simple;
-	bh=/eF3+dH82g2GsNZ69rvGK6Tn+zGBo8LFU2rgwfQ7mrw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NU9z2MmN2CMMhmxL1w8fRa/AkJpVXK4/JeAnm9k+M27PETnHYz2c30l+VZ1sadwIWjCO1YtPNprCTv8t2SIiRR7sROVdiDpVKwda3JF/nv6eyWHpp+3UZMqQtq9DmNwbS9RLWsM8Ri+rMIpfA/c+kqw5qKNxl7/HdipRjG7hPiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F9TKxwLt; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718114561; c=relaxed/simple;
+	bh=W2pEsKL7o7jrs2TaEo52X5dgZvZI9653hgnLFvrpWSg=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=d6yH9l4wfWB65vWW1TDVQ4HaK5J1snxhK9U4gz7JVvPNL7K0ZbF6BglD1oZxIBv/8Kyfo6kqozCLZ4KqS/h3d4a3nt56580uYBScztueDw1wOtUXroDaUw2eqhhzTeCKSjFUQ58qSn0+Ewqv0JAB0DeABENZ4aZ5ZhS9hr9lVik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=D0Wm4Gej; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F9TKxwLt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718114508; x=1749650508;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/eF3+dH82g2GsNZ69rvGK6Tn+zGBo8LFU2rgwfQ7mrw=;
-  b=F9TKxwLtyWL5t9WTobKHi9gENHN4nA0DlpbUXjOKgeyotMvGfw0XDCwU
-   h9SJKrooSbBkifbXYuGUdy6sPs9Wbl8wlktd+rX+0XNGSBk03XuszIDvu
-   6+9ebPz4rN9myVlunSYDA1SLn1wjksEVHFHBfcEijnbfTazWCNFD38QEU
-   eUuHl+LGIE7Oq+1d6XY2Hf7ctSIUueAZMMfttbz1c2K1mQih/iAGkyUU8
-   VI0hovu++K1b2J2cO2CsZBFJmJoqRunS0Bfc2QpCGzxpVivnQ5s+GpcHD
-   vLEcXld3D2+tY21pJCqEMVSA8XZdo6I5NBwcr27K95F0LnuubA3YYxNGG
-   w==;
-X-CSE-ConnectionGUID: ZIjt1dg5Qr6xT+wu8ZH4Nw==
-X-CSE-MsgGUID: UL0ssncyT6SeAcB++5VK9w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="25450374"
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="25450374"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 07:01:47 -0700
-X-CSE-ConnectionGUID: 1Yt1XmWOTa2EL5X4tuahZw==
-X-CSE-MsgGUID: 3SllhWrMTDKcAHtIii7CYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="44348659"
-Received: from unknown (HELO tlindgre-MOBL1) ([10.245.247.195])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 07:01:41 -0700
-Date: Tue, 11 Jun 2024 17:01:05 +0300
-From: Tony Lindgren <tony.lindgren@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] printk: Track command line console positions to fix
- console order
-Message-ID: <ZmhYoV4ZrNwmIDS4@tlindgre-MOBL1>
-References: <20240606114149.118633-1-tony.lindgren@linux.intel.com>
- <ZmgIB2lQaW9oqn3O@pathway.suse.cz>
- <ZmgfZr5ccHATnkAA@tlindgre-MOBL1>
- <ZmhM1VPWhuTggsgf@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="D0Wm4Gej"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1718114515; x=1718719315; i=markus.elfring@web.de;
+	bh=W2pEsKL7o7jrs2TaEo52X5dgZvZI9653hgnLFvrpWSg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=D0Wm4Gejk6TSeDRq9+doUX7Io3ROv8ClPa713A7kmm3ChhE6Vrkx5R67ENav3jiB
+	 v+HZkq7zNZW/1ui3mJlE7d9A7Jnb3rkNbaI3Ntq1vN88WwUogv6SufuERrGtwdlkO
+	 2aMEyqQlHCMidj4Zpou8EXO0B+Oc5JYfaAmW5X1ugehJErJ0w3T/14bmuObjfHUKR
+	 9lRAXbK2xwFDVqSXrmAuQdFMcj8+I2S1pFOsiiZKDI14AGiB1zZo9BRSARPYQ+ClF
+	 MKEB/EM3bJ1ebocSbE1SgcludIdq4+tcgcq9CAVw+BBx0vSMTwubcg/aIGQKdsBmA
+	 Se9tCmH10v+UbQ7qpw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MnG2C-1sihrL0iOa-00dahS; Tue, 11
+ Jun 2024 16:01:55 +0200
+Message-ID: <010b1c91-fbde-4b01-a92e-8c14751c7699@web.de>
+Date: Tue, 11 Jun 2024 16:01:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmhM1VPWhuTggsgf@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ linux-leds@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org,
+ Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Lee Jones <lee@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Pavel Machek <pavel@ucw.cz>
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20240611-leds-mt6360-memleak-v1-1-93642eb5011e@gmail.com>
+Subject: Re: [PATCH] leds: mt6360: fix memory leak in
+ mt6360_init_isnk_properties()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240611-leds-mt6360-memleak-v1-1-93642eb5011e@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vXEYOvaM2JhixxYml/MB3pIPwT5XHFYnYUbXKBTecMbfNFSzCAW
+ sglEHnYhxBF/QKA95KliUnr88huv3OXl/oBThbevXPvjUzrL9ptOZyioC1KoLyERAw31xRH
+ PYYKTd8TQ++HEf7YLdU7+tBTUrXTMRnG6PX70ZHo/+WWQ3PjsKw9ikG+Jm57wme+sNXBb8h
+ 9eluliCCFKTyVWamrGCUw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:lvl8jcAGd20=;KMJvMO4Y+WSHny/FBJphtdHFrTK
+ BTDkJfKQvgkXEAug1o1JXvo58g2oP7YquGiQlBi4/zX1n+/ke6SGlbvAooBsnLF+Q4Q7oaJsC
+ zhU/CeXLiYFdlEzqmzb/PpjaEjixr80Sh7WhFm4Sc6grg+s5Uoj0HlM1RHPKSDSXZLu0SE/Kf
+ PFmItSaAb3esTcyundO+svoGaQDWqgHMHbcFfvvVaFDyIN/Klp3kqtBa1eW7rJLe6o9Vzb4Wm
+ I6dCBxgdtvr4mcbx+glBoGJN+2VALSFoK/QYsMK5S3Ll2z4y6W80fZAcfAOWxQdiEdxC1Dmzf
+ 9lv5xmXcmfvdgoCkpaugjtGsTckjM4T/w0L9c2GuMBNIeCjn7rQAu7a4y5hWyaoAL9NR0GcQn
+ WYYbZ0Nu/dpj1Q2T4wbwHc/28eXeLnd1ZekBiuCh/aS1cU5tFE78RMm1qmFwoc/wyhb9DPxDm
+ 3W/bE2FGYjWEQD2L1nSw0VQ1AfBOcOyp2480d2RJKZCuVrvxjKjQGmEEhEBMewv+YZT3Xl22o
+ CqI80ZrnUA+YWIt6MfdLeugOweV3Oz93UwvR7fuOktr+eG9cMkdHKCJPFlhHSY0fIn/wpVzhB
+ iJoFoRqXIpWNCfpXFZb2N1KJa5A5Yaj3rl/PO8vhW/e5pclPMrQDDxXAmqXsngt+MDGv/5UJ+
+ aYzgEE4a0i1sBhJoER1ptjqf7trZH0VA86gk+vAUXB5dY8xXdkk8xPAA42BGv4nPgzw07xOFt
+ gs04oBU0ZR4UK9gUGkqryvTQn7BsPuLBjhJr0ifUiB1pBhYfn1XdDkM7u3BALBBnrjNqirh/z
+ hlX1oRumBXo4GAWZWQVYWHrLkRrIYBA3Y0I3wAghzRnkw=
 
-On Tue, Jun 11, 2024 at 04:10:45PM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 11, 2024 at 12:56:54PM +0300, Tony Lindgren wrote:
-> > On Tue, Jun 11, 2024 at 10:17:11AM +0200, Petr Mladek wrote:
-> > >     I would expect:
-> > > 
-> > > 	serial8250:0.0	-> ttyS0
-> > > 	serial8250:0.1	-> ttyS1
-> > > 	serial8250:0.2	-> ttyS2
-> > > 	[...]
-> >  
-> > I believe this would be the situation if you make CONFIG_ACPI is not set
-> > in the .config.
-> 
-> This is interesting. So, we still have the DEVNAME differences depending on
-> the kernel configuration? OTOH, I can't imagine either how we can get the
-> device names more stable as long as some drivers instantiate the platform
-> device instead of using 8250 core parts (port, base, core) directly.
+=E2=80=A6
+> Add the missing calls to fwnode_handle_put(child) to avoid memory leaks
+> in the error paths.
 
-Seems we can add translation as needed though. For example, we could add
-console=serial8250:0.0 translation to the PNP port. Or console=0x3f8,115200.
+I suggest to apply a goto chain for a while.
+https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+go=
+to+chain+when+leaving+a+function+on+error+when+using+and+releasing+resourc=
+es
+
+Will the application of scope-based resource management become feasible wi=
+th another delay?
+https://elixir.bootlin.com/linux/v6.10-rc3/source/include/linux/cleanup.h#=
+L8
 
 Regards,
-
-Tony
+Markus
