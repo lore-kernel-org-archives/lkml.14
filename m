@@ -1,70 +1,177 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F4713E8AE
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 11:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A8A13E8AE;
+	Tue, 11 Jun 2024 11:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718104649; cv=none; b=n4+OsWi7K/W22fagiFqRPHneujQ4KzdRZ9Y+2CZJaFAfJdY6hekZ5Fp6fwpwLmdyi/+LJzUsbXS8HQhAEKZ8FE7zal74voEK90QXjYRAGX72HMJ94pVYdl5pzNdSpuiG6pZkpL6AD9FU1IsWNfCeC6jTk0XXPbU1B1RVTP4th0I=
+	t=1718104926; cv=none; b=WxxvhQRTwD078S/dDxfdODQmVsxmjujyvhA8lWplQ9+XdqHZBDYaTjdrrx5CKNzmCJpxBTJbkAWb9qQQN/2HnF1bFfvq02v3y+R5cfxijIFfR8/Iu43QAUd4tBE5s/oMhZdIVAjxcdjQGp2j26fEZp68OEg/2B0Y6lyeW9Cr7Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718104649; c=relaxed/simple;
-	bh=H5hfJES+y6/fEUd4HOft3N27puzOeOCO6FPSaDwlL2M=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Vteb4qlB4jg6gJg1XKtIu8aq15ZHV93tE4Q9HuJ0xhvGIlh5fDFN1Iqghs6sqVG/ZjHvij/kGiQKsP1norxnJ5jRolItYVPVsemVTOv3RhbZZoBBJjdTYAsuSAn0XvonrJeZ4VPOBqxmKZYpPwmOfsZoZLaUjVpbp6Bp+dd0n78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-37586a82295so39706105ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 04:17:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718104647; x=1718709447;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H5hfJES+y6/fEUd4HOft3N27puzOeOCO6FPSaDwlL2M=;
-        b=k6+0KlGxQUt0WsgL4n4MdN6YSaecUCWgSgc8FNfkYEAyt2YBMjPu/S1YGk+g95kdXp
-         jYvEE5KkxQkZlYLlV/QXgV7B3dD6UkL/MQJOIzAyfOsrKEAXnvM9dklTcexmdxzv2rzp
-         4HqcrITErGgJSJ69ubTJ2DEZzR9JSHR/U5yE6sTUq+GELx0wnBNBbopwmNXBfh3uZnNa
-         FLZU/48HkUwbWn3x16PsYbnWnAeh1Y9M391E1dCDts2/mpm1jWP9xhx22RkfM4Ab0UKo
-         j21hTFJebH9UCJ9yWYCs4rCZzJ/XFJFyjls0emqMbGfT0vmqqElmCMq3VpL046V/yQxs
-         z9Cg==
-X-Gm-Message-State: AOJu0Ywh7K40SI23O4aYaDUeGZFQDiicKf7G80RALVeRyiLm7FqVgEqB
-	PCq4xZ1sAsWD7r47zPew3goh0daCYa8ZM0xS2wnDukxLv/bG8rTGcP0AOqzIxV8GBrN2GJThWus
-	BiJJl98+5XNXK6YJIoy/kQ+B4hkO5KzFi/UAtwhUjsZFwKmoNQlUML40=
-X-Google-Smtp-Source: AGHT+IHVeRPvAyxFfl/sBM47RWmZbNCjpCZKSLhMvg8931swg5ddNqhG52owZgq4GDYhnKmAXu/cAv68I0TfMAO8j5V91SAmrDOB
+	s=arc-20240116; t=1718104926; c=relaxed/simple;
+	bh=YhLvdXo+bgU9zbCGfGQR0N/YY1+urUBInzEGRzY7tnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M8b1G/AyZ1RAkWqtQRMKDTmgFkfsCbN8+cr95sWjBkFaULmKrtLrhMC3M6d0MKOO7kpWoNyYhSlTvM1SEmmDvr2I23FvEKwYG6qmLrVt2Avgh3wojd1I6az6H0vzXwyZDbSDe2lnZ/ogGJOONDTOPTMK4o96b0qE7IuP7nyEuMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6/uNApW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6/uNApW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A10D6C2BD10;
+	Tue, 11 Jun 2024 11:22:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718104925;
+	bh=YhLvdXo+bgU9zbCGfGQR0N/YY1+urUBInzEGRzY7tnE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=G6/uNApWfJG5oj1Poo3GOdINKoAZzGzL5J4O7Mrvc/2AEMccK5swiqCJyH7+3WBCU
+	 zvAADBWRBZ2pW8wfXGn4VlzzdaWEo94PpUISbg6sn/GIb0sSI6rXWs9ZY30Izz2A59
+	 /RHvdXBz0ofMl5T0GfrPA64BL6CJX2pYksfOo0krWZc7zU1cE4HmRv997sReIwcpgK
+	 XSvM5ddDBFc4EEGX1V5hAM/ZApOAnHAFCe3V5uoyZ228+vh7K7rYSneZQTHAQpWnE2
+	 aQmuWCI6O9Oi7WPNRPcjk1bG4QzptfQuOLxQTzNjqMXBgfLgrFXM8aXQpld58Pa2pG
+	 FL4O3Bws+3Mxw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org,
+	x86@kernel.org,
+	bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	Deepak Gupta <debug@rivosinc.com>
+Subject: [PATCHv8 bpf-next 0/9] uprobe: uretprobe speed up
+Date: Tue, 11 Jun 2024 13:21:49 +0200
+Message-ID: <20240611112158.40795-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:f0e:b0:375:9deb:ceb8 with SMTP id
- e9e14a558f8ab-3759debd2d8mr2933905ab.3.1718104646938; Tue, 11 Jun 2024
- 04:17:26 -0700 (PDT)
-Date: Tue, 11 Jun 2024 04:17:26 -0700
-In-Reply-To: <0000000000008312ad06163b7225@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002b042d061a9b695c@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [bpf?] KMSAN: uninit-value in htab_lru_percpu_map_lookup_percpu_elem
-From: syzbot <syzbot+1971e47e5210c718db3c@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+hi,
+as part of the effort on speeding up the uprobes [0] coming with
+return uprobe optimization by using syscall instead of the trap
+on the uretprobe trampoline.
 
-***
+The speed up depends on instruction type that uprobe is installed
+and depends on specific HW type, please check patch 1 for details.
 
-Subject: Re: [syzbot] [bpf?] KMSAN: uninit-value in htab_lru_percpu_map_loo=
-kup_percpu_elem
-Author: wojciech.gladysz@infogain.com
+Patches 1-8 are based on bpf-next/master, but patch 2 and 3 are
+apply-able on linux-trace.git tree probes/for-next branch.
+Patch 9 is based on man-pages master.
 
-#syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux 9=
-56a9878a57078fafea171ded9cff2ad5352f446
-The information in this email is confidential and may be legally privileged=
-. It is intended solely for the addressee and access to it by anyone else i=
-s unauthorized. If you are not the intended recipient, any disclosure, copy=
-ing, distribution or any action taken or omitted to be taken based on it, i=
-s strictly prohibited and may be unlawful.
+v8 changes:
+- rebased (another new syscall got merged)
+- added acks
+
+Also available at:
+  https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  uretprobe_syscall
+
+thanks,
+jirka
+
+
+Notes to check list items in Documentation/process/adding-syscalls.rst:
+
+- System Call Alternatives
+  New syscall seems like the best way in here, because we need
+  just to quickly enter kernel with no extra arguments processing,
+  which we'd need to do if we decided to use another syscall.
+
+- Designing the API: Planning for Extension
+  The uretprobe syscall is very specific and most likely won't be
+  extended in the future.
+
+  At the moment it does not take any arguments and even if it does
+  in future, it's allowed to be called only from trampoline prepared
+  by kernel, so there'll be no broken user.
+
+- Designing the API: Other Considerations
+  N/A because uretprobe syscall does not return reference to kernel
+  object.
+
+- Proposing the API
+  Wiring up of the uretprobe system call is in separate change,
+  selftests and man page changes are part of the patchset.
+
+- Generic System Call Implementation
+  There's no CONFIG option for the new functionality because it
+  keeps the same behaviour from the user POV.
+
+- x86 System Call Implementation
+  It's 64-bit syscall only.
+
+- Compatibility System Calls (Generic)
+  N/A uretprobe syscall has no arguments and is not supported
+  for compat processes.
+
+- Compatibility System Calls (x86)
+  N/A uretprobe syscall is not supported for compat processes.
+
+- System Calls Returning Elsewhere
+  N/A.
+
+- Other Details
+  N/A.
+
+- Testing
+  Adding new bpf selftests and ran ltp on top of this change.
+
+- Man Page
+  Attached.
+
+- Do not call System Calls in the Kernel
+  N/A.
+
+
+[0] https://lore.kernel.org/bpf/ZeCXHKJ--iYYbmLj@krava/
+---
+Jiri Olsa (8):
+      x86/shstk: Make return uprobe work with shadow stack
+      uprobe: Wire up uretprobe system call
+      uprobe: Add uretprobe syscall to speed up return probe
+      selftests/x86: Add return uprobe shadow stack test
+      selftests/bpf: Add uretprobe syscall test for regs integrity
+      selftests/bpf: Add uretprobe syscall test for regs changes
+      selftests/bpf: Add uretprobe syscall call from user space test
+      selftests/bpf: Add uretprobe shadow stack test
+
+ arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
+ arch/x86/include/asm/shstk.h                                |   4 +
+ arch/x86/kernel/shstk.c                                     |  16 ++++
+ arch/x86/kernel/uprobes.c                                   | 124 ++++++++++++++++++++++++++++-
+ include/linux/syscalls.h                                    |   2 +
+ include/linux/uprobes.h                                     |   3 +
+ include/uapi/asm-generic/unistd.h                           |   5 +-
+ kernel/events/uprobes.c                                     |  24 ++++--
+ kernel/sys_ni.c                                             |   2 +
+ tools/include/linux/compiler.h                              |   4 +
+ tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c       | 123 ++++++++++++++++++++++++++++-
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 385 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_syscall.c          |  15 ++++
+ tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  17 ++++
+ tools/testing/selftests/x86/test_shadow_stack.c             | 145 ++++++++++++++++++++++++++++++++++
+ 15 files changed, 860 insertions(+), 10 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c
+
+Jiri Olsa (1):
+      man2: Add uretprobe syscall page
+
+ man/man2/uretprobe.2 | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 man/man2/uretprobe.2
