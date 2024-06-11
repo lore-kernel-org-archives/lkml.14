@@ -1,67 +1,43 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099F017BB0A;
-	Tue, 11 Jun 2024 11:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC71617C7DB;
+	Tue, 11 Jun 2024 11:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718105577; cv=none; b=m8AiaQTy9ErKimKmTrpcNlCzvD7P+kuLOUZfvKgjoPfup/EefBI+dH5AY1ogVcZUHN8o61O6scamB+08ht5KWTMQ4pR/JaEr6FtSv9Jn2aVku4gGpK1ZiyGMxksbZXHH8ZZ00W/k3JPxUfOBx7WOentbYaYzWlHNeRUcWZdeYxY=
+	t=1718105581; cv=none; b=tYnMQV4IyGMguuwLRjQW6zCzWwDcWP3eHDiwFhnHpeRiZMy3ZLgZ4QsAbY1RLIpKAsXgX7jkakUmykP9/u0HwgLLN7lzjT0og7MLSJLEG68Vg02wUaDPWjyQBb7um4z7CQ6GLRYGrakr+6UnmJAiAcLSRJxI1g6hzL4zXFHZL7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718105577; c=relaxed/simple;
-	bh=05kfyfA+1HW/19R9nKDQLxLwlI0VDXCoagdozz8+RPk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nNvdtQzDwwSec4000oQTEznMPGq2Qq5saowuZ9vYQDsMn0Bce/2R95ppLF4x878ERpz9wF66eq9t2KgrMXUGhNFNGW/kDdUiElq5Dp9YmcsGXCSpeW7JBeAXXKg/TFxn9+VHi51IkGtZNfIKAqtXsZnrVcdLJkNFgzcQkJxgYQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=q6Y3sQ30; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="q6Y3sQ30"
-X-UUID: 548e59ce27e611efa22eafcdcd04c131-20240611
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=gZ+L3w0QZv+3dXASpa8etsuHp4Ejgx7CTnrEsKA4Jck=;
-	b=q6Y3sQ30CzbVjSHSA+CcuxnWOaUDK+FValPmlYnrAGxiU47Co32KUp7XnFf+7n10+85xWkWRCj9dFNa99aiOpJm1H6QBoRYjyEdIdv644DAmnSxX8nyTOxrZsXODnLAvwRpwFwOkZTtGoCUPDnvd6WiuZI+dgArJbhZRgm5115s=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:5c3d9a77-a3ce-4b5c-bbfa-d1b192fb7d8d,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:393d96e,CLOUDID:0532db93-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-UUID: 548e59ce27e611efa22eafcdcd04c131-20240611
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
-	(envelope-from <zhi.mao@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1356379596; Tue, 11 Jun 2024 19:32:48 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Tue, 11 Jun 2024 19:32:47 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Tue, 11 Jun 2024 19:32:46 +0800
-From: Zhi Mao <zhi.mao@mediatek.com>
-To: <mchehab@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <sakari.ailus@linux.intel.com>
-CC: <laurent.pinchart@ideasonboard.com>, <shengnan.wang@mediatek.com>,
-	<yaya.chang@mediatek.com>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, <yunkec@chromium.org>,
-	<conor+dt@kernel.org>, <matthias.bgg@gmail.com>,
-	<angelogioacchino.delregno@collabora.com>, <jacopo.mondi@ideasonboard.com>,
-	<zhi.mao@mediatek.com>, <10572168@qq.com>, <hverkuil-cisco@xs4all.nl>,
-	<heiko@sntech.de>, <jernej.skrabec@gmail.com>, <macromorgan@hotmail.com>,
-	<linus.walleij@linaro.org>, <hdegoede@redhat.com>,
-	<tomi.valkeinen@ideasonboard.com>, <gerald.loacker@wolfvision.net>,
-	<andy.shevchenko@gmail.com>, <bingbu.cao@intel.com>,
-	<dan.scally@ideasonboard.com>, <linux-media@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v6 0/3] media: i2c: Add support for GC05A2 sensor
-Date: Tue, 11 Jun 2024 19:32:33 +0800
-Message-ID: <20240611113236.16513-1-zhi.mao@mediatek.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1718105581; c=relaxed/simple;
+	bh=evBDAJSKCEtjfj0SrHps7BnWFCYo9u1IGqSZA5sCbmA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IlmeYDK7YzcRfBjcfDnQR/wgRbr2aZym9OBBHg//lFxWKLLGWv9og+sSX1iVrrfi1qMt0g9WPTK/9DAS2bwAIZKkPRQEcM4DsSFauMls44QW3xaQ8wda4FBpIeleKdcb8b/xCN0zy9t5+e40zfdEwPCHIa4AuulOC4f5nlkctq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.08,229,1712588400"; 
+   d="scan'208";a="207491408"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 11 Jun 2024 20:32:58 +0900
+Received: from renesas-deb12.mshome.net (unknown [10.226.92.82])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 6A1924007201;
+	Tue, 11 Jun 2024 20:32:54 +0900 (JST)
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/9] pinctrl: renesas: rzg2l: Clean up and refactor OEN read/write functions
+Date: Tue, 11 Jun 2024 12:31:56 +0100
+Message-Id: <20240611113204.3004-3-paul.barker.ct@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
+References: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,59 +45,190 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
 
+The variable naming in the various OEN functions has been confusing. We
+were passing the _pin & bit variables from rzg2l_pinctrl_pinconf_get()
+and rzg2l_pinctrl_pinconf_set() as the offset & pin argument to the
+read_oen() and write_oen() functions. This doesn't make sense, the first
+of these isn't actually an offset and the second is not needed for
+RZ/V2H but leads to confusion with the bit variable used within these
+functions.
 
-This series adds YAML DT binding and V4L2 sub-device driver for Galaxycore's
-GC05A2 5-megapixel 10-bit RAW CMOS 1/5" sensor, with an MIPI CSI-2 image data
-interface and the I2C control bus.
+To tidy this up, instead pass the _pin variable directly to the
+read_oen() and write_oen() functions with consistent naming. Then
+rzg3s_read_oen() and rzg3s_write_oen() can use macros to get the port
+and pin numbers it needs.
 
-The driver is implemented with V4L2 framework.
- - Async registered as a V4L2 sub-device.
- - As the first component of camera system including Seninf, ISP pipeline.
- - A media entity that provides one source pad in common.
- - Used in camera features on ChromeOS application.
+Also, merge rzg3s_oen_is_supported() into rzg3s_pin_to_oen_bit() to give
+a single translation function which returns an error if the pin doesn't
+support OEN. While we're here, remove an unnecessary branch and clarify
+the variable naming.
 
-Also this driver supports following features:
- - manual exposure and analog gain control support
- - vertical blanking control support
- - test pattern support
- - media controller support
- - runtime PM support
- - support resolution: 2592x1944@30fps, 1280x720@60fps
+Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+---
+Changes v1->v2:
+  * Merged patches 1 & 2 from the previous series, updated to be
+    compatible with recent patches adding RZ/V2H support.
 
-Previous versions of this patch-set can be found here:
-v5:https://lore.kernel.org/all/20240605105540.17937-1-zhi.mao@mediatek.com/ 
-v4:https://lore.kernel.org/all/20240427052233.8915-1-zhi.mao@mediatek.com/
-v3:https://lore.kernel.org/linux-media/20240403033825.9072-1-zhi.mao@mediatek.com/
-v2:https://lore.kernel.org/linux-media/20240323014751.4989-1-zhi.mao@mediatek.com/
-v1:https://lore.kernel.org/linux-media/20240316025253.2300-1-zhi.mao@mediatek.com/
-v0:https://lore.kernel.org/linux-media/20240313054409.8073-1-zhi.mao@mediatek.com/
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 74 +++++++++++--------------
+ 1 file changed, 32 insertions(+), 42 deletions(-)
 
-This series is based on linux-next, tag: next-20240611
-Changes in v6:
-- use "dev_err_probe" API in probe function 
-
-Thanks
-
-Zhi Mao (3):
-  media: dt-bindings: i2c: add GalaxyCore GC05A2 image sensor
-  media: i2c: Add GC05A2 image sensor driver
-  MAINTAINERS: Add entry for GC05A2 image sensor
-
- .../bindings/media/i2c/galaxycore,gc05a2.yaml |  112 ++
- MAINTAINERS                                   |    7 +
- drivers/media/i2c/Kconfig                     |   10 +
- drivers/media/i2c/Makefile                    |    1 +
- drivers/media/i2c/gc05a2.c                    | 1359 +++++++++++++++++
- 5 files changed, 1489 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/galaxycore,gc05a2.yaml
- create mode 100644 drivers/media/i2c/gc05a2.c
-
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index 901175f6d05c..b28be5be668d 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -289,8 +289,8 @@ struct rzg2l_pinctrl_data {
+ #endif
+ 	void (*pwpr_pfc_lock_unlock)(struct rzg2l_pinctrl *pctrl, bool lock);
+ 	void (*pmc_writeb)(struct rzg2l_pinctrl *pctrl, u8 val, u16 offset);
+-	u32 (*oen_read)(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin);
+-	int (*oen_write)(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin, u8 oen);
++	u32 (*oen_read)(struct rzg2l_pinctrl *pctrl, u32 caps, unsigned int _pin);
++	int (*oen_write)(struct rzg2l_pinctrl *pctrl, u32 caps, unsigned int _pin, u8 oen);
+ 	int (*hw_to_bias_param)(unsigned int val);
+ 	int (*bias_param_to_hw)(enum pin_config_param param);
+ };
+@@ -994,53 +994,43 @@ static bool rzg2l_ds_is_supported(struct rzg2l_pinctrl *pctrl, u32 caps,
+ 	return false;
+ }
+ 
+-static bool rzg3s_oen_is_supported(u32 caps, u8 pin, u8 max_pin)
++static int rzg3s_pin_to_oen_bit(const struct rzg2l_hwcfg *hwcfg, u32 caps, u32 port, u8 pin)
+ {
+-	if (!(caps & PIN_CFG_OEN))
+-		return false;
++	u8 bit = pin * 2;
+ 
+-	if (pin > max_pin)
+-		return false;
++	if (!(caps & PIN_CFG_OEN) || pin > hwcfg->oen_max_pin)
++		return -EINVAL;
+ 
+-	return true;
++	if (port == hwcfg->oen_max_port)
++		bit += 1;
++
++	return bit;
+ }
+ 
+-static u8 rzg3s_pin_to_oen_bit(u32 offset, u8 pin, u8 max_port)
++static u32 rzg3s_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, unsigned int _pin)
+ {
+-	if (pin)
+-		pin *= 2;
++	u32 port = RZG2L_PIN_ID_TO_PORT(_pin);
++	u8 pin = RZG2L_PIN_ID_TO_PIN(_pin);
++	int bit;
+ 
+-	if (offset / RZG2L_PINS_PER_PORT == max_port)
+-		pin += 1;
+-
+-	return pin;
+-}
+-
+-static u32 rzg3s_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin)
+-{
+-	u8 max_port = pctrl->data->hwcfg->oen_max_port;
+-	u8 max_pin = pctrl->data->hwcfg->oen_max_pin;
+-	u8 bit;
+-
+-	if (!rzg3s_oen_is_supported(caps, pin, max_pin))
++	bit = rzg3s_pin_to_oen_bit(pctrl->data->hwcfg, caps, port, pin);
++	if (bit < 0)
+ 		return 0;
+ 
+-	bit = rzg3s_pin_to_oen_bit(offset, pin, max_port);
+-
+ 	return !(readb(pctrl->base + ETH_MODE) & BIT(bit));
+ }
+ 
+-static int rzg3s_write_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin, u8 oen)
++static int rzg3s_write_oen(struct rzg2l_pinctrl *pctrl, u32 caps, unsigned int _pin, u8 oen)
+ {
+-	u8 max_port = pctrl->data->hwcfg->oen_max_port;
+-	u8 max_pin = pctrl->data->hwcfg->oen_max_pin;
++	u32 port = RZG2L_PIN_ID_TO_PORT(_pin);
++	u8 pin = RZG2L_PIN_ID_TO_PIN(_pin);
+ 	unsigned long flags;
+-	u8 val, bit;
++	int bit;
++	u8 val;
+ 
+-	if (!rzg3s_oen_is_supported(caps, pin, max_pin))
+-		return -EINVAL;
+-
+-	bit = rzg3s_pin_to_oen_bit(offset, pin, max_port);
++	bit = rzg3s_pin_to_oen_bit(pctrl->data->hwcfg, caps, port, pin);
++	if (bit < 0)
++		return bit;
+ 
+ 	spin_lock_irqsave(&pctrl->lock, flags);
+ 	val = readb(pctrl->base + ETH_MODE);
+@@ -1119,12 +1109,12 @@ static int rzv2h_bias_param_to_hw(enum pin_config_param param)
+ 	return -EINVAL;
+ }
+ 
+-static u8 rzv2h_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, u32 offset)
++static u8 rzv2h_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, unsigned int _pin)
+ {
+ 	static const char * const pin_names[] = { "ET0_TXC_TXCLK", "ET1_TXC_TXCLK",
+ 						  "XSPI0_RESET0N", "XSPI0_CS0N",
+ 						  "XSPI0_CKN", "XSPI0_CKP" };
+-	const struct pinctrl_pin_desc *pin_desc = &pctrl->desc.pins[offset];
++	const struct pinctrl_pin_desc *pin_desc = &pctrl->desc.pins[_pin];
+ 	unsigned int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(pin_names); i++) {
+@@ -1136,19 +1126,19 @@ static u8 rzv2h_pin_to_oen_bit(struct rzg2l_pinctrl *pctrl, u32 offset)
+ 	return 0;
+ }
+ 
+-static u32 rzv2h_oen_read(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin)
++static u32 rzv2h_oen_read(struct rzg2l_pinctrl *pctrl, u32 caps, unsigned int _pin)
+ {
+ 	u8 bit;
+ 
+ 	if (!(caps & PIN_CFG_OEN))
+ 		return 0;
+ 
+-	bit = rzv2h_pin_to_oen_bit(pctrl, offset);
++	bit = rzv2h_pin_to_oen_bit(pctrl, _pin);
+ 
+ 	return !(readb(pctrl->base + PFC_OEN) & BIT(bit));
+ }
+ 
+-static int rzv2h_oen_write(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin, u8 oen)
++static int rzv2h_oen_write(struct rzg2l_pinctrl *pctrl, u32 caps, unsigned int _pin, u8 oen)
+ {
+ 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
+ 	const struct rzg2l_register_offsets *regs = &hwcfg->regs;
+@@ -1159,7 +1149,7 @@ static int rzv2h_oen_write(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8
+ 	if (!(caps & PIN_CFG_OEN))
+ 		return -EINVAL;
+ 
+-	bit = rzv2h_pin_to_oen_bit(pctrl, offset);
++	bit = rzv2h_pin_to_oen_bit(pctrl, _pin);
+ 	spin_lock_irqsave(&pctrl->lock, flags);
+ 	val = readb(pctrl->base + PFC_OEN);
+ 	if (oen)
+@@ -1217,7 +1207,7 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+ 	case PIN_CONFIG_OUTPUT_ENABLE:
+ 		if (!pctrl->data->oen_read)
+ 			return -EOPNOTSUPP;
+-		arg = pctrl->data->oen_read(pctrl, cfg, _pin, bit);
++		arg = pctrl->data->oen_read(pctrl, cfg, _pin);
+ 		if (!arg)
+ 			return -EINVAL;
+ 		break;
+@@ -1358,7 +1348,7 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
+ 			arg = pinconf_to_config_argument(_configs[i]);
+ 			if (!pctrl->data->oen_write)
+ 				return -EOPNOTSUPP;
+-			ret = pctrl->data->oen_write(pctrl, cfg, _pin, bit, !!arg);
++			ret = pctrl->data->oen_write(pctrl, cfg, _pin, !!arg);
+ 			if (ret)
+ 				return ret;
+ 			break;
 -- 
-2.25.1
-
-
-
+2.39.2
 
