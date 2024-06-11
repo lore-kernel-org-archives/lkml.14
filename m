@@ -1,139 +1,104 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F5217D88D;
-	Tue, 11 Jun 2024 11:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7A5417D8B5
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 11:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718105774; cv=none; b=jsc9iKVQ+CK6IeW2/tnLITtWIRVc75953eUQsibFHUVwD2cRlDNaFFSA9o5C0404JoSLPmsN4ELXj3BRZ6BbIefSLb1uet2n7z7Q8rYFrA+egQfvGttW8oOednWlbxBQrxMbPZ7WSgv58o1b8RzFrZuBTonyP2G/Br9sh7jrvjk=
+	t=1718105779; cv=none; b=ffpeeD1y2iCEBn+nx47KymlWvqkWd4vAoXchErW+sNsoVtFPnQSzXBTJgsKZ9j7CBT9Rp2+hZHgPpVxJBjsCDuuxRxV3DcrBqGCSUlJeDegtxkJa4Rc6MdI5tyU7xzuzSy8/ZZhv4mpJjKZ6Ljwyxjfr+YL+wM+ZjHP9KNXcxIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718105774; c=relaxed/simple;
-	bh=wTDGlpwvDV/tYVSnvnYnjRhtXn8bRII9NTQtrKlKeew=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gbrXlbOszd4SgE8xnU2MVno4i0oJakTOVr3JerJJxiPHBbMjn0kF7h8gHoUn6v/rzidoRsP8DScjyZSfNMXCOdoLqZD8IqCAWxnEssZWYrCsG11SsuZ/WKcbQr6zqRcN33IHMGLxIUEfMhCQ6a5X9QcQ0g6aQl69H7uov0NeMn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wzhjc4T8; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718105779; c=relaxed/simple;
+	bh=KRwPXUn6DQRf5xXAQc1WpIgnWvp45Pqu02uX4Li/3dM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=e2RZUE79ZdF06DbB5qH1TYn2h21cS0tcBnq0/IxM7Yl+rJ3aDdHE63R1/IuIOybjeXD+gqazCej9owcM4/gEru2mZiEPl36tF5L4+5WZH7j7gVhO0xzFg8vlCALRcpYxz00GvUt3KXf2KZfExVouyDzMyTVLkoy3Mu2za9zOfDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=Q9xyf6WE; arc=none smtp.client-ip=117.135.210.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wzhjc4T8"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2c1def9b4b3so877489a91.0;
-        Tue, 11 Jun 2024 04:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718105772; x=1718710572; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DUr5nSYv5tY7HQINi2nTpc/x5kG6Ztbr9RxJD3fNnUU=;
-        b=Wzhjc4T82qH4VjRs02s20i0NcFre+WGiDWRWKXncK0NY1BD5wNMxsw5AcbgYgfElbe
-         KqKhF15BGzgRKugM2l9FuK22iDBzcOKqXEc1DSiKlnPykV5BqC7xy7uBEDhqaGTjl7vs
-         EcVi4NVGUAir1Or/bL99zJa4i3fA5e02m57o9AZF7zG7F1qqcPqm7A5PvUVkt3GZvpMr
-         EXH9nK6tO8hMOIBGQjk9LGDlYZxQMcD0ClwGcyklCHTw9YB6o3KGnhA18PwRK/UP8d82
-         L+iqNXj/nEa7AbxTONI8LNsP1B+2leLaIk8hSY3P6ITsik+bVigBbT/h8xgOi5Hvbj/I
-         TZrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718105772; x=1718710572;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DUr5nSYv5tY7HQINi2nTpc/x5kG6Ztbr9RxJD3fNnUU=;
-        b=UySFLjtfIyz5CFUze72ZHAS2qKmyoYhNjDzPJzkm8OGPvp+GNN9oiO+j64v1heMl/F
-         3RFpZ1HM82S3KEBudR9uPxSXQMabQTzETN5tCuvKStHJ9lekrdYnKBdLTDNODoiBVkf7
-         Qxu0hbfj8Uvbtj68RdQJ9XrJyxshxB1axIB9PXMj4gybv5gTCzx8VUnCHD9wp/ekj4Ae
-         SUzhdviBnDmcbcidxYKGsWMNcqi72vxmB/ItnRUkTXGdDq701qR7KjcZHUECXJ+z1dYF
-         J/zR2qRI81OFk/P6G1L18u+J+nkTftoLXAFp9ayyPcoHn56rEL755JAyxFSTbacMugwV
-         8Z4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWvgLPnGUjytWkA28hblAmTQwZKv+U84vEuAHh6orC0Ns1XZMzgsxeecVHfA3P5OPKlv5ejI35q7cWj1m8H1Pqqqiw2WHtZIKBLFehae19h5ko6nFvCsMj2f2hqWdplim0yNZBP6O7FmzyTHZX8S2YNicfzFZd3PBzgJJRx4OqGaGBUfYc=
-X-Gm-Message-State: AOJu0Yz+gmzSKRu7e4AA63rrC6/TAqp4e8v1wYd/bd5Y9ULvOj+P+BLO
-	eBf1bzG0Fht9c82Kf5UehXSKuZEmOevTyXVCiRDEa7UgSwkgZhsL
-X-Google-Smtp-Source: AGHT+IFUGwaFivizDf0SnGE18XoE7bi8+5EJ03/BzizEhUoZRYPWIZ4N2Kjf0iQkk+nU04BWSQDNgQ==
-X-Received: by 2002:a17:90b:4f8c:b0:2c3:195d:8cc1 with SMTP id 98e67ed59e1d1-2c3195d8deamr3897147a91.37.1718105772537;
-        Tue, 11 Jun 2024 04:36:12 -0700 (PDT)
-Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2c2dd785762sm6705086a91.37.2024.06.11.04.36.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 04:36:12 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Hauke Mehrtens <hauke@hauke-m.de>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	=?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>,
-	linux-mips@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Daniel=20Gonz=C3=A1lez=20Cabanelas?= <dgcbueu@gmail.com>
-Subject: [PATCH v7 5/5] mips: bmips: enable RAC on BMIPS4350
-Date: Tue, 11 Jun 2024 13:35:37 +0200
-Message-ID: <20240611113538.9004-6-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240611113538.9004-1-ansuelsmth@gmail.com>
-References: <20240611113538.9004-1-ansuelsmth@gmail.com>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Q9xyf6WE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Subject:From:Message-ID:Date:MIME-Version:
+	Content-Type; bh=jCFqd3LXs39+VvrrsYj4pOe0n5oGnuB0OD0gS2ysprA=;
+	b=Q9xyf6WEfnTLzKNsjSajrV4DhpElAvfK3VOG7PXv3jYMGiQfKaIOQeZdf/Xkd1
+	PXKdhwwCfiO9rMSC9GQHh2Ntb88Yo9J7km1E7j5FXk+eqkMZwj2MvU6Vo+HkGphH
+	9hRIP5IjiEUiz+p22vaUOK3SaKMZjz4Ax+auc2hmibyew=
+Received: from [172.21.21.216] (unknown [118.242.3.34])
+	by gzga-smtp-mta-g1-3 (Coremail) with SMTP id _____wDXvw77Mmhm7thyAw--.44907S2;
+	Tue, 11 Jun 2024 19:20:28 +0800 (CST)
+Subject: Re: [PATCH] mm/gup: don't check page lru flag before draining it
+To: David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, liuzixing@hygon.cn
+References: <0d7a4405-9a2e-4bd1-ba89-a31486155233@redhat.com>
+ <dc7a0b61-8d3f-7205-2f6d-c2b12500947a@126.com>
+ <776de760-e817-43b2-bd00-8ce96f4e37a8@redhat.com>
+ <7063920f-963a-4b3e-a3f3-c5cc227bc877@redhat.com>
+ <48150a28-ed48-49ff-9432-9cd30cda4da4@linux.alibaba.com>
+ <11ef3deb-d1e3-46d5-97ed-9ba3c1fbbba9@redhat.com>
+ <697a9bc2-a655-4035-aa5e-7d3acb23e79d@redhat.com>
+ <d6deb928-3466-45ea-939b-cb5aca9bc7b4@linux.alibaba.com>
+ <3a368e38-a4cb-413e-a6d9-41c6b3dbd5ae@redhat.com>
+ <48fb0e58-16d1-7956-cf35-74741826617a@126.com>
+ <ZmR1dVUB5mE2If9t@casper.infradead.org>
+ <617f9e36-9334-4630-a6b9-473f2dd570d4@redhat.com>
+From: yangge1116 <yangge1116@126.com>
+Message-ID: <8351052a-5c21-c383-544b-3166e883587c@126.com>
+Date: Tue, 11 Jun 2024 19:20:26 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <617f9e36-9334-4630-a6b9-473f2dd570d4@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXvw77Mmhm7thyAw--.44907S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uF1xWr47XrW7urWrZFyUGFg_yoW8Gw1kpF
+	18KF98GF4qkryayFn2gwnrArsay3yrXFW5AFy3Zry7CF4DXF1a9rW0qa15CFy3Jr4Sqr1I
+	ya1jq3WkuF15ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07b0eOJUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiGA36G2VLbs-xaAAAsi
 
-From: Daniel González Cabanelas <dgcbueu@gmail.com>
 
-The data RAC is left disabled by the bootloader in some SoCs, at least in
-the core it boots from.
-Enabling this feature increases the performance up to +30% depending on the
-task.
 
-Signed-off-by: Daniel González Cabanelas <dgcbueu@gmail.com>
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-[ rework code and reduce code duplication ]
-Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- arch/mips/kernel/smp-bmips.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+在 2024/6/9 上午12:03, David Hildenbrand 写道:
+> On 08.06.24 17:15, Matthew Wilcox wrote:
+>> On Sat, Jun 08, 2024 at 12:38:49PM +0800, yangge1116 wrote:
+>>> Can we add a PG_lru_batch flag to determine whether a page is in lru 
+>>> batch?
+>>> If we can, seems this problem will be easier.
+>>
+>> Page flags are in short supply.  You'd need a really good justification.
+>>
+> 
+> A flag would not be able to handle the "part of multiple LRU batches" 
+> that should currently possible (when to clear the flag?). Well, if we 
+> have to keep supporting that. If we only to be part in a single LRU 
+> batch, a new flag could work and we could still allow isolating a folio 
+> from LRU while in some LRU batch.
 
-diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
-index 20e2fb10022d..e30342af8d91 100644
---- a/arch/mips/kernel/smp-bmips.c
-+++ b/arch/mips/kernel/smp-bmips.c
-@@ -598,6 +598,7 @@ asmlinkage void __weak plat_wired_tlb_setup(void)
- void bmips_cpu_setup(void)
- {
- 	void __iomem __maybe_unused *cbr = bmips_cbr_addr;
-+	u32 __maybe_unused rac_addr;
- 	u32 __maybe_unused cfg;
- 
- 	switch (current_cpu_type()) {
-@@ -626,6 +627,23 @@ void bmips_cpu_setup(void)
- 		__raw_readl(cbr + BMIPS_RAC_ADDRESS_RANGE);
- 		break;
- 
-+	case CPU_BMIPS4350:
-+		rac_addr = BMIPS_RAC_CONFIG_1;
-+
-+		if (!(read_c0_brcm_cmt_local() & (1 << 31)))
-+			rac_addr = BMIPS_RAC_CONFIG;
-+
-+		/* Enable data RAC */
-+		cfg = __raw_readl(cbr + rac_addr);
-+		__raw_writel(cfg | 0xf, cbr + rac_addr);
-+		__raw_readl(cbr + rac_addr);
-+
-+		/* Flush stale data out of the readahead cache */
-+		cfg = __raw_readl(cbr + BMIPS_RAC_CONFIG);
-+		__raw_writel(cfg | 0x100, cbr + BMIPS_RAC_CONFIG);
-+		__raw_readl(cbr + BMIPS_RAC_CONFIG);
-+		break;
-+
- 	case CPU_BMIPS4380:
- 		/* CBG workaround for early BMIPS4380 CPUs */
- 		switch (read_c0_prid()) {
--- 
-2.43.0
+Yes, before adding a folio to LRU batch, check whether the folio has 
+been added. Add the folio to LRU batch only if the folio has not been 
+added.
+
+> 
+> If we could handle it using the existing flags, that would of course be 
+> better (wondering if we could store more information in the existing 
+> flags by using a different encoding for the different states).
+
+If a folio contains more than one page, the folio will not be added to 
+LRU batch. Can we use folio_test_large(folio) to filter?
+
+if (!folio_test_large(folio) && drain_allow) {
+	lru_add_drain_all();
+	drain_allow = false;
+}
+
+> 
+> The temporary clearing of the LRU flag we do right now tells me that 
+> it's already not 100% reliable, so the question is how much more 
+> unreliable we can make it before it would hurt :)
+> 
 
