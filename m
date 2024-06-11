@@ -1,163 +1,134 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD0317B436
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 10:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E0517836F;
+	Tue, 11 Jun 2024 10:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718100691; cv=none; b=LBeOEEgNJsy89rp/FiKLBeFEk0WSxrw3yKmoTEQvQEvufkaw6H8EuBG9awpKOFE+Ws33i5XkguI/R4JNReC1oe1+vDnVjl85GRCBbFsvVQNAz0nUTqY9q3zsib3zjQQcvbtjjW8u8Ybq8Yl6cyC6imc0Bik2QO2bZWRvWarcBNA=
+	t=1718100768; cv=none; b=OKqE4oTDbcY5yAaf6LIaTZIJRMZ103yU3Wepw9nfw8EOFxsBoHMWEEz7zDJ5QHLW0Sim9Cuoza10jRLdhTvUqbv9xqF+TFQGLsjWlpPBsMjVJH3cGGRpq+XGzZmD51Qk4T9IHGRVveoCpszM63HtGTUYD7I7OlDqhGj7CNQ9Ku4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718100691; c=relaxed/simple;
-	bh=70wTV4nMPkC96519CWpP6cXN2DwOUaVtwPlToALg+34=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZKZMPms8tCS417WfOcoQwB0MNrgiU4GbKGLnw7I0WCYZy5+cRZPj8eo0s0J6gufHckcPRwxZ5S2pPfc93D29S/Z46IZo/4z8R/yIS7gt84jH9SjM6L5ksGrGsNVmQ2b/gzF3kNKukP9wEIJBbNXouzK9ukAnpe5FL79S9XxbP4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Jptw3rzn; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1718100768; c=relaxed/simple;
+	bh=hHq7rsBFDq0EqNnuYPQ1CAP+SGwfC+85cs43Miwvbwk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AX3cB7kGtIQnyxvTwbWQR+GLDNtN0VYm9jWf6swl1j63tFnrysmsBoDSEKjFG/txv9wIsjeotTQ/dTX1oXCeg6WYAjHrV9oWSJ1Ruw0GobyRMDK4mMcOIvL4YeF2JBPqMp78ubZQItiUOhzJ3L+mxTNo9tdV87iscY7I7gK9Zrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XF5tygky; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Jptw3rzn"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1718100682; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=ihHol0Lo4aQL92vXhUE0q0HG3Xsyoz8HlIbQSl3GlRA=;
-	b=Jptw3rznsqoHQxQkCYMKVYim7AsECX9znu/4R94NJp8vLd4WcIzqq+a0yaHYvsN5Bwt54eTffUbUeq1WyXmROKAbiVoPr2290bOnpEePq7Cx23kngnfjzAdFNZycFGJFwpb2enBjzGuxIGdknmyd9dla+hIkBGFUeBLOFw+eu1I=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W8G1Jrq_1718100680;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8G1Jrq_1718100680)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Jun 2024 18:11:21 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	hughd@google.com
-Cc: willy@infradead.org,
-	david@redhat.com,
-	wangkefeng.wang@huawei.com,
-	ying.huang@intel.com,
-	21cnbao@gmail.com,
-	ryan.roberts@arm.com,
-	shy828301@gmail.com,
-	ziy@nvidia.com,
-	ioworker0@gmail.com,
-	da.gomez@samsung.com,
-	p.raghav@samsung.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/6] mm: shmem: add mTHP size alignment in shmem_get_unmapped_area
-Date: Tue, 11 Jun 2024 18:11:09 +0800
-Message-Id: <0c549b57cf7db07503af692d8546ecfad0fcce52.1718090413.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
-References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XF5tygky"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2ebd95f136bso9059821fa.0;
+        Tue, 11 Jun 2024 03:12:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718100765; x=1718705565; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2FKak35VIiYwM8SAujbX9oYKzoQLHlkNtzmJ5k52VYs=;
+        b=XF5tygkyT1RbLf0yFFfzpjBEjpmvSHWL6DDTiK6rJt0Gt4Ydgz8ky+FHjPfZk8d7C8
+         a6kLqA+An1P8fXeICCxFJdwyEymX5x/UQfrHhOVaG7Pb92rnNkrfq+FpWoHlFXgYpHiz
+         7HUAknBP/iqc3lf0NfjrrFMQHoAU+ALrd8v4mVXDxdHj1wgQJwXZ04CCMDcC2O0/ACDp
+         7lVyvUPr/WNW0DYQyfnnvTbPGADYbd1KHGt+TH405MU9sgv2sdCjZKhdl/XqZRLbFQh2
+         UvrdAfmK5otvjqLCKqV8zXg26uhTGpNBKZf2Q5mkd/Y/Slmy5vTBuoXPrLCaSxrgVUMY
+         Jw7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718100765; x=1718705565;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2FKak35VIiYwM8SAujbX9oYKzoQLHlkNtzmJ5k52VYs=;
+        b=p2kWx616qP87C7DdC2GCLq6cF6M1Fld7xdRTXEhBphtiEHAlE44zkWIy8aDSPKfUZH
+         MthuKT3GnRNHKnIU9wUeP5XRvelx7VHbV3+Vpduk8d2uBUdhQ3RrelA1h2tedLkLsH18
+         KxwxgTPeR0j3cP0sqS1qL5Ij3ivlJu0cPfOVITBnVpykLtom7LmNoj5c3a+ICjUVCnMC
+         qmgzD26TTwul6y+PgXEeMB1gleGnkAV925rZc19bACZIu63RHpRRs5Sw+xJLS/Mb7Gzq
+         TmjOjXt+jT821r4smQwPxzVpGDZ+CwU72J7+p3slFqqFbbp1ikUTdT1i045pQt2GXtzM
+         hT8A==
+X-Forwarded-Encrypted: i=1; AJvYcCU3YhD4mfgBJTivljzNFgzyr3So6jDQqp2NyX1gKYmh9KB7sJZea84CJiilMQcRHQzcg9fgH6Dymt2u3p6mJhNm9wHuWhtF/art+IGftXBNlAJQWUdnd03aQQBUgis7kZ0z
+X-Gm-Message-State: AOJu0YxF5plPd5rEolu8XON1Zn4LUn9kM0L07wGZ4vtLKcYGb/48bOyy
+	5zX0dElczSWqFZIN/pH1em6Rj5qDXYWOmDgKfvPlW6UyYH3qwIy1
+X-Google-Smtp-Source: AGHT+IFqxkEHeFSRbrMxnPFKPJEiNaoRvYCebSTK4U7KrRNNGFlGxa8V+twgJbUCwSME/kpyvOOKGQ==
+X-Received: by 2002:a2e:3603:0:b0:2e9:6e43:c897 with SMTP id 38308e7fff4ca-2eadce82d72mr71336111fa.48.1718100764800;
+        Tue, 11 Jun 2024 03:12:44 -0700 (PDT)
+Received: from pc636 (host-90-233-193-23.mobileonline.telia.com. [90.233.193.23])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ebee031c95sm6061191fa.101.2024.06.11.03.12.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 03:12:44 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 11 Jun 2024 12:12:41 +0200
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>,
+	Frederic Weisbecker <frederic@kernel.org>, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org
+Subject: Re: [PATCH rcu 2/9] rcu: Reduce synchronize_rcu() delays when all
+ wait heads are in use
+Message-ID: <ZmgjGdRLCg3tnuBC@pc636>
+References: <657595c8-e86c-4594-a5b1-3c64a8275607@paulmck-laptop>
+ <20240604222355.2370768-2-paulmck@kernel.org>
+ <ZmBVfpyEZeTIAHJn@localhost.localdomain>
+ <c7d07e5d-34a0-4874-8e7e-1c576c14c8e6@paulmck-laptop>
+ <fbc30c3a-ecd3-4525-9434-307c7769bb4c@amd.com>
+ <a0aa3d5e-006c-475d-bd2f-b15fca47deee@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <a0aa3d5e-006c-475d-bd2f-b15fca47deee@paulmck-laptop>
 
-Although the top-level hugepage allocation can be turned off, anonymous shmem
-can still use mTHP by configuring the sysfs interface located at
-'/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled'. Therefore,
-add alignment for mTHP size to provide a suitable alignment address in
-shmem_get_unmapped_area().
+On Thu, Jun 06, 2024 at 09:49:59AM -0700, Paul E. McKenney wrote:
+> On Thu, Jun 06, 2024 at 09:16:08AM +0530, Neeraj Upadhyay wrote:
+> > 
+> > 
+> > On 6/6/2024 12:08 AM, Paul E. McKenney wrote:
+> > > On Wed, Jun 05, 2024 at 02:09:34PM +0200, Frederic Weisbecker wrote:
+> > >> Le Tue, Jun 04, 2024 at 03:23:48PM -0700, Paul E. McKenney a écrit :
+> > >>> From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+> > >>>
+> > >>> When all wait heads are in use, which can happen when
+> > >>> rcu_sr_normal_gp_cleanup_work()'s callback processing
+> > >>> is slow, any new synchronize_rcu() user's rcu_synchronize
+> > >>> node's processing is deferred to future GP periods. This
+> > >>> can result in long list of synchronize_rcu() invocations
+> > >>> waiting for full grace period processing, which can delay
+> > >>> freeing of memory. Mitigate this problem by using first
+> > >>> node in the list as wait tail when all wait heads are in use.
+> > >>> While methods to speed up callback processing would be needed
+> > >>> to recover from this situation, allowing new nodes to complete
+> > >>> their grace period can help prevent delays due to a fixed
+> > >>> number of wait head nodes.
+> > >>>
+> > >>> Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+> > >>> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > >>
+> > >> IIRC we agreed that this patch could be a step too far that
+> > >> made an already not so simple state machine even less simple,
+> > >> breaking the wait_head based flow.
+> > > 
+> > > True, which is why we agreed not to submit it into the v6.10 merge window.
+> > > 
+> > > And I don't recall us saying what merge window to send it to.
+> > > 
+> > >> Should we postpone this change until it is observed that a workqueue
+> > >> not being scheduled for 5 grace periods is a real issue?
+> > > 
+> > > Neeraj, thoughts?  Or, better yet, test results?  ;-)
+> > 
+> > Yes I agree that we postpone this change until we see it as a real
+> > problem. I had run a test to invoke synchronize_rcu() from all CPUs
+> > on a 96 core system in parallel. I didn't specifically check if this
+> > scenario was hit. Will run RCU torture test with this change.
+> 
+> Very well, I will drop this patch with the expectation that you will
+> re-post it if a problem does arise.
+> 
+Thank you! We discussed it before and came to conclusion that it adds an
+extra complexity. Once we hit an issue with delays, we can introduce it
+and explain a workload which triggers it.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Tested-by: Lance Yang <ioworker0@gmail.com>
----
- mm/shmem.c | 40 +++++++++++++++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 9 deletions(-)
-
-diff --git a/mm/shmem.c b/mm/shmem.c
-index e849c88452b2..f5469c357be6 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2394,6 +2394,7 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 	unsigned long inflated_len;
- 	unsigned long inflated_addr;
- 	unsigned long inflated_offset;
-+	unsigned long hpage_size;
- 
- 	if (len > TASK_SIZE)
- 		return -ENOMEM;
-@@ -2412,8 +2413,6 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 
- 	if (shmem_huge == SHMEM_HUGE_DENY)
- 		return addr;
--	if (len < HPAGE_PMD_SIZE)
--		return addr;
- 	if (flags & MAP_FIXED)
- 		return addr;
- 	/*
-@@ -2425,8 +2424,11 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 	if (uaddr == addr)
- 		return addr;
- 
-+	hpage_size = HPAGE_PMD_SIZE;
- 	if (shmem_huge != SHMEM_HUGE_FORCE) {
- 		struct super_block *sb;
-+		unsigned long __maybe_unused hpage_orders;
-+		int order = 0;
- 
- 		if (file) {
- 			VM_BUG_ON(file->f_op != &shmem_file_operations);
-@@ -2439,18 +2441,38 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 			if (IS_ERR(shm_mnt))
- 				return addr;
- 			sb = shm_mnt->mnt_sb;
-+
-+			/*
-+			 * Find the highest mTHP order used for anonymous shmem to
-+			 * provide a suitable alignment address.
-+			 */
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+			hpage_orders = READ_ONCE(huge_shmem_orders_always);
-+			hpage_orders |= READ_ONCE(huge_shmem_orders_within_size);
-+			hpage_orders |= READ_ONCE(huge_shmem_orders_madvise);
-+			if (SHMEM_SB(sb)->huge != SHMEM_HUGE_NEVER)
-+				hpage_orders |= READ_ONCE(huge_shmem_orders_inherit);
-+
-+			if (hpage_orders > 0) {
-+				order = highest_order(hpage_orders);
-+				hpage_size = PAGE_SIZE << order;
-+			}
-+#endif
- 		}
--		if (SHMEM_SB(sb)->huge == SHMEM_HUGE_NEVER)
-+		if (SHMEM_SB(sb)->huge == SHMEM_HUGE_NEVER && !order)
- 			return addr;
- 	}
- 
--	offset = (pgoff << PAGE_SHIFT) & (HPAGE_PMD_SIZE-1);
--	if (offset && offset + len < 2 * HPAGE_PMD_SIZE)
-+	if (len < hpage_size)
-+		return addr;
-+
-+	offset = (pgoff << PAGE_SHIFT) & (hpage_size - 1);
-+	if (offset && offset + len < 2 * hpage_size)
- 		return addr;
--	if ((addr & (HPAGE_PMD_SIZE-1)) == offset)
-+	if ((addr & (hpage_size - 1)) == offset)
- 		return addr;
- 
--	inflated_len = len + HPAGE_PMD_SIZE - PAGE_SIZE;
-+	inflated_len = len + hpage_size - PAGE_SIZE;
- 	if (inflated_len > TASK_SIZE)
- 		return addr;
- 	if (inflated_len < len)
-@@ -2463,10 +2485,10 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 	if (inflated_addr & ~PAGE_MASK)
- 		return addr;
- 
--	inflated_offset = inflated_addr & (HPAGE_PMD_SIZE-1);
-+	inflated_offset = inflated_addr & (hpage_size - 1);
- 	inflated_addr += offset - inflated_offset;
- 	if (inflated_offset > offset)
--		inflated_addr += HPAGE_PMD_SIZE;
-+		inflated_addr += hpage_size;
- 
- 	if (inflated_addr > TASK_SIZE - len)
- 		return addr;
--- 
-2.39.3
-
+--
+Uladzislau Rezki
