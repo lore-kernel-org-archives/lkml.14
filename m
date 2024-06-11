@@ -1,391 +1,573 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fallback22.i.mail.ru (fallback22.i.mail.ru [79.137.243.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A8E153580
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 23:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1FE155CB7;
+	Tue, 11 Jun 2024 23:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718147127; cv=none; b=CX0hLliWGF62dIrK2bbaDy9R7a7Qk+dTWbA7RoNln9Z8XbmuN1olZ6QPdonBjXC4mm/TZbgjRkk+xGFxX8wq9aiSaXrIan5CGM6arhU1MFT1lfArDYluWGnyLv7UDKHmWORpJII8qyi854iiy5VZtYaMhOzHv9KlyMHWjM84ObI=
+	t=1718147133; cv=none; b=nXmMwXbxdxdgMSB7Eyq9NbFF5Z/bj0HaHrkXsK9SvFWulRDKa2f7SKHr++Jky99LDsEmqDDwlCV0BJjNOUqIduu6JU2KyLd1/dTR2gac4VlLIPQdfquSn3aVUFuBYRucb3f98D1hKxa7Zg8KF5OUIKeIiq1SzBg+bbiOfvlC6s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718147127; c=relaxed/simple;
-	bh=BoPidXd0qEL/VN+p66VMqndM+I9E6zuVNAGk0ln/hwA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eYcQi2GNzOSmLbdnR3HZShp69LzmIpNl7URSkn04BBWdW3+5T5wgiYd8gx2ntyaqrfxgBmpf6FP/as0p3jIPHWXibn68gsk38u/5DbEzpYKPGPsVlPjbBaQtQ7Xxa4Vn/Cuot4vQKWJRCelBmiYPD5KW1ZfzjrhP+2J9FT+q6+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dh07i8Le; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718147133; c=relaxed/simple;
+	bh=zZniUb/WkdIAyptukUEcODb0HZ3EOVDEZkeS38WMYGU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Xlp2m4T97dGhx+wtAE62t0fRU/zWnLxOpM3tGcknpbxtZSOyO3bWKkxx67I45n8mQEIyn9LVjAMrhvf4yMdzEF8fJd33jw82OdnxkIK5thYy31yVW3ffDyEjZJ58mQOim4nsDUHcvuE/ZBfdZq2YaSpA5Ww8KVOuppMD3hWV2as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=Vf8ZxlWG; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=bkduYzSR; arc=none smtp.client-ip=79.137.243.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dh07i8Le"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4405dffca81so36171cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 16:05:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718147124; x=1718751924; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pz/3hS9rvEm8ISFTbesB06oUlpFYSPujM05j9EdyaiQ=;
-        b=Dh07i8LeMTi1P/XiU8mOuGUnSW7YxOF575760j5BaYylEjPLGK2VdM5i77VxT2OEhK
-         qtUauoNk0lWDctYB/6BiO0u4ly9jQ0JD0iX9RKY18q/tQqu3vHsv33PfUmLj+RRqo90a
-         +EhSOc2tElTufMtRFxi2aoZKc9ZHzeUwJa1uPakME1Nu9uyFQahnASrFS27O3aSa8sgQ
-         yWzIsprMDS1x2BhH/OKalXoMm7V8mBW/JBiLaL2D/GUoVxlFvmLMaqVXgKcIVVKQNyUM
-         7WNPT/PyRxoCuGWKx60vTi/qPzFkTFqfKiaq46aaX85wyCY9ZEZb3/GBgttedpIPtsqY
-         3gnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718147124; x=1718751924;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pz/3hS9rvEm8ISFTbesB06oUlpFYSPujM05j9EdyaiQ=;
-        b=kXEE/HCz4yCs5GaxzsFivggvn0qyRij8I2t4qF1eSoLkq9/vnxWD49DbFGAmw4B//Q
-         dbNZLeF1Wn8NApSEY22FbqXofCDW/B+FRGfdlMwe1G0Uja/hNuViXj2D82E/cNHwMNwA
-         buufFyl3Q/dyzxHzGInWLB+a2IpWhGAetWgH6O8OgBemfZYYB8EeUZ+xTlNz6kOBgA/r
-         fr9zz+B9dW+uk7LOqxcAqnLn3OFz65OhWSPI2UnHjgv1wXaDu+nxzX2VlGOTAW5Oj+Sy
-         PuTRuMn/Elkm54j4EkIoPV+0dmOb8IqOasSSenC17PmnCZ7pMksAnGFl+1v4iye9qVb9
-         Om+A==
-X-Forwarded-Encrypted: i=1; AJvYcCXMuNTE8vcB5uonsnQ5b3czg5VLczisFMpd3baQS078yx2DzcXHL3u6fC7KvWFuzyG8Qp/jF2WiPjcx6Ep7rXejMoYMkrZbhPEOd5p9
-X-Gm-Message-State: AOJu0Yw1tS3HR3uvIwAz281RE5KO9EIcbHvytx3dWgwjJ7TzPmRONHmR
-	42mUlf0uvG1asGlKCWXR8TTEbqF9Ei/yi7oQP/PyQCUNd8YU45zu9vUYNwYNZeJo28WuMDgWVA0
-	GJhLmryBEwxrpNEqCKtpinB4aTdh3PCCmnIhC
-X-Google-Smtp-Source: AGHT+IE52oInjAZCB3WBMhaUU5ZrU3GZGDMx8kQzX/bSZjmjZyyxSH/FDIuluJ0bSVsR8b8JvGhmRRklaeYoppeG6VQ=
-X-Received: by 2002:a05:622a:4015:b0:440:331b:59f7 with SMTP id
- d75a77b69052e-44158bbdd7cmr1206381cf.6.1718147123716; Tue, 11 Jun 2024
- 16:05:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="Vf8ZxlWG";
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="bkduYzSR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
+	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=m9LV7CkHpDjtcWiEw6TdFlo9ptw3zxLnUSnFx00eRl0=;
+	t=1718147130;x=1718237130; 
+	b=Vf8ZxlWGGnJtwxzbQquKhfUthDMJduR8eWbsxaISs89RqkBeVYEnJPIs9dVGA0U5zxbUntfGX/z+shavAy4YWt6kCfEGZJScDmms9DilVdOVoo19tjFlRsC3G6+h6epdK51M3+64oJ+ha0tWrswcGEy3TzrUTHLhu6gb6BySRpY=;
+Received: from [10.12.4.16] (port=35292 helo=smtp47.i.mail.ru)
+	by fallback22.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
+	id 1sHA80-00CAyw-CB; Wed, 12 Jun 2024 01:38:08 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
+	X-Cloud-Ids:Disposition-Notification-To;
+	bh=m9LV7CkHpDjtcWiEw6TdFlo9ptw3zxLnUSnFx00eRl0=; t=1718145488; x=1718235488; 
+	b=bkduYzSRiDOyZ6UgmyBYEBF0iPLdp/S7jdI7RlfGUhNP87mvj9s2KBKr3yed332vlCg2N5vJ8M9
+	eOztihARtb849POQRuyi+gRRJCa625PG2+3rM89+7W3Se57vohItT8tubK4fG8s4k+1n/Zx66HEHs
+	81nPAJzlLVk+kVmHMxo=;
+Received: by smtp47.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1sHA7l-00000000PfZ-3t9T; Wed, 12 Jun 2024 01:37:54 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+To: robdclark@gmail.com,
+	quic_abhinavk@quicinc.com,
+	dmitry.baryshkov@linaro.org,
+	sean@poorly.run,
+	marijn.suijten@somainline.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	quic_rmccann@quicinc.com,
+	konrad.dybcio@linaro.org,
+	neil.armstrong@linaro.org,
+	jonathan@marek.ca,
+	swboyd@chromium.org,
+	quic_khsieh@quicinc.com,
+	quic_jesszhan@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Danila Tikhonov <danila@jiaxyga.com>
+Subject: [PATCH 1/4] dt-bindings: display/msm: Add SM7150 MDSS
+Date: Wed, 12 Jun 2024 01:37:40 +0300
+Message-ID: <20240611223743.113223-2-danila@jiaxyga.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240611223743.113223-1-danila@jiaxyga.com>
+References: <20240611223743.113223-1-danila@jiaxyga.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611002145.2078921-1-jthoughton@google.com>
- <20240611002145.2078921-5-jthoughton@google.com> <CAOUHufYGqbd45shZkGCpqeTV9wcBDUoo3iw1SKiDeFLmrP0+=w@mail.gmail.com>
- <CADrL8HVHcKSW3hiHzKTit07gzo36jtCZCnM9ZpueyifgNdGggw@mail.gmail.com> <ZmioedgEBptNoz91@google.com>
-In-Reply-To: <ZmioedgEBptNoz91@google.com>
-From: James Houghton <jthoughton@google.com>
-Date: Tue, 11 Jun 2024 16:04:47 -0700
-Message-ID: <CADrL8HU_FKHTz_6d=xhVLZFDQ_zQo-zdB2rqdpa2CKusa1uo+A@mail.gmail.com>
-Subject: Re: [PATCH v5 4/9] mm: Add test_clear_young_fast_only MMU notifier
-To: Sean Christopherson <seanjc@google.com>
-Cc: Yu Zhao <yuzhao@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Ankit Agrawal <ankita@nvidia.com>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
-	James Morse <james.morse@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Raghavendra Rao Ananta <rananta@google.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Shaoqin Huang <shahuang@redhat.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Wei Xu <weixugc@google.com>, 
-	Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD9AC8CA0B4439200FA2E41D1825D8172A0E0E393E23BEE614B00894C459B0CD1B9A94C51420D94F20106104296DCCA83D2F0DC7AC59AFF5BCA42442993E2508E0AEDD16E8EE75FCBE4
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7E9B91E80248DE6B6EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006375F0BD5CF353A411D8638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D86F7599384FF39348408FF9FAEF290F8BE9211BDC2835EF99CC7F00164DA146DAFE8445B8C89999728AA50765F7900637D0FEED2715E18529389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8D2DCF9CF1F528DBCF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C68E4D7E803FA7AD5040F9FF01DFDA4A84AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C328B42170CC47BF7DBA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF776A0366D588B3C31DD303D21008E298D5E8D9A59859A8B6BAA8CD687FCDB2EB75ECD9A6C639B01B78DA827A17800CE70D44ABEBB09E7BA443847C11F186F3C59DAA53EE0834AAEE
+X-C1DE0DAB: 0D63561A33F958A52F8FE841FAC0A3225002B1117B3ED6963570EECE388EE504484B8D70797403F6823CB91A9FED034534781492E4B8EEADF12279BA039A6965C79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFD3CB7DA9F310739027B8BA1D52B59DF12A0E0508814C4F9442F682E748DADC4D519D809D4148B49604A26A3878DC13302EA28DDA7ED6DE68E3725B7D062D8D43EA3C54D5E627C7EC54A6BD6C3A9AE7E002C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj7p5wIdCuWKP3ewHT4yqGBw==
+X-Mailru-Sender: 9EB879F2C80682A09F26F806C73949810CCDD7C2C42388EECFE9FA76EDA5B4B7397373BC4CC98A80118AC97EDC6116FB2C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B4D68C2164A06637339A6B427C6964551913B22325A6B80E86049FFFDB7839CE9E30D7A70BAF70B5493AEBA98CF1117A962AE3154DDB277317C106E8B7CF2C8BB7
+X-7FA49CB5: 0D63561A33F958A543AF80C270778C009895743D90FC9041EE57EE09152F38FC8941B15DA834481FA18204E546F3947CB4B51A2BAB7FBE05117882F4460429724CE54428C33FAD30A8DF7F3B2552694AC26CFBAC0749D213D2E47CDBA5A9658378DA827A17800CE791DAD9F922AA71188941B15DA834481F9449624AB7ADAF3735872C767BF85DA227C277FBC8AE2E8B26FE8EF37ABF9ED775ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
+X-87b9d050: 1
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj7p5wIdCuWKPab1CGvd3hEw==
+X-Mailru-MI: 8000000000000800
+X-Mras: Ok
 
-On Tue, Jun 11, 2024 at 12:42=E2=80=AFPM Sean Christopherson <seanjc@google=
-.com> wrote:
->
-> On Tue, Jun 11, 2024, James Houghton wrote:
-> > On Mon, Jun 10, 2024 at 10:34=E2=80=AFPM Yu Zhao <yuzhao@google.com> wr=
-ote:
-> > >
-> > > On Mon, Jun 10, 2024 at 6:22=E2=80=AFPM James Houghton <jthoughton@go=
-ogle.com> wrote:
-> > > >
-> > > > This new notifier is for multi-gen LRU specifically
-> > >
-> > > Let me call it out before others do: we can't be this self-serving.
-> > >
-> > > > as it wants to be
-> > > > able to get and clear age information from secondary MMUs only if i=
-t can
-> > > > be done "fast".
-> > > >
-> > > > By having this notifier specifically created for MGLRU, what "fast"
-> > > > means comes down to what is "fast" enough to improve MGLRU's abilit=
-y to
-> > > > reclaim most of the time.
-> > > >
-> > > > Signed-off-by: James Houghton <jthoughton@google.com>
-> > >
-> > > If we'd like this to pass other MM reviewers, especially the MMU
-> > > notifier maintainers, we'd need to design a generic API that can
-> > > benefit all the *existing* users: idle page tracking [1], DAMON [2]
-> > > and MGLRU.
-> > >
-> > > Also I personally prefer to extend the existing callbacks by adding
-> > > new parameters, and on top of that, I'd try to consolidate the
-> > > existing callbacks -- it'd be less of a hard sell if my changes resul=
-t
-> > > in less code, not more.
-> > >
-> > > (v2 did all these, btw.)
-> >
-> > I think consolidating the callbacks is cleanest, like you had it in
-> > v2. I really wasn't sure about this change honestly, but it was my
-> > attempt to incorporate feedback like this[3] from v4. I'll consolidate
-> > the callbacks like you had in v2.
->
-> James, wait for others to chime in before committing yourself to a course=
- of
-> action, otherwise you're going to get ping-ponged to hell and back.
+Document the MDSS hardware found on the Qualcomm SM7150 platform.
 
-Ah yeah. I really mean "I'll do it, provided the other feedback is in
-line with this".
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+---
+ .../display/msm/qcom,sm7150-mdss.yaml         | 460 ++++++++++++++++++
+ 1 file changed, 460 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.yaml
 
->
-> > Instead of the bitmap like you had, I imagine we'll have some kind of
-> > flags argument that has bits like MMU_NOTIFIER_YOUNG_CLEAR,
-> > MMU_NOTIFIER_YOUNG_FAST_ONLY, and other ones as they come up. Does
-> > that sound ok?
->
-> Why do we need a bundle of flags?  If we extend .clear_young() and .test_=
-young()
-> as Yu suggests, then we only need a single "bool fast_only".
+diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.yaml
+new file mode 100644
+index 0000000000000..c75498dca9f34
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.yaml
+@@ -0,0 +1,460 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/msm/qcom,sm7150-mdss.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm SM7150 Display MDSS
++
++maintainers:
++  - Danila Tikhonov <danila@jiaxyga.com>
++
++description:
++  SM7150 MSM Mobile Display Subsystem(MDSS), which encapsulates sub-blocks like
++  DPU display controller, DSI and DP interfaces etc.
++
++$ref: /schemas/display/msm/mdss-common.yaml#
++
++properties:
++  compatible:
++    const: qcom,sm7150-mdss
++
++  clocks:
++    items:
++      - description: Display ahb clock from gcc
++      - description: Display hf axi clock
++      - description: Display sf axi clock
++      - description: Display core clock
++
++  clock-names:
++    items:
++      - const: iface
++      - const: bus
++      - const: nrt_bus
++      - const: core
++
++  iommus:
++    maxItems: 1
++
++  interconnects:
++    items:
++      - description: Interconnect path from mdp0 port to the data bus
++      - description: Interconnect path from mdp1 port to the data bus
++      - description: Interconnect path from CPU to the reg bus
++
++  interconnect-names:
++    items:
++      - const: mdp0-mem
++      - const: mdp1-mem
++      - const: cpu-cfg
++
++patternProperties:
++  "^display-controller@[0-9a-f]+$":
++    type: object
++    additionalProperties: true
++    properties:
++      compatible:
++        const: qcom,sm7150-dpu
++
++  "^displayport-controller@[0-9a-f]+$":
++    type: object
++    additionalProperties: true
++    properties:
++      compatible:
++        const: qcom,sm7150-dp
++
++  "^dsi@[0-9a-f]+$":
++    type: object
++    additionalProperties: true
++    properties:
++      compatible:
++        items:
++          - const: qcom,sm7150-dsi-ctrl
++          - const: qcom,mdss-dsi-ctrl
++
++  "^phy@[0-9a-f]+$":
++    type: object
++    additionalProperties: true
++    properties:
++      compatible:
++        const: qcom,dsi-phy-10nm
++
++required:
++  - compatible
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,rpmh.h>
++    #include <dt-bindings/clock/qcom,sm7150-dispcc.h>
++    #include <dt-bindings/clock/qcom,sm7150-gcc.h>
++    #include <dt-bindings/interconnect/qcom,icc.h>
++    #include <dt-bindings/interconnect/qcom,sm7150-rpmh.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/qcom,rpmhpd.h>
++
++    display-subsystem@ae00000 {
++        compatible = "qcom,sm7150-mdss";
++        reg = <0x0ae00000 0x1000>;
++        reg-names = "mdss";
++
++        power-domains = <&dispcc MDSS_GDSC>;
++
++        clocks = <&dispcc DISPCC_MDSS_AHB_CLK>,
++                 <&gcc GCC_DISP_HF_AXI_CLK>,
++                 <&gcc GCC_DISP_SF_AXI_CLK>,
++                 <&dispcc DISPCC_MDSS_MDP_CLK>;
++        clock-names = "iface",
++                      "bus",
++                      "nrt_bus",
++                      "core";
++
++        interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-controller;
++        #interrupt-cells = <1>;
++
++        interconnects = <&mmss_noc MASTER_MDP_PORT0 QCOM_ICC_TAG_ALWAYS
++                         &mc_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ALWAYS>,
++                        <&mmss_noc MASTER_MDP_PORT1 QCOM_ICC_TAG_ALWAYS
++                         &mc_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ALWAYS>,
++                        <&gem_noc MASTER_AMPSS_M0 QCOM_ICC_TAG_ACTIVE_ONLY
++                         &config_noc SLAVE_DISPLAY_CFG QCOM_ICC_TAG_ACTIVE_ONLY>;
++        interconnect-names = "mdp0-mem",
++                             "mdp1-mem",
++                             "cpu-cfg";
++
++        iommus = <&apps_smmu 0x800 0x440>;
++
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges;
++
++        display-controller@ae01000 {
++            compatible = "qcom,sm7150-dpu";
++            reg = <0x0ae01000 0x8f000>,
++                  <0x0aeb0000 0x2008>;
++            reg-names = "mdp", "vbif";
++
++            clocks = <&gcc GCC_DISP_HF_AXI_CLK>,
++                    <&dispcc DISPCC_MDSS_AHB_CLK>,
++                    <&dispcc DISPCC_MDSS_ROT_CLK>,
++                    <&dispcc DISPCC_MDSS_MDP_LUT_CLK>,
++                    <&dispcc DISPCC_MDSS_MDP_CLK>,
++                    <&dispcc DISPCC_MDSS_VSYNC_CLK>;
++            clock-names = "bus",
++                          "iface",
++                          "rot",
++                          "lut",
++                          "core",
++                          "vsync";
++
++            assigned-clocks = <&dispcc DISPCC_MDSS_VSYNC_CLK>;
++            assigned-clock-rates = <19200000>;
++
++            operating-points-v2 = <&mdp_opp_table>;
++            power-domains = <&rpmhpd RPMHPD_CX>;
++
++            interrupt-parent = <&mdss>;
++            interrupts = <0>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    dpu_intf1_out: endpoint {
++                        remote-endpoint = <&mdss_dsi0_in>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    dpu_intf2_out: endpoint {
++                        remote-endpoint = <&mdss_dsi1_in>;
++                    };
++                };
++
++                port@2 {
++                    reg = <2>;
++                    dpu_intf0_out: endpoint {
++                        remote-endpoint = <&dp_in>;
++                    };
++                };
++            };
++
++            mdp_opp_table: opp-table {
++                compatible = "operating-points-v2";
++
++                opp-19200000 {
++                    opp-hz = /bits/ 64 <19200000>;
++                    required-opps = <&rpmhpd_opp_min_svs>;
++                };
++
++                opp-200000000 {
++                    opp-hz = /bits/ 64 <200000000>;
++                    required-opps = <&rpmhpd_opp_low_svs>;
++                };
++
++                opp-300000000 {
++                    opp-hz = /bits/ 64 <300000000>;
++                    required-opps = <&rpmhpd_opp_svs>;
++                };
++
++                opp-344000000 {
++                    opp-hz = /bits/ 64 <344000000>;
++                    required-opps = <&rpmhpd_opp_svs_l1>;
++                };
++
++                opp-430000000 {
++                    opp-hz = /bits/ 64 <430000000>;
++                    required-opps = <&rpmhpd_opp_nom>;
++                };
++            };
++        };
++
++        dsi@ae94000 {
++            compatible = "qcom,sm7150-dsi-ctrl",
++                         "qcom,mdss-dsi-ctrl";
++            reg = <0x0ae94000 0x400>;
++            reg-names = "dsi_ctrl";
++
++            interrupt-parent = <&mdss>;
++            interrupts = <4>;
++
++            clocks = <&dispcc DISPCC_MDSS_BYTE0_CLK>,
++                     <&dispcc DISPCC_MDSS_BYTE0_INTF_CLK>,
++                     <&dispcc DISPCC_MDSS_PCLK0_CLK>,
++                     <&dispcc DISPCC_MDSS_ESC0_CLK>,
++                     <&dispcc DISPCC_MDSS_AHB_CLK>,
++                     <&gcc GCC_DISP_HF_AXI_CLK>;
++            clock-names = "byte",
++                          "byte_intf",
++                          "pixel",
++                          "core",
++                          "iface",
++                          "bus";
++
++            assigned-clocks = <&dispcc DISPCC_MDSS_BYTE0_CLK_SRC>,
++                              <&dispcc DISPCC_MDSS_PCLK0_CLK_SRC>;
++            assigned-clock-parents = <&mdss_dsi0_phy 0>,
++                                     <&mdss_dsi0_phy 1>;
++
++            operating-points-v2 = <&dsi_opp_table>;
++            power-domains = <&rpmhpd RPMHPD_CX>;
++
++            phys = <&mdss_dsi0_phy>;
++            phy-names = "dsi";
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    mdss_dsi0_in: endpoint {
++                        remote-endpoint = <&dpu_intf1_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    mdss_dsi0_out: endpoint {
++                    };
++                };
++            };
++
++            dsi_opp_table: opp-table {
++                compatible = "operating-points-v2";
++
++                opp-180000000 {
++                    opp-hz = /bits/ 64 <180000000>;
++                    required-opps = <&rpmhpd_opp_low_svs>;
++                };
++
++                opp-275000000 {
++                    opp-hz = /bits/ 64 <275000000>;
++                    required-opps = <&rpmhpd_opp_svs>;
++                };
++
++                opp-358000000 {
++                    opp-hz = /bits/ 64 <358000000>;
++                    required-opps = <&rpmhpd_opp_svs_l1>;
++                };
++            };
++        };
++
++        mdss_dsi0_phy: phy@ae94400 {
++            compatible = "qcom,dsi-phy-10nm";
++            reg = <0x0ae94400 0x200>,
++                  <0x0ae94600 0x280>,
++                  <0x0ae94a00 0x1e0>;
++            reg-names = "dsi_phy",
++                        "dsi_phy_lane",
++                        "dsi_pll";
++
++            #clock-cells = <1>;
++            #phy-cells = <0>;
++
++            clocks = <&dispcc DISPCC_MDSS_AHB_CLK>,
++                     <&rpmhcc RPMH_CXO_CLK>;
++            clock-names = "iface", "ref";
++            vdds-supply = <&vdda_mipi_dsi0_pll>;
++        };
++
++        dsi@ae96000 {
++            compatible = "qcom,sm7150-dsi-ctrl",
++                         "qcom,mdss-dsi-ctrl";
++            reg = <0x0ae96000 0x400>;
++            reg-names = "dsi_ctrl";
++
++            interrupt-parent = <&mdss>;
++            interrupts = <5>;
++
++            clocks = <&dispcc DISPCC_MDSS_BYTE1_CLK>,
++                     <&dispcc DISPCC_MDSS_BYTE1_INTF_CLK>,
++                     <&dispcc DISPCC_MDSS_PCLK1_CLK>,
++                     <&dispcc DISPCC_MDSS_ESC1_CLK>,
++                     <&dispcc DISPCC_MDSS_AHB_CLK>,
++                     <&gcc GCC_DISP_HF_AXI_CLK>;
++            clock-names = "byte",
++                          "byte_intf",
++                          "pixel",
++                          "core",
++                          "iface",
++                          "bus";
++
++            assigned-clocks = <&dispcc DISPCC_MDSS_BYTE1_CLK_SRC>,
++                              <&dispcc DISPCC_MDSS_PCLK1_CLK_SRC>;
++            assigned-clock-parents = <&mdss_dsi1_phy 0>,
++                                     <&mdss_dsi1_phy 1>;
++
++            operating-points-v2 = <&dsi_opp_table>;
++            power-domains = <&rpmhpd RPMHPD_CX>;
++
++            phys = <&mdss_dsi1_phy>;
++            phy-names = "dsi";
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    mdss_dsi1_in: endpoint {
++                        remote-endpoint = <&dpu_intf2_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    mdss_dsi1_out: endpoint {
++                    };
++                };
++            };
++        };
++
++        mdss_dsi1_phy: phy@ae96400 {
++            compatible = "qcom,dsi-phy-10nm";
++            reg = <0x0ae96400 0x200>,
++                  <0x0ae96600 0x280>,
++                  <0x0ae96a00 0x1e0>;
++            reg-names = "dsi_phy",
++                        "dsi_phy_lane",
++                        "dsi_pll";
++
++            #clock-cells = <1>;
++            #phy-cells = <0>;
++
++            clocks = <&dispcc DISPCC_MDSS_AHB_CLK>,
++                     <&rpmhcc RPMH_CXO_CLK>;
++            clock-names = "iface", "ref";
++            vdds-supply = <&vdda_mipi_dsi1_pll>;
++        };
++
++        displayport-controller@ae90000 {
++            compatible = "qcom,sm7150-dp";
++            reg = <0xae90000 0x200>,
++                  <0xae90200 0x200>,
++                  <0xae90400 0xc00>,
++                  <0xae91000 0x400>,
++                  <0xae91400 0x400>;
++
++            interrupt-parent = <&mdss>;
++            interrupts = <12>;
++
++            clocks = <&dispcc DISPCC_MDSS_AHB_CLK>,
++                     <&dispcc DISPCC_MDSS_DP_AUX_CLK>,
++                     <&dispcc DISPCC_MDSS_DP_LINK_CLK>,
++                     <&dispcc DISPCC_MDSS_DP_LINK_INTF_CLK>,
++                     <&dispcc DISPCC_MDSS_DP_PIXEL_CLK>;
++            clock-names = "core_iface",
++                          "core_aux",
++                          "ctrl_link",
++                          "ctrl_link_iface",
++                          "stream_pixel";
++
++            assigned-clocks = <&dispcc DISPCC_MDSS_DP_LINK_CLK_SRC>,
++                              <&dispcc DISPCC_MDSS_DP_PIXEL_CLK_SRC>;
++            assigned-clock-parents = <&dp_phy 0>,
++                                     <&dp_phy 1>;
++
++            operating-points-v2 = <&dp_opp_table>;
++            power-domains = <&rpmhpd RPMHPD_CX>;
++
++            phys = <&dp_phy>;
++            phy-names = "dp";
++
++            #sound-dai-cells = <0>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    dp_in: endpoint {
++                        remote-endpoint = <&dpu_intf0_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    dp_out: endpoint {
++                    };
++                };
++            };
++
++            dp_opp_table: opp-table {
++                compatible = "operating-points-v2";
++
++                opp-160000000 {
++                    opp-hz = /bits/ 64 <160000000>;
++                    required-opps = <&rpmhpd_opp_low_svs>;
++                };
++
++                opp-270000000 {
++                    opp-hz = /bits/ 64 <270000000>;
++                    required-opps = <&rpmhpd_opp_svs>;
++                };
++
++                opp-540000000 {
++                    opp-hz = /bits/ 64 <540000000>;
++                    required-opps = <&rpmhpd_opp_svs_l1>;
++                };
++
++                opp-810000000 {
++                    opp-hz = /bits/ 64 <810000000>;
++                    required-opps = <&rpmhpd_opp_nom>;
++                };
++            };
++        };
++    };
++...
+-- 
+2.45.2
 
-We don't need to. In my head it's a little easier to collapse them
-(slightly less code, and at the callsite you have a flag with a name
-instead of a true/false). Making it a bool SGTM.
-
-> As for adding a fast_only versus dedicated APIs, I don't have a strong pr=
-eference.
-> Extending will require a small amount of additional churn, e.g. to pass i=
-n false,
-> but that doesn't seem problematic on its own.  On the plus side, there wo=
-uld be
-> less copy+paste in include/linux/mmu_notifier.h (though that could be sol=
-ved with
-> macros :-) ).
-
-I think having the extra bool is cleaner than the new fast_only
-notifier, definitely.
-
->
-> E.g.
->
-> --
-> diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-> index 7b77ad6cf833..07872ae00fa6 100644
-> --- a/mm/mmu_notifier.c
-> +++ b/mm/mmu_notifier.c
-> @@ -384,7 +384,8 @@ int __mmu_notifier_clear_flush_young(struct mm_struct=
- *mm,
->
->  int __mmu_notifier_clear_young(struct mm_struct *mm,
->                                unsigned long start,
-> -                              unsigned long end)
-> +                              unsigned long end,
-> +                              bool fast_only)
->  {
->         struct mmu_notifier *subscription;
->         int young =3D 0, id;
-> @@ -393,9 +394,12 @@ int __mmu_notifier_clear_young(struct mm_struct *mm,
->         hlist_for_each_entry_rcu(subscription,
->                                  &mm->notifier_subscriptions->list, hlist=
-,
->                                  srcu_read_lock_held(&srcu)) {
-> -               if (subscription->ops->clear_young)
-> -                       young |=3D subscription->ops->clear_young(subscri=
-ption,
-> -                                                               mm, start=
-, end);
-> +               if (!subscription->ops->clear_young ||
-> +                   fast_only && !subscription->ops->has_fast_aging)
-> +                       continue;
-> +
-> +               young |=3D subscription->ops->clear_young(subscription,
-> +                                                       mm, start, end);
-
-KVM changing has_fast_aging dynamically would be slow, wouldn't it? I
-feel like it's simpler to just pass in fast_only into `clear_young`
-itself (and this is how I interpreted what you wrote above anyway).
-
->         }
->         srcu_read_unlock(&srcu, id);
->
-> @@ -403,7 +407,8 @@ int __mmu_notifier_clear_young(struct mm_struct *mm,
->  }
->
->  int __mmu_notifier_test_young(struct mm_struct *mm,
-> -                             unsigned long address)
-> +                             unsigned long address,
-> +                             bool fast_only)
->  {
->         struct mmu_notifier *subscription;
->         int young =3D 0, id;
-> @@ -412,12 +417,15 @@ int __mmu_notifier_test_young(struct mm_struct *mm,
->         hlist_for_each_entry_rcu(subscription,
->                                  &mm->notifier_subscriptions->list, hlist=
-,
->                                  srcu_read_lock_held(&srcu)) {
-> -               if (subscription->ops->test_young) {
-> -                       young =3D subscription->ops->test_young(subscript=
-ion, mm,
-> -                                                             address);
-> -                       if (young)
-> -                               break;
-> -               }
-> +               if (!subscription->ops->test_young)
-> +                       continue;
-> +
-> +               if (fast_only && !subscription->ops->has_fast_aging)
-> +                       continue;
-> +
-> +               young =3D subscription->ops->test_young(subscription, mm,=
- address);
-> +               if (young)
-> +                       break;
->         }
->         srcu_read_unlock(&srcu, id);
-> --
->
-> It might also require multiplexing the return value to differentiate betw=
-een
-> "young" and "failed".  Ugh, but the code already does that, just in a bes=
-poke way.
-
-Yeah, that is necessary.
-
-> Double ugh.  Peeking ahead at the "failure" code, NAK to adding
-> kvm_arch_young_notifier_likely_fast for all the same reasons I objected t=
-o
-> kvm_arch_has_test_clear_young() in v1.  Please stop trying to do anything=
- like
-> that, I will NAK each every attempt to have core mm/ code call directly i=
-nto KVM.
-
-Sorry to make you repeat yourself; I'll leave it out of v6. I don't
-like it either, but I wasn't sure how important it was to avoid
-calling into unnecessary notifiers if the TDP MMU were completely
-disabled.
-
-> Anyways, back to this code, before we spin another version, we need to ag=
-ree on
-> exactly what behavior we want out of secondary MMUs.  Because to me, the =
-behavior
-> proposed in this version doesn't make any sense.
->
-> Signalling failure because KVM _might_ have relevant aging information in=
- SPTEs
-> that require taking kvm->mmu_lock is a terrible tradeoff.  And for the te=
-st_young
-> case, it's flat out wrong, e.g. if a page is marked Accessed in the TDP M=
-MU, then
-> KVM should return "young", not "failed".
-
-Sorry for this oversight. What about something like:
-
-1. test (and maybe clear) A bits on TDP MMU
-2. If accessed && !should_clear: return (fast)
-3. if (fast_only): return (fast)
-4. If !(must check shadow MMU): return (fast)
-5. test (and maybe clear) A bits in shadow MMU
-6. return (slow)
-
-Some of this reordering (and maybe a change from
-kvm_shadow_root_allocated() to checking indirect_shadow_pages or
-something else) can be done in its own patch.
-
-> If KVM is using the TDP MMU, i.e. has_fast_aging=3Dtrue, then there will =
-be rmaps
-> if and only if L1 ran a nested VM at some point.  But as proposed, KVM do=
-esn't
-> actually check if there are any shadow TDP entries to process.  That coul=
-d be
-> fixed by looking at kvm->arch.indirect_shadow_pages, but even then it's n=
-ot clear
-> that bailing if kvm->arch.indirect_shadow_pages > 0 makes sense.
->
-> E.g. if L1 happens to be running an L2, but <10% of the VM's memory is ex=
-posed to
-> L2, then "failure" is pretty much guaranteed to a false positive.  And ev=
-en for
-> the pages that are exposed to L2, "failure" will occur if and only if the=
- pages
-> are being accessed _only_ by L2.
->
-> There most definitely are use cases where the majority of a VM's memory i=
-s accessed
-> only by L2.  But if those use cases are performing poorly under MGLRU, th=
-en IMO
-> we should figure out a way to enhance KVM to do a fast harvest of nested =
-TDP
-> Accessed information, not make MGRLU+KVM suck for a VMs that run nested V=
-Ms.
-
-This makes sense. I don't have data today to say that we would get a
-huge win from speeding up harvesting Accessed information from the
-shadow MMU would be helpful. Getting this information for the TDP MMU
-is at least better than no information at all.
-
->
-> Oh, and calling into mmu_notifiers to do the "slow" version if the fast v=
-ersion
-> fails is suboptimal.
-
-Agreed. I didn't like this when I wrote it. This can be easily fixed
-by making mmu_notifier_clear_young() return "fast" and "young or not",
-which I will do.
-
-> So rather than failing the fast aging, I think what we want is to know if=
- an
-> mmu_notifier found a young SPTE during a fast lookup.  E.g. something lik=
-e this
-> in KVM, where using kvm_has_shadow_mmu_sptes() instead of kvm_memslots_ha=
-ve_rmaps()
-> is an optional optimization to avoid taking mmu_lock for write in paths w=
-here a
-> (very rare) false negative is acceptable.
->
->   static bool kvm_has_shadow_mmu_sptes(struct kvm *kvm)
->   {
->         return !tdp_mmu_enabled || READ_ONCE(kvm->arch.indirect_shadow_pa=
-ges);
->   }
->
->   static int __kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range,
->                          bool fast_only)
->   {
->         int young =3D 0;
->
->         if (!fast_only && kvm_has_shadow_mmu_sptes(kvm)) {
->                 write_lock(&kvm->mmu_lock);
->                 young =3D kvm_handle_gfn_range(kvm, range, kvm_age_rmap);
->                 write_unlock(&kvm->mmu_lock);
->         }
->
->         if (tdp_mmu_enabled && kvm_tdp_mmu_age_gfn_range(kvm, range))
->                 young =3D 1 | MMU_NOTIFY_WAS_FAST;
-
-I don't think this line is quite right. We might set
-MMU_NOTIFY_WAS_FAST even when we took the mmu_lock. I understand what
-you mean though, thanks.
-
->
->         return (int)young;
->   }
->
-> and then in lru_gen_look_around():
->
->         if (spin_is_contended(pvmw->ptl))
->                 return false;
->
->         /* exclude special VMAs containing anon pages from COW */
->         if (vma->vm_flags & VM_SPECIAL)
->                 return false;
->
->         young =3D ptep_clear_young_notify(vma, addr, pte);
->         if (!young)
->                 return false;
->
->         if (!(young & MMU_NOTIFY_WAS_FAST))
->                 return true;
->
->         young =3D 1;
->
-> with the lookaround done using ptep_clear_young_notify_fast().
->
-> The MMU_NOTIFY_WAS_FAST flag is gross, but AFAICT it would Just Work with=
-out
-> needing to update all users of ptep_clear_young_notify() and friends.
-
-Sounds good to me.
-
-Thanks for all the feedback!
