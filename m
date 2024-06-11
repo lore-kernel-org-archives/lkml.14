@@ -1,55 +1,57 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828FE171093;
-	Tue, 11 Jun 2024 10:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4020E558A5;
+	Tue, 11 Jun 2024 10:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718101006; cv=none; b=Tx/0DbBGzuBqLTVhvrZjeaDT3dNfOwN663f3puMSBFW7XZyHfnY+sFOzatAqHkVN512BURcAKp9ELTq0HneLqPjhkKWiqf/Q990olwpEbfXBkerL96ewzhtTss+VSRs4KyInTcvutRCGZnk3pQNWT88BI/V2vCYOn46L6wGm5CU=
+	t=1718101009; cv=none; b=O4WJ+1nO+jJQu6M2rcndPlNxN0wjNvHYvtsQqYgMth2JFytxoG6/bIeFCDGREbzECVewgOqmcGG9XQxVUgFO+YV2QTN+Y4saodEUFWzqiu2sb/vJSoN7MTshh3miNfXRyoID57AL1IcYTwxyqElMH74IOD48Pf/75M9St3j4Ylw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718101006; c=relaxed/simple;
-	bh=FcUhVZtywOK9kxMvai7/GZE1mImBUHiulyedco8utXY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PbTtXo5yFp/DqWP6hERLm/HQV7uhjSDdNNgkeB9L1QuHGF9LDMseftcYoJynXiBZmy5YNR/e6cDP+2d46A/jlRjHS55Tcdnpc3r/dCJa95PyawC6GtLw6GlU05Xmu+IyL1M8yBcYsoHgmyXwHmxnjghLCCQ9NkwnE6n3bzQW7Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bpKEnRi3; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1718101009; c=relaxed/simple;
+	bh=MQRPna/48QhZ1v0/gMd7kyf8YGX6lSvsn1kVRPs5xA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o9fkSig/N8oIfdW9cPn7od5rwBdE9LcB6d/KvQygH7tk35V9YL0BJbBIDHQwMAAuTPcjeTi+ltPbDRIy0kVtmC1YfWsiHl2dKmR91hozJVg2pUMR97CGFOXZob4JEL2NEfR2BrksmCZgNtX/EJEe3CY9TDOANQaUPIiN2cB66d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dxp//18r; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpKEnRi3"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4217990f997so26316335e9.2;
-        Tue, 11 Jun 2024 03:16:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxp//18r"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2ebed33cb67so10101651fa.0;
+        Tue, 11 Jun 2024 03:16:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718101003; x=1718705803; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vIVgHslHc8mGThRF1qcVmrN54UHgjwK8zdf0VtH82oY=;
-        b=bpKEnRi3rf1Xq9qA2HpR4k0Nbbinl90mykjY2wEWJTlTZ6tQkk7kF1HSFamgI06VyX
-         4e9dPd75djQP+emq5rSoIDUKeNWQRT/NmpS/LWzZZm73Y9oEwHJgujV5Od6YjT2BFLC4
-         GIoTmm5fdJicJ6zFasWKBjHM2jn6HaGV2lCFc5T/xWaoC3leh+uONUiwQ9mktudaN8B6
-         ghKTG86MzBlRcm0X2DNxC61wPbUpnFfPW9bqP1lKvsNdhVRcIBJg+cQgZRskaZXsfcYm
-         ABKflNHAKWfiNTGz1TyaH7Q3rQArEUw2IivN8Lrabh+5V/iUfoobrI4yr7Cl3rqapzUR
-         lN0Q==
+        d=gmail.com; s=20230601; t=1718101006; x=1718705806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MBXDKgjyA4bti1zoOZEiYHZlT+/fD+8yvyhyrG3GC+0=;
+        b=dxp//18rW0ewoZtrFiET76ROU7tdDKsWbeZ4BfVcluN8X140MAlKqfjsH0yiWpdN1i
+         qDGklu1aXX9izwXNJvTy0iROCug873Sq05OQFz1yqCfwb52EkDhsHn9XobdBjzV4tmZD
+         9Yfb42T7tiXdwj7KuaN/YpqC2iW/xsI2f+0u+rNA95+WF3Mq8IisprKJhmDR8E7kJGE8
+         B8fw2bGARx4MooKDCe1c2Ell9hpUeCWIDSHjknOTiRky1WKfe29qd5EktLCftKwc6a9r
+         lBgGvhd0hWa6Tqlm3jrXwaMXL2WknmBhEg8P9HhDeP7eByNIe4euv4bLF7AOj6FSAy4y
+         1eNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718101003; x=1718705803;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vIVgHslHc8mGThRF1qcVmrN54UHgjwK8zdf0VtH82oY=;
-        b=VVaNJZAG7iecq0L39XYVyJhRGvoq/fyaI+OMLk+05uareabRWNGrrkT7lCsP6EQhsW
-         gKc8Mhykduv51rKZRF8psxGVgUf7sS7sP0JmZaGNhxrfOF7s7YqMXgGPGxhynZMxaXox
-         Jn1CbnnMYikYMrPDADKdMLNvwgdWw3kU2zJXgKCn8eNazFvPKhZ7hgnE17wdqNT5kBNs
-         tYYy8YKVPbPX35eFJVHf/X+dnNZ5xUZ2Inbqc00PmcqnBF6wM5bxESs9OL8tYRc+4bKG
-         42T4C5j8kh+LdVZ2N28TsDPgYlXLqNy4UT8NITkkUDSAte+2kkgGGuIcNuVpGis8wLrP
-         Dqjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXFqG36BOEGBrcU325y136AFQii8pPfEfxHB9YNWZUG33QDyYixlpj76gQmsg0UGYgowO/CIpkyvkE0KhatfpfR6NqAqKf+N3PpQNa3RRiN1Il5MJw8esa3Kn3d6rY2VXQq7NT5pDfeq4Y8eYOEFJnOLIbp3EVwGH4Lp3U7IHPp94eJAbMOdXQ
-X-Gm-Message-State: AOJu0YwR0d2rfEJ5zZBpIkqYLWkyGEPNqem1BK0RJNSL92W2BsNNqWyj
-	a5QtFowMRc7kXLv9GtabsW/743cjy/tF55QFIRdDNMH7xc/nNZeK
-X-Google-Smtp-Source: AGHT+IGY+tQhKFR0ODWsDOkTiMXY3X5Pqt9XtBWT52Crt4Ny8EiS1x+SsdHticwZh2BhNaGZoS/B8w==
-X-Received: by 2002:a05:600c:4e8a:b0:421:7ee4:bbe8 with SMTP id 5b1f17b1804b1-4217ee4be2dmr61477055e9.19.1718101002500;
-        Tue, 11 Jun 2024 03:16:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718101006; x=1718705806;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MBXDKgjyA4bti1zoOZEiYHZlT+/fD+8yvyhyrG3GC+0=;
+        b=YlGO1QylrAebxPoxyPHm/E4xv9DQlE8Nx8c4Tr2Svu+nrJ6ehCGpcSTqLSVP0DjQ98
+         D8raocHkEqIA1/9IepfSsGVYw6iQ5uLW56Bate7spGbf87YcznT7f2Z7/eyqYbSGNrEo
+         QrGYgvAUPOOWt1WUyWtdzPV6bESeJnppucTSXr8ObwRbMqyuVegUSbkIeM5MPVPgy258
+         hIwsk8fYpVSwl0GVDkpHi2W2oN/+83/W+fkR0Aui6xPuyFRVtpjIGAjQNisBBg0+JStW
+         0O+yLurEldXEyscNqy2ZvNL95l0RFEBl78msTn9hQX+NbCFvxjMpAxvcMN7EKWO6OBR4
+         iMSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpY8VOT1QD7n8DSg64cOPoyhVZrBKRla9NIzSUFFg5DWSwcWuAL9sH41hc1MkE8Xvblsn4zvCc+3en21TJrEuxNhxFMdLVAVXV/iY6rYtlxJJeoZ46HftMTc/9niHX+wDWDpmEYyDwed2mVcQLQXxT4vzN3ctyXs0ArLhxCrberiDBVmCpkF+q
+X-Gm-Message-State: AOJu0YwgkUvOFK2c9/LgRlJfVBPSIKSy3FpTcmVIgLBNMQCMI3yIRs12
+	A/MpeRQW7cYUtd0zT4Aqdpp7TaqxF1F5Z9DQwUQumGieA0Z77cVc
+X-Google-Smtp-Source: AGHT+IF0VrjbGIbQhYRCMf5xKuAStpvCpyCTUseU0aJVLNkpwIUPOJqRq3CzC+nvJ0hAxLInKiGKeA==
+X-Received: by 2002:a2e:a443:0:b0:2e9:768a:12ae with SMTP id 38308e7fff4ca-2eadce33be3mr78826211fa.22.1718101006134;
+        Tue, 11 Jun 2024 03:16:46 -0700 (PDT)
 Received: from f.. (cst-prg-65-249.cust.vodafone.cz. [46.135.65.249])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c1aa1desm173481275e9.11.2024.06.11.03.16.39
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c1aa1desm173481275e9.11.2024.06.11.03.16.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 03:16:41 -0700 (PDT)
+        Tue, 11 Jun 2024 03:16:45 -0700 (PDT)
 From: Mateusz Guzik <mjguzik@gmail.com>
 To: brauner@kernel.org
 Cc: viro@zeniv.linux.org.uk,
@@ -60,10 +62,12 @@ Cc: viro@zeniv.linux.org.uk,
 	josef@toxicpanda.com,
 	hch@infradead.org,
 	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v3 0/2] rcu-based inode lookup for iget*
-Date: Tue, 11 Jun 2024 12:16:30 +0200
-Message-ID: <20240611101633.507101-1-mjguzik@gmail.com>
+Subject: [PATCH v3 2/2] btrfs: use iget5_locked_rcu
+Date: Tue, 11 Jun 2024 12:16:32 +0200
+Message-ID: <20240611101633.507101-3-mjguzik@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240611101633.507101-1-mjguzik@gmail.com>
+References: <20240611101633.507101-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,105 +76,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I think the appropriate blurb which needs to land here also needs to be
-in the commit message for the first patch, so here it is copy pasted
-with some modifications at the end:
-
-[quote]
-Instantiating a new inode normally takes the global inode hash lock
-twice:
-1. once to check if it happens to already be present
-2. once to add it to the hash
-
-The back-to-back lock/unlock pattern is known to degrade performance
-significantly, which is further exacerbated if the hash is heavily
-populated (long chains to walk, extending hold time). Arguably hash
-sizing and hashing algo need to be revisited, but that's beyond the
-scope of this patch.
-
-A long term fix would introduce finer-grained locking. An attempt was
-made several times, most recently in [1], but the effort appears
-stalled.
-
-A simpler idea which solves majority of the problem and which may be
-good enough for the time being is to use RCU for the initial lookup.
-Basic RCU support is already present in the hash. This being a temporary
-measure I tried to keep the change as small as possible.
-
-iget_locked consumers (notably ext4) get away without any changes
-because inode comparison method is built-in.
-
-iget5_locked and ilookup5_nowait consumers pass a custom callback. Since
-removal of locking adds more problems (inode can be changing) it's not
-safe to assume all filesystems happen to cope.  Thus iget5_locked_rcu,
-ilookup5_rcu and ilookup5_nowait_rcu get added, requiring manual
-conversion.
-
-In order to reduce code duplication find_inode and find_inode_fast grow
-an argument indicating whether inode hash lock is held, which is passed
-down should sleeping be necessary. They always rcu_read_lock, which is
-redundant but harmless. Doing it conditionally reduces readability for
-no real gain that I can see. RCU-alike restrictions were already put on
-callbacks due to the hash spinlock being held.
-
-There is a real cache-busting workload scanning millions of files in
-parallel (it's a backup server thing), where the initial lookup is
-guaranteed to fail resulting in the 2 lock acquires.
-
-Implemented below is a synthehic benchmark which provides the same
-behavior. [I shall note the workload is not running on Linux, instead it
-was causing trouble elsewhere. Benchmark below was used while addressing
-said problems and was found to adequately represent the real workload.]
-
-Total real time fluctuates by 1-2s.
-
 With 20 threads each walking a dedicated 1000 dirs * 1000 files
-directory tree to stat(2) on a 32 core + 24GB RAM vm:
-[/quote]
+directory tree to stat(2) on a 32 core + 24GB ram vm:
 
-Specific results:
-
-ext4 (needed mkfs.ext4 -N 24000000):
-before:	3.77s user 890.90s system 1939% cpu 46.118 total
-after:  3.24s user 397.73s system 1858% cpu 21.581 total (-53%)
-
-btrfs (s/iget5_locked/iget5_locked_rcu in fs/btrfs/inode.c):
 before: 3.54s user 892.30s system 1966% cpu 45.549 total
 after:  3.28s user 738.66s system 1955% cpu 37.932 total (-16.7%)
 
-btrfs bottlenecks itself on its own locks here.
-
 Benchmark can be found here: https://people.freebsd.org/~mjg/fstree.tgz
 
-fs rundown is as follows:
-- ext4 patched implicitly
-- xfs does not use the inode hash
-- bcachefs is out of the picture as Kent decided to implement his own
-  inode hashing based on rhashtable, for now private to his fs.
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+---
+ fs/btrfs/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I have not looked at others.
-
-[1] https://lore.kernel.org/all/20231206060629.2827226-1-david@fromorbit.com/
-
-v3:
-- export new routines with _GPL
-- don't use the extern keyword
-- add ilookup5_rcu to follow iget5_locked scheme
-
-v2:
-- add argument lists to new routines
-- assert the inode hash lock is not held as applicable
-- real btrfs patch included
-
-Mateusz Guzik (2):
-  vfs: add rcu-based find_inode variants for iget ops
-  btrfs: use iget5_locked_rcu
-
- fs/btrfs/inode.c   |   2 +-
- fs/inode.c         | 119 ++++++++++++++++++++++++++++++++++++++-------
- include/linux/fs.h |  10 +++-
- 3 files changed, 112 insertions(+), 19 deletions(-)
-
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 4883cb512379..457d2c18d071 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -5588,7 +5588,7 @@ static struct inode *btrfs_iget_locked(struct super_block *s, u64 ino,
+ 	args.ino = ino;
+ 	args.root = root;
+ 
+-	inode = iget5_locked(s, hashval, btrfs_find_actor,
++	inode = iget5_locked_rcu(s, hashval, btrfs_find_actor,
+ 			     btrfs_init_locked_inode,
+ 			     (void *)&args);
+ 	return inode;
 -- 
 2.43.0
 
