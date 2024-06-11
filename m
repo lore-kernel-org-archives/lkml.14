@@ -1,64 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C356B54F87;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CA25F870;
 	Tue, 11 Jun 2024 16:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718124841; cv=none; b=OTiPEgOdVmCb8ujKQqcS/ZM7Z9DrZZKGKozOqRL6E4P8j1nDzV8oPeo1BHqo0lGSkjvCJyv2DJjpkz7/x0WEpcGGzkSLimyQ2mbj3avCIeIgU7RmKWAqRtqY6gpKfqubBWD2TCbT9MW77k2tj9rE108Jr7aAc2al1Rc+ZBQQSpE=
+	t=1718124841; cv=none; b=t/Y4uIAFg/hhPVfd93DhPZJXX3imNUMriS1pRl5YfDHOATozIqZiOQmRafV1kbpD9KsACeonV9UaQ9r24uZQdlXhPGcJJY3amfpwMHoaTb15AE512irIz/JYvKId970cCi2qmwbR/KMNo2j+Km0PlSH0CRIESVpfXGWXPAgOxmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718124841; c=relaxed/simple;
-	bh=HaAST8bKT2MLYLbSME38/FHVe10PQTlJWtlIdz1pzsU=;
+	bh=jwIQR1DsU02huks9/aVKbhDwo5RFGf5+8/kqprO2kt4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=q6fPfPc+shosGZKulnoJQcud/p+EfWSLx/YNOZP3tZvsQkRcu+l9mNsPKnoUXvGfcGKcQE2qC1dxdwKwfNqF4NJZypZYxSyuoT4YOpLtptZ+d3zS98LCf6KHutrUCOfzmDQTxSZLzBT5LMOszVdf1oiRYRR7akTf9p4FwyeI8/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ea7tWUBc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fI+PPqSl; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=jrRf+7TxnclWvfpfA8REV8zB3M2SAgdfrev4T9K97qVNqLl0sH/5h7CyhQ7aYyV+7JnHX9+xbZbmIXzc/AgO//7iZKar4GhMk+fogQNp85UlaV2wi+VYTIK2lIgzak/OCjcwBI6eFpyAhuo6XUxkntPSh9a6J9B9McCLCmDx0MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1oxPbEkT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SoNNTMx7; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ea7tWUBc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fI+PPqSl"
-Date: Tue, 11 Jun 2024 16:53:48 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1oxPbEkT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SoNNTMx7"
+Date: Tue, 11 Jun 2024 16:53:49 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718124828;
+	s=2020; t=1718124829;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NPEmiG0J/+M6PsxFaTQGoLa/PkP8fCWdZt5TMfxUXUU=;
-	b=ea7tWUBcJsh9QlYrjilsWTJBmB/8qHNpIDl57aHgFumKN/y/uwOQc4n9bRhWs8c5FaiFvP
-	eXWgqDDDuinmRaYYM9/W64RB475tsYVWrUqaPCblKNKoIwRgJ/FKleZTF9v4RTwVXU7cOs
-	ToRUGlFTwsq6dGnvJaSvZ49shk/h+h7P2uN1KGUFI1gyV8LlH/Dl0KzzekWkEdPHo1bb96
-	uSor1mjg96fVSXV755UsAtZ5vKNi9KTOdPSNdu+VcjS4TspvajYqxfT7wTyUtaFgyTbPj9
-	Ntd1/drbu+AVTEcWMHDcz1OXigjo+c+721/3QFLFkZomSdHbtK8eIVPAf+5b5g==
+	bh=J3FIPocLkXF5f7KbGC7RnGZS8G5klhHGy6AyfvCGWCs=;
+	b=1oxPbEkT8EPVW37hi2h099+yjX3KPeveZETQsJtw3AG7VtKlHrGcJB37VmQKvQEzKKu1d2
+	YOdRrt9PUYOFBUrBMWRHDPOS+ABCE++SLSnUTlZoZMi3OKxTfIu6F3PkY78w+uOrCxg+Jr
+	8HaiWxKoqI1RwnNBIFRln29dHZq98GD+AYBUyLYWKFChaJPwJKUlCOOpuT/MCK/P/K49Or
+	yDBqgACvwyoi+GkNliwvj104xXfxNBrj2VCkn3iEa0uP31hnhMJHfPv745yutB5DOXIm6w
+	SdyTTPROL3JfjYXQhBBzK5iaBHYxrIPgqiaX/FWeeOzn67ShQipCemwInkoEUw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718124828;
+	s=2020e; t=1718124829;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NPEmiG0J/+M6PsxFaTQGoLa/PkP8fCWdZt5TMfxUXUU=;
-	b=fI+PPqSlIGe2nQ5JQKQAT+sAMSZWswJaIUrPrzBtPDTNQKUNjBCoxuomIxcE6PZup9iy9O
-	dXAW6klfhDhepWCg==
+	bh=J3FIPocLkXF5f7KbGC7RnGZS8G5klhHGy6AyfvCGWCs=;
+	b=SoNNTMx7PWVQsOgqhaJPAYhvZj85wGvQuFouzk2prrzSvoWPy2KeFNxan9hmI6kfwkYz1d
+	roA+txMw8VrcKsAg==
 From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/alternatives] x86/alternative: Convert ALTERNATIVE_TERNARY()
+Subject: [tip: x86/alternatives] x86/alternative: Convert alternative_input()
 Cc: "Borislav Petkov (AMD)" <bp@alien8.de>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240607111701.8366-10-bp@kernel.org>
-References: <20240607111701.8366-10-bp@kernel.org>
+In-Reply-To: <20240607111701.8366-6-bp@kernel.org>
+References: <20240607111701.8366-6-bp@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171812482818.10875.11347382340489705696.tip-bot2@tip-bot2>
+Message-ID: <171812482917.10875.6160530676593967009.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,41 +67,43 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/alternatives branch of tip:
 
-Commit-ID:     d2d302b1bbe28dba3bd8da855ac9c16aa5dbd00e
-Gitweb:        https://git.kernel.org/tip/d2d302b1bbe28dba3bd8da855ac9c16aa5dbd00e
+Commit-ID:     bb91576965e79d17e8e23fccdef91c4bf09d1a74
+Gitweb:        https://git.kernel.org/tip/bb91576965e79d17e8e23fccdef91c4bf09d1a74
 Author:        Borislav Petkov (AMD) <bp@alien8.de>
-AuthorDate:    Fri, 07 Jun 2024 13:16:56 +02:00
+AuthorDate:    Fri, 07 Jun 2024 13:16:52 +02:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 11 Jun 2024 18:20:41 +02:00
+CommitterDate: Tue, 11 Jun 2024 18:09:27 +02:00
 
-x86/alternative: Convert ALTERNATIVE_TERNARY()
-
-The C macro.
+x86/alternative: Convert alternative_input()
 
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20240607111701.8366-10-bp@kernel.org
+Link: https://lore.kernel.org/r/20240607111701.8366-6-bp@kernel.org
 ---
- arch/x86/include/asm/alternative.h | 6 ------
- 1 file changed, 6 deletions(-)
+ arch/x86/include/asm/alternative.h | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index bc260f2..007baab 100644
+index 21ead5d..428d6ef 100644
 --- a/arch/x86/include/asm/alternative.h
 +++ b/arch/x86/include/asm/alternative.h
-@@ -274,15 +274,9 @@ static inline int alternatives_text_reserved(void *start, void *end)
+@@ -330,7 +330,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
+  * Leaving an unused argument 0 to keep API compatibility.
+  */
+ #define alternative_input(oldinstr, newinstr, ft_flags, input...)	\
+-	asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, ft_flags)	\
++	asm_inline volatile(N_ALTERNATIVE(oldinstr, newinstr, ft_flags) \
+ 		: : "i" (0), ## input)
  
- /* If @feature is set, patch in @newinstr_yes, otherwise @newinstr_no. */
- #define ALTERNATIVE_TERNARY(oldinstr, ft_flags, newinstr_yes, newinstr_no) \
--	ALTERNATIVE_2(oldinstr, newinstr_no, X86_FEATURE_ALWAYS,	\
--		      newinstr_yes, ft_flags)
--
--/* If @feature is set, patch in @newinstr_yes, otherwise @newinstr_no. */
--#define N_ALTERNATIVE_TERNARY(oldinstr, ft_flags, newinstr_yes, newinstr_no) \
- 	N_ALTERNATIVE_2(oldinstr, newinstr_no, X86_FEATURE_ALWAYS,	\
- 		      newinstr_yes, ft_flags)
+ /* Like alternative_input, but with a single output argument */
+@@ -356,10 +356,6 @@ static inline int alternatives_text_reserved(void *start, void *end)
+ 	asm_inline volatile (ALTERNATIVE("call %c[old]", "call %c[new]", ft_flags) \
+ 		: output : [old] "i" (oldfunc), [new] "i" (newfunc), ## input)
  
+-#define n_alternative_input(oldinstr, newinstr, ft_flags, input...)	\
+-	asm_inline volatile (N_ALTERNATIVE(oldinstr, newinstr, ft_flags) \
+-		: : "i" (0), ## input)
 -
- #define ALTERNATIVE_3(oldinsn, newinsn1, ft_flags1, newinsn2, ft_flags2, \
- 			newinsn3, ft_flags3)				\
- 	OLDINSTR_3(oldinsn, 1, 2, 3)					\
+ #define n_alternative_call(oldfunc, newfunc, ft_flags, output, input...)	\
+ 	asm_inline volatile (N_ALTERNATIVE("call %c[old]", "call %c[new]", ft_flags) \
+ 		: output : [old] "i" (oldfunc), [new] "i" (newfunc), ## input)
