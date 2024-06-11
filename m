@@ -1,131 +1,158 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wflow1-smtp.messagingengine.com (wflow1-smtp.messagingengine.com [64.147.123.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD5817332E
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 08:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8680F2AF11;
+	Tue, 11 Jun 2024 08:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718092970; cv=none; b=kJKDTOcvecdC39mzbExlCugC119chBErQaDmYFT+AZTNFf9x4AYYJXXbMu2dmwkv47efVA6jnHfxpe+xdr7KE4GMWC/RRRSLFgw1SI+1wJKzgrMKb/O7NVLGfNBkWHqC9KJmv3TGs0MSpZpfiLFVbpc7WxhxKJMf3VUItaF5Sec=
+	t=1718093058; cv=none; b=LpRQaluXdGoY9wdkM0LDCP2nWoyRcndKsrHuryRKk/9BpO26aPUQcJsshSSGXdaZspDc97Dg/GhP3aftLokTGPDCgWfi3uoenQZWotQitOda0av5MHwuVXxgzXf02rk/LqgCNc1caiakLGW2QuH1BlD5PRSZUlUZL3GUFS9GwwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718092970; c=relaxed/simple;
-	bh=lWc2nHEexhFavmycz68aTW7hPDVLvdwoBeRsopX57cM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LRyaWce4ydBwiln81eM8ny3icFJUIxy7JQ5cV48CwMpvyuL8Ax+XoN9UIpILxjA9BiVU3Y8Q91mewpVkba/9P//F379AXjMq7mkmAObBllQNzQe/ymza2Y8hWbVHnjrm2P7iOCGch9XlS2j5an+o52XsTFjx4qplpXDqoxk+jsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WT6hV4V4; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718093058; c=relaxed/simple;
+	bh=i5PCbp0/q6PWz4TVWQpu/XHWdtU4gQtsM/eIXXS5bCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ndaXJxABZVuXLCM7HDiVozNF3AcEvkenzxNJktu9GPWi5pNyxrhh/Z0cJ0cv6bJgTbW09F3os1xaPZ+kMeEQg3S54G/hR7e3meuB6edA/LcQu9eK+iEdINOcass02d2GF55W6Ezj8UdgVrWOfebkwfhxvQ3ESqrANUImEp2FsKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net; spf=pass smtp.mailfrom=3xx0.net; dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b=mZQbjnu5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CSZrK0Kd; arc=none smtp.client-ip=64.147.123.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=3xx0.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xx0.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WT6hV4V4"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57c68682d1aso3457627a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 01:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718092966; x=1718697766; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=or+4NmGXTUe0vxNapTWhccRz5KiVpXdBi26BBe10Eio=;
-        b=WT6hV4V4eU/eN5Ojvf/6oEJZDqauU/2JherUv0UvOVwTYK8EHj6xPiNPhHZmspQLCQ
-         Ab7mCdt673TPnFTgJ0aNgEDznq3+FGGTXrvb/qshfuTtnm6Ji1C6sDi2L+UXUxztzOtQ
-         5mF0+v8jiUqSseEKTXDL+xGy8MeZ0FgDJTMD4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718092966; x=1718697766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=or+4NmGXTUe0vxNapTWhccRz5KiVpXdBi26BBe10Eio=;
-        b=PMBNEeg2PyeFsWCXdWPx4d13QSD193FsyJNTmDP/uGiOsu8wuG6bDOOOL0OeN3Bumn
-         pFuVW6y+SjtMpO9mOG+sSL7N3tREtllZskYxyqvQNVewrfTMqotDd5V//3ApU+oMCG0t
-         iF9xqiLSJB6qzOLjCoayk4cGcg/N/Zg++z5+mOXKU4SCITECwnhQmWXEPGJ88WQ/MHsq
-         uJ5FAWuQ7SmQVcSyiHQe6gc1XaZa1bDlB4+TydcgSPjBfvHhwvsXKMgATcyKvu7ULQdN
-         7QXRiT2s3B6eHCFMBifzDmp330SWWpk7YfHTrPETNHXCWNkb2UZEKYRyHGyrYN5IK7jX
-         k/lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVriscpv4nlaKpa6GL/XeD/gsCb2Rcx4a2ZBrsSOUbg6ge4KGmOdb0+2vABPE2OZv3UgH326A/wLpfHAhkNTV4LMVtQecMDH5PZ+9ct
-X-Gm-Message-State: AOJu0Yzll5+g8Ltwj3/ZEV/aDoiYPId5DeIgNdgNrqCVwE+hf9VlOhjg
-	JqbM3UtIFb8Kk5Bd51lXdraG/1t2Z1q/MP/p6hHkjpQRwI6EaRvpsglr3PLqs8gEG5JpO+Q/V2c
-	=
-X-Google-Smtp-Source: AGHT+IEEtuS0VnnPOHS2PSzkpfMpk0ES12PwyQs4sfNhrzOtEpDA1ALjEk2v3aRjN7lfZYgTGhkY+A==
-X-Received: by 2002:a17:907:9720:b0:a6f:10bb:967a with SMTP id a640c23a62f3a-a6f10bb975cmr497406166b.37.1718092966225;
-        Tue, 11 Jun 2024 01:02:46 -0700 (PDT)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6ef9100096sm480212166b.97.2024.06.11.01.02.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 01:02:45 -0700 (PDT)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a6ef793f4b8so347358866b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 01:02:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUhQNwNq2Y3wJWwdosGIMIj0drYCSMFA2sPGdkddsnCELJ7aO7GvbdRm7M54UxKO/HEs0XZyt/dhKMD+qzTiOZOdM2RFVd2LyEy+0eB
-X-Received: by 2002:a17:906:39ca:b0:a6f:309d:ec23 with SMTP id
- a640c23a62f3a-a6f309df3f9mr177781666b.72.1718092965211; Tue, 11 Jun 2024
- 01:02:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=3xx0.net header.i=@3xx0.net header.b="mZQbjnu5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CSZrK0Kd"
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailflow.west.internal (Postfix) with ESMTP id 282092CC0167;
+	Tue, 11 Jun 2024 04:04:12 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 11 Jun 2024 04:04:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xx0.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1718093051;
+	 x=1718096651; bh=T/+yVl2zv0+WWZAFjJjZWDjIEaS6BfN4J4jIExynF6o=; b=
+	mZQbjnu5j3Y6c5s3NSn+f0d3nDl8PoIpV2J7xwyMi9/WvD/RY1kTze8DRKg5Ob/9
+	qdcDzg8z1JIHwDnn25DSApXsXTn6/bVuJosk8d9RnWp8rWzskRXM9PaWfzjSQcbO
+	L/pICtn0oU8vqHYGhaUI1WhxzlfiEW2Clz2RiIucnveZEE0r7ic4GSTumjSm/+sx
+	TwBH7RXzTN8uCCs8xL8Sbb4/3Mi1fvUv0uRTk5azsCKbpc82kY8WVMIrYDFbESmz
+	tAKWOi8hA8Yb3/3nHam8loFLXet5LCOSdm5CHxishmCypoFw7WMqzrS6+GZqpoKW
+	KSv/GyUZaUeeojOfo+9Vzg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718093051; x=
+	1718096651; bh=T/+yVl2zv0+WWZAFjJjZWDjIEaS6BfN4J4jIExynF6o=; b=C
+	SZrK0KdQEkfShTQPNyvj4mlnKZ0Xbt96wH2Bk8SLgKtBosrmcGOS62Nxz2GgpRKh
+	RM+s1SmAOHc8jwTQYcbXY4HfhyvA1X/BpdzYexyb3voF546hIMFrftL6byx/8Gq5
+	CyxDkiIDN9oLRqT0Nf/LaUiqqX05eT1btd9UsyUmbwFpTvbGTA6DT3DuQvwfUBKc
+	qA52qqMKRKtPR/9fjA9TbeDBTjsdN+FQxV3vQB7Zo6Dn7FU+V32DBRBd2xsUo4KD
+	epx9fxt2GbDP3IDJj7N9Sx6AiW6gmuCXgkH2QW1AZX1ds1Dhu6HORajf9Tf9GL0+
+	Sd5Mo8tvMorsvB3tmZk0Q==
+X-ME-Sender: <xms:-wRoZpXrMrwrS2LBoRUf1CscHpzfEOrNAJKNPFtQhnL2ou4ekXBebw>
+    <xme:-wRoZplIqIz-jLey3ypWwohXbLo_axCWylNtXJSop0FrUIU_rmjonZ32jdlWwBPFT
+    iyChc6HdYd2moNtCsY>
+X-ME-Received: <xmr:-wRoZla3TKdjigG_1iaNu_jfnqUKH-kmyaTaQ8PEpjIy_KzdOf026xrOdaJZbZ3hsIKHSjAW1_0YIc-XzHE-Kz8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfeduuddguddvfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtugfgjgestheksfdttddtjeenucfhrhhomheplfho
+    nhgrthhhrghnucevrghlmhgvlhhsuceojhgtrghlmhgvlhhsseefgiigtddrnhgvtheqne
+    cuggftrfgrthhtvghrnhepleekffehueelieehveekjeeggfdufefffeeuvdetkeeigefg
+    veekvedtfeegffegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdplhgruhhntghhph
+    grugdrnhgvthenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehjtggrlhhmvghlshesfeiggidtrdhnvght
+X-ME-Proxy: <xmx:-wRoZsW_jAS-81zAUR-g6jdd9E8ilJENs9OUd1rRv-1c8UA21Ym8_A>
+    <xmx:-wRoZjlpGEBpk6d50L2m4A98pvBaAsuSdPz6BQm4X_y5dld9sd84LA>
+    <xmx:-wRoZpefYCike81RvCyTXCdE9YDoVGo62yxfwbbeJ0ekaL6W3FmwhA>
+    <xmx:-wRoZtEuV4QOEfDqcw9_xN4BTBgS0yEpp8zMtZ8VcYlL1hMBle_ObQ>
+    <xmx:-wRoZtmBixysWk2mkeQa9y_IPYYypQgmdhR9RwxVXuUx8F-uV7TEZXxX>
+Feedback-ID: i76614979:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 11 Jun 2024 04:04:07 -0400 (EDT)
+Date: Tue, 11 Jun 2024 01:09:18 -0700
+From: Jonathan Calmels <jcalmels@3xx0.net>
+To: Paul Moore <paul@paul-moore.com>
+Cc: brauner@kernel.org, ebiederm@xmission.com,
+ 	Jonathan Corbet <corbet@lwn.net>, James Morris <jmorris@namei.org>,
+ 	"Serge E. Hallyn" <serge@hallyn.com>, KP Singh <kpsingh@kernel.org>,
+ 	Matt Bobrowski <mattbobrowski@google.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ 	Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ 	Martin KaFai Lau <martin.lau@linux.dev>,
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ 	Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>,
+ 	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, 	Luis Chamberlain <mcgrof@kernel.org>,
+ Kees Cook <kees@kernel.org>, 	Joel Granados <j.granados@samsung.com>,
+ John Johansen <john.johansen@canonical.com>,
+ 	David Howells <dhowells@redhat.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>,
+ 	Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>, 	Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, containers@lists.linux.dev,
+ 	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-doc@vger.kernel.org, 	linux-security-module@vger.kernel.org,
+ bpf@vger.kernel.org, apparmor@lists.ubuntu.com,
+ 	keyrings@vger.kernel.org, selinux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] bpf,lsm: Allow editing capabilities in BPF-LSM
+ hooks
+Message-ID: <z2bgjrzeq7crqx24chdbxnaanuhczbjnq6da3xw6al6omjj5xz@mqbzzzfva5sw>
+References: <20240609104355.442002-1-jcalmels@3xx0.net>
+ <20240609104355.442002-5-jcalmels@3xx0.net>
+ <CAHC9VhT5XWbhoY2Nw5jQz4GxpDriUdHw=1YsQ4xLVUtSnFxciA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531-da7219-v1-1-ac3343f3ae6a@chromium.org> <171762153256.557520.12011428649748199502.b4-ty@kernel.org>
-In-Reply-To: <171762153256.557520.12011428649748199502.b4-ty@kernel.org>
-From: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Date: Tue, 11 Jun 2024 16:02:08 +0800
-X-Gmail-Original-Message-ID: <CAHc4DNJ3q=a8Wts_q12=R34eMbMq+d4PSEFe7YR+DDs=C_Og9g@mail.gmail.com>
-Message-ID: <CAHc4DNJ3q=a8Wts_q12=R34eMbMq+d4PSEFe7YR+DDs=C_Og9g@mail.gmail.com>
-Subject: Re: [PATCH RFT] ASoC: mediatek: mt8183-da7219-max98357: Fix kcontrol
- name collision
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Alper Nebi Yasak <alpernebiyasak@gmail.com>, Hsin-Te Yuan <yuanhsinte@chromium.org>, 
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhT5XWbhoY2Nw5jQz4GxpDriUdHw=1YsQ4xLVUtSnFxciA@mail.gmail.com>
 
-On Thu, Jun 6, 2024 at 5:05=E2=80=AFAM Mark Brown <broonie@kernel.org> wrot=
-e:
->
-> On Fri, 31 May 2024 08:37:54 +0000, Hsin-Te Yuan wrote:
-> > Since "Headphone Switch" kcontrol name has already been used by da7219,
-> > rename the control name from "Headphone" to "Headphones" to prevent the
-> > colision. Also, this change makes kcontrol name align with the one in
-> > mt8186-mt6366-da7219-max98357.c.
+On Sun, Jun 09, 2024 at 08:18:48PM GMT, Paul Moore wrote:
+> On Sun, Jun 9, 2024 at 6:40 AM Jonathan Calmels <jcalmels@3xx0.net> wrote:
 > >
+> > This patch allows modifying the various capabilities of the struct cred
+> > in BPF-LSM hooks. More specifically, the userns_create hook called
+> > prior to creating a new user namespace.
 > >
->
-> Applied to
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-=
-next
->
-> Thanks!
->
-> [1/1] ASoC: mediatek: mt8183-da7219-max98357: Fix kcontrol name collision
->       commit: 97d8613679eb53bd0c07d0fbd3d8471e46ba46c1
->
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
->
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
->
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
->
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
->
-> Thanks,
-> Mark
->
+> > With the introduction of userns capabilities, this effectively provides
+> > a simple way for LSMs to control the capabilities granted to a user
+> > namespace and all its descendants.
+> >
+> > Update the selftests accordingly by dropping CAP_SYS_ADMIN in
+> > namespaces and checking the resulting task's bounding set.
+> >
+> > Signed-off-by: Jonathan Calmels <jcalmels@3xx0.net>
+> > ---
+> >  include/linux/lsm_hook_defs.h                 |  2 +-
+> >  include/linux/security.h                      |  4 +-
+> >  kernel/bpf/bpf_lsm.c                          | 55 +++++++++++++++++++
+> >  security/apparmor/lsm.c                       |  2 +-
+> >  security/security.c                           |  6 +-
+> >  security/selinux/hooks.c                      |  2 +-
+> >  .../selftests/bpf/prog_tests/deny_namespace.c | 12 ++--
+> >  .../selftests/bpf/progs/test_deny_namespace.c |  7 ++-
+> >  8 files changed, 76 insertions(+), 14 deletions(-)
+> 
+> I'm not sure we want to go down the path of a LSM modifying the POSIX
+> capabilities of a task, other than the capabilities/commoncap LSM.  It
+> sets a bad precedent and could further complicate issues around LSM
+> ordering.
 
-Hi Mark,
+Well unless I'm misunderstanding, this does allow modifying the
+capabilities/commoncap LSM through BTF. The reason for allowing
+`userns_create` to be modified is that it is functionally very similar
+to `cred_prepare` in that it operates with new creds (but specific to
+user namespaces because of reasons detailed in [1]). 
 
-I accidentally added a Change-Id field in the commit message. Can you
-help remove it before sending it to Linus?
+There were some concerns in previous threads that the userns caps by
+themselves wouldn't be granular enough, hence the LSM integration.
+Ubuntu for example, currently has to resort to a hardcoded profile
+transition to achieve this [2].
 
-Thanks,
-Hsin-Te
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7cd4c5c2101cb092db00f61f69d24380cf7a0ee8
+[2] https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/noble/commit/?id=43a6c29532f517179fea8c94949d657d71f4fc13
