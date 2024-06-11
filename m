@@ -1,307 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E961CFA9;
-	Tue, 11 Jun 2024 16:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEE63D556
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 16:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718123784; cv=none; b=CE9tT0ozVEpDIaTm9HXA/r//d/nYM2fq1CXI/KcSdYa3hvlphauXNgAHIx6meAcO6q1qXmv994kpehdUh1L6fkVhEs96lY542Ewn9C2YstjHhL6Jc7a9AmdMP96g2CF5qrq0pD3N+3jzGaZ4sJd7TVohdy93/KpMbFZfNRWNxJ0=
+	t=1718123849; cv=none; b=f12clxr+hh23n3EPF4rxtSzx35eaj6zJWmCZ0yOHXioFlFEB4TYfSLEBzlIx4NWxOwASmn4UbYdn/+rZ0qGbJZUx86g4Gx6Y1vwG7FWx2BKLU0tzKM/Qwm2cwoP3glyyVoq/AWM21mtWNfWqOawq8tPfaocXm5rX/a2Br+douFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718123784; c=relaxed/simple;
-	bh=lc5OBt3a0lOopI/ilgimjrd8D/Lwin6NVPSkHe2KmGg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y8lm3/M3FERraSVEKCCVF0gQeCALkQd6xNI/smT5OeNb8phmnhtb1gPRW9k3bvnmXXtCyaI8Q+aQPOqy2DoVKa69wS49LwIhDlu0UFj4hWiHa3KoM7Yd9jh5x1pspohrwkhQYv6XndBOT263SwCutaifSIYJL3PCvQMWjw04V38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bk8L+bnY; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bk8L+bnY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718123783; x=1749659783;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lc5OBt3a0lOopI/ilgimjrd8D/Lwin6NVPSkHe2KmGg=;
-  b=bk8L+bnYeC4RlvRxbKIuTxjWAPlzzHF27D0A9CXAzMbGX6dGoZUuv6QY
-   QCW4nMuAra++Ny6XGgHZgOrahw1BgedGqnC7UstSIUWxIcUHs1fKdNK7G
-   lzzO/JlgqBk+7Y/t9W5saDrr9WXOjl8QzvSH6zRqmMWHgKL2FvScI82tR
-   cilrd0r4uRfIJ5jGKyQyA22ipOwave8fPoQZEtQgxuVetFyzvLPpVPDlN
-   drxlY5AqLiYaU38avaoontaDLUDG+a2plQmFIykSYosvqmWVsPm3Y1L8w
-   0nVK2ojz1/qiib1PbQr/fahZCCHSXCdDohJVwGM1kRHj++Taz33FPdQ46
-   A==;
-X-CSE-ConnectionGUID: YbTgofCpS6uJtvwaaimG/Q==
-X-CSE-MsgGUID: KtrwT5ehQwyH46hK6KiapA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="14972714"
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="14972714"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:36:23 -0700
-X-CSE-ConnectionGUID: ggwif3ZWSKuoN2ZMghFfdA==
-X-CSE-MsgGUID: k0D2yHfLRGmP+DhmEufjpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="39959464"
-Received: from test2-linux-lab.an.intel.com ([10.122.105.166])
-  by orviesa006.jf.intel.com with ESMTP; 11 Jun 2024 09:36:21 -0700
-From: matthew.gerlach@linux.intel.com
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	joyce.ooi@intel.com,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: [PATCH v6 1/2] dt-bindings: PCI: altera: Convert to YAML
-Date: Tue, 11 Jun 2024 11:35:24 -0500
-Message-Id: <20240611163525.4156688-1-matthew.gerlach@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718123849; c=relaxed/simple;
+	bh=zmsOm5zVkjm7xTUsdVu8daBXMwaoTvNYKt6UYD7v+ks=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bIZsCZP+6DMptl3k/BTpz4XHKsmcDdsIP3FmwZcvVxX/gEfq4EWhv5OZ2WyePW47klzKYIsXeJKvCZyKlxOTyTkE2QEyW3W2YAEwrOqUM6vYZAC0k9sKovxzeAzDiQoUEz0HrG8Qkjd1vm/SEng4fsx9dZS9U1EuueMigzsJNK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-7eb1d659c76so704443239f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:37:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718123847; x=1718728647;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yaVN3PXLUvhLaNmZS/WM/UFUx9n6em9c+6ETvsCf4bo=;
+        b=sO/7lZCe9AY60+6ML+5tPFqIh+SaasWHN//0twe3f7tPk2lyJOHKCVu7mY9sivXqAt
+         /LFrTHy6RP+Nz7VksSetSYdvdQrNGa3gJahqpprMmvGc56Wbv9zQ11lo9IvMN4DlmTU6
+         O8kpaBFTHRNb/fObttBM14C6sAqzAzGAw0HKFXGv4+pDmbE3ZGX3rlfCviJpztgk9VS8
+         rIJZvTJxblpQBsYG58VvPmqYBhJXkvbj1cxIjRwy4IPU4O5Cws+Vl57gJmMnf9wdSgaj
+         SI60rOwGxWjIU773akqVWlCqFIYpl27TxsFT3xiHsoCnf4ylY2/4P4MO2QFiMpGbdxaq
+         +l0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUO3AvcBYo3GGGafNeXEljr78MQaipNa+5U+lH6EqJN7UsxKsnwz5rhwVsJQWQMv1yCoVAAYM/cymI1uFcqsjzMJ7wFaXwchyezQwND
+X-Gm-Message-State: AOJu0YxtglmsacAo1+b7GZthu5QoI8KtC/G987PgYxM69UBiGZnsMsJz
+	ta7y/tMx1DVNaSKllhs2+5Ei9EaP631fosGy4UHmwJcf9bvTzFXd2L+D6I/de9/zYR0VcTytk4g
+	iV2vOJ5vxwvWrZk3xjRwO4nvblQxMghMLoBQbvOmRO/x7Rg+MZNKCtlU=
+X-Google-Smtp-Source: AGHT+IEf0JjTnlLcFctIEWKpZnmyQYtD2CsSU33V+LKNAGYPG3adHPUEu+oAQoeKn/QRwhkj4bpoS9LntDQmNv8IOehHNepsguy0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:4121:b0:4b7:ca39:5869 with SMTP id
+ 8926c6da1cb9f-4b7ca395b64mr651611173.6.1718123846730; Tue, 11 Jun 2024
+ 09:37:26 -0700 (PDT)
+Date: Tue, 11 Jun 2024 09:37:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009096d3061a9fe1ac@google.com>
+Subject: [syzbot] [wireless?] WARNING in rdev_scan
+From: syzbot <syzbot+cd6135193ba6bb9ad158@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, ilan.peer@intel.com, 
+	johannes.berg@intel.com, johannes@sipsolutions.net, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	miriam.rachel.korenblit@intel.com, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Hello,
 
-Convert the device tree bindings for the Altera Root Port PCIe controller
-from text to YAML.
+syzbot found the following issue on:
 
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+HEAD commit:    c44711b78608 liquidio: Adjust a NULL pointer handling path..
+git tree:       net
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=164c2762980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=333ebe38d43c42e2
+dashboard link: https://syzkaller.appspot.com/bug?extid=cd6135193ba6bb9ad158
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=105b4602980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=163c3b32980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/47ff53e982e7/disk-c44711b7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7b10dcb52f35/vmlinux-c44711b7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b4a6bf6f87c5/bzImage-c44711b7.xz
+
+The issue was bisected to:
+
+commit f7a8b10bfd614d7a9a16fbe80d28ead4f063cb00
+Author: Johannes Berg <johannes.berg@intel.com>
+Date:   Fri May 10 09:37:38 2024 +0000
+
+    wifi: cfg80211: fix 6 GHz scan request building
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13500a36980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=10d00a36980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17500a36980000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cd6135193ba6bb9ad158@syzkaller.appspotmail.com
+Fixes: f7a8b10bfd61 ("wifi: cfg80211: fix 6 GHz scan request building")
+
+warning: `syz-executor368' uses wireless extensions which will stop working for Wi-Fi 7 hardware; use nl80211
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 5094 at net/wireless/rdev-ops.h:462 rdev_scan+0x188/0x300 net/wireless/rdev-ops.h:462
+Modules linked in:
+CPU: 1 PID: 5094 Comm: syz-executor368 Not tainted 6.10.0-rc2-syzkaller-00228-gc44711b78608 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+RIP: 0010:rdev_scan+0x188/0x300 net/wireless/rdev-ops.h:462
+Code: e8 0d a8 01 00 89 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 17 35 c1 f6 90 0f 0b 90 e9 23 ff ff ff e8 09 35 c1 f6 90 <0f> 0b 90 bb ea ff ff ff eb d1 e8 f9 34 c1 f6 c6 05 42 dd c2 04 01
+RSP: 0018:ffffc900034778d8 EFLAGS: 00010293
+RAX: ffffffff8ad4f177 RBX: ffff888022a50000 RCX: ffff88807ea21e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff8ad4f033 R09: 1ffffffff1f5a965
+R10: dffffc0000000000 R11: fffffbfff1f5a966 R12: dffffc0000000000
+R13: ffff888022a50000 R14: ffff88807c98c000 R15: ffff88807c98c000
+FS:  0000555573837380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000005fdeb8 CR3: 0000000029ce0000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ cfg80211_wext_siwscan+0xcbf/0x10d0 net/wireless/scan.c:3509
+ ioctl_standard_iw_point+0x788/0xcb0 net/wireless/wext-core.c:867
+ ioctl_standard_call+0xc7/0x290 net/wireless/wext-core.c:1052
+ wext_ioctl_dispatch+0x58e/0x640 net/wireless/wext-core.c:1016
+ wext_handle_ioctl+0x15f/0x270 net/wireless/wext-core.c:1077
+ sock_ioctl+0x17f/0x8e0 net/socket.c:1275
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb389e893a9
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc48732138 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007ffc48732308 RCX: 00007fb389e893a9
+RDX: 0000000020000000 RSI: 0000000000008b18 RDI: 0000000000000003
+RBP: 00007fb389efc610 R08: 0000000000000000 R09: 00007ffc48732308
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffc487322f8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+
 ---
-v6:
- - Fix dt_binding_check warnings by creating interrupt-controller subnode
-   and fixing interrupt-map.
- - Updated filename in MAINTAINERS.
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-v5:
- - add interrupt-controller #interrupt-cells to required field
- - don't touch original example dts
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-v4:
- - reorder reg-names to match original binding
- - move reg and reg-names to top level with limits.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-v3:
- - Added years to copyright
- - Correct order in file of allOf and unevaluatedProperties
- - remove items: in compatible field
- - fix reg and reg-names constraints
- - replace deprecated pci-bus.yaml with pci-host-bridge.yaml
- - fix entries in ranges property
- - remove device_type from required
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-v2:
- - Move allOf: to bottom of file, just like example-schema is showing
- - add constraint for reg and reg-names
- - remove unneeded device_type
- - drop #address-cells and #size-cells
- - change minItems to maxItems for interrupts:
- - change msi-parent to just "msi-parent: true"
- - cleaned up required:
- - make subject consistent with other commits coverting to YAML
- - s/overt/onvert/g
----
- .../devicetree/bindings/pci/altera-pcie.txt   |  50 --------
- .../bindings/pci/altr,pcie-root-port.yaml     | 114 ++++++++++++++++++
- MAINTAINERS                                   |   2 +-
- 3 files changed, 115 insertions(+), 51 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
- create mode 100644 Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
-deleted file mode 100644
-index 816b244a221e..000000000000
---- a/Documentation/devicetree/bindings/pci/altera-pcie.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--* Altera PCIe controller
--
--Required properties:
--- compatible :	should contain "altr,pcie-root-port-1.0" or "altr,pcie-root-port-2.0"
--- reg:		a list of physical base address and length for TXS and CRA.
--		For "altr,pcie-root-port-2.0", additional HIP base address and length.
--- reg-names:	must include the following entries:
--		"Txs": TX slave port region
--		"Cra": Control register access region
--		"Hip": Hard IP region (if "altr,pcie-root-port-2.0")
--- interrupts:	specifies the interrupt source of the parent interrupt
--		controller.  The format of the interrupt specifier depends
--		on the parent interrupt controller.
--- device_type:	must be "pci"
--- #address-cells:	set to <3>
--- #size-cells:		set to <2>
--- #interrupt-cells:	set to <1>
--- ranges:	describes the translation of addresses for root ports and
--		standard PCI regions.
--- interrupt-map-mask and interrupt-map: standard PCI properties to define the
--		mapping of the PCIe interface to interrupt numbers.
--
--Optional properties:
--- msi-parent:	Link to the hardware entity that serves as the MSI controller
--		for this PCIe controller.
--- bus-range:	PCI bus numbers covered
--
--Example
--	pcie_0: pcie@c00000000 {
--		compatible = "altr,pcie-root-port-1.0";
--		reg = <0xc0000000 0x20000000>,
--			<0xff220000 0x00004000>;
--		reg-names = "Txs", "Cra";
--		interrupt-parent = <&hps_0_arm_gic_0>;
--		interrupts = <0 40 4>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		bus-range = <0x0 0xFF>;
--		device_type = "pci";
--		msi-parent = <&msi_to_gic_gen_0>;
--		#address-cells = <3>;
--		#size-cells = <2>;
--		interrupt-map-mask = <0 0 0 7>;
--		interrupt-map = <0 0 0 1 &pcie_0 1>,
--			            <0 0 0 2 &pcie_0 2>,
--			            <0 0 0 3 &pcie_0 3>,
--			            <0 0 0 4 &pcie_0 4>;
--		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
--			  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
--	};
-diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-new file mode 100644
-index 000000000000..08ee04f6e004
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-@@ -0,0 +1,114 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright (C) 2015, 2019, 2024, Intel Corporation
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Altera PCIe Root Port
-+
-+maintainers:
-+  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - altr,pcie-root-port-1.0
-+      - altr,pcie-root-port-2.0
-+
-+  reg:
-+    items:
-+      - description: TX slave port region
-+      - description: Control register access region
-+      - description: Hard IP region
-+    minItems: 2
-+
-+  reg-names:
-+    items:
-+      - const: Txs
-+      - const: Cra
-+      - const: Hip
-+    minItems: 2
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-map-mask:
-+    items:
-+      - const: 0
-+      - const: 0
-+      - const: 0
-+      - const: 7
-+
-+  interrupt-map:
-+    maxItems: 4
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+  interrupt-controller:
-+    description: identifies the node as an interrupt controller
-+    type: object
-+    properties:
-+      interrupt-controller: true
-+
-+      "#address-cells":
-+        const: 0
-+
-+      "#interrupt-cells":
-+        const: 1
-+
-+    required:
-+      - interrupt-controller
-+      - "#address-cells"
-+      - "#interrupt-cells"
-+
-+    additionalProperties: false
-+
-+  msi-parent: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - "#interrupt-cells"
-+  - interrupt-controller
-+  - interrupt-map
-+  - interrupt-map-mask
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    pcie_0: pcie@c00000000 {
-+        compatible = "altr,pcie-root-port-1.0";
-+        reg = <0xc0000000 0x20000000>,
-+              <0xff220000 0x00004000>;
-+        reg-names = "Txs", "Cra";
-+        interrupt-parent = <&hps_0_arm_gic_0>;
-+        interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+        #interrupt-cells = <1>;
-+        bus-range = <0x0 0xff>;
-+        device_type = "pci";
-+        msi-parent = <&msi_to_gic_gen_0>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        interrupt-map-mask = <0 0 0 7>;
-+        interrupt-map = <0 0 0 1 &pcie_intc 1>,
-+                        <0 0 0 2 &pcie_intc 2>,
-+                        <0 0 0 3 &pcie_intc 3>,
-+                        <0 0 0 4 &pcie_intc 4>;
-+        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000>,
-+                 <0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
-+        pcie_intc: interrupt-controller {
-+            interrupt-controller;
-+            #address-cells = <0>;
-+            #interrupt-cells = <1>;
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 670b8201973b..c8120cb9d340 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17142,7 +17142,7 @@ PCI DRIVER FOR ALTERA PCIE IP
- M:	Joyce Ooi <joyce.ooi@intel.com>
- L:	linux-pci@vger.kernel.org
- S:	Supported
--F:	Documentation/devicetree/bindings/pci/altera-pcie.txt
-+F:	Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
- F:	drivers/pci/controller/pcie-altera.c
- 
- PCI DRIVER FOR APPLIEDMICRO XGENE
--- 
-2.34.1
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
+If you want to undo deduplication, reply with:
+#syz undup
