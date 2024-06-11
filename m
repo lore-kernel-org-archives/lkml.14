@@ -1,98 +1,86 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCA217DE3D;
-	Tue, 11 Jun 2024 13:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09D817D88C;
+	Tue, 11 Jun 2024 13:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718114175; cv=none; b=uENZAWnXnwgd7YXwS/U/bOiPaFZAYCB9n35EKVvdp/Q+HfSrx7V/ltpPSmpJmSfyL505RSkrb4cvd7+EbdgALBxxGIYO1QOIr/7HP4djiRlgfwkWh79BnBCwjIeSYsVLb7s6E/9sChcRpGUF1gHH9oaN+KCEul2PUTGCDP8JYLo=
+	t=1718114196; cv=none; b=QfqrjypcmTAsH3sNpt1EKDX7LkD3Dv7kbczMUMuFcQd6B75QD5rGMEy5EgfEganRbNOuxkgELa84OQPuTlP4dEHB8jmkzUQ9W22hQMJph/0eeguEsGZW5khCW1PNlEu/8MJb+KUue0VUXtpmOsvncl/eZn9XJUFc3sDyN1Sa828=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718114175; c=relaxed/simple;
-	bh=hZekxdzg6/DbdtqVNiroTrOJ0Q1iP2Vz3e229k+G84U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AP5MFf1e2pSfx9WDWtOo8cQwWwFXLO94WKoT8AormZwd3TnIIVWQbQ0MEnHS4k3/blm6N8CyBZ4j/evTYgYBZ++wKSYvJKaFkOjFQKSC9u3EzThy4aW0gz9FoJ3/IG4IcZ9rkZ2sUe0gLmzp2j5RFnfWy4SlJyKo5m71FgX0Jcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
-Received: from [127.0.0.1] (helo=localhost)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=9906f4c1d5=ms@dev.tdt.de>)
-	id 1sH1yu-002Yle-LV; Tue, 11 Jun 2024 15:56:12 +0200
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1sH1yu-00FJ85-4O; Tue, 11 Jun 2024 15:56:12 +0200
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id D3EA8240053;
-	Tue, 11 Jun 2024 15:56:11 +0200 (CEST)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id 68642240050;
-	Tue, 11 Jun 2024 15:56:11 +0200 (CEST)
-Received: from mschiller1.dev.tdt.de (unknown [10.2.3.20])
-	by mail.dev.tdt.de (Postfix) with ESMTPSA id 3775B376FA;
-	Tue, 11 Jun 2024 15:56:11 +0200 (CEST)
-From: Martin Schiller <ms@dev.tdt.de>
-To: martin.blumenstingl@googlemail.com,
-	hauke@hauke-m.de,
-	andrew@lunn.ch,
-	f.fainelli@gmail.com,
-	olteanv@gmail.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ms@dev.tdt.de
-Subject: [PATCH net-next v5 12/12] net: dsa: lantiq_gswip: Improve error message in gswip_port_fdb()
-Date: Tue, 11 Jun 2024 15:54:34 +0200
-Message-ID: <20240611135434.3180973-13-ms@dev.tdt.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240611135434.3180973-1-ms@dev.tdt.de>
-References: <20240611135434.3180973-1-ms@dev.tdt.de>
+	s=arc-20240116; t=1718114196; c=relaxed/simple;
+	bh=AzMMWpTTBZJQB1Sti3Hx2aIxr1jFUoxrrZxbpJlwWLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cENKUPdMesLVWCbC2b49yjqIgPC+o9jL/7O2js1HFPg3d8mBy+2lcY7CsAIpaLhNpIDn9gvdceDmX+ntZBvYPf+2fU7gzX84NZRzaA+5jQDt/nsdHz+TE/r/m9mITHI6hOfAq7uknSMneay/id0Oc9tt9XnjJmHgAd7QGeEgIOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kaGvp3xn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kaGvp3xn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76C8DC2BD10;
+	Tue, 11 Jun 2024 13:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718114196;
+	bh=AzMMWpTTBZJQB1Sti3Hx2aIxr1jFUoxrrZxbpJlwWLc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kaGvp3xn98pvoMf8thzl6OcKd9guInjdtxXZcUvLZ+WdpCFF7ipgtF8frP2dPjMB1
+	 2UMKXeDO/qeXmmZRW+PinxPXHCvmHCadEo/khi4KKI0yFcbzrWpg5U/3JxqfsdQfVa
+	 qG0vCVgmhoxkCVVOShkekjx7ssiBOuWQHI5+FfEg=
+Date: Tue, 11 Jun 2024 15:56:33 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Tianshu Qiu <tian.shu.qiu@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Chan <michael.chan@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	linux-media@vger.kernel.org, netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
+	sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 1/6] auxbus: make to_auxiliary_drv accept and return a
+ constant pointer
+Message-ID: <2024061115-aversion-lunchroom-d54c@gregkh>
+References: <20240611130103.3262749-7-gregkh@linuxfoundation.org>
+ <ZmhUp-UclZkvQLqE@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-purgate-type: clean
-X-purgate: clean
-X-purgate-ID: 151534::1718114172-CF4488CF-D5B94AF4/0/0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZmhUp-UclZkvQLqE@kekkonen.localdomain>
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Tue, Jun 11, 2024 at 01:44:07PM +0000, Sakari Ailus wrote:
+> Hi Greg,
+> 
+> On Tue, Jun 11, 2024 at 03:01:04PM +0200, Greg Kroah-Hartman wrote:
+> > In the quest to make struct device constant, start by making
+> > to_auziliary_drv() return a constant pointer so that drivers that call
+> 
+> s/z/s/
 
-Print that no FID is found for bridge %s instead of the incorrect
-message that the port is not part of a bridge.
+Ah, good catch, I'll fix that up when applying it!
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
----
- drivers/net/dsa/lantiq_gswip.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com> # drivers/media/pci/intel/ipu6
 
-diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswi=
-p.c
-index ec52c62eadce..fcd4505f4925 100644
---- a/drivers/net/dsa/lantiq_gswip.c
-+++ b/drivers/net/dsa/lantiq_gswip.c
-@@ -1370,7 +1370,8 @@ static int gswip_port_fdb(struct dsa_switch *ds, in=
-t port,
- 	}
-=20
- 	if (fid =3D=3D -1) {
--		dev_err(priv->dev, "Port not part of a bridge\n");
-+		dev_err(priv->dev, "no FID found for bridge %s\n",
-+			bridge->name);
- 		return -EINVAL;
- 	}
-=20
---=20
-2.39.2
+thanks for the review.
 
+greg k-h
