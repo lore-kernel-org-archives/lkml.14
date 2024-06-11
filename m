@@ -1,261 +1,189 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF29317624A;
-	Tue, 11 Jun 2024 09:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71759176AB8
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718098952; cv=none; b=hwOFjkiH/49nRPmx6TE+fNO8RrEhm6jbA0q6EoNPFZk8mrCP8lDazG39HdbZ+SeijjuzVjDq8UA/ZV8o78KSuyVj+ztli0kzE9EX9bOJVvOLW88cE0bZfIQDMwXLCe5n2WJ83OgGSGxJZ7YVBAXSCTNsDjDEznfaA8nLKqxv2Dw=
+	t=1718098985; cv=none; b=lc8HpRJ0Gn/Gdr/25bZ6cljbiXVhRRkNzn4S5WDg1i5lvgg02RIJ1RGD7GV8I6YG6rWCsnMp5QBv917iX2Am90t/BkC/ok+aACLHWTReZFLY/aExIlaBbTtKhTvG2D4DFLwwXWli7GfiJcLcvINa0F19+vMs1yPMcVcchQsO2dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718098952; c=relaxed/simple;
-	bh=vmcw0LoEb2KYPpqCFEmI5BlvDCI6GwFkzcgF2Y7u/DA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=orMPhfum8fnY8u76az57XTsqjI0rm5rCs+aIM6vbx418v7Rus9nDTtdiCMZUJfaLWwOhItfu+rit2KMVI/PipeO/XgL1OOSycwEKXAvFnGABYrZsxJ7kzfZ+Q27KAplENGqgDLKOwMgZ6HGnCPvbA3cvcj53HiUYw/m5uw8GvvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FWtA8+nt; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718098985; c=relaxed/simple;
+	bh=PjgyDSFoWWSLuBYP8YRI3EDHBqV5H/aqSV8Hc10U6vY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pzZJ/XTooTwG6WF4wfFXsLnCUWZwj3A63YjNg2lSt3zU6NxJBhBuHVAuukobzTpgNqPtaoTYIrckkl4IVpS4/5c0o+wjSmkUQWVhTkPRWEJjbMefSVfRpKRFj5qbUAZeMEKh1WdT7FRk3/BBnZQ48H2Nvtp5kVB1OHtPjHiemww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VoHZg1zn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FWtA8+nt"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B2qdon024313;
-	Tue, 11 Jun 2024 09:42:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=4cDv83/EReSbO2bcNeU4T7lO
-	TBkKY0tXj81oN6i5QT0=; b=FWtA8+ntrlZ2+XgaDmj30WDTL1gGuL0A5i2g1l0V
-	Ahkh4VntEJujQ0veP8uxja+RzPDdwwzM/N+zOfJ+NxBcAZYrerqNsFw6jvnBF4On
-	swYr22huRTU/cOXDk5GuH0Gl4h66AHX6tt7BP3FUOJ+udaptzd1yPQcky+KR2gaF
-	eyOtwQp0Bcc+SOI++6Z+IVyD/DmifxyMu/yfUSKGHnD6m8OdIL3FX1eoSR9QsBjJ
-	0sDZCokn8knOxqabSp2ASMP+wg2TuNrH/Vb6qf0tq9V2ydZyukuABOioHdfkoyE6
-	ojQ4WEMQK0hM/+FGanQLJIcca30EI8KXId24xbJ7k4gKPw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymd0eehk2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 09:42:25 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45B9gPk6009672
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 09:42:25 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 11 Jun 2024 02:42:20 -0700
-Date: Tue, 11 Jun 2024 15:12:16 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Georgi Djakov
-	<djakov@kernel.org>, <andersson@kernel.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <quic_anusha@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v9 6/6] arm64: dts: qcom: ipq9574: Add icc provider
- ability to gcc
-Message-ID: <Zmgb+OjdBNw71sC1@hu-varada-blr.qualcomm.com>
-References: <20240418092305.2337429-1-quic_varada@quicinc.com>
- <20240418092305.2337429-7-quic_varada@quicinc.com>
- <a7194edd-a2c8-46fc-bea1-f26b0960e535@linaro.org>
- <Ziov6bWBXYXJ4Zp8@hu-varada-blr.qualcomm.com>
- <27f4f3dd-9375-40cf-8c8f-1c4edf66e31b@linaro.org>
- <ZjNdTmmXucjtRxJt@hu-varada-blr.qualcomm.com>
- <c015b3a5-2213-4ebd-b960-d97ed1fe7062@kernel.org>
- <ZjshR0ekcn0gxwOa@hu-varada-blr.qualcomm.com>
- <CAA8EJpqENsojPQmCbma_nQLEZq8nK1fz1K0JdtvLd=kPrH_DBw@mail.gmail.com>
- <1a08ef42-b52f-4c97-90d7-e7fdee7725b4@linaro.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VoHZg1zn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718098982;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=4Fvo4snqjmjLL5YGwAq7AoShRlEWBSMshPzLS47jMwA=;
+	b=VoHZg1znVK/cl+rVxGgbKZSJrnsSjR91CMf3R2+8nErj0PiudsniIqgxkriipkFapVFboa
+	i+O82qe/sNr2pJAlM+C2D7Vb+V8ZDvXi5k3YLZP+h7kiRMd7yuGeTO/9Y1RlNmOsWHO+Oq
+	BvW5Ilo7O0465bHZxKbQ5akzc452q/I=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-35-ZYYgmKksPQy4oqnHwvRo7A-1; Tue, 11 Jun 2024 05:43:00 -0400
+X-MC-Unique: ZYYgmKksPQy4oqnHwvRo7A-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-52c0bfd6a89so2798040e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 02:43:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718098979; x=1718703779;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4Fvo4snqjmjLL5YGwAq7AoShRlEWBSMshPzLS47jMwA=;
+        b=fuL2Ksbpvgo5I+0IGXMQjY9faMN8y9hXth64PV2EkpcFeypDWDEYzjRiDy3LYLogCg
+         jTD9zrTI1WohGDyl/PS/XeDcq2L6s0uyQ+Ohz0bYyvKzDCO+Zl5py3HhLQVdWH/ZYtKj
+         +5q+dX7JpNbLqNFCaB3B8jrwP2PE9jnek/sJMAadrrxjlYquRnftbW4lyWCaVk6/2qaw
+         /0/AXcz6W/7TJuWz192szsFGI+WzG6OeMa4pNoZWuVVQucdRmSx1QCKGVl7Grfe9BlA/
+         Z1mUTSzGA7Ka0zJlA1+RAtpD/Qd5q6WR7KwRH0/hivo5yJznunMUqq8itMBUSWvfTpGR
+         jjvw==
+X-Gm-Message-State: AOJu0Yz99K5KiaVYdj/XRBMvr4y5/MXJqGrNfr/ZK4+fZjMZs+kVlizx
+	hhsFTDjeMBZ2vnsG3kyh9n8bDhqa51IDpNBCSQUT59JOXnFbs28HCZ7RXw/wUdwzxE1v/lYUUwB
+	alcrXNus9MNtNhEkfY4qthJ00ZARDOzrKnAFFMWel+9IShge6T8Yj6AtU7vgz4ixQCGBaqGmdUn
+	3OJBDlwuAHxxK61h92HDBEDzFISCkI5fX620eO0xYxOA==
+X-Received: by 2002:ac2:5a43:0:b0:52b:e7ff:4eb7 with SMTP id 2adb3069b0e04-52be7ff4ed8mr5513996e87.59.1718098979228;
+        Tue, 11 Jun 2024 02:42:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGXolbyC1nt04woF61IXkeFzl40jH1amuFwhtMdKb0jcnAeO4WTr7EvpCOinxTpGFsUzHiFKA==
+X-Received: by 2002:ac2:5a43:0:b0:52b:e7ff:4eb7 with SMTP id 2adb3069b0e04-52be7ff4ed8mr5513958e87.59.1718098978571;
+        Tue, 11 Jun 2024 02:42:58 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c748:ba00:1c00:48ea:7b5a:c12b? (p200300cbc748ba001c0048ea7b5ac12b.dip0.t-ipconnect.de. [2003:cb:c748:ba00:1c00:48ea:7b5a:c12b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215c2cd247sm176185215e9.40.2024.06.11.02.42.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jun 2024 02:42:57 -0700 (PDT)
+Message-ID: <824c319a-530e-4153-80f5-20e2c463fa81@redhat.com>
+Date: Tue, 11 Jun 2024 11:42:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1a08ef42-b52f-4c97-90d7-e7fdee7725b4@linaro.org>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _-L6S3pVII9ef9_o7MLi0E3pCivFMPxi
-X-Proofpoint-ORIG-GUID: _-L6S3pVII9ef9_o7MLi0E3pCivFMPxi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-11_05,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- adultscore=0 spamscore=0 mlxscore=0 clxscore=1011 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406110073
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: initialize memmap of
+ !ZONE_DEVICE with PageOffline() instead of PageReserved()
+To: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-hyperv@vger.kernel.org,
+ virtualization@lists.linux.dev, xen-devel@lists.xenproject.org,
+ kasan-dev@googlegroups.com, Mike Rapoport <rppt@kernel.org>,
+ Oscar Salvador <osalvador@suse.de>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Juergen Gross <jgross@suse.com>, Stefano Stabellini
+ <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>
+References: <20240607090939.89524-1-david@redhat.com>
+ <20240607090939.89524-3-david@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240607090939.89524-3-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 06, 2024 at 04:06:01PM +0200, Konrad Dybcio wrote:
-> On 8.05.2024 10:10 AM, Dmitry Baryshkov wrote:
-> > On Wed, 8 May 2024 at 09:53, Varadarajan Narayanan
-> > <quic_varada@quicinc.com> wrote:
-> >>
-> >> On Fri, May 03, 2024 at 04:51:04PM +0300, Georgi Djakov wrote:
-> >>> Hi Varada,
-> >>>
-> >>> Thank you for your work on this!
-> >>>
-> >>> On 2.05.24 12:30, Varadarajan Narayanan wrote:
-> >>>> On Tue, Apr 30, 2024 at 12:05:29PM +0200, Konrad Dybcio wrote:
-> >>>>> On 25.04.2024 12:26 PM, Varadarajan Narayanan wrote:
-> >>>>>> On Tue, Apr 23, 2024 at 02:58:41PM +0200, Konrad Dybcio wrote:
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> On 4/18/24 11:23, Varadarajan Narayanan wrote:
-> >>>>>>>> IPQ SoCs dont involve RPM in managing NoC related clocks and
-> >>>>>>>> there is no NoC scaling. Linux itself handles these clocks.
-> >>>>>>>> However, these should not be exposed as just clocks and align
-> >>>>>>>> with other Qualcomm SoCs that handle these clocks from a
-> >>>>>>>> interconnect provider.
-> >>>>>>>>
-> >>>>>>>> Hence include icc provider capability to the gcc node so that
-> >>>>>>>> peripherals can use the interconnect facility to enable these
-> >>>>>>>> clocks.
-> >>>>>>>>
-> >>>>>>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >>>>>>>> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> >>>>>>>> ---
-> >>>>>>>
-> >>>>>>> If this is all you do to enable interconnect (which is not the case,
-> >>>>>>> as this patch only satisfies the bindings checker, the meaningful
-> >>>>>>> change happens in the previous patch) and nothing explodes, this is
-> >>>>>>> an apparent sign of your driver doing nothing.
-> >>>>>>
-> >>>>>> It appears to do nothing because, we are just enabling the clock
-> >>>>>> provider to also act as interconnect provider. Only when the
-> >>>>>> consumers are enabled with interconnect usage, this will create
-> >>>>>> paths and turn on the relevant NOC clocks.
-> >>>>>
-> >>>>> No, with sync_state it actually does "something" (sets the interconnect
-> >>>>> path bandwidths to zero). And *this* patch does nothing functionally,
-> >>>>> it only makes the dt checker happy.
-> >>>>
-> >>>> I understand.
-> >>>>
-> >>>>>> This interconnect will be used by the PCIe and NSS blocks. When
-> >>>>>> those patches were posted earlier, they were put on hold until
-> >>>>>> interconnect driver is available.
-> >>>>>>
-> >>>>>> Once this patch gets in, PCIe for example will make use of icc.
-> >>>>>> Please refer to https://lore.kernel.org/linux-arm-msm/20230519090219.15925-5-quic_devipriy@quicinc.com/.
-> >>>>>>
-> >>>>>> The 'pcieX' nodes will include the following entries.
-> >>>>>>
-> >>>>>>         interconnects = <&gcc MASTER_ANOC_PCIE0 &gcc SLAVE_ANOC_PCIE0>,
-> >>>>>>                         <&gcc MASTER_SNOC_PCIE0 &gcc SLAVE_SNOC_PCIE0>;
-> >>>>>>         interconnect-names = "pcie-mem", "cpu-pcie";
-> >>>>>
-> >>>>> Okay. What about USB that's already enabled? And BIMC/MEMNOC?
-> >>>>
-> >>>> For USB, the GCC_ANOC_USB_AXI_CLK is enabled as part of the iface
-> >>>> clock. Hence, interconnect is not specified there.
-> >>>>
-> >>>> MEMNOC to System NOC interfaces seem to be enabled automatically.
-> >>>> Software doesn't have to turn on or program specific clocks.
-> >>>>
-> >>>>>>> The expected reaction to "enabling interconnect" without defining the
-> >>>>>>> required paths for your hardware would be a crash-on-sync_state, as all
-> >>>>>>> unused (from Linux's POV) resources ought to be shut down.
-> >>>>>>>
-> >>>>>>> Because you lack sync_state, the interconnects silently retain the state
-> >>>>>>> that they were left in (which is not deterministic), and that's precisely
-> >>>>>>> what we want to avoid.
-> >>>>>>
-> >>>>>> I tried to set 'sync_state' to icc_sync_state to be invoked and
-> >>>>>> didn't see any crash.
-> >>>>>
-> >>>>> Have you confirmed that the registers are actually written to, and with
-> >>>>> correct values?
-> >>>>
-> >>>> I tried the following combinations:-
-> >>>>
-> >>>> 1. Top of tree linux-next + This patch set
-> >>>>
-> >>>>     * icc_sync_state called
-> >>>>     * No crash or hang observed
-> >>>>     * From /sys/kernel/debug/clk/clk_summary can see the
-> >>>>       relevant clocks are set to the expected rates (compared
-> >>>>       with downstream kernel)
-> >>>>
-> >>>> 2. Top of tree linux-next + This patch set + PCIe enablement
-> >>>>
-> >>>>     * icc_sync_state NOT called
-> >>>
-> >>> If sync_state() is not being called, that usually means that there
-> >>> are interconnect consumers that haven't probed successfully (PCIe?)
-> >>> or their dependencies. That can be checked in /sys/class/devlink/.../status
-> >>> But i am not sure how this works for PCI devices however.
-> >>>
-> >>> You can also manually force a call to sync_state by writing "1" to
-> >>> the interconnect provider's /sys/devices/.../state_synced
-> >>>
-> >>> Anyway, the question is if PCIe and NSS work without this driver?
-> >>
-> >> No.
-> >>
-> >>> If they work, is this because the clocks are turned on by default
-> >>> or by the boot loader?
-> >>
-> >> Initially, the PCIe/NSS driver enabled these clocks directly
-> >> by having them in their DT nodes itself. Based on community
-> >> feedback this was removed and after that PCIe/NSS did not work.
-> >>
-> >>> Then if an interconnect path (clock) gets disabled either when we
-> >>> reach a sync_state (with no bandwidth requests) or we explicitly
-> >>> call icc_set_bw() with 0 bandwidth values, i would expect that
-> >>> these PCIe and NSS devices would not function anymore (it might
-> >>> save some power etc) and if this is unexpected we should see a
-> >>> a crash or hang...
-> >>>
-> >>> Can you confirm this?
-> >>
-> >> With ICC enabled, icc_set_bw (with non-zero values) is called by
-> >> PCIe and NSS drivers. Haven't checked with icc_set_bw with zero
-> >> values.
-> >>
-> >> PCIe:   qcom_pcie_probe -> qcom_pcie_icc_init -> icc_set_bw
-> >> NSS:    ppe_icc_init -> icc_set_bw
-> >>
-> >> I believe sync_state is not getting called since there is a
-> >> non-zero set bandwidth request. Which seems to be aligned with
-> >> your explanation.
-> >
-> > This doesn't look correct. sync_state is being called once all
-> > consumers are probed. It doesn't matter whether those consumers have
-> > non-zero bandwidth requests or no.
->
-> /sys/kernel/debug/devices_deferred may have some useful info, too
+On 07.06.24 11:09, David Hildenbrand wrote:
+> We currently initialize the memmap such that PG_reserved is set and the
+> refcount of the page is 1. In virtio-mem code, we have to manually clear
+> that PG_reserved flag to make memory offlining with partially hotplugged
+> memory blocks possible: has_unmovable_pages() would otherwise bail out on
+> such pages.
+> 
+> We want to avoid PG_reserved where possible and move to typed pages
+> instead. Further, we want to further enlighten memory offlining code about
+> PG_offline: offline pages in an online memory section. One example is
+> handling managed page count adjustments in a cleaner way during memory
+> offlining.
+> 
+> So let's initialize the pages with PG_offline instead of PG_reserved.
+> generic_online_page()->__free_pages_core() will now clear that flag before
+> handing that memory to the buddy.
+> 
+> Note that the page refcount is still 1 and would forbid offlining of such
+> memory except when special care is take during GOING_OFFLINE as
+> currently only implemented by virtio-mem.
+> 
+> With this change, we can now get non-PageReserved() pages in the XEN
+> balloon list. From what I can tell, that can already happen via
+> decrease_reservation(), so that should be fine.
+> 
+> HV-balloon should not really observe a change: partial online memory
+> blocks still cannot get surprise-offlined, because the refcount of these
+> PageOffline() pages is 1.
+> 
+> Update virtio-mem, HV-balloon and XEN-balloon code to be aware that
+> hotplugged pages are now PageOffline() instead of PageReserved() before
+> they are handed over to the buddy.
+> 
+> We'll leave the ZONE_DEVICE case alone for now.
+> 
 
-/sys/kernel/debug/devices_deferred seems to be empty
+@Andrew, can we add here:
 
-	# mount | grep -w debugfs
-	none on /sys/kernel/debug type debugfs (rw,relatime)
+"Note that self-hosted vmemmap pages will no longer be marked as 
+reserved. This matches ordinary vmemmap pages allocated from the buddy 
+during memory hotplug. Now, really only vmemmap pages allocated from 
+memblock during early boot will be marked reserved. Existing 
+PageReserved() checks seem to be handling all relevant cases correctly 
+even after this change."
 
-	# cat /sys/kernel/debug/devices_deferred  | wc -l
-	0
+-- 
+Cheers,
 
-Added the following print to icc_sync_state,
+David / dhildenb
 
-	@@ -1096,6 +1096,7 @@ void icc_sync_state(struct device *dev)
-		struct icc_node *n;
-		static int count;
-
-	+	printk("--> %s: %d %d\n", __func__, providers_count, count);
-		count++;
-
-		if (count < providers_count)
-			return;
-
-icc_sync_state seems to be called once,
-
-	# dmesg | grep icc_sync_state
-	[   12.260544] --> icc_sync_state: 2 0
-
-Since 'providers_count' is greated than 'count' icc_sync_state
-seems to return before doing anything.
-
-Thanks
-Varada
