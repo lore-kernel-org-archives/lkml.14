@@ -1,134 +1,313 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E58757F6;
-	Tue, 11 Jun 2024 18:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9385F73473
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 18:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718131143; cv=none; b=nhl2gbXdvrNl9KxA0tz9kETkuBqcfkU3lpHSDcziXO1nLo7ypYaVzNDjJxdocHXW+GyNJ7jZCirwupUOIOe3Jp3nlj0sK8fIZ2PXKytzVwWWF1e1WBxkRbt0Cb2TvkHEIyWIben7uOBm2W7Qqw8m1h1br/w5QGujtFXJL862XzQ=
+	t=1718131162; cv=none; b=suY9iZPfRDjCwJK7kNFKkRBbLXZsqOaAbBFXmEX0to1WNzDqRlWaBocdnYUlUwlRMN1opj63OAx5woP7y1e5PWC5d0NvWqYErWX6Q02eo1dBQj2emvMTfWUHvzXCGTT8ygB+qoO8OTJRg1rW1hs85KX2haLz9RhsezKFwbL5pKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718131143; c=relaxed/simple;
-	bh=ohppsjWPjJRyFtFqckt/hYnonCHoM/wgvmO6lrk5vdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ULDcR0olqw+vNtIAztCXFTB3HREquciIVbt8J9EJDEBNd2LUZO9IdSWccHga/I90GLjBoHalpYhMKCfJZDIX6aJOMROyoBYupEnSxtNTXenRqU2N18A7CEx7x8e1OErhefupuW4BjzWupDbIMB7FJAsezgMdvjpk4bIzWyIN6k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JUi0MIis; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718131162; c=relaxed/simple;
+	bh=wbAaoWLPx2Oy80fYPSmUt15AboIsGp9JOTASkLDpdkg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cE8pgFlA6Zi6GNv3JN0N+sweG/YwFvFGa9fyfm0XM6XRvscPnEyfZC7Z/tumMGxRcX75BJRPu15A7L/oIibbelmwOA/DinqsHi1/H9LvgEdMSEvh1mwYTIqpKiOhYcSY9lKn3ii08GkCORpIQhI7gll4AiEN1l0QyL/S23in6y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dl/d8ifD; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JUi0MIis"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718131141; x=1749667141;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ohppsjWPjJRyFtFqckt/hYnonCHoM/wgvmO6lrk5vdw=;
-  b=JUi0MIisWy/kvQ1qa5MALMjIN7qtJ/OXGB9bPgYGgKqbuwhLnXW7C6ud
-   SNE6EFXxG+5+hBZ1egBVu7fytOPzqjKO1orAkjYnzBK/QVmEMK8CFWwQT
-   ZMZ+zA6nfIqs4FGLx9pn0nRBsZ4DRhVZzA0+hNEbTXr7IlaNSrm15rXyL
-   dCK6uOxFPffqH7LkMuv5l00DiBpSVpv1T9x9wSGDbHP2Oc7oCHL8KGhRX
-   jDFRwxnezk+NAT0KZ6KSTTNGeqjWJpR6E5BeiKoz4CWOUhfmUMl7/hW4v
-   4tKpEeUD1X74UCAiZE3Wrwdl+h9x+fe3/AOTUYTivqn9Po2OzhH1LIe0J
-   A==;
-X-CSE-ConnectionGUID: N705jKijR1mMIBKx/ITPeg==
-X-CSE-MsgGUID: NSK1CjKpRg+5X+6ainA99A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="14587440"
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="14587440"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 11:39:00 -0700
-X-CSE-ConnectionGUID: wm7c0nIRRHiga9+KZhrnwg==
-X-CSE-MsgGUID: Nqw0HRHOQOWT9fRxOWk9FA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="39631801"
-Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 11 Jun 2024 11:38:58 -0700
-Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sH6OV-0000mY-1r;
-	Tue, 11 Jun 2024 18:38:55 +0000
-Date: Wed, 12 Jun 2024 02:38:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Karan Tilak Kumar <kartilak@cisco.com>, sebaddel@cisco.com
-Cc: oe-kbuild-all@lists.linux.dev, arulponn@cisco.com, djhawar@cisco.com,
-	gcboffa@cisco.com, mkai2@cisco.com, satishkh@cisco.com,
-	jejb@linux.ibm.com, martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Karan Tilak Kumar <kartilak@cisco.com>
-Subject: Re: [PATCH 03/14] scsi: fnic: Add support for fabric based solicited
- requests and responses
-Message-ID: <202406120201.VakI9Dly-lkp@intel.com>
-References: <20240610215100.673158-4-kartilak@cisco.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dl/d8ifD"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7955dc86cacso160571485a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 11:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718131159; x=1718735959; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kDkH2vvU0sx/oCEzi9/YBrjDW0qvg23Vl0BqpbWQ76E=;
+        b=Dl/d8ifD2ImvNwHxbm39ea/9e99lioHQzgdARs6ZfZrN5FoIY6B5Y1AZVg+aw50p1g
+         64+zCV1/WqNRmE4ToABTggiLK8tBbV2afBuGeyJlPWdpDDZ8Rds8yKiAjIFlGll8GixX
+         fD+o7xdHeKKtvqSDad7udrejulf2+/gjn5zyMyAcdjWbMBbacs8zydNirBEOvdg9I+Dy
+         gkMt6DBQSvUACBWxdHEJYN3SW4vAPNuqfIXgS5SnbAeQE/6rJrwuYInHVDx+4JaUCnZF
+         4bNnmm5jvzkXrd209bqH9gvE0E9+FfK/J8i63d0xWt9tVdzSxfodbS2m6jeH5uOfNd8V
+         1AvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718131159; x=1718735959;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kDkH2vvU0sx/oCEzi9/YBrjDW0qvg23Vl0BqpbWQ76E=;
+        b=iKGVCi1WdSGqeyobd8y+0SB37zkpBuMpZsjVUEDcWdiQ1yUMmJDz+ex71Zbr1CLalj
+         LKNnB2jcxQJLshX92Xvre0oQfkRnHhEQxUXJMH2aShuT2MERrH6x3ic1rUrdy3Fr9JWn
+         ck4x16KvLKMJ3sRHA1ankHbli3kDM/FRbbJ4cyHBlZsG5qR006TRlRHAbx6v/ppjFph3
+         eZLopYwx1Q4dFHyF4J1eLg1bO/rfUHcf4YN0hiZx48zY+75AE45ljUeIO/Fjt62E+fBf
+         M9B8VUR3abyOUcx0MPopPbpZa4ch1XvG4hYzvd9FV3Z8XE8fi0kbC7/s7G7FzKLZkzYj
+         NvzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsWJPcha6jKL3m1velqn/MjQsz3Srqh2Lp2SappLgs3Juv5mYKEBRM5ADgGhS2ZIfWcQ5IQllY64AfzwIeJHgswnStP19xfc5Bn2o6
+X-Gm-Message-State: AOJu0YxnLz7avVyJJt4iVSUxsQ3/XKEeE1ep4+eJxt1iEnFV7bGc+9Pr
+	tSfwC0tD6iDAHBu5NIVVbTfRvxpmbhDoGcjU/xS5u84haObkNJVRgGwQ20hk9z4QvEm9FA8cLC5
+	7gX741UNUWiFqzsbL75zJkO+c9F8KqEHv
+X-Google-Smtp-Source: AGHT+IE+NIIz+mkqTDA5bfcLoCUUMwh3Cs61+jxaywiEL9W/NJzHnHqaQgukA/NOFwUC2ffP9m7uK8A4usyeOXTvrBk=
+X-Received: by 2002:ad4:5cc4:0:b0:6b0:71c0:cbaa with SMTP id
+ 6a1803df08f44-6b071c0cd62mr117404576d6.33.1718131159311; Tue, 11 Jun 2024
+ 11:39:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240610215100.673158-4-kartilak@cisco.com>
+References: <20240610121820.328876-1-usamaarif642@gmail.com> <20240610121820.328876-2-usamaarif642@gmail.com>
+In-Reply-To: <20240610121820.328876-2-usamaarif642@gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 11 Jun 2024 11:39:08 -0700
+Message-ID: <CAKEwX=PnwjmZKPLX2=ubD6+-+ZAqpXnczkHe4=1QY1hizOE8WQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] mm: store zero pages to be swapped out in a bitmap
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, david@redhat.com, 
+	ying.huang@intel.com, hughd@google.com, willy@infradead.org, 
+	yosryahmed@google.com, chengming.zhou@linux.dev, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Karan,
+On Mon, Jun 10, 2024 at 5:18=E2=80=AFAM Usama Arif <usamaarif642@gmail.com>=
+ wrote:
+>
+> Approximately 10-20% of pages to be swapped out are zero pages [1].
+> Rather than reading/writing these pages to flash resulting
+> in increased I/O and flash wear, a bitmap can be used to mark these
+> pages as zero at write time, and the pages can be filled at
+> read time if the bit corresponding to the page is set.
+> With this patch, NVMe writes in Meta server fleet decreased
+> by almost 10% with conventional swap setup (zswap disabled).
+>
+> [1]https://lore.kernel.org/all/20171018104832epcms5p1b2232e2236258de3d03d=
+1344dde9fce0@epcms5p1/
+>
+> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+> ---
+>  include/linux/swap.h |  1 +
+>  mm/page_io.c         | 92 +++++++++++++++++++++++++++++++++++++++++++-
+>  mm/swapfile.c        | 21 +++++++++-
+>  3 files changed, 111 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index a11c75e897ec..e88563978441 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -299,6 +299,7 @@ struct swap_info_struct {
+>         signed char     type;           /* strange name for an index */
+>         unsigned int    max;            /* extent of the swap_map */
+>         unsigned char *swap_map;        /* vmalloc'ed array of usage coun=
+ts */
+> +       unsigned long *zeromap;         /* vmalloc'ed bitmap to track zer=
+o pages */
+>         struct swap_cluster_info *cluster_info; /* cluster info. Only for=
+ SSD */
+>         struct swap_cluster_list free_clusters; /* free clusters list */
+>         unsigned int lowest_bit;        /* index of first free in swap_ma=
+p */
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index a360857cf75d..2cac1e11fb85 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -172,6 +172,82 @@ int generic_swapfile_activate(struct swap_info_struc=
+t *sis,
+>         goto out;
+>  }
+>
+> +static bool is_folio_page_zero_filled(struct folio *folio, int i)
+> +{
+> +       unsigned long *data;
+> +       unsigned int pos, last_pos =3D PAGE_SIZE / sizeof(*data) - 1;
+> +       bool ret =3D false;
+> +
+> +       data =3D kmap_local_folio(folio, i * PAGE_SIZE);
+> +       if (data[last_pos])
+> +               goto out;
+> +       for (pos =3D 0; pos < PAGE_SIZE / sizeof(*data); pos++) {
+> +               if (data[pos])
+> +                       goto out;
+> +       }
+> +       ret =3D true;
+> +out:
+> +       kunmap_local(data);
+> +       return ret;
+> +}
+> +
+> +static bool is_folio_zero_filled(struct folio *folio)
+> +{
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < folio_nr_pages(folio); i++) {
+> +               if (!is_folio_page_zero_filled(folio, i))
+> +                       return false;
+> +       }
+> +       return true;
+> +}
+> +
+> +static void folio_zero_fill(struct folio *folio)
+> +{
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < folio_nr_pages(folio); i++)
+> +               clear_highpage(folio_page(folio, i));
+> +}
+> +
+> +static void swap_zeromap_folio_set(struct folio *folio)
+> +{
+> +       struct swap_info_struct *sis =3D swp_swap_info(folio->swap);
+> +       swp_entry_t entry;
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < folio_nr_pages(folio); i++) {
+> +               entry =3D page_swap_entry(folio_page(folio, i));
+> +               set_bit(swp_offset(entry), sis->zeromap);
+> +       }
+> +}
+> +
+> +static void swap_zeromap_folio_clear(struct folio *folio)
+> +{
+> +       struct swap_info_struct *sis =3D swp_swap_info(folio->swap);
+> +       swp_entry_t entry;
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < folio_nr_pages(folio); i++) {
+> +               entry =3D page_swap_entry(folio_page(folio, i));
+> +               clear_bit(swp_offset(entry), sis->zeromap);
+> +       }
+> +}
+> +
+> +static bool swap_zeromap_folio_test(struct folio *folio)
+> +{
+> +       struct swap_info_struct *sis =3D swp_swap_info(folio->swap);
+> +       swp_entry_t entry;
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < folio_nr_pages(folio); i++) {
+> +               entry =3D page_swap_entry(folio_page(folio, i));
+> +               if (!test_bit(swp_offset(entry), sis->zeromap))
+> +                       return false;
+> +       }
+> +       return true;
+> +}
+> +
+>  /*
+>   * We may have stale swap cache pages in memory: notice
+>   * them here and get rid of the unnecessary final write.
+> @@ -195,6 +271,15 @@ int swap_writepage(struct page *page, struct writeba=
+ck_control *wbc)
+>                 folio_unlock(folio);
+>                 return ret;
+>         }
+> +
+> +       if (is_folio_zero_filled(folio)) {
+> +               swap_zeromap_folio_set(folio);
+> +               folio_start_writeback(folio);
+> +               folio_unlock(folio);
+> +               folio_end_writeback(folio);
+> +               return 0;
+> +       }
+> +       swap_zeromap_folio_clear(folio);
+>         if (zswap_store(folio)) {
+>                 folio_start_writeback(folio);
+>                 folio_unlock(folio);
+> @@ -515,8 +600,11 @@ void swap_read_folio(struct folio *folio, bool synch=
+ronous,
+>                 psi_memstall_enter(&pflags);
+>         }
+>         delayacct_swapin_start();
+> -
+> -       if (zswap_load(folio)) {
+> +       if (swap_zeromap_folio_test(folio)) {
+> +               folio_zero_fill(folio);
+> +               folio_mark_uptodate(folio);
+> +               folio_unlock(folio);
+> +       } else if (zswap_load(folio)) {
+>                 folio_mark_uptodate(folio);
+>                 folio_unlock(folio);
+>         } else if (data_race(sis->flags & SWP_FS_OPS)) {
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index f1e559e216bd..90451174fe34 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -453,6 +453,8 @@ static unsigned int cluster_list_del_first(struct swa=
+p_cluster_list *list,
+>  static void swap_cluster_schedule_discard(struct swap_info_struct *si,
+>                 unsigned int idx)
+>  {
+> +       unsigned int i;
+> +
+>         /*
+>          * If scan_swap_map_slots() can't find a free cluster, it will ch=
+eck
+>          * si->swap_map directly. To make sure the discarding cluster isn=
+'t
+> @@ -461,6 +463,13 @@ static void swap_cluster_schedule_discard(struct swa=
+p_info_struct *si,
+>          */
+>         memset(si->swap_map + idx * SWAPFILE_CLUSTER,
+>                         SWAP_MAP_BAD, SWAPFILE_CLUSTER);
+> +       /*
+> +        * zeromap can see updates from concurrent swap_writepage() and s=
+wap_read_folio()
+> +        * call on other slots, hence use atomic clear_bit for zeromap in=
+stead of the
+> +        * non-atomic bitmap_clear.
+> +        */
+> +       for (i =3D 0; i < SWAPFILE_CLUSTER; i++)
+> +               clear_bit(idx * SWAPFILE_CLUSTER + i, si->zeromap);
+>
+>         cluster_list_add_tail(&si->discard_clusters, si->cluster_info, id=
+x);
+>
+> @@ -482,7 +491,7 @@ static void __free_cluster(struct swap_info_struct *s=
+i, unsigned long idx)
+>  static void swap_do_scheduled_discard(struct swap_info_struct *si)
+>  {
+>         struct swap_cluster_info *info, *ci;
+> -       unsigned int idx;
+> +       unsigned int idx, i;
+>
+>         info =3D si->cluster_info;
+>
+> @@ -498,6 +507,8 @@ static void swap_do_scheduled_discard(struct swap_inf=
+o_struct *si)
+>                 __free_cluster(si, idx);
+>                 memset(si->swap_map + idx * SWAPFILE_CLUSTER,
+>                                 0, SWAPFILE_CLUSTER);
+> +               for (i =3D 0; i < SWAPFILE_CLUSTER; i++)
+> +                       clear_bit(idx * SWAPFILE_CLUSTER + i, si->zeromap=
+);
+>                 unlock_cluster(ci);
+>         }
+>  }
+> @@ -1336,6 +1347,7 @@ static void swap_entry_free(struct swap_info_struct=
+ *p, swp_entry_t entry)
+>         count =3D p->swap_map[offset];
+>         VM_BUG_ON(count !=3D SWAP_HAS_CACHE);
+>         p->swap_map[offset] =3D 0;
+> +       clear_bit(offset, p->zeromap);
 
-kernel test robot noticed the following build warnings:
+Hmm so clear_bit() is done at the swap_entry_free() point. I wonder if
+we can have a problem, where:
 
-[auto build test WARNING on mkp-scsi/for-next]
-[also build test WARNING on jejb-scsi/for-next linus/master v6.10-rc3 next-20240611]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+1. The swap entry has its zeromap bit set, and is freed to the swap
+slot cache (free_swap_slot() in mm/swap_slots.c). For instance, it is
+reclaimed from the swap cache, and all the processes referring to it
+are terminated, which decrements the swap count to 0 (swap_free() ->
+__swap_entry_free() -> free_swap_slots())
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Karan-Tilak-Kumar/scsi-fnic-Replace-shost_printk-with-pr_info-pr_err/20240611-060227
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git for-next
-patch link:    https://lore.kernel.org/r/20240610215100.673158-4-kartilak%40cisco.com
-patch subject: [PATCH 03/14] scsi: fnic: Add support for fabric based solicited requests and responses
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240612/202406120201.VakI9Dly-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240612/202406120201.VakI9Dly-lkp@intel.com/reproduce)
+2. The swap slot is then re-used in swap space allocation
+(add_to_swap()) - its zeromap bit is never cleared.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406120201.VakI9Dly-lkp@intel.com/
+3. swap_writepage() writes that non-zero page to swap
 
-All warnings (new ones prefixed by >>):
+4. swap_read_folio() checks the bitmap, sees that the zeromap bit for
+the entry is set, so populates a zero page for it.
 
-   In file included from drivers/scsi/fnic/fnic_fcs.c:21:
-   drivers/scsi/fnic/fnic_fcs.c: In function 'fdls_send_fcoe_frame':
->> drivers/scsi/fnic/fnic.h:159:33: warning: format '%ld' expects argument of type 'long int', but argument 7 has type 'unsigned int' [-Wformat=]
-     159 |                                 "fnic<%d>: %s: %d: " fmt, fnic_num,\
-         |                                 ^~~~~~~~~~~~~~~~~~~~
-   drivers/scsi/fnic/fnic.h:146:25: note: in definition of macro 'FNIC_CHECK_LOGGING'
-     146 |                         CMD;                                    \
-         |                         ^~~
-   include/scsi/scsi_host.h:738:9: note: in expansion of macro 'dev_printk'
-     738 |         dev_printk(prefix, &(shost)->shost_gendev, fmt, ##a)
-         |         ^~~~~~~~~~
-   drivers/scsi/fnic/fnic.h:158:26: note: in expansion of macro 'shost_printk'
-     158 |                          shost_printk(kern_level, host,                 \
-         |                          ^~~~~~~~~~~~
-   drivers/scsi/fnic/fnic_fcs.c:1228:25: note: in expansion of macro 'FNIC_FCS_DBG'
-    1228 |                         FNIC_FCS_DBG(KERN_INFO, fnic->lport->host, fnic->fnic_num,
-         |                         ^~~~~~~~~~~~
+zswap in the past has to carefully invalidate these leftover entries
+quite carefully. Chengming then move the invalidation point to
+free_swap_slot(), massively simplifying the logic.
 
-
-vim +159 drivers/scsi/fnic/fnic.h
-
-5df6d737dd4b0fe Abhijeet Joglekar 2009-04-17  149  
-3df9dd0d51c2e4b Karan Tilak Kumar 2023-12-11  150  #define FNIC_MAIN_DBG(kern_level, host, fnic_num, fmt, args...)		\
-5df6d737dd4b0fe Abhijeet Joglekar 2009-04-17  151  	FNIC_CHECK_LOGGING(FNIC_MAIN_LOGGING,			\
-3df9dd0d51c2e4b Karan Tilak Kumar 2023-12-11  152  			 shost_printk(kern_level, host,			\
-3df9dd0d51c2e4b Karan Tilak Kumar 2023-12-11  153  				"fnic<%d>: %s: %d: " fmt, fnic_num,\
-3df9dd0d51c2e4b Karan Tilak Kumar 2023-12-11  154  				__func__, __LINE__, ##args);)
-5df6d737dd4b0fe Abhijeet Joglekar 2009-04-17  155  
-3df9dd0d51c2e4b Karan Tilak Kumar 2023-12-11  156  #define FNIC_FCS_DBG(kern_level, host, fnic_num, fmt, args...)		\
-5df6d737dd4b0fe Abhijeet Joglekar 2009-04-17  157  	FNIC_CHECK_LOGGING(FNIC_FCS_LOGGING,			\
-3df9dd0d51c2e4b Karan Tilak Kumar 2023-12-11  158  			 shost_printk(kern_level, host,			\
-3df9dd0d51c2e4b Karan Tilak Kumar 2023-12-11 @159  				"fnic<%d>: %s: %d: " fmt, fnic_num,\
-3df9dd0d51c2e4b Karan Tilak Kumar 2023-12-11  160  				__func__, __LINE__, ##args);)
-5df6d737dd4b0fe Abhijeet Joglekar 2009-04-17  161  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I wonder if we need to do the same here?
