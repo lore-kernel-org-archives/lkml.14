@@ -1,43 +1,67 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E08D517B41D;
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099F017BB0A;
 	Tue, 11 Jun 2024 11:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718105576; cv=none; b=pMOCLYRLKLupuHBsUQmp0KNasKjkXvsdZwrSMPmszDBEP/sfqos7lVVjFr+BCI6+0y8dWzUXxj4hsj4r5bsFK45Y3rXbtNz568OnsgZkcc/Z6YVBNcXzIFOyfV3I2mxeWlK05cUVL6yKepLS+JMzXuLMznKtsAgkRnPpVJ8WnMw=
+	t=1718105577; cv=none; b=m8AiaQTy9ErKimKmTrpcNlCzvD7P+kuLOUZfvKgjoPfup/EefBI+dH5AY1ogVcZUHN8o61O6scamB+08ht5KWTMQ4pR/JaEr6FtSv9Jn2aVku4gGpK1ZiyGMxksbZXHH8ZZ00W/k3JPxUfOBx7WOentbYaYzWlHNeRUcWZdeYxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718105576; c=relaxed/simple;
-	bh=oAw395Pju5e2QGLxf9ap/yzVl6p6ScZui+eKTUO5hvo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=axMN+Il2el1XVSlw+ZniBm7CHuEwYztrN/5nYj4I+tFtwhsY5uq1J3uB+8R9R4ZXy2X1qrQ1YG+62eNRPP2tB0E7sULTLNjfupkB+xssmwqFfEFviTFZCiBrpcqmQiR5Utsl3uxKiPz0XdLYfnn1Xd6pvZupPph5CkQQDOgC7xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.08,229,1712588400"; 
-   d="scan'208";a="207491402"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 11 Jun 2024 20:32:53 +0900
-Received: from renesas-deb12.mshome.net (unknown [10.226.92.82])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9CF664006DF4;
-	Tue, 11 Jun 2024 20:32:49 +0900 (JST)
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/9] pinctrl: renesas: rzg2l: Clarify OEN read/write support
-Date: Tue, 11 Jun 2024 12:31:55 +0100
-Message-Id: <20240611113204.3004-2-paul.barker.ct@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
-References: <20240611113204.3004-1-paul.barker.ct@bp.renesas.com>
+	s=arc-20240116; t=1718105577; c=relaxed/simple;
+	bh=05kfyfA+1HW/19R9nKDQLxLwlI0VDXCoagdozz8+RPk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nNvdtQzDwwSec4000oQTEznMPGq2Qq5saowuZ9vYQDsMn0Bce/2R95ppLF4x878ERpz9wF66eq9t2KgrMXUGhNFNGW/kDdUiElq5Dp9YmcsGXCSpeW7JBeAXXKg/TFxn9+VHi51IkGtZNfIKAqtXsZnrVcdLJkNFgzcQkJxgYQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=q6Y3sQ30; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="q6Y3sQ30"
+X-UUID: 548e59ce27e611efa22eafcdcd04c131-20240611
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=gZ+L3w0QZv+3dXASpa8etsuHp4Ejgx7CTnrEsKA4Jck=;
+	b=q6Y3sQ30CzbVjSHSA+CcuxnWOaUDK+FValPmlYnrAGxiU47Co32KUp7XnFf+7n10+85xWkWRCj9dFNa99aiOpJm1H6QBoRYjyEdIdv644DAmnSxX8nyTOxrZsXODnLAvwRpwFwOkZTtGoCUPDnvd6WiuZI+dgArJbhZRgm5115s=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.39,REQID:5c3d9a77-a3ce-4b5c-bbfa-d1b192fb7d8d,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:393d96e,CLOUDID:0532db93-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: 548e59ce27e611efa22eafcdcd04c131-20240611
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+	(envelope-from <zhi.mao@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1356379596; Tue, 11 Jun 2024 19:32:48 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 11 Jun 2024 19:32:47 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 11 Jun 2024 19:32:46 +0800
+From: Zhi Mao <zhi.mao@mediatek.com>
+To: <mchehab@kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <sakari.ailus@linux.intel.com>
+CC: <laurent.pinchart@ideasonboard.com>, <shengnan.wang@mediatek.com>,
+	<yaya.chang@mediatek.com>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, <yunkec@chromium.org>,
+	<conor+dt@kernel.org>, <matthias.bgg@gmail.com>,
+	<angelogioacchino.delregno@collabora.com>, <jacopo.mondi@ideasonboard.com>,
+	<zhi.mao@mediatek.com>, <10572168@qq.com>, <hverkuil-cisco@xs4all.nl>,
+	<heiko@sntech.de>, <jernej.skrabec@gmail.com>, <macromorgan@hotmail.com>,
+	<linus.walleij@linaro.org>, <hdegoede@redhat.com>,
+	<tomi.valkeinen@ideasonboard.com>, <gerald.loacker@wolfvision.net>,
+	<andy.shevchenko@gmail.com>, <bingbu.cao@intel.com>,
+	<dan.scally@ideasonboard.com>, <linux-media@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+Subject: [PATCH v6 0/3] media: i2c: Add support for GC05A2 sensor
+Date: Tue, 11 Jun 2024 19:32:33 +0800
+Message-ID: <20240611113236.16513-1-zhi.mao@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,130 +69,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-We currently support OEN read/write for the RZ/G3S SoC but not the
-RZ/G2L SoC family (consisting of RZ/G2L, RZ/G2LC, RZ/G2UL, RZ/V2L &
-RZ/Five). The appropriate functions are renamed to clarify this.
 
-We should also only set the oen_read and oen_write function pointers for
-the devices which support these operations. This requires us to check
-that these function pointers are valid before calling them.
+This series adds YAML DT binding and V4L2 sub-device driver for Galaxycore's
+GC05A2 5-megapixel 10-bit RAW CMOS 1/5" sensor, with an MIPI CSI-2 image data
+interface and the I2C control bus.
 
-Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
----
-Changes v1->v2:
-  * New patch to clarify function names.
+The driver is implemented with V4L2 framework.
+ - Async registered as a V4L2 sub-device.
+ - As the first component of camera system including Seninf, ISP pipeline.
+ - A media entity that provides one source pad in common.
+ - Used in camera features on ChromeOS application.
 
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 28 ++++++++++++-------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+Also this driver supports following features:
+ - manual exposure and analog gain control support
+ - vertical blanking control support
+ - test pattern support
+ - media controller support
+ - runtime PM support
+ - support resolution: 2592x1944@30fps, 1280x720@60fps
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 32945d4c8dc0..901175f6d05c 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -994,7 +994,7 @@ static bool rzg2l_ds_is_supported(struct rzg2l_pinctrl *pctrl, u32 caps,
- 	return false;
- }
- 
--static bool rzg2l_oen_is_supported(u32 caps, u8 pin, u8 max_pin)
-+static bool rzg3s_oen_is_supported(u32 caps, u8 pin, u8 max_pin)
- {
- 	if (!(caps & PIN_CFG_OEN))
- 		return false;
-@@ -1005,7 +1005,7 @@ static bool rzg2l_oen_is_supported(u32 caps, u8 pin, u8 max_pin)
- 	return true;
- }
- 
--static u8 rzg2l_pin_to_oen_bit(u32 offset, u8 pin, u8 max_port)
-+static u8 rzg3s_pin_to_oen_bit(u32 offset, u8 pin, u8 max_port)
- {
- 	if (pin)
- 		pin *= 2;
-@@ -1016,31 +1016,31 @@ static u8 rzg2l_pin_to_oen_bit(u32 offset, u8 pin, u8 max_port)
- 	return pin;
- }
- 
--static u32 rzg2l_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin)
-+static u32 rzg3s_read_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin)
- {
- 	u8 max_port = pctrl->data->hwcfg->oen_max_port;
- 	u8 max_pin = pctrl->data->hwcfg->oen_max_pin;
- 	u8 bit;
- 
--	if (!rzg2l_oen_is_supported(caps, pin, max_pin))
-+	if (!rzg3s_oen_is_supported(caps, pin, max_pin))
- 		return 0;
- 
--	bit = rzg2l_pin_to_oen_bit(offset, pin, max_port);
-+	bit = rzg3s_pin_to_oen_bit(offset, pin, max_port);
- 
- 	return !(readb(pctrl->base + ETH_MODE) & BIT(bit));
- }
- 
--static int rzg2l_write_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin, u8 oen)
-+static int rzg3s_write_oen(struct rzg2l_pinctrl *pctrl, u32 caps, u32 offset, u8 pin, u8 oen)
- {
- 	u8 max_port = pctrl->data->hwcfg->oen_max_port;
- 	u8 max_pin = pctrl->data->hwcfg->oen_max_pin;
- 	unsigned long flags;
- 	u8 val, bit;
- 
--	if (!rzg2l_oen_is_supported(caps, pin, max_pin))
-+	if (!rzg3s_oen_is_supported(caps, pin, max_pin))
- 		return -EINVAL;
- 
--	bit = rzg2l_pin_to_oen_bit(offset, pin, max_port);
-+	bit = rzg3s_pin_to_oen_bit(offset, pin, max_port);
- 
- 	spin_lock_irqsave(&pctrl->lock, flags);
- 	val = readb(pctrl->base + ETH_MODE);
-@@ -1215,6 +1215,8 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
- 		break;
- 
- 	case PIN_CONFIG_OUTPUT_ENABLE:
-+		if (!pctrl->data->oen_read)
-+			return -EOPNOTSUPP;
- 		arg = pctrl->data->oen_read(pctrl, cfg, _pin, bit);
- 		if (!arg)
- 			return -EINVAL;
-@@ -1354,6 +1356,8 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
- 
- 		case PIN_CONFIG_OUTPUT_ENABLE:
- 			arg = pinconf_to_config_argument(_configs[i]);
-+			if (!pctrl->data->oen_write)
-+				return -EOPNOTSUPP;
- 			ret = pctrl->data->oen_write(pctrl, cfg, _pin, bit, !!arg);
- 			if (ret)
- 				return ret;
-@@ -3065,8 +3069,6 @@ static struct rzg2l_pinctrl_data r9a07g043_data = {
- #endif
- 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzg2l_pmc_writeb,
--	.oen_read = &rzg2l_read_oen,
--	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
- 	.bias_param_to_hw = &rzg2l_bias_param_to_hw,
- };
-@@ -3082,8 +3084,6 @@ static struct rzg2l_pinctrl_data r9a07g044_data = {
- 	.hwcfg = &rzg2l_hwcfg,
- 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzg2l_pmc_writeb,
--	.oen_read = &rzg2l_read_oen,
--	.oen_write = &rzg2l_write_oen,
- 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
- 	.bias_param_to_hw = &rzg2l_bias_param_to_hw,
- };
-@@ -3098,8 +3098,8 @@ static struct rzg2l_pinctrl_data r9a08g045_data = {
- 	.hwcfg = &rzg3s_hwcfg,
- 	.pwpr_pfc_lock_unlock = &rzg2l_pwpr_pfc_lock_unlock,
- 	.pmc_writeb = &rzg2l_pmc_writeb,
--	.oen_read = &rzg2l_read_oen,
--	.oen_write = &rzg2l_write_oen,
-+	.oen_read = &rzg3s_read_oen,
-+	.oen_write = &rzg3s_write_oen,
- 	.hw_to_bias_param = &rzg2l_hw_to_bias_param,
- 	.bias_param_to_hw = &rzg2l_bias_param_to_hw,
- };
+Previous versions of this patch-set can be found here:
+v5:https://lore.kernel.org/all/20240605105540.17937-1-zhi.mao@mediatek.com/ 
+v4:https://lore.kernel.org/all/20240427052233.8915-1-zhi.mao@mediatek.com/
+v3:https://lore.kernel.org/linux-media/20240403033825.9072-1-zhi.mao@mediatek.com/
+v2:https://lore.kernel.org/linux-media/20240323014751.4989-1-zhi.mao@mediatek.com/
+v1:https://lore.kernel.org/linux-media/20240316025253.2300-1-zhi.mao@mediatek.com/
+v0:https://lore.kernel.org/linux-media/20240313054409.8073-1-zhi.mao@mediatek.com/
+
+This series is based on linux-next, tag: next-20240611
+Changes in v6:
+- use "dev_err_probe" API in probe function 
+
+Thanks
+
+Zhi Mao (3):
+  media: dt-bindings: i2c: add GalaxyCore GC05A2 image sensor
+  media: i2c: Add GC05A2 image sensor driver
+  MAINTAINERS: Add entry for GC05A2 image sensor
+
+ .../bindings/media/i2c/galaxycore,gc05a2.yaml |  112 ++
+ MAINTAINERS                                   |    7 +
+ drivers/media/i2c/Kconfig                     |   10 +
+ drivers/media/i2c/Makefile                    |    1 +
+ drivers/media/i2c/gc05a2.c                    | 1359 +++++++++++++++++
+ 5 files changed, 1489 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/galaxycore,gc05a2.yaml
+ create mode 100644 drivers/media/i2c/gc05a2.c
+
 -- 
-2.39.2
+2.25.1
+
+
+
 
