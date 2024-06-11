@@ -1,163 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE763A1BF;
-	Tue, 11 Jun 2024 16:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B3A43ABD
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 16:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718124597; cv=none; b=PW5i9MopJuCw027HJpJPrUvtRDCyVI0kFkvJ5g6AD8WLrv/k6fwY28QfHkXCZ7QWtQkUuXyrumbxMcZ5AGbDqy/7ZAEsOdrkMamje5T6o8hlixGVmgsZZkV5TbbPJKVRCylRMFmwKYgls2BGJ2bpK+ZXvgA41G1ONE0cM2TgOAE=
+	t=1718124598; cv=none; b=anOmx3WX4dL/zr/wHPRmvLu//bhARX2q1cFEPjWe+eWW+A//uRpXIF1Smm5XS08exEca1687q1rSQXT9kvM4IwqlXkT/8Y825tGT4H4OrlRECOgJNLVsYeGQ483FtFPeG0idpcqjIlC8+bbzLqw+u95u4ZOvKD4r/R0Hop70igY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718124597; c=relaxed/simple;
-	bh=1v047t35c6qLm19msLAzWgPRd+2a52vL96fVRO7TAkE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JtS3AyaE6UemIpggn537lVN16oWvpBEXXz4dov0NxnMH6R3aOY/EuB5taSX7NRpkRN7igl5XKHB83f6TlpPieoI1eEO4YEX5YbA0oKhXIivtqI3Ycx2oVV19R6HKP3s6f2i9QuBh0gZe/xExTYdedfrb8jl9lGVO+3ZlaYC3rtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mbcGSzo4; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718124598; c=relaxed/simple;
+	bh=MreIlMooNRf639ruyk8R4KbSz88+aCksPZ1DbVVAbvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G3WZ8RauPu0ryOkxymbAAZ+ZbCb0zWUbbA9dcdGbj0wyqZaxnuvreLeoFraOJHqgh+elm+Hl42zBBgslRkRL0O8Jcz/EzD5G1Ltg2nRS04axObaWVAWcdbJQDxcWY+zM7Osa7FtTC9984HqUOXWkS3cwEAnGec9g/kx5vqPowWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=y3SMqKoQ; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mbcGSzo4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718124596; x=1749660596;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1v047t35c6qLm19msLAzWgPRd+2a52vL96fVRO7TAkE=;
-  b=mbcGSzo4cV4+wq7m7KuNrg3seQcU7NIDzNy9QqHVHiTWV4zTpkehljy7
-   GJaPWoiYSQaQIkac/Qtxy35WjrGZuBXc/8RQrRjSmlDw81/ig137hwVyJ
-   hJ6Am5bef/kf3h1wzs992cSi17941Xur3MvvmElu4Z6JLodCbZVdpWJO8
-   Zjpq+LDwJTaYYTCMYLPlKl8QyHKwT8AY64ZiTy8BSnrQWnt6r9EsZS10Q
-   q1g7HdbDbaZuG8Q4pq3X/rokMCNRSL/p+XD0BdS1GO4aSk9eNeVS92WA+
-   ZZ9bFKn+wew10R2ajftsdBBtrJ0Y3/eYpGt3yDt66NOTw43Yb8OPKDT86
-   w==;
-X-CSE-ConnectionGUID: wnav3QOqSLeqVPatec6WWg==
-X-CSE-MsgGUID: 2FUcv2OCQWSQLvQOATVvQw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="40249616"
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208,223";a="40249616"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 09:49:55 -0700
-X-CSE-ConnectionGUID: L0C88JV3TXihXBARem94nw==
-X-CSE-MsgGUID: GJTOORIvQP248Oej/VAciA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208,223";a="40103295"
-Received: from jacob-builder.jf.intel.com ([10.54.39.125])
-  by orviesa008.jf.intel.com with ESMTP; 11 Jun 2024 09:49:55 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: X86 Kernel <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Ingo Molnar" <mingo@redhat.com>,
-	"Borislav Petkov" <bp@alien8.de>,
-	linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Andi Kleen <andi.kleen@intel.com>,
-	"Xin Li" <xin3.li@intel.com>
-Subject: 
-Date: Tue, 11 Jun 2024 09:54:51 -0700
-Message-Id: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="y3SMqKoQ"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-df771b6cc9cso1333826276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:49:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1718124596; x=1718729396; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7JnGMgyfSYYWtEjlzPfN4hmoXT439HFNz0d94uVz2J4=;
+        b=y3SMqKoQgWwszJShEg4lM1emGCZL8Rm/0WYtO5K38Jm2MRszr7rWq3D0eAVUUMXZ/6
+         ksK7ms/M3wagkL2167CtQ5tB/hrKz4XSRBOAmGQjg9KpQwymGGR0BLBLX0aLF49Vkghv
+         k3RfQgoF/ho0RMT0sT6ZGAJVJsTMzqeZYHBFDuDhgE6DxquzjFLcyT0GNZnXaLs0fFx2
+         MmECccXLMaEjzPNyEgW9FhdtR9PPtWtjYiYDf0g9R1y5ncQljfLQk+otWRr2Gi44P+JK
+         HiNafNxTpT4LO16567hhGBFOHyyRT9Ui0mHUZt+pGrMYlIqraG8Ds4gxD5S7dnA1md7w
+         AQGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718124596; x=1718729396;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7JnGMgyfSYYWtEjlzPfN4hmoXT439HFNz0d94uVz2J4=;
+        b=SJYytbOiFhGdgTW99Lw86vnC+81GcbGLDtUdm7NooqpEZ+cRhQuwG6bVbtjnJjQCc7
+         IELxc9AAC9szMkN9JD20MGrXRf6MohqXpzuy8ick3DKWsHrUmpIZWoTn5hvcr2QqG2YM
+         ghvLG3abn+FtkNuo6hnYRddnN+4qeBawgXjvJ6jsgdsWy0n3YXLA5XrBc6g576szEVgi
+         XdZ4Ll4g4WcIWRE89lnT8mDLDfkjTcVHZZ42/+4lQrsZx8tVLclYR3Zav/ywKkDHwZjh
+         pR3RuiFmeX5LzdR1qXWOzxqfdQ3sl4DNYAYADqwysNm75HlObuKl9zcKePm5WiGcId/Y
+         R/qw==
+X-Forwarded-Encrypted: i=1; AJvYcCX62nRM+QO+LR57toldwbHs22Ly/X5VFbGXPu/3tNZGvBb+Qm/sWfNDY9lThbYz8z08JJBOM4ZxAaIYqxy2emVk2sFTDCurqM/QzF+I
+X-Gm-Message-State: AOJu0YwuS4aDUvqt/g49JHpAR7fpEKYekxOjoqPHz/yC1/5YDPza61jo
+	7KbPkff8Loxb+aLFbZDy5fpdJZfmFbOBNFpVLUepTH74L+EHGybYPcrKWg4Cf18=
+X-Google-Smtp-Source: AGHT+IEgSQHZ9Ca/meY6ChiB+OY2zTSlD3WY3Cf/xA7fFzm7DHmZml5zF09haqocKRev36lx9709fA==
+X-Received: by 2002:a81:5215:0:b0:627:972f:baba with SMTP id 00721157ae682-62cd55f7322mr129115757b3.31.1718124595699;
+        Tue, 11 Jun 2024 09:49:55 -0700 (PDT)
+Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62cfb6e4638sm11635327b3.75.2024.06.11.09.49.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 09:49:55 -0700 (PDT)
+Date: Tue, 11 Jun 2024 12:49:53 -0400
+From: Josef Bacik <josef@toxicpanda.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, hch@infradead.org
+Subject: Re: [PATCH v3 0/2] rcu-based inode lookup for iget*
+Message-ID: <20240611164953.GC247672@perftesting>
+References: <20240611101633.507101-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240611101633.507101-1-mjguzik@gmail.com>
 
-From e52010df700cde894633c45c0b364847e63a9819 Mon Sep 17 00:00:00 2001
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Date: Tue, 11 Jun 2024 09:49:17 -0700
-Subject: Subject: [PATCH v2 0/6] Add support for NMI source reporting
+On Tue, Jun 11, 2024 at 12:16:30PM +0200, Mateusz Guzik wrote:
+> I think the appropriate blurb which needs to land here also needs to be
+> in the commit message for the first patch, so here it is copy pasted
+> with some modifications at the end:
+> 
+> [quote]
+> Instantiating a new inode normally takes the global inode hash lock
+> twice:
+> 1. once to check if it happens to already be present
+> 2. once to add it to the hash
+> 
+> The back-to-back lock/unlock pattern is known to degrade performance
+> significantly, which is further exacerbated if the hash is heavily
+> populated (long chains to walk, extending hold time). Arguably hash
+> sizing and hashing algo need to be revisited, but that's beyond the
+> scope of this patch.
+> 
+> A long term fix would introduce finer-grained locking. An attempt was
+> made several times, most recently in [1], but the effort appears
+> stalled.
+> 
+> A simpler idea which solves majority of the problem and which may be
+> good enough for the time being is to use RCU for the initial lookup.
+> Basic RCU support is already present in the hash. This being a temporary
+> measure I tried to keep the change as small as possible.
+> 
+> iget_locked consumers (notably ext4) get away without any changes
+> because inode comparison method is built-in.
+> 
+> iget5_locked and ilookup5_nowait consumers pass a custom callback. Since
+> removal of locking adds more problems (inode can be changing) it's not
+> safe to assume all filesystems happen to cope.  Thus iget5_locked_rcu,
+> ilookup5_rcu and ilookup5_nowait_rcu get added, requiring manual
+> conversion.
+> 
+> In order to reduce code duplication find_inode and find_inode_fast grow
+> an argument indicating whether inode hash lock is held, which is passed
+> down should sleeping be necessary. They always rcu_read_lock, which is
+> redundant but harmless. Doing it conditionally reduces readability for
+> no real gain that I can see. RCU-alike restrictions were already put on
+> callbacks due to the hash spinlock being held.
+> 
+> There is a real cache-busting workload scanning millions of files in
+> parallel (it's a backup server thing), where the initial lookup is
+> guaranteed to fail resulting in the 2 lock acquires.
+> 
+> Implemented below is a synthehic benchmark which provides the same
+> behavior. [I shall note the workload is not running on Linux, instead it
+> was causing trouble elsewhere. Benchmark below was used while addressing
+> said problems and was found to adequately represent the real workload.]
+> 
+> Total real time fluctuates by 1-2s.
+> 
+> With 20 threads each walking a dedicated 1000 dirs * 1000 files
+> directory tree to stat(2) on a 32 core + 24GB RAM vm:
+> [/quote]
+> 
+> Specific results:
+> 
+> ext4 (needed mkfs.ext4 -N 24000000):
+> before:	3.77s user 890.90s system 1939% cpu 46.118 total
+> after:  3.24s user 397.73s system 1858% cpu 21.581 total (-53%)
+> 
+> btrfs (s/iget5_locked/iget5_locked_rcu in fs/btrfs/inode.c):
+> before: 3.54s user 892.30s system 1966% cpu 45.549 total
+> after:  3.28s user 738.66s system 1955% cpu 37.932 total (-16.7%)
+> 
+> btrfs bottlenecks itself on its own locks here.
+> 
+> Benchmark can be found here: https://people.freebsd.org/~mjg/fstree.tgz
+> 
+> fs rundown is as follows:
+> - ext4 patched implicitly
+> - xfs does not use the inode hash
+> - bcachefs is out of the picture as Kent decided to implement his own
+>   inode hashing based on rhashtable, for now private to his fs.
+> 
+> I have not looked at others.
+> 
+> [1] https://lore.kernel.org/all/20231206060629.2827226-1-david@fromorbit.com/
+> 
 
-Hi Thomas and all,
-
-Non-Maskable Interrupts (NMIs) are routed to the local Advanced Programmable
-Interrupt Controller (APIC) using vector #2. Before the advent of the
-Flexible Return and Event Delivery (FRED)[1], the vector information set by
-the NMI initiator was disregarded or lost within the hardware, compelling
-system software to poll every registered NMI handler to pinpoint the source
-of the NMI[2]. This approach led to several issues:
-
-1.	Inefficiency due to the CPU's time spent polling all handlers.
-2.	Increased latency from the additional time taken to poll all handlers.
-3.	The occurrence of unnecessary NMIs if they are triggered shortly
-	after being processed by a different source.
-
-To tackle these challenges, Intel introduced NMI source reporting as a part
-of the FRED specification (detailed in Chapter 9). This CPU feature ensures
-that while all NMI sources are still aggregated into NMI vector (#2) for
-delivery, the source of the NMI is now conveyed through FRED event data
-(a 16-bit bitmap on the stack). This allows for the selective dispatch
-of the NMI source handler based on the bitmap, eliminating the need to
-invoke all NMI source handlers indiscriminately.
-
-In line with the hardware architecture, various interrupt sources can
-generate NMIs by encoding an NMI delivery mode. However, this patchset
-activates only the local NMI sources that are currently utilized by the
-Linux kernel, which includes:
-
-1.	Performance monitoring.
-2.	Inter-Processor Interrupts (IPIs) for functions like CPU backtrace,
-	machine check, Kernel GNU Debugger (KGDB), reboot, panic stop, and
-	self-test.
-
-Other NMI sources will continue to be handled as previously when the NMI
-source is not utilized or remains unidentified.
-
-Next steps:
-1. KVM support
-2. Optimization to reuse IDT NMI vector 2 as NMI source for "known" source.
-Link:https://lore.kernel.org/lkml/746fecd5-4c79-42f9-919e-912ec415e73f@zytor.com/
-
-
-[1] https://www.intel.com/content/www/us/en/content-details/779982/flexible-return-and-event-delivery-fred-specification.html
-[2] https://lore.kernel.org/lkml/171011362209.2468526.15187874627966416701.tglx@xen13/
-
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
 Thanks,
 
-Jacob
-
----
-Change logs are in individual patches.
-
-Jacob Pan (6):
-  x86/irq: Add enumeration of NMI source reporting CPU feature
-  x86/irq: Extend NMI handler registration interface to include source
-  x86/irq: Factor out common NMI handling code
-  x86/irq: Process nmi sources in NMI handler
-  perf/x86: Enable NMI source reporting for perfmon
-  x86/irq: Enable NMI source on IPIs delivered as NMI
-
- arch/x86/Kconfig                         |  9 +++
- arch/x86/events/amd/ibs.c                |  2 +-
- arch/x86/events/core.c                   | 11 ++-
- arch/x86/events/intel/core.c             |  6 +-
- arch/x86/include/asm/apic.h              |  1 +
- arch/x86/include/asm/cpufeatures.h       |  1 +
- arch/x86/include/asm/disabled-features.h |  8 +-
- arch/x86/include/asm/irq_vectors.h       | 38 +++++++++
- arch/x86/include/asm/nmi.h               |  4 +-
- arch/x86/kernel/apic/hw_nmi.c            |  5 +-
- arch/x86/kernel/apic/ipi.c               |  4 +-
- arch/x86/kernel/apic/local.h             | 18 +++--
- arch/x86/kernel/cpu/mce/inject.c         |  4 +-
- arch/x86/kernel/cpu/mshyperv.c           |  2 +-
- arch/x86/kernel/kgdb.c                   |  6 +-
- arch/x86/kernel/nmi.c                    | 99 +++++++++++++++++++++---
- arch/x86/kernel/nmi_selftest.c           |  7 +-
- arch/x86/kernel/reboot.c                 |  4 +-
- arch/x86/kernel/smp.c                    |  4 +-
- arch/x86/kernel/traps.c                  |  4 +-
- arch/x86/platform/uv/uv_nmi.c            |  4 +-
- drivers/acpi/apei/ghes.c                 |  2 +-
- drivers/char/ipmi/ipmi_watchdog.c        |  2 +-
- drivers/edac/igen6_edac.c                |  2 +-
- drivers/watchdog/hpwdt.c                 |  6 +-
- 25 files changed, 200 insertions(+), 53 deletions(-)
-
--- 
-2.25.1
-
+Josef
