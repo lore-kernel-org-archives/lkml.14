@@ -1,238 +1,166 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4E4171640;
-	Tue, 11 Jun 2024 06:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F5A13F43E;
+	Tue, 11 Jun 2024 06:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718087494; cv=none; b=C/icwVkKh7hU1MZKMVaXPQmF5NlbY10T2/g5KIv66BBDki6AMQyAmOqqsLSj4kOywHGnLOPYAmSFXjgq1Dr5QDDeHs8gBia1teB0sm7BRbMWYdm9ElBs6SdpKgZzmAD/fO3APYO+3FDkdMb1uZ+7yqZs41D19Hf0Zo6qAhVawj0=
+	t=1718087510; cv=none; b=anKaPje5ltc9Afwpp08kMI4mh7rC55nvugidmJxXqreNpgXUMQ9Y/YxzBthpMgP6/x6MF3PNSFV3XDW/orH++5Ws8DsCwS1U8f+6ZAhz+qMsVrzid5SMgrCNJXlfLsndZZ5cqKhcj+lSJT40KW8zopOgGkPnzO+3qRjAL2Qsut0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718087494; c=relaxed/simple;
-	bh=Gpc+AIIuwGC+HGzIiUUwG+cNgFkKLIjwSmVZyoACLbQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gpODpRg3MJUL6NO18QR+PM2PAU3Cln7sgbXG61cXxmbJ/twzvmG/CwPIuL7C7UN87Osv8+a+EfisRlvZ0U8slb5xLhTswoaCjPDoV4Q+31dN/7cUhDumH0y8Viid5ukktAi1wGiD+GfOfDjhp6yC6LngHxcObHh21tFsgBe9K6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=vl1G3Vv/; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1718087510; c=relaxed/simple;
+	bh=2ZPT3S+8HRYZ+/M0fqX0hFmUPpAO06wEJb3duJQkoAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PclHaKvNWwoYsdycEaaPUxteTty+JiaYoj7G7sVYL2Y1RnmbeOK21mkUV/wllPqGau1vvgbJR4B4WEoVJ3GvtgvNHvSs1y6L2SIxVHqOmIZHVQy7P1EOPU4oMVKquihc5RUOihD5XUiyZHUkxdvsPyObW3RAV5jZRtDsjwlIhEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0JPPfuGX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vl1G3Vv/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718087491; x=1749623491;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Gpc+AIIuwGC+HGzIiUUwG+cNgFkKLIjwSmVZyoACLbQ=;
-  b=vl1G3Vv/7diS3uLxjus141yNio0TTbfh9UDfZX2YALgNHic3QFz7IU7e
-   n3Ai5/EHZp3Yd8b0sznzAVgAdRz7yIGw7i7sUy3eeQadTUQ+SpIunvyE5
-   M4ukTPO5AFGHp8zAYWkQ2Xk1Voll0Bb9wulrxXHYIV85O7F1V+OUSnkRv
-   4mAifhuZm5yn88saXiEU3NB47gQrYvoozMpOddTAE3GPYbr43aWRV0pWD
-   hFHQz2O1yRrnsUWhqmGUJ4axBy56x8src8yQ+dD1Op9wriX0XbZuNmBxc
-   uk9vs4Rp6AawPAy1Hw0I8dxKPtGR2KvY6+4B7M+++S4Svlm6e2n5Ue5nD
-   Q==;
-X-CSE-ConnectionGUID: Q3N2X1fHS0SOCLsGG11+zg==
-X-CSE-MsgGUID: U4ghN53eQLOtE3gBVFx78g==
-X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
-   d="scan'208";a="27243364"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 10 Jun 2024 23:31:29 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 10 Jun 2024 23:30:57 -0700
-Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 10 Jun 2024 23:30:51 -0700
-From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-To: <lkp@intel.com>
-CC: <Raju.Lakkaraju@microchip.com>, <UNGLinuxDriver@microchip.com>,
-	<andrew@lunn.ch>, <bryan.whitehead@microchip.com>, <davem@davemloft.net>,
-	<edumazet@google.com>, <hkallweit1@gmail.com>, <hmehrtens@maxlinear.com>,
-	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>, <linux@armlinux.org.uk>,
-	<lxu@maxlinear.com>, <netdev@vger.kernel.org>,
-	<oe-kbuild-all@lists.linux.dev>, <pabeni@redhat.com>, <sbauer@blackbox.su>,
-	Wojciech Drewek <wojciech.drewek@intel.com>
-Subject: [PATCH net V3 2/3] net: lan743x: Support WOL at both the PHY and MAC appropriately
-Date: Tue, 11 Jun 2024 11:57:52 +0530
-Message-ID: <20240611062753.12020-3-Raju.Lakkaraju@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240611062753.12020-1-Raju.Lakkaraju@microchip.com>
-References: <202406052200.w3zuc32H-lkp@intel.com>
- <20240611062753.12020-1-Raju.Lakkaraju@microchip.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0JPPfuGX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F72BC2BD10;
+	Tue, 11 Jun 2024 06:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718087509;
+	bh=2ZPT3S+8HRYZ+/M0fqX0hFmUPpAO06wEJb3duJQkoAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0JPPfuGXCrZ6lXFH3MNQIVzydNYC1Ez7pLYaDlhmGhBeO/gQR1uq6ZpiIXlVW1wLP
+	 q9KJ+LIe/vdCP1qGQllOpuwHaFTakhpNIBKfjpoGkbscZ04wjb0Updauu86oFlq54B
+	 95DRMaFmFRTTD1b9Il4u9ZK7C1TpnQdnL9brKK1M=
+Date: Tue, 11 Jun 2024 08:31:46 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: rafael@kernel.org, mcgrof@kernel.org, russell.h.weight@intel.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@samsung.com,
+	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com,
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] rust: add firmware abstractions
+Message-ID: <2024061128-provolone-coyness-1d3c@gregkh>
+References: <20240610180318.72152-1-dakr@redhat.com>
+ <20240610180318.72152-3-dakr@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240610180318.72152-3-dakr@redhat.com>
 
-Prevent options not supported by the PHY from being requested to it by the MAC
-Whenever a WOL option is supported by both, the PHY is given priority
-since that usually leads to better power savings.
+On Mon, Jun 10, 2024 at 08:02:28PM +0200, Danilo Krummrich wrote:
+> Add an abstraction around the kernels firmware API to request firmware
+> images. The abstraction provides functions to access the firmware's size
+> and backing buffer.
+> 
+> The firmware is released once the abstraction instance is dropped.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@redhat.com>
+> ---
+>  rust/bindings/bindings_helper.h |   1 +
+>  rust/kernel/firmware.rs         | 107 ++++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs              |   1 +
+>  3 files changed, 109 insertions(+)
+>  create mode 100644 rust/kernel/firmware.rs
+> 
+> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+> index ddb5644d4fd9..18a3f05115cb 100644
+> --- a/rust/bindings/bindings_helper.h
+> +++ b/rust/bindings/bindings_helper.h
+> @@ -9,6 +9,7 @@
+>  #include <kunit/test.h>
+>  #include <linux/errname.h>
+>  #include <linux/ethtool.h>
+> +#include <linux/firmware.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/mdio.h>
+>  #include <linux/phy.h>
+> diff --git a/rust/kernel/firmware.rs b/rust/kernel/firmware.rs
+> new file mode 100644
+> index 000000000000..7ff4c325f670
+> --- /dev/null
+> +++ b/rust/kernel/firmware.rs
+> @@ -0,0 +1,107 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Firmware abstraction
+> +//!
+> +//! C header: [`include/linux/firmware.h`](srctree/include/linux/firmware.h")
+> +
+> +use crate::{bindings, device::Device, error::Error, error::Result, str::CStr};
+> +use core::ptr::NonNull;
+> +
+> +// One of the following: `bindings::request_firmware`, `bindings::firmware_request_nowarn`,
+> +// `firmware_request_platform`, `bindings::request_firmware_direct`
+> +type FwFunc =
+> +    unsafe extern "C" fn(*mut *const bindings::firmware, *const i8, *mut bindings::device) -> i32;
+> +
+> +/// Abstraction around a C `struct firmware`.
+> +///
+> +/// This is a simple abstraction around the C firmware API. Just like with the C API, firmware can
+> +/// be requested. Once requested the abstraction provides direct access to the firmware buffer as
+> +/// `&[u8]`. The firmware is released once [`Firmware`] is dropped.
+> +///
+> +/// # Invariants
+> +///
+> +/// The pointer is valid, and has ownership over the instance of `struct firmware`.
+> +///
+> +/// # Examples
+> +///
+> +/// ```
+> +/// use kernel::firmware::Firmware;
+> +///
+> +/// let fw = Firmware::request("path/to/firmware.bin", dev.as_ref())?;
+> +/// driver_load_firmware(fw.data());
+> +/// ```
+> +pub struct Firmware(NonNull<bindings::firmware>);
+> +
+> +impl Firmware {
+> +    fn request_internal(name: &CStr, dev: &Device, func: FwFunc) -> Result<Self> {
+> +        let mut fw: *mut bindings::firmware = core::ptr::null_mut();
+> +        let pfw: *mut *mut bindings::firmware = &mut fw;
+> +
+> +        // SAFETY: `pfw` is a valid pointer to a NULL initialized `bindings::firmware` pointer.
+> +        // `name` and `dev` are valid as by their type invariants.
+> +        let ret = unsafe { func(pfw as _, name.as_char_ptr(), dev.as_raw()) };
+> +        if ret != 0 {
+> +            return Err(Error::from_errno(ret));
+> +        }
+> +
+> +        // SAFETY: `func` not bailing out with a non-zero error code, guarantees that `fw` is a
+> +        // valid pointer to `bindings::firmware`.
+> +        Ok(Firmware(unsafe { NonNull::new_unchecked(fw) }))
+> +    }
+> +
+> +    /// Send a firmware request and wait for it. See also `bindings::request_firmware`.
+> +    pub fn request(name: &CStr, dev: &Device) -> Result<Self> {
+> +        Self::request_internal(name, dev, bindings::request_firmware)
+> +    }
 
-Fixes: e9e13b6adc338 ("lan743x: fix for potential NULL pointer dereference with bare card")
-Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202406052200.w3zuc32H-lkp@intel.com/
----
-Change List:
-------------
-V2 -> V3:
-  - Remove the "phy does not support WOL" debug message which is not required
-  - Remove WAKE_PHY support option from Ethernet MAC (LAN743x/PCI11x1x) driver
-  - Add "phy_wol_supported" and "phy_wolopts" variables to hold PHY's WOL config
-V1 -> V2:
-  - Repost - No change
-V0 -> V1:
-  - Change the "phy does not support WOL" print from netif_info() to
-    netif_dbg()
+How does this handle when CONFIG_FW_LOADER is not enabled?  Why are you
+building these bindings if that option is not checked?
 
- .../net/ethernet/microchip/lan743x_ethtool.c  | 44 +++++++++++++++++--
- drivers/net/ethernet/microchip/lan743x_main.c | 18 ++++++--
- drivers/net/ethernet/microchip/lan743x_main.h |  4 ++
- 3 files changed, 58 insertions(+), 8 deletions(-)
+> +
+> +    /// Send a request for an optional firmware module. See also
+> +    /// `bindings::firmware_request_nowarn`.
+> +    pub fn request_nowarn(name: &CStr, dev: &Device) -> Result<Self> {
+> +        Self::request_internal(name, dev, bindings::firmware_request_nowarn)
+> +    }
+> +
+> +    /// Send a request for a firmware with platform-fw fallback. See also
+> +    /// `bindings::firmware_request_platform`.
+> +    pub fn request_platform(name: &CStr, dev: &Device) -> Result<Self> {
+> +        Self::request_internal(name, dev, bindings::firmware_request_platform)
+> +    }
+> +
+> +    /// Send a request for a firmware directly without usermode helper. See also
+> +    /// `bindings::request_firmware_direct`.
+> +    pub fn request_direct(name: &CStr, dev: &Device) -> Result<Self> {
+> +        Self::request_internal(name, dev, bindings::request_firmware_direct)
+> +    }
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_ethtool.c b/drivers/net/ethernet/microchip/lan743x_ethtool.c
-index d0f4ff4ee075..0d1740d64676 100644
---- a/drivers/net/ethernet/microchip/lan743x_ethtool.c
-+++ b/drivers/net/ethernet/microchip/lan743x_ethtool.c
-@@ -1127,8 +1127,12 @@ static void lan743x_ethtool_get_wol(struct net_device *netdev,
- 	if (netdev->phydev)
- 		phy_ethtool_get_wol(netdev->phydev, wol);
- 
--	wol->supported |= WAKE_BCAST | WAKE_UCAST | WAKE_MCAST |
--		WAKE_MAGIC | WAKE_PHY | WAKE_ARP;
-+	if (wol->supported != adapter->phy_wol_supported)
-+		netif_warn(adapter, drv, adapter->netdev,
-+			   "PHY changed its supported WOL! old=%x, new=%x\n",
-+			   adapter->phy_wol_supported, wol->supported);
-+
-+	wol->supported |= MAC_SUPPORTED_WAKES;
- 
- 	if (adapter->is_pci11x1x)
- 		wol->supported |= WAKE_MAGICSECURE;
-@@ -1143,7 +1147,39 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
- {
- 	struct lan743x_adapter *adapter = netdev_priv(netdev);
- 
-+	/* WAKE_MAGICSEGURE is a modifier of and only valid together with
-+	 * WAKE_MAGIC
-+	 */
-+	if ((wol->wolopts & WAKE_MAGICSECURE) && !(wol->wolopts & WAKE_MAGIC))
-+		return -EINVAL;
-+
-+	if (netdev->phydev) {
-+		struct ethtool_wolinfo phy_wol;
-+		int ret;
-+
-+		phy_wol.wolopts = wol->wolopts & adapter->phy_wol_supported;
-+
-+		/* If WAKE_MAGICSECURE was requested, filter out WAKE_MAGIC
-+		 * for PHYs that do not support WAKE_MAGICSECURE
-+		 */
-+		if (wol->wolopts & WAKE_MAGICSECURE &&
-+		    !(adapter->phy_wol_supported & WAKE_MAGICSECURE))
-+			phy_wol.wolopts &= ~WAKE_MAGIC;
-+
-+		ret = phy_ethtool_set_wol(netdev->phydev, &phy_wol);
-+		if (ret && (ret != -EOPNOTSUPP))
-+			return ret;
-+
-+		if (ret == -EOPNOTSUPP)
-+			adapter->phy_wolopts = 0;
-+		else
-+			adapter->phy_wolopts = phy_wol.wolopts;
-+	} else {
-+		adapter->phy_wolopts = 0;
-+	}
-+
- 	adapter->wolopts = 0;
-+	wol->wolopts &= ~adapter->phy_wolopts;
- 	if (wol->wolopts & WAKE_UCAST)
- 		adapter->wolopts |= WAKE_UCAST;
- 	if (wol->wolopts & WAKE_MCAST)
-@@ -1164,10 +1200,10 @@ static int lan743x_ethtool_set_wol(struct net_device *netdev,
- 		memset(adapter->sopass, 0, sizeof(u8) * SOPASS_MAX);
- 	}
- 
-+	wol->wolopts = adapter->wolopts | adapter->phy_wolopts;
- 	device_set_wakeup_enable(&adapter->pdev->dev, (bool)wol->wolopts);
- 
--	return netdev->phydev ? phy_ethtool_set_wol(netdev->phydev, wol)
--			: -ENETDOWN;
-+	return 0;
- }
- #endif /* CONFIG_PM */
- 
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index 6a40b961fafb..90572e780d9f 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -3118,6 +3118,17 @@ static int lan743x_netdev_open(struct net_device *netdev)
- 		if (ret)
- 			goto close_tx;
- 	}
-+
-+#ifdef CONFIG_PM
-+	if (adapter->netdev->phydev) {
-+		struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
-+
-+		phy_ethtool_get_wol(netdev->phydev, &wol);
-+		adapter->phy_wol_supported = wol.supported;
-+		adapter->phy_wolopts = wol.wolopts;
-+	}
-+#endif
-+
- 	return 0;
- 
- close_tx:
-@@ -3587,10 +3598,9 @@ static void lan743x_pm_set_wol(struct lan743x_adapter *adapter)
- 
- 	pmtctl |= PMT_CTL_ETH_PHY_D3_COLD_OVR_ | PMT_CTL_ETH_PHY_D3_OVR_;
- 
--	if (adapter->wolopts & WAKE_PHY) {
--		pmtctl |= PMT_CTL_ETH_PHY_EDPD_PLL_CTL_;
-+	if (adapter->phy_wolopts)
- 		pmtctl |= PMT_CTL_ETH_PHY_WAKE_EN_;
--	}
-+
- 	if (adapter->wolopts & WAKE_MAGIC) {
- 		wucsr |= MAC_WUCSR_MPEN_;
- 		macrx |= MAC_RX_RXEN_;
-@@ -3686,7 +3696,7 @@ static int lan743x_pm_suspend(struct device *dev)
- 	lan743x_csr_write(adapter, MAC_WUCSR2, 0);
- 	lan743x_csr_write(adapter, MAC_WK_SRC, 0xFFFFFFFF);
- 
--	if (adapter->wolopts)
-+	if (adapter->wolopts || adapter->phy_wolopts)
- 		lan743x_pm_set_wol(adapter);
- 
- 	if (adapter->is_pci11x1x) {
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
-index fac0f33d10b2..3b2585a384e2 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.h
-+++ b/drivers/net/ethernet/microchip/lan743x_main.h
-@@ -1042,6 +1042,8 @@ enum lan743x_sgmii_lsd {
- 	LINK_2500_SLAVE
- };
- 
-+#define MAC_SUPPORTED_WAKES  (WAKE_BCAST | WAKE_UCAST | WAKE_MCAST | \
-+			      WAKE_MAGIC | WAKE_ARP)
- struct lan743x_adapter {
- 	struct net_device       *netdev;
- 	struct mii_bus		*mdiobus;
-@@ -1049,6 +1051,8 @@ struct lan743x_adapter {
- #ifdef CONFIG_PM
- 	u32			wolopts;
- 	u8			sopass[SOPASS_MAX];
-+	u32			phy_wolopts;
-+	u32			phy_wol_supported;
- #endif
- 	struct pci_dev		*pdev;
- 	struct lan743x_csr      csr;
--- 
-2.34.1
+Why just these variants?  Why not just add the ones that people actually
+need instead of a random assortment like you choose here :)
 
+thanks,
+
+greg k-h
