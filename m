@@ -1,55 +1,72 @@
-Received: from mx0b-002bf204.pphosted.com (mx0b-002bf204.pphosted.com [205.220.172.86])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2060.outbound.protection.outlook.com [40.107.100.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1872217B41F;
-	Tue, 11 Jun 2024 08:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.172.86
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718096002; cv=none; b=Xt1ahky/vAOaiIZwwgdvmJmkYbb1BFAXiWTPIv9fIht9sk/3+875JXUTT7M6WF314eFaDUpcmF6kgx4FY93+4vc7h7AyS8anLuwoVk8xZGzJRdflAgPnKHgg5n9PCCAMfDyclTXpM6NaUt6Zyco+kOOQ1m+rnUPdHAeH1+tb3EY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718096002; c=relaxed/simple;
-	bh=W3BHzlZ6gBSB7UmPWv3NX/0dDwzclZnZK9/Bh3qSoE8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QHQ1Kwyn5UBcn/BKgcg5YDUZTvm6AYaiznARboah6TQGyEVNjMijYwRG/b2UuiUcTDJU3d6n0TvV09E9/V/SSLKz8eQXF29UjjDMtuWbR0IWmrd7kjZAHpQzeFITMrF9X3SqbUsbR78t2RnKA4Q6Q38c+LWJ+uvOgrCSfM63/Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=monolithicpower.com; spf=pass smtp.mailfrom=monolithicpower.com; dkim=pass (2048-bit key) header.d=monolithicpower.com header.i=@monolithicpower.com header.b=S/e4JJWB; arc=none smtp.client-ip=205.220.172.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=monolithicpower.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monolithicpower.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6635517B500;
+	Tue, 11 Jun 2024 08:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718096003; cv=fail; b=Acokuu63nkEy4kZUEtnlSQEWsnHQv9CCc0douJ2oKDhXm/y/dNUMde/Sc41mTcasFrFQoG0m+Gc9IuIgeu90aypYX/9hYbmj1fc1ebJrPvp3EQTuY4Cyqd1teKmGI9H9VSm/lJ6MyjqO+oOXHTBHmUrgUlyfXRABaWwfiQvl0r4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718096003; c=relaxed/simple;
+	bh=W99zQEQQ/OGxxPso2jS9+4W6tk4N7XEGoGWIIlK+OCs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JZxWyIAkF9Hg4FOlP9aEqCa6kXG9EcVQo532GrWxjcOo4XT9aGiSWqtcBvSNRshgkL/+b9Fi1TLzOqVMBxJpo1M7mcATPbjYBvTFisRC1dPLraZpn/CYmNLQ8Ma4NFneYoIRCtGigOuQVOllu9uYPT8xfWh8UWvPaDCMfrVskrc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=T34zTJ4O; arc=fail smtp.client-ip=40.107.100.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monolithicpower.com header.i=@monolithicpower.com header.b="S/e4JJWB"
-Received: from pps.filterd (m0207525.ppops.net [127.0.0.1])
-	by mx0a-002bf204.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B6Zrdk002210;
-	Tue, 11 Jun 2024 01:34:31 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	monolithicpower.com; h=cc:content-transfer-encoding:content-type
-	:date:from:message-id:mime-version:subject:to; s=pps1; bh=bpFueT
-	IZ2r0KqeKAGmGnZxhpFCdSSLVE7SrrqSSaKYA=; b=S/e4JJWB9DshMzNhCaNhT1
-	AdZhzXBPrBKyD3IdDu8u0dFl2VYySkmLhi2G9kEfIx0Z+Xb5Q6g1A7sG580x8iqO
-	93rBEvfqXSd5yESrTDYxpr4+jBlOW3o22PJGoTiBR+zKRXZrTpupzNMXp+4x4ADZ
-	tBT/KhRhGIdVAJPoDf7rW0iHp0m1pzQ+vf7OuMWq6FgVj4Lo7LQ4UMmLAXWfyE04
-	65VgcDbLuAUMEdnEFM6RZbtn0QB24iKsuf6CQZs4vQFyaC4DJW3RFO3AEYmzq2zC
-	HKgDGBv4E3bK3zPJ3TGH8ah+i/8NK1bqTdTT0oaIrFpA5HXmUjTzSjmdxFxs9u5A
-	==
-Received: from webmail.monolithicpower.com (mps-vpn.monolithicpower.com [12.33.0.20] (may be forged))
-	by mx0a-002bf204.pphosted.com (PPS) with ESMTPS id 3ymm00mx39-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 11 Jun 2024 01:34:17 -0700 (PDT)
-Received: from CD-MSH04.monolithicpower.com (10.10.70.213) by
- MPS-MSH04.monolithicpower.com (10.10.10.206) with Microsoft SMTP Server
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T34zTJ4O"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RREGDQ86XXRfopZZqpzWtbMCPv10TX9QL9+qFUCd+U+ehB8vjcg+oU63+MkpDqcDq4Umz9yqpIdNMRSuE0Ep9T954+g1DbYLJ6eqv7sXZsb40fVpWN+jTSzXv+xtZ2J70tRzYuEC0cLQlzoISQjcgLpV77l2rbgF9L51H3p0OLgFWseC5eqiTTW04SHEismwuy3KtPzggqaaKGYrnKJWtC6c/+kQz8zSzpSm6ni6HcXRwrx793T1t7ucm87nGQYI0R+amdYBnh8l6VFtvLs6QAl7HjeifCZiw5SBrCAOcxlWn4ZsmNdQN4dQLY/txrro48tSv98Ue+kewP4DCiPj0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NRrjJrhZ9mOUhVW3oEGJa+meilMx3yjHSMrYjj0j9Eo=;
+ b=cthpmEG6ah/VPx7ERKtCwZCwIcXMHwxNhJ/jkU+ezzIKVzXJZA69wZP/28IMf6Zjl5bbyNpqJzeSDE+1oNhKoyb0M+2rCbb0l7ETVVfrfNUPprFK2WWY0A/hXzyUUT2ZTzC5AZdmDbFpoUlifEM0IraDZ3SpWqjChZws2Fw6keMhEWPUzinjdRGWR/DUD64xyBLXHwRBuIS/qgRvgEKT8gfGTGzV/1mtpFJzpoh0hUqhqdKq7PPl+1QvkM1Sl0AshPvc7Tv5J6IFiClMqNjwlKwawUxZoyI4qrQF/qeStQg8tpgYSEyan4oKDz8hrrV1gUQn0Ckg9vfM8uY4qznS6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NRrjJrhZ9mOUhVW3oEGJa+meilMx3yjHSMrYjj0j9Eo=;
+ b=T34zTJ4OdXiBnCyTzmfJjFdUtyxpSZHSM64XChK9u6FZcGw6YmxA0VppdYZIoi7uxFuP/WBUfXYgjoglu4Wtkcz0gQtIq10Hc9SFygFlRTe5DpUViw7kIvIkMag5WkmnrCec4EchEsGyhuJ0tbTyugNSlKIWKnX5BSmp5Ru4BVI=
+Received: from SA0PR13CA0007.namprd13.prod.outlook.com (2603:10b6:806:130::12)
+ by PH7PR12MB7889.namprd12.prod.outlook.com (2603:10b6:510:27f::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Tue, 11 Jun
+ 2024 08:53:15 +0000
+Received: from SN1PEPF000397B4.namprd05.prod.outlook.com
+ (2603:10b6:806:130:cafe::7d) by SA0PR13CA0007.outlook.office365.com
+ (2603:10b6:806:130::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.19 via Frontend
+ Transport; Tue, 11 Jun 2024 08:53:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF000397B4.mail.protection.outlook.com (10.167.248.58) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Tue, 11 Jun 2024 08:53:15 +0000
+Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Tue, 11 Jun 2024 01:32:59 -0700
-Received: from smtp.gmail.com (10.10.86.102) by CD-MSH04.monolithicpower.com
- (10.10.70.213) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 11 Jun
- 2024 16:32:57 +0800
-From: Yuxi Wang <Yuxi.Wang@monolithicpower.com>
-To: <Yuxi.Wang@monolithicpower.com>, <pavel@ucw.cz>, <lee@kernel.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <wyx137120466@gmail.com>
-CC: <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH V2 0/2] leds: Add a driver for MP3326
-Date: Tue, 11 Jun 2024 16:32:33 +0800
-Message-ID: <20240611083236.1609-1-Yuxi.Wang@monolithicpower.com>
-X-Mailer: git-send-email 2.42.0.windows.2
+ 15.1.2507.39; Tue, 11 Jun 2024 03:53:10 -0500
+From: Perry Yuan <perry.yuan@amd.com>
+To: <Mario.Limonciello@amd.com>, <gautham.shenoy@amd.com>
+CC: <rafael.j.wysocki@intel.com>, <viresh.kumar@linaro.org>,
+	<Ray.Huang@amd.com>, <Borislav.Petkov@amd.com>, <Alexander.Deucher@amd.com>,
+	<Xinmei.Huang@amd.com>, <Xiaojian.Du@amd.com>, <Li.Meng@amd.com>,
+	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 09/10] cpufreq: amd-pstate: implement heterogeneous core topology for highest performance initialization
+Date: Tue, 11 Jun 2024 16:52:25 +0800
+Message-ID: <97b65a2294154dd469377a7a76ee738de7bf7aef.1718095377.git.perry.yuan@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1718095377.git.perry.yuan@amd.com>
+References: <cover.1718095377.git.perry.yuan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,39 +75,239 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: CD-MSLBN02.monolithicpower.com (192.168.86.32) To
- CD-MSH04.monolithicpower.com (10.10.70.213)
-X-Proofpoint-ORIG-GUID: TROeet2erSYo9aZOB4Xn2vns07dkxTId
-X-Proofpoint-GUID: TROeet2erSYo9aZOB4Xn2vns07dkxTId
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-11_04,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- impostorscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 adultscore=0 phishscore=0 mlxlogscore=685
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406110064
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000397B4:EE_|PH7PR12MB7889:EE_
+X-MS-Office365-Filtering-Correlation-Id: 85f3fad0-45b5-499d-53bd-08dc89f3eee1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|1800799015|376005|36860700004|82310400017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?O/THm7uoC8n3ANUyyXrUG9yp2GRC1vfWVEeu5EWDFMPI+SeX5bwnDD/RYeaD?=
+ =?us-ascii?Q?icfgtYwAbGatDA6cSy9r3r612ryN+l9R/5zvzkKfGo+GZjg02nemP5mMxTgx?=
+ =?us-ascii?Q?SvyNC55mqVl7jOljthA9n9xKU17lLSILpP7mbnuZ4egS+i4Wnindxl1+6WaH?=
+ =?us-ascii?Q?2EshEOJlaBcOskgCrzeU9dJxA7E2SfoEzeXxDLZmamYWMSpFaGm0Hsl5OWTV?=
+ =?us-ascii?Q?rwO1FC1edHoN/MOko5QKccGMoSIMpv61iuMsF7S1/w3zFHGbJIOd1tYROd0A?=
+ =?us-ascii?Q?+L80/qOuM/pRdf8AHxB+xwSxQrqtyO+yqjVoC83z0kd0NjiE8y3hfFsH/+jA?=
+ =?us-ascii?Q?G2B/VABWH36pjWpwG4lPfg79TL1nWmuV0gB0TEQGzXFe4G/CVlXgJj7IiSkC?=
+ =?us-ascii?Q?EniigoJPdwddqycpabEz5zvPPBQBL+vpe6HY6skgewBn8UEox5LtgXXB/YkU?=
+ =?us-ascii?Q?04hCoS0gh5HY7pCVLRJGoEMBZZyuspy2JjrSLiWXBeJnAmvgsmgQXNrdo/+l?=
+ =?us-ascii?Q?eMPzyoeqLzk8nXMvzMilOzfKCJvG/Yj1ETB/KJz3jJMELny7O/MKg0RsbbFy?=
+ =?us-ascii?Q?xBc1WcDTZcIbE8FcYI8ezziEvu+1QuM6AaV0Af+8fiPYb/QS7up+tuyamYQh?=
+ =?us-ascii?Q?/GuS2XxP596en1c2q4oFV9bCjpJghxAWGyvIoIsyFR7InQ8DLcOYhOETP+nv?=
+ =?us-ascii?Q?A5UbqKTDa6tVHdtg7oKbQpOsIHqU5SFQaD3Un40NpC3rY1lIf5//+wxDaO0e?=
+ =?us-ascii?Q?iNFi58vm22X+k4RImRpRilsA3niLHALhiU+4AXcA0MDavLdq9p+gr5ENLJf3?=
+ =?us-ascii?Q?ag0ny7T/TPwFKCuExJL/59JTMIhLfCEHDLaHnpRn9POGBCMZVxO6WD41PS32?=
+ =?us-ascii?Q?+8Rj3jn8bWuMzETqd8eq9+TV/n68DszCN08MbXGWu1V5Ao65AZzBKBY7SKeo?=
+ =?us-ascii?Q?r/c2gLpCOA95blztJhgLmrkoUs/igIhDwDSQxdAOlpqb5xkchSKuSYiav1l3?=
+ =?us-ascii?Q?1B2bwbAe34yb5cUKrfq2l0dSpWbEUfEBkAHIJmT8M/5BeGSslaJ6kSuSoAnT?=
+ =?us-ascii?Q?vpis0bTRGcd5KWVXcAmOLe/b3Gj038SQp+CXSwb/kYLEZzEySRidiYW0q5X9?=
+ =?us-ascii?Q?lIQng8B2enIm+YSg91urhEpO6qqG006ILMIU8pSmRRNG8EdYUpIHzuIPVhY0?=
+ =?us-ascii?Q?L93ZXWiZlAP62ZlCywPy+lfnKLTjRZE4NfOmvsJFnOLICyb+CXyOc7Yl8agr?=
+ =?us-ascii?Q?1d7Sr7Xp+HCnkkiRejvDih3TEHHFrm8o+Hbw2WPAUsMsrjQKl2h+Zgx5WDZm?=
+ =?us-ascii?Q?ULLyvsK7SYf0OUmZlACkuh8zAjoeoZvQYoqmn6heZZks9rM4aCj0hf+w5zLM?=
+ =?us-ascii?Q?Iefcj3LILw0uDlht0iD45Z+XuzWFSgaCsJmjpSy+b4D3oIIoqw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(376005)(36860700004)(82310400017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2024 08:53:15.6789
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85f3fad0-45b5-499d-53bd-08dc89f3eee1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000397B4.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7889
 
-Add the binding description and the corresponding driver for
-the MPS MP3326.
+Introduces an optimization to the AMD-Pstate driver by implementing
+a heterogeneous core topology for the initialization of the highest
+performance value while driver loading.
+There are two type cores designed including performance core and
+Efficiency Core.
+Each core type has different highest performance and frequency values
+configured by the platform.  The `amd_pstate` driver needs to identify
+the type of core to correctly set an appropriate highest perf value.
 
-Signed-off-by: Yuxi Wang <Yuxi.Wang@monolithicpower.com>
+X86_FEATURE_HETERO_CORE_TOPOLOGY is used to identify whether the
+processor support heterogeneous core type by reading CPUID leaf
+Fn_0x80000026_EAX and bit 30. if the bit is set as one, then amd_pstate
+driver will check EBX 30:28 bits to get the core type.
 
-Changes in V2:
-  - Fix patch format error
+PDF p274
 
-Yuxi Wang (2):
-  dt-bindings: leds: add mps mp3326 LED
-  leds: add mp3326 driver
+Link: https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/programmer-references/24593.pdf
+Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+---
+ arch/x86/include/asm/processor.h |  2 +
+ arch/x86/kernel/cpu/amd.c        | 19 +++++++++
+ drivers/cpufreq/amd-pstate.c     | 67 ++++++++++++++++++++++++--------
+ 3 files changed, 72 insertions(+), 16 deletions(-)
 
- .../devicetree/bindings/leds/mps,mp3326.yaml  | 146 ++++
- drivers/leds/Kconfig                          |   9 +
- drivers/leds/Makefile                         |   1 +
- drivers/leds/leds-mp3326.c                    | 697 ++++++++++++++++++
- 4 files changed, 853 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/mps,mp3326.yaml
- create mode 100644 drivers/leds/leds-mp3326.c
-
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index cb4f6c513c48..223aa58e2d5c 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -694,10 +694,12 @@ static inline u32 per_cpu_l2c_id(unsigned int cpu)
+ extern u32 amd_get_highest_perf(void);
+ extern void amd_clear_divider(void);
+ extern void amd_check_microcode(void);
++extern int amd_get_this_core_type(void);
+ #else
+ static inline u32 amd_get_highest_perf(void)		{ return 0; }
+ static inline void amd_clear_divider(void)		{ }
+ static inline void amd_check_microcode(void)		{ }
++static inline int amd_get_this_core_type(void)		{ return -1; }
+ #endif
+ 
+ extern unsigned long arch_align_stack(unsigned long sp);
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 44df3f11e731..62a4ef21ef79 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -1231,3 +1231,22 @@ void noinstr amd_clear_divider(void)
+ 		     :: "a" (0), "d" (0), "r" (1));
+ }
+ EXPORT_SYMBOL_GPL(amd_clear_divider);
++
++#define X86_CPU_TYPE_ID_SHIFT	28
++
++/**
++ * amd_get_this_core_type - Get the type of this heterogeneous CPU
++ *
++ * Returns the CPU type [31:28] (i.e., performance or efficient) of
++ * a CPU in the processor.
++ * If the processor has no core type support, returns -1.
++ */
++
++int amd_get_this_core_type(void)
++{
++	if (!cpu_feature_enabled(X86_FEATURE_HETERO_CORE_TOPOLOGY))
++		return -1;
++
++	return cpuid_ebx(0x80000026) >> X86_CPU_TYPE_ID_SHIFT;
++}
++EXPORT_SYMBOL_GPL(amd_get_this_core_type);
+diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+index cb59de71b6ee..fa486dfaa7e8 100644
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -51,8 +51,9 @@
+ 
+ #define AMD_PSTATE_TRANSITION_LATENCY	20000
+ #define AMD_PSTATE_TRANSITION_DELAY	1000
+-#define CPPC_HIGHEST_PERF_PERFORMANCE	196
+-#define CPPC_HIGHEST_PERF_DEFAULT	166
++#define CPPC_HIGHEST_PERF_EFFICIENT		132
++#define CPPC_HIGHEST_PERF_PERFORMANCE		196
++#define CPPC_HIGHEST_PERF_DEFAULT		166
+ 
+ #define AMD_CPPC_EPP_PERFORMANCE		0x00
+ #define AMD_CPPC_EPP_BALANCE_PERFORMANCE	0x80
+@@ -85,6 +86,14 @@ struct quirk_entry {
+ 	u32 lowest_freq;
+ };
+ 
++/* defined by CPUID_Fn80000026_EBX BIT [31:28] */
++enum amd_core_type {
++	CPU_CORE_TYPE_NO_HETERO_SUP = -1,
++	CPU_CORE_TYPE_PERFORMANCE = 0,
++	CPU_CORE_TYPE_EFFICIENCY = 1,
++	CPU_CORE_TYPE_UNDEFINED = 2,
++};
++
+ /*
+  * TODO: We need more time to fine tune processors with shared memory solution
+  * with community together.
+@@ -359,9 +368,27 @@ static inline int amd_pstate_enable(bool enable)
+ 	return static_call(amd_pstate_enable)(enable);
+ }
+ 
++static void get_this_core_type(void *data)
++{
++	int *cpu_type = data;
++
++	*cpu_type = amd_get_this_core_type();
++}
++
++static int amd_pstate_get_cpu_type(int cpu)
++{
++	int cpu_type = 0;
++
++	smp_call_function_single(cpu, get_this_core_type, &cpu_type, 1);
++
++	return cpu_type;
++}
++
+ static u32 amd_pstate_highest_perf_set(struct amd_cpudata *cpudata)
+ {
+ 	struct cpuinfo_x86 *c = &cpu_data(0);
++	u32 highest_perf;
++	int core_type;
+ 
+ 	/*
+ 	 * For AMD CPUs with Family ID 19H and Model ID range 0x70 to 0x7f,
+@@ -371,7 +398,26 @@ static u32 amd_pstate_highest_perf_set(struct amd_cpudata *cpudata)
+ 	if (c->x86 == 0x19 && (c->x86_model >= 0x70 && c->x86_model <= 0x7f))
+ 		return CPPC_HIGHEST_PERF_PERFORMANCE;
+ 
+-	return CPPC_HIGHEST_PERF_DEFAULT;
++	core_type = amd_pstate_get_cpu_type(cpudata->cpu);
++	pr_debug("core_type %d found\n", core_type);
++
++	switch (core_type) {
++	case CPU_CORE_TYPE_NO_HETERO_SUP:
++		highest_perf = CPPC_HIGHEST_PERF_DEFAULT;
++		break;
++	case CPU_CORE_TYPE_PERFORMANCE:
++		highest_perf = CPPC_HIGHEST_PERF_PERFORMANCE;
++		break;
++	case CPU_CORE_TYPE_EFFICIENCY:
++		highest_perf = CPPC_HIGHEST_PERF_EFFICIENT;
++		break;
++	default:
++		highest_perf = CPPC_HIGHEST_PERF_DEFAULT;
++		WARN_ONCE(true, "WARNING: Undefined core type found");
++		break;
++	}
++
++    return highest_perf;
+ }
+ 
+ static int pstate_init_perf(struct amd_cpudata *cpudata)
+@@ -384,15 +430,7 @@ static int pstate_init_perf(struct amd_cpudata *cpudata)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* For platforms that do not support the preferred core feature, the
+-	 * highest_pef may be configured with 166 or 255, to avoid max frequency
+-	 * calculated wrongly. we take the AMD_CPPC_HIGHEST_PERF(cap1) value as
+-	 * the default max perf.
+-	 */
+-	if (cpudata->hw_prefcore)
+-		highest_perf = amd_pstate_highest_perf_set(cpudata);
+-	else
+-		highest_perf = AMD_CPPC_HIGHEST_PERF(cap1);
++	highest_perf = amd_pstate_highest_perf_set(cpudata);
+ 
+ 	WRITE_ONCE(cpudata->highest_perf, highest_perf);
+ 	WRITE_ONCE(cpudata->max_limit_perf, highest_perf);
+@@ -413,10 +451,7 @@ static int cppc_init_perf(struct amd_cpudata *cpudata)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (cpudata->hw_prefcore)
+-		highest_perf = amd_pstate_highest_perf_set(cpudata);
+-	else
+-		highest_perf = cppc_perf.highest_perf;
++	highest_perf = amd_pstate_highest_perf_set(cpudata);
+ 
+ 	WRITE_ONCE(cpudata->highest_perf, highest_perf);
+ 	WRITE_ONCE(cpudata->max_limit_perf, highest_perf);
 -- 
-2.39.2
+2.34.1
 
