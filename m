@@ -1,158 +1,288 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7079A17C7D1;
-	Tue, 11 Jun 2024 13:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from zg8tmtyylji0my4xnjeumjiw.icoremail.net (zg8tmtyylji0my4xnjeumjiw.icoremail.net [162.243.161.220])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAFCD17C7D7;
+	Tue, 11 Jun 2024 13:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.161.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718111920; cv=none; b=EzabcWE55R3hlMuHYTJuFXOVPPeLDXkypY2t1Ec0hRBW4OufJN1nBHFl83DyGZ0uCboXi553SRjxQ6luXFQ/sU7DED/NNhQ+kVta3Kd3fR6eg1GCSxMVpOY7hja8Dvvb9Q0qU1uxFWiK8HHyCw2Ysro8GrdRjb7rTtfmZDt7tlk=
+	t=1718111929; cv=none; b=s7gmckgyhOrLeyOXNp9RfNVoen7y9lXk+GeXhf6IjOaG83zS00xhpogG9reY8A2/a63m+boy5Y9IcccDNQyALRXs4TYsD1Dcc3jvSCir8g+wI/0Yb0H0nb5cz9yRjUHFzPHahb/R17N+hqBJeye7ci8Gisd6qF4a+MTrWdCuSU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718111920; c=relaxed/simple;
-	bh=//O8QtIkUmKxIBuNk5IVof7YvtkWoHd/YCdJUEecUUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UcAz/KqElvtWpiM1jvUosFmEKpn07w/OtXsUN5JK87wCTNN7wAXHqPRkcKCrNMeYtHRWsnxKfqMirQ4V8WZNHhSajn3dUJn0EPfmv50qJ22+jJQjlneqL8QehHN5/go4xHTtD79oX2qV2xk2JZW7O1ckrDXVt4KGJEzpLS+PXRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aYNQKFFc; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aYNQKFFc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718111918; x=1749647918;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=//O8QtIkUmKxIBuNk5IVof7YvtkWoHd/YCdJUEecUUE=;
-  b=aYNQKFFc61/ZqD8tG8zPkKyW3TOA9H8k+A2eJotBHfklsJ+jq8eb8yGZ
-   MToaJ/sd4lRudp+3igYAeAdSCaPvmu5CmbMzykQCT5NtVUt1Stz0TXL4O
-   2+GTkuaEDSqRR1MiHiDXr/aNz16swI7Hi0FfzPbYUmebRefspLA6RhDdM
-   Ca2lNPkqnvrSlM9+RDfSqJrkO5/MBzsBNfqTCxcYU22Uo0sWS7WoeNDIZ
-   dXJxQY+g28C2KONVrhIvrypF5daujHpSaVoyHOTgT3o4K34NjN8OAP6xy
-   OUbEP87BLo7VkemKFwoPB54fp67+KhmCxZ5BajEWerv5S4mrsjg1tuLJU
-   g==;
-X-CSE-ConnectionGUID: K0io0sKCSP29HLcz8FmZBg==
-X-CSE-MsgGUID: HBP8WYTBSm6BEO+OSLYFiQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="40221754"
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="40221754"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 06:18:38 -0700
-X-CSE-ConnectionGUID: vfwcBQrYSvuAytjbhXuaFw==
-X-CSE-MsgGUID: ys0y+A/sTz2N0gygGMg9FQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="39896510"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.124.224.116]) ([10.124.224.116])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 06:18:35 -0700
-Message-ID: <aefee0c0-6931-4677-932e-e61db73b63a2@linux.intel.com>
-Date: Tue, 11 Jun 2024 21:18:32 +0800
+	s=arc-20240116; t=1718111929; c=relaxed/simple;
+	bh=ES7wp3TjBJU7oN34llmd1uzWuSryLZ3GbtLiVIHQF74=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LxZpBhgxMoE2PjnOFqFu2BQwlPsRu9Sy6iPyQi69oOiZhzn6xCdl/Rlzafe0ertnuNPqjp181s9cXM8Gg3TbcY+tT6XZImKSr0JGvy7UAhIqsM8RQs5GXd2dt6dO5gfBK+ZnQvjK3wKn8IaQOKFPJje3Vs4YaWbNYXDWDG6ivaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=162.243.161.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
+Received: from hust.edu.cn (unknown [172.16.0.52])
+	by app1 (Coremail) with SMTP id HgEQrAC3maprTmhmLNmyBw--.38643S2;
+	Tue, 11 Jun 2024 21:17:31 +0800 (CST)
+Received: from pride-poweredge-r740.. (unknown [222.20.126.129])
+	by gateway (Coremail) with SMTP id _____wAX08VnTmhmHdkDAQ--.1929S2;
+	Tue, 11 Jun 2024 21:17:28 +0800 (CST)
+From: Dongliang Mu <dzm91@hust.edu.cn>
+To: Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: hust-os-kernel-patches@googlegroups.com,
+	linux-doc@vger.kernel.org,
+	Dongliang Mu <dzm91@hust.edu.cn>,
+	Cheng Ziqiu <chengziqiu@hust.edu.cn>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] scripts: add scripts/checktransupdate.py
+Date: Tue, 11 Jun 2024 21:17:16 +0800
+Message-Id: <20240611131723.53515-1-dzm91@hust.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 116/130] KVM: TDX: Silently discard SMI request
-To: Sean Christopherson <seanjc@google.com>, isaku.yamahata@intel.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sagi Shahar <sagis@google.com>,
- Kai Huang <kai.huang@intel.com>, chen.bo@intel.com, hang.yuan@intel.com,
- tina.zhang@intel.com
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <9c4547ea234a2ba09ebe05219f180f08ac6fc2e3.1708933498.git.isaku.yamahata@intel.com>
- <ZiJ3Krs_HoqdfyWN@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <ZiJ3Krs_HoqdfyWN@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:HgEQrAC3maprTmhmLNmyBw--.38643S2
+Authentication-Results: app1; spf=neutral smtp.mail=dzm91@hust.edu.cn;
+X-Coremail-Antispam: 1UD129KBjvJXoWxtFW8CF4kZFyfAFW5Cr47CFg_yoWxZr1xpa
+	45G3WIyr4rAFW7Jr4fJw4UuFy3ArnrJFWjqryIgr93Ar17K34F9FWSk34SvrZrWF1rX34a
+	ga4Fyr1jkF17uaDanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQab7Iv0xC_Zr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
+	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_JF
+	0_Jw1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
+	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r
+	4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx0Ec7CjxVAajcxG14v26r4UJVWxJr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMx
+	AIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFW3Jr1UJwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
+	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jDkucUUUUU=
+X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
 
+The checktransupdate.py script helps track the translation status of
+the documentation in different locales, e.g., zh_CN and verify if
+these documenation is up-to-date. More specially, it uses `git log`
+commit to find the latest english commit from the translation commit
+(order by author date) and the latest english commits from HEAD. If
+differences occur, report the file and commits that need to be updated.
 
+Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+Signed-off-by: Cheng Ziqiu <chengziqiu@hust.edu.cn>
+---
+v1->v2: revise the output format of git commits
+        add some description and usage of this script
+ scripts/checktransupdate.py | 203 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 203 insertions(+)
+ create mode 100755 scripts/checktransupdate.py
 
-On 4/19/2024 9:52 PM, Sean Christopherson wrote:
-> On Mon, Feb 26, 2024, isaku.yamahata@intel.com wrote:
->> From: Isaku Yamahata <isaku.yamahata@intel.com>
->>
->> TDX doesn't support system-management mode (SMM) and system-management
->> interrupt (SMI) in guest TDs.  Because guest state (vcpu state, memory
->> state) is protected, it must go through the TDX module APIs to change guest
->> state, injecting SMI and changing vcpu mode into SMM.  The TDX module
->> doesn't provide a way for VMM to inject SMI into guest TD and a way for VMM
->> to switch guest vcpu mode into SMM.
->>
->> We have two options in KVM when handling SMM or SMI in the guest TD or the
->> device model (e.g. QEMU): 1) silently ignore the request or 2) return a
->> meaningful error.
->>
->> For simplicity, we implemented the option 1).
->>
->> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
->> ---
->>   arch/x86/kvm/smm.h         |  7 +++++-
->>   arch/x86/kvm/vmx/main.c    | 45 ++++++++++++++++++++++++++++++++++----
->>   arch/x86/kvm/vmx/tdx.c     | 29 ++++++++++++++++++++++++
->>   arch/x86/kvm/vmx/x86_ops.h | 12 ++++++++++
->>   4 files changed, 88 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/x86/kvm/smm.h b/arch/x86/kvm/smm.h
->> index a1cf2ac5bd78..bc77902f5c18 100644
->> --- a/arch/x86/kvm/smm.h
->> +++ b/arch/x86/kvm/smm.h
->> @@ -142,7 +142,12 @@ union kvm_smram {
->>   
->>   static inline int kvm_inject_smi(struct kvm_vcpu *vcpu)
->>   {
->> -	kvm_make_request(KVM_REQ_SMI, vcpu);
->> +	/*
->> +	 * If SMM isn't supported (e.g. TDX), silently discard SMI request.
->> +	 * Assume that SMM supported = MSR_IA32_SMBASE supported.
->> +	 */
->> +	if (static_call(kvm_x86_has_emulated_msr)(vcpu->kvm, MSR_IA32_SMBASE))
->> +		kvm_make_request(KVM_REQ_SMI, vcpu);
->>   	return 0;
-> No, just do what KVM already does for CONFIG_KVM_SMM=n, and return -ENOTTY.  The
-> *entire* point of have a return code is to handle setups that don't support SMM.
->
-> 	if (!static_call(kvm_x86_has_emulated_msr)(vcpu->kvm, MSR_IA32_SMBASE)))
-> 		return -ENOTTY;
->
-> And with that, I would drop the comment, it's pretty darn clear what "assumption"
-> is being made.  In quotes because it's not an assumption, it's literally KVM's
-> implementation.
->
-> And then the changelog can say "do what KVM does for CONFIG_KVM_SMM=n" without
-> having to explain why we decided to do something completely arbitrary for TDX.
->
->>   }
->>   
->> diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
->> index ed46e7e57c18..4f3b872cd401 100644
->> --- a/arch/x86/kvm/vmx/main.c
->> +++ b/arch/x86/kvm/vmx/main.c
->> @@ -283,6 +283,43 @@ static void vt_msr_filter_changed(struct kvm_vcpu *vcpu)
->>   	vmx_msr_filter_changed(vcpu);
->>   }
->>   
->> +#ifdef CONFIG_KVM_SMM
->> +static int vt_smi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
->> +{
->> +	if (is_td_vcpu(vcpu))
->> +		return tdx_smi_allowed(vcpu, for_injection);
-> Adding stubs for something that TDX will never support is silly.  Bug the VM and
-> return an error.
->
-> 	if (KVM_BUG_ON(is_td_vcpu(vcpu)))
-> 		return -EIO;
-
-is_td_vcpu() is defined in tdx.h.
-Do you mind using open code to check whether the VM is TD in vmx.c?
-"vcpu->kvm->arch.vm_type == KVM_X86_TDX_VM"
-
-
-
->
-> And I wouldn't even bother with vt_* wrappers, just put that right in vmx_*().
-> Same thing for everything below.
->
+diff --git a/scripts/checktransupdate.py b/scripts/checktransupdate.py
+new file mode 100755
+index 000000000000..5a0fc99e3f93
+--- /dev/null
++++ b/scripts/checktransupdate.py
+@@ -0,0 +1,203 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
++
++"""
++This script helps track the translation status of the documentation
++in different locales, e.g., zh_CN. More specially, it uses `git log`
++commit to find the latest english commit from the translation commit
++(order by author date) and the latest english commits from HEAD. If
++differences occur, report the file and commits that need to be updated.
++
++The usage is as follows:
++- ./scripts/checktransupdate.py -l zh_CN
++This will print all the files that need to be updated in the zh_CN locale.
++- ./scripts/checktransupdate.py Documentation/translations/zh_CN/dev-tools/testing-overview.rst
++This will only print the status of the specified file.
++
++The output is something like:
++Documentation/translations/zh_CN/dev-tools/testing-overview.rst (1 commits)
++commit 42fb9cfd5b18 ("Documentation: dev-tools: Add link to RV docs")
++"""
++
++import os
++from argparse import ArgumentParser, BooleanOptionalAction
++from datetime import datetime
++
++flag_p_c = False
++flag_p_uf = False
++flag_debug = False
++
++
++def dprint(*args, **kwargs):
++    if flag_debug:
++        print("[DEBUG] ", end="")
++        print(*args, **kwargs)
++
++
++def get_origin_path(file_path):
++    paths = file_path.split("/")
++    tidx = paths.index("translations")
++    opaths = paths[:tidx]
++    opaths += paths[tidx + 2 :]
++    return "/".join(opaths)
++
++
++def get_latest_commit_from(file_path, commit):
++    command = "git log --pretty=format:%H%n%aD%n%cD%n%n%B {} -1 -- {}".format(
++        commit, file_path
++    )
++    dprint(command)
++    pipe = os.popen(command)
++    result = pipe.read()
++    result = result.split("\n")
++    if len(result) <= 1:
++        return None
++
++    dprint("Result: {}".format(result[0]))
++
++    return {
++        "hash": result[0],
++        "author_date": datetime.strptime(result[1], "%a, %d %b %Y %H:%M:%S %z"),
++        "commit_date": datetime.strptime(result[2], "%a, %d %b %Y %H:%M:%S %z"),
++        "message": result[4:],
++    }
++
++
++def get_origin_from_trans(origin_path, t_from_head):
++    o_from_t = get_latest_commit_from(origin_path, t_from_head["hash"])
++    while o_from_t is not None and o_from_t["author_date"] > t_from_head["author_date"]:
++        o_from_t = get_latest_commit_from(origin_path, o_from_t["hash"] + "^")
++    if o_from_t is not None:
++        dprint("tracked origin commit id: {}".format(o_from_t["hash"]))
++    return o_from_t
++
++
++def get_commits_count_between(opath, commit1, commit2):
++    command = "git log --pretty=format:%H {}...{} -- {}".format(commit1, commit2, opath)
++    dprint(command)
++    pipe = os.popen(command)
++    result = pipe.read().split("\n")
++    # filter out empty lines
++    result = list(filter(lambda x: x != "", result))
++    return result
++
++
++def pretty_output(commit):
++    command = "git log --pretty='format:%h (\"%s\")' -1 {}".format(commit)
++    dprint(command)
++    pipe = os.popen(command)
++    return pipe.read()
++
++
++def check_per_file(file_path):
++    opath = get_origin_path(file_path)
++
++    if not os.path.isfile(opath):
++        dprint("Error: Cannot find the origin path for {}".format(file_path))
++        return
++
++    o_from_head = get_latest_commit_from(opath, "HEAD")
++    t_from_head = get_latest_commit_from(file_path, "HEAD")
++
++    if o_from_head is None or t_from_head is None:
++        print("Error: Cannot find the latest commit for {}".format(file_path))
++        return
++
++    o_from_t = get_origin_from_trans(opath, t_from_head)
++
++    if o_from_t is None:
++        print("Error: Cannot find the latest origin commit for {}".format(file_path))
++        return
++
++    if o_from_head["hash"] == o_from_t["hash"]:
++        if flag_p_uf:
++            print("No update needed for {}".format(file_path))
++        return
++    else:
++        print("{}".format(file_path), end="\t")
++        commits = get_commits_count_between(
++            opath, o_from_t["hash"], o_from_head["hash"]
++        )
++        print("({} commits)".format(len(commits)))
++        if flag_p_c:
++            for commit in commits:
++                msg = pretty_output(commit)
++                if "Merge tag" not in msg:
++                    print("commit", msg)
++
++
++def main():
++    script_path = os.path.dirname(os.path.abspath(__file__))
++    linux_path = os.path.join(script_path, "..")
++
++    parser = ArgumentParser(description="Check the translation update")
++    parser.add_argument(
++        "-l",
++        "--locale",
++        help="Locale to check when files are not specified",
++    )
++    parser.add_argument(
++        "--print-commits",
++        action=BooleanOptionalAction,
++        default=True,
++        help="Print commits between the origin and the translation",
++    )
++
++    parser.add_argument(
++        "--print-updated-files",
++        action=BooleanOptionalAction,
++        default=False,
++        help="Print files that do no need to be updated",
++    )
++
++    parser.add_argument(
++        "--debug",
++        action=BooleanOptionalAction,
++        help="Print debug information",
++        default=False,
++    )
++
++    parser.add_argument(
++        "files", nargs="*", help="Files to check, if not specified, check all files"
++    )
++    args = parser.parse_args()
++
++    global flag_p_c, flag_p_uf, flag_debug
++    flag_p_c = args.print_commits
++    flag_p_uf = args.print_updated_files
++    flag_debug = args.debug
++
++    # get files related to linux path
++    files = args.files
++    if len(files) == 0:
++        if args.locale is not None:
++            files = (
++                os.popen(
++                    "find {}/Documentation/translations/{} -type f".format(
++                        linux_path, args.locale
++                    )
++                )
++                .read()
++                .split("\n")
++            )
++        else:
++            files = (
++                os.popen(
++                    "find {}/Documentation/translations -type f".format(linux_path)
++                )
++                .read()
++                .split("\n")
++            )
++
++    files = list(filter(lambda x: x != "", files))
++    files = list(map(lambda x: os.path.relpath(os.path.abspath(x), linux_path), files))
++
++    # cd to linux root directory
++    os.chdir(linux_path)
++
++    for file in files:
++        check_per_file(file)
++
++
++if __name__ == "__main__":
++    main()
+-- 
+2.39.2
 
