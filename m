@@ -1,155 +1,239 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44361176ABA;
-	Tue, 11 Jun 2024 14:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5431D52C;
+	Tue, 11 Jun 2024 14:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718114444; cv=none; b=ghcsUAI0Ki/tTzQPvyUTQkRe9WSMeKfMDHUmlBhkYeyivhSQQnpr9dpWa8PSd/gtK49esLrbIBio3BFRC/RtgNW4IMyv0cDJsrbe6ANxS7qqMm+8YWBRyoW3qUpLyksbirBz3aS01CNzG3WdMYfpV0S+w0kMRSPsiDSez4UQcPM=
+	t=1718114502; cv=none; b=eQBRPtBwyzkGtaerpippdZ51EeL3mmr1glJgvuuS7ghZ2r4aeoK2noIp+eeiTcSiYl4esLDDWmhGiy0AxyiOHX8VnnNP//QZWv1t+vu8ETmytKblAWEl8t6Mp57PiBVW5J6mpFe0Z0JqQYCNhaDkOjguPrs6XsYGhf8OlAbMBPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718114444; c=relaxed/simple;
-	bh=Nn4o4q+BV9qqo5+3JXOfWLj3V0S/VMi7dVbqAdD7kd0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TkINHqSrjKcX/XxBH02DwpBy0BzZE053MuDdHg/3x2dIIKE53psgNUaokCoE37nyJ95/Tdsu7MlHFyY3/0+pxZhXU/fuu9i0bsvkS5mGJVOG0MP1n6y7LCXgo8sJ4TrORQGVOXpJ9xlnEcqVd4u2W3+sY+75Z9Q4DV0CzTDF1o4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=H1evq0Dq; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718114502; c=relaxed/simple;
+	bh=ZfXqe5DRStLJbbL+hA9tbL6IekOLbb51eB0k+L/00qA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lXlnNo36hTmDQBowoTJFrgzb+KBL8a640HtDROjfAQdtyqngKK0bMdvAoE8krrzsCRSLk5oVs2ugF4CDPdzDPhIzo1KlPdJOmsmhTtbSrln/Da7T8lyZ7q1FHdWFaHVAAzj4uucBPHqEDtdXRWHSS3vAB02QIwEDUQFbp+I14o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e86UUdKn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H1evq0Dq"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45BE0aVY077223;
-	Tue, 11 Jun 2024 09:00:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718114436;
-	bh=UksPvX2iT5jFoUevaSSujIFfKusReYrJlUO5ZImZzJE=;
-	h=From:To:CC:Subject:Date;
-	b=H1evq0Dq7+r1lVU+TBUsSZjRTmrtz/7ql5n8LTuhfc1+wJg2fvZ/qHiyYHjfVZtIt
-	 sMrC2Kfz2395Weq+epIIQtiGNT5L2i448dffVg8VghhWO4thcybUMoPCrGtlQ5eAOm
-	 CL28OAs1Y8bgTaxRSp7vIth/7Gviqp18CTyE2QYU=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45BE0aIl055885
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 11 Jun 2024 09:00:36 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 11
- Jun 2024 09:00:35 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 11 Jun 2024 09:00:35 -0500
-Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45BE0Zc9102178;
-	Tue, 11 Jun 2024 09:00:35 -0500
-From: Andrew Davis <afd@ti.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH] dt-bindings: gpio: lsi,zevio-gpio: convert to YAML
-Date: Tue, 11 Jun 2024 09:00:34 -0500
-Message-ID: <20240611140034.24685-1-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e86UUdKn"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B5B6Ki017540;
+	Tue, 11 Jun 2024 14:01:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	UI4ZVeDijMil2oU15QweqG+lgenlo/lXYwe5MUgORM0=; b=e86UUdKnR4WPbUoi
+	n4hd07s5rfYxLjZxPXtVfxNRzvH8z8yfzoACLZChSK7HxKQAMgGw0wN51yPftVhK
+	u1IETzTCY0P4quuc0gIroZxVaio69TGa02B0wzykkbWMmArfrFuIzAnEaMcQt6PM
+	i2Dyn4tqb9WIXIGGrMqq8DQv94VC8knVeBmw/F7vGeNNmLx3N9CwYZyaSotXTB0X
+	qV3Udz30drnhIOeXph0Dbe+eYvF3+MBn3p9eRfcwZpCHMY8+TxKSYJijokLYuaxp
+	mjlJNRyS/GuVlVglm9en+qtUgpXmXiglB8e0wPMzewQ7QqjAwo3HaxC+6K9RL0n9
+	mw2Skw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymg2epk82-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Jun 2024 14:01:26 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45BE1OYr000587
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Jun 2024 14:01:24 GMT
+Received: from [10.48.243.20] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
+ 2024 07:01:24 -0700
+Message-ID: <abef8935-3da2-4736-9ebc-1b5ad1c7e2a2@quicinc.com>
+Date: Tue, 11 Jun 2024 07:01:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mmc: add missing MODULE_DESCRIPTION() macros
+Content-Language: en-US
+To: Dragan Simic <dsimic@manjaro.org>
+CC: Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang
+	<wsa+renesas@sang-engineering.com>,
+        <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+References: <20240610-md-drivers-mmc-v1-1-c2a2593e4121@quicinc.com>
+ <8f2e755bd711b566274119762b19505d@manjaro.org>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <8f2e755bd711b566274119762b19505d@manjaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 34JGQQK3mHppKrcAt8ATbXVOj5XiFZAm
+X-Proofpoint-GUID: 34JGQQK3mHppKrcAt8ATbXVOj5XiFZAm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-11_07,2024-06-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 malwarescore=0 priorityscore=1501
+ clxscore=1011 adultscore=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406110101
 
-Convert Zevio GPIO controller bindings to DT schema.
+On 6/11/2024 12:29 AM, Dragan Simic wrote:
+> Hello Jeff,
+> 
+> Thanks for the patch.  Please see a few comments below.
+> 
+> On 2024-06-10 16:17, Jeff Johnson wrote:
+>> make allmodconfig && make W=1 C=1 reports:
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in 
+>> drivers/mmc/host/of_mmc_spi.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in
+>> drivers/mmc/host/tmio_mmc_core.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in
+>> drivers/mmc/host/renesas_sdhi_core.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in 
+>> drivers/mmc/core/mmc_core.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in
+>> drivers/mmc/core/pwrseq_simple.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in
+>> drivers/mmc/core/pwrseq_sd8787.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in 
+>> drivers/mmc/core/pwrseq_emmc.o
+>> WARNING: modpost: missing MODULE_DESCRIPTION() in 
+>> drivers/mmc/core/sdio_uart.o
+>>
+>> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+>>
+>> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+>> ---
+>> Corrections to these descriptions are welcomed. I'm not an expert in
+>> this code so in most cases I've taken these descriptions directly from
+>> code comments, Kconfig descriptions, or git logs.  History has shown
+>> that in some cases these are originally wrong due to cut-n-paste
+>> errors, and in other cases the drivers have evolved such that the
+>> original information is no longer accurate.
+>> ---
+>>  drivers/mmc/core/core.c              | 1 +
+>>  drivers/mmc/core/pwrseq_emmc.c       | 1 +
+>>  drivers/mmc/core/pwrseq_sd8787.c     | 1 +
+>>  drivers/mmc/core/pwrseq_simple.c     | 1 +
+>>  drivers/mmc/core/sdio_uart.c         | 1 +
+>>  drivers/mmc/host/of_mmc_spi.c        | 1 +
+>>  drivers/mmc/host/renesas_sdhi_core.c | 1 +
+>>  drivers/mmc/host/tmio_mmc_core.c     | 1 +
+>>  8 files changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+>> index a8c17b4cd737..d6c819dd68ed 100644
+>> --- a/drivers/mmc/core/core.c
+>> +++ b/drivers/mmc/core/core.c
+>> @@ -2362,4 +2362,5 @@ static void __exit mmc_exit(void)
+>>  subsys_initcall(mmc_init);
+>>  module_exit(mmc_exit);
+>>
+>> +MODULE_DESCRIPTION("MMC core driver");
+>>  MODULE_LICENSE("GPL");
+>> diff --git a/drivers/mmc/core/pwrseq_emmc.c 
+>> b/drivers/mmc/core/pwrseq_emmc.c
+>> index 3b6d69cefb4e..fff30330574f 100644
+>> --- a/drivers/mmc/core/pwrseq_emmc.c
+>> +++ b/drivers/mmc/core/pwrseq_emmc.c
+>> @@ -115,4 +115,5 @@ static struct platform_driver 
+>> mmc_pwrseq_emmc_driver = {
+>>  };
+>>
+>>  module_platform_driver(mmc_pwrseq_emmc_driver);
+>> +MODULE_DESCRIPTION("HW reset support for eMMC");
+> 
+> "Hardware reset support for eMMC" would read a bit better.
+> 
+>>  MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/mmc/core/pwrseq_sd8787.c 
+>> b/drivers/mmc/core/pwrseq_sd8787.c
+>> index 0c5808fc3206..f24bbd68e251 100644
+>> --- a/drivers/mmc/core/pwrseq_sd8787.c
+>> +++ b/drivers/mmc/core/pwrseq_sd8787.c
+>> @@ -130,4 +130,5 @@ static struct platform_driver 
+>> mmc_pwrseq_sd8787_driver = {
+>>  };
+>>
+>>  module_platform_driver(mmc_pwrseq_sd8787_driver);
+>> +MODULE_DESCRIPTION("Power sequence support for Marvell SD8787 BT + 
+>> Wifi chip");
+>>  MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/mmc/core/pwrseq_simple.c 
+>> b/drivers/mmc/core/pwrseq_simple.c
+>> index df9588503ad0..97f6d69d9c80 100644
+>> --- a/drivers/mmc/core/pwrseq_simple.c
+>> +++ b/drivers/mmc/core/pwrseq_simple.c
+>> @@ -159,4 +159,5 @@ static struct platform_driver 
+>> mmc_pwrseq_simple_driver = {
+>>  };
+>>
+>>  module_platform_driver(mmc_pwrseq_simple_driver);
+>> +MODULE_DESCRIPTION("Simple HW reset support for MMC");
+> 
+> "Simple power sequence management for MMC" would be more accurate.
+> 
+>>  MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/mmc/core/sdio_uart.c 
+>> b/drivers/mmc/core/sdio_uart.c
+>> index 575ebbce378e..6b7471dba3bf 100644
+>> --- a/drivers/mmc/core/sdio_uart.c
+>> +++ b/drivers/mmc/core/sdio_uart.c
+>> @@ -1162,4 +1162,5 @@ module_init(sdio_uart_init);
+>>  module_exit(sdio_uart_exit);
+>>
+>>  MODULE_AUTHOR("Nicolas Pitre");
+>> +MODULE_DESCRIPTION("SDIO UART/GPS driver");
+>>  MODULE_LICENSE("GPL");
+>> diff --git a/drivers/mmc/host/of_mmc_spi.c 
+>> b/drivers/mmc/host/of_mmc_spi.c
+>> index bf54776fb26c..05939f30a5ae 100644
+>> --- a/drivers/mmc/host/of_mmc_spi.c
+>> +++ b/drivers/mmc/host/of_mmc_spi.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/mmc/core.h>
+>>  #include <linux/mmc/host.h>
+>>
+>> +MODULE_DESCRIPTION("OpenFirmware bindings for the MMC-over-SPI 
+>> driver");
+>>  MODULE_LICENSE("GPL");
+>>
+>>  struct of_mmc_spi {
+>> diff --git a/drivers/mmc/host/renesas_sdhi_core.c
+>> b/drivers/mmc/host/renesas_sdhi_core.c
+>> index 12f4faaaf4ee..d62a4ed86775 100644
+>> --- a/drivers/mmc/host/renesas_sdhi_core.c
+>> +++ b/drivers/mmc/host/renesas_sdhi_core.c
+>> @@ -1162,4 +1162,5 @@ void renesas_sdhi_remove(struct platform_device 
+>> *pdev)
+>>  }
+>>  EXPORT_SYMBOL_GPL(renesas_sdhi_remove);
+>>
+>> +MODULE_DESCRIPTION("Renesas SDHI driver");
+> 
+> "Renesas SDHI core driver" would be a bit more accurate.
+> 
+>>  MODULE_LICENSE("GPL v2");
+>> diff --git a/drivers/mmc/host/tmio_mmc_core.c 
+>> b/drivers/mmc/host/tmio_mmc_core.c
+>> index 93e912afd3ae..c1a4ade5f949 100644
+>> --- a/drivers/mmc/host/tmio_mmc_core.c
+>> +++ b/drivers/mmc/host/tmio_mmc_core.c
+>> @@ -1319,4 +1319,5 @@ int tmio_mmc_host_runtime_resume(struct device 
+>> *dev)
+>>  EXPORT_SYMBOL_GPL(tmio_mmc_host_runtime_resume);
+>>  #endif
+>>
+>> +MODULE_DESCRIPTION("TMIO MMC core driver");
+>>  MODULE_LICENSE("GPL v2");
+>>
+>> ---
+>> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+>> change-id: 20240610-md-drivers-mmc-cb5f273b5b33
 
-Changes during conversion:
- - Add used but undocumented interrupts property
+Thank you for your clarifications. I'll incorporate them in the next version.
 
-Signed-off-by: Andrew Davis <afd@ti.com>
----
- .../devicetree/bindings/gpio/gpio-zevio.txt   | 16 -------
- .../bindings/gpio/lsi,zevio-gpio.yaml         | 46 +++++++++++++++++++
- 2 files changed, 46 insertions(+), 16 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-zevio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/lsi,zevio-gpio.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-zevio.txt b/Documentation/devicetree/bindings/gpio/gpio-zevio.txt
-deleted file mode 100644
-index a37bd9ae27307..0000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-zevio.txt
-+++ /dev/null
-@@ -1,16 +0,0 @@
--Zevio GPIO controller
--
--Required properties:
--- compatible: Should be "lsi,zevio-gpio"
--- reg: Address and length of the register set for the device
--- #gpio-cells: Should be two. The first cell is the pin number and the
--  second cell is used to specify optional parameters (currently unused).
--- gpio-controller: Marks the device node as a GPIO controller.
--
--Example:
--	gpio: gpio@90000000 {
--		compatible = "lsi,zevio-gpio";
--		reg = <0x90000000 0x1000>;
--		gpio-controller;
--		#gpio-cells = <2>;
--	};
-diff --git a/Documentation/devicetree/bindings/gpio/lsi,zevio-gpio.yaml b/Documentation/devicetree/bindings/gpio/lsi,zevio-gpio.yaml
-new file mode 100644
-index 0000000000000..542b5f9a495d9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/lsi,zevio-gpio.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/lsi,zevio-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Zevio GPIO controller
-+
-+maintainers:
-+  - Andrew Davis <afd@ti.com>
-+
-+properties:
-+  compatible:
-+    const: lsi,zevio-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    description: The first cell is the pin number and the second cell is used
-+      to specify optional parameters (currently unused).
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio: gpio@90000000 {
-+        compatible = "lsi,zevio-gpio";
-+        reg = <0x90000000 0x1000>;
-+        interrupts = <7>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+    };
--- 
-2.39.2
-
+/jeff
