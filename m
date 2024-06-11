@@ -1,302 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C9A15383D;
-	Tue, 11 Jun 2024 21:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0606150991
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 21:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718143065; cv=none; b=pxrWnQMcHsWVxSj+d0rUODV8EzP/51lYYJtVeDSoAtJ3yeD1a09h+aqIow1YDSgFYEiiswu0s85DVBEBIqDhwhkvQ636/bQ3Ih2aUY5M2Tuv94UgXFDKyWQYfY6kJdBETJ6TAf5NUAtT98LAydRshxePXODVgd9djXOSF8sL1TU=
+	t=1718143090; cv=none; b=iazXfeviU6mkqyvIFDZCxyZndSmM1c43iGmtgqIsJKW2dOyoviOeVp9h+GubkVHbrH5R/kfR/yIq5hnwG/8Wljm0iTZFlFyHxpdgvD6QvdOfzYCUBzhXtl+vkuMjUpywqzX1cyegmMfZdAG8/Rwvtd3b5Q0vTWYBRbYCO0x15Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718143065; c=relaxed/simple;
-	bh=QbebTA/mPlAlWAfAArNwWxAgzrx+BQhUoQiQg16EKEQ=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=MQPSqjK3SYNzRscZ8obOiloCQff4AdJKfuyk8vtlunj0nn8khWhGr8pqoKRXE2WlG2vGSM2u8kfOOJ3d99TrvQXNz4v+GvhDbxVc/YYfO9cGrlGvhROsqAi/mrK3ypWaXyhXXmXXbf4ddwzxOqHXU6s8WeD6Z8rpoTigEEbySUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD1C3C2BD10;
-	Tue, 11 Jun 2024 21:57:44 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sH9VB-00000001VSw-1jX9;
-	Tue, 11 Jun 2024 17:58:01 -0400
-Message-ID: <20240611215610.548854415@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 17:56:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lstoakes@gmail.com>,
- linux-mm@kvack.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- linux-hardening@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- wklin@google.com,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>,
- Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH v4 0/2] mm/memblock: Add "reserve_mem" to reserved named  memory at boot up
+	s=arc-20240116; t=1718143090; c=relaxed/simple;
+	bh=IkcUZXxfZfGtEuqDFEfXjk5PL0kaTZTimAtsOntwH0c=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=LZ39EKW9t4pU2Qh2uTXsz3Qll3A/TFnDSzeQuvTHpXgGOdSiFXnN8v0bOknDG6zOWjn96pc2zP3RQhTihFy1tsGN7BHduru6pQx8sU3WFHSWSD/YHW5A/DlzWm1mVzUphl0waXY0pSysBqZjJveetyGia3i1kWzoN982wWA1fNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X2e+Rm1Z; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X2e+Rm1Z"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6e231ed9e5aso3911431a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 14:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718143088; x=1718747888; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cgBsV7Qs18R7dQFA6CLfjwo4Hn5qZ69LouFSR8EeMz8=;
+        b=X2e+Rm1Z4AYIyOONo0fQObTg78gRczxK5LKf2oFsZuuY1iqW9OCdCWIvw94ZwzzK40
+         VYbCDMZ4BLXnb11C5/QPSaWqCtlUwRoUqirEqeOg22biTLW33l60ikeXclRAB1MVivEg
+         43URBiIb9mdYD71PHDRTyU/nGFxqYqAGALCE+2SCQXd2+lJFQ1tJtWXRevC8gMB7LHQX
+         3rOYFsgQaJFdfWwpUFsoJZCHEXUYC8Qc0wWNkNykGmXZaweDOwDVrG1Ck6e3WPBehJtk
+         xOtMjujU+Ifpc60uK7UJ6uX1F0kaUFBgsXpT68bOkAoZ+ui+76PgrP4+uFHS6kzXpp7X
+         9kGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718143088; x=1718747888;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cgBsV7Qs18R7dQFA6CLfjwo4Hn5qZ69LouFSR8EeMz8=;
+        b=H47Ivxu2+Nf5WJjlq0JQXEx8mcZuAilqKePR+CEWve9abo8tAZHJ1RBA7UJ1GvbhBF
+         zXQKHQpF5kr2Ume9gE6kRx+3rwkFhdtVgZLpdneffqrPcPZAjA/vmrBbkIpYMMG7mxZD
+         Q3oBxZd+VQm0rub+c23AMkYXb/GzPVsT08vIsl3hWWiNs+gOsaOFO24enHfQo2S0J0Qt
+         FlQRxS7aK8qquKRlbnHGvcLuprozNzkEYz4jMPK0e3m5iS0qa/4UOVy33g+q1w1w+QnQ
+         RFFdRdLTR6ajgvSOjUIH76nRz/IScBds4Voizlkb+73aFc8nJikSuLGfg8buuluQKmbA
+         AORQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnfiGyBiy8idQoDwaTmq519NbABXzmxeDPryoqpzUT+cqyCmt/iv0Byw/d9FYs9IQlNStFaB/UYhenaiQNxeSJ01gYmhDeGAPcKhM+
+X-Gm-Message-State: AOJu0Yw1QdxONeYSechnZXytxlONc3sxdArFrRGGSiBcPkQCcQb8d2BZ
+	DtuyRF9Rrbodvzgw1Ktjos29QL9JG2kyo3YYHwd8nPdUFH7Gk92ibVd57p7LKKAzObw8mMDdVER
+	SnA==
+X-Google-Smtp-Source: AGHT+IEmldGTIkv1T4o9/PiXtoC4rZne+Dg326PKnj69O+oEtuDXipai7Z86wWOiFzxP3tEmhS691Edp3UQ=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:bb97:b0:1f6:8033:f361 with SMTP id
+ d9443c01a7336-1f83b5df050mr4825ad.6.1718143088022; Tue, 11 Jun 2024 14:58:08
+ -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Tue, 11 Jun 2024 14:58:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Message-ID: <20240611215805.340664-1-seanjc@google.com>
+Subject: [PATCH] KVM: x86/mmu: Clean up function comments for dirty logging APIs
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Reserve unspecified location of physical memory from kernel command line
+Rework the function comment for kvm_arch_mmu_enable_log_dirty_pt_masked(),
+as it has gotten a bit stale, and is the last source of warnings for W=1
+builds in KVM x86 due to using a kernel-doc comment without documenting
+all parameters.
 
-Background:
+Opportunistically subsume the functions comments for
+kvm_mmu_write_protect_pt_masked() and kvm_mmu_clear_dirty_pt_masked(), as
+there is no value in regurgitating the same parameter information, and
+capturing the differences between write-protection and PML-based dirty
+logging is best done in a common location.
 
-In ChromeOS, we have 1 MB of pstore ramoops reserved so that we can extract
-dmesg output and some other information when a crash happens in the field.
-(This is only done when the user selects "Allow Google to collect data for
- improving the system"). But there are cases when there's a bug that
-requires more data to be retrieved to figure out what is happening. We would
-like to increase the pstore size, either temporarily, or maybe even
-permanently. The pstore on these devices are at a fixed location in RAM (as
-the RAM is not cleared on soft reboots nor crashes). The location is chosen
-by the BIOS (coreboot) and passed to the kernel via ACPI tables on x86.
-There's a driver that queries for this to initialize the pstore for
-ChromeOS:
+No functional change intended.
 
-  See drivers/platform/chrome/chromeos_pstore.c
+Cc: David Matlack <dmatlack@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
 
-Problem:
+I don't actually care too much about the comment itself, I really just want to
+get rid of the annoying warnings (I was *very* tempted to just delete the extra
+asterisk), so if anyone has any opinion whatsoever...
 
-The problem is that, even though there's a process to change the kernel on
-these systems, and is done regularly to install updates, the firmware is
-updated much less frequently. Choosing the place in RAM also takes special
-care, and may be in a different address for different boards. Updating the
-size via firmware is a large effort and not something that many are willing
-to do for a temporary pstore size change.
+ arch/x86/kvm/mmu/mmu.c | 43 ++++++++++++++++++------------------------
+ 1 file changed, 18 insertions(+), 25 deletions(-)
 
-Requirement:
-
-Need a way to reserve memory that will be at a consistent location for
-every boot, if the kernel and system are the same. Does not need to work
-if rebooting to a different kernel, or if the system can change the
-memory layout between boots.
-
-The reserved memory can not be an hard coded address, as the same kernel /
-command line needs to run on several different machines. The picked memory
-reservation just needs to be the same for a given machine, but may be
-different for different machines.
-
-Solution:
-
-The solution I have come up with is to introduce a new "reserve_mem=" kernel
-command line. This parameter takes the following format:
-
-  reserve_mem=nn:align:label
-
-Where nn is the size of memory to reserve, the align is the alignment of
-that memory, and label is the way for other sub-systems to find that memory.
-This way the kernel command line could have:
-
-  reserve_mem=12M:4096:oops   ramoops.mem_name=oops
-
-At boot up, the kernel will search for 12 megabytes in usable memory regions
-with an alignment of 4096. It will start at the highest regions and work its
-way down (for those old devices that want access to lower address DMA). When
-it finds a region, it will save it off in a small table and mark it with the
-"oops" label. Then the pstore ramoops sub-system could ask for that memory
-and location, and it will map itself there.
-
-This prototype allows for 8 different mappings (which may be overkill, 4 is
-probably plenty) with 16 byte size to store the label.
-
-I have tested this and it works for us to solve the above problem. We can
-update the kernel and command line and increase the size of pstore without
-needing to update the firmware, or knowing every memory layout of each
-board. I only tested this locally, it has not been tested in the field.
-
-Changes since v3: https://lore.kernel.org/all/20240611144911.327227285@goodmis.org/
-
-[ patch at bottom showing differences ]
-
-- Changed table type of start and size from unsigned long to phys_addr_t
-  (as well as the parameters to the functions that use them)
-
-- Changed old reference to "early_reserve_mem" to "reserve_mem"
-
-- Check before reservering memory:
-  o Size is non-zero
-  o name has text in it
-
-- If align is less than SMP_CACHE_BYTES, make it SMP_CACHE_BYTES
-
-- Remove the silly check of testing *p == '\0' after a p += strlen(p)
-
-Changes since v2: https://lore.kernel.org/all/20240606150143.876469296@goodmis.org/
-
-- Fixed typo of "reserver"
-
-- Added EXPORT_SYMBOL_GPL() for reserve_mem_find_by_name()
-
-- Removed "built-in" from module description that was changed from v1.
-
-
-Changes since v1: https://lore.kernel.org/all/20240603233330.801075898@goodmis.org/
-
-- Updated the change log of the first patch as well as added an entry
-  into kernel-parameters.txt about how reserve_mem is for soft reboots
-  and may not be reliable. 
-
-
-Steven Rostedt (Google) (2):
-      mm/memblock: Add "reserve_mem" to reserved named memory at boot up
-      pstore/ramoops: Add ramoops.mem_name= command line option
-
-
-Steven Rostedt (Google) (2):
-      mm/memblock: Add "reserve_mem" to reserved named memory at boot up
-      pstore/ramoops: Add ramoops.mem_name= command line option
-
-----
- Documentation/admin-guide/kernel-parameters.txt |  20 +++++
- fs/pstore/ram.c                                 |  14 +++
- include/linux/mm.h                              |   2 +
- mm/memblock.c                                   | 115 ++++++++++++++++++++++++
- 4 files changed, 151 insertions(+)
-
-
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 0653b76c70fe..4311fcbc84f2 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -919,8 +919,8 @@ static void __init ramoops_register_dummy(void)
- 	struct ramoops_platform_data pdata;
- 
- 	if (mem_name) {
--		unsigned long start;
--		unsigned long size;
-+		phys_addr_t start;
-+		phys_addr_t size;
- 
- 		if (reserve_mem_find_by_name(mem_name, &start, &size)) {
- 			mem_address = start;
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index b4455cc02f2c..077fb589b88a 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4263,6 +4263,6 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
- void vma_pgtable_walk_begin(struct vm_area_struct *vma);
- void vma_pgtable_walk_end(struct vm_area_struct *vma);
- 
--int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size);
-+int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size);
- 
- #endif /* _LINUX_MM_H */
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 60a2161de351..044ddce8f085 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2249,14 +2249,14 @@ void __init memblock_free_all(void)
- #define RESERVE_MEM_NAME_SIZE		16
- struct reserve_mem_table {
- 	char			name[RESERVE_MEM_NAME_SIZE];
--	unsigned long		start;
--	unsigned long		size;
-+	phys_addr_t		start;
-+	phys_addr_t		size;
- };
- static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
- static int reserved_mem_count;
- 
- /* Add wildcard region with a lookup name */
--static int __init reserved_mem_add(unsigned long start, unsigned long size,
-+static int __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
- 				   const char *name)
- {
- 	struct reserve_mem_table *map;
-@@ -2282,7 +2282,7 @@ static int __init reserved_mem_add(unsigned long start, unsigned long size,
-  *
-  * Returns: 1 if found or 0 if not found.
-  */
--int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size)
-+int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size)
- {
- 	struct reserve_mem_table *map;
- 	int i;
-@@ -2302,11 +2302,12 @@ int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned lo
- EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
- 
- /*
-- * Parse early_reserve_mem=nn:align:name
-+ * Parse reserve_mem=nn:align:name
-  */
- static int __init reserve_mem(char *p)
- {
- 	phys_addr_t start, size, align;
-+	char *name;
- 	char *oldp;
- 	int err;
- 
-@@ -2315,7 +2316,7 @@ static int __init reserve_mem(char *p)
- 
- 	oldp = p;
- 	size = memparse(p, &p);
--	if (p == oldp)
-+	if (!size || p == oldp)
- 		return -EINVAL;
- 
- 	if (*p != ':')
-@@ -2325,20 +2326,36 @@ static int __init reserve_mem(char *p)
- 	if (*p != ':')
- 		return -EINVAL;
- 
-+	/*
-+	 * memblock_phys_alloc() doesn't like a zero size align,
-+	 * but it is OK for this command to have it.
-+	 */
-+	if (align <= SMP_CACHE_BYTES)
-+		align = SMP_CACHE_BYTES;
-+
-+	name = p + 1;
-+	if (!strlen(name))
-+		return -EINVAL;
-+
-+	/* Make sure that name has text */
-+	for (p = name; *p; p++) {
-+		if (!isspace(*p))
-+			break;
-+	}
-+	if (!*p)
-+		return -EINVAL;
-+
- 	start = memblock_phys_alloc(size, align);
- 	if (!start)
- 		return -ENOMEM;
- 
--	p++;
--	err = reserved_mem_add(start, size, p);
-+	err = reserved_mem_add(start, size, name);
- 	if (err) {
- 		memblock_phys_free(start, size);
- 		return err;
- 	}
- 
--	p += strlen(p);
--
--	return *p == '\0' ? 0: -EINVAL;
-+	return 0;
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index f2c9580d9588..7eb87d473223 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1307,15 +1307,6 @@ static bool __rmap_clear_dirty(struct kvm *kvm, struct kvm_rmap_head *rmap_head,
+ 	return flush;
  }
- __setup("reserve_mem=", reserve_mem);
  
+-/**
+- * kvm_mmu_write_protect_pt_masked - write protect selected PT level pages
+- * @kvm: kvm instance
+- * @slot: slot to protect
+- * @gfn_offset: start of the BITS_PER_LONG pages we care about
+- * @mask: indicates which pages we should protect
+- *
+- * Used when we do not need to care about huge page mappings.
+- */
+ static void kvm_mmu_write_protect_pt_masked(struct kvm *kvm,
+ 				     struct kvm_memory_slot *slot,
+ 				     gfn_t gfn_offset, unsigned long mask)
+@@ -1339,16 +1330,6 @@ static void kvm_mmu_write_protect_pt_masked(struct kvm *kvm,
+ 	}
+ }
+ 
+-/**
+- * kvm_mmu_clear_dirty_pt_masked - clear MMU D-bit for PT level pages, or write
+- * protect the page if the D-bit isn't supported.
+- * @kvm: kvm instance
+- * @slot: slot to clear D-bit
+- * @gfn_offset: start of the BITS_PER_LONG pages we care about
+- * @mask: indicates which pages we should clear D-bit
+- *
+- * Used for PML to re-log the dirty GPAs after userspace querying dirty_bitmap.
+- */
+ static void kvm_mmu_clear_dirty_pt_masked(struct kvm *kvm,
+ 					 struct kvm_memory_slot *slot,
+ 					 gfn_t gfn_offset, unsigned long mask)
+@@ -1373,14 +1354,26 @@ static void kvm_mmu_clear_dirty_pt_masked(struct kvm *kvm,
+ }
+ 
+ /**
+- * kvm_arch_mmu_enable_log_dirty_pt_masked - enable dirty logging for selected
+- * PT level pages.
++ * kvm_arch_mmu_enable_log_dirty_pt_masked - (Re)Enable dirty logging for a set
++ * of GFNs
+  *
+- * It calls kvm_mmu_write_protect_pt_masked to write protect selected pages to
+- * enable dirty logging for them.
++ * @kvm: kvm instance
++ * @slot: slot to containing the gfns to dirty log
++ * @gfn_offset: start of the BITS_PER_LONG pages we care about
++ * @mask: indicates which gfns to dirty log (1 == enable)
+  *
+- * We need to care about huge page mappings: e.g. during dirty logging we may
+- * have such mappings.
++ * (Re)Enable dirty logging for the set of GFNs indicated by the slot,
++ * gfn_offset, and mask, e.g. after userspace has harvested dirty information
++ * and wants to re-log dirty GFNs for the next round of migration.
++ *
++ * If the slot was assumed to be "initially all dirty", write-protect hugepages
++ * to ensure they are split to 4KiB on the first write (KVM dirty logs at 4KiB
++ * granularity).  If eager page splitting is enabled, immediately try to split
++ * hugepages, e.g. so that vCPUs don't get saddled with the cost of the split.
++ *
++ * If Page-Modification Logging (PML) is enabled and the GFN doesn't need to be
++ * write-protected for other reasons, e.g. shadow paging, clear the Dirty Bit.
++ * Otherwise write-protect the GFN, i.e. clear the Writable Bit.
+  */
+ void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
+ 				struct kvm_memory_slot *slot,
+
+base-commit: f99b052256f16224687e5947772f0942bff73fc1
+-- 
+2.45.2.505.gda0bf45e8d-goog
+
