@@ -1,103 +1,68 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1FA174EEB;
-	Tue, 11 Jun 2024 08:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A25717555C;
+	Tue, 11 Jun 2024 08:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718095831; cv=none; b=hftt5o8OoXxG0wRv+b4a2GsF8RMjDSgffuOyscDRNOrUGtLBm30S80K26QiLZjxKcIFTcOCs5+tuRWvRFCmxpMfJlmcmteY0noWb82bpOg05qAMzhGe/VdV2tLS3IyS89CPmOUmsHeS0+yZWNbmevkns0tPIVXlSjYFrhW1osz0=
+	t=1718095847; cv=none; b=DAdN4cp/W3deWryqUDzFBbtQMvB72nq+NLcMll1MuzJpPaAcxJeq3p/oPr2bh3VsAVJvE3lQ+qBvyIBvQx/bf8R2kOfuPcDdnVUxLXSUqJMRco64EJnwuZzlVxHtEeS/+04n1Iq69qcg0sDvTMNfXKTlt2XKhZqgRhCmtYlgC+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718095831; c=relaxed/simple;
-	bh=Tz0c5VcTfHJlV2uX+Q+nERoAMIrZpPDtHjcTjqCCVNo=;
+	s=arc-20240116; t=1718095847; c=relaxed/simple;
+	bh=x4IeccqboLkC6pu6d+XHWB0qsYC62Jw6KpyPHteDycU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NQRRWfFz6L6s0kLyXKc9BmOMdc47vbR+qybGa8fJTsQbdvLRzy7RxSXmVwswpODEt94iXHqHqRFdD2IOd+00usbny3R70LO5Gflv8ldR2vzTLN5QMj63v563YOSiO3dlfi8CdqENGjh0e5ir2xN/b8/j24WvDh7M6brRmsT2CLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1sGxBT-0000Ne-00; Tue, 11 Jun 2024 10:48:51 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 023C9C0120; Tue, 11 Jun 2024 10:41:16 +0200 (CEST)
-Date: Tue, 11 Jun 2024 10:41:16 +0200
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Celeste Liu <coelacanthushex@gmail.com>
-Cc: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
-	Anup Patel <anup@brainfault.org>, Guo Ren <guoren@kernel.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	Sven Joachim <svenjoac@gmx.de>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Arnd Bergmann <arnd@arndb.de>, Mykola Lysenko <mykolal@fb.com>,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-tegra@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-sh@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Lennart Poettering <lennart@poettering.net>,
-	Icenowy Zheng <uwu@icenowy.me>
-Subject: Re: [PATCH 3/6] mips: defconfig: drop RT_GROUP_SCHED=y from
- generic/db1xxx/eyeq5
-Message-ID: <ZmgNrOr1nalSTeja@alpha.franken.de>
-References: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
- <20240530111947.549474-11-CoelacanthusHex@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=RKAJA1epzF31b39/sKG2FHkvxdiYzsagb1aGzzAdBsgaHjnNSbyOz+0fWMBtwMI7nMPxC8Qn00dzCeUeExFWX86V4ZrKZaGZfKUZRi4FqlXC0NIpBA0RZk386XagfK2TZulHKPTZFfk9HccWw72zk9XVS+c1kMjErH8MEM2si8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgQ7W1Gz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgQ7W1Gz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F57C2BD10;
+	Tue, 11 Jun 2024 08:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718095847;
+	bh=x4IeccqboLkC6pu6d+XHWB0qsYC62Jw6KpyPHteDycU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fgQ7W1Gz2OXH5mdHXx6txC73K+8rJL4eA0kfjYVK1/tfR/BJgcP4DaBB4rSyDR++N
+	 o9l8TbXiqXRi9IUPwg8hT1e/ZfvtS/6Bc9lnyC/l9ZVlYCGgTzN98NU3EKWe8MXOch
+	 PHgQWF8hyuMqI/g5ySOYlf8YeDogRG2RRA+75KtiXQHIaZkbMFAreZdhNdf8gXM83j
+	 SRPCdxmaAVxoLdLlOUKgD/AdFjRRP71CPWWmkLA87A0jBjyAg/sBlczqjWCHnu2+7d
+	 SBV7atHfVYZH2mkk/YWzObDHFMW1+VZohaCDBwU7oHrRy8AmKmsoDyMo0/7Hw3PAuq
+	 PVP5zfxKIvbFw==
+Date: Tue, 11 Jun 2024 08:50:44 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@baylibre.com>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+	linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] pwm: cros-ec: Don't care about consumers in
+ .get_state()
+Message-ID: <ZmgP5NTPEGM0M2Li@google.com>
+References: <20240607084416.897777-5-u.kleine-koenig@baylibre.com>
+ <20240607084416.897777-6-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240530111947.549474-11-CoelacanthusHex@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240607084416.897777-6-u.kleine-koenig@baylibre.com>
 
-On Thu, May 30, 2024 at 07:19:51PM +0800, Celeste Liu wrote:
-> For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
-> needs an RT budget assigned, otherwise the processes in it will not be able to
-> get RT at all. The problem with RT group scheduling is that it requires the
-> budget assigned but there's no way we could assign a default budget, since the
-> values to assign are both upper and lower time limits, are absolute, and need to
-> be sum up to < 1 for each individal cgroup. That means we cannot really come up
-> with values that would work by default in the general case.[1]
-> 
-> For cgroup v2, it's almost unusable as well. If it turned on, the cpu controller
-> can only be enabled when all RT processes are in the root cgroup. But it will
-> lose the benefits of cgroup v2 if all RT process were placed in the same cgroup.
-> 
-> Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn't
-> support it.[2]
-> 
-> [1]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
-> [2]: https://github.com/systemd/systemd/issues/13781#issuecomment-549164383
-> 
-> Signed-off-by: Celeste Liu <CoelacanthusHex@gmail.com>
-> ---
->  arch/mips/configs/db1xxx_defconfig  | 1 -
->  arch/mips/configs/eyeq5_defconfig   | 1 -
->  arch/mips/configs/generic_defconfig | 1 -
->  3 files changed, 3 deletions(-)
+On Fri, Jun 07, 2024 at 10:44:15AM +0200, Uwe Kleine-König wrote:
+> The get_state() callback is never called (in a visible way) after there
+> is a consumer for a pwm device. The core handles loosing the information
+> about duty_cycle just fine.
 
-applied to mips-next.
+ChromeOS EC has no separated "enabled" state, it sees `duty == 0` as
+"disabled"[1].  1db37f9561b2 ("pwm: cros-ec: Cache duty cycle value")
+caches the value in kernel side so that it can retrieve the original duty
+value even if (struct pwm_state *)->enabled is false.
 
-Thomas.
+To make sure I understand, did you mean the original duty value could be less
+important because:
+- We are less caring as it is in a debug context at [2]?
+- At [3], the PWM device is still initializing.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+[1]: https://crrev.com/0e16954460a08133b2557150e0897014ea2b9672/common/pwm.c#66
+[2]: https://elixir.bootlin.com/linux/v6.10-rc3/source/drivers/pwm/core.c#L52
+[3]: https://elixir.bootlin.com/linux/v6.10-rc3/source/drivers/pwm/core.c#L371
