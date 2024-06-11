@@ -1,163 +1,133 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAF52C69B
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 15:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2619928399
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 15:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718119441; cv=none; b=JWaRXB3pi4IpoWLSwDhMKh2Z9/wzi9ilsxqi5gclBAFokHQLc99+0iJdyOu91x2MasSfN4rO7/0qAWB6fTO/JcrlKo+10JKx+HihpvIoJRrlGT0RWDihHJGPqpne5LFLcBF6ePXRrY+DAluOMDFLmSE9Y0VJgAByVS5kyplj04o=
+	t=1718119484; cv=none; b=toGRnHy/Y2haSOFnIHdlyZPAc0O+0yNIRy+Ioo6LIPWo4jp59c536gb/5ACrtH/aIG9E85cqOQ8oqja8h77eUZiZH6TP0GvGwHnsGxvg/mVWL06HMPPv91n4KPBrGc9KVXUe82wk/Z5Pl/pTqnPlPm687ariZJThkuRIELvX3BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718119441; c=relaxed/simple;
-	bh=B49BfP/n62cC5L3T8DG2DbtbA+R5iyv8rVdtsI/Ab6E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PxRjLTOub3nQmMgj9ah4KCwSHT9PpN2o43BDqEbt4OzPj+22cKi7Vhkv+xIjm+zw7taN3SwGjxk3SsLWJui1hWvWOZuPf08q7NNK9ttvXFvSYJXMozRDq/2GviAxjMht2JkfF9SIVYMakETmatfJwLnpThvonWnwEGtnfkBORx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=evISkj++; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718119484; c=relaxed/simple;
+	bh=/dwSstVRIHN9PEcFF8K2VCWFhDw3CyWBawICLCnTK4k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TzfIIQEGgpK44558jMufFfPQp4YH0jnBB3pX16wnOAwXDaOiw4UCKmX/IOXWI40J8g5aTyKgrNo97mE+PvusQfwPRvB2jWgV9fwozRXkAAZW3HHcRvAUzE/oj8/JBZPmIdBi76iXFvjW6TD9542k1RM0lPT8dHvCb+NSkkszvE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=yWi+yrth; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evISkj++"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-35f090093d8so3090992f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 08:23:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="yWi+yrth"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57c61165af6so5010914a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 08:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718119438; x=1718724238; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qqhHKqu8J5x8pyYIaPsNCcIOlIn0KQ56jThNjIBi0ic=;
-        b=evISkj++5UnmDaolLHiNXLOOMEqHgDi8gaDw1Wel1pgRotfyXJqeDOptKX/tPHVehE
-         ge8NTBs1Ti73FE+M5CRBpZK9qOnDQk6WzlFkdr9yScvPKDdsh/OwedN+rHlsIZCj/s0e
-         WzhLv0xJjxjgzAyYWMZiIDrSMAUf0MX7yQGlmGA9CwZRr4XKnT5R+nk6VJncPphCz5AK
-         rtTOc7ppwpAD4NvzjrNT5WQ/wRyagbsuETbL+UAb/ddIgMAWAvl+5+eopnXe58rFzttW
-         eQcx4sDlKWBxtYk0FU8m6jj+hIui972cEdNekYsQDx9h//1NemFt54HjVdew/7669uif
-         U0Ww==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1718119480; x=1718724280; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j+70rPRbTmia/VEIc1/MKb7Bbc21YVKTZi4Axx4ZXvY=;
+        b=yWi+yrthNtTae+UCzrvplnxb4Puf5cwLyKdMa1frAGrfiQGECAHVe/3OcZtpslnwVV
+         wp6zat0ubhUrSfg0FGIBkF6NsHn4tOOE+NXVkefTUejeVQU00KJ0mrFP4QEE/J2OQTdk
+         Yh4Afmd0eEnFIXd1Kpb6tjS5feQpDU69AIVGuhWIV2e4AY+sJbnggvILooAOmhHusZnA
+         kQL8gFPVU8H+XqIN+kLNseUCyyLcAuD6qBs1j8jgGWwjq1JAUTbj+Q8P2PyGJMAIG9/b
+         xjAB9ZYKyKS/OVFlGvBVLkv8imp4h2QacQthz6kNh/3SsfjiFZLNH2Ko7iiyEBUpSdwt
+         OILw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718119438; x=1718724238;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qqhHKqu8J5x8pyYIaPsNCcIOlIn0KQ56jThNjIBi0ic=;
-        b=lL/D3E6FFBOX0Fr/tXdo8leL7GDwAc3lB69pg92Fe7gJhCnFEGPHCyNwnlUf695vLW
-         XGb49mLxWNlW/NSnnNVvra3ZD8iuALihFLlaD8NQvXlWUx7XjAtFWPgQlLLFGO9//+PQ
-         HYgZ+BUqFdDgIAGzRLJ36HAGHUuUf1Xc1LpdU3iG3nlvBiz7H5XrLKaad7bhEQFstgRE
-         nSw3IK3fMf0XKXJAxmC3sgf7W/UBpzTh5TLx682Xrf08xvOZkT8MewR9bn/lJfdVAP4b
-         4UUCFy/VUa/Xzk7EoxZRgp76XSE0lOnjq76WNIAu+HyvSONpUnoK+ttYYlKc3A+6IgGx
-         1r+g==
-X-Forwarded-Encrypted: i=1; AJvYcCX7dJeMDlqcEUoyDxT1OnZD/PJMqc/2ZlRsz4it/9Kpm1UaPnwzcFqFXvyH3eAxX3syW8C5i0WDts3b+ajcKyaoMqcfidGYKd2dk1Bl
-X-Gm-Message-State: AOJu0YyLiDd6Z/WBVCdyxGlwKIvpAM8nR2Q4kOTLf0fvG5T+HRd4Ke0Q
-	ZeICLKuo3jtx8PX5CNxElByW2vBK9tG2bhlUi4yNweII7jqm7O9m
-X-Google-Smtp-Source: AGHT+IHcFnG6/IspHE0p3GMElQnHHuNm9W//aQQuoYBzkQbmaxLJxzn8ycr9NDfb+FwJsULVkcyrrQ==
-X-Received: by 2002:a5d:4010:0:b0:35f:1d13:c843 with SMTP id ffacd0b85a97d-35f21254c37mr4445617f8f.11.1718119437544;
-        Tue, 11 Jun 2024 08:23:57 -0700 (PDT)
-Received: from localhost.localdomain ([31.120.167.14])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f301dfc52sm1167545f8f.82.2024.06.11.08.23.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 08:23:56 -0700 (PDT)
-From: Teddy Engel <engel.teddy@gmail.com>
-To: Philipp Hortmann <philipp.g.hortmann@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Teddy Engel <engel.teddy@gmail.com>
-Subject: [PATCH] staging: vt6656: Fix checkpatch unnecessary parentheses
-Date: Tue, 11 Jun 2024 16:22:56 +0100
-Message-Id: <20240611152256.24563-1-engel.teddy@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1718119480; x=1718724280;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j+70rPRbTmia/VEIc1/MKb7Bbc21YVKTZi4Axx4ZXvY=;
+        b=D+mVeMXyJAZNhqZ/8YowFk7kZUzpqp2RQJN4IcAFwPAxTTCRJSTAv2CdIppe+5mJci
+         NW1IO334Fs9NIO6XtK0yNZb9DMqB7x4x6tmUwhIvlLNM6d3fjfrrC75WwRzfOhBCGIcl
+         Touc60ZyBu8qJyyTMjD13U5aVP+jb5PTe6qOW2IV+v4AmrUxLxFYsZAQPNnzEeJMNQs+
+         gr2sE+ybFoNWzp4kIx36I+IowRG4XMJ0d/qeSk3iDEwL+ZZM9xn0iiJLRFVM/6PlG+bH
+         zF/a1Dhufug8BuHA/lOcGAIRWZX7n97fnU9REXeRrNXjsrNUY1tqjrRkK00Kb8XG960X
+         mKHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWNorDcPypw1nBLapVxmUTHGIMA38WEIhrQrO9IPnZlyRcWrLzZpXKX5XWW2rVkLpI6YkIYrWG5uFgMHMcdWErYFHSRdbdIqthO4mF6
+X-Gm-Message-State: AOJu0YyaSwARjm1JszvNrVwNlx6BtxaJEmWFiJ8o8TWMEElodWczUsh0
+	ievkN6RO1cEf3CPwCHaTBkq353soN7N9F43K1hh1/gDA9XkR6Y8J/sD++aD6Qf/rk0Gm8cSI0We
+	pd1AVRNIOyZT4LhWmzGMQc+7K2mDAWlJXwGu1Zw==
+X-Google-Smtp-Source: AGHT+IHWWWOkriPN+KE2CITqDSoNEiVlJsEhFm+lzJh/A8Jg4Wdvxi/Mv2AisOMO+RU+t5zcPZFRFSgiNLS4Lk4twq4=
+X-Received: by 2002:a50:9e4b:0:b0:57c:5637:b2ae with SMTP id
+ 4fb4d7f45d1cf-57c5637c846mr7651818a12.12.1718119480355; Tue, 11 Jun 2024
+ 08:24:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240611141849.2788693-1-abrestic@rivosinc.com> <6b5392f5-209d-4d3e-b5c3-ba875bf8416d@redhat.com>
+In-Reply-To: <6b5392f5-209d-4d3e-b5c3-ba875bf8416d@redhat.com>
+From: Andrew Bresticker <abrestic@rivosinc.com>
+Date: Tue, 11 Jun 2024 11:24:28 -0400
+Message-ID: <CALE4mHotopTeAX05knsfQ6U1tYP+pQjWAbS5KbxKH5exU1frtw@mail.gmail.com>
+Subject: Re: [PATCH] mm/memory: Pass head page to do_set_pmd()
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove unnecessary parentheses - according to checkpatch.pl strict
+On Tue, Jun 11, 2024 at 10:46=E2=80=AFAM David Hildenbrand <david@redhat.co=
+m> wrote:
+>
+> On 11.06.24 16:18, Andrew Bresticker wrote:
+> > The requirement that the head page be passed to do_set_pmd() was added
+> > in commit ef37b2ea08ac ("mm/memory: page_add_file_rmap() ->
+> > folio_add_file_rmap_[pte|pmd]()") and prevents pmd-mapping in the
+> > finish_fault() path if vmf->page is anything but the head page for an
+> > otherwise suitable vma and pmd-sized page. Have finish_fault() pass in
+> > the head page instead.
+> >
+> > Fixes: ef37b2ea08ac ("mm/memory: page_add_file_rmap() -> folio_add_file=
+_rmap_[pte|pmd]()")
+> > Signed-off-by: Andrew Bresticker <abrestic@rivosinc.com>
+> > ---
+> >   mm/memory.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index 0f47a533014e..f13b953b507c 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -4764,7 +4764,7 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+> >
+> >       if (pmd_none(*vmf->pmd)) {
+> >               if (PageTransCompound(page)) {
+> > -                     ret =3D do_set_pmd(vmf, page);
+> > +                     ret =3D do_set_pmd(vmf, compound_head(page));
+> >                       if (ret !=3D VM_FAULT_FALLBACK)
+> >                               return ret;
+> >               }
+>
+> That certainly makes the "page !=3D &folio->page" check happy.
+>
+> It is *likely* incorrect if we would ever have folios > PMD size (which
+> we don't have on that path yet).
+>
+> I assume that the thp_vma_suitable_order() check would detect any kind
+> of "different placement of the folio in virtual address space", where we
+> could mess up.
 
-Signed-off-by: Teddy Engel <engel.teddy@gmail.com>
----
- drivers/staging/vt6656/TODO       | 2 +-
- drivers/staging/vt6656/baseband.c | 8 ++++----
- drivers/staging/vt6656/main_usb.c | 4 ++--
- drivers/staging/vt6656/usbpipe.c  | 8 ++++----
- 4 files changed, 11 insertions(+), 11 deletions(-)
+thp_vma_suitable_order() checks that the folio fits in the vma, if
+that's what you mean.
 
-diff --git a/drivers/staging/vt6656/TODO b/drivers/staging/vt6656/TODO
-index e154b2f3b247..507b7aec9f14 100644
---- a/drivers/staging/vt6656/TODO
-+++ b/drivers/staging/vt6656/TODO
-@@ -11,7 +11,7 @@ TODO:
- - switch to use LIB80211
- - switch to use MAC80211
- - use kernel coding style
--- checkpatch.pl fixes
-+- checkpatch.pl fixes -- done
- - sparse fixes
- - integrate with drivers/net/wireless
- 
-diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/baseband.c
-index ad7b963f0d98..c981fc75a030 100644
---- a/drivers/staging/vt6656/baseband.c
-+++ b/drivers/staging/vt6656/baseband.c
-@@ -230,8 +230,8 @@ int vnt_vt3184_init(struct vnt_private *priv)
- 
- 	dev_dbg(&priv->usb->dev, "RF Type %d\n", priv->rf_type);
- 
--	if ((priv->rf_type == RF_AL2230) ||
--	    (priv->rf_type == RF_AL2230S)) {
-+	if (priv->rf_type == RF_AL2230 ||
-+	    priv->rf_type == RF_AL2230S) {
- 		priv->bb_rx_conf = vnt_vt3184_al2230[10];
- 		length = sizeof(vnt_vt3184_al2230);
- 		addr = vnt_vt3184_al2230;
-@@ -275,8 +275,8 @@ int vnt_vt3184_init(struct vnt_private *priv)
- 	if (ret)
- 		goto end;
- 
--	if ((priv->rf_type == RF_VT3226) ||
--	    (priv->rf_type == RF_VT3226D0)) {
-+	if (priv->rf_type == RF_VT3226 ||
-+	    priv->rf_type == RF_VT3226D0) {
- 		data = (priv->rf_type == RF_VT3226D0) ? 0x11 : 0x23;
- 
- 		ret = vnt_control_out_u8(priv, MESSAGE_REQUEST_MACREG,
-diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
-index 7bbed462f062..86085f3674c1 100644
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -339,8 +339,8 @@ static int vnt_init_registers(struct vnt_private *priv)
- 
- 	/* load vt3266 calibration parameters in EEPROM */
- 	if (priv->rf_type == RF_VT3226D0) {
--		if ((priv->eeprom[EEP_OFS_MAJOR_VER] == 0x1) &&
--		    (priv->eeprom[EEP_OFS_MINOR_VER] >= 0x4)) {
-+		if (priv->eeprom[EEP_OFS_MAJOR_VER] == 0x1 &&
-+		    priv->eeprom[EEP_OFS_MINOR_VER] >= 0x4) {
- 			calib_tx_iq = priv->eeprom[EEP_OFS_CALIB_TX_IQ];
- 			calib_tx_dc = priv->eeprom[EEP_OFS_CALIB_TX_DC];
- 			calib_rx_iq = priv->eeprom[EEP_OFS_CALIB_RX_IQ];
-diff --git a/drivers/staging/vt6656/usbpipe.c b/drivers/staging/vt6656/usbpipe.c
-index d505b4b69ba4..42b2e0a0a431 100644
---- a/drivers/staging/vt6656/usbpipe.c
-+++ b/drivers/staging/vt6656/usbpipe.c
-@@ -287,7 +287,7 @@ static int vnt_rx_data(struct vnt_private *priv, struct vnt_rcb *ptr_rcb,
- 		return false;
- 	}
- 
--	if ((bytes_received > 2372) || (bytes_received <= 40)) {
-+	if (bytes_received > 2372 || bytes_received <= 40) {
- 		/* Frame Size error drop this packet.*/
- 		dev_dbg(&priv->usb->dev, "------ WRONG Length 2\n");
- 		return false;
-@@ -299,9 +299,9 @@ static int vnt_rx_data(struct vnt_private *priv, struct vnt_rcb *ptr_rcb,
- 	/* if SQ3 the range is 24~27, if no SQ3 the range is 20~23 */
- 
- 	/*Fix hardware bug => PLCP_Length error */
--	if (((bytes_received - head->pay_load_len) > 27) ||
--	    ((bytes_received - head->pay_load_len) < 24) ||
--	    (bytes_received < head->pay_load_len)) {
-+	if ((bytes_received - head->pay_load_len) > 27 ||
-+	    (bytes_received - head->pay_load_len) < 24 ||
-+	    bytes_received < head->pay_load_len) {
- 		dev_dbg(&priv->usb->dev, "Wrong PLCP Length %x\n",
- 			head->pay_load_len);
- 		return false;
--- 
-2.39.2
+> Question is: should we instead drop the "page !=3D &folio->page" check
+> that I added?
 
+Indeed that's probably better as I'm now noticing that
+filemap_map_pmd() has the same issue. Will send a v2.
+
+Thanks.
+-Andrew
+
+>
+> I think I added that check because I saw the "compound_order(page)"
+> check and assumed it would return 0 for tail pages, but missed that we
+> get the compound head first.
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
