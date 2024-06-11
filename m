@@ -1,97 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9548A17CA03;
-	Tue, 11 Jun 2024 13:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AD517CA01;
+	Tue, 11 Jun 2024 13:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718112529; cv=none; b=iyNqyMCS+dIMQe63OqKzVgNtrOW9B1uhsvTT4u9NllQWKGdeP6Kn48g++n8HDdZbRIvqs4HU8+bLidWxvPrOPcCsFZLr0wwM8MI5A+yrwuDBioZgPQpO8WDfQpJxZyY98U5haluR+rbRg69n0W2bifnFUvlo9Va4scHXbmnoc10=
+	t=1718112550; cv=none; b=CHL382og7xomiUgM8vmwPP3rh7B7Mgx4DJVmhcVMGx3YKFAAFhsgk/d0x2qx5mimklL0I3p6PPFFHl1SH4pHWoZ4JHFm34E+eMkGz+mh8042qwJmrQ4WznPGFfHp8uvpTWy4qwgFXl94qtKvs3MEz3JTyGg2v3TvWe9eqa7VbL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718112529; c=relaxed/simple;
-	bh=ZEwkkTMQL/4fU2ogDD+72F11vuWnXpG/X2IJwXrbNJg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tm9p+5EtVHDN5cKOpnoEI5OiYBWGVeogYhgHfmPC5dKOePlFJzLK9c6BJhWNW/17BLOhi1xKmLjaBIqjHqDd0H6HRv/QlxAmO7m8pnFhaAf2Z7gxv7QBMG/LWNZDosk0FNIRKwdlavP6hpQKCUFG7XZlQCLLvKoS0jNLKzCiHeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhOS1BFC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718112550; c=relaxed/simple;
+	bh=BMP9w47+jx4M2agblJj0+ixb5r1r7O+4fLzBZBqWW3k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TDG+Z24v3htYvB0rj/w7uz5YzY5+GvVSeBgirNgDpzLuzxCbHZTjiCE4/LNkNz1OpNum7dHnMpd/L9l38rIVOnbJmDAS9IIzYyzwvOaDkDS33GiKqyqBwDwvDd7Es0aH6UfI0qAQIhWURM2KgSTTAx/ZHBBkEg0Y9Dz7Ib5hKW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=acRpc38v; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhOS1BFC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 263DFC32789;
-	Tue, 11 Jun 2024 13:28:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718112529;
-	bh=ZEwkkTMQL/4fU2ogDD+72F11vuWnXpG/X2IJwXrbNJg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rhOS1BFCh7cbbhKz1ccVOKRvbXIq1FJmo/rVJft3QXoyzzZafE0gQjXqMCnQZIlOa
-	 4eetBZ1P8FUq/5CvclReuRediHZV+9TmOSkAbGIm7uesi803Q9/6OWEhnWPLoZwWrq
-	 yJCm2A/4VnK8IolB2fSAvbxa6D87+QNvashqCXp2ifk+RA9qHpr8r0BG+unY7wo/iS
-	 i3tQwiHDYjNjryXQXcWk5Bwjy479BwbaakUiw6OrPhScuGlpbja6QKH14Zr/73Ajii
-	 NJoDL9NwrosR7EtP1FcMnVX/ftSb0qYDdJxjTaqK6jIkPCbdILeU5/aSIW2/OOIXlk
-	 OpMCrVS8rSVZg==
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5b96a95c5e8so3038732eaf.3;
-        Tue, 11 Jun 2024 06:28:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXfjOwzOaSUDFkO4T20G8AWrTsHt1OjyQbdi/2RyT+69TZdAziDqOAjvaXBJlx+gEoABT6ZCMGnWRUAYylx4VbP5FzzCM/PJIlSTsKd6J4WHqbpQzke/rBb4gcH7f7TD00eVZsmAio/CfobNO7/OZE0
-X-Gm-Message-State: AOJu0YyRDmTAwI4/DIEVvTwQFFpcTdzKA7UE9/Wa3jbudtlTKLLkcUPx
-	iH2KF+I7354SjwWpDLQapq3WlT3HqocbFrpEJuOF5JZ1mMzdz2JQZ50H7aI0ftKEHGqOhrhiXrJ
-	6uFE1J7y9Jy3ZK5NdlCo8a080fb4=
-X-Google-Smtp-Source: AGHT+IHlGKbtoqSzrPuKgTNyQwgeafZr4upSLMIYVozrJD3uFzQQvkgvs5KhKonxebKDoBlVg3RkcFYQLBO7Ux1UT+4=
-X-Received: by 2002:a05:6820:168e:b0:5bb:672:404d with SMTP id
- 006d021491bc7-5bb067242a8mr5150419eaf.7.1718112528431; Tue, 11 Jun 2024
- 06:28:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="acRpc38v"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 4364C886AE;
+	Tue, 11 Jun 2024 15:28:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1718112541;
+	bh=HemWINfH/epw+LZFgUcstNjd+LDPJilMaixFK22+03Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=acRpc38vKy22z8IOCx6o/g1Z8cXPaHREocz/f0ymJuu/zSVZ/NdhDO1t0LhouEEPc
+	 rp6XJBfvRdHSTfxOR0kaB5mGKoT7CxxzIBcXMmH+LuMeqMzPDJPWDa5Jv/Bl9/buEH
+	 2IRH9fHbaP9iaDmE26pCk+2KAdeqI2yW8uU6kiSGZSyN4m/U1andbOEe6dM8dIjlLi
+	 35fbfnglEeWiYNXyf/uL7HgN5Fq+YYAlh/MnZ4QRJLshxBWVtIBGlVDH8LMFQh7zfD
+	 u8bN0jDc7qBRuIzi4Zs+mzs+UGguNDtZduItpB8pizQfnS82yd9EZ11PJs31X9QvL0
+	 hKofLqcYUCxSQ==
+Message-ID: <de1625ea-1ba8-4ebd-9442-59c7d9a6d04c@denx.de>
+Date: Tue, 11 Jun 2024 15:05:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2024051727-CVE-2023-52666-802b@gregkh> <85948141-5eae-bb3d-cb39-62fc6ddfe476@huawei.com>
-In-Reply-To: <85948141-5eae-bb3d-cb39-62fc6ddfe476@huawei.com>
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Tue, 11 Jun 2024 22:28:36 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd8HNYvhq6jiBUfh3sLwPDEsR43yVkUZuqsX+7ARezy52g@mail.gmail.com>
-Message-ID: <CAKYAXd8HNYvhq6jiBUfh3sLwPDEsR43yVkUZuqsX+7ARezy52g@mail.gmail.com>
-Subject: Re: CVE-2023-52666: ksmbd: fix potential circular locking issue in smb2_set_ea()
-To: Wang Zhaolong <wangzhaolong1@huawei.com>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-cve-announce@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] ARM: dts: stm32: add ethernet1 and ethernet2
+ support on stm32mp13
+To: Christophe Roullier <christophe.roullier@foss.st.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Richard Cochran <richardcochran@gmail.com>, Jose Abreu
+ <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240611130110.841591-1-christophe.roullier@foss.st.com>
+ <20240611130110.841591-2-christophe.roullier@foss.st.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <20240611130110.841591-2-christophe.roullier@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-2024=EB=85=84 6=EC=9B=94 11=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 8:30, W=
-ang Zhaolong <wangzhaolong1@huawei.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
->
->
-> >
-> > The Linux kernel CVE team recommends that you update to the latest
-> > stable kernel version for this, and many other bugfixes.  Individual
-> > changes are never tested alone, but rather are part of a larger kernel
-> > release.  Cherry-picking individual commits is not recommended or
-> > supported by the Linux kernel community at all.  If however, updating t=
-o
-> > the latest release is impossible, the individual changes to resolve thi=
-s
-> > issue can be found at these commits:
-> >       https://git.kernel.org/stable/c/5349fd419e4f685d609c85b781f2b70f0=
-fb14848
-> >       https://git.kernel.org/stable/c/e61fc656ceeaec65f19a92f0ffbeb562b=
-7941e8d
-> >       https://git.kernel.org/stable/c/e9ec6665de8f706b4f4133b87b2bd02a1=
-59ec57b
-> >       https://git.kernel.org/stable/c/ecfd93955994ecc2a1308f5ee4bd90c7f=
-ca9a8c6
-> >       https://git.kernel.org/stable/c/6fc0a265e1b932e5e97a038f99e29400a=
-93baad0
->
-> Hello.
->
-> Is this a valid CVE patch?
->
-> I noticed that the introduced `get_write` is not being used within the
-> function, and there are no follow-up patches addressing this.
-My bad, I'll update this.
-Thank you for your review.
->
-> Best regards,
->
-> Wang Zhaolong
->
+On 6/11/24 3:01 PM, Christophe Roullier wrote:
+> Both instances ethernet based on GMAC SNPS IP on stm32mp13.
+> GMAC IP version is SNPS 4.20.
+> 
+> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+
+Reviewed-by: Marek Vasut <marex@denx.de>
