@@ -1,159 +1,70 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECF61779BD
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6600EE57E
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718099329; cv=none; b=ENesRLXCLUWRoLSh7Ciqs7ptGslHN81spU1M2mrLcdOU/2Vt3Mn+0k5XS10NVPzc+ODr3kBNIoDnRRhLKjuXcwHCRawC9LGEs07QxGDElOfPFr88VwZL/6dv0GePX800NFuWqYq9CvhluhYi69rQZChPm+w/K6GURGu1aUmYqmI=
+	t=1718099447; cv=none; b=RmDDGnN8Bsmh6E93tpQVJmRnYUGxlKo0W+HkYyHlWV6Ux5phbCxXc/1MBZusXwuBFDaaNqikVY7/vBeN+g5Xd4jCTgEADrX08Nc/G4ytxFPaEsCv4y9L2iwtcOPgtNIN3imbd/qXZpyCSSnpXeLzi0NNsBuEJcAjRZIaBrum+ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718099329; c=relaxed/simple;
-	bh=rY1E63AFRlnvfo6oM5WyAgqbtSr3Iiigk/dvnbD7cdM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NX7MObi6t/Ee/JfqLcOr/Nv0MN08zHpZY3kzT0prWHr7XWctvAsRvQPxQENRyssbD6bk7pY65PexgnNYFMiO2i4yibhJL1Nad75NfyvOy8JwgaYM8xLQul4FwHGlhqdG3iVBUs3VJH0HxLVx77aOZx71pGVepikSOWfwPLndyC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=mbiD2GPs; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="mbiD2GPs"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57c68c3f8adso996069a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 02:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718099325; x=1718704125; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3URf1bqoxt6RvPsq+unfHOhtdPyrUcD08+rrLeED5Co=;
-        b=mbiD2GPsD6Euborju0ealfurXCJ9AUldpWjr+zUpduWNfqoI5gwBAbs138T2aiLOVB
-         KNd6f2Htb6jJkJhztl7EG1dNAmpQJigtjWbdHyTfb/EL2OzDaOfJ1St9Pgg/8Mff1Ji1
-         63xZBSOS9QPEI4GCWw7HcJiIGff5qkwyp0p/zaJd/Y99xn3pBRk7x4Id96aysuTB9Z5i
-         QRvhI5MHe3ZeeBcYIgeWRJSqdmjj19ZyXEpN61B7Pr8E8iBkmQSKCkLcEYSE/ej0oi40
-         BW65Cy6jLpXAazSe3FRXECggmCXtZnA82hmrp53/GP/ZusXo2k59yEovTru+qVhyqQ4g
-         Xg1Q==
+	s=arc-20240116; t=1718099447; c=relaxed/simple;
+	bh=PTnT7800Zf0dBf4vWv+RMOy353rooukdlsSDSkMJuI0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=goJdqk63gh5QnLH1z+0Cpqzl+KbagTGpGYZgWYrDjAR90otory0X5xil/No1x13H1nMwNaocHG9ixze3oViBf6mpoUHEG8ItFgmabU+2ytadpmMZ2weba1wIjfiQF2jN++tcxTJpUOVPW0eAIOFY4YC0qgCUDxkFNK4dkPr2yfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7eb61de14bbso448484339f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 02:50:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718099325; x=1718704125;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3URf1bqoxt6RvPsq+unfHOhtdPyrUcD08+rrLeED5Co=;
-        b=dE0JyYgbkT6jPslGJpuUKo94pT6AIQS4Sj8A8kfUjevzLb/u/bNDQJ4hsk1Rn6oMFZ
-         BcuhWrCFvTbzQ6UD4eU87ae5/53lV5Xt/DHqsMAEnpngZP1JFrmuo0d2ti81bOwy0/tj
-         aGFT3Y6s3ZQ51XdXLv+CupJolc1xOdeklEE2hRmonh7WSE3xsnWbspB7VcRGIqQtsbpM
-         yxmNjoodxtGEwe0lFi/yDxWH0TSzaWpJuuTqbFdifs3dDBrVB8LQ+W4Fqgi9yZM2seYY
-         KCv2oh4C1UTYCHOddtmyf4rNbuhJM92PSWX8l9fgJ1ysqjmZsaTIPhaDPr4fl6NBhhgV
-         RwcA==
-X-Forwarded-Encrypted: i=1; AJvYcCX2vn5HNOi71SylYxgAbr9PFTsVKY7wj4+FakOhKgrQh64rABtfRxIl1gADS9gYIhAAu8sHjpuQIbg3GZx3FwkSMM7SZe8EuVEuTkf0
-X-Gm-Message-State: AOJu0YxKVoGWXmLPakFWW4/bWuiIb1/pH7PkXtdW307aywoUo0JdDGCi
-	MCy5CyEd7PYWDjWHbBROaaRf0vYBmugLAw4vHvs855p1AuZUV10cEXTq1BgRmb0=
-X-Google-Smtp-Source: AGHT+IF14ZNnXOfobI/WB8lXVND+Ohqa5JoXFDW/TfmN1pVZr0QdPr6CGSC0zuZrHL1qY/x7lEYXOA==
-X-Received: by 2002:a50:d712:0:b0:579:e6ff:c61f with SMTP id 4fb4d7f45d1cf-57c508fd7f6mr11085689a12.25.1718099325105;
-        Tue, 11 Jun 2024 02:48:45 -0700 (PDT)
-Received: from localhost.localdomain ([91.216.213.152])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae2340f6sm9059647a12.90.2024.06.11.02.48.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 02:48:44 -0700 (PDT)
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-To: 
-Cc: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [Patch v2 2/2] ASoC: dt-bindings: lpc32xx: Add lpc32xx i2s DT binding
-Date: Tue, 11 Jun 2024 11:47:52 +0200
-Message-Id: <20240611094810.27475-2-piotr.wojtaszczyk@timesys.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
-References: <[PATCH] ASoC: fsl: Add i2s and pcm drivers for LPC32xx CPUs>
- <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
+        d=1e100.net; s=20230601; t=1718099445; x=1718704245;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PTnT7800Zf0dBf4vWv+RMOy353rooukdlsSDSkMJuI0=;
+        b=cvqi0h7OvkYpOhK6Z0XLjpi6MAKFytao/epO8fst0GzdGsqusqaTmty1LcV8S743Es
+         QJ8Bh55jk9DytzI07whPLxhaK4i7wKAW7z+NeBFl9X5/nuImWZAxXYTctDgkHjFQEIIj
+         cun4CbYo+D5QzsZcKtNu0y3pZh6LFNSBkoLpDV7TvGRe8rLoY5jsdWDCDeC38UK5saWc
+         elz5FsyQtwDgHymzB7r/V05tzDglHwbSxeV4uYUWE/JDp74YQMD6a1G2zsOiuup6dn9v
+         7LAzw3AMc59v1Dd4EGvljwXDwnYUjyVrqVtgVLzcX8flnJWXKAxo31kHNSHJLzYDRQOB
+         fhZQ==
+X-Gm-Message-State: AOJu0Yydvbtn8AWTQY/JhyTnZ36AWCrtCxZaKP9VtdWxb50lvkeR0DJ/
+	Tr/GkzLPPCBDZQMKSD6rjXTu/S+WYSq9QnzepCDoKdmf7tujvlA6p0J/fwtLhijJWAc1l+DenOc
+	aeg85hMMf0roImUEgCg9IAZcQw1xpIcVQ0JYTMABO8IqRtTGkB7ZA2js=
+X-Google-Smtp-Source: AGHT+IFIZCb0WPdAXa9CjwZj3aOgmtGjAyphMlWJgvgOaMWZp0hOHjQTMHqrtZ6ubKCfeYOXz6MMZ0AjeQRuVdgWzzF6qCDIZgYZ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:2cc1:b0:7eb:7cf2:adb0 with SMTP id
+ ca18e2360f4ac-7eb7cf2bca9mr35324039f.4.1718099445587; Tue, 11 Jun 2024
+ 02:50:45 -0700 (PDT)
+Date: Tue, 11 Jun 2024 02:50:45 -0700
+In-Reply-To: <0000000000008312ad06163b7225@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000024acee061a9a33bf@google.com>
+Subject: Re: [syzbot] [syzbot] [bpf?] KMSAN: uninit-value in htab_lru_percpu_map_lookup_percpu_elem
+From: syzbot <syzbot+1971e47e5210c718db3c@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add nxp,lpc3220-i2s DT binding documentation.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Signed-off-by: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
----
-Changes for v2:
-- Added maintainers field
-- Dropped clock-names
-- Dropped unused unneded interrupts field
+***
 
- .../bindings/sound/nxp,lpc3220-i2s.yaml       | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml
+Subject: [syzbot] [bpf?] KMSAN: uninit-value in htab_lru_percpu_map_lookup_=
+percpu_elem
+Author: wojciech.gladysz@infogain.com
 
-diff --git a/Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml b/Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml
-new file mode 100644
-index 000000000000..66e48d8a5a1b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/nxp,lpc3220-i2s.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/nxp,lpc3220-i2s.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP LPC32XX I2S Controller
-+
-+description:
-+  The I2S controller in LPC32XX SoCs to interface codecs and other audo devices.
-+
-+maintainers:
-+  - Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - nxp,lpc3220-i2s
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: input clock of the peripheral.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/lpc32xx-clock.h>
-+
-+    i2s0: i2s@20094000 {
-+      compatible = "nxp,lpc3220-i2s";
-+      reg = <0x20094000 0x1000>;
-+      clocks = <&clk LPC32XX_CLK_I2S0>;
-+      clock-names = "i2s_clk";
-+      status = "disabled";
-+    };
-+
-+...
--- 
-2.25.1
-
+#syz test: https://linux.googlesource.com/linux/kernel/git/torvalds/linux f=
+2d3b30c96861fc12f905040f9e6cd75dc1a0ade
+The information in this email is confidential and may be legally privileged=
+. It is intended solely for the addressee and access to it by anyone else i=
+s unauthorized. If you are not the intended recipient, any disclosure, copy=
+ing, distribution or any action taken or omitted to be taken based on it, i=
+s strictly prohibited and may be unlawful.
