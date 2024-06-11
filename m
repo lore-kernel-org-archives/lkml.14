@@ -1,96 +1,104 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF644171671;
-	Tue, 11 Jun 2024 06:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F0C6116;
+	Tue, 11 Jun 2024 06:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718086891; cv=none; b=FL+X8yj+Thm3eMBRIIrHbR61uj0PbDFvWea4yqgoi9oLGhATbyCKGE5HNRwD6H7ptin+JN/3nu51Bb5F+cDxyAD5vR3a72xwkGTs9I7uejuduFi6Geyd20nm5/xrP4Z6BCKIkj5g1bc6VmuaOj7Dsukq1cXa2nG9vPjeF5KHlHE=
+	t=1718086994; cv=none; b=FOUyCgZlxYGO13+VioCuwA2B5lYxQJLiH6OM1Am97hhdNtrJ0ox4Lk2NPx2TNtO6BRhm9cFO6hE3nLsC7AH26HPkgKrCCTtD9JEi0el/Hlp7WmP/D+Yh2fiwH/pLTwUgQedcal0/IuBFV+OOyT+MvI5jlIeF/8pNHjYOnjtMb58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718086891; c=relaxed/simple;
-	bh=7y3NYO7po3GNFMmc0kZoJTChSE95BDnqvwukper8rhg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oUqjYzxt5qAFHPRtlje8vmwwKtX+6ZPqr+k7jTnDmtmr29f22mUwimWAhFsCV3kQUviSL8M5XNEIQafDOyGh7bll0HcylqBZhgEYhDCWMKm2UOwR2Urp1pJGcmRQpEdTFY37gC1+1K3hWprMgnacemx9UBTlj5L/fz8m07nEExI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dUSA/8Oc; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718086994; c=relaxed/simple;
+	bh=ve4gT6CyxU4E2TQ43WtxEhXL8/ATKIHsYr3UXy4cHyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iJN18xxn2YK+qzeAAygyEuuxXrsV9vZgxvYJnafQS9Bv8ODq6W5b1xSyvjCIJ3asSs7Rb5gBLPFJkmx+Sc4AdZh6rMS0RoVzLxoDG7o99Z3ZEAOTsnmYS9GXyiH9pq6wFaWXxrW9p9fb9Kg2XCpkjGr5l4Bx2/ulIYWbWHwn/6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=18Jf531q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dUSA/8Oc"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45B6L4gX126284;
-	Tue, 11 Jun 2024 01:21:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718086864;
-	bh=CP+LDdPyvvolLB5E7oanQuL7LYswwkSefkdI+mxK7sA=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=dUSA/8OcxlFnu1uvIxYLxrjjFdJspH3GiAkjgxm+/kKM93I9AnPU5/71ab8pqJnvy
-	 KLB6/bMkcskPcff+lhPDHYLqK2zNJ750UHRTHgXtogv6tMoF9JuiYPFX30/6Ob4w+e
-	 mPyIJl/H5DSmfd111XhCyNeNkPnBAoRWsi9xKhSc=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45B6L46g032093
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 11 Jun 2024 01:21:04 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 11
- Jun 2024 01:21:03 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 11 Jun 2024 01:21:04 -0500
-Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45B6L3Tj069287;
-	Tue, 11 Jun 2024 01:21:03 -0500
-Date: Tue, 11 Jun 2024 11:51:02 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: Andrew Davis <afd@ti.com>
-CC: Sebastian Reichel <sre@kernel.org>,
-        Florian Fainelli
-	<florian.fainelli@broadcom.com>,
-        Broadcom internal kernel review list
-	<bcm-kernel-feedback-list@broadcom.com>,
-        <linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] power: reset: brcmstb: Do not go into infinite loop
- if reset fails
-Message-ID: <20240611062102.ez66rcvf4d464oqz@dhruva>
-References: <20240610142836.168603-1-afd@ti.com>
- <20240610142836.168603-5-afd@ti.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="18Jf531q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BFC3C2BD10;
+	Tue, 11 Jun 2024 06:23:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718086994;
+	bh=ve4gT6CyxU4E2TQ43WtxEhXL8/ATKIHsYr3UXy4cHyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=18Jf531qULxA/w23HwCUdkd/2Y3nJjWIdgleWTellkonv3YQTG0F1QG0wlv7DzTdW
+	 SrvqlNIF0jkDgNfIVHsbIhRqxh0YFLAYsjfSXfHUs9RH/SH5tZBk3lwxcOEK7pNReM
+	 f1GLVwOyOPoxXC+2uL+/vb+ZybUC97FNph2f4/6w=
+Date: Tue, 11 Jun 2024 08:23:11 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	kernel-janitors@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	"workflows@vger.kernel.org" <workflows@vger.kernel.org>,
+	Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <2024061143-transfer-jalapeno-afa0@gregkh>
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240609082726.32742-6-Julia.Lawall@inria.fr>
+ <20240610112223.151faf65@rorschach.local.home>
+ <b647eacd-f6f3-4960-acfd-36c30f376995@paulmck-laptop>
+ <20240610163606.069d552a@gandalf.local.home>
+ <70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240610142836.168603-5-afd@ti.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
 
-On Jun 10, 2024 at 09:28:36 -0500, Andrew Davis wrote:
-> There may be other backup reset methods available, do not halt
-> here so that other reset methods can be tried.
+On Mon, Jun 10, 2024 at 11:40:54PM +0200, Vlastimil Babka wrote:
+> On 6/10/24 10:36 PM, Steven Rostedt wrote:
+> > On Mon, 10 Jun 2024 08:46:42 -0700
+> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > 
+> >> > > index 7c29f4afc23d..338c52168e61 100644
+> >> > > --- a/fs/tracefs/inode.c
+> >> > > +++ b/fs/tracefs/inode.c
+> >> > > @@ -53,14 +53,6 @@ static struct inode *tracefs_alloc_inode(struct super_block *sb)
+> >> > >  	return &ti->vfs_inode;
+> >> > >  }
+> >> > >  
+> >> > > -static void tracefs_free_inode_rcu(struct rcu_head *rcu)
+> >> > > -{
+> >> > > -	struct tracefs_inode *ti;
+> >> > > -
+> >> > > -	ti = container_of(rcu, struct tracefs_inode, rcu);
+> >> > > -	kmem_cache_free(tracefs_inode_cachep, ti);  
+> >> > 
+> >> > Does this work?
+> >> > 
+> >> > tracefs needs to be freed via the tracefs_inode_cachep. Does
+> >> > kfree_rcu() handle specific frees for objects that were not allocated
+> >> > via kmalloc()?  
+> >> 
+> >> A recent change to kfree() allows it to correctly handle memory allocated
+> >> via kmem_cache_alloc().  News to me as of a few weeks ago.  ;-)
+> > 
+> > If that's the case then:
+> > 
+> > Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > 
+> > Do we have a way to add a "Depends-on" tag so that anyone backporting this
+> > will know that it requires the change to whatever allowed that to happen?
 > 
-> Signed-off-by: Andrew Davis <afd@ti.com>
-> ---
->  drivers/power/reset/brcmstb-reboot.c | 3 ---
->  1 file changed, 3 deletions(-)
+> Looks like people use that tag, although no grep hits in Documentation, so
+> Cc'ing workflows@ and Thorsten.
 > 
-> diff --git a/drivers/power/reset/brcmstb-reboot.c b/drivers/power/reset/brcmstb-reboot.c
-> index 59ed1513cfb30..441b44e0a9f29 100644
-> --- a/drivers/power/reset/brcmstb-reboot.c
-> +++ b/drivers/power/reset/brcmstb-reboot.c
-> @@ -58,9 +58,6 @@ static int brcmstb_restart_handler(struct sys_off_data *data)
->  		return NOTIFY_DONE;
->  	}
->  
-> -	while (1)
-> -		;
-> -
+> In this case it would be
+> 
+> Depends-on: c9929f0e344a ("mm/slob: remove CONFIG_SLOB")
 
-I agree, while (1) may not be the best thing to do here.
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Ick, no, use the documented way of handling this as described in the
+stable kernel rules file.
 
--- 
-Best regards,
-Dhruva
+thanks,
+
+greg k-h
