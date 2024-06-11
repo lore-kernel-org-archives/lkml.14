@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7304170835;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72B763C;
 	Tue, 11 Jun 2024 05:11:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718082660; cv=none; b=Ge7379B5dnjgkzHSJKpCgiGySrCOxQB9Xq1bGZ64MXoHOCEcX/3fx5A3gCYTi3q4M64ky1XaRCSGF/TD4C2A1bIMQb28dOUeuR+WBIropIWgVqdwIxYQ+55CQY6kQSdHfAhaJ/d83BsaP1skn1x7uZ7ycZBRQa4OEHC1t/9kQuo=
+	t=1718082660; cv=none; b=jmcxGIA8UMyvpPNiqfn1WCQgv6o1SIpwB/vL6e+z8H10ssvG5mt0Ma2M2oAgzPgjOZdRuchANchaYA35tyKkqK7SePZ/gqReTEPbDZOG3WfDkIB3DXCE5cqTiM2qlw1I6wWVOWJgJH5xio7wmB0SnboF8iBg6ufBMEAHA2dUz+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718082660; c=relaxed/simple;
-	bh=a1yCcNo00YVw+JbGiKiSn/QHOttjkTM0NAqfh9YXZrA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mp6TwiCBSJbT4zbhYLnbjFzv26DTiiacB6kvPqRI1KDcaCbfrQBCN+w1mCOxaAOa5B/R/Y3Y3CG5hDKaI/ZZulZZ5fttTzaDGnD5ykchTGLkcqkkpju8F+80TZC7sS5hJhhmwIPjLndMRYegWtK+ElkHv6oLDxsmN5b8lmVIE1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uggSy2wc; arc=none smtp.client-ip=10.30.226.201
+	bh=fNglPpq1OR578DdMVdAmSf59MmLIadxgL7Jtj0YqXm8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DgSlgzVYCkYsYbQjdQs/zFYTh881syiaIuET/lnw/UndqLMMvR9RnZ/K199nD7Yow0oiaLfOnbhjZbLjxLbJqeEtpPMN19mfD1ziBIjwkObqyi2dvITCkDqkqpxhbYCHqVku5fvCDZbdwwlkLtKVdpVBfrF+AiQiBcpiPDR8v/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szioNOFz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uggSy2wc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 281C7C2BD10;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szioNOFz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 781D1C4AF51;
 	Tue, 11 Jun 2024 05:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1718082660;
-	bh=a1yCcNo00YVw+JbGiKiSn/QHOttjkTM0NAqfh9YXZrA=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=uggSy2wcxCeuMHpNhrkm0bzwOYCIcJcZECvpe65lQLkrX3cDvOFTQTaEXQ28shxFx
-	 dT5C394l/6LKypiDoTgdjnfqdU7fha6dY29reltS4SRR3rVnT+EKmF+uuPj1yu+O3w
-	 +8K+20GxdgbPPa2TqqWMQ+Ct6x7L1PfhnfNxLnNKO/r0cpylRzCv4zx1tZZBul7qZP
-	 qHAyxIoMwzcKMnsuSndHgqzNy4ezLiTr/nrgSXSR4T7+YP0jaMsv/myQ77hPTZrGD7
-	 dUnuC7gMMWSNofmtooux4pPqtYmPxW3ZPwxlN8zgBKhdb+MDQwHS8odUOiL/7QiDAb
-	 OTm5WzwbXq8Pg==
+	bh=fNglPpq1OR578DdMVdAmSf59MmLIadxgL7Jtj0YqXm8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=szioNOFzEU16gF2REnhbCPQsvmebHMEDMhgN7l7rcDdPIi3BWJnTZc46OdZoUOMgz
+	 uxCw/oYU3bLzKNaBoo0JkUBO+qMr9Ma64tLaP+UXQhxNUtK3ESBd4xgIquAREdF7eF
+	 sJrM+by1SsnF+xLRSvPb9Bd5uofiF0xeyQ5ub2+EBoZnSl1XoygdpKnZunDpACL58V
+	 cjMgC+TvO/yxTHYNv/8qVCsxKJPlwoMSckc21vJlwHneXMJWpBzVtf4/T5xT1dxfzM
+	 pdpiI6waVMe3ANqi1rCpsy/aqE0eY9S+y8+AczpVm4wbZ5ca+5l8K8aZ7D1LhM+QTP
+	 Y80tJnWgau/0A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F144C25B76;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63950C25B76;
 	Tue, 11 Jun 2024 05:11:00 +0000 (UTC)
 From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Subject: [PATCH 0/3] Pinctrl: A4: Add pinctrl driver
-Date: Tue, 11 Jun 2024 13:10:56 +0800
-Message-Id: <20240611-a4_pinctrl-v1-0-dc487b1977b3@amlogic.com>
+Date: Tue, 11 Jun 2024 13:10:59 +0800
+Subject: [PATCH 3/3] arm64: dts: amlogic: a4: add pinctrl node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGHcZ2YC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDMwNz3UST+ILMvOSSohxdExNzEwNjA0NLQ9M0JaCGgqLUtMwKsGHRsbW
- 1ABgVCJtcAAAA
+Message-Id: <20240611-a4_pinctrl-v1-3-dc487b1977b3@amlogic.com>
+References: <20240611-a4_pinctrl-v1-0-dc487b1977b3@amlogic.com>
+In-Reply-To: <20240611-a4_pinctrl-v1-0-dc487b1977b3@amlogic.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -54,11 +54,11 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
  linux-kernel@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1718082657; l=963;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718082658; l=1392;
  i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=a1yCcNo00YVw+JbGiKiSn/QHOttjkTM0NAqfh9YXZrA=;
- b=CZCp68RkKk3QYBnZehamSHoVmqDw+Dzifk10pmgVUl0JpV1jociJdPiNpRjHkbrWa+WeSTn9m
- 0+CraFm8i7UDbxmz6UALLINVPDDwMSzAmkl8uAHpkYTKEzmUfVrJhRX
+ bh=dK1sBro4y44HxdZ7xq97Zu8WXKXsyY0hjnlhV/Rfko0=;
+ b=fPWr6+NYpqH9T8KWCXZZwBxdMkk0QoKEll2gzJAqwC8lX8rYr4earPV3u9ulD3JKWLmCCM0Er
+ J/t1A1E3N49DhS0Sn5+Kwlpv/+j4TTt7DWisWrT3bHqlHN9cgK+8iQa
 X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
  pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
 X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
@@ -66,29 +66,62 @@ X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
 X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 Reply-To: xianwei.zhao@amlogic.com
 
-Add pinctrl driver support for Amloigc A4 SoC
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+
+Add pinctrl device to support Amlogic A4.
 
 Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
-Xianwei Zhao (3):
-      dt-bindings: pinctrl: Add support for Amlogic A4 SoCs
-      pinctrl: meson: Add driver support for Amlogic A4 SoCs
-      arm64: dts: amlogic: a4: add pinctrl node
+ arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi | 36 +++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
- .../bindings/pinctrl/amlogic,meson-pinctrl-a1.yaml |    2 +
- arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        |   36 +
- drivers/pinctrl/meson/Kconfig                      |    6 +
- drivers/pinctrl/meson/Makefile                     |    1 +
- drivers/pinctrl/meson/pinctrl-amlogic-a4.c         | 1163 ++++++++++++++++++++
- .../dt-bindings/gpio/amlogic,a4-aobus-pinctrl.h    |   21 +
- .../dt-bindings/gpio/amlogic,a4-periphs-pinctrl.h  |   93 ++
- 7 files changed, 1322 insertions(+)
----
-base-commit: 87501b7ca0005c533d770d37e0047a60954d986a
-change-id: 20240607-a4_pinctrl-44740301915f
+diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+index de10e7aebf21..5d858bb93eb7 100644
+--- a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
++++ b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+@@ -47,4 +47,40 @@ pwrc: power-controller {
+ 			#power-domain-cells = <1>;
+ 		};
+ 	};
++
++	soc {
++		aobus_pinctrl: pinctrl@fe08e700 {
++			compatible = "amlogic,a4-aobus-pinctrl";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			ao_gpio: bank@fe08e700 {
++				reg = <0x0 0xfe08e700 0x0 0x04>,
++				      <0x0 0xfe08e704 0x0 0x60>;
++				reg-names = "mux", "gpio";
++				gpio-controller;
++				#gpio-cells = <2>;
++				gpio-ranges = <&aobus_pinctrl 0 0 8>;
++			};
++		};
++	};
++};
++
++&apb {
++	periphs_pinctrl: pinctrl@4000 {
++		compatible = "amlogic,a4-periphs-pinctrl";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		gpio: bank@4000 {
++			reg = <0x0 0x4000 0x0 0x0050>,
++			      <0x0 0x40c0 0x0 0x0220>;
++			reg-names = "mux", "gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&periphs_pinctrl 0 0 73>;
++		};
++	};
+ };
 
-Best regards,
 -- 
-Xianwei Zhao <xianwei.zhao@amlogic.com>
+2.37.1
 
 
