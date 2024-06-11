@@ -1,167 +1,115 @@
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46480178CCF
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAF1178CCF;
+	Tue, 11 Jun 2024 13:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718111534; cv=none; b=L16pSTEPheVsc4PW+rPxFdmgenMNicMmI5Jegk2PywbinEBPc7rD4Os7Pw3pf6TxtV4gpHC3My805rkNv9+1r0B1IYhPXULUHjh1ojzCvLejE0+cTSbZflQ/kKxmxYVBjD9fVGQeJHVz+jPQcyQ55ySprecVpbTDgU2C1OSaOfE=
+	t=1718111570; cv=none; b=tbnxSbTcl0AzCuVwh/I30SFt7DjKf1crdgD68bGXnQp+/5VFZvl3cXbqgKPk1RHD1cVltMaWx4N01/BzL/+dPvk8hyFf6uFC58dgtlvo4Mi0vutPp6oyNL7OY+rrylyOMgWqxV3WNpkHZnD2alhoyggbfmIHKn9vatGLLshpBxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718111534; c=relaxed/simple;
-	bh=1uyVeCNwdm3i9R+X7AEUciEH3LQi9dhrZKghSZoyxC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WxP18pS3mT3Z3mPm595u2yCyHENLD3rZF2HWsMkQW7nwiseUOQd44v594tlBRBuHGbzLdjiu/jexKVB89c5jI4g9dsgzTrd91j7U7kzy3h6ETd0LWLhFBBhhvMS6peDLTeXKmkPaIU/8ircgvIvxGdoFnMoB0haKGPBZIkrf268=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=autcCY38; arc=none smtp.client-ip=91.26.50.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	s=arc-20240116; t=1718111570; c=relaxed/simple;
+	bh=OGe3r2/6pOkH3bSOKeGtF6RD1v4JiSo+hRENqhCkqew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=naif1t1/8A/vUWp5zTkQW39GvJ4LcF96ztRwQqL59HiVfkhN1dBxyvm5Y/ntjhtCQYS1kmLU+l685dldwLnG27kaYH3n5IIAVZs1ilyBVKe5r9d9VJ0XQIylZE6YHpquHP2K+twkvbisrYBbewp9Wb7msrwxlXBrsmGKhE5S6qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dkfn9bGA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="autcCY38"
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1718111528; x=1720703528;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1uyVeCNwdm3i9R+X7AEUciEH3LQi9dhrZKghSZoyxC8=;
-	b=autcCY38H97S1LBqDZ3xhC8kq/YUV7TFGJqjn9+PQd+a5Z9uDyO7c7vE2dHrALku
-	fK2VyTcMNyLMxtpEP+Cfz+wqaOM6+wtjzchbJZ6woOkrI05lXapMNL20bZD9gw/a
-	f1isyGFKfxwR35GfDaKhet5Pl74qdWPaet6I+nVjwDo=;
-X-AuditID: ac14000a-03e52700000021bc-0f-66684d283699
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id CD.94.08636.82D48666; Tue, 11 Jun 2024 15:12:08 +0200 (CEST)
-Received: from [10.0.0.19] (172.25.0.11) by Berlix.phytec.de (172.25.0.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Tue, 11 Jun
- 2024 15:12:03 +0200
-Message-ID: <4e7dd467-20be-43ce-936d-200ede6d511b@phytec.de>
-Date: Tue, 11 Jun 2024 15:11:59 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dkfn9bGA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A823CC2BD10;
+	Tue, 11 Jun 2024 13:12:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718111570;
+	bh=OGe3r2/6pOkH3bSOKeGtF6RD1v4JiSo+hRENqhCkqew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dkfn9bGAJxiqPyULSPh28vzRbnNR6uLlnIrDo64O2djHmmF+9RmhcOl1CvS6RlPCw
+	 pEJ2EeFIlvJ2EkvwVCxHDm6slBdVLgQr4kN+c7fu1vggrJNAQ9FU4FVyenGIoeEKIZ
+	 GepRVPGZdqhokEa+3vxMyNcH4/J0S6sBObj0+l1nCYzNlO0dGTz9njTbNCnfqNnsSW
+	 k2nXmY37Jup2keBhBI+3nFdUIX9sYSAJ+XVaGfcfvON3MDtvtB3cBR5RM/GwnlHNj1
+	 +5k/Mos4HWpzcryvLv3rM0CC0LbLDh3IMsleknX2XOrTBCPVUhzp8aMzyluerjV77T
+	 PGUGdv3n3DVTA==
+Date: Tue, 11 Jun 2024 14:12:45 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Daire McNamara <daire.mcnamara@microchip.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v1 2/2] PCI: microchip: rework reg region handing
+Message-ID: <20240611-relapsing-hurt-3a5f37743784@spud>
+References: <20240527-slather-backfire-db4605ae7cd7@wendy>
+ <20240527-flint-whacky-4fb21c38476b@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] Add overlays to disable optional hardware in
- k3-am6xx-phycore-som boards
-To: Vignesh Raghavendra <vigneshr@ti.com>, Nathan Morrisson
-	<nmorrisson@phytec.com>, <nm@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>, Wadim Egorov
-	<w.egorov@phytec.de>
-References: <20240528225137.3629698-1-nmorrisson@phytec.com>
- <4ac40139-eda0-4f6a-8bbe-99110605f91e@ti.com>
- <33084cb0-95f4-414d-b094-bf704376fd02@phytec.de>
-Content-Language: en-US
-From: Daniel Schultz <d.schultz@phytec.de>
-In-Reply-To: <33084cb0-95f4-414d-b094-bf704376fd02@phytec.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: Florix.phytec.de (172.25.0.13) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsWyRpKBR1fDNyPNYMcHA4s1e88xWcw/co7V
-	Yvnn2ewWL2fdY7PY9Pgaq8XlXXPYLN78OMtk8aFxM5vF/z072C2636lb/D/7gd2B22PTqk42
-	j81L6j36u1tYPf5cfMfqcfzGdiaPz5vkAtiiuGxSUnMyy1KL9O0SuDKenfnLXnBcvmL38vgG
-	xvuSXYycHBICJhLru18xdjFycQgJLGGS6J8/B8q5xShxdt8tVpAqXgEbiQ3vbrCB2CwCqhJ9
-	/1ezQcQFJU7OfMICYosKyEvcvzWDvYuRg0NYIE3icp8RyBwRgZ2MEpNuvGAFcZgFVjNKPJiy
-	jB1iw3xGiVkTrjOBdDMLiEvcejIfzGYT0JK4s2UuM8gkTgFbiQ+TEyFKLCQWvznIDmHLSzRv
-	nc0MYgsJKEjM3jaZEeIdeYlp514zQ9ihEkc2rWaawCg8C8mts5Bsm4Vk7CwkYxcwsqxiFMrN
-	TM5OLcrM1ivIqCxJTdZLSd3ECIo3EQauHYx9czwOMTJxMB5ilOBgVhLhPROTnibEm5JYWZVa
-	lB9fVJqTWnyIUZqDRUmcd3VHcKqQQHpiSWp2ampBahFMlomDU6qBsWfzr/meR3sqt030bLaY
-	YPRi+47whjMPKvYnq4hfWL5/84dVP8Nk8gvfPtl7t/narfuV72LfuJevemCy4+85DrdNbzZK
-	GUR5sNjbMOtp9E59svLhq7mXlnezfS52LHDV4YxVfDMta33M8lu32g3uebgdXZ/dV7V7l329
-	oeet1zO2vdkn1LVmd5ASS3FGoqEWc1FxIgA2f7xBpQIAAA==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="66+HdzG+IeYp/nLS"
+Content-Disposition: inline
+In-Reply-To: <20240527-flint-whacky-4fb21c38476b@wendy>
 
-Hi Vignesh,
 
-On 10.06.24 10:07, Wadim Egorov wrote:
-> Add: Daniel Schultz
+--66+HdzG+IeYp/nLS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, May 27, 2024 at 10:37:17AM +0100, Conor Dooley wrote:
+> @@ -1150,28 +1129,44 @@ static int mc_host_probe(struct platform_device *=
+pdev)
+> =20
+>  	port->dev =3D dev;
+> =20
+> -	port->axi_base_addr =3D devm_platform_ioremap_resource(pdev, 1);
+> -	if (IS_ERR(port->axi_base_addr))
+> -		return PTR_ERR(port->axi_base_addr);
+> +	/*
+> +	 * The original, incorrect, binding that lumped the control and
+> +	 * bridge addresses together still needs to be handled by the driver.
+> +	 */
+> +	axi_base_addr =3D devm_platform_ioremap_resource_byname(pdev, "apb");
+
+I noticed yesterday that this will print an error during boot, which I
+don't really want for the devices using the updated format. I'll send a
+v2 tomorrow with the reg region probing inverted.
+
+Thanks,
+Conor.
+
+> +	if (!IS_ERR(axi_base_addr)) {
+> +		port->bridge_base_addr =3D axi_base_addr + MC_PCIE1_BRIDGE_ADDR;
+> +		port->ctrl_base_addr =3D axi_base_addr + MC_PCIE1_CTRL_ADDR;
+> +		goto addrs_set;
+> +	}
+> =20
+> +	port->bridge_base_addr =3D devm_platform_ioremap_resource_byname(pdev, =
+"bridge");
+> +	if (IS_ERR(port->bridge_base_addr))
+> +		return dev_err_probe(dev, PTR_ERR(port->bridge_base_addr),
+> +				     "legacy apb register and bridge region missing");
+> +
+> +	port->ctrl_base_addr =3D devm_platform_ioremap_resource_byname(pdev, "c=
+trl");
+> +	if (IS_ERR(port->ctrl_base_addr))
+> +		return dev_err_probe(dev, PTR_ERR(port->ctrl_base_addr),
+> +				     "legacy apb register and ctrl region missing");
+> +
+> +addrs_set:
 >
-> Am 03.06.24 um 19:41 schrieb Vignesh Raghavendra:
->> Hi Nathan,
->>
->> On 29/05/24 04:21, Nathan Morrisson wrote:
->>> Add three overlays to disable the eth phy, rtc, and spi nor. These
->>> overlays will be used to disable device tree nodes for components
->>> that are optionally not populated.
->>>
->>> v2:
->>>    - Add build time tests in makefile
->>>
->>> Nathan Morrisson (4):
->>>    arm64: dts: ti: k3-am64-phycore-som: Add serial_flash label
->>
->>
->>>    arm64: dts: ti: k3-am6xx-phycore-som: Add overlay to disable eth phy
->>>    arm64: dts: ti: k3-am6xx-phycore-som: Add overlay to disable rtc
->>>    arm64: dts: ti: k3-am6xx-phycore-som: Add overlay to disabl spi nor
->>>
->>>   arch/arm64/boot/dts/ti/Makefile               | 17 +++++++++++++++++
->>>   .../boot/dts/ti/k3-am64-phycore-som.dtsi      |  2 +-
->>>   .../ti/k3-am6xx-phycore-disable-eth-phy.dtso  | 19 
->>> +++++++++++++++++++
->>>   .../dts/ti/k3-am6xx-phycore-disable-rtc.dtso  | 15 +++++++++++++++
->>>   .../ti/k3-am6xx-phycore-disable-spi-nor.dtso  | 15 +++++++++++++++
->>>   5 files changed, 67 insertions(+), 1 deletion(-)
->>
->>>   create mode 100644 
->>> arch/arm64/boot/dts/ti/k3-am6xx-phycore-disable-eth-phy.dtso
->>>   create mode 100644 
->>> arch/arm64/boot/dts/ti/k3-am6xx-phycore-disable-rtc.dtso
->>>   create mode 100644 
->>> arch/arm64/boot/dts/ti/k3-am6xx-phycore-disable-spi-nor.dtso
->>>
->>
->> I am not sure if this a common practice to have overlays to disable
->> missing components (at least I dont see such dtso in kernel). I would
->> like to see an what DT maintainers feel as such dtsos can explode in
->> numbers.
->>
->> Is this something that U-Boot can detect and fix up for the Linux DT?
->>
->> Unpopulated SPI flash and RTC should ideally not be an issue as drivers
->> would gracefully fail albeit with some sort of error msg.
->> Not so sure about Eth PHYs though.
->>
->> Also, Are these dtso's mutually exclusive? ie can SoM have SPI flash but
->> not RTC, have RTC and SPI Flash but no ETH PHY?
 
-Let me explain a little bit why we would like to have those overlays 
-upstream.
+--66+HdzG+IeYp/nLS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Our SOMs come with a so-called "option tree" to produce one product with 
-different components. For example, our standard part name for the 
-phyCORE-AM62x is PCM-071-5432DE11I.A0 and the option tree is located 
-between PCM-071 and A0. In this particular tree, the fourth character 
-defines the DDR size with 2GB. If we have a customer with less memory 
-requirements, we can simply produce the 1GB variant (PCM-071-5431...) 
-and lower the cost.
+-----BEGIN PGP SIGNATURE-----
 
-Luckily, we can read the TI SOC part number in u-boot and disable 
-non-existing components like CPU cores, GPUs, etc. in the Linux 
-device-tree. However, we still need to handle all modifiable parts on 
-our SOMs. For the phyCORE-AM62x, this would be the DDR size, SPI-NOR 
-size and flash type (Q/OSPI), and whether the RTC and Ethernet PHY are 
-populated. The DDR size can be handled completely in SPL, but for 
-everything else we need to modify our Linux device-tree. The easiest and 
-cleanest way to do that is by applying overlays, which are located next 
-to the device-tree. I'm not a fan of letting drivers fail to probe. 
-Customers with extensive product verifications most likely need to 
-disable those manually, which is against the idea of buying a 
-fully-functional SOM. Alternatively, we need to hard-code fixups in our 
-U-Boot which means some U-Boot/Linux combinations might not boot anymore 
-or we maintain them in a Phytec repository and never archive fully 
-upstream status for our products.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmhNTQAKCRB4tDGHoIJi
+0m6kAP9Yi9S7w0ZvHdiZWSo84UEHKpHj2Y1/n5bHC+FrPclaqgD8DZbVakSMXx/j
+Ui6ZHfzPJVENrprpWkS4r/azLfon1A4=
+=qPrU
+-----END PGP SIGNATURE-----
 
-Regarding the number of overlays. We use those three plus an additional 
-one, which we need to upstream too, for the AM62x, AM62Ax, and AM64x. 
-The upcoming AM62P and AM67 require one additional overlay for an 
-optional, second EEPROM. In total we need 5 overlays for 5 AM6 products.
-
-Best Regards,
-Daniel
-
-
+--66+HdzG+IeYp/nLS--
