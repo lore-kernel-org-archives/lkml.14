@@ -1,270 +1,406 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0F2134BC;
-	Tue, 11 Jun 2024 14:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C30F111A8
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 14:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718117374; cv=none; b=SOm2U5gCI3HsCsFK0qCTJPn6597ggXb0ST7Mc0Pa05okpn4WYyjDuEdIJsaf1BYS1YdjJM78bKRpORiW+k1w5mRPur2KY+I+z9crsvEqbmKlF/AOgIVE7Y3391LBcZvDWaOMqBYrga98qcuTHWQQQW6Xb4ce2SY598sA8ZRQpX8=
+	t=1718117394; cv=none; b=ICws8m0a0AReMP/Xd19GHDcdwBjwbzVh5p+EasMhHQ4GtovMX6himgjJOh+u4vK9VK431AwfwYXD3w1BlGzqXcmzDyLVrW8F01DGR+381xuGt8KTI1s/C5m3Cq/b+MOUloX6eUfC+YnJn5wNkIuEmkq7FjLq7AvMCGaONjkFIjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718117374; c=relaxed/simple;
-	bh=9BAjAJrljfOZzkleoSTbE1CCRwWdpRzdEptyrdlUHY0=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=COStRGVwWzEwOC3Bw8uyjL/cepAINPN3i1WrNszMZr7GE+ECLfchDL1lEjSDQViPApQsHB9nDB9OPM4VyRcleI3Jm+d+aYHwjUDpRH78k054onLheSeyn3lW/gaSCH/Atl4DF/Ueki9Jcog/HdbrLWjkEkeDm+mahASkSuhgA7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C44C4AF49;
-	Tue, 11 Jun 2024 14:49:33 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sH2on-00000001Onf-2roL;
-	Tue, 11 Jun 2024 10:49:49 -0400
-Message-ID: <20240611144949.544382280@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 10:49:12 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lstoakes@gmail.com>,
- linux-mm@kvack.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- linux-hardening@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- wklin@google.com,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>,
- Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH v3 1/2] mm/memblock: Add "reserve_mem" to reserved named memory at boot up
-References: <20240611144911.327227285@goodmis.org>
+	s=arc-20240116; t=1718117394; c=relaxed/simple;
+	bh=MB1u9xYJAeyNJZqJHudCJdl9rlrJURgOKjV7Pikqrmc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nPTHYqdpW7N/Uu20M6g7TgzW4aN76GUd+r89UuZ7+aFF/OhFUGwtORHOsooOwPizyrW0hAbYXSmiKruHFKYqK3v1yHAgtWIzFFbKaTphUUu02HCRzeWuApIqowIRtE83O4/NT5GMZrZDELrmXZocM/73P99KQYLBqgLsYKgmi70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hOzwDzDa; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hOzwDzDa"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f480624d0fso9329895ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 07:49:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718117391; x=1718722191; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=j5YCF6B9jcBatj7ItxDmcM7idEWLAzJfNnqPPDuiJIA=;
+        b=hOzwDzDa9VqwY+ZM51k7W4jyz5kfvkJ/BJzF1bYgOd6QttqWbQUCC8DYo/5IchldQ2
+         90+Wy57iBfP/xxuvJfQbvYmHxIQg1dZ6a5Snz4Xmf2lbcENpYFIccSyb3/Mtk+vOoRx2
+         dCLksOwRH1OCvqCtsJG/qNn4gDghsfAV2zpgE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718117391; x=1718722191;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j5YCF6B9jcBatj7ItxDmcM7idEWLAzJfNnqPPDuiJIA=;
+        b=CsjEm7CUKzMo3NKm3t8CwrEQYS53UBzrSETb/3FsL7ofnF619o4tQrZf9Bid+cjKB+
+         8SSmkPvgXWiWR+u9mY5Eb0YMei9n9hDB4chnZAZJa5+EVZgVtn/7CA3Pe8rp2FRaZrFE
+         xXxBkoSKS4hIhkkkZW8Pt2RG5t6W9yKmwLWzNXwC6+PnJ/JfByO9P8wwUpygJsZMP0Ta
+         KJzAGuSbs2WLilvRDXX6ewBGRWejpvZl7lKGiia+PV/cUfro3ycTVXc8F5nOmldNNcME
+         bCF0Av59cB7a9zw+tNNQoMfofV/OwHuagTCoaaoRCqLwWBCuNvxElCuZ6pV4s0GrMl+5
+         qkJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUi1R9QCqZcnWEdlIck+68HjQjG+W07ESI9YHtTBz3A3upouhtN5v4o8kfqgdcBCSgO91uqaeUnGJc+F/4wfAeUKAilW5wxfiasShA
+X-Gm-Message-State: AOJu0YzwXRI6R6tTDEnI1PRfhzLHb8xX+5iWle3zGMSJaLwik8ecp5dA
+	WM5G/XVZiLzV51YoLNJ3T1gkg5HYswalvVHnJqnn+dNEEsm0sgVQJtspARPkSg==
+X-Google-Smtp-Source: AGHT+IGgmtV75jlWWUP/itqgZ1iq0kBKoA0+VdNfN1pUkCG/3+hoGRiPWm3pyGDcsphKke3eyZnASA==
+X-Received: by 2002:a17:903:32c3:b0:1f7:e32f:f057 with SMTP id d9443c01a7336-1f7e32ff2d1mr559695ad.34.1718117391339;
+        Tue, 11 Jun 2024 07:49:51 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:f410:2f13:37e2:37d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f7209970f3sm28733955ad.90.2024.06.11.07.49.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 07:49:50 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: dri-devel@lists.freedesktop.org,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Maxime Ripard <mripard@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Yuran Pereira <yuran.pereira@hotmail.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	David Airlie <airlied@gmail.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/panel: Avoid warnings w/ panel-simple/panel-edp at shutdown
+Date: Tue, 11 Jun 2024 07:48:51 -0700
+Message-ID: <20240611074846.1.Ieb287c2c3ee3f6d3b0d5f49b29f746b93621749c@changeid>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+At shutdown if you've got a _properly_ coded DRM modeset driver then
+you'll get these two warnings at shutdown time:
 
-In order to allow for requesting a memory region that can be used for
-things like pstore on multiple machines where the memory layout is not the
-same, add a new option to the kernel command line called "reserve_mem".
+  Skipping disable of already disabled panel
+  Skipping unprepare of already unprepared panel
 
-The format is:  reserve_mem=nn:align:name
+These warnings are ugly and sound concerning, but they're actually a
+sign of a properly working system. That's not great.
 
-Where it will find nn amount of memory at the given alignment of align.
-The name field is to allow another subsystem to retrieve where the memory
-was found. For example:
+It's not easy to get rid of these warnings. Until we know that all DRM
+modeset drivers used with panel-simple and panel-edp are properly
+calling drm_atomic_helper_shutdown() or drm_helper_force_disable_all()
+then the panel drivers _need_ to disable/unprepare themselves in order
+to power off the panel cleanly. However, there are lots of DRM modeset
+drivers used with panel-edp and panel-simple and it's hard to know
+when we've got them all. Since the warning happens only on the drivers
+that _are_ updated there's nothing to encourage broken DRM modeset
+drivers to get fixed.
 
-  reserve_mem=12M:4096:oops ramoops.mem_name=oops
+In order to flip the warning to the proper place, we need to know
+which modeset drivers are going to shutdown properly. Though ugly, do
+this by creating a list of everyone that shuts down properly. This
+allows us to generate a warning for the correct case and also lets us
+get rid of the warning for drivers that are shutting down properly.
 
-Where ramoops.mem_name will tell ramoops that memory was reserved for it
-via the reserve_mem option and it can find it by calling:
+Maintaining this list is ugly, but the idea is that it's only short
+term. Once everyone is converted we can delete the list and call it
+done. The list is ugly enough and adding to it is annoying enough that
+people should push to make this happen.
 
-  if (reserve_mem_find_by_name("oops", &start, &size)) {
-	// start holds the start address and size holds the size given
+Implement this all in a shared "header" file included by the two panel
+drivers that need it. This avoids us adding an new exports while still
+allowing the panel drivers to be modules. The code waste should be
+small and, as per above, the whole solution is temporary.
 
-This is typically used for systems that do not wipe the RAM, and this
-command line will try to reserve the same physical memory on soft reboots.
-Note, it is not guaranteed to be the same location. For example, if KASLR
-places the kernel at the location of where the RAM reservation was from a
-previous boot, the new reservation will be at a different location.  Any
-subsystem using this feature must add a way to verify that the contents of
-the physical memory is from a previous boot, as there may be cases where
-the memory will not be located at the same location.
-
-Not all systems may work either. There could be bit flips if the reboot
-goes through the BIOS. Using kexec to reboot the machine is likely to
-have better results in such cases.
-
-Link: https://lore.kernel.org/all/ZjJVnZUX3NZiGW6q@kernel.org/
-
-Suggested-by: Mike Rapoport <rppt@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
-Changes since v2: https://lore.kernel.org/linux-trace-kernel/20240606150316.751642266@goodmis.org
+I came up with this idea to help us move forward since otherwise I
+couldn't see how we were ever going to fix panel-simple and panel-edp
+since they're used by so many DRM Modeset drivers. It's a bit ugly but
+I don't hate it. What do others think?
 
-- Fixed typo "reserver"
+This is at the end of the series so even if folks hate it we could
+still land the rest of the series.
+This was a "bonus" extra patch I added at the end of v3 of the series
+("drm/panel: Remove most store/double-check of prepared/enabled
+state") [1]. There, I had the note: "I came up with this idea to help
+us move forward since otherwise I couldn't see how we were ever going
+to fix panel-simple and panel-edp since they're used by so many DRM
+Modeset drivers. It's a bit ugly but I don't hate it. What do others
+think?"
 
-- Added EXPORT_SYMBOL_GPL() for reserve_mem_find_by_name()
+As requested by Neil, now that the rest of the series has landed I'm
+sending this as a standalone patch so it can get more attention. I'm
+starting it back at "v1". There is no change between v1 and the one
+sent previously except for a typo fix in an error message: Can't't =>
+Can't
 
- .../admin-guide/kernel-parameters.txt         | 20 ++++
- include/linux/mm.h                            |  2 +
- mm/memblock.c                                 | 98 +++++++++++++++++++
- 3 files changed, 120 insertions(+)
+[1] https://lore.kernel.org/r/20240605002401.2848541-1-dianders@chromium.org
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b600df82669d..ce7de8136f2f 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5710,6 +5710,26 @@
- 			them.  If <base> is less than 0x10000, the region
- 			is assumed to be I/O ports; otherwise it is memory.
+ drivers/gpu/drm/drm_panel.c                   |  12 ++
+ .../gpu/drm/panel/panel-drm-shutdown-check.h  | 151 ++++++++++++++++++
+ drivers/gpu/drm/panel/panel-edp.c             |  19 +--
+ drivers/gpu/drm/panel/panel-simple.c          |  19 +--
+ 4 files changed, 169 insertions(+), 32 deletions(-)
+ create mode 100644 drivers/gpu/drm/panel/panel-drm-shutdown-check.h
+
+diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+index cfbe020de54e..df3f15f4625e 100644
+--- a/drivers/gpu/drm/drm_panel.c
++++ b/drivers/gpu/drm/drm_panel.c
+@@ -161,6 +161,12 @@ int drm_panel_unprepare(struct drm_panel *panel)
+ 	if (!panel)
+ 		return -EINVAL;
  
-+	reserve_mem=	[RAM]
-+			Format: nn[KNG]:<align>:<label>
-+			Reserve physical memory and label it with a name that
-+			other subsystems can use to access it. This is typically
-+			used for systems that do not wipe the RAM, and this command
-+			line will try to reserve the same physical memory on
-+			soft reboots. Note, it is not guaranteed to be the same
-+			location. For example, if KASLR places the kernel at the
-+			location of where the RAM reservation was from a previous
-+			boot, the new reservation will be at a different location.
-+			Any subsystem using this feature must add a way to verify
-+			that the contents of the physical memory is from a previous
-+			boot, as there may be cases where the memory will not be
-+			located at the same location.
-+
-+			The format is size:align:label for example, to request
-+			12 megabytes of 4096 alignment for ramoops:
-+
-+			reserve_mem=12M:4096:oops ramoops.mem_name=oops
-+
- 	reservetop=	[X86-32,EARLY]
- 			Format: nn[KMG]
- 			Reserves a hole at the top of the kernel virtual
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 9849dfda44d4..b4455cc02f2c 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4263,4 +4263,6 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
- void vma_pgtable_walk_begin(struct vm_area_struct *vma);
- void vma_pgtable_walk_end(struct vm_area_struct *vma);
++	/*
++	 * If you're seeing this warning, you either need to add your driver
++	 * to "drm_drivers_that_shutdown" (if you're seeing it with panel-edp
++	 * or panel-simple) or you need to remove the manual call to
++	 * drm_panel_unprepare() in your panel driver.
++	 */
+ 	if (!panel->prepared) {
+ 		dev_warn(panel->dev, "Skipping unprepare of already unprepared panel\n");
+ 		return 0;
+@@ -245,6 +251,12 @@ int drm_panel_disable(struct drm_panel *panel)
+ 	if (!panel)
+ 		return -EINVAL;
  
-+int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size);
-+
- #endif /* _LINUX_MM_H */
-diff --git a/mm/memblock.c b/mm/memblock.c
-index d09136e040d3..60a2161de351 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2244,6 +2244,104 @@ void __init memblock_free_all(void)
- 	totalram_pages_add(pages);
- }
- 
-+/* Keep a table to reserve named memory */
-+#define RESERVE_MEM_MAX_ENTRIES		8
-+#define RESERVE_MEM_NAME_SIZE		16
-+struct reserve_mem_table {
-+	char			name[RESERVE_MEM_NAME_SIZE];
-+	unsigned long		start;
-+	unsigned long		size;
-+};
-+static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
-+static int reserved_mem_count;
-+
-+/* Add wildcard region with a lookup name */
-+static int __init reserved_mem_add(unsigned long start, unsigned long size,
-+				   const char *name)
-+{
-+	struct reserve_mem_table *map;
-+
-+	if (!name || !name[0] || strlen(name) >= RESERVE_MEM_NAME_SIZE)
-+		return -EINVAL;
-+
-+	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
-+		return -1;
-+
-+	map = &reserved_mem_table[reserved_mem_count++];
-+	map->start = start;
-+	map->size = size;
-+	strscpy(map->name, name);
-+	return 0;
-+}
-+
-+/**
-+ * reserve_mem_find_by_name - Find reserved memory region with a given name
-+ * @name: The name that is attached to a reserved memory region
-+ * @start: If found, holds the start address
-+ * @size: If found, holds the size of the address.
++	/*
++	 * If you're seeing this warning, you either need to add your driver
++	 * to "drm_drivers_that_shutdown" (if you're seeing it with panel-edp
++	 * or panel-simple) or you need to remove the manual call to
++	 * drm_panel_disable() in your panel driver.
++	 */
+ 	if (!panel->enabled) {
+ 		dev_warn(panel->dev, "Skipping disable of already disabled panel\n");
+ 		return 0;
+diff --git a/drivers/gpu/drm/panel/panel-drm-shutdown-check.h b/drivers/gpu/drm/panel/panel-drm-shutdown-check.h
+new file mode 100644
+index 000000000000..dfa8197e09fb
+--- /dev/null
++++ b/drivers/gpu/drm/panel/panel-drm-shutdown-check.h
+@@ -0,0 +1,151 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2024 Google Inc.
 + *
-+ * Returns: 1 if found or 0 if not found.
++ * This header is a temporary solution and is intended to be included
++ * directly by panel-edp.c and panel-simple.c.
++ *
++ * This header is needed because panel-edp and panel-simple are used by a
++ * wide variety of DRM drivers and it's hard to know for sure if all of the
++ * DRM drivers used by those panel drivers are properly calling
++ * drm_atomic_helper_shutdown() or drm_helper_force_disable_all() at
++ * shutdown/remove time.
++ *
++ * The plan for this header file:
++ * - Land it and hope that the warning print will encourage DRM drivers to
++ *   get fixed.
++ * - Eventually move to a WARN() splat for extra encouragement.
++ * - Assume that everyone has been fixed and remove this header file.
 + */
-+int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size)
-+{
-+	struct reserve_mem_table *map;
-+	int i;
 +
-+	for (i = 0; i < reserved_mem_count; i++) {
-+		map = &reserved_mem_table[i];
-+		if (!map->size)
-+			continue;
-+		if (strcmp(name, map->name) == 0) {
-+			*start = map->start;
-+			*size = map->size;
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
++#ifndef __PANEL_DRM_SHUTDOWN_CHECK_H__
++#define __PANEL_DRM_SHUTDOWN_CHECK_H__
++
++#include <drm/drm_bridge.h>
++#include <drm/drm_drv.h>
 +
 +/*
-+ * Parse early_reserve_mem=nn:align:name
++ * This is a list of all DRM drivers that appear to properly call
++ * drm_atomic_helper_shutdown() or drm_helper_force_disable_all() at
++ * shutdown and remove time.
++ *
++ * We can't detect this dynamically and are stuck with a list because the panel
++ * driver's shutdown() call might be called _before_ the DRM driver's
++ * shutdown() call.
++ *
++ * NOTE: no verification has been done to confirm that the below drivers
++ * are actually _used_ with panel-simple or panel-edp, only that these drivers
++ * appear to be shutting down properly. It doesn't hurt to have extra drivers
++ * listed here as long as the list doesn't contain any drivers that are
++ * missing the shutdown calls.
 + */
-+static int __init reserve_mem(char *p)
++static const char * const drm_drivers_that_shutdown[] = {
++	"armada-drm",
++	"aspeed-gfx-drm",
++	"ast",
++	"atmel-hlcdc",
++	"bochs-drm",
++	"cirrus",
++	"exynos",
++	"fsl-dcu-drm",
++	"gm12u320",
++	"gud",
++	"hdlcd",
++	"hibmc",
++	"hx8357d",
++	"hyperv_drm",
++	"ili9163",
++	"ili9225",
++	"ili9341",
++	"ili9486",
++	"imx-dcss",
++	"imx-drm",
++	"imx-lcdc",
++	"imx-lcdif",
++	"ingenic-drm",
++	"kirin",
++	"komeda",
++	"logicvc-drm",
++	"loongson",
++	"mali-dp",
++	"mcde",
++	"meson",
++	"mgag200",
++	"mi0283qt",
++	"msm",
++	"mxsfb-drm",
++	"omapdrm",
++	"panel-mipi-dbi",
++	"pl111",
++	"qxl",
++	"rcar-du",
++	"repaper",
++	"rockchip",
++	"rzg2l-du",
++	"ssd130x",
++	"st7586",
++	"st7735r",
++	"sti",
++	"stm",
++	"sun4i-drm",
++	"tidss",
++	"tilcdc",
++	"tve200",
++	"vboxvideo",
++	"zynqmp-dpsub",
++	""
++};
++
++static void panel_shutdown_if_drm_driver_needs_fixing(struct drm_panel *panel)
 +{
-+	phys_addr_t start, size, align;
-+	char *oldp;
-+	int err;
++	struct drm_bridge *bridge;
++	const struct drm_driver *driver;
++	const char * const *driver_name;
 +
-+	if (!p)
-+		return -EINVAL;
++	/*
++	 * Look for a bridge that shares the DT node of this panel. That only
++	 * works if we've been linked up with a panel_bridge.
++	 */
++	bridge = of_drm_find_bridge(panel->dev->of_node);
++	if (bridge && bridge->dev && bridge->dev->driver) {
++		/*
++		 * If the DRM driver for the bridge is known to be fine then
++		 * we're done.
++		 */
++		driver = bridge->dev->driver;
++		for (driver_name = drm_drivers_that_shutdown; *driver_name; driver_name++) {
++			if (strcmp(*driver_name, driver->name) == 0)
++				return;
++		}
 +
-+	oldp = p;
-+	size = memparse(p, &p);
-+	if (p == oldp)
-+		return -EINVAL;
-+
-+	if (*p != ':')
-+		return -EINVAL;
-+
-+	align = memparse(p+1, &p);
-+	if (*p != ':')
-+		return -EINVAL;
-+
-+	start = memblock_phys_alloc(size, align);
-+	if (!start)
-+		return -ENOMEM;
-+
-+	p++;
-+	err = reserved_mem_add(start, size, p);
-+	if (err) {
-+		memblock_phys_free(start, size);
-+		return err;
++		/*
++		 * If you see the message below then:
++		 * 1. Make sure your DRM driver is properly calling
++		 *    drm_atomic_helper_shutdown() or drm_helper_force_disable_all()
++		 *    at shutdown time.
++		 * 2. Add your driver to the list.
++		 */
++		dev_warn(panel->dev,
++			 "DRM driver appears buggy; manually disable/unprepare\n");
++	} else {
++		/*
++		 * If you see the message below then your setup needs to
++		 * be moved to using a panel_bridge. This often happens
++		 * by calling devm_drm_of_get_bridge(). Having a panel without
++		 * an associated panel_bridge is deprecated.
++		 */
++		dev_warn(panel->dev,
++			 "Can't find DRM driver; manually disable/unprepare\n");
 +	}
 +
-+	p += strlen(p);
-+
-+	return *p == '\0' ? 0: -EINVAL;
++	/*
++	 * If we don't know if a DRM driver is properly shutting things down
++	 * then we'll manually call the disable/unprepare. This is always a
++	 * safe thing to do (in that it won't cause you to crash), but it
++	 * does generate a warning.
++	 */
++	drm_panel_disable(panel);
++	drm_panel_unprepare(panel);
 +}
-+__setup("reserve_mem=", reserve_mem);
 +
- #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
- static const char * const flagname[] = {
- 	[ilog2(MEMBLOCK_HOTPLUG)] = "HOTPLUG",
++#endif
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index 67ab6915d6e4..26f89858df9d 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -42,6 +42,8 @@
+ #include <drm/drm_edid.h>
+ #include <drm/drm_panel.h>
+ 
++#include "panel-drm-shutdown-check.h"
++
+ /**
+  * struct panel_delay - Describes delays for a simple panel.
+  */
+@@ -948,22 +950,7 @@ static void panel_edp_shutdown(struct device *dev)
+ {
+ 	struct panel_edp *panel = dev_get_drvdata(dev);
+ 
+-	/*
+-	 * NOTE: the following two calls don't really belong here. It is the
+-	 * responsibility of a correctly written DRM modeset driver to call
+-	 * drm_atomic_helper_shutdown() at shutdown time and that should
+-	 * cause the panel to be disabled / unprepared if needed. For now,
+-	 * however, we'll keep these calls due to the sheer number of
+-	 * different DRM modeset drivers used with panel-edp. The fact that
+-	 * we're calling these and _also_ the drm_atomic_helper_shutdown()
+-	 * will try to disable/unprepare means that we can get a warning about
+-	 * trying to disable/unprepare an already disabled/unprepared panel,
+-	 * but that's something we'll have to live with until we've confirmed
+-	 * that all DRM modeset drivers are properly calling
+-	 * drm_atomic_helper_shutdown().
+-	 */
+-	drm_panel_disable(&panel->base);
+-	drm_panel_unprepare(&panel->base);
++	panel_shutdown_if_drm_driver_needs_fixing(&panel->base);
+ }
+ 
+ static void panel_edp_remove(struct device *dev)
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 8345ed891f5a..f505bc27e5ae 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -42,6 +42,8 @@
+ #include <drm/drm_panel.h>
+ #include <drm/drm_of.h>
+ 
++#include "panel-drm-shutdown-check.h"
++
+ /**
+  * struct panel_desc - Describes a simple panel.
+  */
+@@ -720,22 +722,7 @@ static void panel_simple_shutdown(struct device *dev)
+ {
+ 	struct panel_simple *panel = dev_get_drvdata(dev);
+ 
+-	/*
+-	 * NOTE: the following two calls don't really belong here. It is the
+-	 * responsibility of a correctly written DRM modeset driver to call
+-	 * drm_atomic_helper_shutdown() at shutdown time and that should
+-	 * cause the panel to be disabled / unprepared if needed. For now,
+-	 * however, we'll keep these calls due to the sheer number of
+-	 * different DRM modeset drivers used with panel-simple. The fact that
+-	 * we're calling these and _also_ the drm_atomic_helper_shutdown()
+-	 * will try to disable/unprepare means that we can get a warning about
+-	 * trying to disable/unprepare an already disabled/unprepared panel,
+-	 * but that's something we'll have to live with until we've confirmed
+-	 * that all DRM modeset drivers are properly calling
+-	 * drm_atomic_helper_shutdown().
+-	 */
+-	drm_panel_disable(&panel->base);
+-	drm_panel_unprepare(&panel->base);
++	panel_shutdown_if_drm_driver_needs_fixing(&panel->base);
+ }
+ 
+ static void panel_simple_remove(struct device *dev)
 -- 
-2.43.0
-
+2.45.2.505.gda0bf45e8d-goog
 
