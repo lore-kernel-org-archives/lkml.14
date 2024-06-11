@@ -1,106 +1,156 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC8D17545;
-	Tue, 11 Jun 2024 11:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBCB171644;
+	Tue, 11 Jun 2024 11:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718105530; cv=none; b=uK73vhTQBvUhXv9AastNDKNd+TpEmayS+OZ53nwFjhjeZmHxts3485UNruHkoyuVa7y8xwK55LxxhmJtarVLMauDMHuZQc5FBImT74qzckJH3ldwo0e9+3uX6aqbjh6MAj2OlN8UXY2ArfMN8zSPNw0JOd55NEqjWh5SHBuRH70=
+	t=1718105537; cv=none; b=UDihHFFiigH+RuRqebJjkWCq2wAvRwSW7A3lCpHbj5WZ33XvAJmsRlVzemO44pZxP/UQ3bou42fbjwuevhrsbogwEsXGEiMRzHysAJMzhEiW/LFRyWF7I8AGqU/MmO28D4TRwGk01ftXVEB7VW716jDy4oVH1xl0ZCP8OcTkOGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718105530; c=relaxed/simple;
-	bh=5QhOS7T2ECWOrmqZP7wpgVuK7sIW+K19WolJgjf0mbg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GxY+2kXvsh+Li3bogGyckoeoZ3l2s6y8VPxPFe6dooWES53cyepazyYk0EPTAWAJSuQ5OSJpdmRsCsW+hgulnjAMWdeimvFK07Qnc2BudnNHjAswxeL8gZafW78rI09M5sm5jywpkrhSkc3m2x99ZBwhMK5xT+7yV9yUWkJZsN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bX98tjQv; arc=none smtp.client-ip=209.85.161.47
+	s=arc-20240116; t=1718105537; c=relaxed/simple;
+	bh=R5AWGqF7+0BvYL3AmgE6VyRPPP37Za3cS2p/DkO8jjw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EnTugtMHr3qZWlc1MOKom6tZUoD8WGLL4Sb9cEqEgzDVPvKyhKxooLQGEu97UeuJ7vfjavw4RKUC4AI4MtlLV8vvI97D5fVDqka0qrqqSCAejYkphu2g//vSJaO3zsW6miiS+SuCyYxziQigqGP768qG5POgv9CLU63RFm5Jugk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TaOvJfi9; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bX98tjQv"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5b3241373adso506895eaf.2;
-        Tue, 11 Jun 2024 04:32:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TaOvJfi9"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-421a1b834acso17601485e9.3;
+        Tue, 11 Jun 2024 04:32:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718105528; x=1718710328; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qo2PmNsaAKgRZzuMPm5GrqXgFAxK9fkcVAgK1ivuWd8=;
-        b=bX98tjQv3G1ZUs16ZruusKfyotrUlaojCEwYVHeRnX42x/830Bngw0sPHf7hSMtLTG
-         7NYLZS9VfNsOw6BRkYO+SFnnzp/LuZxUMnDXb5JgPsDC6+cOA6KxP9vSE1aUZEw3SBCm
-         g79GqcIrYGdKN1dG/iufZFXd3XX3+3T6SJZnFYY0hnake4eyF/J5juUQ4VsRAr2FPDXg
-         IZs7Dd9Gv5t53t0UUxmenJ8K7z/9k7cYkbRuDVJdASDsCwkZkZR6npDTqDgcKU9g9HGg
-         ZbziuacFvKARrL2+KkvY9rQpJ8hJ7eGsdf+nwDI4Bu0VggLZ9ipQ1PlppFWvaqZKiqMA
-         72ZA==
+        d=gmail.com; s=20230601; t=1718105534; x=1718710334; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iAmwsFns9JAnMUeW6MOSQ6NrqNWyIGTK87/ABQlpO6A=;
+        b=TaOvJfi9aYox+64Pu4BTmwCn5ceMRpM+2NGx+vdMXIZmzxvGMH9TAoemM2TjXlsB37
+         PT60YsKKSHe10vNvAm8lp6LB3d45sEOxKbkMTPpZR1V/Yi+bq3u9wCjl0fjXuWzWKMWQ
+         hSqNivu/hAQW9a89LBT74J5iFzpQjexJSS/GJEmURi54M6w2DAYtWZM1F18jfDdGcp0o
+         ZfwHh75Ao7S0KhyZdKwo5D1+EktcdbaWVH3ZoXMMseNQ6g0uTAmtCGLl7YveV2nFhyWD
+         4y/DI9mIG6QVOnEranJTgBhljGdX1W1L1nDzw/gUQ8Cm7j+xgQK+sJp/3yfaOAx9bwkQ
+         MARQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718105528; x=1718710328;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qo2PmNsaAKgRZzuMPm5GrqXgFAxK9fkcVAgK1ivuWd8=;
-        b=NSzzun7IN4+Oi+1pLEgJAxN0o0LgCuBiDAmJMqDZDjAKSLew/9Oa17H6H1Dkv2mjHi
-         kA/wo6UX6eCnod7klAgzCt08xdRi3j6QXpjaXlv15zXjReqUVgxzKpxagP9ku0nulYJx
-         g0/vjFdeZjWcTSlTp5B3E4Qmaa55zuUbNrhHbYNWaLGBmFcAbLYsSuc2YiOR3v7LkLpJ
-         3Qdf8IhCf5yymYXocUvpW76kodf1jjIZjVZY1Vd6Q1GSVIku4dEw2u1P/Lx2Cd3xn8bE
-         flwtUWbi/YQAVdP7m/OzJNnNADWNfvjEcOH1CTQ+9lF/bEbi9VX6BCkMIJ262N7UStMm
-         PV0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWo9ZJuMLhdIUq6yWBL8n1++SyUWiLvpnG9EmLr5wjD8mesZJyIrH3V51N0Kf0bui6b6ork+R4aPKeCwkfblq2DLnxzL5BMH9kmEIGnNw5trFTBgrJOmh+14b0GHkvhTIz17kkwj9ig
-X-Gm-Message-State: AOJu0YyBHDFO6zVrzJykf+duBgi2FV+l4xXq+Mm0bEpc/7X7VVA5q3H5
-	QZlryCa4PGk+cGZKjKzU+yyD6ES5ilNOu0mx1/KmAFgVM0F/YDraA7993B9QkzlPgsMKYRfwme+
-	0qBy4scbBnidFQCaAqBTvcNmhsuM=
-X-Google-Smtp-Source: AGHT+IEOXcemW3CJq1WccB0TeUKL64I1iCoFXp10rVnF2Ye6L9IJ6w7VZS1vjuiE1ZhFLQiRKTceR8mn+/Hpgl9lPgY=
-X-Received: by 2002:a05:6820:1506:b0:5ba:a69f:465f with SMTP id
- 006d021491bc7-5baae8d7912mr11170277eaf.9.1718105528139; Tue, 11 Jun 2024
- 04:32:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718105534; x=1718710334;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iAmwsFns9JAnMUeW6MOSQ6NrqNWyIGTK87/ABQlpO6A=;
+        b=MkWHDA2nzbMBZptw/M3hMREYkZvaRPy2LYWgxkVHgOjUzKq5KkBfz+szA7IGfOAyNh
+         mZqwuiThdBCo2pYXCpMmYKmwwUBgHJTt+bDM1Ftj9XbwgKej0cCKq7oPTBDGxD7hx5Of
+         iLGzRhysnz6JGuIQWYvy6FJk2xsVI0iHzQmo3CcPzh6QGYFy+8NCIyQWBZLl9nZ+gon+
+         4p+u6MXuco8gnN8PgFwyoSuzbWjAsVQSYsMhP2UVvvzmahrb61pP2U0Xw8Y6MKUg2IEw
+         Rhv48yuZWjrwmb/TrrhJ7clYqjMIYaqTzPMHNUwRIIQfHeLMj/OLRzXRNGEmajTbXAIA
+         CTDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmsD7hb47a0GBBt7NjCO5OnvzZSLyACFcxC7oK0wc1RxFd87QKogd4EUFs3zxJWcefaocw+dd2dss/Jp2/pFkE/nhqKJZi/1htpY6U6LFsk6u7Y23foTUYTko8+lsdwAvjn70Qnnn0PJxQUACdg0tm2a6ztdBDaaMjyytITYglvdf2f54=
+X-Gm-Message-State: AOJu0YwsF1sXL5RtIsU3AjlIE2v5WTpZEzcHA7/o13Vdp+nWKWkBBN1b
+	UuYyQ0D5s92mZ9b23plkpyo4wKpF2CHsAZhe1If06Czc4eMtd3Fq
+X-Google-Smtp-Source: AGHT+IGLBnPl5dIR7IwVCK3ZBa00jbrkeJrUN1XCn7y9FxUH8UbesX6JRCJmiWP+MXr/tDMzkJCfUA==
+X-Received: by 2002:a05:600c:3ba0:b0:421:78c3:9d11 with SMTP id 5b1f17b1804b1-42178c39f55mr71836115e9.1.1718105534028;
+        Tue, 11 Jun 2024 04:32:14 -0700 (PDT)
+Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4227467990csm2473505e9.1.2024.06.11.04.32.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 04:32:13 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Hauke Mehrtens <hauke@hauke-m.de>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	=?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>,
+	linux-mips@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/5] mips: bmips: improve handling of RAC and CBR addr
+Date: Tue, 11 Jun 2024 13:32:03 +0200
+Message-ID: <20240611113209.8142-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611042515.61387-1-dzm91@hust.edu.cn> <3931f2be-fe98-45ac-8a40-a474dd7ef61c@loongson.cn>
-In-Reply-To: <3931f2be-fe98-45ac-8a40-a474dd7ef61c@loongson.cn>
-From: Dongliang Mu <mudongliangabcd@gmail.com>
-Date: Tue, 11 Jun 2024 19:31:41 +0800
-Message-ID: <CAD-N9QVbU=+i2WH05-836TNB-G42R3NQWf+8OFxfsbrbFsd7cw@mail.gmail.com>
-Subject: Re: [PATCH] docs/zh_CN: add process/researcher-guidelines Chinese translation
-To: Yanteng Si <siyanteng@loongson.cn>
-Cc: Dongliang Mu <dzm91@hust.edu.cn>, Alex Shi <alexs@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Konstantin Ryabitsev <konstantin@linuxfoundation.org>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 11, 2024 at 7:11=E2=80=AFPM Yanteng Si <siyanteng@loongson.cn> =
-wrote:
->
-> Hi all,
->
-> =E5=9C=A8 2024/6/11 12:25, Dongliang Mu =E5=86=99=E9=81=93:
-> > Finish the translation of researcher-guidelines and add it to the
-> > index file.
->
-> How about add a tag?  just like:
->
-> Commit xxxxxxxxxxxx ("xxxxxxxx").
->
-> This will reduce the effort of subsequent document updates.
->
-> At the same time, I also noticed that Ziqiu sent an automated probe
-> tool, and I think this will be useful for running scripts in the future.
-> What do you think?
->
+Hi,
 
-This is a good idea. Maybe I can add a sentence like this,
+this simple series improve handling of RAC and CBR address and try to
+upstream these simple patch we have in OpenWrt for a while.
 
-"Update to commit 42fb9cfd5b18 ("Documentation: dev-tools: Add link to
-RV docs")"
+The first patch fix a straight kernel panic where some Bootloader might
+enable RAC but misconfigure the CBR address. The current logic only
+check if RAC is enabled but doesn't verify if the CBR address is usable.
 
-It can help track the translation status of all translated documents.
+The DMA sync function cause a kernel panic for invalid write. (as CBR is
+0 or something like 0xa)
 
-> See <https://lore.kernel.org/linux-doc/20240422065822.1441611-1-chengziqi=
-u@hust.edu.cn/>
->
-> Thanks,
-> Yanteng
->
->
->
+The second is preparation for making the CBR address configurable in DT.
+Since this address doesn't change, we can cache it and reference it with
+a local variable instead of calling the register to access the value.
+
+The 4th patch make it configurable with 2 DT property, one to actually
+set the reg and the other to force set it.
+
+The first property is used when CBR is set to 0. The second property is
+to force it if the Bootloader sets it to something wrong.
+
+If the CBR value is not 0 and is not forced with the second property a
+WARN is printed and the DT value is ignored.
+
+The 4th patch enable RAC on BMIPS4350.
+
+These has been tested on BCM6358 (HG556a) and BCM6368 (VH4032N) and
+reported correct functionality.
+
+Changes v6:
+- Add missing patch that got lost in v5
+- Fix missing header for legacy bcm47xx
+- Fix compilation error with gcc 10.2.1
+Changes v5:
+- Add Ack tags
+- Improve DT descriptions as suggested by Conor
+Changes v4:
+- Fix compilation error with legacy brcm target
+- Improve property description in DT commit (give
+  CBR meaning and drop reference to linux functions)
+- Use only __read_mostly as we can't add variable to
+  multiple data sections
+- In patch 4 use local cbr variable instead of global
+  one.
+Changes v3:
+- Drop broken-cbr-reg property
+- Fix anyOf+const with enum
+Changes v2:
+- Prefix brcm vendor in the added property
+- Drop last patch (cpu switch from DMA sync)
+- Validate CBR addr from DT to be outside DRAM
+- Reduce indentation in DT CBR check
+- Reduce delta and use local variable for CBR where possible
+- Fix and improve typo and spelling mistake
+- Use 0xf instead of 0xa for BCM6358 RAC enable
+
+Christian Marangi (4):
+  mips: bmips: BCM6358: make sure CBR is correctly set
+  mips: bmips: rework and cache CBR addr handling
+  dt-bindings: mips: brcm: Document brcm,bmips-cbr-reg property
+  mips: bmips: setup: make CBR address configurable
+
+Daniel González Cabanelas (1):
+  mips: bmips: enable RAC on BMIPS4350
+
+ .../devicetree/bindings/mips/brcm/soc.yaml    | 24 +++++++++++++++
+ arch/mips/bcm47xx/prom.c                      |  3 ++
+ arch/mips/bcm63xx/prom.c                      |  3 ++
+ arch/mips/bmips/dma.c                         |  2 +-
+ arch/mips/bmips/setup.c                       | 29 +++++++++++++++++--
+ arch/mips/include/asm/bmips.h                 |  1 +
+ arch/mips/kernel/smp-bmips.c                  | 28 ++++++++++++++++--
+ 7 files changed, 85 insertions(+), 5 deletions(-)
+
+-- 
+2.43.0
+
