@@ -1,183 +1,235 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+Received: from mx0a-002bf204.pphosted.com (mx0a-002bf204.pphosted.com [205.220.160.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170E4174EE4;
-	Tue, 11 Jun 2024 08:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C03174EE8;
+	Tue, 11 Jun 2024 08:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.160.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718094793; cv=none; b=T+gmOwDVeQmGYpHMWA2PhIL7ftGWy7FworP0ZEVLk8MLfoM8Fx2rnRsvbUL+KN7ioGjVvhsqW3ub/+4f3wSfrxW3+5H6AOIrPOG3+KpulLxy8UiWEPY4piZBGZ87o8S6j4ZB9SY4KC2rHHeMnC8Z1wPr3IHqZ2qOngiRSoUm7u4=
+	t=1718094823; cv=none; b=DVizwcWFHENSOS9p296dSGvUWA23+PzVRrr1ARLFGa6n10YNr0tvvhQ5N/0bAOyk21q4t2Z8dGPZeIGOIf/NgZQgfszq4Mtpb9HjXXIcgfDxGwBoksdKxr/9VNKKg7gwPukFBdFQ2c7rdSWoSr4+b5g7nTG530IEevK5irQ4x7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718094793; c=relaxed/simple;
-	bh=CtnVECJ3Sqv+zIcHzuKNfaum0O8bvOkhLfRsNVVkeVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XuOMX4f/idTgQ10dynkVmxDBfi5FIR6UtIzmni1SoUNYvAVGfk0iNX8rBVAjnGOSpNI9vp7L73+J6HrsTXvEcHFdQxD7XuiF3y5buD/d/jn6wVfQq5nhgaqYASd6+i43RcsZLdH5pQJDMaarJBppaOz2LQJyXZ12ThaDriCb5hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=bY850SoV; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1718094823; c=relaxed/simple;
+	bh=VByCAbJ7MLx1lZmemiE0Z+kxtuGsmPYOeP+2Vp+S2zE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MJBwOawCOa8gZUS58uhaG5fSbQ4xX42wJ9ybPq8GhS8m2+1Y+sjVmZW4CWx8EvxPuL9kKq4p16ygFbVNwCV4TCFe7YwdRtizYghzkJM1brTZ7hHpt0dYIFYnpPadIRNHQ1CSvLgk2L+rUfb9BxqHDcAUtZTHAx05zQwmplEB2Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=monolithicpower.com; spf=pass smtp.mailfrom=monolithicpower.com; dkim=pass (2048-bit key) header.d=monolithicpower.com header.i=@monolithicpower.com header.b=q2WKmLQ/; arc=none smtp.client-ip=205.220.160.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=monolithicpower.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monolithicpower.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="bY850SoV"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sGwwB-0007za-0M;
-	Tue, 11 Jun 2024 10:33:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=uxBtCY19yODZNGkHF7p72TwtLkbwXAYNX7XgY9uZj5E=; b=bY850SoVU4kt1ak7F0R7JsX9QO
-	DdB29QsoOvKrafPCzplJFZTJdsKy1JFENOjrDVwyoJYHEd8vNRSL/KBSdsnpHl/rydwRwOgBieTLC
-	DeSmCQ1iQsjOilOeG+bzK5Gqih3Qq3l2tICIOBxbBFceynZg6wUtJJiby5kxqIKwgk3OPDIqI1ZmU
-	AL0HPjcA/xmWYeSMTyTsT9IEAIgyxIvW5ElKBtEQ3yw3A+MW1jtv+BRqHgRfxttKYEzCko9nijKlJ
-	f/uBX51kv2UL7WRP5Brfxh3O3V2Fc9jsn6xZA3AEJYrfpkkMEw+d0tUpChXY63fD5L7AFmCFYfG83
-	/DOPLVxQ==;
-Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sGww6-0031HS-0Z;
-	Tue, 11 Jun 2024 10:32:59 +0200
-Date: Tue, 11 Jun 2024 10:32:56 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Adam Ford <aford173@gmail.com>
-Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>, marcel@holtmann.org,
- johan@kernel.org, pmenzel@molgen.mpg.de, jirislaby@kernel.org,
- gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-bluetooth@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
- tomi.valkeinen@ideasonboard.com, =?UTF-8?B?UMOpdGVy?= Ujfalusi
- <peter.ujfalusi@gmail.com>, robh@kernel.org, hns@goldelico.com
-Subject: Re: [PATCH v4 0/4] Bluetooth/gnss: GNSS support for TiWi chips
-Message-ID: <20240611103256.4e64dd16@aktux>
-In-Reply-To: <CAHCN7xLDjnW1gK8DF4codzFLEvC_hDgeACR8wtWF8nxCJ=+RBg@mail.gmail.com>
-References: <20240606183032.684481-1-andreas@kemnade.info>
-	<CABBYNZ+Fz2TLSNa28H3kjVKOSA7C-XOzdQJiHdJs3FKxnq01DA@mail.gmail.com>
-	<20240606221941.333a9704@aktux>
-	<CAHCN7xLhbiqTTOwPZ22KekALDn0KtH6vNQEJpSmSCTiMggX5Qg@mail.gmail.com>
-	<20240608212004.3707d8ea@aktux>
-	<CAHCN7xLDjnW1gK8DF4codzFLEvC_hDgeACR8wtWF8nxCJ=+RBg@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=monolithicpower.com header.i=@monolithicpower.com header.b="q2WKmLQ/"
+Received: from pps.filterd (m0207524.ppops.net [127.0.0.1])
+	by mx0a-002bf204.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B5J2di001124;
+	Tue, 11 Jun 2024 01:33:34 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	monolithicpower.com; h=cc:content-transfer-encoding:content-type
+	:date:from:in-reply-to:message-id:mime-version:references
+	:subject:to; s=pps1; bh=eAqj0fn2SjxsGFSxJrPJnDo5Sw9EaxcRC9z1BwQe
+	VsE=; b=q2WKmLQ/Fh1Ic2iDKBFjKYh0LzOWzqonxvYwaF1fApEHBGSY2xHOYL7b
+	YGdjtCPIiEvUXexVwsX2IcTrnLzWinSmgjzUJkYLtfdT3YAjwl78bNXP7IajrSCG
+	ydr85x4QKM4Z/wLRxsIJgFjf0Z0hhtPh0OcfW0mO3yOJQbp16PIUmlqMCrttAMV8
+	irhPtevThBlOfCWrleTLtL+71zIBWirrrMwo0RpgiXm6gkTmMtm4d72Pj/GGYHQc
+	QPi2qRySup4gPD/W2qPqaIGo561laM5UNICASKbw2Y6niE5pCb76zdH41NvdX7pa
+	9MV6y2EWtNXznJBcfeiCY4sr71orkQ==
+Received: from webmail.monolithicpower.com (mps-vpn.monolithicpower.com [12.33.0.20] (may be forged))
+	by mx0a-002bf204.pphosted.com (PPS) with ESMTPS id 3ymjqnhg06-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 11 Jun 2024 01:33:34 -0700 (PDT)
+Received: from CD-MSH04.monolithicpower.com (10.10.70.213) by
+ MPS-MSH04.monolithicpower.com (10.10.10.206) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 11 Jun 2024 01:33:00 -0700
+Received: from smtp.gmail.com (10.10.86.102) by CD-MSH04.monolithicpower.com
+ (10.10.70.213) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 11 Jun
+ 2024 16:32:59 +0800
+From: Yuxi Wang <Yuxi.Wang@monolithicpower.com>
+To: <Yuxi.Wang@monolithicpower.com>, <pavel@ucw.cz>, <lee@kernel.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <wyx137120466@gmail.com>
+CC: <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH V2 1/2] dt-bindings: leds: add mps mp3326 LED
+Date: Tue, 11 Jun 2024 16:32:34 +0800
+Message-ID: <20240611083236.1609-2-Yuxi.Wang@monolithicpower.com>
+X-Mailer: git-send-email 2.42.0.windows.2
+In-Reply-To: <20240611083236.1609-1-Yuxi.Wang@monolithicpower.com>
+References: <20240611083236.1609-1-Yuxi.Wang@monolithicpower.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CD-MSLBN02.monolithicpower.com (192.168.86.32) To
+ CD-MSH04.monolithicpower.com (10.10.70.213)
+X-Proofpoint-GUID: NS1_831byNLwqJbQxf7-Qz-bfS3xtWVm
+X-Proofpoint-ORIG-GUID: NS1_831byNLwqJbQxf7-Qz-bfS3xtWVm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-11_04,2024-06-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 mlxlogscore=886 spamscore=0 suspectscore=0 phishscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406110064
 
-Hi Adam,
+Document mps mp3326 LED driver devicetree bindings.
 
-On Mon, 10 Jun 2024 18:17:05 -0500
-Adam Ford <aford173@gmail.com> wrote:
+Signed-off-by: Yuxi Wang <Yuxi.Wang@monolithicpower.com>
 
-> On Sat, Jun 8, 2024 at 2:20=E2=80=AFPM Andreas Kemnade <andreas@kemnade.i=
-nfo> wrote:
-> >
-> > Hi Adam,
-> >
-> > On Sat, 8 Jun 2024 14:00:38 -0500
-> > Adam Ford <aford173@gmail.com> wrote:
-> > =20
-> > > On Thu, Jun 6, 2024 at 3:19=E2=80=AFPM Andreas Kemnade <andreas@kemna=
-de.info> wrote: =20
-> > > >
-> > > > Hi Luiz,
-> > > >
-> > > > On Thu, 6 Jun 2024 16:04:10 -0400
-> > > > Luiz Augusto von Dentz <luiz.dentz@gmail.com> wrote:
-> > > > =20
-> > > > > Hi Andreas,
-> > > > >
-> > > > > On Thu, Jun 6, 2024 at 2:30=E2=80=AFPM Andreas Kemnade <andreas@k=
-emnade.info> wrote: =20
-> > > > > >
-> > > > > > Some of these chips have GNSS support. In some vendor kernels
-> > > > > > a driver on top of misc/ti-st can be found providing a /dev/tig=
-ps
-> > > > > > device which speaks the secretive Air Independent Interface (AI=
-2) protocol. =20
-> > >
-> > > I think you may have sent me a file to test, but I can't find the
-> > > e-mail.   Can you tell me what tool you used to test it?  I can get
-> > > gnss0 to enumerate, so I am close.
-> > > =20
-> > hmm, /bin/cat is sufficient. It should spit out nmea now by default.
-> >
-> > For playing around with raw mode, you need the ai2raw parameter
-> > and then you can play around with read-gps from
-> > https://github.com/akemnade/bt200tools
-> > =20
-> > > [   20.759857] hci-ti serial0-0: using DT
-> > > '/ocp@68000000/serial@4806c000/bluetooth-gnss' for 'enable' GPIO
-> > > lookup
-> > > [   20.770263] of_get_named_gpiod_flags: parsed 'enable-gpios'
-> > > property of node '/ocp@68000000/serial@4806c000/bluetooth-gnss[0]' -
-> > > status (0)
-> > > [   29.221588] gnss: GNSS driver registered with major 244
-> > > =20
-> > That is nice. =20
->=20
-> I think I am stuck.  The closed-sourced GPS binary that Logic PD did
-> was done a 3rd party which has since been sold, and Logic PD never had
-> the source code, I just get junk with this driver:
->=20
-Well, the whole thing is kept in secrecy. But the junk you get is just=20
-plain NMEA which I get also when device is indoors, so you got the chip
-into a mode which common user space (like gpsd) understands. So IMHO that i=
-s a
-Tested-By. So thanks a lot. I am happy with that result for the first step.
+diff --git a/Documentation/devicetree/bindings/leds/mps,mp3326.yaml b/Documentation/devicetree/bindings/leds/mps,mp3326.yaml
+new file mode 100644
+index 000000000000..09833df692ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/mps,mp3326.yaml
+@@ -0,0 +1,146 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/mps,mp3326.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MPS MP3326 RGB/White LED Driver
++
++maintainers:
++  - Yuxi Wang <Yuxi.Wang@monolithicpower.com>
++
++description: |
++  The MP3326 is a RGB/White LED driver with I2C interface.
++
++  For more product information please see the link below:
++  https://www.monolithicpower.com/en/products/mp3326.html
++
++properties:
++  compatible:
++    const: mps,mp3326
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++patternProperties:
++  '^multi-led@[0-4]$':
++    type: object
++    $ref: leds-class-multicolor.yaml#
++    unevaluatedProperties: false
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++      reg:
++        minimum: 0
++        maximum: 4
++        description: Index of the RGB module.
++
++    patternProperties:
++      "^led@[0-9a-f]+$":
++        type: object
++        $ref: common.yaml#
++        unevaluatedProperties: false
++
++        properties:
++          reg:
++            description: Index of the LED.
++            minimum: 0
++            maximum: 15
++
++        required:
++          - reg
++          - color
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++      - reg
++
++  "^led@[0-9a-f]+$":
++    type: object
++    $ref: common.yaml#
++    unevaluatedProperties: false
++
++    properties:
++      reg:
++        description: Index of the LED.
++        minimum: 0
++        maximum: 15
++
++    required:
++      - reg
++
++required:
++  - compatible
++  - reg
++  - "#address-cells"
++  - "#size-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        led-controller@30 {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            compatible = "mps,mp3326";
++            reg = <0x30>;
++            multi-led@0 {
++                #address-cells = <1>;
++                #size-cells = <0>;
++                color = <LED_COLOR_ID_RGB>;
++                reg = <0>;
++                label = "multi-led1";
++                led@0 {
++                    reg  = <0>;
++                    color = <LED_COLOR_ID_RED>;
++                };
++
++                led@1 {
++                    reg = <1>;
++                    color = <LED_COLOR_ID_GREEN>;
++                };
++
++                led@2 {
++                    reg = <2>;
++                    color = <LED_COLOR_ID_BLUE>;
++                };
++            };
++        };
++    };
++
++  - |
++    #include <dt-bindings/leds/common.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        led-controller@30 {
++            compatible = "mps,mp3326";
++            reg = <0x30>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            led@0 {
++                label = "red0";
++                reg= <0>;
++                color = <LED_COLOR_ID_WHITE>;
++            };
++        };
++    };
+-- 
+2.39.2
 
-So first rpc was tested with a Motorola tablet and the BT200, this one now
-with two different devices, so it is a good situation.=20
-
-> $GPGLL,,,,,,V,N*64
-> $GPRMC,,V,,,,,,,,,,N*53
-> $GPGGA,,,,,,0,,,,,,,,*66
-> $GPVTG,,T,,M,,N,,K,N*2C
-> $GPGSA,M,1,,,,,,,,,,,,,,,*12
-> $GPGSV,1,1,00*79
-> $GPGLL,,,,,,V,N*64
-> $GPRMC,,V,,,,,,,,,,N*53
-> $GPGGA,,,,,,0,,,,,,,,*66
-> $GPVTG,,T,,M,,N,,K,N*2C
-> $GPGSA,M,1,,,,,,,,,,,,,,,*12
-> $GPGSV,1,1,00*79
-> $GPGLL,,,,,,V,N*64
-> $GPRMC,,V,,,,,,,,,,N*53
-> $GPGGA,,,,,,0,,,,,,,,*66
-> $GPVTG,,T,,M,,N,,K,N*2C
-> $GPGSA,M,1,,,,,,,,,,,,,,,*12
-> $GPGSV,1,1,00*79
->=20
-A note: contrary to other GPS I have seen, this one does not give
-out satellite reception strength if not much is known about
-position. So this pattern might continue a bit even if antenna
-is there and gps reception is good. Much development of this
-driver was done in a hammock with keyboard in a sleeping bag outside
-so I know a bit...
-
-> I am not 100% positive, but I think the antenna might be required to
-> be powered.  I'll talk with the HW engineer who designed the Torpedo +
-> Wireless SOM and see if he remembers anyhthing about the GPS.  I know
-> for a fact that Logic PD doesn't have the source code for their GPS
-> demo, and I know it doesn't work with modern kernels, so i can't
-> compare the performance.
->=20
-Well, and demo tools are not easily available anywhere...
-Well, I think if there is some special antenna powering stuff,
-that can be done in a second step. Probably just a gpio or something.
-But that would affect both the testing tools and the in-kernel
-solution.
-
-As said, you might use the ai2raw=3D1 parameter and try the read_gps from
-bt200tools. Or the demo might work if you symlink gnss0 to tigps.
-
-> :-(
-
-Well, no, correct is :-)
-
-Regards,
-Andreas
