@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB41150993;
-	Tue, 11 Jun 2024 19:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112421527A3;
+	Tue, 11 Jun 2024 19:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718134132; cv=none; b=eRpBS9lMx/QWahGOF78/L2Dx0Iae9G8FmYacBwjiFVCNYUMUrFDML1euVmeR19DkyWaiVo1ktpD4CYYjnojOHY6nqfPfrAwgSswCNFTFteE8jV0UfwURcdS8YKJ1+2nId5wU1+5tYffVEPJgnrXyBhq/UcJTa4M+hPMIfwD7cEI=
+	t=1718134133; cv=none; b=u9dx9MxpkT0MGYBQzf5LTp53i80f9PwC+ui26aNxce3fKGQ3lTvT2O8R08dUeC6UYfOPjuauL699FuIEESE9w6LLl62Wg/S4H5bDjAQqJMptneD0AQyie7cMkVpCgzI1NetUsc3huENup3wXoI51Hyjb4eVtGnZpHd9xex/YJq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718134132; c=relaxed/simple;
-	bh=K4KJPf4QB6jOf5u0u06FknhYoLg3UPKgp828zEyhmLA=;
+	s=arc-20240116; t=1718134133; c=relaxed/simple;
+	bh=IE1IK2OKn7/pafSQ0ncO+HLzuopsT1q+/33iYZS7wTg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=XnB+52edg4vuA9tpJ1TxQpJa7vtCLwU405INRNiElrFRog/59BhZKsre+/ZQpcZTYczEhHNQeKYxBODz2WONRaec/m8BiF8iHcv0aiGTrs/ucOCZtLRYeJiPQ4g+zUDJ/LKm5Nzl2wRHC4R/RDnMW4ZpNgvL0tKwmlTtqcMV028=
+	 Content-Type; b=uvBk+aqTisYvCtLEyzbHNiZ32JR0hdU3TzISUzn2pqJRND2fRcCsrp5LHbHi4H4vtgPx4qGnZcnhtFAduaPiwqnEQJiBfOd/Jcn5lZhCfHuNcKlloxwqziUZJH3G21d8HDrT6oLWZeSzJueO8GLwud6Dcg1n/Qco3aoffedS+N0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E64B3C4DDF1;
-	Tue, 11 Jun 2024 19:28:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0AE6C4DDEE;
+	Tue, 11 Jun 2024 19:28:52 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sH7B6-00000001Tsv-25wa;
-	Tue, 11 Jun 2024 15:29:08 -0400
-Message-ID: <20240611192908.362267880@goodmis.org>
+	id 1sH7B7-00000001TvR-1Dpl;
+	Tue, 11 Jun 2024 15:29:09 -0400
+Message-ID: <20240611192909.150400552@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 15:28:35 -0400
+Date: Tue, 11 Jun 2024 15:28:40 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -49,7 +49,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [PATCH v4 07/13] ring-buffer: Validate boot range memory events
+Subject: [PATCH v4 12/13] tracing: Update function tracing output for previous boot buffer
 References: <20240611192828.691638177@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,257 +61,53 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Make sure all the events in each of the sub-buffers that were mapped in a
-memory region are valid. This moves the code that walks the buffers for
-time-stamp validation out of the CONFIG_RING_BUFFER_VALIDATE_TIME_DELTAS
-ifdef block and is used to validate the content. Only the ring buffer
-event meta data and time stamps are checked and not the data load.
-
-This also has a second purpose. The buffer_page structure that points to
-the data sub-buffers has accounting that keeps track of the number of
-events that are on the sub-buffer. This updates that counter as well. That
-counter is used in reading the buffer and knowing if the ring buffer is
-empty or not.
+For a persistent ring buffer that is saved across boots, if function
+tracing was performed in the previous boot, it only saves the address of
+the functions and uses "%pS" to print their names. But the current boot,
+those functions may be in different locations. The persistent meta-data
+saves the text delta between the two boots and can be used to find the
+address of the saved function of where it is located in the current boot.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 189 +++++++++++++++++++++++++++++--------
- 1 file changed, 151 insertions(+), 38 deletions(-)
+ kernel/trace/trace_output.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index aecd4a7d62be..86f03c0ba4c0 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1674,10 +1674,151 @@ static bool rb_meta_valid(struct ring_buffer_meta *meta, int cpu,
- 		subbuf = (void *)subbuf + subbuf_size;
- 	}
- 
--	pr_info("Ring buffer meta is from previous boot!\n");
- 	return true;
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index d8b302d01083..b9d2c64c0648 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -990,8 +990,11 @@ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
  }
  
-+static int rb_meta_subbuf_idx(struct ring_buffer_meta *meta, void *subbuf);
-+
-+static int rb_read_data_buffer(struct buffer_data_page *dpage, int tail, int cpu,
-+			       unsigned long long *timestamp, u64 *delta_ptr)
-+{
-+	struct ring_buffer_event *event;
-+	u64 ts, delta;
-+	int events = 0;
-+	int e;
-+
-+	*delta_ptr = 0;
-+	*timestamp = 0;
-+
-+	ts = dpage->time_stamp;
-+
-+	for (e = 0; e < tail; e += rb_event_length(event)) {
-+
-+		event = (struct ring_buffer_event *)(dpage->data + e);
-+
-+		switch (event->type_len) {
-+
-+		case RINGBUF_TYPE_TIME_EXTEND:
-+			delta = rb_event_time_stamp(event);
-+			ts += delta;
-+			break;
-+
-+		case RINGBUF_TYPE_TIME_STAMP:
-+			delta = rb_event_time_stamp(event);
-+			if (delta < ts) {
-+				*delta_ptr = delta;
-+				*timestamp = ts;
-+				return -1;
-+			}
-+			ts = delta;
-+			break;
-+
-+		case RINGBUF_TYPE_PADDING:
-+			if (event->time_delta == 1)
-+				break;
-+			fallthrough;
-+		case RINGBUF_TYPE_DATA:
-+			events++;
-+			ts += event->time_delta;
-+			break;
-+
-+		default:
-+			return -1;
-+		}
-+	}
-+	*timestamp = ts;
-+	return events;
-+}
-+
-+static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
-+{
-+	unsigned long long ts;
-+	u64 delta;
-+	int tail;
-+
-+	tail = local_read(&dpage->commit);
-+	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
-+}
-+
-+/* If the meta data has been validated, now validate the events */
-+static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
-+	struct buffer_page *head_page;
-+	unsigned long entry_bytes = 0;
-+	unsigned long entries = 0;
-+	int ret;
-+	int i;
-+
-+	if (!meta || !meta->head_buffer)
-+		return;
-+
-+	/* Do the reader page first */
-+	ret = rb_validate_buffer(cpu_buffer->reader_page->page, cpu_buffer->cpu);
-+	if (ret < 0) {
-+		pr_info("Ring buffer reader page is invalid\n");
-+		goto invalid;
-+	}
-+	entries += ret;
-+	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
-+	local_set(&cpu_buffer->reader_page->entries, ret);
-+
-+	head_page = cpu_buffer->head_page;
-+
-+	/* If both the head and commit are on the reader_page then we are done. */
-+	if (head_page == cpu_buffer->reader_page &&
-+	    head_page == cpu_buffer->commit_page)
-+		goto done;
-+
-+	/* Iterate until finding the commit page */
-+	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
-+
-+		/* Reader page has already been done */
-+		if (head_page == cpu_buffer->reader_page)
-+			continue;
-+
-+		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-+		if (ret < 0) {
-+			pr_info("Ring buffer meta [%d] invalid buffer page\n",
-+				cpu_buffer->cpu);
-+			goto invalid;
-+		}
-+		entries += ret;
-+		entry_bytes += local_read(&head_page->page->commit);
-+		local_set(&cpu_buffer->head_page->entries, ret);
-+
-+		if (head_page == cpu_buffer->commit_page)
-+			break;
-+	}
-+
-+	if (head_page != cpu_buffer->commit_page) {
-+		pr_info("Ring buffer meta [%d] commit page not found\n",
-+			cpu_buffer->cpu);
-+		goto invalid;
-+	}
-+ done:
-+	local_set(&cpu_buffer->entries, entries);
-+	local_set(&cpu_buffer->entries_bytes, entry_bytes);
-+
-+	pr_info("Ring buffer meta [%d] is from previous boot!\n", cpu_buffer->cpu);
-+	return;
-+
-+ invalid:
-+	/* The content of the buffers are invalid, reset the meta data */
-+	meta->head_buffer = 0;
-+	meta->commit_buffer = 0;
-+
-+	/* Reset the reader page */
-+	local_set(&cpu_buffer->reader_page->entries, 0);
-+	local_set(&cpu_buffer->reader_page->page->commit, 0);
-+
-+	/* Reset all the subbuffers */
-+	for (i = 0; i < meta->nr_subbufs - 1; i++, rb_inc_page(&head_page)) {
-+		local_set(&head_page->entries, 0);
-+		local_set(&head_page->page->commit, 0);
-+	}
-+}
-+
- static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ static void print_fn_trace(struct trace_seq *s, unsigned long ip,
+-			   unsigned long parent_ip, int flags)
++			   unsigned long parent_ip, long delta, int flags)
  {
- 	struct ring_buffer_meta *meta;
-@@ -1756,8 +1897,6 @@ static void *rbm_next(struct seq_file *m, void *v, loff_t *pos)
- 	return rbm_start(m, pos);
- }
- 
--static int rb_meta_subbuf_idx(struct ring_buffer_meta *meta, void *subbuf);
--
- static int rbm_show(struct seq_file *m, void *v)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer = m->private;
-@@ -2010,6 +2149,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 	if (ret < 0)
- 		goto fail_free_reader;
- 
-+	rb_meta_validate_events(cpu_buffer);
++	ip += delta;
++	parent_ip += delta;
 +
- 	/* If the boot meta was valid then this has already been updated */
- 	meta = cpu_buffer->ring_meta;
- 	if (!meta || !meta->head_buffer ||
-@@ -3954,11 +4095,10 @@ static void check_buffer(struct ring_buffer_per_cpu *cpu_buffer,
- 			 struct rb_event_info *info,
- 			 unsigned long tail)
- {
--	struct ring_buffer_event *event;
- 	struct buffer_data_page *bpage;
- 	u64 ts, delta;
- 	bool full = false;
--	int e;
-+	int ret;
+ 	seq_print_ip_sym(s, ip, flags);
  
- 	bpage = info->tail_page->page;
+ 	if ((flags & TRACE_ITER_PRINT_PARENT) && parent_ip) {
+@@ -1009,7 +1012,7 @@ static enum print_line_t trace_fn_trace(struct trace_iterator *iter, int flags,
  
-@@ -3984,39 +4124,12 @@ static void check_buffer(struct ring_buffer_per_cpu *cpu_buffer,
- 	if (atomic_inc_return(this_cpu_ptr(&checking)) != 1)
- 		goto out;
+ 	trace_assign_type(field, iter->ent);
  
--	ts = bpage->time_stamp;
--
--	for (e = 0; e < tail; e += rb_event_length(event)) {
--
--		event = (struct ring_buffer_event *)(bpage->data + e);
--
--		switch (event->type_len) {
--
--		case RINGBUF_TYPE_TIME_EXTEND:
--			delta = rb_event_time_stamp(event);
--			ts += delta;
--			break;
--
--		case RINGBUF_TYPE_TIME_STAMP:
--			delta = rb_event_time_stamp(event);
--			delta = rb_fix_abs_ts(delta, ts);
--			if (delta < ts) {
--				buffer_warn_return("[CPU: %d]ABSOLUTE TIME WENT BACKWARDS: last ts: %lld absolute ts: %lld\n",
--						   cpu_buffer->cpu, ts, delta);
--			}
--			ts = delta;
--			break;
--
--		case RINGBUF_TYPE_PADDING:
--			if (event->time_delta == 1)
--				break;
--			fallthrough;
--		case RINGBUF_TYPE_DATA:
--			ts += event->time_delta;
--			break;
--
--		default:
--			RB_WARN_ON(cpu_buffer, 1);
-+	ret = rb_read_data_buffer(bpage, tail, cpu_buffer->cpu, &ts, &delta);
-+	if (ret < 0) {
-+		if (delta < ts) {
-+			buffer_warn_return("[CPU: %d]ABSOLUTE TIME WENT BACKWARDS: last ts: %lld absolute ts: %lld\n",
-+					   cpu_buffer->cpu, ts, delta);
-+			goto out;
- 		}
- 	}
- 	if ((full && ts > info->ts) ||
+-	print_fn_trace(s, field->ip, field->parent_ip, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
+ 	trace_seq_putc(s, '\n');
+ 
+ 	return trace_handle_return(s);
+@@ -1674,7 +1677,7 @@ trace_func_repeats_print(struct trace_iterator *iter, int flags,
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	print_fn_trace(s, field->ip, field->parent_ip, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
+ 	trace_seq_printf(s, " (repeats: %u, last_ts:", field->count);
+ 	trace_print_time(s, iter,
+ 			 iter->ts - FUNC_REPEATS_GET_DELTA_TS(field));
 -- 
 2.43.0
 
