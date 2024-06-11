@@ -1,109 +1,99 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8030579C8;
-	Tue, 11 Jun 2024 09:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAB717623F
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 09:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718096606; cv=none; b=owL9/WiSulCqLLUNdhkdL5h7girnNe0GsNV4xsFD48Y7J43UkswWlHUH/UxTOWQf4NHuYk8VDHnIafZT+eRONtGUE+FGZe3z+LnMwacO8hgzU2NpDdJF3tcuR1WxPiJ7l2wp7k4KbuanQibL2oUEOQEQAolAEcxGzm5jBzoxatU=
+	t=1718096619; cv=none; b=eNvHXMqJaGXy47gi1BaBObM63957nkT6CTDZecIESZgeBodpPaBO9e6ll07XKprz9qwbNcUlgoEv2aSCBa+5GFPOUY1g9J+Pou3oYpSBnTprOASANUZzMvaui+Iq/ek2Q8ZoDzH54j5wT6DWilijA3fojxKotbctxOMhuOiQgp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718096606; c=relaxed/simple;
-	bh=cFBtMtud7strLsmIoucBTehp9+ujneQBRiuKV7REWKA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WmrBo1Zms8Sg/njjoYh0CSIrbdmCiuDpwSCCnV/7EdV4/BhoPehh5TYQAWNRnAHeXMaOK+igIwzeuCEVB0zNuY2n2u4EJTOI9D12uuvlkQ2cZH+hD7v0qPxt3x8EdtD7gk/sbG1ewku2D9tuSiIFrkPMlEOhqkyHd5xaRgLx4w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RxVxevJJ; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718096619; c=relaxed/simple;
+	bh=wU35Bt/W4Th7ebj0fz6w+yPys0fnerf+0iDw45DCtn4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kN0ergeMTc00gIHd2iP4me5dwPHqtJo57yzSbrvzIjlaUwxKNeteairuSgQuxYgsZeeqISGFUhdIXXoT+YL+v/JibIj80Cuf3jS1CL2ouI4I/f/Gr65tudcptTAeD7BRRE2UhfjIQgwxPNbN8GTylJ0YsndglgjDZj4UDQmX80g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KurZBcQ+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RxVxevJJ"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a6f04afcce1so90319266b.2;
-        Tue, 11 Jun 2024 02:03:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718096603; x=1718701403; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MaUvDD1ua4d11/mNYdxEtsIhc9jZ3PvUExTrYcCwUcM=;
-        b=RxVxevJJN8rTcVKZJBYsbqSuJ7hyiDalJGOUlaQRG8vyfCWualWnWLZCZ21IOJ+3DS
-         Xl0XtZtkwDHIMb6BIKK3KhmBGozeDA8IBwtAlEzYtBd02NUBaEYmC+Q5pgBuxUfJY6NP
-         NLv/si02wjTTuN7hc450/LN+4773ZFrF2EnijxSpKKEriC8DL+vkJj7JYZVwP5i3m2kt
-         Bsuzj0ZKENiutJcjBcU5jtBildGT9JZjj949fw9yZdUburWXgXogQhmelgMNgOPMg1IN
-         2WeBKHAyO/JWXkgiAfCNK2FYpJD6xbVG38rZZiohlc6ayJcas2A0LCo0ggWRoXfY1oND
-         92Vg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KurZBcQ+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718096617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XLWHA3e+iEuCixJwfkXomh9A2UOMcv37vtzmFIMouF4=;
+	b=KurZBcQ+NmLCKcwO+Ps8VIQczU7Oc2sm/pfqtbp+coWZMURoyRF0iEEugS9fErXgN39thu
+	guZN6ACACaqVlTA5IxTuFyXkZittb2FDQ3MFnOcxhzApM7bX/IDTuhSY1JMs1pvDF9IVCV
+	KTD22QR65J4Zw4qe6RW8fDkdwav9GHI=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-620-AutPRsfkOv2ZszifxP4Eyw-1; Tue, 11 Jun 2024 05:03:29 -0400
+X-MC-Unique: AutPRsfkOv2ZszifxP4Eyw-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-57c748dd112so556688a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 02:03:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718096603; x=1718701403;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MaUvDD1ua4d11/mNYdxEtsIhc9jZ3PvUExTrYcCwUcM=;
-        b=qk4bQq76iJzw5NE5EKqR0Fw3af8l1DrMVldc4DglQJOxk07VDr0qVF67IXPO78wYrr
-         uzEPU3mYIytwqN7Aelb2/MNAALLqe6UURKSfxlZ9wjPbAV62q4BFOmbf/sEwqzJGQiJO
-         IbUNNlBqhbPUv1TmMjGyQZbgudRc7pDtHv6OY1SByxfWFYwNwMrXa51aTsoklIZ9uLiM
-         rWlSiqdtBvIU0ESgcEjrNW6cfrGPEnAHG51C+ucVRgoIVJgJ9XorD4DKiOCy3jwKnroy
-         M74BNhmd8wjRyWVSabzfEF8nm8jdmDbatbPeanJu/wpLyfTGxi5jABHuJmDvrDm0QrH1
-         mafQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9kl/ZaF9luIqKmnHxF5lWn0CkaKavYdCthw6jXepZVOnEwqFCHgtvYThXWHn5CUUNKipXKXlV3WvFYILN0hk1OEgvBB54FxzGkq3S4lXSzEV8hbGts6l84x/YmztGsmojtI5Q70+gZrg=
-X-Gm-Message-State: AOJu0YyBnUnoKhrd2fUSj+kz9Qx2QeKX6qYy8ObXpgKjRLYuBgHNPAGg
-	AK3f465GFMv2Y9OB9yx+GZkfcGOm4vBPFAKyUESiLTkdzLLs+S7K
-X-Google-Smtp-Source: AGHT+IF1p47KrotDUyugQTZUcZ3xIm+l6ILxJywC0yVVgkBB72xEYlqMNGH3djepNLmIPJAx0EWjLA==
-X-Received: by 2002:a17:906:3cb:b0:a6f:2e80:6e04 with SMTP id a640c23a62f3a-a6f2e807573mr232587566b.19.1718096602571;
-        Tue, 11 Jun 2024 02:03:22 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6e2e1d4cb8sm562848766b.5.2024.06.11.02.03.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 02:03:22 -0700 (PDT)
-Message-ID: <5f329f81cdfed31771f014d4d3cc35f4d13ffb0e.camel@gmail.com>
-Subject: Re: [PATCH 4/4] hwmon: (pmbus/max31827) Explain why enum chips must
- not start with 0
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Peter Yin
- <peteryin.openbmc@gmail.com>, Potin Lai <potin.lai.pt@gmail.com>, Daniel
- Matyas <daniel.matyas@analog.com>, Andrew Davis <afd@ti.com>, Krzysztof
- Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Tue, 11 Jun 2024 11:07:10 +0200
-In-Reply-To: <20240610181046.1991436-5-linux@roeck-us.net>
-References: <20240610181046.1991436-1-linux@roeck-us.net>
-	 <20240610181046.1991436-5-linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+        d=1e100.net; s=20230601; t=1718096608; x=1718701408;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XLWHA3e+iEuCixJwfkXomh9A2UOMcv37vtzmFIMouF4=;
+        b=I6FJuYqPA9/6H6qKwK+UtV/gneq3WE3hVXLg1jBETmePmg5Su3ldFloAjMuUfyuFrT
+         rucY0bUiUrwo6bAFkXLS+Lto0DAAUastgn587AncZ3mQ95KqylSqG/qGPmfMDosh1OWJ
+         GpZciaLJxTMj5CSVyXrYjnCNi6xeaOHm98BTdH5iFsrvypyZ1KdBE64VrX8nc2XNCGGA
+         YgkfT+flY+owQpu2ARhfq/vcOWCs25Yq9jUh1+n/CcWhueOh9aACs6RB36vQFeMiJjFs
+         yU+mPFJVtIAcLBJ/FW8gAIuZ5TeEWC6XGjUyMex8O96Ot0js982xqRteVGjqyGlZsEOz
+         brnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwXEhREIuEohhHBVjXyDspi9FtjdebDk4yp/IT2qcCfKZ7EDZq04Wqq97lvK0bXPmzclKLIvXCjKzf2xO2WBuEHb2kZhYdiQsl+fWP
+X-Gm-Message-State: AOJu0YxvQYs8J8Jzc0FQEjP/Xgax3tEr03FhGjZ8ULVXVI6usKbyV7R7
+	lQWs9kVMmZOgTRu/Oj0cpzQYBCF2Wy4aWyFKFfe76W1YrcvMTJsE/bCEb7T/5P8+/S7K0ELMzXF
+	78EMxojlaVc6uAe5C68tmabZCmszjZp72//4T8liWFY9+SfmMGj/FO+hrVgpwTw==
+X-Received: by 2002:a50:8a82:0:b0:57a:33a5:9b71 with SMTP id 4fb4d7f45d1cf-57c50972f28mr9752096a12.33.1718096608137;
+        Tue, 11 Jun 2024 02:03:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBNv7S2oEwkt1dYa7oWJiEJQJtRTwaghusj5MnBn4EV1Sy+PsswgNz9xRNTlMZV4hQSAwwSQ==
+X-Received: by 2002:a50:8a82:0:b0:57a:33a5:9b71 with SMTP id 4fb4d7f45d1cf-57c50972f28mr9752074a12.33.1718096607760;
+        Tue, 11 Jun 2024 02:03:27 -0700 (PDT)
+Received: from [192.168.0.102] (host-95-245-118-97.retail.telecomitalia.it. [95.245.118.97])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57aae11a98csm8905551a12.48.2024.06.11.02.03.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jun 2024 02:03:27 -0700 (PDT)
+Message-ID: <b5f84790-8036-44cf-bfd9-0a43269a26d9@redhat.com>
+Date: Tue, 11 Jun 2024 11:03:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/3] sched/rt: Rename realtime_{prio, task}() to
+ rt_or_dl_{prio, task}()
+To: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+ Metin Kaya <metin.kaya@arm.com>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+References: <20240610192018.1567075-1-qyousef@layalina.io>
+ <20240610192018.1567075-4-qyousef@layalina.io>
+Content-Language: en-US, pt-BR, it-IT
+From: Daniel Bristot de Oliveira <bristot@redhat.com>
+In-Reply-To: <20240610192018.1567075-4-qyousef@layalina.io>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2024-06-10 at 11:10 -0700, Guenter Roeck wrote:
-> If a driver calls device_get_match_data(), the .data pointer in its id
-> data structures must not be NULL/0 because device_get_match_data()
-> returns NULL if an entry is not found. Explain that in a comment to avoid
-> confusion why this is required in this driver but not in other drivers.
->=20
-> Cc: Daniel Matyas <daniel.matyas@analog.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
+On 6/10/24 21:20, Qais Yousef wrote:
+> -	if (realtime_prio(p->prio)) /* includes deadline */
+> +	if (rt_or_dl_prio(p->prio))
 
-Acked-by: Nuno Sa <nuno.sa@analog.com>
+that is it... no thinking, no recall, no comment, no confusion...
 
-> =C2=A0drivers/hwmon/max31827.c | 5 +++++
-> =C2=A01 file changed, 5 insertions(+)
->=20
-> diff --git a/drivers/hwmon/max31827.c b/drivers/hwmon/max31827.c
-> index f8a13b30f100..391cb059e94d 100644
-> --- a/drivers/hwmon/max31827.c
-> +++ b/drivers/hwmon/max31827.c
-> @@ -46,6 +46,11 @@
-> =C2=A0#define MAX31827_M_DGR_TO_16_BIT(x)	(((x) << 4) / 1000)
-> =C2=A0#define MAX31827_DEVICE_ENABLE(x)	((x) ? 0xA : 0x0)
-> =C2=A0
-> +/*
-> + * The enum passed in the .data pointer of struct of_device_id must
-> + * start with a value !=3D 0 since that is a requirement for using
-> + * device_get_match_data().
-> + */
-> =C2=A0enum chips { max31827 =3D 1, max31828, max31829 };
-> =C2=A0
-> =C2=A0enum max31827_cnv {
+-- Daniel.
 
