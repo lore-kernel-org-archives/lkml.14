@@ -1,173 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E512C1EA71;
-	Tue, 11 Jun 2024 13:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E6F17D346
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 13:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718112730; cv=none; b=jyU6ukmG7Sb+SXhCFBTbWnVxXgzNZREFivZCYLJnpIrlNQ12z7WFW6qNqjw2fuJlE5Q1Lb665a3ixYyMxDEIT4DJbAlECeZz1vAuIsaPCEK5+UZZuJ43scm0DS9th9Ha5lMNazrCx9UzbehxRTGM0loGB1Hgg7/Y4IPHFXmLj70=
+	t=1718112756; cv=none; b=MYFsg0PvAjq8SIbmJ5GBRgrwiTKNbe9T1yKu5CxMbp34l7/9YmKy9jpy3j+XrckcAMtXC21Er30rVJVnqR6PAycpHkRVcu0jxeUaUsJEIIb0u5oeUkxpPBjgnytr9yvzqMXl7fMN6PlByQpfMylEXU0P0A1hXln91ri7N1b7wEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718112730; c=relaxed/simple;
-	bh=4Ecmaz+tOqycgV8YUD4eHo7O50NZPOPSrgUB34T1RJ4=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=VL99mLtCCx7PpoicN71uye07BeL4YO9lvyD905/NQM2eXVK4nDgTwQvLmkSMyLsE+uFH1DqsjThV4xjWDppZbYKoIFpQYLSrqtPr3fe+wZ5dR1vNx3UQ4AIKA4v2IpL+naCbmELUFWWNJHn10FsLoqK/7r/n5kBDOQHqbIwBg9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jElkHqQU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718112756; c=relaxed/simple;
+	bh=AjfnKmSBKF1H0bkdDVE5AzBTFJqttfCK9emE7wy2T/o=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=o2dK006P+4RqGpPPV4ro1k8IkGIXYXFA9PnCQ+F625J9TioL8lqfolIiMzo+/WZrNSldCgK0R1cOkyne3K/aBapGRF2sZ0J5F+Wtdq9hLFm/qDN0G/eKGpl4KUNm4TvVYEzcSk/sKhb/mMdDs8vaN7dA+7sxdDa2NMsCtF8JLNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--nogikh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AH+2No0V; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--nogikh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jElkHqQU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DFDCC4AF48;
-	Tue, 11 Jun 2024 13:32:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718112729;
-	bh=4Ecmaz+tOqycgV8YUD4eHo7O50NZPOPSrgUB34T1RJ4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=jElkHqQUFHlVRUi7T7S/jhRumOqUf0ZwvAPaaYe06sfGivntg1J3V8Gjtsmz2KSFx
-	 0g3pg3U+JkJLSS8SkvqQeMvlTw3mMYgSOmhlJw+t7bgacBYVScxt0H3O+nlgG5NYKl
-	 HRZXUrjOAriySKK/GxXWQ0X50z+2j/5Thaa6Owey7qeWS+fLf/JPb0uvcLEe7Wga9M
-	 njjVB00G/4nbw8YfPKGZA8h99V+TVP0GQJjzWry1Z26Fp7fStDJNJl1X3AftYSLNEe
-	 2UxS+D/hpF8nDNm0+SmsYwSElBOclJ93gEvH0i9ectiZYLXk0R56UqV1529lXvctiX
-	 qhyvjSF0tmnGA==
-Date: Tue, 11 Jun 2024 07:32:08 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AH+2No0V"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-df7a6530373so10306519276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 06:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718112753; x=1718717553; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CczDrlzQ7X9eqfdK0+v+uqDqKtRnCLBrcF8URyssx0A=;
+        b=AH+2No0Vk+VXpBCzm+L3NbWwg/16v5i81RplCnC/VX3Pt37wmAd1ywrA3IyrQBLjgh
+         q8gu8tV8jEIuLIYdsUBtICEw9znu5s3DqxRt9dZUHsPDuJVGCmRj95Im9PLkQcuuhReh
+         fYlFcE7vIdyWHHkMKDas2J7fy/RExXY61WtRYrGj1bwW37mV39uFvLRi4rP4jqGNAeJf
+         1V7dl6YPs05/BsDrx1nXwV4dlv3gaWVPYIYJ5elwkDoViCOy4T23OsWZ3q9GhuD7xDLL
+         Wmcdsrwro96TuM3wE8xOyYJX2f6n96IZmiVnwsR+dFESxpaZ4MU1IDRFLY4FrAMAqAZU
+         AYUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718112753; x=1718717553;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CczDrlzQ7X9eqfdK0+v+uqDqKtRnCLBrcF8URyssx0A=;
+        b=Hhv45wKgoM6+Dp00Duz+EL+/hQyWDo/B+SlHbYAsRJnspcCbqFE76DGYpaa5FWPVMZ
+         YgXZkyVBq+2UUxIb4yWsjZM9W4xL/MTv34mjBimWji63oqq9/Qvr1aEjzu2T1tH8k0hV
+         Em8oVHeK5TFGP/owJ1fswd9PvscqNH9rOZhtahf3RXSz0ayN5d226wdBDetQUjgOOis+
+         4G702l7sVkAng7up+H/J8B67DXSKWPt4ZxYNvIMrPTF5opTxlQzMD7D1INgUxqCbiNGX
+         5tBsuECxSNLcw5QkgkiFYWq0Vyh+GpPiMj5VqKn4EeJTP2smbF5VZFLGleeU6T4uM0mz
+         WNqg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6Kcf2BnpVqy7l+jrSVemYBKj4JYNs4eTRQifrNUrSxJ3/81IM5+2k3Fx9/7GlS3qRhT/S+TFSl6PZ82/awyJq40svLPeMc3T6jP/v
+X-Gm-Message-State: AOJu0Yz00BuIRlEPDjXCJ7yWypBcxUx/uk44eGAh91W0eGZdQWhWtMUy
+	0M9Z0L80BfiGiC3W0jopwP8SMJ9UDhMm8NSIvtmfLgLaIShkKxGQVFDRGi0/YANYeEqYAfU0qoF
+	KBw==
+X-Google-Smtp-Source: AGHT+IFFhHwAThESi5lnx2MoAAXjIEDBUPhcXxjiflTxgo8L4rhg6+LIiU1xgIBisb/pLrJtZeBlk5y4vAQ=
+X-Received: from nogikhp920.muc.corp.google.com ([2a00:79e0:9c:201:4221:fb00:2718:295d])
+ (user=nogikh job=sendgmr) by 2002:a05:6902:1547:b0:dfb:5bd:178a with SMTP id
+ 3f1490d57ef6-dfd9fc66fa9mr704907276.1.1718112753540; Tue, 11 Jun 2024
+ 06:32:33 -0700 (PDT)
+Date: Tue, 11 Jun 2024 15:32:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Farouk Bouabid <farouk.bouabid@cherry.de>
-Cc: Conor Dooley <conor+dt@kernel.org>, linux-rockchip@lists.infradead.org, 
- Wolfram Sang <wsa+renesas@sang-engineering.com>, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Quentin Schulz <quentin.schulz@cherry.de>, Heiko Stuebner <heiko@sntech.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- linux-i2c@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>, 
- Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20240611-dev-mule-i2c-mux-v3-0-08d26a28e001@cherry.de>
-References: <20240611-dev-mule-i2c-mux-v3-0-08d26a28e001@cherry.de>
-Message-Id: <171811267304.1781724.4665185672258305049.robh@kernel.org>
-Subject: Re: [PATCH v3 0/7] Add Mule I2C multiplexer support
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Message-ID: <20240611133229.527822-1-nogikh@google.com>
+Subject: [PATCH] kcov: don't lose track of remote references during softirqs
+From: Aleksandr Nogikh <nogikh@google.com>
+To: dvyukov@google.com, andreyknvl@gmail.com, arnd@arndb.de, 
+	akpm@linux-foundation.org
+Cc: elver@google.com, glider@google.com, syzkaller@googlegroups.com, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	Aleksandr Nogikh <nogikh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+In kcov_remote_start()/kcov_remote_stop(), we swap the previous KCOV
+metadata of the current task into a per-CPU variable. However, the
+kcov_mode_enabled(mode) check is not sufficient in the case of remote
+KCOV coverage: current->kcov_mode always remains KCOV_MODE_DISABLED
+for remote KCOV objects.
 
-On Tue, 11 Jun 2024 13:43:51 +0200, Farouk Bouabid wrote:
-> Mule is an mcu that emulates a set of I2C devices which are reachable
-> through an I2C-mux.
-> 
-> The emulated devices share a single I2C address with the mux itself
-> where the requested register is what determines which logic is executed
-> (muxing logic or device logic):
-> 
-> 1- The devices on the mux can be selected (muxing functionality) by
-> writing the appropriate device number to an I2C config register (0xff)
-> that is not used by any device logic.
-> 
-> 2- Any access to a register other than the config register will be
-> handled by the previously selected device.
-> 
->       +-------------------------------------------------------+
->       |  Mule                                                 |
->       |        +---------------+                              |
->     ----+-(1)->|Config register|-----+                        |
->       | |      +---------------+     |                        |
->       | |                            V_                       |
->       | |                            |  \          +--------+ |
->       | |                            |   \-------->| dev #0 | |
->       | |                            |   |         +--------+ |
->       | |                            | M |-------->| dev #1 | |
->       | +-----------(2)------------->| U |         +--------+ |
->       |                              | X |-------->| dev #2 | |
->       |                              |   |         +--------+ |
->       |                              |   /-------->| dev #3 | |
->       |                              |__/          +--------+ |
->       +-------------------------------------------------------+
-> 
-> The current I2C-mux implementation does not allow the mux to use the
-> I2C address of a child device. As a workaround, A new I2C-adapter quirk is
-> introduced to skip the check for conflict between a child device and the
-> mux core I2C address when adding the child device.
-> 
-> This patch-series adds support for this multiplexer. Mule is integrated
-> as part of rk3399-puma, px30-ringneck, rk3588-tiger and rk3588-jaguar
-> boards.
-> 
-> Signed-off-by: Farouk Bouabid <farouk.bouabid@cherry.de>
-> 
-> Changes in v3:
-> - Change "i2c" in comments/commit-logs to "I2C"
-> - Fix long line-length
-> - Warn when "share_addr_with_children" is set and the Mux is not an I2C device
-> - Fix/stop propagating "I2C_AQ_SKIP_ADDR_CHECK" flag if "share_addr_with_children"
->   is not set.
-> - Fix "old_fw" variable is used to indicate the reversed meaning.
-> 
-> - Link to v2: https://lore.kernel.org/r/20240506-dev-mule-i2c-mux-v2-0-a91c954f65d7@cherry.de
-> 
-> Changes in v2:
-> - Add i2c-adapter quirks to skip checking for conflict between the mux core
->   and a child device address.
-> - Rename dt-binding to "tsd,mule-i2c-mux.yaml"
-> - Add Mule description to kconfig
-> - Fix indentation
-> - Move device table after probe
-> 
-> - Link to v1: https://lore.kernel.org/r/20240426-dev-mule-i2c-mux-v1-0-045a482f6ffb@theobroma-systems.com
-> 
-> ---
-> Farouk Bouabid (7):
->       i2c: mux: add the ability to share mux address with child nodes
->       dt-bindings: i2c: mux: mule: add dt-bindings for mule i2c multiplexer
->       i2c: muxes: add support for mule i2c multiplexer
->       arm64: dts: rockchip: add mule i2c mux (0x18) on rk3399-puma
->       arm64: dts: rockchip: add mule i2c mux (0x18) on rk3588-tiger
->       arm64: dts: rockchip: add mule i2c mux (0x18) on px30-ringneck
->       arm64: dts: rockchip: add mule i2c mux (0x18) on rk3588-jaguar
-> 
->  .../devicetree/bindings/i2c/tsd,mule-i2c-mux.yaml  |  80 +++++++++++
->  arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi    |  20 ++-
->  arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi      |  20 ++-
->  arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts     |  19 ++-
->  arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi     |  19 ++-
->  drivers/i2c/i2c-core-base.c                        |   6 +-
->  drivers/i2c/i2c-mux.c                              |  48 ++++++-
->  drivers/i2c/muxes/Kconfig                          |  18 +++
->  drivers/i2c/muxes/Makefile                         |   1 +
->  drivers/i2c/muxes/i2c-mux-mule.c                   | 157 +++++++++++++++++++++
->  include/linux/i2c-mux.h                            |   1 +
->  include/linux/i2c.h                                |   7 +
->  12 files changed, 384 insertions(+), 12 deletions(-)
-> ---
-> base-commit: 79c1f584335af42ce359ee3ff0f4e9cc324296ed
-> change-id: 20240404-dev-mule-i2c-mux-9103cde07021
-> 
-> Best regards,
-> --
-> Farouk Bouabid <farouk.bouabid@cherry.de>
-> 
-> 
-> 
+If the original task that has invoked the KCOV_REMOTE_ENABLE ioctl
+happens to get interrupted and kcov_remote_start() is called, it
+ultimately leads to kcov_remote_stop() NOT restoring the original
+KCOV reference. So when the task exits, all registered remote KCOV
+handles remain active forever.
 
+Fix it by introducing a special kcov_mode that is assigned to the
+task that owns a KCOV remote object. It makes kcov_mode_enabled()
+return true and yet does not trigger coverage collection in
+__sanitizer_cov_trace_pc() and write_comp_data().
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+Signed-off-by: Aleksandr Nogikh <nogikh@google.com>
+Fixes: 5ff3b30ab57d ("kcov: collect coverage from interrupts")
+---
+ include/linux/kcov.h | 2 ++
+ kernel/kcov.c        | 1 +
+ 2 files changed, 3 insertions(+)
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y rockchip/rk3588-jaguar.dtb' for 20240611-dev-mule-i2c-mux-v3-0-08d26a28e001@cherry.de:
-
-arch/arm64/boot/dts/rockchip/rk3588-jaguar.dtb: fan@18: '#cooling-cells' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/trivial-devices.yaml#
-
-
-
-
+diff --git a/include/linux/kcov.h b/include/linux/kcov.h
+index b851ba415e03..3b479a3d235a 100644
+--- a/include/linux/kcov.h
++++ b/include/linux/kcov.h
+@@ -21,6 +21,8 @@ enum kcov_mode {
+ 	KCOV_MODE_TRACE_PC = 2,
+ 	/* Collecting comparison operands mode. */
+ 	KCOV_MODE_TRACE_CMP = 3,
++	/* The process owns a KCOV remote reference. */
++	KCOV_MODE_REMOTE = 4,
+ };
+ 
+ #define KCOV_IN_CTXSW	(1 << 30)
+diff --git a/kernel/kcov.c b/kernel/kcov.c
+index c3124f6d5536..5371d3f7b5c3 100644
+--- a/kernel/kcov.c
++++ b/kernel/kcov.c
+@@ -632,6 +632,7 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+ 			return -EINVAL;
+ 		kcov->mode = mode;
+ 		t->kcov = kcov;
++		WRITE_ONCE(t->kcov_mode, KCOV_MODE_REMOTE);
+ 		kcov->t = t;
+ 		kcov->remote = true;
+ 		kcov->remote_size = remote_arg->area_size;
+-- 
+2.45.2.505.gda0bf45e8d-goog
 
