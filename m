@@ -1,207 +1,144 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFC956B79;
-	Tue, 11 Jun 2024 18:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B604157CB5;
+	Tue, 11 Jun 2024 18:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718131485; cv=none; b=EB10R/Bdrw/VfCsHRP/Rwr+8qapf+Ic+WyPRKNir0lQz0FUaTk25gGpBKXYesR7uVQqFG66ebPSvk48Q0ocVCZgopH+gMiZDWHURKk9TprhW1kTI6Lc9UxcDyteEfVjPyXkIYwhA00szUIBjeIsxBo2mpCRRjDhwJb6f23Eevq4=
+	t=1718131487; cv=none; b=mzQXsULubCZLU17byRNMgXkxPL6MPnanMlqV5ZC0z1yZiASQeGO3aJDz1GrFp0++CKEBOWjEyIJioOogNRhDUrDYfODW2iFY0NwDAv0EtzGMUF8AANotiPKUq5rDf5roUhyORnOaT2+K7uMwNx6dDxZ2KgFz4ozat3I90vRprKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718131485; c=relaxed/simple;
-	bh=cmWCRSsYOjggNYeVeX/Fh4mhXsxo9amZoR1fd/Cu6Gk=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=mwITV4wKUeiCM+3agPzL81ds4okk68z0HA10nnD8lurKF84GIrH6eyjucI98dLMApCS5/NrCx3YC5Kr7gtS7Iq+DdAmPEh9GyMN7FNBW3pcikoaEdio6MsaArV7LqpzzSbpNXOFeVwJ2M8s15sLvqEMqh+BGWWnwU/oGYPVTtt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=exe9x/dN; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1718131487; c=relaxed/simple;
+	bh=yWm+CV/ol6Yb0FRVj/f//Za7SwasM3ugj7xYp1INfAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZN9+ADkh7hO/oQXjq/iG5PRcbq/NCch5CrolkDmsEKdKzonsCdsPqeGDlpWwHn1Hhh5IvE+sMrEvCu5O5I02AdlIeTJtxRNhK8xLSv8HOlwiLZ/rmrbuxUWmWosCway00Wq6SBHyP24WluzkGWTpdt4ix5Xy4h2jMarZudpqujU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=okEtiCOV; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="exe9x/dN"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="okEtiCOV"
+Received: from [IPV6:2601:646:8002:4640:7285:c2ff:fefb:fd4] ([IPv6:2601:646:8002:4640:7285:c2ff:fefb:fd4])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45BIQOXg3417874
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 11 Jun 2024 11:26:24 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45BIQOXg3417874
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024051501; t=1718130387;
+	bh=OHa9DhySlaaVhhVOAe30IsVHYFteIibUy4qxaCqMzfc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=okEtiCOVX3HdSiQvDxNYgYr+0HqgJLKnG2m/rlhjGnPh3XRakqH86Oe0HdFjQ8vb8
+	 lCLlJW7zSBSPM1bA8ax15thRrIwWFaFPa+o+EdL0rZXm/4/srmUbr6CHP65bznGV6W
+	 /KqQ2D4aqxtZUQuY/R1ri1KUYKGzgNTcj5gKCQDmB9GzuFD1tce5uDmWNtkEv67UBQ
+	 IMwXQ4AT2ur45vH1k3ay4KEUOfF1/sbHVKDC6HZDl/Rr6CAEEJOpoq0nP6p/4NCCle
+	 bBvwdvwS9QuAK9Xc12EimU7dTn6UCMfkGN+YTd5x4KhT3RxS5dyR7XQZEkI5pnsssf
+	 IW/2FxDzYYpCw==
+Message-ID: <5c8b3ee9-64c2-4ff3-9cca-ba2672b9635e@zytor.com>
+Date: Tue, 11 Jun 2024 11:26:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1718131479;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7pHYA0hGBd5Rs4Cbwkyp6/xsosqWE78XZanccvxJQB0=;
-	b=exe9x/dNpVvBNkUcZVrYH73T+Uod4Qi/u0ryfQ1dBdVMGUqiiCQ8njpLS63/J4xQpon0KC
-	Opyqd+dviw2iFD9Q42wk9fmwQlEmV26rd+V5Jd5/PTAYZ82ABKgP/vPLC/N4xrd3AEpes8
-	iO59i0Wx+OCimcupfXEDaQcyvSvQ0/JojoiXxQJuVMgt4ndSkFy17xEnLjQ+6IX94naf8y
-	KzGRAxT1KNWpCQhG6Q2qDs0cQWIrUyijdRg+Is6g2VkHKK5XVgVtBL8iKnIxbELUlV+uC/
-	/5tcB+Q0wW/rxhrHd2T6vdNbgCpZTlR5QzCjFY81tIVh30LUJws/J/Bz72CohQ==
-Date: Tue, 11 Jun 2024 20:44:38 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, linux-mmc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] mmc: add missing MODULE_DESCRIPTION() macros
-In-Reply-To: <20240611-md-drivers-mmc-v2-1-2ef2cbcdc061@quicinc.com>
-References: <20240611-md-drivers-mmc-v2-1-2ef2cbcdc061@quicinc.com>
-Message-ID: <afbb0c52a5f37caeba7c2839d702cc0a@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
+ confusion
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Borislav Petkov <bp@alien8.de>
+Cc: Nikolay Borisov <nik.borisov@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Kalra, Ashish"
+ <ashish.kalra@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "Huang, Kai" <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Baoquan He <bhe@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+        linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
+ <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
+ <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
+ <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
+ <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
+ <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
+Content-Language: en-US
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On 2024-06-11 17:50, Jeff Johnson wrote:
-> make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in 
-> drivers/mmc/host/of_mmc_spi.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in
-> drivers/mmc/host/tmio_mmc_core.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in
-> drivers/mmc/host/renesas_sdhi_core.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in 
-> drivers/mmc/core/mmc_core.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in
-> drivers/mmc/core/pwrseq_simple.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in
-> drivers/mmc/core/pwrseq_sd8787.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in 
-> drivers/mmc/core/pwrseq_emmc.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in 
-> drivers/mmc/core/sdio_uart.o
+On 6/4/24 08:21, Kirill A. Shutemov wrote:
 > 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+>  From b45fe48092abad2612c2bafbb199e4de80c99545 Mon Sep 17 00:00:00 2001
+> From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Date: Fri, 10 Feb 2023 12:53:11 +0300
+> Subject: [PATCHv11.1 06/19] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
 > 
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com> # for TMIO 
-> and SDHI
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> TDX guests run with MCA enabled (CR4.MCE=1b) from the very start. If
+> that bit is cleared during CR4 register reprogramming during boot or
+> kexec flows, a #VE exception will be raised which the guest kernel
+> cannot handle it.
+> 
+> Therefore, make sure the CR4.MCE setting is preserved over kexec too and
+> avoid raising any #VEs.
+> 
+> The change doesn't affect non-TDX-guest environments.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>   arch/x86/kernel/relocate_kernel_64.S | 17 ++++++++++-------
+>   1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index 085eef5c3904..9c2cf70c5f54 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -5,6 +5,8 @@
+>    */
+>   
+>   #include <linux/linkage.h>
+> +#include <linux/stringify.h>
+> +#include <asm/alternative.h>
+>   #include <asm/page_types.h>
+>   #include <asm/kexec.h>
+>   #include <asm/processor-flags.h>
+> @@ -145,14 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+>   	 * Set cr4 to a known state:
+>   	 *  - physical address extension enabled
+>   	 *  - 5-level paging, if it was enabled before
+> +	 *  - Machine check exception on TDX guest, if it was enabled before.
+> +	 *    Clearing MCE might not be allowed in TDX guests, depending on setup.
+> +	 *
+> +	 * Use R13 that contains the original CR4 value, read in relocate_kernel().
+> +	 * PAE is always set in the original CR4.
+>   	 */
+> -	movl	$X86_CR4_PAE, %eax
+> -	testq	$X86_CR4_LA57, %r13
+> -	jz	.Lno_la57
+> -	orl	$X86_CR4_LA57, %eax
+> -.Lno_la57:
+> -
+> -	movq	%rax, %cr4
+> +	andl	$(X86_CR4_PAE | X86_CR4_LA57), %r13d
+> +	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %r13d), X86_FEATURE_TDX_GUEST
+> +	movq	%r13, %cr4
+>   
 
-Looking good to me, thanks for the v2.
+If this is the case, I don't really see a reason to clear MCE per se as 
+I'm guessing a machine check here will be fatal anyway? It just changes 
+the method of death.
 
-Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+Also, is there a reason to save %cr4, run code, and *then* clear the 
+relevant bits? Wouldn't it be better to sanitize %cr4 as soon as possible?
 
-> ---
-> Corrections to these descriptions are welcomed. I'm not an expert in
-> this code so in most cases I've taken these descriptions directly from
-> code comments, Kconfig descriptions, or git logs.  History has shown
-> that in some cases these are originally wrong due to cut-n-paste
-> errors, and in other cases the drivers have evolved such that the
-> original information is no longer accurate.
-> ---
-> Changes in v2:
-> - Updated descriptions in core/pwrseq_emmc.c, core/pwrseq_simple.c, and
->   host/renesas_sdhi_core.c per guidance from Dragan.
-> - Link to v1:
-> https://lore.kernel.org/r/20240610-md-drivers-mmc-v1-1-c2a2593e4121@quicinc.com
-> ---
->  drivers/mmc/core/core.c              | 1 +
->  drivers/mmc/core/pwrseq_emmc.c       | 1 +
->  drivers/mmc/core/pwrseq_sd8787.c     | 1 +
->  drivers/mmc/core/pwrseq_simple.c     | 1 +
->  drivers/mmc/core/sdio_uart.c         | 1 +
->  drivers/mmc/host/of_mmc_spi.c        | 1 +
->  drivers/mmc/host/renesas_sdhi_core.c | 1 +
->  drivers/mmc/host/tmio_mmc_core.c     | 1 +
->  8 files changed, 8 insertions(+)
-> 
-> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> index a8c17b4cd737..d6c819dd68ed 100644
-> --- a/drivers/mmc/core/core.c
-> +++ b/drivers/mmc/core/core.c
-> @@ -2362,4 +2362,5 @@ static void __exit mmc_exit(void)
->  subsys_initcall(mmc_init);
->  module_exit(mmc_exit);
-> 
-> +MODULE_DESCRIPTION("MMC core driver");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/mmc/core/pwrseq_emmc.c 
-> b/drivers/mmc/core/pwrseq_emmc.c
-> index 3b6d69cefb4e..96fa4c508900 100644
-> --- a/drivers/mmc/core/pwrseq_emmc.c
-> +++ b/drivers/mmc/core/pwrseq_emmc.c
-> @@ -115,4 +115,5 @@ static struct platform_driver 
-> mmc_pwrseq_emmc_driver = {
->  };
-> 
->  module_platform_driver(mmc_pwrseq_emmc_driver);
-> +MODULE_DESCRIPTION("Hardware reset support for eMMC");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/mmc/core/pwrseq_sd8787.c 
-> b/drivers/mmc/core/pwrseq_sd8787.c
-> index 0c5808fc3206..f24bbd68e251 100644
-> --- a/drivers/mmc/core/pwrseq_sd8787.c
-> +++ b/drivers/mmc/core/pwrseq_sd8787.c
-> @@ -130,4 +130,5 @@ static struct platform_driver 
-> mmc_pwrseq_sd8787_driver = {
->  };
-> 
->  module_platform_driver(mmc_pwrseq_sd8787_driver);
-> +MODULE_DESCRIPTION("Power sequence support for Marvell SD8787 BT + 
-> Wifi chip");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/mmc/core/pwrseq_simple.c 
-> b/drivers/mmc/core/pwrseq_simple.c
-> index df9588503ad0..154a8921ae75 100644
-> --- a/drivers/mmc/core/pwrseq_simple.c
-> +++ b/drivers/mmc/core/pwrseq_simple.c
-> @@ -159,4 +159,5 @@ static struct platform_driver 
-> mmc_pwrseq_simple_driver = {
->  };
-> 
->  module_platform_driver(mmc_pwrseq_simple_driver);
-> +MODULE_DESCRIPTION("Simple power sequence management for MMC");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/mmc/core/sdio_uart.c 
-> b/drivers/mmc/core/sdio_uart.c
-> index 575ebbce378e..6b7471dba3bf 100644
-> --- a/drivers/mmc/core/sdio_uart.c
-> +++ b/drivers/mmc/core/sdio_uart.c
-> @@ -1162,4 +1162,5 @@ module_init(sdio_uart_init);
->  module_exit(sdio_uart_exit);
-> 
->  MODULE_AUTHOR("Nicolas Pitre");
-> +MODULE_DESCRIPTION("SDIO UART/GPS driver");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/mmc/host/of_mmc_spi.c 
-> b/drivers/mmc/host/of_mmc_spi.c
-> index bf54776fb26c..05939f30a5ae 100644
-> --- a/drivers/mmc/host/of_mmc_spi.c
-> +++ b/drivers/mmc/host/of_mmc_spi.c
-> @@ -19,6 +19,7 @@
->  #include <linux/mmc/core.h>
->  #include <linux/mmc/host.h>
-> 
-> +MODULE_DESCRIPTION("OpenFirmware bindings for the MMC-over-SPI 
-> driver");
->  MODULE_LICENSE("GPL");
-> 
->  struct of_mmc_spi {
-> diff --git a/drivers/mmc/host/renesas_sdhi_core.c
-> b/drivers/mmc/host/renesas_sdhi_core.c
-> index 12f4faaaf4ee..58536626e6c5 100644
-> --- a/drivers/mmc/host/renesas_sdhi_core.c
-> +++ b/drivers/mmc/host/renesas_sdhi_core.c
-> @@ -1162,4 +1162,5 @@ void renesas_sdhi_remove(struct platform_device 
-> *pdev)
->  }
->  EXPORT_SYMBOL_GPL(renesas_sdhi_remove);
-> 
-> +MODULE_DESCRIPTION("Renesas SDHI core driver");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/mmc/host/tmio_mmc_core.c 
-> b/drivers/mmc/host/tmio_mmc_core.c
-> index 93e912afd3ae..c1a4ade5f949 100644
-> --- a/drivers/mmc/host/tmio_mmc_core.c
-> +++ b/drivers/mmc/host/tmio_mmc_core.c
-> @@ -1319,4 +1319,5 @@ int tmio_mmc_host_runtime_resume(struct device 
-> *dev)
->  EXPORT_SYMBOL_GPL(tmio_mmc_host_runtime_resume);
->  #endif
-> 
-> +MODULE_DESCRIPTION("TMIO MMC core driver");
->  MODULE_LICENSE("GPL v2");
-> 
-> ---
-> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-> change-id: 20240610-md-drivers-mmc-cb5f273b5b33
+	-hpa
