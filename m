@@ -1,76 +1,67 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885C117623D
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 12:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AB8C17B437;
+	Tue, 11 Jun 2024 12:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718108478; cv=none; b=VJigLO2t/xffqahVX6ZbCefxGR1JW9mVXCyRsXybgoDyjMJ+VGKAgtOcN5YaEH8yaXlyIEun28fhSdqQfhpVl+kUz19Px8j9HQeLOOAR3ZL+MOohWqYw1S4OI1Bm1sPw7pwiSGhbm3HQt1sR11RWfgZIW9rTXJcjcOUqxmm0yuk=
+	t=1718108542; cv=none; b=uyZnSFF3cx2C/yl0jizpkUSmlZRLWaBh7yRTPV5alfIaslc3/V2VUn9vW3K9zlPtuCGCLmiatZWuOQ+IYr7RHoclrmXamERa3jcW4tFOsxbK2O6AY3/3SUbM4jfi6ZL7HVSEu2W4LFGR7vN4Bg53UcD6gSECmHXOj45anSDP0VI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718108478; c=relaxed/simple;
-	bh=j2kFCTc+IqtiC8E0F9sbwks2G9uj4Xig7u/w2y6v2i0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MkAPPxemRYFveyzYEfdmRCAKJ9onEmAHA4tPwPRj6iPpiK7qVHrDn8KTVGCeDr+u74LaDvdlITr4MncRBY/2n1cwC47NVX4+Z465zmItl8degD0BJZiE4R+Nd7+GX6rPFjAAf6Qp4SlhoDfw+vZR94DHaZY4UEBlYbOp9i35NSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Vz75r2PLZz29dsF;
-	Tue, 11 Jun 2024 20:19:44 +0800 (CST)
-Received: from kwepemd500014.china.huawei.com (unknown [7.221.188.63])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3114814022E;
-	Tue, 11 Jun 2024 20:21:07 +0800 (CST)
-Received: from 228-1616.huawei.com (10.67.246.68) by
- kwepemd500014.china.huawei.com (7.221.188.63) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 11 Jun 2024 20:21:06 +0800
-From: Nianyao Tang <tangnianyao@huawei.com>
-To: <maz@kernel.org>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<mark.rutland@arm.com>, <oliver.upton@linux.dev>, <broonie@kernel.org>,
-	<ardb@kernel.org>, <joey.gouly@arm.com>, <ryan.roberts@arm.com>,
-	<jeremy.linton@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <tangnianyao@huawei.com>, <guoyang2@huawei.com>
-Subject: [PATCH] arm64/cpufeatures/kvm: Add ARMv8.9 FEAT_ECBHB bits in ID_AA64MMFR1 register
-Date: Tue, 11 Jun 2024 12:20:49 +0000
-Message-ID: <20240611122049.2758600-1-tangnianyao@huawei.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1718108542; c=relaxed/simple;
+	bh=xNKFRd8JMvvsnTc6kECOfW1SxZSS9jNzHNft0SA3yWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ppjJThc4KdU18vqBFDG1oHTYMwfLNJc2MCqCncXmzUNZrGzQ+ZqK02YyY1e64wwtBUfer2JlHXU28q8b5GpmIILCRkpgDhLVYm6y0PAu1IKeLmWqcxeOIi17f+i0SjX2zwFaKRgDh/JsGnV/JrJNH737g0ewRbg+92nX7ctG2g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1sH0Vq-0002Bf-00; Tue, 11 Jun 2024 14:22:06 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id AAFEFC0688; Tue, 11 Jun 2024 13:16:04 +0200 (CEST)
+Date: Tue, 11 Jun 2024 13:16:04 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] MIPS: Loongson64: Implement PM suspend for LEFI
+ firmware
+Message-ID: <Zmgx9A5ea1uW6SHt@alpha.franken.de>
+References: <20240507-loongson64-suspend-v1-0-534d92a4e09a@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd500014.china.huawei.com (7.221.188.63)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240507-loongson64-suspend-v1-0-534d92a4e09a@flygoat.com>
 
-Enable ECBHB bits in ID_AA64MMFR1 register as per ARM DDI 0487K.a
-specification.
+On Tue, May 07, 2024 at 04:21:58PM +0100, Jiaxun Yang wrote:
+> Hi all,
+> 
+> This series implemented PM suspend for LEFI firmware.
+> We missed this for long in upstream kernel...
+> 
+> Please review
+> Thanks
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+> Jiaxun Yang (3):
+>       MIPS: asm/pm.h: Use platform agnostic macros
+>       MIPS: select CPU_PM with SUSPEND
+>       MIPS: Loongson64: Implement PM suspend for LEFI firmware
+> 
+>  arch/mips/Kconfig              |  2 +-
+>  arch/mips/include/asm/pm.h     | 22 +++++------
+>  arch/mips/loongson64/Makefile  |  2 +-
+>  arch/mips/loongson64/pm.c      | 88 +++++++++---------------------------------
+>  arch/mips/loongson64/sleeper.S | 17 ++++++++
+>  5 files changed, 48 insertions(+), 83 deletions(-)
 
-When guest OS read ID_AA64MMFR1_EL1, kvm emulate this reg using
-ftr_id_aa64mmfr1 and always return ID_AA64MMFR1_EL1.ECBHB=0 to guest.
-It results in guest syscall jump to tramp ventry, which is not needed
-in implementation with ID_AA64MMFR1_EL1.ECBHB=1.
-Let's make the guest syscall process the same as the host.
+series applied to mips-next.
 
-Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
----
- arch/arm64/kernel/cpufeature.c | 1 +
- 1 file changed, 1 insertion(+)
+Thomas.
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 48e7029f1054..c3913c90797e 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -429,6 +429,7 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
- };
- 
- static const struct arm64_ftr_bits ftr_id_aa64mmfr1[] = {
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_EL1_ECBHB_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_EL1_TIDCP1_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_EL1_AFP_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_EL1_HCX_SHIFT, 4, 0),
 -- 
-2.30.0
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
