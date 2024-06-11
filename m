@@ -1,154 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F205B47772;
-	Tue, 11 Jun 2024 08:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170E4174EE4;
+	Tue, 11 Jun 2024 08:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718094696; cv=none; b=DJEpQNOwQP1AocvkWbLSrhdYEh5tX0mYPtD66IsUj5PAHxZ0LpdHkUWGaZZX3vmtHI4PcbtQYPWPaeGkGcCZ2t0OFlqixQELxsK5lMMYCipd8AE1uFar1uQ+ZBIETnooPFA+nDeGijl7NdDFvKTfomciMp57EltyOZVN9VNnjag=
+	t=1718094793; cv=none; b=T+gmOwDVeQmGYpHMWA2PhIL7ftGWy7FworP0ZEVLk8MLfoM8Fx2rnRsvbUL+KN7ioGjVvhsqW3ub/+4f3wSfrxW3+5H6AOIrPOG3+KpulLxy8UiWEPY4piZBGZ87o8S6j4ZB9SY4KC2rHHeMnC8Z1wPr3IHqZ2qOngiRSoUm7u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718094696; c=relaxed/simple;
-	bh=wpXcbORh+1wj0dP3PDcCLU455xdM3PvTHmev7n0Dpi4=;
+	s=arc-20240116; t=1718094793; c=relaxed/simple;
+	bh=CtnVECJ3Sqv+zIcHzuKNfaum0O8bvOkhLfRsNVVkeVA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J+vfJ35ebCPEtg8HEOLawSSLtAO8toJc0UrvKNnIVw6MmJStH7wM8TR1KvTN32EHtGZiHqmRg4wThP4Np9bZkMTSWHbQJeHWQLnBDZxPVgD8G1i2JLYzrZC0egdT3Fv3a5J5abqxpIYAIhHMf58XO6KvmuMx40WDS07yTAEwGZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nXPvm9Jb; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 MIME-Version:Content-Type; b=XuOMX4f/idTgQ10dynkVmxDBfi5FIR6UtIzmni1SoUNYvAVGfk0iNX8rBVAjnGOSpNI9vp7L73+J6HrsTXvEcHFdQxD7XuiF3y5buD/d/jn6wVfQq5nhgaqYASd6+i43RcsZLdH5pQJDMaarJBppaOz2LQJyXZ12ThaDriCb5hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=bY850SoV; arc=none smtp.client-ip=161.97.139.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nXPvm9Jb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718094696; x=1749630696;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wpXcbORh+1wj0dP3PDcCLU455xdM3PvTHmev7n0Dpi4=;
-  b=nXPvm9JbkXrJKwBhp0lFnZ1Vv5zIp6SPMxLF7SvpbBdeVlE43V/D7X46
-   mQkWqaQqgh6mI0IPzZWA5svJmC7GTOMN2heIWyCjVKSo7e9xOpR24bcgn
-   jkaJmuFFvHeYcovBhN8F1nLo8SZ+o9f5djU68fU+6Vau/5E0qN/FfSJpK
-   pkHhsaclGC2Qzs0DwY16GA6UG/0c70RYEtCB1H8U3BFz710NmeUxw5WfB
-   0Xl/Puic9TCtEje9x8YG2gjBGcZ2ciOnoYpJrVqa3dm1EvwoJgJ8Ll7sN
-   p9cGV93rhvowb01+CBZy4/S8Kgrl6Nt6JLGUkjIlVXN3LlUSfWaqzCzpt
-   A==;
-X-CSE-ConnectionGUID: q68OvUamQv+ARa9bwIoX9A==
-X-CSE-MsgGUID: IVHbXrDYR62GKa/qTnTmGw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="25369291"
-X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
-   d="scan'208";a="25369291"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 01:31:35 -0700
-X-CSE-ConnectionGUID: 21/u/m45QGalCO9X+iVVNA==
-X-CSE-MsgGUID: d/bcU8KTS0il3nu5lHAZpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
-   d="scan'208";a="39426247"
-Received: from mtkaczyk-mobl.ger.corp.intel.com (HELO localhost) ([10.246.38.248])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 01:31:31 -0700
-Date: Tue, 11 Jun 2024 10:31:26 +0200
-From: Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>
-To: Yu Kuai <yukuai3@huawei.com>
-Cc: <agk@redhat.com>, <snitzer@kernel.org>, <mpatocka@redhat.com>,
- <song@kernel.org>, <xni@redhat.com>, <l@damenly.org>,
- <dm-devel@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <linux-raid@vger.kernel.org>, <yukuai1@huaweicloud.com>,
- <yi.zhang@huawei.com>, <yangerkun@huawei.com>
-Subject: Re: [PATCH 02/12] md: add a new enum type sync_action
-Message-ID: <20240611103126.00003ee0@linux.intel.com>
-In-Reply-To: <20240603125815.2199072-3-yukuai3@huawei.com>
-References: <20240603125815.2199072-1-yukuai3@huawei.com>
-	<20240603125815.2199072-3-yukuai3@huawei.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="bY850SoV"
+Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
+	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1sGwwB-0007za-0M;
+	Tue, 11 Jun 2024 10:33:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=uxBtCY19yODZNGkHF7p72TwtLkbwXAYNX7XgY9uZj5E=; b=bY850SoVU4kt1ak7F0R7JsX9QO
+	DdB29QsoOvKrafPCzplJFZTJdsKy1JFENOjrDVwyoJYHEd8vNRSL/KBSdsnpHl/rydwRwOgBieTLC
+	DeSmCQ1iQsjOilOeG+bzK5Gqih3Qq3l2tICIOBxbBFceynZg6wUtJJiby5kxqIKwgk3OPDIqI1ZmU
+	AL0HPjcA/xmWYeSMTyTsT9IEAIgyxIvW5ElKBtEQ3yw3A+MW1jtv+BRqHgRfxttKYEzCko9nijKlJ
+	f/uBX51kv2UL7WRP5Brfxh3O3V2Fc9jsn6xZA3AEJYrfpkkMEw+d0tUpChXY63fD5L7AFmCFYfG83
+	/DOPLVxQ==;
+Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
+	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1sGww6-0031HS-0Z;
+	Tue, 11 Jun 2024 10:32:59 +0200
+Date: Tue, 11 Jun 2024 10:32:56 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Adam Ford <aford173@gmail.com>
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>, marcel@holtmann.org,
+ johan@kernel.org, pmenzel@molgen.mpg.de, jirislaby@kernel.org,
+ gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ linux-bluetooth@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+ tomi.valkeinen@ideasonboard.com, =?UTF-8?B?UMOpdGVy?= Ujfalusi
+ <peter.ujfalusi@gmail.com>, robh@kernel.org, hns@goldelico.com
+Subject: Re: [PATCH v4 0/4] Bluetooth/gnss: GNSS support for TiWi chips
+Message-ID: <20240611103256.4e64dd16@aktux>
+In-Reply-To: <CAHCN7xLDjnW1gK8DF4codzFLEvC_hDgeACR8wtWF8nxCJ=+RBg@mail.gmail.com>
+References: <20240606183032.684481-1-andreas@kemnade.info>
+	<CABBYNZ+Fz2TLSNa28H3kjVKOSA7C-XOzdQJiHdJs3FKxnq01DA@mail.gmail.com>
+	<20240606221941.333a9704@aktux>
+	<CAHCN7xLhbiqTTOwPZ22KekALDn0KtH6vNQEJpSmSCTiMggX5Qg@mail.gmail.com>
+	<20240608212004.3707d8ea@aktux>
+	<CAHCN7xLDjnW1gK8DF4codzFLEvC_hDgeACR8wtWF8nxCJ=+RBg@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 3 Jun 2024 20:58:05 +0800
-Yu Kuai <yukuai3@huawei.com> wrote:
+Hi Adam,
 
-> In order to make code related to sync_thread cleaner in following
-> patches, also add detail comment about each sync action. And also
-> prepare to remove the related recovery_flags in the fulture.
-> 
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  drivers/md/md.h | 57 ++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 56 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index 170412a65b63..6b9d9246f260 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -34,6 +34,61 @@
->   */
->  #define	MD_FAILFAST	(REQ_FAILFAST_DEV | REQ_FAILFAST_TRANSPORT)
->  
-> +/* Status of sync thread. */
-> +enum sync_action {
-> +	/*
-> +	 * Represent by MD_RECOVERY_SYNC, start when:
-> +	 * 1) after assemble, sync data from first rdev to other copies, this
-> +	 * must be done first before other sync actions and will only execute
-> +	 * once;
-> +	 * 2) resize the array(notice that this is not reshape), sync data
-> for
-> +	 * the new range;
-> +	 */
-> +	ACTION_RESYNC,
-> +	/*
-> +	 * Represent by MD_RECOVERY_RECOVER, start when:
-> +	 * 1) for new replacement, sync data based on the replace rdev or
-> +	 * available copies from other rdev;
-> +	 * 2) for new member disk while the array is degraded, sync data from
-> +	 * other rdev;
-> +	 * 3) reassemble after power failure or re-add a hot removed rdev,
-> sync
-> +	 * data from first rdev to other copies based on bitmap;
-> +	 */
-> +	ACTION_RECOVER,
-> +	/*
-> +	 * Represent by MD_RECOVERY_SYNC | MD_RECOVERY_REQUESTED |
-> +	 * MD_RECOVERY_CHECK, start when user echo "check" to sysfs api
-> +	 * sync_action, used to check if data copies from differenct rdev are
-> +	 * the same. The number of mismatch sectors will be exported to user
-> +	 * by sysfs api mismatch_cnt;
-> +	 */
-> +	ACTION_CHECK,
-> +	/*
-> +	 * Represent by MD_RECOVERY_SYNC | MD_RECOVERY_REQUESTED, start when
-> +	 * user echo "repair" to sysfs api sync_action, usually paired with
-> +	 * ACTION_CHECK, used to force syncing data once user found that
-> there
-> +	 * are inconsistent data,
-> +	 */
-> +	ACTION_REPAIR,
-> +	/*
-> +	 * Represent by MD_RECOVERY_RESHAPE, start when new member disk is
-> added
-> +	 * to the conf, notice that this is different from spares or
-> +	 * replacement;
-> +	 */
-> +	ACTION_RESHAPE,
-> +	/*
-> +	 * Represent by MD_RECOVERY_FROZEN, can be set by sysfs api
-> sync_action
-> +	 * or internal usage like setting the array read-only, will forbid
-> above
-> +	 * actions.
-> +	 */
-> +	ACTION_FROZEN,
-> +	/*
-> +	 * All above actions don't match.
-> +	 */
-> +	ACTION_IDLE,
-> +	NR_SYNC_ACTIONS,
-> +};
+On Mon, 10 Jun 2024 18:17:05 -0500
+Adam Ford <aford173@gmail.com> wrote:
 
-I like if counter is keep in same style as rest enum values, like ACTION_COUNT.
+> On Sat, Jun 8, 2024 at 2:20=E2=80=AFPM Andreas Kemnade <andreas@kemnade.i=
+nfo> wrote:
+> >
+> > Hi Adam,
+> >
+> > On Sat, 8 Jun 2024 14:00:38 -0500
+> > Adam Ford <aford173@gmail.com> wrote:
+> > =20
+> > > On Thu, Jun 6, 2024 at 3:19=E2=80=AFPM Andreas Kemnade <andreas@kemna=
+de.info> wrote: =20
+> > > >
+> > > > Hi Luiz,
+> > > >
+> > > > On Thu, 6 Jun 2024 16:04:10 -0400
+> > > > Luiz Augusto von Dentz <luiz.dentz@gmail.com> wrote:
+> > > > =20
+> > > > > Hi Andreas,
+> > > > >
+> > > > > On Thu, Jun 6, 2024 at 2:30=E2=80=AFPM Andreas Kemnade <andreas@k=
+emnade.info> wrote: =20
+> > > > > >
+> > > > > > Some of these chips have GNSS support. In some vendor kernels
+> > > > > > a driver on top of misc/ti-st can be found providing a /dev/tig=
+ps
+> > > > > > device which speaks the secretive Air Independent Interface (AI=
+2) protocol. =20
+> > >
+> > > I think you may have sent me a file to test, but I can't find the
+> > > e-mail.   Can you tell me what tool you used to test it?  I can get
+> > > gnss0 to enumerate, so I am close.
+> > > =20
+> > hmm, /bin/cat is sufficient. It should spit out nmea now by default.
+> >
+> > For playing around with raw mode, you need the ai2raw parameter
+> > and then you can play around with read-gps from
+> > https://github.com/akemnade/bt200tools
+> > =20
+> > > [   20.759857] hci-ti serial0-0: using DT
+> > > '/ocp@68000000/serial@4806c000/bluetooth-gnss' for 'enable' GPIO
+> > > lookup
+> > > [   20.770263] of_get_named_gpiod_flags: parsed 'enable-gpios'
+> > > property of node '/ocp@68000000/serial@4806c000/bluetooth-gnss[0]' -
+> > > status (0)
+> > > [   29.221588] gnss: GNSS driver registered with major 244
+> > > =20
+> > That is nice. =20
+>=20
+> I think I am stuck.  The closed-sourced GPS binary that Logic PD did
+> was done a 3rd party which has since been sold, and Logic PD never had
+> the source code, I just get junk with this driver:
+>=20
+Well, the whole thing is kept in secrecy. But the junk you get is just=20
+plain NMEA which I get also when device is indoors, so you got the chip
+into a mode which common user space (like gpsd) understands. So IMHO that i=
+s a
+Tested-By. So thanks a lot. I am happy with that result for the first step.
 
-Anyway LGTM.
+So first rpc was tested with a Motorola tablet and the BT200, this one now
+with two different devices, so it is a good situation.=20
 
-Mariusz
+> $GPGLL,,,,,,V,N*64
+> $GPRMC,,V,,,,,,,,,,N*53
+> $GPGGA,,,,,,0,,,,,,,,*66
+> $GPVTG,,T,,M,,N,,K,N*2C
+> $GPGSA,M,1,,,,,,,,,,,,,,,*12
+> $GPGSV,1,1,00*79
+> $GPGLL,,,,,,V,N*64
+> $GPRMC,,V,,,,,,,,,,N*53
+> $GPGGA,,,,,,0,,,,,,,,*66
+> $GPVTG,,T,,M,,N,,K,N*2C
+> $GPGSA,M,1,,,,,,,,,,,,,,,*12
+> $GPGSV,1,1,00*79
+> $GPGLL,,,,,,V,N*64
+> $GPRMC,,V,,,,,,,,,,N*53
+> $GPGGA,,,,,,0,,,,,,,,*66
+> $GPVTG,,T,,M,,N,,K,N*2C
+> $GPGSA,M,1,,,,,,,,,,,,,,,*12
+> $GPGSV,1,1,00*79
+>=20
+A note: contrary to other GPS I have seen, this one does not give
+out satellite reception strength if not much is known about
+position. So this pattern might continue a bit even if antenna
+is there and gps reception is good. Much development of this
+driver was done in a hammock with keyboard in a sleeping bag outside
+so I know a bit...
+
+> I am not 100% positive, but I think the antenna might be required to
+> be powered.  I'll talk with the HW engineer who designed the Torpedo +
+> Wireless SOM and see if he remembers anyhthing about the GPS.  I know
+> for a fact that Logic PD doesn't have the source code for their GPS
+> demo, and I know it doesn't work with modern kernels, so i can't
+> compare the performance.
+>=20
+Well, and demo tools are not easily available anywhere...
+Well, I think if there is some special antenna powering stuff,
+that can be done in a second step. Probably just a gpio or something.
+But that would affect both the testing tools and the in-kernel
+solution.
+
+As said, you might use the ai2raw=3D1 parameter and try the read_gps from
+bt200tools. Or the demo might work if you symlink gnss0 to tigps.
+
+> :-(
+
+Well, no, correct is :-)
+
+Regards,
+Andreas
