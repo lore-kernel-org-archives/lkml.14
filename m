@@ -1,199 +1,72 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F16F17D8B2
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 14:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E0D1DDF4;
+	Tue, 11 Jun 2024 14:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718115238; cv=none; b=oO5ZTgU7Uj3ZziRSgOjGHqe6lBmYeUKGYc9YMXtum0Xqwz+HpL2Yw6Ky/HRLHmT+/R33WK5f7k71X5grCBWravCAXxztEEvFgTeTd+tOJi+54W6cTExBl+r/zmSuSPQtWGMxKDuU6Vh/Km23MXZju2OOk/B7/2GC8gX9N0MtP48=
+	t=1718115284; cv=none; b=HXPHxtGhUkO+CL8Gxhqn666diltWjCMOvmJDYQN+/QJt+Qnob90h7BFl8HrUX7BC0mp+WCWn/0KkQCviV8LpeSrxEfYNNwcs5ZgvmVvbJ1IerWWJo/FOj4P4ALZ3JusDVuXROH18PTcYQ1EntZJMNqNlF1vUFquR+GjrGlL1AwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718115238; c=relaxed/simple;
-	bh=DenBAvY1VgHb5IE7Lt78+EUBNFqsgXe3l0GramNtKiU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nZ8cZ386gGoaAzv/If5g2HYcF0Jg6lGPWWkrO3Rt3RNByjUeT1dpjBPySeuY5pXzvAk2eTzbPzj4wNHVlDfEr8o0D5tc4IvsReJd+VADVgcjEUfINOlMs7S1tcicPm8QMReYBgvs1bvD118wFXQtUEnHdWVrXM8eNFNdMTXTqpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aUivzDZW; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aUivzDZW"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6f9774a556cso697756a34.0
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 07:13:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718115236; x=1718720036; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zy8oHMpwAzTnrA6hIQed17Wxd5v4cl8lNZdtIYkbZh4=;
-        b=aUivzDZWNQ8SqyNsbBG3+4fNSTd21gRLOewQWkR8CmKrEEtlA5k8BTZ2V0tCo3OsNN
-         1LyesWDclfUe4hEDsrXOl9FIyaWsbAXXk4Du839UG3R+QWUv2vNQX0y6SZgfewHPrb3D
-         HZSy/Y6Fc25NHT2o1qnlAhs0pX+FZQvohHN+E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718115236; x=1718720036;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zy8oHMpwAzTnrA6hIQed17Wxd5v4cl8lNZdtIYkbZh4=;
-        b=e6jWlhCs+KCWCGLjXemaaWKHUzZC9A22G1ydvqocU93KxDqZETFUDbZGUGSJOiTgyo
-         YX+D4TVWy8tk//4m6ZjEJOE5H2BNhhPtE4IlK8BgTiyXUad5tKMIJraSjWB814G1ZTZ4
-         +Kz5hW/wKkufdwF3IfCJd8Ahj2CHFUdSnr+BBaeOfMiBkcdJ4wRCCogGOdImY8eQfOHN
-         o18PFGHUwX+mzuArV/AYxZefVQULK+PXlN2Vbqj5jZN2PQraxWhNTYV8zHvCqe21ojzV
-         OaFOyC8AZaemE//QhLYFU83D9WwIS+kO4/6JaRERBd9VP5IDqYDF//+6pRA1O/rg/nTx
-         1QWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVf1AyBdiu1O81qFfuB6B9FW38LECXovzepuTBqq2bbXKYV9ikXv3kCQ0mzENczwcifvvTccCG8+/Br7kovJgGW7R7Hysp0KTQnjpAj
-X-Gm-Message-State: AOJu0YwUt7VVMiYO4kxhsDwCKuwCrOMRsHWwqEZCRxrxM32BzQ64bGGW
-	DkkZsGDcdRCC2AD4yQ4hvIQ2GWDOow90CWD342GR1yV4ALHvtpZaLZpMaGyrvl7YRkKgMqxuYq2
-	pJATlfINdMSj3gTup0iEQqvyRSjv/dHQah1eA
-X-Google-Smtp-Source: AGHT+IEyLXp50AVlWar+ASEL8EEFzsgHFJzCmH5iDrtEytk/RBAQaUrOjGAzA/S0A1NSW/DgR87CGNyjYAUP4RRKdUg=
-X-Received: by 2002:a05:6870:ec94:b0:254:9ded:a3b7 with SMTP id
- 586e51a60fabf-2549dedd4b0mr9558744fac.56.1718115236307; Tue, 11 Jun 2024
- 07:13:56 -0700 (PDT)
+	s=arc-20240116; t=1718115284; c=relaxed/simple;
+	bh=S/j3+QxdEt9IjCO3OfwR4LKCMbcrl3GvC8e/rIHpyMA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aWdHzLxSg0SuYbkLV8MR89iAe3cB+urnBs8k265oxSH0clIN3xRMc2KFrIepDsBpXvxNbElUvXwE23RX4njiWlFKbZUL7Id3eenFRSC7Odxpv0Oh8NqxvwadQ3C4C2Mv5rKFZ9I9F/vYUQF0L1He30PJXxbc3AypYSbv03J0Y2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8AEEC2BD10;
+	Tue, 11 Jun 2024 14:14:42 +0000 (UTC)
+Date: Tue, 11 Jun 2024 10:14:58 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Greg KH <gregkh@linuxfoundation.org>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+ kernel-janitors@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ "workflows@vger.kernel.org" <workflows@vger.kernel.org>, Thorsten Leemhuis
+ <linux@leemhuis.info>
+Subject: Re: [PATCH 05/14] tracefs: replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <20240611101458.7fa78da8@gandalf.local.home>
+In-Reply-To: <05ec743a-c4e9-4c66-b2cd-4e89c858d7d4@suse.cz>
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+	<20240609082726.32742-6-Julia.Lawall@inria.fr>
+	<20240610112223.151faf65@rorschach.local.home>
+	<b647eacd-f6f3-4960-acfd-36c30f376995@paulmck-laptop>
+	<20240610163606.069d552a@gandalf.local.home>
+	<70c093a5-df9c-4665-b9c9-90345c7f2139@suse.cz>
+	<2024061143-transfer-jalapeno-afa0@gregkh>
+	<05ec743a-c4e9-4c66-b2cd-4e89c858d7d4@suse.cz>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240608021023.176027-1-jhubbard@nvidia.com> <CABi2SkVoNyXLrfU71gnv1qVUAADpUmFXiDoKKPc54MLb5JpB+Q@mail.gmail.com>
- <a8f9d4e2-8a12-4e5d-bd22-9c92955135f4@nvidia.com> <CABi2SkU8=tjWhD-e=OdiVr+YeU+BZZLB_vMfkNb-VWpbP2xcng@mail.gmail.com>
- <95005e7c-3705-48c5-8ee2-3d9b0688fcbc@nvidia.com>
-In-Reply-To: <95005e7c-3705-48c5-8ee2-3d9b0688fcbc@nvidia.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Tue, 11 Jun 2024 07:13:44 -0700
-Message-ID: <CABi2SkXN1jsnrawCwADxWB0Whj+e-m7+9c=5Lo3gY5CYVrnpkQ@mail.gmail.com>
-Subject: Re: [PATCH 0/5] cleanups, fixes, and progress towards avoiding "make headers"
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Andrei Vagin <avagin@google.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Christian Brauner <brauner@kernel.org>, David Hildenbrand <david@redhat.com>, Kees Cook <kees@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, Peter Xu <peterx@redhat.com>, 
-	Rich Felker <dalias@libc.org>, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 10, 2024 at 11:26=E2=80=AFPM John Hubbard <jhubbard@nvidia.com>=
- wrote:
->
-> On 6/10/24 9:45 PM, Jeff Xu wrote:
-> > On Mon, Jun 10, 2024 at 9:34=E2=80=AFPM John Hubbard <jhubbard@nvidia.c=
-om> wrote:
-> >> On 6/10/24 9:21 PM, Jeff Xu wrote:
-> >>> Hi
-> >>>
-> >>>
-> >>> On Fri, Jun 7, 2024 at 7:10=E2=80=AFPM John Hubbard <jhubbard@nvidia.=
-com> wrote:
-> >>>>
-> >>>> Eventually, once the build succeeds on a sufficiently old distro, th=
-e
-> >>>> idea is to delete $(KHDR_INCLUDES) from the selftests/mm build, and =
-then
-> >>>> after that, from selftests/lib.mk and all of the other selftest buil=
-ds.
-> >>>>
-> >>>> For now, this series merely achieves a clean build of selftests/mm o=
-n a
-> >>>> not-so-old distro: Ubuntu 23.04:
-> >>>>
-> >>>> 1. Add __NR_mseal.
-> >>>>
-> >>>> 2. Add fs.h, taken as usual from a snapshot of ./usr/include/linux/f=
-s.h
-> >>>> after running "make headers". This is how we have agreed to do this =
-sort
-> >>>> of thing, see [1].
-> >>>>
-> >>> What is the "official" way to build selftests/mm ?
-> >>
-> >>   From Documentation/dev-tools/kselftest.rst, it is:
-> >>
-> >>     $ make headers
-> >>     $ make -C tools/testing/selftests
-> >>
-> >>> I tried a few ways, but it never worked, i.e. due to head missing.
-> >>
-> >> You are correct. Today's rules require "make headers" first. But
-> >> I'm working on getting rid of that requirement, because it causes
-> >> problems for some people and situations.
-> >>
-> >> (Even worse is the follow-up rule, in today's documentation,
-> >> that tells us to *run* the selftests from within Make! This
-> >> is just madness.
-> >
-> > That is hilarious! :)
->
-> :)
->
-> >
-> >>   Because the tests need to run as root in
-> >> many cases. And Make will try to rebuild if necessary...thus
-> >> filling your tree full of root-owned files...but that's for
-> >> another time.)
-> >>
-> >>>
-> >>> 1>
-> >>> cd tools/testing/selftests/mm
-> >>> make
-> >>>
-> >>> migration.c:10:10: fatal error: numa.h: No such file or directory
-> >>>      10 | #include <numa.h>
-> >>>         |          ^~~~~~~~
-> >>> compilation terminated.
-> >>>
-> >>> 2>
-> >>> make headers
-> >>> make -C tools/testing/selftests
-> >>>
-> >>> make[1]: Entering directory
-> >>> '/usr/local/google/home/jeffxu/mm/tools/testing/selftests/mm'
-> >>>     CC       migration
-> >>> migration.c:10:10: fatal error: numa.h: No such file or directory
-> >>>      10 | #include <numa.h>
-> >>>
-> >>
-> >> Well, actually, for these, one should install libnuma-dev and
-> >> numactl (those are Ubuntu package names. Arch Linux would be:
-> >> numactl).
-> >>
-> >> I think. The idea is: use system headers if they are there, and
-> >> local kernel tree header files if the items are so new that they
-> >> haven't made it to $OLDEST_DISTO_REASONABLE.
-> >>
-> >> Something like that.
-> >>
-> > But I don't want to install random packages if possible.
->
-> Well...keep in mind that it's not really random. If a test program
-> requires numa.h, it's typically because it also links against libnuma,
-> which *must* be supplied by the distro if you want to build. Because
-> it doesn't come with the kernel, of course.
->
-Agreed.
+On Tue, 11 Jun 2024 10:42:28 +0200
+Vlastimil Babka <vbabka@suse.cz> wrote:
 
-> So what you're really saying is that you'd like to build and run
-> whatever you can at the moment--the build should soldier on past
-> failures as much as possible.
->
-Yes. That is what I meant. It would be a convenient feature.
+> AFAICS that documented way is for a different situation? I assume you mean
+> this part:
+> 
+> * Specify any additional patch prerequisites for cherry picking::
+> 
+>     Cc: <stable@vger.kernel.org> # 3.3.x: a1f84a3: sched: Check for idle
+> 
+> But that would assume we actively want to backport this cleanup patch in the
+> first place. But as I understand Steven's intention, we want just to make
+> sure that if in the future this patch is backported (i.e. as a dependency of
+> something else) it won't be forgotten to also backport c9929f0e344a
+> ("mm/slob: remove CONFIG_SLOB"). How to express that without actively
+> marking this patch for backport at the same time?
 
-> >
-> > Can makefile rule continue to the next target in case of failure though=
- ?
->
-> That could be done, in general. The question is if that's really what
-> we want, or should want. Maybe...
->
-> > right now it stopped  at migration.c , if it continues to the next targ=
-et, then
-> > I don't  need to use gcc to manually build mseal_test.
->
-> Let me take a peek at it in the morning.
->
->
->
-> thanks,
-> --
-> John Hubbard
-> NVIDIA
->
+Exactly! This isn't to be tagged as stable. It's just a way to say "if you
+need this patch for any reason, you also need patch X".
+
+I think "Depends-on" is the way to go, as it is *not* a stable thing, and
+what is in stable rules is only about stable patches.
+
+-- Steve
