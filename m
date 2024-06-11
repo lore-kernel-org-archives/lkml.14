@@ -1,106 +1,124 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EB71DDF4
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 14:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13FC1DDF4
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 14:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718114718; cv=none; b=ur/mk1VuxplB5Z+Q8ggVHq9O4oggJrdLgYb6W20iMkz6j2o4YTdZulw7CYOSbwGU4LYOjlBSdqYtW3J8JGbqrLFS0ahTGecUycMSqleIZaYi/L1vSCOdo30LliLCJRIGlPxtDXEoeBxk2WBEvbN8qUnsDrLfKBa7RepDTiv2KN8=
+	t=1718114757; cv=none; b=gJfV7fnAF0h0K9SfyPqekS80+AKJuGPggI8ZC0dZXl52XUOMVG6c8fbLja+gY/GVSpWPGmyU6r6xi7nM4wPcuFj8bzxyxV2pRxBKB5O3UU7hR442W4jsasJEPEvT7rDHnVaVKw9MSNDfjqX23Cia3bVqLJkIUh1rn+HhSrcKR5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718114718; c=relaxed/simple;
-	bh=uD4M2vuWvnr/FYqJKUEwIRqZV+qIYFXFrcZIZ3XUa4k=;
-	h=Message-ID:Date:MIME-Version:To:From:Cc:Subject:Content-Type; b=l+MmB9Sy8AWnBAsSXBZVZmhY1XQYuPZX99FqDPbAp8OXfFth55Xp4FrOCd7XkLkElf7iSpm/Y7PHg3/qMpCV0VgzygSbbEx8rtQ+GMn6BLWKt636GsMRIv8eonbLMPHxS7e73M8YcUTGW4ph5mP6WxwqX92KZcufFIWXuS1OhDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QQChe+ad; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718114757; c=relaxed/simple;
+	bh=fb9h/s1OdFP7eRPaSrSo2uGC1HXvmDGSTyWKkCdOi0E=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Q9BuPKCBHB2+MVyaNurtgiOp9OgaiSnM2/JMooDL/gxqAZ7dKdGG1idr8E9fPNdmgaGtEqJCv/hmNxm6s81quEQH7VF9GxMbMzn+Q8F7ep5LceOApduAgHb+eVwLJU4raHHzMkO4aE2LQ8Js/+vD3Qrkmk42LWb0+3GP0rU4UwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Wt+tDmjI; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQChe+ad"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7041082a80aso3460684b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 07:05:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718114716; x=1718719516; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:cc:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=38tu7OukSsob3gjFMMjlwZapLvS+XgxyUoOOKJ0vVdk=;
-        b=QQChe+admChP/5T0dhgo8Eq04gwHjwCv+/YO2+zouO4ANOaofZpsufDei6g6KmFThQ
-         xLYjlVpZDBkOSxbTAlDchT6/W9PRF917b3mo6lpaxjZYaJxQLf4LH49iwF/TIddYOXZt
-         p6wfNvTgoxBQ5JstGr0xmAQ4iTASbnYRWyufdDILYBJApJ9Zgjh0+/B542Is70jJKCGE
-         qpu/h6YwIBQzQ6RSq4hZmEYSgU0CJze+prkv7LeUMab0J9Y/qb0MHvJhMPT1HH2a2lyV
-         6uI+UMOrneZ5+U8jFSAMANET8oZMSuJfzR1Kz3LOzGayBlSrjQzeZLqh3KcorOQlXICI
-         DVOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718114716; x=1718719516;
-        h=content-transfer-encoding:subject:cc:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=38tu7OukSsob3gjFMMjlwZapLvS+XgxyUoOOKJ0vVdk=;
-        b=eSKP1APeMJVNln6aZyQBt4eKVV/e9r2Co3y7vRVys0OB37dfvFYIGP2NSNOZt2RONa
-         vtzozu8Iv9qjIJnDfz7qGklgcW48q4JrZ2ssGcruCQ0q5Qr4Bg4R+ajvLeTDoQUsi/qE
-         RK4dUb4zHSVlpF+VtlVPmPWdxYxeXDKQWOOG0kgSvCUcujNfZ6vPr70bBWK/MQ7Fc7oT
-         FAfKOmiLOZyB9HQSY+96PuqW2kPgtcw/qdCw1CQt/gd3gOFOVf0c8DiaQ5HOvFVVyoSV
-         eGkxaHYCtgCg6Wav+u6gJx8YtgvFTb4M5+S6VQdgZG98zZtDETKcwAmBTmkAACTSpjdn
-         9VEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqj3D6aEkkR3es2s5KVNrRuKVrHF7BaeZQUGo6kVqcE/gYK6+1D0Wi/aY8RjyF723pVTKjI9Pi/beCfSoF+Rr0XzKS2xEFsIucAR0B
-X-Gm-Message-State: AOJu0YzefWyo7mv/Dd4BogwcieXKLgraWfYTSj7EsojkGfC6qvUxjll5
-	45doGZ2Enf9ucncop7Dyf3dNOI1G7nm5IgVY94V/4wo/1oknbITH
-X-Google-Smtp-Source: AGHT+IEVS+sMNyFBjvo2nPo59Rw+Yitrzl0X6ZQnPzDXsQRp1kcRfQtAKLgM+0aFOze8xPVBJashnQ==
-X-Received: by 2002:a05:6a20:8408:b0:1af:dae8:5eac with SMTP id adf61e73a8af0-1b2f9cb8dabmr13394713637.46.1718114716341;
-        Tue, 11 Jun 2024 07:05:16 -0700 (PDT)
-Received: from [192.168.0.105] ([103.246.195.195])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705b3198eddsm828917b3a.192.2024.06.11.07.05.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 07:05:16 -0700 (PDT)
-Message-ID: <1b7c19ec-536f-4f28-a68f-b03c1b51b99b@gmail.com>
-Date: Tue, 11 Jun 2024 19:35:13 +0530
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Wt+tDmjI"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 999EA40E0176;
+	Tue, 11 Jun 2024 14:05:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Bh3dWK00moCE; Tue, 11 Jun 2024 14:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1718114748; bh=H70qKEsyywdGIzZyFtIxa1Xk8eZnGnp/jCfVMLZyi+M=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Wt+tDmjIyG6q3owvFDUPoVEa9ZbwTDyr1D2mpF1518ZWSZZwKRBrvsKVJqXd/VYZ8
+	 kJOXKE6Rf2o4tkP0obr+nkETGmxwP6Npre5LVuuyxL9InE0UMp26SKOpO7i1QX0xwh
+	 FNqXLVU+vvDhZ1qLqX4cvZ7mDEtzLza/icSMmIHn2eKhsNPG6C+rQlw5j9R5pMa74W
+	 ojKSkzewEg3yYuOA9014cJLI3ZDa2vxY7SgUhTtmeXi9g2IityNt1ueAEPM0sxk1sX
+	 nZOhLIaYDm8lAcRteCOnyWhVxjevHu+xT9Je9k8XaJCtrxwLcTejPI2xpCVGpfSlKg
+	 0Eqh6wtUGzjkadoqRSaOZBS4Ql2OWImEomCqXKvwoqQqBHLL9Z9CgjcrrhLpc2MyFL
+	 Ru2R/HC5TAskSXea1DQqzhU3c3hb4A1BXu8u+4sNY+haTVRKhK/deofj8/qpx32cEk
+	 JAbC3dqYmutceJi9XZnxryiFthPz2qYLcjy2CLdbdeymbq1Cq8146Vx6VqWHSDz3rS
+	 8gO1MlHic1aswffJk2gMmqB7D54Kz1OqzmOLiXMnO4ojHCFyYH5wYacV8nU1Rx8qBG
+	 d5ju0zslFgnaeKcmDoZjiZNCinVFtpopsrIRIwO2Tu9IENot+BlFEEBbUuDpQ3S+ts
+	 GITEAm9xcrLa0A6DtCh0kWDE=
+Received: from [IPv6:::1] (unknown [IPv6:2a02:3038:204:3eef:78c3:4ef6:d0a7:2ead])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DB91240E0081;
+	Tue, 11 Jun 2024 14:05:43 +0000 (UTC)
+Date: Tue, 11 Jun 2024 16:05:39 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@kernel.org>
+CC: X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 00/14] x86/alternatives: Nest them
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20240611132609.GH8774@noisy.programming.kicks-ass.net>
+References: <20240607111701.8366-1-bp@kernel.org> <20240611132609.GH8774@noisy.programming.kicks-ass.net>
+Message-ID: <7C4F08B2-70C1-4A63-B901-33D197A2BDC4@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com
-From: Tejas Vipin <tejasvipin76@gmail.com>
-Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/panel : himax-hx83102: fix incorrect argument to
- mipi_dsi_msleep
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-mipi_dsi_msleep expects struct mipi_dsi_multi_context to be passed as a
-value and not as a reference.
+On June 11, 2024 3:26:09 PM GMT+02:00, Peter Zijlstra <peterz@infradead=2Eo=
+rg> wrote:
+>On Fri, Jun 07, 2024 at 01:16:47PM +0200, Borislav Petkov wrote:
+>
+>> Borislav Petkov (AMD) (13):
+>>   x86/alternative: Zap alternative_ternary()
+>>   x86/alternative: Convert alternative()
+>>   x86/alternative: Convert alternative_2()
+>>   x86/alternative: Convert alternative_input()
+>>   x86/alternative: Convert alternative_io()
+>>   x86/alternative: Convert alternative_call()
+>>   x86/alternative: Convert alternative_call_2()
+>>   x86/alternative: Convert ALTERNATIVE_TERNARY()
+>>   x86/alternative: Convert ALTERNATIVE_3()
+>>   x86/alternative: Convert the asm ALTERNATIVE() macro
+>>   x86/alternative: Convert the asm ALTERNATIVE_2() macro
+>>   x86/alternative: Convert the asm ALTERNATIVE_3() macro
+>>   x86/alternative: Replace the old macros
+>>=20
+>> Peter Zijlstra (1):
+>>   x86/alternatives: Add nested alternatives macros
+>>=20
+>>  arch/x86/include/asm/alternative=2Eh | 225 +++++++++------------------=
+--
+>>  arch/x86/kernel/alternative=2Ec      |  20 ++-
+>>  arch/x86/kernel/fpu/xstate=2Eh       |  14 +-
+>>  tools/objtool/arch/x86/special=2Ec   |  23 +++
+>>  tools/objtool/special=2Ec            |  16 +-
+>>  5 files changed, 125 insertions(+), 173 deletions(-)
+>
+>The whole back and forth with the n_foo things ia weird, but sure, have
+>at=2E
+>
+>Acked-by: Peter Zijlstra (Intel) <peterz@infradead=2Eorg>
 
-Fixes: a2ab7cb169da ("drm/panel: himax-hx83102: use wrapped MIPI DCS functions")
+Thanks, yeah it is in the 0th mail:
 
-Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
----
+"For ease of bisection, the old macros are converted to the new, nested
+variants in a step-by-step manner so that in case an issue is
+encountered during testing, one can pinpoint the place where it fails
+easier=2E Because debugging alternatives is a serious pain=2E"
 
-Changes in v2:
-    - Add Fixes tag
+If you remember, your original patch had this issue where it would confuse=
+ two back-to-back =2Ealtinstr entries for nested because you were comparing=
+ only the offsets and they happened to be equal, by l
 
-v1: https://lore.kernel.org/all/d9f4546f-c2f9-456d-ba75-85cc195dd9b8@gmail.com/
+Now debugging *that* was insane and I managed to find the issue only when =
+I started converting each place one-by-one and booting each one step=2E
 
----
- drivers/gpu/drm/panel/panel-himax-hx83102.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That's why this superficial split is all about=2E We will appreciate it la=
+ter=2E I hope not but if something explodes, bisection will be a lot easier=
+ this way=2E
 
-diff --git a/drivers/gpu/drm/panel/panel-himax-hx83102.c b/drivers/gpu/drm/panel/panel-himax-hx83102.c
-index 6009a3fe1b8f..ab00fd92cce0 100644
---- a/drivers/gpu/drm/panel/panel-himax-hx83102.c
-+++ b/drivers/gpu/drm/panel/panel-himax-hx83102.c
-@@ -479,7 +479,7 @@ static int hx83102_disable(struct drm_panel *panel)
- 	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
- 	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
- 
--	mipi_dsi_msleep(&dsi_ctx, 150);
-+	mipi_dsi_msleep(dsi_ctx, 150);
- 
- 	return dsi_ctx.accum_err;
- }
--- 
-2.45.2
+I hope this makes sense=2E
 
+
+--=20
+Sent from a small device: formatting sucks and brevity is inevitable=2E 
