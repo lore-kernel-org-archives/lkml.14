@@ -1,138 +1,178 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92180174EE1;
-	Tue, 11 Jun 2024 09:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99BA17623B;
+	Tue, 11 Jun 2024 09:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718098889; cv=none; b=YP3/ZRbsl+ngp6Nd3r4dfgb55Dyz28PYAkx61AH2FFHO5TIowkBno1KbXadYnNvdUeWF4GEnoS7J3hnf3H85sgz71WtRGquyhcplJWTNdchYXctQiWOgmky2ES4Y/dWS1SHGp7fFRaEG2EHWiv0g9y40DfexhbJdYzZ5dWd8dSw=
+	t=1718098914; cv=none; b=E/aCZCoSkAAvQBpcSpYPbSduT3UA9DqGw4CVpWAkcii/QU8lFqX6cGpl7D/9gb+Jp+K+Im4YpJ1YvPVqMeuGHTnXH+A9WL/O0iB1VbW2eJ3VzUVaPqtk4o9Mvwakh2pEJmkZZUr8fdNHdKB/LBkU5syr2sFi6Lwclbq1rOsNnns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718098889; c=relaxed/simple;
-	bh=dQOULWqezeuww7ejUoLFCnXbf5SwY0YY1vbl1I/nVJ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=iyYN7BfP65ACbQX8vHqBl3nyPgvuHrfwE+ZEVup6YCDE45v/g3CBFaPCG0ISPEAFkZdk3El4fdzLH4EWJIt2KcpQ5RtBigQe6p7wqD/A5IRuujkvQWuVv7hYTdqj+mzq7GF8MK7BcF8k2C1sCeYk69B/iqbdjL72AIRge4wJxMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QFz/CVcp; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718098914; c=relaxed/simple;
+	bh=37YAOyLbzHAe/CTu+jh14G55K4UoZ2Y4wMYFT0xQ7uo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DqF6AEQusZnFDivrRx01G+ppY77D9c5tGwJ6xJkwhiNcvT9YCn0Gl2BX75p1ewHS1jHXssci0mJ9e7PubEBvKwwANBrQ6Lmh7WExtGzRGpS5RNDf8Ekpz9dcjBTZi9IRFYevJEd04CyHmBcZzvuGhA/Z0EMXp7FmMKSEyiwED5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=d95O85Gn; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QFz/CVcp"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B2CSKP003044;
-	Tue, 11 Jun 2024 09:41:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0Rmyjmkwoc5tiGZhzDVQgcWabQ/ZklcnHsQ39AywqZk=; b=QFz/CVcpXH8M3WRk
-	tuLpJdcJ8ECJPa7mcvleOvPFHvcO+yg85k6klWyyLBLAtEHs+guh/blXVsUrif+m
-	ztZU9Y1RNqGjvKvQiluCBooSicQnt/UNF7M4oSAgSiJFt3CtBfQt2Kog/6HskRj9
-	lRG0zbzfLkhxfIabqfX2Pb0S5MgXIEcf1Qvg7wI/m0Srlp1qUnvAh1leWkwfxtmM
-	eyAn5/hIrmnMDuSLe4vtaRyzBBy35KaB5r0tCP/tNCtcdTJ7WtQDccZl4W3NyW+9
-	kVRipiXPH8n/fG+pxbiMwte3EqSYmFZBa/4c/90cLEnJqLdpKhQJcc5qzDc4je2h
-	Gqzwlw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ymfcv603w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 09:41:21 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45B9fJb0017772
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jun 2024 09:41:19 GMT
-Received: from [10.214.67.128] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
- 2024 02:41:17 -0700
-Message-ID: <cf6f8b58-858a-1000-2f23-9e91c16e1c9a@quicinc.com>
-Date: Tue, 11 Jun 2024 15:11:08 +0530
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="d95O85Gn"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Vz3bV1zx3z9sGf;
+	Tue, 11 Jun 2024 11:41:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1718098902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zbkiOeCEyPQu0nf19vXRe22PR52sb7jygcpNN/dtAno=;
+	b=d95O85GnokMrBOReY4l/P1SXMB5K0c089lZGv3kW963gYYVhEPxc4qUr4cnBcUibeImrTy
+	4dmvTMoKr96fPVR6lU6b6nEdupU/yE88lTZfIzJzUl0kK60oWw5MT0S6p/oUUeLAMLHnZx
+	eXOvUop11JoBAKgsWMEX+mqJoneMBs5tQZFWYOtaSQyntZUr51DFhjmdXkAsXENbkjtl3Z
+	ZbZQqEWx1tI9pKSLYFEYpmVhuLq1/+WqqPQeMkK/kM/1VhDgQKspLucK1INMEIl3i2cnE7
+	5GIouw9U+4n5+sxPh6Iv1SvVFrSCMmyZWL04TVpYPrcp3d3ieFeoS2vNHcYgPg==
+Date: Tue, 11 Jun 2024 09:41:37 +0000
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: John Garry <john.g.garry@oracle.com>
+Cc: david@fromorbit.com, djwong@kernel.org, chandan.babu@oracle.com,
+	brauner@kernel.org, akpm@linux-foundation.org, willy@infradead.org,
+	mcgrof@kernel.org, linux-mm@kvack.org, hare@suse.de,
+	linux-kernel@vger.kernel.org, yang@os.amperecomputing.com,
+	Zi Yan <zi.yan@sent.com>, linux-xfs@vger.kernel.org,
+	p.raghav@samsung.com, linux-fsdevel@vger.kernel.org, hch@lst.de,
+	gost.dev@samsung.com, cl@os.amperecomputing.com
+Subject: Re: [PATCH v7 07/11] iomap: fix iomap_dio_zero() for fs bs > system
+ page size
+Message-ID: <20240611094137.vxuhldj4b3qslsdj@quentin>
+References: <20240607145902.1137853-1-kernel@pankajraghav.com>
+ <20240607145902.1137853-8-kernel@pankajraghav.com>
+ <4c6e092d-5580-42c8-9932-b42995e914be@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH] arm64: dts: qcom: qdu1000: Add secure qfprom node
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240607113445.2909-1-quic_kbajaj@quicinc.com>
- <mjkxgytrdzm7gz6jjjbe3tjemussrcqyvz52n4o4cwhdr6y557@h4im5qv4itpc>
-Content-Language: en-US
-From: Komal Bajaj <quic_kbajaj@quicinc.com>
-In-Reply-To: <mjkxgytrdzm7gz6jjjbe3tjemussrcqyvz52n4o4cwhdr6y557@h4im5qv4itpc>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: PlJ77QrDwh8t7hweF0lVF1SJSSdyHebz
-X-Proofpoint-GUID: PlJ77QrDwh8t7hweF0lVF1SJSSdyHebz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-11_05,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- mlxlogscore=748 phishscore=0 priorityscore=1501 malwarescore=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406110073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4c6e092d-5580-42c8-9932-b42995e914be@oracle.com>
 
-
-
-On 6/7/2024 5:22 PM, Dmitry Baryshkov wrote:
-> On Fri, Jun 07, 2024 at 05:04:45PM +0530, Komal Bajaj wrote:
->> Add secure qfprom node and also add properties for multi channel
->> DDR. This will be required for LLCC driver to pick the correct
->> LLCC configuration.
+> > index 49938419fcc7..9f791db473e4 100644
+> > --- a/fs/iomap/buffered-io.c
+> > +++ b/fs/iomap/buffered-io.c
+> > @@ -1990,6 +1990,12 @@ EXPORT_SYMBOL_GPL(iomap_writepages);
+> >   static int __init iomap_init(void)
+> >   {
+> > +	int ret;
+> > +
+> > +	ret = iomap_dio_init();
+> > +	if (ret)
+> > +		return ret;
+> > +
+> >   	return bioset_init(&iomap_ioend_bioset, 4 * (PAGE_SIZE / SECTOR_SIZE),
+> >   			   offsetof(struct iomap_ioend, io_bio),
+> >   			   BIOSET_NEED_BVECS);
 > 
-> 
-> 'will be' or 'is' ?
+> I suppose that it does not matter that zero_fs_block is leaked if this fails
+> (or is it even leaked?), as I don't think that failing that bioset_init()
+> call is handled at all.
 
-Sure, will update like that.
+If bioset_init fails, then we have even more problems than just a leaked
+64k memory? ;)
 
-Thanks
-Komal
+Do you have something like this in mind?
+
+diff --git a/fs/internal.h b/fs/internal.h
+index 30217f0ff4c6..def96c7ed9ea 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -39,6 +39,7 @@ int __block_write_begin_int(struct folio *folio, loff_t pos, unsigned len,
+  * iomap/direct-io.c
+  */
+ int iomap_dio_init(void);
++void iomap_dio_exit(void);
+ 
+ /*
+  * char_dev.c
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 9f791db473e4..8d8b9e62201f 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1994,10 +1994,16 @@ static int __init iomap_init(void)
+ 
+        ret = iomap_dio_init();
+        if (ret)
+-               return ret;
++               goto out;
+ 
+-       return bioset_init(&iomap_ioend_bioset, 4 * (PAGE_SIZE / SECTOR_SIZE),
++       ret = bioset_init(&iomap_ioend_bioset, 4 * (PAGE_SIZE / SECTOR_SIZE),
+                           offsetof(struct iomap_ioend, io_bio),
+                           BIOSET_NEED_BVECS);
++       if (!ret)
++               goto out;
++
++       iomap_dio_exit();
++out:
++       return ret;
+ }
+ fs_initcall(iomap_init);
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index b95600b254a3..f4c9445ca50d 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -69,6 +69,12 @@ int iomap_dio_init(void)
+        return 0;
+ }
+ 
++void iomap_dio_exit(void)
++{
++       __free_pages(zero_fs_block, ZERO_FSB_ORDER);
++
++}
++
+ static struct bio *iomap_dio_alloc_bio(const struct iomap_iter *iter,
+                struct iomap_dio *dio, unsigned short nr_vecs, blk_opf_t opf)
+ {
 
 > 
->>
->> Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/qdu1000.dtsi | 15 +++++++++++++++
->>   1 file changed, 15 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/qdu1000.dtsi b/arch/arm64/boot/dts/qcom/qdu1000.dtsi
->> index 7a77f7a55498..d8df1bab63d5 100644
->> --- a/arch/arm64/boot/dts/qcom/qdu1000.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/qdu1000.dtsi
->> @@ -1584,6 +1584,21 @@ system-cache-controller@19200000 {
->>   			reg-names = "llcc0_base",
->>   				    "llcc_broadcast_base";
->>   			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
->> +
->> +			nvmem-cell-names = "multi-chan-ddr";
->> +			nvmem-cells = <&multi_chan_ddr>;
->> +		};
->> +
->> +		sec_qfprom: efuse@221c8000 {
->> +			compatible = "qcom,qdu1000-sec-qfprom", "qcom,sec-qfprom";
->> +			reg = <0 0x221c8000 0 0x1000>;
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +
->> +			multi_chan_ddr: multi-chan-ddr@12b {
->> +				reg = <0x12b 0x1>;
->> +				bits = <0 2>;
->> +			};
->>   		};
->>   	};
->>
->> --
->> 2.42.0
->>
+> > +
+> >   static struct bio *iomap_dio_alloc_bio(const struct iomap_iter *iter,
+> >   		struct iomap_dio *dio, unsigned short nr_vecs, blk_opf_t opf)
+> >   {
+> > @@ -236,17 +253,22 @@ static void iomap_dio_zero(const struct iomap_iter *iter, struct iomap_dio *dio,
+> >   		loff_t pos, unsigned len)
+> >   {
+> >   	struct inode *inode = file_inode(dio->iocb->ki_filp);
+> > -	struct page *page = ZERO_PAGE(0);
+> >   	struct bio *bio;
+> > +	/*
+> > +	 * Max block size supported is 64k
+> > +	 */
+> > +	WARN_ON_ONCE(len > ZERO_FSB_SIZE);
 > 
+> JFYI, As mentioned in https://lore.kernel.org/linux-xfs/20240429174746.2132161-1-john.g.garry@oracle.com/T/#m5354e2b2531a5552a8b8acd4a95342ed4d7500f2,
+> we would like to support an arbitrary size. Maybe I will need to loop for
+> zeroing sizes > 64K.
+
+The initial patches were looping with a ZERO_PAGE(0), but the initial
+feedback was to use a huge zero page. But when I discussed that at LSF,
+the people thought we will be using a lot of memory for sub-block
+memory, especially on architectures with 64k base page size.
+
+So for now a good tradeoff between memory usage and efficiency was to
+use a 64k buffer as that is the maximum FSB we support.[1]
+
+IIUC, you will be using this function also to zero out the extent and
+not just a FSB?
+
+I think we could resort to looping until we have a way to request
+arbitrary zero folios without having to allocate at it in
+iomap_dio_alloc_bio() for every IO.
+
+[1] https://lore.kernel.org/linux-xfs/20240529134509.120826-8-kernel@pankajraghav.com/
+
+--
+Pankaj
