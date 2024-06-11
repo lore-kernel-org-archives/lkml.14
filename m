@@ -1,100 +1,138 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF767173351;
-	Tue, 11 Jun 2024 08:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1E5174EC9;
+	Tue, 11 Jun 2024 08:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718093085; cv=none; b=NFOJi7yNYuc5YWwRf6NGlIzLlmPPy2xDfqZg1/OTT2wfWSamB5WMNNb1gNxKNdQeH4QfWBu6ea1U7AT8TEjcP9SghMB+Cifb093GHB5wOf2aeGBeNK/wuhnRwk82KXIKIh/bd0k+RDimhthi0myUqTQG/Mne0ftRSAN1lJhTh2k=
+	t=1718093088; cv=none; b=IEoLmG7CPGZzqK6BnaAfQ63k2NK9xsH8WQwsFUSG9jhkX5Y6Tt2bTKm2g9so1QnmWFGxSJU+avj/AExjKD2rb3f/+JOvJXFgia1HN0gjsTczK9zO5+8qfL8Eu3/J/WEh5J/TjCJhvIUMMIXQImopLISfUifXcj+fBsbb/zpYtA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718093085; c=relaxed/simple;
-	bh=VVElxgkUIfaPWX6L+f8ZayYJBJTkUQN4WFHJZkR5/sM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=q60Bq9l4nyS6xNkfhLGgczIxGR3bmUXp5qmKKYC0XntxqlZO2mQgT7vriMmwYJ6lwtpMxdKdlz2C6cipxmBJ3LhwHQjj56PefGMzSqYeEaFKKWsfrpDKBZQd70E1tkIN6dJHvM27i+/8NrrmeM7vKD9g3Xs4y8CX7S//DRxlpV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=ge4vhsmd; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1718093088; c=relaxed/simple;
+	bh=cjDSq1fkfavKtAt7cAib4nKFIPpMZ1jL1K0Sm23/ubg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvVa/bFOzwJHT4NIrlZRF4Sy4aCz9bzw3mwKPjHzJY0Swo6SymEHn4efjayCBJCjhwgjCWMIwuPHBNbKYzslwPG03W7jbRawSuXksiyL5MdgBiVKshJ+XmoRTNogFktTQDOcXFrrJMuMaCkrdEMZSd42TtzNiFG828d+FrFRl3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=d34ckmkz; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="ge4vhsmd"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id AC18CA0673;
-	Tue, 11 Jun 2024 10:04:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=Iw86xKR/OFWQyAzkNCm+
-	Kk/DYTWImqwL9oSvNnLL/mM=; b=ge4vhsmdAPNxyPz6clUFsMZGShyn/2XIAF65
-	TeonR0VVCwKuy/dF2fHdxr6yjidXJotjMNO9o0kKzjMg+0vSL35IpDqy3wgyIKBG
-	uFNo/RrqoXhIacQiPx8ne2LdUpd/59/YooIxtuTsANTXUUuS4vx3Z6/gfoIHvvdE
-	6Tkowf6Nexkm1OS+FN2HKIevPPCei2vWxs2VO4asLLWCywOMpMW4DAUM1DlpJJWX
-	GDNVHucA0WHN4z5uIpAV9Chu73ybON7PcdHZXuUnVYydj3BBDrrwnWgd67+5T5fQ
-	vG5A36ZFRnyrXKRGcp1TQVtzbYFF4JZlzM28fV3/6Ia4FmPL9JjyAxFLFxiakErI
-	u0mHKrJHpf1ARrsQ/777Z1Gxm98cpKg//hmorenS9BcDxKAsmkZ8UYzjJGuIucfl
-	90m+aA1MtqPpkWMRXPTWpye/3VXjZjWRs0T1MDDJsAOl+gkFFMZPlau/rlsOH57c
-	7/1dVFjEFilqSirtFqeeXiMo61McVYjfN/XetUoblHCmbk+tZH/Ez7WFWX1icccJ
-	W5QLgA1zF2c/Ps09sr1vk2h0uDTTfzKTI7Eywp7Jfg9Tsicch45eY5MDzj/5Bbla
-	LLv3KGR+u+KhX+4TyOVd0WEEeVwKR0+AUuOeHa++YeXeQFBtHpjxi58c5nGC0vUs
-	Y9s9ufI=
-Message-ID: <d6d6c080-b001-4911-83bc-4aca7701cdff@prolan.hu>
-Date: Tue, 11 Jun 2024 10:04:39 +0200
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="d34ckmkz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1718093085; x=1749629085;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cjDSq1fkfavKtAt7cAib4nKFIPpMZ1jL1K0Sm23/ubg=;
+  b=d34ckmkzBuzgnwgaEyERl8nGgTSGz6N676jUL5POrKM8LLuu4f0m78ac
+   vD0+pylwwbhi1Dd3DMYZ0oc8XGs7F3Kv5rM5I+s2FFMZpFLiBp9zg2XBG
+   8Pmxb32lToXe4qGJBEbXRfZPpFP01Zuy/qNRcwkHuRz0d6B39/cBYNTPg
+   Ia/nQkpZQuaVZMMJ4Ef81W/5YviUcmDAHz4FbvphNAUZ9NZ3/TQ/6QemF
+   /OroHw00DOy1RcXO9eWppLCwkG8Yg7IHIYPrunBHOrsNuOBbmKjzTXTOr
+   hBZpfLqPjVSStLHn6Mv2zdX+3ss31tyk725EanAOLYZxFG41tas+JfMui
+   Q==;
+X-CSE-ConnectionGUID: u76H7Qz2QNSGdqOn7lTiWw==
+X-CSE-MsgGUID: FGphlgQFRDye/ZbeONnACw==
+X-IronPort-AV: E=Sophos;i="6.08,229,1712646000"; 
+   d="scan'208";a="27247166"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Jun 2024 01:04:38 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 11 Jun 2024 01:04:06 -0700
+Received: from localhost (10.10.85.11) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Tue, 11 Jun 2024 01:04:05 -0700
+Date: Tue, 11 Jun 2024 13:31:22 +0530
+From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+CC: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>, <lkp@intel.com>,
+	<UNGLinuxDriver@microchip.com>, <andrew@lunn.ch>,
+	<bryan.whitehead@microchip.com>, <davem@davemloft.net>,
+	<edumazet@google.com>, <hkallweit1@gmail.com>, <hmehrtens@maxlinear.com>,
+	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>, <linux@armlinux.org.uk>,
+	<lxu@maxlinear.com>, <netdev@vger.kernel.org>,
+	<oe-kbuild-all@lists.linux.dev>, <pabeni@redhat.com>, <sbauer@blackbox.su>,
+	Wojciech Drewek <wojciech.drewek@intel.com>
+Subject: Re: [PATCH net V3 0/3] net: lan743x: Fixes for multiple WOL related
+ issues
+Message-ID: <ZmgEUrA6xM9vtDxD@HYD-DK-UNGSW21.microchip.com>
+References: <202406052200.w3zuc32H-lkp@intel.com>
+ <20240611062753.12020-1-Raju.Lakkaraju@microchip.com>
+ <20240611071051.65e5n3bn7e4zm7lq@DEN-DL-M31836.microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] net: fec: Add ECR bit macros, fix FEC_ECR_EN1588 being
- cleared on link-down
-To: Andrew Lunn <andrew@lunn.ch>
-CC: <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Wei Fang <wei.fang@nxp.com>, Shenwei Wang
-	<shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Richard Cochran
-	<richardcochran@gmail.com>
-References: <20240607081855.132741-1-csokas.bence@prolan.hu>
- <46892275-619c-4dfb-9214-3bbb14b78093@lunn.ch>
-Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <46892275-619c-4dfb-9214-3bbb14b78093@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2945A12957627C61
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20240611071051.65e5n3bn7e4zm7lq@DEN-DL-M31836.microchip.com>
 
-Hi!
+Hi Horatiu,
 
-On 6/10/24 21:13, Andrew Lunn wrote:
-> On Fri, Jun 07, 2024 at 10:18:55AM +0200, Csókás, Bence wrote:
->> FEC_ECR_EN1588 bit gets cleared after MAC reset in `fec_stop()`, which
->> makes all 1588 functionality shut down on link-down. However, some
->> functionality needs to be retained (e.g. PPS) even without link.
+There is no new changes except "kernel test robot" reported issue.
+
+I fix the issue and sent the patch along with other old patches.
+Also add "Reported-by" and "Closes" tags to all patches and
+--in-reply-to=202406052200.w3zuc32H-lkp@intel.com.
+i.e.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406052200.w3zuc32H-lkp@intel.com/
+
+Is it sufficient? or
+Do you need to generete new version of patches ?
+
+Thanks,
+Raju
+The 06/11/2024 09:10, Horatiu Vultur wrote:
+> Hi Raju,
 > 
-> I don't know much about PPS. Could you point to some documentation,
-> list email etc, which indicated PPS without link is expected to work.
+> Is this not supposed to be v4?
+> Because I can see v3 here:
+> https://www.spinics.net/lists/netdev/msg1002225.html
 > 
-> Please also Cc: Richard Cochran for changes like this.
+> The 06/11/2024 11:57, Raju Lakkaraju wrote:
+> > This patch series implement the following fixes:
+> > 1. Disable WOL upon resume in order to restore full data path operation
+> > 2. Support WOL at both the PHY and MAC appropriately 
+> > 3. Remove interrupt mask clearing from config_init 
+> > 
+> > Patch-3 was sent seperately earlier. Review comments in link: 
+> > https://lore.kernel.org/lkml/4a565d54-f468-4e32-8a2c-102c1203f72c@lunn.ch/T/
+> > 
+> > Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>                        
+> > Reported-by: kernel test robot <lkp@intel.com>                                  
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202406052200.w3zuc32H-lkp@intel.com/
 > 
-> Thanks
-> 	Andrew
+> I think you should drop the 'Reported-by' and 'Closes' tags because the
+> issue that is getting closed is the one that you introduced in one of
+> your previous version of the patch series.
+> 
+> > 
+> > Raju Lakkaraju (3):
+> >   net: lan743x: disable WOL upon resume to restore full data path
+> >     operation
+> >   net: lan743x: Support WOL at both the PHY and MAC appropriately
+> >   net: phy: mxl-gpy: Remove interrupt mask clearing from config_init
+> > 
+> >  .../net/ethernet/microchip/lan743x_ethtool.c  | 44 ++++++++++++--
+> >  drivers/net/ethernet/microchip/lan743x_main.c | 46 ++++++++++++---
+> >  drivers/net/ethernet/microchip/lan743x_main.h | 28 +++++++++
+> >  drivers/net/phy/mxl-gpy.c                     | 58 ++++++++++++-------
+> >  4 files changed, 144 insertions(+), 32 deletions(-)
+> > 
+> > -- 
+> > 2.34.1
+> > 
+> > 
+> 
+> -- 
+> /Horatiu
 
-This is what Richard said two years ago on the now-reverted patch:
-
-Link: https://lore.kernel.org/netdev/YvRdTwRM4JBc5RuV@hoboy.vegasvil.org
-
- > IMO the least surprising behavior is that once enabled, a feature
- > stays on until explicitly disabled.
-
-The point of PPS is, it is a 1 Hz clock reference. We don't want to take 
-away a clock signal because of an unexpected link fault, for instance.
-
-Plus, this patch doesn't even re-enable PPS or any other 1588 functions, 
-it just prevents the adapter from forgetting it is even 1588-capable. 
-I'll resubmit with more clear wording and appropriate "Fixes:" and "Cc:" 
-tags.
-
-Bence
-
+-- 
+Thanks,                                                                         
+Raju
