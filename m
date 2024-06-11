@@ -1,149 +1,97 @@
-Received: from smtp-190e.mail.infomaniak.ch (smtp-190e.mail.infomaniak.ch [185.125.25.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8DB42A93
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 08:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64103F8C7
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 08:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718094343; cv=none; b=FHF2AJB2CF/RcG33qUn+8ACTtYBfyKb3Jqcj1DHloV4gBzn3ZeufxOEFsVnYDNTQv8rDerLurUrcMYG99sceykbqWFapzyBPkqUDLklGQ2t44rXvC0ap3irSLxG32EgxTaFj5GDCJ/Q2tLsiad2PtS9escaVJkwU53ENMG1Yuts=
+	t=1718094448; cv=none; b=M7HpYL3OA9f5ifasqERdwCl0Vv8baD6ZwQn7bF+y0qYlKrcKq3U6Z5s82yO9xSUrzw8pbiV2XS+aqNtObGhiliKDAWViekrguL6dOjAoCVBCvZ4TsA3PaDiS3vgDMTEagNgn6MRuy7XXaVhVq4uitLqH1zOWv491uaz1kOMhuho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718094343; c=relaxed/simple;
-	bh=ybykIiW5VS3w+BkZyxy+Xnk5v4bDo8zglruVsuDtuxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mMA4xhlIufrZjDSkpE0eOwumCxSjjmopm8ZF/O6wz0ZqABSeUdUFmCf3I3nBtJw06EatjTrfcLFfU+oSE5Vj1uUx8FkGryP1m2h17UnyNHGHalFtOIuRDC0U3qkbPaAVRykCeK3A7jl2eDQsRATkJBQz7DHqY4ByG3xAAWsYFjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=p7gWMbH9; arc=none smtp.client-ip=185.125.25.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="p7gWMbH9"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Vz1mY3v3Kzmd9;
-	Tue, 11 Jun 2024 10:19:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1718093965;
-	bh=NW3ocj6F1Nb72KUy4vifp/1WY92XTuWX9CWEPsfwJug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p7gWMbH9DGOuQoUYjnndqIVt2uAA3gUGDUyubDLx1JaPzfKf5SYKVV51GfcWqciLM
-	 hINyTroRtAcw//sLWZq18//REbzYac0e+KsNpLeubtjEWLLTBgcMIfCoGpB/qvGC/C
-	 oTkqrskWLQVC5V4PYi/DiCCsCQdk3VyQ/u6HJt60=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Vz1mX56RQz9FN;
-	Tue, 11 Jun 2024 10:19:24 +0200 (CEST)
-Date: Tue, 11 Jun 2024 10:19:20 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Jann Horn <jannh@google.com>
-Cc: Tahera Fahimi <fahimitahera@gmail.com>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, outreachy@lists.linux.dev, 
-	netdev@vger.kernel.org, =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>
-Subject: Re: [PATCH v3] landlock: Add abstract unix socket connect restriction
-Message-ID: <20240611.Pi8Iph7ootae@digikod.net>
-References: <ZmJJ7lZdQuQop7e5@tahera-OptiPlex-5000>
- <CAG48ez3NvVnonOqKH4oRwRqbSOLO0p9djBqgvxVwn6gtGQBPcw@mail.gmail.com>
+	s=arc-20240116; t=1718094448; c=relaxed/simple;
+	bh=4846dXCi+LLa+oRqvFIzMnMlIKpDWNszKOj8xaC2DZY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=YS1AdLMzaXJOow+LHu4y6gskPvrpmuuKGAf3HX00iQYxFfkEjNbutLtPcW+8TBGkWTp2kJRz9lNQM8P/ytrtaVaPcubs+SY6qD8r+K7GAWyhKlSAlWGofl4NnWqr1hgJSNuvKLW3VQYsN1RWcLRaeR8eAaJ++k2/zF4MEbmXke4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3737ee417baso44814485ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 01:27:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718094446; x=1718699246;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i5XKnkHLsIoqOGAS3OERR6bhoari0fo/c4MqVHhGMVA=;
+        b=N5Z6ME8wmHLT+J6ZwFkpZXJaomCcQRLNoZEe1X0smi6v3fSBVYk01/FVF5FWqTV1T+
+         nRX8vPTZ22HnNqikpWQ64gz4ARWz5MSKafurxcJUqKxJEgjrLQaIYxUN0kDsQHYdsy4X
+         CDyYn/r6mfBZFnMaAB2BkuTGiKEzDRTjNw8BovG8djBmYA2bqunC0pGKFvaR3Rk0ikkn
+         Qjb5X0k7CI/ghfkKHC7nz/zSB9c2ApST0nszfjaeEU8p6Xt4dQQM765aSpN7H5yrCLOp
+         m7lTfKEgxFGT571HRTF5yhh+tUIN0ycXphAgYQwyEsmuE9WmbNsHs+GHDkUoPIaynNp1
+         sXrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcni2GjQGoPFFonj7sYlWAW7hViP2Ko7boH9KaJ3nlzrxVYy6j7bmvSn1F+W5WruZt2mdVq9UJpSBtTcQDLo/SraM3Rzw5uHkifdsp
+X-Gm-Message-State: AOJu0Yyy0zshoWb+1cgKvd33Nl7zcRfEP57BlUyVd+xuu79LF5obU99Y
+	7hjKcnvKYQH7axBDKMz76l1+G37Ot/yTVVhb3Ei/xAAVg82hO+xM+uCCH4Kcnh6N9IsuaSeoHHY
+	ERXHFFErx5+b7Y51udTT9pe98RiOwCsnY+LTY4Cqlk5TG8xwKXZ/R3yQ=
+X-Google-Smtp-Source: AGHT+IHNQFjX7nXtcEGVrCfUjJQTGAwh53HEqyZkAYPKF01NcC8BWO2SzrSRycYpJoEOKitThluVmUtW2DwOM/ljmxzKGAzvXeKU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez3NvVnonOqKH4oRwRqbSOLO0p9djBqgvxVwn6gtGQBPcw@mail.gmail.com>
-X-Infomaniak-Routing: alpha
+X-Received: by 2002:a05:6e02:214a:b0:373:8d04:28b2 with SMTP id
+ e9e14a558f8ab-375b30d379dmr1024555ab.0.1718094445998; Tue, 11 Jun 2024
+ 01:27:25 -0700 (PDT)
+Date: Tue, 11 Jun 2024 01:27:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002502d7061a9909cf@google.com>
+Subject: [syzbot] Monthly bcachefs report (Jun 2024)
+From: syzbot <syzbot+liste26a67e46fe73e904149@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 11, 2024 at 12:27:58AM +0200, Jann Horn wrote:
-> Hi!
-> 
-> Thanks for helping with making Landlock more comprehensive!
-> 
-> On Fri, Jun 7, 2024 at 1:44 AM Tahera Fahimi <fahimitahera@gmail.com> wrote:
-> > Abstract unix sockets are used for local inter-process communications
-> > without on a filesystem. Currently a sandboxed process can connect to a
-> > socket outside of the sandboxed environment, since landlock has no
-> > restriction for connecting to a unix socket in the abstract namespace.
-> > Access to such sockets for a sandboxed process should be scoped the same
-> > way ptrace is limited.
-> 
-> This reminds me - from what I remember, Landlock also doesn't restrict
-> access to filesystem-based unix sockets yet... I'm I'm right about
-> that, we should probably at some point add code at some point to
-> restrict that as part of the path-based filesystem access rules? (But
-> to be clear, I'm not saying I expect you to do that as part of your
-> patch, just commenting for context.)
+Hello bcachefs maintainers/developers,
 
-Yes, I totally agree.  For now, unix socket binding requires to create
-the LANDLOCK_ACCESS_FS_MAKE_SOCK right, but connecting to an existing
-socket is not controlled.  The abstract unix socket scoping is
-orthogonal and extends Landlock with unix socket LSM hooks, which are
-required to extend the "filesystem" access rights to control path-based
-unix socket.
+This is a 31-day syzbot report for the bcachefs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/bcachefs
 
-> 
-> > Because of compatibility reasons and since landlock should be flexible,
-> > we extend the user space interface by adding a new "scoped" field. This
-> > field optionally contains a "LANDLOCK_SCOPED_ABSTRACT_UNIX_SOCKET" to
-> > specify that the ruleset will deny any connection from within the
-> > sandbox to its parents(i.e. any parent sandbox or non-sandbox processes)
-> 
-> You call the feature "LANDLOCK_SCOPED_ABSTRACT_UNIX_SOCKET", but I
-> don't see anything in this code that actually restricts it to abstract
-> unix sockets (as opposed to path-based ones and unnamed ones, see the
-> "Three types of address are distinguished" paragraph of
-> https://man7.org/linux/man-pages/man7/unix.7.html). If the feature is
-> supposed to be limited to abstract unix sockets, I guess you'd maybe
-> have to inspect the unix_sk(other)->addr, check that it's non-NULL,
-> and then check that `unix_sk(other)->addr->name->sun_path[0] == 0`,
-> similar to what unix_seq_show() does? (unix_seq_show() shows abstract
-> sockets with an "@".)
+During the period, 37 new issues were detected and 15 were fixed.
+In total, 59 issues are still open and 30 have been fixed so far.
 
-Right, that should be part of the next series.  Tests should check that
-too.
+Some of the still happening issues:
 
-> 
-> Separately, I wonder if it would be useful to have another mode for
-> forbidding access to abstract unix sockets entirely; or alternatively
-> to change the semantics of LANDLOCK_SCOPED_ABSTRACT_UNIX_SOCKET so
-> that it also forbids access from outside the landlocked domain as was
-> discussed elsewhere in the thread. If a landlocked process starts
-> listening on something like "@/tmp/.X11-unix/X0", maybe X11 clients
-> elsewhere on my system shouldn't be confused into connecting to that
-> landlocked socket...
+Ref  Crashes Repro Title
+<1>  2800    No    WARNING in cleanup_srcu_struct (4)
+                   https://syzkaller.appspot.com/bug?extid=6cf577c8ed4e23fe436b
+<2>  1722    Yes   WARNING in bch2_trans_srcu_unlock
+                   https://syzkaller.appspot.com/bug?extid=1e515cab343dbe5aa38a
+<3>  1620    Yes   INFO: task hung in __closure_sync
+                   https://syzkaller.appspot.com/bug?extid=7bf808f7fe4a6549f36e
+<4>  1070    Yes   KMSAN: uninit-value in bch2_inode_v3_invalid
+                   https://syzkaller.appspot.com/bug?extid=d3803303d5b280e059d8
+<5>  578     Yes   BUG: MAX_LOCK_DEPTH too low! (4)
+                   https://syzkaller.appspot.com/bug?extid=46405fa9afa07e6c8c40
+<6>  221     Yes   kernel BUG in gc_bucket
+                   https://syzkaller.appspot.com/bug?extid=246b47da27f8e7e7d6fb
+<7>  187     No    INFO: task hung in bch2_readahead
+                   https://syzkaller.appspot.com/bug?extid=a6060114362257e9798a
+<8>  185     Yes   KMSAN: uninit-value in bch2_alloc_v4_invalid
+                   https://syzkaller.appspot.com/bug?extid=3b2968fa4953885dd66a
+<9>  148     Yes   kernel BUG in bch2_fs_journal_stop
+                   https://syzkaller.appspot.com/bug?extid=10b936c5eaee2819b49b
+<10> 104     Yes   INFO: task hung in bch2_fs_read_only_work
+                   https://syzkaller.appspot.com/bug?extid=8996d8f176cf946ef641
 
-In this case, I think we should have a (light) Landlock domain for a
-user session to make sure apps only connect to the legitimate X11 socket
-(either in the same domain, or through a path-based socket).
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-There is also ongoing work to restrict socket creation according to their
-type:
-https://lore.kernel.org/all/20240524093015.2402952-1-ivanov.mikhail1@huawei-partners.com/
-This will make possible to control abstract unix socket creation and
-avoid this kind of issue too.
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
-> 
-> [...]
-> > +static bool sock_is_scoped(struct sock *const other)
-> > +{
-> > +       bool is_scoped = true;
-> > +       const struct landlock_ruleset *dom_other;
-> > +       const struct cred *cred_other;
-> > +
-> > +       const struct landlock_ruleset *const dom =
-> > +               landlock_get_current_domain();
-> > +       if (!dom)
-> > +               return true;
-> > +
-> > +       lockdep_assert_held(&unix_sk(other)->lock);
-> > +       /* the credentials will not change */
-> > +       cred_other = get_cred(other->sk_peer_cred);
-> > +       dom_other = landlock_cred(cred_other)->domain;
-> > +       is_scoped = domain_scope_le(dom, dom_other);
-> > +       put_cred(cred_other);
-> 
-> You don't have to use get_cred()/put_cred() here; as the comment says,
-> the credentials will not change, so we don't need to take another
-> reference to them.
-> 
-> > +       return is_scoped;
-> > +}
-> 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
