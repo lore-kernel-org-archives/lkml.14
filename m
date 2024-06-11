@@ -1,119 +1,65 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277231CD06;
-	Tue, 11 Jun 2024 19:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8AA1CF90;
+	Tue, 11 Jun 2024 19:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718135257; cv=none; b=JZwqhk6xF5jYRSAirPh+YCct3am4C/U4RE4VBc+GPipBCczxAw8thA4VDPhRwQRATQpY05Kz2tU8FKtARFG+wUwTWn9Qr8apYYNFl84uy8UBGOBHfgfmblmXkbgJgjcbGL417kyJec7nzmSDoVbFTVkHASd0C8LgKMYeo+XCYjQ=
+	t=1718135289; cv=none; b=BoD/fWIrXpgyXewzI+JAOZEnVxE8y0zI/N497wUeD48NlnRS67aLAARBloqCzpNq1lMipZeJlHu1g+c1pNxlj0Y+uoLzx9MEa+QFceeUgKRaR3pI0qjTsR1CxkGfeR3aaY7Uh9Cn4BikyNyCURYJMTGt76Bi4bYebHotp0+iL8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718135257; c=relaxed/simple;
-	bh=P8tRXS5Qm+J/JCdOjw/TVF0tn8jwvJSRwemvRKueNxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jpXuh+wBUyxgRNhr5hHmAKiVcomfTVqrrRp7cpJhq7zvqhtLy2TW3+SGnGzfQFakPWIuR/QipPeBVTEPpheVq35LrCwwAiy4lGvnt9Gs4YB1Wm0I32DPrZj4qM7ogpYV9CfmQyN/bg/Pu61yD3jx2DdD08C227UZWFMtPPS09h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=gZjVbghD; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1718135289; c=relaxed/simple;
+	bh=L/YueKASRBrvMS6yV7mI4azJyOMWnw87aZ7Ap4SDt2Q=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=m9Ch+JZ5zXVxSG1kA1VjwUytQjqh23//rv+5Ah8/K1P2GXdjlWYkCs6za8fNBIpC2cwDoR1Q5vh5OBAyB6XRij5q8YFImijKCG3SdefowvV59Xof9VlKV18I2gj+j6MDcCZLnMhO9HhaR0I6ABjFyNJr0ILebJFDIDpuV22Sp7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=oM7EO8gZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="gZjVbghD"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4ABFD40E016E;
-	Tue, 11 Jun 2024 19:47:31 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 7egZOOhYrnUo; Tue, 11 Jun 2024 19:47:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1718135247; bh=KC/Wq1TdqELiVMasu/6IhWJ5RKEy2WZabJ1TgN7EDpo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gZjVbghDzG0nP5cUPybv4xjwXUw/XCKD2xi82Zv94c+xqXlSD2qHLWA4ec+ncBc9A
-	 /a1LbzPD4bLO4EEN+CZY0NKOfHQcj1PykJZpMpMtxZEEOLM67AkxoxXoXosQ9lZlna
-	 n7Nmi4ZPJGPeJs8K8LXnGz5e87NPVyAFi/gcG6STb1244NJSEKC7RqhedZN5nkS4Sy
-	 /1yrO2GhIB+OjkfoTp0Jr+TB0qblLFXFBW+G8xnDCwMwPS1xtl4ZfIDiYfbfIwPCwq
-	 HGCaTWzWkwQL2y7YyBWx6sM+HiiMq5xtYbL9BaOrv73UP3014pZLRW9Clf13aqUkNB
-	 C8aX9ijV3RVLiLTdDlnp8Oapk+TFfOVcFewxvRyJpkpM4wmlMsWUwp+lZWPuLot5hm
-	 2ttdOPqCnCNqZG+Z7gmSdGZA3LZ1VtpyumKmA3/zTqSpse2Sy4OWv96IySCJ7gCP0A
-	 0ytFhs8/2PQce2RpYFem1c7BlZIAzvMeTr5lDdAusNnYS2qDbwouFUUyVLcfOFdQk4
-	 XTgYvmOwdub7dCaPBGoiIrg294eaJ5nrLZ0/bKBf0m69dTyc0zoDe5URK34OLqCh58
-	 5gpieItixDx5YAcr6EowJ4PnUifObwQoY8BAFo4X0/JYOs7rG3nPSPUm7XE4dYkEAv
-	 zipMkDI2v+o+y2TApZy/pnJg=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5670640E0031;
-	Tue, 11 Jun 2024 19:47:00 +0000 (UTC)
-Date: Tue, 11 Jun 2024 21:46:53 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Tao Liu <ltao@redhat.com>
-Subject: Re: [PATCHv11 18/19] x86/acpi: Add support for CPU offlining for
- ACPI MADT wakeup method
-Message-ID: <20240611194653.GGZmiprSNzK0JSJL17@fat_crate.local>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-19-kirill.shutemov@linux.intel.com>
- <20240603083930.GNZl2BQk2lQ8WtcE4o@fat_crate.local>
- <icu4yecqfwhmbexupo4zzei4lbe5sgavsfkm27jd6t6gyjynul@c2wap3jhtik7>
- <20240610134020.GCZmcCRFxuObyv1W_d@fat_crate.local>
- <hidvykk3yan5rtlhum6go7j3lwgrcfcgxlwyjug3osfakw2x6f@4ohvo23zaesv>
- <nh7cihzlsjtoddtec6m62biqdn62k3ka5svs6m64qekhpebu5z@dkplwad2urgp>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="oM7EO8gZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3613C2BD10;
+	Tue, 11 Jun 2024 19:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1718135288;
+	bh=L/YueKASRBrvMS6yV7mI4azJyOMWnw87aZ7Ap4SDt2Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oM7EO8gZrBSlYkoPUGcIjb3pkmxNQ45Tyl5aR4Fb1IwymO5Sz5FsvZcQbP5zLwvLg
+	 3mpwkj8wZKcRPbUVfJep0qwXijcYb7B+N3Xfa4QNFrn26b2Ij5wM5ctZ+mb/SXnFSU
+	 JAi9uCZ8Fd/npHQOr+zuLKcYcPxRp5BgUE8C5i3c=
+Date: Tue, 11 Jun 2024 12:48:07 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Yue Zhao <findns94@gmail.com>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-mm@kvack.org, Tejun Heo <tj@kernel.org>,
+ Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Jonathan Corbet <corbet@lwn.net>, Michal Hocko <mhocko@kernel.org>, Roman
+ Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeelb@google.com>,
+ Muchun Song <muchun.song@linux.dev>, David Hildenbrand <david@redhat.com>,
+ Chris Li <chrisl@kernel.org>, Matthew Wilcox <willy@infradead.org>, Kefeng
+ Wang <wangkefeng.wang@huawei.com>, Yosry Ahmed <yosryahmed@google.com>,
+ Hugh Dickins <hughd@google.com>, Dan Schatzberg <schatzberg.dan@gmail.com>,
+ Yu Zhao <yuzhao@google.com>
+Subject: Re: [PATCH v6 0/2] Add swappiness argument to memory.reclaim
+Message-Id: <20240611124807.aedaa473507150bd65e63426@linux-foundation.org>
+In-Reply-To: <htpurelstaqpswf5nkhtttm3vtbvga7qazs2estwzf2srmg65x@banbo2c5ewzw>
+References: <20240103164841.2800183-1-schatzberg.dan@gmail.com>
+	<htpurelstaqpswf5nkhtttm3vtbvga7qazs2estwzf2srmg65x@banbo2c5ewzw>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <nh7cihzlsjtoddtec6m62biqdn62k3ka5svs6m64qekhpebu5z@dkplwad2urgp>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 11, 2024 at 06:47:05PM +0300, Kirill A. Shutemov wrote:
-> Borislav, given this code deduplication effort is not trivial, maybe we
-> can do it as a separate patchset on top of this one?
+On Tue, 11 Jun 2024 12:25:24 -0700 Shakeel Butt <shakeel.butt@linux.dev> wrote:
 
-Sure, as long as it gets done and doesn't get delayed indefinitely by
-new and more important features enablement.
+> Hi folks,
+> 
+> This series has been in the mm-unstable for several months. Are there
+> any remaining concerns here otherwise can we please put this in the
+> mm-stable branch to be merged in the next Linux release?
 
-Usually, we do unifications and cleanups first - then new features but
-this kexec pile has been long in the making already...
+The review didn't go terribly well so I parked the series awaiting more
+clarity.  Although on rereading, it seems that Yu Zhao isn't seeing any
+blocking issues?
 
-> I also wounder if it makes sense to combine ident_map.c and
-> set_memory.c.  There's some overlap between the two.
-
-Yeah, we have a bunch of different pagetable manipulating things, all
-with their peculiarities and unifying them and having a good set of APIs
-which everything else uses, is always a good thing.
-
-And since we're talking cleanups, there's another thing I've been
-looking at critically: CONFIG_X86_5LEVEL. Maybe it is time to get rid of
-it and make the 5level stuff unconditional. And get rid of a bunch of
-code since both vendors support 5level now...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
