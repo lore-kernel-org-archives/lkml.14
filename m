@@ -1,73 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AC01E49E;
-	Tue, 11 Jun 2024 13:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D55417C7D7;
+	Tue, 11 Jun 2024 13:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718112014; cv=none; b=pUtqI6y+E48EaD1G5Uzzvt4nmzbsjAngf/pw/upWTTAcZcpkTJRfAjmxr96HYeuvgJ8cZViwRrbcJmu6r1zG6CDe/tTsN8yhBmUGtdLjcHXSIrLHUXdgxzQ5EB1gOA/CQXWvjkd2h5z1doet08k/BlxsgKQxgh6ULQPLm747S5Y=
+	t=1718112083; cv=none; b=jWTGmawK4pfzR+DdT9l/o9kvyJUgpY8SN9sc1BJ7Vdd8hDuxUHXtaXXR4UZJukHWQyOrknuWGvmG8x6wwMYXyAucF7yduid1IR/5E06d191D5/99ECm4gIhnbQTBAY9CzA5OdiB2cfN88ZbFrTsUoYroKdN+JQPVNbwBvEHS46M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718112014; c=relaxed/simple;
-	bh=scYseydD4W86mLHD0NXDGiB61t/F+N3UuYzCRNJji34=;
+	s=arc-20240116; t=1718112083; c=relaxed/simple;
+	bh=yBk1izK7yPb+2BLQn/5bpktLFQpC0tjKDfxcjcrOTNk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gOnXIREqUEEe7jhq5cGh3J1b2fE5ax7DGSgbeUxYuztJBXatbbJicWR1pAfMRoO5jJW9Hzj9ThNUFWTkQqUAdGcCWeanehHSe8aHxl7oMadHz3VbbNfvQSyrRhv/Q2rNeBTN6Dv5Xyg1OOkWHr6vcfwaZh2drGFMNbGkQu2Sv9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwJyvK17; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ughbzw0zUjtimTbGN6wbWwoeshgNk11vcEyGQVTqNuyXRBNvXgykzNGaF+3ytzDAp2iCJ5JoalT1vJlfoe0lqF/q43gmYrGGKJP0lTig11jXnL5OkfMTCbSnxmxfIhEdC1Smmk0zaqiz/yVjbgiMwSQ6f8ZyBETEVNF9DTlYMlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=hX++gOoL; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwJyvK17"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718112014; x=1749648014;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=scYseydD4W86mLHD0NXDGiB61t/F+N3UuYzCRNJji34=;
-  b=bwJyvK17+Gd5T4QlDVTkPbhz8s/LSoxCHBTQucdXHzW7x7HVnE1AsLsc
-   XpYb3yYh/UmNZjZqO3eBSDOonroClXQzKIypPOlJ1KzqHinoQr/EoRQVf
-   08AhZzWEO62VGWfcriDlXS3jQLVUEDeB+R1fh0Nki7u0aqv+nMxayWQXS
-   vPCiC9ngeF1PsjGO+2toGvWKyyHliVwjh+G7SDC/ofORP+0QHMaCJ/VJb
-   wg03ZMhvyNUkVQknaBAeePyn5C2YkyRcDkON3zG1r7BT6PmH7TmvZ0du6
-   RB5gVb6Jn6beWWtcQq/0KAsZNzfQ0FVhxdhmZUBd58/1sZOv+vRS1i6nj
-   w==;
-X-CSE-ConnectionGUID: nc6+Zm4cRd+Y9El4S4bEUg==
-X-CSE-MsgGUID: Ti6hXySQROaAixZciQJPdg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11099"; a="14661980"
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="14661980"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 06:20:13 -0700
-X-CSE-ConnectionGUID: yvfEdXfwTOGfTOhvmakTUQ==
-X-CSE-MsgGUID: 1s2C84kRRhKD11GcAk+tbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,230,1712646000"; 
-   d="scan'208";a="40022762"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 06:20:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sH1Py-0000000FXuW-0YY5;
-	Tue, 11 Jun 2024 16:20:06 +0300
-Date: Tue, 11 Jun 2024 16:20:05 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: Sam Protsenko <semen.protsenko@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: Re: [PATCH v1 2/4] clk: rockchip: Switch to use kmemdup_array()
-Message-ID: <ZmhPBccSC0Uc2fjQ@smile.fi.intel.com>
-References: <20240606161028.2986587-1-andriy.shevchenko@linux.intel.com>
- <20240606161028.2986587-3-andriy.shevchenko@linux.intel.com>
- <8182279.JRmrKFJ9eK@diego>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hX++gOoL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=+V9OrxfREx1kEorG7byrGojydV3IAsYO8seACV3xijQ=; b=hX
+	++gOoLYyBwkJbyP4qyqh6HbF3FaCGVTobhWZB2jsGS5h8TeWiDY4fZI8C8jDMdYmgyDSj8UtlIwPN
+	GPf9JZ+5CY1GbvzRw1MPj9sTYPsgAu2UHLidh79Q8enULgT44fs1Emr0coU6HRJzypmnVNNKYJEk+
+	IBETdPzE+xCgvvI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sH1Qv-00HODM-Gr; Tue, 11 Jun 2024 15:21:05 +0200
+Date: Tue, 11 Jun 2024 15:21:05 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next-next] net: phy: realtek: add support for rtl8224
+ 2.5Gbps PHY
+Message-ID: <243d5e27-522d-408d-a551-d11073cf330b@lunn.ch>
+References: <20240611053415.2111723-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,34 +47,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8182279.JRmrKFJ9eK@diego>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240611053415.2111723-1-chris.packham@alliedtelesis.co.nz>
 
-On Fri, Jun 07, 2024 at 10:13:04AM +0200, Heiko Stübner wrote:
-> Am Donnerstag, 6. Juni 2024, 18:09:32 CEST schrieb Andy Shevchenko:
-
-...
-
-> > -		cpuclk->rate_table = kmemdup(rates,
-> > -					     sizeof(*rates) * nrates,
-> > -					     GFP_KERNEL);
-> > +		cpuclk->rate_table = kmemdup_array(rates, nrates, sizeof(*rates),
-> > +						   GFP_KERNEL);
+On Tue, Jun 11, 2024 at 05:34:14PM +1200, Chris Packham wrote:
+> The Realtek RTL8224 PHY is a 2.5Gbps capable PHY. It only uses the
+> clause 45 MDIO interface and can leverage the support that has already
+> been added for the other 822x PHYs.
 > 
-> are you sure the param order is correct?
-> 
-> According to [0], it's (src, element_size, count, gfp), while above
-> (and below) element_size and count seems switched in the
-> kmemdup_array calls.
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-I'm glad you asked. The parameter order is going to be fixed [1].
+You probably should Cc: Eric Woudstra and Marek Behún who have both
+worked on 2.5G variants of this PHY.
 
-> [0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/util.c#n149
+> Notes:
+>     I'm currently testing this on an older kernel because the board I'm
+>     using has a SOC/DSA switch that has a driver in openwrt for Linux 5.15.
+>     I have tried to selectively back port the bits I need from the other
+>     rtl822x work so this should be all that is required for the rtl8224.
+>     
+>     There's quite a lot that would need forward porting get a working system
+>     against a current kernel so hopefully this is small enough that it can
+>     land while I'm trying to figure out how to untangle all the other bits.
+     
+I don't see this as being a problem. It should not be possible to
+cause regressions by adding a new device like this. If it turns out to
+be broken, you can fix it up later.
 
-[1]: 0ee14725471c ("mm/util: Swap kmemdup_array() arguments")
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+	Andrew
