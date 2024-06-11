@@ -1,30 +1,59 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.7])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D501017C7CA
-	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 11:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.7
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC45E17B4E7
+	for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 11:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718106402; cv=none; b=YLeJlRm5W82oKBrX5PnW2irI4auzfzbPXRbICJ3G92+fFgYOAxpjtSi5onWK4EaLQC0XOCpBVb2bi43Nn0OjFDlNr0SulVGWpHiMz/FwgRFnoHj5EhRWIuYiNvmJzjnZ3WOOkR88GlyKiK8wftvY0FOyypeM3fEqBTAvnxkpRvs=
+	t=1718106574; cv=none; b=DHuyGm05mskzL36xZcm7DFJgXFHeBoJJSk42nZgv9nSeJvX0YAa+bS0P0a/ynzLc2CLneQAFSL+ev9JvnwNR7s6izeUTYuPqKNkOlC0WdzhthQtV4g15XexQ2ODmcKnsFXxJxyY9iaOz9FL5V0L/WlTA6qS84rgmo5uG3jh5Ouc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718106402; c=relaxed/simple;
-	bh=4Iw4fKsDc/U0YUlAj9b61PaJoo45yzZofCFRy/INvHQ=;
+	s=arc-20240116; t=1718106574; c=relaxed/simple;
+	bh=ewWyf1JfY3LyL1pjAMWp9/aI1mRNEwZhQAt+DO/D7YU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y7gXTncgY54x16wzWWZrkBqKNApOxaxYYdDsMZVfxd6wUVVpeSdAUGIxDLpv6KXLksdcR00VEcSqfwyaWx6sxPO+gPJ6PEdGREAfND1y3YvwMyfDwnWwsQTq6CCB8Szm0gWd45hn7n0BNy2ofiKb1FtJl54DHL18gescz7GXZKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=ZWat7ZHm; arc=none smtp.client-ip=117.135.210.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	 In-Reply-To:Content-Type; b=A+F8AKeZZphkl95sxVIDiyngwYZ5v3IfzINwYfluPPop17J1Tw2X86f4gH9TY3Zs//5+XTKl6V9SHR3A3hg0YExIT8PuQYFxMUCcIeX/F4xFZF7hkYxB1gNFo4a2GA2Ib8Myyy1ubyIid2geFfuTd6oT7qU59BYyfmoLt0e7vDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AH4VMQoF; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="ZWat7ZHm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=/RlQz+7UKTdFqSfL5oJg7kZuSi4+tMMNoJuBh5KXON8=;
-	b=ZWat7ZHmIlqfR/pMSbiA+WcrAPKPN8Ctg2T10SwHLin8Y644FdQnzS+nF8QDPG
-	APbmkd/18wVax0hlyq0vhlWffbXD6NXyZbeOt8RmfqoSNYrDH14zzCf2XyQlr1zv
-	JuD6tRbae7p18Sm8LykON8RAXRwoSs1NjTsVoc6617irM=
-Received: from [172.24.140.37] (unknown [111.204.182.99])
-	by gzga-smtp-mta-g1-5 (Coremail) with SMTP id _____wDnj_Z+N2hmp0mlDQ--.43517S2;
-	Tue, 11 Jun 2024 19:39:45 +0800 (CST)
-Message-ID: <b596cb41-9c62-4134-a76d-6139ae859b07@126.com>
-Date: Tue, 11 Jun 2024 19:39:42 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AH4VMQoF"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-797e2834c4eso32100385a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 04:49:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718106571; x=1718711371; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zM6sCCNyz3zbF+OseHVD84e8m7rxxZxvUuiGGqpJ9HQ=;
+        b=AH4VMQoFmUKrPxx4iJHx/vNnFohEIlRvKIUKANIInLg4YoVpSiolPiyII2aS7FYELK
+         GE0IAjLYPL3XTMT+7aoJ8oOG1xsWcfnLxiyndXQOOiyv585pb17APkMKKisYL/pRq9pS
+         X9IzI5MBUSmMDYo7aDn4FUP4t0323KP7U3MZpBLDcRFcmNOBLISZPj0c6T6O54DOuBgK
+         jd9s2RR1reEWnddfDENjXQ6KV9kNDh3pF10BhaCZOENIOU/8SAtLVpu0WcG5uyXg2zaM
+         auUjMr619ZndkQeyAyGwbQp25sL8Xh6ImTyEVaYs1pw2JbddTf2g0Zecr9+v9Vyv80wT
+         2lUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718106571; x=1718711371;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zM6sCCNyz3zbF+OseHVD84e8m7rxxZxvUuiGGqpJ9HQ=;
+        b=hlUmEYXac5Lo+31GtWJmsJ9szOw8VC9eF0vG7KzvI84g88v4soxZpAcE8EbOjVOnHv
+         dgrafIi2qpLZsXu7FkSLi4Alfyn27kJxxj1fc9QTrJkNuVG5MGYBwDjAzUKN6AkuNkyR
+         PnTmuqlr2AnDN6hz3CN8cMq+ge7Bpl5EywvhqBYTw5hy2Pb8n4c9Ve+movBl1V7rtFgk
+         9RrhnhpjmtMAn7D33N9EuYrTjXjPwnTd8pHGgLjA4wtgGJJN7z3ym9ww7GAzw9NfhPQM
+         e/+cDbMGpqy4d4aPum3UocJdD9cYLW3uBL6UzN4at5XlD2+e9Pk8jkL+8N8ReR8NVS2B
+         J5iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUS/IQ7eLtqJwL1HTjHQHy9uJeYtqPDHZCXS6f+3SPv0H6PoY3SDD8uZWqsxiT3QMEpyDSqVhvupbAGBqEDW9dZPPC4C3E3kBqJMkKb
+X-Gm-Message-State: AOJu0Yx4rSng7LOVaA2m0RNfY4wV8L07Jo8PwB5mI9OWUTXr974BWDyG
+	SDttTTESH9nXwCTt34om95My23JAZ1UO1VZl7egXuCo9H/jfFDon
+X-Google-Smtp-Source: AGHT+IFuaZm4PTedWMppwN/psDVDjWpYw00uONK9hGyy3bG0MxfKy7XPv6flRcWLbA6h3RpenoRhkQ==
+X-Received: by 2002:a05:620a:191a:b0:795:5de4:6625 with SMTP id af79cd13be357-797c2d6271emr434035585a.5.1718106571390;
+        Tue, 11 Jun 2024 04:49:31 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:eb:d0d0:c7fd:c82c? ([2620:10d:c092:500::7:57b4])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-797ee6619ddsm17525485a.99.2024.06.11.04.49.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jun 2024 04:49:31 -0700 (PDT)
+Message-ID: <9ddfe544-636d-4638-ae0e-053674e47322@gmail.com>
+Date: Tue, 11 Jun 2024 12:49:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,85 +61,108 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/fair: Reschedule the cfs_rq when current is
- ineligible
-To: Chunxin Zang <spring.cxz@gmail.com>
-Cc: dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
- linux-kernel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>,
- yangchen11@lixiang.com, Jerry Zhou <zhouchunhua@lixiang.com>,
- Chunxin Zang <zangchunxin@lixiang.com>, mingo@redhat.com,
- Peter Zijlstra <peterz@infradead.org>, juri.lelli@redhat.com,
- vincent.guittot@linaro.org
-References: <20240524134011.270861-1-spring.cxz@gmail.com>
- <572bef0a-727c-4922-93e9-ad29c385120e@126.com>
- <6AF97701-B8F4-46C6-851E-A8BACE97E8C0@gmail.com>
- <bb43844e-0ef2-44d6-9d98-496865d942b9@126.com>
- <DD2A2CD1-E7F9-4519-82F5-22E769364C55@gmail.com>
+Subject: Re: [PATCH v3 1/2] mm: store zero pages to be swapped out in a bitmap
+To: Yosry Ahmed <yosryahmed@google.com>, 21cnbao@gmail.com
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, david@redhat.com,
+ ying.huang@intel.com, hughd@google.com, willy@infradead.org,
+ nphamcs@gmail.com, chengming.zhou@linux.dev, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com,
+ Shakeel Butt <shakeel.butt@linux.dev>
+References: <20240610121820.328876-1-usamaarif642@gmail.com>
+ <20240610121820.328876-2-usamaarif642@gmail.com>
+ <CAJD7tkbpXjg00CRSrXU_pbaHwEaW1b3k8AQgu8y2PAh7EkTOug@mail.gmail.com>
+ <d822ec8b-3b7d-4e5c-ac96-b6fda63da5d4@gmail.com>
+ <CAJD7tkZoaM=dWim7GPqEERDZyxp3PqMNctzXQCPDMO=8kQSwfw@mail.gmail.com>
 Content-Language: en-US
-From: Honglei Wang <jameshongleiwang@126.com>
-In-Reply-To: <DD2A2CD1-E7F9-4519-82F5-22E769364C55@gmail.com>
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <CAJD7tkZoaM=dWim7GPqEERDZyxp3PqMNctzXQCPDMO=8kQSwfw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDnj_Z+N2hmp0mlDQ--.43517S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ww45ZrW8WFyrWr1rWr13XFb_yoW8AF47pr
-	ZxX3WFyw1DC3Z7Ja1Iq3y2qryIyF4fAFZrJryvkry7KanxC3W0gFyfCF43CF9F9F4F9wn0
-	v3s8Aw17AryDZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UC_M-UUUUU=
-X-CM-SenderInfo: 5mdpv2pkrqwzphlzt0bj6rjloofrz/1tbiJAb6rWW-Py04fQAAs4
+Content-Transfer-Encoding: 8bit
+
+@@ -515,8 +600,11 @@ void swap_read_folio(struct folio *folio, bool 
+synchronous,
+>>>>                   psi_memstall_enter(&pflags);
+>>>>           }
+>>>>           delayacct_swapin_start();
+>>>> -
+>>>> -       if (zswap_load(folio)) {
+>>>> +       if (swap_zeromap_folio_test(folio)) {
+>>>> +               folio_zero_fill(folio);
+>>>> +               folio_mark_uptodate(folio);
+>>>> +               folio_unlock(folio);
+>>> We don't currently support swapping in large folios, but it is a work
+>>> in progress, and this will break once we have it.
+>>> swap_zeromap_folio_test() will return false even if parts of the folio
+>>> are in fact zero-filled. Then, we will go read those from disk swap,
+>>> essentially corrupting data.
+>> So yes, with this patch I tested swap out of large zero folio, but when
+>> swapping in it was page by page. My assumption was that swap_read_folio
+>> (when support is added) would only pass a large folio that was earlier
+>> swapped out as a large folio. So if a zero filled large folio was
+>> swapped out, the zeromap will be set for all the pages in that folio,
+>> and at large folio swap in (when it is supported), it will see that all
+>> the bits in the zeromap for that folio are set,  and will just
+>> folio_zero_fill.
+>>
+>> If even a single page in large folio has non-zero data then zeromap will
+>> not store it and it will go to either zswap or disk, and at read time as
+>> all the bits in zeromap are not set, it will still goto either zswap or
+>> disk, so I think this works?
+>>
+>> Is my assumption wrong that only large folios can be swapped in only if
+>> they were swapped out as large? I think this code works in that case.
+> I think the assumption is incorrect. I think we would just check if
+> contiguous PTEs have contiguous swap entries and swapin the folio as a
+> large folio in this case. It is likely that the swap entries are
+> contiguous because it was swapped out as a large folio, but I don't
+> think it's guaranteed.
+
+Yes, makes sense. Thanks for explaining this.
+
+>
+> For example, here is a patch that implements large swapin support for
+> the synchronous swapin case, and I think it just checks that the PTEs
+> have contiguous swap entries:
+> https://lore.kernel.org/linux-mm/20240304081348.197341-6-21cnbao@gmail.com/
+>
+> This makes a lot of sense because otherwise you'd have to keep track
+> of how the folios were composed at the time of swapout, to be able to
+> swap the same folios back in.
+
+I think the solution to large folio swap-in for this optimization and 
+zswap is not in swap_read_folio in this patch-series or any call further 
+down the stack, as its too late by the time you reach here, but in 
+Barrys' patch. This needs to happen much earlier when deciding the size 
+of the folio at folio creation in alloc_swap_folio, after Barry checks
+
+     if (is_zswap_enabled())
+         goto fallback;
+
+once the order is decided, we would need to check the indexes in the 
+zeromap array starting from swap_offset(entry) and ending at 
+swap_offset(entry) + 2^order are set. If no bits are set, or all bits 
+are set, then we allocate large folio. Otherwise, we goto fallback.
+
+I think its better to handle this in Barrys patch. I feel this series is 
+close to its final state, i.e. the only diff I have for the next 
+revision is below to remove start/end_writeback for zer_filled case. I 
+will comment on Barrys patch once the I send out the next revision of this.
 
 
+diff --git a/mm/page_io.c b/mm/page_io.c
+index 2cac1e11fb85..08a3772ddcf7 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -274,9 +274,7 @@ int swap_writepage(struct page *page, struct 
+writeback_control *wbc)
 
-On 2024/6/6 20:39, Chunxin Zang wrote:
+         if (is_folio_zero_filled(folio)) {
+                 swap_zeromap_folio_set(folio);
+-               folio_start_writeback(folio);
+                 folio_unlock(folio);
+-               folio_end_writeback(folio);
+                 return 0;
+         }
+         swap_zeromap_folio_clear(folio);
 
-> 
-> Hi honglei
-> 
-> Recently, I conducted testing of multiple cgroups using version 2. Version 2 ensures the
-> RUN_TO_PARITY feature, so the test results are somewhat better under the
-> NO_RUN_TO_PARITY feature.
-> https://lore.kernel.org/lkml/20240529141806.16029-1-spring.cxz@gmail.com/T/
-> 
-> The testing environment I used still employed 4 cores,  4 groups of hackbench (160 processes)
-> and 1 cyclictest. If too many cgroups or processes are created on the 4 cores, the test
-> results will fluctuate severely, making it difficult to discern any differences.
-> 
-> The organization of cgroups was in two forms:
-> 1. Within the same level cgroup, 10 sub-cgroups were created, with each cgroup having
->    an average of 16 processes.
-> 
->                                    EEVDF      PATCH  EEVDF-NO_PARITY  PATCH-NO_PARITY
-> 
->     LNICE(-19)    # Avg Latencies: 00572      00347      00502      00218
-> 
->     LNICE(0)      # Avg Latencies: 02262      02225      02442      02321
-> 
->     LNICE(19)     # Avg Latencies: 03132      03422      03333      03489
-> 
-> 2. In the form of a binary tree, 8 leaf cgroups were established, with a depth of 4.
->    On average, each cgroup had 20 processes
-> 
->                                    EEVDF      PATCH  EEVDF-NO_PARITY  PATCH-NO_PARITY
-> 
->     LNICE(-19)    # Avg Latencies: 00601      00592      00510      00400
-> 
->     LNICE(0)      # Avg Latencies: 02703      02170      02381      02126
-> 
->     LNICE(19)     # Avg Latencies: 04773      03387      04478      03611
-> 
-> Based on the test results, there is a noticeable improvement in scheduling latency after
-> applying the patch in scenarios involving multiple cgroups.
-> 
-> 
-> thanks
-> Chunxin
-> 
-Hi Chunxin,
-
-Thanks for sharing the test result. It looks helpful at least in this 
-cgroups scenario. I'm still curious which point of the two changes helps 
-more in your test, just as mentioned at the very first mail of this thread.
-
-Thanks,
-Honglei
 
