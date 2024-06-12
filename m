@@ -1,131 +1,410 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F654AEF4;
-	Wed, 12 Jun 2024 18:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19AD35FBB7;
+	Wed, 12 Jun 2024 18:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217074; cv=none; b=r2bhK0xl0STKEdLf07GqJJQz04c9SopgDDvwC6wmmSiQ3hS/Rc3PKZX8kVffe/ODnT1LVHNe2hvMn3GnIOXiCv+6RZyc0N5npv4MinK2rx+3kKW8aC3mJbhv5kxvB2CtZVByWQJDmmcFH1pIWNkdGZBHaCGaPOotpomLKfJidS4=
+	t=1718217077; cv=none; b=Mu97ynS4yO8Xy+ccAUD2pXjdcSZ23BFUgLJvFRnb3wmGRAvRNMf6kLMpWwdY2wVjOWs+qqAEztpopSsiEH0v63amCT0qCi4w4uIl41uULQlrZ/yF8efpkXgegtGW2dR7H02yIw4phUHSATXXakI8A2e62o/k6LG3CaOTSsdM8FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217074; c=relaxed/simple;
-	bh=6zChqabg+jrjms+BmIotaOqJm9mHGdH7DbrkmgDnhkA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c4Eb6g9WcLLZv0iifQlh9iYb7dUABMVA78am5SRKAh7XDqIXbGOUwuiz/H+jEd++ouXF0HO0S9v4lId+ICvB18kvp9H6yUxNAW8JuqKwWFZ/5jYuMa/3wXsKuFt+O8Zc1htX6mJ0TC/o0x7pEeUy5WqjfvOZYovDbM8VMpJGVLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F8ii8SpZ; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718217077; c=relaxed/simple;
+	bh=oou1jM5VFq/2y2bcsmpwOiyQfeAuRop+eiyLGDLCMxU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qQsxUZCm297ADWf1W0sz+BiOvti2uNSvLM2HJ2uQ61E2Xucc0+vk22rxmHbQKZVOy5sSU5TSdW044I9diV45J5chAKENIKrctviN/VR0EE83cmjVIBmXCT6sjtEGUifAFNUoORlq/LIGkEoYjW0Fg3i5qiBNwI4Qsn8GcmqrrvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ODbk6cFg; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F8ii8SpZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718217072; x=1749753072;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6zChqabg+jrjms+BmIotaOqJm9mHGdH7DbrkmgDnhkA=;
-  b=F8ii8SpZ+1CFkNvxHxEpzJ3/ElBnkzdQ75bNnEAqIwDaBA76BX8VZeym
-   ZW3B0PVTW4ia72Mj4WbvsIpgnM9n/SxU1Pm04qIGvVtWYIsr7OSll4QyG
-   c/b5spcc5QKBhxwi1XqWz7OLLyDYVvN/h6UQhR7wnv1p7ekQjmJvZrzQY
-   jZScObl/Yg1dnHvy1o83SdMnNoBtWP1aRcf7wWmfIHKagb/dQ/VG6Cn0D
-   XfbnhiTQ5gvjxX/D1yl1Ol/FNxbi/4FXNTbxaYbnQoxOjSOBPE0n1q5Le
-   jt5wy41VchgzbbbwbbdeMsskpX654VwGj9+1kS5RQzTEwvOwd06utiVpf
-   Q==;
-X-CSE-ConnectionGUID: ow5u5epJQeGm4fw8CCBe0g==
-X-CSE-MsgGUID: j8oanuLARlKbN9fmpliqgw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="14802777"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="14802777"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 11:31:12 -0700
-X-CSE-ConnectionGUID: 3Rbjk7C7QFGkdQjv3VdJmw==
-X-CSE-MsgGUID: w7BvMGymTKGvtmdm7uyvTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="40352179"
-Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 12 Jun 2024 11:31:09 -0700
-Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sHSkU-0001os-1R;
-	Wed, 12 Jun 2024 18:31:06 +0000
-Date: Thu, 13 Jun 2024 02:30:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Slark Xiao <slark_xiao@163.com>, manivannan.sadhasivam@linaro.org,
-	loic.poulain@linaro.org, ryazanov.s.a@gmail.com,
-	johannes@sipsolutions.net, quic_jhugo@quicinc.com
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Slark Xiao <slark_xiao@163.com>
-Subject: Re: [PATCH v2 1/2] bus: mhi: host: Import mux_id item
-Message-ID: <202406130220.gq15Sjzk-lkp@intel.com>
-References: <20240612093842.359805-1-slark_xiao@163.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ODbk6cFg"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CGOUTF011256;
+	Wed, 12 Jun 2024 18:31:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	j5G049VqCQMeE3w0OXR+7RWXAi7MH2G9dMoTlQcaq/4=; b=ODbk6cFgyhN6+Stw
+	xKoFPfFysI6gAsAJ+lmQP0CRNgysllSA4BxPaNxfODtAtQSBidlPfnIDOiPrcoHd
+	USM0PWwlR7vuDrsoViywASn9GTQKbiVVFzH1iywKW1VY03L6I99qlaR/iZSglRu9
+	OZ2w/xwBBwV2nWOHcVOGyVUjFgILkKinU2Lh7QN65r/0LfO9filA4nvD7ExBJf2s
+	ecFm0Af4i8pYPl9mLyGc9wHjI9ZAAmNoz7uN6/coobeXKlrjUs7uwgUZQ9WANoGl
+	43U5DlTeP7eLFgJhteleI/+AXEZfiXiLdsGLUPF91/7kx9L0iOq0F3KKankiYFRq
+	8DsKwQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yq83wh5ww-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 18:31:04 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CIV2qV027832
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 18:31:02 GMT
+Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 12 Jun 2024 11:30:57 -0700
+From: Sibi Sankar <quic_sibis@quicinc.com>
+To: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <quic_rgottimu@quicinc.com>, <quic_kshivnan@quicinc.com>,
+        <quic_sibis@quicinc.com>, <conor+dt@kernel.org>
+Subject: [RFC V2 1/4] dt-bindings: firmware: Add support for QCOM Vendor Protocol
+Date: Thu, 13 Jun 2024 00:00:28 +0530
+Message-ID: <20240612183031.219906-2-quic_sibis@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240612183031.219906-1-quic_sibis@quicinc.com>
+References: <20240612183031.219906-1-quic_sibis@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240612093842.359805-1-slark_xiao@163.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 4P1iCEa0ItLAyj1ZsloIKOQNT-aT8dT-
+X-Proofpoint-ORIG-GUID: 4P1iCEa0ItLAyj1ZsloIKOQNT-aT8dT-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_09,2024-06-12_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406120131
 
-Hi Slark,
+Document the SCMI QCOM Vendor protocol v1.0 bindings and the various memory
+buses that can be monitored and scaled by memory latency governor hosted
+on it.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+---
 
-[auto build test WARNING on mani-mhi/mhi-next]
-[also build test WARNING on linus/master v6.10-rc3 next-20240612]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+v1:
+* Add missing bindings for the protocol. [Konrad/Dmitry]
+* Use alternate bindings. [Dmitry/Konrad]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Slark-Xiao/net-wwan-mhi-make-default-data-link-id-configurable/20240612-174242
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi.git mhi-next
-patch link:    https://lore.kernel.org/r/20240612093842.359805-1-slark_xiao%40163.com
-patch subject: [PATCH v2 1/2] bus: mhi: host: Import mux_id item
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240613/202406130220.gq15Sjzk-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240613/202406130220.gq15Sjzk-lkp@intel.com/reproduce)
+ .../bindings/firmware/arm,scmi.yaml           |  21 ++
+ .../bindings/soc/qcom/qcom,scmi-memlat.yaml   | 243 ++++++++++++++++++
+ include/dt-bindings/soc/qcom,scmi-vendor.h    |  22 ++
+ 3 files changed, 286 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,scmi-memlat.yaml
+ create mode 100644 include/dt-bindings/soc/qcom,scmi-vendor.h
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406130220.gq15Sjzk-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/bus/mhi/host/pci_generic.c:57: warning: Function parameter or struct member 'mux_id' not described in 'mhi_pci_dev_info'
-
-
-vim +57 drivers/bus/mhi/host/pci_generic.c
-
-48f98496b1de132f drivers/bus/mhi/host/pci_generic.c Qiang Yu      2024-04-24  32  
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  33  /**
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  34   * struct mhi_pci_dev_info - MHI PCI device specific information
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  35   * @config: MHI controller configuration
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  36   * @name: name of the PCI module
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  37   * @fw: firmware path (if any)
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  38   * @edl: emergency download mode firmware path (if any)
-48f98496b1de132f drivers/bus/mhi/host/pci_generic.c Qiang Yu      2024-04-24  39   * @edl_trigger: capable of triggering EDL mode in the device (if supported)
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  40   * @bar_num: PCI base address register to use for MHI MMIO register space
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  41   * @dma_data_width: DMA transfer word size (32 or 64 bits)
-5c2c85315948c42c drivers/bus/mhi/pci_generic.c      Richard Laing 2021-07-15  42   * @mru_default: default MRU size for MBIM network packets
-56f6f4c4eb2a710e drivers/bus/mhi/pci_generic.c      Bhaumik Bhatt 2021-07-16  43   * @sideband_wake: Devices using dedicated sideband GPIO for wakeup instead
-56f6f4c4eb2a710e drivers/bus/mhi/pci_generic.c      Bhaumik Bhatt 2021-07-16  44   *		   of inband wake support (such as sdx24)
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  45   */
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  46  struct mhi_pci_dev_info {
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  47  	const struct mhi_controller_config *config;
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  48  	const char *name;
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  49  	const char *fw;
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  50  	const char *edl;
-48f98496b1de132f drivers/bus/mhi/host/pci_generic.c Qiang Yu      2024-04-24  51  	bool edl_trigger;
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  52  	unsigned int bar_num;
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  53  	unsigned int dma_data_width;
-5c2c85315948c42c drivers/bus/mhi/pci_generic.c      Richard Laing 2021-07-15  54  	unsigned int mru_default;
-56f6f4c4eb2a710e drivers/bus/mhi/pci_generic.c      Bhaumik Bhatt 2021-07-16  55  	bool sideband_wake;
-2b153f167f41516b drivers/bus/mhi/host/pci_generic.c Slark Xiao    2024-06-12  56  	unsigned int mux_id;
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21 @57  };
-855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  58  
-
+diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+index 7de2c29606e5..21e4da53d02c 100644
+--- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
++++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+@@ -278,6 +278,27 @@ properties:
+     required:
+       - reg
+ 
++  protocol@80:
++    $ref: '#/$defs/protocol-node'
++    unevaluatedProperties: false
++
++    properties:
++      reg:
++        const: 0x80
++
++      memlat-dvfs:
++        type: object
++        additionalProperties: false
++        description:
++          The list of all memory buses that can be monitored and scaled by the
++          memory latency governor running on the SCMI controller.
++
++        patternProperties:
++          '^memory-[0-9]$':
++            type: object
++            $ref: /schemas/soc/qcom/qcom,scmi-memlat.yaml#
++            unevaluatedProperties: false
++
+ additionalProperties: false
+ 
+ $defs:
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,scmi-memlat.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,scmi-memlat.yaml
+new file mode 100644
+index 000000000000..c6e3d163c4a3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,scmi-memlat.yaml
+@@ -0,0 +1,243 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/qcom/qcom,scmi-memlat.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm SCMI Memory Bus nodes
++
++maintainers:
++  - Sibi Sankar <quic_sibis@quicinc.com>
++
++description: |
++  This binding describes the various memory buses that can be monitored and scaled
++  by memory latency governor running on the CPU Control Processor (SCMI controller).
++
++properties:
++  qcom,memory-type:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 2]
++    description:
++      Memory Bus Identifier
++        0 = QCOM_MEM_TYPE_DDR
++        1 = QCOM_MEM_TYPE_LLCC
++        2 = QCOM_MEM_TYPE_DDR_QOS
++
++  freq-table-hz:
++    items:
++      items:
++        - description: Minimum frequency of the memory bus in Hz
++        - description: Maximum frequency of the memory bus in Hz
++
++patternProperties:
++  '^monitor-[0-9]$':
++    type: object
++    unevaluatedProperties: false
++    description:
++      The list of all monitors detecting the memory latency bound workloads using
++      various counters.
++
++    properties:
++      qcom,compute-type:
++        description:
++          Monitors of type compute perform bus dvfs based on a rudimentary CPU
++          frequency to memory frequency map.
++        type: boolean
++
++      qcom,ipm-ceil:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description:
++          Monitors having this property perform bus dvfs based on the same
++          rudimentary table but the scaling is performed only if the calculated
++          IPM (Instruction Per Misses) exceeds the given ceiling.
++
++      qcom,cpulist:
++        $ref: /schemas/types.yaml#/definitions/phandle-array
++        description:
++          List of phandles to the CPUs nodes whose frequency and IPM are to be
++          monitored.
++
++      operating-points-v2: true
++      opp-table:
++        type: object
++
++    required:
++      - qcom,cpulist
++      - operating-points-v2
++      - opp-table
++
++    allOf:
++      - if:
++          properties:
++            qcom,compute-type: false
++        then:
++          required:
++            - qcom,ipm-ceil
++
++      - if:
++          properties:
++            qcom,ipm-ceil: false
++        then:
++          required:
++            - qcom,compute-type
++
++required:
++  - qcom,memory-type
++  - freq-table-hz
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/soc/qcom,scmi-vendor.h>
++
++    firmware {
++        scmi {
++            compatible = "arm,scmi";
++            mboxes = <&cpucp_mbox 0>, <&cpucp_mbox 2>;
++            mbox-names = "tx", "rx";
++            shmem = <&cpu_scp_lpri0>, <&cpu_scp_lpri1>;
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            protocol@80 {
++                reg = <0x80>;
++
++                memlat-dvfs {
++                    memory-0 {
++                        qcom,memory-type = <QCOM_MEM_TYPE_DDR>;
++                        freq-table-hz = /bits/ 64 <200000000 4224000000>;
++
++                        monitor-0 {
++                            qcom,ipm-ceil = <20000000>;
++                            qcom,cpulist = <&CPU0 &CPU1 &CPU2 &CPU3 &CPU4 &CPU5 &CPU6 &CPU7
++                                            &CPU8 &CPU9 &CPU10 &CPU11>;
++                            operating-points-v2 = <&memory0_monitor0_opp_table>;
++
++                            memory0_monitor0_opp_table: opp-table {
++                                compatible = "operating-points-v2";
++
++                                opp-999000000 {
++                                    opp-hz = /bits/ 64 <999000000 547000000>;
++                                };
++
++                                opp-1440000000 {
++                                    opp-hz = /bits/ 64 <1440000000 768000000>;
++                                };
++
++                                opp-1671000000 {
++                                    opp-hz = /bits/ 64 <1671000000 1555000000>;
++                                };
++
++                                opp-2189000000 {
++                                    opp-hz = /bits/ 64 <2189000000 2092000000>;
++                                };
++
++                                opp-2516000000 {
++                                    opp-hz = /bits/ 64 <2516000000 3187000000>;
++                                };
++
++                                opp-3860000000 {
++                                    opp-hz = /bits/ 64 <3860000000 4224000000>;
++                                };
++                            };
++                        };
++
++                        monitor-1 {
++                            qcom,compute-type;
++                            qcom,cpulist = <&CPU0 &CPU1 &CPU2 &CPU3 &CPU4 &CPU5 &CPU6 &CPU7
++                                            &CPU8 &CPU9 &CPU10 &CPU11>;
++                            operating-points-v2 = <&memory0_monitor1_opp_table>;
++
++                            memory0_monitor1_opp_table: opp-table {
++                                compatible = "operating-points-v2";
++
++                                opp-1440000000 {
++                                        opp-hz = /bits/ 64 <1440000000 200000000>;
++                                };
++
++                                opp-2189000000 {
++                                        opp-hz = /bits/ 64 <2189000000 768000000>;
++                                };
++
++                                opp-2516000000 {
++                                        opp-hz = /bits/ 64 <2516000000 1555000000>;
++                                };
++
++                                opp-3860000000 {
++                                        opp-hz = /bits/ 64 <3860000000 4224000000>;
++                                };
++                            };
++                        };
++                    };
++
++                    memory-1 {
++                        qcom,memory-type = <QCOM_MEM_TYPE_LLCC>;
++                        freq-table-hz = /bits/ 64 <300000000 1067000000>;
++
++                        monitor-0 {
++                            qcom,ipm-ceil = <20000000>;
++                            qcom,cpulist = <&CPU0 &CPU1 &CPU2 &CPU3 &CPU4 &CPU5 &CPU6 &CPU7
++                                            &CPU8 &CPU9 &CPU10 &CPU11>;
++                            operating-points-v2 = <&memory1_monitor0_opp_table>;
++
++                            memory1_monitor0_opp_table: opp-table {
++                                compatible = "operating-points-v2";
++
++                                opp-999000000 {
++                                    opp-hz = /bits/ 64 <999000000 300000000>;
++                                };
++
++                                opp-1440000000 {
++                                    opp-hz = /bits/ 64 <1440000000 466000000>;
++                                };
++
++                                opp-1671000000 {
++                                    opp-hz = /bits/ 64 <1671000000 600000000>;
++                                };
++
++                                opp-2189000000 {
++                                    opp-hz = /bits/ 64 <2189000000 806000000>;
++                                };
++
++                                opp-2516000000 {
++                                    opp-hz = /bits/ 64 <2516000000 933000000>;
++                                };
++
++                                opp-3860000000 {
++                                    opp-hz = /bits/ 64 <3860000000 1066000000>;
++                                };
++                            };
++                        };
++                    };
++
++                    memory-2 {
++                        qcom,memory-type = <QCOM_MEM_TYPE_DDR_QOS>;
++                        freq-table-hz = /bits/ 64 <QCOM_DDR_LEVEL_AUTO QCOM_DDR_LEVEL_PERF>;
++
++                        monitor-0 {
++                            qcom,ipm-ceil = <20000000>;
++                            qcom,cpulist = <&CPU0 &CPU1 &CPU2 &CPU3 &CPU4 &CPU5 &CPU6 &CPU7
++                                            &CPU8 &CPU9 &CPU10 &CPU11>;
++                            operating-points-v2 = <&memory2_monitor0_opp_table>;
++
++                            memory2_monitor0_opp_table: opp-table {
++                                compatible = "operating-points-v2";
++
++                                opp-2189000000 {
++                                    opp-hz = /bits/ 64 <2189000000>;
++                                    opp-level = <QCOM_DDR_LEVEL_AUTO>;
++                                };
++
++                                opp-3860000000 {
++                                    opp-hz = /bits/ 64 <3860000000>;
++                                    opp-level = <QCOM_DDR_LEVEL_PERF>;
++                                };
++                            };
++                        };
++                    };
++                };
++            };
++        };
++    };
+diff --git a/include/dt-bindings/soc/qcom,scmi-vendor.h b/include/dt-bindings/soc/qcom,scmi-vendor.h
+new file mode 100644
+index 000000000000..7ae8d8d5623b
+--- /dev/null
++++ b/include/dt-bindings/soc/qcom,scmi-vendor.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++#ifndef __DT_BINDINGS_QCOM_SCMI_VENDOR_H
++#define __DT_BINDINGS_QCOM_SCMI_VENDOR
++
++/* Memory IDs */
++#define QCOM_MEM_TYPE_DDR	0x0
++#define QCOM_MEM_TYPE_LLCC	0x1
++#define QCOM_MEM_TYPE_DDR_QOS	0x2
++
++/*
++ * QCOM_MEM_TYPE_DDR_QOS supports the following states.
++ *
++ * %QCOM_DDR_LEVEL_AUTO:	DDR operates with LPM enabled
++ * %QCOM_DDR_LEVEL_PERF:	DDR operates with LPM disabled
++ */
++#define QCOM_DDR_LEVEL_AUTO	0x0
++#define QCOM_DDR_LEVEL_PERF	0x1
++
++#endif /* __DT_BINDINGS_QCOM_SCMI_VENDOR_H */
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
