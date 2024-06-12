@@ -1,126 +1,93 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EA7391;
-	Wed, 12 Jun 2024 01:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8050CCA7D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718155294; cv=none; b=jjEiYnVO5U9hMhl2jzIL4cRbIjuQju6ZNAKMA5l1O46jw0sNX4StYhti/cz2RL3uAg0dzqM/pHtLMjED/f0ug9EAXEf5CWESz/UqsR4YSOlhDxz/ge8dk2MB04z+g6Pt5hOL7l6mTJRPdNH400Kg539Zth7DlU18IMwybLI2d74=
+	t=1718155304; cv=none; b=kOs1KKOF3OlQ5bU/W7Lj4Kn5JMGwgnkJyTRKYOJi/3CNAg0gX7qLxOir7wZtjHTH0RwsXVdyOSt4Bv5Lhf5z5D71wXLhvMNP79GitxPSvj/qnqXOG0vAv38dd7rZNpb7YVZwIN8jxfpfULfPoQ1kqDX+xkHDGVFazCZHCvYzOmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718155294; c=relaxed/simple;
-	bh=QGO5DNB1ktBaq18MrT3YSf2fdBgNWF96qt+lNFGXEjs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZDiXeQONM0ombjl5oDh4TU9okRbPogBOUD+/OI46uxHki9yTWqwsIZ8DtildmTWP6dZNHlKnT7MN6RceXZVJFl7QwR194KKbe73qUQRwDWyuYA3Occ8eN62p+lUThtvNeLBH6tfGjtWeaO2S9y5hDhc/Cxi362KbQosCaG0jsJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=iSb0nmpb; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1718155304; c=relaxed/simple;
+	bh=GlapdDKhTIPCCJP/VkWHjj68tVw41md0iGY6n3ryj0A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BDrATCu0QiFDdy1sK2BSXOTZXgnVn1X0BjF5lfn2ILnIp+7g1G5e9wkPr6OGBTMhJYgcKNsC0C/RygawoLa6jc3kBgj3ngAIM1QkUcl0sZD9AsuC6c4xaNErTrunoJsXpBRUy+PPP/vyeWcEx9/zl33zVIFZOWp2wlqm6IFXNVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dgokbjKk; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iSb0nmpb"
-X-UUID: 16d67b2e285a11efa22eafcdcd04c131-20240612
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=GoDbejxUQ5CH3/w/X+WKXRuM50NCUjo+XMdENx3Q9sc=;
-	b=iSb0nmpbzwz+qwAH2d9XJwIcH3JbYsdkwv77GMJft1Br5dpug4R4lKiZMAOSI8FB9LcrUnSAKvCNgZmA/lpyMBeXQJ6dCkff59JvsDX/hOg/+q/8pV9gogXMxMVCWOtWgmCjjsf8dYsf9KNtqtGUhtP8i2O1i7OS5tBHe1jU+Vw=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:ef24ff04-c1ce-4d88-b794-01e9fe46a064,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:393d96e,CLOUDID:f6157988-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 16d67b2e285a11efa22eafcdcd04c131-20240612
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw02.mediatek.com
-	(envelope-from <zhi.mao@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 560014558; Wed, 12 Jun 2024 09:21:26 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 12 Jun 2024 09:21:24 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Wed, 12 Jun 2024 09:21:22 +0800
-From: Zhi Mao <zhi.mao@mediatek.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-CC: Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Zhi Mao <zhi.mao@mediatek.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart
-	<laurent.pinchart+renesas@ideasonboard.com>, Heiko Stuebner
-	<heiko@sntech.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil
-	<hverkuil-cisco@xs4all.nl>, Hans de Goede <hdegoede@redhat.com>, "Tomi
- Valkeinen" <tomi.valkeinen@ideasonboard.com>, Alain Volmat
-	<alain.volmat@foss.st.com>, Paul Elder <paul.elder@ideasonboard.com>, "Mehdi
- Djait" <mehdi.djait@bootlin.com>, Andy Shevchenko
-	<andy.shevchenko@gmail.com>, Bingbu Cao <bingbu.cao@intel.com>,
-	<linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, <shengnan.wang@mediatek.com>,
-	<yaya.chang@mediatek.com>, <yunkec@chromium.org>, <10572168@qq.com>
-Subject: [PATCH v3 3/3] MAINTAINERS: Add entry for GT97xx VCM driver
-Date: Wed, 12 Jun 2024 09:20:19 +0800
-Message-ID: <20240612012019.19078-4-zhi.mao@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240612012019.19078-1-zhi.mao@mediatek.com>
-References: <20240612012019.19078-1-zhi.mao@mediatek.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dgokbjKk"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfa84f6a603so10520325276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 18:21:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718155301; x=1718760101; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=949Sco2VRHaNtzMxd2fbftK/o32Oz5QH2yGUJXRf1kk=;
+        b=dgokbjKkIQ6Lm4zfYBCgheAKFvMp2cLnqTVO4RDa32JkAVCYkW+wXDbg/xIIK9Flp5
+         ZC0VClD+tip33nOL46K4kf3mCTVmJk7x92By8aNQH99Vt12YA5LEepjdsko4Yhi1VTnB
+         fozhe5emdudhOBxMOPekPMXki4PNJW14b8uGaUV5ye61sD8sy7lj+4Q06s8w3eFBEgtN
+         l/xPHdkhvpJBJ678NAFzjhfwUEET0SBg8PJ89OHUBvvpfo9AsYqzgnh7B2BFd/LtrgWL
+         syJO9NGsNkWSlhOWMZ+5SVJBjr627DcCFRJMZmSIaFz1ver8aAwixET45MbJ1clDMWlN
+         a/wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718155301; x=1718760101;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=949Sco2VRHaNtzMxd2fbftK/o32Oz5QH2yGUJXRf1kk=;
+        b=MMGvSZxFJrg75p/quYVWgxuMjDKadG5/OtE9TSXefaXSxea6sOubVaUX4ojUfa1oYZ
+         dZCtTSj3Oqkn3CfCuPMOlXELweSsDQMV3Oa1TXf3zwHVpJTmgSJNfZZgruUCngnTJKyC
+         rdfil+R3TNR0quyAvZdvpEDiQcrRVccuGM7USCYozZGudiDUKMk5n+3FTmCAXxtuT+uV
+         K7RjSrPgjIWxzAQl+G9HTG91TZQNffl/tLpPevD2yu9f834WdaMnXXK3UTpBrFZY41jR
+         xZLYv6AiOrlK2v7dIwYOaKlQLcqlsQMwEFgABjt4VreDVuB8et0HD7r1zzCXUQFhzrTt
+         p7dA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPGkzNUMI/hh1r/5bE5+2D93o9+nVsJ7YU2tqDPl/vrK7TSM0n8sMWLZ/j97yTqoCc30xnsiFph9UDVmDTDRjTIBdpCqlLmyicDh/Z
+X-Gm-Message-State: AOJu0Yx2CVofVbrv5/8i/trkoHWhBdTtmSOuXpMV6ZMxyChCei5G76+W
+	uYANRpNslJNIxutErbloFvTmkzWhGNyPig1X5rR0MjP9VRF1wdgjZeLBym+NFwX2qT/GGt+apL8
+	q6A==
+X-Google-Smtp-Source: AGHT+IEV7dvCZCTRpJ744rvbmMY7/LY4nMjTd6+1Xr4TaQMCK/If60QDgbv1vmQQIQ6r1mtLOEulyXxkmDQ=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:c12:b0:dfb:210f:3ad2 with SMTP id
+ 3f1490d57ef6-dfe65f78d94mr29693276.2.1718155301449; Tue, 11 Jun 2024 18:21:41
+ -0700 (PDT)
+Date: Tue, 11 Jun 2024 18:18:36 -0700
+In-Reply-To: <20240508132502.184428-1-julian.stecklina@cyberus-technology.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--1.740300-8.000000
-X-TMASE-MatchedRID: GIpmbigRs3Y9S3IiQd+eNQPZZctd3P4BFuNF4lJG6xtGL0g1nVmkYTcG
-	i0cOVVasRcK0DrBkisuAMuqetGVetksDkkP3zIjqavP8b9lJtWr6C0ePs7A07fH8XRQwShO7Ayk
-	Qe1sIa0XYNwoFzR6TfCnyQECDq3YS+cAQf7nhiHEBxwmF6nT2v0FNSQkI9yjefYyfbAjKfD6cXr
-	SpsbyZea6edyNz+tV1oydMlEjRcid9fBQSbWi4PMsNjEULX/uufoZ02Tg1aYA=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--1.740300-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	BBF44A3C6038B97E8327B33B45543D43F4733C587BBDE6740BD7819DB45B6D542000:8
-X-MTK: N
+Mime-Version: 1.0
+References: <20240508132502.184428-1-julian.stecklina@cyberus-technology.de>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Message-ID: <171814098169.327928.5071447429899645642.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: x86: add KVM_RUN_X86_GUEST_MODE kvm_run flag
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Julian Stecklina <julian.stecklina@cyberus-technology.de>
+Cc: Thomas Prescher <thomas.prescher@cyberus-technology.de>, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Add maintainer entry for GT97xx VCM driver
+On Wed, 08 May 2024 15:25:01 +0200, Julian Stecklina wrote:
+> When a vCPU is interrupted by a signal while running a nested guest,
+> KVM will exit to userspace with L2 state. However, userspace has no
+> way to know whether it sees L1 or L2 state (besides calling
+> KVM_GET_STATS_FD, which does not have a stable ABI).
+> 
+> This causes multiple problems:
+> 
+> [...]
 
-Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Applied to kvm-x86 misc.  Note, the capability got number 237, as 236 was
+claimed by KVM_CAP_X86_APIC_BUS_CYCLES_NS.  The number might also change again,
+e.g. if a different arch adds a capability and x86 loses the race.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 670b8201973b..d12694c743ab 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9328,6 +9328,13 @@ F:	Documentation/filesystems/gfs2*
- F:	fs/gfs2/
- F:	include/uapi/linux/gfs2_ondisk.h
- 
-+GIANTEC GT9769 LENS VOICE COIL DRIVER
-+M:	Zhi Mao <zhi.mao@mediatek.com>
-+L:	linux-media@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/i2c/giantec,gt9769.yaml
-+F:	drivers/media/i2c/gt97xx.c
-+
- GIGABYTE WATERFORCE SENSOR DRIVER
- M:	Aleksa Savic <savicaleksa83@gmail.com>
- L:	linux-hwmon@vger.kernel.org
-@@ -23590,6 +23597,7 @@ L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	drivers/media/i2c/ak*
- F:	drivers/media/i2c/dw*
-+F:	drivers/media/i2c/gt*
- F:	drivers/media/i2c/lm*
- 
- V4L2 CAMERA SENSOR DRIVERS
--- 
-2.25.1
+Thanks!
 
+[1/1] KVM: x86: add KVM_RUN_X86_GUEST_MODE kvm_run flag
+      https://github.com/kvm-x86/linux/commit/85542adb65ec
+
+--
+https://github.com/kvm-x86/linux/tree/next
