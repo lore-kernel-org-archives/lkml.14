@@ -1,159 +1,93 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497D817FAB7
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE381182AF;
+	Wed, 12 Jun 2024 15:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718207524; cv=none; b=iNbYpmlYrMi/LlDjIEBz10qoKpQGrxFeFArWyNrIAedMqmPFacTDV+7qPrzXtXfIbeeCbx0QgA6Dxo1obD9Fi7r0sHejC+ImltXokL+CkDl3KgDN1/G5o0TfB3xdCi4BFvY7S5HCpKzKrqn5q+rspjYlXBZ7tteKNrsNvo+P+uY=
+	t=1718207637; cv=none; b=GHONXi35E385xMMDTZFEZr1fwKiDd1UDpkDmsKSE/ZiSPE0KWuFgG24zN9PSiCphXYYuagomXRxsmrqx/sOGGECmEUhw7ReZ1ZXGCd4weIN+PgClZpf2o5Athigh1f0Pk8RDmU2q401V6tw1utFTDKZc36dncgSfvxdGntFTSCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718207524; c=relaxed/simple;
-	bh=xtBDFoQmM9KRsbYQrWoWhaDcGs4A5YynZBYJRZNzOfE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GI9HuQotOq7eG05TWDjELcb5mg6V2hfrWmVKNtOebUNMT8dmGT/KVLxkCblEUDc9WdwYgYrjnVtWJxyCj4pU/fMdx+1mGT5+mVJwPQ2ROKYCzJfJlOus8Ksu801jRlqQY2NeKmkLqYa+nL6ahGVOU4G/z61AWdke9WCufQjQcOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=F59ldffT; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	s=arc-20240116; t=1718207637; c=relaxed/simple;
+	bh=A/q6m45sA8KG3xWSmANGingFfUIcNjjpTnH7bMJgRmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMJCmrPc6i2kZ3Iu8Mn+huZkRpCzDjeVP5AA2zIcoF70l7MMHl7/XzRdC0ceYwyh42ibm62OzPq1RdipdE115nwwZcN0/AusFvnIwWPx3JGFud9cJSrTXDRjj55uvVMHCAlj2XTqQoVpEQ0BkoBw64ZMV/bTl8z9h9yVuTBm0Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mTy8Jw/j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="F59ldffT"
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 45CFFKZc007498
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:52:02 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc :
- content-transfer-encoding : content-type : date : from : message-id :
- mime-version : subject : to; s=s2048-2021-q4;
- bh=I/Z6N+8GhYKAY2oDMx40QxjDLD0DkKbXD3UysbN8DvI=;
- b=F59ldffTNBenHKBhWMmTrYlfiDKpxNy/YcsE8FHZ5mJ0eHqKohUX/2S2n7gIHsLnH/XY
- v+tu7vrRbT7Aqa37QzcPu1YSLrCxyb3ZdPtvtEzhLkmwhlDiInTeL9MfAXXJSUFgOIyL
- M5pChy1VRE+yWbwWshmtr1yPfFi0tF/Bzw92PCu6zleAbq8FVyqHyv7gAT+FUiRFBjmn
- JMv9Px6Nhvy9x4Gy7Ir+7nq/Cv+pvkffzWKS8R0FuxVCwXO8+6rpy8H4Go6HF8TAz4/X
- hKiODwIj5mLIuvXGYsiCCPLYqM2HLjQHL+13lWsi0Jc+Ttwu4JPnvof7m7Ibc2hNE6hS Vw== 
-Received: from mail.thefacebook.com ([163.114.134.2])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3yphwwak9h-5
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:52:02 -0700
-Received: from twshared15118.35.frc1.facebook.com (2620:10d:c085:208::11) by
- mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.11; Wed, 12 Jun 2024 15:51:58 +0000
-Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id DCB8BF5EA644; Wed, 12 Jun 2024 08:51:47 -0700 (PDT)
-From: Keith Busch <kbusch@meta.com>
-To: <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>
-CC: <hch@lst.de>, <sagi@grimberg.me>, <paulmck@kernel.org>,
-        <davidgow@google.com>, <akpm@linux-foundation.org>,
-        <venkat88@linux.vnet.ibm.com>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 1/2] list: introduce a new cutting helper
-Date: Wed, 12 Jun 2024 08:51:34 -0700
-Message-ID: <20240612155135.3060667-1-kbusch@meta.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mTy8Jw/j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17E8CC116B1;
+	Wed, 12 Jun 2024 15:53:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718207637;
+	bh=A/q6m45sA8KG3xWSmANGingFfUIcNjjpTnH7bMJgRmI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mTy8Jw/jTcDpAnDYssZPlt8vz3bcbolI+P475PfDuR+fHaR5a09wgg6QBVQmg+owo
+	 PFKNFpynkSRKrTtBXBPy0ysbUUlHxeVjIjUdtXs96LdZ1ufRoZNg9rgwCa5eJvUXvB
+	 rCgM8wwfi+tDUSoLG4g6iuFsIYolucywbFU0XQtmCtG7Y9FvraSaYABDJTo0mMeKWw
+	 m9+vnDFnA0M5HoTXzHh49/T8BwrUh8ZGmJTUA4odCXPkzzhHrFgKwlHX+CGKglQIAV
+	 BhAfgE5r6q2Je+Tb9DPxuDgUdayvTqG0MbCQoqOnv0PXv3JsExXn/4BjdcAMmn8aTl
+	 yIYArnfRGivpg==
+Date: Wed, 12 Jun 2024 16:53:53 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Jessica Clarke <jrtc27@jrtc27.com>
+Cc: Minda Chen <minda.chen@starfivetech.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-riscv <linux-riscv@lists.infradead.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v1] riscv: dts: starfive: add PCIe dts configuration for
+ JH7110
+Message-ID: <20240612-circling-hungry-29a993ca5fc5@spud>
+References: <20240611015200.40996-1-minda.chen@starfivetech.com>
+ <98031697-93AE-43AC-B192-44B12CB43EC5@jrtc27.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="o24WclyZlx9mMuRS"
+Content-Disposition: inline
+In-Reply-To: <98031697-93AE-43AC-B192-44B12CB43EC5@jrtc27.com>
+
+
+--o24WclyZlx9mMuRS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: OwlQJr-qOc0LM7j4N2j5vuUeS4WkBg74
-X-Proofpoint-GUID: OwlQJr-qOc0LM7j4N2j5vuUeS4WkBg74
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_08,2024-06-12_02,2024-05-17_01
 
-From: Keith Busch <kbusch@kernel.org>
+On Wed, Jun 12, 2024 at 04:24:44PM +0100, Jessica Clarke wrote:
+> On 11 Jun 2024, at 02:52, Minda Chen <minda.chen@starfivetech.com> wrote:
+> >=20
+> > Add PCIe dts configuraion for JH7110 SoC platform.
+> >=20
+> > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+> > Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
+> > ---
+> > .../boot/dts/starfive/jh7110-common.dtsi      | 64 ++++++++++++++
+> > arch/riscv/boot/dts/starfive/jh7110.dtsi      | 86 +++++++++++++++++++
+> > 2 files changed, 150 insertions(+)
+>=20
+> Is there a corresponding YAML schema?
 
-Provide a helper to remove elements from a list to the end, and place
-those elements in a new list.
+Yeah, it's in linux-next via the PCI tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Do=
+cumentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- include/linux/list.h | 20 ++++++++++++++++++++
- lib/list-test.c      | 29 +++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+--o24WclyZlx9mMuRS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/include/linux/list.h b/include/linux/list.h
-index 5f4b0a39cf46a..f22850e854820 100644
---- a/include/linux/list.h
-+++ b/include/linux/list.h
-@@ -520,6 +520,26 @@ static inline void list_cut_before(struct list_head =
-*list,
- 	entry->prev =3D head;
- }
-=20
-+/**
-+ * list_cut - cut a list into two from the entry
-+ * @list: a new list to add all removed entries
-+ * @head: a list with entries
-+ * @entry: an entry within head, could be the head itself
-+ *
-+ * This helper removes elements from @head starting at @entry until the =
-end,
-+ * and appends them to @lists.
-+ */
-+static inline void list_cut(struct list_head *list,
-+		struct list_head *head, struct list_head *entry)
-+{
-+	list->next =3D entry;
-+	list->prev =3D head->prev;
-+	head->prev =3D entry->prev;
-+	entry->prev->next =3D head;
-+	entry->prev =3D list;
-+	list->prev->next =3D list;
-+}
-+
- static inline void __list_splice(const struct list_head *list,
- 				 struct list_head *prev,
- 				 struct list_head *next)
-diff --git a/lib/list-test.c b/lib/list-test.c
-index 0cc27de9cec88..1507f46cf1ade 100644
---- a/lib/list-test.c
-+++ b/lib/list-test.c
-@@ -382,6 +382,34 @@ static void list_test_list_is_singular(struct kunit =
-*test)
- 	KUNIT_EXPECT_FALSE(test, list_is_singular(&list));
- }
-=20
-+static void list_test_list_cut(struct kunit *test)
-+{
-+	struct list_head entries[3], *cur;
-+	LIST_HEAD(list1);
-+	LIST_HEAD(list2);
-+	int i =3D 0;
-+
-+	list_add_tail(&entries[0], &list1);
-+	list_add_tail(&entries[1], &list1);
-+	list_add_tail(&entries[2], &list1);
-+
-+	/* before: [list1] -> entries[0] -> entries[1] -> entries[2] */
-+	list_cut(&list2, &list1, &entries[1]);
-+	/* after: [list1] -> entries[0], [list2] -> entries[1] -> entries[2] */
-+
-+	list_for_each(cur, &list1) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, i, 1);
-+
-+	list_for_each(cur, &list2) {
-+		KUNIT_EXPECT_PTR_EQ(test, cur, &entries[i]);
-+		i++;
-+	}
-+}
-+
- static void list_test_list_cut_position(struct kunit *test)
- {
- 	struct list_head entries[3], *cur;
-@@ -780,6 +808,7 @@ static struct kunit_case list_test_cases[] =3D {
- 	KUNIT_CASE(list_test_list_is_singular),
- 	KUNIT_CASE(list_test_list_cut_position),
- 	KUNIT_CASE(list_test_list_cut_before),
-+	KUNIT_CASE(list_test_list_cut),
- 	KUNIT_CASE(list_test_list_splice),
- 	KUNIT_CASE(list_test_list_splice_tail),
- 	KUNIT_CASE(list_test_list_splice_init),
---=20
-2.43.0
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmnEkAAKCRB4tDGHoIJi
+0tEhAQDKDsuAnifw9l4RMxkk9gttAErd01F5deCxrozjvbw68gD/f4YR4jwR+HWo
+guuAKaN4L1wy1l8OHja7SG8tgk4Wsgo=
+=DpyI
+-----END PGP SIGNATURE-----
+
+--o24WclyZlx9mMuRS--
