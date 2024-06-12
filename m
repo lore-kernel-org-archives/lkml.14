@@ -1,138 +1,252 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4362D1836D0
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 16:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB3D181321;
+	Wed, 12 Jun 2024 16:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718208212; cv=none; b=Kx9PXlJ76b0bl/vry85PRXdLAzSO0IAumut6Ea1c2SokQeaIvbRKGLamvlUgsP5mpYvrJnrKzYjIcCfa+cNZyPt/UY3z7DNBhrzIW+JdWIU2osoVRpoH3Gtkvb9WPZmQU4aqu5VKrx2mp+XGqVAVJftF7KBi7NDhAFFxIfuNa9s=
+	t=1718208254; cv=none; b=iLUQux/YrN8RAM0GKKLSldAVQ/0WvPTtx8KxkQFPOXvpb01LhORGiKu5HNtV/OeOnmIbBiv7ku/NvJAOhU+GVC/9ZwX8EFkx+bs/3f8tCYG7VkXsdopRnhTVoEYyDJRqpQCYpngivo7M6lcB6ZZcIFB15/VIxJPVAYd00EdjOZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718208212; c=relaxed/simple;
-	bh=ohVgUKw8pNuG0pdNC0IycgIg/FLKQkS/xkAb0Ciu+dY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZLn2gYeSXFNfLUxbopgMVmM1P+o5vyvbUlo3t3HpRXltPCK83q+qv3rkkvWXJ9dqjFEB0uqNP3y37WFAzcwMwkNFeAfn7p0/5nKqysYDxGlL+sNggcEc+YKAQAz4STAEQcyHpp+FkuTTzWixHJ2WVdvL7dlrQvGzDbXHvpnwd5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HD+CkIzQ; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718208254; c=relaxed/simple;
+	bh=KDemYi20FzCyN4R11poSytu7smnSLYTz4hF35CJ5RWA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jMRHsg6ir+ZX1cA0yAiYFFUiMTXrLTdy7cetBSV5c2cmY5G4alsLb1LVg2gOVrkgwfUD2yqo2eYDWZ6pHyeYbtQ6Cktn6c/RaNFhSxygVQOA4+pPjWGAGSZAIV1RIqVpEgdFk2LPhgMXx4z1GT3cQnlBnSSFUBFkAmYnSzcIVTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MpTrPoiP; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HD+CkIzQ"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6b08d661dbaso10405006d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 09:03:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpTrPoiP"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7042cb2abc8so3211052b3a.0;
+        Wed, 12 Jun 2024 09:04:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718208208; x=1718813008; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ohVgUKw8pNuG0pdNC0IycgIg/FLKQkS/xkAb0Ciu+dY=;
-        b=HD+CkIzQhH6ru/OPHO0hR+Dix5gdLJgUOlX3BrTHAmwtIIdJbLoCt2LVNyebydevX2
-         DlAUpzDgJexgomn/uPXD5DsI+rPX/4lNO9pcXgZ6sksSn5MjimF3yirN83rLJRVM2fjB
-         rjGSfs5pHdvznSK5FCWnRKv5aDNMLl+5yxmwk=
+        d=gmail.com; s=20230601; t=1718208252; x=1718813052; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AH50orR5FyIlpjugYepr6bfFOHdgPbrZzYYt/ypEgjU=;
+        b=MpTrPoiPiep5+rNGz7sXxHtnjGPxP90pTPDu9O4jHdmGnXy5K459y9k+p5e1WKYaep
+         BAQNVECQiUMmw1nIzRNo7+wl0rr61AR7QwxjNW8br8LlMxT+XLuJgv9aF5YO6W6NsMTJ
+         4H9poZUzTk1AZ4iqSAj1VklhSNRbH0qzgGnYuHHnAF2MG1uX+hUvmz5vcvHMtvxnpLxL
+         hrUgxshFNSEh60bWwEG3VxdimuVlq35YX7ew9TINgAtNM43GJfANNRG9ZqsfmRkRXWNQ
+         zYHNQVy65i+TSREfuJjkneHa+TE6FqEJcT16VWPDLYR6AzLMBxSGpWfw0iXBqnA8hQSX
+         aw4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718208208; x=1718813008;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ohVgUKw8pNuG0pdNC0IycgIg/FLKQkS/xkAb0Ciu+dY=;
-        b=T3NI+HLUmjqLqS2Ljg7RzjNgoZtYlNZGxiWLuY0gRT9EAZkOtjOFOSLq8jRC0TfzXQ
-         +B6R1PTyxodSJIQgrD8UVa9DX0mRHLQLwZK5enicPAHTDj1CvLUXWVM23eJbqMaA3Klj
-         srJEZUiOzdga/kkXj4lwPTCKzSjF86W5HAFWih7iXUIGFPFWu2amoai2qfzFKSLnRA30
-         oJiJs9LZMuYVvQMX/ph+6mCYrkNJVXnWgFyomiwNEMdyl2C64gMqfurdDad0KNWaWf8T
-         tPGzP7jjp+bTXP+7EUI6CIgHPc14RRZG5MSR/tnrsD9EhqXOF5hsOr3SMAPthWmoVWYW
-         eIHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvo9nM+S22f4yQDRQArntslBygfPYIhP6TuTiPRDoOBn1SD6+PLXuD8WEPle3tWvzDOmMZ9DNtDqs7nxKYRuYuJpi/XJ+Rxh8buy9a
-X-Gm-Message-State: AOJu0Yy5vVMKk074n1qUZ5OodLmr4MT7AnkxlmK/bY3PzrmSQtDcE2y9
-	3fNLoaYDOnJ5o8NnRt4RXJWNDC5uUXOhGzYevfNsdhmglx2RwAm3lFXs6NgwNDfxD4E2sYdqXKE
-	=
-X-Google-Smtp-Source: AGHT+IHYZXf0r1HnI0Mys6g5iwjPecdoCMAj57gs/Dipcro7IDjdpj30MTzMuCg2es6ro2b+lHZQoQ==
-X-Received: by 2002:a05:6214:1bce:b0:6ad:7562:c286 with SMTP id 6a1803df08f44-6b2a33de154mr1968656d6.15.1718208207704;
-        Wed, 12 Jun 2024 09:03:27 -0700 (PDT)
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com. [209.85.160.175])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b0782266f4sm37310366d6.121.2024.06.12.09.03.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 09:03:26 -0700 (PDT)
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4405dffca81so191321cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 09:03:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX0w3+nStMMj81jXhTtpd4h1KgCbN4+Sz4M3u3LfpAR1owsuIMJI4d/wHXk9nT3cUX5sYOUwA4vqW17NgRR7hDmOJfSWCFkqx7yLImz
-X-Received: by 2002:a05:622a:8c3:b0:441:6135:ba89 with SMTP id
- d75a77b69052e-44161360e39mr1211681cf.3.1718208205353; Wed, 12 Jun 2024
- 09:03:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718208252; x=1718813052;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AH50orR5FyIlpjugYepr6bfFOHdgPbrZzYYt/ypEgjU=;
+        b=CzBOwr2PdNV768WYRligvvSuVqyxHb1YgI9lV7a2lXlBJkG4rnyzsSfFpB9ZHBNags
+         mKmhabNLoKpqwsCOixjz6gdady/JjoGt4V1mCZESGYrgjrZWrwHqpJczw8DQ/lDJ07MY
+         lXd5NyA8Wmpn+dVQfZNtfinSbbhtw3ndjppm/E8kcDcr/owz0N6PBgj7EssTpTRBU+lX
+         +vuqbBiuOjcvRrFnRYmi+9qNP3ZIKN3IIHgcWjl+3MIfXYvYdnaH/WB9Q3xisQuGWdyh
+         xJXLR+4PVAl4STs0AiA4ZSvakwfezwK/+QBcdkYtnLixB1kdKF+FXxFqXmIC36EoPq4h
+         0Wbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXi6jDgBp439BGPAiohbzz1BnDs+QraMe69XZvJjqBeJo585ceiveQnrdqM3AeNSwfmtBO4Z4mx5MdrUZjZDhpTQcswBuBcyG6qnqRZZnID/kSqmQZRd6SBAm2GPzywieKqE6ryJOn1NA==
+X-Gm-Message-State: AOJu0YwNUe9zJxMqdlU9QeOYLFDr5lrBF0x8KqdVpiEnoa2sKRPkVlKA
+	chgnMOBy/FAUv9wg3K8q5y6WiMIHOIBS8Yb8DeosSdTMBGaJbQdD
+X-Google-Smtp-Source: AGHT+IHc7rN5RhTKgGX+U2xnByt7BB6V+V8NYKfp2g4qSX34Lk1wtCxbkckFHtg4nNii+mCRqOfJPg==
+X-Received: by 2002:a05:6a00:a14:b0:6fc:fcc8:cb38 with SMTP id d2e1a72fcca58-705bcf1accamr2931743b3a.33.1718208251825;
+        Wed, 12 Jun 2024 09:04:11 -0700 (PDT)
+Received: from shresth-aspirea71576g.abesec.ac.in ([139.5.197.147])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705382784b9sm5911884b3a.48.2024.06.12.09.04.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 09:04:11 -0700 (PDT)
+From: Shresth Prasad <shresthprasad7@gmail.com>
+To: vkoul@kernel.org,
+	kishon@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	sebastian.reichel@collabora.com,
+	s.hauer@pengutronix.de,
+	cristian.ciocaltea@collabora.com,
+	andy.yan@rock-chips.com
+Cc: linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	javier.carrasco.cruz@gmail.com,
+	Shresth Prasad <shresthprasad7@gmail.com>
+Subject: [PATCH v2] dt-bindings: phy: rockchip-emmc-phy: Convert to dtschema
+Date: Wed, 12 Jun 2024 21:33:37 +0530
+Message-ID: <20240612160336.5132-2-shresthprasad7@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611074846.1.Ieb287c2c3ee3f6d3b0d5f49b29f746b93621749c@changeid>
- <20240612-garnet-condor-from-saturn-1c51bb@houat> <CAD=FV=Xpu0-_kEvRWy9w8ypjo7pF7tsFWxHfhMZ=YjHugTqG1w@mail.gmail.com>
- <Zmm6_27GikpmT3HQ@phenom.ffwll.local>
-In-Reply-To: <Zmm6_27GikpmT3HQ@phenom.ffwll.local>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 12 Jun 2024 09:03:07 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WSXX_FgBcF0XHMUkLpfEzPcgThLEttcB9RzVXzyqKnNw@mail.gmail.com>
-Message-ID: <CAD=FV=WSXX_FgBcF0XHMUkLpfEzPcgThLEttcB9RzVXzyqKnNw@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel: Avoid warnings w/ panel-simple/panel-edp at shutdown
-To: Doug Anderson <dianders@chromium.org>, Maxime Ripard <mripard@kernel.org>, 
-	dri-devel@lists.freedesktop.org, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Yuran Pereira <yuran.pereira@hotmail.com>, 
-	Chris Morgan <macromorgan@hotmail.com>, David Airlie <airlied@gmail.com>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	linux-kernel@vger.kernel.org
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Convert txt bindings of Rockchip EMMC PHY to dtschema to allow
+for validation.
 
-On Wed, Jun 12, 2024 at 8:13=E2=80=AFAM Daniel Vetter <daniel@ffwll.ch> wro=
-te:
->
-> > > I ran the coccinelle script we started with, and here are the results=
-:
-> > >
-> > > ./drivers/gpu/drm/vmwgfx/vmwgfx_drv.c:1640:25-39: ERROR: KMS driver v=
-mw_pci_driver is missing shutdown implementation
-> > > ./drivers/gpu/drm/kmb/kmb_drv.c:621:30-49: ERROR: KMS driver kmb_plat=
-form_driver is missing shutdown implementation
-> > > ./drivers/gpu/drm/tiny/arcpgu.c:422:30-52: ERROR: KMS driver arcpgu_p=
-latform_driver is missing shutdown implementation
-> >
-> > Sure, although I think we agreed even back when we talked about this
-> > last that your coccinelle script wasn't guaranteed to catch every
-> > driver. ...so I guess the question is: are we willing to accept that
-> > we'll stop disabling panels at shutdown for any drivers that might
-> > were missed. For instance, looking at it by hand (which also could
-> > miss things), I previously thought that we also might need:
-> >
-> > * nouveau
-> > * tegra
-> > * amdgpu
-> > * sprd
-> > * gma500
-> > * radeon
-> >
-> > I sent patches for those drivers but they don't go through drm-misc
-> > and some of the drivers had a lot of abstraction layers and were hard
-> > to reason about. I'm also not 100% confident that all of those drivers
-> > really are affected--they'd have to be used with panel-simple or
-> > panel-edp...
->
-> Aside from amdgpu and radeon they're all in -misc now, and Alex is
-> generally fairly responsive.
+Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
+---
+Changes in v2:
+    - Fixed example
+    - Changed file referenced in grf.yaml
 
-Ah, nice! They weren't when I sent the patches ages ago. I guess I
-should go ahead and repost things and maybe they'll get some traction.
+Tested against `rockchip/rk3399-firefly.dtb`, `rockchip/rk3399-orangepi.dtb`
+and `rockchip/rk3399-pinebook-pro.dtb`.
 
+ .../bindings/phy/rockchip,emmc-phy.yaml       | 79 +++++++++++++++++++
+ .../bindings/phy/rockchip-emmc-phy.txt        | 43 ----------
+ .../devicetree/bindings/soc/rockchip/grf.yaml |  2 +-
+ 3 files changed, 80 insertions(+), 44 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
+ delete mode 100644 Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
 
-> > In any case, having some sort of warning that would give us a
-> > definitive answer would be nice. My proposed patch would give us that
-> > warning. I could even jump to a WARN_ON right from the start.
->
-> Yeah we defo want some warning to at least check this at runtime.
+diff --git a/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
+new file mode 100644
+index 000000000000..f42045389383
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/rockchip,emmc-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip EMMC PHY
++
++maintainers:
++  - Shresth Prasad <shresthprasad7@gmail.com>
++
++properties:
++  "#phy-cells":
++    const: 0
++
++  compatible:
++    const: rockchip,rk3399-emmc-phy
++
++  reg:
++    description:
++      PHY register address offset and length in "general register files"
++    maxItems: 1
++
++  clock-names:
++    description: |
++      Although this is not a required property (because most boards can get
++      basic functionality without having access to it), it is strongly
++      suggested.
++    const: emmcclk
++
++  clocks:
++    description:
++      Should have a phandle to the card clock exported by the SDHCI driver.
++    maxItems: 1
++
++  drive-impedance-ohm:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Specifies the drive impedance in Ohm.
++    enum: [33, 40, 50, 66, 100]
++    default: 50
++
++  rockchip,enable-strobe-pulldown:
++    type: boolean
++    description: |
++      Enable internal pull-down for the strobe
++      line.  If not set, pull-down is not used.
++
++  rockchip,output-tapdelay-select:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Specifies the phyctrl_otapdlysec register.
++    default: 0x4
++    maximum: 0xf
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    grf: syscon@ff770000 {
++      compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
++      reg = <0x0 0xff770000 0x0 0x10000>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++
++      emmcphy: phy@f780 {
++        #phy-cells = <0>;
++        compatible = "rockchip,rk3399-emmc-phy";
++        reg = <0xf780 0x20>;
++        clocks = <&sdhci>;
++        clock-names = "emmcclk";
++        drive-impedance-ohm = <50>;
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+deleted file mode 100644
+index 57d28c0d5696..000000000000
+--- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-Rockchip EMMC PHY
+------------------------
+-
+-Required properties:
+- - compatible: rockchip,rk3399-emmc-phy
+- - #phy-cells: must be 0
+- - reg: PHY register address offset and length in "general
+-   register files"
+-
+-Optional properties:
+- - clock-names: Should contain "emmcclk".  Although this is listed as optional
+-		(because most boards can get basic functionality without having
+-		access to it), it is strongly suggested.
+-		See ../clock/clock-bindings.txt for details.
+- - clocks: Should have a phandle to the card clock exported by the SDHCI driver.
+- - drive-impedance-ohm: Specifies the drive impedance in Ohm.
+-                        Possible values are 33, 40, 50, 66 and 100.
+-                        If not set, the default value of 50 will be applied.
+- - rockchip,enable-strobe-pulldown: Enable internal pull-down for the strobe
+-                                    line.  If not set, pull-down is not used.
+- - rockchip,output-tapdelay-select: Specifies the phyctrl_otapdlysec register.
+-                                    If not set, the register defaults to 0x4.
+-                                    Maximum value 0xf.
+-
+-Example:
+-
+-
+-grf: syscon@ff770000 {
+-	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-
+-...
+-
+-	emmcphy: phy@f780 {
+-		compatible = "rockchip,rk3399-emmc-phy";
+-		reg = <0xf780 0x20>;
+-		clocks = <&sdhci>;
+-		clock-names = "emmcclk";
+-		drive-impedance-ohm = <50>;
+-		#phy-cells = <0>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+index 79798c747476..1f88416657cc 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
++++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
+@@ -178,7 +178,7 @@ allOf:
+       patternProperties:
+         "phy@[0-9a-f]+$":
+           description:
+-            Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
++            Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
+ 
+   - if:
+       properties:
+-- 
+2.45.2
 
-Yeah, my patch today currently just has a "dev_warn", but the question
-is whether it would get more attention with a full on WARN_ON(). I
-know WARN_ON() can be pretty controversial.
-
--Doug
