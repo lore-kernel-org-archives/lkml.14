@@ -1,51 +1,27 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9438A17F372;
-	Wed, 12 Jun 2024 14:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id BD1CA17E456
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718203024; cv=none; b=GG1/hGHi7DE9eCi04QYUfaMtpimv8XsztsUot8JBnsLpPofrTFZL3g/Es2yhDEsAQWzDfa/9cT1yCF/hm4i5ETNHN0K2y0Fg0TdnGuJ+5ItcLrsWtIJh7pleDmWynjHCl0+O8GkIMvemtPRNrpHkLgkYFEYbfCDnfG3zGrEsBa4=
+	t=1718203050; cv=none; b=ZpnxUZtARNlkBRtotxNu71tRU7acXx5fGmBNIsGsr/fMoTsZTJWrdOzOZb5ZQJkn0MWM2uyinIJEMTV2kg1hKVPAh2dW/9CVUUAn7VEhmKkB9qVDxEqgc5CU4pd2DWahLy1QzLTgnoYNeoy7FF78NaPayVioOTD6aZPxMZgWb3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718203024; c=relaxed/simple;
-	bh=/GOyvyNQXNdNU82UwWzJ6YR0BSG8PucB1SMnlHjVSTE=;
+	s=arc-20240116; t=1718203050; c=relaxed/simple;
+	bh=bQA6/YbD0LnAqlHHCD0lNcxUEHgiqOkL0iQb13PzXRI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DfY/9p7/Jmw5rB4BTvo+yB9Uj6S7wK+Dl+tjBwJ1TsvEDVNjp8APikABUgjRS6sPXcwFe47v5h9k2TvHhXNNMWSPdlWnHYCZ/eYSMNQaVKAvFtHsEjJl6R431EpnwPQWReerURYS9sugcZXzqhMz3jLXtXlF/R8aNlnKqxAKkMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=relz/AJZ; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="relz/AJZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=YVsYJ12ebR82p9Eejxa6cR6b5LianMTSMrKus+1LFng=; b=relz/AJZ0Y1VO7eBEkGBIsMdfE
-	iQA1NfDxGwFlvEIRxoMOIHLfMrvz/2wvJKnRUIXpVPf3ZTHSY2oaWIeRXcB9FNff5UxVrgqMNnim1
-	TaF/2E9Csn+h2Mw705pdDHu2LPN7rzTZXHfL1jc9kwHjuLS6VVCtk3Ytszk7IHDPhaMo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sHP5X-00HToA-Lw; Wed, 12 Jun 2024 16:36:35 +0200
-Date: Wed, 12 Jun 2024 16:36:35 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Yojana Mallik <y-mallik@ti.com>
-Cc: schnelle@linux.ibm.com, wsa+renesas@sang-engineering.com,
-	diogo.ivo@siemens.com, rdunlap@infradead.org, horms@kernel.org,
-	vigneshr@ti.com, rogerq@ti.com, danishanwar@ti.com,
-	pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
-	davem@davemloft.net, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, srk@ti.com, rogerq@kernel.org,
-	Siddharth Vadapalli <s-vadapalli@ti.com>
-Subject: Re: [PATCH net-next v2 2/3] net: ethernet: ti: Register the RPMsg
- driver as network device
-Message-ID: <8567cb7e-5398-4315-9574-0e8ff142d061@lunn.ch>
-References: <20240531064006.1223417-1-y-mallik@ti.com>
- <20240531064006.1223417-3-y-mallik@ti.com>
- <4416ada7-399b-4ea0-88b0-32ca432d777b@lunn.ch>
- <2d65aa06-cadd-4462-b8b9-50c9127e6a30@ti.com>
- <bad12a9c-533e-47c3-9aa7-1a4d71eb6d87@lunn.ch>
- <ebbd1bcc-ecc4-4bbe-aefb-39256abeed21@ti.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hbJcr7L3nWHJdIWNJCwrT3e9ivF3Gk7H6QqNeP3xpSLXXXt5pPcGlcJzUvVXUX/DWDTiNJLC9yq2Au1Le3jT7MO7oXUFKPlbmOf4nz+pZgfz5dfONouKX6prCki7Dl38s08RShn/WXxTptXZv9972y32shgB3y6ZBsvJZyG7Org=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 226065 invoked by uid 1000); 12 Jun 2024 10:37:26 -0400
+Date: Wed, 12 Jun 2024 10:37:26 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: syzbot <syzbot+5f996b83575ef4058638@syzkaller.appspotmail.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+  linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [usb?] INFO: rcu detected stall in raw_ioctl
+Message-ID: <2bfca69a-b7e0-4f66-9025-1324af803318@rowland.harvard.edu>
+References: <684687e4-8be4-42ee-a125-8ef9acc3fec9@rowland.harvard.edu>
+ <000000000000babbf8061aa113df@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,30 +30,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ebbd1bcc-ecc4-4bbe-aefb-39256abeed21@ti.com>
+In-Reply-To: <000000000000babbf8061aa113df@google.com>
 
-> No, RTOS the peer is not telling the Linux machine what MAC address to use. The
-> user can add a unicast mac address to the virtual network interface using the
-> following steps:
+On Tue, Jun 11, 2024 at 11:03:03AM -0700, syzbot wrote:
+> Hello,
 > 
-> Steps to add MAC Address
-> # Bring down the virtual port interface
-> $ ifconfig eth1 down
-> # Set MAC address for the virtual port interface, ex 01:02:03:04:05:06
-> $ ifconfig eth1 hw ether 01:02:03:04:05:06
-> # Bring the interface up
-> $ ifconfig eth1 up
+> syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> 
+> Reported-and-tested-by: syzbot+5f996b83575ef4058638@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         8867bbd4 mm: arm64: Fix the out-of-bounds issue in con..
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14e092de980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3b4350cf56c61c80
+> dashboard link: https://syzkaller.appspot.com/bug?extid=5f996b83575ef4058638
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> userspace arch: arm64
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=137c697e980000
+> 
+> Note: testing is done by a robot and is best-effort only.
 
-ifconfig is long deprecated, replaced by iproute2. Please don't use it
-for anything modern.
+Let's try Greg's suggestion to replace dev_err() with 
+dev_err_ratelimited().
 
-> While adidng the mac address, ndo ops will call set_mac_address which will call
-> create_send_request which will create a request with command add mac address
-> and send a rpmsg to R5 core.
+Alan Stern
 
-The protocol documentation should be at a level that your can give it
-to somebody else and they can implement it, e.g. for a different
-OS. So please make the documentation clearer, what direction are these
-messages flowing. And make the protocol description OS agnostic.
+Index: usb-devel/drivers/usb/class/cdc-wdm.c
+===================================================================
+--- usb-devel.orig/drivers/usb/class/cdc-wdm.c
++++ usb-devel/drivers/usb/class/cdc-wdm.c
+@@ -266,14 +266,14 @@ static void wdm_int_callback(struct urb
+ 			dev_err(&desc->intf->dev, "Stall on int endpoint\n");
+ 			goto sw; /* halt is cleared in work */
+ 		default:
+-			dev_err(&desc->intf->dev,
++			dev_err_ratelimited(&desc->intf->dev,
+ 				"nonzero urb status received: %d\n", status);
+ 			break;
+ 		}
+ 	}
+ 
+ 	if (urb->actual_length < sizeof(struct usb_cdc_notification)) {
+-		dev_err(&desc->intf->dev, "wdm_int_callback - %d bytes\n",
++		dev_err_ratelimited(&desc->intf->dev, "wdm_int_callback - %d bytes\n",
+ 			urb->actual_length);
+ 		goto exit;
+ 	}
 
-	Andrew
