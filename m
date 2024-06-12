@@ -1,134 +1,116 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E95217BA1;
-	Wed, 12 Jun 2024 01:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AF5A34;
+	Wed, 12 Jun 2024 01:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718157273; cv=none; b=kjUM2Z59/o0goTlCTm6le74+4fSCSoKtP+3ApIEy4Vemv31FDhMnjlOMaLYmYEzWAyOuKuVLhQl1thmh5hXx/tEWFVF2Bmw5vuwTlBK3Grj3G/3e+shgTFak8MCHqojibmhtDnwSN9+ra3wnVpBW+Zf3afB370aw0emHsHrWOwU=
+	t=1718157300; cv=none; b=KrlQO8/6L/dBEzyXlJ5/vCvvGW2XmTi3komtKkXR0b2E+chRG+IlSI5BZnp0Ds2snlF2OWNymAVDvJ+tjG2FMuQRQoE/2t77/yAOD5DuismVSG8peygrQ5BXz09mduDei4bP6OQEterMGm8xAZqHKAh1KpGv6YLXS2ZMS+U1A5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718157273; c=relaxed/simple;
-	bh=w1xnUv5Kz3/tY/ryCxn3oTJxNlt53fqlci48thBjbm8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BKSU0v8/zPIhcNm4sxc/Aybt8tzFmbbnx+oSOuyOPpTSxOXC+rzRQosMGsm5s4JBNLt+Wd5GuwhrGGhDjjZ9+YUWG1O6wBD7C9Wq5eElrlIHOtUhsFSnOkAkNiZQ9OJDAbey2In7BgxpVRkuzR3ZsWbtXJPuCMOimICm8vAEx7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nngteK8L; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nngteK8L"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5baeab9fd60so1452757eaf.2;
-        Tue, 11 Jun 2024 18:54:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718157271; x=1718762071; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JwItdTmcPCVbWWTJKIwknMPMvZjx8Ik6YysUYQY2Gk4=;
-        b=nngteK8LPCYdacW2VfNvMaCDiBMFpVCS2BT43gA4FzMsrcfOIR0Nx2AMKuVnsDkSMD
-         yhVkghDaZ4zz+DnjjXN0CTIbA8OQ0/zhrTzkUtJvuuVUB9xdbpuIUUq1dNy4M7NHJwZV
-         GG7tBlIHXkiAouORIiwX7Tch5O/Qz0acJDh32oP4uTMRQEF5v4bPvxsh4Tg2TFLN6A/9
-         SjrQByYBVqSRsDY+9cKSb96HFsWEhW+4MjiwZ/904K3wmAWVBv5vV+47irc1u5lqejqi
-         JkMN8VOa6KE06SGUe+XTe4/q6PV//Ud08+Bmoafpm/EBLZnd10yxG+VORHtjSeWVX5U+
-         4lAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718157271; x=1718762071;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JwItdTmcPCVbWWTJKIwknMPMvZjx8Ik6YysUYQY2Gk4=;
-        b=j7HpVRgNdkEd1nVUR/e/+ErxlVdH8Dmi5yDoDXG2kazMho5wwb3ATR+dUkELk3smtJ
-         B+SFz4kIRIY6qO4QHFVJsgEyCbsbNDnSxfWnqVtuhfb3PJMqRz88Udo7bkd5ZL6r9CmU
-         llCyzJ9JGErOWqKYbtSJqKxMShiTLQeDBvd+Avj7Zjxp3spsQay8DaSYZ+gfgnUWDa+h
-         g+CrFxePIHCGDdFs2/gGzmR/P3bfMTrKKxkctuPhmjPGUpKwFBzlf3TKPJp8RKf8gXJH
-         rjikE4z3YgF/hKJG9x5T+/DWEqYxEKbnHaMBeLoGesurhCNzjbf2Ien43LWl531BA5tD
-         LsIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeFcxz5ZKPQJj0IFYAss+mUVaMSff7RBBFrT0qvnxBSORw4n/tlzNfQFnmsQ2fVV6dtHeiikXrxTpCZarEPF7GaMp0cdkunCz9KY5AFxR4tMRvGZpMyo6pn0/z58VYYc8LWRo+dPyZ
-X-Gm-Message-State: AOJu0YzgIPBYI0I1uRMk1Y+1IfuCRRgSr3MCG/LQo1/+lhfi7KnCECa7
-	QF9GzEUNGg9bxw3YohyIczrVZq3il8JUV2tJ4Kt9NNXU7hZZje4WsaPexsVK59UF9JDu98smt6j
-	SzxaLS5YpAHMI8hxzj1hWLWr8a34=
-X-Google-Smtp-Source: AGHT+IHKvXcsY6mlaFymMXwEWQLlYamCRCx2QwoAcHfH+QCs99TtpseiJAvy+X5wop0X5Jh0s7SF0rgNTsAUHA1+5tk=
-X-Received: by 2002:a05:6820:22a0:b0:5b9:f2f4:6a95 with SMTP id
- 006d021491bc7-5bb3ba15b36mr529150eaf.5.1718157271162; Tue, 11 Jun 2024
- 18:54:31 -0700 (PDT)
+	s=arc-20240116; t=1718157300; c=relaxed/simple;
+	bh=r8PY6QEOhPtRFjfjSiFU8lPQ8wJfWgLeOtd1jLIo/JA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KxqIvgxmsk0MJ40mI4xgI75LixvmiL/9Sn80yYzvLXhHL7OkcqVoR9LK1uNCU8oT0lzV9yqGf9AW2NbHPURN2sZOrdJZOq6+urXsf8qen6+sHpPxZA5gT9YloDRkJy9aKcJeTcoM2QkVs3rCF9aA3udxC0WhNaHG9wVzHNpWJlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VzT4y4fKBzmcTP;
+	Wed, 12 Jun 2024 09:50:10 +0800 (CST)
+Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
+	by mail.maildlp.com (Postfix) with ESMTPS id E4FD5140EEF;
+	Wed, 12 Jun 2024 09:54:53 +0800 (CST)
+Received: from [10.67.109.211] (10.67.109.211) by
+ dggpemd100004.china.huawei.com (7.185.36.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 12 Jun 2024 09:54:53 +0800
+Message-ID: <ce637b13-de98-4a77-9df6-8bc6ec177009@huawei.com>
+Date: Wed, 12 Jun 2024 09:54:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611044358.25689-1-dzm91@hust.edu.cn> <1c3c4698-c70f-4b04-ae96-a83c3b9bbc4d@gmail.com>
- <CAD-N9QXY8frJmxp+LWM9g2_8UdubzMushMEPGyM9Z-UFEHfN3A@mail.gmail.com> <5961a584-dbb5-40e7-8e25-69eb7aefcdb1@gmail.com>
-In-Reply-To: <5961a584-dbb5-40e7-8e25-69eb7aefcdb1@gmail.com>
-From: Dongliang Mu <mudongliangabcd@gmail.com>
-Date: Wed, 12 Jun 2024 09:54:05 +0800
-Message-ID: <CAD-N9QV-LqraTPVgt3CayyPKreVRR3S4SvFkwkqPKkVpuegJcw@mail.gmail.com>
-Subject: Re: [PATCH] docs/zh_CN: Update the translation of dev-tools/testing-overview
-To: Alex Shi <seakeel@gmail.com>
-Cc: Dongliang Mu <dzm91@hust.edu.cn>, Alex Shi <alexs@kernel.org>, 
-	Yanteng Si <siyanteng@loongson.cn>, Jonathan Corbet <corbet@lwn.net>, 
-	Hu Haowen <2023002089@link.tyut.edu.cn>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH-next v4] arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+Content-Language: en-US
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<arnd@arndb.de>, <ardb@kernel.org>, <linux@armlinux.org.uk>, <afd@ti.com>,
+	<akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
+	<corbet@lwn.net>, <rppt@kernel.org>, <robh@kernel.org>, <tglx@linutronix.de>,
+	<linus.walleij@linaro.org>, <maskray@google.com>, Linux-Renesas
+	<linux-renesas-soc@vger.kernel.org>, Chris Brandt <Chris.Brandt@renesas.com>
+References: <20240316023932.700685-1-liuyuntao12@huawei.com>
+ <CAMuHMdWMAg59p+hzeLG9Uc3X55Vt9ccNy5BRoPX0RJbxrMOFLA@mail.gmail.com>
+From: "liuyuntao (F)" <liuyuntao12@huawei.com>
+In-Reply-To: <CAMuHMdWMAg59p+hzeLG9Uc3X55Vt9ccNy5BRoPX0RJbxrMOFLA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemd100004.china.huawei.com (7.185.36.20)
 
-On Wed, Jun 12, 2024 at 9:36=E2=80=AFAM Alex Shi <seakeel@gmail.com> wrote:
->
->
->
-> On 6/11/24 2:50 PM, Dongliang Mu wrote:
-> > On Tue, Jun 11, 2024 at 2:36=E2=80=AFPM Alex Shi <seakeel@gmail.com> wr=
-ote:
-> >>
-> >>
-> >>
-> >> On 6/11/24 12:43 PM, Dongliang Mu wrote:
-> >>> Update to commit 42fb9cfd5b18 ("Documentation: dev-tools:
-> >>> Add link to RV docs")
-> >>>
-> >>> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
-> >>> ---
-> >>>  Documentation/translations/zh_CN/dev-tools/testing-overview.rst | 2 =
-++
-> >>>  1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/translations/zh_CN/dev-tools/testing-overv=
-iew.rst b/Documentation/translations/zh_CN/dev-tools/testing-overview.rst
-> >>> index c91f9b60f9f1..d89d0ec1d4cc 100644
-> >>> --- a/Documentation/translations/zh_CN/dev-tools/testing-overview.rst
-> >>> +++ b/Documentation/translations/zh_CN/dev-tools/testing-overview.rst
-> >>> @@ -99,6 +99,8 @@ Documentation/dev-tools/kcov.rst =E6=98=AF=E8=83=BD=
-=E5=A4=9F=E6=9E=84=E5=BB=BA=E5=9C=A8=E5=86=85=E6=A0=B8=E4=B9=8B=E4=B8=AD=EF=
-=BC=8C=E7=94=A8=E4=BA=8E=E5=9C=A8=E6=AF=8F
-> >>>    =E5=8F=82=E9=98=85 Documentation/dev-tools/kfence.rst
-> >>>  * lockdep=E6=98=AF=E4=B8=80=E4=B8=AA=E9=94=81=E5=AE=9A=E6=AD=A3=E7=
-=A1=AE=E6=80=A7=E6=A3=80=E6=B5=8B=E5=99=A8=E3=80=82=E5=8F=82=E9=98=85
-> >>>    Documentation/locking/lockdep-design.rst
-> >>> +* Runtime Verification (RV) =E6=94=AF=E6=8C=81=E6=A3=80=E6=9F=A5=E7=
-=BB=99=E5=AE=9A=E5=AD=90=E7=B3=BB=E7=BB=9F=E7=9A=84=E7=89=B9=E5=AE=9A=E8=A1=
-=8C=E4=B8=BA=E3=80=82=E5=8F=82=E9=98=85
-> >>
-> >> Why not translate the words 'Runtime Verification' here?
-> >
-> > If you translate it into "=E5=8A=A8=E6=80=81=E7=A1=AE=E8=AE=A4", this s=
-ounds like a very general term.
-> > So I keep the original English.
->
-> Runtime is often translated as '=E8=BF=90=E8=A1=8C=E6=97=B6', so could be=
- =E2=80=98=E8=BF=90=E8=A1=8C=E6=97=B6=E7=A1=AE=E8=AE=A4=E2=80=99
+That's great, thanks for your testing.
 
-How about =E8=BF=90=E8=A1=8C=E6=97=B6=E7=A1=AE=E8=AE=A4=EF=BC=88Runtime Ver=
-ification=EF=BC=89=EF=BC=9F
-
->
-> >
-> >>
-> >> Thanks!
-> >> Alex
-> >>> +  Documentation/trace/rv/runtime-verification.rst=E3=80=82
-> >>>  * =E9=99=A4=E6=AD=A4=E4=BB=A5=E5=A4=96=EF=BC=8C=E5=9C=A8=E5=86=85=E6=
-=A0=B8=E4=B8=AD=E8=BF=98=E6=9C=89=E4=B8=80=E4=BA=9B=E5=85=B6=E5=AE=83=E7=9A=
-=84=E8=B0=83=E8=AF=95=E5=B7=A5=E5=85=B7=EF=BC=8C=E5=A4=A7=E5=A4=9A=E6=95=B0=
-=E8=83=BD=E5=9C=A8
-> >>>    lib/Kconfig.debug =E4=B8=AD=E6=89=BE=E5=88=B0=E3=80=82
-> >>>
-> >>
+On 2024/6/11 20:45, Geert Uytterhoeven wrote:
+> Hi Yuntao,
+> 
+> On Sat, Mar 16, 2024 at 3:44 AM Yuntao Liu <liuyuntao12@huawei.com> wrote:
+>> The current arm32 architecture does not yet support the
+>> HAVE_LD_DEAD_CODE_DATA_ELIMINATION feature. arm32 is widely used in
+>> embedded scenarios, and enabling this feature would be beneficial for
+>> reducing the size of the kernel image.
+>>
+>> In order to make this work, we keep the necessary tables by annotating
+>> them with KEEP, also it requires further changes to linker script to KEEP
+>> some tables and wildcard compiler generated sections into the right place.
+>> When using ld.lld for linking, KEEP is not recognized within the OVERLAY
+>> command, and Ard proposed a concise method to solve this problem.
+>>
+>> It boots normally with defconfig, vexpress_defconfig and tinyconfig.
+>>
+>> The size comparison of zImage is as follows:
+>> defconfig       vexpress_defconfig      tinyconfig
+>> 5137712         5138024                 424192          no dce
+>> 5032560         4997824                 298384          dce
+>> 2.0%            2.7%                    29.7%           shrink
+>>
+>> When using smaller config file, there is a significant reduction in the
+>> size of the zImage.
+>>
+>> We also tested this patch on a commercially available single-board
+>> computer, and the comparison is as follows:
+>> a15eb_config
+>> 2161384         no dce
+>> 2092240         dce
+>> 3.2%            shrink
+>>
+>> The zImage size has been reduced by approximately 3.2%, which is 70KB on
+>> 2.1M.
+>>
+>> Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
+>> Tested-by: Arnd Bergmann <arnd@arndb.de>
+>> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> Thanks for your patch, which is now commit ed0f941022515ff4 ("ARM:
+> 9404/1: arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION") in
+> arm/for-next (next-20240611).
+> 
+> I gave this a try on my custom configs for RSK+RZA1 (RZ/A1H)
+> and RZA2MEVB (RZ/A2M).  According to bloat-o-meter, enabling
+> HAVE_LD_DEAD_CODE_DATA_ELIMINATION reduced kernel size by almost
+> 500 KiB (-8.3%).  The figures reported in "Memory: ... available"
+> were even more impressive: 1032 KiB more free memory than before.
+> 
+> As these boards have only 32 resp. 64 MiB of RAM, and some products
+> even use RZ/A1H with just the 10 MiB of on-chip SRAM, this is a good
+> improvement to have!
+> Thanks!
+> 
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
+> 
