@@ -1,163 +1,79 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD81C31A83;
-	Wed, 12 Jun 2024 18:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DCF3FE2A;
+	Wed, 12 Jun 2024 18:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718216856; cv=none; b=q9eYkv/TwJWD9FYPqHk7dsVuxWgm1XbXH1Nd/B5TppAjORQu0gcESwj0UD41uThK7+QrZQokdj9d/u8kIHaG743nTIbYlH8DIFUE0ZT5eodpzojX5X80k2Er+JFlr7EcSYlyosqUTI71WL7E5fjF7WDfx4QnJzJW4oLUM7K3flo=
+	t=1718216915; cv=none; b=ewaREUR7EFS7AaqVNAr+Dx3HJfMfcdoma53Rj479OlcocDfnWWpd0LzL1QfbRzC8U0qcconbuXA6HZMHW04cruOu9Zp9my7kUdR97Gn+XUIKLKjbm7Cw3jFyiKgXcgRJ64dwwy1Y1fK/l+o9TChxnVGyJ9/FdhrfShhxREWZiGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718216856; c=relaxed/simple;
-	bh=WYLiTDYrtmqxZDYMH2fKtRR5JLxjg/IcLpait4AyIuo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QqVGkDNhFUXt7dtMgO5t5K3y/TWFsTNCqjN0uvaKdDYt+COrYmuRB0yEgzzRwNTuJeL4rmzZpCEV0b6NsgdXJQzBb3qkY4QxCLdX2dRwj494iQMhxG1sf595HX8eDyotXpYTBLMbDjLHvO4KNcoO8QZBH/CtV6Ud9RsSQUecpvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KXSn4v3p; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718216915; c=relaxed/simple;
+	bh=NJeqqnsIfUMhlSi06vIIKPHNE2ykrkcvFQ48tdRGhsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fq4iZ7hCt99U5OfAl4lLxoSCTS9LnIFIZItFEYCZ0Q5Ypv2Ae+JESr7AB34S7J0xof3bu/cBRRd2fcOl3P6ra0b7zfzcHF3iseReWINIt2hT9fPF1hUDhrs+hYTfFv7gWpm4sptyvKQJDkWEZ5QxpPWHEupr4GhEX1hyl+LjjVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ddpy3LFX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXSn4v3p"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52bc27cfb14so323501e87.0;
-        Wed, 12 Jun 2024 11:27:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718216853; x=1718821653; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oQSGxEg3iN0gqxDb6TEEcUHjyTvJD6k44q7b9dlYWfg=;
-        b=KXSn4v3p90NHcxgoa2l7BWcpf463nlNa1tlrS7r9Vsr3Wa715EGKcRF2e0o8C9vvoF
-         bjde44/S+OOstn9XoS72pfQQJElcsniHMCfYrMr3ZyzN1h1Lp+M6CAYOCni8XnUiYfns
-         /8AbGHYJS3/W1k0gxZ6wQ+VEh7C3PHPgOOjyxQtvi5lvPtfsD0SzG5JdG4ie21Nr3dIv
-         wnv/qt6iah5qx7jhqknl5nKDav3kmhd5nnGUP2JaR/VUrE79VJw3F9Tjd1KnxdQXTl9Z
-         l1B7x/fsFbyp3iswKF4bZcBSrhpOR0MWjXY7O49g1Gnf2BiaLgUJN1ARszmkwztxzj0r
-         cSGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718216853; x=1718821653;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oQSGxEg3iN0gqxDb6TEEcUHjyTvJD6k44q7b9dlYWfg=;
-        b=iUhcPLAQiSMDVL7PsL4HyP/OFZ3awKSz0uyU/bz5s/jHSAHE+NgVYrqNkJNsvD3TEu
-         3+9LJ3pPm+sk/UHibxXGm5YtHFKZYPYj/yP3suu0wLEpBLq8jn6hZ1yZc+AhmqaiK5mP
-         UGD1pLGbp8yaPNy79maU6AWIXx/A1b73q0i8EK1eO7tAwK2T01X+jMnxpIrM3iBZRZvZ
-         OcJFTTf/U345H37O6Zb+RyIq63Wg89fF09XF/cbER1/7oKFsM9fu82QH3+9afgmAkgP9
-         qUfWo8akdJArQ4nIq3kgaaWGjugXzesWIkGzPqVDuy7ACV6mKHk0fX4fDV1xyVOi/j70
-         6gvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEcOkGJlSnMCSJErndD79CUe38QxSmHTc3aHLa8o1aR5u+JdXirjURqAfrXIpxUnxq5i2MZCtNKNMbVn8MfMaLMxjACwDS6LEqpw21nVs6aZXfuiurAvuMbFHrir40Byqz571gRW2MeA4eXQ==
-X-Gm-Message-State: AOJu0YxYIXbBHgp8wKvh4zcaA186Se8UheMYNyk0fx7pJyTxlmV83iUa
-	/3uI35BcixtbWZ+6m1dEzhKO9/UGuTFCOo1OC77eG/V4k9UX/lFWUXNZIpu9sSQDq0DqB8oq7/t
-	AtdyPvc+Q/agyeSBjeP7TWc5xKFU=
-X-Google-Smtp-Source: AGHT+IHE2u7bq8RlQP5/SHfWvC1F277raGWkjpZrHWs1rSZohmb9Dws1p52jKqTwp6CnTOoFDhbJ8wrhrtmgKGZnhf0=
-X-Received: by 2002:ac2:494b:0:b0:52c:868f:a28d with SMTP id
- 2adb3069b0e04-52c9a4036d2mr1943419e87.50.1718216852798; Wed, 12 Jun 2024
- 11:27:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ddpy3LFX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE7CC116B1;
+	Wed, 12 Jun 2024 18:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718216914;
+	bh=NJeqqnsIfUMhlSi06vIIKPHNE2ykrkcvFQ48tdRGhsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ddpy3LFXn9c98MKv3p1z9yzC/k7fp2NoQZCwQ1Bp3h+rc35Aj+5XYZpEUKKZ724ju
+	 y9ZVcyK1HprCeVdIqNoKJZA4N3pV2QBPcSSYx5JVzTca/Va89RiIqfN0iHQoRB5v22
+	 4P3VgoYjRQ0YRiOTFBQRUENT3jTcTYpRVcLHbZDkmjvl5fr0ovC4LYgtA8l9Bo4qNi
+	 sj6e2NiHBaBOFoXtpyO9MS/O51xFBlLGWQtlXXkxqasrMderNVfzK0R8HW3Fi9nd5v
+	 VqL2s2J+83NWAWDiaNO7RZLtHBTbLgANwd7LPwPmWBvnlcaNkfDGkoiSy+OXB4oGcu
+	 z4C8Bg0Ko80zg==
+Date: Wed, 12 Jun 2024 11:28:33 -0700
+From: Kees Cook <kees@kernel.org>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Kenton Groombridge <concord@gentoo.org>, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] wifi: mac80211: Avoid address calculations via out of
+ bounds array indexing
+Message-ID: <202406121127.FB2E58C2@keescook>
+References: <20240605152218.236061-1-concord@gentoo.org>
+ <fd1acc0f69ef9573ff0dced35863949c80c6d5e7.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612164715.614843-1-mjguzik@gmail.com>
-In-Reply-To: <20240612164715.614843-1-mjguzik@gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Wed, 12 Jun 2024 20:27:20 +0200
-Message-ID: <CAGudoHFc3NiC+GS68BcU0QX8zjtWFUcJsN5QsZuwLvMBnnVGLw@mail.gmail.com>
-Subject: Re: [PATCH] vfs: move d_lockref out of the area used by RCU lookup
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk, jack@suse.cz, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd1acc0f69ef9573ff0dced35863949c80c6d5e7.camel@sipsolutions.net>
 
-While I 100% stand behind the patch I found the lockref issue
-mentioned below reproduces almost reliably on my box if given enough
-time, thus I'm going to need to fix it first.
+On Wed, Jun 12, 2024 at 10:20:41AM +0200, Johannes Berg wrote:
+> On Wed, 2024-06-05 at 11:22 -0400, Kenton Groombridge wrote:
+> 
+> 
+> > Co-authored-by: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Kenton Groombridge <concord@gentoo.org>
+> > 
+> 
+> Wait ... I don't know what Kees did here, but seems then he should sign-
+> off too.
+> 
+> Kees?
 
-As such consider this patch posting as a heads up, don't pull it.
+I had helped mainly in private emails with Kenton. I'm fine with
+whatever tags people want. :)
 
-On Wed, Jun 12, 2024 at 6:47=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> w=
-rote:
->
-> Stock kernel scales worse than FreeBSD when doing a 20-way stat(2) on
-> the same tmpfs-backed file.
->
-> According to perf top:
->   38.09%  [kernel]              [k] lockref_put_return
->   26.08%  [kernel]              [k] lockref_get_not_dead
->   25.60%  [kernel]              [k] __d_lookup_rcu
->    0.89%  [kernel]              [k] clear_bhb_loop
->
-> __d_lookup_rcu is participating in cacheline ping pong due to the
-> embedded name sharing a cacheline with lockref.
->
-> Moving it out resolves the problem:
->   41.50%  [kernel]                  [k] lockref_put_return
->   41.03%  [kernel]                  [k] lockref_get_not_dead
->    1.54%  [kernel]                  [k] clear_bhb_loop
->
-> benchmark (will-it-scale, Sapphire Rapids, tmpfs, ops/s):
-> FreeBSD:7219334
-> before: 5038006
-> after:  7842883 (+55%)
->
-> One minor remark: the 'after' result is unstable, fluctuating between
-> ~7.8 mln and ~9 mln between restarts of the test. I picked the lower
-> bound.
->
-> An important remark: lockref API has a deficiency where if the spinlock
-> is taken for any reason and there is a continuous stream of incs/decs,
-> it will never recover back to atomic op -- everyone will be stuck taking
-> the lock. I used to run into it on occasion when spawning 'perf top'
-> while benchmarking, but now that the pressure on lockref itself is
-> increased I randomly see it merely when benchmarking.
->
-> It looks like this:
-> min:308703 max:429561 total:8217844     <-- nice start
-> min:152207 max:178380 total:3501879     <-- things are degrading
-> min:65563 max:70106 total:1349677       <-- everyone is stuck locking
-> min:69001 max:72873 total:1424714
-> min:68993 max:73084 total:1425902
->
-> The fix would be to add a variant which will wait for the lock to be
-> released for some number of spins, and only take it after to still
-> guarantee forward progress. I'm going to look into it. Mentioned in the
-> commit message if someone runs into it as is.
->
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-> ---
->  include/linux/dcache.h | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-> index bf53e3894aae..326dbccc3736 100644
-> --- a/include/linux/dcache.h
-> +++ b/include/linux/dcache.h
-> @@ -89,13 +89,18 @@ struct dentry {
->         struct inode *d_inode;          /* Where the name belongs to - NU=
-LL is
->                                          * negative */
->         unsigned char d_iname[DNAME_INLINE_LEN];        /* small names */
-> +       /* --- cacheline 1 boundary (64 bytes) was 32 bytes ago --- */
->
->         /* Ref lookup also touches following */
-> -       struct lockref d_lockref;       /* per-dentry lock and refcount *=
-/
->         const struct dentry_operations *d_op;
->         struct super_block *d_sb;       /* The root of the dentry tree */
->         unsigned long d_time;           /* used by d_revalidate */
->         void *d_fsdata;                 /* fs-specific data */
-> +       /* --- cacheline 2 boundary (128 bytes) --- */
-> +       struct lockref d_lockref;       /* per-dentry lock and refcount
-> +                                        * keep separate from RCU lookup =
-area if
-> +                                        * possible!
-> +                                        */
->
->         union {
->                 struct list_head d_lru;         /* LRU list */
-> --
-> 2.43.0
->
+Signed-off-by: Kees Cook <kees@kernel.org>
 
+and/or
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+(Though note the email address change just to keep checkpatch happy
+about Co-authored-by vs S-o-b mismatches.)
+
+Thanks!
+
+-- 
+Kees Cook
