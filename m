@@ -1,106 +1,173 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E590B126F0D
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 22:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40E8127B5A
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 22:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718230004; cv=none; b=FC/nGLv8yUbjIP6nFziJWjSVDlfhHrKFJHVx4e3PMwfgQRBbXQ5DP+xu5ab+0Svtn085fYldvR1HLlzMY4vBE6BfiGn6KAtaQffB+ZXSIWrBQU1hkyCCsNw8PFKFkhTD5NiqaonaXpFx0jC40UNkI3G9BG/DX3Zcr/XrSDvoJaY=
+	t=1718230146; cv=none; b=IHrNH4gQllKzDB+s3DJnhn0l8rqVpWVktLPZ5nJOVA8cMB8KeQVGcI7J9HXn34la7I6uR2Xbss+t+41+rJTX1FACYX0z2oCRKfAQMA032tmHFt2PenNalPImA/ZTLrLTiy0cIYDph1dYOikYmnSMH48/sjIo5Fx/JfrZNU2fhMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718230004; c=relaxed/simple;
-	bh=nWQB0cxwpb5Nyp9W2Aj2B6qiyQPIg/qKQY5yKA+03K8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pVd2NBVWw+wADE0B5Fq3w1SNSUAPLOnGrCZf89hBRNPeUd3Dw5jiCdb/8dceErp6vcIbFtVVz2Ry0y/5O6EmtJN13baEh7MvMztFmCeoXwObp7AXmn5pT5ryOouEAa7WlVpvQNDCOrMs6+okz5/DSrPpTPo0GS4/AiXWELNfPbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rxn08QA6; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718230146; c=relaxed/simple;
+	bh=uf4QwjexCbqgBE5KgK6TjEHCqZfSMf9GM+zF7zleRX4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=GVzqtvvCuAAHW7yoFB+EGSr9GZ0URWsQ40Gxsh552rIwLos2z93ZopgsYhhFoUKPVWfjOi/3bqHM0BR4Mg6cg/q7GAItjrRgIRVBt/KPdQpX2zSyt2DleiJ0/D5dI8k4H+fBBcdKS8Av2JZnVqwSeZ7gH2LbPIoTzLDGDqioB/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WCbft5Ps; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rxn08QA6"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52bc0236f04so52061e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:06:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WCbft5Ps"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6fb22ecd976so188729b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718230001; x=1718834801; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VHMkWh1GJqApt9wvbkQjpRZMa0KcRsUTuqWe6P4okXg=;
-        b=Rxn08QA6bw+Rp/CPNBTBe1zTm9vXDUWsV7Uby7e1oF4TyL17o/CeJV0ALs+/t7PeWv
-         pwugLXNreBY8DyBo7jOcqWzqDVBmgXhlIFgZeUW0t2bMjv+iZmjTUzjwkAsHgVJnaX9p
-         UL9DY7b7MxtWgrVIUntHyQq6dfSAFOsev3QSajDrozf111aWRJjatg70HNVZpTo/pyMZ
-         9MfwthRMHWmgIi5exv5WiXdArtV+beTr9NurrBqA6bFF59SJuWpPnWMmkdnSfOmkpG0r
-         tdhRnpR0+q7wroUVHQuy8uJBIS6Xk6MnuI3/WIO086mIYe2ByKuHaSdI1WN7TGWeJqnl
-         pYsA==
+        d=google.com; s=20230601; t=1718230144; x=1718834944; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/5uG0fPgVb1UTRgqxTYPdWxSr8OQ4pJ5csv1+LzNJtI=;
+        b=WCbft5Psx+Rtd8O6uWItQynnGV0Z589CuDLIx149masc3T7X+yDJQCcAhTHs7lO1Zu
+         AUxAnSzPoOXiq2cS1a3YSvmvuPjP1VA1itDcccPnulwNyurPywAxedBEx2nSgEAwtKDk
+         /32bj91B19svsy7KO0pqKx+uv64kZm81MfNRzvt6E+Vn2QgZb8/O9/wMkHzepzAmlwgX
+         4LP5t4kEHMeaBK55loWmOqE2dMVHXE7A33csXGUtmgw+G98xAdeqvekEodIN1gLfWd6a
+         +lXW47dLoJvU+YuySCpRScl1/0eu9UcEB0h7gXtB0QxKVU7+KMW8ekU4tTd7uinP/ebR
+         CpAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718230001; x=1718834801;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VHMkWh1GJqApt9wvbkQjpRZMa0KcRsUTuqWe6P4okXg=;
-        b=cDDXyGqudHmI2xMzHNy/KgIHkS8a2BE1jvF3YNbYXnho+ttxsgA3ivharkrUtt+J9h
-         r3ijaeKHd6JuA4AFRVmh0LdSksBVN1b9F6yVZB3oKBiO+CTfpBsAPNY3JvvAoPIngyIP
-         wsBriahd6aAwOx1X0hV+WY9fNVQ5Vkdn94SfTOAMbsussihuKW4ybDr1aNbfV9H8S8FM
-         ygtNO6bsG3S3Y6sqSeswuZy9KGp2oLmh5I3VAExA6RHTFoUZn+v7y4PQmbGdt4G/0E6h
-         S5LoDA0mEYE2B0R0/SQIsIGCMdSsHAntuP61yaLTXZXmfrwFoXgx+u6lWQxzYi5uk0iB
-         ydZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhgEKHjMUv78g3cJZXsJYW4kYc/eHOvcAQm5DmPmnXqTr5M4HL1YnmPWDPgpb9uUMpflRPFXzpPFJ7Xg2owCTSPdd1B4d5eoAWZRhk
-X-Gm-Message-State: AOJu0YzLuFzZom1v0zjS0owwgYXAqZ5+tR8JB/7y618CqDPkUInH7wl7
-	fxZlWUMvRSEQbsSz3aWGaS4emxL32x7E+LvzePOlbCMQmzCh8vEe1D9lM3PovK4=
-X-Google-Smtp-Source: AGHT+IFGBDcnsnGgnH57GdtLyI7Cp/okDgOWixyNLiELylSt9euObSqVLA0Bs7EZsFFRS0f0ffmkBA==
-X-Received: by 2002:a2e:22c5:0:b0:2ec:2f8:f4b0 with SMTP id 38308e7fff4ca-2ec02f8f645mr4542301fa.0.1718230001010;
-        Wed, 12 Jun 2024 15:06:41 -0700 (PDT)
-Received: from [192.168.1.3] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c78556sm76301fa.85.2024.06.12.15.06.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 15:06:40 -0700 (PDT)
-Message-ID: <e974477c-f451-4c9c-83d6-31437c52f1bd@linaro.org>
-Date: Thu, 13 Jun 2024 01:06:39 +0300
+        d=1e100.net; s=20230601; t=1718230144; x=1718834944;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/5uG0fPgVb1UTRgqxTYPdWxSr8OQ4pJ5csv1+LzNJtI=;
+        b=LgLa0dNixwUr96RisAEt+Sdxt4Px0ggftcjXJVtBbjb8XAthrlTCQ+QTezSP5IW1M5
+         zEUO8COUg51OrbtX+W29sMLQq7QPwhykOMhsHxYK69J7YKIN6AhiSPKCZdoPO922KwRg
+         g6MkVfb+U9W6xj+V/Qh+fZp0buzToGajAFvlOQoShEaza14KQ5jtd/50jOqYNJgfEZYV
+         fHMHdkt+0QxV5PifrasDxSlyFQ8NoEuWwxRs/VnU0QuHmywXGDPPk6lFHI8K9V6cqGb+
+         /XAPFx8P/yJ3XEUzuJJBopEljSNestcoSUNsNftsIOQpvjSFsgvwMy8GM4H66/mcJe46
+         j5PQ==
+X-Gm-Message-State: AOJu0Yzk9AIXZSSiK7D8Pt1rVSdRuVZIFmEzoEV4t2K1MydtoMTex2xn
+	GFsJyo9NKd+IlX+9sSoLzRfGlqcX32eFwL38Qy21BobTx2zz3PstGZPwPwC3Vv3UmSnv7Lr89BY
+	ptw==
+X-Google-Smtp-Source: AGHT+IH7XsxsWv6Xxtc9WU3EA5gUAJyix8Gbpq//kNw7QeS8GpV4XLqP4J1OWQy1QXo5sNaSavBNy6s6yRI=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:181c:b0:705:c24c:70e3 with SMTP id
+ d2e1a72fcca58-705c9247ae9mr14937b3a.2.1718230144114; Wed, 12 Jun 2024
+ 15:09:04 -0700 (PDT)
+Date: Wed, 12 Jun 2024 15:09:02 -0700
+In-Reply-To: <20240207172646.3981-11-xin3.li@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 2/8] dt-bindings: clock: qcom: Add SM8650 video clock
- controller
-Content-Language: en-US
-To: Jagadeesh Kona <quic_jkona@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Taniya Das <quic_tdas@quicinc.com>,
- Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
- Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20240602114439.1611-1-quic_jkona@quicinc.com>
- <20240602114439.1611-3-quic_jkona@quicinc.com>
-From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-In-Reply-To: <20240602114439.1611-3-quic_jkona@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240207172646.3981-1-xin3.li@intel.com> <20240207172646.3981-11-xin3.li@intel.com>
+Message-ID: <ZmocflXIH0UUsFzn@google.com>
+Subject: Re: [PATCH v2 10/25] KVM: VMX: Add support for FRED context save/restore
+From: Sean Christopherson <seanjc@google.com>
+To: Xin Li <xin3.li@intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	shuah@kernel.org, vkuznets@redhat.com, peterz@infradead.org, 
+	ravi.v.shankar@intel.com, xin@zytor.com
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Jagadeesh,
+On Wed, Feb 07, 2024, Xin Li wrote:
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 264378c3b784..ee61d2c25cb0 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1420,6 +1420,24 @@ static void vmx_write_guest_kernel_gs_base(struct vcpu_vmx *vmx, u64 data)
+>  	preempt_enable();
+>  	vmx->msr_guest_kernel_gs_base = data;
+>  }
+> +
+> +static u64 vmx_read_guest_fred_rsp0(struct vcpu_vmx *vmx)
+> +{
+> +	preempt_disable();
+> +	if (vmx->guest_state_loaded)
+> +		vmx->msr_guest_fred_rsp0 = read_msr(MSR_IA32_FRED_RSP0);
+> +	preempt_enable();
+> +	return vmx->msr_guest_fred_rsp0;
+> +}
+> +
+> +static void vmx_write_guest_fred_rsp0(struct vcpu_vmx *vmx, u64 data)
+> +{
+> +	preempt_disable();
+> +	if (vmx->guest_state_loaded)
+> +		wrmsrl(MSR_IA32_FRED_RSP0, data);
+> +	preempt_enable();
+> +	vmx->msr_guest_fred_rsp0 = data;
+> +}
 
-On 6/2/24 14:44, Jagadeesh Kona wrote:
-> SM8650 video clock controller has most clocks same as SM8450,
-> but it also has few additional clocks and resets. Add device tree
-> bindings for the video clock controller on Qualcomm SM8650 platform
-> by defining these additional clocks and resets on top of SM8450.
-> 
-> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This should be unnecessary when you switch to the user return framework.
 
-thank you for the change.
+KERNEL_GS_BASE is a bit special because it needs to be reloaded if the kernel
+switches to a different task, i.e. before an exit to userspace.
 
-Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+> @@ -1892,6 +1895,30 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
+>  			return 1;
+>  
+>  		data = (u32)data;
+> +		break;
+> +	case MSR_IA32_FRED_RSP0 ... MSR_IA32_FRED_CONFIG:
+> +		if (index != MSR_IA32_FRED_STKLVLS && is_noncanonical_address(data, vcpu))
+> +			return 1;
+> +		if ((index >= MSR_IA32_FRED_RSP0 && index <= MSR_IA32_FRED_RSP3) &&
+> +		    (data & GENMASK_ULL(5, 0)))
+> +			return 1;
+> +		if ((index >= MSR_IA32_FRED_SSP1 && index <= MSR_IA32_FRED_SSP3) &&
+> +		    (data & GENMASK_ULL(2, 0)))
+> +			return 1;
+> +
+> +		if (host_initiated) {
+> +			if (!kvm_cpu_cap_has(X86_FEATURE_FRED))
+> +				return 1;
+> +		} else {
+> +			/*
+> +			 * Inject #GP upon FRED MSRs accesses from a non-FRED guest,
+> +			 * which also ensures no malicious guest can write to FRED
+> +			 * MSRs to corrupt host FRED MSRs.
+> +			 */
 
---
-Best wishes,
-Vladimir
+Drop the comment, if someone reading KVM code doesn't grok that attempting to
+access MSRs that shouldn't exist results in #GP, then a comment probably isn't
+going to save them.
+
+This should also be bumped to the top, i.e. do the "does this exist check" first.
+
+Lastly, the direction we are taking is to NOT exempt host-initiated writes, i.e.
+userspace has to set CPUID before MSRs.  If you base the next version on top of
+this series, it should just work (and if it doesn't, I definitely want to know):
+
+https://lore.kernel.org/all/20240425181422.3250947-1-seanjc@google.com
+
+
+> +			if (!guest_can_use(vcpu, X86_FEATURE_FRED))
+> +				return 1;
+> +		}
+> +
+
+Uh, where does the value go?  Oh, this is common code.  Ah, and it's in common
+code so that VMX can avoid having to make an extra function call for every MSR.
+Neat.
+
+>  		break;
+>  	}
+>  
+> @@ -1936,6 +1963,22 @@ int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
+>  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDPID))
+>  			return 1;
+>  		break;
+> +	case MSR_IA32_FRED_RSP0 ... MSR_IA32_FRED_CONFIG:
+> +		if (host_initiated) {
+> +			if (!kvm_cpu_cap_has(X86_FEATURE_FRED))
+> +				return 1;
+> +		} else {
+> +			/*
+> +			 * Inject #GP upon FRED MSRs accesses from a non-FRED guest,
+> +			 * which also ensures no malicious guest can write to FRED
+> +			 * MSRs to corrupt host FRED MSRs.
+> +			 */
+> +			if (!guest_can_use(vcpu, X86_FEATURE_FRED))
+> +				return 1;
+> +		}
+
+Same comments here.
