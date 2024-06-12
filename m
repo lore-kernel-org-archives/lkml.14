@@ -1,38 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CC716B752;
-	Wed, 12 Jun 2024 06:56:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5339D16C457;
+	Wed, 12 Jun 2024 06:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718175410; cv=none; b=TEX2aCTnksMWWrBVWAXKEwUOQDb5aEOZglR9zJIlXEIsFVbUidMqqhxR7rmjK5WstlFMLKx2Qb4LvWBPAMrHZ++qw0gAgt532+ZVuTy5Fm+k/i41AliX03WzMBWH/8hY8p5jLfQXtBcSjQm+mtk96qYAy5jP88dTGn3bv3cxU9E=
+	t=1718175412; cv=none; b=lZvsKdp/hCJthXRrTWU9VK5qws6OTyqrUlFxO6lrs6pvdCy94SGaKxDNALwNNB5p71oABLshOeNCnXhrKjva4ufisigiE4+QjnIYYhqg/InGqZh6OWaQkovoV5FY1jXqbf/uuJwYGCN9UUu6TiTxz9IERz0BXHlZ+3w/5UII8bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718175410; c=relaxed/simple;
-	bh=z090XTQvQBYL0YPMD1iXI6s6bgkAm08NSDinEGPKJcI=;
+	s=arc-20240116; t=1718175412; c=relaxed/simple;
+	bh=SkIftQirDdLlyxmCDt5htuLPjcMwEi5kzUdi13oBLd8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bW8o4MSfZ4ou3o7QG2qL+61dEzIOTYCpyiO+9Kd37WLqtvixCfi77SxRGbx/snmLUMSX/6Kw5Q7wt8WPMOeB9fcCfJIGlNMt2el1P1cU/C7WpVa5s0lTrE6clfewS60CP2fl6DEUQ+yulDdYTU6D2gF8Gt6e1xqvC9Rl6M/Aw10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OIj21/E9; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=FrwFObMixxvVd7Y1Cj7OvwRYQhoFIw6SPHVTQZrOSlxkYWPt9nn3IUEMKY87v9Kk+QYpYuwve9rfO3NQMV1dOW6BRlyVphNAvduhUARiCgFFRCCw6XVZfDmL6DoNWJskt8wIKZqZYLT6D0hlk6iXz1V/JT1oHCtr9B6lCE7U84A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ceVuqgwR; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OIj21/E9"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ceVuqgwR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718175400;
-	bh=z090XTQvQBYL0YPMD1iXI6s6bgkAm08NSDinEGPKJcI=;
+	s=mail; t=1718175403;
+	bh=SkIftQirDdLlyxmCDt5htuLPjcMwEi5kzUdi13oBLd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OIj21/E9VZzEzjjNShGO95ZsDZ8R4SdhxS6Ritt+JBq3xC+KwdDu/7ltTeIhG8Ocg
-	 Dd4gGjN09bPhX2S5wcUTsFikGuxUFxrKR40SQlok1TKaiatkV5U3v4CUYgjiTtobyr
-	 YK9UVnfbb8ZWB12BYgxt7BsvvLo5KbH/gzVuChFl+Y2djgrGgNbnKJ+/eGJ97C+r6C
-	 lgqAYhqHx3vnM02N92uJVUKkJsmGgwNyjQP3A56Z0HcBMiW41ivyk7N/MoHOkquHO9
-	 NK/jjK9dznt2x0JOqIkhH3eA6X2VZxveCqCPW3jlND3SYeweQcjvTSXpdq3GbwRNiZ
-	 iw+I5wZQmOzVQ==
+	b=ceVuqgwRF7oGSa7XW+MN4G6MN4pNght+XEi/CkQSlF1A2sZD4OEqU2boimzM2eKFK
+	 pwDcKPN3p9B11f85R62mYHGmEUp+OBqDkAY/qUeshOx83UezDZO1tQVk/2z1utZpr1
+	 1rkH7MhJZXKQHOqOdy7E9a4PQIMcJ3Hqj47k7DYIoYgMquYJbPqRl+nGXTk919DEn8
+	 zlqxijDPpwGwH4zfmi2Yg7Yk8mpa0R/2pU0ge6u2xnhXxABjKKfUK8wUQQ4U4DiDtr
+	 GVkS+xuOiaowm3o4/Qoy/pRqnF5YEA3g1Mq1c1KgJAfdSiKmCQOViXsYXT9tBh5cLz
+	 qIlDAtoly7deg==
 Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 91C6C3782199;
-	Wed, 12 Jun 2024 06:56:38 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DC148378219F;
+	Wed, 12 Jun 2024 06:56:41 +0000 (UTC)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: chunkuang.hu@kernel.org
 Cc: robh@kernel.org,
@@ -60,9 +60,9 @@ Cc: robh@kernel.org,
 	sui.jinfeng@linux.dev,
 	michael@walle.cc,
 	Alexandre Mergnat <amergnat@baylibre.com>
-Subject: [PATCH v7 1/3] dt-bindings: display: mediatek: Add OF graph support for board path
-Date: Wed, 12 Jun 2024 08:56:32 +0200
-Message-ID: <20240612065634.26569-2-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v7 3/3] drm/mediatek: Implement OF graphs support for display paths
+Date: Wed, 12 Jun 2024 08:56:34 +0200
+Message-ID: <20240612065634.26569-4-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240612065634.26569-1-angelogioacchino.delregno@collabora.com>
 References: <20240612065634.26569-1-angelogioacchino.delregno@collabora.com>
@@ -74,623 +74,550 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The display IPs in MediaTek SoCs support being interconnected with
-different instances of DDP IPs (for example, merge0 or merge1) and/or
-with different DDP IPs (for example, rdma can be connected with either
-color, dpi, dsi, merge, etc), forming a full Display Data Path that
-ends with an actual display.
+It is impossible to add each and every possible DDP path combination
+for each and every possible combination of SoC and board: right now,
+this driver hardcodes configuration for 10 SoCs and this is going to
+grow larger and larger, and with new hacks like the introduction of
+mtk_drm_route which is anyway not enough for all final routes as the
+DSI cannot be connected to MERGE if it's not a dual-DSI, or enabling
+DSC preventively doesn't work if the display doesn't support it, or
+others.
 
-The final display pipeline is effectively board specific, as it does
-depend on the display that is attached to it, and eventually on the
-sensors supported by the board (for example, Adaptive Ambient Light
-would need an Ambient Light Sensor, otherwise it's pointless!), other
-than the output type.
+Since practically all display IPs in MediaTek SoCs support being
+interconnected with different instances of other, or the same, IPs
+or with different IPs and in different combinations, the final DDP
+pipeline is effectively a board specific configuration.
 
-Add support for OF graphs to most of the MediaTek DDP (display) bindings
-to add flexibility to build custom hardware paths, hence enabling board
-specific configuration of the display pipeline and allowing to finally
-migrate away from using hardcoded paths.
+Implement OF graphs support to the mediatek-drm drivers, allowing to
+stop hardcoding the paths, and preventing this driver to get a huge
+amount of arrays for each board and SoC combination, also paving the
+way to share the same mtk_mmsys_driver_data between multiple SoCs,
+making it more straightforward to add support for new chips.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
 Tested-by: Alexandre Mergnat <amergnat@baylibre.com>
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- .../display/mediatek/mediatek,aal.yaml        | 40 +++++++++++++++++++
- .../display/mediatek/mediatek,ccorr.yaml      | 21 ++++++++++
- .../display/mediatek/mediatek,color.yaml      | 22 ++++++++++
- .../display/mediatek/mediatek,dither.yaml     | 22 ++++++++++
- .../display/mediatek/mediatek,dpi.yaml        | 25 +++++++++++-
- .../display/mediatek/mediatek,dsc.yaml        | 24 +++++++++++
- .../display/mediatek/mediatek,dsi.yaml        | 27 ++++++++++++-
- .../display/mediatek/mediatek,ethdr.yaml      | 22 ++++++++++
- .../display/mediatek/mediatek,gamma.yaml      | 19 +++++++++
- .../display/mediatek/mediatek,merge.yaml      | 23 +++++++++++
- .../display/mediatek/mediatek,od.yaml         | 22 ++++++++++
- .../display/mediatek/mediatek,ovl-2l.yaml     | 22 ++++++++++
- .../display/mediatek/mediatek,ovl.yaml        | 22 ++++++++++
- .../display/mediatek/mediatek,postmask.yaml   | 21 ++++++++++
- .../display/mediatek/mediatek,rdma.yaml       | 22 ++++++++++
- .../display/mediatek/mediatek,ufoe.yaml       | 21 ++++++++++
- 16 files changed, 372 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_disp_drv.h       |   1 +
+ .../gpu/drm/mediatek/mtk_disp_ovl_adaptor.c   |  40 ++-
+ drivers/gpu/drm/mediatek/mtk_dpi.c            |  21 +-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 301 ++++++++++++++++--
+ drivers/gpu/drm/mediatek/mtk_drm_drv.h        |   2 +-
+ drivers/gpu/drm/mediatek/mtk_dsi.c            |  14 +-
+ 6 files changed, 341 insertions(+), 38 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
-index b4c28e96dd55..623cf7e37fe3 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,aal.yaml
-@@ -61,6 +61,27 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_drv.h b/drivers/gpu/drm/mediatek/mtk_disp_drv.h
+index 082ac18fe04a..94843974851f 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_drv.h
++++ b/drivers/gpu/drm/mediatek/mtk_disp_drv.h
+@@ -108,6 +108,7 @@ size_t mtk_ovl_get_num_formats(struct device *dev);
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: AAL input port
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          AAL output to the next component's input, for example could be one
-+          of many gamma, overdrive or other blocks.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-@@ -88,5 +109,24 @@ examples:
-            power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-            clocks = <&mmsys CLK_MM_DISP_AAL>;
-            mediatek,gce-client-reg = <&gce SUBSYS_1401XXXX 0x5000 0x1000>;
-+
-+           ports {
-+               #address-cells = <1>;
-+               #size-cells = <0>;
-+
-+               port@0 {
-+                   reg = <0>;
-+                   aal0_in: endpoint {
-+                       remote-endpoint = <&ccorr0_out>;
-+                   };
-+               };
-+
-+               port@1 {
-+                   reg = <1>;
-+                   aal0_out: endpoint {
-+                       remote-endpoint = <&gamma0_in>;
-+                   };
-+               };
-+           };
-        };
-     };
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.yaml
-index 8c2a737237f2..71ea277a5d8e 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ccorr.yaml
-@@ -54,6 +54,27 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
+ void mtk_ovl_adaptor_add_comp(struct device *dev, struct mtk_mutex *mutex);
+ void mtk_ovl_adaptor_remove_comp(struct device *dev, struct mtk_mutex *mutex);
++bool mtk_ovl_adaptor_is_comp_present(struct device_node *node);
+ void mtk_ovl_adaptor_connect(struct device *dev, struct device *mmsys_dev,
+ 			     unsigned int next);
+ void mtk_ovl_adaptor_disconnect(struct device *dev, struct device *mmsys_dev,
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
+index 02dd7dcdfedb..400519d1ca1f 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
+@@ -491,6 +491,38 @@ static int compare_of(struct device *dev, void *data)
+ 	return dev->of_node == data;
+ }
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
++static int ovl_adaptor_of_get_ddp_comp_type(struct device_node *node,
++					    enum mtk_ovl_adaptor_comp_type *ctype)
++{
++	const struct of_device_id *of_id = of_match_node(mtk_ovl_adaptor_comp_dt_ids, node);
 +
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: CCORR input port
++	if (!of_id)
++		return -EINVAL;
 +
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          CCORR output to the input of the next desired component in the
-+          display pipeline, usually only one of the available AAL blocks.
++	*ctype = (enum mtk_ovl_adaptor_comp_type)((uintptr_t)of_id->data);
 +
-+    required:
-+      - port@0
-+      - port@1
++	return 0;
++}
 +
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,color.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,color.yaml
-index b886ca0d89ea..61d040a10c08 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,color.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,color.yaml
-@@ -64,6 +64,28 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
++bool mtk_ovl_adaptor_is_comp_present(struct device_node *node)
++{
++	enum mtk_ovl_adaptor_comp_type type;
++	int ret;
++
++	ret = ovl_adaptor_of_get_ddp_comp_type(node, &type);
++	if (ret)
++		return false;
++
++	if (type >= OVL_ADAPTOR_TYPE_NUM)
++		return false;
++
++	/*
++	 * ETHDR and Padding are used exclusively in OVL Adaptor: if this
++	 * component is not one of those, it's likely not an OVL Adaptor path.
++	 */
++	return type == OVL_ADAPTOR_TYPE_ETHDR || type == OVL_ADAPTOR_TYPE_PADDING;
++}
++
+ static int ovl_adaptor_comp_init(struct device *dev, struct component_match **match)
+ {
+ 	struct mtk_disp_ovl_adaptor *priv = dev_get_drvdata(dev);
+@@ -500,12 +532,11 @@ static int ovl_adaptor_comp_init(struct device *dev, struct component_match **ma
+ 	parent = dev->parent->parent->of_node->parent;
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: COLOR input port
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          COLOR output to the input of the next desired component in the
-+          display pipeline, for example one of the available CCORR or AAL
-+          blocks.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dither.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dither.yaml
-index 1588b3f7cec7..3d4ab3f86294 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dither.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dither.yaml
-@@ -55,6 +55,28 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
+ 	for_each_child_of_node(parent, node) {
+-		const struct of_device_id *of_id;
+ 		enum mtk_ovl_adaptor_comp_type type;
+-		int id;
++		int id, ret;
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: DITHER input, usually from a POSTMASK or GAMMA block.
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          DITHER output to the input of the next desired component in the
-+          display pipeline, for example one of the available DSC compressors,
-+          DP_INTF, DSI, LVDS or others.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
-index 803c00f26206..6607cb1c6e0a 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
-@@ -64,13 +64,34 @@ properties:
-       Output port node. This port should be connected to the input port of an
-       attached HDMI, LVDS or DisplayPort encoder chip.
+-		of_id = of_match_node(mtk_ovl_adaptor_comp_dt_ids, node);
+-		if (!of_id)
++		ret = ovl_adaptor_of_get_ddp_comp_type(node, &type);
++		if (ret)
+ 			continue;
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: DPI input port
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: DPI output to an HDMI, LVDS or DisplayPort encoder input
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-   - interrupts
-   - clocks
-   - clock-names
--  - port
-+
-+oneOf:
-+  - required:
-+      - port
-+  - required:
-+      - ports
+ 		if (!of_device_is_available(node)) {
+@@ -514,7 +545,6 @@ static int ovl_adaptor_comp_init(struct device *dev, struct component_match **ma
+ 			continue;
+ 		}
  
- additionalProperties: false
+-		type = (enum mtk_ovl_adaptor_comp_type)(uintptr_t)of_id->data;
+ 		id = ovl_adaptor_comp_get_id(dev, node, type);
+ 		if (id < 0) {
+ 			dev_warn(dev, "Skipping unknown component %pOF\n",
+diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+index bfe8653005db..966716ec26c8 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dpi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+@@ -704,6 +704,20 @@ static int mtk_dpi_bridge_attach(struct drm_bridge *bridge,
+ 				 enum drm_bridge_attach_flags flags)
+ {
+ 	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
++	int ret;
++
++	dpi->next_bridge = devm_drm_of_get_bridge(dpi->dev, dpi->dev->of_node, 1, -1);
++	if (IS_ERR(dpi->next_bridge)) {
++		ret = PTR_ERR(dpi->next_bridge);
++		if (ret == -EPROBE_DEFER)
++			return ret;
++
++		/* Old devicetree has only one endpoint */
++		dpi->next_bridge = devm_drm_of_get_bridge(dpi->dev, dpi->dev->of_node, 0, 0);
++		if (IS_ERR(dpi->next_bridge))
++			return dev_err_probe(dpi->dev, PTR_ERR(dpi->next_bridge),
++					     "Failed to get bridge\n");
++	}
  
-@@ -79,7 +100,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/clock/mt8173-clk.h>
+ 	return drm_bridge_attach(bridge->encoder, dpi->next_bridge,
+ 				 &dpi->bridge, flags);
+@@ -1055,13 +1069,6 @@ static int mtk_dpi_probe(struct platform_device *pdev)
+ 	if (dpi->irq < 0)
+ 		return dpi->irq;
  
--    dpi0: dpi@1401d000 {
-+    dpi: dpi@1401d000 {
-         compatible = "mediatek,mt8173-dpi";
-         reg = <0x1401d000 0x1000>;
-         interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yaml
-index 2cbdd9ee449d..846de6c17d93 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsc.yaml
-@@ -49,6 +49,30 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
+-	dpi->next_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 0, 0);
+-	if (IS_ERR(dpi->next_bridge))
+-		return dev_err_probe(dev, PTR_ERR(dpi->next_bridge),
+-				     "Failed to get bridge\n");
+-
+-	dev_info(dev, "Found bridge node: %pOF\n", dpi->next_bridge->of_node);
+-
+ 	platform_set_drvdata(pdev, dpi);
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          Display Stream Compression input, usually from one of the DITHER
-+          or MERGE blocks.
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          Display Stream Compression output to the input of the next desired
-+          component in the display pipeline, for example to MERGE, DP_INTF,
-+          DPI or DSI.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
-index 8611319bed2e..2e9d3d23cbc1 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.yaml
-@@ -76,6 +76,26 @@ properties:
-       Output port node. This port should be connected to the input
-       port of an attached DSI panel or DSI-to-eDP encoder chip.
+ 	dpi->bridge.funcs = &mtk_dpi_bridge_funcs;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index b5f605751b0a..ae148093fcdc 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -26,6 +26,7 @@
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input ports can have multiple endpoints, each of those connects
-+      to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: DSI input port, usually from DITHER, DSC or MERGE
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          DSI output to an attached DSI panel, or a DSI-to-X encoder chip
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-@@ -85,7 +105,12 @@ required:
-   - clock-names
-   - phys
-   - phy-names
--  - port
-+
-+oneOf:
-+  - required:
-+      - port
-+  - required:
-+      - ports
+ #include "mtk_crtc.h"
+ #include "mtk_ddp_comp.h"
++#include "mtk_disp_drv.h"
+ #include "mtk_drm_drv.h"
+ #include "mtk_gem.h"
  
- unevaluatedProperties: false
+@@ -798,12 +799,245 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
+ 	{ }
+ };
  
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ethdr.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ethdr.yaml
-index 677882348ede..98db47894eeb 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ethdr.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ethdr.yaml
-@@ -110,6 +110,28 @@ properties:
-       include/dt-bindings/gce/<chip>-gce.h, mapping to the register of display
-       function block.
++static int mtk_drm_of_get_ddp_comp_type(struct device_node *node, enum mtk_ddp_comp_type *ctype)
++{
++	const struct of_device_id *of_id = of_match_node(mtk_ddp_comp_dt_ids, node);
++
++	if (!of_id)
++		return -EINVAL;
++
++	*ctype = (enum mtk_ddp_comp_type)((uintptr_t)of_id->data);
++
++	return 0;
++}
++
++static int mtk_drm_of_get_ddp_ep_cid(struct device_node *node,
++				     int output_port, enum mtk_crtc_path crtc_path,
++				     struct device_node **next, unsigned int *cid)
++{
++	struct device_node *ep_dev_node, *ep_out;
++	enum mtk_ddp_comp_type comp_type;
++	int ret;
++
++	ep_out = of_graph_get_endpoint_by_regs(node, output_port, crtc_path);
++	if (!ep_out)
++		return -ENOENT;
++
++	ep_dev_node = of_graph_get_remote_port_parent(ep_out);
++	of_node_put(ep_out);
++	if (!ep_dev_node)
++		return -EINVAL;
++
++	/*
++	 * Pass the next node pointer regardless of failures in the later code
++	 * so that if this function is called in a loop it will walk through all
++	 * of the subsequent endpoints anyway.
++	 */
++	*next = ep_dev_node;
++
++	if (!of_device_is_available(ep_dev_node))
++		return -ENODEV;
++
++	ret = mtk_drm_of_get_ddp_comp_type(ep_dev_node, &comp_type);
++	if (ret) {
++		if (mtk_ovl_adaptor_is_comp_present(ep_dev_node)) {
++			*cid = (unsigned int)DDP_COMPONENT_DRM_OVL_ADAPTOR;
++			return 0;
++		}
++		return ret;
++	}
++
++	ret = mtk_ddp_comp_get_id(ep_dev_node, comp_type);
++	if (ret < 0)
++		return ret;
++
++	/* All ok! Pass the Component ID to the caller. */
++	*cid = (unsigned int)ret;
++
++	return 0;
++}
++
++/**
++ * mtk_drm_of_ddp_path_build_one - Build a Display HW Pipeline for a CRTC Path
++ * @dev:          The mediatek-drm device
++ * @cpath:        CRTC Path relative to a VDO or MMSYS
++ * @out_path:     Pointer to an array that will contain the new pipeline
++ * @out_path_len: Number of entries in the pipeline array
++ *
++ * MediaTek SoCs can use different DDP hardware pipelines (or paths) depending
++ * on the board-specific desired display configuration; this function walks
++ * through all of the output endpoints starting from a VDO or MMSYS hardware
++ * instance and builds the right pipeline as specified in device trees.
++ *
++ * Return:
++ * * %0       - Display HW Pipeline successfully built and validated
++ * * %-ENOENT - Display pipeline was not specified in device tree
++ * * %-EINVAL - Display pipeline built but validation failed
++ * * %-ENOMEM - Failure to allocate pipeline array to pass to the caller
++ */
++static int mtk_drm_of_ddp_path_build_one(struct device *dev, enum mtk_crtc_path cpath,
++					 const unsigned int **out_path,
++					 unsigned int *out_path_len)
++{
++	struct device_node *next, *prev, *vdo = dev->parent->of_node;
++	unsigned int temp_path[DDP_COMPONENT_DRM_ID_MAX] = { 0 };
++	unsigned int *final_ddp_path;
++	unsigned short int idx = 0;
++	bool ovl_adaptor_comp_added = false;
++	int ret;
++
++	/* Get the first entry for the temp_path array */
++	ret = mtk_drm_of_get_ddp_ep_cid(vdo, 0, cpath, &next, &temp_path[idx]);
++	if (ret) {
++		if (next && temp_path[idx] == DDP_COMPONENT_DRM_OVL_ADAPTOR) {
++			dev_err(dev, "Adding OVL Adaptor for %pOF\n", next);
++			ovl_adaptor_comp_added = true;
++		} else {
++			if (next)
++				dev_err(dev, "Invalid component %pOF\n", next);
++			else
++				dev_err(dev, "Cannot find first endpoint for path %d\n", cpath);
++
++			return ret;
++		}
++	}
++	idx++;
++
++	/*
++	 * Walk through port outputs until we reach the last valid mediatek-drm component.
++	 * To be valid, this must end with an "invalid" component that is a display node.
++	 */
++	do {
++		prev = next;
++		ret = mtk_drm_of_get_ddp_ep_cid(next, 1, cpath, &next, &temp_path[idx]);
++		of_node_put(prev);
++		if (ret) {
++			of_node_put(next);
++			break;
++		}
++
++		/*
++		 * If this is an OVL adaptor exclusive component and one of those
++		 * was already added, don't add another instance of the generic
++		 * DDP_COMPONENT_OVL_ADAPTOR, as this is used only to decide whether
++		 * to probe that component master driver of which only one instance
++		 * is needed and possible.
++		 */
++		if (temp_path[idx] == DDP_COMPONENT_DRM_OVL_ADAPTOR) {
++			if (!ovl_adaptor_comp_added)
++				ovl_adaptor_comp_added = true;
++			else
++				idx--;
++		}
++	} while (++idx < DDP_COMPONENT_DRM_ID_MAX);
++
++	/*
++	 * The device component might not be disabled: in that case, don't
++	 * check the last entry and just report that the device is missing.
++	 */
++	if (ret == -ENODEV)
++		return ret;
++
++	/* If the last entry is not a final display output, the configuration is wrong */
++	switch (temp_path[idx - 1]) {
++	case DDP_COMPONENT_DP_INTF0:
++	case DDP_COMPONENT_DP_INTF1:
++	case DDP_COMPONENT_DPI0:
++	case DDP_COMPONENT_DPI1:
++	case DDP_COMPONENT_DSI0:
++	case DDP_COMPONENT_DSI1:
++	case DDP_COMPONENT_DSI2:
++	case DDP_COMPONENT_DSI3:
++		break;
++	default:
++		dev_err(dev, "Invalid display hw pipeline. Last component: %d (ret=%d)\n",
++			temp_path[idx - 1], ret);
++		return -EINVAL;
++	}
++
++	final_ddp_path = devm_kmemdup(dev, temp_path, idx * sizeof(temp_path[0]), GFP_KERNEL);
++	if (!final_ddp_path)
++		return -ENOMEM;
++
++	dev_dbg(dev, "Display HW Pipeline built with %d components.\n", idx);
++
++	/* Pipeline built! */
++	*out_path = final_ddp_path;
++	*out_path_len = idx;
++
++	return 0;
++}
++
++static int mtk_drm_of_ddp_path_build(struct device *dev, struct device_node *node,
++				     struct mtk_mmsys_driver_data *data)
++{
++	struct device_node *ep_node;
++	struct of_endpoint of_ep;
++	bool output_present[MAX_CRTC] = { false };
++	bool valid_output_found = false;
++	int ret;
++
++	for_each_endpoint_of_node(node, ep_node) {
++		ret = of_graph_parse_endpoint(ep_node, &of_ep);
++		if (ret) {
++			dev_err_probe(dev, ret, "Cannot parse endpoint\n");
++			break;
++		}
++
++		if (of_ep.id >= MAX_CRTC) {
++			ret = dev_err_probe(dev, -EINVAL,
++					    "Invalid endpoint%u number\n", of_ep.port);
++			break;
++		}
++
++		output_present[of_ep.id] = true;
++	}
++
++	if (ret) {
++		of_node_put(ep_node);
++		return ret;
++	}
++
++	if (output_present[CRTC_MAIN]) {
++		ret = mtk_drm_of_ddp_path_build_one(dev, CRTC_MAIN,
++						    &data->main_path, &data->main_len);
++		if (ret == 0)
++			valid_output_found = true;
++		else if (ret != -ENODEV)
++			return ret;
++	}
++
++	if (output_present[CRTC_EXT]) {
++		ret = mtk_drm_of_ddp_path_build_one(dev, CRTC_EXT,
++						    &data->ext_path, &data->ext_len);
++		if (ret == 0)
++			valid_output_found = true;
++		else if (ret != -ENODEV)
++			return ret;
++	}
++
++	if (output_present[CRTC_THIRD]) {
++		ret = mtk_drm_of_ddp_path_build_one(dev, CRTC_THIRD,
++						    &data->third_path, &data->third_len);
++		if (ret == 0)
++			valid_output_found = true;
++		else if (ret != -ENODEV)
++			return ret;
++	}
++
++	if (!valid_output_found)
++		return -ENODEV;
++
++	return 0;
++}
++
+ static int mtk_drm_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *phandle = dev->parent->of_node;
+ 	const struct of_device_id *of_id;
+ 	struct mtk_drm_private *private;
++	struct mtk_mmsys_driver_data *mtk_drm_data;
+ 	struct device_node *node;
+ 	struct component_match *match = NULL;
+ 	struct platform_device *ovl_adaptor;
+@@ -824,7 +1058,31 @@ static int mtk_drm_probe(struct platform_device *pdev)
+ 	if (!of_id)
+ 		return -ENODEV;
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
+-	private->data = of_id->data;
++	mtk_drm_data = (struct mtk_mmsys_driver_data *)of_id->data;
++	if (!mtk_drm_data)
++		return -EINVAL;
 +
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: ETHDR input, usually from one of the MERGE blocks.
++	private->data = kmemdup(mtk_drm_data, sizeof(*mtk_drm_data), GFP_KERNEL);
++	if (!private->data)
++		return -ENOMEM;
 +
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          ETHDR output to the input of the next desired component in the
-+          display pipeline, for example one of the available MERGE blocks,
-+          or others.
++	/* Try to build the display pipeline from devicetree graphs */
++	if (of_graph_is_present(phandle)) {
++		dev_dbg(dev, "Building display pipeline for MMSYS %u\n",
++			mtk_drm_data->mmsys_id);
++		private->data = devm_kmemdup(dev, mtk_drm_data,
++					     sizeof(*mtk_drm_data), GFP_KERNEL);
++		if (!private->data)
++			return -ENOMEM;
 +
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,gamma.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,gamma.yaml
-index b8b8e83ebc3f..17f299abda11 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,gamma.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,gamma.yaml
-@@ -64,6 +64,25 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
++		ret = mtk_drm_of_ddp_path_build(dev, phandle, private->data);
++		if (ret)
++			return ret;
++	} else {
++		/* No devicetree graphs support: go with hardcoded paths if present */
++		dev_dbg(dev, "Using hardcoded paths for MMSYS %u\n", mtk_drm_data->mmsys_id);
++		private->data = mtk_drm_data;
++	};
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: GAMMA input, usually from one of the AAL blocks.
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          GAMMA output to the input of the next desired component in the
-+          display pipeline, for example one of the available DITHER or
-+          POSTMASK blocks.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,merge.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,merge.yaml
-index dae839279950..0de9f64f3f84 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,merge.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,merge.yaml
-@@ -77,6 +77,29 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
+ 	private->all_drm_private = devm_kmalloc_array(dev, private->data->mmsys_dev_num,
+ 						      sizeof(*private->all_drm_private),
+@@ -846,12 +1104,11 @@ static int mtk_drm_probe(struct platform_device *pdev)
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          MERGE input port, usually from DITHER, DPI, DSC, DSI, MDP_RDMA,
-+          ETHDR or even from a different MERGE block
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          MERGE output to a DSC, DPI, DP_INTF, DSI, ETHDR, Write DMA, or
-+          a different MERGE block, or others.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-   resets:
-     description: reset controller
-       See Documentation/devicetree/bindings/reset/reset.txt for details.
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,od.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,od.yaml
-index 831c653caffd..71534febd49c 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,od.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,od.yaml
-@@ -38,6 +38,28 @@ properties:
-     items:
-       - description: OD Clock
+ 	/* Iterate over sibling DISP function blocks */
+ 	for_each_child_of_node(phandle->parent, node) {
+-		const struct of_device_id *of_id;
+ 		enum mtk_ddp_comp_type comp_type;
+ 		int comp_id;
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: OD input port, usually from an AAL block
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          OD output to the input of the next desired component in the
-+          display pipeline, for example one of the available RDMA or
-+          other blocks.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
-index c7dd0ef02dcf..bacdfe7d08a6 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
-@@ -57,6 +57,28 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
+-		of_id = of_match_node(mtk_ddp_comp_dt_ids, node);
+-		if (!of_id)
++		ret = mtk_drm_of_get_ddp_comp_type(node, &comp_type);
++		if (ret)
+ 			continue;
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: OVL input port from MMSYS, VDOSYS or other OVLs
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          OVL output to the input of the next desired component in the
-+          display pipeline, for example one of the available COLOR, RDMA
-+          or WDMA blocks.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml
-index c471a181d125..e93f0247bdcc 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml
-@@ -74,6 +74,28 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
+ 		if (!of_device_is_available(node)) {
+@@ -860,8 +1117,6 @@ static int mtk_drm_probe(struct platform_device *pdev)
+ 			continue;
+ 		}
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: OVL input port from MMSYS or one of multiple VDOSYS
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          OVL output to the input of the next desired component in the
-+          display pipeline, for example one of the available COLOR, RDMA
-+          or WDMA blocks.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,postmask.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,postmask.yaml
-index 11fe32e50a59..fb6fe4742624 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,postmask.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,postmask.yaml
-@@ -52,6 +52,27 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
+-		comp_type = (enum mtk_ddp_comp_type)(uintptr_t)of_id->data;
+-
+ 		if (comp_type == MTK_DISP_MUTEX) {
+ 			int id;
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: POSTMASK input port, usually from GAMMA
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          POSTMASK output to the input of the next desired component in the
-+          display pipeline, for example one of the available DITHER blocks.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml
-index 39dbb5c8bcf8..edb8d3b67025 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml
-@@ -86,6 +86,28 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     maxItems: 1
+@@ -890,22 +1145,24 @@ static int mtk_drm_probe(struct platform_device *pdev)
+ 		 * blocks have separate component platform drivers and initialize their own
+ 		 * DDP component structure. The others are initialized here.
+ 		 */
+-		if (comp_type == MTK_DISP_AAL ||
+-		    comp_type == MTK_DISP_CCORR ||
+-		    comp_type == MTK_DISP_COLOR ||
+-		    comp_type == MTK_DISP_GAMMA ||
+-		    comp_type == MTK_DISP_MERGE ||
+-		    comp_type == MTK_DISP_OVL ||
+-		    comp_type == MTK_DISP_OVL_2L ||
+-		    comp_type == MTK_DISP_OVL_ADAPTOR ||
+-		    comp_type == MTK_DISP_RDMA ||
+-		    comp_type == MTK_DP_INTF ||
+-		    comp_type == MTK_DPI ||
+-		    comp_type == MTK_DSI) {
+-			dev_info(dev, "Adding component match for %pOF\n",
+-				 node);
+-			drm_of_component_match_add(dev, &match, component_compare_of,
+-						   node);
++		switch (comp_type) {
++		default:
++			break;
++		case MTK_DISP_AAL:
++		case MTK_DISP_CCORR:
++		case MTK_DISP_COLOR:
++		case MTK_DISP_GAMMA:
++		case MTK_DISP_MERGE:
++		case MTK_DISP_OVL:
++		case MTK_DISP_OVL_2L:
++		case MTK_DISP_OVL_ADAPTOR:
++		case MTK_DISP_RDMA:
++		case MTK_DP_INTF:
++		case MTK_DPI:
++		case MTK_DSI:
++			dev_info(dev, "Adding component match for %pOF\n", node);
++			drm_of_component_match_add(dev, &match, component_compare_of, node);
++			break;
+ 		}
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
+ 		ret = mtk_ddp_comp_init(node, &private->ddp_comp[comp_id], comp_id);
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+index 78d698ede1bf..7e54d86e25a3 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+@@ -59,7 +59,7 @@ struct mtk_drm_private {
+ 	struct device *mmsys_dev;
+ 	struct device_node *comp_node[DDP_COMPONENT_DRM_ID_MAX];
+ 	struct mtk_ddp_comp ddp_comp[DDP_COMPONENT_DRM_ID_MAX];
+-	const struct mtk_mmsys_driver_data *data;
++	struct mtk_mmsys_driver_data *data;
+ 	struct drm_atomic_state *suspend_state;
+ 	unsigned int mbox_index;
+ 	struct mtk_drm_private **all_drm_private;
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index c255559cc56e..880ea37937da 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -904,9 +904,17 @@ static int mtk_dsi_host_attach(struct mipi_dsi_host *host,
+ 	dsi->lanes = device->lanes;
+ 	dsi->format = device->format;
+ 	dsi->mode_flags = device->mode_flags;
+-	dsi->next_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 0, 0);
+-	if (IS_ERR(dsi->next_bridge))
+-		return PTR_ERR(dsi->next_bridge);
++	dsi->next_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
++	if (IS_ERR(dsi->next_bridge)) {
++		ret = PTR_ERR(dsi->next_bridge);
++		if (ret == -EPROBE_DEFER)
++			return ret;
 +
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: RDMA input port, usually from MMSYS, OD or OVL
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          RDMA output to the input of the next desired component in the
-+          display pipeline, for example one of the available COLOR, DPI,
-+          DSI, MERGE or UFOE blocks.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml
-index 39e3e2d4a0db..61a5e22effbf 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ufoe.yaml
-@@ -43,6 +43,27 @@ properties:
-     items:
-       - description: UFOe Clock
++		/* Old devicetree has only one endpoint */
++		dsi->next_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 0, 0);
++		if (IS_ERR(dsi->next_bridge))
++			return PTR_ERR(dsi->next_bridge);
++	}
  
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+    description:
-+      Input and output ports can have multiple endpoints, each of those
-+      connects to either the primary, secondary, etc, display pipeline.
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: UFOE input, usually from one of the RDMA blocks.
-+
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description:
-+          UFOE output to the input of the next desired component in the
-+          display pipeline, usually one of the available DSI blocks.
-+
-+    required:
-+      - port@0
-+      - port@1
-+
- required:
-   - compatible
-   - reg
+ 	drm_bridge_add(&dsi->bridge);
+ 
 -- 
 2.45.2
 
