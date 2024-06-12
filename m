@@ -1,100 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AA14696;
-	Wed, 12 Jun 2024 08:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D766B4696
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718179370; cv=none; b=bqN1WQTLSX1vJlVNvrjX2JXahT8P1j1gDSZqJe7PlXDyYulLG3i3JkuWX4RiuCrjgtD7l9NiUUoetA/yfgI9+40YPlRf5IFqsI0z2NBjmBS9q8Zqbl9ZoOiuTshu7oTzAQp0x4dNoRhg1bZEm0QYnq8yRrTSNunsnkV20Ht9iDk=
+	t=1718179385; cv=none; b=juSMM9anB+ZkLAMOMKFIhEm7jeTcsgfgudFekL9tfs4TeEaWoLLGFNsL83Zb/AP5F5WdzvEGvXuZL9PdpA0lF1kurJaf50gsjMMy9EMa33e7HZzxU/ko2SP6WarLqgPytzztxpPvGogEBrpSn4gL16avgNIOCoAgtzB5pAHRGhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718179370; c=relaxed/simple;
-	bh=N1bClvRvObB6ZljtKs6JY5eoGxIdtJA0IytQtreuk6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dl7h0cw1DsJ5R+bFW4sR734k27USvAyyzDHZe8wM/oBXcDyr6ZUjdnl/Dq54jbI1tBYQUmi2vTI33wFVb6TwrHmYmlgQdFeSd2dTqNGqcayYagDcSboNFAgVdTL3BIsLhG5MlPUNhyH8d1XrXSimuSntkUZjFwiQfckmUvOiz98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DqQ1KXw0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718179385; c=relaxed/simple;
+	bh=oZhvy6kkbKYCk5v6xkrBCIcY4DF51uW5QFIx01DmAzk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AOiSPXmI6u9sepOV6wooLMIfqDBs4PyEZQydlb4ZCQOfu/wkjuDib8E9a77ZDGamN5ypqPRtwGWB8r/tAGk6SiZCx56T90kxdOh6hwPITw370Zg9meTYvnh4yBVwwa0kGlBOzv1decKegNMdJjbXC05GBumirxqRwkvry4zaRLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=3Y4DHdeQ; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DqQ1KXw0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADE9C3277B;
-	Wed, 12 Jun 2024 08:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718179369;
-	bh=N1bClvRvObB6ZljtKs6JY5eoGxIdtJA0IytQtreuk6E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DqQ1KXw0HNnwmUKJCtNZVDfhBe9ukGFZ7dzd+n4fYJrunK6hfe4FJomwSnPaOvx/c
-	 apRLmhXvSe/GBslRA3UUyOgTQXT8sHPifvpEe2LQnUCYs2COloIkNmouGty1vdQJ3c
-	 268Vs+5S6WLlB1kEmMZyzzJWlFToymZjeSuZodDo=
-Date: Wed, 12 Jun 2024 10:02:46 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: lakshmi.sowjanya.d@intel.com
-Cc: tglx@linutronix.de, giometti@enneenne.com, corbet@lwn.net,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	andriy.shevchenko@linux.intel.com, eddie.dong@intel.com,
-	christopher.s.hall@intel.com, pandith.n@intel.com,
-	subramanian.mohan@intel.com, thejesh.reddy.t.r@intel.com
-Subject: Re: [PATCH v10 2/3] Documentation: driver-api: pps: Add Intel Timed
- I/O PPS generator
-Message-ID: <2024061230-thimble-oxymoron-3beb@gregkh>
-References: <20240612035359.7307-1-lakshmi.sowjanya.d@intel.com>
- <20240612035359.7307-3-lakshmi.sowjanya.d@intel.com>
+	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="3Y4DHdeQ"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6b063047958so25028236d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:03:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718179383; x=1718784183; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oZhvy6kkbKYCk5v6xkrBCIcY4DF51uW5QFIx01DmAzk=;
+        b=3Y4DHdeQXtPkZ5hp70y6YIwp1yaSi3QMjJKn1BSGUxTdLUy5r7hty7Ih5ewK+K/rHy
+         /Q8+gO03CrVScBzLNsz+wc919MfFLZbbReyRQKr6oXZE4m+TlG/o9yGaTlGoEVRlEGkd
+         tdtaQf/tJEHK2qAhqgxulimP8CUWRTwIwUCDo+MwpkGcd8rkNR4rWkk8iFIIEKBFKd7V
+         R9WsR9GFvg/lMnDa3t/WrQoPZZytJ/Eaufuu3WHxCUO5TqrJkf/tvESNQZR0ibVZuXlV
+         BoNZ75jCj0yIbFL2SD1e73NE1szeH/TSDEomNI/pCt8+LPMNRJvm60jvkUB5Y+0NsQcC
+         5FLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718179383; x=1718784183;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oZhvy6kkbKYCk5v6xkrBCIcY4DF51uW5QFIx01DmAzk=;
+        b=HWMVo9DrgtQb0rRyTzkY+V7X8UM1ennT+T3tOlvXD6YWcF1Dfw+RQz4J0JEfEtSOBg
+         CeF4RDRVZh6wajy1cMtPPE+s8vQsoU1uPNuv/nruAH5vyH8tZ+XvRmXlnQe+iygiNkSr
+         YrrhAwkABc0KgIZl1sd6GPHGR8lD6uTMfpZHwe1Eo1qi/BfS8wtw/yu9Q/r8M1ANMriV
+         h1JQ715+CJqZjnutWs/3id71/ceQp3YZtlmICPLaeTK0w6z1hE89YX/1YpR8V94GZ9xk
+         N199SIXHZ+9oc+9q6Zu2K2sm0jWGNEwDl+flCoxkyO5588+/EcY+xFMIaBwkvfLmGRz1
+         2TDw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdMTfvbPG9OoaCH7N3A+5ruC2SXWYu9t1LMe2wk0CpqqJK1sx5wjlNKvsljrtCGq+mKhUHDHN/95co5/B8DgdL+KVf9jlGsyRyO0Jw
+X-Gm-Message-State: AOJu0YzGOpOTQlsFkMjP2eNFhq7f+DEld/HolA84X9CtPoQSv/bBlme8
+	qBT86+tsiPlzn0mPWoqlbkBq+fRWgoerypKoHl5Jp6REcd0jTBTiaMySePZwbSyE1EVfRiluAZX
+	NZYRqL54SWW6UmuKyAMmtMMDUtRGv4Ut66yeOoA==
+X-Google-Smtp-Source: AGHT+IFBoGLGnRCfXUTT6MkmXv5tkb/vW4wlOs2DaIN1mKJ7KPlKywflPDae5tbSNQuiVC2G0raN2IzC+x3zhZJMYtQ=
+X-Received: by 2002:a05:6214:4606:b0:6b0:77fb:8f16 with SMTP id
+ 6a1803df08f44-6b191778bdbmr10576316d6.21.1718179382867; Wed, 12 Jun 2024
+ 01:03:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240612035359.7307-3-lakshmi.sowjanya.d@intel.com>
+References: <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
+ <20240611094810.27475-2-piotr.wojtaszczyk@timesys.com> <1ea92ff0-7e2d-4a9f-bef4-d50fc93b86e6@kernel.org>
+In-Reply-To: <1ea92ff0-7e2d-4a9f-bef4-d50fc93b86e6@kernel.org>
+From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Date: Wed, 12 Jun 2024 10:02:51 +0200
+Message-ID: <CAG+cZ07jpi0dobjf8JYt263qqy1tYWAvzsV9cgKaAW05mBoCeQ@mail.gmail.com>
+Subject: Re: [Patch v2 2/2] ASoC: dt-bindings: lpc32xx: Add lpc32xx i2s DT binding
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Russell King <linux@armlinux.org.uk>, Jaroslav Kysela <perex@perex.cz>, 
+	Takashi Iwai <tiwai@suse.com>, Arnd Bergmann <arnd@arndb.de>, Chancel Liu <chancel.liu@nxp.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, linux-sound@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, 
+	linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 12, 2024 at 09:23:58AM +0530, lakshmi.sowjanya.d@intel.com wrote:
-> From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-> 
-> Add Intel Timed I/O PPS usage instructions.
-> 
-> Co-developed-by: Pandith N <pandith.n@intel.com>
-> Signed-off-by: Pandith N <pandith.n@intel.com>
-> Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Rodolfo Giometti <giometti@enneenne.com>
-> ---
->  Documentation/driver-api/pps.rst | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/Documentation/driver-api/pps.rst b/Documentation/driver-api/pps.rst
-> index 78dded03e5d8..75f7b094f963 100644
-> --- a/Documentation/driver-api/pps.rst
-> +++ b/Documentation/driver-api/pps.rst
-> @@ -246,3 +246,27 @@ delay between assert and clear edge as small as possible to reduce system
->  latencies. But if it is too small slave won't be able to capture clear edge
->  transition. The default of 30us should be good enough in most situations.
->  The delay can be selected using 'delay' pps_gen_parport module parameter.
-> +
-> +
-> +Intel Timed I/O PPS signal generator
-> +------------------------------------
-> +
-> +Intel Timed I/O is a high precision device, present on 2019 and newer Intel
-> +CPUs, that can generate PPS signals.
-> +
-> +Timed I/O and system time are both driven by same hardware clock. The signal
-> +is generated with a precision of ~20 nanoseconds. The generated PPS signal
-> +is used to synchronize an external device with system clock. For example,
-> +it can be used to share your clock with a device that receives PPS signal,
-> +generated by Timed I/O device. There are dedicated Timed I/O pins to deliver
-> +the PPS signal to an external device.
-> +
-> +Usage of Intel Timed I/O as PPS generator:
-> +
-> +Start generating PPS signal::
-> +
-> +        $echo 1 > /sys/devices/platform/INTCxxxx\:00/enable
-> +
-> +Stop generating PPS signal::
-> +
-> +        $echo 0 > /sys/devices/platform/INTCxxxx\:00/enable
+On Tue, Jun 11, 2024 at 12:18=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
+> I do not see my comment about DAI being addressed.
+Were you asking if it's a DAI? yes it is.
 
-Why is this not described in Documenation/ABI/ ?
-
-thanks,
-
-greg k-h
+--=20
+Piotr Wojtaszczyk
+Timesys
