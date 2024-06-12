@@ -1,53 +1,114 @@
-Received: from iodev.co.uk (iodev.co.uk [46.30.189.100])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DED984D39;
-	Wed, 12 Jun 2024 20:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.189.100
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B70284A56
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 20:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718224965; cv=none; b=mTqXtBywr3U0l2BEJ7As1CSCkiwC1gqQ4eRnrV5r/z1GWwrO6FLP9Vq2Fu1+vEN2xBYhqNXbh9viq6fx6my8L/EkgO9nIcQfYCqJN1/8j4tIiN9O9UJ2jC88gIEMtDC1NpZInLfpjTlJdDvG3xDI7fj8fCnHqRYgBHW8kYpHLsk=
+	t=1718225106; cv=none; b=rf15gd4rYFvMDOLGhYnNmoIU3ve2oiBVGKYM/oIxFM6MRn6C9JJ9gDnVjz8i9InoqdKMP6/iJBRPEVxD4mMQuhBExzQwA8dpG3tdOn8L1yRpGJG7y2FIb98aW5G/1NYGzOrWSvYWWdCLAg/7wgNzLEr7auEdNUWEBl4y0scETLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718224965; c=relaxed/simple;
-	bh=+qyqE9vjz/LOYQtCfw+SBzbNmcA8piPkgSyHmAla2O0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Qq1qV6SoW+LQb5Zok3uwyGSzYiR5FM2QDAz5377/B6+lSK8Dq92XLZ2nKg3T37AuCVJ2Xn/HWqyeohbgjDFShWC/zqoObtQMerdKauBizVsqyllGFtvI+tm2vgaNsfeXxIT0NP8dLbnmvpWbQ5AmH/gQIwOrzSRsbf3fML1rkfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=iodev.co.uk; spf=pass smtp.mailfrom=iodev.co.uk; arc=none smtp.client-ip=46.30.189.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=iodev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iodev.co.uk
-Received: from pirotess (222.red-83-46-228.dynamicip.rima-tde.net [83.46.228.222])
-	by iodev.co.uk (Postfix) with ESMTPSA id 91AB12F8341;
-	Wed, 12 Jun 2024 22:33:20 +0200 (CEST)
-Date: Wed, 12 Jun 2024 22:33:19 +0200
-From: Ismael Luceno <ismael@iodev.co.uk>
-To: stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: Intel e1000e driver bug on stable (6.9.x)
-Message-ID: <ZmfcJsyCB6M3wr84@pirotess>
+	s=arc-20240116; t=1718225106; c=relaxed/simple;
+	bh=LJPyVLxQz22AUgai1hBIZOsMe6oYq/Z01oyfjpDxA7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mGlxI2bdVihDXcgVVVgm48r9rQXi59OgUiARpXcfmovkOlcFox7OUS0LfKwn+A3dVj3KKVJQOYIXJWZhdy2OK8vMD1iU/2cqdPwikrnwbvDexPds2i6isbfy0hzPpIfFQPV/3fxRy3ax6Y5IoOATeUZdlkW3dJYfvsN9Wi7Ir3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wuN7W3G4; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wuN7W3G4"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2e78fe9fc2bso2920811fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 13:45:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718225102; x=1718829902; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SEA70tBJ4PwBkoOMmWe3ULbP4tpxOmjC5IUbkfsrBUs=;
+        b=wuN7W3G4i0bEunh3Zn2kPsv7VQc1iBvgTbSiCi42stiS8E2JXCKbV9Dm9Q8z054he+
+         sQsmB0E2mup8J3mbHo0rBC27WUBdyEqSIkp5ru8Tu2zRMGxl+L4UTNblN3iI/dXoP16b
+         RNtz70s3raT8O3kUhbmw4+Sh9V1/6pFmGRlud2tzivjDawzwtQxDKt6KMuq/+xFanMii
+         2TRMKVTZofHa0sLa9Ww8r+Md8vKFfxVPtUBXjFd8hHHGbmTIoVjPD5hcr1ZUbgG+tK8e
+         ZFVypr+ERMfEvlzIX9SjI2MewHoC4ZUu3tgQ7JMUP4f+GtIZ8xOHZheVUuwPPRIeOKDY
+         CXfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718225102; x=1718829902;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SEA70tBJ4PwBkoOMmWe3ULbP4tpxOmjC5IUbkfsrBUs=;
+        b=XqRQe0ugcAyRKGvwnG9gHqsEyOEYUVjuCfRmZreDBYkhaQ7YVW5iTxAExZBfDL+LQH
+         WWQyC936ynHnvHSTtmdWyTporIeFaKQiALYsAHDrLGDlsRrc4CYhhqlvPU1ySFlL2+8g
+         dpbLXzxXp64CGyH9DC1oMJUpBco9xPFzgYZAlpYnoLhB8BtT2BCqHuUaBXYVqrSD8XX0
+         KihmzN3OhoFb9kG5oy94/1IEuwMFdjCMqPlR3+QszFRHtYOUbKKcFv6u3fTZJFQfi+LR
+         s+ShxsEzuOHIpWCt7jBSrphd4N1+MKZgUAqiMgZjDB6sy+Y1fvfuHlQRzXJQATcevCPX
+         Flwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVefpzUgokhkjiOkm2RZtT/7JqvxqXlZTTvooOfixrm/mX3HFq3V1Opj4qTjy9L+hCczDsyS5dRVblDnqbDQxOzNrB4Mm+/EUacfIVW
+X-Gm-Message-State: AOJu0YzPFsZRhw25oFo7L1DXK6Cjfmz5ijt5tDUK1vKQiJ/OpyC/UYwh
+	DnfSC7Cg9PTGMOV2tM1v8B7fJEEjLDjOUM+DXNbTtRhc7rHRJgfUkLrJ6M8Us3I=
+X-Google-Smtp-Source: AGHT+IGVRVhHEiIlwITe9DlEo5WfJ4Eof41I9EM1LQ/eq9af4QfavH0OfsPqZ0JOdpEI84p8RNKzSw==
+X-Received: by 2002:a2e:9ed1:0:b0:2eb:e840:4a1b with SMTP id 38308e7fff4ca-2ebfc8feb43mr16792821fa.7.1718225102385;
+        Wed, 12 Jun 2024 13:45:02 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ebe4169b35sm16912301fa.135.2024.06.12.13.45.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 13:45:01 -0700 (PDT)
+Date: Wed, 12 Jun 2024 23:45:00 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
+Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, kernel-dev@igalia.com, alexander.deucher@amd.com, 
+	christian.koenig@amd.com, Simon Ser <contact@emersion.fr>, 
+	Pekka Paalanen <ppaalanen@gmail.com>, daniel@ffwll.ch, Daniel Stone <daniel@fooishbar.org>, 
+	'Marek =?utf-8?B?T2zFocOhayc=?= <maraeo@gmail.com>, Dave Airlie <airlied@gmail.com>, ville.syrjala@linux.intel.com, 
+	Xaver Hugl <xaver.hugl@gmail.com>, Joshua Ashton <joshua@froggi.es>, 
+	Michel =?utf-8?Q?D=C3=A4nzer?= <michel.daenzer@mailbox.org>
+Subject: Re: [PATCH v5 2/3] drm: Allow drivers to choose plane types to async
+ flip
+Message-ID: <pu4nawhvy52imqgpib4lx3s5lsbatmfrq3e7aa4zxfmewt6xrn@ki7woraegakt>
+References: <20240612193713.167448-1-andrealmeid@igalia.com>
+ <20240612193713.167448-3-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240612193713.167448-3-andrealmeid@igalia.com>
 
-Hi,
+On Wed, Jun 12, 2024 at 04:37:12PM -0300, André Almeida wrote:
+> Different planes may have different capabilities of doing async flips,
+> so create a field to let drivers allow async flip per plane type.
+> 
+> Signed-off-by: André Almeida <andrealmeid@igalia.com>
+> ---
+>  drivers/gpu/drm/drm_atomic_uapi.c | 4 ++--
+>  drivers/gpu/drm/drm_plane.c       | 3 +++
+>  include/drm/drm_plane.h           | 5 +++++
+>  3 files changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_plane.c b/drivers/gpu/drm/drm_plane.c
+> index 57662a1fd345..bbcec3940636 100644
+> --- a/drivers/gpu/drm/drm_plane.c
+> +++ b/drivers/gpu/drm/drm_plane.c
+> @@ -385,6 +385,9 @@ static int __drm_universal_plane_init(struct drm_device *dev,
+>  
+>  	drm_modeset_lock_init(&plane->mutex);
+>  
+> +	if (type == DRM_PLANE_TYPE_PRIMARY)
+> +		plane->async_flip = true;
+> +
 
-I noticed that the NIC started to fail on a couple of notebooks [0]
-[1] after upgrading to 6.9.1.
+Why? Also note that the commit message writes about adding the field,
+not about enabling it for the primary planes.
 
-I tracked down the problem to commit 861e8086029e ("e1000e: move force
-SMBUS from enable ulp function to avoid PHY loss issue", 2024-03-03),
-included in all 6.9.x releases.
-
-The fix is in commit bfd546a552e1 ("e1000e: move force SMBUS near
-the end of enable_ulp function", 2024-05-28) from mainline.
-
-The NIC fails right after boot on both systems I tried; I mention
-because the description is a bit unclear about that on the fix, maybe
-other systems are affected differently.
-
-Best regards.
+>  	plane->base.properties = &plane->properties;
+>  	plane->dev = dev;
+>  	plane->funcs = funcs;
 
 
-[0] HP ZBook 17 Gen 1 (D5D93AV) [8086:153a (rev 04)]
-[1] Lenovo Thinkpad P15 Gen 1 [8086:0d4c]
+-- 
+With best wishes
+Dmitry
