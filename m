@@ -1,77 +1,298 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 65B562E3E0
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B950E3A1C9;
+	Wed, 12 Jun 2024 18:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718216179; cv=none; b=lxNCZH46bLS93uTh1AIoSmw/Tquac5kQwo3nQWO8GqQt6PErLqDjTubHAPIFziKChGoRCF/77S3uR0icm9GGIWnERxbcEfT2L5UXy/D3Uj03Q2jBEoHjLO6TegNgZuJkpS9esQgNPgcexHwYnHCI0951JNHQH1FvPGoHHEx8pCQ=
+	t=1718216182; cv=none; b=QKK9Cz7PcaS5ACnyRzEpkDGkeEX2cEi++cQIxxE39drvuIW7afZ3UXYGkxniw2E4OyldboMGoEPAUNQH97w5wvsLr4Aji7N7C+M69lSSdHyT9aydnvl0+AVc6HkaFeu4Rio4JPDQcvltl1yrwIVWIRec2GzUfeBsKCahF8anZMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718216179; c=relaxed/simple;
-	bh=Fegv2307vxylDdMBcSU8WOxyIWy1vn+xS4tfkkD5nVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VrGCCotbcBbqv/lBihnd/eBxTiUTBwylPchg2eq/UAI2MrHpsZjJP8GFJeT9CDKicEs+cS1zWqBry6HjBW4jPf57ai/fskhgNTA3RWcHWeVxb411IOi39xGLvpjIMD2X1sDyO4M8CMJ5hel3bRwsvN2ZF9bSLEzqtE+37Y4DkAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 232816 invoked by uid 1000); 12 Jun 2024 14:16:15 -0400
-Date: Wed, 12 Jun 2024 14:16:15 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Peter Chen <peter.chen@kernel.org>,
-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-  Oliver Neukum <oneukum@suse.com>, linux-usb@vger.kernel.org,
-  linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-  usb-storage@lists.one-eyed-alien.net, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] usb: add missing MODULE_DESCRIPTION() macros
-Message-ID: <183a4d6a-30ad-4dce-b54d-3624aba36ac9@rowland.harvard.edu>
-References: <20240611-md-drivers-usb-v1-1-8b8d669e8e73@quicinc.com>
+	s=arc-20240116; t=1718216182; c=relaxed/simple;
+	bh=C/sTM/+AwVpVzWE4Xx22Er7RhO2ScdTSZELduPJ41sI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=TCTkHDZgwP0s45LkoAn2vUjDJo5+TrhQv6NDd4u95CvrtUJeDVig+e58FDWF7tA7n2ZHPtHwcRfPbyufXFWs4F7dMzOIaMNUA9mkVgM53BZoBOAdrEZMQRDLp7t3Kc9tncS1SYlEqPOd6VUqHSMnfRZIV7IkxO74aX9UNKMhqdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DS/+L8JK; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DS/+L8JK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718216179; x=1749752179;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=C/sTM/+AwVpVzWE4Xx22Er7RhO2ScdTSZELduPJ41sI=;
+  b=DS/+L8JKJAIt9AjLtjKxulgoXawWoVrhllpQFbF5l73coRAzhhd9Rybu
+   AOduiQy38pOjHc97wFrO8HNEsj0sTk8ejhR2gbvF6mQLy/W6P9HtlQwID
+   jdZkYbUynN96sk/ofLFSs9IkCmveOnpPMBswYzbFORQT9Rvrgm7Y9uR1u
+   07i+WN/Aq7+vOYv6KXcEnF3cnUH9jFxWZKNdMqxPZ4L74KeYUi4xAsoeU
+   gtvg9jbpIw88HndOHXOk3C822HlpDo6oIropIozuiLcfpcWQi1OAl31Nt
+   FqXRHhEZbjEYY9RqZs9EcTfiaSn5UPtVWig0XJf8VcT0Nen9CvyY9CANK
+   w==;
+X-CSE-ConnectionGUID: 2Dom8jopQbe90lpf/eywYg==
+X-CSE-MsgGUID: fkaCltTBRWGYBJfJF9fEyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="14875083"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="14875083"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 11:16:19 -0700
+X-CSE-ConnectionGUID: 96RRl6OaTeabx/ud40lFpA==
+X-CSE-MsgGUID: YC08FACsSJGdJJV+WxxwHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="39823169"
+Received: from rchatre-ws.ostc.intel.com ([10.54.69.144])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 11:16:18 -0700
+From: Reinette Chatre <reinette.chatre@intel.com>
+To: isaku.yamahata@intel.com,
+	pbonzini@redhat.com,
+	erdemaktas@google.com,
+	vkuznets@redhat.com,
+	seanjc@google.com,
+	vannapurve@google.com,
+	jmattson@google.com,
+	mlevitsk@redhat.com,
+	xiaoyao.li@intel.com,
+	chao.gao@intel.com,
+	rick.p.edgecombe@intel.com,
+	yuan.yao@intel.com
+Cc: reinette.chatre@intel.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V9 0/2] KVM: x86: Make bus clock frequency for vAPIC timer configurable
+Date: Wed, 12 Jun 2024 11:16:10 -0700
+Message-Id: <cover.1718214999.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611-md-drivers-usb-v1-1-8b8d669e8e73@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 11, 2024 at 07:37:20PM -0700, Jeff Johnson wrote:
-> With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/core/usbcore.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/mon/usbmon.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/class/usbtmc.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/storage/uas.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/chipidea/ci_hdrc_msm.o
-> 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
-> This is the remaining one-off fixes in usb.
-> 
-> Corrections to these descriptions are welcomed. I'm not an expert in
-> this code so in most cases I've taken these descriptions directly from
-> code comments, Kconfig descriptions, or git logs.  History has shown
-> that in some cases these are originally wrong due to cut-n-paste
-> errors, and in other cases the drivers have evolved such that the
-> original information is no longer accurate.
-> 
-> Let me know if any of these changes need to be segregated into
-> separate patches to go through different maintainer trees.
+Changes from v8:
+- v8: https://lore.kernel.org/lkml/cover.1718043121.git.reinette.chatre@intel.com/
+- Many changes to new udelay() utility patch as well as the APIC bus
+  frequency test aimed to make it more robust (additional ASSERTs,
+  consistent types, eliminate duplicate code, etc.) and useful with
+  support for more user configuration. Please refer to individual patches for
+  detailed changes.
+- Series applies cleanly to next branch of kvm-x86 with HEAD
+  e4e9e1067138e5620cf0500c3e5f6ebfb9d322c8.
 
-> diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-> index a0c432b14b20..65f9940bc7e8 100644
-> --- a/drivers/usb/core/usb.c
-> +++ b/drivers/usb/core/usb.c
-> @@ -1150,4 +1150,5 @@ static void __exit usb_exit(void)
->  
->  subsys_initcall(usb_init);
->  module_exit(usb_exit);
-> +MODULE_DESCRIPTION("USB support library");
->  MODULE_LICENSE("GPL");
+Changes from v7:
+- v7: https://lore.kernel.org/lkml/cover.1717695426.git.reinette.chatre@intel.com/
+- Use appropriate ioctl() return type.
+- Let new tsc_khz used by KVM selftest be of the same type as same variable
+  used in kernel.
+- Please refer to individual patches for detailed changes.
 
-I would change this to "USB core host-side support", or something more 
-along those lines.  It's not just a library because it does include 
-several drivers (such as the USB hub driver).  And it's host-side rather 
-than device-side -- that's a separate module.
+Changes from v6:
+- V6: https://lore.kernel.org/lkml/cover.1715017765.git.reinette.chatre@intel.com/
+- KVM changes were merged into kvm-x86 misc and subsequently dropped from
+  this submission. This submission only contains the selftest changes.
+  https://lore.kernel.org/lkml/ZmBw9R_jkNLYXkJh@google.com/
+- New patch to add udelay() utility to x86_64 KVM selftests. (Sean)
+- Many changes to APIC bus frequency selftest. Please refer to the patch
+  for detailed changes.
+- Series applies cleanly to next branch of kvm-x86 with HEAD
+  af0903ab52ee6d6f0f63af67fa73d5eb00f79b9a.
 
-Alan Stern
+Changes from v5:
+- v5: https://lore.kernel.org/lkml/cover.1714081725.git.reinette.chatre@intel.com/
+- Rebased on latest of "next" branch of https://github.com/kvm-x86/linux.git
+- Added Xiaoyao Li and Yuan Yao's Reviewed-by tags.
+- Use the KVM selftest vm_create() wrapper instead of open coding it. (Zide)
+- Improve grammar of selftest description. (Zide)
+
+Changes from v4:
+- v4: https://lore.kernel.org/lkml/cover.1711035400.git.reinette.chatre@intel.com/
+- Rename capability from KVM_CAP_X86_APIC_BUS_FREQUENCY to
+  KVM_CAP_X86_APIC_BUS_CYCLES_NS. (Xiaoyao Li).
+- Include "Testing" section in cover letter.
+- Add Rick's Reviewed-by tags.
+- Rebased on latest of "next" branch of https://github.com/kvm-x86/linux.git
+
+Changes from v3:
+- v3: https://lore.kernel.org/all/cover.1702974319.git.isaku.yamahata@intel.com/
+- Reworked all changelogs.
+- Regarding code changes: patches #1 and #2 are unchanged, patch #3 was
+  reworked according to Sean's guidance, and patch #4 (the test)
+  needed changes after rebase to kvm-x86/next and the implementation
+  (patch #3) changes.
+- Added Reviewed-by tags to patches #1, #2, and #4, but removed
+  Maxim's Reviewed-by tag from patch #3 because it changed so much.
+- Added a "Suggested-by" to patch #4 to reflect that it represents
+  Sean's guidance.
+- Reworked cover to match customs (in subject line) and reflect feedback
+  to patches: capability renamed to KVM_CAP_X86_APIC_BUS_FREQUENCY, clarify
+  distinction between "core crystal clock" and "bus clock", and update
+  pro/con list.
+- Please refer to individual patches for detailed changes.
+
+Changes from v2:
+- v2: https://lore.kernel.org/lkml/cover.1699936040.git.isaku.yamahata@intel.com/
+- Removed APIC_BUS_FREQUENCY and apic_bus_frequency of struct kvm-arch.
+- Update the commit messages.
+- Added reviewed-by (Maxim Levitsky)
+- Use 1.5GHz instead of 1GHz as frequency for the test case.
+
+Changes from v1:
+- v1: https://lore.kernel.org/all/cover.1699383993.git.isaku.yamahata@intel.com/
+- Added a test case
+- Fix a build error for i386 platform
+- Add check if vcpu isn't created.
+- Add check if lapic chip is in-kernel emulation.
+- Updated api.rst
+
+Summary
+-------
+Add KVM_CAP_X86_APIC_BUS_CYCLES_NS capability to configure the APIC
+bus clock frequency for APIC timer emulation.
+Allow KVM_ENABLE_CAPABILITY(KVM_CAP_X86_APIC_BUS_CYCLES_NS) to set the
+frequency in nanoseconds. When using this capability, the user space
+VMM should configure CPUID leaf 0x15 to advertise the frequency.
+
+Description
+-----------
+Vishal reported [1] that the TDX guest kernel expects a 25MHz APIC bus
+frequency but ends up getting interrupts at a significantly higher rate.
+
+The TDX architecture hard-codes the core crystal clock frequency to
+25MHz and mandates exposing it via CPUID leaf 0x15. The TDX architecture
+does not allow the VMM to override the value.
+
+In addition, per Intel SDM:
+    "The APIC timer frequency will be the processor’s bus clock or core
+     crystal clock frequency (when TSC/core crystal clock ratio is
+     enumerated in CPUID leaf 0x15) divided by the value specified in
+     the divide configuration register."
+
+The resulting 25MHz APIC bus frequency conflicts with the KVM hardcoded
+APIC bus frequency of 1GHz.
+
+The KVM doesn't enumerate CPUID leaf 0x15 to the guest unless the user
+space VMM sets it using KVM_SET_CPUID. If the CPUID leaf 0x15 is
+enumerated, the guest kernel uses it as the APIC bus frequency. If not,
+the guest kernel measures the frequency based on other known timers like
+the ACPI timer or the legacy PIT. As reported in [1] the TDX guest kernel
+expects a 25MHz timer frequency but gets timer interrupt more frequently
+due to the 1GHz frequency used by KVM.
+
+To ensure that the guest doesn't have a conflicting view of the APIC bus
+frequency, allow the userspace to tell KVM to use the same frequency that
+TDX mandates instead of the default 1Ghz.
+
+There are several options to address this:
+1. Make the KVM able to configure APIC bus frequency (this series).
+   Pro: It resembles the existing hardware.  The recent Intel CPUs
+        adopts 25MHz.
+   Con: Require the VMM to emulate the APIC timer at 25MHz.
+2. Make the TDX architecture enumerate CPUID leaf 0x15 to configurable
+   frequency or not enumerate it.
+   Pro: Any APIC bus frequency is allowed.
+   Con: Deviates from TDX architecture.
+3. Make the TDX guest kernel use 1GHz when it's running on KVM.
+   Con: The kernel ignores CPUID leaf 0x15.
+4. Change CPUID leaf 0x15 under TDX to report the crystal clock frequency
+   as 1 GHz.
+   Pro: This has been the virtual APIC frequency for KVM guests for 13
+        years.
+   Pro: This requires changing only one hard-coded constant in TDX.
+   Con: It doesn't work with other VMMs as TDX isn't specific to KVM.
+   Con: Core crystal clock frequency is also used to calculate TSC frequency.
+   Con: If it is configured to value different from hardware, it will
+        break the correctness of INTEL-PT Mini Time Count (MTC) packets
+        in TDs.
+
+Testing
+-------
+Tested on non-TDX host using included kselftest. Host running kernel
+with this series applied to "next" branch of
+https://github.com/kvm-x86/linux.git
+
+Tested on TDX host and TD using a modified version
+of x86/apic.c:test_apic_timer_one_shot() available from
+https://github.com/intel/kvm-unit-tests-tdx/blob/tdx/x86/apic.c.
+Host running TDX KVM development patches and QEMU with corresponding TDX
+changes.
+The test needed to be modified to (a) stop any lingering timers before the
+test starts, and (b) use CPUID 0x15 in TDX to accurately determine the TSC
+and APIC frequencies instead of making 1GHz assumption and use similar
+check as the kselftest test introduced in this series (while increasing
+the amount with which the frequency is allowed to deviate by 1%).
+
+The core changes made to x86/apic.c:test_apic_timer_one_shot() for this
+testing are shown below for reference. Work is in progress to upstream
+these modifications.
+
+@@ -477,11 +478,29 @@ static void lvtt_handler(isr_regs_t *regs)
+ 
+ static void test_apic_timer_one_shot(void)
+ {
+-	uint64_t tsc1, tsc2;
+ 	static const uint32_t interval = 0x10000;
++	uint64_t measured_apic_freq, tsc2, tsc1;
++	uint32_t tsc_freq = 0, apic_freq = 0;
++	struct cpuid cpuid_tsc = {};
+ 
+ #define APIC_LVT_TIMER_VECTOR    (0xee)
+ 
++	/*
++	 * CPUID 0x15 is not available in VMX, can use it to obtain
++	 * TSC and APIC frequency for accurate testing
++	 */
++	if (is_tdx_guest()) {
++		cpuid_tsc = raw_cpuid(0x15, 0);
++		tsc_freq = cpuid_tsc.c * cpuid_tsc.b / cpuid_tsc.a;
++		apic_freq = cpuid_tsc.c;
++	}
++	/*
++	   stop already fired local timer
++	   the test case can be negative failure if the timer fired
++	   after installed lvtt_handler but *before*
++	   write to TIMICT again.
++	 */
++	apic_write(APIC_TMICT, 0);
+ 	handle_irq(APIC_LVT_TIMER_VECTOR, lvtt_handler);
+ 
+ 	/* One shot mode */
+@@ -503,8 +522,16 @@ static void test_apic_timer_one_shot(void)
+ 	 * cases, the following should satisfy on all modern
+ 	 * processors.
+ 	 */
+-	report((lvtt_counter == 1) && (tsc2 - tsc1 >= interval),
+-	       "APIC LVT timer one shot");
++	if (is_tdx_guest()) {
++		measured_apic_freq = interval * (tsc_freq / (tsc2 - tsc1));
++		report((lvtt_counter == 1) &&
++		       (measured_apic_freq < apic_freq * 102 / 100) &&
++		       (measured_apic_freq > apic_freq * 98 / 100),
++		       "APIC LVT timer one shot");
++	} else {
++		report((lvtt_counter == 1) && (tsc2 - tsc1 >= interval),
++		"APIC LVT timer one shot");
++	}
+ }
+
+[1] https://lore.kernel.org/lkml/20231006011255.4163884-1-vannapurve@google.com/
+
+Isaku Yamahata (1):
+  KVM: selftests: Add test for configure of x86 APIC bus frequency
+
+Reinette Chatre (1):
+  KVM: selftests: Add x86_64 guest udelay() utility
+
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/include/x86_64/apic.h       |   8 +
+ .../selftests/kvm/include/x86_64/processor.h  |  17 ++
+ .../selftests/kvm/lib/x86_64/processor.c      |  11 +
+ .../kvm/x86_64/apic_bus_clock_test.c          | 202 ++++++++++++++++++
+ 5 files changed, 239 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/apic_bus_clock_test.c
+
+base-commit: e4e9e1067138e5620cf0500c3e5f6ebfb9d322c8
+-- 
+2.34.1
+
