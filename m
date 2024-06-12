@@ -1,148 +1,447 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3855417DE1D
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDEF7E8;
+	Wed, 12 Jun 2024 14:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718202907; cv=none; b=f5DGF8xqPg86e91kRrvUBeASCq5Z6L1n5HBsal7giVZlifSMJvdzKNdHSd5mGC4+oZ48dZNJZZpqHyI+Cb6Mj7+NZUJtxYH0bCwnSMwShdADxsx16Z87c59xklQdqJPqxVBmKfrzdnl6LBD3aXMeevbac6HO3LFfXvn4DgArpDI=
+	t=1718203009; cv=none; b=cb85EIIJsN/3cf35UKnf41GOqvz31UXLS0OF6KiAVhJX5fBEO5o1d0ss+Fdu0v/sYjMphXfaJ+cqHZnP0cvq+GhSmwg8NlXokX7Wi3EucUhn9TFILa6kJ+6pvPZMsO7JFjSaX2dExtpyH+XR8y+DScj9/VjxcEHN/GGcuk0Jbbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718202907; c=relaxed/simple;
-	bh=CJF6WXOxjBKKQGfYbRw0AbGXHFxgkGVBGBpz9drwwfs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=vCGGi3DE3qeoTdJDg12hAhpQUNKzMdQ1juLfLIAA3tuBMdJYKknfc4uSUGrjmSpxujjDbcRLDuKyPGbIUJzJowJt2/avz2GYTMxv5Xv3FafFpn/6Dl2XKwGIfTCaJJ9xhosG2o2HMmX5NeoQ3MZVah+pulyiAjG1MydArYo3TRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WLSZLAUt; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718203009; c=relaxed/simple;
+	bh=+Qrk02N38F2+EZhA+vwnf6upgFG4Ctsp/GWyrA4VMfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jBAVOjCN2sxI7tSO+gNIg1X7BNwBk1nKNIc7TZAgLDola3FRqEgjXpBUnzo50yec7TxEl6kWNJAC89ZbNQ1EK+maCdJs8EIGlR4mk+06mgpU5WpJPSvCS36ulOJY7hPrEdsbxwVaT2kxFi0kMDVfK6ayAg1xf+/U5STZ8VkNCkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lWyzwDbD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VvXV3JZm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WLSZLAUt"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4217c7eb6b4so35696925e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718202904; x=1718807704; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0d3nemtLTIlGYr0wQiRJe+hWAQzd6FHXLae79gtynBo=;
-        b=WLSZLAUt1+/7Ecpv24IYv2xlsWbtxZ7JyfLEQpmbNf2+8Ezn0yPvoiwuSCgmA5EdVY
-         lzRx6KnSa4O5e3KqOIEzaVuoCFBoBquMefBXjJkeNZS1CCN2qHcu2h+Knde1yfW9n0ds
-         lSlp6yG9weNKstEOe5fGLODGDSAZM54JFSc6RHaopmUSeolS7QQFD84SsKBek7eV2zem
-         iB0pTqFkP9NIPeDkytXWc1d5JBEZliVHZ98Gx1RXQ4mcF4azu1pZPuJJQPyfXmAoAJcw
-         TTXji6swQ/kkzqCiCDORS+67OedWRqWPVKMEgkFtxUQc7FOoa8gUX4E9i12WWU19LVJZ
-         +ZTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718202904; x=1718807704;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0d3nemtLTIlGYr0wQiRJe+hWAQzd6FHXLae79gtynBo=;
-        b=BH95FrGLgdxm9NNo0nq6ZefjSAQw04SBywoWO37z4pma1ZgfhQ6up/oz50yh08v0i8
-         gGVDtjWRYdjb2VVsGYEI4rrFIk8QYw9jrwS+3YPIz4Lau32304qXbXql0ihPFrT5IAXS
-         pXEu0eJrYLcedPm+VWVoAYUAx5s9AaJhbuiclhIKMacXfWz+27qB4bAv6n/YlByOhx6C
-         jzVs30TaBwI/v4smtjMV7Ikdddc/kpEJQaOmC7ZDIoLxS2HonhMgIwgT8XDyq15+otJv
-         Q7LK3zGSm7tU87IQ6pAyAVbs2Ykd+NAruw5kgSI1XeWSIpahyHhHEUcYbpgU9tIxiqYf
-         t2Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCX/Sv7oCCNzPgC04JYkgw6neQpgS7MVZYAIXaQaxyeRJsvOT+8DM7bRdBGUrKgUcFz7MyLP4oMyoqFQYuL707ApSozf029nzkZYJIMN
-X-Gm-Message-State: AOJu0Yxc/eJKUKv+7oeJxiVp6A3uFfvgsjl278nmYI+K6zctFroZmbSc
-	74cUO+IGWoDHyMzKTESQkP8/ss6V478vpJGOa3F1wrp40k79PpHB98nOd6cYaH0=
-X-Google-Smtp-Source: AGHT+IFdR66CEHF3pbbU8fAxsgoAgu2w+lXVGwcwRX1cvGhBLBdMA1CA0IynRV9+5vuANlVWMo80dQ==
-X-Received: by 2002:a05:600c:5487:b0:422:1a82:3ebf with SMTP id 5b1f17b1804b1-422867bec26mr19747255e9.35.1718202904586;
-        Wed, 12 Jun 2024 07:35:04 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:30bd:bf21:eed1:8aeb? ([2a01:e0a:982:cbb0:30bd:bf21:eed1:8aeb])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de623sm29220775e9.31.2024.06.12.07.35.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 07:35:04 -0700 (PDT)
-Message-ID: <de0672bc-b75b-48a8-aa01-2ed7b89aeff5@linaro.org>
-Date: Wed, 12 Jun 2024 16:35:02 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lWyzwDbD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VvXV3JZm"
+Date: Wed, 12 Jun 2024 16:36:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1718203004;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=t5E+xGBN+bpnbjwDcIYFz6pf3iBLnA4uNjCCL/DqW2Y=;
+	b=lWyzwDbDuv/JNfxlWrl2ByalhXQZINGguuPwsBxQfiHKM0sF1Ys7IcsGWATW+Ge2pEGN88
+	6ufqeYtXVZEkE+XrNEw+Of1ynA5XDzikUauZEGauPzfrxwoQ1U0e0k63kKsMGVWmannLo5
+	NZgDfLSCJEOZXn6ZbQfZrncg8Py0XaZ8RjCWR00l5jRYIYQaRvHUnyZTLRkxavP2DAsB2q
+	2lczp6TIQTb5kxl5nVeEdHZawIrRvTIZDUFl5y30NjDYGa/HSeUMEmIKGKtoqxdNpugyte
+	q4Q+XG0GJCyDaPtNrnyr1UH9zaRqFcFGpg3GG4ec53DZVFLZFfy2+yOq5B/0/g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1718203004;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=t5E+xGBN+bpnbjwDcIYFz6pf3iBLnA4uNjCCL/DqW2Y=;
+	b=VvXV3JZmhFmv7wHgO2AR8oAgbpPrrTZF5gzfpLZt1oTpOZlbAxVbVmHyHb8uQTEwgY9zWt
+	6sOnUN2xWIKpd1AA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: [ANNOUNCE] v6.10-rc3-rt5
+Message-ID: <20240612143642.AADPqSwN@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] spi: meson-spicc: add spicc loopback mode
-To: xianwei.zhao@amlogic.com, Mark Brown <broonie@kernel.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
- Sunny Luo <sunny.luo@amlogic.com>
-References: <20240612-spi_lbc-v1-1-d52e8c8011bd@amlogic.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20240612-spi_lbc-v1-1-d52e8c8011bd@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On 12/06/2024 11:44, Xianwei Zhao via B4 Relay wrote:
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> 
-> Add spicc loopback mode for debugging convenience.
-> 
-> Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> ---
->   drivers/spi/spi-meson-spicc.c | 6 ++++--
->   1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
-> index 8a4a8ba9dfed..8838a98b04c2 100644
-> --- a/drivers/spi/spi-meson-spicc.c
-> +++ b/drivers/spi/spi-meson-spicc.c
-> @@ -514,7 +514,9 @@ static int meson_spicc_prepare_message(struct spi_controller *host,
->   	/* Setup no wait cycles by default */
->   	writel_relaxed(0, spicc->base + SPICC_PERIODREG);
->   
-> -	writel_bits_relaxed(SPICC_LBC_W1, 0, spicc->base + SPICC_TESTREG);
-> +	writel_bits_relaxed(SPICC_LBC_W1,
-> +			    spi->mode & SPI_LOOP ? SPICC_LBC_W1 : 0,
-> +			    spicc->base + SPICC_TESTREG);
->   
->   	return 0;
->   }
-> @@ -850,7 +852,7 @@ static int meson_spicc_probe(struct platform_device *pdev)
->   
->   	host->num_chipselect = 4;
->   	host->dev.of_node = pdev->dev.of_node;
-> -	host->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH;
-> +	host->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH | SPI_LOOP;
->   	host->bits_per_word_mask = SPI_BPW_MASK(32) |
->   				   SPI_BPW_MASK(24) |
->   				   SPI_BPW_MASK(16) |
-> 
-> ---
-> base-commit: ec0d19f2b59699e2e148091debaa0d9d6af5800a
-> change-id: 20240611-spi_lbc-0859cebc580e
-> 
-> Best regards,
+Dear RT folks!
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+I'm pleased to announce the v6.10-rc3-rt5 patch set. 
+
+Changes since v6.10-rc3-rt4:
+
+  - Update the BH-locking series to the upcoming v6. This reworks
+    locking within the series which avoids a case where pahole fails to
+    process the BTF information. Reported by Clark Williams, Luis
+    Claudio R. Goncalves and Kurt Kanzenbach.
+
+Known issues
+    None.
+
+The delta patch against v6.10-rc3-rt4 is appended below and can be found here:
+ 
+     https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.10/incr/patch-6.10-rc3-rt4-rt5.patch.xz
+
+You can get this release via the git tree at:
+
+    https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v6.10-rc3-rt5
+
+The RT patch against v6.10-rc3 can be found here:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.10/older/patch-6.10-rc3-rt5.patch.xz
+
+The split quilt queue is available at:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.10/older/patches-6.10-rc3-rt5.tar.xz
+
+Sebastian
+
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 2fc16ce4a404b..62662ab99d1f4 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -733,15 +733,22 @@ struct bpf_nh_params {
+ 	};
+ };
+ 
++/* flags for bpf_redirect_info kern_flags */
++#define BPF_RI_F_RF_NO_DIRECT	BIT(0)	/* no napi_direct on return_frame */
++#define BPF_RI_F_RI_INIT	BIT(1)
++#define BPF_RI_F_CPU_MAP_INIT	BIT(2)
++#define BPF_RI_F_DEV_MAP_INIT	BIT(3)
++#define BPF_RI_F_XSK_MAP_INIT	BIT(4)
++
+ struct bpf_redirect_info {
+ 	u64 tgt_index;
+ 	void *tgt_value;
+ 	struct bpf_map *map;
+ 	u32 flags;
+-	u32 kern_flags;
+ 	u32 map_id;
+ 	enum bpf_map_type map_type;
+ 	struct bpf_nh_params nh;
++	u32 kern_flags;
+ };
+ 
+ struct bpf_net_context {
+@@ -757,14 +764,7 @@ static inline struct bpf_net_context *bpf_net_ctx_set(struct bpf_net_context *bp
+ 
+ 	if (tsk->bpf_net_context != NULL)
+ 		return NULL;
+-	memset(&bpf_net_ctx->ri, 0, sizeof(bpf_net_ctx->ri));
+-
+-	if (IS_ENABLED(CONFIG_BPF_SYSCALL)) {
+-		INIT_LIST_HEAD(&bpf_net_ctx->cpu_map_flush_list);
+-		INIT_LIST_HEAD(&bpf_net_ctx->dev_map_flush_list);
+-	}
+-	if (IS_ENABLED(CONFIG_XDP_SOCKETS))
+-		INIT_LIST_HEAD(&bpf_net_ctx->xskmap_map_flush_list);
++	bpf_net_ctx->ri.kern_flags = 0;
+ 
+ 	tsk->bpf_net_context = bpf_net_ctx;
+ 	return bpf_net_ctx;
+@@ -785,6 +785,11 @@ static inline struct bpf_redirect_info *bpf_net_ctx_get_ri(void)
+ {
+ 	struct bpf_net_context *bpf_net_ctx = bpf_net_ctx_get();
+ 
++	if (!(bpf_net_ctx->ri.kern_flags & BPF_RI_F_RI_INIT)) {
++		memset(&bpf_net_ctx->ri, 0, offsetof(struct bpf_net_context, ri.nh));
++		bpf_net_ctx->ri.kern_flags |= BPF_RI_F_RI_INIT;
++	}
++
+ 	return &bpf_net_ctx->ri;
+ }
+ 
+@@ -792,6 +797,11 @@ static inline struct list_head *bpf_net_ctx_get_cpu_map_flush_list(void)
+ {
+ 	struct bpf_net_context *bpf_net_ctx = bpf_net_ctx_get();
+ 
++	if (!(bpf_net_ctx->ri.kern_flags & BPF_RI_F_CPU_MAP_INIT)) {
++		INIT_LIST_HEAD(&bpf_net_ctx->cpu_map_flush_list);
++		bpf_net_ctx->ri.kern_flags |= BPF_RI_F_CPU_MAP_INIT;
++	}
++
+ 	return &bpf_net_ctx->cpu_map_flush_list;
+ }
+ 
+@@ -799,6 +809,11 @@ static inline struct list_head *bpf_net_ctx_get_dev_flush_list(void)
+ {
+ 	struct bpf_net_context *bpf_net_ctx = bpf_net_ctx_get();
+ 
++	if (!(bpf_net_ctx->ri.kern_flags & BPF_RI_F_DEV_MAP_INIT)) {
++		INIT_LIST_HEAD(&bpf_net_ctx->dev_map_flush_list);
++		bpf_net_ctx->ri.kern_flags |= BPF_RI_F_DEV_MAP_INIT;
++	}
++
+ 	return &bpf_net_ctx->dev_map_flush_list;
+ }
+ 
+@@ -806,14 +821,14 @@ static inline struct list_head *bpf_net_ctx_get_xskmap_flush_list(void)
+ {
+ 	struct bpf_net_context *bpf_net_ctx = bpf_net_ctx_get();
+ 
++	if (!(bpf_net_ctx->ri.kern_flags & BPF_RI_F_XSK_MAP_INIT)) {
++		INIT_LIST_HEAD(&bpf_net_ctx->xskmap_map_flush_list);
++		bpf_net_ctx->ri.kern_flags |= BPF_RI_F_XSK_MAP_INIT;
++	}
++
+ 	return &bpf_net_ctx->xskmap_map_flush_list;
+ }
+ 
+-DEFINE_FREE(bpf_net_ctx_clear, struct bpf_net_context *, bpf_net_ctx_clear(_T));
+-
+-/* flags for bpf_redirect_info kern_flags */
+-#define BPF_RI_F_RF_NO_DIRECT	BIT(0)	/* no napi_direct on return_frame */
+-
+ /* Compute the linear packet data range [data, data_end) which
+  * will be accessed by various program types (cls_bpf, act_bpf,
+  * lwt, ...). Subsystems allowing direct data access must (!)
+diff --git a/localversion-rt b/localversion-rt
+index ad3da1bcab7e8..0efe7ba1930e1 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt4
++-rt5
+diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
+index 9596ad19224ad..3c9f6538990ea 100644
+--- a/net/bridge/br_netfilter_hooks.c
++++ b/net/bridge/br_netfilter_hooks.c
+@@ -853,6 +853,7 @@ static int br_nf_dev_queue_xmit(struct net *net, struct sock *sk, struct sk_buff
+ {
+ 	struct nf_bridge_info *nf_bridge = nf_bridge_info_get(skb);
+ 	unsigned int mtu, mtu_reserved;
++	int ret;
+ 
+ 	mtu_reserved = nf_bridge_mtu_reduction(skb);
+ 	mtu = skb->dev->mtu;
+@@ -885,7 +886,7 @@ static int br_nf_dev_queue_xmit(struct net *net, struct sock *sk, struct sk_buff
+ 
+ 		IPCB(skb)->frag_max_size = nf_bridge->frag_max_size;
+ 
+-		guard(local_lock_nested_bh)(&brnf_frag_data_storage.bh_lock);
++		local_lock_nested_bh(&brnf_frag_data_storage.bh_lock);
+ 		data = this_cpu_ptr(&brnf_frag_data_storage);
+ 
+ 		if (skb_vlan_tag_present(skb)) {
+@@ -901,7 +902,9 @@ static int br_nf_dev_queue_xmit(struct net *net, struct sock *sk, struct sk_buff
+ 		skb_copy_from_linear_data_offset(skb, -data->size, data->mac,
+ 						 data->size);
+ 
+-		return br_nf_ip_fragment(net, sk, skb, br_nf_push_frag_xmit);
++		ret = br_nf_ip_fragment(net, sk, skb, br_nf_push_frag_xmit);
++		local_unlock_nested_bh(&brnf_frag_data_storage.bh_lock);
++		return ret;
+ 	}
+ 	if (IS_ENABLED(CONFIG_NF_DEFRAG_IPV6) &&
+ 	    skb->protocol == htons(ETH_P_IPV6)) {
+@@ -913,7 +916,7 @@ static int br_nf_dev_queue_xmit(struct net *net, struct sock *sk, struct sk_buff
+ 
+ 		IP6CB(skb)->frag_max_size = nf_bridge->frag_max_size;
+ 
+-		guard(local_lock_nested_bh)(&brnf_frag_data_storage.bh_lock);
++		local_lock_nested_bh(&brnf_frag_data_storage.bh_lock);
+ 		data = this_cpu_ptr(&brnf_frag_data_storage);
+ 		data->encap_size = nf_bridge_encap_header_len(skb);
+ 		data->size = ETH_HLEN + data->encap_size;
+@@ -921,8 +924,12 @@ static int br_nf_dev_queue_xmit(struct net *net, struct sock *sk, struct sk_buff
+ 		skb_copy_from_linear_data_offset(skb, -data->size, data->mac,
+ 						 data->size);
+ 
+-		if (v6ops)
+-			return v6ops->fragment(net, sk, skb, br_nf_push_frag_xmit);
++		if (v6ops) {
++			ret = v6ops->fragment(net, sk, skb, br_nf_push_frag_xmit);
++			local_unlock_nested_bh(&brnf_frag_data_storage.bh_lock);
++			return ret;
++		}
++		local_unlock_nested_bh(&brnf_frag_data_storage.bh_lock);
+ 
+ 		kfree_skb(skb);
+ 		return -EMSGSIZE;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 0ff8b11c8ab6f..85702022c5cd4 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4030,9 +4030,8 @@ sch_handle_ingress(struct sk_buff *skb, struct packet_type **pt_prev, int *ret,
+ 		   struct net_device *orig_dev, bool *another)
+ {
+ 	struct bpf_mprog_entry *entry = rcu_dereference_bh(skb->dev->tcx_ingress);
+-	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear) = NULL;
+ 	enum skb_drop_reason drop_reason = SKB_DROP_REASON_TC_INGRESS;
+-	struct bpf_net_context __bpf_net_ctx;
++	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
+ 	int sch_ret;
+ 
+ 	if (!entry)
+@@ -4067,10 +4066,12 @@ sch_handle_ingress(struct sk_buff *skb, struct packet_type **pt_prev, int *ret,
+ 			break;
+ 		}
+ 		*ret = NET_RX_SUCCESS;
++		bpf_net_ctx_clear(bpf_net_ctx);
+ 		return NULL;
+ 	case TC_ACT_SHOT:
+ 		kfree_skb_reason(skb, drop_reason);
+ 		*ret = NET_RX_DROP;
++		bpf_net_ctx_clear(bpf_net_ctx);
+ 		return NULL;
+ 	/* used by tc_run */
+ 	case TC_ACT_STOLEN:
+@@ -4080,8 +4081,10 @@ sch_handle_ingress(struct sk_buff *skb, struct packet_type **pt_prev, int *ret,
+ 		fallthrough;
+ 	case TC_ACT_CONSUMED:
+ 		*ret = NET_RX_SUCCESS;
++		bpf_net_ctx_clear(bpf_net_ctx);
+ 		return NULL;
+ 	}
++	bpf_net_ctx_clear(bpf_net_ctx);
+ 
+ 	return skb;
+ }
+@@ -4089,10 +4092,9 @@ sch_handle_ingress(struct sk_buff *skb, struct packet_type **pt_prev, int *ret,
+ static __always_inline struct sk_buff *
+ sch_handle_egress(struct sk_buff *skb, int *ret, struct net_device *dev)
+ {
+-	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear) = NULL;
+ 	struct bpf_mprog_entry *entry = rcu_dereference_bh(dev->tcx_egress);
+ 	enum skb_drop_reason drop_reason = SKB_DROP_REASON_TC_EGRESS;
+-	struct bpf_net_context __bpf_net_ctx;
++	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
+ 	int sch_ret;
+ 
+ 	if (!entry)
+@@ -4115,10 +4117,12 @@ sch_handle_egress(struct sk_buff *skb, int *ret, struct net_device *dev)
+ 		/* No need to push/pop skb's mac_header here on egress! */
+ 		skb_do_redirect(skb);
+ 		*ret = NET_XMIT_SUCCESS;
++		bpf_net_ctx_clear(bpf_net_ctx);
+ 		return NULL;
+ 	case TC_ACT_SHOT:
+ 		kfree_skb_reason(skb, drop_reason);
+ 		*ret = NET_XMIT_DROP;
++		bpf_net_ctx_clear(bpf_net_ctx);
+ 		return NULL;
+ 	/* used by tc_run */
+ 	case TC_ACT_STOLEN:
+@@ -4128,8 +4132,10 @@ sch_handle_egress(struct sk_buff *skb, int *ret, struct net_device *dev)
+ 		fallthrough;
+ 	case TC_ACT_CONSUMED:
+ 		*ret = NET_XMIT_SUCCESS;
++		bpf_net_ctx_clear(bpf_net_ctx);
+ 		return NULL;
+ 	}
++	bpf_net_ctx_clear(bpf_net_ctx);
+ 
+ 	return skb;
+ }
+@@ -6372,6 +6378,7 @@ static void __napi_busy_loop(unsigned int napi_id,
+ 	struct napi_struct *napi;
+ 
+ 	WARN_ON_ONCE(!rcu_read_lock_held());
++
+ restart:
+ 	napi_poll = NULL;
+ 
+@@ -6893,12 +6900,11 @@ static int napi_threaded_poll(void *data)
+ 
+ static __latent_entropy void net_rx_action(struct softirq_action *h)
+ {
+-	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear) = NULL;
+ 	struct softnet_data *sd = this_cpu_ptr(&softnet_data);
+ 	unsigned long time_limit = jiffies +
+ 		usecs_to_jiffies(READ_ONCE(net_hotdata.netdev_budget_usecs));
++	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
+ 	int budget = READ_ONCE(net_hotdata.netdev_budget);
+-	struct bpf_net_context __bpf_net_ctx;
+ 	LIST_HEAD(list);
+ 	LIST_HEAD(repoll);
+ 
+@@ -6955,7 +6961,8 @@ static __latent_entropy void net_rx_action(struct softirq_action *h)
+ 		sd->in_net_rx_action = false;
+ 
+ 	net_rps_action_and_irq_enable(sd);
+-end:;
++end:
++	bpf_net_ctx_clear(bpf_net_ctx);
+ }
+ 
+ struct netdev_adjacent {
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 64a1696a52920..f00cc56123013 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2019,6 +2019,7 @@ BPF_CALL_5(bpf_csum_diff, __be32 *, from, u32, from_size,
+ 	struct bpf_scratchpad *sp = this_cpu_ptr(&bpf_sp);
+ 	u32 diff_size = from_size + to_size;
+ 	int i, j = 0;
++	__wsum ret;
+ 
+ 	/* This is quite flexible, some examples:
+ 	 *
+@@ -2032,13 +2033,15 @@ BPF_CALL_5(bpf_csum_diff, __be32 *, from, u32, from_size,
+ 		     diff_size > sizeof(sp->diff)))
+ 		return -EINVAL;
+ 
+-	guard(local_lock_nested_bh)(&bpf_sp.bh_lock);
++	local_lock_nested_bh(&bpf_sp.bh_lock);
+ 	for (i = 0; i < from_size / sizeof(__be32); i++, j++)
+ 		sp->diff[j] = ~from[i];
+ 	for (i = 0; i <   to_size / sizeof(__be32); i++, j++)
+ 		sp->diff[j] = to[i];
+ 
+-	return csum_partial(sp->diff, diff_size, seed);
++	ret = csum_partial(sp->diff, diff_size, seed);
++	local_unlock_nested_bh(&bpf_sp.bh_lock);
++	return ret;
+ }
+ 
+ static const struct bpf_func_proto bpf_csum_diff_proto = {
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index b33bae4ba78b6..5000394a4f51a 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -309,12 +309,16 @@ void napi_get_frags_check(struct napi_struct *napi)
+ void *__napi_alloc_frag_align(unsigned int fragsz, unsigned int align_mask)
+ {
+ 	struct napi_alloc_cache *nc = this_cpu_ptr(&napi_alloc_cache);
++	void *data;
+ 
+ 	fragsz = SKB_DATA_ALIGN(fragsz);
+-	guard(local_lock_nested_bh)(&napi_alloc_cache.bh_lock);
+ 
+-	return __page_frag_alloc_align(&nc->page, fragsz, GFP_ATOMIC,
++	local_lock_nested_bh(&napi_alloc_cache.bh_lock);
++	data = __page_frag_alloc_align(&nc->page, fragsz, GFP_ATOMIC,
+ 				       align_mask);
++	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
++	return data;
++
+ }
+ EXPORT_SYMBOL(__napi_alloc_frag_align);
+ 
+@@ -342,17 +346,20 @@ static struct sk_buff *napi_skb_cache_get(void)
+ 	struct napi_alloc_cache *nc = this_cpu_ptr(&napi_alloc_cache);
+ 	struct sk_buff *skb;
+ 
+-	guard(local_lock_nested_bh)(&napi_alloc_cache.bh_lock);
++	local_lock_nested_bh(&napi_alloc_cache.bh_lock);
+ 	if (unlikely(!nc->skb_count)) {
+ 		nc->skb_count = kmem_cache_alloc_bulk(net_hotdata.skbuff_cache,
+ 						      GFP_ATOMIC,
+ 						      NAPI_SKB_CACHE_BULK,
+ 						      nc->skb_cache);
+-		if (unlikely(!nc->skb_count))
++		if (unlikely(!nc->skb_count)) {
++			local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
+ 			return NULL;
++		}
+ 	}
+ 
+ 	skb = nc->skb_cache[--nc->skb_count];
++	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
+ 	kasan_mempool_unpoison_object(skb, kmem_cache_size(net_hotdata.skbuff_cache));
+ 
+ 	return skb;
+@@ -1439,7 +1446,7 @@ static void napi_skb_cache_put(struct sk_buff *skb)
+ 	if (!kasan_mempool_poison_object(skb))
+ 		return;
+ 
+-	guard(local_lock_nested_bh)(&napi_alloc_cache.bh_lock);
++	local_lock_nested_bh(&napi_alloc_cache.bh_lock);
+ 	nc->skb_cache[nc->skb_count++] = skb;
+ 
+ 	if (unlikely(nc->skb_count == NAPI_SKB_CACHE_SIZE)) {
+@@ -1451,6 +1458,7 @@ static void napi_skb_cache_put(struct sk_buff *skb)
+ 				     nc->skb_cache + NAPI_SKB_CACHE_HALF);
+ 		nc->skb_count = NAPI_SKB_CACHE_HALF;
+ 	}
++	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
+ }
+ 
+ void __napi_kfree_skb(struct sk_buff *skb, enum skb_drop_reason reason)
