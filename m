@@ -1,119 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80FE1DDF6
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9061DDF6;
+	Wed, 12 Jun 2024 15:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718204479; cv=none; b=DYv+ikqSaJ/t9as/Eyv6LW6RlB9LpRZ4Slc1ESE7/WqUcP20x/YOKoOm6MbkK20/Rkqcdrp2msO0JnShiEtA+vh/6+Wv9RXTCcjPS4X2l4cixY5zkbqFhcL47Hn955s36pOdNLEJo48xB/r4N6rD+61JWJBLiCX8ynsgmCUC7ZE=
+	t=1718204495; cv=none; b=e7A9gMgnB8lnMlIPfvSUne6K+BWSfyKc+vQP8qyYrOVu3UeQgN6P04PTAxJyEpEjnZn8ijmFbmJFXo/eqfK87yhlj9BgkqwabgmM7oQ/90Nw5oE+Bx3pQs/QjUUVN/KEYEN2mc41FJmkbrnRNdl9t2z7aipcHVwqB0H2Meu8xsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718204479; c=relaxed/simple;
-	bh=99ZGerARksGUGdw+E23Lcu8HvgTTG9/x1SmFsKpGl20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EBQ4lcpfLxmUdb1xcntuc71CIREv1H8mewwe57hwClT1nTj6P8Um2JEHl9w5Rk8BjuvUdL521fkOJd6V/YkmoAQhZtuNfB08TTeImSiA00sTiXR/YqGyfqYbU3M1coHCzeMJ3CQbtPLmoxbwtGp0ouHy+aBLkOjPZmPeQJ+DsRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fas3SAW2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718204495; c=relaxed/simple;
+	bh=5gh97F4lmMTKjYGn4RJTGhAQsduqmkqK7gLhFlr0UQM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uwSSeJgIqmBiUI8WkpyUHWpgc/tZ5QwbcG40mccNeAYI8Nz/U7vZYYTGS+VZVTu/1RmsIP8/NCS3C2YR+QeEIv2fYZAo3QEaubIUOXhg32AM7WSo87qJApOAb2o3Z4c462KNYwuvJ+JnaSPqkiBZPQBsII0klK75j8916y7ZxxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hUA+Xytk; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fas3SAW2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718204476;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AK7Qzf/MhUoQm7mnY6EWFd26DeQUWTNXILgKlaTUO3c=;
-	b=Fas3SAW2CjbWoV8KGQZvhGQVm07fkAW+Jrd070R1rod7+7lrOHyJp04Id/nC5w11bBthbo
-	ms7Cj/w6JY5wd6oUdR4vhYiA2mXAjMCm2rAMaJvsE+0cbBKup/qMPbqvyBuw5RPV5TRtD2
-	ZhLgfMF5UN/wVQYjX31Tm8C7hP3SYT8=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-211-SoQ-7KDuMS-iP7koNzYsXw-1; Wed, 12 Jun 2024 11:01:13 -0400
-X-MC-Unique: SoQ-7KDuMS-iP7koNzYsXw-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ebf7a0ed89so12806301fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:01:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUA+Xytk"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52c82101407so7519914e87.3;
+        Wed, 12 Jun 2024 08:01:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718204492; x=1718809292; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5gh97F4lmMTKjYGn4RJTGhAQsduqmkqK7gLhFlr0UQM=;
+        b=hUA+XytkSAfJyiIooCRkAx/OYbIxlLC8zes5HHc//tZ5xYXBs9hVs+k2EaM7U3Gxyf
+         kCz4JZMDJzDLDWXiV+3HAamOQ1JQuRuhkhsxKMx/E3KvzUnLoJhWAbgVcOw4tkppQJPV
+         JZxFiTC94Y22cotNi+WUPGzhJCurZWpbE4AgtmYGbTDcYtRtkNR8ArfNomLG+qFcuhIg
+         z7wZ9v7r8K0YYPlGuNU4vKRR5MBRbNSD1Cp4hUj88szDFQAea5CvbVN/OVgIePaG0wh/
+         0fUrzxZxknpy1Um3k91J1P2g3PLCeLqCFSmuLnIS3Egym3cKfBbsKoCTusonHqy7RYil
+         o2BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718204472; x=1718809272;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AK7Qzf/MhUoQm7mnY6EWFd26DeQUWTNXILgKlaTUO3c=;
-        b=TKUXL8Q37YTH49UuOIQwmLn6IrI51k0CNRlVuzNa1FezZZOP//BLnvE4vz42KJ+Pf/
-         1Z38S63BCdfyUlfPL6Y8E04RNg2yWoMjJWfjWxQBrH9gvgh/TzkLxzAiQcvc5P7Sj9ga
-         C88F5V9HS54yAbBzxwyb0PaO9GhjGxRJdXwUzE8Lcss5fgRjItuh9R6S3PDYuUhwLyke
-         fkPujXFuwTdsqx+Pu+73DgUhGgr3dSEkX3F4E21vZ7f892kuUdnUsHPqGFHqIbXDTBYD
-         jzEoAXgCdDFgM6ufcDOYCfp+eH81d0Q72iYTYFp2mwsyzSMR8Z6IXGnijF9EPDGZlshl
-         hWbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2Zqs5vMIrI+ezBC83XErh6cak1LmqmgaGsKxlNC3DnRr6l6ZUBfdiaymq3PwkLub/S9r4Q7VEUgU3x6dMFC50A+mLi7gA/Mb63nOW
-X-Gm-Message-State: AOJu0YzUNPisOaV+VGh4IZ8TNyRMQP6RT7J8FUUaFxHbx9Nq9OAKpLuA
-	IT8jCeCKoOuratOI20POBW/6PHWTXgfmUHFGa2XFIOiVzbsiE1tHX+tSCDOBaqdx57pOBvvNvir
-	vqgPunQbl/ozvDiAMUUocKC3JVdpABNBVdTTb+0sEyV83bwV8809fYvzbA0RLLg==
-X-Received: by 2002:a2e:99c7:0:b0:2ea:e98e:4399 with SMTP id 38308e7fff4ca-2ebfc94de35mr14250771fa.36.1718204472175;
-        Wed, 12 Jun 2024 08:01:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFTuPBgbKAFLkoD5DUY4zQdrl9+ofAljCO8M4EqUgORhCBOFn2MvAE0KtkNSgtX7OadYbchrQ==
-X-Received: by 2002:a2e:99c7:0:b0:2ea:e98e:4399 with SMTP id 38308e7fff4ca-2ebfc94de35mr14250531fa.36.1718204471700;
-        Wed, 12 Jun 2024 08:01:11 -0700 (PDT)
-Received: from localhost (nat-pool-brq-u.redhat.com. [213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f26578176sm7756461f8f.11.2024.06.12.08.01.10
+        d=1e100.net; s=20230601; t=1718204492; x=1718809292;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5gh97F4lmMTKjYGn4RJTGhAQsduqmkqK7gLhFlr0UQM=;
+        b=ud9C3XhRfhw/U0LLC7342InwBS4BkiKqezTqaAxlKLa5PdZsuRZNbsYnVToGaus7pJ
+         0ZbR6KTjvXtZbU1Z5MKT19tw1hFMlw8OgKSVve3/rb9GShottFCh6PXRDZfoAnOs8BSL
+         JmgfPcyn4xPO/znfL1OnWaqTYZgmQzO7AoDpRzz8VS6l429IEi5DDz3wF85AoPhIeb0v
+         i3zoh2tTgDiF2vUeaAbxfvfY3Hzh5DGMTpC2kNI6Qn7GcCElwPIjyOzKkiZexLToKyws
+         C74Snsmw++VNOkwaN/dWWZ1wKbacMoWqXv9RthLiblS7NUMn4GXaRIjIN+D6tYl8s4sx
+         Xhiw==
+X-Forwarded-Encrypted: i=1; AJvYcCW13xFAwZPSrQ8rdqHJMtD9RjFRKAtrivkXESCEX+diyfv+d8J/raepeSP8pq47+ha40PlI4vOARE9WVThLjNGr8StwYhR3xEBecSeno94KigMJEGz9l9E2v14vET0JAMuwFQbqgEFSPiADQFfx6NC14HAdjquMnkwTNEGA3oBIqkZgyg==
+X-Gm-Message-State: AOJu0YwCSGxbLqPbdH9jYm+pehlm4UYZ/6a2K1kyobQ+zVOGNKbSlUSL
+	yB34wQoJ9RtAU0JxmL39tu7xaLdpzMD7u9qS/KyGgEZEPKRrL8XL
+X-Google-Smtp-Source: AGHT+IEL6ILLYP49R4ixZXZKEIh70NZQEod0jSyEsz1U18tuPac2Cy9eS3MUOZTZTH4S3xwUrcs66Q==
+X-Received: by 2002:a05:6512:281a:b0:52c:9f9d:d55a with SMTP id 2adb3069b0e04-52c9f9dd6acmr163290e87.51.1718204491285;
+        Wed, 12 Jun 2024 08:01:31 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:994e:fbde:478:1ce1? (p200300f6ef1cc500994efbde04781ce1.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:994e:fbde:478:1ce1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0d200820sm570859466b.181.2024.06.12.08.01.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 08:01:10 -0700 (PDT)
-Date: Wed, 12 Jun 2024 17:01:04 +0200
-From: Davide Caratti <dcaratti@redhat.com>
-To: =?iso-8859-1?Q?Asbj=F8rn_Sloth_T=F8nnesen?= <ast@fiberby.net>
-Cc: Ilya Maximets <i.maximets@ovn.org>, Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>, Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH net-next 1/9] net/sched: flower: define new tunnel
- flags
-Message-ID: <Zmm4MMX_WFFEfLFd@dcaratti.users.ipa.redhat.com>
-References: <20240611235355.177667-1-ast@fiberby.net>
- <20240611235355.177667-2-ast@fiberby.net>
+        Wed, 12 Jun 2024 08:01:30 -0700 (PDT)
+Message-ID: <26b29525e41aad25e144f98994640585c4c8b705.camel@gmail.com>
+Subject: Re: [PATCH v3 2/2] iio: adc: ad7192: Fix clock config
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Alisa-Dariana Roman <alisadariana@gmail.com>, Alisa-Dariana Roman
+ <alisa.roman@analog.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Michael Hennerich <michael.hennerich@analog.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Cc: Alexandru Tachici <alexandru.tachici@analog.com>, Lars-Peter Clausen
+	 <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Rob Herring
+	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	 <conor+dt@kernel.org>
+Date: Wed, 12 Jun 2024 17:05:18 +0200
+In-Reply-To: <20240612141637.175709-3-alisa.roman@analog.com>
+References: <20240612141637.175709-1-alisa.roman@analog.com>
+	 <20240612141637.175709-3-alisa.roman@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240611235355.177667-2-ast@fiberby.net>
 
-On Tue, Jun 11, 2024 at 11:53:34PM +0000, Asbjørn Sloth Tønnesen wrote:
-> Define new TCA_FLOWER_KEY_FLAGS_* flags for use in struct
-> flow_dissector_key_control, covering the same flags
-> as currently exposed through TCA_FLOWER_KEY_ENC_FLAGS,
-> but assign them new bit positions in so that they don't
-> conflict with existing TCA_FLOWER_KEY_FLAGS_* flags.
-> 
-> Synchronize FLOW_DIS_* flags, but put the new flags
-> under FLOW_DIS_F_*. The idea is that we can later, move
-> the existing flags under FLOW_DIS_F_* as well.
-> 
-> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+On Wed, 2024-06-12 at 17:16 +0300, Alisa-Dariana Roman wrote:
+> There are actually 4 configuration modes of clock source for AD719X
+> devices. Either a crystal can be attached externally between MCLK1 and
+> MCLK2 pins, or an external CMOS-compatible clock can drive the MCLK2
+> pin. The other 2 modes make use of the 4.92MHz internal clock.
+>=20
+> Note that the fix tag is for the commit that moved the driver out of
+> staging.
+>=20
+> Fixes: b581f748cce0 ("staging: iio: adc: ad7192: move out of staging")
+> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
 > ---
->  include/net/flow_dissector.h | 17 +++++++++++++----
->  include/uapi/linux/pkt_cls.h |  5 +++++
->  2 files changed, 18 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/net/flow_dissector.h b/include/net/flow_dissector.h
-> index 99626475c3f4a..1f0fddb29a0d8 100644
-> --- a/include/net/flow_dissector.h
-> +++ b/include/net/flow_dissector.h
-> @@ -16,7 +16,8 @@ struct sk_buff;
->   * struct flow_dissector_key_control:
->   * @thoff:     Transport header offset
->   * @addr_type: Type of key. One of FLOW_DISSECTOR_KEY_*
-> - * @flags:     Key flags. Any of FLOW_DIS_(IS_FRAGMENT|FIRST_FRAGENCAPSULATION)
-> + * @flags:     Key flags.
-> + *             Any of FLOW_DIS_(IS_FRAGMENT|FIRST_FRAGENCAPSULATION|F_*)
 
-^^ nit: there was a typo in the original line above. Maybe this is a
-good chance to put the missing '|' before 'ENCAPSULATION'
+Hmmm, I did not looked at the datasheet but looked at the older implementat=
+ion
+and I'm not sure this is an actual fix. Can you elaborate on that?
+
+So on the current implementation I can see that we have some properties tha=
+t are
+not documented:
+
+adi,int-clock-output-enable
+adi,clock-xtal
+
+So, I see in your series that you're documenting adi,clock-xtal using clk-n=
+ames.
+I do think your code is cleaner but I don't think the older implementation =
+to be
+buggy. Am I missing something?
+
+I can also see that you're ignoring AD7192_CLK_INT_CO... That's also removi=
+ng
+functionality from the driver even though the implementation is not as it s=
+hould
+be I think. If I understand that mode correctly, it's just about having the
+internal clock in the MCLK pin. Effectively this would then be a clock prov=
+ider
+with a fixed rate of 4.92MHz. So I believe that exposing it as a clock prov=
+ider
+would likely be the way to go.
+
+- Nuno S=C3=A1=20
 
 
