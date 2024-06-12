@@ -1,205 +1,124 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2060.outbound.protection.outlook.com [40.107.22.60])
+Received: from smtp58.i.mail.ru (smtp58.i.mail.ru [95.163.41.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18BF13BAD7;
-	Wed, 12 Jun 2024 06:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718173132; cv=fail; b=VvnPtNvz+On0TdvUvxrZHirDF4X8jLoNL/EMmZuhzZf3NoXHaOs3bW5zbd8pjFZBqNml2e9KjETK78xIXHFVOr95+CIgNbgaoAaJqz/K2oOMec4zeO7mxOmhMAZvAkKZtUAbajBGJt55yeBm1UNFB/SFRB7uuPoNI6yXbPr71rk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718173132; c=relaxed/simple;
-	bh=9qmVcGcov4NL9U650rX5AxsRVw+ZqWwkY69Y0hPg7DE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Dcu0IDpOrj20tkjjllZfrvsI1pu8dXZlyHxAfTPJ+NkDq7l6vFHUEqgMcO7OrK8kNb4kBjPTTQ7CbIVa2BspTiPc6gBJmCuSGBG6SApr2Zy5GPDFjqw/SDpRnkti2EL7UnY9bzUnn+Jea2+OTlMoWxaEbxgZ4WQU6sGdvopt1Aw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=heBoMDNc; arc=fail smtp.client-ip=40.107.22.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D560113CAA7;
+	Wed, 12 Jun 2024 06:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.163.41.96
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718173192; cv=none; b=ZXg5KDw3N4oFS44c+SgvwPpMPC10nHeFf71JH5KeV4j+M2NAljVE22yD82Covd9JCspPVSyzI7Ir9RMoNkRUmHaPSsZnul3qxDl/b/nb9+p+9Ze+v4x+4l2SHpv0GgPBLL4XMZIHza4B9R9w1mmwRxre8EXRLZlQSs0R6g/0EOk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718173192; c=relaxed/simple;
+	bh=3XnFHemwzoffQbBL8ILZ+D+G1+e/Y3bOk7LP6mh8MZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lmEkcQwc9PFlS0ZHgdy7BzLVNPcjiZfkxf4hd3zQjTfqNl+582DNysXGu3DmCYBI8XBWE3inqvYv0SRi2UxRBw6Jto/Gr93AVlRoO/UdVz9Gtf9iy85BT2HgKPfHVlwQFFbzpZOKLrmQNZBmX/49d8USB34OrcfDpXpLG5cQtkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=dpiPJP3H; arc=none smtp.client-ip=95.163.41.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="heBoMDNc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jJkeVGXWqNmgrGFcdsi8Cq1pEPjKKtYR66nDLtm0lO3SPVBzwTXJpuhzuAKgoGtDhvNh2dSgDaXUUGClGCVg7n/bq4swNXUnSydWOpvClo3JwGabuDzaCv4KOgevwDLbEDp9RgKW12q04doRZ6bk883HniKuaWuct4OEmbcSXEJr0N1hzmIMjInQeyBb5+D9xCrl4ktOO1atgmB9l8qfNpqRZNbYQCP6U630hn4y4m+P+HpGzPO36QUxdvTpCv8T21Gw6ou4uYxB2QsDck5Uj9GqC/YTQL2qrZURVw40nV/pd2m3Iw4CeaT+djBEdQrd3zTFMApIOSUL95pvAWxH/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r6tz0jG/wn3EbQEJpi1PXob/zB6l4ssTtJEl8hbZhJ8=;
- b=DaGTC/W3uuGW2zp8lzgdrWtOIrwLgenY0ddggV/uJ02zvtF8kIWsiDMHcfJrXlWwSIhdPbCSPp6K3zoNWVxDkZteJnO9WhD22sZDwTFeVw4bKyFqpZnYvJbcCykbtH3s5ptxzFptRwW50DTd7+7I599CTrQFwAwHLzqjgUg8tCjOkZmEFdsV/Wd/DY3My4AjwEYEHXZBu6xY9u3aGJ8g/FQlI7Vs+TXi8IMlXfLvuo8jMiSMaHu5zY7Cje6p55qArKEoQ6prbt75yYsowHKKnBrB6kjaotYYbo9+BsF2+DNm56iWxmNGgdQq0BO9igj7Ex91fm6+JfhRrSr13nJzOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r6tz0jG/wn3EbQEJpi1PXob/zB6l4ssTtJEl8hbZhJ8=;
- b=heBoMDNcR03AUq4qOjTsq5Bv/C9VpAaSrhmNwAohHok+kQXlk3h6jUodKuOnw36MgOe0iH4QJnUNTEzdi6y+vEBAtRvgB6JwgsrVamLA4YsamPLX+vBLcCmAECb+E/0DXBWqSGBRTlGT4i626hRzzabOihmra/R5loOafRjlo4A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-Received: from DB9PR02MB9994.eurprd02.prod.outlook.com (2603:10a6:10:462::8)
- by PA1PR02MB11008.eurprd02.prod.outlook.com (2603:10a6:102:48e::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.36; Wed, 12 Jun
- 2024 06:18:42 +0000
-Received: from DB9PR02MB9994.eurprd02.prod.outlook.com
- ([fe80::f9a2:77a1:a5aa:8f8b]) by DB9PR02MB9994.eurprd02.prod.outlook.com
- ([fe80::f9a2:77a1:a5aa:8f8b%4]) with mapi id 15.20.7633.037; Wed, 12 Jun 2024
- 06:18:42 +0000
-Message-ID: <ef71090e-13c7-4ef1-b34e-d6fe9546b705@axis.com>
-Date: Wed, 12 Jun 2024 08:18:40 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] hwmon: (ina2xx):Add Suppor for passing alert
- polarity from device tree to driver
-To: Krzysztof Kozlowski <krzk@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@axis.com
-References: <20240611-apol-ina2xx-fix-v4-0-8df1d2282fc5@axis.com>
- <34fe20d5-c67a-44e6-8ec1-566d80e25447@kernel.org>
-Content-Language: en-US
-From: Amna Waseem <Amna.Waseem@axis.com>
-In-Reply-To: <34fe20d5-c67a-44e6-8ec1-566d80e25447@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MM0P280CA0094.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:190:9::35) To DB9PR02MB9994.eurprd02.prod.outlook.com
- (2603:10a6:10:462::8)
+	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="dpiPJP3H"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Sender:Reply-To:To
+	:Cc:Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+	List-Archive:X-Cloud-Ids:Disposition-Notification-To;
+	bh=D3dOaQVwqk4GkOQb1RNDUR9U5BZ6DrIfmfdHyETWOyE=; t=1718173189; x=1718263189; 
+	b=dpiPJP3H41OBt5xOk1AZ5YCsgyhNlKovC5G6IYT+zg6gGAf0TEMzj5VhfsdFXrg3sbDO5WXFDgM
+	6hSI6Mm4TNIRTI0hIHBquCA/6oGclvFAc5oA3UPHVbVjA4UgEd5JhQS7vZkX8SGQxMaHk3l7y77xu
+	OeGzdaRXuWOVC8xayBs=;
+Received: by smtp58.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1sHHKc-00000007HWt-08LX; Wed, 12 Jun 2024 09:19:39 +0300
+Message-ID: <727417e8-781c-435c-8abd-f3dfe6b0e5bb@jiaxyga.com>
+Date: Wed, 12 Jun 2024 09:19:35 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR02MB9994:EE_|PA1PR02MB11008:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12a7bf82-35ec-4af8-620d-08dc8aa781cd
-X-LD-Processed: 78703d3c-b907-432f-b066-88f7af9ca3af,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230032|376006|366008|1800799016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SWY0ampzWTFLMlJVWERsMnoxeHgwVTdmbldHSGx0b0JvWnVwaXhTbDRteUlM?=
- =?utf-8?B?U3ZNcjFYMVBWa3lReklTVVVXYVdweUNqZU9SOXAzL3plZ3k4Y1ZTeEE5M0xz?=
- =?utf-8?B?MXdqRC9VS0JGZW9oMGdQVFZuaC9TK083MGZtbEZWNFUyYWdPbmRzQXlpQWRP?=
- =?utf-8?B?SkoyRmlxaStCNHRIbHJ2TjRVZWtrSGtWdFVjU003cG5EY28zbGwzSXZTbUFC?=
- =?utf-8?B?akJzcG5KNVlWNkFyekIzOFc1d0ZPd1N0S3A4MWRKWitYVUJvM2picUM5Sjh4?=
- =?utf-8?B?eUV4NExwQzAzRU9vQjVZbjF0amJaY0gzWnhRMS9NSUVlREJaVnlGdDYwVFVw?=
- =?utf-8?B?RGhDZTJ4NWJrYm95Q2tIVC84YnRadkk2RUZrWVU4dFVtNndrSmtpZWRESHNU?=
- =?utf-8?B?YXJoNGNldFdFVEwraVZVTUh0dE0vc3hKUXFHS0VSNzRUSzdTNE5EblpLRVlR?=
- =?utf-8?B?enJZbWZTUFRmV0RtYWw5M0lDeU9nM2lua2w0VkcwYU9ZeUxzVDErbjJSN0tJ?=
- =?utf-8?B?d09oSkZMZExoNWlVb0tDQ1hlNmUwWmovZThBM29lK3l5dldqMTJEem9EaFB2?=
- =?utf-8?B?UnZ5d3N6bWZkem80UWNmek9EYnc5a0o1ZlBhNGZlakdOMks1SngzTEpDL2Rn?=
- =?utf-8?B?b255OFhSaENMWjBUM21LK3VxTUY0bjV2c3RMSTR5ekpHUENGbGJTYUtYZXcy?=
- =?utf-8?B?TXpidWZRMC9scHJMejh4aEdvbjRLV1VPbHlLcGN6SmdXb2dmT2dVa0h4akp4?=
- =?utf-8?B?MVNVUWdadTB6U1k5QnJWekRybDlhdnorM2VRNjROZnh4ZVdWOGJNNVJEQlR6?=
- =?utf-8?B?ZjltRm1mUkNTRTFER1F0Zi9Id0RCZDFGZXpPZFZpY2NHclAwQ3lhZitYVmtp?=
- =?utf-8?B?aHB4azVuU1ZTUGk3SlphT1FleHFKc1ZiRlZtbllPM3MwclJVRUp3cHUzMnlH?=
- =?utf-8?B?anZEZksxLzJMWm5jU2VsUVFuNC85ZG5ycWNZS2xFQTU0cERKZ0pzOFB6RUln?=
- =?utf-8?B?V2lJR0htYVRJODFOWTMrZWY3US9Jb0xKMXNpU2ZVS0xMRHdUdFpNOHFaYmhG?=
- =?utf-8?B?ZE82aWdkaUhMOXlBcWRnaFhDbGVwTmRwbUFrSDArb25TREZYelVidzdoUmp3?=
- =?utf-8?B?T2ZTN29PeWhKN25iSEZJRXhibU50WHlIbnZPdkh4a2krZ25BRUZaZ3VkK1FQ?=
- =?utf-8?B?MTlKNHFmUTJuOUxFQXBNVkZkREROR292NmxFakRmbUp0T0xST1MzYWpOWmFa?=
- =?utf-8?B?WTJNUFplYXVFOWd5Yks5M210dEJJSlZtb2lMVnBkVi9EaStUcjh5dCtIY3Br?=
- =?utf-8?B?V1N0SmFlMStKZ0R0SGpEWVN6L3VNZ1pBSEJQSlFRZjVJVEd2LzVSblZ1OTQ4?=
- =?utf-8?B?SlJBMThpQmxHNVdkbUM5cXRNNXFDUzc1aThpS3dCSVVNZHUvaFFRYjdzaVJG?=
- =?utf-8?B?SFo5VnJWZlN4eG5WQ0thN20xbEtESml2cWdOUllmUjFVWVltUW9pdVY1UEMx?=
- =?utf-8?B?SEp2OGdRTlpqMkx1MWd4YlNEOWN0d0h2b2RESHB4dnZseDd1dnhlSUdZYTVO?=
- =?utf-8?B?dnVyRDRudndkc25ldlFtc1JkMDk3RXlyQzltMWI4UTU3UTRqZkMzZzNMRFV1?=
- =?utf-8?B?aXlZUVdwZklWbHhYMTRXZ2crN3hVK1g0UVA0MlQrZDVuN2NETE9OdXEyUDNx?=
- =?utf-8?Q?y6qLD1Rcb7kAmMHfndFL?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR02MB9994.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230032)(376006)(366008)(1800799016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TVVUbEkwU0tjaFhRZXNDekkzSklENllZTkxsbFFTMDlRZ2pBMjZEK3pEWVFq?=
- =?utf-8?B?RVRKejMwZTZKRkxTSFMxMk5seXZEb1lKTnJReS82TG0xWUJtaXNFYTN3a0tE?=
- =?utf-8?B?a3FaaHp4OEdycUovd1RvcUlaNlJyMmhHVlUvWXFGem5XdmFhVEhza3Yrc0h4?=
- =?utf-8?B?cHJFNUEvNjUzay93L2NIZ2hDQVlqdThWSGR6SWY0YlJ3RUlBa3U0b1d3TXRs?=
- =?utf-8?B?Z09oUHNNcDhyK0sxZGFRZm9Xc0FSUVhmUmZSWWNqeG52L3YwS2FLQjdKWjVk?=
- =?utf-8?B?L01iUEZJVDNvUDRKZXpxOWZRQ0JOd0E1ZWF3ZFcyamh5WmlBZlZMZXdrNDZv?=
- =?utf-8?B?TmZ2OU9RV092bytSQ3RkSUs2Z052V2hRRlVFQUNBWU9kWlF3c0JlUy90b0lJ?=
- =?utf-8?B?N1ltSTV4NnFIUTNiUHhPWWE3Sm1sUmx6aXRKcHNRbzhwSEVBTUU5cEdZTFpz?=
- =?utf-8?B?UlA0UTVqWE9adHBMOFBzV3RhTjV0Mmw2TWI3WktLVFFCTXNPZEVBQm1IRGlV?=
- =?utf-8?B?TUhpT002K1BUZ1lOUVdaYmg5VTVnS3FuaXhiVFZmV1N0ZkpkRkRORGI3ZGxn?=
- =?utf-8?B?Y0dGY2toSUs0WmlPQ2N4K3l4dUd5N1ZRMU95MVAwbjNOT2p0OFFFdzZ5WXJh?=
- =?utf-8?B?OVVkNENqNFlFR00rakhJTWYrRnNkNUsvVmZvcWxLbkIweHNFQlQrQnIwcE5p?=
- =?utf-8?B?QlFMa3MzUm5jMHcvQnRBVEFVRmxqamNUYUhHUjNBK05zMFRQb3B5bSt4eGtT?=
- =?utf-8?B?ZzZJdUpyQ2Z1RTdEZ0llV2YxMWh5ZlFEUThueFhCTThFMXVBRE1tQVhXTC9L?=
- =?utf-8?B?RzdVcHdCZk80czhOTEI1NEFoMkk0Y0o1bmpJemQ3V2s2Vld1V013eGlvT05x?=
- =?utf-8?B?bjUybCsyZ2VRUnovT2oxWnM0K2xzQzZKakFVQk5iNkpxbzUrWDZnSEY4TUZ4?=
- =?utf-8?B?RWNueVFBVUswWjBYQkZtTmdQd1pXTk9KOG40cS8yQzhnRXVEaE5nQmR5bjhN?=
- =?utf-8?B?eGwyMkpUcEVYSVdtY1ZFZElyd0FjcUdudVBZNVMySkdicGdIWFVXbysrYzJE?=
- =?utf-8?B?WENKWFNMVXNzTS9UcEZwelh0cEx4K0FaZmNOZTJseXkyYWhoekEzZWMxTlQ4?=
- =?utf-8?B?cng4aWhtNzZrNm1uTUpGa2dmVDBTNWxmNWk4VFZrSjh6aXdZODNiUmRaQWl1?=
- =?utf-8?B?OEQ4M0pQZUM1c2pKRnlKNHYyMWNqRm54ellaWERkazViRW1NOEhkUHZVelZ4?=
- =?utf-8?B?TlJvODgzdmozKyt1TG5LVytWL3hNOUM0c2FadHJBeDViWkpsdWNhamRpSi9N?=
- =?utf-8?B?dEkyUklMZ0FhT2RSWmFrd1RvTy9FL1lUQkc3R0VHdkpFTFZlWUg3SEpPZzJ4?=
- =?utf-8?B?K1pLWWRlTTkrR0pNbmh1c2JQWGNWc1FodzVyRFJxMFZ3K1hnZ281WCtDcTJu?=
- =?utf-8?B?UnhhTnZHcDAxalJsdzdJM1ArOUVnM09wQjU3dEgrQnE3SEhkd3l2QUlHQkNX?=
- =?utf-8?B?OHVla1JJVkNHakFwSGNlNnhXT25Kck1LU0NwMkwzRjNDTWtXWXE4ZHcrMXVu?=
- =?utf-8?B?NUowcWw5OVZNN1VadnJBZmFiZmVTejZXL2lCS2ZHWE9SWDhhUWVJMHZ1THhH?=
- =?utf-8?B?blRIVi9TVitLc0pLTkM0OXJCWk5jdkRDekpPUHNGbUJHM2s0aDQ3NmRpWGll?=
- =?utf-8?B?ZFh1MW5LR1VqdmhRNnorQWVneHFqOFdFeGtkdmlKZnhXWllhdEEwaE5QVjN2?=
- =?utf-8?B?MCtWVml5OElzT25lNWxHUEFOaUhPdUJzSXJ2RUJIK0FzaDVPTzlnaFZaMDZU?=
- =?utf-8?B?cTVtemorOHVYRDIxUWVrUi9Xamp2Ni8zcFFuZzNGandBWVZVc2lBUjlKeHdq?=
- =?utf-8?B?TVBoVVBtQTNzT1JUVkYrRDFHRDh0L1ZPcnNYTkh1WTV6dTV5M3FacjRJeDJU?=
- =?utf-8?B?MldmbTF4L09QeS9ubjd3MGFwdkY4MklFNFc4c3dVN3ZvN0hSZHVNcHhPeDR6?=
- =?utf-8?B?VTNrRW1FUEhTMTRDeDlkSVhyelZCMmMrVmJBMEF6NWNFQ2ZMWU82L0E2bDNI?=
- =?utf-8?B?aCt5a3dqSDlCOEtEZ3hqb1VpRG9JaHM5R0YvNUNTSy83NGJneW96Mzg5a001?=
- =?utf-8?Q?b95k=3D?=
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12a7bf82-35ec-4af8-620d-08dc8aa781cd
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR02MB9994.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2024 06:18:42.3691
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hp+z80wQ0k+LQXNSJRhp4sqAs0j9KIQL+oavmoKAZ9tio3OoKrNl9CiJKsACbWTx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR02MB11008
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: display/msm: Add SM7150 MDSS
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: jonathan@marek.ca, krzk+dt@kernel.org, quic_khsieh@quicinc.com,
+ linux-arm-msm@vger.kernel.org, quic_rmccann@quicinc.com, sean@poorly.run,
+ dmitry.baryshkov@linaro.org, tzimmermann@suse.de, mripard@kernel.org,
+ linux-kernel@vger.kernel.org, konrad.dybcio@linaro.org,
+ dri-devel@lists.freedesktop.org, maarten.lankhorst@linux.intel.com,
+ daniel@ffwll.ch, freedreno@lists.freedesktop.org,
+ marijn.suijten@somainline.org, robdclark@gmail.com, conor+dt@kernel.org,
+ swboyd@chromium.org, quic_abhinavk@quicinc.com, devicetree@vger.kernel.org,
+ airlied@gmail.com, quic_jesszhan@quicinc.com, neil.armstrong@linaro.org,
+ danila@jiaxyga.com
+References: <20240611223743.113223-1-danila@jiaxyga.com>
+ <20240611223743.113223-2-danila@jiaxyga.com>
+ <171815244421.3448243.12009673117592867975.robh@kernel.org>
+Content-Language: en-US
+From: Danila Tikhonov <danila@jiaxyga.com>
+In-Reply-To: <171815244421.3448243.12009673117592867975.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp58.i.mail.ru; auth=pass smtp.auth=danila@jiaxyga.com smtp.mailfrom=danila@jiaxyga.com
+X-Mailru-Src: smtp
+X-4EC0790: 10
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD9AC8CA0B4439200FA2E41D1825D8172A0E0E393E23BEE614B00894C459B0CD1B93701F1BE02D458FA0884110FD7E9D573E0C26D275431DD20C21EB64246B0F9A252B81C99D67B1670
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7646B74825E00C605EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006378D70459436292EC88638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D89EE4BF3B69F6BE66ADED0A25A7AF3B77439617833B69C6AECC7F00164DA146DAFE8445B8C89999728AA50765F7900637CAEE156C82D3D7D9389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8B861051D4BA689FCF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C4E7D9683544204AFC0837EA9F3D197644AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C3F6D1C8D476B9D508BA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CFED8438A78DFE0A9E1DD303D21008E298D5E8D9A59859A8B64854413538E1713F75ECD9A6C639B01B78DA827A17800CE73D56AD9F5B48EAD3731C566533BA786AA5CC5B56E945C8DA
+X-C1DE0DAB: 0D63561A33F958A5DC52C108294D8BC45002B1117B3ED696C2EE067D40BD6233886DC9BC01168B20823CB91A9FED034534781492E4B8EEADBEC81E4AEBD6D2BFBDAD6C7F3747799A
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF3FED46C3ACD6F73ED3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFB89CEDACDE7794F3187A3F96CD4411BD88AF9E799152713C812A02B75F5FAA397DB53F182780859704A26A3878DC1330792B0840721B6E26F714D4249A18921BAADE3C488B45354054A6BD6C3A9AE7E002C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj7p5wIdCuWKPDhetPjfSXkA==
+X-Mailru-Sender: 9EB879F2C80682A09F26F806C7394981056BA5190A4959367FC47A557B39A39B5B2B8F84C2F39F76C9F642B473F2A1192C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
 
-On 6/11/24 14:49, Krzysztof Kozlowski wrote:
-> On 11/06/2024 11:36, Amna Waseem wrote:
->> The INA230 has alert polarity bit in Mask/Enable register which can be
->> configured to be active high or active low depending upon the requirements
->> of the hardware using this chip. The patches in this series adds the support
->> for passing alert polarity value from device tree to the driver. Alert polarity
->> property is added device tree bindings and the driver is modified to read
->> this property and set the Alert polarity (APOL) bit value in Mask/Enable register
->> of INA230.
+On 6/12/24 03:34, Rob Herring (Arm) wrote:
+> On Wed, 12 Jun 2024 01:37:40 +0300, Danila Tikhonov wrote:
+>> Document the MDSS hardware found on the Qualcomm SM7150 platform.
 >>
->> Signed-off-by: Amna Waseem <Amna.Waseem@axis.com>
+>> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
 >> ---
->> Changes in v4:
->> - Remove unnecessary checks while setting alert polarity bit
->> - Link to v3: https://lore.kernel.org/r/20240603-apol-ina2xx-fix-v3-0-b9eff3158e4e@axis.com
-> <form letter>
-> This is a friendly reminder during the review process.
+>>   .../display/msm/qcom,sm7150-mdss.yaml         | 460 ++++++++++++++++++
+>>   1 file changed, 460 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.yaml
+>>
+> My bot found errors running 'make dt_binding_check' on your patch:
 >
-> It looks like you received a tag and forgot to add it.
+> yamllint warnings/errors:
 >
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions, under or above your Signed-off-by tag. Tag is "received", when
-> provided in a message replied to you on the mailing list. Tools like b4
-> can help here. However, there's no need to repost patches *only* to add
-> the tags. The upstream maintainer will do that for tags received on the
-> version they apply.
+> dtschema/dtc warnings/errors:
+> Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.example.dts:25:18: fatal error: dt-bindings/clock/qcom,sm7150-dispcc.h: No such file or directory
+>     25 |         #include <dt-bindings/clock/qcom,sm7150-dispcc.h>
+>        |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> make[2]: *** [scripts/Makefile.lib:427: Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.example.dtb] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1430: dt_binding_check] Error 2
+> make: *** [Makefile:240: __sub-make] Error 2
 >
-> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+> doc reference errors (make refcheckdocs):
 >
-> If a tag was not added on purpose, please state why and what changed.
-> </form letter>
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240611223743.113223-2-danila@jiaxyga.com
 >
-> Missing this is really odd, considering you are using b4. Please read
-> the b4 guide.
+> The base for the series is generally the latest rc1. A different dependency
+> should be noted in *this* patch.
 >
-> Best regards,
-> Krzysztof
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
 >
-Thanks Krzysztof for the information. I have read the documentation in 
-the link you provided and I will keep it in mind next time if I submit 
-patches.
+> pip3 install dtschema --upgrade
+>
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your schema.
+>
 
-Regards
+Yes, this happened because I forgot to add note (same for both dtbindings):
+Depends on commit ca3a91063acc (dt-bindings: clock: qcom: Add SM7150 
+DISPCC clocks)
 
-Amna
+I don't think I need to resend series right now. But if it's necessary, 
+I will.
 
+---
+Best wishes
+Danila
