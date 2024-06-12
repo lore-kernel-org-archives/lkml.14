@@ -1,90 +1,149 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473876A8DB
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 19:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BFA3A29F
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 19:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718221065; cv=none; b=hUgism7Zwfhnze1q6PHPhx8X2n2h2ZFsq0ux+1RYwj4mAzrR+M/vfun0GipKnaBbHhe+Q0HCdfGomG8g9JK01ONj+J2Mf4owKRafe+Wm7cg7ELcw3KEzcCnDmcVQ+gC4Ss0uxDuMlYcOQXmLsVOtGqYhLvbsCmR3KcV2afaVro8=
+	t=1718221114; cv=none; b=NpVtBPSTOmIYUc5WUTbNf4MPDsJPm/UvTZm0UYsSYrLVwHHoR3b0yc5EK5ruOAS1R8dSxrJ12cB60M+/LBtX/36E1sRJV8ReU8F3/pG8msABySnuffktpbfobYHV+YbNk2rcJBIVzTJ5gu21GyLTfu3hnfz7uev03T1TRTaCYYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718221065; c=relaxed/simple;
-	bh=bAgvQLjry72ucsu6tyvE+IoTpk3LdoXsF+98JxrZlGc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pfrBQqgQ8DZfWo/DbAG7u0e/HvshbAcS6YD+tkRuXPnOyIqzNRS+qZZmLsyIVXWYa0WHJHAeJeEKi421onSADsq3aIdcejgWIyIyhx9SvEN0ZwsuVnuDn0MjzPpvnQ271/2PrQS4ZDy7CYbjisHIk9QyJ9DWVPG+ZS6F8r4OAi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Pj8oAdlG; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1718221114; c=relaxed/simple;
+	bh=3O2VXIYtm+77i6RAmyE/iB05l4/QfxPoP/92pVes7fo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NQmouaRt5hxfNk4vMUmZSgGMW3aV3qV/dT0nndGIET3Qiru/1iF5CgHM/7Z6oJx3NZIEsl7g1iRZBskMMgipO4As5rOz5I8H1A8/GHN25bmYbsHP4GJ4gl5mrJrt418uDtQ6QuCiBgBqGYaen9q5pJ7Wg5XUjlh7FkdjUe7plaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgyBIKp5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Pj8oAdlG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=rJP3bi32e6r8RV+D2X0N8VAFuxM3UDfcxB2VNYPJ2TI=; b=Pj8oAdlGr1ZqbcE2L91WeNekxr
-	UJtQDy2roFDtBjZdT9mC+3YBbRvFn8Akid+p+qWIVSNiBkorGQXAywBjBl3PywJpv0B0Nrnyfx4Ql
-	3QmcQ3OVRTLFMbqmN2S9Rw07Vm7tXgLhOXCwBpeD0agZtb8wB8Lo6Ed4LU9Gw3sw7BD0VFgXx9ClE
-	S26I6mzsO+3y1fY89GpB8fbN8opQSeRA1j+1i+nY0aVJ0Qa0a3VJZZhQHzw1AobZV+quj0ItSHQCy
-	GJZScBPIAZxwqbOJ1T7XHMemb9BczneTGknNwktnvaTeTNbF4ICoZgzVF99oH8YudzeOueMxWqekE
-	cOaa+Knw==;
-Received: from [191.204.194.169] (helo=localhost.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1sHTmp-002RtF-F2; Wed, 12 Jun 2024 21:37:35 +0200
-From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-To: dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: kernel-dev@igalia.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Simon Ser <contact@emersion.fr>,
-	Pekka Paalanen <ppaalanen@gmail.com>,
-	daniel@ffwll.ch,
-	Daniel Stone <daniel@fooishbar.org>,
-	=?UTF-8?q?=27Marek=20Ol=C5=A1=C3=A1k=27?= <maraeo@gmail.com>,
-	Dave Airlie <airlied@gmail.com>,
-	ville.syrjala@linux.intel.com,
-	Xaver Hugl <xaver.hugl@gmail.com>,
-	Joshua Ashton <joshua@froggi.es>,
-	=?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@mailbox.org>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Subject: [PATCH v5 3/3] drm/amdgpu: Make it possible to async flip overlay planes
-Date: Wed, 12 Jun 2024 16:37:13 -0300
-Message-ID: <20240612193713.167448-4-andrealmeid@igalia.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240612193713.167448-1-andrealmeid@igalia.com>
-References: <20240612193713.167448-1-andrealmeid@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgyBIKp5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F17D6C4AF48;
+	Wed, 12 Jun 2024 19:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718221114;
+	bh=3O2VXIYtm+77i6RAmyE/iB05l4/QfxPoP/92pVes7fo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sgyBIKp54VFxMG+medder41hKEsUF9I96Q7lJMnDAIgEa2Z90m9udgd5uLeLkl+uR
+	 TWza8FdFCTK54XAb/CvhGGNfJ+FJsQI+CfjiFqGjeFS1ZecS1puBZC57agbfXef47z
+	 bLXwfQKlaT9Lpv/9KVc8q2hyzWgnYuPSEoNqr0xTNVbOkBs/5KOsgAQyjlWstvPTNX
+	 vQbSv7EkvxIM4wxwQbW+gPD9heSDvL9zY2DeLh4m79x5igjJO3QfxCHRef1mKuINww
+	 49t/yHwvW3iT4rnhK2lgZ7ADKWaM6BcYarZ7MvHH005hqIboFvDpxGruZ6E4hH+S52
+	 41BigPna414eA==
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH] f2fs: clean up set REQ_RAHEAD given rac
+Date: Wed, 12 Jun 2024 19:38:31 +0000
+Message-ID: <20240612193831.106524-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-amdgpu can handle async flips on overlay planes, so mark it as true
-during the plane initialization.
+Let's set REQ_RAHEAD per rac by single source.
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/compress.c |  2 +-
+ fs/f2fs/data.c     | 17 +++++++++++------
+ fs/f2fs/f2fs.h     |  2 +-
+ 3 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
-index 8a4c40b4c27e..dc5392c08a87 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
-@@ -1708,6 +1708,7 @@ int amdgpu_dm_plane_init(struct amdgpu_display_manager *dm,
- 	} else if (plane->type == DRM_PLANE_TYPE_OVERLAY) {
- 		unsigned int zpos = 1 + drm_plane_index(plane);
- 		drm_plane_create_zpos_property(plane, zpos, 1, 254);
-+		plane->async_flip = true;
- 	} else if (plane->type == DRM_PLANE_TYPE_CURSOR) {
- 		drm_plane_create_zpos_immutable_property(plane, 255);
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 1ef82a546391..990b93689b46 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1100,7 +1100,7 @@ static int prepare_compress_overwrite(struct compress_ctx *cc,
+ 		struct bio *bio = NULL;
+ 
+ 		ret = f2fs_read_multi_pages(cc, &bio, cc->cluster_size,
+-					&last_block_in_bio, false, true);
++					&last_block_in_bio, NULL, true);
+ 		f2fs_put_rpages(cc);
+ 		f2fs_destroy_compress_ctx(cc, true);
+ 		if (ret)
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index b9b0debc6b3d..b6dcb3bcaef7 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2067,12 +2067,17 @@ static inline loff_t f2fs_readpage_limit(struct inode *inode)
+ 	return i_size_read(inode);
+ }
+ 
++static inline blk_opf_t f2fs_ra_op_flags(struct readahead_control *rac)
++{
++	return rac ? REQ_RAHEAD : 0;
++}
++
+ static int f2fs_read_single_page(struct inode *inode, struct folio *folio,
+ 					unsigned nr_pages,
+ 					struct f2fs_map_blocks *map,
+ 					struct bio **bio_ret,
+ 					sector_t *last_block_in_bio,
+-					bool is_readahead)
++					struct readahead_control *rac)
+ {
+ 	struct bio *bio = *bio_ret;
+ 	const unsigned blocksize = blks_to_bytes(inode, 1);
+@@ -2148,7 +2153,7 @@ static int f2fs_read_single_page(struct inode *inode, struct folio *folio,
  	}
+ 	if (bio == NULL) {
+ 		bio = f2fs_grab_read_bio(inode, block_nr, nr_pages,
+-				is_readahead ? REQ_RAHEAD : 0, index,
++				f2fs_ra_op_flags(rac), index,
+ 				false);
+ 		if (IS_ERR(bio)) {
+ 			ret = PTR_ERR(bio);
+@@ -2178,7 +2183,7 @@ static int f2fs_read_single_page(struct inode *inode, struct folio *folio,
+ #ifdef CONFIG_F2FS_FS_COMPRESSION
+ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+ 				unsigned nr_pages, sector_t *last_block_in_bio,
+-				bool is_readahead, bool for_write)
++				struct readahead_control *rac, bool for_write)
+ {
+ 	struct dnode_of_data dn;
+ 	struct inode *inode = cc->inode;
+@@ -2301,7 +2306,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+ 
+ 		if (!bio) {
+ 			bio = f2fs_grab_read_bio(inode, blkaddr, nr_pages,
+-					is_readahead ? REQ_RAHEAD : 0,
++					f2fs_ra_op_flags(rac),
+ 					page->index, for_write);
+ 			if (IS_ERR(bio)) {
+ 				ret = PTR_ERR(bio);
+@@ -2399,7 +2404,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
+ 			ret = f2fs_read_multi_pages(&cc, &bio,
+ 						max_nr_pages,
+ 						&last_block_in_bio,
+-						rac != NULL, false);
++						rac, false);
+ 			f2fs_destroy_compress_ctx(&cc, false);
+ 			if (ret)
+ 				goto set_error_page;
+@@ -2449,7 +2454,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
+ 				ret = f2fs_read_multi_pages(&cc, &bio,
+ 							max_nr_pages,
+ 							&last_block_in_bio,
+-							rac != NULL, false);
++							rac, false);
+ 				f2fs_destroy_compress_ctx(&cc, false);
+ 			}
+ 		}
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 9688df332147..95d12e025786 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -4297,7 +4297,7 @@ void f2fs_update_read_extent_tree_range_compressed(struct inode *inode,
+ 				unsigned int llen, unsigned int c_len);
+ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+ 				unsigned nr_pages, sector_t *last_block_in_bio,
+-				bool is_readahead, bool for_write);
++				struct readahead_control *rac, bool for_write);
+ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc);
+ void f2fs_decompress_end_io(struct decompress_io_ctx *dic, bool failed,
+ 				bool in_task);
 -- 
-2.45.2
+2.45.2.505.gda0bf45e8d-goog
 
