@@ -1,222 +1,115 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8700117CA1D;
-	Wed, 12 Jun 2024 13:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288BC17CA1D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 13:57:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718200624; cv=none; b=j86WCgBqITNz9Cdj9DbWoL8ONlkRGrYr74uz6depawMcX8PGj/7VggtEMwn18OB3q760f5Xn4PK13m77s0l8ZlD9GR1ekPET88tU3oUKEjkd4DruIebRcMyks8aVvRR4ixbzsUqzQufyu69pyzBGUK9/yBylCiAFXxWeELCmjKY=
+	t=1718200634; cv=none; b=a/wBTg+hdaRUJesC0HZ969/eEPvY8ts3/7go3r6yaredFMGU0WM28ykD8ailG40E2atG8EU32VGrf+L0DFvIydr3brI9tTniL6qw5Fx1SXGekqizCSzTyaFB6u8BM/LnIokzDQI0xesSX4jKUwAHD9P3q8X73aBYxnW/0E5XAqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718200624; c=relaxed/simple;
-	bh=4mjR3G5pH7AZMAhzm6AMqu2uj5bQPlS9qrLFME/pKYc=;
+	s=arc-20240116; t=1718200634; c=relaxed/simple;
+	bh=i4c48ygCfSU6WdCIpYbNWrvciGw+hJsYn2TXRdffl3o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n1bBsFfYjIaU4n3suYAE36JnaV4toeQ8Gha5EKV+hMPTELfHtEnwWxocU1wF8niaQ4d0H8pj1azL4GNGzcSjsRgPJob1kW/zV5sfn0IN0jKnpCaRVpTXKWi6oux7/3zqlbvWyxqLODZJvGR4YNBlKitqLje47vBI4+dGSVxBB6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57168367;
-	Wed, 12 Jun 2024 06:57:25 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34B6A3F64C;
-	Wed, 12 Jun 2024 06:56:58 -0700 (PDT)
-Message-ID: <e9fc6ce3-d5c5-431d-a628-62742432be47@arm.com>
-Date: Wed, 12 Jun 2024 14:56:55 +0100
+	 In-Reply-To:Content-Type; b=PoT1B5a0kxhB7bTOIkG1amxCIFR4PPkoWX/REzEXs3eNrHGoWtX+oEfT5w04Ro5c3H9vnz9JAe7mEJQkvb2p1aY6RI2NoOAgaSNNwojZC7Kc0f3wNaBvdrJ5dJW1aRvzZX0B1mIN3jLv151cOKdoUMN6RZL4Bxci6CkLehgAN8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mVSuHYBh; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVSuHYBh"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4217d808034so34767635e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 06:57:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718200631; x=1718805431; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bAU+NAmzf19Ylr7LCKll4QKmndTbiCGZt3MgtjOKBe0=;
+        b=mVSuHYBhMVl+hRkgJGyYBSPAxG0Fezsd26hXl7Bk4jInE9l/ZJMQrewbQ98Njt/ifd
+         OYeV08vnnEqmtHw+8pumBNNLgcDTrhBwUBUsJAwqk942icGa/ou83mIEfkUcwXZROFn8
+         G45j3u2wpBiX+2T6++4B7CNth2N6gI/0Mox7F7RqXrVKQ9F5HKKRmVBHX7KDT5Hd3Qr8
+         gQt7sDfpW4fkp3gIuj+DnbTnra4iZ901zPUUb8L/0NHpIoYcI/3MV87rJVsosnRwyJDZ
+         8E+a3M/ykF6RLZ06i1iHmUB99NHpbBSfw8CHlxRKtVB7loGC9wWAZa0VZudP6C0fvOff
+         G3xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718200631; x=1718805431;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bAU+NAmzf19Ylr7LCKll4QKmndTbiCGZt3MgtjOKBe0=;
+        b=NflOg8CFT0K3iyTIlSPp6NwGGlSyCOxrPdUpWlBWk5rOj9ch/BcEAYoNXwRDaZRWRM
+         V/pcNlezRpKuyhgZGch4GXMP/HLfp5sI7jumEpkANX7Y6n5tuQvuoqyt0h3kfGxqcPnQ
+         q9/YndRAXVxLTke64hfTCcNS566E8kyjVZDLmPRpjWQ5h8PsW0NqO1ZeSNasqt1VRPQv
+         O5sdugeSV84LxtsBItDN8GwOxFnOdmTxA48epibBab42SgwEsh9fagEY7cmadorTc0B8
+         dd3PUOhIGG+93DF1J1jEsSW1bBiaSBgiqTqIwv9xll1uTB7B5bcxEv/A87TA5vbrDImH
+         wDcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8T4L4XSY6ICyfH2W3gV+uytsXbbS0foD55FYsHcHDwmNmOUnEIOmfniJrAdM/OKbv7E1hFPf57Wt4gpyrlys0DqYM/IsmZL+tRbQw
+X-Gm-Message-State: AOJu0Yxi8ia+qhUbfl+JQsCdXCZ2rASVwt3DFDHgCHyZm66M6GvP50x4
+	GbB++Qt1mNE2YluO+kyDMLmvXQcmKGJnv8D2fSCev4K4LTv7TXKT
+X-Google-Smtp-Source: AGHT+IGgpqrnK9Fy5Po1Nycou3NuX5aDnZs8SefI8hI5wxLt69PZUkXYbM5/ZYIMphSo77xcayKefw==
+X-Received: by 2002:a05:600c:3551:b0:421:de31:81 with SMTP id 5b1f17b1804b1-422864af043mr16574585e9.24.1718200631175;
+        Wed, 12 Jun 2024 06:57:11 -0700 (PDT)
+Received: from [192.168.1.100] ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286fe75c4sm27831985e9.5.2024.06.12.06.57.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 06:57:10 -0700 (PDT)
+Message-ID: <0b8b2ea4-e07f-086f-c14b-0c9acb151aa1@gmail.com>
+Date: Wed, 12 Jun 2024 15:57:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] perf pmus: Sort/merge/aggregate PMUs like
- mrvl_ddr_pmu
-To: Ian Rogers <irogers@google.com>, Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: Tuan Phan <tuanphan@os.amperecomputing.com>,
- Thomas Richter <tmricht@linux.ibm.com>,
- Bhaskara Budiredla <bbudiredla@marvell.com>,
- Bharat Bhushan <bbhushan2@marvell.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
- Stephane Eranian <eranian@google.com>, Mark Brown <broonie@kernel.org>,
- Naresh Kamboju <naresh.kamboju@linaro.org>
-References: <20240515060114.3268149-1-irogers@google.com>
- <20240515060114.3268149-2-irogers@google.com>
- <ce31a50b-53db-4c6f-9cb1-242280b0951c@arm.com>
- <CAP-5=fWxdZ1ibv7Pi0L38+NF-vNWZCtcDS9JVf6k3z9nDsrQQw@mail.gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CAP-5=fWxdZ1ibv7Pi0L38+NF-vNWZCtcDS9JVf6k3z9nDsrQQw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [patch 4/4] jump_label: Simplify and clarify
+ static_key_fast_inc_cpus_locked()
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Sam Sun <samsun1006219@gmail.com>,
+ x86@kernel.org, syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com
+References: <87bk49xf15.ffs@tglx> <20240610124258.109097511@linutronix.de>
+ <20240610124406.548322963@linutronix.de>
+Content-Language: en-US
+From: Uros Bizjak <ubizjak@gmail.com>
+In-Reply-To: <20240610124406.548322963@linutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 12/06/2024 1:32 pm, Ian Rogers wrote:
-> On Wed, Jun 12, 2024 at 4:19 AM Aishwarya TCV <aishwarya.tcv@arm.com> wrote:
->>
->>
->>
->> On 15/05/2024 07:01, Ian Rogers wrote:
->>> The mrvl_ddr_pmu is uncore and has a hexadecimal address suffix while
->>> the previous PMU sorting/merging code assumes uncore PMU names start
->>> with uncore_ and have a decimal suffix. Because of the previous
->>> assumption it isn't possible to wildcard the mrvl_ddr_pmu.
->>>
->>> Modify pmu_name_len_no_suffix but also remove the suffix number out
->>> argument, this is because we don't know if a suffix number of say 100
->>> is in hexadecimal or decimal. As the only use of the suffix number is
->>> in comparisons, it is safe there to compare the values as hexadecimal.
->>> Modify perf_pmu__match_ignoring_suffix so that hexadecimal suffixes
->>> are ignored.
->>>
->>> Only allow hexadecimal suffixes to be greater than length 2 (ie 3 or
->>> more) so that S390's cpum_cf PMU doesn't lose its suffix.
->>>
->>> Change the return type of pmu_name_len_no_suffix to size_t to
->>> workaround GCC incorrectly determining the result could be negative.
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>   tools/perf/util/pmu.c  | 33 +++++++++++++--------
->>>   tools/perf/util/pmus.c | 67 ++++++++++++++++++++++++------------------
->>>   tools/perf/util/pmus.h |  7 ++++-
->>>   3 files changed, 65 insertions(+), 42 deletions(-)
->>>
->>
->> Hi Ian,
->>
->> Perf test "perf_all_PMU_test" is failing when run against
->> next-master(next-20240612) kernel with Arm64 on JUNO in our CI. It looks
->> like it is failing when run on JUNO alone. Verified by running on other
->> boards like RB5 and Ampere_altra and confirming that it does not fail on
->> these boards. Suspecting that the suffixed 'armv8_pmuv3_0' naming could
->> be the reason of test failure.
->>
->> Reverting the change (3241d46f5f54) seems to fix it.
->>
->> This works fine on Linux version v6.10-rc3
->>
->> Failure log
->> ------------
->> 110: perf all PMU test:
->> --- start ---
->> test child forked, pid 8279
->> Testing armv8_pmuv3/br_immed_retired/
->> Event 'armv8_pmuv3/br_immed_retired/' not printed in:
->> # Running 'internals/synthesize' benchmark:
->> Computing performance of single threaded perf event synthesis by
->> synthesizing events on the perf process itself:
->>    Average synthesis took: 1169.431 usec (+- 0.144 usec)
->>    Average num. events: 35.000 (+- 0.000)
->>    Average time per event 33.412 usec
->>    Average data synthesis took: 1225.698 usec (+- 0.102 usec)
->>    Average num. events: 119.000 (+- 0.000)
->>    Average time per event 10.300 usec
->>
->>   Performance counter stats for 'perf bench internals synthesize':
->>
->>          3263664785      armv8_pmuv3_0/br_immed_retired/
->>
->>
->>        25.472854464 seconds time elapsed
->>
->>         8.004791000 seconds user
->>        17.060209000 seconds sys
->> ---- end(-1) ----
->> 110: perf all PMU test                                               :
->> FAILED!
+
+> Make the code more obvious and add proper comments to avoid future head
+> scratching.
 > 
-> Hi Aishwarya,
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   kernel/jump_label.c |   20 +++++++++++---------
+>   1 file changed, 11 insertions(+), 9 deletions(-)
 > 
-> Thanks for reporting an issue. The test should be pretty self
-> explanatory: it is doing a `perf stat -e
-> armv8_pmuv3/br_immed_retired/` and then looking for that in the
-> output. The event armv8_pmuv3/br_immed_retired/ comes from running
-> perf list. As you can see in the output the event did work, so perf
-> stat is working so nothing is actually broken here. What isn't working
-> is the perf stat output matching the command line event and this is
-> because of the unnecessary suffix on ARM's PMU name.
-> 
-> We have a problem that ARM have buggy PMU drivers, either from
-> introducing new naming conventions or by just being broken:
-> https://lore.kernel.org/lkml/CAP-5=fWNDkOpnYF=5v1aQkVDrDWsmw+zYX1pjS8hoiYVgZsRGA@mail.gmail.com/
-> I've also asked that ARM step up their testing, for example in the
-> event parsing testing the PMU is hardcoded to the x86 PMU name of
-> 'cpu':
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/parse-events.c?h=perf-tools-next#n2317
-> On a cortex A53, then PMU is named 'armv8_cortex_a53':
-> ```
-> $ ls /sys/devices/armv8_cortex_a53/
-> caps  cpus  events  format  perf_event_mux_interval_ms  power
-> subsystem  type  uevent
-> ```
-> This name appears better, so what's up with ARM's core PMU name?
+> --- a/kernel/jump_label.c
+> +++ b/kernel/jump_label.c
+> @@ -162,22 +162,24 @@ bool static_key_slow_inc_cpuslocked(stru
+>   	if (static_key_fast_inc_not_disabled(key))
+>   		return true;
+>   
+> -	jump_label_lock();
+> -	if (atomic_read(&key->enabled) == 0) {
+> -		atomic_set(&key->enabled, -1);
+> +	guard(mutex)(&jump_label_mutex);
+> +	/* Try to mark it as 'enabling in progress. */
 
-With Devicetree, we are able to derive a descriptive PMU name from the 
-compatible string provided by the DT. Under ACPI, however, all we get 
-told is whether each CPU has a usable PMU or not, so the best we can do 
-is work out how many different CPU microarchitectures we have overall 
-and create a PMU instance for each type. We still don't know *what* each 
-one is, just that they're different, hence ending up with a common name 
-plus a suffix which we can increment for disambiguation if and when we 
-do see something new - userspace can still piece together the "cpus" 
-lists and MIDRs to figure out what's what, we just can't do much in the 
-kernel itself.
+Missing closing quotation mark above.
 
-> Anyway, I'm tempted to fix this by just skipping the test on ARM given
-> ARM's overall broken state.
+> +	if (!atomic_cmpxchg(&key->enabled, 0, -1)) {
 
-This isn't a driver issue, it's a "the behaviour of 'perf list' changed 
-inconsistently" issue. I also had a brief dig into this using a 
-different arm64 ACPI system, and I think I can broadly characterise the 
-cause. This is prior to 3241d46f5f54:
+This can be:
 
-root@crazy-taxi:~# ./perf-mainline list armv8_pmuv3
+int tmp = 0;
+if (atomic_try_cmpxchg(&key->enabled, &tmp, -1)) {
+...
 
-List of pre-defined events (to be used in -e or -M):
+and will result in more optimal code and will IMO also be more readable 
+because it is clear that the code is executed when cmpxchg succeeds.
 
+(BTW: The atomic_read()/atomic_set() pair can also be converted to 
+cmpxchg in static_key_enable_cpuslocked().)
 
-armv8_pmuv3_0:
-   L1-dcache-loads OR armv8_pmuv3_0/L1-dcache-loads/
-   L1-dcache-load-misses OR armv8_pmuv3_0/L1-dcache-load-misses/
-   L1-icache-loads OR armv8_pmuv3_0/L1-icache-loads/
-   L1-icache-load-misses OR armv8_pmuv3_0/L1-icache-load-misses/
-   dTLB-loads OR armv8_pmuv3_0/dTLB-loads/
-   dTLB-load-misses OR armv8_pmuv3_0/dTLB-load-misses/
-   iTLB-loads OR armv8_pmuv3_0/iTLB-loads/
-   iTLB-load-misses OR armv8_pmuv3_0/iTLB-load-misses/
-   branch-loads OR armv8_pmuv3_0/branch-loads/
-   branch-load-misses OR armv8_pmuv3_0/branch-load-misses/
-   l3d_cache_wb OR armv8_pmuv3_0/l3d_cache_wb/        [Kernel PMU event]
-
-
-And this is after:
-
-root@crazy-taxi:~# ./perf-next list armv8_pmuv3
-
-List of pre-defined events (to be used in -e or -M):
-
-
-armv8_pmuv3_0:
-   L1-dcache-loads OR armv8_pmuv3_0/L1-dcache-loads/
-   L1-dcache-load-misses OR armv8_pmuv3_0/L1-dcache-load-misses/
-   L1-icache-loads OR armv8_pmuv3_0/L1-icache-loads/
-   L1-icache-load-misses OR armv8_pmuv3_0/L1-icache-load-misses/
-   dTLB-loads OR armv8_pmuv3_0/dTLB-loads/
-   dTLB-load-misses OR armv8_pmuv3_0/dTLB-load-misses/
-   iTLB-loads OR armv8_pmuv3_0/iTLB-loads/
-   iTLB-load-misses OR armv8_pmuv3_0/iTLB-load-misses/
-   branch-loads OR armv8_pmuv3_0/branch-loads/
-   branch-load-misses OR armv8_pmuv3_0/branch-load-misses/
-   l3d_cache_wb OR armv8_pmuv3/l3d_cache_wb/          [Kernel PMU event]
-
-See the difference in the last line - it appears that CPU PMU events 
-which map to common hardware/cache events *do* still report the full PMU 
-name, but any PMU-type-specific events show a truncated name in list and 
-thus fail the test's strict match against the full name reported by stat.
-
-Thanks,
-Robin.
+Uros.
