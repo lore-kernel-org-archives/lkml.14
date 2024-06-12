@@ -1,223 +1,179 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32A216D305
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D52116D32C
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718182118; cv=none; b=DfIousAbQw5SSLz37hqYQJaw5IfydHXTXGQQQFSrJYZZ4eBH5DF5ovEJOEBA69gX7CxBB1oR54k5FjH03O5iQXYXQXu0PG0KmOkFZ0tHEVi41BJU1GqtaCPMZQ+v8Tdj43szZGbNfu6Y2gR1A+EGY4tIuTp0LObOc6BKh5xMj+g=
+	t=1718182204; cv=none; b=nhY+x+KloM76Azj8IlMklAoPMhb2IOsTa0AiTapih5qQ8kaS7HdanWYs0u3A0LG/8AUSuIb1hoo0q7cP3I5z5e/WwjkYO6zkwIkKGzIbBPqzXb1LO/MC7w+ZnjIOAQgV6a42nUNpgErURttS0juIja8HAGXvmvJaNgmVNSzmyO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718182118; c=relaxed/simple;
-	bh=uW3zlwozbkwBk3Q0UO6Rb/luAmvnclY7u9aDX3Hq14w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=koGkwReUfHMr7gW8LLnNM9BYvanjXElPPHlz5FZZNEl0CLs7TdKX2glaFIYik3DiIoBBy3A0KtoaDY9yulza6OUGY35+m+h2A2pPugFTcXHjFjEYjhjPjJnvbO2BBYU2FIZMMUdPlxVxx0JFMGsIdHs+6nazV7qd21YY1nfHT/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BfQtPKIb; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718182204; c=relaxed/simple;
+	bh=b14JE8Hd1cKYDo7Y7AIGAOjh0QSV12BCe651HRE/Krk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FdqAF4sH19PSjxxoDO3URMiCLTynAlxhy7ZHJrT5LbSPP6R2ukC05P8IgoVhbN4p8gj64XGRcIdPqRYlPVj9UBnWR0dJQ1SOgCdT0aGcXoy73xVaJdztkHMzTRE9F4gs1nQJipuXoX9kega5X+RqwZ1MPtMyCqZTkRgVtLpDleI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hqJDE1As; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BfQtPKIb"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a6ef793f4b8so481987466b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:48:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hqJDE1As"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35f06861ae6so4172771f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:50:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718182114; x=1718786914; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jtVbKt1Lt/6TaBr1LN7eGKLsWZLDTjib6uq4q3NlYf0=;
-        b=BfQtPKIbv6wbIv3KDR67Bero1oc7umSI3o0oJ2gOxo93mPP0r9VuD4Rg99RYZa2UVi
-         hjimtmU4xyYcFukC041DrqHYXSqdphgXD6y0jZMOXINIHvdiHicS8BV76CH6ZKkOrozB
-         v+ur5RfrFO653cGlqlQpDmbZlqL1F8UjWGRWg=
+        d=linaro.org; s=google; t=1718182201; x=1718787001; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KblFtxoLOYdOj133hsBDEfsyDTDk4K9GtWvFG0mVigs=;
+        b=hqJDE1AssGN+vj8hfCZOPwRj8MJF46bgIP1ZT9BZotdbYAQE3dKdk+tX+yRzAACRFc
+         2AquzzDpcNXuaUaWmUdKam59gmflrGnVtAi0ia1u5dYgD5Vlp/OJkG6U2Sv31f1YYEMj
+         U0GpfcwODeszj+HX0rMpML9ZY+geCxfVesLjfU2U/ebohF1gd5LknW1btCDxH049PKoU
+         nqpIatfjMuQur2kbk4G85JQFwVuNSKns+eezezUzebQwrEnYEi1JcoOoYEjZZsyCdulQ
+         V0Bkb4TD0kEXe6SHNb+l+OoQXUaqBLbuOPUpy42qDOKTz1pTrFVue2DoTVK7Tli15sZO
+         4Wlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718182114; x=1718786914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jtVbKt1Lt/6TaBr1LN7eGKLsWZLDTjib6uq4q3NlYf0=;
-        b=KPul118hRWvPmjbMe7DPm5VoqboYHd5P0jldjTP0B0eG6QpoFwmOq+DIDnXpPZSm3L
-         Z2mPVaYQMZSgJT54Z7RKdx2G/hyJnsmyu7FrTQsCSlEwDnkmC9Tyc5Z5OY2mcuw2HbOK
-         FLcBT3ZGAlPDuT7GEGPn61QXl3F0HGMFdJfh/PZ8ncly12AzuYIVkgpxXQ3MdB9u0/wk
-         Dg3wSo9zhCTWHrx+uVCH8uSoL6jisksoyF/nR0MmTTYh6eO5P85qT0avsG7QwhG5w5Zx
-         kNtBudbW4YLIW/J+7dWMpen0aB3Mt7Er3E9AIDvcZ4/E0JlwKw81+ara7jwnkY+iwD33
-         3Bow==
-X-Forwarded-Encrypted: i=1; AJvYcCWYq4q2X1EDbowt3kWzU96fKuqQBXdBwwCnpZXG04A41oajUsHHYeDvf31qh1Qbk4kixC7HXzVZfe4moJORnOKYZgRhE3dskrAzVy3P
-X-Gm-Message-State: AOJu0YzmPqpsksXbn4LIgLm0dlcZL0LY71P4dQOvNgERwRx7PxYjXAyQ
-	VbRiMuxfQ/FZ9MGKqEakJXDleiVhN8jINzwef0bQz4RqxnNW4jl6ioB4AcSiRCmEKbP+6rqE18B
-	+/A==
-X-Google-Smtp-Source: AGHT+IEu/9GOJhP0lZlXEyAz/tjVyf7uUHP7IlxTLmNCoImwq28c/VujQ2f0dRUGUqOjR23068cP0g==
-X-Received: by 2002:a17:907:9724:b0:a6e:f6b0:c49d with SMTP id a640c23a62f3a-a6f47d526b2mr86760766b.34.1718182114530;
-        Wed, 12 Jun 2024 01:48:34 -0700 (PDT)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0e47b8f7sm518143566b.31.2024.06.12.01.48.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 01:48:33 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57c68682d1aso4898093a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:48:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWOb06e9UtjRFZr4iC2G6rM75cACP/fdJHK16OOJfClD5eSUOtPsRljABZq11xcpwBsLribLh2O08g/l6LxMz4yZrJZ8vxZPOaXqCgK
-X-Received: by 2002:a17:906:f5a3:b0:a64:722f:4051 with SMTP id
- a640c23a62f3a-a6f47c07d92mr76196066b.0.1718182112798; Wed, 12 Jun 2024
- 01:48:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718182201; x=1718787001;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KblFtxoLOYdOj133hsBDEfsyDTDk4K9GtWvFG0mVigs=;
+        b=rmLpaBJHqyNMjSyFlAPcZg8Ubc6Ki3De8qCrhjl16u9PEIJLZCar3LsSBGJDAwsKAx
+         iVf76eihz840AxtvcMATc1IGeiXrWh5T+HdUJwy9jHbvLGlAwCSvuHTVjQJjy3brInrj
+         7/UvLRXvox763wqVcI926GbZltMblEdkxFEbT2lz9D07PK9XjRbjEUMLv4uJNr1lgE4h
+         OsYZBxmV8SCZlUIBR8XwZSJQp4FY+nx/w1gVUVleHvuyu4Xl6ikeFWVVi98tPUZOowCd
+         6B8P2tyIP2XIyw+WDfK2ZvO40cvhM/XIuys0uJodkEJIznpJtZC6LfxgHHm5lwu56T5l
+         qRPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuejUlBSzXoMtWASaIbZKgvlqEgICZNAekKxb2XSb94/hQPhSKe11gCaDrz9m9W4pE7f5e/mAreJIv1dvja2VH8BD7g86BaaICemaK
+X-Gm-Message-State: AOJu0YwgTLQc8Z3+oAiJSuzfKrNZflj0OlK76q24BzPs/0yu9F7I4bpj
+	w20ZASJgsYY8YBgDLrWXF856sQJyaLH1Shh1YwvRvBeEN+4D6lfvddIb0IP/kSc=
+X-Google-Smtp-Source: AGHT+IEuW4Qt0F2C34adTuf4Iw0RgJsE7gOJQJAtCM1xxw0xSETRwNKL24J5NNVEkQTJOvaASbj0VQ==
+X-Received: by 2002:a5d:47a9:0:b0:35f:bcc:98ed with SMTP id ffacd0b85a97d-35fdf79a152mr942011f8f.6.1718182200506;
+        Wed, 12 Jun 2024 01:50:00 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f26578176sm6812313f8f.11.2024.06.12.01.49.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 01:50:00 -0700 (PDT)
+Date: Wed, 12 Jun 2024 11:49:56 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+	Sasha Levin <sashal@kernel.org>, Tom Gall <tom.gall@linaro.org>,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v5] checkpatch: check for missing Fixes tags
+Message-ID: <6825db9f-be27-4096-9723-6ad65342a59e@moroto.mountain>
+References: <ZmhUgZBKeF_8ixA6@moroto>
+ <20240611113855.b63a6015b26a0dad49d9f2a7@linux-foundation.org>
+ <b3baa059-b433-42da-96c0-588312b5a4ac@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240323-resend-hwtimestamp-v10-0-b08e590d97c7@chromium.org>
- <20240323-resend-hwtimestamp-v10-4-b08e590d97c7@chromium.org>
- <4kck7oedsnj6kfiv7ykwsjg35qodg5bdktu5t5w3xtg2xuscto@2yh6kfdqwimc>
- <20240610114306.GR18479@pendragon.ideasonboard.com> <CAAFQd5DAXq6fTrp6jF42URrwzwE+tGz_jJCRM2bhieD76u+QpA@mail.gmail.com>
- <20240612074342.GA28989@pendragon.ideasonboard.com> <CANiDSCuM9RdQ9Tq4-vL2b8UP3_GFV41gvnKm7Gmh2dpmCO98+A@mail.gmail.com>
- <20240612082040.GD28989@pendragon.ideasonboard.com>
-In-Reply-To: <20240612082040.GD28989@pendragon.ideasonboard.com>
-From: Tomasz Figa <tfiga@chromium.org>
-Date: Wed, 12 Jun 2024 17:47:52 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5B8eOkXMY0m=y6A+3MjEny-UMTteBAhAahDWc1y52woWw@mail.gmail.com>
-Message-ID: <CAAFQd5B8eOkXMY0m=y6A+3MjEny-UMTteBAhAahDWc1y52woWw@mail.gmail.com>
-Subject: Re: [PATCH v10 4/6] media: uvcvideo: Allow hw clock updates with
- buffers not full
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"hn.chen" <hn.chen@sunplusit.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b3baa059-b433-42da-96c0-588312b5a4ac@leemhuis.info>
 
-On Wed, Jun 12, 2024 at 5:21=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> On Wed, Jun 12, 2024 at 09:47:26AM +0200, Ricardo Ribalda wrote:
-> > On Wed, 12 Jun 2024 at 09:44, Laurent Pinchart
-> > <laurent.pinchart@ideasonboard.com> wrote:
-> > >
-> > > On Wed, Jun 12, 2024 at 12:28:56PM +0900, Tomasz Figa wrote:
-> > > > On Mon, Jun 10, 2024 at 8:43=E2=80=AFPM Laurent Pinchart wrote:
-> > > > > On Wed, May 29, 2024 at 05:03:08PM +0900, Tomasz Figa wrote:
-> > > > > > On Sat, Mar 23, 2024 at 10:48:05AM +0000, Ricardo Ribalda wrote=
-:
-> > > > > > > With UVC 1.5 we get as little as one clock sample per frame. =
-Which means
-> > > > > > > that it takes 32 frames to move from the software timestamp t=
-o the
-> > > > > > > hardware timestamp method.
-> > > > > > >
-> > > > > > > This results in abrupt changes in the timestamping after 32 f=
-rames (~1
-> > > > > > > second), resulting in noticeable artifacts when used for enco=
-ding.
-> > > > > > >
-> > > > > > > With this patch we modify the update algorithm to work with w=
-hatever
-> > > > > > > amount of values are available.
-> > > > > > >
-> > > > > > > Tested-by: HungNien Chen <hn.chen@sunplusit.com>
-> > > > > > > Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> > > > > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.=
-com>
-> > > > > > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > > > > > ---
-> > > > > > >  drivers/media/usb/uvc/uvc_video.c | 16 ++++++++++++++--
-> > > > > > >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/medi=
-a/usb/uvc/uvc_video.c
-> > > > > > > index d6ca383f643e3..af25b9f1b53fe 100644
-> > > > > > > --- a/drivers/media/usb/uvc/uvc_video.c
-> > > > > > > +++ b/drivers/media/usb/uvc/uvc_video.c
-> > > > > > > @@ -768,10 +768,10 @@ void uvc_video_clock_update(struct uvc_=
-streaming *stream,
-> > > > > > >
-> > > > > > >     spin_lock_irqsave(&clock->lock, flags);
-> > > > > > >
-> > > > > > > -   if (clock->count < clock->size)
-> > > > > > > +   if (clock->count < 2)
-> > > > > > >             goto done;
-> > > > > > >
-> > > > > > > -   first =3D &clock->samples[clock->head];
-> > > > > > > +   first =3D &clock->samples[(clock->head - clock->count + c=
-lock->size) % clock->size];
-> > > > > > >     last =3D &clock->samples[(clock->head - 1 + clock->size) =
-% clock->size];
-> > > > > > >
-> > > > > > >     /* First step, PTS to SOF conversion. */
-> > > > > > > @@ -786,6 +786,18 @@ void uvc_video_clock_update(struct uvc_s=
-treaming *stream,
-> > > > > > >     if (y2 < y1)
-> > > > > > >             y2 +=3D 2048 << 16;
-> > > > > > >
-> > > > > > > +   /*
-> > > > > > > +    * Have at least 1/4 of a second of timestamps before we
-> > > > > > > +    * try to do any calculation. Otherwise we do not have en=
-ough
-> > > > > > > +    * precision. This value was determined by running Androi=
-d CTS
-> > > > > > > +    * on different devices.
-> > > > > > > +    *
-> > > > > > > +    * dev_sof runs at 1KHz, and we have a fixed point precis=
-ion of
-> > > > > > > +    * 16 bits.
-> > > > > > > +    */
-> > > > > > > +   if ((y2 - y1) < ((1000 / 4) << 16))
-> > > > > > > +           goto done;
-> > > > > >
-> > > > > > Not a comment for this patch directly, but...
-> > > > > >
-> > > > > > This kind of makes me wonder if we don't want to have some docu=
-mentation
-> > > > > > that specifies what the userspace can expect from the timestamp=
-s, so
-> > > > > > that this isn't changed randomly in the future breaking what wa=
-s fixed
-> > > > > > by this patch.
-> > > > >
-> > > > > I think timestamp handling should really be moved to userspace. I=
-t will
-> > > > > be easier to handle with floating-point arithmetic there. That wo=
-uld
-> > > > > have been difficult to manage for applications a while ago, but n=
-ow that
-> > > > > we have libcamera, we could implement it there. This isn't high o=
-n my
-> > > > > todo list though.
-> > > >
-> > > > While indeed that would probably be a better way to handle the comp=
-lex
-> > > > logic if we designed the driver today, we already have userspace th=
-at
-> > > > expects the timestamps to be handled correctly in the kernel. I
-> > > > suspect moving it to the userspace would require some core V4L2
-> > > > changes to define a new timestamp handling mode, where multiple raw
-> > > > hardware timestamps are exposed to the userspace, instead of the hi=
-gh
-> > > > level system monotonic one.
-> > >
-> > > The uvcvideo driver already supports exposing the packet headers to
-> > > userspace through a metadata capture device, so I think we have all t=
-he
-> > > components we need. The only missing thing would be the implementatio=
-n
-> > > in libcamera :-)
-> >
-> > We would still have to duplicate the quirk information in libcamera
-> > and the kernel.
->
-> Sure, and there will be some level of code duplication. My point is that
-> I believe it can be done in userspace, and while small changes to the
-> clock handling on the kernel side are fine, if we wanted to change the
-> code significantly I think it would be better moved to userspace.
+On Wed, Jun 12, 2024 at 08:46:24AM +0200, Thorsten Leemhuis wrote:
+> On 11.06.24 20:38, Andrew Morton wrote:
+> > On Tue, 11 Jun 2024 16:43:29 +0300 Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> > 
+> >> This check looks for common words that probably indicate a patch
+> >> is a fix.  For now the regex is:
+> >>
+> >> 	(?:(?:BUG: K.|UB)SAN: |Call Trace:|stable\@|syzkaller)/)
+> >>
+> >> Why are stable patches encouraged to have a fixes tag?  Some people mark
+> >> their stable patches as "# 5.10" etc.  This is useful but a Fixes tag is
+> >> still a good idea.
+> > 
+> > I'd say that "# 5.10" is lame
+> 
+> Documentation/process/stable-kernel-rules.rst documents this use to
+> "Point out kernel version prerequisites".
+> 
 
-Okay, that sounds much more reasonable. I guess I misunderstood your
-original reply, sorry.
+No, the 5.10 means that the fix is required for everything after 5.10.
+Here is how you reference pre-requisites.
 
-Best regards,
-Tomasz
+    Cc: <stable@vger.kernel.org> # 3.3.x: a1f84a3: sched: Check for idle
+    Cc: <stable@vger.kernel.org> # 3.3.x: 1b9508f: sched: Rate-limit newidle
+    Cc: <stable@vger.kernel.org> # 3.3.x: fd21073: sched: Fix affinity logic
 
-> I
-> don't have plans to work on this, and I'm not requesting anyone to do so
-> either at this point.
->
-> --
-> Regards,
->
-> Laurent Pinchart
+The documentation was written before we went to 12 character hashes and
+also these days we normally put ("") around the subject.  I've made a
+copy of all the uses of this format from 2023 at the bottom of this
+email to see how people use it in real life.
+
+> > and it would be good if checkpatch could
+> > detect this and warn "hey, use a proper Fixes:".  Because
+> > 
+> >> It  helps people to not cherry-pick buggy patches without also
+> >> cherry-picking the fix.
+> > 
+> > seems pretty important.
+> 
+> Hmmm. That would lead to false positive when it comes to changes that
+> for example just add a device ID (and thus do not "Fix" anything) while
+> having prerequisites that are only available in a specific version.
+
+What I'm saying is, imagine you are maintaining a distro kernel for
+10 years.  In this scenario you're pulling in whole new wifi drivers
+so the kernel still runs on modern hardware.  The stable tag says
+"apply this to 6.8+" because that's when the driver was merged.  But as
+a distro maintainer it's much nicer to have a Fixes: 123412341234 ("Add
+new wifi driver").
+
+regards,
+dan carpenter
+
+Dependencies listed in 2023:
+
+    Cc:  <stable@vger.kernel.org> # 6.1.x: 3837a03 serial: sc16is7xx: improve regmap debugfs by using one regmap per port
+    Cc:  <stable@vger.kernel.org> # 6.1.x: 3837a03 serial: sc16is7xx: improve regmap debugfs by using one regmap per port
+    Cc: <stable@vger.kernel.org> # 6.6+: f8ff234: kernel/Kconfig.kexec: drop select of KEXEC for CRASH_DUMP
+    Cc: <stable@vger.kernel.org> # v6.0+: 1da5c9b x86: Introduce ia32_enabled()
+    Cc: stable@vger.kernel.org # 6.6.x: c5dbf0416000: platform/x86: hp-bioscfg: Simplify return check in hp_add_other_attributes()
+    Cc: stable@vger.kernel.org # 6.6.x: 5736aa9537c9: platform/x86: hp-bioscfg: move mutex_lock() down in hp_add_other_attributes()
+    Cc: <stable@vger.kernel.org> # selftests/resctrl: Refactor feature check to use resource and feature name
+    Cc: <stable@vger.kernel.org> # selftests/resctrl: Remove duplicate feature check from CMT test
+    Cc: <stable@vger.kernel.org> # selftests/resctrl: Move _GNU_SOURCE define into Makefile
+    Cc: stable@vger.kernel.org # 5.9.x: 09252177d5f9: SUNRPC: Handle major timeout in xprt_adjust_timeout()
+    Cc: stable@vger.kernel.org # 5.9.x: 7de62bc09fe6: SUNRPC dont update timeout value on connection reset
+    Cc: stable@vger.kernel.org # 0b035401c570: rbd: move rbd_dev_refresh() definition
+    Cc: stable@vger.kernel.org # 510a7330c82a: rbd: decouple header read-in from updating rbd_dev->header
+    Cc: stable@vger.kernel.org # c10311776f0a: rbd: decouple parent info read-in from updating rbd_dev
+    Cc: <stable@vger.kernel.org> # 6.1.y: bf0207e172703 ("drm/amdgpu: add S/G display parameter")
+    Cc: <stable@vger.kernel.org> # 6.1.y: bf0207e172703 ("drm/amdgpu: add S/G display parameter")
+    Cc: <stable@vger.kernel.org> # 5.15.x: 60a0aab7463ee69 arm64: module-plts: inline linux/moduleloader.h
+    Cc: stable@vger.kernel.org # 588159009d5b: rbd: retrieve and check lock owner twice before blocklisting
+    Cc: stable@vger.kernel.org # f38cb9d9c204: rbd: make get_lock_owner_info() return a single locker or NULL
+    Cc: stable@vger.kernel.org # 8ff2c64c9765: rbd: harden get_lock_owner_info() a bit
+    Cc: 6.4+ <stable@vger.kernel.org> # 6.4+: 8bcbb18c61d6: thermal: core: constify params in thermal_zone_device_register
+    Cc: stable@vger.kernel.org # please backport to all LTSes but not before v6.6-rc2 is tagged
+    Cc: stable@vger.kernel.org      # 3.18: a872ab303d5d: "usb: dwc3: qcom: fix use-after-free on runtime-PM wakeup"
+    Cc: stable@vger.kernel.org # v6.0+ 2f38e84 net/ncsi: make one oem_gma function for all mfr id
+    Cc: <stable@vger.kernel.org> # 6.0: 5365cea199c7 ("soc: qcom: llcc: Rename reg_offset structs to reflect LLCC version")
+    Cc: <stable@vger.kernel.org> # 6.0: c13d7d261e36 ("soc: qcom: llcc: Pass LLCC version based register offsets to EDAC driver")
+    Cc: stable@vger.kernel.org # 6.1.y: 5591a051b86b: drm/amdgpu: refine get gpu clock counter method
+    Cc: stable@vger.kernel.org # 6.2.y: 5591a051b86b: drm/amdgpu: refine get gpu clock counter method
+    Cc: stable@vger.kernel.org # 6.3.y: 5591a051b86b: drm/amdgpu: refine get gpu clock counter method
+    Cc: stable@vger.kernel.org #3.2: 30332eeefec8: debugfs: regset32: Add Runtime PM support
+    Cc: <stable@vger.kernel.org> # dependency for "drm/rockchip: vop: Leave
+    Cc: stable@vger.kernel.org # 4.15: 30332eeefec8: debugfs: regset32: Add Runtime PM support
+    Cc: <stable@vger.kernel.org> # v5.19+ (if someone else does the backport)
+    CC: stable@vger.kernel.org # 5.4.x: c8a5f8ca9a9c: btrfs: print checksum type and implementation at mount time
+    Cc: <stable@kernel.org> # d6fd48eff750 ("virt/coco/sev-guest: Check SEV_SNP attribute at probe time")
+    Cc: <stable@kernel.org> # 970ab823743f (" virt/coco/sev-guest: Simplify extended guest request handling")
+    Cc: <stable@kernel.org> # c5a338274bdb ("virt/coco/sev-guest: Remove the disable_vmpck label in handle_guest_request()")
+    Cc: <stable@kernel.org> # 0fdb6cc7c89c ("virt/coco/sev-guest: Carve out the request issuing logic into a helper")
+    Cc: <stable@kernel.org> # d25bae7dc7b0 ("virt/coco/sev-guest: Do some code style cleanups")
+    Cc: <stable@kernel.org> # fa4ae42cc60a ("virt/coco/sev-guest: Convert the sw_exit_info_2 checking to a switch-case")
+    Cc: stable@vger.kernel.org      # 5.1: 680f8666baf6: interconnect: Make icc_provider_del() return void
+    Cc: <stable@kernel.org> # 2355370cd941 ("x86/microcode/amd: Remove load_microcode_amd()'s bsp parameter")
+    Cc: <stable@kernel.org> # a5ad92134bd1 ("x86/microcode/AMD: Add a @cpu parameter to the reloading functions")
+
