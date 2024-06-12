@@ -1,107 +1,116 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BC04C63
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4AE4C63
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718179249; cv=none; b=XbmbRdkweNfjOU1b8505honVPJplbzdm+bgO9J8T3FcBSUuO4F5dcD0lcKpjspzUCLbHfq3D7QcQ9Dc1bNyA8Xe+ThuWAiu2IuuhBHDrMPER97SNEEM6o7Ca81s7DZTUU19rAuyVHGgRW9lTmfexIVJVXS4HoxCJbcWXAR3YMII=
+	t=1718179331; cv=none; b=APBBqvidXWQNkoHVVNwJzpXSwRhuNqxr8r9zV0dVcMuIfDO+BR4hh1NQGs157zlwsi8xNgtERJbz+9RWAVobWqAm6JyOmZjC7nzMBhY3qovFpZrIW4MufiIC+/0hbx+c5zSLcspy2v5foDSiWXlkjG42csNS1dXluOlpFfuqK/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718179249; c=relaxed/simple;
-	bh=Iye8NbZSQ6kLwre3fp7X6/PawuNxoVKqvT377JMBMRI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L7Lyr9uilP/UPLlyjNMBu8mAmJHx2264sf0Sl0QjVZnF3kkwiGX0+LNsXahQoIbfAWDRvaK2kR2K21/uNXK/Ejbua+D+vWWEm36mKai5sOh8QaKH5A19HRz0UgFAYGlXq2CuVep89iFa4msOWJmJcWGPkyTdzFI4tIGaTD7aqA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WCd1yQzN; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1718179331; c=relaxed/simple;
+	bh=E4ogs9hBictxE7ukXz0EmjyOLTNqPtBX6JxBOeDJggM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EH02sK78KuVy5XChPooevEVKxlzOKKjUtkxk29v0kE4SzR1anVTcG3wR699Wzyw486cYwr3rnPhsmFmiV3zIbNL8S5N0nF4a1DtLsHmR4yzIad1I/WMtizC49Brp6b6hMkPmGOWMchXxI7+k80w4dpkAZd4s3aYBhY3WLxlPQ6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NzYrEmjT; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WCd1yQzN"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f1c4800easo384937666b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:00:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NzYrEmjT"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52c94cf4c9bso1902866e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:02:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1718179245; x=1718784045; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7wcRVW/nhW18asiOmcxYMI52nKc1Lau2tgBza0fWM8k=;
-        b=WCd1yQzNAYSGRY5yoZmDG0Ys/l/UB7zu3NtU7wYnfwloPUHO2DDCkcrQxGt9ibExKz
-         vQa4YWDbibA9ox4t9v/vOuHs4AsPWcvb3UxxADMMbY2eaF1gDbvMvSiQndF5PwzLItbQ
-         MkiJmguaTYizyWPfmRbgA7hl1tY7zZozK+aNI+LnbS0WAhiqQPpos8oLbYuEOrf8Zqne
-         NCdl1pUqEQoJKWUXrTVsSojV5114pEQ1I02PP3KJ7JwenhivrgvcOyx6X3vHBXYGpv5r
-         NrMIIBZu8LZNUAmQy6WMhiPdTIfJZZSSeE0aPQdQd1tNQZWMuSt3kHcfzgCATMg9jbkg
-         dHgw==
+        d=linaro.org; s=google; t=1718179328; x=1718784128; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iy6VaAIWsc/uFJxkxC11R2z+NrPGPrzZFexuniHGbrY=;
+        b=NzYrEmjTa8FaiGfGTcVuqWzOAF9WVuHG2wKoEsALDBP8S4C1+NJzF/si4ueUzfpj3s
+         TkRWLyg/xf18ZfNJFktPsDDftbHCPuRsikZF/X9QmXKCUSccX7DlgVUPvKhpqzxFdCNp
+         kHiekoWtxVjyemu54W38CiGgrx3l89sd0fC1ZdD+Y0R/eCpVSAW2hG7+NwGZ3iMEoKSq
+         r7inZBJwEw0KgVOuvDsFXa7GpaSV8AzAYp+gNgEm+7n/nxSblj/HCVZGr82Qqr4GcpDy
+         gmZNkYyrkUNQPpsQRZ4E9V9n0iAnY/eWuTYd2+DbJGtIW4JG9R4TATcHWzi6ouJtK7e4
+         IZQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718179245; x=1718784045;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7wcRVW/nhW18asiOmcxYMI52nKc1Lau2tgBza0fWM8k=;
-        b=Hk4Q3GYffVXq3DGVtVEauuH9fiyXjoKwyQImLuvVQuGO2yw2Vz6Wk6poqa/FqU0+nP
-         J+PhHGCR8PFARvGvqlkX+R17DnIhuhkwdil/kISWsmr2r4EgHTEpTVfbTeXJe3UqZneS
-         QyOvDpnj1jMtXbOLdjmOFFBysj2/2WJxshztqAalZLpb1fxKYlrjhF6bX9bxAjVazmcw
-         DLdfLbJd7XbilvK+jpFI7RB4Bf+1150phcjlJkx8138OHRB6RBUi6nVr3jwbsTR7kKYC
-         Q6gFYA/xeis7yLosbKLRedz/UWFMjmNcNvxIaiaZpBNPOyI6Y1yKKpquBp4UPqBfNvW+
-         OJKg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8R1rdTHT9ak4ODIxs/8BRquLcxXrB7DSgoBdH8vipTog3ldCpEwopYtjgm602JKDrPuAO7YJ1UMAreP8/2McsP3bPPJ3RAaInNkin
-X-Gm-Message-State: AOJu0Yy86jjItVmaX6ntwog/Lx0HzEj820N1fcW7qNl9o/8AzoEM20D0
-	RzP12DweMUJfYGwuiUMvZymxVFb94X6mZodeHwSN+WIMSK3QQZXLYc0EN5k9sK4=
-X-Google-Smtp-Source: AGHT+IGRFholVNe/4JMsUiq5frRKGJ1K2M3+HujTTgz1BQSdVdgGDoBmuhS1E15RnAK9dM3I9sdihA==
-X-Received: by 2002:a17:906:55cf:b0:a6f:e55:ba1d with SMTP id a640c23a62f3a-a6f47d1e186mr58094966b.11.1718179245217;
-        Wed, 12 Jun 2024 01:00:45 -0700 (PDT)
-Received: from ?IPV6:2001:a61:138e:201:27e2:fe9:90b9:6b9a? ([2001:a61:138e:201:27e2:fe9:90b9:6b9a])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6ef7913eb8sm626424566b.178.2024.06.12.01.00.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 01:00:45 -0700 (PDT)
-Message-ID: <378bad75-dfc7-4462-8fbc-a462e129a0ea@suse.com>
-Date: Wed, 12 Jun 2024 10:00:44 +0200
+        d=1e100.net; s=20230601; t=1718179328; x=1718784128;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iy6VaAIWsc/uFJxkxC11R2z+NrPGPrzZFexuniHGbrY=;
+        b=W88XMT1qUmyh4Z5O3ATXUGRVujX/fDOK+eKLSNcGRO3RxPyjw4Y74swFcINeHFH+du
+         TzJeryX3ewlChD6H6jZA6GUZimQEW3QdDxbxxpNQOY/dh6SDLJ94u0WyES/Wb6G4yl1F
+         Qp7llovEnQyvedPQCxTB6vDPjF6dPUkD21dz57Dpd3C54oCIpiVKHB4lrEjF1+46mj8r
+         ecyrLdnSD12LG2FikxVUa9Y4ymiUELzZM5KMzhy3uEoflHG/0fZxDdT5Q2V9aS/9hnVU
+         7LVHhHEzwMKiLlVQzBi6ViZPc8gTDngpk4Q7ty9nk9Au6z0TXTDfqKYxUSx3c4OqsmUh
+         72Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlnmBFrymTx/MwaNBIL9t2xWIs8t7r/FIryiJ9n9bu/ycdi2E6I0BC+xiI1fgojGy5DKK8SbnytxRLALmfHFZTR5qe3U8PopAFGslr
+X-Gm-Message-State: AOJu0Yxr63PbC10oRXEBs8vLlvH6RzTfOXO8pREuJehjVjoFpIa0mBOs
+	Z+iOk7CVk3T30se/uDBhqfrDup2V1+Q2UXZEUSEpJUdyBNqOm6WGq/ouHZydiac=
+X-Google-Smtp-Source: AGHT+IFDKHNqbb5jXRRVasJXbOoXoBcVXVT3XdueDls6+ffc1QNC2kyj8whnyTo7bp9zFvAdHXeXCQ==
+X-Received: by 2002:ac2:58e8:0:b0:52c:7fe5:f89 with SMTP id 2adb3069b0e04-52c9a3c6b34mr739943e87.15.1718179327968;
+        Wed, 12 Jun 2024 01:02:07 -0700 (PDT)
+Received: from eriador.lan (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52c879187f0sm1435885e87.272.2024.06.12.01.02.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 01:02:07 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v5 0/9] drm/msm: make use of the HDMI connector infrastructure
+Date: Wed, 12 Jun 2024 11:02:06 +0300
+Message-ID: <171817931352.2727087.11541630600563210677.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240607-bridge-hdmi-connector-v5-0-ab384e6021af@linaro.org>
+References: <20240607-bridge-hdmi-connector-v5-0-ab384e6021af@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: USB Denial Of Service
-To: Alan Stern <stern@rowland.harvard.edu>,
- Greg KH <gregkh@linuxfoundation.org>, Oliver Neukum <oneukum@suse.com>
-Cc: USB mailing list <linux-usb@vger.kernel.org>,
- Kernel development list <linux-kernel@vger.kernel.org>
-References: <40dfa45b-5f21-4eef-a8c1-51a2f320e267@rowland.harvard.edu>
-Content-Language: en-US
-From: Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <40dfa45b-5f21-4eef-a8c1-51a2f320e267@rowland.harvard.edu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 11.06.24 16:35, Alan Stern wrote:
-> Greg, Oliver, or anyone else:
+On Fri, 07 Jun 2024 16:22:57 +0300, Dmitry Baryshkov wrote:
+> This patchset sits on top Maxime's HDMI connector patchset ([1]).
 > 
-> Questions:
+> Currently this is an RFC exploring the interface between HDMI bridges
+> and HDMI connector code. This has been lightly verified on the Qualcomm
+> DB820c, which has native HDMI output. If this approach is considered to
+> be acceptable, I'll finish MSM HDMI bridge conversion (reworking the
+> Audio Infoframe code). Other bridges can follow the same approach (we
+> have lt9611 / lt9611uxc / adv7511 on Qualcomm hardware).
 > 
-> If a broken or malicious device causes a USB class driver to add a
-> thousand (or more) error messages per second to the kernel log,
-> indefinitely, would that be considered a form of DOS?
+> [...]
 
-Yes.
+Applied to drm-misc-next, thanks!
 
-> Should the driver be fixed?
+[1/9] drm/connector: hdmi: allow disabling Audio Infoframe
+      commit: 000d1940c90984a9a2af9c02bc17e3ca0d87f71d
+[2/9] drm/bridge-connector: switch to using drmm allocations
+      commit: c12907be57b16eed5a73f75a44ebea8f30629c85
+[3/9] drm/bridge-connector: implement glue code for HDMI connector
+      commit: 6b4468b0c6ba37a16795da567b58dc80bc7fb439
 
-If a broken device can do that, definitely.
+Best regards,
+-- 
+With best wishes
+Dmitry
 
-> What is an acceptable rate for an unending stream of error messages?
-> Once a second?  Once a minute?
-
-Definitely not once a second. I'd be tempted to call a neverending stream
-an issue by itself. The approach the SCSI layer takes by giving up on
-a device if all else fails seems wise to me.
-  
-> At what point should the driver give up and stop trying to communicate
-> with the device?
-
-I would propose after five cycles of all error handling.
-
-The exact number, as long as it is greater than 1 and a small integer
-does not really matter, as long as it exists.
-
-	Regards
-		Oliver
