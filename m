@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410A3823AC
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB7182492
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217220; cv=none; b=YjnSUWX0RqMzmAESvzeJOcnv05OLVhIbq0kKVtNkslg4dgx8+HIw3S5JRj9VTVZVc/xjml4ZwQB53dud6HT2VrIZj8x8/HuUNFHpZEXhEJo9Igqz41DWWcpBaNnuXpxtY1ilgIEPnsjzGwTtSgOCuc6lH4Hy7425rFZzoSw4f+Y=
+	t=1718217226; cv=none; b=cxSLL/fVWeMJ121RQ3ic8qRV5GIJOS7BNM7XhaZ42hB1gNQfE1GINFxlAZcNtsLuUJTfHOqI5OhyJwMDXqk1Vgu5PtidP2YjpjIjeg/wX33DQ1x6sSxQG/A0kBLjXcC6Fqh8phUiAywWAm9Rnxxtg0EEkNtadCmiaoRNJsLlICw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217220; c=relaxed/simple;
-	bh=GW3F5bRDidIfzFfzx2XH9TZgHygHBWW2YgjI9x1i9kA=;
+	s=arc-20240116; t=1718217226; c=relaxed/simple;
+	bh=/Y3F4sCd7/hxoSnGLA3j5vPDaNT/PzOL30m0ArVq/VY=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=stpJkg0vAk80CV7KzdeChmWk9TdgioYShhS1fGbYGz4zHhrHYOQB/24GV/QXMWhiAAVyCSC8X4j6rZjjrEup+vl4khD0FxRIlYXMvzoszFIjsi+IgvJ+EsWGqvUPMCsXmT9yUUucLE9yVMWf6mUxLu4a9rf8aB1emzK7S2hURCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wBAfei2k; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=UkywMKC043ox26JOyKazu6R/pMCFcylS/6Z1q2ZUGK0shWCgGsU8bZHKxGOKjsU7u5ADWHs6tXanbYrcAAJpEgQmwgTAnxUuaODdWahDEpSrfqUEuRXuflsDoZv30wPNR0r+7IHzwgdDIH5DKtQ67mP8K53ipHkvdQmWbo4giI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rP/sws8v; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wBAfei2k"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfdddb9b425so244674276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:33:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rP/sws8v"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6300aeb93dcso3413757b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:33:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718217216; x=1718822016; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718217223; x=1718822023; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hxFca2akLEi/c6aeiWryG3twAj/x8mJ+5CcLXE4nJMw=;
-        b=wBAfei2kL1ZcoeHo2BHZAsPPT1zDP5xxnU6YYpceSEzBFi7SBKeExgVLw0n+LAhgqL
-         ekC+59Nvwt5+iMo05pAagN5j5k+BkZQqUiH1hUcfyLxpi8QTPTSTuzemGfa4/8kdV/2D
-         /21CWctfBEE1zX6ZTbrg/p9pSmGE7LozNvRQg7Kr0WMCep7AWEsnYk6vwwubXp2ft1CF
-         ORBSVxUQIo0qYo9tLnVDk2NMJuksDau5vpMvBmbh08RNRId1YVUbmaW2rLdlTeJEUhpB
-         8DXegtwm1hB2qCQXlbjiwdIANggpt0Fx0YrTb8X660HCXQvz6W2k/j3yHoqEI8bE8nCt
-         /6vA==
+        bh=qcvOQ2AYZ7WMCcNf48y0Z4WIFFdDS7XM+Tp2DrQsPX4=;
+        b=rP/sws8vcz6H1pxHy8tHHDH0Rk57fIR3h3Zo8Qchjpvy5rLlMggauUc1OF79xyXUGQ
+         wfBkC47pVUG+d+2HeRET01bquauFbdzzKTF/hdrD0x2en8s1rvpz2JDrx4usTZzXRUrV
+         P3+cmDWt9u962ezC0pV1xMINUx0InDc4R2R1DbnviG2E7ffRVDydbaT792Dk4nOvcjT8
+         UQ57n+RF8/mCN33Qcn8WEZYFfbnz66uaFt0zVIINbmM1O+Mb5oWlSHqWMPoudT9d6xQ6
+         MiaeRTiaomH3yI37BcYDAR2OOUeldVnSqoxaJcutMimYBG896v4VUW2hQ92CuOVr9N8+
+         gLBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718217216; x=1718822016;
+        d=1e100.net; s=20230601; t=1718217223; x=1718822023;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hxFca2akLEi/c6aeiWryG3twAj/x8mJ+5CcLXE4nJMw=;
-        b=FHQTshzgrmPwU5bb/h0+fVifqhYrALYx1lUfHWVU5xALJthiAb4OqCOInpuUeDumHN
-         Cp9HiCMyxRLwTYyYHKWb2ntkHz1J6CHjMxyNsj4KDHBTgxZ4YxiIeHG5uR1piKBzWuCw
-         +eeQV0EXPofW8nkmEDluI6CqkjwP8Zl2Xjx+EHu2Wc88GbuItP6sbwddBhQ5KfFnl8F+
-         Sn/DDaVinBV0jyUQy+E1WDQ2fLVVvo4oyjjlmlgssIxN4gQdDZjhsTnGnJSlljWgYxtL
-         TrLtO6VOBIBMAgNOC/zMHy3x9jRDkyatdn6oTpgqYPJWAXXahKpMMOy/Jjkj/G6rfWXO
-         kEMA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiqb498gximWiUHaojTuJ73JLmqKGXB/fK8pzf0or/z2zO14QP5WCJ1lxvfglE6tYBNv+NloplkuB0GGLNfSAFvyFItu2wOaHWFVOc
-X-Gm-Message-State: AOJu0Yz8BNmpLxx7FkAaevR84HsCum9dUhA/w/bjP+I2APkRg0GhJsBZ
-	vaTv1g31nCWRIe5JYZxIQ86rcMoijRgfpHLlo0axcJRvQLDH6ihUuTonyEm/GZC54cQuCigzYhB
-	IFqCfCg==
-X-Google-Smtp-Source: AGHT+IHHEhm3YqNyXbkwlJqf7zAbA10K5YtztZ12tlPf+OX1TpaElO1uBuwFIrHE76zPeVUQ691ENdAPSP7k
+        bh=qcvOQ2AYZ7WMCcNf48y0Z4WIFFdDS7XM+Tp2DrQsPX4=;
+        b=AAtXH9Yg0YracJgGmmyJ3CwW+wM3sjWjPofGh+zeWuvrPALmg+vgfdDUWtru+PJq/a
+         YqRCBwhfTMAflWlOI0TusD6U51MZtnE+8tNaOyssvf2pMA7XZ7LI3VseYn0LvcZ0dlPz
+         5chEzfBOj6aneq7Me251e1de4kv/B6VD82Vr1zh+ng2ItsRhZCu+5Ho3Oa/bLAqNZnXt
+         ljeeM1BmU2mWz1ghqSB5CFH38KhF+KlcxDVnFUquL9AXx7r0tYKi1HOp4NcqUr1IC/B2
+         wFE5CvpL45RZQPQelmeROd9rrk5UFk6XjsJBlKPqF8w93xKZHCiTv2GSQgt4Kzp8LD8E
+         PfxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLIulsVYsqcoF3jggE5/mwXjg0okwlXNhzZ5DI9/8sSLviF6HxWPetVqucz6XoL3eeqistqjfksmpxGMVdle5u4WYfzEszOj7gEGSK
+X-Gm-Message-State: AOJu0Yy/X2KtUpAC7dhBQluNm5vTTQ9+/RXKoM6N72eaKe/rxuV5kkMg
+	6WfEcKkdMq2HjmX+J3nKS35smelQwo2M0+RV4xb0vNebzJfyqsPoJnCglBSYVSUWW/iGIJPuBe2
+	hwsGWEQ==
+X-Google-Smtp-Source: AGHT+IEdZtuxFCkd4xeaZMVA0551v1r2/AOz8THV3+MN9PWe9shK7np3c1wiSt7RmdoT82E3zDdATSpfd0ve
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:959d:4302:db0e:d12a])
- (user=irogers job=sendgmr) by 2002:a05:6902:2b03:b0:dda:c57c:b69b with SMTP
- id 3f1490d57ef6-dfe62f13456mr822488276.0.1718217216102; Wed, 12 Jun 2024
- 11:33:36 -0700 (PDT)
-Date: Wed, 12 Jun 2024 11:32:02 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:88:b0:62f:22cd:7082 with SMTP id
+ 00721157ae682-62fbb7f3b47mr6200647b3.5.1718217222801; Wed, 12 Jun 2024
+ 11:33:42 -0700 (PDT)
+Date: Wed, 12 Jun 2024 11:32:05 -0700
 In-Reply-To: <20240612183205.3120248-1-irogers@google.com>
-Message-Id: <20240612183205.3120248-5-irogers@google.com>
+Message-Id: <20240612183205.3120248-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240612183205.3120248-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Subject: [PATCH v1 4/7] perf bench: Make bench its own library
+Subject: [PATCH v1 7/7] perf python: Clean up build dependencies
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -87,124 +87,105 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Make the benchmark code into a library so it may be linked against
-things like the python module to avoid compiling code twice.
+The python build now depends on libraries and doesn't use
+python-ext-sources except for the util/python.c dependency. Switch to
+just directly depending on that file and util/setup.py. This allows
+the removal of python-ext-sources.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Build         |  4 ++--
- tools/perf/Makefile.perf | 11 +++++++++-
- tools/perf/bench/Build   | 46 ++++++++++++++++++++--------------------
- 3 files changed, 35 insertions(+), 26 deletions(-)
+ tools/perf/Makefile.perf           | 10 +-----
+ tools/perf/util/python-ext-sources | 53 ------------------------------
+ 2 files changed, 1 insertion(+), 62 deletions(-)
+ delete mode 100644 tools/perf/util/python-ext-sources
 
-diff --git a/tools/perf/Build b/tools/perf/Build
-index fddd45ab35b4..2787f5630ff7 100644
---- a/tools/perf/Build
-+++ b/tools/perf/Build
-@@ -1,4 +1,4 @@
--perf-y += builtin-bench.o
-+perf-bench-y += builtin-bench.o
- perf-y += builtin-annotate.o
- perf-y += builtin-config.o
- perf-y += builtin-diff.o
-@@ -35,7 +35,7 @@ endif
- 
- perf-$(CONFIG_LIBELF) += builtin-probe.o
- 
--perf-y += bench/
-+perf-bench-y += bench/
- perf-test-y += tests/
- 
- perf-y += perf.o
 diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index ecf0586e9061..f9709718cb83 100644
+index 6f66d3a7ffb2..918b851b2e0d 100644
 --- a/tools/perf/Makefile.perf
 +++ b/tools/perf/Makefile.perf
-@@ -425,6 +425,9 @@ endif
+@@ -380,14 +380,6 @@ python-clean := $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT
+ # Use the detected configuration
+ -include $(OUTPUT).config-detected
  
- export PERL_PATH
+-ifeq ($(CONFIG_LIBTRACEEVENT),y)
+-  PYTHON_EXT_SRCS := $(shell grep -v ^\# util/python-ext-sources)
+-else
+-  PYTHON_EXT_SRCS := $(shell grep -v ^\#\\\|util/trace-event.c\\\|util/trace-event-parse.c util/python-ext-sources)
+-endif
+-
+-PYTHON_EXT_DEPS := util/python-ext-sources util/setup.py $(LIBAPI)
+-
+ SCRIPTS = $(patsubst %.sh,%,$(SCRIPT_SH))
  
-+LIBPERF_BENCH_IN := $(OUTPUT)perf-bench-in.o
-+LIBPERF_BENCH := $(OUTPUT)libperf-bench.a
-+
- LIBPERF_TEST_IN := $(OUTPUT)perf-test-in.o
- LIBPERF_TEST := $(OUTPUT)libperf-test.a
+ PROGRAMS += $(OUTPUT)perf
+@@ -715,7 +707,7 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+ # Create python binding output directory if not already present
+ $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
  
-@@ -438,7 +441,7 @@ PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
- ifdef LIBBPF_STATIC
-   PERFLIBS += $(LIBBPF)
- endif
--PERFLIBS += $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPMU_EVENTS)
-+PERFLIBS += $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPMU_EVENTS)
- 
- # We choose to avoid "if .. else if .. else .. endif endif"
- # because maintaining the nesting to match is a pain.  If
-@@ -740,6 +743,12 @@ $(LIBPMU_EVENTS_IN): FORCE prepare
- $(LIBPMU_EVENTS): $(LIBPMU_EVENTS_IN)
- 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
- 
-+$(LIBPERF_BENCH_IN): FORCE prepare
-+	$(Q)$(MAKE) $(build)=perf-bench
-+
-+$(LIBPERF_BENCH): $(LIBPERF_BENCH_IN)
-+	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $<
-+
- $(LIBPERF_TEST_IN): FORCE prepare
- 	$(Q)$(MAKE) $(build)=perf-test
- 
-diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
-index c2ab30907ae7..279ab2ab4abe 100644
---- a/tools/perf/bench/Build
-+++ b/tools/perf/bench/Build
-@@ -1,25 +1,25 @@
--perf-y += sched-messaging.o
--perf-y += sched-pipe.o
--perf-y += sched-seccomp-notify.o
--perf-y += syscall.o
--perf-y += mem-functions.o
--perf-y += futex-hash.o
--perf-y += futex-wake.o
--perf-y += futex-wake-parallel.o
--perf-y += futex-requeue.o
--perf-y += futex-lock-pi.o
--perf-y += epoll-wait.o
--perf-y += epoll-ctl.o
--perf-y += synthesize.o
--perf-y += kallsyms-parse.o
--perf-y += find-bit-bench.o
--perf-y += inject-buildid.o
--perf-y += evlist-open-close.o
--perf-y += breakpoint.o
--perf-y += pmu-scan.o
--perf-y += uprobe.o
-+perf-bench-y += sched-messaging.o
-+perf-bench-y += sched-pipe.o
-+perf-bench-y += sched-seccomp-notify.o
-+perf-bench-y += syscall.o
-+perf-bench-y += mem-functions.o
-+perf-bench-y += futex-hash.o
-+perf-bench-y += futex-wake.o
-+perf-bench-y += futex-wake-parallel.o
-+perf-bench-y += futex-requeue.o
-+perf-bench-y += futex-lock-pi.o
-+perf-bench-y += epoll-wait.o
-+perf-bench-y += epoll-ctl.o
-+perf-bench-y += synthesize.o
-+perf-bench-y += kallsyms-parse.o
-+perf-bench-y += find-bit-bench.o
-+perf-bench-y += inject-buildid.o
-+perf-bench-y += evlist-open-close.o
-+perf-bench-y += breakpoint.o
-+perf-bench-y += pmu-scan.o
-+perf-bench-y += uprobe.o
- 
--perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
--perf-$(CONFIG_X86_64) += mem-memset-x86-64-asm.o
-+perf-bench-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
-+perf-bench-$(CONFIG_X86_64) += mem-memset-x86-64-asm.o
- 
--perf-$(CONFIG_NUMA) += numa.o
-+perf-bench-$(CONFIG_NUMA) += numa.o
+-$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(PERFLIBS)
++$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): util/python.c util/setup.py $(PERFLIBS)
+ 	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
+         CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBS)' \
+ 	  $(PYTHON_WORD) util/setup.py \
+diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
+deleted file mode 100644
+index 1bec945f4838..000000000000
+--- a/tools/perf/util/python-ext-sources
++++ /dev/null
+@@ -1,53 +0,0 @@
+-#
+-# List of files needed by perf python extension
+-#
+-# Each source file must be placed on its own line so that it can be
+-# processed by Makefile and util/setup.py accordingly.
+-#
+-
+-util/python.c
+-../lib/ctype.c
+-util/cap.c
+-util/evlist.c
+-util/evsel.c
+-util/evsel_fprintf.c
+-util/perf_event_attr_fprintf.c
+-util/cpumap.c
+-util/memswap.c
+-util/mmap.c
+-util/namespaces.c
+-../lib/bitmap.c
+-../lib/find_bit.c
+-../lib/list_sort.c
+-../lib/hweight.c
+-../lib/string.c
+-../lib/vsprintf.c
+-util/thread_map.c
+-util/util.c
+-util/cgroup.c
+-util/parse-branch-options.c
+-util/rblist.c
+-util/counts.c
+-util/print_binary.c
+-util/strlist.c
+-util/trace-event.c
+-util/trace-event-parse.c
+-../lib/rbtree.c
+-util/string.c
+-util/symbol_fprintf.c
+-util/units.c
+-util/affinity.c
+-util/rwsem.c
+-util/hashmap.c
+-util/perf_regs.c
+-util/fncache.c
+-util/rlimit.c
+-util/perf-regs-arch/perf_regs_aarch64.c
+-util/perf-regs-arch/perf_regs_arm.c
+-util/perf-regs-arch/perf_regs_csky.c
+-util/perf-regs-arch/perf_regs_loongarch.c
+-util/perf-regs-arch/perf_regs_mips.c
+-util/perf-regs-arch/perf_regs_powerpc.c
+-util/perf-regs-arch/perf_regs_riscv.c
+-util/perf-regs-arch/perf_regs_s390.c
+-util/perf-regs-arch/perf_regs_x86.c
 -- 
 2.45.2.505.gda0bf45e8d-goog
 
