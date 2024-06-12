@@ -1,189 +1,93 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078E9629E4
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C5D4CDF9;
+	Wed, 12 Jun 2024 18:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718218236; cv=none; b=ja+c7vYoRpbM55+5F6OoIXYlVtQDLZufWEo8SmBabNDTcHwCdQtL4Y+G01ecAg6oiWRSWmHN8u0mu5Yc0GYbUy3DTLe6Bq72Auk/csIqxOCQxNrRVWUakZT3QvXyZfu5Sfx50ovV5DyvNWsY4AZegvzBt5DEYHn2qNYw5SePg+s=
+	t=1718218262; cv=none; b=SOViR8y0p6bkcZe1OqVTYa8eA8Bj45SuYd+HgePN/SYCahtjOCqtxLU4S6EyT69k2a6BOFhDbkNK4JsDluZX0zMfR7vAAsZa/on2j82K2idetV1a0TzW5dUrfdeCVHtm/Al+s3Q/jSctJdKaJleS2e+x+VOU8J9TmFKz1uy0u0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718218236; c=relaxed/simple;
-	bh=04J8z3Ji+/a4DiOzfeQOCFUFl/QSp0R7BgM1OMz/6sU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CabrVyX9MBE2iEKF8m2IWZ+hNQyE/jL6mpbZpa/c1eCcXuPPFjakZ+tp2ROBVpSM7/GbYccUzFQ9Keo6w+qFnZWfccNBn1nTm2NBWRxY58/8sKDNLmUti4CaJXJFFz+RqPZsbZNL1ngWJExWc2ivP2kYUUtAvgo3SH5kDGS2Pe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AZISgCzh; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718218262; c=relaxed/simple;
+	bh=Zf7s9WeVnkvmuXPzjsfTL8ksWv08gNLaGXu8WKfdazc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RmZ00bzUQQfvBVmBWQju3u3P3BN8MTxfGeu3Xr/f53089f9tkZj0l6iEHEP0ySCuEvFWI9pKbjAdd3CjPINBrNzyeZgLWtZxHqMn+d6yYQvyjFZEFAOL6eDR5/UP08nyu6HE5M6gqZVwiF6ZZsCCdqP8j/OUM3jVGfXEIbS+xcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UN40XRk9; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AZISgCzh"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6ae259b1c87so11456806d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718218233; x=1718823033; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oiQQ23KIjo8vJtcLEZAdNg1+OGV+c+w6Qzig7BQEQig=;
-        b=AZISgCzh4xez7/i5U9u90TA5BMIomTDeUD+72cWRcg09WoerX/YzWjGn597WM+mj6H
-         2rkUBxGoKztnUAK2aNi7Q7K9ToZtS36iLFLCMt31/NhrE7raIx4ZMPIbaKVeiSLU8Db8
-         uNJwCOh/vxejSU8H6B9wodvYEzO8nhBoagM0A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718218233; x=1718823033;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oiQQ23KIjo8vJtcLEZAdNg1+OGV+c+w6Qzig7BQEQig=;
-        b=CJ1rySCl7/9d/M1rM3VPVr4gPRY+s37VFMvWPW1XJpvmHTHDAnbeIGr0KZ17mjU2gU
-         AjNdpm/eMGm+F39lAUNSVrlx3v3R5etlhdnTbrUBwBxL9uVG4ToqsZL8OTgy223jl3fy
-         ou+vdUMpMRo/i6Q0ixn05puH3FFrMU4x1PVxjGu/z7kt6cdWpFItK1EovMXs6ZoAkoX5
-         CxBzGpfZPwUV7i87r/kaMWLb9NxG9mFvseo+yt0D50R1B5MN85a7mErnkPNfYcUFLOq4
-         aZZ3I+5K5G31dJ45REU8WCVrnqd49IKHuKhNegN/ce2X/c4rs79OU93gY/4pQEjnI+yW
-         JnEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvQI5oAjq37hL2dnCKXky9Pti/YcSoVZHcBnVmt6FUMa/nWhYO7dCuHzZU6ZVyj5Al9RhfSvqOswfxuAgaAPHTKweb+FfC+CXS5SYF
-X-Gm-Message-State: AOJu0YzHsXvQ1PrBkivEaJTMDU7bTkilBOBB/ngWb5csGB+xN6R+nUlt
-	sqIFxbERqI53QlAD+3q4FBOBbfjtXjwsClpO9wjk/lJ8rI4sctfAVzIesudqSDpo3+Hu9XyRzpw
-	=
-X-Google-Smtp-Source: AGHT+IETWOVLHCEkbx9AOcFCluBNgnzm4FbQIgeY6T0bLn3v8pEnYSnuQBFnf+lINUjt6S5SO6Z1DQ==
-X-Received: by 2002:ad4:5fcb:0:b0:6ad:764d:bf39 with SMTP id 6a1803df08f44-6b2a33ce408mr10223566d6.11.1718218233514;
-        Wed, 12 Jun 2024 11:50:33 -0700 (PDT)
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com. [209.85.160.177])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b06ae2266bsm48994806d6.3.2024.06.12.11.50.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 11:50:33 -0700 (PDT)
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4405dffca81so29001cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:50:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUbA0/Mwxrt77RvhvUMj45oqi3CBTPtoHWjKJxJPfujvV5gOKi6jkhB0OZ+E6LtY0qeZHrlCh0xb0h/OrLnr3muHBTtC3QC/uq6Q8rv
-X-Received: by 2002:a05:622a:5a8c:b0:43e:3833:c5e3 with SMTP id
- d75a77b69052e-441a163ac33mr295191cf.11.1718217917336; Wed, 12 Jun 2024
- 11:45:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UN40XRk9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SnTD+YzDcFdeMAvSsaXVlZcl9N1crAVDMcpCBvbsy4M=; b=UN40XRk98RsgoJc9yo1fssXg4B
+	rhAiDU4piBR+yp7MAQSmFafqrEBApb5mYlwjE9CykOkoWUBWGqMhKGrMqUoLS2TO7EVdzFDEmZfMY
+	gr2/B6BPuy6EjyIothSFx4I2t0byuYkB772tm/NlqmDkm24/i1888acz6GDNgWbjgGNJKQRbPkuAN
+	q2tsfM8iX4s+cOyTSytKQtrDOO8tvCWxya3zpclY4sBqq6LWeTY4iJg8A189S9xb3oPARsa421sAY
+	FOvNO0J/v+GC7qJRf9g3xvGtqGWhkTXdioqI/qORq91Fe43olNz3Va+hORnhpcPi0qDEKOS8hlym8
+	nxcCddog==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sHT3Z-0000000EzSY-0Y2E;
+	Wed, 12 Jun 2024 18:50:49 +0000
+Date: Wed, 12 Jun 2024 19:50:49 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+Cc: david@fromorbit.com, djwong@kernel.org, chandan.babu@oracle.com,
+	brauner@kernel.org, akpm@linux-foundation.org, mcgrof@kernel.org,
+	linux-mm@kvack.org, hare@suse.de, linux-kernel@vger.kernel.org,
+	yang@os.amperecomputing.com, Zi Yan <zi.yan@sent.com>,
+	linux-xfs@vger.kernel.org, p.raghav@samsung.com,
+	linux-fsdevel@vger.kernel.org, hch@lst.de, gost.dev@samsung.com,
+	cl@os.amperecomputing.com, john.g.garry@oracle.com
+Subject: Re: [PATCH v7 04/11] readahead: allocate folios with
+ mapping_min_order in readahead
+Message-ID: <ZmnuCQriFLdHKHkK@casper.infradead.org>
+References: <20240607145902.1137853-1-kernel@pankajraghav.com>
+ <20240607145902.1137853-5-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610222515.3023730-1-dianders@chromium.org>
- <20240610152420.v4.2.I65a6430ab75f74d20c28b5c5f819dd5b8455933d@changeid> <0bb414fa-851b-40cf-ede9-fc6252c6b173@linux.intel.com>
-In-Reply-To: <0bb414fa-851b-40cf-ede9-fc6252c6b173@linux.intel.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 12 Jun 2024 11:45:00 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WWrTHRdwrbOFBrZ94HpWQo6v6FkLTxa1vgN31SC6GqDA@mail.gmail.com>
-Message-ID: <CAD=FV=WWrTHRdwrbOFBrZ94HpWQo6v6FkLTxa1vgN31SC6GqDA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/8] tty: serial: Add uart_fifo_timeout_ms()
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Tony Lindgren <tony@atomide.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Johan Hovold <johan+linaro@kernel.org>, 
-	John Ogness <john.ogness@linutronix.de>, linux-arm-msm@vger.kernel.org, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Stephen Boyd <swboyd@chromium.org>, linux-serial <linux-serial@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240607145902.1137853-5-kernel@pankajraghav.com>
 
-Hi,
+On Fri, Jun 07, 2024 at 02:58:55PM +0000, Pankaj Raghav (Samsung) wrote:
+> @@ -230,7 +247,9 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
+>  		struct folio *folio = xa_load(&mapping->i_pages, index + i);
+>  		int ret;
+>  
+> +
 
-On Wed, Jun 12, 2024 at 12:38=E2=80=AFAM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Mon, 10 Jun 2024, Douglas Anderson wrote:
->
-> > The current uart_fifo_timeout() returns jiffies, which is not always
-> > the most convenient for callers. Add a variant uart_fifo_timeout_ms()
-> > that returns the timeout in milliseconds.
-> >
-> > NOTES:
-> > - msecs_to_jiffies() rounds up, unlike nsecs_to_jiffies(). This is
-> >   because msecs_to_jiffies() is actually intended for device drivers
-> >   to calculate timeout value. This means we don't need to take the max
-> >   of the timeout and "1" since the timeout will always be > 0 ms (we
-> >   add 20 ms of slop).
-> > - uart_fifo_timeout_ms() returns "unsigned int" but we leave
-> >   uart_fifo_timeout() returning "unsigned long". This matches the
-> >   types of msecs_to_jiffies().
-> >
-> > Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> > Changes in v4:
-> > - New
-> >
-> >  include/linux/serial_core.h | 15 +++++++++++----
-> >  1 file changed, 11 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-> > index 8cb65f50e830..97968acfd564 100644
-> > --- a/include/linux/serial_core.h
-> > +++ b/include/linux/serial_core.h
-> > @@ -889,14 +889,21 @@ unsigned int uart_get_divisor(struct uart_port *p=
-ort, unsigned int baud);
-> >  /*
-> >   * Calculates FIFO drain time.
-> >   */
-> > -static inline unsigned long uart_fifo_timeout(struct uart_port *port)
-> > +static inline unsigned int uart_fifo_timeout_ms(struct uart_port *port=
-)
-> >  {
-> >       u64 fifo_timeout =3D (u64)READ_ONCE(port->frame_time) * port->fif=
-osize;
-> > +     unsigned int fifo_timeout_ms =3D div_u64(fifo_timeout, NSEC_PER_M=
-SEC);
-> >
-> > -     /* Add .02 seconds of slop */
-> > -     fifo_timeout +=3D 20 * NSEC_PER_MSEC;
-> > +     /*
-> > +      * Add .02 seconds of slop. This also helps account for the fact =
-that
-> > +      * when we converted from ns to ms that we didn't round up.
-> > +      */
-> > +     return fifo_timeout_ms + 20;
-> > +}
-> >
-> > -     return max(nsecs_to_jiffies(fifo_timeout), 1UL);
-> > +static inline unsigned long uart_fifo_timeout(struct uart_port *port)
-> > +{
-> > +     return msecs_to_jiffies(uart_fifo_timeout_ms(port));
-> >  }
->
-> Hi,
->
-> This is definitely towards the right direction! However, it now does
-> double conversion, first div_u64() and then msecs_to_jiffies(). Perhaps i=
-t
-> would be better to retain the nsecs version (maybe rename it to _ns for
-> consistency) and add _ms variant that does the nsec -> msec conversion.
+Spurious newline
 
-I spent a bit of time thinking about it and I don't agree. If you feel
-very strongly about it or someone else wants to jump in and break the
-tie then I can look again, but:
+>  		if (folio && !xa_is_value(folio)) {
+> +			long nr_pages = folio_nr_pages(folio);
 
-1. The comment before nsecs_to_jiffies() specifically states that it's
-not supposed to be used for this purpose. Specifically, it says:
+Hm, but we don't have a reference on this folio.  So this isn't safe.
 
- * Unlike {m,u}secs_to_jiffies, type of input is not unsigned int but u64.
- * And this doesn't return MAX_JIFFY_OFFSET since this function is designed
- * for scheduler, not for use in device drivers to calculate timeout value.
+> @@ -240,12 +259,24 @@ void page_cache_ra_unbounded(struct readahead_control *ractl,
+>  			 * not worth getting one just for that.
+>  			 */
+>  			read_pages(ractl);
+> -			ractl->_index += folio_nr_pages(folio);
+> +
+> +			/*
+> +			 * Move the ractl->_index by at least min_pages
+> +			 * if the folio got truncated to respect the
+> +			 * alignment constraint in the page cache.
+> +			 *
+> +			 */
+> +			if (mapping != folio->mapping)
+> +				nr_pages = min_nrpages;
+> +
+> +			VM_BUG_ON_FOLIO(nr_pages < min_nrpages, folio);
+> +			ractl->_index += nr_pages;
 
-...so switching away from nsecs_to_jiffies() to msecs_to_jiffies() is
-arguably a "bugfix", or at least avoids using the API in a way that's
-against the documentation.
+Why not just:
+			ractl->_index += min_nrpages;
 
-2. As mentioned in the commit message, nsecs_to_jiffies() truncates
-where msecs_to_jiffies() rounds up. Presumably this difference is
-related to the comment above where the "ns" version is intended for
-the scheduler. Using the "ms" version allows us to get rid of the
-extra call to "max()" which is a benefit. Technically since the
-timeout is at least 20 ms the minimum HZ is 100 I guess we didn't need
-the max anyway, but I guess someone thought it was cleaner and now we
-can definitely get rid of it.
+like you do below?
 
-3. These functions are inline anyway, so I don't think it's causing a
-huge bloat of instructions. In fact, moving from 64-bit math to 32-bit
-math sooner could make the code smaller.
-
-4. I don't feel like it hurts the readability to convert down to ms
-and then to jiffies. In fact, IMO it helps since it makes it more
-obvious that we're working with ms.
