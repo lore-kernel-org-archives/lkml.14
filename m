@@ -1,122 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B7C17F386;
-	Wed, 12 Jun 2024 13:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5136C17F39F;
+	Wed, 12 Jun 2024 13:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718200393; cv=none; b=Dd+6ZCK/ng7/RLzLdaAtqzvnvdxSmYCgXBUtIC/+0j2yRS5qWZdCOIUpGCd0AW67mCVxK4Aj9L9n5FmJoUjRR2N3krOhxBRjA5puPvy98ATl7dq1F9RZpCJ6+h7u0bVxZn83RVCc1pcCFw91MpuRuorDsmp8ysuJex52VSiVLUc=
+	t=1718200395; cv=none; b=dQdeKBkNYsZgnAB4yMPnefd3QTvOSQ41GVqoxmB3f8VVKmz8tqv1ic4X8ETFwGaLZN2AicB9fu8BOXk6Rt9vV8KPDKOKCmfEXdqCX8apOtwwtr3E+c5IF+ILYkeslvKqPPXhBD8biwHEVhjFv92/a6KarNKeBUAjp280P6Kx7Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718200393; c=relaxed/simple;
-	bh=9ZhMiQb8F+YQkrSmW/uvqq+sOj8IhPHHedOkJlMaFF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S495T8X2nM/VLsUsOARHVIyzKT7Wj45+vN0xYrrmqr4ncIHF+I03RMeSAHOHccBNX/YBMo667UmD23eV//CJj4rqCszCGQrsiTOLfQcjii4SyNPoriTllxRQKpz3eKIWoQOw3tXZACtkYQ/pbNa6G5YmvAL1hSSvgA00jtL183M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fvKnVWA6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fvKnVWA6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E7AC4AF4D;
-	Wed, 12 Jun 2024 13:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718200393;
-	bh=9ZhMiQb8F+YQkrSmW/uvqq+sOj8IhPHHedOkJlMaFF4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fvKnVWA67l2XCec23FfIZmoq1TS+spuTVbQympdCm7UMttUJCZLZZLe64EqSf6FXI
-	 8SCU86o5e5aoAixswN3wUaJ9u6l7ri5xkVbcLVW9bKm/5jiyPilSe5xkPiYXKmwTis
-	 NtSzPwrdd/y9XD64ii4OrGOevxIt0b3ekkUY846QVMYQnINaBz9qk+4D3+o9V5Ql2q
-	 IFHVXcjOrFJi/a6jiLCUYoxUEV5tPmGfvBAInTaRGLW8plyEHBDjz2GPCXSQ06H6TE
-	 t7Lgu1AcIMYvUQUtQseFJiMcExfYzQi8SHvi6GCrBOQaWL5mV533wS4UAq6Eh618B6
-	 4jbj+ACrX4XAg==
-Date: Wed, 12 Jun 2024 15:53:08 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Amir Goldstein <amir73il@gmail.com>, James Clark <james.clark@arm.com>, ltp@lists.linux.it, 
-	linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2] VFS: generate FS_CREATE before FS_OPEN when
- ->atomic_open used.
-Message-ID: <20240612-nennung-ungnade-ae9bdc5f8c4c@brauner>
-References: <171817619547.14261.975798725161704336@noble.neil.brown.name>
+	s=arc-20240116; t=1718200395; c=relaxed/simple;
+	bh=ETeqjYikvQUmV+JBY0OUQbNcQiW4jGVDEl9xk5l13Cg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dHtZ4KMk6bR6HhgP+7Z6P4liFxWwfGuJFEhJBOcN2U1oFd7uSbpT/VLHEof3V01MmHoWRKvu5056bQvXMhVq8LRQxsHMVtSeVZmU3G6B3xNU0BE3SBQ6KVjzGEkiySooLDo1MLiqCg/C7IwCMUhs8N2JbFhwe2N5m+oTGJJ44+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-42179dafd6bso6219925e9.0;
+        Wed, 12 Jun 2024 06:53:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718200393; x=1718805193;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0gvlL/3Hh6Rvkzj8HeRV4KajZ/sjiz7m+L1scRmwe5k=;
+        b=rTGMymNtlUuauES3FizoQTNFlFSJ04N7xlxlMB7pmbCAE/Aqyg+/ZI4DOc4se1PRM2
+         Pjg+dxd5lwNaj1xt7HsFpj5t+dckdPBet1wi/Fq65A0pNcVDObkj0mgnodFdEWFwtxps
+         Liq3ij6DHvN7R/kNkzl29an4grdcUxxljqlQ9AQWQdfECgYSKB/78niSh08hkHe9wcrw
+         JQriN4H7UiskxpKQE039vIezllYr9jdjYcBN1pLPJDDwW9j/CuhbHyEqot9+Bb9aoPP3
+         wbx/5HXSBEuDEt0XXXUdHdmfQalkEAbF9R3dpFgg3jHVnYoKOdS0gHJpNwLR+P8gD+nm
+         2dRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVDio1NDrqchiTojAjHnwit3RsiWrPpILpFaQxKKlIpFB6vfWhECZXNpYBgy3Js6Wxw7Su0jbEuVaOovN6QX8RnLX5b5RmJkWRtiP3qgi1ubAXbmMUSQcwCemNAtYrnDbMcn/TEnR/y0xQxTPdvpex8DJNnw479qdQij7/nvpu0QCxjcyK
+X-Gm-Message-State: AOJu0YypMXutyX5LejHrotJwpjSIWbqpcj0M1PbuWWucR0+I0tz2d8FC
+	ZpWAfG6H2x0a52KnFTXxn44X+o+xY31iHJesDcYoemjMKY9MfU+4
+X-Google-Smtp-Source: AGHT+IE2T90QH80rrQ35HgVVqB20gHNtrUAWASa/gbvajU+K3eKydM1CK3LNiNDzGaMzR19vk4V0bw==
+X-Received: by 2002:a05:600c:3b23:b0:421:3249:557e with SMTP id 5b1f17b1804b1-4223c531cf9mr51588135e9.8.1718200392753;
+        Wed, 12 Jun 2024 06:53:12 -0700 (PDT)
+Received: from ramallet.home (cst-prg-45-36.cust.vodafone.cz. [46.135.45.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422871ec9e6sm28201695e9.38.2024.06.12.06.53.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 06:53:12 -0700 (PDT)
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Wed, 12 Jun 2024 15:52:58 +0200
+Subject: [PATCH 5/9] arm64: dts: rockchip: Enable the NPU on quartzpro64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <171817619547.14261.975798725161704336@noble.neil.brown.name>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240612-6-10-rocket-v1-5-060e48eea250@tomeuvizoso.net>
+References: <20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net>
+In-Reply-To: <20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net>
+To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, Heiko Stuebner <heiko@sntech.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Oded Gabbay <ogabbay@kernel.org>, 
+ Tomeu Vizoso <tomeu.vizoso@tomeuvizoso.net>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+ Tomeu Vizoso <tomeu@tomeuvizoso.net>
+X-Mailer: b4 0.13.0
 
-On Wed, Jun 12, 2024 at 05:09:55PM +1000, NeilBrown wrote:
-> 
-> When a file is opened and created with open(..., O_CREAT) we get
-> both the CREATE and OPEN fsnotify events and would expect them in that
-> order.   For most filesystems we get them in that order because
-> open_last_lookups() calls fsnofify_create() and then do_open() (from
-> path_openat()) calls vfs_open()->do_dentry_open() which calls
-> fsnotify_open().
-> 
-> However when ->atomic_open is used, the
->    do_dentry_open() -> fsnotify_open()
-> call happens from finish_open() which is called from the ->atomic_open
-> handler in lookup_open() which is called *before* open_last_lookups()
-> calls fsnotify_create.  So we get the "open" notification before
-> "create" - which is backwards.  ltp testcase inotify02 tests this and
-> reports the inconsistency.
-> 
-> This patch lifts the fsnotify_open() call out of do_dentry_open() and
-> places it higher up the call stack.  There are three callers of
-> do_dentry_open().
-> 
-> For vfs_open() and kernel_file_open() the fsnotify_open() is placed
-> directly in that caller so there should be no behavioural change.
-> 
-> For finish_open() there are two cases:
->  - finish_open is used in ->atomic_open handlers.  For these we add a
->    call to fsnotify_open() at the top of do_open() if FMODE_OPENED is
->    set - which means do_dentry_open() has been called.
->  - finish_open is used in ->tmpfile() handlers.  For these a similar
->    call to fsnotify_open() is added to vfs_tmpfile()
-> 
-> With this patch NFSv3 is restored to its previous behaviour (before
-> ->atomic_open support was added) of generating CREATE notifications
-> before OPEN, and NFSv4 now has that same correct ordering that is has
-> not had before.  I haven't tested other filesystems.
-> 
-> Fixes: 7c6c5249f061 ("NFS: add atomic_open for NFSv3 to handle O_TRUNC correctly.")
-> Reported-by: James Clark <james.clark@arm.com>
-> Closes: https://lore.kernel.org/all/01c3bf2e-eb1f-4b7f-a54f-d2a05dd3d8c8@arm.com
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
+Enable the nodes added in a previous commit to the rk3588s device tree.
 
-We should take this is a bugfix because it doesn't change behavior.
+Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-But then we should follow this up with a patch series that tries to
-rectify the open/close imbalance because I find that pretty ugly. That's
-at least my opinion.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts b/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
+index b4f22d95ac0e..9afb7efebace 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-quartzpro64.dts
+@@ -291,6 +291,14 @@ &gpu {
+ 	status = "okay";
+ };
+ 
++&rknn {
++	status = "okay";
++};
++
++&rknn_mmu {
++	status = "okay";
++};
++
+ &i2c2 {
+ 	status = "okay";
+ 
 
-We should aim to only generate an open event when may_open() succeeds
-and don't generate a close event when the open has failed. Maybe:
+-- 
+2.45.2
 
-+#ifdef CONFIG_FSNOTIFY
-+#define file_nonotify(f) ((f)->f_mode |= __FMODE_NONOTIFY)
-+#else
-+#define file_nonotify(f) ((void)(f))
-+#endif
-
-will do.
-
-Basic open permissions failing should count as failure to open and thus
-also turn of a close event.
-
-The somewhat ugly part is imho that security hooks introduce another
-layer of complexity. While we do count security_file_permission() as
-a failure to open we wouldn't e.g., count security_file_post_open() as a
-failure to open (Though granted here that "*_post_open()" makes it
-easier.). But it is really ugly that LSMs get to say "no" _after_ the
-file has been opened. I suspect this is some IMA or EVM thing where they
-hash the contents or something but it's royally ugly and I complained
-about this before. But maybe such things should just generate an LSM
-layer event via fsnotify in the future (FSNOTIFY_MAC) or something...
-Then userspace can see "Hey, the VFS said yes but then the MAC stuff
-said no."
