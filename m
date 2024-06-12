@@ -1,73 +1,257 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B1116C847
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D35115279B;
+	Wed, 12 Jun 2024 08:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718180165; cv=none; b=goEpptGDNhDkQSqGlbVxAZsH4hobWKItW5D4bQW2mjnJmNzbkKJqhRneQv3FcxeF33ndvLz6hDbXjFZMFlbC2UNAdGQbVpLL+ZwR3yIrn3uFje0ejB6Es2tQHn6IwrQTMoJ5OXTwwCV5W43QcyZBeuJQtVJ7gIzoATr21Pr1Njg=
+	t=1718180213; cv=none; b=UPjzd8ZWIwWVa5yL8AYDUTCpm5/1A6O0ErL3YArEuhRSCUBp1GEZuIrN469u/HKxgVhcTXHnIJASQEO1p2EwRsSN3b8S239mlU2LLmk2SwENebwKDBRW0TRa4Q89Z0gpVwY7kBVEPuo2zwfBO4r+Ms+hznw0nQQcEl1xw1MzifI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718180165; c=relaxed/simple;
-	bh=pPrvKPgkDZlWmW3RWQ3jPwaKR+JarvmNteOJQkBEhfo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=OCkP2VE8s/qpi1FA3IKeYKBkVp3vjIkdNaF+Lpj7kZQE4fD9mv/MkaP9eNie87yUP8f15Rb0BzeQhoLd8WU0178sGv/dOoShehv9vdmi6C6CuNLKceZuJgzo8WxiavWtR+HhbOnnCc25v3wmn27b6c+yQS6HcYkHiB/WtdxlVZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7eb5f83ae57so53263439f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:16:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718180163; x=1718784963;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y1f5rG0GED7hvT8RoLEV2fCcFFtkEFl6Mt4qV1QJ6eU=;
-        b=G9Z83Q7jFXv6o+t9Nb9i18MypLk8WqVp7mbboPBGJLgjmzE3NKqTfWHw36kFcJPYC5
-         N2x2XPPjheS4BKk/P1u8zCdtnQGpxXg40X6B9SsYGjl8GBoTFb6U6FSCzXMHxxBVGLfX
-         IzoAWvZUXDGUrwtupOjt5mzxoPGe5sgL1SLkZ9tteSK49Byh+r+PcanCJlLTBHnn1t0v
-         aLilIowdnVBIGWSsGAs4CB/B/dVCp0vDp35QpGqREzQc0pTBMNciRywMlyE/iJiyHYtr
-         5PQGX0bRU5jDDZSFJR9ldGyeJs25rSlKKUfWn6tsB9A3qmEezlNtm/EVPj8rtx5sIRfT
-         Misg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOe0GomgXk4qorA290yQl0pFK326uyKdr7Zsys3aoEWgCijA/CnHUe4hStDIlzgRqaocoU6EjOQuV1cca1ZfnVSqkcgP4eg2h/x7Kh
-X-Gm-Message-State: AOJu0Yxh9vC9SRV7xHtnbGTARAlS0b+GAl+D0/CwiWlQ6HIEsCtEckqg
-	uq/ycEAlIc/D2BEAt8zF1bmBXdf7rJ4beBVU/yWg6510nHaGvvCpcAvumAkiQEVi8qPryi49cno
-	vN3ANE9oBIoeM7xESH9aBxOxw8YDxGzZCaDH0G1PLnxaT3MqyNAbk+8o=
-X-Google-Smtp-Source: AGHT+IH1pmZW+aPomxFxxM8K+Ihu/XmrpFC1QDfZ61+kNLWyxohZU4bRxTOt55XTXCfWFxlqQnTC7UfkBnJnWl3awsnXbdjTkcIq
+	s=arc-20240116; t=1718180213; c=relaxed/simple;
+	bh=Yg97OsjtcY3yk1e+X2kIqRNCmOwcA8lmuN0BccmJp1w=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=r7DkSc3NdUHV+NnVFaE9lmO/ruBU+72IaWqRXRcm0CeU6TBAjcqOlY2mQj/yrlwleZRKMPgxYDouGX7PJMyOd2fdtcizvkbM427HzaxtZK80MBfZuPppErM4hYObAQAw89BVuxzX2PdnH9Ws3+aq0KQGVSxkMSw9l3CSLc4VGx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Xc+92hCH; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Xc+92hCH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1718180209;
+	bh=Yg97OsjtcY3yk1e+X2kIqRNCmOwcA8lmuN0BccmJp1w=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=Xc+92hCH52rej/sP6x6VK+kHGHGlTm2WhSJg3MJWkGfjDr019xsMMlkisR+4kVWqS
+	 KJYh9UP96g88t0hLyrCwmQRUgb/nvkfQZEv/k67Nf+aCu4B8B20iAqz0e2YbEa37l7
+	 97X2K2JgZhyXagoQ2bS2tiyb0MXQJ2mVemD4FmjllWbrzOLewAHwNTaS9RIs7PlPJ3
+	 5rmSLUzAQR4VYT9gtfD4842oJJa6Zu0Q5vos3emaEv5xFQXv/Puzm/RyGsqLLRsbO1
+	 R96kLsBkz36kBGu/M0ZkRNBxQJ46UZ+2P3oU/uYG5rBMlplK8uD65h01wBd2mb4e7p
+	 Hf/gaWkJRh4tQ==
+Received: from [100.113.15.66] (ec2-34-240-57-77.eu-west-1.compute.amazonaws.com [34.240.57.77])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 053CD378216D;
+	Wed, 12 Jun 2024 08:16:46 +0000 (UTC)
+Message-ID: <87e6beea-4618-4a5c-a883-42ef64a2d584@collabora.com>
+Date: Wed, 12 Jun 2024 13:17:23 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c509:0:b0:375:a55e:f614 with SMTP id
- e9e14a558f8ab-375b30c7b51mr809405ab.0.1718180163076; Wed, 12 Jun 2024
- 01:16:03 -0700 (PDT)
-Date: Wed, 12 Jun 2024 01:16:03 -0700
-In-Reply-To: <ZmlSXfFAw-gWfJIG@localhost.localdomain>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000047d686061aacfee0@google.com>
-Subject: Re: [syzbot] [mm?] general protection fault in dequeue_hugetlb_folio_nodemask
- (2)
-From: syzbot <syzbot+569ed13f4054f271087b@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, muchun.song@linux.dev, osalvador@suse.de, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com
+Subject: Re: [PATCH v2 1/4] kselftests: vdso: vdso_test_clock_getres: conform
+ test to TAP output
+To: Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240610054129.1527389-1-usama.anjum@collabora.com>
+ <20240610054129.1527389-2-usama.anjum@collabora.com>
+ <7b020209-3b20-48f4-92fb-099d80aee625@linuxfoundation.org>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <7b020209-3b20-48f4-92fb-099d80aee625@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On 6/12/24 1:32 AM, Shuah Khan wrote:
+> On 6/9/24 23:41, Muhammad Usama Anjum wrote:
+>> Conform the layout, informational and status messages to TAP. No
+>> functional change is intended other than the layout of output messages.
+>> Use kselftest_harness.h to conform to TAP as the number of tests depend
+>> on the available options at build time. The kselftest_harness makes the
+> 
+> 
+> How does converting to kselftest_harness help with available options ay
+> build time? Can you explain?
+> 
+> I am not seeing any value in converting this test to the harness? I want
+> to see a better justification.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Before:
+./vdso_test_clock_getres
+clock_id: CLOCK_REALTIME [PASS]
+clock_id: CLOCK_BOOTTIME [PASS]
+clock_id: CLOCK_TAI [PASS]
+clock_id: CLOCK_REALTIME_COARSE [PASS]
+clock_id: CLOCK_MONOTONIC [PASS]
+clock_id: CLOCK_MONOTONIC_RAW [PASS]
+clock_id: CLOCK_MONOTONIC_COARSE [PASS]
 
-Reported-and-tested-by: syzbot+569ed13f4054f271087b@syzkaller.appspotmail.com
+Here is the output of the test before this patch. The test output test
+names and if they are passed or failed. It doesn't output information
+related to error when it occurs. I wanted to convert it to standard format
+by using kselftest.h where we can get the error related information as
+well. But as the number of tests depend on how many of CLOCK_BOOTTIME,
+CLOCK_TAI etc are defined, static counting is difficult. Test harness is
+best suited for this. Output:
 
-Tested on:
+./vdso_test_clock_getres
+TAP version 13
+1..7
+# Starting 7 tests from 1 test cases.
+#  RUN           global.clock_realtime ...
+#            OK  global.clock_realtime
+ok 1 global.clock_realtime
+#  RUN           global.clock_boottime ...
+#            OK  global.clock_boottime
+ok 2 global.clock_boottime
+#  RUN           global.clock_tai ...
+#            OK  global.clock_tai
+ok 3 global.clock_tai
+#  RUN           global.clock_realtime_coarse ...
+#            OK  global.clock_realtime_coarse
+ok 4 global.clock_realtime_coarse
+#  RUN           global.clock_monotonic ...
+#            OK  global.clock_monotonic
+ok 5 global.clock_monotonic
+#  RUN           global.clock_monotonic_raw ...
+#            OK  global.clock_monotonic_raw
+ok 6 global.clock_monotonic_raw
+#  RUN           global.clock_monotonic_coarse ...
+#            OK  global.clock_monotonic_coarse
+ok 7 global.clock_monotonic_coarse
+# PASSED: 7 / 7 tests passed.
+# Totals: pass:7 fail:0 xfail:0 xpass:0 skip:0 error:0
 
-commit:         f2a50aed mm/hugetlb: Guard dequeue_hugetlb_folio_nodem..
-git tree:       https://github.com/leberus/linux hugetlb-dequeue-numa
-console output: https://syzkaller.appspot.com/x/log.txt?x=1089406c980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
-dashboard link: https://syzkaller.appspot.com/bug?extid=569ed13f4054f271087b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Not only the code is simplified, the descriptive error is printed on
+console that what went wrong. Example if a test case fails:
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+#  RUN           global.clock_realtime ...
+# vdso_test_clock_getres.c:66:clock_realtime:Expected 1 (1) == ((x.tv_sec
+!= y.tv_sec) || (x.tv_nsec != y.tv_nsec)) (0)
+# clock_realtime: Test terminated by assertion
+#          FAIL  global.clock_realtime
+not ok 1 global.clock_realtime
+
+> 
+>> test easy to convert and presents better maintainability.
+>>
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> ---
+>> Changes since v1:
+>> - Update commit message to include that kselftest_harness has been used
+>>    to conform to TAP and why
+>> ---
+>>   .../selftests/vDSO/vdso_test_clock_getres.c   | 68 +++++++++----------
+>>   1 file changed, 33 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
+>> b/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
+>> index 38d46a8bf7cba..c1ede40521f05 100644
+>> --- a/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
+>> +++ b/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
+>> @@ -25,7 +25,7 @@
+>>   #include <unistd.h>
+>>   #include <sys/syscall.h>
+>>   -#include "../kselftest.h"
+>> +#include "../kselftest_harness.h"
+>>     static long syscall_clock_getres(clockid_t _clkid, struct timespec *_ts)
+>>   {
+>> @@ -54,18 +54,8 @@ const char *vdso_clock_name[12] = {
+>>   /*
+>>    * This function calls clock_getres in vdso and by system call
+>>    * with different values for clock_id.
+>> - *
+>> - * Example of output:
+>> - *
+>> - * clock_id: CLOCK_REALTIME [PASS]
+>> - * clock_id: CLOCK_BOOTTIME [PASS]
+>> - * clock_id: CLOCK_TAI [PASS]
+>> - * clock_id: CLOCK_REALTIME_COARSE [PASS]
+>> - * clock_id: CLOCK_MONOTONIC [PASS]
+>> - * clock_id: CLOCK_MONOTONIC_RAW [PASS]
+>> - * clock_id: CLOCK_MONOTONIC_COARSE [PASS]
+>>    */
+>> -static inline int vdso_test_clock(unsigned int clock_id)
+>> +static inline void vdso_test_clock(struct __test_metadata *_metadata,
+>> unsigned int clock_id)
+>>   {
+>>       struct timespec x, y;
+>>   @@ -73,52 +63,60 @@ static inline int vdso_test_clock(unsigned int
+>> clock_id)
+>>       clock_getres(clock_id, &x);
+>>       syscall_clock_getres(clock_id, &y);
+>>   -    if ((x.tv_sec != y.tv_sec) || (x.tv_nsec != y.tv_nsec)) {
+>> -        printf(" [FAIL]\n");
+>> -        return KSFT_FAIL;
+>> -    }
+>> -
+>> -    printf(" [PASS]\n");
+>> -    return KSFT_PASS;
+>> +    ASSERT_EQ(0, ((x.tv_sec != y.tv_sec) || (x.tv_nsec != y.tv_nsec)));
+>>   }
+>>   -int main(int argc, char **argv)
+>> -{
+>> -    int ret = 0;
+>> -
+>>   #if _POSIX_TIMERS > 0
+>>     #ifdef CLOCK_REALTIME
+>> -    ret += vdso_test_clock(CLOCK_REALTIME);
+>> +TEST(clock_realtime)
+>> +{
+>> +    vdso_test_clock(_metadata, CLOCK_REALTIME);
+>> +}
+>>   #endif
+>>     #ifdef CLOCK_BOOTTIME
+>> -    ret += vdso_test_clock(CLOCK_BOOTTIME);
+>> +TEST(clock_boottime)
+>> +{
+>> +    vdso_test_clock(_metadata, CLOCK_BOOTTIME);
+>> +}
+>>   #endif
+>>     #ifdef CLOCK_TAI
+>> -    ret += vdso_test_clock(CLOCK_TAI);
+>> +TEST(clock_tai)
+>> +{
+>> +    vdso_test_clock(_metadata, CLOCK_TAI);
+>> +}
+>>   #endif
+>>     #ifdef CLOCK_REALTIME_COARSE
+>> -    ret += vdso_test_clock(CLOCK_REALTIME_COARSE);
+>> +TEST(clock_realtime_coarse)
+>> +{
+>> +    vdso_test_clock(_metadata, CLOCK_REALTIME_COARSE);
+>> +}
+>>   #endif
+>>     #ifdef CLOCK_MONOTONIC
+>> -    ret += vdso_test_clock(CLOCK_MONOTONIC);
+>> +TEST(clock_monotonic)
+>> +{
+>> +    vdso_test_clock(_metadata, CLOCK_MONOTONIC);
+>> +}
+>>   #endif
+>>     #ifdef CLOCK_MONOTONIC_RAW
+>> -    ret += vdso_test_clock(CLOCK_MONOTONIC_RAW);
+>> +TEST(clock_monotonic_raw)
+>> +{
+>> +    vdso_test_clock(_metadata, CLOCK_MONOTONIC_RAW);
+>> +}
+>>   #endif
+>>     #ifdef CLOCK_MONOTONIC_COARSE
+>> -    ret += vdso_test_clock(CLOCK_MONOTONIC_COARSE);
+>> +TEST(clock_monotonic_coarse)
+>> +{
+>> +    vdso_test_clock(_metadata, CLOCK_MONOTONIC_COARSE);
+>> +}
+>>   #endif
+>>   -#endif
+>> -    if (ret > 0)
+>> -        return KSFT_FAIL;
+>> +#endif /* _POSIX_TIMERS > 0 */
+>>   -    return KSFT_PASS;
+>> -}
+>> +TEST_HARNESS_MAIN
+> 
+> thanks,
+> -- Shuah
+> 
+> 
+
+-- 
+BR,
+Muhammad Usama Anjum
