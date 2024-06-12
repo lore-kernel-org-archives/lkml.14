@@ -1,135 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7795C17B516;
-	Wed, 12 Jun 2024 16:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B9A17FAD4
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 16:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718208788; cv=none; b=NDzsKsB38T0QrdqwQwJMyW2/7ka0iteQrYkywM64PoBtqjR3G2m1Tu9tWAB+qNBXyvNFSnLsBBjqTAKnCRZ6HK1ce0MkRk00AGIjR2tEuAqNMr9HP74+Y2f+PlH3VkQhhJqahsxdzfYb8ddUYJCKyHKFmvsPE7zMZdjbVQdYCCs=
+	t=1718208901; cv=none; b=FuGd7Xv9B4CyMSTfNDSlfUpdj34fD2Q0DMtavsmVv0OpNxy5PXY/aOWmnijsE8v8ubOA29urddoTPLtEAXRFHzzHoPixKKCo9epeq1NEy6gISVTChFkAVtgaA3mglx5xN2BO3PqFk98MqsHx6Y5Qsh8pGj9Tnp3kcpxQGYeoB/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718208788; c=relaxed/simple;
-	bh=TqdikSL4T/F8T6RVHBxSBxob3KUr7m3yyjdVJKKjxEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Je5XNbSZWJWWwo29ArSZN2PE0A1gZnqwobNYVKaxG21bbbRWVKSI6Oyl/xj1S7VylUgqv8TFkhf3KA7XBf5p+fv7RKuAUhMLiboSSrzp1Q6/CePdNDc0coEH8ImXca45HH7ROe3gR9W/fvwh974przTzlTRWL1+CrdBP/ahJKuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33ACD1042;
-	Wed, 12 Jun 2024 09:13:30 -0700 (PDT)
-Received: from [192.168.20.22] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7B443F73B;
-	Wed, 12 Jun 2024 09:13:04 -0700 (PDT)
-Message-ID: <a1dd1847-5e77-41dc-a4ad-d44984c3cf98@arm.com>
-Date: Wed, 12 Jun 2024 11:10:14 -0500
+	s=arc-20240116; t=1718208901; c=relaxed/simple;
+	bh=7IaOkQTvZhAIxMJg8oiQzlRd8SmNiomrhY9Jtmiv2hs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fAaz+osxYpo39cfzeJmV/1GY0UrrvGiBTBQmHaEf1KVlMn1wakHOaAWippGWf0/T51a3EttJAsKpR95D3dGdt7LJI5CUSC5Peiw6vahvVPe3Y5ZxC9NWBAf1RZJejHpxaRdyMrLotvMAXpInM+0LEeyCCBcuNHyTLqsLd93+KEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ZSi8BBPo; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ZSi8BBPo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=7IaO
+	kQTvZhAIxMJg8oiQzlRd8SmNiomrhY9Jtmiv2hs=; b=ZSi8BBPo3Nl2Z1779mEr
+	k8mnUOAwD8nchMo0LGNgmtS9Ofmi9+oqMRpU2Bm1owFRAseRS04PYJu3XGvAEb8F
+	fb32Ks48Q3sYSjjMG0QM9SB8hyTzeXLtbj3dixNwWthCj9eMH2THmyLMRlOC6tdL
+	Hw2X6J27apJlJhSRr/G8zkf1ywYttapd+/qc1karJktOn7G76bsoMEtJ6L7vmRn1
+	h+dfPjyvv5qmdqpZhyEHosqerGCWzZo+lc4yoJRE8D8aHLx6K5ohXFb/5tfWy1NF
+	B2I53BtYxm+NhADo8yDm9M7HQakjD/XWRAniv8uPU1kTjz2n9OUXHAosm3MExLng
+	9A==
+Received: (qmail 867536 invoked from network); 12 Jun 2024 18:14:57 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 Jun 2024 18:14:57 +0200
+X-UD-Smtp-Session: l3s3148p1@Z4fvrrMauhVtKPIY
+Date: Wed, 12 Jun 2024 18:14:56 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: linux-i2c@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] docs: i2c: summary: document use of inclusive
+ language
+Message-ID: <k7skotoxoml3anejknhcofgk4qbubsxwegfa6c4wyofu7yrdcw@55ezznhofqyz>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Easwar Hariharan <eahariha@linux.microsoft.com>, linux-i2c@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240610081023.8118-1-wsa+renesas@sang-engineering.com>
+ <20240610081023.8118-5-wsa+renesas@sang-engineering.com>
+ <8e051ecf-a355-4aef-bc40-007f9b709ba6@linux.microsoft.com>
+ <iizkptuud2bcqnfvyvfomdbsakywyszzfmyawgsymsdvkatyyz@eze75wfqoczl>
+ <2770eb46-7322-4638-a5fe-9d994458a5c2@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Raspberry Pi5 - RP1 driver - RFC
-Content-Language: en-US
-To: Stefan Wahren <wahrenst@gmx.net>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, Dave Ertman <david.m.ertman@intel.com>,
- Lizhi Hou <lizhi.hou@amd.com>, clement.leger@bootlin.com
-References: <ZmhvqwnOIdpi7EhA@apocalypse>
- <ba8cdf39-3ba3-4abc-98f5-d394d6867f95@gmx.net>
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <ba8cdf39-3ba3-4abc-98f5-d394d6867f95@gmx.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Hi,
-
-On 6/11/24 14:05, Stefan Wahren wrote:
-> Hi Andrea,
-> 
-> i added Jeremy, because AFAIK he was deeply involved in ACPI
-> implementation of the RPi 4.
-
-I'm not sure what to add here, the RPi4 work was done as an example of 
-using firmware standards to boot multiple OSs with a single 
-boot/firmware interface. Which means ACPI.
-
-Alternatively, the PCIe/SMCCC might be able to make this device look 
-more regular, by putting everything on separate PCIe functions.
-
-OTOH, I don't think this device is particularly special, except maybe to 
-the extent that it doubles down on ideas regarded as best left in the 
-1990's. The kernel documents how to handle these cases with ACPI _ADR(). 
-A PCI device can create the _ADR nodes by injecting an SSDT into the 
-ACPI namespace via the PCI option ROMs if the platform firmware doesn't 
-provide them. Should it though? If I were doing it I might be tempted to 
-configure the root port in early firmware and hide it from the OS, 
-claiming instead a bunch of platform devices.
-
-IMHO, DT/Linux platforms should probably do something similar to _ADR() 
-for consistency rather than requiring the EP driver to get involved. 
-Further, mixing DT's into a possible ACPI platform is really the worst 
-of both.  Even worse if it requires further distro 
-dracut/initrd/grub/etc one off hacking or polluting the initrd or ESP of 
-non RPi platforms to handle the overlay.
-
-So, a custom EP/bus driver option solves the problem on linux for both 
-DT and ACPI implementations if the device type/offsets are hard coded 
-into it. And presumably if there is a follow on device, it would use 
-multiple PCIe functions to avoid all these problems, the ones around 
-securing the platform with an IOMMU, enabling VFIO, and everything else 
-one gets for "free" with a proper PCIe EP.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fwelgbx6weqjrtet"
+Content-Disposition: inline
+In-Reply-To: <2770eb46-7322-4638-a5fe-9d994458a5c2@linux.microsoft.com>
 
 
-PS:
-The PCIe/SMCC API could probably make all these devices appear as PCIe 
-functions avoiding the need for a monolithic bus or DT/ACPI description 
-to handle it. But that will likely break the second this device is 
-plugged into something with an SMMU (this platform doesn't have one, 
-correct?), and of course if would require all the firmware configured 
-BAR mappings to remain static, which isn't a problem if its presented as 
-an integrated endpoint. If someone is interested in doing it that way 
-then we should talk.
+--fwelgbx6weqjrtet
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-> 
-> Am 11.06.24 um 17:39 schrieb Andrea della Porta:
->> Hi,
->> I'm on the verge of reworking the RP1 driver from downstream in order 
->> for it to be
->> in good shape for upstream inclusion.
->> RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint 
->> sporting a pletora
->> of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM, etc.) 
->> whose registers
->> are all reachable starting from an offset from the BAR address.
->> The main point here is that while the RP1 as an endpoint itself is 
->> discoverable via
->> usual PCI enumeraiton, the devices it contains are not discoverable 
->> and must be
->> declared e.g. via the devicetree. This is an RFC about the correct 
->> approach to use
->> in integrating the driver and registering the subdevices.
->>
-> I cannot provide much input into the technical discussion, but i would
-> prefer an approach which works good with DT and ACPI.
-> 
-> Best regards
-> Stefan
->>
->> Link:
->> - [1]: 
->> https://github.com/raspberrypi/linux/blob/rpi-6.6.y/arch/arm/boot/dts/broadcom/rp1.dtsi
->> - [2]: 
->> https://github.com/raspberrypi/linux/blob/rpi-6.6.y/drivers/mfd/rp1.c
->> - [3]: 
->> https://lpc.events/event/17/contributions/1421/attachments/1337/2680/LPC2023%20Non-discoverable%20devices%20in%20PCI.pdf
->> - [4]: 
->> https://lore.kernel.org/lkml/20230419231155.GA899497-robh@kernel.org/t/
->> - [5]: https://lore.kernel.org/lkml/Y862WTT03%2FJxXUG8@kroah.com/
-> 
+> I am wondering what the impact of this doc update is on my series[1]. I
+> am looking for a straightforward recommendation for what terminology I,
+> and hopefully others, should adopt *outside the i2c subsystem*, where
+> Linux (typically) has a driver for the controller and is communicating
+> with an unknown OS/firmware on the target.
+>=20
+> a) Spec-compliant "controller/target"
+> b) Linux implementation/spec hybrid "controller/client", or
+> c) Linux implementation "adapter/client"
+>=20
+> I prefer (a), FWIW, so do apparently reviewers on my series.
 
+I also prefer (a), but people should know what (c) means when they look
+around in the kernel source. I'll see how it goes with rewording this
+patch accordingly.
+
+
+--fwelgbx6weqjrtet
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZpyYAACgkQFA3kzBSg
+KbZrnA//VDxupQph4i4nzxcFiBLijZAkRB6jbx+os4BiqInq00eKQwRGyMqQedH+
+OXXEDYLSNfDETSrn+nB17qVChFoAILTpfFxh1UWX6cr7nNo7BtOWTwVYHTw1Ot+z
+discuzXwUJgPNNGkOwIBwpiFkyAsn0TKnfy1Y9hS8MP/LpVnZUS+x52aEFPvwu3d
+7h5Uwzkkx2JlhQaqMDaed6oxfhmGhozjhHac/KyJ8aLzxpgvOCtgXh2qqBmeTkHv
+V6F8WY6YakpddQLgeD9xUOf8kG4PA13VfT8E6MzpShXJPO9jZ7Ez3J5knRhK6iju
+3URM1oCf0ZMJ/w00PEhhk+CvuP1F2tM7Qt7wG5+vjilsFEP4k+rs5+qPWYs9dEKY
+WMuMJGzZRL2e5E0dMBwc5eEnLXs2c1IRkDu6P8l1vKeysGI77gIRATCu8a68qE1U
+KhqacjhwK5QfpaajIjY+QyIBHsMaCOPCLsfuo5EkBSx/gdOcKYz8EZvzvO5sVbOg
+JfXCMeX6/qaRsseZ5nPyEDI+wtfY6DdWfZm+Gai7pK1MEYulY/3/oiiJs4u3sdVU
+qfZdYyBLjzS97Wd3JLynKcFsnh0pJ+sIGD9VDBBmPwYr3jvNsTn7EN7MtzKTJqhH
+xkc3RRl27Jm0T+UL6eqEizsIMkMiPbVaGhD9X1G2mw3/nOB0fqM=
+=7E9O
+-----END PGP SIGNATURE-----
+
+--fwelgbx6weqjrtet--
