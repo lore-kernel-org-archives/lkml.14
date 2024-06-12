@@ -1,133 +1,79 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B821B18622;
-	Wed, 12 Jun 2024 15:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3344B1802D9;
+	Wed, 12 Jun 2024 15:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718206350; cv=none; b=nPJNj3yhUZzLYBwlR3xsAlZY6YQPCWTb3d59i9qoDFBJ/eVLSsezPhRGFj+XNmGedRuUi3VA6w3JmJdXrR0LZ1qwrda7Aq9z7f/1Wl5BN+zPp2OprW/fqo9LsuirNX+meV7w5Dgo553WPWtTrzWRkb3LzSRyObXYfvhm8G07fXA=
+	t=1718206363; cv=none; b=b7wphDWFJUCnqGFAfD3wFwYHiNyoaxHQPMH15HwE5+cf+emXaprgPneen2Xn5XYtxZjIfUT9pxj0DjSKPFj77OGeWrDULbWA/70iwSoq0UkTkPh9gb9jtHB6Oi8tnh3cltQhlbmpHS2nde+xtetP04NBOepcwEVLRhaS35jc/20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718206350; c=relaxed/simple;
-	bh=F+6SWx5dI1I9dsDuGM8Nmb5hE25KXgto7Lw0GkbxFPY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=muGPA5MrNSYcY60hsINnloQDoVpzIan+PnjWUP2GifgIqT+2DcNGTS12Ws7GqtrrmPDoqIpycnpjG+Ex4GgchwWhXkY968/Z3IxHaRUpIkcyjaq09XXqMhm1Uii8TT3Ya+dkCev9gC7hfVSe4E+Br+Mm6VSKPLfS6/O+ku7aYpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hm+p7i99; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718206363; c=relaxed/simple;
+	bh=ifRzRxf1rrmcvnfimIiSxsCywCmMXk1id3TTD2HQxtg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K9vH3ad7FGunF4V/1mC1ksZErLEyQnDZlXOUzq8AiQ3dQjeSpFrVFfXgXp1Gpu9wb6kqUBWHDVPJ2BdiqWg59VjqwN+EO0S01EEo+Lz4SMwz2jFGwFW/Sh4G2uAxENfIiNP0ZsOYrGHX0HxiERx1u1jIZfMeYOgAE6jhaf3kmRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NS2Q5BtM; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hm+p7i99"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CAbPEr002327;
-	Wed, 12 Jun 2024 15:32:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=FCegkFHVBMrsBjwQBG8Wpk
-	ylVo51bMD1m3qO3Axj88k=; b=Hm+p7i99wxO7c6b0+BZglF0iBwgQVzbvgrz0R7
-	6E9+Ti1N9Qku9A1q970Kk1Y5NMd35U//Ruc826G3LIVAIkiqySxVhaA0Tgn1veW6
-	Mb6L+uOod5YWbuKsXP3oytifrYFSQyYIU2e9fuZ8LBE7RalUmaR88x3P0Uzm7SbM
-	eA3Qgwk3Ywmrfq5srWCPRHMQhUhvsuLP4g2Z5PAfEtuxV5hQdHbCo71YFQbfyYPL
-	m2RRLYXEuElqPRxkS/bZnVlRdClsnlbccakXjULmLcWka0i6HKnW5Re/NZfxc9pU
-	Df2dCGassUfW2k6y9FYM+sSL+N5kmDisr2v3L/uTwgRHlWog==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yq4s8hrgf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 15:32:24 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CFWNwx018537
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 15:32:23 GMT
-Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Jun
- 2024 08:32:23 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Wed, 12 Jun 2024 08:32:22 -0700
-Subject: [PATCH] fbdev: matroxfb: add missing MODULE_DESCRIPTION() macros
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NS2Q5BtM"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57c61165af6so6617408a12.2;
+        Wed, 12 Jun 2024 08:32:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718206359; x=1718811159; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ifRzRxf1rrmcvnfimIiSxsCywCmMXk1id3TTD2HQxtg=;
+        b=NS2Q5BtMEFGhSJS2+CKp51OxRpnwWFWfkY5AYgZNtbtkYO/ND2KMEzXkGSnCp7/6hu
+         iOpe6wZ0XEyin0bB2I9MbYncNWAcPiDp4zCmWRN6y/XfZ65SwZZs226OBmSBqwbkhCX7
+         LRmlFMmMtiyqummQ06O3A477qRfeX/300geqd2tBvuZCsSMniycuCF5YQIHzTZRhCJ0A
+         Quqzl5JtuMI4Gh40YnWPuDcbOaguSXPshR7JRJI1ial7oij5ZWbdNJ0aJwHiw51AiOoO
+         Bdyf74lqvsStlKEtMg/Kwus2TsiLTsmAs7wpYWdoh4LlHtySpKDxDkBWoITF7KnbSPIe
+         gcfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718206359; x=1718811159;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ifRzRxf1rrmcvnfimIiSxsCywCmMXk1id3TTD2HQxtg=;
+        b=cN5ZNnxZNI+QdoJKiLHk2LamuW2u7gALLwS9ru4EyiyJTwNxzxVLYvGrkz75z7YF2L
+         WxE45I6GXaO72cKeQGkriyYaBVTDz58jiYGLSznavle/jEiR8tcQ0GUnqIdrBjaJNv7O
+         2pgPSk81Q/LR7DyUoLOVV0DTgGC+TaETg4DAc/y+w3ndXAmNP7iv25LGjApTmp8gI3VV
+         xZJTg5dj4/p28vTP0v1fOy7HSNNyqhJqNRaRF7uZDSKeIe8UeeQfJD79cnBS7QRQSjb3
+         ueelupmJ22bwbjEjNzrIuImx1wXI2jOv4ySMB3y9BaDRcvFjdzvmnvzI/72zw8O8Vvu+
+         rn3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX07ZClAUDVAmgyeAAs7o10CX3E7b2Gswq/jQc8Hd4iWwN5x7WLIzvfDHQ0/swaRAz4yqIoNhy/GG6x6hSHh/HJKeYZ+9bht8ts5rmRJEnF/BlZmgAC+uSlNU9EGNzaUDKVij8uuORS0zFVUPkQp58jgWPWmqDrB0aOB8PEcUi81h8LS6YrHA==
+X-Gm-Message-State: AOJu0YwzvqgHy6d+E69nR0ykPkXAGtvx/F+7HsQqoXZMlOIUyCP//4+g
+	+o67A6/9mQv/PIbuTKUsARl2Om3qw22DrdTTvP4cprRygM8P/1oC7Yr/F/Ise3Pkoo4C9zcroEX
+	UUEOsiAH4KGyq84w+yvA3YSTKOEc=
+X-Google-Smtp-Source: AGHT+IElaL2Bh5AGgHhl64jF1fLtnm4lTPWXn5/I3eAW+jWB96be+8eLrTB1DmW3qgp3ngxWnHbaPGIZmacUz33mK8U=
+X-Received: by 2002:a50:8d54:0:b0:57c:60f0:98bc with SMTP id
+ 4fb4d7f45d1cf-57ca9754f1amr1507418a12.11.1718206359224; Wed, 12 Jun 2024
+ 08:32:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240612-md-drivers-video-fbdev-matrox-v1-1-999fb28b9793@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAIW/aWYC/x3MSwrDMAwA0asErStIjOnvKqUL2VYaQeMUKTGGk
- LvX7fItZnYwVmGDe7eDchGTJTcMpw7iRPnFKKkZXO98fx4czgmTSmE1LJJ4wTEkLjjTqktF7zl
- 6dyW6XQja46M8Sv3/H8/mQMYYlHKcfte35K221lZWOI4vkPv81Y4AAAA=
-To: Helge Deller <deller@gmx.de>
-CC: <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 06GydcilGYjpQx-TVQJgngG2Wmsx9Ngx
-X-Proofpoint-ORIG-GUID: 06GydcilGYjpQx-TVQJgngG2Wmsx9Ngx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_08,2024-06-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- spamscore=0 mlxscore=0 malwarescore=0 phishscore=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 mlxlogscore=969 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120111
+References: <20240612142951.37259-1-kanakshilledar@gmail.com> <dd529de8-07b0-444d-83c3-4b8c3424a7ef@kernel.org>
+In-Reply-To: <dd529de8-07b0-444d-83c3-4b8c3424a7ef@kernel.org>
+From: Kanak Shilledar <kanakshilledar@gmail.com>
+Date: Wed, 12 Jun 2024 21:02:27 +0530
+Message-ID: <CAGLn_=s=LtCJsP-BWFG9vJp_hQfQ_hnAtB6oKdTW68YxLLE_mg@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: serial: vt8500-uart: convert to json-schema
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kanak Shilledar <kanakshilledar111@protonmail.com>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/matrox/matroxfb_accel.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/matrox/matroxfb_DAC1064.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/matrox/matroxfb_Ti3026.o
+Sorry for the confusion. I will fix the maintainers part quickly.
+I have one question that if I find any area for the SoC is not
+maintained or orphaned,
+how can I find out who is the maintainer for that area, or the one who
+last contributed
+for that specific area?
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
-
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
-Corrections to these descriptions are welcomed. While doing these
-cleanups treewide, in most cases I've taken these descriptions
-directly from code comments, Kconfig descriptions, or git logs.
-However in this directory many of the files have duplicate
-descriptions and the Kconfigs have none, so I winged it based upon
-eyeballing the code and looking at the existing MODULE_DESCRIPTION()s
----
- drivers/video/fbdev/matrox/matroxfb_DAC1064.c | 1 +
- drivers/video/fbdev/matrox/matroxfb_Ti3026.c  | 1 +
- drivers/video/fbdev/matrox/matroxfb_accel.c   | 1 +
- 3 files changed, 3 insertions(+)
-
-diff --git a/drivers/video/fbdev/matrox/matroxfb_DAC1064.c b/drivers/video/fbdev/matrox/matroxfb_DAC1064.c
-index 765e805d14e3..398b7035f5a9 100644
---- a/drivers/video/fbdev/matrox/matroxfb_DAC1064.c
-+++ b/drivers/video/fbdev/matrox/matroxfb_DAC1064.c
-@@ -1111,4 +1111,5 @@ EXPORT_SYMBOL(matrox_G100);
- EXPORT_SYMBOL(DAC1064_global_init);
- EXPORT_SYMBOL(DAC1064_global_restore);
- #endif
-+MODULE_DESCRIPTION("Matrox Mystique/G100 output driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/video/fbdev/matrox/matroxfb_Ti3026.c b/drivers/video/fbdev/matrox/matroxfb_Ti3026.c
-index 5617c014da87..f53b8066e8a5 100644
---- a/drivers/video/fbdev/matrox/matroxfb_Ti3026.c
-+++ b/drivers/video/fbdev/matrox/matroxfb_Ti3026.c
-@@ -746,4 +746,5 @@ struct matrox_switch matrox_millennium = {
- };
- EXPORT_SYMBOL(matrox_millennium);
- #endif
-+MODULE_DESCRIPTION("Matrox Millennium output driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/video/fbdev/matrox/matroxfb_accel.c b/drivers/video/fbdev/matrox/matroxfb_accel.c
-index ce51227798a1..52e15dc6f45b 100644
---- a/drivers/video/fbdev/matrox/matroxfb_accel.c
-+++ b/drivers/video/fbdev/matrox/matroxfb_accel.c
-@@ -517,4 +517,5 @@ static void matroxfb_imageblit(struct fb_info* info, const struct fb_image* imag
- 	}
- }
- 
-+MODULE_DESCRIPTION("Accelerated fbops for Matrox Millennium/Mystique/G100/G200/G400/G450/G550");
- MODULE_LICENSE("GPL");
-
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240612-md-drivers-video-fbdev-matrox-44ec428aa97a
-
+Thanks and Regards,
+Kanak Shilledar
