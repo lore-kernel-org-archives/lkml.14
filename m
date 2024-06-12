@@ -1,86 +1,87 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6600F16F0F3;
-	Wed, 12 Jun 2024 12:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF8616F848;
+	Wed, 12 Jun 2024 12:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718195352; cv=none; b=S4u5SECb3y2FQlW7EbDmp4GMWlnThplfGFdXlxQcqaKUd2CHAh7zwxnRSL/KP2tJwuIfNsZkQG8fbU/ocS11uDF8A/oFPzos8Yzy2uYwyrGJsBuGrnCdNfQyEP6uXFUL5BtsU6QnwEPaWkrwIyfjhNroc3leX+ipqIAJREDmOX8=
+	t=1718195368; cv=none; b=eagfM5/xJbTd5595f4Hq09M40q/5MgUtUqVh938XzZKXvwgS4e7OOoueMoON7h0yDUR4jVGEsXOuWprjm1Q/K+M2iV9csdXAaCBYFi5AbgFjZDiB8NWFdfy7aORC4rc/KB9rCdb0ehXbrRap3WjPw2F69NMZHGHZ0BpUUP2+iKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718195352; c=relaxed/simple;
-	bh=xa3TDRwgZuX8yrQhYuKQcppS5saA02uNPUv7uS2FNlw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=RNBEy1SeC/bDxm/om2T+z2dwNv1BtEWAWItnMu86F56SGFJdYn6IFi2cqfcDvxBMhmp0sUUZZa7k3u0W2Ve6Og65TltWbfSzOcL04k/OSGgUCitHm/Af/JagE02lY7gwRDocrlau0fEGnSIXOK3GmdEmSIa6RAEcxUz6mfDUUSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=vnN08X8c; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1718195368; c=relaxed/simple;
+	bh=aPMJ7TzY2Dg+TsFr4Fv7AJOxLApsEqX6Hn4TKyXO1uM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SO7SGur6UA2znWbDVt8b7xhAI0kaRsJRfKkOplPOZNzYDedWZmQY7SfOtqdD1lmr6Sll48i1Ux369Js72z4yyGmzwasJvdj3G1wBnLmyotjUovSu+g6MDzLTxcEeqoaix1zFWDZtaLy64N2i+hV9HtjuFpVaNUiZyZ609DsbZUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k2tT9/xc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="vnN08X8c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1718195331; x=1718800131; i=markus.elfring@web.de;
-	bh=xa3TDRwgZuX8yrQhYuKQcppS5saA02uNPUv7uS2FNlw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=vnN08X8c9dQil+FPsUvfogxmWJ4G3S2/XuGyM6/hEthZyVGU8cx7iXfZI8CYQu52
-	 tWjqZ08zhRMBhUhD89KDzmYTfWT0m3aYW2dm+iHwVkd7d+isO5bt+LpomHQ2rk1Aj
-	 g6lCS3uM88rApXtMDvkGDwo3Vt8s8z9XNUXOBH9/nzBbHMCot/K5yVKTHK1gOJE9a
-	 96CFXAgyZCtb1BDwYoaXXWXf2bDm261yJzBrZ/PQzZtRpVUqw80IgBeXIbLsZbagz
-	 Pefp4Jiw46fZSbTElpaq3aWLmsY54sy65RL/VUqrMULfuSX9H+P2v86kGGqZbVA1T
-	 29cQwcmGqjkREINl1w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mrfp8-1sn91S3dPY-00cXtP; Wed, 12
- Jun 2024 14:28:50 +0200
-Message-ID: <47685d2a-da23-4558-8577-98f4ddfff386@web.de>
-Date: Wed, 12 Jun 2024 14:28:49 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k2tT9/xc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D9EC3277B;
+	Wed, 12 Jun 2024 12:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718195368;
+	bh=aPMJ7TzY2Dg+TsFr4Fv7AJOxLApsEqX6Hn4TKyXO1uM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=k2tT9/xcri/krj9rQ0L3V9UnjefZUzMFU+lBND3HP2O8Wff3Nj1oTiVQ8W/LjwjPz
+	 A2B5t3W2wTSJU5JX/nr8PSn44W2gEsr3hwfGa/00Ywy59/K64/WU1yABR8tFwI1aTT
+	 TdsoyeoJs+30dmcDX4+3604AnHZZk8gndK8x7CG5ugcvXFl35X4gpAX5gBauYQZiPc
+	 qmiEG+d3zSQ1z5v8hOCFAO2mtVqLNb6VCJGNELTTzkvt3NeGoQLJjFX63v+6/hIm/C
+	 ctKhQVzqy1j6YK8kXI0gwAlQLA2K+/nLzpZ/hl1Udzg27Sq6vmbGEQ8OEj5EfAyxFB
+	 MQW7eKbVccrrw==
+From: Christian Brauner <brauner@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsi@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	jk@ozlabs.org,
+	joel@jms.id.au,
+	alistair@popple.id.au,
+	eajames@linux.ibm.com,
+	parthiban.veerasooran@microchip.com,
+	christian.gromm@microchip.com,
+	willy@infradead.org,
+	akpm@linux-foundation.org
+Subject: Re: (subset) [PATCH RESEND 3/3] proc: Remove usage of the deprecated ida_simple_xx() API
+Date: Wed, 12 Jun 2024 14:29:04 +0200
+Message-ID: <20240612-mohnblume-avancieren-582d8e0e52ae@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To:  <ae10003feb87d240163d0854de95f09e1f00be7d.1717855701.git.christophe.jaillet@wanadoo.fr>
+References: <cover.1717855701.git.christophe.jaillet@wanadoo.fr> <ae10003feb87d240163d0854de95f09e1f00be7d.1717855701.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
- linux-arm-msm@vger.kernel.org, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240522-fd-hdmi-hpd-v2-0-c30bdb7c5c7e@linaro.org>
-Subject: Re: [v2 00/14] drm/msm/hdmi: rework and fix the HPD even generation
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240522-fd-hdmi-hpd-v2-0-c30bdb7c5c7e@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Ja2i8ZUUvIyK5q6YmCwdL9rk9uZKTbD7PKkt7563jmEhmvE1n4c
- ZzUvQSj4iXfm5RqU3YVXn2bO8RGzprL9jpkdN6Wkyc5bi1udDg6/jMke6Qq2DPUgdk/qPDS
- rx/UmNp34WoVZtCQ+Hm61N2h978worirp0LojuomUXpXRLzwhxvIvn04DPLkfb3EcHLR1LW
- CkPD1llIIPwaJ3/+h9TfA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:yYaB5Ri7W4o=;VeXpXqKLcMhulJxSFoDGSSyHCDU
- 1qiyxgM707FIzTmPeutdJTN5Z17s79WLkQGxx5T5Ev/oR/SQMAXyzDiveZyG+pj8UoS5LMJqO
- d6vpnd7OBMweb9Jo7kPWnDDztF5e9B2wQi2XO3uWcMUTJWiHaXG7AVoLAosaHK0L2DxcUc9I0
- NLzd06Ls5sXgkYesdr/NS++eWV+gto7Jm3CQ0h5AJR5parbruvLI8RjB0n/cIiY3nGtYVQ6t1
- 5W64isUzcseQ780s3janMrjpRlLANa8cojD55YJu3G0AypYh0eFEKKBmkMAwf3XJ0hEGe/gpW
- f7P5rPFmslf7STucUBuuxem33Rr0xzIAQUaaVWoc0S62z2BywINXnbIlIs1ekeMRxHeXfeDb8
- 98N4IgBEijbe93h+kX0qUrIqhTDeBJYeG+UGqDMKrCL6hP1jaKjrUMgUm0y2L1pgJwcLta20f
- zs71UcnG41xTdDus060Qmhgfmp8L7KkTMUokwgDqklp6CRpQUeMoyC7008lUs8xrpM63h9uuV
- itOkG9n/KeONrcxZ9WwLW6IZ4iWAwDGWqGI1/vxLk34OaqQQ7yceltRI51lTMSbKGU5aILVqq
- KGmguOz31zO7mh8x+yjLdyyhHM5/Yk25SxsnuF7DJqEv3OXTVrKi6kcxkrDIzt4XQH0Nebg8p
- XOx8PYhVqK6MNf0KRKu0U8myq5TlI/RsTyO2Ks6wT6feFxiUqA/ta6mFKPzFeMpr0IJDBVy40
- Tu7+hQ01bR+Ndii39ADVjIwGhElg0IQT53xwFbbn4pFjNa21+0Dk6sxi2xK7+OiW7sUebrJgE
- JcQDccGzTtj9OyZn8803lhasUDYIkIoYl4OmHPFDAbLUY=
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1112; i=brauner@kernel.org; h=from:subject:message-id; bh=aPMJ7TzY2Dg+TsFr4Fv7AJOxLApsEqX6Hn4TKyXO1uM=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRlTpl9tfvL2dyQE3NWPjOs7Aifb7Iy6Mea2i3qORGt7 +Y82XzuekcpC4MYF4OsmCKLQ7tJuNxynorNRpkaMHNYmUCGMHBxCsBE9qQx/LNN/X3p7Izau73C PM631W/FPYg+MD/4sc4iNduVgh/KFgUzMny3mM8rbyTpYLVN9bCd7eyqxIuij/uu35ivtObWRd6 NifwA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> This series was tested on msm8996 and apq8064 boards. Previously HPD
-> handling sometimes could trigger in the CRTC event handling, =E2=80=A6
+On Sat, 08 Jun 2024 16:34:20 +0200, Christophe JAILLET wrote:
+> ida_alloc() and ida_free() should be preferred to the deprecated
+> ida_simple_get() and ida_simple_remove().
+> 
+> Note that the upper limit of ida_simple_get() is exclusive, but the one of
+> ida_alloc_max() is inclusive. So a -1 has been added when needed.
+> 
+> 
+> [...]
 
-Would you like to refer to the word =E2=80=9Cevent=E2=80=9D also in the me=
-ssage subject?
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-Regards,
-Markus
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[3/3] proc: Remove usage of the deprecated ida_simple_xx() API
+      https://git.kernel.org/vfs/vfs/c/08ce6f724ce9
