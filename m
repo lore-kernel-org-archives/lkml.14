@@ -1,138 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A34913CAA7
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 06:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A2D13CAA7
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 06:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718173273; cv=none; b=Sm3dJ5QAHMxAVSBNHMQGCMY2Z7deRMqhe1oE99mKwXMnaY5p8wTgw2+BAPJzvBcEGORgv5pnFke8qj8uXvq1HYYWBnZyaYToM0EVkQru3zpBKzcMzM336Xi/IxrkyeBigsJr+N6qVUAK5Mcl2sLM9XYlcfC4ZsH5KinhwnsuX5Y=
+	t=1718173403; cv=none; b=DxJaCrPcuBb6SKDwQA2VzCGSerfgpSFAcnTcFPZllFnMMR4UYzhtupv41dVmxi/7eKoFcUh7znKIn+fkKHnnlDC26auxqWL+8NnAK3qs2sf/s22N3lPyhPORAOLMF27Xqoqi6CucAzYQ4Aq7CfCmn2sCrdkVcZvsnUvMM4h8748=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718173273; c=relaxed/simple;
-	bh=htK3JGDzZ50RrcVE9SiM5Fksd2VJ/2WYnYQ5LvzPLBY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sdqqO5w2DO6GA8v3ThxbyMvTG0ij0UZ6XKxAGogjbYtNWyVEMJvrpjTlHWcfZkrvDmW31hkBBNL6OVOJNTPKv8EdWQpX8e7ucoIMHTfntIi+BjtsJvHvdFnr//wA+2yIwvo2gPcWMO2+9GSmXkEEWRWEyJqKvdNAgF/2xj5sclk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kLncFwkN; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718173403; c=relaxed/simple;
+	bh=icd9nxjBubTTVN7BCWPA9XGhyGP3xyxo01FV3QQfzoQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ToRGzowA3dK3ZVvhadHMQmJ7C476P5LZ/R8SZpCx5+cCLhZFK7RN/kbULOz2S6cwDBqSOg77s3hPb6BVyrbAK16/Td1ANWcYwDpBOxFPNAS8KmcfiyPu2BaFMS5WY2DTKrXtTn9KJpsHLwi69cshvc1PjsPf+DHn4XvixwMo7rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xZun7ONV; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kLncFwkN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718173271; x=1749709271;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=htK3JGDzZ50RrcVE9SiM5Fksd2VJ/2WYnYQ5LvzPLBY=;
-  b=kLncFwkNMl35aqXeCr+1JpYz9QEHENNWCpZLJUmSo145BvSbGvImc0kK
-   COMJqDUie5JDgyJkRGn3l9aR/9sN21/EXhIdTSzba+uT7TgI4019FP2lD
-   IE+gsz+uWc3f7Xsu4VNwolw6v0w9JiApSHe9kgwjcuG4twJbf+MHBqa/j
-   gsGHcKLsPtRdoFIigPeySHx5JiOk82H73FhgtROZVrTg/7bojYFHQ5DJh
-   BjaI2ESq0aYB5A3CMtOxaYSK+o+ZmSs5fDLmZh7kwFepqivr8xoIcQiLI
-   j4YS3u1/g++l3I2ajgCUS6SukGVhrLgqtPvXrqh7iZQXi78wx5zZkCw1H
-   w==;
-X-CSE-ConnectionGUID: TWKm0amRQde7OHOnmPZdLw==
-X-CSE-MsgGUID: Me833cOrTFCgzBwD1UquDA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="18699012"
-X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="18699012"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:21:11 -0700
-X-CSE-ConnectionGUID: 3x1SUSrQSIGBA4eo9xt7lQ==
-X-CSE-MsgGUID: hNXSG1BbSwK2yLWSV/Ej9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="40309738"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:21:08 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Hugh Dickins <hughd@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Zi Yan <ziy@nvidia.com>,
-  Baolin Wang <baolin.wang@linux.alibaba.com>,  David Hildenbrand
- <david@redhat.com>,  linux-kernel@vger.kernel.org,  linux-mm@kvack.org
-Subject: Re: [PATCH hotfix] mm/migrate: fix kernel BUG at mm/compaction.c:2761!
-In-Reply-To: <46c948b4-4dd8-6e03-4c7b-ce4e81cfa536@google.com> (Hugh Dickins's
-	message of "Tue, 11 Jun 2024 22:06:20 -0700 (PDT)")
-References: <46c948b4-4dd8-6e03-4c7b-ce4e81cfa536@google.com>
-Date: Wed, 12 Jun 2024 14:19:17 +0800
-Message-ID: <87msnq7key.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xZun7ONV"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718173398; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=VkbxeyTbzZHZmW5pIOy78DIOXXvghz5goTacRzjkGcY=;
+	b=xZun7ONVSp59YHlaF88XlpNhvWvx/mKEtjYh0DtNHEnG8liZK5fDiONRvL6q5kop37pXvLyRsjefAGf5CYStfFI/p7O4D+773IYlMrvwVK5QjfdgY+6d+dA89bxHCZ061BFx4Z0a7O8maFVRYtQ1ttftealY+/zXVBj435jTUlI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W8J9Tpa_1718173396;
+Received: from 30.97.56.60(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8J9Tpa_1718173396)
+          by smtp.aliyun-inc.com;
+          Wed, 12 Jun 2024 14:23:17 +0800
+Message-ID: <3d8087e4-ff84-48cc-823a-a6ce2a3c76b4@linux.alibaba.com>
+Date: Wed, 12 Jun 2024 14:23:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/7] support large folio swap-out and swap-in for shmem
+To: Hugh Dickins <hughd@google.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, david@redhat.com,
+ wangkefeng.wang@huawei.com, chrisl@kernel.org, ying.huang@intel.com,
+ 21cnbao@gmail.com, ryan.roberts@arm.com, shy828301@gmail.com,
+ ziy@nvidia.com, ioworker0@gmail.com, da.gomez@samsung.com,
+ p.raghav@samsung.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1717673614.git.baolin.wang@linux.alibaba.com>
+ <7477de0e-e5bb-529d-e2c0-cabd0d39fb5c@google.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <7477de0e-e5bb-529d-e2c0-cabd0d39fb5c@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hugh Dickins <hughd@google.com> writes:
+Hi Hugh,
 
-> I hit the VM_BUG_ON(!list_empty(&cc->migratepages)) in compact_zone();
-> and if DEBUG_VM were off, then pages would be lost on a local list.
->
-> Our convention is that if migrate_pages() reports complete success (0),
-> then the migratepages list will be empty; but if it reports an error or
-> some pages remaining, then its caller must putback_movable_pages().
->
-> There's a new case in which migrate_pages() has been reporting complete
-> success, but returning with pages left on the migratepages list: when
-> migrate_pages_batch() successfully split a folio on the deferred list,
-> but then the "Failure isn't counted" call does not dispose of them all.
->
-> Since that block is expecting the large folio to have been counted as 1
-> failure already, and since the return code is later adjusted to success
-> whenever the returned list is found empty, the simple way to fix this
-> safely is to count splitting the deferred folio as "a failure".
->
-> Fixes: 7262f208ca68 ("mm/migrate: split source folio if it is on deferred split list")
-> Signed-off-by: Hugh Dickins <hughd@google.com>
-> ---
-> A hotfix to 6.10-rc, not needed for stable.
->
->  mm/migrate.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1654,7 +1654,12 @@ static int migrate_pages_batch(struct list_head *from,
->  
->  			/*
->  			 * The rare folio on the deferred split list should
-> -			 * be split now. It should not count as a failure.
-> +			 * be split now. It should not count as a failure:
-> +			 * but increment nr_failed because, without doing so,
-> +			 * migrate_pages() may report success with (split but
-> +			 * unmigrated) pages still on its fromlist; whereas it
-> +			 * always reports success when its fromlist is empty.
-> +			 *
->  			 * Only check it without removing it from the list.
->  			 * Since the folio can be on deferred_split_scan()
->  			 * local list and removing it can cause the local list
-> @@ -1669,6 +1674,7 @@ static int migrate_pages_batch(struct list_head *from,
->  			if (nr_pages > 2 &&
->  			   !list_empty(&folio->_deferred_list)) {
->  				if (try_split_folio(folio, split_folios) == 0) {
-> +					nr_failed++;
+On 2024/6/12 13:46, Hugh Dickins wrote:
+> On Thu, 6 Jun 2024, Baolin Wang wrote:
+> 
+>> Shmem will support large folio allocation [1] [2] to get a better performance,
+>> however, the memory reclaim still splits the precious large folios when trying
+>> to swap-out shmem, which may lead to the memory fragmentation issue and can not
+>> take advantage of the large folio for shmeme.
+>>
+>> Moreover, the swap code already supports for swapping out large folio without
+>> split, and large folio swap-in[3] series is queued into mm-unstable branch.
+>> Hence this patch set also supports the large folio swap-out and swap-in for
+>> shmem.
+>>
+>> [1] https://lore.kernel.org/all/cover.1717495894.git.baolin.wang@linux.alibaba.com/
+>> [2] https://lore.kernel.org/all/20240515055719.32577-1-da.gomez@samsung.com/
+>> [3] https://lore.kernel.org/all/20240508224040.190469-6-21cnbao@gmail.com/T/
+>>
+>> Changes from RFC:
+>>   - Rebased to the latest mm-unstable.
+>>   - Drop the counter name fixing patch, which was queued into mm-hotfixes-stable
+>>   branch.
+>>
+>> Baolin Wang (7):
+>>    mm: vmscan: add validation before spliting shmem large folio
+>>    mm: swap: extend swap_shmem_alloc() to support batch SWAP_MAP_SHMEM
+>>      flag setting
+>>    mm: shmem: support large folio allocation for shmem_replace_folio()
+>>    mm: shmem: extend shmem_partial_swap_usage() to support large folio
+>>      swap
+>>    mm: add new 'orders' parameter for find_get_entries() and
+>>      find_lock_entries()
+>>    mm: shmem: use swap_free_nr() to free shmem swap entries
+>>    mm: shmem: support large folio swap out
+>>
+>>   drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  1 +
+>>   include/linux/swap.h                      |  4 +-
+>>   include/linux/writeback.h                 |  1 +
+>>   mm/filemap.c                              | 27 ++++++-
+>>   mm/internal.h                             |  4 +-
+>>   mm/shmem.c                                | 58 ++++++++------
+>>   mm/swapfile.c                             | 98 ++++++++++++-----------
+>>   mm/truncate.c                             |  8 +-
+>>   mm/vmscan.c                               | 22 ++++-
+>>   9 files changed, 140 insertions(+), 83 deletions(-)
+> 
+> I wanted to have some tests running, while looking through these
+> and your shmem mTHP patches; but I wasted too much time on that by
+> applying these on top and hitting crash, OOMs and dreadful thrashing -
+> testing did not get very far at all.
 
-It appears better to add
+Thanks for testing. I am sorry I haven't found the issues with my testing.
 
-        stats->nr_thp_failed++;
+> Perhaps all easily fixed, but I don't have more time to spend on it,
+> and think this series cannot expect to go into 6.11: I'll have another
+> try with it next cycle.
+> 
+> I really must turn my attention to your shmem mTHP series: no doubt
+> I'll have minor adjustments to ask there - but several other people
+> are also waiting for me to respond (or given up on me completely).
 
-too.  Otherwise, if migrate_pages_batch() is called via migrate_pages(,
-MIGRATE_ASYNC, ), nr_thp_failed will not increase.  But if
-migrate_pages_batch() is called via migrate_pages(, MIGRATE_SYNC*, ),
-nr_thp_failed will increase in migrate_pages_sync() via
+Sure. Thanks.
 
-        stats->nr_thp_failed += astats.nr_thp_split;
+> 
+> The little crash fix needed in this series appears to be:
+> 
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -2053,7 +2053,8 @@ static int shmem_swapin_folio(struct ino
+>   			goto failed;
+>   	}
+>   
+> -	error = shmem_add_to_page_cache(folio, mapping, index,
+> +	error = shmem_add_to_page_cache(folio, mapping,
+> +					round_down(index, nr_pages),
+>   					swp_to_radix_entry(swap), gfp);
+>   	if (error)
+>   		goto failed;
 
-That is, they are not consistent.  The issue exists since commit
-7262f208ca68 ("mm/migrate: split source folio if it is on deferred split
-list").
+Good catch. I missed this.
 
-Otherwise, this looks good to me.  Thanks!
+> Then the OOMs and dreadful thrashing are due to refcount confusion:
+> I did not even glance at these patches to work out what's wanted,
+> but a printk in __remove_mapping() showed that folio->_refcount was
+> 1024 where 513 was expected, so reclaim was freeing none of them.
 
->  					stats->nr_thp_split += is_thp;
->  					stats->nr_split++;
->  					continue;
-
---
-Best Regards,
-Huang, Ying
+I will look at this issue and continue to do more tesing before sending 
+out new version. Thanks.
