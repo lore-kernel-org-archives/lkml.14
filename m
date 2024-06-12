@@ -1,215 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAD651C45;
-	Wed, 12 Jun 2024 18:41:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF196F2F2;
+	Wed, 12 Jun 2024 18:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217716; cv=none; b=PLabNLJ/AcQAFwjrQdmKflH+4++U85kvfW38/WJRQx/bgFJOKg+SKQfpza+xcO9rIIsWWvdmMPWCP2eoPtqWjsX+wwGlWUMK67OH6Le+u/6uByw5Xu4GZAx+mWYY0r0zzU4cXz4SJqDhYx7dv0/kpNAp2Ufdwjd+jxJCMRqHiAU=
+	t=1718217721; cv=none; b=NStOJrDJcuJ8slczbt5QfWcAgfBNXkLmdivvg6wsXx2dIFi2dl1fINlJaLKiqwdc5g5KHQ1f6z6O6NRDYWzBXhy2UKNyeydNC+yjaCu3CPw2LiAVj4cVvbl2kJ5w8YUGuBed/+bm0Wel4C6Ke3U/tSG7Pl31KvkBA23rUfZy9o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217716; c=relaxed/simple;
-	bh=bsiocjMdSbNWXRE26AKfuTdlJAeRjkYzp/UJN99xvY8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hIQIPqFmN3L6HSbXt4A4ReFEiZLZ0OFcFIoGjBWpLq3qCcjl9CM5/TtR/DnIyJsj+k/N9wrM0OF54a62HbUg4UxpRxXm7vZjPJ3W/XiMBK5FgEYpCzTI5fmc117g7pHohdykhhfVhRuiVaPuZiLeMGjo+MIPR3F3I8CUZUykq7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlGmqilp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718217721; c=relaxed/simple;
+	bh=mAIdBktGBsJfF8zgxDtzpPy0UqBsNJgXgpFV2sbScFI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NRdsOkRgxdg/Ch5NK7hJoTVaurLSmJUicLP9OAg1sdWu1qmDzeXMhS5mFj6B3dFIoniA2K7Wi26YPtSRLm/ldgZvkWyk53oJslHX7m/7tTEOdCuT/cgMM/IEU9n+Q2rAFLnDNqCYcmEgxwFn2aFqSZr0//FwDMvsWjmJvJA3bHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FU4Pmgqd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlGmqilp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B30D6C4AF50;
-	Wed, 12 Jun 2024 18:41:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FU4Pmgqd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C059C32786;
+	Wed, 12 Jun 2024 18:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718217715;
-	bh=bsiocjMdSbNWXRE26AKfuTdlJAeRjkYzp/UJN99xvY8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WlGmqilpadNsVXr+hlHuIg0rvLfsWMs2ZK2hW1pCX8laDRVuGBO0ZKaDCnKIC45OG
-	 SXcY+a0AkHfOBudvi/cNs7OFiIDuDyjv4RQC5aZrkjAXkTcs9IxOMIpmxsKtOxVjxO
-	 QcuU6MOQUjOShyo0iYJQARG5kRKTLIdCe52FI7kk0+q6hc7An/KjVxFw1G6ValEuXE
-	 pMTjgbpAYH3/ZdGIQyTjfdn1oTXw7c8N/+OLBqsMxqs5dbMghEeWNsJaN8nZw4UBN2
-	 QoDsXAphguFCD8Q7BSREyw3luycABlrE7WwdUujpIsL4+UgG+ufHHHuninKHpYAgNF
-	 q8D+DLcZd6iGg==
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5bad97708efso17658eaf.1;
-        Wed, 12 Jun 2024 11:41:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW0aBX4pW//2OiWbzaq8yzW1Y1KZwLHYcRqSyxsPrbcePSr2QXFS73ZEGMMIw59aecdmiurRUQN8ZagR7wimv26t5aq48GoXZsXQPNGwIiaLjlNYhLepKZCBsokQfZAHiKQR4GsuRiscwPE4Vb18M5TdSDdiAyh8kSEqZpnmqe1rnxXEJan
-X-Gm-Message-State: AOJu0Yx9FPcS8si6V89XPmlX0JZq1aUe+WlQhOgr0G+caAErDQ2f58np
-	Ky8XkdXh1DIgTHV23upkqCF9HPKUO6ZradOEj0xF5WJozOat3BLtBunbO6ZfSxvSf8Fb8pQ/jY8
-	Lm2ksnRIPgsbhOCWDlMIPx9vfaHM=
-X-Google-Smtp-Source: AGHT+IFnK5h44LsdeYX+xRSwdvSgqIYjg8Vd+aOcIXNMFJrSOGxTPhNHMiiucq46k6atD9R3fAhOisT5pW1/jzJzuUo=
-X-Received: by 2002:a4a:3101:0:b0:5ba:ca8a:6598 with SMTP id
- 006d021491bc7-5bb3b7b972bmr2887893eaf.0.1718217715001; Wed, 12 Jun 2024
- 11:41:55 -0700 (PDT)
+	s=k20201202; t=1718217720;
+	bh=mAIdBktGBsJfF8zgxDtzpPy0UqBsNJgXgpFV2sbScFI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FU4PmgqdWvYqgfewU/OGEo4njYGh15AbSaztNNgZgaKDoOJyIe89t6a9VdxgK7G5i
+	 lr0HflK89pgZpHcZXCgNSVx7vPuGhFiO6IbMdt27yUpdqVJjbe0xdsOynqXRo1gNiF
+	 wcreD5n3XV0HtOeaT/1leJ4xDJzwR426ok4crPgso5y56yAo5nuvQ/BR8OnnxBhS9c
+	 LSGRkYMnW2403gAUIjm5XqOZDGIj8gPthOiJRUETY0GO5bSxCnsEbfVhJoPPOZ8tXS
+	 zHVI/JzaJZmnLvHzts71QRNENmFI2vhhos1MBZtXsY0wjwDjHPx7kSNR650oXchqC5
+	 m01K2Ta0nJwoQ==
+Date: Wed, 12 Jun 2024 11:42:00 -0700
+From: Kees Cook <kees@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Gatlin Newhouse <gatlin.newhouse@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Baoquan He <bhe@redhat.com>, Changbin Du <changbin.du@huawei.com>,
+	Pengfei Xu <pengfei.xu@intel.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>, Xin Li <xin3.li@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Tina Zhang <tina.zhang@intel.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2] x86/traps: Enable UBSAN traps on x86
+Message-ID: <202406121139.5E793B4F3E@keescook>
+References: <20240601031019.3708758-1-gatlin.newhouse@gmail.com>
+ <878qzm6m2m.ffs@tglx>
+ <7bthvkp3kitmmxwdywyeyexajedlxxf6rqx4zxwco6bzuyx5eq@ihpax3jffuz6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
- <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com> <ZmmQLt7wB-yGQBTw@kekkonen.localdomain>
- <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
- <ZmmT56Cyvb2FCyav@kekkonen.localdomain> <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
- <ZmmY3he9vfWVWU3I@kekkonen.localdomain> <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
- <18cb82bb-51c6-4a52-80a4-6b1e3d95f99c@redhat.com> <CAJZ5v0je=Z+2LWv41OVwunujfTD7U2L9QDrNa7MoNBL+Chstnw@mail.gmail.com>
- <Zmnp8JbFj7ZoN5Vy@kekkonen.localdomain>
-In-Reply-To: <Zmnp8JbFj7ZoN5Vy@kekkonen.localdomain>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 12 Jun 2024 20:41:43 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0ie+OzJ5xd2g-j+pT=D20Ps__dA149XRnX8i9r4KKJ=ww@mail.gmail.com>
-Message-ID: <CAJZ5v0ie+OzJ5xd2g-j+pT=D20Ps__dA149XRnX8i9r4KKJ=ww@mail.gmail.com>
-Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port nodes
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-	Genes Lists <lists@sapience.com>, linux-kernel@vger.kernel.org, mchehab@kernel.org, 
-	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com, 
-	wentong.wu@intel.com, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7bthvkp3kitmmxwdywyeyexajedlxxf6rqx4zxwco6bzuyx5eq@ihpax3jffuz6>
 
-Hi Sakari,
+On Tue, Jun 11, 2024 at 01:26:09PM -0700, Gatlin Newhouse wrote:
+> On Mon, Jun 03, 2024 at 06:13:53PM UTC, Thomas Gleixner wrote:
+> > On Sat, Jun 01 2024 at 03:10, Gatlin Newhouse wrote:
+> > 
+> > > Bring x86 to parity with arm64, similar to commit 25b84002afb9
+> > > ("arm64: Support Clang UBSAN trap codes for better reporting").
+> > > Enable the output of UBSAN type information on x86 architectures
+> > > compiled with clang when CONFIG_UBSAN_TRAP=y. Currently ARM
+> > > architectures output which specific sanitizer caused the trap,
+> > > via the encoded data in the trap instruction. Clang on x86
+> > > currently encodes the same data in ud1 instructions but the x86
+> > > handle_bug() and is_valid_bugaddr() functions currently only look
+> > > at ud2s.
+> > 
+> > Please structure your change log properly instead of one paragraph of
+> > unstructured word salad. See:
+> > 
+> >   https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
+> >   
+> > > +/*
+> > > + * Check for UD1, UD2, with or without Address Size Override Prefixes instructions.
+> > > + */
+> > >  __always_inline int is_valid_bugaddr(unsigned long addr)
+> > >  {
+> > >  	if (addr < TASK_SIZE_MAX)
+> > > @@ -88,7 +92,13 @@ __always_inline int is_valid_bugaddr(unsigned long addr)
+> > >  	 * We got #UD, if the text isn't readable we'd have gotten
+> > >  	 * a different exception.
+> > >  	 */
+> > > -	return *(unsigned short *)addr == INSN_UD2;
+> > > +	if (*(u16 *)addr == INSN_UD2)
+> > > +		return INSN_UD2;
+> > > +	if (*(u16 *)addr == INSN_UD1)
+> > > +		return INSN_UD1;
+> > > +	if (*(u8 *)addr == INSN_ASOP && *(u16 *)(addr + 1) == INSN_UD1)
+> > 
+> > 	s/1/LEN_ASOP/ ?
+> > 
+> > > +		return INSN_ASOP;
+> > > +	return 0;
+> > 
+> > I'm not really a fan of the reuse of the INSN defines here. Especially
+> > not about INSN_ASOP. Also 0 is just lame.
+> > 
+> > Neither does the function name make sense anymore. is_valid_bugaddr() is
+> > clearly telling that it's a boolean check (despite the return value
+> > being int for hysterical raisins). But now you turn it into a
+> > non-boolean integer which returns a instruction encoding. That's
+> > hideous. Programming should result in obvious code and that should be
+> > pretty obvious to people who create tools to validate code.
+> > 
+> > Also all UBSAN cares about is the actual failure type and not the
+> > instruction itself:
+> > 
+> > #define INSN_UD_MASK		0xFFFF
+> > #define INSN_ASOP_MASK		0x00FF
+> > 
+> > #define BUG_UD_NONE		0xFFFF
+> > #define BUG_UD2			0xFFFE
+> > 
+> > __always_inline u16 get_ud_type(unsigned long addr)
+> > {
+> > 	u16 insn;
+> > 
+> > 	if (addr < TASK_SIZE_MAX)
+> >         	return BUD_UD_NONE;
+> > 
+> >         insn = *(u16 *)addr;
+> >         if ((insn & INSN_UD_MASK) == INSN_UD2)
+> >         	return BUG_UD2;
+> > 
+> > 	if ((insn & INSN_ASOP_MASK) == INSN_ASOP)
+> >         	insn = *(u16 *)(++addr);
+> > 
+> > 	// UBSAN encodes the failure type in the two bytes after UD1
+> >         if ((insn & INSN_UD_MASK) == INSN_UD1)
+> >         	return *(u16 *)(addr + LEN_UD1);
+> > 
+> > 	return BUG_UD_NONE;
+> > }
+> > 
+> > No?
+> 
+> Thanks for the feedback.
+> 
+> It seems that is_valid_bugaddr() needs to be implemented on all architectures
+> and the function get_ud_type() replaces it here. So how should the patch handle
+> is_valid_bugaddr()? Should the function remain as-is in traps.c despite no
+> longer being used?
 
-On Wed, Jun 12, 2024 at 8:33=E2=80=AFPM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Rafael,
->
-> On Wed, Jun 12, 2024 at 05:26:46PM +0200, Rafael J. Wysocki wrote:
-> > Hi,
-> >
-> > On Wed, Jun 12, 2024 at 4:30=E2=80=AFPM Hans de Goede <hdegoede@redhat.=
-com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On 6/12/24 3:06 PM, Rafael J. Wysocki wrote:
-> > > > Hi Sakari,
-> > > >
-> > > > On Wed, Jun 12, 2024 at 2:47=E2=80=AFPM Sakari Ailus
-> > > > <sakari.ailus@linux.intel.com> wrote:
-> > > >>
-> > > >> Hi Rafael,
-> > > >>
-> > > >> On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysocki wrote:
-> > > >>>>>>> I just hit the same problem on another Dell laptop. It seems =
-that
-> > > >>>>>>> all Dell laptops with IPU6 camera from the Tiger Lake, Alder =
-Lake
-> > > >>>>>>> and Raptor Lake generations suffer from this problem.
-> > > >>>>>>>
-> > > >>>>>>> So instead of playing whack a mole with DMI matches we should
-> > > >>>>>>> simply disable ACPI MIPI DISCO support on all Dell laptops
-> > > >>>>>>> with those CPUs. I'm preparing a fix for this to replace
-> > > >>>>>>> the DMI matching now.
-> > > >>>>>>
-> > > >>>>>> DisCo for Imaging support shouldn't be dropped on these system=
-s, and this
-> > > >>>>>> isn't what your patch does either. Instead the ACPI graph port=
- nodes (as
-> > > >>>>>> per Linux specific definitions) are simply dropped, i.e. this =
-isn't related
-> > > >>>>>> to DisCo for Imaging at all.
-> > > >>>>>
-> > > >>>>> So it looks like the changelog of that patch could be improved,=
- right?
-> > > >>>>
-> > > >>>> Well, yes. The reason the function is in the file is that nearly=
- all camera
-> > > >>>> related parsing is located there, not that it would be related t=
-o DisCo for
-> > > >>>> Imaging as such.
-> > > >>>
-> > > >>> So IIUC the camera graph port nodes are created by default with t=
-he
-> > > >>> help of the firmware-supplied information, but if that is defecti=
-ve a
-> > > >>> quirk can be added to skip the creation of those ports in which c=
-ase
-> > > >>> they will be created elsewhere.
-> > > >>>
-> > > >>> Is this correct?
-> > > >>
-> > > >> Yes.
-> > > >
-> > > > So it would be good to add a comment to this effect to
-> > > > acpi_nondev_subnode_extract() where acpi_graph_ignore_port() is
-> > > > called.
-> > > >
-> > > > And there is a somewhat tangential question that occurred to me: If
-> > > > the nodes are created elsewhere when acpi_graph_ignore_port() is tr=
-ue,
-> > > > why is it necessary to consult the platform firmware for the
-> > > > information on them at all?  Wouldn't it be better to simply always
-> > > > create them elsewhere?
-> > >
-> > > That is a good question. The ACPI MIPI DISCO specification is an
-> > > attempt standardize how MIPI cameras and their sensors are described
-> > > in ACPI.
-> > >
-> > > But this is not actually being used by any Windows drivers atm. The w=
-indows
-> > > drivers rely on their own custom ACPI data which gets translated into
-> > > standard Linux device-properties by: drivers/media/pci/intel/ipu-brid=
-ge.c
-> > >
-> > > and so far AFAIK there are 0 laptops where there actually is 100% fun=
-ctional
-> > > ACPI MIPI information. I believe that some work is in place to get co=
-rrect
-> > > usable ACPI MIPI information in place in the ACPI tables of some Mete=
-or Lake
-> > > laptops. But I believe that there too it does not work yet with the B=
-IOS
-> > > version with which current Windows models are shipping. It is being f=
-ixed
-> > > for systems which have Linux support from the vendor but I suspect th=
-at
-> > > on other models if ACPI MIPI DISCO information is there it will not
-> > > necessarily be reliable because AFAICT Windows does not actually use =
-it.
-> > >
-> > > And TBH this has me worried about camera support for Meteor Lake devi=
-ces
-> > > going forward. We really need to have 1 reliable source of truth here=
- and
-> > > using information which is ignored by Windows does not seem like the =
-best
-> > > source to use.
-> > >
-> > > Sakari I know you have been pushing for MIPI camera descriptions unde=
-r
-> > > ACPI to move to a standardized format and I can see how that is a goo=
-d
-> > > thing, but atm it seems to mainly cause things to break and before
-> > > the ACPI MIPI DISCO support landed in 6.8 we did not have these issue=
-s,
-> > > since the information used by the ipu-bridge code does seem to be cor=
-rect.
-> >
-> > Well, if Windows doesn't use this information, it is almost guaranteed
-> > to be garbage.
->
-> No ACPI DSDT in production systems uses DisCo for Imaging as of now at
-> least to my knowledge.
->
-> >
-> > So maybe it would be better to make acpi_graph_ignore_port() return
-> > true by default and false only when the information is known to be
-> > valid.  IOW, whitelist things instead of adding blacklist entries in
-> > perpetuum.
->
-> What could be gained from this?
+Yeah, this is why I'd suggested to Gatlin in early designs to reuse
+is_valid_bugaddr()'s int value. It's a required function, so it seemed
+sensible to just repurpose it from yes/no to no/type1/type2/type3/etc.
 
-Generally speaking, fewer headaches for people trying to support Linux
-on Intel client platforms.
+-Kees
 
-Every system that needs to be put into dmi_ignore_port_nodes[] means a
-boot problem for someone that needs to be addressed.
-
-And after the Hans' patch at
-
-https://patchwork.kernel.org/project/linux-acpi/patch/20240612104220.22219-=
-1-hdegoede@redhat.com/
-
-we would effectively get very close to that point anyway.
-
-Are the ACPI tables on MTL and beyond going to be fixed?  If not,
-we'll probably need to add MTL to the list of platform IDs and so on.
-In what way is this better?
+-- 
+Kees Cook
