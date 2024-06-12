@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D061836F9;
-	Wed, 12 Jun 2024 17:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86994183072;
+	Wed, 12 Jun 2024 17:03:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718211808; cv=none; b=QahNWHDuIPnRbUbOFhzHUPPXkjttF1iGy6GIBfP72B3j5tvgTX7wU6XQmp4Pe59zFeuRvtTXfdsiJuQm3eyRSmIuCSjBcH5KhQmPvB7jUmAKgZyB4p/bqcwPbUhB8tsAT7tQp0KvZDx0Dg66clptxvxkF6WQ8P96AUHyipnD94A=
+	t=1718211807; cv=none; b=Qc/w8liZQ4T92lwf3eB3k53srsg7VdAZWbzfW3SfP0OGeZrOKoBiv1M+hEtJyVolPFTmm92j7Z2FxZI7T8xKxV64ioKeWjtLDBXoVxwCHop8+6FHz1D/Afo5FhkoIj/n/uXBLnPkFNFzC+6+Y6q7i0U/QpOTplNtrSx+Gtk+l1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718211808; c=relaxed/simple;
-	bh=f2JsaRGu7vA7hA1bGsZGvZuKQkyhegS/xCLgmJwB4bI=;
+	s=arc-20240116; t=1718211807; c=relaxed/simple;
+	bh=8mNx9FPoHj4JNcDCiK2qJg5jIW+93DxmgJLrP1yB8cs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NXmukoNoUwzjRPqMUpCG5GM5wiyS+0AnxWXieIWvun/lrMbpLIlxlDGidQ7I7A8jMDlzU0YIKSKF5wg/rYkoWxJN1tsN7vLuraw0XauEZf9Wq30nH+GEbLi4z/tDv6nm7Zcnq7yGZA3yvXCJ1742OnnB+RgifrFqw8VTgoSL5Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4lxEvzl9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SpG2zCVL; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=QXgWST5PAVvLgAXH1wkqUTtODgb348mBfgTuJKBQbfZJzlH5GhYVz0GT55eJk3FDtTERWG1dG4OncWPhh352QcLRM5YPjc2D4syF3H1G4c95PIqKsZO/R5GQrF4pn8xgbFn/ryFbXEHRgWJVFJOkPoTbmCvqscKHx1OxP+cVTDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U8CYlAP3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=h+Q2UvtJ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4lxEvzl9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SpG2zCVL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U8CYlAP3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="h+Q2UvtJ"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718211799;
+	s=2020; t=1718211797;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vNvzn6YBgh3SLeUaRC7IMEJndOAuZol5cL2OUwmCNkc=;
-	b=4lxEvzl9kH2v9ZutAksrHyVn15ofpdOJY0jodz6zR6rRqvvC89TB72HBgdgi9lfRI5hlav
-	b3B+whg1w8rNHWp75BXB5NYWbdsziQNPHWgAzj8uBfaEeh/JdFvB0WnO4MlV8Wd/YK/Z7W
-	83ExRAGjjyIRBJsiaMfxfLGOerpmf7K96fLHxmQcaM1wNqtIfXZT+3exqifMN8/pHGA0vm
-	o1FH+h3NStpeQsAk3q3SMo6Xhxg4VdOkc1Qkdn++gF2cFLLM6ONZeNYvZZ4U1XMFiR03Ms
-	uAfZ4T/Dlc/APhlye8KzNxK1rXf83ncmIOlgof5AejwvWdXEjuk9FCQzS6KuwQ==
+	bh=IeTJF40iEq+NZZllVmnIBl8wcOsjOidTGbpcz9abXes=;
+	b=U8CYlAP3M7UyeA2rF7aIo75QSZzoFqOS/0NINtpqToPfokhiObYvGdb0GXULAnfiQWlUvF
+	zk0HMKo4kIxNOjO3kVgvU7VFEUjUo0QNYfOoDuLPapNTrKiqW16opfRmG9bgVZvmP/7VUF
+	dMSm25S9uPvdIY9WZSuT/Wn7UbhhwY8JLE+vo6LAxdoEJc3d0gwjCGfY6JfDnWlpCs3VD1
+	752rlAALydgavJKr5AtnxfUfs1VNV9H5ymFriHqhcbAWqRy4dKzAvuGq0mwMwsP0dcDF1T
+	x6eE3vTqeApr5BNBvOUFx7/fKBvbToq2uX86Po7lnkPHpOpc02FFyIOvFQMs6Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718211799;
+	s=2020e; t=1718211797;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vNvzn6YBgh3SLeUaRC7IMEJndOAuZol5cL2OUwmCNkc=;
-	b=SpG2zCVLz2CZtx8ySvQmphkpChsqZDr3u5cUIO72e0lNoYrfjGp7iWSFG29xXirpkRigE1
-	PkLyE/AHjI9m59CQ==
+	bh=IeTJF40iEq+NZZllVmnIBl8wcOsjOidTGbpcz9abXes=;
+	b=h+Q2UvtJWf3O4utp+8HLCT6K8vHoTmy7wbw3TI0MsEf5iqSb0PHcWJilK2kOpK7OG8/mrK
+	XMr7Sj+lm5wQFFCw==
 To: linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -55,20 +55,17 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Waiman Long <longman@redhat.com>,
 	Will Deacon <will@kernel.org>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	bpf@vger.kernel.org
-Subject: [PATCH v6 net-next 13/15] net: Use nested-BH locking for bpf_scratchpad.
-Date: Wed, 12 Jun 2024 18:44:39 +0200
-Message-ID: <20240612170303.3896084-14-bigeasy@linutronix.de>
+	Ben Segall <bsegall@google.com>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH v6 net-next 08/15] net: softnet_data: Make xmit.recursion per task.
+Date: Wed, 12 Jun 2024 18:44:34 +0200
+Message-ID: <20240612170303.3896084-9-bigeasy@linutronix.de>
 In-Reply-To: <20240612170303.3896084-1-bigeasy@linutronix.de>
 References: <20240612170303.3896084-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -79,75 +76,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-bpf_scratchpad is a per-CPU variable and relies on disabled BH for its
-locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT
-this data structure requires explicit locking.
+Softirq is preemptible on PREEMPT_RT. Without a per-CPU lock in
+local_bh_disable() there is no guarantee that only one device is
+transmitting at a time.
+With preemption and multiple senders it is possible that the per-CPU
+recursion counter gets incremented by different threads and exceeds
+XMIT_RECURSION_LIMIT leading to a false positive recursion alert.
 
-Add a local_lock_t to the data structure and use local_lock_nested_bh()
-for locking. This change adds only lockdep coverage and does not alter
-the functional behaviour for !PREEMPT_RT.
+Instead of adding a lock to protect the per-CPU variable it is simpler
+to make the counter per-task. Sending and receiving skbs happens always
+in thread context anyway.
 
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Hao Luo <haoluo@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Song Liu <song@kernel.org>
-Cc: Stanislav Fomichev <sdf@google.com>
-Cc: Yonghong Song <yonghong.song@linux.dev>
-Cc: bpf@vger.kernel.org
+Having a lock to protected the per-CPU counter would block/ serialize two
+sending threads needlessly. It would also require a recursive lock to
+ensure that the owner can increment the counter further.
+
+Make the recursion counter a task_struct member on PREEMPT_RT.
+
+Cc: Ben Segall <bsegall@google.com>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- net/core/filter.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ include/linux/netdevice.h | 11 +++++++++++
+ include/linux/sched.h     |  4 +++-
+ net/core/dev.h            | 20 ++++++++++++++++++++
+ 3 files changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index ba1a739a9bedc..fbcfd563dccfd 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -1658,9 +1658,12 @@ struct bpf_scratchpad {
- 		__be32 diff[MAX_BPF_STACK / sizeof(__be32)];
- 		u8     buff[MAX_BPF_STACK];
- 	};
-+	local_lock_t	bh_lock;
- };
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index d20c6c99eb887..b5ec072ec2430 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -3223,7 +3223,9 @@ struct softnet_data {
+ #endif
+ 	/* written and read only by owning cpu: */
+ 	struct {
++#ifndef CONFIG_PREEMPT_RT
+ 		u16 recursion;
++#endif
+ 		u8  more;
+ #ifdef CONFIG_NET_EGRESS
+ 		u8  skip_txqueue;
+@@ -3256,10 +3258,19 @@ struct softnet_data {
 =20
--static DEFINE_PER_CPU(struct bpf_scratchpad, bpf_sp);
-+static DEFINE_PER_CPU(struct bpf_scratchpad, bpf_sp) =3D {
-+	.bh_lock	=3D INIT_LOCAL_LOCK(bh_lock),
-+};
+ DECLARE_PER_CPU_ALIGNED(struct softnet_data, softnet_data);
 =20
- static inline int __bpf_try_make_writable(struct sk_buff *skb,
- 					  unsigned int write_len)
-@@ -2016,6 +2019,7 @@ BPF_CALL_5(bpf_csum_diff, __be32 *, from, u32, from_s=
-ize,
- 	struct bpf_scratchpad *sp =3D this_cpu_ptr(&bpf_sp);
- 	u32 diff_size =3D from_size + to_size;
- 	int i, j =3D 0;
-+	__wsum ret;
-=20
- 	/* This is quite flexible, some examples:
- 	 *
-@@ -2029,12 +2033,15 @@ BPF_CALL_5(bpf_csum_diff, __be32 *, from, u32, from=
-_size,
- 		     diff_size > sizeof(sp->diff)))
- 		return -EINVAL;
-=20
-+	local_lock_nested_bh(&bpf_sp.bh_lock);
- 	for (i =3D 0; i < from_size / sizeof(__be32); i++, j++)
- 		sp->diff[j] =3D ~from[i];
- 	for (i =3D 0; i <   to_size / sizeof(__be32); i++, j++)
- 		sp->diff[j] =3D to[i];
-=20
--	return csum_partial(sp->diff, diff_size, seed);
-+	ret =3D csum_partial(sp->diff, diff_size, seed);
-+	local_unlock_nested_bh(&bpf_sp.bh_lock);
-+	return ret;
++#ifdef CONFIG_PREEMPT_RT
++static inline int dev_recursion_level(void)
++{
++	return current->net_xmit_recursion;
++}
++
++#else
++
+ static inline int dev_recursion_level(void)
+ {
+ 	return this_cpu_read(softnet_data.xmit.recursion);
  }
++#endif
 =20
- static const struct bpf_func_proto bpf_csum_diff_proto =3D {
+ void __netif_schedule(struct Qdisc *q);
+ void netif_schedule_queue(struct netdev_queue *txq);
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 61591ac6eab6d..a9b0ca72db55f 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -975,7 +975,9 @@ struct task_struct {
+ 	/* delay due to memory thrashing */
+ 	unsigned                        in_thrashing:1;
+ #endif
+-
++#ifdef CONFIG_PREEMPT_RT
++	u8				net_xmit_recursion;
++#endif
+ 	unsigned long			atomic_flags; /* Flags requiring atomic access. */
+=20
+ 	struct restart_block		restart_block;
+diff --git a/net/core/dev.h b/net/core/dev.h
+index b7b518bc2be55..2f96d63053ad0 100644
+--- a/net/core/dev.h
++++ b/net/core/dev.h
+@@ -150,6 +150,25 @@ struct napi_struct *napi_by_id(unsigned int napi_id);
+ void kick_defer_list_purge(struct softnet_data *sd, unsigned int cpu);
+=20
+ #define XMIT_RECURSION_LIMIT	8
++
++#ifdef CONFIG_PREEMPT_RT
++static inline bool dev_xmit_recursion(void)
++{
++	return unlikely(current->net_xmit_recursion > XMIT_RECURSION_LIMIT);
++}
++
++static inline void dev_xmit_recursion_inc(void)
++{
++	current->net_xmit_recursion++;
++}
++
++static inline void dev_xmit_recursion_dec(void)
++{
++	current->net_xmit_recursion--;
++}
++
++#else
++
+ static inline bool dev_xmit_recursion(void)
+ {
+ 	return unlikely(__this_cpu_read(softnet_data.xmit.recursion) >
+@@ -165,5 +184,6 @@ static inline void dev_xmit_recursion_dec(void)
+ {
+ 	__this_cpu_dec(softnet_data.xmit.recursion);
+ }
++#endif
+=20
+ #endif
 --=20
 2.45.1
 
