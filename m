@@ -1,143 +1,184 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2BF84FD6
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 21:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D4F84D02;
+	Wed, 12 Jun 2024 21:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718228492; cv=none; b=LAuVkOwnUzvOXRmAeckzuPDa73gFFVoxRVW4e9CchF8OaMBz++rAP2NJnmM+QTVgwV3HQ5b47df0zq2RFhs1GIEukxAqmjwdm+itDOtonJO/0c843Bs3415slRCC8MN/iR2O48T4kQqxY4O/Qb5bUnNCF1ELNh38rhTFVpf7CKM=
+	t=1718228743; cv=none; b=FGKFqm2DckM5gDZ2QrdIf6AyJBtqpcLS0RUq8DipHb3jviZiF+l9FQZ0mqYwO5cYgrdNKV6P1PjPzF9xS2/d+MzeMDDauNgdyiZyzorLFzYDOaKpIE6WJZEnJilNIvN1F2dktdl/f2zcCYqmnxgY9e1T1SUNRtUWYQxytAW3+nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718228492; c=relaxed/simple;
-	bh=67HimRWaOGcR94s5nxBB2Mq+DzVfjSTg7cKrm0Wpvhs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=s4DLEmHc8tnAy+5Noc3BDW06vRyW/xF9bvybYQRd/zxRP7MZAsGT2oMnbkEj2j/ekCui+EGcUoDJcczl6DsVpd1XXhK9NuzqDNesViUlqiBQTelqdLowV7CIBHGVrypi0T1EH2nf4ua+DoTYlCtbBaaC8DauI/7iboaYCtCiQb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XggfXzyM; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718228743; c=relaxed/simple;
+	bh=3qwM3YMDGCSC1fcQ0SSKCUNxj4nWENbqFIY8TjOX4jY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JQRfRnzusNBJy+TyvlJMXovPDQHtqA90NIpu0S+BSfbInc7ZuOIV8KrDesBg1Go8WHCiCkDkXmk9SxPbPbin6YEi6UnroQ4ct6vcmf8CrcHvSZPU3WUPHsj26PoFltd2/CaUfZql2OhQus191RFA+w3Yo4JM8tjzSKg8zIIZqzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ab0aUMQD; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XggfXzyM"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfef7896c01so547776276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:41:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ab0aUMQD"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70432d3406bso261734b3a.1;
+        Wed, 12 Jun 2024 14:45:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718228489; x=1718833289; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HTQmzQkZFO50boRFOtlelRlvtzu8rK9h6SKmuODGoO8=;
-        b=XggfXzyMstRxKCqRll+7QU/Ci0hFq0KnQSrT5yFh+pj463/u3cV0lHbF6TbnsW1caD
-         E6kK5cZKLY60T6UYN+JeolX+VLAxx4XkUSp8wZz2ZLfCbnjMQmY7J3th3grNGLuHZPYu
-         fZTpBWtUjkVc0POdrLoIEWOV4bsGAI+8GIRiIXZg8X5HKxZRUFgzxjV1845efE1q/449
-         MkXvOqnr2T8K8VIYoCF7XRkFSSqyhVUJS4T/9IbsKX+BuTwdydm8nm77lxyghZ8IrVES
-         JuzD+1Q28Pk5iD+qHXU15qw/cy7AGXWJkSz1ltZxr/jYh7ivhQgd5ypAcpkXmD9R6hvO
-         +mfg==
+        d=gmail.com; s=20230601; t=1718228741; x=1718833541; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i6lWae0B5/GP4WtvVp63JCaJ9laTWe/yar8hYd+cHUM=;
+        b=ab0aUMQDnZni+oLzp/83JWaRuz5jApJvZItRJ3s3Q58TcF+OpqGSb6Yqf374rcYavg
+         G9XLrEw8k8z/MIr+xweXTCdv3p/vcsLukPvg6fRXz0S3HMdDqc7kVO5G5hDnYXqPda4X
+         X7uNxXCOqBk0Gnd8j2XdGyeUHbtH3WmRcfDrVBynGDlKcNzyA/Id+eyy0bpGjf35YNYv
+         OaJP81/gJpnYruc92dvJuemCFrVQtb6SStDvIlEpdcSX+gZ9XDdnL85PNXLFqQhwomrI
+         seZpBryvT1sZGX0QZHp2rk8beeFlWelHCq6ZZlHRCutHEDzi8Lpu9zWd3SvrAU6JyThz
+         PwiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718228489; x=1718833289;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HTQmzQkZFO50boRFOtlelRlvtzu8rK9h6SKmuODGoO8=;
-        b=mKDQR+fQNstdUWyv2ThFDGQWkSPrREJF84GjPzRAzG0z2QyomCUnaU2MDodkWrxULw
-         IbTWugstF2GyGYP4VykniyIus20vDGY4ylKen7eM/XJpWFsEqT638CFAEnguzaBoPsYN
-         0u8k52dh568EQCfqCG+SNG1nMETpdVvk+fVKWZjtb0VNVeslOH34JcJD3JJf3bw+78XC
-         AH9PwofbdT5iJqyd9bs2SZ/mPbt7r+o7BAsXK2ynO4Cs0ltnv+80xPVD5hx+ED6xsrIb
-         9V0xhFbbLwj7bsElDS/DgmvGDo9842IqLu1z8U8Ds3pRvTbVx6vtLLWIb0HmkLXWW22J
-         tKjw==
-X-Gm-Message-State: AOJu0YzTCw1ZA0aHX2tjH7ATxAveUo9LxKorSrUk83HGgOhrY5JL1l42
-	+aDqE8hR72UfAByOo2UpCrcocwIMxTCRhKqNwXIJ1hzdJ+HOsA2cHbjgkmSiaW/Hm+a5b9RlzdH
-	Sgw==
-X-Google-Smtp-Source: AGHT+IGyG+mtcr/kVU3oAvt9em/qYRB1UDjtYQnTl1yJOreZRmpK01aFGB2+hznOEVLDsABe9yFV/Tj5WtE=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:100f:b0:df7:8c1b:430a with SMTP id
- 3f1490d57ef6-dfe65e7eb4dmr855641276.3.1718228489057; Wed, 12 Jun 2024
- 14:41:29 -0700 (PDT)
-Date: Wed, 12 Jun 2024 14:41:27 -0700
-In-Reply-To: <20240207172646.3981-9-xin3.li@intel.com>
+        d=1e100.net; s=20230601; t=1718228741; x=1718833541;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i6lWae0B5/GP4WtvVp63JCaJ9laTWe/yar8hYd+cHUM=;
+        b=dPfZelmwU5pDKGXFI+gjqLtbeuZC5VysOzVD7gU94w6MHWhLz9p41ZBxuAAWChaLYv
+         jpEY38whoGgd3RXHpCZzGsrIEeVcDW6f72TRnPZ/KPZk6MaFoZ1LGsg7dHL79Yi1cKrw
+         6ltQym3TAIbi1zxF/+5rcNFJnPZonhevGpT14cv+emDpuS8hswuPC3OAoxuudcxGDPfZ
+         0WUC2SuFCCwvf6elv7VdkD3E/cyi8gS/Xj6Mlc10WueuadwKM7x+9Hvr1p8XWXHPbvvT
+         VS6swYNvjllELukIfpdmCldYJu0hkGiK5HTYp8xl0EIcekZNvKzrM8vxbP0d/arKKtKj
+         7JVg==
+X-Forwarded-Encrypted: i=1; AJvYcCW12gCS5cuOgtifWAha7PKyRZBKqqJH3wy3jvWrymIIunjK+Z+wD2cnpJibJ772Cq/5MXRkUPy7bS8elyRGfRv+MVK/1GonvVYanJHR+PGC4Hv2mIDI5XieYTSnLVNHyWHoBUshtP0g2gou9TjSxznsAcO5B/R/EBrqCwwWWc8rKA==
+X-Gm-Message-State: AOJu0Yy/u6HFOzbxtbLcLcD/c5RUA9LU01CCQtAgTJVKAIXLy0rSpcP3
+	y9PPKIpAeW0S9sKH2ryYTq5NxuPX9KblAlRv2WbfKmXWCwLzlKO8
+X-Google-Smtp-Source: AGHT+IGZC5SmaoqyXbCaLhBvQFZ1c0FtMBTPMwCFezpbf/bZb45GQ5Wm0sQBFB1zxS3xK8XrV31x/Q==
+X-Received: by 2002:a05:6a20:a11e:b0:1b5:d172:91ef with SMTP id adf61e73a8af0-1b8a9b704ffmr3594757637.5.1718228740702;
+        Wed, 12 Jun 2024 14:45:40 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:3077:52c7:3e56:8d61])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb6b4efsm16518b3a.151.2024.06.12.14.45.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 14:45:40 -0700 (PDT)
+Date: Wed, 12 Jun 2024 14:45:37 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Martin Schiller <ms@dev.tdt.de>
+Cc: hauke@hauke-m.de, tsbogend@alpha.franken.de, rdunlap@infradead.org,
+	robh@kernel.org, bhelgaas@google.com, linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] MIPS: pci: lantiq: restore reset gpio polarity
+Message-ID: <ZmoXAR79emQBNyhj@google.com>
+References: <20240607090400.1816612-1-ms@dev.tdt.de>
+ <ZmnfQWFoIw5UCV-k@google.com>
+ <7d34eb4017e809245daa342e3ccddf4f@dev.tdt.de>
+ <b6bea9239050ed39ce3a051a5985b86d@dev.tdt.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240207172646.3981-1-xin3.li@intel.com> <20240207172646.3981-9-xin3.li@intel.com>
-Message-ID: <ZmoWB_XtA0wR2K4Q@google.com>
-Subject: Re: [PATCH v2 08/25] KVM: VMX: Initialize VMCS FRED fields
-From: Sean Christopherson <seanjc@google.com>
-To: Xin Li <xin3.li@intel.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	shuah@kernel.org, vkuznets@redhat.com, peterz@infradead.org, 
-	ravi.v.shankar@intel.com, xin@zytor.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6bea9239050ed39ce3a051a5985b86d@dev.tdt.de>
 
-On Wed, Feb 07, 2024, Xin Li wrote:
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index d58ed2d3d379..b7b772183ee4 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1470,6 +1470,18 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
->  				    (unsigned long)(cpu_entry_stack(cpu) + 1));
->  		}
->  
-> +#ifdef CONFIG_X86_64
+On Wed, Jun 12, 2024 at 09:47:39PM +0200, Martin Schiller wrote:
+> On 2024-06-12 20:39, Martin Schiller wrote:
+> > On 2024-06-12 19:47, Dmitry Torokhov wrote:
+> > > Hi Marton,
+> > 
+> > Hi Dmitry,
+> > 
+> > > 
+> > > On Fri, Jun 07, 2024 at 11:04:00AM +0200, Martin Schiller wrote:
+> > > > Commit 90c2d2eb7ab5 ("MIPS: pci: lantiq: switch to using gpiod
+> > > > API") not
+> > > > only switched to the gpiod API, but also inverted / changed the
+> > > > polarity
+> > > > of the GPIO.
+> > > > 
+> > > > According to the PCI specification, the RST# pin is an active-low
+> > > > signal. However, most of the device trees that have been widely
+> > > > used for
+> > > > a long time (mainly in the openWrt project) define this GPIO as
+> > > > active-high and the old driver code inverted the signal internally.
+> > > > 
+> > > > Apparently there are actually boards where the reset gpio must be
+> > > > operated inverted. For this reason, we cannot use the
+> > > > GPIOD_OUT_LOW/HIGH
+> > > > flag for initialization. Instead, we must explicitly set the gpio to
+> > > > value 1 in order to take into account any "GPIO_ACTIVE_LOW" flag that
+> > > > may have been set.
+> > > 
+> > > Do you have example of such boards? They could not have worked before
+> > > 90c2d2eb7ab5 because it was actively setting the reset line to
+> > > physical
+> > > high, which should leave the device in reset state if there is an
+> > > inverter between the AP and the device.
+> > 
+> > Oh, you're right. I totally missed that '__gpio_set_value' was used in
+> > the original code and that raw accesses took place without paying
+> > attention to the GPIO_ACTIVE_* flags.
+> > 
+> > You can find the device trees I am talking about in [1].
+> > 
+> > @Thomas Bogendoerfer:
+> > Would it be possible to stop the merging of this patch?
+> > I think We have to do do some further/other changes.
+> > 
+> > > 
+> > > > 
+> > > > In order to remain compatible with all these existing device
+> > > > trees, we
+> > > > should therefore keep the logic as it was before the commit.
+> > > 
+> > > With gpiod API operating with logical states there's still
+> > > difference in
+> > > logic:
+> > > 
+> > > 	gpiod_set_value_cansleep(reset_gpio, 1);
+> > > 
+> > > will leave GPIO at 1 if it is described as GPIO_ACTIVE_HIGH (which is
+> > > apparently what you want for boards with broken DTS) but for boards
+> > > that accurately describe GPIO as GPIO_ACTIVE_LOW it well drive GPIO to
+> > > 0, leaving the card in reset state.
+> > > 
+> > > You should either use gpiod_set_raw_value_calsleep() or we can try and
+> > > quirk it in gpiolib (like we do for many other cases of incorrect GPIO
+> > > polarity descriptions and which is my preference).
+> 
+> So you mean we should add an entry for "lantiq,pci-xway" to the
+> of_gpio_try_fixup_polarity()?
+> Do you know any dts / device outside the openWrt universe which is using
+> this driver.
 
-Don't bother, practically no one cares about 32-bit KVM these days, and I highly
-don't anyone that runs 32-bit KVM cares about the code footprint to this degree.
+No, I don't.
 
-> +		/* Per-CPU FRED MSRs */
-> +		if (kvm_cpu_cap_has(X86_FEATURE_FRED)) {
-> +			vmcs_write64(HOST_IA32_FRED_RSP1, read_msr(MSR_IA32_FRED_RSP1));
-> +			vmcs_write64(HOST_IA32_FRED_RSP2, read_msr(MSR_IA32_FRED_RSP2));
-> +			vmcs_write64(HOST_IA32_FRED_RSP3, read_msr(MSR_IA32_FRED_RSP3));
-> +			vmcs_write64(HOST_IA32_FRED_SSP1, read_msr(MSR_IA32_FRED_SSP1));
-> +			vmcs_write64(HOST_IA32_FRED_SSP2, read_msr(MSR_IA32_FRED_SSP2));
-> +			vmcs_write64(HOST_IA32_FRED_SSP3, read_msr(MSR_IA32_FRED_SSP3));
+Could you please try this:
 
-That's a lot of RDMSRs to eat on every task migration.  How hard would it be to
-add a per-CPU cache for each of these?  Or is there a pre-existing way to get at
-the info that's faster than RDMSR?
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 59c7f8a2431a..4948ecaa422c 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -203,6 +203,16 @@ static void of_gpio_try_fixup_polarity(const struct device_node *np,
+ 		 */
+ 		{ "qi,lb60",		"rb-gpios",	true },
+ #endif
++#if IS_ENABLED(CONFIG_PCI_LANTIQ)
++		/*
++		 * According to the PCI specification, the RST# pin is an
++		 * active-low signal. However, most of the device trees that
++		 * have been widely used for a long time incorrectly describe
++		 * reset GPIO as active-high, and were also using wrong name
++		 * for the property.
++		 */
++		{ "lantiq,pci-xway",	"gpios-reset",	false },
++#endif
+ #if IS_ENABLED(CONFIG_TOUCHSCREEN_TSC2005)
+ 		/*
+ 		 * DTS for Nokia N900 incorrectly specified "active high"
+@@ -512,7 +522,7 @@ static struct gpio_desc *of_find_gpio_rename(struct device_node *np,
+ 		{ "reset",	"reset-n-io",	"marvell,nfc-uart" },
+ 		{ "reset",	"reset-n-io",	"mrvl,nfc-uart" },
+ #endif
+-#if !IS_ENABLED(CONFIG_PCI_LANTIQ)
++#if IS_ENABLED(CONFIG_PCI_LANTIQ)
+ 		/* MIPS Lantiq PCI */
+ 		{ "reset",	"gpios-reset",	"lantiq,pci-xway" },
+ #endif
 
-> +		}
-> +#endif
-> +
->  		vmx->loaded_vmcs->cpu = cpu;
->  	}
->  }
-> @@ -4321,6 +4333,15 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
->  	 */
->  	vmcs_write16(HOST_DS_SELECTOR, 0);
->  	vmcs_write16(HOST_ES_SELECTOR, 0);
-> +
-> +	/*
-> +	 * FRED MSRs are per-cpu, however FRED CONFIG and STKLVLS MSRs
-> +	 * are the same on all CPUs, thus they are initialized here.
+Thanks.
 
-Eh, just trim this to:
-
-	/* FRED CONFIG and STKLVLS are the same on all CPUs. */
-
-> +	 */
-> +	if (kvm_cpu_cap_has(X86_FEATURE_FRED)) {
-> +		vmcs_write64(HOST_IA32_FRED_CONFIG, read_msr(MSR_IA32_FRED_CONFIG));
-> +		vmcs_write64(HOST_IA32_FRED_STKLVLS, read_msr(MSR_IA32_FRED_STKLVLS));
-> +	}
->  #else
->  	vmcs_write16(HOST_DS_SELECTOR, __KERNEL_DS);  /* 22.2.4 */
->  	vmcs_write16(HOST_ES_SELECTOR, __KERNEL_DS);  /* 22.2.4 */
-> @@ -4865,6 +4886,19 @@ static void __vmx_vcpu_reset(struct kvm_vcpu *vcpu)
->  	 */
->  	vmx->pi_desc.nv = POSTED_INTR_VECTOR;
->  	vmx->pi_desc.sn = 1;
-> +
-> +#ifdef CONFIG_X86_64
-> +	if (kvm_cpu_cap_has(X86_FEATURE_FRED)) {
-> +		vmcs_write64(GUEST_IA32_FRED_CONFIG, 0);
-> +		vmcs_write64(GUEST_IA32_FRED_RSP1, 0);
-> +		vmcs_write64(GUEST_IA32_FRED_RSP2, 0);
-> +		vmcs_write64(GUEST_IA32_FRED_RSP3, 0);
-> +		vmcs_write64(GUEST_IA32_FRED_STKLVLS, 0);
-> +		vmcs_write64(GUEST_IA32_FRED_SSP1, 0);
-> +		vmcs_write64(GUEST_IA32_FRED_SSP2, 0);
-> +		vmcs_write64(GUEST_IA32_FRED_SSP3, 0);
-> +	}
-
-Somewhat of a moot point, but this belongs in init_vmcs(), not __vmx_vcpu_reset().
+-- 
+Dmitry
