@@ -1,107 +1,103 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B804C1802AA;
-	Wed, 12 Jun 2024 15:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964FF146017
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718207461; cv=none; b=V0mUwXtzF9ufx1x9iJtLHLa0cTBM/M7O7jKTcaybeBIhA7L3WtIWLRLx40zbOxDOw7juTsTAqdgnDw8BENL6sFrh/rnfkkUn8sdorijPLid0jpmdRBG+50JNVyZkjqS5GiWLFxWUzHmJx9kmzewNV2xm3VNI/s22oe1g75cPcnI=
+	t=1718207524; cv=none; b=KAJtnTSCnfAWQEgh3x5Dvw4qizKe9XMrMLrkNhne9pXgG5uUSlzv6BrxZXGsHy4LHXpPsBe/++7v1MTFLKcjNPVMFD2tUnoEd7+vyLnrl10c8BfLTDnZ4D6rZ+dOEln6Sv70TOnNoo0wzk3510ihsfdvKjI0TSgDTMXZcfOsZ3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718207461; c=relaxed/simple;
-	bh=klVtsJuKXbwtzbDnxkwIMDy1AWW0ZYbn+0pkQtKH7hE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=KxkSNs7cyZ6gsgmYDYHJNAuiX7hbvFxtGVEA1fWV6xnFFVRjSeKTlCpKj0/NdNhV92qpZSH2LA/UU9vZp9dDJ/CkBfYqFhaQOKjg+7KpVGu57NfBFQ/woEHmsuAmOj5RW45wS50TXi1af1z0FDcFtG9QXz61H0do7nf0fBW753o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kMzwwb79; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718207524; c=relaxed/simple;
+	bh=N86oabt2fKTMO2uOL8z7pPMGu8O/KQBt+1LpSMDdwSo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MEPGmysitEr5yZ0hCF4bY3wTnlbmVN6MvpaegC1s7SaMaBJEnRZBBAA3F8SuByjxK82I7N3AXkZZqAox6brMJDGO5QUwD911NVwNl76KD4bLVbTdrn/e/thvLkW0eG5sRMypE5mH1+MORwikH0jc+x38D67ezhT4xD/xY1hg4+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=hV7y+HxN; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kMzwwb79"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CAbPGg002327;
-	Wed, 12 Jun 2024 15:50:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=qfTgjrU+c9t402lfc6kXmQ
-	ihmKH9vn1aemt575x7eyM=; b=kMzwwb79xvjTbt5rROi+QsOVKszqW8CiNPVotT
-	an6WOXjjhmbazPTgeDIceny2KDKakbt+s29E+of2VB0kuM5mUUk2ehX8HLWdV7xG
-	B6+QRITkQgVjky3yF8mx6qgVGTxZT/kBISCzY5ymct/LNPgFaOg+vVfY/ev2pIwr
-	JmVov8lQ8+tkTIGumGh5d8N2f4d3s9lK/k5xXC7qckemgRyMOn76GMh8bUtXzpTw
-	qnnUdCyMC0WqgJYHVo76iZVsvpCl1bi6sGQbtb2nkI+ePec1mCIJxogdJW9iteYj
-	Kk5cveK5DSnsV7yL5lkqSwiwCaC79Q6EFHUhq8PKqZjxUlug==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yq4s8htvv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 15:50:55 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CFosb7021482
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 15:50:54 GMT
-Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Jun
- 2024 08:50:54 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Wed, 12 Jun 2024 08:50:53 -0700
-Subject: [PATCH] fbdev: viafb: add missing MODULE_DESCRIPTION() macro
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="hV7y+HxN"
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+	by m0089730.ppops.net (8.17.1.19/8.17.1.19) with ESMTP id 45CFbEQ6024314
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:52:01 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=s2048-2021-q4;
+ bh=Dp9jB3/zWqEW0lejCiauS6edrezGeGq1zpJr+Kx+fZI=;
+ b=hV7y+HxNxvW3yl2z+NBnGRGgju03oovha427d0bVPLpvulwd7Dpxq4Z/NgoozRYJOvcR
+ +Xt/4MxiTMlgoUXQAI1wFf+hX0TZ371I6GFpGXgXZYDPeqsTqNJsqQCuXrjkUtZbEZLZ
+ 66KEAGqPhDNDAwHI9Nc2QZmCkD7ILOwWNOvnsnuhKhv38YElYtKTzpjV6iuJ5CQZsYmc
+ hSAus7BVC9RGLNJGgiUuanNri6MFatJb0TvpMAwnG0w+pslM1+mt45/+f+d6xKPDcJnc
+ HxL7cuBYW+KevdR72T9866U/2E5/zvlZetAbPFaqIFQgjRNh8Wm42FYboUK1oU0mTctk Dg== 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+	by m0089730.ppops.net (PPS) with ESMTPS id 3yqefm836f-6
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:52:01 -0700
+Received: from twshared26916.05.ash9.facebook.com (2620:10d:c0a8:1b::2d) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.11; Wed, 12 Jun 2024 15:51:58 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id 06B8FF5EA646; Wed, 12 Jun 2024 08:51:47 -0700 (PDT)
+From: Keith Busch <kbusch@meta.com>
+To: <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+CC: <hch@lst.de>, <sagi@grimberg.me>, <paulmck@kernel.org>,
+        <davidgow@google.com>, <akpm@linux-foundation.org>,
+        <venkat88@linux.vnet.ibm.com>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 2/2] nvme: fix namespace removal list
+Date: Wed, 12 Jun 2024 08:51:35 -0700
+Message-ID: <20240612155135.3060667-2-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240612155135.3060667-1-kbusch@meta.com>
+References: <20240612155135.3060667-1-kbusch@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240612-md-drivers-video-fbdev-via-v1-1-651f7cd699c4@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAN3DaWYC/x3MQQ6CMBBG4auQWTsJBZXEqxgXLfNXJpFiptiQE
- O5udfe+zdspwxSZbs1OhqJZl1ThTg2Nk09PsEo1dW13bq+u41lYTAssc1HBwjEISm3PvQwSe3c
- BMFAdvA1Rt//8/qgOPoOD+TROv+VL02fj2ecVRsfxBckNVLyLAAAA
-To: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>,
-        Helge Deller
-	<deller@gmx.de>
-CC: <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Kfn7gG-BakFs6dOAKfuK3YBjxTsIjesn
-X-Proofpoint-ORIG-GUID: Kfn7gG-BakFs6dOAKfuK3YBjxTsIjesn
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: qeSLCxNhe5c5qv8wtUvzILNfGT1BH2aF
+X-Proofpoint-ORIG-GUID: qeSLCxNhe5c5qv8wtUvzILNfGT1BH2aF
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-12_08,2024-06-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- spamscore=0 mlxscore=0 malwarescore=0 phishscore=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1011 mlxlogscore=931 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120114
 
-With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/via/viafb.o
+From: Keith Busch <kbusch@kernel.org>
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+This function wants to move a subset of a list from an element to the
+end to another list, so do that with the new list_cut helper instead of
+using the wrong list splice.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Fixes: be647e2c76b27f4 ("nvme: use srcu for iterating namespace list")
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 ---
-Description derived from the Kconfig entry
----
- drivers/video/fbdev/via/viafbdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/nvme/host/core.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/fbdev/via/viafbdev.c b/drivers/video/fbdev/via/viafbdev.c
-index a52b1ba43a48..6da5ae7d229a 100644
---- a/drivers/video/fbdev/via/viafbdev.c
-+++ b/drivers/video/fbdev/via/viafbdev.c
-@@ -2144,5 +2144,6 @@ MODULE_PARM_DESC(viafb_lcd_port, "Specify LCD output port.");
- module_param(viafb_dvi_port, charp, S_IRUSR);
- MODULE_PARM_DESC(viafb_dvi_port, "Specify DVI output port.");
- 
-+MODULE_DESCRIPTION("VIA UniChrome (Pro) and Chrome9 display driver");
- MODULE_LICENSE("GPL");
- #endif
-
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240612-md-drivers-video-fbdev-via-3d7df315eee7
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index f5d150c62955d..30fec15872b3d 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3959,9 +3959,10 @@ static void nvme_remove_invalid_namespaces(struct =
+nvme_ctrl *ctrl,
+=20
+ 	mutex_lock(&ctrl->namespaces_lock);
+ 	list_for_each_entry_safe(ns, next, &ctrl->namespaces, list) {
+-		if (ns->head->ns_id > nsid)
+-			list_splice_init_rcu(&ns->list, &rm_list,
+-					     synchronize_rcu);
++		if (ns->head->ns_id > nsid) {
++			list_cut(&rm_list, &ctrl->namespaces, &ns->list);
++			break;
++		}
+ 	}
+ 	mutex_unlock(&ctrl->namespaces_lock);
+ 	synchronize_srcu(&ctrl->srcu);
+--=20
+2.43.0
 
