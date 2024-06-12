@@ -1,36 +1,39 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF6F16C86A;
-	Wed, 12 Jun 2024 07:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CB77D412;
+	Wed, 12 Jun 2024 07:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718176949; cv=none; b=kkVNnf2Aw8umlBJg8nBStEWXcgnBQ67VBHOVvbfir62lASaFDyc3XhGR6Jb3S6WRTQDwHGweGj66kb6adAq+xYnd/QbaVrQrI1YdAPMnfIt6vH7ynV40zFCeEdRUHnbRg3q29jgDP/jHCnEAJbyez5FCL4xefV0sHjE0DKGkd3U=
+	t=1718176950; cv=none; b=nFnBsDZyMLTQY9ATw5I5+Y8+nH7NeOxiQwtkBCghYuqt3GsvRB49jnLc807uB0aF9m6H29pp1O7BZ21PDE7rgCjlO96iT7Zc2CBmoabCVrPOAYefagNczcdJ0layHmOZMbeAcBh16mmJc1dMg/B1KHn8pzH2bvIn3Sy3sFaDgLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718176949; c=relaxed/simple;
-	bh=7XkyMNNVFbwIywmIqmH+fmp6s2CF96J+4RJhXNaHaj0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L9yiY7wuyl2Nta9vqJxUNS3FvW1sX63lM2fxoQvdxfpOj+H1YPj08rG4o8J5wzkMkuQ3Et20hyM3oRebD12vSwmecpX99iDniDywDayvgJWeupjHVv8ZeB91nzjcz8BN9AjD+S1p0NDhh5nT+M7qz6fB9ZI0srsELHdMYhPWt7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+	s=arc-20240116; t=1718176950; c=relaxed/simple;
+	bh=vPXJ8cSWFgNVAmLKMLTd9Mxy8oHDbUFZaOahvRHCk7E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HMlwyLVwfxCniM14wd1wterzD3ag85jEYRcJ9Ju5GJ3gWrn0sBtNcLIqMS18MTHPthcKVK1CFbzN2+ceEFdLqRrX/dTt/OPaZfMeoWoG+KU/u4HF/kUWYYdW1UgbTFz63WBBy+qGg8Z+1zYaJ7X8BYphwmBC7iq3d28mv+pn5lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VzcMq4TN0z1X3YJ;
-	Wed, 12 Jun 2024 15:18:31 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VzcMY0rTgzxT29;
+	Wed, 12 Jun 2024 15:18:17 +0800 (CST)
 Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6ADD3140360;
-	Wed, 12 Jun 2024 15:22:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 64D9D140154;
+	Wed, 12 Jun 2024 15:22:21 +0800 (CST)
 Received: from huawei.com (10.173.127.72) by canpemm500002.china.huawei.com
  (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 12 Jun
- 2024 15:22:18 +0800
+ 2024 15:22:20 +0800
 From: Miaohe Lin <linmiaohe@huawei.com>
 To: <akpm@linux-foundation.org>, <tony.luck@intel.com>, <bp@alien8.de>
 CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
 	<linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
-Subject: [PATCH v3 00/13] Some cleanups for memory-failure
-Date: Wed, 12 Jun 2024 15:18:22 +0800
-Message-ID: <20240612071835.157004-1-linmiaohe@huawei.com>
+Subject: [PATCH v3 04/13] mm/memory-failure: save some page_folio() calls
+Date: Wed, 12 Jun 2024 15:18:26 +0800
+Message-ID: <20240612071835.157004-5-linmiaohe@huawei.com>
 X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20240612071835.157004-1-linmiaohe@huawei.com>
+References: <20240612071835.157004-1-linmiaohe@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,45 +45,42 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  canpemm500002.china.huawei.com (7.192.104.244)
 
-Hi everyone,
-This series contains a few cleanup patches to avoid exporting unused
-function, add helper macro, fix some obsolete comments and so on. More
-details can be found in the respective changelogs.
-Thanks!
+Use local variable folio directly to save a page_folio() call. Also
+use folio_mapped() to save more page_folio() calls. No functional
+change intended.
+
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 ---
-v3:
- Fix build error per kernel test robot. Thanks.
- s/extern// for function declarations per Matthew. Thanks.
-v2:
- Collect Reviewed-by tag and use folio_mapped() per David. Thanks.
- Fix build error per kernel test robot. Thanks.
----
-Miaohe Lin (13):
-  mm/memory-failure: simplify put_ref_page()
-  mm/memory-failure: remove MF_MSG_SLAB
-  mm/memory-failure: add macro GET_PAGE_MAX_RETRY_NUM
-  mm/memory-failure: save some page_folio() calls
-  mm/memory-failure: remove unneeded empty string
-  mm/memory-failure: remove confusing initialization to count
-  mm/memory-failure: don't export hwpoison_filter() when
-    !CONFIG_HWPOISON_INJECT
-  mm/memory-failure: use helper macro task_pid_nr()
-  mm/memory-failure: remove obsolete comment in unpoison_memory()
-  mm/memory-failure: move some function declarations into internal.h
-  mm/memory-failure: fix comment of get_hwpoison_page()
-  mm/memory-failure: remove obsolete comment in kill_proc()
-  mm/memory-failure: correct comment in me_swapcache_dirty
+ mm/memory-failure.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- include/linux/mm.h         |  8 -------
- include/linux/page-flags.h |  5 -----
- include/linux/rmap.h       |  2 --
- include/ras/ras_event.h    |  1 -
- mm/internal.h              | 10 +++++++++
- mm/memory-failure.c        | 46 +++++++++++++++-----------------------
- 6 files changed, 28 insertions(+), 44 deletions(-)
-
-
-base-commit: 8a58962d482f5ab03d698f56fcbd5449757accfa
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 958b17a4b0f5..470c570d779c 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1575,7 +1575,7 @@ static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
+ 	 * This check implies we don't kill processes if their pages
+ 	 * are in the swap cache early. Those are always late kills.
+ 	 */
+-	if (!page_mapped(p))
++	if (!folio_mapped(folio))
+ 		return true;
+ 
+ 	if (folio_test_swapcache(folio)) {
+@@ -1626,10 +1626,10 @@ static bool hwpoison_user_mappings(struct folio *folio, struct page *p,
+ 		try_to_unmap(folio, ttu);
+ 	}
+ 
+-	unmap_success = !page_mapped(p);
++	unmap_success = !folio_mapped(folio);
+ 	if (!unmap_success)
+ 		pr_err("%#lx: failed to unmap page (folio mapcount=%d)\n",
+-		       pfn, folio_mapcount(page_folio(p)));
++		       pfn, folio_mapcount(folio));
+ 
+ 	/*
+ 	 * try_to_unmap() might put mlocked page in lru cache, so call
 -- 
 2.33.0
 
