@@ -1,143 +1,86 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995C04F1EE
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF5F4F1EE;
+	Wed, 12 Jun 2024 18:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718218335; cv=none; b=Q61zAjAoxma+vbOZc0VT5JUi3wWhF9w/d82u1OTPHmLWioLK7SQhHerAiWOjhZusiu/4SrNZtk8LeiI5REHknVQHIv3C4L9A3IQOKES59ecJ5yRKhWD9Bl7/hz4VNkl7wrEbr3APjrtu0tCpd4iij+zTiMmh+Ay5SK0RV5oiv4E=
+	t=1718218354; cv=none; b=dFw+gQQk0r5gGedfWFHPmBseGq2q+tCQR/Xo0BgpKSmEtIuN9+KRfKumliGsLyCW+LwGgpPz03CIxG3/yYmYm641m/ew+7eo3QD1QjBhfsEE7/jSckda5kZegqEnLsHN5FAxGKe9uB7XyJaHXGdyE8LYaH9U+JWO9lyyZitN9C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718218335; c=relaxed/simple;
-	bh=5JSXHJAUu46lj6snCC04DzSX38aU2k16Nzif4AapOqQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EAauuP3t2jY25f4JExHratajVBvd0CWUMe/2Kx714kTJlblojkL3cyBCM72B5AuRO/b2xnONUEG82AtJtaA/PHqOX7hdC3vIRUc+deSWcTC6O93OSLCLj5U4WIDwHHmMi4lFjAyCjRSTK47Conz4LHFD5KVaSiOs0ZzQie07Dyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Cd46wL97; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Cd46wL97"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CHTeNc025730;
-	Wed, 12 Jun 2024 18:52:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=vW5lsyIFWSZkq
-	9+WtC/JLBFyEtR2dLFJCqUMsgFyCqs=; b=Cd46wL97RUwSHZ6G+DYdGbVmrMSLr
-	oYJJS0VSN5T8LJ06QP88Ar4RquF+m4OkTeG8PTDeLVijJO3t2HoPrJaCgVUPN+EW
-	/+VWLZrVHIPO5PjW1wuNiN+F27RKu4lryZAhcDvNA4eWkcLOE2YCCIVdDCrk05fj
-	t3F/hsNzhE3j5ES3PDGfZXGaxCKaPwmWONPmlBMupATF1a2KyEW3rC/1ZHeLIvKz
-	hrxJTnDG7ttIJYNWPeygWBLAOwjLcGvaGglX28fe42OWYGZUJv/ShG4bnBNmNB1c
-	FEf0HjedacN5Dhzxg1eRLiaKAuq3eXVWoF+o+kNL+h59EAEwGjyJQN+NA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yqg4dg771-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 18:51:59 +0000 (GMT)
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45CIpxIO020141;
-	Wed, 12 Jun 2024 18:51:59 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yqg4dg76w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 18:51:59 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45CHk4Qm023609;
-	Wed, 12 Jun 2024 18:51:58 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yn3umrent-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 18:51:58 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45CIpqDG34603636
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Jun 2024 18:51:55 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C7FAE20040;
-	Wed, 12 Jun 2024 18:51:52 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CEB832004B;
-	Wed, 12 Jun 2024 18:51:49 +0000 (GMT)
-Received: from li-80eaad4c-2afd-11b2-a85c-af8123d033e3.ibm.com (unknown [9.124.218.62])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Jun 2024 18:51:49 +0000 (GMT)
-From: "Nysal Jan K.A." <nysal@linux.ibm.com>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc: Tyrel Datwyler <tyreld@linux.ibm.com>, Michal Suchanek <msuchanek@suse.de>,
-        "Nysal Jan K.A" <nysal@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] powerpc/topology: Check if a core is online
-Date: Thu, 13 Jun 2024 00:20:38 +0530
-Message-ID: <20240612185046.1826891-3-nysal@linux.ibm.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240612185046.1826891-1-nysal@linux.ibm.com>
-References: <20240612185046.1826891-1-nysal@linux.ibm.com>
+	s=arc-20240116; t=1718218354; c=relaxed/simple;
+	bh=AFNQEyQz8NyIoVuU/XMy7q/Q54NFWdA/wuxRXPywRUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P40He/iEgyvZ2DTUP3+nNTDHcrf1QhFkFycbdJuogUwdT4TmMdpmJ2jutVsvlj/9J73PlYtMVyJYzZcsEvq8rJIeooBVj297jFnM2GuIRelbIsAYx4Z8CaGBODqoFpnQ9YBeeqe9aoO+TP5Y6zK6jRsDxtsgI8DOuUJ00vKqkh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB7ADC4AF50;
+	Wed, 12 Jun 2024 18:52:29 +0000 (UTC)
+Date: Wed, 12 Jun 2024 14:52:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck
+ <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Ross
+ Zwisler <zwisler@google.com>, wklin@google.com, Vineeth Remanan Pillai
+ <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>, Linus Torvalds
+ <torvalds@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Mike
+ Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v3 2/2] pstore/ramoops: Add ramoops.mem_name= command
+ line option
+Message-ID: <20240612145228.5bf426e0@rorschach.local.home>
+In-Reply-To: <202406121145.8860502D7@keescook>
+References: <20240611144911.327227285@goodmis.org>
+	<20240611144949.703297941@goodmis.org>
+	<202406121145.8860502D7@keescook>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: y0CmASwOnchMM_lNxM3pTCqYDpQRyUjC
-X-Proofpoint-ORIG-GUID: 7A2i1_wFaeyJnh6LWP4SYwqr0LtVLDaj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_09,2024-06-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- bulkscore=0 mlxlogscore=986 impostorscore=0 spamscore=0 malwarescore=0
- suspectscore=0 lowpriorityscore=0 priorityscore=1501 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120131
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: "Nysal Jan K.A" <nysal@linux.ibm.com>
+On Wed, 12 Jun 2024 11:45:57 -0700
+Kees Cook <kees@kernel.org> wrote:
 
-topology_is_core_online() checks if the core a CPU belongs to
-is online. The core is online if at least one of the sibling
-CPUs is online. The first CPU of an online core is also online
-in the common case, so this should be fairly quick.
+> On Tue, Jun 11, 2024 at 10:49:13AM -0400, Steven Rostedt wrote:
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > 
+> > Add a method to find a region specified by reserve_mem=nn:align:name for
+> > ramoops. Adding a kernel command line parameter:
+> > 
+> >   reserve_mem=12M:4096:oops ramoops.mem_name=oops
+> > 
+> > Will use the size and location defined by the memmap parameter where it
+> > finds the memory and labels it "oops". The "oops" in the ramoops option
+> > is used to search for it.
+> > 
+> > This allows for arbitrary RAM to be used for ramoops if it is known that
+> > the memory is not cleared on kernel crashes or soft reboots.
+> > 
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
+> 
+> Acked-by: Kees Cook <kees@kernel.org>
+> 
+> Let me know if this should go via the pstore tree, if you'd rather carry
+> it?
+> 
 
-Signed-off-by: Nysal Jan K.A <nysal@linux.ibm.com>
----
- arch/powerpc/include/asm/topology.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+I'm going to send out another version to cover some more comments that
+were made, and perhaps it's best if Mike Rapoport takes it through his
+tree.
 
-diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
-index f4e6f2dd04b7..16bacfe8c7a2 100644
---- a/arch/powerpc/include/asm/topology.h
-+++ b/arch/powerpc/include/asm/topology.h
-@@ -145,6 +145,7 @@ static inline int cpu_to_coregroup_id(int cpu)
- 
- #ifdef CONFIG_HOTPLUG_SMT
- #include <linux/cpu_smt.h>
-+#include <linux/cpumask.h>
- #include <asm/cputhreads.h>
- 
- static inline bool topology_is_primary_thread(unsigned int cpu)
-@@ -156,6 +157,18 @@ static inline bool topology_smt_thread_allowed(unsigned int cpu)
- {
- 	return cpu_thread_in_core(cpu) < cpu_smt_num_threads;
- }
-+
-+#define topology_is_core_online topology_is_core_online
-+static inline bool topology_is_core_online(unsigned int cpu)
-+{
-+	int i, first_cpu = cpu_first_thread_sibling(cpu);
-+
-+	for (i = first_cpu; i < first_cpu + threads_per_core; ++i) {
-+		if (cpu_online(i))
-+			return true;
-+	}
-+	return false;
-+}
- #endif
- 
- #endif /* __KERNEL__ */
--- 
-2.35.3
+Thanks!
 
+-- Steve
