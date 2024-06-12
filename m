@@ -1,168 +1,124 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F73181CFC;
-	Wed, 12 Jun 2024 16:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB18B181338;
+	Wed, 12 Jun 2024 16:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718210546; cv=none; b=CSwXBK/t2rfIvYEpXi2oMPQxaM6eKxmdZKkp9Er4vCrVHm1eKBKo/glf4/Ek+9jLaoxHgP9kIP31PdM7DISXzQ5QRSc5lSzodi5xhS9bn0NSd7v3fK94IE0hio1vHpB+HnpnR2R47PMBcqjrISvBWu3N4sqmaow3av0kzZeSvSo=
+	t=1718210597; cv=none; b=f6ZZ6ZKMQL4dolPnbotE69WIfy5DEyIoz4nA7+2+o1vD+rDhbgyb4OdyIcG0X/TWh6W6d0secIR0NWRtP6n4bXK60VpbzW9sQZk7ffWZl+/tFi6IlZoYV0XCRyFdmz6jvQ7hkp9zpw/1oShelBZtFyBaSmmODJ7r+hjwwOrtFBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718210546; c=relaxed/simple;
-	bh=dAnHTtpolYPt15rFjwpq32w6shRczb9Te9yZLBal7IQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=bVO7Wypxf8rnNAIU+WHOCx1poHtFKbqKAk6ZG7gzajzvRXyLf/SawDRvbH6nRwUelc1blTIpKOZR/AXWsLZMHh/78CYj6JX4ULm50UbUcGZ7rekFFM9bjiMmmBOXMkbzXMTjpz60hmZhdR/hMaSuSpYI+d/2MKp3+20718EUjwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=St8kYnn2; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718210597; c=relaxed/simple;
+	bh=qreY//fAnwwkk5hLrRnCWnJ+QKjVx1QnAEwqG8yApo0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XYGbjOKC6jD2ISC8HojW7mWtSj32RD97ta6WgI42M9HobsA3JPtvsglOlEaUvlJ/zTunBKuyj8CbUCMUN3iMzHYBvIk4hkomV6C8PMur/7pp6XvxhO0yiHUNGP+jy0U05zckEl3493tk2enbQagJMbLe+OTBh6Q7/0d6P294+C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfOFfJYl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="St8kYnn2"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45CGgBx3039618;
-	Wed, 12 Jun 2024 11:42:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718210531;
-	bh=QygYFQ2htYur7OEp+8UrMIwDjqm0ddORmkB/GzNB+F8=;
-	h=From:Date:Subject:References:In-Reply-To:To:CC;
-	b=St8kYnn2BEkWYFKImjpfnppB5Gyt+ruCei7b120oD42MuWmZtRueQOSJ3GwTXYOUC
-	 scPncqh+qK8pmcwf3eqEZCkoWPX8XbRhocc4hj5FbvFoBIyCR3ONTQdtBZl8h0v3et
-	 +Gw4uPm6ovh0wChUKUznE9RYSD6ZWpmfncTRZRWw=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45CGgBKH079730
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 12 Jun 2024 11:42:11 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 12
- Jun 2024 11:42:11 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 12 Jun 2024 11:42:11 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45CGgAgA099380;
-	Wed, 12 Jun 2024 11:42:10 -0500
-From: Bryan Brattlof <bb@ti.com>
-Date: Wed, 12 Jun 2024 11:41:51 -0500
-Subject: [PATCH 2/5] cpufreq: ti: update OPP table for AM62Px SoCs
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfOFfJYl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63B27C116B1;
+	Wed, 12 Jun 2024 16:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718210596;
+	bh=qreY//fAnwwkk5hLrRnCWnJ+QKjVx1QnAEwqG8yApo0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QfOFfJYl+At6SDp9QB2/9KYlRNFBxjcMd3sjevdUTbcPc9/nkSDqUsmp+QKjMB468
+	 AnPPsM4PcmeWyrvZw8ofSIObzpyis7XpqdTeLJFggSg0Y8ddhM/l8WqHIQEOixuylV
+	 cln7ccJa0R8i2k0q0EXtVYv80x5NXYe9NDi4oNx3HcciIwfi6LxWJMK/Gq7f51zPGJ
+	 zszizSTfiQRQE5MXfLRHS7aoFNLb9zxPe2rh7m/CjT4zs5yrTTzyRTe732LlIYzcQ3
+	 TpJNlI1WpoNFtlCIuv0RCwYItf1RbaJtqwcTQtZGwIajthNMXaRPnl6gxaNaI8w3Ym
+	 +eeqRUUXPNL3w==
+Date: Wed, 12 Jun 2024 17:43:12 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Burton <paulburton@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] dt-bindings: mips: img: Add devices binding
+Message-ID: <20240612-styling-deafening-2cdae7cf0b55@spud>
+References: <20240612-boston-syscon-v2-0-9f8e1a07fa63@flygoat.com>
+ <20240612-boston-syscon-v2-8-9f8e1a07fa63@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240612-ti-opp-updates-v1-2-3551c31d9872@ti.com>
-References: <20240612-ti-opp-updates-v1-0-3551c31d9872@ti.com>
-In-Reply-To: <20240612-ti-opp-updates-v1-0-3551c31d9872@ti.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar
-	<viresh.kumar@linaro.org>, Lee Jones <lee@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>
-CC: Vibhore Vardhan <vibhore@ti.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Bryan Brattlof <bb@ti.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2615; i=bb@ti.com;
- h=from:subject:message-id; bh=dAnHTtpolYPt15rFjwpq32w6shRczb9Te9yZLBal7IQ=;
- b=owNCWmg5MUFZJlNZeSzJwwAAZn///v9P7m8yftfKqHn8tft/b3O6zo/5r2vbdqy+hftz2/ywA
- RmwHagANDIGQaaNA0eoyZAGmgaAaepk0DQGmmhoMmmgANNBkaBoep6JjUDEzU3qaiANNDAQBiYQ
- DQ0aBgTRgTTQA0GQNGjAgeo0GEMgYgaaYI0ZMBGTIHQekGmTQ9TTIaA0PUGjJiDE0NNA0ABk0NB
- hGE0YCYjRkZBiaGgYTTIDIwgAHoIOB3G2AL0zQpRhQRjw8TK14QoGZnG9FbDhgbr8g152zSoTtH
- vxwzsnJInHL+swCQJcMekxi8RMIEwf4hVhML5onOA4iN35+1v0VodNutIc/mQJNgE9z2bfW2vHF
- zHwBng6+JZMlpfgmj3KCCdtc7HVJlpwnMVTaY/hKBDS4aS5S8DIUoQP5vHhmNE6UIIY8T04MhXu
- UrAy26Pc0cbwnUy/WbDNj05Gdyu2Z9xOsj+0roHQvWjUKlviCbsfo9E9uSbxXYwuMnwpMu2fcI6
- DfDHPFQnjlT6Au3jAWRaPRLNk+AlFha35V5q7M3nDMsX74pqhoqyAQ0t0YxiA1ey9SOOGUXytci
- E/oISlImCMpoZYRIVz+z1iJKOWgCpyqyUIfvyCVcEF87aLIw0o1E5JsMC7nPVoAIuaGSFjkoDsJ
- Vwf4u5IpwoSDyWZOGA=
-X-Developer-Key: i=bb@ti.com; a=openpgp;
- fpr=D3D177E40A38DF4D1853FEEF41B90D5D71D56CE0
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tzuLAazgu/3W4bpO"
+Content-Disposition: inline
+In-Reply-To: <20240612-boston-syscon-v2-8-9f8e1a07fa63@flygoat.com>
 
-More speed grades for the AM62Px SoC family have been defined which
-unfortunately no longer align with the AM62x table. So create a new
-table with these new speed grades defined for the AM62Px
 
-Signed-off-by: Bryan Brattlof <bb@ti.com>
----
- drivers/cpufreq/ti-cpufreq.c | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+--tzuLAazgu/3W4bpO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
-index a80698f3cfe65..6c84562de5c6b 100644
---- a/drivers/cpufreq/ti-cpufreq.c
-+++ b/drivers/cpufreq/ti-cpufreq.c
-@@ -69,6 +69,13 @@ enum {
- #define AM62A7_SUPPORT_R_MPU_OPP		BIT(1)
- #define AM62A7_SUPPORT_V_MPU_OPP		BIT(2)
- 
-+#define AM62P5_EFUSE_O_MPU_OPP			15
-+#define AM62P5_EFUSE_S_MPU_OPP			19
-+#define AM62P5_EFUSE_U_MPU_OPP			21
-+
-+#define AM62P5_SUPPORT_O_MPU_OPP		BIT(0)
-+#define AM62P5_SUPPORT_U_MPU_OPP		BIT(2)
-+
- #define VERSION_COUNT				2
- 
- struct ti_cpufreq_data;
-@@ -134,6 +141,23 @@ static unsigned long omap3_efuse_xlate(struct ti_cpufreq_data *opp_data,
- 	return BIT(efuse);
- }
- 
-+static unsigned long am62p5_efuse_xlate(struct ti_cpufreq_data *opp_data,
-+					unsigned long efuse)
-+{
-+	unsigned long calc_efuse = AM62P5_SUPPORT_O_MPU_OPP;
-+
-+	switch (efuse) {
-+	case AM62P5_EFUSE_U_MPU_OPP:
-+	case AM62P5_EFUSE_S_MPU_OPP:
-+		calc_efuse |= AM62P5_SUPPORT_U_MPU_OPP;
-+		fallthrough;
-+	case AM62P5_EFUSE_O_MPU_OPP:
-+		calc_efuse |= AM62P5_SUPPORT_O_MPU_OPP;
-+	}
-+
-+	return calc_efuse;
-+}
-+
- static unsigned long am62a7_efuse_xlate(struct ti_cpufreq_data *opp_data,
- 					unsigned long efuse)
- {
-@@ -291,6 +315,15 @@ static struct ti_cpufreq_soc_data am62a7_soc_data = {
- 	.multi_regulator = false,
- };
- 
-+static struct ti_cpufreq_soc_data am62p5_soc_data = {
-+	.efuse_xlate = am62p5_efuse_xlate,
-+	.efuse_offset = 0x0,
-+	.efuse_mask = 0x07c0,
-+	.efuse_shift = 0x6,
-+	.rev_offset = 0x0014,
-+	.multi_regulator = false,
-+};
-+
- /**
-  * ti_cpufreq_get_efuse() - Parse and return efuse value present on SoC
-  * @opp_data: pointer to ti_cpufreq_data context
-@@ -395,7 +428,7 @@ static const struct of_device_id ti_cpufreq_of_match[] = {
- 	{ .compatible = "ti,omap36xx", .data = &omap36xx_soc_data, },
- 	{ .compatible = "ti,am625", .data = &am625_soc_data, },
- 	{ .compatible = "ti,am62a7", .data = &am62a7_soc_data, },
--	{ .compatible = "ti,am62p5", .data = &am625_soc_data, },
-+	{ .compatible = "ti,am62p5", .data = &am62p5_soc_data, },
- 	/* legacy */
- 	{ .compatible = "ti,omap3430", .data = &omap34xx_soc_data, },
- 	{ .compatible = "ti,omap3630", .data = &omap36xx_soc_data, },
+On Wed, Jun 12, 2024 at 12:56:27PM +0100, Jiaxun Yang wrote:
+> Add devices binding for various Imagination Technologies
+> MIPS based Platforms.
+>=20
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  .../devicetree/bindings/mips/img/devices.yaml      | 33 ++++++++++++++++=
+++++++
+>  1 file changed, 33 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mips/img/devices.yaml b/Do=
+cumentation/devicetree/bindings/mips/img/devices.yaml
+> new file mode 100644
+> index 000000000000..460ca96577ad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/img/devices.yaml
+> @@ -0,0 +1,33 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mips/img/devices.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Imagination Technologies MIPS based Platforms
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +
+> +      - description: IMG Boston
+> +        const: img,boston
+> +
+> +      - description: IMG Marduk (Creator Ci40)
+> +        items:
+> +          - const: img,pistachio-marduk
+> +          - const: img,pistachio
+> +
+> +      - description: Imagination University Program MIPSfpga
+> +        items:
+> +          - const: img,xilfpga
+> +          - const: digilent,nexys4ddr
 
--- 
-2.45.2
+Usually the order used here is something like:
+compatible =3D "vendor,soc-board", "vendor,soc"
+The pistachio one seems to follow that, but AFAICT "boston" is a board
+and the order in this one is something like:
+compatible =3D "vendor,soc", "vendor,generic-fpga-board"
 
+--tzuLAazgu/3W4bpO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmnQIAAKCRB4tDGHoIJi
+0h5jAP4hD5OB8U5paykiNEvhqV4ngCLkQcx7w24WR7mJaH7JwAD+JhirqZfMIhHi
+eGZTIm9niUbibg1zRSo7OgnwY3iE9As=
+=YVxZ
+-----END PGP SIGNATURE-----
+
+--tzuLAazgu/3W4bpO--
