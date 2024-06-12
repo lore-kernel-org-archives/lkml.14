@@ -1,188 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3F84597A;
-	Wed, 12 Jun 2024 18:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB684AED1
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217208; cv=none; b=p59yQh4TZexYO9oZKw9hELZgpCKrH2UxP6a/Dcfkl3Wx2zu444/HvPlTwgZQN17OSJLALl/rkx3+SJMS8tf/AtvGgcRhPIG4r5QGYfwL9sRkM1EpH7gb1cbW5YQDbYyeqy1pbYUEIOIvs9GNA5G1KBY47HaHVn+474nrcCYwUnI=
+	t=1718217211; cv=none; b=S9LYBZ9pxov8IMtO6dAta+BTWjN7tWIjMVkG3BdFmFSmhtrlgf5m83LjXuKf41jXjfinAHE5n7yKHqOb4bNULNilEKFwPkFfrrCpNt3VgMRh1fajo8oNxXU8KZHszEkqRUwtq6PkHqBuxowpD4thQfhpfBOgVSau8BmLOO4Wg4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217208; c=relaxed/simple;
-	bh=3chq8aGAuNSKagtHO9pYuCTMVP7l20YtXhwbbVv0/gg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fVMwycmI5x+siqK+wWHmlksi6DPpbA6oY49/0bRGlKVI/RUtYK255QxQC18sPZwC1+3UG/TZOKbG33DMzsjNazEkqxQL4wT23yTxSljYEOdn2csdLA4DXx05MMBMm25fl619WMOISRuIb8sqSUYU1+VrNINeC/FG/KPRkZUrBfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZCzru+PM; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1718217211; c=relaxed/simple;
+	bh=xgg4zHwGeqMcxWJL7P+K/9CH+X7F2jIwkiY5qfhp9HU=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=hJZqzGDJVdIclxhkwF6dEyDkC2wWsBb653EgcdiglhkbpAzFMzm3yYomvoaPXeEkqkqP4jga0nGxGiTPEbKOnbcmalSrIc+R19LUNDPfGDBiSTLXuUkdF33UgCPXMbZ9tvZMWQOd8pOu0lzncexsP/Bymop4oCQugTpr7h1CF7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=amjkUyZu; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZCzru+PM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718217207; x=1749753207;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=3chq8aGAuNSKagtHO9pYuCTMVP7l20YtXhwbbVv0/gg=;
-  b=ZCzru+PM1DKbDnL5qAs7z7kTlFub5V2FwmnFAH4T84Ol95C0bdpTl6HC
-   itzu8+a+iB2XkZT9I8ghCXh65HLoBuwxCIqo0wOS/v+x63NtmnWB4dW0y
-   Je092v7C2wHkluV8mhgw9MmXqJ40oEEmuXOA6e0Ki/8+kCywJvL4KY1rQ
-   O7TNKNrzgVYuBmhqf0PPw8686F2AqyH9HlJX0/l91NVTJI1pAVEIK6rBz
-   0r34U00SaUn0r+GRjJZCy+n72D+r+j4L3Zv8anaJleA16mf4KvRxADQvH
-   vGKNh0ywsaHZFwoHdd0VARAnypIYLpXFYYMVvH+ol8fHJ0+ToeYsg5BiZ
-   w==;
-X-CSE-ConnectionGUID: zxyeR/zJRYetvrC+Zm8Haw==
-X-CSE-MsgGUID: WCnow9OEQOKuGVKPcRhSKQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="18858296"
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="18858296"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 11:33:26 -0700
-X-CSE-ConnectionGUID: D8O8/xUdTBKzElSgYmAnyA==
-X-CSE-MsgGUID: 3g51+lagSs6J3ayfXpGkkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
-   d="scan'208";a="39768352"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 11:33:23 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id E2B6D11FA94;
-	Wed, 12 Jun 2024 21:33:20 +0300 (EEST)
-Date: Wed, 12 Jun 2024 18:33:20 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Genes Lists <lists@sapience.com>,
-	linux-kernel@vger.kernel.org, mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
-	wentong.wu@intel.com, linux-media@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
- nodes
-Message-ID: <Zmnp8JbFj7ZoN5Vy@kekkonen.localdomain>
-References: <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
- <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
- <ZmmQLt7wB-yGQBTw@kekkonen.localdomain>
- <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
- <ZmmT56Cyvb2FCyav@kekkonen.localdomain>
- <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
- <ZmmY3he9vfWVWU3I@kekkonen.localdomain>
- <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
- <18cb82bb-51c6-4a52-80a4-6b1e3d95f99c@redhat.com>
- <CAJZ5v0je=Z+2LWv41OVwunujfTD7U2L9QDrNa7MoNBL+Chstnw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="amjkUyZu"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfede368fcaso273202276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718217207; x=1718822007; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Rm0EtUlY7qVzQZI97HOfdq0hSIaq1mUCwGuA2+Hn2yY=;
+        b=amjkUyZueUzii7OyKrNUzMPmfhEbZvq+6fSgCL+qh7hkibin4ZSX5GezZGSGil2N48
+         geDhXQlkOWd0b25uGnZPTA58CMSOJ+f4Eydz/8fBwOsAnD4b5Kt5VEgFu/oiCwJQc7HE
+         xrbmOzjC5ZPru7j07AclvJvPelxw5SNdksO4ne1eyIBH0vD1CBlbUdFOcRH2Ku0dF1Q4
+         1GgBb3WYw9gkHtDPWBqRX/mQnQ3WCRG4sBcGY/4ZLHYN1zeBTBTkSfu3hR2VBSCIbn/W
+         ND1/bXfe+2llFtu5bCP/wwT+9P9ZdV6d3hWmJ0kEACzmQpV1g0yPZBqGuPGXCUXOFaDG
+         a0vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718217207; x=1718822007;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Rm0EtUlY7qVzQZI97HOfdq0hSIaq1mUCwGuA2+Hn2yY=;
+        b=mOgVdC9gNp8tOCKr7HE1LJ1F1A4hjpaLNhRNP5LAZJvZZZs5o42Dk7LfzkLwX/0Cgb
+         sirsox1AvfxTGAFLv3NbOiZXwTmLphKpakzSDeelz5UL5AyszQ2ZtbPYyXEleS8bL7uC
+         LXs/HRHpgcssGHxkVyzIvn5ljJ5OExa8JlJXyuRU+MTAEoruTDrGM1i9LQImn8e4Nc7O
+         fwho+mwr4mo6qojAwU4rmFy1xIRojG/mSDM/873slN4J/iPM18gC61knGAWASf6pwDK6
+         4SzNxNasTvR4chGivNenLQkO1GsgPoEI6U+fm8hXtqQ+BB536Quhv3b3gyollkui5ZPL
+         DwmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQsI0gCjTF7fkppLvdiB42vPv0ch81zqUDpl6NbdNXwEUr4fw8uYve98QGrzizQHj870QYbDvVAN1H/puViirRJiPNtI+Gn8J/UtEW
+X-Gm-Message-State: AOJu0YwWw/Zt1ayfe6UXtzX3aJbJ8QLm5WxNjg7nShjNeLkV9LdbshQv
+	KI1c0pRl1YOHUG2OmfjWyUR5EkREJqgrw8Ry9W01u7fz/44K4mFmpY6zqYo1Cqr7twsiwksR5Ym
+	k9cB3cQ==
+X-Google-Smtp-Source: AGHT+IH1yI9i/s+26+jM/E/uI8+fPG/zWe9dsO6CmMohvLKaJEU2deKggpKC2BICy6YM6dj4+CXqvZYdg/vu
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:959d:4302:db0e:d12a])
+ (user=irogers job=sendgmr) by 2002:a25:c841:0:b0:dfb:197c:8caf with SMTP id
+ 3f1490d57ef6-dfe66b6704fmr445067276.6.1718217207099; Wed, 12 Jun 2024
+ 11:33:27 -0700 (PDT)
+Date: Wed, 12 Jun 2024 11:31:58 -0700
+Message-Id: <20240612183205.3120248-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0je=Z+2LWv41OVwunujfTD7U2L9QDrNa7MoNBL+Chstnw@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Subject: [PATCH v1 0/7] Refactor perf python module build
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Nick Terrell <terrelln@fb.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Kees Cook <keescook@chromium.org>, Andrei Vagin <avagin@google.com>, 
+	Athira Jajeev <atrajeev@linux.vnet.ibm.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Ze Gao <zegao2021@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	coresight@lists.linaro.org, rust-for-linux@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Rafael,
+Refactor the perf python module build to instead of building C files
+it links libraries. To support this make static libraries for tests,
+ui, util and pmu-events. Doing this allows fewer functions to be
+stubbed out, importantly parse_events is no longer stubbed out which
+will improve the ability to work with heterogeneous cores.
 
-On Wed, Jun 12, 2024 at 05:26:46PM +0200, Rafael J. Wysocki wrote:
-> Hi,
-> 
-> On Wed, Jun 12, 2024 at 4:30 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > On 6/12/24 3:06 PM, Rafael J. Wysocki wrote:
-> > > Hi Sakari,
-> > >
-> > > On Wed, Jun 12, 2024 at 2:47 PM Sakari Ailus
-> > > <sakari.ailus@linux.intel.com> wrote:
-> > >>
-> > >> Hi Rafael,
-> > >>
-> > >> On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysocki wrote:
-> > >>>>>>> I just hit the same problem on another Dell laptop. It seems that
-> > >>>>>>> all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
-> > >>>>>>> and Raptor Lake generations suffer from this problem.
-> > >>>>>>>
-> > >>>>>>> So instead of playing whack a mole with DMI matches we should
-> > >>>>>>> simply disable ACPI MIPI DISCO support on all Dell laptops
-> > >>>>>>> with those CPUs. I'm preparing a fix for this to replace
-> > >>>>>>> the DMI matching now.
-> > >>>>>>
-> > >>>>>> DisCo for Imaging support shouldn't be dropped on these systems, and this
-> > >>>>>> isn't what your patch does either. Instead the ACPI graph port nodes (as
-> > >>>>>> per Linux specific definitions) are simply dropped, i.e. this isn't related
-> > >>>>>> to DisCo for Imaging at all.
-> > >>>>>
-> > >>>>> So it looks like the changelog of that patch could be improved, right?
-> > >>>>
-> > >>>> Well, yes. The reason the function is in the file is that nearly all camera
-> > >>>> related parsing is located there, not that it would be related to DisCo for
-> > >>>> Imaging as such.
-> > >>>
-> > >>> So IIUC the camera graph port nodes are created by default with the
-> > >>> help of the firmware-supplied information, but if that is defective a
-> > >>> quirk can be added to skip the creation of those ports in which case
-> > >>> they will be created elsewhere.
-> > >>>
-> > >>> Is this correct?
-> > >>
-> > >> Yes.
-> > >
-> > > So it would be good to add a comment to this effect to
-> > > acpi_nondev_subnode_extract() where acpi_graph_ignore_port() is
-> > > called.
-> > >
-> > > And there is a somewhat tangential question that occurred to me: If
-> > > the nodes are created elsewhere when acpi_graph_ignore_port() is true,
-> > > why is it necessary to consult the platform firmware for the
-> > > information on them at all?  Wouldn't it be better to simply always
-> > > create them elsewhere?
-> >
-> > That is a good question. The ACPI MIPI DISCO specification is an
-> > attempt standardize how MIPI cameras and their sensors are described
-> > in ACPI.
-> >
-> > But this is not actually being used by any Windows drivers atm. The windows
-> > drivers rely on their own custom ACPI data which gets translated into
-> > standard Linux device-properties by: drivers/media/pci/intel/ipu-bridge.c
-> >
-> > and so far AFAIK there are 0 laptops where there actually is 100% functional
-> > ACPI MIPI information. I believe that some work is in place to get correct
-> > usable ACPI MIPI information in place in the ACPI tables of some Meteor Lake
-> > laptops. But I believe that there too it does not work yet with the BIOS
-> > version with which current Windows models are shipping. It is being fixed
-> > for systems which have Linux support from the vendor but I suspect that
-> > on other models if ACPI MIPI DISCO information is there it will not
-> > necessarily be reliable because AFAICT Windows does not actually use it.
-> >
-> > And TBH this has me worried about camera support for Meteor Lake devices
-> > going forward. We really need to have 1 reliable source of truth here and
-> > using information which is ignored by Windows does not seem like the best
-> > source to use.
-> >
-> > Sakari I know you have been pushing for MIPI camera descriptions under
-> > ACPI to move to a standardized format and I can see how that is a good
-> > thing, but atm it seems to mainly cause things to break and before
-> > the ACPI MIPI DISCO support landed in 6.8 we did not have these issues,
-> > since the information used by the ipu-bridge code does seem to be correct.
-> 
-> Well, if Windows doesn't use this information, it is almost guaranteed
-> to be garbage.
+Patches 1 to 5 add static libraries for existing parts of the perf
+build.
 
-No ACPI DSDT in production systems uses DisCo for Imaging as of now at
-least to my knowledge.
+Patch 6 adds the python build using libraries rather than C source
+files.
 
-> 
-> So maybe it would be better to make acpi_graph_ignore_port() return
-> true by default and false only when the information is known to be
-> valid.  IOW, whitelist things instead of adding blacklist entries in
-> perpetuum.
+Patch 7 cleans up the python dependencies and removes the no longer
+needed python-ext-sources.
 
-What could be gained from this?
+Ian Rogers (7):
+  perf ui: Make ui its own library
+  perf pmu-events: Make pmu-events a library
+  perf test: Make tests its own library
+  perf bench: Make bench its own library
+  perf util: Make util its own library
+  perf python: Switch module to linking libraries from building source
+  perf python: Clean up build dependencies
 
-> 
-> And hopefully we'll eventually get to the point at which we are able
-> to say "whitelist everything from now on".
+ tools/perf/Build                              |  14 +-
+ tools/perf/Makefile.config                    |   5 +
+ tools/perf/Makefile.perf                      |  66 ++-
+ tools/perf/arch/Build                         |   4 +-
+ tools/perf/arch/arm/Build                     |   4 +-
+ tools/perf/arch/arm/tests/Build               |   8 +-
+ tools/perf/arch/arm/util/Build                |  10 +-
+ tools/perf/arch/arm64/Build                   |   4 +-
+ tools/perf/arch/arm64/tests/Build             |   8 +-
+ tools/perf/arch/arm64/util/Build              |  20 +-
+ tools/perf/arch/csky/Build                    |   2 +-
+ tools/perf/arch/csky/util/Build               |   6 +-
+ tools/perf/arch/loongarch/Build               |   2 +-
+ tools/perf/arch/loongarch/util/Build          |   8 +-
+ tools/perf/arch/mips/Build                    |   2 +-
+ tools/perf/arch/mips/util/Build               |   6 +-
+ tools/perf/arch/powerpc/Build                 |   4 +-
+ tools/perf/arch/powerpc/tests/Build           |   6 +-
+ tools/perf/arch/powerpc/util/Build            |  24 +-
+ tools/perf/arch/riscv/Build                   |   2 +-
+ tools/perf/arch/riscv/util/Build              |   8 +-
+ tools/perf/arch/s390/Build                    |   2 +-
+ tools/perf/arch/s390/util/Build               |  16 +-
+ tools/perf/arch/sh/Build                      |   2 +-
+ tools/perf/arch/sh/util/Build                 |   2 +-
+ tools/perf/arch/sparc/Build                   |   2 +-
+ tools/perf/arch/sparc/util/Build              |   2 +-
+ tools/perf/arch/x86/Build                     |   6 +-
+ tools/perf/arch/x86/tests/Build               |  20 +-
+ tools/perf/arch/x86/util/Build                |  42 +-
+ tools/perf/bench/Build                        |  46 +-
+ tools/perf/scripts/Build                      |   4 +-
+ tools/perf/scripts/perl/Perf-Trace-Util/Build |   2 +-
+ .../perf/scripts/python/Perf-Trace-Util/Build |   2 +-
+ tools/perf/tests/Build                        | 140 +++----
+ tools/perf/tests/workloads/Build              |  12 +-
+ tools/perf/ui/Build                           |  18 +-
+ tools/perf/ui/browsers/Build                  |  14 +-
+ tools/perf/ui/tui/Build                       |   8 +-
+ tools/perf/util/Build                         | 394 +++++++++---------
+ tools/perf/util/arm-spe-decoder/Build         |   2 +-
+ tools/perf/util/cs-etm-decoder/Build          |   2 +-
+ tools/perf/util/hisi-ptt-decoder/Build        |   2 +-
+ tools/perf/util/intel-pt-decoder/Build        |   2 +-
+ tools/perf/util/perf-regs-arch/Build          |  18 +-
+ tools/perf/util/python-ext-sources            |  53 ---
+ tools/perf/util/python.c                      | 271 +++++-------
+ tools/perf/util/scripting-engines/Build       |   4 +-
+ tools/perf/util/setup.py                      |  33 +-
+ 49 files changed, 612 insertions(+), 722 deletions(-)
+ delete mode 100644 tools/perf/util/python-ext-sources
 
 -- 
-Kind regards,
+2.45.2.505.gda0bf45e8d-goog
 
-Sakari Ailus
