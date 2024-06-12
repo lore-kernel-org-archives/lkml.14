@@ -1,253 +1,106 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6518B4315D;
-	Wed, 12 Jun 2024 22:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E590B126F0D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 22:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718229711; cv=none; b=qhFmYuDrvqXFhOSD5n063uetVNNqvFkIXvaCbTWIw1D2jW39idTrog7NP42Z+WrlCtvm3Hy0an7KGlBXBWt3UWvvJieh7vGEqyXvJ0JIqqnHIwOjOV9ZvVu+XV4PxYMfnTZ7ywWkZcvt78q2v3itJp+najQf3FX6rHsMhkvlf54=
+	t=1718230004; cv=none; b=FC/nGLv8yUbjIP6nFziJWjSVDlfhHrKFJHVx4e3PMwfgQRBbXQ5DP+xu5ab+0Svtn085fYldvR1HLlzMY4vBE6BfiGn6KAtaQffB+ZXSIWrBQU1hkyCCsNw8PFKFkhTD5NiqaonaXpFx0jC40UNkI3G9BG/DX3Zcr/XrSDvoJaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718229711; c=relaxed/simple;
-	bh=Uih+X4X2ngsvHGmo3y1qNHpmM9uwrd521ue+S26TsZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lmOBjBq0COHOBJtoSwf/SQKXIwhr05cltaGIlfGUNSMcXJ8uR2ZAJ3/PtLH6mbPY1SaFZ043mSlWrZUJBwma+9DO/BFonMDXDrrrvNJkAxbBvmZ58RuRs/wmhgY4dVxy3Gtc6oznPfm1OI8HkSafIr7uNyqxqrgqi8vPDIQ8WHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcPwsHXf; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718230004; c=relaxed/simple;
+	bh=nWQB0cxwpb5Nyp9W2Aj2B6qiyQPIg/qKQY5yKA+03K8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pVd2NBVWw+wADE0B5Fq3w1SNSUAPLOnGrCZf89hBRNPeUd3Dw5jiCdb/8dceErp6vcIbFtVVz2Ry0y/5O6EmtJN13baEh7MvMztFmCeoXwObp7AXmn5pT5ryOouEAa7WlVpvQNDCOrMs6+okz5/DSrPpTPo0GS4/AiXWELNfPbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rxn08QA6; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcPwsHXf"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57c68682d1aso195940a12.3;
-        Wed, 12 Jun 2024 15:01:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rxn08QA6"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52bc0236f04so52061e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718229708; x=1718834508; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0t1xiHBOEtEaHKk2K15+YhtWVGfJsDQCqRsuRN68uRo=;
-        b=NcPwsHXfdunTXNfCSOdUBrGaqldXTfVTxlVHL8CsrG0q5GFzACIxMCtUwYpZ3FiSqf
-         P++zSKkjiM9ER5wmUFcdt7yzwqaE3VGQ3D7qIW56JpcvKec3lEpccVl7r0LTOK/2RryF
-         yCEfR/ezwqqZmHWFvdAsETvHml93tWGqHmd3H1SIxYJrM76quHqCPEGmmW/1dETUGJgu
-         mQgqcUE/v/lCA59qhraYBHPqC0WAfK8HSsh+L/LnHSbHROp4NjjLmhr4xM9zfibVkdVQ
-         Ok6udj7Tm91j5xNlAR/SfdcFAWpfmVkAu6EHtfkr7VvyFsWgM7nL/+40K6Xc3caoaEa/
-         1WAw==
+        d=linaro.org; s=google; t=1718230001; x=1718834801; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VHMkWh1GJqApt9wvbkQjpRZMa0KcRsUTuqWe6P4okXg=;
+        b=Rxn08QA6bw+Rp/CPNBTBe1zTm9vXDUWsV7Uby7e1oF4TyL17o/CeJV0ALs+/t7PeWv
+         pwugLXNreBY8DyBo7jOcqWzqDVBmgXhlIFgZeUW0t2bMjv+iZmjTUzjwkAsHgVJnaX9p
+         UL9DY7b7MxtWgrVIUntHyQq6dfSAFOsev3QSajDrozf111aWRJjatg70HNVZpTo/pyMZ
+         9MfwthRMHWmgIi5exv5WiXdArtV+beTr9NurrBqA6bFF59SJuWpPnWMmkdnSfOmkpG0r
+         tdhRnpR0+q7wroUVHQuy8uJBIS6Xk6MnuI3/WIO086mIYe2ByKuHaSdI1WN7TGWeJqnl
+         pYsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718229708; x=1718834508;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0t1xiHBOEtEaHKk2K15+YhtWVGfJsDQCqRsuRN68uRo=;
-        b=vL80spk+WPzyBn5bqUSsv2zdB+nzEx3B4ND8Sf7qbjM3s0P4G20QZaM58qnda5LLr3
-         2uNq9zSNxELiLmK4iYRGfsJGuGZXxnQB1wuDkKOX+dE2+OZUqd8UpiK8Z9Uddik99be1
-         hEMTtoPw63v9lf8L6nUCrluzsuFfvqpLPIERxu5B7J0mxb7KTPDJab0lLdH9gTzW8zjt
-         Aka5o2AU7f3FNPgXjA7N0l2OGUJphiGhgbJmn3LuplErwaQgEOrWOGkN+nWZsNr5KgeX
-         RB3ZwhDM5715bwM/hbO1t/ykzFYYsqS/m5ZZOXniKR8RuTqzSICDcYwCckyPj61tHpvZ
-         3YwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUc8pCGWy7XXwQV3EVHcsSD8fqHdRVsOREe9jSPk+gReiZY7OjapqvIYM0hzLeq+I4KLCFmJzQaaMFzcpHfJfkFGiAo3SPvfjtQAM2aV7NZ4+k1Ucb+MQc22cZrwUyCW5S5HzyUMnC7JIRDX8mfuyOZDqp5Hut/jrmye1pbEYFH8ODQ4pl/
-X-Gm-Message-State: AOJu0YxVpYe8PLzRNAqY98XUrEWu8/0mHZ2ui1so7SfWF5/xENA5mw8o
-	1tLFaskHP2oYv5ejPIp63262mDigmNh1IIvT0gV/oV9zSqxzcA7r
-X-Google-Smtp-Source: AGHT+IGXHUoQjW5UUOvB7a2fVV6YK1Tfy9Qw3eHdvf0ofWkmBRuLTT/YgANHaR+rS0PamfigwXFtiA==
-X-Received: by 2002:a50:c19a:0:b0:57c:7594:4436 with SMTP id 4fb4d7f45d1cf-57ca9750ab2mr1839313a12.12.1718229707348;
-        Wed, 12 Jun 2024 15:01:47 -0700 (PDT)
-Received: from mehdi-archlinux ([2a02:8109:aa27:2d00::f836])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57cb743ade6sm40620a12.95.2024.06.12.15.01.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 15:01:46 -0700 (PDT)
-Date: Thu, 13 Jun 2024 00:01:44 +0200
-From: Mehdi Djait <mehdi.djait.k@gmail.com>
-To: Val Packett <val@packett.cool>
-Cc: mchehab@kernel.org, heiko@sntech.de, hverkuil-cisco@xs4all.nl,
-	krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-	conor+dt@kernel.org, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
-	maxime.chevallier@bootlin.com, paul.kocialkowski@bootlin.com,
-	michael.riesch@wolfvision.net, laurent.pinchart@ideasonboard.com,
-	Mehdi Djait <mehdi.djait@bootlin.com>
-Subject: Re: [RESEND Patch v13 2/3] media: rockchip: Add a driver for
- Rockchip's camera interface
-Message-ID: <ZmoayNhtB8bXquQi@mehdi-archlinux>
-References: <cover.1707677804.git.mehdi.djait.k@gmail.com>
- <715d89214d1ed6a8bb16cbb6268718a737485560.1707677804.git.mehdi.djait.k@gmail.com>
- <PACYES.KP3K6W0JOIAK1@packett.cool>
+        d=1e100.net; s=20230601; t=1718230001; x=1718834801;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VHMkWh1GJqApt9wvbkQjpRZMa0KcRsUTuqWe6P4okXg=;
+        b=cDDXyGqudHmI2xMzHNy/KgIHkS8a2BE1jvF3YNbYXnho+ttxsgA3ivharkrUtt+J9h
+         r3ijaeKHd6JuA4AFRVmh0LdSksBVN1b9F6yVZB3oKBiO+CTfpBsAPNY3JvvAoPIngyIP
+         wsBriahd6aAwOx1X0hV+WY9fNVQ5Vkdn94SfTOAMbsussihuKW4ybDr1aNbfV9H8S8FM
+         ygtNO6bsG3S3Y6sqSeswuZy9KGp2oLmh5I3VAExA6RHTFoUZn+v7y4PQmbGdt4G/0E6h
+         S5LoDA0mEYE2B0R0/SQIsIGCMdSsHAntuP61yaLTXZXmfrwFoXgx+u6lWQxzYi5uk0iB
+         ydZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhgEKHjMUv78g3cJZXsJYW4kYc/eHOvcAQm5DmPmnXqTr5M4HL1YnmPWDPgpb9uUMpflRPFXzpPFJ7Xg2owCTSPdd1B4d5eoAWZRhk
+X-Gm-Message-State: AOJu0YzLuFzZom1v0zjS0owwgYXAqZ5+tR8JB/7y618CqDPkUInH7wl7
+	fxZlWUMvRSEQbsSz3aWGaS4emxL32x7E+LvzePOlbCMQmzCh8vEe1D9lM3PovK4=
+X-Google-Smtp-Source: AGHT+IFGBDcnsnGgnH57GdtLyI7Cp/okDgOWixyNLiELylSt9euObSqVLA0Bs7EZsFFRS0f0ffmkBA==
+X-Received: by 2002:a2e:22c5:0:b0:2ec:2f8:f4b0 with SMTP id 38308e7fff4ca-2ec02f8f645mr4542301fa.0.1718230001010;
+        Wed, 12 Jun 2024 15:06:41 -0700 (PDT)
+Received: from [192.168.1.3] (88-112-131-206.elisa-laajakaista.fi. [88.112.131.206])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ec05c78556sm76301fa.85.2024.06.12.15.06.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 15:06:40 -0700 (PDT)
+Message-ID: <e974477c-f451-4c9c-83d6-31437c52f1bd@linaro.org>
+Date: Thu, 13 Jun 2024 01:06:39 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PACYES.KP3K6W0JOIAK1@packett.cool>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 2/8] dt-bindings: clock: qcom: Add SM8650 video clock
+ controller
+Content-Language: en-US
+To: Jagadeesh Kona <quic_jkona@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Taniya Das <quic_tdas@quicinc.com>,
+ Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20240602114439.1611-1-quic_jkona@quicinc.com>
+ <20240602114439.1611-3-quic_jkona@quicinc.com>
+From: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+In-Reply-To: <20240602114439.1611-3-quic_jkona@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Val :)
+Hi Jagadeesh,
 
-And sorry for the late response!
-
-On Wed, Jun 12, 2024 at 02:23:13AM -0300, Val Packett wrote:
-> Hi,
+On 6/2/24 14:44, Jagadeesh Kona wrote:
+> SM8650 video clock controller has most clocks same as SM8450,
+> but it also has few additional clocks and resets. Add device tree
+> bindings for the video clock controller on Qualcomm SM8650 platform
+> by defining these additional clocks and resets on top of SM8450.
 > 
-> a couple more comments on this driver:
-> 
-> On Sun, Feb 11 2024 at 20:03:31 +01:00:00, Mehdi Djait
-> <mehdi.djait.k@gmail.com> wrote:
-> > +static int cif_stream_start(struct cif_stream *stream)
-> > +{
-> > +	u32 val, fmt_type, xfer_mode = 0;
-> > +	struct cif_device *cif_dev = stream->cifdev;
-> > +	struct cif_remote *remote_info = &cif_dev->remote;
-> > +	int ret;
-> > +	u32 input_mode;
-> > +
-> > +	stream->frame_idx = 0;
-> > +	stream->frame_phase = 0;
-> > +
-> > +	fmt_type = stream->cif_fmt_in->fmt_type;
-> > +	input_mode = (remote_info->std == V4L2_STD_NTSC) ?
-> > +		      CIF_FORMAT_INPUT_MODE_NTSC :
-> > +		      CIF_FORMAT_INPUT_MODE_PAL;
-> 
-> Mode logic needs to be expanded for cameras; I'm trying to get it working
-> correctly,
-> so far managed to get some cursed selfies with the wrong pixel format :) but
-> either
-> way I could send a patch when I have it working well.
-> 
+> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Do you mind sharing which sensor is connected on one end to the camera
-and the other end to cif ?
+thank you for the change.
 
-I developed this driver using the tw9900 NTSC/PAL/SECAM Video Decoder 
-and I know that more patches are needed to make this driver work 
-with other sensors. Look at the series from Michael Riesch where he
-adds support for other sensors on top of this series:
-https://lore.kernel.org/linux-media/20240220-v6-8-topic-rk3568-vicap-v1-0-2680a1fa640b@wolfvision.net/
-
-PLEASE NOTE: For the moment being I am not working on this driver as I
-don't have access to the hardware.
-
-I need a rockchip board that can boot upstream kernel AND that has
-DVP (Digital Video Port) camera interface to continue working on CIF.
-I have some candidates but I am still not entirely sure how to proceed
-further.
-
-ALSO NOTE: This driver still need some more work as you can see in the
-last round of reviews: it should be converted to a media device centric
-driver that correctly uses the Media Controller.
-
-Look at the discussion here: https://lore.kernel.org/linux-media/ZeWqEkcoYN6gXWS9@valkosipuli.retiisi.eu/
-
-> > +static int subdev_notifier_complete(struct v4l2_async_notifier
-> > *notifier)
-> > +{
-> > +	struct cif_device *cif_dev;
-> > +	struct v4l2_subdev *sd;
-> > +	int ret;
-> > +
-> > +	cif_dev = container_of(notifier, struct cif_device, notifier);
-> > +	sd = cif_dev->remote.sd;
-> > +
-> > +	mutex_lock(&cif_dev->media_dev.graph_mutex);
-> > +
-> 
-> Potential deadlock with this lock:
-
-I will look more into this when/if I contine working on this driver
-
-Still I am happy that other people are taking a look at this series and
-doing something with it!
+Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
 
 --
-Kind Regards
-Mehdi Djait
-
-> 
-> [    3.438667] ======================================================
-> [    3.438672] WARNING: possible circular locking dependency detected
-> [    3.438677] 6.10.0-rc1-next-20240531 #151 Not tainted
-> [    3.438684] ------------------------------------------------------
-> [    3.438687] kworker/u8:1/25 is trying to acquire lock:
-> [    3.438695] c152d41c (videodev_lock){+.+.}-{4:4}, at:
-> __video_register_device+0xf4/0x15b0
-> [    3.438737]
-> [    3.438737] but task is already holding lock:
-> [    3.438740] c31981fc (&mdev->graph_mutex){+.+.}-{4:4}, at:
-> subdev_notifier_complete+0x20/0x80
-> [    3.438765]
-> [    3.438765] which lock already depends on the new lock.
-> [    3.438765]
-> [    3.438769]
-> [    3.438769] the existing dependency chain (in reverse order) is:
-> [    3.438772]
-> [    3.438772] -> #1 (&mdev->graph_mutex){+.+.}-{4:4}:
-> [    3.438786]        lock_acquire+0x110/0x374
-> [    3.438809]        __mutex_lock+0xac/0xf2c
-> [    3.438828]        mutex_lock_nested+0x1c/0x24
-> [    3.438843]        media_device_register_entity+0x80/0x1e8
-> [    3.438857]        __video_register_device+0xab0/0x15b0
-> [    3.438869]        cif_register_stream_vdev+0x158/0x18c
-> [    3.438880]        cif_plat_probe+0x20c/0x424
-> [    3.438888]        platform_probe+0x5c/0xb0
-> [    3.438905]        really_probe+0xc8/0x2cc
-> [    3.438916]        __driver_probe_device+0x88/0x1a0
-> [    3.438926]        driver_probe_device+0x30/0x108
-> [    3.438936]        __driver_attach+0x94/0x184
-> [    3.438946]        bus_for_each_dev+0x7c/0xcc
-> [    3.438955]        bus_add_driver+0xcc/0x1ec
-> [    3.438964]        driver_register+0x7c/0x114
-> [    3.438975]        do_one_initcall+0x7c/0x2f8
-> [    3.438989]        kernel_init_freeable+0x1b0/0x20c
-> [    3.439010]        kernel_init+0x14/0x12c
-> [    3.439024]        ret_from_fork+0x14/0x28
-> [    3.439033]
-> [    3.439033] -> #0 (videodev_lock){+.+.}-{4:4}:
-> [    3.439048]        check_prev_add+0x134/0x17d8
-> [    3.439065]        __lock_acquire+0x17e0/0x21fc
-> [    3.439080]        lock_acquire+0x110/0x374
-> [    3.439095]        __mutex_lock+0xac/0xf2c
-> [    3.439109]        mutex_lock_nested+0x1c/0x24
-> [    3.439123]        __video_register_device+0xf4/0x15b0
-> [    3.439135]        __v4l2_device_register_subdev_nodes+0xd8/0x1a0
-> [    3.439152]        subdev_notifier_complete+0x2c/0x80
-> [    3.439160]        __v4l2_async_register_subdev+0xa8/0x1a0
-> [    3.439176]        gc0308_probe+0x654/0x6f4
-> [    3.439187]        i2c_device_probe+0x168/0x268
-> [    3.439201]        really_probe+0xc8/0x2cc
-> [    3.439211]        __driver_probe_device+0x88/0x1a0
-> [    3.439221]        driver_probe_device+0x30/0x108
-> [    3.439231]        __device_attach_driver+0x94/0x10c
-> [    3.439241]        bus_for_each_drv+0x90/0xe4
-> [    3.439250]        __device_attach+0xac/0x1b0
-> [    3.439260]        bus_probe_device+0x8c/0x90
-> [    3.439269]        deferred_probe_work_func+0x7c/0xac
-> [    3.439279]        process_one_work+0x23c/0x6bc
-> [    3.439295]        worker_thread+0x190/0x3d8
-> [    3.439308]        kthread+0xf8/0x114
-> [    3.439321]        ret_from_fork+0x14/0x28
-> [    3.439330]
-> [    3.439330] other info that might help us debug this:
-> [    3.439330]
-> [    3.439333]  Possible unsafe locking scenario:
-> [    3.439333]
-> [    3.439336]        CPU0                    CPU1
-> [    3.439339]        ----                    ----
-> [    3.439341]   lock(&mdev->graph_mutex);
-> [    3.439349]                                lock(videodev_lock);
-> [    3.439356]                                lock(&mdev->graph_mutex);
-> [    3.439363]   lock(videodev_lock);
-> [    3.439370]
-> [    3.439370]  *** DEADLOCK ***
-> [    3.439370]
-> [    3.439373] 5 locks held by kworker/u8:1/25:
-> [    3.439379]  #0: c28106b4 ((wq_completion)events_unbound){+.+.}-{0:0},
-> at: process_one_work+0x1ac/0x6bc
-> [    3.439408]  #1: f0889f20 (deferred_probe_work){+.+.}-{0:0}, at:
-> process_one_work+0x1d4/0x6bc
-> [    3.439436]  #2: c303ec9c (&dev->mutex){....}-{4:4}, at:
-> __device_attach+0x30/0x1b0
-> [    3.439461]  #3: c152d3d0 (list_lock){+.+.}-{4:4}, at:
-> __v4l2_async_register_subdev+0x50/0x1a0
-> [    3.439491]  #4: c31981fc (&mdev->graph_mutex){+.+.}-{4:4}, at:
-> subdev_notifier_complete+0x20/0x80
-> 
-> > 
-> 
-> 
+Best wishes,
+Vladimir
