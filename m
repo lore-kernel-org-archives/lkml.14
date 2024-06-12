@@ -1,116 +1,141 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA21168C2B;
-	Wed, 12 Jun 2024 06:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB5C13B5B3
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 06:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718173680; cv=none; b=osZdAoI7+NPWJOH2dnqNzezclmLh0RkTNGznbmMEDPeww7Qe326jTIAln4R1qX+EY0uGEVIrB5YWi9tidwNLVoGYgZjlKTpY8ew/H8ydNu15SIyhNNz8CUTQHu8jyzf0LgS7sJvkesdFGJ60muV7djgZ5oY/3JcouAMnU0+so+A=
+	t=1718173720; cv=none; b=BfyY4eHdf5czK8Z+O+7TTjT7ZPpFe6Z0Abyt+j0dFhjK58TYhWmbd5FdCOHh5cM4OsPa1DH9CNJu1SsOH1zKUASjAxoa71yPJz3ggW0Zqyd4DiUOMaH89BSSDOiEgTpPUf4R1xD5ljpaER7A3Hw4XZz7nLBJmBhG6SW/iu314/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718173680; c=relaxed/simple;
-	bh=ugNYoY6lJkeDZGFcc33lqYTlwwgLPpaacppijn6x0es=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N5AqcNRWxMwsQj/kXTKBgxmLrmbUgglHieSI14S4efRyO9BgSlzEkTROr1XqQIvAoxXtaulL8vnYswf8WnEwIqq6gvR3WhQdCzA2K8qiid2OjH+8jikClpHJYMaK/bytg3QaRr6YFmqmOSlJZ/mUDtLma9oghfjlLTRhse4Mf74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KTphWL/O; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718173720; c=relaxed/simple;
+	bh=5VGHP0Uu4GEt9dUL3C7ycP0EIcDYBw17Aoa6jPD7lWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sNt+uI9VzIYyJSdw3OkU5vpn2hWDmcfuGjqx5mRac99zhYJrf86kc6ZodSqoWY7Xs/nhLnmVfuFN/r7e81Zd8fxJFjDuTxX77CxKEIq0cjYEQ3mL9vgIeoNkMuXSiScqRndEnQOTrBWIzoFqG8M0clKLFOXBmoZ5BDFrYpMErIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OcE19JJ8; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KTphWL/O"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C0GdFl032587;
-	Wed, 12 Jun 2024 06:27:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	CqntTKvgv07Jg/bwaIzuqbqGOmA8gFqglXQDdSqaK7s=; b=KTphWL/OFpmoEQm+
-	bMso5UdCqF7xDgviaDbeAhg4Je1LfWEXYqmitIv8dc0N7mg9l0CsrW+zrCM724zW
-	0WdkUVxgC7WbfBRDVy2aeP7LehDHezDJDqIBTXco0kP9HkTb9wPLLF6DRcAgC3bA
-	KnJSEg93aPOxiW2jKVsdjSfrijcDTBu8nMljy5S2UFX/27FLFkI9srW7wPsbooT0
-	yVf58sNdIzPv6/ZwrCqxeBaIMQWPRolfaxP5gVtU58Bo+Jf8nE7ScqN7EWW06sNZ
-	FEKLpgdfLnTdVka+XqSQmZgfvY9VW8J+u5Dn/U3Te06189KOE9nxh0pmsV9dRoGU
-	kT0FJw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ypp87t9hx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 06:27:54 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45C6RslQ026666
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 06:27:54 GMT
-Received: from hu-kbajaj-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 11 Jun 2024 23:27:50 -0700
-From: Komal Bajaj <quic_kbajaj@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Mukesh
- Ojha" <quic_mojha@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Komal Bajaj <quic_kbajaj@quicinc.com>
-Subject: [PATCH 2/2] dt-bindings: cache: qcom,llcc: Fix QDU1000 description
-Date: Wed, 12 Jun 2024 11:57:19 +0530
-Message-ID: <20240612062719.31724-3-quic_kbajaj@quicinc.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240612062719.31724-1-quic_kbajaj@quicinc.com>
-References: <20240612062719.31724-1-quic_kbajaj@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OcE19JJ8"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f3efa1cc7so91234566b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 23:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718173717; x=1718778517; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9oHRS/6fbMlz5Nc/pRAypu+9kB8YgLFrFHMqAN2klms=;
+        b=OcE19JJ8yLhauPdDZ+3VQ/o+qcQEtSXQEViINmGbP6vUXMEhg2AdtPauKZ+Ds3tKl0
+         SxgcnpZ14E09PvwDDiDTxeuxxwHu4wE+KAQU9wPzT9Gh+BcN6226s9ubwmML0Rt81Pu4
+         Zw/wUUELR1SFD5aGDuVR7Yzw+3arZbK5qkuG2jx08MwdDOV+cMyL8+YkJYDAU0hbrX8i
+         ub8Hg9mg1rTEUB6N2dS+tAO0csiT9SjMXT8hW+SOxxf6sO5zbBoFkSKuBUFi9Iuzo1Z6
+         1S475h+KEFrLKovd7fW9jCZWuo/GYB9pz8kpLmGuBwGeUQ9xCGfAE0LQ7xsFfdrS/YPQ
+         gZ0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718173717; x=1718778517;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9oHRS/6fbMlz5Nc/pRAypu+9kB8YgLFrFHMqAN2klms=;
+        b=Y3dme7PrTzwMrCSsG1ErBsmoJvSCUebj9Ox5+77Ap2PLGTBuO1cNCLhov3PkL8Ynzp
+         BZ2bz4SbDk4siRji6u84uXcWxg7odQrWfngkPxfoM4yJkSszsuhOU9wpzYLCDuFmsyhr
+         Fr/VegH4jhFRu0x+9AoVGyPn6E+BsYw/I4iZmCqsGX2wBTKSzavBw6u1ZdUh8LubHMHa
+         0+kT0v2h0ZVKfDF0TOfnvCnDCul+/AgegWTy19Pro1HqNCp/tY+jtK+ZfPFaYS7T7ynI
+         e/04cznlD2AGODyLRR2/NSqW8Nsqe3ZGLvbqMOx4/ZdOoMqPVpnTF0L9jECsHXU3UX2D
+         w/QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrr2nBNUpL0QimR3nG1NboWsJMLAnoYxyXlf9DI3Brj9nUtv5JToOedYazWKH63qgSbQ/BxM1ERL8JzlPC0F8zPeduzVQplsxGQ7Vn
+X-Gm-Message-State: AOJu0YwkVXqSXj9SY6eQrU8ivbajxgFk0qzBKuHCo5SNFXMrnu53T7Yi
+	IKOxfDQxmjz4WH8U9faG0bzKiejGGeOXZMVkHchZR+2g0cY0lKdg
+X-Google-Smtp-Source: AGHT+IGI/oqkZwMwyUVDqo4ctemWaeIxP1af1zQk55eXFO/5r1OGyyJu7z6VsLk4Uj0wqWwkVg9X2g==
+X-Received: by 2002:a17:906:689a:b0:a6f:4232:4370 with SMTP id a640c23a62f3a-a6f42324412mr120440366b.5.1718173716367;
+        Tue, 11 Jun 2024 23:28:36 -0700 (PDT)
+Received: from andrea ([151.76.32.59])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f1c99d8f1sm384201566b.175.2024.06.11.23.28.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 23:28:36 -0700 (PDT)
+Date: Wed, 12 Jun 2024 08:28:31 +0200
+From: Andrea Parri <parri.andrea@gmail.com>
+To: Li Zetao <lizetao1@huawei.com>
+Cc: linux-riscv@lists.infradead.org, dvyukov@google.com,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	linux-kernel@vger.kernel.org,
+	Patrick O'Neill <patrick@rivosinc.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: riscv: link error when supporting KCSAN
+Message-ID: <ZmlADwdvCHCNqg6E@andrea>
+References: <c740ef8f-1bb4-0c4a-4b88-77dab19f3e31@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: KFBn7GJVRa5wU5-LfKENb5StAD0uZdL8
-X-Proofpoint-ORIG-GUID: KFBn7GJVRa5wU5-LfKENb5StAD0uZdL8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_02,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- spamscore=0 suspectscore=0 mlxlogscore=847 priorityscore=1501 adultscore=0
- bulkscore=0 mlxscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406120044
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c740ef8f-1bb4-0c4a-4b88-77dab19f3e31@huawei.com>
 
-QDU1000 DTSI comes with one LLCC0-7 base addresses. Updating
-dt-bindings accordingly.
+On Wed, Jun 12, 2024 at 11:02:32AM +0800, Li Zetao wrote:
+> Hi all,
+> 
+> I'm developing support for KCSAN on riscv but getting the following link
+> error:
+> 
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L996':
+> core.c:(.text+0x2b62): undefined reference to `__atomic_exchange_1'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1015':
+> core.c:(.text+0x2c40): undefined reference to `__atomic_fetch_add_1'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1034':
+> core.c:(.text+0x2d1e): undefined reference to `__atomic_fetch_sub_1'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1053':
+> core.c:(.text+0x2dfc): undefined reference to `__atomic_fetch_and_1'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1071':
+> core.c:(.text+0x2eda): undefined reference to `__atomic_fetch_or_1'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1090':
+> core.c:(.text+0x2fb8): undefined reference to `__atomic_fetch_xor_1'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1109':
+> core.c:(.text+0x3096): undefined reference to `__atomic_fetch_nand_1'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1128':
+> core.c:(.text+0x3182): undefined reference to `__atomic_compare_exchange_1'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1147':
+> core.c:(.text+0x3274): undefined reference to `__atomic_compare_exchange_1'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1166':
+> core.c:(.text+0x3366): undefined reference to `__atomic_compare_exchange_1'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1220':
+> core.c:(.text+0x35ec): undefined reference to `__atomic_exchange_2'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1239':
+> core.c:(.text+0x36ce): undefined reference to `__atomic_fetch_add_2'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1258':
+> core.c:(.text+0x37b0): undefined reference to `__atomic_fetch_sub_2'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1277':
+> core.c:(.text+0x3892): undefined reference to `__atomic_fetch_and_2'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1296':
+> core.c:(.text+0x3974): undefined reference to `__atomic_fetch_or_2'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1315':
+> core.c:(.text+0x3a56): undefined reference to `__atomic_fetch_xor_2'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1334':
+> core.c:(.text+0x3b38): undefined reference to `__atomic_fetch_nand_2'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1353':
+> core.c:(.text+0x3c28): undefined reference to `__atomic_compare_exchange_2'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1372':
+> core.c:(.text+0x3d1e): undefined reference to `__atomic_compare_exchange_2'
+> riscv64-linux-gnu-ld: kernel/kcsan/core.o: in function `.L1391':
+> core.c:(.text+0x3e14): undefined reference to `__atomic_compare_exchange_2'
+> make[2]: *** [scripts/Makefile.vmlinux:34: vmlinux] Error 1
+> make[1]: *** [/home/l00517538/PrIntFuzz/third_party/linux/Makefile:1171:
+> vmlinux] Error 2
+> 
+> The reason for the error is that riscv only supports 32-bit or 64-bit atomic
+> operations.As far as I know, this error is solved through the
+> no-outline-atomics option on arm64. How can I solve this problem on riscv?
 
-Fixes: f0f99f371822 ("dt-bindings: cache: qcom,llcc: correct QDU1000 reg entries")
-Signed-off-by: Komal Bajaj <quic_kbajaj@quicinc.com>
----
- Documentation/devicetree/bindings/cache/qcom,llcc.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+IIRC, support for inline subword atomic ops has been added to riscv/gcc
+with
 
-diff --git a/Documentation/devicetree/bindings/cache/qcom,llcc.yaml b/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
-index 192911696010..68ea5f70b75f 100644
---- a/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
-+++ b/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
-@@ -67,7 +67,6 @@ allOf:
-         compatible:
-           contains:
-             enum:
--              - qcom,qdu1000-llcc
-               - qcom,sc7180-llcc
-               - qcom,sm6350-llcc
-     then:
-@@ -132,6 +131,7 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - qcom,qdu1000-llcc
-               - qcom,sc8180x-llcc
-               - qcom,sc8280xp-llcc
-               - qcom,x1e80100-llcc
---
-2.42.0
+  https://gcc.gnu.org/pipermail/gcc-patches/2023-April/616807.html
 
+(-minline-atomics becoming the default behavior with the above changes).
+
+It appears as if your compiler does not include these changes and might
+have to be upgraded?
+
++ Patrick and Palmer, FYI.
+
+  Andrea
