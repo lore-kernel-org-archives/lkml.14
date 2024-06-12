@@ -1,113 +1,82 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B88BAD56;
-	Wed, 12 Jun 2024 01:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD61107A8
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718155156; cv=none; b=AT2Fo++pwkep2cIFXrqWvh5KmtEEnuECS42qE0UbpYLwGmVt1sOVmhotmrbML5hnElGmyxjXQKQ51Jfa05JykHbuLo5GBpy8nwDzpeOdxva6EBmQVVUVJ6yI8y+t4Id9cA/BnJuwdtSPYqpm8UWWb5wYjDycDrGNay7503z80ig=
+	t=1718155174; cv=none; b=Xu3m9g3KF/swa3aA6UIMJtNu5YwD7BRBAlusdwTDIAwbeOVTPAqDNvzJEXCbYpNorfJGqSokw2+2h8FU/uoNdL7iAL996eZrFz7Eku7nor0yUZp3M8JPqfwHm995mELxRmbSzfCfxo9lL945OquteLlTB9Z1uMBikd/j1zBYRKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718155156; c=relaxed/simple;
-	bh=kSYXv9nIPkIFXOkJTequSQ7Wqj4nVqUZe+e6mX6ay74=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=r/bgN1Dc/sWKqKXQvyy4+482U1Qwl6hzRvp5NXsr9AV7zLXPefcB1MkCxADw7gW0p3B1pIFMpA/HmsVsv2AMqB2dzR9c/rMTbbvBeKuiaPkLGkVj8G2QvPS9CBdHAE7WkM9rjwFaD5qxfOg+rQul/IxGXFKhs+1BN4t77UV+gnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MhKWQPkS; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718155174; c=relaxed/simple;
+	bh=01On2/EVecp/FpY2MPxFsS9f5SUR4JP7vCiq48Sf3QM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=dqbMExjI3Ou3RnEaN38NwUShK5F0K+94Qf7Y0yE/MJYyAl/0SsuPHfZE/2SvJvOCJVZ4UfVS9tZYZryKQ3yspmVzrZdAuGY373B1r9fdJ42z3NHK+RjAooE31cuGkh72lQQjtNrK3TqHj0Ni9yjptZN9aHJK88shDr0LHwumNW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rfgMf/Rx; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MhKWQPkS"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45BHHrFi001180;
-	Wed, 12 Jun 2024 01:19:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=yw0xmqzsIr/6r5+9NKqm3b
-	RLhcjjifZCyGq40TyF3tI=; b=MhKWQPkSpWuFqtV+qjM+Hfbb2rIgsO+IXEG7DM
-	/9FtdsfJnM9LwQy2LG4u1nryfpf6VNZkMjpklq46ZLNkmZuUgwtqawWnXtXBB8kD
-	pAsAGtu/Mcx0ezs/4KzdxxLNW0qz4SvsGZcYaw+9fI/bQuaRJwCVLG9YL/jjmwou
-	K7VtbXoK/10sAIEiDWgmmr2zZkrblrP+1hIutyN0Wz+c2BeOCR5ijvi/7CF4AloY
-	LEZKGxb4OxW2Rdm7QamL+3jCpswV5OucWkN1lfabD2X+w9TYxpAJq9OlLpnMGxm4
-	3JDKDcvgbPuHFzT6tscp9Zyw5MQ8q+87riWuVjCEQq/hrYiA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yptuy0ux8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 01:19:13 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45C1JCOk026642
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 01:19:12 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
- 2024 18:19:11 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Tue, 11 Jun 2024 18:19:10 -0700
-Subject: [PATCH] usb: phy: add missing MODULE_DESCRIPTION() macros
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rfgMf/Rx"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1f6ea6afba0so2718555ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 18:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718155173; x=1718759973; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dpt7pOC6j5Ad67mZsPPp978WnRTmoVaVrsPf3/HpPSQ=;
+        b=rfgMf/Rxk0Fw+ii+N0a/TGkL9avtYFr0oawmOfQAImxaVv6qHbuaMCEUqC1HQI9p1k
+         /YhsxwW8Id/mCjs7SoYyRBBYtYLeboZYGhYFn+WUTM5hPlhL6LT2eVfKvpMOpHMhMS+5
+         Kam1lErtWTWs6wwn0SaNtjnoxoltjE4fqbLA46ADO2HlQPdtuQ8S/BtiuvK7MItZGznT
+         5EBHcPa1b2uQD95JNlv6PBFft5d3Wqkt1vhVl8Rj989pBQkcwIfjy84fB/y20akMSS7Y
+         ubgtwnPWqJG6L2+3HiYbSAmp4SmQXCjBQIiPjbvRmApCpNQQp9bmNNM1oJTkCvyg5pxo
+         TeTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718155173; x=1718759973;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dpt7pOC6j5Ad67mZsPPp978WnRTmoVaVrsPf3/HpPSQ=;
+        b=FKPqFe/SvgOBq2pAeNXEcC3LndN6ZtT92mkiqWgoarocpP1Gqmp5yKEdRn0XkwM8uL
+         c1JsHXpYm9qrmm3RwPfZdT5mLd9f+tbO47yT5qgLCBIGw8MqVIFFFh1zOlTun1k9tYse
+         xlrpPG2kAFRNPqubFlNN2yrMhs8T37mEVvi61a8KODFWR17t7v3Igj3ORGdFos11krni
+         WAuMGRz5ZGnVL9M+K4PcyHKBkm3YzSetEaluDpK83ssG50enlXMzn5JYRB7hznnz1t4R
+         dgn8mF4hT0dajzJm6ruLXodHi5bKXBZheNbe4zPLzdFJvhKILECb2q/hSo11CGlYFKDf
+         LxDA==
+X-Forwarded-Encrypted: i=1; AJvYcCXaea0H35/K3FcRE+7g8Eb3K9wAO0KSgjojZcDTO1FBhV1ZUmnJjZlQiwsWCHx9SeST3HWCY4rFitt/9Kqtvs5bDTGMl9rEI1IESqVv
+X-Gm-Message-State: AOJu0YxjiVyxKXSR2I1xsNrbTiVV28GoDV0uneSYePAqCS1QcGbHMNGe
+	kDXjbXxxjD+FUyzHIGh3XHnww8MnDY2t+BO7lUv4UV252FGUBq6wduA/zId7rxPAD2yr/uFFxvU
+	5Uw==
+X-Google-Smtp-Source: AGHT+IFacOJgoQzjKofsQnSKGWaTN0dSvkvFf7Msi15ZsbtxDiubwj9jgMosm5e8+6Xxaijsg5R5zHNcy8I=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:e882:b0:1f7:1046:d68e with SMTP id
+ d9443c01a7336-1f83ad55c76mr214055ad.2.1718155172838; Tue, 11 Jun 2024
+ 18:19:32 -0700 (PDT)
+Date: Tue, 11 Jun 2024 18:18:32 -0700
+In-Reply-To: <20240506075025.2251131-1-binbin.wu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20240506075025.2251131-1-binbin.wu@linux.intel.com>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
+Message-ID: <171803734657.3359701.7956342663823858498.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: VMX: Remove unused declaration of vmx_request_immediate_exit()
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Binbin Wu <binbin.wu@linux.intel.com>
+Cc: pbonzini@redhat.com, isaku.yamahata@intel.com, xiaoyao.li@intel.com
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240611-md-drivers-usb-phy-v1-1-1cacb41280c3@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAI33aGYC/x3MTQ6CMBBA4auQWTsJrWLUqxgX/ZnaSaSSGSAYw
- t0pLr/FeysoCZPCo1lBaGblb6kwpwZCduVNyLEabGsv7dUY7CNG4ZlEcVKPQ/6hvdlzl7q7Syl
- ADQehxMt/+nxVe6eEXlwJ+Vh9uEwL9k5HEti2Hcikx+2DAAAA
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: oAh1paW8K3R4STJ9BfoJwCvCotDadggY
-X-Proofpoint-ORIG-GUID: oAh1paW8K3R4STJ9BfoJwCvCotDadggY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-11_13,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- suspectscore=0 clxscore=1015 mlxlogscore=643 phishscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120006
 
-With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/phy/phy-am335x-control.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/phy/phy-am335x.o
+On Mon, 06 May 2024 15:50:25 +0800, Binbin Wu wrote:
+> After commit 0ec3d6d1f169 "KVM: x86: Fully defer to vendor code to decide
+> how to force immediate exit", vmx_request_immediate_exit() was removed.
+> Commit 5f18c642ff7e "KVM: VMX: Move out vmx_x86_ops to 'main.c' to dispatch
+> VMX and TDX" added its declaration by accident.  Remove it.
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
+Applied to kvm-x86 misc, thanks!
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/usb/phy/phy-am335x-control.c | 1 +
- drivers/usb/phy/phy-am335x.c         | 1 +
- 2 files changed, 2 insertions(+)
+[1/1] KVM: VMX: Remove unused declaration of vmx_request_immediate_exit()
+      https://github.com/kvm-x86/linux/commit/d5989a3533fc
 
-diff --git a/drivers/usb/phy/phy-am335x-control.c b/drivers/usb/phy/phy-am335x-control.c
-index 97e6603c7149..ada508be090a 100644
---- a/drivers/usb/phy/phy-am335x-control.c
-+++ b/drivers/usb/phy/phy-am335x-control.c
-@@ -189,4 +189,5 @@ static struct platform_driver am335x_control_driver = {
- };
- 
- module_platform_driver(am335x_control_driver);
-+MODULE_DESCRIPTION("AM335x USB PHY Control Driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/usb/phy/phy-am335x.c b/drivers/usb/phy/phy-am335x.c
-index e39665cf4b4a..6db88e00f127 100644
---- a/drivers/usb/phy/phy-am335x.c
-+++ b/drivers/usb/phy/phy-am335x.c
-@@ -142,4 +142,5 @@ static struct platform_driver am335x_phy_driver = {
- };
- 
- module_platform_driver(am335x_phy_driver);
-+MODULE_DESCRIPTION("AM335x USB PHY Driver");
- MODULE_LICENSE("GPL v2");
-
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240611-md-drivers-usb-phy-28235f59affc
-
+--
+https://github.com/kvm-x86/linux/tree/next
