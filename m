@@ -1,299 +1,137 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7902784DE9
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 20:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A1B1C14;
+	Wed, 12 Jun 2024 20:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718222975; cv=none; b=lgRwNwVAtp6EnfT8IwRMwHCVNn56DhNPUbbt6Uf8WJS8MLxK7xYKAwN/amxDuz54qYJacBGnxNa6RPb/N8aA5UVvGpiJ1tcIuwX2eQpw2VCypvr4sD4FxtwXcS1nip1YB3kWWpRsFXoNDwaLreDcWvRRwWJvKdDPkB99zA63/9o=
+	t=1718223137; cv=none; b=GpR3RJAT3qq/lFchSWZUVVBD3zcOP2CPUu5sYQ+0b83fgr12EhHuichHJKN4N9uTJVKLisJanINW69DBlGka7WLiOOcvxY/4SkR6NB04ZTM5j9tPGrTVib+q0daQFivTXTyI3ltYFEFLiQKVhYmXhi3y8yB6j4GTwMwrKpnL5LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718222975; c=relaxed/simple;
-	bh=jF2I4eWVfCTC/mgwsHEU1ahkjsFYbbCMnQ/zLeO8He4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=owXbE0x1T8S3FS93vB7nuARlTU3lmSyEARsUEZ+DJJup/vbNKM+wSdNV2I4BYXhFSB7odSQgWemqwfeLNQQYuqjSZAPh1crJIoZNbdeSyp209tCNiyJ+nLArOU6YtIv1r3DJ/uF38aJ0Vdu/mBJpQuCIjC4WRQnZb7n3Ee+9qXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=UsfHvtpL; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1718223137; c=relaxed/simple;
+	bh=aiB+HcNQdSbdAWf84cErkGgK/8MxwjwOmssmKmpzNu0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=gHqCmPq+fTmcWmRjUa1sjSuBti+hnSEkDqw5QiQrgjQuIntyrq0gbNH9Eo3aiQKyQf/1ywaEnG+gcDl6qoh19y8qBN0zzYGI1yD9bg/xLnOv1LZkKBaOaDjwBGE7lBFyGkkLljGP8Pj0RlyUgCh+gfaBSMhgLpKHn77LL7sGFeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W95BQyoM; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="UsfHvtpL"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f717ee193fso2421705ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 13:09:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1718222973; x=1718827773; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0s8R7PiKG7ygOhXdI8mYQIM9Nw0ZpcuydO4wtHx1EMs=;
-        b=UsfHvtpLFxcnz6Eg7k9HqLBR2W9wJddrq0qRVGl+/pFoD4gFyeL16BorqUOgk+advY
-         o4MKvWS9tnNwds5F4CoWROlvBGysb79w2F709ZszgFh01jH8kpHH+aR/cuN95Cb5IgPz
-         kF3z36z8NkiA115cExOQFBWxqge6nbaiwQK6Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718222973; x=1718827773;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0s8R7PiKG7ygOhXdI8mYQIM9Nw0ZpcuydO4wtHx1EMs=;
-        b=k0s6mvzU4un988tbuBtL1nbusjHIJfTGh5Kq1ypQ9O9eXk7kEoQlyFAjbm5MKTd8S7
-         /1G//aelmMj8dhlSu0nsjPN36vokTyRhjESF3k5scW/q9zOOQb3rVG7DNU26AMzpbDDT
-         oQ33pBNqdv6P/dHc05GiHL63lgLqgzj7g+bRhaH9zaAqE/X9iTC8v8Kcy5TraQmGZkOG
-         v67AtAMl+FjksilRdYbvy9ty2AxUrYMbnkcSM6dckGxi4ZDzGQtZqFp2/xrBTJB3xh/u
-         Vbn8cYFG2pVbdM5C/85oC3bK3MB7+O1h6KF28hUEiWIG7qHuLFae1IHDPJikrYS4hDa6
-         aEJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIM4ws36HGR3BvNlxZ8utuZRYG5q0LjJyRPA0Q9rVnplvu2FUHmQRx1d8GAL+8M922w/vWkzo709FvdezrJCzYv5XxgDnEn+LxXqZ8
-X-Gm-Message-State: AOJu0Yy064TaGp6NLLKcJu8Jf4w4bziGiBJsUDjob4s3t3wqxlVscdf3
-	1Mcv/2Kq2m05x3ed5JfBJJrTCnTJlXB/omr/F67T0acHxvHLOf3n0qrLZn98dc70OwVY9nUTaCL
-	E
-X-Google-Smtp-Source: AGHT+IHNCHnF1MmZHVxSU7HnVfRcpDsxPSWFUTjrM9Uz154aliKZf70E5jtEhSMhN5KO+k991iL49g==
-X-Received: by 2002:a17:903:1c9:b0:1f7:123e:2c6f with SMTP id d9443c01a7336-1f83b6788eemr35571165ad.37.1718222972808;
-        Wed, 12 Jun 2024 13:09:32 -0700 (PDT)
-Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6ee3d5a17sm91506805ad.146.2024.06.12.13.09.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 13:09:32 -0700 (PDT)
-From: Joe Damato <jdamato@fastly.com>
-To: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: nalramli@fastly.com,
-	Joe Damato <jdamato@fastly.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	linux-rdma@vger.kernel.org (open list:MELLANOX MLX5 core VPI driver)
-Subject: [net-next v5 2/2] net/mlx5e: Add per queue netdev-genl stats
-Date: Wed, 12 Jun 2024 20:08:57 +0000
-Message-Id: <20240612200900.246492-3-jdamato@fastly.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240612200900.246492-1-jdamato@fastly.com>
-References: <20240612200900.246492-1-jdamato@fastly.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W95BQyoM"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CGOUa9011256;
+	Wed, 12 Jun 2024 20:12:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=sTDbAm0FX2VDGPeO43Y89C
+	dUZ8GzetNQp4r9jYVATMQ=; b=W95BQyoM7DV8Tp4UqvPRVsne0PWaMQLfTe+gyi
+	ym3mRP7rqKudiLubyMe5uqDubUXqIJxJ/xRsWrzrTdgsMPyLODd/FRZgjwcvAcrI
+	BBxuVjnyIW954gjci7M+/lTKYrYqz49pMb/turk6rTL1FiG7EBePRm4n80MKtwVL
+	t2GuQPzmBFaOPWHoIJVlv9KA4sSzJs+1+lgZKUjZCyPOMNcmrnociTSD8+wDDgmo
+	0L8q19HETU4ZB9ENomaI7STfTIaYu3ugjnwGFd0majw2Tdpgx5BsLiQu8Sbry4Do
+	Hur0lFxlhzdnbSzf0jCV7f0O0RkEuOIEzQ+WpMNUM9izoOcA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yq83whcjh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 20:12:00 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CKBw0Y022137
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 20:11:59 GMT
+Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Jun
+ 2024 13:11:58 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Wed, 12 Jun 2024 13:11:57 -0700
+Subject: [PATCH] crypto: arm64 - add missing MODULE_DESCRIPTION() macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240612-md-arch-arm64-crypto-v1-1-7a0e83d83cda@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAAwBamYC/x3MQQrCMBCF4auUWTuQ1lCpVxEXk+nUDJi0TKpUS
+ u9udPPgW7x/hyKmUuDa7GDy1qJzrmhPDXCk/BDUsRo613nXtx2mEck41km9R7bPss54YTfQmUM
+ YJg/1uphMuv2zt3t1oCIYjDLHX+yp+bVhorKKwXF8AWT2/oaFAAAA
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon
+	<will@kernel.org>
+CC: <linux-crypto@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Jeff
+ Johnson" <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: dPFcgKCpPLXktockCe95fvolI67ewKud
+X-Proofpoint-ORIG-GUID: dPFcgKCpPLXktockCe95fvolI67ewKud
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_10,2024-06-12_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 clxscore=1011
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406120143
 
-./cli.py --spec netlink/specs/netdev.yaml \
-         --dump qstats-get --json '{"scope": "queue"}'
+With ARCH=arm64, make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in arch/arm64/crypto/crct10dif-ce.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in arch/arm64/crypto/poly1305-neon.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in arch/arm64/crypto/aes-neon-bs.o
 
-...snip
+Add the missing invocations of the MODULE_DESCRIPTION() macro.
 
- {'ifindex': 7,
-  'queue-id': 62,
-  'queue-type': 'rx',
-  'rx-alloc-fail': 0,
-  'rx-bytes': 105965251,
-  'rx-packets': 179790},
- {'ifindex': 7,
-  'queue-id': 0,
-  'queue-type': 'tx',
-  'tx-bytes': 9402665,
-  'tx-packets': 17551},
-
-...snip
-
-Also tested with the script tools/testing/selftests/drivers/net/stats.py
-in several scenarios to ensure stats tallying was correct:
-
-- on boot (default queue counts)
-- adjusting queue count up or down (ethtool -L eth0 combined ...)
-
-The tools/testing/selftests/drivers/net/stats.py brings the device up,
-so to test with the device down, I did the following:
-
-$ ip link show eth4
-7: eth4: <BROADCAST,MULTICAST> mtu 9000 qdisc mq state DOWN [..snip..]
-  [..snip..]
-
-$ cat /proc/net/dev | grep eth4
-eth4: 235710489  434811 [..snip rx..] 2878744 21227  [..snip tx..]
-
-$ ./cli.py --spec ../../../Documentation/netlink/specs/netdev.yaml \
-           --dump qstats-get --json '{"ifindex": 7}'
-[{'ifindex': 7,
-  'rx-alloc-fail': 0,
-  'rx-bytes': 235710489,
-  'rx-packets': 434811,
-  'tx-bytes': 2878744,
-  'tx-packets': 21227}]
-
-Compare the values in /proc/net/dev match the output of cli for the same
-device, even while the device is down.
-
-Note that while the device is down, per queue stats output nothing
-(because the device is down there are no queues):
-
-$ ./cli.py --spec ../../../Documentation/netlink/specs/netdev.yaml \
-           --dump qstats-get --json '{"scope": "queue", "ifindex": 7}'
-[]
-
-Signed-off-by: Joe Damato <jdamato@fastly.com>
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 ---
- .../net/ethernet/mellanox/mlx5/core/en_main.c | 132 ++++++++++++++++++
- 1 file changed, 132 insertions(+)
+ arch/arm64/crypto/aes-neonbs-glue.c   | 1 +
+ arch/arm64/crypto/crct10dif-ce-glue.c | 1 +
+ arch/arm64/crypto/poly1305-glue.c     | 1 +
+ 3 files changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index c548e2fdc58f..d3f38b4b18eb 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -39,6 +39,7 @@
- #include <linux/debugfs.h>
- #include <linux/if_bridge.h>
- #include <linux/filter.h>
-+#include <net/netdev_queues.h>
- #include <net/page_pool/types.h>
- #include <net/pkt_sched.h>
- #include <net/xdp_sock_drv.h>
-@@ -5299,6 +5300,136 @@ static bool mlx5e_tunnel_any_tx_proto_supported(struct mlx5_core_dev *mdev)
- 	return (mlx5_vxlan_allowed(mdev->vxlan) || mlx5_geneve_tx_allowed(mdev));
- }
+diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
+index 467ac2f768ac..46425e7b9755 100644
+--- a/arch/arm64/crypto/aes-neonbs-glue.c
++++ b/arch/arm64/crypto/aes-neonbs-glue.c
+@@ -16,6 +16,7 @@
+ #include <linux/module.h>
  
-+static void mlx5e_get_queue_stats_rx(struct net_device *dev, int i,
-+				     struct netdev_queue_stats_rx *stats)
-+{
-+	struct mlx5e_priv *priv = netdev_priv(dev);
-+	struct mlx5e_channel_stats *channel_stats;
-+	struct mlx5e_rq_stats *xskrq_stats;
-+	struct mlx5e_rq_stats *rq_stats;
-+
-+	ASSERT_RTNL();
-+	if (mlx5e_is_uplink_rep(priv))
-+		return;
-+
-+	channel_stats = priv->channel_stats[i];
-+	xskrq_stats = &channel_stats->xskrq;
-+	rq_stats = &channel_stats->rq;
-+
-+	stats->packets = rq_stats->packets + xskrq_stats->packets;
-+	stats->bytes = rq_stats->bytes + xskrq_stats->bytes;
-+	stats->alloc_fail = rq_stats->buff_alloc_err +
-+			    xskrq_stats->buff_alloc_err;
-+}
-+
-+static void mlx5e_get_queue_stats_tx(struct net_device *dev, int i,
-+				     struct netdev_queue_stats_tx *stats)
-+{
-+	struct mlx5e_priv *priv = netdev_priv(dev);
-+	struct mlx5e_sq_stats *sq_stats;
-+
-+	ASSERT_RTNL();
-+	/* no special case needed for ptp htb etc since txq2sq_stats is kept up
-+	 * to date for active sq_stats, otherwise get_base_stats takes care of
-+	 * inactive sqs.
-+	 */
-+	sq_stats = priv->txq2sq_stats[i];
-+	stats->packets = sq_stats->packets;
-+	stats->bytes = sq_stats->bytes;
-+}
-+
-+static void mlx5e_get_base_stats(struct net_device *dev,
-+				 struct netdev_queue_stats_rx *rx,
-+				 struct netdev_queue_stats_tx *tx)
-+{
-+	struct mlx5e_priv *priv = netdev_priv(dev);
-+	struct mlx5e_ptp *ptp_channel;
-+	int i, tc;
-+
-+	ASSERT_RTNL();
-+	if (!mlx5e_is_uplink_rep(priv)) {
-+		rx->packets = 0;
-+		rx->bytes = 0;
-+		rx->alloc_fail = 0;
-+
-+		for (i = priv->channels.params.num_channels; i < priv->stats_nch; i++) {
-+			struct netdev_queue_stats_rx rx_i = {0};
-+
-+			mlx5e_get_queue_stats_rx(dev, i, &rx_i);
-+
-+			rx->packets += rx_i.packets;
-+			rx->bytes += rx_i.bytes;
-+			rx->alloc_fail += rx_i.alloc_fail;
-+		}
-+
-+		/* always report PTP RX stats from base as there is no
-+		 * corresponding channel to report them under in
-+		 * mlx5e_get_queue_stats_rx.
-+		 */
-+		if (priv->rx_ptp_opened) {
-+			struct mlx5e_rq_stats *rq_stats = &priv->ptp_stats.rq;
-+
-+			rx->packets += rq_stats->packets;
-+			rx->bytes += rq_stats->bytes;
-+		}
-+	}
-+
-+	tx->packets = 0;
-+	tx->bytes = 0;
-+
-+	for (i = 0; i < priv->stats_nch; i++) {
-+		struct mlx5e_channel_stats *channel_stats = priv->channel_stats[i];
-+
-+		/* handle two cases:
-+		 *
-+		 *  1. channels which are active. In this case,
-+		 *     report only deactivated TCs on these channels.
-+		 *
-+		 *  2. channels which were deactivated
-+		 *     (i > priv->channels.params.num_channels)
-+		 *     must have all of their TCs [0 .. priv->max_opened_tc)
-+		 *     examined because deactivated channels will not be in the
-+		 *     range of [0..real_num_tx_queues) and will not have their
-+		 *     stats reported by mlx5e_get_queue_stats_tx.
-+		 */
-+		if (i < priv->channels.params.num_channels)
-+			tc = mlx5e_get_dcb_num_tc(&priv->channels.params);
-+		else
-+			tc = 0;
-+
-+		for (; tc < priv->max_opened_tc; tc++) {
-+			struct mlx5e_sq_stats *sq_stats = &channel_stats->sq[tc];
-+
-+			tx->packets += sq_stats->packets;
-+			tx->bytes += sq_stats->bytes;
-+		}
-+	}
-+
-+	/* if PTP TX was opened at some point and has since either:
-+	 *    -  been shutdown and set to NULL, or
-+	 *    -  simply disabled (bit unset)
-+	 *
-+	 * report stats directly from the ptp_stats structures as these queues
-+	 * are now unavailable and there is no txq index to retrieve these
-+	 * stats via calls to mlx5e_get_queue_stats_tx.
-+	 */
-+	ptp_channel = priv->channels.ptp;
-+	if (priv->tx_ptp_opened && (!ptp_channel || !test_bit(MLX5E_PTP_STATE_TX, ptp_channel->state))) {
-+		for (tc = 0; tc < priv->max_opened_tc; tc++) {
-+			struct mlx5e_sq_stats *sq_stats = &priv->ptp_stats.sq[tc];
-+
-+			tx->packets += sq_stats->packets;
-+			tx->bytes   += sq_stats->bytes;
-+		}
-+	}
-+}
-+
-+static const struct netdev_stat_ops mlx5e_stat_ops = {
-+	.get_queue_stats_rx  = mlx5e_get_queue_stats_rx,
-+	.get_queue_stats_tx  = mlx5e_get_queue_stats_tx,
-+	.get_base_stats      = mlx5e_get_base_stats,
-+};
-+
- static void mlx5e_build_nic_netdev(struct net_device *netdev)
- {
- 	struct mlx5e_priv *priv = netdev_priv(netdev);
-@@ -5316,6 +5447,7 @@ static void mlx5e_build_nic_netdev(struct net_device *netdev)
+ MODULE_AUTHOR("Ard Biesheuvel <ard.biesheuvel@linaro.org>");
++MODULE_DESCRIPTION("Bit sliced AES using NEON instructions");
+ MODULE_LICENSE("GPL v2");
  
- 	netdev->watchdog_timeo    = 15 * HZ;
+ MODULE_ALIAS_CRYPTO("ecb(aes)");
+diff --git a/arch/arm64/crypto/crct10dif-ce-glue.c b/arch/arm64/crypto/crct10dif-ce-glue.c
+index 09eb1456aed4..57036a02634b 100644
+--- a/arch/arm64/crypto/crct10dif-ce-glue.c
++++ b/arch/arm64/crypto/crct10dif-ce-glue.c
+@@ -138,6 +138,7 @@ module_cpu_feature_match(ASIMD, crc_t10dif_mod_init);
+ module_exit(crc_t10dif_mod_exit);
  
-+	netdev->stat_ops	  = &mlx5e_stat_ops;
- 	netdev->ethtool_ops	  = &mlx5e_ethtool_ops;
+ MODULE_AUTHOR("Ard Biesheuvel <ard.biesheuvel@linaro.org>");
++MODULE_DESCRIPTION("CRC-T10DIF using arm64 NEON and Crypto Extensions");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS_CRYPTO("crct10dif");
+ MODULE_ALIAS_CRYPTO("crct10dif-arm64-ce");
+diff --git a/arch/arm64/crypto/poly1305-glue.c b/arch/arm64/crypto/poly1305-glue.c
+index 1fae18ba11ed..9c4bfd62e789 100644
+--- a/arch/arm64/crypto/poly1305-glue.c
++++ b/arch/arm64/crypto/poly1305-glue.c
+@@ -226,6 +226,7 @@ static void __exit neon_poly1305_mod_exit(void)
+ module_init(neon_poly1305_mod_init);
+ module_exit(neon_poly1305_mod_exit);
  
- 	netdev->vlan_features    |= NETIF_F_SG;
--- 
-2.25.1
++MODULE_DESCRIPTION("Poly1305 transform using NEON instructions");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS_CRYPTO("poly1305");
+ MODULE_ALIAS_CRYPTO("poly1305-neon");
+
+---
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+change-id: 20240612-md-arch-arm64-crypto-7c09a3cbb9f4
 
