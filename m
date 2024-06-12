@@ -1,110 +1,115 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3883616E885;
-	Wed, 12 Jun 2024 09:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C1AA34;
+	Wed, 12 Jun 2024 09:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718186038; cv=none; b=h+rl0nFJx+3vFsflxlf1lrOeKmgepxCc7pSTt+fHS2EbH1tfdhu8hc+ifaCUix0pGMvaP++hsD2YK1KfmRse3WXttDf2O7Opt3/OFfnUfCNTSo8xkx8h8Yf6hyWXH7vGnpDe1Ro0PSxVCTM4eyDVR2u53mP0NDMeEvUsi6lOITs=
+	t=1718186120; cv=none; b=a2w/3oYpp1k6xJia5g2Tkcm+GbXaP0c7K6vSesFVNNe8+2x8m2fXGYQ5imhFFzlxLuLE0EoOlxBEUgWr8IBT1E7ULi+iZxjRUYlCPA+QNfOXvTm9zJ3RqelZ1y38t2jNNl5lsXpoFVr+rkqqL52EUpwilUrpj7/d0ya0h40zQvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718186038; c=relaxed/simple;
-	bh=1KEWyFoCMTmoTcxSTlV4zMfEojOLQmrzSBfJGBmPpLE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jSZGrdULSiE+Sc869jk6FgOBd37ATs0u7O/Yv+63jWmJrYD//da3dYswqPQpdT+fqxEKNWNtvMqTWrp+My2NUpdK6TQ5p3tWSNfOiwkCk3pqS+WKCyLfiyJd5AzmwnRPVuickyBQBBwC9KoWEqdhGXTH8MpfuLEcxg68Lggt6SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VenXACPk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718186120; c=relaxed/simple;
+	bh=IUlWQQqW3cQb1qb4NtDCHI7QOQj5j7JMOhaHKauOiNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W0/FkcMPd9Aebfje/obsl9HEfSdpDdrfCgx4MroCZjdCTxkOeM5/HBHUGztdvLIlNGR6ElStJf47pibM5mYHaBjyYl9BuFZOiCtVNICvpSNWVWMm5hBNHTtDJlLKulK/An06TVvahaalr9/TlFPjY/M90a7eeCUUmWmCShFHi3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wbgQ/ePR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VenXACPk"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C9KrNf018083;
-	Wed, 12 Jun 2024 09:53:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lBymZgJFy/4Nwqfcncss78bsklXX4SxvhrH9q6SaQZY=; b=VenXACPkTUP6c8RC
-	l5cOZkgzLWtGEflFJLzbm51qLIb2e9wPULUMvs1j+CrP+CWjolHP2cXDbVejvIcE
-	kDeMr1PBpSp/2C+CMi8D2N1xzDGrajR89QZEkrLp84hbI6XCaAaWyoJqw/zGNHly
-	niqpL68t4ysumNL/BoF4qFJhgO2aLlAAturvimecceh56gacxfWzLcbdmVGQRIV/
-	37lOL11LJZRAJqW3x+lFYVCXcsyrGoFdpi1Zih2hov2ZxiE2I/Tc9wB2G7mP4eXL
-	hCLpIUhS4A82A4kKUj8RmyJgs/dC0zw9vz26c00ObNkatNG91stZJM9Dh+cd0RAN
-	fFwJUA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ypp87ts8n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 09:53:42 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45C9rfhf027041
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 09:53:41 GMT
-Received: from luoj-gv.qualcomm.com (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Jun
- 2024 02:53:37 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <andrew@lunn.ch>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <corbet@lwn.net>, <vladimir.oltean@nxp.com>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        Conor Dooley
-	<conor.dooley@microchip.com>
-Subject: [PATCH net-next 2/2] dt-bindings: net: ethernet-controller: add 10g-qxgmii mode
-Date: Wed, 12 Jun 2024 17:53:17 +0800
-Message-ID: <20240612095317.1261855-3-quic_luoj@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240612095317.1261855-1-quic_luoj@quicinc.com>
-References: <20240612095317.1261855-1-quic_luoj@quicinc.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wbgQ/ePR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A594C3277B;
+	Wed, 12 Jun 2024 09:55:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718186119;
+	bh=IUlWQQqW3cQb1qb4NtDCHI7QOQj5j7JMOhaHKauOiNI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=wbgQ/ePRCJCuF1v4mZFoS9pFDhM27kHeWXMuh9OoDCTYgnuVBWGotLmRaILAdj/jH
+	 +c10ngXD8YNfyoD9n+CACwFleSSp4TXlsfzqrFQgimCIsTxeQQymsWqvrSL0zvSsPm
+	 AQL7L0BdYfUUPgjdysWu4HYqXWaoGXE4ZZrGnmEw=
+Date: Wed, 12 Jun 2024 11:55:17 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Oliver Neukum <oneukum@suse.com>,
+	USB mailing list <linux-usb@vger.kernel.org>,
+	Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: USB Denial Of Service
+Message-ID: <2024061236-diabolic-wisplike-d2b1@gregkh>
+References: <40dfa45b-5f21-4eef-a8c1-51a2f320e267@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: uAiV06oRFTUmciDQ6inKAGW3PuC7c7TR
-X-Proofpoint-ORIG-GUID: uAiV06oRFTUmciDQ6inKAGW3PuC7c7TR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_06,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- spamscore=0 suspectscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- bulkscore=0 mlxscore=0 clxscore=1015 impostorscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406120071
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40dfa45b-5f21-4eef-a8c1-51a2f320e267@rowland.harvard.edu>
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Tue, Jun 11, 2024 at 10:35:12AM -0400, Alan Stern wrote:
+> Greg, Oliver, or anyone else:
+> 
+> Questions:
+> 
+> If a broken or malicious device causes a USB class driver to add a 
+> thousand (or more) error messages per second to the kernel log, 
+> indefinitely, would that be considered a form of DOS?
+> 
+> Should the driver be fixed?
 
-Add the new interface mode 10g-qxgmii, which is similar to
-usxgmii but extend to 4 channels to support maximum of 4
-ports with the link speed 10M/100M/1G/2.5G.
+Good question.  Right now, by default, we "trust" usb devices to an
+extent.  We have been "pushing back" that boundry over time, such that
+now we will validate USB descriptors to verify that they actually are
+sane before allowing a driver to bind to them, and if there's any bugs
+with that, we will fix them.
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
----
- Documentation/devicetree/bindings/net/ethernet-controller.yaml | 1 +
- 1 file changed, 1 insertion(+)
+But we totally trust the data stream from devices, and trust that once
+an urb is submitted, they work properly.
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-index b2785b03139f..45819b235800 100644
---- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-@@ -103,6 +103,7 @@ properties:
-       - usxgmii
-       - 10gbase-r
-       - 25gbase-r
-+      - 10g-qxgmii
- 
-   phy-mode:
-     $ref: "#/properties/phy-connection-type"
--- 
-2.34.1
+If we wish to change that threat model, great, but that will require
+those that wish to change that model to DO THE ACTUAL WORK!
 
+I don't want to see fuzzers start to fuzz the data streams of USB
+drivers and expect us to fix the bugs.  That's flat out not ok, as this
+is something that right now, we do not care about.  If companies do care
+about this, they need to do the work as that is NOT how Linux is
+currently designed and implemented.
+
+Same goes for other device types.  I get this conversation all the time
+(had it last week at a very very very large Linux company.)  It usually
+goes something like:
+
+	Them:	We want to claim that we can trust drivers to work
+		properly for malicious devices
+	Me:	Wonderful, send the patches to do so, fixing up all
+		subsystems that rely on them!
+	Them:	No, that's something that Linux should already support.
+	Me:	Why do you care about this?
+	Them:	Because we want to host systems in untrusted situations.
+	Me:	So you want to save money by not using a single physical
+		host.
+	Them:	Yes.
+	Me:	Then spend some of that money to do the work to make
+		this happen, do not force the community to do it for you.
+	Them:	...
+
+> What is an acceptable rate for an unending stream of error messages?  
+> Once a second?  Once a minute?
+
+The *_ratelimited() functions should handle this if you want to use
+them.
+
+> At what point should the driver give up and stop trying to communicate 
+> with the device?
+
+That's tricky, we don't have good answers for that as everyone has a
+different idea of how long "flaky" devices should be able to flake out
+before coming back.
+
+> (These are not moot questions.  There are indeed drivers, and probably 
+> not just in the USB subsystem, subject to this sort of behavior.)
+
+Totally agreed.  But again, the design of Linux right now is that we
+implicitly trust the hardware we are running on.  If that design
+decision wants to be changed, some people need to do a ton of work to
+change it.
+
+Thanks,
+
+greg k-h
