@@ -1,170 +1,202 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD737757F8
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA8D25757
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718181959; cv=none; b=nISBsZ6tSHVrWepv4wfPOBKaSUpjeGB9wh9JYGj+LuXTk3o9XEc2/uaAOQinS8BIxD6Q4sHpyT6WRCFUAIEWvkW58p+boV6YPv5zC77y9hmDNAtJfYrO5LmAqIAF5tTVFWHljHcsshtlEshi8svLPquUp+3lhMQnxNYDvjZ9VsI=
+	t=1718182041; cv=none; b=JUHwtE9ywPct9sMssw0FMMlhMHVcLn3ettoC0O6lPOmcLWYtw1vVvaB5uM9XxjQMFZkxhZPnL3Z31wzFafh5v1CjdYJa+Z0dBAxddTZ5V4I+2M8aweFC2sW+EViT2rx21smPULLgs8lS7hb+EZxyZZ7jEjedKaBkHEe3rMxB6bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718181959; c=relaxed/simple;
-	bh=+Kc/AhCmJZDN+z1v5B5jpkDqHq+Ce7zdIcHo4V7c5vo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QcXsVhu+IdvRyIwk1OKJB37gkOhUAyomvAw5ZDvJm0Q6nYMhDU8GmrdLrJXNnXmmybg/vqfHGZ0wMtCvNn8IG1G5AVHtxygIB6GdMvg/yJLcnMWyl1KBWjjnuGKpNBLLkC9ia1C8yn01QwfQyCWrGMh+0MxUFG3oul7VL0F+Pn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Kp5EAU7x; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1718182041; c=relaxed/simple;
+	bh=NCqG+cxi6ENhun4XB9fyg9tID2Z5hfw1lyoqEHgbieA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N1BVCieuIVVn3uqeDcLAQt244SFJqBzIBM5QlM43k60iu9tyd1zeV7YB2ZsvB8ExHT7f92WJfh/nsC6cx8RbleT1hHdfpFdzvkRsHDhcH3QXVxCS7hlrs0oOiGDsmypPbO7FzeYHHVksPC0k5+CDg272wf/o3s0QarVQfc65zxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=oNDsTNQ3; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Kp5EAU7x"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-52bc88fb243so447489e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1718181956; x=1718786756; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mmdle60OyXYzHnY4uAc3ZIp5lh6qnfcxEmNuLz4sZH8=;
-        b=Kp5EAU7xiwHVfGM4ZYoDdody7GnYJ02CYvguGJ3xAWGF1YGZplT0Ic83N69sL8p8hE
-         CzVa0Hd5f9+924r1hdVWf0v/hG1BW0Q9QYLSD+ffWvtG5vgVmne4INFSyxP4EF8HqbUa
-         EycvSqh/iaYseD0xBQg64GwDc/eFYUzsUpHh8=
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="oNDsTNQ3"
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com [209.85.208.200])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id DE9B93F2A1
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:47:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1718182035;
+	bh=QCgoiR1FNu5yMhX4TrSw5jXqsK7VlpYhCw5LiGx0UTk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=oNDsTNQ39Miyzb1rfPZHFE/SvDDYE24q2GWHz9a5wWE3YMJMSyGVYb5DWlehniF9y
+	 e/szz5NoIaLneZSzYrsSJw8kphxflTlpmf66gfM95lDPdW6fSDgQtyBdof9A+HBG7p
+	 Q0VB9+OR8F19Upd4nOx1ewRBIWONQKU/4g7bXNPL9OXlS9Uf8O/pGmTevGarbtnvby
+	 Rww5uYatvnrLmLGV9a0SaSCj0IUx85VVmLfGi8+LjDtZ9h5o/KpEmUI8StNB0huy0W
+	 obfFtI+9ubZ1vsvSZ8SrEtS1Rv2mxkLKv3gctRS9+i938QoOrNwTcSrk1LdVZtXoY5
+	 gtWz3iPunXiQw==
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2ebeef33f21so20265561fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:47:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718181956; x=1718786756;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mmdle60OyXYzHnY4uAc3ZIp5lh6qnfcxEmNuLz4sZH8=;
-        b=XvSMlERm941Ld0Gq/rykShzTvwRFFmkK6bqrKDG/Orpb4+UqZ/1FYiSGxFTLaNa2AY
-         3CtueQ/kS6C7hrmLlk4b4eN1YoCIzzVN6pCL+Co8i8Pgra02ra02aDXlDwLJ3lgXdudo
-         MtEW5AEYXutdOPsHzVDPS646apFlxMPvXBeipRxUXEt8SnSV91MkMtoLqJZ3206q+Thr
-         mxfDPwpKCEmlGMyfvLXedBVp6mpOs8AESwS/RsTnlvOR+AvVZ0GGfD5cX7m7daO5vq/i
-         jCUtNfC6uib7ZLAOkRJbdbOHxnIpExO2gFyAVvGFOUXFAlKG7JND/eDcBqWngBW1snDt
-         gj0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXaAG/qa04ipTlwTZ2j1XX2Qw3oIHXstqDr7P6171Z4S42/ogrc2a3U+OH9IR0hocyOsmAWyPv5oN9aK0+pszGWvUh/aSmvQ/raZEx/
-X-Gm-Message-State: AOJu0YzPlekKYkFppyRX89rb80eaaCGvUHOjY67GfJuraD4LuHqJ5ad4
-	dvx7FHLaez8HJHp5G21PqBf6iKJm8U8ygfe6vacbKxKseAphSUw/ggfudtnoFM4=
-X-Google-Smtp-Source: AGHT+IEN2iOgvU4IG9+VZppwFPKb+iyuVD3RBsFuaPvkQqAd7b8Sg7CAQLH7LpQ/LkJ8NrbWNpd/gQ==
-X-Received: by 2002:a2e:2281:0:b0:2ea:eac6:6872 with SMTP id 38308e7fff4ca-2ebfc815c37mr7977921fa.0.1718181955802;
-        Wed, 12 Jun 2024 01:45:55 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422871f9068sm16507935e9.43.2024.06.12.01.45.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 01:45:55 -0700 (PDT)
-Date: Wed, 12 Jun 2024 10:45:53 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/fbdev-dma: fix getting smem_start
-Message-ID: <ZmlgQV4Eov0xv5bc@phenom.ffwll.local>
-Mail-Followup-To: Thomas Zimmermann <tzimmermann@suse.de>,
-	Peng Fan <peng.fan@nxp.com>,
-	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240604080328.4024838-1-peng.fan@oss.nxp.com>
- <8f4a6d80-dd3e-422f-88af-d26f50c973ff@suse.de>
- <AM6PR04MB59415B3F01D02024A255BFB988C72@AM6PR04MB5941.eurprd04.prod.outlook.com>
- <766908de-922c-4d71-bb04-29dbe4d1d64d@suse.de>
- <AM6PR04MB5941216A69AE325A79689C5888C72@AM6PR04MB5941.eurprd04.prod.outlook.com>
- <6c01bee4-c3f5-496e-8b4f-a29c97954808@suse.de>
+        d=1e100.net; s=20230601; t=1718182035; x=1718786835;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QCgoiR1FNu5yMhX4TrSw5jXqsK7VlpYhCw5LiGx0UTk=;
+        b=n1B5rLuR2GqZambZFqGhb6kKkksMVelyP0gKnsXUYVHlWXZSRKb2QMLuyvKtzoqpEQ
+         26+hqWhD3yJBWzfgEasH1qYXiyGwOQkMMfy6YHOPsLQzTUPu2uK2I5x7G0pfYQGqgGWi
+         o6bdZeEX9xp0ZZMHdzkGleOYZ0jI8OshMmEtYjND4O7CySKAfjLy8wN5yEHTU+g3/UrM
+         II77VfXJxc/Yyj9rEyfIGNjcOr9+w0AtVozWKCKKTIIbr3lUZTu3PP1yzBPQqnI2OTCC
+         W5tDox08uYi2MY+eEdGeiGkCWz29dmq/qt5EFzjlIr+FKepYge8r/x3sTRoHhec55MGT
+         oudw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHB87qNiEO35r46YurD1P/Ukw9D1xXXUHjlV6nINTfUmEchL+2DmRcoO0ZJEjYmi0klrc3a/NFPrZmI9cDDZbFSybKC0AepnGI+GWA
+X-Gm-Message-State: AOJu0YzFMHKOMhO0EkNotP2eDfoooxedgAR+nl71nIoycoGHH5o0xYRk
+	n+TRr6Fez5LSwr+x3OCiVSs0C4DlrL5CzR4F0AkLHpxpotqhQTocj+y0AvKtwXKxSE46Zriy/b4
+	RBwApo2+8A0qFRHVAP/vAv7W4wYG4ZfgtTKgS08idlIyaqu5cQrXGw6PuZal5RVp7MpnhixaCzg
+	h1cFzCkYXVFzFh41SIDxJ+ZjSix4fTtalDiZxV/g7MI11+gnjCDeqi
+X-Received: by 2002:a2e:8608:0:b0:2eb:e9bb:ba16 with SMTP id 38308e7fff4ca-2ebfca3418dmr8921011fa.38.1718182035285;
+        Wed, 12 Jun 2024 01:47:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEUSS0J0jX8Cu9Zc/Ts8VtHtZf93LRYh78QU3x5Uaf5MhWK7nrOT/wgMTxXLkTVxy8EiGeoQQx2V+zw/gZKA3s=
+X-Received: by 2002:a2e:8608:0:b0:2eb:e9bb:ba16 with SMTP id
+ 38308e7fff4ca-2ebfca3418dmr8920651fa.38.1718182034230; Wed, 12 Jun 2024
+ 01:47:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c01bee4-c3f5-496e-8b4f-a29c97954808@suse.de>
-X-Operating-System: Linux phenom 6.8.9-amd64 
+References: <20240608025347.90680-1-chengen.du@canonical.com>
+ <66660e3cd5636_8dbbb294c@willemb.c.googlers.com.notmuch> <CAPza5qfVzV7NFiVY1jcZR-+0ey-uKgUjV6OcjmDFvKG3T-2SXA@mail.gmail.com>
+ <666789d3d9d2a_bf52c294e9@willemb.c.googlers.com.notmuch>
+In-Reply-To: <666789d3d9d2a_bf52c294e9@willemb.c.googlers.com.notmuch>
+From: Chengen Du <chengen.du@canonical.com>
+Date: Wed, 12 Jun 2024 16:47:02 +0800
+Message-ID: <CAPza5qe8KAjjZsZdTupXx27kvdPzhBNcDC=Nk5Xjc4O2obEAAA@mail.gmail.com>
+Subject: Re: [PATCH v6] af_packet: Handle outgoing VLAN packets without
+ hardware offloading
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, kaber@trash.net, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 11, 2024 at 11:29:58AM +0200, Thomas Zimmermann wrote:
-> Hi
-> 
-> Am 11.06.24 um 10:23 schrieb Peng Fan:
-> > > Subject: Re: [PATCH] drm/fbdev-dma: fix getting smem_start
-> > > 
-> > > Hi
-> > > 
-> > > Am 11.06.24 um 03:00 schrieb Peng Fan:
-> > > > > Subject: Re: [PATCH] drm/fbdev-dma: fix getting smem_start
-> > > > > 
-> > > > > Hi
-> > > > > 
-> > > > > Am 04.06.24 um 10:03 schrieb Peng Fan (OSS):
-> > > > > > From: Peng Fan <peng.fan@nxp.com>
-> > > > > > 
-> > > > > > If 'info->screen_buffer' locates in vmalloc address space,
-> > > > > > virt_to_page will not be able to get correct results. With
-> > > > > > CONFIG_DEBUG_VM and CONFIG_DEBUG_VIRTUAL enabled on ARM64,
-> > > > > there is dump below:
-> > > > > 
-> > > > > Which graphics driver triggers this bug?
-> > > > It is NXP i.MX95 DPU driver which is still in NXP downstream repo.
-> > > Which DRM memory manager does that driver use?
-> > DRM_GEM_DMA_DRIVER_OPS
-> 
-> So fbdev-dma would be correct. But with the gem-dma allocator, wouldn't you
-> allocate from one of these dma_alloc_() calls at [1] ? How does the drivers
-> end up with vmalloc'd fbdev memory? Specifically in the light of the docs at
-> [2].
+Hi Willem,
 
-I think when you have an iommu dma_alloc just allocates pages, and uses
-the iommu to make it all contiguous for the device, and vmalloc for the
-kernel. So it's not allocated with vmalloc(), just ends up getting mapped
-into the vmalloc range.
--Sima
+On Tue, Jun 11, 2024 at 7:18=E2=80=AFAM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> Chengen Du wrote:
+> > Hi Willem,
+> >
+> > I'm sorry, but I would like to confirm the issue further.
+> >
+> > On Mon, Jun 10, 2024 at 4:19=E2=80=AFAM Willem de Bruijn
+> > <willemdebruijn.kernel@gmail.com> wrote:
+> > >
+> > > Chengen Du wrote:
+> > > > The issue initially stems from libpcap. The ethertype will be overw=
+ritten
+> > > > as the VLAN TPID if the network interface lacks hardware VLAN offlo=
+ading.
+> > > > In the outbound packet path, if hardware VLAN offloading is unavail=
+able,
+> > > > the VLAN tag is inserted into the payload but then cleared from the=
+ sk_buff
+> > > > struct. Consequently, this can lead to a false negative when checki=
+ng for
+> > > > the presence of a VLAN tag, causing the packet sniffing outcome to =
+lack
+> > > > VLAN tag information (i.e., TCI-TPID). As a result, the packet capt=
+uring
+> > > > tool may be unable to parse packets as expected.
+> > > >
+> > > > The TCI-TPID is missing because the prb_fill_vlan_info() function d=
+oes not
+> > > > modify the tp_vlan_tci/tp_vlan_tpid values, as the information is i=
+n the
+> > > > payload and not in the sk_buff struct. The skb_vlan_tag_present() f=
+unction
+> > > > only checks vlan_all in the sk_buff struct. In cooked mode, the L2 =
+header
+> > > > is stripped, preventing the packet capturing tool from determining =
+the
+> > > > correct TCI-TPID value. Additionally, the protocol in SLL is incorr=
+ect,
+> > > > which means the packet capturing tool cannot parse the L3 header co=
+rrectly.
+> > > >
+> > > > Link: https://github.com/the-tcpdump-group/libpcap/issues/1105
+> > > > Link: https://lore.kernel.org/netdev/20240520070348.26725-1-chengen=
+.du@canonical.com/T/#u
+> > > > Fixes: 393e52e33c6c ("packet: deliver VLAN TCI to userspace")
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Chengen Du <chengen.du@canonical.com>
+> > >
+> > > Overall, solid.
+> > >
+> > > > ---
+> > > >  net/packet/af_packet.c | 57 ++++++++++++++++++++++++++++++++++++++=
+++--
+> > > >  1 file changed, 55 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+> > > > index ea3ebc160e25..8cffbe1f912d 100644
+> > > > --- a/net/packet/af_packet.c
+> > > > +++ b/net/packet/af_packet.c
+> > > > @@ -538,6 +538,43 @@ static void *packet_current_frame(struct packe=
+t_sock *po,
+> > > >       return packet_lookup_frame(po, rb, rb->head, status);
+> > > >  }
+> > > >
+> > > > +static u16 vlan_get_tci(struct sk_buff *skb)
+> > > > +{
+> > > > +     struct vlan_hdr vhdr, *vh;
+> > > > +     u8 *skb_orig_data =3D skb->data;
+> > > > +     int skb_orig_len =3D skb->len;
+> > > > +
+> > > > +     skb_push(skb, skb->data - skb_mac_header(skb));
+> > > > +     vh =3D skb_header_pointer(skb, ETH_HLEN, sizeof(vhdr), &vhdr)=
+;
+> > >
+> > > Don't harcode Ethernet.
+> > >
+> > > According to documentation VLANs are used with other link layers.
+> > >
+> > > More importantly, in practice PF_PACKET allows inserting this
+> > > skb->protocol on any device.
+> > >
+> > > We don't use link layer specific constants anywhere in the packet
+> > > socket code for this reason. But instead dev->hard_header_len.
+> > >
+> > > One caveat there is variable length link layer headers, where
+> > > dev->min_header_len !=3D dev->hard_header_len. Will just have to fail
+> > > on those.
+> >
+> > Thank you for pointing out this error. I would like to confirm if I
+> > need to use dev->hard_header_len to get the correct header length and
+> > return zero if dev->min_header_len !=3D dev->hard_header_len to handle
+> > variable-length link layer headers. Is there something I
+> > misunderstand, or are there other aspects I need to consider further?
+>
+> That's right.
+>
+> The min_header_len !=3D hard_header_len check is annoying and may seem
+> pedantic. But it's the only way to trust that the next header starts
+> at hard_header_len.
 
+Thank you for your advice.
+I have implemented the modification, but I found that the
+(min_header_len !=3D hard_header_len) check results in unexpected
+behavior in the following test scenario:
+    ip link add link ens18 ens18.24 type vlan proto 802.1ad id 24
+    ip link add link ens18.24 ens18.24.25 type vlan proto 802.1Q id 25
+    ifconfig ens18.24 1.0.24.1/24
+    ifconfig ens18.24.25 1.0.25.1/24
+    ping -n 1.0.25.3 > /dev/null 2>&1 &
+    tcpdump -nn -i any -y LINUX_SLL -Q out not tcp and not udp
 
-> 
-> [1] https://elixir.bootlin.com/linux/v6.9/source/drivers/gpu/drm/drm_gem_dma_helper.c#L146
-> [2] https://elixir.bootlin.com/linux/v6.9/source/Documentation/core-api/dma-api-howto.rst#L124
-> 
-> Best regards
-> Thomas
-> 
-> > 
-> > > I'm asking because if the driver allocates BOs via vmalloc(), should it really
-> > > use fbdev-dma?
-> > We use it for fbdev emulation. If drm_kms_helper.fbdev_emulation is 0,
-> > fbdev emulation could be disabled.
-> > 
-> > Thanks
-> > Peng
-> > > Best regards
-> > > Thomas
-> > > 
-> > > > Thanks,
-> > > > Peng.
-> > > --
-> > > --
-> > > Thomas Zimmermann
-> > > Graphics Driver Developer
-> > > SUSE Software Solutions Germany GmbH
-> > > Frankenstrasse 146, 90461 Nuernberg, Germany
-> > > GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman HRB
-> > > 36809 (AG Nuernberg)
-> 
-> -- 
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+While receiving a packet from ens18.24.25 (802.1Q), the min_header_len
+and hard_header_len are 14 and 18, respectively.
+This check results in the TCI being 0 instead of 25.
+Should we skip this check to display the correct value, or is there
+another check that can achieve the same purpose?
