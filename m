@@ -1,111 +1,123 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039B37FB
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28297FB;
+	Wed, 12 Jun 2024 14:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718202439; cv=none; b=K+lGM0ISciUtFyeACHB1wqsNuwZgrva5wEQQ+qD3AwxH+CEslW1gSwgegp2w3bK/3BkcHjMkbV96TC/FDPjVQt0I0Jk1MYKHGX32Rbbgqdtdt7SOZf4qufWbQTvAdW7s3QJ4BApxywNo5Mt4sxbVeTtkWBx2Auv2DH34AsmuBmw=
+	t=1718202501; cv=none; b=rXufMtK0yu8S5lLLdZ/odRG3IhaUc4yMvKowv4tsufv/lY1xOOGfCvy/EgTh11154AVWikvbhXuR/WHbkHQFh2a7oXDiiBgptfjXGOPck3TDhZM9gaktsfnwt6VVFOz2UTlseH2j+uJszW73hjNhiUJFDkBRmLG5xHRK5M2JIVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718202439; c=relaxed/simple;
-	bh=WvrdNviMX5TzKJJ8L49b4Qix7SQh0JAWUMwXtKICv8s=;
+	s=arc-20240116; t=1718202501; c=relaxed/simple;
+	bh=M5Wq5PkW+j5WBpUWNaxe35+bKituzA8SiWZVorHnflI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XA/GADIAC2zZvvqJnbAzlQCc+nZ76cThF/kYdmpyYOflHkzgoD/Mx+RlOot5uEwyDrKped8YiK4BpBRqyx/Ici2AcPC2ptMtRP/20bUjfseENJXsMZdxuuPBu783gJVzg21arPuc3jgwsgVFX5SZcdLv3MC7t2/1du3Ri0enFAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DTE6xpBb; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=aChqzn+kkN2cYsueCYD4hk0wfe8zXNGel3X7swibSHAE5ZELmoSTaOZEN0WzKoJzKewxWbL4n+Qh5P9969kPrJ9ORex998ciSNvgyG5A9FAHIwjNjJESQCuqgmU1fxxh040REg3PYYNBFTJxLptU7CZfkPFbs/mFrjshl5YI0EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eb/TW/q5; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DTE6xpBb"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dfe41f7852cso946629276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:27:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eb/TW/q5"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ebeefb9a6eso22171461fa.1;
+        Wed, 12 Jun 2024 07:28:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718202436; x=1718807236; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718202498; x=1718807298; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h7Z/F2lTFqxBQr8f3YutkrSgp/gPqby12XW1md45flk=;
-        b=DTE6xpBbiJqy5Tk4viU4rvjDd5KhzmomcToUw3vUSDOT/7bNI665Yvmpc8fjTX3GUE
-         dq/VMr0FCbY6H0ey+U0/m38rugLNgzav983+Mk3D5gJ1LaXWJDTMyw6ofmSq3Mw4F58Y
-         xJlJesv5gE3Vbj28viNGr/ogALNftwSgXyFbQ=
+        bh=ZBGRs/yfS5hfu0UJmUEEloYokRcE9KOZ/5P6i9N80po=;
+        b=eb/TW/q5oO48KNt+Af+wQUVUoayNH3z49p2H8HIXHzUArNvBEDW7LTqdOFlZIr96Qt
+         0UUr5huK4UbmmzOs7cQgm6uhtFugC7x5pspeRSJkLUSHt1Fwhpq3WiY/blgSmCtc85OX
+         +eiB1O5GJ/rXpd59J2VQJKtF7KnwznQqoYbuQwZcp001wMpICGNO1xjUF7pYP12Zsa1U
+         HhocjK7izQ/nKeYBGJAXqwzl3wiYmheU+ua6DhZ7D6aR0grGmObiRnwhWhv45uyTu+3k
+         nAZty1x9Y8FnLRviUvMqRyuFJ2X/oG7Z8tkaq5bbvwACtafw24APSAjlrOm1MRD+IYBm
+         OkrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718202436; x=1718807236;
+        d=1e100.net; s=20230601; t=1718202498; x=1718807298;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h7Z/F2lTFqxBQr8f3YutkrSgp/gPqby12XW1md45flk=;
-        b=vhVSuHcpwlRTmt0Ek55YW9cPqHC2PdXtEjO2Q8sxvnzkJbyLHj6M8Skly6iTl0Eoyv
-         A3s82OR15UHC33eV0m7/5s2n1ixDVuNzZ2VKWKKq71El4E9N8YEXKacItRro+8dJHBf6
-         b1fgH65vEfSBFTRzYYIKmbFxj3PwU5/jZgj03jFDmWR5UG9Mm9c8aCdYTN+I0ELuOOO0
-         g/qdhE8/Mk1LEmrRVcS7CiO0curD7t+5H8XmBhSkY6GfsRcDPOEDBIoI5Drxub5BOPTQ
-         dwIAKv8g+ZNXCuI+ps+HWbptC2ASebjLdx7xtLPemmEijYDHuutoI5qhe1L5+Nx5AGdc
-         AGeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWuAG64U4aeEqh8HE37aE0D8HzqUTIjUlHGl5EPyzsBgxU9dZJY9nystvCfkr9ONkgyMOTY6PO3qa7PSzF17gq/Qdva3J6oePuMWVPs
-X-Gm-Message-State: AOJu0Yzv2Vaa5LoZbIcl4rhRMBcRwLJigyzpp1s1XDAWSeXpSQDiszi6
-	3QZ9lnNRt8DLFyEtqFTc1ah2klTOxp7lcOKqWQeLV8Yq77XNvFSdI28RE9ooYDAqtaYpmwDQm4E
-	=
-X-Google-Smtp-Source: AGHT+IHu0U25x9X1Pg/v8WLMtA+jnT0Qcgs9vOse5k6pZim/CJTqQsh796il9mqCR+X3DXzdESA02Q==
-X-Received: by 2002:a25:aa42:0:b0:dfe:fc2b:56a3 with SMTP id 3f1490d57ef6-dfefc2b5738mr480841276.56.1718202436573;
-        Wed, 12 Jun 2024 07:27:16 -0700 (PDT)
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com. [209.85.160.179])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4415df952d9sm3915061cf.88.2024.06.12.07.27.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 07:27:16 -0700 (PDT)
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4400cc0dad1so464451cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:27:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWjqkSUpMlreotRpZhQc1PQ1RaD605q0DpXERTHOWO4/xOpNfQH5nLiX8RxLGrE4J65hLe0AWYiKjtfN3H0f52Md07Or72LWC7q0uAx
-X-Received: by 2002:a05:622a:5a9a:b0:43e:295:f160 with SMTP id
- d75a77b69052e-4415a39f97bmr3125261cf.24.1718202116182; Wed, 12 Jun 2024
- 07:21:56 -0700 (PDT)
+        bh=ZBGRs/yfS5hfu0UJmUEEloYokRcE9KOZ/5P6i9N80po=;
+        b=uXn/xDOIGO5Kbecd4eTtVEXHfD/9T0POVI23Gb1JO04MBJLGzWfhVIgi+rxVQBz2hm
+         Mm+3tcZwyKz06+I5AreYBbzK2uv2hb+gVE3n9tbOiL5J8m2N5i1FJMoEnxhe0tzZkRJL
+         8hlfW8zL4bGQmIVL1u4B2WR2JtVa5AL9oXHvj1/6TEPQBjJjOmXVF05XaXHdRsAzrktO
+         z53qpWp3EGnVXqV1gDT1E3N1C6H8WaMi+wFY+WxwaE09IsQmXANn8dgtL0WaAlKjAyRe
+         4Ef/xppbMcqi8zxQH6EHfGeu2oUH3qlkjZBBc7BiWFGFeBMEGXKKc+Fx5CgScOHWjhh+
+         r1IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+rZgMlsu5w1wHhcuhYPlpC4eav/gizoTRANgwhKN31O9IOtYZvIKh/Hac7FUhP5QtISsVKnxskYW4b3uEcY/Nofk0syrutEUhO5dqq4IP9lvEg5JBfjB5kDdejT4+pgFwtYTiZo8CihpJebrlZhiGsHJTi5Q/xUA6kicmwdlztYuBng==
+X-Gm-Message-State: AOJu0Yy4eQonk6i3bE1x1ToeQozIxj0tzsVWkZydjvurdbT63NHm+5TZ
+	wN53WAh0d/hxDTg1oSY68GPqcuVWLzLFBgE1nn+FF1ctj5s7NIiFaKNaYBDxcvmFayfZTEIEMQp
+	lDqwyWD/ovGuU71xzIv1k/mnpuDPJIuCOB/oju9Rh
+X-Google-Smtp-Source: AGHT+IHOs3ciOviU8J52fVK6ZywQ5lGQdMISCOwO4tHH7On+5Hsi54kgd/FP+vf2ZrTO8jNLdDjnz/KhkhEElQXnm7M=
+X-Received: by 2002:a2e:a0cc:0:b0:2ea:e4e9:8776 with SMTP id
+ 38308e7fff4ca-2ebfc9ab259mr12598771fa.46.1718202497821; Wed, 12 Jun 2024
+ 07:28:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612133550.473279-1-tejasvipin76@gmail.com> <20240612133550.473279-3-tejasvipin76@gmail.com>
-In-Reply-To: <20240612133550.473279-3-tejasvipin76@gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 12 Jun 2024 07:21:40 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VTEzSyTHm-YBwneBgpohK8uu460DER-GcsQWu-z9hJsg@mail.gmail.com>
-Message-ID: <CAD=FV=VTEzSyTHm-YBwneBgpohK8uu460DER-GcsQWu-z9hJsg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/mipi-dsi: fix handling of ctx in mipi_dsi_msleep
-To: Tejas Vipin <tejasvipin76@gmail.com>, neil.armstrong@linaro.org
-Cc: quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, 
-	linus.walleij@linaro.org, dmitry.baryshkov@linaro.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240601092646.52139-1-joswang1221@gmail.com> <20240603130004.25662-1-joswang1221@gmail.com>
+ <9c665afe-16d7-469e-ac3e-d0d7388a31b7@kernel.org>
+In-Reply-To: <9c665afe-16d7-469e-ac3e-d0d7388a31b7@kernel.org>
+From: joswang <joswang1221@gmail.com>
+Date: Wed, 12 Jun 2024 22:28:06 +0800
+Message-ID: <CAMtoTm1ojhCSRb4c+MPjuJB+JaeD2ex6B7FpCaJtLvrTj0Q8Cg@mail.gmail.com>
+Subject: Re: [PATCH v2, 1/3] dt-bindings: usb: dwc3: Add snps,p2p3tranok quirk
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Thinh.Nguyen@synopsys.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, balbi@kernel.org, devicetree@vger.kernel.org, 
+	joswang <joswang@lenovo.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Jun 12, 2024 at 6:37=E2=80=AFAM Tejas Vipin <tejasvipin76@gmail.com=
+On Tue, Jun 4, 2024 at 2:33=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
 > wrote:
 >
-> ctx would be better off treated as a pointer to account for most of its
-> usage so far, and brackets should be added to account for operator
-> precedence for correct evaluation.
+> On 03/06/2024 15:00, joswang wrote:
+> > From: joswang <joswang@lenovo.com>
 >
-> Fixes: f79d6d28d8fe7 ("drm/mipi-dsi: wrap more functions for streamline h=
-andling")
-> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
-> ---
->  include/drm/drm_mipi_dsi.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Is this your full name or known identity you want to use for all kernel
+> contributions? Looks like login...
+>
+> >
+> > There is an issue with the DWC31 2.00a and earlier versions
+> > where the controller link power state transition from
+> > P3/P3CPM/P4 to P2 may take longer than expected, ultimately
+> > resulting in the hibernation D3 entering time exceeding the
+> > expected 10ms.
+> >
+> > Add a new 'snps,p2p3tranok-quirk' DT quirk to dwc3 core
+> > for enable the controller transitions directly from phy
+> > power state P2 to P3 or from state P3 to P2.
+> >
+> > Note that this can only be set if the USB3 PHY supports
+> > direct p3 to p2 or p2 to p3 conversion.
+> >
+> > Signed-off-by: joswang <joswang@lenovo.com>
+> > ---
+> >  Documentation/devicetree/bindings/usb/snps,dwc3.yaml | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml b/Doc=
+umentation/devicetree/bindings/usb/snps,dwc3.yaml
+> > index 1cd0ca90127d..721927495887 100644
+> > --- a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+> > +++ b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+> > @@ -242,6 +242,13 @@ properties:
+> >        When set, all HighSpeed bus instances in park mode are disabled.
+> >      type: boolean
+> >
+> > +  snps,p2p3tranok-quirk:
+>
+> Why this cannot be deduced from compatible? Which upstream SoCs are
+> affected?
+>
+>
+>
+> Best regards,
+> Krzysztof
+>
 
-Yeah. Looking closer at the history, it looks like it was always
-intended to be a pointer since the first users all used it as a
-pointer.
-
-Suggested-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-I've also compile-tested all the panels currently using mipi_dsi_msleep().
-
-Neil: Given that this is a correctness thing, I'd rather see this land
-sooner rather than later. If you agree, maybe you can land these two
-patches whenever you're comfortable with them?
-
-
--Doug
+Thanks for your help in reviewing the code
+DWC31_USB 2.00a and earlier versions IP bug, regardless of platform.
