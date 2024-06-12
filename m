@@ -1,93 +1,188 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEE18003F;
-	Wed, 12 Jun 2024 18:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3F84597A;
+	Wed, 12 Jun 2024 18:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217096; cv=none; b=e7iIsLgJxHFfers0YrZy8qaOG2vCsvwM7MJTZngJUy4wo3dOtfI27d3zE31hg4XoAUp3Y6fijnv3G/TMhGv5pTJrEGiCP4IobHI34TT87VWh1GbjeO0cYx7Tft7XZdg4Hm8Qiq8uVNgD/cq62YsevOTbIehW8LspHFi0FqjexKA=
+	t=1718217208; cv=none; b=p59yQh4TZexYO9oZKw9hELZgpCKrH2UxP6a/Dcfkl3Wx2zu444/HvPlTwgZQN17OSJLALl/rkx3+SJMS8tf/AtvGgcRhPIG4r5QGYfwL9sRkM1EpH7gb1cbW5YQDbYyeqy1pbYUEIOIvs9GNA5G1KBY47HaHVn+474nrcCYwUnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217096; c=relaxed/simple;
-	bh=KJpri+IbVnAoZKMxYgYMeN+Mhz/Vw1rvPuNwlL7jfN4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=EqJs1Orl74d3AdKOwtCvwc3TGHW9boZ5lYNHKZ4xZXRl7tnVM0l/1vPjjm/o4KLAR8D9NW5M1NbF5uQFu1Q2kbyv/BcZWBHZ4PEvMlIyKTmpVxXBXme+Y74Ub8D/RIBlKt4cvoN21nmhxTgFZg5A6MEeeLO6LJnDNofeUQYjpE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from fedori.lan (c3e47615.dsl.pool.telekom.hu [::ffff:195.228.118.21])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000070662.000000006669E981.0016B242; Wed, 12 Jun 2024 20:31:28 +0200
-From: Gergo Koteles <soyer@irl.hu>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-  Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-  Gergo Koteles <soyer@irl.hu>
-Subject: [PATCH 1/2] media: v4l2: ctrls: Add ROLL_ABSOLUTE control
-Date: Wed, 12 Jun 2024 20:31:13 +0200
-Message-ID: <d4d606920a2e08fa468eb6c98f7f2f387ed58e16.1718216718.git.soyer@irl.hu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1718216718.git.soyer@irl.hu>
-References: <cover.1718216718.git.soyer@irl.hu>
+	s=arc-20240116; t=1718217208; c=relaxed/simple;
+	bh=3chq8aGAuNSKagtHO9pYuCTMVP7l20YtXhwbbVv0/gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fVMwycmI5x+siqK+wWHmlksi6DPpbA6oY49/0bRGlKVI/RUtYK255QxQC18sPZwC1+3UG/TZOKbG33DMzsjNazEkqxQL4wT23yTxSljYEOdn2csdLA4DXx05MMBMm25fl619WMOISRuIb8sqSUYU1+VrNINeC/FG/KPRkZUrBfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZCzru+PM; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZCzru+PM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718217207; x=1749753207;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=3chq8aGAuNSKagtHO9pYuCTMVP7l20YtXhwbbVv0/gg=;
+  b=ZCzru+PM1DKbDnL5qAs7z7kTlFub5V2FwmnFAH4T84Ol95C0bdpTl6HC
+   itzu8+a+iB2XkZT9I8ghCXh65HLoBuwxCIqo0wOS/v+x63NtmnWB4dW0y
+   Je092v7C2wHkluV8mhgw9MmXqJ40oEEmuXOA6e0Ki/8+kCywJvL4KY1rQ
+   O7TNKNrzgVYuBmhqf0PPw8686F2AqyH9HlJX0/l91NVTJI1pAVEIK6rBz
+   0r34U00SaUn0r+GRjJZCy+n72D+r+j4L3Zv8anaJleA16mf4KvRxADQvH
+   vGKNh0ywsaHZFwoHdd0VARAnypIYLpXFYYMVvH+ol8fHJ0+ToeYsg5BiZ
+   w==;
+X-CSE-ConnectionGUID: zxyeR/zJRYetvrC+Zm8Haw==
+X-CSE-MsgGUID: WCnow9OEQOKuGVKPcRhSKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="18858296"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="18858296"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 11:33:26 -0700
+X-CSE-ConnectionGUID: D8O8/xUdTBKzElSgYmAnyA==
+X-CSE-MsgGUID: 3g51+lagSs6J3ayfXpGkkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="39768352"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 11:33:23 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id E2B6D11FA94;
+	Wed, 12 Jun 2024 21:33:20 +0300 (EEST)
+Date: Wed, 12 Jun 2024 18:33:20 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Genes Lists <lists@sapience.com>,
+	linux-kernel@vger.kernel.org, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+	wentong.wu@intel.com, linux-media@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [PATCH 1/1] ACPI: scan: Ignore Dell XPS 9320 camera graph port
+ nodes
+Message-ID: <Zmnp8JbFj7ZoN5Vy@kekkonen.localdomain>
+References: <e9062095-b312-44df-a9e3-0b09f3ec9eff@redhat.com>
+ <4b387b4d-f778-4891-9f07-df5fc0a093cd@redhat.com>
+ <ZmmQLt7wB-yGQBTw@kekkonen.localdomain>
+ <CAJZ5v0ii3WFQRPdfHeeW4M9kXSWDVxxxy02zThcf25mjNwqDAw@mail.gmail.com>
+ <ZmmT56Cyvb2FCyav@kekkonen.localdomain>
+ <CAJZ5v0hOBggQR_=uA3VuhruQnZihVxHHovpTz4=qfcbiSunsYw@mail.gmail.com>
+ <ZmmY3he9vfWVWU3I@kekkonen.localdomain>
+ <CAJZ5v0j7HTfg1wY+B+7vhE6tBKPVHMuu_MsFHjaLK70VS_cNEw@mail.gmail.com>
+ <18cb82bb-51c6-4a52-80a4-6b1e3d95f99c@redhat.com>
+ <CAJZ5v0je=Z+2LWv41OVwunujfTD7U2L9QDrNa7MoNBL+Chstnw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0je=Z+2LWv41OVwunujfTD7U2L9QDrNa7MoNBL+Chstnw@mail.gmail.com>
 
-Add V4L2_CID_ROLL_ABSOLUTE as an integer control to
-retrieve and set the camera roll in degrees, and its
-documentation.
+Hi Rafael,
 
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
----
- Documentation/userspace-api/media/v4l/ext-ctrls-camera.rst | 5 +++++
- drivers/media/v4l2-core/v4l2-ctrls-defs.c                  | 1 +
- include/uapi/linux/v4l2-controls.h                         | 2 ++
- 3 files changed, 8 insertions(+)
+On Wed, Jun 12, 2024 at 05:26:46PM +0200, Rafael J. Wysocki wrote:
+> Hi,
+> 
+> On Wed, Jun 12, 2024 at 4:30 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > Hi,
+> >
+> > On 6/12/24 3:06 PM, Rafael J. Wysocki wrote:
+> > > Hi Sakari,
+> > >
+> > > On Wed, Jun 12, 2024 at 2:47 PM Sakari Ailus
+> > > <sakari.ailus@linux.intel.com> wrote:
+> > >>
+> > >> Hi Rafael,
+> > >>
+> > >> On Wed, Jun 12, 2024 at 02:32:26PM +0200, Rafael J. Wysocki wrote:
+> > >>>>>>> I just hit the same problem on another Dell laptop. It seems that
+> > >>>>>>> all Dell laptops with IPU6 camera from the Tiger Lake, Alder Lake
+> > >>>>>>> and Raptor Lake generations suffer from this problem.
+> > >>>>>>>
+> > >>>>>>> So instead of playing whack a mole with DMI matches we should
+> > >>>>>>> simply disable ACPI MIPI DISCO support on all Dell laptops
+> > >>>>>>> with those CPUs. I'm preparing a fix for this to replace
+> > >>>>>>> the DMI matching now.
+> > >>>>>>
+> > >>>>>> DisCo for Imaging support shouldn't be dropped on these systems, and this
+> > >>>>>> isn't what your patch does either. Instead the ACPI graph port nodes (as
+> > >>>>>> per Linux specific definitions) are simply dropped, i.e. this isn't related
+> > >>>>>> to DisCo for Imaging at all.
+> > >>>>>
+> > >>>>> So it looks like the changelog of that patch could be improved, right?
+> > >>>>
+> > >>>> Well, yes. The reason the function is in the file is that nearly all camera
+> > >>>> related parsing is located there, not that it would be related to DisCo for
+> > >>>> Imaging as such.
+> > >>>
+> > >>> So IIUC the camera graph port nodes are created by default with the
+> > >>> help of the firmware-supplied information, but if that is defective a
+> > >>> quirk can be added to skip the creation of those ports in which case
+> > >>> they will be created elsewhere.
+> > >>>
+> > >>> Is this correct?
+> > >>
+> > >> Yes.
+> > >
+> > > So it would be good to add a comment to this effect to
+> > > acpi_nondev_subnode_extract() where acpi_graph_ignore_port() is
+> > > called.
+> > >
+> > > And there is a somewhat tangential question that occurred to me: If
+> > > the nodes are created elsewhere when acpi_graph_ignore_port() is true,
+> > > why is it necessary to consult the platform firmware for the
+> > > information on them at all?  Wouldn't it be better to simply always
+> > > create them elsewhere?
+> >
+> > That is a good question. The ACPI MIPI DISCO specification is an
+> > attempt standardize how MIPI cameras and their sensors are described
+> > in ACPI.
+> >
+> > But this is not actually being used by any Windows drivers atm. The windows
+> > drivers rely on their own custom ACPI data which gets translated into
+> > standard Linux device-properties by: drivers/media/pci/intel/ipu-bridge.c
+> >
+> > and so far AFAIK there are 0 laptops where there actually is 100% functional
+> > ACPI MIPI information. I believe that some work is in place to get correct
+> > usable ACPI MIPI information in place in the ACPI tables of some Meteor Lake
+> > laptops. But I believe that there too it does not work yet with the BIOS
+> > version with which current Windows models are shipping. It is being fixed
+> > for systems which have Linux support from the vendor but I suspect that
+> > on other models if ACPI MIPI DISCO information is there it will not
+> > necessarily be reliable because AFAICT Windows does not actually use it.
+> >
+> > And TBH this has me worried about camera support for Meteor Lake devices
+> > going forward. We really need to have 1 reliable source of truth here and
+> > using information which is ignored by Windows does not seem like the best
+> > source to use.
+> >
+> > Sakari I know you have been pushing for MIPI camera descriptions under
+> > ACPI to move to a standardized format and I can see how that is a good
+> > thing, but atm it seems to mainly cause things to break and before
+> > the ACPI MIPI DISCO support landed in 6.8 we did not have these issues,
+> > since the information used by the ipu-bridge code does seem to be correct.
+> 
+> Well, if Windows doesn't use this information, it is almost guaranteed
+> to be garbage.
 
-diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-camera.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-camera.rst
-index cdc515c60468..81bc31a4bf79 100644
---- a/Documentation/userspace-api/media/v4l/ext-ctrls-camera.rst
-+++ b/Documentation/userspace-api/media/v4l/ext-ctrls-camera.rst
-@@ -672,3 +672,8 @@ enum v4l2_scene_mode -
- 
-     As modes differ for each sensor, menu items are not standardized by this
-     control and are left to the programmer.
-+
-+``V4L2_CID_ROLL_ABSOLUTE (integer)``
-+    This control describes the camera rotation along the image viewing axis in
-+    degrees. Values range from -180 to +180, the default is zero. Positive
-+    values rotate the camera clockwise, negative values counter-clockwise.
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls-defs.c b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
-index 8696eb1cdd61..0e8af56cb2a2 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls-defs.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
-@@ -1086,6 +1086,7 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_CAMERA_ORIENTATION:	return "Camera Orientation";
- 	case V4L2_CID_CAMERA_SENSOR_ROTATION:	return "Camera Sensor Rotation";
- 	case V4L2_CID_HDR_SENSOR_MODE:		return "HDR Sensor Mode";
-+	case V4L2_CID_ROLL_ABSOLUTE:		return "Roll, Absolute";
- 
- 	/* FM Radio Modulator controls */
- 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 99c3f5e99da7..a6d28e54bbc0 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -1087,6 +1087,8 @@ enum v4l2_auto_focus_range {
- 
- #define V4L2_CID_HDR_SENSOR_MODE		(V4L2_CID_CAMERA_CLASS_BASE+36)
- 
-+#define V4L2_CID_ROLL_ABSOLUTE			(V4L2_CID_CAMERA_CLASS_BASE+37)
-+
- /* FM Modulator class control IDs */
- 
- #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
+No ACPI DSDT in production systems uses DisCo for Imaging as of now at
+least to my knowledge.
+
+> 
+> So maybe it would be better to make acpi_graph_ignore_port() return
+> true by default and false only when the information is known to be
+> valid.  IOW, whitelist things instead of adding blacklist entries in
+> perpetuum.
+
+What could be gained from this?
+
+> 
+> And hopefully we'll eventually get to the point at which we are able
+> to say "whitelist everything from now on".
+
 -- 
-2.45.2
+Kind regards,
 
+Sakari Ailus
