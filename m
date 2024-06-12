@@ -1,161 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA3E16C69E;
-	Wed, 12 Jun 2024 07:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EED16B73C;
+	Wed, 12 Jun 2024 07:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718176052; cv=none; b=SFYxOC3qSGr8boXln08BWNfe+PIWYw2m3raHy4zZ6RNGEsSwT+zcfGFzjL1BxP+qBr50dYIqISdSEvOjHwf5vMEopT/3yb3E3MIMkzb9CUdU8YEuyBfR4dck3CRoRwswDOKm+5f9ovaML8zRpiJKVRCAQbAngcAXzdh/hBZC6+k=
+	t=1718176070; cv=none; b=GP1IkPDWgiz8FgaYl+qy/4lSJyBS+0U+sfgXwbU+MQ4//omXF8oCj7gPaQhdtNmESzyptZmTqCHK9Xv5S22MZScsVeNf8l7I+FkSVYPakoh68LCKX/pvWcNEgBwt0/H9pL51lTbok6Zik3GtoXttp7Nm5PMl9O24if0gOn2BPgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718176052; c=relaxed/simple;
-	bh=+YUgPW5c25TRz6pbWQMM+dmE1GdC7Q7SfIqSXdzEvCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RLlZ+WHm77TAXe1iSmZnNuJFLeC3L8hOCfkbOTw8bubyCy4nxsq7gl9pflAIxYB+ZT/LtSRQ19T2urEZNyv8AqUAxmXFIRZMB5YitqUcJMv4vAJmRDYJMnVONDETLwfx14OMbQw8e5D9eRXyeFMAacFO8z/CSttTTe+EIMtbUe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ztbXtLPC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ztbXtLPC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08598C3277B;
-	Wed, 12 Jun 2024 07:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718176052;
-	bh=+YUgPW5c25TRz6pbWQMM+dmE1GdC7Q7SfIqSXdzEvCk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ztbXtLPCgGzGXhxdVipqgUVlhhdRqf6MLnT2wsd5MI2CglPVgTNnp6f7koCkB/Xg9
-	 ZARawHbun5ow/0InrH+ABs9UezZycFxQiDZjWIklkMEvLafw7LJajHUNH0mrwsbzHR
-	 PSSejEKyh+phAFXSBO9ugm107JD2DbHRqmpYXfn0=
-Date: Wed, 12 Jun 2024 09:07:29 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Kuangyi Chiang <ki.chiang65@gmail.com>
-Cc: mathias.nyman@intel.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] xhci: Don't issue Reset Device command to Etron xHCI host
-Message-ID: <2024061227-cruelness-unwind-13a4@gregkh>
-References: <20240612022256.7365-1-ki.chiang65@gmail.com>
+	s=arc-20240116; t=1718176070; c=relaxed/simple;
+	bh=s7TgO1xFEFshQBAQY8OYv14stw9Qgxt8pZDh96opt3k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=TsxU2Cg8/F9tenyurob5+OdoreD22nCQ5MIxHJopJ3L+wwrFdgIk5xqQksC0kOYsJmDJP4zxCC/yyGSZkhte+ePThr8aVIEjoU8sZY7tBQuzKh/HkFwQ1pLacZ2FmihuQioeC96ivjuMYU7J2Bt9TNlbf6j1yqwAMLB3pknXKUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BA9851A124C;
+	Wed, 12 Jun 2024 08:57:47 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6D2A51A0FFA;
+	Wed, 12 Jun 2024 08:57:47 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 1D65C180222C;
+	Wed, 12 Jun 2024 14:57:45 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: viorel.suman@nxp.com
+Subject: [PATCH 2/3] ASoC: fsl_audmix: Split playback and capture stream to different DAI
+Date: Wed, 12 Jun 2024 14:40:51 +0800
+Message-Id: <1718174452-17596-3-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1718174452-17596-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1718174452-17596-1-git-send-email-shengjiu.wang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240612022256.7365-1-ki.chiang65@gmail.com>
 
-On Wed, Jun 12, 2024 at 10:22:56AM +0800, Kuangyi Chiang wrote:
-> Sometimes hub driver does not recognize USB device that is connected
-> to external USB2.0 Hub when system resumes from S4.
-> 
-> This happens when xHCI driver issue Reset Device command to inform
-> Etron xHCI host that USB device has been reset.
-> 
-> Seems that Etron xHCI host can not perform this command correctly,
-> affecting that USB device.
-> 
-> Instead, to aviod this, xHCI driver should reassign device slot ID
-> by calling xhci_free_dev() and then xhci_alloc_dev(), the effect is
-> the same.
+As audmix requires playback and capture stream in different
+master/slave mode, so separate playback and capture stream to
+different DAI. There are three DAIs required, two DAIs for playback
+one DAI for capture.
 
-How is freeing and then allocating the device doing anything?
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/fsl_audmix.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-> 
-> Add XHCI_ETRON_HOST quirk flag to invoke workaround in
-> xhci_discover_or_reset_device().
-> 
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Kuangyi Chiang <ki.chiang65@gmail.com>
-> ---
->  drivers/usb/host/xhci-pci.c |  2 ++
->  drivers/usb/host/xhci.c     | 11 ++++++++++-
->  drivers/usb/host/xhci.h     |  2 ++
->  3 files changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index 05881153883e..c7a88340a6f8 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -395,11 +395,13 @@ static void xhci_pci_quirks(struct device *dev, struct xhci_hcd *xhci)
->  			pdev->device == PCI_DEVICE_ID_EJ168) {
->  		xhci->quirks |= XHCI_RESET_ON_RESUME;
->  		xhci->quirks |= XHCI_BROKEN_STREAMS;
-> +		xhci->quirks |= XHCI_ETRON_HOST;
->  	}
->  	if (pdev->vendor == PCI_VENDOR_ID_ETRON &&
->  			pdev->device == PCI_DEVICE_ID_EJ188) {
->  		xhci->quirks |= XHCI_RESET_ON_RESUME;
->  		xhci->quirks |= XHCI_BROKEN_STREAMS;
-> +		xhci->quirks |= XHCI_ETRON_HOST;
->  	}
->  
->  	if (pdev->vendor == PCI_VENDOR_ID_RENESAS &&
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index 37eb37b0affa..aba4164b0873 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -3752,6 +3752,15 @@ static int xhci_discover_or_reset_device(struct usb_hcd *hcd,
->  						SLOT_STATE_DISABLED)
->  		return 0;
->  
-> +	if (xhci->quirks & XHCI_ETRON_HOST) {
-> +		xhci_free_dev(hcd, udev);
-> +		ret = xhci_alloc_dev(hcd, udev);
+diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
+index 0ab2c1962117..1671a3037c60 100644
+--- a/sound/soc/fsl/fsl_audmix.c
++++ b/sound/soc/fsl/fsl_audmix.c
+@@ -326,15 +326,6 @@ static struct snd_soc_dai_driver fsl_audmix_dai[] = {
+ 			.rates = SNDRV_PCM_RATE_8000_96000,
+ 			.formats = FSL_AUDMIX_FORMATS,
+ 		},
+-		.capture = {
+-			.stream_name = "AUDMIX-Capture-0",
+-			.channels_min = 8,
+-			.channels_max = 8,
+-			.rate_min = 8000,
+-			.rate_max = 96000,
+-			.rates = SNDRV_PCM_RATE_8000_96000,
+-			.formats = FSL_AUDMIX_FORMATS,
+-		},
+ 		.ops = &fsl_audmix_dai_ops,
+ 	},
+ 	{
+@@ -349,8 +340,13 @@ static struct snd_soc_dai_driver fsl_audmix_dai[] = {
+ 			.rates = SNDRV_PCM_RATE_8000_96000,
+ 			.formats = FSL_AUDMIX_FORMATS,
+ 		},
++		.ops = &fsl_audmix_dai_ops,
++	},
++	{
++		.id   = 2,
++		.name = "audmix-2",
+ 		.capture = {
+-			.stream_name = "AUDMIX-Capture-1",
++			.stream_name = "AUDMIX-Capture-0",
+ 			.channels_min = 8,
+ 			.channels_max = 8,
+ 			.rate_min = 8000,
+-- 
+2.34.1
 
-Wait, why are you freeing and then allocating the same device?  That
-needs a lot of documentation here.
-
-> +		if (ret == 1)
-> +			return 0;
-
-And why does the function return 1?
-
-> +		else
-> +			return -EINVAL;
-> +	}
-> +
->  	trace_xhci_discover_or_reset_device(slot_ctx);
->  
->  	xhci_dbg(xhci, "Resetting device with slot ID %u\n", slot_id);
-> @@ -3862,7 +3871,7 @@ static int xhci_discover_or_reset_device(struct usb_hcd *hcd,
->   * disconnected, and all traffic has been stopped and the endpoints have been
->   * disabled.  Free any HC data structures associated with that device.
->   */
-> -static void xhci_free_dev(struct usb_hcd *hcd, struct usb_device *udev)
-> +void xhci_free_dev(struct usb_hcd *hcd, struct usb_device *udev)
-
-Why is this now global if you are only calling it in the same file?
-
-
->  {
->  	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
->  	struct xhci_virt_device *virt_dev;
-> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-> index 30415158ed3c..f46b4dcb0613 100644
-> --- a/drivers/usb/host/xhci.h
-> +++ b/drivers/usb/host/xhci.h
-> @@ -1627,6 +1627,7 @@ struct xhci_hcd {
->  #define XHCI_RESET_TO_DEFAULT	BIT_ULL(44)
->  #define XHCI_ZHAOXIN_TRB_FETCH	BIT_ULL(45)
->  #define XHCI_ZHAOXIN_HOST	BIT_ULL(46)
-> +#define XHCI_ETRON_HOST	BIT_ULL(47)
-
-Defining bit quirks just based on the vendor seems wrong to me, as that
-information can be determined when needed at any time just by the pci
-id, right?  So why is a quirk bit needed?
-
-Shouldn't the quirk bit say what the broken functionality is?  Same
-probably for the XHCI_ZHAOXIN_HOST, but that's not your issue to
-solve...
-
->  
->  	unsigned int		num_active_eps;
->  	unsigned int		limit_active_eps;
-> @@ -1863,6 +1864,7 @@ int xhci_resume(struct xhci_hcd *xhci, pm_message_t msg);
->  irqreturn_t xhci_irq(struct usb_hcd *hcd);
->  irqreturn_t xhci_msi_irq(int irq, void *hcd);
->  int xhci_alloc_dev(struct usb_hcd *hcd, struct usb_device *udev);
-> +void xhci_free_dev(struct usb_hcd *hcd, struct usb_device *udev);
-
-Should not be needed.
-
-thanks,
-
-greg k-h
