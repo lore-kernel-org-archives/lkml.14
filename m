@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB5716C84F;
-	Wed, 12 Jun 2024 17:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970371822E9;
+	Wed, 12 Jun 2024 17:09:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718212183; cv=none; b=adjlf9A3uP8c3fPNKaivEdA1NGQ17r2aPf6vtS9D+EcKu4T+XuJ8p4UtGZfilDbxvDVwohZv0uB9Ov677hhZqdU3xuUBZVlAi1wacF0i4ZFVobX5wEm/HQ6dAjzEyxjCTfen0GjFbb/lAVq1KsLkwwceVaGvzVhgCVpfAdKXdxc=
+	t=1718212187; cv=none; b=kR0/AoW3opbcdjMXU3rf/fi73zSWYhN6QWSbgENW6VKhNCYQ/lah4nnBKcZFX6eOhCYsFwBXDU7N+a2t0qQILq3fQVH19Ssmr1/SMMyeR7E72X3mWKlqxBRb9jdOkWdHpGTfJjCow0NQUlC1uGC6/mHPGXp5iqyFfSFcCrr/vSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718212183; c=relaxed/simple;
-	bh=qXn2J2Ad1IeHu7jqmyxVFj5XlOylI3qbh7DnQSO8Dgo=;
+	s=arc-20240116; t=1718212187; c=relaxed/simple;
+	bh=DGmFEgFvihFdxQvmqz4ZN/g91RcvtXzAkLA+2ZHUehY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NBeRHq3A9thcOT/L8sqK3/9kZYvl8n1oEMpR84VErcCoecsSTXJIivO3bsPi7GMAvsVEG0HFvo1XlcLxRDJ1abYCSP2C+2oPsMWavOIwTEsMai24TilkY5F60SPgQSq0ol4vsgbA/7XfZgg1dInJYeyYbwu/xKEuIG9KSEj0jBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfkZA/dt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=NGbm+tX4zGesb4K8Gqu/HNOQUf7YMn3cXt5wwd8jquuhhY0MWSvlN5W0/QLUrDBX2OHvZizVNGH9OauynvPtIDC6midvllTDf+QWz02Ik4SK3+pqYNcreOpprb6LOFVYNh2vUePQk7aRqus1TzK4iD8ZozAS6ivQGqWJZ4WHex8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3imqW9P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfkZA/dt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76482C116B1;
-	Wed, 12 Jun 2024 17:09:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3imqW9P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6637C4AF50;
+	Wed, 12 Jun 2024 17:09:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718212182;
-	bh=qXn2J2Ad1IeHu7jqmyxVFj5XlOylI3qbh7DnQSO8Dgo=;
+	s=k20201202; t=1718212186;
+	bh=DGmFEgFvihFdxQvmqz4ZN/g91RcvtXzAkLA+2ZHUehY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=nfkZA/dt8kMAeWdKD4n12L0JnifHFVghUZLjoBySN1jvxF0V5b8fYdoW5dYgDQ+w8
-	 kzWjwJI7ODj/cQVjuCPPdRZBUrTBQxjOW6Md0Y6pfATWk4bCmhj/YIx0LhjegDpBao
-	 oCVnrCt60f6XirBObzQZwjiSarLhk/kHsbRJYsqRgLRsJLJKQEnMrXTLqQMh/e0Ff1
-	 +0Hkoh59khSdACfTzhupW7rOlITO1d4zuXB7lhljxVBkoCMTgskAzmmLARXRMlirPS
-	 iICF1MKWpzMX4Do0in0epfyJ74rSLLJT5Hia1yfWSeVASv9s70YWZP8o50XyuQ8S7q
-	 x635lx9uDVqsg==
+	b=H3imqW9P9XFmNrDHk+S9fa3HMBPc+kiQkeLKEYY0m6mMSuBI2SfsSvZajyPgwuNqt
+	 gdQaDe0xbfV//r/N8nCEr3xqfS4iRKYXnxzCVQQaYmcPbOfQKS6akzpDM0ZjE0o5Sw
+	 77jmlq2g+nt60kE7/Patsnt/EX5yv1z6garTA4ANCEclPRAc6koezf6MhkmfP3diHP
+	 knyz+pQBCFnFbfTFG4Dsz2UMP1X1to0NXk3cPmJeNou5vz6KWOZjNDxsxdocp1CesD
+	 lokZHcEyumHIj19KDodY4Ub/3/Bnz0qNW/BFW9kyPiQWuc8lERjGLmvYBKjp0Rdg8+
+	 uKH0TgCyCw6ng==
 From: Mark Brown <broonie@kernel.org>
-To: Animesh Agarwal <animeshagarwal28@gmail.com>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240606041212.78428-1-animeshagarwal28@gmail.com>
-References: <20240606041212.78428-1-animeshagarwal28@gmail.com>
-Subject: Re: [PATCH v2] ASoC: dt-bindings: linux,spdif: Convert
- spdif-reciever.txt to dtschema
-Message-Id: <171821218010.232443.15741334839027344442.b4-ty@kernel.org>
-Date: Wed, 12 Jun 2024 18:09:40 +0100
+To: Artur Weber <aweber.kernel@gmail.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <01590109-cf27-404b-88ff-b42bb73ca1c6@moroto.mountain>
+References: <01590109-cf27-404b-88ff-b42bb73ca1c6@moroto.mountain>
+Subject: Re: [PATCH] ASoC: samsung: midas_wm1811: Fix error code in probe()
+Message-Id: <171821218296.232443.6293513321320642950.b4-ty@kernel.org>
+Date: Wed, 12 Jun 2024 18:09:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,8 +49,8 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14-dev-4c370
 
-On Thu, 06 Jun 2024 09:42:00 +0530, Animesh Agarwal wrote:
-> Convert the dummy SPDIF receiver bindings to DT schema.
+On Sat, 08 Jun 2024 17:24:31 +0300, Dan Carpenter wrote:
+> This accidentally returns success instead of -EINVAL.
 > 
 > 
 
@@ -60,8 +60,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: dt-bindings: linux,spdif: Convert spdif-reciever.txt to dtschema
-      commit: a694956df4ca75d74bcd422908ddcd8e2ea3042e
+[1/1] ASoC: samsung: midas_wm1811: Fix error code in probe()
+      commit: 5c33876a20e1f42471c2b6fd1804428311d35f1f
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
