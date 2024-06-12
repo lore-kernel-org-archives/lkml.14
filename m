@@ -1,122 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DDD85C52;
-	Wed, 12 Jun 2024 20:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAEA84D2C;
+	Wed, 12 Jun 2024 20:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718223871; cv=none; b=TMYpS520T+zb1D2vRUCrmQ4UCLZVP/4kL9ltwpc5gszxs73P7cGCY2Pnuq0uopV0Ni4Vvp/+X0N2LOEB9o5gf3xWwfOIWAvIm3YMqsNnI1w52eBjIVNM+3lFatGd9EsPQjb7t1veXtZQuU0AcWXrsruPOupGY7dtZGaVEqGyizE=
+	t=1718223930; cv=none; b=ZT6aTDpMXW74o1CLzgOVHfe2Hkn9NpLT7VBqdhDvN4oMmfs+/qWNRenLSq5TPNjo1XHD0DADFl+Lj8IMkNHlHaN1xHozOEHluC7kbRnwDA8jPOPy+ICGA6ks21uPThlmU5uEW+fuI08CAK6pwSnMC+2n47M1lFRgmBnILtOzRjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718223871; c=relaxed/simple;
-	bh=a6q28AfeY7KKsG2kG9Y11B99G/UZQtSlNTUmM44t9SM=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=a40SSTMhffW6RLEzh8UbB40zJfwfivAU/KDQe/gsH/iM1hxEcloCpVe6TtjMMcr9DWESO//gCNc+7fPOJ+WavCi3eRfdQKlss6bipIHjxuEfSWoLFFeDbKk6zAhE+H3BydsAF406bytJH456j+LBP499+Lr6tq1vEB1jiC0mK6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xvL+FUDe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z3uQABTJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1718223930; c=relaxed/simple;
+	bh=0Rgb+lTc0MFdKvGyTfrXC3aT7qcl8gWlicq53gT7wlg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vgfo3SIIYyIRfhywdEJJn/oRFF5oagJyzM/HsDHQDnt57EdKN2ai+UnRv+aIiZCWqHf4zwyvDIj3Ysmax63ep6oGTwSHkF3dw8HzFwqptQRT2pl+IZJZuPFVCIscl210TgWdhaPRDCgkbjauGCmZWLp421ng9ct805wYeJ1vdZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=i1EJeHyE; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xvL+FUDe";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z3uQABTJ"
-Date: Wed, 12 Jun 2024 20:24:25 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1718223865;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DQ4ky/PCh98PHFGcwPPXctHrV5/zfTg4rHhdQPuVmv0=;
-	b=xvL+FUDeAMImcjceUWpclYnLD9KmIzimqKefUItXhK4x7tMnIFcKftMEqZ34VNCKKmkCHy
-	pl17J3FQ6XREPuSROw1cLXoczSPVMwOW5xSuCYeDxWG073HcGLzqM3NQGutVBHxm4FF22U
-	VNHVoVTrhm6LDpyJvJm+Ywqu+HoG6GQ5q2HgrNdYoLdUmzEhNlDdKGgIE99P/LwVihOqux
-	NShz5EC4n8U6FBfoTjmds7fMpYvyQ9ki6EkFq7ItFGIAPV9WtXijH6g7HB+QPqUzc0TKuj
-	QX4QyOJqDZpv8M/w1ifTyvMIgBsk2UExgVesI1eSIe2vAvENdOlqKQjz4aQqCg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1718223865;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DQ4ky/PCh98PHFGcwPPXctHrV5/zfTg4rHhdQPuVmv0=;
-	b=Z3uQABTJoA2dgjP/fjxqYO+bxDQATAuXPOWZU8Hye7MQB3E63EqrJ88aiDUw3mWtidxUpS
-	obvLYdyCjzzd6/AQ==
-From: "tip-bot2 for Marcin Juszkiewicz" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/misc] x86, arm: Add missing license tag to syscall tables files
-Cc: Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, linux-arm-kernel@lists.infradead.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240229145101.553998-1-marcin@juszkiewicz.com.pl>
-References: <20240229145101.553998-1-marcin@juszkiewicz.com.pl>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="i1EJeHyE"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 919A812E4;
+	Wed, 12 Jun 2024 22:25:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1718223913;
+	bh=0Rgb+lTc0MFdKvGyTfrXC3aT7qcl8gWlicq53gT7wlg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i1EJeHyEyBLVJMaCmD6MMJ/4PaC7EACNJSaWwx5Om1+rzKtu287UiS64ji4v+60wf
+	 G7n+RsI6Of8utZV06quo0BpHScZg7/Y4+g0Nou7FhlK5NyDV3nMJoC8DA7bBjpABhk
+	 qsbpo6SXUZPHufygXpHW8fK2Yxv8Aa/GvB45uVlA=
+Date: Wed, 12 Jun 2024 23:25:07 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Cc: Tomasz Figa <tfiga@chromium.org>,
+	Yunfei Dong <yunfei.dong@mediatek.com>,
+	Jeffrey Kardatzke <jkardatzke@google.com>,
+	=?utf-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4=?= Prado <nfraprado@collabora.com>,
+	Nathan Hebert <nhebert@chromium.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Sebastian Fricke <sebastian.fricke@collabora.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Chen-Yu Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,
+	Hsin-Yi Wang <hsinyi@chromium.org>,
+	Fritz Koenig <frkoenig@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH v6,04/24] v4l: add documentation for restricted memory
+ flag
+Message-ID: <20240612202507.GT28989@pendragon.ideasonboard.com>
+References: <20240516122102.16379-1-yunfei.dong@mediatek.com>
+ <20240516122102.16379-5-yunfei.dong@mediatek.com>
+ <20240522111622.GA31185@pendragon.ideasonboard.com>
+ <bhgv5djcjc4yt75pyug2yirrymeucjyslthnvq6k2kpp7axfph@jzo5wpcbgwun>
+ <33d38919f3f94b6e1848aaee20cf52ac9c1df606.camel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171822386538.10875.13561552354845428931.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <33d38919f3f94b6e1848aaee20cf52ac9c1df606.camel@collabora.com>
 
-The following commit has been merged into the x86/misc branch of tip:
+On Wed, Jun 12, 2024 at 03:43:58PM -0400, Nicolas Dufresne wrote:
+> Le mercredi 12 juin 2024 à 13:37 +0900, Tomasz Figa a écrit :
+> > > Why is this flag needed ? Given that the usage model requires the V4L2
+> > > device to be a dma buf importer, why would userspace set the
+> > > V4L2_BUF_CAP_SUPPORTS_RESTRICTED_MEM flag and pass a non-restricted
+> > > buffer to the device ?
+> > 
+> > Given that the flag is specified at REQBUF / CREATE_BUFS time, it's
+> > actually useful to tell the driver the queue is operating in restricted
+> > (aka secure) mode.
+> > 
+> > I suppose we could handle that at the time of a first QBUF, but that
+> > would make the driver initialization and validation quite a bit of pain.
+> > So I'd say that the design being proposed here makes things simpler and
+> > more clear, even if it doesn't add any extra functionality.
+> 
+> There is few more reasons I notice in previous series (haven't read the latest):
+> 
+> - The driver needs to communicate through the OPTEE rather then SCP and some
+> communication are needed just to figure-out things like supported profile/level
+> resolutions etc.
+> - The driver needs to allocate auxiliary buffers in secure heap too, allocation
+> at runtime are not the best
 
-Commit-ID:     9aae1baa1c5d8b7229b6de38dc9dc17efcb8c55d
-Gitweb:        https://git.kernel.org/tip/9aae1baa1c5d8b7229b6de38dc9dc17efcb8c55d
-Author:        Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>
-AuthorDate:    Thu, 29 Feb 2024 15:51:00 +01:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 12 Jun 2024 11:33:45 +02:00
+Will the same driver support both modes on the same system ?
 
-x86, arm: Add missing license tag to syscall tables files
+> Note that the discussion around this flag already took place in the very first
+> iteration of the serie, it was originally using a CID and that was a proposed
+> replacement from Hans.
 
-syscall*.tbl files were added to make it easier to check which system
-calls are supported on each architecture and to check for their numbers.
+-- 
+Regards,
 
-Arm and x86 files lack Linux-syscall-note license exception present in
-files for all other architectures.
-
-Signed-off-by: Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: https://lore.kernel.org/r/20240229145101.553998-1-marcin@juszkiewicz.com.pl
----
- arch/arm/tools/syscall.tbl             | 1 +
- arch/x86/entry/syscalls/syscall_32.tbl | 1 +
- arch/x86/entry/syscalls/syscall_64.tbl | 1 +
- 3 files changed, 3 insertions(+)
-
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 2ed7d22..23c9820 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
- #
- # Linux system call numbers and entry vectors
- #
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 7fd1f57..9436b67 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
- #
- # 32-bit system call numbers and entry vectors
- #
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index a396f6e..129bdd4 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
- #
- # 64-bit system call numbers and entry vectors
- #
+Laurent Pinchart
