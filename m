@@ -1,168 +1,159 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04DE17084A
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 12:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88AD153509;
+	Wed, 12 Jun 2024 12:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718196555; cv=none; b=gvrUszIo/kD1bIPHfSmlUrHUgzZY6ohgLp/QKe7aHGGducr8ALh/FrACtOGOeH7hvmeJfGptWb7T6Gl6fwVB4tDu3BePsb2+PfrutmpXTxkQ7PbMaLfEPevvX7WT15LMnUe0b8oiTYJ206FbCc6PRGs7B1vy9M26E0i4SusINP0=
+	t=1718196567; cv=none; b=r47dWW4ISSi6VBPvG58HbxQeAwD1Jy3PTiohin/JdZgGgnzgwiwiHiPdHx3BnI2ugHlVm0pebLIp+fOpFMuSqJYDmoHEtvrwJ8XNPALLIsSAAgYYFoUxOnR5zILHkv/js32WB95gpvSyDEKa12nGfb8EarL2fy4Qvm5lApoc0So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718196555; c=relaxed/simple;
-	bh=nK8eQD3U2HLvmSpYT0ul176n/7+KfLRXAUeTJYk9YdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GskAmBP9THjQgdiwmRwwYP1kB0DnvGWXTE5XgZHKh72nE1/I098wy0uB6iebOqi8TWonzSHiBuwe8vuoqdu9VnV/uHHTqWJBgjlqXnKzWNqewbJDNX4jaAb8jsbb4Ah3OFNRZ//mXa00vzZLzUI3ym3yCqLx5tXh5BJ1wTGuMdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C8R2kAE5; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718196567; c=relaxed/simple;
+	bh=jml4Li8jRIuKDzQQJHvxjVmuIVdQD/S+n68zDOjWbwc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KZcwp1xPunRevyi3aRiIgUNkNyRwEaItNvIN7KOfgixSQaeucBr1z12hYeuC1bGCkGxmTxGIrWXdrh29Eib4LCz3rHBRd57AfTTjr3RLPgt0hT4a4nBuJQ9q+ES2QnFJt2ThFTXkfJqLxFC/x72gt2HhWyJX8sJfvofwllXiFr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=eqe/9oJg; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C8R2kAE5"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2ebe40673e8so37792281fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 05:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718196552; x=1718801352; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0yxD5VYZZavmxVXtb3enG8WmplRcJPFmwaHxZgVVSPo=;
-        b=C8R2kAE5QLFHnlLGclMrXOUYdtvEwoG1MkFG5A/bPsMQqQEYO9MZ7r5mbHC/ALwyYK
-         ty577VF8IjbswNcoJq0WRp81AL+7HwXvAHsBTSdc84nqAriQk1Nug2RiSA5knYIaQj7S
-         p2CaLggKxmeHEhxWgfBjd4OF9I1m0wqKTKZ4NBEl6UrhXA+jy0SkHtT2pM5Rl58bSbtX
-         9Ke4tUEFQDWulCkaNI+fq/4+t/Q4tO6DibeE/Kd4yxHJ7d/JQay8qUhtfGfrmGzBb6xd
-         mCQncXScN0+zZJSVuLHhqPErL4QlvUYdKGHyU8l1G9ZZaH4OffsKOVy9ecEnuXuBkPAr
-         wYNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718196552; x=1718801352;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0yxD5VYZZavmxVXtb3enG8WmplRcJPFmwaHxZgVVSPo=;
-        b=sreJ5/zDP37ISt9DNb9yyBW6r6M4R4jHhcbqKy2P2felkACHSWi/cahTbkdP2hkVpx
-         kJa0v27R/MlXpKEwFz/QdRL8sK99OBUKSjH2QzMvic3d/m0NRCeSXrJxlEShb8wTHOZc
-         Eyd7+2rZmIy9MbsYz+vUbIQ+IUaYzX083J88Qr/oocXD99LcMNmHnfhu2DB9y9dpYAJp
-         7TefJCF3FO3O52cWcLQoXCAxkCX9VrAI1E0oXSAGFgzQyWZ8pYzo3AwWRmkjPqwVao5j
-         TNEJJu6bak+onXQ+hcSv95zt73IwxPsvFOVjdwdDNWvKAepHHKgG3SRXBeXiqa+Qmgvc
-         rsNg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUrkQgchxEgP4KK8xtkp4ENRiRiycA/YhNn/Y2jvzNfNrlmDza4uPzDhgyKPhRAbC85YqDGMVtcj4uZGUOhWn5pGQ88QPKJ7e+23Ec
-X-Gm-Message-State: AOJu0YymXMNEw6HyugdtcHXAXCfwhpGhFS7OfLPBFQRupH5SElg8kon+
-	ldP96SuOad+AEBSsXzoY/VO8ZPtcJenR+Rp7wPyIueYVoIU37f715DvM7rRBBAI=
-X-Google-Smtp-Source: AGHT+IHTtXOw7Dy85qXvDzKaBi3NfAqIFcpOA4TBDfQaEJBSthuiUBRe5J4B3+U+O6qnjq/yvAitWg==
-X-Received: by 2002:a2e:9b13:0:b0:2eb:de21:94a1 with SMTP id 38308e7fff4ca-2ebfc964026mr9608001fa.43.1718196551645;
-        Wed, 12 Jun 2024 05:49:11 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyybrhy-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2eadb8d2973sm22603021fa.117.2024.06.12.05.49.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 05:49:11 -0700 (PDT)
-Date: Wed, 12 Jun 2024 15:49:09 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Ekansh Gupta <quic_ekangupt@quicinc.com>
-Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
-	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
-	quic_chennak@quicinc.com, stable <stable@kernel.org>
-Subject: Re: [PATCH v5 6/7] misc: fastrpc: Fix ownership reassignment of
- remote heap
-Message-ID: <xvy4syldmqdklij4wbub6x52gexijlrgtoketd3urohxrca5g2@mmioafzpmy7s>
-References: <20240611103442.27198-1-quic_ekangupt@quicinc.com>
- <20240611103442.27198-7-quic_ekangupt@quicinc.com>
- <xc2ys75plbtrenastitqafadfrtolpd3bjdqcrl3wnozpc6kdo@e6e73ousyea7>
- <7d75f6b1-60fe-4a03-a251-4675a3364148@quicinc.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="eqe/9oJg"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CBgWMZ016579;
+	Wed, 12 Jun 2024 14:48:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=+7VI0+0yWgu+99TXdk1RwS
+	Mz8s0/dUbNSHBFUKF/9IQ=; b=eqe/9oJgCQbH8XTb1sRoXJPTLEmFq1Cdx9qS0r
+	17cNTGfJ8lQPrJdDqhqyRygeS/rwKu7wVsQu/4gR1enXPHSPrultScJQqY7C5ey2
+	sXMReUiV2OLWRT/N94aXRuTqfkygzn6fCsldRiwP7aMsN2W7lCUutBDRr45TNDrT
+	PJuIvIt5ERp9wPGiHMbItVk0IlMaLF3oww0rqjOdw+ID43XE+M7Ozjc5yQhA6IT9
+	w1ipyp4b98oRzeRunV/WCbLay58Sv+B+db13K/sUT0HguiOrN/p+pJPqsKYeNPzq
+	zjkha5vpisayMQE4LrCQoC5Vir75WNtdHiZiTp8JlQcHfNtg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ypbp4qrn5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 14:48:58 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5DD0C40047;
+	Wed, 12 Jun 2024 14:47:50 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 73DB7215BF7;
+	Wed, 12 Jun 2024 14:47:16 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
+ (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 12 Jun
+ 2024 14:47:16 +0200
+Received: from localhost (10.252.17.208) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 12 Jun
+ 2024 14:47:15 +0200
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+To: <heikki.krogerus@linux.intel.com>, <gregkh@linuxfoundation.org>
+CC: <stable@vger.kernel.org>, <dmitry.baryshkov@linaro.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <fabrice.gasnier@foss.st.com>
+Subject: [PATCH v2] usb: ucsi: stm32: fix command completion handling
+Date: Wed, 12 Jun 2024 14:46:56 +0200
+Message-ID: <20240612124656.2305603-1-fabrice.gasnier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7d75f6b1-60fe-4a03-a251-4675a3364148@quicinc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE2.st.com (10.75.90.13) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_06,2024-06-12_02,2024-05-17_01
 
-On Wed, Jun 12, 2024 at 09:54:47AM +0530, Ekansh Gupta wrote:
-> 
-> 
-> On 6/11/2024 5:29 PM, Dmitry Baryshkov wrote:
-> > On Tue, Jun 11, 2024 at 04:04:39PM +0530, Ekansh Gupta wrote:
-> >> Audio PD daemon will allocate memory for audio PD dynamic loading
-> > What is Audio PD daemon? Is it something running on the CPU or on the
-> > DSP? Is it adsprpcd or some other daemon?
-> It's adsprpcd which is going to attach to Audio PD.
+Sometimes errors are seen, when doing DR swap, like:
+[   24.672481] ucsi-stm32g0-i2c 0-0035: UCSI_GET_PDOS failed (-5)
+[   24.720188] ucsi-stm32g0-i2c 0-0035: ucsi_handle_connector_change:
+ GET_CONNECTOR_STATUS failed (-5)
 
-Ack
+There may be some race, which lead to read CCI, before the command complete
+flag is set, hence returning -EIO. Similar fix has been done also in
+ucsi_acpi [1].
 
-> >
-> >> usage when it is attaching for the first time to audio PD. As
-> >> part of this, the memory ownership is moved to the VM where
-> > Which VM?
-> In audio PD case, it's the following VMIDs:
-> QCOM_SCM_VMID_LPASS
-> QCOM_SCM_VMID_ADSP_HEAP
-> 
-> Defined here: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/dt-bindings/firmware/qcom,scm.h?h=v6.10-rc3
-> 
-> These are expected to be added to fastrpc DT node as "qcom,vmids"
+In case of a spurious or otherwise delayed notification it is
+possible that CCI still reports the previous completion. The
+UCSI spec is aware of this and provides two completion bits in
+CCI, one for normal commands and one for acks. As acks and commands
+alternate the notification handler can determine if the completion
+bit is from the current command.
 
-Ok, good.
+To fix this add the ACK_PENDING bit for ucsi_stm32g0 and only complete
+commands if the completion bit matches.
 
-> 
-> >
-> >> audio PD can use it. In case daemon process is killed without any
-> >> impact to DSP audio PD, the daemon process will retry to attach to
-> >> audio PD and in this case memory won't be reallocated. If the invoke
-> >> fails due to any reason, as part of err_invoke, the memory ownership
-> >> is getting reassigned to HLOS even when the memory was not allocated.
-> >> At this time the audio PD might still be using the memory and an
-> >> attemp of ownership reassignment would result in memory issue.
-> > What kind of 'memory issues'? Is it even possible to reclaim the memory
-> > back?
-> In case when audio PD on DSP is still using the memory, the ownership should not be
-> moved to HLOS. This might happen in daemon kill scenario where remote_heap is not
-> allocated again, but if due to any reason if the fastrpc_internal_invoke fails, that might
-> result in the ownership change of remote_heap memory.
+[1] https://lore.kernel.org/lkml/20240121204123.275441-3-lk@c--e.de/
 
-You are describing the expected behaviour. not the observed issue.
+Fixes: 72849d4fcee7 ("usb: typec: ucsi: stm32g0: add support for stm32g0 controller")
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+---
+Changes in v2: rebase and define ACK_PENDING as commented by Dmitry.
+---
+ drivers/usb/typec/ucsi/ucsi_stm32g0.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-Also, the second quesiton didn't get the answer. Is it possible to free
-/reclaim the memory?
-
-> >
-> >> Fixes: 0871561055e6 ("misc: fastrpc: Add support for audiopd")
-> >> Cc: stable <stable@kernel.org>
-> >> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
-> >> ---
-> >>  drivers/misc/fastrpc.c | 4 +++-
-> >>  1 file changed, 3 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-> >> index 1ba85c70e3ff..24dc1cba40e9 100644
-> >> --- a/drivers/misc/fastrpc.c
-> >> +++ b/drivers/misc/fastrpc.c
-> >> @@ -1238,6 +1238,7 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
-> >>  	struct fastrpc_phy_page pages[1];
-> >>  	char *name;
-> >>  	int err;
-> >> +	bool scm_done = false;
-> >>  	struct {
-> >>  		int pgid;
-> >>  		u32 namelen;
-> >> @@ -1289,6 +1290,7 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
-> >>  					fl->cctx->remote_heap->phys, fl->cctx->remote_heap->size, err);
-> >>  				goto err_map;
-> >>  			}
-> >> +			scm_done = true;
-> >>  		}
-> >>  	}
-> >>  
-> >> @@ -1324,7 +1326,7 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
-> >>  
-> >>  	return 0;
-> >>  err_invoke:
-> >> -	if (fl->cctx->vmcount) {
-> >> +	if (fl->cctx->vmcount && scm_done) {
-> >>  		u64 src_perms = 0;
-> >>  		struct qcom_scm_vmperm dst_perms;
-> >>  		u32 i;
-> >> -- 
-> >> 2.43.0
-> >>
-> 
-
+diff --git a/drivers/usb/typec/ucsi/ucsi_stm32g0.c b/drivers/usb/typec/ucsi/ucsi_stm32g0.c
+index ac48b7763114..ac69288e8bb0 100644
+--- a/drivers/usb/typec/ucsi/ucsi_stm32g0.c
++++ b/drivers/usb/typec/ucsi/ucsi_stm32g0.c
+@@ -65,6 +65,7 @@ struct ucsi_stm32g0 {
+ 	struct device *dev;
+ 	unsigned long flags;
+ #define COMMAND_PENDING	1
++#define ACK_PENDING	2
+ 	const char *fw_name;
+ 	struct ucsi *ucsi;
+ 	bool suspended;
+@@ -396,9 +397,13 @@ static int ucsi_stm32g0_sync_write(struct ucsi *ucsi, unsigned int offset, const
+ 				   size_t len)
+ {
+ 	struct ucsi_stm32g0 *g0 = ucsi_get_drvdata(ucsi);
++	bool ack = UCSI_COMMAND(*(u64 *)val) == UCSI_ACK_CC_CI;
+ 	int ret;
+ 
+-	set_bit(COMMAND_PENDING, &g0->flags);
++	if (ack)
++		set_bit(ACK_PENDING, &g0->flags);
++	else
++		set_bit(COMMAND_PENDING, &g0->flags);
+ 
+ 	ret = ucsi_stm32g0_async_write(ucsi, offset, val, len);
+ 	if (ret)
+@@ -406,9 +411,14 @@ static int ucsi_stm32g0_sync_write(struct ucsi *ucsi, unsigned int offset, const
+ 
+ 	if (!wait_for_completion_timeout(&g0->complete, msecs_to_jiffies(5000)))
+ 		ret = -ETIMEDOUT;
++	else
++		return 0;
+ 
+ out_clear_bit:
+-	clear_bit(COMMAND_PENDING, &g0->flags);
++	if (ack)
++		clear_bit(ACK_PENDING, &g0->flags);
++	else
++		clear_bit(COMMAND_PENDING, &g0->flags);
+ 
+ 	return ret;
+ }
+@@ -429,8 +439,9 @@ static irqreturn_t ucsi_stm32g0_irq_handler(int irq, void *data)
+ 	if (UCSI_CCI_CONNECTOR(cci))
+ 		ucsi_connector_change(g0->ucsi, UCSI_CCI_CONNECTOR(cci));
+ 
+-	if (test_bit(COMMAND_PENDING, &g0->flags) &&
+-	    cci & (UCSI_CCI_ACK_COMPLETE | UCSI_CCI_COMMAND_COMPLETE))
++	if (cci & UCSI_CCI_ACK_COMPLETE && test_and_clear_bit(ACK_PENDING, &g0->flags))
++		complete(&g0->complete);
++	if (cci & UCSI_CCI_COMMAND_COMPLETE && test_and_clear_bit(COMMAND_PENDING, &g0->flags))
+ 		complete(&g0->complete);
+ 
+ 	return IRQ_HANDLED;
 -- 
-With best wishes
-Dmitry
+2.25.1
+
