@@ -1,48 +1,48 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F829181D1D;
-	Wed, 12 Jun 2024 17:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D753D1822C8;
+	Wed, 12 Jun 2024 17:29:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718213357; cv=none; b=MdfX46bXUf1jWgI+GhhyUDk7YrCWY03fafuypJMTyHAm5SJ4sO5Wwf72eJC84aHqk/01HmklHY1H8oiyYVwD5tqjImvziORi6x+ZPoeuH/LnFqoKNelv7H/ojffw3q/hUn/+jcEgDaKZOwbkk1NcQNPH3KHyG+pU9qSWpWaeaAg=
+	t=1718213359; cv=none; b=soKjteRu+tDvoz+oshg3SvUyBmTMtv9Th9SENFIsZ9l/L/BjdrgBaj5Sl8zcHthyl1aYrEcrhKW4ARCQQc2hcpZ/osAFJ/rX81dCuXH1D5f7rDm8bxeLX0zAwhKKQ+q2N+3NB3vBDCf7RIl05etfXRqgILXlW3Cfii/sjToAvFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718213357; c=relaxed/simple;
-	bh=mF2zABnS7+Y74pMwmQhDWi0T7x08YCZFnf5AJQXyZik=;
+	s=arc-20240116; t=1718213359; c=relaxed/simple;
+	bh=2gIA6Iq203YqgqKcJSudmGZ5LiXcONkeQpWJJMNZAsQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bviqPOmjwCFlZSeU4/afU58AuhtqISCuX7QRq02uu9F/sYJ1XcsJkKjvQ9HlvWgC0cWUfQuJ4OhrYewaFZXnCA/N1bdQq0HdM99nrIjJ2tyUa4BNGPKKZy5uITKim/slzKsmANbA6P0h7z+DgitRcwEG+kdztZESHTJJSYJgxak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=D5cNQVKe; arc=none smtp.client-ip=68.232.154.123
+	 MIME-Version:Content-Type; b=HxyJu13PV3kl7NuNVfHn/5hobnG1jA0MGMQXjWhLFzW51FEWwmRP6vprQeVOjnrBgoms5qui8V5DbmmROO4wpABrVVHfB1HPfTmTxE3f17yuPH1kQj1wRY/BhyxkDGd3GH4IS9xPm81H4n6+In05+R+0cm3rhf0aC9tMr7StZw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Dyq/r11n; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="D5cNQVKe"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Dyq/r11n"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718213355; x=1749749355;
+  t=1718213357; x=1749749357;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=mF2zABnS7+Y74pMwmQhDWi0T7x08YCZFnf5AJQXyZik=;
-  b=D5cNQVKe6HQZaWq0iQGluEAKsldlNPLEMRcXtZwq1m50jMO6raIP4kKp
-   5q22Gz8huSyYlhZHz13qeJhpfzEq5G2zUL3QiSSvU78Rhz0KnvzFr9CKj
-   hymrFQLFdSy0/LxykTUPUxiFxSLfZyr783ybZdBlOOwQI3iGDYFLXYCoM
-   wH8y8t+kl90A/nl0Tk8RfQIhFn64InWBcHjvhyKSY/zp7nW3tw7wxVNZJ
-   shL4Rt/RyYF1jSquDbhZYNV4FSeyPKc+D5QoACWGwVWZoz1UmyGOGA/sF
-   D0Ty6CY8FD5ewglgFi22iwRsRa6enw0bHzjXYU2D/WtvFI2UwEWHIuzs7
-   Q==;
-X-CSE-ConnectionGUID: ieXvztiDSrapc98ofAbAOQ==
-X-CSE-MsgGUID: 3TYrlRmNR36LKMYI4FbrNg==
+  bh=2gIA6Iq203YqgqKcJSudmGZ5LiXcONkeQpWJJMNZAsQ=;
+  b=Dyq/r11n9VDtmqYplvESmfxRwAsiQuUD+kuTrhzf1GqbRCvvDUxdLgWq
+   a7ua+LJDdsNPvRVJNGjCCBfwx9V1S9OcO8Qs1LiEkQzJ2aW9xWQH7bKB9
+   YCCr6mDFUP+JVs+zyiQPhk/uwJRTNmy8Es5pU+jrBKxf4u9APy5sOmUd8
+   hDuJgWyrca3ApWjgJ1xWsZPDsa8Y7aXNcegw7odSXubNPUqPPMgoG4RIT
+   TD2tdw2fjgrDJCESsitdRxYCiWBIOpEB65q06RJWAndyQldQyAA8JT7lg
+   QpigvjtlSeTFwzr0iVIHiuWxjXhK/PKuI/XB2jcttOIRxBzoMNJeK+7mg
+   g==;
+X-CSE-ConnectionGUID: Vpq6ati1SxKeL258BLuWYg==
+X-CSE-MsgGUID: WQjZbRuESJqHwb6AZO+l5g==
 X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
-   d="scan'208";a="194739142"
+   d="scan'208";a="194739146"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Jun 2024 10:29:09 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Jun 2024 10:29:10 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 12 Jun 2024 10:28:39 -0700
+ 15.1.2507.35; Wed, 12 Jun 2024 10:28:50 -0700
 Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 12 Jun 2024 10:28:34 -0700
+ 15.1.2507.35 via Frontend Transport; Wed, 12 Jun 2024 10:28:45 -0700
 From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
 To: <netdev@vger.kernel.org>
 CC: <davem@davemloft.net>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -50,9 +50,9 @@ CC: <davem@davemloft.net>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
 	<sbauer@blackbox.su>, <hmehrtens@maxlinear.com>, <lxu@maxlinear.com>,
 	<hkallweit1@gmail.com>, <edumazet@google.com>, <pabeni@redhat.com>,
 	<wojciech.drewek@intel.com>, <UNGLinuxDriver@microchip.com>
-Subject: [PATCH net V4 1/3] net: lan743x: disable WOL upon resume to restore full data path operation
-Date: Wed, 12 Jun 2024 22:55:37 +0530
-Message-ID: <20240612172539.28565-2-Raju.Lakkaraju@microchip.com>
+Subject: [PATCH net V4 3/3] net: phy: mxl-gpy: Remove interrupt mask clearing from config_init
+Date: Wed, 12 Jun 2024 22:55:39 +0530
+Message-ID: <20240612172539.28565-4-Raju.Lakkaraju@microchip.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240612172539.28565-1-Raju.Lakkaraju@microchip.com>
 References: <20240612172539.28565-1-Raju.Lakkaraju@microchip.com>
@@ -65,147 +65,161 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-When Wake-on-LAN (WoL) is active and the system is in suspend mode, triggering
-a system event can wake the system from sleep, which may block the data path.
-To restore normal data path functionality after waking, disable all wake-up
-events. Furthermore, clear all Write 1 to Clear (W1C) status bits by writing
-1's to them.
+When the system resumes from sleep, the phy_init_hw() function invokes
+config_init(), which clears all interrupt masks and causes wake events to be
+lost in subsequent wake sequences. Remove interrupt mask clearing from
+config_init() and preserve relevant masks in config_intr().
 
-Fixes: 4d94282afd95 ("lan743x: Add power management support")
+Fixes: 7d901a1e878a ("net: phy: add Maxlinear GPY115/21x/24x driver")
 Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
 Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
 ---
-Change List:                                                                    
-------------                                                                    
+Change List:
+------------
 V3 -> V4:
   - No change
-V2 -> V3:
-  - No change
-V1 -> V2:
-  - Repost - No change
-V0 -> V1:
-  - Variable "data" change from "int" to "unsigned int"
- drivers/net/ethernet/microchip/lan743x_main.c | 30 ++++++++++++++++---
- drivers/net/ethernet/microchip/lan743x_main.h | 24 +++++++++++++++
- 2 files changed, 50 insertions(+), 4 deletions(-)
+V0 -> V3:
+  - Address the https://lore.kernel.org/lkml/4a565d54-f468-4e32-8a2c-102c1203f72c@lunn.ch/T/
+    review comments
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index 6be8a43c908a..6a40b961fafb 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -3575,7 +3575,7 @@ static void lan743x_pm_set_wol(struct lan743x_adapter *adapter)
+ drivers/net/phy/mxl-gpy.c | 58 +++++++++++++++++++++++++--------------
+ 1 file changed, 38 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/net/phy/mxl-gpy.c b/drivers/net/phy/mxl-gpy.c
+index b2d36a3a96f1..e5f8ac4b4604 100644
+--- a/drivers/net/phy/mxl-gpy.c
++++ b/drivers/net/phy/mxl-gpy.c
+@@ -107,6 +107,7 @@ struct gpy_priv {
  
- 	/* clear wake settings */
- 	pmtctl = lan743x_csr_read(adapter, PMT_CTL);
--	pmtctl |= PMT_CTL_WUPS_MASK_;
-+	pmtctl |= PMT_CTL_WUPS_MASK_ | PMT_CTL_RES_CLR_WKP_MASK_;
- 	pmtctl &= ~(PMT_CTL_GPIO_WAKEUP_EN_ | PMT_CTL_EEE_WAKEUP_EN_ |
- 		PMT_CTL_WOL_EN_ | PMT_CTL_MAC_D3_RX_CLK_OVR_ |
- 		PMT_CTL_RX_FCT_RFE_D3_CLK_OVR_ | PMT_CTL_ETH_PHY_WAKE_EN_);
-@@ -3710,6 +3710,7 @@ static int lan743x_pm_resume(struct device *dev)
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct net_device *netdev = pci_get_drvdata(pdev);
- 	struct lan743x_adapter *adapter = netdev_priv(netdev);
-+	u32 data;
+ 	u8 fw_major;
+ 	u8 fw_minor;
++	u32 wolopts;
+ 
+ 	/* It takes 3 seconds to fully switch out of loopback mode before
+ 	 * it can safely re-enter loopback mode. Record the time when
+@@ -221,6 +222,15 @@ static int gpy_hwmon_register(struct phy_device *phydev)
+ }
+ #endif
+ 
++static int gpy_ack_interrupt(struct phy_device *phydev)
++{
++	int ret;
++
++	/* Clear all pending interrupts */
++	ret = phy_read(phydev, PHY_ISTAT);
++	return ret < 0 ? ret : 0;
++}
++
+ static int gpy_mbox_read(struct phy_device *phydev, u32 addr)
+ {
+ 	struct gpy_priv *priv = phydev->priv;
+@@ -262,16 +272,8 @@ static int gpy_mbox_read(struct phy_device *phydev, u32 addr)
+ 
+ static int gpy_config_init(struct phy_device *phydev)
+ {
+-	int ret;
+-
+-	/* Mask all interrupts */
+-	ret = phy_write(phydev, PHY_IMASK, 0);
+-	if (ret)
+-		return ret;
+-
+-	/* Clear all pending interrupts */
+-	ret = phy_read(phydev, PHY_ISTAT);
+-	return ret < 0 ? ret : 0;
++	/* Nothing to configure. Configuration Requirement Placeholder */
++	return 0;
+ }
+ 
+ static int gpy21x_config_init(struct phy_device *phydev)
+@@ -627,11 +629,23 @@ static int gpy_read_status(struct phy_device *phydev)
+ 
+ static int gpy_config_intr(struct phy_device *phydev)
+ {
++	struct gpy_priv *priv = phydev->priv;
+ 	u16 mask = 0;
++	int ret;
++
++	ret = gpy_ack_interrupt(phydev);
++	if (ret)
++		return ret;
+ 
+ 	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
+ 		mask = PHY_IMASK_MASK;
+ 
++	if (priv->wolopts & WAKE_MAGIC)
++		mask |= PHY_IMASK_WOL;
++
++	if (priv->wolopts & WAKE_PHY)
++		mask |= PHY_IMASK_LSTC;
++
+ 	return phy_write(phydev, PHY_IMASK, mask);
+ }
+ 
+@@ -678,6 +692,7 @@ static int gpy_set_wol(struct phy_device *phydev,
+ 		       struct ethtool_wolinfo *wol)
+ {
+ 	struct net_device *attach_dev = phydev->attached_dev;
++	struct gpy_priv *priv = phydev->priv;
  	int ret;
  
- 	pci_set_power_state(pdev, PCI_D0);
-@@ -3728,6 +3729,30 @@ static int lan743x_pm_resume(struct device *dev)
- 		return ret;
+ 	if (wol->wolopts & WAKE_MAGIC) {
+@@ -725,6 +740,8 @@ static int gpy_set_wol(struct phy_device *phydev,
+ 		ret = phy_read(phydev, PHY_ISTAT);
+ 		if (ret < 0)
+ 			return ret;
++
++		priv->wolopts |= WAKE_MAGIC;
+ 	} else {
+ 		/* Disable magic packet matching */
+ 		ret = phy_clear_bits_mmd(phydev, MDIO_MMD_VEND2,
+@@ -732,6 +749,13 @@ static int gpy_set_wol(struct phy_device *phydev,
+ 					 WOL_EN);
+ 		if (ret < 0)
+ 			return ret;
++
++		/* Disable the WOL interrupt */
++		ret = phy_clear_bits(phydev, PHY_IMASK, PHY_IMASK_WOL);
++		if (ret < 0)
++			return ret;
++
++		priv->wolopts &= ~WAKE_MAGIC;
  	}
  
-+	ret = lan743x_csr_read(adapter, MAC_WK_SRC);
-+	netif_info(adapter, drv, adapter->netdev,
-+		   "Wakeup source : 0x%08X\n", ret);
-+
-+	/* Clear the wol configuration and status bits. Note that
-+	 * the status bits are "Write One to Clear (W1C)"
-+	 */
-+	data = MAC_WUCSR_EEE_TX_WAKE_ | MAC_WUCSR_EEE_RX_WAKE_ |
-+	       MAC_WUCSR_RFE_WAKE_FR_ | MAC_WUCSR_PFDA_FR_ | MAC_WUCSR_WUFR_ |
-+	       MAC_WUCSR_MPR_ | MAC_WUCSR_BCAST_FR_;
-+	lan743x_csr_write(adapter, MAC_WUCSR, data);
-+
-+	data = MAC_WUCSR2_NS_RCD_ | MAC_WUCSR2_ARP_RCD_ |
-+	       MAC_WUCSR2_IPV6_TCPSYN_RCD_ | MAC_WUCSR2_IPV4_TCPSYN_RCD_;
-+	lan743x_csr_write(adapter, MAC_WUCSR2, data);
-+
-+	data = MAC_WK_SRC_ETH_PHY_WK_ | MAC_WK_SRC_IPV6_TCPSYN_RCD_WK_ |
-+	       MAC_WK_SRC_IPV4_TCPSYN_RCD_WK_ | MAC_WK_SRC_EEE_TX_WK_ |
-+	       MAC_WK_SRC_EEE_RX_WK_ | MAC_WK_SRC_RFE_FR_WK_ |
-+	       MAC_WK_SRC_PFDA_FR_WK_ | MAC_WK_SRC_MP_FR_WK_ |
-+	       MAC_WK_SRC_BCAST_FR_WK_ | MAC_WK_SRC_WU_FR_WK_ |
-+	       MAC_WK_SRC_WK_FR_SAVED_;
-+	lan743x_csr_write(adapter, MAC_WK_SRC, data);
-+
- 	/* open netdev when netdev is at running state while resume.
- 	 * For instance, it is true when system wakesup after pm-suspend
- 	 * However, it is false when system wakes up after suspend GUI menu
-@@ -3736,9 +3761,6 @@ static int lan743x_pm_resume(struct device *dev)
- 		lan743x_netdev_open(netdev);
+ 	if (wol->wolopts & WAKE_PHY) {
+@@ -748,9 +772,11 @@ static int gpy_set_wol(struct phy_device *phydev,
+ 		if (ret & (PHY_IMASK_MASK & ~PHY_IMASK_LSTC))
+ 			phy_trigger_machine(phydev);
  
- 	netif_device_attach(netdev);
--	ret = lan743x_csr_read(adapter, MAC_WK_SRC);
--	netif_info(adapter, drv, adapter->netdev,
--		   "Wakeup source : 0x%08X\n", ret);
++		priv->wolopts |= WAKE_PHY;
+ 		return 0;
+ 	}
  
- 	return 0;
++	priv->wolopts &= ~WAKE_PHY;
+ 	/* Disable the link state change interrupt */
+ 	return phy_clear_bits(phydev, PHY_IMASK, PHY_IMASK_LSTC);
  }
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
-index 645bc048e52e..fac0f33d10b2 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.h
-+++ b/drivers/net/ethernet/microchip/lan743x_main.h
-@@ -61,6 +61,7 @@
- #define PMT_CTL_RX_FCT_RFE_D3_CLK_OVR_		BIT(18)
- #define PMT_CTL_GPIO_WAKEUP_EN_			BIT(15)
- #define PMT_CTL_EEE_WAKEUP_EN_			BIT(13)
-+#define PMT_CTL_RES_CLR_WKP_MASK_		GENMASK(9, 8)
- #define PMT_CTL_READY_				BIT(7)
- #define PMT_CTL_ETH_PHY_RST_			BIT(4)
- #define PMT_CTL_WOL_EN_				BIT(3)
-@@ -227,12 +228,31 @@
- #define MAC_WUCSR				(0x140)
- #define MAC_MP_SO_EN_				BIT(21)
- #define MAC_WUCSR_RFE_WAKE_EN_			BIT(14)
-+#define MAC_WUCSR_EEE_TX_WAKE_			BIT(13)
-+#define MAC_WUCSR_EEE_RX_WAKE_			BIT(11)
-+#define MAC_WUCSR_RFE_WAKE_FR_			BIT(9)
-+#define MAC_WUCSR_PFDA_FR_			BIT(7)
-+#define MAC_WUCSR_WUFR_				BIT(6)
-+#define MAC_WUCSR_MPR_				BIT(5)
-+#define MAC_WUCSR_BCAST_FR_			BIT(4)
- #define MAC_WUCSR_PFDA_EN_			BIT(3)
- #define MAC_WUCSR_WAKE_EN_			BIT(2)
- #define MAC_WUCSR_MPEN_				BIT(1)
- #define MAC_WUCSR_BCST_EN_			BIT(0)
+@@ -758,18 +784,10 @@ static int gpy_set_wol(struct phy_device *phydev,
+ static void gpy_get_wol(struct phy_device *phydev,
+ 			struct ethtool_wolinfo *wol)
+ {
+-	int ret;
++	struct gpy_priv *priv = phydev->priv;
  
- #define MAC_WK_SRC				(0x144)
-+#define MAC_WK_SRC_ETH_PHY_WK_			BIT(17)
-+#define MAC_WK_SRC_IPV6_TCPSYN_RCD_WK_		BIT(16)
-+#define MAC_WK_SRC_IPV4_TCPSYN_RCD_WK_		BIT(15)
-+#define MAC_WK_SRC_EEE_TX_WK_			BIT(14)
-+#define MAC_WK_SRC_EEE_RX_WK_			BIT(13)
-+#define MAC_WK_SRC_RFE_FR_WK_			BIT(12)
-+#define MAC_WK_SRC_PFDA_FR_WK_			BIT(11)
-+#define MAC_WK_SRC_MP_FR_WK_			BIT(10)
-+#define MAC_WK_SRC_BCAST_FR_WK_			BIT(9)
-+#define MAC_WK_SRC_WU_FR_WK_			BIT(8)
-+#define MAC_WK_SRC_WK_FR_SAVED_			BIT(7)
-+
- #define MAC_MP_SO_HI				(0x148)
- #define MAC_MP_SO_LO				(0x14C)
+ 	wol->supported = WAKE_MAGIC | WAKE_PHY;
+-	wol->wolopts = 0;
+-
+-	ret = phy_read_mmd(phydev, MDIO_MMD_VEND2, VPSPEC2_WOL_CTL);
+-	if (ret & WOL_EN)
+-		wol->wolopts |= WAKE_MAGIC;
+-
+-	ret = phy_read(phydev, PHY_IMASK);
+-	if (ret & PHY_IMASK_LSTC)
+-		wol->wolopts |= WAKE_PHY;
++	wol->wolopts = priv->wolopts;
+ }
  
-@@ -295,6 +315,10 @@
- #define RFE_INDX(index)			(0x580 + (index << 2))
- 
- #define MAC_WUCSR2			(0x600)
-+#define MAC_WUCSR2_NS_RCD_		BIT(7)
-+#define MAC_WUCSR2_ARP_RCD_		BIT(6)
-+#define MAC_WUCSR2_IPV6_TCPSYN_RCD_	BIT(5)
-+#define MAC_WUCSR2_IPV4_TCPSYN_RCD_	BIT(4)
- 
- #define SGMII_ACC			(0x720)
- #define SGMII_ACC_SGMII_BZY_		BIT(31)
+ static int gpy_loopback(struct phy_device *phydev, bool enable)
 -- 
 2.34.1
 
