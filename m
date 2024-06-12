@@ -1,111 +1,144 @@
-Received: from komekko.fuwafuwatime.moe (komekko.fuwafuwatime.moe [65.21.224.109])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126D116D4F6;
-	Wed, 12 Jun 2024 12:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.224.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA1F16D4F6;
+	Wed, 12 Jun 2024 12:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718195713; cv=none; b=K0yKTlAyBXdC7d0JEl3p5hhQMBSO3gj8JrKZfsIpfVsQVA+AEpusBiEi9N171Q4tUS3U9OsQ+jNkVFczrUIX+G3RMoHYahc8bXhvX/hHff617lmaA4mf0n0cN++cTml2e4r7iCE4b5lDX74yH+FZQwbE7AoKS4JMDdlv9TiZ3fk=
+	t=1718195746; cv=none; b=Qfe9cwXYoEagCSjv5YA1mphPw+Cm4G7bIBLVfu9zlivVztc13xRZv+9gOs8exSAzHLHzNJW3HRXv5DtImUvlLWVwH/lGWYdEkSoJOKaJksSpj+Efot0Ni+lkBTuCGLv3BqY7zH1Y319wd9VZqcgWcvACD1mXDY/y93EkHtrTm3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718195713; c=relaxed/simple;
-	bh=TDi4E53eOV070hTG5YTA25MB1lt7gnKyfwnJfREXyYo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VOH4gEf/bNo5HB3c9CyzMbMH4Id41DxAl/6QcAFtXgMBjxn7VdFAGAtufuZUM1viAXt8FF1zdVrXZ9FFxvAjkPU33sf3SqQ1cZjeGqi4UmbBy/fNtYBGCXrAKcIbsrc0igxirpsmJ+9jaZBER8xpIPicNcHpFCx0V3KOeHaoMiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=concord.sh; spf=pass smtp.mailfrom=concord.sh; dkim=pass (2048-bit key) header.d=concord.sh header.i=@concord.sh header.b=hqddc/9m; arc=none smtp.client-ip=65.21.224.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=concord.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=concord.sh
+	s=arc-20240116; t=1718195746; c=relaxed/simple;
+	bh=75aY26XuMuHZAMH1H77DDXsruluFV5/Q1HkpU9UlInU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=WlxjkKPb1Zznz0/5GlmXrvOgwjjK0WSt+O/LyS+lwVkgigfcx5J7drK1DUSvbdu76UiaCDoY7pUXXLNQXiWWSVp25pM7rEmupl0lACn5386K6NzU7fxyDEXSTi3EYBUvCJabAJ9AxlPNpO1YOoGejVgSIPKmzzVn1ze/dAiowGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UZggQePO; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=concord.sh header.i=@concord.sh header.b="hqddc/9m"
-Received: from megumin.fuwafuwatime.moe (unknown [71.203.71.170])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by komekko.fuwafuwatime.moe (Postfix) with ESMTPSA id A03E41145104;
-	Wed, 12 Jun 2024 15:29:15 +0300 (EEST)
-Received: from localhost (unknown [192.168.1.101])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by megumin.fuwafuwatime.moe (Postfix) with ESMTPSA id 0C8D010962BC;
-	Wed, 12 Jun 2024 08:29:10 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=concord.sh; s=dkim;
-	t=1718195353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TDi4E53eOV070hTG5YTA25MB1lt7gnKyfwnJfREXyYo=;
-	b=hqddc/9maZCsBRJ9ABlmTv6tXq6l0TTb+km1ZM5oOQfADREbo2japdfW2lyZe49Gfba42c
-	FGg6yfC+tWIv8FkC1NEeiJW1u2IWOmoK1ekdLLHPz2wkjITKo8UMxF6FQjA+fatksvPNoh
-	ncONAKqvg5cXEhxf4WpDBCh1Zvp+ZO7tnfD7xHmBtxGUQ66gWcwuBUYKaMMlPBlhotMEpJ
-	VRr1q8LALz50D2LL67N/gpLfA4kinPgTB6RXV+Zc3ggKIJhGf//5CNCHbz8aUOqPBDtSLD
-	lje7a8rSySZcGmtCyAB4e2MIXtbYRMgAmcBA5ncaYbDjVawpMgtbxGMCsfqwRQ==
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=me@concord.sh smtp.mailfrom=me@concord.sh
-Date: Wed, 12 Jun 2024 08:29:01 -0400
-From: Kenton Groombridge <me@concord.sh>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Kenton Groombridge <concord@gentoo.org>, 
-	Kees Cook <keescook@chromium.org>, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] wifi: mac80211: Avoid address calculations via out of
- bounds array indexing
-Message-ID: <hftvxmqv4wm4l6s4ynkzakvawem4a6mvzvkbvnfgvkuie6ybbw@7pulonpy7q74>
-Mail-Followup-To: Johannes Berg <johannes@sipsolutions.net>, 
-	Kenton Groombridge <concord@gentoo.org>, Kees Cook <keescook@chromium.org>, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-References: <20240605152218.236061-1-concord@gentoo.org>
- <fd1acc0f69ef9573ff0dced35863949c80c6d5e7.camel@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZggQePO"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57c72d6d5f3so5267067a12.1;
+        Wed, 12 Jun 2024 05:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718195743; x=1718800543; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KRmihzRKsZKPXkmImPA2PJdwqrzPV0j1SUb1OGAaqoc=;
+        b=UZggQePODzwNyl/i3peyhVVQa8LCk5pnQ+TK46s5ck7aHiM7g/Do3msJrhS3pKtO3E
+         79lGyPQxLUjj3YrNcgT9vcTaA8vpJloTWPSlmN37mRGgSOwsXdU45XETcPsn+9wys5NV
+         oyQV8C74Qlk2VfgNO/omr8pBgEYUYgiVjWMQvz4uHTt7EoE+ATUnIR2o5w5WE3b5uQTi
+         9Tqn06t1g31slmlDPiXEjlDxY1yuzgoYSGm4b9F2SLrK5Fm90/xqXEA00cKZBKyvr51R
+         xb+CljHeZNnq+erIZVjHZAbW5o2sD7jJx1QTuAwbN5L1YhQQnLCkdD0euc7kmlsKt1hX
+         Y5vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718195743; x=1718800543;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KRmihzRKsZKPXkmImPA2PJdwqrzPV0j1SUb1OGAaqoc=;
+        b=ZOJe2vJVgNTxzETN5WHzNoEMCfgeXMeYqqZldYkIcIQqa97sMAEVoptsemHJXF5x4T
+         hIzjtUC45vdDX9l/LmQATO93U/tMxqv2chYQbiGIP9pWdWxmg/a3Qrckc0gGR/cEmPMW
+         P9puwze6hIK2sSAhtIPMZe5nMcV1PNT49VLUZDmE+bNcpvNHlLNe4htt2T5PmqSABtV3
+         ZSJmdyqJ8sZ7NbqvqVhpkhIDXiNcyYsDnhhDRZ33iiDzzjQpqJIazRaLgvqWNlpdE7FC
+         yKC+BXHMew3OrdwgSwYpA7WT3unkqEOJTCqMXmaMHMoehNljcMVuqG08IJeGwx52j324
+         dzXA==
+X-Forwarded-Encrypted: i=1; AJvYcCWm5VJXA1Y+7lj78ak71ZzvCSmyhS7bzxXkFLGTwDg/kjds08pDZBPhQSPOiiWAK462XwO5CC4z6cWD3PcvYRZ2IshFZ8YdQR5MJEEDirmnhyLVUyM6xmIG2ITgkXFMyKdn15puqaM=
+X-Gm-Message-State: AOJu0YxYVcXw2RKAWF6Oyo8UUEnXhf63YGwZ/jEhBwUcgIfRWa6RpzKU
+	/KGYMSbfwAzE7a9sW1lqqVgIQocjMT1WtDGc9MmNYB5vHL2Vx+9qPF1iCg==
+X-Google-Smtp-Source: AGHT+IGD0yDtfu7JBxBoQrITgVlvHEvwGIrCaQ0jIW2iRXWNcl1eNmoadDqoSgoNRaVbxiE6xRrYPg==
+X-Received: by 2002:a17:906:355b:b0:a6f:4e02:ce55 with SMTP id a640c23a62f3a-a6f4e0323e1mr31088866b.53.1718195742741;
+        Wed, 12 Jun 2024 05:35:42 -0700 (PDT)
+Received: from [192.168.42.244] ([163.114.131.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6c8072a101sm879776266b.201.2024.06.12.05.35.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 05:35:42 -0700 (PDT)
+Message-ID: <6213cf3d-b114-4c27-b9c5-6339b9f363aa@gmail.com>
+Date: Wed, 12 Jun 2024 13:35:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="m6rphp4l66hp66gv"
-Content-Disposition: inline
-In-Reply-To: <fd1acc0f69ef9573ff0dced35863949c80c6d5e7.camel@sipsolutions.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [io-uring] WARNING in io_fill_cqe_req_aux
+To: chase xd <sl1589472800@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+ io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CADZouDQx4tqCfCfmCHjUp9nhAJ8_qTX=cCYOFzMYiQQwtsNuag@mail.gmail.com>
+ <4fd9cd27-487d-4a23-b17a-aa9dcb09075f@gmail.com>
+ <CADZouDSyJVR=WX-X46QCUZeUz=7DHg_9=e5y=N7Wb+zMQ_dGtQ@mail.gmail.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <CADZouDSyJVR=WX-X46QCUZeUz=7DHg_9=e5y=N7Wb+zMQ_dGtQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+On 6/12/24 08:10, chase xd wrote:
+> Sorry now I'm also a bit confused by the branch choosing. I checked
+> out branch "for-6.9/io_uring" and started testing on that branch. I
+> assume that was the latest version of io_uring at that time, even now
+> I check out that branch and the bug still exists. How should I know
+> whether the branch will be merged, and which branch do you think I
+> should test on? Thanks.
+
+# git show a69d20885494:io_uring/io_uring.c | grep -A 13 io_fill_cqe_req_aux
+bool io_fill_cqe_req_aux(struct io_kiocb *req, bool defer, s32 res, u32 cflags)
+{
+         struct io_ring_ctx *ctx = req->ctx;
+         u64 user_data = req->cqe.user_data;
+
+         if (!defer)
+                 return __io_post_aux_cqe(ctx, user_data, res, cflags, false);
+
+         lockdep_assert_held(&ctx->uring_lock);
+         io_lockdep_assert_cq_locked(ctx);
+
+         ctx->submit_state.flush_cqes = true;
+         return io_fill_cqe_aux(ctx, user_data, res, cflags);
+}
+
+That's the buggy version from the hash you're testing, IIRC it
+was in the tree for longer than necessary, presumably which is
+why you found it, but it was never sent to Linus. Below is
+current state of for-6.9 and what it was replaced with
+respectively. Let me separately check for-6.9/io_uring if you're
+concerned about it.
 
 
---m6rphp4l66hp66gv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On 24/06/12 10:20AM, Johannes Berg wrote:
->=20
-> Wait ... I don't know what Kees did here, but seems then he should sign-
-> off too.
->=20
 
-Very early on I asked Kees to review this patch and he identified a
-couple issues with it and offered some suggestions. I wanted to make
-sure to credit him appropriately for his help -- I apologize if the
-Co-authored-by: tag is not appropriate here.
+# git show for-6.9/io_uring:io_uring/io_uring.c | grep -A 30 io_fill_cqe_req_aux
+bool io_fill_cqe_req_aux(struct io_kiocb *req, bool defer, s32 res, u32 cflags)
+{
+         struct io_ring_ctx *ctx = req->ctx;
+         u64 user_data = req->cqe.user_data;
+         struct io_uring_cqe *cqe;
 
---m6rphp4l66hp66gv
-Content-Type: application/pgp-signature; name="signature.asc"
+         lockdep_assert(!io_wq_current_is_worker());
 
------BEGIN PGP SIGNATURE-----
+         if (!defer)
+                 return __io_post_aux_cqe(ctx, user_data, res, cflags, false);
 
-iQKTBAABCgB9FiEEP+u3AkfbrORB/inCFt7v5V9Ft54FAmZplIlfFIAAAAAALgAo
-aXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5maWZ0aGhvcnNlbWFuLm5ldDNG
-RUJCNzAyNDdEQkFDRTQ0MUZFMjlDMjE2REVFRkU1NUY0NUI3OUUACgkQFt7v5V9F
-t57vpA//VHsT66cH6yUOnOb25EOh76FkknUiaDTdDSU90XWIx3SBe2xILR+yeipU
-hMpdatBpLtE0lIKnWjp7a9ZxTrIzHtqkKqscNzFRlsPVlZqOw3pOmCyyYi4gsxwY
-AL6tn4Jb6iS4msK124/ncdOIkudCMuE3p8ii9SDFn47ubf4oROgsFponQqP1Mjt6
-/0a1fPFbUm7pJR/dCVbk+WcEHq65jS3uk60fL1iYttLsPQVjAKjkbsfDzUA7h8Vx
-xPTXgbSNgy2uCp78s20z0gkGiJ4RLGJlE9U2msFHbWRUY0MBZDVa67IHMql7JsOl
-Y3MCItaZdLbf44bhP2NuFEF5NPdXka2EgrTpS7wUbnX8x9H9nmCVTgWFWOHKGV2y
-2roUwfuO/oYSrmQpFH2CTo0wtwnKaA+57e8qD6kQZzRqeGMrLGoc9AwvFPxxXPyy
-ZyDfSUXRY9PRJ/TGZAosm1PO1BCMJTd9Qg+0v3usoXeBtsG49E3XJtLfKCq0dK8i
-OSpUfNVuPDeZ1MA2YsbmXg/z/WGmj7daCA20Kto502qtuTHYsX4X9SxFx7SZHCEh
-MkKjyPpyLxMSMhLTHHD9qIs+LsUxvDbKElZPT+0YmrOaS1xB3SW685sNmoGVOZ8Z
-aF037mFI3iIUqGjFZZynBmJPllU2//O9CP9RIfne12m7TrZWc2U=
-=0LHB
------END PGP SIGNATURE-----
+         lockdep_assert_held(&ctx->uring_lock);
 
---m6rphp4l66hp66gv--
+         if (ctx->submit_state.cqes_count == ARRAY_SIZE(ctx->completion_cqes)) {
+...
+
+# git show origin/for-6.10/io_uring:io_uring/io_uring.c | grep -A 13 io_req_post_cqe
+bool io_req_post_cqe(struct io_kiocb *req, s32 res, u32 cflags)
+{
+         struct io_ring_ctx *ctx = req->ctx;
+         bool posted;
+
+         lockdep_assert(!io_wq_current_is_worker());
+         lockdep_assert_held(&ctx->uring_lock);
+
+         __io_cq_lock(ctx);
+         posted = io_fill_cqe_aux(ctx, req->cqe.user_data, res, cflags);
+         ctx->submit_state.cq_flush = true;
+         __io_cq_unlock_post(ctx);
+         return posted;
+}
+
+-- 
+Pavel Begunkov
