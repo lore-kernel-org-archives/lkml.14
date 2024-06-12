@@ -1,59 +1,57 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A8616F0FB;
-	Wed, 12 Jun 2024 11:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9B216F0E1;
+	Wed, 12 Jun 2024 11:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718191400; cv=none; b=Iuze3wh9sHSIMCP1TuhAK1YM5S1wxWxA6tiC5Sj0Fol5q296cTG8jKXFweiJ0q0Dv1CYcnh+7HNkuFTWpCmrb10M+VDJmMCbUxAbtRu+eNpouy7jFtrOP5U7zEvRZ8mCnPTVuW8KSCPgv+o6aHO3yqGizuKKJBlHyl5I9RPrcKA=
+	t=1718191410; cv=none; b=GkbAlBHiFYZ6P6bnj5BPUkF1rF6QnFILl2NCfJ4ywNRKU+1IfbU3pP2SQldXR/hyXKoMOcYDZzn9o1NHjn4Gy/AR/yRxbTfvtvqdXoLaCgspmAcwyKO+ZfC8P9o0/x28ctje2TVYIWCv9TrJtHpBikcIN6PAbMg9TYGeo41HdoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718191400; c=relaxed/simple;
-	bh=eyqk4BWKM+w8zgI+2BHLFLdZGQatPIJSvGdKBMHkdnQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lPNZWuaFVGtpJsf7AkOddaHef/msG1JEQb9he6uVgyb4d2bYe8WUjDUGZ/+yI9WcjG2IBu872706KjtRx7AgqpDE4bCUjFRPJQ5jB1opiRLWcq1ATfljdCZ9t8utY938i75knO7CRSXwRNR2oPbwg/NL18uthf+DRej+FJalkzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=R19Yq5TI; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1718191410; c=relaxed/simple;
+	bh=se7f+d0GSXWtsNYbOTjloWfdd1VeakxeFcefGN+ydGc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VxSWecDcFnP1Ts+Au7dMiJuxinYYU6aC4v0yXbvO7LS13wA1DyPNGadRHC1Y3WoFeD9kU84W63cynXXBNXT6rm2rL/psPsCslW9IeR1kt5BwAv3WY1NzFTB2CnRW80a6UfUIRhahqk2ZS+YreY8MTuNOwbkRJc5s1GBbJ07loKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=a+3gS9zI; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R19Yq5TI"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45CBNCwP080336;
-	Wed, 12 Jun 2024 06:23:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1718191392;
-	bh=650Q/oEA4q0guSCa793ebYVf7QtXHsuFmq4zcJ/TXek=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=R19Yq5TIeFdUD4hvyy0acdnq7K8stejhKcBaJfMX9E0HGmWmZZdzijVJf8QhreDxF
-	 uSaJFZJ1nEf2DT/ohbt4R1ly5yrvWc0Od8fX3eWMHfuN5SgGBDqg4N2Gliny8GmLeb
-	 Stcjx+U3U8yo29oLWgAVqTjHdYxIe6OPprfDYk+U=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45CBNCk9022931
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 12 Jun 2024 06:23:12 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 12
- Jun 2024 06:23:11 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 12 Jun 2024 06:23:12 -0500
-Received: from uda0510294.dhcp.ti.com (uda0510294.dhcp.ti.com [10.24.69.66])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45CBMxe4120263;
-	Wed, 12 Jun 2024 06:23:08 -0500
-From: Beleswar Padhi <b-padhi@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <j-choudhary@ti.com>, <vaishnav.a@ti.com>,
-        <afd@ti.com>, <u-kumar1@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/2] arm64: dts: ti: k3-j722s-evm: Add memory carveouts for R5F and C7x
-Date: Wed, 12 Jun 2024 16:52:59 +0530
-Message-ID: <20240612112259.1131653-3-b-padhi@ti.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="a+3gS9zI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1718191408; x=1749727408;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=se7f+d0GSXWtsNYbOTjloWfdd1VeakxeFcefGN+ydGc=;
+  b=a+3gS9zIwYVtq7BCPTCTs4+FAkmorQBI40RYvAeKr0o3MWxXWcvjTlHE
+   o4TPrj9mblRkvNvwRqm6Rpu+DZ67PUqCfmdAKh0hshje6RYS5EXQyWSOW
+   LoVCKdQKW1bGlKvvZUR9TTiSFO/q3g3ziC+2iQMcngRGAxLU62ECMsMdo
+   azusKsdTPhtflgGCH6fAWtbfaQnP0WcFGrmgUkxA2n2Y8okeZubK4U7UK
+   2T1DEspQUABzZt/N9lNtC32SR3B5OlyUT4g84iAz/o/FJT2WI3tjuRr0l
+   jNdxoqOT/NUK8pEio86UC7WvrPgrRLrtBKSHpuKoOfA6FVzYrIA6++p9Q
+   w==;
+X-CSE-ConnectionGUID: hzPuRHFvRM+Wy8rrRTyffQ==
+X-CSE-MsgGUID: hGPkAvY2QcmND2RgQJnH6Q==
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="29761704"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Jun 2024 04:23:22 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 12 Jun 2024 04:22:41 -0700
+Received: from daire-X570.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 12 Jun 2024 04:22:39 -0700
+From: <daire.mcnamara@microchip.com>
+To: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <conor.dooley@microchip.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<robh@kernel.org>, <bhelgaas@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <daire.mcnamara@microchip.com>
+Subject: [PATCH v3 0/3] Fix address translations on MPFS PCIe controller
+Date: Wed, 12 Jun 2024 12:22:10 +0100
+Message-ID: <20240612112213.2734748-1-daire.mcnamara@microchip.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240612112259.1131653-1-b-padhi@ti.com>
-References: <20240612112259.1131653-1-b-padhi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,190 +60,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Apurva Nandan <a-nandan@ti.com>
+From: Daire McNamara <daire.mcnamara@microchip.com>
 
-The K3 J722S SoCs have one single-core Arm Cortex-R5F processor in each
-of the WAKEUP, MCU and MAIN voltage domain, and two C71x DSP subsystems
-in MAIN voltage domain.
+Hi all,
 
-The Inter-Processor communication between the main A72 cores and these
-R5F and DSP remote cores is achieved through shared memory and
-Mailboxes. Thus, add the memory carveouts and enable the mailbox
-clusters required for communication.
+On Microchip PolarFire SoC (MPFS), the PCIe controller is connected to the
+CPU via one of three Fabric Interface Connectors (FICs).  Each FIC present
+to the CPU complex as 64-bit AXI-M and 64-bit AXI-S.  To preserve
+compatibility with other PolarFire family members, the PCIe controller is
+connected to its encapsulating FIC via a 32-bit AXI-M and 32-bit AXI-S
+interface.
 
-Signed-off-by: Apurva Nandan <a-nandan@ti.com>
-[ Added and enabled mailbox instances ]
-Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 140 ++++++++++++++++++++++++
- 1 file changed, 140 insertions(+)
+Each FIC is implemented in FPGA logic and can incorporate logic along its 64-bit
+AXI-M to 32-bit AXI-M chain (including address translation) and, likewise, along
+its 32-bit AXI-S to 64-bit AXI-S chain (again including address translation).
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-index 253b02f0437de..643a017833572 100644
---- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
-@@ -51,12 +51,71 @@ secure_ddr: optee@9e800000 {
- 			no-map;
- 		};
- 
-+		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@a0000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0xa0000000 0x00 0x100000>;
-+			no-map;
-+		};
-+
- 		wkup_r5fss0_core0_memory_region: r5f-memory@a0100000 {
- 			compatible = "shared-dma-pool";
- 			reg = <0x00 0xa0100000 0x00 0xf00000>;
- 			no-map;
- 		};
- 
-+		mcu_r5fss0_core0_dma_memory_region: mcu-r5fss-dma-memory-region@a1000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0xa1000000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		mcu_r5fss0_core0_memory_region: mcu-r5fss-memory-region@a1100000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0xa1100000 0x00 0xf00000>;
-+			no-map;
-+		};
-+
-+		main_r5fss0_core0_dma_memory_region: main-r5fss-dma-memory-region@a2000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0xa2000000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		main_r5fss0_core0_memory_region: main-r5fss-memory-region@a2100000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0xa2100000 0x00 0xf00000>;
-+			no-map;
-+		};
-+
-+		c7x_0_dma_memory_region: c7x-dma-memory@a3000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0xa3000000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		c7x_0_memory_region: c7x-memory@a3100000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0xa3100000 0x00 0xf00000>;
-+			no-map;
-+		};
-+
-+		c7x_1_dma_memory_region: c7x-dma-memory@a4000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0xa4000000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		c7x_1_memory_region: c7x-memory@a4100000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0xa4100000 0x00 0xf00000>;
-+			no-map;
-+		};
-+
-+		rtos_ipc_memory_region: ipc-memories@a5000000 {
-+			reg = <0x00 0xa5000000 0x00 0x1c00000>;
-+			alignment = <0x1000>;
-+			no-map;
-+		};
- 	};
- 
- 	vmain_pd: regulator-0 {
-@@ -400,6 +459,87 @@ &sdhci1 {
- 	bootph-all;
- };
- 
-+&mailbox0_cluster0 {
-+	status = "okay";
-+	mbox_r5_0: mbox-r5-0 {
-+		ti,mbox-rx = <0 0 0>;
-+		ti,mbox-tx = <1 0 0>;
-+	};
-+};
-+
-+&mailbox0_cluster1 {
-+	status = "okay";
-+	mbox_mcu_r5_0: mbox-mcu-r5-0 {
-+		ti,mbox-rx = <0 0 0>;
-+		ti,mbox-tx = <1 0 0>;
-+	};
-+};
-+
-+&mailbox0_cluster2 {
-+	status = "okay";
-+	mbox_c7x_0: mbox-c7x-0 {
-+		ti,mbox-rx = <0 0 0>;
-+		ti,mbox-tx = <1 0 0>;
-+	};
-+};
-+
-+&mailbox0_cluster3 {
-+	status = "okay";
-+	mbox_main_r5_0: mbox-main-r5-0 {
-+		ti,mbox-rx = <0 0 0>;
-+		ti,mbox-tx = <1 0 0>;
-+	};
-+
-+	mbox_c7x_1: mbox-c7x-1 {
-+		ti,mbox-rx = <2 0 0>;
-+		ti,mbox-tx = <3 0 0>;
-+	};
-+};
-+
-+&wkup_r5fss0 {
-+	status = "okay";
-+};
-+
-+&wkup_r5fss0_core0 {
-+	mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
-+	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-+			<&wkup_r5fss0_core0_memory_region>;
-+};
-+
-+&mcu_r5fss0 {
-+	status = "okay";
-+};
-+
-+&mcu_r5fss0_core0 {
-+	mboxes = <&mailbox0_cluster1 &mbox_mcu_r5_0>;
-+	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
-+			<&mcu_r5fss0_core0_memory_region>;
-+};
-+
-+&main_r5fss0 {
-+	status = "okay";
-+};
-+
-+&main_r5fss0_core0 {
-+	mboxes = <&mailbox0_cluster3 &mbox_main_r5_0>;
-+	memory-region = <&main_r5fss0_core0_dma_memory_region>,
-+			<&main_r5fss0_core0_memory_region>;
-+};
-+
-+&c7x_0 {
-+	status = "okay";
-+	mboxes = <&mailbox0_cluster2 &mbox_c7x_0>;
-+	memory-region = <&c7x_0_dma_memory_region>,
-+			<&c7x_0_memory_region>;
-+};
-+
-+&c7x_1 {
-+	status = "okay";
-+	mboxes = <&mailbox0_cluster3 &mbox_c7x_1>;
-+	memory-region = <&c7x_1_dma_memory_region>,
-+			<&c7x_1_memory_region>;
-+};
-+
- &serdes_ln_ctrl {
- 	idle-states = <J722S_SERDES0_LANE0_USB>,
- 		      <J722S_SERDES1_LANE0_PCIE0_LANE0>;
+In order to reduce the potential support space for the PCIe controller in
+this environment, MPFS supports certain reference designs for these address
+translations: reference designs for cache-coherent memory accesses
+and reference designs for non-cache-coherent memory accesses. The precise
+details of these reference designs and associated customer guidelines
+recommending that customers adhere to the addressing schemes used in those
+reference designs are available from Microchip, but the implication for the
+PCIe controller address translation between CPU-space and PCIe-space are:
+
+For outbound address translation, the PCIe controller address translation tables
+are treated as if they are 32-bit only.  Any further address translation must
+be done in FPGA fabric.
+
+For inbound address translation, the PCIe controller is configurable for two
+cases:
+* In the case of cache-coherent designs, the base of the AXI-S side of the
+  address translation must be set to 0 and the size should be 4 GiB wide. The
+  FPGA fabric must complete any address translations based on that 0-based
+  address translation.
+* In the case of non-cache coherent designs, the base of AXI-S side of the
+  address translation must be set to 0x8000'0000 and the size shall be 2 GiB
+  wide.  The FPGA fabric must complete any address translation based on that
+  0x80000000 base.
+
+So, for example, in the non-cache-coherent case, with a device tree property
+that maps an inbound range from 0x10'0000'0000 in PCIe space to 0x10'0000'0000
+in CPU space, the PCIe rootport will translate a PCIe address of 0x10'0000'0000
+to an intermediate 32-bit AXI-S address of 0x8000'0000 and the FIC is
+responsible for translating that intermediate 32-bit AXI-S address of
+0x8000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
+
+And similarly, for example, in the cache-coherent case, with a device tree
+property that maps an inbound range from 0x10'0000'0000 in PCIe space to
+0x10'0000'0000 in CPU space, the PCIe rootport will translate a PCIe address
+of 0x10'0000'0000 to an intermediate 32-bit AXI-S address of 0x0000'0000 and
+the FIC is responsible for translating that intermediate 32-bit AXI-S address
+of 0x0000'0000 to a 64-bit AXI-S address of 0x10'0000'0000.
+
+See https://lore.kernel.org/all/20220902142202.2437658-1-daire.mcnamara@microchip.com/T/
+for backstory.
+
+Changes since v2:
+- Added <Signed-off-by: tag>
+
+Changes since v1:
+- added bindings patch to allow dma-noncoherent
+- changed a size_t to u64 to pass 32-bit compile tests
+- allowed 64-bit outbound pcie translations
+- tied PCIe side of eCAM translation table to 0
+
+Conor Dooley (1):
+  dt-bindings: PCI: microchip,pcie-host: allow dma-noncoherent
+
+Daire McNamara (2):
+  PCI: microchip: Fix outbound address translation tables
+  PCI: microchip: Fix inbound address translation tables
+
+ .../bindings/pci/microchip,pcie-host.yaml     |   2 +
+ drivers/pci/controller/pcie-microchip-host.c  | 107 ++++++++++++++++--
+ 2 files changed, 99 insertions(+), 10 deletions(-)
+
+
+base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
 -- 
 2.34.1
 
