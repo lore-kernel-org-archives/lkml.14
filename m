@@ -1,174 +1,141 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D1D17C77;
-	Wed, 12 Jun 2024 05:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA041C2D;
+	Wed, 12 Jun 2024 05:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718169689; cv=none; b=ERw4vnRCOhI8kKqYMYTkgG3rXEjfhJ6R4dLlb7GobkO+uwBWKzhzhgu00jQZcRF+Izt+yVyJukwn8y8vnHEHAjGsx2sXo9g5yD3THxOWGxEXIxDaKDD850TP4DuOiLjR4QfjlyKm0QD+wQ0E/beBapRt17vMs3IPPsFtH3R5kAk=
+	t=1718169721; cv=none; b=Z0BrEpUP8MXTH2peVm5uAlDQsBSpW+gWOoIm7ZjzdYMu5yI1TXSgm2t18hgzFtNIdLOZoHcBi0XKSfgGNREiDIaPDbJacuU9eOvjvk79m6xyN/wXK+Dw0GEH7nIcmPAqK0FlxIgGvp2FWnwKNLiJayaF27OKuwSySM4pGgbo1nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718169689; c=relaxed/simple;
-	bh=4mkGo9OXoaEwGBVqvDJO298UkslxWHdGdGifnUeG6a0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=UpXVYuw2EE8qrNx7SnyQMqnTgm6ZPwYSqrMDGGTaOavfhEl0KujHUFz/k2O7uS7TBJQ4N+0h2GEBZ4UOE9yJt39iU+lCZccZqHNxo3TdY8/RMCbjSsniRPFIghVtbQLRdYypPcv+JEHz9aUy1SrpFl6t5QV4GwOEmsN2qNSEfm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IzbvRK58; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718169721; c=relaxed/simple;
+	bh=8SGOda8tYPcw0wzFjbPUAUG2mv09WHxbpDwu0cNWIFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ml2166lDugBjm/EL2ajqF0bxCUR2z61W15m7gJFNOv8KD1CcvnlVdPH9GtwnHxYe0PAanA9BVZmHtIhOG5UcYjMDAUKZmPQHRRE9bO1OZJ66GuklIttK7HCRUMU6RpIYowMXRhWnQa/b9A862ZyRgyFtdFN9WqSMKPTfHbsfuek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XJzKow9T; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IzbvRK58"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C5BleE025787;
-	Wed, 12 Jun 2024 05:21:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=q1cUHs5b56/GKnz57ZOrMs
-	p6LpP35/QWVMEWh9vbuNg=; b=IzbvRK58mJpq6Y/WEiBqZLqSzP0yUjP0zuD9zS
-	iboKLphkve+iGdaDZA9zn2EUuXL+y46crn8w/zZjpfabXI4zNWCbJwsEfeWkpr4p
-	iMvt4id/WFaBSzA+Jp5JUcQW8W+ozOin2RZMEq3T1/6urqr1F/rEFozSjxn6m+ov
-	04Zqh9+Vj+Q1mo2yayBLLEwvCvJozQ7KGa3ZXr/Ywnlft1hd1ArcP0Tcluzhdjwg
-	PHdGhFrvjKSRiSJr4RMLu6y48B1xco8wIWYV5azZyShsr/79tkTZw/WZjudtGtUA
-	1WkHOZOu4BpXsmHTe5utSTn04ZptBmjGRHhuDBRf/kvf/Png==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yps5x9jfk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 05:21:22 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45C5L1xO020174
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 05:21:01 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
- 2024 22:21:00 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Tue, 11 Jun 2024 22:20:59 -0700
-Subject: [PATCH] platform/x86: add missing MODULE_DESCRIPTION() macros
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJzKow9T"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-48c4a821d76so1015381137.2;
+        Tue, 11 Jun 2024 22:22:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718169719; x=1718774519; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fjEwJgRoG92FC9Vw5huQBkdZy2fxtlgBnuBKB/008U0=;
+        b=XJzKow9TKqUCW9TmDa5rKNQxTtDpSNeVcSt6QWMhIkRzm/zQ90nWoZa/w5xw6RVmwz
+         2p3ABsv2oCNQkIP//1cvDC2mNCeXFwbcE6bv1C6WQBVHFvLCLQNp2xgV4RC6lb1vCdk1
+         jxqBpojj3DIlgYbIQnc/lxTv9Ut/YSiRL36duXOYAA0cdwZ5bEDdQ/yfVr+0GrB6VNo4
+         N+/BllgyLD2CLVeluJddcdMY907nAyxB52dzUAOy6JcGvsjLOqPmlqYrrhaF1oYPKp3M
+         2Scnug70Gr/XJFCOf/WOp8wET8Xce27/AhfpHhH9522MB5oYaIbaguI8mszk8kAAi6te
+         KjPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718169719; x=1718774519;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fjEwJgRoG92FC9Vw5huQBkdZy2fxtlgBnuBKB/008U0=;
+        b=D/BO4D1LGzsQDFSHkCbYQXHf1c5cFGyDCvpz7TBSf0cMheYHsUselzsrOCbvHk4hP+
+         /ewKgDIHbJ18ebTLDB3BvTeYahnwIj7zTIwx1pFftAg0wYI58GoRzHpPny+uyh3bzSLq
+         CAfXRWmofFBuAv1mlf0OAAJYI474o4edw0zJ1jfRs4vEutaYFfOoAAXEtiDnUY3wVSPg
+         nu+UtP+HDu5S2jevb9hFPArEdMIVVVa+pcR7i08lDUyivosvxoIz8d3piSxFBSEDXg3Q
+         wHV3cRiSqfTDDtuR3XkMLZc1UXNl9EWwljyn7XaEKqaqJKM40R53hIoJ98tB88/0Kk3f
+         Z1bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXJzdieaVpq9Aj3C8/Tfm8stcTPcxwr37x3qhfwtnmXG9R9j5H+5ODzFwc2I+tWgXsbCK/wd9CT7BD6uIGhLzREwnlQSiFwcrrUnZN4
+X-Gm-Message-State: AOJu0YxaSKl4eg5JtCqr+jjzUUz3vbeILHzFyJJnePFlE6ztSy2yU0KT
+	VhTdlwV4T5xK3ZXfTpLC+Sk4DswdO3RfrjkRMEptFKsTOaw/yLx6
+X-Google-Smtp-Source: AGHT+IFDvF86CuK3Kg24+xx5dBk2/UDjJk+sWB47rTKVHiKT+QQs97LesjLepl9XawzJSkfEe8TcLw==
+X-Received: by 2002:a67:b641:0:b0:48c:4d59:6295 with SMTP id ada2fe7eead31-48d91de3080mr974801137.19.1718169719138;
+        Tue, 11 Jun 2024 22:21:59 -0700 (PDT)
+Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-797a2b7f956sm186654985a.6.2024.06.11.22.21.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jun 2024 22:21:58 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 2893D1200043;
+	Wed, 12 Jun 2024 01:21:58 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Wed, 12 Jun 2024 01:21:58 -0400
+X-ME-Sender: <xms:djBpZjepV48rA8difPCs5QQIvsblVI7GqyooEM7GVBuLcH16ihDHFQ>
+    <xme:djBpZpOSBMMS1yv7MEuoR35VjkeF488ge73Jx5kJkC22K4G57GbHOnZgXqssf0WWB
+    LlpdvgelIy0Snt0_w>
+X-ME-Received: <xmr:djBpZsjShrWrBibnu9O0Z5xGTsFQUDKh4aBvdzdl2xYg3fHO5SgeEPA-Iw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedufedgledvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueeviedu
+    ffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
+    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
+    igmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:djBpZk_bCnEb_qh7jne4GYOzjhOCd-swKy33lBc1UEW6ZbCk2qtrLA>
+    <xmx:djBpZvsewM13dmMZPARhg3iAt4WCJZFI0JeqkrOkJGXIIwT-aoIvfg>
+    <xmx:djBpZjFP7fB-7itURqGUpDkD_-jG_qeF881mb10M5DIalgYd3C57Fw>
+    <xmx:djBpZmNP-rupTPcCkq3RtbEC-2Lk_76CXmNW5bi2IfkV9fzr5J-n7g>
+    <xmx:djBpZgOM2_4tEuUKI0CjzbgPmeiKi1FhZDowT24t05GD5MTbv4HMNHp5>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 12 Jun 2024 01:21:57 -0400 (EDT)
+Date: Tue, 11 Jun 2024 22:21:56 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org
+Subject: Re: [PATCH rcu 0/6] Grace-period memory-barrier adjustments for v6.11
+Message-ID: <ZmkwdFhXK2SsVWa4@Boquns-Mac-mini.home>
+References: <81f4e616-8125-4934-a8e2-fd5beae90995@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240611-md-drivers-platform-x86-v1-1-d850e53619ee@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIADowaWYC/x3MQQqDMBBA0avIrDuQGAmlVyldjMlYB0yUiZWAe
- PemXb7F/ycUVuECj+4E5UOKrLnB3joIM+U3o8Rm6E0/GG8tpohR5WAtuC20T6smrHeP5Mj43g3
- RuQCt3pQnqf/z89U8UmEclXKYf79F8qdiorKzwnV9AdrJciuIAAAA
-To: Hans de Goede <hdegoede@redhat.com>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>,
-        Justin Ernst <justin.ernst@hpe.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: HgIMLBW91dznE7LdXGdpJM2in-X0IuoV
-X-Proofpoint-ORIG-GUID: HgIMLBW91dznE7LdXGdpJM2in-X0IuoV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_02,2024-06-11_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 clxscore=1011 malwarescore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0
- phishscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2406120036
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <81f4e616-8125-4934-a8e2-fd5beae90995@paulmck-laptop>
 
-With ARCH=x86, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/amilo-rfkill.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/uv_sysfs.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/ibm_rtl.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/xo1-rfkill.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/firmware_attributes_class.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/x86/wireless-hotkey.o
+On Tue, Jun 04, 2024 at 03:26:46PM -0700, Paul E. McKenney wrote:
+> Hello!
+> 
+> This series removes redundant memory barriers from the grace-period
+> code paths:
+> 
+> 1.	Remove full ordering on second EQS snapshot, courtesy of Frederic
+> 	Weisbecker.
+> 
+> 2.	Remove superfluous full memory barrier upon first EQS snapshot,
+> 	courtesy of Frederic Weisbecker.
+> 
+> 3.	rcu/exp: Remove superfluous full memory barrier upon first EQS
+> 	snapshot, courtesy of Frederic Weisbecker.
+> 
+> 4.	Remove full memory barrier on boot time eqs sanity check,
+> 	courtesy of Frederic Weisbecker.
+> 
+> 5.	Remove full memory barrier on RCU stall printout, courtesy of
+> 	Frederic Weisbecker.
+> 
+> 6.	rcu/exp: Remove redundant full memory barrier at the end of GP,
+> 	courtesy of Frederic Weisbecker.
+> 
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
-This is the last of the issues present (that I'm aware of) in
-drivers/platform/x86
----
- drivers/platform/x86/amilo-rfkill.c              | 1 +
- drivers/platform/x86/firmware_attributes_class.c | 1 +
- drivers/platform/x86/ibm_rtl.c                   | 1 +
- drivers/platform/x86/uv_sysfs.c                  | 1 +
- drivers/platform/x86/wireless-hotkey.c           | 1 +
- drivers/platform/x86/xo1-rfkill.c                | 1 +
- 6 files changed, 6 insertions(+)
+Regards,
+Boqun
 
-diff --git a/drivers/platform/x86/amilo-rfkill.c b/drivers/platform/x86/amilo-rfkill.c
-index efcf909786a5..2423dc91debb 100644
---- a/drivers/platform/x86/amilo-rfkill.c
-+++ b/drivers/platform/x86/amilo-rfkill.c
-@@ -171,6 +171,7 @@ static void __exit amilo_rfkill_exit(void)
- }
- 
- MODULE_AUTHOR("Ben Hutchings <ben@decadent.org.uk>");
-+MODULE_DESCRIPTION("Fujitsu-Siemens Amilo rfkill support");
- MODULE_LICENSE("GPL");
- MODULE_DEVICE_TABLE(dmi, amilo_rfkill_id_table);
- 
-diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
-index dd8240009565..182a07d8ae3d 100644
---- a/drivers/platform/x86/firmware_attributes_class.c
-+++ b/drivers/platform/x86/firmware_attributes_class.c
-@@ -49,4 +49,5 @@ int fw_attributes_class_put(void)
- EXPORT_SYMBOL_GPL(fw_attributes_class_put);
- 
- MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
-+MODULE_DESCRIPTION("Firmware attributes class helper module");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/ibm_rtl.c b/drivers/platform/x86/ibm_rtl.c
-index 1d4bbae115f1..231b37909801 100644
---- a/drivers/platform/x86/ibm_rtl.c
-+++ b/drivers/platform/x86/ibm_rtl.c
-@@ -29,6 +29,7 @@ static bool debug;
- module_param(debug, bool, 0644);
- MODULE_PARM_DESC(debug, "Show debug output");
- 
-+MODULE_DESCRIPTION("IBM Premium Real Time Mode (PRTM) driver");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Keith Mannthey <kmmanth@us.ibm.com>");
- MODULE_AUTHOR("Vernon Mauery <vernux@us.ibm.com>");
-diff --git a/drivers/platform/x86/uv_sysfs.c b/drivers/platform/x86/uv_sysfs.c
-index 37372d7cc54a..f6a0627f36db 100644
---- a/drivers/platform/x86/uv_sysfs.c
-+++ b/drivers/platform/x86/uv_sysfs.c
-@@ -929,4 +929,5 @@ module_init(uv_sysfs_init);
- module_exit(uv_sysfs_exit);
- 
- MODULE_AUTHOR("Hewlett Packard Enterprise");
-+MODULE_DESCRIPTION("Sysfs structure for HPE UV systems");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/wireless-hotkey.c b/drivers/platform/x86/wireless-hotkey.c
-index e95cdbbfb708..459e20f7e161 100644
---- a/drivers/platform/x86/wireless-hotkey.c
-+++ b/drivers/platform/x86/wireless-hotkey.c
-@@ -14,6 +14,7 @@
- #include <linux/acpi.h>
- #include <acpi/acpi_bus.h>
- 
-+MODULE_DESCRIPTION("Airplane mode button for AMD, HP & Xiaomi laptops");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Alex Hung");
- MODULE_ALIAS("acpi*:HPQ6001:*");
-diff --git a/drivers/platform/x86/xo1-rfkill.c b/drivers/platform/x86/xo1-rfkill.c
-index e64d5646b4c7..5fe68296501c 100644
---- a/drivers/platform/x86/xo1-rfkill.c
-+++ b/drivers/platform/x86/xo1-rfkill.c
-@@ -74,5 +74,6 @@ static struct platform_driver xo1_rfkill_driver = {
- module_platform_driver(xo1_rfkill_driver);
- 
- MODULE_AUTHOR("Daniel Drake <dsd@laptop.org>");
-+MODULE_DESCRIPTION("OLPC XO-1 software RF kill switch");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:xo1-rfkill");
-
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240611-md-drivers-platform-x86-a3a06234d33c
-
+> 						Thanx, Paul
+> 
+> ------------------------------------------------------------------------
+> 
+>  b/Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst |    6 +--
+>  b/kernel/rcu/tree.c                                                     |    2 -
+>  b/kernel/rcu/tree_exp.h                                                 |    8 +++-
+>  b/kernel/rcu/tree_stall.h                                               |    4 +-
+>  kernel/rcu/tree.c                                                       |   19 +++-------
+>  kernel/rcu/tree_exp.h                                                   |    8 +++-
+>  6 files changed, 26 insertions(+), 21 deletions(-)
+> 
