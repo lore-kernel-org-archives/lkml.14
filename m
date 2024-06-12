@@ -1,173 +1,121 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1802B17E908;
-	Wed, 12 Jun 2024 14:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D5517F4F9;
+	Wed, 12 Jun 2024 14:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718204373; cv=none; b=niP0VtLIeN6n/Xg8JJ3Czfz+KBHNhAjNzW5JPyAw69YbIt2txzalaMY4I7JHCdk+9RcDr7rSRXEDIxsZvdBrD+ZltyX410keAQeG777fUzjPgbqah+6qLfsJmkD5OWn5HHJVdu9e2Y1TN3mGtFHQNXlsY1JUCDpDpFpFffkPNzI=
+	t=1718204395; cv=none; b=M+rQiTg7udEZDSmKiwhXWrjLlRZDKTWY0Owlr6SlTuWN9EI43L2Pjj8bT4dElg+5UlQBiT/2W8kVRQusp0mcpMo/uTU/MLrXL5k4aU1E3T3g6W6DYt7vBUbf9uCNqSLzGIIZMgcvKVmv4jWx4JHkq/Hh9zx7tMyHLLstioTZrgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718204373; c=relaxed/simple;
-	bh=I/RhYDzf/30awGk8qX49GxRawz1i67PHYIeoDU9q/pA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WZvkG+VNLMbrE3dgHOeAw1dpxyVNE0INH/sE0pkjKsQGCdQ0WUVAX9/UdDBB2PJw6v1w9iKtxu0G6iQ4UddMd/I/lQGGtuluKbXcpc9qPw4kpE6SPX5Oz3yDNpLJU4ZXIwLUAqqzsL8JWgteogY/40wTF2nxbqEKEy1ppnSeYC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GPp7RNFy; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718204395; c=relaxed/simple;
+	bh=ClXfKtrObNYFGJH3nO4MkQnRpdoJTRqan1XfI/UCRmQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oZCNyD3YmVXhsULi5lLGfan/sFT5NivtKvt6RWT0Pwoz7i+m52gtnlT1OrO/OeS/BOKzEbyy6CCHGS8RC5mqu+LBCAxI0J8dqydRIY/blI6LvZzHJB6sI2tdiHgtGTpXHKFEzjHrEcqcm6msBY+f6sy4RjtmVB0AcMVVlsv9Ix8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WGgBAM1K; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPp7RNFy"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-797fb0b4832so23031185a.0;
-        Wed, 12 Jun 2024 07:59:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718204371; x=1718809171; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r7pnIh8CCgoUZgqnSf6nIhLg5VDGVcPLcOm4WGfQJrQ=;
-        b=GPp7RNFyEbd8m7R5ORIO795gPgpicOY6JIdsIsI8NTqrNlqCLdBsfhNigoUc9H7tUs
-         gWCcL/fxng21y+kd9LDeihea+UhyWDjp+SuKaShIxnGVMh9nlLRoBiAEoKHeYizmwq5V
-         UqdOw7o2+fdGcuJoj4+xX4NLfaVbJOsS9nzYQthbxSHH+WcaEvgrQkH1TdyxOyc2zRcl
-         wDcalQ0CqARJVU9a+cKkN3ObNzQ0+bShzda9upU+0ESSgSX1kk6nPNVnASVPKXZFzqc/
-         04g0u+EUF2PE5FXL02Suf68a37ss6tIZes6T0/sjJK/0NNrOuz0OZnMcqdlNvZNSeMHG
-         26wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718204371; x=1718809171;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r7pnIh8CCgoUZgqnSf6nIhLg5VDGVcPLcOm4WGfQJrQ=;
-        b=rkwhDnZKiez6pvamnu2/a+r/ylw17RHB3A4fBrG2kM2+BJuOuOhCSfQ9BVVIKNDzhK
-         Vcjm4LcfNv2znahtylsHuN9dL5pqXML0AFQxrotJMIBV1zFozcBlBAjoNb9hQA2NglDd
-         KXhffHMnTrDd37U+hyJg7mkYMssUnqlh/exX2XQHC+MTwozuaCRSFdNDLy/Fuu2NTo0f
-         CxT1NmtwrPj9UtVUEYmiGh+9S3vOi9VEO9eIBgkgOHVOzwHAGyP59VE90modZua8r9re
-         ILC5AWIyoJs64ukiTZWYBG5ZssUPnJ0YXC+feBxtVD/mUL/aXg+RVlq8td7OEQIYa5y+
-         Td6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVdWTue07FjcJYZQeRZvCqGoZraxALoTvdworm9ioErxOJjKxlfA+3CV3UX4f5v4Dgod14z7vHYGfAutGCtPKzJJGjS+N9NBJbjAGEa5Db/JaJbJaCM+j5yhX6W275pbHbR682Q/e5E4qkhvVdRrY79DhepbfV99gKHLrIAZbKQYQif9sVw
-X-Gm-Message-State: AOJu0YwqKd3g6FoXOGXeUjEr8HDCRHWzd6wmWSR0Z5+xmIyAHFaCOInu
-	NQxZ8laUDUpr/Tu48mN181zmG/s59WmkiaOiPUJNvJYsmI8gatGk
-X-Google-Smtp-Source: AGHT+IEzBD02R0RYQC2Qs1ckK+wDy9Iol4jNBX/wfyFXYm5GbCm+JL+8uf/UJjk2wOPVhPpisc5hjA==
-X-Received: by 2002:a05:620a:258a:b0:795:5a93:5b86 with SMTP id af79cd13be357-797f600740bmr217734585a.15.1718204370889;
-        Wed, 12 Jun 2024 07:59:30 -0700 (PDT)
-Received: from sheun-Legion-5-15IAH7H.phub.net.cable.rogers.com ([2607:fea8:bad7:5400:f2b7:e8f6:98dd:a423])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7955ad3b9b5sm366409385a.85.2024.06.12.07.59.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 07:59:30 -0700 (PDT)
-From: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org
-Cc: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>,
-	skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: sound: Convert max98088 to dtschema
-Date: Wed, 12 Jun 2024 10:59:01 -0400
-Message-ID: <20240612145903.497758-1-abdulrasaqolawani@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WGgBAM1K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718204394; x=1749740394;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ClXfKtrObNYFGJH3nO4MkQnRpdoJTRqan1XfI/UCRmQ=;
+  b=WGgBAM1KGSABw5nU+48YRz4JkUvsszlwO++Gg6smvO+zM1JRju8NdE7V
+   +AnfphSmzna+rLoKI9ckaNV0ZXraMrei+Jj8Rb/5zu2D9JMXf9/IZgAZu
+   YJEVFjDpxN4Awo5T+X7QyWTpmzkXJHAC7Oc9kb2hfwc/aq1otTlI493gl
+   xnvT6i714HM5iTfvsjS463lpjqEZYs5HPv4gXwDCKpnB7tP8HPBlPj59r
+   Uyr93YzqHQt3P8v/ZAc/+SiFW9+imOKfShgYFhnE9x5VKibTkpxVz3+1e
+   bBzHrEAc9SMfjxZjgZK81A7H7HJgpZjBYZzMqWzOH2UdB35I9rQM7VRAU
+   A==;
+X-CSE-ConnectionGUID: wLJMRod/TfeyL19UeHZS4g==
+X-CSE-MsgGUID: 8qUZB+4BR1C6L/Y1p6uz+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="25551549"
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="25551549"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 07:59:54 -0700
+X-CSE-ConnectionGUID: 841aPa7dSOKPs3kKUGyVwg==
+X-CSE-MsgGUID: +1nNoP70T1e7w8bmaCZ8AQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="44938104"
+Received: from iklimasz-mobl1.ger.corp.intel.com (HELO [10.245.246.56]) ([10.245.246.56])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 07:59:48 -0700
+Message-ID: <fabc7ac8-6c44-4395-bd16-59257a949e9b@linux.intel.com>
+Date: Wed, 12 Jun 2024 16:59:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v23 00/32] Introduce QC USB SND audio offloading support
+To: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>, Wesley Cheng
+ <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
+ mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
+ corbet@lwn.net, broonie@kernel.org, lgirdwood@gmail.com, krzk+dt@kernel.org,
+ Thinh.Nguyen@synopsys.com, bgoswami@quicinc.com, tiwai@suse.com,
+ robh@kernel.org, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
+ alsa-devel@alsa-project.org
+References: <20240610235808.22173-1-quic_wcheng@quicinc.com>
+ <80fefd6b-0f3a-4f6a-869e-fd2225315801@linux.intel.com>
+Content-Language: en-US
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <80fefd6b-0f3a-4f6a-869e-fd2225315801@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Convert the max98088 audio codec txt bindings to DT schema.
 
-Signed-off-by: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
----
-Validated with dtschema and tested against samsung/exynos5800-peach-pi.dts.
 
- .../bindings/sound/maxim,max98088.txt         | 23 ---------
- .../bindings/sound/maxim,max98088.yaml        | 47 +++++++++++++++++++
- 2 files changed, 47 insertions(+), 23 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/maxim,max98088.txt
- create mode 100644 Documentation/devicetree/bindings/sound/maxim,max98088.yaml
+On 6/12/24 16:50, Amadeusz Sławiński wrote:
+> On 6/11/2024 1:57 AM, Wesley Cheng wrote:
+> 
+>> Wesley Cheng (32):
+>>    ASoC: Add SOC USB APIs for adding an USB backend
+>>    ASoC: dt-bindings: qcom,q6dsp-lpass-ports: Add USB_RX port
+>>    ASoC: qcom: qdsp6: Introduce USB AFE port to q6dsp
+>>    ASoC: qdsp6: q6afe: Increase APR timeout
+>>    ASoC: qcom: qdsp6: Add USB backend ASoC driver for Q6
+>>    ALSA: usb-audio: Introduce USB SND platform op callbacks
+>>    ALSA: usb-audio: Export USB SND APIs for modules
+>>    ALSA: usb-audio: Save UAC sample size information
+>>    usb: dwc3: Specify maximum number of XHCI interrupters
+>>    usb: host: xhci-plat: Set XHCI max interrupters if property is present
+>>    ALSA: usb-audio: qcom: Add USB QMI definitions
+>>    ALSA: usb-audio: qcom: Introduce QC USB SND offloading support
+>>    ALSA: usb-audio: Check for support for requested audio format
+>>    ASoC: usb: Add PCM format check API for USB backend
+>>    ASoC: qcom: qdsp6: Ensure PCM format is supported by USB audio device
+>>    ALSA: usb-audio: Prevent starting of audio stream if in use
+>>    ALSA: usb-audio: Do not allow USB offload path if PCM device is in use
+>>    ASoC: dt-bindings: Update example for enabling USB offload on SM8250
+>>    ALSA: usb-audio: qcom: Populate PCM and USB chip information
+>>    ASoC: qcom: qdsp6: Add support to track available USB PCM devices
+>>    ASoC: Introduce SND kcontrols to select sound card and PCM device
+>>    ASoC: qcom: qdsp6: Add SOC USB offload select get/put callbacks
+>>    ASoC: Introduce SND kcontrols to track USB offloading state
+>>    ASoC: qcom: qdsp6: Add PCM ops to track current state
+>>    ASoC: usb: Create SOC USB SND jack kcontrol
+>>    ASoC: qcom: qdsp6: Add headphone jack for offload connection status
+>>    ASoC: usb: Fetch ASoC sound card information
+>>    ALSA: usb-audio: Add USB offloading capable kcontrol
+>>    ALSA: usb-audio: Allow for rediscovery of connected USB SND devices
+>>    ALSA: usb-audio: qcom: Use card and PCM index from QMI request
+>>    ASoC: usb: Rediscover USB SND devices on USB port add
+>>    ASoC: doc: Add documentation for SOC USB
+> 
+> I'm not sure how other reviewers feel about this, but is there any
+> chance to group patches in some logical order? It is bit hard to review
+> when I need to jump from generic ALSA to ASoC then QCOM code and then
+> there are dt-bindings mixed in between and back again.
 
-diff --git a/Documentation/devicetree/bindings/sound/maxim,max98088.txt b/Documentation/devicetree/bindings/sound/maxim,max98088.txt
-deleted file mode 100644
-index da764d913319..000000000000
---- a/Documentation/devicetree/bindings/sound/maxim,max98088.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--MAX98088 audio CODEC
--
--This device supports I2C only.
--
--Required properties:
--
--- compatible: "maxim,max98088" or "maxim,max98089".
--- reg: The I2C address of the device.
--
--Optional properties:
--
--- clocks: the clock provider of MCLK, see ../clock/clock-bindings.txt section
--  "consumer" for more information.
--- clock-names: must be set to "mclk"
--
--Example:
--
--max98089: codec@10 {
--	compatible = "maxim,max98089";
--	reg = <0x10>;
--	clocks = <&clks IMX6QDL_CLK_CKO2>;
--	clock-names = "mclk";
--};
-diff --git a/Documentation/devicetree/bindings/sound/maxim,max98088.yaml b/Documentation/devicetree/bindings/sound/maxim,max98088.yaml
-new file mode 100644
-index 000000000000..8800075f7f97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/maxim,max98088.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/maxim,max98088.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MAX98088 audio CODEC
-+
-+maintainers:
-+  - Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - maxim,max98088
-+      - maxim,max98091
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: master clock
-+
-+  clock-names:
-+    items:
-+      - const: mclk
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        audio-codec@10 {
-+            compatible = "maxim,max98089";
-+            reg = <0x10>;
-+            clocks = <&clks 0>;
-+            clock-names = "mclk";
-+        };
-+    };
--- 
-2.43.0
-
+Completely agree. And splitting the 32 patches in smaller sets would
+help as well, every time I want to review I just don't have the time to
+go through 32 heavy-duty patches across USB/ALSA/ASoC.
