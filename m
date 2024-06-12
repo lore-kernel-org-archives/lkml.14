@@ -1,105 +1,123 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5CC17E447
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 16:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD5F1836C4
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 16:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718208154; cv=none; b=KN7fDrOV2Md2GVPqgFvhBFOEucukkddN+dQO4fwE7cX7YgTnysT/g1/VtatHFJogZiHTfBXoy8KD9h8L1c9bd/Dn32RnZx8XLniY+8wR+n4odO4cUxS/B6ppBTJTC5654WqJZskHaXPbh4kbivOZbvWqDWpkZbXgwqsX4p+25cc=
+	t=1718208209; cv=none; b=pzsWYbPpxQOqWzLg2/ZWTdL5usr+yBN1RKOsvlbafPF6sEAF/ltyLjdoJG+SsxaeomEZ4awbpMBMy/506Sq35/i7BF9XusUVYMUBAZg7dz512PTeCoFvLDx6qoUNRMlVrQHhghn1tTobUmobtiO8pY2UrsZmF2rLLjOFM0P48Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718208154; c=relaxed/simple;
-	bh=1TFVrwww23bDZwSiwRJ2jYhuVWiPUIMbmY+tTlCjXjs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JdyuqIR8Yhx2DVUcYkxQ+Av/bLzci6jAZO2LgbC10q0vPF25qugXSVhHpFRWnrg7ghUg3k1/rGgu5pPa5pAOX9PLD/S1G3sey66tRpG9U/3qlT9Tx7lJWtm/sCniou0ppYVJm5V6XGUiPYU/awVPMKZRNI50GpAeadCyyxcIxzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LGoscxZy; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718208209; c=relaxed/simple;
+	bh=332UBS0prHxkyUP4CYQFP5s8Gc011jBYVWz+9XPLa9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pCe5Po3SvntLI5qF05t5PCdNPXmWvTHXs9Rz4AklE9jeKXgWWPcXkxhckMEsD+oo5Il1/LqJnbMCj8SUz5jYUS1ZzPBAxVkFmrH8wIEmSxc27cCki/SPrzJ0SdhMxIaoWssMCByc1Ig81iKFyqW6XESF/jF0NK2aXzq1ZW/drKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=CQwRuXXG; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LGoscxZy"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-6658818ad5eso5492244a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 09:02:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718208152; x=1718812952; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aePX0hruEKIOA1+M6OG+w8QdYVFE2Ff801XPria8pOI=;
-        b=LGoscxZy6lwkru6Pilm1lF2UQ/tHK+gZWOu43q8UxUWphgVq03Tr44mDFjp4Z3DKDs
-         RWuYXz+E9qH7n7JsyvMVNRwHf7i4YITKTNShsUSFUllJft8lg7HAuy1tP1lpyGaAT9Q3
-         0UIhPoMlY9GMNpd+mKIeyMqiFDkHXQnVBcdlHQGvkR2FWRFb+h4aR9RkJpVeZIS75vfB
-         2VSSWI6x8vXBTec/RUAb0LY5lhCXjV9MHVLJ/ao18FPRB+tCClY6M+gF1Eluzq0H3zaD
-         v2Juom3NsZxQQKVVD/sXKLs+B82hY1SoQpjxV7w2KG1HzSqTgbjkr5p0qOqnS6xGguz4
-         TJaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718208152; x=1718812952;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aePX0hruEKIOA1+M6OG+w8QdYVFE2Ff801XPria8pOI=;
-        b=LxK+ZXWz+AK/n/pP0c17lad0nx58citkcBWOG6oYkmfgK4bZSOoo+PoZOhunADDv+D
-         o+umJ6RTdnLkfKFTv8jJJ2uhOeLFTedWoY0t6Hh2rvrf6Nnf/tAJS0n6HhMqchuf7Y/y
-         QgDNKkQfs7nXy9P6hUq/nz300HQRtPQ9vyUVQ13aE3qAzqDT1ymUtnmVyCCrop+o5iIW
-         NYilpSVrudoA2FdsWXqcm4YLmWvC5N7P2oqnwqnDLVeCIhi7Tpk7g36qFHNj/rd9tT27
-         vherkkOTsvheHC5vU0aQUOpfLf8+0cWlmwyE/5LpXLGDBlHgKqBiSMjIW7KMeRbGT+hA
-         9JKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWRydaxshm0HJZLGfugeS2fhm639Lxp6rjUz61FwoaKw+je8cBFeKjfwuV5hfjIip5PDbwez9FJR4aYMHIRZrjytG9481b9sztgcKXO
-X-Gm-Message-State: AOJu0Yz1hIUHMEfowYCdiCDFIZ4yxEkmbgQEbqrhjQupW0OaXcMVPUsN
-	e/Ww1D89mR628071dkuOxzMMRY2wVyC25t66oFpBFLQ3MB8vpMVK399O1LuPHEvqsYgWQiVQ9KK
-	/xQ==
-X-Google-Smtp-Source: AGHT+IG0uMYRLBiUhOc770oDRl2hP1hRVk0jGwiyLvB3wm+pqn+z8Eju9Zd1H20tziFvsazDeHJOkFbkr74=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:9503:0:b0:673:9f86:3f23 with SMTP id
- 41be03b00d2f7-6fae0e6eb36mr4827a12.3.1718208151688; Wed, 12 Jun 2024 09:02:31
- -0700 (PDT)
-Date: Wed, 12 Jun 2024 09:02:30 -0700
-In-Reply-To: <20240611002145.2078921-9-jthoughton@google.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="CQwRuXXG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=B54B
+	e83JNs7nl+rMReElF3H5ROq4XTJOopa9NkI4U9s=; b=CQwRuXXGQsXzbkMKeRef
+	BiEfLsMYDRrCKtKab3BTsl82biB8MvTwjBnrYoiycs8RjW7gmPyvazaDPOcnl6U0
+	aFlBgPwJ1xdNtW0DCrCYwB9VuQz5miQRl2aRdNYdIPQCW6k+HTsi2GEnQGyTw5B5
+	6TfsnUgfV1AadDA872fkj+330NTsC/wGUOJsLEG1WhiUxkFlISXTM9glWndbUI/w
+	ZHfVmgx4NjSOY0mch35Z1s0NCXSTlfHqCWJIK9n/o2e6dg2bvDx4FGOJUdo1bARW
+	0pTR6G//LlAPF0ruOVOY6NCE1sJce3YmBDdpT/jCall9c8/I/iTvfrtJ9W3DlhPE
+	mQ==
+Received: (qmail 864170 invoked from network); 12 Jun 2024 18:03:22 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 Jun 2024 18:03:22 +0200
+X-UD-Smtp-Session: l3s3148p1@fkR/hbMa7DNtKPIY
+Date: Wed, 12 Jun 2024 18:03:20 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-renesas-soc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
+	Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v9 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <jvnvx7a4pn6evrp5ehfrt4qsiuprq6ogvrue2a3uupwtydmgcm@2rvat7ibvgb4>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-renesas-soc@vger.kernel.org, 
+	Jonathan Corbet <corbet@lwn.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	Kent Gibson <warthog618@gmail.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+References: <20240610112700.80819-1-wsa+renesas@sang-engineering.com>
+ <20240610112700.80819-2-wsa+renesas@sang-engineering.com>
+ <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240611002145.2078921-1-jthoughton@google.com> <20240611002145.2078921-9-jthoughton@google.com>
-Message-ID: <ZmnGlpBR91TyI3Lt@google.com>
-Subject: Re: [PATCH v5 8/9] mm: multi-gen LRU: Have secondary MMUs participate
- in aging
-From: Sean Christopherson <seanjc@google.com>
-To: James Houghton <jthoughton@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Ankit Agrawal <ankita@nvidia.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, David Matlack <dmatlack@google.com>, 
-	David Rientjes <rientjes@google.com>, James Morse <james.morse@arm.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Shaoqin Huang <shahuang@redhat.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Wei Xu <weixugc@google.com>, Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pvtrej2bwhzfyplx"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MfZ11U+kAh1+K=DxtJ=QL+cY7Q_sBN4sQDF-RNgjpV0QA@mail.gmail.com>
 
-On Tue, Jun 11, 2024, James Houghton wrote:
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index e8fc5ecb59b2..24a3ff639919 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -870,13 +870,10 @@ static bool folio_referenced_one(struct folio *folio,
->  			continue;
->  		}
->  
-> -		if (pvmw.pte) {
-> -			if (lru_gen_enabled() &&
-> -			    pte_young(ptep_get(pvmw.pte))) {
-> -				lru_gen_look_around(&pvmw);
-> +		if (lru_gen_enabled() && pvmw.pte) {
-> +			if (lru_gen_look_around(&pvmw))
->  				referenced++;
-> -			}
-> -
-> +		} else if (pvmw.pte) {
->  			if (ptep_clear_flush_young_notify(vma, address,
->  						pvmw.pte))
->  				referenced++;
 
-Random question not really related to KVM/secondary MMU participation.  AFAICT,
-the MGLRU approach doesn't flush TLBs after aging pages.  How does MGLRU mitigate
-false negatives on pxx_young() due to the CPU not setting Accessed bits because
-of stale TLB entries?
+--pvtrej2bwhzfyplx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Bart,
+
+> I really dislike drivers being called in an ambiguous way like
+> "simple" or - in this case "sloppy". I understand why it is - in fact
+> - sloppy but can we call it anything else? Like
+> "gpio-logic-analyzer.c"?
+
+Sure, we can if you prefer. I named it like this to make the limitations
+super-clear. And even with that in place, I still got a private email
+where someone wanted to build a 400MHz-RPi-based logic analyzer device
+with it. Which would not only have the latency problems, but also
+likely have a max sampling speed of whopping 400kHz.
+
+> > +Note that you must provide a name for every GPIO specified. Currently a
+> > +maximum of 8 probes are supported. 32 are likely possible but are not
+> > +implemented yet.
+> > +
+>=20
+> What happens on non-DT systems? Can you still create an analyzer in a
+> different way? Can I maybe interest you in configfs for the purpose of
+> device configuration like what gpio-sim and the upcoming gpio-virtuser
+> does?
+
+Frankly, I'd like to leave this to the person needing it. I've been
+working on this for way too long already and am not up to major changes
+anymore. Minor stuff, okay, I'll go one or two more rounds.
+
+The GPIO analyzer is a debug tool aimed for development boards in remote
+labs, and all boards I have access to use DT. Furthermore, debugfs is nice
+because it is clear there is no stable ABI. It has been useful as-is in
+the past. That's what I am offering. If that's not enough, no hard
+feelings, but someone else needs to continue then.
+
+All the best,
+
+   Wolfram
+
+
+--pvtrej2bwhzfyplx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZpxsEACgkQFA3kzBSg
+Kbb5LhAAq7J+u9AU3h27i893hHfBUdMFaOWvXvYAUCE7Ihm1awM4jeRX7zVMZ2v/
+NbXFUj7xY4aM40fIEhcHfv4+eESY5ba72+3w8n8xkUgepmYCbzirZ2CetqgA4R6S
+y7bnz8Zb32bQAEPtLOeDc138+UOlI11LwYLk9aF5hdkRLGja0GVy8vXUb6N8Ioy9
+ChOdx3OSqnhdkUOWHemErPpFC5QbtOVkXusvpdhSh3ixT+CMIXBAINHBeFgax8Z3
+suaRT0jxA/F8utd3uGQZmW3BJTjpdJpPuzoRRD91TvfI4ZOTRmMSIJz+9nJlTfYw
+0MIiNgRdIyD4xSjTIzOj5R2aZi6RgeJeqeyc9ILYoVaLG4/SGcZ0/LfE5IrJ/9rO
+VqrPcndc5MgzNexkacS9jG+x0StUTD6FXpePN9xAJ8Mz9lvZU51kGo3KNNWFYmlV
+TVqdLu73GdsCdn2IddJJ6L0lqb2pn+obcX1Hpjb/pcIn76swDehemGGEScmV4J65
+pKRdc/5DrRf/jtlWVnU5Er+pKEL72nU7VyfQjfom62fQ5wRZVgyD6j0mp6jd63fZ
+h7JzLl2rbr0+JaGDn6eZLhjpvv5JFnb9uWnoL5CJSexICOYLJ8pbk89y6aZ5gxl2
+wm4SK454E0Hs5Lz2qWkn63OOWHCMg+7Mqu4MslSH9dHBT1i5e64=
+=PsWW
+-----END PGP SIGNATURE-----
+
+--pvtrej2bwhzfyplx--
