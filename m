@@ -1,45 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB18B181338;
-	Wed, 12 Jun 2024 16:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1852816C84F;
+	Wed, 12 Jun 2024 16:45:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718210597; cv=none; b=f6ZZ6ZKMQL4dolPnbotE69WIfy5DEyIoz4nA7+2+o1vD+rDhbgyb4OdyIcG0X/TWh6W6d0secIR0NWRtP6n4bXK60VpbzW9sQZk7ffWZl+/tFi6IlZoYV0XCRyFdmz6jvQ7hkp9zpw/1oShelBZtFyBaSmmODJ7r+hjwwOrtFBs=
+	t=1718210752; cv=none; b=kC3lk9SoaR/Zv41b359tNiiNOi5rjRnAurhNgIrHtnlPcbTS4Njh0la7JJIHbQXl+HGl8EvpRP22a60IrCZHg+HwDoeR29TEqUONsb4Z1CF0qhFXBnorBpSZ9AAn+DiYjHW1k7/cfUYKwC08UhgNIN8ep7DcO/dYWiHhl6WxJo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718210597; c=relaxed/simple;
-	bh=qreY//fAnwwkk5hLrRnCWnJ+QKjVx1QnAEwqG8yApo0=;
+	s=arc-20240116; t=1718210752; c=relaxed/simple;
+	bh=8w9ShgPS5TN17Vgq4/FFJj6VXTdhI8xmQ63ahvkxhdk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XYGbjOKC6jD2ISC8HojW7mWtSj32RD97ta6WgI42M9HobsA3JPtvsglOlEaUvlJ/zTunBKuyj8CbUCMUN3iMzHYBvIk4hkomV6C8PMur/7pp6XvxhO0yiHUNGP+jy0U05zckEl3493tk2enbQagJMbLe+OTBh6Q7/0d6P294+C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfOFfJYl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fod95XWW4RsaxhSlwYRZ4Wsc4oaI9fCA2dmcGI+rmdg9d94LBb4MbL54u7sKj+HZKxRTTBlMLxaQgITmWtqgGI5OXG5CohTuqqnFNTD5zzJgG9hmYQj3E0Ly2BIX66I9RlbNmTZJu2XrV1PVKsZC9Z/7heXxU5ZF4/h22IS0ifc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDzuo8wO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfOFfJYl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63B27C116B1;
-	Wed, 12 Jun 2024 16:43:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDzuo8wO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40DA3C116B1;
+	Wed, 12 Jun 2024 16:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718210596;
-	bh=qreY//fAnwwkk5hLrRnCWnJ+QKjVx1QnAEwqG8yApo0=;
+	s=k20201202; t=1718210751;
+	bh=8w9ShgPS5TN17Vgq4/FFJj6VXTdhI8xmQ63ahvkxhdk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QfOFfJYl+At6SDp9QB2/9KYlRNFBxjcMd3sjevdUTbcPc9/nkSDqUsmp+QKjMB468
-	 AnPPsM4PcmeWyrvZw8ofSIObzpyis7XpqdTeLJFggSg0Y8ddhM/l8WqHIQEOixuylV
-	 cln7ccJa0R8i2k0q0EXtVYv80x5NXYe9NDi4oNx3HcciIwfi6LxWJMK/Gq7f51zPGJ
-	 zszizSTfiQRQE5MXfLRHS7aoFNLb9zxPe2rh7m/CjT4zs5yrTTzyRTe732LlIYzcQ3
-	 TpJNlI1WpoNFtlCIuv0RCwYItf1RbaJtqwcTQtZGwIajthNMXaRPnl6gxaNaI8w3Ym
-	 +eeqRUUXPNL3w==
-Date: Wed, 12 Jun 2024 17:43:12 +0100
+	b=KDzuo8wObD64mZR2bYEWIGnEbTIH8wewjHs/Iag6eiIv+NpxYmgjJLz1q9iXW3lSn
+	 mharen142TxgEJQvoYAjlIA8KjpT681ujrWkKaT4WPLz4FwT833LNS6lENvvlUzrbY
+	 m6GlctBFzmSjJeIturTITA67dUMa+aAWxMokbxaky6VKcTPTwi5dFBPFneGYQ2hNNL
+	 FsdxKBL1vFbDO3jOMIr1BhaizDPo1/pWdN8LD0/SzXV9DuKSPUgdm7zj25wDa+dsjf
+	 eDJbtk6hEYvP1L8KJoWZDyhaM4XFyXyw36EGYyzvgI1iyTugK3V4YRVZQ40DByZhi2
+	 yaD9D+z/rD8XQ==
+Date: Wed, 12 Jun 2024 17:45:45 +0100
 From: Conor Dooley <conor@kernel.org>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+To: Rob Herring <robh@kernel.org>
+Cc: Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Paul Burton <paulburton@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] dt-bindings: mips: img: Add devices binding
-Message-ID: <20240612-styling-deafening-2cdae7cf0b55@spud>
-References: <20240612-boston-syscon-v2-0-9f8e1a07fa63@flygoat.com>
- <20240612-boston-syscon-v2-8-9f8e1a07fa63@flygoat.com>
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Chao Wei <chao.wei@sophgo.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: interrupt-controller: Add SOPHGO
+ SG2002 plic
+Message-ID: <20240612-dripping-ligament-df108345e61a@spud>
+References: <20240612-sg2002-v2-0-19a585af6846@bootlin.com>
+ <20240612-sg2002-v2-2-19a585af6846@bootlin.com>
+ <20240612153051.GA2633500-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,78 +57,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tzuLAazgu/3W4bpO"
+	protocol="application/pgp-signature"; boundary="vP3fUDhDzW4Xnwx4"
 Content-Disposition: inline
-In-Reply-To: <20240612-boston-syscon-v2-8-9f8e1a07fa63@flygoat.com>
+In-Reply-To: <20240612153051.GA2633500-robh@kernel.org>
 
 
---tzuLAazgu/3W4bpO
+--vP3fUDhDzW4Xnwx4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 12, 2024 at 12:56:27PM +0100, Jiaxun Yang wrote:
-> Add devices binding for various Imagination Technologies
-> MIPS based Platforms.
+On Wed, Jun 12, 2024 at 09:30:51AM -0600, Rob Herring wrote:
+> On Wed, Jun 12, 2024 at 10:02:32AM +0200, Thomas Bonnefille wrote:
+> > Add compatible string for SOPHGO SG2002 Platform-Level Interruter
+> > Controller.
+> >=20
+> > Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
 >=20
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  .../devicetree/bindings/mips/img/devices.yaml      | 33 ++++++++++++++++=
-++++++
->  1 file changed, 33 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mips/img/devices.yaml b/Do=
-cumentation/devicetree/bindings/mips/img/devices.yaml
-> new file mode 100644
-> index 000000000000..460ca96577ad
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/img/devices.yaml
-> @@ -0,0 +1,33 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/img/devices.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Imagination Technologies MIPS based Platforms
-> +
-> +maintainers:
-> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: IMG Boston
-> +        const: img,boston
-> +
-> +      - description: IMG Marduk (Creator Ci40)
-> +        items:
-> +          - const: img,pistachio-marduk
-> +          - const: img,pistachio
-> +
-> +      - description: Imagination University Program MIPSfpga
-> +        items:
-> +          - const: img,xilfpga
-> +          - const: digilent,nexys4ddr
+> Missing Conor's ack. When sending new versions, it is your=20
+> responsibility to add tags.
 
-Usually the order used here is something like:
-compatible =3D "vendor,soc-board", "vendor,soc"
-The pistachio one seems to follow that, but AFAICT "boston" is a board
-and the order in this one is something like:
-compatible =3D "vendor,soc", "vendor,generic-fpga-board"
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
---tzuLAazgu/3W4bpO
+--vP3fUDhDzW4Xnwx4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmnQIAAKCRB4tDGHoIJi
-0h5jAP4hD5OB8U5paykiNEvhqV4ngCLkQcx7w24WR7mJaH7JwAD+JhirqZfMIhHi
-eGZTIm9niUbibg1zRSo7OgnwY3iE9As=
-=YVxZ
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmnQuQAKCRB4tDGHoIJi
+0oGXAP9jq4hT6rwjb+4Rzk+jSXSxZtKrvLO+xrJjdgNSa0VHvAEAu3e4/SedACde
+/k8mLIpxN0vOBrZWA4GSTPUkPkfyDA8=
+=gfD1
 -----END PGP SIGNATURE-----
 
---tzuLAazgu/3W4bpO--
+--vP3fUDhDzW4Xnwx4--
