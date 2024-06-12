@@ -1,118 +1,100 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18C5155726;
-	Wed, 12 Jun 2024 13:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8DD16EC12;
+	Wed, 12 Jun 2024 13:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718198193; cv=none; b=pCa9Rs86TDNGpZFKs/zl+ic0Z37B1WClBNdX8rUhtlgeV4J1N47l11fU98uyrUGz0VkNY6uYs7n/67LZwyUplO3JtQU/0dgqCBwbz08YYqHdcpbmPrTJ3IH115/DLRn10BKGHyhPamFGfTQBjaOiHwyOvV2/7+GI20AXfguHR7E=
+	t=1718198285; cv=none; b=JJkwfVs2vSH5uI4qv/DBz3LKYT0MLLBpS011CNda4H0bZ8D0Ue0ZlvMISvTQerX8BeAJnfIF2z59Px8HJNU1FUtyCYuFDaFoK3hLmhPKfyUNwPRgc5+oqsjHtWc3l0H4HmjGlb5lHn6j3CAj89b8m/J8EwcbfptJJ0pw8eH2/kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718198193; c=relaxed/simple;
-	bh=l9y/Z4x7QkAaJVs49JxA/qmda+ddIvT15VdLqZyHLj8=;
+	s=arc-20240116; t=1718198285; c=relaxed/simple;
+	bh=EAhhAkJSPT8m5ngR46DhDWBeRyQ+o42ANBwH3ptZVhg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hEFF6MDF63Y/Kt2sT3GFeS2Pai+NoIcO4E30XwzwHIiAk+XLPHBJiBtFo3QOHcZxxiUgV2uQdpV2f2nK68AFHU4LLNzWGwOhYr3Rtmd3RFAOmmNq29neCNX+F6j7pjTiIgk7x/kQSEeobrvzhCR+EjP1zGiMD2nh0gLAs4rIFZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLGVTC9l; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Fqg9X6enFyGfuaHx+TKNQCVe3De0MmandlpuSCB+hP6Hw9fzmEdwWxrtwXspygWJPeDOsG2t3KwYqit9MaxTTiTPRsKDgUUQNkKu/d5gI5r6xH26rER6pvlo25cHsLQJDX+HZYSPNJzgTGVWgeiPf7VMUxi5uflsOYE+coCewuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OApSNVQ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLGVTC9l"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dfefd03184cso35881276.0;
-        Wed, 12 Jun 2024 06:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718198191; x=1718802991; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PwMZw8SNDy2rDcIYySUqCvaJTgpGfRRKM+xvQfmuCPI=;
-        b=dLGVTC9l8Wo+kejdXrHbDrVsNtNbZrNMx9KF0+RcwEyJdW53bH4wgazykrPTyd9Qpe
-         hCecMQV49M9IXRfB1VeLLcUU1QHw2JGdGu1lnGMHnTBzgUYaCivL4f2V9LySu+VLN7TW
-         QP76gDMYXwwPyX8TFQOZI7pYigLviXcRa6KMhTQmFC026IwxSKgapWhZdz17Eezc+L/C
-         MwRWmdwjDqYG5QZEQycri/hA/WQ6vydm1IsKn8RHTOYI12orFttfPrgjG1U6Mknuoq2a
-         XzsPL4XaQIhHsONem1tVx1RxK4pRVkjT7Uey6dXZQU/NYn1ntJStVNx3VRmla7KvcF8J
-         z8YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718198191; x=1718802991;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PwMZw8SNDy2rDcIYySUqCvaJTgpGfRRKM+xvQfmuCPI=;
-        b=SJ665ToWosAvTKJ1dSj9+i+iTpFdzKiKJK93rzFu/WTwXrqzokZAjSwr9UM0gBqK5W
-         +X1Ru1P4SJakaJbQUzwBb7kRzK0HsUfIyX4VwbOVGsQuCkgO8hiXOyAZ/sGb0uogIcG3
-         jMaNnGpR/BV8lqCTT/kALD7BjmQYFnZNHAFRFAttlJdxCXUrlagASPWKrMFio2u0mHPc
-         xOrVrR9qKJV090Kv8K138OOJnIAireTQDOVbLELVMyg8UGLdSsrT/oYlb2OHq6zyRS9n
-         FHK6I/MJpHTQU/jedjNGZjo4rPNIaCwPMMs0fs9myoWKDGmfhDUsHo+k9V3OsaoHspi2
-         tfIg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2XIXNJUssili+pnhyxNoI1qz9k4rjO01jysCWjZNSkeze2bQADD1VcID4AWEi+SmtwHlE8vMZdE0M4HrIcmNCVL5bjFf2OrbYKqREQ9i7FAUcfdcwbOzw20ji19Mhx+xj
-X-Gm-Message-State: AOJu0YwQ0E+xlO3NXACd5n80ze4Q6LI7V502xwDa8MACbMmpJgRx/n4n
-	zYfhVQPH3Bpfj9sIqrIX5uzIntgn2G3M+XXMYE7Dvh25Tk0PXtUmREWgQPdTDrVG9GstsYn5lam
-	Hy4SVNpGwAy7k88mFxmVOeCqv74E=
-X-Google-Smtp-Source: AGHT+IGac1DxLcW4ENRJWP0/8CZJFTAkydRmsecEhQ/UfDQDK02+6RMljRoqimNvIXiTHvSy6ELFXLH6zeThxyPDmuI=
-X-Received: by 2002:a25:4cc9:0:b0:dfb:1b5:6e6a with SMTP id
- 3f1490d57ef6-dfe68b15119mr1416360276.43.1718198190771; Wed, 12 Jun 2024
- 06:16:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OApSNVQ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40486C4AF50;
+	Wed, 12 Jun 2024 13:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718198285;
+	bh=EAhhAkJSPT8m5ngR46DhDWBeRyQ+o42ANBwH3ptZVhg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OApSNVQ9rxCDt78BplPKCVq47aEVD9f7bvXL595EXGUxakoQ5fNWgPRq+nw8FUdDB
+	 48+kmtTH+mDChhpxU9+TXo90WaGNshAaVz8EAdHmGQ8prHcI5l8gAAYoicWRbcugKs
+	 Fm4nbnlyjSaqcBUoghULX27RFQE5Qy5Op8b44vj8atRLQBvD63HHk5fUNWc9CQEfWo
+	 vgLuWdQUbCwrdVKv7d/DtFUwtutQCY+Tdx7lmUHRvad9/jbd95ikcEmisJp8jz5lVL
+	 xDrbvgdK7PNtYZ8L9fOwZ0LUVeyloZ8sttX/xFMnM4ZbPG4GsVj4crSSySPlW69pYQ
+	 zkrMyQBbPJ9MA==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52c7f7fdd24so2893841e87.1;
+        Wed, 12 Jun 2024 06:18:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVQGvJLOfIqKNLIAigHcdCE3BVNAdTciPjQitn+R//7Mhj0e9fu/dPLImMPAL0M9EkpqmhcSs9u8cUO5MpJlnjl82kavuTfVyVRYKRbHferwrJJm1y9oEwvusTDNFuG8x+xfPBFxmHnh8x4HMWA4NHa4EUhdk/QK5cV6xFEW5KX1awXIw==
+X-Gm-Message-State: AOJu0Yz+NlZYAiDBDfykWr7nYVTOYWfT9zcdGUAMS3S2m0ObTcofvAM1
+	qyXnTul2KGVN64f87hpTTUVUf9T081YCUO4icM3JeQ80eHPjU7lmdukDeLjYozSNs9lt8ffD21t
+	3pMU+2VQrEth81vweXiesIeS98w==
+X-Google-Smtp-Source: AGHT+IGRdGHPsMkRPpbZiPDo0vVmCHDqtl0Psn5HUImt9EEAE0lx3tPjGwXY5tKVUkqpNnOVIiW4L3JmK8xPdWvgy8M=
+X-Received: by 2002:a05:6512:3d1f:b0:52b:d48e:32e8 with SMTP id
+ 2adb3069b0e04-52c9a3fd878mr1250484e87.45.1718198283584; Wed, 12 Jun 2024
+ 06:18:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506101751.3145407-1-foxywang@tencent.com> <171803642381.3355478.4236692282060742412.b4-ty@google.com>
-In-Reply-To: <171803642381.3355478.4236692282060742412.b4-ty@google.com>
-From: Yi Wang <up2wing@gmail.com>
-Date: Wed, 12 Jun 2024 21:16:18 +0800
-Message-ID: <CAN35MuRr64-0iJvmX6=kn8QVH_KJnhtwyaF+_MFJv3MgRe7xkw@mail.gmail.com>
-Subject: Re: [v5 0/3] KVM: irqchip: synchronize srcu only if needed
-To: Sean Christopherson <seanjc@google.com>
-Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, wanpengli@tencent.com, 
-	foxywang@tencent.com, oliver.upton@linux.dev, maz@kernel.org, 
-	anup@brainfault.org, atishp@atishpatra.org, borntraeger@linux.ibm.com, 
-	frankja@linux.ibm.com, imbrenda@linux.ibm.com, weijiang.yang@intel.com
+References: <20240611-dev-mule-i2c-mux-v3-0-08d26a28e001@cherry.de>
+ <20240611-dev-mule-i2c-mux-v3-2-08d26a28e001@cherry.de> <171811272875.1782775.2673232019553624734.robh@kernel.org>
+In-Reply-To: <171811272875.1782775.2673232019553624734.robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 12 Jun 2024 07:17:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ83sz5-MZN+Cv6=AbLXWxAaYayw=k0_X=F2AAxU1j2Gg@mail.gmail.com>
+Message-ID: <CAL_JsqJ83sz5-MZN+Cv6=AbLXWxAaYayw=k0_X=F2AAxU1j2Gg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] dt-bindings: i2c: mux: mule: add dt-bindings for
+ mule i2c multiplexer
+To: Farouk Bouabid <farouk.bouabid@cherry.de>
+Cc: Heiko Stuebner <heiko@sntech.de>, Andi Shyti <andi.shyti@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Quentin Schulz <quentin.schulz@cherry.de>, 
+	linux-rockchip@lists.infradead.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 12, 2024 at 9:19=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
+On Tue, Jun 11, 2024 at 7:32=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org>=
+ wrote:
 >
-> On Mon, 06 May 2024 18:17:48 +0800, Yi Wang wrote:
-> > From: Yi Wang <foxywang@tencent.com>
+>
+> On Tue, 11 Jun 2024 13:43:53 +0200, Farouk Bouabid wrote:
+> > Mule is an MCU that emulates a set of I2C devices which are reachable
+> > through an I2C-mux.
 > >
-> > We found that it may cost more than 20 milliseconds very accidentally
-> > to enable cap of KVM_CAP_SPLIT_IRQCHIP on a host which has many vms
-> > already.
+> > The emulated devices share a single I2C address with the mux itself
+> > where the requested register is what determines which logic is executed
+> > (mux logic or device logic).
 > >
-> > The reason is that when vmm(qemu/CloudHypervisor) invokes
-> > KVM_CAP_SPLIT_IRQCHIP kvm will call synchronize_srcu_expedited() and
-> > might_sleep and kworker of srcu may cost some delay during this period.
-> > One way makes sence is setup empty irq routing when creating vm and
-> > so that x86/s390 don't need to setup empty/dummy irq routing.
+> > Add support for the Mule I2C multiplexer bindings.
 > >
-> > [...]
+> > Signed-off-by: Farouk Bouabid <farouk.bouabid@cherry.de>
+> > ---
+> >  .../devicetree/bindings/i2c/tsd,mule-i2c-mux.yaml  | 80 ++++++++++++++=
+++++++++
+> >  1 file changed, 80 insertions(+)
+> >
 >
-> Applied to kvm-x86 generic, with a lot of fixup.  A sanity check on the e=
-nd
-> result would be much appreciated.  Thanks!
-
-The code LGTM. I did some tests in my Intel machine and found no problems.
-
-Thanks for your work :)
-
+> My bot found errors running 'make dt_binding_check' on your patch:
 >
-> [1/3] KVM: Setup empty IRQ routing when creating a VM
->       https://github.com/kvm-x86/linux/commit/fbe4a7e881d4
-> [2/3] KVM: x86: Don't re-setup empty IRQ routing when KVM_CAP_SPLIT_IRQCH=
-IP
->       https://github.com/kvm-x86/linux/commit/e3c89f5dd11d
-> [3/3] KVM: s390: Don't re-setup dummy routing when KVM_CREATE_IRQCHIP
->       https://github.com/kvm-x86/linux/commit/c4201bd24f4a
+> yamllint warnings/errors:
 >
-> --
-> https://github.com/kvm-x86/linux/tree/next
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i=
+2c/tsd,mule-i2c-mux.example.dtb: fan@18: '#cooling-cells' does not match an=
+y of the regexes: 'pinctrl-[0-9]+'
+>         from schema $id: http://devicetree.org/schemas/trivial-devices.ya=
+ml#
 
+You cannot add warnings. Please fix this or this patch will never be
+accepted. Either drop the property from the example or add it to the
+binding (by moving out of trivial-devices.yaml).
 
-
-
----
-Best wishes
-Yi Wang
+Rob
