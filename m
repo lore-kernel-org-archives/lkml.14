@@ -1,73 +1,80 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7192716D4F6
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 09:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B234F16D9C2;
+	Wed, 12 Jun 2024 09:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718184546; cv=none; b=sI9IOSdhOai7EIcSuSLEvDhWUdhWR2k88EtSm+QMkRMAUEuGgQEZch6S6weu8AfYd3UMT33MnONUnMWSf/2exqYEBIetmeO9tpVvq3cTZ/6LluV4TU5saeauaKkBdkOHbpJuYiTwCje16WrkA8K/e8Pw8OhWE9lQ3jI1qmZVoZs=
+	t=1718184590; cv=none; b=YFeip+A8zi7murcmsy07JfkZUjyiAzFjiF/xyYc4XXlC+7/edoGBE70JvNXxcZ9X5/Ov1d4On9y1ozaxPbU+eSZZlZ89W6rwCmFhd1/6Ps2CtRX4Ymhn/ABrmuFbFOSh9wNwcXO2E8+H2JHJ9U1UMHRL4IIk/8Z0U9boW22RXfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718184546; c=relaxed/simple;
-	bh=GqwZyjbDTb2LW7L7RQnUs/jhE0c2peodbic9mCWJ92k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EyC8X1epmBLqhYjwZS+Q2yFFAXgVL69spHO92aNAo0OH+sa+S7z9gYJBm6CCYAvgTVA/Ul2K2W4KomPeZokB7QkYMNt2JJJTTmMEGCgffQFhVEG1TGFpzNsVXQGrNmUuxKRyAiw/GewoQ7yFbwe9LuV+sgf/AovPnYv5EcCjn8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=AOrJ5cGv; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1718184590; c=relaxed/simple;
+	bh=rFs6324PNSNEr+KrQbB0/JC7iriAaHajaKyTasMSKrU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=In2p/QxKSdcfT6yuy3em0j5/SQwX+LZxKFonROK3z63VBt8YFOVeeNNyAhjD0lFWgPO21TjphD4gr5BuTltV0/aCzj63vYKQPKcwDY/LmXKOUwxuiKhOaQK9sUo6lhjPqdU0x8HbOqzdjexC044gT32tY6ZK5liO5BvKQ4OR3w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Dr7DPNum; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="AOrJ5cGv"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1718184536; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=UvzU82ARd3O0HY9mewpe3B6t/gdUxhobUBIFn6ECcTE=;
-	b=AOrJ5cGvHTZu6JJN0yuO8HocECn/U5Fa5twm3KxBcnPKfd9wpnKLVLTDlHB1dcOf6eQdTk9h/ehYMBIv8MA6P/7WcEX74eh6e7/z+yNHJm2povRcrvBJAAuMNLy6ZYjIB6AflUbRxqZoRyB0DjpZhW2qJLmF73d0cisqb+T/lTs=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W8KLpTr_1718184503;
-Received: from 30.97.56.60(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W8KLpTr_1718184503)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Jun 2024 17:28:54 +0800
-Message-ID: <aef7c71e-5aff-4ce3-a2a9-8df930232af8@linux.alibaba.com>
-Date: Wed, 12 Jun 2024 17:28:54 +0800
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Dr7DPNum"
+Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 0BF551FCBE;
+	Wed, 12 Jun 2024 11:29:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1718184585;
+	bh=Uif8SokEBNPcdv/uzxFpcgOwjzaU/nH1FeWne+W/Rwo=; h=From:To:Subject;
+	b=Dr7DPNum7Pp+kftR635PcT7EIqNtum6OeIOvfvfBUB6RzYu6jv2kVL6HBnvyoiJEK
+	 +vTtNuU01DCsv9aXo7koOMDS6wRfbPF0Ejxsr5yYk7u8vWG5Yjxj2LJ4zerF+VUku/
+	 rmFdBFvJmWmJdA1cMi/FM+sJu/fQ8e0C+JnN2uMbbTPdDyG4D4IOP5Pmc+dXIKgWi2
+	 7S4uQ6vMM828Tk5Bn7PssZlbw2zOp8hurf7tx1RFCW3jq9ezSUDkKp0KyWrAtNYmAI
+	 CtqUzRB2jf5BX+0HTB4NBfLwqho+w90WJfW6FIkiGSAF3AB+eFY0zA4NOsVWcYuGa2
+	 VcuQDq1Gu8sLQ==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Christian Eggers <ceggers@arri.de>
+Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dt-bindings: eeprom: at25: add  fujitsu,mb85rs256 compatible
+Date: Wed, 12 Jun 2024 11:29:34 +0200
+Message-Id: <20240612092934.12282-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/6] mm: memory: extend finish_fault() to support large
- folio
-To: Zi Yan <ziy@nvidia.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
- david@redhat.com, wangkefeng.wang@huawei.com, ying.huang@intel.com,
- 21cnbao@gmail.com, ryan.roberts@arm.com, shy828301@gmail.com,
- ioworker0@gmail.com, da.gomez@samsung.com, p.raghav@samsung.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
- <3a190892355989d42f59cf9f2f98b94694b0d24d.1718090413.git.baolin.wang@linux.alibaba.com>
- <DF94C669-963F-4BA7-81A1-B25031D2365A@nvidia.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <DF94C669-963F-4BA7-81A1-B25031D2365A@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
+The fujitsu,mb85rs256 is a 256 Kbit SPI memory FRAM in the same family
+as the two existing fujitsu,mb85rs* compatibles and at25 compatible.
 
-On 2024/6/11 22:38, Zi Yan wrote:
-> On 11 Jun 2024, at 6:11, Baolin Wang wrote:
-> 
->> Add large folio mapping establishment support for finish_fault() as a
->> preparation, to support multi-size THP allocation of anonymous shmem pages
->> in the following patches.
->>
->> Keep the same behavior (per-page fault) for non-anon shmem to avoid inflating
->> the RSS unintentionally, and we can discuss what size of mapping to build
->> when extending mTHP to control non-anon shmem in the future.
->>
->> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
->> ---
->>   mm/memory.c | 57 +++++++++++++++++++++++++++++++++++++++++++----------
->>   1 file changed, 47 insertions(+), 10 deletions(-)
->>
-> LGTM. Reviewed-by: Zi Yan <ziy@nvidia.com>
+Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+---
+No changes in the driver is required for this to be used, a device tree
+file using it will come in a later step. Sending to minimize work
+slowdown because of TI DT maintainer requirements on DT bindings, see
+https://lore.kernel.org/all/469be7c2-6865-40d4-bd06-15dc3a08b3e3@kernel.org/
+for more details.
+---
+ Documentation/devicetree/bindings/eeprom/at25.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks Zi for reviewing.
+diff --git a/Documentation/devicetree/bindings/eeprom/at25.yaml b/Documentation/devicetree/bindings/eeprom/at25.yaml
+index 1715b0c9feea..c31e5e719525 100644
+--- a/Documentation/devicetree/bindings/eeprom/at25.yaml
++++ b/Documentation/devicetree/bindings/eeprom/at25.yaml
+@@ -28,6 +28,7 @@ properties:
+               - anvo,anv32e61w
+               - atmel,at25256B
+               - fujitsu,mb85rs1mt
++              - fujitsu,mb85rs256
+               - fujitsu,mb85rs64
+               - microchip,at25160bn
+               - microchip,25lc040
+-- 
+2.39.2
+
