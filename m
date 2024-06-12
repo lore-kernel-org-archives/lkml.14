@@ -1,94 +1,96 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78857E110
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 19:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F8783CD7;
+	Wed, 12 Jun 2024 19:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718222158; cv=none; b=e7juZPX/fNju8sM571SsMQf+LASwa2un7HdGo5/R+Vbrysg5jpMccTPAYHa0dNbCujqbLjI0wMcj+4zqTN2sWRbXyLQdw2Xy3l8DFQrn0Fd7BcIzYYt7OjxTnAJR2DSz7iJ8ZjwPeLWe7DKiEpQqS5oz4zwUGkQxIo8KMUPnxoY=
+	t=1718222362; cv=none; b=dnrenxnhZLiXVtdA295dBGkfcGqCCr5dlhFITYevvnvCKYdIWmmwRJV8ZbcOEWKgz7PEfpvLkShVzTYpkyl6ZNNkfHFjReES+RZxT0OdeZd8J3s7KSyTtuhiD0MkdZ/zWchckLIVKt75jE2zt7KvzG6+uU8KjE+QDLcqnbBPX+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718222158; c=relaxed/simple;
-	bh=Dh2KtUvAtiglq0b5/QtxJb7/lWsVoYr0FusrI650O/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uk9xPwkQcD8MnCG+8+9iMb+QQumE2qz35ohFhnkuGOFDTunGqwH59fV/AaIemsU2mdXkfRFjUmIh+cjPNWYfFApKWWNdUKH6gh4j1TFsAa8oxfmSibNrmWMz7XSjGtVz0/ehDmDQNdJXGvjzQ1wMBUnkOi4IeyDJMVYQaN+JPZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Vtz+E3fb; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1718222362; c=relaxed/simple;
+	bh=ywb3uiBG2wy3W42HC/zKfdSwk5lSiUjJmg2WrX2ndXU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fh/GtxsAV2TxQHrlDXQFXIdjqcCauPcuhuYwAiXah//qyP4rz5z3aFutbxoIcG+q/hRW9MpBp2AgcCpyoK4WXZx5MioJSrygU6e+8geAd6DnGhN39N7CtFTg85ieJydD4IgpzlBThUv4C8KNnw8AsC0sglmnQKesS4lTEWkgUYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdZ0ef3s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Vtz+E3fb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Ld6CWp6MvzsfLCexkDmw2gq97DL2MMR6pnNJDMxtfIA=; b=Vtz+E3fbD9VMAjoM7eXXw/SekN
-	/PGXprwiiarZARHaEYw01wCUTLmPpMy3P2njBf20E2WoMhObsnQPJ/ht8zj8hmcbsthTvjr7CpFow
-	B1fLTQ+hYpXR87n+bzFaP5+eGIkDr/NhT9QuGdD32fUZDRnP/aYuZBm1HuW103UfEIBaU7UBs9yv1
-	dzaues67Dmyc8wccMFs0E1EssR4SLmIDKjRWRRz3f3V+Tmcelbfe++1CIAqYUW/xKBqYZVIY/9fL9
-	E8g+/0zAE+dAQdKtaFF6QlAPRhEbpPds8lj9UPBh6ZX3/7HO2/xtFWUQqc2U3QQTFkCX/SBH/h8Ot
-	L93b3x3A==;
-Received: from [191.204.194.169] (helo=localhost.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1sHTmg-002RtF-JM; Wed, 12 Jun 2024 21:37:27 +0200
-From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-To: dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: kernel-dev@igalia.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Simon Ser <contact@emersion.fr>,
-	Pekka Paalanen <ppaalanen@gmail.com>,
-	daniel@ffwll.ch,
-	Daniel Stone <daniel@fooishbar.org>,
-	=?UTF-8?q?=27Marek=20Ol=C5=A1=C3=A1k=27?= <maraeo@gmail.com>,
-	Dave Airlie <airlied@gmail.com>,
-	ville.syrjala@linux.intel.com,
-	Xaver Hugl <xaver.hugl@gmail.com>,
-	Joshua Ashton <joshua@froggi.es>,
-	=?UTF-8?q?Michel=20D=C3=A4nzer?= <michel.daenzer@mailbox.org>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Subject: [PATCH v5 1/3] drm/atomic: Allow userspace to use explicit sync with atomic async flips
-Date: Wed, 12 Jun 2024 16:37:11 -0300
-Message-ID: <20240612193713.167448-2-andrealmeid@igalia.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240612193713.167448-1-andrealmeid@igalia.com>
-References: <20240612193713.167448-1-andrealmeid@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdZ0ef3s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C4BC4AF1C;
+	Wed, 12 Jun 2024 19:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718222361;
+	bh=ywb3uiBG2wy3W42HC/zKfdSwk5lSiUjJmg2WrX2ndXU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gdZ0ef3swbOtu4F1HBTAPQa2DzYdERqCN34g33CXEgeljn2/5A/haffsVyUg/tYWR
+	 LCMfDwCvEj1TJ9phJbS1CZ77BY3DR/CZcChUJBnU1zAWSyMIMoW4HK5Qpr+6a+nrG8
+	 68b1H5hyFBuLWtjh7J7Q+MJR/bQ2Iv1K7XPH5aSnR4nMJlM5+jeywtEeVvqJ5BrOZA
+	 +Wmv6Rhv2Tmg+0cqattKws4UN32cG3Yw72GJj0rLd5VUzYF7G7ez4k+hHShDOUqaaK
+	 N/aONIMtabnXL9D/MebPj0W2APDB0OZbpdMrQ4KHQiY49AaKFX6r/ul7I7r3MbaFHr
+	 Ks3CbTVPu4sIA==
+From: Kees Cook <kees@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Vitor Massaru Iha <vitor@massaru.org>,
+	Ivan Orlov <ivan.orlov0322@gmail.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3 0/2] usercopy: Convert test_user_copy to KUnit test
+Date: Wed, 12 Jun 2024 12:59:17 -0700
+Message-Id: <20240612195412.make.760-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1667; i=kees@kernel.org; h=from:subject:message-id; bh=ywb3uiBG2wy3W42HC/zKfdSwk5lSiUjJmg2WrX2ndXU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmaf4XEwSV7IuaeeCDHXmAIPUInE1HVQWFespdR wraZVkQQGuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZmn+FwAKCRCJcvTf3G3A JqH9D/9txSQCi1FIJJQ1Ag5Xwl/86L58GRfBVKTS7JD15KOFdocuGu52/CNwtYotA7DPcEheBXh oFDx8vdj5N4pRHTTDUYAHDcEhlPjZ/1ddI8SH5RJJgdNV8hv+RPVhe96Q1q2WFSKXPPsOdQ6iD8 qQQ131S6g/B3hqKD3DjNi6ypugExxOAR+7j8x8JTxONfQDjBuSWgvM+vanCM1XPHBNwBAztqfY+ nPECZuj3ZP9ulqjCe6tMhN93aSAe1UaFk6oO0utpnnMEC++sPTfMY3Xk8DH1WQ3yzTyJ6gg2XJO BjF5k3uAvtLU+mmRDzS/XvCWzsLTnFRrs568HlUPRB7uL9pdFM9NYdeiyDbokbmY1SMM4A147Cd cBs89TcwDjz6XBRwjL5Tc5a3gE+hu/wqWGVSa9+PBOIZLM6oCBqhpa34XqxRkx8vyUdlU2/P90L ZqC1gEYRVog8cZDSOXiYeD/D+MfMa3g1ZJ6qcazC27OjXrHN/avdgm0Bqq0Gh6AfBDe3+C8tNSt 5+axJO5e2tDqVwwSJ/5E2/b2Qw48tVaNuq9vhR1DQf/g96fJnt4JktzDR7cgaB6fHtGEDyX2I1y sE+iNvtFaffCjonvPp1iIUbRkns4sbrCPzQU8uBk8fiua3TT7y6vyg8jab5+DmYTlNw/qxFt8cS f/U9LEWdteKKV
+ 5g==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Allow userspace to use explicit synchronization with atomic async flips.
-That means that the flip will wait for some hardware fence, and then
-will flip as soon as possible (async) in regard of the vblank.
+Hi,
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
----
- drivers/gpu/drm/drm_atomic_uapi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This builds on the proposal[1] from Mark and lets me convert the
+existing usercopy selftest to KUnit. Besides adding this basic test to
+the KUnit collection, it also opens the door for execve testing (which
+depends on having a functional current->mm), and should provide the
+basic infrastructure for adding Mark's much more complete usercopy tests.
 
-diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
-index 22bbb2d83e30..2e1d9391febe 100644
---- a/drivers/gpu/drm/drm_atomic_uapi.c
-+++ b/drivers/gpu/drm/drm_atomic_uapi.c
-@@ -1070,7 +1070,9 @@ int drm_atomic_set_property(struct drm_atomic_state *state,
- 			break;
- 		}
- 
--		if (async_flip && prop != config->prop_fb_id) {
-+		if (async_flip &&
-+		    prop != config->prop_fb_id &&
-+		    prop != config->prop_in_fence_fd) {
- 			ret = drm_atomic_plane_get_property(plane, plane_state,
- 							    prop, &old_val);
- 			ret = drm_atomic_check_prop_changes(ret, old_val, prop_value, prop);
+ v3:
+  - use MEMEQ KUnit helper (David)
+  - exclude pathological address confusion test for systems with separate
+    address spaces, noticed by David
+  - add KUnit-conditional exports for alloc_mm() and arch_pick_mmap_layout()
+    noticed by 0day
+ v2: https://lore.kernel.org/lkml/20240610213055.it.075-kees@kernel.org/
+ v1: https://lore.kernel.org/lkml/20240519190422.work.715-kees@kernel.org/
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/20230321122514.1743889-2-mark.rutland@arm.com/
+
+Kees Cook (2):
+  kunit: test: Add vm_mmap() allocation resource manager
+  usercopy: Convert test_user_copy to KUnit test
+
+ MAINTAINERS                                |   1 +
+ include/kunit/test.h                       |  17 ++
+ kernel/fork.c                              |   3 +
+ lib/Kconfig.debug                          |  21 +-
+ lib/Makefile                               |   2 +-
+ lib/kunit/Makefile                         |   1 +
+ lib/kunit/user_alloc.c                     | 113 +++++++++
+ lib/{test_user_copy.c => usercopy_kunit.c} | 282 ++++++++++-----------
+ mm/util.c                                  |   3 +
+ 9 files changed, 288 insertions(+), 155 deletions(-)
+ create mode 100644 lib/kunit/user_alloc.c
+ rename lib/{test_user_copy.c => usercopy_kunit.c} (46%)
+
 -- 
-2.45.2
+2.34.1
 
