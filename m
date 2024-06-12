@@ -1,120 +1,92 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E94316EC08;
-	Wed, 12 Jun 2024 10:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2363616E888
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 10:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718189584; cv=none; b=O/C4z8fjEcSn1RN0qZwX4LymQL1FpMpyO4bKqGfQp6O5C1ElmPeDLfiorF2t8wVO64fJxzClwdMgmNXB045QgKloYEY3tkopFsuq/spLpsRSfobCkyzEgY4/LhsiCuk1Yk5bIfwauxcNCqIeL0VWONBgHorRoi15WOuupmQ5250=
+	t=1718189751; cv=none; b=ftgmjUbZgJHWBUE9GglGLjcdo6LmJdANs8Z320MhujTOmo8m92YQqiY34l5FTm6CTAxgD7a5T/vWxrhgln3QdaZX7ZJ7tbkUMSoecKJ29Xj6s1xtJHgIv6o0xNb4zBoKaWidkH+htdzywr996ZYmyRPJWbU4JvOPcTEalo+W1kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718189584; c=relaxed/simple;
-	bh=2kj58qBP7FxoSCa5xKHPmCM/1eQ+8Ps7f9qbYfMXyVI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MlFsYir5Vvsx9IPm4jCy1sipfWRXb6aheD9rJcju6aw6IbHdTVpR6NG0e75dp7N7tJ39UZrV3rUVk8iLqShYspK1o2QHtYPF2dSHylOnG6HBfUjb4HivXfIjLCAl40x94ydYZPSBrhXFJvNMTLA2gxYNCvewxCe45QaCN5rWrVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ABjKWT+1; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718189751; c=relaxed/simple;
+	bh=o2/azgVrwaPNaWmwIxK9yQ8UpjBGGyP25jHl/Y4SoR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GkieDtO9S6tos1YypeszjQ7iDEVwYe7Tj3VajPAIo+L09uVopBKektfOSqI057NvCnkRwkLLfAzaGWASBuJFYl7z8HDKWukFzTAOYi+Xo2kvyTVKt1HApG8AYJmw6Y8v92Chn/kr3XeikK6oBXOHhoOSSUmN1gQlv4ioripp6SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=X1XFR+hf; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ABjKWT+1"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-79550284502so134848285a.2;
-        Wed, 12 Jun 2024 03:53:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718189582; x=1718794382; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=flZgWFKhxWxGjaqOkdyMdJqS0YRaXDWOZAS2UaEwY1c=;
-        b=ABjKWT+1WyEGVqbp+dcguFpWD6MP5C1fAcrEFHRr02MjYHMvTdV17Fnoc7CGlBvadr
-         wvsAZWVqoW82WU/XAmrshMi6n5bcU4woW0ZLaSq/01s340gY/dHyopNy8tvzy01pFQCi
-         ZxZsgdissD0Moe0bTQizdNsxYM9j1GG/TraDW7VeABjId+1F6eKD472B/DFtLQJUzckY
-         TgBSNyX1zE0H9ydTdvfz/7s1Nw2vRKFxX3cOqMl+avXsoCTUGwUhJg+TcisYTHwBFE8f
-         Eg4gCT7WuLDJMDPZKpMs4uPuwFXdhE8PbtbqgUeVwAQLQYoEEGQRBttfnvStSk7QHYXs
-         hQKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718189582; x=1718794382;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=flZgWFKhxWxGjaqOkdyMdJqS0YRaXDWOZAS2UaEwY1c=;
-        b=VNNh9UHGIgpYTz6vpOYy6jvcN9vWpVPzfNKL1Wc8+NjUi1NDlwy7Rpavuy1mpIpOFn
-         P4mwSthWsbC73ouGKEfL7jrPUbncc+u8mDVsfXKI/QpBjUHl6pUI7SLOVEs27SToWOxD
-         KESu7eXRnU2Hg5JEqGDBKmcdp37jkQy+CjvX5kWbqUlgCbOPQGeQfWzlHHQLw2CqGWv4
-         k6nFOGQyf2H5IMOuTF0QKS1EldiA3Mb9XbZlrkGpY9z9ol5pxpM/PLgFuL0gaxuLk2mS
-         dGbjqcYjzjKoNNFYY2AgHn/9393RzMl03bV4VegYEcpk+bzp7TkSvLZuCvObXLkdRUmN
-         a6WA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4pkwZibhYXiwvG84MFotJBgHP06UCISwtXEXmEdo5U3KrO/68P8CUJrQWvGA0bc4hixaZTqUDhBC13fddk6KKskegVZaUNHBnKl3WomY67Ah5jMAFJ0OVWWy4/R9mGYOmalIEqcXybo0=
-X-Gm-Message-State: AOJu0YxVEx0IVwUSVRFD3YMzxBktjxck9BB95b6Eu96/c9NqcsgN9UNR
-	kl8Pu2HZqdmK+pTvO6YgguroEXnOVfvuoIXL/kiLpQNDRqPCFkfF
-X-Google-Smtp-Source: AGHT+IG03VCubVJFPRBzLaPxCBDKnO23hWH4/PaX1JLdVSVW8yvfzl9Kojj1v/Si3ZT7YU3BdzOFcw==
-X-Received: by 2002:a05:620a:28c7:b0:795:4f8b:88ee with SMTP id af79cd13be357-797f613e827mr127082385a.76.1718189581831;
-        Wed, 12 Jun 2024 03:53:01 -0700 (PDT)
-Received: from sheun-Legion-5-15IAH7H.phub.net.cable.rogers.com ([2607:fea8:bad7:5400:f2b7:e8f6:98dd:a423])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7954c3580aasm447074385a.136.2024.06.12.03.53.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 03:53:01 -0700 (PDT)
-From: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
-To: sakari.ailus@linux.intel.com,
-	dave.stevenson@raspberrypi.com,
-	jacopo@jmondi.org,
-	mchehab@kernel.org
-Cc: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	javier.carrasco.cruz@gmail.com,
-	julia.lawall@inria.fr
-Subject: [PATCH v2] media: i2c: ov5647: replacing of_node_put with __free(device_node)
-Date: Wed, 12 Jun 2024 06:51:58 -0400
-Message-ID: <20240612105232.400361-1-abdulrasaqolawani@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X1XFR+hf"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45CAth2I070962;
+	Wed, 12 Jun 2024 05:55:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718189743;
+	bh=XX/2FTvcpOE83ZKsu0t3uhvjEs4L4Hnx0LHgBYjOiNw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=X1XFR+hfZ+xF5nw38IFLJl4DdTCZbIStWr+7e/46heu8L3Pvv3VCSTVVcLD6kfKfq
+	 dAUVwdlmDxgtrMFw6lQrK3jLgSMMXLMs3UY3XHjkAS43U1jphdLlzAgXeqtFVu+Laq
+	 /kabihcCFBSsOcjfhvQUypUuerwRxIIv0cxpJwFo=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45CAthKg004773
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 12 Jun 2024 05:55:43 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 12
+ Jun 2024 05:55:42 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 12 Jun 2024 05:55:42 -0500
+Received: from [10.24.69.66] (uda0510294.dhcp.ti.com [10.24.69.66])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45CAteSN090679;
+	Wed, 12 Jun 2024 05:55:41 -0500
+Message-ID: <ab50c7df-c2b9-4b34-9b81-dc89f76dd80a@ti.com>
+Date: Wed, 12 Jun 2024 16:25:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mailbox: omap: Fix mailbox interrupt sharing
+To: Andrew Davis <afd@ti.com>, Jassi Brar <jassisinghbrar@gmail.com>,
+        Hari
+ Nagalla <hnagalla@ti.com>
+CC: <linux-kernel@vger.kernel.org>
+References: <20240611170456.136795-1-afd@ti.com>
+Content-Language: en-US
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <20240611170456.136795-1-afd@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Replace instance of of_node_put with __free(device_node)
-to protect against any memory leaks due to future changes
-in control flow.
 
-Signed-off-by: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
----
- drivers/media/i2c/ov5647.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
-index 7e1ecdf2485f..0fb4d7bff9d1 100644
---- a/drivers/media/i2c/ov5647.c
-+++ b/drivers/media/i2c/ov5647.c
-@@ -1360,24 +1360,21 @@ static int ov5647_parse_dt(struct ov5647 *sensor, struct device_node *np)
- 	struct v4l2_fwnode_endpoint bus_cfg = {
- 		.bus_type = V4L2_MBUS_CSI2_DPHY,
- 	};
--	struct device_node *ep;
-+	struct device_node *ep __free(device_node) =
-+		of_graph_get_endpoint_by_regs(np, 0, -1);
- 	int ret;
- 
--	ep = of_graph_get_endpoint_by_regs(np, 0, -1);
- 	if (!ep)
- 		return -EINVAL;
- 
- 	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &bus_cfg);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	sensor->clock_ncont = bus_cfg.bus.mipi_csi2.flags &
- 			      V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK;
- 
--out:
--	of_node_put(ep);
--
--	return ret;
-+	return 0;
- }
- 
- static int ov5647_probe(struct i2c_client *client)
--- 
-2.43.0
-
+On 11/06/24 22:34, Andrew Davis wrote:
+> Multiple mailbox users can share one interrupt line. This flag was
+> mistakenly dropped as part of the FIFO removal. Mark the IRQ as shared.
+>
+> Reported-by: Beleswar Padhi <b-padhi@ti.com>
+> Fixes: 3f58c1f4206f ("mailbox: omap: Remove kernel FIFO message queuing")
+> Signed-off-by: Andrew Davis <afd@ti.com>
+Tested-by: Beleswar Padhi <b-padhi@ti.com>
+> ---
+>   drivers/mailbox/omap-mailbox.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
+> index 46747559b438f..7a87424657a15 100644
+> --- a/drivers/mailbox/omap-mailbox.c
+> +++ b/drivers/mailbox/omap-mailbox.c
+> @@ -230,7 +230,8 @@ static int omap_mbox_startup(struct omap_mbox *mbox)
+>   	int ret = 0;
+>   
+>   	ret = request_threaded_irq(mbox->irq, NULL, mbox_interrupt,
+> -				   IRQF_ONESHOT, mbox->name, mbox);
+> +				   IRQF_SHARED | IRQF_ONESHOT, mbox->name,
+> +				   mbox);
+>   	if (unlikely(ret)) {
+>   		pr_err("failed to register mailbox interrupt:%d\n", ret);
+>   		return ret;
