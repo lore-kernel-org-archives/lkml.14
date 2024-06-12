@@ -1,168 +1,195 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6249817F518
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF021DFC6
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718203697; cv=none; b=H6TJPB1Y8QrMGkyirsOBeGS48Bk2ZtW/6EsZbx4K4XPIONS4y2t5XkyutRo/OF5FJs+yokeNvhIjI8N06cWf9P/vxTM3qxykWSST+i9wWFaR7u/JM8XKycFQYlxq3OKU7cNfvhCcq0EpDsAfeMTHFTGFjVKRFZ8gVXIIx747WMo=
+	t=1718203794; cv=none; b=m4erIHripDR7GyfSuS2c5I9iYwjwiaq1ITkqHBBKwGvC78/kHjZs1bpZe+RnlecCkOr1WwyZyrZh75RnRQTAW95DjCuQgi0IEc06y8EGz1SX9LCoSijwh7FsHQn/opFx/RncCZk98N1QwL4fdScgAF1Bm199i2TlH83QvvE/liw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718203697; c=relaxed/simple;
-	bh=gTvUfeVcV0WBX/VSstMj3P4uHESmQaeTlXAV82NwTbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OyxMpJkBcwHMIqeLYhsQ3E8nN5dQA//xSMrK+pk2KF1/jWwOaB836KqoHIeva66fadcjDHOPhN45V61wPwadiiMRRpDtVDdcJOP9rLauoEBXMHskZ0dbXvnvK8/FjZYTSJhpPUFShhbvowkEp4/Lug7fEeysgPjP3qk520Rhowc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cqY9wgKi; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1718203794; c=relaxed/simple;
+	bh=Eia1SQ7Fh2LvoCGqiWI+qaZMBI765dvAVIkmD4DsMCE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uDPaMQv41E9xitdMcwiGLLwR8K1KQEvMrSWYK/Z5J2AXm8BSvk+MnctCFpewbtpJzQQgxMaqLJIcOuwKFyfX460CsO1Wz+wFpBJD8hnQnIgUZeurxNv6mhOVwzGhLuoKEBGhBrODE32KTf2z8bxr0rK236emc6+/pjIYjyBuARY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f47yGXyv; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cqY9wgKi"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a6f1cf00b3aso176919666b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1718203693; x=1718808493; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8IWtwzoqSJWM3Lgz12Iah6lW8otD2wfGj7uZTal1qAE=;
-        b=cqY9wgKiuy/ci4WOO9TbMUPtNwcwMQ34cJH3IY9Frn0/1QtkzeFZ0/Enb4mBdslaKX
-         7539l0Iolf4DarmHzWhJyCLey7SdTSsnjNAlP7NUKW64XYgijMBoVK6rHGxb699Zg5Lj
-         3+kil24oBa/8I8eoXdvKPdSph69/MY7lBrhshKAdE9RPKp1dTev6JFaBJN4AbiE2dket
-         TcYZgyMAQ6387fnjs/iO331jpXQLwmhpFXS2PlCGusNu7FJAtk0EX9o2CHW9Lw3CTDGV
-         U5T0vr2xB/fzegSBsrVr9uKjj2Zdps6cmun3TGsy8O19GHR2Mz92CSP6g+VWUJZ4bFAX
-         LtUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718203693; x=1718808493;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8IWtwzoqSJWM3Lgz12Iah6lW8otD2wfGj7uZTal1qAE=;
-        b=j27HBpQ0V8W1PKYToXri1Q55JV1uS8KTcYhOZoxzD31syk9dQs+mrXYxmZ1lJnH0Ql
-         spuMEc/6Sth4PHg+zwxZXax/HD+2CM3GzJPSNffnakJlL8vJT8ChHjO42EXxlrEhVK1e
-         UKrno9Tye1U5LOq6G9xug3bUmXSfI47tADpkSb2jhP++8UO5N9ygfwriH+adMPN+OgcR
-         NL1Y8ya5TG4BwIw2GnNETTmU6TkifgIoHbjg33TQXpJM+pu/SdFSPfAdBG+Z4Cnne29L
-         INo0uFTTTy6+ygwGzq+7cs9+Y6iYV9vlfsTCZHyRYmggHXegSGbd1pHLNO9qnwea6/57
-         azkw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVGxadrF9XniFeKaC214a4weE4ZEY5Tclrb0HDLR4FeSLDG8BfVPWEXfghsQX7RdxftGIje8hAjEmA+OsEg0TtFcb6BDMOe804B62E
-X-Gm-Message-State: AOJu0YybVNg6pCTld6UPUZmikQvPsIhgN2pliBox7eGmk7j2t/45rkSO
-	DsVGlcbCKOxcQC4M106sV4heLxDsGMFuKz/asv0Y6+uba19XsfiSpSSqsBjtvzU=
-X-Google-Smtp-Source: AGHT+IFe/XnrBiMyULWYXvobbO+KULp/ZOLbfPDdM4O64ls/uoXWS6C0Worus7xXfYnO3Uc+wuChjQ==
-X-Received: by 2002:a17:906:ce44:b0:a6f:51b3:cbad with SMTP id a640c23a62f3a-a6f51b3cc99mr5567166b.25.1718203692687;
-        Wed, 12 Jun 2024 07:48:12 -0700 (PDT)
-Received: from pathway.suse.cz (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f19171cd0sm453652766b.61.2024.06.12.07.48.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 07:48:12 -0700 (PDT)
-Date: Wed, 12 Jun 2024 16:48:10 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Tony Lindgren <tony.lindgren@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Tony Lindgren <tony@atomide.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] printk: Track command line console positions to fix
- console order
-Message-ID: <Zmm1KpOKkigPRyrG@pathway.suse.cz>
-References: <20240606114149.118633-1-tony.lindgren@linux.intel.com>
- <ZmgIB2lQaW9oqn3O@pathway.suse.cz>
- <ZmgfZr5ccHATnkAA@tlindgre-MOBL1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f47yGXyv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718203793; x=1749739793;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Eia1SQ7Fh2LvoCGqiWI+qaZMBI765dvAVIkmD4DsMCE=;
+  b=f47yGXyvYBL+E9AFTa961wWvvn+ALw5MqyQwMWEnyn6KkvDH78IlqqyB
+   vW+64N1Yk0bLBnnfSP8kWeCurZUCrNnr6YVPEmiOcTamuTTv71yzJ0eaE
+   AY6iPcfHmBHl3cu3D3ZpFvdeMD8lO1mga1Rr5dFKiAdwaV9p/GvGXBPxZ
+   /v5MTcip8ImXjYqabZ8+arON74sOQkpc6FhBfiCdkYcM6TV3PhgGdBXjm
+   2uIjY9Jo6fwhHWjmZ7/euhH0uccYyfv2RYA9Pr1AeUa5rasqaAXjQivrZ
+   x5DJ/C1KhLaQVPK/5dEPV5w4NQUbJFkBDLYDmULDZzeM72yJpi06o9wS1
+   Q==;
+X-CSE-ConnectionGUID: iNV0+oTVS7Ks6eKZPcd6FA==
+X-CSE-MsgGUID: Zw33adbQQqWTw6kd0zhVFQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="25550569"
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="25550569"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 07:49:52 -0700
+X-CSE-ConnectionGUID: Ee3u1bY9TVyedS3HYcmsUw==
+X-CSE-MsgGUID: d1UvAkCcQC2SIxMUqwFIXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="44937061"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 07:49:52 -0700
+Received: from [10.212.10.32] (kliang2-mobl1.ccr.corp.intel.com [10.212.10.32])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 6F3B520B5703;
+	Wed, 12 Jun 2024 07:49:51 -0700 (PDT)
+Message-ID: <eb5d91d1-2898-45e0-a2d3-aa5c66155911@linux.intel.com>
+Date: Wed, 12 Jun 2024 10:49:50 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZmgfZr5ccHATnkAA@tlindgre-MOBL1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] perf/x86/uncore: Save the unit control address of all
+ units
+To: Tim Chen <tim.c.chen@linux.intel.com>, peterz@infradead.org,
+ mingo@kernel.org, linux-kernel@vger.kernel.org
+Cc: acme@kernel.org, namhyung@kernel.org, irogers@google.com,
+ eranian@google.com, ak@linux.intel.com, yunying.sun@intel.com
+References: <20240610201619.884021-1-kan.liang@linux.intel.com>
+ <20240610201619.884021-2-kan.liang@linux.intel.com>
+ <0f1ba5d8ecc62f774590077b2f88f5b64dd98452.camel@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <0f1ba5d8ecc62f774590077b2f88f5b64dd98452.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue 2024-06-11 12:56:54, Tony Lindgren wrote:
-> On Tue, Jun 11, 2024 at 10:17:11AM +0200, Petr Mladek wrote:
-> > On Thu 2024-06-06 14:41:46, Tony Lindgren wrote:
-> > > Recent changes to allow using DEVNAME:0.0 style console names caused a
-> > > regression to the kernel command line handling for the console options.
-> > 
-> > Sigh, I have missed that it has already ended in the mainline via
-> > the tty tree :-/
-> > 
-> > Honestly, I would prefer to revert it and implement it a clean way.
-> > I see a lot of existing and possible problems:
+
+
+On 2024-06-10 6:40 p.m., Tim Chen wrote:
+> On Mon, 2024-06-10 at 13:16 -0700, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The unit control address of some CXL units may be wrongly calculated
+>> under some configuration on a EMR machine.
+>>
+>> The current implementation only saves the unit control address of the
+>> units from the first die, and the first unit of the rest of dies. Perf
+>> assumed that the units from the other dies have the same offset as the
+>> first die. So the unit control address of the rest of the units can be
+>> calculated. However, the assumption is wrong, especially for the CXL
+>> units.
+>>
+>> Introduce an RB tree for each uncore type to save the unit control
+>> address and ID information for all the units.
+>>
+>> Compared with the current implementation, more space is required to save
+>> the information of all units. The extra size should be acceptable.
+>> For example, on EMR, there are 221 units at most. For a 2-socket machine,
+>> the extra space is ~6KB at most.
+>>
+>> Tested-by: Yunying Sun <yunying.sun@intel.com>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>  arch/x86/events/intel/uncore_discovery.c | 79 +++++++++++++++++++++++-
+>>  arch/x86/events/intel/uncore_discovery.h | 10 +++
+>>  2 files changed, 87 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+>> index 9a698a92962a..ce520e69a3c1 100644
+>> --- a/arch/x86/events/intel/uncore_discovery.c
+>> +++ b/arch/x86/events/intel/uncore_discovery.c
+>> @@ -93,6 +93,8 @@ add_uncore_discovery_type(struct uncore_unit_discovery *unit)
+>>  	if (!type->box_ctrl_die)
+>>  		goto free_type;
+>>  
+>> +	type->units = RB_ROOT;
+>> +
+>>  	type->access_type = unit->access_type;
+>>  	num_discovered_types[type->access_type]++;
+>>  	type->type = unit->box_type;
+>> @@ -120,10 +122,59 @@ get_uncore_discovery_type(struct uncore_unit_discovery *unit)
+>>  	return add_uncore_discovery_type(unit);
+>>  }
+>>  
+>> +static inline bool unit_less(struct rb_node *a, const struct rb_node *b)
+>> +{
+>> +	struct intel_uncore_discovery_unit *a_node, *b_node;
+>> +
+>> +	a_node = rb_entry(a, struct intel_uncore_discovery_unit, node);
+>> +	b_node = rb_entry(b, struct intel_uncore_discovery_unit, node);
+>> +
+>> +	if (a_node->pmu_idx < b_node->pmu_idx)
+>> +		return true;
+>> +	if (a_node->pmu_idx > b_node->pmu_idx)
+>> +		return false;
+>> +
+>> +	if (a_node->die < b_node->die)
+>> +		return true;
+>> +	if (a_node->die > b_node->die)
+>> +		return false;
+>> +
+>> +	return 0;
 > 
-> Naturally no objection from me for reverting if there are issues that are
-> unfixable from the printk point of view. I'll update the fix along the
-> lines you're suggesting below though, let's see if that's enough for the
-> -rc cycle.
+> Will it be better if the rb_node is sorted by id instead
+> of pmu_idx+die?
 
-OK, let's see how the updated fix looks like.
+The id and pmu_idx+die can all be used as a key to search the RB tree in
+different places.
 
-> > 1. Where and how is DEVNAME:0.0 defined?
-> > 
-> >    The only documentation seems to be in
-> >    Documentation/admin-guide/kernel-parameters.txt for the console=
-> >    parameter:
-> > 
-> > <paste>
-> >                <DEVNAME>:<n>.<n>[,options]
-> >                         Use the specified serial port on the serial core bus.
-> >                         The addressing uses DEVNAME of the physical serial port
-> >                         device, followed by the serial core controller instance,
-> >                         and the serial port instance. The options are the same
-> >                         as documented for the ttyS addressing above.
-> > 
-> >                         The mapping of the serial ports to the tty instances
-> >                         can be viewed with:
-> > 
-> >                         $ ls -d /sys/bus/serial-base/devices/*:*.*/tty/*
-> >                         /sys/bus/serial-base/devices/00:04:0.0/tty/ttyS0
-> > 
-> >                         In the above example, the console can be addressed with
-> >                         console=00:04:0.0. Note that a console addressed this
-> >                         way will only get added when the related device driver
-> >                         is ready. The use of an earlycon parameter in addition to
-> >                         the console may be desired for console output early on.
-> > </paste>
-> > 
-> >    This seems to be a brand new bus.
-> > 
-> >    Is it stable?
-> >    Is it documented in Documentation/ABI/stable/?
+The id is the physical ID of a unit. The search via id is invoked when
+adding a new unit. Perf needs to make sure that the same PMU idx
+(logical id) is assigned to the unit with the same physical ID. Because
+the units with the same physical ID in different dies share the same PMU.
+
+The pmu_idx+die key is used when setting the cpumask. Please see
+intel_uncore_find_discovery_unit_id() in the patch 2. Perf wants to
+understand on which dies the given PMU is available.
+
+Since different keys can be used to search the RB tree, I think one of
+them has to traverse the whole tree. At the stage of adding a new unit,
+the tree is not complete yet. It minimizes the impact of the O(N)
+search. So I choose the pmu_idx+die rather than id.
+
+Also, the driver only does once to build the tree and set the cpumask at
+driver load time. I think the O(N) should be acceptable here.
+
+Thanks,
+Kan
+
 > 
-> I think the DEVNAME originates from udev to be used for various rules. Yes
-> it should be documented somewhere though. I'd say it's stable as it's been
-> in use for years :)
+> Then it will be faster for uncore_find_unit() to run in
+> O(log(N)) instead of O(N).  Right now it looks like we
+> are traversing the whole tree to find the entry with the
+> id.
 > 
-> >    It seems that the feature will cover "only" serial consoles.
-> >    But DEVNAME is a generic name. It might make more sense to
-> >    call it "SERIAL_BASE_DEVNAME" or "SERIAL_DEVNAME" or "SBASE_DEVNAME" or so.
-> > 
-> >    Anyway, console= is an interface with the user space. We will need to
-> >    maintain the backward compatibility "forever".
-> > 
-> >       => we should think twice about the interface !!!
+> Tim
 > 
-> I think we want to keep it generic with DEVNAME, I don't see why we'd want
-> make it serial console specific, at least in the code. For the documentation,
-> I think the kernel parameters example  is clear on the serial port usage?
-
-OK, let's keep the DEVNAME in both the code and documentation,
-
-> > 3. The delimiter between "DEVNAME" and X.Y numbers is ":".
-> >    But ":" is also part of the sample DEVNAME "00:00"
-> > 
-> >    Is it a good idea?
-> > 
-> >    Is the current naming scheme a well known historic one
-> >    or something invented for the new bus?
+>> +}
+>> +
+>> +static inline struct intel_uncore_discovery_unit *
+>> +uncore_find_unit(struct rb_root *root, unsigned int id)
+>> +{
+>> +	struct intel_uncore_discovery_unit *unit;
+>> +	struct rb_node *node;
+>> +
+>> +	for (node = rb_first(root); node; node = rb_next(node)) {
+>> +		unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
+>> +		if (unit->id == id)
+>> +			return unit;
+>> +	}
+>> +
+>> +	return NULL;
+>> +}
+>> +
 > 
-> PCI and USB use a ":" already for the device naming. Also a "-" can be used
-> by the device names, many platform devices do that. I don't think we can
-> pick any better limiter here, at least out of the ":", "-" and "." options.
-
-OK, it seems that ':' is the best choice.
-
-And thanks for explaining the other details. Everything makes more sense now.
-
-Best Regards,
-Petr
+> 
