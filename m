@@ -1,41 +1,66 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC564C62E;
-	Wed, 12 Jun 2024 18:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DCB47F60
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217748; cv=none; b=N0H3jbGswNP+71rsW2hbwY20AAHIIUOJypXQsna2XtUjr1bh+tUmSyVSA6fLEAHI0rkAu7gV/CMAwxS48Pd5E1EalGtnQvUJhGEHqtJgQfcIM/dGUuHAcx3AWMhdXts/NOBFAX9o2XUezGM1n1u9wpxQTVeIgG7EfDx36a+bGw8=
+	t=1718217816; cv=none; b=aVdqu6BH2vhCiugP5cEr1RqWQvEEAsjGlNfPQAUyfJmLarJm5qpgmv9ZlMfVtElHeGCt8ONsLVBMkfqUY9bTZ8vSe6saxhwWfO5FAtTIrUWmkpv0GqaAogy34ItCFmkyEOCl2ejWaIixyRfkoEStDci2+vlkoktF5aAZKVwQPz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217748; c=relaxed/simple;
-	bh=KOyH5IiVpwS6pxgBIHsJ42RKqSXLK0TJcXQo9wh6hBE=;
+	s=arc-20240116; t=1718217816; c=relaxed/simple;
+	bh=o7ns0CAimFMDnmRjVIVStSrzzCFJQjHy/Tp515miRY0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rywvEsPAvIOib5siVRjYlInx0KKldaQg+CMlQ9d9g3Daz6w/byQxHAg43gRC53eI+qwy5V2Tft2fYdBbBLmZAve1LEWL9uu7ePzvaiagYVFMc1zo19lAdJwIFp6cPzTkeK2Ep4X7o652dY1S4sRAkUOGUV89D6Bow30AB5z2ZeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEA461042;
-	Wed, 12 Jun 2024 11:42:50 -0700 (PDT)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB4BA3F64C;
-	Wed, 12 Jun 2024 11:42:24 -0700 (PDT)
-Date: Wed, 12 Jun 2024 19:42:22 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Anvin <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=TgVOfQIMHhKsLsO0pFBlQeleDIC7PbV+NNAGnGF5ybZISN0d0RYeJvRPX0Y/OtNxCLIBVGvEMXnq9pws+hbuZwx4A7C6fi8flaGaO7cW8sYFJhqYSybd/rl/M8x6k3y4OIlI8JbCJOoj86H5mOptcrHXSUsYUywY3PkZFb7qNXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LctJ6ty3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LctJ6ty3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718217813;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XSie2rDJ5lPJ+f0eDBkZKw9s3cyHlIqim7LR340IID4=;
+	b=LctJ6ty30DFZ75Mc1zzsgqYsBzAi2o/4jqo2zxAPyxkMVnq+mxkb9LfhcRWnksKqzkA/39
+	EpE1j4RBB7lH8oY8pCJWtdG55FUYhXM2YdgQBAzb5GFDLAMCPoFkLEqk1EoDBk7Pdh9ENi
+	y5E3O4UHsaGvJpuI3pnzmfg4SkSRwwM=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-423-2pUjVqh4Mya6sBGXoAxjQQ-1; Wed,
+ 12 Jun 2024 14:43:28 -0400
+X-MC-Unique: 2pUjVqh4Mya6sBGXoAxjQQ-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 610E71956068;
+	Wed, 12 Jun 2024 18:43:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.215])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 968DC1956050;
+	Wed, 12 Jun 2024 18:43:20 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 12 Jun 2024 20:41:54 +0200 (CEST)
+Date: Wed, 12 Jun 2024 20:41:48 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+	Andy Lutomirski <luto@amacapital.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dave Hansen <dave@sr71.net>, Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	the arch/x86 maintainers <x86@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH 4/7 v2] arm64: add 'runtime constant' support
-Message-ID: <ZmnsDqP9T0b1z6ML@J2N7QTR9R3.cambridge.arm.com>
-References: <CAHk-=wiHp60JjTs=qZDboGnQxKSzv=hLyjEp+8StqvtjOKY64w@mail.gmail.com>
- <20240611172010.287427-1-torvalds@linux-foundation.org>
+	Uros Bizjak <ubizjak@gmail.com>
+Subject: Re: [PATCH 3/9] x86/fpu: Make task_struct::thread constant size
+Message-ID: <20240612184148.GB23973@redhat.com>
+References: <20240608073134.264210-1-mingo@kernel.org>
+ <20240608073134.264210-4-mingo@kernel.org>
+ <20240610211350.GA1613053@thelio-3990X>
+ <20240611124145.GA26798@redhat.com>
+ <ZmlZiHVF8w09mExw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,54 +69,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240611172010.287427-1-torvalds@linux-foundation.org>
+In-Reply-To: <ZmlZiHVF8w09mExw@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, Jun 11, 2024 at 10:20:10AM -0700, Linus Torvalds wrote:
-> This implements the runtime constant infrastructure for arm64, allowing
-> the dcache d_hash() function to be generated using as a constant for
-> hash table address followed by shift by a constant of the hash index.
-> 
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> ---
-> v2: updates as per Mark Rutland
+The patch below seems to fix the problem.
 
-Sorry, I just realised I got the cache maintenance slightly wrong below.
+Again, the changes in fpu__init_system_early_generic() are not
+strictly needed to fix it, but I believe make sense anyway.
 
-> +static inline void __runtime_fixup_ptr(void *where, unsigned long val)
-> +{
-> +	__le32 *p = lm_alias(where);
-> +	__runtime_fixup_16(p, val);
-> +	__runtime_fixup_16(p+1, val >> 16);
-> +	__runtime_fixup_16(p+2, val >> 32);
-> +	__runtime_fixup_16(p+3, val >> 48);
-> +	caches_clean_inval_pou((unsigned long)p, (unsigned long)(p + 4));
-> +}
+Oleg.
 
-We need to do the I$ maintenance on the VA that'll be executed (to
-handle systems with a VIPT I$), so we'll need to use 'where' rather than
-'p', e.g.
 
-	caches_clean_inval_pou((unsigned long)where,
-			       (unsigned long)where + 4 * AARCH64_INSN_SIZE);
+diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
+index 4e8d37b5a90b..848ea79886ba 100644
+--- a/arch/x86/kernel/fpu/init.c
++++ b/arch/x86/kernel/fpu/init.c
+@@ -71,16 +71,14 @@ static bool __init fpu__probe_without_cpuid(void)
+ 	return fsw == 0 && (fcw & 0x103f) == 0x003f;
+ }
+ 
+-static struct fpu x86_init_fpu __read_mostly;
++static struct fpu x86_init_fpu __attribute__ ((aligned (64))) __read_mostly;
+ 
+ static void __init fpu__init_system_early_generic(void)
+ {
+-	int this_cpu = smp_processor_id();
+-
+ 	fpstate_reset(&x86_init_fpu);
+ 	current->thread.fpu = &x86_init_fpu;
+-	per_cpu(fpu_fpregs_owner_ctx, this_cpu) = &x86_init_fpu;
+-	x86_init_fpu.last_cpu = this_cpu;
++	set_thread_flag(TIF_NEED_FPU_LOAD);
++	x86_init_fpu.last_cpu = -1;
+ 
+ 	if (!boot_cpu_has(X86_FEATURE_CPUID) &&
+ 	    !test_bit(X86_FEATURE_FPU, (unsigned long *)cpu_caps_cleared)) {
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 215a7380e41c..ec22b9bf27f5 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1562,7 +1562,7 @@ struct task_struct {
+ 	 * they are included in the randomized portion of task_struct.
+ 	 */
+ 	randomized_struct_fields_end
+-};
++} __attribute__ ((aligned (64)));
+ 
+ #define TASK_REPORT_IDLE	(TASK_REPORT + 1)
+ #define TASK_REPORT_MAX		(TASK_REPORT_IDLE << 1)
 
-Note: the D$ and I$ maintenance instruction (DC CVAU and IC IVAU) only
-require read permissions, so those can be used on the kernel's
-executable alias even though that's mapped without write permissions.
-
-> +/* Immediate value is 6 bits starting at bit #16 */
-> +static inline void __runtime_fixup_shift(void *where, unsigned long val)
-> +{
-> +	__le32 *p = lm_alias(where);
-> +	u32 insn = le32_to_cpu(*p);
-> +	insn &= 0xffc0ffff;
-> +	insn |= (val & 63) << 16;
-> +	*p = cpu_to_le32(insn);
-> +	caches_clean_inval_pou((unsigned long)p, (unsigned long)(p + 1));
-> +}
-
-Likewise:
-
-	caches_clean_inval_pou((unsigned long)where,
-			       (unsigned long)where + AARCH64_INSN_SIZE);
-
-Mark.
