@@ -1,68 +1,63 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD4B16C859
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463C016C6B4;
+	Wed, 12 Jun 2024 07:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718179152; cv=none; b=C9miyU4BvkwyW30+3rP4SICwIZY1kelDcg+IuBaUpDlAVczsX9qIKYsYNY1holHPx9ASs5eRePobL+C6hQ7sKu5UONkhJhYhAwUb827V7bug53H8UF1TPme+Yc7O9YBI6M6nwTOSTFCpBMJCxMguELOFuv6EQSiWCPf75N8fozw=
+	t=1718179162; cv=none; b=oWKHRDT2+xKmM7ZEZ9tm87wlpVaEqqHakwdiFq3JACEyWy7iHrLZGK9g5fvKdrYNoqxSKFCbsNmBleetE+uT1sPtnmJSu35Z4BPt3CpR8hpIDH5rug9xjBz0RCD61InChWaysUwvxZzV1N9qeGStlo03QuoHVi4Kb4sKec2lZ6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718179152; c=relaxed/simple;
-	bh=vwNJ897gwBvDgypF3Aq9mgPnj8YQo/CTPzx+egzni4c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A+2GH+O0XUKs0Bp6Z+QSInu0pu2GQjKJFuLL7GfboaNtoDOjcKFoSwzSKq9ERcd+WE96yxh9aflJQiy771KlkdP8txeu62uUavlqzB9kJtr7VRSpd/R22qIcHf54wq6GCsDI1iCgwXqukZ4ALJ49zgjDUulzgsZ7AB2sXrJ7gYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zWvqyePI; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1718179162; c=relaxed/simple;
+	bh=7mTgNg2ikwIKft8i7UAtYj8u3wE6XKrlCmTmjGuHvTY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LGtD+78+s38fEheRu2M97+XvwDMaaRLcnKnSzXPEnHW0YNOHWIgDggMcQX5gMkH3LU5TEoCy8M6zYjFetS3aRouMCnJEsjPuT4gFQV4RaXugNZYL+1Nmkf78nxgyENiCW2zPsf/QfhkUR5lxGANvnY586fYSwBLeKqn/JoI1V/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hnbv1Ed3; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zWvqyePI"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52962423ed8so7545909e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 00:59:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718179150; x=1718783950; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=J9bGYOos+5ZAvSBq70WnnGsqeYl9M4GtIdifUxXDp6M=;
-        b=zWvqyePIFpXkfXxDhnYeGltGSiPqWz4I0ZG6/nztCMDdYBSnx18fg0mTlQMUj8Hz3V
-         90IgUsz1qtr/L41nWvRgmDIWbt4aZAwNEfhGZiiiZT7GBny7zjq764evOPLpFN/QMWbL
-         RHcy5JwngJcwt8PdZmFBlGKvWs62ukDWcS39vM57F49mEjLW4NbHZMX4YiM9HgQemVKt
-         tDNApbw4Mv6BUrUHzRGJv3g3BZ8ntqcDW35LcCCpRfxJHkrSn7W8CCqL8yr9q9Z5WA0d
-         rekcySITRF32nUuFZjaAR2e5wq5u+Yn6UfKTTd1YTFYOTbTdlCPWOnjsU2mA8+jMdz26
-         d/ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718179150; x=1718783950;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J9bGYOos+5ZAvSBq70WnnGsqeYl9M4GtIdifUxXDp6M=;
-        b=IYrKR/K74oSXiuF+CRbbBkksLSxyQGIFcrowXR+paxaUTV1Q83Vrb8y8lNHfkglMBC
-         Xj3XOb98MLetbiw7BhRDRkB1sipgKK5orL3J5rNVAJYfSn2elmHezQ9Luw/dNIFeZnK5
-         OJDHIgeaOK/OQOwsJPR2FsO1cHyQgKbnAoJdHImtZbbP3vhDDLOTliFr89105fK0GlsQ
-         6FZseGNKT4uVOIkNDEnq3t6JiDcl2EEhlpp+odvvwnq3c263FBFUCSlphvap41lcjgKA
-         0euzqj20jxAwsxMOVy2KDBOztpztKENgA9/WcUbZ5+vGPjnq4Ue6h3sVsBwZ6GfkX5Sa
-         EHNg==
-X-Forwarded-Encrypted: i=1; AJvYcCUG3Pu8zX3xWUxUBBqXK5npD2aNvZtadivrwMfQ10AqlkFss8LaSt99/8BTEvlYkhaq6VESKY0moAnL4BqXRXYT9EozutUrA0hG89x9
-X-Gm-Message-State: AOJu0YxVCfFyKE70rFV+2VaFwYdximAg7zpcZvUB/ej+pBoXRJfxcM6Y
-	mbkel6RY9we/dp6lYZvfmzm49NsnVfOPHNMWDvN1tXq7QfMYawdLCO7OytlTmLM=
-X-Google-Smtp-Source: AGHT+IHW4NIxUvz4W89OLc8Yhve4W25GsEQm/AZgXDZVaD85P+vCuq8RK+JIPGo75+rm9H3KVgiVuA==
-X-Received: by 2002:a05:6512:1243:b0:52b:bf8f:5690 with SMTP id 2adb3069b0e04-52c9a3fd437mr800598e87.52.1718179149308;
-        Wed, 12 Jun 2024 00:59:09 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:8d3:3800:a172:4e8b:453e:2f03])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de607sm15312315e9.34.2024.06.12.00.59.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 00:59:09 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hnbv1Ed3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718179162; x=1749715162;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7mTgNg2ikwIKft8i7UAtYj8u3wE6XKrlCmTmjGuHvTY=;
+  b=hnbv1Ed3Frzy/NGL6TTNKqdNzpwQH9I6n9rfrzqOKmksSL9dydSrzDbu
+   r80W/cEEum3g4wWS3xCnNq31hbm3ZxgA2uBJH71T+uzfkxYq3hZvtAaAY
+   rhuM2BT8Ya+4LKog3JGiZHGl+K9pDQdVoBwhQzYSyyUwSbSiIl4bfeJKd
+   1Hp5pp4KWpNn9X9IrgZEDvu3ctoQyW+nnQIzFvAhUZnFzVb336kvVLR7A
+   uMtuYbGmDQyZgtMlmDWFmOY83U5yC15IN0IbZGiiuc16l8Mr6UxEncHrd
+   fiJEUpOGejiNtmCv6B9WZXv1yv20ezoYsOzdU+r2RXuU/qhOrk/Zb5DBp
+   Q==;
+X-CSE-ConnectionGUID: VOCIsYWeRE6kPuRGFEPBsQ==
+X-CSE-MsgGUID: CgSWh2oYTKycgpG6+h+jLw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="14768825"
+X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
+   d="scan'208";a="14768825"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 00:59:21 -0700
+X-CSE-ConnectionGUID: 5bFV976PRICls1WKE1o/UQ==
+X-CSE-MsgGUID: TVfmcDRRRV6XTDc3W17Fsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
+   d="scan'208";a="39597596"
+Received: from zwan2-desk1.sh.intel.com ([10.239.160.154])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 00:59:18 -0700
+From: Zhenyu Wang <zhenyuw@linux.intel.com>
+To: peterz@infradead.org
+Cc: kan.liang@linux.intel.com,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] Immutable tag between the Bluetooth and pwrseq branches for v6.11-rc1
-Date: Wed, 12 Jun 2024 09:58:29 +0200
-Message-ID: <20240612075829.18241-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
+	linux-perf-users@vger.kernel.org,
+	x86@kernel.org,
+	Rui Zhang <rui.zhang@intel.com>,
+	Artem Bityutskiy <artem.bityutskiy@intel.com>,
+	Wendy Wang <wendy.wang@intel.com>
+Subject: [PATCH RESEND AGAIN] perf/x86/intel/cstate: Add pkg C2 residency counter for Sierra Forest
+Date: Wed, 12 Jun 2024 16:08:35 +0800
+Message-ID: <20240612080835.306254-1-zhenyuw@linux.intel.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240515032158.12845-1-zhenyuw@linux.intel.com>
+References: <20240515032158.12845-1-zhenyuw@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,48 +66,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Package C2 residency counter is also available on Sierra Forest.
+So add it support in srf_cstates.
 
-Hi Marcel, Luiz,
+Cc: Rui Zhang <rui.zhang@intel.com>
+Cc: Artem Bityutskiy <artem.bityutskiy@intel.com>
+Cc: Wendy Wang <wendy.wang@intel.com>
+Tested-by: Wendy Wang <wendy.wang@intel.com>
+Fixes: 3877d55a0db2 ("perf/x86/intel/cstate: Add Sierra Forest support")
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+---
+ arch/x86/events/intel/cstate.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Please pull the following power sequencing changes into the Bluetooth tree
-before applying the hci_qca patches I sent separately.
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 9d6e8f13d13a..b1a822af25d0 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -64,7 +64,7 @@
+  *			       perf code: 0x00
+  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
+  *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL,
+- *						RPL,SPR,MTL
++ *						RPL,SPR,MTL,SRF
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
+  *			       perf code: 0x01
+@@ -684,7 +684,8 @@ static const struct cstate_model srf_cstates __initconst = {
+ 	.core_events		= BIT(PERF_CSTATE_CORE_C1_RES) |
+ 				  BIT(PERF_CSTATE_CORE_C6_RES),
+ 
+-	.pkg_events		= BIT(PERF_CSTATE_PKG_C6_RES),
++	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
++				  BIT(PERF_CSTATE_PKG_C6_RES),
+ 
+ 	.module_events		= BIT(PERF_CSTATE_MODULE_C6_RES),
+ };
+-- 
+2.45.1
 
-Link: https://lore.kernel.org/linux-kernel/20240605174713.GA767261@bhelgaas/T/
-
-The following changes since commit 83a7eefedc9b56fe7bfeff13b6c7356688ffa670:
-
-  Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/pwrseq-initial-for-v6.11
-
-for you to fetch changes up to 2f1630f437dff20d02e4b3f07e836f42869128dd:
-
-  power: pwrseq: add a driver for the PMU module on the QCom WCN chipsets (2024-06-12 09:20:13 +0200)
-
-----------------------------------------------------------------
-Initial implementation of the power sequencing subsystem for linux v6.11
-
-----------------------------------------------------------------
-Bartosz Golaszewski (2):
-      power: sequencing: implement the pwrseq core
-      power: pwrseq: add a driver for the PMU module on the QCom WCN chipsets
-
- MAINTAINERS                                |    8 +
- drivers/power/Kconfig                      |    1 +
- drivers/power/Makefile                     |    1 +
- drivers/power/sequencing/Kconfig           |   29 +
- drivers/power/sequencing/Makefile          |    6 +
- drivers/power/sequencing/core.c            | 1105 ++++++++++++++++++++++++++++
- drivers/power/sequencing/pwrseq-qcom-wcn.c |  336 +++++++++
- include/linux/pwrseq/consumer.h            |   56 ++
- include/linux/pwrseq/provider.h            |   75 ++
- 9 files changed, 1617 insertions(+)
- create mode 100644 drivers/power/sequencing/Kconfig
- create mode 100644 drivers/power/sequencing/Makefile
- create mode 100644 drivers/power/sequencing/core.c
- create mode 100644 drivers/power/sequencing/pwrseq-qcom-wcn.c
- create mode 100644 include/linux/pwrseq/consumer.h
- create mode 100644 include/linux/pwrseq/provider.h
