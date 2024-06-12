@@ -1,159 +1,120 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B4E1822EB
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 17:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3FD181BB3;
+	Wed, 12 Jun 2024 17:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718212990; cv=none; b=bO2pof/4lJC8vCm+JCA8aZ/2wzljJ202/KR2QW1OlGDUU+YWnPL6j1XaJvTpz41sKmVt0eceU7nv2SzFLYo1vmih4WX3NgxFsIKudvJ5zz2D4DaPNSpbQs/eBOhfxngyUuLvLoRSKEVP/v2XVSIepredjvbuGF2BZn1BoJO6Ng8=
+	t=1718213020; cv=none; b=Mdmlg/VVeVwnTsRBAVLMELn+hjql7mlKBjO/LDohSwYjfnE8ApZKaEfCCJYUArGZ3y4QhjBWfyuQ2Sz0rezghNdqG+Wns6lJD2/iSGcAn5IenW49VYChWhUIVCGsDrrq6FOrhcm3YGOWgR9k0ERQEB2gVXsQtq+WuNnjJ1GHi1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718212990; c=relaxed/simple;
-	bh=/eOveMBmlkJAaaoZTPiEjakaH7aRf8qPb5didjqx0C0=;
+	s=arc-20240116; t=1718213020; c=relaxed/simple;
+	bh=SmhgWhV+k+k1Jn01Ck0bRn6varewMhGpbVWsepDCohQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rIWkq63gn4znAlnzcJSqSAVBe7ZG+Bh+JGsJiWT9poPpQ+ddRH0LoFjdeCLSL32/F/FfXtiMVKTYUEKbzSh7mE4HGul92uDfFKu35GGFJ6ckUzVw794+ss+Va9GgtwIiDINL9fCSghFsrI6wLucfz/aeuGlhPC3sCEidp5Ulm8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cS8fReS7; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 To:Cc:Content-Type; b=g3sDqbfmFnMzPmE0DGAsvkphsvkw3t7xDLGx3efagXOdohSs2sIakU9rb8+WGir5I6/sPn0gF7ia0HMCefdgbzR23L3t6SF/5qqXxLTxIRwTm1OkctpTrlmT4m9Kh9lH4lPqNHmpmiPz19KYwzwh5pxA51HEWk9cjZ5xXlLlXrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqrTaVqb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cS8fReS7"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6b07308fe6cso315166d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 10:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718212987; x=1718817787; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/eOveMBmlkJAaaoZTPiEjakaH7aRf8qPb5didjqx0C0=;
-        b=cS8fReS74js7c+3A33lMxQFwHmCrqYRSXaJwfv+mqJyOZRcrPhe9hMthKqQh2AUmtq
-         +oT6dqrPvkVhN4mNxC5adwxcd1iWSrkD2H14HbY65/NGJye1MgOigeeo2nDrq//B46Af
-         O0Nu2oTTtiUH+se73VuTrKqc9bSLRefhmcUgw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718212987; x=1718817787;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/eOveMBmlkJAaaoZTPiEjakaH7aRf8qPb5didjqx0C0=;
-        b=lvJCUnIzqtkafE/ujqG7HF7qaLU7/By04fdOoEQosh55+TsHYI+Gp7zXq5uad/qnqO
-         X0bkY6C/NCaocVll5zeEdgJC1Zj9uGTADjwSoGM4gYx9htYMwi7S98TQTQPNLudQKYVF
-         /SreOAyO4KB+fic745ts9H4Y4C7lAuerUtyHstULpaGQalz51/jciK33MtXzIFYzmjUO
-         OCr3se71Z4dXA0WxlqHdIWfZxLmrIhCLZPhETxijKJFuN1wSmVyr/bTBgXt04YqqGMYO
-         oSHicl/A4pNtUQnlme5h9siE65GP+X5n4Isd7WAjrRgpQorDHIi/RmhtkV8RaerV8KxO
-         P/6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUX0o+GNeqIkNgKWE6hCGZpCuUA6py1LFGAtoIbE3TpgzRPDOZdRbcAr02ePFaGgj87+yneuPAIBBw6PZxGOqYnuoTnaAsyM94qMu9k
-X-Gm-Message-State: AOJu0YzIHCqcfVTg3rXbySgY7aOzk85ODF3dCrASB8o/P2vrqmNpvQAf
-	fRe1/3Mx1I2C851DabLoXjxuws8rIMp31Y2IVDXk3FEs9PxGyO0YD8mGjwlNFny/Im0eG1g+4Bw
-	=
-X-Google-Smtp-Source: AGHT+IFdGlB8aLlAFmlIrRPiKDwJYO9DXS9IGMfBIcsdcocUAvgIRwHVLcJKvSI9iBx51x1eqKCiAQ==
-X-Received: by 2002:a05:6214:3206:b0:6b0:68cd:6fc3 with SMTP id 6a1803df08f44-6b19196633bmr27248446d6.20.1718212986961;
-        Wed, 12 Jun 2024 10:23:06 -0700 (PDT)
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com. [209.85.160.181])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b087f2b91bsm23819676d6.26.2024.06.12.10.23.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 10:23:06 -0700 (PDT)
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4400cc0dad1so34921cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 10:23:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX+3RmZC6NphjwmDCws6ISojzXtTxlBbl9ddLEOYpoQqXIhUIFpx8obPp5YKIwI1CfZTuB/mgFfS4NAHOSdyihnoWvsOF3kaHSRrCBo
-X-Received: by 2002:a05:622a:5488:b0:441:5e6c:426c with SMTP id
- d75a77b69052e-4415e6c434bmr2453591cf.17.1718212985692; Wed, 12 Jun 2024
- 10:23:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqrTaVqb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94953C4AF1A;
+	Wed, 12 Jun 2024 17:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718213019;
+	bh=SmhgWhV+k+k1Jn01Ck0bRn6varewMhGpbVWsepDCohQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pqrTaVqbhIjv/5M8kgJm/nWlZnSpwPKvcvfMYVmqbQDycCvmXpxhINXk0quLhfJji
+	 1tzAVwHYvTQgsXIAFqkJn1XZTdNgEiZWlgI04X/YzeTS91XRmErFPijdGVuxMV4xlT
+	 Fx+sQkld9jE73/EbIUyLBv3oLxx4puivwceUHjwZu8JjN6zgDb7AIoUBvooMLllAFq
+	 /Fs8A8/4om3TAYNL775gT2Z4Z0QRbBJSxKelhXDCoPcE7qiDklNkc0eclRMMxJKUw3
+	 xrd4Zm29I4LsOkbZUCSGMQDMRZ0j7WBR6ia/TOnXdbkaq5LUGuvdoXqwcq1D83o4/Z
+	 H2A+c+5PqbVyg==
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5baf76164fbso16367eaf.1;
+        Wed, 12 Jun 2024 10:23:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVA4ZcvnHvngM8gCKcTfiNl/wpKcbYdq4a7dWHiLNnRN1veVs8MHcnGhsCG7cRH767eJTSS3QGNKXWhdiiJ5mC4rQw7BHLO5AG2WoP5
+X-Gm-Message-State: AOJu0YxpkgS/4txa8yLVwN/vCnSc/+ySX+js3AoVe9eNo6htIhUxfOvM
+	vBOP8F5aCIS+pMzFavrOFHGHk9ZQ3I1/oOVSjv64AM+U3eAnc20y2/s5HK7xwiLdsnCaIzVn01D
+	wQbHvQG+owwS1jUeLtn1mvP2lTRM=
+X-Google-Smtp-Source: AGHT+IGHa3GWElLGP/C9oYLMX2fq5ZVD08YJMHCa8lDrMbl1m3XVOVMRcQJFtQ9HX4T2TFlR2IblQMhR3cRApH+VIiA=
+X-Received: by 2002:a05:6871:286:b0:254:d417:351f with SMTP id
+ 586e51a60fabf-25514bfd75fmr2688487fac.1.1718213018901; Wed, 12 Jun 2024
+ 10:23:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611074846.1.Ieb287c2c3ee3f6d3b0d5f49b29f746b93621749c@changeid>
- <ZmljNHteJ9L5EdE9@phenom.ffwll.local> <CAD=FV=V4C1AYVqG4gig+SiQr4n_mAPVASxneDDZT1a=7AY3Hzw@mail.gmail.com>
- <Zmm6i6iQOdP613w3@phenom.ffwll.local> <CACRpkdbb5OdizDLSRW3bFEJJhrQ7Fs8Pb=Q2yxBog62Z1m-bOQ@mail.gmail.com>
-In-Reply-To: <CACRpkdbb5OdizDLSRW3bFEJJhrQ7Fs8Pb=Q2yxBog62Z1m-bOQ@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 12 Jun 2024 10:22:49 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vm==ngDo_bZ+xqV4Ojj0SSOO3ZWaxAbWA906h6-e8FMA@mail.gmail.com>
-Message-ID: <CAD=FV=Vm==ngDo_bZ+xqV4Ojj0SSOO3ZWaxAbWA906h6-e8FMA@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel: Avoid warnings w/ panel-simple/panel-edp at shutdown
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Maxime Ripard <mripard@kernel.org>, 
-	Yuran Pereira <yuran.pereira@hotmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
-	David Airlie <airlied@gmail.com>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	linux-kernel@vger.kernel.org, Saravana Kannan <saravanak@google.com>, 
-	Daniel Vetter <daniel@ffwll.ch>
+References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
+ <7f4a777b-88f6-4429-b168-d1337d291386@yahoo.de> <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info>
+ <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de> <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
+ <312649b1-eea9-4346-af93-76a821e88eb7@yahoo.de> <CAJZ5v0jfvRWK0M3Xf=36e74cVQ9rN5T1WdZZVnuk1XmZ=xu==g@mail.gmail.com>
+ <78549853-1763-40cf-9974-3fc737fad093@yahoo.de> <CAJZ5v0h5pQDaA-bEOmcz_TpE87kFqWLFLJC+=OLjg5ZtF3hxpQ@mail.gmail.com>
+ <91d94429-fc7e-4828-914d-1a251ee1ba99@yahoo.de> <CAJZ5v0gPZHDfuK1FRdTAG8Eqjf0NWUQdf-_GCWsWf6dCBE=1dg@mail.gmail.com>
+ <543787c3-db5b-4f63-b5e0-df508300db73@yahoo.de> <CAJZ5v0h7jDw3yX689nZdB+YeJbCk0vFoUgVb4Yi0cqDxjL5chQ@mail.gmail.com>
+ <40ec1e53-2bc8-48aa-9909-fac9072adb57@yahoo.de> <CAJZ5v0jtjXfvr4GXukjyO9XsEO6K2Nfux3otpFPP4vWS_9_qEQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jtjXfvr4GXukjyO9XsEO6K2Nfux3otpFPP4vWS_9_qEQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 12 Jun 2024 19:23:26 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hcX0JAMBA+EVZURDH1BTQ2zL-W_4BjSx0a=1oRaR90ug@mail.gmail.com>
+Message-ID: <CAJZ5v0hcX0JAMBA+EVZURDH1BTQ2zL-W_4BjSx0a=1oRaR90ug@mail.gmail.com>
+Subject: Re: Regression, thermal: core: battery reading wrong after wake from
+ S3 [Was: Bug Report according to thermal_core.c]
+To: "fhortner@yahoo.de" <fhortner@yahoo.de>
+Cc: Linux PM <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: multipart/mixed; boundary="000000000000a420a8061ab4a412"
+
+--000000000000a420a8061ab4a412
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Restored list CCs.
 
-On Wed, Jun 12, 2024 at 9:47=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
+On Wed, Jun 12, 2024 at 3:41=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
 >
-> On Wed, Jun 12, 2024 at 5:11=E2=80=AFPM Daniel Vetter <daniel@ffwll.ch> w=
-rote:
-> > On Wed, Jun 12, 2024 at 07:49:31AM -0700, Doug Anderson wrote:
-> (...)
-> > > The problem is that the ordering is wrong, I think. Even if the OS wa=
-s
-> > > calling driver shutdown functions in the perfect order (which I'm not
-> > > convinced about since panels aren't always child "struct device"s of
-> > > the DRM device), the OS should be calling panel shutdown _before_
-> > > shutting down the DRM device. That means that with your suggestion:
-> > >
-> > > 1. Shutdown starts and panel is on.
-> > >
-> > > 2. OS calls panel shutdown call, which prints warnings because panel
-> > > is still on.
-> > >
-> > > 3. OS calls DRM driver shutdown call, which prints warnings because
-> > > someone else turned the panel off.
+> On Wed, Jun 12, 2024 at 11:56=E2=80=AFAM fhortner@yahoo.de <fhortner@yaho=
+o.de> wrote:
 > >
-> > Uh, that's a _much_ more fundamental issue.
+> > Am 11.06.24 um 16:42 schrieb Rafael J. Wysocki:
 > >
-> > The fix for that is telling the driver core about this dependency with
-> > device_link_add. Unfortuantely, despite years of me trying to push for
-> > this, drm_bridge and drm_panel still don't automatically add these,
-> > because the situation is a really complex mess.
+> > This doesn't make them run in a different order, it just delays both
+> > of them, because the notifiers are called sequentially.
 > >
-> > Probably need to read dri-devel archives for all the past attempts arou=
-nd
-> > device_link_add.
+> > However, if you added the msleep() at the beginning of
+> > thermal_zone_device_resume(), it would change the ordering of this
+> > function with respect to the PM notifiers, so please try doing this.
+> >
+> > I did so and added msleep(1000) to thermal_core.c line 1634
+> > I have also reverted the patch you sent me.
+> >
+> > The battery readings after resume from S3 sleep where fine.
+> > I have tried 2 reboots with 4 sleep/wake cycles, respectively
 >
-> I think involving Saravana Kannan in the discussions around this
-> is the right thing to do, because he knows how to get devicelinks
-> to do the right thing.
+> Thanks!
 >
-> If we can describe what devicelink needs to do to get this ordering
-> right, I'm pretty sure Saravana can tell us how to do it.
+> This means that the two code paths in question somehow interfere
+> destructively when they are running in parallel with each other.
 
-I'm really not convinced that hacking with device links in order to
-get the shutdown notification in the right order is correct, though.
-The idea is that after we're confident that all DRM modeset drivers
-are calling shutdown properly that we should _remove_ any code
-handling shutdown from panel-edp and panel-simple. They should just
-get disabled as part of DRM's shutdown. That means that if we messed
-with devicelinks just to get a different shutdown order that it was
-just for a short term thing.
+One more thing to try is the attached patch (independent of the
+previous one) to lower the priority of the thermal PM notifier to make
+it run always after the ACPI battery one.
 
-That being said, one could argue that having device links between the
-DRM device and the panel is the right thing long term anyway and that
-may well be. I guess the issue is that it's not necessarily obvious
-how the "parent/child" or "supplier/consumer" relationship works w/
-DRM devices, especially panels. My instinct says that the panel
-logically is a "child" or "consumer" of the DRM device and thus
-inserting the correct long term device link would mean we'd get
-shutdown notification in the wrong order. It would be hard to argue
-that the panel is the "parent" of a DRM device, but I guess you could
-call it a "supplier"? ...but it's also a "consumer" of some other
-stuff, like the pixels being output and also (perhaps) the DP AUX bus.
-All this complexity is why the DRM framework tends to use its own
-logic for things like prepare/enable instead of using what Linux gives
-you. I'm sure Saravanah can also tell you about all the crazy device
-link circular dependencies that DRM has thrown him through...
+Please test this one too and let me know if it works for you.
 
-In any case, I guess I'll continue asserting that I'm not going to try
-to solve this problem. If folks don't like my patch and there's no
-suggestion other than solving years-old problems then I'm happy to
-live with the way things are and hope that someone eventually comes
-along and solves it.
+--000000000000a420a8061ab4a412
+Content-Type: text/x-patch; charset="US-ASCII"; name="thermal-core-resume-prio.patch"
+Content-Disposition: attachment; filename="thermal-core-resume-prio.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lxc3mpe90>
+X-Attachment-Id: f_lxc3mpe90
 
--Doug
+LS0tCiBkcml2ZXJzL3RoZXJtYWwvdGhlcm1hbF9jb3JlLmMgfCAgICAxICsKIDEgZmlsZSBjaGFu
+Z2VkLCAxIGluc2VydGlvbigrKQoKSW5kZXg6IGxpbnV4LXBtL2RyaXZlcnMvdGhlcm1hbC90aGVy
+bWFsX2NvcmUuYwo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09Ci0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvdGhlcm1hbC90
+aGVybWFsX2NvcmUuYworKysgbGludXgtcG0vZHJpdmVycy90aGVybWFsL3RoZXJtYWxfY29yZS5j
+CkBAIC0xNzEyLDYgKzE3MTIsNyBAQCBzdGF0aWMgaW50IHRoZXJtYWxfcG1fbm90aWZ5KHN0cnVj
+dCBub3RpCiAKIHN0YXRpYyBzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgdGhlcm1hbF9wbV9uYiA9IHsK
+IAkubm90aWZpZXJfY2FsbCA9IHRoZXJtYWxfcG1fbm90aWZ5LAorCS5wcmlvcml0eSA9IC0xLAog
+fTsKIAogc3RhdGljIGludCBfX2luaXQgdGhlcm1hbF9pbml0KHZvaWQpCg==
+--000000000000a420a8061ab4a412--
