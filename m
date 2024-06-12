@@ -1,179 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB1025622;
-	Wed, 12 Jun 2024 04:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0828E1F60A
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 04:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718165612; cv=none; b=PH8jPdHrNXPOMtmH7A1q1A4aGuXQlPiAtLy8BSHm7SprfLE6AwiKJ6phKQ/UgBg+Lc7ZRz7UTtkGS+R4/nm3bb1dylVOmCN+Jvq/u/aLywUxqjZN+wAnRCr74ARmec882hMLYe3wvMUTrGDdYxKuuilcdhGko1EWdztMjd8mClI=
+	t=1718166033; cv=none; b=Cs4o/iXnhGJF1sHFyUJsn7nLAXl25iOt8bN9kKaCSgixKCvw68Cj4fjcQFkcYT/JbWCgK6poI7uxl7w9GHkd5qmsiKN5rWFjmQn89+TS0pLUAE0X40MVSR0nBwOsjgLBqVUip1E6VDLpr7HuYHucEycELy2kBOHw5wKeJGTsSf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718165612; c=relaxed/simple;
-	bh=e/rBT6UImx0hUN8k3KauxlxXxMRLEJaOaHDhUOQvQMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kJJzb3noc+3fii6fdhCoNyCawQ0biZCA84qZmkxi6KWA/pHQi/q5M7aAymjUMRgZn8UHaUauoYuOr7aSaXUn6DY0E72gdy+XAGMU/gEHIIH6luqE2GaVPIFsiuPWS1FVTnyGr76A3We/3KSNw6qWXv0VYU+Ukovf4eYVJp1mNbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K8h6dbBt; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K8h6dbBt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718165610; x=1749701610;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=e/rBT6UImx0hUN8k3KauxlxXxMRLEJaOaHDhUOQvQMg=;
-  b=K8h6dbBtxrZKcnIaQpUYDgJU02m1Jz4jzHK8bpkM4d5ZgIaXW5sWwaR0
-   WlSkfbQqKWMQOK9iyxEQxPluHYq2qhIw2QZP/lNnwtjv266OR7mqqGmg/
-   ZNQKh15SeQDmGDHLbfL+dFfr++FbPXxlWdYW+MkyKOBAYPcqhRgKLPMiJ
-   HiRQueWTsbHWpKYyWq8pJsiQXzQewAv7L92m1U9xxG0I9e2GtjL5KwIl1
-   QquOTc2rIrHVX+15PUoexy6QUuiXp6hqD32geurc0QfkWEUYkC0j9OfTU
-   AFy4tu7GmaE0WsedNe1hy8rsTeY2jBd+NVtL3czU/9uSJXd7aC7Bawt7/
-   w==;
-X-CSE-ConnectionGUID: IR7altQKRx+EVOpQzlSE3w==
-X-CSE-MsgGUID: 8YsT1GYFSbaeLXL2Wp/8LA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="15036641"
-X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="15036641"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 21:13:30 -0700
-X-CSE-ConnectionGUID: F7fXhmU1SI65vdY9zc4Dnw==
-X-CSE-MsgGUID: 4lwvIdvLSm6UdbsbxXSi6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
-   d="scan'208";a="39513592"
-Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 11 Jun 2024 21:13:26 -0700
-Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sHFMR-0001Bk-36;
-	Wed, 12 Jun 2024 04:13:23 +0000
-Date: Wed, 12 Jun 2024 12:13:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Tomer Maimon <tmaimon77@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc: oe-kbuild-all@lists.linux.dev, Shan-Chun Hung <schung@nuvoton.com>,
-	Avi Fishman <avifishman70@gmail.com>,
-	Tali Perry <tali.perry1@gmail.com>,
-	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
-	Benjamin Fair <benjaminfair@google.com>,
-	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH v1 4/4] pinctrl: nuvoton: Reduce use of OF-specific APIs
-Message-ID: <202406121152.f2DLL871-lkp@intel.com>
-References: <20240611093127.90210-5-andy.shevchenko@gmail.com>
+	s=arc-20240116; t=1718166033; c=relaxed/simple;
+	bh=GctkiOdVRpfP7LUutwUwpfgSAb/wlxs4NY6m/Ij4VrI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=oKBEkPdyeFkyO9Uf6/uFOmpexTnnjPaneDiSmkYj8XTnv+05QqAHtvpRs/7qen57GEOT1sSHfFUF5cIQGcj8JOarlw3r26w0zDA8E+Yh9wZt6XoZegThzDeP+WuL5nrbxFq98tjRYr9UUP3BYOQ3OnCKL+NPmbAm5r4O70Z1dsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-7eb50e42c6aso692957339f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 21:20:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718166031; x=1718770831;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dnEcZQSlSSfWGLe3U4JPeUiGUJ9V4peTlbScVRNrxNs=;
+        b=dQXuahvC+UVfK992ji0OrFdIveGPMgAWB8f4EmHAr0Qr40EPxWcu83Yb84Txy5AkzU
+         WSePV00TmVqOgkt6oO8u9WxTpkae6/3z4sw5AdHkhunk+GpbaitzQBc5mirrBtTeOikE
+         zt/bnb3spjgIcOVKlIMvEtchElyVZbukA3Sh9kFChGocOZPxAwppuwTDA5R9tqxBQl00
+         PnR9HWPdBMri2Jwg+AF2wQw6zWVSau8qirIIDtTzN+hYrt057uQxS1p6ZpX08JY9QMp1
+         lrukS9m84K+evABHZ9vulplf8Gi8BghfcFPEQ9XMgNf+6YBEZvK+F1tMwU+D15v4KgR/
+         x3Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCWOpf/tu+or8WQIh6Dj01NPpMZ3vZdTVqaa24+Hoiaq3zv6IGzDYYCT8irG+Kb4UVPlPiR7twOaqER/60DyxevZZdcbzTHwOChgpuyI
+X-Gm-Message-State: AOJu0Yy3Ap1SzP9FiNaUf7rBrcWnb/k+yCyu51F/LA3J6rv8vnunBGyF
+	u1HyroDHkNvuTPb5bf3SFeXrDNreT/Lzf3wOThck70d7H8n+5z7vC1OVc053vVIVajLBqqxRDqU
+	/q1isgmf5u3IzF4Sb8ro8XME9FTfbiqwWk3Y66gataGDSSg82CNuReTI=
+X-Google-Smtp-Source: AGHT+IFkTHvhhUdoUr2ZTibKNN6lcj7J6RVdaWsARGNYjEPc/B+AzfjC6+2yOQ4dNQPTLPLLJ81bK6hiZ5Ht25sDs/lEC7M/Z4TX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240611093127.90210-5-andy.shevchenko@gmail.com>
+X-Received: by 2002:a05:6638:8414:b0:4b9:13c9:b0fb with SMTP id
+ 8926c6da1cb9f-4b93eef52camr57346173.5.1718166031186; Tue, 11 Jun 2024
+ 21:20:31 -0700 (PDT)
+Date: Tue, 11 Jun 2024 21:20:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f45085061aa9b37e@google.com>
+Subject: [syzbot] [bluetooth?] [usb?] BUG: soft lockup in hci_cmd_timeout
+From: syzbot <syzbot+1b2abad17596ad03dcff@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, luiz.dentz@gmail.com, 
+	marcel@holtmann.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Andy,
+Hello,
 
-kernel test robot noticed the following build warnings:
+syzbot found the following issue on:
 
-[auto build test WARNING on linusw-pinctrl/devel]
-[also build test WARNING on linusw-pinctrl/for-next next-20240611]
-[cannot apply to linus/master v6.10-rc3]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+HEAD commit:    8867bbd4a056 mm: arm64: Fix the out-of-bounds issue in con..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=112ad20a980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3b4350cf56c61c80
+dashboard link: https://syzkaller.appspot.com/bug?extid=1b2abad17596ad03dcff
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1112d2ce980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c37286980000
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-nuvoton-Convert-to-use-struct-pingroup-and-PINCTRL_PINGROUP/20240611-173545
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20240611093127.90210-5-andy.shevchenko%40gmail.com
-patch subject: [PATCH v1 4/4] pinctrl: nuvoton: Reduce use of OF-specific APIs
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240612/202406121152.f2DLL871-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240612/202406121152.f2DLL871-lkp@intel.com/reproduce)
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/6ea21f50498b/disk-8867bbd4.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e2fed09364aa/vmlinux-8867bbd4.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4860173c7a18/Image-8867bbd4.gz.xz
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406121152.f2DLL871-lkp@intel.com/
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1b2abad17596ad03dcff@syzkaller.appspotmail.com
 
-All warnings (new ones prefixed by >>):
+cdc_wdm 1-1:1.0: nonzero urb status received: -71
+cdc_wdm 1-1:1.0: wdm_int_callback - 0 bytes
+cdc_wdm 1-1:1.0: nonzero urb status received: -71
+cdc_wdm 1-1:1.0: wdm_int_callback - 0 bytes
+watchdog: BUG: soft lockup - CPU#0 stuck for 27s! [kworker/u9:2:6293]
+CPU#0 Utilization every 4s during lockup:
+	#1:  97% system,	  1% softirq,	  4% hardirq,	  0% idle
+	#2:  98% system,	  1% softirq,	  3% hardirq,	  0% idle
+	#3:  97% system,	  0% softirq,	  3% hardirq,	  0% idle
+	#4:  98% system,	  1% softirq,	  3% hardirq,	  0% idle
+	#5:  98% system,	  1% softirq,	  3% hardirq,	  0% idle
+Modules linked in:
+irq event stamp: 150196
+hardirqs last  enabled at (150195): [<ffff80008037bc00>] console_emit_next_record kernel/printk/printk.c:2935 [inline]
+hardirqs last  enabled at (150195): [<ffff80008037bc00>] console_flush_all+0x650/0xb74 kernel/printk/printk.c:2994
+hardirqs last disabled at (150196): [<ffff80008af10b00>] __el1_irq arch/arm64/kernel/entry-common.c:533 [inline]
+hardirqs last disabled at (150196): [<ffff80008af10b00>] el1_interrupt+0x24/0x68 arch/arm64/kernel/entry-common.c:551
+softirqs last  enabled at (150190): [<ffff8000801ea530>] softirq_handle_end kernel/softirq.c:400 [inline]
+softirqs last  enabled at (150190): [<ffff8000801ea530>] handle_softirqs+0xa60/0xc34 kernel/softirq.c:582
+softirqs last disabled at (150185): [<ffff800080020de8>] __do_softirq+0x14/0x20 kernel/softirq.c:588
+CPU: 0 PID: 6293 Comm: kworker/u9:2 Tainted: G        W          6.10.0-rc2-syzkaller-g8867bbd4a056 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+Workqueue: hci0 hci_cmd_timeout
+pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : __daif_local_irq_restore arch/arm64/include/asm/irqflags.h:176 [inline]
+pc : arch_local_irq_restore arch/arm64/include/asm/irqflags.h:195 [inline]
+pc : console_emit_next_record kernel/printk/printk.c:2935 [inline]
+pc : console_flush_all+0x67c/0xb74 kernel/printk/printk.c:2994
+lr : console_emit_next_record kernel/printk/printk.c:2935 [inline]
+lr : console_flush_all+0x678/0xb74 kernel/printk/printk.c:2994
+sp : ffff8000993f7360
+x29: ffff8000993f7460 x28: ffff8000993f7510 x27: 0000000000000001
+x26: ffff80009090b530 x25: ffff80009090b520 x24: dfff800000000000
+x23: 1ffff000121216af x22: dfff800000000000 x21: ffff80009090b578
+x20: 0000000000000000 x19: 00000000000000c0 x18: ffff8000993f7298
+x17: 6965636572207375 x16: ffff80008033878c x15: 0000000000000001
+x14: 1ffff00011e379c8 x13: 0000000000000000 x12: 0000000000000003
+x11: 0000000000000001 x10: 0000000000ff0100 x9 : 0000000000000000
+x8 : ffff0000d3a39e40 x7 : ffff800080381d44 x6 : 0000000000000000
+x5 : 0000000000000001 x4 : 0000000000000001 x3 : 0000000000000000
+x2 : 0000000000000006 x1 : 0000000000000080 x0 : 0000000000000000
+Call trace:
+ __daif_local_irq_restore arch/arm64/include/asm/irqflags.h:175 [inline]
+ arch_local_irq_restore arch/arm64/include/asm/irqflags.h:195 [inline]
+ console_emit_next_record kernel/printk/printk.c:2935 [inline]
+ console_flush_all+0x67c/0xb74 kernel/printk/printk.c:2994
+ console_unlock+0xec/0x3d4 kernel/printk/printk.c:3063
+ vprintk_emit+0x1ec/0x350 kernel/printk/printk.c:2345
+ vprintk_default+0xa0/0xe4 kernel/printk/printk.c:2360
+ vprintk+0x200/0x2d4 kernel/printk/printk_safe.c:45
+ _printk+0xdc/0x128 kernel/printk/printk.c:2370
+ bt_err+0xfc/0x144 net/bluetooth/lib.c:296
+ hci_cmd_timeout+0xd8/0x1cc net/bluetooth/hci_core.c:1528
+ process_one_work+0x7b0/0x15e8 kernel/workqueue.c:3231
+ process_scheduled_works kernel/workqueue.c:3312 [inline]
+ worker_thread+0x938/0xef4 kernel/workqueue.c:3393
+ kthread+0x288/0x310 kernel/kthread.c:389
+ ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W          6.10.0-rc2-syzkaller-g8867bbd4a056 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : arch_local_irq_enable+0x8/0xc arch/arm64/include/asm/irqflags.h:50
+lr : default_idle_call+0xf8/0x128 kernel/sched/idle.c:124
+sp : ffff800093e97d10
+x29: ffff800093e97d10 x28: dfff800000000000 x27: 1ffff000127d2fb0
+x26: ffff80008efed000 x25: 0000000000000000 x24: 0000000000000002
+x23: 1ffff00011dfdaad x22: ffff80008efed568 x21: 0000000000000000
+x20: ffff0000c1b70000 x19: ffff8000802e6e08 x18: 1fffe000367b6bde
+x17: ffff80008efed000 x16: ffff8000802e66cc x15: 0000000000000001
+x14: 1fffe000367b8941 x13: 0000000000000000 x12: 0000000000000003
+x11: 0000000000000001 x10: 0000000000000003 x9 : 0000000000000000
+x8 : 00000000000b17a9 x7 : ffff80008047f238 x6 : 0000000000000000
+x5 : 0000000000000001 x4 : 0000000000000001 x3 : ffff80008af14fe8
+x2 : 0000000000000000 x1 : ffff80008b0900a0 x0 : ffff800124e80000
+Call trace:
+ __daif_local_irq_enable arch/arm64/include/asm/irqflags.h:26 [inline]
+ arch_local_irq_enable+0x8/0xc arch/arm64/include/asm/irqflags.h:48
+ cpuidle_idle_call kernel/sched/idle.c:191 [inline]
+ do_idle+0x1f0/0x4e4 kernel/sched/idle.c:332
+ cpu_startup_entry+0x5c/0x74 kernel/sched/idle.c:430
+ secondary_start_kernel+0x1bc/0x1e4 arch/arm64/kernel/smp.c:279
+ __secondary_switched+0xb8/0xbc arch/arm64/kernel/head.S:417
 
-   drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c: In function 'npcm7xx_gpio_of':
->> drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c:1833:25: warning: unused variable 'res' [-Wunused-variable]
-    1833 |         struct resource res;
-         |                         ^~~
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-vim +/res +1833 drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1829  
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1830  static int npcm7xx_gpio_of(struct npcm7xx_pinctrl *pctrl)
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1831  {
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1832  	int ret = -ENXIO;
-3b588e43ee5c7a Tomer Maimon        2018-08-08 @1833  	struct resource res;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1834  	struct device *dev = pctrl->dev;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1835  	struct fwnode_reference_args args;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1836  	struct fwnode_handle *child;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1837  	int id = 0;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1838  
-0173ce55e50800 Andy Shevchenko     2022-04-01  1839  	for_each_gpiochip_node(dev, child) {
-7123707f39ae24 Andy Shevchenko     2024-06-11  1840  		pctrl->gpio_bank[id].base = fwnode_iomap(child, 0);
-ad64639417161e Jiasheng Jiang      2023-06-07  1841  		if (!pctrl->gpio_bank[id].base)
-ad64639417161e Jiasheng Jiang      2023-06-07  1842  			return -EINVAL;
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1843  
-0173ce55e50800 Andy Shevchenko     2022-04-01  1844  		ret = bgpio_init(&pctrl->gpio_bank[id].gc, dev, 4,
-0173ce55e50800 Andy Shevchenko     2022-04-01  1845  				 pctrl->gpio_bank[id].base + NPCM7XX_GP_N_DIN,
-0173ce55e50800 Andy Shevchenko     2022-04-01  1846  				 pctrl->gpio_bank[id].base + NPCM7XX_GP_N_DOUT,
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1847  				 NULL,
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1848  				 NULL,
-0173ce55e50800 Andy Shevchenko     2022-04-01  1849  				 pctrl->gpio_bank[id].base + NPCM7XX_GP_N_IEM,
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1850  				 BGPIOF_READ_OUTPUT_REG_SET);
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1851  		if (ret) {
-0173ce55e50800 Andy Shevchenko     2022-04-01  1852  			dev_err(dev, "bgpio_init() failed\n");
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1853  			return ret;
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1854  		}
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1855  
-0173ce55e50800 Andy Shevchenko     2022-04-01  1856  		ret = fwnode_property_get_reference_args(child, "gpio-ranges", NULL, 3, 0, &args);
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1857  		if (ret < 0) {
-0173ce55e50800 Andy Shevchenko     2022-04-01  1858  			dev_err(dev, "gpio-ranges fail for GPIO bank %u\n", id);
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1859  			return ret;
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1860  		}
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1861  
-7123707f39ae24 Andy Shevchenko     2024-06-11  1862  		ret = fwnode_irq_get(child, 0);
-e804944dcc7799 Krzysztof Kozlowski 2022-04-23  1863  		if (!ret) {
-0173ce55e50800 Andy Shevchenko     2022-04-01  1864  			dev_err(dev, "No IRQ for GPIO bank %u\n", id);
-e804944dcc7799 Krzysztof Kozlowski 2022-04-23  1865  			return -EINVAL;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1866  		}
-0173ce55e50800 Andy Shevchenko     2022-04-01  1867  		pctrl->gpio_bank[id].irq = ret;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1868  		pctrl->gpio_bank[id].irqbase = id * NPCM7XX_GPIO_PER_BANK;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1869  		pctrl->gpio_bank[id].pinctrl_id = args.args[0];
-0173ce55e50800 Andy Shevchenko     2022-04-01  1870  		pctrl->gpio_bank[id].gc.base = args.args[1];
-0173ce55e50800 Andy Shevchenko     2022-04-01  1871  		pctrl->gpio_bank[id].gc.ngpio = args.args[2];
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1872  		pctrl->gpio_bank[id].gc.owner = THIS_MODULE;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1873  		pctrl->gpio_bank[id].gc.parent = dev;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1874  		pctrl->gpio_bank[id].gc.fwnode = child;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1875  		pctrl->gpio_bank[id].gc.label = devm_kasprintf(dev, GFP_KERNEL, "%pfw", child);
-4be1eaf322f07b Nicholas Mc Guire   2018-11-23  1876  		if (pctrl->gpio_bank[id].gc.label == NULL)
-4be1eaf322f07b Nicholas Mc Guire   2018-11-23  1877  			return -ENOMEM;
-4be1eaf322f07b Nicholas Mc Guire   2018-11-23  1878  
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1879  		pctrl->gpio_bank[id].gc.dbg_show = npcmgpio_dbg_show;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1880  		pctrl->gpio_bank[id].direction_input = pctrl->gpio_bank[id].gc.direction_input;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1881  		pctrl->gpio_bank[id].gc.direction_input = npcmgpio_direction_input;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1882  		pctrl->gpio_bank[id].direction_output = pctrl->gpio_bank[id].gc.direction_output;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1883  		pctrl->gpio_bank[id].gc.direction_output = npcmgpio_direction_output;
-0173ce55e50800 Andy Shevchenko     2022-04-01  1884  		pctrl->gpio_bank[id].request = pctrl->gpio_bank[id].gc.request;
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1885  		pctrl->gpio_bank[id].gc.request = npcmgpio_gpio_request;
-de38bdbe011b31 Bartosz Golaszewski 2023-10-13  1886  		pctrl->gpio_bank[id].gc.free = pinctrl_gpio_free;
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1887  		id++;
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1888  	}
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1889  
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1890  	pctrl->bank_num = id;
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1891  	return ret;
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1892  }
-3b588e43ee5c7a Tomer Maimon        2018-08-08  1893  
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
