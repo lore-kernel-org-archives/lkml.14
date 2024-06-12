@@ -1,155 +1,136 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C5D63A
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 04:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D4163A
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 04:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718166690; cv=none; b=BLvdWf4qXm+DAqxC7gt3Q5HVgfy1J5p3iTyh+iynSaHPpTOypYGIR2vh3Tk2SUmmBEtj1Fbrd53iaatbZI339gewQXwD6DO90AyZg1H9OSZ0nJZT21yIOTrwGtnJeMG8WdGxn955hCAePc465XFIBGIxCdFiHu6I/RGwTNt7v/w=
+	t=1718166802; cv=none; b=D3/ib2TD0zMsxWuOXzEfXq8fBRFhYtXeIpJZTjqbcwbOOmTcs8y1Ya4oZPPuWhqSlUrBPrwhp8+txbYXtgzPxY7jt+LIT+6E/vdFC6MEwL//Fp4COcLI0BDu+ZfSw3GvKvU49XKuWDjAyjdPdYL+BRf4W9xCcSedquEoPqsV+kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718166690; c=relaxed/simple;
-	bh=hSnJiEgR5nMe+pD1oPm3BPIx6ljI+CeVh/tUDiPt7w4=;
+	s=arc-20240116; t=1718166802; c=relaxed/simple;
+	bh=oKOMiTUMh2lH/esnQN6AZVJ8ULwr850HU8/bFBOc1G4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TGZb0Ar8aXrY04WO4hxNdRSbXOTXwiPygjMltMIpv/WBHyYCrFJWod3u6u6HWlBpKd5i7h/JN96K0l7pH3HUKn/MDCQCvFkANh+R1Z1EEfF91sn6McLpxE6akLjOfz/m9lR+H7W9AbQ51wYHTajTd+9OzH2J8tkeUCrBDcJ4mJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JywGFy1/; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=f1ajV1kBKfl6Cudrz6VZSHSH4h62FN0D1Eq0UbdzscIUSkGEW1HlsZCVfU/TC0ZMrWcIiJJx3S9Ggmh1N2fApI4VTx5oJ1IvL2fq/hnWOn9TYWV/gWUJfVfWxI/dhvcL+a8UAy1HHcwUuMyZSgBMvTAEp2XEDZF/chPN5vStwsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rts1nzaL; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JywGFy1/"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7041a7d4beeso4005629b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 21:31:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rts1nzaL"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f4a5344ec7so4342345ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 21:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718166689; x=1718771489; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=26yCayUAzc76t5ERK7B6b8gwpGmJll8Ij+c08Bg2GMU=;
-        b=JywGFy1/ZJMdXblpUDu3vfbAHc41BGpW3SFtL5fAaPkpgADXKjklyV8/QSAf5MZrYl
-         awRCMjXfwK8enCCLyMgvArnetTGIFCIvYP1w9RqvYYqSWPuYrFejFCfL2Ut+twi2egRp
-         t5QAarNFZxXMKlNn/2heBWSKSqGE38tMpSOi8=
+        d=linaro.org; s=google; t=1718166800; x=1718771600; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lFT573xAr2xtznmal0QSwzPFRJXGMmZiiu4vvGuLRvE=;
+        b=rts1nzaLBTcuHma9FzL6zT0302Zo/xRoK3j+c+YQo95UvVzF5pVMkKDp408KuI6RPb
+         oxswPss2uVooM/Hz2yyuesAkK+Vtre6DjNCCi2j11qo2ecT3KwogsEM28QAF25G0fmPC
+         kKBX3WZJR/bQryVBYDEbtZsC7RrMJQQJEzDn8lCOhTMVh9w10VnJd4X28iYtyXta5B8+
+         YQwZKd1D3oPLO6biHaiyFDyvs3LAdN3vqPvxBQpwliCbmkNCwrJ23SIPUqyffh2FfJgc
+         ciUvYMBdsHbxyfac8vfPkhrD8GOXNn29Af6z7gi3kWwl8GFDDkOGJykwz7ukgEdTpTlA
+         79SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718166689; x=1718771489;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=26yCayUAzc76t5ERK7B6b8gwpGmJll8Ij+c08Bg2GMU=;
-        b=tmH9WabuvYM3NnbZOeiz6GvXHfntpNDX1oZ6Cmjyi8vbB8GFjp1h/7Ei0I1W65gZb7
-         9DURN8uXdf7y19tmObPjuj/u3FwF2TZYl06+4G4+743+GkJaDNJcrOShXYPvMotbYOwA
-         GIVPRak0kVK/98c9kYuZLbIj42g+Q7P4V49GPot7010B2hwB4qVdR6DmBJ8vouE+IKuA
-         +K8669999WQWCknAvcd87jUtTgxMXKkaO00FfUjPIIE7fQTzbEoucClbvGCRIW45R86U
-         oG5TFMP8joitZN3vn5uSxXlhZYyvKb9HKWWogpkVZslCSsIntiGbj+saeZqjHUam0Js4
-         Gq1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWqStngyn+dZQ02DLafJJOVQyjpwhqA2vSMO3EK0zGtd0DKbBr0KPKn0bTd3FVf+nd+e0ewyIaGjIrEPJOJH9JQLrEi7ryroljJ+qhJ
-X-Gm-Message-State: AOJu0YxsArvP4H7Dzg3fqWjyx/i0me1+VpONEJpxL8bWLuTj7mS9s2+u
-	nQtwVyJO3PqBf4qZDhgjOrhquKAbyUVV687p/ZAucXeEAtcZcjKwZnYjVhKoKw==
-X-Google-Smtp-Source: AGHT+IEDNIroERFQYahAEyUp89r/l251ag7KXTZkZl5/HBfB+fwRsfZPqR83QoYb4oKa3SSk62X7hQ==
-X-Received: by 2002:a05:6a21:81a2:b0:1b2:2e3e:42dd with SMTP id adf61e73a8af0-1b8a9be9bb0mr745623637.34.1718166688682;
-        Tue, 11 Jun 2024 21:31:28 -0700 (PDT)
-Received: from chromium.org (174.71.80.34.bc.googleusercontent.com. [34.80.71.174])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f74179d0basm11631455ad.122.2024.06.11.21.31.24
+        d=1e100.net; s=20230601; t=1718166800; x=1718771600;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lFT573xAr2xtznmal0QSwzPFRJXGMmZiiu4vvGuLRvE=;
+        b=Sf4QrF5qBiGf92BKCvq8SBMMFz0HAp1LKnqR5xWgG266nNxaYF/bua8ZiIdhGofiFD
+         iOw56nP2uec4w9i57Z+ItEpybFwGAiBO+BY4OmZRu/7+91/i26/9mol7ooKgif27HKJc
+         cglFEiVYs/L7x570mBzGPfO9hh7C/9P56jGU3GclYLmjWlMmlKe298Z71EGm6wA3N4vI
+         DCTqSxSgB0OY3zTOXWFADmen2hp+bdFkaOYc6nqMzd6ikJNh/r+ovy4Rk+2L+RELTjpv
+         gcW+yNYvEtaArUneb0YsdlOflLMXmytw+yf4cutVtM5y4LqimqUIwrO1mlHhw9RpBR2J
+         v/6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXlqrmiOqLMckn8csudCotyGqeQmaa47GG8dGrQYpEWwF23eTN3JFFAuwIx9vSfOI4w6aXzL8ZA7snyuilO8eq5Hi0knjYEATJ9GPAb
+X-Gm-Message-State: AOJu0YzrlZGcUWBd7d7OZDgPLrH1zJ4GbGz3Y0q71rF2TiIMH7JzcVYk
+	pY8zwYGgdKJagJ6gkvpJOLWWxtygP7jMRDTZBvCtRGqwwNshk+cr9NioStKtzQ==
+X-Google-Smtp-Source: AGHT+IGjgzQJMzZ2YsUlBKZq5nu9pQSdHRAY35QBtjOBYDL5ZoL+j3Fi8tpi16/g1dFdclnegZjxZQ==
+X-Received: by 2002:a17:902:6f08:b0:1f6:e338:2a6 with SMTP id d9443c01a7336-1f83b19c24bmr9564885ad.23.1718166800089;
+        Tue, 11 Jun 2024 21:33:20 -0700 (PDT)
+Received: from thinkpad ([120.60.129.29])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6ee4ad6a5sm76284795ad.151.2024.06.11.21.33.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jun 2024 21:31:28 -0700 (PDT)
-Date: Wed, 12 Jun 2024 13:31:22 +0900
-From: Tomasz Figa <tfiga@chromium.org>
-To: Yunfei Dong <yunfei.dong@mediatek.com>
-Cc: Jeffrey Kardatzke <jkardatzke@google.com>, 
-	=?utf-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4=?= Prado <nfraprado@collabora.com>, Nathan Hebert <nhebert@chromium.org>, 
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
-	Sebastian Fricke <sebastian.fricke@collabora.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Chen-Yu Tsai <wenst@chromium.org>, 
-	Yong Wu <yong.wu@mediatek.com>, Hsin-Yi Wang <hsinyi@chromium.org>, 
-	Fritz Koenig <frkoenig@chromium.org>, Daniel Vetter <daniel@ffwll.ch>, 
-	Steve Cho <stevecho@chromium.org>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
-	"T . J . Mercier" <tjmercier@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v6,03/24] v4l2: verify restricted dmabufs are used in
- restricted queue
-Message-ID: <rw6dkzasaz4lnvtmxkxlkxte5nvphpjixigjouvjkpctscpdla@bheblt7kmj4y>
-References: <20240516122102.16379-1-yunfei.dong@mediatek.com>
- <20240516122102.16379-4-yunfei.dong@mediatek.com>
+        Tue, 11 Jun 2024 21:33:19 -0700 (PDT)
+Date: Wed, 12 Jun 2024 10:03:14 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Slark Xiao <slark_xiao@163.com>
+Cc: loic.poulain@linaro.org, quic_qianyu@quicinc.com, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] bus: mhi: host: Import link_id item
+Message-ID: <20240612043314.GB2645@thinkpad>
+References: <20240607100114.452979-1-slark_xiao@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240516122102.16379-4-yunfei.dong@mediatek.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240607100114.452979-1-slark_xiao@163.com>
 
-On Thu, May 16, 2024 at 08:20:41PM +0800, Yunfei Dong wrote:
-> From: Jeffrey Kardatzke <jkardatzke@google.com>
+On Fri, Jun 07, 2024 at 06:01:14PM +0800, Slark Xiao wrote:
+> For SDX72 MBIM mode, it starts data mux id from 112 instead of 0.
+> This would lead to device can't ping outside successfully.
+> Also MBIM side would report "bad packet session (112)".
+> So we add a link id default value for SDX72.
 > 
-> Verfies in the dmabuf implementations that if the restricted memory
-> flag is set for a queue that the dmabuf submitted to the queue is
-> unmappable.
-> 
-> Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
-> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+
+link_id is WWAN specific. But what you are passing is essentially 'mux_id', so
+just use the actual name.
+
+> Signed-off-by: Slark Xiao <slark_xiao@163.com>
 > ---
->  drivers/media/common/videobuf2/videobuf2-dma-contig.c | 8 ++++++++
->  drivers/media/common/videobuf2/videobuf2-dma-sg.c     | 8 ++++++++
->  2 files changed, 16 insertions(+)
+>  drivers/bus/mhi/host/pci_generic.c | 3 +++
+>  include/linux/mhi.h                | 1 +
+>  2 files changed, 4 insertions(+)
 > 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> index 3d4fd4ef5310..35a3c1c01eae 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> @@ -710,6 +710,14 @@ static int vb2_dc_map_dmabuf(void *mem_priv)
->  		return -EINVAL;
->  	}
+> diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+> index 0b483c7c76a1..1f9de2730766 100644
+> --- a/drivers/bus/mhi/host/pci_generic.c
+> +++ b/drivers/bus/mhi/host/pci_generic.c
+> @@ -53,6 +53,7 @@ struct mhi_pci_dev_info {
+>  	unsigned int dma_data_width;
+>  	unsigned int mru_default;
+>  	bool sideband_wake;
+> +	unsigned int link_default;
+>  };
 >  
-> +	/* Verify the dmabuf is restricted if we are in restricted mode, this is done
-> +	 * by validating there is no page entry for the dmabuf.
-> +	 */
+>  #define MHI_CHANNEL_CONFIG_UL(ch_num, ch_name, el_count, ev_ring) \
+> @@ -469,6 +470,7 @@ static const struct mhi_pci_dev_info mhi_foxconn_sdx72_info = {
+>  	.dma_data_width = 32,
+>  	.mru_default = 32768,
+>  	.sideband_wake = false,
+> +	.link_default = 112,
 
-Kernel coding style [1] defines multi-line comments to start with an empty
-line.
+Just use 'mux_id' here also.
 
-[1] https://www.kernel.org/doc/html/latest/process/coding-style.html#commenting
-
-> +	if (buf->vb->vb2_queue->restricted_mem && !sg_dma_is_restricted(sgt->sgl)) {
-> +		pr_err("restricted queue requires restricted dma_buf");
-> +		return -EINVAL;
-
-This would leak the mapping. We need to unmap the attachment here.
-
-> +	}
-> +
->  	/* checking if dmabuf is big enough to store contiguous chunk */
->  	contig_size = vb2_dc_get_contiguous_size(sgt);
->  	if (contig_size < buf->size) {
-> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> index 6975a71d740f..2399a9c074ba 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> @@ -570,6 +570,14 @@ static int vb2_dma_sg_map_dmabuf(void *mem_priv)
->  		return -EINVAL;
->  	}
+>  };
 >  
-> +	/* Verify the dmabuf is restricted if we are in restricted mode, this is done
-> +	 * by validating there is no page entry for the dmabuf.
-> +	 */
-
-Ditto.
-
-> +	if (buf->vb->vb2_queue->restricted_mem && !sg_dma_is_restricted(sgt->sgl)) {
-> +		pr_err("restricted queue requires restricted dma_buf");
-> +		return -EINVAL;
-
-Ditto.
-
-Best regards,
-Tomasz
-
-> +	}
-> +
->  	buf->dma_sgt = sgt;
->  	buf->vaddr = NULL;
+>  static const struct mhi_channel_config mhi_mv3x_channels[] = {
+> @@ -1035,6 +1037,7 @@ static int mhi_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	mhi_cntrl->runtime_get = mhi_pci_runtime_get;
+>  	mhi_cntrl->runtime_put = mhi_pci_runtime_put;
+>  	mhi_cntrl->mru = info->mru_default;
+> +	mhi_cntrl->link_id = info->link_default;
 >  
-> -- 
-> 2.25.1
-> 
+>  	if (info->edl_trigger)
+>  		mhi_cntrl->edl_trigger = mhi_pci_generic_edl_trigger;
+> diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+> index b573f15762f8..4da10b99c96e 100644
+> --- a/include/linux/mhi.h
+> +++ b/include/linux/mhi.h
+> @@ -445,6 +445,7 @@ struct mhi_controller {
+>  	bool wake_set;
+>  	unsigned long irq_flags;
+>  	u32 mru;
+> +	u32 link_id;
+
+Add kdoc comment.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
