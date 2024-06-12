@@ -1,263 +1,210 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E3E39850
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 03:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498041DFF0;
+	Wed, 12 Jun 2024 03:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718162747; cv=none; b=VTHzY8hAwMcTVy+EfReGZZX11ICBE83mCd00W89ouVicvImi3srr8bDn6bwadSSr4PcLI/QHGxLzJ/7dQFO2V15Fkgi/2Afy/NWw9bwuJBiGnU/RMFZsMuvZXhb8702h+k3iwSfM8oGVGwcNFyDCYKDPlSBIcCnnYBjA7cmsfX0=
+	t=1718162942; cv=none; b=XvT/MI32Vsji8y/oNowHxltHzljyG5dvQh7ldnFRInlKw6QTPNLNFa+COsr9A/inlLjfYDqv6eByqwI3kzgs1JmXDrYgwmDtkipKYbDOgvsRB0bnihqqT00rvodgkeQF0i+l2OzwET2ACAx0DqsA5w7maemtb9nQHWmL/SHAois=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718162747; c=relaxed/simple;
-	bh=f0KrILH3kr7anOUOsJZV2d4WNHNntE524DO1e7OauZQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L4s1RMhTXNEqnyQ/nThZbUaXAYZv+ZDWi3i9mVj8c5ipItXWpcoj+woOLujf0MAE4lALzHQ8hNww2Nu2cq7Ig19eKyB4y1Y7vlSBEA+yIVGC8qj4AEZxh5gQTmSTq5LgqtF7anK0JoOkpgQm+sXiP3BddQqyp5EQeWM3XGrP9+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Gngi8TSq; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1718162942; c=relaxed/simple;
+	bh=dzytYAPA2vntPxLFoQACxn5mDGtGCdAdzSX3DYn4Sy0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QPC8fTD6kj5Hz9We0N1huk7sWeuyNhc9DaAxLHeewxgXJNl8cP8FbqsmK4ofn8jIzUk3ODZIGKHDHIYIrY74cCn6L5OmZoQngX6xBqnWmhwqBCyfsH0v6cDn/FhAOa0llwoevCntiOjUFahv9GVWrqqWOgCLJ/NYITyfYmxRa88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfZ3uEfp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gngi8TSq"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a6f04afcce1so217666866b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 20:25:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718162743; x=1718767543; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zncNPlK1KhFnoHey29Jtt2xNQ8IDNyEFlcKcVKZ1KJU=;
-        b=Gngi8TSqM6aGg5iNumFe+kztKOkUw417aa9HYQFuU8spWl17nlIpyeovqbqxDfJHCA
-         wSrCzgK7G41CAg3ThG/rRy+eoYsK+m+Ia9paBa/3SRlZD5OnLuo6/J2o131MwaZAadL3
-         BABPFQ8hJtvF0nDKN4i0W+pUlO0GPUqJAH14A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718162743; x=1718767543;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zncNPlK1KhFnoHey29Jtt2xNQ8IDNyEFlcKcVKZ1KJU=;
-        b=rKHmsBX4ZojMARcY4mshUrVAQs99WEXUYPpqmZQZcDxpTcTyaDG0n0CtzfeJnCNIdp
-         h8/JUjjObg23AjtoVRc3wra3ExaJwyYPqXm4M0LYqwVua71LKaKRv+14uYXxG/AgCIgF
-         DBxQH0yKMtOYaOU45qMFLzLJPU1NEsi6Vxr0GD3lRBHkMSH37d7rzG2fN+GRWaIEdKnP
-         uv/PhK2ct+i7557qgA3EW1M0t6uKoA5O52ZJlXbz48kdLKMKd/BoLtIUg9zOw9Rb+CX6
-         gEP5MWXvTNDTLK2Ktq+rK8mBVfWD6OukMlorbaPd3iebke3i6FPpYOvEVVDBNoEWGrJF
-         WSSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDxbSxnXTgmHgFtZFuQTNz62I2tX30z49k1GmzseN2xV82eE6bPG1L5uKRwHJJqN81KMmkkHqDncsV9Q/w+13qRtU6SySiBkzMcTiR
-X-Gm-Message-State: AOJu0YzQ1LBiwA+H+8Z5nMVop6I4deFbwZx/vfTh0eAgRDjXVzcIGkv5
-	5rYBRklyDmbsT6lSflV/gb1+EWSBNjGtmz/0Io0EjDrQFWtjDn0O470YFHfc6tdRLqNrDhM2vc/
-	4zw==
-X-Google-Smtp-Source: AGHT+IGYLH8zz2HkIF2MADD01xlAY9mk+nm++MwSIY6QdnntaWYJ8DJXxs6QSRzxVYOdlPRRD5NhcQ==
-X-Received: by 2002:a17:907:7e96:b0:a63:49d3:e1c5 with SMTP id a640c23a62f3a-a6f480191bfmr56813966b.64.1718162743050;
-        Tue, 11 Jun 2024 20:25:43 -0700 (PDT)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f11e6811bsm447833366b.194.2024.06.11.20.25.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 20:25:41 -0700 (PDT)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a6f04afcce1so217663266b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 20:25:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWIhk1SVoOx+zGQD2QJmtRHDWbCx8shUQ0peXJgUxSe7Cq6/rNv8IxheoKiapRC4JBM8214BfdKc6D4/2rG9qh7cinK4RU1LBncboEi
-X-Received: by 2002:a17:906:35cd:b0:a6e:fbe1:d5e1 with SMTP id
- a640c23a62f3a-a6f47f589abmr40566366b.22.1718162741146; Tue, 11 Jun 2024
- 20:25:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfZ3uEfp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D1EEDC32786;
+	Wed, 12 Jun 2024 03:29:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718162941;
+	bh=dzytYAPA2vntPxLFoQACxn5mDGtGCdAdzSX3DYn4Sy0=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=TfZ3uEfp1sH8DRTaiFN3apxLEzXcEDhJjfHsGkQ5VlIoPBxuj6Ms+6iQZtJaPoY0s
+	 gQXyoPncqufuYUTX1IFiR2iQkpGIfre2JTpQL60NhLzwIiyFPLjMik0A9FcpIr7VFC
+	 18qIsLPh2I3TAPFZgcMt1IWHqEyhP54YvGsoks8zRvMYfIlRE4YzS/Ly7/W4i4FFXV
+	 6L6+VfT6odL7ELpbA5J4Je2/q0gjrvBSfa77grZyVdeiCgw1/gd8vFDhz3y7kgWH60
+	 lKLiYEddd8VfYyg10u9eZ7/uPGxQXT5MNWY6/6MYL1cwyy+Kpfbs3JncZBM9masQ5R
+	 atq8xh9UXLY7w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45E6C27C53;
+	Wed, 12 Jun 2024 03:29:01 +0000 (UTC)
+From: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
+Date: Wed, 12 Jun 2024 04:27:17 +0100
+Subject: [PATCH RFC v2] kbuild/x86: Use $(KBUILD_AFLAGS) in Kbuild's
+ version of $(as-instr)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327-guenter-mini-v4-0-49955c198eae@chromium.org>
- <20240327-guenter-mini-v4-1-49955c198eae@chromium.org> <7d06c6e4-c555-4117-a22b-5c614d7f6f8a@xs4all.nl>
- <CAAFQd5A3nzpv531fu6h7thCkxettTSbc3vofPyt7ie8qf6SJcQ@mail.gmail.com> <1976a7c6-6b66-4c4c-9c9c-f41dd8b2bdf3@xs4all.nl>
-In-Reply-To: <1976a7c6-6b66-4c4c-9c9c-f41dd8b2bdf3@xs4all.nl>
-From: Tomasz Figa <tfiga@chromium.org>
-Date: Wed, 12 Jun 2024 12:25:12 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5CDX9mWejD8RTwFfYA7dLmkfpe8Cbddba+KhrsWJR0uzA@mail.gmail.com>
-Message-ID: <CAAFQd5CDX9mWejD8RTwFfYA7dLmkfpe8Cbddba+KhrsWJR0uzA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] media: uvcvideo: stop stream during unregister
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Max Staudt <mstaudt@chromium.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Alan Stern <stern@rowland.harvard.edu>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sean Paul <seanpaul@chromium.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240612-as-instr-opt-wrussq-v2-1-bd950f7eead7@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAJUVaWYC/22OzQrCMBCEX0X27EqTBjWeBMEH8Co9bOO2Ddgfs
+ 7Uqpe9uWjx6nGG+mRlBOHgWOKxGCDx48W0ThV6vwFXUlIz+FjXoRJvEqARJ0DfSB2y7Hl/hKfJ
+ As2eX7jjd6sRAJLvAhX8vrVe4nE+QRTMnYcwDNa6aC2uSnsOcrrz0bfgsFwa1ML819XdtUKjQ2
+ lyRImsLmx7Lmvx949oasmmavuAli9LUAAAA
+To: Borislav Petkov <bp@alien8.de>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+ "H. Peter Anvin" <hpa@zytor.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+ Dmitry Safonov <0x7f454c46@gmail.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718162850; l=6387;
+ i=0x7f454c46@gmail.com; s=20240410; h=from:subject:message-id;
+ bh=mE/MtJBn2tZ2pMC+jU16KAPPWHc/zIAQ99jOTODDD5E=;
+ b=+ml6hQMsHqv7+mqb7hjrBh5lDWB7+8/2dGtaJhoUzvYoMQcYXrueH858HPd3C/nuBRFU8VOueaEV
+ n5HA69KaAboO5X0CfNO40u34XTuavXrpBuLRgEQvfP5TjJX+IPce
+X-Developer-Key: i=0x7f454c46@gmail.com; a=ed25519;
+ pk=cFSWovqtkx0HrT5O9jFCEC/Cef4DY8a2FPeqP4THeZQ=
+X-Endpoint-Received: by B4 Relay for 0x7f454c46@gmail.com/20240410 with
+ auth_id=152
+X-Original-From: Dmitry Safonov <0x7f454c46@gmail.com>
+Reply-To: 0x7f454c46@gmail.com
 
-On Thu, Jun 6, 2024 at 8:58=E2=80=AFPM Hans Verkuil <hverkuil-cisco@xs4all.=
-nl> wrote:
->
-> On 06/06/2024 12:04, Tomasz Figa wrote:
-> > Hi Hans,
-> >
-> > On Tue, May 28, 2024 at 4:55=E2=80=AFPM Hans Verkuil <hverkuil-cisco@xs=
-4all.nl> wrote:
-> >>
-> >> On 27/03/2024 09:24, Ricardo Ribalda wrote:
-> >>> uvc_unregister_video() can be called asynchronously from
-> >>> uvc_disconnect(). If the device is still streaming when that happens,=
- a
-> >>> plethora of race conditions can happen.
-> >>>
-> >>> Make sure that the device has stopped streaming before exiting this
-> >>> function.
-> >>>
-> >>> If the user still holds handles to the driver's file descriptors, any
-> >>> ioctl will return -ENODEV from the v4l2 core.
-> >>>
-> >>> This change make uvc more consistent with the rest of the v4l2 driver=
-s
-> >>> using the vb2_fop_* and vb2_ioctl_* helpers.
-> >>>
-> >>> Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> >>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> >>> ---
-> >>>  drivers/media/usb/uvc/uvc_driver.c | 11 +++++++++++
-> >>>  1 file changed, 11 insertions(+)
-> >>>
-> >>> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/u=
-vc/uvc_driver.c
-> >>> index bbd90123a4e76..17fc945c8deb6 100644
-> >>> --- a/drivers/media/usb/uvc/uvc_driver.c
-> >>> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> >>> @@ -1911,8 +1911,19 @@ static void uvc_unregister_video(struct uvc_de=
-vice *dev)
-> >>>               if (!video_is_registered(&stream->vdev))
-> >>>                       continue;
-> >>>
-> >>> +             /*
-> >>> +              * Serialize other access to the stream.
-> >>> +              */
-> >>> +             mutex_lock(&stream->mutex);
-> >>> +             uvc_queue_streamoff(&stream->queue, stream->type);
-> >>>               video_unregister_device(&stream->vdev);
-> >>>               video_unregister_device(&stream->meta.vdev);
-> >>> +             mutex_unlock(&stream->mutex);
-> >>
-> >> This sequence isn't fool proof. You have to follow the same sequence a=
-s
-> >> vb2_video_unregister_device(): take a reference to the video device,
-> >> then unregister, then take the stream mutex and call vb2_queue_release
-> >> for each queue. Finally unlock the mutex and call put_device.
-> >
-> > vb2_queue_release() will run when the userspace releases the file
-> > handle that owns the vb2 queue [1], so we shouldn't really need to
-> > call it here.
-> >
-> > [1] https://elixir.bootlin.com/linux/v6.9.3/source/drivers/media/usb/uv=
-c/uvc_v4l2.c#L655
-> >
-> >>
-> >> Doing the video_unregister_device first ensures no new ioctls can be
-> >> called on that device node. Taking the mutex ensures that any still
-> >> running ioctls will finish (since it will sleep until they release the
-> >> mutex), and then you can release the queue.
-> >
-> > Actually isn't the only missing thing in the code basically ensuring
-> > that any ioctl currently being executed finishes? Why is the streamoff
-> > or queue release needed?
->
-> See below...
->
-> >
-> > Best regards,
-> > Tomasz
-> >
-> >>
-> >> This does require that you call get_device before calling video_unregi=
-ster_device,
-> >> otherwise everything might be released at that point.
-> >>
-> >> Instead of vb2_queue_release() you might have to call uvc_queue_stream=
-off,
-> >> but note that there are two queues here: video and meta. The code abov=
-e
-> >> just calls streamoff for the video device.
-> >>
-> >> For the meta device I think you can just use vb2_video_unregister_devi=
-ce()
-> >> directly, since that sets vdev->queue and vdev->queue.lock to the corr=
-ect
-> >> values. That would just leave the video device where you need to do th=
-is
-> >> manually.
->
-> Ideally uvc should just use centralized locking (i.e. set vdev->queue.loc=
-k)
-> for the video node, just like it does for the meta device.
->
-> If that was the case, then it can just call vb2_video_unregister_device()=
-.
-> The vb2_video_unregister_device helper was added to ensure that no ioctls
-> are running, and then streaming is stopped and the queue is released.
+From: Dmitry Safonov <0x7f454c46@gmail.com>
 
-Yes, it would be as simple as that if it used standard locking, but
-since it does its own stuff, I'm not very confident that the same
-logic as in vb2_video_unregister_device() would work fine for it as
-well.
+At Arista some products use compatible 32-bit userspace running on x86.
+As a part of disto build for ia32 it also compiles the 64-bit kernel.
+While the toolchain for the kernel build is yet the same, with 64-bit gcc:
+> / @Bru-na-Boinne% file /usr/bin/gcc-11
+> /usr/bin/gcc-11: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6571ad50d8f12eece053f1bac7a95a2c767f32c9, for GNU/Linux 3.2.0, stripped
 
->
-> While it is true that the queue is released automatically when the last u=
-ser
-> closes the filehandle, it can get complicated if the application has a fi=
-le
-> handle open when the device is unregistered (usually due to it being unpl=
-ugged).
-> Without that call to vb2_video_unregister_device() the queue is still act=
-ive,
-> and especially if you also have subdevices that are still in streaming mo=
-de,
-> it is hard to make sure nothing is still using the hardware.
->
-> vb2_video_unregister_device() provides a clean way of ensuring that when =
-the
-> device is unregistered all streaming is stopped and the vb2 queue is rele=
-ased.
->
-> After that the only file operation that can be used without returning an =
-error
-> is close().
->
-> Since uvc uses its own locking for the video device, it has to do this ma=
-nually.
-> It is probably enough to ensure no ioctls are running since uvc doesn't h=
-ave
-> subdevices, but I think it makes sense to stop streaming and release the =
-queue
-> when unregistering the device, it is weird to postpone that until the las=
-t fh
-> is closed.
+It seems that gcc is being smart and detects that it's running in
+a 32-bit container (personality flag? 32-bit mmap base? something else
+inherited post-exec?  haven't yet figured it out) and by default tries
+to build 32-bit binaries.
 
-My comment comes from a concern that releasing objects and changing
-internal state in the release callback may break some assumptions in
-the operations that will follow once the lock is released, e.g.
-close(), leading to some kind of double frees or dereferencing freed
-objects. Therefore just preventing new opens and setting the
-video_device as unregistered could be potentially a safer option until
-the driver is converted to standard locking. (Is there even a plan to
-do that?)
+That results in a failing toolchain check:
+> / @Bru-na-Boinne% printf "%b\n" "wrussq %rax, (%rbx)" | /usr/bin/gcc-11 -Wa,--fatal-warnings -c -x assembler-with-cpp -o /dev/null -
+> <stdin>: Assembler messages:
+> <stdin>:1: Error: `wrussq' is only supported in 64-bit mode
+
+Which passes when -m64 is directly specify for the build check:
+> / @Bru-na-Boinne% printf "%b\n" "wrussq %rax, (%rbx)" | /usr/bin/gcc-11 -m64 -Wa,--fatal-warnings -c -x assembler-with-cpp -o /dev/null -
+> / @Bru-na-Boinne% echo $?
+> 0
+
+As a result, kbuild produces different value for CONFIG_AS_WRUSS
+for native 64-bit containers and ia32 containers with 64-bit gcc,
+which produces different kernels with enabled/disabled
+CONFIG_X86_USER_SHADOW_STACK.
+
+arch/x86/Makefile already properly defines KBUILD_AFLAGS += -m64,
+which is luckly already available at the point of toolchain check
+in arch/x86/Kconfig.assembler
+
+By hacking around Kbuild variable the following way:
+> --- a/scripts/Kconfig.include
+> +++ b/scripts/Kconfig.include
+> @@ -13,7 +13,8 @@ left_paren  := (
+>
+>  # $(if-success,<command>,<then>,<else>)
+>  # Return <then> if <command> exits with 0, <else> otherwise.
+> -if-success = $(shell,{ $(1); } >/dev/null 2>&1 && echo "$(2)" || echo "$(3)")
+> +if-success = $(shell,echo '$(1)' 1>&2;{ $(1); } >/dev/null 2>&1 && echo "$(2)" || echo "$(3)")
+
+I got the following output for the toolchain check, before:
+> linux @Bru-na-Boinne% make ARCH=x86_64 oldconfig V=1 2>&1 | grep wrus
+> printf "%b\n" "wrussq %rax,(%rbx)" | gcc  -c -x assembler-with-cpp -o /dev/null -
+
+and after:
+> linux @Bru-na-Boinne% make ARCH=x86_64 oldconfig V=1 2>&1 | grep wrus
+> printf "%b\n" "wrussq %rax,(%rbx)" | gcc -D__ASSEMBLY__ -fno-PIE -m64 -c -x assembler-with-cpp -o /dev/null -
+
+Which seems appropriate to me.
+This also reflects the existing definition in scripts/Makefile.compiler
+for $(as-instr) that already has $(KBUILD_AFLAGS).
+
+In order to eliminate a possible circular dependency of
+Kconfig => arch/.../Makefile => Kconfig => ...
+which exist i.e. in arm64/Makefile for KASAN_SHADOW_SCALE_SHIFT that
+depends on CONFIG_KASAH_SW_TAGS and CONFIG_KASAN_GENERIC kconfigs,
+ignore KBUILD_AFLAGS difference in auto.conf.cmd as it is expected that
+the variable will differ between fist and later Makefile passes.
+Use that in Kconfig toolchain checks.
+
+Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
+---
+Changes in v2:
+- I made a mistake in version 1 by not testing it on a clean tree.
+  Which passed on an existing "dirty" tree, but went into build
+  busy-loop over a fresh clean kernel tree. With a little debug,
+  I found out that the reason was subdir-asflags-y in scripts/.
+  They are "empty", but they update KBUILD_AFLAGS with an extra
+  trailing space. Ugh.
+  That resulted in include/config/auto.conf.cmd being unhappy and
+  triggering rebuild after rebuild.
+- Then I've added a patch to scripts/kconfig/preprocess.c that removes
+  any extra head or tail spaces from the environment variables.
+- That was a working patch set on x86_64, but that broke arm64 by
+  creating a circular dependency on KASAN_SHADOW_SCALE_SHIFT.
+- In the end, I decided to just ignore KBUILD_AFLAGS in auto.conf.cmd
+  for RFC v2. Probably, I could just add $(as-instr-config,...)
+  function to Kconfig that would take -m64 just for AS_WRUSS,
+  but that seems like fixing one specific place, rather than more
+  generic fix. Unsure, sending this as RFC, please advise/vote on
+  the best approach.
+- Link to v1: https://lore.kernel.org/r/20240411-as-instr-opt-wrussq-v1-1-99b1a1a99f93@gmail.com
+---
+ scripts/Kconfig.include      |  2 +-
+ scripts/kconfig/preprocess.c | 14 +++++++++++++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index 3ee8ecfb8c04..d8574c1faf2d 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -33,7 +33,7 @@ ld-option = $(success,$(LD) -v $(1))
+ 
+ # $(as-instr,<instr>)
+ # Return y if the assembler supports <instr>, n otherwise
+-as-instr = $(success,printf "%b\n" "$(1)" | $(CC) $(CLANG_FLAGS) -Wa$(comma)--fatal-warnings -c -x assembler-with-cpp -o /dev/null -)
++as-instr = $(success,printf "%b\n" "$(1)" | $(CC) $(CLANG_FLAGS) $(KBUILD_AFLAGS) -Wa$(comma)--fatal-warnings -c -x assembler-with-cpp -o /dev/null -)
+ 
+ # check if $(CC) and $(LD) exist
+ $(error-if,$(failure,command -v $(CC)),C compiler '$(CC)' not found)
+diff --git a/scripts/kconfig/preprocess.c b/scripts/kconfig/preprocess.c
+index f0a4a218c4a5..cf7389f13f00 100644
+--- a/scripts/kconfig/preprocess.c
++++ b/scripts/kconfig/preprocess.c
+@@ -61,6 +61,17 @@ static void env_del(struct env *e)
+ 	free(e);
+ }
+ 
++static bool env_ignore(const char *name)
++{
++	/*
++	 * Break the circular dependency Kconfig => arch/.../Makefile => Kconfig
++	 * On the first Makefile pass only AFLAGS that do not depend on
++	 * CONFIG_* set will be defined. Those are used by Kconfig for
++	 * toolchain checks.
++	 */
++	return !strcmp(name, "KBUILD_AFLAGS");
++}
++
+ /* The returned pointer must be freed when done */
+ static char *env_expand(const char *name)
+ {
+@@ -83,7 +94,8 @@ static char *env_expand(const char *name)
+ 	 * We need to remember all referenced environment variables.
+ 	 * They will be written out to include/config/auto.conf.cmd
+ 	 */
+-	env_add(name, value);
++	if (!env_ignore(name))
++		env_add(name, value);
+ 
+ 	return xstrdup(value);
+ }
+
+---
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+change-id: 20240410-as-instr-opt-wrussq-48ec37e36204
 
 Best regards,
-Tomasz
+-- 
+Dmitry Safonov <0x7f454c46@gmail.com>
 
->
-> Regards,
->
->         Hans
->
->
-> >>
-> >> Regards,
-> >>
-> >>         Hans
-> >>
-> >>> +
-> >>> +             /*
-> >>> +              * Now the vdev is not streaming and all the ioctls wil=
-l
-> >>> +              * return -ENODEV
-> >>> +              */
-> >>>
-> >>>               uvc_debugfs_cleanup_stream(stream);
-> >>>       }
-> >>>
-> >>
->
->
+
