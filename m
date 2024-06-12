@@ -1,65 +1,116 @@
-Received: from smtp134-24.sina.com.cn (smtp134-24.sina.com.cn [180.149.134.24])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1210241A84
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 23:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.149.134.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A9241A84;
+	Wed, 12 Jun 2024 23:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718234223; cv=none; b=Z+sktED7E+PZvFa8Wb5MCAAcBG60ZaGmPGVyPQc4AQOW5sfV4VEWskcNMIHOhzMuDoQGM/bLheUK72cVQjauf38swLxCsQgDRYul591g9L4YuFQlazRRLPM/OHAt7IfKir035WBXoBywvitpcOm7gYq7ralTx07ASp47o20Oxw0=
+	t=1718234272; cv=none; b=jn+JvX20s9nSt/dVmziKJ/OYwiZ6EtCgt5TstqhSRGFLlLoaZPpsOGNJODiPqCSqecU6RR0aRLMnYQzQYe7deSaKjGbD04/ziey0Ds+z8MJ5CKaGc2T0+aSk22lLS7qjOhvuBb5yjLiArywRWyh0lC3+3sODAF6KF3aN9eFh5/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718234223; c=relaxed/simple;
-	bh=GMYBDiIRO4QCtnSJYbtRbqxSJT4qrtVLyXUm49d6ezM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=besYt3BjsHMnwc1P5jgO0i6KI59+2TBXJgtoyd1oOMP6w76Eau0QwfvDYZfTjr94OUlCXmQfJfTKYt/0bWbDpVn9QZtg9mANtAkG5ONmctYtoyoPg/mYYog0d/K6pUSF7QGYH2QewlbaMZZZuVb738LItUBwp9xlPeuJ4pJRiL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=180.149.134.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.64.164])
-	by sina.com (10.185.250.21) with ESMTP
-	id 666A2C5B00002451; Wed, 13 Jun 2024 07:16:46 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 706263408424
-X-SMAIL-UIID: 1CF89B0D61EF49B9A9477140D6C28FBF-20240613-071646-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+d79afb004be235636ee8@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [nilfs?] [mm?] KASAN: slab-use-after-free Read in lru_add_fn
-Date: Thu, 13 Jun 2024 07:16:34 +0800
-Message-Id: <20240612231634.2311-1-hdanton@sina.com>
-In-Reply-To: <000000000000cae276061aa12d5e@google.com>
-References: 
+	s=arc-20240116; t=1718234272; c=relaxed/simple;
+	bh=5ZIzRsZmwLkhF+loYV2ldRFY5KvqeljcAs10mUbNVqc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=T1aMmVXCqLUV25GD5JYZlPzPpIGbWv+hTyj3QsVDbT7R1k6NzTrI9DHTTtGNbW62uXJ5E+BIghl4YuDfCoUsagDwrsooUOMlxbepDffav9qRb01QitL9do3ymLWqSi8LDvu6a2FRChelDOgEOJWDQqOAyi77SOrpCwZAZVoiMLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BKFarr7P; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BKFarr7P"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45CNHfSm000523;
+	Wed, 12 Jun 2024 18:17:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718234261;
+	bh=URgkmHjG21+8HcgxUeOPH9cIZItkVgbPT4MMG7nYknU=;
+	h=From:Date:Subject:References:In-Reply-To:To:CC;
+	b=BKFarr7P9CjOphZENYKMINdVt/ZiylS4HRmgdAunbuy/tDRvihaMSZvBgK8r2KOPE
+	 NlUmHkzVTG0onNzMklr1PmdOsRXp4/dZDPW+Td+KbEDZu39g6PtYSy9tlhBKVMXzfF
+	 dDZ/tJVR55oTIduiHU+1Rh/lRbSXpgR00BkjgiOg=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45CNHe8x017773
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 12 Jun 2024 18:17:40 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 12
+ Jun 2024 18:17:40 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 12 Jun 2024 18:17:40 -0500
+Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 45CNHebo023165;
+	Wed, 12 Jun 2024 18:17:40 -0500
+From: Bryan Brattlof <bb@ti.com>
+Date: Wed, 12 Jun 2024 18:17:36 -0500
+Subject: [PATCH v2 3/5] dt-bindings: mfd: syscon: add TI's opp table
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240612-ti-opp-updates-v2-3-422b6747a254@ti.com>
+References: <20240612-ti-opp-updates-v2-0-422b6747a254@ti.com>
+In-Reply-To: <20240612-ti-opp-updates-v2-0-422b6747a254@ti.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar
+	<viresh.kumar@linaro.org>, Lee Jones <lee@kernel.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>
+CC: Vibhore Vardhan <vibhore@ti.com>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Bryan Brattlof <bb@ti.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1058; i=bb@ti.com;
+ h=from:subject:message-id; bh=5ZIzRsZmwLkhF+loYV2ldRFY5KvqeljcAs10mUbNVqc=;
+ b=owNCWmg5MUFZJlNZ1nwjXQAAZP////btV+PvS1uft+l7dbL3DrX3/e/ev39b//sd3r359e6wA
+ RswHamjEDQGg0ADEADQAAAABoABtRoyANA0NAaDQwmJoZMhoBk0aYE/U9UQANA0MgaBo00BoaDQ
+ yepo0DEBoaDQ0aPSADTQ0GanqDTJtI000NGjQ0NDJo00YQAcJ6RpiAyYjTQAA0yZDEZDTQANNAB
+ kwhpkDQMgxANDQGjQaZMgB6mmjE0AAAFAurNQKQCG8xkJEdEBNjkxaTFa92CNlKOzNiQRxIgElQ
+ esJfnQ+Le6EvSiQqJeypCNqenjI1tv9hs/YNr9gnG1RzdOdqHh2VLHiREsx6EUMLahFkeZADdS2
+ 1Fz+8Jbk07UO0zV93/QwYbig1XUUhSA+6Px0gD4JsAsxKmgqdIFJzom3eC2R1Hpi29tnb6PpSpx
+ pkYTdAnIrK/aRTyi00meoRpGJSryzfsK7pXvAhWoa5O3p1JlM2TI1aQYY9K9fGMkBqiUALmCgop
+ QgbkO7+8B6cayaFjqsjSwIh7jwpxwxcMlX2VQNjOTVpWoaouwWIlyIUtvcEFw+Z1gC0B+dXuaki
+ UoMcJqxIS+lwTnX4jmghpGbFOsBGq1YEeMv2eGYciEC7NZNMwjpl9JoW4FQFAQB5FWkxXWtyIfc
+ 6ATx/RC8A/xdyRThQkNZ8I10A==
+X-Developer-Key: i=bb@ti.com; a=openpgp;
+ fpr=D3D177E40A38DF4D1853FEEF41B90D5D71D56CE0
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue, 11 Jun 2024 11:10:20 -0700
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    83a7eefedc9b Linux 6.10-rc3
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17c645e2980000
+The JTAG_USER_ID_USERCODE efuse address, which is located inside the
+WKUP_CTRL_MMR0 range holds information to identify the speed grades of
+various components on TI's K3 SoCs. Add a compatible to allow the
+cpufreq driver to obtain the data to limit the maximum frequency for the
+CPUs under Linux control.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
+Signed-off-by: Bryan Brattlof <bb@ti.com>
+---
+ Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
---- x/fs/nilfs2/the_nilfs.c
-+++ y/fs/nilfs2/the_nilfs.c
-@@ -922,7 +922,6 @@ void nilfs_put_root(struct nilfs_root *r
- 		spin_unlock(&nilfs->ns_cptree_lock);
- 
- 		nilfs_sysfs_delete_snapshot_group(root);
--		iput(root->ifile);
- 
- 		kfree(root);
- 	}
---
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+index 7ed12a938baa3..ab1fcbe2148f7 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.yaml
++++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+@@ -88,6 +88,7 @@ properties:
+               - rockchip,rv1126-qos
+               - starfive,jh7100-sysmain
+               - ti,am62-usb-phy-ctrl
++              - ti,am62-opp-efuse-table
+               - ti,am62p-cpsw-mac-efuse
+               - ti,am654-dss-oldi-io-ctrl
+               - ti,am654-serdes-ctrl
+
+-- 
+2.45.2
+
