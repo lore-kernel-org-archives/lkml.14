@@ -1,39 +1,39 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8E817FADE;
-	Wed, 12 Jun 2024 15:05:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF2F181313;
+	Wed, 12 Jun 2024 15:05:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718204708; cv=none; b=CVLCp0q4ZsO9Gb3Y9ot8Q+bdVh2u6OhDhjWxN8w7YBY9O2xfWtFhbQ2tlfipNOIoxamyzSaldIEibFxfCKN5t3cwcI5qm1OehP4D6aPXan4HBHJGScH4OAsMBrlYGYtTJQOgiMDs9js8FFNVyfNeYfCP2MvpVC4KVXniCju1KPc=
+	t=1718204710; cv=none; b=o3dUMFsRvWNnCLRdch71deb9GOs2+kGSLwm6HshGUnKoPNKwNhgBlQrRk86jkGjgw+MnFDrvVxe/8HoYTqfbQTMdb8xQps470zkspX6+1VWymPmtppa9lChzmjA8yfdwbwQsvKo+vQArEv+O0YLBBCS7rHG4G2qb25rERwbF82I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718204708; c=relaxed/simple;
-	bh=gnOJv3IJnG4MxVBS3Rs8JRq/t9ZNB4Rqjtb6Bc5CGuo=;
+	s=arc-20240116; t=1718204710; c=relaxed/simple;
+	bh=7yhAM6xH9kCUFSvDoP+AEJuCocl7K81S23eYIiV8v30=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Iql9koeF47F2/ploYX56i0bIRFpcB977gDOfS20mEnCvbj1WlkIioJEXe3xui17Gfbd/pR1ndfiL5Te1y943ICsAbATg88jUN6hqBfURa/XgT2Hn+mm+iXXiWZxk5qmExqT7qsgD49wq6sPBFk7Xzo+OFQMlH7Km6NzsaIhAN8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A5mWR2wu; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=ghxBq4SQhJWWZmGzZDps9Ac1WwaYQe6xTBV08ILPzLmyLIqsFsH7u8iwFaQZ8ugHuc0KmzzQ0z67MkLmS/571eOHjwruBsno23eQ4c2CVOhYYYE23OCwcDxOHlFGQQr6744EaUquSOwOjTobje5ja4yzU8267CGIWLEwgP227i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IXzgo1Uu; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="A5mWR2wu"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 841CD40011;
-	Wed, 12 Jun 2024 15:04:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IXzgo1Uu"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C3D7D40012;
+	Wed, 12 Jun 2024 15:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1718204699;
+	t=1718204706;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KUn20jBzGgQX3nN2BNPFK9rn+KLdbsza5Fx8uyTOtm8=;
-	b=A5mWR2wuQC7gNnaiyTrYK5K5D0rMhC8Kaq2iBYGjelhVpoR+rGRqF4Uonps7zcLbpxxJtA
-	ElTjqYDVfhw1VmpajcQmEdr+peslgg0s7t0GBX0sYR5mSAZoCoze8kgBvYt4McH47/bjYu
-	dfNdwEI5g+qalbyPuBNPoB6kxGTjzRTfi/fDAUedJj616i8xNSJdYdshpMLvIInEXLfwCg
-	jhr8av4kO9V6GOKR6NkHvGdpzvx/2UCQn090cdRokEVss2YUm/ebVaLNPIysOCaRQRvImL
-	MzCyieOHVO0YR36E8YIP7uagVhYsAFoW2sjVSJ5Uszgt39jBe6y2p8InXaaFTw==
+	bh=YXhuPfMb8JiYCutfiZUlVCVpb7e9NN3nMxofwfDJxZk=;
+	b=IXzgo1UuqK0KUZkl3kZPUHcR7OVraTlpqWhVRSnYRhnbzlpB6t2z/vVRs1k/r9V3K57DEI
+	KKt9SNgk+oQQJZfYRWtxnWewdeRRVPuUtsRdHoxgYObfjsPGyVWM0Vn2ieFO4rRLwx2X1F
+	BWf84w7Pw0pex6m2aX98YZhTpxEs6AvZLQTUTocHnS1HjSTbS73EC6zEdwGO8WzhwDguv4
+	s0thMGnMdfeXCrv110JhGMmgxxQIZfgsvlXQ/0VAGrg9w5JD8CG4tQOgz/BaR2/SdALygD
+	d/U2fS0yQNvVAFE18VUTN2yLni48GaxUj27KRC1iHveVLdJFhoQLV26nkcDV5Q==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Wed, 12 Jun 2024 17:04:04 +0200
-Subject: [PATCH net-next v15 04/14] net: Make net_hwtstamp_validate
- accessible
+Date: Wed, 12 Jun 2024 17:04:10 +0200
+Subject: [PATCH net-next v15 10/14] net: netdevsim: ptp_mock: Convert to
+ netdev_ptp_clock_register
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240612-feature_ptp_netnext-v15-4-b2a086257b63@bootlin.com>
+Message-Id: <20240612-feature_ptp_netnext-v15-10-b2a086257b63@bootlin.com>
 References: <20240612-feature_ptp_netnext-v15-0-b2a086257b63@bootlin.com>
 In-Reply-To: <20240612-feature_ptp_netnext-v15-0-b2a086257b63@bootlin.com>
 To: Florian Fainelli <florian.fainelli@broadcom.com>, 
@@ -68,48 +68,116 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: kory.maincent@bootlin.com
 
-Make the net_hwtstamp_validate function accessible in prevision to use
-it from ethtool to validate the hwtstamp configuration before setting it.
+The hardware registration clock for net device is now using
+netdev_ptp_clock_register to save the net_device pointer within the PTP
+clock xarray. netdevsim is registering its ptp through the mock driver.
+It is the only driver using the mock driver to register a ptp clock.
+Convert the mock driver to the new API.
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
-
-Change in v8:
+Changes in v8:
 - New patch
-
-Change in v10:
-- Remove export symbol as ethtool can't be built as a module.
-- Move the declaration to net/core/dev.h instead of netdevice.h
 ---
- net/core/dev.h       | 1 +
- net/core/dev_ioctl.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/netdevsim/netdev.c | 19 +++++++++++--------
+ drivers/ptp/ptp_mock.c         |  4 ++--
+ include/linux/ptp_mock.h       |  4 ++--
+ 3 files changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/net/core/dev.h b/net/core/dev.h
-index 75094405b569..7e2425326170 100644
---- a/net/core/dev.h
-+++ b/net/core/dev.h
-@@ -171,5 +171,6 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
- 			    struct netlink_ext_ack *extack);
- int dev_get_hwtstamp_phylib(struct net_device *dev,
- 			    struct kernel_hwtstamp_config *cfg);
-+int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg);
+diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
+index c22897bf5509..51ba5e75740e 100644
+--- a/drivers/net/netdevsim/netdev.c
++++ b/drivers/net/netdevsim/netdev.c
+@@ -662,17 +662,12 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
+ 	struct mock_phc *phc;
+ 	int err;
  
- #endif
-diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
-index b8cf8c55fa2d..6aaa8326bf8f 100644
---- a/net/core/dev_ioctl.c
-+++ b/net/core/dev_ioctl.c
-@@ -184,7 +184,7 @@ static int dev_ifsioc_locked(struct net *net, struct ifreq *ifr, unsigned int cm
+-	phc = mock_phc_create(&ns->nsim_bus_dev->dev);
+-	if (IS_ERR(phc))
+-		return PTR_ERR(phc);
+-
+-	ns->phc = phc;
+ 	ns->netdev->netdev_ops = &nsim_netdev_ops;
+ 	ns->netdev->stat_ops = &nsim_stat_ops;
+ 
+ 	err = nsim_udp_tunnels_info_create(ns->nsim_dev, ns->netdev);
+ 	if (err)
+-		goto err_phc_destroy;
++		return err;
+ 
+ 	rtnl_lock();
+ 	err = nsim_queue_init(ns);
+@@ -690,8 +685,18 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
+ 	if (err)
+ 		goto err_ipsec_teardown;
+ 	rtnl_unlock();
++
++	phc = mock_phc_create(ns->netdev);
++	if (IS_ERR(phc)) {
++		err = PTR_ERR(phc);
++		goto err_register_netdevice;
++	}
++
++	ns->phc = phc;
+ 	return 0;
+ 
++err_register_netdevice:
++	unregister_netdevice(ns->netdev);
+ err_ipsec_teardown:
+ 	nsim_ipsec_teardown(ns);
+ 	nsim_macsec_teardown(ns);
+@@ -701,8 +706,6 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
+ err_utn_destroy:
+ 	rtnl_unlock();
+ 	nsim_udp_tunnels_info_destroy(ns->netdev);
+-err_phc_destroy:
+-	mock_phc_destroy(ns->phc);
  	return err;
  }
  
--static int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg)
-+int net_hwtstamp_validate(const struct kernel_hwtstamp_config *cfg)
+diff --git a/drivers/ptp/ptp_mock.c b/drivers/ptp/ptp_mock.c
+index e7b459c846a2..1dcbe7426746 100644
+--- a/drivers/ptp/ptp_mock.c
++++ b/drivers/ptp/ptp_mock.c
+@@ -115,7 +115,7 @@ int mock_phc_index(struct mock_phc *phc)
+ }
+ EXPORT_SYMBOL_GPL(mock_phc_index);
+ 
+-struct mock_phc *mock_phc_create(struct device *dev)
++struct mock_phc *mock_phc_create(struct net_device *dev)
  {
- 	enum hwtstamp_tx_types tx_type;
- 	enum hwtstamp_rx_filters rx_filter;
+ 	struct mock_phc *phc;
+ 	int err;
+@@ -147,7 +147,7 @@ struct mock_phc *mock_phc_create(struct device *dev)
+ 	spin_lock_init(&phc->lock);
+ 	timecounter_init(&phc->tc, &phc->cc, 0);
+ 
+-	phc->clock = ptp_clock_register(&phc->info, dev);
++	phc->clock = netdev_ptp_clock_register(&phc->info, dev);
+ 	if (IS_ERR(phc->clock)) {
+ 		err = PTR_ERR(phc->clock);
+ 		goto out_free_phc;
+diff --git a/include/linux/ptp_mock.h b/include/linux/ptp_mock.h
+index 72eb401034d9..e226011071f8 100644
+--- a/include/linux/ptp_mock.h
++++ b/include/linux/ptp_mock.h
+@@ -13,13 +13,13 @@ struct mock_phc;
+ 
+ #if IS_ENABLED(CONFIG_PTP_1588_CLOCK_MOCK)
+ 
+-struct mock_phc *mock_phc_create(struct device *dev);
++struct mock_phc *mock_phc_create(struct net_device *dev);
+ void mock_phc_destroy(struct mock_phc *phc);
+ int mock_phc_index(struct mock_phc *phc);
+ 
+ #else
+ 
+-static inline struct mock_phc *mock_phc_create(struct device *dev)
++static inline struct mock_phc *mock_phc_create(struct net_device *dev)
+ {
+ 	return NULL;
+ }
 
 -- 
 2.34.1
