@@ -1,148 +1,128 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204D27FB
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 13:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D5417CA07;
+	Wed, 12 Jun 2024 13:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718199985; cv=none; b=az/D8x605I8lJeh+AHmhsF+Lif1mm9FxVBZTj64uutZofk6pbRCmbTp5gifbV0IbYySolCJMvw+gcLBV456w+sKIuFg/CTL/pIYZ0cWlFX7v4n7NHbNOsu1nQY2Ghkk9NJzpfd54Leb8MGK8FH/dvSRinK9S821t5GSWqK8x2LQ=
+	t=1718200000; cv=none; b=FAUlCiWHe+PGNh/Ml16JVRAonLlQ8rNtXVZYzkgymjl8HHcpr1PzjPMbH95V1SvnRSHUCZacJyxPKdO7xAcy/dCwJZGts1JThoPSazebK734W1kz/rASqn+5Mo1lhobO8KvyONOEhYnqnZVDdrhB9UgmrRINLvCtPcaCe4/bv4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718199985; c=relaxed/simple;
-	bh=enYU9795cBzStQtdGNP3wA0LSi6gU7vJzy/bNPSiwWk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TjViECnJNcpXv2eRu7e9vPxOofVu4gf1YEzF+MFg3cQVdth4Q6Eudn0SirPHo6U4AiOLCtMf5OCDx8FCbhm7VPjvEf1nIp8T8DH8+dCP/SZpw7tFPWVW1kAHg9MuI50EAWQo7wzqvPVdM96g24Yjs2ZbYKUduvHrJNZZM0aATIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VzmtZ3VDyzxSRP;
-	Wed, 12 Jun 2024 21:42:14 +0800 (CST)
-Received: from dggpemf100008.china.huawei.com (unknown [7.185.36.138])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0EAB118007A;
-	Wed, 12 Jun 2024 21:46:19 +0800 (CST)
-Received: from [10.174.177.243] (10.174.177.243) by
- dggpemf100008.china.huawei.com (7.185.36.138) with Microsoft SMTP Server
+	s=arc-20240116; t=1718200000; c=relaxed/simple;
+	bh=l6JauifMwDADWOX0MI9XkCrKIjsUwmsm/PL6kduWNZE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iPc+y9oYB8hcfcE5gHERA4PG1dfTrNCLdlZ8BX9ANXzGAMv7sjUF6O28p3T6Pa1gG48VQIrMCKaif3sE39GVI/Dj5vDq9eP3/2r5aeHzLvibNS1d/M6hrd4NLPay6G9XK3Epo6fKsCTpsh214vsD6iqcvcaXwLfdZqb/YqtjXLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=QxmcjL46; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="QxmcjL46"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CAdUMv019644;
+	Wed, 12 Jun 2024 06:46:31 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=vfSgv9/tpfHbWYJdCKz61kS
+	srvCLMtL8kuJRyvXKozg=; b=QxmcjL46DXMuew+PuR6lS5NjMJUG+I86X5NIECh
+	88X5FMkeuDXKxddRJiIE0V7kHsNyfDu2l0EdNOMXpQzQoCjKz6YvL/VRUBBuXkf2
+	jfyWkWAY1JEqwAs0hr6Un8MhkjZa94hFtSFG5Fm6G9afwlwWQaWy5u8KN+7XorXd
+	t6xTinkRkFYcIQsmbV+zn7nqafVer2E4yQliZ4Vw7tE+cWexw+cXmtA28jes3hEg
+	xeZ34eT1hfhpaMrQxSGYjWXs+uBvxg8wooMuOTfDEbsgxbfPb6KNa1kCuXNpMV1e
+	zll0uPFb0n25ddL02N+xMVrMj7pTa26PP2HO123V36AiPAQ==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yq8qx0u2u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 06:46:31 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 12 Jun 2024 21:46:18 +0800
-Message-ID: <e60808c6-5d50-42c4-a736-f1f417f85327@huawei.com>
-Date: Wed, 12 Jun 2024 21:46:17 +0800
+ 15.2.1544.4; Wed, 12 Jun 2024 06:46:30 -0700
+Received: from bharat-OptiPlex-3070.marvell.com (10.69.176.80) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server id
+ 15.2.1544.4 via Frontend Transport; Wed, 12 Jun 2024 06:46:25 -0700
+From: Bharat Bhushan <bbhushan2@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sgoutham@marvell.com>, <gakula@marvell.com>, <sbhatta@marvell.com>,
+        <hkelam@marvell.com>, <davem@davemloft.net>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <jerinj@marvell.com>,
+        <lcherian@marvell.com>, <richardcochran@gmail.com>
+CC: <bbhushan2@marvell.com>
+Subject: [net-next,v4 0/8] cn10k-ipsec: Add outbound inline ipsec support
+Date: Wed, 12 Jun 2024 19:16:14 +0530
+Message-ID: <20240612134622.2157086-1-bbhushan2@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/6] mm: shmem: add mTHP counters for anonymous shmem
-Content-Language: en-US
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, <akpm@linux-foundation.org>,
-	<hughd@google.com>
-CC: <willy@infradead.org>, <david@redhat.com>, <ying.huang@intel.com>,
-	<21cnbao@gmail.com>, <ryan.roberts@arm.com>, <shy828301@gmail.com>,
-	<ziy@nvidia.com>, <ioworker0@gmail.com>, <da.gomez@samsung.com>,
-	<p.raghav@samsung.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <cover.1718090413.git.baolin.wang@linux.alibaba.com>
- <4fd9e467d49ae4a747e428bcd821c7d13125ae67.1718090413.git.baolin.wang@linux.alibaba.com>
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-In-Reply-To: <4fd9e467d49ae4a747e428bcd821c7d13125ae67.1718090413.git.baolin.wang@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemf100008.china.huawei.com (7.185.36.138)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: 8biBxeXItfoWX1HIztZt2Z1JP3WaqIad
+X-Proofpoint-ORIG-GUID: 8biBxeXItfoWX1HIztZt2Z1JP3WaqIad
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_07,2024-06-12_02,2024-05-17_01
 
+This patch series adds outbound inline ipsec support on Marvell
+cn10k series of platform. One crypto hardware logical function
+(cpt-lf) per netdev is required for inline ipsec outbound
+functionality. Software prepare and submit crypto hardware
+(CPT) instruction for outbound inline ipsec crypto mode offload.
+The CPT instruction have details for encryption and authentication
+Crypto hardware encrypt, authenticate and provide the ESP packet
+to network hardware logic to transmit ipsec packet.
 
+First patch makes dma memory writable for in-place encryption,
+Second patch moves code to common file, Third patch disable
+backpressure on crypto (CPT) and network (NIX) hardware.
+Patch four onwards enables inline outbound ipsec.
 
-On 2024/6/11 18:11, Baolin Wang wrote:
-> Add mTHP counters for anonymous shmem.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
->   include/linux/huge_mm.h |  3 +++
->   mm/huge_memory.c        |  6 ++++++
->   mm/shmem.c              | 18 +++++++++++++++---
->   3 files changed, 24 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index 909cfc67521d..212cca384d7e 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -281,6 +281,9 @@ enum mthp_stat_item {
->   	MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
->   	MTHP_STAT_SWPOUT,
->   	MTHP_STAT_SWPOUT_FALLBACK,
-> +	MTHP_STAT_FILE_ALLOC,
-> +	MTHP_STAT_FILE_FALLBACK,
-> +	MTHP_STAT_FILE_FALLBACK_CHARGE,
->   	__MTHP_STAT_COUNT
->   };
->   
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 1360a1903b66..3fbcd77f5957 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -555,6 +555,9 @@ DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
->   DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
->   DEFINE_MTHP_STAT_ATTR(swpout, MTHP_STAT_SWPOUT);
->   DEFINE_MTHP_STAT_ATTR(swpout_fallback, MTHP_STAT_SWPOUT_FALLBACK);
-> +DEFINE_MTHP_STAT_ATTR(file_alloc, MTHP_STAT_FILE_ALLOC);
-> +DEFINE_MTHP_STAT_ATTR(file_fallback, MTHP_STAT_FILE_FALLBACK);
-> +DEFINE_MTHP_STAT_ATTR(file_fallback_charge, MTHP_STAT_FILE_FALLBACK_CHARGE);
->   
->   static struct attribute *stats_attrs[] = {
->   	&anon_fault_alloc_attr.attr,
-> @@ -562,6 +565,9 @@ static struct attribute *stats_attrs[] = {
->   	&anon_fault_fallback_charge_attr.attr,
->   	&swpout_attr.attr,
->   	&swpout_fallback_attr.attr,
-> +	&file_alloc_attr.attr,
-> +	&file_fallback_attr.attr,
-> +	&file_fallback_charge_attr.attr,
->   	NULL,
->   };
->   
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index f5469c357be6..99bd3c34f0fb 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -1773,6 +1773,9 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
->   
->   			if (pages == HPAGE_PMD_NR)
->   				count_vm_event(THP_FILE_FALLBACK);
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +			count_mthp_stat(order, MTHP_STAT_FILE_FALLBACK);
-> +#endif
->   			order = next_order(&suitable_orders, order);
->   		}
->   	} else {
-> @@ -1792,9 +1795,15 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
->   		if (xa_find(&mapping->i_pages, &index,
->   				index + pages - 1, XA_PRESENT)) {
->   			error = -EEXIST;
-> -		} else if (pages == HPAGE_PMD_NR) {
-> -			count_vm_event(THP_FILE_FALLBACK);
-> -			count_vm_event(THP_FILE_FALLBACK_CHARGE);
-> +		} else if (pages > 1) {
-> +			if (pages == HPAGE_PMD_NR) {
-> +				count_vm_event(THP_FILE_FALLBACK);
-> +				count_vm_event(THP_FILE_FALLBACK_CHARGE);
-> +			}
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +			count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_FALLBACK);
-> +			count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_FALLBACK_CHARGE);
+v3->v4:
+ - Few error messages in datapath removed and some moved
+   under netif_msg_tx_err().
+ - Added check for crypto offload (XFRM_DEV_OFFLOAD_CRYPTO)
+   Thanks "Leon Romanovsky" for pointing out
+ - Fixed codespell error as per comment from Simon Horman 
+ - Added some other cleanup comment from Kalesh Anakkur Purayil
 
-pages > 1, we have correct order, count_mthp_stat(order, MTHP_XXX) ?
+v2->v3:
+ - Fix smatch and sparse erros (Comment from Simon Horman)
+ - Fix build error with W=1 (Comment from Simon Horman)
+   https://patchwork.kernel.org/project/netdevbpf/patch/20240513105446.297451-6-bbhushan2@marvell.com/
+ - Some other minor cleanup as per comment
+   https://www.spinics.net/lists/netdev/msg997197.html
 
-> +#endif
->   		}
->   		goto unlock;
->   	}
-> @@ -2168,6 +2177,9 @@ static int shmem_get_folio_gfp(struct inode *inode, pgoff_t index,
->   		if (!IS_ERR(folio)) {
->   			if (folio_test_pmd_mappable(folio))
->   				count_vm_event(THP_FILE_ALLOC);
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +			count_mthp_stat(folio_order(folio), MTHP_STAT_FILE_ALLOC);
-> +#endif
->   			goto alloced;
->   		}
->   		if (PTR_ERR(folio) == -EEXIST)
+v1->v2:
+ - Fix compilation error to build driver a module
+ - Use dma_wmb() instead of architecture specific barrier
+ - Fix couple of other compilation warnings
+
+Bharat Bhushan (8):
+  octeontx2-pf: map skb data as device writeable
+  octeontx2-pf: Move skb fragment map/unmap to common code
+  octeontx2-af: Disable backpressure between CPT and NIX
+  cn10k-ipsec: Initialize crypto hardware for outb inline ipsec
+  cn10k-ipsec: Add SA add/delete support for outb inline ipsec
+  cn10k-ipsec: Process inline ipsec transmit offload
+  cn10k-ipsec: Allow inline ipsec offload for skb with SA
+  cn10k-ipsec: Enable outbound inline ipsec offload
+
+ .../net/ethernet/marvell/octeontx2/af/mbox.h  |    4 +
+ .../ethernet/marvell/octeontx2/af/rvu_nix.c   |   74 +-
+ .../ethernet/marvell/octeontx2/nic/Makefile   |    1 +
+ .../marvell/octeontx2/nic/cn10k_ipsec.c       | 1078 +++++++++++++++++
+ .../marvell/octeontx2/nic/cn10k_ipsec.h       |  258 ++++
+ .../marvell/octeontx2/nic/otx2_common.c       |   99 +-
+ .../marvell/octeontx2/nic/otx2_common.h       |   25 +
+ .../marvell/octeontx2/nic/otx2_dcbnl.c        |    3 +
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c  |   19 +-
+ .../marvell/octeontx2/nic/otx2_txrx.c         |   65 +-
+ .../marvell/octeontx2/nic/otx2_txrx.h         |    3 +
+ .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |   10 +-
+ 12 files changed, 1585 insertions(+), 54 deletions(-)
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.h
+
+-- 
+2.34.1
+
