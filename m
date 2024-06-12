@@ -1,140 +1,211 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF4E129E94;
-	Wed, 12 Jun 2024 21:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E98231A67
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 21:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718229213; cv=none; b=KFwssRwTGRfoh+3AcMvIiEASqr0QHZWa/dPMKhxn6DxMnK5V09ILmir7sTfGwyQ2Wpfzpr4wpUKanrv8enulg0ngOXsihZHeaBsAtw7vPoq7nKg2AOErrSXgSuB4BHDXvNb4LoiGklqaH691RoXcysB/sTULfUIRrAeSy28ujq8=
+	t=1718229518; cv=none; b=lPX7c2p3ym06x2QrHmVEcdZtV67qafbzDU0eaWq87SDaaSuKwdFQRPZNmskNQlyImLTS6huL/QQ5XOj3eg9VL2UUj6yfWbDtaLGMnqOpaKA3HHsk4pod0bkawlak5rtT6NLQGyRsPXS16GA6hACWwe/fM67PrVfTerZ0ydj2kkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718229213; c=relaxed/simple;
-	bh=mcJjYHjV++hIvIdWkHyHOgdpiusnN+4IJjaQnk6MVdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PKt0/pcFoc7C9k1hqk3fvi0bAvHQt25PImI3YjNpcCcCVkNmiUPG8XdBrPX8BfSCZW/eQfvdFlcR/LPkoIsaBgwndbD8gEfNSw0TvX5ysrNFLvo5YnUXP5NSVnRZiFEF68saPxFvFDERJXzWXSqw3hfzCCrDVNp4xjDALUfQpso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kofaZ7Hh; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718229518; c=relaxed/simple;
+	bh=khrDNDWmeGqGZrOXj4qoCzqppIXgw1A4jRwrqwCdU8I=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=JiQ5tE5kaEkV0ooZMkT1GAdk7Eb+qAX/m1eg03abRhWInTI/TqojmKolP8Q0ZqXEHLYhNaQzp7spxpvSanZO7I5kY5NgBSWMzikl2qfYG7ck9r77kA8GTMfoMwklV2eHvSKl3gyNrWv/99kLNpDHhcz/sHBOia2rHJqItEi2YdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=upSGIncV; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kofaZ7Hh"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4217926991fso3908165e9.3;
-        Wed, 12 Jun 2024 14:53:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="upSGIncV"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-70421e78edcso283825b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:58:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718229210; x=1718834010; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9pxDQ2xml58KGU++S3MziyUsd0pYxlkTij9Nt+5fCkQ=;
-        b=kofaZ7Hh3eDkmlr2KpMuNhnS+PA02UIOOXea7GEar+k1UZeq22MPbgQNSJVRqqcx2I
-         cLkbJbCFNL18XVWtoCSS/GzQZU/QRlE1qU0i5XwcC9fKZhdB9tUeyF5SkLgziKsFcm5W
-         NJTVjYEplT8ZNTr+0oYqX+Ej/gVAqz5n4xX2ETwWOXC+Qd3hX/lKRL9efoeyCNVltn+s
-         ZWj3J1J2uJrCJpAFz6hzYGJS0iUMoVUzUvFtLbNGLExTlon3LFCanRNzucdB61SxLw+9
-         UX43ERM7HuCRS9TgMbZQ4OxlCe48foVoPAg8bMFi+KhRZVXVJFBMRtcxWHDDvxWotDfz
-         qwJA==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1718229516; x=1718834316; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eb1Tdmuo2+DL2sMCGsEjLYo7CfSSy+N0ra/0HS1hBn4=;
+        b=upSGIncVzEiKempUdbqo4sFE1wX8kQVVTRZs7aoMNutt5DLfLVOSOfksXjl//FkHaG
+         FveZn7mpSszihqO/p1fRtYxY9VSN0ETANIehjVqsSlWib+6bia8z9QjUuI3+RyJn7gYk
+         AlNtQXlDYw8XtU4Su8jljDMlYGpIP1Pw3Zk2+2yfVrLs0x+KnnDYg15BN+lGApg1BU4o
+         sbIUGkhU6jXFvpL16mlubhHAnv01/o7soszCDexYrhfLnifRYoj1tkMm8vxeRIZYXe5x
+         U8SUxZBY7W4SWS8G+7LSmBk6aUqB4425aBFBIo37LDKJMVjQRP9L7VZhABhtQIcEMk6z
+         Yjow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718229210; x=1718834010;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9pxDQ2xml58KGU++S3MziyUsd0pYxlkTij9Nt+5fCkQ=;
-        b=UyciX6bT6joU/ap3tWyTZFNkbi0/lPXjRTN+GH2gTsXr3Hv6cBgIc6skvOO84JEFkt
-         Qgaqqo/CsZk62wSCE9XKgEMIQsSIk2uSEhb1kMdu62GeeJaoDP5fLRccOk+gzndaJUwd
-         oVHRHVvDGqynw8evOAOgVU2jRsk1GCN8Hry2vtzb34vUX3PsjZ9MFTSG0P2v2IVfrus2
-         tt5O5gTRLbT2EQwCSkAtfylavPnJrB8eea52JgLTP/ONTQr8OPld/8W45XRbXf8AjFEW
-         4TIg+pw9PGlZU1Dw6HIL3bgpEtELlSeOdGZFmuY/5jCWt4CAHYst2KPWpFDnuOPKIGi5
-         bWdw==
-X-Forwarded-Encrypted: i=1; AJvYcCVvnBxM5QwdkCqTac45gynk5iaOhx7LZ6StHgbXIR9W4dyffTyU5s5P9kMT12ey8VCWe4/Fm+oSxanLc4Ps50kOVytOO2vIT2kfjzkHIBtHb1W/L6zg5+1nr6j4vAeyCxBhX6LEhg5/zdcjK0ZXHy9D83vNAqVJ6ggYoH2MvBk+XOjYoA==
-X-Gm-Message-State: AOJu0YxhMk9FW8TGnJGITK7y1iqWQU9VJoQnJvUBSK5mbXoXvVL8P8B6
-	FuxCYH4S1bjOeRCPamyXduk6/kIJYdTENMGa6Hiph8E1YApyqBKEY2Ytkg==
-X-Google-Smtp-Source: AGHT+IFqIoOKC1lqkvIoSrutwet1tzBSEOu4Q+/c77rzZJZWz+OjyJm4fZX/gA7it5X1tJrM35WvNQ==
-X-Received: by 2002:a05:600c:358b:b0:422:6765:2726 with SMTP id 5b1f17b1804b1-422865ad68fmr27777105e9.30.1718229209883;
-        Wed, 12 Jun 2024 14:53:29 -0700 (PDT)
-Received: from [192.168.0.5] ([69.6.8.124])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35ef5d2e73dsm17831029f8f.16.2024.06.12.14.53.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 14:53:29 -0700 (PDT)
-Message-ID: <0b24c10f-1c20-4bd1-958b-dbf89cb28792@gmail.com>
-Date: Thu, 13 Jun 2024 00:54:03 +0300
+        d=1e100.net; s=20230601; t=1718229516; x=1718834316;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eb1Tdmuo2+DL2sMCGsEjLYo7CfSSy+N0ra/0HS1hBn4=;
+        b=FHWiYNKB5LXZhe24TpYME3ml/cWljx8rStRNdYoPJqwV0qKkqJygif2nDc+HLlogzL
+         lP4JEKFgbopPJEYbMs92FPtKcnaocb59CN0yhDxQXZddHeoigvlUU9S/QwcrAzN2rh7m
+         6aC80S78+BhSQQxo6TCymrKjnbkaNAbWwd7MwVEDPtsV8Eydc0YzxjrxKIyh3Q5qFQd1
+         R773C1AJJI6MajCb7/qzbz3UuR8jYkR+u+hUHwWKkNZMkYCflmjNz68cIMKKoJz+/FSM
+         gig9FNHk4jOd5y2bC5B9nJ+Cbva2q1igfLN+nR6fzMTy62cSe59ZC0k2MmjPhceF0id+
+         GJIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVquJZPJ/wsoC278srCdJhi/72//pb1Y/ienaFOc6EsNxF8M+ZSDW3DJtkBC5uhg/ylgRsXcr9pRbTL9eW9MeWZjlCDSyE5k1R0eZia
+X-Gm-Message-State: AOJu0YwB/pCYc/MNugK3TAfo9v8bRTd0CqfOXwL1Dn37PRnjPnithPEM
+	49vbzVLUD13wD8JYnN6mPdMmL8qNw2MS2Odj1BPLMj+XgWAy0JTDLj5As7H6gQxICO2MCAdPVhZ
+	k
+X-Google-Smtp-Source: AGHT+IEJhUslG+KXH+FRzbl+rnNWPz4a9aFQN8ML87y8Vr+1JNHaUcsU3bWw/7YAi/1ijZiJFiXyTQ==
+X-Received: by 2002:a05:6a00:1704:b0:705:9abf:a41d with SMTP id d2e1a72fcca58-705bce0a2cbmr3903937b3a.10.1718229515532;
+        Wed, 12 Jun 2024 14:58:35 -0700 (PDT)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb3cdacsm27295b3a.132.2024.06.12.14.58.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 14:58:35 -0700 (PDT)
+Date: Wed, 12 Jun 2024 14:58:35 -0700 (PDT)
+X-Google-Original-Date: Wed, 12 Jun 2024 14:58:32 PDT (-0700)
+Subject:     Re: [PATCH v3] riscv: defconfig: Enable StarFive JH7110 drivers
+In-Reply-To: <20240605071701.13737-1-hal.feng@starfivetech.com>
+CC: Conor Dooley <conor.dooley@microchip.com>, emil.renner.berthing@canonical.com,
+  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, hal.feng@starfivetech.com,
+  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: hal.feng@starfivetech.com
+Message-ID: <mhng-e2ae02b6-ac36-40cf-aa44-79ab8a625885@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] net: wwan: mhi: make default data link id
- configurable
-To: Slark Xiao <slark_xiao@163.com>, manivannan.sadhasivam@linaro.org
-Cc: loic.poulain@linaro.org, johannes@sipsolutions.net,
- quic_jhugo@quicinc.com, netdev@vger.kernel.org, mhi@lists.linux.dev,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240612093941.359904-1-slark_xiao@163.com>
-Content-Language: en-US
-From: Sergey Ryazanov <ryazanov.s.a@gmail.com>
-In-Reply-To: <20240612093941.359904-1-slark_xiao@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello Slark, Manivannan,
-
-On 12.06.2024 12:39, Slark Xiao wrote:
-> For SDX72 MBIM device, it starts data mux id from 112 instead of 0.
-> This would lead to device can't ping outside successfully.
-> Also MBIM side would report "bad packet session (112)".
-> So we add a link id default value for these SDX72 products which
-> works in MBIM mode.
-
-The patch itself looks good to me except a tiny nitpick (see below). 
-Meanwhile, I can not understand when we should merge it. During the V1 
-discussion, It was mentioned that we need this change specifically for 
-Foxconn SDX72 modem. Without any actual users the configurable default 
-data link id is a dead code.
-
-According to the ARM MSM patchwork [1], the main Foxconn SDX72 
-introducing patch is (a) not yet merged, (b) no more applicable. So, as 
-far as I understand, it should be resend. In this context, a best way to 
-merge the modem support is to prepend the modem introduction patch with 
-these changes forming a series:
-1/3: bus: mhi: host: Import mux_id item
-2/3: net: wwan: mhi: make default data link id configurable
-3/3: bus: mhi: host: Add Foxconn SDX72 related support
-
-And merge the series as whole, when everything will be ready. This will 
-help us to avoid partially merged work and will keep the modem support 
-introduction clear.
-
-Manivannan, could you share the main [1] Foxconn SDX72 introduction 
-patch status, and your thoughts regarding the merging process?
-
-
-1. 
-https://patchwork.kernel.org/project/linux-arm-msm/patch/20240520070633.308913-1-slark_xiao@163.com/
-
-> Signed-off-by: Slark Xiao <slark_xiao@163.com>
+On Wed, 05 Jun 2024 00:17:01 PDT (-0700), hal.feng@starfivetech.com wrote:
+> Add support for StarFive JH7110 SoC and VisionFive 2 board.
+> - Cache
+> - Temperature sensor
+> - PMIC (AXP15060)
+> - Ethernet PHY (YT8531)
+> - Restart GPIO
+> - RNG
+> - I2C
+> - SPI
+> - Quad SPI
+> - PCIe
+> - USB & USB 2.0 PHY & PCIe 2.0/USB 3.0 PHY
+> - Audio (I2S / TDM / PWM-DAC)
+> - MIPI-CSI2 RX & D-PHY RX
+>
+> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
 > ---
->   drivers/net/wwan/mhi_wwan_mbim.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wwan/mhi_wwan_mbim.c b/drivers/net/wwan/mhi_wwan_mbim.c
-> index 3f72ae943b29..c731fe20814f 100644
-> --- a/drivers/net/wwan/mhi_wwan_mbim.c
-> +++ b/drivers/net/wwan/mhi_wwan_mbim.c
-> @@ -618,7 +618,8 @@ static int mhi_mbim_probe(struct mhi_device *mhi_dev, const struct mhi_device_id
->   	mbim->rx_queue_sz = mhi_get_free_desc_count(mhi_dev, DMA_FROM_DEVICE);
->   
->   	/* Register wwan link ops with MHI controller representing WWAN instance */
-> -	return wwan_register_ops(&cntrl->mhi_dev->dev, &mhi_mbim_wwan_ops, mbim, 0);
-> +	return wwan_register_ops(&cntrl->mhi_dev->dev, &mhi_mbim_wwan_ops, mbim,
-> +		mhi_dev->mhi_cntrl->link_id);
+>
+> As more drivers of StarFive JH7110 VisionFive 2 board are upstream,
+> add support for them in riscv defconfig.
+>
+> Changes since v2:
+> - As the JH7110 PCIe driver was accepted, add CONFIG_PCIE_STARFIVE_HOST=m.
+> - Add CONFIG_MOTORCOMM_PHY=m, which supports the ethernet phy chips
+>   on the board.
+> - Rebase on the -next branch.
+>
+> Changes since v1:
+> - Drop CONFIG_STAGING=y, CONFIG_STAGING_MEDIA=y,
+>   CONFIG_V4L_PLATFORM_DRIVERS=y, CONFIG_VIDEO_STARFIVE_CAMSS=m.
+> - Change CONFIG_SENSORS_SFCTEMP as a module.
+> - Drop CONFIG_CLK_STARFIVE_JH7110_*=y, because they are not critical to boot.
+> - Update the commit message.
+>
+> History:
+> v2: https://lore.kernel.org/all/20240506034627.66765-1-hal.feng@starfivetech.com/
+> v1: https://lore.kernel.org/all/20240403060902.42834-1-hal.feng@starfivetech.com/
+>
+> ---
+>  arch/riscv/configs/defconfig | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index 12dc8c73a8ac..6e10039c5c42 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -110,8 +110,10 @@ CONFIG_PCIEPORTBUS=y
+>  CONFIG_PCI_HOST_GENERIC=y
+>  CONFIG_PCIE_XILINX=y
+>  CONFIG_PCIE_FU740=y
+> +CONFIG_PCIE_STARFIVE_HOST=m
+>  CONFIG_DEVTMPFS=y
+>  CONFIG_DEVTMPFS_MOUNT=y
+> +CONFIG_SIFIVE_CCACHE=y
+>  CONFIG_MTD=y
+>  CONFIG_MTD_BLOCK=y
+>  CONFIG_MTD_CFI=y
+> @@ -143,6 +145,7 @@ CONFIG_RAVB=y
+>  CONFIG_STMMAC_ETH=m
+>  CONFIG_MICREL_PHY=y
+>  CONFIG_MICROSEMI_PHY=y
+> +CONFIG_MOTORCOMM_PHY=m
+>  CONFIG_CAN_RCAR_CANFD=m
+>  CONFIG_INPUT_MOUSEDEV=y
+>  CONFIG_KEYBOARD_SUN4I_LRADC=m
+> @@ -155,24 +158,35 @@ CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+>  CONFIG_VIRTIO_CONSOLE=y
+>  CONFIG_HW_RANDOM=y
+>  CONFIG_HW_RANDOM_VIRTIO=y
+> +CONFIG_HW_RANDOM_JH7110=m
+> +CONFIG_I2C=y
+>  CONFIG_I2C_CHARDEV=m
+> +CONFIG_I2C_DESIGNWARE_PLATFORM=y
+>  CONFIG_I2C_MV64XXX=m
+>  CONFIG_I2C_RIIC=y
+>  CONFIG_SPI=y
+> +CONFIG_SPI_CADENCE_QUADSPI=m
+> +CONFIG_SPI_PL022=m
+>  CONFIG_SPI_RSPI=m
+>  CONFIG_SPI_SIFIVE=y
+>  CONFIG_SPI_SUN6I=y
+>  # CONFIG_PTP_1588_CLOCK is not set
+>  CONFIG_GPIO_SIFIVE=y
+> +CONFIG_POWER_RESET_GPIO_RESTART=y
+> +CONFIG_SENSORS_SFCTEMP=m
+>  CONFIG_CPU_THERMAL=y
+>  CONFIG_DEVFREQ_THERMAL=y
+>  CONFIG_RZG2L_THERMAL=y
+>  CONFIG_WATCHDOG=y
+>  CONFIG_SUNXI_WATCHDOG=y
+>  CONFIG_RENESAS_RZG2LWDT=y
+> +CONFIG_MFD_AXP20X_I2C=y
+>  CONFIG_REGULATOR=y
+>  CONFIG_REGULATOR_FIXED_VOLTAGE=y
+> +CONFIG_REGULATOR_AXP20X=y
+>  CONFIG_REGULATOR_GPIO=y
+> +CONFIG_MEDIA_SUPPORT=m
+> +CONFIG_VIDEO_CADENCE_CSI2RX=m
+>  CONFIG_DRM=m
+>  CONFIG_DRM_RADEON=m
+>  CONFIG_DRM_NOUVEAU=m
+> @@ -184,6 +198,10 @@ CONFIG_SOUND=y
+>  CONFIG_SND=y
+>  CONFIG_SND_SOC=y
+>  CONFIG_SND_SOC_RZ=m
+> +CONFIG_SND_DESIGNWARE_I2S=m
+> +CONFIG_SND_SOC_STARFIVE=m
+> +CONFIG_SND_SOC_JH7110_PWMDAC=m
+> +CONFIG_SND_SOC_JH7110_TDM=m
+>  CONFIG_SND_SOC_WM8978=m
+>  CONFIG_SND_SIMPLE_CARD=m
+>  CONFIG_USB=y
+> @@ -197,6 +215,11 @@ CONFIG_USB_OHCI_HCD_PLATFORM=y
+>  CONFIG_USB_RENESAS_USBHS=m
+>  CONFIG_USB_STORAGE=y
+>  CONFIG_USB_UAS=y
+> +CONFIG_USB_CDNS_SUPPORT=m
+> +CONFIG_USB_CDNS3=m
+> +CONFIG_USB_CDNS3_GADGET=y
+> +CONFIG_USB_CDNS3_HOST=y
+> +CONFIG_USB_CDNS3_STARFIVE=m
+>  CONFIG_USB_MUSB_HDRC=m
+>  CONFIG_USB_MUSB_SUNXI=m
+>  CONFIG_NOP_USB_XCEIV=m
+> @@ -246,6 +269,9 @@ CONFIG_RZG2L_ADC=m
+>  CONFIG_RESET_RZG2L_USBPHY_CTRL=y
+>  CONFIG_PHY_SUN4I_USB=m
+>  CONFIG_PHY_RCAR_GEN3_USB2=y
+> +CONFIG_PHY_STARFIVE_JH7110_DPHY_RX=m
+> +CONFIG_PHY_STARFIVE_JH7110_PCIE=m
+> +CONFIG_PHY_STARFIVE_JH7110_USB=m
+>  CONFIG_LIBNVDIMM=y
+>  CONFIG_NVMEM_SUNXI_SID=y
+>  CONFIG_EXT4_FS=y
 
-Just a nitpick. The second line had better be aligned with the opening 
-bracket:
-
-return wwan_register_ops(&cntrl->...
-                          mhi_dev->...
-
->   }
->   
->   static void mhi_mbim_remove(struct mhi_device *mhi_dev)
-
---
-Sergey
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
