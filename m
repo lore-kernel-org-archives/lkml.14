@@ -1,96 +1,118 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9634411
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC3C17C9;
+	Wed, 12 Jun 2024 01:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718155417; cv=none; b=M0UK6PQj+WNPFOAwZy7TEmgITAJ4fiMt4M62a2c3MIoTFnmM4bZ+EPFTAVNH4CS59j5C1xJSGGRftdf0Bqiqgp8I3wszjTugsRrPuwMNU1Br3FqwSLi39CgprdeqjSK3o8d9Wxry+38RDVRmkvnirnd3wvOQHvlyLTyRI8dfRJw=
+	t=1718155676; cv=none; b=ipR7GkSKTa9zri39vBEcduV7KRE7TuRC2DswgHoynrJlLA9jbRm2mogeR7G4rQ9XXi/lFYZdVqy+BK70InGbfrwciME4c6/8y9kYR2WBXsWtCpASUsoAbnGAhj2QaT3Va7AGcGoKUGsDYxjFg9dnD8nNWRsGUtb+qM+UZs+7dPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718155417; c=relaxed/simple;
-	bh=9joCK+5QYCvw814DBtCIuJ51y0uYUX8Tgug9gGwYU58=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RaID2bKXAtlETvonqqFSXd1NHFC9GocDwayxJ/Z6EAvf4b80eppDX54bcQ6LOt/ZXrKcjcZI7BvKG4dpFbZuzZasLNYesHK38Zu8vdQ3/c/aSXrm5wHlZQDFsZRUcPfLTAMcYroju8BeIMbgWeXHuzzBTCABoc+tRDR2w/KY8Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R5+0wxIW; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718155676; c=relaxed/simple;
+	bh=72ccGiqpasKMW/KuF0ZWk8xmKm5MkMvQGTh43Of7jks=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RKLpqITOOgGVggpAxkmppi6+I5urJ+FHYLgGGNbo6CiCic/Jcm1beL4njaCB0MMGM3PnJ+JvNNIX2fY7bBYgszQKHWmm3o7u8Q7Ik4s+yQT4orMpBzIAKYKKv3yAkXhm4efxN2zVDW6Jv83yVT4An4lYfWEJTZT6sFCyyveTTxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=dyzncG6r; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R5+0wxIW"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfa77d54cd2so9779536276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 18:23:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718155415; x=1718760215; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9RzYaJguaQI8ezMD1wLQZOMHWWd0f/qf7YACXyF/8fY=;
-        b=R5+0wxIWSbXYi5W3HQoiMfntIpjoSAqwbPLG/wTzn1CPAAg3NTzLTYY8zOs8Ljl+NA
-         adq18X8NIhl45m1IJX721TW/A8Otu5wOYlz7yhbkpUWjPXJqpcRtIzL0ld0rcjmbbLsI
-         ohlaxfeJpjDZRNfQYDk4Ykzz0mWmuWlnCoz3Y2R8GDR/fKJuXETn91b/KiCwWaN/Phwf
-         bcZN+1I9Jq6b2p2fkmoZtrt0wuf3OLbMLd/pT23z7Tjkdc13tu1hgqyA1NKMbUwzUisd
-         LIem6s1loda08mc3qCmFIDQENMCwfS++TZG9ELpnD9dQzxnCPNK1RHoFDoKJ7Qu0wCiX
-         nDCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718155415; x=1718760215;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9RzYaJguaQI8ezMD1wLQZOMHWWd0f/qf7YACXyF/8fY=;
-        b=vZ+aPLn9sKD9Hwl2MI1Ppqms2sRlRj3uUsd/FImwKQ5CLmC1eRqXX3ouARTf9OafeL
-         TQ9/6yT9Yfxk+3bMIJ10z3O8AQnvsQEmonu5abumo95Yd3FjbkJqjuNAtM2Ev+awk+I2
-         qAd2UczUYgdJjKnNSG9dbWA9r67+c0soQUCpMFCqcSx+BOkWwxIf+itDgCkF0kTJfLP+
-         WKxI87Dti3A7EAXzfOm0y8sX97b3ck2KI0WBOp22B3jQ715AORI/S4LYUR5L+XD9wicc
-         zPmhlQxx/EeGmvYJagjLdW0+9UeQ8PGRBEwN4eHvxNcy7tE/FQEBF0O8+yuDgcdg2Q4X
-         dJ5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWIo4nt1+O4NVWIAJ3W66F7FQsS/dDx6abVelIz1giQsLQV7upY3flSl1Q0JHH/q3gdwu2oIFpJq/MEn2jF9dG4hubBnVaXrEO5M0LI
-X-Gm-Message-State: AOJu0Yy3wzIoUZl1v2A+wC3wr7xaG0Pn/WpfZUaxIWog4Yym9afhv+6Q
-	7YLSiHLj0Xut88EJ900/JHL4lJILpQNGQVtGcewlUjU6JcXVOvauRMx5r45HZnFehhk7YEJbvao
-	E1Q==
-X-Google-Smtp-Source: AGHT+IEjJZGRKCQcHh9FXJ7J1f//y7xo6LzdBEJEvjj24wLGzsUbimQAjBo7Ve3dQ7CFgjY96N6Qv0fPgkU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:2b0c:b0:dfa:b47e:b99f with SMTP id
- 3f1490d57ef6-dfe65f78355mr33849276.2.1718155415290; Tue, 11 Jun 2024 18:23:35
- -0700 (PDT)
-Date: Tue, 11 Jun 2024 18:18:46 -0700
-In-Reply-To: <20240507133103.15052-1-wei.w.wang@intel.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dyzncG6r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1718155671;
+	bh=aenrKh5vxiZhj+lFhogAzKc1iOwHEHknWWsHgrgrf2E=;
+	h=Date:From:To:Cc:Subject:From;
+	b=dyzncG6rDIK6Q1P1pek2X2HGCvOLLvO9d6kaBeaiYFFCduUeauiopPbenV3ahkdi/
+	 qtnNmsvVDM9HIyRMZ70ekQoOZ0BhSTa/4zIWTUwPGOrofPk5Y63uhIQkTXXm5t3DKk
+	 D+M7VxRwxGN/W+1FZLQp/8pHp6Hsnk7qPdjOQ/LtzXgBSTPXTSraR+6tYaeWA9CiLS
+	 WfDF+x3Jl48kZXKDG1y57+ZE8C7E3ZaLHj+85ddVk0ThNXYR/wyGM3EU+oRjZH7JUs
+	 6zQeDR6qjrzZizW/fTZi/ZEDL43NL0ZjeQ8SlF9G+W1EQtY7JVmjxvWRPzSpSI1MIg
+	 BGEArgKWS7vTQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VzSb64rXCz4w2P;
+	Wed, 12 Jun 2024 11:27:46 +1000 (AEST)
+Date: Wed, 12 Jun 2024 11:27:46 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Tony Luck <tony.luck@intel.com>, Yury Norov
+ <yury.norov@gmail.com>
+Subject: linux-next: manual merge of the tip tree with the mm tree
+Message-ID: <20240612112746.3130d68b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240507133103.15052-1-wei.w.wang@intel.com>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <171805499012.3417292.16148545321570928307.b4-ty@google.com>
-Subject: Re: [PATCH v4 0/3] KVM/x86: Enhancements to static calls
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com, Wei Wang <wei.w.wang@intel.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/YOSTDTDlMN0uXKzhX+3sSTZ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, 07 May 2024 21:31:00 +0800, Wei Wang wrote:
-> This patchset introduces the kvm_x86_call() and kvm_pmu_call() macros to
-> streamline the usage of static calls of kvm_x86_ops and kvm_pmu_ops. The
-> current static_call() usage is a bit verbose and can lead to code
-> alignment challenges, and the addition of kvm_x86_ prefix to hooks at the
-> static_call() sites hinders code readability and navigation. The use of
-> static_call_cond() is essentially the same as static_call() on x86, so it
-> is replaced by static_call() to simplify the code. The changes have gone
-> through my tests (guest launch, a few vPMU tests, live migration tests)
-> without an issue.
-> 
-> [...]
+--Sig_/YOSTDTDlMN0uXKzhX+3sSTZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied to kvm-x86 static_calls.  I may or may not rebase these commits
-depending on what all gets queued for 6.10.  There are already three conflicts
-that I know of, but they aren't _that_ annoying.  Yet.  :-)
+Hi all,
 
-Thanks!
+Today's linux-next merge of the tip tree got a conflict in:
 
-[1/3] KVM: x86: Replace static_call_cond() with static_call()
-      https://github.com/kvm-x86/linux/commit/161827082760
-[2/3] KVM: x86: Introduce kvm_x86_call() to simplify static calls of kvm_x86_ops
-      https://github.com/kvm-x86/linux/commit/aebed32e4985
-[3/3] KVM: x86/pmu: Add kvm_pmu_call() to simplify static calls of kvm_pmu_ops
-      https://github.com/kvm-x86/linux/commit/4dbd1f66c5bf
+  include/linux/cacheinfo.h
 
---
-https://github.com/kvm-x86/linux/tree/next
+between commit:
+
+  f6a9651bfd74 ("cpumask: make core headers including cpumask_types.h where=
+ possible")
+
+from the mm-nonmm-unstable branch of the mm tree and commit:
+
+  685cb1674060 ("cacheinfo: Add function to get cacheinfo for a given CPU a=
+nd cache level")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/cacheinfo.h
+index 286db104e054,3dde175f4108..000000000000
+--- a/include/linux/cacheinfo.h
++++ b/include/linux/cacheinfo.h
+@@@ -3,7 -3,8 +3,8 @@@
+  #define _LINUX_CACHEINFO_H
+ =20
+  #include <linux/bitops.h>
++ #include <linux/cpuhplock.h>
+ -#include <linux/cpumask.h>
+ +#include <linux/cpumask_types.h>
+  #include <linux/smp.h>
+ =20
+  struct device_node;
+
+--Sig_/YOSTDTDlMN0uXKzhX+3sSTZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZo+ZIACgkQAVBC80lX
+0GxisQf+OmG6pg1a7Pj2fCoxVz3x2kbRExO5WJss2J8RJZWmyUs+q7NOkLb8QhA/
+nakSdWLgocoJ5AwgCCZjidYIPzQtqTM54R9hQsymo5jWk51xYCLhmWTe8rEElK7P
+pkH99Shjf3D4ErISee+9pQCfMp1D3vC75eb70fZIYqucaPbqJtkQ0JwjGAFflv6Q
+wFn+VQAwlfiXkIiS2gUYOKTSN7KqAJZr95+VzsWCvjMP/vUUIire6WY6p+8RMu8F
+PgnsHYWP79PONHrOyBcnnDau5IgFMqUgLFSerx2gxEXUFdFBKG1MEvEB5L3KiryU
+L8sPSAHgeGHDJyf0KKtifnrJ2Vb1zw==
+=iA/m
+-----END PGP SIGNATURE-----
+
+--Sig_/YOSTDTDlMN0uXKzhX+3sSTZ--
