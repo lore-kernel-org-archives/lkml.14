@@ -1,133 +1,159 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26B016F29C;
-	Wed, 12 Jun 2024 12:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8CA16F29C;
+	Wed, 12 Jun 2024 12:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718196071; cv=none; b=YvoLWru2vy0oPxgPa3TdkMlQAJUHOO+1x4O6wbpSdmcHIqNmlhwdDUAsLO3iozXH7Rzpqmvy0MIjEumv2WlTuShjcUwwqSeoDDQDBklBorBDi9Pq3rNGD9gVZgsdmCmpBBGxhXKyBp3juwV+ikkNSER8A1fhUOCryYQ9zQMvMl8=
+	t=1718196088; cv=none; b=iTNgq5fdvgUb+ifkPcSf6xb0pvD1GVC2fMzXNHvNxpj0fTj05vrNGbXSFAuxiUPIZ4ckzDIsCWxdgkho2If2rB1hTtvzBFB6Nkly1RDyDIkiLpuaQokFrxudnQCTlfHfOPhfRz6FV3iVYDnbV21WKjwHpFV4fZ84fwmqZHCmNz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718196071; c=relaxed/simple;
-	bh=8t9V+RAuQ307UNgRL1t8CxJDFzSaO2i9p55Z97H1iSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dLjno9OkAsKqgsVQeGxN19+oldqAUW4S1iR7sra3Iwl3/TWNyvHJhQzGS6Ii+rMP5gnnDEIS0rSaAq832M7pH+1kCPaBkb+chF15XAomXkHgN59sbMjOSQ72gxCjAS2zIMuzC5cdh2GuaNgMv9dQC44cG6QMYe4mCk5Ch/xtc+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A/5sGVd3; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1718196088; c=relaxed/simple;
+	bh=QKNi1AnJcoaWSExqqXnv1fwPnCX7d8tJdIQZQ5sLTLg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=peKpkElDWmUMq/R0r8hS1vq8CskSvn+g+15f1uPAPxgh/T2ywxfGZrnnBd0Mzsyr1NoVNxlj/AVUsYnmBQrkSp/vqRYOw0umPrpbM/7mIFB5xLwd7QAJ3cNc0dFZDy/UOQExcw9phPQlXVlS+dMQ4iaDtN79QMU/ty35PqYdD5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dp6+j6TW; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A/5sGVd3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=pRy0sJWQM10IgB/bhi5G6l1DK7UQGSd130PPr57Mh4Y=;
-	t=1718196069; x=1718628069; b=A/5sGVd3QQbrZi9TzZmWda2DCsSu4WcQCFj9QwkkG6b0xmx
-	Zv3onSkETgPd341pc2KfX7lUmKJOw3p1YWkO+SJrtnSxxBv9aNrMpImVaDS40wCJF8HyQMa3kweNQ
-	6TJk4mvRAE6xBDFUn8jhYMakbx1eX8dtlwDfQ4AHxVMLHWpGA/HPlyEABjCtxxX9i6NAOvfnhyuSV
-	w/pbYPj3m7aoz95SvGFbI4RV/DtYW1Lx0dMvEweP0ydlujKa5dFB0BDiG9G/KL44QVOzAKfZrxiOM
-	9rPyPWEPEwVpb7Orssb1D5Adv0aeRzvfKpQE/NzzzzKI+DFObWz1TYrAYOpsbd2w==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sHNHl-0004yB-H5; Wed, 12 Jun 2024 14:41:05 +0200
-Message-ID: <67b279c7-1b65-46be-baa2-06794b47b9d1@leemhuis.info>
-Date: Wed, 12 Jun 2024 14:41:04 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dp6+j6TW"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C5FpOs026048;
+	Wed, 12 Jun 2024 12:41:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=4w9NEFBq31+/OpwZoJSdmS
+	qWfK/PiX4zNunRe6a0SyE=; b=dp6+j6TW7nWc9elNgo/XTtQUx3DdqbL0CQDIPy
+	sEiMsnzYWJ1SbjnTxlB+LYPKN+kXDJ7z+lV9KAdZMR+kR1UnY4PK3XY67YCoaf9r
+	oB+Gtd07s81QDDY9Pg+HA7SFHmR+YgeimuCcdS5Z8BQkdzAsMucst7AXABywB0HN
+	ZUkXqlCPi4KzbAU7g0lVeox/6UkS9zi5DL1WouidQYivY0okUrcUHc13yjLFsfOm
+	nCflnln6CKrFdbxrspnncoTUcmOdNpYrw0P1wDhDAXyGm3tUgQHjh/HRg91eCr/r
+	p0MHRnOoh5Rvt+lc0V2o2ydwfpBi0YeFKo9WF+x739kEPErg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yps5xak42-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 12:41:18 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CCfHwl003077
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 12:41:17 GMT
+Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 12 Jun 2024 05:41:11 -0700
+From: Sibi Sankar <quic_sibis@quicinc.com>
+To: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <jassisinghbrar@gmail.com>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <dmitry.baryshkov@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <quic_rgottimu@quicinc.com>,
+        <quic_kshivnan@quicinc.com>, <quic_sibis@quicinc.com>,
+        <conor+dt@kernel.org>, <quic_nkela@quicinc.com>,
+        <quic_psodagud@quicinc.com>, <abel.vesa@linaro.org>
+Subject: [PATCH V6 0/5] qcom: x1e80100: Enable CPUFreq
+Date: Wed, 12 Jun 2024 18:10:51 +0530
+Message-ID: <20240612124056.39230-1-quic_sibis@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] QXL display malfunction
-To: "tzimmermann@suse.de" <tzimmermann@suse.de>
-Cc: "Petkov, Borislav" <Borislav.Petkov@amd.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "zack.rusin@broadcom.com" <zack.rusin@broadcom.com>,
- "dmitry.osipenko@collabora.com" <dmitry.osipenko@collabora.com>,
- "Kaplan, David" <David.Kaplan@amd.com>,
- "Koenig, Christian" <Christian.Koenig@amd.com>,
- Dave Airlie <airlied@redhat.com>, Dave Airlie <airlied@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- ML dri-devel <dri-devel@lists.freedesktop.org>,
- spice-devel@lists.freedesktop.org, virtualization@lists.linux.dev
-References: <DS7PR12MB576622398096CB650FF6AF4294FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
- <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <DS7PR12MB57665F9F4BDF0598D7CC53DD94FF2@DS7PR12MB5766.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1718196069;3e301e0f;
-X-HE-SMSGID: 1sHNHl-0004yB-H5
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vUAtslI0AYZvWHAMOgUuY4fAXaXabGRf
+X-Proofpoint-ORIG-GUID: vUAtslI0AYZvWHAMOgUuY4fAXaXabGRf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_06,2024-06-12_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999
+ spamscore=0 suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0
+ phishscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2405170001 definitions=main-2406120092
 
-[CCing a few more people and lists that get_maintainers pointed out for qxl]
+This series enables CPUFreq support on the X1E SoC using the SCMI perf
+protocol. This was originally part of the RFC: firmware: arm_scmi:
+Qualcomm Vendor Protocol [1]. I've split it up so that this part can
+land earlier.
 
-Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
-for once, to make this easily accessible to everyone.
+V5:
+* Fix build error reported by kernel test robot by adding 64BIT requirement
+  to COMPILE_TEST
+* Pick Rbs
 
-Thomas, from here it looks like this report that apparently is caused by
-a change of yours that went into 6.10-rc1 (b33651a5c98dbd ("drm/qxl: Do
-not pin buffer objects for vmap")) fell through the cracks. Or was
-progress made to resolve this and I just missed this?
+V4:
+* Move val, flag and chan to local loop variables. [Jassi]
+* Add cpucp mailbox to the MAINTAINERS file. [Jassi]
+* Move to core_initcall. [Konrad]
+* Skip explicitly setting txdone_irq/txdone_poll to zero. [Konrad]
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+V3:
+* Fix Maintainer info in cpucp mbox bindings. [Bjorn]
+* Fix copyright info in cpucp driver. [Bjorn]
+* Drop unused APSS_CPUCP_TX_MBOX_IDR, value init and drv_data. [Bjorn/Dmitry]
+* Convert to lower case hex. [Bjorn]
+* Convert irq and dev to local variables. [Bjorn]
+* Replace for and if with for_each_set_bit. [Bjorn]
+* Document the need for spinlock. [Bjorn]
+* Add space after " for aesthetics. [Bjorn]
+* Fix err in calc and add fixes tag. [Bjorn]
+* Include io.h and re-order platform_device.h
+* Use GENMASK_ULL to generate APSS_CPUCP_RX_MBOX_CMD_MASK.
 
-#regzbot poke
+V2:
+* Fix series version number [Rob]
+* Pickup Rbs from Dimitry and Rob.
+* Use power-domain instead of clocks. [Sudeep/Ulf]
+* Rename sram sub-nodes according to schema. [Dmitry]
+* Use BIT() instead of manual shift. [Dmitry]
+* Define RX_MBOX_CMD to account for chan calculation. [Dmitry]
+* Clear the bit instead of the entire status within the spinlock. [Dmitry]
+* Use dev_err_probe instead. [Dmitry]
+* Drop superfluous error message while handling errors from get_irq. [Dmitry]
+* Use devm_mbox_controller_register and drop remove path. [Dmitry]
+* Define TX_MBOX_CMD to account for chan calculation.
+* Use cpucp->dev in probe path for conformity.
 
+RFC V1:
+* Use x1e80100 as the fallback for future SoCs using the cpucp-mbox
+  controller. [Krzysztoff/Konrad/Rob]
+* Use chan->lock and chan->cl to detect if the channel is no longer
+  Available. [Dmitry]
+* Use BIT() instead of using manual shifts. [Dmitry]
+* Don't use integer as a pointer value. [Dmitry]
+* Allow it to default to of_mbox_index_xlate. [Dmitry]
+* Use devm_of_iomap. [Dmitry]
+* Use module_platform_driver instead of module init/exit. [Dmitry]
+* Get channel number using mailbox core (like other drivers) and
+  further simplify the driver by dropping setup_mbox func.
 
-On 03.06.24 04:29, Kaplan, David wrote:
->> -----Original Message-----
->> From: Kaplan, David
->> Sent: Sunday, June 2, 2024 9:25 PM
->> To: tzimmermann@suse.de; dmitry.osipenko@collabora.com; Koenig,
->> Christian <Christian.Koenig@amd.com>; zach.rusin@broadcom.com
->> Cc: Petkov, Borislav <Borislav.Petkov@amd.com>; regressions@list.linux.dev
->> Subject: [REGRESSION] QXL display malfunction
->>
->> Hi,
->>
->> I am running an Ubuntu 19.10 VM with a tip kernel using QXL video and I've
->> observed the VM graphics often malfunction after boot, sometimes failing to
->> load the Ubuntu desktop or even immediately shutting the guest down.
->> When it does load, the guest dmesg log often contains errors like
->>
->> [    4.303586] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
->> wrong: 65376256x16777216+0+0
->> [    4.586883] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
->> wrong: 65376256x16777216+0+0
->> [    4.904036] [drm:drm_atomic_helper_commit_planes] *ERROR* head 1
->> wrong: 65335296x16777216+0+0
->> [    5.374347] [drm:qxl_release_from_id_locked] *ERROR* failed to find id in
->> release_idr
->>
->> I bisected the issue down to "drm/qxl: Do not pin buffer objects for vmap"
->> (b33651a5c98dbd5a919219d8c129d0674ef74299).
->>
->> The full guest .config and guest XML can be provided if desired.  The guest
->> kernel has QXL support compiled in and the VM has
->>
->> <video>
->>   <model type="qxl" ram="65536" vram="65536" vgamem="16384"
->> heads="1" primary="yes"/>
->>   <address type="pci" domain="0x0000" bus="0x00" slot="0x01"
->> function="0x0"/> </video>
->>
->> The host is Ubuntu 24.04 (stock) running QEMU version 8.2.2.  The VM is run
->> under virt-manager 4.1.0.  If other information would be helpful, just let me
->> know.
->>
->> Thanks --David Kaplan
-> 
-> Fixing emails...sorry
-> 
-> --David Kaplan
-> 
-> 
+[1]: https://lore.kernel.org/lkml/20240117173458.2312669-1-quic_sibis@quicinc.com/#r
+
+Other relevant Links:
+https://lore.kernel.org/lkml/be2e475a-349f-4e98-b238-262dd7117a4e@linaro.org/
+
+Sibi Sankar (5):
+  dt-bindings: mailbox: qcom: Add CPUCP mailbox controller bindings
+  mailbox: Add support for QTI CPUCP mailbox controller
+  arm64: dts: qcom: x1e80100: Resize GIC Redistributor register region
+  arm64: dts: qcom: x1e80100: Add cpucp mailbox and sram nodes
+  arm64: dts: qcom: x1e80100: Enable cpufreq
+
+ .../bindings/mailbox/qcom,cpucp-mbox.yaml     |  49 +++++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi        |  91 ++++++---
+ drivers/mailbox/Kconfig                       |   8 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/qcom-cpucp-mbox.c             | 187 ++++++++++++++++++
+ 6 files changed, 319 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,cpucp-mbox.yaml
+ create mode 100644 drivers/mailbox/qcom-cpucp-mbox.c
+
+-- 
+2.34.1
+
