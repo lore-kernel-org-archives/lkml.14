@@ -1,225 +1,137 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D753D1822C8;
-	Wed, 12 Jun 2024 17:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00991836C4
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 17:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718213359; cv=none; b=soKjteRu+tDvoz+oshg3SvUyBmTMtv9Th9SENFIsZ9l/L/BjdrgBaj5Sl8zcHthyl1aYrEcrhKW4ARCQQc2hcpZ/osAFJ/rX81dCuXH1D5f7rDm8bxeLX0zAwhKKQ+q2N+3NB3vBDCf7RIl05etfXRqgILXlW3Cfii/sjToAvFQ=
+	t=1718213362; cv=none; b=WODEDuZCRoHAtwAgiB9Z6XpnQrkx6HVO80pvBObBxgPHPjftsNn5FvNL4LoNmCX0+8ZpNUAd0t30b54BvtThjrszX6Zw/9FqXe0eb1WYb/kBZRj6kj+hHvOFZug6sVKgsV6zYSE+E+ppOCPrKHHELKRlm2g3V/1xUXGgbdXQUv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718213359; c=relaxed/simple;
-	bh=2gIA6Iq203YqgqKcJSudmGZ5LiXcONkeQpWJJMNZAsQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HxyJu13PV3kl7NuNVfHn/5hobnG1jA0MGMQXjWhLFzW51FEWwmRP6vprQeVOjnrBgoms5qui8V5DbmmROO4wpABrVVHfB1HPfTmTxE3f17yuPH1kQj1wRY/BhyxkDGd3GH4IS9xPm81H4n6+In05+R+0cm3rhf0aC9tMr7StZw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Dyq/r11n; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1718213362; c=relaxed/simple;
+	bh=SqHXwxyX0hOMrGyXlbcSlWw9tiq1bd472LhKjNZO0j4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MhS/xX8285cwx6pzMhp2JlCW+81LRyB3Ymsl1JCCdmAz4oLqnSE7Arrt1Zdq4WZ9aD5Yj/3RIrunmL+6nYat+3ep9GeZicYtvz9apUdrbrnMhvKsxDeGbpU95p8aGqxvT5pLYT+zEQrN0297sz7s3tMDy/48JfKpWs++tqTiq/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=cHTfEDbH; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Dyq/r11n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1718213357; x=1749749357;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2gIA6Iq203YqgqKcJSudmGZ5LiXcONkeQpWJJMNZAsQ=;
-  b=Dyq/r11n9VDtmqYplvESmfxRwAsiQuUD+kuTrhzf1GqbRCvvDUxdLgWq
-   a7ua+LJDdsNPvRVJNGjCCBfwx9V1S9OcO8Qs1LiEkQzJ2aW9xWQH7bKB9
-   YCCr6mDFUP+JVs+zyiQPhk/uwJRTNmy8Es5pU+jrBKxf4u9APy5sOmUd8
-   hDuJgWyrca3ApWjgJ1xWsZPDsa8Y7aXNcegw7odSXubNPUqPPMgoG4RIT
-   TD2tdw2fjgrDJCESsitdRxYCiWBIOpEB65q06RJWAndyQldQyAA8JT7lg
-   QpigvjtlSeTFwzr0iVIHiuWxjXhK/PKuI/XB2jcttOIRxBzoMNJeK+7mg
-   g==;
-X-CSE-ConnectionGUID: Vpq6ati1SxKeL258BLuWYg==
-X-CSE-MsgGUID: WQjZbRuESJqHwb6AZO+l5g==
-X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
-   d="scan'208";a="194739146"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Jun 2024 10:29:10 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 12 Jun 2024 10:28:50 -0700
-Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 12 Jun 2024 10:28:45 -0700
-From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-To: <netdev@vger.kernel.org>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bryan.whitehead@microchip.com>, <andrew@lunn.ch>, <linux@armlinux.org.uk>,
-	<sbauer@blackbox.su>, <hmehrtens@maxlinear.com>, <lxu@maxlinear.com>,
-	<hkallweit1@gmail.com>, <edumazet@google.com>, <pabeni@redhat.com>,
-	<wojciech.drewek@intel.com>, <UNGLinuxDriver@microchip.com>
-Subject: [PATCH net V4 3/3] net: phy: mxl-gpy: Remove interrupt mask clearing from config_init
-Date: Wed, 12 Jun 2024 22:55:39 +0530
-Message-ID: <20240612172539.28565-4-Raju.Lakkaraju@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240612172539.28565-1-Raju.Lakkaraju@microchip.com>
-References: <20240612172539.28565-1-Raju.Lakkaraju@microchip.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="cHTfEDbH"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dfe398bc50dso109742276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 10:29:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1718213359; x=1718818159; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=60lvPuusqxavVhRXfVcmrSoiIVupdLi0rpCh21972os=;
+        b=cHTfEDbHk6HIEEn0Ouvd1wUDoXpMYFN/HZO3ahKHW+K15xPGFiMJcf8MVBZfy7Lndu
+         9B0gJUKFP12+r7Xc0M3Fq2RqW+bZgItpodmOakdof6kuTbSmAdWWeM2ubU1BlyQiebMb
+         MvuxAQamRDwQeIW9ZFBIcvc59CZMvSKdRtNzitNXU8JHVrEMDHNC/i5Yf9gBEwfkTVAI
+         KAIunmbnZvUDIKtLlMs0yrTuey7ImwDoH+0hvUxrPZx76Hy4yG9yQD5DOFiP9PpUxuj6
+         EIcmmCaIDNDCFGvrURI3v936AvRLS4oTV3eYPx2TdJldxRqJalPrHlTJbKC7D+B/tmAO
+         4PzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718213359; x=1718818159;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=60lvPuusqxavVhRXfVcmrSoiIVupdLi0rpCh21972os=;
+        b=xKzIDpSAZAPWewx9SPEaxDwxk7HN6SDAADrzv57nilzg7SJFngJrR5gSgjTbOBgVc2
+         DR1Xm+Azl+NsfjU2NsnnC3j1fF77ie+iLonaqT8hWSVyhTxfJODH0cu6XlYLcUZbCSwk
+         YOAxDBEu+BzCRTUigsCDWRUjOnJo7lKp7r+N/aBgFI+p4jGoZ+hLOXyyb9460i0YJDZ0
+         yRfNePxl+4vUPHAAVmnZK8tOFYuMGI2nwjzQgCFHNMDhEJOJmKVQ9ODMyio/bebA8SSI
+         HODrA073Whc10QMbiD0f6Xmbsrz0sYV7ss+J9XJHzAwq4T3bVP82c4p4xv1nAU+3QBt+
+         I1qA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4LxbwKuRRirQQPfLSnnmOU1Y0dIN61MiExN5wF0x6f/wfZZcOQS+hCuUKF/NNHWKEZyHDJSP9w9Znx23hswB3soungLENtmRj7+lg
+X-Gm-Message-State: AOJu0Ywa79Hg9Zri3mfueDe86yCpdK2OA+J3rT2ZBJ+9dkthP+KfaqXs
+	/RE09WetLiHVZh3SU88JL5bEkpgD2ESLT6qSYIREPMikPlgRJnN2d9kNhktqpCOr3w0FhDtU2W6
+	0rCti1iQ4iiMllmpyK2b/mEZb7E52V/fWjORt
+X-Google-Smtp-Source: AGHT+IEhGQzLLgCG9zMe0EWuDP1y2oVPtsHywKe/9At+CIXkctODudh6oHfrQfYIPwmYuFhbkIgUb9iq6CY+5R6qw6E=
+X-Received: by 2002:a25:7:0:b0:de6:1695:13a3 with SMTP id 3f1490d57ef6-dfe62f1a60dmr2505543276.0.1718213358736;
+ Wed, 12 Jun 2024 10:29:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20240609104355.442002-1-jcalmels@3xx0.net> <20240609104355.442002-5-jcalmels@3xx0.net>
+ <CAHC9VhT5XWbhoY2Nw5jQz4GxpDriUdHw=1YsQ4xLVUtSnFxciA@mail.gmail.com>
+ <z2bgjrzeq7crqx24chdbxnaanuhczbjnq6da3xw6al6omjj5xz@mqbzzzfva5sw>
+ <887a3658-2d8d-4f9e-98f2-27124bb6f8e6@canonical.com> <CAHC9VhQFNPJTOct5rUv3HT6Z2S20mYdW75seiG8no5=fZd7JjA@mail.gmail.com>
+ <uuvwcdsy7o4ulmrdzwffr6uywfacmlkjrontmjdj44luantpok@dtatxaa6tzyv>
+ <CAHC9VhRnthf8+KgfuzFHXWEAc9RShDO0G_g0kc1OJ-UTih1ywg@mail.gmail.com> <rgzhcsblub7wedm734n56cw2qf6czjb4jgck6l5miur6odhovo@n5tgrco74zce>
+In-Reply-To: <rgzhcsblub7wedm734n56cw2qf6czjb4jgck6l5miur6odhovo@n5tgrco74zce>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 12 Jun 2024 13:29:06 -0400
+Message-ID: <CAHC9VhRGJTND25MFk4gR-FGxoLhMmgUrMpz_YoMFOwL6kr28zQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] bpf,lsm: Allow editing capabilities in BPF-LSM hooks
+To: Jonathan Calmels <jcalmels@3xx0.net>
+Cc: John Johansen <john.johansen@canonical.com>, brauner@kernel.org, ebiederm@xmission.com, 
+	Jonathan Corbet <corbet@lwn.net>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Joel Granados <j.granados@samsung.com>, David Howells <dhowells@redhat.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	containers@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org, 
+	apparmor@lists.ubuntu.com, keyrings@vger.kernel.org, selinux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When the system resumes from sleep, the phy_init_hw() function invokes
-config_init(), which clears all interrupt masks and causes wake events to be
-lost in subsequent wake sequences. Remove interrupt mask clearing from
-config_init() and preserve relevant masks in config_intr().
+On Wed, Jun 12, 2024 at 4:15=E2=80=AFAM Jonathan Calmels <jcalmels@3xx0.net=
+> wrote:
+> On Tue, Jun 11, 2024 at 06:38:31PM GMT, Paul Moore wrote:
+> > On Tue, Jun 11, 2024 at 6:15=E2=80=AFPM Jonathan Calmels <jcalmels@3xx0=
+.net> wrote:
 
-Fixes: 7d901a1e878a ("net: phy: add Maxlinear GPY115/21x/24x driver")
-Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
----
-Change List:
-------------
-V3 -> V4:
-  - No change
-V0 -> V3:
-  - Address the https://lore.kernel.org/lkml/4a565d54-f468-4e32-8a2c-102c1203f72c@lunn.ch/T/
-    review comments
+...
 
- drivers/net/phy/mxl-gpy.c | 58 +++++++++++++++++++++++++--------------
- 1 file changed, 38 insertions(+), 20 deletions(-)
+> > > Arguably, if we do want fine-grained userns policies, we need LSMs to
+> > > influence the userns capset at some point.
+> >
+> > One could always use, or develop, a LSM that offers additional
+> > controls around exercising capabilities.  There are currently four
+> > in-tree LSMs, including the capabilities LSM, which supply a
+> > security_capable() hook that is used by the capability-based access
+> > controls in the kernel; all of these hook implementations work
+> > together within the LSM framework and provide an additional level of
+> > control/granularity beyond the existing capabilities.
+>
+> Right, but the idea was to have a simple and easy way to reuse/trigger
+> as much of the commoncap one as possible from BPF. If we're saying we
+> need to reimplement and/or use a whole new framework, then there is
+> little value.
 
-diff --git a/drivers/net/phy/mxl-gpy.c b/drivers/net/phy/mxl-gpy.c
-index b2d36a3a96f1..e5f8ac4b4604 100644
---- a/drivers/net/phy/mxl-gpy.c
-+++ b/drivers/net/phy/mxl-gpy.c
-@@ -107,6 +107,7 @@ struct gpy_priv {
- 
- 	u8 fw_major;
- 	u8 fw_minor;
-+	u32 wolopts;
- 
- 	/* It takes 3 seconds to fully switch out of loopback mode before
- 	 * it can safely re-enter loopback mode. Record the time when
-@@ -221,6 +222,15 @@ static int gpy_hwmon_register(struct phy_device *phydev)
- }
- #endif
- 
-+static int gpy_ack_interrupt(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* Clear all pending interrupts */
-+	ret = phy_read(phydev, PHY_ISTAT);
-+	return ret < 0 ? ret : 0;
-+}
-+
- static int gpy_mbox_read(struct phy_device *phydev, u32 addr)
- {
- 	struct gpy_priv *priv = phydev->priv;
-@@ -262,16 +272,8 @@ static int gpy_mbox_read(struct phy_device *phydev, u32 addr)
- 
- static int gpy_config_init(struct phy_device *phydev)
- {
--	int ret;
--
--	/* Mask all interrupts */
--	ret = phy_write(phydev, PHY_IMASK, 0);
--	if (ret)
--		return ret;
--
--	/* Clear all pending interrupts */
--	ret = phy_read(phydev, PHY_ISTAT);
--	return ret < 0 ? ret : 0;
-+	/* Nothing to configure. Configuration Requirement Placeholder */
-+	return 0;
- }
- 
- static int gpy21x_config_init(struct phy_device *phydev)
-@@ -627,11 +629,23 @@ static int gpy_read_status(struct phy_device *phydev)
- 
- static int gpy_config_intr(struct phy_device *phydev)
- {
-+	struct gpy_priv *priv = phydev->priv;
- 	u16 mask = 0;
-+	int ret;
-+
-+	ret = gpy_ack_interrupt(phydev);
-+	if (ret)
-+		return ret;
- 
- 	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
- 		mask = PHY_IMASK_MASK;
- 
-+	if (priv->wolopts & WAKE_MAGIC)
-+		mask |= PHY_IMASK_WOL;
-+
-+	if (priv->wolopts & WAKE_PHY)
-+		mask |= PHY_IMASK_LSTC;
-+
- 	return phy_write(phydev, PHY_IMASK, mask);
- }
- 
-@@ -678,6 +692,7 @@ static int gpy_set_wol(struct phy_device *phydev,
- 		       struct ethtool_wolinfo *wol)
- {
- 	struct net_device *attach_dev = phydev->attached_dev;
-+	struct gpy_priv *priv = phydev->priv;
- 	int ret;
- 
- 	if (wol->wolopts & WAKE_MAGIC) {
-@@ -725,6 +740,8 @@ static int gpy_set_wol(struct phy_device *phydev,
- 		ret = phy_read(phydev, PHY_ISTAT);
- 		if (ret < 0)
- 			return ret;
-+
-+		priv->wolopts |= WAKE_MAGIC;
- 	} else {
- 		/* Disable magic packet matching */
- 		ret = phy_clear_bits_mmd(phydev, MDIO_MMD_VEND2,
-@@ -732,6 +749,13 @@ static int gpy_set_wol(struct phy_device *phydev,
- 					 WOL_EN);
- 		if (ret < 0)
- 			return ret;
-+
-+		/* Disable the WOL interrupt */
-+		ret = phy_clear_bits(phydev, PHY_IMASK, PHY_IMASK_WOL);
-+		if (ret < 0)
-+			return ret;
-+
-+		priv->wolopts &= ~WAKE_MAGIC;
- 	}
- 
- 	if (wol->wolopts & WAKE_PHY) {
-@@ -748,9 +772,11 @@ static int gpy_set_wol(struct phy_device *phydev,
- 		if (ret & (PHY_IMASK_MASK & ~PHY_IMASK_LSTC))
- 			phy_trigger_machine(phydev);
- 
-+		priv->wolopts |= WAKE_PHY;
- 		return 0;
- 	}
- 
-+	priv->wolopts &= ~WAKE_PHY;
- 	/* Disable the link state change interrupt */
- 	return phy_clear_bits(phydev, PHY_IMASK, PHY_IMASK_LSTC);
- }
-@@ -758,18 +784,10 @@ static int gpy_set_wol(struct phy_device *phydev,
- static void gpy_get_wol(struct phy_device *phydev,
- 			struct ethtool_wolinfo *wol)
- {
--	int ret;
-+	struct gpy_priv *priv = phydev->priv;
- 
- 	wol->supported = WAKE_MAGIC | WAKE_PHY;
--	wol->wolopts = 0;
--
--	ret = phy_read_mmd(phydev, MDIO_MMD_VEND2, VPSPEC2_WOL_CTL);
--	if (ret & WOL_EN)
--		wol->wolopts |= WAKE_MAGIC;
--
--	ret = phy_read(phydev, PHY_IMASK);
--	if (ret & PHY_IMASK_LSTC)
--		wol->wolopts |= WAKE_PHY;
-+	wol->wolopts = priv->wolopts;
- }
- 
- static int gpy_loopback(struct phy_device *phydev, bool enable)
--- 
-2.34.1
+I can appreciate how allowing direct manipulation of capability bits
+from a BPF LSM looks attractive, but my hope is that our discussion
+here revealed that as you look deeper into making it work there are a
+number of pitfalls which prevent this from being a safe option for
+generalized systems.
 
+> TBH, I don't feel strongly about this, which is why it is absent from
+> v1. However, as John pointed out, we should at least be able to modify
+> the blob if we want flexible userns caps policies down the road.
+
+As discussed in this thread, there are existing ways to provide fine
+grained control over exercising capabilities that can be safely used
+within the LSM framework.  I don't want to speak to what John is
+envisioning, but he should be aware of these mechanisms, and if I
+recall he did voice a level of concern about the same worries I
+mentioned.
+
+I'm happy to discuss ways in which we can adjust the LSM hooks/layer
+to support different approaches to capability controls, but one LSM
+directly manipulating the state of another is going to be a no vote
+from me.
+
+--=20
+paul-moore.com
