@@ -1,170 +1,152 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2111.outbound.protection.partner.outlook.cn [139.219.146.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043A4257D
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 03:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0773EF4FA;
+	Wed, 12 Jun 2024 03:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.219.146.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718162971; cv=none; b=V06jotT4rLA7Jl2UGqvUvjdZyfgccNOENfhGKv0KlPyzy7UL64JUCOMFOppEMMfQrRyfz+mb0o5pt+fjqB9tcv/DLP2eB2SJuKqwXzKCV59QimKeYhgATF4BUib+fTjKC3S2D+L8HzmxQpvef4vGCvFg3fWrGPNKpaakeGqqm3o=
+	t=1718163028; cv=none; b=EIL3nzmO0dXVmdeYV7M6DlH5S0SRF8njznfLKbTUuKMmU8JmEvXUpgIOOPrwlTbGt8x7iuojRgV/ltwqTESRKqT49tg+sQ2EcwLhXrzblz14Bnw2ganDnV6yjdevQzk76Y8XJWu2fWTOgeydepZvSM/tZvua6qtsTwhG8V6v6WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718162971; c=relaxed/simple;
-	bh=FY9fFF1F7cRvCwX73JSRpuljV2KG6+THYC6d4MhA8ZU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MhfAQvzIBEz9srsIbBBnEdLB90WU0HMUFDzU5QL2/zcvYsWXTKA7WuzBLsKMv6UWqFRMABCMHhArSrXYC6+VvPUJyhJJkjiRZMaIqv3cBuL2E4S/HZiuuIvGcVryKUb+1Wn0lfRqLGUkFaLOYES5ICz93DW3ZhshW8ROX18Tzlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Rzw1Gj/0; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rzw1Gj/0"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57c685bfd86so5295276a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 20:29:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718162968; x=1718767768; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qct4xvMTygFxOfNWaCR3/q2u96535kRB68KKPO3xZ1c=;
-        b=Rzw1Gj/0ZofNz5RIVAa2LB5as2e/ZPYVTTmWcYjY4w2aHrOFc7E53VJS5qntvrR4ap
-         a1ZaQ73nsJfYT8CNCJq3uu4HOa+/IDAW7SMOVTCuLbdnnjKEykHk1kuPnAsIhE7z0+J6
-         bIy+wlzsPEpdcRE3P6M53tP4o2fayoWs6EVRg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718162968; x=1718767768;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qct4xvMTygFxOfNWaCR3/q2u96535kRB68KKPO3xZ1c=;
-        b=o5/Ojb+ujP3cakbhns4cr4uzb2CPOmxpNYnPZ4hCiRptV5eCy7VC/HSp3aQh0WuF+6
-         lePp94uKr5qLQpo4NTSfXg4JbFDP16iNbqMw/wmeCG9Fb7v/f4//qHR+6X7DYluyG9PV
-         bDLM8uOFIggUVaPvN0GviFnIXDxOwzfmdAbQeRWRQwlXcpkDF/QDVn/IH4JSdVXIbwLe
-         3dL0VFjWskcxHasoAa61gNFgQefPTfkktsWGFVJ0npODviua4OqtK9yrmpurPIBmNJIt
-         uqb1N7RtVlXI8qTsnxVe0QoCSSfWaqT/fxhmwKXOPPHKMms8m++q8ozpGjpbz/b/fJK1
-         TuxA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8jq8J7l53nzHtN+Uw01h5cE1M2w48AyHyFPgDpNo/woAnW3LIpx0JZJlg2V370wID26S7VxWpmdtU1PoIqrlcr8YkMRn3OIoauVeX
-X-Gm-Message-State: AOJu0YxLQh273J4v03HBQaaotZqSU8qAca2/8Kuk4QRTb9OTtMxf48bF
-	xTb8maWJCRf4K6ngjUunwPDkwaneR8lkPb5UyWJ4lToUr0kFWryHs6ZmfcvjDaNUGw+112GdCeF
-	qEQ==
-X-Google-Smtp-Source: AGHT+IGSnfaFWFs+sp0RJy1wgk1q3iIuIow1kEhAGq26hJ54gy/LiRmOJk05ycRArAssgEvIrRDfkw==
-X-Received: by 2002:a50:d7d6:0:b0:578:676e:324 with SMTP id 4fb4d7f45d1cf-57ca976cccfmr306099a12.17.1718162967841;
-        Tue, 11 Jun 2024 20:29:27 -0700 (PDT)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c7cf18193sm5413814a12.50.2024.06.11.20.29.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 20:29:26 -0700 (PDT)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a6ef64b092cso474110266b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 20:29:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUZieLhKSrdpSyl7Ueg8L9SK0rrH546tHs4GXW1NogemBx45I4cdO76Ud2k4qQzx/M52gyffFR7vLUWLEfLMxq8E6bdEjKn1Mpo+zMC
-X-Received: by 2002:a17:906:f206:b0:a6e:fe97:b33a with SMTP id
- a640c23a62f3a-a6f47f938acmr28194866b.29.1718162965328; Tue, 11 Jun 2024
- 20:29:25 -0700 (PDT)
+	s=arc-20240116; t=1718163028; c=relaxed/simple;
+	bh=kLKAbzi0xsqXvRGTpQFmPAYjqFrDThP5VWGEQnR2Icw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UtdBKit8mDuFyg6FUwvp1lIezUypelhUnmcOZxtgE5trEtwLdfAnZ3qZjLf16EG/KvFB88T/KFNCCYc6fm3Xcp3N8BK6VWMsiyWc5qWUBzRKkZTBAXW68/j3y6yU34Yj6TZNpcAqf7n+0j7xPHC6O8qK82U0mwn3u5BjFJ4kwAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=none smtp.client-ip=139.219.146.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+Received: from NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:10::10) by NT0PR01MB1023.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:2::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.38; Wed, 12 Jun
+ 2024 02:58:19 +0000
+Received: from NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e3b:43f8:2e6d:ecce]) by NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e3b:43f8:2e6d:ecce%7]) with mapi id 15.20.7611.039; Wed, 12 Jun 2024
+ 02:58:18 +0000
+From: JiaJie Ho <jiajie.ho@starfivetech.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "David S . Miller" <davem@davemloft.net>, "linux-crypto@vger.kernel.org"
+	<linux-crypto@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] crypto: starfive - Align rsa input data to 32-bit
+Thread-Topic: [PATCH] crypto: starfive - Align rsa input data to 32-bit
+Thread-Index: AQHasV7JGIR2o9Gsw0quf+yEyIC5HbG8Na+AgAdOR4A=
+Date: Wed, 12 Jun 2024 02:58:18 +0000
+Message-ID:
+ <NT0PR01MB11824BA0DD4F7C638A91E80C8AC02@NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn>
+References: <20240529002553.1372257-1-jiajie.ho@starfivetech.com>
+ <ZmLsK9Apy9NwNEQi@gondor.apana.org.au>
+In-Reply-To: <ZmLsK9Apy9NwNEQi@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: NT0PR01MB1182:EE_|NT0PR01MB1023:EE_
+x-ms-office365-filtering-correlation-id: 00809498-56e6-4ffe-bcac-08dc8a8b8364
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230032|41320700005|366008|1800799016|38070700010;
+x-microsoft-antispam-message-info:
+ 6BoecWKvpDpVjmNu8LUkwK6zwPA9uEmbO3qvlGVeHNPr88Q9UPxSlDZMUjw58AWJnrwYfhs2Zh5ccZ9HoM+d0g8N8BCcCP70ckGMXG2ArZW0cUreNEtFa+zGqVQZSDMksfDL7ALEVQ2rAxGiVLWaPVRPxVFo26IdR9hThbZJ/tapYhfMjTsRxW0Vgimfw7APubWSGBq68t2chXuQ8KBiKyGEj5v3d4MLnmWiGIrC6a/SgqmV3oZinRYLi75Z4XHbUfmNY4/ju9XQ88cOpClh2Zf6cMnBTathTx2f0Myct4rVhRSvV2aotUZBLVOclzfAcc4m3XRHGylEYhvqz9J2i6nzvL53hrvafM+s0d7PuVahljwjEWWnFs0aoEu814cYQXoYCbNc8VydbxoS40ay9/HGJBg40w0JW1LzX/UOYLujQHcLuF7WOpAeqZkYf1kx15JAogA+ulL6Yzjd/Rn7rsxYRelx1WBqQMSTX2o1QXezp/rjZrNiux73dDKQUR4SzQx95rWwTBr8gqhexduGQPl4P1tb2j7nI8gAq4JfjRBjNDHAUD049odPvPI+noJdEJ1fm75igpEHmJ95rltB2/wIIC/ARtWdeojnx19ZkMrwnIP89o6YDYHdr57CSjws
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230032)(41320700005)(366008)(1800799016)(38070700010);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?lW/5V8zycOjf4o3J2rWMKA2F98T1zCsR2wFwRdkDT7UF3xLDlq/K1UrIkzf+?=
+ =?us-ascii?Q?nImXyR1pmQYkhR5ydxcIQv+8OK7BrFkxbhyBWTpkS5bFhZ6Pu1026UODyBkb?=
+ =?us-ascii?Q?nMjpYLqbHeE7EAHZhIwK5CdkFsJ36jwc+sd1HfO/vAvax1nn6sSzVBF1Sn+7?=
+ =?us-ascii?Q?IYddaf7Q4olGZhc9ts8hPiYHVIrdGXTWxGtQSaVM/mz4YYJkKqDkTfe1De3T?=
+ =?us-ascii?Q?4mv/IFgUC5I2SsBYHBVkM9AbglbWeANKO0nZCDKETFutIbXuomB1qNAKxSfS?=
+ =?us-ascii?Q?oJz8eGU5hK20i2rC6IQ5PlI71I0wvyBT248/zFzw7b9LiJno0MxV+ANv/TBY?=
+ =?us-ascii?Q?nrkbLz3svKZNIlypsHz+9V6+ofMyLYA9ndi8iezs1S3qTqCMBBgOI0PVzaD/?=
+ =?us-ascii?Q?UD6K2WenHXoO9ZxfQE1Q4c26OGioV3YU7ViHc57tmJ1O8n/55t9fPDDtD+J2?=
+ =?us-ascii?Q?/qZ8tbrnILUEbhz3LFG1h2zElb1U+ovuA45mdpRhVd4l8RTt9qQMGGiPfXvS?=
+ =?us-ascii?Q?frFfeoMlJ/idYfIYtTaRCQ4X6WTvsQFDXqiy2sCV6/Z5l4QEg92ZKfYJMbQY?=
+ =?us-ascii?Q?iuD+2cge3CzN16JRvYjAJHzv+WAFPzzobJU+DE0Llww/vdpkMnj3g6JbTz2n?=
+ =?us-ascii?Q?iIH9uZ4cpTOpZ+wM2L4dIHlO8EJR1tgqJr5zmiHprnUf8xfxsSJtp7CzbAeB?=
+ =?us-ascii?Q?ICFAuFUkCCNxBqUuGrFWzzjbpql1y5ZvlPO13wmk5X7pk0MZDqq9efBH1CKC?=
+ =?us-ascii?Q?UzIBNkR0RO464z6vFl0s76IknFzwg2qEirEV3rmkwrfEC/05dFGumVctr3Fa?=
+ =?us-ascii?Q?JCqWcngVM+f8bPOrgudJ1X+DAgYE7IP99RVOecz8ygUxBOAhxu+V7+E0M3C7?=
+ =?us-ascii?Q?isrM1qZa6nCclaFayixMPF3+t1bB2QGKlGfRLC3sCbJ9BP0YuSLhbRh8yyCH?=
+ =?us-ascii?Q?9lKiuKytL6E9+KvX1RTGSnHe8e2TWB4B9930dSGSWw+9xysxMNknAoVGAcXv?=
+ =?us-ascii?Q?eP8v+9dOexvaY9GxGZcMTnjsOyQsidMJkRKj8Zy37jRI6PiPFKK+XCN4a/qi?=
+ =?us-ascii?Q?QA/U3sIE5j+/RzwQTiisq6FpUxrMSb4GC5PMJKnVsjcPkk+jKe13z/s9ApGa?=
+ =?us-ascii?Q?ZS9dLdAsbMiHTNRQT/uVIegi8a+AtFA88mo1vO+8X9DRADBkDgdZennYFNUN?=
+ =?us-ascii?Q?7HbIbWtgcxauAYJoH7DaodhgcjvjlpArb1zrwDezsPQQxRUr88tlJS1YxjM6?=
+ =?us-ascii?Q?D5GCfuKFnVvuwHAj4SM9UGEPzkhqGagMBfCQudSTgL4LsTfash7zeedQEvuT?=
+ =?us-ascii?Q?RV9IlhgdyQHsa1Ay2DzfsjPm2+7Vi/GRo+RX5Oia3cLEGjm3SyNmOFJwzsNF?=
+ =?us-ascii?Q?QFnUijbvCpFazexgZdEeuzLYMknu/RxCPIS7Uk/uFKcvNW3n5YtUnuK3/3N9?=
+ =?us-ascii?Q?Yj4o4kbVQvBf9a90xPi76P+jmdut5tIPlz4zdldtAeLSOM9oQjOUNIfx6IYV?=
+ =?us-ascii?Q?SWZSE9oyKwUUYDTAjXBPtziEqm5TT/Zqt81ma2j1swPTm3xw/qCGilu1CAkm?=
+ =?us-ascii?Q?AtZjThcg9XBYrlUubaO2d5VO5aADxb+ZfuQ02jcXhN8T/qPQvjt2Zkjnjw+W?=
+ =?us-ascii?Q?lA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240323-resend-hwtimestamp-v10-0-b08e590d97c7@chromium.org>
- <20240323-resend-hwtimestamp-v10-4-b08e590d97c7@chromium.org>
- <4kck7oedsnj6kfiv7ykwsjg35qodg5bdktu5t5w3xtg2xuscto@2yh6kfdqwimc> <20240610114306.GR18479@pendragon.ideasonboard.com>
-In-Reply-To: <20240610114306.GR18479@pendragon.ideasonboard.com>
-From: Tomasz Figa <tfiga@chromium.org>
-Date: Wed, 12 Jun 2024 12:28:56 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5DAXq6fTrp6jF42URrwzwE+tGz_jJCRM2bhieD76u+QpA@mail.gmail.com>
-Message-ID: <CAAFQd5DAXq6fTrp6jF42URrwzwE+tGz_jJCRM2bhieD76u+QpA@mail.gmail.com>
-Subject: Re: [PATCH v10 4/6] media: uvcvideo: Allow hw clock updates with
- buffers not full
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"hn.chen" <hn.chen@sunplusit.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: NT0PR01MB1182.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00809498-56e6-4ffe-bcac-08dc8a8b8364
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jun 2024 02:58:18.9125
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zt44A0KgQ86sjgO5RCVvzzLEJsp44L3oqx1hcRqmIHeWozRqbmLtbCmTU8BtDzhKYVzZjZvxJFm8nbxai4Sqo0xMZ1emJYbEvJybZOQRS1Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: NT0PR01MB1023
 
-On Mon, Jun 10, 2024 at 8:43=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> On Wed, May 29, 2024 at 05:03:08PM +0900, Tomasz Figa wrote:
-> > On Sat, Mar 23, 2024 at 10:48:05AM +0000, Ricardo Ribalda wrote:
-> > > With UVC 1.5 we get as little as one clock sample per frame. Which me=
-ans
-> > > that it takes 32 frames to move from the software timestamp to the
-> > > hardware timestamp method.
-> > >
-> > > This results in abrupt changes in the timestamping after 32 frames (~=
-1
-> > > second), resulting in noticeable artifacts when used for encoding.
-> > >
-> > > With this patch we modify the update algorithm to work with whatever
-> > > amount of values are available.
-> > >
-> > > Tested-by: HungNien Chen <hn.chen@sunplusit.com>
-> > > Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > ---
-> > >  drivers/media/usb/uvc/uvc_video.c | 16 ++++++++++++++--
-> > >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uv=
-c/uvc_video.c
-> > > index d6ca383f643e3..af25b9f1b53fe 100644
-> > > --- a/drivers/media/usb/uvc/uvc_video.c
-> > > +++ b/drivers/media/usb/uvc/uvc_video.c
-> > > @@ -768,10 +768,10 @@ void uvc_video_clock_update(struct uvc_streamin=
-g *stream,
-> > >
-> > >     spin_lock_irqsave(&clock->lock, flags);
-> > >
-> > > -   if (clock->count < clock->size)
-> > > +   if (clock->count < 2)
-> > >             goto done;
-> > >
-> > > -   first =3D &clock->samples[clock->head];
-> > > +   first =3D &clock->samples[(clock->head - clock->count + clock->si=
-ze) % clock->size];
-> > >     last =3D &clock->samples[(clock->head - 1 + clock->size) % clock-=
->size];
-> > >
-> > >     /* First step, PTS to SOF conversion. */
-> > > @@ -786,6 +786,18 @@ void uvc_video_clock_update(struct uvc_streaming=
- *stream,
-> > >     if (y2 < y1)
-> > >             y2 +=3D 2048 << 16;
-> > >
-> > > +   /*
-> > > +    * Have at least 1/4 of a second of timestamps before we
-> > > +    * try to do any calculation. Otherwise we do not have enough
-> > > +    * precision. This value was determined by running Android CTS
-> > > +    * on different devices.
-> > > +    *
-> > > +    * dev_sof runs at 1KHz, and we have a fixed point precision of
-> > > +    * 16 bits.
-> > > +    */
-> > > +   if ((y2 - y1) < ((1000 / 4) << 16))
-> > > +           goto done;
+> On Wed, May 29, 2024 at 08:25:53AM +0800, Jia Jie Ho wrote:
+> > Hardware expects RSA input plain/ciphertext to be 32-bit aligned.
+> > Allocate aligned buffer and shift data accordingly.
 > >
-> > Not a comment for this patch directly, but...
+> > Signed-off-by: Jia Jie Ho <jiajie.ho@starfivetech.com>
+> > ---
+> >  drivers/crypto/starfive/jh7110-cryp.h |  3 +--
+> > drivers/crypto/starfive/jh7110-rsa.c  | 17 ++++++++++-------
+> >  2 files changed, 11 insertions(+), 9 deletions(-)
 > >
-> > This kind of makes me wonder if we don't want to have some documentatio=
-n
-> > that specifies what the userspace can expect from the timestamps, so
-> > that this isn't changed randomly in the future breaking what was fixed
-> > by this patch.
->
-> I think timestamp handling should really be moved to userspace. It will
-> be easier to handle with floating-point arithmetic there. That would
-> have been difficult to manage for applications a while ago, but now that
-> we have libcamera, we could implement it there. This isn't high on my
-> todo list though.
+> > diff --git a/drivers/crypto/starfive/jh7110-cryp.h
+> > b/drivers/crypto/starfive/jh7110-cryp.h
+> > index 494a74f52706..eeb4e2b9655f 100644
+> > --- a/drivers/crypto/starfive/jh7110-cryp.h
+> > +++ b/drivers/crypto/starfive/jh7110-cryp.h
+> > @@ -217,12 +217,11 @@ struct starfive_cryp_request_ctx {
+> >  	struct scatterlist			*out_sg;
+> >  	struct ahash_request			ahash_fbk_req;
+> >  	size_t					total;
+> > -	size_t					nents;
+> >  	unsigned int				blksize;
+> >  	unsigned int				digsize;
+> >  	unsigned long				in_sg_len;
+> >  	unsigned char				*adata;
+> > -	u8 rsa_data[] __aligned(sizeof(u32));
+> > +	u8					*rsa_data;
+>=20
+> You didn't explain why this is moving from a pre-allocated buffer to one =
+that's
+> allocated on the run.  It would appear that there is no reason why you ca=
+n't
+> build the extra space used for shifting into reqsize.
+>=20
+Hi Herbert,
 
-While indeed that would probably be a better way to handle the complex
-logic if we designed the driver today, we already have userspace that
-expects the timestamps to be handled correctly in the kernel. I
-suspect moving it to the userspace would require some core V4L2
-changes to define a new timestamp handling mode, where multiple raw
-hardware timestamps are exposed to the userspace, instead of the high
-level system monotonic one.
+Can I fix the buffer length of the pre-allocated buffer to 256 bytes instea=
+d of
+the current variable length buffer?=20
 
-Best regards,
-Tomasz
+-        u8 rsa_data[] __aligned(sizeof(u32));
++       u8 rsa_data[STARFIVE_RSA_MAX_KEYSZ];
+
+That's the maximum length supported by the hardware and=20
+most applications now use rsa2048 and above.
+
+Thanks,
+Jia Jie
