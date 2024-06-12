@@ -1,133 +1,120 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB15117F514
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A3017F504;
+	Wed, 12 Jun 2024 15:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718205158; cv=none; b=LRNm+In09efrKQwLt1qnM4lxAiaGtXiLyRoUISQ4pUXzHBYKY9Q4aD0Gge8+A78/JiUuFspx1j/2gg1x/rTgxE12StKJqDGnm6CRGwUhGlcnxxBEZozTdGvxDFI9FxTRzY8+9HExvOSo/JnsCDxMOqKMDs3+BgmSNDk9gzSfRzQ=
+	t=1718205184; cv=none; b=TxLOCN862KLWr442vL5xdXUH0rdQ81Gdnw6wzTm/zhTIVcX3lWNHhPPwE8Jzl19C0p//PkAVSMIyKesLQGEdmB9LelOp+SGmOAu1a7DHCZmcAWkw9UOzHlHKC4oYiVt/LeMbht7EywgkDbJglK6NNgR9Q61Plv/4sRYW71MPyCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718205158; c=relaxed/simple;
-	bh=UfKYU+FaEaDhlgVIlRO+d4NHVy0mPvtEYjAmluIP2c0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BBdQ553vNRmC+JcgtDQwrPuSk9IQIUwboEMvlOTmircq9IReFWhvS/Kr1ai62fxuEaAnvYlqly4lZxmhTxfjDMplnTIcrE4NYHxy3N1zKcVJp9Ex8mOzrbSvowvUlxNGIo5MK7yE+LcYVR6XoCeqFg/Ek+8QIx5O7sk9ac92sZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AZAEus65; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718205184; c=relaxed/simple;
+	bh=CI3a4ZTH6QkNb6fo8QvVrdnNkzWsdTGrepojuhjTqcg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=eGrV1p5+a8G/4QvejpAEHfmilOFurabcTFBNwIIpdkohy2gruf74kO8F2SIt+shoBnKS609A1Zc3ZoHX7qK01gIBi+qmOAisbE9rH1BA10V1UuzXuHjMu2bIqBhq3LBCn6WBxQBOSKN/v26kqsGnttl8B22atkg6TcoD3CaOavo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SdBt74Ka; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AZAEus65"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dfde5ae0aaeso1580259276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:12:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SdBt74Ka"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4415e623653so4632791cf.1;
+        Wed, 12 Jun 2024 08:13:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718205156; x=1718809956; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ui0asLPnRQrSAoLGngUgtvhcpdpuHV+OvoZ2KNM3Fig=;
-        b=AZAEus65lFwXLSuDD7pvNBIR6lQmCU0QWOCq5Mb3lBOqD6hWB8qUxOKsp0Plc6YleJ
-         O1iA38wyo2Qit0rf/jPen7iLSbeMQnMbwEMYP6g/M16fRCqegSun+WBX4IeucxzUfYWk
-         CZ5qSfbLIKrLWSzVn9n6xf/NwGWELQJrWMQ5dG0E3DisOX0YkdXSPP0Pdzsc9hT5oREe
-         +72RdbxtYILqDqV0NLWuZi2yaqA4cJIulb43SP8nadcmtACHGQbnSkx3FsCzBzj7sPKX
-         PQt/VE3CXQpACCxgrfynk4GTzrY8NcfgufMPKvisClqJwmGPFBkM4fqXSMAjywazb0cN
-         pt7A==
+        d=gmail.com; s=20230601; t=1718205182; x=1718809982; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XHQXmqxHeWpd8OXnf/8HM51by6gwtLJcxhrxbZ3GwFA=;
+        b=SdBt74KapjbuSKBX7YwpNEAXKm3gUpfJFyGuE5v9YAEVrYDctykXGsBEXoZSuKgcYc
+         M+ZGEzcxOFX5GQcmCWqKMSS1drco3GyphI5wYO+w8j/cMlwsIkj4jSTWxMeZdI5K1D8D
+         87u/qjFCA/pbKAJznJe41F94OG+WuzWGoTOIH5sr9mJTsSL0n6q3zX9ByQZd/HYAXbXP
+         UHK1sV8fKAU6I7YmBQe+btnLdKbBOHxBsnKoankODLMS48swxIfpQxI2NrZtKRmBv15p
+         3WuKSZIRrdkfSpe6cbQVBezb/1pin57YvKnL+UdTXB1sQG1FJek7PPDoFxVu9tTRF+zu
+         MLmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718205156; x=1718809956;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ui0asLPnRQrSAoLGngUgtvhcpdpuHV+OvoZ2KNM3Fig=;
-        b=mEKJzEMYtyKkO1zjCD/81gElOl3XpG0uyB8F3qhKl/eRa9nTzk1GHpxbvzyGjFouHb
-         a9Mi8CFeqL6PPnTzii+Dqu2AxCBVHT/HaS50bQHFz4Gg1HuxGGukefW5VK032RKdQo6X
-         ADqqEUX5sod++MpwQvi56kWt5PQxU5aPHoFlU1EgC1ldzYG8HqKFihKfNJ6ELsgV6H6V
-         tVU3uymskIAXuwPPH35h40J9wpuOyJnUaA14fe695Hm0Oybcx6knngYRrbselsbgdpZO
-         N6++u42CwdGs5mNTnakKxlShr7H80tT6b1b3qvlO1Bw6WLegW9qONTj4I+D6e5Ilxneb
-         gIAA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8bVMRE5a38QrmO2QIByTZWgEzIFSGLjy6A9ATpXHAPxBqlnWXDvkLZm6bJ2n6QsA+5S8qcUcdrCraBoDjggLsHxxULy6j46q2KB0v
-X-Gm-Message-State: AOJu0YyfcF/2RE1QTe57+HhOAbIPTPrvV+mtwybXEKFHAiTMANleFtbz
-	Nmm+YeuplcbbIcgSz624KiS0zLR7I6Tj7enmEmg0ZjDilirHESZLn96fnxZoeP+0LUxZ/CECC3L
-	J3xvxfLeU3ZEwFdVQQIRvw9Hggbjqo9jML9KOZA==
-X-Google-Smtp-Source: AGHT+IFWoi12CdmKen6XCavHsYiaGeZ6uNOT7Y113dWDJBAN7YMJe+nUPHOOTDfX1o7vHsPrrRKwh1FWKxulzT69BGo=
-X-Received: by 2002:a25:6a45:0:b0:dfb:538:df1d with SMTP id
- 3f1490d57ef6-dfe6852d794mr1893187276.43.1718205155725; Wed, 12 Jun 2024
- 08:12:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718205182; x=1718809982;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XHQXmqxHeWpd8OXnf/8HM51by6gwtLJcxhrxbZ3GwFA=;
+        b=utFVhfPj+dXDfEJEYGVxNUmlzXUeR1I1wsL5GXATmhCQxKpWy55QmBufTK7c92+fLj
+         4zeg7uwdL/U7Ao4XvIqJpl4E4KvIPlmfGpTuxd0M2Sgef9TgWvghyaEZzDytvyc/f1uQ
+         dUUicufAqTUNNoAxk7hpCZtbvL4ujSAvhkEoZsmxshgHIiIzYMDdvitiRZPdKCL91mdy
+         Ra8S5TV8V4M9+hoB9+Rl7pMcE0KM0oCry/rk4ZqFFrVsl09CziwjHfn1LyceM6z30Syk
+         Ei0v0Mw0VKHfcdhseKmHN/dH7aaYtn4eV0wf+gG7QcXrbDl6SxQqGZbdmk393ZPx0UEX
+         Zz3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVGEXCxiM1f++kTqWlWRd8rF2aOaPLVs+BuaA41V3/7qKADqXvCky2r/sdLx+clc7Jg/j5uprwCc48nQC6ooJTDZhYSynj/K8Pq1AZnBKe+QFO51HImfsaFXQgrxEb3t/iy/j8L5EmF7Q==
+X-Gm-Message-State: AOJu0Yyk9t09yTdjXTQCQuWE13jPJ1hghtg8bWCMlQqteuSg9uhdq8zo
+	9YyjDCNUMRYPLUJ0fVkefXN9E71xeANTePLA/2VxuINqLeZcbbFI
+X-Google-Smtp-Source: AGHT+IHfUqkiFUdNB7o+p/EPi7/QHlTHXRBGuw+7U9oYj8NY19HT4c3Kg9utIq6uyPK27o/gfKaG5w==
+X-Received: by 2002:a05:622a:148c:b0:43f:ee8c:b2e with SMTP id d75a77b69052e-44159b68890mr34943721cf.29.1718205181674;
+        Wed, 12 Jun 2024 08:13:01 -0700 (PDT)
+Received: from [0.0.0.0] (97.64.23.41.16clouds.com. [97.64.23.41])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4403895aa9asm56189961cf.7.2024.06.12.08.12.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 08:13:01 -0700 (PDT)
+Message-ID: <68b4dbc5-18ee-4dc7-85da-dd420df9bf16@gmail.com>
+Date: Wed, 12 Jun 2024 23:12:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240610-md-drivers-pmdomain-amlogic-v1-1-b49ddb1a8bdf@quicinc.com>
-In-Reply-To: <20240610-md-drivers-pmdomain-amlogic-v1-1-b49ddb1a8bdf@quicinc.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 12 Jun 2024 17:11:59 +0200
-Message-ID: <CAPDyKFpJdOGq7VneJfaodo2Jc1jc8pfnoNxCdRW5+T0ofdabtg@mail.gmail.com>
-Subject: Re: [PATCH] pmdomain: amlogic: add missing MODULE_DESCRIPTION() macros
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/3] scsi: scsi_error: Fix wrong statistic when print
+ error info
+To: Hannes Reinecke <hare@suse.de>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240605091731.3111195-1-haowenchao22@gmail.com>
+ <20240605091731.3111195-3-haowenchao22@gmail.com>
+ <15f0fb9b-3b30-413d-9f30-81c246b6bae1@suse.de>
+Content-Language: en-US
+From: Wenchao Hao <haowenchao22@gmail.com>
+In-Reply-To: <15f0fb9b-3b30-413d-9f30-81c246b6bae1@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 11 Jun 2024 at 01:13, Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
->
-> On x86, make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pmdomain/amlogic/meson-gx-pwrc-vpu.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pmdomain/amlogic/meson-ee-pwrc.o
->
-> Add the missing invocation of the MODULE_DESCRIPTION() macro to all
-> files which have a MODULE_LICENSE().
->
-> This includes meson-secure-pwrc.c which, although it did not produce a
-> warning with the x86 allmodconfig configuration, may cause this
-> warning with other configurations where CONFIG_MESON_SM is enabled.
->
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+On 6/12/24 4:34 PM, Hannes Reinecke wrote:
+> On 6/5/24 11:17, Wenchao Hao wrote:
+>> shost_for_each_device() would skip devices which is in progress of
+>> removing, so commands of these devices would be ignored in
+>> scsi_eh_prt_fail_stats().
+>>
+>> Fix this issue by using shost_for_each_device_include_deleted()
+>> to iterate devices in scsi_eh_prt_fail_stats().
+>>
+>> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+>> Signed-off-by: Wenchao Hao <haowenchao22@gmail.com>
+>> ---
+>>   drivers/scsi/scsi_error.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
+>> index 612489afe8d2..a61fd8af3b1f 100644
+>> --- a/drivers/scsi/scsi_error.c
+>> +++ b/drivers/scsi/scsi_error.c
+>> @@ -409,7 +409,7 @@ static inline void scsi_eh_prt_fail_stats(struct Scsi_Host *shost,
+>>       int cmd_cancel = 0;
+>>       int devices_failed = 0;
+>>   -    shost_for_each_device(sdev, shost) {
+>> +    shost_for_each_device_include_deleted(sdev, shost) {
+>>           list_for_each_entry(scmd, work_q, eh_entry) {
+>>               if (scmd->device == sdev) {
+>>                   ++total_failures;
+> 
+> That is wrong. We should rather add a failure counter to the SCSI host, and have the scsi device increase it every time a failure occurs.
+> Then we can avoid this loop completely.
+> 
 
-Applied for next, thanks!
+This function would print the total failure commands and the number of device like following:
 
-Kind regards
-Uffe
+scsi host4: Total of 3 commands on 2 devices require eh work
 
+Just add a failure counter to the SCSI host can not record the number of devices.
 
-> ---
->  drivers/pmdomain/amlogic/meson-ee-pwrc.c     | 1 +
->  drivers/pmdomain/amlogic/meson-gx-pwrc-vpu.c | 1 +
->  drivers/pmdomain/amlogic/meson-secure-pwrc.c | 1 +
->  3 files changed, 3 insertions(+)
->
-> diff --git a/drivers/pmdomain/amlogic/meson-ee-pwrc.c b/drivers/pmdomain/amlogic/meson-ee-pwrc.c
-> index fcec6eb610e4..fbb2b4103930 100644
-> --- a/drivers/pmdomain/amlogic/meson-ee-pwrc.c
-> +++ b/drivers/pmdomain/amlogic/meson-ee-pwrc.c
-> @@ -648,4 +648,5 @@ static struct platform_driver meson_ee_pwrc_driver = {
->         },
->  };
->  module_platform_driver(meson_ee_pwrc_driver);
-> +MODULE_DESCRIPTION("Amlogic Meson Everything-Else Power Domains driver");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/pmdomain/amlogic/meson-gx-pwrc-vpu.c b/drivers/pmdomain/amlogic/meson-gx-pwrc-vpu.c
-> index 33df520eab95..6028e91664a4 100644
-> --- a/drivers/pmdomain/amlogic/meson-gx-pwrc-vpu.c
-> +++ b/drivers/pmdomain/amlogic/meson-gx-pwrc-vpu.c
-> @@ -376,4 +376,5 @@ static struct platform_driver meson_gx_pwrc_vpu_driver = {
->         },
->  };
->  module_platform_driver(meson_gx_pwrc_vpu_driver);
-> +MODULE_DESCRIPTION("Amlogic Meson GX Power Domains driver");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/pmdomain/amlogic/meson-secure-pwrc.c b/drivers/pmdomain/amlogic/meson-secure-pwrc.c
-> index 4d5bda0d60fc..b50e5678abe3 100644
-> --- a/drivers/pmdomain/amlogic/meson-secure-pwrc.c
-> +++ b/drivers/pmdomain/amlogic/meson-secure-pwrc.c
-> @@ -355,4 +355,5 @@ static struct platform_driver meson_secure_pwrc_driver = {
->         },
->  };
->  module_platform_driver(meson_secure_pwrc_driver);
-> +MODULE_DESCRIPTION("Amlogic Meson Secure Power Domains driver");
->  MODULE_LICENSE("Dual MIT/GPL");
->
-> ---
-> base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-> change-id: 20240610-md-drivers-pmdomain-amlogic-f117930600ea
->
+> Cheers,
+> 
+> Hannes
+
