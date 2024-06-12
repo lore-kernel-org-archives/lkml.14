@@ -1,90 +1,113 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0579F514
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD7F4A0A;
+	Wed, 12 Jun 2024 01:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718155181; cv=none; b=osN9//Lh+zXVJc99zAeKpqncFWkV+OqV1gCXOKXS8WbRknQjyBzMAeVFQiba2TNVbIF2b9JlABgyGlbEfmn1Oy56gDM8HHJ5vVK+o0UKAz+oD0+Tqhd95qjsiVlKVOGXGbZfhX5h1UCNjGfCQ8FvLwdOgg0M+e5i/HDRE5uYrvs=
+	t=1718155238; cv=none; b=hJJgSZDjDt89ibhLavt4GkHydPqmZM6bkljkPZgvrAIgLIvHjR31DJtiuc94mwwYo4K0zgtFzV77Lv5324OTo23qL5M+RNZmvQGvZ6MvrkKa/vaKvguBrxU39Q6Hv5G8onJsN+t3OLEfDHjJge0/WRYm5N99Y2NgMEDX6LOOdaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718155181; c=relaxed/simple;
-	bh=ZtX1s1hXE7bmPxWnn9VXN8JelDZTdMwnyMJhqBsFBDU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MvvIABQI8gPOYbAw+fOnfH9MfflH5VTiZ1zJhiXcoLJ/qMvMAnWfonJQVtqj3b+VdV3sqTVJKYuWPHJR2lBrQ7Pnrh7E+WZUCLPyih6Ov1Ll5hwNjeXw6x44kklUvF9jMb54RAdzinee+aBAqO2423Yv2J3WNPu+QqQXthD9vW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bUvMAmHu; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1718155238; c=relaxed/simple;
+	bh=UFCfQ0hrhFG/Vxf7U9u47frkRuW4P5y2nTaEQJReSsA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AJCiIu731DXUb7xGFJTG1558RWgbLG9H9TtvEzMA8dUGui8fF6i1oZqG7zOC1Wrz4iD0fgwmgLvjWb44uwJx4SoIF5plQPScnAKEz4mCEQ/LBpz1JlEsVkiuz0uc/P0wBjy8CwMoj9nEAsbILFG5HadrkKSTayy02Hv3rV1qmvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=dhhfKCQS; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bUvMAmHu"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6e231ed9e5aso4023118a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 18:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718155179; x=1718759979; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8jsSK3imQEryaxf2anzrgoWKvNS6m0fGR63VtCmdp5c=;
-        b=bUvMAmHuie0Q7b+SaTGDqt0wjQb7lWtjB9xKZxbAKwUs6GjzUN2/dffI9+nbBRYMCB
-         hdd173DuWVXjaRz9fYvqWfkiW03PlhpAuQMt/kcZE/qzBzLkb4xyRjVEQgmb2gC3yXrP
-         sxhr0qT4Bzl3G+SQanm4L2nQUEqQMqxCzUMGCkHWQDlvurLa96RbFuYRfyBy52OVxqQN
-         Ah2w+VYPXK7Bi1VFMjnE+sjqEvY3QWofa05Ljl1ZwZHGAg4fHzIJFkyIPuhMfPvxyUG/
-         xYvTygO429zzUCxitH63gBAdoy955MFiNRs9+SfMrpTFIc8Q9Ou3GU7uikcffjMABr8n
-         hzyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718155179; x=1718759979;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8jsSK3imQEryaxf2anzrgoWKvNS6m0fGR63VtCmdp5c=;
-        b=RXf/yUYOMpM6BtAlHd5e0NekrxYJeh4AilYEFM2+j+CvaQu0eHU58zMLWA1QxUkx++
-         8is6Eixh18NvyuGhqbETgyXrNWybSPYQFb851mOQUs8BrqN9YDQoTgCjyw+u6/PDUigQ
-         FnSLXlDe+3Ql59f31dVE5sDwfmDOY9w9hSv0wVo6FVSOB/Va2sHB1YprXaIE67nom1lf
-         Nlq0VkH1rmkoeY9TkD1CeQOocRhBdb+hNP3NowglPwLDA7VXyR0G7VM6D0t8y9pKoUVk
-         33DfCPL9MCf5al3WuraFzcPq3SJO7jgBjbzWliq95rmf3rW29vagG6oeCg3dAd+kTUuJ
-         5Ofg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSaiWKesWstLzlP+durj92mNlRcrSCVikMfiuHYLutFT3G5cnQ2axAcvwAuNVwGo4wMyQsmmuk4914CfU+bmPhlRaGI3jcbmNBSGGl
-X-Gm-Message-State: AOJu0YwG1Vq5tZq2ib+0Aq/eWRmTFxQvnjqhjCh0h0yr0KyGfboYeKLm
-	W6hKlO9IiHSW3OtC28v1bSc5zb9JkSrv8ckO6PYPdli06vmcbUeIEaJgOQ7PxA4fOErGs//YTCa
-	Qzg==
-X-Google-Smtp-Source: AGHT+IHUUEc4D4vyKYP7fHBa2tj4d3EHkY2IkXDSa1+CkSKXASaoY9W2JGXiM+UnleB8V6TtDr2FxNvlvXg=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a02:586:b0:6e5:790d:1d6e with SMTP id
- 41be03b00d2f7-6fae66aadb7mr973a12.7.1718155179083; Tue, 11 Jun 2024 18:19:39
- -0700 (PDT)
-Date: Tue, 11 Jun 2024 18:18:34 -0700
-In-Reply-To: <54abd1d0ccaba4d532f81df61259b9c0e021fbde.1714977229.git.houwenlong.hwl@antgroup.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dhhfKCQS"
+X-UUID: f63dabc6285911efa54bbfbb386b949c-20240612
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=204HJCc8S6y1MsmDodpJho9HqhzErabCckCS1J9ulx8=;
+	b=dhhfKCQSHK8ikh1VwEwQv1layrNwulIxekQhXLsOwldNIWW/1u23bQv/27HlNvzlahxE0Dy14ucwb392bu29OyKmlXiFPdwVVU1bcScshQSqmStGKPQmYEtRGxTX+2sS7Ll8ttowq9cASLH5KgevQYepl0DUKVLUyksdGfNRP4Q=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.39,REQID:0d94837d-31ff-4ef6-9ed2-945d9baca99b,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:393d96e,CLOUDID:63f7df93-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: f63dabc6285911efa54bbfbb386b949c-20240612
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <zhi.mao@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 15499936; Wed, 12 Jun 2024 09:20:32 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Wed, 12 Jun 2024 09:20:30 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Wed, 12 Jun 2024 09:20:29 +0800
+From: Zhi Mao <zhi.mao@mediatek.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+CC: Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Zhi Mao <zhi.mao@mediatek.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart
+	<laurent.pinchart+renesas@ideasonboard.com>, Heiko Stuebner
+	<heiko@sntech.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil
+	<hverkuil-cisco@xs4all.nl>, Hans de Goede <hdegoede@redhat.com>, Tomi
+ Valkeinen <tomi.valkeinen@ideasonboard.com>, Alain Volmat
+	<alain.volmat@foss.st.com>, Paul Elder <paul.elder@ideasonboard.com>, Mehdi
+ Djait <mehdi.djait@bootlin.com>, Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Bingbu Cao <bingbu.cao@intel.com>, <linux-media@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<shengnan.wang@mediatek.com>, <yaya.chang@mediatek.com>,
+	<yunkec@chromium.org>, <10572168@qq.com>
+Subject: [PATCH v3 0/3] media: i2c: Add support for GT97xx VCM
+Date: Wed, 12 Jun 2024 09:20:16 +0800
+Message-ID: <20240612012019.19078-1-zhi.mao@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <54abd1d0ccaba4d532f81df61259b9c0e021fbde.1714977229.git.houwenlong.hwl@antgroup.com>
-X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
-Message-ID: <171803647246.3355936.8432724232961067756.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: x86: Drop unused check_apicv_inhibit_reasons()
- callback definition
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
-	Hou Wenlong <houwenlong.hwl@antgroup.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Mon, 06 May 2024 14:35:02 +0800, Hou Wenlong wrote:
-> The check_apicv_inhibit_reasons() callback implementation was dropped in
-> the commit b3f257a84696 ("KVM: x86: Track required APICv inhibits with
-> variable, not callback"), but the definition removal was missed in the
-> final version patch (it was removed in the v4). Therefore, it should be
-> dropped, and the vmx_check_apicv_inhibit_reasons() function declaration
-> should also be removed.
-> 
-> [...]
+This series add YAML DT binding and V4L2 sub-device driver for Giantec's GT9768&GT9769.
+GT9768&GT9769 is a 10-bit DAC with 100mA output current sink capability, designed
+for voice coil motor(VCM) with I2C control bus.
 
-Applied to kvm-x86 misc, thanks!
+This driver supports:
+ - support pm runtime function for suspend/resume
+ - support camera lens focus position by V4L2_CID_FOCUS_ABSOLUTE CMD
+ - used in camera features on ChromeOS application
 
-[1/1] KVM: x86: Drop unused check_apicv_inhibit_reasons() callback definition
-      https://github.com/kvm-x86/linux/commit/c7d4c5f01961
+Previous versions of this patch-set can be found here:
+v2:https://lore.kernel.org/all/20240427012613.6621-1-zhi.mao@mediatek.com/
+v1:https://lore.kernel.org/all/20240420011840.23148-1-zhi.mao@mediatek.com/
+v0:https://lore.kernel.org/all/20240410104002.1197-1-zhi.mao@mediatek.com/
 
---
-https://github.com/kvm-x86/linux/tree/next
+This series is based on linux-next, tag: next-20240611
+Changes in v3:
+- Add maintainer entry for GT97xx VCM driver
+
+Thanks
+
+Zhi Mao (3):
+  media: dt-bindings: i2c: add Giantec GT97xx VCM
+  media: i2c: Add GT97xx VCM driver
+  MAINTAINERS: Add entry for GT97xx VCM driver
+
+ .../bindings/media/i2c/giantec,gt9769.yaml    |  55 +++
+ MAINTAINERS                                   |   8 +
+ drivers/media/i2c/Kconfig                     |  13 +
+ drivers/media/i2c/Makefile                    |   1 +
+ drivers/media/i2c/gt97xx.c                    | 436 ++++++++++++++++++
+ 5 files changed, 513 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/giantec,gt9769.yaml
+ create mode 100644 drivers/media/i2c/gt97xx.c
+
+-- 
+2.25.1
+
+
