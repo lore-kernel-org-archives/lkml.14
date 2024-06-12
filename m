@@ -1,146 +1,157 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2048.outbound.protection.outlook.com [40.107.101.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54B916C878
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718179895; cv=none; b=JhBkXVmzd1SUNvetuuBO2vZ3Oc7ZQialdqicAUBmqH79FDAJ9Sd78JwIdDjOaTfdwS/evGougrTGT/24HzX6bmBWHyFjsHF8mveqkYX0HhKHUJ4F8MEWlOTDnK/gNPJaFHog78hANd8SW2m37hE7vLy6lWHpTQkrBGe6obrPRG4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718179895; c=relaxed/simple;
-	bh=o/83bP/Kgt021W/Xs4v4B6cZ9tybAWx60f4FgAlbeuo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JubfLTS06sA5b7pcomuMRaE6dfpqo7OEqdNohGNMn8r0PDLCIwIPs2Jfk4KzOsaCGKjPBU6W+YLIFLqjDbjel9k0kZAIXwxo+7JzKm81t/H+1qMtNJ0O9peRHzVCuTFRjY/3dnG5/hOJTCO07p6T1OkNpV7q6rkpMAepj2qKYRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Crx0GyBK; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2BA45948;
+	Wed, 12 Jun 2024 08:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1718179939; cv=fail; b=tNcBGpKIGzRY5QZc4hKaI+OJtgrf3jpk1sZRqzY5qrN6Dz2W2BNDpX8jEFdkzWz7RwZ/urZMG+BrwtKppnzqoFDSUhc/sM7oI7mJkRao1/ivcfe+iw6kgGq160JCIo9kGBLfwWDNID3SYMUxO7KvnBJ6JwM2HAOnXDnln2LUpSo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1718179939; c=relaxed/simple;
+	bh=u8opVFTucgBWlVQ9QovYBXf65OWFF0pzuflaPgoPQeI=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nn3pYTY2C2cEkF9YC1hz6dIph6qR75Z5qgz4TjA+iuZ4KObxBl9XF2i43dqil0HQz530X7+BKDhwkzif+g9o5ikwvwkf66G2V10navyrr/WkcAlGy3wwYeadtE5FVS+b50iuFMVQKHPJjOcwExH45+9qN4u/GHsBKWFTZkvsL5o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LsFIWwzU; arc=fail smtp.client-ip=40.107.101.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Crx0GyBK"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5bafe063f35so299917eaf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:11:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718179893; x=1718784693; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jtUCsNEN1OLn5CWnbEq8DyQzZdykGreH7aUIN+pkvSo=;
-        b=Crx0GyBKN1SDVLT7nYH8zBXsmCCKraGc8DaS2ZC5oS2ePWjcqnLPrYnCeGmkqJPh/q
-         PDFKQLMRTGTOYGGkSI33Ftsgpym/l4btS4ErbFMec9ZBDQr//B6PWuvmVudpxcKfoPCp
-         sLZxfolRLEcrAKpwZmsKXOx+FJxWx+Y7vW7dZQSjKYt5yaU2hS6HvXwBjh/SoyJRxjo8
-         EDW/IA5aTDjxmVMfXsrUW0gftt5gRZxShG5utFzzcWcJc+NKR8APQ28E0ylhh4KpeLHm
-         RHw+HO7nRCCLrqdsmaXP2cwx44Z6QEOQqfE1jj1bxVsTPS8URh0eqEeqN53bUchMR6Ge
-         U8rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718179893; x=1718784693;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jtUCsNEN1OLn5CWnbEq8DyQzZdykGreH7aUIN+pkvSo=;
-        b=VMEOPPDAMra+xxGZ5Tm7Jcf/lMvWf0ne0WtlnA1DViwDACoftJRF7aUFIWq9kg/bzK
-         PNpysVxXsIOgzCR3e6F0Jzv4JOB1GO78G6ib5msSRIYo9YN+PiPdmVWI5u5efRJjdIhY
-         wyM1vIFEN3MV8mDfnnOn4YvWTAFXw6TeLwuxSPOiedPwxFsvvNE+bfKI55uV0hqYCb7g
-         Ld14eiyISj6ZMx+9aEBzj9Q7WGcdBAkWb3Ikm/NlszGVs9XjkUMvWruHL39XFFkDPl5V
-         q9HbcPbrxnV1FS+9h3zRmRAkLsWZvsMdCCK+ayFMyl6Jf4/bxK+00y/kvQsxQt+eKBwW
-         W+Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTigQ0lkCWSTD1ri51qVPrdoeRBrJ6gbdYs3XrhjflKMizYtWd/WoyIsfjLTly90p17t07u4KKecO5Ho4ln6zezzwoCNcIBogffORX
-X-Gm-Message-State: AOJu0Ywhp79we8/mWOGCRsA8tz2OX8cTcf8+nWnXpLY0w8OuJdnAMU87
-	jgIeIILwgbbNn0FMkPiWXFTbtHVT+XR6JAKbZeQaDmb86dNDUA/bboQKFykR2T5zH9u2K/H7a1D
-	u7Vrpw7Osj27eFVjyXZtMOWRdzro=
-X-Google-Smtp-Source: AGHT+IECgC2oHqDsxlvyzV/cACnerXz2243qmwjQzGItweUJ08q0MLhe29CXS0lfrpbzaZ22X3IRtwWP206QmA+KE2Q=
-X-Received: by 2002:a05:6870:2194:b0:254:a157:651a with SMTP id
- 586e51a60fabf-25513554843mr634783fac.9.1718179892726; Wed, 12 Jun 2024
- 01:11:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LsFIWwzU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LaESELf6Zi1nwByn5UgtJCzwntLSOz0vTRvyn/dphAmilMfnMTxf1mrCRtlJVd3bUljCrcKOEs8cnNQKvLq42/apAK1U041eelHYHg53v4JvL8XVShd2yjAJNgQCkf4fvzyQNgKiSniTSgl35G5Ak1HrOmSvv7ij/P/eMwuyosW1krFHUIRYuYbbCCaQ0X1cRSWNPGFJRa+BZ6n1hUNK77SqH5COanurT1QCB0yrCtdWWUI7ptSxnQNi38DYOELJNh0Se3h/BjeiCFeUjLNQVosv1DY2F1C+U+9/81mrPN+7lS59/WVMHjDHPRKG78F6YXTx24+pANQScIzITSi/4A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yTyM3sqKI/xtRqAewFQpg+zRzcfjQWnUOoan6Mfc3pQ=;
+ b=ivXJRda9t6eAtPKznCy/PIX7znhCOY5d+B/50vAZaIEZGHQ1fja2XCaT/pBAEpPtUCef7XkZGs9uUrM4SV74chBG4Nbe0Pnp8hSrybXF3JYr6w42aFXO6eHLt+g7dblE7P0E4RX6tSsW+aPX8s3Aifxi4bppxzowoKmtkEXfr7JgGQ5wRDJyHW2+VNFI6/WaZvfQ6KOXEagKOU3Ud1qXfGhFTJvKWjAi3QGA8ivuUZn7uog7LbyWPAmVBIxsUxlEqoT9pknQ6XJ2ZYYEU4DJv8JpeHmZ5RDh0tQdW5Uut07+zWIg12W+nYVmiHi8D7+6bdNwd8P/rlf6rR1sAcePpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yTyM3sqKI/xtRqAewFQpg+zRzcfjQWnUOoan6Mfc3pQ=;
+ b=LsFIWwzUC/lTzHF7UYpJaQnqqr5F8HnTEaX1gYcAGktAN7AbjC3Z/PiYD3Cg3maZwQ1GGKMWFgIiHUiUwk3xgl6jzyw5Yq3yyoPBm96+tZXPcuRjm5fAwzi1eAB+nXZDXXoM7OGkrf9ouFkYeqK6qJhp5C50INJk4TYH2w7tN+c=
+Received: from SJ0PR05CA0074.namprd05.prod.outlook.com (2603:10b6:a03:332::19)
+ by DS7PR12MB8371.namprd12.prod.outlook.com (2603:10b6:8:e9::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.21; Wed, 12 Jun
+ 2024 08:12:12 +0000
+Received: from CO1PEPF000066E6.namprd05.prod.outlook.com
+ (2603:10b6:a03:332:cafe::b0) by SJ0PR05CA0074.outlook.office365.com
+ (2603:10b6:a03:332::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.17 via Frontend
+ Transport; Wed, 12 Jun 2024 08:12:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000066E6.mail.protection.outlook.com (10.167.249.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Wed, 12 Jun 2024 08:12:11 +0000
+Received: from BLRRASHENOY1 (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 12 Jun
+ 2024 03:12:02 -0500
+From: Gautham R.Shenoy <gautham.shenoy@amd.com>
+To: Perry Yuan <perry.yuan@amd.com>, <Mario.Limonciello@amd.com>
+CC: <rafael.j.wysocki@intel.com>, <viresh.kumar@linaro.org>,
+	<Ray.Huang@amd.com>, <Borislav.Petkov@amd.com>, <Alexander.Deucher@amd.com>,
+	<Xinmei.Huang@amd.com>, <Xiaojian.Du@amd.com>, <Li.Meng@amd.com>,
+	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 06/10] Documentation: PM: amd-pstate: add guided mode
+ to the Operation mode
+In-Reply-To: <6e960ad57d31d379f8b0b631581b078fb9b272ea.1718095377.git.perry.yuan@amd.com>
+References: <cover.1718095377.git.perry.yuan@amd.com>
+ <6e960ad57d31d379f8b0b631581b078fb9b272ea.1718095377.git.perry.yuan@amd.com>
+Date: Wed, 12 Jun 2024 13:42:00 +0530
+Message-ID: <87jziuzijz.fsf@BLR-5CG11610CF.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240606070645.3295-1-xuewen.yan@unisoc.com> <20240609225520.6gnmx2wjhxghcxfo@airbuntu>
-In-Reply-To: <20240609225520.6gnmx2wjhxghcxfo@airbuntu>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Wed, 12 Jun 2024 16:11:21 +0800
-Message-ID: <CAB8ipk-9EVgyii3SGH9GOA3Mb5oMQdn1_vLVrCsSn1FmSQieOw@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Prevent cpu_busy_time from exceeding actual_cpu_capacity
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, vincent.guittot@linaro.org, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, bristot@redhat.com, 
-	vschneid@redhat.com, vincent.donnefort@arm.com, ke.wang@unisoc.com, 
-	linux-kernel@vger.kernel.org, christian.loehle@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000066E6:EE_|DS7PR12MB8371:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2e91f17f-c001-4fc0-70a9-08dc8ab75c8a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230032|36860700005|1800799016|82310400018|376006;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?OhrrHO7ImkvPD3dRCmp8wUCuHJhOQ2whBRxoIR6KdlSkX7C8hvhXwSUv+THn?=
+ =?us-ascii?Q?jcJ6sdvFD16EijkM8m6ItSl6yEsxFeZRofqyLW3Est4q6l3ciMvNQsfE5lOr?=
+ =?us-ascii?Q?RI0StdGZPKbTJF9pB0TlfUz5XsJPXPrR0b6IPFgbYdxVMzYotR+Mmcm4wjcE?=
+ =?us-ascii?Q?YuEMRKtKFSUJDYQLIdb2oxioFPCjoM7T1uSYK0Fc+7nYnYsjuoRVkCsyAslg?=
+ =?us-ascii?Q?fVqeAEUA9ynt3nKb9560ATzcc+/mHr3x4XehIFecj0YSyKMaHhg6Km81pFCl?=
+ =?us-ascii?Q?Zz1ayOukv9WSFVUhrQmby1/zWApX3df9VmFy4aa8JK8gNok1PzGrMdqNxvvZ?=
+ =?us-ascii?Q?/N7vCMahChJL1ftnIketA19qdE72nQG5qs9HoJr8m1/vp0Zw72Q6CyvxELqg?=
+ =?us-ascii?Q?dFFOnBn1pUQGuIwgbEGDtxfZ/6hJWnfYmdY78ep0cEroTGu3zIcUkywsYBws?=
+ =?us-ascii?Q?epJWfm7UJp/GQMSrU/epIjeP2fA4PVTKenT9UzNOGgDCrm5z0HSsTUMBUxmE?=
+ =?us-ascii?Q?iXqNVcSHsfEybGOnpGJD7xCZ0yWc9kUATpMVe0LVrU9qaqBJdmgv/kG9APgu?=
+ =?us-ascii?Q?6HxD5RkP52XNqqucBdsUwf45N3QIP8uv5nu/0gQGlihCGlgDTtZkVa6cgIn5?=
+ =?us-ascii?Q?/67mTbW9zx0PaxmaYS1seaVUgtZpi/xHisRorjLkRoZLYV5fygbKJmjd+0cQ?=
+ =?us-ascii?Q?SzyE6zRiTrp9g1L8W0epn7olVayi5MKEVpnXae2TtZVns0HCzSES1dAULWC0?=
+ =?us-ascii?Q?bUVj3SxweipnraHSxag0ZJC/7U6HHSLhFQ0Kk0TQvu/Y8PWNesNEHBxmi/ay?=
+ =?us-ascii?Q?qfqYzl89BKUO4d715jRRlURr/J/92fV7xwdFtAFxP6farn5s0tPbdhkWgePe?=
+ =?us-ascii?Q?SEIDn+VSkd2L7R/jf59oH8ekUL0k++8NMtQ7LgIuceXpPytpXua9Tf5P2KtK?=
+ =?us-ascii?Q?s6IwQo5h4y71Jlr0nF2ZUWN/6AdZ06wv5wlo/rloSmwvPr5Nhrk8Kx8sjGZc?=
+ =?us-ascii?Q?Z+94LFgv4nnSKQJ3fbcKw0HPmIx4fKHKadcmUtzFa/ShbZLEv4sWdjfK1itJ?=
+ =?us-ascii?Q?k4ECZJjBG9+1cC7VZNMYSXfgjF+f/mqbyBAh3iYRgjv6Fcfgc4+T8aZi4J4b?=
+ =?us-ascii?Q?Xqj7sDv+GNpPQohlm+SjeB7kdg529z7fgtHvLexPBN5eY6MMkWk6qhVmAabX?=
+ =?us-ascii?Q?/+QS4jM+MqIkuOoOt4N5splScrKgaJe6XZTZtDqHMQON8r49OUA+xLvYDKxI?=
+ =?us-ascii?Q?QH35oNBBUhzUc+IwyAGF936VYqLpnBqoxi5mfrg7/Wj42Xgd4G2TFTPMpqCS?=
+ =?us-ascii?Q?uqmLQ63jksM1JdZwfmowK7kBfJt2aTUrVJcepEJeeG+jnazIV7bhNPsb6xwx?=
+ =?us-ascii?Q?0M0wbBDf6B4/JWUPJ3tAwhLBVuHJdCvAnvVAyvWT1ptWKq0Yng=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230032)(36860700005)(1800799016)(82310400018)(376006);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2024 08:12:11.2555
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e91f17f-c001-4fc0-70a9-08dc8ab75c8a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000066E6.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8371
 
-Hi Qais
+Perry Yuan <perry.yuan@amd.com> writes:
 
-On Mon, Jun 10, 2024 at 6:55=E2=80=AFAM Qais Yousef <qyousef@layalina.io> w=
-rote:
+> the guided mode is also supported, so the operation mode should include
+> that mode as well.
 >
-> On 06/06/24 15:06, Xuewen Yan wrote:
-> > Because the effective_cpu_util() would return a util which
-> > maybe bigger than the actual_cpu_capacity, this could cause
-> > the pd_busy_time calculation errors.
-> > So clamp the cpu_busy_time with the eenv->cpu_cap, which is
-> > the actual_cpu_capacity.
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+
+Thanks for adding this.
+
+Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+
+> ---
+>  Documentation/admin-guide/pm/amd-pstate.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> I actually think capping by pd_cap is something we should remove. Saturat=
-ed
-> systems aren't calculated properly especially when uclamp_max is used.
->
-> But this might a bigger change and out of scope of what you're proposing.=
-.
-
-I agree, there are other things to consider before doing this.
-
->
-> Did this 'wrong' calculation cause an actual problem for task placement?
-> I assume the pd looked 'busier' because some CPUs were too busy.
-
-This will not only affect calculations in scenarios with high temperatures.
-Sometimes, users will set scalimg_max_freq to actively limit the CPU freque=
-ncy,
-so that even if the CPU load is large, the CPU frequency will not be very h=
-igh.
-At this time, even if tasks are placed on other CPUs in the same PD,
-the energy increment may not be too large, thus affecting core selection.
-
->
-> Was the system in overutilzied state? Usually if one CPU is that busy
-> overutilized should be set and we'd skip EAS - unless uclamp_max was used=
-.
-
-As Christian said, This case occurs not only in the overutil scenario,
-this scenario holds true as long as the actual-cpu-capacity caused by
-the reduction in max cpu frequency is smaller than the cpu util.
-
-Thanks!
----
-xuewen
->
-> >
-> > Fixes: 3e8c6c9aac42 ("sched/fair: Remove task_util from effective utili=
-zation in feec()")
-> > Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> > ---
-> >  kernel/sched/fair.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 8a5b1ae0aa55..8939d725023a 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -7870,7 +7870,9 @@ static inline void eenv_pd_busy_time(struct energ=
-y_env *eenv,
-> >       for_each_cpu(cpu, pd_cpus) {
-> >               unsigned long util =3D cpu_util(cpu, p, -1, 0);
-> >
-> > -             busy_time +=3D effective_cpu_util(cpu, util, NULL, NULL);
-> > +             util =3D effective_cpu_util(cpu, util, NULL, NULL);
-> > +             util =3D min(eenv->cpu_cap, util);
-> > +             busy_time +=3D util;
-> >       }
-> >
-> >       eenv->pd_busy_time =3D min(eenv->pd_cap, busy_time);
-> > --
-> > 2.25.1
-> >
+> diff --git a/Documentation/admin-guide/pm/amd-pstate.rst b/Documentation/admin-guide/pm/amd-pstate.rst
+> index de83e742738e..7eb35ad21c7d 100644
+> --- a/Documentation/admin-guide/pm/amd-pstate.rst
+> +++ b/Documentation/admin-guide/pm/amd-pstate.rst
+> @@ -406,7 +406,7 @@ control its functionality at the system level.  They are located in the
+>  ``/sys/devices/system/cpu/amd_pstate/`` directory and affect all CPUs.
+>  
+>  ``status``
+> -	Operation mode of the driver: "active", "passive" or "disable".
+> +	Operation mode of the driver: "active", "passive", "guided" or "disable".
+>  
+>  	"active"
+>  		The driver is functional and in the ``active mode``
+> -- 
+> 2.34.1
