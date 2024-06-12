@@ -1,221 +1,172 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A5216E881
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA00B16F0E4
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718193185; cv=none; b=Ebox9MnUfF+UZRFgEECMj8jRPKXwTicbFBG//jL0Guifs4qB2UQBQWzTV4zIo4MlEz5W6e9L+H9rplzdZSDDqPGj8ev4S3oliTOl+1SA14plCUIWz/4l17Rpt/7wTyTEC7AYP6G1Nhnpw3wGTRe0mIiLAPai0MNvrPFAowTf0Ts=
+	t=1718193218; cv=none; b=QbCrE7eb+Dy6CqKzKFKbs7YoyYY+0W3ofi+drEd/rbgt/tQQgdb8Kv4LBTgrXfkR+XmS8kQJhphvGPAPEcjSsX5iwh+ATyH2gTNFCvbf8oBniWV+on/rJpdI8DWq3OD9Kcz6yOTAacYkR5aR1LT32z2tOeDXnWbCNO+O2WsJ7AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718193185; c=relaxed/simple;
-	bh=gIxc5R2yJd9VUifO8gyW7fV3jyzLCecrCt5fl7cMhQM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UirkIvS9xJABmX/Qs8Ch3cQ38Y7TA9mluQNW4fOp4W/WhsbvYAH5cCh6vCwAH9CraFIHIf8wt7yr3RHPIUNqS+UOvc7VY6S/49AEKVqoazSXf2bv4M5vjTYEfwl/vAxUwxka+DHTo4jhMcISSWZmgK5NVBTVDhkXGcGsn8CU1h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vlnvGd4I; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1718193218; c=relaxed/simple;
+	bh=VkkTtK8kv49ihxUIWWfJmoPWa7Qtpd9YsQ68XKHv/T4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eh4MYVu5syZKfaQsuxy+ltcPd4XdeBQym3K4kWhlmCRJ7Ew1xc/aSOIkbQYTkvglDdqMSOt7seVqBRwD3ZiGnTJ5S4mkjEwRv9z45wjMeIBLl13pKcTBuTlQdIg2GNubavCBdbKeThFJMp3nz9R9Sy7uCvy9wY/QxRjgmAmrdt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ljDya9GC; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vlnvGd4I"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52bc121fb1eso5789702e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 04:53:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718193182; x=1718797982; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RMaVrXTNSn8/RlgcBidtA4XNwAtbmdRI1NY6kSKH78g=;
-        b=vlnvGd4I9XwvwxIOYIOYmsD7QKkJ5KN8WsIpjHtV3WKatrYDHnkawEZtPh8p6ZNjWe
-         wmM2YaX57fsXHk3qTqKjwQnLm5TwdRAPBrnCtAjmhLMoDq+nk3yewV4uSbLPCcpLfu3o
-         l4P77jJG/tJqUFPS+OWjYpOCw8klnROq0c2XH67fTyQtWQiXwEXSysfnDUrEgfFxEiDo
-         v1C1G+qixJuIj5kCamYwPUbM7xifgqSttaqwjxKxTQQOa/8ocSL+7e/8aRez7VaA/Xyt
-         BD4869csava4myns3G8A/31wn81jfjKlqcuu5E8TuO/D36AbhNCgD8yy7Sqx/7OuNZye
-         7qiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718193182; x=1718797982;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RMaVrXTNSn8/RlgcBidtA4XNwAtbmdRI1NY6kSKH78g=;
-        b=sRHAYRc7rnQbRdYXIsGA3Zld97MPaw9rYCd1tX/E1aod0Cgtsuu7XG8pRrV9vz/Wdd
-         r/caio3BUN7dcV3R5L/dEIi7QjCtUxEY99C9Jh6URUg2/r2d7QOhKw61ZDdeSkAOI5ka
-         i4/RdZBtEDrWZD3LSt9JGo2HHoOXHGmP5KnzIPvymFjUfOF3CCCSUzt7LG8VNU06seFR
-         4tpOqHawJkVYgOyT5tY48T5X3OWG46fiv9QkWxI2yj0nr5HcdvQZKcnficeU2ZwKeqt+
-         X3/jJbKlpVRr2Eui2ww0hpiRP9AkOhve23mE9iUlpgmSZ2bSMrsaiopSgaYsRu/sCjKx
-         EyLA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6ptAapWvXD+bkxRE4ZWOFnJw1D2/+vPTpJxyRe5HyX0THF4O8i2ONiJ26MiByxIy7MVkJJncAoovE1CizPtOcRqkmql5xhaiExiB7
-X-Gm-Message-State: AOJu0Yzdsdbl+rdx8b/e7hoGgtVdVbnJovaqxLhrHn3ZDI/cZQy89pBz
-	DVJP1h9JZ2WuaPuT1Evac1sZ83c0Opsokmtb7vO/Rpawo5WYlc1ZCe8Zh+WKQLs=
-X-Google-Smtp-Source: AGHT+IHYYStDCJ+efOYUfRfVc0U8uY+8W/Gy+dCA6wjCUkJXARiUSADe+wTLCY9FVnjiFVraHnRknw==
-X-Received: by 2002:ac2:46f6:0:b0:52c:84a2:6e0f with SMTP id 2adb3069b0e04-52c9a3c768fmr857602e87.15.1718193182228;
-        Wed, 12 Jun 2024 04:53:02 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:8d3:3800:a172:4e8b:453e:2f03])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f1c958f9fsm10457352f8f.38.2024.06.12.04.53.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 04:53:01 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 1/2] genirq/irq_sim: add a notifier for irqchip events
-Date: Wed, 12 Jun 2024 13:52:25 +0200
-Message-ID: <20240612115231.26703-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240612115231.26703-1-brgl@bgdev.pl>
-References: <20240612115231.26703-1-brgl@bgdev.pl>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ljDya9GC"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 45CBpuLn085550;
+	Wed, 12 Jun 2024 06:51:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1718193116;
+	bh=VkkTtK8kv49ihxUIWWfJmoPWa7Qtpd9YsQ68XKHv/T4=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To;
+	b=ljDya9GCg4AdzEVBNT5A6TV9Uo15cW/lMf3r8TyH1fwbNYmkYxthEVF4ZTjTh9TQJ
+	 X85oYZBolz1A3uNaT+n7ao5rpb0YWRg/Blkj/zVTADY27rCfrUdWi710ZFL78nsR+v
+	 8eNl3WzIteepB9708pP/MoykdOZgWB3h/rPe5jV8=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 45CBpuM1006451
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 12 Jun 2024 06:51:56 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 12
+ Jun 2024 06:51:55 -0500
+Received: from DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c]) by
+ DLEE101.ent.ti.com ([fe80::91ee:60bc:bfb7:851c%18]) with mapi id
+ 15.01.2507.023; Wed, 12 Jun 2024 06:51:55 -0500
+From: "Ding, Shenghao" <shenghao-ding@ti.com>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "broonie@kernel.org" <broonie@kernel.org>
+CC: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "perex@perex.cz"
+	<perex@perex.cz>,
+        "13916275206@139.com" <13916275206@139.com>,
+        "zhourui@huaqin.com" <zhourui@huaqin.com>,
+        "alsa-devel@alsa-project.org"
+	<alsa-devel@alsa-project.org>,
+        "Salazar, Ivan" <i-salazar@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chadha,
+ Jasjot Singh" <j-chadha@ti.com>,
+        "liam.r.girdwood@intel.com"
+	<liam.r.girdwood@intel.com>,
+        "Yue, Jaden" <jaden-yue@ti.com>,
+        "yung-chuan.liao@linux.intel.com" <yung-chuan.liao@linux.intel.com>,
+        "Rao,
+ Dipa" <dipa@ti.com>, "yuhsuan@google.com" <yuhsuan@google.com>,
+        "Lo, Henry"
+	<henry.lo@ti.com>, "tiwai@suse.de" <tiwai@suse.de>,
+        "Xu, Baojun"
+	<baojun.xu@ti.com>, "soyer@irl.hu" <soyer@irl.hu>,
+        "Baojun.Xu@fpt.com"
+	<Baojun.Xu@fpt.com>,
+        "judyhsiao@google.com" <judyhsiao@google.com>,
+        "Navada
+ Kanyana, Mukund" <navada@ti.com>,
+        "cujomalainey@google.com"
+	<cujomalainey@google.com>,
+        "Kutty, Aanya" <aanya@ti.com>,
+        "Mahmud, Nayeem"
+	<nayeem.mahmud@ti.com>,
+        "savyasanchi.shukla@netradyne.com"
+	<savyasanchi.shukla@netradyne.com>,
+        "flaviopr@microsoft.com"
+	<flaviopr@microsoft.com>,
+        "Ji, Jesse" <jesse-ji@ti.com>,
+        "darren.ye@mediatek.com" <darren.ye@mediatek.com>
+Subject: RE: [EXTERNAL] Re: [RESEND PATCH v4] ASoc: tas2781: Enable RCA-based
+ playback without DSP firmware download
+Thread-Topic: [EXTERNAL] Re: [RESEND PATCH v4] ASoc: tas2781: Enable RCA-based
+ playback without DSP firmware download
+Thread-Index: AQHauA7VzKr60B04MES3npAwhDhNCbG7CTGAgAj/dqA=
+Date: Wed, 12 Jun 2024 11:51:55 +0000
+Message-ID: <c56ec5c5bd7349a788251230deead24a@ti.com>
+References: <20240606124105.1492-1-shenghao-ding@ti.com>
+ <146da765-c53f-4eb4-874e-53625daeb03e@linux.intel.com>
+In-Reply-To: <146da765-c53f-4eb4-874e-53625daeb03e@linux.intel.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-Currently users of the interrupt simulator don't have any way of being
-notified about interrupts from the simulated domain being requested or
-released. This causes a problem for one of the users - the GPIO
-simulator - which is unable to lock the pins as interrupts.
-
-Add a blocking notifier and provide interfaces to register with it, then
-use it to notify users of the domain about interrupts being requested
-and released while also leaving space for future extensions.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- include/linux/irq_sim.h | 11 +++++++
- kernel/irq/irq_sim.c    | 64 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 75 insertions(+)
-
-diff --git a/include/linux/irq_sim.h b/include/linux/irq_sim.h
-index ab831e5ae748..462d1913bb27 100644
---- a/include/linux/irq_sim.h
-+++ b/include/linux/irq_sim.h
-@@ -10,6 +10,7 @@
- #include <linux/device.h>
- #include <linux/fwnode.h>
- #include <linux/irqdomain.h>
-+#include <linux/notifier.h>
- 
- /*
-  * Provides a framework for allocating simulated interrupts which can be
-@@ -23,4 +24,14 @@ struct irq_domain *devm_irq_domain_create_sim(struct device *dev,
- 					      unsigned int num_irqs);
- void irq_domain_remove_sim(struct irq_domain *domain);
- 
-+enum {
-+	IRQ_SIM_DOMAIN_IRQ_REQUESTED = 1,
-+	IRQ_SIM_DOMAIN_IRQ_RELEASED,
-+};
-+
-+int irq_sim_domain_register_notifier(struct irq_domain *domain,
-+				     struct notifier_block *nb);
-+int irq_sim_domain_unregister_notifier(struct irq_domain *domain,
-+				       struct notifier_block *nb);
-+
- #endif /* _LINUX_IRQ_SIM_H */
-diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
-index 38d6ae651ac7..653b6ca869cb 100644
---- a/kernel/irq/irq_sim.c
-+++ b/kernel/irq/irq_sim.c
-@@ -17,6 +17,7 @@ struct irq_sim_work_ctx {
- 	unsigned int		irq_count;
- 	unsigned long		*pending;
- 	struct irq_domain	*domain;
-+	struct blocking_notifier_head notifier;
- };
- 
- struct irq_sim_irq_ctx {
-@@ -88,6 +89,28 @@ static int irq_sim_set_irqchip_state(struct irq_data *data,
- 	return 0;
- }
- 
-+static int irq_sim_request_resources(struct irq_data *data)
-+{
-+	struct irq_sim_irq_ctx *irq_ctx = irq_data_get_irq_chip_data(data);
-+	struct irq_sim_work_ctx *work_ctx = irq_ctx->work_ctx;
-+	irq_hw_number_t hwirq = irqd_to_hwirq(data);
-+
-+	blocking_notifier_call_chain(&work_ctx->notifier,
-+				     IRQ_SIM_DOMAIN_IRQ_REQUESTED, &hwirq);
-+
-+	return 0;
-+}
-+
-+static void irq_sim_release_resources(struct irq_data *data)
-+{
-+	struct irq_sim_irq_ctx *irq_ctx = irq_data_get_irq_chip_data(data);
-+	struct irq_sim_work_ctx *work_ctx = irq_ctx->work_ctx;
-+	irq_hw_number_t hwirq = irqd_to_hwirq(data);
-+
-+	blocking_notifier_call_chain(&work_ctx->notifier,
-+				     IRQ_SIM_DOMAIN_IRQ_RELEASED, &hwirq);
-+}
-+
- static struct irq_chip irq_sim_irqchip = {
- 	.name			= "irq_sim",
- 	.irq_mask		= irq_sim_irqmask,
-@@ -95,6 +118,8 @@ static struct irq_chip irq_sim_irqchip = {
- 	.irq_set_type		= irq_sim_set_type,
- 	.irq_get_irqchip_state	= irq_sim_get_irqchip_state,
- 	.irq_set_irqchip_state	= irq_sim_set_irqchip_state,
-+	.irq_request_resources	= irq_sim_request_resources,
-+	.irq_release_resources	= irq_sim_release_resources,
- };
- 
- static void irq_sim_handle_irq(struct irq_work *work)
-@@ -183,6 +208,7 @@ struct irq_domain *irq_domain_create_sim(struct fwnode_handle *fwnode,
- 	work_ctx->irq_count = num_irqs;
- 	work_ctx->work = IRQ_WORK_INIT_HARD(irq_sim_handle_irq);
- 	work_ctx->pending = no_free_ptr(pending);
-+	BLOCKING_INIT_NOTIFIER_HEAD(&work_ctx->notifier);
- 
- 	return no_free_ptr(work_ctx)->domain;
- }
-@@ -242,3 +268,41 @@ struct irq_domain *devm_irq_domain_create_sim(struct device *dev,
- 	return domain;
- }
- EXPORT_SYMBOL_GPL(devm_irq_domain_create_sim);
-+
-+/**
-+ * irq_sim_domain_register_notifier - Start listening for events on this
-+ *                                    interrupt simulator.
-+ *
-+ * @domain:     The interrupt simulator domain to register with.
-+ * @nb:         Notifier block called on domain events.
-+ *
-+ * On success: return 0.
-+ * On failure: return negative error code.
-+ */
-+int irq_sim_domain_register_notifier(struct irq_domain *domain,
-+				     struct notifier_block *nb)
-+{
-+	struct irq_sim_work_ctx *work_ctx = domain->host_data;
-+
-+	return blocking_notifier_chain_register(&work_ctx->notifier, nb);
-+}
-+EXPORT_SYMBOL_GPL(irq_sim_domain_register_notifier);
-+
-+/**
-+ * irq_sim_domain_unregister_notifier - Stop listening for events on this
-+ *                                      interrupt simulator.
-+ *
-+ * @domain:     The interrupt simulator domain to register with.
-+ * @nb:         Notifier block called on domain events.
-+ *
-+ * On success: return 0.
-+ * On failure: return negative error code.
-+ */
-+int irq_sim_domain_unregister_notifier(struct irq_domain *domain,
-+				       struct notifier_block *nb)
-+{
-+	struct irq_sim_work_ctx *work_ctx = domain->host_data;
-+
-+	return blocking_notifier_chain_unregister(&work_ctx->notifier, nb);
-+}
-+EXPORT_SYMBOL_GPL(irq_sim_domain_unregister_notifier);
--- 
-2.40.1
-
+SGkgUGllcnJlDQpTb3JyeSBmb3IgbWlzc2luZyB5b3VyIHZhbHVhYmxlIHJldmlldyBjb21tZW50
+cywgdGhhbmtzIGZvciBCcm9vbmllJ3MgcmVtaW5kLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQo+IEZyb206IFBpZXJyZS1Mb3VpcyBCb3NzYXJ0IDxwaWVycmUtbG91aXMuYm9zc2Fy
+dEBsaW51eC5pbnRlbC5jb20+DQo+IFNlbnQ6IFRodXJzZGF5LCBKdW5lIDYsIDIwMjQgOTowOSBQ
+TQ0KPiBUbzogRGluZywgU2hlbmdoYW8gPHNoZW5naGFvLWRpbmdAdGkuY29tPjsgYnJvb25pZUBr
+ZXJuZWwub3JnDQo+IENjOiBhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb207IGxnaXJk
+d29vZEBnbWFpbC5jb207DQo+IHBlcmV4QHBlcmV4LmN6OyAxMzkxNjI3NTIwNkAxMzkuY29tOyB6
+aG91cnVpQGh1YXFpbi5jb207IGFsc2EtDQo+IGRldmVsQGFsc2EtcHJvamVjdC5vcmc7IFNhbGF6
+YXIsIEl2YW4gPGktc2FsYXphckB0aS5jb20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVs
+Lm9yZzsgQ2hhZGhhLCBKYXNqb3QgU2luZ2ggPGotY2hhZGhhQHRpLmNvbT47DQo+IGxpYW0uci5n
+aXJkd29vZEBpbnRlbC5jb207IFl1ZSwgSmFkZW4gPGphZGVuLXl1ZUB0aS5jb20+OyB5dW5nLQ0K
+PiBjaHVhbi5saWFvQGxpbnV4LmludGVsLmNvbTsgUmFvLCBEaXBhIDxkaXBhQHRpLmNvbT47IHl1
+aHN1YW5AZ29vZ2xlLmNvbTsNCj4gTG8sIEhlbnJ5IDxoZW5yeS5sb0B0aS5jb20+OyB0aXdhaUBz
+dXNlLmRlOyBYdSwgQmFvanVuIDxiYW9qdW4ueHVAdGkuY29tPjsNCj4gc295ZXJAaXJsLmh1OyBC
+YW9qdW4uWHVAZnB0LmNvbTsganVkeWhzaWFvQGdvb2dsZS5jb207IE5hdmFkYSBLYW55YW5hLA0K
+PiBNdWt1bmQgPG5hdmFkYUB0aS5jb20+OyBjdWpvbWFsYWluZXlAZ29vZ2xlLmNvbTsgS3V0dHks
+IEFhbnlhDQo+IDxhYW55YUB0aS5jb20+OyBNYWhtdWQsIE5heWVlbSA8bmF5ZWVtLm1haG11ZEB0
+aS5jb20+Ow0KPiBzYXZ5YXNhbmNoaS5zaHVrbGFAbmV0cmFkeW5lLmNvbTsgZmxhdmlvcHJAbWlj
+cm9zb2Z0LmNvbTsgSmksIEplc3NlIDxqZXNzZS0NCj4gamlAdGkuY29tPjsgZGFycmVuLnllQG1l
+ZGlhdGVrLmNvbQ0KPiBTdWJqZWN0OiBbRVhURVJOQUxdIFJlOiBbUkVTRU5EIFBBVENIIHY0XSBB
+U29jOiB0YXMyNzgxOiBFbmFibGUgUkNBLWJhc2VkDQo+IHBsYXliYWNrIHdpdGhvdXQgRFNQIGZp
+cm13YXJlIGRvd25sb2FkDQo+IA0KPiBJIGFtIGFmcmFpZCB0aGVyZSBhcmUgc3RpbGwgY2lyY3Vs
+YXIgbG9naWMgaXNzdWVzLCBvciB0aGUgY29kZS9jb21tZW50cyBkb24ndA0KPiBjYXB0dXJlIHdo
+YXQgeW91IGFyZSB0cnlpbmcgdG8gZG8u4oCKLuKAii7igIouID4gZGlmZiAtLWdpdCBhL2luY2x1
+ZGUvc291bmQvdGFzMjc4MS0NCj4gZHNwLuKAimggYi9pbmNsdWRlL3NvdW5kL3RhczI3ODEtZHNw
+LuKAimggPiBpbmRleCA3ZmJhN2VhMjZhNGIu4oCKLuKAijNjZGE5ZGExNGY2ZA0KPiAxMDA2NDQg
+PiBaalFjbVFSWUZwZnB0QmFubmVyU3RhcnQgVGhpcyBtZXNzYWdlIHdhcyBzZW50IGZyb20gb3V0
+c2lkZSBvZg0KPiBUZXhhcyBJbnN0cnVtZW50cy4NCj4gRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9w
+ZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSByZWNvZ25pemUgdGhlIHNvdXJjZSBvZiB0aGlzDQo+
+IGVtYWlsIGFuZCBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUuIElmIHlvdSB3aXNoIHRvIHJlcG9y
+dCB0aGlzIG1lc3NhZ2UgdG8gSVQNCj4gU2VjdXJpdHksIHBsZWFzZSBmb3J3YXJkIHRoZSBtZXNz
+YWdlIGFzIGFuIGF0dGFjaG1lbnQgdG8gcGhpc2hpbmdAbGlzdC50aS5jb20NCj4gDQo+IFpqUWNt
+UVJZRnBmcHRCYW5uZXJFbmQNCj4gSSBhbSBhZnJhaWQgdGhlcmUgYXJlIHN0aWxsIGNpcmN1bGFy
+IGxvZ2ljIGlzc3Vlcywgb3IgdGhlIGNvZGUvY29tbWVudHMgZG9uJ3QNCj4gY2FwdHVyZSB3aGF0
+IHlvdSBhcmUgdHJ5aW5nIHRvIGRvLi4uLg0KPiANCj4gDQouLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uDQo+IC4uLiBhbmQgaGVyZSB0aGlzIFRBU0RFVklDRV9SQ0FfRldfT0sgcmVh
+bGx5IG1lYW5zIGEgZmFpbC4NCj4gDQo+IHNvIGhvdyBjYW4gWzFdIGNvbnNpZGVyIFRBU0RFVklD
+RV9SQ0FfRldfT0sgYXMgYSBzdWNjZXNzIGNhc2U/DQo+IA0KPiBPciB0aGlzIHRoaXMgc2F5aW5n
+IHRoYXQgdGhlIGJhc2VsaW5lIGlzIHRoZSBSQ0EgY2FzZSwgYW5kIHRoZW4gdGhlIGNvZGUNCj4g
+YXR0ZW1wdHMgdG8gbG9hZCBmaXJtd2FyZSBidXQgaW4gY2FzZSBvZiBmYWlsdXJlcyBqdXN0IGtl
+ZXAgZ29pbmcsIGkuZS4NCj4gZmFpbGluZyB0byBsb2FkIGZpcm13YXJlIGlzIE5PVCBhbiBlcnJv
+cj8NCkNvcnJlY3QuDQo+IA0KPiBUaGF0IHdvdWxkIGJlIHNvbWV3aGF0IGRpZmZlcmVudCB0byB0
+aGUgY29tbWl0IHRpdGxlIHRoYXQgc2F5cyAnd2l0aG91dCBEU1ANCj4gZmlybXdhcmUgZG93bmxv
+YWQnLg0KPiANCj4gV291bGQgeW91IG1pbmQgY2xhcmlmeWluZyB0aGUgc3RlcHMgcGxlYXNlPw0K
+VGhlcmUncyB0d28gYmluIGZpbGVzIGZvciB0YXMyNzgxLCBvbmUgaXMgcmVnaXN0ZXIgc2V0dGlu
+Z3MoUkNBIGJpbiBmaWxlKSwgdGhlIG90aGVyIGlzIHRoZSBkc3AgZmlybXdhcmUgYW5kIGZpbHRl
+ciBjb2VmZi4NCklmIG5vIFJDQSBiaW4gZmlsZSBpcyBsb2FkLCB0aGUgdGFzMjc4MSBjYW4ndCB3
+b3JrLCBpdCB3aWxsIGJlIFRBU0RFVklDRV9EU1BfRldfRkFJTC4NCklmIG9ubHkgUkNBIGJpbiBm
+aWxlIGxvYWQsIHRoZSB0YXMyNzgxIHdpbGwgd29yayBpbiBieXBhc3MgbW9kZSwgd2hpY2ggZHNw
+IGRvIG5vdCB3b3JrLCBuZWl0aGVyIHNwayBwcm90ZWN0aW9uIG5vciBhY291c3RpYyANCmFsZ29y
+aXRobSBpcyBlbmFibGVkIA0KKFRBU0RFVklDRV9SQ0FfRldfT0spLg0KSWYgYm90aCBSQ0EgYmlu
+IGFuZCBkc3AgZmlybXdhcmUgYXJlIGxvYWRlZCwgdGhhdCBpcyBUQVNERVZJQ0VfRFNQX0ZXX0FM
+TF9PSywgdGFzMjc4MSB3b3JrIGluIGRzcCBtb2RlLCBib3RoIHNwayBwcm90ZWN0aW9uDQphbmQg
+YWNvdXN0aWMgYWxnb3JpdGhtIGFyZSBlbmFibGVkDQo+IA0KPiANCj4gPiAgCQl0YXNkZXZpY2Vf
+ZHNwX3JlbW92ZSh0YXNfcHJpdik7DQo+ID4gIAl9DQo+ID4gIAltdXRleF91bmxvY2soJnRhc19w
+cml2LT5jb2RlY19sb2NrKTsNCj4gPiBAQCAtNDY2LDE0ICs0NzQsMTQgQEAgc3RhdGljIGludCB0
+YXNkZXZpY2Vfc3RhcnR1cChzdHJ1Y3QNCj4gPiBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3RyZWFt
+LCAgew0KPiA+ICAJc3RydWN0IHNuZF9zb2NfY29tcG9uZW50ICpjb2RlYyA9IGRhaS0+Y29tcG9u
+ZW50Ow0KPiA+ICAJc3RydWN0IHRhc2RldmljZV9wcml2IFRBU0RFVklDRV9SQ0FfRldfT0sqdGFz
+X3ByaXYgPQ0KPiBzbmRfc29jX2NvbXBvbmVudF9nZXRfZHJ2ZGF0YShjb2RlYyk7DQo+ID4gLQlp
+bnQgcmV0ID0gMDsNCj4gPg0KPiA+IC0JaWYgKHRhc19wcml2LT5md19zdGF0ZSAhPSBUQVNERVZJ
+Q0VfRFNQX0ZXX0FMTF9PSykgew0KPiA+IC0JCWRldl9lcnIodGFzX3ByaXYtPmRldiwgIkRTUCBi
+aW4gZmlsZSBub3QgbG9hZGVkXG4iKTsNCj4gPiAtCQlyZXQgPSAtRUlOVkFMOw0KPiA+ICsJc3dp
+dGNoICh0YXNfcHJpdi0+Zndfc3RhdGUpIHsNCj4gPiArCWNhc2UgVEFTREVWSUNFX1JDQV9GV19P
+SzoNCj4gPiArCWNhc2UgVEFTREVWSUNFX0RTUF9GV19BTExfT0s6DQo+ID4gKwkJcmV0dXJuIDA7
+DQo+ID4gKwlkZWZhdWx0Og0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICAJfQ0KPiA+IC0N
+Cj4gPiAtCXJldHVybiByZXQ7DQo+ID4gIH0NCj4gPg0KPiA+ICBzdGF0aWMgaW50IHRhc2Rldmlj
+ZV9od19wYXJhbXMoc3RydWN0IHNuZF9wY21fc3Vic3RyZWFtICpzdWJzdHJlYW0sDQo=
