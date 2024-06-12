@@ -1,107 +1,102 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A298F72;
-	Wed, 12 Jun 2024 01:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195F44696;
+	Wed, 12 Jun 2024 01:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718157556; cv=none; b=MZaDZh8u8CUGUx2LY4Qg9It+MqnBAb89w04FwJeRiixpt8qXA75cmNhig5ypB75W68Gffy80dliWnvE4LH5vt0Y+ds8LiwKe053zQQP+gVtK4mV72IHlVfhTSxGMSTzR4mQFFdkjF9WaYnEKw2r8YVjuXTNHuUj1QDJfBiD3AIo=
+	t=1718157585; cv=none; b=tmZRSIScfyBI7+yyeGkCJElQAk2e5PvZuAreCgsSCAn9tyjpbfxaJ4EgDXzm97YV+WGdeRokPqXBaYdwUF0JflsfpLuZS2iAC+/h7OoQuUNpoolvr2ush+Px9V5jpsZQ27/kmpRTu28uVVOHUH0NqPINZvYW2BfFZIRanQ/fiXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718157556; c=relaxed/simple;
-	bh=m/9CniaJyW8JNpE0fIuzwkYnQ2cyl64QD9V3J9ZowtY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bRlH8qkf2q7OA+OGZ3aFLZAJckQuQ/eRAWcZ3cFBFkkcE9GEVpPxTwGSsLUruc4b2kwpEdDnoBZaqLQiD7xCnwPR/7ur6K8tcabUz9Q8ZFCg0IbD2+Fl1WC+KEMgXmStORs7SmaZRC5GWX9R0un7qIbGGHNoJn3dG1yi839hTBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VzTC05tKxz2CkTM;
-	Wed, 12 Jun 2024 09:55:24 +0800 (CST)
-Received: from kwepemi500009.china.huawei.com (unknown [7.221.188.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id 13F1E140257;
-	Wed, 12 Jun 2024 09:59:12 +0800 (CST)
-Received: from localhost (10.175.127.227) by kwepemi500009.china.huawei.com
- (7.221.188.199) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 12 Jun
- 2024 09:59:11 +0800
-Date: Wed, 12 Jun 2024 10:10:58 +0800
-From: Long Li <leo.lilong@huawei.com>
-To: John Garry <john.g.garry@oracle.com>, <david@fromorbit.com>,
-	<djwong@kernel.org>, <hch@lst.de>, <viro@zeniv.linux.org.uk>,
-	<brauner@kernel.org>, <jack@suse.cz>, <chandan.babu@oracle.com>,
-	<willy@infradead.org>
-CC: <axboe@kernel.dk>, <martin.petersen@oracle.com>,
-	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<tytso@mit.edu>, <jbongio@google.com>, <ojaswin@linux.ibm.com>,
-	<ritesh.list@gmail.com>, <mcgrof@kernel.org>, <p.raghav@samsung.com>,
-	<linux-xfs@vger.kernel.org>, <catherine.hoang@oracle.com>
-Subject: Re: [PATCH v3 08/21] xfs: Introduce FORCEALIGN inode flag
-Message-ID: <20240612021058.GA729527@ceph-admin>
-References: <20240429174746.2132161-1-john.g.garry@oracle.com>
- <20240429174746.2132161-9-john.g.garry@oracle.com>
+	s=arc-20240116; t=1718157585; c=relaxed/simple;
+	bh=864XpaVKILlfYw0eJqI5Z58BDDy0cJ3P9fgW1Ko95xQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hGhs1pVRD8KkgLTT2c+D19O9kdfexofKDDojsu05fZqI7SiVZUlaXT6fCmKQdLneuMv8i2JnHELZfGKrczXDmttf6NLX+vp1ZIu/D9ltXN/wmDJnpkeABFTZ9l/8Ov8mTAPh4urvvCOaNHJGS2PXXiwdvETz9i72Y5+SIXmDpRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CJ+Kjvpv; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CJ+Kjvpv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718157584; x=1749693584;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=864XpaVKILlfYw0eJqI5Z58BDDy0cJ3P9fgW1Ko95xQ=;
+  b=CJ+Kjvpv/UlJU6uyJU4p+G94fgmXaNPnHuQHlKyTJhTg5VDEhIoI58b1
+   qBejoTKzXA5kTNJAjeIOQECmNLofsVDbhpr5dP8WRZKdJMnGLSLZVsDu9
+   DKE4MM+tIG5AzpCsTreQGrVNm7r3nZnkXnKtuPdNtnEyORmzKWJ2wNbqu
+   VeHTyB5oqZmnZNZdmgwaM0arxJsUuwinuw3KBHvSgSUvti5hftOUM5va3
+   mHHDyBdGyudKF16vXgVFhFbusAC1GkXGI1FkgpRumTKA+/AIrdwSlXSZ2
+   Y4WJlfOm4g3geQ0mnWEdoh08BdT30Rnrqa+7G4Rai0AvRR7G9ExwwNvxA
+   w==;
+X-CSE-ConnectionGUID: XbRW/3pFTFqdChYHGM07RQ==
+X-CSE-MsgGUID: ir+f7X/VR9ezAEGMn3BJrA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="14627031"
+X-IronPort-AV: E=Sophos;i="6.08,231,1712646000"; 
+   d="scan'208";a="14627031"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 18:59:44 -0700
+X-CSE-ConnectionGUID: 5HB6WzFSSMGKudJkHqD1gA==
+X-CSE-MsgGUID: yNpNGTL4TJCH+F1tV7HboQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,231,1712646000"; 
+   d="scan'208";a="39688397"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.227.51]) ([10.124.227.51])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 18:59:42 -0700
+Message-ID: <04b27f2d-5509-4fd0-ac97-ae61d6105b4d@intel.com>
+Date: Wed, 12 Jun 2024 09:59:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20240429174746.2132161-9-john.g.garry@oracle.com>
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi500009.china.huawei.com (7.221.188.199)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: x86/mmu: Rephrase comment about synthetic PFERR
+ flags in #PF handler
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240608001108.3296879-1-seanjc@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20240608001108.3296879-1-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 29, 2024 at 05:47:33PM +0000, John Garry wrote:
-> From: "Darrick J. Wong" <djwong@kernel.org>
+On 6/8/2024 8:11 AM, Sean Christopherson wrote:
+> Reword the BUILD_BUG_ON() comment in the legacy #PF handler to explicitly
+> describe how asserting that synthetic PFERR flags are limited to bits 31:0
+> protects KVM against inadvertently passing a synthetic flag to the common
+> page fault handler.
 > 
-> Add a new inode flag to require that all file data extent mappings must
-> be aligned (both the file offset range and the allocated space itself)
-> to the extent size hint.  Having a separate COW extent size hint is no
-> longer allowed.
+> No functional change intended.
 > 
-> The goal here is to enable sysadmins and users to mandate that all space
-> mappings in a file must have a startoff/blockcount that are aligned to
-> (say) a 2MB alignment and that the startblock/blockcount will follow the
-> same alignment.
-> 
-> jpg: Enforce extsize is a power-of-2 and aligned with afgsize + stripe
->      alignment for forcealign
-> Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
-> Co-developed-by: John Garry <john.g.garry@oracle.com>
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+
 > ---
->  fs/xfs/libxfs/xfs_format.h    |  6 ++++-
->  fs/xfs/libxfs/xfs_inode_buf.c | 50 +++++++++++++++++++++++++++++++++++
->  fs/xfs/libxfs/xfs_inode_buf.h |  3 +++
->  fs/xfs/libxfs/xfs_sb.c        |  2 ++
->  fs/xfs/xfs_inode.c            | 12 +++++++++
->  fs/xfs/xfs_inode.h            |  2 +-
->  fs/xfs/xfs_ioctl.c            | 34 +++++++++++++++++++++++-
->  fs/xfs/xfs_mount.h            |  2 ++
->  fs/xfs/xfs_super.c            |  4 +++
->  include/uapi/linux/fs.h       |  2 ++
->  10 files changed, 114 insertions(+), 3 deletions(-)
+>   arch/x86/kvm/mmu/mmu.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-> index 2b2f9050fbfb..4dd295b047f8 100644
-> --- a/fs/xfs/libxfs/xfs_format.h
-> +++ b/fs/xfs/libxfs/xfs_format.h
-> @@ -353,6 +353,7 @@ xfs_sb_has_compat_feature(
->  #define XFS_SB_FEAT_RO_COMPAT_RMAPBT   (1 << 1)		/* reverse map btree */
->  #define XFS_SB_FEAT_RO_COMPAT_REFLINK  (1 << 2)		/* reflinked files */
->  #define XFS_SB_FEAT_RO_COMPAT_INOBTCNT (1 << 3)		/* inobt block counts */
-> +#define XFS_SB_FEAT_RO_COMPAT_FORCEALIGN (1 << 30)	/* aligned file data extents */
- 
-Hi, John
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 8d7115230739..2421d971ce1b 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4599,7 +4599,10 @@ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
+>   	if (WARN_ON_ONCE(error_code >> 32))
+>   		error_code = lower_32_bits(error_code);
+>   
+> -	/* Ensure the above sanity check also covers KVM-defined flags. */
+> +	/*
+> +	 * Restrict KVM-defined flags to bits 63:32 so that it's impossible for
+> +	 * them to conflict with #PF error codes, which are limited to 32 bits.
+> +	 */
+>   	BUILD_BUG_ON(lower_32_bits(PFERR_SYNTHETIC_MASK));
+>   
+>   	vcpu->arch.l1tf_flush_l1d = true;
+> 
+> base-commit: b9adc10edd4e14e66db4f7289a88fdbfa45ae7a8
 
-You know I've been using and testing your atomic writes patch series recently,
-and I'm particularly interested in the changes to the on-disk format. I noticed
-that XFS_SB_FEAT_RO_COMPAT_FORCEALIGN uses bit 30 instead of bit 4, which would
-be the next available bit in sequence.
-
-I'm wondering if using bit 30 is just a temporary solution to avoid conflicts, 
-and if the plan is to eventually use bits sequentially, for example, using bit 4?
-I'm looking forward to your explanation.
-
-Thanks,
-Long Li
