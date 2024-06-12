@@ -1,39 +1,36 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898447D412;
-	Wed, 12 Jun 2024 07:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF6F16C86A;
+	Wed, 12 Jun 2024 07:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718176945; cv=none; b=eCPkS1BQxlDRzD2znMHx3UHQjLQB3LyldZmJZPshm54EKH7URs4v26fN/gXItXAb7VUGeNDWhoQWWn/sc5nmyCx69GTdYCRxxNohwpzr4us9N48r4ETZslOJoKQ16MYLXsKwmldZzEpn61Xz0CgH3atNN9TEjRiSrW624vLJ5WE=
+	t=1718176949; cv=none; b=kkVNnf2Aw8umlBJg8nBStEWXcgnBQ67VBHOVvbfir62lASaFDyc3XhGR6Jb3S6WRTQDwHGweGj66kb6adAq+xYnd/QbaVrQrI1YdAPMnfIt6vH7ynV40zFCeEdRUHnbRg3q29jgDP/jHCnEAJbyez5FCL4xefV0sHjE0DKGkd3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718176945; c=relaxed/simple;
-	bh=lNTgL9bIM0ya5dGayqFCcn/qYeuQFOLkZ9SHTvr4cGE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SVhAPFtE8gdTFXzjJt0iPLm+WdPfPFxeSVqDIWNz7ZYVhixKuF29ruuhNlZxuBQZmhF1F2ZDvsbGYOfzLqhONZTD7+s++VRlkxl5LspFzgNQRyH3NHAvscISozhGSvd7DW3bSLLfOCtV585aetZoAbCO3I5971Uo6G8pWhRYEMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	s=arc-20240116; t=1718176949; c=relaxed/simple;
+	bh=7XkyMNNVFbwIywmIqmH+fmp6s2CF96J+4RJhXNaHaj0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L9yiY7wuyl2Nta9vqJxUNS3FvW1sX63lM2fxoQvdxfpOj+H1YPj08rG4o8J5wzkMkuQ3Et20hyM3oRebD12vSwmecpX99iDniDywDayvgJWeupjHVv8ZeB91nzjcz8BN9AjD+S1p0NDhh5nT+M7qz6fB9ZI0srsELHdMYhPWt7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VzcQ1401Fz1HDJm;
-	Wed, 12 Jun 2024 15:20:25 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VzcMq4TN0z1X3YJ;
+	Wed, 12 Jun 2024 15:18:31 +0800 (CST)
 Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6F53C180065;
-	Wed, 12 Jun 2024 15:22:20 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 6ADD3140360;
+	Wed, 12 Jun 2024 15:22:19 +0800 (CST)
 Received: from huawei.com (10.173.127.72) by canpemm500002.china.huawei.com
  (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 12 Jun
- 2024 15:22:19 +0800
+ 2024 15:22:18 +0800
 From: Miaohe Lin <linmiaohe@huawei.com>
 To: <akpm@linux-foundation.org>, <tony.luck@intel.com>, <bp@alien8.de>
 CC: <nao.horiguchi@gmail.com>, <linmiaohe@huawei.com>, <linux-mm@kvack.org>,
 	<linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>
-Subject: [PATCH v3 02/13] mm/memory-failure: remove MF_MSG_SLAB
-Date: Wed, 12 Jun 2024 15:18:24 +0800
-Message-ID: <20240612071835.157004-3-linmiaohe@huawei.com>
+Subject: [PATCH v3 00/13] Some cleanups for memory-failure
+Date: Wed, 12 Jun 2024 15:18:22 +0800
+Message-ID: <20240612071835.157004-1-linmiaohe@huawei.com>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240612071835.157004-1-linmiaohe@huawei.com>
-References: <20240612071835.157004-1-linmiaohe@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,52 +42,45 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  canpemm500002.china.huawei.com (7.192.104.244)
 
-Since commit 46df8e73a4a3 ("mm: free up PG_slab"), MF_MSG_SLAB becomes
-unused. Remove it. No functional change intended.
-
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Hi everyone,
+This series contains a few cleanup patches to avoid exporting unused
+function, add helper macro, fix some obsolete comments and so on. More
+details can be found in the respective changelogs.
+Thanks!
 ---
- include/linux/mm.h      | 1 -
- include/ras/ras_event.h | 1 -
- mm/memory-failure.c     | 1 -
- 3 files changed, 3 deletions(-)
+v3:
+ Fix build error per kernel test robot. Thanks.
+ s/extern// for function declarations per Matthew. Thanks.
+v2:
+ Collect Reviewed-by tag and use folio_mapped() per David. Thanks.
+ Fix build error per kernel test robot. Thanks.
+---
+Miaohe Lin (13):
+  mm/memory-failure: simplify put_ref_page()
+  mm/memory-failure: remove MF_MSG_SLAB
+  mm/memory-failure: add macro GET_PAGE_MAX_RETRY_NUM
+  mm/memory-failure: save some page_folio() calls
+  mm/memory-failure: remove unneeded empty string
+  mm/memory-failure: remove confusing initialization to count
+  mm/memory-failure: don't export hwpoison_filter() when
+    !CONFIG_HWPOISON_INJECT
+  mm/memory-failure: use helper macro task_pid_nr()
+  mm/memory-failure: remove obsolete comment in unpoison_memory()
+  mm/memory-failure: move some function declarations into internal.h
+  mm/memory-failure: fix comment of get_hwpoison_page()
+  mm/memory-failure: remove obsolete comment in kill_proc()
+  mm/memory-failure: correct comment in me_swapcache_dirty
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 25b541974134..0bf0f22b32c8 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4048,7 +4048,6 @@ enum mf_result {
- enum mf_action_page_type {
- 	MF_MSG_KERNEL,
- 	MF_MSG_KERNEL_HIGH_ORDER,
--	MF_MSG_SLAB,
- 	MF_MSG_DIFFERENT_COMPOUND,
- 	MF_MSG_HUGE,
- 	MF_MSG_FREE_HUGE,
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index cf7f19b7ce64..9bc707fe8819 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -356,7 +356,6 @@ TRACE_EVENT(aer_event,
- #define MF_PAGE_TYPE		\
- 	EM ( MF_MSG_KERNEL, "reserved kernel page" )			\
- 	EM ( MF_MSG_KERNEL_HIGH_ORDER, "high-order kernel page" )	\
--	EM ( MF_MSG_SLAB, "kernel slab page" )				\
- 	EM ( MF_MSG_DIFFERENT_COMPOUND, "different compound page after locking" ) \
- 	EM ( MF_MSG_HUGE, "huge page" )					\
- 	EM ( MF_MSG_FREE_HUGE, "free huge page" )			\
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 2e6038c73119..4b9a9298d478 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -911,7 +911,6 @@ static const char *action_name[] = {
- static const char * const action_page_types[] = {
- 	[MF_MSG_KERNEL]			= "reserved kernel page",
- 	[MF_MSG_KERNEL_HIGH_ORDER]	= "high-order kernel page",
--	[MF_MSG_SLAB]			= "kernel slab page",
- 	[MF_MSG_DIFFERENT_COMPOUND]	= "different compound page after locking",
- 	[MF_MSG_HUGE]			= "huge page",
- 	[MF_MSG_FREE_HUGE]		= "free huge page",
+ include/linux/mm.h         |  8 -------
+ include/linux/page-flags.h |  5 -----
+ include/linux/rmap.h       |  2 --
+ include/ras/ras_event.h    |  1 -
+ mm/internal.h              | 10 +++++++++
+ mm/memory-failure.c        | 46 +++++++++++++++-----------------------
+ 6 files changed, 28 insertions(+), 44 deletions(-)
+
+
+base-commit: 8a58962d482f5ab03d698f56fcbd5449757accfa
 -- 
 2.33.0
 
