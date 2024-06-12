@@ -1,121 +1,100 @@
-Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C95616E87C;
-	Wed, 12 Jun 2024 09:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C70716DED2;
+	Wed, 12 Jun 2024 09:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718186021; cv=none; b=Rp6zBzgzAftK8sAFEKscGCpIwcBTxyj5ZJzBYawYBKpZA4XeUPew1NGsObb/+5AerbOB/xO3R6NMb2dNSRy00WlzGyf7Gbkw5ziyDPsc0+7iSgUPpmlbdUcE0HwZzFpBaUJrYJTW4uwIXcXtD4OShoYc2d07pfGeh4HS7+KEOS8=
+	t=1718186031; cv=none; b=c9Z0oTewCko/yxiGS9N0hw3KFP5TInd/i2PWGipUvbXg9w5Zvyl+iDs0BfH8Qq7/gNJjE+U/cySNxVSfbRh0Rm5XPQSQH6HH0t6KFqJBNrPTMYonzpm7AlLxsiBLx5c1774KWY+LMOTUFoJo6/wu6X8xAmhHAAi05k2NPxgYcls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718186021; c=relaxed/simple;
-	bh=NSrQU7oxV782OTF1pzPrNXGHVTnX0ocauyLrs3G9UWw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=F65hmWHQsfGf897GL33IIc3SxQQSAMPHEvlb58pRvttcE/zKKhKbTmSX7IlZShcOEkxW2TuRK7K16x7PdUf+WajaciBI+S29z6D5FLTZsvr0/zbqYr6vu+mkqkrTrNNjicT7rrwk6/ENm3FDY/xkmPZcASPFqb1H9S76Nlza3a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=B8Tz9pui; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aF3fLhvJ; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1718186031; c=relaxed/simple;
+	bh=yRlmiQo1uibOoBDJDgUIhh3gKKJ8sqPtUMS2oriWl9k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DBkWj5SSwWEfQ3oIEPsEg7p03qEBlgCz+sFk7cz1k9XbuFpEXXZQ3HQY4jYc3d9y9YrtAvwMobFKCvOX6xJ9lNc09D81c++wVyn+gEs/OYoFGtI5PvY8Cdyi/D1I/kMDNHphk9KAn8KKMGcpNk8doUHt4z75niqd4S1i5bz9L+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Nr22xxNX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="B8Tz9pui";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aF3fLhvJ"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 250B213801B6;
-	Wed, 12 Jun 2024 05:53:39 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 12 Jun 2024 05:53:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1718186019;
-	 x=1718272419; bh=eTw/3uGoMaLNBc00Ig08jpj75W3u53E9jYmieBPTfWU=; b=
-	B8Tz9puigFIHyA4uL2uLeAZfR5lVpixa3qnlj0f8iVSo2xuQ6PyVq0U+eVdfdy0K
-	T6LFgIX7Xu93MmmogGKW04YQNo30yW4cvAgCE1311fWyNufwlndNLkZsaJO0PKrk
-	N6IaBDChMRC3PhZHxUsdOtIcQFMkvtYegfr69EHfKLDRr4bi/jqa4nfq2Cb22Fkx
-	XATiu+C0Lmug00xsoWhk2jUn78HCZrMT37wggG1tfR2zDErUnbKISOuTc62eliZQ
-	Fsu9KxTEWNrIgQXE3ZNj0ND4FXZQ+8QKmvV5KdCpi9deEIXDOzQHXGDlb9PhVelb
-	bv3P82pEa6CGx/O9lyG9MA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1718186019; x=
-	1718272419; bh=eTw/3uGoMaLNBc00Ig08jpj75W3u53E9jYmieBPTfWU=; b=a
-	F3fLhvJqW/Z7Erq9KoHi69WfmcZiFoRLrH47iSyzZ9USw8+xdHoTXB9yGNUED/Ur
-	yxyjtmUa/qj27URKoDAickrTmzEKVvz/4gUxHYYo3DVFhK/lsr+k4FMRd6oHCOMp
-	KuZMDkV4V5yk9JoeGW2HEGBHyEom/Aas/05oatWq4socA6hBFnk45hpTilX86prx
-	MPYZ7+ddM0ZVtF17b3NskroogylaHdxNWL5bqZ3dUd46CAHvVHVPVctdz3Yo2YNc
-	PD0FWfoPML6szVJoPc9J5cSmQjIRZcM97HFxTdvnLPV8DHm8Er/qB+1H6lnYJtmx
-	Qneq4Gx87ef9epqLu1Z2g==
-X-ME-Sender: <xms:InBpZlssg7QkE_g5N9CEIUe5Tqcyrn1H-13e2pDmZqMtzp5U213rHw>
-    <xme:InBpZufAjcuyZuDXJCbL-umv50h2V9p6xgjggbLouZ4X18sQUxPtapZZvbqix3jZ-
-    AUYaBwi-8J69Kkk0JI>
-X-ME-Received: <xmr:InBpZowE_yR0huv-pAXNBJeXofSOAo3rnTvgBiTTjKRQOOIzB7GlUuE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedugedgvddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeflihgr
-    gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
-    cuggftrfgrthhtvghrnhepvdekiefhfeevkeeuveetfeelffekgedugefhtdduudeghfeu
-    veegffegudekjeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:InBpZsMjnry50j_-zi2NM2uQExsp-_4o9hlfWvqgOmgIUkSp4olo6g>
-    <xmx:I3BpZl8wfrH6sc84ZGFTSoqx7VUGn8Z1shcjVU8M3cwQw7tiog8U8Q>
-    <xmx:I3BpZsWOqmyt2PSJ0saV2WJm-67tFdewwSFZEp2BB6P7kbW8pS1fFA>
-    <xmx:I3BpZmdZHWchKWtZwGOPk5DS6rqXJyS6wMWysXS2DXwSRshgd6pW_w>
-    <xmx:I3BpZlxeUMDcoxkN4uSDMEVeBeUJ0ezvam7bCfvD52lz4su0Jv2LufGi>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 12 Jun 2024 05:53:38 -0400 (EDT)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Wed, 12 Jun 2024 10:53:32 +0100
-Subject: [PATCH v2 4/4] MIPS: Select ARCH_HAVE_NMI_SAFE_CMPXCHG when
- possible
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Nr22xxNX"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C6cKkN001361;
+	Wed, 12 Jun 2024 09:53:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=nsxJ81OnUl8js+adMpv2E1
+	+5d/b+K4/IU2AKkSrL+E4=; b=Nr22xxNXXQMnvw9cNdIV1qA14ugNe2cbtVB3xi
+	N7D8VvwS4mWG2JfFvPo4HXA+ob3b+E4ZVQCAFU0P+ll6utPIQ3mPoBKWBxNQTnGT
+	BAogH4TGAL/kU3yAOeyoBae2ZMnwP9wMeLppwif1G+1lGtweJbYFDj7QvHXxbxsS
+	9ZD15I4KjzA11VRTIUSRMolpw3wMjA727l6JMm/OEh3jpJ/6MPYtOKh97eAiWePR
+	0HSpbZK3VRwXMP/fb1YkO3OotNLMKIQodpfBpsFndBHZgUfFqe/6gSRH5TLPQZ6f
+	2EioqnW6lNFub5//Pvqd4GIWqoDVq1cwKolLDxA5Ai42mwsA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yptuy1uru-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 09:53:33 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45C9rXSh013682
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 09:53:33 GMT
+Received: from luoj-gv.qualcomm.com (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Jun
+ 2024 02:53:29 -0700
+From: Luo Jie <quic_luoj@quicinc.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <andrew@lunn.ch>, <hkallweit1@gmail.com>,
+        <linux@armlinux.org.uk>, <corbet@lwn.net>, <vladimir.oltean@nxp.com>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
+Subject: [PATCH net-next 0/2] Introduce PHY mode 10G-QXGMII
+Date: Wed, 12 Jun 2024 17:53:15 +0800
+Message-ID: <20240612095317.1261855-1-quic_luoj@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240612-mips-llsc-v2-4-a42bd5562bdb@flygoat.com>
-References: <20240612-mips-llsc-v2-0-a42bd5562bdb@flygoat.com>
-In-Reply-To: <20240612-mips-llsc-v2-0-a42bd5562bdb@flygoat.com>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Jonas Gorski <jonas.gorski@gmail.com>, 
- "Maciej W. Rozycki" <macro@orcam.me.uk>, linux-mips@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=635;
- i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=NSrQU7oxV782OTF1pzPrNXGHVTnX0ocauyLrs3G9UWw=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhrTMAlmP7QHTs8w8JoU2PjhS4ayfIDfz4xHv5T4Xs7sUe
- 67evtPeUcrCIMbFICumyBIioNS3ofHigusPsv7AzGFlAhnCwMUpABPZVsbwzy7v9w6uKzPjpN/v
- P27M5mi+4rKHY+5enjJVG43WdIvt4owMkxn/hv7bqGjLerummSdQWWT9lMs9mueW739k1HH73Sx
- 3TgA=
-X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
- fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: g_iMA5xOiqjxnp3lsznu5Ie_Cx3rYknf
+X-Proofpoint-ORIG-GUID: g_iMA5xOiqjxnp3lsznu5Ie_Cx3rYknf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_06,2024-06-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ impostorscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 clxscore=1011 mlxlogscore=748 phishscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406120071
 
-LLSC based CMPXCHG is safe for NMI.
+This patch series adds 10G-QXGMII mode for PHY driver. The patch
+series is split from the QCA8084 PHY driver patch series below.
+https://lore.kernel.org/all/20231215074005.26976-1-quic_luoj@quicinc.com/
+ 
+Per Andrew Lunn’s advice, submitting this patch series for acceptance
+as they already include the necessary 'Reviewed-by:' tags. This way,
+they need not wait for QCA8084 series patches to conclude review.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Vladimir Oltean (2):
+  net: phy: introduce core support for phy-mode = "10g-qxgmii"
+  dt-bindings: net: ethernet-controller: add 10g-qxgmii mode
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index e83036580a47..1bb274c50636 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -17,6 +17,7 @@ config MIPS
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_GCOV_PROFILE_ALL
-+	select ARCH_HAVE_NMI_SAFE_CMPXCHG if CPU_HAS_LLSC
- 	select ARCH_KEEP_MEMBLOCK
- 	select ARCH_USE_BUILTIN_BSWAP
- 	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
+ .../devicetree/bindings/net/ethernet-controller.yaml |  1 +
+ Documentation/networking/phy.rst                     |  6 ++++++
+ drivers/net/phy/phy-core.c                           |  1 +
+ drivers/net/phy/phylink.c                            | 12 ++++++++++--
+ include/linux/phy.h                                  |  4 ++++
+ include/linux/phylink.h                              |  1 +
+ 6 files changed, 23 insertions(+), 2 deletions(-)
 
+
+base-commit: 91579c93a9b207725559e3199870419afd50220f
 -- 
-2.43.0
+2.34.1
 
