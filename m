@@ -1,122 +1,110 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134A416E888;
-	Wed, 12 Jun 2024 10:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EDF16E888
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 10:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718189453; cv=none; b=MC+tNTiVydj6Lf6fQGaoB0ESAmpZ2B/TSh3ybndR2V1b1AkidMT8xmfivk0+8ySFo/prv3PSqWPjCwXKEDjAldzm+pmc11mqBrxOxYsXOxQYNrKp56FnQ5Ddn85TeHBiMuU+e+58vA6JabKWruUTdybUPj7Okdv0pypRbKu6p98=
+	t=1718189554; cv=none; b=hS0gL2hCYFjh1tPCHWp4EuGjGIG8guW7+MSAo1LSDA0M229+Hq/z9FDxsIsqtgKPKtS4l2gAECaqHUqL7j2LpBNO1AtigZRcD8tL4jxOFoWtR/pLwGXjQctECPLRSyW3YdBfzXCg0CtYjJZdWLpz+12UFEEg1c/uf3Aawk9fscY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718189453; c=relaxed/simple;
-	bh=gPrkmLuEip24rQDMBNxfQcWKheL4If4TqkyUbqMGUBo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HqA/pGnMHHUsojoTD7vzsfLXHNbPG1c8BFYIGrALxX0ZQe92sT4tVFao98Xbc6ibnor9cibYX0jPgUN2itplyzfZnzNN797pccceR4m9i59lN5ScWiOvuvvGtJJ2zf+g35j5Oa/WIq6fKileZuIFUVgb5424xtRV9JXbkDFpyjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BKGz5irt; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718189554; c=relaxed/simple;
+	bh=hfca2HZsexdSmcR2L0VarVPDzv56VOL6tv9ZzVNhWgk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OHYiKO1aZIeeLnw/5FV5Sv/5QkBrihRc4zZeIXhk9vvAxzqIPUp0a8uVyzMvp8qeJ0OWOmIn+KnsyPq7dv/uqdu0pm/kS5pPZEAM/tPyU7QcaPhUIeKazIGw21uWchchSGMvLIFVSpIpII1XrHcyN0H6rkZrwIdqeA2vxfj/o1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=re8qN6q0; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKGz5irt"
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-48c3957a7c5so1639611137.0;
-        Wed, 12 Jun 2024 03:50:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="re8qN6q0"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-421eab59723so24212155e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 03:52:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718189451; x=1718794251; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LnNdcpUztmxxIzRAemfxZWkh6cGiDZLepHKzz20EjH0=;
-        b=BKGz5irtO0jpnOr6dgSSw65dt7GQd+zNVicoqzOKhbYZzrAV3LzY4XeNW+pTvdXpoJ
-         Y7+EvnYhzFVl5wFsPlzxcOlvhKAxGvPyUQOAqwjZScvf0lN+pVYuBf94LTKl7+GP8V5C
-         F1H9ojQiIvAeUSwI0u+tAvEfInEdS9Anyd7icyKNmxa/YcZ5UDOqOTktO/X39gFN5c09
-         Zg31DjZur+/7ZSS3DgfjCJ2+6P2aUP6uOkgeycqtvt5pJNA1n2iHbajTfqQcnYjkeQ6+
-         TLi7Saxt0qnixi2o4l86L0K0DVMQFskqtl21PH9OTk9S/g6MmYgwiEYK1x1UUkvtMkDA
-         CQ0A==
+        d=linaro.org; s=google; t=1718189551; x=1718794351; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cPi9QkdS95dkNdofAqCFmLTLe43Jm537m7bw1KQ0ItY=;
+        b=re8qN6q0jAzkaIlLcbrQD6yb62C0s1p099HEKNJKNUFhfCdsivQdXyLRpFvZo3s1Dq
+         jth8zdP5iL2an0vn6WGN4a8rwYdyqrVpm2BrmxzkVKBoQfDve7A6TTNEkeiSPrJXXqp/
+         qBhfPCXjH7aN+xIkKr/zGO2V7K6GRY6l9TXg+B6aXccVuLDgEXs6VWupxL0SP8HCOGRC
+         nmB5WOf+RFx8htebdViPH5gsR99FMjV+mlJWWZ7w9RlycQPhwczAgVRcWtScdFxk907G
+         M7jTbvRuToRzpP8HoJAw82YMC9FoPiuKLpZoLSycT0WVdu/E0Fsgl0DaQFoE+oBAyHIG
+         Mlfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718189451; x=1718794251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LnNdcpUztmxxIzRAemfxZWkh6cGiDZLepHKzz20EjH0=;
-        b=sw313xF+CZbG2NzNyj/4IgdDtoLJ/YLoUn8H7uNVyjDLo+H0prnoUyd99ww2ouZwGO
-         /2oQLlkUzC1WJ1NfjJ2yU98c1pSFh/rtSnltBLfhiJamx8F+CAfliE+dpbs7tGea0LwQ
-         c/+HkPTLHirmXomvIBsfLUfd5eszx6hyG3o+B3zikWhGLp+vFvz6uqU87LWdg1AAtP2X
-         8DBHPEvf33sMpe+qdSWQ3LxPr8osdLeX8XsLOf7xZxdLoTLBRuXmDwLlpO80Yc2og+U+
-         SqkhSdKpL88x1SJldh1nL/BH0E2iiF/63w2oyf5N6WHpCb5srdESDII5kaphwKNfLGcL
-         HLmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAff3hM1cfNxPgppylExlTml/QYWz92m0D35i3eWrjWY+26vdTlAN4CmQl59fvWuLKLbkenXlBulATCyYJGYaJDDnFq6zezezUGqCIWMH2/bAmF6Emceu87z8b2EscpGlDkUjU2df8YA==
-X-Gm-Message-State: AOJu0Yz3PpzGBVZpFtSL64cv9KhxAH6P3BPhjErYHOexmC8dTGOUfB3A
-	Zh6L+McKcTD+MaTArT/fcEBGL3EmGyFNsxgX/WTKMx6jol1gWRlg3PlE8JtXqjG0+jS2OyVUOBc
-	0+mpKXTT5geeA6EWh02FrvZjM28vHvom4Cys=
-X-Google-Smtp-Source: AGHT+IG9mILrRCPtGIeqY6s6hVhQfpuh7Ua8TIQsbfdFRmq5VFdX20DYGz4fiJ6e4HTepneR9rq/sHGhuMsdCUKsDTM=
-X-Received: by 2002:a67:fa57:0:b0:48c:3d43:a157 with SMTP id
- ada2fe7eead31-48d91e4111amr1360703137.27.1718189450838; Wed, 12 Jun 2024
- 03:50:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718189551; x=1718794351;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cPi9QkdS95dkNdofAqCFmLTLe43Jm537m7bw1KQ0ItY=;
+        b=ALb68QJRfN/xeF9Sh1+W3zfy7vp/EQql+rQbVd4N9z5lQUM/xmtydf953QemGyTajL
+         zct6vnGTNccQpyxMQ4AstMfkxp6e8LauCcJHxzSzaDK4aDRQeRNTDO+/985WQ4Mqz3XN
+         g2KoGjIsyDolXvoyCAmhr3ySDPoj2lirO5o9MqDB9gLGELti+htLQU/F3KWf14lm3mSj
+         Jgx6r9TQoC27MbPUv9ullhirhVj6Wy3Zi2OaGuPr0LfHS3EmzavNu6MXsUWvP+rVaCKc
+         fcHjQPsqS9dLYkpGtCNszFxyRoGz154Z0BOGbV1Wvi76Sh29GpF1NRuWT+5DjXbQ/yRr
+         kK3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVeMraGKIfSrDTCJoENy1cJxHHuI/80arkrg5opPpjn5VmwrplDmvK9FmsM5k+wvJOZXc5twxDE5B4rXrLGiDtZteMIhrXt+TSvkz7j
+X-Gm-Message-State: AOJu0Yze2KJmAaJ3oIcmvARWBf92yb+diE0/K33RIyhn1xK5sXOlVzlL
+	PHw84VmNpexD6oaddAYPpwW5VMkAbBsmuZF7+0l//wgpFPeDbvEbkaYzfSH60PY=
+X-Google-Smtp-Source: AGHT+IESwYJf6CJnIPpXgk18wMsSx3pKvDvFlcyAWNgt77NIwpqGQS3CGPJBRqxbG2fIpZ5+AFV1zA==
+X-Received: by 2002:a05:600c:74a:b0:422:8557:3c5a with SMTP id 5b1f17b1804b1-422864af026mr11662165e9.19.1718189551298;
+        Wed, 12 Jun 2024 03:52:31 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422870f05edsm22074695e9.24.2024.06.12.03.52.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 03:52:30 -0700 (PDT)
+Date: Wed, 12 Jun 2024 13:52:27 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+	Sasha Levin <sashal@kernel.org>, Tom Gall <tom.gall@linaro.org>,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v5] checkpatch: check for missing Fixes tags
+Message-ID: <386af0a6-b15d-4be2-a0e7-0375e822031d@moroto.mountain>
+References: <ZmhUgZBKeF_8ixA6@moroto>
+ <20240611113855.b63a6015b26a0dad49d9f2a7@linux-foundation.org>
+ <b3baa059-b433-42da-96c0-588312b5a4ac@leemhuis.info>
+ <6825db9f-be27-4096-9723-6ad65342a59e@moroto.mountain>
+ <390652ca-a383-4953-aa39-8c4ac92f2e3d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240423150728.91527-1-sheharyaar48@gmail.com>
- <f60aac7f-dbba-4cba-8bb6-302b5c911b8c@linaro.org> <CAHTLo_=Gg-KN2zOtjOBCxQURq+Ap913Miph2FMhvkoV+GybFNA@mail.gmail.com>
- <106b6911-3097-487e-85db-f8de5958adcb@linaro.org>
-In-Reply-To: <106b6911-3097-487e-85db-f8de5958adcb@linaro.org>
-From: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
-Date: Wed, 12 Jun 2024 16:20:39 +0530
-Message-ID: <CAHTLo_kf5+3hW1NytA7tD64MSFOUEfkb71cNARkHb95Qhm=W2Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: vt8500: replace "uhci" nodename with generic
- name "usb"
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <390652ca-a383-4953-aa39-8c4ac92f2e3d@leemhuis.info>
 
-On Wed, Jun 12, 2024 at 1:44=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 15/05/2024 06:53, Mohammad Shehar Yaar Tausif wrote:
-> > On Tue, Apr 23, 2024 at 8:46=E2=80=AFPM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 23/04/2024 17:07, Mohammad Shehar Yaar Tausif wrote:
-> >>> Replace "uhci" nodenames with "usb" as it's generic and aligns with
-> >>> the schema binding.
-> >>>
-> >>> Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
-> >>> ---
-> >>>  arch/arm/boot/dts/vt8500/vt8500.dtsi | 2 +-
-> >>>  arch/arm/boot/dts/vt8500/wm8505.dtsi | 2 +-
-> >>>  arch/arm/boot/dts/vt8500/wm8650.dtsi | 2 +-
-> >>>  arch/arm/boot/dts/vt8500/wm8750.dtsi | 4 ++--
-> >>>  arch/arm/boot/dts/vt8500/wm8850.dtsi | 4 ++--
-> >>>  5 files changed, 7 insertions(+), 7 deletions(-)
-> >>
-> >>
-> >> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >>
-> >> Best regards,
-> >> Krzysztof
-> >>
-> >
-> > Hi,
-> >
-> > Is there any further feedback or update for this ? This patch is not
-> > yet merged but the related dt-binding patch that has been merged :
-> > https://lore.kernel.org/all/20240423150550.91055-1-sheharyaar48@gmail.c=
-om/.
-> > I understand that this is a trivial patch and the maintainers may be
-> > busy with important work.
->
-> I don't see you Cc any maintainers, so no one will pick it up.
+On Wed, Jun 12, 2024 at 11:15:45AM +0200, Thorsten Leemhuis wrote:
+> I see your point and agree that it would be nice to have. At the same
+> time I've seen people on the lists that don't like to use the Fixes: tag
+> when nothing is "fixed".
 
-Sorry for the mistake, I used b4 and it gave me this list of
-maintainers for the patch, the other recipients were commit_signers.
-Please guide me for my next steps. Should I add them to the list too ?
+That's correct.  Checkpatch stuff, clean ups, and patches which silence
+*harmless* static checker warnings shouldn't get a Fixes tag.  This
+checkpatch warning doesn't affect that.  If you look at the patches
+which were flagged it's mostly because of CCing stable or syzbot.
 
-Regards,
-Shehar
+> And it would be an additional burden for
+> developers to look the commit-id up. So it could contribute to the
+> "checkpatch is asking too much here and not worth the trouble" stance
+> I've seen a few times (to which I contributed myself... :-/ ).
 
-> Best regards,
-> Krzysztof
->
+Someone's got to do it.  It might as well be the person who writes the
+patch.
+
+There are times where you're working across function boundaries or even
+subsystem boundaries and in those cases finding the correct Fixes tag is
+difficult.  The other case where it's annoying is when the code has
+moved between files.  But it's generally a worthwhile exercise.  It
+helps to look at what the original author was trying to do when they
+introduced the bug.  And when you add a Fixes tag then checkpatch will
+CC the original author so the review is better as well.
+
+regards,
+dan carpenter
