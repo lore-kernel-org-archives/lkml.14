@@ -1,85 +1,148 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D766B4696
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A602A16D33F
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718179385; cv=none; b=juSMM9anB+ZkLAMOMKFIhEm7jeTcsgfgudFekL9tfs4TeEaWoLLGFNsL83Zb/AP5F5WdzvEGvXuZL9PdpA0lF1kurJaf50gsjMMy9EMa33e7HZzxU/ko2SP6WarLqgPytzztxpPvGogEBrpSn4gL16avgNIOCoAgtzB5pAHRGhk=
+	t=1718179392; cv=none; b=Cfls1f9IV/YdkfBR6D6plU0PBvB0FCNt7RyDp6BwZ8Wa4fO70JO1znSl6dOX8ch7DmRzcuviIa+jxdx4HbyzUnTY6RDylERZDFp2ut0zSvHAZ+7Ezn2whAnPD7kNHcPpICJpZRa3wQkIsvpLFyQJDkvG76NVd2wSqEGQdvBv/nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718179385; c=relaxed/simple;
-	bh=oZhvy6kkbKYCk5v6xkrBCIcY4DF51uW5QFIx01DmAzk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AOiSPXmI6u9sepOV6wooLMIfqDBs4PyEZQydlb4ZCQOfu/wkjuDib8E9a77ZDGamN5ypqPRtwGWB8r/tAGk6SiZCx56T90kxdOh6hwPITw370Zg9meTYvnh4yBVwwa0kGlBOzv1decKegNMdJjbXC05GBumirxqRwkvry4zaRLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com; spf=pass smtp.mailfrom=timesys.com; dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b=3Y4DHdeQ; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=timesys.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=timesys.com
+	s=arc-20240116; t=1718179392; c=relaxed/simple;
+	bh=BCyDycZDFGsCPLW3LT7aTXi2lBSpeO3/z21P3m5C4y4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cdoPoylKHsSMMNYMivbILOk+E9mZo+O+RbBOhKCmkqHNYviu7vBFpO1divrHgkubBzAXUa0DHhTNVfzHaEolfcjfrTXP5q0Yhxh6EW1S7fifSZ0CZwJ2a9gbIfoUlTgVnxguSX1NHvE/lcEEvSHr5r1Vy0c0Ma2PDZJIvzQYlUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ALd8oroY; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=timesys-com.20230601.gappssmtp.com header.i=@timesys-com.20230601.gappssmtp.com header.b="3Y4DHdeQ"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6b063047958so25028236d6.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:03:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ALd8oroY"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ebeefb9a6eso19053961fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:03:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=timesys-com.20230601.gappssmtp.com; s=20230601; t=1718179383; x=1718784183; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oZhvy6kkbKYCk5v6xkrBCIcY4DF51uW5QFIx01DmAzk=;
-        b=3Y4DHdeQXtPkZ5hp70y6YIwp1yaSi3QMjJKn1BSGUxTdLUy5r7hty7Ih5ewK+K/rHy
-         /Q8+gO03CrVScBzLNsz+wc919MfFLZbbReyRQKr6oXZE4m+TlG/o9yGaTlGoEVRlEGkd
-         tdtaQf/tJEHK2qAhqgxulimP8CUWRTwIwUCDo+MwpkGcd8rkNR4rWkk8iFIIEKBFKd7V
-         R9WsR9GFvg/lMnDa3t/WrQoPZZytJ/Eaufuu3WHxCUO5TqrJkf/tvESNQZR0ibVZuXlV
-         BoNZ75jCj0yIbFL2SD1e73NE1szeH/TSDEomNI/pCt8+LPMNRJvm60jvkUB5Y+0NsQcC
-         5FLA==
+        d=linaro.org; s=google; t=1718179389; x=1718784189; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=UEfh8o/mxRGcDDlLCZYzRIr4dGTXPTfh9g32u4YpLRM=;
+        b=ALd8oroY3wMBl45O3BaWBiubKxE5zPkWo64Zi6ue9QRhr4s1hfi0IWKW4fvSF1m98N
+         ppmnl4OYQT//U2bb6I74KaFlNq9DQsuuk2wiBo4fXnGKUbjo2I4DpneOTsjDZ0ajxTh8
+         BDUUc0gGjiPvmb59lJB7EhbuTywcnTQlWnXD1WJQFL5SY9xqbYRLz5mU1WcenElhBBnk
+         65R0u/pmL8gkGAJq9qm7Y1lTWT/uCr4VV8aPYiOwJQgrUADVJjNyHOJTkhp/nM2pb3CZ
+         8RPxHHIozGKvRBY1nWEVHio3LdX2kUYmjz6490y+zj9+7TIKVvuW/ZCyhXXSZQXze2f7
+         XuwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718179383; x=1718784183;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oZhvy6kkbKYCk5v6xkrBCIcY4DF51uW5QFIx01DmAzk=;
-        b=HWMVo9DrgtQb0rRyTzkY+V7X8UM1ennT+T3tOlvXD6YWcF1Dfw+RQz4J0JEfEtSOBg
-         CeF4RDRVZh6wajy1cMtPPE+s8vQsoU1uPNuv/nruAH5vyH8tZ+XvRmXlnQe+iygiNkSr
-         YrrhAwkABc0KgIZl1sd6GPHGR8lD6uTMfpZHwe1Eo1qi/BfS8wtw/yu9Q/r8M1ANMriV
-         h1JQ715+CJqZjnutWs/3id71/ceQp3YZtlmICPLaeTK0w6z1hE89YX/1YpR8V94GZ9xk
-         N199SIXHZ+9oc+9q6Zu2K2sm0jWGNEwDl+flCoxkyO5588+/EcY+xFMIaBwkvfLmGRz1
-         2TDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdMTfvbPG9OoaCH7N3A+5ruC2SXWYu9t1LMe2wk0CpqqJK1sx5wjlNKvsljrtCGq+mKhUHDHN/95co5/B8DgdL+KVf9jlGsyRyO0Jw
-X-Gm-Message-State: AOJu0YzGOpOTQlsFkMjP2eNFhq7f+DEld/HolA84X9CtPoQSv/bBlme8
-	qBT86+tsiPlzn0mPWoqlbkBq+fRWgoerypKoHl5Jp6REcd0jTBTiaMySePZwbSyE1EVfRiluAZX
-	NZYRqL54SWW6UmuKyAMmtMMDUtRGv4Ut66yeOoA==
-X-Google-Smtp-Source: AGHT+IFBoGLGnRCfXUTT6MkmXv5tkb/vW4wlOs2DaIN1mKJ7KPlKywflPDae5tbSNQuiVC2G0raN2IzC+x3zhZJMYtQ=
-X-Received: by 2002:a05:6214:4606:b0:6b0:77fb:8f16 with SMTP id
- 6a1803df08f44-6b191778bdbmr10576316d6.21.1718179382867; Wed, 12 Jun 2024
- 01:03:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718179389; x=1718784189;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UEfh8o/mxRGcDDlLCZYzRIr4dGTXPTfh9g32u4YpLRM=;
+        b=EpCCAICjHQRaLDjWX+Cppt1REDVsKlbiM66O7gILYsnG8CZVW4tM5FEkXvZfoLnOct
+         F2VOTu5l+p9qHhwECyicXy3pizTVyx1m5/C3xb6cLGJf2bFuqoXKPQ72a/Yd0d58YSyx
+         npi7RCKk+9lxoMIgCQ09LtUixU9a4onFQe63jWXuIVY3yA7j/+RSO/Em3ILfMYala+sU
+         NKQl/3SXKOdznW9cb8iV5kqiUkLXF8iq6v0Go4gpx67evi1/b5E32SR/hdM8TP7PP2Od
+         1EhMfRSmnWC0Dzn+ewNO9jaDXkp5qU2QBRa1lV4sJmqeZc1A34Rl42N5Dj7MI4lnSbCj
+         M8tg==
+X-Forwarded-Encrypted: i=1; AJvYcCXfvNB/FHn3xRBABfC2iqMz8hCaQ2Z5imLj0s0eeaooIp8MC7TNL7ugGgmmPKjGGSVk30LN5XZx9WqjYIjA9WCPKDrcPyG07o/0hXac
+X-Gm-Message-State: AOJu0Ywyfw63zFIt7Q7ffIko9RmyA7AwGMP6UAIPLQ6fj0kiaglSQEMV
+	difOzkWcdeqsIpDVrHDK5XKO3Ta+kEFeyjKFEVyYgrvDgUV8FzVO6+LvcfWEXU0=
+X-Google-Smtp-Source: AGHT+IHlUR6tr4AkZIxnNVCmVJyL1+GTcAxpr6BEK7+/ok+vXPpzjma1XIjGPVoAIQtdu4oBvOLnKg==
+X-Received: by 2002:a05:651c:19aa:b0:2ea:ea1c:3872 with SMTP id 38308e7fff4ca-2ebfc99867fmr7714501fa.37.1718179388737;
+        Wed, 12 Jun 2024 01:03:08 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286fe76easm15489865e9.2.2024.06.12.01.03.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 01:03:08 -0700 (PDT)
+Message-ID: <769ad0d7-57d6-4f1b-a276-5b284380a998@linaro.org>
+Date: Wed, 12 Jun 2024 10:03:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240611094810.27475-1-piotr.wojtaszczyk@timesys.com>
- <20240611094810.27475-2-piotr.wojtaszczyk@timesys.com> <1ea92ff0-7e2d-4a9f-bef4-d50fc93b86e6@kernel.org>
-In-Reply-To: <1ea92ff0-7e2d-4a9f-bef4-d50fc93b86e6@kernel.org>
-From: Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Date: Wed, 12 Jun 2024 10:02:51 +0200
-Message-ID: <CAG+cZ07jpi0dobjf8JYt263qqy1tYWAvzsV9cgKaAW05mBoCeQ@mail.gmail.com>
-Subject: Re: [Patch v2 2/2] ASoC: dt-bindings: lpc32xx: Add lpc32xx i2s DT binding
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vladimir Zapolskiy <vz@mleia.com>, Russell King <linux@armlinux.org.uk>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Arnd Bergmann <arnd@arndb.de>, Chancel Liu <chancel.liu@nxp.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, linux-sound@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, 
-	linuxppc-dev@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] input/touchscreen: imagis: Add supports for Imagis
+ IST3038
+To: Raymond Hackley <raymondhackley@protonmail.com>,
+ linux-kernel@vger.kernel.org
+Cc: Markuss Broks <markuss.broks@gmail.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Stephan Gerhold <stephan@gerhold.net>, Nikita Travkin <nikita@trvn.ru>,
+ linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht
+References: <20240612032036.33103-1-raymondhackley@protonmail.com>
+ <20240612032036.33103-3-raymondhackley@protonmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240612032036.33103-3-raymondhackley@protonmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 11, 2024 at 12:18=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
-> I do not see my comment about DAI being addressed.
-Were you asking if it's a DAI? yes it is.
+On 12/06/2024 05:21, Raymond Hackley wrote:
+> +
+>  static const struct imagis_properties imagis_3038b_data = {
+> -	.interrupt_msg_cmd = IST3038B_REG_STATUS,
+> -	.touch_coord_cmd = IST3038B_REG_STATUS,
+> +	.interrupt_msg_cmd = IST30XX_REG_STATUS,
+> +	.touch_coord_cmd = IST30XX_REG_STATUS,
+>  	.whoami_cmd = IST3038B_REG_CHIPID,
+>  	.whoami_val = IST3038B_WHOAMI,
+>  };
+> @@ -415,6 +429,7 @@ static const struct imagis_properties imagis_3038c_data = {
+>  #ifdef CONFIG_OF
+>  static const struct of_device_id imagis_of_match[] = {
+>  	{ .compatible = "imagis,ist3032c", .data = &imagis_3032c_data },
+> +	{ .compatible = "imagis,ist3038", .data = &imagis_3038_data },
 
---=20
-Piotr Wojtaszczyk
-Timesys
+Where is the binding? Compatibles must be documented BEFORE they are used.
+
+Best regards,
+Krzysztof
+
