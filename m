@@ -1,141 +1,109 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E230B16C686
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB41516B74F;
+	Wed, 12 Jun 2024 07:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718175863; cv=none; b=fHIewTCWpReQ6wyD8uJZzK5pCq1Icq+eWNg0Xmq+MxxMEswQnMFn+4hysxCgrCWHFvYwwaUWcQrKLUrIiIw0Z1iHFbae1Nfwnu5JMaWeOpSfo3b+ydaXm6JxL4GmT4W7+JhpfvfPQbXtNn/aKTULSH/wNUHxd/bVjDn2n7kebAo=
+	t=1718176033; cv=none; b=jUDnnrkSq8XmazmPQea5+ZHdpPy0dMmXhAZwjN3xDjCMFRgE5c3Umpd73C/+er+slRMcPxIIjMQ626IYRebkkQ7F8MnUmT/szw0i1s7SxlHzBNBf169zO9kaAiM3fAU0KIzDfnYPlqTLw37kB2qu7mDjiePlVF89Fd6GUtmW7lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718175863; c=relaxed/simple;
-	bh=zCOfxUMNbTimxoNGyJQ5cLuOQZScXflSS8KPyACMt5c=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=nLEKEecwRmUB4+URSjiiPmdwGVDuZOLYrjZhqaXvTgJxGzDbiY+2QehS+wBDjRA5sBiK3/Q7AjwS+G5iSYnXM7gvWexTq7RdBB6vbSGdcy74d2kWntkZu7ZatPZY+GVITsmiBc2MhXqy+QOOuf/vlvOmjxIzqlfOkt7RrpKpYVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-7eb50e42c6aso703865039f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 00:04:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718175861; x=1718780661;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tVP6kzcT3WzYOFPmgYeq/LYhwLDdwDXCf8wJa1aYRy0=;
-        b=Za+X8MqDfa0+B9YRQa97F6UMmdgg3l7uGdMBxRbBgev6jZv932wie5fy7TssoYbFIg
-         NmKN/iJuTeea6fc/debVfjx8FipUnKXRh8+CjOIfz7cK6sDGYbWNsHuNOXToHreTZWGR
-         TqJ7DI/SmU+IbkljRUq9desz8l50Q1fVDFfM7s60fLP4/cVAwp2XhlDjHqBYVEz+6lPh
-         uJR0B942YhqxdBy19JzmjJU02DBPbqGGBnSSVWWbI6fVwKk10xCYHo2NCLpx6p//Y01Z
-         u3CtLCKsY5pnU9MCsqn0DMt8UizcJ45dfaE17ZukW/xX3co0GzwZimtL9at6Dm7qZ07Z
-         A74Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWmm5Nhu3SX+iW0fRyJTZCaaok/cIMX5M0J7jJ6KtFGsVMZz1x0EUQJYFReVU07XXacKBUBHDeeC+lZ0pFRnjJqcnu/LDRGSVlgolWN
-X-Gm-Message-State: AOJu0YwogUMFNVitY+1jKXzhY+ggQYrKnT+o9s+rzZrxXpne/jredV2r
-	we1GlGXQ2thAELOC/S3I7pZBf3Tm9WY5eX2fAmnjEYwvuvbZd3GYRMmc43uO6y0fAr833fn5JgA
-	ymF8yKGvXmU+Mkzdu1rBBy1Z4z4U+1pL4pgAWfmdi57yMfMnWw8j5MYQ=
-X-Google-Smtp-Source: AGHT+IE1L4UGLI+rRwggB1Q4T+ACzMUx5Z8S+02UGk0btw7KxMtFtHCjU1E3BNcomnebOuTvopAinr/yk0o71hsY1dcSoVdo+NYK
+	s=arc-20240116; t=1718176033; c=relaxed/simple;
+	bh=+Rww3ToDP1rCgowHETjslBhmPr1ZzWm2jyXRlow5EHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jpILa3R62sTa0o+qhqU7oBSjyf4UGvb0NILt9FUp96ZEje5Q/de/VsD7eu8PFgjBdx9pfFXwIkyQasUjPPDWczvYY3JEu2YG/Um6E9RmvhFRjKTaK5C8Jq7q+kS79duTFwgX4m7iPOVgBNDS+TPYFkZBf1FObUeWJ64/QN6F9vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Azc8cCkx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Azc8cCkx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA9AAC3277B;
+	Wed, 12 Jun 2024 07:07:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718176033;
+	bh=+Rww3ToDP1rCgowHETjslBhmPr1ZzWm2jyXRlow5EHo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Azc8cCkxptCRPh+Mq4/EDEGWMgWm8rOQV+Jm7egOz378QpwlmMceaiMKzHrqS2f4d
+	 h7sGIvTbPi3BMn7b1mnggZVYWrdTEaOD2xCHUfZl6dIGBPG2VTAEQoSQQ9/be+FOXc
+	 fY+VaHM9yMYY2LxfNEBDYj8jNmZyUmvnfTcFFTK2IN1tSAibzYmlhat/2hjEu7/GCr
+	 WHHIiypD4q2KC0jtZfpj8qZ44DST7oEXStA7yVfkARuWyV4G21Iyk7M0FMyw81xcn5
+	 IB6L6Pr79kfZWr+/1rnR3AlVHKjlRVe8cooX7lj3Zoxfv2pK9DxOPk8UEW6Pv7E+7z
+	 aiEkdqWMaKL2Q==
+Date: Wed, 12 Jun 2024 09:07:07 +0200
+From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "hkallweit1@gmail.com"
+ <hkallweit1@gmail.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+ "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+ <edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+ "pabeni@redhat.com" <pabeni@redhat.com>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "ericwouds@gmail.com" <ericwouds@gmail.com>
+Subject: Re: [PATCH next-next] net: phy: realtek: add support for rtl8224
+ 2.5Gbps PHY
+Message-ID: <20240612090707.7da3fc01@dellmb>
+In-Reply-To: <c3d699a1-2f24-41c5-b0a7-65db025eedbc@alliedtelesis.co.nz>
+References: <20240611053415.2111723-1-chris.packham@alliedtelesis.co.nz>
+	<c3d699a1-2f24-41c5-b0a7-65db025eedbc@alliedtelesis.co.nz>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8718:b0:488:d668:d201 with SMTP id
- 8926c6da1cb9f-4b93ec0e1bamr66869173.1.1718175861100; Wed, 12 Jun 2024
- 00:04:21 -0700 (PDT)
-Date: Wed, 12 Jun 2024 00:04:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dce2f1061aabfdfd@google.com>
-Subject: [syzbot] [bcachefs?] kernel BUG in bch2_btree_path_level_init
-From: syzbot <syzbot+dd828a1b596932a42e10@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Tue, 11 Jun 2024 20:42:43 +0000
+Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
 
-syzbot found the following issue on:
+> +cc Eric W and Marek.
+> 
+> On 11/06/24 17:34, Chris Packham wrote:
+> > The Realtek RTL8224 PHY is a 2.5Gbps capable PHY. It only uses the
+> > clause 45 MDIO interface and can leverage the support that has already
+> > been added for the other 822x PHYs.
+> >
+> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > ---
+> >
+> > Notes:
+> >      I'm currently testing this on an older kernel because the board I'm
+> >      using has a SOC/DSA switch that has a driver in openwrt for Linux 5.15.
+> >      I have tried to selectively back port the bits I need from the other
+> >      rtl822x work so this should be all that is required for the rtl8224.
+> >      
+> >      There's quite a lot that would need forward porting get a working system
+> >      against a current kernel so hopefully this is small enough that it can
+> >      land while I'm trying to figure out how to untangle all the other bits.
+> >      
+> >      One thing that may appear lacking is the lack of rate_matching support.
+> >      According to the documentation I have know the interface used on the
+> >      RTL8224 is (q)uxsgmii so no rate matching is required. As I'm still
+> >      trying to get things completely working that may change if I get new
+> >      information.
+> >
+> >   drivers/net/phy/realtek.c | 8 ++++++++
+> >   1 file changed, 8 insertions(+)
+> >
+> > diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+> > index 7ab41f95dae5..2174893c974f 100644
+> > --- a/drivers/net/phy/realtek.c
+> > +++ b/drivers/net/phy/realtek.c
+> > @@ -1317,6 +1317,14 @@ static struct phy_driver realtek_drvs[] = {
+> >   		.resume         = rtlgen_resume,
+> >   		.read_page      = rtl821x_read_page,
+> >   		.write_page     = rtl821x_write_page,
+> > +	}, {
+> > +		PHY_ID_MATCH_EXACT(0x001ccad0),
+> > +		.name		= "RTL8224 2.5Gbps PHY",
+> > +		.get_features   = rtl822x_c45_get_features,
+> > +		.config_aneg    = rtl822x_c45_config_aneg,
+> > +		.read_status    = rtl822x_c45_read_status,
+> > +		.suspend        = genphy_c45_pma_suspend,
+> > +		.resume         = rtlgen_c45_resume,
+> >   	}, {
+> >   		PHY_ID_MATCH_EXACT(0x001cc961),
+> >   		.name		= "RTL8366RB Gigabit Ethernet"  
 
-HEAD commit:    8867bbd4a056 mm: arm64: Fix the out-of-bounds issue in con..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=1749a2e2980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3b4350cf56c61c80
-dashboard link: https://syzkaller.appspot.com/bug?extid=dd828a1b596932a42e10
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1206d55a980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16e839ac980000
+Don't you need rtl822xb_config_init for serdes configuration?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6ea21f50498b/disk-8867bbd4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e2fed09364aa/vmlinux-8867bbd4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4860173c7a18/Image-8867bbd4.gz.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/9f1aae1e19b4/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+dd828a1b596932a42e10@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/btree_iter.c:645!
-Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 1 PID: 27 Comm: kworker/1:1 Tainted: G        W          6.10.0-rc2-syzkaller-g8867bbd4a056 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-Workqueue: bcachefs_write_ref bch2_do_invalidates_work
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : bch2_btree_path_level_init+0x820/0x83c fs/bcachefs/btree_iter.c:113
-lr : btree_path_pos_in_node fs/bcachefs/btree_iter.c:113 [inline]
-lr : bch2_btree_path_level_init+0x820/0x83c fs/bcachefs/btree_iter.c:645
-sp : ffff800093f06d30
-x29: ffff800093f06d40 x28: dfff800000000000 x27: 0000000000000000
-x26: 0000000000000000 x25: 0000000000008000 x24: 0000000000000000
-x23: 0000000000000000 x22: 0000000000000000 x21: ffff0000d4718234
-x20: ffff0000d8597800 x19: ffff0000d4718230 x18: ffff800093f079d4
-x17: 000000000000cd7d x16: ffff80008af156e8 x15: ffff7000127e0d94
-x14: ffff80008eff0558 x13: dfff800000000000 x12: 00000000e50ce57d
-x11: 0000000000000002 x10: 0000000000ff0100 x9 : 0000000000000000
-x8 : ffff0000c1b7dac0 x7 : ffff80008278cf60 x6 : 0000000000000000
-x5 : 0000000000000000 x4 : 0000000000000001 x3 : 0000000000000000
-x2 : ffff0000d8597800 x1 : 0000000000008000 x0 : 0000000000000000
-Call trace:
- btree_path_pos_in_node fs/bcachefs/btree_iter.c:113 [inline]
- bch2_btree_path_level_init+0x820/0x83c fs/bcachefs/btree_iter.c:645
- btree_path_lock_root fs/bcachefs/btree_iter.c:783 [inline]
- bch2_btree_path_traverse_one+0xd84/0x285c fs/bcachefs/btree_iter.c:1182
- bch2_btree_path_traverse fs/bcachefs/btree_iter.h:229 [inline]
- __bch2_btree_iter_peek fs/bcachefs/btree_iter.c:2185 [inline]
- bch2_btree_iter_peek_upto+0xbd8/0x56e4 fs/bcachefs/btree_iter.c:2285
- bch2_btree_iter_peek_upto_type fs/bcachefs/btree_iter.h:641 [inline]
- bch2_do_invalidates_work+0x454/0x249c fs/bcachefs/alloc_background.c:2010
- process_one_work+0x7b0/0x15e8 kernel/workqueue.c:3231
- process_scheduled_works kernel/workqueue.c:3312 [inline]
- worker_thread+0x938/0xef4 kernel/workqueue.c:3393
- kthread+0x288/0x310 kernel/kthread.c:389
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
-Code: d4210000 9777e81c d4210000 9777e81a (d4210000) 
----[ end trace 0000000000000000 ]---
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Marek
