@@ -1,155 +1,102 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A154D1DFF0;
-	Wed, 12 Jun 2024 22:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4C21DFF0;
+	Wed, 12 Jun 2024 22:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718230862; cv=none; b=STCgZ9AloMKSizPz2IAxrAsqiNVS4XrBbLmvdqRHI/ji6ngNmrA5GaNMBP51x1BYNucD+BI1ivK4JSVv/S5Rq99lbab3Kg6cEnZRh8uiMlkvksc4Ak1i1BegXXvBCJHdaMDpdq0N5K7ZSsf0ZNQaes2WsgQJo+CGq8wAQd17njE=
+	t=1718230978; cv=none; b=ijARZmNx3VaHuFSayaHZhofVwQOzDXX0XsJpeWYJcdEqFAccVqEtYSvfRNQ7B10ahxMrL9RRa/pLTBebPHA50moN2xkyT17XSnFY/pAJSdd8I3mWHxFKwXCauM1/IWut6QatlogeKZc6OvANEsAl4PcZ5Du2pBeVlSTydwLo//c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718230862; c=relaxed/simple;
-	bh=z6S78JodWNuADElHskPehWDvqD/HSQ05v50azD0XDU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gvSS5fY8onE2EJu1lGVw/2C84bj7NCt54LIXtESMoUSOeAumfce3iJjFrTLI5lz7+rgyu4hxSbUqjc+LCnBGhI4juTTFh74yUgUCV7MYfViIDJf7MOtluevWD3AyhKHn5bzOgXG/5ctL5pi99TEe5DlwVAnb6a4ht0aX2MKBuCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=4wrKYE+o; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718230978; c=relaxed/simple;
+	bh=kjGjPKRkxzNWFzgE6y4cA/bYXf9LyB4+K5/alp3/Ne8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Zj84ONjvxPqDVVMLWjDaIr9QZNqkq5PF5LbNkckxa8S9xr5xPx6fAH9KREV2K1DRWX0TaMezs7n283MBInzP8tfBEeYV9+ZIgH1SbzqSIvARJuyDeJYcGMHtJbCMcUmDborW3LBWNSZnt+qsyjr180nRUvuYG5hhHTGqFj6RF1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z1ApWSwz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="4wrKYE+o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718230858;
-	bh=z6S78JodWNuADElHskPehWDvqD/HSQ05v50azD0XDU0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=4wrKYE+oAXWGyeA4J+OREQFqe0MxZHe+9mW95n0gTbaGx42th4Uxk3SHZJyHGNEef
-	 /zxCJZA6nGfVgomHsVv0MdEC/nZxaEyJeTiR0HKfJNLaO1l0wTHhuXXKbz28wACs7g
-	 /F+NpfIw3rAVgVHV+b4XmdPdMqugLVCXVkKWAW0x6yJPx6B5mk/S3kTkBayuGCPY+S
-	 UdYX7Rsavr27VU486ZXami/ExF0Mc1p1FjWF/0KLB+0CKsANr2+1G0YIjUJId9Q1OH
-	 bt7gqm92sMaL0X1VhC6r1U1/4sYbVPQg/zsCutfGEG1nzEv9NraGzElM5PQSeM0xs4
-	 pMI5ZuPFNnqbQ==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6ED2137820F9;
-	Wed, 12 Jun 2024 22:20:58 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id E54E110608F7; Thu, 13 Jun 2024 00:20:57 +0200 (CEST)
-Date: Thu, 13 Jun 2024 00:20:57 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
-	devicetree@vger.kernel.org, Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
-	Jianfeng Liu <liujianfeng1994@gmail.com>, linux-rockchip@lists.infradead.org, 
-	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>, 
-	kernel@collabora.com, Heiko Stuebner <heiko@sntech.de>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH v5 1/5] media: dt-bindings: rk3568-vepu: Add RK3588
- VEPU121
-Message-ID: <t5yyanxuweou6edj3subsbtndow6nwwexcgkhctfx3mdkoi7dl@zjtqmvklwzz4>
-References: <20240612173213.42827-1-sebastian.reichel@collabora.com>
- <20240612173213.42827-2-sebastian.reichel@collabora.com>
- <171821679246.3419351.9732124883795406633.robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z1ApWSwz"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CKnJKr024376;
+	Wed, 12 Jun 2024 22:22:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=i6UukDRRZJzedinienBhid
+	zn17tHAMUbF3e55BtT55Q=; b=Z1ApWSwzuXF/KQc/9Dv2RhCvimvC6xs57zRfld
+	mLNRiETzBed6Pk+oMkksYKEtL1DtbMpSU7fuUVGfXy1Rp82rAF6v9I+FCADQINLl
+	FJuc0Ll0bYRIZLat9ESinxZjMjYQtHdfEVY29dmCvEPZtL0UNWVTPsOpND1YEbaT
+	rEtnFUgERWVXZiO2HpsrdG3z7xP3tQRggEptH9cZd1yqBIHiRpuuzoSibSOUMTJH
+	hxOJBwsVh7hU6odeet6tnVbYe8moYcHDmuXi2PW+BgpTPKXYx/hbCJ06Q/6PRFMt
+	Fg2+pufbKY3PbMgzX9fkR/JiMjQLRBWzsaZvSEX8rlAmlx0A==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yqcxthb6j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 22:22:53 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CMMqLM028847
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 22:22:52 GMT
+Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Jun
+ 2024 15:22:51 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Wed, 12 Jun 2024 15:01:11 -0700
+Subject: [PATCH] fbdev: goldfishfb: add missing MODULE_DESCRIPTION() macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ntp3lma6src7nirh"
-Content-Disposition: inline
-In-Reply-To: <171821679246.3419351.9732124883795406633.robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240612-md-drivers-video-fbdev-v1-1-68b1f7316835@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAKYaamYC/x3MwQqDMAyA4VeRnBfQ0gndq4wd2ibOwKwjmUUQ3
+ 33djt/h/w8wVmGDW3eAchWTtTQMlw7yHMuTUagZXO98Pw4OF0JSqayGVYhXnBJxxZwC5dGHHPw
+ VWvxWnmT/j++P5hSNMWksef7tXlK2HZdoH1Y4zy/JL2l4hwAAAA==
+To: Helge Deller <deller@gmx.de>
+CC: <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Jeff
+ Johnson" <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: _lw1Ga2g9ZjHDXoZvWK77lt8G-CYap4y
+X-Proofpoint-GUID: _lw1Ga2g9ZjHDXoZvWK77lt8G-CYap4y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_10,2024-06-12_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406120159
 
+With ARCH=arm64, make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/goldfishfb.o
 
---ntp3lma6src7nirh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
 
-Hi,
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ drivers/video/fbdev/goldfishfb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Wed, Jun 12, 2024 at 12:26:32PM GMT, Rob Herring (Arm) wrote:
-> On Wed, 12 Jun 2024 19:15:41 +0200, Sebastian Reichel wrote:
-> > From: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
-> >=20
-> > This encoder-only device is present four times on this SoC, and should
-> > support everything the rk3568 vepu supports (so JPEG, H.264 and VP8
-> > encoding). No fallback compatible has been added, since the operating
-> > systems might already support RK3568 VEPU and want to avoid registering
-> > four of them separately considering they can be used as a cluster.
-> >=20
-> > Signed-off-by: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > ---
-> >  .../devicetree/bindings/media/rockchip,rk3568-vepu.yaml      | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >=20
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> yamllint warnings/errors:
->=20
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/m=
-edia/rockchip,rk3568-vepu.yaml: properties:compatible:oneOf: [{'const': 'ro=
-ckchip,rk3568-vepu'}, {'const': 'rockchip,rk3588-vepu121'}] should not be v=
-alid under {'items': {'propertyNames': {'const': 'const'}, 'required': ['co=
-nst']}}
-> 	hint: Use 'enum' rather than 'oneOf' + 'const' entries
-> 	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
->=20
-> doc reference errors (make refcheckdocs):
->=20
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/202406=
-12173213.42827-2-sebastian.reichel@collabora.com
->=20
-> The base for the series is generally the latest rc1. A different dependen=
-cy
-> should be noted in *this* patch.
->=20
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->=20
-> pip3 install dtschema --upgrade
->=20
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your sch=
-ema.
+diff --git a/drivers/video/fbdev/goldfishfb.c b/drivers/video/fbdev/goldfishfb.c
+index ca9e8255947c..5f8de1ec23c3 100644
+--- a/drivers/video/fbdev/goldfishfb.c
++++ b/drivers/video/fbdev/goldfishfb.c
+@@ -321,4 +321,5 @@ static struct platform_driver goldfish_fb_driver = {
+ 
+ module_platform_driver(goldfish_fb_driver);
+ 
++MODULE_DESCRIPTION("Goldfish Virtual Platform Framebuffer driver");
+ MODULE_LICENSE("GPL v2");
 
-oops. That's on me for not doing another test and doing something
-stupid. I obviously wanted this and didn't recheck the bindings
-after dropping the fallback compatible.
+---
+base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+change-id: 20240612-md-drivers-video-fbdev-cb9dc649c945
 
-enum:
-  - rockchip,rk3568-vepu
-  - rockchip,rk3588-vepu121
-
-I will change it in v6 if people are fine with this solution.
-
--- Sebastian
-
---ntp3lma6src7nirh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmZqH0IACgkQ2O7X88g7
-+pqdoA/9EV2En/+YR2Jzd8BcFmaqKhPrT3iarETgvi+l5Pil5FpQk+4uPvpRYTpJ
-XsvG36RWz2jDBnHwqIwcqbU6fzM/YdEQbyk6RzCQwbJ7aZrDgq+Va4+RzlwNb9YG
-Cvd00NTkP+Nvj1vdP7YQ4hkB9jHpGNAU6AsF+Te+A3K/YDkqvSMwDAyAL+n5bN8D
-i8n3x0R5DOUVKibVFZgQgf+onqXPf9HGOfZhxGzyPArnK8i9ccyu6BGSjwcQYWIr
-q24mfPKWIKmRR8+7BQvyG0gA/YPhtYzmCei4zAVXEmM9ZzK3CjNub7jHOBsBTdX/
-BEAWc/S1LBboiHF1Nk3eDZr7GyUGL3i+mnMS7VJ9i35GKMNqUo/dLc9su+UVWHGK
-V4T89f+yADLH1ojY4aUB9Ay3f96D3bVnHlH+RcqNvS4L0R+0lhEJ7DS5NW6yq+kn
-MR+odxWpNJoQvbQJ66vb0xCr57YmKSOXNqq+k4IBXUbLG8fQf7XytmqVstZ90iGy
-/PEfFTG1gjpySqENBccrQd2liRWtxsEfF/AQe3N1tthyXMORiCc1805FThm7IsFr
-tTN2vaFTZt5FCv/07WzT5KyP6iQkxwiKnshN6L7wIhovNj/yo6HkW1GJ1jZx/Eab
-QnzlBXW2SJpf4q6z3PMLd7ZzjBaYio+FIBDsv4PvO3mOymc6lMs=
-=977a
------END PGP SIGNATURE-----
-
---ntp3lma6src7nirh--
