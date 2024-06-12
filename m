@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF2F107A8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901E417BB9;
 	Wed, 12 Jun 2024 02:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718158626; cv=none; b=CpZNpZ/Wkn4NeUSuvjhCAuCtTaebYW8q9i3yT234giA/hD0nBs3zDdZPhNfOYECTOjiwQR2WbxH+JjZuQXVBEe7ebHmkfF7RBg3aUtnKz00c1PDvudoGdPdxJ9XhsoCV4Ftk8lui4tE2bT+8R5I01WLoulvs/A183Zb1c3nBt7E=
+	t=1718158626; cv=none; b=SDvjZTBtf50xin1Km7wBof04WNxyD9cPRuobkSL/pwi7FajVfK+txrRTxaSZERDb9aW/bElCnTSIsZMTHvkRyC9Qylf16A3Lyjucgn4ufBXZots6w33qLGET9jEAUQbsIGh2v1MGLjzu1IjcDdK5nhCme+ccHGnDiMzYotsh0zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718158626; c=relaxed/simple;
-	bh=IRZouYvQDcDDwGVt9CLJBBSl8xJmfXDnj69WXT7Zx40=;
+	bh=37r8lDjHzicuRAJsYN1lC8DJ6beNJb/4WZW/eHu4mrg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=CcQrOmxWbe/4yjoH3h9lo4vKKT2+LejnQR1dxjPkwKsJVizdXdeVbqNwz3JBZBVxyhkAnXFJc7WBZdOd8ot715UZn819otS1QZjCB9iNib36EFfY1CoGe7/8GzIurx5qpZOF6/A0GU6gTC57gzs1cSeTsQt+6dBp+GRdDCJ4/+M=
+	 Content-Type; b=QM1gqb8sDmiM1cZYmXUhOSLdLr87tPFoqNAtSXrGL4tK7O2xmfA+wexZawcWj/f+Tpfd/zTOkg2BMsgIuzk6/9QlrjYTY6W3006yj1M+hIdwKKouk1S78ksE21lFPZVyGDH7Koi9dTZgNf9k5MRwFQRxYK8+27/FtP5phDh6VdI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CB85C4DDE8;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7751DC4AF65;
 	Wed, 12 Jun 2024 02:17:06 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sHDYB-00000001XLh-0nZV;
+	id 1sHDYB-00000001XNC-2oNb;
 	Tue, 11 Jun 2024 22:17:23 -0400
-Message-ID: <20240612021723.047267127@goodmis.org>
+Message-ID: <20240612021723.532929570@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 11 Jun 2024 22:16:48 -0400
+Date: Tue, 11 Jun 2024 22:16:51 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -49,7 +49,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guenter Roeck <linux@roeck-us.net>,
  Ross Zwisler <zwisler@google.com>,
  Kees Cook <keescook@chromium.org>
-Subject: [PATCH v5 06/13] ring-buffer: Add test if range of boot buffer is valid
+Subject: [PATCH v5 09/13] ring-buffer: Save text and data locations in mapped meta data
 References: <20240612021642.941740855@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,256 +61,75 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Add a test against the ring buffer memory range to see if it has valid
-data. The ring_buffer_meta structure is given a new field called
-"first_buffer" which holds the address of the first sub-buffer. This is
-used to both determine if the other fields are valid as well as finding
-the offset between the old addresses of the sub-buffer from the previous
-boot to the new addresses of the current boot.
-
-Since the values for nr_subbufs and subbuf_size is to be the same, check
-if the values in the meta page match the values calculated.
-
-Take the range of the first_buffer and the total size of all the buffers
-and make sure the saved head_buffer and commit_buffer fall in the range.
-
-Iterate through all the sub-buffers to make sure that the values in the
-sub-buffer "commit" field (the field that holds the amount of data on the
-sub-buffer) is within the end of the sub-buffer. Also check the index
-array to make sure that all the indexes are within nr_subbufs.
+When a ring buffer is mapped to a specific address, save the address of a
+text function and some data. This will be used to determine the delta
+between the last boot and the current boot for pointers to functions as
+well as to data.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 143 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 135 insertions(+), 8 deletions(-)
+ kernel/trace/ring_buffer.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 076e7135b9ef..c746ec12b7cd 100644
+index 2118c478e42b..195e47ef730d 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -45,6 +45,7 @@
+@@ -45,6 +45,8 @@
  static void update_pages_handler(struct work_struct *work);
  
  struct ring_buffer_meta {
-+	unsigned long	first_buffer;
++	unsigned long	text_addr;
++	unsigned long	data_addr;
+ 	unsigned long	first_buffer;
  	unsigned long	head_buffer;
  	unsigned long	commit_buffer;
- 	__u32		subbuf_size;
-@@ -1618,21 +1619,103 @@ static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, int idx)
- 	return (void *)ptr;
+@@ -542,6 +544,9 @@ struct trace_buffer {
+ 	unsigned long			range_addr_start;
+ 	unsigned long			range_addr_end;
+ 
++	long				last_text_delta;
++	long				last_data_delta;
++
+ 	unsigned int			subbuf_size;
+ 	unsigned int			subbuf_order;
+ 	unsigned int			max_data_size;
+@@ -1821,10 +1826,15 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	}
  }
  
-+/*
-+ * See if the existing memory contains valid ring buffer data.
-+ * As the previous kernel must be the same as this kernel, all
-+ * the calculations (size of buffers and number of buffers)
-+ * must be the same.
-+ */
-+static bool rb_meta_valid(struct ring_buffer_meta *meta, int cpu,
-+			  struct trace_buffer *buffer, int nr_pages)
-+{
-+	int subbuf_size = PAGE_SIZE;
-+	struct buffer_data_page *subbuf;
-+	unsigned long buffers_start;
-+	unsigned long buffers_end;
-+	int i;
-+
-+	/* The subbuffer's size and number of subbuffers must match */
-+	if (meta->subbuf_size != subbuf_size ||
-+	    meta->nr_subbufs != nr_pages + 1) {
-+		pr_info("Ring buffer boot meta [%d] mismatch of subbuf_size/nr_pages\n", cpu);
-+		return false;
-+	}
-+
-+	buffers_start = meta->first_buffer;
-+	buffers_end = meta->first_buffer + (subbuf_size * meta->nr_subbufs);
-+
-+	/* Is the head and commit buffers within the range of buffers? */
-+	if (meta->head_buffer < buffers_start ||
-+	    meta->head_buffer >= buffers_end) {
-+		pr_info("Ring buffer boot meta [%d] head buffer out of range\n", cpu);
-+		return false;
-+	}
-+
-+	if (meta->commit_buffer < buffers_start ||
-+	    meta->commit_buffer >= buffers_end) {
-+		pr_info("Ring buffer boot meta [%d] commit buffer out of range\n", cpu);
-+		return false;
-+	}
-+
-+	subbuf = rb_subbufs_from_meta(meta);
-+
-+	/* Is the meta buffers and the subbufs themselves have correct data? */
-+	for (i = 0; i < meta->nr_subbufs; i++) {
-+		if (meta->buffers[i] < 0 ||
-+		    meta->buffers[i] >= meta->nr_subbufs) {
-+			pr_info("Ring buffer boot meta [%d] array out of range\n", cpu);
-+			return false;
-+		}
-+
-+		if ((unsigned)local_read(&subbuf->commit) > subbuf_size) {
-+			pr_info("Ring buffer boot meta [%d] buffer invalid commit\n", cpu);
-+			return false;
-+		}
-+
-+		subbuf = (void *)subbuf + subbuf_size;
-+	}
-+
-+	pr_info("Ring buffer meta is from previous boot!\n");
-+	return true;
-+}
++/* Used to calculate data delta */
++static char rb_data_ptr[] = "";
 +
  static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
  {
  	struct ring_buffer_meta *meta;
-+	unsigned long delta;
+ 	unsigned long delta;
++	unsigned long this_text = (unsigned long)rb_range_meta_init;
++	unsigned long this_data = (unsigned long)rb_data_ptr;
  	void *subbuf;
  	int cpu;
  	int i;
+@@ -1841,6 +1851,10 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ 			meta->first_buffer += delta;
+ 			meta->head_buffer += delta;
+ 			meta->commit_buffer += delta;
++			buffer->last_text_delta = this_text - meta->text_addr;
++			buffer->last_data_delta = this_data - meta->data_addr;
++			meta->text_addr = this_text;
++			meta->data_addr = this_data;
+ 			continue;
+ 		}
  
- 	for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
-+		void *next_meta;
-+
- 		meta = rb_range_meta(buffer, nr_pages, cpu);
- 
-+		if (rb_meta_valid(meta, cpu, buffer, nr_pages)) {
-+			/* Make the mappings match the current address */
-+			subbuf = rb_subbufs_from_meta(meta);
-+			delta = (unsigned long)subbuf - meta->first_buffer;
-+			meta->first_buffer += delta;
-+			meta->head_buffer += delta;
-+			meta->commit_buffer += delta;
-+			continue;
-+		}
-+
-+		if (cpu < nr_cpu_ids - 1)
-+			next_meta = rb_range_meta(buffer, nr_pages, cpu + 1);
-+		else
-+			next_meta = (void *)buffer->range_addr_end;
-+
-+		memset(meta, 0, next_meta - (void *)meta);
-+
- 		meta->nr_subbufs = nr_pages + 1;
- 		meta->subbuf_size = PAGE_SIZE;
- 
+@@ -1857,6 +1871,8 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
  		subbuf = rb_subbufs_from_meta(meta);
  
-+		meta->first_buffer = (unsigned long)subbuf;
-+
+ 		meta->first_buffer = (unsigned long)subbuf;
++		meta->text_addr = this_text;
++		meta->data_addr = this_data;
+ 
  		/*
  		 * The buffers[] array holds the order of the sub-buffers
- 		 * that are after the meta data. The sub-buffers may
-@@ -1724,10 +1807,26 @@ int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, in
- 	return 0;
- }
- 
-+/* Map the buffer_pages to the previous head and commit pages */
-+static void rb_meta_buffer_update(struct ring_buffer_per_cpu *cpu_buffer,
-+				  struct buffer_page *bpage)
-+{
-+	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
-+
-+	if (meta->head_buffer == (unsigned long)bpage->page)
-+		cpu_buffer->head_page = bpage;
-+
-+	if (meta->commit_buffer == (unsigned long)bpage->page) {
-+		cpu_buffer->commit_page = bpage;
-+		cpu_buffer->tail_page = bpage;
-+	}
-+}
-+
- static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 		long nr_pages, struct list_head *pages)
- {
- 	struct trace_buffer *buffer = cpu_buffer->buffer;
-+	struct ring_buffer_meta *meta = NULL;
- 	struct buffer_page *bpage, *tmp;
- 	bool user_thread = current->mm != NULL;
- 	gfp_t mflags;
-@@ -1762,6 +1861,10 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 	 */
- 	if (user_thread)
- 		set_current_oom_origin();
-+
-+	if (buffer->range_addr_start)
-+		meta = rb_range_meta(buffer, nr_pages, cpu_buffer->cpu);
-+
- 	for (i = 0; i < nr_pages; i++) {
- 		struct page *page;
- 
-@@ -1778,11 +1881,14 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 		 */
- 		list_add_tail(&bpage->list, pages);
- 
--		if (buffer->range_addr_start) {
-+		if (meta) {
- 			/* A range was given. Use that for the buffer page */
- 			bpage->page = rb_range_buffer(cpu_buffer, i + 1);
- 			if (!bpage->page)
- 				goto free_pages;
-+			/* If this is valid from a previous boot */
-+			if (meta->head_buffer)
-+				rb_meta_buffer_update(cpu_buffer, bpage);
- 			bpage->range = 1;
- 			bpage->id = i + 1;
- 		} else {
-@@ -1844,6 +1950,7 @@ static struct ring_buffer_per_cpu *
- rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
-+	struct ring_buffer_meta *meta;
- 	struct buffer_page *bpage;
- 	struct page *page;
- 	int ret;
-@@ -1884,6 +1991,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 		bpage->page = rb_range_buffer(cpu_buffer, 0);
- 		if (!bpage->page)
- 			goto fail_free_reader;
-+		if (cpu_buffer->ring_meta->head_buffer)
-+			rb_meta_buffer_update(cpu_buffer, bpage);
- 		bpage->range = 1;
- 	} else {
- 		page = alloc_pages_node(cpu_to_node(cpu),
-@@ -1902,14 +2011,32 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 	if (ret < 0)
- 		goto fail_free_reader;
- 
--	cpu_buffer->head_page
--		= list_entry(cpu_buffer->pages, struct buffer_page, list);
--	cpu_buffer->tail_page = cpu_buffer->commit_page = cpu_buffer->head_page;
-+	/* If the boot meta was valid then this has already been updated */
-+	meta = cpu_buffer->ring_meta;
-+	if (!meta || !meta->head_buffer ||
-+	    !cpu_buffer->head_page || !cpu_buffer->commit_page || !cpu_buffer->tail_page) {
-+		if (meta && meta->head_buffer &&
-+		    (cpu_buffer->head_page || cpu_buffer->commit_page || cpu_buffer->tail_page)) {
-+			pr_warn("Ring buffer meta buffers not all mapped\n");
-+			if (!cpu_buffer->head_page)
-+				pr_warn("   Missing head_page\n");
-+			if (!cpu_buffer->commit_page)
-+				pr_warn("   Missing commit_page\n");
-+			if (!cpu_buffer->tail_page)
-+				pr_warn("   Missing tail_page\n");
-+		}
- 
--	rb_head_page_activate(cpu_buffer);
--	if (cpu_buffer->ring_meta) {
--		struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
--		meta->commit_buffer = meta->head_buffer;
-+		cpu_buffer->head_page
-+			= list_entry(cpu_buffer->pages, struct buffer_page, list);
-+		cpu_buffer->tail_page = cpu_buffer->commit_page = cpu_buffer->head_page;
-+
-+		rb_head_page_activate(cpu_buffer);
-+
-+		if (cpu_buffer->ring_meta)
-+			meta->commit_buffer = meta->head_buffer;
-+	} else {
-+		/* The valid meta buffer still needs to activate the head page */
-+		rb_head_page_activate(cpu_buffer);
- 	}
- 
- 	return cpu_buffer;
 -- 
 2.43.0
 
