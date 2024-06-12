@@ -1,126 +1,120 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3766C84DFF
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 20:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC9484A56;
+	Wed, 12 Jun 2024 20:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718223691; cv=none; b=JWtgXFFMjbNqPVsa5dyo6Dazhu0JDnG79T1dyQB6KwXOAQuUINmLpWms/ZYHA7vl7akQK1zMP1kc5gdkUZ8jkvINrY+RkIxrsCZik3mjiuXuWT5CE9OT8AcDKfxMeo/keZrUuG06V/zxt0LGJfYHdLYIFSIpHIexmAVS8pePTNE=
+	t=1718223760; cv=none; b=B7YbD/n0hli7TB/0P78b7IFKGtrElT5bZoF/ts+Fncve4lES73zWKnQxBcqSxmBzozNDne0ZRFHUABXmFdhPpPXDAGJ+6kIAf+Dz+IutxBWLmeV4HMw3FknD/LrhYJ6AxtrvTaOO7lOFb28IZ5SNE4bPBYdhccVv8FKN/6nXNpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718223691; c=relaxed/simple;
-	bh=Y9JmGBo0c7lW83Az7dSmFQ4xeG9SUat2NMd0Gd2IswQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=g4ifbAXW1YWDhW46xbf/ucNcsm4ElBm1fZcRHw5F03fnau0Dke7hQvumMCnegYceqCT9ERXmdxVfZgTTypBMg5oEjY28A5nVy3U1CGEfahrL7zh1XoFjA1c8SjavSQQjpx3hBXExBK/xogehfwMI85OeudRpZL3QMkVe7H8sZqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rhQtJxAF; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1718223760; c=relaxed/simple;
+	bh=8WTD6sYve58aB6+RW7KFovQtTgqjvA9DP8iUKon4+mA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n6Pb7TU0m1AECL8gfRkcz2bnFWf+YCKUs/V9ZvAP05DYdNSUNl7H/OhPk8m3xhVQctO3UIH2hGphLeklxlSM6fo0f4IRCfVUkLOCn2TRs/WW8efuCc4Kq/4KEb9PNPLmtE3bhVQzhctGZEI17xfLGFtTV/JpVXQFyhyvjxP+MbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=igmSRE9K; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rhQtJxAF"
-X-Envelope-To: torvalds@linux-foundation.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1718223686;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=wXcD6/YF85x4CLdgIr2RqnTdVu0TMTvQKa4O5vPHG4s=;
-	b=rhQtJxAFenwuQ6pEBVukxUvt/crmCY9eWVUQQ4XVUfSiXrTWEhHfTLFc8LOCTeal2Kh7Oz
-	VRLzUwdd/c+W/PfeiTMe96GK8x+2RxxD3/QWdZ32T19Nv+JDQ+kT8FfSiGp+GHe9XYY8s4
-	AFHTuMbe1k3X9NfwB5guXi3evHqAG+g=
-X-Envelope-To: linux-bcachefs@vger.kernel.org
-X-Envelope-To: linux-fsdevel@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-Date: Wed, 12 Jun 2024 16:21:22 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs fixes for 6.10-rc4
-Message-ID: <6pkst4l27qb7asdlg47jy6zycvvse45ienwiybqgjtc47fs4so@f6ahc5rwgv46>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="igmSRE9K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718223759; x=1749759759;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8WTD6sYve58aB6+RW7KFovQtTgqjvA9DP8iUKon4+mA=;
+  b=igmSRE9KuZZI71SEX5gbREGV1TbLt8b8RtjA8YHhISKjaHYK3qQ1ZCpa
+   EuU0YsVbYfZmzmHimSPsS3iRyL40Srf/fK+70FmHZdh+T5rliZYVufBdb
+   3EkHnL8f/OTvoaaG8VXdJW4PfD3mU+3qp9eyeP6FfwKvNQPJ8ZJ4QZFwv
+   RMcZfGxwCmGMZfNnAs12NEOHI6RnkzHI200Z5AEHLhdrvmp6O6Ph4Au1E
+   GTU6n8WwzBvxDSZJsReAbbhFiuJ8FFDdd6sbmS4WieZcNPo0r4zyhwuhs
+   82KzRbdgD7M3MzNT42psrIZHN3On1kMHXYR6nsyR/iIlXVLK2uumqNw2V
+   w==;
+X-CSE-ConnectionGUID: zDlTbO8GRSyfkSDqhJBpvw==
+X-CSE-MsgGUID: 8gIT4jzSTWSsXES11It+5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="14974327"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="14974327"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 13:22:39 -0700
+X-CSE-ConnectionGUID: iGF4IHCHRwOQDfhlcK79FA==
+X-CSE-MsgGUID: 0lpd7zF+RReLIylyivdOTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="45028858"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 13:22:39 -0700
+Date: Wed, 12 Jun 2024 13:27:41 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: X86 Kernel <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>, Zeng Guang
+ <guang.zeng@intel.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 5/6] perf/x86: Enable NMI source reporting for
+ perfmon
+Message-ID: <20240612132741.10f58458@jacob-builder>
+In-Reply-To: <8afef909-974e-40fe-a39c-3c1e4e6d6938@zytor.com>
+References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
+	<20240611165457.156364-6-jacob.jun.pan@linux.intel.com>
+	<8afef909-974e-40fe-a39c-3c1e4e6d6938@zytor.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Linus, another batch of fixes for you. Nothing terribly exciting, the
-usual mix of syzbot + user bug fixes.
+Hi H.,
 
-The following changes since commit 83a7eefedc9b56fe7bfeff13b6c7356688ffa670:
+On Tue, 11 Jun 2024 12:10:52 -0700, "H. Peter Anvin" <hpa@zytor.com> wrote:
 
-  Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
+> On 6/11/24 09:54, Jacob Pan wrote:
+> > 
+> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> > index 1ef2201e48ac..db8c30881f5c 100644
+> > --- a/arch/x86/events/core.c
+> > +++ b/arch/x86/events/core.c
+> > @@ -46,6 +46,7 @@
+> >   
+> >   struct x86_pmu x86_pmu __read_mostly;
+> >   static struct pmu pmu;
+> > +u32 apic_perfmon_ctr = APIC_DM_NMI;
+> >   
+> >   DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
+> >   	.enabled = 1,
+> > @@ -1680,7 +1681,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+> >   	 * This generic handler doesn't seem to have any issues where
+> > the
+> >   	 * unmasking occurs so it was left at the top.
+> >   	 */
+> > -	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> > +	apic_write(APIC_LVTPC, apic_perfmon_ctr);
+> >   
+> >   	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+> >   		if (!test_bit(idx, cpuc->active_mask))
+> > @@ -1723,7 +1724,10 @@ void perf_events_lapic_init(void)
+> >   	/*
+> >   	 * Always use NMI for PMU
+> >   	 */
+> > -	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> > +	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
+> > +		apic_perfmon_ctr |= NMI_SOURCE_VEC_PMI;
+> > +
+> > +	apic_write(APIC_LVTPC, apic_perfmon_ctr);
+> >   }
+> >  
+> There really is no reason to not do this unconditinoally. If NMI source 
+> is not supported it is simply a noop.
+Yes, will do.
 
-are available in the Git repository at:
+I was being paranoid in case some old CPUs don't ignore the vector field.
 
-  https://evilpiepirate.org/git/bcachefs.git tags/bcachefs-2024-06-12
+Thanks,
 
-for you to fetch changes up to f2736b9c791a126ecb9cfc1aef1c7b4152b66e2d:
-
-  bcachefs: Fix rcu_read_lock() leak in drop_extra_replicas (2024-06-11 18:59:08 -0400)
-
-----------------------------------------------------------------
-bcachefs fixes for 6.10-rc4
-
-- fix kworker explosion, due to calling submit_bio() (which can block)
-  from a multithreaded workqueue
-- fix error handling in btree node scan
-- forward compat fix: kill an old debug assert
-- key cache shrinker fixes
-  this is a partial fix for stalls doing multithreaded creates - there
-  were various O(n^2) issues the key cache shrinker was hitting
-
-  https://lore.kernel.org/linux-bcachefs/fmfpgkt3dlzxhotrfmqg3j3wn5bpqiqvlc44xllncvdkimmx3i@n4okabtvhu7t/
-
-  there's more work coming here; I'm working on a patch to delete the
-  key cache lock, which initial testing shows to be a pretty drastic
-  performance improvement
-- assorted syzbot fixes
-
-----------------------------------------------------------------
-Hongbo Li (1):
-      bcachefs: fix the display format for show-super
-
-Kent Overstreet (16):
-      bcachefs: Split out btree_write_submit_wq
-      bcachefs: Fix incorrect error handling found_btree_node_is_readable()
-      bcachefs: Delete incorrect BTREE_ID_NR assertion
-      bcachefs: fix stack frame size in fsck.c
-      bcachefs: Enable automatic shrinking for rhashtables
-      bcachefs: increase key cache shrinker batch size
-      bcachefs: set sb->s_shrinker->seeks = 0
-      bcachefs: Fix reporting of freed objects from key cache shrinker
-      bcachefs: Leave a buffer in the btree key cache to avoid lock thrashing
-      bcachefs: Fix refcount leak in check_fix_ptrs()
-      bcachefs: Fix snapshot_create_lock lock ordering
-      bcachefs: Replace bucket_valid() asserts in bucket lookup with proper checks
-      bcachefs: Check for invalid bucket from bucket_gen(), gc_bucket()
-      bcachefs: Add missing synchronize_srcu_expedited() call when shutting down
-      bcachefs: Add missing bch_inode_info.ei_flags init
-      bcachefs: Fix rcu_read_lock() leak in drop_extra_replicas
-
- fs/bcachefs/alloc_background.c |  22 +++-
- fs/bcachefs/bcachefs.h         |   3 +-
- fs/bcachefs/btree_cache.c      |   9 +-
- fs/bcachefs/btree_gc.c         |  17 ++-
- fs/bcachefs/btree_io.c         |   8 +-
- fs/bcachefs/btree_iter.c       |  11 +-
- fs/bcachefs/btree_key_cache.c  |  33 +++--
- fs/bcachefs/btree_node_scan.c  |   9 +-
- fs/bcachefs/buckets.c          | 293 +++++++++++++++++++++++------------------
- fs/bcachefs/buckets.h          |  17 ++-
- fs/bcachefs/buckets_types.h    |   2 +
- fs/bcachefs/data_update.c      |   3 +-
- fs/bcachefs/ec.c               |  26 +++-
- fs/bcachefs/extents.c          |   9 +-
- fs/bcachefs/fs-ioctl.c         |  17 +--
- fs/bcachefs/fs.c               |   3 +
- fs/bcachefs/fsck.c             |   3 +
- fs/bcachefs/io_read.c          |  37 ++++--
- fs/bcachefs/io_write.c         |  19 ++-
- fs/bcachefs/movinggc.c         |   7 +-
- fs/bcachefs/super-io.c         |   6 +-
- fs/bcachefs/super.c            |  10 +-
- 22 files changed, 344 insertions(+), 220 deletions(-)
+Jacob
