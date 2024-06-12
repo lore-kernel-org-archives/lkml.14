@@ -1,128 +1,85 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5819417F360
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+Received: from hust.edu.cn (unknown [202.114.0.240])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6FE217F374;
+	Wed, 12 Jun 2024 14:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.114.0.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718203960; cv=none; b=hs7KLcTMEX7ZazyBASK8aAagiwoUYSV1yEQBq8qU/1cLbIzvoG6I46xUTxXeIXCTirD9ENNQO0Hv1OpLbP2xeWQhfu2aSQ/9ry2eOskrw9TIi6yFgFU2jbUuh4vQraLmMCNMxDpmsnCnfHEFcYWNEAK2XMwLZErxGMSKm8t710s=
+	t=1718203964; cv=none; b=jBHaX8ktCvZlpWFOTuE02up2q4DNjZwNGzCpBOOSH811DOINosH1tbdW5h6/lLCO/sSKDKfRd56Y52ctSgZEyTTBcIjfZ2P43MhjNVmywWek1N2qnTM9tO1WIXir/452eJA2OgoAMq66PThrgQo/WFe24eRtkEO3yRazd8fligQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718203960; c=relaxed/simple;
-	bh=QXLK14xztxRqSzKwZY/aZojpgAVTJffJ6v964d5Zw9w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gvEeKENsP2SjNruAbJNiiSehcErA6EEQtlkuyt37tb8yeyMChgDrAQsw9KC6YocmsJ2OuChK9obf09pXj1nv+IhlsH2zluvrqu0eSDQTA36i0KT27tZ3nP50XIOqJHArVpvlvB/nVeq7ktYaQHxYC10IvD/sTcmy+Lt5iNDCjrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UJ2//WY2; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UJ2//WY2"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3d218ea7750so1350305b6e.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:52:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1718203956; x=1718808756; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VlfyFCkUVCs8ONQQdxaEn5ekXCqtc2aYs760svQn/CM=;
-        b=UJ2//WY2mwOIs1wNTuxs+ziWaK3nUGQnihOzb9NiWwueFjotACEsOwwbs8td4W/ndQ
-         RlXPjyVPLytBTUVg2hStX3N0YY2Se3rZhz2NCdM9m5nqHBgTS2WHlmK9cKDNybK3bNQC
-         mOvXXkUOdjqwU9wIxbxdXuxzLJFwnnnuimnhA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718203956; x=1718808756;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VlfyFCkUVCs8ONQQdxaEn5ekXCqtc2aYs760svQn/CM=;
-        b=SjSr7NxrLp7zQOBq1rYd/dD5xd8hljvGqFSEAnp3qAu7174OHkywFsqCuYUPrNFWF+
-         19TolfL4gFrQbd77/LnjtMT+Elj1WIazWOlSeuHfLlQDZowYutMT/U/TuHVH39Umq6OT
-         ocN0I3KuML58o7BEQxTz0JGkempElxaq/bWg6F6N8sevtUn2cJT5e/9whDmNX6f11BMH
-         2QIHlID0DWDPVRPuCJS9/rXyQ8W2CgxmEBlAb3OTDmM2qMSqr6vl+/HIPTleZl594YoX
-         SWJO63TRKkt7eg/Qn/RyaTNZalI+BYUJQn9QJq6rO/jlp1ot5eZoiZRwyi7YwTjOZCc8
-         D9bg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIuT14rbvvbBRtzQ/jP1ZudFeAsdSJmLsnSG8dVt7DhsJcScVCnjqobBg2XQbAAffRGTMocRwZ5g171YVjE8H2KO/YKW/uGumqpsHV
-X-Gm-Message-State: AOJu0Yz+H5TYjKiuMfbWdekSBbq5ba1Dp0wxIm6PSdLycKx/ncoml0Y8
-	+1ENfBeExBbhX/OOzECtbII3KuzLElr898pogNxrcHc/spXVR+Er3KaUZyH2rPPY2dE1ZLO8/A8
-	=
-X-Google-Smtp-Source: AGHT+IHxdThS+anZT7idmREL2mZhRWFzWA6TB1y6N2viC79Z+2weH6NgA+CmLoJ/Tp5EFWMfAnEb6g==
-X-Received: by 2002:a05:6808:1207:b0:3d2:1740:c811 with SMTP id 5614622812f47-3d23e0377a5mr2370624b6e.35.1718203955956;
-        Wed, 12 Jun 2024 07:52:35 -0700 (PDT)
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com. [209.85.160.178])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4415e6ce8d4sm3687851cf.10.2024.06.12.07.52.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 07:52:35 -0700 (PDT)
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4405cf01a7fso345131cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:52:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWRMdIE3jxh1bhEOYdFixfUlIhRM0QNVPgxYM0+vPbtB3yuBda3cl37t+gr6So5/qBI19aEWLv1YuD4N9O1o3E3Zb2TB5/0LyJgzR0q
-X-Received: by 2002:a05:622a:514d:b0:43e:cb4:1d10 with SMTP id
- d75a77b69052e-44159205ccfmr3828581cf.14.1718203954512; Wed, 12 Jun 2024
- 07:52:34 -0700 (PDT)
+	s=arc-20240116; t=1718203964; c=relaxed/simple;
+	bh=kicZ9/XRu1MAmkWk/I+JRxn8BvTZI+30+zPvFIqGN2I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Sk8BYQp5UnHreVfyoPR/tSs01u4IX2viS4TykiI5kQDrWOS9JgE/kNnMhNmGmuBTGjVrVc3U+Z+BMlvY3zGpSYuPTKFTw+OtTuQEw7/lGcDSSieo3aTecEmYqTee8RkYsom/lwYOtFU3qYE3mDBmGH/U0WakzXVJoxBi/cQUNe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=202.114.0.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
+Received: from hust.edu.cn (unknown [172.16.0.52])
+	by app2 (Coremail) with SMTP id HwEQrABHn8cCtmlm6cxvAQ--.12262S2;
+	Wed, 12 Jun 2024 22:51:46 +0800 (CST)
+Received: from pride-poweredge-r740.. (unknown [222.20.126.129])
+	by gateway (Coremail) with SMTP id _____wDn7sYBtmlmLq4KAQ--.11539S2;
+	Wed, 12 Jun 2024 22:51:46 +0800 (CST)
+From: Dongliang Mu <dzm91@hust.edu.cn>
+To: Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Dongliang Mu <dzm91@hust.edu.cn>
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] docs/zh_CN: Update the translation of dev-tools/gdb-kernel-debugging
+Date: Wed, 12 Jun 2024 22:50:45 +0800
+Message-Id: <20240612145048.57829-1-dzm91@hust.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612133550.473279-1-tejasvipin76@gmail.com>
- <20240612133550.473279-3-tejasvipin76@gmail.com> <CAD=FV=VTEzSyTHm-YBwneBgpohK8uu460DER-GcsQWu-z9hJsg@mail.gmail.com>
- <9beb8011-cb0f-4694-87e7-d4c02de80cd8@linaro.org>
-In-Reply-To: <9beb8011-cb0f-4694-87e7-d4c02de80cd8@linaro.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 12 Jun 2024 07:52:22 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Udsw=XCR204A8QGwVSAxyprLCrrOgmZf+pU+8m-7sQ0Q@mail.gmail.com>
-Message-ID: <CAD=FV=Udsw=XCR204A8QGwVSAxyprLCrrOgmZf+pU+8m-7sQ0Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/mipi-dsi: fix handling of ctx in mipi_dsi_msleep
-To: neil.armstrong@linaro.org
-Cc: Tejas Vipin <tejasvipin76@gmail.com>, quic_jesszhan@quicinc.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, daniel@ffwll.ch, linus.walleij@linaro.org, 
-	dmitry.baryshkov@linaro.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:HwEQrABHn8cCtmlm6cxvAQ--.12262S2
+Authentication-Results: app2; spf=neutral smtp.mail=dzm91@hust.edu.cn;
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1rGr48ZF48ZF15ur1DAwb_yoW8JFyxpw
+	4q9FyfG3WfZry3J345GF48GFy7Jas7GF45KFy0va4Fqryvq3yIqw4akas0qFy2q34IyFWU
+	uF4fCFyj93y093JanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm2b7Iv0xC_Cr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vE
+	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_Jr
+	v_JF1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
+	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0EF7xvrVAajcxG14v26r
+	4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx0Ec7CjxVAajcxG14v26r4UJVWxJr1l
+	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxAIw2
+	8IcVCjz48v1sIEY20_GFW3Jr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
+	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07jfpndUUUUU=
+X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
 
-Hi,
+Update to commit 6b219431037b ("docs/scripts/gdb: add necessary
+make scripts_gdb step")
 
-On Wed, Jun 12, 2024 at 7:34=E2=80=AFAM <neil.armstrong@linaro.org> wrote:
->
-> On 12/06/2024 16:21, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Wed, Jun 12, 2024 at 6:37=E2=80=AFAM Tejas Vipin <tejasvipin76@gmail=
-.com> wrote:
-> >>
-> >> ctx would be better off treated as a pointer to account for most of it=
-s
-> >> usage so far, and brackets should be added to account for operator
-> >> precedence for correct evaluation.
-> >>
-> >> Fixes: f79d6d28d8fe7 ("drm/mipi-dsi: wrap more functions for streamlin=
-e handling")
-> >> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
-> >> ---
-> >>   include/drm/drm_mipi_dsi.h | 2 +-
-> >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > Yeah. Looking closer at the history, it looks like it was always
-> > intended to be a pointer since the first users all used it as a
-> > pointer.
-> >
-> > Suggested-by: Douglas Anderson <dianders@chromium.org>
-> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> >
-> > I've also compile-tested all the panels currently using mipi_dsi_msleep=
-().
-> >
-> > Neil: Given that this is a correctness thing, I'd rather see this land
-> > sooner rather than later. If you agree, maybe you can land these two
-> > patches whenever you're comfortable with them?
->
-> Applying them, but inverting them, fix should go first.
+Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+---
+ .../translations/zh_CN/dev-tools/gdb-kernel-debugging.rst     | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Well, they're both fixes, and inverting them means that you get a
-compile failure across several panels if you happen to be bisecting
-and land on the first commit, but it doesn't really matter. I guess
-the compile failure is maybe a benefit given that they were not doing
-their delays properly... ;-)
+diff --git a/Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst b/Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst
+index 17b5ce85a90c..94c15c258726 100644
+--- a/Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst
++++ b/Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst
+@@ -34,6 +34,10 @@ Kgdb内核调试器、QEMU等虚拟机管理程序或基于JTAG的硬件接口
+   但这通常仅在不依赖内核模块时才有效。有关此模式的更多详细信息，请参阅QEMU文档。
+   在这种情况下，如果架构支持KASLR，应该在禁用CONFIG_RANDOMIZE_BASE的情况下构建内核。
+ 
++- 构建gdb脚本（适用于内核v5.1版本及以上）
++
++    make scripts_gdb 
++
+ - 启用QEMU/KVM的gdb stub，可以通过如下方式实现
+ 
+     - 在VM启动时，通过在QEMU命令行中添加“-s”参数
+-- 
+2.34.1
 
--Doug
