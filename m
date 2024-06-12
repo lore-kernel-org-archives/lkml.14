@@ -1,113 +1,107 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shout12.mail.de (shout12.mail.de [62.201.172.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B215884E07
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 20:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E78D84D0B;
+	Wed, 12 Jun 2024 20:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.201.172.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718225613; cv=none; b=ZzC31DE3gfB4XpQTFkVObMXS1vh88ULv5BjkB22KXND+CXcwoBh4Ol6/Z5blVH/8Xw+Ja8wJe9kDTAhYODkSDC06+nLY2wArkOQpUustojbarWqDcLq5iGbbr6vXPcfDxrs69qIqc94aTCHsr3tuQB8AmtMgzq/YSQV/2B7NW3g=
+	t=1718225666; cv=none; b=dTUfIhxC2VdnzzwYhKbfAjXlBLzMw+9rWiH7UW8EF9UTVTG21lmyHO6CJhfEV3GXC+8M7a9igPVJhMz7iNEKsvnaHdFckaQEOW2a/Hla09Oo1ACdjPofzch7EbFtq98WNEmI/BdYgnyErUgJRRh+LGUl83P2xe4aXSJq5bhSB78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718225613; c=relaxed/simple;
-	bh=x2snBHhVt4z5TOb+zscUiPsECWC11ob5QWlrzrhqK2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lrUjmgr0nU7FrwFup+Rwm4mvDSWt1+p6VMvfKvc530/15bvitpX8sRocArxh6nKFGfvY4xaPlc4YPuPs/ZkKRIOKWeBen/z44OO6M3zMa4Ashep9zkrcV0TYp8U66kBbywWzsAho46ZUeUgL1TvvIn3MbTxLjgsPgQh8M6SRXGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Yvax15Fc; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1718225666; c=relaxed/simple;
+	bh=6m8xzsYHtwC9JE0M/yKVz8jVu/Kt+2HzHaIfh10Nz0E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WOc1w+S0L61+FPI3bU2Ji/GgNSc1yIKzg5EtSkmT1bmliPhBlY8oze0ZDVE6ztcnUERBVDSrQ0Vi5vi+1TlEpdX9wSN1LtueTE5lZBqmO1x8JmHuMeIetBDL+eB6FHlxUuq1P+TWMMJVoXT3M0x+mJbzDj7ivSf1APHAVLIn/mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.de; spf=pass smtp.mailfrom=mail.de; dkim=pass (2048-bit key) header.d=mail.de header.i=@mail.de header.b=6QIKw9Rs; arc=none smtp.client-ip=62.201.172.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Yvax15Fc"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2c2d2534c51so26706a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 13:53:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1718225610; x=1718830410; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bSYIXvgTjBjLjDaj5a+Hbq3RRIqI54cl6LplLVVHNnw=;
-        b=Yvax15Fc5ecUSpmvr5w7oAeQ75G5RfwEmSCbkQWwnvhsNBZDzuNG/KeQPBmqZ5YswP
-         E9KtTx74pMdd9x1rRU9SfiQD+xuaCAA+RDr+11/sIP/2Ot6elidH4ASU5unijca7V1/R
-         ixJq0kQ4YbrlLEaIuJJx9usiNtt+AMfB30AtsCLx+MnQFqoLWn3bFKfGbvTTsdaeb9Tt
-         e6cm1KRyyEsZ5xPTaBSEidAatsEkklKSt0IYasBMx4GxfEAeAzlDsZ9LIWIvvfZ3aYN7
-         a+2WAT4/CbrUR+MWRxkEM3vkLiBatI3cyCYWkq6U5VXCvOYN/vxLJSMZ7GaCCj5AuRl7
-         x12w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718225610; x=1718830410;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bSYIXvgTjBjLjDaj5a+Hbq3RRIqI54cl6LplLVVHNnw=;
-        b=S+pUrPW4n4WYqjgcz6oIG2vWZyx3kKgGcTaZXcD/Qc0lyWwHl1mMB5rjTptYJ/Yvdd
-         yHCH2TknuWyC1m7bV27KOe/otdNf4dl+qUCbJvjTIY0WWKOJxCa611bbdg7VR+vuv5+U
-         lejRwHO1IJo8PSXYCnI2D3pKJgAqFK0wCNGj9FJRcMfLtNOmr85ryToUswLljst7Rt2o
-         f6eyhV/RAfHcfZly7pC4dWjHp4UyaU90g7QNrOw39dGZNwsJ5wSnb6+T7qESySHfOEn0
-         aoioSZwFrjAIC/K3AjeGv90jtNr7uOxgze2gVyH7zri5zoOnG2iX3723aQZUDEkGZYo1
-         BoUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWsGmLfpwLQe3QFDTENR+zsKNocnIkPO7shtoLCdQ36UiShR3qV6bfAaVKtGGTgvfq4A6L+kjdyXNIXVls=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnTAFK5FIu2IvLBu05aRHYlUuK+3AtA87NKNMs6hiLaFU8jdUy
-	tXiATHqhU0pvGyOTfD7ucibApGu8WYcEffsHTWOEK12YFERSQKCedK7pwXWvBb2VNBSB6qksj10
-	E
-X-Google-Smtp-Source: AGHT+IEBnkgvit8R/o/lYAcC85W+TBVXxi4/XDehB+eDIJlB10T7guKWGrixXTji//T7/aa9IA3sKg==
-X-Received: by 2002:a17:90a:8186:b0:2c4:aab0:121e with SMTP id 98e67ed59e1d1-2c4aab01640mr2667270a91.1.1718225610127;
-        Wed, 12 Jun 2024 13:53:30 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c085:21cf::1466? ([2620:10d:c090:400::5:728])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c4c45f3035sm5983a91.25.2024.06.12.13.53.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 13:53:29 -0700 (PDT)
-Message-ID: <f092f5b5-68c8-4e76-9ea1-f319bcf20444@kernel.dk>
-Date: Wed, 12 Jun 2024 14:53:27 -0600
+	dkim=pass (2048-bit key) header.d=mail.de header.i=@mail.de header.b="6QIKw9Rs"
+Received: from shout02.mail.de (unknown [10.0.120.222])
+	by shout12.mail.de (Postfix) with ESMTPS id B4E4E24193D;
+	Wed, 12 Jun 2024 22:54:17 +0200 (CEST)
+Received: from postfix02.mail.de (postfix02.bt.mail.de [10.0.121.126])
+	by shout02.mail.de (Postfix) with ESMTP id 9BFA92409FE;
+	Wed, 12 Jun 2024 22:54:17 +0200 (CEST)
+Received: from smtp01.mail.de (smtp01.bt.mail.de [10.0.121.211])
+	by postfix02.mail.de (Postfix) with ESMTP id 79143A00E2;
+	Wed, 12 Jun 2024 22:54:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mail.de;
+	s=mailde202009; t=1718225657;
+	bh=6m8xzsYHtwC9JE0M/yKVz8jVu/Kt+2HzHaIfh10Nz0E=;
+	h=From:To:Cc:Subject:Date:Message-ID:From:To:CC:Subject:Reply-To;
+	b=6QIKw9Rsu7n7mugdZdPgsZCP5RoN1d8UdXFDSM2jJN16MDT6GPwUNfogw9SsRqD3C
+	 FMoNtk9N9LUzoPE69SQ4DhwdQgORjCf2UqFdQUUP6C7TJ8uhZ6g9v0LYozBfsdj99F
+	 RMnjD8TrGIJTWH8TB9KiakYMGvLUfX9/sBkwO0QEtB9BuFc56TWP0e0KsXV5Nbb1SJ
+	 wkqhlrNrxC2XZsSaOAraoSRwScaR0CxjUKUKuRSQ1NUvzXlv4uSUPOvhFBWsdwAoQG
+	 khVbU4997HK6yoWuYcUU0sQnRsWhhej1cUSav/eyNrUJ+fzu4LJ857VogZRU38foyN
+	 GMHuRYEkXjFmQ==
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp01.mail.de (Postfix) with ESMTPSA id 30B682400C1;
+	Wed, 12 Jun 2024 22:54:15 +0200 (CEST)
+From: Sebastian Kropatsch <seb-dev@mail.de>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Refactor, fix and improve NanoPi R6 series
+Date: Wed, 12 Jun 2024 22:48:09 +0200
+Message-ID: <20240612205056.397204-1-seb-dev@mail.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: Avoid polling configuration errors
-To: Christoph Hellwig <hch@infradead.org>, hexue <xue01.he@samsung.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20240531091021epcas5p48fdbd6302bec7a91ff66272c600b0dab@epcas5p4.samsung.com>
- <20240531091015.2636025-1-xue01.he@samsung.com>
- <ZlrQCaR6xEaghWdQ@infradead.org>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <ZlrQCaR6xEaghWdQ@infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-purgate: clean
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate-type: clean
+X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate: clean
+X-purgate-size: 1402
+X-purgate-ID: 154282::1718225657-FE5BF670-6DE0309F/0/0
 
-On 6/1/24 1:38 AM, Christoph Hellwig wrote:
-> On Fri, May 31, 2024 at 05:10:15PM +0800, hexue wrote:
->> Here's a misconfigured if application is doing polled IO
->> for devices that don't have a poll queue, the process will
->> continue to do syscall between user space and kernel space,
->> as in normal poll IO, CPU utilization will be 100%. IO actually
->> arrives through interruption.
->>
->> This patch returns a signal that does not support the operation
->> when the underlying device does not have a poll queue, avoiding
->> performance and CPU simultaneous loss.
-> 
-> This feels like the wrong place to check for this.
-> 
-> As we've dropped synchronous polling we now only support
-> thead based polling, right now only through io_uring.
-> 
-> So we need to ensure REQ_POLLED doesn't even get set for any
-> other I/O.
+Hello,
 
-We happily allow polled IO for async polled IO, even if the destination
-queue isn't polled (or it doesn't exist). This is different than the old
-sync polled support.
+This patch series fixes a lot of minor issues in the current devicetree
+for the FriendlyElec NanoPi R6 series (R6C and R6S), as well as adding
+support for the GPU and one USB3 port which was previously disabled.
 
-It'll work just fine, it just won't really do what you expect in the
-sense that IRQs are still being triggered. The app side won't wait
-however, it'll just busy poll on the completion and either race with the
-IRQ delivery or find it once completed.
+To aid with these patches, I have refactored the devicetrees in such a
+way that they will now share a common dtsi source file in a similar
+fashion than what the NanoPi R5C and R5S are already doing.
+This makes changes which only affect one of the boards easier, less
+error-prone and more maintainable. Also we don't need to work with
+/delete-node/ and /delete-property/ this way :)
 
-So I think the bigger question here is if we want to change that. It can
-indicate a bad configuration, but there's also risk there in terms of
-breaking a setup that already works for someone. You'd get -ENONOTSUPP
-rather than just (suboptimal) completed IO.
+Cheers,
+Sebastian
+
+PS: Additional comments in patch 2 and 3.
+
+---
+
+Sebastian Kropatsch (5):
+  arm64: dts: rockchip: Add common definitions for NanoPi R6C and R6S
+  arm64: dts: rockchip: Fix regulators, gmac and naming on NanoPi
+    R6C/R6S
+  arm64: dts: rockchip: Improve LEDs on NanoPi R6C/R6S
+  arm64: dts: rockchip: Enable lower USB3 port on NanoPi R6C/R6S
+  arm64: dts: rockchip: Enable GPU on NanoPi R6C/R6S
+
+ ...-nanopi-r6s.dts => rk3588s-nanopi-r6.dtsi} | 242 +++---
+ .../boot/dts/rockchip/rk3588s-nanopi-r6c.dts  |  48 +-
+ .../boot/dts/rockchip/rk3588s-nanopi-r6s.dts  | 743 +-----------------
+ 3 files changed, 193 insertions(+), 840 deletions(-)
+ copy arch/arm64/boot/dts/rockchip/{rk3588s-nanopi-r6s.dts => rk3588s-nanopi-r6.dtsi} (81%)
 
 -- 
-Jens Axboe
+2.43.0
 
