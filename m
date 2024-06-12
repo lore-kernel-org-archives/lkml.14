@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1EF84A50;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3B655C08;
 	Wed, 12 Jun 2024 20:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718223867; cv=none; b=GMNncu2Sfkpe29e2bURE5Gdk0BRa9FNaUrRIDbRqsysXRlLDCNd1vM68snT4YcbralTbms1vSkNlEGjtVdyBmC38ZFuiJtRHq1IYzFUaNBxxAl3KhFsFxhjcv5B4RuMTEB/8AQ+OhliVYS7O8YD3EbuPrP1JT/4Y45iytK1+qqo=
+	t=1718223867; cv=none; b=Nq4I2HrsA5Cpo0EPRJzvBMPE7fvePREFVu+YEkBi7yClgwEjvp0mxEm5/8YJ9OBz87cZJhfm9Z9/z3bfMFQdJXlEYXcg58jl6MUZJ0jhR4BHZ1imQmtsssi2JIWt/+K32h+Ryv+tp14hpPSBfqiJ9YJOwPjDgTSpH450l3izFn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718223867; c=relaxed/simple;
-	bh=yjWkhxs5kUTi6CYrOT0J3zw9KEWkho0XRWlCYLaAA5Y=;
+	bh=XFv1w4MP/icuRunpNsbZXGMTL0ekm3+wuCm31bs/Reg=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=r4fyFG4gfwCp6+Ly9yUCre/EIK7UVi/1voA73VNpFrUPsYvfdIZneM8SEuGuJHdZo6LVGvdHqe+2qnjvf3sJXBCfHxgm15rCn0ruvbv43lXAcpAyqrLGYa5ilODLUFBlL1aN95mdh4nlGytqz91IH6cEpKdJ8cEZfWglR8KTql4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W6EcJCUA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F74izOzU; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ceEYZxLHqedLw2jPRQdhUzI87TX1D3m54s3QJjSwhRX3PYgUOsYO1EJeQTAGzMeZm3bU99OZng693c5b+W0e4BakT0CMJhyf+ck9sgI5fZTVrUxL/Q0TsFC2nbN9KxqX9UCPMNDU0wiKzE1xtRMHKw9oZy+7OiL7BMNoHoZeWYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0oKfJAhn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C4PyHnlN; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W6EcJCUA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F74izOzU"
-Date: Wed, 12 Jun 2024 20:24:23 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0oKfJAhn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C4PyHnlN"
+Date: Wed, 12 Jun 2024 20:24:24 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1718223864;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HwVOHysEGr846iN4zNF25RAqMaPqe7jfEOPp/zwruw8=;
-	b=W6EcJCUAgxDaQHnXTu8L4qHXN4tYjGjQI4bLpqKdg+PWuTWo++a6SJxvGOv9bQ70Om8oih
-	kKPSzpoaPAJsaswd+CsSp6/XAKyOVyMZM/LSdMdBu62NRsNgW/ZcozlaxulrLFl9/p15iC
-	S48J5PjrbUV2KDUlUfzMap7eUrm2crjhWrLmsToO5tpzJeafPz5tD2n4/buAswGp2JffRj
-	+Ebbu1nxctwS/3aTda7E/wFJrjSIifpJkO4wFTtQn/JPb2yCHj1nt+cGh0EPEMr+sfyzsL
-	uqho0DOKjQQRs6zZ/uow1utbehK0hC01zAgCmhUOnAoHYwpUh5ih5TSg2b5nGw==
+	bh=3UnLYSXhK1xnYoFSnlcbaxaS8i5nYimnW5GleY60k+I=;
+	b=0oKfJAhnehkl6mD4DqTZQln4d5kdCQcxUnKzSb25bENaXfPOEt2iIQHFe2uHZ+q4B9YPHj
+	2lNP/gzrSsrplQI/HoQp6sqAuLUi524dTm1flU8nJQwgWebFj1qaOi/sVHrrdMgmn8uddU
+	AH6//WxpD9qE5DjlicjLsPggRCrSTSzqjwgcvgx00q92bgtEG2m+3VsUtcM17KrWskCcy6
+	YMNJ51nzGezP2FVuSTFklHuRENar5/mFFGKRS+/9P+YXMRiOf3Solz47G/ng7dFuO9ypl9
+	dJKfFK8Cajm3i4kmUJtJnNMow0jaUKvmiBuVktDjbBruGbDSQt84TeetlR1THA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1718223864;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,29 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HwVOHysEGr846iN4zNF25RAqMaPqe7jfEOPp/zwruw8=;
-	b=F74izOzUfdHo3BBtu8a45QTUUR1edL9+910wh1bY6jO0OnBfrPjc0AU8AWLEG8B+m1aQxC
-	1/H/2E8aYdEV71Bg==
+	bh=3UnLYSXhK1xnYoFSnlcbaxaS8i5nYimnW5GleY60k+I=;
+	b=C4PyHnlNt7ihDF6JwcQSMINccrLCsBXM3X5izTljJXrOCM/5duVikr36nNaanwCOm7Vgaf
+	G6Qm5WsnnVBtT7CA==
 From: "tip-bot2 for Yazen Ghannam" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/misc] hwmon: (k10temp) Define a helper function to read CCD
- temperature
+Subject: [tip: x86/misc] x86/amd_nb: Enhance SMN access error checking
 Cc: Yazen Ghannam <yazen.ghannam@amd.com>,
  "Borislav Petkov (AMD)" <bp@alien8.de>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240606-fix-smn-bad-read-v4-5-ffde21931c3f@amd.com>
-References: <20240606-fix-smn-bad-read-v4-5-ffde21931c3f@amd.com>
+In-Reply-To: <20240606-fix-smn-bad-read-v4-4-ffde21931c3f@amd.com>
+References: <20240606-fix-smn-bad-read-v4-4-ffde21931c3f@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171822386382.10875.6648306533264978895.tip-bot2@tip-bot2>
+Message-ID: <171822386407.10875.16449136725170041056.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,68 +68,126 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/misc branch of tip:
 
-Commit-ID:     cc66126fd317a70d8612a8356ad512a1539abd75
-Gitweb:        https://git.kernel.org/tip/cc66126fd317a70d8612a8356ad512a1539abd75
+Commit-ID:     dc5243921be1b6a0b4259dbcec3dc95016ad8427
+Gitweb:        https://git.kernel.org/tip/dc5243921be1b6a0b4259dbcec3dc95016ad8427
 Author:        Yazen Ghannam <yazen.ghannam@amd.com>
-AuthorDate:    Thu, 06 Jun 2024 11:12:58 -05:00
+AuthorDate:    Thu, 06 Jun 2024 11:12:57 -05:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 12 Jun 2024 11:39:29 +02:00
+CommitterDate: Wed, 12 Jun 2024 11:38:58 +02:00
 
-hwmon: (k10temp) Define a helper function to read CCD temperature
+x86/amd_nb: Enhance SMN access error checking
 
-The CCD temperature register is read in two places. These reads are done
-using an AMD SMN access, and a number of parameters are needed for the
-operation.
+AMD Zen-based systems use a System Management Network (SMN) that
+provides access to implementation-specific registers.
 
-Move the SMN access and parameter gathering into a helper function in order to
-simplify the code flow. This also has a benefit of centralizing the hardware
-register access in a single place in case fixes or special decoding is required.
+SMN accesses are done indirectly through an index/data pair in PCI
+config space. The accesses can fail for a variety of reasons.
+
+Include code comments to describe some possible scenarios.
+
+Require error checking for callers of amd_smn_read() and amd_smn_write().
+This is needed because many error conditions cannot be checked by these
+functions.
+
+  [ bp: Touchup comment. ]
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20240606-fix-smn-bad-read-v4-5-ffde21931c3f@amd.com
+Link: https://lore.kernel.org/r/20240606-fix-smn-bad-read-v4-4-ffde21931c3f@amd.com
 ---
- drivers/hwmon/k10temp.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/amd_nb.h |  4 +--
+ arch/x86/kernel/amd_nb.c      | 44 ++++++++++++++++++++++++++++++----
+ 2 files changed, 41 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-index 6cad35e..315c52d 100644
---- a/drivers/hwmon/k10temp.c
-+++ b/drivers/hwmon/k10temp.c
-@@ -158,6 +158,13 @@ static void read_tempreg_nb_zen(struct pci_dev *pdev, u32 *regval)
- 		*regval = 0;
+diff --git a/arch/x86/include/asm/amd_nb.h b/arch/x86/include/asm/amd_nb.h
+index 5c37944..6f3b6ae 100644
+--- a/arch/x86/include/asm/amd_nb.h
++++ b/arch/x86/include/asm/amd_nb.h
+@@ -21,8 +21,8 @@ extern int amd_numa_init(void);
+ extern int amd_get_subcaches(int);
+ extern int amd_set_subcaches(int, unsigned long);
+ 
+-extern int amd_smn_read(u16 node, u32 address, u32 *value);
+-extern int amd_smn_write(u16 node, u32 address, u32 value);
++int __must_check amd_smn_read(u16 node, u32 address, u32 *value);
++int __must_check amd_smn_write(u16 node, u32 address, u32 value);
+ 
+ struct amd_l3_cache {
+ 	unsigned indices;
+diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+index 027a8c7..059e5c1 100644
+--- a/arch/x86/kernel/amd_nb.c
++++ b/arch/x86/kernel/amd_nb.c
+@@ -180,6 +180,43 @@ static struct pci_dev *next_northbridge(struct pci_dev *dev,
+ 	return dev;
  }
  
-+static int read_ccd_temp_reg(struct k10temp_data *data, int ccd, u32 *regval)
-+{
-+	u16 node_id = amd_pci_dev_to_node_id(data->pdev);
-+
-+	return amd_smn_read(node_id, ZEN_CCD_TEMP(data->ccd_offset, ccd), regval);
-+}
-+
- static long get_raw_temp(struct k10temp_data *data)
++/*
++ * SMN accesses may fail in ways that are difficult to detect here in the called
++ * functions amd_smn_read() and amd_smn_write(). Therefore, callers must do
++ * their own checking based on what behavior they expect.
++ *
++ * For SMN reads, the returned value may be zero if the register is Read-as-Zero.
++ * Or it may be a "PCI Error Response", e.g. all 0xFFs. The "PCI Error Response"
++ * can be checked here, and a proper error code can be returned.
++ *
++ * But the Read-as-Zero response cannot be verified here. A value of 0 may be
++ * correct in some cases, so callers must check that this correct is for the
++ * register/fields they need.
++ *
++ * For SMN writes, success can be determined through a "write and read back"
++ * However, this is not robust when done here.
++ *
++ * Possible issues:
++ *
++ * 1) Bits that are "Write-1-to-Clear". In this case, the read value should
++ *    *not* match the write value.
++ *
++ * 2) Bits that are "Read-as-Zero"/"Writes-Ignored". This information cannot be
++ *    known here.
++ *
++ * 3) Bits that are "Reserved / Set to 1". Ditto above.
++ *
++ * Callers of amd_smn_write() should do the "write and read back" check
++ * themselves, if needed.
++ *
++ * For #1, they can see if their target bits got cleared.
++ *
++ * For #2 and #3, they can check if their target bits got set as intended.
++ *
++ * This matches what is done for RDMSR/WRMSR. As long as there's no #GP, then
++ * the operation is considered a success, and the caller does their own
++ * checking.
++ */
+ static int __amd_smn_rw(u16 node, u32 address, u32 *value, bool write)
  {
- 	u32 regval;
-@@ -223,9 +230,7 @@ static int k10temp_read_temp(struct device *dev, u32 attr, int channel,
- 				*val = 0;
- 			break;
- 		case 2 ... 13:		/* Tccd{1-12} */
--			ret = amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
--					   ZEN_CCD_TEMP(data->ccd_offset, channel - 2),
--					   &regval);
-+			ret = read_ccd_temp_reg(data, channel - 2, &regval);
+ 	struct pci_dev *root;
+@@ -202,9 +239,6 @@ static int __amd_smn_rw(u16 node, u32 address, u32 *value, bool write)
  
- 			if (ret)
- 				return ret;
-@@ -397,8 +402,7 @@ static void k10temp_get_ccd_support(struct pci_dev *pdev,
- 		 * the register value. And this will incorrectly pass the TEMP_VALID
- 		 * bit check.
- 		 */
--		if (amd_smn_read(amd_pci_dev_to_node_id(pdev),
--				 ZEN_CCD_TEMP(data->ccd_offset, i), &regval))
-+		if (read_ccd_temp_reg(data, i, &regval))
- 			continue;
+ 	err = (write ? pci_write_config_dword(root, 0x64, *value)
+ 		     : pci_read_config_dword(root, 0x64, value));
+-	if (err)
+-		pr_warn("Error %s SMN address 0x%x.\n",
+-			(write ? "writing to" : "reading from"), address);
  
- 		if (regval & ZEN_CCD_TEMP_VALID)
+ out_unlock:
+ 	mutex_unlock(&smn_mutex);
+@@ -213,7 +247,7 @@ out:
+ 	return err;
+ }
+ 
+-int amd_smn_read(u16 node, u32 address, u32 *value)
++int __must_check amd_smn_read(u16 node, u32 address, u32 *value)
+ {
+ 	int err = __amd_smn_rw(node, address, value, false);
+ 
+@@ -226,7 +260,7 @@ int amd_smn_read(u16 node, u32 address, u32 *value)
+ }
+ EXPORT_SYMBOL_GPL(amd_smn_read);
+ 
+-int amd_smn_write(u16 node, u32 address, u32 value)
++int __must_check amd_smn_write(u16 node, u32 address, u32 value)
+ {
+ 	return __amd_smn_rw(node, address, &value, true);
+ }
