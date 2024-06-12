@@ -1,271 +1,160 @@
-Received: from mail.nfschina.com (unknown [42.101.60.195])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 71C2A16D4EF;
-	Wed, 12 Jun 2024 08:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327A712B89;
+	Wed, 12 Jun 2024 09:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718182742; cv=none; b=NbY8TYvPDAZx6Prt3Wg/A8UiilcZUEQqCJbx+O5NOuDwxXR4DkWavIeSS3bbTqN1skxhA4hXsTS5AfLwu7YSpoW65MC/nauPkqTYhE8CeAbxbw/CXyZ/BYP+L3Xz62zgyMyusy8N2KhboxzoEnn6Bpcv3ZEMcg+8BAKCBFWepJ0=
+	t=1718182908; cv=none; b=iXEqnYZ7hvQMBh3fanBKSjgAa07UKWPEPFj+/XIJxijMVgMEAfhJMGbvclG4sPoeTqysleZul+ruHMOMIsn7ymmb6e/y6b/Mc6H9rwwaxwv/zvChkwcEx4kpy7g/VWQ22xA0j5Kd7z1e3pbTmbeD7h7MOBG8gZagDugrkzg3nDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718182742; c=relaxed/simple;
-	bh=IPCWgpd6c1bFEoB2WSV9QRjQj7pwRw3QVv26rxSLklw=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=l+yp1dRdTYARkoG/NkN0SDMxkn2UuxOKAsrAXgzEbatk4s/eY4CYqPMOJVcNTP1d9sDmlAwTOG/fSOO3Qlr/WCRv3knwUTH69M5T8LCp0S50M9IeeRUcmf1Qjt4OxUk82SEEcou5ieLPq7BOG0O0fgJCGp157Vkn3Rg+NxGxAQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from localhost.localdomain (unknown [219.141.250.2])
-	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPA id 6C0126022F9AD;
-	Wed, 12 Jun 2024 16:58:36 +0800 (CST)
-X-MD-Sfrom: kunyu@nfschina.com
-X-MD-SrcIP: 219.141.250.2
-From: kunyu <kunyu@nfschina.com>
-To: davem@davemloft.net,
-	dsahern@kernel.org,
-	udknight@gmail.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@google.com,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com
-Cc: netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kunyu <kunyu@nfschina.com>
-Subject: [PATCH] x86: net: bpf_jit_comp32: Remove unused 'cnt' variables from most functions
-Date: Wed, 12 Jun 2024 16:58:23 +0800
-Message-Id: <20240612085823.28133-1-kunyu@nfschina.com>
-X-Mailer: git-send-email 2.18.2
+	s=arc-20240116; t=1718182908; c=relaxed/simple;
+	bh=zW95mcY2lDdEt8aWX+3ZUEKduxRjMlZj8PPfH50hswI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sCOD4tKTO4OfM9Zt53m/UCRn4gP5NBvWIbLCmX6Y7T7xKy61o4RVNSVpMZGmJir0CGPFV0KW3ylglOVuaunNZ6XTTm+D9lnKlhkd/wCQJPNDJJBixXLBimwsLwyv5hdfQH7Rl+dAvdLezB9PoGoXo/IDJbDav0ECQBw7A7s7gwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gQtDCGDJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aZ700U5H; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gQtDCGDJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aZ700U5H; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gQtDCGDJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aZ700U5H";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gQtDCGDJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aZ700U5H"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 101A9341E0;
+	Wed, 12 Jun 2024 09:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718182905; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qX8ubfxWYSG+t5h+vmgwN8Y/8N1fgeclkZq1Y7PRvL8=;
+	b=gQtDCGDJ91AEpjFra2kEv+E9IdE+uEMdGDBZhYRKgfhToFVLhSnfY0Cc7hTXQsWcar9nVP
+	BXP42YAnFHYDAUqhV0/SELJ/9tWQZRVbLkZc/ILomJvUQEGQ2fd1ecpg3ktm5vwGD6Wzlc
+	OxsNr8B9v4KxEKkGRk9iUSGp4tzUQuU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718182905;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qX8ubfxWYSG+t5h+vmgwN8Y/8N1fgeclkZq1Y7PRvL8=;
+	b=aZ700U5Hv6FRrHXSSqAKdtx8YKmbjderymirydAJB3UnIZnrKPdVGZWSEZ+dvCMljc3H1M
+	CErCY/xApYgePKDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1718182905; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qX8ubfxWYSG+t5h+vmgwN8Y/8N1fgeclkZq1Y7PRvL8=;
+	b=gQtDCGDJ91AEpjFra2kEv+E9IdE+uEMdGDBZhYRKgfhToFVLhSnfY0Cc7hTXQsWcar9nVP
+	BXP42YAnFHYDAUqhV0/SELJ/9tWQZRVbLkZc/ILomJvUQEGQ2fd1ecpg3ktm5vwGD6Wzlc
+	OxsNr8B9v4KxEKkGRk9iUSGp4tzUQuU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1718182905;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qX8ubfxWYSG+t5h+vmgwN8Y/8N1fgeclkZq1Y7PRvL8=;
+	b=aZ700U5Hv6FRrHXSSqAKdtx8YKmbjderymirydAJB3UnIZnrKPdVGZWSEZ+dvCMljc3H1M
+	CErCY/xApYgePKDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D15B2137DF;
+	Wed, 12 Jun 2024 09:01:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 9EKnMvhjaWZqZgAAD6G6ig
+	(envelope-from <hare@suse.de>); Wed, 12 Jun 2024 09:01:44 +0000
+Message-ID: <407624c7-5edc-4940-bf71-4134207b1458@suse.de>
+Date: Wed, 12 Jun 2024 11:01:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 03/11] filemap: allocate mapping_min_order folios in
+ the page cache
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, david@fromorbit.com,
+ djwong@kernel.org, chandan.babu@oracle.com, brauner@kernel.org,
+ akpm@linux-foundation.org, willy@infradead.org
+Cc: mcgrof@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ yang@os.amperecomputing.com, Zi Yan <zi.yan@sent.com>,
+ linux-xfs@vger.kernel.org, p.raghav@samsung.com,
+ linux-fsdevel@vger.kernel.org, hch@lst.de, gost.dev@samsung.com,
+ cl@os.amperecomputing.com, john.g.garry@oracle.com
+References: <20240607145902.1137853-1-kernel@pankajraghav.com>
+ <20240607145902.1137853-4-kernel@pankajraghav.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20240607145902.1137853-4-kernel@pankajraghav.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[sent.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,kvack.org,vger.kernel.org,os.amperecomputing.com,sent.com,samsung.com,lst.de,oracle.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Score: -4.29
+X-Spam-Level: 
 
-In these functions, the 'cnt' variable is not used or does not require
-value checking, so these 'cnt' variables can be removed.
+On 6/7/24 16:58, Pankaj Raghav (Samsung) wrote:
+> From: Pankaj Raghav <p.raghav@samsung.com>
+> 
+> filemap_create_folio() and do_read_cache_folio() were always allocating
+> folio of order 0. __filemap_get_folio was trying to allocate higher
+> order folios when fgp_flags had higher order hint set but it will default
+> to order 0 folio if higher order memory allocation fails.
+> 
+> Supporting mapping_min_order implies that we guarantee each folio in the
+> page cache has at least an order of mapping_min_order. When adding new
+> folios to the page cache we must also ensure the index used is aligned to
+> the mapping_min_order as the page cache requires the index to be aligned
+> to the order of the folio.
+> 
+> Co-developed-by: Luis Chamberlain <mcgrof@kernel.org>
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> ---
+>   include/linux/pagemap.h | 20 ++++++++++++++++++++
+>   mm/filemap.c            | 26 ++++++++++++++++++--------
+>   2 files changed, 38 insertions(+), 8 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Signed-off-by: kunyu <kunyu@nfschina.com>
----
- arch/x86/net/bpf_jit_comp32.c | 27 ++-------------------------
- 1 file changed, 2 insertions(+), 25 deletions(-)
+Cheers,
 
-diff --git a/arch/x86/net/bpf_jit_comp32.c b/arch/x86/net/bpf_jit_comp32.c
-index de0f9e5f9f73..30f9b8a3faed 100644
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -207,7 +207,6 @@ static inline void emit_ia32_mov_i(const u8 dst, const u32 val, bool dstk,
- 				   u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 
- 	if (dstk) {
- 		if (val == 0) {
-@@ -235,7 +234,6 @@ static inline void emit_ia32_mov_r(const u8 dst, const u8 src, bool dstk,
- 				   bool sstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 sreg = sstk ? IA32_EAX : src;
- 
- 	if (sstk)
-@@ -286,7 +284,6 @@ static inline void emit_ia32_mul_r(const u8 dst, const u8 src, bool dstk,
- 				   bool sstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 sreg = sstk ? IA32_ECX : src;
- 
- 	if (sstk)
-@@ -319,7 +316,6 @@ static inline void emit_ia32_to_le_r64(const u8 dst[], s32 val,
- 					 const struct bpf_prog_aux *aux)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
- 
-@@ -367,7 +363,6 @@ static inline void emit_ia32_to_be_r64(const u8 dst[], s32 val,
- 				       const struct bpf_prog_aux *aux)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
- 
-@@ -436,7 +431,6 @@ static inline void emit_ia32_div_mod_r(const u8 op, const u8 dst, const u8 src,
- 				       bool dstk, bool sstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 
- 	if (sstk)
- 		/* mov ecx,dword ptr [ebp+off] */
-@@ -483,7 +477,6 @@ static inline void emit_ia32_shift_r(const u8 op, const u8 dst, const u8 src,
- 				     bool dstk, bool sstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg = dstk ? IA32_EAX : dst;
- 	u8 b2;
- 
-@@ -525,7 +518,6 @@ static inline void emit_ia32_alu_r(const bool is64, const bool hi, const u8 op,
- 				   bool sstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 sreg = sstk ? IA32_EAX : src;
- 	u8 dreg = dstk ? IA32_EDX : dst;
- 
-@@ -599,7 +591,6 @@ static inline void emit_ia32_alu_i(const bool is64, const bool hi, const u8 op,
- 				   u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg = dstk ? IA32_EAX : dst;
- 	u8 sreg = IA32_EDX;
- 
-@@ -698,7 +689,6 @@ static inline void emit_ia32_alu_i64(const bool is64, const u8 op,
- static inline void emit_ia32_neg64(const u8 dst[], bool dstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
- 
-@@ -732,7 +722,6 @@ static inline void emit_ia32_lsh_r64(const u8 dst[], const u8 src[],
- 				     bool dstk, bool sstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
- 
-@@ -785,7 +774,6 @@ static inline void emit_ia32_arsh_r64(const u8 dst[], const u8 src[],
- 				      bool dstk, bool sstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
- 
-@@ -838,7 +826,6 @@ static inline void emit_ia32_rsh_r64(const u8 dst[], const u8 src[], bool dstk,
- 				     bool sstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
- 
-@@ -891,7 +878,6 @@ static inline void emit_ia32_lsh_i64(const u8 dst[], const u32 val,
- 				     bool dstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
- 
-@@ -939,7 +925,6 @@ static inline void emit_ia32_rsh_i64(const u8 dst[], const u32 val,
- 				     bool dstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
- 
-@@ -988,7 +973,6 @@ static inline void emit_ia32_arsh_i64(const u8 dst[], const u32 val,
- 				      bool dstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u8 dreg_lo = dstk ? IA32_EAX : dst_lo;
- 	u8 dreg_hi = dstk ? IA32_EDX : dst_hi;
- 
-@@ -1036,7 +1020,6 @@ static inline void emit_ia32_mul_r64(const u8 dst[], const u8 src[], bool dstk,
- 				     bool sstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 
- 	if (dstk)
- 		/* mov eax,dword ptr [ebp+off] */
-@@ -1113,7 +1096,6 @@ static inline void emit_ia32_mul_i64(const u8 dst[], const u32 val,
- 				     bool dstk, u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	u32 hi;
- 
- 	hi = val & (1<<31) ? (u32)~0 : 0;
-@@ -1200,7 +1182,6 @@ struct jit_context {
- static void emit_prologue(u8 **pprog, u32 stack_depth)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 	const u8 *r1 = bpf2ia32[BPF_REG_1];
- 	const u8 fplo = bpf2ia32[BPF_REG_FP][0];
- 	const u8 fphi = bpf2ia32[BPF_REG_FP][1];
-@@ -1237,7 +1218,6 @@ static void emit_prologue(u8 **pprog, u32 stack_depth)
- 	EMIT3(0x89, add_2reg(0x40, IA32_EBP, IA32_EBX), STACK_VAR(tcc[0]));
- 	EMIT3(0x89, add_2reg(0x40, IA32_EBP, IA32_EBX), STACK_VAR(tcc[1]));
- 
--	BUILD_BUG_ON(cnt != PROLOGUE_SIZE);
- 	*pprog = prog;
- }
- 
-@@ -1246,7 +1226,6 @@ static void emit_epilogue(u8 **pprog, u32 stack_depth)
- {
- 	u8 *prog = *pprog;
- 	const u8 *r0 = bpf2ia32[BPF_REG_0];
--	int cnt = 0;
- 
- 	/* mov eax,dword ptr [ebp+off]*/
- 	EMIT3(0x8B, add_2reg(0x40, IA32_EBP, IA32_EAX), STACK_VAR(r0[0]));
-@@ -1391,7 +1370,6 @@ static void emit_bpf_tail_call(u8 **pprog, u8 *ip)
- static inline void emit_push_r64(const u8 src[], u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 
- 	/* mov ecx,dword ptr [ebp+off] */
- 	EMIT3(0x8B, add_2reg(0x40, IA32_EBP, IA32_ECX), STACK_VAR(src_hi));
-@@ -1409,7 +1387,6 @@ static inline void emit_push_r64(const u8 src[], u8 **pprog)
- static void emit_push_r32(const u8 src[], u8 **pprog)
- {
- 	u8 *prog = *pprog;
--	int cnt = 0;
- 
- 	/* mov ecx,dword ptr [ebp+off] */
- 	EMIT3(0x8B, add_2reg(0x40, IA32_EBP, IA32_ECX), STACK_VAR(src_lo));
-@@ -1570,7 +1547,7 @@ static int emit_kfunc_call(const struct bpf_prog *bpf_prog, u8 *end_addr,
- 			   const struct bpf_insn *insn, u8 **pprog)
- {
- 	const u8 arg_regs[] = { IA32_EAX, IA32_EDX, IA32_ECX };
--	int i, cnt = 0, first_stack_regno, last_stack_regno;
-+	int i, first_stack_regno, last_stack_regno;
- 	int free_arg_regs = ARRAY_SIZE(arg_regs);
- 	const struct btf_func_model *fm;
- 	int bytes_in_stack = 0;
-@@ -1663,7 +1640,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 	int insn_cnt = bpf_prog->len;
- 	bool seen_exit = false;
- 	u8 temp[BPF_MAX_INSN_SIZE + BPF_INSN_SAFETY];
--	int i, cnt = 0;
-+	int i;
- 	int proglen = 0;
- 	u8 *prog = temp;
- 
+Hannes
 -- 
-2.18.2
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
