@@ -1,161 +1,111 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FED17E470
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039B37FB
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718202385; cv=none; b=CzNYxwErYjCpNLvWcGHJ9bfbktSAOWdameaWWgtl+8+9xd74YOj/N4Rd+SeCbJamSORAKfr/B/oFOrtRZGQ2osRyPSxMVVZMQJ2Vrwqmq9yWfBI0ZWVWaCmTggde8aCjYph/5TXz48sv9SUXgVMP35A70ED7UXQuuRIultxtqZI=
+	t=1718202439; cv=none; b=K+lGM0ISciUtFyeACHB1wqsNuwZgrva5wEQQ+qD3AwxH+CEslW1gSwgegp2w3bK/3BkcHjMkbV96TC/FDPjVQt0I0Jk1MYKHGX32Rbbgqdtdt7SOZf4qufWbQTvAdW7s3QJ4BApxywNo5Mt4sxbVeTtkWBx2Auv2DH34AsmuBmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718202385; c=relaxed/simple;
-	bh=uNi2Aj5GB0qprr0RlLvPxqzHcZyuu+DlH1zEbI28b0s=;
+	s=arc-20240116; t=1718202439; c=relaxed/simple;
+	bh=WvrdNviMX5TzKJJ8L49b4Qix7SQh0JAWUMwXtKICv8s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DGgAr116QYLkH11JBr/Rukya3/EtEjTTzKuRo0ht9O6jIqJS/EKLHrLz+Io0BADy28MpV9AECwqtxo2/zG92tLlN+nPJ2Hnbg2JxptIPHssD7iZ2zcf3O3nIfialEqqKl8owx8VCz5eUKlnFtw88ZVlBKODCDzf43OaYPgoWkZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=zK6W22l4; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
+	 To:Cc:Content-Type; b=XA/GADIAC2zZvvqJnbAzlQCc+nZ76cThF/kYdmpyYOflHkzgoD/Mx+RlOot5uEwyDrKped8YiK4BpBRqyx/Ici2AcPC2ptMtRP/20bUjfseENJXsMZdxuuPBu783gJVzg21arPuc3jgwsgVFX5SZcdLv3MC7t2/1du3Ri0enFAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DTE6xpBb; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="zK6W22l4"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-627f3265898so74047167b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:26:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DTE6xpBb"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dfe41f7852cso946629276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:27:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1718202377; x=1718807177; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1718202436; x=1718807236; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uNi2Aj5GB0qprr0RlLvPxqzHcZyuu+DlH1zEbI28b0s=;
-        b=zK6W22l4Yl+ZEhgN7Bvo0YSNNAHaS30wFFj0bQni9yDpxgfXFCeub8mAoqgCgECvuo
-         Xra+umtXteC4pw6eOOsqHoQeew3zNy6G41YaU3Tz0afJNnxUo/NnKGyI4mv2O0wIEKQ+
-         DG/K/pKqQyVLjpvDFpC06YANmfdkAsIbZukydrDYckOnQgrvJ/ahDD3lCYaK0pkScNnS
-         KcwHiW2wXZ9/vUEkhKK5la4OEaPOwyXd/2uIqz4LzEd//9zX1OiTKGvqtIg0GNXbhYk4
-         6s2SZA15eRHXuxZjOxJjo2ggLn6uavzctosoXAnOlunxPaCcmbHX990Bpq6yd+h8X1Ht
-         84ZQ==
+        bh=h7Z/F2lTFqxBQr8f3YutkrSgp/gPqby12XW1md45flk=;
+        b=DTE6xpBbiJqy5Tk4viU4rvjDd5KhzmomcToUw3vUSDOT/7bNI665Yvmpc8fjTX3GUE
+         dq/VMr0FCbY6H0ey+U0/m38rugLNgzav983+Mk3D5gJ1LaXWJDTMyw6ofmSq3Mw4F58Y
+         xJlJesv5gE3Vbj28viNGr/ogALNftwSgXyFbQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718202377; x=1718807177;
+        d=1e100.net; s=20230601; t=1718202436; x=1718807236;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uNi2Aj5GB0qprr0RlLvPxqzHcZyuu+DlH1zEbI28b0s=;
-        b=Th8Q3UU5O+BFWw0GO1x02vX5P4/KX3s9jcjCdk8rz7ZXCREXore75PLTMVPeB7nh4v
-         /apistQNwVo69PTkaMrSQwIOvSfioCTplqnFumwNH7VlqF37ulfsgeLAqHwQ94fPQuQc
-         luzdMuLb+Du0M8RFa2sr/pdoBFnFWFLr4Xo/qCN9yq1fTiPnCHCqT1bcHIugyJ3iz/77
-         K/U5sTDpkqIeLjqBcRo+h4LJsVOpol2TyiwnpP+uQZL+9mDu1DFKYCTDg7+oxq7V//2O
-         Zeyiol3SQJPvy1aKefZip+oqEov9J0LFWydjkHpC2PNyNPkbTRRw/VNl9AmS1RzAksxc
-         Zuhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOJyd0Gwuxcn4/f7IezLrMEDmwMh6/1UvngPITqewZQO/qnkDPUB1sMn7KPWdTU67DKVM2XFgb4H6o/sZ1Gtl4sIEq4VDlG2lqJEsY
-X-Gm-Message-State: AOJu0YxWYr3zg1PKwKpEuroLg4SMn6OrEQuT7f/1T5crTIal8iSkt2cy
-	YSEubWk8ct1/oCdmAkxkyTVTPmiHGklcau4ORdkGuxZ08IfORttfw/EzNLKhJbL7xhL7wca/Bef
-	sWvI=
-X-Google-Smtp-Source: AGHT+IET9KivyoOw02SqbWX8+KoeFJ2956s16q2bJVtdbkuqsDxSa7zyXiLqji88CEabQ8vULgAGTg==
-X-Received: by 2002:a0d:ca01:0:b0:627:7e65:979 with SMTP id 00721157ae682-62fb902d6f8mr20373777b3.24.1718202377106;
-        Wed, 12 Jun 2024 07:26:17 -0700 (PDT)
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62da43d3528sm8138847b3.25.2024.06.12.07.26.16
+        bh=h7Z/F2lTFqxBQr8f3YutkrSgp/gPqby12XW1md45flk=;
+        b=vhVSuHcpwlRTmt0Ek55YW9cPqHC2PdXtEjO2Q8sxvnzkJbyLHj6M8Skly6iTl0Eoyv
+         A3s82OR15UHC33eV0m7/5s2n1ixDVuNzZ2VKWKKq71El4E9N8YEXKacItRro+8dJHBf6
+         b1fgH65vEfSBFTRzYYIKmbFxj3PwU5/jZgj03jFDmWR5UG9Mm9c8aCdYTN+I0ELuOOO0
+         g/qdhE8/Mk1LEmrRVcS7CiO0curD7t+5H8XmBhSkY6GfsRcDPOEDBIoI5Drxub5BOPTQ
+         dwIAKv8g+ZNXCuI+ps+HWbptC2ASebjLdx7xtLPemmEijYDHuutoI5qhe1L5+Nx5AGdc
+         AGeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuAG64U4aeEqh8HE37aE0D8HzqUTIjUlHGl5EPyzsBgxU9dZJY9nystvCfkr9ONkgyMOTY6PO3qa7PSzF17gq/Qdva3J6oePuMWVPs
+X-Gm-Message-State: AOJu0Yzv2Vaa5LoZbIcl4rhRMBcRwLJigyzpp1s1XDAWSeXpSQDiszi6
+	3QZ9lnNRt8DLFyEtqFTc1ah2klTOxp7lcOKqWQeLV8Yq77XNvFSdI28RE9ooYDAqtaYpmwDQm4E
+	=
+X-Google-Smtp-Source: AGHT+IHu0U25x9X1Pg/v8WLMtA+jnT0Qcgs9vOse5k6pZim/CJTqQsh796il9mqCR+X3DXzdESA02Q==
+X-Received: by 2002:a25:aa42:0:b0:dfe:fc2b:56a3 with SMTP id 3f1490d57ef6-dfefc2b5738mr480841276.56.1718202436573;
+        Wed, 12 Jun 2024 07:27:16 -0700 (PDT)
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com. [209.85.160.179])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4415df952d9sm3915061cf.88.2024.06.12.07.27.16
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 07:26:16 -0700 (PDT)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dfde5ae0aaeso1516001276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:26:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWjWDOPgapHScKDPYPlFUGAVgYdQRFWd/uxilgOOI8hnic+u72tYFD+ErxSoyUPeEMpXXsSBkMcGockpoMnnXJi0CYoul8NMyVRS308
-X-Received: by 2002:a25:aa70:0:b0:dfd:dfc3:2825 with SMTP id
- 3f1490d57ef6-dfe67065562mr2033623276.36.1718202375106; Wed, 12 Jun 2024
- 07:26:15 -0700 (PDT)
+        Wed, 12 Jun 2024 07:27:16 -0700 (PDT)
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4400cc0dad1so464451cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:27:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWjqkSUpMlreotRpZhQc1PQ1RaD605q0DpXERTHOWO4/xOpNfQH5nLiX8RxLGrE4J65hLe0AWYiKjtfN3H0f52Md07Or72LWC7q0uAx
+X-Received: by 2002:a05:622a:5a9a:b0:43e:295:f160 with SMTP id
+ d75a77b69052e-4415a39f97bmr3125261cf.24.1718202116182; Wed, 12 Jun 2024
+ 07:21:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240424063753.3740664-1-tomeu@tomeuvizoso.net>
- <97eadcba7cabe56f0f4b4d753bd3d53f8540ef4b.camel@pengutronix.de>
- <CAAObsKAQ=pWQ8MR1W7WwK1nVEeiCFNC3k+NZKsu4Fkts-_+zWg@mail.gmail.com> <CAPj87rO7zyDsqUWnkF0pZeNFnNK2UnAVJy4RmB3jmPkKQ+zbEw@mail.gmail.com>
-In-Reply-To: <CAPj87rO7zyDsqUWnkF0pZeNFnNK2UnAVJy4RmB3jmPkKQ+zbEw@mail.gmail.com>
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Date: Wed, 12 Jun 2024 16:26:02 +0200
-X-Gmail-Original-Message-ID: <CAAObsKBm3D_3ctFyK-rfpM-PU6ox1yoaMA1EES9yR-nRmU4rYw@mail.gmail.com>
-Message-ID: <CAAObsKBm3D_3ctFyK-rfpM-PU6ox1yoaMA1EES9yR-nRmU4rYw@mail.gmail.com>
-Subject: Re: [PATCH] drm/etnaviv: Create an accel device node if compute-only
-To: Daniel Stone <daniel@fooishbar.org>
-Cc: Lucas Stach <l.stach@pengutronix.de>, linux-kernel@vger.kernel.org, 
-	Oded Gabbay <ogabbay@kernel.org>, Russell King <linux+etnaviv@armlinux.org.uk>, 
-	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, Daniel Stone <daniels@collabora.com>
+References: <20240612133550.473279-1-tejasvipin76@gmail.com> <20240612133550.473279-3-tejasvipin76@gmail.com>
+In-Reply-To: <20240612133550.473279-3-tejasvipin76@gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 12 Jun 2024 07:21:40 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VTEzSyTHm-YBwneBgpohK8uu460DER-GcsQWu-z9hJsg@mail.gmail.com>
+Message-ID: <CAD=FV=VTEzSyTHm-YBwneBgpohK8uu460DER-GcsQWu-z9hJsg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/mipi-dsi: fix handling of ctx in mipi_dsi_msleep
+To: Tejas Vipin <tejasvipin76@gmail.com>, neil.armstrong@linaro.org
+Cc: quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com, 
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, 
+	linus.walleij@linaro.org, dmitry.baryshkov@linaro.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 20, 2024 at 1:19=E2=80=AFPM Daniel Stone <daniel@fooishbar.org>=
- wrote:
->
-> Hi,
->
-> On Mon, 20 May 2024 at 08:39, Tomeu Vizoso <tomeu@tomeuvizoso.net> wrote:
-> > On Fri, May 10, 2024 at 10:34=E2=80=AFAM Lucas Stach <l.stach@pengutron=
-ix.de> wrote:
-> > > Am Mittwoch, dem 24.04.2024 um 08:37 +0200 schrieb Tomeu Vizoso:
-> > > > If we expose a render node for NPUs without rendering capabilities,=
- the
-> > > > userspace stack will offer it to compositors and applications for
-> > > > rendering, which of course won't work.
-> > > >
-> > > > Userspace is probably right in not questioning whether a render nod=
-e
-> > > > might not be capable of supporting rendering, so change it in the k=
-ernel
-> > > > instead by exposing a /dev/accel node.
-> > > >
-> > > > Before we bring the device up we don't know whether it is capable o=
-f
-> > > > rendering or not (depends on the features of its blocks), so first =
-try
-> > > > to probe a rendering node, and if we find out that there is no rend=
-ering
-> > > > hardware, abort and retry with an accel node.
-> > >
-> > > On the other hand we already have precedence of compute only DRM
-> > > devices exposing a render node: there are AMD GPUs that don't expose =
-a
-> > > graphics queue and are thus not able to actually render graphics. Mes=
-a
-> > > already handles this in part via the PIPE_CAP_GRAPHICS and I think we
-> > > should simply extend this to not offer a EGL display on screens witho=
-ut
-> > > that capability.
-> >
-> > The problem with this is that the compositors I know don't loop over
-> > /dev/dri files, trying to create EGL screens and moving to the next
-> > one until they find one that works.
-> >
-> > They take the first render node (unless a specific one has been
-> > configured), and assumes it will be able to render with it.
-> >
-> > To me it seems as if userspace expects that /dev/dri/renderD* devices
-> > can be used for rendering and by breaking this assumption we would be
-> > breaking existing software.
->
-> Mm, it's sort of backwards from that. Compositors just take a
-> non-render DRM node for KMS, then ask GBM+EGL to instantiate a GPU
-> which can work with that. When run in headless mode, we don't take
-> render nodes directly, but instead just create an EGLDisplay or
-> VkPhysicalDevice and work backwards to a render node, rather than
-> selecting a render node and going from there.
->
-> So from that PoV I don't think it's really that harmful. The only
-> complication is in Mesa, where it would see an etnaviv/amdgpu/...
-> render node and potentially try to use it as a device. As long as Mesa
-> can correctly skip, there should be no userspace API implications.
->
-> That being said, I'm not entirely sure what the _benefit_ would be of
-> exposing a render node for a device which can't be used by any
-> 'traditional' DRM consumers, i.e. GL/Vulkan/winsys.
+Hi,
 
-What I don't understand yet from Lucas proposal is how this isn't
-going to break existing userspace.
+On Wed, Jun 12, 2024 at 6:37=E2=80=AFAM Tejas Vipin <tejasvipin76@gmail.com=
+> wrote:
+>
+> ctx would be better off treated as a pointer to account for most of its
+> usage so far, and brackets should be added to account for operator
+> precedence for correct evaluation.
+>
+> Fixes: f79d6d28d8fe7 ("drm/mipi-dsi: wrap more functions for streamline h=
+andling")
+> Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+> ---
+>  include/drm/drm_mipi_dsi.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I mean, even if we find a good way of having userspace skip
-non-rendering render nodes, what about existing userspace that isn't
-able to do that? Any updates to newer kernels are going to break them.
+Yeah. Looking closer at the history, it looks like it was always
+intended to be a pointer since the first users all used it as a
+pointer.
 
-Regards,
+Suggested-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-Tomeu
+I've also compile-tested all the panels currently using mipi_dsi_msleep().
+
+Neil: Given that this is a correctness thing, I'd rather see this land
+sooner rather than later. If you agree, maybe you can land these two
+patches whenever you're comfortable with them?
+
+
+-Doug
