@@ -1,50 +1,51 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1DC6F2F0
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB19716F265
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 11:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718192296; cv=none; b=vEbkUuNSsRuDhN5cC9yl3EPnpRwKDH66XGizRDB7wNu3RaUahujAPXivBjdpd/c97+72s61LWp/776uMWE3sG57/fpVsTcu3UIFlXCi+h8bjnuQLmuwQ1A1AHxcL60o2j6EvqE59rQl2e+RUco5SdqzQbRWPFBd62zQiQaw2Ea4=
+	t=1718192302; cv=none; b=AYvDd0jvMCIaEEznNt3Ch6GmJnHcEhnc29015B2Fjgwt0LOPsWpEXNCvohY4UKaFDW0WlzrOaxwnKOyQzrCBu9MqgyyOdKqm/Q7YfAk6GCQFDqAM0etTi1oVTO9xrXGLLuPNXwwrH5QV9rjEtZBZXIveadAITYI2So5m9priX0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718192296; c=relaxed/simple;
-	bh=10lsxUsANAnYetZLlu3kHdpg1HXTuYl2IsnIznvcsh8=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type; b=li9IhseUSg9QT7n6RcBeK86+tBLtDZPUCl6CYiCUGuqgKG7yxTtgqHv0uzgQb2jA4RiKxjaIDHKDf+drYLKeD6yVKZzweFlE/bNus/XvlAafQzlQuxic54cDyluB+afABwiY7VPBkqhGYy5jA+9nrAIRi/f0fascFHefwb8Esis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=BE+wMOC4; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1718192302; c=relaxed/simple;
+	bh=RO+EslzO1JL6niVXmcuYv7N1hmpWRO6V7vSCqsN84G0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type; b=AxRdHXeJizp4FsHxduCn43qKq7QU7IYzQr7FGIC6EBfi5j7n71MbFzye8T/9tGLSAOkn4I5q/OJXbgRaa53TtXSRlNvV8fScajZvEOFSbj/vAftDUyEk/3fVW0oo5SH7wiQWn334/GgYQde71MX/HXX8+V1aBkLJDN7EnGeJ6Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=WZk5B8ve; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BE+wMOC4"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2c2db1fc31fso733687a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 04:38:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WZk5B8ve"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c1baf8ff31so648690a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 04:38:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1718192294; x=1718797094; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=etbAZKNU9ONfjEO1BpDgencJ2m8Xkhn7JyX62hBwg/w=;
-        b=BE+wMOC4WPoe46UXmto7DjhEaJxX7c3SoYCVmlMJj6n6u0Nc00o4PE6cQXr9zjHOvD
-         9R8Tu7HtDDAw5tTOiXAG6tmY2Bro6EEcbHOiXWnBEoMEj9OdM9x/wWKbQ8ZseEqT+pmd
-         QJmszobeXtXJlAdrnLrTNVDZkZ808c2ZbbCeU=
+        d=broadcom.com; s=google; t=1718192300; x=1718797100; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ftj1rzvc6aUlmbvkU5HDTW6fYwWrfaPwDhqjbWwrJA8=;
+        b=WZk5B8ve/uNBwe/4n3INxCsL7l/wVYHjd2sHktzEL26Ri1ekw1EuI3NFh5bDxfFY8x
+         wqC5H4q2RJB/yD17Wy3OMwU5zfhqNRleTBNjph6lCLqeRxl86tRCOOicy6551zFUy9rV
+         HPl+wzde/CjDXLSuDAoVErVIV3yyGQccVx9B8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718192294; x=1718797094;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=etbAZKNU9ONfjEO1BpDgencJ2m8Xkhn7JyX62hBwg/w=;
-        b=BszGwU+YawETFU+IO56XUhq2RdsltATE2YgW6Psf6aRdcE7SlQyooNKvaf+FyW1iKP
-         IgWh+0Kjrf523N0advor+N1N+8WDgIlbU/92zzbjEr6IOaUuikUFodjnMBD3A7pl7mFO
-         ajX6kh6fQqhtc+Z2dwmNu9wLt6rs4DJkp6qcH2+8dJtEYAZSeVS9snOrHO10kzG1F/70
-         3GbjWn2qVKoAdPftaZtYVEUl41OH/qF3Tj5jeh7fdwRRr2gs3S4cGvIpIyU3pJzdo/8o
-         ZWwKLALZQi9324FYwm5Y8hFRlgrsPH18YOccv6YvltFTjeAqKSdvYltuLK6q4qc5vnc6
-         wJAg==
-X-Gm-Message-State: AOJu0YwgecFWjrJ8JgAbydhwbxpJaINL9vEsao6Xvp97LzwP1ifyRaWN
-	splO4/P3+VVhgw7E81x1cv4OuyY/rHVUjaPgsg5dpV4De6WVRt56p0lS8pWfzw==
-X-Google-Smtp-Source: AGHT+IGCjLijC2vL35AHringbNE/x3DQDliMKM9yus5e+RUnEYXjZTJplS+jKubqq4tiK0cpDKbGGg==
-X-Received: by 2002:a17:902:d4d2:b0:1f7:2b3:3331 with SMTP id d9443c01a7336-1f83b7e4fddmr16192245ad.4.1718192294014;
-        Wed, 12 Jun 2024 04:38:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718192300; x=1718797100;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ftj1rzvc6aUlmbvkU5HDTW6fYwWrfaPwDhqjbWwrJA8=;
+        b=tucwnsnoSXXL8QL4GwqzABEYnf4EaKDV5ZEvq5zPaQ0XbvFd+t4+w2Sq1ISb8ZzWUt
+         fpDObE3vQReQsnsOCzPxeIKPEockhM1H+7hDJVR/6ngo2cenyRLc9XepiUlsbnypatjB
+         pcbrSTJVjCDtRyOs3kDZEuAS6gdbfCiPYVulGQJBH/60lvLxGwRAVkx/Gcv1jMxDqdbJ
+         F59uBnnoftScfeM8NZN13PciRkgrjjT0DKIk7SY7PSRRrByc5v3CF+6OYAnSC/VTg/j2
+         9kXRZgG2XnmbsvukrSbk0EcYPrY+MUDRdjCeUUoUsoDw82En2LPpG94A757pL0T/YgRH
+         gK1Q==
+X-Gm-Message-State: AOJu0Yyqw83KvN14pLEDcOcV0bl2nlAtC4TE/CmKQ90F63jW2oIzp62e
+	QDQ+MVahHJeuXgWzdWqhnriKVjWm4TcWfe3mKRfS1cEMqthQTimpHU/Xucohfw==
+X-Google-Smtp-Source: AGHT+IEjaVszanpa6z6YEttWLZ90J+Gma8mpQUbnjH8hOYOBjk1f3iQxxx4ijVssFyXOzqK82vDI4A==
+X-Received: by 2002:a17:903:2285:b0:1f7:12c9:9426 with SMTP id d9443c01a7336-1f83b7e071dmr16950195ad.3.1718192300192;
+        Wed, 12 Jun 2024 04:38:20 -0700 (PDT)
 Received: from dhcp-135-24-192-142.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6fc06a5d2sm74392305ad.306.2024.06.12.04.38.10
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6fc06a5d2sm74392305ad.306.2024.06.12.04.38.17
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 12 Jun 2024 04:38:12 -0700 (PDT)
+        Wed, 12 Jun 2024 04:38:19 -0700 (PDT)
 From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
 To: linux-pci@vger.kernel.org,
 	bhelgaas@google.com
@@ -52,205 +53,99 @@ Cc: linux-kernel@vger.kernel.org,
 	sumanesh.samanta@broadcom.com,
 	sathya.prakash@broadcom.com,
 	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Subject: [PATCH 0/2] pci/switch_discovery: Add new module to discover inter-switch P2P links
-Date: Wed, 12 Jun 2024 04:27:34 -0700
-Message-Id: <1718191656-32714-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
+Subject: [PATCH 2/2] pci/p2pdma: Modify p2p_dma_distance to detect virtual P2P links
+Date: Wed, 12 Jun 2024 04:27:36 -0700
+Message-Id: <1718191656-32714-3-git-send-email-shivasharan.srikanteshwara@broadcom.com>
 X-Mailer: git-send-email 2.4.3
+In-Reply-To: <1718191656-32714-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
+References: <1718191656-32714-1-git-send-email-shivasharan.srikanteshwara@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000005f7dfd061aafd191"
+	boundary="000000000000bb9159061aafd150"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
---0000000000005f7dfd061aafd191
+--000000000000bb9159061aafd150
 
-A. Introductory definitions:
+Update the p2p_dma_distance() to determine virtual inter-switch P2P links
+existing between two switches and use this to calculate the DMA distance
+between two devices.
 
-Virtual Switch: Broadcom(PLX) switches have a capability where a
-single physical switch can be divided up into N number of virtual
-switches at SOD. For example, a single physical switch with 64 ports
-can be configured to appear to the host as 2 switches with 32 ports
-each. This is a static configuration that needs to be done before the
-switch boots, and cannot generally be changed on the fly. Now consider
-a GPU in Virtual switch 1 and a NIC on Virtual switch 2. The key here
-is that it's actually the same switch, and IF P2P is enabled between
-the two virtual switches, then that would be almost infinite bandwidth
-between the GPU and the NIC. However, today there is no way for the
-host to know that, and host applications believe that any data
-exchange between the GPU and NIC must go through host root port and
-thus would be slow. Note: Any such P2P must follow ACS/IOMMU rules,
-and has to be enabled in the Broadcom switches.
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+---
+ drivers/pci/Kconfig  |  1 +
+ drivers/pci/p2pdma.c | 18 +++++++++++++++++-
+ 2 files changed, 18 insertions(+), 1 deletion(-)
 
-Inter Switch Link: While the current use-case is about the virtual
-switch config above, this could also extend to physical switch, where
-the two physical switches have, say, a x16 PCIe connection between
-them.
-
-B: Goal/Problem statement:
-
-Goal 1: Summary: Provide user applications a means by which they can
-discover two virtual switches to be part of the same physical switch
-or when physical switches are physically connected to each other, so
-that they can discover optimized data path for HPC/AI applications.
-
-With the rapid progression of High Performance Computing (HPC) and
-Artificial Intelligence (AI), it is becoming more and more common to
-have complex topologies with multiple GPU, NIC, NVMe devices etc
-interconnected using multiple switches.   HPC and AI libraries like
-MPI, UCC, NCCL,RCCL, HCCL etc analyze this topology to build a
-topology tree to optimize data path for collective operations like
-all-reduce etc .
-
-Example:
-
-                             Host root bridge
-                ---------------------------------------
-                |                  |                  |
-  NIC1 --- PCI Switch1        PCI Switch2        PCI Switch3 --- NIC2
-                |                  |                  |
-               GPU1 ------------- GPU2 ------------- GPU3
-
-                               SERVER 1
-
-In the simple picture above in Server1, Switch1, Switch2, Switch3
-are all connected to the host bridge and each switch has a GPU
-connected, and Switch1/3 each has a NIC connected.
-In a typical AI setup, there are many such servers, each connected by
-upper level network switch, and "rail optimized", ie, NIC1 of all
-servers are connected to Ethernet Switch1, NIC2 connected to Ethernet
-Switch2 etc (Ethernet switches are not shown in picture above)
-The GPUs are connected among themselves by some backend fabric, like
-NVLINK (NVIDIA).
-Assume that in the above diagram, PCI Switch1  and PCI Switch3 are
-virtual switches belonging to the same physical switch and thus a very
-high speed data link exists between them, but today host applications
-have no knowledge about that.
-(This is a very simple example, and modern AI infrastructure can be
-way more complex than that.)
-
-Now for collective operations like all-reduce, the HPC/AI libraries
-analyze the topology above and typically decide on a data path like
-this: NIC1->GPU1->GPU2->GPU3-> NIC2 which is suboptimal, because
-ideally data should come go in and out through the same NIC because of
-"rail optimized" topology.
-Some libraries do this:NIC1->GPU1->GPU2->GPU3-> GPU1->NIC1.
-The applications do the above because they think data from GPU3 to
-NIC1  needs to go through the host root port, which is very
-inefficient. What they do not know is that Switch1 and Switch3 are the
-same physical entity with virtually infinite bandwidth between them,
-and with that, they would have chosen a path like:
-NIC1->GPU1->GPU2->GPU3->NIC1, which is the most optimized in the above
-example.
-
-Goal 2: Extend Linux P2PDMA distance function pci_p2pdma_distance to
-account for Virtual Switch and physical switches connected by inter
-switch link. The current implementation of the function has no
-knowledge of Virtual switch and inter switch link.
-Consider the example below:
-
-     -+  Root Port
-      \+ Switch1 Upstream Port
-         +-+ Switch1 Downstream Port 0
-          \- Device A
-      \+ Switch2 Upstream Port
-         +-+ Switch2 Downstream Port 0
-           \- Device B
-
-Suppose Switch1 and Switch2 are virtual switches belonging  to the
-same physical switch. Today P2PDMA distance between Device A and
-Device B  will return PCI_P2PDMA_MAP_THRU_HOST_BRIDGE, as kernel has
-no idea that switch1 and switch2 are actually physically connected to
-each other.
-We intend to fix that, so that pci_p2pdma_distance now takes into
-account switch connectivity information.
-
-C. FAQs
-
-FAQ 1:  How does this feature work with ACS/IOMMU?
-This feature does NOT add any new connectivity.  The inter-switch
-/virtual switch connections already follow all ACS/IOMMU rules, and
-only if allowed by ACS settings, they allow for data to follow a
-shortcut connection between switches and bypass the root port. The
-only thing this module does is provide the switch connection
-information to application software and pci_p2pdma_distance clients,
-so that they can make intelligent decisions for the data path.
-
-FAQ 2:  Is this feature Broadcom specific and will it work for other
-vendors?
-The current implementation of the kernel module looks at Broadcom
-Vendor specific extensions to determine if switch p2p is enabled.
-Thus, the current implementation works only on Broadcom switches. That
-being said, other vendors are free to extend/modify the code to
-support their switch. The function names, code structure and sysfs path
-that exposes the pci switch p2p is on purpose made generic, to allow for
-extension of support to other vendors.
-
-FAQ 3: Why can't applications read the Broadcom vendor specific
-information directly from the config space? Why do we need the sysfs
-path?
-The vendor specific section of PCIe config space is not readable by
-applications running in non-root mode, as such applications can only
-read the first few bytes of the config space. Besides, reading the
-vendor specific config space will not make the solution generic.
-
-FAQ 4: Will applications still use the standard P2P model of
-registering the provider, client etc?
-Absolutely. All existing p2p api will work as is. All that this module
-provides is information that a fast connection exists between switches
- and/or pci endpoints. To make the actual p2p DMA, application need
-use existing p2p API and follow existing ACS/IOMMU rules
-
-FAQ 5: Why can't we only modify the existing pci_p2pdma_distance
-function, and expose a p2pdistance to userspace? Why do we need the
-new sysfs entries for pci switch connectivity?
-The existing HPC/AI libraries like MPI, UCC, NCCL,RCCL, HCCL etc work
-not only with PCIe switches, but also with other kind of connectivity,
-like TCP, network switches, infiniband and backend inter GPU
-connectivity like NVLINK and AFL. Because of that, the libraries have
-matured code that analyzes all the connections and entire topology to
-determine the most optimal data path among nodes. Just using
-pci_p2pdma_distance does not work for them, because there might be a
-shorter path between two nodes using NVLINK or a network switch.  In
-theory those libraries could be modified to use pci_p2pdma_distance
-for PCIe connection and other method for other connection, but in
-practice that is near impossible, as those changes are very intrusive
-and those libraries have matured for a long time,. Their respective
-maintainers are highly reluctant to make such a big change and rather
-get only the missing information, that is whether two switches are
-connected together. Broadcom has received such first hand feedback.
-Forcing everyone to use p2pdistance only will defeat the whole purpose
-of this module. However, we do want to support those libraries that
-want to use pci_p2pdma_distance, and that is why we are extending
-pci_p2pdma_distance function too. Thus, our goal here is to enable
-existing libraries to get only the information they need, while having
-means for new code or more flexible code to use pci_p2pdma_distance as
-needed.
-
-Shivasharan S (2):
-  switch_discovery: Add new module to discover inter switch links
-    between PCI-to-PCI bridges
-  pci/p2pdma: Modify p2p_dma_distance to detect virtual P2P links
-
- .../driver-api/pci/switch_discovery.rst       |  52 +++
- MAINTAINERS                                   |  13 +
- drivers/pci/Kconfig                           |   1 +
- drivers/pci/p2pdma.c                          |  18 +-
- drivers/pci/switch/Kconfig                    |   9 +
- drivers/pci/switch/Makefile                   |   1 +
- drivers/pci/switch/switch_discovery.c         | 375 ++++++++++++++++++
- drivers/pci/switch/switch_discovery.h         |  44 ++
- 8 files changed, 512 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/driver-api/pci/switch_discovery.rst
- create mode 100644 drivers/pci/switch/switch_discovery.c
- create mode 100644 drivers/pci/switch/switch_discovery.h
-
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index d35001589d88..3e6226ec91fd 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -174,6 +174,7 @@ config PCI_P2PDMA
+ 	depends on 64BIT
+ 	select GENERIC_ALLOCATOR
+ 	select NEED_SG_DMA_FLAGS
++	select PCI_SW_DISCOVERY
+ 	help
+ 	  Enables drivers to do PCI peer-to-peer transactions to and from
+ 	  BARs that are exposed in other devices that are the part of
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 4f47a13cb500..780e649b3a1d 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -21,6 +21,8 @@
+ #include <linux/seq_buf.h>
+ #include <linux/xarray.h>
+ 
++extern bool sw_disc_check_virtual_link(struct pci_dev *a, struct pci_dev *b);
++
+ struct pci_p2pdma {
+ 	struct gen_pool *pool;
+ 	bool p2pmem_published;
+@@ -576,7 +578,7 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 		int *dist, bool verbose)
+ {
+ 	enum pci_p2pdma_map_type map_type = PCI_P2PDMA_MAP_THRU_HOST_BRIDGE;
+-	struct pci_dev *a = provider, *b = client, *bb;
++	struct pci_dev *a = provider, *b = client, *bb, *b_virtual_link = NULL;
+ 	bool acs_redirects = false;
+ 	struct pci_p2pdma *p2pdma;
+ 	struct seq_buf acs_list;
+@@ -606,6 +608,17 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 			if (a == bb)
+ 				goto check_b_path_acs;
+ 
++			// Physical Broadcom PEX switches can be provisioned into
++			// multiple virtual switches.
++			// if both upstream bridges belong to the same physical
++			// switch, and the switch supports P2P,
++			// p2p_dma_distance() should take into account of such
++			// scenarios.
++			if (sw_disc_check_virtual_link(a, bb)) {
++				b_virtual_link = bb;
++				goto check_b_path_acs;
++			}
++
+ 			bb = pci_upstream_bridge(bb);
+ 			dist_b++;
+ 		}
+@@ -629,6 +642,9 @@ calc_map_type_and_dist(struct pci_dev *provider, struct pci_dev *client,
+ 			acs_cnt++;
+ 		}
+ 
++		if (b_virtual_link && bb == b_virtual_link)
++			break;
++
+ 		bb = pci_upstream_bridge(bb);
+ 	}
+ 
 -- 
 2.43.0
 
 
---0000000000005f7dfd061aafd191
+--000000000000bb9159061aafd150
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -322,13 +217,13 @@ uwxVuxQ2ZLaLPPZF5H6t1UPCJRYZXbcjPQHXqFTijI0/1PIUtJy3gUmAsxZe+1n/rCqqCHE4rM+q
 Xm1kxB5u/2AMUovVed0IK1+1PFQLP47vY8PfDbSkU4UXH0YxggJtMIICaQIBATBrMFsxCzAJBgNV
 BAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdD
 QyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgxa/VOooH9UEc6Gh9UwDQYJYIZIAWUDBAIBBQCg
-gdQwLwYJKoZIhvcNAQkEMSIEIJZt8YoGCLOg1ZeIlPXCjNr0k33kmKgq5Mz7gnZGFivHMBgGCSqG
-SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDYxMjExMzgxNFowaQYJKoZI
+gdQwLwYJKoZIhvcNAQkEMSIEIOX7iw8VjpkiWq6Z1S+ccSRFUoOUrhiPxfgM2XD9qJzmMBgGCSqG
+SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDYxMjExMzgyMFowaQYJKoZI
 hvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG
 9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEF
-AASCAQDBIH9mkTOaF+32BoUgGwIjCf+Xf67oOMpeop9YmMPt+DPFQ0xh3Wgz9YdJAG6+oMMmnsih
-7tQR6PDpoWg3oTdut1+2MdgDvo1XnPR+1tvEWgi5Xf+n3Vwo737dRoJu47kuwhXlnrzSv0zkpf6O
-AXwTxj4nBgFd1unP0E+ixoEWV7BcxtyBkPhgwdCsEKhv8JqY/UHEtz+V5FjxX/MQxPP/dRj8L1mp
-6ZKgVM7NeCFUoQ9nUw7qzdiwNQFr7ChShhBXk2Z6nWPblFyavetxSRiFWdhXgfG0vgYzp3Ul2kl8
-MoFVTAf2lKoFwSvGkjDtB4obskP1YQlYmq/1sG2c64B/
---0000000000005f7dfd061aafd191--
+AASCAQBHSsrXCc/uVzKakYiUtxTLKAZnK0+Qig+prJ1BvmAWSlq/ghJwQiW2ieDKo62OWdbV1p3d
+55ZO6x/+3TdkOH2s6bu9/yEHklz9FmyulixbkErlDkJ8sNVCsr7RQGNXacFmehbniM+SiIA3Y7yT
+LSA8VuG71SwgpymwGXx5/B+uZZhhwzDc6uanTxxg0BCr96r1Ta7BEPriNiXhYh0BlPsjzTMTm3p1
+40gZwOxdikJHrvSJfk9SZn2QIsyW+EcmkSD4+qS5UfBDriw+K28virHLKEvSvY2TloD9cOVEBF/K
+W+jQT/HWRXzeaEO/bxF46KgLDGfSOvz+HpaBpnl1BLZ8
+--000000000000bb9159061aafd150--
