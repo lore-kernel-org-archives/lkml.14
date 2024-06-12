@@ -1,222 +1,137 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3692317F507
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FAD15444E;
+	Wed, 12 Jun 2024 15:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718205072; cv=none; b=BVlV7eln9dFHkB/GwV/92RGp8EueBfjGQjs9ZjooX6OHHLbRjsRVRILBu61bGTUWyKEewyndojS7RphbNqptpe9LGFNcn/Nyk6z2PikB/f/JpH8dOm7KojH+obIWiGaDO7wIL7hlRJ6eLBVY61xeXyuP1LEf+NrTJT3FrXERpEg=
+	t=1718205136; cv=none; b=kNRQY+avigFzvelUyFj/V3GJAyYGhEU+F+Q9/aznje9SeIL8eIOxhBBcvCn4R+9MoQtmkB1D4j9Lh1l6MzdRBP18JPusDoNqZfebfHEJHpzpjLQ6D/0Ze+upUEtP/cZ0J+/xaS5uJQcT8PS7mIeQjXF4s8pI+sMd1ps2hkvXkPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718205072; c=relaxed/simple;
-	bh=G0+hLd6oELx91zxUvRGFLWG7LPKQ6qmGL0/jI3fP+Vw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JLvMGNB9XCyiPhts/fbkNRKRymXq4vTRExpm31c2QtAGJ7JtGXA6bApuUkgtFcLIkiLGau8maN0K53nYbq+kKSzNDL5Swx7ID1gyFEAlLpvNZg9rF6Q9G7+Q5ReZdGC/habogwlu7Os7RTO5+w1H/LBpb+GKS6LOiNqSBi/PHbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=EZb/lZIH; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1718205136; c=relaxed/simple;
+	bh=WjhyEVrS4YOsT148Yx89pL+UkzPas9bEKkZhjJS5Oho=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kIzghlzF12PdQ41E0muJiE9yYbpNXwAQc051GDxHa8/1qq5ZBfvJopaLANWLbArl687rr+V5Iue6LiO0b7QHHW35NHEiJ1D5p9ieCldPMBqEHP43gNi0to43u5ei7BomTEe0nSBSm9IQ1M+HN2tLE4wZ22l1MwZ8CImVtNmmLCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U9xbURPo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="EZb/lZIH"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-42110872bf9so7232415e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1718205069; x=1718809869; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j3rEd/N79zsTx5bN2Ceul3LBY+GMeO3ZQ5xYcqq+Lx8=;
-        b=EZb/lZIHRdr9rDuV6Ufuh9HnxicTYLbfBGtSoLa4m9UPFnRBLqwekpMXWN7ziVgUL6
-         KN567xYdKn+9BJS3NyW9JrlyATO+gNWXNyC24xQcbzIYZwiZkIsdsLZ697K80/KSLcRr
-         bhEXiKDefUIM1h1NcnTw3KDSKvzxdTG6HK/zM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718205069; x=1718809869;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j3rEd/N79zsTx5bN2Ceul3LBY+GMeO3ZQ5xYcqq+Lx8=;
-        b=ZoYEQol3AR8PlgC27F7SKHLqtwq0IwrPT5JoztphUoPcduqjBBT7X0kl+KxNH5MYf7
-         r3kTIZrJVdOW3AV4gJBjIBV1zXgZMYh0M+sNH1g63fbKwb2AXd63iNjRKsT0JgJemAjZ
-         XdG28yTTNWbtw5AcjznfN8MzQpqC14eEh5hKnrgdQ1gKUNUeDxQ+Td9af3OxuXwojJWX
-         cKuODgJeQywmq2NLPaqRogPYAn6iXHn7wt6m7PsIUfdPmWcgRvnw//itAQ/Lr4Lym5/i
-         m/h2dIJg6mow80L1fx3n7NAIwFHPzrMMZ14tF5XxJmN5ylAFPfBHIz+e+zFxGLFgeSVL
-         l3ug==
-X-Forwarded-Encrypted: i=1; AJvYcCXsE2yfYdWgkP1JhLF5SkrFAqFHEUSb2u1WvckdSB0uGUwyjm5663D7IG7q5vJjwyzlU8eVTEvx93E2CeOt2oLudb3DrviEbSJreN2d
-X-Gm-Message-State: AOJu0YyktQb9iq2qDaYjxCZkmgDu1looa3/kHtlfbZci2s48ikKuxrj1
-	+HqmAeMdmkioHMz5WgLbwILofe2273M/KJr6TEQb9b7MbLXehV1YuR4w1TEkfYE=
-X-Google-Smtp-Source: AGHT+IGOokcQBaF0gtzavB63Lm/hzcbJyOl+IEUlftNYtxr6X9d0tMA3jKNn1cu9xWD4Kz5+Y3xExQ==
-X-Received: by 2002:a05:600c:1c85:b0:421:de31:76 with SMTP id 5b1f17b1804b1-422866bcc38mr14735365e9.3.1718205069428;
-        Wed, 12 Jun 2024 08:11:09 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286fe919bsm28783255e9.19.2024.06.12.08.11.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 08:11:09 -0700 (PDT)
-Date: Wed, 12 Jun 2024 17:11:07 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Doug Anderson <dianders@chromium.org>
-Cc: dri-devel@lists.freedesktop.org,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Yuran Pereira <yuran.pereira@hotmail.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	David Airlie <airlied@gmail.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH] drm/panel: Avoid warnings w/ panel-simple/panel-edp at
- shutdown
-Message-ID: <Zmm6i6iQOdP613w3@phenom.ffwll.local>
-Mail-Followup-To: Doug Anderson <dianders@chromium.org>,
-	dri-devel@lists.freedesktop.org,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Yuran Pereira <yuran.pereira@hotmail.com>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	David Airlie <airlied@gmail.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-kernel@vger.kernel.org
-References: <20240611074846.1.Ieb287c2c3ee3f6d3b0d5f49b29f746b93621749c@changeid>
- <ZmljNHteJ9L5EdE9@phenom.ffwll.local>
- <CAD=FV=V4C1AYVqG4gig+SiQr4n_mAPVASxneDDZT1a=7AY3Hzw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U9xbURPo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718205135; x=1749741135;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=WjhyEVrS4YOsT148Yx89pL+UkzPas9bEKkZhjJS5Oho=;
+  b=U9xbURPov/qbSTaDL2rVhzPlBZA1eEKoNe7JYU7QJAoHllyDOH8Ni/D1
+   D0AV/v8d4itHREp6ExyoIrt37Yg291TG6mPWCmrysitaLOXjSLkZsWwJf
+   e6YX9nTzv+1qSYTnwAfeliLx+jAkxIVzxrzLKDRMhCcanP3IUSHLUb+8u
+   OZX1Dk41J8pweO3SjM08znDaGmGpjLF3MI6w3HqxCwfMCENdQYa6hC1RJ
+   5vQssUnn8OQGiEXYeMZp9IgV/HekZkbhGc1D0OzGn0rdcIM06bA1/L+gu
+   gB1dvkx2TdnjDAt0lbfKyFx1g5UTxk2R+OXSXOkYEFZhFtSfLAE/Ar/+X
+   g==;
+X-CSE-ConnectionGUID: Ltfxjm6yRc+LAV03ZV4Scw==
+X-CSE-MsgGUID: /TS8zCxARyeE/2h67+oLvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="26394319"
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="26394319"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 08:12:14 -0700
+X-CSE-ConnectionGUID: kwDaRzc1TQiY9jarYnCxdg==
+X-CSE-MsgGUID: 5Rrxm+96Skqw7TKKe3UrOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
+   d="scan'208";a="40295494"
+Received: from sj-4150-psse-sw-opae-dev2.sj.intel.com ([10.233.115.162])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 08:12:14 -0700
+Date: Wed, 12 Jun 2024 08:12:05 -0700 (PDT)
+From: matthew.gerlach@linux.intel.com
+X-X-Sender: mgerlach@sj-4150-psse-sw-opae-dev2
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
+    krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+    joyce.ooi@intel.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] PCI: altera: support dt binding update
+In-Reply-To: <20240611170410.GA989554@bhelgaas>
+Message-ID: <alpine.DEB.2.22.394.2406120744350.662691@sj-4150-psse-sw-opae-dev2>
+References: <20240611170410.GA989554@bhelgaas>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=V4C1AYVqG4gig+SiQr4n_mAPVASxneDDZT1a=7AY3Hzw@mail.gmail.com>
-X-Operating-System: Linux phenom 6.8.9-amd64 
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, Jun 12, 2024 at 07:49:31AM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Wed, Jun 12, 2024 at 1:58 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > On Tue, Jun 11, 2024 at 07:48:51AM -0700, Douglas Anderson wrote:
-> > > At shutdown if you've got a _properly_ coded DRM modeset driver then
-> > > you'll get these two warnings at shutdown time:
-> > >
-> > >   Skipping disable of already disabled panel
-> > >   Skipping unprepare of already unprepared panel
-> > >
-> > > These warnings are ugly and sound concerning, but they're actually a
-> > > sign of a properly working system. That's not great.
-> > >
-> > > It's not easy to get rid of these warnings. Until we know that all DRM
-> > > modeset drivers used with panel-simple and panel-edp are properly
-> > > calling drm_atomic_helper_shutdown() or drm_helper_force_disable_all()
-> > > then the panel drivers _need_ to disable/unprepare themselves in order
-> > > to power off the panel cleanly. However, there are lots of DRM modeset
-> > > drivers used with panel-edp and panel-simple and it's hard to know
-> > > when we've got them all. Since the warning happens only on the drivers
-> > > that _are_ updated there's nothing to encourage broken DRM modeset
-> > > drivers to get fixed.
-> > >
-> > > In order to flip the warning to the proper place, we need to know
-> > > which modeset drivers are going to shutdown properly. Though ugly, do
-> > > this by creating a list of everyone that shuts down properly. This
-> > > allows us to generate a warning for the correct case and also lets us
-> > > get rid of the warning for drivers that are shutting down properly.
-> > >
-> > > Maintaining this list is ugly, but the idea is that it's only short
-> > > term. Once everyone is converted we can delete the list and call it
-> > > done. The list is ugly enough and adding to it is annoying enough that
-> > > people should push to make this happen.
-> > >
-> > > Implement this all in a shared "header" file included by the two panel
-> > > drivers that need it. This avoids us adding an new exports while still
-> > > allowing the panel drivers to be modules. The code waste should be
-> > > small and, as per above, the whole solution is temporary.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > > I came up with this idea to help us move forward since otherwise I
-> > > couldn't see how we were ever going to fix panel-simple and panel-edp
-> > > since they're used by so many DRM Modeset drivers. It's a bit ugly but
-> > > I don't hate it. What do others think?
-> >
-> > I think it's terrible :-)
-> 
-> Well, we're in agreement. It is terrible. However, in my opinion it's
-> still a reasonable way to move forward.
-> 
-> 
-> > Why does something like this now work?
-> >
-> > drm_panel_shutdown_fixup(panel)
-> > {
-> >         /* if you get warnings here, fix your main drm driver to call
-> >          * drm_atomic_helper_shutdown()
-> >          */
-> >         if (WARN_ON(panel->enabled))
-> >                 drm_panel_disable(panel);
-> >
-> >         if (WARN_ON(panel->prepared))
-> >                 drm_panel_unprepare(panel);
-> > }
-> >
-> > And then call that little helper in the relevant panel drivers? Also feel
-> > free to bikeshed the name and maybe put a more lengthly explainer into the
-> > kerneldoc for that ...
-> >
-> > Or am I completely missing the point here?
-> 
-> The problem is that the ordering is wrong, I think. Even if the OS was
-> calling driver shutdown functions in the perfect order (which I'm not
-> convinced about since panels aren't always child "struct device"s of
-> the DRM device), the OS should be calling panel shutdown _before_
-> shutting down the DRM device. That means that with your suggestion:
-> 
-> 1. Shutdown starts and panel is on.
-> 
-> 2. OS calls panel shutdown call, which prints warnings because panel
-> is still on.
-> 
-> 3. OS calls DRM driver shutdown call, which prints warnings because
-> someone else turned the panel off.
 
-Uh, that's a _much_ more fundamental issue.
 
-The fix for that is telling the driver core about this dependency with
-device_link_add. Unfortuantely, despite years of me trying to push for
-this, drm_bridge and drm_panel still don't automatically add these,
-because the situation is a really complex mess.
+On Tue, 11 Jun 2024, Bjorn Helgaas wrote:
 
-Probably need to read dri-devel archives for all the past attempts around
-device_link_add.
+> On Tue, Jun 11, 2024 at 11:35:25AM -0500, matthew.gerlach@linux.intel.com wrote:
+>> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>
+>> Add support for the device tree binding update. As part of
+>> converting the binding document from text to yaml, with schema
+>> validation, a device tree subnode was added to properly map
+>> legacy interrupts. Maintain backward compatibility with previous binding.
+>
+> If something was *added* to the binding, I think it would be helpful
+> to split that into two patches: (1) convert to YAML with zero
+> functional changes, (2) add the new stuff.  Adding something at the
+> same time as changing the format makes it hard to review.
 
-But the solution is definitely not to have a manually tracked list, what's
-very architectural unsound way to tackle this problem.
+Thanks for feedback. It was during the conversion to YAML that a problem 
+with the original binding was discovered. As Rob Herring pointed out in
+https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240513205913.313592-1-matthew.gerlach@linux.intel.com/
 
-> Certainly if I goofed and the above is wrong then let me know--I did
-> my experiments on this many months ago and didn't try repeating them
-> again now.
+"Making the PCI host the interrupt parent didn't even work in the kernel
+  until somewhat recently (maybe a few years now). That's why a bunch of PCI
+  hosts have an interrupt-controller child node."
 
-Oh the issue is very real and known since years. It also wreaks module
-unload and driver unbinding, since currently nothing makes sure your
-drm_panel lives longer than your drm_device.
+This was an attempt to fix the problem. I can resubmit a conversion to YAML 
+with zero functional changes.
 
-> In any case, the only way I could figure out around this was some sort
-> of list. As mentioned in the commit message, it's super ugly and
-> intended to be temporary. Once we solve all the current in-tree
-> drivers, I'd imagine that long term for new DRM drivers this kind of
-> thing would be discovered during bringup of new boards. Usually during
-> bringup of new boards EEs measure timing signals and complain if
-> they're not right. If some EE cared and said we weren't disabling the
-> panel correctly at shutdown time then we'd know there was a problem.
+Matthew Gerlach
 
-You've stepped into an entire hornets nest with this device dependency
-issue unfortunately, I'm afraid :-/
 
-Cheers, Sima
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+>
+> Then we could have a more specific subject and commit log for *this*
+> patch.
+>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> ---
+>>  drivers/pci/controller/pcie-altera.c | 13 +++++++++++--
+>>  1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+>> index a9536dc4bf96..88511fa2f078 100644
+>> --- a/drivers/pci/controller/pcie-altera.c
+>> +++ b/drivers/pci/controller/pcie-altera.c
+>> @@ -667,11 +667,20 @@ static void altera_pcie_isr(struct irq_desc *desc)
+>>  static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
+>>  {
+>>  	struct device *dev = &pcie->pdev->dev;
+>> -	struct device_node *node = dev->of_node;
+>> +	struct device_node *node, *child;
+>>
+>>  	/* Setup INTx */
+>> +	child = of_get_next_child(dev->of_node, NULL);
+>> +	if (child)
+>> +		node = child;
+>> +	else
+>> +		node = dev->of_node;
+>> +
+>>  	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+>> -					&intx_domain_ops, pcie);
+>> +						 &intx_domain_ops, pcie);
+>> +	if (child)
+>> +		of_node_put(child);
+>> +
+>>  	if (!pcie->irq_domain) {
+>>  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+>>  		return -ENOMEM;
+>> --
+>> 2.34.1
+>>
+>
