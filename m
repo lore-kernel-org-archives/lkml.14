@@ -1,119 +1,171 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D72616DEB9
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 09:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B6F16E877
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 09:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718184273; cv=none; b=HNQuPutJLmFfIGfS3S/ijke+0qf9C/UChtBKbwp24NWmjOREL8WOZqotmTCegARo7VJcKGBKrxdg+LwjfFkoK+mNKT5MJJJ0L7hUbm0TEaa2MvlaKM1gnf5uDBnPPRQ+TkhMhMuJTKDCFnp3AEeQbrT/zUT4+Vh0gZ0mYilypsU=
+	t=1718184278; cv=none; b=oRAJ/3mZr1f7UFMwixMN4SiCrIC/TI6A8prqJ+6FZHGi8tnWJzLu8KYpNE5LxjDFrrHQmoiuYhQmR1E06/QMje99oDX0D8UOIxy+c6xBEC9IfMnS79+iFANpddXGblUxzhZc1LxHTZ3iV6d8gpVRE1KhelI/6VWPIoFgkPGXEQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718184273; c=relaxed/simple;
-	bh=/YmAORbO3+x2lQ89cPlqc8Ys60h2WO17kQvYvC6EUd0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IDkU0/tRshpnaRMzsuEM7/toEmXxhOvSzbGSaTuuZBA0e2MB+4HOn4yUdCSQq1brv1uoV6m33HJn0y3wNS5yqvXFooQ6/1s99YOqkT6fPpB26av8PwuFglrOakmulE0TopXuYLF68DbCdLLq1EvZVfWeJu9E7QH5bzqcnAnE0JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JYeHG7YJ; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718184278; c=relaxed/simple;
+	bh=L1eYFsd2ZgDDc2zAssruJiNBzTzfkCoqlRXj8Y5zH0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m7bkfZ1v/tSbMP0BEUrLTUCHnv06817cvDiIUEe5AVkgBXBJR6O/qvJy4w/Ehyufm/zzli/5KBWbCDa9vjOZXrs0je1zsp6gZDLCMgp1jwUN2GNErS6G8c4a47IBC0mQX3BJHnn5jOiC7Ca+SDlqVauwZkX+Dz8UaYmS3GdkOLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=P/piD8iE; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JYeHG7YJ"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52bbdc237f0so2588598e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 02:24:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="P/piD8iE"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a6f1da33826so274484866b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 02:24:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718184270; x=1718789070; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DfH51kBtOmvN/SbHgLsWaCNr0Bu/Fg6um6oRQlR7oHY=;
-        b=JYeHG7YJjxA9XXiVI5+d7Dgip5bHXF+8A3Lt4FtmfAHSyltDKSkvOFmXmAAKBcUE4Y
-         EKUPCYAAEPPlnX6SRr0wAJKL7YVPeeQs2/Z2fCm6FEyug85WFBKC6a84OGoT9nLRxxoy
-         90IDi3G7tUSN3PgVXpAVQMOEEtM73HgE+qGkHxx2xRjHS4yfUSTamz8cCiPuOvQPxJSS
-         s0GqhLbZa4WD9B7PVBuSAPGsKuTJYHjrph74YuE/y9zdf7q4gcGcdpO7k3yYtXEsdA1z
-         HLTtxx11Y6S5OG3SwuYIDFYSoi3hazp2/rfzEk402EiOwb038bMPKMQSye+azsb2VUVN
-         0NmQ==
+        d=suse.com; s=google; t=1718184275; x=1718789075; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gDuh1x6nDx2yqhwN8jMaJp/Vu3DrJ767UoGOq8Ogv9s=;
+        b=P/piD8iEDYQboKIRa/lXleOQpWgVatrddvKLr5s2EdAx8lSZI5uBswfkcRYprcCGbQ
+         SUT0Ih18pUHZpKtSet01Wo/XU7Pm3r5M8/mru6XQ7L0L3YzvEfHryD0it3Z4Po+1U7Dl
+         QD9J20udmbSX67VtUB5t2W7V7B0EP9k+SBrCzT2HLhhzYJzGa/vK2fQl8LjfYX0r3hJs
+         +Zcivt3ZLRKwxZ65fBEGn2n8np1Eb4C9q1zP7tNKliNRsDE9mJv/jv0gzPR59RDjnEkD
+         TPW4iRNLH7ZAZHGaKZk9r5nWjt2hSYhxYprCGJjN/VSbKDoNYut2DpSYhxvwclyL88Ne
+         wrAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718184270; x=1718789070;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DfH51kBtOmvN/SbHgLsWaCNr0Bu/Fg6um6oRQlR7oHY=;
-        b=uXZUMEVokHi5Mjv6H8GfcFi5jXfNrrur9NzNBn7sBF+HFHfBj8r/vhfd+wP5lukcOn
-         ApfLwxLXS+6KImzEtFaKWKHV8WAgqQy0QiXthuBXkPifN83FJAlJdrfIjMnlL8wUszUF
-         txVNW5Uxl4efQvNcywZWINIwxXOCkUMchFgzV4kzkkiAH4LB2eD9WeSjuu/+v+FVgWmG
-         9mJyIEDWUrPpWlhEE31PKd3fsxLwkkfCC0IUo+y2bszZiFVNnxmhiI1S49mJvg5nAaNs
-         IEwoJ3OY8SgKzHA3+AP3Kd1YYgqt3rlQ+0D7SAe4hsKGpbH66zZgwUvZAPDd6d6XXF+T
-         SZqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKUxEMD2cPa3ogG2vOLAkQAuJMQzQWoCScJuYmc1u0gQ3eJ3lL070eSQT4bOtTSyuZubw8rLUUWI+wyaGL0+NPRsljY9PVSeJdz9GN
-X-Gm-Message-State: AOJu0YxHzw3vYFCbFplgkDeeRJq/F1gkfXU1/gr92jiah2lVA50xL59Z
-	ZZnq5zQhUWt6N0fAavX7IWK5SCuQVDFkzkMSL1enKl9SrYuYd4gD93DrbUAw/M0=
-X-Google-Smtp-Source: AGHT+IEF/QjW1JAYelI47//kT/YeUyUvmkw2ZBd8t575ZCaGqY/UKt62km1JBl3qUL4DuZNV4IphVA==
-X-Received: by 2002:ac2:4341:0:b0:52c:8a15:3c01 with SMTP id 2adb3069b0e04-52c9a3dfab4mr923248e87.40.1718184269730;
-        Wed, 12 Jun 2024 02:24:29 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52c82faf1b7sm1623806e87.130.2024.06.12.02.24.28
+        d=1e100.net; s=20230601; t=1718184275; x=1718789075;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gDuh1x6nDx2yqhwN8jMaJp/Vu3DrJ767UoGOq8Ogv9s=;
+        b=jfyAQG0R0kfO4/rpbEyOTeN5RhPbx8KSzwzvuIpbl3lt2jC/heiq8xCOoRDP6Z7HMw
+         vYDNdXbNtsAYdqM08OD0qiJ563pjy+VbGLpChD74BoOaJ1BTuJf4V3uB17uC68koyxJR
+         EtHvtpfnB2gbB5XRLxtfkgtl9wyxxxlqX0enZKQH80DiAfCh3hk4cZ0vaTXzTLRbm1eF
+         WEP4XHjgrr7gPbjDEE5E3Vs+ydDfSJgEsBkoYIfXJaulvJL1KcySabM4H/oDcwOAOzrJ
+         sYhlfY18P68eytXnLGKYlbtXYIrVlnBN/RlMH9p4GXWCw+VOTk4Qx29KIKCChf1nQ/cg
+         ErEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9VOBoocynepS/ii5zPounIZnGvmPaRXwo6IJZRnEGLc6fO6xKFKPhzs1MMDB4r1H3QUshxoWPYzq5xRsxUncmQYYD6XObuSkG1O83
+X-Gm-Message-State: AOJu0YyXGtcxIxBjVK2hWq7cUi7DWou7oYq2ai5r0vJ+mq5K/3Ad+R//
+	OwXzfAWiOLjyC7ExSsUFMamE3y/7Cqvh11CGS0aXGFMEPGBKWI3X1kFpiu0KnIU=
+X-Google-Smtp-Source: AGHT+IGywukrXVrgPfJuE6gJFMPhIIJp5jgER+XVrwFbw38D+FLyFqrjFx604EpzXCllNIp8efxJCA==
+X-Received: by 2002:a17:907:1186:b0:a6f:e93:f8f1 with SMTP id a640c23a62f3a-a6f47d4eee4mr103265366b.14.1718184274688;
+        Wed, 12 Jun 2024 02:24:34 -0700 (PDT)
+Received: from pathway.suse.cz (nat2.prg.suse.com. [195.250.132.146])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f1d8369casm389439466b.225.2024.06.12.02.24.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 02:24:29 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 3/3] arm64: dts: mediatek: mt8173-elm: drop PMIC's syscon node
-Date: Wed, 12 Jun 2024 11:24:21 +0200
-Message-ID: <20240612092421.52917-3-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240612092421.52917-1-krzysztof.kozlowski@linaro.org>
-References: <20240612092421.52917-1-krzysztof.kozlowski@linaro.org>
+        Wed, 12 Jun 2024 02:24:34 -0700 (PDT)
+Date: Wed, 12 Jun 2024 11:24:32 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH printk v2 04/18] printk: nbcon: Introduce printing
+ kthreads
+Message-ID: <ZmlpPucSy8Topb5h@pathway.suse.cz>
+References: <20240603232453.33992-1-john.ogness@linutronix.de>
+ <20240603232453.33992-5-john.ogness@linutronix.de>
+ <ZmMIOWEAMgXz4j-U@pathway.suse.cz>
+ <87ed95j8yh.fsf@jogness.linutronix.de>
+ <ZmhkVAC_3FMohrEr@pathway.suse.cz>
+ <87sexipmrk.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87sexipmrk.fsf@jogness.linutronix.de>
 
-According to AngeloGioacchino Del Regno, the syscon node in PMIC is
-neither needed nor used.  It looks like a solution to expose some of the
-registers of PMIC.
+On Wed 2024-06-12 10:57:11, John Ogness wrote:
+> On 2024-06-11, Petr Mladek <pmladek@suse.com> wrote:
+> >> --- a/kernel/printk/printk.c
+> >> +++ b/kernel/printk/printk.c
+> >> The thread failing to start is a serious issue. Particularly for
+> >> PREEMPT_RT.
+> >
+> > I agree.
+> >
+> >> Probably it should be something like:
+> >> 
+> >> 	if (WARN_ON(IS_ERR(kt))) {
+> >
+> > Might make sense.
+> 
+> I will add this for v2.
+> 
+> > Honestly, if the system is not able to start the kthread then
+> > it is probably useless anyway. I would prefer if printk keeps working
+> > so that people know what is going on ;-)
+> 
+> OK. For v2 I will change it to fallback to the legacy printing for those
+> consoles that do not have a kthread.
+> 
+> > After all, I would add two comments, like these:
+> >
+> > <proposal-2>
+> > 	/*
+> > 	 * Any access to the console device is serialized either by
+> > 	 * device_lock() or console context or both.
+> > 	 */
+> > 	kt = kthread_run(nbcon_kthread_func, con, "pr/%s%d", con->name,
+> > con->index);
+> > [...]
+> >
+> > 	/*
+> > 	 * Some users check con->kthread to decide whether to flush
+> > 	 * the messages directly using con->write_atomic(). But they
+> > 	 * do so only when the console is already in @console_list.
+> > 	 */
+> 
+> I do not understand how @console_list is related to racing between
+> non-thread and thread. kthreads are not only created during
+> registration. For example, they can be created much later when the last
+> boot console unregisters.
 
-Drop it to solve also incorrect number of entries in the "reg" property
-and fix dtbs_check warning:
+I had in mind two particular code paths:
 
-  mt8173-elm.dtb: syscon@c000: reg: [[0, 49152], [0, 264]] is too long
+  1. The check of con->kthread in nbcon_device_release() before
+     calling __nbcon_atomic_flush_pending_con().
 
-Link: https://lore.kernel.org/all/671a4b1e-3d95-438c-beae-d967e0ad1c77@collabora.com/
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+     But it is called only when __uart_port_using_nbcon() returns true.
+     And it would fail when nbcon_kthread_create() is called because
 
----
+		checks hlist_unhashed_lockless(&up->cons->node)
 
-Changes in v2:
-1. Drop the node as suggested.
----
- arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 6 ------
- 1 file changed, 6 deletions(-)
+     would fail. Which checks of the console is in @console_list
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-index 6d962d437e02..b4d85147b77b 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-@@ -1134,12 +1134,6 @@ mt6397_vibr_reg: ldo_vibr {
- 		rtc: mt6397rtc {
- 			compatible = "mediatek,mt6397-rtc";
- 		};
--
--		syscfg_pctl_pmic: syscon@c000 {
--			compatible = "mediatek,mt6397-pctl-pmic-syscfg",
--				     "syscon";
--			reg = <0 0x0000c000 0 0x0108>;
--		};
- 	};
- };
- 
--- 
-2.43.0
+
+  2. The following check in console_flush_all()
+
+			if ((flags & CON_NBCON) && con->kthread)
+				continue;
+
+     The result affects whether the legacy flush would call
+     nbcon_legacy_emit_next_record().
+
+     But this is called only for_each_console_srcu(con)
+     => it could not race with nbcon_kthread_create()
+	because this console is not in @console_list at this moment.
+
+By other words, I was curious whether some other code paths might
+call con->write_atomic() while the kthread is already running.
+
+It is not that important because it would be safe anyway.
+I was checking this before I realized that it would be safe.
+
+Anyway, the information about that the console is not in @console_list
+when we set con->kthread still looks useful. At minimum,
+the check would be racy if the console was on the list.
+
+Does it make any sense now?
+
+> I am OK with the first comment of this proposal. I do not understand the
+> second comment.
+
+Feel free to propose another comment. Or you could ignore the proposal
+if you think that it does more harm than good.
+
+Best Regards,
+Petr
 
