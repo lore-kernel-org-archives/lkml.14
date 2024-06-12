@@ -1,118 +1,136 @@
-Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8049516C852;
-	Wed, 12 Jun 2024 08:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BA816C86C;
+	Wed, 12 Jun 2024 08:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718180358; cv=none; b=pE8dQzKKWOS3iwhfat7BCAAnHxBoprNFi31trvwXC6XkXcJBRoM+lDUSOS++wTo3YwQR/MYD1fvs/l6mhyE7Ea/fnBGr7EeXx3kMTP59TYHilKk9s9wG3AXZURmRGK1mrBQ9q2DoZrDFiF7tS9UTAjAOksJTX7Vi9udmVnErmyY=
+	t=1718180436; cv=none; b=Kx9ZRdxaHZJA+pdk8Y1Uem/aRQhAtMX7mbZRWEp12W3AECaiKhh7TEcaJbwmUYQtGKjAgRmU7lEJ0GMuHdnaEySJUyYY+5ZauIuUht18usD12psufjqHJ9oKjBfLnI5CjkYIN9f0Vopl7lfg1O+tNpklmaov4LaR1DeBeX7rfHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718180358; c=relaxed/simple;
-	bh=y//vbwfgBmVOrV/PuTjRTGtOTJ16+anauhBJjxDnZS0=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=k9veehGSD4nLbnhZNvvSGkthC24uf+bHc9x8fOaLhs04YWSmoftP+05hFYrcF2Ss5qs+95mhN7lp0hyR4ngcjBZRx41g5cYQCH3qDCNFq0ozgrLw2D+ldDS9VYRolcWgITpsROPQcvdcIvCWRdlH75CqLF2XgYbz3WfOJ8Xce3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=cLtineVW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ep5NWYR1; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1718180436; c=relaxed/simple;
+	bh=nqkRr3hEqhXfpawRBXQoqriQ7Yorslv65k57UzVvhMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ndhDGwryhcP6JskcsjzQKqxB4UzN3KBnwZfiTLn2FMXyDLf+RSYzYGue5q7rRO1EEMu+v5AUp/vgUEFxkbA+geOPj3OuhAj39Gyp96w69eJ4TrdxoeBfemEwt6AHAiW2MDtgTkfnAEQ2aOWsU0I0JYppyX+sQYjlJ/6yg6UKc+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LninAheT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="cLtineVW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ep5NWYR1"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 8EFBB1380193;
-	Wed, 12 Jun 2024 04:19:14 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 12 Jun 2024 04:19:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1718180354; x=1718266754; bh=d8ymq7h+Su
-	pUPB1TveszzEzISILgzgA3jwE5Eb5tOo8=; b=cLtineVW9mr/pV8qARMG2jgqOS
-	+5XYZXEOoVSCYDVQdas5V5ZBdf2YV8Ae2k+/bfx5LJBmWNSlh+OD/PB6uaXZqZ1s
-	HqM7g8ErabNRspnQ5XaLsJJIMTk4qDzcn1fxXZc1rLMmGOzrBwv9sERSPA9oZVJd
-	dJYIq+G18nb+nZ6cb0+gVXzUAYWyTaM9q7r+mi093YKkcCSHyARHElKBGoAh6oG1
-	ARAWdmKtLhgi2qPFun7jQJSKdRWfISSeSFnk/dMQ5hBxkvnglD7Wk7lHbkllfccz
-	jm1CId6N41DKpfjjNLvyf64Bfh5zByI+lyffSQYm+vUAx3+SKp3MKRedsIdw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1718180354; x=1718266754; bh=d8ymq7h+SupUPB1TveszzEzISILg
-	zgA3jwE5Eb5tOo8=; b=Ep5NWYR1umrudPmeDMu5zJ40VHbQhuNrWLLvsC+AvDGa
-	Ck9he2H8ZwTc6/uvUGegKIv2tFoXhYR9e+TnP1ke5YFTfMJroMsqXBBpzqRlrBia
-	iFM/8hmBILSkGNuM1NI1x0TWb0MeZnagFm0w9+XzKck4c+V+Bik0oCNkDsiMQG2Z
-	N0h5j+Bqy0j1p2EC0pT5OP2MRr7dOh84/TvhpDyaM6zrote36lO4UFZIAbJiJa8M
-	1zPvdIf5yCKhMiuobjI/RW4mb45QndV2UKaFmeYbKcIR/c7O2dA1eyvdY3QCxbMo
-	cRGITwOdyhbL6XgPr77iZ6MU9r9zzezjADrlvQ4oTg==
-X-ME-Sender: <xms:AlppZgyhzFuOFYwRPkvpuRiZVMiS-XWloRkTwKptMs84lMwYsWPx2w>
-    <xme:AlppZkR21xV8qOeULUtzpTHFseQBiudMO_FFYipXMIq_UButUWe2g6weD_C0MR7d4
-    PCrFDq_UpeaehILs9s>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedugedgtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:AlppZiXLDtfOBZktVAvgWTF0ksGBBajqeywK6hU7pK4KVR_NpZtQzw>
-    <xmx:AlppZugoz3yNYqwEzCEGHKewNaDkoVoQ5PDYt7-4D4MYXPI3Mi2pEA>
-    <xmx:AlppZiCfGGV2Q67Gjfk5v1vObUSV_TRM2ODFvniUt5bHjHGuoH3_mQ>
-    <xmx:AlppZvIc2Rx6ZYp0hZvwZI9EhosZMfB1rLtQ6dyuTqbMl2X4fCH39w>
-    <xmx:AlppZq6qYlLxPN7FqNnVAsjF9zzvF184QZ0j8p5vaNoOR26uVR5RX2Xe>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 00598B6008D; Wed, 12 Jun 2024 04:19:13 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-515-g87b2bad5a-fm-20240604.001-g87b2bad5
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LninAheT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88FD2C3277B;
+	Wed, 12 Jun 2024 08:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718180436;
+	bh=nqkRr3hEqhXfpawRBXQoqriQ7Yorslv65k57UzVvhMU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LninAheT/igtgi3vHkFPND6tsxz+KJap4+LsnQLQqKJfSEAGbdKfNRrZfPkYGZsCQ
+	 eOoauin7ReKXi46V47zU/pkO03GoeBhl8VvbU5Qni1cpAIgOGKDcqzaml2fAY6oYFa
+	 WZ0eDzahLSSVyRCI998EnVMZuu99SvU6wkuju9z8=
+Date: Wed, 12 Jun 2024 10:20:33 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: linux-kernel@vger.kernel.org, Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Bingbu Cao <bingbu.cao@intel.com>,
+	Tianshu Qiu <tian.shu.qiu@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Chan <michael.chan@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	linux-media@vger.kernel.org, netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
+	sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 1/6] auxbus: make to_auxiliary_drv accept and return a
+ constant pointer
+Message-ID: <2024061212-excusable-dissuade-379b@gregkh>
+References: <20240611130103.3262749-7-gregkh@linuxfoundation.org>
+ <d2ffbc2d-0966-4210-a5d0-719c27d9adb1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <cfad60ae-3dee-4c03-84c0-734f1fa59ff2@app.fastmail.com>
-In-Reply-To: <ea604d75-e571-4d63-a7e2-aa1393588c75@collabora.com>
-References: <20240611-md-drivers-soc-v1-1-8f0fc9fff234@quicinc.com>
- <a314c676-3dbd-46f8-826a-2e59367d30ce@linaro.org>
- <ea604d75-e571-4d63-a7e2-aa1393588c75@collabora.com>
-Date: Wed, 12 Jun 2024 10:18:53 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- "Neil Armstrong" <neil.armstrong@linaro.org>,
- "Jeff Johnson" <quic_jjohnson@quicinc.com>,
- "Kevin Hilman" <khilman@baylibre.com>,
- "Jerome Brunet" <jbrunet@baylibre.com>,
- "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
- "Shawn Guo" <shawnguo@kernel.org>, "Sascha Hauer" <s.hauer@pengutronix.de>,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>,
- "Fabio Estevam" <festevam@gmail.com>, "Linus Walleij" <linusw@kernel.org>,
- "Imre Kaloz" <kaloz@openwrt.org>, "Matthias Brugger" <matthias.bgg@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-mediatek@lists.infradead.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] soc: add missing MODULE_DESCRIPTION() macros
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d2ffbc2d-0966-4210-a5d0-719c27d9adb1@intel.com>
 
-On Wed, Jun 12, 2024, at 10:12, AngeloGioacchino Del Regno wrote:
+On Tue, Jun 11, 2024 at 03:50:47PM +0200, Przemek Kitszel wrote:
+> On 6/11/24 15:01, Greg Kroah-Hartman wrote:
+> > In the quest to make struct device constant, start by making
+> 
+> just curious, how far it will go? eg. do you plan to convert
+> get/put_device() to accept const?
 
-> MediaTek:
-> Reviewed-by: AngeloGioacchino Del Regno 
-> <angelogioacchino.delregno@collabora.com>
->
-> ...but I'm not sure how we should apply this? :-)
->
-> Either Arnd takes it directly, or you split it per-soc... and I don't have any
-> preference anyway.
->
-> (P.S.: Added Arnd to the loop)
+Ugh, that should have said "in the quest to make struct device_driver
+const", not device.  devices obviously can't be constant everywhere as
+they are dynamically created.
 
-I think in this case it makes sense to keep it as a single
-patch, no need to clutter up the git log with identical
-one-line changes.
+> or convert devlink API to accept
+> consts?
 
-Jeff, can you send this to soc@kernel.org (cc:lakml)
-once you feel you have enough Acks? That will put it
-into my patchwork queue.
+Again, sorry, no, typo on my part.
 
-      Arnd
+> 
+> > to_auziliary_drv() return a constant pointer so that drivers that call
+> 
+> typo: s/auz/aux/
+
+I'll fix this typo up, and the one above, when I commit it.
+
+> 
+> > this can be fixed up before the driver core changes.
+> > 
+> > As the return type previously was not constant, also fix up all callers
+> > that were assuming that the pointer was not going to be a constant one
+> > in order to not break the build.
+> > 
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> 
+> [...]
+> 
+> > diff --git a/drivers/net/ethernet/intel/ice/ice_ptp.c b/drivers/net/ethernet/intel/ice/ice_ptp.c
+> > index 0f17fc1181d2..7341e7c4ef24 100644
+> > --- a/drivers/net/ethernet/intel/ice/ice_ptp.c
+> > +++ b/drivers/net/ethernet/intel/ice/ice_ptp.c
+> > @@ -2784,7 +2784,7 @@ static struct ice_pf *
+> >   ice_ptp_aux_dev_to_owner_pf(struct auxiliary_device *aux_dev)
+> >   {
+> >   	struct ice_ptp_port_owner *ports_owner;
+> > -	struct auxiliary_driver *aux_drv;
+> > +	const struct auxiliary_driver *aux_drv;
+> >   	struct ice_ptp *owner_ptp;
+> >   	if (!aux_dev->dev.driver)
+> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/dev.c b/drivers/net/ethernet/mellanox/mlx5/core/dev.c
+> > index 47e7c2639774..9a79674d27f1 100644
+> > --- a/drivers/net/ethernet/mellanox/mlx5/core/dev.c
+> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/dev.c
+> > @@ -349,7 +349,7 @@ int mlx5_attach_device(struct mlx5_core_dev *dev)
+> >   {
+> >   	struct mlx5_priv *priv = &dev->priv;
+> >   	struct auxiliary_device *adev;
+> > -	struct auxiliary_driver *adrv;
+> > +	const struct auxiliary_driver *adrv;
+> 
+> nit: in netdev we do maintain RCT order of initialization
+
+what does that mean?  Nothing is being initialized here.
+
+thanks,
+
+greg k-h
