@@ -1,250 +1,149 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E407172762;
-	Wed, 12 Jun 2024 12:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DC517083D;
+	Wed, 12 Jun 2024 12:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718196114; cv=none; b=mKse0H+WoSM/+rXppEYXbwu93YNEzAVTeD4/H22Sp7haYyIR32mXbJ2VyhUDAXLyHsUBdhBpkmIw1QEWgiH9MoSk2omlJwKeB1uA/Y66m0pZ5u4FYQQU1Ms2R/JGtfW5E3xIaHVlM7woIfqgkCP2FwsdLkVi5o5xN/a2obVALZE=
+	t=1718196125; cv=none; b=Xh8NHHj24nkcILBoQZmbd7qNHtU2a0c4VpZASCU4ivw1qnCeL1wNRz1VKo8XM5k0jNz1QF/yYRbuet2bJaMC66A/2o6MfckWwbukOq8KgVqXae56rBznnEHOX8p5CEHcMKpwAhNuvxt6F90zx/KrKhVs4F89HU9BWEXALNw6edU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718196114; c=relaxed/simple;
-	bh=nsOzgIGVh8i9darpIkpH96n/RS7dt193t1r9I4zBilo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a2Wt/N1WwWlqzfjzlRuKjRfUF72sglyw+bjSeG7xPC6W/Z8eX9Q5pewaPgUGIl+oiE6GoGyrMb1bLqYTecjW/ZjloXConDc4eAH61eWVnXrxJBoa5CNagrVBSzwT5TqZ2ZR1ViVJ5f3tHryxhoqDnsGsuadzEvMR1c6Cdv3FJxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ikAaxpqk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718196125; c=relaxed/simple;
+	bh=2eS5AS9BXmEOhaWNRS+1JFWwcMxQFs94YTD2RJKbNJI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hHHum1i3SlbTU4t3VucCRaRuacmjBcIACAaf5toDq9SxNga3CUSoTXIgZUHS1tr6bugS8vXbdkRSQN913t2NTzUOtb8D9e6q7OPwAPqwFA5DHkXa8QBjPFLdK/MIA+w1tzc6FR7rav6wc3TcxXvWu6TR+tjnjP6wZKG1Y5RcksM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GQz9aj/a; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ikAaxpqk"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C4YDQR001288;
-	Wed, 12 Jun 2024 12:41:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	uCeQX9o7rZqWhhhCkhaPUKfVMlLEvloOp0eyMQjfCFk=; b=ikAaxpqkoDIFhepi
-	7aF8GfZeOiACGKIfo6mWS3G9lNr3z5bvmvtGZPvyIH83jrSATGh1ZsNrQq+9z1Sb
-	0cMlfKBZxLsuJLsEedDj9xHAAcdllD+HqGiPPLR6gp2YNfNMwBhOL+ZptQr37aBb
-	iXRU6o/8meDKScgHU2ovRW9M5YaHma/ROkF0OIWo4GHMXRKVUt9GBKmD7NWXr17W
-	5qZwMsse03Qo1aGVjFcBnPCOyhrsYNqq/ceCZwqPFv6f2z5ACYokasIO8ez0YGHT
-	bRh4RUjT7fx2aFHsZF1ijMzopPcZ88aWIFiO1J+q0nTdHpCc6nlfisotsq9pbowy
-	lQ6Ekg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yq4s093k4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 12:41:46 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CCfjjJ016325
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 12:41:45 GMT
-Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 12 Jun 2024 05:41:40 -0700
-From: Sibi Sankar <quic_sibis@quicinc.com>
-To: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <jassisinghbrar@gmail.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <dmitry.baryshkov@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <quic_rgottimu@quicinc.com>,
-        <quic_kshivnan@quicinc.com>, <quic_sibis@quicinc.com>,
-        <conor+dt@kernel.org>, <quic_nkela@quicinc.com>,
-        <quic_psodagud@quicinc.com>, <abel.vesa@linaro.org>
-Subject: [PATCH V6 5/5] arm64: dts: qcom: x1e80100: Enable cpufreq
-Date: Wed, 12 Jun 2024 18:10:56 +0530
-Message-ID: <20240612124056.39230-6-quic_sibis@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240612124056.39230-1-quic_sibis@quicinc.com>
-References: <20240612124056.39230-1-quic_sibis@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQz9aj/a"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-579fa270e53so3590988a12.3;
+        Wed, 12 Jun 2024 05:42:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718196122; x=1718800922; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yaWg4m5Bnwvqv8YcEFmBCH4VJg0dR5I+06fePYSf13o=;
+        b=GQz9aj/afkHFwSE+qfS7yErjJNwZ3dqH/CVpt/uScG6PPvAgz3psfh5X2tfM5UkD5G
+         pMpPWb4kcN1dDIw255l8CNNR1iNb20Ou/aTXjxFlKJjea4rt4sRPTd48tVpb2pIQdVsk
+         egSJgonwMBzBSe+RAj8ktDDMAnZUX6wgTCDgUk9l5JImsmrZfoGJPvRalcv+DIRDMyG1
+         jHoGWc2jx+JMtMxwGYqkFjd7Ujxobl6Qm6TL4y4DdRtun8eeLFRsY4ShelDgqCSSi4TR
+         tXTHmgqHQaMZualXvuY3Ti8aYXSEiyxWOQsVRKMpKB2M/CxcQRtN8rviXz50ltPBGYXY
+         M+AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718196122; x=1718800922;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yaWg4m5Bnwvqv8YcEFmBCH4VJg0dR5I+06fePYSf13o=;
+        b=uxLgpnww9Z6SjezGbjaT+yZatl0H1B3lCSUR8B/aKoadM8Jg1Z0rIFlPulyVTqDljC
+         P1u/DzT/mC5uYObHJ/Ye6JSkoZbbcidIASIaIuS2AdyA7h7J3TxJAmvxF9XqsyzKgeBq
+         /VV60FJz4seiMdx6AFqnuN7EeN1ac9VUeXy20Ac1FQSuLXzior+pcFRkYYAwphfWNOV9
+         fnhXa9XrQERqjJ19nRaufGX54i3x4uHafi0xDv+9kMcFSNqsBTL4Z6vzC4PT3l5UGqPU
+         6VGlVk3gQe2fuFJHpMfrhCCHsLhICC6P+QWTkcNBD9kTU9ZlgDc88V5m4GGvJUKQ3icw
+         XWmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRw4D6jDupSDBmHBnjwU4OgVhTPFbbkBR/1gihrSjAWwNju7cu0GnMcvlqo2uIfSs8vIJeIliReb8QQXpc7j6mt/n60uqxDwl6oQSles3n2pv8Ww7fB9iRB7ed7lgTUNq48yvineZTG7zfknyp9eufNnXzfWV6lx6ggHYfkoi0folk
+X-Gm-Message-State: AOJu0Yw5N1xIXqrbq2WsvZRTRz7okxE2NWYjWA7+Qd+azetaf2XmQLn0
+	QwKZEwv1UQmf/UdCBcspOWRKccL/cMgd9S5BNS4/XTO+OyGzkCIS
+X-Google-Smtp-Source: AGHT+IEurYY9mBvYQqhqXDFmp4P8HwN0BoTp0cQDJ0TSoIEs17WlcQeFx3uNCZL+rbnmP83DTCb74A==
+X-Received: by 2002:a50:d7dd:0:b0:57c:74b1:bf51 with SMTP id 4fb4d7f45d1cf-57ca97626b3mr1524272a12.20.1718196122177;
+        Wed, 12 Jun 2024 05:42:02 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c9f32f079sm1869654a12.88.2024.06.12.05.42.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 05:42:01 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 12 Jun 2024 14:41:59 +0200
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: Jiri Olsa <olsajiri@gmail.com>, shuah@kernel.org, daniel@iogearbox.net,
+	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+	quentin@isovalent.com, alan.maguire@oracle.com, acme@kernel.org,
+	martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+	haoluo@google.com, mykolal@fb.com, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH bpf-next v4 03/12] bpf: selftests: Fix fentry test kfunc
+ prototypes
+Message-ID: <ZmmXl1NHgwOEXy4F@krava>
+References: <cover.1717881178.git.dxu@dxuuu.xyz>
+ <1f493cb7a7e5349f99e2badf0880b75dd6681898.1717881178.git.dxu@dxuuu.xyz>
+ <Zmb_hJQqxi44Nj5B@krava>
+ <gwrlw7wtc72vz3ky2pltvpoadtjlezv6kdrs6wf3ptsecyu2sh@aexbk4rotm3x>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fPSKKh4nApuCd9MDb9JfN-UMtPQFYlm-
-X-Proofpoint-ORIG-GUID: fPSKKh4nApuCd9MDb9JfN-UMtPQFYlm-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_06,2024-06-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- bulkscore=0 malwarescore=0 impostorscore=0 suspectscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 mlxlogscore=938
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120092
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <gwrlw7wtc72vz3ky2pltvpoadtjlezv6kdrs6wf3ptsecyu2sh@aexbk4rotm3x>
 
-Enable cpufreq on X1E80100 SoCs through the SCMI perf protocol node.
+On Tue, Jun 11, 2024 at 10:58:26AM -0600, Daniel Xu wrote:
+> On Mon, Jun 10, 2024 at 03:28:36PM GMT, Jiri Olsa wrote:
+> > On Sat, Jun 08, 2024 at 03:15:59PM -0600, Daniel Xu wrote:
+> > > The prototypes in progs/get_func_ip_test.c were not in line with how the
+> > > actual kfuncs are defined in net/bpf/test_run.c. This causes compilation
+> > > errors when kfunc prototypes are generated from BTF.
+> > > 
+> > > Fix by aligning with actual kfunc definitions.
+> > > 
+> > > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> > > ---
+> > >  .../testing/selftests/bpf/progs/get_func_ip_test.c | 14 +++++++-------
+> > >  1 file changed, 7 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/tools/testing/selftests/bpf/progs/get_func_ip_test.c b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
+> > > index 8956eb78a226..a89596f7585d 100644
+> > > --- a/tools/testing/selftests/bpf/progs/get_func_ip_test.c
+> > > +++ b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
+> > > @@ -5,13 +5,13 @@
+> > >  
+> > >  char _license[] SEC("license") = "GPL";
+> > >  
+> > > -extern const void bpf_fentry_test1 __ksym;
+> > > -extern const void bpf_fentry_test2 __ksym;
+> > > -extern const void bpf_fentry_test3 __ksym;
+> > > -extern const void bpf_fentry_test4 __ksym;
+> > > -extern const void bpf_modify_return_test __ksym;
+> > > -extern const void bpf_fentry_test6 __ksym;
+> > > -extern const void bpf_fentry_test7 __ksym;
+> > > +extern int bpf_fentry_test1(int a) __ksym;
+> > 
+> > hum, the only registered one as kfunc is bpf_fentry_test1, to allow fmodret
+> > also there's bpf_fentry_test9 as kfunc, which AFAICS is not really needed
+> 
+> I think bpf_modify_return_test() is also registered. But otherwise yeah,
+> I think I was overaggressive here. Are you thinking something like this?
 
-Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
----
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 63 ++++++++++++++++----------
- 1 file changed, 39 insertions(+), 24 deletions(-)
+yes, looks good
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index 7b619db07694..d134dc4c7425 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -69,8 +69,8 @@ CPU0: cpu@0 {
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
--			power-domains = <&CPU_PD0>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD0>, <&scmi_dvfs 0>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 
- 			L2_0: l2-cache {
-@@ -86,8 +86,8 @@ CPU1: cpu@100 {
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
--			power-domains = <&CPU_PD1>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD1>, <&scmi_dvfs 0>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -97,8 +97,8 @@ CPU2: cpu@200 {
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
--			power-domains = <&CPU_PD2>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD2>, <&scmi_dvfs 0>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -108,8 +108,8 @@ CPU3: cpu@300 {
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
--			power-domains = <&CPU_PD3>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD3>, <&scmi_dvfs 0>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -119,8 +119,8 @@ CPU4: cpu@10000 {
- 			reg = <0x0 0x10000>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_1>;
--			power-domains = <&CPU_PD4>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD4>, <&scmi_dvfs 1>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 
- 			L2_1: l2-cache {
-@@ -136,8 +136,8 @@ CPU5: cpu@10100 {
- 			reg = <0x0 0x10100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_1>;
--			power-domains = <&CPU_PD5>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD5>, <&scmi_dvfs 1>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -147,8 +147,8 @@ CPU6: cpu@10200 {
- 			reg = <0x0 0x10200>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_1>;
--			power-domains = <&CPU_PD6>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD6>, <&scmi_dvfs 1>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -158,8 +158,8 @@ CPU7: cpu@10300 {
- 			reg = <0x0 0x10300>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_1>;
--			power-domains = <&CPU_PD7>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD7>, <&scmi_dvfs 1>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -169,8 +169,8 @@ CPU8: cpu@20000 {
- 			reg = <0x0 0x20000>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_2>;
--			power-domains = <&CPU_PD8>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD8>, <&scmi_dvfs 2>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 
- 			L2_2: l2-cache {
-@@ -186,8 +186,8 @@ CPU9: cpu@20100 {
- 			reg = <0x0 0x20100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_2>;
--			power-domains = <&CPU_PD9>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD9>, <&scmi_dvfs 2>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -197,8 +197,8 @@ CPU10: cpu@20200 {
- 			reg = <0x0 0x20200>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_2>;
--			power-domains = <&CPU_PD10>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD10>, <&scmi_dvfs 2>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -208,8 +208,8 @@ CPU11: cpu@20300 {
- 			reg = <0x0 0x20300>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_2>;
--			power-domains = <&CPU_PD11>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD11>, <&scmi_dvfs 2>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -309,6 +309,21 @@ scm: scm {
- 			interconnects = <&aggre2_noc MASTER_CRYPTO QCOM_ICC_TAG_ALWAYS
- 					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
- 		};
-+
-+		scmi {
-+			compatible = "arm,scmi";
-+			mboxes = <&cpucp_mbox 0>, <&cpucp_mbox 2>;
-+			mbox-names = "tx", "rx";
-+			shmem = <&cpu_scp_lpri0>, <&cpu_scp_lpri1>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			scmi_dvfs: protocol@13 {
-+				reg = <0x13>;
-+				#power-domain-cells = <1>;
-+			};
-+		};
- 	};
- 
- 	clk_virt: interconnect-0 {
--- 
-2.34.1
+> 
+> 
+> diff --git a/tools/testing/selftests/bpf/progs/get_func_ip_test.c b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
+> index a89596f7585d..2011cacdeb18 100644
+> --- a/tools/testing/selftests/bpf/progs/get_func_ip_test.c
+> +++ b/tools/testing/selftests/bpf/progs/get_func_ip_test.c
+> @@ -6,12 +6,11 @@
+>  char _license[] SEC("license") = "GPL";
+> 
+>  extern int bpf_fentry_test1(int a) __ksym;
+> -extern int bpf_fentry_test2(int a, __u64 b) __ksym;
+> -extern int bpf_fentry_test3(char a, int b, __u64 c) __ksym;
+> -extern int bpf_fentry_test4(void *a, char b, int c, __u64 d) __ksym;
+>  extern int bpf_modify_return_test(int a, int *b) __ksym;
+> -extern int bpf_fentry_test6(__u64 a, void *b, short c, int d, void *e, __u64 f) __ksym;
+> -extern int bpf_fentry_test7(struct bpf_fentry_test_t *arg) __ksym;
 
+I did not realize bpf_fentry_test6/7 are not used.. ok
+
+thanks,
+jirka
+
+> +
+> +extern const void bpf_fentry_test2 __ksym;
+> +extern const void bpf_fentry_test3 __ksym;
+> +extern const void bpf_fentry_test4 __ksym;
+> 
+>  extern bool CONFIG_X86_KERNEL_IBT __kconfig __weak;
