@@ -1,136 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BA816C86C;
-	Wed, 12 Jun 2024 08:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8853216C852
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 08:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718180436; cv=none; b=Kx9ZRdxaHZJA+pdk8Y1Uem/aRQhAtMX7mbZRWEp12W3AECaiKhh7TEcaJbwmUYQtGKjAgRmU7lEJ0GMuHdnaEySJUyYY+5ZauIuUht18usD12psufjqHJ9oKjBfLnI5CjkYIN9f0Vopl7lfg1O+tNpklmaov4LaR1DeBeX7rfHU=
+	t=1718180436; cv=none; b=TUj5b3d7x84IgMfjMxGCp5rpVvv6fsDFyQ1CpfaaXQSDinXUYy+e3DjTgA4HRhrp1DQ/gCPgZ9kxNh73XNIDrUjY0YDwSpDa30oEbuwiUONsNVGJeWpQy8dSoNI7YIn2JOeZONkHYl01Pr5pTUG5H3wXU0j1J/JzeqwZipKOug8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718180436; c=relaxed/simple;
-	bh=nqkRr3hEqhXfpawRBXQoqriQ7Yorslv65k57UzVvhMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ndhDGwryhcP6JskcsjzQKqxB4UzN3KBnwZfiTLn2FMXyDLf+RSYzYGue5q7rRO1EEMu+v5AUp/vgUEFxkbA+geOPj3OuhAj39Gyp96w69eJ4TrdxoeBfemEwt6AHAiW2MDtgTkfnAEQ2aOWsU0I0JYppyX+sQYjlJ/6yg6UKc+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LninAheT; arc=none smtp.client-ip=10.30.226.201
+	bh=UjX30Q/chhMfu+tqaRL4g479FQ85eWt5DCCzNJXZE7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R1we8ppVzOkDLLWWpA09c5vFe8MSVsrsHz1WaFO6JGveXX/1aL8YFERpoWwyY17IYlYbkRozINj2B71kKx0zEnL5k8pJ0SRcv1DowPRWp77P6Hwe1Q0XhzQUpGC1YmbYrK45D2VLjM0eAlXKyjoGY+f5q4XmY1TixOvA3+iOrYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DlIdZTO8; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LninAheT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88FD2C3277B;
-	Wed, 12 Jun 2024 08:20:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718180436;
-	bh=nqkRr3hEqhXfpawRBXQoqriQ7Yorslv65k57UzVvhMU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LninAheT/igtgi3vHkFPND6tsxz+KJap4+LsnQLQqKJfSEAGbdKfNRrZfPkYGZsCQ
-	 eOoauin7ReKXi46V47zU/pkO03GoeBhl8VvbU5Qni1cpAIgOGKDcqzaml2fAY6oYFa
-	 WZ0eDzahLSSVyRCI998EnVMZuu99SvU6wkuju9z8=
-Date: Wed, 12 Jun 2024 10:20:33 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: linux-kernel@vger.kernel.org, Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Bingbu Cao <bingbu.cao@intel.com>,
-	Tianshu Qiu <tian.shu.qiu@intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Michael Chan <michael.chan@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	linux-media@vger.kernel.org, netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
-	sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 1/6] auxbus: make to_auxiliary_drv accept and return a
- constant pointer
-Message-ID: <2024061212-excusable-dissuade-379b@gregkh>
-References: <20240611130103.3262749-7-gregkh@linuxfoundation.org>
- <d2ffbc2d-0966-4210-a5d0-719c27d9adb1@intel.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DlIdZTO8"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-421820fc26dso27304545e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 01:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718180433; x=1718785233; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4fnQoWbKQPigJStkTW3OuZtA3AHbdJ+985auD2zJfsY=;
+        b=DlIdZTO8TEvDB+QrFcVD0LjJqFuJPpJjXu8QA5niT5sa/oK3V+R9ahBDxFv1P3wCzd
+         IGYUKeHFXElc/MPicFdRSpLfgnNUiA5qpf69mjhWiGKBqqSawjw6UuqzqhS/jynFbcrA
+         Y5qOuEtaaY193AoPLhv+6FGiasYxMA2xcCpFL+lxcJ09uHAvGh4Zh+GJNgrrvAjiBo0/
+         XO/id5tuR8KzN+YY+uuI5N2rJ4a153OJYxoMfSWI3S+zK8bocWkmoBmgFIeKwo+RwXH1
+         MMGpfPXfpc/y+6xQ8/sgbiMK6peckxDY4qpYDdKtPJZJkWibXoejGML6JlIH/pjS/f98
+         BvhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718180433; x=1718785233;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4fnQoWbKQPigJStkTW3OuZtA3AHbdJ+985auD2zJfsY=;
+        b=MflCpcKfuMxoJdLNNsfXiCVi3KviU2LtBXoJhC32nOdpoEu02OFv+wP2Rwriv582lT
+         zevjzWK/srUutU0vLdC3Ssy2pzS+Kmx7NbdqwmgG37/A5olVWUmfCkBBEgD67vpIoDxl
+         p11UB+bkpj3zNW9h5+M5TeQvQu6NLghu9q9eue8RwSB8pjR514mGEViyAoNhQp6hFKA1
+         AESDbBIgc0AembH499IfJTa4o6K/1wa4HHEZfWwHawgqK6L7/NAAmZP40CmTbDkS0GZx
+         S2QORqFsvfelUonHCnkgsB0jXuRlzQXc3OciMaB2eg1J7V+3brJ9aMpolMtl54/FjyAY
+         giaA==
+X-Gm-Message-State: AOJu0YxAIhdHpBUHVYC8GYtgM88YlnGdae1SZVlspKT8FV4+iizSknpM
+	iyIfTN+yh0Evt09Pu+5WUo/VzFIIirkgb8nz16qTlg6636JkwZ9DdHBPdRLyx0tDZlu/on1hSzF
+	J
+X-Google-Smtp-Source: AGHT+IHnWTN4AsV/rO/wXyzk0e+kJevmpUYIHPt+dsPykazjVLSo7vNtfO0z6ioqKTVg5mgovBNISA==
+X-Received: by 2002:a05:600c:458a:b0:421:b16c:5bf5 with SMTP id 5b1f17b1804b1-422862acb06mr10454575e9.2.1718180432772;
+        Wed, 12 Jun 2024 01:20:32 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:8d3:3800:a172:4e8b:453e:2f03])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4229207d1a7sm6011775e9.1.2024.06.12.01.20.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 01:20:32 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v9 0/5] PCI/pwrctl: initial implementation and first user
+Date: Wed, 12 Jun 2024 10:20:13 +0200
+Message-ID: <20240612082019.19161-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d2ffbc2d-0966-4210-a5d0-719c27d9adb1@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 11, 2024 at 03:50:47PM +0200, Przemek Kitszel wrote:
-> On 6/11/24 15:01, Greg Kroah-Hartman wrote:
-> > In the quest to make struct device constant, start by making
-> 
-> just curious, how far it will go? eg. do you plan to convert
-> get/put_device() to accept const?
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Ugh, that should have said "in the quest to make struct device_driver
-const", not device.  devices obviously can't be constant everywhere as
-they are dynamically created.
+I'm sending the PCI part separately to keep the history on the list.
+Bjorn acked all of them so I'll pick them up later today into the pwrseq
+tree.
 
-> or convert devlink API to accept
-> consts?
+Changelog:
 
-Again, sorry, no, typo on my part.
+Since v8:
+- split out the PCI patches into their own series
+- improved commit messages (added rationale for the PCI pwrctl and the
+  powrseq driver for QCOM QCAxyz, start with a capital letter)
+- pick up Acks from Bjorn
+- Link to v8: https://lore.kernel.org/r/20240528-pwrseq-v8-0-d354d52b763c@linaro.org
 
-> 
-> > to_auziliary_drv() return a constant pointer so that drivers that call
-> 
-> typo: s/auz/aux/
+Since v7:
+- added DTS changes for sm8650-hdk
+- added circular dependency detection for pwrseq units
+- fixed a KASAN reported use-after-free error in remove path
+- improve Kconfig descriptions
+- fix typos in bindings and Kconfig
+- fixed issues reported by smatch
+- fix the unbind path in PCI pwrctl
+- lots of minor improvements to the pwrseq core
 
-I'll fix this typo up, and the one above, when I commit it.
+Since v6:
+- kernel doc fixes
+- drop myself from the DT bindings maintainers list for ath12k
+- wait until the PCI bridge device is fully added before creating the
+  PCI pwrctl platform devices for its sub-nodes, otherwise we may see
+  sysfs and procfs attribute failures (due to duplication, we're
+  basically trying to probe the same device twice at the same time)
+- I kept the regulators for QCA6390's ath11k as required as they only
+  apply to this specific Qualcomm package
 
-> 
-> > this can be fixed up before the driver core changes.
-> > 
-> > As the return type previously was not constant, also fix up all callers
-> > that were assuming that the pointer was not going to be a constant one
-> > in order to not break the build.
-> > 
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> 
-> [...]
-> 
-> > diff --git a/drivers/net/ethernet/intel/ice/ice_ptp.c b/drivers/net/ethernet/intel/ice/ice_ptp.c
-> > index 0f17fc1181d2..7341e7c4ef24 100644
-> > --- a/drivers/net/ethernet/intel/ice/ice_ptp.c
-> > +++ b/drivers/net/ethernet/intel/ice/ice_ptp.c
-> > @@ -2784,7 +2784,7 @@ static struct ice_pf *
-> >   ice_ptp_aux_dev_to_owner_pf(struct auxiliary_device *aux_dev)
-> >   {
-> >   	struct ice_ptp_port_owner *ports_owner;
-> > -	struct auxiliary_driver *aux_drv;
-> > +	const struct auxiliary_driver *aux_drv;
-> >   	struct ice_ptp *owner_ptp;
-> >   	if (!aux_dev->dev.driver)
-> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/dev.c b/drivers/net/ethernet/mellanox/mlx5/core/dev.c
-> > index 47e7c2639774..9a79674d27f1 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx5/core/dev.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/dev.c
-> > @@ -349,7 +349,7 @@ int mlx5_attach_device(struct mlx5_core_dev *dev)
-> >   {
-> >   	struct mlx5_priv *priv = &dev->priv;
-> >   	struct auxiliary_device *adev;
-> > -	struct auxiliary_driver *adrv;
-> > +	const struct auxiliary_driver *adrv;
-> 
-> nit: in netdev we do maintain RCT order of initialization
+Since v5:
+- unify the approach to modelling the WCN WLAN/BT chips by always exposing
+  the PMU node on the device tree and making the WLAN and BT nodes become
+  consumers of its power outputs; this includes a major rework of the DT
+  sources, bindings and driver code; there's no more a separate PCI
+  pwrctl driver for WCN7850, instead its power-up sequence was moved
+  into the pwrseq driver common for all WCN chips
+- don't set load_uA from new regulator consumers
+- fix reported kerneldoc issues
+- drop voltage ranges for PMU outputs from DT
+- many minor tweaks and reworks
 
-what does that mean?  Nothing is being initialized here.
+v1: Original RFC:
 
-thanks,
+https://lore.kernel.org/lkml/20240104130123.37115-1-brgl@bgdev.pl/T/
 
-greg k-h
+v2: First real patch series (should have been PATCH v2) adding what I
+    referred to back then as PCI power sequencing:
+
+https://lore.kernel.org/linux-arm-kernel/2024021413-grumbling-unlivable-c145@gregkh/T/
+
+v3: RFC for the DT representation of the PMU supplying the WLAN and BT
+    modules inside the QCA6391 package (was largely separate from the
+    series but probably should have been called PATCH or RFC v3):
+
+https://lore.kernel.org/all/CAMRc=Mc+GNoi57eTQg71DXkQKjdaoAmCpB=h2ndEpGnmdhVV-Q@mail.gmail.com/T/
+
+v4: Second attempt at the full series with changed scope (introduction of
+    the pwrseq subsystem, should have been RFC v4)
+
+https://lore.kernel.org/lkml/20240201155532.49707-1-brgl@bgdev.pl/T/
+
+v5: Two different ways of handling QCA6390 and WCN7850:
+
+https://lore.kernel.org/lkml/20240216203215.40870-1-brgl@bgdev.pl/
+
+Bartosz Golaszewski (5):
+  PCI: Hold the rescan mutex when scanning for the first time
+  PCI/pwrctl: Reuse the OF node for power controlled devices
+  PCI/pwrctl: Create platform devices for child OF nodes of the port
+    node
+  PCI/pwrctl: Add PCI power control core code
+  PCI/pwrctl: Add a PCI power control driver for power sequenced devices
+
+ MAINTAINERS                            |   8 ++
+ drivers/pci/Kconfig                    |   1 +
+ drivers/pci/Makefile                   |   1 +
+ drivers/pci/bus.c                      |   9 ++
+ drivers/pci/of.c                       |  14 ++-
+ drivers/pci/probe.c                    |   2 +
+ drivers/pci/pwrctl/Kconfig             |  17 +++
+ drivers/pci/pwrctl/Makefile            |   6 ++
+ drivers/pci/pwrctl/core.c              | 137 +++++++++++++++++++++++++
+ drivers/pci/pwrctl/pci-pwrctl-pwrseq.c |  89 ++++++++++++++++
+ drivers/pci/remove.c                   |   3 +-
+ include/linux/pci-pwrctl.h             |  51 +++++++++
+ 12 files changed, 333 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/pci/pwrctl/Kconfig
+ create mode 100644 drivers/pci/pwrctl/Makefile
+ create mode 100644 drivers/pci/pwrctl/core.c
+ create mode 100644 drivers/pci/pwrctl/pci-pwrctl-pwrseq.c
+ create mode 100644 include/linux/pci-pwrctl.h
+
+-- 
+2.40.1
+
