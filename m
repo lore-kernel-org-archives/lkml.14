@@ -1,50 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D791DFC6;
-	Wed, 12 Jun 2024 14:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A083717F37A
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718203812; cv=none; b=jrD3kCMYf0S6sOy7lVh3fxVYGqMshJBsGW1KNAwMn8Z+Bb2GIAf7In2eBLcDzzqXUUHs0dVqTVD3FNLNPipOTzXf6tNDI98R7KHZmA/pQEMHL1Fx5RkVd2xthtab6rah207yWZSddtL3x4JWD1SbFneqlLyTuUE3ke09egFMC7c=
+	t=1718203911; cv=none; b=Oj/rAfGpdf1ptWB5rv5mKluhcDB2lrymBIh1U5wWSuDovQXEsc2tUYaXrlD0cifYuUhAuLMduj+o0SNFiFYgsFENUVneoVTR/UBjYm28uf9wcSCUfqftnkl79EGUaN8V+qVm7nIV0LknZmHtRYiCyeKMdYobHpF3ocq2h1tgEvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718203812; c=relaxed/simple;
-	bh=A3ALZuSC7JFA7FKUWJ7dtEFKaiBbbWF3EU24yn8PEOM=;
+	s=arc-20240116; t=1718203911; c=relaxed/simple;
+	bh=uQnPob09RXsb+k15cJ24zoa5K6h1QNmp6SDtPOiGCwY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l3EnbwRBWyUicWBoImu5Kf4AujSwNxEM98bvPUl3zhhLB3xa72i44MzMfa2tdpNWdGfWe1EEgbQm81JYDwGxCbk2OUj95/eF+s1xtTSCpmu9NzQS1SctRPqImEuruhkM+Zgr0NdRbGtWa9VlNu5/yr81ImOsQJRSJCaNaP18sPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ludUtzU7; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=d60844IFqQVc7PiFABz7vk9+RdYyWdhtva41YAaLggMZYhWLrTSvcMa75u452g6T9TiSFIpdQ3raMxVukOKkl/lx3Xe0O7xmamEkJkwsrU4Q/5KDkGZyoslhG9UY89bqYRezPV7gstGL/KcQgW6JIM4w+cdlH1LsD59T2ezo5pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fKK+eTCM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ludUtzU7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718203811; x=1749739811;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=A3ALZuSC7JFA7FKUWJ7dtEFKaiBbbWF3EU24yn8PEOM=;
-  b=ludUtzU7LmTO+kSNJthOdS/BQde4iLc2wy8s+ObKl4kOgNgWqkoZFsZb
-   c8rLZFYEsIbq1bWB9uhOCDG5VS6ZYxiNrXeuNZRwcNPkQbIVsmmN9Y2OO
-   DgyA4JrgZWWnGRq7oHfX0UC94v79AV1VAqR6vTlExzrcbgUaernowYvek
-   u8mfqetKQMso/YxM6OznL77FvO0rIHvhWmAAB/tnca2QDhoHq1UzLnpbK
-   WPlut+tjhu5j/xkc6pNGJQTlBnSID1MwB72n1l9NdRcdt95OPEwPsQXwN
-   9k1fWiOUwWhmU/Yd+kIK3sf3iYfIbm0zCOnkUpc7heNJPimpM5pgOc06t
-   g==;
-X-CSE-ConnectionGUID: wIze13QBTKmuKkcdNb4mOQ==
-X-CSE-MsgGUID: krqLjsqNQrWDuIXnA7J2mA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="25603908"
-X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
-   d="scan'208";a="25603908"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 07:50:09 -0700
-X-CSE-ConnectionGUID: sIB8IIaFR/u7dDoKj/j2Iw==
-X-CSE-MsgGUID: V8mahd+5QBSIdsk5KEyVLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,233,1712646000"; 
-   d="scan'208";a="39925635"
-Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.0.53]) ([10.94.0.53])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 07:50:04 -0700
-Message-ID: <80fefd6b-0f3a-4f6a-869e-fd2225315801@linux.intel.com>
-Date: Wed, 12 Jun 2024 16:50:01 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKK+eTCM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718203908;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zVmTidelMG1PiYfixcVkCNJNOeFZsMw+GcpMsMjUemA=;
+	b=fKK+eTCMktY8/OT/jreSyfik6twXjIWkeZwKMVUfy05lhV3Hd1vWgEGPwgFrltPVNFHdMx
+	iraHV64Wf9wCbmel3I+OcTqJ1zfZk/csYfSC6Qi2i3FBEwvGK7vZbIdUYNXbogb+OQMIWU
+	iFiIY59oBisK8hNGFGUVOu3aqy5SJfk=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-501-hpAR25ixM8ayzx1X-aL49g-1; Wed, 12 Jun 2024 10:51:46 -0400
+X-MC-Unique: hpAR25ixM8ayzx1X-aL49g-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a6f4af1c655so39791766b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:51:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718203905; x=1718808705;
+        h=content-transfer-encoding:in-reply-to:organization:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zVmTidelMG1PiYfixcVkCNJNOeFZsMw+GcpMsMjUemA=;
+        b=DoaBw6MlyOwhEq7+A25mAQ+p4IkvKVzURCS+XDjGmOLxPyikGmmq1LR93D96hMMldY
+         QjdeLqWQeGHqR1fAXxuwpNcgivBWozB7aY7WHmA2xVtC7LFPG+pKnwYfAAk7aLZHGjPp
+         sNUfzHZb3oUQHqD0TPQ38syzJdUucnXi1W8+aRCJNHfxWeDgs9xHPrPRxHn0RAxL/pE6
+         nllXiL6yBUqMHI6zMF1uAU9Cm5sBhQwHunzffaz2xmX1xnXb3psz29RND9E9pvG3DUpn
+         JrstW4D6oCCS4uZQb3vgWtypJAz90N6klUfNeD/uqVBGzg0JyBi8YY3PZZAsTGtRRJ8D
+         YykA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWWNfUBrY+9NCRzzesbe2VqAuHZbUYw/Wq9z3Hn+zLnGmiuGgvyWZWrFvQ0UTxFx08p7swXlkQIUpKRPHdGogDGBnXMChYOhJPn8pf
+X-Gm-Message-State: AOJu0YyfMZ/A2J+aA9AkkqhF1cD6VjaQPrjRwigepbJnDVr0K4pYdgyG
+	r0d4zmlxi5bmKhXM0n0lzPF5Y34J/R7QJDf1APj+WnDeyw8c/9v2DMkI2EPZF4txMo5OPotNJQ3
+	EKqwKBBsiXT3qeF/uUS6Q299g9A/c247Ewc5b1jC4424jUj/1dYYVTNImKzbrhQ==
+X-Received: by 2002:a17:907:7e87:b0:a6f:e36:abae with SMTP id a640c23a62f3a-a6f47ce6c8bmr168031266b.42.1718203905079;
+        Wed, 12 Jun 2024 07:51:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHbGf3kVGrfya669fPpWGOZYpQmZGTofto5bcgn7UtgXwLAm8zLWXejA536NlRPQkJg4vVVqg==
+X-Received: by 2002:a17:907:7e87:b0:a6f:e36:abae with SMTP id a640c23a62f3a-a6f47ce6c8bmr168029066b.42.1718203904649;
+        Wed, 12 Jun 2024 07:51:44 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:4b3f:ee94:abf:b8ff:feee:998b? ([2a02:810d:4b3f:ee94:abf:b8ff:feee:998b])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f102c4494sm539231766b.112.2024.06.12.07.51.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 07:51:44 -0700 (PDT)
+Message-ID: <d74edb73-1dba-43f4-a50c-36354c39d758@redhat.com>
+Date: Wed, 12 Jun 2024 16:51:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,61 +68,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v23 00/32] Introduce QC USB SND audio offloading support
+Subject: Re: [PATCH v2 1/2] rust: add abstraction for struct device
+To: Boqun Feng <boqun.feng@gmail.com>, Greg KH <gregkh@linuxfoundation.org>
+Cc: rafael@kernel.org, mcgrof@kernel.org, russell.h.weight@intel.com,
+ ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+ fujita.tomonori@gmail.com, pstanner@redhat.com, ajanulgu@redhat.com,
+ lyude@redhat.com, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240610180318.72152-1-dakr@redhat.com>
+ <20240610180318.72152-2-dakr@redhat.com> <ZmdID8AlXtoxUfC1@boqun-archlinux>
+ <ZmhPW9yq7y6jbmIg@pollux> <2024061136-unbridle-confirm-c653@gregkh>
+ <Zmh3oN9sWamaYHOD@Boquns-Mac-mini.home>
 Content-Language: en-US
-To: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
- mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
- corbet@lwn.net, broonie@kernel.org, lgirdwood@gmail.com, krzk+dt@kernel.org,
- Thinh.Nguyen@synopsys.com, bgoswami@quicinc.com, tiwai@suse.com,
- robh@kernel.org, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
- alsa-devel@alsa-project.org
-References: <20240610235808.22173-1-quic_wcheng@quicinc.com>
-From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>
-In-Reply-To: <20240610235808.22173-1-quic_wcheng@quicinc.com>
+From: Danilo Krummrich <dakr@redhat.com>
+Organization: RedHat
+In-Reply-To: <Zmh3oN9sWamaYHOD@Boquns-Mac-mini.home>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 6/11/2024 1:57 AM, Wesley Cheng wrote:
+On 6/11/24 18:13, Boqun Feng wrote:
+> On Tue, Jun 11, 2024 at 03:29:22PM +0200, Greg KH wrote:
+>> On Tue, Jun 11, 2024 at 03:21:31PM +0200, Danilo Krummrich wrote:
+>>> ...hence, I agree we should indeed add to the #Invariants and #Safety section
+>>> that `->release` must be callable  from any thread.
+>>>
+>>> However, this is just theory, do we actually have cases where `device::release`
+> 
+> @Danilo, right, it's only theorical, but it's good to call it out since
+> it's the requirement for a safe Rust abstraction.
 
-> Wesley Cheng (32):
->    ASoC: Add SOC USB APIs for adding an USB backend
->    ASoC: dt-bindings: qcom,q6dsp-lpass-ports: Add USB_RX port
->    ASoC: qcom: qdsp6: Introduce USB AFE port to q6dsp
->    ASoC: qdsp6: q6afe: Increase APR timeout
->    ASoC: qcom: qdsp6: Add USB backend ASoC driver for Q6
->    ALSA: usb-audio: Introduce USB SND platform op callbacks
->    ALSA: usb-audio: Export USB SND APIs for modules
->    ALSA: usb-audio: Save UAC sample size information
->    usb: dwc3: Specify maximum number of XHCI interrupters
->    usb: host: xhci-plat: Set XHCI max interrupters if property is present
->    ALSA: usb-audio: qcom: Add USB QMI definitions
->    ALSA: usb-audio: qcom: Introduce QC USB SND offloading support
->    ALSA: usb-audio: Check for support for requested audio format
->    ASoC: usb: Add PCM format check API for USB backend
->    ASoC: qcom: qdsp6: Ensure PCM format is supported by USB audio device
->    ALSA: usb-audio: Prevent starting of audio stream if in use
->    ALSA: usb-audio: Do not allow USB offload path if PCM device is in use
->    ASoC: dt-bindings: Update example for enabling USB offload on SM8250
->    ALSA: usb-audio: qcom: Populate PCM and USB chip information
->    ASoC: qcom: qdsp6: Add support to track available USB PCM devices
->    ASoC: Introduce SND kcontrols to select sound card and PCM device
->    ASoC: qcom: qdsp6: Add SOC USB offload select get/put callbacks
->    ASoC: Introduce SND kcontrols to track USB offloading state
->    ASoC: qcom: qdsp6: Add PCM ops to track current state
->    ASoC: usb: Create SOC USB SND jack kcontrol
->    ASoC: qcom: qdsp6: Add headphone jack for offload connection status
->    ASoC: usb: Fetch ASoC sound card information
->    ALSA: usb-audio: Add USB offloading capable kcontrol
->    ALSA: usb-audio: Allow for rediscovery of connected USB SND devices
->    ALSA: usb-audio: qcom: Use card and PCM index from QMI request
->    ASoC: usb: Rediscover USB SND devices on USB port add
->    ASoC: doc: Add documentation for SOC USB
+Similar to my previous reply, if we want to call this out as safety requirement
+in `Device::from_raw`, we probably want to add it to the documentation of the C
+`struct device`, such that we can argue that this is an invariant of C's
+`struct device`.
 
-I'm not sure how other reviewers feel about this, but is there any 
-chance to group patches in some logical order? It is bit hard to review 
-when I need to jump from generic ALSA to ASoC then QCOM code and then 
-there are dt-bindings mixed in between and back again.
+Otherwise we'd have to write something like:
+
+"It must also be ensured that the `->release` function of a `struct device` can
+be called from any non-atomic context. While not being officially documented this
+is guaranteed by the invariant of `struct device`."
+
+> 
+>>> is not allowed to be called from any thread? If so, this would be very confusing
+>>> for a reference counted type from a design point of view...
+>>
+>> What do you mean exactly "by any thread"?  Maybe not from interrupt
+> 
+> The `Send` trait here doesn't really differ between interrupt contexts
+> and process contexts, so "by any thread", it includes all the contexts.
+> However, we rely on klint[1] to detect context mismatch in compile time
+> (it's still a WIP though). For this case, we would need to mark the
+> `Device::dec_ref` function as might sleep.
+> 
+> Regards,
+> Boqun
+> 
+> [1]: https://rust-for-linux.com/klint
+> 
+>> context, but any other normal thread (i.e. that you can sleep in), it
+>> should be fine to call release() in.
+>>
+>> thanks,
+>>
+>> greg k-h
+> 
+
