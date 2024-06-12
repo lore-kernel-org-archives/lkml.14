@@ -1,78 +1,86 @@
-Received: from 2.mo560.mail-out.ovh.net (2.mo560.mail-out.ovh.net [188.165.53.149])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D586A93B
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 23:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.53.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4617FA93B;
+	Wed, 12 Jun 2024 23:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718233410; cv=none; b=jbUPLga+WY1s68q8fnnAR4MaKuCH+HQhSSzSf7g2df8HHTYSE65kxs7CCJ1wyy/f8NwODSa+ndN3MVufQISPuhzNI6pVbvrmJ+YpKnZMYW4L6u52boRG/bpBe8ZzbnAI7UBqQ+v1L6EvvGqUlPs4UdV+QM9y2/J6jpm2YYPGqHg=
+	t=1718233460; cv=none; b=O0Lp+3MhnHfS4pZvAgtd2RW+nnErWNDxRsLGjn0+UTJyHlOfMD65FT2fwnlQRhxfuIDx7prdW/Mv+/DodgX1QmWuDkAFwf1E4RIySenQIt+jqNJ4FPNpK0hKTYxXaj29JYYkf35QoP8MV7y/zaC0U9WoSRJWgA6NV44mf6kCJ0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718233410; c=relaxed/simple;
-	bh=KzwCtGoCwtsF3CfcweDKgrTOyhrnDMmW56Ale1QeMEI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=sn+pmoF7+H6DyolZ9JR5H9dJKO+JSIMLWAhA7kYAdqDF1nxvXSCdGxrFQm1DRnY5ansONsTNqjGTdgr8cuI4SwM9yrRWUJOqQK0U4x1mWMjRuPCXl0xIlejG+M9uCGesfZL7KA46RIEJjwU3v2Q07BPGWGFy63GueWckdQvGe28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=188.165.53.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
-Received: from director7.ghost.mail-out.ovh.net (unknown [10.108.25.16])
-	by mo560.mail-out.ovh.net (Postfix) with ESMTP id 4W017F56lCz1Twy
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 22:54:01 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-dxjts (unknown [10.110.113.129])
-	by director7.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 96F8D1FE88;
-	Wed, 12 Jun 2024 22:54:00 +0000 (UTC)
-Received: from etezian.org ([37.59.142.99])
-	by ghost-submission-6684bf9d7b-dxjts with ESMTPSA
-	id IPYkIQgnamaHBQAAd8G54g
-	(envelope-from <andi@etezian.org>); Wed, 12 Jun 2024 22:54:00 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-99G003b15965ea-e6ae-42f6-b281-ca76e21c9f69,
-                    DA170D98FC4D5E4E6D17746280F9905ED5007368) smtp.auth=andi@etezian.org
-X-OVh-ClientIp:89.217.109.169
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Jean Delvare <jdelvare@suse.com>, Rudolf Marek <r.marek@assembler.cz>, 
- Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <20240607-md-drivers-i2c-busses-v1-1-0340f4590199@quicinc.com>
-References: <20240607-md-drivers-i2c-busses-v1-1-0340f4590199@quicinc.com>
-Subject: Re: [PATCH] i2c: add missing MODULE_DESCRIPTION() macros
-Message-Id: <171823283902.404205.70695545508575687.b4-ty@kernel.org>
-Date: Thu, 13 Jun 2024 00:53:59 +0200
+	s=arc-20240116; t=1718233460; c=relaxed/simple;
+	bh=r4XcvG9Zjydzkd1AmkZAP2xPiok2w/W0tDdIGWsKLlE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIeR1GSy8Hdu2O2r9D2Qkh/7U02FoBliN9vHB8NdfTCpXVcWbPD3xDXIcj59XWqHJ3YOZF4wG5M6au2U7Sz7tZsIwjre9rENy8ytC+PzmNln1iQoCO7UgfkQnseVFajLZIMluhZDy7b/hf622ykfjKlK0dngkWPeCA4AmuDS6As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ajo5INMF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ajo5INMF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C77F8C116B1;
+	Wed, 12 Jun 2024 23:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718233459;
+	bh=r4XcvG9Zjydzkd1AmkZAP2xPiok2w/W0tDdIGWsKLlE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=ajo5INMFOIdUK8bTKJSOMTORqSBUVoTQMoTueScDlw6P7fEKN6L6KudGm8A/f9DV2
+	 vac6aDF6zFHvqVhLnecDeXpTWqKjsgyaGlyYA4jn+sYSI8iPlTZA780P5FZZ2QLokd
+	 TW2/efoa0ILfQDom5zYPZYttH0Zay//A6W3sEm47ScK9OEZvoBo/K4BvF3RIs/Le4w
+	 ckCQrAXr3PM4+Pd067rXKPEm+1PxdYqAXhlaQm4dv5OxvWFhB3hvQnXvNmk7dvAr7L
+	 /vanj8BKtPfnTrKefLFEyaIqF22+2EqJuMoTh97FTwq7ijzvQEu32ydoZbQcPLyXRl
+	 tC6o2QGNB+peQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 6C26FCE0DEA; Wed, 12 Jun 2024 16:04:19 -0700 (PDT)
+Date: Wed, 12 Jun 2024 16:04:19 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Jakub Kicinski <kuba@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>,
+	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	bridge@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kvm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org,
+	wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org,
+	ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+Message-ID: <fc3fb837-6f3c-4955-899d-1be002d17d70@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240609082726.32742-1-Julia.Lawall@inria.fr>
+ <20240612143305.451abf58@kernel.org>
+ <baee4d58-17b4-4918-8e45-4d8068a23e8c@paulmck-laptop>
+ <7e58e73d-4173-49fe-8f05-38a3699bc2c1@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
-X-Ovh-Tracer-Id: 2812779443686935184
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrfeduhedgudehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpeetnhguihcuufhhhihtihcuoegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpeffteehudffvdfhudfgffdugfejjeduheehgeefgeeuhfeiuefghffgueffvdfgfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdekledrvddujedruddtledrudeiledpfeejrdehledrudegvddrleelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheeitddpmhhouggvpehsmhhtphhouhht
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e58e73d-4173-49fe-8f05-38a3699bc2c1@kernel.dk>
 
-Hi
-
-On Fri, 07 Jun 2024 09:28:43 -0700, Jeff Johnson wrote:
-> make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ccgx-ucsi.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-ali1563.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-pxa.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/i2c/busses/i2c-qup.o
+On Wed, Jun 12, 2024 at 04:52:57PM -0600, Jens Axboe wrote:
+> On 6/12/24 4:37 PM, Paul E. McKenney wrote:
+> > [PATCH 09/14] block: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+> > 	I don't see a kmem_cache_destroy(), but then again, I also don't
+> > 	see the kmem_cache_create().  Unless someone can see what I am
+> > 	not seeing, let's wait.
 > 
-> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+> It's in that same file:
 > 
-> [...]
+> blk_ioc_init()
+> 
+> the cache itself never goes away, as the ioc code is not unloadable. So
+> I think the change there should be fine.
 
-Applied to i2c/i2c-host-next on
+Thank you, Jens!  (And to Jakub for motivating me to go look.)
 
-git://git.kernel.org/pub/scm/linux/kernel/git/local tree
+So to update the scorecared, 05/14, 09/14, 11/14 and 12/14 are OK and
+can go ahead.
 
-Thank you,
-Andi
-
-Patches applied
-===============
-[1/1] i2c: add missing MODULE_DESCRIPTION() macros
-      commit: 1131179f9f4d073bff70e9afe4179caa703c6af1
-
+							Thanx, Paul
