@@ -1,104 +1,185 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0951791F4
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 13:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9D0153BFA;
+	Wed, 12 Jun 2024 13:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718198536; cv=none; b=hAFoJQ31yBawAgahfYLJRlKiFn7xysQyfBnvndyyJ6oLMz3Wx1t40J/4lJpgMmiOiCnsKrxhRi0nSTaG+YIXU4qcY73P7dgKbhjrlhbsQkdn4bu3wo59qjelU+w7GnMYT8nSKAryv+/rOEXU1fOfVL2+aACJDShrdU+ihnaRYMk=
+	t=1718198591; cv=none; b=oYTjdZauACT8HMRayMgQgk8So39EZoNNO2hzRZh5CUATvjGlYdOugg/6Bh+/VgvL+8bMZtHL1M+DzI6NTWzkDU0IsIDpraJnhpFYV10g8KKJfyaehQ73BTOt+6HHJuuUwq59G5kbMarsSGRfPPRp1gRWXRTFAeTHisWwYTcGbfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718198536; c=relaxed/simple;
-	bh=RM/yyON+6lyB6Kj4FOxNNV+NuZ2jFCP1VoFpY0bDmWo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rHAVF3t2YHiSr4I63pZ/BUnzF3X1pyNRnJR/av9QJgcPEOpmgD0V/SC8IXMbVxMqS8x1okxpfgU9Uj/iMzl6M71zkGQoqt/hHDmijMsWfqPREBoTEiJvjpYpr4EXolsuTAX/W6d6uFnp8mOEPt9LOVPlTDs4tJka/k5iVuGQjfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JfE3Nu+l; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718198591; c=relaxed/simple;
+	bh=LU4Ex0c19yd2n5aDC24lwUC4E3uI/9CYV2LjGKS7R7Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nGcE8UMoV4VtLiMS+gxoni73Hs0LV84BqwqXbzwg4VBvCUz458kVmGPrKrhW/Zw2yCt9iEnXA42QjNnvE2SFEQ+wmuYjCFJmPyxJFomap6XnpB3S1NYSbTLVKwgfdcDPipyBVXv+ZpDc+9A112zEEWmqrbJdCiKQBBt6oJxRKbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=qG+md0Fp; arc=none smtp.client-ip=193.136.128.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JfE3Nu+l"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-62a08092c4dso24425697b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 06:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718198534; x=1718803334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qsoWuzn17VvjikVzQz6+Jyxo7R4j3K1aNLPcDUzQdZE=;
-        b=JfE3Nu+lmQGflisTTxgOBVHAJbnSfMDvQr63ehaSAYORVOR52uudhzIClbDtCANmx4
-         GYiJqVM4BFGMns809djxKdwe/uCR8iFx/tiR9hD/xyrJFhPEpYJYyi0OGF4Qo9ePE6sS
-         ZXimjFnq+J800ZP6lkvAOTHz7QbAQ3nZGqkaMb1J9oQrtcSPck7Rb9Nm2OyZiWxvh+rT
-         gMDSk6C6k6FWYiy+M8XYDPGr+nLJG0mKRNWSfkrhvoHEaDz3UErKiT96yhWnTJ4FvKdc
-         X0w9N7jApdNqrBSDw53srx3yJH9nonelAeJAt3UHm4wBTbDFAWs3M+RIIJ180LS4stKx
-         yRCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718198534; x=1718803334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qsoWuzn17VvjikVzQz6+Jyxo7R4j3K1aNLPcDUzQdZE=;
-        b=IFCxjybZw3LdQAATqdEMY44FzBlwrZ998h/0eYhKI6ykhd08gsFmN559NNaJog2cMG
-         HXtPpy0ujnF0/n2kC3ioT5GhFbab7CZd9+9jjzmj+gAYLLxTuAjcJTjqIDhBiXM3CbK9
-         aPDfhuOEjFFEqM5HvnhL7Jaqt9Y7Nuuju8CLvte3qk9m+yLgpONALgcxSsefo9CuLDsX
-         Iq5SIogjtkyUNvx2Wh3eHGxXsrAyuNLY9dNTVpd8F1xwOjsPVMoIIzLR0juTXllOaxTf
-         JpLQW2/iJc3U2ydNRlDw5GBs4AyQfU+W/r/r9V7S4oDbAisLaUZ8k9VLt3dd8AOHkGY5
-         9Y6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWoIFL4Jej5IR6WvUBy2G7aDUSy+BC4RB3RDKqB/8sAiuAeyeNbLikR6ALPeBYSEvFVJO2YYcUyGMSF1FodetYRpwGYhI3e2jy+V2y9
-X-Gm-Message-State: AOJu0YyvHqUIRfWk5k5sehDOA4en/HervWRVXwm3uyCEQY92Nl0DISeU
-	ts6snOViFdKlmTyX/qs70hrf9hQeErAJn+5/e/PuPudTsXlQRWCdGCmnhz07KmITpbwsP8FA+ci
-	cZAsVHe0rMzVWT1Zde1dTc/1O5GHl+elmGTie5A==
-X-Google-Smtp-Source: AGHT+IHOmiC+sARRKPnM20C1DGRPtMc6UmI9stZNJsOQF5EN19JWxDcLDuyjTBRVCwm3T5Vs6GZWTmySOdJ8QSidTZY=
-X-Received: by 2002:a0d:d841:0:b0:62c:e8a2:305 with SMTP id
- 00721157ae682-62fba375c1fmr16113497b3.41.1718198534271; Wed, 12 Jun 2024
- 06:22:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="qG+md0Fp"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 82C8E6000871;
+	Wed, 12 Jun 2024 14:13:27 +0100 (WEST)
+X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
+Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
+ by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
+ with LMTP id D5TUq_B7VFPf; Wed, 12 Jun 2024 14:13:25 +0100 (WEST)
+Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
+	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id 3CCD360022EC;
+	Wed, 12 Jun 2024 14:13:25 +0100 (WEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
+	s=mail; t=1718198005;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EndnLYNCiF0bEFLBj6ypoVHvLGji1T/luzXJeq0p5iE=;
+	b=qG+md0Fpy20B8uhbJptDViyIXNwDVgtTYVz+LFHvUlhRZnkexGMGA+76Br9V+eHITRMCKP
+	1zyzaPKB37gZEbM9cbgWeizndZFLFESPJiXBvriHnT2HfemtDAD54e/ovBCRhtUbvVSLJE
+	2iVzbkQUm36NsLvZ34CvihFT0pehI4g=
+Received: from [192.168.1.53] (unknown [IPv6:2a01:14:8073:1e10:c362:ff08:aa85:54c6])
+	(Authenticated sender: ist187313)
+	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id E0AEA36008D;
+	Wed, 12 Jun 2024 14:13:24 +0100 (WEST)
+From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+Date: Wed, 12 Jun 2024 14:13:10 +0100
+Subject: [PATCH] usb: typec: ucsi_acpi: Add LG Gram quirk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240522-fd-hdmi-hpd-v2-13-c30bdb7c5c7e@linaro.org> <deaa2a50-9e16-4f23-8c13-34947ba4e4e0@web.de>
-In-Reply-To: <deaa2a50-9e16-4f23-8c13-34947ba4e4e0@web.de>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 12 Jun 2024 16:22:03 +0300
-Message-ID: <CAA8EJppn_mVzmd==-bs8je8VjXrNrWu0hNXWAGuP+TP3DARReg@mail.gmail.com>
-Subject: Re: [PATCH v2 13/14] drm/msm/hdmi: ensure that HDMI is one if HPD is requested
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, Rob Clark <robdclark@gmail.com>, 
-	Sean Paul <sean@poorly.run>, LKML <linux-kernel@vger.kernel.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240612-gram_quirk-v1-1-52b0ff0e1546@tecnico.ulisboa.pt>
+X-B4-Tracking: v=1; b=H4sIAOWeaWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDM0Mj3fSixNz4wtLMomzdxGRDUwMjU/NkE0NTJaCGgqLUtMwKsGHRsbW
+ 1AMstTy9cAAAA
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1718198004; l=3786;
+ i=diogo.ivo@tecnico.ulisboa.pt; s=20240529; h=from:subject:message-id;
+ bh=LU4Ex0c19yd2n5aDC24lwUC4E3uI/9CYV2LjGKS7R7Q=;
+ b=/wMoBUlbLnYhsYGDdmkVrhiAKN1jd11Kcbxd6ww1WqLjHCITUpALS5Zf3rr7khf6My1ycL/qw
+ HblFxMpznxOCNg53rrzOd8zIC9VKAE+Pqsh9Y1xeOp7k45vNQJCtktU
+X-Developer-Key: i=diogo.ivo@tecnico.ulisboa.pt; a=ed25519;
+ pk=BRGXhMh1q5KDlZ9y2B8SodFFY8FGupal+NMtJPwRpUQ=
 
-On Wed, 12 Jun 2024 at 16:01, Markus Elfring <Markus.Elfring@web.de> wrote:
->
-> =E2=80=A6
-> > +++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-> > @@ -117,11 +117,13 @@ static void msm_hdmi_bridge_atomic_pre_enable(str=
-uct drm_bridge *bridge,
-> >
-> >       DBG("power up");
-> >
-> > +     mutex_lock(&hdmi->state_mutex);
-> >       if (!hdmi->power_on) {
-> =E2=80=A6
-> >       }
-> > +     mutex_unlock(&hdmi->state_mutex);
-> >
-> >       if (hdmi->hdmi_mode) {
-> >               msm_hdmi_config_avi_infoframe(hdmi);
-> =E2=80=A6
->
-> Would you become interested to apply a statement like =E2=80=9Cguard(mute=
-x)(&hdmi->state_mutex);=E2=80=9D?
-> https://elixir.bootlin.com/linux/v6.10-rc3/source/include/linux/mutex.h#L=
-196
+Some LG Gram laptops report a bogus connector change event after a
+GET_PDOS command for the partner's source PDOs, which disappears from
+the CCI after acknowledging the command. However, the subsequent
+GET_CONNECTOR_STATUS in ucsi_handle_connector_change() still reports
+this bogus change in bits 5 and 6, leading to the UCSI core re-checking
+the partner's source PDOs and thus to an infinite loop.
 
-I am not.
+Fix this by adding a quirk that signals when a potentially buggy GET_PDOS
+command is used, checks the status change report and clears it if it is a
+bogus event before sending it to the UCSI core.
 
+Signed-off-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+---
+The models affected by this bug have been reported to be of several forms:
+1xZ90Q, 1xZD90Q, 1xZB90Q, x = {5, 6, 7}, and as such this patch matches
+only on the final 90Q as well as the product family since the "90Q" string
+may collide with other LG models by being too short. If there are other
+better ways of achieving this match I would be happy to hear about them.
+---
+ drivers/usb/typec/ucsi/ucsi_acpi.c | 61 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
---=20
-With best wishes
-Dmitry
+diff --git a/drivers/usb/typec/ucsi/ucsi_acpi.c b/drivers/usb/typec/ucsi/ucsi_acpi.c
+index 8d112c3edae5..adf32ca0f761 100644
+--- a/drivers/usb/typec/ucsi/ucsi_acpi.c
++++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
+@@ -25,6 +25,7 @@ struct ucsi_acpi {
+ 	unsigned long flags;
+ #define UCSI_ACPI_COMMAND_PENDING	1
+ #define UCSI_ACPI_ACK_PENDING		2
++#define UCSI_ACPI_CHECK_BOGUS_EVENT	3
+ 	guid_t guid;
+ 	u64 cmd;
+ };
+@@ -128,6 +129,58 @@ static const struct ucsi_operations ucsi_zenbook_ops = {
+ 	.async_write = ucsi_acpi_async_write
+ };
+ 
++static int ucsi_gram_read(struct ucsi *ucsi, unsigned int offset,
++			  void *val, size_t val_len)
++{
++	u16 bogus_change = UCSI_CONSTAT_POWER_LEVEL_CHANGE |
++			   UCSI_CONSTAT_PDOS_CHANGE;
++	struct ucsi_acpi *ua = ucsi_get_drvdata(ucsi);
++	struct ucsi_connector_status *status;
++	int ret;
++
++	ret = ucsi_acpi_read(ucsi, offset, val, val_len);
++	if (ret < 0)
++		return ret;
++
++	if (UCSI_COMMAND(ua->cmd) == UCSI_GET_CONNECTOR_STATUS &&
++	    test_bit(UCSI_ACPI_CHECK_BOGUS_EVENT, &ua->flags) &&
++	    offset == UCSI_MESSAGE_IN) {
++		status = (struct ucsi_connector_status *)val;
++
++		/* Clear the bogus change */
++		if (status->change == bogus_change)
++			status->change = 0;
++
++		clear_bit(UCSI_ACPI_CHECK_BOGUS_EVENT, &ua->flags);
++	}
++
++	return ret;
++}
++
++static int ucsi_gram_sync_write(struct ucsi *ucsi, unsigned int offset,
++				const void *val, size_t val_len)
++{
++	struct ucsi_acpi *ua = ucsi_get_drvdata(ucsi);
++	int ret;
++
++	ret = ucsi_acpi_sync_write(ucsi, offset, val, val_len);
++	if (ret < 0)
++		return ret;
++
++	if (UCSI_COMMAND(ua->cmd) == UCSI_GET_PDOS &&
++	    ua->cmd & UCSI_GET_PDOS_PARTNER_PDO(1) &&
++	    ua->cmd & UCSI_GET_PDOS_SRC_PDOS)
++		set_bit(UCSI_ACPI_CHECK_BOGUS_EVENT, &ua->flags);
++
++	return ret;
++}
++
++static const struct ucsi_operations ucsi_gram_ops = {
++	.read = ucsi_gram_read,
++	.sync_write = ucsi_gram_sync_write,
++	.async_write = ucsi_acpi_async_write
++};
++
+ static const struct dmi_system_id ucsi_acpi_quirks[] = {
+ 	{
+ 		.matches = {
+@@ -136,6 +189,14 @@ static const struct dmi_system_id ucsi_acpi_quirks[] = {
+ 		},
+ 		.driver_data = (void *)&ucsi_zenbook_ops,
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LG Electronics"),
++			DMI_MATCH(DMI_PRODUCT_FAMILY, "LG gram PC"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "90Q"),
++		},
++		.driver_data = (void *)&ucsi_gram_ops,
++	},
+ 	{ }
+ };
+ 
+
+---
+base-commit: 5821bf2dffbe18fe1f097dbb027415fa15a38e9a
+change-id: 20240612-gram_quirk-ac150257c415
+
+Best regards,
+-- 
+Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+
