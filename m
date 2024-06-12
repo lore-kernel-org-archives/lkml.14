@@ -1,87 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F413209;
-	Wed, 12 Jun 2024 17:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54513209;
+	Wed, 12 Jun 2024 17:26:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718213142; cv=none; b=rQoSMCbXPFL7J3rp59mlM7Iv4UOZGOfBh53N1PWEorRwYcNIqZIex6my7FLz54UgeQwbDIiPSgjUybsqCIZIdbh8qTO9ENgHrdrpUQzEAoRbba0dgW8OYwJEQnBsRmCwJ9KaHBb8VX9KPlM82LGFKApo+7/i/XvZIit9E7ww79k=
+	t=1718213179; cv=none; b=oZaMeQtH1ObpckbJSkEmG1ylWMkrxFirB9CEa5Otk3ad12i20jLJkQj0rrgFIAnwcXBoIeMCIWpYVFEYulGusjdV5AWtP7+mNb5Q4HWyPvZFmlidNQ9C+bYZhSZpGz3r3hsXwwCxFzbJlOc1BGxsKP7jdqCBXsxXkJsbdYoGcbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718213142; c=relaxed/simple;
-	bh=OK6qbZ0vnNzVV/sfoCYgFy2+diPsXnMq6GJhiiEBkqA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fKD9x3QuHrjZqjZmnEku14enRo2k1ZyBo8410g9aE20viOZlFSlC7aovtM4pnlfSQhPbhp2jh2X2FtV40HevArIimezQw+2pe9lHSa20TPEYFYPYGR/CgfwzpvYWG+hHk25/bQq4OqHr+wJ+cb2erZxin1XVGyFmku8v0PX7I/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idsETjRo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718213179; c=relaxed/simple;
+	bh=8mAINEWgGiadV1kEJND+F9WvJE3WuJIALswoL9FapSI=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=sLFLsAUD3jkw6ri8Yt0YKT6vqVJJIR5M6zslCc9qmcwqPwPbkCIeaI+b31YjK1jZH/LRFa0qfoM2IuYIm8KPcD0KHTEp4V3wTeUT/kTV8CChdsAsIkV3MmJHUt6gDK4lr3bGs5WLpfLJuEZaiOUxgsoWxL9cVKtEJM+WNe51WEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LypDdc56; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idsETjRo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6D82C116B1;
-	Wed, 12 Jun 2024 17:25:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LypDdc56"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58848C116B1;
+	Wed, 12 Jun 2024 17:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718213142;
-	bh=OK6qbZ0vnNzVV/sfoCYgFy2+diPsXnMq6GJhiiEBkqA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=idsETjRovWK/GS7qYp0LF/BUjTYnBRhnBQk+GH8O/gBjiAFb0r1Prz7f93za8/Rfb
-	 8QRtIEyn0oUx6Rk8rOgwP3sYY6Cm7gfkJMihZmBX55RtTsc6sohzX8xO835Wim14lY
-	 RNIaTiC+Z7iKE3OVCrnrz9t3gjR6ifFds8vNH3R9Ruqalo/nk/MQeDRabSXDDlHiMa
-	 GVe1NA9vLejS+TXVm+yTxBPI+7K6cj2aJg4DPrUHsK6mSqLXzOnpuj/EUTPiyGj8XQ
-	 QzCXCaMJoQYiHc6N/K9VVJb6GD8s4Ft0bfqCwiW5AbzupPvGp3DlrprM5tguPe5nmh
-	 xMDgd9cRlCNPQ==
-From: Mark Brown <broonie@kernel.org>
-To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, 
- Jarkko Nikula <jarkko.nikula@bitmer.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, 
- linux-omap@vger.kernel.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Primoz Fiser <primoz.fiser@norik.com>
-Cc: upstream@lists.phytec.de
-In-Reply-To: <20240610125847.773394-1-primoz.fiser@norik.com>
-References: <20240610125847.773394-1-primoz.fiser@norik.com>
-Subject: Re: [PATCH v2] ASoC: ti: omap-hdmi: Fix too long driver name
-Message-Id: <171821313984.235346.8948491995982488309.b4-ty@kernel.org>
-Date: Wed, 12 Jun 2024 18:25:39 +0100
+	s=k20201202; t=1718213179;
+	bh=8mAINEWgGiadV1kEJND+F9WvJE3WuJIALswoL9FapSI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=LypDdc56kiZi2JjvRRlVxTTMRS9WLepzejGCDmQSSqGvE8U5TsAtu5H7PCR7GWD2R
+	 +V0vb9dzRZdgXA/g8wDH85Ykf4fzHukdkp1eeNKP+zPvnocP0m15T1hyy8vIZjm+sI
+	 hZWYo5G91IrrSKFHkF6uATS6vQeP8wnNmRkjmDh1QI4l330XPyLK7vX1UUO4xEOzSd
+	 lSz0C1gpZyZLJ6XEs/TI3I55reyrrvf5ZZS+SB5ArmB+yErQn/fGulgKkQAYUGc0g4
+	 RXvFduL9Y9KlCeTYEfQZC/uvOb5lB2e3ERkH+SJHxK8V78Xu8YwttIPlA334EtlbOe
+	 AzBB30DTa/aiA==
+Date: Wed, 12 Jun 2024 11:26:18 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14-dev-4c370
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Shresth Prasad <shresthprasad7@gmail.com>
+Cc: skhan@linuxfoundation.org, linux-phy@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, cristian.ciocaltea@collabora.com, 
+ javier.carrasco.cruz@gmail.com, krzk+dt@kernel.org, 
+ sebastian.reichel@collabora.com, heiko@sntech.de, 
+ devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org, 
+ s.hauer@pengutronix.de, vkoul@kernel.org, andy.yan@rock-chips.com, 
+ kishon@kernel.org
+In-Reply-To: <20240612160336.5132-2-shresthprasad7@gmail.com>
+References: <20240612160336.5132-2-shresthprasad7@gmail.com>
+Message-Id: <171821317822.3213383.11527359300023322395.robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: phy: rockchip-emmc-phy: Convert to
+ dtschema
 
-On Mon, 10 Jun 2024 14:58:47 +0200, Primoz Fiser wrote:
-> Set driver name to "HDMI". This simplifies the code and gets rid of
-> the following error messages:
+
+On Wed, 12 Jun 2024 21:33:37 +0530, Shresth Prasad wrote:
+> Convert txt bindings of Rockchip EMMC PHY to dtschema to allow
+> for validation.
 > 
->   ASoC: driver name too long 'HDMI 58040000.encoder' -> 'HDMI_58040000_e'
+> Signed-off-by: Shresth Prasad <shresthprasad7@gmail.com>
+> ---
+> Changes in v2:
+>     - Fixed example
+>     - Changed file referenced in grf.yaml
 > 
+> Tested against `rockchip/rk3399-firefly.dtb`, `rockchip/rk3399-orangepi.dtb`
+> and `rockchip/rk3399-pinebook-pro.dtb`.
+> 
+>  .../bindings/phy/rockchip,emmc-phy.yaml       | 79 +++++++++++++++++++
+>  .../bindings/phy/rockchip-emmc-phy.txt        | 43 ----------
+>  .../devicetree/bindings/soc/rockchip/grf.yaml |  2 +-
+>  3 files changed, 80 insertions(+), 44 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rockchip,emmc-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
 > 
 
-Applied to
+My bot found errors running 'make dt_binding_check' on your patch:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+yamllint warnings/errors:
 
-Thanks!
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.example.dtb: syscon@ff770000: reg: [[0, 4285988864], [0, 65536]] is too long
+	from schema $id: http://devicetree.org/schemas/soc/rockchip/grf.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/rockchip,emmc-phy.example.dtb: syscon@ff770000: reg: [[0, 4285988864], [0, 65536]] is too long
+	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
 
-[1/1] ASoC: ti: omap-hdmi: Fix too long driver name
-      commit: 524d3f126362b6033e92cbe107ae2158d7fbff94
+doc reference errors (make refcheckdocs):
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240612160336.5132-2-shresthprasad7@gmail.com
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+pip3 install dtschema --upgrade
 
-Thanks,
-Mark
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
