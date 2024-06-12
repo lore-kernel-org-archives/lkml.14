@@ -1,102 +1,207 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4C21DFF0;
-	Wed, 12 Jun 2024 22:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D884255C08
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 22:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718230978; cv=none; b=ijARZmNx3VaHuFSayaHZhofVwQOzDXX0XsJpeWYJcdEqFAccVqEtYSvfRNQ7B10ahxMrL9RRa/pLTBebPHA50moN2xkyT17XSnFY/pAJSdd8I3mWHxFKwXCauM1/IWut6QatlogeKZc6OvANEsAl4PcZ5Du2pBeVlSTydwLo//c=
+	t=1718231085; cv=none; b=iVaFXiYcV3NPSvuKgrO6wJztxBjJlYko7iHtcVyJW2RMmgFqOUKPK8GRYJSlISDh2P2VxXaawb3YId6F3DXB4aCWm0xnBsxa89a0bzmKloiLJT6ko9dG4MdNLqSDVyR6Dkhbos1bHyoYzf8LEvn4oYgL5wxLvkAIDkTX/7UWaVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718230978; c=relaxed/simple;
-	bh=kjGjPKRkxzNWFzgE6y4cA/bYXf9LyB4+K5/alp3/Ne8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Zj84ONjvxPqDVVMLWjDaIr9QZNqkq5PF5LbNkckxa8S9xr5xPx6fAH9KREV2K1DRWX0TaMezs7n283MBInzP8tfBEeYV9+ZIgH1SbzqSIvARJuyDeJYcGMHtJbCMcUmDborW3LBWNSZnt+qsyjr180nRUvuYG5hhHTGqFj6RF1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z1ApWSwz; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718231085; c=relaxed/simple;
+	bh=p/wmu+4wYl/wqNke/QhUcX7EKLyt1KgUpm4CzyEB4AE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RDK5GhZAz9YMpE/NjLjh/4D48WfJ7fmr1hNCvgcs4ctJaLEsTge8vwpAiqzkhf2SVUaRwWjYQKtYO4f14g0RtLPqRGdxwKktkFaHx/UR6O9+qHfc+VPeMOGqwS8TuZjJAyaiFVgIf2r6rEi56uoK6SHJS5m6Xhq/RD01buDNjAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XXfhtB10; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z1ApWSwz"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CKnJKr024376;
-	Wed, 12 Jun 2024 22:22:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=i6UukDRRZJzedinienBhid
-	zn17tHAMUbF3e55BtT55Q=; b=Z1ApWSwzuXF/KQc/9Dv2RhCvimvC6xs57zRfld
-	mLNRiETzBed6Pk+oMkksYKEtL1DtbMpSU7fuUVGfXy1Rp82rAF6v9I+FCADQINLl
-	FJuc0Ll0bYRIZLat9ESinxZjMjYQtHdfEVY29dmCvEPZtL0UNWVTPsOpND1YEbaT
-	rEtnFUgERWVXZiO2HpsrdG3z7xP3tQRggEptH9cZd1yqBIHiRpuuzoSibSOUMTJH
-	hxOJBwsVh7hU6odeet6tnVbYe8moYcHDmuXi2PW+BgpTPKXYx/hbCJ06Q/6PRFMt
-	Fg2+pufbKY3PbMgzX9fkR/JiMjQLRBWzsaZvSEX8rlAmlx0A==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yqcxthb6j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 22:22:53 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CMMqLM028847
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 22:22:52 GMT
-Received: from [169.254.0.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 12 Jun
- 2024 15:22:51 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Wed, 12 Jun 2024 15:01:11 -0700
-Subject: [PATCH] fbdev: goldfishfb: add missing MODULE_DESCRIPTION() macro
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XXfhtB10"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f47f07acd3so4101545ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 15:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1718231083; x=1718835883; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hvJdqdXbOsMsvfolWLIhz5jKfl0lZRFyGewDbo4ybFE=;
+        b=XXfhtB10ztNzpumwlwt2rnGNCPYoTiOj7Tws/arWbAR+ymXKP27s9nmRy8iMvm9SIG
+         79+6AXFi/l4jdaF1lF4nBhozQWSUhZlS/NAKeKP1pQK6KGl9io3EPEdBdYkrQUIFA3Qn
+         3Gx8QEtZ4osTugneQmGVpo3XaV1sBgysHGRG0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718231083; x=1718835883;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hvJdqdXbOsMsvfolWLIhz5jKfl0lZRFyGewDbo4ybFE=;
+        b=plQRzf3545mhcE8etrQsSmmBk/bVDXjGYzmVRPwrz6Ab2R3yhKDObQ6rtWTYVZtLFa
+         SNlUuXH1GnjZiVVvqWn2f1aqGLwOTkLIwp8JZyTTPKDC+HUbtMYcYd6hCuAzpgHGL14i
+         j3EbjRbXtlORAOddu3BRAX6zy7nwnkWBy+h25znMGxlqquURsI9qQCn6z5GQ3ZvJPhvJ
+         hmMIAhgoO29JdzqMqPDcXpcF/ho2oVnFxf+KegLYaV4TOsL81nmSIquvzvf1sa5hnM1I
+         foiogXBEZ+vdKgr7Mgay3uBYYHpletbQr8BrhYkU0J/dJ7fL3JiHoOSXe+dNLkwdGgHn
+         8k1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVsZRI7Qb1GSc4pZLDmFfISk2uXBIa56+r52zgVs/OFVRJDvarzkF41EQa+p/u5DQLzC4fN7ppp2cnaCXmM/1f9dYo4FZM65oeWMWcP
+X-Gm-Message-State: AOJu0YymKjc9f+vbAiU23wzZVawcFfR4mkkCHnrLcpG1KWKyIeBK9Is3
+	XVjeenjuifnxZ7nZAeBUHSUaA121ScRlUhsrvIiLHpmdt6BZbUCi7z/iNdup5Q==
+X-Google-Smtp-Source: AGHT+IFAyr/OLXB4J5n0QdHaEa3zXIRNItrD8acC+tRkbc51QXKJOk4EcFMZStf7hJ6gv4GGb6OcUA==
+X-Received: by 2002:a17:902:e851:b0:1f6:65d3:296 with SMTP id d9443c01a7336-1f83b637bdcmr34717685ad.29.1718231083000;
+        Wed, 12 Jun 2024 15:24:43 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:2816:6a42:9074:18cc])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6f30acda9sm87914105ad.198.2024.06.12.15.24.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 15:24:42 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: dri-devel@lists.freedesktop.org,
+	Maxime Ripard <mripard@kernel.org>
+Cc: Douglas Anderson <dianders@chromium.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Alexey Brodkin <abrodkin@synopsys.com>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Anitha Chrisanthus <anitha.chrisanthus@intel.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Candice Li <candice.li@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>,
+	Edmund Dea <edmund.j.dea@intel.com>,
+	Hamza Mahfooz <hamza.mahfooz@amd.com>,
+	Hawking Zhang <Hawking.Zhang@amd.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Karol Herbst <kherbst@redhat.com>,
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+	Le Ma <le.ma@amd.com>,
+	Lijo Lazar <lijo.lazar@amd.com>,
+	Lyude Paul <lyude@redhat.com>,
+	Ma Jun <Jun.Ma2@amd.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Shashank Sharma <shashank.sharma@amd.com>,
+	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
+	Steven Price <steven.price@arm.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Victor Lu <victorchengchi.lu@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	chenxuebing <chenxb_99091@126.com>,
+	linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	nouveau@lists.freedesktop.org
+Subject: [PATCH v2 0/8] drm: make leftover drivers call drm_atomic_helper_shutdown() at the right times
+Date: Wed, 12 Jun 2024 15:23:40 -0700
+Message-ID: <20240612222435.3188234-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.45.2.505.gda0bf45e8d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240612-md-drivers-video-fbdev-v1-1-68b1f7316835@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAKYaamYC/x3MwQqDMAyA4VeRnBfQ0gndq4wd2ibOwKwjmUUQ3
- 33djt/h/w8wVmGDW3eAchWTtTQMlw7yHMuTUagZXO98Pw4OF0JSqayGVYhXnBJxxZwC5dGHHPw
- VWvxWnmT/j++P5hSNMWksef7tXlK2HZdoH1Y4zy/JL2l4hwAAAA==
-To: Helge Deller <deller@gmx.de>
-CC: <linux-fbdev@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: _lw1Ga2g9ZjHDXoZvWK77lt8G-CYap4y
-X-Proofpoint-GUID: _lw1Ga2g9ZjHDXoZvWK77lt8G-CYap4y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_10,2024-06-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- lowpriorityscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120159
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-With ARCH=arm64, make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/goldfishfb.o
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+This patch series is the leftovers of a patch series sent in September
+2023 [1] in an attempt to get some of the patches landed finally.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/video/fbdev/goldfishfb.c | 1 +
- 1 file changed, 1 insertion(+)
+This patch series originally came about after a _long_ discussion
+between me and Maxime Ripard in response to a different patch I sent
+out [2]. As part of that discussion, we realized that it would be good
+if DRM drivers consistently called drm_atomic_helper_shutdown()
+properly at shutdown and driver remove time as it's documented that
+they should do. The eventual goal of this would be to enable removing
+some hacky code from panel drivers where they had to hook into
+shutdown themselves because the DRM driver wasn't calling them.
 
-diff --git a/drivers/video/fbdev/goldfishfb.c b/drivers/video/fbdev/goldfishfb.c
-index ca9e8255947c..5f8de1ec23c3 100644
---- a/drivers/video/fbdev/goldfishfb.c
-+++ b/drivers/video/fbdev/goldfishfb.c
-@@ -321,4 +321,5 @@ static struct platform_driver goldfish_fb_driver = {
- 
- module_platform_driver(goldfish_fb_driver);
- 
-+MODULE_DESCRIPTION("Goldfish Virtual Platform Framebuffer driver");
- MODULE_LICENSE("GPL v2");
+It turns out that quite a lot of drivers seemed to be missing
+drm_atomic_helper_shutdown() in one or both places that it was
+supposed to be. This patch series attempts to fix all the drivers that
+I was able to identify.
 
----
-base-commit: 83a7eefedc9b56fe7bfeff13b6c7356688ffa670
-change-id: 20240612-md-drivers-video-fbdev-cb9dc649c945
+NOTE: fixing this wasn't exactly cookie cutter. Each driver has its
+own unique way of setting itself up and tearing itself down. Some
+drivers also use the component model, which adds extra fun. I've made
+my best guess at solving this and I've run a bunch of compile tests
+(specifically, allmodconfig for amd64, arm64, and powerpc). That being
+said, these code changes are not totally trivial and I've done zero
+real testing on them. Making these patches was also a little mind
+numbing and I'm certain my eyes glazed over at several points when
+writing them. What I'm trying to say is to please double-check that I
+didn't do anything too silly, like cast your driver's drvdata to the
+wrong type. Even better, test these patches!
+
+Apparently most of these drivers now land through drm-misc [3], so
+hopefully they can land. The two that don't (amdgpu and radeon) are
+the ones I'm most ucertain about anyway so I've stuck them at the end.
+If I've totally buggered those up feel free to take my patch as a bug
+report and submit your own proper fix. ...or if there's some reason
+that we don't need to do anything for those drivers then let me know
+and we can drop them.
+
+I'd like to call out a few drivers that I _didn't_ fix in this series
+and why. If any of these drivers should be fixed then please yell.
+- DRM drivers backed by usb_driver (like gud, gm12u320, udl): I didn't
+  add the call to drm_atomic_helper_shutdown() at shutdown time
+  because there's no ".shutdown" callback for them USB drivers. Given
+  that USB is hotpluggable, I'm assuming that they are robust against
+  this and the special shutdown callback isn't needed.
+- ofdrm and simpledrm: These didn't have drm_atomic_helper_shutdown()
+  in either shutdown or remove, but I didn't add it. I think that's OK
+  since they're sorta special and not really directly controlling
+  hardware power sequencing.
+- virtio, vkms, vmwgfx, xen: I believe these are all virtual (thus
+  they wouldn't directly drive a panel) and adding the shutdown
+  didn't look straightforward, so I skipped them.
+
+I've let each patch in the series get CCed straight from
+get_maintainer. That means not everyone will have received every patch
+but everyone should be on the cover letter. I know some people dislike
+this but when touching this many drivers there's not much
+choice. dri-devel and lkml have been CCed and lore/lei exist, so
+hopefully that's enough for folks. I'm happy to add people to the
+whole series for future posts.
+
+[1] https://lore.kernel.org/r/20230901234202.566951-1-dianders@chromium.org
+[2] https://lore.kernel.org/r/20230804140605.RFC.4.I930069a32baab6faf46d6b234f89613b5cec0f14@changeid
+[3] https://lore.kernel.org/r/Zmm6_27GikpmT3HQ@phenom.ffwll.local
+
+Changes in v2:
+- Gathered whatever hadn't landed, rebased, and reposted.
+
+Douglas Anderson (8):
+  drm/kmb: Call drm_atomic_helper_shutdown() at shutdown time
+  drm/nouveau: Call drm_atomic_helper_shutdown() or equiv at shutdown
+    time
+  drm/tegra: Call drm_atomic_helper_shutdown() at shutdown time
+  drm/arcpgu: Call drm_atomic_helper_shutdown() at shutdown time
+  drm/sprd: Call drm_atomic_helper_shutdown() at remove time
+  drm/gma500: Call drm_helper_force_disable_all() at shutdown/remove
+    time
+  drm/radeon: Call drm_helper_force_disable_all() at shutdown/remove
+    time
+  drm/amdgpu: Call drm_atomic_helper_shutdown() at shutdown time
+
+ drivers/gpu/drm/amd/amdgpu/amdgpu.h        |  1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 10 ++++++++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |  2 ++
+ drivers/gpu/drm/gma500/psb_drv.c           |  8 ++++++++
+ drivers/gpu/drm/kmb/kmb_drv.c              |  6 ++++++
+ drivers/gpu/drm/nouveau/nouveau_display.c  |  9 +++++++++
+ drivers/gpu/drm/nouveau/nouveau_display.h  |  1 +
+ drivers/gpu/drm/nouveau/nouveau_drm.c      | 13 +++++++++++++
+ drivers/gpu/drm/nouveau/nouveau_drv.h      |  1 +
+ drivers/gpu/drm/nouveau/nouveau_platform.c |  6 ++++++
+ drivers/gpu/drm/radeon/radeon_drv.c        |  7 ++++++-
+ drivers/gpu/drm/sprd/sprd_drm.c            |  4 +++-
+ drivers/gpu/drm/tegra/drm.c                |  6 ++++++
+ drivers/gpu/drm/tiny/arcpgu.c              |  6 ++++++
+ 14 files changed, 78 insertions(+), 2 deletions(-)
+
+-- 
+2.45.2.505.gda0bf45e8d-goog
 
