@@ -1,106 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903AC17C20B;
-	Wed, 12 Jun 2024 13:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3155317B511
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 13:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718199693; cv=none; b=sElq2TyE7SOBUZqSCdWHzu1lmMMgxFgiafJMK3BWtuJ+mPapG/7AYvVZ3g3/L8qL6L+TUiS9VS8FJYIa8nRZa2D1EZRwoUlghIqyULiKUcLGS++w0mQXw8nT9yFuyQcB4NOJSlyMCKIfiacUUcN62QcHexzlwKBT6VWMZrbWhgk=
+	t=1718199804; cv=none; b=XSAQg80NV/bg7obutwU1pL78phUJN26gess073/6MIPuZNTgWZBiyLW2zoss4GUfVoicbtjnjAQXkyX0hlopBIoogkwwmAoHeJjpPPmq/zdN+Nnl0xxlvwcWPtm7xnI5HxTPlVQ6pOK/1ql+8KmhPaEZHpDMWjLLkwTCSwEFL0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718199693; c=relaxed/simple;
-	bh=Hznc7hRgrzn2IxR8Fss2HdZtPD+nw6i8AeUbGDa+luw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KdYjZDahuTLy8+TBlgpipVmK9fB7cWpF/n43HQ1j4D2JX3pgKGqdQUCph+Yfdngo31CK65R48NinLLW+ktJDG2SePOjaFAOPsTva8SUKwJARpXvHo5xRBNv/iRdJDz5j4MPApnwhiCaM+xqfRTZrKvB61TQML1XQYy+g8kh+j08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qF6U3Sma; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718199804; c=relaxed/simple;
+	bh=AQvzJWgWpkJxPhs5qk71PyEz+V1dhT5cp0cCp9Ezdek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i9QqcxJLA3/f0FvzJ2kX0iqdF0G7u5gbvyu9oR/GmTfa8TWz1dq6nVdS1wlw92Aesno0cbaPUPgiZVFd/yeD0eItaJ2Cf6JARKS165BqQCwckAYkEoc0Ssbau+7swcNGgIZ+4ackMJ7aJp/a/5TvEhybH0NFIIoyo0FMVJMlIiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dFPYVq0S; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qF6U3Sma"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241C5C4AF48;
-	Wed, 12 Jun 2024 13:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718199693;
-	bh=Hznc7hRgrzn2IxR8Fss2HdZtPD+nw6i8AeUbGDa+luw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qF6U3SmaZoTFR60uJau309WxT7aGiKNezaclvjpZlyF/ZdiX3OvnUQhs2S7yoRAAO
-	 wbCsV0VcJKmemuPgmiCnVJE4mfZTFi1k2fzMMhMRhKfJiwiqif1w/D9QBhWjBerBLL
-	 dJLSN64KV63TJl9DYb1XPwmWbFuCDMgAvfhvMcyibNJa+QAzumSUFUCujcnBP0zkFB
-	 LZ+RNKAYoxKyb97jsTWqEvWCtOcWJTH81ApayzRN5taSS7AaLYUAkcmbTwd0rBQlcM
-	 qlLz506GaD8vZByd2gLiTa0JOSaTYC+khxAWMuwElYAAG6qxQ2IHt0hA3+YX/6sRU/
-	 jpv+ZytdwVr9Q==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52c84a21b8cso861412e87.1;
-        Wed, 12 Jun 2024 06:41:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWkH3cfCFkcMq+DO32Wg8tcYsMofSMkuKVzOEAkBxemHUMuD7ktkJkeGmSfOST85DilL9/K0C9i8l5VcHjGh3kwPTo0KtYaLWV98PjS
-X-Gm-Message-State: AOJu0Yw1bXtsoW6kbYXjwx/JHvKd05HIng0YgH6NSHLKOM/WzRkZMdyp
-	+xxD8dDX+Vy3mj3Ie9eWJVTAeYTyXfrL8AqtQv61VbI5swPzRuE8a+8kQJzqKIrP1sVcJ9EUHWh
-	mKxyqqMv0gUMR6caaTmskjvA6oRI=
-X-Google-Smtp-Source: AGHT+IEun5Gtz0LCxq9yBb41flxm/g/kXOUXseEINgoIv9wOBEOLa8iFLxx8BeuDj8pfpBvS/ZBkQeXetjv0oZxS87c=
-X-Received: by 2002:ac2:5b83:0:b0:52c:8dc6:e40b with SMTP id
- 2adb3069b0e04-52c9a0bdf5cmr531653e87.4.1718199691497; Wed, 12 Jun 2024
- 06:41:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dFPYVq0S"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-579fa270e53so3744604a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 06:43:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718199801; x=1718804601; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tw/7zGdTsSeZNmEJkjTPH0b3j/r5J+D7HHf+/YeS7UQ=;
+        b=dFPYVq0S8BIcG+EC5tsyGtyJ4WxHk+oFLE6LkXGPThcc2mvxvaBE0o4Akvoe/OY7pG
+         7Ee34kgEUcxRb4mh7D/CDqffHy99AM9VyxmZYvTsUWsY/71WhtyHHsS7tDjOBO07YU3u
+         JlaRmssQWw6EF8ZRYsiOsMVyeG8sbiFT7nx4U2DCw+lRHu96+l/x11VaBrLgGAZOuZDA
+         xcAKpY9WorUtVCg3hlrMovCzdsmzvL1Nl1EbdAXmZLLlh4cKIxvWbA4sKr6k73NEhFfz
+         0JRHz4vFESwtprEoEhQBUFRUrZYE/TD4O6qg6H+Y8wAP6MyZa78o5dMYYXcHNJt9tc/C
+         EdQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718199801; x=1718804601;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Tw/7zGdTsSeZNmEJkjTPH0b3j/r5J+D7HHf+/YeS7UQ=;
+        b=xE4Ytbrw/O69kPS9S9Tbozri6AUjLN5v92Jwep2tj1ykIeJt4cf9fmcDL0+8/xfxH3
+         Pj3WKVCJNs79L36//TjJlhQupFZh/tY5du0ZbL5/smBy1Oju80K2uwV9j2nXFEziTWy2
+         SwwihWxvcqICttAMRAzCqdbCekyG7b53Q6StLLY2ClL2yQQN2UcMjojx7Vh20s3GckVn
+         AyEMbw+EoxX671V+LIk/DBDdcPiDVf2d1B7ubSkstwfLBsJ2GSOMiYoTtwdbrJluBM5U
+         8y6q5t68xUTfXTA12gLAgTFE+d0WN3ZlzmIV1QZve8gBxU9jemg9jNrXHdZ44ATRTXZ1
+         6X1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVJqKCYPvjVduz2qPou+ZGpE6EY+5JgTb9uCsMV9W1yrcEboqtN4KOb1Yv1bQ4FcSpFUt5gvMHVDLfxXEojF6v3ud6bMsNouyBEY4PM
+X-Gm-Message-State: AOJu0Ywq3VKFPE64VvlmVpqpHnwYW6X9+b8Q0oBwIWsGHCEwdyxF281i
+	iB6IEcRQE3Wy2RNDDXlN5A8RMuR/YqddOigh6eD/7+8kk9RWUdDmBQfiHjnwU9E=
+X-Google-Smtp-Source: AGHT+IHasYGYvCuR/gsemBMGOL3ZriQj+qaAAw0drH8GGQv4k/nCBqBPPkv10ZqO1bYW25jArgP9UQ==
+X-Received: by 2002:a17:906:3e4a:b0:a6f:1a1a:d3f5 with SMTP id a640c23a62f3a-a6f47d4ef5emr140675366b.8.1718199801286;
+        Wed, 12 Jun 2024 06:43:21 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0a4c4c72sm570792366b.193.2024.06.12.06.43.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 06:43:20 -0700 (PDT)
+Message-ID: <82482ddc-9f0f-45b6-b1a1-6de2617b6980@linaro.org>
+Date: Wed, 12 Jun 2024 15:43:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240612123710.177557-2-ardb+git@google.com>
-In-Reply-To: <20240612123710.177557-2-ardb+git@google.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 12 Jun 2024 15:41:20 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHm5QdzmzZOJSdaqpsS8AA0n6u_s=3ovp7Box=e28St3A@mail.gmail.com>
-Message-ID: <CAMj1kXHm5QdzmzZOJSdaqpsS8AA0n6u_s=3ovp7Box=e28St3A@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/efi: Free EFI memory map only when installing a
- new one.
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ashish Kalra <Ashish.Kalra@amd.com>, Dave Young <dyoung@redhat.com>, 
-	Mike Rapoport <rppt@kernel.org>, Borislav Petkov <bp@alien8.de>, Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: ARM: vt8500: add Krzysztof Kozlowski as
+ maintainer
+To: Alexey Charkov <alchark@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, arm <arm@kernel.org>, soc@kernel.org,
+ Olof Johansson <olof@lixom.net>
+References: <20240612111623.102868-1-krzysztof.kozlowski@linaro.org>
+ <b1f14e92-4491-45f5-90ca-cc3d5ceea81f@app.fastmail.com>
+ <CABjd4YxxmNqDXe7SSzTpr4gsf4-Rp4sgB8x2sYSGzDDx5CWo2A@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CABjd4YxxmNqDXe7SSzTpr4gsf4-Rp4sgB8x2sYSGzDDx5CWo2A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 12 Jun 2024 at 14:37, Ard Biesheuvel <ardb+git@google.com> wrote:
->
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> The logic in __efi_memmap_init() is shared between two different
-> execution flows:
-> - mapping the EFI memory map early or late into the kernel VA space, so
->   that its entries can be accessed;
-> - cloning the EFI memory map in order to insert new entries that are
->   created as a result of creating a memory reservation
->   (efi_arch_mem_reserve())
->
-> In the former case, the underlying memory containing the kernel's view
-> of the EFI memory map (which may be heavily modified by the kernel
-> itself on x86) is not modified at all, and the only thing that changes
-> is the virtual mapping of this memory, which is different between early
-> and late boot.
->
-> In the latter case, an entirely new allocation is created that carries a
-> new, updated version of the kernel's view of the EFI memory map. When
-> installing this new version, the old version will no longer be
-> referenced, and if the memory was allocated by the kernel, it will leak
-> unless it gets freed.
->
-> The logic that implements this freeing currently lives on the code path
-> that is shared between these two use cases, but it should only apply to
-> the latter. So move it to the correct spot.
->
-> While at it, move __efi_memmap_free() into its only caller, and drop the
-> dummy definition for non-x86 architectures, as that is no longer needed.
->
-> Cc: Ashish Kalra <Ashish.Kalra@amd.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Fixes: f0ef6523475f ("efi: Fix efi_memmap_alloc() leaks")
-> Link: https://lore.kernel.org/all/36ad5079-4326-45ed-85f6-928ff76483d3@amd.com
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
-> v2:
-> - free old memory map only after installing the new one succeeded
-> - move __efi_memmap_free() into its only caller
+On 12/06/2024 14:57, Alexey Charkov wrote:
+> Hi Arnd, Krzystof,
+> 
+> On Wed, Jun 12, 2024 at 3:43 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> On Wed, Jun 12, 2024, at 13:16, Krzysztof Kozlowski wrote:
+>>> The ARM VIA/WonderMedia VT8500 platform became orphaned in
+>>> commit 8f1b7ba55c61 ("MAINTAINERS: ARM/VT8500, remove defunct e-mail")
+>>> and clearly it is on the way out of the kernel.  However few folks send
+>>> patches to it and it is nice to actually take them, till the platform is
+>>> in the kernel.
+>>>
+>>> I do not plan to actively support/maintain ARM VT8500 but I can take odd
+>>> fixes now and then.
+>>>
+>>> Extend the maintainer entry to cover also VT8500 DTS.
+>>>
+>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>
+>> Cc: Alexey Charkov
+>>
+>> Thanks for stepping up. A few years ago, Alexey also had
+>> some interest in this platform and knew some other remaining
+>> users.
+> 
+> Indeed, I'm still interested in getting it up and running, and even
+> got my good old WM8950-based APC Rock board out of storage for it
+> recently. I also have a WM8880-based laptop and another WM8850-based
+> one at hand, but need to bring them up to speed. Should also have a
+> number of older WM8750, WM8650 and VT8500 (but not WM8505) devices
+> somewhere deeper in storage.
+> 
+> I haven't touched the related code in a while, but as the original
+> author of VT8500 and WM8505 support code from over a decade back I'd
+> love to keep it all alive and functional, including reviewing and
+> testing stuff as well as (hopefully) adding extra functionality that's
+> been on my backlog for years. Does that count as support/maintain?
+> Happy to be listed in maintainers and be in the loop if I qualify.
 
-Ugh this breaks efi_fake_mem (which is another user of
-__efi_memmap_free(), only not enabled by default.
+You can take the sole maintainership thus handle patches/pull requests,
+or become added as a co-maintainer.
 
-I'll need to respin this.
+Best regards,
+Krzysztof
+
