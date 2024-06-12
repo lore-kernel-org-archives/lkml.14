@@ -1,170 +1,229 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322F9180A79;
-	Wed, 12 Jun 2024 15:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA17181B86;
+	Wed, 12 Jun 2024 15:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718206374; cv=none; b=LZQJLuEnYwSggYpmNkA9viPgsWdecgGDYEdumU5f+Z6ECbVlwyWA6e8nG6i36JgAFA12VjmRhsSq+Px3Z9C64m/TEwcXYbRjW/K2f9knCDDKM1TXAIkRYsIDLAQpkZLgfCksBgNCsR1uJBoeZswJPVU7mpX8agC5MWuKBHZjn/U=
+	t=1718206377; cv=none; b=DB0cFH52NxOr5eg3DnrpUEfncIVepLloxbHxmIUzD5PGA9y52si5VtfreFWtM5L4cu15Phva7Ss7GVdhuMeG7VDRTY40FpFpkBaNtG0UQ/T6REJCVOPNvA8KyZAiNwOgK4+RfD0NWm6YA+Ib1O8ra6+m+WWxNsD2Dri+jyWtmFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718206374; c=relaxed/simple;
-	bh=2wwPlROZa4IjXKMB/B8j6xb6yzJ8Sd+ewIMeIt5CG6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SUxrC1UnfIn7jaltqv9sGRaP4Gf0CHF7ZkRLmCcRT9ROpc5jNYCAeeKBw4Gjp37MRZhXkCIBiuTCbyb8ghAEqgg3tXe5Mu5iA5l0eH+dpXkcCIdhlx7zHAYYZiRlwGsCa91lrU6PXbPLvEo9lOqMC3gDhfgQ2gRn+YZh7E3lNKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=rBqrXBe6; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="rBqrXBe6"
-Received: from pps.filterd (m0355090.ppops.net [127.0.0.1])
-	by m0355090.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 45CDleNs004491;
-	Wed, 12 Jun 2024 15:32:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=DKIM202306; bh=5UYz7vM8ukqZ7+rx3Rz0bIj
-	lD/l1jReNBhEadDHRJ70=; b=rBqrXBe6qrlvYkIRocJmwI/w/30JQDW1d5FBlxC
-	va2Yr8DYzIwLJHWai3Oc23+Z38N+nLb1A6NmAyyo0KiBVdSsjoqDkUAtN+v094ZZ
-	7YvxCfQJE/q2bSheubx/z+/uE25pTJfzug+bZtiiF0TtvJJ9LWrAGXb964dNls8g
-	DTt9jV/8l+9NqvXRvu4Gy3CkY69yhk1tnquk+L4KbYZbTxzH1mGohMRdkl3uohBq
-	2/QVrzM9vwqtVEIrJ+oa5GjHSV0Zq1/CGZaB3jgo61B80EcHbD0rdHkSAdHATqFi
-	cTMJJfnWz4jqBAtHyO7lUswFAEYC5MgvVTGGS/jT0jOpsUg==
-Received: from va32lpfpp03.lenovo.com ([104.232.228.23])
-	by m0355090.ppops.net (PPS) with ESMTPS id 3yn2msg6vg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 15:32:19 +0000 (GMT)
-Received: from va32lmmrp02.lenovo.com (va32lmmrp02.mot.com [10.62.176.191])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by va32lpfpp03.lenovo.com (Postfix) with ESMTPS id 4VzqKZ6ymTz51Q9y;
-	Wed, 12 Jun 2024 15:32:18 +0000 (UTC)
-Received: from ilclasset02 (ilclasset02.mot.com [100.64.49.13])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by va32lmmrp02.lenovo.com (Postfix) with ESMTPSA id 4VzqKZ3HsBz2VZ3B;
-	Wed, 12 Jun 2024 15:32:18 +0000 (UTC)
-Date: Wed, 12 Jun 2024 10:32:17 -0500
-From: Maxwell Bland <mbland@motorola.com>
-To: "open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)" <bpf@vger.kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Zi Shen Lim <zlim.lnx@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>
-Subject: [PATCH bpf-next v6 3/3] arm64/cfi,bpf: Use DEFINE_CFI_TYPE in arm64
-Message-ID: <c6fsgv7bjt2d2ejz2uuin2g475fkvpyenp32wehdqlcf6ihqgx@5gicsaw4u37f>
-References: <illfkwuxwq3adca2h4shibz2xub62kku3g2wte4sqp7xj7cwkb@ckn3qg7zxjuv>
+	s=arc-20240116; t=1718206377; c=relaxed/simple;
+	bh=6McAjyKnZGmSFtVSpXgthVIWRJTWzo3llkJs/bUceOM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nnPxT6KvOHlIGvP2YjN+X1hbAzLGRT85oq1n2VeQZyYKOMxuyN+hZGmrgCy1Y8S7qZ7FmvCWPBmaNg6a6U3iO1H2eZc5hSH3ghLJeeV0YjiQw0r8BnlYn9MmcQavAhH0aYFbrw62bvFyJHzw1B3l8yf4Ft81CR1J5xVetMwSOfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 214E0C32786;
+	Wed, 12 Jun 2024 15:32:53 +0000 (UTC)
+Date: Wed, 12 Jun 2024 11:32:51 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wei Yang <richard.weiyang@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Kees Cook
+ <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Guenter
+ Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
+ wklin@google.com, Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel
+ Fernandes <joel@joelfernandes.org>, Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard Biesheuvel
+ <ardb@kernel.org>, Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v2 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <20240612113251.43b9c7b9@rorschach.local.home>
+In-Reply-To: <20240612072340.hsdxusmszixebvrt@master>
+References: <20240606150143.876469296@goodmis.org>
+	<20240606150316.751642266@goodmis.org>
+	<20240611144029.h7egl4aif5mjlrwf@master>
+	<20240611111218.71e57e0f@gandalf.local.home>
+	<20240612072340.hsdxusmszixebvrt@master>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <illfkwuxwq3adca2h4shibz2xub62kku3g2wte4sqp7xj7cwkb@ckn3qg7zxjuv>
-X-Proofpoint-ORIG-GUID: 4_v9B3kXPAzqWmjgo_DoyOlN5e58hRxg
-X-Proofpoint-GUID: 4_v9B3kXPAzqWmjgo_DoyOlN5e58hRxg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_08,2024-06-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- malwarescore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 phishscore=0 adultscore=0 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120111
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Corrects Puranjay Mohan's commit to adopt Mark Rutland's
-suggestion of using a C CFI type macro in kCFI+BPF.
+On Wed, 12 Jun 2024 07:23:40 +0000
+Wei Yang <richard.weiyang@gmail.com> wrote:
+> >> >+struct reserve_mem_table {
+> >> >+	char			name[RESERVE_MEM_NAME_SIZE];
+> >> >+	unsigned long		start;
+> >> >+	unsigned long		size;    
+> >> 
+> >> phys_addr_t looks more precise?  
+> >
+> >For just the start variable, correct? I'm OK with updating that.
+> >  
+> 
+> Both start and size. When you look at the definition of memblock_region, both
+> are defined as phys_addr_t.
 
-Signed-off-by: Maxwell Bland <mbland@motorola.com>
----
- arch/arm64/kernel/alternative.c | 46 ++++-----------------------------
- 1 file changed, 5 insertions(+), 41 deletions(-)
+I ended up keeping everything phys_addr_t.
 
-diff --git a/arch/arm64/kernel/alternative.c b/arch/arm64/kernel/alternative.c
-index 1715da7df137..d7a58eca7665 100644
---- a/arch/arm64/kernel/alternative.c
-+++ b/arch/arm64/kernel/alternative.c
-@@ -8,6 +8,7 @@
- 
- #define pr_fmt(fmt) "alternatives: " fmt
- 
-+#include <linux/cfi_types.h>
- #include <linux/init.h>
- #include <linux/cpu.h>
- #include <linux/elf.h>
-@@ -302,53 +303,16 @@ EXPORT_SYMBOL(alt_cb_patch_nops);
- 
- #ifdef CONFIG_CFI_CLANG
- struct bpf_insn;
--
- /* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
- extern unsigned int __bpf_prog_runX(const void *ctx,
- 				    const struct bpf_insn *insn);
--
--/*
-- * Force a reference to the external symbol so the compiler generates
-- * __kcfi_typid.
-- */
--__ADDRESSABLE(__bpf_prog_runX);
--
--/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
--asm (
--"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
--"	.type	cfi_bpf_hash,@object				\n"
--"	.globl	cfi_bpf_hash					\n"
--"	.p2align	2, 0x0					\n"
--"cfi_bpf_hash:							\n"
--"	.word	__kcfi_typeid___bpf_prog_runX			\n"
--"	.size	cfi_bpf_hash, 4					\n"
--"	.popsection						\n"
--);
--
-+DEFINE_CFI_TYPE(cfi_bpf_hash, __bpf_prog_runX);
- /* Must match bpf_callback_t */
- extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
--
--__ADDRESSABLE(__bpf_callback_fn);
--
--/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
--asm (
--"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
--"	.type	cfi_bpf_subprog_hash,@object			\n"
--"	.globl	cfi_bpf_subprog_hash				\n"
--"	.p2align	2, 0x0					\n"
--"cfi_bpf_subprog_hash:						\n"
--"	.word	__kcfi_typeid___bpf_callback_fn			\n"
--"	.size	cfi_bpf_subprog_hash, 4				\n"
--"	.popsection						\n"
--);
--
-+DEFINE_CFI_TYPE(cfi_bpf_subprog_hash, __bpf_callback_fn);
- u32 cfi_get_func_hash(void *func)
- {
--	u32 hash;
--
--	if (get_kernel_nofault(hash, func - cfi_get_offset()))
--		return 0;
--
--	return hash;
-+	u32 *hashp = func - cfi_get_offset();
-+	return READ_ONCE(*hashp);
- }
- #endif
--- 
-2.43.0
+> 
+> >>   
+> >> >+};
+> >> >+static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
+> >> >+static int reserved_mem_count;    
+> >> 
+> >> Seems no matter we use this feature or not, these memory would be occupied?  
+> >
+> >Yes, because allocation may screw it up as well. I could add a CONFIG
+> >around it, so that those that do not want this could configure it out. But
+> >since it's just a total of (16 + 8 + 8) * 8 = 256 bytes, I'm not sure it's
+> >much of a worry to add the complexities to save that much space. As the
+> >code to save it may likely be bigger.
+> >  
+> 
+> If Mike feel good to it, I am ok.
+> 
+> >>   
+> >> >+
+> >> >+/* Add wildcard region with a lookup name */
+> >> >+static int __init reserved_mem_add(unsigned long start, unsigned long size,
+> >> >+				   const char *name)
+> >> >+{
+> >> >+	struct reserve_mem_table *map;
+> >> >+
+> >> >+	if (!name || !name[0] || strlen(name) >= RESERVE_MEM_NAME_SIZE)
+> >> >+		return -EINVAL;
+> >> >+
+> >> >+	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
+> >> >+		return -1;    
+> >> 
+> >> return ENOSPC? Not good at it, but a raw value maybe not a good practice.  
+> >
+> >This is what gets returned by the command line parser. It only cares if it
+> >is zero or not.
+> >  
+> >> 
+> >> Also, we'd better do this check before allocation.  
+> >
+> >What allocation?
+> >  
+> 
+> You call reserved_mem_add() after memblock_phys_alloc(). 
+> My suggestion is do those sanity check before calling memblock_phys_alloc().
+
+Yeah, I did add more checks before the allocation happens.
 
 
+> 
+> >>   
+> >> >+
+> >> >+	map = &reserved_mem_table[reserved_mem_count++];
+> >> >+	map->start = start;
+> >> >+	map->size = size;
+> >> >+	strscpy(map->name, name);
+> >> >+	return 0;
+> >> >+}
+> >> >+
+> >> >+/**
+> >> >+ * reserve_mem_find_by_name - Find reserved memory region with a given name
+> >> >+ * @name: The name that is attached to a reserved memory region
+> >> >+ * @start: If found, holds the start address
+> >> >+ * @size: If found, holds the size of the address.
+> >> >+ *
+> >> >+ * Returns: 1 if found or 0 if not found.
+> >> >+ */
+> >> >+int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size)
+> >> >+{
+> >> >+	struct reserve_mem_table *map;
+> >> >+	int i;
+> >> >+
+> >> >+	for (i = 0; i < reserved_mem_count; i++) {
+> >> >+		map = &reserved_mem_table[i];
+> >> >+		if (!map->size)
+> >> >+			continue;
+> >> >+		if (strcmp(name, map->name) == 0) {
+> >> >+			*start = map->start;
+> >> >+			*size = map->size;
+> >> >+			return 1;
+> >> >+		}
+> >> >+	}
+> >> >+	return 0;
+> >> >+}
+> >> >+
+> >> >+/*
+> >> >+ * Parse early_reserve_mem=nn:align:name    
+> >> 
+> >> early_reserve_mem or reserve_mem ?  
+> >
+> >Oops, that was the original name. I'll change that.
+> >  
+> >>   
+> >> >+ */
+> >> >+static int __init reserve_mem(char *p)
+> >> >+{
+> >> >+	phys_addr_t start, size, align;  
+> >
+> >Hmm, I wonder if I should change size and align to unsigned long?
+> >  
+> 
+> I grep the kernel, some use u64, some use unsigned long. 
+> I think it is ok to use unsigned long here.
+
+For consistency, I switched them all to phys_addr_t.
+
+> 
+> >> >+	char *oldp;
+> >> >+	int err;
+> >> >+
+> >> >+	if (!p)
+> >> >+		return -EINVAL;
+> >> >+
+> >> >+	oldp = p;
+> >> >+	size = memparse(p, &p);
+> >> >+	if (p == oldp)
+> >> >+		return -EINVAL;
+> >> >+
+> >> >+	if (*p != ':')
+> >> >+		return -EINVAL;
+> >> >+
+> >> >+	align = memparse(p+1, &p);
+> >> >+	if (*p != ':')
+> >> >+		return -EINVAL;
+> >> >+    
+> >> 
+> >> Better to check if the name is valid here.   
+> >
+> >You mean that it has text and is not blank?
+> >  
+> >> 
+> >> Make sure command line parameters are valid before doing the allocation.  
+> >
+> >You mean that size is non zero?
+> >  
+> 
+> I mean do those sanity check before real allocation.
+
+Yep, I hope I caught everything (of course I need to check if the name
+exists first).
+
+> 
+> >I don't know if we care what the align is. Zero is valid.
+> >  
+> 
+> memblock internal would check the alignment. If it is zero, it will change to
+> SMP_CACHE_BYTES with dump_stack().
+
+I saw that and added:
+
+	if (align < SMP_CACHE_BYTES)
+		align = SMP_CACHE_BYTES;
+
+so that SMP_CACHE_BYTES will be the minimum alignment.
+
+Thanks for looking at this.
+
+-- Steve
