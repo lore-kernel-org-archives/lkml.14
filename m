@@ -1,80 +1,60 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EF4208A4
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 06:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD7513C80A
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 06:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718172688; cv=none; b=d005Ly4MzS97/dF02OnGHNjaeSEOpfxJeFgQSbS+QdWj0UgogQVoAtNBwrirDcNKZS3nVAbANr5OA9Dh1t0krngYcm6u1bnN4DAxQpGIBbK8oSU6cHxYvBgU2fxBEAIIxnWgba/TEbkgBpLC041HVF8jgxlZzZpcQ6MBuCbykEA=
+	t=1718172771; cv=none; b=oiMk89xTmsZt8q6hmgrXmKz2s1sKwrtXEqWDTM7rXVdVDrxBR9oePfPmLmc7EaNAVwnMwA04d86N95Q+MBJqpVqn5vqzkUAb/xMJM6Q4HQO0aYzsq+9AgsZTsCrU29d0driYNcdYz56gZY78GgfYLsq6hi0G8GEe9E8utCwIHSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718172688; c=relaxed/simple;
-	bh=71yS6KWmQ/835z9Hgl3DF8WH8aQqCMdkN51lplB1k4E=;
+	s=arc-20240116; t=1718172771; c=relaxed/simple;
+	bh=bMHNn5K5SdcsmFeGjk+EH0zYqXn/MYJ+ePkN09KC/PI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QVz2E4OuO7K3htSpONgmRQqTvlQcHXxmNhXEwx63BgiFpIZkn9dz2oTeOtw+iKfMYwu+Mq6ZHbiinA/VomQW12nfzN7JHYrwSqQXvd0VlB/EmPd/O5DNku7v1obzUqmB2ZEhCOGWf5uU+tSPY4Gi5BggCaqMZszArB/BTZaouz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=q5uaLl4y; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6ROSClDr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0S0AtOsX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bhdppViT; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=IxH7SIJLSzLg0KRD88M3hQV2RFSLseyZSavny9TMey0AsjetVM2EbMGO7hmjGriBLz0PL4AenfZi5l8680utBScICkZitquN25YAnXNnivMCqmHa2b/XpTC+hhWi7QwlA9/jQcAVsFdrzrWm+a31ekhWGBsleCy4OIDuaaZkbDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CoGld2Vr; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="q5uaLl4y";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6ROSClDr";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0S0AtOsX";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bhdppViT"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0C35C21079;
-	Wed, 12 Jun 2024 06:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718172684; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kv4XHC9GTpRAkkL1nuyfozm6BHGpzmSviYbo3rNfZW8=;
-	b=q5uaLl4yJUJAEDcOqCHyalHW9VHPYkL9FuOd+WOdFpIbfjmwh/o4Ofifkpzv/ZPcJe51RW
-	JryOgpCy683HX4at35ONWXunzSiFO/1TrdrAlKWaM26EzLxpTs2QQaMxwK6yyRlWYx+rJ8
-	y4A2Gcd/7F3UklHEveNgX9JiV1vWtKQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718172684;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kv4XHC9GTpRAkkL1nuyfozm6BHGpzmSviYbo3rNfZW8=;
-	b=6ROSClDrPwhbB/H6nqJSRsyQGyoTGtNxAagKILHn7e2q9M/EbIEBUTI/F+nXlL8YYPNnFa
-	awuY2gaiq1CqcLCg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1718172683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kv4XHC9GTpRAkkL1nuyfozm6BHGpzmSviYbo3rNfZW8=;
-	b=0S0AtOsX0NffzEwNTVEY/6QRw0244voAxV+kxVV4zDJVoJ0TZ31UkERd/9L5MvpjvFhEYO
-	uDqOrw5WFpjjeIIiOTE6q1z74y1EDvBNLks7A1iY6kXS15cBgITdojmYEFgH3jcrEyhbfL
-	2B68rfX1+le5W7Jab9QGKCB2UOOIMg4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1718172683;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kv4XHC9GTpRAkkL1nuyfozm6BHGpzmSviYbo3rNfZW8=;
-	b=bhdppViTUKO6MMo0SS4Ck+nbNnqEa+5x88Zb93S+jwTcqvJP5wywnr1RP2adkNG9k/quEO
-	4wLYPgcIl+TQL2Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0B4DD1372E;
-	Wed, 12 Jun 2024 06:11:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 04pGAAo8aWb1NQAAD6G6ig
-	(envelope-from <hare@suse.de>); Wed, 12 Jun 2024 06:11:21 +0000
-Message-ID: <8a4f965d-91af-4e70-b605-fa5fe2fee43a@suse.de>
-Date: Wed, 12 Jun 2024 08:11:21 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CoGld2Vr"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57c5c51cb89so2475911a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 23:12:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1718172768; x=1718777568; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=g5h7rK0sr+2BxDz/k9zC8M7ipcnnpqL/bNRXKRcGg18=;
+        b=CoGld2VrgUUzAEX4FisL2Ee2H1ekfSLcYRELx3FhQjRi0ZEVTAgDKns1CetdNhffQd
+         pzs6t++8a65/d0RrFLLjpm2EKWNzqKczGPDek+zSmyzC0Ulx39G0B2SwGtp+OyzRn7jl
+         MSuKrX8H7sYfLHQTi/9XFHskPYDnD5mKv115+ULTV+epvgfuNKGURrLGaa2k0JHCzyI6
+         j2VuSPZjcuwVWlu5m/F5LtVtC2H64Wvd+XcM8oXZ/gFsyG1hSG9OLLWHL6PKm10dVAku
+         rCSu4GDMqXifn4hlLmrlkGU6ZmM5xilqgE693HGAlRYCSyAI7j2FoojLy9fUaCAKHAlD
+         5UkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718172768; x=1718777568;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g5h7rK0sr+2BxDz/k9zC8M7ipcnnpqL/bNRXKRcGg18=;
+        b=uCS2XgaVtE8r5PksQ/S+u9sVt6MCDIkOrRjJweoQmEjzrQ4TlYXSg5JOHq9e0lPyAn
+         ZfBtpgY+99OtLu0fs+bMQMANsafb7IMCbyWl2b9MKfRJdvLzcQR2OvDe+H4e7/JDB/YH
+         rKJ7EVwJhY6JwIPLPBOMbMoHlVYCu2kg3IZEQjI5e1I3VAP3H/nQhJtXAsF14FCT5RwE
+         sX9oKhsk7gvJCE/wxUYrC/FHumjm9XYYPhn/9o2EYxRWYpeavfMEOybNGx5yzuQBNbS5
+         82UKzZuYJQFqXcNCAayWbwn1ntw45uFkfUkBcw5ZGy1ENgsON1K/Yzc/tThiwrDKlV+R
+         1k1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXElzWeHGijInr8lATo4/l7BrjSwDgrA4Pg5iw3xTiVNhmk/XQbCoufgcm1YPKyntdSKYZb0+7mXfFanT6D3HP5zX/RKirF+ZBPXi/d
+X-Gm-Message-State: AOJu0YxuyxTEO/TN/FuW+06VytaWVGnvo9lQE3pNSSkiPszZ4h5vhbxB
+	XXSufz11qzZ1sJ3z8xBIPN7v9xU1rgHw3U7cpFz4ZcAjXBScS4NV6pQCjq5FfyQ=
+X-Google-Smtp-Source: AGHT+IHN7OLZJUykbo/Z/aU26XIBCzrO1SYvoeEqCSDfm2b0Ciy65f+R7CfT6NO0SIhfkE7duxBVzA==
+X-Received: by 2002:a50:d494:0:b0:57c:ad11:e759 with SMTP id 4fb4d7f45d1cf-57cad11f283mr293326a12.28.1718172767944;
+        Tue, 11 Jun 2024 23:12:47 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.137])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c55d8aca8sm8664613a12.97.2024.06.11.23.12.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jun 2024 23:12:47 -0700 (PDT)
+Message-ID: <c99d8df2-84ce-4b26-941e-b8a1413b8156@linaro.org>
+Date: Wed, 12 Jun 2024 08:12:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,239 +62,180 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/1] nvme-multipath: implement "queue-depth" iopolicy
+Subject: Re: [PATCH V2 2/2] leds: add mp3326 driver
+To: "Yuxi (Yuxi) Wang" <Yuxi.Wang@monolithicpower.com>,
+ "pavel@ucw.cz" <pavel@ucw.cz>, "lee@kernel.org" <lee@kernel.org>,
+ "robh+dt@kernel.org" <robh+dt@kernel.org>,
+ "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "wyx137120466@gmail.com" <wyx137120466@gmail.com>
+Cc: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240611083236.1609-1-Yuxi.Wang@monolithicpower.com>
+ <20240611083236.1609-3-Yuxi.Wang@monolithicpower.com>
+ <c510fd3f-a55a-4ac9-bbc1-d2392027724c@linaro.org>
+ <SN4PR13MB53103D139D9F816E5F4930EAF6C02@SN4PR13MB5310.namprd13.prod.outlook.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
-To: John Meneghini <jmeneghi@redhat.com>, kbusch@kernel.org, hch@lst.de,
- sagi@grimberg.me, emilne@redhat.com
-Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
- jrani@purestorage.com, randyj@purestorage.com, hare@kernel.org
-References: <20240612002034.1299922-1-jmeneghi@redhat.com>
- <20240612002034.1299922-2-jmeneghi@redhat.com>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20240612002034.1299922-2-jmeneghi@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.29 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,purestorage.com:email]
-X-Spam-Flag: NO
-X-Spam-Score: -4.29
-X-Spam-Level: 
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <SN4PR13MB53103D139D9F816E5F4930EAF6C02@SN4PR13MB5310.namprd13.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 6/12/24 02:20, John Meneghini wrote:
-> From: Thomas Song <tsong@purestorage.com>
+On 12/06/2024 04:23, Yuxi (Yuxi) Wang wrote:
+>>
+>>> +/*
+>>> + * PWM in the range of [0 255]
+>>> + */
+>>> +static int led_pwm_store(struct device *dev, struct device_attribute *attr,
+>>> +			     const char *buf, size_t count)
+>>
+>> Nope.
+> Hi Krzysztof,
 > 
-> The round-robin path selector is inefficient in cases where there is a
-> difference in latency between paths.  In the presence of one or more
-> high latency paths the round-robin selector continues to use the high
-> latency path equally. This results in a bias towards the highest latency
-> path and can cause a significant decrease in overall performance as IOs
-> pile on the highest latency path. This problem is acute with NVMe-oF
-> controllers.
+> What do you mean this Nope?
+> Is it  format or function?
+
+As sorry, you are reimplementing kernel interfaces, so that's a no.
 > 
-> The queue-depth policy instead sends I/O requests down the path with the
-> least amount of requests in its request queue. Paths with lower latency
-> will clear requests more quickly and have less requests in their queues
-> compared to higher latency paths. The goal of this path selector is to
-> make more use of lower latency paths which will bring down overall IO
-> latency and increase throughput and performance.
+>>
+>> ...
+>>
+>>> +	}
+>>> +	r_val = r_val * 255 / 4095 + (r_val * 255 % 4095) / (4095 / 2);
+>>> +	g_val = g_val * 255 / 4095 + (g_val * 255 % 4095) / (4095 / 2);
+>>> +	b_val = b_val * 255 / 4095 + (b_val * 255 % 4095) / (4095 / 2);
+>>> +	if (led->num_colors == 1)
+>>> +		return sysfs_emit(buf, "0x%x\n", r_val);
+>>> +	else
+>>> +		return sysfs_emit(buf, "0x%x 0x%x 0x%x\n", r_val, g_val, b_val);
+>>> +}
+>>> +
+>>> +static int led_enable_store(struct device *dev,
+>>> +				struct device_attribute *attr, const char *buf,
+>>> +				size_t count)
+>>
+>> Eeeee? store to enable LED? Really?
+> Yes. The users need this function and we provide it.
+
+NAK, I don't care about your users. You re-implemented existing ABI.
+Without any ABI docs that's just pure duplication.
+
 > 
-> Signed-off-by: Thomas Song <tsong@purestorage.com>
-> [emilne: patch developed by Thomas Song @ Pure Storage, fixed whitespace
->        and compilation warnings, updated MODULE_PARM description, and
->        fixed potential issue with ->current_path[] being used]
-> Co-developed-by: Ewan D. Milne <emilne@redhat.com>
-> Signed-off-by: Ewan D. Milne <emilne@redhat.com>
-> [jmeneghi: vairious changes and improvements, addressed review comments]
-> Co-developed-by: John Meneghini <jmeneghi@redhat.com>
-> Signed-off-by: John Meneghini <jmeneghi@redhat.com>
-> Link: https://lore.kernel.org/linux-nvme/20240509202929.831680-1-jmeneghi@redhat.com/
-> Tested-by: Marco Patalano <mpatalan@redhat.com>
-> Reviewed-by: Randy Jennings <randyj@purestorage.com>
-> Tested-by: Jyoti Rani <jrani@purestorage.com>
-> ---
->   drivers/nvme/host/core.c      |   2 +-
->   drivers/nvme/host/multipath.c | 108 +++++++++++++++++++++++++++++++---
->   drivers/nvme/host/nvme.h      |   5 ++
->   3 files changed, 106 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index 7c9f91314d36..c10ff8815d82 100644
-> --- a/drivers/nvme/host/core.c
-> +++ b/drivers/nvme/host/core.c
-> @@ -110,7 +110,7 @@ struct workqueue_struct *nvme_delete_wq;
->   EXPORT_SYMBOL_GPL(nvme_delete_wq);
->   
->   static LIST_HEAD(nvme_subsystems);
-> -static DEFINE_MUTEX(nvme_subsystems_lock);
-> +DEFINE_MUTEX(nvme_subsystems_lock);
->   
->   static DEFINE_IDA(nvme_instance_ida);
->   static dev_t nvme_ctrl_base_chr_devt;
-> diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-> index 03a6868f4dbc..fe10e0cebcf0 100644
-> --- a/drivers/nvme/host/multipath.c
-> +++ b/drivers/nvme/host/multipath.c
-> @@ -17,6 +17,7 @@ MODULE_PARM_DESC(multipath,
->   static const char *nvme_iopolicy_names[] = {
->   	[NVME_IOPOLICY_NUMA]	= "numa",
->   	[NVME_IOPOLICY_RR]	= "round-robin",
-> +	[NVME_IOPOLICY_QD]      = "queue-depth",
->   };
->   
->   static int iopolicy = NVME_IOPOLICY_NUMA;
-> @@ -29,6 +30,8 @@ static int nvme_set_iopolicy(const char *val, const struct kernel_param *kp)
->   		iopolicy = NVME_IOPOLICY_NUMA;
->   	else if (!strncmp(val, "round-robin", 11))
->   		iopolicy = NVME_IOPOLICY_RR;
-> +	else if (!strncmp(val, "queue-depth", 11))
-> +		iopolicy = NVME_IOPOLICY_QD;
->   	else
->   		return -EINVAL;
->   
-> @@ -43,7 +46,7 @@ static int nvme_get_iopolicy(char *buf, const struct kernel_param *kp)
->   module_param_call(iopolicy, nvme_set_iopolicy, nvme_get_iopolicy,
->   	&iopolicy, 0644);
->   MODULE_PARM_DESC(iopolicy,
-> -	"Default multipath I/O policy; 'numa' (default) or 'round-robin'");
-> +	"Default multipath I/O policy; 'numa' (default), 'round-robin' or 'queue-depth'");
->   
->   void nvme_mpath_default_iopolicy(struct nvme_subsystem *subsys)
->   {
-> @@ -128,6 +131,11 @@ void nvme_mpath_start_request(struct request *rq)
->   	struct nvme_ns *ns = rq->q->queuedata;
->   	struct gendisk *disk = ns->head->disk;
->   
-> +	if (READ_ONCE(ns->head->subsys->iopolicy) == NVME_IOPOLICY_QD) {
-> +		atomic_inc(&ns->ctrl->nr_active);
-> +		nvme_req(rq)->flags |= NVME_MPATH_CNT_ACTIVE;
-> +	}
-> +
->   	if (!blk_queue_io_stat(disk->queue) || blk_rq_is_passthrough(rq))
->   		return;
->   
-> @@ -140,6 +148,12 @@ EXPORT_SYMBOL_GPL(nvme_mpath_start_request);
->   void nvme_mpath_end_request(struct request *rq)
->   {
->   	struct nvme_ns *ns = rq->q->queuedata;
-> +	int result;
-> +
-> +	if ((nvme_req(rq)->flags & NVME_MPATH_CNT_ACTIVE)) {
-> +		result = atomic_dec_if_positive(&ns->ctrl->nr_active);
-> +		WARN_ON_ONCE(result < 0);
-> +	}
->   
->   	if (!(nvme_req(rq)->flags & NVME_MPATH_IO_STATS))
->   		return;
-> @@ -291,10 +305,15 @@ static struct nvme_ns *nvme_next_ns(struct nvme_ns_head *head,
->   	return list_first_or_null_rcu(&head->list, struct nvme_ns, siblings);
->   }
->   
-> -static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head,
-> -		int node, struct nvme_ns *old)
-> +static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head)
->   {
-> -	struct nvme_ns *ns, *found = NULL;
-> +	struct nvme_ns *ns, *old, *found = NULL;
-> +	int node = numa_node_id();
-> +
-> +	old = srcu_dereference(head->current_path[node], &head->srcu);
-> +
-> +	if (unlikely(!old))
-> +		return __nvme_find_path(head, node);
->   
->   	if (list_is_singular(&head->list)) {
->   		if (nvme_path_is_disabled(old))
-> @@ -334,13 +353,49 @@ static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head,
->   	return found;
->   }
->   
-> +static struct nvme_ns *nvme_queue_depth_path(struct nvme_ns_head *head)
-> +{
-> +	struct nvme_ns *best_opt = NULL, *best_nonopt = NULL, *ns;
-> +	unsigned int min_depth_opt = UINT_MAX, min_depth_nonopt = UINT_MAX;
-> +	unsigned int depth;
-> +
-> +	list_for_each_entry_rcu(ns, &head->list, siblings) {
-> +		if (nvme_path_is_disabled(ns))
-> +			continue;
-> +
-> +		depth = atomic_read(&ns->ctrl->nr_active);
-> +
-> +		switch (ns->ana_state) {
-> +		case NVME_ANA_OPTIMIZED:
-> +			if (depth < min_depth_opt) {
-> +				min_depth_opt = depth;
-> +				best_opt = ns;
-> +			}
-> +			break;
-> +		case NVME_ANA_NONOPTIMIZED:
-> +			if (depth < min_depth_nonopt) {
-> +				min_depth_nonopt = depth;
-> +				best_nonopt = ns;
-> +			}
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +
-> +		if (min_depth_opt == 0)
-> +			return best_opt;
-> +	}
-> +
-> +	return best_opt ? best_opt : best_nonopt;
-> +}
-> +
->   static inline bool nvme_path_is_optimized(struct nvme_ns *ns)
->   {
->   	return nvme_ctrl_state(ns->ctrl) == NVME_CTRL_LIVE &&
->   		ns->ana_state == NVME_ANA_OPTIMIZED;
->   }
->   
-> -inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
-> +static struct nvme_ns *nvme_numa_path(struct nvme_ns_head *head)
->   {
->   	int node = numa_node_id();
->   	struct nvme_ns *ns;
-> @@ -349,13 +404,25 @@ inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
->   	if (unlikely(!ns))
->   		return __nvme_find_path(head, node);
->   
-> -	if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_RR)
-> -		return nvme_round_robin_path(head, node, ns);
->   	if (unlikely(!nvme_path_is_optimized(ns)))
->   		return __nvme_find_path(head, node);
-> +
+>>
+>> ...
+>>
+>>> +{
+>>> +	struct led_classdev *lcdev = dev_get_drvdata(dev);
+>>> +	struct mp3326_led *led = container_of(lcdev, struct mp3326_led, cdev);
+>>> +	struct mp3326 *chip = led->private_data;
+>>> +	int ret;
+>>> +	uint val, i;
+>>
+>>
+>>> +
+>>> +static DEVICE_ATTR_RW(led_pwm);
+>>> +static DEVICE_ATTR_RW(led_enable);
+>>> +static DEVICE_ATTR_RO(led_short_fault);
+>>> +static DEVICE_ATTR_RO(led_open_fault);
+>>
+>> No, for multiple reasons:
+>> 1. Where ABI documentation?
+>> 2. There is a standard sysfs interface. No need for most of that. Please
+>> explain why standard interface does not fit your needs - for each new
+>> interface.
+> Hi krzysztof,
+> 
+> 1. Where ABI documentation?
+> A: 
+> Sorry, the abi is insufficient.
 
-Pointless newline.
+Which one is insufficient?
 
-But other than that:
+> 
+> Can I add it as comment above the function?
+> 
+> 2. There is a standard sysfs interface. No need for most of that. Please
+> explain why standard interface does not fit your needs - for each new
+>  interface.
+> A:
+> Leds has two ways to light dim. One is analog dimming, another pwm dimming.
+> They are different in practice. 
+> 
+> In RGB module, pwm dimming can control color and analog dimming can control intensity.
+> 
+> Mp3326 supports the two ways which can operate contemporary.
+> 
+> In practice, I have needs below.
+> 1. Operate rgb color and intensity.
+> 2. enable/disable some channel
+> 3. short/open fault notice.
+> 
+> However, The standard interface only has three functions below, they are not fit my needs.
+> 1. multi_index
+> 2. multi_intensity(only can dim using one way, so I use it as analog dimming)
+> 3. led_mc_calc_color
+> 
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+Please point to which ABI is not sufficient.
 
-Cheers,
+> 
+> In order to fit my needs, I add the interface below.
+> led_pwm       
+> led_enable
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+Because especially this one sounds like you are mocking us.
+
+> led_short_fault
+> led_open_fault
+> 
+
+
+Best regards,
+Krzysztof
 
