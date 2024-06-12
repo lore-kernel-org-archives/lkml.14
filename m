@@ -1,146 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2940713CAA7;
-	Wed, 12 Jun 2024 06:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A34913CAA7
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 06:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718173235; cv=none; b=CvV86/FnDl7umTRPk4mAfpcQdNw+xriFCopRLFwpg9D3n4TG8p3XB8ZbpLN/qSY0KKWkRNlVQT8Mh2V5HSB1KOhBnAd+Gq5x1CzCIbgIBtjqNjAfY/fms90QLuEZ3vXqBa6b8SNGjkmW616mlt0ETs9UUlC7AnwaC9hShJ+hq/Q=
+	t=1718173273; cv=none; b=Sm3dJ5QAHMxAVSBNHMQGCMY2Z7deRMqhe1oE99mKwXMnaY5p8wTgw2+BAPJzvBcEGORgv5pnFke8qj8uXvq1HYYWBnZyaYToM0EVkQru3zpBKzcMzM336Xi/IxrkyeBigsJr+N6qVUAK5Mcl2sLM9XYlcfC4ZsH5KinhwnsuX5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718173235; c=relaxed/simple;
-	bh=oichh5d6CnkwFu+MT1jkc4//LKWwx7+JksMux62D+j4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TsWckl6euD/ykJxoGi7aI8qbBxgjLP37fPP9QZJWkq4oVLWuIOAI1zuCUHcIiyj3D7SW94mYe8MY1x3aOaOj6z7BPKwuVAOi6uf5/xn+ZnrTHM+hWZuIEp0KYSlOv1uRYq/sK0qfq3Ru+cU4TpuuZ+9gjEeALyECq3mGvfwQlXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsMS8LSK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718173273; c=relaxed/simple;
+	bh=htK3JGDzZ50RrcVE9SiM5Fksd2VJ/2WYnYQ5LvzPLBY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=sdqqO5w2DO6GA8v3ThxbyMvTG0ij0UZ6XKxAGogjbYtNWyVEMJvrpjTlHWcfZkrvDmW31hkBBNL6OVOJNTPKv8EdWQpX8e7ucoIMHTfntIi+BjtsJvHvdFnr//wA+2yIwvo2gPcWMO2+9GSmXkEEWRWEyJqKvdNAgF/2xj5sclk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kLncFwkN; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsMS8LSK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37616C32786;
-	Wed, 12 Jun 2024 06:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718173234;
-	bh=oichh5d6CnkwFu+MT1jkc4//LKWwx7+JksMux62D+j4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZsMS8LSKKIY6eGYlAzVJ+qi/q3h1aHzTpFxwFvfOIhtpSoXGviichqW+32452EKZo
-	 BQEtWVPHWTQok6Y32lvE/sFJK0b897dsg8AdVa1bJyR4aGMNNxI3aXfJPYEm7+LF00
-	 dKX5e0jg0vbfjw0+6Ec3X6eut/1YncLSF1GaOd9dVYSP/kzuFOa+W05kHUyT+A5uBv
-	 eymqcemnTvHVYKlF4eiQYOpspFpTeOwPHTSUtrXtZdInnRgVrQ/lRRa5WKKMZjB5lB
-	 pd5KwwpRXfEdmSGRkR09ucvpV87N/tFuKo3sf3D3wxLmuS0VFd5ckEJaXbx/cZSXpB
-	 Wfef8UwSLihTg==
-Message-ID: <629a1867-94b7-4f89-821a-a38b92189af5@kernel.org>
-Date: Wed, 12 Jun 2024 08:20:28 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kLncFwkN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718173271; x=1749709271;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=htK3JGDzZ50RrcVE9SiM5Fksd2VJ/2WYnYQ5LvzPLBY=;
+  b=kLncFwkNMl35aqXeCr+1JpYz9QEHENNWCpZLJUmSo145BvSbGvImc0kK
+   COMJqDUie5JDgyJkRGn3l9aR/9sN21/EXhIdTSzba+uT7TgI4019FP2lD
+   IE+gsz+uWc3f7Xsu4VNwolw6v0w9JiApSHe9kgwjcuG4twJbf+MHBqa/j
+   gsGHcKLsPtRdoFIigPeySHx5JiOk82H73FhgtROZVrTg/7bojYFHQ5DJh
+   BjaI2ESq0aYB5A3CMtOxaYSK+o+ZmSs5fDLmZh7kwFepqivr8xoIcQiLI
+   j4YS3u1/g++l3I2ajgCUS6SukGVhrLgqtPvXrqh7iZQXi78wx5zZkCw1H
+   w==;
+X-CSE-ConnectionGUID: TWKm0amRQde7OHOnmPZdLw==
+X-CSE-MsgGUID: Me833cOrTFCgzBwD1UquDA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11100"; a="18699012"
+X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
+   d="scan'208";a="18699012"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:21:11 -0700
+X-CSE-ConnectionGUID: 3x1SUSrQSIGBA4eo9xt7lQ==
+X-CSE-MsgGUID: hNXSG1BbSwK2yLWSV/Ej9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,232,1712646000"; 
+   d="scan'208";a="40309738"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2024 23:21:08 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Hugh Dickins <hughd@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  Zi Yan <ziy@nvidia.com>,
+  Baolin Wang <baolin.wang@linux.alibaba.com>,  David Hildenbrand
+ <david@redhat.com>,  linux-kernel@vger.kernel.org,  linux-mm@kvack.org
+Subject: Re: [PATCH hotfix] mm/migrate: fix kernel BUG at mm/compaction.c:2761!
+In-Reply-To: <46c948b4-4dd8-6e03-4c7b-ce4e81cfa536@google.com> (Hugh Dickins's
+	message of "Tue, 11 Jun 2024 22:06:20 -0700 (PDT)")
+References: <46c948b4-4dd8-6e03-4c7b-ce4e81cfa536@google.com>
+Date: Wed, 12 Jun 2024 14:19:17 +0800
+Message-ID: <87msnq7key.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] hwmon: (ina2xx):Add Suppor for passing alert
- polarity from device tree to driver
-To: Amna Waseem <Amna.Waseem@axis.com>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@axis.com
-References: <20240611-apol-ina2xx-fix-v4-0-8df1d2282fc5@axis.com>
- <34fe20d5-c67a-44e6-8ec1-566d80e25447@kernel.org>
- <ef71090e-13c7-4ef1-b34e-d6fe9546b705@axis.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <ef71090e-13c7-4ef1-b34e-d6fe9546b705@axis.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
-On 12/06/2024 08:18, Amna Waseem wrote:
-> On 6/11/24 14:49, Krzysztof Kozlowski wrote:
->> On 11/06/2024 11:36, Amna Waseem wrote:
->>> The INA230 has alert polarity bit in Mask/Enable register which can be
->>> configured to be active high or active low depending upon the requirements
->>> of the hardware using this chip. The patches in this series adds the support
->>> for passing alert polarity value from device tree to the driver. Alert polarity
->>> property is added device tree bindings and the driver is modified to read
->>> this property and set the Alert polarity (APOL) bit value in Mask/Enable register
->>> of INA230.
->>>
->>> Signed-off-by: Amna Waseem <Amna.Waseem@axis.com>
->>> ---
->>> Changes in v4:
->>> - Remove unnecessary checks while setting alert polarity bit
->>> - Link to v3: https://lore.kernel.org/r/20240603-apol-ina2xx-fix-v3-0-b9eff3158e4e@axis.com
->> <form letter>
->> This is a friendly reminder during the review process.
->>
->> It looks like you received a tag and forgot to add it.
->>
->> If you do not know the process, here is a short explanation:
->> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
->> versions, under or above your Signed-off-by tag. Tag is "received", when
->> provided in a message replied to you on the mailing list. Tools like b4
->> can help here. However, there's no need to repost patches *only* to add
->> the tags. The upstream maintainer will do that for tags received on the
->> version they apply.
->>
->> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
->>
->> If a tag was not added on purpose, please state why and what changed.
->> </form letter>
->>
->> Missing this is really odd, considering you are using b4. Please read
->> the b4 guide.
->>
->> Best regards,
->> Krzysztof
->>
-> Thanks Krzysztof for the information. I have read the documentation in 
-> the link you provided and I will keep it in mind next time if I submit 
-> patches.
-> 
+Hugh Dickins <hughd@google.com> writes:
 
-So you require someone to re-review?
+> I hit the VM_BUG_ON(!list_empty(&cc->migratepages)) in compact_zone();
+> and if DEBUG_VM were off, then pages would be lost on a local list.
+>
+> Our convention is that if migrate_pages() reports complete success (0),
+> then the migratepages list will be empty; but if it reports an error or
+> some pages remaining, then its caller must putback_movable_pages().
+>
+> There's a new case in which migrate_pages() has been reporting complete
+> success, but returning with pages left on the migratepages list: when
+> migrate_pages_batch() successfully split a folio on the deferred list,
+> but then the "Failure isn't counted" call does not dispose of them all.
+>
+> Since that block is expecting the large folio to have been counted as 1
+> failure already, and since the return code is later adjusted to success
+> whenever the returned list is found empty, the simple way to fix this
+> safely is to count splitting the deferred folio as "a failure".
+>
+> Fixes: 7262f208ca68 ("mm/migrate: split source folio if it is on deferred split list")
+> Signed-off-by: Hugh Dickins <hughd@google.com>
+> ---
+> A hotfix to 6.10-rc, not needed for stable.
+>
+>  mm/migrate.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1654,7 +1654,12 @@ static int migrate_pages_batch(struct list_head *from,
+>  
+>  			/*
+>  			 * The rare folio on the deferred split list should
+> -			 * be split now. It should not count as a failure.
+> +			 * be split now. It should not count as a failure:
+> +			 * but increment nr_failed because, without doing so,
+> +			 * migrate_pages() may report success with (split but
+> +			 * unmigrated) pages still on its fromlist; whereas it
+> +			 * always reports success when its fromlist is empty.
+> +			 *
+>  			 * Only check it without removing it from the list.
+>  			 * Since the folio can be on deferred_split_scan()
+>  			 * local list and removing it can cause the local list
+> @@ -1669,6 +1674,7 @@ static int migrate_pages_batch(struct list_head *from,
+>  			if (nr_pages > 2 &&
+>  			   !list_empty(&folio->_deferred_list)) {
+>  				if (try_split_folio(folio, split_folios) == 0) {
+> +					nr_failed++;
 
-Best regards,
-Krzysztof
+It appears better to add
 
+        stats->nr_thp_failed++;
+
+too.  Otherwise, if migrate_pages_batch() is called via migrate_pages(,
+MIGRATE_ASYNC, ), nr_thp_failed will not increase.  But if
+migrate_pages_batch() is called via migrate_pages(, MIGRATE_SYNC*, ),
+nr_thp_failed will increase in migrate_pages_sync() via
+
+        stats->nr_thp_failed += astats.nr_thp_split;
+
+That is, they are not consistent.  The issue exists since commit
+7262f208ca68 ("mm/migrate: split source folio if it is on deferred split
+list").
+
+Otherwise, this looks good to me.  Thanks!
+
+>  					stats->nr_thp_split += is_thp;
+>  					stats->nr_split++;
+>  					continue;
+
+--
+Best Regards,
+Huang, Ying
