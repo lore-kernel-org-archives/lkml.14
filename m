@@ -1,113 +1,109 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7104182860;
-	Wed, 12 Jun 2024 19:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE72982860
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 19:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718221449; cv=none; b=DSDBoWjlayuag59VSmH5pxhJSn6VgsThd1xZ6Z2fKuZqvoPWkvsp3N7dC1FMdGAMn/Xi60/o0VgNDgRf1QeqmxKxg4igtEaylfHEZc1RQFnsv04tjaEAMKtqOZRD+l/Y3JuDjBE1uqqc91thcKRuS9TY0eCL6leWpB9FQr44yVw=
+	t=1718221488; cv=none; b=PmgNBw2KYPPgF4/AHoS+sF9NkliD9+e4igDJYXwOzIVz7xHirNYXZQb22hKC29useOp4UKtIblwdXDUUZdp5tKiDLelGUbl8RVrhoa/k8sf07AMXBzMLK7sWPf3H5RalLsHE6OYpk9fggVwg00DEWt+7o2EBsBlKm25NYTdyDBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718221449; c=relaxed/simple;
-	bh=O+FtYBDXnbweDOL4R19ZV1/NNhwH5Y4Lp4FSBLIU0eI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cFoSL3irj/1Tq2/ZMAtZ3esUuDG6aOz03+JneSVOQ1nzCrqdQDaLaodMeqG7P4uOxFKSn8leIadyZrcO1JlkHpO9DjS1D9p1VnWeIljsZsgJObFvlgLtYM9qsTW3gJZR043/f+LoXmmrvhxcAhsV95URtTwuVBRpeY9S1sVSZa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JIGHAZj2; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1718221488; c=relaxed/simple;
+	bh=OR1d5VyF/7X0e1TsHxZ9Lk78cj+zPyBIY+rt5wIGorQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ia80xgdLUKC0FvLSomgCtzfEMm+NvQnhz689zTV5A7opuWwcshf+kZT0FX7OVuy8+8ajMkSJk5L+1DTXiUF7h4uIyHq9AN7ZCRqUe8IRUdIfmyRTeGkCFIcKz1T3TrcUwb2Et5JJaYrD2QxaA/ZbTMO3E7FlzbtyoFe6QgAIlWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k5YzWpmx; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JIGHAZj2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1718221445;
-	bh=O+FtYBDXnbweDOL4R19ZV1/NNhwH5Y4Lp4FSBLIU0eI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=JIGHAZj2aQD8Hf9VwrqLKLytT4dBeSTIJBFXagatR7vdFUsPH/EF9pjdUJUUfrXbt
-	 wqAbkemqdxjfLNrKrzo2anATw1gMq5x59nVVJM9ZY5FRIKfpQmAXV0kpPctLDPLTP1
-	 XtlIewrROieob8JRnMLmwbglgi0JhIjgfuSeA4C3IH9vFvQu+dGxgkrMiTFxO6jMKS
-	 3krRYoi7ipn9fU8f3IkM/GnM/O5BSMPNNWdzVIUveQXL0SplP78uVA+B8WtPoNv4jt
-	 m10m9kBwO+tBXqGEaAsWX9nmoPup8osFQUJsYEIa0xMafS+8UQx1Q3V9YAZ/mJaaWr
-	 0CZWeoEVqskVQ==
-Received: from nicolas-tpx395.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B9AEA378065F;
-	Wed, 12 Jun 2024 19:44:01 +0000 (UTC)
-Message-ID: <33d38919f3f94b6e1848aaee20cf52ac9c1df606.camel@collabora.com>
-Subject: Re: [PATCH v6,04/24] v4l: add documentation for restricted memory
- flag
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Tomasz Figa <tfiga@chromium.org>, Laurent Pinchart
-	 <laurent.pinchart@ideasonboard.com>
-Cc: Yunfei Dong <yunfei.dong@mediatek.com>, Jeffrey Kardatzke
- <jkardatzke@google.com>, =?ISO-8859-1?Q?N=EDcolas?= "F . R . A . Prado"
- <nfraprado@collabora.com>, Nathan Hebert <nhebert@chromium.org>, Hans
- Verkuil <hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
- <benjamin.gaignard@collabora.com>, Sebastian Fricke
- <sebastian.fricke@collabora.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>,  Marek Szyprowski <m.szyprowski@samsung.com>, Chen-Yu
- Tsai <wenst@chromium.org>, Yong Wu <yong.wu@mediatek.com>,  Hsin-Yi Wang
- <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>, Daniel Vetter
- <daniel@ffwll.ch>,  Steve Cho <stevecho@chromium.org>, Sumit Semwal
- <sumit.semwal@linaro.org>, Brian Starkey <Brian.Starkey@arm.com>, John
- Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>,
- Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Matthias
- Brugger <matthias.bgg@gmail.com>,  linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org,  linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,  linux-mediatek@lists.infradead.org, 
- Project_Global_Chrome_Upstream_Group@mediatek.com
-Date: Wed, 12 Jun 2024 15:43:58 -0400
-In-Reply-To: <bhgv5djcjc4yt75pyug2yirrymeucjyslthnvq6k2kpp7axfph@jzo5wpcbgwun>
-References: <20240516122102.16379-1-yunfei.dong@mediatek.com>
-	 <20240516122102.16379-5-yunfei.dong@mediatek.com>
-	 <20240522111622.GA31185@pendragon.ideasonboard.com>
-	 <bhgv5djcjc4yt75pyug2yirrymeucjyslthnvq6k2kpp7axfph@jzo5wpcbgwun>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 (3.52.2-1.fc40) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k5YzWpmx"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f61742a024so42385ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 12:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1718221486; x=1718826286; darn=vger.kernel.org;
+        h=mime-version:user-agent:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DnH5fWF1vZdpxO/xmNthzzpxxZmShkacESefN2gAYOU=;
+        b=k5YzWpmxyJIFr7fjvTPmYboZhtgs4Np5p9QLirs4LtpJD+4NLsnn23AvkugL6bE37V
+         KE5qjBKGT46/UjOWpRtGeABAvj9ijHclzifBp0NZpmJE0EFFEDl1WKbaUtlnc56xL00Q
+         btaRUTTISrF3aCJmZXgYyEMd2OLznCcuxyKuRdzz+tlbxWOV35nGEx768WQfn1p5udOx
+         eflPofpM12ADnYqFbT9Tk7qIcPmem1z53MlsUq6ckcZpePbpOsVohzh4pS9HY94DSe2X
+         ZAZPh0tyNg5lb1dJk1oQMpxCmkxO4Lhmd+jclgJaKmRus25nFY8Yc9n3XAdkjaMYlxnH
+         oHyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718221486; x=1718826286;
+        h=mime-version:user-agent:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DnH5fWF1vZdpxO/xmNthzzpxxZmShkacESefN2gAYOU=;
+        b=P3AQmKpgc8LurKTgKShZPFUF3j1nLcAEk905hiHtBeiddTlE8SarK7KA7/DEhkGKlA
+         ExKNz86taeAwx3vquNDRN+4pzkpG9OvaWlQxTMI9qk/fl3aK6enbTVI1COUHJdz0AH5m
+         EAnTTV5uHMZtSiCEi5g61W27EZWedBW6Wrv6aJKVNQNwS0QRLz9Lhb9cew7eueOts2KR
+         g4rJcbWZo5A/N7lrBuLMJKhrRe0j+CZ1FLr51a1TFn/PKpU9byAs8NGm6DLAZlSRdD6o
+         a6lUHzljjYdF+WYwmMWjsnVn9LfTzTUnoCe7RF5SviNx0t2g0Uh8oBz/2MDWIvhwC02H
+         0JUw==
+X-Gm-Message-State: AOJu0Yyt/0bZMKvycMoCyP1A3GSx52phhokyGBN/UT3wJqmGhZvcGHh6
+	Iz/Vx/TnwDL6TfyqojFSYjCgTWZnedDcOL8W5jrOLNaZ9cWBpOeYvxnfmVkEXw==
+X-Google-Smtp-Source: AGHT+IFtovkZPw6siRncHj2S+TjHg2Th+7w9+JVXHjCH3C6TPMRJDnE3pfpHjNx+tY7kW9GKIA7AQA==
+X-Received: by 2002:a17:902:fc90:b0:1f7:3bb8:c32f with SMTP id d9443c01a7336-1f84ff3fde6mr451775ad.13.1718221485651;
+        Wed, 12 Jun 2024 12:44:45 -0700 (PDT)
+Received: from bsegall.svl.corp.google.com.localhost ([2620:15c:2a3:200:bcff:f772:74b7:8f03])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7042571df69sm7905262b3a.52.2024.06.12.12.44.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 12:44:45 -0700 (PDT)
+From: Benjamin Segall <bsegall@google.com>
+To: linux-efi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, Arvind
+ Sankar <nivedita@alum.mit.edu>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>
+Subject: [PATCH v2] x86/boot: Don't add the EFI stub to targets, again
+Date: Wed, 12 Jun 2024 12:44:44 -0700
+Message-ID: <xm267ceukksz.fsf@bsegall.svl.corp.google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
 
-Hi,
+This is a re-commit of the commit da05b143a308 ("x86/boot: Don't add the
+EFI stub to targets") after the tagged patch incorrectly reverted it.
 
-Le mercredi 12 juin 2024 =C3=A0 13:37 +0900, Tomasz Figa a =C3=A9crit=C2=A0=
-:
-> > Why is this flag needed ? Given that the usage model requires the V4L2
-> > device to be a dma buf importer, why would userspace set the
-> > V4L2_BUF_CAP_SUPPORTS_RESTRICTED_MEM flag and pass a non-restricted
-> > buffer to the device ?
->=20
-> Given that the flag is specified at REQBUF / CREATE_BUFS time, it's
-> actually useful to tell the driver the queue is operating in restricted
-> (aka secure) mode.
->=20
-> I suppose we could handle that at the time of a first QBUF, but that
-> would make the driver initialization and validation quite a bit of pain.
-> So I'd say that the design being proposed here makes things simpler and
-> more clear, even if it doesn't add any extra functionality.
+To summarize: vmlinux-objs-y is added to targets, with an assumption
+that they are all relative to $(obj); adding a $(objtree)/drivers/...
+path causes the build to incorrectly create a useless
+arch/x86/boot/compressed/drivers/... directory tree.
 
-There is few more reasons I notice in previous series (haven't read the lat=
-est):
+Fix this just by using a different make variable for the EFI stub.
 
-- The driver needs to communicate through the OPTEE rather then SCP and som=
-e
-communication are needed just to figure-out things like supported profile/l=
-evel
-resolutions etc.
-- The driver needs to allocate auxiliary buffers in secure heap too, alloca=
-tion
-at runtime are not the best
+Fixes: cb8bda8ad443 ("x86/boot/compressed: Rename efi_thunk_64.S to efi-mixed.S")
+Signed-off-by: Ben Segall <bsegall@google.com>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: stable@vger.kernel.org # v6.1+
+---
+ arch/x86/boot/compressed/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Note that the discussion around this flag already took place in the very fi=
-rst
-iteration of the serie, it was originally using a CID and that was a propos=
-ed
-replacement from Hans.
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 243ee86cb1b1..f2051644de94 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -103,13 +103,13 @@ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+ vmlinux-objs-$(CONFIG_INTEL_TDX_GUEST) += $(obj)/tdx.o $(obj)/tdcall.o $(obj)/tdx-shared.o
+ vmlinux-objs-$(CONFIG_UNACCEPTED_MEMORY) += $(obj)/mem.o
+ 
+ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
+-vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
++vmlinux-libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ 
+-$(obj)/vmlinux: $(vmlinux-objs-y) FORCE
++$(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+ 	$(call if_changed,ld)
+ 
+ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
+ $(obj)/vmlinux.bin: vmlinux FORCE
+ 	$(call if_changed,objcopy)
+-- 
+2.45.2.505.gda0bf45e8d-goog
 
-regards,
-Nicolas
