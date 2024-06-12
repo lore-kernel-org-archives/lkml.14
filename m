@@ -1,58 +1,74 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout5-smtp.messagingengine.com (fout5-smtp.messagingengine.com [103.168.172.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C861A34;
-	Wed, 12 Jun 2024 09:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C314A34;
+	Wed, 12 Jun 2024 09:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718185900; cv=none; b=o4FJAMh0/5ZfF9N4yQQSPJI4eqpCZHt6+wl0CPGH0W0wZ0OvjCiP+NoCQSLBEJfBZCKEH+yMpWvOlCHcWCdF3qKgHSJFlamdcOcRpCC5U2RLagpNZ1qHRt2uP3+49LEDhsOPjUoFMTuQCXvbc9fBZKwTfckR2pYG6VocPqLK8Mo=
+	t=1718186017; cv=none; b=R6J8u4mZQFjO3VsZtP6KRb5jxBVngsPnQEhuIwlZ4w+Q1Xq7/X837YqOSf0Ej3slHy/k1JRnMCdTV22adSGu/kW5v7MByOMIajc4XkBbrYxzhHMa6TuIeiuZ8qEmb3YldM+tRMg5+HD6JuHWNPaBEMWhsEz5X15rbhm+1tjJFBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718185900; c=relaxed/simple;
-	bh=8dFZrXMQrpSMEZnw2V6V7d9rPJd3f8Fhs33OTTxQ9Fc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z8pY0Wc5bHHALmCog4/MWLxzUOlu6cC4hKKJBC9cPjAucMoKMm1kwYiG87kZJI5qjDmM6kTraxk6KqAECtcQv4+dvAxZNZTIiD+xKx4yMAnLyaUtYxsJ8fn2/E5yHSCWINkKHUTiCxWVls4PymSxjHrPOspJF2sdWQsAhPEYdc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDyft+Uk; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718186017; c=relaxed/simple;
+	bh=LTt8Soc7AMOTMEDD18dBhsJ9SMhm26/CHqO5qzg9vxg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qDJTixV4UWKuEqdazdTVQk6sWnbz7MzqbIjjNxixibz9jtgSk27grbU4oyt58LqyazV8eHgEtACNKnskg8f16KiSVrogwyTxK/UuMNVM1irToDI+cQjJc+OoyhYu2UtnFSfQCXoBlSg5RrB1boIUtdLJvfquw36L44G8SmlfnyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=2fiUFocI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Z2sSrXNB; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDyft+Uk"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-6ce533b6409so1601079a12.1;
-        Wed, 12 Jun 2024 02:51:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718185899; x=1718790699; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0gzrM6EvAqCUYyubpdKPvo+y6fnT5QsRDHvsxqtQtqU=;
-        b=NDyft+UkATa2UFldp+y4RdEVUCDXHkQnmjFPVY/a4y4kXD4nJGtpkXFINy70XzajOW
-         jGjAiTkEenKzh4A5ScHq7pLs+ty1vWIpK9ROAqY8vS7CVM0HuUOXby37MI8O0o8w7Lo5
-         8nXtPPdfOLeLnJ4NtdJpHk00b3IHIiyIOU9HRU9Lc5gzTrKBVjc75KtvSWEsyHaKLAxo
-         8rogKJDZW9ryn10JRVsxCjw3QokRHj6VKWu/BmWzrSADBCVICWPK/JfQOy4E7ll4PdIF
-         7UjYH6fyBgvS3ab6awSk13Dq3WD8I8YAp+zBk6s+Sh3s2aw+Yp9hNCb0lNN40j6yWtKC
-         TuCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718185899; x=1718790699;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0gzrM6EvAqCUYyubpdKPvo+y6fnT5QsRDHvsxqtQtqU=;
-        b=sAW67aX0+eUTyGU0lh2T5s5t9vIcHtrz+dBrjqS+hx4S99oaFPi01i3ISNfXmB3d/e
-         x05hVG/zY6tfqiyYr6Qep7IRHV9bGI+JSGQvupMeMYJV9+O3IDUw+Iri4gfoVhpcKzEh
-         d1MCA6INfLPb7wVnh3e2JVVLxaR23RrifM40g7NKNB/PQAVvqFnmJJhlyN1VgECUSzbD
-         x46SPnWd7/j6A3ojnNethbOULm+zKhzioW8by5hO8ypnwABKn7UgSFPB0m0JXH7ALLM7
-         8HCcTIQRWeADnF0X5MNc7ArAtOjNikkzHhsSQA7eVy5CdqYrDKqOudMUyoOOc7Hw7hWy
-         I/gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpKBFUdYnA6z/1p+jHDlh5YTpU4jruBf92UeaWFJhNBgFX9u8pvdTFbC4ytcdXEoYIyK+eyQT9ycqLNvwE5PkvpWlh98CCQRjNcdxi
-X-Gm-Message-State: AOJu0YxZjo8y2kOjD3uttfzeGvXtjJ+HFv0tQkTulrrIcEs3UQVPAz+T
-	fGuS7d/oiMCWbUOij9WySkGcnkiVs/IP/Nc25VrTtK6u55hXpgzCpfU1MvWVnAc=
-X-Google-Smtp-Source: AGHT+IGJN0M/2lFf49OeqFh31ecKXXTeS9tXciHX6sjFHJ0uuRZ48YpqlzWs/E6lU0N4L+wFzLxLjA==
-X-Received: by 2002:a17:90b:1d0d:b0:2c3:40b7:1f6d with SMTP id 98e67ed59e1d1-2c4a7530740mr1817234a91.0.1718185898396;
-        Wed, 12 Jun 2024 02:51:38 -0700 (PDT)
-Received: from localhost ([2405:201:a42a:e05e:b15d:9596:9397:9fee])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2c4a9c2fa34sm1161774a91.38.2024.06.12.02.51.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 02:51:38 -0700 (PDT)
-From: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
-Date: Wed, 12 Jun 2024 15:21:25 +0530
-Subject: [PATCH RESEND] bpf: fix order of args in call to bpf_map_kvcalloc
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="2fiUFocI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z2sSrXNB"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 6024F13801AD;
+	Wed, 12 Jun 2024 05:53:34 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Wed, 12 Jun 2024 05:53:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1718186014; x=1718272414; bh=cQ
+	HyV8JnUmrwi4UXdpt8Fz/R++EiBrxTEeAiMYKquj4=; b=2fiUFocIm6MKx+iF7U
+	jcwIxKirHmAxbKf4f462HEQF/WZG5ptIMOveFcjFcA+88chcrP8Qqo0jY67KN2w1
+	ayxJKmHc18C14Q3RxP8Z0vNXTomefa6+M0ewJNVfHDuPyebmPDjj1qqxG7nJCMgu
+	Aji9UOmTSmmnpwfhQpGE5v4/by7ySXAELYIo1UpOGJ8Lk3oKVQ40TvNKYBrwg9Cq
+	4FJKVljEqOZb8enG93yxtiaQ5NqaBh7PpX5ONM4qKlZMtWXV4EKUNcVZs8JqvMwx
+	OVEz2Q/p3SIqM+SFajcv+kQRJ/1DWrCkObXecVo10I7XZnj5T7UW8EtmbM2Tx6Dm
+	vctg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1718186014; x=1718272414; bh=cQHyV8JnUmrwi
+	4UXdpt8Fz/R++EiBrxTEeAiMYKquj4=; b=Z2sSrXNBsuaYRfKGSVKKsSjsZx3WB
+	PZwAerV1qVa+BVcXyjihKi+Qz19KsnL2kvLdTQqu1Mr+rBS6oSkNdG8DFlf4bd/9
+	DBTYP8+i+D4E/j0OT6Z8GDVf/tbmnUuOJKFVUiR52Kxo4GDGs5S7tYAvaxk+f16D
+	WO+2E1nUBX196O0U23QReRuzDVbDp4cYtf1bPCqiDRLRXSuC16tbQ1LX4PD7DExW
+	79GrshaFx/HPY0VppOpjzKOru/jcKGecJy21GU9ZRJeo/0mYOJ9Nhrb6zW4/Mrwt
+	TBaRWPHe97w3zyljQEcoBuKk6ARr7JbJkd6fsEB/DCYrUeNUpIE3jAXag==
+X-ME-Sender: <xms:HnBpZny0AhU4fDHMQUapMGuPl1Vpd0Gg8Z_21aiiNvFjlX0ybD1hMQ>
+    <xme:HnBpZvRclJKkEGdNfUF8FbS2F2NiAkMKde7tz5mWPaGZap3_fzpzDeU7lJEtV3_Is
+    kt7eTCn6C7IDssoccE>
+X-ME-Received: <xmr:HnBpZhUk__SU2x7HTQd69lKjlc55xecfEX5NTYKJ0k7rF52P96ZLm6k>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrfedugedgvddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpeflihgrgihu
+    nhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecugg
+    ftrfgrthhtvghrnhepgfevffejteegjeeflefgkeetleekhfeugfegvdeuueejkeejteek
+    kedvfffffedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehf
+    lhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:HnBpZhinTEmeaLEsNce0wYZajqDZfp2RCRzXy0hxCtO0fi-OVZ-FRg>
+    <xmx:HnBpZpB5Jir4bWZ324tkTFHTq-toBlxQTqFenn_m6NCh1gYTcGpjOA>
+    <xmx:HnBpZqK-P_URGWTLymsmBjaT7RnbPcV6vx-vueemfKyMtg4eRwgBVg>
+    <xmx:HnBpZoBIX11wl-b3btcgj7Qpgrhl9BqsmH9Y-4oGsYSnUBvC0fJshw>
+    <xmx:HnBpZr0wtk7dixymJTeyZE4Qaa-v5vvdHjyWRCGkgWJS1h4s-vGqAqkj>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 12 Jun 2024 05:53:33 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH v2 0/4] MIPS: Enable ARCH_SUPPORTS_ATOMIC_RMW
+Date: Wed, 12 Jun 2024 10:53:28 +0100
+Message-Id: <20240612-mips-llsc-v2-0-a42bd5562bdb@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,75 +77,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240612-master-v1-1-a95f24339dab@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAJxvaWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDM0Mj3dzE4pLUIt20VMtUM+PEJNNkS1MloOKCotS0zAqwQdFKQa7Brn4
- uSrG1tQD2m2AGYAAAAA==
-To: Martin KaFai Lau <martin.lau@linux.dev>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, 
- Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+X-B4-Tracking: v=1; b=H4sIABhwaWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
+ vPSU3UzU4B8JSMDIxMDM0Mj3dzMgmLdnJziZF3DNKO0JEtDM8tkgyQloPqCotS0zAqwWdGxtbU
+ Aw19DZFsAAAA=
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Jonas Gorski <jonas.gorski@gmail.com>, 
+ "Maciej W. Rozycki" <macro@orcam.me.uk>, linux-mips@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1428;
- i=sheharyaar48@gmail.com; h=from:subject:message-id;
- bh=8dFZrXMQrpSMEZnw2V6V7d9rPJd3f8Fhs33OTTxQ9Fc=;
- b=owEBbQKS/ZANAwAIAVeh+rkVtmsSAcsmYgBmaW+j/5SiyBV1U+kYa1ezq8Z+KA1egtQ3xxPiO
- TjQprR/7qWJAjMEAAEIAB0WIQSJaujhf+zhb4nUAadXofq5FbZrEgUCZmlvowAKCRBXofq5FbZr
- Er8pD/488YlR0TVjaPLg3f8HjCYciHzDhSZtlc+mgsxn6oHHV5fwRfchyp82ZzPLyLaucoC0xec
- 8buWJEjWFJ+IoHURJ0uLl1lts58UyHHLOdu3CvQsoHzZBqpU75zDaZVDckeco2LvfuJ6Y5tZM9x
- VzmAkEYoYKNMWg4rMaMZ7fgaUHfKwUlLRlcuhZ2dYsqXT93ZkytWTAc5MCbryuh2y1XpUm98nwx
- n1pi8LzdZwKdF1QfpAKflwH7pwLi7zVLJceWZUg5FpoygGtnw4dQIwP8FtnUSpVv0f/AaJBYwou
- AeJIDCAJ6llJ97a+Afpdfj4zJB6Ji6K0wihM3TxA1McSqNdERYWB5Eg2Ny/K3cstxcI2bp83xMm
- q2WlZBydVdxQaFvxLrXGUujwENW6CoqbHYr4af5w++Otb0jriVdKqzU97XysGbZQg9owH4Iq3DB
- TWQyTF7NBhZapQgQNlk8dDgjl077bhdu7nOvEm+wQw7JsHOI5j2IS5By41XiHyi05/9UZovnQcX
- Xy3LpqGaWgiConcdPNRRGMIVkuh2kQd/j1eTlqObpRMcJ4AlhEr5xjyrGiIVtHk7NQxpNZcNY7p
- EjtgAgCslE6AMOlf8UpbG6KgXRjLM6MZtMf4SqqCRns1gJSxPKCqKKEoBfCFAMbeRXb4x2HY2C2
- 1ca/CydMvbPiNyg==
-X-Developer-Key: i=sheharyaar48@gmail.com; a=openpgp;
- fpr=896AE8E17FECE16F89D401A757A1FAB915B66B12
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1184;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=LTt8Soc7AMOTMEDD18dBhsJ9SMhm26/CHqO5qzg9vxg=;
+ b=owGbwMvMwCXmXMhTe71c8zDjabUkhrTMAlnmuji3CdNlnhk5T1u/N7V3oWP9sm/hQdneDZ+N7
+ vkfvbWho5SFQYyLQVZMkSVEQKlvQ+PFBdcfZP2BmcPKBDKEgYtTACaik83wP7osJ/WSmOusjxcY
+ OlRWf9239rnC6dPZ5VO2Fal8nSgx9xYjw/8v6k8id9VYPFHudT/8Ye692e6vt6eWBGmkMomdD7q
+ pyAMA
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-The original function call passed size of smap->bucket before the number of
-buckets which raises the error 'calloc-transposed-args' on compilation.
+Hi all,
 
-Fixes: 62827d612ae5 ("bpf: Remove __bpf_local_storage_map_alloc")
-Reviewed-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+This series enables ARCH_SUPPORTS_ATOMIC_RMW for MIPS.
+The first two patches are for making LLSC availability information
+available to Kconfig, and the last two select actual options.
+
+Please review.
+
+v1: https://lore.kernel.org/all/20230519164753.72065-1-jiaxun.yang@flygoat.com/
+
+Thanks
+- Jiaxun
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
-- already merged in linux-next
-- [1] suggested sending as a fix for 6.10 cycle
+Jiaxun Yang (4):
+      MIPS: Introduce WAR_4KC_LLSC config option
+      MIPS: Introduce config options for LLSC availability
+      MIPS: Select ARCH_SUPPORTS_ATOMIC_RMW when possible
+      MIPS: Select ARCH_HAVE_NMI_SAFE_CMPXCHG when possible
 
-[1] https://lore.kernel.org/all/363ad8d1-a2d2-4fca-b66a-3d838eb5def9@intel.com/
+ arch/mips/Kconfig                                  | 28 ++++++++++++++++++++++
+ arch/mips/include/asm/cpu-features.h               |  9 ++++++-
+ arch/mips/include/asm/cpu.h                        |  1 +
+ .../include/asm/mach-ath25/cpu-feature-overrides.h |  6 ++---
+ arch/mips/kernel/cpu-probe.c                       |  9 +++++++
+ 5 files changed, 48 insertions(+), 5 deletions(-)
 ---
- kernel/bpf/bpf_local_storage.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/bpf/bpf_local_storage.c b/kernel/bpf/bpf_local_storage.c
-index 976cb258a0ed..c938dea5ddbf 100644
---- a/kernel/bpf/bpf_local_storage.c
-+++ b/kernel/bpf/bpf_local_storage.c
-@@ -782,8 +782,8 @@ bpf_local_storage_map_alloc(union bpf_attr *attr,
- 	nbuckets = max_t(u32, 2, nbuckets);
- 	smap->bucket_log = ilog2(nbuckets);
- 
--	smap->buckets = bpf_map_kvcalloc(&smap->map, sizeof(*smap->buckets),
--					 nbuckets, GFP_USER | __GFP_NOWARN);
-+	smap->buckets = bpf_map_kvcalloc(&smap->map, nbuckets,
-+					 sizeof(*smap->buckets), GFP_USER | __GFP_NOWARN);
- 	if (!smap->buckets) {
- 		err = -ENOMEM;
- 		goto free_smap;
-
----
-base-commit: 2ef5971ff345d3c000873725db555085e0131961
-change-id: 20240612-master-fe9e63ab5c95
+base-commit: 03d44168cbd7fc57d5de56a3730427db758fc7f6
+change-id: 20240612-mips-llsc-1f2fb9169c0b
 
 Best regards,
 -- 
-Mohammad Shehar Yaar Tausif <sheharyaar48@gmail.com>
+Jiaxun Yang <jiaxun.yang@flygoat.com>
 
