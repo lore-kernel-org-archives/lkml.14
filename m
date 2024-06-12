@@ -1,163 +1,160 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D981417D8A3;
-	Wed, 12 Jun 2024 14:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7EB17B4F1
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 14:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718201015; cv=none; b=J6XK26aPExL0dI5icWlFyUiNXuhBdrugMdvi9kgH0bQmlirbrYpEWYjin6LREQ1+RzIafoQPAIC5N2Beu4RUNy5vBinFF4iN3BqDs6H7MGPa9ZyORIjX8eb+vEMKnDhV3+rj7MMr4DOcWpO7yzZB5/O91OMHWQa+3mbG+GERSlc=
+	t=1718201068; cv=none; b=trLDGFoOvkXxP1HaQe59EyhN/AavezlRbYxV17DPwTEK0Qoe1rW+WKUhpazZcLoYlcgcAKMyBmlwZTVWSRe42/PQUWZo9dAioQZeV8ONlkRv3qQ/s6aBgL3vReb3IzeTdxqYaB94MTzhyPk1vRB6t56Lx3a2Lo1B4GqKo0cjIXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718201015; c=relaxed/simple;
-	bh=Z8v6VN3VTXwQnLuxWiCD7XiHXxTlypzscfkEhk+/2RU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GIYHCyDXOEh1PfzzWMPk608LCvyB6Xu7EhD5v4jiCH1KTsO5b8SR7JsXfHlltyGDJG9/qt4Ta2Ap7fvuA+6lxIu9R6iusgz4zAdsVrnxaxqxzezusPrqm5j1UOhRjvsRjeilBAWEuJ1zsL/1AkLlFWGa3fPtDCypcaad4j3GkmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B448D367;
-	Wed, 12 Jun 2024 07:03:57 -0700 (PDT)
-Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E43413F64C;
-	Wed, 12 Jun 2024 07:03:30 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org
-Cc: James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Spoorthy S <spoorts2@in.ibm.com>,
-	German Gomez <german.gomez@arm.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf test: Make test_arm_callgraph_fp.sh more robust
-Date: Wed, 12 Jun 2024 15:03:14 +0100
-Message-Id: <20240612140316.3006660-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1718201068; c=relaxed/simple;
+	bh=n6rQcdlTzLyq3J1ACt2i5X2K8jWLz6x7Pyg6vl9BQmw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oRfp4piTureTm/zO4lzxKYutBTGUqQIymtlnZrpt2dwjEsjr1LVs54r4rKHSOoC0RTQUl3j/PSbR/AbbFzWe1jjkjfpWtYUnLpVm4dOhBiaF3UZkGIjJNGYPM/4lOqE9pqmyTN8cJUfH0iuteUd28fUilFkwg1wjxiZDrYKM3lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dnztEUgO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dnztEUgO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718201065;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=VHS87YElUOWkANf6E72nxalS03lPC9WT8JCafxHD7gY=;
+	b=dnztEUgOc+Ad1hHvLIfeMjzJtyp3xCi3FMEQ43nVVAobscNfYjJ998CUYYCThS0vXMmeaW
+	ZQ/9Lgq4vgF7SRKWijDqeODuzvb/aEo3kg0TPJjdfxBh9/I2cQ7+Zzhr20G0NSvkbXstXb
+	94ZF+/i1INsE5/jWADxNgXFaU8R0XpA=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-434-OCQM5DUDOyqfNylMhYtB1Q-1; Wed, 12 Jun 2024 10:04:24 -0400
+X-MC-Unique: OCQM5DUDOyqfNylMhYtB1Q-1
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6b062c433cfso24379906d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:04:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718201063; x=1718805863;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VHS87YElUOWkANf6E72nxalS03lPC9WT8JCafxHD7gY=;
+        b=RRcjoMeCQeeQ8hUOvxYOzkOar2XDKP7OErGHr7jk8mS29Tu0hfVlPvV0z3bE+Pjt9X
+         8p1pI8lUuf+mh1V7ALoF0IOyShMHa3Tn8w/xg2snXryVb2XHf0dBpowPpnoDi5a6GW5d
+         niQnlXxapt1D+MJHOfDzoOBVUwPwMm9Zm1X0wpuVm2bSlr2bNQmz8LUZXaFfoldRLfvz
+         EnOXUTCU/n7vPf0JN2i75OIQIEhgKj9ko8yinuk0lCIMM3wqY1pW/nXHhhPAYNkevmBg
+         hCyHt+BtyK3xald6men5+0lsH7C56WJsh2/m5tdVq68Lvg0mp+TEFpCV6nOh1WsD+8xt
+         /HbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIaLeHzEKF/CJEpKoifbcx/ivSf/+AQDQW+fUsp4sI59OoWZjkTepFdy7cAbVuB29jY/ow+UMJmLwRPgk5QQ9MUSuUgBSd/L02qNdx
+X-Gm-Message-State: AOJu0YynLN/t8OxHoCdA0eCmvFfHU0P3WiYm9PfG+NPVJlVLTVbdYRXf
+	xfdrkgkhEyYiEIz1sHnfaOxmUPg5Q+T52lBVpXJJDTjxc8ENjZ9BYY+Hpada4GJhsiKYeQAdu3z
+	x0EDzWUuHoi4VX+0JZXVyY4gCRZAvH+tOcZGMAkPDCcs0Hc/nGV7EVHezc411gg==
+X-Received: by 2002:a05:6214:2b90:b0:6b0:7821:4026 with SMTP id 6a1803df08f44-6b1a6c57871mr20406656d6.52.1718201062929;
+        Wed, 12 Jun 2024 07:04:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHis29s85ghN1wCvWNHSB3z3fEhPObl0T66oMycOn7F9OWRQIQYakS2Z/8aehOyVDRyZ6GOEQ==
+X-Received: by 2002:a05:6214:2b90:b0:6b0:7821:4026 with SMTP id 6a1803df08f44-6b1a6c57871mr20406306d6.52.1718201062563;
+        Wed, 12 Jun 2024 07:04:22 -0700 (PDT)
+Received: from [192.168.0.4] (ip-109-43-176-68.web.vodafone.de. [109.43.176.68])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a1515903sm958436d6.58.2024.06.12.07.04.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jun 2024 07:04:22 -0700 (PDT)
+Message-ID: <6086ef5e-48e7-40f3-b0a7-ff67b20aeae3@redhat.com>
+Date: Wed, 12 Jun 2024 16:04:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] s390/virtio_ccw: fix config change notifications
+To: Halil Pasic <pasic@linux.ibm.com>, Cornelia Huck <cohuck@redhat.com>,
+ Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Boqiao Fu <bfu@redhat.com>, Sebastian Mitterle <smitterl@redhat.com>
+References: <20240611214716.1002781-1-pasic@linux.ibm.com>
+From: Thomas Huth <thuth@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=thuth@redhat.com; keydata=
+ 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
+In-Reply-To: <20240611214716.1002781-1-pasic@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The 2 second sleep can cause the test to fail on very slow network file
-systems because Perf ends up being killed before it finishes starting
-up.
+On 11/06/2024 23.47, Halil Pasic wrote:
+> Commit e3e9bda38e6d ("s390/virtio_ccw: use DMA handle from DMA API")
+> broke configuration change notifications for virtio-ccw by putting the
+> DMA address of *indicatorp directly into ccw->cda disregarding the fact
+> that if !!(vcdev->is_thinint) then the function
+> virtio_ccw_register_adapter_ind() will overwrite that ccw->cda value
+> with the address of the virtio_thinint_area so it can actually set up
+> the adapter interrupts via CCW_CMD_SET_IND_ADAPTER.  Thus we end up
+> pointing to the wrong object for both CCW_CMD_SET_IND if setting up the
+> adapter interrupts fails, and for CCW_CMD_SET_CONF_IND regardless
+> whether it succeeds or fails.
+> 
+> To fix this, let us save away the dma address of *indicatorp in a local
+> variable, and copy it to ccw->cda after the "vcdev->is_thinint" branch.
+> 
+> Reported-by: Boqiao Fu <bfu@redhat.com>
+> Reported-by: Sebastian Mitterle <smitterl@redhat.com>
+> Fixes: e3e9bda38e6d ("s390/virtio_ccw: use DMA handle from DMA API")
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> ---
+> I know that checkpatch.pl complains about a missing 'Closes' tag.
+> Unfortunately I don't have an appropriate URL at hand. @Sebastian,
+> @Boqiao: do you have any suggetions?
 
-Fix it by making the leafloop workload end after a fixed time like the
-other workloads so there is no need to kill it after 2 seconds.
+Closes: https://issues.redhat.com/browse/RHEL-39983
+?
 
-Also remove the 1 second start sampling delay because it is similarly
-fragile. Instead, search through all samples for a matching one, rather
-than just checking the first sample and hoping it's in the right place.
+Anyway, I've tested the patch and it indeed fixes the problem with 
+virtio-balloon and the link state for me:
 
-Fixes: cd6382d82752 ("perf test arm64: Test unwinding using fame-pointer (fp) mode")
-Signed-off-by: James Clark <james.clark@arm.com>
----
- .../perf/tests/shell/test_arm_callgraph_fp.sh | 27 +++++++------------
- tools/perf/tests/workloads/leafloop.c         | 20 +++++++++++---
- 2 files changed, 26 insertions(+), 21 deletions(-)
-
-diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-index 61898e256616..9caa36130175 100755
---- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-+++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
-@@ -28,28 +28,21 @@ cleanup_files()
- 
- trap cleanup_files EXIT TERM INT
- 
--# Add a 1 second delay to skip samples that are not in the leaf() function
- # shellcheck disable=SC2086
--perf record -o "$PERF_DATA" --call-graph fp -e cycles//u -D 1000 --user-callchains -- $TEST_PROGRAM 2> /dev/null &
--PID=$!
-+perf record -o "$PERF_DATA" --call-graph fp -e cycles//u --user-callchains -- $TEST_PROGRAM
- 
--echo " + Recording (PID=$PID)..."
--sleep 2
--echo " + Stopping perf-record..."
--
--kill $PID
--wait $PID
-+# Try opening the file so any immediate errors are visible in the log
-+perf script -i "$PERF_DATA" -F comm,ip,sym | head -n4
- 
--# expected perf-script output:
-+# expected perf-script output if 'leaf' has been inserted correctly:
- #
--# program
-+# perf
- # 	728 leaf
- # 	753 parent
- # 	76c leafloop
--# ...
-+# ... remaining stack to main() ...
- 
--perf script -i "$PERF_DATA" -F comm,ip,sym | head -n4
--perf script -i "$PERF_DATA" -F comm,ip,sym | head -n4 | \
--	awk '{ if ($2 != "") sym[i++] = $2 } END { if (sym[0] != "leaf" ||
--						       sym[1] != "parent" ||
--						       sym[2] != "leafloop") exit 1 }'
-+# Each frame is separated by a tab, some spaces and an address
-+SEP="[[:space:]]+ [[:xdigit:]]+"
-+perf script -i "$PERF_DATA" -F comm,ip,sym | tr '\n' ' ' | \
-+	grep -E -q "perf $SEP leaf $SEP parent $SEP leafloop"
-diff --git a/tools/perf/tests/workloads/leafloop.c b/tools/perf/tests/workloads/leafloop.c
-index 1bf5cc97649b..f7561767e32c 100644
---- a/tools/perf/tests/workloads/leafloop.c
-+++ b/tools/perf/tests/workloads/leafloop.c
-@@ -1,6 +1,8 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#include <signal.h>
- #include <stdlib.h>
- #include <linux/compiler.h>
-+#include <unistd.h>
- #include "../tests.h"
- 
- /* We want to check these symbols in perf script */
-@@ -8,10 +10,16 @@ noinline void leaf(volatile int b);
- noinline void parent(volatile int b);
- 
- static volatile int a;
-+static volatile sig_atomic_t done;
-+
-+static void sighandler(int sig __maybe_unused)
-+{
-+	done = 1;
-+}
- 
- noinline void leaf(volatile int b)
- {
--	for (;;)
-+	while (!done)
- 		a += b;
- }
- 
-@@ -22,12 +30,16 @@ noinline void parent(volatile int b)
- 
- static int leafloop(int argc, const char **argv)
- {
--	int c = 1;
-+	int sec = 1;
- 
- 	if (argc > 0)
--		c = atoi(argv[0]);
-+		sec = atoi(argv[0]);
-+
-+	signal(SIGINT, sighandler);
-+	signal(SIGALRM, sighandler);
-+	alarm(sec);
- 
--	parent(c);
-+	parent(sec);
- 	return 0;
- }
- 
--- 
-2.34.1
+Tested-by: Thomas Huth <thuth@redhat.com>
 
