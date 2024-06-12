@@ -1,139 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E15384D39;
-	Wed, 12 Jun 2024 20:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from iodev.co.uk (iodev.co.uk [46.30.189.100])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DED984D39;
+	Wed, 12 Jun 2024 20:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.189.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718224957; cv=none; b=Aef8EF0ILV9XuDPw4NbDM9n3Cr+RAaLFK4Vr/OzZzTRR5zexckuf3YftNjdhYjHua5Ex2BtQWNuEFwKfg9onBIsVdsNmd30TltiGleE+zWxx42kor1zyu5nzfobTsdKVDV5BNMk2DWNGcbYXvzj/htDmwy02FgabihIaP83KkPk=
+	t=1718224965; cv=none; b=mTqXtBywr3U0l2BEJ7As1CSCkiwC1gqQ4eRnrV5r/z1GWwrO6FLP9Vq2Fu1+vEN2xBYhqNXbh9viq6fx6my8L/EkgO9nIcQfYCqJN1/8j4tIiN9O9UJ2jC88gIEMtDC1NpZInLfpjTlJdDvG3xDI7fj8fCnHqRYgBHW8kYpHLsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718224957; c=relaxed/simple;
-	bh=ROAG1n+s9+Sfvh8VDDnGQMJgUbbS6fHotKmxBlMQ33Y=;
+	s=arc-20240116; t=1718224965; c=relaxed/simple;
+	bh=+qyqE9vjz/LOYQtCfw+SBzbNmcA8piPkgSyHmAla2O0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=AiwGzj4xudFAy6K61hXEoqPm6hnhzsl7BujX3uZQd7feAgstlGAhU3kahF5ZYR80szriOC85XKZXaui5a+Q2DBiLvgnlG31SLwbNQcXrhc6Rkr5qE+wDSnzoftmYT3yHpl2pPAKzvIaVFKPCIZYwkwz1nD7vhFuP0NE5zkRaA/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yhg4Jx7m; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yhg4Jx7m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3D54C116B1;
-	Wed, 12 Jun 2024 20:42:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718224957;
-	bh=ROAG1n+s9+Sfvh8VDDnGQMJgUbbS6fHotKmxBlMQ33Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Yhg4Jx7mXQtKoJwbeqymT+AC/jzOi5DPUWQvL+ZBMforcPV0Wld2wZfY7NMcSVP72
-	 0u91JxxSnSU1u2V1l5c17bzxUy/X6hSDV8ozaaKVj6soNVAxv1Nn6wdwfZYNKQRY/+
-	 kOZIXUjRnTDdBGuQOi1gsg2UpnjYl3G8BzUWhst/0JV04Qv2Dp52Z2Gx/hQ/29Iq2i
-	 KA40SffByyHxxDWrmoXw6XqB8gIlV3KYO6xmt5lkF//tnyI7Ca0X9+jDZ//5DCyIJs
-	 wVsQZ34h0IL8SQGbQlLbZ9vCynj6ECEUUioFyKCUTd9eKq61e8mN/KN6nU6sNCD9DA
-	 oJFDFPeoJf1bw==
-Date: Wed, 12 Jun 2024 15:42:35 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>, dakr@redhat.com,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v8 03/13] PCI: Reimplement plural devres functions
-Message-ID: <20240612204235.GA1037175@bhelgaas>
+	 Content-Disposition; b=Qq1qV6SoW+LQb5Zok3uwyGSzYiR5FM2QDAz5377/B6+lSK8Dq92XLZ2nKg3T37AuCVJ2Xn/HWqyeohbgjDFShWC/zqoObtQMerdKauBizVsqyllGFtvI+tm2vgaNsfeXxIT0NP8dLbnmvpWbQ5AmH/gQIwOrzSRsbf3fML1rkfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=iodev.co.uk; spf=pass smtp.mailfrom=iodev.co.uk; arc=none smtp.client-ip=46.30.189.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=iodev.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iodev.co.uk
+Received: from pirotess (222.red-83-46-228.dynamicip.rima-tde.net [83.46.228.222])
+	by iodev.co.uk (Postfix) with ESMTPSA id 91AB12F8341;
+	Wed, 12 Jun 2024 22:33:20 +0200 (CEST)
+Date: Wed, 12 Jun 2024 22:33:19 +0200
+From: Ismael Luceno <ismael@iodev.co.uk>
+To: stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: Intel e1000e driver bug on stable (6.9.x)
+Message-ID: <ZmfcJsyCB6M3wr84@pirotess>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ec1be501811dc2ac082ec71349bde45145749d3c.camel@redhat.com>
 
-On Wed, Jun 12, 2024 at 10:51:40AM +0200, Philipp Stanner wrote:
-> On Tue, 2024-06-11 at 16:44 -0500, Bjorn Helgaas wrote:
-> > I'm trying to merge these into pci/next, but I'm having a hard time
-> > writing the merge commit log.  I want a one-sentence description of
-> > each patch that tells me what the benefit of the patch is.  Usually
-> > the subject line is a good start.
-> > 
-> > "Reimplement plural devres functions" is kind of vague and doesn't
-> > quite motivate this patch, and I'm having a hard time extracting the
-> > relevant details from the commit log below.
-> 
-> I would say that the summary would be something along the lines:
-> "Set ground layer for devres simplification and extension"
-> 
-> because this patch simplifies the existing functions and adds
-> infrastructure that can later be used to deprecate the bloated existing
-> functions, remove the hybrid mechanism and add pcim_iomap_range().
+Hi,
 
-I think something concrete like "Add partial-BAR devres support" would
-give people a hint about what to look for.
+I noticed that the NIC started to fail on a couple of notebooks [0]
+[1] after upgrading to 6.9.1.
 
-This patch contains quite a bit more than that, and if it were
-possible, it might be nice to split the rest to a different patch, but
-I'm not sure it's even possible and I just want to get this series out
-the door.
+I tracked down the problem to commit 861e8086029e ("e1000e: move force
+SMBUS from enable ulp function to avoid PHY loss issue", 2024-03-03),
+included in all 6.9.x releases.
 
-If the commit log includes the partial-BAR idea and the specific
-functions added, I think that will hold together.  And then it makes
-sense for why the "plural" functions would be implemented on top of
-the "singular" ones.
+The fix is in commit bfd546a552e1 ("e1000e: move force SMBUS near
+the end of enable_ulp function", 2024-05-28) from mainline.
 
-> > > Implement a set of singular functions 
-> > 
-> > What is this set of functions?  My guess is below.
-> > 
-> > > that use devres as it's intended and
-> > > use those singular functions to reimplement the plural functions.
-> > 
-> > What does "as it's intended" mean?  Too nebulous to fit here.
-> 
-> Well, the idea behind devres is that you allocate a device resource
-> _for each_ object you want to be freed / deinitialized automatically.
-> One devres object per driver / subsystem object, one devres callback
-> per cleanup job for the driver / subsystem.
-> 
-> What PCI devres did instead was to use just ONE devres object _for
-> everything_ and then it had to implement all sorts of checks to check
-> which sub-resource this master resource is actually about:
-> 
-> (from devres.c)
-> static void pcim_release(struct device *gendev, void *res)
-> {
-> 	struct pci_dev *dev = to_pci_dev(gendev);
-> 	struct pci_devres *this = res;
-> 	int i;
-> 
-> 	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++)
-> 		if (this->region_mask & (1 << i))
-> 			pci_release_region(dev, i);
-> 
-> 	if (this->mwi)
-> 		pci_clear_mwi(dev);
-> 
-> 	if (this->restore_intx)
-> 		pci_intx(dev, this->orig_intx);
-> 
-> 	if (this->enabled && !this->pinned)
-> 		pci_disable_device(dev);
-> }
-> 
-> 
-> So one could dare to say that devres was partially re-implemented on
-> top of devres.
-> 
-> The for-loop and the if-conditions constitute that "re-implementation".
-> No one has any clue why it has been done that way, because it provides
-> 0 upsides and would have been far easier to implement by just letting
-> devres do its job.
-> 
-> Would you like to see the above details in the commit message?
+The NIC fails right after boot on both systems I tried; I mention
+because the description is a bit unclear about that on the fix, maybe
+other systems are affected differently.
 
-No.  Just remove the "use devres as it's intended" since that's not
-needed to motivate this patch.  I think we need fewer and
-more-specific words.
+Best regards.
 
-Bjorn
+
+[0] HP ZBook 17 Gen 1 (D5D93AV) [8086:153a (rev 04)]
+[1] Lenovo Thinkpad P15 Gen 1 [8086:0d4c]
