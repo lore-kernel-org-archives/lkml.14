@@ -1,60 +1,48 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD7513C80A
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 06:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CBA13CFB0;
+	Wed, 12 Jun 2024 06:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718172771; cv=none; b=oiMk89xTmsZt8q6hmgrXmKz2s1sKwrtXEqWDTM7rXVdVDrxBR9oePfPmLmc7EaNAVwnMwA04d86N95Q+MBJqpVqn5vqzkUAb/xMJM6Q4HQO0aYzsq+9AgsZTsCrU29d0driYNcdYz56gZY78GgfYLsq6hi0G8GEe9E8utCwIHSU=
+	t=1718172774; cv=none; b=RasQaFz7l2EcLJfN546ArDTm1WWh9zkhbMkOF5ddevw76dy4J7nIfau/wXuJbeNB0HGsv0u+Ww3ljSE5+gZrrrbg0Sl3XTKxBa3QvJhZEid9fcgJU0QUTSawXjyGlbtGcA0UVHZ1/T6Q6qzucujelfqTDB2oS/kMPgSQQ28U38Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718172771; c=relaxed/simple;
-	bh=bMHNn5K5SdcsmFeGjk+EH0zYqXn/MYJ+ePkN09KC/PI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IxH7SIJLSzLg0KRD88M3hQV2RFSLseyZSavny9TMey0AsjetVM2EbMGO7hmjGriBLz0PL4AenfZi5l8680utBScICkZitquN25YAnXNnivMCqmHa2b/XpTC+hhWi7QwlA9/jQcAVsFdrzrWm+a31ekhWGBsleCy4OIDuaaZkbDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CoGld2Vr; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1718172774; c=relaxed/simple;
+	bh=zo4pdTcHd8FQMwJZM2TIfPr8WX9aXERYXLbSCPAIl2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AblL9SuUsMkk7MdzOmy7vU/68QYAKk5+N7iBZcSLcsvO1GV7Y6b85tJnQC10GchLj70Xm52c7Bm6lNG/AI8WmsX70JMjKWmWDyuK0kFMvhLAgGgRONY+yWWgQSCj0d0ZGbINwV4ec5LQJQGqmLMqOPyemBmAUdUX/NzsIamyg2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=O9DylEYo; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CoGld2Vr"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57c5c51cb89so2475911a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Jun 2024 23:12:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1718172768; x=1718777568; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=g5h7rK0sr+2BxDz/k9zC8M7ipcnnpqL/bNRXKRcGg18=;
-        b=CoGld2VrgUUzAEX4FisL2Ee2H1ekfSLcYRELx3FhQjRi0ZEVTAgDKns1CetdNhffQd
-         pzs6t++8a65/d0RrFLLjpm2EKWNzqKczGPDek+zSmyzC0Ulx39G0B2SwGtp+OyzRn7jl
-         MSuKrX8H7sYfLHQTi/9XFHskPYDnD5mKv115+ULTV+epvgfuNKGURrLGaa2k0JHCzyI6
-         j2VuSPZjcuwVWlu5m/F5LtVtC2H64Wvd+XcM8oXZ/gFsyG1hSG9OLLWHL6PKm10dVAku
-         rCSu4GDMqXifn4hlLmrlkGU6ZmM5xilqgE693HGAlRYCSyAI7j2FoojLy9fUaCAKHAlD
-         5UkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718172768; x=1718777568;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g5h7rK0sr+2BxDz/k9zC8M7ipcnnpqL/bNRXKRcGg18=;
-        b=uCS2XgaVtE8r5PksQ/S+u9sVt6MCDIkOrRjJweoQmEjzrQ4TlYXSg5JOHq9e0lPyAn
-         ZfBtpgY+99OtLu0fs+bMQMANsafb7IMCbyWl2b9MKfRJdvLzcQR2OvDe+H4e7/JDB/YH
-         rKJ7EVwJhY6JwIPLPBOMbMoHlVYCu2kg3IZEQjI5e1I3VAP3H/nQhJtXAsF14FCT5RwE
-         sX9oKhsk7gvJCE/wxUYrC/FHumjm9XYYPhn/9o2EYxRWYpeavfMEOybNGx5yzuQBNbS5
-         82UKzZuYJQFqXcNCAayWbwn1ntw45uFkfUkBcw5ZGy1ENgsON1K/Yzc/tThiwrDKlV+R
-         1k1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXElzWeHGijInr8lATo4/l7BrjSwDgrA4Pg5iw3xTiVNhmk/XQbCoufgcm1YPKyntdSKYZb0+7mXfFanT6D3HP5zX/RKirF+ZBPXi/d
-X-Gm-Message-State: AOJu0YxuyxTEO/TN/FuW+06VytaWVGnvo9lQE3pNSSkiPszZ4h5vhbxB
-	XXSufz11qzZ1sJ3z8xBIPN7v9xU1rgHw3U7cpFz4ZcAjXBScS4NV6pQCjq5FfyQ=
-X-Google-Smtp-Source: AGHT+IHN7OLZJUykbo/Z/aU26XIBCzrO1SYvoeEqCSDfm2b0Ciy65f+R7CfT6NO0SIhfkE7duxBVzA==
-X-Received: by 2002:a50:d494:0:b0:57c:ad11:e759 with SMTP id 4fb4d7f45d1cf-57cad11f283mr293326a12.28.1718172767944;
-        Tue, 11 Jun 2024 23:12:47 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.137])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57c55d8aca8sm8664613a12.97.2024.06.11.23.12.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jun 2024 23:12:47 -0700 (PDT)
-Message-ID: <c99d8df2-84ce-4b26-941e-b8a1413b8156@linaro.org>
-Date: Wed, 12 Jun 2024 08:12:44 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="O9DylEYo"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45C1BNwN004113;
+	Wed, 12 Jun 2024 06:07:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Gz1XV3cxEedHzX2ppgnLw2HKCj5hYGYjsPxXTwzROJM=; b=O9DylEYoTV2KhTR8
+	OYjKVtFAQcK85pLTmr5a9CXcYtrmyQN17sz5SVXo8+F6TBT0ZZ5PfYheJAo5CX8f
+	JdK2ARqCws3kDPGqNDAu7+cSoOw3auyVnCI1yLxA245Z3aGApSkLrhUUeTTF1itP
+	YD9gzXQ6B0e+ZvPua1rsB+sdb5nIPUVqYv4/a0V/9g6aooa+4HiLdqGvllv5ZL46
+	nV2MmN4LqJbu4IFj/c1Tl9b2NtUIO1ptbySXUSZ4l2oGjoAq09nublYV1ZpSCb2q
+	OzJJFJgKHxHNjNDj8q6PLGGlopK5sFPbLFNrqCGNNAXGYx1y7rUOEOXh99FEIVRj
+	jgp6eQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yphsatys6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 06:07:27 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45C67Qs6031749
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Jun 2024 06:07:26 GMT
+Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 11 Jun
+ 2024 23:07:22 -0700
+Message-ID: <dc0f11ba-2ca7-498a-b2dd-26a48e9cdf90@quicinc.com>
+Date: Wed, 12 Jun 2024 14:07:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,180 +50,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] leds: add mp3326 driver
-To: "Yuxi (Yuxi) Wang" <Yuxi.Wang@monolithicpower.com>,
- "pavel@ucw.cz" <pavel@ucw.cz>, "lee@kernel.org" <lee@kernel.org>,
- "robh+dt@kernel.org" <robh+dt@kernel.org>,
- "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "wyx137120466@gmail.com" <wyx137120466@gmail.com>
-Cc: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240611083236.1609-1-Yuxi.Wang@monolithicpower.com>
- <20240611083236.1609-3-Yuxi.Wang@monolithicpower.com>
- <c510fd3f-a55a-4ac9-bbc1-d2392027724c@linaro.org>
- <SN4PR13MB53103D139D9F816E5F4930EAF6C02@SN4PR13MB5310.namprd13.prod.outlook.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] scsi: ufs: core: quiesce request queues before check
+ pending cmds
+To: Bart Van Assche <bvanassche@acm.org>, <quic_cang@quicinc.com>,
+        <mani@kernel.org>, <beanhuo@micron.com>, <avri.altman@wdc.com>,
+        <junwoo80.lee@samsung.com>, <martin.petersen@oracle.com>,
+        <quic_nguyenb@quicinc.com>, <quic_nitirawa@quicinc.com>,
+        <quic_rampraka@quicinc.com>
+CC: <linux-scsi@vger.kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Peter Wang
+	<peter.wang@mediatek.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Maramaina Naresh
+	<quic_mnaresh@quicinc.com>,
+        Asutosh Das <quic_asutoshd@quicinc.com>,
+        "open
+ list" <linux-kernel@vger.kernel.org>,
+        <quic_richardp@quicinc.com>
+References: <1717754818-39863-1-git-send-email-quic_ziqichen@quicinc.com>
+ <7ba3bbb8-a5c3-4ecd-9c2a-c9586c9d6bf2@acm.org>
+ <6d636c36-ce05-4825-b916-b97484c41c5b@quicinc.com>
+ <16b2cd1b-8f1a-4fb1-823f-a73463c6f7a0@acm.org>
 Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <SN4PR13MB53103D139D9F816E5F4930EAF6C02@SN4PR13MB5310.namprd13.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+From: Ziqi Chen <quic_ziqichen@quicinc.com>
+In-Reply-To: <16b2cd1b-8f1a-4fb1-823f-a73463c6f7a0@acm.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-
-On 12/06/2024 04:23, Yuxi (Yuxi) Wang wrote:
->>
->>> +/*
->>> + * PWM in the range of [0 255]
->>> + */
->>> +static int led_pwm_store(struct device *dev, struct device_attribute *attr,
->>> +			     const char *buf, size_t count)
->>
->> Nope.
-> Hi Krzysztof,
-> 
-> What do you mean this Nope?
-> Is it  format or function?
-
-As sorry, you are reimplementing kernel interfaces, so that's a no.
-> 
->>
->> ...
->>
->>> +	}
->>> +	r_val = r_val * 255 / 4095 + (r_val * 255 % 4095) / (4095 / 2);
->>> +	g_val = g_val * 255 / 4095 + (g_val * 255 % 4095) / (4095 / 2);
->>> +	b_val = b_val * 255 / 4095 + (b_val * 255 % 4095) / (4095 / 2);
->>> +	if (led->num_colors == 1)
->>> +		return sysfs_emit(buf, "0x%x\n", r_val);
->>> +	else
->>> +		return sysfs_emit(buf, "0x%x 0x%x 0x%x\n", r_val, g_val, b_val);
->>> +}
->>> +
->>> +static int led_enable_store(struct device *dev,
->>> +				struct device_attribute *attr, const char *buf,
->>> +				size_t count)
->>
->> Eeeee? store to enable LED? Really?
-> Yes. The users need this function and we provide it.
-
-NAK, I don't care about your users. You re-implemented existing ABI.
-Without any ABI docs that's just pure duplication.
-
-> 
-> 
->>
->> ...
->>
->>> +{
->>> +	struct led_classdev *lcdev = dev_get_drvdata(dev);
->>> +	struct mp3326_led *led = container_of(lcdev, struct mp3326_led, cdev);
->>> +	struct mp3326 *chip = led->private_data;
->>> +	int ret;
->>> +	uint val, i;
->>
->>
->>> +
->>> +static DEVICE_ATTR_RW(led_pwm);
->>> +static DEVICE_ATTR_RW(led_enable);
->>> +static DEVICE_ATTR_RO(led_short_fault);
->>> +static DEVICE_ATTR_RO(led_open_fault);
->>
->> No, for multiple reasons:
->> 1. Where ABI documentation?
->> 2. There is a standard sysfs interface. No need for most of that. Please
->> explain why standard interface does not fit your needs - for each new
->> interface.
-> Hi krzysztof,
-> 
-> 1. Where ABI documentation?
-> A: 
-> Sorry, the abi is insufficient.
-
-Which one is insufficient?
-
-> 
-> Can I add it as comment above the function?
-> 
-> 2. There is a standard sysfs interface. No need for most of that. Please
-> explain why standard interface does not fit your needs - for each new
->  interface.
-> A:
-> Leds has two ways to light dim. One is analog dimming, another pwm dimming.
-> They are different in practice. 
-> 
-> In RGB module, pwm dimming can control color and analog dimming can control intensity.
-> 
-> Mp3326 supports the two ways which can operate contemporary.
-> 
-> In practice, I have needs below.
-> 1. Operate rgb color and intensity.
-> 2. enable/disable some channel
-> 3. short/open fault notice.
-> 
-> However, The standard interface only has three functions below, they are not fit my needs.
-> 1. multi_index
-> 2. multi_intensity(only can dim using one way, so I use it as analog dimming)
-> 3. led_mc_calc_color
-> 
-
-Please point to which ABI is not sufficient.
-
-> 
-> In order to fit my needs, I add the interface below.
-> led_pwm       
-> led_enable
-
-Because especially this one sounds like you are mocking us.
-
-> led_short_fault
-> led_open_fault
-> 
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: UKNVGE4CoyxyZkkVhe81RFt86ruRx0ZI
+X-Proofpoint-GUID: UKNVGE4CoyxyZkkVhe81RFt86ruRx0ZI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-12_02,2024-06-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ adultscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2405170001 definitions=main-2406120042
 
 
-Best regards,
-Krzysztof
 
+On 6/11/2024 9:51 PM, Bart Van Assche wrote:
+> On 6/11/24 04:02, Ziqi Chen wrote:
+>> As for removing the rest calls to ufshcd_scsi_block_requests() and 
+>> ufshcd_scsi_unblock_requests(), I think you are right, but I am not 
+>> quite sure because we haven't seen issue reported w.r.t those spots. 
+>> If possible, we can co-work on this sometime later.
+> 
+> If you want I can work on the removal of the
+> ufshcd_scsi_block_requests() and ufshcd_scsi_unblock_requests()
+> functions.
+
+Thank you, Bart. I will help to review and give you support as possible 
+as I can.
+
+BRs,
+
+Ziqi
+> 
+> Thanks,
+> 
+> Bart.
+> 
