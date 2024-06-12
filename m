@@ -1,150 +1,200 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BBF183073
-	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5650818309D
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 18:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718215849; cv=none; b=mGDfLuru9VcLxGURAbGG8DYmWhr6EMTnI3OFz+EAirbsdshEo4gRFUqwZhWXg54ha/PBz2HiiQLVd+1rCCedUU89zu3xXSGEyp2UveYM4fztgzwNqqlQovCaKrcl4DrqVsuouQZfPSaQjT00d14Dhhlk4Hk6oEikj4s3JYazqSs=
+	t=1718215855; cv=none; b=RDe8it6FlKUiSgbqLYBCOAuU8B10snYMj5Ots2oGISsSOtJMA5mBsS4Rbk2IGN/itjiis6JNz8TK/zxIqzzmXVXQR+bCCtTcJoVVbpUqrj9L8Nd+myEYtpsOZSrpG3utEIB3HcYzOwLMGDgNdk8SyY9Czk5to3sgSNPkTRSY5pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718215849; c=relaxed/simple;
-	bh=+XnHRTnS9LdzjAnCfXLi+O0dR/LBhekA4iksGxNsJfw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oQ4xvpSQAtuw2Uf7nWi/vwYBW7Tx607DoUpjj6EIXvNyqyzD0FOGfSXA88pZVZiRMpCYeiVmefljmFaIN9uTt073dw3Dlsg3ONmTz0Wpf2tbKutyqYK1xm1lLm90GkRys3TGxwabYpdOSGOy6HF0E7nK62qz/qc2jYHr8jU+plk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=tQXH8/Xq; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1718215855; c=relaxed/simple;
+	bh=SqV7Q9/x2YZSDMfPGfsV1yJAT7awWqzlHlOMVv8cLh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FmUoMnsMk0e+vGv9duXErvGz0ggSemn3K9PKisSPolyQQAmANP8fPW/p0ww3zVdqfPLoc0CF/CQkglTW9H6F8QkEH5In1R4vKQc9Pz7Rwe9PxmisHSUAS9oFwdkIrhwtpXZKioZZdQbYffcAupzLhvpN7ErzKfZmHdXPjC4E7d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMslw1kM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="tQXH8/Xq"
-X-Envelope-To: ezequiel@vanguardiasur.com.ar
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1718215845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7Wwh90v24Qe0BQdwYakUsPolSiapUti7KGb/PL1W8ms=;
-	b=tQXH8/Xq1QwVd4wMRAzNCmzYZzKLwohN/fYu1HQM4kXHE6+bf2CX1BhmaEvz3S/Hg3SPKy
-	87DEEJ6ISuSnNmwLRBcaqGex7Bxy0nahTAxNfXA/B+VJ87tJWcgbu97vRj6gpo5TchKCPY
-	mjpYLhImN/fkkrTqDuctfIyl/PIQxHa+WHB5fM3NFGtWxKQ+zBbN3kPV6sxOu4N3ZGIXC+
-	8mrczhGNnlxVPOGPvff1s/5YuwwE2bOL1PfB7wITly/t5jnO/0Fq3dNP+pU/wBsczUIhVi
-	26rDjcJfWZyO7caBLM/8sBaFKy6JEUViMJOwrqA5MyvSwrqRkK6+c8EHUvx1iw==
-X-Envelope-To: p.zabel@pengutronix.de
-X-Envelope-To: frattaroli.nicolas@gmail.com
-X-Envelope-To: heiko@sntech.de
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: krzk+dt@kernel.org
-X-Envelope-To: conor+dt@kernel.org
-X-Envelope-To: liujianfeng1994@gmail.com
-X-Envelope-To: linkmauve@linkmauve.fr
-X-Envelope-To: nicolas.dufresne@collabora.com
-X-Envelope-To: linux-media@vger.kernel.org
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: devicetree@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: kernel@collabora.com
-X-Envelope-To: sigmaris@gmail.com
-X-Envelope-To: sebastian.reichel@collabora.com
-X-Envelope-To: sebastian.reichel@collabora.com
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
- Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jianfeng Liu <liujianfeng1994@gmail.com>,
- Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com, Hugh Cole-Baker <sigmaris@gmail.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject:
- Re: [PATCH v5 5/5] arm64: dts: rockchip: Add VPU121 support for RK3588
-Date: Wed, 12 Jun 2024 20:10:30 +0200
-Message-ID: <4207056.GSNtieVc0Q@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <20240612173213.42827-6-sebastian.reichel@collabora.com>
-References:
- <20240612173213.42827-1-sebastian.reichel@collabora.com>
- <20240612173213.42827-6-sebastian.reichel@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMslw1kM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE48DC116B1;
+	Wed, 12 Jun 2024 18:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718215854;
+	bh=SqV7Q9/x2YZSDMfPGfsV1yJAT7awWqzlHlOMVv8cLh8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=gMslw1kMWn30pa75ei+/+bMEaMAwzg+JqSBQqRr3YbO7ctXDF9g2rYJBLan25UjHS
+	 lRvR3ecW/zowY/zpOO8slFFdh6+vA6qkx5GbSfAWBOBla0CtDcGfVoDWD9A7I4zDia
+	 vMpsuNdm821GYoNYAttWud6d5zbGyofE4SjmWnkcNy9LIL+SorLt+1F4KbQpyIVSa3
+	 wqvrDhhMyCi/c019QeenkpYrtnDQsKWn5HgCugXmFsWM9Qv2TjCYUHgYW4CvX97s/q
+	 BiDgbjZdb4jq0nll+K22zOWbms56nRD7lpy2ujq2Wzw/RBKZaM30TuERof/a5yAeXn
+	 FdxDXVGISLoRg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 7EDB7CE0DEA; Wed, 12 Jun 2024 11:10:54 -0700 (PDT)
+Date: Wed, 12 Jun 2024 11:10:54 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	tglx@linutronix.de, torvalds@linux-foundation.org,
+	rostedt@goodmis.org, mark.rutland@arm.com, juri.lelli@redhat.com,
+	joel@joelfernandes.org, raghavendra.kt@amd.com,
+	sshegde@linux.ibm.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v2 13/35] sched: allow runtime config for PREEMPT_AUTO
+Message-ID: <652b1be3-e154-4902-b7aa-f9151ed5cf75@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240528003521.979836-1-ankur.a.arora@oracle.com>
+ <20240528003521.979836-14-ankur.a.arora@oracle.com>
+ <20240528162725.GH26599@noisy.programming.kicks-ass.net>
+ <87ttif641i.fsf@oracle.com>
+ <20240606115101.GC8774@noisy.programming.kicks-ass.net>
+ <87ikymw1g2.fsf@oracle.com>
+ <20240606173218.GH8774@noisy.programming.kicks-ass.net>
+ <87frtnt02l.fsf@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5992854.hoJakhlImG";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87frtnt02l.fsf@oracle.com>
 
---nextPart5992854.hoJakhlImG
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Diederik de Haas <didi.debian@cknow.org>
-Date: Wed, 12 Jun 2024 20:10:30 +0200
-Message-ID: <4207056.GSNtieVc0Q@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <20240612173213.42827-6-sebastian.reichel@collabora.com>
-MIME-Version: 1.0
-
-Hi,
-
-On Wednesday, 12 June 2024 19:15:45 CEST Sebastian Reichel wrote:
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi index
-> 9edbcfe778ca..e7e1b456b9b9 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> @@ -1239,6 +1239,27 @@ jpeg_enc3_mmu: iommu@fdbac800 {
->                 #iommu-cells = <0>;
->         };
+On Sat, Jun 08, 2024 at 05:46:26PM -0700, Ankur Arora wrote:
+> Peter Zijlstra <peterz@infradead.org> writes:
+> > On Thu, Jun 06, 2024 at 08:11:41AM -0700, Ankur Arora wrote:
+> >> Peter Zijlstra <peterz@infradead.org> writes:
+> >> > On Thu, May 30, 2024 at 02:29:45AM -0700, Ankur Arora wrote:
+> >> >> Peter Zijlstra <peterz@infradead.org> writes:
+> >> >> > On Mon, May 27, 2024 at 05:34:59PM -0700, Ankur Arora wrote:
+> >> >> >> Reuse sched_dynamic_update() and related logic to enable choosing
+> >> >> >> the preemption model at boot or runtime for PREEMPT_AUTO.
+> >> >> >>
+> >> >> >> The interface is identical to PREEMPT_DYNAMIC.
+> >> >> >
+> >> >> > Colour me confused, why?!? What are you doing and why aren't just just
+> >> >> > adding AUTO to the existing DYNAMIC thing?
+> >> >>
+> >> >> You mean have a single __sched_dynamic_update()? AUTO doesn't use any
+> >> >> of the static_call/static_key stuff so I'm not sure how that would work.
+> >> >
+> >> > *sigh*... see the below, seems to work.
+> >>
+> >> Sorry, didn't mean for you to have to do all that work to prove the
+> >> point.
+> >
+> > Well, for a large part it was needed for me to figure out what your
+> > patches were actually doing anyway. Peel away all the layers and this is
+> > what remains.
+> >
+> >> I phrased it badly. I do understand how lazy can be folded in as
+> >> you do here:
+> >>
+> >> > +	case preempt_dynamic_lazy:
+> >> > +		if (!klp_override)
+> >> > +			preempt_dynamic_disable(cond_resched);
+> >> > +		preempt_dynamic_disable(might_resched);
+> >> > +		preempt_dynamic_enable(preempt_schedule);
+> >> > +		preempt_dynamic_enable(preempt_schedule_notrace);
+> >> > +		preempt_dynamic_enable(irqentry_exit_cond_resched);
+> >> > +		preempt_dynamic_key_enable(preempt_lazy);
+> >> > +		if (mode != preempt_dynamic_mode)
+> >> > +			pr_info("Dynamic Preempt: lazy\n");
+> >> > +		break;
+> >> >  	}
+> >>
+> >> But, if the long term goal (at least as I understand it) is to get rid
+> >> of cond_resched() -- to allow optimizations that needing to call cond_resched()
+> >> makes impossible -- does it make sense to pull all of these together?
+> >
+> > It certainly doesn't make sense to add yet another configurable thing. We
+> > have one, so yes add it here.
+> >
+> >> Say, eventually preempt_dynamic_lazy and preempt_dynamic_full are the
+> >> only two models left. Then we will have (modulo figuring out how to
+> >> switch over klp from cond_resched() to a different unwinding technique):
+> >>
+> >> static void __sched_dynamic_update(int mode)
+> >> {
+> >>         preempt_dynamic_enable(preempt_schedule);
+> >>         preempt_dynamic_enable(preempt_schedule_notrace);
+> >>         preempt_dynamic_enable(irqentry_exit_cond_resched);
+> >>
+> >>         switch (mode) {
+> >>         case preempt_dynamic_full:
+> >>                 preempt_dynamic_key_disable(preempt_lazy);
+> >>                 if (mode != preempt_dynamic_mode)
+> >>                         pr_info("%s: full\n", PREEMPT_MODE);
+> >>                 break;
+> >>
+> >> 	case preempt_dynamic_lazy:
+> >> 		preempt_dynamic_key_enable(preempt_lazy);
+> >> 		if (mode != preempt_dynamic_mode)
+> >> 			pr_info("Dynamic Preempt: lazy\n");
+> >> 		break;
+> >>         }
+> >>
+> >>         preempt_dynamic_mode = mode;
+> >> }
+> >>
+> >> Which is pretty similar to what the PREEMPT_AUTO code was doing.
+> >
+> > Right, but without duplicating all that stuff in the interim.
 > 
-> +       vpu: video-codec@fdb50000 {
-> +               compatible = "rockchip,rk3588-vpu121",
-> "rockchip,rk3568-vpu"; +               reg = <0x0 0xfdb50000 0x0 0x800>;
-> +               interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH 0>;
-> +               interrupt-names = "vdpu";
-> +               clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
-> +               clock-names = "aclk", "hclk";
-> +               iommus = <&vpu_mmu>;
-> +               power-domains = <&power RK3588_PD_VDPU>;
-> +       };
-> +
-> +       vpu_mmu: iommu@fdb50800 {
-> +               compatible = "rockchip,rk3588-iommu",
-> "rockchip,rk3568-iommu"; +               reg = <0x0 0xfdb50800 0x0 0x40>;
-> +               interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH 0>;
-> +               clock-names = "aclk", "iface";
-> +               clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
-> +               power-domains = <&power RK3588_PD_VDPU>;
-> +               #iommu-cells = <0>;
-> +       };
-> +
->         av1d: video-codec@fdc70000 {
+> Yeah, that makes sense. Joel had suggested something on these lines
+> earlier [1], to which I was resistant.
+> 
+> However, the duplication (and the fact that the voluntary model
+> was quite thin) should have told me that (AUTO, preempt=voluntary)
+> should just be folded under PREEMPT_DYNAMIC.
+> 
+> I'll rework the series to do that.
+> 
+> That should also simplify RCU related choices which I think Paul will
+> like. Given that the lazy model is meant to eventually replace
+> none/voluntary, so PREEMPT_RCU configuration can just be:
+> 
+> --- a/kernel/rcu/Kconfig
+> +++ b/kernel/rcu/Kconfig
+> @@ -18,7 +18,7 @@ config TREE_RCU
+> 
+>  config PREEMPT_RCU
+>         bool
+> -       default y if PREEMPTION
+> +       default y if PREEMPTION && !PREEMPT_LAZY
 
-Shouldn't these nodes come *before* 
-jpeg_enc0: video-codec@fdba0000 
-As fdb50000 is lower then fdba0000?
+Given that PREEMPT_DYNAMIC selects PREEMPT_BUILD which in turn selects
+PREEMPTION, this should work.
 
-Cheers,
-  Diederik
---nextPart5992854.hoJakhlImG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+> Or, maybe we should instead have this:
+> 
+> --- a/kernel/rcu/Kconfig
+> +++ b/kernel/rcu/Kconfig
+> @@ -18,7 +18,7 @@ config TREE_RCU
+> 
+>  config PREEMPT_RCU
+>         bool
+> -       default y if PREEMPTION
+> +       default y if PREEMPT || PREEMPT_RT
+>         select TREE_RCU
+> 
+> Though this would be a change in behaviour for current PREEMPT_DYNAMIC
+> users.
 
------BEGIN PGP SIGNATURE-----
+Which I believe to be a no-go.  I believe that PREEMPT_DYNAMIC users
+really need their preemptible kernels to include preemptible RCU.
 
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZmnklgAKCRDXblvOeH7b
-bjdlAQD4lJfAZ+uWdf2M0bt3TgJkdY9aeTap7nRn/OtdhFmyLwD+KKaiUZBld2Py
-aS3zD6719QKISeO69bc5PwdusH9GXAA=
-=RLxZ
------END PGP SIGNATURE-----
+If PREEMPT_LAZY causes PREEMPT_DYNAMIC non-preemptible kernels to become
+lazily preemptible, that is a topic to discuss with PREEMPT_DYNAMIC users.
+On the other hand, if PREEMPT_LAZY does not cause PREEMPT_DYNAMIC
+kernels to become lazily preemptible, then I would expect there to be
+hard questions about removing cond_resched() and might_sleep(), or,
+for that matter changing their semantics.  Which I again must leave
+to PREEMPT_DYNAMIC users.
 
---nextPart5992854.hoJakhlImG--
+							Thanx, Paul
 
-
-
+> [1] https://lore.kernel.org/lkml/fd48ea5c-bc74-4914-a621-d12c9741c014@joelfernandes.org/
+> 
+> Thanks
+> --
+> ankur
