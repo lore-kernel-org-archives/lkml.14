@@ -1,158 +1,131 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329142904;
-	Wed, 12 Jun 2024 18:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F654AEF4;
+	Wed, 12 Jun 2024 18:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718217070; cv=none; b=E8/McPnd3LDRfJIVNqBsW11GxgB7+NKl0ncMlGFolHilP2OEsBSxM5HZDCVYaLWd1hCuN7Zwdu7/KoNb1Nqzitb5/g29lu3WXl93NFvX3ImgaRMdVFFO/s0oW5P4DjhWVArIE+ZXWrl6SYAenosQSoecHQ496kzlekdLQGBv/3M=
+	t=1718217074; cv=none; b=r2bhK0xl0STKEdLf07GqJJQz04c9SopgDDvwC6wmmSiQ3hS/Rc3PKZX8kVffe/ODnT1LVHNe2hvMn3GnIOXiCv+6RZyc0N5npv4MinK2rx+3kKW8aC3mJbhv5kxvB2CtZVByWQJDmmcFH1pIWNkdGZBHaCGaPOotpomLKfJidS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718217070; c=relaxed/simple;
-	bh=bbW9jfn/YkVzxgq0mUcCmWnAQ+1pHU/SiOxwbF4Robs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A12fxE9TskWEkN/V+7ZbdazmMAFZFA4N4nRb9JDo6JGPfldyDIby7/o5hSt8KtNxSda09qybPIT4kkg3JGYuNz1cf6voNPzGCELZN1G/iC16OLZu1Jn/fipj+uN23NShPrWFlvsr4lemmAacXkkHvpRVpAXLJdyl3BLKSQ05nkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hGkDeiqB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1718217074; c=relaxed/simple;
+	bh=6zChqabg+jrjms+BmIotaOqJm9mHGdH7DbrkmgDnhkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c4Eb6g9WcLLZv0iifQlh9iYb7dUABMVA78am5SRKAh7XDqIXbGOUwuiz/H+jEd++ouXF0HO0S9v4lId+ICvB18kvp9H6yUxNAW8JuqKwWFZ/5jYuMa/3wXsKuFt+O8Zc1htX6mJ0TC/o0x7pEeUy5WqjfvOZYovDbM8VMpJGVLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F8ii8SpZ; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hGkDeiqB"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45CFbk34016948;
-	Wed, 12 Jun 2024 18:30:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=EzEJlEWFLZbkymQcOUSopO
-	cRdcYxgvQlzTjdmeL+W4g=; b=hGkDeiqBA7+fhg3uWzCox7KlLclY0ov7oIH/6Q
-	yYv+aZmpML5yrWgc8hHdUen0fdon168D7hZFtI5FzpWp1n+wftssKw5QJkcYnVnw
-	mFCc6QVSoXZUF5bvZ5/JNfZ4JyOTDKQvZHIh7hUBtkUuGL7S473f40MFSeeJAkfw
-	MElXflXSdf+L7FzkDiWVT1wp6uru+Bqyz5OBgWxm1iAWkwBxTMKu5wKMtszfs/Bj
-	HdRQbt4lWMPbsw+KnnVlC17LGPdNAAzJO+Chy1V2qCD+z+zm03hWiccP+FFg0Itj
-	iwZ8t2pXnQSdEqR3Ojs5s7Mkseh7xQEKk5C2P+PqAh1Wvy3g==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ypmjavmby-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 18:30:58 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.19/8.17.1.19) with ESMTPS id 45CIUvr6007635
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Jun 2024 18:30:57 GMT
-Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 12 Jun 2024 11:30:53 -0700
-From: Sibi Sankar <quic_sibis@quicinc.com>
-To: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <quic_rgottimu@quicinc.com>, <quic_kshivnan@quicinc.com>,
-        <quic_sibis@quicinc.com>, <conor+dt@kernel.org>
-Subject: [RFC V2 0/4] firmware: arm_scmi: vendors: Qualcomm Vendor Protocol
-Date: Thu, 13 Jun 2024 00:00:27 +0530
-Message-ID: <20240612183031.219906-1-quic_sibis@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F8ii8SpZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718217072; x=1749753072;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6zChqabg+jrjms+BmIotaOqJm9mHGdH7DbrkmgDnhkA=;
+  b=F8ii8SpZ+1CFkNvxHxEpzJ3/ElBnkzdQ75bNnEAqIwDaBA76BX8VZeym
+   ZW3B0PVTW4ia72Mj4WbvsIpgnM9n/SxU1Pm04qIGvVtWYIsr7OSll4QyG
+   c/b5spcc5QKBhxwi1XqWz7OLLyDYVvN/h6UQhR7wnv1p7ekQjmJvZrzQY
+   jZScObl/Yg1dnHvy1o83SdMnNoBtWP1aRcf7wWmfIHKagb/dQ/VG6Cn0D
+   XfbnhiTQ5gvjxX/D1yl1Ol/FNxbi/4FXNTbxaYbnQoxOjSOBPE0n1q5Le
+   jt5wy41VchgzbbbwbbdeMsskpX654VwGj9+1kS5RQzTEwvOwd06utiVpf
+   Q==;
+X-CSE-ConnectionGUID: ow5u5epJQeGm4fw8CCBe0g==
+X-CSE-MsgGUID: j8oanuLARlKbN9fmpliqgw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11101"; a="14802777"
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="14802777"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2024 11:31:12 -0700
+X-CSE-ConnectionGUID: 3Rbjk7C7QFGkdQjv3VdJmw==
+X-CSE-MsgGUID: w7BvMGymTKGvtmdm7uyvTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,234,1712646000"; 
+   d="scan'208";a="40352179"
+Received: from lkp-server01.sh.intel.com (HELO 628d7d8b9fc6) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 12 Jun 2024 11:31:09 -0700
+Received: from kbuild by 628d7d8b9fc6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sHSkU-0001os-1R;
+	Wed, 12 Jun 2024 18:31:06 +0000
+Date: Thu, 13 Jun 2024 02:30:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Slark Xiao <slark_xiao@163.com>, manivannan.sadhasivam@linaro.org,
+	loic.poulain@linaro.org, ryazanov.s.a@gmail.com,
+	johannes@sipsolutions.net, quic_jhugo@quicinc.com
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Slark Xiao <slark_xiao@163.com>
+Subject: Re: [PATCH v2 1/2] bus: mhi: host: Import mux_id item
+Message-ID: <202406130220.gq15Sjzk-lkp@intel.com>
+References: <20240612093842.359805-1-slark_xiao@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: nzqeVsfnI2NV1gNaM2IAzbyH651A5Gwt
-X-Proofpoint-ORIG-GUID: nzqeVsfnI2NV1gNaM2IAzbyH651A5Gwt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-12_10,2024-06-12_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- clxscore=1015 mlxscore=0 impostorscore=0 mlxlogscore=913
- lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406120132
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240612093842.359805-1-slark_xiao@163.com>
 
-The SCMI QCOM vendor protocol provides a generic way of exposing a
-number of Qualcomm SoC specific features (like memory bus scaling)
-through a mixture of pre-determined algorithm strings and param_id
-pairs hosted on the SCMI controller. Introduce a client driver that
-uses the memlat algorithm string hosted on QCOM SCMI Vendor Protocol
-to detect memory latency workloads and control frequency/level of
-the various memory buses (DDR/LLCC/DDR_QOS).
+Hi Slark,
 
-Generic QCOM Vendor protocol background:
-It was found that a lot of the vendor protocol used internally was
-for debug/internal development purposes that would either be super
-SoC specific or had to be disabled because of some features being
-fused during production. This lead to a large number of vendor
-protocol numbers being quickly consumed and were never released
-either. Using a generic vendor protocol with functionality abstracted
-behind algorithm strings gave us the flexibility of allowing such
-functionality exist during initial development/debugging while
-still being able to expose functionality like memlat once they have
-matured enough. The param-ids are certainly expected to act as ABI
-for algorithms strings like MEMLAT.
+kernel test robot noticed the following build warnings:
 
-Now that the SCMI controller firmware (CPUCP) is feature complete
-with the impending release of X1E SoCs, I should be able to get out
-next re-spins a lot quicker. I'll keep adding more documentation in
-the subsequent re-spins. Thanks in advance for taking time to review
-the series.
+[auto build test WARNING on mani-mhi/mhi-next]
+[also build test WARNING on linus/master v6.10-rc3 next-20240612]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Opens:
-* opp-tables are used but they don't get to be added to the scmi device (thus we
-  rely on a lot of manual parsing) because the memlat client driver doesn't vote
-  on these resources clocks/interconnects/power-domain from the kernel and some
-  of the resouces aren't modelled in the first place like DDR_QOS.
+url:    https://github.com/intel-lab-lkp/linux/commits/Slark-Xiao/net-wwan-mhi-make-default-data-link-id-configurable/20240612-174242
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi.git mhi-next
+patch link:    https://lore.kernel.org/r/20240612093842.359805-1-slark_xiao%40163.com
+patch subject: [PATCH v2 1/2] bus: mhi: host: Import mux_id item
+config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240613/202406130220.gq15Sjzk-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240613/202406130220.gq15Sjzk-lkp@intel.com/reproduce)
 
-V1:
-* Add missing bindings for the protocol. [Konrad/Dmitry]
-* Use alternate bindings. [Dmitry/Konrad]
-* Rebase on top of Cristian's "SCMI multiple vendor protocol support" series. [Cristian]
-* Add more documentation wherever possible. [Sudeep]
-* Replace pr_err/info with it's dev equivalents.
-* Mixed tabs and initialization cleanups in the memlat driver. [Konrad]
-* Commit message update for the memlat driver. [Dmitry]
-* Cleanups/Fixes suggested for the client driver. [Dmitry/Konrad/Cristian]
-* Use opp-tables instead of memfreq-tbl. [Dmitry/Konrad]
-* Detect physical cpu to deal with variants with reduced cpu count.
-* Add support for DDR_QOS mem_type.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406130220.gq15Sjzk-lkp@intel.com/
 
-To Dos:
-* More documentation [Sudeep/Dmitry/Konrad]
-* Use alternate bindings instead of freq-table-Hz. [Dmitry]
-* Prevent duplication of code using vendor protocol driver. [Dmitry]
+All warnings (new ones prefixed by >>):
 
-Depends on:
-vendor protocol submenu: https://lore.kernel.org/all/20240408093052.3801576-3-cristian.marussi@arm.com/
-X1E cpufreq: https://lore.kernel.org/lkml/20240612124056.39230-1-quic_sibis@quicinc.com/
+>> drivers/bus/mhi/host/pci_generic.c:57: warning: Function parameter or struct member 'mux_id' not described in 'mhi_pci_dev_info'
 
-Sibi Sankar (4):
-  dt-bindings: firmware: Add support for QCOM Vendor Protocol
-  firmware: arm_scmi: vendors: Add QCOM vendor protocol
-  soc: qcom: Introduce SCMI based Memlat (Memory Latency) governor
-  arm64: dts: qcom: x1e80100: Enable LLCC/DDR/DDR_QOS dvfs
 
- .../bindings/firmware/arm,scmi.yaml           |  21 +
- .../bindings/soc/qcom/qcom,scmi-memlat.yaml   | 243 ++++++++
- arch/arm64/boot/dts/qcom/x1e80100.dtsi        | 136 ++++
- drivers/firmware/arm_scmi/vendors/Kconfig     |  12 +
- drivers/firmware/arm_scmi/vendors/Makefile    |   2 +-
- .../arm_scmi/vendors/qcom_scmi_vendor.c       | 184 ++++++
- drivers/soc/qcom/Kconfig                      |  12 +
- drivers/soc/qcom/Makefile                     |   1 +
- drivers/soc/qcom/qcom_scmi_client.c           | 590 ++++++++++++++++++
- include/dt-bindings/soc/qcom,scmi-vendor.h    |  22 +
- include/linux/qcom_scmi_vendor.h              |  39 ++
- 11 files changed, 1261 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,scmi-memlat.yaml
- create mode 100644 drivers/firmware/arm_scmi/vendors/qcom_scmi_vendor.c
- create mode 100644 drivers/soc/qcom/qcom_scmi_client.c
- create mode 100644 include/dt-bindings/soc/qcom,scmi-vendor.h
- create mode 100644 include/linux/qcom_scmi_vendor.h
+vim +57 drivers/bus/mhi/host/pci_generic.c
+
+48f98496b1de132f drivers/bus/mhi/host/pci_generic.c Qiang Yu      2024-04-24  32  
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  33  /**
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  34   * struct mhi_pci_dev_info - MHI PCI device specific information
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  35   * @config: MHI controller configuration
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  36   * @name: name of the PCI module
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  37   * @fw: firmware path (if any)
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  38   * @edl: emergency download mode firmware path (if any)
+48f98496b1de132f drivers/bus/mhi/host/pci_generic.c Qiang Yu      2024-04-24  39   * @edl_trigger: capable of triggering EDL mode in the device (if supported)
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  40   * @bar_num: PCI base address register to use for MHI MMIO register space
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  41   * @dma_data_width: DMA transfer word size (32 or 64 bits)
+5c2c85315948c42c drivers/bus/mhi/pci_generic.c      Richard Laing 2021-07-15  42   * @mru_default: default MRU size for MBIM network packets
+56f6f4c4eb2a710e drivers/bus/mhi/pci_generic.c      Bhaumik Bhatt 2021-07-16  43   * @sideband_wake: Devices using dedicated sideband GPIO for wakeup instead
+56f6f4c4eb2a710e drivers/bus/mhi/pci_generic.c      Bhaumik Bhatt 2021-07-16  44   *		   of inband wake support (such as sdx24)
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  45   */
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  46  struct mhi_pci_dev_info {
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  47  	const struct mhi_controller_config *config;
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  48  	const char *name;
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  49  	const char *fw;
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  50  	const char *edl;
+48f98496b1de132f drivers/bus/mhi/host/pci_generic.c Qiang Yu      2024-04-24  51  	bool edl_trigger;
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  52  	unsigned int bar_num;
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  53  	unsigned int dma_data_width;
+5c2c85315948c42c drivers/bus/mhi/pci_generic.c      Richard Laing 2021-07-15  54  	unsigned int mru_default;
+56f6f4c4eb2a710e drivers/bus/mhi/pci_generic.c      Bhaumik Bhatt 2021-07-16  55  	bool sideband_wake;
+2b153f167f41516b drivers/bus/mhi/host/pci_generic.c Slark Xiao    2024-06-12  56  	unsigned int mux_id;
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21 @57  };
+855a70c12021bdc5 drivers/bus/mhi/pci_generic.c      Loic Poulain  2020-10-21  58  
 
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
