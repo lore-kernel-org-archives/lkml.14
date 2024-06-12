@@ -1,113 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1583116C6A5;
-	Wed, 12 Jun 2024 07:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD4B16C859
+	for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 07:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718179136; cv=none; b=jiFNUOJRpcwLOXgX/bQjwR4BgRoQyyI4ttd+Nn9R68Ub4U8ibyVyoDCmA5HMElLIjMfPvMzPRR+lVRLmK9W+tBjhEgBcSPzjJp6a4BGHf4+ifb+vbsfcqr0gCq12pLUM7Dc0NXjbkKu6AYJetWvdu/wsirGz5ZN3zYB+vA21UYw=
+	t=1718179152; cv=none; b=C9miyU4BvkwyW30+3rP4SICwIZY1kelDcg+IuBaUpDlAVczsX9qIKYsYNY1holHPx9ASs5eRePobL+C6hQ7sKu5UONkhJhYhAwUb827V7bug53H8UF1TPme+Yc7O9YBI6M6nwTOSTFCpBMJCxMguELOFuv6EQSiWCPf75N8fozw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718179136; c=relaxed/simple;
-	bh=3LFtotRRK2OvgkevUxAw97OnaB6blbVrV6bpKO+w89E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ASdhiXAmbuPDOrXfD0QXThQgz5QLQBHIv+ec2s/2RoW/SpJ8eNiXABckWOIGI8F2NgPoQ8n90VZSKZx90kvp7/9Wx/XVblTyvqydXd1wUtdp0d29PRiYEVkH8Zmpx8zNE3MjODJfLCBHLc/AjGrZOcYQgd+YPyvtIrtXOA5xq/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u03sckw8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718179152; c=relaxed/simple;
+	bh=vwNJ897gwBvDgypF3Aq9mgPnj8YQo/CTPzx+egzni4c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A+2GH+O0XUKs0Bp6Z+QSInu0pu2GQjKJFuLL7GfboaNtoDOjcKFoSwzSKq9ERcd+WE96yxh9aflJQiy771KlkdP8txeu62uUavlqzB9kJtr7VRSpd/R22qIcHf54wq6GCsDI1iCgwXqukZ4ALJ49zgjDUulzgsZ7AB2sXrJ7gYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zWvqyePI; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u03sckw8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01154C32786;
-	Wed, 12 Jun 2024 07:58:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718179135;
-	bh=3LFtotRRK2OvgkevUxAw97OnaB6blbVrV6bpKO+w89E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=u03sckw8PZKnCV8J8i7K7PqlAcm3uLqCV6Jgl0+VDhKkkVVRE5brHTCUThq30NNv+
-	 v92EG8WO3ost8F0Gp/ChnTl6lwvSF03yFfCAzxWJdJgLSEOPie/rHeQLbWngFaUf4w
-	 /DvV7umn4vad9mMrfZssSFOiMxMdSRL1ZgNhsBu6/hGJd4RCLPPAAG6SbFaCqOg+wo
-	 CBpNGoVOfj/ZRu8ZoNFMnpUfJoJv4gguJq8YngxnnPry9ihMx02hPdKMwdh5I6nz+b
-	 D01LGHeU0+fVExiQz90cBB1o4D+WT04Z1fN6M4GgPSKp3VfzNBQD2py7r/1rZ3+TD4
-	 EGN5jzBAkaIYA==
-Message-ID: <175bd8b0-83b8-45d0-99bd-1e9384fed3f7@kernel.org>
-Date: Wed, 12 Jun 2024 09:58:50 +0200
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zWvqyePI"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52962423ed8so7545909e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 12 Jun 2024 00:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1718179150; x=1718783950; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J9bGYOos+5ZAvSBq70WnnGsqeYl9M4GtIdifUxXDp6M=;
+        b=zWvqyePIFpXkfXxDhnYeGltGSiPqWz4I0ZG6/nztCMDdYBSnx18fg0mTlQMUj8Hz3V
+         90IgUsz1qtr/L41nWvRgmDIWbt4aZAwNEfhGZiiiZT7GBny7zjq764evOPLpFN/QMWbL
+         RHcy5JwngJcwt8PdZmFBlGKvWs62ukDWcS39vM57F49mEjLW4NbHZMX4YiM9HgQemVKt
+         tDNApbw4Mv6BUrUHzRGJv3g3BZ8ntqcDW35LcCCpRfxJHkrSn7W8CCqL8yr9q9Z5WA0d
+         rekcySITRF32nUuFZjaAR2e5wq5u+Yn6UfKTTd1YTFYOTbTdlCPWOnjsU2mA8+jMdz26
+         d/ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718179150; x=1718783950;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J9bGYOos+5ZAvSBq70WnnGsqeYl9M4GtIdifUxXDp6M=;
+        b=IYrKR/K74oSXiuF+CRbbBkksLSxyQGIFcrowXR+paxaUTV1Q83Vrb8y8lNHfkglMBC
+         Xj3XOb98MLetbiw7BhRDRkB1sipgKK5orL3J5rNVAJYfSn2elmHezQ9Luw/dNIFeZnK5
+         OJDHIgeaOK/OQOwsJPR2FsO1cHyQgKbnAoJdHImtZbbP3vhDDLOTliFr89105fK0GlsQ
+         6FZseGNKT4uVOIkNDEnq3t6JiDcl2EEhlpp+odvvwnq3c263FBFUCSlphvap41lcjgKA
+         0euzqj20jxAwsxMOVy2KDBOztpztKENgA9/WcUbZ5+vGPjnq4Ue6h3sVsBwZ6GfkX5Sa
+         EHNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUG3Pu8zX3xWUxUBBqXK5npD2aNvZtadivrwMfQ10AqlkFss8LaSt99/8BTEvlYkhaq6VESKY0moAnL4BqXRXYT9EozutUrA0hG89x9
+X-Gm-Message-State: AOJu0YxVCfFyKE70rFV+2VaFwYdximAg7zpcZvUB/ej+pBoXRJfxcM6Y
+	mbkel6RY9we/dp6lYZvfmzm49NsnVfOPHNMWDvN1tXq7QfMYawdLCO7OytlTmLM=
+X-Google-Smtp-Source: AGHT+IHW4NIxUvz4W89OLc8Yhve4W25GsEQm/AZgXDZVaD85P+vCuq8RK+JIPGo75+rm9H3KVgiVuA==
+X-Received: by 2002:a05:6512:1243:b0:52b:bf8f:5690 with SMTP id 2adb3069b0e04-52c9a3fd437mr800598e87.52.1718179149308;
+        Wed, 12 Jun 2024 00:59:09 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:8d3:3800:a172:4e8b:453e:2f03])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422874de607sm15312315e9.34.2024.06.12.00.59.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jun 2024 00:59:09 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-bluetooth@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] Immutable tag between the Bluetooth and pwrseq branches for v6.11-rc1
+Date: Wed, 12 Jun 2024 09:58:29 +0200
+Message-ID: <20240612075829.18241-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: cache: qcom,llcc: Fix QDU1000
- description
-To: Komal Bajaj <quic_kbajaj@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Mukesh Ojha <quic_mojha@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240612062719.31724-1-quic_kbajaj@quicinc.com>
- <20240612062719.31724-3-quic_kbajaj@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240612062719.31724-3-quic_kbajaj@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/06/2024 08:27, Komal Bajaj wrote:
-> QDU1000 DTSI comes with one LLCC0-7 base addresses. Updating
-> dt-bindings accordingly.
-> 
-> Fixes: f0f99f371822 ("dt-bindings: cache: qcom,llcc: correct QDU1000 reg entries")
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-You are basically reverting without saying this is a revert and without
-explanation.
+Hi Marcel, Luiz,
 
-What's happening with QDU1000? Why it is such a mess that DTS was
-totally not matching bindings drivers and now suddenly we need to revert
-commits?
+Please pull the following power sequencing changes into the Bluetooth tree
+before applying the hci_qca patches I sent separately.
 
-Best regards,
-Krzysztof
+Link: https://lore.kernel.org/linux-kernel/20240605174713.GA767261@bhelgaas/T/
 
+The following changes since commit 83a7eefedc9b56fe7bfeff13b6c7356688ffa670:
+
+  Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/pwrseq-initial-for-v6.11
+
+for you to fetch changes up to 2f1630f437dff20d02e4b3f07e836f42869128dd:
+
+  power: pwrseq: add a driver for the PMU module on the QCom WCN chipsets (2024-06-12 09:20:13 +0200)
+
+----------------------------------------------------------------
+Initial implementation of the power sequencing subsystem for linux v6.11
+
+----------------------------------------------------------------
+Bartosz Golaszewski (2):
+      power: sequencing: implement the pwrseq core
+      power: pwrseq: add a driver for the PMU module on the QCom WCN chipsets
+
+ MAINTAINERS                                |    8 +
+ drivers/power/Kconfig                      |    1 +
+ drivers/power/Makefile                     |    1 +
+ drivers/power/sequencing/Kconfig           |   29 +
+ drivers/power/sequencing/Makefile          |    6 +
+ drivers/power/sequencing/core.c            | 1105 ++++++++++++++++++++++++++++
+ drivers/power/sequencing/pwrseq-qcom-wcn.c |  336 +++++++++
+ include/linux/pwrseq/consumer.h            |   56 ++
+ include/linux/pwrseq/provider.h            |   75 ++
+ 9 files changed, 1617 insertions(+)
+ create mode 100644 drivers/power/sequencing/Kconfig
+ create mode 100644 drivers/power/sequencing/Makefile
+ create mode 100644 drivers/power/sequencing/core.c
+ create mode 100644 drivers/power/sequencing/pwrseq-qcom-wcn.c
+ create mode 100644 include/linux/pwrseq/consumer.h
+ create mode 100644 include/linux/pwrseq/provider.h
